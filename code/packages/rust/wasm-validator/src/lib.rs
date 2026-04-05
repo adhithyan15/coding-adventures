@@ -50,7 +50,7 @@ use wasm_types::{ExternalKind, ImportTypeInfo, WasmModule};
 /// | TooManyMemories       | Module declares 2 memories (max is 1).       |
 /// | TooManyTables         | Module declares 2 tables (max is 1).         |
 /// | InvalidDataSegment    | Data segment references memory index 1.      |
-/// | InvalidElementSegment | Element segment references table index 1.    |
+/// | InvalidElement | Element segment references table index 1.    |
 /// | Other                 | Catch-all for additional validation errors.  |
 #[derive(Debug, Clone, PartialEq)]
 pub enum ValidationError {
@@ -67,7 +67,7 @@ pub enum ValidationError {
     /// A data segment references an invalid memory index.
     InvalidDataSegment(String),
     /// An element segment references an invalid table index.
-    InvalidElementSegment(String),
+    InvalidElement(String),
     /// A catch-all for other validation failures.
     Other(String),
 }
@@ -81,8 +81,8 @@ impl std::fmt::Display for ValidationError {
             ValidationError::TooManyMemories(m) => write!(f, "TooManyMemories: {}", m),
             ValidationError::TooManyTables(m) => write!(f, "TooManyTables: {}", m),
             ValidationError::InvalidDataSegment(m) => write!(f, "InvalidDataSegment: {}", m),
-            ValidationError::InvalidElementSegment(m) => {
-                write!(f, "InvalidElementSegment: {}", m)
+            ValidationError::InvalidElement(m) => {
+                write!(f, "InvalidElement: {}", m)
             }
             ValidationError::Other(m) => write!(f, "ValidationError: {}", m),
         }
@@ -257,7 +257,7 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
             }
             ExternalKind::Table => {
                 if (exp.index as usize) >= total_tables {
-                    return Err(ValidationError::InvalidElementSegment(format!(
+                    return Err(ValidationError::InvalidElement(format!(
                         "export \"{}\" references table index {}, but only {} tables exist",
                         exp.name, exp.index, total_tables
                     )));
@@ -295,13 +295,13 @@ pub fn validate(module: &WasmModule) -> Result<ValidatedModule, ValidationError>
     // ── Check 9: Element segments ───────────────────────────────────────
     for (i, elem) in module.elements.iter().enumerate() {
         if total_tables == 0 {
-            return Err(ValidationError::InvalidElementSegment(format!(
+            return Err(ValidationError::InvalidElement(format!(
                 "element segment #{} references a table, but no table is declared",
                 i
             )));
         }
         if elem.table_index != 0 {
-            return Err(ValidationError::InvalidElementSegment(format!(
+            return Err(ValidationError::InvalidElement(format!(
                 "element segment #{} references table index {}, but only index 0 is valid",
                 i, elem.table_index
             )));
@@ -488,5 +488,389 @@ mod tests {
         };
         let err = validate(&module).unwrap_err();
         assert!(matches!(err, ValidationError::FuncIndexOutOfBounds(_)));
+    }
+
+    // ── Additional validation tests ──────────────────────────────────
+
+    #[test]
+    fn valid_start_function() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            start: Some(0),
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn rejects_too_many_tables() {
+        let module = WasmModule {
+            tables: vec![
+                TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: 1, max: None },
+                },
+                TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: 1, max: None },
+                },
+            ],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TooManyTables(_)));
+    }
+
+    #[test]
+    fn rejects_bad_import_type_index() {
+        let module = WasmModule {
+            types: vec![],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "func".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(99),
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TypeIndexOutOfBounds(_)));
+    }
+
+    #[test]
+    fn valid_import_type_index() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "func".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn rejects_data_segment_no_memory() {
+        let module = WasmModule {
+            data: vec![DataSegment {
+                memory_index: 0,
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                data: vec![0x01],
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::InvalidDataSegment(_)));
+    }
+
+    #[test]
+    fn rejects_data_segment_bad_memory_index() {
+        let module = WasmModule {
+            memories: vec![MemoryType {
+                limits: Limits { min: 1, max: None },
+            }],
+            data: vec![DataSegment {
+                memory_index: 1, // only index 0 is valid
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                data: vec![0x01],
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::InvalidDataSegment(_)));
+    }
+
+    #[test]
+    fn valid_data_segment() {
+        let module = WasmModule {
+            memories: vec![MemoryType {
+                limits: Limits { min: 1, max: None },
+            }],
+            data: vec![DataSegment {
+                memory_index: 0,
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                data: vec![0x01, 0x02],
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn rejects_element_segment_no_table() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            elements: vec![Element {
+                table_index: 0,
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                function_indices: vec![0],
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::InvalidElement(_)));
+    }
+
+    #[test]
+    fn rejects_element_segment_bad_table_index() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: 10, max: None },
+            }],
+            elements: vec![Element {
+                table_index: 1, // only 0 is valid
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                function_indices: vec![0],
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::InvalidElement(_)));
+    }
+
+    #[test]
+    fn rejects_element_segment_bad_func_index() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: 10, max: None },
+            }],
+            elements: vec![Element {
+                table_index: 0,
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                function_indices: vec![99], // out of bounds
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::FuncIndexOutOfBounds(_)));
+    }
+
+    #[test]
+    fn valid_element_segment() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: 10, max: None },
+            }],
+            elements: vec![Element {
+                table_index: 0,
+                offset_expr: vec![0x41, 0x00, 0x0B],
+                function_indices: vec![0],
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn rejects_export_bad_memory_index() {
+        let module = WasmModule {
+            exports: vec![Export {
+                name: "mem".to_string(),
+                kind: ExternalKind::Memory,
+                index: 0,
+            }],
+            // No memories exist
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::InvalidDataSegment(_)));
+    }
+
+    #[test]
+    fn rejects_export_bad_table_index() {
+        let module = WasmModule {
+            exports: vec![Export {
+                name: "tbl".to_string(),
+                kind: ExternalKind::Table,
+                index: 0,
+            }],
+            // No tables exist
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::InvalidElement(_)));
+    }
+
+    #[test]
+    fn rejects_export_bad_global_index() {
+        let module = WasmModule {
+            exports: vec![Export {
+                name: "g".to_string(),
+                kind: ExternalKind::Global,
+                index: 0,
+            }],
+            // No globals exist
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::Other(_)));
+    }
+
+    #[test]
+    fn valid_export_memory() {
+        let module = WasmModule {
+            memories: vec![MemoryType {
+                limits: Limits { min: 1, max: None },
+            }],
+            exports: vec![Export {
+                name: "mem".to_string(),
+                kind: ExternalKind::Memory,
+                index: 0,
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn valid_export_global() {
+        let module = WasmModule {
+            globals: vec![Global {
+                global_type: GlobalType {
+                    value_type: ValueType::I32,
+                    mutable: false,
+                },
+                init_expr: vec![0x41, 0x00, 0x0B],
+            }],
+            exports: vec![Export {
+                name: "g".to_string(),
+                kind: ExternalKind::Global,
+                index: 0,
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn valid_module_with_imports_counted() {
+        // Imported function + module function = 2 total functions
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "imported".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            functions: vec![0],
+            code: vec![FunctionBody { locals: vec![], code: vec![0x0B] }],
+            exports: vec![Export {
+                name: "local_fn".to_string(),
+                kind: ExternalKind::Function,
+                index: 1, // index 0 is import, index 1 is module-defined
+            }],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
+    }
+
+    #[test]
+    fn imported_memory_counts_toward_limit() {
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "mem".to_string(),
+                kind: ExternalKind::Memory,
+                type_info: ImportTypeInfo::Memory(MemoryType {
+                    limits: Limits { min: 1, max: None },
+                }),
+            }],
+            memories: vec![MemoryType {
+                limits: Limits { min: 1, max: None },
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TooManyMemories(_)));
+    }
+
+    #[test]
+    fn imported_table_counts_toward_limit() {
+        let module = WasmModule {
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "tbl".to_string(),
+                kind: ExternalKind::Table,
+                type_info: ImportTypeInfo::Table(TableType {
+                    element_type: 0x70,
+                    limits: Limits { min: 1, max: None },
+                }),
+            }],
+            tables: vec![TableType {
+                element_type: 0x70,
+                limits: Limits { min: 1, max: None },
+            }],
+            ..Default::default()
+        };
+        let err = validate(&module).unwrap_err();
+        assert!(matches!(err, ValidationError::TooManyTables(_)));
+    }
+
+    #[test]
+    fn validation_error_display() {
+        let cases = vec![
+            (ValidationError::TypeIndexOutOfBounds("test".into()), "TypeIndexOutOfBounds: test"),
+            (ValidationError::FuncIndexOutOfBounds("test".into()), "FuncIndexOutOfBounds: test"),
+            (ValidationError::DuplicateExport("test".into()), "DuplicateExport: test"),
+            (ValidationError::TooManyMemories("test".into()), "TooManyMemories: test"),
+            (ValidationError::TooManyTables("test".into()), "TooManyTables: test"),
+            (ValidationError::InvalidDataSegment("test".into()), "InvalidDataSegment: test"),
+            (ValidationError::InvalidElement("test".into()), "InvalidElement: test"),
+            (ValidationError::Other("test".into()), "ValidationError: test"),
+        ];
+        for (err, expected) in cases {
+            assert_eq!(format!("{}", err), expected);
+        }
+    }
+
+    #[test]
+    fn validation_error_is_error_trait() {
+        let err = ValidationError::Other("test".into());
+        let _: &dyn std::error::Error = &err;
+    }
+
+    #[test]
+    fn validated_module_contains_module() {
+        let module = WasmModule::default();
+        let validated = validate(&module).unwrap();
+        assert_eq!(validated.module.types.len(), 0);
+    }
+
+    #[test]
+    fn multiple_valid_exports() {
+        let module = WasmModule {
+            types: vec![FuncType { params: vec![], results: vec![] }],
+            functions: vec![0, 0],
+            code: vec![
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+                FunctionBody { locals: vec![], code: vec![0x0B] },
+            ],
+            exports: vec![
+                Export { name: "a".to_string(), kind: ExternalKind::Function, index: 0 },
+                Export { name: "b".to_string(), kind: ExternalKind::Function, index: 1 },
+            ],
+            ..Default::default()
+        };
+        assert!(validate(&module).is_ok());
     }
 }

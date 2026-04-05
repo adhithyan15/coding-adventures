@@ -604,4 +604,305 @@ mod tests {
         let err = ProcExitError { exit_code: 0 };
         assert_eq!(format!("{}", err), "proc_exit(0)");
     }
+
+    #[test]
+    fn test_proc_exit_error_nonzero() {
+        let err = ProcExitError { exit_code: 1 };
+        assert_eq!(format!("{}", err), "proc_exit(1)");
+        assert_eq!(err.exit_code, 1);
+    }
+
+    #[test]
+    fn test_proc_exit_is_error_trait() {
+        let err = ProcExitError { exit_code: 42 };
+        let _: &dyn std::error::Error = &err;
+    }
+
+    #[test]
+    fn test_runtime_default() {
+        let runtime = WasmRuntime::default();
+        // Default runtime should have no host
+        let wasm = build_square_wasm();
+        let result = runtime.load_and_run(&wasm, "square", &[3]);
+        assert_eq!(result.unwrap(), vec![9]);
+    }
+
+    #[test]
+    fn test_runtime_load_invalid_wasm() {
+        let runtime = WasmRuntime::new();
+        let result = runtime.load(&[0x00, 0x01, 0x02, 0x03]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_runtime_validate_valid_module() {
+        let wasm = build_square_wasm();
+        let runtime = WasmRuntime::new();
+        let module = runtime.load(&wasm).unwrap();
+        assert!(runtime.validate(&module).is_ok());
+    }
+
+    #[test]
+    fn test_runtime_instantiate() {
+        let wasm = build_square_wasm();
+        let runtime = WasmRuntime::new();
+        let module = runtime.load(&wasm).unwrap();
+        let instance = runtime.instantiate(&module).unwrap();
+
+        // Check that exports were populated
+        assert!(!instance.exports.is_empty());
+        assert_eq!(instance.exports[0].0, "square");
+        assert_eq!(instance.exports[0].1, ExternalKind::Function);
+    }
+
+    #[test]
+    fn test_runtime_call_wrong_export_type() {
+        // Build a module that exports a memory, then try to call it as a function
+        let mut wasm = Vec::new();
+        wasm.extend_from_slice(&[0x00, 0x61, 0x73, 0x6D]); // magic
+        wasm.extend_from_slice(&[0x01, 0x00, 0x00, 0x00]); // version
+
+        // Memory section (id=5): 1 memory, min=1, no max
+        let mem_section = vec![0x01, 0x00, 0x01]; // 1 memory, limits flag 0, min 1
+        wasm.push(0x05);
+        wasm.push(mem_section.len() as u8);
+        wasm.extend_from_slice(&mem_section);
+
+        // Export section (id=7): export "mem" as memory 0
+        let export_section = vec![
+            0x01,       // 1 export
+            0x03,       // name length
+            b'm', b'e', b'm',
+            0x02,       // memory export kind
+            0x00,       // memory index 0
+        ];
+        wasm.push(0x07);
+        wasm.push(export_section.len() as u8);
+        wasm.extend_from_slice(&export_section);
+
+        let runtime = WasmRuntime::new();
+        let result = runtime.load_and_run(&wasm, "mem", &[]);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("not a function"));
+    }
+
+    #[test]
+    fn test_runtime_with_memory() {
+        // Build a module with memory that stores and loads a value
+        // func store_and_load(val: i32) -> i32:
+        //   i32.const 0; local.get 0; i32.store; i32.const 0; i32.load; end
+        let mut wasm = Vec::new();
+        wasm.extend_from_slice(&[0x00, 0x61, 0x73, 0x6D]);
+        wasm.extend_from_slice(&[0x01, 0x00, 0x00, 0x00]);
+
+        // Type section: (i32) -> i32
+        let type_section = vec![0x01, 0x60, 0x01, 0x7F, 0x01, 0x7F];
+        wasm.push(0x01);
+        wasm.push(type_section.len() as u8);
+        wasm.extend_from_slice(&type_section);
+
+        // Function section
+        let func_section = vec![0x01, 0x00];
+        wasm.push(0x03);
+        wasm.push(func_section.len() as u8);
+        wasm.extend_from_slice(&func_section);
+
+        // Memory section: 1 page min, no max
+        let mem_section = vec![0x01, 0x00, 0x01];
+        wasm.push(0x05);
+        wasm.push(mem_section.len() as u8);
+        wasm.extend_from_slice(&mem_section);
+
+        // Export section
+        let export_section = vec![
+            0x01, 0x04, b't', b'e', b's', b't', 0x00, 0x00,
+        ];
+        wasm.push(0x07);
+        wasm.push(export_section.len() as u8);
+        wasm.extend_from_slice(&export_section);
+
+        // Code section
+        let body = vec![
+            0x00,       // 0 locals
+            0x41, 0x00, // i32.const 0 (addr)
+            0x20, 0x00, // local.get 0 (val)
+            0x36, 0x02, 0x00, // i32.store align=2 offset=0
+            0x41, 0x00, // i32.const 0 (addr)
+            0x28, 0x02, 0x00, // i32.load align=2 offset=0
+            0x0B,       // end
+        ];
+        let body_with_size = {
+            let mut v = vec![body.len() as u8];
+            v.extend_from_slice(&body);
+            v
+        };
+        let code_section = {
+            let mut v = vec![0x01u8];
+            v.extend_from_slice(&body_with_size);
+            v
+        };
+        wasm.push(0x0A);
+        wasm.push(code_section.len() as u8);
+        wasm.extend_from_slice(&code_section);
+
+        let runtime = WasmRuntime::new();
+        let result = runtime.load_and_run(&wasm, "test", &[42]);
+        assert_eq!(result.unwrap(), vec![42]);
+    }
+
+    #[test]
+    fn test_runtime_with_global() {
+        // Module with a mutable global initialized to 100
+        let module = WasmModule {
+            types: vec![FuncType {
+                params: vec![],
+                results: vec![ValueType::I32],
+            }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![0x23, 0x00, 0x0B], // global.get 0; end
+            }],
+            globals: vec![Global {
+                global_type: GlobalType {
+                    value_type: ValueType::I32,
+                    mutable: true,
+                },
+                init_expr: vec![0x41, 0xE4, 0x00, 0x0B], // i32.const 100; end (100 in signed LEB128)
+            }],
+            exports: vec![Export {
+                name: "get_global".to_string(),
+                kind: ExternalKind::Function,
+                index: 0,
+            }],
+            ..Default::default()
+        };
+
+        let runtime = WasmRuntime::new();
+        let mut instance = runtime.instantiate(&module).unwrap();
+        let result = runtime.call(&mut instance, "get_global", &[]).unwrap();
+        assert_eq!(result, vec![100]);
+    }
+
+    #[test]
+    fn test_runtime_with_data_segment() {
+        // Module with memory and a data segment that initializes bytes
+        let module = WasmModule {
+            types: vec![FuncType {
+                params: vec![],
+                results: vec![ValueType::I32],
+            }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x41, 0x00, // i32.const 0
+                    0x28, 0x02, 0x00, // i32.load align=2 offset=0
+                    0x0B,
+                ],
+            }],
+            memories: vec![MemoryType {
+                limits: Limits { min: 1, max: None },
+            }],
+            data: vec![DataSegment {
+                memory_index: 0,
+                offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
+                data: vec![0x2A, 0x00, 0x00, 0x00],  // 42 in little-endian
+            }],
+            exports: vec![Export {
+                name: "read".to_string(),
+                kind: ExternalKind::Function,
+                index: 0,
+            }],
+            ..Default::default()
+        };
+
+        let runtime = WasmRuntime::new();
+        let mut instance = runtime.instantiate(&module).unwrap();
+        let result = runtime.call(&mut instance, "read", &[]).unwrap();
+        assert_eq!(result, vec![42]);
+    }
+
+    #[test]
+    fn test_wasi_stub_proc_exit() {
+        let wasi = WasiStub::new(|_| {});
+        let func = wasi
+            .resolve_function("wasi_snapshot_preview1", "proc_exit")
+            .unwrap();
+        assert_eq!(func.func_type().params, vec![ValueType::I32]);
+        assert!(func.func_type().results.is_empty());
+        // Calling proc_exit should return an error (trap)
+        let result = func.call(&[WasmValue::I32(0)]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_wasi_stub_enosys_function() {
+        let wasi = WasiStub::new(|_| {});
+        let func = wasi
+            .resolve_function("wasi_snapshot_preview1", "unknown_function")
+            .unwrap();
+        let result = func.call(&[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(52)]); // ENOSYS
+    }
+
+    #[test]
+    fn test_wasi_stub_wrong_module() {
+        let wasi = WasiStub::new(|_| {});
+        assert!(wasi.resolve_function("env", "some_func").is_none());
+    }
+
+    #[test]
+    fn test_wasi_stub_resolve_global() {
+        let wasi = WasiStub::new(|_| {});
+        assert!(wasi.resolve_global("wasi_snapshot_preview1", "x").is_none());
+    }
+
+    #[test]
+    fn test_wasi_stub_resolve_memory() {
+        let wasi = WasiStub::new(|_| {});
+        assert!(wasi.resolve_memory("wasi_snapshot_preview1", "memory").is_none());
+    }
+
+    #[test]
+    fn test_wasi_stub_resolve_table() {
+        let wasi = WasiStub::new(|_| {});
+        assert!(wasi.resolve_table("wasi_snapshot_preview1", "table").is_none());
+    }
+
+    #[test]
+    fn test_runtime_with_host() {
+        let wasi = WasiStub::new(|_| {});
+        let runtime = WasmRuntime::with_host(Box::new(wasi));
+        let wasm = build_square_wasm();
+        let result = runtime.load_and_run(&wasm, "square", &[4]);
+        assert_eq!(result.unwrap(), vec![16]);
+    }
+
+    #[test]
+    fn test_instance_fields() {
+        let wasm = build_square_wasm();
+        let runtime = WasmRuntime::new();
+        let module = runtime.load(&wasm).unwrap();
+        let instance = runtime.instantiate(&module).unwrap();
+
+        // No memory in square module
+        assert!(instance.memory.is_none());
+        // No tables
+        assert!(instance.tables.is_empty());
+        // No globals
+        assert!(instance.globals.is_empty());
+        // One function type
+        assert_eq!(instance.func_types.len(), 1);
+        // One function body
+        assert_eq!(instance.func_bodies.len(), 1);
+    }
+
+    #[test]
+    fn test_runtime_load_and_run_nonexistent_export_error_message() {
+        let wasm = build_square_wasm();
+        let runtime = WasmRuntime::new();
+        let err = runtime.load_and_run(&wasm, "no_such_fn", &[1]).unwrap_err();
+        assert!(err.contains("not found"));
+    }
 }
