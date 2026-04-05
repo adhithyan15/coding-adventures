@@ -70,6 +70,8 @@ use CodingAdventures::PixelContainer;
 our $VERSION  = '0.01';
 our @EXPORT_OK = qw(encode_bmp decode_bmp mime_type);
 
+use constant MAX_DIMENSION => 16384;
+
 # ============================================================================
 # mime_type() -> 'image/bmp'
 # ============================================================================
@@ -226,6 +228,7 @@ sub decode_bmp {
 
     die "BMP: width $w is not positive" unless $w > 0;
     die "BMP: height 0 is invalid" if $h_signed == 0;
+    die "dimensions too large" if $w > MAX_DIMENSION || abs($h_signed) > MAX_DIMENSION;
 
     # Negative biHeight → top-down (rows stored in display order).
     # Positive biHeight → bottom-up (rows stored in reverse order).

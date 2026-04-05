@@ -56,6 +56,8 @@ use CodingAdventures::PixelContainer;
 our $VERSION   = '0.01';
 our @EXPORT_OK = qw(encode_ppm decode_ppm mime_type);
 
+use constant MAX_DIMENSION => 16384;
+
 # ============================================================================
 # mime_type() -> 'image/x-portable-pixmap'
 # ============================================================================
@@ -195,6 +197,7 @@ sub decode_ppm {
         unless $w =~ /^\d+$/ && $w > 0;
     die "PPM: height '$h' is not a positive integer"
         unless $h =~ /^\d+$/ && $h > 0;
+    die "dimensions too large" if $w > MAX_DIMENSION || $h > MAX_DIMENSION;
     die "PPM: maxval '$maxval' out of range (1..65535)"
         unless $maxval =~ /^\d+$/ && $maxval >= 1 && $maxval <= 65535;
     die "PPM: maxval > 255 (two-byte channels) not supported"

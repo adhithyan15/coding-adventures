@@ -213,8 +213,16 @@ func DecodeBmp(data []byte) (*pc.PixelContainer, error) {
 	biWidth32 := biWidth
 
 	// ── Validate pixel data region ──────────────────────────────────────────
-	pixelDataSize := biWidth32 * biHeight * bytesPerPixel
-	if uint64(pixelDataOffset)+uint64(pixelDataSize) > uint64(len(data)) {
+	// Reject dimensions that exceed the package-wide cap before calling pc.New,
+	// which would panic for oversized images. This converts a panic into a
+	// structured error return, and prevents uint32 overflow in pixelDataSize.
+	if biWidth32 > pc.MaxDimension || biHeight > pc.MaxDimension {
+		return nil, errors.New("imagecodecbmp: image dimensions exceed maximum")
+	}
+	// Use uint64 arithmetic so that e.g. 65535×65535 cannot overflow a uint32
+	// before we compare it against the slice length.
+	pixelDataSize := uint64(biWidth32) * uint64(biHeight) * uint64(bytesPerPixel)
+	if uint64(pixelDataOffset)+pixelDataSize > uint64(len(data)) {
 		return nil, errors.New("imagecodecbmp: pixel data region is truncated")
 	}
 

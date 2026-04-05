@@ -12,6 +12,9 @@ from pixel_container import ImageCodec, PixelContainer, create_pixel_container
 
 __all__ = ["PpmCodec", "encode_ppm", "decode_ppm"]
 
+_MAX_DIMENSION = 16384
+_MAX_TOKEN_LEN = 20
+
 
 class PpmCodec(ImageCodec):
     """PPM P6 image encoder and decoder."""
@@ -81,6 +84,8 @@ def decode_ppm(data: bytes) -> PixelContainer:
         start = pos
         while pos < len(data) and data[pos:pos+1] not in (b" ", b"\t", b"\r", b"\n"):
             pos += 1
+            if pos - start > _MAX_TOKEN_LEN:
+                raise ValueError("PPM: header token too long")
         return data[start:pos].decode()
 
     magic = _read_token()
@@ -89,6 +94,10 @@ def decode_ppm(data: bytes) -> PixelContainer:
 
     width = int(_read_token())
     height = int(_read_token())
+    if width <= 0 or height <= 0:
+        raise ValueError(f"PPM: invalid dimensions ({width}×{height})")
+    if width > _MAX_DIMENSION or height > _MAX_DIMENSION:
+        raise ValueError(f"PPM: dimensions {width}×{height} exceed maximum {_MAX_DIMENSION}")
     maxval = int(_read_token())
     if maxval != 255:
         raise ValueError(f"PPM: unsupported max value {maxval}, only 255 supported")

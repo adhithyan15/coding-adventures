@@ -108,8 +108,7 @@ export function encodeQoi(pixels: PixelContainer): Uint8Array {
   out.push(0); // colorspace = sRGB
 
   const hashTable: Array<[number, number, number, number]> = new Array(64).fill([0, 0, 0, 0]);
-  let prev: [number, number, number, number] = [0, 0, 0, 0, 255].slice(0, 4) as [number, number, number, number];
-  prev = [0, 0, 0, 255]; // QOI initial state: opaque black
+  let prev: [number, number, number, number] = [0, 0, 0, 255]; // QOI initial state: opaque black
   let run = 0;
 
   const totalPixels = width * height;
@@ -206,6 +205,11 @@ export function decodeQoi(bytes: Uint8Array): PixelContainer {
   const width  = view.getUint32(4, false);  // big-endian
   const height = view.getUint32(8, false);
   if (width === 0 || height === 0) throw new Error("QOI: invalid dimensions");
+
+  const MAX_DIMENSION = 16384;
+  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+    throw new Error(`QOI: dimensions ${width}×${height} exceed maximum ${MAX_DIMENSION}`);
+  }
 
   const totalPixels = width * height;
 

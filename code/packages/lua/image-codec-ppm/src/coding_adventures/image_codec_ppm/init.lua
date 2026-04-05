@@ -206,6 +206,11 @@ function M.decode_ppm(data)
         error("decode_ppm: invalid height '" .. height_str .. "'")
     end
 
+    local MAX_DIMENSION = 16384
+    if width > MAX_DIMENSION or height > MAX_DIMENSION then
+        error("decode_ppm: image dimensions too large")
+    end
+
     -- Token 4: max value
     local maxval_str
     maxval_str, pos = next_token(data, pos)

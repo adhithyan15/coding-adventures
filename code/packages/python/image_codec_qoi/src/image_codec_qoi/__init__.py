@@ -15,6 +15,8 @@ from pixel_container import ImageCodec, PixelContainer, create_pixel_container
 
 __all__ = ["QoiCodec", "encode_qoi", "decode_qoi"]
 
+_MAX_DIMENSION = 16384
+
 _MAGIC = b"qoif"
 _END_MARKER = bytes([0, 0, 0, 0, 0, 0, 0, 1])
 
@@ -128,6 +130,8 @@ def decode_qoi(data: bytes) -> PixelContainer:
     width, height = struct.unpack_from(">II", data, 4)
     if width == 0 or height == 0:
         raise ValueError("QOI: invalid dimensions")
+    if width > _MAX_DIMENSION or height > _MAX_DIMENSION:
+        raise ValueError(f"QOI: dimensions {width}×{height} exceed maximum {_MAX_DIMENSION}")
 
     total = width * height
     payload_len = len(data) - 22

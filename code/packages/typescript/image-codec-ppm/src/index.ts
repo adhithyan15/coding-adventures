@@ -124,6 +124,12 @@ export function decodePpm(bytes: Uint8Array): PixelContainer {
   if (hRes.value === null) throw new Error("PPM: invalid dimensions");
   const height = hRes.value;
 
+  const MAX_DIMENSION = 16384;
+  if (width <= 0 || height <= 0) throw new Error(`PPM: invalid dimensions (${width}×${height})`);
+  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+    throw new Error(`PPM: dimensions ${width}×${height} exceed maximum ${MAX_DIMENSION}`);
+  }
+
   skipWhitespaceAndComments(bytes, { pos });
   const maxRes = readInt(bytes, { pos });
   pos = maxRes.pos;
@@ -181,7 +187,11 @@ function readToken(bytes: Uint8Array, cur: Cursor): { token: string | null; pos:
   skipWhitespaceAndComments(bytes, cur);
   if (cur.pos >= bytes.length) return { token: null, pos: cur.pos };
   const start = cur.pos;
-  while (cur.pos < bytes.length && !isAsciiWhitespace(bytes[cur.pos])) cur.pos++;
+  const MAX_TOKEN_LEN = 20;
+  while (cur.pos < bytes.length && !isAsciiWhitespace(bytes[cur.pos])) {
+    cur.pos++;
+    if (cur.pos - start > MAX_TOKEN_LEN) throw new Error('PPM: header token too long');
+  }
   const token = new TextDecoder().decode(bytes.slice(start, cur.pos));
   return { token, pos: cur.pos };
 }

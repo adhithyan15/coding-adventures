@@ -103,6 +103,9 @@ defmodule CodingAdventures.ImageCodecQoi do
 
   # ── Constants ────────────────────────────────────────────────────────────────
 
+  # Maximum allowed dimension to prevent oversized image allocation
+  @max_dimension 16384
+
   # The "qoif" magic bytes at the start of every QOI file
   @qoi_magic "qoif"
 
@@ -323,7 +326,11 @@ defmodule CodingAdventures.ImageCodecQoi do
           _channels::8,
           _colorspace::8,
           rest::binary>> ->
-          {:ok, {width, height, rest}}
+          if width > @max_dimension or height > @max_dimension do
+            {:error, "QOI: image dimensions too large"}
+          else
+            {:ok, {width, height, rest}}
+          end
 
         _ ->
           {:error, "Invalid QOI header"}

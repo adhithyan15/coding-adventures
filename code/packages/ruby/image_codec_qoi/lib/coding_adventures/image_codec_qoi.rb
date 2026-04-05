@@ -65,6 +65,8 @@ require "coding_adventures/pixel_container"
 
 module CodingAdventures
   module ImageCodecQoi
+    MAX_DIMENSION = 16384
+
     # Magic bytes that identify a QOI file.
     MAGIC = "qoif"
 
@@ -285,6 +287,8 @@ module CodingAdventures
       _channels = s.getbyte(12)  # informational; we always produce RGBA containers
       # colorspace at offset 13 is informational — not validated
 
+      raise ArgumentError, "QOI: dimensions too large" if width > MAX_DIMENSION || height > MAX_DIMENSION
+
       pc     = CodingAdventures::PixelContainer
       canvas = pc.create(width, height)
 
@@ -306,10 +310,8 @@ module CodingAdventures
           # -------------------------------------------------------------------
           # QOI_OP_RGBA — 5 bytes: tag + R + G + B + A
           # -------------------------------------------------------------------
-          r = s.getbyte(pos)
-          g = s.getbyte(pos + 1)
-          b = s.getbyte(pos + 2)
-          a = s.getbyte(pos + 3)
+          raise ArgumentError, "QOI: data truncated in RGBA op" if pos + 3 >= s.bytesize
+          r = s.getbyte(pos); g = s.getbyte(pos + 1); b = s.getbyte(pos + 2); a = s.getbyte(pos + 3)
           pos += 4
           running[pixel_hash(r, g, b, a)] = [r, g, b, a]
 
@@ -322,9 +324,8 @@ module CodingAdventures
           # -------------------------------------------------------------------
           # QOI_OP_RGB — 4 bytes: tag + R + G + B  (alpha unchanged)
           # -------------------------------------------------------------------
-          r = s.getbyte(pos)
-          g = s.getbyte(pos + 1)
-          b = s.getbyte(pos + 2)
+          raise ArgumentError, "QOI: data truncated in RGB op" if pos + 2 >= s.bytesize
+          r = s.getbyte(pos); g = s.getbyte(pos + 1); b = s.getbyte(pos + 2)
           pos += 3
           running[pixel_hash(r, g, b, a)] = [r, g, b, a]
 

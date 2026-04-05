@@ -79,21 +79,39 @@ type ImageCodec interface {
 	Decode([]byte) (*PixelContainer, error)
 }
 
+// MaxDimension is the largest width or height accepted by New.
+// Images larger than 16384×16384 pixels (~1 GiB at 4 bytes/pixel) are
+// rejected to prevent denial-of-service via unbounded heap allocation.
+const MaxDimension = 16384
+
 // New returns a zeroed PixelContainer with the given dimensions.
 //
 // All pixels start as (0, 0, 0, 0) — transparent black.
+//
+// New panics if either dimension exceeds MaxDimension, to prevent
+// denial-of-service via crafted image headers that request enormous
+// allocations. The uint64 arithmetic for the total size prevents the
+// uint32 overflow that would otherwise silently truncate the allocation.
 //
 // Example:
 //
 //	img := pixelcontainer.New(640, 480)
 //	// img is now a 640×480 blank canvas
 func New(width, height uint32) *PixelContainer {
-	// Allocate exactly width * height * 4 bytes, all zeroed.
-	// Go's make zeroes the slice, so every channel starts at 0.
+	if width == 0 || height == 0 {
+		return &PixelContainer{Width: width, Height: height, Data: []byte{}}
+	}
+	if width > MaxDimension || height > MaxDimension {
+		panic(fmt.Sprintf("pixelcontainer: dimensions %dx%d exceed MaxDimension (%d)", width, height, MaxDimension))
+	}
+	// Use uint64 arithmetic to compute the buffer size, avoiding uint32
+	// overflow that could occur with large dimensions (e.g. 65536×65536 would
+	// wrap to 0 with uint32, causing make to allocate an empty slice).
+	size := uint64(width) * uint64(height) * 4
 	return &PixelContainer{
 		Width:  width,
 		Height: height,
-		Data:   make([]byte, width*height*4),
+		Data:   make([]byte, size),
 	}
 }
 

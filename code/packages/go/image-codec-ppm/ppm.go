@@ -212,12 +212,18 @@ func DecodePpm(data []byte) (*pc.PixelContainer, error) {
 	// ── Step 6: Pixel data ───────────────────────────────────────────────────
 	w := uint32(widthVal)
 	h := uint32(heightVal)
-	expectedBytes := int(w) * int(h) * 3
-	if pos+expectedBytes > len(data) {
-		return nil, fmt.Errorf(
-			"imagecodecppm: pixel data truncated: need %d bytes, have %d",
-			expectedBytes, len(data)-pos,
-		)
+
+	// Reject oversized images before calling pc.New (which would panic) and
+	// before computing expectedBytes (which could overflow on 32-bit platforms).
+	if w > pc.MaxDimension || h > pc.MaxDimension {
+		return nil, fmt.Errorf("imagecodecppm: image dimensions %dx%d exceed maximum", w, h)
+	}
+
+	// Use int64 arithmetic so that very large (but still sub-MaxDimension) images
+	// cannot overflow int on 32-bit platforms.
+	expectedBytes := int64(w) * int64(h) * 3
+	if int64(pos)+expectedBytes > int64(len(data)) {
+		return nil, errors.New("imagecodecppm: pixel data truncated")
 	}
 
 	img := pc.New(w, h)

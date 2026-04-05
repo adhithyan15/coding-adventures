@@ -109,6 +109,8 @@ use CodingAdventures::PixelContainer;
 our $VERSION   = '0.01';
 our @EXPORT_OK = qw(encode_qoi decode_qoi mime_type);
 
+use constant MAX_DIMENSION => 16384;
+
 # QOI chunk op-code tags
 use constant QOI_OP_RGB   => 0xFE;   # 11111110
 use constant QOI_OP_RGBA  => 0xFF;   # 11111111
@@ -370,6 +372,7 @@ sub decode_qoi {
     my ($w, $h) = unpack('N N', substr($bytes, 4, 8));
     die "QOI: width must be positive" unless $w > 0;
     die "QOI: height must be positive" unless $h > 0;
+    die "dimensions too large" if $w > MAX_DIMENSION || $h > MAX_DIMENSION;
 
     my $channels    = unpack('C', substr($bytes, 12, 1));
     # colorspace at offset 13 — we read it but don't use it (display only)

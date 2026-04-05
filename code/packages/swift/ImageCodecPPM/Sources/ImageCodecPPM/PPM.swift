@@ -226,6 +226,11 @@ public func decodePpm(_ bytes: [UInt8]) throws -> PixelContainer {
         throw ImageCodecPPMError.invalidDimensions
     }
 
+    let maxDimension = 16384
+    guard width <= maxDimension, height <= maxDimension else {
+        throw ImageCodecPPMError.invalidDimensions
+    }
+
     // ── 4. Parse maxval ───────────────────────────────────────────────────
 
     skipWhitespaceAndComments()

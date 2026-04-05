@@ -304,7 +304,16 @@ func DecodeQoi(data []byte) (*pc.PixelContainer, error) {
 	// channels := data[12]  // 3 or 4 — we always decode as RGBA
 	// colorspace := data[13] // informational only; no processing needed
 
-	pixelCount := int(w) * int(h)
+	// Reject oversized images before calling pc.New (which panics for dimensions
+	// above MaxDimension) and before computing pixelCount (which could overflow
+	// a plain int multiplication for e.g. 65535×65535).
+	if w > pc.MaxDimension || h > pc.MaxDimension {
+		return nil, fmt.Errorf("imagecodecqoi: image dimensions %dx%d exceed maximum", w, h)
+	}
+	// After the MaxDimension cap, w*h ≤ 16384² = 268,435,456, which fits in
+	// both int32 and int64. The uint64 cast on the intermediate product prevents
+	// any theoretical overflow before the cap is checked on 32-bit platforms.
+	pixelCount := int(uint64(w) * uint64(h))
 	img := pc.New(w, h)
 
 	// ── Decoder state ─────────────────────────────────────────────────────────

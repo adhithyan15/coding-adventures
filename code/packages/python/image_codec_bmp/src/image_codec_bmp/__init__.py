@@ -15,6 +15,8 @@ from pixel_container import ImageCodec, PixelContainer, create_pixel_container
 
 __all__ = ["BmpCodec", "encode_bmp", "decode_bmp"]
 
+_MAX_DIMENSION = 16384
+
 
 class BmpCodec(ImageCodec):
     """BMP image encoder and decoder."""
@@ -106,6 +108,9 @@ def decode_bmp(data: bytes) -> PixelContainer:
         raise ValueError(f"BMP: unsupported bit depth {bit_count}, only 32 supported")
     if compression != 0:
         raise ValueError(f"BMP: unsupported compression {compression}")
+
+    if width > _MAX_DIMENSION or height > _MAX_DIMENSION:
+        raise ValueError(f"BMP: dimensions {width}×{height} exceed maximum {_MAX_DIMENSION}")
 
     pixel_bytes = width * height * 4
     pixel_end = pixel_offset + pixel_bytes

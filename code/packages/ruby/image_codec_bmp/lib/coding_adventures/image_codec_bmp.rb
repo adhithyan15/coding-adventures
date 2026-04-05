@@ -54,6 +54,8 @@ require "coding_adventures/pixel_container"
 
 module CodingAdventures
   module ImageCodecBmp
+    MAX_DIMENSION = 16384
+
     # -------------------------------------------------------------------------
     # BmpCodec — class that satisfies the ImageCodec mixin interface.
     # -------------------------------------------------------------------------
@@ -189,6 +191,9 @@ module CodingAdventures
 
       raise ArgumentError, "Unsupported BMP bit depth: #{bit_count} (expected 32)" unless bit_count == 32
       raise ArgumentError, "Unsupported BMP compression: #{compression} (expected 0)" unless compression == 0
+
+      raise ArgumentError, "BMP: invalid dimensions" if width.zero? || bi_height.zero?
+      raise ArgumentError, "BMP: dimensions too large" if width > MAX_DIMENSION || bi_height.abs > MAX_DIMENSION
 
       # -----------------------------------------------------------------------
       # Determine scan-line direction.

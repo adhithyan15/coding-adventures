@@ -349,6 +349,11 @@ public func decodeBmp(_ bytes: [UInt8]) throws -> PixelContainer {
         throw ImageCodecBMPError.invalidDimensions
     }
 
+    let maxDimension = 16384
+    guard widthSigned <= maxDimension, abs(heightSigned) <= maxDimension else {
+        throw ImageCodecBMPError.invalidDimensions
+    }
+
     let w = Int(widthSigned)
     // Use the absolute value of height for storage; track direction separately.
     let h = Int(abs(heightSigned))

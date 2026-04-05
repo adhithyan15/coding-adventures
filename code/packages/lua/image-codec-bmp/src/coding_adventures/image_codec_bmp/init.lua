@@ -236,6 +236,11 @@ function M.decode_bmp(data)
         error("decode_bmp: invalid dimensions " .. width .. "x" .. height)
     end
 
+    local MAX_DIMENSION = 16384
+    if width > MAX_DIMENSION or height > MAX_DIMENSION then
+        error("decode_bmp: invalid or oversized image dimensions")
+    end
+
     local expected_pixel_bytes = width * height * 4
     if #data < off_bits + expected_pixel_bytes then
         error("decode_bmp: pixel data truncated")

@@ -32,6 +32,8 @@ require "coding_adventures/pixel_container"
 
 module CodingAdventures
   module ImageCodecPpm
+    MAX_DIMENSION = 16384
+
     # -------------------------------------------------------------------------
     # PpmCodec — satisfies the ImageCodec mixin interface.
     # -------------------------------------------------------------------------
@@ -140,6 +142,8 @@ module CodingAdventures
 
       width  = Integer(read_token.call)
       height = Integer(read_token.call)
+      raise ArgumentError, "PPM: invalid dimensions" unless width.positive? && height.positive?
+      raise ArgumentError, "PPM: dimensions too large" if width > MAX_DIMENSION || height > MAX_DIMENSION
       maxval = Integer(read_token.call)
       raise ArgumentError, "PPM maxval must be 255 (got #{maxval})" unless maxval == 255
 

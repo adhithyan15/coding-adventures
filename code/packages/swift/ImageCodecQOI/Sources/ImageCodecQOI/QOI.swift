@@ -508,6 +508,11 @@ public func decodeQoi(_ bytes: [UInt8]) throws -> PixelContainer {
         throw ImageCodecQOIError.invalidDimensions
     }
 
+    let maxDimension = 16384
+    guard w <= maxDimension, h <= maxDimension else {
+        throw ImageCodecQOIError.invalidDimensions
+    }
+
     let channels = bytes[12]
     guard channels == 3 || channels == 4 else {
         throw ImageCodecQOIError.unsupportedChannels

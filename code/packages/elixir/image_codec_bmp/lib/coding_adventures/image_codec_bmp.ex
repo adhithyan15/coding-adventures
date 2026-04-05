@@ -72,6 +72,9 @@ defmodule CodingAdventures.ImageCodecBmp do
 
   # ── BMP constants ────────────────────────────────────────────────────────────
 
+  # Maximum allowed dimension to prevent oversized image allocation
+  @max_dimension 16384
+
   # "BM" signature
   @bmp_signature <<0x42, 0x4D>>
 
@@ -220,7 +223,11 @@ defmodule CodingAdventures.ImageCodecBmp do
           compression::little-32,
           _pixel_data_size::little-32,
           _rest::binary>> ->
-          {:ok, {width, abs(height), bpp, compression, pixel_offset}}
+          if width > @max_dimension or abs(height) > @max_dimension do
+            {:error, "BMP: image dimensions too large"}
+          else
+            {:ok, {width, abs(height), bpp, compression, pixel_offset}}
+          end
 
         _ ->
           {:error, "Invalid BMP header"}
@@ -231,6 +238,10 @@ defmodule CodingAdventures.ImageCodecBmp do
   # Extract pixels from the raw pixel data section of the BMP.
   defp extract_pixels(data, w, h, bpp, compression, pixel_offset)
        when bpp in [24, 32] and compression in [0, 3] do
+    # Guard against a pixel_offset that exceeds the file length
+    if pixel_offset > byte_size(data) do
+      {:error, "BMP: pixel offset exceeds file size"}
+    else
     # Skip to the pixel data
     <<_header::binary-size(pixel_offset), pixel_data::binary>> = data
 
@@ -261,6 +272,7 @@ defmodule CodingAdventures.ImageCodecBmp do
     case result do
       {:error, _} = err -> err
       container -> {:ok, container}
+    end
     end
   end
 

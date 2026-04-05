@@ -383,6 +383,12 @@ function M.decode_qoi(data)
     if width < 1 or height < 1 then
         error("decode_qoi: invalid dimensions " .. width .. "x" .. height)
     end
+
+    local MAX_DIMENSION = 16384
+    if width > MAX_DIMENSION or height > MAX_DIMENSION then
+        error("decode_qoi: image dimensions too large")
+    end
+
     if channels ~= 3 and channels ~= 4 then
         error("decode_qoi: unsupported channels " .. channels)
     end
@@ -424,6 +430,7 @@ function M.decode_qoi(data)
             -- -----------------------------------------------------------------
             -- QOI_OP_RGBA: read 4 raw bytes
             -- -----------------------------------------------------------------
+            if pos + 3 > #data then error("decode_qoi: truncated RGBA chunk") end
             r = string.byte(data, pos)
             g = string.byte(data, pos + 1)
             b = string.byte(data, pos + 2)
@@ -434,6 +441,7 @@ function M.decode_qoi(data)
             -- -----------------------------------------------------------------
             -- QOI_OP_RGB: read 3 raw bytes, keep previous alpha
             -- -----------------------------------------------------------------
+            if pos + 2 > #data then error("decode_qoi: truncated RGB chunk") end
             r = string.byte(data, pos)
             g = string.byte(data, pos + 1)
             b = string.byte(data, pos + 2)
@@ -486,6 +494,7 @@ function M.decode_qoi(data)
                 --   dr = ((b2 >> 4) & 0x0F) - 8 + dg
                 --   db = ( b2       & 0x0F) - 8 + dg
                 -- -------------------------------------------------------------
+                if pos > #data then error("decode_qoi: truncated LUMA chunk") end
                 local b2 = string.byte(data, pos)
                 pos = pos + 1
                 local dg = (b1 & 0x3F) - 32

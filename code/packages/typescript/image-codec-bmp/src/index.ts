@@ -155,6 +155,15 @@ export function decodeBmp(bytes: Uint8Array): PixelContainer {
   if (bitCount !== 32) throw new Error(`BMP: unsupported bit depth ${bitCount}, only 32 supported`);
   if (compression !== 0) throw new Error(`BMP: unsupported compression ${compression}`);
 
+  const MAX_DIMENSION = 16384;
+  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+    throw new Error(`BMP: dimensions ${width}×${height} exceed maximum ${MAX_DIMENSION}`);
+  }
+  const totalPixels = width * height;
+  if (totalPixels > MAX_DIMENSION * MAX_DIMENSION) {
+    throw new Error(`BMP: image too large`);
+  }
+
   const pixelBytes = width * height * 4;
   const pixelEnd   = pixelOffset + pixelBytes;
   if (bytes.length < pixelEnd) throw new Error("BMP: pixel data truncated");
