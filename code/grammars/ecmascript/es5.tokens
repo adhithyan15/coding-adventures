@@ -1,0 +1,202 @@
+# ECMAScript 5 (2009) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 5
+#
+# ECMA-262, 5th Edition — December 2009
+#
+# ES5 landed a full decade after ES3 (ES4 was abandoned after years of
+# debate). The syntactic changes are modest — the real innovations were
+# strict mode semantics, native JSON support, and property descriptors.
+#
+# What ES5 adds over ES3:
+#   - `debugger` keyword (moved from future-reserved to keyword)
+#   - Getter/setter syntax in object literals: { get x() {}, set x(v) {} }
+#   - String line continuation (backslash before newline)
+#   - Trailing commas in object literals (already in arrays since ES1)
+#
+# What ES5 does NOT have:
+#   - No let/const (added in ES2015)
+#   - No class syntax (added in ES2015)
+#   - No arrow functions (added in ES2015)
+#   - No template literals (added in ES2015)
+#   - No modules (added in ES2015)
+#   - No destructuring (added in ES2015)
+#
+# Strict Mode
+# -----------
+# ES5 introduced "use strict" directive prologue. Strict mode is a SEMANTIC
+# restriction, not a syntactic one — the grammar is identical. The parser
+# recognizes the directive and applies restrictions as post-parse validation:
+#   - No `with` statement
+#   - No duplicate parameter names
+#   - No octal literals
+#   - `arguments` and `eval` cannot be assigned to
+#   - Future-reserved words in strict mode: implements, interface, let,
+#     package, private, protected, public, static, yield
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# Numbers: same as ES3.
+
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# Strings: same as ES3, but ES5 adds line continuation — a backslash
+# immediately before a line terminator continues the string on the next line.
+# The regex pattern remains the same because \\ already matches escaped
+# characters; the line-continuation behavior is a lexer semantic.
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# Regular expression literals: same as ES3 (g, i, m flags).
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gim]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# Same as ES3 — no new operators in ES5.
+
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# ES5 promotes `debugger` from future-reserved (ES3) to a full keyword.
+# All ES3 keywords are retained.
+
+keywords:
+  break
+  case
+  catch
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  finally
+  for
+  function
+  if
+  in
+  instanceof
+  new
+  return
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# ES5 significantly reduces the future-reserved list compared to ES3.
+# Many ES3 reserved words are no longer reserved in ES5 non-strict mode
+# (abstract, boolean, byte, char, etc.). In strict mode, additional words
+# are reserved (implements, interface, let, package, private, protected,
+# public, static, yield) — but that is a semantic restriction, not a
+# lexical one that we enforce here.
+
+reserved:
+  class
+  const
+  enum
+  export
+  extends
+  import
+  super
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/

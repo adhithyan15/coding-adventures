@@ -1,0 +1,253 @@
+# ECMAScript 2023 (ES14) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2023
+#
+# ECMA-262, 14th Edition — June 2023
+#
+# ES2023 has minimal syntax changes. The only lexical addition is the
+# hashbang (shebang) comment, which formalizes a pattern that Node.js and
+# other JavaScript runtimes have supported informally for years.
+#
+# New features:
+#
+#   1. Hashbang comments: `#!/usr/bin/env node`
+#      Valid ONLY at byte position 0 of the source file. Commonly used in
+#      CLI scripts to tell Unix-like operating systems which interpreter
+#      to use when the file is executed directly:
+#
+#        #!/usr/bin/env node
+#        console.log("Hello from a CLI tool!");
+#
+#      Without this, you'd need to explicitly call `node script.js`.
+#      With it, you can `chmod +x script.js && ./script.js`.
+#
+#      Before ES2023, runtimes stripped the hashbang line before parsing.
+#      Now it is formally part of the grammar — the parser recognizes it
+#      as a valid comment at position 0.
+#
+#   2. Array.prototype.findLast/findLastIndex — runtime only
+#   3. Change Array by copy (toSorted, toReversed, toSpliced, with) — runtime only
+#   4. Symbols as WeakMap keys — runtime only
+#
+# Token changes from ES2022:
+#   - Added: HASHBANG = /^#![^\n]*/
+#     Note: The `^` means "start of input" — this token is only valid at
+#     byte position 0. The lexer must enforce this positional constraint.
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+# --- NEW IN ES2023: Hashbang comment ---
+#
+# The hashbang (or "shebang") line is a Unix convention dating back to the
+# 1980s. The kernel reads `#!` at position 0 and uses the rest of the line
+# as the interpreter path. JavaScript finally formalized this in the grammar.
+#
+# Constraints:
+#   - MUST be at byte position 0 (not just "first line" — literally the first
+#     two characters of the file must be `#!`)
+#   - Continues to end of line (like a line comment)
+#   - Is treated as a comment (not emitted as a token in most parsers)
+#
+# Best implementation strategy: check for `#!` before starting the main
+# lexer loop, or use a pre-tokenize hook.
+
+HASHBANG = /^#![^\n]*/
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (with ES2021 numeric separators) ---
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (with ES2022 `d` flag) ---
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuy]*/
+
+# ============================================================================
+# Multi-character operators (unchanged from ES2022)
+# ============================================================================
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+
+context_keywords:
+  as
+  async
+  await
+  from
+  of
+  get
+  set
+  static
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

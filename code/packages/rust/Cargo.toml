@@ -168,4 +168,11 @@ members = [
   "wasm-validator",
   "wasm-execution",
   "wasm-runtime",
+  "vigenere-cipher",
+  "ecmascript-es1-lexer",
+  "ecmascript-es3-lexer",
+  "ecmascript-es5-lexer",
+  "ecmascript-es1-parser",
+  "ecmascript-es3-parser",
+  "ecmascript-es5-parser",
 ]

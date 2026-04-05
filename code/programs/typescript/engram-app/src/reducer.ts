@@ -38,6 +38,7 @@ import {
   createInitialProgress,
   INITIAL_EASE_FACTOR,
 } from "./sm2.js";
+import { generateSecureId } from "./secure-id.js";
 
 export type { AppState };
 
@@ -55,10 +56,7 @@ export const initialState: AppState = {
 // ── ID generation ───────────────────────────────────────────────────────────
 
 function generateId(): string {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return generateSecureId();
 }
 
 // ── Reducer ─────────────────────────────────────────────────────────────────

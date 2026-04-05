@@ -1,0 +1,222 @@
+# ECMAScript 3 (1999) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 3
+#
+# ECMA-262, 3rd Edition — December 1999
+#
+# ES3 was the version that made JavaScript a real, complete language. It landed
+# two years after ES1 and added features that developers today consider
+# fundamental: regular expressions, error handling, and strict equality.
+#
+# What ES3 adds over ES1:
+#   - === and !== (strict equality — no type coercion)
+#   - try/catch/finally/throw (structured error handling)
+#   - Regular expression literals (/pattern/flags)
+#   - `instanceof` operator
+#   - Expanded future-reserved words
+#
+# What ES3 does NOT have:
+#   - No getters/setters in object literals (added in ES5)
+#   - No strict mode (added in ES5)
+#   - No let/const/class/arrow functions (added in ES2015)
+#   - No template literals (added in ES2015)
+#
+# Regex vs Division Ambiguity
+# ---------------------------
+# The `/` character is ambiguous in JavaScript: it could start a regex literal
+# or be the division operator. This requires context-sensitive lexing using
+# the previousToken() callback (Extension 1 from lexer-parser-extensions.md).
+#
+#   / is REGEX after:  = ( [ { , ; : ? ! & | ^ ~ + - * / % < > return
+#                      typeof void delete new in instanceof case throw
+#   / is SLASH after:  ) ] NAME NUMBER STRING ++ --
+#
+# The GrammarLexer handles this via the on_token callback mechanism.
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# Numbers: same as ES1 — decimal, float, hex. No binary or octal prefixes.
+
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# Strings: same as ES1 — single and double quoted with backslash escapes.
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# Regular expression literals (NEW in ES3).
+# The pattern is everything between unescaped slashes, followed by optional flags.
+# Flags: g (global), i (case-insensitive), m (multiline).
+# Note: The lexer must use previousToken() to disambiguate from division.
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gim]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# ES3 adds === and !== (strict equality). These must come BEFORE == and !=
+# in the token file because of first-match-wins ordering.
+
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# ES3 adds 5 keywords over ES1: catch, finally, instanceof, throw, try.
+# The `instanceof` operator checks prototype chain membership.
+
+keywords:
+  break
+  case
+  catch
+  continue
+  default
+  delete
+  do
+  else
+  finally
+  for
+  function
+  if
+  in
+  instanceof
+  new
+  return
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# ES3 significantly expanded the reserved word list. Many of these eventually
+# became real keywords in ES2015 (class, const, export, extends, import, super)
+# or were used in strict mode (implements, interface, private, protected, public).
+
+reserved:
+  abstract
+  boolean
+  byte
+  char
+  class
+  const
+  debugger
+  double
+  enum
+  export
+  extends
+  final
+  float
+  goto
+  implements
+  import
+  int
+  interface
+  long
+  native
+  package
+  private
+  protected
+  public
+  short
+  static
+  super
+  synchronized
+  throws
+  transient
+  volatile
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/

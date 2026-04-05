@@ -25,6 +25,12 @@
  *   cols: number       -- cached column count (data[0].length)
  * ```
  */
+function assertMatrixIndex(index: number, limit: number, axis: "row" | "col"): void {
+  if (!Number.isSafeInteger(index) || index < 0 || index >= limit) {
+    throw new Error(`${axis} index ${String(index)} out of bounds for size ${limit}.`);
+  }
+}
+
 export class Matrix {
   data: number[][];
   rows: number;
@@ -179,9 +185,8 @@ export class Matrix {
    * Throws if the index is out of bounds.
    */
   get(row: number, col: number): number {
-    if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
-      throw new Error(`Index (${row}, ${col}) out of bounds for ${this.rows}x${this.cols} matrix.`);
-    }
+    assertMatrixIndex(row, this.rows, "row");
+    assertMatrixIndex(col, this.cols, "col");
     return this.data[row][col];
   }
 
@@ -194,15 +199,10 @@ export class Matrix {
    *   M.get(0, 0)                 -> unchanged original value
    */
   set(row: number, col: number, value: number): Matrix {
-    // Coerce to integer to prevent prototype pollution via string keys
-    // like '__proto__'. The bounds check ensures valid array indices.
-    const r = Math.trunc(row);
-    const c = Math.trunc(col);
-    if (r < 0 || r >= this.rows || c < 0 || c >= this.cols) {
-      throw new Error(`Index (${r}, ${c}) out of bounds for ${this.rows}x${this.cols} matrix.`);
-    }
-    const newData = this.data.map(row => [...row]);
-    newData[r][c] = value;
+    assertMatrixIndex(row, this.rows, "row");
+    assertMatrixIndex(col, this.cols, "col");
+    const newData = this.data.map(r => [...r]);
+    newData[row][col] = value;
     return new Matrix(newData);
   }
 

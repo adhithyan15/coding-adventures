@@ -1,0 +1,146 @@
+# ML04 — Activation Functions
+
+## Overview
+
+The Activation Functions specification defines the fundamental non-linear transformations applied to neuron outputs in neural networks. Without activation functions, any composition of linear layers collapses to a single linear transformation — the network could only learn straight lines. Activation functions introduce the non-linearity that allows networks to approximate arbitrarily complex functions.
+
+This is a fundamental mathematical layer. It has absolutely no dependencies other than language-native math libraries (specifically `exp` and `tanh`). **These are purely standalone, composable scalar functions — each takes a single float and returns a single float.**
+
+## Layer Position
+
+```
+Inputs → Linear Layer → [YOU ARE HERE] → Loss Functions (ML01)
+                              ↑
+                    Gradient Descent (ML02) uses the derivatives
+```
+
+**Input from:** Raw scalar values (the pre-activation output of a linear layer).
+**Output to:** Transformed scalar values fed to the next layer or to a loss function.
+
+## Why These Three?
+
+Neural network literature has produced dozens of activation functions, but three dominate practice:
+
+| Function | Range | Use Case | Why It Matters |
+|----------|-------|----------|----------------|
+| **Sigmoid** | $(0, 1)$ | Output layer for binary classification | Maps any real number to a probability |
+| **ReLU** | $[0, \infty)$ | Hidden layers (default choice) | Computationally cheap, avoids vanishing gradients |
+| **Tanh** | $(-1, 1)$ | Hidden layers, zero-centered data | Like sigmoid but centered at zero |
+
+## The Three Activation Functions
+
+### Sigmoid
+
+$$\sigma(x) = \frac{1}{1 + e^{-x}}$$
+
+The sigmoid function squashes any real number into the range $(0, 1)$. It was the original activation function used in neural networks, inspired by the firing rate of biological neurons. For very negative $x$, the output approaches 0; for very positive $x$, it approaches 1; at $x = 0$, it returns exactly 0.5.
+
+**Overflow protection:** For $x < -709$, $e^{-x}$ overflows `float64`. Implementations must clamp: return `0.0` for $x < -709$ and `1.0` for $x > 709$.
+
+### ReLU (Rectified Linear Unit)
+
+$$\text{ReLU}(x) = \max(0, x)$$
+
+ReLU is the simplest and most widely used activation function in modern deep learning. It passes positive values through unchanged and zeros out negative values. Despite its simplicity, it solves the vanishing gradient problem that plagued sigmoid/tanh in deep networks — the gradient is either 0 or 1, never a tiny fraction.
+
+### Tanh (Hyperbolic Tangent)
+
+$$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$$
+
+Tanh is essentially a rescaled sigmoid: $\tanh(x) = 2\sigma(2x) - 1$. Its output is centered at zero (unlike sigmoid's centering at 0.5), which often leads to faster convergence during training because the gradients are better balanced.
+
+## Mathematical Derivatives
+
+For backpropagation, implementations must provide the derivative of each activation function with respect to its input $x$:
+
+| Function | Derivative Formula | Notes |
+|----------|-------------------|-------|
+| Sigmoid' | $\sigma(x) \cdot (1 - \sigma(x))$ | Maximum value of 0.25 at $x = 0$ |
+| ReLU' | $\begin{cases} 1 & \text{if } x > 0 \\ 0 & \text{if } x \leq 0 \end{cases}$ | Technically undefined at $x = 0$; convention is 0 |
+| Tanh' | $1 - \tanh^2(x)$ | Maximum value of 1.0 at $x = 0$ |
+
+## Public API
+
+```text
+// Package: activation-functions
+// All functions take a single float and return a single float.
+// These are pure, stateless scalar functions.
+
+func Sigmoid(x: Float) -> Float
+func SigmoidDerivative(x: Float) -> Float
+
+func Relu(x: Float) -> Float
+func ReluDerivative(x: Float) -> Float
+
+func Tanh(x: Float) -> Float
+func TanhDerivative(x: Float) -> Float
+```
+
+## Data Flow & Constraints
+
+1. All functions are **pure** — no side effects, no mutation, no state.
+2. All functions operate on **scalars** (single float values), not arrays.
+3. Sigmoid must handle overflow gracefully (clamp at $\pm 709$).
+4. ReLU derivative at exactly $x = 0$ returns `0.0` by convention.
+5. Implementations should use the language's native `exp` and `tanh` where available, unless the language philosophy is to build from first principles (e.g., using a custom `trig` package).
+
+## Test Strategy
+
+Activation functions are tested for exact mathematical parity using hardcoded scalar inputs across all language implementations.
+
+### Parity Test Vectors
+
+**Sigmoid**
+| Input | Expected Output | Notes |
+|-------|----------------|-------|
+| `0.0` | `0.5` | Midpoint |
+| `1.0` | `0.7310585786300049` | Standard positive |
+| `-1.0` | `0.2689414213699951` | Symmetry: $\sigma(-x) = 1 - \sigma(x)$ |
+| `10.0` | `0.9999546021312976` | Near saturation |
+| `-710.0` | `0.0` | Overflow clamp |
+| `710.0` | `1.0` | Overflow clamp |
+
+**Sigmoid Derivative**
+| Input | Expected Output | Notes |
+|-------|----------------|-------|
+| `0.0` | `0.25` | Maximum derivative |
+| `1.0` | `0.19661193324148185` | |
+| `10.0` | `~0.0000453978` | Near-zero (saturated region) |
+
+**ReLU**
+| Input | Expected Output |
+|-------|----------------|
+| `5.0` | `5.0` |
+| `-3.0` | `0.0` |
+| `0.0` | `0.0` |
+
+**ReLU Derivative**
+| Input | Expected Output |
+|-------|----------------|
+| `5.0` | `1.0` |
+| `-3.0` | `0.0` |
+| `0.0` | `0.0` |
+
+**Tanh**
+| Input | Expected Output | Notes |
+|-------|----------------|-------|
+| `0.0` | `0.0` | Midpoint |
+| `1.0` | `0.7615941559557649` | |
+| `-1.0` | `-0.7615941559557649` | Odd function: $\tanh(-x) = -\tanh(x)$ |
+
+**Tanh Derivative**
+| Input | Expected Output | Notes |
+|-------|----------------|-------|
+| `0.0` | `1.0` | Maximum derivative |
+| `1.0` | `0.4199743416140261` | |
+
+### Property-Based Tests
+
+In addition to parity vectors, implementations should verify these mathematical properties:
+
+1. **Sigmoid range:** For any $x$, $0 < \sigma(x) < 1$
+2. **Sigmoid symmetry:** $\sigma(-x) = 1 - \sigma(x)$
+3. **ReLU idempotence:** $\text{ReLU}(\text{ReLU}(x)) = \text{ReLU}(x)$
+4. **Tanh odd symmetry:** $\tanh(-x) = -\tanh(x)$
+5. **Tanh range:** For any $x$, $-1 < \tanh(x) < 1$
+6. **All derivatives non-negative:** Sigmoid', ReLU', and Tanh' are all $\geq 0$

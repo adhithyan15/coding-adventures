@@ -1,0 +1,304 @@
+# ECMAScript 2025 (ES16) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2025
+#
+# ECMA-262, 16th Edition — June 2025
+#
+# ES2025 is the most syntax-rich release since ES2022. It adds three major
+# features that have been in development for years: decorators, import
+# attributes, and explicit resource management (`using`).
+#
+# New features:
+#
+#   1. Decorators: `@decorator`
+#      A metaprogramming feature that lets you wrap or modify classes,
+#      methods, fields, and accessors using a clean annotation syntax:
+#
+#        @logged
+#        class UserService {
+#          @cached
+#          async getUser(id) { ... }
+#
+#          @validate(schema)
+#          set data(value) { ... }
+#        }
+#
+#      Decorators are functions that receive the decorated value and can
+#      replace it, wrap it, or register metadata about it. They execute
+#      at class evaluation time, not at runtime — they transform the class
+#      definition itself.
+#
+#      JavaScript decorators went through NINE TC39 proposals over 7 years
+#      before reaching Stage 4. The final design is intentionally simpler
+#      than TypeScript's experimental decorators (which were based on an
+#      earlier proposal).
+#
+#   2. Import attributes: `import json from "./data.json" with { type: "json" }`
+#      Provides metadata to the module loader about how to interpret the
+#      import. The `with` keyword introduces a block of key-value attributes:
+#
+#        import data from "./data.json" with { type: "json" };
+#        import styles from "./app.css" with { type: "css" };
+#        const mod = await import("./m.wasm", { with: { type: "webassembly" } });
+#
+#      This replaces the earlier `assert` keyword from the withdrawn import
+#      assertions proposal. The key difference: `with` attributes can
+#      influence HOW a module is loaded (not just assert properties after).
+#
+#   3. Explicit resource management: `using` and `await using`
+#      Deterministic cleanup of resources, similar to Python's `with`,
+#      C#'s `using`, and Java's try-with-resources:
+#
+#        {
+#          using handle = openFile("data.txt");
+#          // handle is automatically closed when the block exits
+#        }
+#
+#        {
+#          await using db = await connectDB();
+#          // db.close() is called asynchronously when block exits
+#        }
+#
+#      Resources implement `Symbol.dispose` (sync) or `Symbol.asyncDispose`
+#      (async). When the block exits — normally, via exception, or via
+#      return/break — the runtime calls the dispose method automatically.
+#
+#   4. RegExp duplicate named capture groups — runtime/regex internal
+#   5. Set methods (union, intersection, difference, etc.) — runtime only
+#   6. Iterator helpers (map, filter, take, etc.) — runtime only
+#   7. JSON modules — uses import attributes syntax
+#
+# Token changes from ES2024:
+#   - Added: AT = "@" (decorator prefix)
+#   - Added: `using` as a context keyword
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+HASHBANG = /^#![^\n]*/
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (with ES2021 numeric separators) ---
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (with ES2024 `v` flag) ---
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsvy]*/
+
+# ============================================================================
+# Multi-character operators (unchanged from ES2024)
+# ============================================================================
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# --- NEW IN ES2025: Decorator prefix ---
+#
+# The `@` symbol is used as the decorator prefix. It was previously unused
+# in JavaScript syntax (though it appeared in JSDoc comments and was used
+# by TypeScript's experimental decorators).
+#
+# The `@` must be immediately followed by an expression that evaluates to
+# a decorator function. Common patterns:
+#   @decorator           — simple decorator (identifier)
+#   @decorator(args)     — decorator factory (call expression)
+#   @mod.decorator       — member expression decorator
+#   @mod.decorator(args) — member expression factory
+
+AT = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# ES2025 adds `using` as a context keyword for explicit resource management.
+# Like `async` and `await`, `using` is NOT a full keyword — it can still be
+# used as an identifier in most positions. It only has special meaning in
+# declaration contexts:
+#
+#   using x = getResource();           // resource declaration
+#   await using y = await getAsync();  // async resource declaration
+#   const using = 42;                  // still valid as an identifier!
+#
+# The `with` keyword (already reserved since ES1) is reused for import
+# attributes — no new keyword needed.
+
+context_keywords:
+  as
+  async
+  await
+  from
+  of
+  get
+  set
+  static
+  using
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

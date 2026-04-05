@@ -1,0 +1,455 @@
+# ECMAScript 2024 (ES15) — Parser Grammar
+# @version 1
+# @ecmascript_edition 2024
+#
+# ECMA-262, 15th Edition — June 2024
+#
+# ES2024 introduces no new grammar productions. The only syntax-adjacent
+# change is the `v` regex flag (unicodeSets), which is a change to the
+# REGEX token pattern, not to the parser grammar.
+#
+# This grammar is identical to ES2023.
+#
+# Runtime additions (no syntax changes):
+#   - Well-formed Unicode strings (String.prototype.isWellFormed, toWellFormed)
+#   - Atomics.waitAsync
+#   - Resizable ArrayBuffer and growable SharedArrayBuffer
+#   - Array grouping: Object.groupBy(), Map.groupBy()
+#   - Promise.withResolvers
+#   - ArrayBuffer transfer (structuredClone)
+
+# ============================================================================
+# Program
+# ============================================================================
+
+program = [ HASHBANG ] { source_element } ;
+
+source_element = import_declaration
+               | export_declaration
+               | function_declaration
+               | generator_declaration
+               | async_function_declaration
+               | async_generator_declaration
+               | class_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+
+function_declaration = "function" NAME LPAREN [ formal_parameters ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+formal_parameters = formal_parameter { COMMA formal_parameter } [ COMMA ] ;
+
+formal_parameter = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
+                 | ELLIPSIS ( NAME | binding_pattern ) ;
+
+function_body = { source_element } ;
+
+generator_declaration = "function" STAR NAME LPAREN [ formal_parameters ] RPAREN
+                        LBRACE function_body RBRACE ;
+
+generator_expression = "function" STAR [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                       LBRACE function_body RBRACE ;
+
+yield_expression = "yield" [ STAR ] assignment_expression ;
+
+async_function_declaration = "async" "function" NAME LPAREN [ formal_parameters ] RPAREN
+                             LBRACE function_body RBRACE ;
+
+async_function_expression = "async" "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE ;
+
+async_arrow_function = "async" arrow_parameters ARROW concise_body ;
+
+async_method = "async" [ STAR ] property_name LPAREN [ formal_parameters ] RPAREN
+               LBRACE function_body RBRACE ;
+
+await_expression = "await" unary_expression ;
+
+async_generator_declaration = "async" "function" STAR NAME
+                              LPAREN [ formal_parameters ] RPAREN
+                              LBRACE function_body RBRACE ;
+
+async_generator_expression = "async" "function" STAR [ NAME ]
+                             LPAREN [ formal_parameters ] RPAREN
+                             LBRACE function_body RBRACE ;
+
+lexical_declaration = ( "let" | "const" ) binding_list SEMICOLON ;
+
+binding_list = lexical_binding { COMMA lexical_binding } ;
+
+lexical_binding = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+# --- Classes ---
+
+class_declaration = "class" NAME [ class_heritage ] class_body ;
+
+class_expression = "class" [ NAME ] [ class_heritage ] class_body ;
+
+class_heritage = "extends" left_hand_side_expression ;
+
+class_body = LBRACE { class_element } RBRACE ;
+
+class_element = [ "static" ] method_definition SEMICOLON
+              | [ "static" ] async_method SEMICOLON
+              | class_field_declaration
+              | private_method_definition
+              | static_block
+              | SEMICOLON ;
+
+class_field_declaration = [ "static" ] ( property_name | PRIVATE_NAME )
+                          [ EQUALS assignment_expression ] SEMICOLON ;
+
+private_method_definition = [ "static" ] PRIVATE_NAME
+                            LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] "get" PRIVATE_NAME LPAREN RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] "set" PRIVATE_NAME
+                            LPAREN formal_parameter RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] STAR PRIVATE_NAME
+                            LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE
+                          | [ "static" ] "async" [ STAR ] PRIVATE_NAME
+                            LPAREN [ formal_parameters ] RPAREN
+                            LBRACE function_body RBRACE ;
+
+static_block = "static" LBRACE { statement } RBRACE ;
+
+method_definition = property_name LPAREN [ formal_parameters ] RPAREN
+                    LBRACE function_body RBRACE
+                  | "get" property_name LPAREN RPAREN
+                    LBRACE function_body RBRACE
+                  | "set" property_name LPAREN formal_parameter RPAREN
+                    LBRACE function_body RBRACE
+                  | STAR property_name LPAREN [ formal_parameters ] RPAREN
+                    LBRACE function_body RBRACE ;
+
+# --- Modules ---
+
+import_declaration = "import" import_clause from_clause SEMICOLON
+                   | "import" module_specifier SEMICOLON ;
+
+import_clause = default_import [ COMMA named_imports ]
+              | default_import [ COMMA namespace_import ]
+              | named_imports
+              | namespace_import ;
+
+default_import = NAME ;
+
+named_imports = LBRACE [ import_specifier { COMMA import_specifier } [ COMMA ] ] RBRACE ;
+
+import_specifier = NAME [ "as" NAME ] ;
+
+namespace_import = STAR "as" NAME ;
+
+from_clause = "from" STRING ;
+
+module_specifier = STRING ;
+
+export_declaration = "export" "default" ( function_declaration | generator_declaration
+                                        | async_function_declaration
+                                        | async_generator_declaration
+                                        | class_declaration
+                                        | assignment_expression SEMICOLON )
+                   | "export" ( function_declaration | generator_declaration
+                              | async_function_declaration
+                              | async_generator_declaration
+                              | class_declaration | lexical_declaration
+                              | variable_statement )
+                   | "export" named_exports [ from_clause ] SEMICOLON
+                   | "export" STAR from_clause SEMICOLON ;
+
+named_exports = LBRACE [ export_specifier { COMMA export_specifier } [ COMMA ] ] RBRACE ;
+
+export_specifier = NAME [ "as" NAME ] ;
+
+# ============================================================================
+# Destructuring
+# ============================================================================
+
+binding_pattern = object_binding_pattern
+               | array_binding_pattern ;
+
+object_binding_pattern = LBRACE [ binding_property { COMMA binding_property } [ COMMA ] ]
+                         [ object_rest_property ] RBRACE ;
+
+object_rest_property = ELLIPSIS NAME ;
+
+array_binding_pattern = LBRACKET [ binding_element { COMMA binding_element } [ COMMA ] ] RBRACKET ;
+
+binding_property = property_name COLON binding_element
+                 | NAME [ EQUALS assignment_expression ] ;
+
+binding_element = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
+               | ELLIPSIS NAME ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | for_of_statement
+          | for_await_of_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | debugger_statement
+          | lexical_declaration
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = ( NAME | binding_pattern ) [ EQUALS assignment_expression ] ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list
+                  | "let" binding_list
+                  | "const" binding_list
+                  | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" binding_element
+                     | "const" binding_element
+                     | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+for_of_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" binding_element
+                     | "const" binding_element
+                     | left_hand_side_expression ) "of" assignment_expression
+                   RPAREN statement ;
+
+for_await_of_statement = "for" "await" LPAREN
+                           ( "var" variable_declaration
+                           | "let" binding_element
+                           | "const" binding_element
+                           | left_hand_side_expression ) "of" assignment_expression
+                         RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" [ LPAREN NAME RPAREN ] block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" expression SEMICOLON ;
+
+debugger_statement = "debugger" SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+assignment_expression = conditional_expression
+                      | arrow_function
+                      | async_arrow_function
+                      | yield_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_STAR_EQUALS
+                    | STAR_EQUALS | SLASH_EQUALS | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS | PIPE_EQUALS | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS
+                    | OR_OR_EQUALS | AND_AND_EQUALS | NULLISH_COALESCE_EQUALS ;
+
+conditional_expression = nullish_coalescing_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+nullish_coalescing_expression = logical_or_expression
+                                { NULLISH_COALESCE logical_or_expression } ;
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression }
+                      | PRIVATE_NAME "in" shift_expression ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = exponentiation_expression
+                            { ( STAR | SLASH | PERCENT ) exponentiation_expression } ;
+
+exponentiation_expression = unary_expression [ STAR_STAR exponentiation_expression ] ;
+
+unary_expression = postfix_expression
+                 | await_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+left_hand_side_expression = call_expression
+                          | optional_chain_expression
+                          | new_expression ;
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | DOT PRIVATE_NAME
+                  | LBRACKET expression RBRACKET | template_literal } ;
+
+optional_chain_expression = member_expression
+                            { OPTIONAL_CHAIN NAME
+                            | OPTIONAL_CHAIN PRIVATE_NAME
+                            | OPTIONAL_CHAIN LBRACKET expression RBRACKET
+                            | OPTIONAL_CHAIN arguments
+                            | DOT NAME
+                            | DOT PRIVATE_NAME
+                            | LBRACKET expression RBRACKET
+                            | arguments
+                            | template_literal } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+member_expression = primary_expression
+                    { DOT NAME | DOT PRIVATE_NAME
+                    | LBRACKET expression RBRACKET | template_literal }
+                  | "new" member_expression arguments
+                  | "super" DOT NAME
+                  | "super" LBRACKET expression RBRACKET
+                  | "new" DOT "target" ;
+
+arguments = LPAREN [ argument_list [ COMMA ] ] RPAREN ;
+
+argument_list = ( spread_element | assignment_expression )
+                { COMMA ( spread_element | assignment_expression ) } ;
+
+spread_element = ELLIPSIS assignment_expression ;
+
+arrow_function = arrow_parameters ARROW concise_body ;
+
+arrow_parameters = NAME
+                 | LPAREN [ formal_parameters ] RPAREN ;
+
+concise_body = assignment_expression
+             | LBRACE function_body RBRACE ;
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | BIGINT
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | generator_expression
+                   | async_function_expression
+                   | class_expression
+                   | template_literal
+                   | dynamic_import
+                   | import_meta
+                   | LPAREN expression RPAREN ;
+
+dynamic_import = "import" LPAREN assignment_expression RPAREN ;
+
+import_meta = "import" DOT "meta" ;
+
+array_literal = LBRACKET [ element_list ] RBRACKET ;
+
+element_list = [ spread_element | assignment_expression ]
+               { COMMA [ spread_element | assignment_expression ] } ;
+
+object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
+
+property_definition = property_name COLON assignment_expression
+                    | NAME
+                    | method_definition
+                    | async_method
+                    | object_spread_property ;
+
+object_spread_property = ELLIPSIS assignment_expression ;
+
+property_name = NAME
+              | STRING
+              | NUMBER
+              | LBRACKET assignment_expression RBRACKET ;
+
+function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
+                      LBRACE function_body RBRACE ;
+
+template_literal = TEMPLATE_NO_SUB
+                 | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
+
+template_span = expression TEMPLATE_MIDDLE ;
