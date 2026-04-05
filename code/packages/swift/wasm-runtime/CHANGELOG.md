@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+
+- WasmRuntime: complete runtime composing parser, validator, and execution engine
+- WasmInstance: live module instance with memory, tables, globals, exports
+- WasiStub: minimal WASI implementation (fd_write, proc_exit) for I/O programs
+- Full instantiation pipeline: import resolution, memory/table allocation,
+  global initialization, data/element segment application, start function call
+- loadAndRun() convenience method for parse-validate-instantiate-call in one step
+- call() method for invoking exports by name with automatic type conversion
+- Comprehensive test suite (10 tests) including end-to-end square(5)=25,
+  factorial(5)=120, add(3,4)=7
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

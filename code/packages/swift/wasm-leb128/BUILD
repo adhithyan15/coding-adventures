@@ -1,1 +1,1 @@
-swift test --enable-code-coverage --verbose
+if command -v xcrun >/dev/null 2>&1; then xcrun swift test; else swift test; fi

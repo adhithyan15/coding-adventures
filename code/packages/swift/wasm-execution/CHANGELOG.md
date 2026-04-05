@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+
+- Complete i32, i64, f32, f64 numeric instruction handlers
+- All comparison, unary, and binary operations for all four types
+- All conversion instructions (wrap, extend, trunc, convert, reinterpret, demote, promote)
+- Complete memory load/store handlers including all narrow variants (8/16/32-bit)
+- Control flow: block, loop, if/else, br, br_if, br_table, return, call, call_indirect
+- Recursive function call dispatch through WasmExecutionEngine
+- WasmValue type with typed extraction methods
+- LinearMemory with full load/store support and page-based growth
+- Table with bounds checking for indirect calls
+- HostFunction and HostInterface protocol for import resolution
+- Constant expression evaluator for globals and data/element segments
+- Bytecode decoder for variable-length WASM instructions
+- Control flow map builder for structured control flow
+- Comprehensive test suite (28 tests)
+
+### Fixed
+
+- Function calls now use recursive dispatch instead of broken inline approach
+- Control flow block/loop/if handlers correctly reference current PC
+- Branch execution jumps past end instruction for non-loop blocks
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

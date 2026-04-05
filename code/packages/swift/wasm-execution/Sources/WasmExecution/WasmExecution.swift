@@ -864,8 +864,14 @@ func executeBranch(_ vm: GenericVM, _ ctx: WasmExecutionContext, _ labelIndex: I
     // Pop labels down to target.
     ctx.labelStack = Array(ctx.labelStack.prefix(labelStackIndex))
 
-    // Jump.
-    vm.jumpTo(label.targetPc)
+    // Jump. For non-loop blocks, jump past the end instruction (endPc + 1)
+    // so the end handler doesn't try to pop an already-removed label.
+    // For loops, jump to the loop header to re-enter the loop body.
+    if label.isLoop {
+        vm.jumpTo(label.targetPc)
+    } else {
+        vm.jumpTo(label.targetPc + 1)
+    }
 }
 
 // ============================================================================
@@ -1658,9 +1664,9 @@ func registerControl(_ vm: GenericVM) {
     vm.registerContextOpcode(0x02) { vm, instr, _, ctxObj in
         let ctx = ctxObj as! WasmExecutionContext
         let arity = blockArity(instr.operand, funcTypes: ctx.funcTypes)
-        let pc = vm.pc - 1  // pc already advanced past this instruction
-        let target = ctx.controlFlowMap[pc]
-        let endPc = target?.endPc ?? vm.pc
+        // vm.pc is the current instruction index (auto-advanced after handler).
+        let target = ctx.controlFlowMap[vm.pc]
+        let endPc = target?.endPc ?? (vm.pc + 1)
         ctx.labelStack.append(Label(arity: arity, targetPc: endPc, stackHeight: vm.typedStack.count, isLoop: false))
     }
 
@@ -1668,9 +1674,8 @@ func registerControl(_ vm: GenericVM) {
     vm.registerContextOpcode(0x03) { vm, instr, _, ctxObj in
         let ctx = ctxObj as! WasmExecutionContext
         let arity = blockArity(instr.operand, funcTypes: ctx.funcTypes)
-        let pc = vm.pc - 1
-        // Loop branches go to the loop start (the instruction after the loop opcode).
-        ctx.labelStack.append(Label(arity: arity, targetPc: pc, stackHeight: vm.typedStack.count, isLoop: true))
+        // Loop branches jump back to the loop instruction itself.
+        ctx.labelStack.append(Label(arity: arity, targetPc: vm.pc, stackHeight: vm.typedStack.count, isLoop: true))
     }
 
     // if (0x04)
@@ -1678,9 +1683,8 @@ func registerControl(_ vm: GenericVM) {
         let ctx = ctxObj as! WasmExecutionContext
         let arity = blockArity(instr.operand, funcTypes: ctx.funcTypes)
         let cond = popWasm(vm)
-        let pc = vm.pc - 1
-        let target = ctx.controlFlowMap[pc]
-        let endPc = target?.endPc ?? vm.pc
+        let target = ctx.controlFlowMap[vm.pc]
+        let endPc = target?.endPc ?? (vm.pc + 1)
         let elsePc = target?.elsePc
 
         ctx.labelStack.append(Label(arity: arity, targetPc: endPc, stackHeight: vm.typedStack.count, isLoop: false))

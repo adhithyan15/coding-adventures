@@ -169,7 +169,7 @@ final class WasmExecutionTests: XCTestCase {
         let decoded = try decodeFunctionBody(body)
         let cfMap = buildControlFlowMap(decoded)
         XCTAssertNotNil(cfMap[0])
-        XCTAssertEqual(cfMap[0]?.endPc, 3)
+        XCTAssertEqual(cfMap[0]?.endPc, 2)
     }
 
     // ========================================================================
