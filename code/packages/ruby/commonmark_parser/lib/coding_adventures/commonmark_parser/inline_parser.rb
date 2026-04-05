@@ -428,8 +428,13 @@ module CodingAdventures
           return DocumentAst::RawInlineNode.new(format: "html", value: scanner.source[saved_pos...scanner.pos])
         end
         until scanner.done?
-          if scanner.match?("-->") || scanner.match?("--!>")
-            content = scanner.source[content_start...scanner.pos - 3]
+          terminator = if scanner.match?("-->")
+                         "-->"
+                       elsif scanner.match?("--!>")
+                         "--!>"
+                       end
+          if terminator
+            content = scanner.source[content_start...scanner.pos - terminator.length]
             if content.end_with?("-")
               scanner.pos = saved_pos
               return nil
@@ -441,23 +446,6 @@ module CodingAdventures
         scanner.pos = saved_pos
         return nil
       end
-
-    def self.hard_break_whitespace?(text)
-      count = 0
-      index = text.length - 1
-      while index >= 0 && (text[index] == " " || text[index] == "\t")
-        count += 1
-        return true if count >= 2
-        index -= 1
-      end
-      false
-    end
-
-    def self.rstrip_spaces_and_tabs(text)
-      index = text.length
-      index -= 1 while index > 0 && (text[index - 1] == " " || text[index - 1] == "\t")
-      text[0...index]
-    end
 
       # Processing instruction: <? ... ?>
       if scanner.match?("?")
@@ -596,6 +584,23 @@ module CodingAdventures
 
       scanner.pos = saved_pos
       nil
+    end
+
+    def self.hard_break_whitespace?(text)
+      count = 0
+      index = text.length - 1
+      while index >= 0 && (text[index] == " " || text[index] == "\t")
+        count += 1
+        return true if count >= 2
+        index -= 1
+      end
+      false
+    end
+
+    def self.rstrip_spaces_and_tabs(text)
+      index = text.length
+      index -= 1 while index > 0 && (text[index - 1] == " " || text[index - 1] == "\t")
+      text[0...index]
     end
 
     # ─── Autolink Parsing ────────────────────────────────────────────────────
