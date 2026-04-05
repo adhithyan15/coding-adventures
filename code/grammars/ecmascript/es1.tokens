@@ -1,0 +1,192 @@
+# ECMAScript 1 (1997) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 1
+#
+# ECMA-262, 1st Edition — June 1997
+#
+# This is the very first standardized version of JavaScript. Brendan Eich
+# created the language for Netscape Navigator in 1995; two years later,
+# ECMA International published this specification.
+#
+# What ES1 has:
+#   - 26 keywords (break, case, continue, default, delete, do, else, for,
+#     function, if, in, new, return, switch, this, typeof, var, void, while, with)
+#   - Basic operators: arithmetic, bitwise, logical, comparison, assignment
+#   - String literals (single and double quoted)
+#   - Numeric literals (decimal integers, floats, hex with 0x prefix)
+#   - The $ character is valid in identifiers (unusual for 1997)
+#
+# What ES1 does NOT have:
+#   - No === or !== (strict equality — added in ES3)
+#   - No try/catch/finally/throw (error handling — added in ES3)
+#   - No regex literals (implementation-defined in ES1 — formalized in ES3)
+#   - No template literals (added in ES2015)
+#   - No arrow functions (added in ES2015)
+#   - No let/const (added in ES2015)
+#   - No binary (0b) or octal (0o) numeric literals (added in ES2015)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in JavaScript can contain letters, digits, underscores, and
+# the dollar sign ($). The $ was included for generated code (like Java's
+# inner class naming) and later became famous through jQuery.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# Numbers: decimal integers, floating point, and hex integers.
+# ES1 does not have binary (0b) or formal octal (0o) prefixes.
+# Leading-dot floats like .5 are supported.
+# Scientific notation (1e10, 2.5E-3) is supported.
+
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# Strings: both single-quoted and double-quoted, with backslash escapes.
+# ES1 supports: \\, \', \", \n, \r, \t, \b, \f, \0, \xHH, \uHHHH
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# ES1 has == and != but NOT === and !== (those are ES3).
+# The unsigned right shift >>> is unique to JavaScript — most languages
+# only have >> (signed/arithmetic right shift).
+
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT = ">>>"
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# ES1 has 26 keywords. These are reclassified from NAME to KEYWORD by the
+# lexer. Note: `class`, `const`, `let`, `import`, `export` are NOT keywords
+# in ES1 — they are future reserved words (see reserved section below).
+
+keywords:
+  break
+  case
+  continue
+  default
+  delete
+  do
+  else
+  for
+  function
+  if
+  in
+  new
+  return
+  switch
+  this
+  typeof
+  var
+  void
+  while
+  with
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# These identifiers are reserved for future use. Using them as variable
+# names is a syntax error. Many of these became actual keywords in later
+# versions (class in ES2015, const in ES2015, etc.).
+
+reserved:
+  class
+  const
+  enum
+  export
+  extends
+  import
+  super
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
