@@ -351,8 +351,10 @@ func parseColor(hex string) (ResolvedValue, error) {
 	h := hex[1:] // strip leading '#'
 	r, g, b, a := 0, 0, 0, 255
 
+	// Parse a 2-char hex byte (00–FF = 0–255). Use ParseUint with bitSize 8
+	// so the parser rejects values > 255 before the cast to int.
 	parseHex := func(s string) (int, error) {
-		n, err := strconv.ParseInt(s, 16, 64)
+		n, err := strconv.ParseUint(s, 16, 8)
 		return int(n), err
 	}
 
