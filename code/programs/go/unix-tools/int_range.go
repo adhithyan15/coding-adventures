@@ -6,11 +6,12 @@ import (
 )
 
 func intFromInt64(value int64) (int, error) {
-	converted := int(value)
-	if int64(converted) != value {
+	const maxIntValue = int(^uint(0) >> 1)
+	const minIntValue = -maxIntValue - 1
+	if value < int64(minIntValue) || value > int64(maxIntValue) {
 		return 0, fmt.Errorf("%d is outside the supported integer range", value)
 	}
-	return converted, nil
+	return int(value), nil
 }
 
 func intFromFloat64(value float64) (int, error) {
@@ -23,15 +24,11 @@ func intFromFloat64(value float64) (int, error) {
 		return 0, fmt.Errorf("%v is not an integer", value)
 	}
 
-	asInt64 := int64(truncated)
-	if float64(asInt64) != truncated {
+	const maxIntValue = int(^uint(0) >> 1)
+	const minIntValue = -maxIntValue - 1
+	if truncated < float64(minIntValue) || truncated > float64(maxIntValue) {
 		return 0, fmt.Errorf("%v is outside the supported integer range", value)
 	}
 
-	converted := int(asInt64)
-	if int64(converted) != asInt64 {
-		return 0, fmt.Errorf("%v is outside the supported integer range", value)
-	}
-
-	return converted, nil
+	return int(truncated), nil
 }

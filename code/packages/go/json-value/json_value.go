@@ -76,13 +76,18 @@ package jsonvalue
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 
 	jsonparser "github.com/adhithyan15/coding-adventures/code/packages/go/json-parser"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
+)
+
+const (
+	maxNativeInt = int(^uint(0) >> 1)
+	minNativeInt = -maxNativeInt - 1
 )
 
 // ============================================================================
@@ -489,13 +494,10 @@ func unescapeJSONString(s string) string {
 			case 'u':
 				if i+5 < len(s) {
 					hexStr := s[i+2 : i+6]
-					if r, err := strconv.ParseUint(hexStr, 16, 32); err == nil {
-						parsedRune := rune(r)
-						if utf8.ValidRune(parsedRune) {
-							sb.WriteRune(parsedRune)
-							i += 6
-							continue
-						}
+					if unescaped, err := strconv.Unquote(`"\u` + hexStr + `"`); err == nil && len(unescaped) > 0 {
+						sb.WriteString(unescaped)
+						i += 6
+						continue
 					}
 				}
 				// Malformed \uXXXX — preserve as-is.
@@ -588,7 +590,9 @@ func ToNative(value JsonValue) interface{} {
 
 			case *JsonNumber:
 				if v.IsInteger {
-					return rf.Generate(true, false, interface{}(int(v.Value)))
+					if nativeInt, ok := nativeIntValue(v.Value); ok {
+						return rf.Generate(true, false, interface{}(nativeInt))
+					}
 				}
 				return rf.Generate(true, false, interface{}(v.Value))
 
@@ -603,6 +607,16 @@ func ToNative(value JsonValue) interface{} {
 			}
 		}).GetResult()
 	return result
+}
+
+func nativeIntValue(value float64) (int, bool) {
+	if math.IsNaN(value) || math.IsInf(value, 0) || math.Trunc(value) != value {
+		return 0, false
+	}
+	if value < float64(minNativeInt) || value > float64(maxNativeInt) {
+		return 0, false
+	}
+	return int(value), true
 }
 
 // ============================================================================

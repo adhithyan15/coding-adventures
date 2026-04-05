@@ -147,11 +147,12 @@ func (c *StarlarkCompiler) addConstant(value interface{}) int {
 }
 
 func checkedIntLiteral(value int64, raw string) int {
-	converted := int(value)
-	if int64(converted) != value {
+	const maxIntValue = int(^uint(0) >> 1)
+	const minIntValue = -maxIntValue - 1
+	if value < int64(minIntValue) || value > int64(maxIntValue) {
 		panic(fmt.Sprintf("integer literal out of range: %s", raw))
 	}
-	return converted
+	return int(value)
 }
 
 // addName adds a name to the names table and returns its index.
@@ -1751,7 +1752,7 @@ func (c *StarlarkCompiler) compileAtom(node *parser.ASTNode) {
 			// Fallback to decimal
 			val, _ = strconv.ParseInt(tok.Value, 10, 64)
 		}
-		idx := c.addConstant(int(val))
+		idx := c.addConstant(checkedIntLiteral(val, tok.Value))
 		c.emit(OpLoadConst, idx)
 
 	case tn == "FLOAT":
