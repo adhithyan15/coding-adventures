@@ -173,22 +173,49 @@ end
 
 --- get returns the element at row i, column j (1-based).
 --
+-- Raises an error if the indices are out of bounds.
+--
 -- @param mat  a matrix
 -- @param i    row index (1-based)
 -- @param j    column index (1-based)
 -- @return     the scalar value at position (i, j)
 function M.get(mat, i, j)
+    if i < 1 or i > mat.rows or j < 1 or j > mat.cols then
+        error(string.format(
+            "index out of bounds: (%d, %d) for (%d×%d) matrix",
+            i, j, mat.rows, mat.cols
+        ))
+    end
     return mat.data[i][j]
 end
 
---- set replaces the element at row i, column j with val.
+--- set returns a **new** matrix with the element at (i, j) replaced by val.
 --
--- @param mat  a matrix (mutated in place)
+-- The original matrix is not mutated — this follows the immutability
+-- principle described in ML03.  All operations return new values.
+--
+-- @param mat  a matrix
 -- @param i    row index (1-based)
 -- @param j    column index (1-based)
 -- @param val  new value
+-- @return     a new matrix identical to mat except data[i][j] = val
 function M.set(mat, i, j, val)
-    mat.data[i][j] = val
+    if i < 1 or i > mat.rows or j < 1 or j > mat.cols then
+        error(string.format(
+            "index out of bounds: (%d, %d) for (%d×%d) matrix",
+            i, j, mat.rows, mat.cols
+        ))
+    end
+    -- Deep copy the matrix, then overwrite the target element.
+    local copy = {}
+    for r = 1, mat.rows do
+        copy[r] = {}
+        for c = 1, mat.cols do
+            copy[r][c] = mat.data[r][c]
+        end
+    end
+    copy[i][j] = val
+    return make_matrix(mat.rows, mat.cols, copy)
 end
 
 -- ============================================================================
@@ -391,6 +418,424 @@ function M.dot(A, B)
     end
 
     return result, nil
+end
+
+-- ============================================================================
+-- Reductions
+-- ============================================================================
+--
+-- A "reduction" collapses a matrix (or part of it) into a smaller result.
+-- Think of it as folding all elements through an accumulator function.
+
+--- sum returns the sum of all elements in the matrix.
+--
+-- For a 2×2 matrix [[1,2],[3,4]], sum = 1 + 2 + 3 + 4 = 10.
+--
+-- @param mat  a matrix
+-- @return     a number
+function M.sum(mat)
+    local total = 0.0
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            total = total + mat.data[i][j]
+        end
+    end
+    return total
+end
+
+--- sum_rows collapses each row into a single value, producing an n×1
+-- column vector where each element is the sum of that row's elements.
+--
+-- Example: [[1,2],[3,4]] -> [[3],[7]]
+--
+-- @param mat  a matrix (m×n)
+-- @return     a column vector (m×1)
+function M.sum_rows(mat)
+    local data = {}
+    for i = 1, mat.rows do
+        local s = 0.0
+        for j = 1, mat.cols do
+            s = s + mat.data[i][j]
+        end
+        data[i] = { s }
+    end
+    return make_matrix(mat.rows, 1, data)
+end
+
+--- sum_cols collapses each column into a single value, producing a 1×m
+-- row vector where each element is the sum of that column's elements.
+--
+-- Example: [[1,2],[3,4]] -> [[4,6]]
+--
+-- @param mat  a matrix (m×n)
+-- @return     a row vector (1×n)
+function M.sum_cols(mat)
+    local row = {}
+    for j = 1, mat.cols do
+        local s = 0.0
+        for i = 1, mat.rows do
+            s = s + mat.data[i][j]
+        end
+        row[j] = s
+    end
+    return make_matrix(1, mat.cols, { row })
+end
+
+--- mean returns the arithmetic mean of all elements.
+--
+-- mean = sum / count, where count = rows * cols.
+--
+-- @param mat  a matrix
+-- @return     a number
+function M.mean(mat)
+    return M.sum(mat) / (mat.rows * mat.cols)
+end
+
+--- min returns the minimum element value in the matrix.
+--
+-- Scans every element and keeps the smallest.
+--
+-- @param mat  a matrix
+-- @return     a number
+function M.min(mat)
+    local best = mat.data[1][1]
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            if mat.data[i][j] < best then
+                best = mat.data[i][j]
+            end
+        end
+    end
+    return best
+end
+
+--- max returns the maximum element value in the matrix.
+--
+-- @param mat  a matrix
+-- @return     a number
+function M.max(mat)
+    local best = mat.data[1][1]
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            if mat.data[i][j] > best then
+                best = mat.data[i][j]
+            end
+        end
+    end
+    return best
+end
+
+--- argmin returns the (row, col) position of the minimum element (1-based).
+--
+-- When there are ties, the first occurrence in row-major order wins.
+--
+-- @param mat  a matrix
+-- @return     row (1-based), col (1-based)
+function M.argmin(mat)
+    local best = mat.data[1][1]
+    local bi, bj = 1, 1
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            if mat.data[i][j] < best then
+                best = mat.data[i][j]
+                bi, bj = i, j
+            end
+        end
+    end
+    return bi, bj
+end
+
+--- argmax returns the (row, col) position of the maximum element (1-based).
+--
+-- When there are ties, the first occurrence in row-major order wins.
+--
+-- @param mat  a matrix
+-- @return     row (1-based), col (1-based)
+function M.argmax(mat)
+    local best = mat.data[1][1]
+    local bi, bj = 1, 1
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            if mat.data[i][j] > best then
+                best = mat.data[i][j]
+                bi, bj = i, j
+            end
+        end
+    end
+    return bi, bj
+end
+
+-- ============================================================================
+-- Element-wise math
+-- ============================================================================
+--
+-- These operations apply a mathematical function independently to every
+-- element of the matrix, producing a new matrix of the same shape.
+
+--- map applies a function to every element, returning a new matrix.
+--
+-- The function receives a single number and must return a single number.
+--
+-- Example: M.map(mat, function(x) return x * 2 end)
+--
+-- @param mat  a matrix
+-- @param fn   a function (number -> number)
+-- @return     a new matrix of the same shape
+function M.map(mat, fn)
+    local data = {}
+    for i = 1, mat.rows do
+        data[i] = {}
+        for j = 1, mat.cols do
+            data[i][j] = fn(mat.data[i][j])
+        end
+    end
+    return make_matrix(mat.rows, mat.cols, data)
+end
+
+--- sqrt returns a new matrix where every element is the square root
+-- of the corresponding element in the original.
+--
+-- @param mat  a matrix (all elements should be >= 0)
+-- @return     a new matrix
+function M.sqrt(mat)
+    return M.map(mat, math.sqrt)
+end
+
+--- abs returns a new matrix where every element is the absolute value
+-- of the corresponding element in the original.
+--
+-- @param mat  a matrix
+-- @return     a new matrix
+function M.abs(mat)
+    return M.map(mat, math.abs)
+end
+
+--- pow raises every element to the given exponent, returning a new matrix.
+--
+-- Example: M.pow(mat, 2.0) squares every element.
+--
+-- @param mat  a matrix
+-- @param exp  the exponent
+-- @return     a new matrix
+function M.pow(mat, exp)
+    return M.map(mat, function(x) return x ^ exp end)
+end
+
+-- ============================================================================
+-- Shape operations
+-- ============================================================================
+--
+-- Shape operations change the arrangement of elements without altering
+-- their values.  They always return new matrices.
+
+--- flatten converts any matrix to a 1×n row vector, reading elements
+-- in row-major order.
+--
+-- Example: [[1,2],[3,4]] -> [[1,2,3,4]]
+--
+-- @param mat  a matrix
+-- @return     a 1×(rows*cols) row vector
+function M.flatten(mat)
+    local flat = {}
+    local idx = 1
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            flat[idx] = mat.data[i][j]
+            idx = idx + 1
+        end
+    end
+    return make_matrix(1, mat.rows * mat.cols, { flat })
+end
+
+--- reshape rearranges a matrix into the given dimensions.
+--
+-- The total number of elements (new_rows * new_cols) must equal the
+-- original (mat.rows * mat.cols).  Elements are read in row-major order
+-- from the source and written in row-major order to the target.
+--
+-- @param mat       a matrix
+-- @param new_rows  desired number of rows
+-- @param new_cols  desired number of columns
+-- @return          new matrix, or raises error on size mismatch
+function M.reshape(mat, new_rows, new_cols)
+    local total = mat.rows * mat.cols
+    if new_rows * new_cols ~= total then
+        error(string.format(
+            "reshape: cannot reshape (%d×%d) = %d elements into (%d×%d) = %d elements",
+            mat.rows, mat.cols, total, new_rows, new_cols, new_rows * new_cols
+        ))
+    end
+
+    -- Read all elements in row-major order.
+    local flat = {}
+    local idx = 1
+    for i = 1, mat.rows do
+        for j = 1, mat.cols do
+            flat[idx] = mat.data[i][j]
+            idx = idx + 1
+        end
+    end
+
+    -- Write them back in the new shape.
+    local data = {}
+    idx = 1
+    for i = 1, new_rows do
+        data[i] = {}
+        for j = 1, new_cols do
+            data[i][j] = flat[idx]
+            idx = idx + 1
+        end
+    end
+
+    return make_matrix(new_rows, new_cols, data)
+end
+
+--- row extracts row i as a 1×cols matrix (1-based).
+--
+-- @param mat  a matrix
+-- @param i    row index (1-based)
+-- @return     a 1×cols matrix
+function M.row(mat, i)
+    if i < 1 or i > mat.rows then
+        error(string.format("row: index %d out of bounds for %d rows", i, mat.rows))
+    end
+    local r = {}
+    for j = 1, mat.cols do
+        r[j] = mat.data[i][j]
+    end
+    return make_matrix(1, mat.cols, { r })
+end
+
+--- col extracts column j as a rows×1 matrix (1-based).
+--
+-- @param mat  a matrix
+-- @param j    column index (1-based)
+-- @return     a rows×1 matrix
+function M.col(mat, j)
+    if j < 1 or j > mat.cols then
+        error(string.format("col: index %d out of bounds for %d cols", j, mat.cols))
+    end
+    local data = {}
+    for i = 1, mat.rows do
+        data[i] = { mat.data[i][j] }
+    end
+    return make_matrix(mat.rows, 1, data)
+end
+
+--- slice extracts a sub-matrix from rows [r0..r1) and columns [c0..c1).
+--
+-- Indices are 1-based and the range is half-open: r0 is inclusive, r1 is
+-- exclusive (same convention as Python slicing, adjusted to 1-based).
+-- So slice(mat, 1, 3, 1, 2) extracts rows 1..2, column 1.
+--
+-- @param mat  a matrix
+-- @param r0   start row (inclusive, 1-based)
+-- @param r1   end row (exclusive, 1-based)
+-- @param c0   start col (inclusive, 1-based)
+-- @param c1   end col (exclusive, 1-based)
+-- @return     sub-matrix of shape (r1-r0) × (c1-c0)
+function M.slice(mat, r0, r1, c0, c1)
+    if r0 < 1 or r1 > mat.rows + 1 or c0 < 1 or c1 > mat.cols + 1 then
+        error(string.format(
+            "slice: bounds (%d:%d, %d:%d) out of range for (%d×%d) matrix",
+            r0, r1, c0, c1, mat.rows, mat.cols
+        ))
+    end
+    local nr = r1 - r0
+    local nc = c1 - c0
+    local data = {}
+    for i = 1, nr do
+        data[i] = {}
+        for j = 1, nc do
+            data[i][j] = mat.data[r0 + i - 1][c0 + j - 1]
+        end
+    end
+    return make_matrix(nr, nc, data)
+end
+
+-- ============================================================================
+-- Equality and comparison
+-- ============================================================================
+
+--- equals returns true if two matrices have exactly the same shape and
+-- identical element values (floating-point exact equality).
+--
+-- @param A  a matrix
+-- @param B  a matrix
+-- @return   boolean
+function M.equals(A, B)
+    if A.rows ~= B.rows or A.cols ~= B.cols then return false end
+    for i = 1, A.rows do
+        for j = 1, A.cols do
+            if A.data[i][j] ~= B.data[i][j] then return false end
+        end
+    end
+    return true
+end
+
+--- close returns true if two matrices have the same shape and all
+-- corresponding elements are within `tol` of each other.
+--
+-- This is the floating-point-safe version of `equals`.  The default
+-- tolerance is 1e-9, which handles typical IEEE 754 rounding errors.
+--
+-- @param A    a matrix
+-- @param B    a matrix
+-- @param tol  tolerance (default 1e-9)
+-- @return     boolean
+function M.close(A, B, tol)
+    tol = tol or 1e-9
+    if A.rows ~= B.rows or A.cols ~= B.cols then return false end
+    for i = 1, A.rows do
+        for j = 1, A.cols do
+            if math.abs(A.data[i][j] - B.data[i][j]) > tol then
+                return false
+            end
+        end
+    end
+    return true
+end
+
+-- ============================================================================
+-- Factory methods
+-- ============================================================================
+
+--- identity creates an n×n identity matrix.
+--
+-- The identity matrix has 1.0 on the main diagonal and 0.0 everywhere
+-- else.  It is the multiplicative identity: I · A = A · I = A.
+--
+-- @param n  size (number of rows and columns)
+-- @return   n×n identity matrix
+function M.identity(n)
+    local data = {}
+    for i = 1, n do
+        data[i] = {}
+        for j = 1, n do
+            data[i][j] = (i == j) and 1.0 or 0.0
+        end
+    end
+    return make_matrix(n, n, data)
+end
+
+--- from_diagonal creates a square diagonal matrix from a list of values.
+--
+-- The values go on the main diagonal; all off-diagonal elements are 0.
+--
+-- Example: from_diagonal({2, 3}) -> [[2,0],[0,3]]
+--
+-- @param values  a flat table of numbers
+-- @return        n×n matrix where n = #values
+function M.from_diagonal(values)
+    local n = #values
+    local data = {}
+    for i = 1, n do
+        data[i] = {}
+        for j = 1, n do
+            data[i][j] = (i == j) and values[i] or 0.0
+        end
+    end
+    return make_matrix(n, n, data)
 end
 
 return M
