@@ -25,15 +25,30 @@ for a dependency-free first implementation.
 Shared barcode architecture lives here. Format-specific behavior lives in
 separate spec files:
 
-- [draw-instructions.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/draw-instructions.md)
-- [draw-instructions-svg.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/draw-instructions-svg.md)
-- [barcode-1d.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/barcode-1d.md)
-- [code39.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/code39.md)
-- [upc-a.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/upc-a.md)
-- [ean-13.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/ean-13.md)
-- [codabar.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/codabar.md)
-- [itf.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/itf.md)
-- [code128.md](/Users/adhithya/Downloads/Codex/coding-adventures/code/specs/code128.md)
+### Rendering infrastructure
+
+- [draw-instructions.md](draw-instructions.md)
+- [draw-instructions-svg.md](draw-instructions-svg.md)
+- [draw-instructions-metal.md](draw-instructions-metal.md)
+
+### 1D (linear) barcodes
+
+- [barcode-1d.md](barcode-1d.md) — shared 1D abstraction (runs model)
+- [code39.md](code39.md) — Code 39
+- [upc-a.md](upc-a.md) — UPC-A
+- [ean-13.md](ean-13.md) — EAN-13
+- [codabar.md](codabar.md) — Codabar
+- [itf.md](itf.md) — ITF (Interleaved 2 of 5)
+- [code128.md](code128.md) — Code 128
+
+### 2D (matrix and stacked) barcodes
+
+- [barcode-2d.md](barcode-2d.md) — shared 2D abstraction (ModuleGrid model)
+- [qr-code.md](qr-code.md) — QR Code (v1–40, ECC levels L/M/Q/H)
+- data-matrix.md — Data Matrix ECC200 *(planned)*
+- aztec-code.md — Aztec Code *(planned)*
+- pdf417.md — PDF417 *(planned)*
+- micro-qr.md — MicroQR *(planned)*
 
 Additional symbologies should follow the same pattern.
 
@@ -127,9 +142,12 @@ Format-specific packages should own:
 ## Future Extensions
 
 - Code 39 checksum support
-- UPC-A
-- EAN-13
-- Code 128
-- QR codes
+- Mixed-mode QR encoding (numeric/alphanumeric/byte segments)
+- QR ECI mode (explicit UTF-8 signal)
+- QR Structured Append (split message across symbols)
+- MicroQR / rMQR for compact spaces
+- Data Matrix ECC200 (industrial marking)
+- Aztec Code (boarding passes)
+- PDF417 (driver's licences, USPS)
 - barcode reader/scanner simulation
 - shared JSON explanations for visualizer apps
