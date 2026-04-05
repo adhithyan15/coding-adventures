@@ -263,7 +263,14 @@ public class WebComponentRenderer: MosaicRenderer {
     }
 
     public func beginEach(slotName: String, itemName: String, elementType: MosaicType, ctx: SlotContext) {
-        fragments.append(.eachOpen(field: toFieldName(slotName), itemName: itemName))
+        // Validate itemName is a safe JS identifier to prevent code injection in forEach callback
+        let safeItem: String
+        if let _ = itemName.range(of: "^[a-zA-Z_$][a-zA-Z0-9_$]*$", options: .regularExpression) {
+            safeItem = itemName
+        } else {
+            safeItem = "_item"
+        }
+        fragments.append(.eachOpen(field: toFieldName(slotName), itemName: safeItem))
     }
 
     public func endEach() {

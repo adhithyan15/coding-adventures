@@ -443,7 +443,9 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
           %{kind: :string, value: "none"}    -> {%{frame | attrs: frame.attrs ++ ["aria-hidden=\"true\""]}, state}
           %{kind: :string, value: "heading"} -> {%{frame | attrs: frame.attrs ++ ["role=\"heading\""]}, state}
           %{kind: :string, value: "image"}   -> {%{frame | attrs: frame.attrs ++ ["role=\"img\""]}, state}
-          %{kind: :string, value: v}          -> {%{frame | attrs: frame.attrs ++ ["role=\"#{v}\""]}, state}
+          %{kind: :string, value: v} when is_binary(v) ->
+            safe_v = String.replace(v, "\"", "&quot;") |> String.replace("'", "&#39;")
+            {%{frame | attrs: frame.attrs ++ ["role=\"#{safe_v}\""]}, state}
           _ -> {frame, state}
         end
 
@@ -802,7 +804,10 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
   end
   defp ts_field_type(_), do: "unknown"
 
-  defp default_value(%{type: %{kind: :text}, default_value: %{kind: :string, value: v}}), do: "'#{v}'"
+  defp default_value(%{type: %{kind: :text}, default_value: %{kind: :string, value: v}}) do
+    escaped = String.replace(v, "\\", "\\\\") |> String.replace("'", "\\'")
+    "'#{escaped}'"
+  end
   defp default_value(%{type: %{kind: :number}, default_value: %{kind: :number, value: v}}), do: "#{v}"
   defp default_value(%{type: %{kind: :bool}, default_value: %{kind: :bool, value: v}}), do: "#{v}"
   defp default_value(%{type: %{kind: :text}}),      do: "''"
@@ -815,7 +820,11 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
   defp default_value(%{type: %{kind: :list}}),      do: "[]"
   defp default_value(_),                            do: "null"
 
-  defp default_scalar(%{default_value: %{kind: :string, value: v}}), do: v
+  # default_scalar is used for observedAttributes value in attributeChangedCallback —
+  # it becomes a JS string comparison value, so escape backslash and single-quote.
+  defp default_scalar(%{default_value: %{kind: :string, value: v}}) do
+    String.replace(v, "\\", "\\\\") |> String.replace("'", "\\'")
+  end
   defp default_scalar(%{default_value: %{kind: :number, value: v}}), do: "#{v}"
   defp default_scalar(%{default_value: %{kind: :bool, value: v}}),   do: "#{v}"
   defp default_scalar(%{type: %{kind: :number}}), do: "0"
