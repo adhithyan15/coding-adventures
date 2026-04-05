@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+
+- End-to-end test suite: hand-assembled square(n)=n*n module passes all
+  cases including i32 overflow wrapping (square(2147483647)=1)
+- End-to-end add(a,b) test suite
+- API tests covering load, validate, instantiate, call pipeline
+- WasiStub tests
+- Dedicated t/square.t test file (9 test cases)
+- Comprehensive t/01-basic.t (19 test cases)
+
+### Fixed
+
+- Fixed code section field name mismatch: parser uses `codes`/`body`,
+  runtime now correctly converts to execution engine's `code`/`locals` format
+- Fixed `validate` subroutine redefinition warning by not importing
+  WasmValidator::validate into the runtime's namespace
+- Updated BUILD to install wasm-validator and wasm-execution dependencies
+- Updated cpanfile and Makefile.PL with wasm-validator/wasm-execution deps
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

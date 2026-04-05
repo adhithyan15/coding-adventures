@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Fixed
+
+- Fixed opcode dispatch priority: when executing with a context (e.g., WASM),
+  registered context handlers now take priority over standard VM opcodes.
+  Previously, WASM opcodes that shared numeric values with standard opcodes
+  (e.g., WASM nop=0x01 vs VM LOAD_CONST=0x01, WASM local.get=0x20 vs VM
+  ADD=0x20) would incorrectly execute the standard handler instead of the
+  WASM handler, causing stack underflow errors.
+
 ## [0.1.0] - 2026-03-28
 
 ### Added

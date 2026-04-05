@@ -538,18 +538,19 @@ local function decode_single_immediate(code, offset, imm_type)
     if imm_type == "none" then
         return nil, 0
 
-    elseif imm_type == "i32" or imm_type == "i32:s" then
+    elseif imm_type == "i32" or imm_type == "i32:s" or imm_type == "i32:i32" then
         -- Signed LEB128 for i32.const
         local val, consumed = wasm_leb128.decode_signed(code, offset)
         return val, consumed
 
-    elseif imm_type == "i64:s" then
+    elseif imm_type == "i64:s" or imm_type == "i64:i64" then
         -- Signed LEB128 for i64.const (up to 10 bytes)
         local val, consumed = wasm_leb128.decode_signed(code, offset)
         return val, consumed
 
     elseif imm_type == "local_idx:u32" or imm_type == "global_idx:u32"
         or imm_type == "func_idx:u32" or imm_type == "label_idx:u32"
+        or imm_type == "label:u32"
         or imm_type == "mem_idx:u32" then
         -- Unsigned LEB128 index
         local val, consumed = wasm_leb128.decode_unsigned(code, offset)
@@ -564,7 +565,7 @@ local function decode_single_immediate(code, offset, imm_type)
         local val, consumed = wasm_leb128.decode_signed(code, offset)
         return val, consumed
 
-    elseif imm_type == "memarg" then
+    elseif imm_type == "memarg" or imm_type == "memarg(align:u32, offset:u32)" then
         -- Memory argument: align (unsigned LEB128) + offset (unsigned LEB128)
         local align, a_size = wasm_leb128.decode_unsigned(code, offset)
         local mem_offset, o_size = wasm_leb128.decode_unsigned(code, offset + a_size)

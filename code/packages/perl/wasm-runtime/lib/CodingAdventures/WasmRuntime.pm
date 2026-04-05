@@ -53,7 +53,7 @@ use lib '../wasm-validator/lib';
 use lib '../wasm-execution/lib';
 
 use CodingAdventures::WasmModuleParser qw(parse);
-use CodingAdventures::WasmValidator qw(validate);
+use CodingAdventures::WasmValidator ();  # import nothing; call fully qualified
 use CodingAdventures::WasmExecution qw(i32 i64 f32 f64 evaluate_const_expr);
 
 use Exporter 'import';
@@ -149,10 +149,29 @@ sub instantiate {
     }
 
     # Step 2: Add module-defined functions
+    my $raw_codes = $module->{codes} || $module->{code} || [];
     for my $i (0 .. $#{ $module->{functions} || [] }) {
         my $type_idx = $module->{functions}[$i];
         push @func_types, $module->{types}[$type_idx];
-        push @func_bodies, ($module->{code} || [])->[$i];
+
+        # Convert parser's code format to execution engine format.
+        # Parser returns: { locals => [{count => N, type => T}, ...], body => \@bytes }
+        # Engine expects: { locals => \@expanded_type_codes, code => \@bytes }
+        my $raw = $raw_codes->[$i];
+        if ($raw) {
+            my @expanded_locals;
+            for my $lg (@{ $raw->{locals} || [] }) {
+                for (1 .. $lg->{count}) {
+                    push @expanded_locals, $lg->{type};
+                }
+            }
+            push @func_bodies, {
+                locals => \@expanded_locals,
+                code   => $raw->{body} || $raw->{code} || [],
+            };
+        } else {
+            push @func_bodies, undef;
+        }
         push @host_functions, undef;
     }
 

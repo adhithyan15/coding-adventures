@@ -471,6 +471,16 @@ sub _dispatch {
     my $operand = $instr->{operand};
     my $output  = undef;
 
+    # --- Context opcode handlers take priority when a context is active ---
+    # When executing with a context (e.g., WASM execution), registered context
+    # handlers MUST be checked first because WASM opcodes reuse the same numeric
+    # values as standard VM opcodes (e.g., WASM nop=0x01 vs VM LOAD_CONST=0x01).
+    if ($self->{_current_context} && exists $self->{_context_handlers}{$opcode}) {
+        my $handler = $self->{_context_handlers}{$opcode};
+        $handler->($self, $instr, $code, $self->{_current_context});
+        return $output;
+    }
+
     # --- Stack operations ---
 
     if ( $opcode == CodingAdventures::VirtualMachine::OpCode::LOAD_CONST ) {

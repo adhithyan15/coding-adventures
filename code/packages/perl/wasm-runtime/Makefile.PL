@@ -15,6 +15,8 @@ WriteMakefile(
         'CodingAdventures::WasmOpcodes' => 0,
         'CodingAdventures::WasmModuleParser' => 0,
         'CodingAdventures::VirtualMachine' => 0,
+        'CodingAdventures::WasmValidator' => 0,
+        'CodingAdventures::WasmExecution' => 0,
     },
     TEST_REQUIRES    => {
         'Test2::V0' => 0,

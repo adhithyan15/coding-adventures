@@ -307,7 +307,7 @@ sub store_f64 {
 sub store_i32_8 {
     my ($self, $offset, $value) = @_;
     $self->_bounds_check($offset, 1);
-    substr($self->{data}, $offset, 1) = pack('c', $value & 0xFF);
+    substr($self->{data}, $offset, 1) = pack('C', $value & 0xFF);
 }
 
 sub store_i32_16 {
@@ -1388,6 +1388,251 @@ sub _register_all_handlers {
         $vm->{pc}++;
     });
 
+    # i32.shr_u (0x76) — logical right shift (unsigned)
+    $vm->register_context_opcode(0x76, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $shift = $b & 31;
+        # Treat $a as unsigned 32-bit for logical shift
+        my $unsigned_a = $a & 0xFFFFFFFF;
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($unsigned_a >> $shift));
+        $vm->{pc}++;
+    });
+
+    # i32.rotl (0x77) — rotate left
+    $vm->register_context_opcode(0x77, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $shift = $b & 31;
+        my $ua = $a & 0xFFFFFFFF;
+        my $result = (($ua << $shift) | ($ua >> (32 - $shift))) & 0xFFFFFFFF;
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($result));
+        $vm->{pc}++;
+    });
+
+    # i32.rotr (0x78) — rotate right
+    $vm->register_context_opcode(0x78, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $shift = $b & 31;
+        my $ua = $a & 0xFFFFFFFF;
+        my $result = (($ua >> $shift) | ($ua << (32 - $shift))) & 0xFFFFFFFF;
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($result));
+        $vm->{pc}++;
+    });
+
+    # i32.lt_u (0x49) — unsigned less-than
+    $vm->register_context_opcode(0x49, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32(
+            ($a & 0xFFFFFFFF) < ($b & 0xFFFFFFFF) ? 1 : 0
+        ));
+        $vm->{pc}++;
+    });
+
+    # i32.gt_s (0x4A) — signed greater-than
+    $vm->register_context_opcode(0x4A, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a > $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i32.gt_u (0x4B) — unsigned greater-than
+    $vm->register_context_opcode(0x4B, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32(
+            ($a & 0xFFFFFFFF) > ($b & 0xFFFFFFFF) ? 1 : 0
+        ));
+        $vm->{pc}++;
+    });
+
+    # i32.le_s (0x4C) — signed less-or-equal
+    $vm->register_context_opcode(0x4C, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a <= $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i32.le_u (0x4D) — unsigned less-or-equal
+    $vm->register_context_opcode(0x4D, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32(
+            ($a & 0xFFFFFFFF) <= ($b & 0xFFFFFFFF) ? 1 : 0
+        ));
+        $vm->{pc}++;
+    });
+
+    # i32.ge_s (0x4E) — signed greater-or-equal
+    $vm->register_context_opcode(0x4E, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a >= $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i32.ge_u (0x4F) — unsigned greater-or-equal
+    $vm->register_context_opcode(0x4F, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32(
+            ($a & 0xFFFFFFFF) >= ($b & 0xFFFFFFFF) ? 1 : 0
+        ));
+        $vm->{pc}++;
+    });
+
+    # i32.clz (0x67) — count leading zeros
+    $vm->register_context_opcode(0x67, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $ua = $a & 0xFFFFFFFF;
+        my $count = 32;
+        for my $bit (reverse 0..31) {
+            if ($ua & (1 << $bit)) { $count = 31 - $bit; last; }
+        }
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($count));
+        $vm->{pc}++;
+    });
+
+    # i32.ctz (0x68) — count trailing zeros
+    $vm->register_context_opcode(0x68, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $ua = $a & 0xFFFFFFFF;
+        my $count = 32;
+        for my $bit (0..31) {
+            if ($ua & (1 << $bit)) { $count = $bit; last; }
+        }
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($count));
+        $vm->{pc}++;
+    });
+
+    # i32.popcnt (0x69) — population count (number of 1-bits)
+    $vm->register_context_opcode(0x69, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $ua = $a & 0xFFFFFFFF;
+        my $count = 0;
+        while ($ua) { $count += ($ua & 1); $ua >>= 1; }
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($count));
+        $vm->{pc}++;
+    });
+
+    # i32.div_u (0x6E) — unsigned division
+    $vm->register_context_opcode(0x6E, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        CodingAdventures::WasmExecution::TrapError->throw("integer divide by zero")
+            if ($b & 0xFFFFFFFF) == 0;
+        my $result = int(($a & 0xFFFFFFFF) / ($b & 0xFFFFFFFF));
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($result));
+        $vm->{pc}++;
+    });
+
+    # i32.rem_s (0x6F) — signed remainder
+    $vm->register_context_opcode(0x6F, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        CodingAdventures::WasmExecution::TrapError->throw("integer divide by zero")
+            if $b == 0;
+        # WASM rem_s: result has sign of dividend, use truncation toward zero
+        my $result = $a - int($a / $b) * $b;
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($result));
+        $vm->{pc}++;
+    });
+
+    # i32.rem_u (0x70) — unsigned remainder
+    $vm->register_context_opcode(0x70, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        CodingAdventures::WasmExecution::TrapError->throw("integer divide by zero")
+            if ($b & 0xFFFFFFFF) == 0;
+        my $result = ($a & 0xFFFFFFFF) % ($b & 0xFFFFFFFF);
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($result));
+        $vm->{pc}++;
+    });
+
+    # --- i64 comparison ops ---
+
+    # i64.eqz (0x50)
+    $vm->register_context_opcode(0x50, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a == 0 ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i64.eq (0x51)
+    $vm->register_context_opcode(0x51, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a == $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i64.ne (0x52)
+    $vm->register_context_opcode(0x52, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a != $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i64.lt_s (0x53)
+    $vm->register_context_opcode(0x53, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a < $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i64.gt_s (0x55)
+    $vm->register_context_opcode(0x55, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a > $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i64.le_s (0x57)
+    $vm->register_context_opcode(0x57, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a <= $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
+    # i64.ge_s (0x59)
+    $vm->register_context_opcode(0x59, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($a >= $b ? 1 : 0));
+        $vm->{pc}++;
+    });
+
     # --- i64 arithmetic ---
 
     # i64.add (0x7C)
@@ -1414,6 +1659,217 @@ sub _register_all_handlers {
         my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
         my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
         $vm->push_typed(CodingAdventures::WasmExecution::i64($a * $b));
+        $vm->{pc}++;
+    });
+
+    # i64.div_s (0x7F) — signed division
+    $vm->register_context_opcode(0x7F, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        CodingAdventures::WasmExecution::TrapError->throw("integer divide by zero")
+            if $b == 0;
+        $vm->push_typed(CodingAdventures::WasmExecution::i64(int($a / $b)));
+        $vm->{pc}++;
+    });
+
+    # i64.and (0x83)
+    $vm->register_context_opcode(0x83, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i64($a & $b));
+        $vm->{pc}++;
+    });
+
+    # i64.or (0x84)
+    $vm->register_context_opcode(0x84, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i64($a | $b));
+        $vm->{pc}++;
+    });
+
+    # i64.xor (0x85)
+    $vm->register_context_opcode(0x85, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i64($a ^ $b));
+        $vm->{pc}++;
+    });
+
+    # i64.shl (0x86)
+    $vm->register_context_opcode(0x86, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i64($a << ($b & 63)));
+        $vm->{pc}++;
+    });
+
+    # --- Memory stores (additional) ---
+
+    # i64.store (0x37)
+    $vm->register_context_opcode(0x37, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val  = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        my $base = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $addr = ($base & 0xFFFFFFFF) + $instr->{operand}{offset};
+        $ctx->{memory}->store_i64($addr, $val);
+        $vm->{pc}++;
+    });
+
+    # f32.store (0x38)
+    $vm->register_context_opcode(0x38, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val  = CodingAdventures::WasmExecution::_as_f32($vm->pop_typed());
+        my $base = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $addr = ($base & 0xFFFFFFFF) + $instr->{operand}{offset};
+        $ctx->{memory}->store_f32($addr, $val);
+        $vm->{pc}++;
+    });
+
+    # f64.store (0x39)
+    $vm->register_context_opcode(0x39, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val  = CodingAdventures::WasmExecution::_as_f64($vm->pop_typed());
+        my $base = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $addr = ($base & 0xFFFFFFFF) + $instr->{operand}{offset};
+        $ctx->{memory}->store_f64($addr, $val);
+        $vm->{pc}++;
+    });
+
+    # --- f32 additional ---
+
+    # f32.div (0x95)
+    $vm->register_context_opcode(0x95, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_f32($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_f32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f32($a / $b));
+        $vm->{pc}++;
+    });
+
+    # f32.abs (0x8B)
+    $vm->register_context_opcode(0x8B, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_f32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f32(abs($a)));
+        $vm->{pc}++;
+    });
+
+    # f32.neg (0x8C)
+    $vm->register_context_opcode(0x8C, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_f32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f32(-$a));
+        $vm->{pc}++;
+    });
+
+    # --- f64 additional ---
+
+    # f64.div (0xA3)
+    $vm->register_context_opcode(0xA3, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $b = CodingAdventures::WasmExecution::_as_f64($vm->pop_typed());
+        my $a = CodingAdventures::WasmExecution::_as_f64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f64($a / $b));
+        $vm->{pc}++;
+    });
+
+    # f64.abs (0x99)
+    $vm->register_context_opcode(0x99, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_f64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f64(abs($a)));
+        $vm->{pc}++;
+    });
+
+    # f64.neg (0x9A)
+    $vm->register_context_opcode(0x9A, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $a = CodingAdventures::WasmExecution::_as_f64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f64(-$a));
+        $vm->{pc}++;
+    });
+
+    # --- Additional conversion instructions ---
+
+    # i32.trunc_f64_s (0xAA)
+    $vm->register_context_opcode(0xAA, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_f64($vm->pop_typed());
+        CodingAdventures::WasmExecution::TrapError->throw("invalid conversion to integer")
+            if $val != $val;  # NaN check
+        $vm->push_typed(CodingAdventures::WasmExecution::i32(int($val)));
+        $vm->{pc}++;
+    });
+
+    # i64.extend_i32_u (0xAD)
+    $vm->register_context_opcode(0xAD, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::i64($val & 0xFFFFFFFF));
+        $vm->{pc}++;
+    });
+
+    # f32.convert_i32_s (0xB2)
+    $vm->register_context_opcode(0xB2, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f32($val));
+        $vm->{pc}++;
+    });
+
+    # f32.convert_i32_u (0xB3)
+    $vm->register_context_opcode(0xB3, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f32($val & 0xFFFFFFFF));
+        $vm->{pc}++;
+    });
+
+    # f64.convert_i32_s (0xB7)
+    $vm->register_context_opcode(0xB7, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f64($val));
+        $vm->{pc}++;
+    });
+
+    # f64.convert_i32_u (0xB8)
+    $vm->register_context_opcode(0xB8, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f64($val & 0xFFFFFFFF));
+        $vm->{pc}++;
+    });
+
+    # f64.convert_i64_s (0xB9)
+    $vm->register_context_opcode(0xB9, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i64($vm->pop_typed());
+        $vm->push_typed(CodingAdventures::WasmExecution::f64($val));
+        $vm->{pc}++;
+    });
+
+    # i32.reinterpret_f32 (0xBC)
+    $vm->register_context_opcode(0xBC, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_f32($vm->pop_typed());
+        my $bits = unpack('L', pack('f', $val));
+        $vm->push_typed(CodingAdventures::WasmExecution::i32($bits));
+        $vm->{pc}++;
+    });
+
+    # f32.reinterpret_i32 (0xBE)
+    $vm->register_context_opcode(0xBE, sub {
+        my ($vm, $instr, $code, $ctx) = @_;
+        my $val = CodingAdventures::WasmExecution::_as_i32($vm->pop_typed());
+        my $float = unpack('f', pack('L', $val & 0xFFFFFFFF));
+        $vm->push_typed(CodingAdventures::WasmExecution::f32($float));
         $vm->{pc}++;
     });
 

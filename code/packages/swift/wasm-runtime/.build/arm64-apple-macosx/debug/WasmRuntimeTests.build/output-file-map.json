@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmRuntimeTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/Tests/WasmRuntimeTests/WasmRuntimeTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmRuntimeTests.build/WasmRuntimeTests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmRuntimeTests.build/WasmRuntimeTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmRuntimeTests.build/WasmRuntimeTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmRuntimeTests.build/WasmRuntimeTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmRuntimeTests.build/WasmRuntimeTests.dia"
+  }
+}

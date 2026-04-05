@@ -62,6 +62,11 @@ public struct ValidatedModule {
 // MARK: - Validate Function
 // ============================================================================
 
+/// A namespace type for the WasmValidator module.
+public struct WasmValidator {
+    public init() {}
+}
+
 private let MAX_MEMORY_PAGES: UInt32 = 65536
 
 /// Validate a parsed WASM module for structural correctness.

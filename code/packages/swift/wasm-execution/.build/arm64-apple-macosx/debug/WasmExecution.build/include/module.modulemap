@@ -1,0 +1,3 @@
+module WasmExecution {
+    header "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-execution/.build/arm64-apple-macosx/debug/WasmExecution.build/include/WasmExecution-Swift.h"
+}

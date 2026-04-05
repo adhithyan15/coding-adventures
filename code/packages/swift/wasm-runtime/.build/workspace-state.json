@@ -1,0 +1,111 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "virtual-machine",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/virtual-machine",
+          "name" : "virtual-machine"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/virtual-machine"
+        },
+        "subpath" : "virtual-machine"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "wasm-execution",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-execution",
+          "name" : "wasm-execution"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-execution"
+        },
+        "subpath" : "wasm-execution"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "wasm-leb128",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-leb128",
+          "name" : "wasm-leb128"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-leb128"
+        },
+        "subpath" : "wasm-leb128"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "wasm-module-parser",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-module-parser",
+          "name" : "wasm-module-parser"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-module-parser"
+        },
+        "subpath" : "wasm-module-parser"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "wasm-opcodes",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-opcodes",
+          "name" : "wasm-opcodes"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-opcodes"
+        },
+        "subpath" : "wasm-opcodes"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "wasm-types",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-types",
+          "name" : "wasm-types"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-types"
+        },
+        "subpath" : "wasm-types"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "wasm-validator",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-validator",
+          "name" : "wasm-validator"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-validator"
+        },
+        "subpath" : "wasm-validator"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

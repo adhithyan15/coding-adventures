@@ -26,7 +26,9 @@ defmodule CodingAdventures.WasmRuntime.MixProject do
       {:coding_adventures_wasm_types, path: "../wasm_types"},
       {:coding_adventures_wasm_opcodes, path: "../wasm_opcodes"},
       {:coding_adventures_wasm_module_parser, path: "../wasm_module_parser"},
-      {:coding_adventures_virtual_machine, path: "../virtual_machine"}
+      {:coding_adventures_virtual_machine, path: "../virtual_machine"},
+      {:coding_adventures_wasm_validator, path: "../wasm_validator"},
+      {:coding_adventures_wasm_execution, path: "../wasm_execution"}
     ]
   end
 end

@@ -30,7 +30,7 @@ defmodule CodingAdventures.WasmExecution.ConstExpr do
     case opcode do
       # i32.const
       0x41 ->
-        {value, consumed} = WasmLeb128.decode_signed(expr, pos)
+        {:ok, {value, consumed}} = WasmLeb128.decode_signed(expr, pos)
         do_evaluate(expr, pos + consumed, Values.i32(value), globals)
 
       # i64.const
@@ -50,7 +50,7 @@ defmodule CodingAdventures.WasmExecution.ConstExpr do
 
       # global.get
       0x23 ->
-        {global_index, consumed} = WasmLeb128.decode_unsigned(expr, pos)
+        {:ok, {global_index, consumed}} = WasmLeb128.decode_unsigned(expr, pos)
 
         if global_index >= length(globals) do
           raise TrapError,

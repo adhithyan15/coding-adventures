@@ -41,7 +41,10 @@ defmodule CodingAdventures.WasmExecution.Decoder do
     <<_::binary-size(offset), opcode_byte::8, _::binary>> = code
     offset = offset + 1
 
-    info = WasmOpcodes.get_opcode(opcode_byte)
+    info = case WasmOpcodes.get_opcode(opcode_byte) do
+      {:ok, opcode_map} -> opcode_map
+      {:error, _} -> nil
+    end
     immediates = if info, do: Map.get(info, :immediates, []), else: []
 
     {operand, new_offset} = decode_immediates(code, offset, immediates)
@@ -79,11 +82,11 @@ defmodule CodingAdventures.WasmExecution.Decoder do
   defp decode_single_immediate(code, offset, type) do
     case type do
       "i32" ->
-        {value, consumed} = WasmLeb128.decode_signed(code, offset)
+        {value, consumed} = unwrap_leb!(WasmLeb128.decode_signed(code, offset))
         {value, offset + consumed}
 
       t when t in ~w(labelidx funcidx typeidx localidx globalidx tableidx memidx) ->
-        {value, consumed} = WasmLeb128.decode_unsigned(code, offset)
+        {value, consumed} = unwrap_leb!(WasmLeb128.decode_unsigned(code, offset))
         {value, offset + consumed}
 
       "i64" ->
@@ -105,26 +108,26 @@ defmodule CodingAdventures.WasmExecution.Decoder do
           type_byte == 0x40 -> {0x40, offset + 1}
           type_byte in [0x7F, 0x7E, 0x7D, 0x7C] -> {type_byte, offset + 1}
           true ->
-            {value, consumed} = WasmLeb128.decode_signed(code, offset)
+            {value, consumed} = unwrap_leb!(WasmLeb128.decode_signed(code, offset))
             {value, offset + consumed}
         end
 
       "memarg" ->
-        {align, align_size} = WasmLeb128.decode_unsigned(code, offset)
-        {mem_offset, offset_size} = WasmLeb128.decode_unsigned(code, offset + align_size)
+        {align, align_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, offset))
+        {mem_offset, offset_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, offset + align_size))
         {%{align: align, offset: mem_offset}, offset + align_size + offset_size}
 
       "vec_labelidx" ->
-        {count, count_size} = WasmLeb128.decode_unsigned(code, offset)
+        {count, count_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, offset))
         pos = offset + count_size
 
         {labels, pos} =
           Enum.reduce(1..max(count, 0)//1, {[], pos}, fn _, {labels_acc, p} ->
-            {label, label_size} = WasmLeb128.decode_unsigned(code, p)
+            {label, label_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, p))
             {[label | labels_acc], p + label_size}
           end)
 
-        {default_label, default_size} = WasmLeb128.decode_unsigned(code, pos)
+        {default_label, default_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, pos))
 
         {%{labels: Enum.reverse(labels), default_label: default_label}, pos + default_size}
 
@@ -132,6 +135,10 @@ defmodule CodingAdventures.WasmExecution.Decoder do
         {nil, offset}
     end
   end
+
+  # Unwrap {:ok, {value, consumed}} from LEB128 decode functions.
+  defp unwrap_leb!({:ok, {value, consumed}}), do: {value, consumed}
+  defp unwrap_leb!({:error, msg}), do: raise(RuntimeError, "LEB128 decode error: #{msg}")
 
   # ===========================================================================
   # 64-bit Signed LEB128

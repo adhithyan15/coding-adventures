@@ -1,0 +1,3 @@
+module wasm_runtimePackageTests {
+    header "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/wasm_runtimePackageTests.build/include/wasm-runtimePackageTests-Swift.h"
+}

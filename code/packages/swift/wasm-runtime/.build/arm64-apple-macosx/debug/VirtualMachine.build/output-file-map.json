@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/virtual-machine/Sources/VirtualMachine/VirtualMachine.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/VirtualMachine.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/VirtualMachine.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/VirtualMachine~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/VirtualMachine.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/VirtualMachine.build/VirtualMachine.dia"
+  }
+}

@@ -4,6 +4,8 @@ requires 'coding-adventures-wasm-types';
 requires 'coding-adventures-wasm-opcodes';
 requires 'coding-adventures-wasm-module-parser';
 requires 'coding-adventures-virtual-machine';
+requires 'coding-adventures-wasm-validator';
+requires 'coding-adventures-wasm-execution';
 
 # Test dependencies
 on 'test' => sub {

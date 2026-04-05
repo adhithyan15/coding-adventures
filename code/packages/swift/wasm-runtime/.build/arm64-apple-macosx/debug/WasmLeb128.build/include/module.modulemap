@@ -1,0 +1,3 @@
+module WasmLeb128 {
+    header "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/gracious-payne/code/packages/swift/wasm-runtime/.build/arm64-apple-macosx/debug/WasmLeb128.build/include/WasmLeb128-Swift.h"
+}
