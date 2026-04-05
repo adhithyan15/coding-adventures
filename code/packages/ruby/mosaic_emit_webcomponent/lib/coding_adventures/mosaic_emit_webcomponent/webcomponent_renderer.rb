@@ -440,7 +440,9 @@ module CodingAdventures
       def ts_default_value(val)
         case val[:kind]
         when "string"
-          escaped = val[:value].gsub("\\", "\\\\\\\\").gsub('"', '\\"')
+          # Use block form to avoid gsub replacement-string backslash ambiguity.
+          # Escape \ first, then " so the output is safe inside a TS double-quoted string.
+          escaped = val[:value].gsub('\\') { '\\\\' }.gsub('"') { '\\"' }
           "\"#{escaped}\""
         when "number"    then val[:value].to_s
         when "bool"      then val[:value].to_s
