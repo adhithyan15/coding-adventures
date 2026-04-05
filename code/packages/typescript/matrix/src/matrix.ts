@@ -194,11 +194,15 @@ export class Matrix {
    *   M.get(0, 0)                 -> unchanged original value
    */
   set(row: number, col: number, value: number): Matrix {
-    if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
-      throw new Error(`Index (${row}, ${col}) out of bounds for ${this.rows}x${this.cols} matrix.`);
+    // Coerce to integer to prevent prototype pollution via string keys
+    // like '__proto__'. The bounds check ensures valid array indices.
+    const r = Math.trunc(row);
+    const c = Math.trunc(col);
+    if (r < 0 || r >= this.rows || c < 0 || c >= this.cols) {
+      throw new Error(`Index (${r}, ${c}) out of bounds for ${this.rows}x${this.cols} matrix.`);
     }
-    const newData = this.data.map(r => [...r]);
-    newData[row][col] = value;
+    const newData = this.data.map(row => [...row]);
+    newData[r][c] = value;
     return new Matrix(newData);
   }
 
