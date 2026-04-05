@@ -1,5 +1,7 @@
 -- Comprehensive tests for the Scytale cipher implementation.
 
+package.path = "../src/?.lua;" .. "../src/?/init.lua;" .. package.path
+
 local scytale = require("coding_adventures.scytale_cipher")
 
 describe("ScytaleCipher", function()
