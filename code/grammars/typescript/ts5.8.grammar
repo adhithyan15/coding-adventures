@@ -883,9 +883,9 @@ ts_accessor_declaration = { decorator } { ts_member_modifier } "accessor" proper
 # TypeScript Expression Extensions
 # ============================================================================
 
-ts_as_expression = assignment_expression "as" type_expression ;
+ts_as_expression = conditional_expression "as" type_expression ;
 
-ts_satisfies_expression = assignment_expression "satisfies" type_expression ;
+ts_satisfies_expression = conditional_expression "satisfies" type_expression ;
 
 # TS 5.5: TypeScript can now INFER type predicates automatically.
 # Explicit type predicates are still supported and may still be needed
