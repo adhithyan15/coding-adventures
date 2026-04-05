@@ -38,6 +38,22 @@ use std::collections::HashSet;
 use directed_graph::graph::{Graph, GraphError};
 use node_bridge::*;
 
+macro_rules! unwrap_ref {
+    ($env:expr, $value:expr, $ty:ty) => {
+        unwrap_data::<$ty>($env, $value)
+            .as_ref()
+            .expect(concat!(stringify!($ty), " should always be wrapped"))
+    };
+}
+
+macro_rules! unwrap_mut {
+    ($env:expr, $value:expr, $ty:ty) => {
+        unwrap_data_mut::<$ty>($env, $value)
+            .as_mut()
+            .expect(concat!(stringify!($ty), " should always be wrapped"))
+    };
+}
+
 // ---------------------------------------------------------------------------
 // Helper: convert GraphError to a JS exception and return undefined
 // ---------------------------------------------------------------------------
@@ -111,7 +127,7 @@ unsafe extern "C" fn graph_add_node(env: napi_env, info: napi_callback_info) -> 
             return undefined(env);
         }
     };
-    let graph = unwrap_data_mut::<Graph>(env, this);
+    let graph = unwrap_mut!(env, this, Graph);
     graph.add_node(&name);
     undefined(env)
 }
@@ -126,7 +142,7 @@ unsafe extern "C" fn graph_remove_node(env: napi_env, info: napi_callback_info) 
             return undefined(env);
         }
     };
-    let graph = unwrap_data_mut::<Graph>(env, this);
+    let graph = unwrap_mut!(env, this, Graph);
     match graph.remove_node(&name) {
         Ok(()) => undefined(env),
         Err(e) => throw_graph_error(env, e),
@@ -143,21 +159,21 @@ unsafe extern "C" fn graph_has_node(env: napi_env, info: napi_callback_info) -> 
             return undefined(env);
         }
     };
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     bool_to_js(env, graph.has_node(&name))
 }
 
 /// graph.nodes() -- returns an array of all node names
 unsafe extern "C" fn graph_nodes(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     vec_str_to_js(env, &graph.nodes())
 }
 
 /// graph.size() -- returns the number of nodes
 unsafe extern "C" fn graph_size(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     usize_to_js(env, graph.size())
 }
 
@@ -182,7 +198,7 @@ unsafe extern "C" fn graph_add_edge(env: napi_env, info: napi_callback_info) -> 
             return undefined(env);
         }
     };
-    let graph = unwrap_data_mut::<Graph>(env, this);
+    let graph = unwrap_mut!(env, this, Graph);
     match graph.add_edge(&from, &to) {
         Ok(()) => undefined(env),
         Err(e) => throw_graph_error(env, e),
@@ -206,7 +222,7 @@ unsafe extern "C" fn graph_remove_edge(env: napi_env, info: napi_callback_info) 
             return undefined(env);
         }
     };
-    let graph = unwrap_data_mut::<Graph>(env, this);
+    let graph = unwrap_mut!(env, this, Graph);
     match graph.remove_edge(&from, &to) {
         Ok(()) => undefined(env),
         Err(e) => throw_graph_error(env, e),
@@ -230,14 +246,14 @@ unsafe extern "C" fn graph_has_edge(env: napi_env, info: napi_callback_info) -> 
             return undefined(env);
         }
     };
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     bool_to_js(env, graph.has_edge(&from, &to))
 }
 
 /// graph.edges() -- returns array of [from, to] pairs
 unsafe extern "C" fn graph_edges(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     vec_tuple2_str_to_js(env, &graph.edges())
 }
 
@@ -255,7 +271,7 @@ unsafe extern "C" fn graph_predecessors(env: napi_env, info: napi_callback_info)
             return undefined(env);
         }
     };
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     match graph.predecessors(&name) {
         Ok(v) => vec_str_to_js(env, &v),
         Err(e) => throw_graph_error(env, e),
@@ -272,7 +288,7 @@ unsafe extern "C" fn graph_successors(env: napi_env, info: napi_callback_info) -
             return undefined(env);
         }
     };
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     match graph.successors(&name) {
         Ok(v) => vec_str_to_js(env, &v),
         Err(e) => throw_graph_error(env, e),
@@ -289,7 +305,7 @@ unsafe extern "C" fn graph_topological_sort(
     info: napi_callback_info,
 ) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     match graph.topological_sort() {
         Ok(v) => vec_str_to_js(env, &v),
         Err(e) => throw_graph_error(env, e),
@@ -299,7 +315,7 @@ unsafe extern "C" fn graph_topological_sort(
 /// graph.hasCycle() -- returns true if the graph contains a cycle
 unsafe extern "C" fn graph_has_cycle(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     bool_to_js(env, graph.has_cycle())
 }
 
@@ -316,7 +332,7 @@ unsafe extern "C" fn graph_transitive_closure(
             return undefined(env);
         }
     };
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     match graph.transitive_closure(&name) {
         Ok(closure) => hash_set_to_js(env, &closure),
         Err(e) => throw_graph_error(env, e),
@@ -331,7 +347,7 @@ unsafe extern "C" fn graph_affected_nodes(
 ) -> napi_value {
     let (this, args) = get_cb_info(env, info, 1);
     let changed = hash_set_from_js(env, args[0]);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     hash_set_to_js(env, &graph.affected_nodes(&changed))
 }
 
@@ -342,7 +358,7 @@ unsafe extern "C" fn graph_independent_groups(
     info: napi_callback_info,
 ) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let graph = unwrap_data::<Graph>(env, this);
+    let graph = unwrap_ref!(env, this, Graph);
     match graph.independent_groups() {
         Ok(groups) => vec_vec_str_to_js(env, &groups),
         Err(e) => throw_graph_error(env, e),
