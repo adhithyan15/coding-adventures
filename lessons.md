@@ -4,6 +4,42 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-05: Lua regex does not support \v and \f escapes in character classes
+
+The ECMAScript .tokens grammar files use `/[ \t\r\n\v\f]+/` for whitespace skip patterns. In Lua's regex engine, `\v` and `\f` are not recognized escape sequences inside character classes. They are interpreted as literal `v` and `f`, causing the whitespace skip to match the letters `v` and `f` in source code, silently consuming characters from keywords like `var` and `function`.
+
+**Symptom:** `var` tokenizes as NAME with value `ar` (the `v` is consumed by the skip pattern).
+
+**Solution:** In Lua lexer wrappers that load .tokens files with `\v` or `\f` in patterns, replace these escapes with actual control characters before parsing:
+
+```lua
+content = content:gsub("\\v", "\x0B")
+content = content:gsub("\\f", "\x0C")
+```
+
+**Rule:** Every Lua lexer package that loads a .tokens grammar with `\v` or `\f` in skip patterns must sanitize the content before calling `grammar_tools.parse_token_grammar`.
+
+---
+
+### 2026-04-05: Swift GrammarLexer emits generic "KEYWORD" type for all keywords
+
+The Swift `GrammarLexer` emits tokens with type `"KEYWORD"` for all keywords, with the actual keyword text in the `value` field. This differs from the Lua GrammarLexer which uses `type_name` set to the uppercased keyword (e.g., `"VAR"`, `"IF"`).
+
+**Solution:** Swift lexer wrappers must post-process the token stream to promote `KEYWORD` tokens:
+
+```swift
+return raw.map { token in
+    if token.type == "KEYWORD" {
+        return Token(type: token.value.uppercased(), value: token.value, ...)
+    }
+    return token
+}
+```
+
+**Rule:** All Swift language lexer packages need keyword promotion in their `tokenize()` method.
+
+---
+
 ### 2026-04-04: Gradle "build" directory conflicts with BUILD file on case-insensitive filesystems
 
 Gradle's default output directory is `build/`. On macOS and Windows (case-insensitive filesystems), this collides with our `BUILD` file — Gradle sees `BUILD` as a file where it expects to create a `build/` directory, causing `IllegalArgumentException: Could not create problems-report directory`.

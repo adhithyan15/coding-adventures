@@ -1,0 +1,287 @@
+# ECMAScript 2016 (ES7) — Lexical Grammar
+# @version 1
+# @ecmascript_edition 2016
+#
+# ECMA-262, 7th Edition — June 2016
+#
+# ES2016 was the first release under TC39's new yearly cadence. After the
+# massive ES2015 dump (classes, modules, arrows, generators, destructuring,
+# template literals, let/const, and more), the committee switched to small,
+# incremental annual releases. Each feature must reach "Stage 4" (complete
+# with tests and multiple implementations) before inclusion.
+#
+# ES2016 is the smallest annual release in JavaScript history. It adds exactly
+# two things:
+#
+#   1. The exponentiation operator: `**` and `**=`
+#      - `2 ** 10` evaluates to 1024 (same as Math.pow(2, 10))
+#      - `x **= 2` is shorthand for `x = x ** 2`
+#      - Right-associative: `2 ** 3 ** 2` is `2 ** (3 ** 2)` = 512, not 64
+#
+#   2. Array.prototype.includes() — but that's a runtime API, not syntax
+#
+# Everything else in this file comes from ES2015. Since each grammar file is
+# self-contained (no inheritance), this file includes the FULL ES2015 token
+# set plus the two new operator tokens.
+#
+# Token ordering matters: longer tokens must appear before shorter ones that
+# share a prefix. For example, `**=` must come before `**`, which must come
+# before `*=`, which must come before `*`. This is the "first-match-wins"
+# (maximal munch) principle that every lexer relies on.
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers ---
+#
+# ES2015 added binary (0b/0B) and octal (0o/0O) literals to the existing
+# hex and decimal forms from ES1. ES2016 makes no changes to number syntax.
+
+BINARY_NUMBER = /0[bB][01]+/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]+/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# --- Strings ---
+#
+# Double-quoted and single-quoted strings, unchanged since ES1. Backslash
+# escapes work in both: \n, \t, \\, \", \', \xHH, \uHHHH, and ES2015's
+# \u{HHHHHH} for full Unicode support.
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+#
+# ES2015 introduced template literals using backticks. They come in two forms:
+#
+#   1. No-substitution: `hello world` — a simple string, no ${} expressions
+#   2. With substitution: `hello ${name}!` — contains embedded expressions
+#
+# For substitution templates, the lexer splits them into parts:
+#   - TEMPLATE_HEAD: `hello ${     (opens the template, starts first expression)
+#   - TEMPLATE_MIDDLE: } more ${   (closes one expression, starts another)
+#   - TEMPLATE_TAIL: } goodbye`    (closes last expression, ends the template)
+#
+# TEMPLATE_MIDDLE and TEMPLATE_TAIL live in the `template` group because they
+# start with `}`, which would otherwise be lexed as RBRACE. The lexer pushes
+# into the template group when it encounters `${` inside a template, and pops
+# back when the expression completes.
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions ---
+#
+# ES2015 added the `u` (Unicode) flag. Flags available: g, i, m, u, y.
+# The `y` (sticky) flag was also added in ES2015.
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gimuy]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# Ordering is critical. Longest-match-first ensures that `**=` is recognized
+# before `**`, which is recognized before `*=`, which is recognized before `*`.
+
+# --- NEW IN ES2016: Exponentiation operators ---
+#
+# The `**` operator was the first new infix operator since ES1. It fills a
+# gap that Math.pow() covered but with cleaner syntax for mathematical code.
+# The compound assignment `**=` follows the pattern of all other compound
+# assignment operators (+=, -=, *=, /=, etc.).
+#
+# Why right-associative? Math convention. In mathematical notation, a^b^c
+# means a^(b^c), not (a^b)^c. So `2 ** 3 ** 2` = `2 ** 9` = 512.
+# This is the ONLY right-associative binary operator in JavaScript besides
+# assignment itself.
+
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+
+# --- ES5 operators (unchanged) ---
+
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+
+# --- ES2015 operators ---
+
+ARROW    = "=>"
+ELLIPSIS = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# ES2015 promoted several future-reserved words to full keywords: class,
+# const, export, extends, import, super, let, yield. ES2016 adds no new
+# keywords.
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# After ES2015 promoted class, const, export, extends, import, and super,
+# only `enum` remains unconditionally reserved for future use.
+
+reserved:
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# Context keywords are identifiers that have special meaning in certain
+# grammatical positions but can still be used as variable names elsewhere.
+# This is how JavaScript evolves without breaking existing code.
+#
+# ES2015 introduced these context keywords:
+#   - `as`: used in import/export renaming: `import { x as y } from "m"`
+#   - `from`: used in import/export sources: `import x from "module"`
+#   - `of`: used in for-of loops: `for (const x of iterable)`
+#   - `get`: used in getter definitions: `{ get prop() {} }`
+#   - `set`: used in setter definitions: `{ set prop(v) {} }`
+#   - `static`: used in class definitions: `class C { static method() {} }`
+
+context_keywords:
+  as
+  from
+  of
+  get
+  set
+  static
+
+# ============================================================================
+# Token groups
+# ============================================================================
+#
+# Template literal continuation tokens live in a separate lexer group.
+# When the lexer encounters `${` inside a template, it pushes the default
+# group to lex the expression. When it encounters `}` at brace depth 0,
+# it switches to the template group to continue lexing the template string.
+
+groups:
+  template:
+    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/
