@@ -32,6 +32,19 @@ Using `java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }` i
 
 ---
 
+### 2026-04-04: CI detect outputs must use steps.toolchains, not steps.detect
+
+The CI workflow has a "Normalize toolchain requirements" step (id: `toolchains`) that sits between the detect step and the job outputs. On main branch pushes, it forces all languages to `true` for the full rebuild. On other branches, it passes through the detect outputs.
+
+When adding a new language to CI, you must add it in THREE places:
+1. `allLanguages` in the build tool (`main.go`)
+2. The detect job `outputs:` section (using `steps.toolchains.outputs.needs_<lang>`)
+3. The `steps.toolchains` normalization step — in BOTH the `is_main=true` branch AND the `else` branch
+
+If you only add it to `outputs:` using `steps.detect.outputs` instead of `steps.toolchains.outputs`, the validator will fail with: "detect outputs for forced main full builds are not normalized through steps.toolchains."
+
+---
+
 ### 2026-04-04: elixir_make chicken-and-egg: do not use `:make` compiler in mix.exs when BUILD builds the NIF externally
 
 When `mix.exs` lists `compilers: Mix.compilers() ++ [:make]`, Mix tries to
