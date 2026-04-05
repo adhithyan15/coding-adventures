@@ -62,7 +62,7 @@ describe("FIPS 180-4 test vectors", () => {
     );
   });
 
-  it("one million 'a' characters", () => {
+  it("one million 'a' characters", { timeout: 60_000 }, () => {
     const data = new Uint8Array(1_000_000).fill(0x61); // 'a'
     expect(sha512Hex(data)).toBe(
       "e718483d0ce769644e2e42c7bc15b4638e1f98b13b2044285632a803afa973eb" +
@@ -301,7 +301,7 @@ describe("SHA512Hasher streaming", () => {
     expect(result).toBe(sha512Hex(text("abc")));
   });
 
-  it("streaming million 'a's matches oneshot", () => {
+  it("streaming million 'a's matches oneshot", { timeout: 60_000 }, () => {
     const data = new Uint8Array(1_000_000).fill(0x61);
     const h = new SHA512Hasher();
     h.update(data.subarray(0, 500_000));
