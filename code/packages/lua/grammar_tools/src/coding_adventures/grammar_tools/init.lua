@@ -191,6 +191,7 @@ function TokenGrammar.new()
     self.definitions = {}
     self.keywords = {}
     self.context_keywords = {}
+    self.soft_keywords = {}
     self.mode = ""
     self.escape_mode = ""
     self.skip_definitions = {}
@@ -408,6 +409,8 @@ local RESERVED_GROUP_NAMES = {
     keywords = true,
     reserved = true,
     errors = true,
+    context_keywords = true,
+    soft_keywords = true,
 }
 
 -- ============================================================================
@@ -548,6 +551,10 @@ function grammar_tools.parse_token_grammar(source)
             current_section = "context_keywords"
             goto continue
         end
+        if stripped == "soft_keywords:" or stripped == "soft_keywords :" then
+            current_section = "soft_keywords"
+            goto continue
+        end
 
         -- Inside a section: lines must be indented (start with space or tab)
         if current_section ~= "" then
@@ -562,6 +569,11 @@ function grammar_tools.parse_token_grammar(source)
                 elseif current_section == "context_keywords" then
                     if stripped ~= "" then
                         grammar.context_keywords[#grammar.context_keywords + 1] = stripped
+                    end
+
+                elseif current_section == "soft_keywords" then
+                    if stripped ~= "" then
+                        grammar.soft_keywords[#grammar.soft_keywords + 1] = stripped
                     end
 
                 elseif current_section == "reserved" then

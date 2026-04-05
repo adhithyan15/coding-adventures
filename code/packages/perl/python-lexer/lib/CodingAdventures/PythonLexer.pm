@@ -92,57 +92,81 @@ use File::Basename qw(dirname);
 use File::Spec;
 use CodingAdventures::GrammarTools;
 
+# DefaultVersion is the Python version used when no version is specified.
+use constant DEFAULT_VERSION => '3.12';
+
+# SupportedVersions lists all Python versions with grammar files.
+our @SUPPORTED_VERSIONS = ('2.7', '3.0', '3.6', '3.8', '3.10', '3.12');
+
 # ============================================================================
 # Grammar loading and caching
 # ============================================================================
 #
 # Reading and parsing the grammar file on every tokenize() call would be
-# wasteful. We cache the TokenGrammar object and compiled rule lists in
-# package-level variables. They are populated on the first call and reused.
+# wasteful. We cache TokenGrammar objects and compiled rule lists keyed
+# by version string. They are populated on first use and reused thereafter.
 
-my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
-my $_rules;        # arrayref of { name => str, pat => qr// }
-my $_skip_rules;   # arrayref of qr// patterns for skip definitions
-my $_keyword_map;  # hashref mapping keyword string → promoted token type
+my %_grammar_cache;   # version => CodingAdventures::GrammarTools::TokenGrammar
+my %_rules_cache;     # version => arrayref of { name => str, pat => qr// }
+my %_skip_cache;      # version => arrayref of qr// patterns for skip definitions
+my %_keyword_cache;   # version => hashref mapping keyword string => promoted type
 
 # --- _grammars_dir() ----------------------------------------------------------
 #
 # Return the absolute path to the shared `grammars/` directory in the
 # monorepo, computed relative to this module file.
-#
-# We use File::Spec for cross-platform path construction and
-# File::Basename::dirname to strip the filename component.
 
 sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/python-lexer/lib/CodingAdventures/PythonLexer.pm
     my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → python-lexer/ → perl/ → packages/ → code/
+    # Climb 5 levels: CodingAdventures/ -> lib/ -> python-lexer/ -> perl/ -> packages/ -> code/
     for (1..5) {
         $dir = dirname($dir);
     }
     return File::Spec->catdir($dir, 'grammars');
 }
 
-# --- _grammar() ---------------------------------------------------------------
+# --- _resolve_version($version) -----------------------------------------------
 #
-# Load and parse `python.tokens`, caching the result.
+# Return the version string to use. If undef or empty, returns DEFAULT_VERSION.
+
+sub _resolve_version {
+    my ($version) = @_;
+    return DEFAULT_VERSION if !defined($version) || $version eq '';
+    return $version;
+}
+
+# --- _grammar_path($version) --------------------------------------------------
+#
+# Return the path to the .tokens file for the given Python version.
+
+sub _grammar_path {
+    my ($version) = @_;
+    return File::Spec->catfile( _grammars_dir(), 'python', "python${version}.tokens" );
+}
+
+# --- _grammar($version) -------------------------------------------------------
+#
+# Load and parse the versioned grammar, caching per version.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
-    return $_grammar if $_grammar;
+    my ($version) = @_;
+    my $v = _resolve_version($version);
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'python.tokens' );
+    return $_grammar_cache{$v} if $_grammar_cache{$v};
+
+    my $tokens_file = _grammar_path($v);
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::PythonLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };
     close $fh;
 
     my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::PythonLexer: failed to parse python.tokens: $err"
+    die "CodingAdventures::PythonLexer: failed to parse python${v}.tokens: $err"
         unless $grammar;
 
-    $_grammar = $grammar;
-    return $_grammar;
+    $_grammar_cache{$v} = $grammar;
+    return $grammar;
 }
 
 # --- _build_rules() -----------------------------------------------------------
@@ -167,9 +191,12 @@ sub _grammar {
 # Alias resolution: definitions with `-> ALIAS` emit the alias as type name.
 
 sub _build_rules {
-    return if $_rules;    # already built
+    my ($version) = @_;
+    my $v = _resolve_version($version);
 
-    my $grammar = _grammar();
+    return if $_rules_cache{$v};    # already built for this version
+
+    my $grammar = _grammar($v);
     my (@rules, @skip_rules);
 
     # Build skip patterns
@@ -202,22 +229,18 @@ sub _build_rules {
 
     # If the grammar has no skip definitions (e.g. python.tokens has none),
     # add a default whitespace skip so that spaces, tabs, carriage returns, and
-    # newlines between tokens are silently consumed — matching the behaviour of
-    # the Lua GrammarLexer which applies a built-in whitespace skip when the
-    # grammar contains no skip: section.
+    # newlines between tokens are silently consumed.
     unless (@skip_rules) {
         push @skip_rules, qr/\G[ \t\r\n]+/;
     }
 
     # Build keyword lookup map from the grammar keywords section.
-    # NAME tokens whose value matches a keyword are promoted to the keyword type.
-    # Keywords are stored exactly as defined in the grammar (case-sensitive).
     my %kw_map;
     $kw_map{$_} = uc($_) for @{ $grammar->keywords };
-    $_keyword_map = \%kw_map;
+    $_keyword_cache{$v} = \%kw_map;
 
-    $_skip_rules = \@skip_rules;
-    $_rules      = \@rules;
+    $_skip_cache{$v} = \@skip_rules;
+    $_rules_cache{$v} = \@rules;
 }
 
 # ============================================================================

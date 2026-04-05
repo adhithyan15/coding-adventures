@@ -7,32 +7,38 @@ require_relative "test_helper"
 # ================================================================
 #
 # These tests verify that the grammar-driven lexer, when loaded
-# with python.tokens, correctly tokenizes Python source code.
+# with versioned python.tokens files, correctly tokenizes Python
+# source code for multiple Python versions.
 #
 # The key insight being tested: the same lexer engine that handles
 # one language can handle any language whose tokens are described
 # in a .tokens file. We are not testing the lexer engine itself
 # (that is tested in the lexer gem) -- we are testing that the
-# Python grammar file correctly describes Python's lexical rules.
+# Python grammar files correctly describe Python's lexical rules.
 # ================================================================
 
 class TestPythonLexer < Minitest::Test
   TT = CodingAdventures::Lexer::TokenType
 
+  # Clear the grammar cache before each test so tests are independent.
+  def setup
+    CodingAdventures::PythonLexer.clear_cache!
+  end
+
   # ------------------------------------------------------------------
   # Helper: tokenize and strip the trailing EOF token for cleaner tests
   # ------------------------------------------------------------------
 
-  def tokenize(source)
-    CodingAdventures::PythonLexer.tokenize(source)
+  def tokenize(source, version: "3.12")
+    CodingAdventures::PythonLexer.tokenize(source, version: version)
   end
 
-  def token_types(source)
-    tokenize(source).map(&:type)
+  def token_types(source, version: "3.12")
+    tokenize(source, version: version).map(&:type)
   end
 
-  def token_values(source)
-    tokenize(source).map(&:value)
+  def token_values(source, version: "3.12")
+    tokenize(source, version: version).map(&:value)
   end
 
   # ------------------------------------------------------------------
@@ -310,11 +316,122 @@ class TestPythonLexer < Minitest::Test
   end
 
   # ------------------------------------------------------------------
-  # Grammar path resolution
+  # Version parameter and grammar path resolution
   # ------------------------------------------------------------------
 
-  def test_grammar_path_exists
-    assert File.exist?(CodingAdventures::PythonLexer::PYTHON_TOKENS_PATH),
-      "python.tokens file should exist at #{CodingAdventures::PythonLexer::PYTHON_TOKENS_PATH}"
+  def test_default_version_is_3_12
+    assert_equal "3.12", CodingAdventures::PythonLexer::DEFAULT_VERSION
+  end
+
+  def test_supported_versions
+    expected = %w[2.7 3.0 3.6 3.8 3.10 3.12]
+    assert_equal expected, CodingAdventures::PythonLexer::SUPPORTED_VERSIONS
+  end
+
+  def test_grammar_path_for_version
+    path = CodingAdventures::PythonLexer.grammar_path("3.12")
+    assert path.end_with?("python/python3.12.tokens"),
+      "Expected path to end with python/python3.12.tokens, got: #{path}"
+  end
+
+  def test_grammar_path_for_2_7
+    path = CodingAdventures::PythonLexer.grammar_path("2.7")
+    assert path.end_with?("python/python2.7.tokens"),
+      "Expected path to end with python/python2.7.tokens, got: #{path}"
+  end
+
+  def test_grammar_files_exist_for_all_versions
+    CodingAdventures::PythonLexer::SUPPORTED_VERSIONS.each do |v|
+      path = CodingAdventures::PythonLexer.grammar_path(v)
+      assert File.exist?(path),
+        "Grammar file missing for Python #{v}: #{path}"
+    end
+  end
+
+  def test_unsupported_version_raises
+    assert_raises(ArgumentError) do
+      CodingAdventures::PythonLexer.tokenize("x = 1", version: "1.0")
+    end
+  end
+
+  def test_unsupported_version_error_message
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::PythonLexer.tokenize("x = 1", version: "99.9")
+    end
+    assert_includes error.message, "Unsupported Python version"
+    assert_includes error.message, "99.9"
+  end
+
+  def test_tokenize_with_default_version
+    # Calling without version: should use 3.12
+    tokens = CodingAdventures::PythonLexer.tokenize("x = 1")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_tokenize_with_explicit_3_12
+    tokens = tokenize("x = 1", version: "3.12")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_tokenize_with_3_8
+    tokens = tokenize("x = 1", version: "3.8")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_tokenize_with_2_7
+    tokens = tokenize("x = 1", version: "2.7")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_tokenize_with_3_0
+    tokens = tokenize("x = 1", version: "3.0")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_tokenize_with_3_6
+    tokens = tokenize("x = 1", version: "3.6")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_tokenize_with_3_10
+    tokens = tokenize("x = 1", version: "3.10")
+    types = tokens.map(&:type)
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF], types
+  end
+
+  def test_grammar_caching
+    # First call loads the grammar, second call should use the cache.
+    CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.12")
+    CodingAdventures::PythonLexer.tokenize("y = 2", version: "3.12")
+    # No assertion needed beyond not crashing -- caching is an
+    # implementation detail. We verify it works by the fact that
+    # the second call produces correct results.
+    tokens = CodingAdventures::PythonLexer.tokenize("y = 2", version: "3.12")
+    assert_equal "y", tokens[0].value
+  end
+
+  def test_clear_cache
+    CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.12")
+    CodingAdventures::PythonLexer.clear_cache!
+    # After clearing, the next call should re-load from disk.
+    tokens = CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.12")
+    assert_equal [TT::NAME, TT::EQUALS, TT::NUMBER, TT::EOF],
+      tokens.map(&:type)
+  end
+
+  def test_different_versions_cached_independently
+    CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.8")
+    CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.12")
+    # Both should work without interference.
+    tokens_38 = CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.8")
+    tokens_312 = CodingAdventures::PythonLexer.tokenize("x = 1", version: "3.12")
+    assert_equal "x", tokens_38[0].value
+    assert_equal "x", tokens_312[0].value
   end
 end

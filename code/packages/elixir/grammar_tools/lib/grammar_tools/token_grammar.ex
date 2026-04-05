@@ -41,6 +41,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             skip_definitions: [],
             reserved_keywords: [],
             context_keywords: [],
+            soft_keywords: [],
             mode: nil,
             escape_mode: nil,
             groups: %{},
@@ -76,6 +77,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           skip_definitions: [token_definition()],
           reserved_keywords: [String.t()],
           context_keywords: [String.t()],
+          soft_keywords: [String.t()],
           mode: String.t() | nil,
           escape_mode: String.t() | nil,
           groups: %{optional(String.t()) => pattern_group()},
@@ -191,8 +193,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
                     "Line #{line_number}: Invalid group name: #{inspect(group_name)} " <>
                       "(must be a lowercase identifier like 'tag' or 'cdata')"}}
 
-                group_name in ~w(default skip keywords reserved errors) ->
-                  reserved_names = Enum.join(Enum.sort(~w(default errors keywords reserved skip)), ", ")
+                group_name in ~w(default skip keywords reserved errors context_keywords soft_keywords) ->
+                  reserved_names = Enum.join(Enum.sort(~w(context_keywords default errors keywords reserved skip soft_keywords)), ", ")
 
                   {:halt,
                    {:error,
@@ -226,8 +228,11 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             stripped in ["context_keywords:", "context_keywords :"] ->
               {:cont, %{acc | section: :context_keywords}}
 
+            stripped in ["soft_keywords:", "soft_keywords :"] ->
+              {:cont, %{acc | section: :soft_keywords}}
+
             # Inside a section �� indented lines are section entries
-            acc.section in [:keywords, :reserved, :context_keywords] and
+            acc.section in [:keywords, :reserved, :context_keywords, :soft_keywords] and
                 (String.starts_with?(line, " ") or String.starts_with?(line, "\t")) ->
               word = stripped
 
@@ -242,6 +247,10 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
 
                 :context_keywords ->
                   grammar = %{acc.grammar | context_keywords: acc.grammar.context_keywords ++ [word]}
+                  {:cont, %{acc | grammar: grammar}}
+
+                :soft_keywords ->
+                  grammar = %{acc.grammar | soft_keywords: acc.grammar.soft_keywords ++ [word]}
                   {:cont, %{acc | grammar: grammar}}
               end
 
@@ -292,7 +301,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             # Non-indented line exits any section
             true ->
               section =
-                if acc.section in [:keywords, :reserved, :skip, :errors, :context_keywords] or match?({:group, _}, acc.section),
+                if acc.section in [:keywords, :reserved, :skip, :errors, :context_keywords, :soft_keywords] or match?({:group, _}, acc.section),
                   do: :definitions,
                   else: acc.section
 

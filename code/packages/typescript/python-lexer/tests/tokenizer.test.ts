@@ -1,8 +1,8 @@
 /**
  * Tests for the Python Lexer (TypeScript).
  *
- * These tests verify that the grammar-driven lexer, when loaded with the
- * `python.tokens` grammar file, correctly tokenizes Python source code.
+ * These tests verify that the grammar-driven lexer, when loaded with
+ * versioned Python grammar files, correctly tokenizes Python source code.
  *
  * The key insight: **no new lexer code was written**. The same
  * `grammarTokenize` engine that handles any language handles Python —
@@ -10,18 +10,18 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { tokenizePython } from "../src/tokenizer.js";
+import { tokenizePython, SUPPORTED_VERSIONS } from "../src/tokenizer.js";
 
 // ---------------------------------------------------------------------------
 // Helper — extract just the type names for cleaner assertions
 // ---------------------------------------------------------------------------
 
-function tokenTypes(source: string): string[] {
-  return tokenizePython(source).map((t) => t.type);
+function tokenTypes(source: string, version?: string): string[] {
+  return tokenizePython(source, version).map((t) => t.type);
 }
 
-function tokenValues(source: string): string[] {
-  return tokenizePython(source).map((t) => t.value);
+function tokenValues(source: string, version?: string): string[] {
+  return tokenizePython(source, version).map((t) => t.value);
 }
 
 // ---------------------------------------------------------------------------
@@ -133,5 +133,46 @@ describe("function definition syntax", () => {
     expect(types).toEqual([
       "KEYWORD", "NAME", "LPAREN", "NAME", "RPAREN", "COLON", "EOF",
     ]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Version Support
+// ---------------------------------------------------------------------------
+
+describe("version support", () => {
+  it("exports all supported versions", () => {
+    expect(SUPPORTED_VERSIONS).toEqual(["2.7", "3.0", "3.6", "3.8", "3.10", "3.12"]);
+  });
+
+  it("defaults to 3.12 when no version is specified", () => {
+    // Both calls should produce the same output
+    const withDefault = tokenTypes("x = 1");
+    const explicit = tokenTypes("x = 1", "3.12");
+    expect(withDefault).toEqual(explicit);
+  });
+
+  it("loads each supported version without error", () => {
+    for (const version of SUPPORTED_VERSIONS) {
+      // Smoke test: every version should be able to tokenize a simple expression
+      const tokens = tokenizePython("x = 1", version);
+      expect(tokens.length).toBeGreaterThan(0);
+      expect(tokens[tokens.length - 1].type).toBe("EOF");
+    }
+  });
+
+  it("tokenizes with Python 2.7 grammar", () => {
+    const tokens = tokenizePython("x = 1", "2.7");
+    expect(tokens[0].type).toBe("NAME");
+    expect(tokens[0].value).toBe("x");
+  });
+
+  it("caches grammars across calls", () => {
+    // Calling twice with the same version should reuse the cached grammar.
+    // We verify this indirectly by checking that both calls succeed and
+    // produce identical results.
+    const first = tokenTypes("a + b", "3.8");
+    const second = tokenTypes("a + b", "3.8");
+    expect(first).toEqual(second);
   });
 });
