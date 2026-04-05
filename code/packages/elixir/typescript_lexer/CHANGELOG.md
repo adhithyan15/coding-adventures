@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+- `tokenize(source, version \\ nil)` — optional `version` parameter accepting
+  `"ts1.0"`, `"ts2.0"`, `"ts3.0"`, `"ts4.0"`, `"ts5.0"`, or `"ts5.8"`.
+  Passing `nil` (default) uses the generic grammar — backwards-compatible with v0.1.x.
+- `create_lexer(source, version \\ nil)` — new function returning a lexer context map
+  for use in pipeline-style tokenization workflows.
+- Version validation raises `ArgumentError` with a descriptive message for unknown versions.
+- Expanded test suite covering all six TS version strings, nil version, factory function,
+  and error cases.
+
+### Changed
+- `tokenize/1` is now implemented as a 1-arity wrapper over `tokenize/2` — fully
+  backwards-compatible; existing callers with one argument are unaffected.
+
 ## [0.1.0] - 2026-03-24
 
 ### Added
