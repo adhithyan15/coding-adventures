@@ -1025,18 +1025,29 @@ file (`lib/coding_adventures_starlark_vm.rb`) before referencing it.
 
 ---
 
-### 2026-03-28: Lua test files need package.path setup for local src/ directory
+### 2026-03-28: CRITICAL — Lua test files MUST set package.path before require
 
 When running `busted . --verbose` from the `tests/` subdirectory, Lua cannot
 find modules in the `src/` directory because it's not in `package.path`.
-Always add this at the top of every Lua test file (before the first `require`):
+This causes "module not found" errors, especially on **Windows CI** where
+the rockspec install does NOT put modules into the default Lua search path.
+
+**Every Lua test file MUST have this line before the first `require`:**
 
 ```lua
 package.path = "../src/?.lua;" .. "../src/?/init.lua;" .. package.path
 ```
 
-This pattern was established by the existing arithmetic package. Every new
-Lua test file must include it.
+Without this line, tests pass on some platforms but fail on Windows with:
+```
+module 'coding_adventures.foo' not found:
+    no file './src/coding_adventures\foo.lua'
+```
+
+This is NOT optional. It is NOT handled by BUILD files or rockspecs on Windows.
+The test file itself must prepend the path. This lesson has been re-learned
+multiple times (atbash_cipher, scytale_cipher). Do NOT create a Lua test file
+without this line.
 
 ---
 
