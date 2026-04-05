@@ -135,14 +135,17 @@ private func maj(_ x: UInt64, _ y: UInt64, _ z: UInt64) -> UInt64 {
 
 @inline(__always)
 private func readBE64(_ bytes: [UInt8], _ offset: Int) -> UInt64 {
-    return (UInt64(bytes[offset]) << 56)
+    // Break into sub-expressions to help the Swift type-checker
+    // (long chained expressions cause "unable to type-check" errors).
+    let hi: UInt64 = (UInt64(bytes[offset]) << 56)
         | (UInt64(bytes[offset + 1]) << 48)
         | (UInt64(bytes[offset + 2]) << 40)
         | (UInt64(bytes[offset + 3]) << 32)
-        | (UInt64(bytes[offset + 4]) << 24)
+    let lo: UInt64 = (UInt64(bytes[offset + 4]) << 24)
         | (UInt64(bytes[offset + 5]) << 16)
         | (UInt64(bytes[offset + 6]) << 8)
         | UInt64(bytes[offset + 7])
+    return hi | lo
 }
 
 // ============================================================================
