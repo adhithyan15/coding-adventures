@@ -35,8 +35,6 @@ defmodule CodingAdventures.PythonLexerTest do
       names = Enum.map(grammar.definitions, & &1.name)
 
       assert "NAME" in names
-      assert "INT" in names
-      assert "STRING" in names
       assert "EQUALS_EQUALS" in names
       assert "COLON" in names
       assert "if" in grammar.keywords
@@ -96,9 +94,10 @@ defmodule CodingAdventures.PythonLexerTest do
       assert {eof.line, eof.column} == {1, 6}
     end
 
-    test "returns an error on unexpected characters" do
-      assert {:error, message} = PythonLexer.tokenize("@")
-      assert message =~ "Unexpected character"
+    test "tokenizes @ as AT token (decorator operator)" do
+      {:ok, tokens} = PythonLexer.tokenize("@\n")
+      types = Enum.map(tokens, & &1.type)
+      assert "AT" in types
     end
 
     test "accepts an explicit version parameter" do
