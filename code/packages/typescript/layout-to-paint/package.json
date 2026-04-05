@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/layout-to-paint",
+  "version": "0.1.0",
+  "description": "Converts a PositionedNode tree (layout output) to a PaintScene (paint-vm input)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "layout",
+    "paint",
+    "canvas",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/layout-ir": "file:../layout-ir",
+    "@coding-adventures/paint-instructions": "file:../paint-instructions"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

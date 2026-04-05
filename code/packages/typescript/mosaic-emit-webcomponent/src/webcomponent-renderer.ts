@@ -524,11 +524,20 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
         break;
       case "style":
         if (value.kind === "enum") {
-          classNames.push(`mosaic-${value.namespace}-${value.member}`);
-          this._needsTypeScaleCSS = true;
+          // Validate namespace/member are safe identifiers (alphanumeric + hyphen)
+          // before embedding in the HTML class attribute of the generated code.
+          const safeNs = /^[a-zA-Z0-9-]+$/.test(value.namespace) ? value.namespace : "";
+          const safeMember = /^[a-zA-Z0-9-]+$/.test(value.member) ? value.member : "";
+          if (safeNs && safeMember) {
+            classNames.push(`mosaic-${safeNs}-${safeMember}`);
+            this._needsTypeScaleCSS = true;
+          }
         } else if (value.kind === "string") {
-          classNames.push(`mosaic-${value.value}`);
-          this._needsTypeScaleCSS = true;
+          // Validate value is a safe identifier before embedding in class attribute.
+          if (/^[a-zA-Z0-9-]+$/.test(value.value)) {
+            classNames.push(`mosaic-${value.value}`);
+            this._needsTypeScaleCSS = true;
+          }
         }
         break;
 
@@ -560,7 +569,10 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
         break;
       case "fit":
         if (tag === "Image" && value.kind === "string") {
-          styles.push(`object-fit:${value.value}`);
+          // Allowlist valid CSS object-fit values — prevents attribute injection
+          // in the static HTML string baked into _render() / innerHTML.
+          const fitAllowed = new Set(["fill", "contain", "cover", "none", "scale-down"]);
+          if (fitAllowed.has(value.value)) styles.push(`object-fit:${value.value}`);
         }
         break;
 
@@ -579,7 +591,13 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
             case "none":    attrs.push('aria-hidden="true"'); break;
             case "heading": attrs.push('role="heading"'); break; // post-processed above
             case "image":   attrs.push('role="img"'); break;
-            default:        attrs.push(`role="${value.value}"`); break;
+            default: {
+              // Escape the role value to prevent attribute injection in the
+              // static HTML string baked into _render() / innerHTML.
+              const safeRole = value.value.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+              attrs.push(`role="${safeRole}"`);
+              break;
+            }
           }
         }
         break;
@@ -800,10 +818,13 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
         // Node/component slots use Light DOM projection (no _render call)
         setterLines.push(`  set ${slot.name}(v: HTMLElement) { this._projectSlot('${slot.name}', v); }`);
       } else if (slot.type.kind === "image") {
-        // Image slots: validate URL to reject javascript: scheme
+        // Image slots: use a positive allowlist — only permit https:, http:,
+        // and relative URLs. This is more robust than blocking javascript: alone
+        // since it also rejects data:text/html, vbscript:, and encoded variants.
         setterLines.push(`  set ${slot.name}(v: string) {`);
-        setterLines.push(`    if (/^javascript:/i.test(v.trim())) return;`);
-        setterLines.push(`    ${field} = v;`);
+        setterLines.push(`    const trimmed = v.trim();`);
+        setterLines.push(`    if (!/^(https?:\\/\\/|\\/|\\.\\/)/.test(trimmed) && !/^[^:/?#]*[/?#]/.test(trimmed)) return;`);
+        setterLines.push(`    ${field} = trimmed;`);
         setterLines.push(`    this._render();`);
         setterLines.push(`  }`);
         setterLines.push(`  get ${slot.name}(): string { return ${field}; }`);

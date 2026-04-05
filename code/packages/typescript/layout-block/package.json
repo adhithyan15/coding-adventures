@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/layout-block",
+  "version": "0.1.0",
+  "description": "Block and inline flow layout algorithm — CSS normal flow (block formatting context) for document renderers",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "layout",
+    "block",
+    "inline",
+    "css",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/layout-ir": "file:../layout-ir"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "@coding-adventures/layout-text-measure-estimated": "file:../layout-text-measure-estimated"
+  }
+}

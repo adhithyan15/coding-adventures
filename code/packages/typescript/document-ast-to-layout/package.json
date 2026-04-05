@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/document-ast-to-layout",
+  "version": "0.1.0",
+  "description": "Converts a Document AST (TE00) into a LayoutNode tree for the block-flow layout algorithm",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "document",
+    "layout",
+    "markdown",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/document-ast": "file:../document-ast",
+    "@coding-adventures/layout-ir": "file:../layout-ir"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
