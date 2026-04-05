@@ -30,6 +30,7 @@ from virtual_machine.generic_vm import (
     GenericVM,
     MaxRecursionError,
     OpcodeHandler,
+    TypedVMValue,
     VMTypeError,
 )
 from virtual_machine.vm import (
@@ -67,4 +68,5 @@ __all__ = [
     "DivisionByZeroError",
     "InvalidOpcodeError",
     "InvalidOperandError",
+    "TypedVMValue",
 ]
