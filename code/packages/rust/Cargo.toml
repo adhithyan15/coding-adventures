@@ -164,4 +164,5 @@ members = [
   "mosaic-vm",
   "mosaic-emit-react",
   "mosaic-emit-webcomponent",
+  "scytale-cipher",
 ]
