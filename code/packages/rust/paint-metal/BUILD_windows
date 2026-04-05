@@ -1,0 +1,1 @@
+echo "SKIP: paint-metal requires macOS/Apple platform — not supported on Windows"
