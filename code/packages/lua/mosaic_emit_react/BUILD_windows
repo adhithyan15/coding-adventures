@@ -1,1 +1,2 @@
+REM prereqs: ../mosaic_lexer ../mosaic_parser ../mosaic_analyzer ../mosaic_vm
 cd tests && busted . --verbose --pattern=test_
