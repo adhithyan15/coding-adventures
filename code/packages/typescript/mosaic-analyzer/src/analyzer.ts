@@ -508,7 +508,10 @@ function analyzeNodeContents(node: ASTNode): MosaicChild[] {
  *   "100%"  → { kind: "dimension", value: 100, unit: "%" }
  */
 function parseDimension(raw: string): MosaicValue & { kind: "dimension" } {
-  const match = raw.match(/^(-?[0-9]*\.?[0-9]+)([a-zA-Z%]+)$/);
+  // Use a non-backtracking numeric pattern to prevent ReDoS on crafted input.
+  // [0-9]+(?:\.[0-9]+)? | \.[0-9]+ is unambiguous; avoids the A*B?A+ structure
+  // that caused polynomial backtracking in the original [0-9]*\.?[0-9]+ pattern.
+  const match = raw.match(/^(-?(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+))([a-zA-Z%]+)$/);
   if (!match) throw new AnalysisError(`Invalid DIMENSION token: "${raw}"`);
   return { kind: "dimension", value: parseFloat(match[1]), unit: match[2] };
 }
