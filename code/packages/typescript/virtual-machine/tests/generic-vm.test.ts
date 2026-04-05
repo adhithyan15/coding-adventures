@@ -1381,4 +1381,268 @@ describe("GenericVM", () => {
       });
     });
   });
+
+  // =====================================================================
+  // Typed Stack Operations
+  // =====================================================================
+
+  describe("typed stack operations", () => {
+    it("should push and pop typed values", () => {
+      const vm = new GenericVM();
+
+      vm.pushTyped({ type: 0x7F, value: 42 });
+      vm.pushTyped({ type: 0x7E, value: 7n });
+
+      const top = vm.popTyped();
+      expect(top).toEqual({ type: 0x7E, value: 7n });
+
+      const second = vm.popTyped();
+      expect(second).toEqual({ type: 0x7F, value: 42 });
+    });
+
+    it("should peek typed values without consuming them", () => {
+      const vm = new GenericVM();
+      vm.pushTyped({ type: 0x7D, value: 3.14 });
+
+      const peeked = vm.peekTyped();
+      expect(peeked).toEqual({ type: 0x7D, value: 3.14 });
+      expect(vm.typedStack.length).toBe(1);
+    });
+
+    it("should throw on pop from empty typed stack", () => {
+      const vm = new GenericVM();
+      expect(() => vm.popTyped()).toThrow(StackUnderflowError);
+    });
+
+    it("should throw on peek of empty typed stack", () => {
+      const vm = new GenericVM();
+      expect(() => vm.peekTyped()).toThrow(StackUnderflowError);
+    });
+
+    it("should support BigInt values on typed stack", () => {
+      const vm = new GenericVM();
+      const big = BigInt("9223372036854775807"); // i64 max
+      vm.pushTyped({ type: 0x7E, value: big });
+      const result = vm.popTyped();
+      expect(result.value).toBe(big);
+      expect(typeof result.value).toBe("bigint");
+    });
+
+    it("should be independent from untyped stack", () => {
+      const vm = new GenericVM();
+      vm.push(100);
+      vm.pushTyped({ type: 0x7F, value: 200 });
+
+      expect(vm.stack.length).toBe(1);
+      expect(vm.typedStack.length).toBe(1);
+
+      expect(vm.pop()).toBe(100);
+      expect(vm.popTyped()).toEqual({ type: 0x7F, value: 200 });
+    });
+
+    it("should be cleared by reset", () => {
+      const vm = new GenericVM();
+      vm.pushTyped({ type: 0x7F, value: 42 });
+      vm.reset();
+      expect(vm.typedStack.length).toBe(0);
+    });
+  });
+
+  // =====================================================================
+  // BigInt Support in VMValue
+  // =====================================================================
+
+  describe("bigint support", () => {
+    it("should support bigint values on the untyped stack", () => {
+      const vm = new GenericVM();
+      vm.push(42n);
+      expect(vm.pop()).toBe(42n);
+    });
+
+    it("should support bigint in variables", () => {
+      const vm = new GenericVM();
+      vm.variables["big"] = 9999999999999999n;
+      expect(vm.variables["big"]).toBe(9999999999999999n);
+    });
+  });
+
+  // =====================================================================
+  // Pre/Post Instruction Hooks
+  // =====================================================================
+
+  describe("instruction hooks", () => {
+    it("pre-hook should transform instructions before dispatch", () => {
+      const vm = new GenericVM();
+      const transformed: number[] = [];
+
+      // Register a handler for opcode 0x01
+      vm.registerOpcode(0x01, (vm, instr) => {
+        // The handler should see the TRANSFORMED instruction
+        transformed.push(instr.operand as number);
+        vm.advancePc();
+        return null;
+      });
+
+      // Pre-hook doubles the operand
+      vm.setPreInstructionHook((_vm, instruction, _code) => {
+        return {
+          opcode: instruction.opcode,
+          operand: ((instruction.operand as number) ?? 0) * 2,
+        };
+      });
+
+      const code: CodeObject = {
+        instructions: [
+          { opcode: 0x01, operand: 5 },
+          { opcode: 0x01, operand: 10 },
+        ],
+        constants: [],
+        names: [],
+      };
+
+      // Register a halt to stop after 2 instructions
+      vm.execute(code);
+
+      expect(transformed).toEqual([10, 20]); // 5*2, 10*2
+    });
+
+    it("post-hook should run after each instruction", () => {
+      const vm = new GenericVM();
+      const postLog: number[] = [];
+
+      vm.registerOpcode(0x01, (vm) => {
+        vm.push(1);
+        vm.advancePc();
+        return null;
+      });
+
+      vm.setPostInstructionHook((vm, _instruction, _code) => {
+        postLog.push(vm.pc);
+      });
+
+      const code: CodeObject = {
+        instructions: [{ opcode: 0x01 }, { opcode: 0x01 }],
+        constants: [],
+        names: [],
+      };
+
+      vm.execute(code);
+      // After each handler calls advancePc, post-hook sees the new PC
+      expect(postLog).toEqual([1, 2]);
+    });
+
+    it("should allow removing hooks with null", () => {
+      const vm = new GenericVM();
+      let hookCalled = false;
+
+      vm.setPreInstructionHook(() => {
+        hookCalled = true;
+        return { opcode: 0x01 };
+      });
+      vm.setPreInstructionHook(null);
+
+      vm.registerOpcode(0x01, (vm) => {
+        vm.advancePc();
+        return null;
+      });
+
+      vm.execute({
+        instructions: [{ opcode: 0x01 }],
+        constants: [],
+        names: [],
+      });
+
+      expect(hookCalled).toBe(false);
+    });
+  });
+
+  // =====================================================================
+  // Context-Aware Execution
+  // =====================================================================
+
+  describe("context-aware execution", () => {
+    it("should pass context to context-aware handlers", () => {
+      const vm = new GenericVM();
+      let receivedContext: unknown = null;
+
+      vm.registerContextOpcode(0x01, (_vm, _instr, _code, ctx) => {
+        receivedContext = ctx;
+        _vm.advancePc();
+        return null;
+      });
+
+      const code: CodeObject = {
+        instructions: [{ opcode: 0x01 }],
+        constants: [],
+        names: [],
+      };
+
+      const myContext = { memory: [1, 2, 3], label: "test" };
+      vm.executeWithContext(code, myContext);
+
+      expect(receivedContext).toBe(myContext);
+    });
+
+    it("should prefer context handlers over regular handlers during context execution", () => {
+      const vm = new GenericVM();
+      let which = "";
+
+      vm.registerOpcode(0x01, (vm) => {
+        which = "regular";
+        vm.advancePc();
+        return null;
+      });
+
+      vm.registerContextOpcode(0x01, (vm) => {
+        which = "context";
+        vm.advancePc();
+        return null;
+      });
+
+      const code: CodeObject = {
+        instructions: [{ opcode: 0x01 }],
+        constants: [],
+        names: [],
+      };
+
+      // With context: should use context handler
+      vm.executeWithContext(code, { data: true });
+      expect(which).toBe("context");
+
+      // Without context: should use regular handler
+      vm.reset();
+      vm.registerOpcode(0x01, (vm) => {
+        which = "regular-again";
+        vm.advancePc();
+        return null;
+      });
+      vm.execute(code);
+      expect(which).toBe("regular-again");
+    });
+
+    it("should restore previous context after execution", () => {
+      const vm = new GenericVM();
+
+      vm.registerContextOpcode(0x01, (vm) => {
+        vm.advancePc();
+        return null;
+      });
+
+      const code: CodeObject = {
+        instructions: [{ opcode: 0x01 }],
+        constants: [],
+        names: [],
+      };
+
+      vm.executeWithContext(code, { outer: true });
+      expect(vm.executionContext).toBeNull();
+    });
+
+    it("should clear execution context on reset", () => {
+      const vm = new GenericVM();
+      vm.executionContext = { test: true };
+      vm.reset();
+      expect(vm.executionContext).toBeNull();
+    });
+  });
 });

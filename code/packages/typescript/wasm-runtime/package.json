@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/wasm-runtime",
+  "version": "0.1.0",
+  "description": "WebAssembly 1.0 runtime: parse, validate, instantiate, and execute WASM modules",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/wasm-leb128": "file:../wasm-leb128",
+    "@coding-adventures/wasm-types": "file:../wasm-types",
+    "@coding-adventures/wasm-opcodes": "file:../wasm-opcodes",
+    "@coding-adventures/wasm-module-parser": "file:../wasm-module-parser",
+    "@coding-adventures/wasm-validator": "file:../wasm-validator",
+    "@coding-adventures/wasm-execution": "file:../wasm-execution",
+    "@coding-adventures/virtual-machine": "file:../virtual-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -81,8 +81,17 @@
  * Our VM is dynamically typed — values can be numbers, strings, or
  * CodeObjects (for function references). This mirrors how interpreters
  * for dynamic languages like Python or Ruby work internally.
+ *
+ * The ``bigint`` type was added to support 64-bit integer operations
+ * in typed VMs like WebAssembly, where ``i64`` values exceed JavaScript's
+ * safe integer range (2^53 - 1). BigInt provides arbitrary-precision
+ * integers, and WebAssembly constrains them to 64 bits using
+ * ``BigInt.asIntN(64, ...)`` and ``BigInt.asUintN(64, ...)``.
+ *
+ * This same extension will be useful for future JVM (``long``) and
+ * CLR (``Int64``) support.
  */
-export type VMValue = number | string | CodeObject | null;
+export type VMValue = number | string | bigint | CodeObject | null;
 
 // =========================================================================
 // OpCode Enumeration
