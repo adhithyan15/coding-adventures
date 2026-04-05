@@ -1,0 +1,355 @@
+# TypeScript 2.0 — Lexical Grammar
+# @version 1
+# @typescript_version 2.0
+# @ecmascript_baseline 2015
+#
+# TypeScript 2.0 — September 2016
+#
+# TypeScript 2.0 is built on ES2015 (ES6) as its baseline, meaning TypeScript
+# can emit ES2015 code natively and leverages ES2015 language features.
+#
+# Historical context:
+# TypeScript 1.x was a success — it shipped classes before ES2015, brought
+# type safety to the browser/Node ecosystem, and was rapidly adopted by
+# Angular, Microsoft, and the community. TypeScript 2.0 matured the type
+# system with several critical additions that made working with nullable types
+# and library code much safer.
+#
+# What TypeScript 2.0 adds over TypeScript 1.x:
+#
+#   Strict null checks (--strictNullChecks):
+#     In TS 1.x, `null` and `undefined` were subtypes of every type —
+#     `let x: string = null;` was valid. TS 2.0 added `--strictNullChecks`
+#     which separates null/undefined into their own types.
+#     Now: `let x: string | null = null;` (must be explicit).
+#     This is arguably the most impactful TypeScript feature ever — it
+#     eliminates an entire class of "cannot read property of null" errors.
+#
+#   `never` type:
+#     The bottom type — a value that can never occur. Uses:
+#       - Return type of functions that always throw: `(): never => { throw err; }`
+#       - Unreachable code in exhaustiveness checks
+#       - Empty union type: `string & number` = `never` (impossible intersection)
+#     `never` is a subtype of every type; no value has type `never`.
+#
+#   Non-nullable types:
+#     With --strictNullChecks, `string` no longer includes null/undefined.
+#     Use `string | null` or `string | undefined` explicitly.
+#
+#   Control flow analysis:
+#     TypeScript narrows types based on control flow:
+#       if (x !== null) { x.toUpperCase(); }  // x narrowed to string here
+#     This is semantic (not grammar), but enabled by the `never` type.
+#
+#   Abstract classes (formalized):
+#     Abstract classes and methods were in TS 1.x but 2.0 made them more robust.
+#
+#   Type alias for tagged unions:
+#     `type Shape = Circle | Square;` with a discriminant field.
+#
+#   Mapped types (TS 2.1, included here for the grammar file):
+#     `{ [K in keyof T]: SomeType }` — transform all properties of T.
+#     Fundamentally new syntax — uses `in` inside square brackets.
+#     Powers utility types like `Partial<T>`, `Readonly<T>`, `Pick<T, K>`.
+#
+#   Conditional types (TS 2.8, included here for grammar completeness):
+#     `T extends U ? X : Y` — type-level ternary expression.
+#     Powers `NonNullable<T>`, `ReturnType<T>`, `Parameters<T>`, etc.
+#
+# TypeScript 2.0 targets ES2015 output — it can compile to modern JavaScript.
+# This means ES2015 features (classes, arrow functions, let/const, modules,
+# generators, template literals, destructuring, etc.) pass through unchanged
+# or with minor adjustments.
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# Numbers: ES2015 adds binary (0b) and octal (0o) literals.
+# TypeScript 2.0 inherits these. The binary and octal patterns must come
+# before the general hex/int patterns (first-match-wins).
+
+BINARY_NUMBER = /0[bB][01]+/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]+/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# Strings: same as ES5/ES2015.
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# Regular expressions: ES2015 adds the `u` flag (Unicode mode) and `y` (sticky).
+# TypeScript passes regex literals through to the target JavaScript.
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gimu]*/
+
+# Template literals: ES2015 backtick strings with interpolation.
+# TypeScript can type-check template literal types (TS 4.1+), but for TS 2.0
+# they are lexed the same way as ES2015.
+#
+# Template literal lexing requires pattern groups for nested expressions.
+# A backtick opens a template; `${` switches to expression mode; `}` at
+# brace-depth 0 returns to template mode.
+#
+# Token flow for `Hello ${name}!`:
+#   TEMPLATE_HEAD   = "Hello "       (backtick up to ${)
+#   NAME            = "name"         (inside the ${...} expression)
+#   TEMPLATE_TAIL   = "!"            (from } to closing backtick)
+#
+# Token flow for `No interpolation`:
+#   TEMPLATE_NO_SUB = "No interpolation"
+
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+TEMPLATE_HEAD   = /`([^`\\$]|\\.|\$[^{])*\$\{/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# ES2015 operators plus TypeScript inheritance. No new multi-character
+# operators are added in TypeScript 2.0.
+#
+# ARROW (=>) is used both as the arrow function separator in expressions
+# AND as the return type separator in type expressions:
+#   (x: number) => x + 1     // arrow function value
+#   (x: number) => number     // function type annotation
+# The parser uses context to distinguish these.
+#
+# ELLIPSIS (...) is used for:
+#   - Spread in arrays/objects: `[...arr]`, `{...obj}`
+#   - Rest parameters: `function(...args: string[])`
+#   - Tuple rest elements: `[string, ...number[]]`
+
+ARROW    = "=>"
+ELLIPSIS = "..."
+
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# Same as TS 1.0. AT (@) for decorators (experimental in TS 2.0, enabled with
+# --experimentalDecorators). BANG (!) for both logical-not and non-null assertion.
+#
+# PLUS and MINUS appear in mapped type modifiers:
+#   `{ +readonly [K in keyof T]: T[K] }`  — add readonly
+#   `{ -readonly [K in keyof T]: T[K] }`  — remove readonly
+#   `{ [K in keyof T]+?: T[K] }`          — add optional
+#   `{ [K in keyof T]-?: T[K] }`          — remove optional
+# The lexer emits plain PLUS/MINUS; the parser handles context.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# Decorator prefix: @Component, @Injectable, @NgModule
+AT = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# TypeScript 2.0 is based on ES2015. ES2015 promotes several words to
+# hard keywords: class, const, export, extends, import, super, let, yield.
+#
+# TypeScript continues to avoid adding new hard keywords. The only new
+# TypeScript-specific tokens in 2.0 are context keywords.
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+  enum
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# TypeScript 2.0 inherits all ES2015 context keywords AND all TS 1.0
+# context keywords, then adds two new ones specific to TS 2.0.
+#
+# Inherited from ES2015:
+#   as, from, of, get, set, static
+#
+# Inherited from TypeScript 1.0:
+#   type, interface, namespace, module, declare, abstract, readonly,
+#   is, keyof, asserts, unique
+#
+# New in TypeScript 2.0:
+#
+#   never — the bottom type. A value of type `never` can never exist.
+#           Unlike `void` (which is a return type for side-effect functions),
+#           `never` means a function NEVER returns — it throws, loops forever,
+#           or calls `process.exit()`.
+#
+#           Exhaustiveness checking example:
+#             function assertNever(x: never): never { throw new Error("Unreachable"); }
+#             type Shape = Circle | Square;
+#             function area(s: Shape): number {
+#               if (s.kind === "circle") return Math.PI * s.r ** 2;
+#               if (s.kind === "square") return s.side ** 2;
+#               return assertNever(s);  // if we forget a case, TypeScript errors here!
+#             }
+#
+#   infer — used in conditional types to capture an inferred type variable.
+#           `T extends Array<infer U> ? U : never` — if T is Array<U>, extracts U.
+#           Technically introduced in TS 2.8 (conditional types), but included
+#           here as a forward-compatible context keyword since it is just an
+#           identifier in non-type positions.
+#
+#           Use case — extract the element type of an array:
+#             type ElementType<T> = T extends Array<infer U> ? U : never;
+#             type X = ElementType<string[]>;  // X = string
+
+context_keywords:
+  as
+  from
+  of
+  get
+  set
+  static
+  type
+  interface
+  namespace
+  module
+  declare
+  abstract
+  readonly
+  is
+  keyof
+  asserts
+  unique
+  never
+  infer
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+
+# ============================================================================
+# Pattern groups (for template literal lexing)
+# ============================================================================
+#
+# When the lexer encounters `${` inside a template, it pushes the default
+# group and increments brace depth. When it encounters `}` at brace depth 0,
+# it pops back to the template group. TEMPLATE_MIDDLE and TEMPLATE_TAIL are
+# only matched inside the template group.
+#
+# TypeScript uses template literal types starting from TS 4.1:
+#   type EventName<T extends string> = `on${Capitalize<T>}`;
+# But in TS 2.0, templates are ordinary string-producing expressions.
+
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

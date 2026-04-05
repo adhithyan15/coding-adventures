@@ -262,10 +262,9 @@ context_keywords:
 # group to lex the expression. When it encounters `}` at brace depth 0,
 # it switches to the template group to continue lexing the template string.
 
-groups:
-  template:
-    TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
-    TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
 
 # ============================================================================
 # Skip patterns

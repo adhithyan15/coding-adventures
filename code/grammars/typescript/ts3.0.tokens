@@ -1,0 +1,296 @@
+# TypeScript 3.0 — Lexical Grammar
+# @version 1
+# @typescript_version 3.0
+# @ecmascript_baseline 2018
+#
+# TypeScript 3.0 — August 2018
+#
+# TypeScript is a typed superset of JavaScript developed by Microsoft. It
+# compiles ("transpiles") to plain JavaScript, adding static type information
+# that is erased at runtime. The central insight behind TypeScript is that
+# JavaScript's dynamic type system — which lets any variable hold any value —
+# can be tamed at development time by annotating code with types, catching
+# mistakes before the program runs.
+#
+# Anders Hejlsberg, who also designed C# and Delphi, created TypeScript at
+# Microsoft. Version 1.0 shipped in 2014. By version 3.0, the type system
+# had matured into one of the most sophisticated structural type systems of
+# any mainstream language.
+#
+# Why TypeScript adds so few new TOKENS:
+#
+# TypeScript's innovation is almost entirely in the TYPE GRAMMAR, not the
+# lexical grammar. The same tokens that JavaScript uses — names, operators,
+# punctuation — serve double duty in type positions. `string`, `number`,
+# `boolean` are not keywords in TypeScript; they are ordinary identifiers
+# that have special meaning only when used in a type context. This design
+# choice maximizes backward compatibility with JavaScript tooling.
+#
+# The main lexical addition is the `@` token for decorators, plus a set
+# of context-sensitive keywords used in type positions.
+#
+# ES2018 baseline:
+#   This grammar includes all tokens from ECMAScript 2018, which brings
+#   async generators (async function*) and object rest/spread (...obj).
+#   TS 3.0 was released the same year as ES2018 and targets it as a
+#   compilation target.
+#
+# TS 3.0 new features:
+#   - `unknown` type: a safer alternative to `any`. Values of type `unknown`
+#     must be narrowed before use — you cannot call methods on `unknown`
+#     without a type guard. This fills the role that `any` should fill: a
+#     type you accept when you don't know the shape upfront, but force you
+#     to check before using.
+#   - Project references: build tool feature, not grammar.
+#   - Rest/spread improvements in tuple types (grammar already covered).
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (from ES2018) ---
+
+BINARY_NUMBER = /0[bB][01]+/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]+/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+#
+# TypeScript uses template literals both at the value level (as JavaScript
+# does) and at the TYPE level in TypeScript 4.1+. At the TS 3.0 level,
+# templates only appear in value positions.
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (ES2018: adds `s` dotAll flag) ---
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gimsuy]*/
+
+# ============================================================================
+# Multi-character operators (ES2018 baseline)
+# ============================================================================
+
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# --- NEW IN TYPESCRIPT: Decorator prefix ---
+#
+# The `@` character introduces a decorator — a metaprogramming annotation
+# applied to a class, method, field, or parameter. TypeScript has supported
+# decorators since version 1.5 (with --experimentalDecorators). The `@` is
+# a single-character token distinct from any JavaScript punctuation.
+#
+# TypeScript's experimental decorators (available in all TS versions with
+# the flag) are based on an early TC39 proposal. They differ from the
+# final ES2025 decorators in their execution model and what context they
+# receive. TypeScript still supports both styles.
+#
+# Examples:
+#   @Component({ template: '...' })
+#   class MyComponent { ... }
+#
+#   @autobind
+#   greet() { return `Hello, ${this.name}`; }
+
+AT = "@"
+
+# ============================================================================
+# Keywords (same as ES2018)
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+  enum
+  async
+  await
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# Context keywords are identifiers that have special meaning only in
+# specific syntactic positions. They are NOT reserved words — you can
+# use them as variable names, property names, etc. The parser must use
+# context to distinguish their special use.
+#
+# For example, `type` is not a keyword:
+#   type Alias = string;     // type alias declaration
+#   const type = "hello";    // perfectly valid variable name
+#   obj.type = 42;           // perfectly valid property access
+#
+# TypeScript adds many context keywords for its type system. The key
+# design principle: TypeScript should be a superset of JavaScript. Any
+# valid JavaScript program must remain valid TypeScript. Making type
+# system words into hard keywords would break existing JavaScript code
+# that uses those identifiers.
+
+context_keywords:
+  # --- ES2018 context keywords ---
+  as
+  from
+  of
+  get
+  set
+  static
+  # --- TypeScript type system keywords ---
+  # These have meaning in type annotation positions but are valid identifiers
+  # in value positions.
+  type
+  interface
+  namespace
+  module
+  declare
+  abstract
+  readonly
+  is
+  keyof
+  asserts
+  unique
+  infer
+  never
+  unknown
+  override
+  out
+  satisfies
+  accessor
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

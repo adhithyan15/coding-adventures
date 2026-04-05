@@ -1,0 +1,883 @@
+# TypeScript 1.0 — Parser Grammar
+# @version 1
+# @typescript_version 1.0
+# @ecmascript_baseline 5
+#
+# TypeScript 1.0 — April 2014
+#
+# This grammar is a superset of ES5. Every ES5 production is present,
+# extended where necessary to accommodate TypeScript's type system.
+#
+# Architecture: TypeScript adds three layers on top of ES5:
+#
+#   Layer 1: Type Annotations
+#   -------------------------
+#   A colon followed by a type expression can appear after variable names,
+#   function parameters, and function names. These are purely erased at
+#   compile time — they do not affect runtime behavior.
+#
+#     var x: number = 5;             // variable with type annotation
+#     function f(a: string): void {} // parameter and return type
+#
+#   Layer 2: New Declarations
+#   -------------------------
+#   TypeScript adds entirely new top-level constructs:
+#     - interface declaration
+#     - type alias declaration
+#     - enum declaration
+#     - namespace (internal module) declaration
+#     - ambient (declare) declaration
+#
+#   Layer 3: Class Extensions
+#   -------------------------
+#   ES5 has no class syntax, but TypeScript 1.0 added classes ahead of ES2015.
+#   TypeScript classes add access modifiers, abstract methods, readonly, and
+#   constructor parameter properties.
+#
+# Key design principle: TypeScript is structurally typed, not nominally typed.
+# Two types are compatible if their shapes match — it does not matter what they
+# are named. This differs from Java/C#, where types are compared by name.
+#
+#   interface Named { name: string; }
+#   interface Greeter { name: string; }
+#   let a: Named = { name: "Alice" };
+#   let b: Greeter = a;  // OK! Same structure.
+#
+# Structural typing makes TypeScript naturally interoperate with plain JS
+# objects, which are just maps of string keys to values.
+
+# ============================================================================
+# Program
+# ============================================================================
+#
+# TypeScript extends the ES5 program entry point to allow TypeScript-specific
+# top-level declarations alongside the ES5 function declarations and statements.
+
+program = { source_element } ;
+
+# source_element: expanded from ES5 to include TypeScript declarations.
+#
+# Order matters for the parser: more specific alternatives should appear first.
+# `interface_declaration`, `type_alias_declaration`, etc. are unambiguous
+# because they start with context keywords that don't start any ES5 statement.
+# `ambient_declaration` starts with `declare`, which is a context keyword.
+
+source_element = interface_declaration
+               | type_alias_declaration
+               | enum_declaration
+               | namespace_declaration
+               | ambient_declaration
+               | function_declaration
+               | ts_class_declaration
+               | statement ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+
+# --- Function Declaration (TypeScript extension of ES5) ---
+#
+# TypeScript adds optional type parameters (generics) and an optional return
+# type annotation. These are erased during compilation.
+#
+#   function identity<T>(x: T): T { return x; }
+#   //               ^^^   ^^^  ^^
+#   //               type  type return type
+#   //               params annotation
+#
+# Type parameters use angle brackets: `<T>` or `<T extends SomeBase>`.
+# The return type annotation follows the closing parenthesis: `: ReturnType`.
+
+function_declaration = "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                       [ COLON type_expression ]
+                       LBRACE function_body RBRACE ;
+
+function_body = { source_element } ;
+
+# --- Typed parameter list ---
+#
+# TypeScript replaces ES5's `formal_parameter_list` with a typed version.
+# Parameters can have:
+#   - Type annotations:      `(x: number)`
+#   - Optional markers:      `(x?: number)`  (may be undefined)
+#   - Default values:        `(x: number = 0)`
+#   - Rest parameters:       `(...args: string[])`
+#   - Access modifiers:      `(private x: number)` (constructor shorthand)
+#   - Destructuring:         `({ a, b }: { a: string; b: number })`
+#
+# Constructor parameter properties are a TypeScript shorthand:
+#   `constructor(private name: string)` is equivalent to:
+#   `constructor(name: string) { this.name = name; }`
+# TypeScript automatically creates and assigns the property.
+
+typed_parameter_list = typed_parameter { COMMA typed_parameter } [ COMMA rest_typed_parameter ]
+                     | rest_typed_parameter ;
+
+typed_parameter = [ accessibility_modifier ] ( NAME | binding_pattern ) [ QUESTION ] [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+rest_typed_parameter = ELLIPSIS NAME [ COLON type_expression ] ;
+
+# --- Variable Statement (TypeScript extension of ES5) ---
+#
+# TypeScript adds optional type annotations to variable declarations.
+#
+#   var x: number = 5;
+#   var name: string;
+#   var pair: [string, number] = ["hello", 1];  // tuple type
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = NAME [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# TypeScript retains all ES5 statements unchanged. Type annotations appear
+# only in declarations and expressions, not in statement-level constructs.
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | debugger_statement
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" LPAREN NAME RPAREN block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" expression SEMICOLON ;
+
+debugger_statement = "debugger" SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# TypeScript adds two expression forms:
+#
+# 1. Type assertion (angle-bracket syntax):
+#    `<string>value` — asserts that `value` has type `string`
+#    Note: This syntax conflicts with JSX angle brackets. In .tsx files,
+#    TypeScript requires the `as` syntax instead (added below).
+#
+# 2. `as` expression:
+#    `value as string` — preferred type assertion, works in all contexts
+#    `as` is the context keyword; the parser recognizes it after an expression
+#    in type position.
+#
+# 3. Non-null assertion:
+#    `value!` — asserts that `value` is not null or undefined
+#    The postfix BANG token serves double duty: prefix = logical not, postfix = non-null.
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+# assignment_expression: TypeScript adds `as` expressions and angle-bracket
+# type assertions as alternatives. These have lower precedence than most
+# operators but higher than comma.
+#
+# Note on precedence:
+#   `x as string + " world"` parses as `x as (string + " world")`? No —
+#   `as` has lower precedence than binary operators. The right-hand side of
+#   `as` is always a type_expression, not another assignment_expression.
+#   This is a special production, not part of the operator precedence tower.
+
+assignment_expression = ts_as_expression
+                      | ts_angle_bracket_assertion
+                      | conditional_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS
+                    | SLASH_EQUALS | PERCENT_EQUALS | AMPERSAND_EQUALS
+                    | PIPE_EQUALS | CARET_EQUALS | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# --- TypeScript Type Assertions ---
+
+# `value as Type` — preferred in TypeScript, especially required in .tsx files.
+# `as` is a context keyword that the parser recognizes after an expression.
+ts_as_expression = ts_non_null_expression "as" type_expression ;
+
+# `value!` — non-null assertion. Tells TypeScript "I know this is not null."
+# Use with care: if you're wrong, you get a runtime null pointer error.
+# Think of it as the "developer pinky promise" operator.
+ts_non_null_expression = left_hand_side_expression BANG ;
+
+# `<Type>value` — legacy type assertion syntax. Not valid in .tsx files
+# because angle brackets conflict with JSX element syntax.
+ts_angle_bracket_assertion = LESS_THAN type_expression GREATER_THAN assignment_expression ;
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression } ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+unary_expression = postfix_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
+
+left_hand_side_expression = call_expression | new_expression ;
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | LBRACKET expression RBRACKET } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+member_expression = primary_expression { DOT NAME | LBRACKET expression RBRACKET }
+                  | "new" member_expression arguments ;
+
+arguments = LPAREN [ argument_list ] RPAREN ;
+
+argument_list = assignment_expression { COMMA assignment_expression } ;
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | LPAREN expression RPAREN ;
+
+array_literal = LBRACKET [ element_list ] RBRACKET ;
+
+element_list = [ assignment_expression ] { COMMA [ assignment_expression ] } ;
+
+# Object literal: ES5 with getter/setter support.
+# TypeScript does not change object literal syntax, only adds type checking.
+
+object_literal = LBRACE [ property_assignment { COMMA property_assignment } [ COMMA ] ] RBRACE ;
+
+property_assignment = getter_property
+                    | setter_property
+                    | property_name COLON assignment_expression ;
+
+# Getter: `{ get name() { return this._name; } }`
+getter_property = NAME LPAREN RPAREN LBRACE function_body RBRACE ;
+
+# Setter: `{ set name(v) { this._name = v; } }`
+setter_property = NAME LPAREN NAME RPAREN LBRACE function_body RBRACE ;
+
+property_name = NAME | STRING | NUMBER ;
+
+# Function expression: TypeScript adds type parameters and return type.
+# `const f = function<T>(x: T): T { return x; }`
+
+function_expression = "function" [ NAME ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                      [ COLON type_expression ]
+                      LBRACE function_body RBRACE ;
+
+# ============================================================================
+# Destructuring Patterns (used in typed_parameter_list)
+# ============================================================================
+#
+# TypeScript inherits destructuring from the ES5+ tradition. In TS 1.0,
+# destructuring appears in parameter lists (TypeScript pre-empted ES2015).
+
+binding_pattern = object_binding_pattern | array_binding_pattern ;
+
+object_binding_pattern = LBRACE [ binding_property { COMMA binding_property } ] RBRACE ;
+
+binding_property = property_name COLON NAME
+                 | NAME ;
+
+array_binding_pattern = LBRACKET [ binding_element { COMMA binding_element } ] RBRACKET ;
+
+binding_element = NAME | binding_pattern ;
+
+# ============================================================================
+# TypeScript Type System
+# ============================================================================
+#
+# This is the core of TypeScript's value proposition. The type system allows
+# developers to annotate their code, enabling:
+#   - Autocomplete (IDE knows what methods/properties are available)
+#   - Refactoring (rename a property and TypeScript finds all usages)
+#   - Error detection (catch typos and wrong types before running code)
+#   - Documentation (types serve as machine-checked documentation)
+#
+# TypeScript's type system is:
+#   - Structural: types are compatible if their shapes match
+#   - Gradual: you can mix typed and untyped (`any`) code
+#   - Erased: types are removed at compile time; no runtime overhead
+#   - Sound-ish: the system is deliberately unsound in some corners
+#     (e.g., covariant method parameters) for practical JavaScript interop
+
+# --- Type Annotation ---
+#
+# A colon followed by a type expression. This is the syntactic marker that
+# separates a name from its type in declarations.
+#
+#   var x: number;         // variable type
+#   function(a: string)    // parameter type
+#   ): string {            // return type
+
+type_annotation = COLON type_expression ;
+
+# --- Type Expression Hierarchy ---
+#
+# TypeScript types form a grammar within the grammar. The type expression
+# hierarchy mirrors the precedence rules for value expressions:
+#
+#   type_expression
+#     └─ union_type           (T | U | V)
+#         └─ intersection_type  (T & U & V)
+#             └─ array_type      (T[])
+#                 └─ primary_type  (T, {x: T}, [T, U], etc.)
+#
+# This hierarchy means:
+#   string | number[]  parses as  string | (number[])  ← array binds tighter
+#   string & number[]  parses as  string & (number[])
+#   string | number & boolean  parses as  string | (number & boolean)  ← & binds tighter than |
+
+type_expression = union_type ;
+
+# Union type: T | U
+# Represents a value that can be one of several types.
+# Example: `string | number` — a value that is either a string or a number.
+# The pipe (|) is the union operator. TypeScript infers unions naturally:
+#   function pad(x: string | number) { ... }  // accepts either type
+
+union_type = intersection_type { PIPE intersection_type } ;
+
+# Intersection type: T & U
+# Represents a value that must satisfy ALL the given types simultaneously.
+# Example: `Named & Aged` — must have both a `name` and an `age` property.
+# Used to combine multiple interface shapes:
+#   type NamedAged = Named & Aged;  // has both name and age
+
+intersection_type = array_type { AMPERSAND array_type } ;
+
+# Array type: T[]
+# The postfix `[]` creates an array type. Multiple brackets create nested arrays.
+# Example: `string[]` is array of string, `string[][]` is array of array of string.
+# This is equivalent to the generic form `Array<string>`.
+
+array_type = primary_type { LBRACKET RBRACKET } ;
+
+# Primary type: the atomic type building blocks.
+# This is where most type expressions "bottom out."
+
+primary_type = predefined_type
+             | type_reference
+             | literal_type
+             | object_type
+             | tuple_type
+             | function_type
+             | constructor_type
+             | "typeof" left_hand_side_expression
+             | "keyof" type_expression
+             | "unique" "symbol"
+             | LPAREN type_expression RPAREN ;
+
+# --- Predefined Types ---
+#
+# TypeScript's built-in primitive type keywords. These are lowercase by
+# convention, while user-defined types are PascalCase (convention, not enforced).
+#
+#   any      — the escape hatch. `any` disables type checking for a value.
+#              Use sparingly — it defeats the purpose of TypeScript.
+#   string   — the JavaScript string primitive
+#   number   — the JavaScript number primitive (all numbers are IEEE 754 doubles)
+#   boolean  — true or false
+#   void     — absence of a value (used as return type for side-effect functions)
+#   object   — any non-primitive value (not string, number, boolean, symbol)
+#   symbol   — ES2015 Symbol primitive (unique opaque value)
+#   undefined — the `undefined` primitive (the value of uninitialized variables)
+#   null      — the `null` primitive (explicit absence of a value)
+
+predefined_type = "any" | "string" | "number" | "boolean" | "void"
+                | "object" | "symbol" | "undefined" | "null" ;
+
+# --- Literal Types ---
+#
+# Exact literal values used as types. Very powerful for discriminated unions.
+#
+#   type Direction = "up" | "down" | "left" | "right";
+#   type Bit = 0 | 1;
+#   type Flag = true | false;
+#
+# If a variable has type `"up"`, TypeScript knows it can ONLY hold the string "up".
+# This allows exhaustiveness checking in switch statements.
+
+literal_type = NUMBER | STRING | "true" | "false" ;
+
+# --- Type Reference ---
+#
+# A reference to a named type (interface, type alias, class, enum, etc.).
+# Qualified names (`A.B.C`) reference types inside namespaces.
+# Type arguments (`Array<string>`) parameterize generic types.
+#
+#   MyInterface
+#   Collections.List<string>
+#   Map<string, number[]>
+
+type_reference = NAME { DOT NAME } [ type_arguments ] ;
+
+# --- Type Arguments (generic instantiation) ---
+#
+# `< TypeArg1, TypeArg2, ... >`
+# Angle brackets are lexed as LESS_THAN/GREATER_THAN but the parser treats
+# them as delimiters in type position. This requires context-sensitive parsing.
+#
+# Example: `Array<string>` instantiates the generic `Array<T>` with `T = string`.
+
+type_arguments = LESS_THAN type_argument_list GREATER_THAN ;
+type_argument_list = type_expression { COMMA type_expression } ;
+
+# --- Type Parameters (generic declaration) ---
+#
+# `< TypeParam1, TypeParam2, ... >`
+# Declares type variables for generic functions, classes, and interfaces.
+# Each parameter can have an optional constraint (`extends SomeType`) and
+# an optional default (`= DefaultType`).
+#
+#   function map<T, U>(arr: T[], fn: (x: T) => U): U[] { ... }
+#   //             ^^^  ^^^                 ^^^  ^^^
+#   //             type params              used in types
+#
+# Constraints narrow what types can be substituted:
+#   function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] { ... }
+#   // K can only be a key of T — prevents typos in property access
+
+type_parameters = LESS_THAN type_parameter_list GREATER_THAN ;
+type_parameter_list = type_parameter { COMMA type_parameter } ;
+type_parameter = NAME [ "extends" type_expression ] [ EQUALS type_expression ] ;
+
+# --- Object Type ---
+#
+# Describes the shape of an object: `{ x: number; y: number; }`.
+# Object types are the foundation of TypeScript's structural type system.
+# Members are separated by semicolons (or commas — TypeScript accepts both).
+#
+# Member kinds:
+#   - Property signature: `x: number` — the object has property x of type number
+#   - Optional property:  `x?: number` — the property may be absent or undefined
+#   - Readonly property:  `readonly x: number` — cannot be reassigned after init
+#   - Index signature:    `[key: string]: number` — any string key maps to number
+#   - Method signature:   `greet(name: string): string` — callable method
+#   - Call signature:     `(x: number): string` — the object itself is callable
+#   - Construct signature: `new(x: number): Foo` — the object is newable
+
+object_type = LBRACE { type_member_semicolon } RBRACE ;
+type_member_semicolon = type_member SEMICOLON ;
+type_member = construct_signature
+            | call_signature
+            | index_signature
+            | method_signature
+            | property_signature ;
+
+# Optional property: the `?` after the name means the property can be absent.
+# When reading, TypeScript widens the type to `T | undefined`.
+property_signature = [ "readonly" ] property_name [ QUESTION ] [ COLON type_expression ] ;
+
+# Index signature: any string (or number) key maps to a value type.
+# `{ [key: string]: number }` — like a dictionary from string to number.
+# Only `string` and `number` are valid index types.
+index_signature = LBRACKET NAME COLON type_expression RBRACKET COLON type_expression ;
+
+# Method signature: property with a function type.
+# Syntactic sugar for a property whose type is a function type.
+method_signature = property_name [ QUESTION ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+# Call signature: the object is itself callable.
+# `{ (x: number): string }` — can be called as a function.
+call_signature = [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+# Construct signature: the object can be used with `new`.
+# `{ new(x: number): Foo }` — a constructor type.
+construct_signature = "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+# --- Tuple Type ---
+#
+# A fixed-length array where each element has a known type.
+# `[string, number]` — first element is string, second is number.
+#
+# Used for things like function return values that pack multiple values:
+#   function divmod(a: number, b: number): [number, number] {
+#     return [Math.floor(a / b), a % b];
+#   }
+#
+# Optional elements (T?) and rest elements (...T[]) allow flexible tuples.
+
+tuple_type = LBRACKET [ tuple_element_list ] RBRACKET ;
+tuple_element_list = tuple_element { COMMA tuple_element } ;
+tuple_element = [ ELLIPSIS ] type_expression [ QUESTION ] ;
+
+# Note: ELLIPSIS is the `...` token from ES2015+. TypeScript uses it in
+# tuple rest elements: `[string, ...number[]]` — string then any number of numbers.
+
+# --- Function Type ---
+#
+# Describes a callable value with specific parameter and return types.
+# `(x: number, y: number) => number` — takes two numbers, returns number.
+#
+# Function types appear:
+#   - As property types:     `{ callback: (err: Error) => void }`
+#   - As parameter types:    `function run(fn: () => void): void`
+#   - As variable types:     `const f: (x: number) => string = ...`
+#
+# The ARROW (=>) token is the arrow from the operator section. In type
+# position (after a parameter list and no LBRACE), it means "returns".
+
+function_type = [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression ;
+
+# Constructor type: describes a newable value.
+# `new(x: number) => Foo` — when called with `new`, produces a Foo.
+constructor_type = "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression ;
+
+# ============================================================================
+# TypeScript Declarations
+# ============================================================================
+
+# --- Interface Declaration ---
+#
+# Interfaces describe the shape of an object without implementation.
+# They are purely compile-time constructs — no JavaScript is emitted for them.
+#
+#   interface Animal {
+#     name: string;
+#     speak(): string;
+#   }
+#
+#   interface Dog extends Animal {
+#     breed: string;
+#   }
+#
+# Key features:
+#   - Declaration merging: multiple `interface Foo` declarations merge!
+#     This is different from `type` aliases (which cannot be merged).
+#   - Extending: `interface Child extends Parent` adds parent's members.
+#   - Multiple extends: `interface C extends A, B` combines A and B.
+#
+# Declaration merging is crucial for augmenting library types:
+#   // In node_modules/jquery/index.d.ts:
+#   interface JQuery { /* original methods */ }
+#   // In your app:
+#   interface JQuery { myPlugin(): void; }  // adds to JQuery!
+
+interface_declaration = "interface" NAME [ type_parameters ] [ interface_heritage ] object_type ;
+interface_heritage = "extends" type_reference { COMMA type_reference } ;
+
+# --- Type Alias Declaration ---
+#
+# Gives a name to any type expression. More flexible than interfaces in some
+# ways (can name union types, primitives, tuples) but cannot be merged.
+#
+#   type StringOrNumber = string | number;
+#   type Callback = (err: Error | null, result: string) => void;
+#   type Pair<T> = [T, T];  // generic type alias
+#
+# Interface vs. type alias debate:
+#   - `interface` is preferred for object shapes (allows merging, better errors)
+#   - `type` is preferred for union/intersection types, primitives, tuples
+#   - Both produce identical structural types at compile time
+
+type_alias_declaration = "type" NAME [ type_parameters ] EQUALS type_expression SEMICOLON ;
+
+# --- Enum Declaration ---
+#
+# Enums define a set of named constants. Unlike most TypeScript constructs,
+# enums DO emit JavaScript code — they are compiled to a self-executing
+# function that builds an object with both forward and reverse mappings.
+#
+#   enum Direction { Up, Down, Left, Right }
+#   // compiles to:
+#   var Direction;
+#   (function (Direction) {
+#     Direction[Direction["Up"] = 0] = "Up";
+#     Direction[Direction["Down"] = 1] = "Down";
+#     // ...
+#   })(Direction || (Direction = {}));
+#
+# Const enums (`const enum`) are fully erased — they are inlined at use sites.
+# Regular enums emit code; const enums do not.
+#
+# Enum members can have explicit initializers:
+#   enum HttpStatus { OK = 200, NotFound = 404, InternalError = 500 }
+# Without initializers, members are auto-numbered from 0.
+
+enum_declaration = [ "const" ] "enum" NAME LBRACE [ enum_body ] RBRACE ;
+enum_body = enum_member { COMMA enum_member } [ COMMA ] ;
+enum_member = property_name [ EQUALS assignment_expression ] ;
+
+# --- Namespace Declaration ---
+#
+# Namespaces (also called "internal modules" in early TypeScript) organize
+# code into named scopes, preventing global namespace pollution.
+#
+#   namespace Geometry {
+#     export interface Point { x: number; y: number; }
+#     export function distance(a: Point, b: Point): number { ... }
+#   }
+#   let p: Geometry.Point = { x: 0, y: 0 };
+#
+# Namespaces compile to self-executing functions (similar to the module
+# pattern in pre-ES2015 JavaScript).
+#
+# The `module` keyword was the original syntax (TypeScript 0.x).
+# `namespace` was introduced in TypeScript 1.5 to avoid confusion with
+# ES2015 modules (which use `import`/`export`). Both are still valid.
+#
+# Nested namespace: `namespace A.B.C { }` is a shorthand for nesting.
+
+namespace_declaration = ( "namespace" | "module" ) qualified_name LBRACE { namespace_element } RBRACE ;
+qualified_name = NAME { DOT NAME } ;
+
+# Namespace elements: what can appear inside a namespace.
+# Note `export` makes an element visible from outside the namespace.
+namespace_element = namespace_declaration
+                  | interface_declaration
+                  | type_alias_declaration
+                  | ts_class_declaration
+                  | function_declaration
+                  | enum_declaration
+                  | variable_statement
+                  | export_assignment
+                  | export_namespace_element
+                  | statement ;
+
+# `export = value` is TypeScript's CommonJS-compatible export syntax for namespaces.
+# It means "this namespace exports exactly this value."
+export_assignment = "export" EQUALS NAME SEMICOLON ;
+
+# Named exports from a namespace: `export interface Foo { }` etc.
+export_namespace_element = "export" ( namespace_declaration
+                                    | interface_declaration
+                                    | type_alias_declaration
+                                    | ts_class_declaration
+                                    | function_declaration
+                                    | enum_declaration
+                                    | variable_statement ) ;
+
+# --- Ambient Declaration ---
+#
+# `declare` tells TypeScript "this exists at runtime, but I'm not providing
+# the implementation here." Ambient declarations are used in:
+#
+#   1. .d.ts declaration files (type definitions for libraries):
+#      `declare var jQuery: JQueryStatic;`
+#
+#   2. Describing globals provided by the environment:
+#      `declare var window: Window;`
+#
+#   3. Describing third-party modules without TypeScript support:
+#      `declare module "legacy-library" { export function foo(): void; }`
+#
+# Ambient declarations emit NO JavaScript. They are purely for the type
+# checker's benefit.
+#
+# This is how DefinitelyTyped (@types/react, @types/node, etc.) works:
+# third-party contributors write .d.ts files full of ambient declarations
+# that describe the shape of JavaScript libraries.
+
+ambient_declaration = "declare" ambient_declaration_body ;
+ambient_declaration_body = variable_statement
+                         | ambient_function_declaration
+                         | ts_class_declaration
+                         | interface_declaration
+                         | type_alias_declaration
+                         | enum_declaration
+                         | namespace_declaration
+                         | ambient_module_declaration ;
+
+# Ambient function declaration: a function signature without a body.
+# Used in .d.ts files to describe external functions.
+# `declare function readFile(path: string): Buffer;`
+# Unlike a normal function_declaration, there is no body (no LBRACE ... RBRACE).
+ambient_function_declaration = "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] SEMICOLON ;
+
+# Ambient module declaration: describes a whole CommonJS/Node module.
+# `declare module "fs" { export function readFile(path: string): Buffer; }`
+ambient_module_declaration = "module" STRING LBRACE { namespace_element } RBRACE ;
+
+# ============================================================================
+# TypeScript Class System
+# ============================================================================
+#
+# TypeScript 1.0 added class syntax before ES2015 standardized it (TypeScript
+# compiles to ES3/ES5 compatible code using prototype chains).
+#
+# TypeScript extends ES2015-style classes with:
+#
+#   Access modifiers:
+#     public    — accessible everywhere (default)
+#     private   — accessible only within the class
+#     protected — accessible within the class and subclasses
+#
+#   abstract classes and methods:
+#     Cannot instantiate; subclasses must implement abstract methods.
+#
+#   readonly properties:
+#     Can be set in the constructor but not afterwards.
+#
+#   Constructor parameter properties:
+#     `constructor(private name: string)` declares AND assigns this.name.
+#
+#   Implements clause:
+#     `class Dog extends Animal implements Runnable` — class must satisfy interface.
+#
+# Visual diagram of class modifiers:
+#
+#   ┌─────────────────────────────────────────────────────────────────┐
+#   │ abstract class Foo<T> extends Bar implements IBaz, IQux {       │
+#   │   private readonly id: string;           // private readonly prop│
+#   │   protected count: number = 0;           // protected prop       │
+#   │   public name: string;                   // explicit public prop  │
+#   │   abstract compute(): T;                 // abstract method       │
+#   │   constructor(public label: string) {}   // param property        │
+#   │   [key: string]: any;                    // index signature       │
+#   │ }                                        //                       │
+#   └─────────────────────────────────────────────────────────────────┘
+
+# ts_class_declaration replaces es2015's class_declaration with TS extensions.
+ts_class_declaration = [ "abstract" ] "class" NAME [ type_parameters ] [ ts_class_heritage ] ts_class_body ;
+
+# The heritage clause adds `implements` alongside `extends`.
+# A class can extend ONE base class (JavaScript's single inheritance).
+# A class can implement MULTIPLE interfaces (type-checking only, no code generated).
+ts_class_heritage = [ "extends" type_reference ] [ "implements" type_reference { COMMA type_reference } ] ;
+
+ts_class_body = LBRACE { ts_class_element } RBRACE ;
+
+ts_class_element = ts_method_definition
+                 | ts_property_declaration
+                 | index_signature SEMICOLON
+                 | SEMICOLON ;
+
+# Methods: can have all modifiers, optionality, type parameters, typed params.
+ts_method_definition = [ accessibility_modifier ] [ "abstract" ] [ "static" ] [ "readonly" ] ts_method_definition_body ;
+
+# Access modifiers: public, private, protected.
+# public: the default; accessible from anywhere.
+# private: only accessible from within the class body.
+# protected: accessible from the class and any subclass.
+accessibility_modifier = "public" | "private" | "protected" ;
+
+# Method body variants: regular, getter, setter, generator.
+ts_method_definition_body = property_name [ QUESTION ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                          | "get" property_name LPAREN RPAREN [ COLON type_expression ] LBRACE function_body RBRACE
+                          | "set" property_name LPAREN typed_parameter RPAREN LBRACE function_body RBRACE
+                          | STAR property_name [ QUESTION ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] LBRACE function_body RBRACE ;
+
+# Property declaration: a field of a class.
+# `private readonly name: string = "default";`
+ts_property_declaration = [ accessibility_modifier ] [ "static" ] [ "abstract" ] [ "readonly" ] property_name [ QUESTION ] [ COLON type_expression ] [ EQUALS assignment_expression ] SEMICOLON ;
+
+# ============================================================================
+# Type Predicates
+# ============================================================================
+#
+# A type predicate is a special return type annotation for "type guard" functions.
+# It tells TypeScript: "if this function returns true, then the argument `x`
+# narrows to the specified type."
+#
+#   function isString(x: any): x is string {
+#     return typeof x === "string";
+#   }
+#
+#   function process(x: string | number) {
+#     if (isString(x)) {
+#       x.toUpperCase();  // TypeScript knows x is string here!
+#     }
+#   }
+#
+# The grammar: `name "is" type_expression`
+# The name must match one of the function's parameters.
+
+type_predicate = NAME "is" type_expression ;

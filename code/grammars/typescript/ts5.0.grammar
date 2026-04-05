@@ -1,0 +1,831 @@
+# TypeScript 5.0 — Parser Grammar
+# @version 1
+# @typescript_version 5.0
+# @ecmascript_baseline 2022
+#
+# TypeScript 5.0 — March 2023 through August 2023 (5.x series)
+#
+# This grammar covers the TypeScript 5.x series (5.0–5.2). It is based on
+# the ES2022 grammar (class fields, private members, static blocks) plus the
+# full TypeScript type system plus 5.x-specific features.
+#
+# === ES2022 Class Features ===
+#
+# ES2022 transforms the class syntax substantially. Before ES2022, class
+# bodies could only contain methods. After ES2022:
+#
+#   class Counter {
+#     // Public field with initializer
+#     count = 0;
+#
+#     // Private field — truly private, enforced at runtime
+#     #secret = "hidden";
+#
+#     // Static field
+#     static instances = 0;
+#
+#     // Static private field
+#     static #pool = [];
+#
+#     // Private method
+#     #validate() { return this.count >= 0; }
+#
+#     // Static initialization block — runs once when class is defined
+#     static {
+#       Counter.instances = 0;
+#       console.log("Counter class initialized");
+#     }
+#   }
+#
+# TypeScript seamlessly integrates all of these with its type system:
+#   - Fields can have type annotations: `count: number = 0;`
+#   - Fields can have access modifiers: `private count = 0;`
+#   - Private names (#) coexist with TypeScript private modifier
+#
+# === TS 5.0: Standard Decorators ===
+#
+# TypeScript 5.0 implements the TC39 decorators proposal (which reached Stage 3
+# in 2022). This is DIFFERENT from the legacy `--experimentalDecorators` mode.
+#
+# Standard decorator API:
+#   type ClassDecorator = (value: Function, ctx: ClassDecoratorContext) => Function | void;
+#   type MethodDecorator = (value: Function, ctx: ClassMethodDecoratorContext) => Function | void;
+#   type FieldDecorator = (value: undefined, ctx: ClassFieldDecoratorContext) => (init: T) => T | void;
+#
+# Standard decorators CAN replace the decorated value (by returning something).
+# Legacy decorators could not reliably do this (hence the controversy).
+#
+# === TS 5.0: const Type Parameters ===
+#
+# Before TS 5.0, passing a literal array to a generic function widened the type:
+#   function foo<T>(arr: T) { return arr; }
+#   const result = foo([1, 2, 3]);  // T = number[] (widened!)
+#
+# With `const T`, the literal type is preserved:
+#   function foo<const T>(arr: T) { return arr; }
+#   const result = foo([1, 2, 3]);  // T = [1, 2, 3] (literal!)
+#
+# This is similar to `as const` assertions but applies at the call site
+# through the type parameter itself.
+#
+# === TS 5.2: Explicit Resource Management ===
+#
+# `using` and `await using` declare resources that are automatically disposed
+# when the enclosing block exits. The resource must implement Symbol.dispose.
+# This grammar covers TS 5.2 features since they are in the same 5.x series.
+
+# ============================================================================
+# Program
+# ============================================================================
+
+program = { source_element } ;
+
+source_element = import_declaration
+               | export_declaration
+               | function_declaration
+               | generator_declaration
+               | async_function_declaration
+               | async_generator_declaration
+               | ts_class_declaration
+               | interface_declaration
+               | type_alias_declaration
+               | enum_declaration
+               | namespace_declaration
+               | ambient_declaration
+               | decorator ts_class_declaration
+               | lexical_declaration
+               | statement ;
+
+# ============================================================================
+# ES2022 Declarations
+# ============================================================================
+
+function_declaration = "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                       [ COLON type_expression ]
+                       LBRACE function_body RBRACE ;
+
+function_body = { source_element } ;
+
+generator_declaration = "function" STAR NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                        [ COLON type_expression ]
+                        LBRACE function_body RBRACE ;
+
+generator_expression = "function" STAR [ NAME ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                       [ COLON type_expression ]
+                       LBRACE function_body RBRACE ;
+
+yield_expression = "yield" [ STAR ] assignment_expression ;
+
+async_function_declaration = "async" "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                             [ COLON type_expression ]
+                             LBRACE function_body RBRACE ;
+
+async_function_expression = "async" "function" [ NAME ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                            [ COLON type_expression ]
+                            LBRACE function_body RBRACE ;
+
+async_arrow_function = "async" arrow_parameters ARROW concise_body ;
+
+async_method = "async" [ STAR ] property_name [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+               [ COLON type_expression ]
+               LBRACE function_body RBRACE ;
+
+await_expression = "await" unary_expression ;
+
+async_generator_declaration = "async" "function" STAR NAME [ type_parameters ]
+                              LPAREN [ typed_parameter_list ] RPAREN
+                              [ COLON type_expression ]
+                              LBRACE function_body RBRACE ;
+
+async_generator_expression = "async" "function" STAR [ NAME ] [ type_parameters ]
+                             LPAREN [ typed_parameter_list ] RPAREN
+                             [ COLON type_expression ]
+                             LBRACE function_body RBRACE ;
+
+lexical_declaration = ( "let" | "const" ) binding_list SEMICOLON ;
+
+binding_list = lexical_binding { COMMA lexical_binding } ;
+
+lexical_binding = ( NAME | binding_pattern ) [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+# --- NEW IN TS 5.2 (ES2025): Using declarations ---
+#
+# `using` binds a resource that will be automatically disposed when the
+# enclosing block exits — even if the block exits via exception.
+#
+#   {
+#     using conn = openConnection();
+#     conn.query("...");
+#     // conn[Symbol.dispose]() called here automatically
+#   }
+#
+# This eliminates a common source of resource leaks in imperative code.
+# The resource must implement the `Disposable` interface (has `[Symbol.dispose]()`).
+
+using_declaration = "using" binding_list SEMICOLON ;
+
+# `await using` is for async resources that implement `AsyncDisposable`:
+#   async function example() {
+#     await using db = await connect();
+#     await db.query("...");
+#     // await db[Symbol.asyncDispose]() called here
+#   }
+
+await_using_declaration = "await" "using" binding_list SEMICOLON ;
+
+# ============================================================================
+# ES2022 Modules
+# ============================================================================
+
+import_declaration = "import" import_clause from_clause SEMICOLON
+                   | "import" module_specifier SEMICOLON
+                   | "import" "type" import_clause from_clause SEMICOLON ;
+
+import_clause = default_import [ COMMA named_imports ]
+              | default_import [ COMMA namespace_import ]
+              | named_imports
+              | namespace_import ;
+
+default_import = NAME ;
+
+named_imports = LBRACE [ import_specifier { COMMA import_specifier } [ COMMA ] ] RBRACE ;
+
+import_specifier = NAME [ "as" NAME ] ;
+
+namespace_import = STAR "as" NAME ;
+
+from_clause = "from" STRING ;
+
+module_specifier = STRING ;
+
+export_declaration = "export" "default" ( function_declaration | generator_declaration
+                                        | async_function_declaration
+                                        | async_generator_declaration
+                                        | ts_class_declaration
+                                        | interface_declaration
+                                        | type_alias_declaration
+                                        | assignment_expression SEMICOLON )
+                   | "export" ( function_declaration | generator_declaration
+                              | async_function_declaration
+                              | async_generator_declaration
+                              | ts_class_declaration | interface_declaration
+                              | type_alias_declaration | enum_declaration
+                              | namespace_declaration | lexical_declaration
+                              | variable_statement )
+                   | "export" named_exports [ from_clause ] SEMICOLON
+                   | "export" STAR from_clause SEMICOLON
+                   | "export" "type" named_exports [ from_clause ] SEMICOLON
+                   | "export" "type" STAR from_clause SEMICOLON ;
+
+named_exports = LBRACE [ export_specifier { COMMA export_specifier } [ COMMA ] ] RBRACE ;
+
+export_specifier = NAME [ "as" NAME ] ;
+
+# ============================================================================
+# Destructuring (ES2018)
+# ============================================================================
+
+binding_pattern = object_binding_pattern
+               | array_binding_pattern ;
+
+object_binding_pattern = LBRACE [ binding_property { COMMA binding_property } [ COMMA ] ]
+                         [ object_rest_property ] RBRACE ;
+
+object_rest_property = ELLIPSIS NAME ;
+
+array_binding_pattern = LBRACKET [ binding_element { COMMA binding_element } [ COMMA ] ] RBRACKET ;
+
+binding_property = property_name COLON binding_element
+                 | NAME [ EQUALS assignment_expression ] ;
+
+binding_element = ( NAME | binding_pattern ) [ EQUALS assignment_expression ]
+               | ELLIPSIS NAME ;
+
+# ============================================================================
+# Statements (ES2022 + TS 5.2 using declarations)
+# ============================================================================
+
+statement = block
+          | variable_statement
+          | empty_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | for_in_statement
+          | for_of_statement
+          | for_await_of_statement
+          | continue_statement
+          | break_statement
+          | return_statement
+          | with_statement
+          | switch_statement
+          | labelled_statement
+          | try_statement
+          | throw_statement
+          | debugger_statement
+          | lexical_declaration
+          | using_declaration
+          | await_using_declaration
+          | expression_statement ;
+
+block = LBRACE { statement } RBRACE ;
+
+variable_statement = "var" variable_declaration_list SEMICOLON ;
+
+variable_declaration_list = variable_declaration { COMMA variable_declaration } ;
+
+variable_declaration = ( NAME | binding_pattern ) [ COLON type_expression ] [ EQUALS assignment_expression ] ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN
+                  ( "var" variable_declaration_list
+                  | "let" binding_list
+                  | "const" binding_list
+                  | [ expression ] ) SEMICOLON
+                  [ expression ] SEMICOLON
+                  [ expression ]
+                RPAREN statement ;
+
+for_in_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" binding_element
+                     | "const" binding_element
+                     | left_hand_side_expression ) "in" expression
+                   RPAREN statement ;
+
+for_of_statement = "for" LPAREN
+                     ( "var" variable_declaration
+                     | "let" binding_element
+                     | "const" binding_element
+                     | "using" binding_element
+                     | left_hand_side_expression ) "of" assignment_expression
+                   RPAREN statement ;
+
+for_await_of_statement = "for" "await" LPAREN
+                           ( "var" variable_declaration
+                           | "let" binding_element
+                           | "const" binding_element
+                           | "using" binding_element
+                           | "await" "using" binding_element
+                           | left_hand_side_expression ) "of" assignment_expression
+                         RPAREN statement ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+with_statement = "with" LPAREN expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN
+                   LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
+
+case_clause = "case" expression COLON { statement } ;
+
+default_clause = "default" COLON { statement } ;
+
+labelled_statement = NAME COLON statement ;
+
+try_statement = "try" block ( catch_clause [ finally_clause ] | finally_clause ) ;
+
+catch_clause = "catch" [ LPAREN NAME RPAREN ] block ;
+
+finally_clause = "finally" block ;
+
+throw_statement = "throw" expression SEMICOLON ;
+
+debugger_statement = "debugger" SEMICOLON ;
+
+# ============================================================================
+# Expressions (ES2022 + TypeScript)
+# ============================================================================
+
+expression = assignment_expression { COMMA assignment_expression } ;
+
+assignment_expression = conditional_expression
+                      | arrow_function
+                      | async_arrow_function
+                      | yield_expression
+                      | ts_as_expression
+                      | ts_satisfies_expression
+                      | left_hand_side_expression assignment_operator assignment_expression ;
+
+# ES2021 logical assignment operators: ||=, &&=, ??=
+assignment_operator = EQUALS | PLUS_EQUALS | MINUS_EQUALS | STAR_STAR_EQUALS
+                    | STAR_EQUALS | SLASH_EQUALS | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS | PIPE_EQUALS | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS
+                    | OR_OR_EQUALS | AND_AND_EQUALS | NULLISH_COALESCE_EQUALS ;
+
+conditional_expression = nullish_coalescing_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+nullish_coalescing_expression = logical_or_expression
+                                { NULLISH_COALESCE logical_or_expression } ;
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+equality_expression = relational_expression
+                      { ( STRICT_EQUALS | STRICT_NOT_EQUALS
+                        | EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# ES2022: ergonomic brand checks — `#field in obj`
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS
+                          | "instanceof" | "in" ) shift_expression }
+                      | PRIVATE_NAME "in" shift_expression ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = exponentiation_expression
+                            { ( STAR | SLASH | PERCENT ) exponentiation_expression } ;
+
+exponentiation_expression = unary_expression [ STAR_STAR exponentiation_expression ] ;
+
+unary_expression = postfix_expression
+                 | await_expression
+                 | "delete" unary_expression
+                 | "void" unary_expression
+                 | "typeof" unary_expression
+                 | PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | TILDE unary_expression
+                 | BANG unary_expression ;
+
+postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS | BANG ] ;
+
+left_hand_side_expression = call_expression
+                          | optional_chain_expression
+                          | new_expression ;
+
+call_expression = member_expression arguments
+                  { arguments | DOT NAME | DOT PRIVATE_NAME
+                  | LBRACKET expression RBRACKET | template_literal } ;
+
+optional_chain_expression = member_expression
+                            { OPTIONAL_CHAIN NAME
+                            | OPTIONAL_CHAIN PRIVATE_NAME
+                            | OPTIONAL_CHAIN LBRACKET expression RBRACKET
+                            | OPTIONAL_CHAIN arguments
+                            | DOT NAME
+                            | DOT PRIVATE_NAME
+                            | LBRACKET expression RBRACKET
+                            | arguments
+                            | template_literal } ;
+
+new_expression = member_expression
+               | "new" new_expression ;
+
+# ES2022: member_expression gains private name access (this.#field)
+member_expression = primary_expression
+                    { DOT NAME | DOT PRIVATE_NAME
+                    | LBRACKET expression RBRACKET | template_literal }
+                  | "new" member_expression arguments
+                  | "super" DOT NAME
+                  | "super" LBRACKET expression RBRACKET
+                  | "new" DOT "target" ;
+
+arguments = LPAREN [ argument_list [ COMMA ] ] RPAREN ;
+
+argument_list = ( spread_element | assignment_expression )
+                { COMMA ( spread_element | assignment_expression ) } ;
+
+spread_element = ELLIPSIS assignment_expression ;
+
+arrow_function = arrow_parameters ARROW concise_body ;
+
+arrow_parameters = NAME
+                 | LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ]
+                 | LESS_THAN type_parameter_list GREATER_THAN LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+concise_body = assignment_expression
+             | LBRACE function_body RBRACE ;
+
+primary_expression = "this"
+                   | NAME
+                   | NUMBER
+                   | BIGINT
+                   | STRING
+                   | REGEX
+                   | "true"
+                   | "false"
+                   | "null"
+                   | array_literal
+                   | object_literal
+                   | function_expression
+                   | generator_expression
+                   | async_function_expression
+                   | ts_class_expression
+                   | template_literal
+                   | dynamic_import
+                   | import_meta
+                   | LPAREN expression RPAREN ;
+
+dynamic_import = "import" LPAREN assignment_expression RPAREN ;
+
+import_meta = "import" DOT "meta" ;
+
+array_literal = LBRACKET [ element_list ] RBRACKET ;
+
+element_list = [ spread_element | assignment_expression ]
+               { COMMA [ spread_element | assignment_expression ] } ;
+
+object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
+
+property_definition = property_name COLON assignment_expression
+                    | NAME
+                    | method_definition
+                    | async_method
+                    | object_spread_property ;
+
+object_spread_property = ELLIPSIS assignment_expression ;
+
+property_name = NAME
+              | STRING
+              | NUMBER
+              | LBRACKET assignment_expression RBRACKET ;
+
+function_expression = "function" [ NAME ] [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                      [ COLON type_expression ]
+                      LBRACE function_body RBRACE ;
+
+method_definition = property_name [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                    [ COLON type_expression ] LBRACE function_body RBRACE
+                  | "get" property_name LPAREN RPAREN
+                    [ COLON type_expression ] LBRACE function_body RBRACE
+                  | "set" property_name LPAREN typed_parameter RPAREN
+                    LBRACE function_body RBRACE
+                  | STAR property_name [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN
+                    [ COLON type_expression ] LBRACE function_body RBRACE ;
+
+template_literal = TEMPLATE_NO_SUB
+                 | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
+
+template_span = expression TEMPLATE_MIDDLE ;
+
+# ============================================================================
+# TypeScript Type System
+# ============================================================================
+
+type_annotation = COLON type_expression ;
+
+type_expression = conditional_type ;
+
+conditional_type = union_type
+                 | union_type "extends" type_expression QUESTION type_expression COLON type_expression ;
+
+union_type = intersection_type { PIPE intersection_type } ;
+
+intersection_type = array_type { AMPERSAND array_type } ;
+
+array_type = primary_type { LBRACKET RBRACKET } ;
+
+# ============================================================================
+# Primary Types
+# ============================================================================
+
+primary_type = predefined_type
+             | type_reference
+             | literal_type
+             | object_type
+             | tuple_type
+             | function_type
+             | constructor_type
+             | mapped_type
+             | "typeof" left_hand_side_expression
+             | "keyof" type_expression
+             | "unique" "symbol"
+             | "infer" NAME [ "extends" type_expression ]
+             | "readonly" array_type
+             | template_literal_type
+             | LPAREN type_expression RPAREN ;
+
+predefined_type = "any" | "string" | "number" | "boolean" | "void" | "never"
+                | "object" | "symbol" | "bigint" | "undefined" | "null" | "unknown" ;
+
+literal_type = NUMBER | BIGINT | STRING | "true" | "false" ;
+
+type_reference = NAME { DOT NAME } [ type_arguments ] ;
+type_arguments = LESS_THAN type_argument_list GREATER_THAN ;
+type_argument_list = type_expression { COMMA type_expression } ;
+
+# TS 5.0: `const` type parameter — preserves literal types at the call site
+# This is the type-parameter-level version of `as const`.
+type_parameters = LESS_THAN type_parameter_list GREATER_THAN ;
+type_parameter_list = type_parameter { COMMA type_parameter } ;
+type_parameter = [ "in" | "out" | "in" "out" | "const" ] NAME
+                 [ "extends" type_expression ] [ EQUALS type_expression ] ;
+
+# ============================================================================
+# Object Types
+# ============================================================================
+
+object_type = LBRACE { type_member } RBRACE ;
+
+type_member = construct_signature SEMICOLON
+            | call_signature SEMICOLON
+            | index_signature SEMICOLON
+            | method_signature SEMICOLON
+            | property_signature SEMICOLON ;
+
+property_signature = [ "readonly" ] property_name [ QUESTION ] [ COLON type_expression ] ;
+
+index_signature = LBRACKET NAME COLON type_expression RBRACKET COLON type_expression ;
+
+method_signature = property_name [ QUESTION ] [ type_parameters ]
+                   LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+call_signature = [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+construct_signature = "abstract" "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression
+                    | "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] ;
+
+# ============================================================================
+# Tuple Types (with TS 4.0+ variadic and labeled elements)
+# ============================================================================
+
+tuple_type = LBRACKET [ tuple_element_list ] RBRACKET ;
+tuple_element_list = tuple_element { COMMA tuple_element } ;
+tuple_element = [ NAME COLON ] [ "readonly" ] [ ELLIPSIS ] type_expression [ QUESTION ] ;
+
+# ============================================================================
+# Function and Constructor Types
+# ============================================================================
+
+function_type = [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression ;
+
+constructor_type = "abstract" "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression
+                 | "new" [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN ARROW type_expression ;
+
+# ============================================================================
+# Mapped Types (TS 4.1: key remapping)
+# ============================================================================
+
+mapped_type = LBRACE [ readonly_modifier ] LBRACKET NAME "in" type_expression
+              [ "as" type_expression ] RBRACKET [ question_modifier ]
+              [ COLON type_expression ] RBRACE ;
+
+readonly_modifier = "readonly" | PLUS "readonly" | MINUS "readonly" ;
+question_modifier = QUESTION | PLUS QUESTION | MINUS QUESTION ;
+
+# ============================================================================
+# Template Literal Types (TS 4.1)
+# ============================================================================
+
+template_literal_type = TEMPLATE_NO_SUB
+                      | TEMPLATE_HEAD { type_expression TEMPLATE_MIDDLE } type_expression TEMPLATE_TAIL ;
+
+# ============================================================================
+# Typed Parameters
+# ============================================================================
+
+typed_parameter_list = typed_parameter { COMMA typed_parameter } [ COMMA rest_typed_parameter ]
+                     | rest_typed_parameter ;
+
+typed_parameter = [ "public" | "private" | "protected" ] [ "override" ] [ "readonly" ]
+                  ( NAME | binding_pattern ) [ QUESTION ] [ COLON type_expression ]
+                  [ EQUALS assignment_expression ] ;
+
+rest_typed_parameter = ELLIPSIS NAME [ COLON type_expression ] ;
+
+# ============================================================================
+# TypeScript Declarations
+# ============================================================================
+
+interface_declaration = "interface" NAME [ type_parameters ] [ interface_heritage ] object_type ;
+
+interface_heritage = "extends" type_reference { COMMA type_reference } ;
+
+type_alias_declaration = "type" NAME [ type_parameters ] EQUALS type_expression SEMICOLON ;
+
+enum_declaration = [ "const" ] "enum" NAME LBRACE [ enum_body ] RBRACE ;
+
+enum_body = enum_member { COMMA enum_member } [ COMMA ] ;
+
+enum_member = property_name [ EQUALS assignment_expression ] ;
+
+namespace_declaration = ( "namespace" | "module" ) qualified_name LBRACE { namespace_element } RBRACE ;
+
+qualified_name = NAME { DOT NAME } ;
+
+namespace_element = namespace_declaration | interface_declaration | type_alias_declaration
+                  | ts_class_declaration | function_declaration | generator_declaration
+                  | enum_declaration | lexical_declaration | variable_statement
+                  | export_assignment | export_namespace_element | statement ;
+
+export_assignment = "export" EQUALS NAME SEMICOLON ;
+
+export_namespace_element = "export" ( namespace_declaration | interface_declaration
+                           | type_alias_declaration | ts_class_declaration | function_declaration
+                           | enum_declaration | lexical_declaration | variable_statement ) ;
+
+ambient_declaration = "declare" ambient_declaration_body ;
+
+ambient_declaration_body = variable_statement | ambient_function_declaration | ts_class_declaration
+                         | interface_declaration | type_alias_declaration | enum_declaration
+                         | namespace_declaration | ambient_module_declaration
+                         | "global" LBRACE { namespace_element } RBRACE ;
+
+ambient_module_declaration = "module" STRING LBRACE { namespace_element } RBRACE ;
+
+# Ambient function declaration: a function signature without a body.
+# `declare function foo(x: string): void;`
+ambient_function_declaration = "function" NAME [ type_parameters ] LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ] SEMICOLON ;
+
+# ============================================================================
+# TypeScript Class Syntax (with ES2022 class features)
+# ============================================================================
+#
+# TypeScript 5.0 classes combine:
+# - ES2022 class fields and private names (#name)
+# - TypeScript access modifiers and type annotations
+# - Standard TC39 decorators
+# - Auto-accessor syntax (TS 5.0)
+#
+# The `accessor` keyword creates a get/set pair backed by private storage:
+#   class Observed {
+#     @observe
+#     accessor count = 0;
+#   }
+# This generates private storage + getter + setter, enabling decorators to
+# intercept reads and writes.
+
+ts_class_declaration = { decorator } [ ts_class_modifiers ] "class" NAME
+                       [ type_parameters ] [ ts_class_heritage ] ts_class_body ;
+
+ts_class_expression = { decorator } [ ts_class_modifiers ] "class" [ NAME ]
+                      [ type_parameters ] [ ts_class_heritage ] ts_class_body ;
+
+ts_class_modifiers = "abstract" | "declare" ;
+
+ts_class_heritage = "extends" type_reference [ "implements" type_reference { COMMA type_reference } ]
+                  | "implements" type_reference { COMMA type_reference } ;
+
+ts_class_body = LBRACE { ts_class_element } RBRACE ;
+
+ts_class_element = ts_class_member
+                 | static_block
+                 | SEMICOLON ;
+
+ts_class_member = ts_constructor_declaration
+                | ts_method_declaration
+                | ts_property_declaration
+                | ts_private_field_declaration
+                | ts_private_method_declaration
+                | ts_accessor_declaration
+                | index_signature ;
+
+# ES2022: static initialization block in class body
+static_block = "static" LBRACE { statement } RBRACE ;
+
+# ES2022: class field declaration (public or private)
+ts_private_field_declaration = [ "static" ] PRIVATE_NAME
+                               [ COLON type_expression ]
+                               [ EQUALS assignment_expression ] SEMICOLON ;
+
+# ES2022: private method in class body
+ts_private_method_declaration = [ "static" ] PRIVATE_NAME
+                                LPAREN [ formal_parameters ] RPAREN
+                                [ COLON type_expression ]
+                                LBRACE function_body RBRACE
+                              | [ "static" ] "get" PRIVATE_NAME LPAREN RPAREN
+                                [ COLON type_expression ]
+                                LBRACE function_body RBRACE
+                              | [ "static" ] "set" PRIVATE_NAME
+                                LPAREN formal_parameter RPAREN
+                                LBRACE function_body RBRACE
+                              | [ "static" ] "async" [ STAR ] PRIVATE_NAME
+                                LPAREN [ formal_parameters ] RPAREN
+                                [ COLON type_expression ]
+                                LBRACE function_body RBRACE ;
+
+ts_constructor_declaration = [ accessibility_modifier ] "constructor"
+                              LPAREN [ ts_constructor_params ] RPAREN
+                              [ COLON "void" ] LBRACE function_body RBRACE ;
+
+ts_constructor_params = ts_constructor_param { COMMA ts_constructor_param } [ COMMA rest_typed_parameter ]
+                      | rest_typed_parameter ;
+
+ts_constructor_param = [ accessibility_modifier ] [ "override" ] [ "readonly" ] typed_parameter ;
+
+accessibility_modifier = "public" | "private" | "protected" ;
+
+ts_method_declaration = { decorator } { ts_member_modifier } ts_method_body ;
+
+ts_member_modifier = "public" | "private" | "protected" | "static" | "abstract"
+                   | "readonly" | "override" | "declare" ;
+
+ts_method_body = property_name [ QUESTION ] [ type_parameters ]
+                 LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ]
+                 LBRACE function_body RBRACE
+               | "get" property_name LPAREN RPAREN [ COLON type_expression ]
+                 LBRACE function_body RBRACE
+               | "set" property_name LPAREN typed_parameter RPAREN
+                 LBRACE function_body RBRACE
+               | STAR property_name [ QUESTION ] [ type_parameters ]
+                 LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ]
+                 LBRACE function_body RBRACE
+               | "async" [ STAR ] property_name [ QUESTION ] [ type_parameters ]
+                 LPAREN [ typed_parameter_list ] RPAREN [ COLON type_expression ]
+                 LBRACE function_body RBRACE ;
+
+ts_property_declaration = { decorator } { ts_member_modifier } property_name [ QUESTION ]
+                          [ COLON type_expression ] [ EQUALS assignment_expression ] SEMICOLON ;
+
+# TS 5.0: auto-accessor declaration
+# `accessor foo` generates: private storage field + getter + setter
+# Particularly useful with decorators for reactive/observed properties.
+ts_accessor_declaration = { decorator } { ts_member_modifier } "accessor" property_name [ QUESTION ]
+                          [ COLON type_expression ] [ EQUALS assignment_expression ] SEMICOLON ;
+
+# ============================================================================
+# TypeScript Decorators (Standard TC39 model in TS 5.0)
+# ============================================================================
+#
+# Standard decorators differ from experimental decorators in their contract:
+#   - Class decorators receive (value: T, context: ClassDecoratorContext)
+#   - May return a new class to replace the original
+#   - Cannot modify the class directly (must return a replacement or nothing)
+#
+# The GRAMMAR is identical to experimental decorators.
+
+decorator = AT decorator_expression ;
+
+decorator_expression = left_hand_side_expression ;
+
+# ============================================================================
+# TypeScript Expression Extensions
+# ============================================================================
+
+ts_as_expression = assignment_expression "as" type_expression ;
+
+ts_satisfies_expression = assignment_expression "satisfies" type_expression ;
+
+type_predicate = [ "asserts" ] NAME "is" type_expression
+               | "asserts" NAME ;

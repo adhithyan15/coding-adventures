@@ -1,0 +1,341 @@
+# TypeScript 5.0 — Lexical Grammar
+# @version 1
+# @typescript_version 5.0
+# @ecmascript_baseline 2022
+#
+# TypeScript 5.0 — March 2023
+#
+# TypeScript 5.0 is a major release with several significant improvements.
+# It targets ES2022 as its baseline, which brings class fields, private
+# class members (#name), and static initialization blocks.
+#
+# === ES2022 Baseline Features ===
+#
+# ES2022 is a landmark release for the class system:
+#
+#   1. Class fields: properties declared directly in the class body
+#      class Point { x = 0; y = 0; }
+#      No more constructor-only initialization.
+#
+#   2. Private class members using `#` prefix:
+#      class Counter { #count = 0; #increment() { this.#count++; } }
+#      These are TRULY private (enforced at runtime), unlike TypeScript's
+#      `private` modifier (which is only compile-time).
+#
+#   3. Static initialization blocks:
+#      class Config { static #data; static { Config.#data = loadConfig(); } }
+#      Complex static initialization that can use try/catch, loops, etc.
+#
+#   4. `d` regex flag (hasIndices): match indices
+#      Regex matches can include start/end positions of each capture group.
+#
+# Token changes from ES2021 → ES2022:
+#   - Added: PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+#   - Changed: REGEX flag set gains `d`
+#   - Added: OR_OR_EQUALS, AND_AND_EQUALS, NULLISH_COALESCE_EQUALS (from ES2021)
+#
+# === TypeScript 5.0 Additions ===
+#
+# TS 5.0 — March 2023:
+#   - Standard TC39 decorators (new decorator model, without --experimentalDecorators)
+#   - `const` type parameters: `function identity<const T>(arg: T): T`
+#     Preserves the literal type of the argument — T is inferred as the
+#     specific literal type, not widened to its base type.
+#   - Multiple config file extends: `"extends": ["./tsconfig.base.json", "./tsconfig.paths.json"]`
+#   - `--verbatimModuleSyntax` flag
+#   - enum and namespace improvements
+#
+# TS 5.1 — June 2023:
+#   - Function return type improvements (undefined vs void distinction)
+#   - Easier implicit returns in setters
+#   - JSDoc @satisfies, @overload
+#
+# TS 5.2 — August 2023:
+#   - `using` and `await using` explicit resource management (TC39 Stage 4)
+#   - Decorator metadata
+#   - Named and anonymous tuple members in union/intersection
+#
+# Note: `using` is in the TS 5.0 token file to cover the full 5.x series
+# from a single grammar. Individual TS 5.0 programs won't use `using`
+# but it is lexically recognized.
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- NEW IN ES2022: Private names ---
+#
+# Private class member names start with `#`. They are in a separate namespace
+# from regular identifiers — `this.#count` and `this.count` can coexist.
+# Unlike TypeScript's `private`, `#` names are enforced at runtime.
+#
+# TypeScript has full support for private names in class bodies:
+#   class Foo {
+#     #bar = 42;            // private field
+#     #method() {}         // private method
+#     test() { return #bar in this; }  // brand check
+#   }
+
+PRIVATE_NAME = /#[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# --- Numbers (with ES2021 numeric separators) ---
+#
+# Numeric separators `_` can be placed between digits for readability:
+#   1_000_000 = 1000000
+#   0xFF_FF = 0xFFFF
+#   0b1010_0001 = 0b10100001
+
+BIGINT_HEX = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?n/ -> BIGINT
+BIGINT_BINARY = /0[bB][01]([01_]*[01])?n/ -> BIGINT
+BIGINT_OCTAL = /0[oO][0-7]([0-7_]*[0-7])?n/ -> BIGINT
+BIGINT_DECIMAL = /[0-9]([0-9_]*[0-9])?n/ -> BIGINT
+
+BINARY_NUMBER = /0[bB][01]([01_]*[01])?/ -> NUMBER
+OCTAL_NUMBER = /0[oO][0-7]([0-7_]*[0-7])?/ -> NUMBER
+HEX_NUMBER = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?/ -> NUMBER
+FLOAT_NUMBER = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?/ -> NUMBER
+SCI_NUMBER = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?/ -> NUMBER
+INT_NUMBER = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# --- Strings ---
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# --- Template literals ---
+
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+
+# --- Regular expressions (ES2022: adds `d` hasIndices flag) ---
+#
+# The `d` flag causes the match result to include `indices` — an array of
+# start/end index pairs for each capture group. This is invaluable for
+# source maps, code analysis tools, and parsers.
+#
+# Available flags: d, g, i, m, s, u, y
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuy]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# ES2021 additions: logical assignment operators
+#   ||=  AND_AND_EQUALS
+#   &&=  OR_OR_EQUALS
+#   ??=  NULLISH_COALESCE_EQUALS
+
+OR_OR_EQUALS             = "||="
+AND_AND_EQUALS           = "&&="
+NULLISH_COALESCE_EQUALS  = "??="
+OPTIONAL_CHAIN           = "?."
+NULLISH_COALESCE         = "??"
+STAR_STAR_EQUALS         = "**="
+STAR_STAR                = "**"
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+ARROW                    = "=>"
+ELLIPSIS                 = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# --- TypeScript + ES2025: Decorator prefix ---
+#
+# TS 5.0 adopts the STANDARD TC39 decorator proposal (Stage 3/4) by default.
+# This replaces the legacy `--experimentalDecorators` behavior.
+# The `@` token is the same; the semantics differ:
+#
+# Standard decorators (TS 5.0+ default):
+#   - Decorators are functions: `type Decorator = (value: T, context: DecoratorContext) => T | void`
+#   - They receive a context object with kind, name, access, etc.
+#   - Class decorators may return a new class
+#   - Method decorators may return a new function
+#   - Field decorators may return an initializer
+#
+# Legacy decorators (--experimentalDecorators):
+#   - Based on earlier proposal
+#   - Used by Angular, NestJS, and many other frameworks
+
+AT = "@"
+
+# ============================================================================
+# Keywords (same as ES2022)
+# ============================================================================
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  let
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  yield
+  true
+  false
+  null
+  enum
+  async
+  await
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+
+reserved:
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# TS 5.0 adds `using` to context keywords to support explicit resource
+# management (TS 5.2 feature, but lexically recognized from the token grammar).
+# `using` is context-sensitive: it's only special in declaration positions.
+#
+# TS 5.0 also adds `accessor` for auto-accessor class members — a shorthand
+# that generates a getter/setter pair backed by a private storage field:
+#   class Foo {
+#     accessor name: string = "";
+#   }
+# This is particularly useful with decorators for observed/reactive properties.
+
+context_keywords:
+  # --- ES2022 context keywords ---
+  as
+  from
+  of
+  get
+  set
+  static
+  # --- TypeScript type system context keywords ---
+  type
+  interface
+  namespace
+  module
+  declare
+  abstract
+  readonly
+  is
+  keyof
+  asserts
+  unique
+  infer
+  never
+  unknown
+  override
+  out
+  satisfies
+  accessor
+  # --- TS 5.2: explicit resource management ---
+  using
+
+# ============================================================================
+# Token groups
+# ============================================================================
+
+group template:
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/

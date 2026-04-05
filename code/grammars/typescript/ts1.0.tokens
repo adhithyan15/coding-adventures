@@ -1,0 +1,334 @@
+# TypeScript 1.0 — Lexical Grammar
+# @version 1
+# @typescript_version 1.0
+# @ecmascript_baseline 5
+#
+# TypeScript 1.0 — April 2014
+#
+# TypeScript is a typed superset of JavaScript developed by Microsoft, first
+# publicly released in October 2012 and reaching 1.0 in April 2014. Anders
+# Hejlsberg (designer of C# and Delphi) led the language design.
+#
+# The core insight: JavaScript is already being used for large-scale
+# applications, but the lack of static typing makes refactoring and tooling
+# difficult. TypeScript adds a structural type system — types are erased at
+# compile time, leaving plain JavaScript. TypeScript is always a *superset*:
+# all valid JavaScript is valid TypeScript.
+#
+# TypeScript 1.0 is built on ES5 (December 2009). It targets ES3/ES5 output.
+#
+# TypeScript's design philosophy — "opt-in types":
+# ------------------------------------------------
+# TypeScript AVOIDS adding new hard keywords wherever possible. Why? Because
+# adding a new keyword (like `interface` as a hard keyword) would break any
+# existing JavaScript file that uses `interface` as a variable name. TypeScript
+# solves this with *context keywords* — words that act as keywords only in
+# specific syntactic positions, and remain valid identifiers elsewhere.
+#
+#   var type = "hello";    // still valid!
+#   type Alias = string;   // also valid — `type` as context keyword
+#
+# What TypeScript 1.0 adds over ES5:
+#   - Type annotations:    `var x: number = 42`
+#   - Interfaces:          `interface Point { x: number; y: number; }`
+#   - Type aliases:        `type StringOrNumber = string | number`
+#   - Generics:            `function identity<T>(x: T): T { return x; }`
+#   - Enums:               `enum Direction { Up, Down, Left, Right }`
+#   - Namespaces:          `namespace MyApp { export function foo() {} }`
+#   - Access modifiers:    `class Foo { private x: number; }`
+#   - Abstract classes:    `abstract class Shape { abstract area(): number; }`
+#   - Readonly properties: `readonly pi: number = 3.14`
+#   - Type assertions:     `<Type>expr` or `expr as Type`
+#   - Non-null assertions: `value!.property`
+#   - Type predicates:     `function isString(x: any): x is string`
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# Numbers: same as ES5.
+# Hexadecimal must come before float/int because the `0x` prefix would match
+# `0` as an integer otherwise (first-match-wins ordering).
+
+HEX_NUMBER = /0[xX][0-9a-fA-F]+/ -> NUMBER
+FLOAT_NUMBER = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?/ -> NUMBER
+SCI_NUMBER = /[0-9]+[eE][+-]?[0-9]+/ -> NUMBER
+INT_NUMBER = /[0-9]+/ -> NUMBER
+
+# Strings: same as ES5. Double-quoted and single-quoted strings, with
+# backslash escapes. ES5 line continuation (backslash before newline) is
+# a lexer semantic handled by the STRING_DQ/STRING_SQ patterns.
+
+STRING_DQ = /"([^"\\]|\\.)*"/ -> STRING
+STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
+
+# Regular expression literals: same as ES5 (g, i, m flags).
+# TypeScript passes regex literals through to JavaScript unchanged.
+
+REGEX = /\/([^\/\\\n]|\\.)+\/[gim]*/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# TypeScript inherits all ES5 operators. No new multi-character operators are
+# added in TS 1.0.
+#
+# Note: LESS_THAN and GREATER_THAN are heavily overloaded in TypeScript.
+# They appear as comparison operators (JS) AND as type argument/parameter
+# delimiters: `Array<string>`, `function identity<T>(x: T)`.
+# The parser uses context (not the lexer) to disambiguate these uses.
+
+STRICT_EQUALS            = "==="
+STRICT_NOT_EQUALS        = "!=="
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT     = ">>>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+
+# TypeScript 1.0 introduces two multi-character operators not in ES5:
+#
+#   ARROW (=>): Used in TypeScript type expressions for function types and
+#   arrow functions. Even though ES2015 standardized arrow functions, TypeScript
+#   had them from v1.0 (targeting ES3/ES5 output). Also used in type syntax:
+#     type Transform = (x: string) => number;
+#
+#   ELLIPSIS (...): Used for rest parameters and spread. TypeScript 1.0 had
+#   rest parameters before ES2015:
+#     function log(...args: string[]): void { }
+#
+# These are the only multi-character operator additions over ES5.
+
+ARROW    = "=>"
+ELLIPSIS = "..."
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# TypeScript adds one operator token:
+#
+#   AT (@): Used as decorator prefix. Decorators were experimental in TS 1.0
+#   (stabilized in TS 1.5 with --experimentalDecorators flag). The AT token
+#   is included here for completeness and forward compatibility.
+#
+#   BANG (!): In TypeScript, a postfix BANG is the non-null assertion operator:
+#     `document.getElementById("id")!.textContent = "hi";`
+#   The lexer emits the same BANG token; the parser applies different semantics
+#   based on position (prefix = logical not, postfix = non-null assertion).
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# TypeScript-specific operator: decorator prefix
+AT = "@"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+COLON     = ":"
+DOT       = "."
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# TypeScript 1.0 retains all ES5 keywords unchanged. TypeScript avoids adding
+# new hard keywords for backward compatibility. All new TypeScript-specific
+# constructs use context keywords (identifiers interpreted based on position).
+#
+# Keywords are RESERVED: you cannot use them as identifiers. Using `interface`
+# as a variable name in JavaScript is valid; TypeScript makes it a context
+# keyword (not a hard keyword) to avoid breaking existing code.
+
+keywords:
+  break
+  case
+  catch
+  class
+  const
+  continue
+  debugger
+  default
+  delete
+  do
+  else
+  enum
+  export
+  extends
+  finally
+  for
+  function
+  if
+  import
+  in
+  instanceof
+  new
+  return
+  super
+  switch
+  this
+  throw
+  try
+  typeof
+  var
+  void
+  while
+  with
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# TypeScript 1.0 promotes class, const, enum, export, extends, import, super
+# to full keywords (they're used in TypeScript syntax). This differs from ES5
+# where these were merely reserved. TypeScript is a superset of JavaScript
+# and needs to USE these words for its own syntax.
+
+reserved:
+
+# ============================================================================
+# Context keywords
+# ============================================================================
+#
+# These are the heart of TypeScript's backward-compatibility strategy.
+# A context keyword is an identifier that:
+#   1. Has special meaning in certain syntactic positions
+#   2. Remains a valid identifier in all other positions
+#
+# This means the following are ALL valid TypeScript:
+#   var get = 5;           // `get` as variable name
+#   get get() { ... }      // `get` as getter keyword
+#   var type = "thing";    // `type` as variable name
+#   type Foo = string;     // `type` as type alias keyword
+#
+# The parser must look ahead to determine which reading applies.
+#
+# ES5 context keywords (from es5.grammar):
+#   get, set — getter/setter syntax in object literals
+#
+# TypeScript 1.0 additions:
+#
+#   type      — introduces a type alias: `type StringOrNumber = string | number;`
+#               Named after the construct; carefully chosen to not conflict since
+#               `type` is not a common variable name in practice.
+#
+#   interface — introduces an interface declaration:
+#               `interface Serializable { serialize(): string; }`
+#               Interfaces describe the shape of an object without implementation.
+#               They are purely compile-time — no runtime artifact is emitted.
+#
+#   namespace — introduces a namespace (internal module):
+#               `namespace MyApp { export class Foo { } }`
+#               Replaced the earlier `module` keyword for non-ambient namespaces.
+#
+#   module    — old TypeScript syntax for namespace, still supported:
+#               `module MyApp { export class Foo { } }`
+#               Also used for ambient external module declarations:
+#               `declare module "fs" { export function readFile(...): void; }`
+#
+#   declare   — marks an ambient declaration (describes shape without emitting code):
+#               `declare var window: Window;`
+#               Used in .d.ts declaration files to describe external APIs.
+#
+#   abstract  — marks an abstract class or abstract method:
+#               `abstract class Shape { abstract area(): number; }`
+#               Abstract classes cannot be instantiated directly.
+#
+#   readonly  — marks a property as read-only after initialization:
+#               `class Point { constructor(readonly x: number) {} }`
+#               Different from `const` — applies to properties, not variables.
+#
+#   is        — type predicate return type:
+#               `function isString(x: any): x is string { return typeof x === "string"; }`
+#               Lets TypeScript narrow the type inside an `if` block.
+#
+#   keyof     — creates a union type of all keys in a type:
+#               `type Keys = keyof { a: 1; b: 2 };  // "a" | "b"`
+#               Fundamental to mapped types and generic constraints.
+#
+#   asserts   — assertion return type (value is never undefined after call):
+#               `function assert(x: unknown): asserts x is string { ... }`
+#               Tells TypeScript that the function throws if the condition is false.
+#
+#   unique    — marks a symbol as a unique brand:
+#               `const sym: unique symbol = Symbol("brand");`
+#               Used with `symbol` to create nominal-style types in a structural system.
+
+context_keywords:
+  get
+  set
+  type
+  interface
+  namespace
+  module
+  declare
+  abstract
+  readonly
+  is
+  keyof
+  asserts
+  unique
+
+# ============================================================================
+# Skip patterns
+# ============================================================================
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING_DQ = /"[^"]*$/
+  BAD_STRING_SQ = /'[^']*$/
+  BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
