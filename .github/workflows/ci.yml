@@ -57,6 +57,8 @@ jobs:
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
       needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
+      needs_java: ${{ steps.toolchains.outputs.needs_java }}
+      needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -140,7 +142,10 @@ jobs:
               'needs_lua=true' \
               'needs_perl=true' \
               'needs_haskell=true' \
-              'needs_dotnet=true' >> "$GITHUB_OUTPUT"
+              'needs_haskell=true' \
+              'needs_dotnet=true' \
+              'needs_java=true' \
+              'needs_kotlin=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -152,7 +157,10 @@ jobs:
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
               'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
               'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
-              'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' >> "$GITHUB_OUTPUT"
+              'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
+              'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' \
+              'needs_java=${{ steps.detect.outputs.needs_java }}' \
+              'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -288,6 +296,31 @@ jobs:
         with:
           elixir-version: '1.16'
           otp-version: '26.0'
+
+      # ── Java / Kotlin ──────────────────────────────────────────
+      #
+      # Both Java and Kotlin packages use Gradle and JDK 21.
+      # A single JDK + Gradle setup covers both languages since
+      # Kotlin/JVM runs on the same JVM.
+
+      - name: Set up JDK 21
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Disable long-lived Gradle services on Windows CI
+        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
+        shell: bash
+        run: |
+          {
+            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
+          } >> "$GITHUB_ENV"
 
       - name: Install cpanm and test dependencies (Perl)
         if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'

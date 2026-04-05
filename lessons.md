@@ -156,6 +156,28 @@ This redirects Gradle's output to `gradle-build/` instead of `build/`. Also add 
 - [ ] `layout.buildDirectory = file("gradle-build")` in build.gradle.kts
 - [ ] BUILD file exists for the monorepo build tool
 - [ ] `gradle-build/` in .gitignore
+- [ ] Do NOT use `java { toolchain { languageVersion.set(...) } }` — let Gradle use the running JDK
+
+---
+
+### 2026-04-04: Java toolchain block causes CI failure when JDK is not pre-installed
+
+Using `java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }` in `build.gradle.kts` causes Gradle to search for a JDK 21 installation matching that exact version. If the CI runner doesn't have JDK 21 pre-installed and toolchain auto-provisioning isn't configured, the build fails with "Cannot find a Java installation on your machine."
+
+**Solution:** Do NOT specify an explicit Java toolchain version. Let Gradle use whatever JDK is on the PATH (set up by `actions/setup-java` in CI). This matches the lesson from the hello-world programs.
+
+---
+
+### 2026-04-04: CI detect outputs must use steps.toolchains, not steps.detect
+
+The CI workflow has a "Normalize toolchain requirements" step (id: `toolchains`) that sits between the detect step and the job outputs. On main branch pushes, it forces all languages to `true` for the full rebuild. On other branches, it passes through the detect outputs.
+
+When adding a new language to CI, you must add it in THREE places:
+1. `allLanguages` in the build tool (`main.go`)
+2. The detect job `outputs:` section (using `steps.toolchains.outputs.needs_<lang>`)
+3. The `steps.toolchains` normalization step — in BOTH the `is_main=true` branch AND the `else` branch
+
+If you only add it to `outputs:` using `steps.detect.outputs` instead of `steps.toolchains.outputs`, the validator will fail with: "detect outputs for forced main full builds are not normalized through steps.toolchains."
 
 ---
 

@@ -55,6 +55,16 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
 		"ghc --version", "cabal --version", "set up haskell",
 	},
+	"java": {
+		"needs_java", "setup-java", "java-version", "java --version",
+		"temurin", "set up jdk", "set up gradle", "setup-gradle",
+		"gradle_opts", "org.gradle.daemon", "org.gradle.vfs.watch",
+	},
+	"kotlin": {
+		"needs_kotlin", "setup-java", "java-version",
+		"temurin", "set up jdk", "set up gradle", "setup-gradle",
+		"gradle_opts", "org.gradle.daemon", "org.gradle.vfs.watch",
+	},
 	"dotnet": {
 		"needs_dotnet", "setup-dotnet", "dotnet-version", "dotnet --version",
 		"set up .net",
