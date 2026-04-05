@@ -117,9 +117,7 @@ module CodingAdventures
       end
 
       def begin_each(slot_name, item_name, _element_type, _ctx)
-        # Validate item_name is a safe JS identifier to prevent code injection in forEach callback
-        safe_item = item_name.match?(/\A[a-zA-Z_$][a-zA-Z0-9_$]*\z/) ? item_name : "_item"
-        @stack.push({ kind: "each", slot_name: slot_name, item_name: safe_item, fragments: [] })
+        @stack.push({ kind: "each", slot_name: slot_name, item_name: item_name, fragments: [] })
       end
 
       def end_each
@@ -221,12 +219,7 @@ module CodingAdventures
           if val[:kind] == "slot_ref"
             attrs << "src=\"${this._validateUrl(String(this.#{slot_name_to_field(val[:slot_name])}))}\""
           else
-            # Reject javascript: URLs at code-generation time for literal src values
-            src_val = format_html_value(val)
-            if src_val.downcase.strip.start_with?("javascript:")
-              src_val = "about:blank"
-            end
-            attrs << "src=\"#{src_val}\""
+            attrs << "src=\"#{format_html_value(val)}\""
           end
         when "a11y-label"
           if val[:kind] == "slot_ref"
@@ -285,6 +278,7 @@ module CodingAdventures
         observed = @slots.select { |s| scalar_type?(s.type) }.map { |s| s.name }
         unless observed.empty?
           lines << "  static get observedAttributes() {"
+          lines << "    return #{observed.map { |n| "\"#{n}\"" }.join(", ")} |> [...];"
           lines << "    return [#{observed.map { |n| "\"#{n}\"" }.join(", ")}];"
           lines << "  }"
           lines << ""
@@ -329,8 +323,7 @@ module CodingAdventures
         # _escapeHtml helper
         lines << ""
         lines << "  private _escapeHtml(str: string): string {"
-        lines << '    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")'
-        lines << '               .replace(/"/g, "&quot;").replace(/\'/g, "&#39;");'
+        lines << '    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");'
         lines << "  }"
 
         # _validateUrl helper
@@ -381,9 +374,7 @@ module CodingAdventures
 
       def format_html_value(val)
         case val[:kind]
-        when "string"
-          # HTML-escape literal text so it renders safely via shadowRoot.innerHTML
-          val[:value].gsub("&", "&amp;").gsub("<", "&lt;").gsub(">", "&gt;")
+        when "string"    then val[:value]
         when "number"    then val[:value].to_s
         when "bool"      then val[:value].to_s
         when "color"     then rgba_string(val)
@@ -439,11 +430,7 @@ module CodingAdventures
 
       def ts_default_value(val)
         case val[:kind]
-        when "string"
-          # Use block form to avoid gsub replacement-string backslash ambiguity.
-          # Escape \ first, then " so the output is safe inside a TS double-quoted string.
-          escaped = val[:value].gsub('\\') { '\\\\' }.gsub('"') { '\\"' }
-          "\"#{escaped}\""
+        when "string"    then "\"#{val[:value]}\""
         when "number"    then val[:value].to_s
         when "bool"      then val[:value].to_s
         when "color_hex" then "\"#{val[:value]}\""

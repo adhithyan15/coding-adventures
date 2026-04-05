@@ -46,16 +46,12 @@ package mosaicemitreact
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"unicode"
 
 	mosaicanalyzer "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-analyzer"
 	mosaicvm "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-vm"
 )
-
-// safeJSIdent matches valid JavaScript identifiers for code-generation safety.
-var safeJSIdent = regexp.MustCompile(`^[a-zA-Z_$][a-zA-Z0-9_$]*$`)
 
 // ============================================================================
 // Stack Frame Types
@@ -212,12 +208,7 @@ func (r *ReactRenderer) EndWhen() {
 // BeginEach emits the opening of a map() iteration.
 func (r *ReactRenderer) BeginEach(slotName string, itemName string, elementType mosaicanalyzer.MosaicType, ctx mosaicvm.SlotContext) {
 	camel := toCamelCase(slotName)
-	// Validate itemName is a safe JS identifier to prevent code injection
-	safeItem := itemName
-	if !safeJSIdent.MatchString(itemName) {
-		safeItem = "_item"
-	}
-	r.appendLine(fmt.Sprintf("{%s.map((%s, _idx) => (", camel, safeItem))
+	r.appendLine(fmt.Sprintf("{%s.map((%s, _idx) => (", camel, itemName))
 }
 
 // EndEach closes a map() iteration.
@@ -404,14 +395,7 @@ func resolvedColorToCSS(v mosaicvm.ResolvedValue) string {
 func resolvedValueToJSX(p mosaicvm.ResolvedProperty) string {
 	switch p.Value.Kind {
 	case "string":
-		// HTML-escape literal text to prevent JSX parser confusion and XSS in non-React contexts
-		s := p.Value.StrValue
-		s = strings.ReplaceAll(s, "&", "&amp;")
-		s = strings.ReplaceAll(s, "<", "&lt;")
-		s = strings.ReplaceAll(s, ">", "&gt;")
-		s = strings.ReplaceAll(s, "{", "&#123;")
-		s = strings.ReplaceAll(s, "}", "&#125;")
-		return s
+		return p.Value.StrValue
 	case "slot_ref":
 		return fmt.Sprintf("{%s}", toCamelCase(p.Value.SlotName))
 	case "number":
@@ -426,25 +410,10 @@ func resolvedValueToJSX(p mosaicvm.ResolvedProperty) string {
 }
 
 // resolvedValueToJSXExpr returns a JSX expression for a value (for use in attributes).
-// For string literals used as src, we reject javascript: URLs at code-generation time
-// to prevent the generated component from containing XSS vectors.
 func resolvedValueToJSXExpr(v mosaicvm.ResolvedValue) string {
 	switch v.Kind {
 	case "string":
-		s := v.StrValue
-		// Block dangerous URL schemes (javascript:, data:, vbscript:) in src values.
-		// Use an allowlist: only http:, https:, protocol-relative //, and relative paths.
-		lower := strings.ToLower(strings.TrimSpace(s))
-		if strings.Contains(lower, ":") {
-			safe := strings.HasPrefix(lower, "http:") || strings.HasPrefix(lower, "https://")
-			if !safe {
-				return "'about:blank'"
-			}
-		}
-		// Escape backslash and single-quote to prevent JS string injection
-		escaped := strings.ReplaceAll(s, `\`, `\\`)
-		escaped = strings.ReplaceAll(escaped, `'`, `\'`)
-		return fmt.Sprintf("'%s'", escaped)
+		return fmt.Sprintf("'%s'", v.StrValue)
 	case "slot_ref":
 		return toCamelCase(v.SlotName)
 	case "number":

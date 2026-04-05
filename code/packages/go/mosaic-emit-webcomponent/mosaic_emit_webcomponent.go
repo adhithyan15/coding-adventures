@@ -44,16 +44,12 @@ package mosaicemitwebcomponent
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"unicode"
 
 	mosaicanalyzer "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-analyzer"
 	mosaicvm "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-vm"
 )
-
-// safeJSIdent matches valid JavaScript identifiers for code-generation safety.
-var safeJSIdent = regexp.MustCompile(`^[a-zA-Z_$][a-zA-Z0-9_$]*$`)
 
 // ============================================================================
 // Render Fragment Types
@@ -191,15 +187,10 @@ func (r *WebComponentRenderer) EndWhen() {
 // BeginEach opens a forEach iteration.
 func (r *WebComponentRenderer) BeginEach(slotName string, itemName string, elementType mosaicanalyzer.MosaicType, ctx mosaicvm.SlotContext) {
 	isNodeList := elementType.Kind == "node" || elementType.Kind == "component"
-	// Validate itemName is a safe JS identifier to prevent code injection in forEach callback
-	safeItem := itemName
-	if !safeJSIdent.MatchString(itemName) {
-		safeItem = "_item"
-	}
 	r.appendFrag(renderFragment{
 		kind:       "each_open",
 		field:      "_" + toWCField(slotName),
-		itemName:   safeItem,
+		itemName:   itemName,
 		isNodeList: isNodeList,
 	})
 }
@@ -267,8 +258,7 @@ func (r *WebComponentRenderer) Emit() mosaicvm.EmitResult {
 
 	// _escapeHtml helper
 	sb.WriteString("  private _escapeHtml(s: string): string {\n")
-	sb.WriteString("    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')\n")
-	sb.WriteString("             .replace(/\"/g, '&quot;').replace(/'/g, '&#39;');\n")
+	sb.WriteString("    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n")
 	sb.WriteString("  }\n")
 
 	sb.WriteString("}\n\n")
@@ -291,11 +281,7 @@ func (r *WebComponentRenderer) Emit() mosaicvm.EmitResult {
 func fragmentToWCCode(f renderFragment) string {
 	switch f.kind {
 	case "open_tag":
-		// Use single-quoted JS string: escape backslash and single-quote only.
-		// This keeps HTML double-quotes (role="button") unescaped and readable.
-		escaped := strings.ReplaceAll(f.htmlStr, `\`, `\\`)
-		escaped = strings.ReplaceAll(escaped, `'`, `\'`)
-		return fmt.Sprintf("    html += '%s';\n", escaped)
+		return fmt.Sprintf("    html += %q;\n", f.htmlStr)
 	case "close_tag":
 		return fmt.Sprintf("    html += '</%s>';\n", f.tag)
 	case "slot_ref_text":
@@ -394,16 +380,7 @@ func dimToCSS(v mosaicvm.ResolvedValue) string {
 		return fmt.Sprintf("%g%s", v.NumValue, unit)
 	}
 	if v.Kind == "string" {
-		// CSS keyword allowlist — only permit known safe values to prevent " injection
-		// into the style attribute that would break the HTML attribute quoting.
-		safe := map[string]bool{
-			"auto": true, "none": true, "inherit": true, "initial": true,
-			"100%": true, "fit-content": true, "max-content": true, "min-content": true,
-		}
-		if safe[v.StrValue] {
-			return v.StrValue
-		}
-		return "auto"
+		return v.StrValue
 	}
 	return "auto"
 }
