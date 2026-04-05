@@ -1,0 +1,14 @@
+[package]
+name = "mosaic-analyzer"
+version = "0.1.0"
+edition = "2021"
+description = "Validates the Mosaic AST and produces a typed MosaicIR"
+
+[dependencies]
+mosaic-parser = { path = "../mosaic-parser" }
+mosaic-lexer = { path = "../mosaic-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser = { path = "../parser" }
+state-machine = { path = "../state-machine" }

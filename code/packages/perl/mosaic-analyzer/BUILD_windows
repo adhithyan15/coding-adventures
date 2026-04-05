@@ -1,0 +1,2 @@
+REM prereqs: ../mosaic-lexer ../mosaic-parser
+echo Perl testing is not supported on Windows - skipping

@@ -9,6 +9,9 @@
 //   - A BUILD file for an isolated-env language (for example Python or
 //     TypeScript) forgets to materialize a local prerequisite that is needed
 //     when the package is built on a fresh runner.
+//   - CI runs a forced full build on main, but conditional toolchain setup is
+//     still wired to incremental diff outputs. That lets commands like mix,
+//     bundle, uv, luarocks, or cpanm disappear only on the full-build path.
 package validator
 
 import (
@@ -30,6 +33,19 @@ import (
 var requiresExplicitPrereqs = map[string]bool{
 	"python":     true,
 	"typescript": true,
+	"perl":       true,
+}
+
+// Languages in this set are installed conditionally by the main CI workflow.
+// If main also forces a full build, detect-job outputs must be normalized so
+// these toolchains are always enabled on that path.
+var ciManagedToolchainLanguages = map[string]bool{
+	"python":     true,
+	"ruby":       true,
+	"typescript": true,
+	"rust":       true,
+	"elixir":     true,
+	"lua":        true,
 	"perl":       true,
 }
 
@@ -97,13 +113,19 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		problems = append(problems, fmt.Sprintf("%s (%s): %s", pkg.Name, buildFileLabel(pkg.Path), strings.Join(parts, "; ")))
 	}
 
+	if ciProblem := validateCIFullBuildToolchains(packages); ciProblem != "" {
+		problems = append(problems, ciProblem)
+	}
+	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
+	problems = append(problems, validatePerlBuildFiles(packages)...)
+
 	if len(problems) == 0 {
 		return nil
 	}
 
 	sort.Strings(problems)
 	return fmt.Errorf(
-		"BUILD file validation failed:\n  - %s\nFix the BUILD file so it matches the metadata dependency graph and works on a clean standalone build.",
+		"BUILD/CI validation failed:\n  - %s\nFix the BUILD file or CI workflow so metadata dependencies and toolchain setup stay correct on clean standalone and full-build runs.",
 		strings.Join(problems, "\n  - "),
 	)
 }
@@ -236,4 +258,479 @@ func extractMetadataDeps(line string, knownNames map[string]string, re *regexp.R
 		}
 	}
 	return found
+}
+
+func validateCIFullBuildToolchains(packages []discovery.Package) string {
+	repoRoot := inferRepoRoot(packages)
+	if repoRoot == "" {
+		return ""
+	}
+
+	ciPath := filepath.Join(repoRoot, ".github", "workflows", "ci.yml")
+	data, err := os.ReadFile(ciPath)
+	if err != nil {
+		return ""
+	}
+
+	workflow := string(data)
+	if !strings.Contains(workflow, "Full build on main merge") {
+		return ""
+	}
+
+	var missingOutputBinding []string
+	var missingMainForce []string
+
+	for _, lang := range languagesNeedingCIToolchains(packages) {
+		outputPattern := regexp.MustCompile(
+			fmt.Sprintf(
+				`needs_%s:\s*\$\{\{\s*steps\.toolchains\.outputs\.needs_%s\s*\}\}`,
+				regexp.QuoteMeta(lang),
+				regexp.QuoteMeta(lang),
+			),
+		)
+		if !outputPattern.MatchString(workflow) {
+			missingOutputBinding = append(missingOutputBinding, lang)
+		}
+
+		if !strings.Contains(workflow, fmt.Sprintf("needs_%s=true", lang)) {
+			missingMainForce = append(missingMainForce, lang)
+		}
+	}
+
+	if len(missingOutputBinding) == 0 && len(missingMainForce) == 0 {
+		return ""
+	}
+
+	var parts []string
+	if len(missingOutputBinding) > 0 {
+		parts = append(parts, fmt.Sprintf(
+			"detect outputs for forced main full builds are not normalized through steps.toolchains for: %s",
+			strings.Join(missingOutputBinding, ", "),
+		))
+	}
+	if len(missingMainForce) > 0 {
+		parts = append(parts, fmt.Sprintf(
+			"forced main full-build path does not explicitly enable toolchains for: %s",
+			strings.Join(missingMainForce, ", "),
+		))
+	}
+
+	return fmt.Sprintf(
+		"%s: %s",
+		filepath.ToSlash(ciPath),
+		strings.Join(parts, "; "),
+	)
+}
+
+func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
+	var problems []string
+	localLuaRocks := make(map[string]string)
+	for _, pkg := range packages {
+		if pkg.Language != "lua" {
+			continue
+		}
+		localLuaRocks[luaRockNameForPackagePath(pkg.Path)] = filepath.Base(pkg.Path)
+	}
+
+	for _, pkg := range packages {
+		if pkg.Language != "lua" {
+			continue
+		}
+		selfRock := "coding-adventures-" + strings.ReplaceAll(filepath.Base(pkg.Path), "_", "-")
+		buildLines := make(map[string][]string)
+		for _, buildPath := range luaBuildFiles(pkg.Path) {
+			lines := readBuildLines(buildPath)
+			buildLines[filepath.Base(buildPath)] = lines
+			if len(lines) == 0 {
+				continue
+			}
+
+			if target := firstForeignLuaRemove(lines, selfRock); target != "" {
+				problems = append(problems, fmt.Sprintf(
+					"%s: Lua BUILD removes unrelated rock %s; isolated package builds should only remove the package they are rebuilding",
+					filepath.ToSlash(buildPath),
+					target,
+				))
+			}
+
+			stateMachineIndex := firstLineContainingAny(lines, "../state_machine", `..\state_machine`)
+			directedGraphIndex := firstLineContainingAny(lines, "../directed_graph", `..\directed_graph`)
+			if stateMachineIndex >= 0 && directedGraphIndex >= 0 && stateMachineIndex < directedGraphIndex {
+				problems = append(problems, fmt.Sprintf(
+					"%s: Lua BUILD installs state_machine before directed_graph; isolated LuaRocks builds require directed_graph first",
+					filepath.ToSlash(buildPath),
+				))
+			}
+
+			if (hasGuardedLocalLuaInstall(lines) ||
+				(filepath.Base(buildPath) == "BUILD_windows" && hasLocalLuaSiblingInstall(lines))) &&
+				!selfLuaInstallDisablesDeps(lines, selfRock) {
+				problems = append(problems, fmt.Sprintf(
+					"%s: Lua BUILD bootstraps sibling rocks but the final self-install does not pass --deps-mode=none or --no-manifest",
+					filepath.ToSlash(buildPath),
+				))
+			}
+
+			if selfLuaInstallDisablesDeps(lines, selfRock) {
+				missingLocalDeps := missingLuaLocalDepsForSelfManagedBuild(pkg.Path, selfRock, lines, localLuaRocks)
+				if len(missingLocalDeps) > 0 {
+					problems = append(problems, fmt.Sprintf(
+						"%s: Lua BUILD self-install disables dependency resolution but does not bootstrap local rockspec dependencies: %s",
+						filepath.ToSlash(buildPath),
+						strings.Join(missingLocalDeps, ", "),
+					))
+				}
+			}
+		}
+
+		missingWindowsDeps := missingLuaSiblingInstalls(buildLines["BUILD"], buildLines["BUILD_windows"])
+		if len(missingWindowsDeps) > 0 {
+			problems = append(problems, fmt.Sprintf(
+				"%s: Lua BUILD_windows is missing sibling installs present in BUILD: %s",
+				filepath.ToSlash(filepath.Join(pkg.Path, "BUILD_windows")),
+				strings.Join(missingWindowsDeps, ", "),
+			))
+		}
+
+		missingWindowsHardening := missingLuaSiblingInstallHardening(buildLines["BUILD"], buildLines["BUILD_windows"])
+		if len(missingWindowsHardening) > 0 {
+			problems = append(problems, fmt.Sprintf(
+				"%s: Lua BUILD_windows sibling installs are missing --deps-mode=none/--no-manifest hardening present in BUILD: %s",
+				filepath.ToSlash(filepath.Join(pkg.Path, "BUILD_windows")),
+				strings.Join(missingWindowsHardening, ", "),
+			))
+		}
+	}
+	return problems
+}
+
+func validatePerlBuildFiles(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.Language != "perl" {
+			continue
+		}
+
+		for _, buildPath := range luaBuildFiles(pkg.Path) {
+			lines := readBuildLines(buildPath)
+			for _, line := range lines {
+				if strings.Contains(line, "cpanm") &&
+					strings.Contains(line, "Test2::V0") &&
+					!strings.Contains(line, "--notest") {
+					problems = append(problems, fmt.Sprintf(
+						"%s: Perl BUILD bootstraps Test2::V0 without --notest; isolated Windows installs can fail while installing the test framework itself",
+						filepath.ToSlash(buildPath),
+					))
+					break
+				}
+			}
+		}
+	}
+	return problems
+}
+
+func languagesNeedingCIToolchains(packages []discovery.Package) []string {
+	seen := make(map[string]bool)
+	var langs []string
+	for _, pkg := range packages {
+		if !ciManagedToolchainLanguages[pkg.Language] || seen[pkg.Language] {
+			continue
+		}
+		seen[pkg.Language] = true
+		langs = append(langs, pkg.Language)
+	}
+	sort.Strings(langs)
+	return langs
+}
+
+func inferRepoRoot(packages []discovery.Package) string {
+	for _, pkg := range packages {
+		root := inferRepoRootFromPackagePath(pkg.Path)
+		if root != "" {
+			return root
+		}
+	}
+	return ""
+}
+
+func inferRepoRootFromPackagePath(pkgPath string) string {
+	current := filepath.Clean(pkgPath)
+	for {
+		parent := filepath.Dir(current)
+		if filepath.Base(current) == "code" {
+			return parent
+		}
+		if parent == current {
+			return ""
+		}
+		current = parent
+	}
+}
+
+func luaBuildFiles(pkgPath string) []string {
+	entries, err := os.ReadDir(pkgPath)
+	if err != nil {
+		return nil
+	}
+
+	var files []string
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasPrefix(entry.Name(), "BUILD") {
+			continue
+		}
+		files = append(files, filepath.Join(pkgPath, entry.Name()))
+	}
+	sort.Strings(files)
+	return files
+}
+
+func readBuildLines(path string) []string {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+
+	var lines []string
+	for _, line := range strings.Split(string(data), "\n") {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+			continue
+		}
+		lines = append(lines, trimmed)
+	}
+	return lines
+}
+
+func firstForeignLuaRemove(lines []string, selfRock string) string {
+	re := regexp.MustCompile(`\bluarocks remove --force ([^ \t]+)`)
+	for _, line := range lines {
+		match := re.FindStringSubmatch(line)
+		if len(match) < 2 {
+			continue
+		}
+		if match[1] != selfRock {
+			return match[1]
+		}
+	}
+	return ""
+}
+
+func firstLineContainingAny(lines []string, patterns ...string) int {
+	for idx, line := range lines {
+		for _, pattern := range patterns {
+			if strings.Contains(line, pattern) {
+				return idx
+			}
+		}
+	}
+	return -1
+}
+
+func hasGuardedLocalLuaInstall(lines []string) bool {
+	for _, line := range lines {
+		if strings.Contains(line, "luarocks show ") &&
+			(strings.Contains(line, "../") || strings.Contains(line, `..\`)) {
+			return true
+		}
+	}
+	return false
+}
+
+func hasLocalLuaSiblingInstall(lines []string) bool {
+	return len(luaSiblingInstallDirs(lines)) > 0
+}
+
+func selfLuaInstallDisablesDeps(lines []string, selfRock string) bool {
+	for _, line := range lines {
+		if !strings.Contains(line, "luarocks make") || !strings.Contains(line, selfRock) {
+			continue
+		}
+		if luaLineDisablesDeps(line) {
+			return true
+		}
+	}
+	return false
+}
+
+func missingLuaSiblingInstalls(unixLines, windowsLines []string) []string {
+	if len(unixLines) == 0 || len(windowsLines) == 0 {
+		return nil
+	}
+
+	windowsDeps := make(map[string]bool)
+	for _, dep := range luaSiblingInstallDirs(windowsLines) {
+		windowsDeps[dep] = true
+	}
+
+	var missing []string
+	for _, dep := range luaSiblingInstallDirs(unixLines) {
+		if !windowsDeps[dep] {
+			missing = append(missing, dep)
+		}
+	}
+
+	return missing
+}
+
+func missingLuaSiblingInstallHardening(unixLines, windowsLines []string) []string {
+	if len(unixLines) == 0 || len(windowsLines) == 0 {
+		return nil
+	}
+
+	unixInstalls := luaSiblingInstallLines(unixLines)
+	windowsInstalls := luaSiblingInstallLines(windowsLines)
+
+	var missing []string
+	for dep, unixLine := range unixInstalls {
+		if !luaLineDisablesDeps(unixLine) {
+			continue
+		}
+		windowsLine, ok := windowsInstalls[dep]
+		if !ok || luaLineDisablesDeps(windowsLine) {
+			continue
+		}
+		missing = append(missing, dep)
+	}
+
+	sort.Strings(missing)
+	return missing
+}
+
+func luaSiblingInstallDirs(lines []string) []string {
+	installLines := luaSiblingInstallLines(lines)
+	dirs := make([]string, 0, len(installLines))
+	for dep := range installLines {
+		dirs = append(dirs, dep)
+	}
+	sort.Strings(dirs)
+	return dirs
+}
+
+func luaSiblingInstallLines(lines []string) map[string]string {
+	re := regexp.MustCompile(`\bcd\s+([.][.][\\/][^ \t\r\n&()]+)`)
+	installs := make(map[string]string)
+
+	for _, line := range lines {
+		if !strings.Contains(line, "luarocks make") {
+			continue
+		}
+
+		match := re.FindStringSubmatch(line)
+		if len(match) < 2 {
+			continue
+		}
+
+		dep := strings.ReplaceAll(match[1], `\`, `/`)
+		if _, exists := installs[dep]; exists {
+			continue
+		}
+		installs[dep] = line
+	}
+	return installs
+}
+
+func luaRockNameForPackagePath(pkgPath string) string {
+	return "coding-adventures-" + strings.ReplaceAll(filepath.Base(pkgPath), "_", "-")
+}
+
+func luaLineDisablesDeps(line string) bool {
+	return strings.Contains(line, "--deps-mode=none") ||
+		strings.Contains(line, "--deps-mode none") ||
+		strings.Contains(line, "--no-manifest")
+}
+
+func missingLuaLocalDepsForSelfManagedBuild(pkgPath, selfRock string, lines []string, localLuaRocks map[string]string) []string {
+	deps := luaLocalRepoDeps(pkgPath, selfRock, localLuaRocks)
+	if len(deps) == 0 {
+		return nil
+	}
+
+	var missing []string
+	for _, dep := range deps {
+		dir := localLuaRocks[dep]
+		unixDir := "../" + dir
+		windowsDir := `..\` + dir
+		if containsLuaDepReference(lines, dep, unixDir, windowsDir) {
+			continue
+		}
+		missing = append(missing, dep)
+	}
+
+	return missing
+}
+
+func luaLocalRepoDeps(pkgPath, selfRock string, localLuaRocks map[string]string) []string {
+	rockspecPath := luaPackageRockspecPath(pkgPath, selfRock)
+	if rockspecPath == "" {
+		return nil
+	}
+
+	data, err := os.ReadFile(rockspecPath)
+	if err != nil {
+		return nil
+	}
+
+	var deps []string
+	seen := make(map[string]bool)
+	inDependencies := false
+	depSpecRe := regexp.MustCompile(`"([^"]+)"`)
+
+	for _, raw := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(raw)
+		if line == "" {
+			continue
+		}
+		if !inDependencies {
+			if strings.HasPrefix(line, "dependencies") && strings.HasSuffix(line, "{") {
+				inDependencies = true
+			}
+			continue
+		}
+		if strings.HasPrefix(line, "}") {
+			break
+		}
+
+		match := depSpecRe.FindStringSubmatch(line)
+		if len(match) < 2 {
+			continue
+		}
+
+		name := strings.Fields(match[1])[0]
+		if name == selfRock || seen[name] {
+			continue
+		}
+		if _, ok := localLuaRocks[name]; !ok {
+			continue
+		}
+		seen[name] = true
+		deps = append(deps, name)
+	}
+
+	sort.Strings(deps)
+	return deps
+}
+
+func luaPackageRockspecPath(pkgPath, selfRock string) string {
+	rockspecs, err := filepath.Glob(filepath.Join(pkgPath, "*.rockspec"))
+	if err != nil || len(rockspecs) == 0 {
+		return ""
+	}
+	sort.Strings(rockspecs)
+	for _, rockspec := range rockspecs {
+		if strings.Contains(filepath.Base(rockspec), selfRock) {
+			return rockspec
+		}
+	}
+	return rockspecs[0]
+}
+
+func containsLuaDepReference(lines []string, depNamesAndPaths ...string) bool {
+	for _, line := range lines {
+		for _, needle := range depNamesAndPaths {
+			if strings.Contains(line, needle) {
+				return true
+			}
+		}
+	}
+	return false
 }

@@ -45,6 +45,7 @@ use CodingAdventures::BuildTool::Cache      ();
 use CodingAdventures::BuildTool::GitDiff    ();
 use CodingAdventures::BuildTool::Reporter   ();
 use CodingAdventures::BuildTool::Plan       ();
+use CodingAdventures::BuildTool::Validator  ();
 
 our $VERSION = '0.01';
 
@@ -68,6 +69,7 @@ sub new {
         language  => $args{language}  // undef,
         diff_base => $args{diff_base} // 'origin/main',
         verbose   => $args{verbose}   // 0,
+        validate_build_files => $args{validate_build_files} // 0,
     }, $class;
 }
 
@@ -90,6 +92,20 @@ sub run {
     # Step 2: Filter by language (if --language was specified).
     if (defined $self->{language}) {
         @all_packages = grep { $_->{language} eq $self->{language} } @all_packages;
+    }
+
+    if ($self->{validate_build_files}) {
+        my $validation_error =
+            CodingAdventures::BuildTool::Validator::validate_build_contracts(
+                $self->{root},
+                \@all_packages,
+            );
+        if (defined $validation_error) {
+            warn "BUILD/CI validation failed:\n";
+            warn "  - $validation_error\n";
+            warn "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.\n";
+            return 1;
+        }
     }
 
     # Step 3: Resolve dependencies.

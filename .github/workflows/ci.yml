@@ -104,6 +104,33 @@ jobs:
             -detect-languages \
             -emit-plan build-plan.json
 
+      - name: Normalize toolchain requirements
+        id: toolchains
+        shell: bash
+        run: |
+          if [ "${{ steps.detect-main.outputs.is_main }}" = "true" ]; then
+            echo "Main branch push detected; enabling all supported toolchains for the forced full build"
+            printf '%s\n' \
+              'needs_python=true' \
+              'needs_ruby=true' \
+              'needs_go=true' \
+              'needs_typescript=true' \
+              'needs_rust=true' \
+              'needs_elixir=true' \
+              'needs_lua=true' \
+              'needs_perl=true' >> "$GITHUB_OUTPUT"
+          else
+            printf '%s\n' \
+              'needs_python=${{ steps.detect.outputs.needs_python }}' \
+              'needs_ruby=${{ steps.detect.outputs.needs_ruby }}' \
+              'needs_go=${{ steps.detect.outputs.needs_go }}' \
+              'needs_typescript=${{ steps.detect.outputs.needs_typescript }}' \
+              'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
+              'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
+              'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
+              'needs_perl=${{ steps.detect.outputs.needs_perl }}' >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Upload build plan
         uses: actions/upload-artifact@v4
         with:

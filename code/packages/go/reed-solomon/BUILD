@@ -1,0 +1,3 @@
+go mod tidy
+go test ./... -v -cover
+go vet ./...

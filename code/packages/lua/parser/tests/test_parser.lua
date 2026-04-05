@@ -1307,6 +1307,20 @@ describe("GrammarParser", function()
             assert.is_nil(err)
             assert.are.equal("expr", ast.rule_name)
         end)
+
+        it("matches KEYWORD rules against promoted keyword token names", function()
+            local g = grammar.make({
+                grammar.rule("expr", grammar.rule_ref("KEYWORD", true)),
+            })
+            local tokens = {
+                tok(T.KEYWORD, "var", 1, 1, "VAR"),
+                tok(T.EOF,     "",    1, 4, "EOF"),
+            }
+            local p = parser.GrammarParser.new(tokens, g)
+            local ast, err = p:parse()
+            assert.is_nil(err)
+            assert.are.equal("expr", ast.rule_name)
+        end)
     end)
 
     describe("trace mode", function()

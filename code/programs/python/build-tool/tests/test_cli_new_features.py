@@ -125,6 +125,7 @@ class TestRebuildArgv:
             plan_file=None,
             emit_plan=None,
             detect_languages=False,
+            validate_build_files=False,
         )
         argv = _rebuild_argv(args)
         assert "--root" in argv
@@ -143,6 +144,7 @@ class TestRebuildArgv:
             plan_file=None,
             emit_plan=None,
             detect_languages=False,
+            validate_build_files=False,
         )
         argv = _rebuild_argv(args)
         assert "--force" in argv
@@ -160,6 +162,7 @@ class TestRebuildArgv:
             plan_file=None,
             emit_plan=None,
             detect_languages=False,
+            validate_build_files=False,
         )
         argv = _rebuild_argv(args)
         assert "--jobs" in argv
@@ -178,6 +181,7 @@ class TestRebuildArgv:
             plan_file=None,
             emit_plan=None,
             detect_languages=False,
+            validate_build_files=False,
         )
         argv = _rebuild_argv(args)
         assert "--language" in argv
@@ -196,12 +200,31 @@ class TestRebuildArgv:
             plan_file=None,
             emit_plan=None,
             detect_languages=False,
+            validate_build_files=False,
         )
         argv = _rebuild_argv(args)
         # Should have diff-base and cache-file but nothing else
         assert "--root" not in argv
         assert "--force" not in argv
         assert "--diff-base" in argv
+
+    def test_with_validate_build_files(self):
+        import argparse
+        args = argparse.Namespace(
+            root=None,
+            force=False,
+            dry_run=False,
+            jobs=None,
+            language="all",
+            diff_base="origin/main",
+            cache_file=Path(".build-cache.json"),
+            plan_file=None,
+            emit_plan=None,
+            detect_languages=False,
+            validate_build_files=True,
+        )
+        argv = _rebuild_argv(args)
+        assert "--validate-build-files" in argv
 
 
 class TestDetectLanguagesMode:

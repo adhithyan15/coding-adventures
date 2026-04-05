@@ -57,6 +57,7 @@ from build_tool.starlark_evaluator import (
     generate_commands,
     is_starlark_build,
 )
+from build_tool.validator import validate_build_contracts
 
 # Optional progress bar integration. When the progress bar package is
 # installed, builds get a real-time terminal UI showing which packages are
@@ -198,6 +199,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Output which language toolchains are needed based on git diff, then exit",
     )
+    parser.add_argument(
+        "--validate-build-files",
+        action="store_true",
+        help="Validate BUILD/CI metadata contracts before continuing",
+    )
 
     args = parser.parse_args(argv)
 
@@ -285,6 +291,17 @@ def main(argv: list[str] | None = None) -> int:
         if not packages:
             print(f"No {args.language} packages found.", file=sys.stderr)
             return 0
+
+    if args.validate_build_files:
+        validation_error = validate_build_contracts(root, packages)
+        if validation_error is not None:
+            print(
+                "BUILD/CI validation failed:\n"
+                f"  - {validation_error}\n"
+                "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.",
+                file=sys.stderr,
+            )
+            return 1
 
     print(f"Discovered {len(packages)} packages")
 
@@ -537,6 +554,17 @@ def _run_from_plan(args: argparse.Namespace, root: Path) -> int:
             print(f"No {args.language} packages found in plan.", file=sys.stderr)
             return 0
 
+    if args.validate_build_files:
+        validation_error = validate_build_contracts(root, packages)
+        if validation_error is not None:
+            print(
+                "BUILD/CI validation failed:\n"
+                f"  - {validation_error}\n"
+                "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.",
+                file=sys.stderr,
+            )
+            return 1
+
     # Reconstruct the dependency graph from the plan's edges.
     graph = DirectedGraph()
     for pkg in packages:
@@ -620,6 +648,8 @@ def _rebuild_argv(args: argparse.Namespace) -> list[str]:
         argv.extend(["--jobs", str(args.jobs)])
     if args.language != "all":
         argv.extend(["--language", args.language])
+    if args.validate_build_files:
+        argv.append("--validate-build-files")
     argv.extend(["--diff-base", args.diff_base])
     argv.extend(["--cache-file", str(args.cache_file)])
     return argv

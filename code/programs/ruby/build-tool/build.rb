@@ -58,6 +58,7 @@ require_relative "lib/build_tool/reporter"
 require_relative "lib/build_tool/starlark_evaluator"
 require_relative "lib/build_tool/git_diff"
 require_relative "lib/build_tool/plan"
+require_relative "lib/build_tool/validator"
 
 module BuildTool
   module CLI
@@ -143,7 +144,8 @@ module BuildTool
         cache_file: Pathname(".build-cache.json"),
         detect_languages: false,
         emit_plan: nil,
-        plan_file: nil
+        plan_file: nil,
+        validate_build_files: false
       }
 
       parser = OptionParser.new do |opts|
@@ -192,6 +194,10 @@ module BuildTool
 
         opts.on("--plan-file FILE", "Read build plan from FILE instead of discovering") do |file|
           options[:plan_file] = Pathname(file)
+        end
+
+        opts.on("--validate-build-files", "Validate BUILD/CI metadata contracts before continuing") do
+          options[:validate_build_files] = true
         end
 
         opts.on("-h", "--help", "Show this help message") do
@@ -280,6 +286,16 @@ module BuildTool
         if packages.empty?
           $stderr.puts "No #{options[:language]} packages found."
           return 0
+        end
+      end
+
+      if options[:validate_build_files]
+        validation_error = Validator.validate_build_contracts(root, packages)
+        if validation_error
+          $stderr.puts "BUILD/CI validation failed:"
+          $stderr.puts "  - #{validation_error}"
+          $stderr.puts "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
+          return 1
         end
       end
 
@@ -531,6 +547,16 @@ module BuildTool
         end
       end
 
+      if options[:validate_build_files]
+        validation_error = Validator.validate_build_contracts(root, packages)
+        if validation_error
+          $stderr.puts "BUILD/CI validation failed:"
+          $stderr.puts "  - #{validation_error}"
+          $stderr.puts "Fix the BUILD file or CI workflow so isolated and full-build runs stay correct."
+          return 1
+        end
+      end
+
       # Reconstruct the dependency graph from the plan's edges.
       graph = BuildTool::DirectedGraph.new
       packages.each { |pkg| graph.add_node(pkg.name) }
@@ -675,6 +701,7 @@ module BuildTool
       argv << "--dry-run" if options[:dry_run]
       argv.push("--jobs", options[:jobs].to_s) if options[:jobs]
       argv.push("--language", options[:language]) if options[:language] != "all"
+      argv << "--validate-build-files" if options[:validate_build_files]
       argv.push("--diff-base", options[:diff_base])
       argv.push("--cache-file", options[:cache_file].to_s)
       argv << "--detect-languages" if options[:detect_languages]

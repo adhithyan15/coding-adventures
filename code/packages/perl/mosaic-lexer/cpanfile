@@ -1,0 +1,6 @@
+# Runtime dependencies — none (hand-written, no external deps)
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};

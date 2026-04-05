@@ -1,0 +1,168 @@
+# Parser grammar for Mosaic — Component Description Language
+# @version 1
+#
+# A .mosaic file declares one component with typed slots and a visual tree.
+# No logic, no binding expressions — only structure and abstract properties.
+#
+# Notation:
+#   |     alternation (choice)
+#   { }   repetition (zero or more)
+#   [ ]   optional (zero or one)
+#   ( )   grouping
+#   "x"   literal match
+# UPPERCASE = token reference, lowercase = rule reference
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+# A Mosaic file contains optional imports followed by exactly one component.
+
+file = { import_decl } component_decl ;
+
+# ============================================================================
+# Imports
+# ============================================================================
+# Import another Mosaic component for use as a slot type or composite node.
+#
+#   import Button from "./button.mosaic";
+#   import Card as InfoCard from "./cards/info.mosaic";
+
+import_decl = KEYWORD NAME [ KEYWORD NAME ] KEYWORD STRING SEMICOLON ;
+
+# ============================================================================
+# Component Declaration
+# ============================================================================
+# A component has a name, slot declarations, and a node tree.
+#
+#   component ProfileCard {
+#     slot avatar-url: image;
+#     slot display-name: text;
+#     slot actions: Button;
+#
+#     Column {
+#       Text { content: @display-name; }
+#       @actions;
+#     }
+#   }
+
+component_decl = KEYWORD NAME LBRACE { slot_decl } node_tree RBRACE ;
+
+# ============================================================================
+# Slot Declarations
+# ============================================================================
+# Each slot has a name, a type, and an optional default value.
+#
+# Primitive types:     text, number, bool, image, color
+# Flexible type:       node (any component — for prototyping or polymorphism)
+# Component types:     Button, Badge, Card (imported or self-referencing)
+# Collection types:    list<text>, list<Button>, list<node>
+#
+#   slot title: text;
+#   slot count: number = 0;
+#   slot visible: bool = true;
+#   slot items: list<text>;
+#   slot action: Button;
+#   slot replies: list<CommentThread>;
+
+slot_decl = KEYWORD NAME COLON slot_type [ EQUALS default_value ] SEMICOLON ;
+
+slot_type = KEYWORD
+          | NAME
+          | list_type ;
+
+list_type = KEYWORD LANGLE slot_type RANGLE ;
+
+default_value = STRING
+              | NUMBER
+              | DIMENSION
+              | COLOR_HEX
+              | KEYWORD ;
+
+# ============================================================================
+# Node Tree
+# ============================================================================
+# The visual tree of the component. The root must be exactly one element.
+
+node_tree = node_element ;
+
+node_element = NAME LBRACE { node_content } RBRACE ;
+
+node_content = property_assignment
+             | child_node
+             | slot_reference
+             | when_block
+             | each_block ;
+
+# ============================================================================
+# Property Assignments
+# ============================================================================
+# Properties are name: value pairs. Values can be literals or slot references.
+#
+#   padding: 16dp;
+#   background: #2563eb;
+#   content: @title;
+#   align: center;
+#   style: heading.small;
+
+property_assignment = ( NAME | KEYWORD ) COLON property_value SEMICOLON ;
+# Note: KEYWORD is allowed as a property name so that slot-type keywords
+# (e.g., "color", "text", "node") can also appear as layout/style property names.
+
+property_value = slot_ref
+              | STRING
+              | NUMBER
+              | DIMENSION
+              | COLOR_HEX
+              | KEYWORD
+              | NAME
+              | enum_value ;
+
+slot_ref = AT NAME ;
+
+enum_value = NAME DOT NAME ;
+
+# ============================================================================
+# Child Nodes
+# ============================================================================
+# Nodes can contain other nodes as children.
+
+child_node = node_element ;
+
+# ============================================================================
+# Slot References (as children)
+# ============================================================================
+# A slot of type node or a component type can appear as a child element.
+#
+#   Column {
+#     @header;
+#     Text { content: @body; }
+#     @footer;
+#   }
+
+slot_reference = AT NAME SEMICOLON ;
+
+# ============================================================================
+# Conditional Rendering
+# ============================================================================
+# Show a subtree only when a bool slot is true.
+# No binding magic — the host language sets the bool via a typed setter.
+#
+#   when @show-header {
+#     Text { content: "Tasks"; style: heading.medium; }
+#   }
+
+when_block = KEYWORD slot_ref LBRACE { node_content } RBRACE ;
+
+# ============================================================================
+# Iteration
+# ============================================================================
+# Repeat a subtree for each item in a list slot.
+# The host language provides the list via a typed setter.
+#
+#   each @items as item {
+#     Row {
+#       Text { content: @item; }
+#     }
+#   }
+
+each_block = KEYWORD slot_ref KEYWORD NAME LBRACE { node_content } RBRACE ;

@@ -39,6 +39,7 @@ mod hasher;
 pub mod plan;
 mod reporter;
 mod resolver;
+mod validator;
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -100,6 +101,10 @@ struct Args {
     /// written as pretty-printed JSON for human readability.
     #[arg(long, default_value = "build-plan.json")]
     plan_file: String,
+
+    /// Validate BUILD/CI metadata contracts before continuing.
+    #[arg(long)]
+    validate_build_files: bool,
 }
 
 // ---------------------------------------------------------------------------
@@ -267,6 +272,15 @@ fn run() -> i32 {
         }
     }
 
+    if args.validate_build_files {
+        if let Some(validation_error) = validator::validate_build_contracts(&repo_root, &packages) {
+            eprintln!("BUILD/CI validation failed:");
+            eprintln!("  - {}", validation_error);
+            eprintln!("Fix the BUILD file or CI workflow so isolated and full-build runs stay correct.");
+            return 1;
+        }
+    }
+
     println!("Discovered {} packages", packages.len());
 
     // Step 4: Resolve dependencies.
@@ -401,7 +415,10 @@ fn run() -> i32 {
         let plan_path = if Path::new(&args.plan_file).is_absolute() {
             args.plan_file.clone()
         } else {
-            repo_root.join(&args.plan_file).to_string_lossy().to_string()
+            repo_root
+                .join(&args.plan_file)
+                .to_string_lossy()
+                .to_string()
         };
 
         match plan::write_plan(&build_plan, &plan_path) {

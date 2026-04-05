@@ -1,0 +1,7 @@
+# Runtime dependencies
+requires 'coding-adventures-mosaic-parser';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};

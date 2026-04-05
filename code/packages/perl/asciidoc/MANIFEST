@@ -1,0 +1,9 @@
+MANIFEST
+Makefile.PL
+README.md
+CHANGELOG.md
+BUILD
+lib/CodingAdventures/Asciidoc.pm
+t/01_basic.t
+t/02_blocks.t
+t/03_inline.t

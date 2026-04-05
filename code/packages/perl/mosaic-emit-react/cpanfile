@@ -1,0 +1,8 @@
+# Runtime dependencies
+requires 'coding-adventures-mosaic-vm';
+requires 'coding-adventures-mosaic-analyzer';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};
