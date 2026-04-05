@@ -126,7 +126,10 @@ use CodingAdventures::PythonParser::ASTNode;
 
 sub new {
     my ($class, $source) = @_;
-    my $tokens = CodingAdventures::PythonLexer->tokenize($source);
+    # Use Python 3.0 grammar for now — the Perl regex engine cannot handle
+    # the complex string patterns (multi-prefix combinations) in 3.6+ grammars.
+    # TODO: fix Perl lexer regex compatibility for versioned grammars.
+    my $tokens = CodingAdventures::PythonLexer->tokenize($source, '3.0');
     return bless {
         _tokens => $tokens,
         _pos    => 0,
