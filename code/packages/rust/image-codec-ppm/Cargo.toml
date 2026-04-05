@@ -1,0 +1,8 @@
+[package]
+name = "image-codec-ppm"
+version = "0.1.0"
+edition = "2021"
+description = "PPM P6 image encoder and decoder using PixelContainer"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }

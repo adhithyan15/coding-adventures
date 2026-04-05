@@ -1,0 +1,8 @@
+[package]
+name = "image-codec-bmp"
+version = "0.1.0"
+edition = "2021"
+description = "BMP image encoder and decoder using PixelContainer"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }

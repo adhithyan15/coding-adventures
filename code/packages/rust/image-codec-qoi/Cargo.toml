@@ -1,0 +1,8 @@
+[package]
+name = "image-codec-qoi"
+version = "0.1.0"
+edition = "2021"
+description = "QOI (Quite OK Image) encoder and decoder using PixelContainer"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }

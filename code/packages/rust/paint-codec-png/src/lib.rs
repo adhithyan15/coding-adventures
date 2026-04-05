@@ -109,7 +109,7 @@ use std::io;
 pub struct PngCodec;
 
 impl ImageCodec for PngCodec {
-    fn mime_type(&self) -> &str {
+    fn mime_type(&self) -> &'static str {
         "image/png"
     }
 

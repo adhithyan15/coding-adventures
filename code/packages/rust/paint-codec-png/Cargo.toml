@@ -6,4 +6,5 @@ description = "PNG image codec for paint-instructions: PixelContainer → PNG by
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
+pixel-container = { path = "../pixel-container" }
 png = { path = "../png" }
