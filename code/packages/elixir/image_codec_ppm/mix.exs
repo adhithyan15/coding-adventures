@@ -5,7 +5,7 @@ defmodule CodingAdventuresImageCodecPpm.MixProject do
     [
       app: :coding_adventures_image_codec_ppm,
       version: "0.1.0",
-      elixir: "~> 1.17",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [threshold: 90]

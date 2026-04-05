@@ -130,6 +130,62 @@ describe("QOI decode errors", () => {
     // width=0, height=1 → invalid
     expect(() => decodeQoi(buf)).toThrow("invalid dimensions");
   });
+
+  it("throws when dimensions exceed MAX_DIMENSION", () => {
+    // Craft a header with width=20000 (> 16384).
+    const buf = new Uint8Array(22);
+    buf.set([0x71, 0x6f, 0x69, 0x66]); // magic
+    const view = new DataView(buf.buffer);
+    view.setUint32(4, 20000, false); // width big-endian
+    view.setUint32(8, 1, false);     // height
+    expect(() => decodeQoi(buf)).toThrow("exceed maximum");
+  });
+});
+
+// ============================================================================
+// OP_INDEX path — checkerboard exercises hash-table recall
+// ============================================================================
+
+describe("QOI OP_INDEX path", () => {
+  it("checkerboard round-trips correctly (exercises INDEX decode)", () => {
+    // Alternating (255,0,0,255) and (0,255,0,255): after the first two pixels
+    // enter the hash table, every subsequent occurrence uses OP_INDEX.
+    const c = createPixelContainer(8, 8);
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        if ((x + y) % 2 === 0) {
+          setPixel(c, x, y, 255, 0, 0, 255);
+        } else {
+          setPixel(c, x, y, 0, 255, 0, 255);
+        }
+      }
+    }
+    const decoded = decodeQoi(encodeQoi(c));
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        expect(pixelAt(decoded, x, y)).toEqual(pixelAt(c, x, y));
+      }
+    }
+  });
+});
+
+// ============================================================================
+// OP_LUMA path — medium deltas fit luma encoding
+// ============================================================================
+
+describe("QOI OP_LUMA path", () => {
+  it("medium-gradient round-trips correctly (exercises LUMA decode)", () => {
+    // Adjacent pixels differ by (10,10,10,0): dr=10, dg=10, db=10.
+    // LUMA: dg=10 ∈[-32,31] ✓, dr-dg=0 ∈[-8,7] ✓, db-dg=0 ∈[-8,7] ✓ → LUMA op used.
+    const c = createPixelContainer(10, 1);
+    for (let x = 0; x < 10; x++) {
+      setPixel(c, x, 0, x * 10, x * 10, x * 10, 255);
+    }
+    const decoded = decodeQoi(encodeQoi(c));
+    for (let x = 0; x < 10; x++) {
+      expect(pixelAt(decoded, x, 0)).toEqual(pixelAt(c, x, 0));
+    }
+  });
 });
 
 // ============================================================================
