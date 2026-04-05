@@ -447,18 +447,26 @@ defmodule CodingAdventures.MosaicEmitReact do
         end
 
       "style" ->
+        # Guards cannot use =~ (regex match) — validate in the body instead.
+        safe_ident = ~r/^[A-Za-z0-9_-]+$/
         case value do
-          %{kind: :enum, namespace: ns, member: m}
-          when is_binary(ns) and is_binary(m) and ns =~ ~r/^[A-Za-z0-9_-]+$/ and m =~ ~r/^[A-Za-z0-9_-]+$/ ->
-            class_name = "mosaic-#{ns}-#{m}"
-            frame2 = %{frame | class_names: frame.class_names ++ [class_name]}
-            state2 = %{state | needs_type_scale_css: true}
-            {frame2, state2}
-          %{kind: :string, value: v}
-          when is_binary(v) and v =~ ~r/^[A-Za-z0-9_-]+$/ ->
-            frame2 = %{frame | class_names: frame.class_names ++ ["mosaic-#{v}"]}
-            state2 = %{state | needs_type_scale_css: true}
-            {frame2, state2}
+          %{kind: :enum, namespace: ns, member: m} when is_binary(ns) and is_binary(m) ->
+            if Regex.match?(safe_ident, ns) and Regex.match?(safe_ident, m) do
+              class_name = "mosaic-#{ns}-#{m}"
+              frame2 = %{frame | class_names: frame.class_names ++ [class_name]}
+              state2 = %{state | needs_type_scale_css: true}
+              {frame2, state2}
+            else
+              {frame, state}
+            end
+          %{kind: :string, value: v} when is_binary(v) ->
+            if Regex.match?(safe_ident, v) do
+              frame2 = %{frame | class_names: frame.class_names ++ ["mosaic-#{v}"]}
+              state2 = %{state | needs_type_scale_css: true}
+              {frame2, state2}
+            else
+              {frame, state}
+            end
           _ -> {frame, state}
         end
 
