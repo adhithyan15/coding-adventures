@@ -631,17 +631,23 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
     raw_render_lines = serialize_fragments(component_frame.fragments, "    ")
 
     # Replace image source and aria placeholders with actual field references.
-    # In Elixir, String.replace with a regex and a function receives the full match string.
-    # We extract the slot name by stripping the placeholder prefix/suffix.
+    # Use Regex.run to extract the slot name, then do a plain literal string replacement.
+    # This avoids relying on String.replace's function-callback arity semantics,
+    # which differ across Elixir versions (1-arity vs 2-arity capture handling).
     render_lines =
       Enum.map(raw_render_lines, fn line ->
-        line
-        |> String.replace(~r/__IMG_SRC_(\w+)__/, fn [_full, slot_name] ->
-          "\" + this._validateUrl(this.#{backing_field(slot_name)}) + \""
-        end)
-        |> String.replace(~r/__ARIA_(\w+)__/, fn [_full, slot_name] ->
-          "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
-        end)
+        line = case Regex.run(~r/__IMG_SRC_(\w+)__/, line) do
+          [full, slot_name] ->
+            replacement = "\" + this._validateUrl(this.#{backing_field(slot_name)}) + \""
+            String.replace(line, full, replacement)
+          _ -> line
+        end
+        case Regex.run(~r/__ARIA_(\w+)__/, line) do
+          [full, slot_name] ->
+            replacement = "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
+            String.replace(line, full, replacement)
+          _ -> line
+        end
       end)
 
     # Assemble the file.
