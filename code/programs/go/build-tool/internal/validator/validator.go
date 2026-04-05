@@ -391,6 +391,15 @@ func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {
 				strings.Join(missingWindowsDeps, ", "),
 			))
 		}
+
+		missingWindowsHardening := missingLuaSiblingInstallHardening(buildLines["BUILD"], buildLines["BUILD_windows"])
+		if len(missingWindowsHardening) > 0 {
+			problems = append(problems, fmt.Sprintf(
+				"%s: Lua BUILD_windows sibling installs are missing --deps-mode=none/--no-manifest hardening present in BUILD: %s",
+				filepath.ToSlash(filepath.Join(pkg.Path, "BUILD_windows")),
+				strings.Join(missingWindowsHardening, ", "),
+			))
+		}
 	}
 	return problems
 }
@@ -536,9 +545,7 @@ func selfLuaInstallDisablesDeps(lines []string, selfRock string) bool {
 		if !strings.Contains(line, "luarocks make") || !strings.Contains(line, selfRock) {
 			continue
 		}
-		if strings.Contains(line, "--deps-mode=none") ||
-			strings.Contains(line, "--deps-mode none") ||
-			strings.Contains(line, "--no-manifest") {
+		if luaLineDisablesDeps(line) {
 			return true
 		}
 	}
@@ -565,10 +572,43 @@ func missingLuaSiblingInstalls(unixLines, windowsLines []string) []string {
 	return missing
 }
 
+func missingLuaSiblingInstallHardening(unixLines, windowsLines []string) []string {
+	if len(unixLines) == 0 || len(windowsLines) == 0 {
+		return nil
+	}
+
+	unixInstalls := luaSiblingInstallLines(unixLines)
+	windowsInstalls := luaSiblingInstallLines(windowsLines)
+
+	var missing []string
+	for dep, unixLine := range unixInstalls {
+		if !luaLineDisablesDeps(unixLine) {
+			continue
+		}
+		windowsLine, ok := windowsInstalls[dep]
+		if !ok || luaLineDisablesDeps(windowsLine) {
+			continue
+		}
+		missing = append(missing, dep)
+	}
+
+	sort.Strings(missing)
+	return missing
+}
+
 func luaSiblingInstallDirs(lines []string) []string {
+	installLines := luaSiblingInstallLines(lines)
+	dirs := make([]string, 0, len(installLines))
+	for dep := range installLines {
+		dirs = append(dirs, dep)
+	}
+	sort.Strings(dirs)
+	return dirs
+}
+
+func luaSiblingInstallLines(lines []string) map[string]string {
 	re := regexp.MustCompile(`\bcd\s+([.][.][\\/][^ \t\r\n&()]+)`)
-	seen := make(map[string]bool)
-	var dirs []string
+	installs := make(map[string]string)
 
 	for _, line := range lines {
 		if !strings.Contains(line, "luarocks make") {
@@ -581,19 +621,22 @@ func luaSiblingInstallDirs(lines []string) []string {
 		}
 
 		dep := strings.ReplaceAll(match[1], `\`, `/`)
-		if seen[dep] {
+		if _, exists := installs[dep]; exists {
 			continue
 		}
-		seen[dep] = true
-		dirs = append(dirs, dep)
+		installs[dep] = line
 	}
-
-	sort.Strings(dirs)
-	return dirs
+	return installs
 }
 
 func luaRockNameForPackagePath(pkgPath string) string {
 	return "coding-adventures-" + strings.ReplaceAll(filepath.Base(pkgPath), "_", "-")
+}
+
+func luaLineDisablesDeps(line string) bool {
+	return strings.Contains(line, "--deps-mode=none") ||
+		strings.Contains(line, "--deps-mode none") ||
+		strings.Contains(line, "--no-manifest")
 }
 
 func missingLuaLocalDepsForSelfManagedBuild(pkgPath, selfRock string, lines []string, localLuaRocks map[string]string) []string {

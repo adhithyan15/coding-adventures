@@ -350,7 +350,7 @@ func TestBuildResourceKeysIncludesGlobalHexCacheForElixirDepsGet(t *testing.T) {
 	}
 }
 
-func TestBuildResourceKeysIncludesGlobalLuaRocksLockOnWindows(t *testing.T) {
+func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaWritesOnWindows(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD_windows": "luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec",
 	})
@@ -366,12 +366,12 @@ func TestBuildResourceKeysIncludesGlobalLuaRocksLockOnWindows(t *testing.T) {
 		filepath.Join(root, "pkg"): "lua/pkg",
 	}, "windows")
 	joined := strings.Join(keys, ",")
-	if !strings.Contains(joined, "global:luarocks-windows") {
-		t.Fatalf("expected keys to include global luarocks-windows lock, got %v", keys)
+	if !strings.Contains(joined, "global:luarocks-tree") {
+		t.Fatalf("expected keys to include global luarocks-tree lock, got %v", keys)
 	}
 }
 
-func TestBuildResourceKeysDoesNotIncludeGlobalLuaRocksLockOnLinux(t *testing.T) {
+func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaWritesOnLinux(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD": "luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec",
 	})
@@ -387,8 +387,29 @@ func TestBuildResourceKeysDoesNotIncludeGlobalLuaRocksLockOnLinux(t *testing.T) 
 		filepath.Join(root, "pkg"): "lua/pkg",
 	}, "linux")
 	joined := strings.Join(keys, ",")
-	if strings.Contains(joined, "global:luarocks-windows") {
-		t.Fatalf("expected no global luarocks-windows lock on Linux, got %v", keys)
+	if !strings.Contains(joined, "global:luarocks-tree") {
+		t.Fatalf("expected keys to include global luarocks-tree lock on Linux, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaRemovesOnLinux(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "luarocks remove --force coding-adventures-pkg 2>/dev/null || true",
+	})
+
+	pkg := discovery.Package{
+		Name:          "lua/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"luarocks remove --force coding-adventures-pkg 2>/dev/null || true"},
+		Language:      "lua",
+	}
+
+	keys := buildResourceKeysForOS(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "lua/pkg",
+	}, "linux")
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:luarocks-tree") {
+		t.Fatalf("expected keys to include global luarocks-tree lock for remove commands, got %v", keys)
 	}
 }
 

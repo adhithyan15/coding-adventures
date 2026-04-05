@@ -485,6 +485,44 @@ luarocks make --local coding-adventures-arm1-gatelevel-0.1.0-1.rockspec
 	}
 }
 
+func TestValidateBuildFilesFailsWindowsLuaSiblingHardeningDrift(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "lua/intel4004_gatelevel", relPath: "code/packages/lua/intel4004_gatelevel", lang: "lua"},
+	})
+
+	writeBuildFile(t, pkgs[0].Path, "BUILD", `
+luarocks show coding-adventures-transistors >/dev/null 2>&1 || (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+luarocks show coding-adventures-logic-gates >/dev/null 2>&1 || (cd ../logic_gates && luarocks make --local --deps-mode=none coding-adventures-logic-gates-0.1.0-1.rockspec)
+luarocks show coding-adventures-arithmetic >/dev/null 2>&1 || (cd ../arithmetic && luarocks make --local --deps-mode=none coding-adventures-arithmetic-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-intel4004-gatelevel-0.1.0-1.rockspec
+`)
+	writeBuildFile(t, pkgs[0].Path, "BUILD_windows", `
+luarocks show coding-adventures-transistors 1>nul 2>nul || (cd ../transistors && luarocks make --local coding-adventures-transistors-0.1.0-1.rockspec)
+luarocks show coding-adventures-logic-gates 1>nul 2>nul || (cd ../logic_gates && luarocks make --local coding-adventures-logic-gates-0.1.0-1.rockspec)
+luarocks show coding-adventures-arithmetic 1>nul 2>nul || (cd ../arithmetic && luarocks make --local coding-adventures-arithmetic-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-intel4004-gatelevel-0.1.0-1.rockspec
+`)
+
+	graph := directedgraph.New()
+	graph.AddNode("lua/intel4004_gatelevel")
+
+	err := ValidateBuildFiles(pkgs, graph)
+	if err == nil {
+		t.Fatal("expected Lua BUILD_windows hardening validation failure")
+	}
+	if !strings.Contains(err.Error(), "sibling installs are missing --deps-mode=none/--no-manifest hardening present in BUILD") {
+		t.Fatalf("expected sibling hardening drift guidance, got %v", err)
+	}
+	if !strings.Contains(err.Error(), "../logic_gates") || !strings.Contains(err.Error(), "../arithmetic") {
+		t.Fatalf("expected hardened sibling package names, got %v", err)
+	}
+}
+
 func TestValidateBuildFilesFailsPerlTestBootstrapWithoutNotest(t *testing.T) {
 	pkgs := makePackages(t, []struct {
 		name     string
