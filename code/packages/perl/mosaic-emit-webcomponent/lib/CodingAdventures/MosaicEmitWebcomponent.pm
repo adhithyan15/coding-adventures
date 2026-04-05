@@ -156,9 +156,11 @@ sub begin_each {
     my ($self, $slot_name, $item_name, $element_type, $ctx) = @_;
     my $field      = "_$slot_name";
     $field         =~ s/-/_/g;
+    # Validate item_name is a safe JS identifier to prevent code injection in forEach callback
+    my $safe_item = ($item_name =~ /^[a-zA-Z_\$][a-zA-Z0-9_\$]*$/) ? $item_name : '_item';
     my $is_node_list = ($element_type->{kind} eq 'node' || $element_type->{kind} eq 'component') ? 1 : 0;
     $self->_push_frag({ kind => 'each_open', field => $field,
-                         item_name => $item_name, is_node_list => $is_node_list });
+                         item_name => $safe_item, is_node_list => $is_node_list });
     push @{ $self->{stack} }, { kind => 'each', slot_name => $slot_name, frags => [] };
 }
 
@@ -235,7 +237,10 @@ sub _build_open_tag {
             next;
         }
         if ($name eq 'source' && $tag eq 'Image') {
-            push @attrs, 'src="' . $self->_value_to_html($value) . '"';
+            my $src = $self->_value_to_html($value);
+            # Reject javascript: URLs to prevent XSS via shadowRoot.innerHTML
+            if (lc($src) =~ /^\s*javascript:/) { $src = 'about:blank'; }
+            push @attrs, 'src="' . $src . '"';
             next;
         }
         if ($name eq 'a11y-label') {
@@ -448,6 +453,8 @@ sub _prop_to_css {
     } elsif ($value->{kind} eq 'string') {
         my $v = $value->{value};
         $v =~ s/^"(.*)"$/$1/;
+        # Escape " to prevent breaking out of style="" HTML attribute
+        $v =~ s/"/&quot;/g;
         $css_val = $v;
     } else {
         $css_val = $value->{value} // '';

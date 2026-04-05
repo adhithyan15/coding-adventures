@@ -44,12 +44,16 @@ package mosaicemitwebcomponent
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode"
 
 	mosaicanalyzer "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-analyzer"
 	mosaicvm "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-vm"
 )
+
+// safeJSIdent matches valid JavaScript identifiers for code-generation safety.
+var safeJSIdent = regexp.MustCompile(`^[a-zA-Z_$][a-zA-Z0-9_$]*$`)
 
 // ============================================================================
 // Render Fragment Types
@@ -187,10 +191,15 @@ func (r *WebComponentRenderer) EndWhen() {
 // BeginEach opens a forEach iteration.
 func (r *WebComponentRenderer) BeginEach(slotName string, itemName string, elementType mosaicanalyzer.MosaicType, ctx mosaicvm.SlotContext) {
 	isNodeList := elementType.Kind == "node" || elementType.Kind == "component"
+	// Validate itemName is a safe JS identifier to prevent code injection in forEach callback
+	safeItem := itemName
+	if !safeJSIdent.MatchString(itemName) {
+		safeItem = "_item"
+	}
 	r.appendFrag(renderFragment{
 		kind:       "each_open",
 		field:      "_" + toWCField(slotName),
-		itemName:   itemName,
+		itemName:   safeItem,
 		isNodeList: isNodeList,
 	})
 }

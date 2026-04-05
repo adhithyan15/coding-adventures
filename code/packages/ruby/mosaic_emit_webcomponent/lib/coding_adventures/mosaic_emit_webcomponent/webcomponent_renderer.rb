@@ -117,7 +117,9 @@ module CodingAdventures
       end
 
       def begin_each(slot_name, item_name, _element_type, _ctx)
-        @stack.push({ kind: "each", slot_name: slot_name, item_name: item_name, fragments: [] })
+        # Validate item_name is a safe JS identifier to prevent code injection in forEach callback
+        safe_item = item_name.match?(/\A[a-zA-Z_$][a-zA-Z0-9_$]*\z/) ? item_name : "_item"
+        @stack.push({ kind: "each", slot_name: slot_name, item_name: safe_item, fragments: [] })
       end
 
       def end_each

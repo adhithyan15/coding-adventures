@@ -419,7 +419,7 @@ public class WebComponentRenderer: MosaicRenderer {
 
     private func valueToHtmlStyleValue(_ v: ResolvedValue) -> String {
         switch v {
-        case let .string(s):    return s
+        case let .string(s):    return s.replacingOccurrences(of: "\"", with: "&quot;")
         case let .number(n):    return "\(n)"
         case let .dimension(d): return d.cssString
         case let .color(c):     return c.cssString
