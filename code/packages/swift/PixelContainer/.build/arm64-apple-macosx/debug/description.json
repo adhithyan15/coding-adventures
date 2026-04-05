@@ -1,0 +1,602 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.xctest/Contents/MacOS/PixelContainerPackageTests",
+      "packagePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer",
+      "productName" : "PixelContainerPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.PixelContainer-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PixelContainer",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/include/PixelContainer-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pixelcontainer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.PixelContainerPackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainerTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PixelContainerPackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainerPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/include/PixelContainerPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pixelcontainer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainerPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.PixelContainerTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Tests/PixelContainerTests/PixelContainerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PixelContainerTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainerTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pixelcontainer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules/PixelContainerTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Tests/PixelContainerTests/PixelContainerTests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "PixelContainer" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PixelContainer",
+      "-package-name",
+      "pixelcontainer",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/include/PixelContainer-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pixelcontainer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "PixelContainerPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PixelContainerPackageTests",
+      "-package-name",
+      "pixelcontainer",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/include/PixelContainerPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pixelcontainer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "PixelContainerTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PixelContainerTests",
+      "-package-name",
+      "pixelcontainer",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Tests/PixelContainerTests/PixelContainerTests.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pixelcontainer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "PixelContainer" : [
+
+    ],
+    "PixelContainerPackageTests" : [
+      "PixelContainerTests",
+      "PixelContainer"
+    ],
+    "PixelContainerTests" : [
+      "PixelContainer"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Tests/PixelContainerTests/PixelContainerTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

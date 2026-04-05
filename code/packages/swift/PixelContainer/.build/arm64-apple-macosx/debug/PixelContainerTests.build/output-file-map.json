@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/Tests/PixelContainerTests/PixelContainerTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/interesting-lalande/code/packages/swift/PixelContainer/.build/arm64-apple-macosx/debug/PixelContainerTests.build/PixelContainerTests.dia"
+  }
+}
