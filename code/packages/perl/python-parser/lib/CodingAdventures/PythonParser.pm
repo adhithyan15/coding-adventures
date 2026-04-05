@@ -608,7 +608,8 @@ sub _parse_primary {
     my $type = $tok->{type};
 
     # --- Numeric literal ---
-    if ($type eq 'NUMBER') {
+    # Accept NUMBER (old grammar), INT, and FLOAT (versioned grammars).
+    if ($type eq 'NUMBER' || $type eq 'INT' || $type eq 'FLOAT') {
         return $self->_node('primary', $self->_leaf($self->_advance()));
     }
 
