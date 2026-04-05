@@ -1,4 +1,5 @@
 cd ../layout-ir && npm ci --quiet
+cd ../layout-text-measure-estimated && npm ci --quiet
 cd ../paint-instructions && npm ci --quiet
 cd ../layout-flexbox && npm ci --quiet
 cd ../layout-to-paint && npm ci --quiet
