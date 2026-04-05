@@ -1,4 +1,4 @@
 luarocks show coding-adventures-grammar-tools 1>nul 2>nul || (cd ../grammar_tools && luarocks make --local coding-adventures-grammar-tools-0.1.0-1.rockspec)
 luarocks show coding-adventures-lexer 1>nul 2>nul || (cd ../lexer && luarocks make --local coding-adventures-lexer-0.1.0-1.rockspec)
-luarocks make --local coding-adventures-parser-0.1.0-1.rockspec
+luarocks make --local --deps-mode=none coding-adventures-parser-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_

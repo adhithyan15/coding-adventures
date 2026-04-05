@@ -1,2 +1,3 @@
 cd ../trig && luarocks make --local coding-adventures-trig-0.1.0-1.rockspec
+cd ../wave && luarocks make --local --deps-mode=none coding-adventures-wave-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_

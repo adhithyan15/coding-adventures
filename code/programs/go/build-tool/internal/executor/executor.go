@@ -426,7 +426,7 @@ func buildResourceKeys(pkg discovery.Package, pathToPkg map[string]string) []str
 // buildResourceKeysForOS is the testable version of buildResourceKeys that
 // accepts an explicit OS name. This allows tests to verify Windows-specific
 // lock key behaviour on non-Windows hosts.
-func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, goos string) []string {
+func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, _ string) []string {
 	keys := map[string]bool{
 		pkg.Name: true,
 	}
@@ -438,14 +438,13 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:hex-cache"] = true
 		}
 
-		if pkg.Language == "lua" && goos == "windows" && strings.Contains(command, "luarocks make") {
-			// On Windows, luarocks requires exclusive write access to the local
-			// rocks tree (~\AppData\Roaming\luarocks). Any two concurrent
-			// `luarocks make` invocations race for that lock and one will fail
-			// with "command 'make' requires exclusive write access". A global
-			// lock key serialises ALL Lua packages that call luarocks make on
-			// Windows regardless of which dependencies they are installing.
-			keys["global:luarocks-windows"] = true
+		if pkg.Language == "lua" &&
+			(strings.Contains(command, "luarocks make") || strings.Contains(command, "luarocks remove")) {
+			// LuaRocks uses a shared rocks tree under HOME on every platform.
+			// Concurrent writes race for that tree lock and can leave packages
+			// observing partially-installed local dependencies. Serialise Lua
+			// BUILDs that mutate the tree so sibling rock installs stay stable.
+			keys["global:luarocks-tree"] = true
 		}
 
 		for _, raw := range relPathRe.FindAllString(command, -1) {

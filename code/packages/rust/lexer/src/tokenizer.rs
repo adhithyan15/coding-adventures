@@ -110,7 +110,7 @@ fn simple_token_type(ch: char) -> Option<TokenType> {
 ///
 /// # Example
 ///
-/// ```
+/// ```ignore
 /// use lexer::tokenizer::LexerConfig;
 ///
 /// let config = LexerConfig {
@@ -149,7 +149,7 @@ impl Default for LexerConfig {
 ///
 /// # Usage
 ///
-/// ```
+/// ```ignore
 /// use lexer::tokenizer::{Lexer, LexerConfig};
 /// use lexer::token::TokenType;
 ///

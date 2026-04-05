@@ -717,7 +717,8 @@ mod tests {
     // Test 24: Mixed-case query tokenization
     // -----------------------------------------------------------------------
 
-    /// SQL is commonly written in mixed case. Verify normalization.
+    /// SQL keywords are matched case-insensitively, but string literals keep
+    /// their original source spelling.
     /// `insert into users values ('Bob', 30)` → INSERT, INTO, users(Name),
     /// VALUES, (, 'Bob'(String), comma, 30(Number), )
     #[test]
@@ -728,7 +729,7 @@ mod tests {
         assert_eq!(pairs[2], (TokenType::Name, "users".to_string()));
         assert_eq!(pairs[3], (TokenType::Keyword, "VALUES".to_string()));
         assert_eq!(pairs[4], (TokenType::LParen, "(".to_string()));
-        assert_eq!(pairs[5], (TokenType::String, "bob".to_string()));
+        assert_eq!(pairs[5], (TokenType::String, "Bob".to_string()));
         assert_eq!(pairs[6], (TokenType::Comma, ",".to_string()));
         assert_eq!(pairs[7], (TokenType::Number, "30".to_string()));
         assert_eq!(pairs[8], (TokenType::RParen, ")".to_string()));
