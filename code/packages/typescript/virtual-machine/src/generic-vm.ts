@@ -141,6 +141,150 @@ import type { VMValue, Instruction, CodeObject, VMTrace } from "./vm.js";
 import { VMError, StackUnderflowError, InvalidOpcodeError } from "./vm.js";
 
 // =========================================================================
+// Typed Value Support
+// =========================================================================
+
+/**
+ * A value with explicit type metadata — for typed VMs.
+ *
+ * ==========================================================================
+ * Why Typed Values?
+ * ==========================================================================
+ *
+ * The base GenericVM is dynamically typed — its stack holds plain {@link VMValue}
+ * items (numbers, strings, bigints, etc.) with no type tags. This works great for
+ * languages like Python or Starlark where types are discovered at runtime.
+ *
+ * But some VMs have **typed operand stacks**:
+ *
+ * - **WebAssembly**: Every stack value is explicitly typed as i32, i64, f32, or f64.
+ *   The ``select`` instruction needs to know types; ``call_indirect`` does runtime
+ *   type checking. Without type tags, the VM can't distinguish an i32 from an f32
+ *   (both are JavaScript ``number``).
+ *
+ * - **JVM**: The operand stack tracks "computational types" — int, long, float,
+ *   double, and reference. ``iadd`` expects two ints; ``dadd`` expects two doubles.
+ *   Long and double values occupy two stack slots.
+ *
+ * - **CLR (.NET)**: The evaluation stack is typed with CIL types (int32, int64,
+ *   native int, F, O). The verifier ensures type safety at load time.
+ *
+ * {@link TypedVMValue} adds a numeric ``type`` tag alongside the raw value. The
+ * tag's meaning is language-specific — for WASM, it's ValueType (0x7F=i32, 0x7E=i64,
+ * 0x7D=f32, 0x7C=f64). For the JVM, it could be T_INT=0, T_LONG=1, etc.
+ *
+ * The GenericVM provides a parallel ``typedStack`` alongside the untyped ``stack``.
+ * Languages that need typing use the typed stack; languages that don't (Starlark,
+ * Lisp) continue using the untyped stack. Both coexist without interference.
+ */
+export interface TypedVMValue {
+  readonly type: number;
+  readonly value: VMValue;
+}
+
+// =========================================================================
+// Instruction Hooks
+// =========================================================================
+
+/**
+ * A hook that runs **before** each instruction is dispatched to its handler.
+ *
+ * ==========================================================================
+ * Why Pre-Instruction Hooks?
+ * ==========================================================================
+ *
+ * Different bytecode formats have different instruction encodings:
+ *
+ * - Our generic CodeObject uses **fixed-format** instructions — each instruction
+ *   is an object with an opcode and an optional operand. The PC is an instruction
+ *   index. This works for languages that compile to our bytecode format.
+ *
+ * - **WebAssembly** uses **variable-length** bytecodes — opcodes are 1 byte, but
+ *   immediates are LEB128-encoded (variable length). The PC is a byte offset.
+ *   A ``block`` instruction has a 1-byte blocktype immediate; ``br_table`` has
+ *   a variable-length vector of label indices.
+ *
+ * - **JVM** bytecodes are similar — most instructions are 1-3 bytes, but
+ *   ``tableswitch`` and ``lookupswitch`` have variable-length padding and tables.
+ *
+ * The pre-instruction hook bridges this gap: it receives the raw instruction from
+ * the CodeObject and can **transform** it before the opcode handler sees it.
+ * For WASM, the hook decodes variable-length bytecodes from a raw byte array and
+ * returns a fixed-format Instruction with decoded operands.
+ *
+ * This keeps the GenericVM's eval loop simple (fetch → hook → dispatch → trace)
+ * while supporting any instruction encoding.
+ *
+ * @param vm          - The GenericVM instance.
+ * @param instruction - The raw instruction fetched from the CodeObject.
+ * @param code        - The full CodeObject.
+ * @returns           A (possibly transformed) instruction to dispatch.
+ */
+export type PreInstructionHook = (
+  vm: GenericVM,
+  instruction: Instruction,
+  code: CodeObject,
+) => Instruction;
+
+/**
+ * A hook that runs **after** each instruction handler completes.
+ *
+ * Post-hooks are useful for:
+ *
+ * - **Tracing/profiling**: Log instruction execution for debugging.
+ * - **Assertions**: Verify stack height invariants during development.
+ * - **Coverage**: Track which instructions were executed.
+ * - **Breakpoints**: Check if a breakpoint condition was met and freeze the VM.
+ *
+ * @param vm          - The GenericVM instance (state already modified by handler).
+ * @param instruction - The instruction that was just executed.
+ * @param code        - The full CodeObject.
+ */
+export type PostInstructionHook = (
+  vm: GenericVM,
+  instruction: Instruction,
+  code: CodeObject,
+) => void;
+
+// =========================================================================
+// Context-Aware Handler
+// =========================================================================
+
+/**
+ * An opcode handler that receives an additional context object.
+ *
+ * ==========================================================================
+ * Why Context-Aware Handlers?
+ * ==========================================================================
+ *
+ * Some VMs need per-execution state beyond the stack and variables:
+ *
+ * - **WASM**: Each execution has a linear memory, function tables, typed globals,
+ *   and a label stack for structured control flow. These must be accessible from
+ *   every instruction handler.
+ *
+ * - **JVM**: Each frame has a constant pool, exception handler table, and the
+ *   class hierarchy for method resolution.
+ *
+ * - **CLR**: Each method has a metadata token space for type resolution.
+ *
+ * Rather than storing this state on the GenericVM (which is generic), we pass
+ * it through as a typed context parameter. The handler's type parameter ``TContext``
+ * specifies what shape the context takes.
+ *
+ * This follows the same pattern as React's ``useContext`` or Go's ``context.Context``
+ * — threading execution-scoped state without global variables.
+ *
+ * @typeParam TContext - The type of the execution context (e.g., WasmExecutionContext).
+ */
+export type ContextOpcodeHandler<TContext = unknown> = (
+  vm: GenericVM,
+  instruction: Instruction,
+  code: CodeObject,
+  context: TContext,
+) => string | null;
+
+// =========================================================================
 // Types
 // =========================================================================
 
@@ -411,6 +555,36 @@ export class GenericVM {
    */
   callStack: Record<string, unknown>[] = [];
 
+  /**
+   * The typed operand stack — for VMs that track value types.
+   *
+   * This is a parallel stack to ``stack`` above. Languages with typed
+   * operand stacks (WASM, JVM, CLR) use ``pushTyped``/``popTyped`` instead
+   * of the untyped ``push``/``pop``. Each entry carries both a value and
+   * a numeric type tag whose meaning is defined by the language.
+   *
+   * Languages that don't need typing (Starlark, Lisp) ignore this entirely.
+   *
+   * ```
+   * // WASM example:
+   * typedStack: [
+   *   { type: 0x7F, value: 42 },    // i32
+   *   { type: 0x7E, value: 7n },    // i64 (BigInt)
+   *   { type: 0x7D, value: 3.14 },  // f32
+   * ]
+   * ```
+   */
+  typedStack: TypedVMValue[] = [];
+
+  /**
+   * Optional execution context — language-specific state passed to handlers.
+   *
+   * This is set via {@link executeWithContext} and accessed by
+   * {@link ContextOpcodeHandler} handlers. Contains whatever extra state
+   * the language needs (WASM: memory/tables/globals; JVM: constant pool; etc.)
+   */
+  executionContext: unknown = null;
+
   // -- Private state -------------------------------------------------------
   // These are internal to the GenericVM and not directly accessible
   // by opcode handlers (they use the public API methods instead).
@@ -461,6 +635,34 @@ export class GenericVM {
    * - Testing that the freeze mechanism works correctly.
    */
   private frozen: boolean = false;
+
+  /**
+   * Optional hook that transforms instructions before dispatch.
+   *
+   * When set, the eval loop calls this function after fetching the raw
+   * instruction but before looking up the opcode handler. The hook can
+   * modify or replace the instruction — for example, decoding WASM's
+   * variable-length bytecodes into fixed-format Instruction objects.
+   */
+  private preHook: PreInstructionHook | null = null;
+
+  /**
+   * Optional hook that runs after each instruction handler completes.
+   *
+   * When set, the eval loop calls this function after the opcode handler
+   * returns, before building the trace. Useful for tracing, assertions,
+   * or profiling.
+   */
+  private postHook: PostInstructionHook | null = null;
+
+  /**
+   * Map of context-aware opcode handlers.
+   *
+   * These handlers receive an additional context parameter alongside
+   * the standard (vm, instruction, code) arguments. Used by typed VMs
+   * that need per-execution state (WASM: memory/tables; JVM: constant pool).
+   */
+  private contextHandlers: Map<number, ContextOpcodeHandler> = new Map();
 
   // =======================================================================
   // Opcode & Builtin Registration
@@ -532,6 +734,90 @@ export class GenericVM {
    */
   getBuiltin(name: string): BuiltinFunction | undefined {
     return this.builtins.get(name);
+  }
+
+  // =======================================================================
+  // Context-Aware Opcode Registration
+  // =======================================================================
+
+  /**
+   * Register a context-aware handler for a specific opcode.
+   *
+   * Context-aware handlers receive an additional parameter — the execution
+   * context — alongside the standard (vm, instruction, code) arguments.
+   * This lets typed VMs pass per-execution state (memory, tables, globals)
+   * to handlers without storing it on the GenericVM itself.
+   *
+   * **How it works with {@link executeWithContext}:**
+   *
+   * When you call ``executeWithContext(code, context)``, the eval loop
+   * passes ``context`` to every context-aware handler. If a regular
+   * (non-context) handler is registered for the same opcode, the context
+   * handler takes priority during context execution.
+   *
+   * **Example: Registering a WASM i32.add handler**
+   *
+   * ```typescript
+   * vm.registerContextOpcode(0x6A, (vm, instr, code, ctx: WasmContext) => {
+   *   const b = vm.popTyped();
+   *   const a = vm.popTyped();
+   *   vm.pushTyped({ type: 0x7F, value: ((a.value as number) + (b.value as number)) | 0 });
+   *   vm.advancePc();
+   *   return "i32.add";
+   * });
+   * ```
+   *
+   * @param opcode  - The numeric opcode value.
+   * @param handler - The context-aware function to call.
+   */
+  registerContextOpcode<TContext = unknown>(
+    opcode: number,
+    handler: ContextOpcodeHandler<TContext>,
+  ): void {
+    this.contextHandlers.set(opcode, handler as ContextOpcodeHandler);
+  }
+
+  // =======================================================================
+  // Instruction Hooks
+  // =======================================================================
+
+  /**
+   * Set a pre-instruction hook.
+   *
+   * The hook runs **before** each instruction is dispatched. It receives
+   * the raw instruction and can return a transformed version. This is how
+   * WASM decodes variable-length bytecodes into fixed-format Instructions.
+   *
+   * Only one pre-hook can be active at a time. Calling this again replaces
+   * the previous hook. Pass ``null`` to remove the hook.
+   *
+   * ```typescript
+   * // WASM decoder hook:
+   * vm.setPreInstructionHook((vm, instruction, code) => {
+   *   // Read bytecode at current offset, decode LEB128 immediates
+   *   const decoded = decodeWasmInstruction(bytecodes, vm.pc);
+   *   return { opcode: decoded.opcode, operand: decoded.operand };
+   * });
+   * ```
+   *
+   * @param hook - The pre-instruction hook, or null to remove.
+   */
+  setPreInstructionHook(hook: PreInstructionHook | null): void {
+    this.preHook = hook;
+  }
+
+  /**
+   * Set a post-instruction hook.
+   *
+   * The hook runs **after** each instruction handler completes. Useful
+   * for tracing, profiling, stack-height assertions, or breakpoints.
+   *
+   * Only one post-hook can be active. Pass ``null`` to remove.
+   *
+   * @param hook - The post-instruction hook, or null to remove.
+   */
+  setPostInstructionHook(hook: PostInstructionHook | null): void {
+    this.postHook = hook;
   }
 
   // =======================================================================
@@ -629,6 +915,59 @@ export class GenericVM {
       );
     }
     return this.stack[this.stack.length - 1];
+  }
+
+  // =======================================================================
+  // Typed Stack Operations
+  // =======================================================================
+
+  /**
+   * Push a typed value onto the typed operand stack.
+   *
+   * Used by typed VMs (WASM, JVM, CLR) that need to track value types
+   * alongside values. Each entry carries both a type tag and a raw value.
+   *
+   * ```
+   *   Before pushTyped({ type: 0x7F, value: 42 }):
+   *     typedStack: [{ type: 0x7E, value: 7n }]
+   *   After:
+   *     typedStack: [{ type: 0x7E, value: 7n }, { type: 0x7F, value: 42 }]
+   * ```
+   *
+   * @param value - The typed value to push.
+   */
+  pushTyped(value: TypedVMValue): void {
+    this.typedStack.push(value);
+  }
+
+  /**
+   * Pop and return the top typed value from the typed stack.
+   *
+   * @returns The typed value that was on top.
+   * @throws  {StackUnderflowError} If the typed stack is empty.
+   */
+  popTyped(): TypedVMValue {
+    if (this.typedStack.length === 0) {
+      throw new StackUnderflowError(
+        "Cannot pop from an empty typed stack — possible compiler bug",
+      );
+    }
+    return this.typedStack.pop()!;
+  }
+
+  /**
+   * Peek at the top typed value without removing it.
+   *
+   * @returns The typed value on top.
+   * @throws  {StackUnderflowError} If the typed stack is empty.
+   */
+  peekTyped(): TypedVMValue {
+    if (this.typedStack.length === 0) {
+      throw new StackUnderflowError(
+        "Cannot peek at an empty typed stack — possible compiler bug",
+      );
+    }
+    return this.typedStack[this.typedStack.length - 1];
   }
 
   // =======================================================================
@@ -830,6 +1169,43 @@ export class GenericVM {
   }
 
   /**
+   * Execute a CodeObject with an execution context.
+   *
+   * This variant passes a context object to all context-aware opcode
+   * handlers (registered via {@link registerContextOpcode}). The context
+   * is available for the duration of execution and cleared afterward.
+   *
+   * This is how typed VMs thread per-execution state through the eval
+   * loop without storing it on the GenericVM:
+   *
+   * ```typescript
+   * // WASM execution:
+   * const wasmContext = {
+   *   memory: linearMemory,
+   *   tables: [funcTable],
+   *   globals: [{ type: 0x7F, value: 0 }],
+   *   labelStack: [],
+   * };
+   *
+   * const traces = vm.executeWithContext(code, wasmContext);
+   * ```
+   *
+   * @typeParam TContext - The type of the execution context.
+   * @param code    - The compiled bytecode to execute.
+   * @param context - The execution context to pass to context-aware handlers.
+   * @returns       An array of VMTrace snapshots.
+   */
+  executeWithContext<TContext>(code: CodeObject, context: TContext): VMTrace[] {
+    const previousContext = this.executionContext;
+    this.executionContext = context;
+    try {
+      return this.execute(code);
+    } finally {
+      this.executionContext = previousContext;
+    }
+  }
+
+  /**
    * Execute a single instruction and return its trace.
    *
    * This is the workhorse method that implements one cycle of
@@ -857,12 +1233,24 @@ export class GenericVM {
     const stackBefore = [...this.stack];
 
     // ── Step 2: Fetch the instruction ───────────────────────────────
-    const instruction = code.instructions[this.pc];
+    let instruction = code.instructions[this.pc];
+
+    // ── Step 2.5: Pre-instruction hook ──────────────────────────────
+    // If a pre-hook is registered, give it a chance to transform the
+    // instruction before dispatch. This is how WASM decodes variable-
+    // length bytecodes into fixed-format Instruction objects.
+    if (this.preHook) {
+      instruction = this.preHook(this, instruction, code);
+    }
 
     // ── Step 3: Decode — look up the handler ────────────────────────
+    // Context-aware handlers take priority during context execution.
+    // This lets typed VMs register handlers that receive per-execution
+    // state (memory, tables, globals) without affecting untyped VMs.
+    const contextHandler = this.contextHandlers.get(instruction.opcode);
     const handler = this.handlers.get(instruction.opcode);
 
-    if (!handler) {
+    if (!contextHandler && !handler) {
       throw new InvalidOpcodeError(
         `No handler registered for opcode 0x${instruction.opcode.toString(16).padStart(2, "0")}`,
       );
@@ -875,16 +1263,29 @@ export class GenericVM {
     //   - Advancing or jumping the PC
     //   - Setting halted = true if it's a HALT instruction
     //   - Returning a description string (or null)
-    const description = handler(this, instruction, code);
+    let description: string | null;
+
+    if (contextHandler && this.executionContext !== null) {
+      // Use context-aware handler when a context is present.
+      description = contextHandler(this, instruction, code, this.executionContext);
+    } else if (handler) {
+      // Fall back to regular handler.
+      description = handler(this, instruction, code);
+    } else {
+      // Context handler exists but no context was set — error.
+      throw new InvalidOpcodeError(
+        `Context handler for opcode 0x${instruction.opcode.toString(16).padStart(2, "0")} requires an execution context`,
+      );
+    }
+
+    // ── Step 4.5: Post-instruction hook ─────────────────────────────
+    // If a post-hook is registered, call it after the handler completes.
+    // Useful for tracing, assertions, or profiling.
+    if (this.postHook) {
+      this.postHook(this, instruction, code);
+    }
 
     // ── Step 5: Record — build the trace ────────────────────────────
-    // Determine if this step produced any output. We do this by checking
-    // if the output array grew during this step.
-    const outputLine =
-      this.output.length > 0
-        ? this.output[this.output.length - 1] ?? null
-        : null;
-
     const trace: VMTrace = {
       pc: pcBefore,
       instruction,
@@ -915,26 +1316,32 @@ export class GenericVM {
    *
    * **What is preserved:**
    * - Opcode handlers (the ``handlers`` map)
+   * - Context handlers (the ``contextHandlers`` map)
    * - Built-in functions (the ``builtins`` map)
    * - Max recursion depth setting
    * - Frozen state
+   * - Pre/post instruction hooks
    *
    * **What is cleared:**
    * - Stack → empty
+   * - Typed stack → empty
    * - Variables → empty
    * - Locals → empty
    * - PC → 0
    * - Halted → false
    * - Output → empty
    * - Call stack → empty
+   * - Execution context → null
    */
   reset(): void {
     this.stack = [];
+    this.typedStack = [];
     this.variables = {};
     this.locals = [];
     this.pc = 0;
     this.halted = false;
     this.output = [];
     this.callStack = [];
+    this.executionContext = null;
   }
 }

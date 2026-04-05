@@ -37,7 +37,11 @@ export {
 export {
   GenericVM,
   type OpcodeHandler,
+  type ContextOpcodeHandler,
   type BuiltinFunction,
+  type TypedVMValue,
+  type PreInstructionHook,
+  type PostInstructionHook,
   MaxRecursionError,
   VMTypeError,
 } from "./generic-vm.js";
