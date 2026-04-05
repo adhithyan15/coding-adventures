@@ -166,3 +166,114 @@ class TestCreateJavaScriptParser:
 
         assert ast_direct.rule_name == ast_factory.rule_name
         assert len(ast_direct.children) == len(ast_factory.children)
+
+
+# ============================================================================
+# Test: Version Parameter
+# ============================================================================
+
+
+class TestVersionParameter:
+    """Test that the ``version`` parameter loads the correct ECMAScript grammar.
+
+    Each ECMAScript version corresponds to both a ``.tokens`` and a ``.grammar``
+    file under ``code/grammars/ecmascript/``.  The version-aware parser must:
+
+    1. Accept all 14 valid version strings without raising errors.
+    2. Still produce a valid AST — ``var x = 1;`` is parseable in every ES version
+       (``var`` is ES1+, making it the safest cross-version expression).
+    3. Raise ``ValueError`` for unknown version strings.
+    4. Treat ``None`` and ``""`` as "use the generic javascript.grammar".
+    """
+
+    def test_no_version_uses_generic_grammar(self) -> None:
+        """Omitting ``version`` (``None``) loads the generic javascript.grammar."""
+        ast = parse_javascript("let x = 1 + 2;")
+        assert ast.rule_name == "program"
+
+    def test_empty_string_uses_generic_grammar(self) -> None:
+        """An empty string also loads the generic javascript.grammar."""
+        ast = parse_javascript("let x = 1;", "")
+        assert ast.rule_name == "program"
+
+    def test_es1_version(self) -> None:
+        """``es1`` grammar parses ECMAScript 1 source correctly."""
+        ast = parse_javascript("var x = 1;", "es1")
+        assert ast.rule_name == "program"
+
+    def test_es3_version(self) -> None:
+        """``es3`` grammar parses ECMAScript 3 source correctly."""
+        ast = parse_javascript("var x = 1;", "es3")
+        assert ast.rule_name == "program"
+
+    def test_es5_version(self) -> None:
+        """``es5`` grammar parses ECMAScript 5 source correctly."""
+        ast = parse_javascript("var x = 1;", "es5")
+        assert ast.rule_name == "program"
+
+    def test_es2015_version(self) -> None:
+        """``es2015`` grammar parses ES2015 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2015")
+        assert ast.rule_name == "program"
+
+    def test_es2016_version(self) -> None:
+        """``es2016`` grammar parses ES2016 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2016")
+        assert ast.rule_name == "program"
+
+    def test_es2017_version(self) -> None:
+        """``es2017`` grammar parses ES2017 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2017")
+        assert ast.rule_name == "program"
+
+    def test_es2018_version(self) -> None:
+        """``es2018`` grammar parses ES2018 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2018")
+        assert ast.rule_name == "program"
+
+    def test_es2019_version(self) -> None:
+        """``es2019`` grammar parses ES2019 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2019")
+        assert ast.rule_name == "program"
+
+    def test_es2020_version(self) -> None:
+        """``es2020`` grammar parses ES2020 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2020")
+        assert ast.rule_name == "program"
+
+    def test_es2021_version(self) -> None:
+        """``es2021`` grammar parses ES2021 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2021")
+        assert ast.rule_name == "program"
+
+    def test_es2022_version(self) -> None:
+        """``es2022`` grammar parses ES2022 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2022")
+        assert ast.rule_name == "program"
+
+    def test_es2023_version(self) -> None:
+        """``es2023`` grammar parses ES2023 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2023")
+        assert ast.rule_name == "program"
+
+    def test_es2024_version(self) -> None:
+        """``es2024`` grammar parses ES2024 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2024")
+        assert ast.rule_name == "program"
+
+    def test_es2025_version(self) -> None:
+        """``es2025`` grammar parses ES2025 source correctly."""
+        ast = parse_javascript("var x = 1;", "es2025")
+        assert ast.rule_name == "program"
+
+    def test_unknown_version_raises_value_error(self) -> None:
+        """An unrecognized version string must raise ``ValueError``."""
+        import pytest
+        with pytest.raises(ValueError, match="Unknown ECMAScript version"):
+            parse_javascript("var x = 1;", "es99")
+
+    def test_version_propagates_to_factory(self) -> None:
+        """``create_javascript_parser`` with a version should produce a valid AST."""
+        parser = create_javascript_parser("var x = 1;", "es5")
+        ast = parser.parse()
+        assert ast.rule_name == "program"

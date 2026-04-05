@@ -2,6 +2,19 @@
 
 All notable changes to the JavaScript Lexer package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+- `version` parameter added to `tokenize_javascript()` and `create_javascript_lexer()`.
+  Pass any of the 14 valid ECMAScript version strings to load the corresponding
+  versioned grammar file from `code/grammars/ecmascript/`. Omitting `version`
+  (or passing `None` / `""`) loads the generic `javascript.tokens` — backward compatible.
+- `_resolve_tokens_path(version)` private helper mapping version strings to paths.
+- `_VALID_VERSIONS` frozenset covering `"es1"`, `"es3"`, `"es5"`, and
+  `"es2015"` through `"es2025"`.
+- Raises `ValueError` with a clear message for unknown version strings.
+- 18 new version-specific tests (one per version + error + factory); 100% coverage.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added
