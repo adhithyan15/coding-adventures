@@ -80,7 +80,12 @@ impl PixelContainer {
     /// assert_eq!(buf.data.len(), 4 * 4 * 4);
     /// ```
     pub fn new(width: u32, height: u32) -> Self {
-        let size = (width * height * 4) as usize;
+        // Use usize arithmetic throughout to prevent u32 overflow in release mode.
+        // width * height * 4 can exceed u32::MAX for large images (e.g. 46341×46341).
+        let size = (width as usize)
+            .checked_mul(height as usize)
+            .and_then(|n| n.checked_mul(4))
+            .expect("PixelContainer dimensions overflow usize");
         Self {
             width,
             height,
@@ -104,7 +109,11 @@ impl PixelContainer {
     /// assert_eq!(p.pixel_at(0, 0), (255, 0, 0, 255));
     /// ```
     pub fn from_data(width: u32, height: u32, data: Vec<u8>) -> Self {
-        let expected = (width * height * 4) as usize;
+        // Use usize arithmetic to prevent u32 overflow in release mode.
+        let expected = (width as usize)
+            .checked_mul(height as usize)
+            .and_then(|n| n.checked_mul(4))
+            .expect("PixelContainer dimensions overflow usize");
         assert_eq!(
             data.len(),
             expected,
@@ -133,7 +142,8 @@ impl PixelContainer {
         if x >= self.width || y >= self.height {
             return (0, 0, 0, 0);
         }
-        let i = ((y * self.width + x) * 4) as usize;
+        // Use usize arithmetic to avoid u32 overflow on large images in release mode.
+        let i = (y as usize * self.width as usize + x as usize) * 4;
         (self.data[i], self.data[i + 1], self.data[i + 2], self.data[i + 3])
     }
 
@@ -154,7 +164,8 @@ impl PixelContainer {
         if x >= self.width || y >= self.height {
             return;
         }
-        let i = ((y * self.width + x) * 4) as usize;
+        // Use usize arithmetic to avoid u32 overflow on large images in release mode.
+        let i = (y as usize * self.width as usize + x as usize) * 4;
         self.data[i]     = r;
         self.data[i + 1] = g;
         self.data[i + 2] = b;

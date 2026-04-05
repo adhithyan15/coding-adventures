@@ -107,9 +107,14 @@ pub fn decode_bmp(bytes: &[u8]) -> Result<PixelContainer, String> {
 // ---------------------------------------------------------------------------
 
 fn encode_bmp_impl(c: &PixelContainer) -> Vec<u8> {
-    // Total file size = 54-byte header + pixel data
-    let pixel_bytes = (c.width * c.height * 4) as usize;
-    let file_size   = 54 + pixel_bytes;
+    // Total file size = 54-byte header + pixel data.
+    // Use usize arithmetic throughout to prevent u32 overflow in release mode.
+    let pixel_bytes = (c.width as usize)
+        .checked_mul(c.height as usize)
+        .and_then(|n| n.checked_mul(4))
+        .expect("BMP encode: image dimensions overflow usize");
+    let file_size   = 54usize.checked_add(pixel_bytes)
+        .expect("BMP encode: file size overflow usize");
     let mut out     = Vec::with_capacity(file_size);
 
     // --- BITMAPFILEHEADER (14 bytes) ---
@@ -183,18 +188,27 @@ fn decode_bmp_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
     // Read pixel data offset from BITMAPFILEHEADER (bytes 10–13).
     let pixel_offset = read_u32_le(bytes, 10) as usize;
 
+    // Pixel data must start after the standard 54-byte header.
+    if pixel_offset < 54 {
+        return Err("BMP: pixel offset is before end of header".into());
+    }
+
     // Read dimensions from BITMAPINFOHEADER (bytes 18–25).
     let bi_width  = read_i32_le(bytes, 18);
     let bi_height = read_i32_le(bytes, 22);
 
     // Width must be positive. Height may be negative (top-down) or positive
     // (bottom-up). We take the absolute value and track direction separately.
+    // Reject i32::MIN: unsigned_abs() would return 2^31, causing overflow.
     if bi_width <= 0 {
         return Err("BMP: invalid width".into());
     }
-    let width     = bi_width as u32;
-    let height    = bi_height.unsigned_abs();
-    let top_down  = bi_height < 0; // negative biHeight → top-down
+    if bi_height == i32::MIN {
+        return Err("BMP: invalid height".into());
+    }
+    let width    = bi_width as u32;
+    let height   = bi_height.unsigned_abs();
+    let top_down = bi_height < 0; // negative biHeight → top-down
 
     if height == 0 {
         return Err("BMP: invalid height".into());
@@ -217,8 +231,14 @@ fn decode_bmp_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
     }
 
     // Verify pixel data fits in the file.
-    let pixel_count  = (width * height) as usize;
-    let pixel_end    = pixel_offset + pixel_count * 4;
+    // Use checked arithmetic to prevent overflow in the bounds check.
+    let pixel_bytes = (width as usize)
+        .checked_mul(height as usize)
+        .and_then(|n| n.checked_mul(4))
+        .ok_or("BMP: image dimensions overflow")?;
+    let pixel_end = pixel_offset
+        .checked_add(pixel_bytes)
+        .ok_or("BMP: pixel data range overflow")?;
     if bytes.len() < pixel_end {
         return Err("BMP: pixel data truncated".into());
     }
@@ -234,7 +254,8 @@ fn decode_bmp_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
             height - 1 - row
         };
         for col in 0..width {
-            let file_idx = pixel_offset + (row * width + col) as usize * 4;
+            // Use usize arithmetic to avoid u32 overflow in release mode.
+            let file_idx = pixel_offset + (row as usize * width as usize + col as usize) * 4;
             let b = bytes[file_idx];
             let g = bytes[file_idx + 1];
             let r = bytes[file_idx + 2];

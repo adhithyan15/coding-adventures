@@ -156,14 +156,20 @@ fn decode_ppm_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
     pos += 1; // skip the single whitespace byte
 
     // Verify we have enough pixel data.
-    let pixel_count = width * height;
-    let needed = pixel_count * 3;
-    if bytes.len() - pos < needed {
+    // Use checked_mul to prevent overflow (width and height are usize from user input).
+    let pixel_count = width.checked_mul(height)
+        .ok_or("PPM: image dimensions overflow")?;
+    let needed = pixel_count.checked_mul(3)
+        .ok_or("PPM: pixel data size overflow")?;
+    // Guard against pos > bytes.len() before subtraction (unsigned underflow).
+    if pos > bytes.len() || bytes.len() - pos < needed {
         return Err("PPM: pixel data truncated".into());
     }
 
     // Read RGB triples → RGBA with A=255.
-    let mut data = Vec::with_capacity(pixel_count * 4);
+    let data_cap = pixel_count.checked_mul(4)
+        .ok_or("PPM: pixel data size overflow")?;
+    let mut data = Vec::with_capacity(data_cap);
     for _ in 0..pixel_count {
         let r = bytes[pos];
         let g = bytes[pos + 1];

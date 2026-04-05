@@ -265,8 +265,13 @@ fn decode_qoi_impl(bytes: &[u8]) -> Result<PixelContainer, String> {
         return Err("QOI: invalid dimensions".into());
     }
 
-    let total_pixels = (width * height) as usize;
-    let mut data = Vec::with_capacity(total_pixels * 4);
+    // Use checked arithmetic to prevent u32 overflow in release mode.
+    let total_pixels = (width as usize)
+        .checked_mul(height as usize)
+        .ok_or("QOI: image dimensions overflow")?;
+    let data_cap = total_pixels.checked_mul(4)
+        .ok_or("QOI: image dimensions overflow")?;
+    let mut data = Vec::with_capacity(data_cap);
 
     // Decode state.
     let mut hash_table = [(0u8, 0u8, 0u8, 0u8); 64];
