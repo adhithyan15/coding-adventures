@@ -32,6 +32,7 @@ import {
   generateRust,
   generateElixir,
   generatePerl,
+  generateHaskell,
   generateCommonFiles,
   updateRustWorkspace,
   findRepoRoot,
@@ -781,6 +782,13 @@ describe("generateTypeScript", () => {
     );
     expect(content).toContain('VERSION = "0.1.0"');
   });
+
+  it("generates typescript program boilerplate", () => {
+    generateTypeScript(tmpDir, "my-app", "program", "A test app", "", [], []);
+    expect(fs.existsSync(path.join(tmpDir, "package.json"))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, "vite.config.ts"))).toBe(true);
+    expect(fs.existsSync(path.join(tmpDir, "src", "main.tsx"))).toBe(true);
+  });
 });
 
 describe("generateRust", () => {
@@ -882,6 +890,24 @@ describe("generateElixir", () => {
 // =========================================================================
 // 6b. generatePerl tests
 // =========================================================================
+
+describe("generateHaskell", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    removeDir(tmpDir);
+  });
+
+  it("creates cabal file with correct name", () => {
+    generateHaskell(tmpDir, "my-pkg", "A test package", "", [], []);
+    const content = fs.readFileSync(path.join(tmpDir, "coding-adventures-my-pkg.cabal"), "utf-8");
+    expect(content).toMatch(/name:\s+coding-adventures-my-pkg/);
+  });
+});
 
 describe("generatePerl", () => {
   let tmpDir: string;
