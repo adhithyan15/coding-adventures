@@ -360,7 +360,9 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
 
       "font-weight" ->
         case value do
-          %{kind: :string, value: v} -> {put_css_style(frame, "font-weight", v), state}
+          %{kind: :string, value: v}
+          when v in ["100","200","300","400","500","600","700","800","900","normal","bold","bolder","lighter"] ->
+            {put_css_style(frame, "font-weight", v), state}
           _ -> {frame, state}
         end
 

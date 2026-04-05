@@ -510,11 +510,13 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
           if (a) styles.push(`text-align:${a}`);
         }
         break;
-      case "font-weight":
+      case "font-weight": {
         if (value.kind === "string") {
-          styles.push(`font-weight:${value.value}`);
+          const safeFW = new Set(["100","200","300","400","500","600","700","800","900","normal","bold","bolder","lighter"]);
+          if (safeFW.has(value.value)) styles.push(`font-weight:${value.value}`);
         }
         break;
+      }
       case "max-lines":
         if (value.kind === "number") {
           styles.push(`-webkit-line-clamp:${value.value}`, "overflow:hidden", "display:-webkit-box", "-webkit-box-orient:vertical");
@@ -704,7 +706,9 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
             lines.push(`${indent}  html += \`<slot name="${frag.field}-\${_i}"></slot>\`;`);
           } else {
             // Primitive list: emit forEach with item variable
-            lines.push(`${indent}this._${frag.field}.forEach(${frag.itemName} => {`);
+            // Validate itemName is a safe JS identifier to prevent code injection
+            const safeItem = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(frag.itemName) ? frag.itemName : "_item";
+            lines.push(`${indent}this._${frag.field}.forEach(${safeItem} => {`);
           }
           break;
         }
@@ -825,7 +829,7 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
       return line.replace(/__IMG_SRC_(\w+)__/g, (_match, slotName) => {
         const slot = this._slots.find(s => s.name === slotName);
         return slot
-          ? `" + this._escapeHtml(this.${this._backingField(slotName)}) + "`
+          ? `" + this._validateUrl(this.${this._backingField(slotName)}) + "`
           : '""';
       }).replace(/__ARIA_(\w+)__/g, (_match, slotName) => {
         return `" + this._escapeHtml(this.${this._backingField(slotName)}) + "`;
@@ -992,7 +996,7 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
 
   private _defaultValueLiteral(v: MosaicValue): string {
     switch (v.kind) {
-      case "string": return `'${v.value}'`;
+      case "string": return `'${v.value.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
       case "number": return `${v.value}`;
       case "bool":   return `${v.value}`;
       default:       return "null";
@@ -1048,14 +1052,19 @@ export class MosaicWebComponentRenderer implements MosaicRenderer {
   }
 
   private _escapeAttr(value: string): string {
-    return value.replace(/"/g, "&quot;");
+    return value
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
   private _escapeHtmlLiteral(s: string): string {
     return s
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   /**

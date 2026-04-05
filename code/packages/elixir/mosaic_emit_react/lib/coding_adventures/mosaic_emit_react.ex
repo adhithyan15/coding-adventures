@@ -427,7 +427,8 @@ defmodule CodingAdventures.MosaicEmitReact do
 
       "font-weight" ->
         case value do
-          %{kind: :string, value: v} ->
+          %{kind: :string, value: v}
+          when v in ["100","200","300","400","500","600","700","800","900","normal","bold","bolder","lighter"] ->
             {put_style(frame, "fontWeight", ~s("#{v}")), state}
           _ -> {frame, state}
         end
@@ -509,8 +510,10 @@ defmodule CodingAdventures.MosaicEmitReact do
             {%{frame | attrs: frame.attrs ++ ["role=\"heading\""]}, state}
           %{kind: :string, value: "image"} ->
             {%{frame | attrs: frame.attrs ++ ["role=\"img\""]}, state}
-          %{kind: :string, value: v} ->
-            {%{frame | attrs: frame.attrs ++ ["role=\"#{v}\""]}, state}
+          %{kind: :string, value: v} when is_binary(v) ->
+            # Escape " to prevent HTML attribute injection in generated JSX source
+            safe_v = String.replace(v, "\"", "&quot;") |> String.replace("'", "&#39;")
+            {%{frame | attrs: frame.attrs ++ ["role=\"#{safe_v}\""]}, state}
           _ -> {frame, state}
         end
 

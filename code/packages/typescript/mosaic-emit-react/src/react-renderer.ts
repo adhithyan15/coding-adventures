@@ -600,11 +600,13 @@ export class MosaicReactRenderer implements MosaicRenderer {
           if (a) styles["textAlign"] = `"${a}"`;
         }
         break;
-      case "font-weight":
+      case "font-weight": {
         if (value.kind === "string") {
-          styles["fontWeight"] = `"${value.value}"`;
+          const safeFW = new Set(["100","200","300","400","500","600","700","800","900","normal","bold","bolder","lighter"]);
+          if (safeFW.has(value.value)) styles["fontWeight"] = `"${value.value}"`;
         }
         break;
+      }
       case "max-lines":
         if (value.kind === "number") {
           // WebKit CSS multi-line text truncation (widely supported as vendor extension)
@@ -686,9 +688,12 @@ export class MosaicReactRenderer implements MosaicRenderer {
               // Use the standard ARIA role name "img" (not "image")
               attrs.push('role="img"');
               break;
-            default:
-              attrs.push(`role="${value.value}"`);
+            default: {
+              // Escape " to prevent HTML attribute injection in generated JSX source
+              const safeRole = value.value.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+              attrs.push(`role="${safeRole}"`);
               break;
+            }
           }
         }
         break;
@@ -1101,7 +1106,7 @@ export class MosaicReactRenderer implements MosaicRenderer {
    */
   private _defaultValueLiteral(v: MosaicValue): string {
     switch (v.kind) {
-      case "string": return `"${v.value}"`;
+      case "string": return `"${v.value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
       case "number": return `${v.value}`;
       case "bool":   return `${v.value}`;
       default:       return "undefined";

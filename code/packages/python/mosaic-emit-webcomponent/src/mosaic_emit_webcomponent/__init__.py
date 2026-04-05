@@ -261,8 +261,11 @@ class WebComponentRenderer(MosaicRenderer):
         element_type: dict,
         context: SlotContext,
     ) -> None:
+        import re as _re
         field = f"_{_camel(slot_name)}"
-        self._render_lines.append(f"    {field}.forEach(({item_name}) => {{")
+        # Validate item_name is a safe JS identifier to prevent code injection in forEach callback
+        safe_item = item_name if _re.match(r'^[a-zA-Z_$][a-zA-Z0-9_$]*$', item_name) else "_item"
+        self._render_lines.append(f"    {field}.forEach(({safe_item}) => {{")
 
     def end_each(self) -> None:
         self._render_lines.append("    });")
@@ -416,7 +419,8 @@ class WebComponentRenderer(MosaicRenderer):
         """Render a CSS value string (for inline style attributes)."""
         kind = v.get("kind")
         if kind == "string":
-            return v["value"]
+            # Escape " to prevent breaking out of style="" HTML attribute
+            return v["value"].replace('"', "&quot;")
         if kind == "number":
             return str(v["value"])
         if kind == "dimension":

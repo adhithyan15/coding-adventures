@@ -46,12 +46,16 @@ package mosaicemitreact
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode"
 
 	mosaicanalyzer "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-analyzer"
 	mosaicvm "github.com/adhithyan15/coding-adventures/code/packages/go/mosaic-vm"
 )
+
+// safeJSIdent matches valid JavaScript identifiers for code-generation safety.
+var safeJSIdent = regexp.MustCompile(`^[a-zA-Z_$][a-zA-Z0-9_$]*$`)
 
 // ============================================================================
 // Stack Frame Types
@@ -208,7 +212,12 @@ func (r *ReactRenderer) EndWhen() {
 // BeginEach emits the opening of a map() iteration.
 func (r *ReactRenderer) BeginEach(slotName string, itemName string, elementType mosaicanalyzer.MosaicType, ctx mosaicvm.SlotContext) {
 	camel := toCamelCase(slotName)
-	r.appendLine(fmt.Sprintf("{%s.map((%s, _idx) => (", camel, itemName))
+	// Validate itemName is a safe JS identifier to prevent code injection
+	safeItem := itemName
+	if !safeJSIdent.MatchString(itemName) {
+		safeItem = "_item"
+	}
+	r.appendLine(fmt.Sprintf("{%s.map((%s, _idx) => (", camel, safeItem))
 }
 
 // EndEach closes a map() iteration.
@@ -395,7 +404,14 @@ func resolvedColorToCSS(v mosaicvm.ResolvedValue) string {
 func resolvedValueToJSX(p mosaicvm.ResolvedProperty) string {
 	switch p.Value.Kind {
 	case "string":
-		return p.Value.StrValue
+		// HTML-escape literal text to prevent JSX parser confusion and XSS in non-React contexts
+		s := p.Value.StrValue
+		s = strings.ReplaceAll(s, "&", "&amp;")
+		s = strings.ReplaceAll(s, "<", "&lt;")
+		s = strings.ReplaceAll(s, ">", "&gt;")
+		s = strings.ReplaceAll(s, "{", "&#123;")
+		s = strings.ReplaceAll(s, "}", "&#125;")
+		return s
 	case "slot_ref":
 		return fmt.Sprintf("{%s}", toCamelCase(p.Value.SlotName))
 	case "number":
