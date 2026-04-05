@@ -379,7 +379,9 @@ module CodingAdventures
 
       def format_html_value(val)
         case val[:kind]
-        when "string"    then val[:value]
+        when "string"
+          # HTML-escape literal text so it renders safely via shadowRoot.innerHTML
+          val[:value].gsub("&", "&amp;").gsub("<", "&lt;").gsub(">", "&gt;")
         when "number"    then val[:value].to_s
         when "bool"      then val[:value].to_s
         when "color"     then rgba_string(val)
@@ -435,7 +437,9 @@ module CodingAdventures
 
       def ts_default_value(val)
         case val[:kind]
-        when "string"    then "\"#{val[:value]}\""
+        when "string"
+          escaped = val[:value].gsub("\\", "\\\\\\\\").gsub('"', '\\"')
+          "\"#{escaped}\""
         when "number"    then val[:value].to_s
         when "bool"      then val[:value].to_s
         when "color_hex" then "\"#{val[:value]}\""

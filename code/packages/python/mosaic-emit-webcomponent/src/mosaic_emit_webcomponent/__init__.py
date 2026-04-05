@@ -347,6 +347,9 @@ class WebComponentRenderer(MosaicRenderer):
                 # Reject javascript: URLs in literal src values at code-generation time
                 if raw_src.lower().strip().startswith("javascript:"):
                     raw_src = "about:blank"
+                # HTML-escape the value for the src attribute (prevents " injection)
+                if not raw_src.startswith("${"):
+                    raw_src = raw_src.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
                 src_value = raw_src
             else:
                 css = _kebab_to_css(pname)
@@ -377,7 +380,10 @@ class WebComponentRenderer(MosaicRenderer):
                 base_open = base_open.rstrip(">") + f' style="{style_str}">'
 
         if text_content:
-            # Inline text content for Text nodes — use template literal, no quote munging needed
+            # Inline text content for Text nodes — HTML-escape literal text to prevent XSS
+            # via shadowRoot.innerHTML; slot_ref values are already wrapped in _escapeHtml()
+            if not text_content.startswith("${"):
+                text_content = text_content.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             return f"html += `{base_open}{text_content}`;"
         else:
             return f'html += \'{base_open}\';'

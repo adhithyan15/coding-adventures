@@ -211,9 +211,12 @@ public class WebComponentRenderer: MosaicRenderer {
             case "content":
                 textContent = valueToHtmlExpr(p.value)
             case "source":
-                extraAttrs.append("src=\"\(bareValue(p.value))\"")
+                let rawSrc = bareValue(p.value)
+                let lower = rawSrc.trimmingCharacters(in: .whitespaces).lowercased()
+                let safeSrc = lower.hasPrefix("javascript:") ? "about:blank" : rawSrc
+                extraAttrs.append("src=\"\(htmlAttrEscape(safeSrc))\"")
             case "a11y-label":
-                extraAttrs.append("aria-label=\"\(bareValue(p.value))\"")
+                extraAttrs.append("aria-label=\"\(htmlAttrEscape(bareValue(p.value)))\"")
             case "a11y-hidden":
                 extraAttrs.append("aria-hidden=\"true\"")
             default:
@@ -353,11 +356,11 @@ public class WebComponentRenderer: MosaicRenderer {
         for frag in fragments {
             switch frag {
             case let .openTag(html):
-                lines.append("\(indent)html += '\(html)';")
+                lines.append("\(indent)html += '\(jsLiteralEscape(html))';")
             case let .closeTag(tag):
                 lines.append("\(indent)html += '</\(tag)>';")
             case let .selfClosing(html):
-                lines.append("\(indent)html += '\(html)';")
+                lines.append("\(indent)html += '\(jsLiteralEscape(html))';")
             case let .slotRef(expr):
                 // Use template literal for expressions
                 lines.append("\(indent)html += `\(expr)`;")
@@ -428,6 +431,15 @@ public class WebComponentRenderer: MosaicRenderer {
     private func bareValue(_ v: ResolvedValue) -> String {
         if case let .string(s) = v { return s }
         return ""
+    }
+
+    /// HTML-escape a string for use in an HTML attribute value (inside double-quotes).
+    private func htmlAttrEscape(_ s: String) -> String {
+        return s
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
     }
 
     // -------------------------------------------------------------------------
