@@ -634,3 +634,131 @@ describe("error handling", function()
         end)
     end)
 end)
+
+-- =========================================================================
+-- Version-aware tokenization
+-- =========================================================================
+--
+-- The `version` parameter selects a versioned grammar file under
+-- code/grammars/ecmascript/. When no version is passed the unified
+-- javascript.tokens file is used (backward-compatible default).
+
+describe("version-aware tokenization", function()
+
+    -- -----------------------------------------------------------------------
+    -- Backward compatibility: no-version call still works
+    -- -----------------------------------------------------------------------
+
+    it("tokenize with no version (backward compatible)", function()
+        local tokens = js_lexer.tokenize("const x = 1;")
+        assert.is_table(tokens)
+        assert.are.equal("CONST", tokens[1].type)
+    end)
+
+    it("tokenize with empty string version (backward compatible)", function()
+        local tokens = js_lexer.tokenize("const x = 1;", "")
+        assert.is_table(tokens)
+        assert.are.equal("CONST", tokens[1].type)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Each recognized ES version loads its versioned grammar
+    -- -----------------------------------------------------------------------
+
+    it("tokenizes with es1 version", function()
+        local tokens = js_lexer.tokenize("var x = 1;", "es1")
+        assert.is_table(tokens)
+        assert.are.equal("VAR", tokens[1].type)
+    end)
+
+    it("tokenizes with es3 version", function()
+        local tokens = js_lexer.tokenize("var x = 1;", "es3")
+        assert.is_table(tokens)
+        assert.are.equal("VAR", tokens[1].type)
+    end)
+
+    it("tokenizes with es5 version", function()
+        local tokens = js_lexer.tokenize("var x = 1;", "es5")
+        assert.is_table(tokens)
+        assert.are.equal("VAR", tokens[1].type)
+    end)
+
+    it("tokenizes with es2015 version", function()
+        local tokens = js_lexer.tokenize("let x = 1;", "es2015")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenizes with es2016 version", function()
+        local tokens = js_lexer.tokenize("let x = 1;", "es2016")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenizes with es2020 version", function()
+        local tokens = js_lexer.tokenize("let x = 1;", "es2020")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenizes with es2025 version", function()
+        local tokens = js_lexer.tokenize("let x = 1;", "es2025")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- create_lexer with version
+    -- -----------------------------------------------------------------------
+
+    it("create_lexer with es2015 returns a usable GrammarLexer", function()
+        local gl = js_lexer.create_lexer("const x = 1;", "es2015")
+        assert.is_not_nil(gl)
+        assert.is_function(gl.tokenize)
+    end)
+
+    it("create_lexer with no version returns a usable GrammarLexer", function()
+        local gl = js_lexer.create_lexer("const x = 1;")
+        assert.is_not_nil(gl)
+        assert.is_function(gl.tokenize)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- get_grammar with version
+    -- -----------------------------------------------------------------------
+
+    it("get_grammar with es1 returns a grammar object", function()
+        local g = js_lexer.get_grammar("es1")
+        assert.is_not_nil(g)
+        assert.is_table(g.definitions)
+    end)
+
+    it("get_grammar caches results across calls (same object returned)", function()
+        local g1 = js_lexer.get_grammar("es5")
+        local g2 = js_lexer.get_grammar("es5")
+        assert.are.equal(g1, g2)
+    end)
+
+    it("different versions return different grammars", function()
+        local g_generic = js_lexer.get_grammar()
+        local g_es1     = js_lexer.get_grammar("es1")
+        assert.is_not_nil(g_generic)
+        assert.is_not_nil(g_es1)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Error on unknown version
+    -- -----------------------------------------------------------------------
+
+    it("raises an error for unknown version string", function()
+        assert.has_error(function()
+            js_lexer.tokenize("var x = 1;", "es99")
+        end)
+    end)
+
+    it("raises an error for typescript version string", function()
+        assert.has_error(function()
+            js_lexer.tokenize("var x = 1;", "ts5.0")
+        end)
+    end)
+end)

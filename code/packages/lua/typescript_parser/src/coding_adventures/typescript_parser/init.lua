@@ -125,7 +125,24 @@ local typescript_lexer  = require("coding_adventures.typescript_lexer")
 local parser_pkg        = require("coding_adventures.parser")
 
 local M = {}
-M.VERSION = "0.1.0"
+M.VERSION = "0.2.0"
+
+-- =========================================================================
+-- Valid TypeScript versions
+-- =========================================================================
+--
+-- Each version maps to a grammar file under code/grammars/typescript/.
+-- The parser grammar (.grammar) and the token grammar (.tokens) are paired.
+--
+-- When version is nil or "" → loads code/grammars/typescript.grammar (generic)
+-- When version is "ts5.0"   → loads code/grammars/typescript/ts5.0.grammar
+--
+-- Recognized versions: ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8
+
+local VALID_TS_VERSIONS = {
+    ["ts1.0"] = true, ["ts2.0"] = true, ["ts3.0"] = true,
+    ["ts4.0"] = true, ["ts5.0"] = true, ["ts5.8"] = true,
+}
 
 -- =========================================================================
 -- Path helpers
@@ -197,22 +214,47 @@ end
 -- to `parse()` or `create_parser()` reuse the cached grammar, avoiding
 -- repeated file I/O and repeated rule compilation.
 
-local _grammar_cache = nil
+-- Cache keyed by version string (or "" for generic).
+local _grammar_cache = {}
 
---- Load and parse `typescript.grammar`, with caching.
--- On the first call, opens the file, parses it with
--- `grammar_tools.parse_parser_grammar`, and caches the result.
--- @return ParserGrammar  The parsed TypeScript parser grammar.
--- @error                 Raises an error if the file cannot be opened or parsed.
-local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+--- Resolve the path to the correct .grammar file for a given version.
+--
+-- @param version string|nil  TypeScript version tag, or nil/"" for generic.
+-- @return string             Absolute path to the parser grammar file.
+local function resolve_grammar_path(version)
+    local script_dir = get_script_dir()
+    local repo_root  = up(script_dir, 6)
+
+    if not version or version == "" then
+        return repo_root .. "/grammars/typescript.grammar"
     end
 
-    -- Navigate: 6 levels up from this file's directory → code/ root.
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/typescript.grammar"
+    if not VALID_TS_VERSIONS[version] then
+        error(
+            "typescript_parser: unknown TypeScript version '" .. version .. "'. " ..
+            "Valid values are: ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8, or nil/\"\" for generic."
+        )
+    end
+
+    return repo_root .. "/grammars/typescript/" .. version .. ".grammar"
+end
+
+--- Load and parse the grammar for a specific version, with per-version caching.
+--
+-- On the first call for a given version, opens the file, parses it with
+-- `grammar_tools.parse_parser_grammar`, and stores the result in _grammar_cache.
+-- On subsequent calls for the same version, returns the cached object immediately.
+--
+-- @param version string|nil  TypeScript version tag (see resolve_grammar_path).
+-- @return ParserGrammar      The parsed TypeScript parser grammar.
+-- @error                     Raises an error if the file cannot be opened or parsed.
+local function get_grammar(version)
+    local key = version or ""
+    if _grammar_cache[key] then
+        return _grammar_cache[key]
+    end
+
+    local grammar_path = resolve_grammar_path(version)
 
     local f, open_err = io.open(grammar_path, "r")
     if not f then
@@ -227,12 +269,12 @@ local function get_grammar()
     local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
     if not grammar then
         error(
-            "typescript_parser: failed to parse typescript.grammar: " ..
+            "typescript_parser: failed to parse grammar file: " ..
             (parse_err or "unknown error")
         )
     end
 
-    _grammar_cache = grammar
+    _grammar_cache[key] = grammar
     return grammar
 end
 
@@ -258,19 +300,24 @@ end
 --   - Parenthesized expressions: `(a + b) * c`
 --   - Expression statements
 --
--- @param source string  The TypeScript text to parse.
--- @return ASTNode       Root of the AST.
--- @error                Raises an error on lexer or parser failure.
+-- @param source  string       The TypeScript text to parse.
+-- @param version string|nil   TypeScript version: "ts1.0", "ts2.0", "ts3.0",
+--                             "ts4.0", "ts5.0", "ts5.8", or nil/"" for generic.
+-- @return ASTNode             Root of the AST.
+-- @error                      Raises an error on lexer or parser failure.
 --
--- Example:
+-- Example (generic):
 --
 --   local typescript_parser = require("coding_adventures.typescript_parser")
 --   local ast = typescript_parser.parse("let x = 5;")
 --   -- ast.rule_name  → "program"
---   -- contains statement → var_declaration
-function M.parse(source)
-    local tokens = typescript_lexer.tokenize(source)
-    local grammar = get_grammar()
+--
+-- Example (versioned):
+--
+--   local ast = typescript_parser.parse("let x: number = 5;", "ts5.0")
+function M.parse(source, version)
+    local tokens = typescript_lexer.tokenize(source, version)
+    local grammar = get_grammar(version)
     local gp = parser_pkg.GrammarParser.new(tokens, grammar)
     local ast, err = gp:parse()
     if not ast then
@@ -284,16 +331,17 @@ end
 -- Use this when you want to control parsing yourself — for example, to
 -- use trace mode or to inspect the token stream before parsing.
 --
--- @param source string   The TypeScript text to tokenize.
--- @return GrammarParser  An initialized parser, ready to call `:parse()`.
+-- @param source  string       The TypeScript text to tokenize.
+-- @param version string|nil   TypeScript version tag (see parse for valid values).
+-- @return GrammarParser       An initialized parser, ready to call `:parse()`.
 --
 -- Example:
 --
---   local p = typescript_parser.create_parser("let x = 1;")
+--   local p = typescript_parser.create_parser("let x = 1;", "ts5.8")
 --   local ast, err = p:parse()
-function M.create_parser(source)
-    local tokens = typescript_lexer.tokenize(source)
-    local grammar = get_grammar()
+function M.create_parser(source, version)
+    local tokens = typescript_lexer.tokenize(source, version)
+    local grammar = get_grammar(version)
     return parser_pkg.GrammarParser.new(tokens, grammar)
 end
 
@@ -302,9 +350,10 @@ end
 -- Exposed so callers can inspect the grammar rules directly — for example,
 -- to enumerate rule names or check the grammar structure.
 --
--- @return ParserGrammar  The parsed TypeScript parser grammar.
-function M.get_grammar()
-    return get_grammar()
+-- @param version string|nil  TypeScript version tag (see parse for valid values).
+-- @return ParserGrammar      The parsed TypeScript parser grammar.
+function M.get_grammar(version)
+    return get_grammar(version)
 end
 
 return M

@@ -618,3 +618,129 @@ describe("error handling", function()
         end)
     end)
 end)
+
+-- =========================================================================
+-- Version-aware tokenization
+-- =========================================================================
+--
+-- The `version` parameter selects a versioned grammar file under
+-- code/grammars/typescript/. Each file captures language additions for
+-- that TypeScript release. When no version is passed the unified
+-- typescript.tokens file is used (backward-compatible default).
+
+describe("version-aware tokenization", function()
+
+    -- -----------------------------------------------------------------------
+    -- Backward compatibility: no-version call still works
+    -- -----------------------------------------------------------------------
+
+    it("tokenize with no version (backward compatible)", function()
+        local tokens = ts_lexer.tokenize("let x = 1;")
+        assert.is_table(tokens)
+        assert.is_true(#tokens > 0)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenize with empty string version (backward compatible)", function()
+        local tokens = ts_lexer.tokenize("let x = 1;", "")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Each recognized version loads its versioned grammar
+    -- -----------------------------------------------------------------------
+
+    it("tokenizes with ts1.0 version", function()
+        local tokens = ts_lexer.tokenize("var x = 1;", "ts1.0")
+        assert.is_table(tokens)
+        assert.are.equal("VAR", tokens[1].type)
+    end)
+
+    it("tokenizes with ts2.0 version", function()
+        local tokens = ts_lexer.tokenize("let x = 1;", "ts2.0")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenizes with ts3.0 version", function()
+        local tokens = ts_lexer.tokenize("const x = 1;", "ts3.0")
+        assert.is_table(tokens)
+        assert.are.equal("CONST", tokens[1].type)
+    end)
+
+    it("tokenizes with ts4.0 version", function()
+        local tokens = ts_lexer.tokenize("let x = 1;", "ts4.0")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenizes with ts5.0 version", function()
+        local tokens = ts_lexer.tokenize("let x = 1;", "ts5.0")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    it("tokenizes with ts5.8 version", function()
+        local tokens = ts_lexer.tokenize("let x = 1;", "ts5.8")
+        assert.is_table(tokens)
+        assert.are.equal("LET", tokens[1].type)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- create_lexer with version
+    -- -----------------------------------------------------------------------
+
+    it("create_lexer with ts5.0 returns a usable GrammarLexer", function()
+        local gl = ts_lexer.create_lexer("let x = 1;", "ts5.0")
+        assert.is_not_nil(gl)
+        assert.is_function(gl.tokenize)
+    end)
+
+    it("create_lexer with no version returns a usable GrammarLexer", function()
+        local gl = ts_lexer.create_lexer("interface Foo {}")
+        assert.is_not_nil(gl)
+        assert.is_function(gl.tokenize)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- get_grammar with version
+    -- -----------------------------------------------------------------------
+
+    it("get_grammar with ts5.8 returns a grammar object", function()
+        local g = ts_lexer.get_grammar("ts5.8")
+        assert.is_not_nil(g)
+        assert.is_table(g.definitions)
+    end)
+
+    it("get_grammar caches results across calls (same object returned)", function()
+        local g1 = ts_lexer.get_grammar("ts4.0")
+        local g2 = ts_lexer.get_grammar("ts4.0")
+        assert.are.equal(g1, g2)
+    end)
+
+    it("different versions return different grammars", function()
+        -- They may be the same grammar if the files happen to be identical,
+        -- but they should both be valid grammar objects.
+        local g_generic = ts_lexer.get_grammar()
+        local g_ts58    = ts_lexer.get_grammar("ts5.8")
+        assert.is_not_nil(g_generic)
+        assert.is_not_nil(g_ts58)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Error on unknown version
+    -- -----------------------------------------------------------------------
+
+    it("raises an error for unknown version string", function()
+        assert.has_error(function()
+            ts_lexer.tokenize("let x = 1;", "ts99.0")
+        end)
+    end)
+
+    it("raises an error for arbitrary bad version string", function()
+        assert.has_error(function()
+            ts_lexer.tokenize("let x = 1;", "javascript")
+        end)
+    end)
+end)

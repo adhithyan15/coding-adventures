@@ -1,5 +1,27 @@
 # Changelog — coding-adventures-javascript-parser
 
+## [0.2.0] — 2026-04-05
+
+### Added
+
+- `version` parameter added to `parse(source, version)`,
+  `create_parser(source, version)`, and `get_grammar(version)`.
+- Version routing: when `version` is `"es1"`, `"es3"`, `"es5"`, or
+  `"es2015"` through `"es2025"`, the corresponding versioned grammar files
+  are loaded from `code/grammars/ecmascript/<version>.grammar` and the
+  lexer uses `code/grammars/ecmascript/<version>.tokens`.
+- Generic fallback: passing `nil` or `""` loads the unified grammars as
+  before (backward compatible).
+- Per-version parser grammar cache keyed by version string.
+- Validation: unknown version strings raise a descriptive error immediately.
+- Extended test suite: new `describe("version-aware parsing")` block
+  covering ES1/ES3/ES5/ES2015/ES2025 versions, `create_parser`, `get_grammar`,
+  and error cases for invalid versions.
+
+### Changed
+
+- `M.VERSION` bumped from `"0.1.0"` to `"0.2.0"`.
+
 ## [0.1.0] - 2026-03-29
 
 ### Added
