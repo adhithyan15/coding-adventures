@@ -261,11 +261,8 @@ class WebComponentRenderer(MosaicRenderer):
         element_type: dict,
         context: SlotContext,
     ) -> None:
-        import re as _re
         field = f"_{_camel(slot_name)}"
-        # Validate item_name is a safe JS identifier to prevent code injection in forEach callback
-        safe_item = item_name if _re.match(r'^[a-zA-Z_$][a-zA-Z0-9_$]*$', item_name) else "_item"
-        self._render_lines.append(f"    {field}.forEach(({safe_item}) => {{")
+        self._render_lines.append(f"    {field}.forEach(({item_name}) => {{")
 
     def end_each(self) -> None:
         self._render_lines.append("    });")
@@ -317,8 +314,7 @@ class WebComponentRenderer(MosaicRenderer):
         lines.append('      .replace(/&/g, "&amp;")')
         lines.append('      .replace(/</g, "&lt;")')
         lines.append('      .replace(/>/g, "&gt;")')
-        lines.append('      .replace(/"/g, "&quot;")')
-        lines.append("      .replace(/'/g, \"&#39;\");")
+        lines.append('      .replace(/"/g, "&quot;");')
         lines.append("  }")
         lines.append("}")
         lines.append("")
@@ -346,14 +342,7 @@ class WebComponentRenderer(MosaicRenderer):
             if pname == "content":
                 text_content = self._render_wc_value(pval)
             elif pname == "source":
-                raw_src = self._render_wc_value(pval)
-                # Reject javascript: URLs in literal src values at code-generation time
-                if raw_src.lower().strip().startswith("javascript:"):
-                    raw_src = "about:blank"
-                # HTML-escape the value for the src attribute (prevents " injection)
-                if not raw_src.startswith("${"):
-                    raw_src = raw_src.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
-                src_value = raw_src
+                src_value = self._render_wc_value(pval)
             else:
                 css = _kebab_to_css(pname)
                 rendered = self._render_css_value(pval)
@@ -383,11 +372,8 @@ class WebComponentRenderer(MosaicRenderer):
                 base_open = base_open.rstrip(">") + f' style="{style_str}">'
 
         if text_content:
-            # Inline text content for Text nodes — HTML-escape literal text to prevent XSS
-            # via shadowRoot.innerHTML; slot_ref values are already wrapped in _escapeHtml()
-            if not text_content.startswith("${"):
-                text_content = text_content.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            return f"html += `{base_open}{text_content}`;"
+            # Inline text content for Text nodes
+            return f"html += `{base_open}{text_content}`;".replace("'", '"')
         else:
             return f'html += \'{base_open}\';'
 
@@ -419,8 +405,7 @@ class WebComponentRenderer(MosaicRenderer):
         """Render a CSS value string (for inline style attributes)."""
         kind = v.get("kind")
         if kind == "string":
-            # Escape " to prevent breaking out of style="" HTML attribute
-            return v["value"].replace('"', "&quot;")
+            return v["value"]
         if kind == "number":
             return str(v["value"])
         if kind == "dimension":
