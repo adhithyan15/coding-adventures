@@ -31,7 +31,6 @@
 //
 // ============================================================================
 
-import Foundation
 import MosaicVm
 import MosaicAnalyzer
 
@@ -212,12 +211,9 @@ public class WebComponentRenderer: MosaicRenderer {
             case "content":
                 textContent = valueToHtmlExpr(p.value)
             case "source":
-                let rawSrc = bareValue(p.value)
-                let lower = rawSrc.trimmingCharacters(in: .whitespaces).lowercased()
-                let safeSrc = lower.hasPrefix("javascript:") ? "about:blank" : rawSrc
-                extraAttrs.append("src=\"\(htmlAttrEscape(safeSrc))\"")
+                extraAttrs.append("src=\"\(bareValue(p.value))\"")
             case "a11y-label":
-                extraAttrs.append("aria-label=\"\(htmlAttrEscape(bareValue(p.value)))\"")
+                extraAttrs.append("aria-label=\"\(bareValue(p.value))\"")
             case "a11y-hidden":
                 extraAttrs.append("aria-hidden=\"true\"")
             default:
@@ -264,14 +260,7 @@ public class WebComponentRenderer: MosaicRenderer {
     }
 
     public func beginEach(slotName: String, itemName: String, elementType: MosaicType, ctx: SlotContext) {
-        // Validate itemName is a safe JS identifier to prevent code injection in forEach callback
-        let safeItem: String
-        if let _ = itemName.range(of: "^[a-zA-Z_$][a-zA-Z0-9_$]*$", options: .regularExpression) {
-            safeItem = itemName
-        } else {
-            safeItem = "_item"
-        }
-        fragments.append(.eachOpen(field: toFieldName(slotName), itemName: safeItem))
+        fragments.append(.eachOpen(field: toFieldName(slotName), itemName: itemName))
     }
 
     public func endEach() {
@@ -344,8 +333,7 @@ public class WebComponentRenderer: MosaicRenderer {
         lines.append("  }")
         lines.append("")
         lines.append("  private _escapeHtml(s: string): string {")
-        lines.append("    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')")
-        lines.append("             .replace(/\"/g,'&quot;').replace(/'/g,'&#39;');")
+        lines.append("    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');")
         lines.append("  }")
         lines.append("}")
         lines.append("")
@@ -364,11 +352,11 @@ public class WebComponentRenderer: MosaicRenderer {
         for frag in fragments {
             switch frag {
             case let .openTag(html):
-                lines.append("\(indent)html += '\(jsLiteralEscape(html))';")
+                lines.append("\(indent)html += '\(html)';")
             case let .closeTag(tag):
                 lines.append("\(indent)html += '</\(tag)>';")
             case let .selfClosing(html):
-                lines.append("\(indent)html += '\(jsLiteralEscape(html))';")
+                lines.append("\(indent)html += '\(html)';")
             case let .slotRef(expr):
                 // Use template literal for expressions
                 lines.append("\(indent)html += `\(expr)`;")
@@ -395,19 +383,9 @@ public class WebComponentRenderer: MosaicRenderer {
     // Value helpers
     // -------------------------------------------------------------------------
 
-    /// Escape a Mosaic literal string so it is safe inside a JS single-quoted string
-    /// and inside a template literal `${}` expression.  We escape: \ ' ` $
-    private func jsLiteralEscape(_ s: String) -> String {
-        return s
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "'", with: "\\'")
-            .replacingOccurrences(of: "`", with: "\\`")
-            .replacingOccurrences(of: "$", with: "\\$")
-    }
-
     private func valueToHtmlExpr(_ v: ResolvedValue) -> String {
         switch v {
-        case let .string(s):    return "${this._escapeHtml('\(jsLiteralEscape(s))')}"
+        case let .string(s):    return "${this._escapeHtml('\(s)')}"
         case let .slotRef(name, slotType, _):
             switch slotType {
             case .primitive("text"), .primitive("image"), .primitive("color"):
@@ -427,7 +405,7 @@ public class WebComponentRenderer: MosaicRenderer {
 
     private func valueToHtmlStyleValue(_ v: ResolvedValue) -> String {
         switch v {
-        case let .string(s):    return s.replacingOccurrences(of: "\"", with: "&quot;")
+        case let .string(s):    return s
         case let .number(n):    return "\(n)"
         case let .dimension(d): return d.cssString
         case let .color(c):     return c.cssString
@@ -439,15 +417,6 @@ public class WebComponentRenderer: MosaicRenderer {
     private func bareValue(_ v: ResolvedValue) -> String {
         if case let .string(s) = v { return s }
         return ""
-    }
-
-    /// HTML-escape a string for use in an HTML attribute value (inside double-quotes).
-    private func htmlAttrEscape(_ s: String) -> String {
-        return s
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
     }
 
     // -------------------------------------------------------------------------
