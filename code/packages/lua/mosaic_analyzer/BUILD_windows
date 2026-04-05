@@ -1,2 +1,4 @@
-REM prereqs: ../mosaic_lexer ../mosaic_parser
+luarocks show coding-adventures-mosaic-lexer 1>nul 2>nul || (cd ..\mosaic_lexer && luarocks make --local coding-adventures-mosaic-lexer-0.1.0-1.rockspec)
+luarocks show coding-adventures-mosaic-parser 1>nul 2>nul || (cd ..\mosaic_parser && luarocks make --local coding-adventures-mosaic-parser-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-mosaic-analyzer-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_
