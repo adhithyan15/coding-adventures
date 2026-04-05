@@ -410,10 +410,18 @@ func resolvedValueToJSX(p mosaicvm.ResolvedProperty) string {
 }
 
 // resolvedValueToJSXExpr returns a JSX expression for a value (for use in attributes).
+// For string literals used as src, we reject javascript: URLs at code-generation time
+// to prevent the generated component from containing XSS vectors.
 func resolvedValueToJSXExpr(v mosaicvm.ResolvedValue) string {
 	switch v.Kind {
 	case "string":
-		return fmt.Sprintf("'%s'", v.StrValue)
+		s := v.StrValue
+		// Reject javascript: URLs in src attributes at compile time
+		lower := strings.ToLower(strings.TrimSpace(s))
+		if strings.HasPrefix(lower, "javascript:") {
+			return "'about:blank'"
+		}
+		return fmt.Sprintf("'%s'", s)
 	case "slot_ref":
 		return toCamelCase(v.SlotName)
 	case "number":

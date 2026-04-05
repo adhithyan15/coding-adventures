@@ -314,7 +314,8 @@ class WebComponentRenderer(MosaicRenderer):
         lines.append('      .replace(/&/g, "&amp;")')
         lines.append('      .replace(/</g, "&lt;")')
         lines.append('      .replace(/>/g, "&gt;")')
-        lines.append('      .replace(/"/g, "&quot;");')
+        lines.append('      .replace(/"/g, "&quot;")')
+        lines.append("      .replace(/'/g, \"&#39;\");")
         lines.append("  }")
         lines.append("}")
         lines.append("")
@@ -342,7 +343,11 @@ class WebComponentRenderer(MosaicRenderer):
             if pname == "content":
                 text_content = self._render_wc_value(pval)
             elif pname == "source":
-                src_value = self._render_wc_value(pval)
+                raw_src = self._render_wc_value(pval)
+                # Reject javascript: URLs in literal src values at code-generation time
+                if raw_src.lower().strip().startswith("javascript:"):
+                    raw_src = "about:blank"
+                src_value = raw_src
             else:
                 css = _kebab_to_css(pname)
                 rendered = self._render_css_value(pval)
@@ -372,8 +377,8 @@ class WebComponentRenderer(MosaicRenderer):
                 base_open = base_open.rstrip(">") + f' style="{style_str}">'
 
         if text_content:
-            # Inline text content for Text nodes
-            return f"html += `{base_open}{text_content}`;".replace("'", '"')
+            # Inline text content for Text nodes — use template literal, no quote munging needed
+            return f"html += `{base_open}{text_content}`;"
         else:
             return f'html += \'{base_open}\';'
 

@@ -632,12 +632,10 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
     render_lines =
       Enum.map(raw_render_lines, fn line ->
         line
-        |> String.replace(~r/__IMG_SRC_(\w+)__/, fn match ->
-          slot_name = match |> String.replace("__IMG_SRC_", "") |> String.replace("__", "")
-          "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
+        |> String.replace(~r/__IMG_SRC_(\w+)__/, fn _full, slot_name ->
+          "\" + this._validateUrl(this.#{backing_field(slot_name)}) + \""
         end)
-        |> String.replace(~r/__ARIA_(\w+)__/, fn match ->
-          slot_name = match |> String.replace("__ARIA_", "") |> String.replace("__", "")
+        |> String.replace(~r/__ARIA_(\w+)__/, fn _full, slot_name ->
           "\" + this._escapeHtml(this.#{backing_field(slot_name)}) + \""
         end)
       end)
@@ -859,7 +857,11 @@ defmodule CodingAdventures.MosaicEmitWebcomponent do
   end
 
   defp escape_attr(value) do
-    String.replace(value, "\"", "&quot;")
+    value
+    |> String.replace("&", "&amp;")
+    |> String.replace("<", "&lt;")
+    |> String.replace(">", "&gt;")
+    |> String.replace("\"", "&quot;")
   end
 
   defp escape_html_literal(s) do
