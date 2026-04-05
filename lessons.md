@@ -20,6 +20,15 @@ This redirects Gradle's output to `gradle-build/` instead of `build/`. Also add 
 - [ ] `layout.buildDirectory = file("gradle-build")` in build.gradle.kts
 - [ ] BUILD file exists for the monorepo build tool
 - [ ] `gradle-build/` in .gitignore
+- [ ] Do NOT use `java { toolchain { languageVersion.set(...) } }` — let Gradle use the running JDK
+
+---
+
+### 2026-04-04: Java toolchain block causes CI failure when JDK is not pre-installed
+
+Using `java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }` in `build.gradle.kts` causes Gradle to search for a JDK 21 installation matching that exact version. If the CI runner doesn't have JDK 21 pre-installed and toolchain auto-provisioning isn't configured, the build fails with "Cannot find a Java installation on your machine."
+
+**Solution:** Do NOT specify an explicit Java toolchain version. Let Gradle use whatever JDK is on the PATH (set up by `actions/setup-java` in CI). This matches the lesson from the hello-world programs.
 
 ---
 
