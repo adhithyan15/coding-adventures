@@ -4,6 +4,14 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-05: Changing lexer token names breaks downstream parsers
+
+When updating the python-lexer to use versioned grammar files (python3.12.tokens), the token name for integers changed from `NUMBER` to `INT`. This broke the python-parser, which still loaded the old `python.grammar` containing `factor = NUMBER | ...`. The parser received `INT` tokens but had no grammar rule matching `INT`.
+
+**Rule:** When changing token names in a lexer grammar, always check all downstream parsers that consume those tokens. Either update the parser grammar simultaneously, or make the grammar accept both old and new token names during the transition period (`factor = INT | FLOAT | NUMBER | ...`).
+
+---
+
 ### 2026-04-05: Lua regex does not support \v and \f escapes in character classes
 
 The ECMAScript .tokens grammar files use `/[ \t\r\n\v\f]+/` for whitespace skip patterns. In Lua's regex engine, `\v` and `\f` are not recognized escape sequences inside character classes. They are interpreted as literal `v` and `f`, causing the whitespace skip to match the letters `v` and `f` in source code, silently consuming characters from keywords like `var` and `function`.
