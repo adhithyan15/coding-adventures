@@ -177,4 +177,7 @@ members = [
   "image-codec-bmp",
   "image-codec-ppm",
   "image-codec-qoi",
+  "paint-instructions",
+  "paint-codec-png",
+  "paint-metal",
 ]

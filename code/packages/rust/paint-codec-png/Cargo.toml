@@ -1,0 +1,9 @@
+[package]
+name = "paint-codec-png"
+version = "0.1.0"
+edition = "2021"
+description = "PNG image codec for paint-instructions: PixelContainer → PNG bytes (and back when inflate is available)"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+png = { path = "../png" }
