@@ -163,10 +163,24 @@ type GenericVM struct {
 	Output    []string
 	CallStack []map[string]interface{}
 
+	// TypedStack holds typed values for statically-typed languages like WASM.
+	// Each value carries a type tag (e.g., i32=0x7F) and a payload.
+	// WASM handlers use PushTyped/PopTyped/PeekTyped instead of Push/Pop/Peek.
+	TypedStack []TypedVMValue
+
+	// ExecutionContext is an opaque context object passed to ContextOpcodeHandlers
+	// during ExecuteWithContext.  For WASM, this is a *WasmExecutionContext.
+	ExecutionContext interface{}
+
 	handlers          map[OpCode]OpcodeHandler
+	contextHandlers   map[OpCode]ContextOpcodeHandler
 	builtins          map[string]BuiltinFunction
 	maxRecursionDepth *int
 	frozen            bool
+
+	// Instruction hooks — called before/after each instruction dispatch.
+	preInstructionHook  func(vm *GenericVM, instr *Instruction, code CodeObject)
+	postInstructionHook func(vm *GenericVM, instr Instruction, code CodeObject)
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -187,15 +201,17 @@ func NewGenericVM() *GenericVM {
 	result, _ := StartNew[*GenericVM]("virtual-machine.NewGenericVM", nil,
 		func(op *Operation[*GenericVM], rf *ResultFactory[*GenericVM]) *OperationResult[*GenericVM] {
 			vm := &GenericVM{
-				Stack:     []interface{}{},
-				Variables: make(map[string]interface{}),
-				Locals:    []interface{}{},
-				PC:        0,
-				Halted:    false,
-				Output:    []string{},
-				CallStack: []map[string]interface{}{},
-				handlers:  make(map[OpCode]OpcodeHandler),
-				builtins:  make(map[string]BuiltinFunction),
+				Stack:           []interface{}{},
+				Variables:       make(map[string]interface{}),
+				Locals:          []interface{}{},
+				PC:              0,
+				Halted:          false,
+				Output:          []string{},
+				CallStack:       []map[string]interface{}{},
+				TypedStack:      []TypedVMValue{},
+				handlers:        make(map[OpCode]OpcodeHandler),
+				contextHandlers: make(map[OpCode]ContextOpcodeHandler),
+				builtins:        make(map[string]BuiltinFunction),
 			}
 			return rf.Generate(true, false, vm)
 		}).GetResult()
@@ -618,6 +634,8 @@ func (vm *GenericVM) Reset() {
 			vm.Halted = false
 			vm.Output = []string{}
 			vm.CallStack = []map[string]interface{}{}
+			vm.TypedStack = []TypedVMValue{}
+			vm.ExecutionContext = nil
 			return rf.Generate(true, false, struct{}{})
 		}).GetResult()
 }
