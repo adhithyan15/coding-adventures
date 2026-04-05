@@ -122,6 +122,7 @@ members = [
     "lattice-transpiler",
     "md5",
     "sha1",
+    "sha512",
     "uuid",
     "wasm-leb128",
     "wasm-module-parser",
