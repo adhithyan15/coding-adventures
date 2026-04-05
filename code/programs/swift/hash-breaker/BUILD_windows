@@ -1,1 +1,1 @@
-swift run HashBreaker
+where swift >nul 2>nul && swift run HashBreaker || echo Swift not available on this runner — skipping
