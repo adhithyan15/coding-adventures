@@ -1,2 +1,3 @@
-python -m pip install -e ../directed-graph -e ../grammar-tools -e ../state-machine -e ../lexer -e ../mosaic-lexer -e ../parser -e ../mosaic-parser -e ../mosaic-analyzer -e .[dev] --quiet
-python -m pytest tests/ -v
+uv venv --quiet --clear
+uv pip install -e ../directed-graph -e ../grammar-tools -e ../state-machine -e ../lexer -e ../mosaic-lexer -e ../parser -e ../mosaic-parser -e ../mosaic-analyzer -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v
