@@ -1,1 +1,1 @@
-where swift >nul 2>nul && swift run HashBreaker || echo Swift not available on this runner — skipping
+if not exist "..\\..\\..\\packages\\swift\\md5" (echo Swift MD5 package not yet available - skipping) else (where swift >nul 2>nul && swift run HashBreaker || echo Swift not available on this runner - skipping)

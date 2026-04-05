@@ -178,7 +178,7 @@ def attack_2_length_extension() -> None:
     original_hash = md5(original_data)
     original_hex = original_hash.hex()
 
-    print(f"Secret (unknown to attacker): {secret!r}")
+    print("Secret (unknown to attacker): <redacted 16-byte demo secret>")
     print(f"Message:                      {message!r}")
     print(f"MAC = md5(secret || message): {original_hex}")
     print(f"Length of (secret || message): {len(original_data)} bytes")
