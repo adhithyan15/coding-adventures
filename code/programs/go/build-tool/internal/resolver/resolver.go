@@ -1070,6 +1070,11 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(cabalName, pkg.Name, pkg.Path, pkg.Language)
 
+		case "haskell":
+			// Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(cabalName, pkg.Name, pkg.Path)
+
 		case "java", "kotlin":
 			// Java and Kotlin packages use Gradle composite builds. Dependencies
 			// are referenced by directory name in settings.gradle.kts via

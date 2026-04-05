@@ -1056,6 +1056,13 @@ function buildKnownNamesForLanguage(
         setKnown(dirName.toLowerCase(), pkg.name, pkg.path, pkg.language);
         break;
       }
+
+      case "haskell": {
+        // Haskell Cabal package names use hyphens.
+        const cabalName = `coding-adventures-${dirName}`.toLowerCase();
+        known.set(cabalName, pkg.name);
+        break;
+      }
     }
   }
 
