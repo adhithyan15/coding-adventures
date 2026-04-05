@@ -49,7 +49,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
   # Constants
   # =========================================================================
 
-  @valid_languages ~w(python go ruby typescript rust elixir perl)
+  @valid_languages ~w(python go ruby typescript rust elixir perl lua swift haskell)
 
   @kebab_case_re ~r/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/
 
@@ -194,6 +194,9 @@ defmodule CodingAdventures.ScaffoldGenerator do
         "rust" -> read_rust_deps(pkg_dir)
         "elixir" -> read_elixir_deps(pkg_dir)
         "perl" -> read_perl_deps(pkg_dir)
+        "lua" -> {:ok, []}
+        "swift" -> {:ok, []}
+        "haskell" -> read_haskell_deps(pkg_dir)
         other -> {:error, "unknown language: #{other}"}
       end
 
@@ -392,6 +395,36 @@ defmodule CodingAdventures.ScaffoldGenerator do
 
       {:error, _} ->
         {:ok, []}
+    end
+  end
+
+  defp read_haskell_deps(pkg_dir) do
+    case File.ls(pkg_dir) do
+      {:ok, files} ->
+        case Enum.find(files, &String.ends_with?(&1, ".cabal")) do
+          nil -> {:ok, []}
+          cabal_file ->
+            cabal_path = Path.join(pkg_dir, cabal_file)
+            case File.read(cabal_path) do
+              {:ok, content} ->
+                deps =
+                  content
+                  |> String.split("\n")
+                  |> Enum.reject(&String.contains?(&1, "name:"))
+                  |> Enum.reject(&String.contains?(&1, "executable"))
+                  |> Enum.reject(&String.contains?(&1, "library"))
+                  |> Enum.flat_map(fn line ->
+                    case Regex.run(~r/coding-adventures-([a-zA-Z0-9-]+)/, line) do
+                      [_, name] -> [name]
+                      _ -> []
+                    end
+                  end)
+                  |> Enum.uniq()
+                {:ok, deps}
+              {:error, _} -> {:ok, []}
+            end
+        end
+      {:error, _} -> {:ok, []}
     end
   end
 
@@ -756,6 +789,12 @@ defmodule CodingAdventures.ScaffoldGenerator do
 
       "perl" ->
         generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+
+      "lua" -> :ok
+      "swift" -> :ok
+
+      "haskell" ->
+        generate_haskell(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
     end
   end
 
@@ -1548,6 +1587,80 @@ defmodule CodingAdventures.ScaffoldGenerator do
     write_dedented(Path.join(t_dir, "00-load.t"), load_t)
     write_dedented(Path.join(t_dir, "01-basic.t"), basic_t)
     File.write!(Path.join(target_dir, "BUILD"), build_content)
+  end
+
+  # =========================================================================
+  # File generation -- Haskell
+  # =========================================================================
+
+  defp generate_haskell(target_dir, pkg_name, description, layer_ctx, _direct_deps, ordered_deps) do
+    pkg_name_haskell = "coding-adventures-#{pkg_name}"
+    module_name = to_camel_case(pkg_name)
+
+    cabal_dep_lines1 = Enum.map(ordered_deps, fn dep -> "                              , coding-adventures-#{dep}" end) |> Enum.join("\n")
+    cabal_dep_lines1_suffix = if cabal_dep_lines1 != "", do: "\n#{cabal_dep_lines1}", else: ""
+
+    cabal_dep_lines2 = Enum.map(ordered_deps, fn dep -> "                            , coding-adventures-#{dep}" end) |> Enum.join("\n")
+    cabal_dep_lines2_suffix = if cabal_dep_lines2 != "", do: "\n#{cabal_dep_lines2}", else: ""
+
+    cabal = """
+    cabal-version: 3.0
+    name:          #{pkg_name_haskell}
+    version:       0.1.0
+    synopsis:      #{description}
+    license:       MIT
+    author:        Adhithya Rajasekaran
+    maintainer:    Adhithya Rajasekaran
+    build-type:    Simple
+
+    library
+        exposed-modules:  #{module_name}
+        build-depends:    base >=4.14#{cabal_dep_lines1_suffix}
+        hs-source-dirs:   src
+        default-language: Haskell2010
+
+    test-suite #{pkg_name_haskell}-test
+        type:             exitcode-stdio-1.0
+        main-is:          Spec.hs
+        build-depends:    base >=4.14
+                        , #{pkg_name_haskell}#{cabal_dep_lines2_suffix}
+        hs-source-dirs:   test
+        default-language: Haskell2010
+    """
+
+    lib_hs = """
+    module #{module_name} where
+
+    -- | #{description}
+    -- #{layer_ctx}
+    someFunc :: IO ()
+    someFunc = putStrLn "someFunc"
+    """
+
+    spec_hs = """
+    import #{module_name}
+
+    main :: IO ()
+    main = do
+        putStrLn "Test suite not yet implemented."
+    """
+
+    cabal_project_lines = Enum.map(ordered_deps, fn dep -> "          ../#{dep}" end) |> Enum.join("\n")
+    cabal_project_lines_suffix = if cabal_project_lines != "", do: "\n#{cabal_project_lines}", else: ""
+    cabal_project = "packages: .#{cabal_project_lines_suffix}\n"
+
+    build = "cabal test all\n"
+
+    src_dir = Path.join(target_dir, "src")
+    test_dir = Path.join(target_dir, "test")
+    File.mkdir_p!(src_dir)
+    File.mkdir_p!(test_dir)
+
+    write_dedented(Path.join(target_dir, "#{pkg_name_haskell}.cabal"), cabal)
+    write_dedented(Path.join(target_dir, "cabal.project"), cabal_project)
+    write_dedented(Path.join(src_dir, "#{module_name}.hs"), lib_hs)
+    write_dedented(Path.join(test_dir, "Spec.hs"), spec_hs)
+    File.write!(Path.join(target_dir, "BUILD"), build)
   end
 
   # =========================================================================

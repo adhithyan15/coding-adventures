@@ -9,6 +9,7 @@ public enum Validator {
         "elixir",
         "lua",
         "perl",
+        "haskell",
     ]
 
     public static func validateCIFullBuildToolchains(repoRoot: String, packages: [BuildPackage]) -> String? {

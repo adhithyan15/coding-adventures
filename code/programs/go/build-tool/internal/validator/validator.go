@@ -47,6 +47,7 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"elixir":     true,
 	"lua":        true,
 	"perl":       true,
+	"haskell":    true,
 }
 
 // ValidateBuildFiles returns an error describing every package whose BUILD file

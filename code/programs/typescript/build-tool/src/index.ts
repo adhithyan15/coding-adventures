@@ -103,7 +103,7 @@ Options:
   --force            Rebuild everything regardless of cache
   --dry-run          Show what would build without actually building
   --jobs <n>         Maximum number of parallel build jobs
-  --language <lang>  Only build packages of this language (python|ruby|go|typescript|rust|elixir|all)
+  --language <lang>  Only build packages of this language (python|ruby|go|typescript|rust|elixir|haskell|all)
   --diff-base <ref>  Git ref to diff against (default: origin/main)
   --cache-file <f>   Path to build cache file (default: .build-cache.json)
   --emit-plan        Write a build plan JSON file and exit (no builds executed)

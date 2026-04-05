@@ -71,7 +71,7 @@ except ImportError:
 
 # ALL_LANGUAGES is the canonical list of supported languages in the monorepo.
 # The order is stable and matches the order used in CI toolchain setup.
-ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift"]
+ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"]
 
 # SHARED_PREFIXES are repo paths that, when changed, mean ALL languages need
 # rebuilding. Only the CI workflow itself fans out to a full rebuild.

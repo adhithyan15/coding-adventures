@@ -66,7 +66,7 @@ module BuildTool
 
     # ALL_LANGUAGES is the canonical list of supported languages in the monorepo.
     # The order is stable and matches the order used in CI toolchain setup.
-    ALL_LANGUAGES = %w[python ruby go typescript rust elixir lua perl swift].freeze
+    ALL_LANGUAGES = %w[python ruby go typescript rust elixir lua perl swift haskell].freeze
 
     # SHARED_PREFIXES are repo paths that, when changed, mean ALL languages
     # need rebuilding. Only changes to the CI workflow itself fan out to

@@ -14,7 +14,8 @@ module BuildTool
       "rust",
       "elixir",
       "lua",
-      "perl"
+      "perl",
+      "haskell"
     ].freeze
 
     def validate_ci_full_build_toolchains(root, packages)

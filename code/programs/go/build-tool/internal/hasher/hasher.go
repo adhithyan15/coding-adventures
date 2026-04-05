@@ -58,6 +58,7 @@ var sourceExtensions = map[string]map[string]bool{
 	"elixir":     {".ex": true, ".exs": true},
 	"starlark":   {".star": true},
 	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
+	"haskell":    {".hs": true, ".cabal": true},
 }
 
 // specialFilenames maps languages to filenames that should always be
@@ -71,6 +72,7 @@ var specialFilenames = map[string]map[string]bool{
 	"elixir":     {"mix.exs": true, "mix.lock": true},
 	"starlark":   {},
 	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
+	"haskell":    {},
 }
 
 // collectSourceFiles walks the package directory and returns all source

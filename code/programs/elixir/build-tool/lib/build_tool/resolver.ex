@@ -173,6 +173,10 @@ defmodule BuildTool.Resolver do
           cpan_name = "coding-adventures-" <> String.downcase(Path.basename(pkg.path))
           Map.put(acc, cpan_name, pkg.name)
 
+        "haskell" ->
+          cabal_name = "coding-adventures-" <> String.downcase(Path.basename(pkg.path))
+          Map.put(acc, cabal_name, pkg.name)
+
         _ ->
           acc
       end
@@ -198,6 +202,7 @@ defmodule BuildTool.Resolver do
       "elixir" -> parse_elixir_deps(pkg, known_names)
       "lua" -> parse_lua_deps(pkg, known_names)
       "perl" -> parse_perl_deps(pkg, known_names)
+      "haskell" -> parse_haskell_deps(pkg, known_names)
       _ -> []
     end
   end
@@ -677,6 +682,38 @@ defmodule BuildTool.Resolver do
 
       {:error, _} ->
         []
+    end
+  end
+
+  defp parse_haskell_deps(pkg, known_names) do
+    # Check .cabal files
+    case File.ls(pkg.path) do
+      {:ok, entries} ->
+        cabal = Enum.find(entries, fn entry -> String.ends_with?(entry, ".cabal") end)
+        if cabal do
+          cabal_path = Path.join(pkg.path, cabal)
+          case File.read(cabal_path) do
+            {:ok, data} ->
+              pattern = ~r/coding-adventures-[a-zA-Z0-9-]+/
+              data
+              |> String.split("\n")
+              |> Enum.flat_map(fn line ->
+                Regex.scan(pattern, line)
+                |> Enum.flat_map(fn
+                  [dep_name] ->
+                    case Map.get(known_names, String.downcase(dep_name)) do
+                      nil -> []
+                      pkg_name -> [pkg_name]
+                    end
+                  _ -> []
+                end)
+              end)
+            {:error, _} -> []
+          end
+        else
+          []
+        end
+      {:error, _} -> []
     end
   end
 
