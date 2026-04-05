@@ -137,9 +137,10 @@ ok( defined $CodingAdventures::Matrix::VERSION, 'VERSION is defined' );
 
 {
     my $A = $M->zeros(2,2);
-    $A->set(0, 1, 99.0);
-    ok( near($A->get(0,1), 99.0), 'set: value updated' );
-    ok( near($A->get(0,0),  0.0), 'set: other element unchanged' );
+    my $B = $A->set(0, 1, 99.0);
+    ok( near($B->get(0,1), 99.0), 'set: value updated in new matrix' );
+    ok( near($B->get(0,0),  0.0), 'set: other element unchanged' );
+    ok( near($A->get(0,1),  0.0), 'set: original not mutated' );
 }
 
 # ===========================================================================
@@ -444,6 +445,285 @@ ok( defined $CodingAdventures::Matrix::VERSION, 'VERSION is defined' );
     my ($sub) = $A->subtract($B);
     my ($add) = $A->add($B->scale(-1.0));
     ok( mat_equal($sub, $add), 'subtract == add of negated' );
+}
+
+# ===========================================================================
+# 14. ML03 Extension Tests — Reductions
+# ===========================================================================
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( near($A->sum, 10.0), 'sum: [[1,2],[3,4]] = 10' );
+}
+
+{
+    ok( near($M->zeros(3,3)->sum, 0.0), 'sum: zeros = 0' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $sr = $A->sum_rows;
+    ok( $sr->rows == 2 && $sr->cols == 1, 'sum_rows: shape' );
+    ok( near($sr->get(0,0), 3.0), 'sum_rows: row 0' );
+    ok( near($sr->get(1,0), 7.0), 'sum_rows: row 1' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $sc = $A->sum_cols;
+    ok( $sc->rows == 1 && $sc->cols == 2, 'sum_cols: shape' );
+    ok( near($sc->get(0,0), 4.0), 'sum_cols: col 0' );
+    ok( near($sc->get(0,1), 6.0), 'sum_cols: col 1' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( near($A->mean, 2.5), 'mean: [[1,2],[3,4]] = 2.5' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( near($A->mat_min, 1.0), 'mat_min: 1' );
+    ok( near($A->mat_max, 4.0), 'mat_max: 4' );
+}
+
+{
+    my $A = $M->from_2d([[-5,2],[3,-1]]);
+    ok( near($A->mat_min, -5.0), 'mat_min: -5 with negatives' );
+    ok( near($A->mat_max,  3.0), 'mat_max: 3 with negatives' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my ($ri, $rj) = $A->argmin;
+    ok( $ri == 0 && $rj == 0, 'argmin: (0,0)' );
+    my ($xi, $xj) = $A->argmax;
+    ok( $xi == 1 && $xj == 1, 'argmax: (1,1)' );
+}
+
+{
+    my $A = $M->from_2d([[3,1],[3,2]]);
+    my ($r, $c) = $A->argmax;
+    ok( $r == 0 && $c == 0, 'argmax: first occurrence on tie' );
+}
+
+# ===========================================================================
+# 15. ML03 Extension Tests — Element-wise math
+# ===========================================================================
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $B = $A->mat_map(sub { $_[0] * 2 });
+    ok( near($B->get(0,0), 2.0), 'mat_map: doubles [0][0]' );
+    ok( near($B->get(1,1), 8.0), 'mat_map: doubles [1][1]' );
+}
+
+{
+    my $A = $M->from_2d([[4,9],[16,25]]);
+    my $B = $A->mat_sqrt;
+    ok( near($B->get(0,0), 2.0), 'mat_sqrt: sqrt(4)' );
+    ok( near($B->get(0,1), 3.0), 'mat_sqrt: sqrt(9)' );
+    ok( near($B->get(1,0), 4.0), 'mat_sqrt: sqrt(16)' );
+    ok( near($B->get(1,1), 5.0), 'mat_sqrt: sqrt(25)' );
+}
+
+{
+    my $A = $M->from_2d([[-1,2],[-3,4]]);
+    my $B = $A->mat_abs;
+    ok( near($B->get(0,0), 1.0), 'mat_abs: |-1|' );
+    ok( near($B->get(1,0), 3.0), 'mat_abs: |-3|' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $B = $A->mat_pow(2.0);
+    ok( near($B->get(0,0), 1.0), 'mat_pow: 1^2' );
+    ok( near($B->get(0,1), 4.0), 'mat_pow: 2^2' );
+    ok( near($B->get(1,0), 9.0), 'mat_pow: 3^2' );
+    ok( near($B->get(1,1), 16.0), 'mat_pow: 4^2' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( $A->close($A->mat_sqrt->mat_pow(2.0), 1e-9), 'sqrt then pow roundtrip is close' );
+}
+
+# ===========================================================================
+# 16. ML03 Extension Tests — Shape operations
+# ===========================================================================
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $F = $A->flatten;
+    ok( $F->rows == 1 && $F->cols == 4, 'flatten: shape' );
+    ok( near($F->get(0,0), 1.0), 'flatten: [0]' );
+    ok( near($F->get(0,1), 2.0), 'flatten: [1]' );
+    ok( near($F->get(0,2), 3.0), 'flatten: [2]' );
+    ok( near($F->get(0,3), 4.0), 'flatten: [3]' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $R = $A->flatten->reshape(2,2);
+    ok( $A->equals($R), 'flatten then reshape roundtrip' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    eval { $A->reshape(3,3) };
+    ok( $@, 'reshape: error on size mismatch' );
+}
+
+{
+    my $A = $M->from_2d([[1,2,3],[4,5,6]]);
+    my $r = $A->mat_row(0);
+    ok( $r->rows == 1 && $r->cols == 3, 'mat_row: shape' );
+    ok( near($r->get(0,0), 1.0), 'mat_row: [0]' );
+    ok( near($r->get(0,2), 3.0), 'mat_row: [2]' );
+}
+
+{
+    my $A = $M->from_2d([[1,2,3],[4,5,6]]);
+    my $c = $A->mat_col(1);
+    ok( $c->rows == 2 && $c->cols == 1, 'mat_col: shape' );
+    ok( near($c->get(0,0), 2.0), 'mat_col: [0]' );
+    ok( near($c->get(1,0), 5.0), 'mat_col: [1]' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $S = $A->slice(0, 2, 0, 1);
+    ok( $S->rows == 2 && $S->cols == 1, 'slice: shape' );
+    ok( near($S->get(0,0), 1.0), 'slice: [0][0]' );
+    ok( near($S->get(1,0), 3.0), 'slice: [1][0]' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $S = $A->slice(0, 2, 0, 2);
+    ok( $A->equals($S), 'slice: full matrix equals original' );
+}
+
+# ===========================================================================
+# 17. ML03 Extension Tests — Equality and comparison
+# ===========================================================================
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $B = $M->from_2d([[1,2],[3,4]]);
+    ok( $A->equals($B), 'equals: identical matrices' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $B = $M->from_2d([[1,2],[3,5]]);
+    ok( !$A->equals($B), 'equals: different matrices' );
+}
+
+{
+    my $A = $M->from_2d([[1,2]]);
+    my $B = $M->from_2d([[1],[2]]);
+    ok( !$A->equals($B), 'equals: different shapes' );
+}
+
+{
+    my $A = $M->from_2d([[1.0, 2.0]]);
+    my $B = $M->from_2d([[1.0 + 1e-10, 2.0 - 1e-10]]);
+    ok( $A->close($B, 1e-9), 'close: within tolerance' );
+}
+
+{
+    my $A = $M->from_2d([[1.0, 2.0]]);
+    my $B = $M->from_2d([[1.1, 2.0]]);
+    ok( !$A->close($B, 1e-9), 'close: outside tolerance' );
+}
+
+# ===========================================================================
+# 18. ML03 Extension Tests — Factory methods
+# ===========================================================================
+
+{
+    my $I = $M->identity(3);
+    ok( $I->rows == 3 && $I->cols == 3, 'identity: shape' );
+    for my $i (0..2) {
+        for my $j (0..2) {
+            my $expected = ($i == $j) ? 1.0 : 0.0;
+            ok( near($I->get($i,$j), $expected), "identity: [$i][$j]" );
+        }
+    }
+}
+
+{
+    my $I = $M->identity(3);
+    my $A = $M->from_2d([[1,2],[3,4],[5,6]]);
+    my ($IA) = $I->dot($A);
+    ok( $IA->equals($A), 'identity(3) . M == M' );
+}
+
+{
+    my $D = $M->from_diagonal([2, 3]);
+    ok( $D->rows == 2 && $D->cols == 2, 'from_diagonal: shape' );
+    ok( near($D->get(0,0), 2.0), 'from_diagonal: [0][0]' );
+    ok( near($D->get(0,1), 0.0), 'from_diagonal: [0][1]' );
+    ok( near($D->get(1,0), 0.0), 'from_diagonal: [1][0]' );
+    ok( near($D->get(1,1), 3.0), 'from_diagonal: [1][1]' );
+}
+
+{
+    ok( $M->from_diagonal([1,1,1])->equals($M->identity(3)), 'from_diagonal([1,1,1]) == identity(3)' );
+}
+
+# ===========================================================================
+# 19. Parity test vectors
+# ===========================================================================
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( near($A->sum, 10.0), 'parity: sum = 10' );
+    ok( near($A->mean, 2.5), 'parity: mean = 2.5' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $sr = $A->sum_rows;
+    my $sc = $A->sum_cols;
+    ok( near($sr->get(0,0), 3.0) && near($sr->get(1,0), 7.0), 'parity: sum_rows' );
+    ok( near($sc->get(0,0), 4.0) && near($sc->get(0,1), 6.0), 'parity: sum_cols' );
+}
+
+{
+    my $I = $M->identity(3);
+    my $A = $M->from_2d([[1,2,3],[4,5,6],[7,8,9]]);
+    my ($IA) = $I->dot($A);
+    ok( $IA->equals($A), 'parity: identity dot' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( $A->flatten->reshape($A->rows, $A->cols)->equals($A), 'parity: flatten/reshape roundtrip' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( $A->close($A->mat_sqrt->mat_pow(2.0), 1e-9), 'parity: close after sqrt/pow' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    ok( near($A->get(0,0), 1.0), 'parity: get(0,0) = 1.0' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my ($r, $c) = $A->argmax;
+    ok( $r == 1 && $c == 1, 'parity: argmax = (1,1)' );
+}
+
+{
+    my $A = $M->from_2d([[1,2],[3,4]]);
+    my $S = $A->slice(0, 2, 0, 1);
+    ok( $S->rows == 2 && $S->cols == 1, 'parity: slice shape' );
+    ok( near($S->get(0,0), 1.0) && near($S->get(1,0), 3.0), 'parity: slice values' );
 }
 
 done_testing;

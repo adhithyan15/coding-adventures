@@ -198,23 +198,37 @@ sub data { return $_[0]->{data} }
 =head2 get($i, $j)
 
 Returns the element at row $i, column $j (zero-based).
+Raises an error if the indices are out of bounds.
 
 =cut
 
 sub get {
     my ( $self, $i, $j ) = @_;
+    die sprintf( "index out of bounds: (%d, %d) for (%dx%d) matrix\n",
+        $i, $j, $self->{rows}, $self->{cols} )
+        if $i < 0 || $i >= $self->{rows} || $j < 0 || $j >= $self->{cols};
     return $self->{data}[$i][$j];
 }
 
 =head2 set($i, $j, $val)
 
-Sets the element at row $i, column $j to $val (zero-based).
+Returns a B<new> matrix with the element at ($i, $j) replaced by $val.
+The original matrix is not mutated.
 
 =cut
 
 sub set {
     my ( $self, $i, $j, $val ) = @_;
-    $self->{data}[$i][$j] = $val;
+    die sprintf( "index out of bounds: (%d, %d) for (%dx%d) matrix\n",
+        $i, $j, $self->{rows}, $self->{cols} )
+        if $i < 0 || $i >= $self->{rows} || $j < 0 || $j >= $self->{cols};
+    # Deep copy, then replace the target element.
+    my @data;
+    for my $r ( 0 .. $self->{rows} - 1 ) {
+        $data[$r] = [ @{ $self->{data}[$r] } ];
+    }
+    $data[$i][$j] = $val;
+    return ref($self)->new( rows => $self->{rows}, cols => $self->{cols}, data => \@data );
 }
 
 # ============================================================================
@@ -424,6 +438,399 @@ sub dot {
     }
 
     return ( $result, undef );
+}
+
+# ============================================================================
+# Reductions
+# ============================================================================
+
+=head2 sum()
+
+Returns the sum of all elements.
+
+=cut
+
+sub sum {
+    my ($self) = @_;
+    my $total = 0.0;
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            $total += $self->{data}[$i][$j];
+        }
+    }
+    return $total;
+}
+
+=head2 sum_rows()
+
+Returns an m x 1 column vector where each element is the sum of that row.
+
+=cut
+
+sub sum_rows {
+    my ($self) = @_;
+    my @data;
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        my $s = 0.0;
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            $s += $self->{data}[$i][$j];
+        }
+        $data[$i] = [$s];
+    }
+    return ref($self)->new( rows => $self->{rows}, cols => 1, data => \@data );
+}
+
+=head2 sum_cols()
+
+Returns a 1 x n row vector where each element is the sum of that column.
+
+=cut
+
+sub sum_cols {
+    my ($self) = @_;
+    my @row;
+    for my $j ( 0 .. $self->{cols} - 1 ) {
+        my $s = 0.0;
+        for my $i ( 0 .. $self->{rows} - 1 ) {
+            $s += $self->{data}[$i][$j];
+        }
+        $row[$j] = $s;
+    }
+    return ref($self)->new( rows => 1, cols => $self->{cols}, data => [ \@row ] );
+}
+
+=head2 mean()
+
+Returns the arithmetic mean of all elements.
+
+=cut
+
+sub mean {
+    my ($self) = @_;
+    return $self->sum() / ( $self->{rows} * $self->{cols} );
+}
+
+=head2 mat_min()
+
+Returns the minimum element value.  Named C<mat_min> to avoid shadowing
+Perl's built-in C<CORE::min>.
+
+=cut
+
+sub mat_min {
+    my ($self) = @_;
+    my $best = $self->{data}[0][0];
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            $best = $self->{data}[$i][$j] if $self->{data}[$i][$j] < $best;
+        }
+    }
+    return $best;
+}
+
+=head2 mat_max()
+
+Returns the maximum element value.  Named C<mat_max> to avoid shadowing
+Perl's built-in C<CORE::max>.
+
+=cut
+
+sub mat_max {
+    my ($self) = @_;
+    my $best = $self->{data}[0][0];
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            $best = $self->{data}[$i][$j] if $self->{data}[$i][$j] > $best;
+        }
+    }
+    return $best;
+}
+
+=head2 argmin()
+
+Returns the (row, col) of the minimum element (zero-based, first occurrence).
+
+=cut
+
+sub argmin {
+    my ($self) = @_;
+    my $best = $self->{data}[0][0];
+    my ( $bi, $bj ) = ( 0, 0 );
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            if ( $self->{data}[$i][$j] < $best ) {
+                $best = $self->{data}[$i][$j];
+                ( $bi, $bj ) = ( $i, $j );
+            }
+        }
+    }
+    return ( $bi, $bj );
+}
+
+=head2 argmax()
+
+Returns the (row, col) of the maximum element (zero-based, first occurrence).
+
+=cut
+
+sub argmax {
+    my ($self) = @_;
+    my $best = $self->{data}[0][0];
+    my ( $bi, $bj ) = ( 0, 0 );
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            if ( $self->{data}[$i][$j] > $best ) {
+                $best = $self->{data}[$i][$j];
+                ( $bi, $bj ) = ( $i, $j );
+            }
+        }
+    }
+    return ( $bi, $bj );
+}
+
+# ============================================================================
+# Element-wise math
+# ============================================================================
+
+=head2 mat_map($fn)
+
+Applies a code reference to every element, returning a new matrix.
+
+=cut
+
+sub mat_map {
+    my ( $self, $fn ) = @_;
+    my @data;
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        $data[$i] = [];
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            $data[$i][$j] = $fn->( $self->{data}[$i][$j] );
+        }
+    }
+    return ref($self)->new( rows => $self->{rows}, cols => $self->{cols}, data => \@data );
+}
+
+=head2 mat_sqrt()
+
+Element-wise square root.  Named C<mat_sqrt> to avoid shadowing
+Perl's built-in C<CORE::sqrt>.
+
+=cut
+
+sub mat_sqrt {
+    my ($self) = @_;
+    return $self->mat_map( sub { CORE::sqrt( $_[0] ) } );
+}
+
+=head2 mat_abs()
+
+Element-wise absolute value.  Named C<mat_abs> to avoid shadowing
+Perl's built-in C<CORE::abs>.
+
+=cut
+
+sub mat_abs {
+    my ($self) = @_;
+    return $self->mat_map( sub { CORE::abs( $_[0] ) } );
+}
+
+=head2 mat_pow($exp)
+
+Element-wise exponentiation.
+
+=cut
+
+sub mat_pow {
+    my ( $self, $exp ) = @_;
+    return $self->mat_map( sub { $_[0] ** $exp } );
+}
+
+# ============================================================================
+# Shape operations
+# ============================================================================
+
+=head2 flatten()
+
+Returns a 1 x n row vector with elements in row-major order.
+
+=cut
+
+sub flatten {
+    my ($self) = @_;
+    my @flat;
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            push @flat, $self->{data}[$i][$j];
+        }
+    }
+    return ref($self)->new( rows => 1, cols => scalar @flat, data => [ \@flat ] );
+}
+
+=head2 reshape($new_rows, $new_cols)
+
+Reshapes the matrix.  Total elements must be preserved.
+
+=cut
+
+sub reshape {
+    my ( $self, $nr, $nc ) = @_;
+    my $total = $self->{rows} * $self->{cols};
+    die sprintf(
+        "reshape: cannot reshape (%dx%d) = %d elements into (%dx%d) = %d elements\n",
+        $self->{rows}, $self->{cols}, $total, $nr, $nc, $nr * $nc
+    ) unless $nr * $nc == $total;
+
+    # Flatten, then refill.
+    my @flat;
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        push @flat, @{ $self->{data}[$i] };
+    }
+    my @data;
+    my $idx = 0;
+    for my $i ( 0 .. $nr - 1 ) {
+        $data[$i] = [];
+        for my $j ( 0 .. $nc - 1 ) {
+            $data[$i][$j] = $flat[$idx++];
+        }
+    }
+    return ref($self)->new( rows => $nr, cols => $nc, data => \@data );
+}
+
+=head2 mat_row($i)
+
+Returns row $i as a 1 x cols matrix (zero-based).
+
+=cut
+
+sub mat_row {
+    my ( $self, $i ) = @_;
+    die sprintf( "row: index %d out of bounds for %d rows\n", $i, $self->{rows} )
+        if $i < 0 || $i >= $self->{rows};
+    return ref($self)->new(
+        rows => 1,
+        cols => $self->{cols},
+        data => [ [ @{ $self->{data}[$i] } ] ],
+    );
+}
+
+=head2 mat_col($j)
+
+Returns column $j as a rows x 1 matrix (zero-based).
+
+=cut
+
+sub mat_col {
+    my ( $self, $j ) = @_;
+    die sprintf( "col: index %d out of bounds for %d cols\n", $j, $self->{cols} )
+        if $j < 0 || $j >= $self->{cols};
+    my @data;
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        $data[$i] = [ $self->{data}[$i][$j] ];
+    }
+    return ref($self)->new( rows => $self->{rows}, cols => 1, data => \@data );
+}
+
+=head2 slice($r0, $r1, $c0, $c1)
+
+Extracts a sub-matrix for rows [$r0..$r1) and columns [$c0..$c1)
+(zero-based, half-open ranges).
+
+=cut
+
+sub slice {
+    my ( $self, $r0, $r1, $c0, $c1 ) = @_;
+    die sprintf(
+        "slice: bounds (%d:%d, %d:%d) out of range for (%dx%d) matrix\n",
+        $r0, $r1, $c0, $c1, $self->{rows}, $self->{cols}
+    ) if $r0 < 0 || $r1 > $self->{rows} || $c0 < 0 || $c1 > $self->{cols};
+
+    my $nr = $r1 - $r0;
+    my $nc = $c1 - $c0;
+    my @data;
+    for my $i ( 0 .. $nr - 1 ) {
+        $data[$i] = [];
+        for my $j ( 0 .. $nc - 1 ) {
+            $data[$i][$j] = $self->{data}[ $r0 + $i ][ $c0 + $j ];
+        }
+    }
+    return ref($self)->new( rows => $nr, cols => $nc, data => \@data );
+}
+
+# ============================================================================
+# Equality and comparison
+# ============================================================================
+
+=head2 equals($B)
+
+Returns true (1) if self and B have the same shape and identical elements.
+
+=cut
+
+sub equals {
+    my ( $self, $B ) = @_;
+    return 0 unless $self->{rows} == $B->{rows} && $self->{cols} == $B->{cols};
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            return 0 if $self->{data}[$i][$j] != $B->{data}[$i][$j];
+        }
+    }
+    return 1;
+}
+
+=head2 close($B, $tol)
+
+Returns true (1) if self and B have the same shape and all elements are
+within $tol of each other.  Default $tol = 1e-9.
+
+=cut
+
+sub close {
+    my ( $self, $B, $tol ) = @_;
+    $tol //= 1e-9;
+    return 0 unless $self->{rows} == $B->{rows} && $self->{cols} == $B->{cols};
+    for my $i ( 0 .. $self->{rows} - 1 ) {
+        for my $j ( 0 .. $self->{cols} - 1 ) {
+            return 0 if CORE::abs( $self->{data}[$i][$j] - $B->{data}[$i][$j] ) > $tol;
+        }
+    }
+    return 1;
+}
+
+# ============================================================================
+# Factory methods
+# ============================================================================
+
+=head2 identity($n)
+
+Class method.  Returns an n x n identity matrix.
+
+=cut
+
+sub identity {
+    my ( $class, $n ) = @_;
+    my @data;
+    for my $i ( 0 .. $n - 1 ) {
+        $data[$i] = [ (0.0) x $n ];
+        $data[$i][$i] = 1.0;
+    }
+    return $class->new( rows => $n, cols => $n, data => \@data );
+}
+
+=head2 from_diagonal($values)
+
+Class method.  Returns a square diagonal matrix from an array-ref of values.
+
+=cut
+
+sub from_diagonal {
+    my ( $class, $values ) = @_;
+    my $n = scalar @$values;
+    my @data;
+    for my $i ( 0 .. $n - 1 ) {
+        $data[$i] = [ (0.0) x $n ];
+        $data[$i][$i] = $values->[$i];
+    }
+    return $class->new( rows => $n, cols => $n, data => \@data );
 }
 
 1;

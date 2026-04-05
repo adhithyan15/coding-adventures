@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/mosaic-ir-to-layout",
+  "version": "0.1.0",
+  "description": "Converts a MosaicComponent IR and resolved slot values into a LayoutNode tree for layout-flexbox",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "mosaic",
+    "layout",
+    "ui",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/layout-ir": "file:../layout-ir",
+    "@coding-adventures/layout-flexbox": "file:../layout-flexbox",
+    "@coding-adventures/layout-to-paint": "file:../layout-to-paint",
+    "@coding-adventures/mosaic-analyzer": "file:../mosaic-analyzer"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

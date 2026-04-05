@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/layout-ir",
+  "version": "0.1.0",
+  "description": "Universal layout intermediate representation — core types and builder helpers shared by all layout algorithm packages",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "layout",
+    "ir",
+    "intermediate-representation",
+    "flexbox",
+    "grid",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -255,10 +255,11 @@ describe("property setters and getters", () => {
     expect(code).toContain("set items(v: string[])");
   });
 
-  it("image slot setter validates URL", () => {
+  it("image slot setter validates URL with positive allowlist", () => {
     const code = compile("component X { slot photo: image; Row {} }");
     expect(code).toContain("set photo(v: string)");
-    expect(code).toContain("javascript:");
+    // Positive allowlist: only https://, http://, and relative URLs are permitted
+    expect(code).toContain("https?:\\/\\/");
   });
 });
 

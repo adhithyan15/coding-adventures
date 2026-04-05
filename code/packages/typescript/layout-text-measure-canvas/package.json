@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/layout-text-measure-canvas",
+  "version": "0.1.0",
+  "description": "Accurate browser Canvas text measurer using CanvasRenderingContext2D.measureText()",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "layout",
+    "text-measurement",
+    "canvas",
+    "browser",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/layout-ir": "file:../layout-ir"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

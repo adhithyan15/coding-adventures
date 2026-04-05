@@ -176,19 +176,22 @@ describe("get and set", function()
         assert.is_true(near(M.get(A, 2, 2), 4.0))
     end)
 
-    it("set updates the element at (i,j)", function()
+    it("set returns a new matrix with the element updated", function()
         local A = M.zeros(2, 2)
-        M.set(A, 1, 2, 99.0)
-        assert.is_true(near(M.get(A, 1, 2), 99.0))
+        local B = M.set(A, 1, 2, 99.0)
+        -- B has the new value.
+        assert.is_true(near(M.get(B, 1, 2), 99.0))
         -- Other elements unchanged.
-        assert.is_true(near(M.get(A, 1, 1), 0.0))
+        assert.is_true(near(M.get(B, 1, 1), 0.0))
+        -- Original A is NOT mutated.
+        assert.is_true(near(M.get(A, 1, 2), 0.0))
     end)
 
-    it("set and get round-trip", function()
+    it("set and get round-trip (immutable chain)", function()
         local A = M.zeros(3, 3)
         for i = 1, 3 do
             for j = 1, 3 do
-                M.set(A, i, j, i * 10 + j)
+                A = M.set(A, i, j, i * 10 + j)
             end
         end
         for i = 1, 3 do
@@ -560,5 +563,403 @@ describe("combined properties", function()
         local negB   = M.scale(B, -1.0)
         local add, _ = M.add(A, negB)
         assert.is_true(mat_equal(sub, add))
+    end)
+end)
+
+-- ============================================================================
+-- ML03 Extension Tests: Reductions
+-- ============================================================================
+
+describe("sum", function()
+    it("sums all elements of [[1,2],[3,4]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(near(M.sum(A), 10.0))
+    end)
+
+    it("sum of zeros is zero", function()
+        assert.is_true(near(M.sum(M.zeros(3, 3)), 0.0))
+    end)
+
+    it("sum of a 1x1 matrix equals its element", function()
+        assert.is_true(near(M.sum(M.new_scalar(7.0)), 7.0))
+    end)
+end)
+
+describe("sum_rows", function()
+    it("collapses rows of [[1,2],[3,4]] to [[3],[7]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local sr = M.sum_rows(A)
+        assert.are.equal(2, sr.rows)
+        assert.are.equal(1, sr.cols)
+        assert.is_true(near(sr.data[1][1], 3.0))
+        assert.is_true(near(sr.data[2][1], 7.0))
+    end)
+end)
+
+describe("sum_cols", function()
+    it("collapses cols of [[1,2],[3,4]] to [[4,6]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local sc = M.sum_cols(A)
+        assert.are.equal(1, sc.rows)
+        assert.are.equal(2, sc.cols)
+        assert.is_true(near(sc.data[1][1], 4.0))
+        assert.is_true(near(sc.data[1][2], 6.0))
+    end)
+end)
+
+describe("mean", function()
+    it("mean of [[1,2],[3,4]] is 2.5", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(near(M.mean(A), 2.5))
+    end)
+
+    it("mean of uniform matrix is that value", function()
+        local A = M.new_2d({{5, 5}, {5, 5}})
+        assert.is_true(near(M.mean(A), 5.0))
+    end)
+end)
+
+describe("min and max", function()
+    it("min of [[1,2],[3,4]] is 1", function()
+        assert.is_true(near(M.min(M.new_2d({{1, 2}, {3, 4}})), 1.0))
+    end)
+
+    it("max of [[1,2],[3,4]] is 4", function()
+        assert.is_true(near(M.max(M.new_2d({{1, 2}, {3, 4}})), 4.0))
+    end)
+
+    it("min with negatives", function()
+        assert.is_true(near(M.min(M.new_2d({{-5, 2}, {3, -1}})), -5.0))
+    end)
+
+    it("max with negatives", function()
+        assert.is_true(near(M.max(M.new_2d({{-5, 2}, {3, -1}})), 3.0))
+    end)
+end)
+
+describe("argmin and argmax", function()
+    it("argmin of [[1,2],[3,4]] is (1,1)", function()
+        local r, c = M.argmin(M.new_2d({{1, 2}, {3, 4}}))
+        assert.are.equal(1, r)
+        assert.are.equal(1, c)
+    end)
+
+    it("argmax of [[1,2],[3,4]] is (2,2)", function()
+        local r, c = M.argmax(M.new_2d({{1, 2}, {3, 4}}))
+        assert.are.equal(2, r)
+        assert.are.equal(2, c)
+    end)
+
+    it("argmin returns first occurrence on tie", function()
+        local r, c = M.argmin(M.new_2d({{1, 1}, {2, 3}}))
+        assert.are.equal(1, r)
+        assert.are.equal(1, c)
+    end)
+
+    it("argmax returns first occurrence on tie", function()
+        local r, c = M.argmax(M.new_2d({{3, 1}, {3, 2}}))
+        assert.are.equal(1, r)
+        assert.are.equal(1, c)
+    end)
+end)
+
+-- ============================================================================
+-- ML03 Extension Tests: Element-wise math
+-- ============================================================================
+
+describe("map", function()
+    it("doubles every element", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local B = M.map(A, function(x) return x * 2 end)
+        assert.is_true(near(B.data[1][1], 2.0))
+        assert.is_true(near(B.data[2][2], 8.0))
+    end)
+
+    it("does not mutate the original", function()
+        local A = M.new_2d({{1, 2}})
+        M.map(A, function(x) return x * 100 end)
+        assert.is_true(near(A.data[1][1], 1.0))
+    end)
+end)
+
+describe("sqrt", function()
+    it("element-wise square root", function()
+        local A = M.new_2d({{4, 9}, {16, 25}})
+        local B = M.sqrt(A)
+        assert.is_true(near(B.data[1][1], 2.0))
+        assert.is_true(near(B.data[1][2], 3.0))
+        assert.is_true(near(B.data[2][1], 4.0))
+        assert.is_true(near(B.data[2][2], 5.0))
+    end)
+end)
+
+describe("abs", function()
+    it("takes absolute value of each element", function()
+        local A = M.new_2d({{-1, 2}, {-3, 4}})
+        local B = M.abs(A)
+        assert.is_true(near(B.data[1][1], 1.0))
+        assert.is_true(near(B.data[1][2], 2.0))
+        assert.is_true(near(B.data[2][1], 3.0))
+        assert.is_true(near(B.data[2][2], 4.0))
+    end)
+end)
+
+describe("pow", function()
+    it("squares every element", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local B = M.pow(A, 2.0)
+        assert.is_true(near(B.data[1][1], 1.0))
+        assert.is_true(near(B.data[1][2], 4.0))
+        assert.is_true(near(B.data[2][1], 9.0))
+        assert.is_true(near(B.data[2][2], 16.0))
+    end)
+
+    it("M.close(M.sqrt(M).pow(2), 1e-9) is true", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local roundtrip = M.pow(M.sqrt(A), 2.0)
+        assert.is_true(M.close(A, roundtrip, 1e-9))
+    end)
+end)
+
+-- ============================================================================
+-- ML03 Extension Tests: Shape operations
+-- ============================================================================
+
+describe("flatten", function()
+    it("flattens [[1,2],[3,4]] to [[1,2,3,4]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local F = M.flatten(A)
+        assert.are.equal(1, F.rows)
+        assert.are.equal(4, F.cols)
+        assert.is_true(near(F.data[1][1], 1.0))
+        assert.is_true(near(F.data[1][2], 2.0))
+        assert.is_true(near(F.data[1][3], 3.0))
+        assert.is_true(near(F.data[1][4], 4.0))
+    end)
+end)
+
+describe("reshape", function()
+    it("reshapes [[1,2],[3,4]] to [[1,2,3,4]] (1x4)", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local R = M.reshape(A, 1, 4)
+        assert.are.equal(1, R.rows)
+        assert.are.equal(4, R.cols)
+    end)
+
+    it("flatten then reshape round-trips: M.flatten(M).reshape(rows, cols) == M", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local roundtrip = M.reshape(M.flatten(A), A.rows, A.cols)
+        assert.is_true(M.equals(A, roundtrip))
+    end)
+
+    it("errors on incompatible reshape", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.has_error(function() M.reshape(A, 3, 3) end)
+    end)
+end)
+
+describe("row and col extraction", function()
+    it("row(1) extracts first row as 1×cols", function()
+        local A = M.new_2d({{1, 2, 3}, {4, 5, 6}})
+        local r = M.row(A, 1)
+        assert.are.equal(1, r.rows)
+        assert.are.equal(3, r.cols)
+        assert.is_true(near(r.data[1][1], 1.0))
+        assert.is_true(near(r.data[1][3], 3.0))
+    end)
+
+    it("col(2) extracts second column as rows×1", function()
+        local A = M.new_2d({{1, 2, 3}, {4, 5, 6}})
+        local c = M.col(A, 2)
+        assert.are.equal(2, c.rows)
+        assert.are.equal(1, c.cols)
+        assert.is_true(near(c.data[1][1], 2.0))
+        assert.is_true(near(c.data[2][1], 5.0))
+    end)
+
+    it("row out of bounds errors", function()
+        local A = M.new_2d({{1, 2}})
+        assert.has_error(function() M.row(A, 3) end)
+    end)
+
+    it("col out of bounds errors", function()
+        local A = M.new_2d({{1, 2}})
+        assert.has_error(function() M.col(A, 3) end)
+    end)
+end)
+
+describe("slice", function()
+    it("slice(1,3,1,2) on [[1,2],[3,4]] extracts [[1],[3]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local S = M.slice(A, 1, 3, 1, 2)
+        assert.are.equal(2, S.rows)
+        assert.are.equal(1, S.cols)
+        assert.is_true(near(S.data[1][1], 1.0))
+        assert.is_true(near(S.data[2][1], 3.0))
+    end)
+
+    it("slice of full matrix equals original", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local S = M.slice(A, 1, 3, 1, 3)
+        assert.is_true(M.equals(A, S))
+    end)
+
+    it("slice(1,2,1,3) on 2x3 gets first row", function()
+        local A = M.new_2d({{1, 2, 3}, {4, 5, 6}})
+        local S = M.slice(A, 1, 2, 1, 4)
+        assert.are.equal(1, S.rows)
+        assert.are.equal(3, S.cols)
+        assert.is_true(near(S.data[1][1], 1.0))
+        assert.is_true(near(S.data[1][3], 3.0))
+    end)
+end)
+
+-- ============================================================================
+-- ML03 Extension Tests: Equality and comparison
+-- ============================================================================
+
+describe("equals", function()
+    it("equal matrices", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local B = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(M.equals(A, B))
+    end)
+
+    it("different matrices", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local B = M.new_2d({{1, 2}, {3, 5}})
+        assert.is_false(M.equals(A, B))
+    end)
+
+    it("different shapes", function()
+        local A = M.new_2d({{1, 2}})
+        local B = M.new_2d({{1}, {2}})
+        assert.is_false(M.equals(A, B))
+    end)
+end)
+
+describe("close", function()
+    it("matrices within tolerance", function()
+        local A = M.new_2d({{1.0, 2.0}})
+        local B = M.new_2d({{1.0 + 1e-10, 2.0 - 1e-10}})
+        assert.is_true(M.close(A, B, 1e-9))
+    end)
+
+    it("matrices outside tolerance", function()
+        local A = M.new_2d({{1.0, 2.0}})
+        local B = M.new_2d({{1.1, 2.0}})
+        assert.is_false(M.close(A, B, 1e-9))
+    end)
+
+    it("sqrt then pow roundtrip is close", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(M.close(A, M.pow(M.sqrt(A), 2.0), 1e-9))
+    end)
+end)
+
+-- ============================================================================
+-- ML03 Extension Tests: Factory methods
+-- ============================================================================
+
+describe("identity", function()
+    it("creates a 3x3 identity", function()
+        local I = M.identity(3)
+        assert.are.equal(3, I.rows)
+        assert.are.equal(3, I.cols)
+        for i = 1, 3 do
+            for j = 1, 3 do
+                local expected = (i == j) and 1.0 or 0.0
+                assert.is_true(near(I.data[i][j], expected))
+            end
+        end
+    end)
+
+    it("identity(3).dot(M) == M", function()
+        local I = M.identity(3)
+        local A = M.new_2d({{1, 2}, {3, 4}, {5, 6}})
+        local IA, err = M.dot(I, A)
+        assert.is_nil(err)
+        assert.is_true(M.equals(IA, A))
+    end)
+
+    it("identity(1) is [[1]]", function()
+        local I = M.identity(1)
+        assert.is_true(near(I.data[1][1], 1.0))
+    end)
+end)
+
+describe("from_diagonal", function()
+    it("from_diagonal({2, 3}) -> [[2,0],[0,3]]", function()
+        local D = M.from_diagonal({2, 3})
+        assert.are.equal(2, D.rows)
+        assert.are.equal(2, D.cols)
+        assert.is_true(near(D.data[1][1], 2.0))
+        assert.is_true(near(D.data[1][2], 0.0))
+        assert.is_true(near(D.data[2][1], 0.0))
+        assert.is_true(near(D.data[2][2], 3.0))
+    end)
+
+    it("from_diagonal({1,1,1}) equals identity(3)", function()
+        assert.is_true(M.equals(M.from_diagonal({1, 1, 1}), M.identity(3)))
+    end)
+end)
+
+-- ============================================================================
+-- ML03 Parity test vectors (same across all 9 languages)
+-- ============================================================================
+
+describe("parity test vectors", function()
+    it("sum/mean: [[1,2],[3,4]] -> sum=10, mean=2.5", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(near(M.sum(A), 10.0))
+        assert.is_true(near(M.mean(A), 2.5))
+    end)
+
+    it("sum_rows/sum_cols: [[1,2],[3,4]] -> rows=[[3],[7]], cols=[[4,6]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local sr = M.sum_rows(A)
+        local sc = M.sum_cols(A)
+        assert.is_true(near(sr.data[1][1], 3.0))
+        assert.is_true(near(sr.data[2][1], 7.0))
+        assert.is_true(near(sc.data[1][1], 4.0))
+        assert.is_true(near(sc.data[1][2], 6.0))
+    end)
+
+    it("identity(3).dot(M) == M", function()
+        local I = M.identity(3)
+        local A = M.new_2d({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}})
+        local IA, err = M.dot(I, A)
+        assert.is_nil(err)
+        assert.is_true(M.equals(IA, A))
+    end)
+
+    it("flatten/reshape roundtrip", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(M.equals(M.reshape(M.flatten(A), A.rows, A.cols), A))
+    end)
+
+    it("close after sqrt/pow roundtrip", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(M.close(A, M.pow(M.sqrt(A), 2.0), 1e-9))
+    end)
+
+    it("get(1,1) on [[1,2],[3,4]] -> 1.0 (1-based)", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        assert.is_true(near(M.get(A, 1, 1), 1.0))
+    end)
+
+    it("argmax on [[1,2],[3,4]] -> (2,2) (1-based)", function()
+        local r, c = M.argmax(M.new_2d({{1, 2}, {3, 4}}))
+        assert.are.equal(2, r)
+        assert.are.equal(2, c)
+    end)
+
+    it("slice(1,3,1,2) on [[1,2],[3,4]] -> [[1],[3]]", function()
+        local A = M.new_2d({{1, 2}, {3, 4}})
+        local S = M.slice(A, 1, 3, 1, 2)
+        assert.are.equal(2, S.rows)
+        assert.are.equal(1, S.cols)
+        assert.is_true(near(S.data[1][1], 1.0))
+        assert.is_true(near(S.data[2][1], 3.0))
     end)
 end)
