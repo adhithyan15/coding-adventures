@@ -181,5 +181,108 @@ defmodule CodingAdventures.ImageCodecBmpTest do
       bad = String.duplicate(<<0>>, 100)
       assert {:error, _} = ImageCodecBmp.decode(bad)
     end
+
+    test "returns error when dimensions exceed MAX_DIMENSION" do
+      # Craft a valid-looking BMP header with width = 20000 (> 16384)
+      w = 20_000
+      h = 1
+      pixel_offset = 66
+      file_size = pixel_offset + w * h * 4
+
+      header =
+        <<"BM",
+          file_size::little-32,
+          0::little-16,
+          0::little-16,
+          pixel_offset::little-32,
+          40::little-32,
+          w::little-32,
+          (-h)::little-signed-32,
+          1::little-16,
+          32::little-16,
+          3::little-32,
+          (w * h * 4)::little-32,
+          2835::little-32,
+          2835::little-32,
+          0::little-32,
+          0::little-32,
+          0x00FF0000::little-32,
+          0x0000FF00::little-32,
+          0x000000FF::little-32>>
+
+      assert {:error, msg} = ImageCodecBmp.decode(header)
+      assert msg =~ "too large"
+    end
+
+    test "returns error for unsupported bit depth" do
+      # Craft a BMP header with 16bpp (unsupported — we only handle 24 and 32)
+      w = 2
+      h = 2
+      pixel_offset = 66
+      file_size = pixel_offset + w * h * 2
+
+      header =
+        <<"BM",
+          file_size::little-32,
+          0::little-16,
+          0::little-16,
+          pixel_offset::little-32,
+          40::little-32,
+          w::little-32,
+          (-h)::little-signed-32,
+          1::little-16,
+          16::little-16,
+          0::little-32,
+          (w * h * 2)::little-32,
+          2835::little-32,
+          2835::little-32,
+          0::little-32,
+          0::little-32,
+          0::little-32,
+          0::little-32,
+          0::little-32>>
+
+      assert {:error, msg} = ImageCodecBmp.decode(header)
+      assert msg =~ "Unsupported"
+    end
+  end
+
+  describe "decode/1 24bpp support" do
+    test "decodes a 24bpp BGR BMP correctly" do
+      # Build a minimal 24bpp BMP for a 1x1 red pixel
+      # 24bpp: each pixel is B G R (3 bytes), rows padded to 4-byte boundary.
+      # For 1x1: row_bytes = 3, padded to 4 bytes.
+      w = 1
+      h = 1
+      pixel_offset = 54  # 14 + 40 (no channel masks for 24bpp)
+      row_stride = 4     # 3 bytes + 1 byte pad
+      pixel_data_size = row_stride * h
+      file_size = pixel_offset + pixel_data_size
+
+      header =
+        <<"BM",
+          file_size::little-32,
+          0::little-16,
+          0::little-16,
+          pixel_offset::little-32,
+          40::little-32,
+          w::little-32,
+          (-h)::little-signed-32,
+          1::little-16,
+          24::little-16,
+          0::little-32,
+          pixel_data_size::little-32,
+          2835::little-32,
+          2835::little-32,
+          0::little-32,
+          0::little-32>>
+
+      # Red pixel in BGR = B=0, G=0, R=255, then 1 byte of padding
+      pixel_data = <<0, 0, 255, 0>>
+
+      bmp = header <> pixel_data
+      assert {:ok, c} = ImageCodecBmp.decode(bmp)
+      assert PixelContainer.pixel_at(c, 0, 0) == {255, 0, 0, 255}
+    end
   end
 end

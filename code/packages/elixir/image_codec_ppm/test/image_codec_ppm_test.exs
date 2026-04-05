@@ -182,5 +182,19 @@ defmodule CodingAdventures.ImageCodecPpmTest do
     test "returns error when only magic line is present" do
       assert {:error, _} = ImageCodecPpm.decode("P6\n")
     end
+
+    test "returns error when width is zero" do
+      # parse_int rejects n == 0 with a specific error
+      ppm = "P6\n0 1\n255\n#{<<0, 0, 0>>}"
+      assert {:error, msg} = ImageCodecPpm.decode(ppm)
+      assert msg =~ "must be > 0"
+    end
+
+    test "returns error when width is not a valid integer" do
+      # parse_int rejects non-numeric strings
+      ppm = "P6\nabc 1\n255\n#{<<0, 0, 0>>}"
+      assert {:error, msg} = ImageCodecPpm.decode(ppm)
+      assert msg =~ "Invalid PPM"
+    end
   end
 end
