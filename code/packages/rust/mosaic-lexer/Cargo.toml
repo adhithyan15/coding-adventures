@@ -1,0 +1,10 @@
+[package]
+name = "mosaic-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizes .mosaic source using the grammar-driven lexer"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }

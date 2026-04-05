@@ -1,0 +1,16 @@
+[package]
+name = "mosaic-emit-webcomponent"
+version = "0.1.0"
+edition = "2021"
+description = "Web Components backend: emits Custom Element classes from MosaicIR"
+
+[dependencies]
+mosaic-vm = { path = "../mosaic-vm" }
+mosaic-analyzer = { path = "../mosaic-analyzer" }
+mosaic-parser = { path = "../mosaic-parser" }
+mosaic-lexer = { path = "../mosaic-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser = { path = "../parser" }
+state-machine = { path = "../state-machine" }
