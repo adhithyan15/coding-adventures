@@ -10,17 +10,25 @@
  * - Semicolons terminate statements
  * - Curly braces for blocks
  * - `$` is valid in identifiers
+ *
+ * Version-aware API (added in v0.2.0)
+ * ------------------------------------
+ *
+ * `tokenizeJavascript(source, version?)` and `createJavascriptLexer(source, version?)`
+ * both accept an optional ECMAScript version string: `"es1"`, `"es3"`, `"es5"`,
+ * `"es2015"` … `"es2025"`. Omitting the version uses the generic `javascript.tokens`
+ * grammar (backwards-compatible with v0.1.x).
  */
 
 import { describe, it, expect } from "vitest";
-import { tokenizeJavascript } from "../src/tokenizer.js";
+import { tokenizeJavascript, createJavascriptLexer } from "../src/index.js";
 
-function tokenTypes(source: string): string[] {
-  return tokenizeJavascript(source).map((t) => t.type);
+function tokenTypes(source: string, version?: string): string[] {
+  return tokenizeJavascript(source, version).map((t) => t.type);
 }
 
-function tokenValues(source: string): string[] {
-  return tokenizeJavascript(source).map((t) => t.value);
+function tokenValues(source: string, version?: string): string[] {
+  return tokenizeJavascript(source, version).map((t) => t.value);
 }
 
 describe("basic expressions", () => {
@@ -135,5 +143,100 @@ describe("literals", () => {
     const tokens = tokenizeJavascript("$foo");
     expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("$foo");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Version-aware API tests (v0.2.0)
+// ---------------------------------------------------------------------------
+
+describe("version-aware tokenization", () => {
+  it("tokenizes with no version (generic grammar — backwards compatible)", () => {
+    const tokens = tokenizeJavascript("let x = 1;");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with empty string version (same as no version)", () => {
+    const tokens = tokenizeJavascript("let x = 1;", "");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with es5 version", () => {
+    const tokens = tokenizeJavascript("var x = 1;", "es5");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("var");
+    expect(tokens[tokens.length - 1].type).toBe("EOF");
+  });
+
+  it("tokenizes with es1 version", () => {
+    // ES1 uses 'var'; basic declarations should work
+    const tokens = tokenizeJavascript("var x = 1;", "es1");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("var");
+  });
+
+  it("tokenizes with es3 version", () => {
+    const tokens = tokenizeJavascript("var x = 1;", "es3");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("var");
+  });
+
+  it("tokenizes with es2015 version", () => {
+    const tokens = tokenizeJavascript("let x = 1;", "es2015");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with es2020 version", () => {
+    const tokens = tokenizeJavascript("const x = 1;", "es2020");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("const");
+  });
+
+  it("tokenizes with es2025 version", () => {
+    const tokens = tokenizeJavascript("let x = 1;", "es2025");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("throws for unknown version string", () => {
+    expect(() => tokenizeJavascript("let x = 1;", "es2099")).toThrow(
+      /Unknown JavaScript\/ECMAScript version "es2099"/
+    );
+  });
+
+  it("throws for completely invalid version string", () => {
+    expect(() => tokenizeJavascript("let x = 1;", "latest")).toThrow(
+      /Unknown JavaScript\/ECMAScript version "latest"/
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// createJavascriptLexer API tests (v0.2.0)
+// ---------------------------------------------------------------------------
+
+describe("createJavascriptLexer", () => {
+  it("returns a GrammarLexer and produces tokens when tokenize() is called", () => {
+    const lexer = createJavascriptLexer("let x = 1;");
+    const tokens = lexer.tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+    expect(tokens[tokens.length - 1].type).toBe("EOF");
+  });
+
+  it("accepts a version string", () => {
+    const lexer = createJavascriptLexer("var y = 2;", "es5");
+    const tokens = lexer.tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("var");
+  });
+
+  it("throws for unknown version", () => {
+    expect(() => createJavascriptLexer("let x = 1;", "es99")).toThrow(
+      /Unknown JavaScript\/ECMAScript version "es99"/
+    );
   });
 });
