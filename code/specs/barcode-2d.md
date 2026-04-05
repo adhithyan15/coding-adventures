@@ -182,95 +182,75 @@ shown in blue, timing in grey, data in black/white, ECC in green, etc.
 
 ## The Render Pipeline
 
-The full 2D barcode pipeline has five stages. The key architectural principle
-is that the **layout stage** is the only stage that knows about pixels. Every
-stage before it works in abstract module units. Every stage after it works in
-concrete pixel coordinates.
+The full 2D barcode encoding pipeline:
 
 ```
 input string / bytes
     │
     ▼
-[ encode ]
+[ data encoding ]
     Encode the input according to the format's character sets and
     encoding modes (numeric, alphanumeric, byte, kanji, etc.).
-    Apply error correction (Reed-Solomon or BCH).
-    Place codewords and structural elements into the module grid.
-    Apply masking and format/version information.
-    Output: ModuleGrid — a 2D boolean grid in abstract module units.
-    No pixels, no coordinates. Just a grid of dark and light modules.
+    Output: a sequence of codeword bytes.
     │
     ▼
-[ layout ]
-    Convert the abstract ModuleGrid into concrete pixel coordinates.
-    This is the ONLY stage that knows about module_size_px, quiet zones,
-    pixel density, and output dimensions.
-
-    Input:  ModuleGrid + Barcode2DLayoutConfig
-    Output: PaintScene (P2D00) — a list of PaintRect instructions with
-            fully resolved pixel coordinates. Every dark module is a
-            PaintRect at an exact (x, y, width, height) in pixels.
-
-    The paint layer downstream is completely dumb. It receives a PaintScene
-    and executes it without knowing anything about modules, barcodes, or
-    error correction.
+[ error correction ]
+    Apply Reed-Solomon (or BCH) to produce error correction codewords.
+    Block interleaving where required by the format.
+    Output: final message polynomial (data + ECC codewords).
     │
     ▼
-[ PaintVM.execute(scene, context) ]
-    Routes each PaintInstruction in the PaintScene to its registered
-    backend handler (P2D01). The PaintVM has no knowledge of barcodes.
-    It only knows "here is a rect, paint it."
+[ module placement ]
+    Place the codewords and structural elements (finder patterns,
+    timing strips, format info, version info, alignment patterns)
+    into a ModuleGrid. Follow format-specific placement rules exactly.
+    Output: ModuleGrid with every module assigned.
     │
     ▼
-[ backend ]
-    paint-vm-svg     → SVG markup string
-    paint-vm-canvas  → HTML Canvas drawing calls
-    paint-metal      → Metal GPU render → PixelContainer → PNG bytes
-    paint-vm-terminal → box-drawing characters (future)
+[ masking ]
+    For formats that support masking (QR, Data Matrix, Aztec):
+    evaluate all candidate mask patterns, score each by penalty rules,
+    and apply the lowest-scoring mask to data modules only.
+    Output: final masked ModuleGrid.
+    │
+    ▼
+[ format information ]
+    Encode the mask pattern index and error correction level into
+    dedicated format information bits. Place these bits into the
+    reserved format modules.
+    Output: final ModuleGrid, fully populated.
+    │
+    ▼
+[ draw instructions ]
+    Translate the ModuleGrid into backend-neutral draw instructions.
+    Each dark module becomes a filled rectangle. The symbol as a whole
+    lives inside a quiet zone margin.
+    Output: DrawScene.
+    │
+    ▼
+[ renderer ]
+    SVG, PNG (via Metal + draw-instructions-png), or native window.
 ```
 
-### The layout step in detail
+### From ModuleGrid to DrawScene
 
-The layout step is where all the geometry is resolved. It takes a ModuleGrid
-(which knows nothing about pixels) and a config (which specifies the desired
-output dimensions), and produces a `PaintScene` (P2D00) with every coordinate
-fully resolved in pixels.
+The translation is simpler than 1D barcodes. Every dark module at grid
+position (col, row) becomes a filled square:
 
 ```
-layout(grid: ModuleGrid, config: Barcode2DLayoutConfig) → PaintScene
+module_size_px = total_px / cols   -- e.g., 300px / 21 columns = ~14px/module
+quiet_zone_px  = quiet_zone_modules * module_size_px
 
--- Compute pixel dimensions
-module_size_px = config.module_size_px
-quiet_zone_px  = config.quiet_zone_modules * module_size_px
-total_width    = (grid.cols + 2 * config.quiet_zone_modules) * module_size_px
-total_height   = (grid.rows + 2 * config.quiet_zone_modules) * module_size_px
-
--- Build PaintScene
-instructions = []
-
--- Background rect (covers entire symbol including quiet zone)
-instructions.push(PaintRect(
-  x=0, y=0, width=total_width, height=total_height,
-  fill=config.background
-))
-
--- One PaintRect per dark module
-for each row in 0..grid.rows:
-  for each col in 0..grid.cols:
-    if grid.modules[row][col] == dark:
-      instructions.push(PaintRect(
+for each row in 0..rows:
+  for each col in 0..cols:
+    if modules[row][col] == dark:
+      emit DrawRect(
         x      = quiet_zone_px + col * module_size_px,
         y      = quiet_zone_px + row * module_size_px,
         width  = module_size_px,
         height = module_size_px,
-        fill   = config.foreground,
-      ))
-
-return PaintScene(
-  width=total_width, height=total_height,
-  background=config.background,
-  instructions=instructions
-)
+        fill   = foreground_color,
+      )
 ```
 
 Optimization: adjacent dark modules in the same row can be merged into a
@@ -279,20 +259,17 @@ O(dark_runs). For a QR code that is ~35% dark, version 10 has roughly
 3,700 dark modules; horizontal run-length encoding reduces this to ~600
 rectangles. This optimization is optional in v0.1.0.
 
-### Layout configuration
+### Render configuration
 
 ```
-Barcode2DLayoutConfig {
+Barcode2DRenderConfig {
   module_size_px:      f64     -- size of one module in pixels (default: 10)
   quiet_zone_modules:  u32     -- quiet zone width in modules (format-specific minimum)
   foreground:          string  -- dark module color (default: "#000000")
   background:          string  -- light module color and background (default: "#ffffff")
-  show_annotations:    bool    -- color-code module roles in PaintScene metadata (default: false)
+  show_annotations:    bool    -- color-code module roles (default: false)
 }
 ```
-
-The layout config is the seam between barcode logic and the paint layer. Nothing
-after this point knows about modules, error correction, or barcode formats.
 
 ### Quiet zones
 
@@ -316,116 +293,65 @@ All 2D barcode packages in this repo should expose:
 
 ```
 encode(input, options) → ModuleGrid
-  -- Encode input into a ModuleGrid (abstract module units, no pixels).
-  -- This is the pure symbology step.
+  -- encode input into a ModuleGrid
 
-layout(grid, config) → PaintScene
-  -- Translate a ModuleGrid into a pixel-resolved PaintScene (P2D00).
-  -- This is where all coordinate computation happens.
-  -- The PaintScene can be passed directly to PaintVM.execute().
+render(input, options) → DrawScene
+  -- encode + translate to draw instructions in one step
 
-encode_and_layout(input, options, config) → PaintScene
-  -- Convenience: encode + layout in one step.
-
-render_svg(input, options?, config?) → string
-  -- Convenience: encode + layout + paint-vm-svg in one step.
-  -- Returns an SVG string. Useful for tests and server-side rendering.
+render_svg(input, options) → string
+  -- encode + render + SVG string in one step
 
 explain(input, options) → AnnotatedModuleGrid
-  -- encode with per-module role annotations (for visualizers).
-  -- The annotations are reflected in PaintScene instruction metadata
-  -- when layout() is called with show_annotations: true.
+  -- encode with per-module role annotations (for visualizers)
 ```
 
-The `options` struct is format-specific. The `config` parameter is always
-`Barcode2DLayoutConfig` and controls the pixel geometry.
+The `options` struct is format-specific but always includes at minimum the
+`Barcode2DRenderConfig` fields above.
 
 ---
 
-## PaintInstructions Compatibility (P2D00)
+## Draw Instructions Compatibility
 
-The `barcode-2d` layout step produces a `PaintScene` (P2D00) using only
-`PaintRect` instructions. No new instruction types are needed.
+The existing draw-instructions IR already supports all the operations needed
+to render 2D barcodes:
 
-| Need | P2D00 primitive |
-|------|----------------|
-| Dark module | `PaintRect(x, y, w, h, fill="#000000")` |
-| Light background | `PaintRect(0, 0, total_w, total_h, fill="#ffffff")` as first instruction |
-| Quiet zone | Handled by offset calculation in the layout step |
-| Color annotations | `PaintRect` with custom `fill` per role + `metadata.role` annotation |
-| Label text | `PaintGlyphRun` below symbol (optional, v0.2.0) |
+| Need | IR primitive |
+|------|-------------|
+| Dark module | `DrawRect(x, y, w, h, fill="#000000")` |
+| Light background | `DrawRect(0, 0, total_w, total_h, fill="#ffffff")` covering full symbol |
+| Quiet zone | Handled by offset calculation in module placement |
+| Color annotations | `DrawRect` with custom fill per role |
+| Label text | `DrawText` below symbol |
 
-2D barcodes slot directly into the PaintVM (P2D01) dispatch pipeline. Every
-backend that handles `PaintRect` — and all backends must — can render a 2D
-barcode without any changes.
+No IR changes are needed. 2D barcodes slot directly into the existing
+draw-instructions → SVG/PNG/Metal pipeline.
 
 ---
 
 ## Metal Rendering
 
-A QR code is a grid of rectangles. The `paint-metal` backend (to be created
-as the Rust Metal PaintVM backend) will handle `PaintRect` instructions via
-GPU render passes. No barcode-specific GPU code is needed — the Metal backend
-is completely barcode-agnostic.
+Because a 2D barcode is a grid of rectangles and the draw-instructions-metal
+backend already renders `DrawRect` primitives via GPU, a QR code can be
+rendered to a native macOS window or PNG using Metal with zero additional GPU
+code.
 
-The intended pipeline once `paint-metal` exists:
-
-```
-qr_code::encode(input)         → ModuleGrid
-barcode_2d::layout(grid, cfg)  → PaintScene    (pixel-resolved PaintRect list)
-paint_metal::create_vm()       → PaintVM<MetalContext>
-vm.execute(scene, ctx)         → renders to offscreen Metal texture
-vm.export(scene, opts)         → PixelContainer
-paint_codec_png::encode(px)    → Vec<u8>       (PNG bytes)
-```
-
-For windowed display (blocking, until window is closed):
-```
-paint_metal::show_in_window(scene)
-```
-
-The paint layer is completely dumb — it receives a `PaintScene` full of
-already-computed pixel coordinates and executes them on the GPU. It has no
-knowledge of QR codes, module grids, or error correction.
-
-### Swappable backends
-
-This is the key property of the PaintVM architecture: **the barcode encoder
-never changes when the backend changes.**
+The existing pipeline:
 
 ```
--- Today: SVG backend
-let vm = paint_vm_svg::create_vm();
-vm.execute(scene, &mut svg_context);    // → SVG string
-
--- Tomorrow: Metal backend (once paint-metal is built)
-let vm = paint_metal::create_vm();
-vm.execute(scene, &mut metal_ctx);      // → renders to Metal texture
-vm.export(scene, opts)                  // → PixelContainer
-
--- PNG from Metal
-let pixels = vm.export(scene, default_opts);
-let png_bytes = paint_codec_png::encode(&pixels);  // → Vec<u8>
-
--- Native window from Metal
-paint_metal::show_in_window(&scene);    // blocks until window is closed
+qr_code::encode(input) → ModuleGrid
+  → barcode_2d::to_draw_scene(grid, config) → DrawScene
+  → draw_instructions_metal::render(scene) → PixelBuffer
+  → draw_instructions_png::encode(buffer) → Vec<u8>
 ```
 
-The `scene` object is identical in all three cases — it comes from
-`barcode_2d::layout(grid, config)` and is just a list of `PaintRect`
-instructions with resolved pixel coordinates. The barcode packages have
-no knowledge of which backend will execute the scene.
+or for windowed display:
 
-### paint-metal status
+```
+draw_instructions_metal_window::show_in_window(scene)
+```
 
-`paint-metal` does not yet exist. It is the next backend to be built after
-the barcode-2d and qr-code packages. Its spec will follow as P2D02.
-
-**Initial implementation uses Canvas (TypeScript) and SVG (all 9 languages).**
-Once `paint-metal` is built as a Rust PaintVM backend, it slots in directly
-with no changes to the barcode encoder. Passing a `paint-codec-png` encoder
-to the painter produces PNG bytes; calling `show_in_window` produces a native
-macOS window. Both paths use the same `PaintScene`.
+This is the direct payoff of the barcode → draw-instructions → Metal
+architecture established with the 1D barcode pipeline.
 
 ---
 
@@ -465,29 +391,19 @@ packages depend on it.
 ## Dependency Stack
 
 ```
-paint-metal (P2D02, Rust)   paint-vm-svg (TypeScript)   paint-vm-canvas (TypeScript)
-      │                           │                             │
-      └───────────────────────────┴─────────────────────────────┘
-                                  │
-                          paint-vm (P2D01)
-                                  │
-                       paint-instructions (P2D00)
-                                  │
-                          barcode-2d (this)          MA02 reed-solomon
-                                  │                         │
-                   ┌──────────────┴───────────┐    MA01 gf256
-                   │              │            │            │
-               qr-code    data-matrix   aztec-code   MA00 polynomial
-                                  │
-                               pdf417
+draw-instructions-metal   draw-instructions-png
+         │                        │
+         └──────────┬─────────────┘
+                    │
+          draw-instructions        MA02 reed-solomon
+                    │                       │
+          barcode-2d (this)        MA01 gf256
+                    │                       │
+           ┌────────┴────────┐     MA00 polynomial
+           │                 │
+       qr-code          data-matrix   aztec-code   pdf417
 ```
 
-The `barcode-2d` package sits at the boundary between barcode logic and the
-paint stack:
-
-- **Below the line**: barcode-specific code. Knows about modules, codewords,
-  Reed-Solomon, finder patterns, masks.
-- **Above the line**: completely barcode-agnostic. Knows only about painting
-  rectangles at pixel coordinates.
-
-The layout step in `barcode-2d` is the only code that crosses this boundary.
+Every format package depends on `barcode-2d` for the shared ModuleGrid
+type and render translation, and on `MA02` (or a format-specific RS variant)
+for error correction.

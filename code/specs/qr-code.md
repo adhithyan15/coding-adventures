@@ -559,12 +559,9 @@ The full encoding pipeline for a given input string and ECC level:
     Write the final format information for the chosen mask.
     Write version information if version ≥ 7.
 
-11. LAYOUT + PAINT
-    Pass the final ModuleGrid to barcode-2d's `layout(grid, config)`,
-    which resolves all module positions to pixel coordinates and returns
-    a PaintScene (P2D00). Pass the PaintScene to a PaintVM backend:
-    paint-vm-svg for SVG output, paint-metal for GPU-rendered PNG or
-    native window.
+11. RENDER
+    Convert the final ModuleGrid to a DrawScene via barcode-2d's
+    `to_draw_scene`. Render to SVG, PNG, or native window.
 ```
 
 ---
@@ -684,21 +681,17 @@ QRCodeError::InvalidInput   -- input contains characters not supported by the mo
 
 ```
 encode(input: string, ecc: EccLevel) → ModuleGrid
-  -- Encodes input to a QR code module grid (abstract module units, no pixels).
+  -- Encodes input to a QR code module grid.
   -- Raises InputTooLong if input exceeds version 40 capacity.
 
-layout(grid: ModuleGrid, config?: Barcode2DLayoutConfig) → PaintScene
-  -- Translate a ModuleGrid into a pixel-resolved PaintScene (P2D00).
-  -- Delegates to barcode-2d::layout() — qr-code does not implement this itself.
+render(input: string, ecc: EccLevel, config?: RenderConfig) → DrawScene
+  -- Encode and translate to draw instructions.
 
-encode_and_layout(input: string, ecc: EccLevel, config?: Barcode2DLayoutConfig) → PaintScene
-  -- Convenience: encode + layout in one call.
-
-render_svg(input: string, ecc: EccLevel, config?: Barcode2DLayoutConfig) → string
-  -- Convenience: encode + layout + paint-vm-svg backend → SVG string.
+render_svg(input: string, ecc: EccLevel, config?: RenderConfig) → string
+  -- Encode, render, and return an SVG string.
 
 explain(input: string, ecc: EccLevel) → AnnotatedModuleGrid
-  -- Encode with full per-module role annotations (for visualizers).
+  -- Encode with full per-module role annotations.
 
 EccLevel = L | M | Q | H
 ```
@@ -775,22 +768,19 @@ Suggested test corpus:
 ## Dependency Stack
 
 ```
-paint-metal (P2D02)    paint-vm-svg    paint-vm-canvas
-      └──────────────────┬─────────────────┘
-                         │
-                  paint-vm (P2D01)
-                         │
-              paint-instructions (P2D00)
-                         │
-                     barcode-2d          MA01 gf256
-                         │                   │
-                     qr-code ────────────────┘
+draw-instructions-metal  draw-instructions-png
+        └──────┬────────────────┘
+               │
+       draw-instructions
+               │
+           barcode-2d           MA01 gf256
+               │                    │
+           qr-code ───────────────── ┘
 ```
 
-`qr-code` depends on `barcode-2d` for the `ModuleGrid` type and the
-`layout()` function (which produces a `PaintScene`), and on `gf256` for
-GF(256) multiplication in the RS encoder. It does **not** depend on MA02
-(QR uses the b=0 RS convention; MA02 uses b=1).
+`qr-code` depends on `barcode-2d` for the ModuleGrid type and
+`to_draw_scene`, and on `gf256` for GF(256) multiplication in the RS
+encoder. It does **not** depend on MA02 (the RS convention differs).
 
 ---
 
