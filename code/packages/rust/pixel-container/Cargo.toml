@@ -1,0 +1,7 @@
+[package]
+name = "pixel-container"
+version = "0.1.0"
+edition = "2021"
+description = "Universal RGBA8 pixel buffer and ImageCodec trait — zero dependencies"
+
+[dependencies]
