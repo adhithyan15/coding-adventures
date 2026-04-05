@@ -756,7 +756,11 @@ defmodule CodingAdventures.MosaicEmitReact do
   defp value_to_jsx(_),                                   do: ""
 
   # Convert a ResolvedValue to a JSX attribute value string.
-  defp attr_value(%{kind: :string, value: v}),              do: "\"#{v}\""
+  # Escape backslash and double-quote in string literals to prevent XSS in JSX attributes.
+  defp attr_value(%{kind: :string, value: v}) do
+    escaped = v |> String.replace("\\", "\\\\") |> String.replace("\"", "\\\"")
+    "\"#{escaped}\""
+  end
   defp attr_value(%{kind: :slot_ref, slot_name: name}),     do: "{#{name}}"
   defp attr_value(_),                                       do: "\"\""
 
@@ -800,7 +804,11 @@ defmodule CodingAdventures.MosaicEmitReact do
   defp slot_type_to_ts(_), do: "unknown"
 
   # Convert a MosaicValue default to a TypeScript literal string.
-  defp default_value_literal(%{kind: :string, value: v}), do: "\"#{v}\""
+  # Escape backslash and double-quote in string literals to prevent broken TS output.
+  defp default_value_literal(%{kind: :string, value: v}) do
+    escaped = v |> String.replace("\\", "\\\\") |> String.replace("\"", "\\\"")
+    "\"#{escaped}\""
+  end
   defp default_value_literal(%{kind: :number, value: v}), do: "#{v}"
   defp default_value_literal(%{kind: :bool, value: v}),   do: "#{v}"
   defp default_value_literal(_),                          do: "undefined"

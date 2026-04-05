@@ -333,7 +333,8 @@ public class WebComponentRenderer: MosaicRenderer {
         lines.append("  }")
         lines.append("")
         lines.append("  private _escapeHtml(s: string): string {")
-        lines.append("    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');")
+        lines.append("    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')")
+        lines.append("             .replace(/\"/g,'&quot;').replace(/'/g,'&#39;');")
         lines.append("  }")
         lines.append("}")
         lines.append("")
@@ -383,9 +384,19 @@ public class WebComponentRenderer: MosaicRenderer {
     // Value helpers
     // -------------------------------------------------------------------------
 
+    /// Escape a Mosaic literal string so it is safe inside a JS single-quoted string
+    /// and inside a template literal `${}` expression.  We escape: \ ' ` $
+    private func jsLiteralEscape(_ s: String) -> String {
+        return s
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "'", with: "\\'")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "$", with: "\\$")
+    }
+
     private func valueToHtmlExpr(_ v: ResolvedValue) -> String {
         switch v {
-        case let .string(s):    return "${this._escapeHtml('\(s)')}"
+        case let .string(s):    return "${this._escapeHtml('\(jsLiteralEscape(s))')}"
         case let .slotRef(name, slotType, _):
             switch slotType {
             case .primitive("text"), .primitive("image"), .primitive("color"):

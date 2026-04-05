@@ -219,7 +219,12 @@ module CodingAdventures
           if val[:kind] == "slot_ref"
             attrs << "src=\"${this._validateUrl(String(this.#{slot_name_to_field(val[:slot_name])}))}\""
           else
-            attrs << "src=\"#{format_html_value(val)}\""
+            # Reject javascript: URLs at code-generation time for literal src values
+            src_val = format_html_value(val)
+            if src_val.downcase.strip.start_with?("javascript:")
+              src_val = "about:blank"
+            end
+            attrs << "src=\"#{src_val}\""
           end
         when "a11y-label"
           if val[:kind] == "slot_ref"
@@ -278,7 +283,6 @@ module CodingAdventures
         observed = @slots.select { |s| scalar_type?(s.type) }.map { |s| s.name }
         unless observed.empty?
           lines << "  static get observedAttributes() {"
-          lines << "    return #{observed.map { |n| "\"#{n}\"" }.join(", ")} |> [...];"
           lines << "    return [#{observed.map { |n| "\"#{n}\"" }.join(", ")}];"
           lines << "  }"
           lines << ""
@@ -323,7 +327,8 @@ module CodingAdventures
         # _escapeHtml helper
         lines << ""
         lines << "  private _escapeHtml(str: string): string {"
-        lines << '    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");'
+        lines << '    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")'
+        lines << '               .replace(/"/g, "&quot;").replace(/\'/g, "&#39;");'
         lines << "  }"
 
         # _validateUrl helper

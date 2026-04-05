@@ -387,7 +387,7 @@ sub _frag_to_code {
     }
     if ($kind eq 'self_closing') {
         my $html = $frag->{html};
-        $html =~ s/'([^>]*)>$/$1 \/>/;
+        $html =~ s/>$/ \/>/;
         $html =~ s/'/\\'/g;
         return "    html += '$html';";
     }

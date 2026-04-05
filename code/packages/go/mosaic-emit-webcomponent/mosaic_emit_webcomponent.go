@@ -258,7 +258,8 @@ func (r *WebComponentRenderer) Emit() mosaicvm.EmitResult {
 
 	// _escapeHtml helper
 	sb.WriteString("  private _escapeHtml(s: string): string {\n")
-	sb.WriteString("    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n")
+	sb.WriteString("    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')\n")
+	sb.WriteString("             .replace(/\"/g, '&quot;').replace(/'/g, '&#39;');\n")
 	sb.WriteString("  }\n")
 
 	sb.WriteString("}\n\n")
@@ -281,7 +282,11 @@ func (r *WebComponentRenderer) Emit() mosaicvm.EmitResult {
 func fragmentToWCCode(f renderFragment) string {
 	switch f.kind {
 	case "open_tag":
-		return fmt.Sprintf("    html += %q;\n", f.htmlStr)
+		// Use single-quoted JS string: escape backslash and single-quote only.
+		// This keeps HTML double-quotes (role="button") unescaped and readable.
+		escaped := strings.ReplaceAll(f.htmlStr, `\`, `\\`)
+		escaped = strings.ReplaceAll(escaped, `'`, `\'`)
+		return fmt.Sprintf("    html += '%s';\n", escaped)
 	case "close_tag":
 		return fmt.Sprintf("    html += '</%s>';\n", f.tag)
 	case "slot_ref_text":
