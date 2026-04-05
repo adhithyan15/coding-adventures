@@ -698,7 +698,7 @@ describe("generateTypeScript", () => {
   });
 
   it("creates package.json with main pointing to src/index.ts", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test package", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test package", "", [], []);
     const content = fs.readFileSync(
       path.join(tmpDir, "package.json"),
       "utf-8",
@@ -707,7 +707,7 @@ describe("generateTypeScript", () => {
   });
 
   it("creates package.json with type: module", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test package", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test package", "", [], []);
     const content = fs.readFileSync(
       path.join(tmpDir, "package.json"),
       "utf-8",
@@ -716,7 +716,7 @@ describe("generateTypeScript", () => {
   });
 
   it("includes @vitest/coverage-v8 in devDependencies", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test package", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test package", "", [], []);
     const content = fs.readFileSync(
       path.join(tmpDir, "package.json"),
       "utf-8",
@@ -725,7 +725,7 @@ describe("generateTypeScript", () => {
   });
 
   it("creates package.json with file: deps for direct dependencies", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test", "", ["logic-gates"], [
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test", "", ["logic-gates"], [
       "logic-gates",
     ]);
     const content = fs.readFileSync(
@@ -738,7 +738,7 @@ describe("generateTypeScript", () => {
   });
 
   it("creates BUILD that chain-installs transitive deps", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test", "", ["logic-gates"], [
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test", "", ["logic-gates"], [
       "directed-graph",
       "logic-gates",
     ]);
@@ -748,13 +748,13 @@ describe("generateTypeScript", () => {
   });
 
   it("creates simple BUILD when no deps", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test", "", [], []);
     const content = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
     expect(content).toBe("npm ci --quiet\nnpx vitest run --coverage\n");
   });
 
   it("creates vitest.config.ts with v8 coverage", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test", "", [], []);
     const content = fs.readFileSync(
       path.join(tmpDir, "vitest.config.ts"),
       "utf-8",
@@ -764,7 +764,7 @@ describe("generateTypeScript", () => {
   });
 
   it("creates tsconfig.json", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test", "", [], []);
     const content = fs.readFileSync(
       path.join(tmpDir, "tsconfig.json"),
       "utf-8",
@@ -774,7 +774,7 @@ describe("generateTypeScript", () => {
   });
 
   it("creates src/index.ts with version export", () => {
-    generateTypeScript(tmpDir, "my-pkg", "A test", "", [], []);
+    generateTypeScript(tmpDir, "my-pkg", "library", "A test", "", [], []);
     const content = fs.readFileSync(
       path.join(tmpDir, "src", "index.ts"),
       "utf-8",
@@ -1085,8 +1085,8 @@ describe("findRepoRoot", () => {
 // =========================================================================
 
 describe("VALID_LANGUAGES", () => {
-  it("contains all 7 supported languages", () => {
-    expect(VALID_LANGUAGES).toHaveLength(7);
+  it("contains all 10 supported languages", () => {
+    expect(VALID_LANGUAGES).toHaveLength(10);
     expect(VALID_LANGUAGES).toContain("python");
     expect(VALID_LANGUAGES).toContain("go");
     expect(VALID_LANGUAGES).toContain("ruby");
@@ -1094,6 +1094,9 @@ describe("VALID_LANGUAGES", () => {
     expect(VALID_LANGUAGES).toContain("rust");
     expect(VALID_LANGUAGES).toContain("elixir");
     expect(VALID_LANGUAGES).toContain("perl");
+    expect(VALID_LANGUAGES).toContain("lua");
+    expect(VALID_LANGUAGES).toContain("swift");
+    expect(VALID_LANGUAGES).toContain("haskell");
   });
 });
 
