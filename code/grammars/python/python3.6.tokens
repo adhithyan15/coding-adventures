@@ -112,24 +112,41 @@ skip:
 #   Your order #{order_id} is ready.
 #   """
 
+# ============================================================================
+# F-String Tokens (DEFERRED — requires lexer mode stack)
+# ============================================================================
+#
+# F-string tokenization requires a stateful lexer with a mode stack:
+# when the lexer sees f", it pushes an f-string mode; inside that mode,
+# { switches to expression mode, } pops back to f-string mode, and the
+# closing quote pops the f-string mode entirely.
+#
+# Our grammar-driven lexer does not yet support mode stacks. Until it does,
+# f-strings are tokenized as regular STRING tokens. The f/F prefix is
+# consumed as part of the string pattern. The internal {expr} syntax is
+# not decomposed into separate tokens.
+#
+# The commented-out definitions below show the intended token structure
+# for when mode stack support is added.
+
 # --- Triple-quoted f-string starters ---
 # These must come before single-quoted variants (first-match-wins).
 # Each prefix combination gets its own pattern but all emit FSTRING_START.
 
-FSTRING_RAW_TRIPLE_DQ_1 = /[rR][fF]"""/  -> FSTRING_START
-FSTRING_RAW_TRIPLE_DQ_2 = /[fF][rR]"""/  -> FSTRING_START
-FSTRING_RAW_TRIPLE_SQ_1 = /[rR][fF]'''/  -> FSTRING_START
-FSTRING_RAW_TRIPLE_SQ_2 = /[fF][rR]'''/  -> FSTRING_START
-FSTRING_TRIPLE_DQ       = /[fF]"""/       -> FSTRING_START
-FSTRING_TRIPLE_SQ       = /[fF]'''/       -> FSTRING_START
+# FSTRING_RAW_TRIPLE_DQ_1 = /[rR][fF]"""/  -> FSTRING_START
+# FSTRING_RAW_TRIPLE_DQ_2 = /[fF][rR]"""/  -> FSTRING_START
+# FSTRING_RAW_TRIPLE_SQ_1 = /[rR][fF]'''/  -> FSTRING_START
+# FSTRING_RAW_TRIPLE_SQ_2 = /[fF][rR]'''/  -> FSTRING_START
+# FSTRING_TRIPLE_DQ       = /[fF]"""/       -> FSTRING_START
+# FSTRING_TRIPLE_SQ       = /[fF]'''/       -> FSTRING_START
 
 # --- Single-quoted f-string starters ---
-FSTRING_RAW_DQ_1        = /[rR][fF]"/     -> FSTRING_START
-FSTRING_RAW_DQ_2        = /[fF][rR]"/     -> FSTRING_START
-FSTRING_RAW_SQ_1        = /[rR][fF]'/     -> FSTRING_START
-FSTRING_RAW_SQ_2        = /[fF][rR]'/     -> FSTRING_START
-FSTRING_DQ              = /[fF]"/         -> FSTRING_START
-FSTRING_SQ              = /[fF]'/         -> FSTRING_START
+# FSTRING_RAW_DQ_1        = /[rR][fF]"/     -> FSTRING_START
+# FSTRING_RAW_DQ_2        = /[fF][rR]"/     -> FSTRING_START
+# FSTRING_RAW_SQ_1        = /[rR][fF]'/     -> FSTRING_START
+# FSTRING_RAW_SQ_2        = /[fF][rR]'/     -> FSTRING_START
+# FSTRING_DQ              = /[fF]"/         -> FSTRING_START
+# FSTRING_SQ              = /[fF]'/         -> FSTRING_START
 
 # --- F-string interior tokens ---
 #
@@ -144,7 +161,7 @@ FSTRING_SQ              = /[fF]'/         -> FSTRING_START
 # The regex below is a simplified representation; a real implementation
 # uses a stateful lexer (mode stack) rather than pure regex.
 
-FSTRING_MIDDLE = /([^{}"'\\]|\\.|{{|}})+/
+# FSTRING_MIDDLE = /([^{}"'\\]|\\.|{{|}})+/
 
 # --- F-string delimiters ---
 #
@@ -152,17 +169,17 @@ FSTRING_MIDDLE = /([^{}"'\\]|\\.|{{|}})+/
 # pattern depends on context (which quote style opened the f-string).
 # Represented here as the common single/double quote closings.
 
-FSTRING_END_TRIPLE_DQ = /"""/  -> FSTRING_END
-FSTRING_END_TRIPLE_SQ = /'''/  -> FSTRING_END
-FSTRING_END_DQ        = /"/    -> FSTRING_END
-FSTRING_END_SQ        = /'/    -> FSTRING_END
+# FSTRING_END_TRIPLE_DQ = /"""/  -> FSTRING_END
+# FSTRING_END_TRIPLE_SQ = /'''/  -> FSTRING_END
+# FSTRING_END_DQ        = /"/    -> FSTRING_END
+# FSTRING_END_SQ        = /'/    -> FSTRING_END
 
 # Expression delimiters within f-strings.
 # { opens an expression hole; } closes it. These are distinct from
 # LBRACE/RBRACE to let the parser distinguish f-string expression
 # boundaries from dict/set literals.
-LBRACE_EXPR  = "{"
-RBRACE_EXPR  = "}"
+# LBRACE_EXPR  = "{"
+# RBRACE_EXPR  = "}"
 
 # ============================================================================
 # String Literals
@@ -177,14 +194,26 @@ RBRACE_EXPR  = "}"
 # Triple-quoted variants come first (first-match-wins: """ before ").
 
 # Triple-quoted with prefixes
+# Raw + f-string triple-quoted: rf"""...""" or fr'''...'''
+STRING_RAW_FSTR_TRIPLE_DQ = /[rR][fF]"""([^"\\]|\\.|\n)*"""|[fF][rR]"""([^"\\]|\\.|\n)*"""/  -> STRING
+STRING_RAW_FSTR_TRIPLE_SQ = /[rR][fF]'''([^'\\]|\\.|\n)*'''|[fF][rR]'''([^'\\]|\\.|\n)*'''/  -> STRING
 STRING_RAW_TRIPLE_DQ = /[rR][bB]?"""([^"\\]|\\.|\n)*"""|[bB][rR]"""([^"\\]|\\.|\n)*"""/  -> STRING
 STRING_RAW_TRIPLE_SQ = /[rR][bB]?'''([^'\\]|\\.|\n)*'''|[bB][rR]'''([^'\\]|\\.|\n)*'''/  -> STRING
+# F-string triple-quoted: f"""...""" or f'''...'''
+STRING_FSTR_TRIPLE_DQ = /[fF]"""([^"\\]|\\.|\n)*"""/                                      -> STRING
+STRING_FSTR_TRIPLE_SQ = /[fF]'''([^'\\]|\\.|\n)*'''/                                      -> STRING
 STRING_TRIPLE_DQ     = /[bB]?"""([^"\\]|\\.|\n)*"""/                                      -> STRING
 STRING_TRIPLE_SQ     = /[bB]?'''([^'\\]|\\.|\n)*'''/                                      -> STRING
 
 # Single-quoted with prefixes
+# Raw + f-string: rf"..." or fr'...'
+STRING_RAW_FSTR_DQ   = /[rR][fF]"([^"\\]|\\.)*"|[fF][rR]"([^"\\]|\\.)*"/                 -> STRING
+STRING_RAW_FSTR_SQ   = /[rR][fF]'([^'\\]|\\.)*'|[fF][rR]'([^'\\]|\\.)*'/                 -> STRING
 STRING_RAW_DQ        = /[rR][bB]?"([^"\\]|\\.)*"|[bB][rR]"([^"\\]|\\.)*"/                 -> STRING
 STRING_RAW_SQ        = /[rR][bB]?'([^'\\]|\\.)*'|[bB][rR]'([^'\\]|\\.)*'/                 -> STRING
+# F-string: f"..." or f'...'
+STRING_FSTR_DQ       = /[fF]"([^"\\]|\\.)*"/                                              -> STRING
+STRING_FSTR_SQ       = /[fF]'([^'\\]|\\.)*'/                                              -> STRING
 STRING_DQ            = /[bB]?"([^"\\]|\\.)*"/                                              -> STRING
 STRING_SQ            = /[bB]?'([^'\\]|\\.)*'/                                              -> STRING
 

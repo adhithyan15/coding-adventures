@@ -45,8 +45,21 @@ skip:
   LINE_CONTINUATION = /\\[ \t]*\n/
 
 # ============================================================================
-# F-String Tokens (PEP 701 — New in 3.12)
+# F-String Tokens (DEFERRED — requires lexer mode stack)
 # ============================================================================
+#
+# F-string tokenization requires a stateful lexer with a mode stack:
+# when the lexer sees f", it pushes an f-string mode; inside that mode,
+# { switches to expression mode, } pops back to f-string mode, and the
+# closing quote pops the f-string mode entirely.
+#
+# Our grammar-driven lexer does not yet support mode stacks. Until it does,
+# f-strings are tokenized as regular STRING tokens. The f/F prefix is
+# consumed as part of the string pattern. The internal {expr} syntax is
+# not decomposed into separate tokens.
+#
+# The commented-out definitions below show the intended token structure
+# for when mode stack support is added.
 #
 # PEP 701 integrates f-string tokenization into the main tokenizer using
 # a "quote stack" approach. The lexer produces structured tokens:
@@ -67,30 +80,37 @@ skip:
 #
 # Triple-quoted patterns must come before single-quoted (first-match-wins).
 
-FSTRING_START_TRIPLE_DQ  = /[fF][rRbB]?"""|[rRbB][fF]"""/    -> FSTRING_START
-FSTRING_START_TRIPLE_SQ  = /[fF][rRbB]?'''|[rRbB][fF]'''/    -> FSTRING_START
-FSTRING_START_DQ         = /[fF][rRbB]?"|[rRbB][fF]"/         -> FSTRING_START
-FSTRING_START_SQ         = /[fF][rRbB]?'|[rRbB][fF]'/         -> FSTRING_START
+# FSTRING_START_TRIPLE_DQ  = /[fF][rRbB]?"""|[rRbB][fF]"""/    -> FSTRING_START
+# FSTRING_START_TRIPLE_SQ  = /[fF][rRbB]?'''|[rRbB][fF]'''/    -> FSTRING_START
+# FSTRING_START_DQ         = /[fF][rRbB]?"|[rRbB][fF]"/         -> FSTRING_START
+# FSTRING_START_SQ         = /[fF][rRbB]?'|[rRbB][fF]'/         -> FSTRING_START
 
 # FSTRING_MIDDLE is state-machine-driven (not purely regex).
 # Approximate pattern: literal text with escaped braces {{ and }}.
-FSTRING_MIDDLE           = /([^{}\\'"#]|\\.|(\{\{)|(\}\}))+/
+# FSTRING_MIDDLE           = /([^{}\\'"#]|\\.|(\{\{)|(\}\}))+/
 
-FSTRING_END_TRIPLE_DQ    = /"""/                               -> FSTRING_END
-FSTRING_END_TRIPLE_SQ    = /'''/                               -> FSTRING_END
-FSTRING_END_DQ           = /"/                                 -> FSTRING_END
-FSTRING_END_SQ           = /'/                                 -> FSTRING_END
+# FSTRING_END_TRIPLE_DQ    = /"""/                               -> FSTRING_END
+# FSTRING_END_TRIPLE_SQ    = /'''/                               -> FSTRING_END
+# FSTRING_END_DQ           = /"/                                 -> FSTRING_END
+# FSTRING_END_SQ           = /'/                                 -> FSTRING_END
 
 # ============================================================================
 # String Literals
 # ============================================================================
 #
 # Prefixes: (none)=str, b/B=bytes, r/R=raw, rb/br=raw bytes, u/U=str (PEP 414).
-# F-strings (f/F prefix) are handled by FSTRING_* tokens above.
+# F-strings (f/F prefix) are tokenized as regular STRING tokens since the
+# FSTRING_* tokens above are deferred (require mode stack support).
 # Triple-quoted patterns must come before single-quoted (first-match-wins).
 
+# Raw + f-string triple-quoted: rf"""...""" or fr'''...'''
+STRING_RAW_FSTRING_TRIPLE_DQ = /[rR][fF]"""([^"\\]|\\.|\n)*"""|[fF][rR]"""([^"\\]|\\.|\n)*"""/   -> STRING
+STRING_RAW_FSTRING_TRIPLE_SQ = /[rR][fF]'''([^'\\]|\\.|\n)*'''|[fF][rR]'''([^'\\]|\\.|\n)*'''/   -> STRING
 STRING_RAW_BYTES_TRIPLE_DQ   = /[bB][rR]"""([^"\\]|\\.|\n)*"""|[rR][bB]"""([^"\\]|\\.|\n)*"""/   -> STRING
 STRING_RAW_BYTES_TRIPLE_SQ   = /[bB][rR]'''([^'\\]|\\.|\n)*'''|[rR][bB]'''([^'\\]|\\.|\n)*'''/   -> STRING
+# F-string triple-quoted: f"""...""" or f'''...'''
+STRING_FSTRING_TRIPLE_DQ     = /[fF]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
+STRING_FSTRING_TRIPLE_SQ     = /[fF]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
 STRING_UNICODE_TRIPLE_DQ     = /[uU]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
 STRING_UNICODE_TRIPLE_SQ     = /[uU]'''([^'\\]|\\.|\n)*'''/                                       -> STRING
 STRING_RAW_TRIPLE_DQ         = /[rR]"""([^"\\]|\\.|\n)*"""/                                       -> STRING
@@ -100,8 +120,14 @@ STRING_BYTES_TRIPLE_SQ       = /[bB]'''([^'\\]|\\.|\n)*'''/                     
 STRING_TRIPLE_DQ             = /"""([^"\\]|\\.|\n)*"""/                                            -> STRING
 STRING_TRIPLE_SQ             = /'''([^'\\]|\\.|\n)*'''/                                            -> STRING
 
+# Raw + f-string: rf"..." or fr'...'
+STRING_RAW_FSTRING_DQ        = /[rR][fF]"([^"\\]|\\.)*"|[fF][rR]"([^"\\]|\\.)*"/                   -> STRING
+STRING_RAW_FSTRING_SQ        = /[rR][fF]'([^'\\]|\\.)*'|[fF][rR]'([^'\\]|\\.)*'/                   -> STRING
 STRING_RAW_BYTES_DQ          = /[bB][rR]"([^"\\]|\\.)*"|[rR][bB]"([^"\\]|\\.)*"/                   -> STRING
 STRING_RAW_BYTES_SQ          = /[bB][rR]'([^'\\]|\\.)*'|[rR][bB]'([^'\\]|\\.)*'/                   -> STRING
+# F-string: f"..." or f'...'
+STRING_FSTRING_DQ            = /[fF]"([^"\\]|\\.)*"/                                               -> STRING
+STRING_FSTRING_SQ            = /[fF]'([^'\\]|\\.)*'/                                               -> STRING
 STRING_UNICODE_DQ            = /[uU]"([^"\\]|\\.)*"/                                               -> STRING
 STRING_UNICODE_SQ            = /[uU]'([^'\\]|\\.)*'/                                               -> STRING
 STRING_RAW_DQ                = /[rR]"([^"\\]|\\.)*"/                                               -> STRING

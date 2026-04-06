@@ -235,6 +235,26 @@ class TokenGrammar:
     Examples: JavaScript's ``async``, ``await``, ``yield``, ``get``, ``set``.
     """
 
+    soft_keywords: list[str] = field(default_factory=list)
+    """Soft keywords — words that act as keywords only in specific syntactic
+    contexts, remaining ordinary identifiers everywhere else.
+
+    Unlike context_keywords (which set a flag on the token), soft keywords
+    produce plain NAME tokens with NO special flag. The lexer is completely
+    unaware of their keyword status — the parser handles disambiguation
+    entirely based on syntactic position.
+
+    This distinction matters because:
+      - context_keywords: lexer hints to parser ("this NAME might be special")
+      - soft_keywords: lexer ignores them completely, parser owns the decision
+
+    Examples:
+      Python 3.10+: ``match``, ``case``, ``_`` (only keywords inside match statements)
+      Python 3.12+: ``type`` (only a keyword in ``type X = ...`` statements)
+
+    A ``soft_keywords:`` section in a .tokens file populates this field.
+    """
+
     def token_names(self) -> set[str]:
         """Return the set of all defined token names.
 
@@ -615,6 +635,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = "context_keywords"
             continue
 
+        if stripped in ("soft_keywords:", "soft_keywords :"):
+            current_section = "soft_keywords"
+            continue
+
         # --- Inside a section ---
         if current_section is not None:
             # Sections contain indented lines. A non-indented line exits
@@ -629,6 +653,9 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                 elif current_section == "context_keywords":
                     if stripped:
                         grammar.context_keywords.append(stripped)
+                elif current_section == "soft_keywords":
+                    if stripped:
+                        grammar.soft_keywords.append(stripped)
                 elif current_section == "skip":
                     # Skip section contains token definitions
                     if "=" not in stripped:

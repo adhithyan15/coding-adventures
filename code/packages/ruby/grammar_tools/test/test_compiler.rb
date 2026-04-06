@@ -193,6 +193,31 @@ class TestCompileTokenGrammarRoundTrip < Minitest::Test
     loaded   = eval_token_grammar(code)
     assert_equal original.definitions[0].pattern, loaded.definitions[0].pattern
   end
+
+  def test_context_keywords
+    source = "NAME = /[a-z]+/\ncontext_keywords:\n  async\n  await\n"
+    original = GT.parse_token_grammar(source)
+    code     = GT.compile_token_grammar(original)
+    loaded   = eval_token_grammar(code)
+    assert_equal %w[async await], loaded.context_keywords
+  end
+
+  def test_soft_keywords
+    source = "NAME = /[a-z]+/\nsoft_keywords:\n  match\n  case\n  type\n"
+    original = GT.parse_token_grammar(source)
+    code     = GT.compile_token_grammar(original)
+    loaded   = eval_token_grammar(code)
+    assert_equal %w[match case type], loaded.soft_keywords
+  end
+
+  def test_soft_keywords_and_context_keywords_together
+    source = "NAME = /[a-z]+/\ncontext_keywords:\n  async\nsoft_keywords:\n  match\n"
+    original = GT.parse_token_grammar(source)
+    code     = GT.compile_token_grammar(original)
+    loaded   = eval_token_grammar(code)
+    assert_equal %w[async], loaded.context_keywords
+    assert_equal %w[match], loaded.soft_keywords
+  end
 end
 
 # ============================================================================

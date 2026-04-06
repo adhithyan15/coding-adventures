@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.0] - 2026-04-05
+
+### Added
+- **TokenGrammar**: `soft_keywords` attribute -- list of soft keywords parsed
+  from the `soft_keywords:` section in `.tokens` files. Soft keywords are words
+  that act as keywords only in specific syntactic contexts (e.g., Python 3.10+
+  `match`, `case`, `_`; Python 3.12+ `type`). Unlike `context_keywords`, soft
+  keywords produce plain NAME tokens with no special flag -- the parser handles
+  all disambiguation based on syntactic position.
+- **Token grammar parser**: recognises `soft_keywords:` section header and
+  collects indented keyword entries (same format as `keywords:` / `context_keywords:`)
+- **Reserved group names**: `soft_keywords` and `context_keywords` added to
+  the set of reserved group names (cannot be used as pattern group names)
+- **Compiler**: `compile_token_grammar` includes `soft_keywords` in generated output
+
 ## [0.5.0] - 2026-04-04
 
 ### Added
