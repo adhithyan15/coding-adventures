@@ -182,4 +182,5 @@ members = [
   "paint-metal",
   "algol-lexer",
   "algol-parser",
+  "register-vm",
 ]

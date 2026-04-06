@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-register-vm"
+version = "0.1.0"
+description = "Generic register-based virtual machine with accumulator model and feedback vectors"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["register-vm", "virtual-machine", "bytecode", "v8", "ignition", "education"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=register_vm --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/register_vm"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
+# E501 (line too long) is ignored: long lines only appear in docstrings and inline
+# comments that serve as literate programming annotations. Wrapping them would harm
+# readability without improving code quality.
+ignore = ["E501"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/register_vm"]

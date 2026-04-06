@@ -1,0 +1,2 @@
+bundle install --quiet --full-index --gemfile=%CD%\Gemfile
+bundle exec --gemfile=%CD%\Gemfile ruby -Ilib -Itest test/test_parrot.rb
