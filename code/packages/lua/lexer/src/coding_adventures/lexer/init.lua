@@ -1011,6 +1011,8 @@ local function pcre_to_lua(s)
                 if     bnc == "t"  then buf[#buf+1] = "\t";  j = j+2
                 elseif bnc == "r"  then buf[#buf+1] = "\r";  j = j+2
                 elseif bnc == "n"  then buf[#buf+1] = "\n";  j = j+2
+                elseif bnc == "v"  then buf[#buf+1] = "\11"; j = j+2  -- vertical tab (U+000B)
+                elseif bnc == "f"  then buf[#buf+1] = "\12"; j = j+2  -- form feed (U+000C)
                 elseif bnc == "s"  then buf[#buf+1] = "%s";  j = j+2
                 elseif bnc == "S"  then buf[#buf+1] = "%S";  j = j+2
                 elseif bnc == "d"  then buf[#buf+1] = "%d";  j = j+2
@@ -1048,6 +1050,8 @@ local function pcre_to_lua(s)
             if     nc == "t"  then result[#result+1] = "\t";     i = i+2
             elseif nc == "r"  then result[#result+1] = "\r";     i = i+2
             elseif nc == "n"  then result[#result+1] = "\n";     i = i+2
+            elseif nc == "v"  then result[#result+1] = "\11";    i = i+2  -- vertical tab (U+000B)
+            elseif nc == "f"  then result[#result+1] = "\12";    i = i+2  -- form feed (U+000C)
             elseif nc == "s"  then result[#result+1] = "%s";     i = i+2
             elseif nc == "S"  then result[#result+1] = "%S";     i = i+2
             elseif nc == "d"  then result[#result+1] = "%d";     i = i+2
