@@ -206,3 +206,45 @@ code/packages/rust/pixel-container/
 ```
 
 `Cargo.toml` declares no `[dependencies]`. The crate is intentionally minimal.
+
+---
+
+## Language Matrix
+
+IC00–IC03 have been implemented across 9 languages. Each language provides 4 packages:
+`pixel-container` (IC00), `image-codec-bmp` (IC01), `image-codec-ppm` (IC02), `image-codec-qoi` (IC03).
+
+| Language | Pixel buffer type | Binary I/O | Test framework | Package manager |
+|----------|-------------------|------------|----------------|-----------------|
+| Rust | `Vec<u8>` | `struct` fields + slice | `#[test]` | Cargo |
+| TypeScript | `Uint8Array` | `DataView` (LE) | Vitest | npm |
+| Python | `bytearray` | `struct.pack/unpack` | pytest | uv/hatchling |
+| Go | `[]byte` | `encoding/binary` | `testing` | go modules |
+| Ruby | `String` (BINARY) | `pack/unpack` | minitest | RubyGems |
+| Swift | `[UInt8]` | manual byte assembly | XCTest | SwiftPM |
+| Elixir | `binary` | binary pattern matching | ExUnit | Mix |
+| Lua | integer array (1-indexed) | `string.pack/unpack` | busted | LuaRocks |
+| Perl | `scalar` (byte string) | `pack/unpack` | Test2::V0 | CPAN/cpanm |
+
+### Naming Conventions by Language
+
+| Language | Module/namespace | Package name |
+|----------|-----------------|--------------|
+| Rust | `pixel_container::PixelContainer` | `pixel-container` |
+| TypeScript | `@coding-adventures/pixel-container` | npm scoped package |
+| Python | `pixel_container.PixelContainer` | `coding-adventures-pixel-container` |
+| Go | `pixelcontainer.PixelContainer` | `github.com/.../go/pixel-container` |
+| Ruby | `CodingAdventures::PixelContainer::Container` | `coding-adventures-pixel-container` |
+| Swift | `PixelContainer` (struct in `PixelContainer` module) | SwiftPM package |
+| Elixir | `CodingAdventures.PixelContainer` | `:coding_adventures_pixel_container` |
+| Lua | `coding_adventures.pixel_container` | rockspec |
+| Perl | `CodingAdventures::PixelContainer` | CPAN dist |
+
+### Implementation Notes
+
+- **Rust**: original reference implementation; `pixel-container` is re-exported from `paint-instructions` for backwards compatibility.
+- **TypeScript**: simplified from the richer `paint-instructions` `PixelContainer` (dropped `channels`, `bit_depth`, `color_space`) to use the fixed RGBA8 model.
+- **Go**: each package is a separate `go.mod` module; codecs reference pixel-container via `replace` directives.
+- **Elixir**: immutable binaries; `set_pixel/7` returns a new struct (functional update).
+- **Lua**: data stored as a 1-indexed integer array (Lua has no byte arrays); `string.pack`/`string.unpack` used for file I/O.
+- **Swift**: tuples returned by `pixelAt` cannot use `XCTAssertEqual` (no `Equatable` conformance); tests use `XCTAssertTrue(tuple == expected)` instead.

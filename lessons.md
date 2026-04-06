@@ -1431,3 +1431,22 @@ static MODULE_NAME_BYTES: &[u8] = b"Elixir.CodingAdventures.GF256Native\0";
 **Rule:** For Elixir NIFs, always use the full `"Elixir.ModuleName"` format for
 `ErlNifEntry.name`. For Erlang NIFs, use the short lowercase atom name.
 
+
+### 2026-04-05: QOI encoder seen-table must update for CURRENT pixel, not previous
+
+When implementing the QOI encoder, the 64-slot seen-pixels table must be updated
+for the **current** pixel after emitting any op that is NOT QOI_OP_INDEX. Updating
+the table for the *previous* pixel before processing the current one (a "lag-one"
+strategy) diverges from the decoder state and causes round-trip failures for any
+image where a pixel is referenced by INDEX after the first emit.
+
+The decoder always updates `seen[hash(r,g,b,a)] = (r,g,b,a)` for each non-RUN
+pixel *after* decoding it. The encoder must do the same: emit the op for the current
+pixel, then update `seen[hash(current)]` — NOT `seen[hash(prev)]` first.
+
+The reference Python, TypeScript, Go, and other correct implementations only update
+`seen` when the pixel did NOT match INDEX (the value is already there for INDEX pixels,
+so updating is a no-op — but the key point is that `prev` is never written to `seen`
+as a separate step).
+
+This bug appeared in the Lua QOI encoder and was fixed before committing.

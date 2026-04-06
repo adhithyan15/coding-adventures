@@ -238,64 +238,19 @@ export type BlendMode =
   | "luminosity";
 
 // ============================================================================
-// PixelContainer — raw pixel buffer (output of PaintVM.export())
+// PixelContainer and ImageCodec — re-exported from pixel-container (IC00)
 // ============================================================================
-
-/**
- * A raw pixel buffer — the output of PaintVM.export() and the input to ImageCodec.encode().
- *
- * Pixels are stored row-major, top-left origin, channels interleaved.
- *
- * For RGBA (channels=4, bit_depth=8), the layout is:
- *   offset = (row * width + col) * 4
- *   pixels[offset + 0] = R
- *   pixels[offset + 1] = G
- *   pixels[offset + 2] = B
- *   pixels[offset + 3] = A
- *
- * Total byte length: width × height × channels × (bit_depth / 8)
- *
- * This type lives in P2D00 (paint-instructions) rather than P2D01 (paint-vm)
- * because both the VM (which produces PixelContainers via export()) and codecs
- * (which consume PixelContainers via encode()) depend on this shared contract.
- * Defining it here keeps the dependency graph acyclic: no codec imports from
- * a VM, no VM imports from a codec.
- */
-export interface PixelContainer {
-  width: number;
-  height: number;
-  channels: 3 | 4; // 3 = RGB, 4 = RGBA
-  bit_depth: 8 | 16; // bits per channel
-  pixels: Uint8Array | Uint16Array; // row-major, interleaved
-  color_space?: "srgb" | "display-p3" | "linear-srgb"; // default "srgb"
-}
-
-// ============================================================================
-// ImageCodec — encode/decode interface for image formats
-// ============================================================================
-
-/**
- * An image codec that can encode a PixelContainer to bytes and decode bytes back.
- *
- * This interface is implemented by packages like paint-codec-png, paint-codec-webp,
- * paint-codec-jpeg, paint-codec-avif. Each codec is a separate package — no codec
- * is bundled into the VM or the IR.
- *
- * The canonical pipeline:
- *   const pixels = vm.export(scene);          // PaintVM → PixelContainer
- *   const bytes  = pngCodec.encode(pixels);   // PixelContainer → Uint8Array
- *   fs.writeFileSync("output.png", bytes);
- *
- * Decode is the reverse — useful when loading a PaintImage.src asset into a
- * backend texture without going through a URI:
- *   const pixels = pngCodec.decode(fs.readFileSync("photo.png"));
- *   const scene = { ..., instructions: [{ kind: "image", src: pixels, ... }] };
- */
-export interface ImageCodec {
-  mime_type: string; // e.g. "image/png", "image/webp", "image/jpeg"
-  encode(pixels: PixelContainer): Uint8Array;
-  decode(bytes: Uint8Array): PixelContainer;
-}
+//
+// These types are defined in the standalone `@coding-adventures/pixel-container`
+// package so that image codecs can depend only on that package without pulling
+// in the full paint IR. Re-exporting them here preserves the existing import
+// path so all downstream consumers compile unchanged.
+//
+// The IC00 model is fixed RGBA8: { width, height, data: Uint8Array }.
+// The older fields (channels, bit_depth, color_space) have been removed —
+// they added complexity with no benefit at the codec layer where callers
+// always deal with RGBA8.
+export type { PixelContainer, ImageCodec } from "@coding-adventures/pixel-container";
 
 // ============================================================================
 // Instruction types
