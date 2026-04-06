@@ -103,13 +103,17 @@ return {
 
     -- ── Core loop functions ────────────────────────────────────────────────
 
-    -- run(language, prompt, waiting)
+    -- run(language, prompt, waiting, opts)
     --   Start an interactive REPL on stdio.
     --   language is required. prompt and waiting default to the built-ins.
+    --   opts is an optional table; opts.mode = "sync" (default) or "async"
+    --   (raises an error — async is not supported in standard Lua).
     run = loop_mod.run,
 
-    -- run_with_io(language, prompt, waiting, input_fn, output_fn)
+    -- run_with_io(language, prompt, waiting, input_fn, output_fn, opts)
     --   Start a REPL with injected I/O. Useful for testing and embedding.
+    --   waiting may be nil in sync mode (a silent no-op shim is used).
+    --   opts.mode = "sync" (default) or "async" (raises an error).
     run_with_io = loop_mod.run_with_io,
 
     -- ── Built-in plug-ins ──────────────────────────────────────────────────

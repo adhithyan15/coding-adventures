@@ -209,6 +209,7 @@ def run_with_io(
     *,
     input_fn: Callable[[], str | None],
     output_fn: Callable[[str], None],
+    mode: str = "async",
 ) -> None:
     """Run the REPL loop with injected I/O.
 
@@ -234,6 +235,19 @@ def run_with_io(
     output_fn:
         Callable that writes a string to the output.  The loop appends a
         newline to every string it writes.  Keyword-only.
+    mode:
+        Evaluation mode.  Accepted values:
+
+        ``"async"`` (default)
+            Evaluation runs in a background :class:`threading.Thread`.
+            The waiting plugin is driven (``start`` / ``tick`` / ``stop``)
+            while the thread is alive.  This is the original behaviour.
+
+        ``"sync"``
+            Evaluation runs directly on the calling thread in a
+            ``try/except`` block.  No thread is spawned and no waiting
+            plugin calls are made.  Useful for tests and synchronous
+            embeddings where threading overhead is undesirable.
 
     Notes
     -----
@@ -276,11 +290,23 @@ def run_with_io(
         line = line.rstrip("\n")
 
         # -------------------------------------------------------------------
-        # Step 2 — evaluate in a background thread, driving waiting ticks.
+        # Step 2 — evaluate, either synchronously or in a background thread.
         # -------------------------------------------------------------------
-        thread, result_box = _eval_in_thread(language, line)
-        thread.start()
-        result = _wait_for_thread(thread, result_box, waiting)
+        if mode == "sync":
+            # Sync path: call eval directly on the calling thread.  No
+            # thread is spawned and the waiting plugin is not invoked.
+            # Exceptions are still caught so the REPL survives a buggy
+            # language plugin without crashing.
+            try:
+                result = language.eval(line)
+            except Exception as exc:  # noqa: BLE001 — deliberate broad catch
+                result = ("error", f"Unhandled exception: {exc}")
+        else:
+            # Async path (default): run eval in a background thread and
+            # drive the waiting plugin while polling for completion.
+            thread, result_box = _eval_in_thread(language, line)
+            thread.start()
+            result = _wait_for_thread(thread, result_box, waiting)
 
         # -------------------------------------------------------------------
         # Step 3 — handle the result.

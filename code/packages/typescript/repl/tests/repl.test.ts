@@ -344,3 +344,104 @@ describe("SilentWaiting", () => {
     expect(() => w.stop(state)).not.toThrow();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Sync mode tests
+// ---------------------------------------------------------------------------
+
+describe("REPL sync mode", () => {
+  // ─── Sync Test 1 ──────────────────────────────────────────────────────────
+
+  it("sync mode: echo works", async () => {
+    /**
+     * In sync mode, `language.eval` is awaited directly with no setInterval.
+     * This test verifies that the echo output is still produced correctly —
+     * the mode change only affects *how* the eval is awaited, not what the
+     * loop does with the result.
+     *
+     * We pass `mode: "sync"` and a real SilentWaiting (which will be ignored).
+     * The loop must still print the echoed value.
+     */
+    const language = new EchoLanguage();
+    const prompt = new DefaultPrompt();
+    const waiting = new SilentWaiting();
+    const outputs: string[] = [];
+    const outputFn = (s: string) => outputs.push(s);
+
+    await runWithIo(
+      language,
+      prompt,
+      waiting,
+      makeInputFn(["hello", null]),
+      outputFn,
+      "sync"
+    );
+
+    // The echo result must appear in outputs, just as it does in async mode.
+    expect(outputs).toContain("hello");
+  });
+
+  // ─── Sync Test 2 ──────────────────────────────────────────────────────────
+
+  it("sync mode: quit works", async () => {
+    /**
+     * `:quit` must terminate the loop in sync mode, exactly as in async mode.
+     *
+     * We supply `:quit` as the first input followed by `"unreachable"`.
+     * The loop must exit after the quit signal and never process the second
+     * input.
+     */
+    const language = new EchoLanguage();
+    const prompt = new DefaultPrompt();
+    const waiting = new SilentWaiting();
+    const outputs: string[] = [];
+    const outputFn = (s: string) => outputs.push(s);
+
+    await runWithIo(
+      language,
+      prompt,
+      waiting,
+      makeInputFn([":quit", "unreachable"]),
+      outputFn,
+      "sync"
+    );
+
+    // "unreachable" must never appear — the loop exited after `:quit`.
+    expect(outputs).not.toContain("unreachable");
+
+    // `:quit` itself must not be echoed.
+    expect(outputs).not.toContain(":quit");
+  });
+
+  // ─── Sync Test 3 ──────────────────────────────────────────────────────────
+
+  it("sync mode: null waiting allowed", async () => {
+    /**
+     * In sync mode the Waiting interface is completely bypassed, so passing
+     * `null` for `waiting` must be accepted without error.
+     *
+     * This is the primary use-case for sync mode: scripted / batch evaluation
+     * where no spinner is desired and no Waiting implementation is at hand.
+     *
+     * We pass `waiting: null` and `mode: "sync"` and verify that the loop
+     * still echoes input correctly.
+     */
+    const language = new EchoLanguage();
+    const prompt = new DefaultPrompt();
+    const outputs: string[] = [];
+    const outputFn = (s: string) => outputs.push(s);
+
+    // TypeScript: null is assignable to `Waiting | null` as declared.
+    await runWithIo(
+      language,
+      prompt,
+      null,          // waiting explicitly null — safe in sync mode
+      makeInputFn(["world", null]),
+      outputFn,
+      "sync"
+    );
+
+    // Echo result must still appear even with null waiting.
+    expect(outputs).toContain("world");
+  });
+});

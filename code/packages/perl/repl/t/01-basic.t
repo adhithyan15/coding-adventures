@@ -280,4 +280,74 @@ subtest 'run_with_io dies without required args' => sub {
     );
 };
 
+# ============================================================================
+# Test 13: sync mode explicit — run_with_io still works when mode => 'sync'
+#          is passed explicitly.
+#
+# This guards against a regression where the mode validation accidentally
+# broke the normal synchronous path. We feed a single line ("hello") and
+# confirm the echo arrives in the output, exactly as Test 1 does — the only
+# difference is the explicit mode => 'sync' argument.
+# ============================================================================
+subtest 'sync mode explicit: works' => sub {
+    my @lines   = ('hello');
+    my @captured;
+
+    CodingAdventures::Repl::run_with_io(
+        language  => CodingAdventures::Repl::EchoLanguage->new(),
+        input_fn  => sub { shift @lines },
+        output_fn => sub { push @captured, $_[0] },
+        mode      => 'sync',
+    );
+
+    my @echos = grep { $_ eq "hello\n" } @captured;
+    is( scalar @echos, 1, 'exactly one echo line with mode => sync' );
+    is( $echos[0], "hello\n", 'echoed line is correct under sync mode' );
+};
+
+# ============================================================================
+# Test 14: async mode — run_with_io must die immediately, before any input
+#          is read, with a message that includes "async mode is not supported".
+#
+# Why die rather than silently fall back to sync?
+#
+# Falling back silently would be dangerous: the caller requested async
+# behaviour (non-blocking, concurrent, etc.) and is likely depending on it.
+# Silently giving them sync semantics instead means their program may appear
+# to work in simple cases but silently deadlock or produce wrong results when
+# the async behaviour is actually needed. Failing loudly makes the mismatch
+# obvious at development time rather than in production.
+#
+# The check must happen BEFORE any input is consumed. We verify this by
+# using an input_fn that dies if called — if the async check runs correctly,
+# that coderef is never reached.
+# ============================================================================
+subtest 'async mode: dies at startup' => sub {
+    my $input_was_read = 0;
+
+    eval {
+        CodingAdventures::Repl::run_with_io(
+            language  => CodingAdventures::Repl::EchoLanguage->new(),
+            input_fn  => sub { $input_was_read = 1; undef },
+            output_fn => sub { },
+            mode      => 'async',
+        );
+    };
+
+    my $err = $@;
+
+    # The call must have thrown
+    ok( $err, 'run_with_io dies when mode is async' );
+
+    # The error message must identify the problem clearly
+    like(
+        $err,
+        qr/async mode is not supported/,
+        'error message mentions "async mode is not supported"'
+    );
+
+    # No input must have been consumed before the die
+    is( $input_was_read, 0, 'input_fn was never called before the die' );
+};
+
 done_testing;

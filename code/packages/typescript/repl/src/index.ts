@@ -54,7 +54,7 @@
  */
 
 // Types and interfaces
-export type { EvalResult, Language, Prompt, Waiting, InputFn, OutputFn } from "./types.js";
+export type { EvalResult, Language, Prompt, Waiting, InputFn, OutputFn, ReplMode } from "./types.js";
 
 // Loop functions
 export { runWithIo, run } from "./loop.js";

@@ -69,12 +69,51 @@ Lua coroutines are cooperative: once `language.eval()` is called, no other code 
 ## I/O Injection
 
 ```lua
--- run_with_io(language, prompt, waiting, input_fn, output_fn)
+-- run_with_io(language, prompt, waiting, input_fn, output_fn, opts)
 --   input_fn()    → string or nil   (nil = EOF)
 --   output_fn(s)  → nil
+--   opts          → optional table (see Mode Support below)
 ```
 
-`run(language, prompt, waiting)` is a convenience wrapper using `io.read` / `io.write`.
+`run(language, prompt, waiting, opts)` is a convenience wrapper using `io.read` / `io.write`.
+
+## Mode Support
+
+Both `run` and `run_with_io` accept an optional `opts` table as their last
+argument. The only recognised field is `mode`:
+
+| `opts.mode` | Behaviour |
+|-------------|-----------|
+| `"sync"` (default) | Normal synchronous eval — the only mode that works in standard Lua. |
+| `"async"` | Raises an error immediately at startup. |
+
+```lua
+-- Default (sync) — opts can be omitted entirely
+repl.run(repl.EchoLanguage)
+
+-- Explicit sync — identical to the above
+repl.run(repl.EchoLanguage, nil, nil, { mode = "sync" })
+
+-- Async — raises: "async mode is not supported in the Lua REPL implementation."
+repl.run(repl.EchoLanguage, nil, nil, { mode = "async" })
+```
+
+### Why is async not supported?
+
+Lua's standard coroutines are *cooperative*: once `language.eval()` is called,
+no other Lua code runs until it returns. There is no preemptive scheduler in
+the standard library. True async evaluation would require an external event
+loop (e.g., [Luvit](https://luvit.io/), [lua-ev](https://github.com/brimworks/lua-ev),
+or LuaJIT with OS threads) that is outside the scope of this package.
+
+Rather than silently ignoring an `async` request or falling back to broken
+behaviour, the framework raises a clear error so that cross-runtime code
+(e.g., glue code driving both a Lua REPL and a Python REPL that does support
+async) gets an actionable message instead of a confusing hang or wrong output.
+
+If you need a waiting animation between `start()` and `stop()`, that is
+achievable in sync mode by implementing a `waiting` plug-in whose `stop()`
+erases the spinner retroactively after eval returns.
 
 ## Package Layout
 

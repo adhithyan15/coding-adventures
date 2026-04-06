@@ -75,18 +75,32 @@ module CodingAdventures
     #
     # Construct with all required collaborators, then call `run` to start
     # the interactive session.
+    #
+    # Two evaluation modes are supported via the `mode:` keyword:
+    #
+    #   :async (default) — the language backend runs on a background Thread.
+    #     The main thread polls with thread.join(tick_ms / 1000.0) and drives
+    #     the Waiting animation each poll cycle. Requires a non-nil `waiting`.
+    #
+    #   :sync — the language backend is called directly in a begin/rescue on
+    #     the current thread. No Thread is spawned, the Waiting interface is
+    #     never touched, and `waiting` may be nil. Use this for batch/scripted
+    #     evaluation or in contexts where threads are undesirable.
     class Loop
       # @param language  [#eval]          the language backend
       # @param prompt    [#global_prompt] the prompt generator
       # @param waiting   [#start,#tick,#tick_ms,#stop] the waiting strategy
+      #                  (may be nil when mode: :sync)
       # @param input_fn  [Proc] called with no args; returns String or nil
       # @param output_fn [Proc] called with a String to display
-      def initialize(language:, prompt:, waiting:, input_fn:, output_fn:)
+      # @param mode      [:async, :sync]  evaluation strategy (default: :async)
+      def initialize(language:, prompt:, waiting:, input_fn:, output_fn:, mode: :async)
         @language  = language
         @prompt    = prompt
         @waiting   = waiting
         @input_fn  = input_fn
         @output_fn = output_fn
+        @mode      = mode
       end
 
       # Run the REPL loop until the user quits or input_fn returns nil.
@@ -95,10 +109,6 @@ module CodingAdventures
       #
       # @return [nil]
       def run
-        # How long to sleep between polls, in seconds.
-        # Convert tick_ms (integer milliseconds) to a float in seconds.
-        sleep_sec = @waiting.tick_ms / 1000.0
-
         loop do
           # ── PRINT the prompt ───────────────────────────────────────────────
           # We use global_prompt here; a multi-line language could switch to
@@ -117,41 +127,13 @@ module CodingAdventures
           # in tests may or may not include it, so we chomp defensively.
           input = input.chomp
 
-          # ── EVAL (async) ───────────────────────────────────────────────────
-          # Spawn a new thread for the eval call. This keeps the main thread
-          # free to drive the Waiting animation.
-          #
-          # Exception safety: the thread body is wrapped in begin/rescue so
-          # that any exception from the language backend is captured and
-          # converted into an [:error, message] result. Without this, an
-          # unhandled exception in the eval thread would be silently swallowed
-          # (Ruby's default behavior for threads without `Thread.abort_on_exception`).
-          thread = Thread.new do
-            begin
-              @language.eval(input)
-            rescue => e
-              # Convert any unexpected exception into an error result.
-              # The REPL session continues — the user is informed and can retry.
-              [:error, e.message]
-            end
+          # ── EVAL ───────────────────────────────────────────────────────────
+          # Route to the appropriate evaluation strategy.
+          outcome = if @mode == :sync
+            eval_sync(input)
+          else
+            eval_async(input)
           end
-
-          # ── WAIT (poll loop) ───────────────────────────────────────────────
-          # Drive the Waiting animation while the eval thread is running.
-          # `thread.join(sleep_sec)` returns nil if the thread is still alive,
-          # or returns the thread object if it has finished.
-          state = @waiting.start
-          state = @waiting.tick(state) until thread.join(sleep_sec)
-
-          # ── STOP waiting ──────────────────────────────────────────────────
-          # The eval thread is done. Let the Waiting impl clean up (e.g.,
-          # erase a spinner line from the terminal).
-          @waiting.stop(state)
-
-          # ── Fetch the result ───────────────────────────────────────────────
-          # `thread.value` returns the last expression from the thread block —
-          # our `[:ok, x]`, `[:error, msg]`, or `:quit`.
-          outcome = thread.value
 
           # ── PRINT / handle the outcome ────────────────────────────────────
           case outcome
@@ -176,6 +158,75 @@ module CodingAdventures
         end
 
         nil
+      end
+
+      private
+
+      # Evaluate in sync mode: call language.eval directly on the current
+      # thread, inside a begin/rescue. No Thread is spawned, and the Waiting
+      # interface is completely bypassed.
+      #
+      # This is simpler and has less overhead than async mode. It is suitable
+      # for scripted evaluation, testing, or any context where the eval is
+      # known to be fast or threading is undesirable.
+      #
+      # @param input [String] the chomped user input
+      # @return [:quit, Array] the eval outcome
+      def eval_sync(input)
+        begin
+          @language.eval(input)
+        rescue => e
+          # Convert any unexpected exception into an error result, just as
+          # the async path does. The REPL session continues.
+          [:error, e.message]
+        end
+      end
+
+      # Evaluate in async mode: spawn a Thread for the eval call and drive
+      # the Waiting animation while polling for completion.
+      #
+      # Spawning the eval on a background thread keeps the main thread free
+      # to update the spinner / progress indicator. This is the original
+      # behaviour and remains the default.
+      #
+      # Exception safety: the thread body wraps eval in begin/rescue so that
+      # any unhandled exception from the language backend is captured and
+      # converted into an [:error, message] result rather than being silently
+      # swallowed (Ruby's default for threads without abort_on_exception).
+      #
+      # @param input [String] the chomped user input
+      # @return [:quit, Array] the eval outcome
+      def eval_async(input)
+        # How long to sleep between polls, in seconds.
+        sleep_sec = @waiting.tick_ms / 1000.0
+
+        # Spawn a new thread for the eval call. This keeps the main thread
+        # free to drive the Waiting animation.
+        thread = Thread.new do
+          begin
+            @language.eval(input)
+          rescue => e
+            # Convert any unexpected exception into an error result.
+            # The REPL session continues — the user is informed and can retry.
+            [:error, e.message]
+          end
+        end
+
+        # ── WAIT (poll loop) ─────────────────────────────────────────────────
+        # Drive the Waiting animation while the eval thread is running.
+        # `thread.join(sleep_sec)` returns nil if the thread is still alive,
+        # or returns the thread object if it has finished.
+        state = @waiting.start
+        state = @waiting.tick(state) until thread.join(sleep_sec)
+
+        # ── STOP waiting ────────────────────────────────────────────────────
+        # The eval thread is done. Let the Waiting impl clean up (e.g.,
+        # erase a spinner line from the terminal).
+        @waiting.stop(state)
+
+        # `thread.value` returns the last expression from the thread block —
+        # our `[:ok, x]`, `[:error, msg]`, or `:quit`.
+        thread.value
       end
     end
   end

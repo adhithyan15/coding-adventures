@@ -88,21 +88,67 @@ end
 --   language   (table)    — Language plug-in; must have an .eval(input) method
 --   prompt     (table)    — Prompt plug-in; must have .global_prompt() and
 --                           .line_prompt() methods
---   waiting    (table)    — Waiting plug-in; must have .start(), .tick(s),
---                           .tick_ms(), and .stop(s) methods
+--   waiting    (table|nil)— Waiting plug-in; must have .start(), .tick(s),
+--                           .tick_ms(), and .stop(s) methods. May be nil in
+--                           sync mode (a silent no-op is used internally).
 --   input_fn   (function) — Called with no args; returns a string (next line)
 --                           or nil (EOF / end of input)
 --   output_fn  (function) — Called with a string; writes it to the user.
 --                           Should NOT add a trailing newline (we add \n where
 --                           needed so the caller controls line endings).
+--   opts       (table|nil)— Optional options table.
+--                           opts.mode = "sync"  (default) — synchronous eval
+--                           opts.mode = "async" — raises an error immediately,
+--                             because Lua's stdlib has no native threads and
+--                             cannot support true async evaluation.
 --
 -- Returns: nil
 --
 -- The loop runs until:
 --   - input_fn() returns nil  (EOF — e.g., user pressed Ctrl-D)
 --   - eval returns { tag = "quit" }
-local function run_with_io(language, prompt, waiting, input_fn, output_fn)
-    -- Validate plug-ins at entry to give clear error messages.
+--
+-- # Mode Support
+--
+-- Lua's standard coroutines are cooperative — once language.eval() is called,
+-- no other code runs until it returns. There is therefore no mechanism to
+-- evaluate expressions asynchronously in standard Lua without external
+-- libraries (e.g., lua-ev, Luvit, or LuaJIT with OS threads).
+--
+-- We make this constraint explicit via the mode option:
+--
+--   opts = { mode = "sync" }    -- the only supported mode; this is the default
+--   opts = { mode = "async" }   -- raises an error immediately at startup
+--
+-- The "async" path exists so that code written to be multi-runtime-aware
+-- (e.g., shared glue code calling both a Lua REPL and a Python REPL that does
+-- support async) gets a clear, actionable error rather than silently falling
+-- back to broken behaviour.
+local function run_with_io(language, prompt, waiting, input_fn, output_fn, opts)
+    -- ── Mode check ────────────────────────────────────────────────────────
+    --
+    -- Resolve mode from opts (default: "sync"). Reject "async" immediately
+    -- because standard Lua cannot support non-blocking eval — raising here
+    -- gives the caller a clear error rather than subtly wrong behaviour.
+    local mode = "sync"
+    if opts ~= nil then
+        assert(type(opts) == "table", "opts must be a table or nil")
+        if opts.mode ~= nil then
+            mode = opts.mode
+        end
+    end
+
+    if mode == "async" then
+        error(
+            "async mode is not supported in the Lua REPL implementation.\n" ..
+            "Use mode = 'sync' instead."
+        )
+    end
+
+    assert(mode == "sync", "opts.mode must be 'sync' or 'async' (got: " ..
+           tostring(mode) .. ")")
+
+    -- ── Validate plug-ins at entry to give clear error messages ───────────
     assert(type(language) == "table",  "language must be a table")
     assert(type(language.eval) == "function", "language.eval must be a function")
     assert(type(prompt) == "table",    "prompt must be a table")
@@ -110,11 +156,23 @@ local function run_with_io(language, prompt, waiting, input_fn, output_fn)
            "prompt.global_prompt must be a function")
     assert(type(prompt.line_prompt) == "function",
            "prompt.line_prompt must be a function")
-    assert(type(waiting) == "table",   "waiting must be a table")
-    assert(type(waiting.start) == "function",  "waiting.start must be a function")
-    assert(type(waiting.tick) == "function",   "waiting.tick must be a function")
-    assert(type(waiting.tick_ms) == "function","waiting.tick_ms must be a function")
-    assert(type(waiting.stop) == "function",   "waiting.stop must be a function")
+    -- waiting is optional in sync mode. When nil we supply a minimal no-op
+    -- shim so the rest of the loop code can call waiting.start() / .stop()
+    -- unconditionally without defensive checks scattered everywhere.
+    if waiting == nil then
+        waiting = {
+            start   = function() return nil end,
+            tick    = function(s) return s   end,
+            tick_ms = function() return 100  end,
+            stop    = function(_s) end,
+        }
+    else
+        assert(type(waiting) == "table",   "waiting must be a table")
+        assert(type(waiting.start) == "function",  "waiting.start must be a function")
+        assert(type(waiting.tick) == "function",   "waiting.tick must be a function")
+        assert(type(waiting.tick_ms) == "function","waiting.tick_ms must be a function")
+        assert(type(waiting.stop) == "function",   "waiting.stop must be a function")
+    end
     assert(type(input_fn) == "function",  "input_fn must be a function")
     assert(type(output_fn) == "function", "output_fn must be a function")
 
@@ -211,13 +269,15 @@ end
 -- standard I/O functions so callers don't have to.
 --
 -- Parameters:
---   language (table)  — Language plug-in (required)
---   prompt   (table)  — Prompt plug-in (optional, defaults to DefaultPrompt)
---   waiting  (table)  — Waiting plug-in (optional, defaults to SilentWaiting)
+--   language (table)    — Language plug-in (required)
+--   prompt   (table)    — Prompt plug-in (optional, defaults to DefaultPrompt)
+--   waiting  (table)    — Waiting plug-in (optional, defaults to SilentWaiting)
+--   opts     (table|nil)— Options table forwarded to run_with_io.
+--                         opts.mode = "sync" (default) or "async" (errors).
 --
 -- The defaults are loaded lazily here rather than at the top of the module.
 -- This avoids circular-require issues and keeps each module self-contained.
-local function run(language, prompt, waiting)
+local function run(language, prompt, waiting, opts)
     -- Load defaults only when needed.
     local default_prompt  = prompt   or require("coding_adventures.repl.default_prompt")
     local default_waiting = waiting  or require("coding_adventures.repl.silent_waiting")
@@ -236,7 +296,7 @@ local function run(language, prompt, waiting)
     end
 
     run_with_io(language, default_prompt, default_waiting,
-                stdio_input, stdio_output)
+                stdio_input, stdio_output, opts)
 end
 
 -- ============================================================================

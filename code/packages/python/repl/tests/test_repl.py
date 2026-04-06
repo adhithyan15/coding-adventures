@@ -555,3 +555,83 @@ class TestSilentWaiting:
     def test_stop_returns_none(self) -> None:
         w = SilentWaiting()
         assert w.stop(None) is None
+
+
+# ---------------------------------------------------------------------------
+# Test case 8 — Sync mode: mode="sync" evaluates without threading.
+# ---------------------------------------------------------------------------
+
+
+class TestSyncMode:
+    """Tests for the ``mode="sync"`` path in :func:`run_with_io`.
+
+    In sync mode ``language.eval`` is called directly on the calling thread
+    with no background threading and no waiting-plugin calls.  All the same
+    result-handling logic applies: echoed output appears, ``:quit`` ends the
+    session, and ``("error", msg)`` is formatted as ``"Error: msg"``.
+    """
+
+    def test_sync_mode_echo(self) -> None:
+        """Echo works in sync mode — input is echoed back to the output.
+
+        Verifies that the fundamental read→eval→print cycle functions
+        correctly when ``mode="sync"`` is passed.  The EchoLanguage returns
+        ``("ok", input)`` for any non-quit string.
+        """
+        it = iter(["hello", ":quit"])
+        outputs: list[str] = []
+        Repl.run_with_io(
+            input_fn=lambda: next(it, None),
+            output_fn=outputs.append,
+            mode="sync",
+        )
+        values = _output_values(outputs)
+        assert "hello" in values
+
+    def test_sync_mode_quit(self) -> None:
+        """:quit ends the session cleanly in sync mode.
+
+        Verifies that the loop respects the language's quit signal when
+        evaluation is synchronous.  Input placed after ``:quit`` must
+        never appear in the output.
+        """
+        it = iter([":quit", "should-not-appear"])
+        outputs: list[str] = []
+        Repl.run_with_io(
+            input_fn=lambda: next(it, None),
+            output_fn=outputs.append,
+            mode="sync",
+        )
+        values = _output_values(outputs)
+        # :quit produces no output and no subsequent inputs are read.
+        assert "should-not-appear" not in values
+        assert values == []
+
+    def test_sync_mode_error(self) -> None:
+        """``("error", msg)`` is formatted as ``"Error: msg"`` in sync mode.
+
+        A language returning an error tuple must still produce a
+        ``"Error: ..."`` line through the output function even when the
+        evaluation path is synchronous.
+        """
+
+        class SyncErrorLanguage(Language):
+            """Returns an error tuple for every non-quit input."""
+
+            def eval(self, input: str) -> tuple[str, str | None] | str:  # noqa: ANN001
+                if input == ":quit":
+                    return "quit"
+                return ("error", f"sync-err: {input}")
+
+        it = iter(["oops", ":quit"])
+        outputs: list[str] = []
+        Repl.run_with_io(
+            language=SyncErrorLanguage(),
+            input_fn=lambda: next(it, None),
+            output_fn=outputs.append,
+            mode="sync",
+        )
+        values = _output_values(outputs)
+        assert len(values) == 1
+        assert "Error:" in values[0]
+        assert "oops" in values[0]

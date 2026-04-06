@@ -421,6 +421,59 @@ describe("run_with_io", function()
         local ok = pcall(run_with_inputs, VoidLanguage, {"x = 1", ":quit"})
         assert.is_true(ok)
     end)
+
+    -- ── Mode option ─────────────────────────────────────────────────────────
+
+    it("sync mode explicit: works the same as default", function()
+        -- Passing opts = { mode = "sync" } should behave identically to passing
+        -- no opts at all. The echo round-trip must still work correctly.
+        local captured = {}
+        local inputs = { "hello", ":quit" }
+        local idx = 0
+
+        repl.run_with_io(
+            repl.EchoLanguage,
+            repl.DefaultPrompt,
+            repl.SilentWaiting,
+            function() idx = idx + 1; return inputs[idx] end,
+            function(s) captured[#captured + 1] = s end,
+            { mode = "sync" }
+        )
+
+        local out = table.concat(captured)
+        -- "hello" must appear in the output, confirming that eval ran normally.
+        assert.is_truthy(out:find("hello", 1, true))
+    end)
+
+    it("async mode: raises error at startup", function()
+        -- Standard Lua has no stdlib threads, so async mode is unsupported.
+        -- The function must raise an error immediately — before any I/O occurs.
+        local captured = {}
+        local called = false
+
+        local ok, err = pcall(function()
+            repl.run_with_io(
+                repl.EchoLanguage,
+                repl.DefaultPrompt,
+                repl.SilentWaiting,
+                function() called = true; return nil end,
+                function(s) captured[#captured + 1] = s end,
+                { mode = "async" }
+            )
+        end)
+
+        -- The call must have failed.
+        assert.is_false(ok)
+        -- The error message must mention "async mode is not supported".
+        assert.is_truthy(
+            tostring(err):find("async mode is not supported", 1, true),
+            "expected error to mention 'async mode is not supported', got: " .. tostring(err)
+        )
+        -- input_fn must NOT have been called — the error fires before the loop.
+        assert.is_false(called)
+        -- No output must have been produced.
+        assert.are.equal(0, #captured)
+    end)
 end)
 
 -- ============================================================================

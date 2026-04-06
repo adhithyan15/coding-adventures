@@ -227,4 +227,73 @@ class TestRepl < Minitest::Test
     w = Repl::SilentWaiting.new
     assert_nil w.stop(nil)
   end
+
+  # ── Sync mode tests ──────────────────────────────────────────────────────
+
+  # Helper that runs run_with_io in sync mode.
+  # `waiting` defaults to SilentWaiting so existing helpers still work, but
+  # the sync-mode tests also verify that nil is accepted.
+  def run_repl_sync(inputs, language: Repl::EchoLanguage.new, waiting: Repl::SilentWaiting.new)
+    outputs = []
+    input_fn  = -> { inputs.shift }
+    output_fn = ->(s) { outputs << s }
+
+    Repl.run_with_io(
+      language:  language,
+      prompt:    Repl::DefaultPrompt.new,
+      waiting:   waiting,
+      input_fn:  input_fn,
+      output_fn: output_fn,
+      mode:      :sync
+    )
+
+    outputs
+  end
+
+  # ── Sync Test 1: test_sync_mode_echo ─────────────────────────────────────
+  #
+  # In sync mode the language backend is called directly (no Thread). The REPL
+  # loop must still echo the input back, show the prompt, and exit on EOF.
+  #
+  # This mirrors test_echo_language_echoes_input but forces mode: :sync.
+  def test_sync_mode_echo
+    outputs = run_repl_sync(["hello", ":quit"])
+
+    assert_includes outputs, "hello",
+      "Sync mode should echo 'hello' back to the output function"
+  end
+
+  # ── Sync Test 2: test_sync_mode_quit ─────────────────────────────────────
+  #
+  # `:quit` must terminate the loop in sync mode just as in async mode.
+  # Any input after `:quit` must never be evaluated.
+  def test_sync_mode_quit
+    outputs = run_repl_sync([":quit", "after_quit"])
+
+    refute_includes outputs, "after_quit",
+      "Sync mode: loop must terminate on :quit; subsequent inputs must not be evaluated"
+
+    refute_includes outputs, ":quit",
+      "Sync mode: the :quit command itself must not appear in output"
+  end
+
+  # ── Sync Test 3: test_sync_mode_error ────────────────────────────────────
+  #
+  # When the language returns [:error, msg] in sync mode, the loop must format
+  # and print it with the "Error: " prefix — exactly the same as async mode.
+  #
+  # This exercises the begin/rescue path inside eval_sync, verifying that
+  # both intentional error returns and unhandled exceptions are handled.
+  def test_sync_mode_error
+    # A language that always signals an error.
+    error_language = Object.new
+    def error_language.eval(_input)
+      [:error, "sync error message"]
+    end
+
+    outputs = run_repl_sync(["bad input", nil], language: error_language)
+
+    assert_includes outputs, "Error: sync error message",
+      "Sync mode should print error results with the 'Error: ' prefix"
+  end
 end

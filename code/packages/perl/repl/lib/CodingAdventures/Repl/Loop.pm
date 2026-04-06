@@ -93,6 +93,11 @@ our $VERSION = '0.01';
 #   waiting    (required)  — A Waiting object with start/tick/stop methods
 #   input_fn   (required)  — Coderef; returns next input line or undef for EOF
 #   output_fn  (required)  — Coderef; called with each string to output
+#   mode       (optional)  — Execution mode string. Only 'sync' is supported.
+#                            Defaults to 'sync'. Passing 'async' causes an
+#                            immediate die, because Perl has no core threading
+#                            module and asynchronous execution cannot be
+#                            provided without external dependencies.
 #
 # The loop terminates when:
 #   a) input_fn returns undef (EOF)
@@ -117,6 +122,34 @@ sub run {
     my $waiting   = $args{waiting}   or croak 'Loop::run: waiting is required';
     my $input_fn  = $args{input_fn}  or croak 'Loop::run: input_fn is required';
     my $output_fn = $args{output_fn} or croak 'Loop::run: output_fn is required';
+
+    # ----------------------------------------------------------------
+    # Validate the mode option
+    # ----------------------------------------------------------------
+    #
+    # Perl does not ship a core threading module that is universally
+    # available across platforms and Perl versions. The ithreads model
+    # (threads.pm) was added in Perl 5.8 but has never been enabled by
+    # default on all builds, and its use is widely discouraged due to
+    # the complexity it introduces (every shared value must be explicitly
+    # declared, data is copied between threads, etc.).
+    #
+    # Therefore this framework supports only synchronous ("sync") mode.
+    # Rather than silently ignoring an "async" request — which would confuse
+    # callers who expect non-blocking behaviour — we fail loudly and early,
+    # before any I/O is performed. This follows the "fail fast" principle:
+    # surface mismatches between caller expectations and implementation
+    # capabilities as soon as possible.
+    #
+    # The check is performed HERE (in Loop::run), not just in Repl::run_with_io,
+    # so that code which calls Loop::run directly also gets the protection.
+
+    my $mode = $args{mode} // 'sync';
+
+    if ( $mode eq 'async' ) {
+        die "async mode is not supported in the Perl REPL implementation.\n"
+          . "Use mode => 'sync' instead.";
+    }
 
     # ----------------------------------------------------------------
     # The REPL loop

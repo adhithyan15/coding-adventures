@@ -174,3 +174,27 @@ export type InputFn = () => Promise<string | null>;
  * testable without monkey-patching globals.
  */
 export type OutputFn = (s: string) => void;
+
+// ---------------------------------------------------------------------------
+// ReplMode — controls how the loop runs evaluation
+// ---------------------------------------------------------------------------
+
+/**
+ * Controls the evaluation strategy used by `runWithIo`.
+ *
+ * - `"async"` (default) — the original setInterval-based behaviour. The eval
+ *   Promise runs concurrently with the Waiting animation, allowing a spinner
+ *   or progress indicator to tick while the evaluator is busy. `waiting` must
+ *   be a non-null `Waiting` implementation in this mode.
+ *
+ * - `"sync"` — a simpler path that `await`s the eval Promise directly with no
+ *   animation overhead. The Waiting interface is completely bypassed, so
+ *   `waiting` may be `null`. This is useful for:
+ *     - Scripted / batch evaluation where no spinner is wanted.
+ *     - Testing environments where real timers would slow tests down.
+ *     - Embedding the REPL in contexts where `setInterval` is unavailable.
+ *
+ * Error handling is identical in both modes: any rejection from `language.eval`
+ * is caught and converted to `{tag: "error", message: ...}`.
+ */
+export type ReplMode = "async" | "sync";

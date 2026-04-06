@@ -79,23 +79,27 @@ module CodingAdventures
     #
     # @param language  [#eval]                language backend
     # @param prompt    [#global_prompt]        prompt generator
-    # @param waiting   [#start,#tick,...]      waiting strategy
+    # @param waiting   [#start,#tick,...]      waiting strategy (may be nil
+    #                                          when mode: :sync)
     # @param input_fn  [Proc] → String|nil     returns next input line or nil
     # @param output_fn [Proc(String) → nil]    receives each output string
+    # @param mode      [:async, :sync]         evaluation strategy (default: :async)
     # @return [nil]
     def self.run_with_io(
       language:,
       prompt:,
       waiting:,
       input_fn:,
-      output_fn:
+      output_fn:,
+      mode: :async
     )
       Loop.new(
         language:  language,
         prompt:    prompt,
         waiting:   waiting,
         input_fn:  input_fn,
-        output_fn: output_fn
+        output_fn: output_fn,
+        mode:      mode
       ).run
     end
   end

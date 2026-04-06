@@ -47,6 +47,7 @@ import type {
   Waiting,
   InputFn,
   OutputFn,
+  ReplMode,
 } from "./types.js";
 import { DefaultPrompt } from "./default_prompt.js";
 import { SilentWaiting } from "./silent_waiting.js";
@@ -139,9 +140,12 @@ async function runStep(
  *
  * @param language  The evaluator. Must implement the Language interface.
  * @param prompt    Provides the prompt strings shown to the user.
- * @param waiting   Drives the animation shown during evaluation.
+ * @param waiting   Drives the animation shown during evaluation. Ignored in
+ *                  sync mode — may be `null` when `mode` is `"sync"`.
  * @param inputFn   Async function that reads the next line; returns null on EOF.
  * @param outputFn  Synchronous function that writes one string to output.
+ * @param mode      `"async"` (default) uses setInterval-based animation;
+ *                  `"sync"` awaits eval directly with no animation overhead.
  *
  * @example
  * await runWithIo(
@@ -151,13 +155,24 @@ async function runStep(
  *   async () => "hello",
  *   (s) => console.log(s),
  * );
+ *
+ * @example — sync mode (no waiting animation required)
+ * await runWithIo(
+ *   new EchoLanguage(),
+ *   new DefaultPrompt(),
+ *   null,
+ *   async () => "hello",
+ *   (s) => console.log(s),
+ *   "sync",
+ * );
  */
 export async function runWithIo(
   language: Language,
   prompt: Prompt,
-  waiting: Waiting,
+  waiting: Waiting | null,
   inputFn: InputFn,
-  outputFn: OutputFn
+  outputFn: OutputFn,
+  mode: ReplMode = "async"
 ): Promise<void> {
   while (true) {
     // Display the prompt before reading input.
@@ -167,8 +182,21 @@ export async function runWithIo(
     const input = await inputFn();
     if (input === null) break;
 
-    // Evaluate the input (with animation) and act on the result.
-    const result = await runStep(language, waiting, input);
+    // Evaluate the input and act on the result.
+    // In async mode: use setInterval-driven animation via runStep.
+    // In sync mode: await eval directly — no animation, no interval overhead.
+    let result: EvalResult;
+    if (mode === "sync") {
+      result = await language.eval(input).catch(
+        (e: unknown): EvalResult => ({
+          tag: "error",
+          message: String(e),
+        })
+      );
+    } else {
+      // waiting is guaranteed non-null in async mode by the API contract.
+      result = await runStep(language, waiting!, input);
+    }
 
     if (result.tag === "quit") {
       // The language or the user has requested exit.

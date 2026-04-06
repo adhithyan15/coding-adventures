@@ -166,6 +166,10 @@ sub run {
 #
 #   prompt     — A Prompt object (default: DefaultPrompt)
 #   waiting    — A Waiting object (default: SilentWaiting)
+#   mode       — Execution mode: only 'sync' is supported (default: 'sync').
+#                Passing 'async' causes an immediate die (see Loop.pm for the
+#                full rationale). The option is accepted here so that callers
+#                do not need to know which layer enforces the restriction.
 #
 # This is the preferred interface for:
 #   * Unit tests (inject strings, capture output)
@@ -193,6 +197,7 @@ sub run_with_io {
     my $output_fn = $args{output_fn} or die 'Repl::run_with_io: output_fn is required';
     my $prompt    = $args{prompt}    // CodingAdventures::Repl::DefaultPrompt->new();
     my $waiting   = $args{waiting}   // CodingAdventures::Repl::SilentWaiting->new();
+    my $mode      = $args{mode}      // 'sync';
 
     CodingAdventures::Repl::Loop::run(
         language  => $language,
@@ -200,6 +205,7 @@ sub run_with_io {
         waiting   => $waiting,
         input_fn  => $input_fn,
         output_fn => $output_fn,
+        mode      => $mode,
     );
 
     return;
