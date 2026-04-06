@@ -82,7 +82,22 @@ defmodule CodingAdventures.AlgolLexer do
   @spec tokenize(String.t()) :: {:ok, [CodingAdventures.Lexer.Token.t()]} | {:error, String.t()}
   def tokenize(source) do
     grammar = get_grammar()
-    GrammarLexer.tokenize(source, grammar)
+    # Post-tokenize hook: the generic GrammarLexer emits "KEYWORD" as the type
+    # for all keyword tokens (begin, end, integer, etc.).  ALGOL 60 has many
+    # distinct keywords and callers expect the specific keyword name as the type
+    # (e.g. type "begin" not "KEYWORD").  We reclassify here so that the public
+    # API of AlgolLexer matches the per-language convention of returning the
+    # lowercase keyword word as the token type.
+    GrammarLexer.tokenize(source, grammar,
+      post_tokenize_hooks: [
+        fn tokens ->
+          Enum.map(tokens, fn
+            %{type: "KEYWORD"} = tok -> %{tok | type: String.downcase(tok.value)}
+            tok -> tok
+          end)
+        end
+      ]
+    )
   end
 
   @doc """

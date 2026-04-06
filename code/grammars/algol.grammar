@@ -182,9 +182,49 @@ for_elem     = arith_expr "step" arith_expr "until" arith_expr
 # Expressions
 # ---------------------------------------------------------------------------
 
-# An expression is either arithmetic (produces a number) or boolean.
-# The distinction matters for procedure calls and assignments.
-expression   = arith_expr | bool_expr ;
+# A unified expression handles both arithmetic and boolean operators.
+#
+# The naive `arith_expr | bool_expr` alternation is broken: ordered-choice
+# PEG semantics mean arith_expr greedily matches the first operand of a
+# boolean expression (e.g. the `a` in `a impl b`), leaving the boolean
+# operator unconsumed.  The correct fix is a single operator-precedence
+# hierarchy where boolean operators sit ABOVE arithmetic:
+#
+#   Precedence (lowest to highest):
+#     eqv   — logical equivalence
+#     impl  — implication
+#     or    — disjunction
+#     and   — conjunction
+#     not   — negation (unary, prefix)
+#     comparison (=, ≠, <, ≤, >, ≥)
+#     addition / subtraction
+#     multiplication / division / div / mod
+#     exponentiation (left-associative per ALGOL 60 report)
+#     primary (literal, variable, call, parenthesised expression)
+#
+# Only the `expression` rule (used in assignments and actual parameters)
+# needs the full unified hierarchy.  Rules used in type-specific contexts
+# (arith_expr for bounds/subscripts, bool_expr for conditionals) are
+# kept as-is.
+expression   = expr_eqv ;
+
+expr_eqv     = expr_impl { "eqv" expr_impl } ;
+expr_impl    = expr_or { "impl" expr_or } ;
+expr_or      = expr_and { "or" expr_and } ;
+expr_and     = expr_not { "and" expr_not } ;
+expr_not     = "not" expr_not | expr_cmp ;
+expr_cmp     = expr_add [ ( EQ | NEQ | LT | LEQ | GT | GEQ ) expr_add ] ;
+expr_add     = [ PLUS | MINUS ] expr_mul { ( PLUS | MINUS ) expr_mul } ;
+expr_mul     = expr_pow { ( STAR | SLASH | "div" | "mod" ) expr_pow } ;
+expr_pow     = expr_atom { ( CARET | POWER ) expr_atom } ;
+expr_atom    = INTEGER_LIT
+             | REAL_LIT
+             | STRING_LIT
+             | "true"
+             | "false"
+             | proc_call
+             | variable
+             | LPAREN expression RPAREN ;
 
 # Arithmetic expression.
 # The conditional form (if b then x else y) produces a numeric value.

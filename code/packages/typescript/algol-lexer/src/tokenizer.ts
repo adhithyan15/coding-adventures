@@ -190,6 +190,16 @@ export function tokenizeAlgol(source: string): Token[] {
    * JSON, but the same engine handles both. The keyword list in the grammar
    * causes IDENT tokens (e.g., "begin", "integer") to be reclassified to their
    * specific keyword types after matching.
+   *
+   * Post-processing: the generic grammarTokenize engine emits "KEYWORD" as the
+   * type for all keyword tokens. ALGOL 60 has many distinct keywords and callers
+   * expect the specific keyword name as the type (e.g. "begin" not "KEYWORD").
+   * We reclassify here so that the ALGOL lexer public API returns the lowercase
+   * keyword word as the token type, matching the per-language convention.
    */
-  return grammarTokenize(source, grammar);
+  return grammarTokenize(source, grammar).map((token) =>
+    token.type === "KEYWORD"
+      ? { ...token, type: token.value.toLowerCase() }
+      : token,
+  );
 }
