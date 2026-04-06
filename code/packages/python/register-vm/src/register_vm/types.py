@@ -90,19 +90,6 @@ Use ``is UNDEFINED`` to check for it — never compare with ``==``.
 
 
 # ---------------------------------------------------------------------------
-# Value union
-# ---------------------------------------------------------------------------
-
-VMValue = int | float | str | bool | None | "_Undefined" | "VMObject" | list | "VMFunction"
-"""The set of all possible values a register or context slot can hold.
-
-Ordering of the union matters for isinstance checks in the VM:
-``bool`` must be checked before ``int`` because ``bool`` is a subclass
-of ``int`` in Python.
-"""
-
-
-# ---------------------------------------------------------------------------
 # Object model
 # ---------------------------------------------------------------------------
 
@@ -425,3 +412,17 @@ class TraceStep:
     acc_after: VMValue
     registers_before: list[VMValue]
     registers_after: list[VMValue]
+
+
+# ---------------------------------------------------------------------------
+# Value union — defined after all classes so we can reference them directly
+# (using string literals in a | expression fails at runtime in Python 3.10+)
+# ---------------------------------------------------------------------------
+
+VMValue = int | float | str | bool | None | _Undefined | VMObject | list | VMFunction
+"""The set of all possible values a register or context slot can hold.
+
+Ordering of the union matters for isinstance checks in the VM:
+``bool`` must be checked before ``int`` because ``bool`` is a subclass
+of ``int`` in Python.
+"""

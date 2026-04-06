@@ -864,6 +864,12 @@ end
 --   operand[2] = argument count
 -- The called function must be a VMFunction (table with kind="function").
 
+-- Forward-declare run_frame here so that call_vm_function (defined immediately
+-- below) captures this local variable via upvalue. Lua closures capture variables
+-- by reference, so when run_frame is assigned later (after the handlers table is
+-- fully populated), the closure will see the real function, not nil.
+local run_frame
+
 local function call_vm_function(vm, fn_table, args)
   -- Increment call depth for STACK_CHECK purposes.
   vm.call_depth = vm.call_depth + 1
@@ -884,9 +890,6 @@ local function call_vm_function(vm, fn_table, args)
   vm.call_depth = vm.call_depth - 1
   return result_val, err
 end
-
--- Forward-declared below; defined after run_frame is defined.
-local run_frame
 
 handlers[M.Opcodes.CALL_ANY_RECEIVER] = function(vm, frame, instr)
   local fn_table = frame.accumulator
