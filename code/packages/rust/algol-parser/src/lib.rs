@@ -301,8 +301,14 @@ mod tests {
         let ast = parse_algol("begin integer x; x := 1 + 2 * 3 end");
         assert_program_root(&ast);
 
-        // arith_expr or simple_arith should appear
-        let has_arith = find_rule(&ast, "arith_expr") || find_rule(&ast, "simple_arith");
+        // With the unified expression grammar, `1 + 2 * 3` in an assignment
+        // is parsed via `expression → expr_eqv → ... → expr_add → expr_mul`.
+        // The old `arith_expr` / `simple_arith` rules are only used for
+        // type-specific contexts (for-loop bounds, subscripts, etc.); a plain
+        // assignment RHS goes through the unified `expr_add` rule.
+        let has_arith = find_rule(&ast, "expr_add")
+            || find_rule(&ast, "arith_expr")
+            || find_rule(&ast, "simple_arith");
         assert!(has_arith, "Expected arithmetic expression rule in AST");
     }
 

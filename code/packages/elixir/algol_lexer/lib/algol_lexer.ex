@@ -93,6 +93,10 @@ defmodule CodingAdventures.AlgolLexer do
         fn tokens ->
           Enum.map(tokens, fn
             %{type: "KEYWORD"} = tok -> %{tok | type: String.downcase(tok.value)}
+            # Strip surrounding single quotes from STRING_LIT values.
+            # The grammar regex /'[^']*'/ includes the delimiters in the matched
+            # text, but callers expect the bare string content without quotes.
+            %{type: "STRING_LIT"} = tok -> %{tok | value: String.slice(tok.value, 1..-2//1)}
             tok -> tok
           end)
         end

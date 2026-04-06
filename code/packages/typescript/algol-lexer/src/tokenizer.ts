@@ -197,9 +197,26 @@ export function tokenizeAlgol(source: string): Token[] {
    * We reclassify here so that the ALGOL lexer public API returns the lowercase
    * keyword word as the token type, matching the per-language convention.
    */
-  return grammarTokenize(source, grammar).map((token) =>
-    token.type === "KEYWORD"
-      ? { ...token, type: token.value.toLowerCase() }
-      : token,
-  );
+  /**
+   * Build a set of keyword strings for case-insensitive reclassification.
+   *
+   * The generic grammarTokenize engine does case-sensitive keyword lookup:
+   * "begin" (lowercase) matches and is returned as type "KEYWORD", but
+   * "BEGIN" or "Begin" do not match and stay as "NAME". ALGOL 60 keywords
+   * are case-insensitive by convention, so we handle both cases here:
+   *
+   *   1. "KEYWORD" tokens: already reclassified — just lowercase the type.
+   *   2. "NAME" tokens whose lowercase value is in the keyword set: reclassify
+   *      to the lowercase keyword name (handles "BEGIN", "Begin", "bEgIn", etc.)
+   */
+  const keywordSet = new Set(grammar.keywords);
+  return grammarTokenize(source, grammar).map((token) => {
+    if (token.type === "KEYWORD") {
+      return { ...token, type: token.value.toLowerCase() };
+    }
+    if (token.type === "NAME" && keywordSet.has(token.value.toLowerCase())) {
+      return { ...token, type: token.value.toLowerCase() };
+    }
+    return token;
+  });
 }
