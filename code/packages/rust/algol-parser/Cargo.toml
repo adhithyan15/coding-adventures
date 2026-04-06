@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-algol-parser"
+version = "0.1.0"
+edition = "2021"
+description = "ALGOL 60 parser — parses ALGOL 60 source text into an AST using the grammar-driven parser and the algol.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-algol-lexer = { path = "../algol-lexer" }
