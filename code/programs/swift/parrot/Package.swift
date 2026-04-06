@@ -10,7 +10,7 @@ let package = Package(
         .executableTarget(
             name: "Parrot",
             dependencies: [
-                .product(name: "CodingAdventuresRepl", package: "CodingAdventuresRepl"),
+                .product(name: "CodingAdventuresRepl", package: "repl"),
             ],
             path: "Sources/Parrot"
         ),
@@ -18,7 +18,7 @@ let package = Package(
             name: "ParrotTests",
             dependencies: [
                 "Parrot",
-                .product(name: "CodingAdventuresRepl", package: "CodingAdventuresRepl"),
+                .product(name: "CodingAdventuresRepl", package: "repl"),
             ],
             path: "Tests/ParrotTests"
         ),

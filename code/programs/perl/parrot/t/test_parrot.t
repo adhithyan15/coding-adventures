@@ -30,6 +30,7 @@
 use strict;
 use warnings;
 use FindBin qw($Bin);
+use Scalar::Util qw(refaddr);
 
 # Add this program's lib/ directory and the repl framework's lib/ directory
 # to the search path. $Bin is the directory of THIS test file (t/).
@@ -252,8 +253,11 @@ ok( eval { require Parrot::Prompt; 1 }, 'Parrot::Prompt loads without error' );
 {
     my $p1 = Parrot::Prompt->new();
     my $p2 = Parrot::Prompt->new();
-    # They should be different references (distinct objects)...
-    isnt( $p1, $p2, 'new() creates distinct instances' );
+    # They should be different references (distinct objects).
+    # Use refaddr for identity comparison — Test2::V0's isnt() does deep
+    # structural comparison, so two empty bless{} objects of the same class
+    # would be considered equal even though they are different heap objects.
+    ok( refaddr($p1) != refaddr($p2), 'new() creates distinct instances' );
     # ...but return identical strings (same stateless behaviour).
     is( $p1->global_prompt(), $p2->global_prompt(),
         'independent instances return identical global_prompt' );
