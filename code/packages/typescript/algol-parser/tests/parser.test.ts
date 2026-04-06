@@ -181,7 +181,7 @@ describe("declarations", () => {
 
     // Should find three IDENT tokens in the ident_list
     const allTokens = findTokens(typeDecls[0]);
-    const identTokens = allTokens.filter((t) => t.type === "IDENT");
+    const identTokens = allTokens.filter((t) => t.type === "NAME");
     expect(identTokens.length).toBeGreaterThanOrEqual(3);
   });
 

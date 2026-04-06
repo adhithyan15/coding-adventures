@@ -317,25 +317,25 @@ describe("keyword boundary — prefix must not match", () => {
      * variable names starting with keywords.
      */
     const tokens = tokenizeAlgol("beginning");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("beginning");
   });
 
   it("lexes 'endgame' as IDENT, not end + game", () => {
     const tokens = tokenizeAlgol("endgame");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("endgame");
   });
 
   it("lexes 'integer1' as IDENT", () => {
     const tokens = tokenizeAlgol("integer1");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("integer1");
   });
 
   it("lexes 'truthy' as IDENT, not true + thy", () => {
     const tokens = tokenizeAlgol("truthy");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("truthy");
   });
 });
@@ -348,13 +348,13 @@ describe("identifiers", () => {
      * Underscores are NOT allowed — original ALGOL 60 did not include them.
      */
     const tokens = tokenizeAlgol("x");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("x");
   });
 
   it("tokenizes a multi-letter identifier", () => {
     const tokens = tokenizeAlgol("sum");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("sum");
   });
 
@@ -364,13 +364,13 @@ describe("identifiers", () => {
      * "A1" is a valid ALGOL identifier (letter followed by digit).
      */
     const tokens = tokenizeAlgol("A1");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("A1");
   });
 
   it("tokenizes a longer identifier with digits", () => {
     const tokens = tokenizeAlgol("count2");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("count2");
   });
 });
@@ -631,7 +631,7 @@ describe("comment skipping", () => {
      * After the comment is consumed, the next real token is IDENT("x").
      */
     const tokens = tokenizeAlgol("comment this is ignored; x := 1");
-    expect(tokens[0].type).toBe("IDENT");
+    expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("x");
   });
 
@@ -643,7 +643,7 @@ describe("comment skipping", () => {
     const types = tokenTypes("comment skip this whole phrase; x := 1");
     expect(types).not.toContain("comment");
     // x := 1 should still be there
-    expect(types).toContain("IDENT");
+    expect(types).toContain("NAME");
     expect(types).toContain("ASSIGN");
     expect(types).toContain("INTEGER_LIT");
   });
@@ -664,7 +664,7 @@ describe("multi-token expression", () => {
      */
     const types = tokenTypes("x := 1 + 2 * 3");
     expect(types).toEqual([
-      "IDENT", "ASSIGN", "INTEGER_LIT", "PLUS", "INTEGER_LIT", "STAR", "INTEGER_LIT", "EOF",
+      "NAME", "ASSIGN", "INTEGER_LIT", "PLUS", "INTEGER_LIT", "STAR", "INTEGER_LIT", "EOF",
     ]);
   });
 
@@ -678,8 +678,8 @@ describe("multi-token expression", () => {
      */
     const types = tokenTypes("begin integer x; x := 42 end");
     expect(types).toEqual([
-      "begin", "integer", "IDENT", "SEMICOLON",
-      "IDENT", "ASSIGN", "INTEGER_LIT",
+      "begin", "integer", "NAME", "SEMICOLON",
+      "NAME", "ASSIGN", "INTEGER_LIT",
       "end", "EOF",
     ]);
   });

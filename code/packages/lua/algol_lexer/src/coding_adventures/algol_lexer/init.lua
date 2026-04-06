@@ -203,7 +203,7 @@ end
 --   local tokens = algol_lexer.tokenize("begin integer x; x := 42 end")
 --   -- tokens[1].type  → "BEGIN"
 --   -- tokens[1].value → "begin"
---   -- tokens[3].type  → "IDENT"
+--   -- tokens[3].type  → "NAME"
 --   -- tokens[3].value → "x"
 function M.tokenize(source)
     local grammar = get_grammar()

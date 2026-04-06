@@ -326,25 +326,25 @@ end)
 describe("identifiers", function()
     it("tokenizes single-letter identifier x", function()
         local tokens = algol_lexer.tokenize("x")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("x", tokens[1].value)
     end)
 
     it("tokenizes multi-letter identifier sum", function()
         local tokens = algol_lexer.tokenize("sum")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("sum", tokens[1].value)
     end)
 
     it("tokenizes alphanumeric identifier A1", function()
         local tokens = algol_lexer.tokenize("A1")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("A1", tokens[1].value)
     end)
 
     it("tokenizes mixed-case identifier myVariable", function()
         local tokens = algol_lexer.tokenize("myVariable")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("myVariable", tokens[1].value)
     end)
 
@@ -352,19 +352,19 @@ describe("identifiers", function()
     -- must be classified as IDENT, not as the keyword.
     it("beginning is IDENT, not BEGIN", function()
         local tokens = algol_lexer.tokenize("beginning")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("beginning", tokens[1].value)
     end)
 
     it("integer2 is IDENT, not INTEGER", function()
         local tokens = algol_lexer.tokenize("integer2")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("integer2", tokens[1].value)
     end)
 
     it("endloop is IDENT, not END", function()
         local tokens = algol_lexer.tokenize("endloop")
-        assert.are.equal("IDENT", tokens[1].type)
+        assert.are.equal("NAME", tokens[1].type)
         assert.are.equal("endloop", tokens[1].value)
     end)
 end)
@@ -616,7 +616,7 @@ describe("comment skipping", function()
         local tokens = algol_lexer.tokenize("comment this is ignored; x := 1")
         local t = types(tokens)
         -- Should see only IDENT ASSIGN INTEGER_LIT EOF
-        assert.are.same({"IDENT", "ASSIGN", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "ASSIGN", "INTEGER_LIT"}, t)
         assert.are.equal("x", tokens[1].value)
     end)
 
@@ -624,15 +624,15 @@ describe("comment skipping", function()
         local tokens = algol_lexer.tokenize("x := 1 comment increment x; x := x + 1")
         local t = types(tokens)
         assert.are.same({
-            "IDENT", "ASSIGN", "INTEGER_LIT",
-            "IDENT", "ASSIGN", "IDENT", "PLUS", "INTEGER_LIT"
+            "NAME", "ASSIGN", "INTEGER_LIT",
+            "NAME", "ASSIGN", "NAME", "PLUS", "INTEGER_LIT"
         }, t)
     end)
 
     it("empty comment body comment ;", function()
         local tokens = algol_lexer.tokenize("comment ; x := 0")
         local t = types(tokens)
-        assert.are.same({"IDENT", "ASSIGN", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "ASSIGN", "INTEGER_LIT"}, t)
     end)
 end)
 
@@ -644,13 +644,13 @@ describe("whitespace handling", function()
     it("strips spaces between tokens", function()
         local tokens = algol_lexer.tokenize("x := 1 + 2")
         local t = types(tokens)
-        assert.are.same({"IDENT", "ASSIGN", "INTEGER_LIT", "PLUS", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "ASSIGN", "INTEGER_LIT", "PLUS", "INTEGER_LIT"}, t)
     end)
 
     it("strips tabs and newlines between tokens", function()
         local tokens = algol_lexer.tokenize("x\t:=\n1")
         local t = types(tokens)
-        assert.are.same({"IDENT", "ASSIGN", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "ASSIGN", "INTEGER_LIT"}, t)
     end)
 end)
 
@@ -662,7 +662,7 @@ describe("multi-token sequences", function()
     it("tokenizes x := 1 + 2", function()
         local tokens = algol_lexer.tokenize("x := 1 + 2")
         local t = types(tokens)
-        assert.are.same({"IDENT", "ASSIGN", "INTEGER_LIT", "PLUS", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "ASSIGN", "INTEGER_LIT", "PLUS", "INTEGER_LIT"}, t)
         local v = values(tokens)
         assert.are.same({"x", ":=", "1", "+", "2"}, v)
     end)
@@ -671,8 +671,8 @@ describe("multi-token sequences", function()
         local tokens = algol_lexer.tokenize("begin integer x; x := 42 end")
         local t = types(tokens)
         assert.are.same({
-            "BEGIN", "INTEGER", "IDENT", "SEMICOLON",
-            "IDENT", "ASSIGN", "INTEGER_LIT",
+            "BEGIN", "INTEGER", "NAME", "SEMICOLON",
+            "NAME", "ASSIGN", "INTEGER_LIT",
             "END"
         }, t)
     end)
@@ -682,9 +682,9 @@ describe("multi-token sequences", function()
         local tokens = algol_lexer.tokenize(src)
         local t = types(tokens)
         assert.are.same({
-            "IF", "IDENT", "GT", "INTEGER_LIT",
-            "THEN", "IDENT", "ASSIGN", "INTEGER_LIT",
-            "ELSE", "IDENT", "ASSIGN", "INTEGER_LIT"
+            "IF", "NAME", "GT", "INTEGER_LIT",
+            "THEN", "NAME", "ASSIGN", "INTEGER_LIT",
+            "ELSE", "NAME", "ASSIGN", "INTEGER_LIT"
         }, t)
     end)
 
@@ -692,7 +692,7 @@ describe("multi-token sequences", function()
         local tokens = algol_lexer.tokenize("for i := 1 step 1 until 10 do")
         local t = types(tokens)
         assert.are.same({
-            "FOR", "IDENT", "ASSIGN", "INTEGER_LIT",
+            "FOR", "NAME", "ASSIGN", "INTEGER_LIT",
             "STEP", "INTEGER_LIT", "UNTIL", "INTEGER_LIT", "DO"
         }, t)
     end)
@@ -701,7 +701,7 @@ describe("multi-token sequences", function()
         local tokens = algol_lexer.tokenize("array A[1:10]")
         local t = types(tokens)
         assert.are.same({
-            "ARRAY", "IDENT", "LBRACKET", "INTEGER_LIT",
+            "ARRAY", "NAME", "LBRACKET", "INTEGER_LIT",
             "COLON", "INTEGER_LIT", "RBRACKET"
         }, t)
     end)
@@ -710,9 +710,9 @@ describe("multi-token sequences", function()
         local tokens = algol_lexer.tokenize("x > 0 and y < 10")
         local t = types(tokens)
         assert.are.same({
-            "IDENT", "GT", "INTEGER_LIT",
+            "NAME", "GT", "INTEGER_LIT",
             "AND",
-            "IDENT", "LT", "INTEGER_LIT"
+            "NAME", "LT", "INTEGER_LIT"
         }, t)
     end)
 
@@ -720,50 +720,50 @@ describe("multi-token sequences", function()
         local tokens = algol_lexer.tokenize("procedure add(a, b);")
         local t = types(tokens)
         assert.are.same({
-            "PROCEDURE", "IDENT", "LPAREN", "IDENT", "COMMA", "IDENT", "RPAREN", "SEMICOLON"
+            "PROCEDURE", "NAME", "LPAREN", "NAME", "COMMA", "NAME", "RPAREN", "SEMICOLON"
         }, t)
     end)
 
     it("tokenizes goto statement", function()
         local tokens = algol_lexer.tokenize("goto myLabel")
         local t = types(tokens)
-        assert.are.same({"GOTO", "IDENT"}, t)
+        assert.are.same({"GOTO", "NAME"}, t)
     end)
 
     it("tokenizes exponentiation with **", function()
         local tokens = algol_lexer.tokenize("x ** 2")
         local t = types(tokens)
-        assert.are.same({"IDENT", "POWER", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "POWER", "INTEGER_LIT"}, t)
     end)
 
     it("tokenizes exponentiation with ^", function()
         local tokens = algol_lexer.tokenize("x ^ 2")
         local t = types(tokens)
-        assert.are.same({"IDENT", "CARET", "INTEGER_LIT"}, t)
+        assert.are.same({"NAME", "CARET", "INTEGER_LIT"}, t)
     end)
 
     it("tokenizes integer division: a div b", function()
         local tokens = algol_lexer.tokenize("a div b")
         local t = types(tokens)
-        assert.are.same({"IDENT", "DIV", "IDENT"}, t)
+        assert.are.same({"NAME", "DIV", "NAME"}, t)
     end)
 
     it("tokenizes modulo: a mod b", function()
         local tokens = algol_lexer.tokenize("a mod b")
         local t = types(tokens)
-        assert.are.same({"IDENT", "MOD", "IDENT"}, t)
+        assert.are.same({"NAME", "MOD", "NAME"}, t)
     end)
 
     it("tokenizes not operator", function()
         local tokens = algol_lexer.tokenize("not flag")
         local t = types(tokens)
-        assert.are.same({"NOT", "IDENT"}, t)
+        assert.are.same({"NOT", "NAME"}, t)
     end)
 
     it("tokenizes switch declaration", function()
         local tokens = algol_lexer.tokenize("switch s := L1, L2")
         local t = types(tokens)
-        assert.are.same({"SWITCH", "IDENT", "ASSIGN", "IDENT", "COMMA", "IDENT"}, t)
+        assert.are.same({"SWITCH", "NAME", "ASSIGN", "NAME", "COMMA", "NAME"}, t)
     end)
 end)
 
@@ -863,9 +863,9 @@ begin
         local tokens = algol_lexer.tokenize(src)
         local t = types(tokens)
         assert.are.same({
-            "FOR", "IDENT", "ASSIGN", "INTEGER_LIT",
-            "WHILE", "IDENT", "LEQ", "INTEGER_LIT",
-            "DO", "IDENT", "ASSIGN", "IDENT", "PLUS", "INTEGER_LIT"
+            "FOR", "NAME", "ASSIGN", "INTEGER_LIT",
+            "WHILE", "NAME", "LEQ", "INTEGER_LIT",
+            "DO", "NAME", "ASSIGN", "NAME", "PLUS", "INTEGER_LIT"
         }, t)
     end)
 
@@ -873,6 +873,6 @@ begin
         local src = "sqrt(2.0)"
         local tokens = algol_lexer.tokenize(src)
         local t = types(tokens)
-        assert.are.same({"IDENT", "LPAREN", "REAL_LIT", "RPAREN"}, t)
+        assert.are.same({"NAME", "LPAREN", "REAL_LIT", "RPAREN"}, t)
     end)
 end)
