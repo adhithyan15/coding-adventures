@@ -1,0 +1,23 @@
+{
+  "name": "parrot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Parrot REPL — echoes back whatever you type",
+  "type": "module",
+  "scripts": {
+    "start": "npx tsx src/main.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@coding-adventures/repl": "file:../../../packages/typescript/repl"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "tsx": "^4.0.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}

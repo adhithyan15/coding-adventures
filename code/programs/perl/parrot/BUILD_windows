@@ -1,0 +1,1 @@
+echo "perl/parrot: skipped on Windows CI"

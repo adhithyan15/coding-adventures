@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# ============================================================================
+# bin/parrot — executable entry point for the Parrot REPL
+# ============================================================================
+#
+# This script is what gets run when a user types `ruby bin/parrot` or
+# (after chmod +x) `./bin/parrot` at the shell.
+#
+# ## What this file does
+#
+# 1. Prepend the `lib/` directory to Ruby's load path ($LOAD_PATH) so that
+#    `require "parrot"` finds `lib/parrot.rb` in this project rather than any
+#    gem installed elsewhere on the system.
+#
+# 2. Require the top-level `parrot` module (which in turn loads all the repl
+#    framework components).
+#
+# 3. Call `Parrot.run` to start the interactive REPL session.
+#
+# ## Why manipulate $LOAD_PATH?
+#
+# When you run a Ruby script, the load path contains system gem directories
+# but NOT the current project's `lib/` folder (unless you ran `bundle exec`
+# or used `require_relative`). Explicitly unshifting the `lib/` path makes
+# `require "parrot"` work reliably regardless of how the script is invoked.
+#
+# `__dir__` is a Ruby magic variable that expands to the absolute path of the
+# directory containing this script (i.e., `bin/`). Joining it with ".." and
+# "lib" gives the absolute path to `lib/`.
+
+$LOAD_PATH.unshift File.join(__dir__, "..", "lib")
+require "parrot"
+
+Parrot.run

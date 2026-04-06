@@ -1,0 +1,23 @@
+[package]
+name = "parrot"
+version = "1.0.0"
+edition = "2021"
+description = "Parrot REPL — the world's simplest REPL: it echoes back whatever you type"
+authors = ["Adhithya Rajasekaran"]
+license = "MIT"
+
+# Prevent Cargo from walking up to find a workspace root at code/packages/rust/Cargo.toml.
+# Each program in this repo is its own standalone workspace so the packages/
+# workspace stays clean and separate.
+[workspace]
+
+[dependencies]
+repl = { path = "../../../packages/rust/repl" }
+
+[lib]
+name = "parrot"
+path = "src/lib.rs"
+
+[[bin]]
+name = "parrot"
+path = "src/main.rs"

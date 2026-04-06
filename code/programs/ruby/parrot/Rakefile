@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+# ============================================================================
+# Rakefile — task definitions for the Parrot REPL program
+# ============================================================================
+#
+# Rake is Ruby's make-equivalent: it defines tasks that can be run from the
+# command line with `rake <task>`. Here we define a single `test` task that
+# uses Rake::TestTask to discover and run all Minitest test files.
+#
+# `FileList["test/test_*.rb"]` is a Rake glob that expands to every file
+# matching the pattern at task runtime — so new test files are picked up
+# automatically without editing this Rakefile.
+#
+# The `default:` task means running bare `rake` is equivalent to `rake test`.
+
+require "rake/testtask"
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "lib" << "test"
+  t.test_files = FileList["test/test_*.rb"]
+  t.verbose = true
+end
+
+task default: :test
