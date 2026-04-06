@@ -1,0 +1,126 @@
+# Token definitions for TypeScript 2.0 (September 2016)
+# TypeScript 2.0 added several important features:
+# - `never` type — the return type of functions that never return
+# - `readonly` modifier — mark properties as immutable
+# - Non-null assertion operator (postfix `!`)
+# - `abstract` classes and methods (actually added in 1.6, formalized in 2.x)
+# - `declare` keyword for ambient declarations
+# - `namespace` keyword (was `module` in 1.x, both work in 2.x)
+# - `let` and `const` (ES6 features, fully supported in 2.x output targets)
+#
+# Sources: TypeScript 2.0 release notes (github.com/microsoft/TypeScript/wiki/release-notes)
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators — multi-character first (longer matches win)
+# ============================================================================
+
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# ============================================================================
+# Keywords — TypeScript 2.0
+# Adds: never, readonly, abstract, declare, namespace, let, const
+# ============================================================================
+
+keywords:
+  # JavaScript / ES6 keywords
+  var
+  let
+  const
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  in
+  delete
+  void
+  throw
+  try
+  catch
+  finally
+  break
+  continue
+  switch
+  case
+  default
+  with
+  debugger
+  # ES6 class syntax
+  class
+  extends
+  super
+  export
+  import
+  from
+  as
+  implements
+  interface
+  public
+  private
+  protected
+  static
+  # TypeScript 1.x keywords (inherited)
+  type
+  enum
+  module
+  # NEW in TypeScript 2.0
+  readonly
+  abstract
+  declare
+  namespace
+  # Primitive types
+  any
+  void
+  string
+  number
+  boolean
+  object
+  never

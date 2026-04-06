@@ -1,0 +1,132 @@
+# Token definitions for TypeScript 4.0 (August 2020)
+# TypeScript 4.0 added:
+# - Variadic tuple types
+# - Labeled tuple elements: `[first: string, second: number]`
+# - Class property inference from constructors
+# - Short-circuit assignment operators (`&&=`, `||=`, `??=`)
+# - `catch` binding optionality (catch clause variables can be typed as `unknown`)
+# - Custom JSX factories
+#
+# The keyword set is largely the same as 3.x. The 4.x series focused on
+# inference improvements and tuple type enhancements rather than new keywords.
+#
+# Sources: TypeScript 4.0 release notes
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators — multi-character first (longer matches win)
+# ============================================================================
+
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# ============================================================================
+# Keywords — TypeScript 4.0
+# Full TypeScript keyword set through 4.x (stable from 3.0 onward)
+# ============================================================================
+
+keywords:
+  # JavaScript / ES6+ keywords
+  var
+  let
+  const
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  in
+  delete
+  void
+  throw
+  try
+  catch
+  finally
+  break
+  continue
+  switch
+  case
+  default
+  with
+  debugger
+  # ES6 class and module syntax
+  class
+  extends
+  super
+  export
+  import
+  from
+  as
+  implements
+  interface
+  public
+  private
+  protected
+  static
+  # TypeScript-specific keywords
+  type
+  enum
+  module
+  readonly
+  abstract
+  declare
+  namespace
+  keyof
+  infer
+  # Primitive and special types
+  any
+  void
+  string
+  number
+  boolean
+  object
+  symbol
+  bigint
+  never
+  unknown

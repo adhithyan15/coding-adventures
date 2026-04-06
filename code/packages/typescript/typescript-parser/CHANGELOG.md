@@ -2,6 +2,23 @@
 
 All notable changes to the TypeScript Parser (TypeScript) package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+- `parseTypescript(source, version?)` — optional `version` parameter accepting
+  `"ts1.0"`, `"ts2.0"`, `"ts3.0"`, `"ts4.0"`, `"ts5.0"`, or `"ts5.8"`.
+  When omitted (or empty string), the generic grammars are used — backwards-compatible
+  with v0.1.x.
+- Versioned grammar support loads parser grammar from `code/grammars/typescript/<version>.grammar`
+  and delegates to the versioned lexer grammar automatically.
+- Clear error thrown for unrecognised version strings.
+- Expanded test suite covering all six TS version strings, empty-string version,
+  and error cases.
+
+### Changed
+- `parseTypescript` signature is now `(source: string, version?: string): ASTNode`
+  — fully backwards-compatible; existing callers with one argument are unaffected.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

@@ -1,0 +1,130 @@
+# Token definitions for TypeScript 3.0 (July 2018)
+# TypeScript 3.0 added:
+# - `unknown` type — the type-safe counterpart of `any`
+# - Project references
+# - Tuple types in rest parameters and spread expressions
+# - Improved inference for generic functions
+# - Better support for `defaultProps` in React
+#
+# Notable: `unknown` was the headline feature — it forces callers to
+# narrow the type before using it, unlike `any` which bypasses checks.
+#
+# Sources: TypeScript 3.0 release notes
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators — multi-character first (longer matches win)
+# ============================================================================
+
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# ============================================================================
+# Keywords — TypeScript 3.0
+# Adds: unknown
+# ============================================================================
+
+keywords:
+  # JavaScript / ES6 keywords
+  var
+  let
+  const
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  in
+  delete
+  void
+  throw
+  try
+  catch
+  finally
+  break
+  continue
+  switch
+  case
+  default
+  with
+  debugger
+  # ES6 class syntax
+  class
+  extends
+  super
+  export
+  import
+  from
+  as
+  implements
+  interface
+  public
+  private
+  protected
+  static
+  # TypeScript keywords
+  type
+  enum
+  module
+  readonly
+  abstract
+  declare
+  namespace
+  keyof
+  infer
+  # Primitive types
+  any
+  void
+  string
+  number
+  boolean
+  object
+  never
+  # NEW in TypeScript 3.0
+  unknown
