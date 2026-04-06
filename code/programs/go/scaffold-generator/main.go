@@ -53,7 +53,7 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell"}
 
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
@@ -153,6 +153,8 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readLuaDeps(pkgDir)
 	case "swift":
 		return readSwiftDeps(pkgDir)
+	case "haskell":
+		return readHaskellDeps(pkgDir)
 	default:
 		return nil, fmt.Errorf("unknown language: %s", lang)
 	}
@@ -414,6 +416,29 @@ func readSwiftDeps(pkgDir string) ([]string, error) {
 				continue
 			}
 			deps = append(deps, depDir)
+		}
+	}
+	return deps, nil
+}
+
+// readHaskellDeps reads cabal file for build-depends entries targeting coding-adventures-* packages.
+func readHaskellDeps(pkgDir string) ([]string, error) {
+	cabalPath := filepath.Join(pkgDir, "coding-adventures-"+filepath.Base(pkgDir)+".cabal")
+	data, err := os.ReadFile(cabalPath)
+	if err != nil {
+		return nil, nil // no cabal file = no deps
+	}
+	re := regexp.MustCompile(`coding-adventures-([a-zA-Z0-9-]+)`)
+	selfName := filepath.Base(pkgDir)
+	var deps []string
+	for _, line := range strings.Split(string(data), "\n") {
+		m := re.FindStringSubmatch(line)
+		if len(m) == 2 {
+			// Ignore metadata lines and the package's own test-suite self-reference.
+			if strings.Contains(line, "name:") || strings.Contains(line, "executable") || strings.Contains(line, "library") || m[1] == selfName {
+				continue
+			}
+			deps = append(deps, m[1])
 		}
 	}
 	return deps, nil
@@ -1624,6 +1649,92 @@ final class %sTests: XCTestCase {
 }
 
 // =========================================================================
+// File generation — Haskell
+// =========================================================================
+
+func generateHaskell(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
+	pkgNameHaskell := "coding-adventures-" + pkgName
+	moduleName := toCamelCase(pkgName)
+
+	cabal := fmt.Sprintf(`cabal-version: 3.0
+name:          %s
+version:       0.1.0
+synopsis:      %s
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  %s
+    build-depends:    base >=4.14
+`, pkgNameHaskell, description, moduleName)
+
+	for _, dep := range orderedDeps {
+		cabal += fmt.Sprintf("                      , coding-adventures-%s\n", dep)
+	}
+	cabal += `    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    build-depends:    base >=4.14
+                    , %s
+`
+	for _, dep := range orderedDeps {
+		cabal += fmt.Sprintf("                    , coding-adventures-%s\n", dep)
+	}
+	cabal = fmt.Sprintf(cabal, pkgNameHaskell, pkgNameHaskell)
+	cabal += `    hs-source-dirs:   test
+    default-language: Haskell2010
+`
+
+	libHs := fmt.Sprintf(`module %s where
+
+-- | %s
+-- %s
+someFunc :: IO ()
+someFunc = putStrLn "someFunc"
+`, moduleName, description, layerCtx)
+
+	specHs := fmt.Sprintf(`import %s
+
+main :: IO ()
+main = do
+    putStrLn "Test suite not yet implemented."
+`, moduleName)
+
+	cabalProject := "packages: ."
+	for _, dep := range orderedDeps {
+		cabalProject += fmt.Sprintf("\n          ../%s", dep)
+	}
+	cabalProject += "\n"
+
+	// BUILD
+	build := "cabal test all\n"
+
+	files := map[string]string{
+		fmt.Sprintf("%s.cabal", pkgNameHaskell): cabal,
+		"cabal.project": cabalProject,
+		"src/" + moduleName + ".hs": libHs,
+		"test/Spec.hs": specHs,
+		"BUILD": build,
+	}
+
+	for path, content := range files {
+		dir := filepath.Dir(filepath.Join(targetDir, path))
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// =========================================================================
 // Common files (README, CHANGELOG)
 // =========================================================================
 
@@ -1835,6 +1946,10 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		}
 	case "swift":
 		if err := generateSwift(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
+			return err
+		}
+	case "haskell":
+		if err := generateHaskell(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
 			return err
 		}
 	}

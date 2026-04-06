@@ -58,7 +58,8 @@ defmodule BuildTool.Hasher do
     "rust" => MapSet.new([".rs", ".toml"]),
     "typescript" => MapSet.new([".ts", ".tsx", ".js", ".jsx", ".json"]),
     "elixir" => MapSet.new([".ex", ".exs"]),
-    "perl" => MapSet.new([".pl", ".pm", ".t", ".xs"])
+    "perl" => MapSet.new([".pl", ".pm", ".t", ".xs"]),
+    "haskell" => MapSet.new([".hs", ".cabal"])
   }
 
   # ---------------------------------------------------------------------------
@@ -75,7 +76,8 @@ defmodule BuildTool.Hasher do
     "rust" => MapSet.new(["Cargo.lock"]),
     "typescript" => MapSet.new(["package-lock.json", "tsconfig.json"]),
     "elixir" => MapSet.new(["mix.lock"]),
-    "perl" => MapSet.new(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"])
+    "perl" => MapSet.new(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"]),
+    "haskell" => MapSet.new()
   }
 
   # ---------------------------------------------------------------------------

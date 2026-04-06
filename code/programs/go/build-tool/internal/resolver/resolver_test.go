@@ -236,6 +236,39 @@ let package = Package(name: "md5")
 	}
 }
 
+func TestParseHaskellDepsSkipsSelfReference(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"build-tool/coding-adventures-build-tool.cabal": `cabal-version: 3.0
+name:          coding-adventures-build-tool
+version:       0.1.0
+
+library
+    exposed-modules:  BuildTool
+    build-depends:    base >=4.14
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    build-depends:    base >=4.14
+                    , coding-adventures-build-tool
+                    , coding-adventures-logic-gates
+`,
+		"logic-gates/coding-adventures-logic-gates.cabal": `name: coding-adventures-logic-gates`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "haskell/programs/build-tool", Path: filepath.Join(root, "build-tool"), Language: "haskell"},
+		{Name: "haskell/logic-gates", Path: filepath.Join(root, "logic-gates"), Language: "haskell"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseHaskellDeps(packages[0], known)
+
+	if len(deps) != 1 || deps[0] != "haskell/logic-gates" {
+		t.Fatalf("expected only haskell/logic-gates dependency, got %v", deps)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Tests for ResolveDependencies
 // ---------------------------------------------------------------------------

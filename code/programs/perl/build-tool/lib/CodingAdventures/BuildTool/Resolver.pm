@@ -338,6 +338,12 @@ sub build_known_names {
             my $dist_name = "coding-adventures-$dir_name";
             $dist_name =~ tr/A-Z/a-z/;
             $known{$dist_name} = $pkg->{name};
+
+        } elsif ($lang eq 'haskell') {
+            # Haskell: coding-adventures-<kebab>
+            my $cabal_name = "coding-adventures-$dir_name";
+            $cabal_name =~ tr/A-Z/a-z/;
+            $known{$cabal_name} = $pkg->{name};
         }
     }
 
@@ -372,6 +378,8 @@ sub resolve_dependencies {
         return $self->_parse_lua_deps($pkg, $known_ref);
     } elsif ($lang eq 'perl') {
         return $self->_parse_perl_deps($pkg, $known_ref);
+    } elsif ($lang eq 'haskell') {
+        return $self->_parse_haskell_deps($pkg, $known_ref);
     }
     return ();
 }
@@ -546,6 +554,33 @@ sub _parse_lua_deps {
     while ($text =~ /"(coding-adventures-[^"]+)"/g) {
         my $dep = lc $1;
         push @deps, $known_ref->{$dep} if exists $known_ref->{$dep};
+    }
+    return @deps;
+}
+
+# _parse_haskell_deps -- Extract internal dependencies from a .cabal file.
+sub _parse_haskell_deps {
+    my ($self, $pkg, $known_ref) = @_;    
+
+    my $cabal;
+    opendir(my $dh, $pkg->{path}) or return ();
+    for my $f (readdir $dh) {
+        if ($f =~ /\.cabal$/) {
+            $cabal = File::Spec->catfile($pkg->{path}, $f);
+            last;
+        }
+    }
+    closedir $dh;
+    return () unless $cabal;
+
+    my $text = _slurp($cabal) // return ();
+
+    my @deps;
+    while ($text =~ /(coding-adventures-[a-zA-Z0-9-]+)/g) {
+        my $dep = lc $1;
+        next unless exists $known_ref->{$dep};
+        next if $known_ref->{$dep} eq $pkg->{name};
+        push @deps, $known_ref->{$dep};
     }
     return @deps;
 }

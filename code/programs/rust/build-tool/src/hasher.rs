@@ -55,6 +55,7 @@ fn source_extensions(language: &str) -> HashSet<&'static str> {
         "go" => [".go"].iter().cloned().collect(),
         "rust" => [".rs", ".toml"].iter().cloned().collect(),
         "perl" => [".pl", ".pm", ".t", ".xs"].iter().cloned().collect(),
+        "haskell" => [".hs", ".cabal"].iter().cloned().collect(),
         _ => HashSet::new(),
     }
 }
@@ -68,6 +69,7 @@ fn special_filenames(language: &str) -> HashSet<&'static str> {
         "go" => ["go.mod", "go.sum"].iter().cloned().collect(),
         "rust" => ["Cargo.toml", "Cargo.lock"].iter().cloned().collect(),
         "perl" => ["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"].iter().cloned().collect(),
+        "haskell" => HashSet::new(),
         _ => HashSet::new(),
     }
 }

@@ -8,6 +8,7 @@ local CI_MANAGED_TOOLCHAIN_LANGUAGES = {
     elixir = true,
     lua = true,
     perl = true,
+    haskell = true,
 }
 
 function Validator.validate_ci_full_build_toolchains(root, packages)

@@ -56,8 +56,8 @@ use std::path::{Path, PathBuf};
 /// The version string, matching the spec and Go implementation.
 const VERSION: &str = "1.0.0";
 
-/// All six supported target languages, in canonical order.
-const VALID_LANGUAGES: &[&str] = &["python", "go", "ruby", "typescript", "rust", "elixir", "perl"];
+/// All supported target languages, in canonical order.
+const VALID_LANGUAGES: &[&str] = &["python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell"];
 
 // =========================================================================
 // Name normalization
@@ -365,6 +365,9 @@ pub fn read_deps(pkg_dir: &Path, lang: &str) -> Vec<String> {
         "rust" => read_rust_deps(pkg_dir),
         "elixir" => read_elixir_deps(pkg_dir),
         "perl" => read_perl_deps(pkg_dir),
+        "lua" => Vec::new(), // stub
+        "swift" => Vec::new(), // stub
+        "haskell" => read_haskell_deps(pkg_dir),
         _ => Vec::new(),
     }
 }
@@ -586,6 +589,47 @@ fn read_perl_deps(pkg_dir: &Path) -> Vec<String> {
                     if !name.is_empty() {
                         deps.push(name);
                     }
+                }
+            }
+        }
+    }
+    deps
+}
+
+/// Reads direct dependencies from a Haskell cabal file.
+fn read_haskell_deps(pkg_dir: &Path) -> Vec<String> {
+    let mut cabal_file = None;
+    let self_name = pkg_dir
+        .file_name()
+        .and_then(|s| s.to_str())
+        .unwrap_or_default()
+        .to_string();
+    if let Ok(entries) = fs::read_dir(pkg_dir) {
+        for entry in entries.flatten() {
+            if entry.path().extension().and_then(|s| s.to_str()) == Some("cabal") {
+                cabal_file = Some(entry.path());
+                break;
+            }
+        }
+    }
+    let cabal_path = match cabal_file {
+        Some(p) => p,
+        None => return Vec::new(),
+    };
+    let content = match fs::read_to_string(&cabal_path) {
+        Ok(c) => c,
+        Err(_) => return Vec::new(),
+    };
+    let mut deps = Vec::new();
+    for line in content.lines() {
+        if let Some(idx) = line.find("coding-adventures-") {
+            let rest = &line[idx + 18..];
+            let dep: String = rest.chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == '-')
+                .collect();
+            if !line.contains("name:") && !line.contains("executable") && !line.contains("library") && dep != self_name {
+                if !dep.is_empty() {
+                    deps.push(dep);
                 }
             }
         }
@@ -1709,6 +1753,84 @@ fn generate_perl(
     Ok(())
 }
 
+fn generate_haskell(
+    target_dir: &Path,
+    pkg_name: &str,
+    description: &str,
+    layer_ctx: &str,
+    _direct_deps: &[String],
+    ordered_deps: &[String],
+) -> io::Result<()> {
+    let pkg_name_haskell = format!("coding-adventures-{}", pkg_name);
+    let module_name = to_camel_case(pkg_name);
+
+    let mut cabal = format!(
+        "cabal-version: 3.0\n\
+        name:          {pkg_name_haskell}\n\
+        version:       0.1.0\n\
+        synopsis:      {description}\n\
+        license:       MIT\n\
+        author:        Adhithya Rajasekaran\n\
+        maintainer:    Adhithya Rajasekaran\n\
+        build-type:    Simple\n\n\
+        library\n\
+            exposed-modules:  {module_name}\n\
+            build-depends:    base >=4.14\n"
+    );
+    for dep in ordered_deps {
+        cabal.push_str(&format!("                              , coding-adventures-{}\n", dep));
+    }
+    cabal.push_str(&format!(
+        "    hs-source-dirs:   src\n\
+            default-language: Haskell2010\n\n\
+        test-suite spec\n\
+            type:             exitcode-stdio-1.0\n\
+            main-is:          Spec.hs\n\
+            build-depends:    base >=4.14\n\
+                            , {pkg_name_haskell}\n"
+    ));
+    for dep in ordered_deps {
+        cabal.push_str(&format!("                            , coding-adventures-{}\n", dep));
+    }
+    cabal.push_str(
+        "    hs-source-dirs:   test\n\
+            default-language: Haskell2010\n"
+    );
+
+    let lib_hs = format!(
+        "module {module_name} where\n\n\
+        -- | {description}\n\
+        -- {layer_ctx}\n\
+        someFunc :: IO ()\n\
+        someFunc = putStrLn \"someFunc\"\n"
+    );
+
+    let spec_hs = format!(
+        "import {module_name}\n\n\
+        main :: IO ()\n\
+        main = do\n\
+            putStrLn \"Test suite not yet implemented.\"\n"
+    );
+
+    let mut cabal_project = "packages: .\n".to_string();
+    for dep in ordered_deps {
+        cabal_project.push_str(&format!("          ../{}\n", dep));
+    }
+
+    let build = "cabal test all\n".to_string();
+
+    fs::create_dir_all(target_dir.join("src"))?;
+    fs::create_dir_all(target_dir.join("test"))?;
+
+    fs::write(target_dir.join(format!("{pkg_name_haskell}.cabal")), &cabal)?;
+    fs::write(target_dir.join("cabal.project"), &cabal_project)?;
+    fs::write(target_dir.join("src").join(format!("{module_name}.hs")), &lib_hs)?;
+    fs::write(target_dir.join("test").join("Spec.hs"), &spec_hs)?;
+    fs::write(target_dir.join("BUILD"), &build)?;
+
+    Ok(())
+}
+
 // =========================================================================
 // Common files (README, CHANGELOG)
 // =========================================================================
@@ -2027,6 +2149,17 @@ fn scaffold(
         )
         .map_err(io_err)?,
         "perl" => generate_perl(
+            &target_dir,
+            &cfg.package_name,
+            &cfg.description,
+            &layer_ctx,
+            &cfg.direct_deps,
+            &ordered_deps,
+        )
+        .map_err(io_err)?,
+        "lua" => (),
+        "swift" => (),
+        "haskell" => generate_haskell(
             &target_dir,
             &cfg.package_name,
             &cfg.description,

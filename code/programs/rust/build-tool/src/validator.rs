@@ -12,6 +12,7 @@ const CI_MANAGED_TOOLCHAIN_LANGUAGES: &[&str] = &[
     "elixir",
     "lua",
     "perl",
+    "haskell",
 ];
 
 pub fn validate_ci_full_build_toolchains(repo_root: &Path, packages: &[Package]) -> Option<String> {
