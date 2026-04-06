@@ -18,9 +18,22 @@
 #
 # All of these are handled by the grammar file — no new code needed.
 #
-# Usage:
+# Version-aware usage
+# -------------------
+# The lexer supports an optional `version:` keyword argument to select
+# a specific TypeScript grammar file from the versioned grammar directory.
+#
+#   # Generic (uses typescript.tokens)
 #   tokens = CodingAdventures::TypescriptLexer.tokenize("let x: number = 1 + 2;")
-#   tokens.each { |t| puts t }
+#
+#   # TypeScript 5.0 (uses typescript/ts5.0.tokens)
+#   tokens = CodingAdventures::TypescriptLexer.tokenize("let x: number = 1;", version: "ts5.0")
+#
+#   # TypeScript 5.8 (uses typescript/ts5.8.tokens)
+#   tokens = CodingAdventures::TypescriptLexer.tokenize(source, version: "ts5.8")
+#
+# Valid versions: "ts1.0", "ts2.0", "ts3.0", "ts4.0", "ts5.0", "ts5.8"
+# Pass nil (or omit) for the generic grammar.
 # ================================================================
 
 require "coding_adventures_grammar_tools"
@@ -31,16 +44,63 @@ module CodingAdventures
     # Path to the grammars directory, computed relative to this file.
     # We navigate up from lib/coding_adventures/typescript_lexer/ to the
     # repository root's code/grammars/ directory.
+    #
+    # Directory structure (counting upward from __dir__):
+    #   lib/coding_adventures/typescript_lexer/  <- __dir__
+    #   lib/coding_adventures/                   <- ..
+    #   lib/                                     <- ../..
+    #   <gem root>/                              <- ../../..
+    #   ruby/                                    <- ../../../..
+    #   packages/                                <- ../../../../..
+    #   code/                                    <- ../../../../../..
+    #   grammars/                                <- ../../../../../../grammars
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
+
+    # The generic typescript.tokens file (no version qualifier).
     TS_TOKENS_PATH = File.join(GRAMMAR_DIR, "typescript.tokens")
+
+    # All valid TypeScript grammar versions supported by the versioned grammar
+    # files in code/grammars/typescript/.  Versions correspond to official
+    # TypeScript releases; "ts5.8" is the latest at time of writing.
+    VALID_VERSIONS = %w[ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8].freeze
+
+    # Resolve the path to the .tokens file for a given version.
+    #
+    # When `version` is nil or empty, the generic grammar is used.
+    # When a valid version string is given (e.g. "ts5.0"), the file
+    # code/grammars/typescript/<version>.tokens is returned.
+    # An unknown version raises ArgumentError immediately so callers get
+    # a clear error message rather than a cryptic file-not-found.
+    #
+    # @param version [String, nil] version tag or nil
+    # @return [String] absolute path to the .tokens file
+    # @raise [ArgumentError] if version is not in VALID_VERSIONS
+    def self.resolve_tokens_path(version)
+      if version.nil? || version.empty?
+        File.join(GRAMMAR_DIR, "typescript.tokens")
+      elsif VALID_VERSIONS.include?(version)
+        File.join(GRAMMAR_DIR, "typescript", "#{version}.tokens")
+      else
+        raise ArgumentError,
+          "Unknown TypeScript version #{version.inspect}. " \
+          "Valid versions: #{VALID_VERSIONS.sort.join(", ")}"
+      end
+    end
 
     # Tokenize a string of TypeScript source code into an array of Token objects.
     #
+    # The optional `version:` keyword argument selects a specific versioned
+    # grammar file.  When omitted (or nil), the generic `typescript.tokens`
+    # grammar is used — the same behaviour as version 0.1.0.
+    #
     # @param source [String] TypeScript source code to tokenize
+    # @param version [String, nil] TypeScript version tag (e.g. "ts5.0") or nil
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
-    def self.tokenize(source)
+    # @raise [ArgumentError] if version is not nil and not in VALID_VERSIONS
+    def self.tokenize(source, version: nil)
+      tokens_path = resolve_tokens_path(version)
       grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(TS_TOKENS_PATH, encoding: "UTF-8")
+        File.read(tokens_path, encoding: "UTF-8")
       )
       lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
       lexer.tokenize

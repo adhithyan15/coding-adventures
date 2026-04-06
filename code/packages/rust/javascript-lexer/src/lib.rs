@@ -5,7 +5,7 @@
 //! This crate provides a lexer (tokenizer) for a subset of JavaScript.
 //!
 //! It does **not** hand-write tokenization rules. Instead, it loads the
-//! `javascript.tokens` grammar file — a declarative description of every
+//! appropriate `.tokens` grammar file — a declarative description of every
 //! token in JavaScript — and feeds it to the generic [`GrammarLexer`]
 //! from the `lexer` crate.
 //!
@@ -24,11 +24,30 @@
 //! ```
 //!
 //! This crate is the thin glue layer that wires these components together
-//! for JavaScript specifically. It knows where to find `javascript.tokens`
+//! for JavaScript specifically. It knows where to find the grammar files
 //! and provides two public entry points:
 //!
 //! - [`create_javascript_lexer`] — returns a `GrammarLexer` for fine-grained control.
 //! - [`tokenize_javascript`] — convenience function that returns `Vec<Token>` directly.
+//!
+//! # Version-Aware API
+//!
+//! Both entry points accept a `version` parameter that selects which grammar
+//! file to use. The JavaScript (ECMAScript) versioning scheme uses the
+//! edition names defined by TC39:
+//!
+//! | `version` | grammar file loaded |
+//! |---|---|
+//! | `""` (empty) | `grammars/javascript.tokens` (generic) |
+//! | `"es1"` | `grammars/ecmascript/es1.tokens` |
+//! | `"es3"` | `grammars/ecmascript/es3.tokens` |
+//! | `"es5"` | `grammars/ecmascript/es5.tokens` |
+//! | `"es2015"` | `grammars/ecmascript/es2015.tokens` |
+//! | `"es2016"` | `grammars/ecmascript/es2016.tokens` |
+//! | … | … |
+//! | `"es2025"` | `grammars/ecmascript/es2025.tokens` |
+//!
+//! An unknown version string returns `Err(String)`.
 //!
 //! # Keywords
 //!
@@ -39,6 +58,7 @@
 //! matching names to KEYWORD tokens.
 
 use std::fs;
+use std::path::PathBuf;
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -48,29 +68,56 @@ use lexer::token::Token;
 // Grammar file location
 // ===========================================================================
 
-/// Build the path to the `javascript.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
+/// Returns the root `grammars/` directory by navigating up from this crate.
 ///
 /// ```text
 /// code/
-///   grammars/
-///     javascript.tokens     <-- this is what we want
+///   grammars/           <-- returned by this function
 ///   packages/
 ///     rust/
 ///       javascript-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
+///         Cargo.toml    <-- env!("CARGO_MANIFEST_DIR")
 /// ```
+fn grammar_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("..")
+        .join("..")
+        .join("grammars")
+}
+
+/// Validate the JavaScript/ECMAScript version string and return the path to
+/// the corresponding `.tokens` grammar file.
 ///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/javascript.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/javascript.tokens")
+/// Valid version strings are:
+/// - `""` — selects the generic `javascript.tokens`
+/// - `"es1"`, `"es3"`, `"es5"` — early ECMAScript editions
+/// - `"es2015"` through `"es2025"` — annual ECMAScript releases
+///
+/// Returns `Err(String)` for any unrecognised version string, so callers
+/// can surface a clear error message rather than panicking on a missing file.
+fn grammar_path(version: &str) -> Result<PathBuf, String> {
+    let root = grammar_root();
+
+    match version {
+        // Empty string → the generic, version-agnostic grammar.
+        "" => Ok(root.join("javascript.tokens")),
+
+        // Versioned ECMAScript grammars live in grammars/ecmascript/.
+        "es1" | "es3" | "es5"
+        | "es2015" | "es2016" | "es2017" | "es2018" | "es2019"
+        | "es2020" | "es2021" | "es2022" | "es2023" | "es2024" | "es2025" => {
+            Ok(root.join("ecmascript").join(format!("{version}.tokens")))
+        }
+
+        // Anything else is an error — we'd rather fail loudly than silently
+        // fall back to the generic grammar and produce confusing results.
+        other => Err(format!(
+            "Unknown JavaScript/ECMAScript version '{other}'. \
+             Valid values: \"\", \"es1\", \"es3\", \"es5\", \
+             \"es2015\"–\"es2025\""
+        )),
+    }
 }
 
 // ===========================================================================
@@ -79,45 +126,61 @@ fn grammar_path() -> String {
 
 /// Create a `GrammarLexer` configured for JavaScript source code.
 ///
+/// The `version` parameter selects which grammar file to load:
+/// - `""` — uses the generic `javascript.tokens` grammar (recommended for
+///   most use cases where you don't need version-specific behaviour).
+/// - `"es1"`, `"es3"`, `"es5"`, `"es2015"`–`"es2025"` — uses a
+///   version-specific grammar for that ECMAScript edition.
+///
 /// This function:
-/// 1. Reads the `javascript.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
+/// 1. Resolves the grammar file path from the version string.
+/// 2. Reads the `.tokens` grammar file from disk.
+/// 3. Parses it into a `TokenGrammar` using `grammar-tools`.
+/// 4. Constructs a `GrammarLexer` with the grammar and the given source.
 ///
 /// The returned lexer is ready to call `.tokenize()` on.
 ///
-/// # Panics
+/// # Errors
 ///
-/// Panics if the grammar file cannot be read or parsed.
+/// Returns `Err(String)` if:
+/// - The `version` string is not recognised.
+/// - The grammar file cannot be read or parsed.
 ///
 /// # Example
 ///
 /// ```no_run
 /// use coding_adventures_javascript_lexer::create_javascript_lexer;
 ///
-/// let mut lexer = create_javascript_lexer("var x = 42;");
+/// // Generic grammar (version-agnostic):
+/// let mut lexer = create_javascript_lexer("var x = 42;", "").unwrap();
 /// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
+///
+/// // ES2015 (ES6) grammar:
+/// let mut lexer_es6 = create_javascript_lexer("let x = 42;", "es2015").unwrap();
 /// ```
-pub fn create_javascript_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read javascript.tokens: {e}"));
+pub fn create_javascript_lexer<'src>(
+    source: &'src str,
+    version: &str,
+) -> Result<GrammarLexer<'src>, String> {
+    // Resolve the grammar file path; fail early on unknown version strings.
+    let path = grammar_path(version)?;
 
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
+    // Read the grammar file from disk.
+    let grammar_text = fs::read_to_string(&path)
+        .map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
+
+    // Parse the grammar text into a structured TokenGrammar.
     //
     // The TokenGrammar contains:
     //   - Token definitions (NAME, NUMBER, STRING, operators, delimiters)
-    //   - Skip patterns (whitespace, single-line comments, multi-line comments)
+    //   - Skip patterns (whitespace, comments)
     //   - Keywords (var, let, const, function, return, if, else, etc.)
     //   - Mode: default (no indentation tracking)
     let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse javascript.tokens: {e}"));
+        .map_err(|e| format!("Failed to parse {}: {e}", path.display()))?;
 
-    // Step 3: Create and return the lexer.
-    GrammarLexer::new(source, &grammar)
+    // Create and return the lexer.
+    Ok(GrammarLexer::new(source, &grammar))
 }
 
 /// Tokenize JavaScript source code into a vector of tokens.
@@ -126,27 +189,47 @@ pub fn create_javascript_lexer(source: &str) -> GrammarLexer<'_> {
 /// lexer creation, and tokenization in one call. The returned vector always
 /// ends with an `EOF` token.
 ///
-/// # Panics
+/// The `version` parameter is the same as for [`create_javascript_lexer`]:
+/// pass `""` for the generic grammar or `"es2015"` etc. for a versioned one.
 ///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character (via `LexerError` propagation).
+/// # Errors
+///
+/// Returns `Err(String)` if the version is unknown, the grammar file is
+/// missing or malformed, or the source contains an unrecognised character.
 ///
 /// # Example
 ///
 /// ```no_run
 /// use coding_adventures_javascript_lexer::tokenize_javascript;
 ///
-/// let tokens = tokenize_javascript("function add(a, b) { return a + b; }");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
+/// // Generic grammar:
+/// let tokens = tokenize_javascript(
+///     "function add(a, b) { return a + b; }",
+///     "",
+/// ).unwrap();
+///
+/// // ES5 grammar:
+/// let tokens_es5 = tokenize_javascript("var x = 1;", "es5").unwrap();
 /// ```
-pub fn tokenize_javascript(source: &str) -> Vec<Token> {
-    let mut js_lexer = create_javascript_lexer(source);
+pub fn tokenize_javascript(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    tokenize_javascript_impl(source, version)
+}
 
-    js_lexer
+/// Internal implementation that owns the grammar string for the duration
+/// of tokenization, avoiding lifetime issues with GrammarLexer<'src>.
+fn tokenize_javascript_impl(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    let path = grammar_path(version)?;
+
+    let grammar_text = fs::read_to_string(&path)
+        .map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
+
+    let grammar = parse_token_grammar(&grammar_text)
+        .map_err(|e| format!("Failed to parse {}: {e}", path.display()))?;
+
+    let mut lexer = GrammarLexer::new(source, &grammar);
+    lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("JavaScript tokenization failed: {e}"))
+        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
 }
 
 // ===========================================================================
@@ -171,13 +254,13 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // Test 1: Simple variable declaration
+    // Test 1: Simple variable declaration (generic grammar)
     // -----------------------------------------------------------------------
 
     /// Verify that a basic variable declaration is tokenized correctly.
     #[test]
     fn test_tokenize_var_declaration() {
-        let tokens = tokenize_javascript("var x = 42;");
+        let tokens = tokenize_javascript("var x = 42;", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         // Expected: KEYWORD("var"), NAME("x"), EQUALS("="), NUMBER("42"), SEMICOLON(";")
@@ -200,7 +283,7 @@ mod tests {
 
         for kw in &keywords {
             let source = format!("{kw};");
-            let tokens = tokenize_javascript(&source);
+            let tokens = tokenize_javascript(&source, "").unwrap();
             let pairs = token_pairs(&tokens);
 
             assert_eq!(
@@ -218,7 +301,7 @@ mod tests {
     /// Arithmetic and comparison operators should be tokenized correctly.
     #[test]
     fn test_operators() {
-        let tokens = tokenize_javascript("a + b - c * d / e;");
+        let tokens = tokenize_javascript("a + b - c * d / e;", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         let ops: Vec<&str> = pairs.iter()
@@ -237,7 +320,7 @@ mod tests {
     /// as single tokens, not split into individual characters.
     #[test]
     fn test_multi_char_operators() {
-        let tokens = tokenize_javascript("a === b !== c;");
+        let tokens = tokenize_javascript("a === b !== c;", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         let has_triple_eq = pairs.iter().any(|(_, v)| *v == "===");
@@ -254,7 +337,7 @@ mod tests {
     /// JavaScript supports both single-quoted and double-quoted strings.
     #[test]
     fn test_strings() {
-        let tokens = tokenize_javascript("var s = \"hello world\";");
+        let tokens = tokenize_javascript("var s = \"hello world\";", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         let has_string = pairs.iter().any(|(t, _)| *t == TokenType::String);
@@ -268,7 +351,7 @@ mod tests {
     /// JavaScript supports integer and floating-point numbers.
     #[test]
     fn test_numbers() {
-        let tokens = tokenize_javascript("42;");
+        let tokens = tokenize_javascript("42;", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         assert_eq!(pairs[0].0, TokenType::Number);
@@ -278,16 +361,11 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 7: Delimiters
     // -----------------------------------------------------------------------
-    //
-    // Note: javascript.tokens has no skip: section, so comments (// and
-    // /* */) are not skipped — they produce tokens (SLASH, NAME, etc.).
-    // The test_comments_skipped test has been removed because comments
-    // are not handled by the grammar-driven lexer for JavaScript.
 
     /// All delimiter tokens should be recognized: ( ) { } [ ] ; , .
     #[test]
     fn test_delimiters() {
-        let tokens = tokenize_javascript("(){}[];,");
+        let tokens = tokenize_javascript("(){}[];,", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         let values: Vec<&str> = pairs.iter().map(|(_, v)| *v).collect();
@@ -302,14 +380,14 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // Test 9: Whitespace is skipped
+    // Test 8: Whitespace is skipped
     // -----------------------------------------------------------------------
 
     /// Whitespace between tokens should be consumed without producing tokens.
     #[test]
     fn test_whitespace_skipped() {
-        let compact = tokenize_javascript("var x=1;");
-        let spaced = tokenize_javascript("var  x  =  1  ;");
+        let compact = tokenize_javascript("var x=1;", "").unwrap();
+        let spaced = tokenize_javascript("var  x  =  1  ;", "").unwrap();
 
         let pairs_compact = token_pairs(&compact);
         let pairs_spaced = token_pairs(&spaced);
@@ -318,14 +396,14 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // Test 10: Factory function returns a working lexer
+    // Test 9: Factory function returns a working lexer
     // -----------------------------------------------------------------------
 
     /// The `create_javascript_lexer` factory function should return a
     /// `GrammarLexer` that can successfully tokenize source code.
     #[test]
     fn test_create_lexer() {
-        let mut lexer = create_javascript_lexer("42;");
+        let mut lexer = create_javascript_lexer("42;", "").unwrap();
         let tokens = lexer.tokenize().expect("Lexer should tokenize successfully");
 
         assert!(tokens.len() >= 2);
@@ -333,14 +411,14 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // Test 11: Function expression
+    // Test 10: Function expression
     // -----------------------------------------------------------------------
 
     /// A function declaration exercises keywords, identifiers, parentheses,
     /// braces, and the return keyword.
     #[test]
     fn test_tokenize_function() {
-        let tokens = tokenize_javascript("function add(a, b) { return a + b; }");
+        let tokens = tokenize_javascript("function add(a, b) { return a + b; }", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         assert_eq!(pairs[0].0, TokenType::Keyword);
@@ -350,16 +428,82 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // Test 12: Arrow function tokens
+    // Test 11: Arrow function tokens
     // -----------------------------------------------------------------------
 
     /// The arrow operator => should be tokenized as a single token.
     #[test]
     fn test_arrow_operator() {
-        let tokens = tokenize_javascript("(x) => x + 1;");
+        let tokens = tokenize_javascript("(x) => x + 1;", "").unwrap();
         let pairs = token_pairs(&tokens);
 
         let has_arrow = pairs.iter().any(|(_, v)| *v == "=>");
         assert!(has_arrow, "Expected '=>' arrow token");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 12: Versioned grammar — es2015
+    // -----------------------------------------------------------------------
+
+    /// The es2015 versioned grammar should tokenize a basic let declaration.
+    #[test]
+    fn test_versioned_es2015() {
+        let tokens = tokenize_javascript("let x = 42;", "es2015").unwrap();
+        let pairs = token_pairs(&tokens);
+
+        assert!(pairs.len() >= 5, "Expected at least 5 tokens with es2015 grammar");
+        assert_eq!(pairs[0].0, TokenType::Keyword);
+        assert_eq!(pairs[0].1, "let");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 13: All versioned grammars parse a number literal
+    // -----------------------------------------------------------------------
+
+    /// Every versioned ECMAScript grammar should successfully tokenize a
+    /// simple number literal.
+    #[test]
+    fn test_all_versioned_grammars() {
+        let versions = [
+            "es1", "es3", "es5",
+            "es2015", "es2016", "es2017", "es2018", "es2019",
+            "es2020", "es2021", "es2022", "es2023", "es2024", "es2025",
+        ];
+        for v in &versions {
+            let result = tokenize_javascript("42;", v);
+            assert!(result.is_ok(), "Version '{v}' should parse successfully: {:?}", result.err());
+
+            let tokens = result.unwrap();
+            let pairs = token_pairs(&tokens);
+            assert_eq!(pairs[0].0, TokenType::Number, "First token for '{v}' should be NUMBER");
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 14: Unknown version returns Err
+    // -----------------------------------------------------------------------
+
+    /// Passing an unrecognised version string should return Err, not panic.
+    #[test]
+    fn test_unknown_version_returns_err() {
+        let result = tokenize_javascript("var x = 1;", "es99");
+        assert!(result.is_err(), "Expected Err for unknown version 'es99'");
+
+        let err_msg = result.unwrap_err();
+        assert!(
+            err_msg.contains("es99"),
+            "Error message should mention the bad version: {err_msg}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 15: create_javascript_lexer with unknown version returns Err
+    // -----------------------------------------------------------------------
+
+    /// The factory function should also return Err for unknown versions.
+    #[test]
+    fn test_create_lexer_unknown_version() {
+        let result = create_javascript_lexer("var x = 1;", "bad-version");
+        assert!(result.is_err(), "Expected Err from create_javascript_lexer with bad version");
     }
 }
