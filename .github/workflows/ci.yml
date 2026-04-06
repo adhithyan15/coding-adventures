@@ -44,6 +44,8 @@ jobs:
   # The build job reads these flags to conditionally install toolchains.
   detect:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       needs_python: ${{ steps.toolchains.outputs.needs_python }}
       needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
@@ -153,6 +155,8 @@ jobs:
         os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     defaults:
       run:
         shell: bash

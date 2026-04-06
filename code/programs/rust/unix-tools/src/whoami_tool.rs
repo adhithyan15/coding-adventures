@@ -84,7 +84,10 @@ mod tests {
     fn returns_a_username() {
         // In any reasonable test environment, $USER should be set.
         let result = get_username();
-        assert!(result.is_ok(), "get_username should succeed in test environment");
+        assert!(
+            result.is_ok(),
+            "get_username should succeed in test environment"
+        );
         let name = result.unwrap();
         assert!(!name.is_empty(), "username should not be empty");
     }
@@ -94,10 +97,9 @@ mod tests {
     fn username_has_no_whitespace() {
         // Unix usernames should not contain spaces or newlines.
         let name = get_username().unwrap();
-        assert!(
-            !name.contains(' ') && !name.contains('\n'),
-            "username should not contain whitespace"
-        );
+        if name.contains(' ') || name.contains('\n') {
+            panic!("username should not contain whitespace");
+        }
     }
 
     #[cfg(unix)]

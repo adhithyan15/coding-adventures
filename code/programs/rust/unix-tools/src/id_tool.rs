@@ -289,7 +289,9 @@ mod tests {
         let info = get_user_info().unwrap();
         let output = format_user_id(&info, true, false);
         assert!(!output.is_empty(), "user name should not be empty");
-        assert_eq!(output, info.username);
+        if output != info.username {
+            panic!("formatted username should match expected username");
+        }
     }
 
     #[cfg(unix)]

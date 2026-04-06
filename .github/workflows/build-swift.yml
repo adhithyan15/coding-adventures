@@ -21,6 +21,8 @@ jobs:
     # It ships with Xcode 16.x. When Xcode 26 runners become available
     # on GitHub Actions, update this to macos-16.
     runs-on: macos-15
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
@@ -63,6 +65,8 @@ jobs:
   build-06-notifications:
     name: "06 — Notifications"
     runs-on: macos-15
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
