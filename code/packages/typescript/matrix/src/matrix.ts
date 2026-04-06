@@ -201,8 +201,11 @@ export class Matrix {
   set(row: number, col: number, value: number): Matrix {
     assertMatrixIndex(row, this.rows, "row");
     assertMatrixIndex(col, this.cols, "col");
-    const newData = this.data.map(r => [...r]);
-    newData[row][col] = value;
+    const updatedRow = [...this.data[row]];
+    updatedRow.splice(col, 1, value);
+    const newData = this.data.map((r, index) =>
+      index === row ? updatedRow : [...r],
+    );
     return new Matrix(newData);
   }
 

@@ -104,6 +104,66 @@ func pathWithinBaseDir(baseDir string, candidate string) bool {
 	return rel == "." || (rel != ".." && !strings.HasPrefix(rel, ".."+string(os.PathSeparator)))
 }
 
+func resolvePathWithinBaseDir(baseDir string, candidate string) (string, error) {
+	candidateAbs, err := filepath.Abs(candidate)
+	if err != nil {
+		return "", err
+	}
+	if !pathWithinBaseDir(baseDir, candidateAbs) {
+		return "", fmt.Errorf("path escapes target directory")
+	}
+
+	rel, err := filepath.Rel(baseDir, candidateAbs)
+	if err != nil {
+		return "", err
+	}
+	if rel == "." {
+		return baseDir, nil
+	}
+
+	current := baseDir
+	for _, part := range strings.Split(rel, string(os.PathSeparator)) {
+		if part == "" || part == "." {
+			continue
+		}
+
+		current = filepath.Join(current, part)
+		info, err := os.Lstat(current)
+		switch {
+		case err == nil && info.Mode()&os.ModeSymlink != 0:
+			resolved, err := filepath.EvalSymlinks(current)
+			if err != nil {
+				return "", err
+			}
+			resolvedAbs, err := filepath.Abs(resolved)
+			if err != nil {
+				return "", err
+			}
+			if !pathWithinBaseDir(baseDir, resolvedAbs) {
+				return "", fmt.Errorf("path escapes target directory")
+			}
+			current = resolvedAbs
+		case err == nil:
+			// Existing non-symlink path segment is already safe.
+		case os.IsNotExist(err):
+			// Missing components cannot redirect yet; keep the path anchored under baseDir.
+		default:
+			return "", err
+		}
+
+		currentAbs, err := filepath.Abs(current)
+		if err != nil {
+			return "", err
+		}
+		if !pathWithinBaseDir(baseDir, currentAbs) {
+			return "", fmt.Errorf("path escapes target directory")
+		}
+		current = currentAbs
+	}
+
+	return current, nil
+}
+
 // =========================================================================
 // tarCreate — create a new tar archive
 // =========================================================================
@@ -322,7 +382,11 @@ func tarExtract(files []string, opts TarOptions, stdout io.Writer, stderr io.Wri
 			fmt.Fprintf(stderr, "tar: %s: path escapes target directory\n", name)
 			continue
 		}
-		targetPath = targetPathAbs
+		targetPath, err = resolvePathWithinBaseDir(targetDirAbs, targetPathAbs)
+		if err != nil {
+			fmt.Fprintf(stderr, "tar: %s: path escapes target directory\n", name)
+			continue
+		}
 
 		if opts.Verbose {
 			fmt.Fprintln(stdout, name)
@@ -376,17 +440,20 @@ func tarExtract(files []string, opts TarOptions, stdout io.Writer, stderr io.Wri
 				fmt.Fprintf(stderr, "tar: %s: symlink target escapes target directory\n", name)
 				continue
 			}
-			resolvedLinkTarget := filepath.Join(filepath.Dir(targetPath), header.Linkname)
-			resolvedLinkTargetAbs, err := filepath.Abs(resolvedLinkTarget)
+			resolvedLinkTarget, err := resolvePathWithinBaseDir(
+				targetDirAbs,
+				filepath.Join(filepath.Dir(targetPath), header.Linkname),
+			)
 			if err != nil {
 				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
 				continue
 			}
-			if !pathWithinBaseDir(targetDirAbs, resolvedLinkTargetAbs) {
-				fmt.Fprintf(stderr, "tar: %s: symlink target escapes target directory\n", name)
+			safeLinkName, err := filepath.Rel(filepath.Dir(targetPath), resolvedLinkTarget)
+			if err != nil {
+				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
 				continue
 			}
-			err = os.Symlink(header.Linkname, targetPath)
+			err = os.Symlink(safeLinkName, targetPath)
 			if err != nil {
 				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
 			}
