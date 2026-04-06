@@ -25,6 +25,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -426,5 +427,62 @@ func TestTarExtractVerbose(t *testing.T) {
 
 	if !strings.Contains(stdout.String(), "v.txt") {
 		t.Errorf("verbose extract should list v.txt, got %q", stdout.String())
+	}
+}
+
+func TestTarExtractRejectsSymlinkPathEscapeThroughExistingSymlink(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("symlink extraction test requires Unix-style symlink semantics")
+	}
+
+	dir := t.TempDir()
+	archivePath := filepath.Join(dir, "escape.tar")
+	archiveFile, err := os.Create(archivePath)
+	if err != nil {
+		t.Fatalf("cannot create archive: %v", err)
+	}
+
+	tw := tar.NewWriter(archiveFile)
+	err = tw.WriteHeader(&tar.Header{
+		Name:     "subdir/parent/escape-link",
+		Typeflag: tar.TypeSymlink,
+		Linkname: "../inside.txt",
+		Mode:     0644,
+	})
+	if err != nil {
+		t.Fatalf("cannot write tar header: %v", err)
+	}
+	if err := tw.Close(); err != nil {
+		t.Fatalf("cannot close tar writer: %v", err)
+	}
+	if err := archiveFile.Close(); err != nil {
+		t.Fatalf("cannot close archive file: %v", err)
+	}
+
+	extractDir := filepath.Join(dir, "out")
+	if err := os.MkdirAll(filepath.Join(extractDir, "subdir"), 0755); err != nil {
+		t.Fatalf("cannot create extract dir: %v", err)
+	}
+	outsideDir := filepath.Join(dir, "outside")
+	if err := os.MkdirAll(outsideDir, 0755); err != nil {
+		t.Fatalf("cannot create outside dir: %v", err)
+	}
+	if err := os.Symlink(filepath.Join("..", "..", "outside"), filepath.Join(extractDir, "subdir", "parent")); err != nil {
+		t.Fatalf("cannot create escape symlink: %v", err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	rc := tarExtract(nil,
+		TarOptions{File: archivePath, Directory: extractDir},
+		&stdout, &stderr)
+
+	if rc != 0 {
+		t.Fatalf("extract failed: rc=%d, stderr=%s", rc, stderr.String())
+	}
+	if !strings.Contains(stderr.String(), "path escapes target directory") {
+		t.Fatalf("expected path escape warning, got %q", stderr.String())
+	}
+	if _, err := os.Lstat(filepath.Join(outsideDir, "escape-link")); !os.IsNotExist(err) {
+		t.Fatalf("expected escaped symlink not to be created, got err=%v", err)
 	}
 }

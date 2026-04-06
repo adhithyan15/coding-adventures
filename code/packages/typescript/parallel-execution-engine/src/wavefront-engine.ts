@@ -383,7 +383,7 @@ export class WavefrontEngine {
     const maskBefore = [...this._execMask];
 
     // Execute on active lanes only
-    const unitTraces: Record<number, string> = {};
+    const unitTraces = Object.create(null) as Record<number, string>;
 
     for (let laneId = 0; laneId < this._config.waveWidth; laneId++) {
       const laneCore = this._lanes[laneId];
