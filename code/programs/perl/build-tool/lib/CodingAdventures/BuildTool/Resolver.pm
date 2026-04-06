@@ -578,7 +578,9 @@ sub _parse_haskell_deps {
     my @deps;
     while ($text =~ /(coding-adventures-[a-zA-Z0-9-]+)/g) {
         my $dep = lc $1;
-        push @deps, $known_ref->{$dep} if exists $known_ref->{$dep};
+        next unless exists $known_ref->{$dep};
+        next if $known_ref->{$dep} eq $pkg->{name};
+        push @deps, $known_ref->{$dep};
     }
     return @deps;
 }

@@ -703,6 +703,7 @@ defmodule BuildTool.Resolver do
                   [dep_name] ->
                     case Map.get(known_names, String.downcase(dep_name)) do
                       nil -> []
+                      pkg_name when pkg_name == pkg.name -> []
                       pkg_name -> [pkg_name]
                     end
                   _ -> []

@@ -434,12 +434,13 @@ export function readHaskellDeps(pkgDir: string): string[] {
   const content = fs.readFileSync(path.join(pkgDir, cabalFile), "utf-8");
   const deps: string[] = [];
   const re = /coding-adventures-([a-zA-Z0-9-]+)/;
+  const selfName = path.basename(pkgDir);
   for (const line of content.split("\n")) {
     if (line.includes("name:") || line.includes("executable") || line.includes("library")) {
       continue;
     }
     const m = line.match(re);
-    if (m && m[1]) {
+    if (m && m[1] && m[1] !== selfName) {
       deps.push(m[1]);
     }
   }
@@ -1724,7 +1725,7 @@ library
   cabal += `    hs-source-dirs:   src
     default-language: Haskell2010
 
-test-suite ${pkgNameHaskell}-test
+test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     build-depends:    base >=4.14

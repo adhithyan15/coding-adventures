@@ -340,9 +340,11 @@ module CodingAdventures
       return [] if cabal_files.empty?
 
       deps = []
+      self_name = File.basename(pkg_dir)
       File.readlines(cabal_files.first).each do |line|
         if line =~ /coding-adventures-([a-zA-Z0-9-]+)/
           next if line.include?("name:") || line.include?("executable") || line.include?("library")
+          next if Regexp.last_match(1) == self_name
           deps << $1
         end
       end
@@ -1225,7 +1227,7 @@ module CodingAdventures
             hs-source-dirs:   src
             default-language: Haskell2010
 
-        test-suite #{pkg_name_haskell}-test
+        test-suite spec
             type:             exitcode-stdio-1.0
             main-is:          Spec.hs
             build-depends:    base >=4.14

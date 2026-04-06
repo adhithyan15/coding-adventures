@@ -429,7 +429,7 @@ local function parse_haskell_deps(pkg, known_names)
 
     for dep_name in text:gmatch("(coding%-adventures%-[%a%d%-]+)") do
         local name = dep_name:lower()
-        if known_names[name] then
+        if known_names[name] and known_names[name] ~= pkg.name then
             deps[#deps + 1] = known_names[name]
         end
     end

@@ -825,7 +825,7 @@ function parseHaskellDeps(
   while ((match = pattern.exec(text)) !== null) {
     const depName = `coding-adventures-${match[1].toLowerCase()}`;
     const pkgName = knownNames.get(depName);
-    if (pkgName) {
+    if (pkgName && pkgName !== pkg.name) {
       internalDeps.push(pkgName);
     }
   }

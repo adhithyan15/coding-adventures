@@ -27,6 +27,7 @@ from scaffold_generator import (  # noqa: E402
     generate_rust,
     generate_elixir,
     generate_perl,
+    generate_haskell,
     generate_common_files,
 )
 
@@ -365,6 +366,17 @@ class TestGeneratePerl:
             prereq_lines = [l for l in build.splitlines() if l.startswith("cd ../")]
             assert prereq_lines == []
             assert "prove -l -v t/" in build
+
+
+class TestGenerateHaskell:
+    """Verify Haskell file generation."""
+
+    def test_cabal_uses_short_test_suite_name(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            generate_haskell(tmp, "test-pkg", "A test", "", [], [])
+            with open(os.path.join(tmp, "coding-adventures-test-pkg.cabal")) as f:
+                content = f.read()
+            assert "test-suite spec" in content
 
 
 class TestCommonFiles:

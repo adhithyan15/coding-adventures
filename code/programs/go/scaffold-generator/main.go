@@ -429,13 +429,13 @@ func readHaskellDeps(pkgDir string) ([]string, error) {
 		return nil, nil // no cabal file = no deps
 	}
 	re := regexp.MustCompile(`coding-adventures-([a-zA-Z0-9-]+)`)
+	selfName := filepath.Base(pkgDir)
 	var deps []string
 	for _, line := range strings.Split(string(data), "\n") {
 		m := re.FindStringSubmatch(line)
 		if len(m) == 2 {
-			// Ensure. we don't add the package itself if it's listed
-			// Actually the cabal file might contain the package name in 'name: ...'
-			if strings.Contains(line, "name:") || strings.Contains(line, "executable") || strings.Contains(line, "library") {
+			// Ignore metadata lines and the package's own test-suite self-reference.
+			if strings.Contains(line, "name:") || strings.Contains(line, "executable") || strings.Contains(line, "library") || m[1] == selfName {
 				continue
 			}
 			deps = append(deps, m[1])
@@ -1676,7 +1676,7 @@ library
 	cabal += `    hs-source-dirs:   src
     default-language: Haskell2010
 
-test-suite %s-test
+test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     build-depends:    base >=4.14

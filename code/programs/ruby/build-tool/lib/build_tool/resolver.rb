@@ -599,7 +599,9 @@ module BuildTool
       cabal_files.first.read.lines.each do |line|
         line.scan(pattern).flatten.each do |dep_base|
           dep_name = "coding-adventures-#{dep_base.downcase}"
-          internal_deps << known_names[dep_name] if known_names.key?(dep_name)
+          next unless known_names.key?(dep_name)
+          next if known_names[dep_name] == package.name
+          internal_deps << known_names[dep_name]
         end
       end
 

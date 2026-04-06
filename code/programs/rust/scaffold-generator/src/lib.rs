@@ -599,6 +599,11 @@ fn read_perl_deps(pkg_dir: &Path) -> Vec<String> {
 /// Reads direct dependencies from a Haskell cabal file.
 fn read_haskell_deps(pkg_dir: &Path) -> Vec<String> {
     let mut cabal_file = None;
+    let self_name = pkg_dir
+        .file_name()
+        .and_then(|s| s.to_str())
+        .unwrap_or_default()
+        .to_string();
     if let Ok(entries) = fs::read_dir(pkg_dir) {
         for entry in entries.flatten() {
             if entry.path().extension().and_then(|s| s.to_str()) == Some("cabal") {
@@ -622,7 +627,7 @@ fn read_haskell_deps(pkg_dir: &Path) -> Vec<String> {
             let dep: String = rest.chars()
                 .take_while(|c| c.is_ascii_alphanumeric() || *c == '-')
                 .collect();
-            if !line.contains("name:") && !line.contains("executable") && !line.contains("library") {
+            if !line.contains("name:") && !line.contains("executable") && !line.contains("library") && dep != self_name {
                 if !dep.is_empty() {
                     deps.push(dep);
                 }
@@ -1778,7 +1783,7 @@ fn generate_haskell(
     cabal.push_str(&format!(
         "    hs-source-dirs:   src\n\
             default-language: Haskell2010\n\n\
-        test-suite {pkg_name_haskell}-test\n\
+        test-suite spec\n\
             type:             exitcode-stdio-1.0\n\
             main-is:          Spec.hs\n\
             build-depends:    base >=4.14\n\

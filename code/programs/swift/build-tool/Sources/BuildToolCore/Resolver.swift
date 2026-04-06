@@ -327,7 +327,12 @@ public enum Resolver {
         }
         return content
             .matches(for: #"(coding-adventures-[a-zA-Z0-9-]+)"#)
-            .compactMap { knownNames[$0.lowercased()] }
+            .compactMap { depName in
+                guard let pkgName = knownNames[depName.lowercased()], pkgName != package.name else {
+                    return nil
+                }
+                return pkgName
+            }
     }
 
     private static func extractQuotedDeps(from line: String, knownNames: [String: String], into dependencies: inout [String]) {

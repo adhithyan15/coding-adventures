@@ -734,6 +734,22 @@ func TestGeneratePerlNoDeps(t *testing.T) {
 	}
 }
 
+func TestGenerateHaskellUsesShortTestSuiteName(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := generateHaskell(tmpDir, "my-pkg", "My package", "", nil, nil); err != nil {
+		t.Fatalf("generateHaskell: %v", err)
+	}
+
+	cabal, err := os.ReadFile(filepath.Join(tmpDir, "coding-adventures-my-pkg.cabal"))
+	if err != nil {
+		t.Fatalf("cannot read cabal file: %v", err)
+	}
+
+	if !strings.Contains(string(cabal), "test-suite spec") {
+		t.Fatal("cabal file should use a short test-suite name")
+	}
+}
+
 // =========================================================================
 // Common files tests
 // =========================================================================

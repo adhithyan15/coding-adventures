@@ -906,6 +906,7 @@ describe("generateHaskell", () => {
     generateHaskell(tmpDir, "my-pkg", "A test package", "", [], []);
     const content = fs.readFileSync(path.join(tmpDir, "coding-adventures-my-pkg.cabal"), "utf-8");
     expect(content).toMatch(/name:\s+coding-adventures-my-pkg/);
+    expect(content).toContain("test-suite spec");
   });
 });
 

@@ -259,11 +259,12 @@ def _read_haskell_deps(pkg_dir: str) -> list[str]:
     deps = []
     import re
     pattern = re.compile(r"coding-adventures-([a-zA-Z0-9-]+)")
+    self_name = os.path.basename(pkg_dir)
     with open(cabal_path) as f:
         for line in f:
             m = pattern.search(line)
             if m:
-                if "name:" in line or "executable" in line or "library" in line:
+                if "name:" in line or "executable" in line or "library" in line or m.group(1) == self_name:
                     continue
                 deps.append(m.group(1))
     return deps
@@ -973,7 +974,7 @@ library
     cabal += f"""    hs-source-dirs:   src
     default-language: Haskell2010
 
-test-suite {pkg_name_haskell}-test
+test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
     build-depends:    base >=4.14

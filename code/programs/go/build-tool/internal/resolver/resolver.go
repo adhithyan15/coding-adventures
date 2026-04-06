@@ -631,7 +631,7 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 	for _, match := range re.FindAllStringSubmatch(string(data), -1) {
 		if len(match) >= 2 {
 			depName := "coding-adventures-" + strings.ToLower(match[1])
-			if pkgName, ok := knownNames[depName]; ok {
+			if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name {
 				internalDeps = append(internalDeps, pkgName)
 			}
 		}

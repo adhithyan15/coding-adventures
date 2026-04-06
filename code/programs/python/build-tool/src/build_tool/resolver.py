@@ -606,7 +606,7 @@ def _parse_haskell_deps(package: Package, known_names: dict[str, str]) -> list[s
     pattern = re.compile(r"coding-adventures-([a-z0-9-]+)")
     for match in pattern.finditer(text):
         dep_name = f"coding-adventures-{match.group(1).lower()}"
-        if dep_name in known_names:
+        if dep_name in known_names and known_names[dep_name] != package.name:
             internal_deps.append(known_names[dep_name])
 
     return internal_deps

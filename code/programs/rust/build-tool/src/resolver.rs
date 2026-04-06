@@ -624,6 +624,9 @@ fn parse_haskell_deps(pkg: &Package, known_names: &HashMap<String, String>) -> V
                 }
                 let dep_name: String = chars[start..i].iter().collect();
                 if let Some(pkg_name) = known_names.get(&dep_name.to_lowercase()) {
+                    if pkg_name == &pkg.name {
+                        continue;
+                    }
                     internal_deps.push(pkg_name.clone());
                 }
             } else {

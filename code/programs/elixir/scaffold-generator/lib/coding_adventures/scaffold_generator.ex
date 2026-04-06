@@ -399,6 +399,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
   end
 
   defp read_haskell_deps(pkg_dir) do
+    self_name = Path.basename(pkg_dir)
     case File.ls(pkg_dir) do
       {:ok, files} ->
         case Enum.find(files, &String.ends_with?(&1, ".cabal")) do
@@ -415,7 +416,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
                   |> Enum.reject(&String.contains?(&1, "library"))
                   |> Enum.flat_map(fn line ->
                     case Regex.run(~r/coding-adventures-([a-zA-Z0-9-]+)/, line) do
-                      [_, name] -> [name]
+                      [_, name] when name != self_name -> [name]
                       _ -> []
                     end
                   end)
@@ -1619,7 +1620,7 @@ defmodule CodingAdventures.ScaffoldGenerator do
         hs-source-dirs:   src
         default-language: Haskell2010
 
-    test-suite #{pkg_name_haskell}-test
+    test-suite spec
         type:             exitcode-stdio-1.0
         main-is:          Spec.hs
         build-depends:    base >=4.14
