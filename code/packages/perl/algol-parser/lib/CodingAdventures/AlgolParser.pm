@@ -417,10 +417,10 @@ sub _parse_type {
 
 sub _parse_ident_list {
     my @children;
-    push @children, _leaf( _expect('IDENT') );
+    push @children, _leaf( _expect('NAME') );
     while (_peek()->{type} eq 'COMMA') {
         push @children, _leaf(_advance());    # consume COMMA
-        push @children, _leaf( _expect('IDENT') );
+        push @children, _leaf( _expect('NAME') );
     }
     return _node('ident_list', \@children);
 }
@@ -483,7 +483,7 @@ sub _parse_bound_pair {
 sub _parse_switch_decl {
     my @children;
     push @children, _leaf( _expect('SWITCH') );
-    push @children, _leaf( _expect('IDENT')  );
+    push @children, _leaf( _expect('NAME')  );
     push @children, _leaf( _expect('ASSIGN') );
     # switch_list: one or more designational expressions separated by COMMA
     push @children, _parse_desig_expr();
@@ -513,7 +513,7 @@ sub _parse_procedure_decl {
     }
 
     push @children, _leaf( _expect('PROCEDURE') );
-    push @children, _leaf( _expect('IDENT')     );
+    push @children, _leaf( _expect('NAME')     );
 
     # Optional formal parameters
     if (_peek()->{type} eq 'LPAREN') {
@@ -625,7 +625,7 @@ sub _parse_statement {
     my @children;
 
     # Optional label: IDENT COLON or INTEGER_LIT COLON
-    if ( (_peek()->{type} eq 'IDENT' || _peek()->{type} eq 'INTEGER_LIT')
+    if ( (_peek()->{type} eq 'NAME' || _peek()->{type} eq 'INTEGER_LIT')
           && _peek2()->{type} eq 'COLON' ) {
         push @children, _leaf(_advance());    # label (IDENT or INTEGER_LIT)
         push @children, _leaf(_advance());    # COLON
@@ -690,7 +690,7 @@ sub _parse_unlabeled_stmt {
     return _node('unlabeled_stmt', [_parse_for_stmt()]) if $type eq 'FOR';
     return _node('unlabeled_stmt', [_parse_goto_stmt()]) if $type eq 'GOTO';
 
-    if ($type eq 'IDENT') {
+    if ($type eq 'NAME') {
         my $next = _peek2()->{type};
         if ($next eq 'ASSIGN') {
             return _node('unlabeled_stmt', [_parse_assign_stmt()]);
@@ -728,7 +728,7 @@ sub _parse_assign_stmt {
     # followed eventually by ASSIGN, it's another left_part.
     # Simple heuristic: if next token is IDENT and the one after that is ASSIGN
     # (or LBRACKET ...), it's another left_part.
-    while (_peek()->{type} eq 'IDENT' && _peek2()->{type} eq 'ASSIGN') {
+    while (_peek()->{type} eq 'NAME' && _peek2()->{type} eq 'ASSIGN') {
         push @children, _parse_left_part();
     }
     push @children, _parse_expression();
@@ -763,7 +763,7 @@ sub _parse_goto_stmt {
 
 sub _parse_proc_stmt {
     my @children;
-    push @children, _leaf( _expect('IDENT') );
+    push @children, _leaf( _expect('NAME') );
     if (_peek()->{type} eq 'LPAREN') {
         push @children, _leaf(_advance());    # LPAREN
         push @children, _parse_actual_params();
@@ -797,7 +797,7 @@ sub _parse_actual_params {
 sub _parse_for_stmt {
     my @children;
     push @children, _leaf( _expect('FOR')   );
-    push @children, _leaf( _expect('IDENT') );
+    push @children, _leaf( _expect('NAME') );
     push @children, _leaf( _expect('ASSIGN') );
     # for_list
     push @children, _parse_for_elem();
@@ -973,7 +973,7 @@ sub _parse_primary {
         return _node('primary', \@ch);
     }
 
-    if ($type eq 'IDENT') {
+    if ($type eq 'NAME') {
         # Peek ahead: IDENT LPAREN → proc_call; otherwise variable
         if (_peek2()->{type} eq 'LPAREN') {
             return _node('primary', [_parse_proc_call()]);
@@ -1139,7 +1139,7 @@ sub _parse_bool_primary {
 
 sub _parse_variable {
     my @children;
-    push @children, _leaf( _expect('IDENT') );
+    push @children, _leaf( _expect('NAME') );
     if (_peek()->{type} eq 'LBRACKET') {
         push @children, _leaf(_advance());    # LBRACKET
         # subscripts: arith_expr {COMMA arith_expr}
@@ -1161,7 +1161,7 @@ sub _parse_variable {
 
 sub _parse_proc_call {
     my @children;
-    push @children, _leaf( _expect('IDENT')  );
+    push @children, _leaf( _expect('NAME')  );
     push @children, _leaf( _expect('LPAREN') );
     push @children, _parse_actual_params();
     push @children, _leaf( _expect('RPAREN') );
@@ -1209,7 +1209,7 @@ sub _parse_simple_desig {
         return _node('simple_desig', \@ch);
     }
 
-    if ($type eq 'IDENT' && _peek2()->{type} eq 'LBRACKET') {
+    if ($type eq 'NAME' && _peek2()->{type} eq 'LBRACKET') {
         my @ch;
         push @ch, _leaf(_advance());    # IDENT
         push @ch, _leaf(_advance());    # LBRACKET
@@ -1219,7 +1219,7 @@ sub _parse_simple_desig {
     }
 
     # Label: IDENT or INTEGER_LIT
-    if ($type eq 'IDENT' || $type eq 'INTEGER_LIT') {
+    if ($type eq 'NAME' || $type eq 'INTEGER_LIT') {
         return _node('simple_desig', [_leaf(_advance())]);
     }
 

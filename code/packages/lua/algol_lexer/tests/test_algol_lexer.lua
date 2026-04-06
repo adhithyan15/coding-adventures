@@ -445,20 +445,21 @@ describe("string literals", function()
     it("tokenizes 'hello'", function()
         local tokens = algol_lexer.tokenize("'hello'")
         assert.are.equal("STRING_LIT", tokens[1].type)
-        -- The grammar-driven lexer returns the raw source value including quotes.
-        assert.are.equal("'hello'", tokens[1].value)
+        -- The Lua GrammarLexer strips surrounding quotes from STRING_LIT tokens
+        -- (token names containing "STRING" trigger quote stripping).
+        assert.are.equal("hello", tokens[1].value)
     end)
 
     it("tokenizes empty string literal ''", function()
         local tokens = algol_lexer.tokenize("''")
         assert.are.equal("STRING_LIT", tokens[1].type)
-        assert.are.equal("''", tokens[1].value)
+        assert.are.equal("", tokens[1].value)
     end)
 
     it("tokenizes string with spaces", function()
         local tokens = algol_lexer.tokenize("'hello world'")
         assert.are.equal("STRING_LIT", tokens[1].type)
-        assert.are.equal("'hello world'", tokens[1].value)
+        assert.are.equal("hello world", tokens[1].value)
     end)
 end)
 

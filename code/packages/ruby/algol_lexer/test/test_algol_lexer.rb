@@ -395,20 +395,21 @@ class TestAlgolLexer < Minitest::Test
   def test_string_hello
     tokens = tokenize("'hello'")
     assert_equal STRING_LIT_TYPE, tokens[0].type
-    # The lexer strips quotes; value contains just the content
-    assert_equal "hello", tokens[0].value
+    # The Ruby GrammarLexer returns the raw source value for STRING_LIT tokens
+    # (quote-stripping only applies to tokens named exactly "STRING").
+    assert_equal "'hello'", tokens[0].value
   end
 
   def test_string_with_spaces
     tokens = tokenize("'x = 5'")
     assert_equal STRING_LIT_TYPE, tokens[0].type
-    assert_equal "x = 5", tokens[0].value
+    assert_equal "'x = 5'", tokens[0].value
   end
 
   def test_empty_string
     tokens = tokenize("''")
     assert_equal STRING_LIT_TYPE, tokens[0].type
-    assert_equal "", tokens[0].value
+    assert_equal "''", tokens[0].value
   end
 
   # ------------------------------------------------------------------
@@ -785,12 +786,13 @@ class TestAlgolLexer < Minitest::Test
 
   def test_procedure_declaration
     # procedure p(x); integer x; begin end
+    # tokens: procedure(0) p(1) ((2) x(3) )(4) ;(5) integer(6) x(7) ;(8) begin(9) end(10)
     source = "procedure p(x); integer x; begin end"
     tokens = tokenize(source)
     non_eof = tokens.reject { |t| t.type == TT::EOF }
     values = non_eof.map(&:value)
     assert_equal "procedure", values[0]
-    assert_equal "integer",   values[4]
+    assert_equal "integer",   values[6]
   end
 
   def test_array_declaration

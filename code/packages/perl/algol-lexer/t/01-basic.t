@@ -211,32 +211,32 @@ subtest 'keywords are case-insensitive: INTEGER' => sub {
 };
 
 # ============================================================================
-# Keyword boundary: partial match must produce IDENT
+# Keyword boundary: partial match must produce NAME
 # ============================================================================
 #
 # "beginning" starts with "begin" but it is NOT the keyword BEGIN.
 # A keyword match requires the entire identifier to be a reserved word.
 # This rule prevents keywords from splitting inside longer names.
 
-subtest 'beginning is IDENT not BEGIN' => sub {
+subtest 'beginning is NAME not BEGIN' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('beginning');
-    is( $toks->[0]{type},  'IDENT',     '"beginning" → IDENT' );
+    is( $toks->[0]{type},  'NAME',     '"beginning" → NAME' );
     is( $toks->[0]{value}, 'beginning', 'value preserved' );
 };
 
-subtest 'ending is IDENT not END' => sub {
+subtest 'ending is NAME not END' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('ending');
-    is( $toks->[0]{type}, 'IDENT', '"ending" → IDENT' );
+    is( $toks->[0]{type}, 'NAME', '"ending" → NAME' );
 };
 
-subtest 'integer2 is IDENT not INTEGER' => sub {
+subtest 'integer2 is NAME not INTEGER' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('integer2');
-    is( $toks->[0]{type}, 'IDENT', '"integer2" → IDENT (trailing digit)' );
+    is( $toks->[0]{type}, 'NAME', '"integer2" → NAME (trailing digit)' );
 };
 
-subtest 'truefalse is IDENT' => sub {
+subtest 'truefalse is NAME' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('truefalse');
-    is( $toks->[0]{type}, 'IDENT', '"truefalse" → IDENT' );
+    is( $toks->[0]{type}, 'NAME', '"truefalse" → NAME' );
 };
 
 # ============================================================================
@@ -245,25 +245,25 @@ subtest 'truefalse is IDENT' => sub {
 
 subtest 'single-letter identifier' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('x');
-    is( $toks->[0]{type},  'IDENT', 'type is IDENT' );
+    is( $toks->[0]{type},  'NAME', 'type is NAME' );
     is( $toks->[0]{value}, 'x',     'value is x' );
 };
 
 subtest 'multi-letter identifier' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('sum');
-    is( $toks->[0]{type},  'IDENT', 'type is IDENT' );
+    is( $toks->[0]{type},  'NAME', 'type is NAME' );
     is( $toks->[0]{value}, 'sum',   'value is sum' );
 };
 
 subtest 'alphanumeric identifier' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('A1');
-    is( $toks->[0]{type},  'IDENT', 'type is IDENT' );
+    is( $toks->[0]{type},  'NAME', 'type is NAME' );
     is( $toks->[0]{value}, 'A1',    'value is A1' );
 };
 
 subtest 'mixed-case identifier' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('myVar');
-    is( $toks->[0]{type},  'IDENT',  'type is IDENT' );
+    is( $toks->[0]{type},  'NAME',  'type is NAME' );
     is( $toks->[0]{value}, 'myVar',  'value is myVar' );
 };
 
@@ -506,9 +506,9 @@ subtest 'COLON :' => sub {
 
 subtest 'comment is consumed silently' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('comment this is ignored; x := 1');
-    # Should see: IDENT(x), ASSIGN(:=), INTEGER_LIT(1), EOF
+    # Should see: NAME(x), ASSIGN(:=), INTEGER_LIT(1), EOF
     my $types = [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$toks ];
-    is( $types, [qw(IDENT ASSIGN INTEGER_LIT)], 'comment is skipped, x := 1 tokenized' );
+    is( $types, [qw(NAME ASSIGN INTEGER_LIT)], 'comment is skipped, x := 1 tokenized' );
     is( $toks->[0]{value}, 'x', 'first real token is x' );
 };
 
@@ -522,8 +522,8 @@ subtest 'comment at start of program' => sub {
 subtest 'multiple comments' => sub {
     my $toks = CodingAdventures::AlgolLexer->tokenize('comment one; x := 1; comment two; y := 2');
     my $types = [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$toks ];
-    # Should see: IDENT(x), ASSIGN, INTEGER_LIT(1), SEMICOLON, IDENT(y), ASSIGN, INTEGER_LIT(2)
-    is( $types, [qw(IDENT ASSIGN INTEGER_LIT SEMICOLON IDENT ASSIGN INTEGER_LIT)],
+    # Should see: NAME(x), ASSIGN, INTEGER_LIT(1), SEMICOLON, NAME(y), ASSIGN, INTEGER_LIT(2)
+    is( $types, [qw(NAME ASSIGN INTEGER_LIT SEMICOLON NAME ASSIGN INTEGER_LIT)],
         'both comments skipped, two assignments remain' );
 };
 
@@ -534,7 +534,7 @@ subtest 'multiple comments' => sub {
 subtest 'spaces between tokens consumed silently' => sub {
     is(
         types_of('x := 42'),
-        [qw(IDENT ASSIGN INTEGER_LIT)],
+        [qw(NAME ASSIGN INTEGER_LIT)],
         'no WHITESPACE tokens in output'
     );
 };
@@ -542,7 +542,7 @@ subtest 'spaces between tokens consumed silently' => sub {
 subtest 'tabs and newlines consumed silently' => sub {
     is(
         types_of("begin\n\tinteger x\nend"),
-        [qw(BEGIN INTEGER IDENT END)],
+        [qw(BEGIN INTEGER NAME END)],
         'only value tokens in output'
     );
 };
@@ -555,7 +555,7 @@ subtest 'minimal program: begin integer x; x := 42 end' => sub {
     my $src = 'begin integer x; x := 42 end';
     is(
         types_of($src),
-        [qw(BEGIN INTEGER IDENT SEMICOLON IDENT ASSIGN INTEGER_LIT END)],
+        [qw(BEGIN INTEGER NAME SEMICOLON NAME ASSIGN INTEGER_LIT END)],
         'correct token sequence for minimal program'
     );
 };
@@ -564,8 +564,8 @@ subtest 'if/then/else' => sub {
     my $src = 'if x = 0 then x := 1 else x := 2';
     is(
         types_of($src),
-        [qw(IF IDENT EQ INTEGER_LIT THEN IDENT ASSIGN INTEGER_LIT
-            ELSE IDENT ASSIGN INTEGER_LIT)],
+        [qw(IF NAME EQ INTEGER_LIT THEN NAME ASSIGN INTEGER_LIT
+            ELSE NAME ASSIGN INTEGER_LIT)],
         'if/then/else token sequence'
     );
 };
@@ -574,8 +574,8 @@ subtest 'for loop' => sub {
     my $src = 'for i := 1 step 1 until 10 do x := x + 1';
     is(
         types_of($src),
-        [qw(FOR IDENT ASSIGN INTEGER_LIT STEP INTEGER_LIT UNTIL INTEGER_LIT
-            DO IDENT ASSIGN IDENT PLUS INTEGER_LIT)],
+        [qw(FOR NAME ASSIGN INTEGER_LIT STEP INTEGER_LIT UNTIL INTEGER_LIT
+            DO NAME ASSIGN NAME PLUS INTEGER_LIT)],
         'for loop token sequence'
     );
 };
@@ -584,7 +584,7 @@ subtest 'array subscript' => sub {
     my $src = 'A[i, j]';
     is(
         types_of($src),
-        [qw(IDENT LBRACKET IDENT COMMA IDENT RBRACKET)],
+        [qw(NAME LBRACKET NAME COMMA NAME RBRACKET)],
         'array subscript token sequence'
     );
 };
@@ -593,7 +593,7 @@ subtest 'arithmetic expression' => sub {
     my $src = 'x + y * z - w / v';
     is(
         types_of($src),
-        [qw(IDENT PLUS IDENT STAR IDENT MINUS IDENT SLASH IDENT)],
+        [qw(NAME PLUS NAME STAR NAME MINUS NAME SLASH NAME)],
         'arithmetic expression token sequence'
     );
 };
@@ -602,7 +602,7 @@ subtest 'exponentiation ** and ^' => sub {
     my $src = 'a ** b ^ c';
     is(
         types_of($src),
-        [qw(IDENT POWER IDENT CARET IDENT)],
+        [qw(NAME POWER NAME CARET NAME)],
         '** is POWER, ^ is CARET'
     );
 };
@@ -611,7 +611,7 @@ subtest 'boolean expression with keywords' => sub {
     my $src = 'not x and y or z';
     is(
         types_of($src),
-        [qw(NOT IDENT AND IDENT OR IDENT)],
+        [qw(NOT NAME AND NAME OR NAME)],
         'boolean operator keywords tokenized correctly'
     );
 };
@@ -620,7 +620,7 @@ subtest 'procedure declaration header' => sub {
     my $src = 'real procedure sum(x, y)';
     is(
         types_of($src),
-        [qw(REAL PROCEDURE IDENT LPAREN IDENT COMMA IDENT RPAREN)],
+        [qw(REAL PROCEDURE NAME LPAREN NAME COMMA NAME RPAREN)],
         'procedure declaration header'
     );
 };

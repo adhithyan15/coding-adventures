@@ -362,7 +362,7 @@ sub tokenize {
 
                 # Keyword reclassification: IDENT may actually be a keyword.
                 # The keyword table maps lowercase word to uppercase token type.
-                if ($type eq 'IDENT') {
+                if ($type eq 'NAME') {
                     my $lc_val = lc($value);
                     if ( exists $_keywords->{$lc_val} ) {
                         $type = uc($lc_val);

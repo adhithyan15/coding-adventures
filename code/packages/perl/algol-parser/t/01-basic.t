@@ -120,7 +120,7 @@ subtest 'type_decl: real x, y' => sub {
     my $ast = CodingAdventures::AlgolParser->parse('begin real x, y; x := 0 end');
     my $ident_list = find_node($ast, 'ident_list');
     ok( defined $ident_list, 'found ident_list' );
-    # ident_list: IDENT COMMA IDENT = 3 children
+    # ident_list: NAME COMMA NAME = 3 children
     is( scalar @{ $ident_list->children }, 3, 'ident_list has 3 children for x, y' );
 };
 
@@ -309,7 +309,7 @@ subtest 'labeled statement' => sub {
     my $src = 'begin integer x; start: x := 0 end';
     my $ast = CodingAdventures::AlgolParser->parse($src);
     is( $ast->rule_name, 'program', 'parsed labeled statement successfully' );
-    # The statement should have a label (IDENT) and COLON as first children
+    # The statement should have a label (NAME) and COLON as first children
     my $stmt = find_node($ast, 'statement');
     ok( defined $stmt, 'found statement node' );
 };
