@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test2::V0;
+use Test::More;
 
 use CodingAdventures::DrawInstructions;
 use CodingAdventures::DrawInstructionsSvg;
