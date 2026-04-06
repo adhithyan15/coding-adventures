@@ -458,7 +458,10 @@ describe("string literals", () => {
      */
     const tokens = tokenizeAlgol("'hello'");
     expect(tokens[0].type).toBe("STRING_LIT");
-    expect(tokens[0].value).toBe("'hello'");
+    // The generic grammar-lexer strips the surrounding single-quote delimiters
+    // from STRING tokens (any token whose name contains "STRING"). The value
+    // is the bare string content, not the quoted form.
+    expect(tokens[0].value).toBe("hello");
   });
 
   it("tokenizes an empty string", () => {
@@ -468,13 +471,13 @@ describe("string literals", () => {
      */
     const tokens = tokenizeAlgol("''");
     expect(tokens[0].type).toBe("STRING_LIT");
-    expect(tokens[0].value).toBe("''");
+    expect(tokens[0].value).toBe("");
   });
 
   it("tokenizes a string with spaces", () => {
     const tokens = tokenizeAlgol("'hello world'");
     expect(tokens[0].type).toBe("STRING_LIT");
-    expect(tokens[0].value).toBe("'hello world'");
+    expect(tokens[0].value).toBe("hello world");
   });
 });
 

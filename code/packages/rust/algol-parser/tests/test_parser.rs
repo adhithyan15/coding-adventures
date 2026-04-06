@@ -157,8 +157,13 @@ fn test_arithmetic_assignment() {
     assert_program_root(&ast);
     assert!(find_rule(&ast, "assign_stmt"), "Expected 'assign_stmt'");
 
-    // The arithmetic expression rules should appear
-    let has_arith = find_rule(&ast, "arith_expr")
+    // With the unified expression grammar, `1 + 2 * 3` in an assignment is parsed
+    // via expression → expr_eqv → ... → expr_add → expr_mul.  The old arith_expr /
+    // simple_arith / term rules only appear in type-specific contexts (for-loop
+    // bounds, subscripts, etc.), not in plain assignment RHS expressions.
+    let has_arith = find_rule(&ast, "expr_add")
+        || find_rule(&ast, "expr_mul")
+        || find_rule(&ast, "arith_expr")
         || find_rule(&ast, "simple_arith")
         || find_rule(&ast, "term");
     assert!(has_arith, "Expected arithmetic expression rules in AST");
@@ -441,7 +446,9 @@ fn test_operator_precedence_parses() {
     let ast = parse_algol("begin real x; x := 2 + 3 * 4 ** 2 end");
     assert_program_root(&ast);
     assert!(find_rule(&ast, "assign_stmt"), "Expected assignment");
-    assert!(find_rule(&ast, "factor"), "Expected factor rule (exponentiation)");
+    // expr_pow is the unified hierarchy's exponentiation rule (replaces old `factor`).
+    assert!(find_rule(&ast, "expr_pow") || find_rule(&ast, "factor"),
+        "Expected exponentiation rule (expr_pow or factor) in AST");
 }
 
 /// A program with a goto statement and a labeled statement.

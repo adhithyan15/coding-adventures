@@ -49,7 +49,8 @@ program      = block ;
 # A block opens a new lexical scope. All declarations must precede all statements.
 # The grammar enforces declaration-before-use at the block level.
 # Blocks can nest: any statement position can hold another block.
-block        = "begin" { declaration SEMICOLON } statement { SEMICOLON statement } "end" ;
+# The statement list is optional — `begin end` is a valid empty block.
+block        = "begin" { declaration SEMICOLON } [ statement { SEMICOLON statement } ] "end" ;
 
 # ---------------------------------------------------------------------------
 # Declarations

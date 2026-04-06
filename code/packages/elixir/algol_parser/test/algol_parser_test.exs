@@ -177,19 +177,23 @@ defmodule CodingAdventures.AlgolParserTest do
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 1 + 2 end")
       all_rules = rule_names_in(ast)
       assert "assign_stmt" in all_rules
-      assert "arith_expr" in all_rules
+      # Unified expression grammar routes `1 + 2` through expression → expr_eqv →
+      # ... → expr_add.  The old arith_expr rule is only used for type-specific
+      # contexts (for-loop bounds, array subscripts, desig_expr).
+      assert "expr_add" in all_rules
     end
 
     test "subtraction: x := 5 - 3" do
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 5 - 3 end")
       all_rules = rule_names_in(ast)
-      assert "arith_expr" in all_rules
+      assert "expr_add" in all_rules
     end
 
     test "multiplication: x := 2 * 3" do
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 2 * 3 end")
       all_rules = rule_names_in(ast)
-      assert "term" in all_rules
+      # Multiplication goes through expr_mul (unified hierarchy replaces old `term`).
+      assert "expr_mul" in all_rules
     end
 
     test "exponentiation x ** 2" do
@@ -197,13 +201,14 @@ defmodule CodingAdventures.AlgolParserTest do
       # This is unusual — most modern languages and mathematics use right-associativity.
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 2 ** 2 end")
       all_rules = rule_names_in(ast)
-      assert "factor" in all_rules
+      # Exponentiation goes through expr_pow (unified hierarchy replaces old `factor`).
+      assert "expr_pow" in all_rules
     end
 
     test "parenthesized expression" do
       {:ok, ast} = AlgolParser.parse("begin integer x; x := (1 + 2) * 3 end")
       all_rules = rule_names_in(ast)
-      assert "arith_expr" in all_rules
+      assert "expr_add" in all_rules
     end
 
     test "div operator for integer division" do
@@ -212,13 +217,13 @@ defmodule CodingAdventures.AlgolParserTest do
       # depending on the types of the operands.
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 10 div 3 end")
       all_rules = rule_names_in(ast)
-      assert "term" in all_rules
+      assert "expr_mul" in all_rules
     end
 
     test "mod operator for remainder" do
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 10 mod 3 end")
       all_rules = rule_names_in(ast)
-      assert "term" in all_rules
+      assert "expr_mul" in all_rules
     end
   end
 
@@ -442,7 +447,9 @@ defmodule CodingAdventures.AlgolParserTest do
       # Parse a literal number value and check that the leaf detection works.
       {:ok, ast} = AlgolParser.parse("begin integer x; x := 42 end")
       # Find the integer literal somewhere in the tree.
-      int_node = find_node(ast, "primary")
+      # With the unified expression grammar, literals appear under expr_atom
+      # (the unified hierarchy's primary-level rule), not the old `primary` rule.
+      int_node = find_node(ast, "expr_atom")
       assert int_node != nil
     end
   end
