@@ -43,6 +43,22 @@
 use bitset::Bitset;
 use node_bridge::*;
 
+macro_rules! unwrap_ref {
+    ($env:expr, $value:expr, $ty:ty) => {
+        unwrap_data::<$ty>($env, $value)
+            .as_ref()
+            .expect(concat!(stringify!($ty), " should always be wrapped"))
+    };
+}
+
+macro_rules! unwrap_mut {
+    ($env:expr, $value:expr, $ty:ty) => {
+        unwrap_data_mut::<$ty>($env, $value)
+            .as_mut()
+            .expect(concat!(stringify!($ty), " should always be wrapped"))
+    };
+}
+
 // ---------------------------------------------------------------------------
 // Extra N-API externs not in node-bridge
 // ---------------------------------------------------------------------------
@@ -153,7 +169,7 @@ fn wrap_new_bitset(env: napi_env, bs: Bitset) -> napi_value {
         napi_new_instance(env, constructor, 1, &zero, &mut instance);
 
         // Replace the inner Bitset with the one we actually want.
-        let inner = unwrap_data_mut::<Bitset>(env, instance);
+        let inner = unwrap_mut!(env, instance, Bitset);
         let _ = std::mem::replace(inner, bs);
 
         instance
@@ -241,7 +257,7 @@ unsafe extern "C" fn bitset_set(env: napi_env, info: napi_callback_info) -> napi
         return undefined(env);
     }
     let i = usize_from_js(env, args[0]);
-    let bs = unwrap_data_mut::<Bitset>(env, this);
+    let bs = unwrap_mut!(env, this, Bitset);
     bs.set(i);
     undefined(env)
 }
@@ -254,7 +270,7 @@ unsafe extern "C" fn bitset_clear(env: napi_env, info: napi_callback_info) -> na
         return undefined(env);
     }
     let i = usize_from_js(env, args[0]);
-    let bs = unwrap_data_mut::<Bitset>(env, this);
+    let bs = unwrap_mut!(env, this, Bitset);
     bs.clear(i);
     undefined(env)
 }
@@ -267,7 +283,7 @@ unsafe extern "C" fn bitset_test(env: napi_env, info: napi_callback_info) -> nap
         return undefined(env);
     }
     let i = usize_from_js(env, args[0]);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     bool_to_js(env, bs.test(i))
 }
 
@@ -279,7 +295,7 @@ unsafe extern "C" fn bitset_toggle(env: napi_env, info: napi_callback_info) -> n
         return undefined(env);
     }
     let i = usize_from_js(env, args[0]);
-    let bs = unwrap_data_mut::<Bitset>(env, this);
+    let bs = unwrap_mut!(env, this, Bitset);
     bs.toggle(i);
     undefined(env)
 }
@@ -299,8 +315,8 @@ unsafe extern "C" fn bitset_and(env: napi_env, info: napi_callback_info) -> napi
         throw_error(env, "and requires a Bitset argument");
         return undefined(env);
     }
-    let a = unwrap_data::<Bitset>(env, this);
-    let b = unwrap_data::<Bitset>(env, args[0]);
+    let a = unwrap_ref!(env, this, Bitset);
+    let b = unwrap_ref!(env, args[0], Bitset);
     wrap_new_bitset(env, a.and(b))
 }
 
@@ -311,8 +327,8 @@ unsafe extern "C" fn bitset_or(env: napi_env, info: napi_callback_info) -> napi_
         throw_error(env, "or requires a Bitset argument");
         return undefined(env);
     }
-    let a = unwrap_data::<Bitset>(env, this);
-    let b = unwrap_data::<Bitset>(env, args[0]);
+    let a = unwrap_ref!(env, this, Bitset);
+    let b = unwrap_ref!(env, args[0], Bitset);
     wrap_new_bitset(env, a.or(b))
 }
 
@@ -323,15 +339,15 @@ unsafe extern "C" fn bitset_xor(env: napi_env, info: napi_callback_info) -> napi
         throw_error(env, "xor requires a Bitset argument");
         return undefined(env);
     }
-    let a = unwrap_data::<Bitset>(env, this);
-    let b = unwrap_data::<Bitset>(env, args[0]);
+    let a = unwrap_ref!(env, this, Bitset);
+    let b = unwrap_ref!(env, args[0], Bitset);
     wrap_new_bitset(env, a.xor(b))
 }
 
 /// bitset.not() -- returns a new bitset with all bits flipped
 unsafe extern "C" fn bitset_not(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let a = unwrap_data::<Bitset>(env, this);
+    let a = unwrap_ref!(env, this, Bitset);
     wrap_new_bitset(env, a.not())
 }
 
@@ -342,8 +358,8 @@ unsafe extern "C" fn bitset_and_not(env: napi_env, info: napi_callback_info) -> 
         throw_error(env, "andNot requires a Bitset argument");
         return undefined(env);
     }
-    let a = unwrap_data::<Bitset>(env, this);
-    let b = unwrap_data::<Bitset>(env, args[0]);
+    let a = unwrap_ref!(env, this, Bitset);
+    let b = unwrap_ref!(env, args[0], Bitset);
     wrap_new_bitset(env, a.and_not(b))
 }
 
@@ -354,49 +370,49 @@ unsafe extern "C" fn bitset_and_not(env: napi_env, info: napi_callback_info) -> 
 /// bitset.popcount() -- returns the number of set bits
 unsafe extern "C" fn bitset_popcount(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     usize_to_js(env, bs.popcount())
 }
 
 /// bitset.len() -- returns the logical length (number of addressable bits)
 unsafe extern "C" fn bitset_len(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     usize_to_js(env, bs.len())
 }
 
 /// bitset.capacity() -- returns the allocated capacity in bits
 unsafe extern "C" fn bitset_capacity(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     usize_to_js(env, bs.capacity())
 }
 
 /// bitset.any() -- returns true if at least one bit is set
 unsafe extern "C" fn bitset_any(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     bool_to_js(env, bs.any())
 }
 
 /// bitset.all() -- returns true if all bits are set
 unsafe extern "C" fn bitset_all(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     bool_to_js(env, bs.all())
 }
 
 /// bitset.none() -- returns true if no bits are set
 unsafe extern "C" fn bitset_none(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     bool_to_js(env, bs.none())
 }
 
 /// bitset.isEmpty() -- returns true if len is 0
 unsafe extern "C" fn bitset_is_empty(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     bool_to_js(env, bs.is_empty())
 }
 
@@ -414,7 +430,7 @@ unsafe extern "C" fn bitset_iter_set_bits(
     info: napi_callback_info,
 ) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
 
     let indices: Vec<usize> = bs.iter_set_bits().collect();
     let arr = array_new(env);
@@ -430,7 +446,7 @@ unsafe extern "C" fn bitset_iter_set_bits(
 /// in a JS safe integer). Returns 0 for an empty bitset.
 unsafe extern "C" fn bitset_to_integer(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     match bs.to_integer() {
         Some(val) => usize_to_js(env, val as usize),
         None => null(env),
@@ -443,7 +459,7 @@ unsafe extern "C" fn bitset_to_binary_str(
     info: napi_callback_info,
 ) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let bs = unwrap_data::<Bitset>(env, this);
+    let bs = unwrap_ref!(env, this, Bitset);
     str_to_js(env, &bs.to_binary_str())
 }
 

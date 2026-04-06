@@ -80,9 +80,39 @@ module CodingAdventures
     # @param html [String]
     # @return [String]
     def self.strip_comments(html)
-      html.gsub(/<!--.*?-->/m, "")
+      result = +""
+      pos = 0
+
+      while pos < html.length
+        start = html.index("<!--", pos)
+        if start.nil?
+          result << html[pos..]
+          break
+        end
+
+        result << html[pos...start]
+        finish = find_comment_end(html, start + 4)
+        if finish.nil?
+          result << html[start..]
+          break
+        end
+        pos = finish
+      end
+
+      result
     end
     private_class_method :strip_comments
+
+    def self.find_comment_end(html, start_index)
+      index = start_index
+      while index < html.length - 2
+        return index + 3 if html[index, 3] == "-->"
+        return index + 4 if html[index, 4] == "--!>"
+        index += 1
+      end
+      nil
+    end
+    private_class_method :find_comment_end
 
     # ─── Pass 2: Drop dangerous elements ──────────────────────────────────────
     #

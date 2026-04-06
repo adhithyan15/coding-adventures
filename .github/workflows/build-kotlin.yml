@@ -10,6 +10,9 @@ on:
       - 'code/programs/kotlin/**'
       - '.github/workflows/build-kotlin.yml'
 
+permissions:
+  contents: read
+
 jobs:
   build-hello-world:
     name: Hello World (Android)

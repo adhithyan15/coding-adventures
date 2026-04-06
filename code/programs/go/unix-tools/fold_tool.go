@@ -152,7 +152,12 @@ func runFoldWithStdin(specPath string, argv []string, stdout io.Writer, stderr i
 		width := 80
 		if v := r.Flags["width"]; v != nil {
 			if n, ok := v.(int64); ok {
-				width = int(n)
+				parsedWidth, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "fold: invalid width: %s\n", err)
+					return 1
+				}
+				width = parsedWidth
 			}
 		}
 

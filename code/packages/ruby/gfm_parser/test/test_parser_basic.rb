@@ -164,6 +164,15 @@ module CodingAdventures
         assert_includes types, "hard_break"
       end
 
+      def test_html_inline_comment_with_bang_terminator
+        doc = CommonmarkParser.parse("foo <!-- comment --!> bar\n")
+        para = doc.children[0]
+        html = para.children.find { |c| c.type == "raw_inline" }
+        refute_nil html
+        assert_equal "html", html.format
+        assert_equal "<!-- comment --!>", html.value
+      end
+
       def test_soft_break
         doc = CommonmarkParser.parse("Hello\nworld\n")
         para = doc.children[0]

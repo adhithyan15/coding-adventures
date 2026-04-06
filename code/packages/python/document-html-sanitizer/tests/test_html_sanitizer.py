@@ -456,7 +456,7 @@ class TestNamedPresets:
 
     def test_relaxed_allows_ftp_links(self):
         result = sanitize_html('<a href="ftp://files.example.com">x</a>', HTML_RELAXED)
-        assert "ftp://files.example.com" in result
+        assert 'href="ftp://files.example.com"' in result
 
     def test_passthrough_is_identity(self):
         html = '<script>alert(1)</script><p onclick="x">y</p><!-- c -->'

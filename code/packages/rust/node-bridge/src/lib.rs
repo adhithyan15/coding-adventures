@@ -374,16 +374,16 @@ pub fn wrap_data<T>(env: napi_env, this: napi_value, data: T) {
     );
 }
 
-pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> &'static T {
+pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> *const T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
-    &*(ptr as *const T)
+    ptr as *const T
 }
 
-pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> &'static mut T {
+pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> *mut T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
-    &mut *(ptr as *mut T)
+    ptr as *mut T
 }
 
 unsafe extern "C" fn free_data<T>(_env: napi_env, data: *mut c_void, _hint: *mut c_void) {

@@ -136,8 +136,7 @@ mod business_logic {
         let name = get_username().unwrap();
         assert!(
             !name.contains('\n'),
-            "username should not contain newlines, got: '{}'",
-            name
+            "username should not contain newlines"
         );
     }
 
@@ -158,8 +157,7 @@ mod business_logic {
         let logname_var = std::env::var("LOGNAME").ok();
         assert!(
             user_var.as_deref() == Some(&name[..]) || logname_var.as_deref() == Some(&name[..]),
-            "username '{}' should match $USER or $LOGNAME",
-            name
+            "username should match $USER or $LOGNAME"
         );
     }
 }

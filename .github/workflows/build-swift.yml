@@ -11,6 +11,9 @@ on:
       - 'code/programs/swift/**'
       - '.github/workflows/build-swift.yml'
 
+permissions:
+  contents: read
+
 jobs:
   build-hello-world:
     name: Hello World

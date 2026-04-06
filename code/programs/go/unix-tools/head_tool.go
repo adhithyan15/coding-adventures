@@ -210,15 +210,25 @@ func runHeadWithStdin(specPath string, argv []string, stdout io.Writer, stderr i
 
 		if v := r.Flags["bytes"]; v != nil {
 			if n, ok := v.(int64); ok && n > 0 {
+				parsedByteCount, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "head: invalid byte count: %s\n", err)
+					return 1
+				}
 				byteMode = true
-				byteCount = int(n)
+				byteCount = parsedByteCount
 			}
 		}
 
 		if !byteMode {
 			if v := r.Flags["lines"]; v != nil {
 				if n, ok := v.(int64); ok {
-					lineCount = int(n)
+					parsedLineCount, err := intFromInt64(n)
+					if err != nil {
+						fmt.Fprintf(stderr, "head: invalid line count: %s\n", err)
+						return 1
+					}
+					lineCount = parsedLineCount
 				}
 			}
 		}

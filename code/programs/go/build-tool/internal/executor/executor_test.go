@@ -350,6 +350,27 @@ func TestBuildResourceKeysIncludesGlobalHexCacheForElixirDepsGet(t *testing.T) {
 	}
 }
 
+func TestBuildResourceKeysIncludesGlobalRustupTargetLock(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "rustup target add wasm32-unknown-unknown && cargo build --target wasm32-unknown-unknown --release",
+	})
+
+	pkg := discovery.Package{
+		Name:          "unknown/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"rustup target add wasm32-unknown-unknown && cargo build --target wasm32-unknown-unknown --release"},
+		Language:      "unknown",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "unknown/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:rustup-targets") {
+		t.Fatalf("expected keys to include global rustup target lock, got %v", keys)
+	}
+}
+
 func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaWritesOnWindows(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD_windows": "luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec",

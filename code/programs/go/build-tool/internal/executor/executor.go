@@ -438,6 +438,13 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:hex-cache"] = true
 		}
 
+		if strings.Contains(command, "rustup target add") {
+			// rustup mutates the shared toolchain under RUSTUP_HOME.
+			// Serialise target installs so concurrent wasm package builds do not
+			// race while adding the same target.
+			keys["global:rustup-targets"] = true
+		}
+
 		if pkg.Language == "lua" &&
 			(strings.Contains(command, "luarocks make") || strings.Contains(command, "luarocks remove")) {
 			// LuaRocks uses a shared rocks tree under HOME on every platform.

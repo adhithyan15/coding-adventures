@@ -51,13 +51,18 @@ module CodingAdventures
     #   }  → \}   (record label field separator)
     #   |  → \|   (record label field separator)
     def self.escape_dot(text)
-      text.gsub("\\", "\\\\\\\\")
-        .gsub('"', '\\"')
-        .gsub("<", "\\<")
-        .gsub(">", "\\>")
-        .gsub("{", "\\{")
-        .gsub("}", "\\}")
-        .gsub("|", "\\|")
+      text.each_char.map do |char|
+        case char
+        when "\\" then "\\\\"
+        when '"' then '\\"'
+        when "<" then "\\<"
+        when ">" then "\\>"
+        when "{" then "\\{"
+        when "}" then "\\}"
+        when "|" then "\\|"
+        else char
+        end
+      end.join
     end
 
     # == Mermaid String Escaping

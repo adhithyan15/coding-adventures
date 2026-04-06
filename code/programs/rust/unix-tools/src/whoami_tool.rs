@@ -96,8 +96,7 @@ mod tests {
         let name = get_username().unwrap();
         assert!(
             !name.contains(' ') && !name.contains('\n'),
-            "username should not contain whitespace, got: '{}'",
-            name
+            "username should not contain whitespace"
         );
     }
 
