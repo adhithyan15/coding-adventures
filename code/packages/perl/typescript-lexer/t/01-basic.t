@@ -482,4 +482,75 @@ subtest 'backtick raises die (template literals not in grammar)' => sub {
     );
 };
 
+# ============================================================================
+# Version-aware tokenization
+# ============================================================================
+#
+# The optional $version argument selects a versioned grammar file under
+# code/grammars/typescript/. No-version calls continue to work (backward
+# compatible default).
+
+subtest 'tokenize with no version (backward compatible)' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;');
+    ok( scalar @$tokens > 0, 'produced tokens' );
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with empty string version (backward compatible)' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', '');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with ts1.0' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('var x = 1;', 'ts1.0');
+    ok( scalar @$tokens > 0, 'produced tokens' );
+    is( $tokens->[0]{type}, 'VAR', 'first token is VAR' );
+};
+
+subtest 'tokenize with ts2.0' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts2.0');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with ts3.0' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('const x = 1;', 'ts3.0');
+    is( $tokens->[0]{type}, 'CONST', 'first token is CONST' );
+};
+
+subtest 'tokenize with ts4.0' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts4.0');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with ts5.0' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts5.0');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'tokenize with ts5.8' => sub {
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts5.8');
+    is( $tokens->[0]{type}, 'LET', 'first token is LET' );
+};
+
+subtest 'grammar is cached per version' => sub {
+    # Two calls with the same version should produce identical token types.
+    my $t1 = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts5.0');
+    my $t2 = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts5.0');
+    is( $t1->[0]{type}, $t2->[0]{type}, 'same type from cached grammar' );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts99.0') },
+        'unknown version ts99.0 causes die'
+    );
+};
+
+subtest 'JavaScript version string is rejected' => sub {
+    ok(
+        dies { CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'es2015') },
+        'es2015 is not a valid TypeScript version'
+    );
+};
+
 done_testing;

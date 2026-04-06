@@ -2,6 +2,31 @@
 
 All notable changes to this package are documented here.
 
+## [0.02] — 2026-04-05
+
+### Added
+
+- `tokenize($source, $version)` — optional `$version` parameter selects
+  a versioned grammar file under `code/grammars/ecmascript/`.
+- Valid version strings: `"es1"`, `"es3"`, `"es5"`, `"es2015"`.."es2025"`.
+  Passing `undef` or `""` uses the generic `javascript.tokens` grammar
+  (backward compatible).
+- `_resolve_tokens_path($version)` — internal helper that maps version
+  strings to grammar file paths.
+- Per-version caches for grammar, compiled rules, skip rules, and keyword
+  map (hashes keyed by version string instead of single package variables).
+- Validation: unknown version strings raise a descriptive `die` immediately.
+- Extended test suite: new version-aware subtests in `t/01-basic.t` covering
+  ES1/ES3/ES5/ES2015/ES2020/ES2025 versions, cache consistency, and error
+  cases.
+
+### Changed
+
+- `$VERSION` bumped from `0.01` to `0.02`.
+- Package-level cache variables (`$_grammar`, `$_rules`, etc.) replaced by
+  hash-based per-version caches (`%_grammar_cache`, etc.).
+- `_grammar()` and `_build_rules()` now accept a `$version` argument.
+
 ## [0.01] — 2026-03-29
 
 ### Added

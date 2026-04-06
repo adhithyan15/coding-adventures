@@ -106,7 +106,7 @@ package CodingAdventures::TypescriptParser;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use CodingAdventures::TypescriptLexer;
 use CodingAdventures::TypescriptParser::ASTNode;
@@ -115,16 +115,19 @@ use CodingAdventures::TypescriptParser::ASTNode;
 # Constructor
 # ============================================================================
 
-# --- new($source) -------------------------------------------------------------
+# --- new($source, $version) ---------------------------------------------------
 #
-# Tokenize `$source` with TypescriptLexer and return a ready-to-parse parser.
-# The lexer handles all the TypeScript-specific keyword recognition, so by
-# the time we see the token stream, keywords like `interface` and `enum`
-# already have their proper token types.
+# Tokenize `$source` with TypescriptLexer (using the specified $version) and
+# return a ready-to-parse parser. The lexer handles all TypeScript-specific
+# keyword recognition, so keywords like `interface` and `enum` already have
+# their proper token types by the time we see the stream.
+#
+# $version is optional. Valid values: "ts1.0", "ts2.0", "ts3.0", "ts4.0",
+# "ts5.0", "ts5.8", or undef/"" for generic TypeScript.
 
 sub new {
-    my ($class, $source) = @_;
-    my $tokens = CodingAdventures::TypescriptLexer->tokenize($source);
+    my ($class, $source, $version) = @_;
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize($source, $version);
     return bless {
         _tokens => $tokens,
         _pos    => 0,
@@ -754,14 +757,15 @@ sub _parse_arg_list {
 # Class-method convenience wrapper
 # ============================================================================
 
-# --- parse_ts($source) --------------------------------------------------------
+# --- parse_ts($source, $version) ----------------------------------------------
 #
 # Convenience class method: tokenize and parse in one call.
+# $version is optional (see new() for valid values).
 # Returns the root ASTNode. Dies on error.
 
 sub parse_ts {
-    my ($class, $source) = @_;
-    my $parser = $class->new($source);
+    my ($class, $source, $version) = @_;
+    my $parser = $class->new($source, $version);
     return $parser->parse();
 }
 

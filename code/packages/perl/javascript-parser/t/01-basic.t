@@ -336,4 +336,68 @@ subtest 'missing semicolon raises die' => sub {
     );
 };
 
+# ============================================================================
+# Version-aware parsing
+# ============================================================================
+#
+# The optional $version argument threads through to JavascriptLexer and
+# selects the correct grammar for that ECMAScript release.
+# No-version calls continue to work (backward compatible default).
+
+subtest 'parse_js with no version (backward compatible)' => sub {
+    my $ast = CodingAdventures::JavascriptParser->parse_js('var x = 5;');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'new + parse with no version (backward compatible)' => sub {
+    my $parser = CodingAdventures::JavascriptParser->new('var x = 5;');
+    my $ast = $parser->parse();
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_js with es1 produces program node' => sub {
+    my $ast = CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'es1');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_js with es3 produces program node' => sub {
+    my $ast = CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'es3');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_js with es5 produces program node' => sub {
+    my $ast = CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'es5');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_js with es2015 produces program node' => sub {
+    my $ast = CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'es2015');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_js with es2025 produces program node' => sub {
+    my $ast = CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'es2025');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'new($source, $version) with es2015' => sub {
+    my $parser = CodingAdventures::JavascriptParser->new('var x = 1;', 'es2015');
+    my $ast = $parser->parse();
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'es99') },
+        'unknown version es99 causes die'
+    );
+};
+
+subtest 'TypeScript version string is rejected' => sub {
+    ok(
+        dies { CodingAdventures::JavascriptParser->parse_js('var x = 1;', 'ts5.0') },
+        'ts5.0 is not a valid ECMAScript version for JavascriptParser'
+    );
+};
+
 done_testing;

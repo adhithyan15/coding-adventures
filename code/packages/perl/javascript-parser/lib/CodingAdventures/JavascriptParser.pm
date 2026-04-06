@@ -105,7 +105,7 @@ package CodingAdventures::JavascriptParser;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use CodingAdventures::JavascriptLexer;
 use CodingAdventures::JavascriptParser::ASTNode;
@@ -114,13 +114,17 @@ use CodingAdventures::JavascriptParser::ASTNode;
 # Constructor
 # ============================================================================
 
-# --- new($source) -------------------------------------------------------------
+# --- new($source, $version) ---------------------------------------------------
 #
-# Tokenize `$source` with JavascriptLexer and return a ready-to-parse parser.
+# Tokenize `$source` with JavascriptLexer (using the specified $version)
+# and return a ready-to-parse parser.
+#
+# $version is optional. Valid values: "es1", "es3", "es5", "es2015".."es2025",
+# or undef/"" for generic JavaScript.
 
 sub new {
-    my ($class, $source) = @_;
-    my $tokens = CodingAdventures::JavascriptLexer->tokenize($source);
+    my ($class, $source, $version) = @_;
+    my $tokens = CodingAdventures::JavascriptLexer->tokenize($source, $version);
     return bless {
         _tokens => $tokens,
         _pos    => 0,
@@ -719,8 +723,8 @@ sub _parse_arg_list {
 # Returns the root ASTNode. Dies on error.
 
 sub parse_js {
-    my ($class, $source) = @_;
-    my $parser = $class->new($source);
+    my ($class, $source, $version) = @_;
+    my $parser = $class->new($source, $version);
     return $parser->parse();
 }
 
