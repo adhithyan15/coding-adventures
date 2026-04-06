@@ -267,14 +267,18 @@ jobs:
           elixir-version: '1.16'
           otp-version: '26.0'
 
-      - name: Set up Swift (macOS/Linux)
-        if: needs.detect.outputs.needs_swift == 'true' && runner.os != 'Windows'
+      - name: Set up Swift (Linux)
+        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Linux'
         uses: swift-actions/setup-swift@v3
         with:
           swift-version: '6.0'
           # Workaround for https://github.com/swift-actions/setup-swift/issues/798
           # GPG key verification fails on Ubuntu runners with "No public key"
-          skip-verify-signature: ${{ runner.os == 'Linux' }}
+          skip-verify-signature: true
+
+      # macOS runners already include Swift via Xcode. Keep using the bundled
+      # toolchain there so XCTest and libXCTestSwiftSupport resolve against the
+      # same Xcode runtime instead of mixing in a standalone toolchain.
 
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
