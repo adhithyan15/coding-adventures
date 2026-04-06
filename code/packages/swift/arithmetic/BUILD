@@ -1,8 +1,1 @@
-{
-    "name": "arithmetic",
-    "version": "1.0.0",
-    "type": "swift_package",
-    "dependencies": [
-        "logic_gates"
-    ]
-}
+if command -v xcrun >/dev/null 2>&1; then xcrun swift test --enable-code-coverage --verbose; else swift test --enable-code-coverage --verbose; fi
