@@ -180,4 +180,5 @@ members = [
   "paint-instructions",
   "paint-codec-png",
   "paint-metal",
+  "register-vm",
 ]
