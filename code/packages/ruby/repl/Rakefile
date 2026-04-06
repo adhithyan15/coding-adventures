@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require "rake/testtask"
+
+# ============================================================================
+# Test task — run all tests under test/
+# ============================================================================
+#
+# `rake test`  — runs the full test suite via minitest
+# `rake`       — same as `rake test` (default task)
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/test_*.rb"]
+end
+
+task default: :test

@@ -73,6 +73,7 @@ members = [
     "pipeline",
     "png",
     "progress-bar",
+    "repl",
     "riscv-simulator",
     "rom-bios",
     "ruby-lexer",

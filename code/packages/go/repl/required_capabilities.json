@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/repl",
+  "capabilities": [
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "The REPL loop uses time.NewTicker to poll the eval goroutine at a configurable interval, enabling the Waiting animation to tick while the Language evaluator runs."
+    }
+  ],
+  "justification": "Uses time for async eval polling (ticker). No filesystem or network access needed; I/O is fully injected by the caller."
+}
