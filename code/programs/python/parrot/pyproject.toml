@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "parrot"
+version = "1.0.0"
+description = "Parrot REPL — the world's simplest REPL: it echoes back whatever you type"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = [
+    "coding-adventures-repl",
+]
+
+[project.scripts]
+# The `parrot` command is installed by `pip install -e .` or `uv pip install -e .`.
+# It calls parrot.main:main() directly — no shell wrapper needed.
+parrot = "parrot.main:main"
+
+[tool.hatch.build.targets.wheel]
+# src layout: all importable code lives under src/.
+# Hatchling needs to be told explicitly which package to include.
+packages = ["src/parrot"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4",
+]
