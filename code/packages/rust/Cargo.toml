@@ -180,4 +180,7 @@ members = [
   "paint-instructions",
   "paint-codec-png",
   "paint-metal",
+  "algol-lexer",
+  "algol-parser",
+  "register-vm",
 ]

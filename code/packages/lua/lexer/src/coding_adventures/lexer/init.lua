@@ -1351,22 +1351,133 @@ end
 -- If is_regex is true, the PCRE pattern is converted to a Lua pattern
 -- via pcre_to_lua() and anchored to the start of the remaining source (^).
 -- If is_regex is false, the pattern is escaped for literal matching.
+--- Split a PCRE pattern string on top-level | (alternation outside groups/classes).
+-- Returns an array of PCRE pattern strings (alternatives).
+-- If there is no top-level |, returns a single-element array.
+--
+-- @param s string  PCRE pattern string.
+-- @return table    Array of PCRE alternative strings.
+local function split_top_level_alt(s)
+    local parts = {}
+    local depth = 0
+    local in_class = false
+    local start = 1
+    local i = 1
+    while i <= #s do
+        local c = s:sub(i, i)
+        if c == "\\" then
+            i = i + 2
+        elseif c == "[" and not in_class then
+            in_class = true; i = i + 1
+            if i <= #s and s:sub(i, i) == "^" then i = i + 1 end
+            if i <= #s and s:sub(i, i) == "]" then i = i + 1 end
+        elseif c == "]" and in_class then
+            in_class = false; i = i + 1
+        elseif not in_class and c == "(" then
+            depth = depth + 1; i = i + 1
+        elseif not in_class and c == ")" then
+            depth = depth - 1; i = i + 1
+        elseif not in_class and c == "|" and depth == 0 then
+            parts[#parts + 1] = s:sub(start, i - 1)
+            start = i + 1
+            i = i + 1
+        else
+            i = i + 1
+        end
+    end
+    parts[#parts + 1] = s:sub(start)
+    return parts
+end
+
+--- Expand a PCRE pattern ending with a trailing (A)? optional group into two
+-- alternatives: one where A is required (more specific, tried first) and one
+-- where A is absent.  This handles the Lua limitation that (A)? with a
+-- multi-character A cannot be expressed in Lua patterns.
+--
+-- Only expands the LAST optional group.  If the pattern does not end with
+-- )?, returns {s} unchanged.
+--
+-- @param s string  PCRE pattern string (a single alternative, no top-level |).
+-- @return table    Array of 1 or 2 PCRE pattern strings.
+local function expand_trailing_optional(s)
+    if #s < 3 then return {s} end
+    if s:sub(#s) ~= "?" or s:sub(#s - 1, #s - 1) ~= ")" then return {s} end
+
+    -- Walk forward to find the ( matching the ) at position #s-1.
+    local close_pos = #s - 1
+    local depth = 0
+    local in_cl = false
+    local open_pos = nil
+    local i = 1
+    while i <= close_pos do
+        local c = s:sub(i, i)
+        if c == "\\" then
+            i = i + 2
+        elseif c == "[" and not in_cl then
+            in_cl = true; i = i + 1
+            if i <= #s and s:sub(i, i) == "^" then i = i + 1 end
+            if i <= #s and s:sub(i, i) == "]" then i = i + 1 end
+        elseif c == "]" and in_cl then
+            in_cl = false; i = i + 1
+        elseif not in_cl and c == "(" then
+            depth = depth + 1
+            open_pos = i  -- track latest open paren at depth 1+
+            i = i + 1
+        elseif not in_cl and c == ")" then
+            if i == close_pos and depth == 1 then
+                -- open_pos is the matching (
+                break
+            end
+            depth = depth - 1
+            i = i + 1
+        else
+            i = i + 1
+        end
+    end
+
+    if not open_pos then return {s} end
+
+    local before = s:sub(1, open_pos - 1)
+    local inner  = s:sub(open_pos + 1, close_pos - 1)
+    -- Return [with A required, without A] — longer match tried first.
+    return { before .. inner, before }
+end
+
 --
 -- @param defn table Token definition with name, pattern, is_regex, alias.
--- @return table Compiled pattern with name, pattern_str, alias.
+-- @return table Array of compiled patterns (each with name, pattern, alias).
+--              Usually one entry; multiple when PCRE alternation is expanded.
 local function compile_pattern(defn)
-    local pat_str
     if defn.is_regex then
-        pat_str = "^" .. pcre_to_lua(defn.pattern)
+        -- Step 1: split the PCRE on top-level | into separate alternatives.
+        local alts = split_top_level_alt(defn.pattern)
+        -- Step 2: for each alternative, expand any trailing (A)? optional group.
+        local expanded = {}
+        for _, alt in ipairs(alts) do
+            local sub = expand_trailing_optional(alt)
+            for _, sa in ipairs(sub) do
+                expanded[#expanded + 1] = sa
+            end
+        end
+        -- Step 3: convert each expanded alternative to a Lua pattern.
+        local result = {}
+        for _, alt in ipairs(expanded) do
+            result[#result + 1] = {
+                name    = defn.name,
+                pattern = "^" .. pcre_to_lua(alt),
+                alias   = defn.alias or "",
+            }
+        end
+        return result
     else
-        -- Escape magic characters for literal matching
-        pat_str = "^" .. defn.pattern:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
+        -- Literal token: escape Lua magic characters.
+        local pat_str = "^" .. defn.pattern:gsub("([%(%)%.%%%+%-%*%?%[%]%^%$])", "%%%1")
+        return {{
+            name    = defn.name,
+            pattern = pat_str,
+            alias   = defn.alias or "",
+        }}
     end
-    return {
-        name    = defn.name,
-        pattern = pat_str,
-        alias   = defn.alias or "",
-    }
 end
 
 --- Map from effective token name to TokenType + type_name.
@@ -1477,10 +1588,16 @@ function GrammarLexer.new(source, grammar)
         end
     end
 
-    -- Compile top-level token patterns
+    -- Compile top-level token patterns.
+    -- compile_pattern() returns an array (may be >1 entry when a PCRE pattern
+    -- contains top-level | or trailing (A)? optional groups that were expanded
+    -- into separate alternatives for Lua compatibility).
     local patterns = {}
     for _, defn in ipairs(grammar.definitions or {}) do
-        patterns[#patterns + 1] = compile_pattern(defn)
+        local compiled = compile_pattern(defn)
+        for _, p in ipairs(compiled) do
+            patterns[#patterns + 1] = p
+        end
     end
 
     -- Compile skip patterns (also apply PCRE-to-Lua conversion)
@@ -1507,7 +1624,10 @@ function GrammarLexer.new(source, grammar)
     for group_name, group in pairs(grammar.groups or {}) do
         local compiled = {}
         for _, defn in ipairs(group.definitions or {}) do
-            compiled[#compiled + 1] = compile_pattern(defn)
+            local defn_patterns = compile_pattern(defn)
+            for _, p in ipairs(defn_patterns) do
+                compiled[#compiled + 1] = p
+            end
             if defn.alias and defn.alias ~= "" then
                 alias_map[defn.name] = defn.alias
             end

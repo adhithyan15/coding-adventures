@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-algol-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "ALGOL 60 lexer — tokenizes ALGOL 60 source text using the grammar-driven lexer and the algol.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

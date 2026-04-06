@@ -1,0 +1,177 @@
+# Token definitions for ALGOL 60
+# @version 1
+#
+# ALGOL 60 (ALGOrithmic Language, 1960) was the first programming language to be
+# formally specified using BNF (Backus-Naur Form). It introduced block structure,
+# lexical scoping, recursion, and the call stack — concepts every modern language
+# inherits. It is the common ancestor of Pascal, C, Ada, Simula (first OOP language),
+# and indirectly Java, Rust, Go, and Swift.
+#
+# Source format: FREE-FORMAT. Whitespace is insignificant between tokens.
+# No column restrictions (unlike Fortran 77 and COBOL, which were punched-card-based).
+#
+# Character set note: The ALGOL 60 report used mathematical typographic symbols
+# (≤, ≥, ≠, ↑, ∧, ∨, ¬, ⊃, ≡) that could not be printed on real hardware of the era.
+# Every hardware implementation mapped these to ASCII sequences. This grammar uses
+# the ASCII conventions that became standard.
+#
+# Key ordering rules (first match wins):
+#   :=  must come before  :   (ASSIGN before COLON)
+#   **  must come before  *   (POWER before STAR)
+#   <=  must come before  <   (LEQ before LT)
+#   >=  must come before  >   (GEQ before GT)
+#   !=  must come before any single-char use of !
+#   REAL_LIT must come before INTEGER_LIT (decimal/exponent before plain digits)
+
+# ---------------------------------------------------------------------------
+# Value tokens
+# ---------------------------------------------------------------------------
+
+# Real literal: digits with a decimal point, an exponent, or both.
+# Pattern covers:
+#   3.14        integer + fractional part
+#   1.5E3       integer + exponent (1500.0)
+#   1.5E-3      integer + negative exponent (0.0015)
+#   100E2       integer + exponent, no decimal point (10000.0)
+# Must come before INTEGER_LIT so that "3.14" matches REAL_LIT not INTEGER_LIT.
+REAL_LIT    = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+/
+
+# Integer literal: one or more decimal digits, no decimal point, no exponent.
+INTEGER_LIT = /[0-9]+/
+
+# String literal: single-quoted. ALGOL 60 strings have no escape sequences —
+# a single quote cannot appear inside a string literal.
+STRING_LIT  = /'[^']*'/
+
+# Identifier: letter followed by zero or more letters or digits.
+# No underscore — original ALGOL 60 did not allow it.
+# Keywords are reclassified from NAME after a full-token match (see keywords section).
+# The identifier token is named NAME (not IDENT) so that the GrammarLexer's keyword
+# promotion logic fires: the promotion check is token_name == "NAME" && value in keyword_set.
+NAME        = /[a-zA-Z][a-zA-Z0-9]*/
+
+# ---------------------------------------------------------------------------
+# Multi-character operators — must appear before single-character versions
+# ---------------------------------------------------------------------------
+
+# Assignment operator. ALGOL uses := for assignment and = for equality.
+# This avoids the C bug of writing = when you mean == (a constant source of errors).
+ASSIGN      = ":="
+
+# Exponentiation. Original ALGOL used ↑ (uparrow). ASCII implementations used
+# either ** (Fortran convention) or ^ (caret). Both are supported.
+# ** must come before * so "**" is not lexed as STAR STAR.
+POWER       = "**"
+
+# Relational operators (ASCII for ≤, ≥, ≠)
+LEQ         = "<="
+GEQ         = ">="
+NEQ         = "!="
+
+# ---------------------------------------------------------------------------
+# Single-character operators
+# ---------------------------------------------------------------------------
+
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+
+# Caret: alternative to ** for exponentiation.
+# Both ^ and ** produce different token kinds so the parser can treat them
+# identically (both map to the exponentiation operator).
+CARET       = "^"
+
+# Equality test (not assignment — ALGOL uses := for that).
+EQ          = "="
+
+LT          = "<"
+GT          = ">"
+
+# ---------------------------------------------------------------------------
+# Delimiters
+# ---------------------------------------------------------------------------
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACKET    = "["
+RBRACKET    = "]"
+SEMICOLON   = ";"
+COMMA       = ","
+
+# Colon appears in: array bound pairs (1:10), label declarations (start:).
+# Must come after := is matched so "x := 5" doesn't become NAME COLON EQ INTEGER_LIT.
+COLON       = ":"
+
+# ---------------------------------------------------------------------------
+# Keywords — reclassified from NAME after a full-token match
+# ---------------------------------------------------------------------------
+#
+# Case-insensitive: BEGIN, Begin, begin all produce the same token kind.
+# The lexer normalizes to lowercase before checking this table.
+# Partial matches do NOT qualify: "beginning" is NAME (identifier), not BEGIN + NAME("ning").
+
+keywords:
+  # Block structure
+  begin
+  end
+
+  # Control flow
+  if
+  then
+  else
+  for
+  do
+  step
+  until
+  while
+  goto
+
+  # Declarations
+  switch
+  procedure
+  own
+  array
+  label
+  value
+
+  # Types
+  integer
+  real
+  boolean
+  string
+
+  # Boolean literals
+  true
+  false
+
+  # Boolean operators (ALGOL uses words, not symbols)
+  not
+  and
+  or
+  impl
+  eqv
+
+  # Arithmetic keywords
+  div
+  mod
+
+  # Comment trigger — lexer switches to comment-skip mode when this keyword is seen.
+  # The comment keyword itself is not emitted as a token; everything up to and
+  # including the next semicolon is consumed silently.
+  comment
+
+# ---------------------------------------------------------------------------
+# Skip patterns — consumed silently, no tokens emitted
+# ---------------------------------------------------------------------------
+
+skip:
+  # Whitespace is completely insignificant in ALGOL 60.
+  # Spaces, tabs, carriage returns, and newlines between tokens are all ignored.
+  WHITESPACE = /[ \t\r\n]+/
+
+  # Comment syntax: the word "comment" followed by any text up to the next ";".
+  # Example: comment this is a comment;
+  # The pattern matches "comment" (already consumed as a keyword trigger above)
+  # but the comment skip rule runs first in the skip phase.
+  COMMENT    = /comment[^;]*;/
