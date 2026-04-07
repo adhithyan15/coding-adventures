@@ -314,10 +314,15 @@ sub _build_rules {
         push @rules, { name => $type, pat => $pat };
     }
 
-    # No keyword reclassification table needed: the grammar file already defines
-    # KEYWORD as a regex rule (KEYWORD = /let|print|.../), so keyword tokens
-    # are matched directly by the rule engine above.
-    $_keywords = {};
+    # Build keyword promotion table from the grammar's keywords: section.
+    # The grammar uses NAME + keyword promotion (not a direct KEYWORD regex).
+    # After a NAME token is matched, we check if its uppercased value is in
+    # this table and reclassify it as KEYWORD if so.
+    my %kw_map;
+    for my $kw (@{ $grammar->keywords }) {
+        $kw_map{uc($kw)} = 1;
+    }
+    $_keywords = \%kw_map;
 
     $_skip_rules = \@skip_rules;
     $_rules      = \@rules;
@@ -564,8 +569,13 @@ sub tokenize {
                 my $value = $&;
                 my $type  = $rule->{name};
 
-                # Keywords are matched before NAME by the synthesised KEYWORD rule,
-                # so no further reclassification is needed here.
+                # Keyword promotion: if a NAME token's uppercased value appears
+                # in the keyword table, reclassify it as KEYWORD. This mirrors
+                # the grammar's keywords: section, which promotes NAME → KEYWORD.
+                if ($type eq 'NAME' && exists $_keywords->{uc($value)}) {
+                    $type  = 'KEYWORD';
+                    $value = uc($value);
+                }
 
                 push @tokens, {
                     type  => $type,

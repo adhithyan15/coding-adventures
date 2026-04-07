@@ -207,6 +207,24 @@ local function get_grammar()
     local content = f:read("*all")
     f:close()
 
+    -- Lua GrammarLexer compatibility: strip non-capturing groups (?:...).
+    --
+    -- The grammar file uses /(?:sin|cos|...|int|...)/ for BUILTIN_FN so that
+    -- GrammarLexers in other languages (Elixir, Rust, Perl) can prepend a start
+    -- anchor to the whole group: \A(?:sin|...|int|...) anchors every alternative.
+    --
+    -- The Lua GrammarLexer does NOT support (?:...) — it converts such groups
+    -- to the wildcard [%s%S]- (any-char), breaking matching entirely.  However,
+    -- the Lua GrammarLexer DOES correctly handle top-level alternation: it splits
+    -- /sin|cos|...|int|.../ on | and anchors each alternative with ^, giving
+    -- ^sin, ^cos, ..., ^int, ... tried in order.  This is correct behaviour.
+    --
+    -- Solution: before parsing, replace /(?:alternatives)/ with /alternatives/
+    -- (strip the non-capturing group delimiters) so the Lua GrammarLexer sees
+    -- bare alternation.  The pattern only matches simple non-nested groups
+    -- (no parens inside), which covers all cases in dartmouth_basic.tokens.
+    content = content:gsub("/%(%?:([^%(%)]+)%)/", "/%1/")
+
     local grammar, parse_err = grammar_tools.parse_token_grammar(content)
     if not grammar then
         error(

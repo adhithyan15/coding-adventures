@@ -159,7 +159,7 @@ STRING_BODY = /"[^"]*"/ -> STRING
 #   3. If a user writes invalid BASIC like "sinx", it will lex as
 #      BUILTIN_FN("sin") + NAME("x"), which the parser will reject anyway.
 # Implementations using PCRE-compatible engines may add (?![a-z0-9]) locally.
-BUILTIN_FN  = /sin|cos|tan|atn|exp|log|abs|sqr|int|rnd|sgn/
+BUILTIN_FN  = /(?:sin|cos|tan|atn|exp|log|abs|sqr|int|rnd|sgn)/
 USER_FN     = /fn[a-z]/
 
 # ============================================================
