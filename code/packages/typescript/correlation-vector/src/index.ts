@@ -82,28 +82,187 @@
  */
 
 import { stringify } from "@coding-adventures/json-serializer";
-import { sha256Hex as _sha256Hex } from "@coding-adventures/sha256";
 
 export const VERSION = "0.1.0";
 
-// ─── SHA-256 Helper ──────────────────────────────────────────────────────────
+// ─── SHA-256 Implementation ──────────────────────────────────────────────────
 //
-// We delegate SHA-256 computation to the repo's own @coding-adventures/sha256
-// package (FIPS 180-4). That package's `sha256Hex` takes a Uint8Array, so this
-// thin adapter encodes a UTF-8 string and calls through.
+// We inline a pure TypeScript SHA-256 here so this package has no dependency
+// on our sha256 package. The correlation-vector must be a leaf dependency that
+// any other package can safely import without pulling in unrelated packages.
 //
-// We use only the first 8 hex characters (32 bits) of the 64-character digest
-// as the CV ID base — enough uniqueness given the per-context counter that
-// follows the base segment.
+// SHA-256 (FIPS 180-4) produces a 256-bit (32-byte) digest from any input.
+// We use only the first 8 hex characters (32 bits) as the CV ID base.
 //
-// @example
-// ```ts
-// sha256Hex("app.ts:5:12")
-// // → "a3f1b2c4..." (64 hex chars — we take just the first 8)
-// ```
+// The algorithm uses the Merkle-Damgård construction:
+//   message → pad to 64-byte blocks → compress each block → 32-byte digest
+//
+// JavaScript Caveat: `>>> 0` forces unsigned 32-bit interpretation
+// ─────────────────────────────────────────────────────────────────
+// JS bitwise operators return SIGNED 32-bit integers. When the top bit is set,
+// `|`, `&`, `^`, `~`, `<<` all produce negative numbers. We fix this with
+// `>>> 0` (zero-fill right shift by 0), which coerces to unsigned 32-bit:
+//
+//   ~0         === -1      (JS signed)
+//   (~0) >>> 0 === 4294967295  (unsigned, what we want)
+
+// Initial hash values: first 32 bits of the fractional parts of √2, √3, √5,
+// √7, √11, √13, √17, √19. "Nothing up my sleeve" — fully verifiable from math.
+const SHA256_INIT: readonly number[] = [
+  0x6a09e667, // √2
+  0xbb67ae85, // √3
+  0x3c6ef372, // √5
+  0xa54ff53a, // √7
+  0x510e527f, // √11
+  0x9b05688c, // √13
+  0x1f83d9ab, // √17
+  0x5be0cd19, // √19
+];
+
+// Round constants: first 32 bits of the fractional parts of the cube roots of
+// the first 64 primes (2, 3, 5, ..., 311). 64 unique constants, one per round.
+const SHA256_K: readonly number[] = [
+  0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
+  0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+  0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+  0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+  0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+  0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+  0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+  0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+  0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+  0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+  0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
+  0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+  0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
+  0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+  0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+  0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+];
+
+// rotr(n, x): rotate x right by n bits within a 32-bit word.
+// Bits that fall off the right end reappear on the left.
+// Example: rotr(2, 0b11001000) = 0b00110010
+function _rotr(n: number, x: number): number {
+  return ((x >>> n) | (x << (32 - n))) >>> 0;
+}
+
+// ch(x, y, z): "Choose" — if bit of x is 1, pick from y; if 0, pick from z.
+// This is a bitwise multiplexer: Ch(x,y,z) = (x AND y) XOR (NOT x AND z)
+function _ch(x: number, y: number, z: number): number {
+  return ((x & y) ^ (~x & z)) >>> 0;
+}
+
+// maj(x, y, z): "Majority" — output 1 if at least 2 of 3 input bits are 1.
+// Maj(x,y,z) = (x AND y) XOR (x AND z) XOR (y AND z)
+function _maj(x: number, y: number, z: number): number {
+  return ((x & y) ^ (x & z) ^ (y & z)) >>> 0;
+}
+
+// Σ0, Σ1: "Big Sigma" — used in the compression round.
+// Each mixes bits via three different rotations to maximize diffusion.
+function _bigSig0(x: number): number {
+  return (_rotr(2, x) ^ _rotr(13, x) ^ _rotr(22, x)) >>> 0;
+}
+function _bigSig1(x: number): number {
+  return (_rotr(6, x) ^ _rotr(11, x) ^ _rotr(25, x)) >>> 0;
+}
+
+// σ0, σ1: "Small sigma" — used in the message schedule expansion.
+// The shift (>>>) makes these non-invertible, which strengthens collision resistance.
+function _smallSig0(x: number): number {
+  return (_rotr(7, x) ^ _rotr(18, x) ^ (x >>> 3)) >>> 0;
+}
+function _smallSig1(x: number): number {
+  return (_rotr(17, x) ^ _rotr(19, x) ^ (x >>> 10)) >>> 0;
+}
+
+// Pad data to a multiple of 64 bytes, per FIPS 180-4 §5.1.1:
+//   1. Append 0x80.
+//   2. Append zeros until length ≡ 56 (mod 64).
+//   3. Append the original bit length as a 64-bit big-endian integer.
+function _sha256Pad(data: Uint8Array): Uint8Array {
+  const byteLen = data.length;
+  const bitLenHigh = Math.floor((byteLen * 8) / 0x100000000) >>> 0;
+  const bitLenLow = (byteLen * 8) >>> 0;
+  const zeroes = ((56 - (byteLen + 1)) % 64 + 64) % 64;
+  const padded = new Uint8Array(byteLen + 1 + zeroes + 8);
+  padded.set(data, 0);
+  padded[byteLen] = 0x80;
+  const view = new DataView(padded.buffer);
+  view.setUint32(byteLen + 1 + zeroes, bitLenHigh, false);
+  view.setUint32(byteLen + 1 + zeroes + 4, bitLenLow, false);
+  return padded;
+}
+
+// Compress one 64-byte block into the 8-word state.
+// 64 rounds of Ch/Maj mixing with the message schedule.
+function _sha256Compress(
+  state: number[],
+  block: Uint8Array,
+): number[] {
+  // Build the 64-word message schedule W from 16 big-endian words + expansion.
+  const W = new Uint32Array(64);
+  const view = new DataView(block.buffer, block.byteOffset, 64);
+  for (let i = 0; i < 16; i++) {
+    W[i] = view.getUint32(i * 4, false); // big-endian
+  }
+  for (let t = 16; t < 64; t++) {
+    W[t] = (_smallSig1(W[t - 2]) + W[t - 7] + _smallSig0(W[t - 15]) + W[t - 16]) >>> 0;
+  }
+
+  // Working variables start at the current state.
+  let [a, b, c, d, e, f, g, h] = state;
+
+  for (let t = 0; t < 64; t++) {
+    const t1 = (h + _bigSig1(e) + _ch(e, f, g) + SHA256_K[t] + W[t]) >>> 0;
+    const t2 = (_bigSig0(a) + _maj(a, b, c)) >>> 0;
+    h = g; g = f; f = e;
+    e = (d + t1) >>> 0;
+    d = c; c = b; b = a;
+    a = (t1 + t2) >>> 0;
+  }
+
+  // Davies-Meyer feed-forward: add compressed output to initial block state.
+  // This makes the function non-invertible — critical for collision resistance.
+  return [
+    (state[0] + a) >>> 0,
+    (state[1] + b) >>> 0,
+    (state[2] + c) >>> 0,
+    (state[3] + d) >>> 0,
+    (state[4] + e) >>> 0,
+    (state[5] + f) >>> 0,
+    (state[6] + g) >>> 0,
+    (state[7] + h) >>> 0,
+  ];
+}
+
+/**
+ * Compute the SHA-256 digest of a UTF-8 string and return the 64-character
+ * lowercase hex string.
+ *
+ * This is a private helper used only for CV ID base generation. We take just
+ * the first 8 characters (32 bits) of the 64-character hex output — enough
+ * uniqueness for our purposes given the counter that follows.
+ *
+ * @example
+ * ```ts
+ * sha256Hex("app.ts:5:12")
+ * // → "a3f1b2c4..." (64 hex chars — we use just the first 8)
+ * ```
+ */
 function sha256Hex(data: string): string {
   const enc = new TextEncoder();
-  return _sha256Hex(enc.encode(data));
+  const bytes = enc.encode(data);
+  const padded = _sha256Pad(bytes);
+  let state = [...SHA256_INIT];
+  for (let i = 0; i < padded.length; i += 64) {
+    state = _sha256Compress(state, padded.subarray(i, i + 64));
+  }
+  // Convert state words to hex string (big-endian).
+  return state
+    .map((w) => w.toString(16).padStart(8, "0"))
+    .join("");
 }
 
 // ─── Public Types ────────────────────────────────────────────────────────────
