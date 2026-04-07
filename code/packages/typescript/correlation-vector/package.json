@@ -1,0 +1,40 @@
+{
+  "name": "@coding-adventures/correlation-vector",
+  "version": "0.1.0",
+  "description": "Append-only provenance tracking for any data pipeline — assign a CV to any entity at birth; every stage appends its contribution",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "correlation-vector",
+    "provenance",
+    "tracing",
+    "pipeline",
+    "data-lineage",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/sha256": "file:../sha256",
+    "@coding-adventures/json-value": "file:../json-value",
+    "@coding-adventures/json-serializer": "file:../json-serializer",
+    "@coding-adventures/json-parser": "file:../json-parser",
+    "@coding-adventures/json-lexer": "file:../json-lexer",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
