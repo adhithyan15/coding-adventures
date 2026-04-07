@@ -1,0 +1,61 @@
+# frozen_string_literal: true
+
+# ================================================================
+# Gemfile -- Dependency Declaration for Local Development
+# ================================================================
+#
+# The Gemfile is used by Bundler to set up the development environment.
+# It extends the gemspec by adding local path: dependencies for all
+# the in-monorepo gems that can't be resolved from rubygems.org.
+#
+# Why do we need to list transitive dependencies explicitly?
+# ============================================================
+# In a published gem, Bundler resolves transitive dependencies
+# automatically from rubygems.org. But here, our dependencies
+# (sha256, json_serializer, etc.) are LOCAL gems in the monorepo
+# -- not published to rubygems.org. Bundler won't auto-discover
+# their transitive deps from rubygems.org either.
+#
+# So we must list every transitive dependency with path: directives.
+# This is the "BUILD files must install ALL transitive dependencies
+# in leaf-to-root order" lesson from lessons.md.
+#
+# Dependency tree (leaf to root):
+#   grammar_tools    (no deps)
+#   directed_graph   (no deps)
+#   state_machine    -> grammar_tools, directed_graph
+#   lexer            -> grammar_tools
+#   parser           -> lexer, grammar_tools
+#   json_lexer       -> lexer
+#   json_parser      -> json_lexer, parser
+#   json_value       -> json_parser
+#   json_serializer  -> json_value
+#   sha256           (no deps)
+# ================================================================
+
+source "https://rubygems.org"
+gemspec
+
+# ---- Transitive dependencies for coding_adventures_json_serializer ----
+# Listed leaf-to-root so Bundler processes them in the correct order.
+
+gem "coding_adventures_grammar_tools", path: "../grammar_tools"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_state_machine", path: "../state_machine"
+gem "coding_adventures_lexer", path: "../lexer"
+gem "coding_adventures_parser", path: "../parser"
+gem "coding_adventures_json_lexer", path: "../json_lexer"
+gem "coding_adventures_json_parser", path: "../json_parser"
+gem "coding_adventures_json_value", path: "../json_value"
+gem "coding_adventures_json_serializer", path: "../json_serializer"
+
+# ---- SHA-256 (our custom implementation) ----
+gem "coding_adventures_sha256", path: "../sha256"
+
+# ---- Development and test tools ----
+group :development, :test do
+  gem "minitest", "~> 5.0"
+  gem "simplecov", "~> 0.22"
+  gem "standard", "~> 1.0"
+  gem "rake", "~> 13.0"
+end
