@@ -57,7 +57,7 @@ for _, contrib := range log.History(cvID) {
 jsonText, _ := log.ToJSONString()
 
 // Restore it on the other end.
-restored, _ := cv.FromJSONString(jsonText)
+restored, _ := cv.DeserializeFromJSON(jsonText)
 _ = restored
 ```
 
@@ -118,9 +118,9 @@ Synthetic entities (no origin) always use `00000000`.
 
 | Method | Description |
 |--------|-------------|
-| `Serialize() (jsonvalue.Value, error)` | Convert the log to a JSON value tree. |
+| `Serialize() map[string]any` | Convert the log to a native Go map. |
 | `ToJSONString() (string, error)` | Serialise to a JSON string. |
-| `FromJSONString(s string) (*CVLog, error)` | Deserialise from a JSON string. |
+| `DeserializeFromJSON(s string) (*CVLog, error)` | Deserialise from a JSON string. |
 
 ---
 
@@ -151,7 +151,7 @@ realistic load (10,000-create uniqueness tests hammer the SHA-256 path).
 
 ## Test coverage
 
-41 tests across all 7 groups from the CV00 spec:
+55 tests across all 7 groups from the CV00 spec (97.4% coverage):
 
 1. **Root lifecycle** — create, contribute, passthrough, delete
 2. **Derivation** — child IDs, `Ancestors`, `Descendants`
