@@ -150,16 +150,32 @@ func TestHmacSHA1_RFC2202_TC6(t *testing.T) {
 
 func TestReturnLengths(t *testing.T) {
 	key, msg := []byte("key"), []byte("msg")
-	if n := len(hmac.HmacMD5(key, msg)); n != 16 {
+	md5tag, err := hmac.HmacMD5(key, msg)
+	if err != nil {
+		t.Fatalf("HmacMD5: unexpected error: %v", err)
+	}
+	if n := len(md5tag); n != 16 {
 		t.Errorf("MD5 len: want 16, got %d", n)
 	}
-	if n := len(hmac.HmacSHA1(key, msg)); n != 20 {
+	sha1tag, err := hmac.HmacSHA1(key, msg)
+	if err != nil {
+		t.Fatalf("HmacSHA1: unexpected error: %v", err)
+	}
+	if n := len(sha1tag); n != 20 {
 		t.Errorf("SHA1 len: want 20, got %d", n)
 	}
-	if n := len(hmac.HmacSHA256(key, msg)); n != 32 {
+	sha256tag, err := hmac.HmacSHA256(key, msg)
+	if err != nil {
+		t.Fatalf("HmacSHA256: unexpected error: %v", err)
+	}
+	if n := len(sha256tag); n != 32 {
 		t.Errorf("SHA256 len: want 32, got %d", n)
 	}
-	if n := len(hmac.HmacSHA512(key, msg)); n != 64 {
+	sha512tag, err := hmac.HmacSHA512(key, msg)
+	if err != nil {
+		t.Fatalf("HmacSHA512: unexpected error: %v", err)
+	}
+	if n := len(sha512tag); n != 64 {
 		t.Errorf("SHA512 len: want 64, got %d", n)
 	}
 }
@@ -169,13 +185,21 @@ func TestReturnLengths(t *testing.T) {
 // ===========================================================================
 
 func TestEmptyKey(t *testing.T) {
-	if n := len(hmac.HmacSHA256([]byte{}, []byte("msg"))); n != 32 {
-		t.Error("empty key should produce 32-byte result")
+	_, err := hmac.HmacSHA256([]byte{}, []byte("msg"))
+	if err == nil {
+		t.Error("empty key should return ErrEmptyKey")
+	}
+	if err != hmac.ErrEmptyKey {
+		t.Errorf("want ErrEmptyKey, got %v", err)
 	}
 }
 
 func TestEmptyMessage(t *testing.T) {
-	if n := len(hmac.HmacSHA256([]byte("key"), []byte{})); n != 32 {
+	tag, err := hmac.HmacSHA256([]byte("key"), []byte{})
+	if err != nil {
+		t.Fatalf("empty message should be allowed: %v", err)
+	}
+	if n := len(tag); n != 32 {
 		t.Error("empty message should produce 32-byte result")
 	}
 }
@@ -183,8 +207,14 @@ func TestEmptyMessage(t *testing.T) {
 func TestKeyLongerThanBlock(t *testing.T) {
 	k65 := bytes.Repeat([]byte{0x01}, 65)
 	k66 := bytes.Repeat([]byte{0x01}, 66)
-	r1 := hmac.HmacSHA256(k65, []byte("msg"))
-	r2 := hmac.HmacSHA256(k66, []byte("msg"))
+	r1, err := hmac.HmacSHA256(k65, []byte("msg"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r2, err := hmac.HmacSHA256(k66, []byte("msg"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	if bytes.Equal(r1, r2) {
 		t.Error("65-byte and 66-byte keys should produce different tags")
 	}
@@ -195,19 +225,43 @@ func TestKeyLongerThanBlock(t *testing.T) {
 // ===========================================================================
 
 func TestDeterministic(t *testing.T) {
-	if !bytes.Equal(hmac.HmacSHA256([]byte("k"), []byte("m")), hmac.HmacSHA256([]byte("k"), []byte("m"))) {
+	r1, err := hmac.HmacSHA256([]byte("k"), []byte("m"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r2, err := hmac.HmacSHA256([]byte("k"), []byte("m"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(r1, r2) {
 		t.Error("HMAC must be deterministic")
 	}
 }
 
 func TestKeySensitivity(t *testing.T) {
-	if bytes.Equal(hmac.HmacSHA256([]byte("k1"), []byte("m")), hmac.HmacSHA256([]byte("k2"), []byte("m"))) {
+	r1, err := hmac.HmacSHA256([]byte("k1"), []byte("m"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r2, err := hmac.HmacSHA256([]byte("k2"), []byte("m"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Equal(r1, r2) {
 		t.Error("different keys must produce different tags")
 	}
 }
 
 func TestMessageSensitivity(t *testing.T) {
-	if bytes.Equal(hmac.HmacSHA256([]byte("k"), []byte("m1")), hmac.HmacSHA256([]byte("k"), []byte("m2"))) {
+	r1, err := hmac.HmacSHA256([]byte("k"), []byte("m1"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	r2, err := hmac.HmacSHA256([]byte("k"), []byte("m2"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Equal(r1, r2) {
 		t.Error("different messages must produce different tags")
 	}
 }

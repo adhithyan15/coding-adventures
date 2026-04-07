@@ -52,12 +52,19 @@ package hmac
 import (
 	"crypto/subtle"
 	"encoding/hex"
+	"errors"
 
 	gmd5 "github.com/adhithyan15/coding-adventures/code/packages/go/md5"
 	gsha1 "github.com/adhithyan15/coding-adventures/code/packages/go/sha1"
 	gsha256 "github.com/adhithyan15/coding-adventures/code/packages/go/sha256"
 	gsha512 "github.com/adhithyan15/coding-adventures/code/packages/go/sha512"
 )
+
+// ErrEmptyKey is returned when a named HMAC variant is called with an empty key.
+// An empty key almost always indicates a misconfiguration (e.g. an unset
+// environment variable), so callers receive an explicit error rather than
+// silently computing a deterministic tag under the zero key.
+var ErrEmptyKey = errors.New("hmac: key must not be empty")
 
 // HashFn is the type of a hash function: takes bytes, returns bytes.
 type HashFn func(data []byte) []byte
@@ -120,32 +127,36 @@ func Verify(expected, actual []byte) bool {
 // HMAC-MD5 remains secure as a MAC even though MD5 is collision-broken.
 // It appears in legacy TLS cipher suites and some older protocols.
 //
-//	HmacMD5([]byte("Jefe"), []byte("what do ya want for nothing?"))
-//	// 750c783e6ab0b503eaa86e310a5db738
-func HmacMD5(key, message []byte) []byte {
+// Returns ErrEmptyKey if key is empty.
+//
+//	tag, err := HmacMD5([]byte("Jefe"), []byte("what do ya want for nothing?"))
+//	// tag hex: 750c783e6ab0b503eaa86e310a5db738
+func HmacMD5(key, message []byte) ([]byte, error) {
 	if len(key) == 0 {
-		panic("hmac: key must not be empty")
+		return nil, ErrEmptyKey
 	}
 	return HMAC(func(d []byte) []byte {
 		s := gmd5.SumMD5(d)
 		return s[:]
-	}, 64, key, message)
+	}, 64, key, message), nil
 }
 
 // HmacSHA1 returns a 20-byte HMAC-SHA1 authentication tag.
 //
 // Used in WPA2 (PBKDF2-HMAC-SHA1), older TLS/SSH, and TOTP/HOTP.
 //
-//	HmacSHA1([]byte("Jefe"), []byte("what do ya want for nothing?"))
-//	// effcdf6ae5eb2fa2d27416d5f184df9c259a7c79
-func HmacSHA1(key, message []byte) []byte {
+// Returns ErrEmptyKey if key is empty.
+//
+//	tag, err := HmacSHA1([]byte("Jefe"), []byte("what do ya want for nothing?"))
+//	// tag hex: effcdf6ae5eb2fa2d27416d5f184df9c259a7c79
+func HmacSHA1(key, message []byte) ([]byte, error) {
 	if len(key) == 0 {
-		panic("hmac: key must not be empty")
+		return nil, ErrEmptyKey
 	}
 	return HMAC(func(d []byte) []byte {
 		s := gsha1.Sum1(d)
 		return s[:]
-	}, 64, key, message)
+	}, 64, key, message), nil
 }
 
 // HmacSHA256 returns a 32-byte HMAC-SHA256 authentication tag.
@@ -153,17 +164,19 @@ func HmacSHA1(key, message []byte) []byte {
 // The modern default for TLS 1.3, JWT HS256, AWS Signature V4,
 // and PBKDF2-HMAC-SHA256.
 //
+// Returns ErrEmptyKey if key is empty.
+//
 //	key := bytes.Repeat([]byte{0x0b}, 20)
-//	HmacSHA256(key, []byte("Hi There"))
-//	// b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7
-func HmacSHA256(key, message []byte) []byte {
+//	tag, err := HmacSHA256(key, []byte("Hi There"))
+//	// tag hex: b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7
+func HmacSHA256(key, message []byte) ([]byte, error) {
 	if len(key) == 0 {
-		panic("hmac: key must not be empty")
+		return nil, ErrEmptyKey
 	}
 	return HMAC(func(d []byte) []byte {
 		s := gsha256.Sum256(d)
 		return s[:]
-	}, 64, key, message)
+	}, 64, key, message), nil
 }
 
 // HmacSHA512 returns a 64-byte HMAC-SHA512 authentication tag.
@@ -172,17 +185,19 @@ func HmacSHA256(key, message []byte) []byte {
 // Note: SHA-512 has a 128-byte block size, so key normalization
 // and ipad/opad use 128 bytes.
 //
+// Returns ErrEmptyKey if key is empty.
+//
 //	key := bytes.Repeat([]byte{0x0b}, 20)
-//	HmacSHA512(key, []byte("Hi There"))
-//	// 87aa7cdea5ef619d4ff0b4241a1d6cb0...
-func HmacSHA512(key, message []byte) []byte {
+//	tag, err := HmacSHA512(key, []byte("Hi There"))
+//	// tag hex: 87aa7cdea5ef619d4ff0b4241a1d6cb0...
+func HmacSHA512(key, message []byte) ([]byte, error) {
 	if len(key) == 0 {
-		panic("hmac: key must not be empty")
+		return nil, ErrEmptyKey
 	}
 	return HMAC(func(d []byte) []byte {
 		s := gsha512.Sum512(d)
 		return s[:]
-	}, 128, key, message)
+	}, 128, key, message), nil
 }
 
 // ===========================================================================
@@ -190,23 +205,43 @@ func HmacSHA512(key, message []byte) []byte {
 // ===========================================================================
 
 // HmacMD5Hex returns the HMAC-MD5 tag as a 32-character lowercase hex string.
+// Panics if key is empty — use HmacMD5 directly if you need error handling.
 func HmacMD5Hex(key, message []byte) string {
-	return hex.EncodeToString(HmacMD5(key, message))
+	tag, err := HmacMD5(key, message)
+	if err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(tag)
 }
 
 // HmacSHA1Hex returns the HMAC-SHA1 tag as a 40-character lowercase hex string.
+// Panics if key is empty — use HmacSHA1 directly if you need error handling.
 func HmacSHA1Hex(key, message []byte) string {
-	return hex.EncodeToString(HmacSHA1(key, message))
+	tag, err := HmacSHA1(key, message)
+	if err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(tag)
 }
 
 // HmacSHA256Hex returns the HMAC-SHA256 tag as a 64-character lowercase hex string.
+// Panics if key is empty — use HmacSHA256 directly if you need error handling.
 func HmacSHA256Hex(key, message []byte) string {
-	return hex.EncodeToString(HmacSHA256(key, message))
+	tag, err := HmacSHA256(key, message)
+	if err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(tag)
 }
 
 // HmacSHA512Hex returns the HMAC-SHA512 tag as a 128-character lowercase hex string.
+// Panics if key is empty — use HmacSHA512 directly if you need error handling.
 func HmacSHA512Hex(key, message []byte) string {
-	return hex.EncodeToString(HmacSHA512(key, message))
+	tag, err := HmacSHA512(key, message)
+	if err != nil {
+		panic(err)
+	}
+	return hex.EncodeToString(tag)
 }
 
 // ===========================================================================

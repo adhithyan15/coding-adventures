@@ -91,6 +91,8 @@
  *   tag = "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7"
  */
 
+import { timingSafeEqual } from "node:crypto";
+
 import { md5 } from "@coding-adventures/md5";
 import { sha1 } from "@coding-adventures/sha1";
 import { sha256 } from "@coding-adventures/sha256";
@@ -326,10 +328,14 @@ export function toHex(bytes: Uint8Array): string {
  * ```
  */
 export function verify(expected: Uint8Array, actual: Uint8Array): boolean {
+  // Hand-rolled XOR accumulators in JavaScript are not guaranteed constant-time:
+  // modern JIT compilers (V8, SpiderMonkey) can and do short-circuit loops once
+  // an accumulator is provably non-zero — defeating the timing-safety goal.
+  // Delegate to Node.js's native crypto.timingSafeEqual, which is implemented
+  // in C and guaranteed to run in time proportional to buffer length regardless
+  // of content. It throws if the two buffers have different lengths, so we
+  // check that separately (a length difference leaks 1 bit but is unavoidable
+  // without padding, and for fixed-length HMAC output this is not exploitable).
   if (expected.length !== actual.length) return false;
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected[i] ^ actual[i];
-  }
-  return diff === 0;
+  return timingSafeEqual(expected, actual);
 }

@@ -9,3 +9,9 @@ coding_adventures_md5 = { path = "../md5" }
 coding_adventures_sha1 = { path = "../sha1" }
 coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_sha512 = { path = "../sha512" }
+# subtle provides guaranteed constant-time comparison primitives.
+# A hand-rolled XOR accumulator in Rust is not sufficient: LLVM can and does
+# optimize away "dead" loop iterations once the accumulator is provably
+# non-zero in release builds. subtle::ConstantTimeEq prevents this via
+# compiler barriers.
+subtle = "2"

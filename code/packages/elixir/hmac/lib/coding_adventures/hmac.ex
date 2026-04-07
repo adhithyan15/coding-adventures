@@ -313,8 +313,18 @@ defmodule CodingAdventures.Hmac do
 
   """
   @spec secure_compare(binary, binary) :: boolean
-  def secure_compare(a, b) when is_binary(a) and is_binary(b) and byte_size(a) == byte_size(b) do
-    :crypto.hash_equals(a, b)
+  def secure_compare(a, b) when is_binary(a) and is_binary(b) do
+    # Compute whether lengths match, but don't use it to short-circuit before
+    # running the constant-time comparison — length alone is a timing oracle.
+    # We always call :crypto.hash_equals (via padding) so the code path is the
+    # same whether or not the lengths differ.
+    same_length = byte_size(a) == byte_size(b)
+    max_len = max(byte_size(a), byte_size(b))
+    a_padded = a <> :binary.copy(<<0>>, max_len - byte_size(a))
+    b_padded = b <> :binary.copy(<<0>>, max_len - byte_size(b))
+    # hash_equals is constant-time; we AND with same_length to return false
+    # when lengths differ, without having taken a short-circuit path earlier.
+    :crypto.hash_equals(a_padded, b_padded) and same_length
   end
 
   def secure_compare(_a, _b), do: false

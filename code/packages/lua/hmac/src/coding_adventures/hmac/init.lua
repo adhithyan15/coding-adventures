@@ -163,19 +163,19 @@ end
 
 --- HMAC-MD5: returns a table of 16 bytes (RFC 2202).
 function M.hmac_md5(key, message)
-    assert(#key > 0, "HMAC key must not be empty")
+    if #key == 0 then error("HMAC key must not be empty", 2) end
     return M.hmac(md5_m.digest, 64, key, message)
 end
 
 --- HMAC-SHA1: returns a table of 20 bytes (RFC 2202).
 function M.hmac_sha1(key, message)
-    assert(#key > 0, "HMAC key must not be empty")
+    if #key == 0 then error("HMAC key must not be empty", 2) end
     return M.hmac(sha1_m.digest, 64, key, message)
 end
 
 --- HMAC-SHA256: returns a table of 32 bytes (RFC 4231).
 function M.hmac_sha256(key, message)
-    assert(#key > 0, "HMAC key must not be empty")
+    if #key == 0 then error("HMAC key must not be empty", 2) end
     return M.hmac(sha256_m.sha256, 64, key, message)
 end
 
@@ -183,7 +183,7 @@ end
 -- SHA-512 uses 128-byte blocks (64-bit words), so key normalization and
 -- ipad/opad arrays are 128 bytes wide.
 function M.hmac_sha512(key, message)
-    assert(#key > 0, "HMAC key must not be empty")
+    if #key == 0 then error("HMAC key must not be empty", 2) end
     return M.hmac(sha512_m.digest, 128, key, message)
 end
 
@@ -234,6 +234,13 @@ end
 -- @param expected table — tag produced locally using the secret key
 -- @param actual   table — tag received from an untrusted source
 -- @return boolean — true iff expected and actual are byte-for-byte identical
+-- NOTE: This verify function uses a bitwise OR accumulator to avoid short-
+-- circuiting on the first mismatch. Under stock Lua 5.3/5.4 this provides
+-- timing consistency because the interpreter processes every iteration. Under
+-- LuaJIT (which traces and optimizes inner loops), timing is not guaranteed:
+-- the JIT can eliminate dead iterations once diff is non-zero. If you are
+-- running under LuaJIT in a security-sensitive context, call into a C
+-- extension (e.g. OpenSSL CRYPTO_memcmp via FFI) instead.
 function M.verify(expected, actual)
     if #expected ~= #actual then return false end
     local diff = 0

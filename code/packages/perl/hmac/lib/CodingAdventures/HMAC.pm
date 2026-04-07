@@ -74,6 +74,9 @@ package CodingAdventures::HMAC;
 
 use strict;
 use warnings;
+use bytes;        # force all length/substr operations to work on raw bytes,
+                  # not Unicode characters — critical for correct key normalization
+                  # when keys contain non-ASCII bytes (e.g. binary secrets)
 use Exporter 'import';
 
 use CodingAdventures::Md5;
