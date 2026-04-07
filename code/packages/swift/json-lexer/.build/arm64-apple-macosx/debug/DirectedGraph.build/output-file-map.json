@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/.build/arm64-apple-macosx/debug/DirectedGraph.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.dia"
+  }
+}
