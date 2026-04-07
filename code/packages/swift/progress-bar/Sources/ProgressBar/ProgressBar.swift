@@ -87,7 +87,11 @@ public final class Tracker: ProgressTracker, @unchecked Sendable {
     private let _completionCondition = NSCondition()
     private var _isFinished = false
     
-    public init(total: Int, writer: @escaping @Sendable (String) -> Void = { fputs($0, stderr) }, label: String = "") {
+    public init(total: Int, writer: @escaping @Sendable (String) -> Void = { 
+        if let data = $0.data(using: .utf8) {
+            FileHandle.standardError.write(data)
+        }
+    }, label: String = "") {
         self._total = total
         self._writer = writer
         self._label = label
