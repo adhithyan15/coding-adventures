@@ -1,265 +1,227 @@
-# BF02 — Brainfuck Bytecode Compiler
+# BF02 — Brainfuck AOT Compiler
 
 ## Overview
 
-This spec replaces `Brainfuck.Translator` with a proper bytecode compiler built on the generic `GenericCompiler` from the `bytecode_compiler` package (spec `04-bytecode-compiler.md`). The compiler walks the AST produced by `Brainfuck.Parser` (spec `BF01`) and emits bytecode using the same opcode constants and handler dispatch table already defined in `Brainfuck.Opcodes` and `Brainfuck.Handlers`.
+This spec introduces two modules that together replace `Brainfuck.Translator`:
 
-**Nothing in the VM changes.** The opcodes are identical, the handlers are identical, and the `CodeObject` format is identical. Only the front-end — the thing that produces the `CodeObject` — changes from a bespoke character scanner to a generic AST-walking compiler.
+- **`Brainfuck.AotCompiler`** — the ahead-of-time pipeline. Runs the lexer, runs the parser, configures the `GenericByteCodeCompiler`, and writes `.bytecode` + `.dbg` to disk. This is the entry point a CLI tool or build system calls.
+- **`Brainfuck.CodeGen`** — the code-generation configuration. Builds a `GenericByteCodeCompiler` (spec `04b`) pre-configured with Brainfuck's instruction map and loop handler. This is what the AotCompiler hands the AST to.
 
-This is the first end-to-end exercise of the generic compilation pipeline:
+The separation matters: `AotCompiler` owns files and pipelines; `CodeGen` owns opcodes and compilation rules. A future JIT compiler for Brainfuck would share `CodeGen` but replace `AotCompiler` entirely.
+
+## Layer Diagram
 
 ```
-source → Lexer → Parser → [THIS: GenericCompiler] → CodeObject → VM
+Brainfuck.AotCompiler          (this spec — pipeline + I/O)
+    │
+    ├─ Brainfuck.Lexer.tokenize/1          (spec BF00)
+    ├─ Brainfuck.Parser.parse_tokens/1     (spec BF01)
+    └─ Brainfuck.CodeGen.build_compiler/0  (this spec — configures GBC)
+           │
+           └─ GenericByteCodeCompiler      (spec 04b — code-generation engine)
+                  │
+                  └─ CodeObject + SidecarWriter
 ```
-
-Every future language in the toolchain follows the same path.
 
 ## Why Replace the Translator?
 
-The `Translator` module handles three concerns at once:
+The `Translator` handles three concerns at once:
 1. Tokenising source characters (implicit lexer)
-2. Recognising the loop structure (implicit parser)
-3. Emitting bytecode (compiler)
+2. Recognising the loop structure (implicit parser — bespoke bracket-stack)
+3. Emitting bytecode (actual compiler work)
 
-Separating them means:
-- Parse errors (unmatched brackets) are caught before compilation and reported with source locations
-- The compiler can be written as a simple, stateless AST visitor
-- The debug sidecar (spec `05d`) can be emitted as a natural by-product of compilation, because every `emit` call is now associated with a specific `ASTNode` that carries `start_line`/`start_column`
+After this refactor:
+- `Brainfuck.Lexer` handles (1) via a grammar file
+- `Brainfuck.Parser` handles (2) via a grammar file — and gives precise error locations for free
+- `Brainfuck.CodeGen` handles (3) via `GenericByteCodeCompiler`
 
-## The Compiler's Job
+The emitted bytecode is **byte-for-byte identical** to `Translator`'s output.
 
-The `GenericCompiler` works by registering a *handler* for each grammar rule name. When `compile/2` is called with an AST node, the compiler looks up the handler for that node's `rule_name` and calls it.
+## The Instruction Map
 
-For Brainfuck, there are four rule names from the grammar:
-- `program` — the root; compile each child instruction
-- `instruction` — a wrapper node; compile its single child
-- `loop` — emit `LOOP_START`, compile body, emit `LOOP_END`, patch jump targets
-- `command` — look at the token type and emit the corresponding opcode
-
-## Opcode Mapping
-
-The existing opcodes in `Brainfuck.Opcodes` map directly to grammar rule tokens:
-
-| Token type (from lexer) | Opcode constant | Hex |
-|---|---|---|
-| `RIGHT` | `Opcodes.right()` | `0x01` |
-| `LEFT` | `Opcodes.left()` | `0x02` |
-| `INC` | `Opcodes.inc()` | `0x03` |
-| `DEC` | `Opcodes.dec()` | `0x04` |
-| `OUTPUT` | `Opcodes.output_op()` | `0x05` |
-| `INPUT` | `Opcodes.input_op()` | `0x06` |
-| Loop open (`[`) | `Opcodes.loop_start()` | `0x07` |
-| Loop close (`]`) | `Opcodes.loop_end()` | `0x08` |
-| End of program | `Opcodes.halt()` | `0xFF` |
-
-## Jump Patching
-
-The loop instruction requires **two-pass** bytecode emission. When the compiler first sees `[`, it does not yet know where `]` will be (that depends on how many instructions are in the loop body). It must:
-
-1. Emit `LOOP_START` with a placeholder operand (`0`)
-2. Remember the bytecode offset of this instruction
-3. Compile the entire loop body
-4. Emit `LOOP_END` pointing back to the `LOOP_START` offset
-5. Go back and patch the `LOOP_START` operand with the offset of the instruction *after* `LOOP_END`
-
-The `GenericCompiler` provides `emit_jump/2` and `patch_jump/3` exactly for this purpose.
-
-```
-Before patching:               After patching:
-
-offset  opcode  operand        offset  opcode  operand
-──────  ──────  ───────        ──────  ──────  ───────
-  0     INC      nil             0     INC      nil
-  1     INC      nil             1     INC      nil
-  2     LOOP_START  0   ←─┐      2     LOOP_START  8   ──┐
-  3     RIGHT    nil        │    3     RIGHT    nil      │
-  4     INC      nil        │    4     INC      nil      │
-  5     LEFT     nil        │    5     LEFT     nil      │
-  6     DEC      nil        │    6     DEC      nil      │
-  7     LOOP_END  2  ──────┘     7     LOOP_END  2   ←──┘
-  8     HALT     nil             8     HALT     nil
-```
-
-`LOOP_START` operand = the offset to jump to when the cell is zero (skip the loop).
-`LOOP_END` operand = the offset to jump to when the cell is nonzero (repeat the loop).
-
-## Compiler Implementation
+Brainfuck's six simple commands are a 1:1 mapping from token type to opcode. With `GenericByteCodeCompiler.set_instruction_map/2` (spec `04b`), there is no need for a handler function per command — the map replaces them all:
 
 ```elixir
-defmodule Brainfuck.Compiler do
+|> GBC.set_instruction_map(%{
+  "RIGHT"  => Opcodes.right(),    # > → 0x01
+  "LEFT"   => Opcodes.left(),     # < → 0x02
+  "INC"    => Opcodes.inc(),      # + → 0x03
+  "DEC"    => Opcodes.dec(),      # - → 0x04
+  "OUTPUT" => Opcodes.output_op(),# . → 0x05
+  "INPUT"  => Opcodes.input_op(), # , → 0x06
+})
+```
+
+Only the `loop` rule needs an explicit handler because it requires two-pass jump patching — the forward jump target is unknown until the body has been compiled.
+
+## CodeGen: Configuring GenericByteCodeCompiler
+
+```elixir
+defmodule Brainfuck.CodeGen do
   @moduledoc """
-  Compiles a Brainfuck AST (from Brainfuck.Parser) into a CodeObject
-  ready for execution by the Brainfuck VM.
+  Configures a GenericByteCodeCompiler for Brainfuck.
 
-  Uses GenericCompiler from the bytecode_compiler package — the same
-  infrastructure all other languages in the toolchain will use.
+  Returns a pre-configured compiler ready to receive an AST.
+  The instruction map handles the six simple commands; the loop
+  handler manages two-pass jump patching.
 
-  Also emits a debug sidecar (.dbg) for debugger and LSP support.
+  Separating configuration from execution allows the same CodeGen
+  to be used by AotCompiler, a future JIT, and test helpers.
   """
 
-  alias CodingAdventures.BytecodeCompiler.GenericCompiler
+  alias CodingAdventures.BytecodeCompiler.GenericByteCodeCompiler, as: GBC
   alias CodingAdventures.Parser.ASTNode
   alias Brainfuck.Opcodes
 
-  @doc """
-  Compile a Brainfuck AST to a CodeObject.
-
-  Returns {code_object, sidecar_writer} so the caller can serialise
-  the sidecar alongside the bytecode.
-  """
-  @spec compile(ASTNode.t()) :: {CodeObject.t(), SidecarWriter.t()}
-  def compile(ast) do
-    compiler = GenericCompiler.new()
-    writer   = SidecarWriter.new(vm_hint: :stack)
-
-    compiler = compiler
-    |> GenericCompiler.register_rule("program",     &handle_program/3)
-    |> GenericCompiler.register_rule("instruction", &handle_instruction/3)
-    |> GenericCompiler.register_rule("loop",        &handle_loop/3)
-    |> GenericCompiler.register_rule("command",     &handle_command/3)
-
-    {code_object, compiler} = GenericCompiler.compile(compiler, ast, Opcodes.halt())
-    {code_object, compiler.sidecar_writer}
+  @spec build_compiler() :: GBC.t()
+  def build_compiler do
+    GBC.new()
+    |> GBC.set_instruction_map(%{
+      "RIGHT"  => Opcodes.right(),
+      "LEFT"   => Opcodes.left(),
+      "INC"    => Opcodes.inc(),
+      "DEC"    => Opcodes.dec(),
+      "OUTPUT" => Opcodes.output_op(),
+      "INPUT"  => Opcodes.input_op(),
+    })
+    |> GBC.register_handler("loop", &handle_loop/3)
   end
 
-  # ── Rule handlers ────────────────────────────────────────────────────────
+  # ── Loop handler ─────────────────────────────────────────────────────────
+  #
+  # The loop rule produces this bytecode:
+  #
+  #   LOOP_START  <offset after LOOP_END>   ← jump here if cell == 0
+  #   ...body instructions...
+  #   LOOP_END    <offset of LOOP_START+1>  ← jump here if cell != 0
+  #
+  # We don't know the "after LOOP_END" offset until the body is compiled,
+  # so we emit LOOP_START with a placeholder (0) and patch it afterward.
 
-  # program: compile each child instruction in sequence
-  defp handle_program(compiler, node, _code) do
-    Enum.reduce(node.children, compiler, fn child, c ->
-      case child do
-        %ASTNode{} -> GenericCompiler.compile_node(c, child)
-        _token     -> c   # skip bare tokens (EOF)
-      end
-    end)
-  end
-
-  # instruction: a thin wrapper — just compile its single ASTNode child
-  defp handle_instruction(compiler, node, _code) do
-    child = Enum.find(node.children, &match?(%ASTNode{}, &1))
-    if child, do: GenericCompiler.compile_node(compiler, child), else: compiler
-  end
-
-  # command: look at the leaf token type and emit the corresponding opcode
-  defp handle_command(compiler, node, _code) do
-    token = ASTNode.token(node) || hd(node.children)
-    opcode = token_to_opcode(token.type)
-
-    # Record source location in the sidecar before emitting
-    writer = SidecarWriter.record_location(compiler.sidecar_writer,
-      offset:  GenericCompiler.current_offset(compiler),
-      line:    token.line,
-      column:  token.column
-    )
-    compiler = %{compiler | sidecar_writer: writer}
-
-    {_idx, compiler} = GenericCompiler.emit(compiler, opcode)
-    compiler
-  end
-
-  # loop: emit LOOP_START placeholder, compile body, emit LOOP_END, patch
   defp handle_loop(compiler, node, _code) do
-    # Find the LOOP_START token for source position
-    open_token = Enum.find(node.children, fn
-      %{type: "LOOP_START"} -> true
-      _                     -> false
+    open_token  = find_token(node, "LOOP_START")
+    close_token = find_token_from_end(node, "LOOP_END")
+
+    # Record [ source position in the sidecar
+    compiler = record(compiler, open_token)
+
+    # Emit LOOP_START with a placeholder; save its index for patching
+    {start_idx, compiler} = GBC.emit_jump(compiler, Opcodes.loop_start())
+
+    # Compile body — GBC's transparent wrapper handling recurses through
+    # the intermediate instruction nodes automatically; we just need to
+    # compile the ASTNode children of the loop node
+    compiler = Enum.reduce(node.children, compiler, fn
+      %ASTNode{} = child, c -> GBC.compile_node(c, child)
+      _token,              c -> c
     end)
 
-    # Record [ position in sidecar
-    writer = SidecarWriter.record_location(compiler.sidecar_writer,
-      offset:  GenericCompiler.current_offset(compiler),
-      line:    open_token.line,
-      column:  open_token.column
-    )
-    compiler = %{compiler | sidecar_writer: writer}
+    # Record ] source position
+    compiler = record(compiler, close_token)
 
-    # Emit LOOP_START with a placeholder operand; remember its index
-    {loop_start_idx, compiler} = GenericCompiler.emit_jump(compiler, Opcodes.loop_start())
-
-    # Compile the body (all ASTNode children between [ and ])
-    compiler = Enum.reduce(node.children, compiler, fn child, c ->
-      case child do
-        %ASTNode{} -> GenericCompiler.compile_node(c, child)
-        _token     -> c
-      end
-    end)
-
-    # Find the LOOP_END token for source position
-    close_token = Enum.find(Enum.reverse(node.children), fn
-      %{type: "LOOP_END"} -> true
-      _                   -> false
-    end)
-
-    # Record ] position in sidecar
-    writer = SidecarWriter.record_location(compiler.sidecar_writer,
-      offset:  GenericCompiler.current_offset(compiler),
-      line:    close_token.line,
-      column:  close_token.column
-    )
-    compiler = %{compiler | sidecar_writer: writer}
-
-    # Emit LOOP_END pointing back to just after LOOP_START
-    loop_body_start = loop_start_idx + 1
-    {_idx, compiler} = GenericCompiler.emit(compiler, Opcodes.loop_end(), loop_body_start)
+    # Emit LOOP_END pointing back to the first instruction in the body
+    body_start = start_idx + 1
+    {_idx, compiler} = GBC.emit(compiler, Opcodes.loop_end(), body_start)
 
     # Patch LOOP_START to point to the instruction after LOOP_END
-    after_loop = GenericCompiler.current_offset(compiler)
-    GenericCompiler.patch_jump(compiler, loop_start_idx, after_loop)
+    GBC.patch_jump(compiler, start_idx, GBC.current_offset(compiler))
   end
 
-  # ── Private helpers ──────────────────────────────────────────────────────
+  defp record(compiler, token) do
+    writer = SidecarWriter.record_location(compiler.sidecar_writer,
+      offset: GBC.current_offset(compiler),
+      line:   token.line,
+      column: token.column
+    )
+    %{compiler | sidecar_writer: writer}
+  end
 
-  @token_to_opcode %{
-    "RIGHT"  => Opcodes.right(),
-    "LEFT"   => Opcodes.left(),
-    "INC"    => Opcodes.inc(),
-    "DEC"    => Opcodes.dec(),
-    "OUTPUT" => Opcodes.output_op(),
-    "INPUT"  => Opcodes.input_op()
-  }
+  defp find_token(node, type) do
+    Enum.find(node.children, &match?(%{type: ^type}, &1))
+  end
 
-  defp token_to_opcode(type), do: Map.fetch!(@token_to_opcode, type)
+  defp find_token_from_end(node, type) do
+    node.children |> Enum.reverse() |> Enum.find(&match?(%{type: ^type}, &1))
+  end
 end
 ```
 
-## Convenience Entry Points
+## AotCompiler: The End-to-End Pipeline
 
 ```elixir
-defmodule Brainfuck.Compiler do
-  # ...above...
+defmodule Brainfuck.AotCompiler do
+  @moduledoc """
+  Ahead-of-time compiler for Brainfuck.
 
-  @doc "Compile source code to a CodeObject in one step."
-  @spec compile_source(String.t()) ::
+  Orchestrates the full pipeline:
+    source string
+      → Brainfuck.Lexer
+      → Brainfuck.Parser
+      → Brainfuck.CodeGen (via GenericByteCodeCompiler)
+      → CodeObject + SidecarWriter
+
+  Optionally writes .bytecode and .dbg files to disk.
+  """
+
+  alias CodingAdventures.BytecodeCompiler.GenericByteCodeCompiler, as: GBC
+  alias Brainfuck.Opcodes
+
+  @doc "Compile source to a CodeObject and sidecar (in memory)."
+  @spec compile(String.t()) ::
     {:ok, CodeObject.t(), SidecarWriter.t()} | {:error, String.t()}
-  def compile_source(source) do
-    with {:ok, ast} <- Brainfuck.Parser.parse(source) do
-      {code_object, sidecar} = compile(ast)
-      {:ok, code_object, sidecar}
+  def compile(source) do
+    with {:ok, tokens} <- Brainfuck.Lexer.tokenize(source),
+         {:ok, ast}    <- Brainfuck.Parser.parse_tokens(tokens) do
+      compiler = Brainfuck.CodeGen.build_compiler()
+      {code_object, compiler} = GBC.compile(compiler, ast, Opcodes.halt())
+      {:ok, code_object, compiler.sidecar_writer}
     end
   end
 
-  @doc "Compile source and write both bytecode and sidecar to disk."
+  @doc "Compile source and write .bytecode + .dbg files to disk."
   @spec compile_to_files(String.t(), output_path :: String.t()) ::
     :ok | {:error, String.t()}
   def compile_to_files(source, output_path) do
-    with {:ok, code_object, sidecar} <- compile_source(source) do
-      bytecode_path = output_path <> ".bytecode"
-      sidecar_path  = output_path <> ".dbg"
-
-      :ok = CodeObject.write_file(code_object, bytecode_path)
-      :ok = SidecarWriter.write_file(sidecar, sidecar_path)
+    with {:ok, code_object, sidecar} <- compile(source) do
+      :ok = CodeObject.write_file(code_object, output_path <> ".bytecode")
+      :ok = SidecarWriter.write_file(sidecar,   output_path <> ".dbg")
     end
   end
 end
 ```
 
-## What the VM Sees
+## Jump Patching Visualised
 
-The `CodeObject` produced is identical to what `Translator` produced. The VM does not know or care whether it came from `Translator` or `Compiler`. For the program `++[>+<-]`:
+For `++[>+<-]`:
 
 ```
+Step 1: compile ++
+  0  INC   nil
+  1  INC   nil
+
+Step 2: enter loop — emit LOOP_START with placeholder
+  2  LOOP_START  0   ← placeholder, saved as start_idx=2
+
+Step 3: compile >+<-
+  3  RIGHT  nil
+  4  INC    nil
+  5  LEFT   nil
+  6  DEC    nil
+
+Step 4: emit LOOP_END pointing back to body_start (start_idx+1 = 3)
+  7  LOOP_END  3
+
+Step 5: patch LOOP_START — current_offset() is now 8
+  2  LOOP_START  8   ← patched: skip to offset 8 when cell is zero
+
+Step 6: emit HALT
+  8  HALT   nil
+```
+
+Final instruction stream:
+```
 Index  Opcode      Operand  Source
-─────  ──────────  ───────  ───────────────────
+─────  ──────────  ───────  ──────────────────
 0      INC         nil      line 1, col 1  (+)
 1      INC         nil      line 1, col 2  (+)
 2      LOOP_START  8        line 1, col 3  ([)
@@ -267,52 +229,34 @@ Index  Opcode      Operand  Source
 4      INC         nil      line 1, col 5  (+)
 5      LEFT        nil      line 1, col 6  (<)
 6      DEC         nil      line 1, col 7  (-)
-7      LOOP_END    2        line 1, col 8  (])
+7      LOOP_END    3        line 1, col 8  (])
 8      HALT        nil      —
 ```
 
-The sidecar's line table records a row for each of offsets 0–7. When a debugger stops at offset 4, it looks up offset 4 in the sidecar and reports "line 1, column 5" — the `+` inside the loop.
-
 ## Migrating from Translator
 
-The public API that callers use changes minimally. Before:
+| Before | After |
+|---|---|
+| `Brainfuck.Translator.translate(source)` | `Brainfuck.AotCompiler.compile(source)` |
+| Returns `CodeObject` | Returns `{:ok, CodeObject, Sidecar}` |
 
-```elixir
-# Old path via Translator
-code_object = Brainfuck.Translator.translate(source)
-result = Brainfuck.VM.execute_brainfuck(source)
-```
-
-After:
-
-```elixir
-# New path via Lexer → Parser → Compiler
-{:ok, code_object, _sidecar} = Brainfuck.Compiler.compile_source(source)
-
-# The VM convenience function is updated internally — callers unchanged
-result = Brainfuck.VM.execute_brainfuck(source)
-```
-
-`Brainfuck.VM.execute_brainfuck/2` is updated to call `Compiler.compile_source` instead of `Translator.translate`. External callers of `execute_brainfuck` see no change.
-
-Callers that call `Translator.translate` directly should migrate to `Compiler.compile_source`.
+`Brainfuck.VM.execute_brainfuck/2` is updated internally to call `AotCompiler.compile`. External callers of `execute_brainfuck` see no change.
 
 ## Files Changed
 
 | File | Change |
 |---|---|
-| `code/grammars/brainfuck.tokens` | **New** — lexer grammar |
-| `code/grammars/brainfuck.grammar` | **New** — parser grammar |
-| `lib/brainfuck/lexer.ex` | **New** — `Brainfuck.Lexer` module |
-| `lib/brainfuck/parser.ex` | **New** — `Brainfuck.Parser` module |
-| `lib/brainfuck/compiler.ex` | **New** — `Brainfuck.Compiler` module |
-| `lib/brainfuck/translator.ex` | **Deleted** — superseded by compiler |
-| `lib/brainfuck/vm.ex` | **Updated** — call compiler instead of translator |
-| `lib/brainfuck.ex` | **Updated** — re-export compiler entry points |
-| `test/brainfuck/translator_test.exs` | **Deleted** — superseded |
+| `code/grammars/brainfuck.tokens` | **New** — lexer grammar (spec BF00) |
+| `code/grammars/brainfuck.grammar` | **New** — parser grammar (spec BF01) |
+| `lib/brainfuck/lexer.ex` | **New** — `Brainfuck.Lexer` |
+| `lib/brainfuck/parser.ex` | **New** — `Brainfuck.Parser` |
+| `lib/brainfuck/code_gen.ex` | **New** — `Brainfuck.CodeGen` |
+| `lib/brainfuck/aot_compiler.ex` | **New** — `Brainfuck.AotCompiler` |
+| `lib/brainfuck/translator.ex` | **Deleted** |
+| `lib/brainfuck/vm.ex` | **Updated** — call `AotCompiler` instead of `Translator` |
+| `lib/brainfuck.ex` | **Updated** — export `AotCompiler` entry points |
+| `test/brainfuck/translator_test.exs` | **Deleted** |
 | `test/brainfuck/lexer_test.exs` | **New** |
 | `test/brainfuck/parser_test.exs` | **New** |
-| `test/brainfuck/compiler_test.exs` | **New** |
-| `test/brainfuck/e2e_test.exs` | **Unchanged** — all existing e2e tests still pass |
-
-The existing end-to-end tests (`e2e_test.exs`) are the acceptance criterion: every program that ran correctly before must produce the same output after this refactor. Since the emitted bytecode is byte-for-byte identical (same opcodes, same operands, same jump targets), the VM behaviour is guaranteed unchanged.
+| `test/brainfuck/aot_compiler_test.exs` | **New** |
+| `test/brainfuck/e2e_test.exs` | **Unchanged** — acceptance criterion |
