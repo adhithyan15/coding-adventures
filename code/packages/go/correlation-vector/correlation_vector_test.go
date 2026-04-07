@@ -953,3 +953,345 @@ func TestSameDeterministicBase(t *testing.T) {
 		t.Errorf("same origin produced different bases: %q vs %q", base1, base2)
 	}
 }
+
+// ── Coverage Boosters for Uncovered Paths ────────────────────────────────────
+
+// TestContributeToMissingCV verifies that contributing to a CV ID that was
+// never stored (e.g., log was disabled at creation) silently returns nil
+// rather than panicking or erroring.
+func TestContributeToMissingCV(t *testing.T) {
+	log := NewCVLog(true)
+	// "fake.1" was never created in this log.
+	err := log.Contribute("fake.1", "parser", "parsed", nil)
+	if err != nil {
+		t.Errorf("Contribute to missing CV should return nil, got: %v", err)
+	}
+}
+
+// TestPassthroughMissingCV verifies that Passthrough on an unknown CV ID
+// is a silent no-op rather than a panic.
+func TestPassthroughMissingCV(t *testing.T) {
+	log := NewCVLog(true)
+	// Should not panic or error.
+	log.Passthrough("nonexistent.1", "type_checker")
+}
+
+// TestDeleteMissingCV verifies that calling Delete on an unknown CV ID is
+// a silent no-op.
+func TestDeleteMissingCV(t *testing.T) {
+	log := NewCVLog(true)
+	// Should not panic or error.
+	log.Delete("nonexistent.1", "dce", "gone", nil)
+}
+
+// TestDeserializeInvalidJSON verifies that DeserializeFromJSON returns a
+// non-nil error for malformed JSON input.
+func TestDeserializeInvalidJSON(t *testing.T) {
+	_, err := DeserializeFromJSON("{invalid json}")
+	if err == nil {
+		t.Error("DeserializeFromJSON should return error for invalid JSON")
+	}
+}
+
+// TestDeserializeEmptyObject verifies that DeserializeFromJSON with an
+// empty object produces an empty CVLog rather than an error.
+func TestDeserializeEmptyObject(t *testing.T) {
+	log, err := DeserializeFromJSON(`{"entries":{},"pass_order":[],"enabled":true}`)
+	if err != nil {
+		t.Fatalf("DeserializeFromJSON returned error: %v", err)
+	}
+	if len(log.Entries) != 0 {
+		t.Errorf("expected 0 entries, got %d", len(log.Entries))
+	}
+	if !log.Enabled {
+		t.Errorf("Enabled should be true")
+	}
+}
+
+// TestDeserializeWithAllFields verifies that DeserializeFromJSON correctly
+// parses entries with all fields populated: origin with timestamp, multiple
+// contributions with metadata, and a deletion record.
+func TestDeserializeWithAllFields(t *testing.T) {
+	raw := `{
+		"entries": {
+			"aabbccdd.1": {
+				"id": "aabbccdd.1",
+				"parent_ids": [],
+				"origin": {
+					"source": "test.ts",
+					"location": "1:0",
+					"timestamp": "2024-01-01T00:00:00Z",
+					"meta": {"env": "test"}
+				},
+				"contributions": [
+					{"source": "parser", "tag": "created", "meta": {"token": "ID"}},
+					{"source": "scope", "tag": "resolved", "meta": {}}
+				],
+				"deleted": {
+					"source": "dce",
+					"reason": "dead code",
+					"meta": {"note": "unused"}
+				}
+			}
+		},
+		"pass_order": ["parser", "scope"],
+		"enabled": true
+	}`
+
+	log, err := DeserializeFromJSON(raw)
+	if err != nil {
+		t.Fatalf("DeserializeFromJSON: %v", err)
+	}
+
+	entry := log.Get("aabbccdd.1")
+	if entry == nil {
+		t.Fatal("entry should not be nil")
+	}
+	if entry.Origin == nil {
+		t.Fatal("origin should not be nil")
+	}
+	if entry.Origin.Timestamp != "2024-01-01T00:00:00Z" {
+		t.Errorf("timestamp = %q", entry.Origin.Timestamp)
+	}
+	if v, ok := entry.Origin.Meta["env"]; !ok || v != "test" {
+		t.Errorf("origin.Meta[env] = %v", entry.Origin.Meta["env"])
+	}
+	if len(entry.Contributions) != 2 {
+		t.Errorf("expected 2 contributions, got %d", len(entry.Contributions))
+	}
+	if entry.Deleted == nil {
+		t.Fatal("deleted should not be nil")
+	}
+	if entry.Deleted.Reason != "dead code" {
+		t.Errorf("deleted.Reason = %q", entry.Deleted.Reason)
+	}
+}
+
+// TestRebuildCountersPreservesRootIDs verifies that after deserialisation,
+// a root ID counter is correctly rebuilt so the next Create for the same
+// origin produces a new ID rather than reusing the deserialized one.
+func TestRebuildCountersPreservesRootIDs(t *testing.T) {
+	log := NewCVLog(true)
+	o := origin("file.ts", "1:0")
+	cv1 := log.Create(o) // e.g. "a3f1b2c4.1"
+	cv2 := log.Create(o) // e.g. "a3f1b2c4.2"
+
+	jsonStr, _ := log.ToJSONString()
+	restored, _ := DeserializeFromJSON(jsonStr)
+
+	// After deserialization, the next create should give "a3f1b2c4.3", not .1 or .2.
+	cv3 := restored.Create(o)
+	if cv3 == cv1 || cv3 == cv2 {
+		t.Errorf("post-deserialization ID %q collides with existing %q or %q", cv3, cv1, cv2)
+	}
+}
+
+// TestAncestorsBranchingMerge verifies that Ancestors correctly handles a
+// merged CV with two branches: both branches' ancestors are returned.
+func TestAncestorsBranchingMerge(t *testing.T) {
+	log := NewCVLog(true)
+	rootA := log.Create(origin("a.ts", "0:0"))
+	rootB := log.Create(origin("b.ts", "0:0"))
+
+	childA := log.Derive(rootA, nil)
+	childB := log.Derive(rootB, nil)
+
+	merged := log.Merge([]string{childA, childB}, nil)
+
+	ancestors := log.Ancestors(merged)
+	// Should include childA, childB, rootA, rootB (in some BFS order).
+	for _, expected := range []string{childA, childB, rootA, rootB} {
+		if !containsString(ancestors, expected) {
+			t.Errorf("Ancestors(%q) missing %q: %v", merged, expected, ancestors)
+		}
+	}
+}
+
+// TestDeserializeMissingFields verifies that DeserializeFromJSON handles
+// entries that are missing optional fields (contributions, origin) gracefully.
+func TestDeserializeMissingFields(t *testing.T) {
+	// Minimal entry with only required fields.
+	raw := `{
+		"entries": {
+			"00000000.1": {
+				"id": "00000000.1",
+				"parent_ids": ["00000000.0"],
+				"contributions": [],
+				"deleted": null
+			}
+		},
+		"pass_order": [],
+		"enabled": false
+	}`
+
+	log, err := DeserializeFromJSON(raw)
+	if err != nil {
+		t.Fatalf("DeserializeFromJSON returned error: %v", err)
+	}
+	entry := log.Get("00000000.1")
+	if entry == nil {
+		t.Fatal("entry is nil")
+	}
+	if entry.Origin != nil {
+		t.Errorf("expected nil origin for entry without origin field, got %v", entry.Origin)
+	}
+}
+
+// ── Capability Cage Framework Tests ──────────────────────────────────────────
+//
+// The gen_capabilities.go file provides the Operation/ResultFactory framework
+// that is required by every package in this monorepo. These tests exercise the
+// framework to ensure it works correctly and to maintain coverage.
+
+// TestOperationSuccess verifies the happy path: a successful callback returns
+// the value and nil error.
+func TestOperationSuccess(t *testing.T) {
+	op := StartNew[int]("test.Success", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			return rf.Generate(true, false, 42)
+		})
+	val, err := op.GetResult()
+	if err != nil {
+		t.Fatalf("GetResult returned error: %v", err)
+	}
+	if val != 42 {
+		t.Errorf("GetResult returned %d, want 42", val)
+	}
+}
+
+// TestOperationExpectedFailure verifies that an expected failure (DidSucceed=false)
+// causes GetResult to return an error.
+func TestOperationExpectedFailure(t *testing.T) {
+	op := StartNew[string]("test.Failure", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Generate(false, false, "")
+		})
+	_, err := op.GetResult()
+	if err == nil {
+		t.Error("expected error for failed operation, got nil")
+	}
+}
+
+// TestOperationTypedFailure verifies that rf.Fail passes the typed error
+// through GetResult unchanged, so callers can use errors.As.
+func TestOperationTypedFailure(t *testing.T) {
+	sentinel := fmt.Errorf("sentinel error")
+	op := StartNew[string]("test.TypedFailure", "",
+		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
+			return rf.Fail("", sentinel)
+		})
+	_, err := op.GetResult()
+	if err != sentinel {
+		t.Errorf("GetResult returned %v, want sentinel error", err)
+	}
+}
+
+// TestOperationPanic verifies that a panicking callback returns the fallback
+// value and a non-nil error (panic is caught and converted to an error).
+func TestOperationPanic(t *testing.T) {
+	op := StartNew[int]("test.Panic", -1,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			panic("unexpected panic")
+		})
+	val, err := op.GetResult()
+	if err == nil {
+		t.Error("expected error when callback panics, got nil")
+	}
+	if val != -1 {
+		t.Errorf("expected fallback -1, got %d", val)
+	}
+}
+
+// TestOperationPanicOnUnexpected verifies that PanicOnUnexpected causes the
+// panic to propagate rather than being caught.
+func TestOperationPanicOnUnexpected(t *testing.T) {
+	op := StartNew[int]("test.RePanic", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			panic("should propagate")
+		}).PanicOnUnexpected()
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Error("expected panic to propagate, but it did not")
+		}
+	}()
+	op.GetResult()
+}
+
+// TestOperationAddProperty verifies that AddProperty can be called without
+// panicking. Properties are used for structured logging.
+func TestOperationAddProperty(t *testing.T) {
+	op := StartNew[bool]("test.AddProperty", false,
+		func(op *Operation[bool], rf *ResultFactory[bool]) *OperationResult[bool] {
+			op.AddProperty("cv_id", "a3f1.1")
+			op.AddProperty("count", 42)
+			return rf.Generate(true, false, true)
+		})
+	val, err := op.GetResult()
+	if err != nil {
+		t.Fatalf("GetResult: %v", err)
+	}
+	if !val {
+		t.Error("expected true from callback")
+	}
+}
+
+// TestCapabilityViolationError verifies the error type's message format.
+func TestCapabilityViolationError(t *testing.T) {
+	e := &_capabilityViolationError{
+		category:  "file",
+		action:    "read",
+		requested: "/etc/passwd",
+	}
+	msg := e.Error()
+	if !strings.Contains(msg, "capability violation") {
+		t.Errorf("error message missing 'capability violation': %q", msg)
+	}
+	if !strings.Contains(msg, "/etc/passwd") {
+		t.Errorf("error message missing requested resource: %q", msg)
+	}
+}
+
+// TestResultFactoryGenerate verifies that ResultFactory.Generate correctly sets
+// the DidSucceed flag and ReturnValue.
+func TestResultFactoryGenerate(t *testing.T) {
+	rf := &ResultFactory[string]{}
+	result := rf.Generate(true, false, "hello")
+	if !result.DidSucceed {
+		t.Error("DidSucceed should be true")
+	}
+	if result.ReturnValue != "hello" {
+		t.Errorf("ReturnValue = %q, want %q", result.ReturnValue, "hello")
+	}
+}
+
+// TestResultFactoryFail verifies that ResultFactory.Fail correctly sets the Err field.
+func TestResultFactoryFail(t *testing.T) {
+	rf := &ResultFactory[int]{}
+	sentinel := fmt.Errorf("sentinel")
+	result := rf.Fail(0, sentinel)
+	if result.DidSucceed {
+		t.Error("DidSucceed should be false for Fail")
+	}
+	if result.Err != sentinel {
+		t.Errorf("Err = %v, want sentinel", result.Err)
+	}
+}
+
+// TestToJSONStringReturnsValidJSON verifies that ToJSONString produces valid
+// JSON (parseable back without error by DeserializeFromJSON).
+func TestToJSONStringReturnsValidJSON(t *testing.T) {
+	log := NewCVLog(true)
+	log.Create(origin("x", "y"))
+
+	jsonStr, err := log.ToJSONString()
+	if err != nil {
+		t.Fatalf("ToJSONString: %v", err)
+	}
+
+	// Verify it's parseable by deserializing it.
+	_, err = DeserializeFromJSON(jsonStr)
+	if err != nil {
+		t.Errorf("ToJSONString produced JSON that DeserializeFromJSON can't parse: %v", err)
+	}
+}

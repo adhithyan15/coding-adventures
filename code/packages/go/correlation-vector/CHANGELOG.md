@@ -22,15 +22,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - `Passthrough(cvID, source string)` — record an identity contribution.
 - Five query operations: `Get`, `Ancestors`, `Descendants`, `History`,
   `Lineage`.
-- JSON serialisation via `Serialize() (jsonvalue.Value, error)`,
-  `ToJSONString() (string, error)`, and `FromJSONString(s string) (*CVLog, error)`.
+- JSON serialisation via `Serialize() map[string]any`,
+  `ToJSONString() (string, error)`, and `DeserializeFromJSON(s string) (*CVLog, error)`.
 - `enabled` flag for zero-overhead tracing in production (`NewCVLog(enabled bool)`).
 - ID generation using `code/packages/go/sha256` (repo's own SHA-256) for
   deterministic, collision-resistant base segments.
 - `PassOrder` slice tracking first-seen order of contributing sources.
 - Counter reconstruction on deserialisation so new IDs never collide with
   restored ones.
-- 41 tests covering all seven spec groups:
+- 55 tests covering all seven spec groups:
   root lifecycle, derivation, merging, deep ancestry, disabled log,
   serialisation roundtrip, and ID uniqueness (10,000 creates).
 - Integration stress-test of the repo's `json-serializer` and `sha256` packages.

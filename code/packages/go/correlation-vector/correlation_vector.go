@@ -73,7 +73,6 @@ package correlationvector
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
 	"strings"
 
 	sha256 "github.com/adhithyan15/coding-adventures/code/packages/go/sha256"
@@ -1001,15 +1000,3 @@ func (l *CVLog) rebuildCounters() {
 	}
 }
 
-// ── Sorted helper for deterministic Descendants ───────────────────────────────
-
-// sortedEntryIDs returns the keys of l.Entries in sorted order.
-// Used internally to produce deterministic output from map iteration.
-func (l *CVLog) sortedEntryIDs() []string {
-	ids := make([]string, 0, len(l.Entries))
-	for id := range l.Entries {
-		ids = append(ids, id)
-	}
-	sort.Strings(ids)
-	return ids
-}
