@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/.build/arm64-apple-macosx/debug/JsonParser.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-parser/Sources/JsonParser/JsonParser.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.dia"
+  }
+}
