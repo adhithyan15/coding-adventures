@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/hmac",
+  "version": "0.1.0",
+  "description": "HMAC (Hash-based Message Authentication Code) — RFC 2104 / FIPS 198-1 — implemented from scratch",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/md5": "file:../md5",
+    "@coding-adventures/sha1": "file:../sha1",
+    "@coding-adventures/sha256": "file:../sha256",
+    "@coding-adventures/sha512": "file:../sha512"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

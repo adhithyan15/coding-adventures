@@ -1,0 +1,1801 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cover/Elixir.CodingAdventures.Hmac.html</title>
+<style>/*
+ %CopyrightBegin%
+
+ SPDX-License-Identifier: Apache-2.0
+
+ Copyright Milton Mazzarri <me@milmazz.uno>
+ Copyright Ericsson AB 2018-2025. All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ %CopyrightEnd%
+*/
+
+body {
+  font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #000;
+  border-top: 2px solid #ddd;
+  background-color: #fff;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  font-weight: 100;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+
+h1 code {
+  font-size: 0.96em;
+}
+
+code {
+  font: 12px monospace;
+}
+
+footer {
+  background: #eee;
+  width: 100%;
+  padding: 10px 0;
+  text-align: right;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex: 1;
+  order: 2;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  border: 1px solid #cbcbcb;
+  color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+table thead {
+  display: none;
+}
+table td.line,
+table td.line a,
+table td.hits {
+  width: 20px;
+  background: #eaeaea;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 0 10px;
+  color: #949494;
+}
+table td.hits {
+  width: 10px;
+  text-align: right;
+  padding: 2px 5px;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+}
+tr.miss td.line,
+tr.miss td.line a,
+tr.miss td.hits {
+  background-color: #ffdce0;
+  border-color: #fdaeb7;
+}
+tr.miss td {
+  background-color: #ffeef0;
+}
+tr.hit td.line,
+tr.hit td.line a,
+tr.hit td.hits {
+  background-color: #cdffd8;
+  border-color: #bef5cb;
+}
+tr.hit td {
+  background-color: #e6ffed;
+}
+td.source {
+  padding-left: 15px;
+  line-height: 15px;
+  white-space: pre;
+  font: 12px monospace;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(95%);
+    background-color: #000000;
+  }
+  a:link {
+    color: #2B507D;
+  }
+  a:visited, a:active {
+    color: #85ABD5;
+  }
+}
+</style>
+</head>
+<body>
+<h1><code>cover/Elixir.CodingAdventures.Hmac.html</code></h1>
+<footer><p>File generated from <code>/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/elixir/hmac/lib/coding_adventures/hmac.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-04-06 at 18:43:49</p></footer>
+<table>
+<tbody>
+<tr>
+<td class="line" id="L1"><a href="#L1">1</a></td>
+<td class="hits"></td>
+<td class="source"><code>defmodule CodingAdventures.Hmac do</code></td>
+</tr>
+<tr>
+<td class="line" id="L2"><a href="#L2">2</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @moduledoc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L3"><a href="#L3">3</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC (Hash-based Message Authentication Code) — RFC 2104 / FIPS 198-1.</code></td>
+</tr>
+<tr>
+<td class="line" id="L4"><a href="#L4">4</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L5"><a href="#L5">5</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## What Is HMAC?</code></td>
+</tr>
+<tr>
+<td class="line" id="L6"><a href="#L6">6</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L7"><a href="#L7">7</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC takes a secret key and a message and produces a fixed-size authentication</code></td>
+</tr>
+<tr>
+<td class="line" id="L8"><a href="#L8">8</a></td>
+<td class="hits"></td>
+<td class="source"><code>  tag. It is used to verify BOTH the integrity (the message hasn't changed) AND</code></td>
+</tr>
+<tr>
+<td class="line" id="L9"><a href="#L9">9</a></td>
+<td class="hits"></td>
+<td class="source"><code>  the authenticity (the sender knows the secret key) of a message.</code></td>
+</tr>
+<tr>
+<td class="line" id="L10"><a href="#L10">10</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L11"><a href="#L11">11</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC is at the heart of:</code></td>
+</tr>
+<tr>
+<td class="line" id="L12"><a href="#L12">12</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - TLS 1.2 handshakes (HMAC-SHA256 for PRF)</code></td>
+</tr>
+<tr>
+<td class="line" id="L13"><a href="#L13">13</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - JWT (JSON Web Token) signatures (`HS256`, `HS512`)</code></td>
+</tr>
+<tr>
+<td class="line" id="L14"><a href="#L14">14</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - WPA2 Wi-Fi authentication (HMAC-SHA1 in PBKDF2)</code></td>
+</tr>
+<tr>
+<td class="line" id="L15"><a href="#L15">15</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - TOTP / HOTP one-time passwords (RFC 6238, RFC 4226)</code></td>
+</tr>
+<tr>
+<td class="line" id="L16"><a href="#L16">16</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - SSH MAC validation</code></td>
+</tr>
+<tr>
+<td class="line" id="L17"><a href="#L17">17</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - S3 / AWS Signature Version 4 request signing</code></td>
+</tr>
+<tr>
+<td class="line" id="L18"><a href="#L18">18</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L19"><a href="#L19">19</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Why Not hash(key || message)?</code></td>
+</tr>
+<tr>
+<td class="line" id="L20"><a href="#L20">20</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L21"><a href="#L21">21</a></td>
+<td class="hits"></td>
+<td class="source"><code>  A naive approach would be `hash(key || message)`. This is vulnerable to a</code></td>
+</tr>
+<tr>
+<td class="line" id="L22"><a href="#L22">22</a></td>
+<td class="hits"></td>
+<td class="source"><code>  **length extension attack**: anyone who knows the hash of a message can compute</code></td>
+</tr>
+<tr>
+<td class="line" id="L23"><a href="#L23">23</a></td>
+<td class="hits"></td>
+<td class="source"><code>  the hash of a longer message without knowing the key.</code></td>
+</tr>
+<tr>
+<td class="line" id="L24"><a href="#L24">24</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L25"><a href="#L25">25</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Example with SHA-256 (a Merkle-Damgård construction):</code></td>
+</tr>
+<tr>
+<td class="line" id="L26"><a href="#L26">26</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L27"><a href="#L27">27</a></td>
+<td class="hits"></td>
+<td class="source"><code>  known: SHA-256(key || "GET /admin")</code></td>
+</tr>
+<tr>
+<td class="line" id="L28"><a href="#L28">28</a></td>
+<td class="hits"></td>
+<td class="source"><code>  attacker can compute: SHA-256(key || "GET /admin" || padding || "/delete")</code></td>
+</tr>
+<tr>
+<td class="line" id="L29"><a href="#L29">29</a></td>
+<td class="hits"></td>
+<td class="source"><code>  without knowing `key`</code></td>
+</tr>
+<tr>
+<td class="line" id="L30"><a href="#L30">30</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L31"><a href="#L31">31</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L32"><a href="#L32">32</a></td>
+<td class="hits"></td>
+<td class="source"><code>  This works because Merkle-Damgård hashes resume from the state left by the</code></td>
+</tr>
+<tr>
+<td class="line" id="L33"><a href="#L33">33</a></td>
+<td class="hits"></td>
+<td class="source"><code>  previous block — if you know the state after hashing `key || message`, you can</code></td>
+</tr>
+<tr>
+<td class="line" id="L34"><a href="#L34">34</a></td>
+<td class="hits"></td>
+<td class="source"><code>  just add more blocks.</code></td>
+</tr>
+<tr>
+<td class="line" id="L35"><a href="#L35">35</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L36"><a href="#L36">36</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## The HMAC Construction (RFC 2104)</code></td>
+</tr>
+<tr>
+<td class="line" id="L37"><a href="#L37">37</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L38"><a href="#L38">38</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC defeats length extension by using two nested hash calls with different keys:</code></td>
+</tr>
+<tr>
+<td class="line" id="L39"><a href="#L39">39</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L40"><a href="#L40">40</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L41"><a href="#L41">41</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC(K, M) = H((K' XOR opad) || H((K' XOR ipad) || M))</code></td>
+</tr>
+<tr>
+<td class="line" id="L42"><a href="#L42">42</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L43"><a href="#L43">43</a></td>
+<td class="hits"></td>
+<td class="source"><code>  where:</code></td>
+</tr>
+<tr>
+<td class="line" id="L44"><a href="#L44">44</a></td>
+<td class="hits"></td>
+<td class="source"><code>    K'    = key padded (or hashed) to the hash's block size</code></td>
+</tr>
+<tr>
+<td class="line" id="L45"><a href="#L45">45</a></td>
+<td class="hits"></td>
+<td class="source"><code>    ipad  = 0x36 repeated to block size  ("inner pad")</code></td>
+</tr>
+<tr>
+<td class="line" id="L46"><a href="#L46">46</a></td>
+<td class="hits"></td>
+<td class="source"><code>    opad  = 0x5C repeated to block size  ("outer pad")</code></td>
+</tr>
+<tr>
+<td class="line" id="L47"><a href="#L47">47</a></td>
+<td class="hits"></td>
+<td class="source"><code>    H     = the underlying hash function (MD5, SHA-1, SHA-256, SHA-512)</code></td>
+</tr>
+<tr>
+<td class="line" id="L48"><a href="#L48">48</a></td>
+<td class="hits"></td>
+<td class="source"><code>    ||    = concatenation</code></td>
+</tr>
+<tr>
+<td class="line" id="L49"><a href="#L49">49</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L50"><a href="#L50">50</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L51"><a href="#L51">51</a></td>
+<td class="hits"></td>
+<td class="source"><code>  **Why two nested calls work:**</code></td>
+</tr>
+<tr>
+<td class="line" id="L52"><a href="#L52">52</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L53"><a href="#L53">53</a></td>
+<td class="hits"></td>
+<td class="source"><code>  The inner call `H(ipad_key || M)` produces a hash that commits to the message</code></td>
+</tr>
+<tr>
+<td class="line" id="L54"><a href="#L54">54</a></td>
+<td class="hits"></td>
+<td class="source"><code>  under a modified key. The outer call `H(opad_key || inner)` wraps that result</code></td>
+</tr>
+<tr>
+<td class="line" id="L55"><a href="#L55">55</a></td>
+<td class="hits"></td>
+<td class="source"><code>  under a DIFFERENT modified key. An attacker cannot extend the message because</code></td>
+</tr>
+<tr>
+<td class="line" id="L56"><a href="#L56">56</a></td>
+<td class="hits"></td>
+<td class="source"><code>  they would need to break into the outer hash, which they cannot do without</code></td>
+</tr>
+<tr>
+<td class="line" id="L57"><a href="#L57">57</a></td>
+<td class="hits"></td>
+<td class="source"><code>  knowing `opad_key`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L58"><a href="#L58">58</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L59"><a href="#L59">59</a></td>
+<td class="hits"></td>
+<td class="source"><code>  **The constants 0x36 and 0x5C:**</code></td>
+</tr>
+<tr>
+<td class="line" id="L60"><a href="#L60">60</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L61"><a href="#L61">61</a></td>
+<td class="hits"></td>
+<td class="source"><code>  These values were chosen by Hugo Krawczyk (the main HMAC designer) because</code></td>
+</tr>
+<tr>
+<td class="line" id="L62"><a href="#L62">62</a></td>
+<td class="hits"></td>
+<td class="source"><code>  they are Hamming-distance-maximized hex values: 0x36 = 0011_0110 and</code></td>
+</tr>
+<tr>
+<td class="line" id="L63"><a href="#L63">63</a></td>
+<td class="hits"></td>
+<td class="source"><code>  0x5C = 0101_1100. They differ in 4 of 8 bits, ensuring the inner and outer</code></td>
+</tr>
+<tr>
+<td class="line" id="L64"><a href="#L64">64</a></td>
+<td class="hits"></td>
+<td class="source"><code>  keys are as different as possible even though both are derived from K'.</code></td>
+</tr>
+<tr>
+<td class="line" id="L65"><a href="#L65">65</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L66"><a href="#L66">66</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Step-by-Step Algorithm</code></td>
+</tr>
+<tr>
+<td class="line" id="L67"><a href="#L67">67</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L68"><a href="#L68">68</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L69"><a href="#L69">69</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Input: key K (any length), message M, hash function H, block size B</code></td>
+</tr>
+<tr>
+<td class="line" id="L70"><a href="#L70">70</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L71"><a href="#L71">71</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Step 1 — Normalize the key to exactly B bytes:</code></td>
+</tr>
+<tr>
+<td class="line" id="L72"><a href="#L72">72</a></td>
+<td class="hits"></td>
+<td class="source"><code>    If len(K) &gt; B:  K' = H(K)    (hash long keys down to digest size)</code></td>
+</tr>
+<tr>
+<td class="line" id="L73"><a href="#L73">73</a></td>
+<td class="hits"></td>
+<td class="source"><code>    If len(K) &lt; B:  K' = K || 0x00 * (B - len(K))  (zero-pad short keys)</code></td>
+</tr>
+<tr>
+<td class="line" id="L74"><a href="#L74">74</a></td>
+<td class="hits"></td>
+<td class="source"><code>    If len(K) == B: K' = K</code></td>
+</tr>
+<tr>
+<td class="line" id="L75"><a href="#L75">75</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L76"><a href="#L76">76</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Step 2 — Create padded keys:</code></td>
+</tr>
+<tr>
+<td class="line" id="L77"><a href="#L77">77</a></td>
+<td class="hits"></td>
+<td class="source"><code>    inner_key = K' XOR (0x36 * B)   (every byte of K' XOR'd with 0x36)</code></td>
+</tr>
+<tr>
+<td class="line" id="L78"><a href="#L78">78</a></td>
+<td class="hits"></td>
+<td class="source"><code>    outer_key = K' XOR (0x5C * B)   (every byte of K' XOR'd with 0x5C)</code></td>
+</tr>
+<tr>
+<td class="line" id="L79"><a href="#L79">79</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L80"><a href="#L80">80</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Step 3 — Compute the nested hash:</code></td>
+</tr>
+<tr>
+<td class="line" id="L81"><a href="#L81">81</a></td>
+<td class="hits"></td>
+<td class="source"><code>    inner = H(inner_key || M)</code></td>
+</tr>
+<tr>
+<td class="line" id="L82"><a href="#L82">82</a></td>
+<td class="hits"></td>
+<td class="source"><code>    result = H(outer_key || inner)</code></td>
+</tr>
+<tr>
+<td class="line" id="L83"><a href="#L83">83</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L84"><a href="#L84">84</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Output: result (same length as H's digest)</code></td>
+</tr>
+<tr>
+<td class="line" id="L85"><a href="#L85">85</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L86"><a href="#L86">86</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L87"><a href="#L87">87</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Block Sizes and Digest Sizes</code></td>
+</tr>
+<tr>
+<td class="line" id="L88"><a href="#L88">88</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L89"><a href="#L89">89</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | Algorithm | Block Size | Digest Size | RFC Reference |</code></td>
+</tr>
+<tr>
+<td class="line" id="L90"><a href="#L90">90</a></td>
+<td class="hits"></td>
+<td class="source"><code>  |-----------|-----------|-------------|---------------|</code></td>
+</tr>
+<tr>
+<td class="line" id="L91"><a href="#L91">91</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | MD5       | 64 bytes  | 16 bytes    | RFC 1321      |</code></td>
+</tr>
+<tr>
+<td class="line" id="L92"><a href="#L92">92</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | SHA-1     | 64 bytes  | 20 bytes    | FIPS 180-4    |</code></td>
+</tr>
+<tr>
+<td class="line" id="L93"><a href="#L93">93</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | SHA-256   | 64 bytes  | 32 bytes    | FIPS 180-4    |</code></td>
+</tr>
+<tr>
+<td class="line" id="L94"><a href="#L94">94</a></td>
+<td class="hits"></td>
+<td class="source"><code>  | SHA-512   | 128 bytes | 64 bytes    | FIPS 180-4    |</code></td>
+</tr>
+<tr>
+<td class="line" id="L95"><a href="#L95">95</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L96"><a href="#L96">96</a></td>
+<td class="hits"></td>
+<td class="source"><code>  SHA-512 uses a 128-byte block because it processes 64-bit words (not 32-bit),</code></td>
+</tr>
+<tr>
+<td class="line" id="L97"><a href="#L97">97</a></td>
+<td class="hits"></td>
+<td class="source"><code>  so it needs twice as many bytes per block to hold the same number of words.</code></td>
+</tr>
+<tr>
+<td class="line" id="L98"><a href="#L98">98</a></td>
+<td class="hits"></td>
+<td class="source"><code>  This means the ipad and opad strings are 128 bytes long, not 64.</code></td>
+</tr>
+<tr>
+<td class="line" id="L99"><a href="#L99">99</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L100"><a href="#L100">100</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Public API</code></td>
+</tr>
+<tr>
+<td class="line" id="L101"><a href="#L101">101</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L102"><a href="#L102">102</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```elixir</code></td>
+</tr>
+<tr>
+<td class="line" id="L103"><a href="#L103">103</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Generic HMAC — bring your own hash function</code></td>
+</tr>
+<tr>
+<td class="line" id="L104"><a href="#L104">104</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac(hash_fn, block_size, key, message)  # -&gt; binary (digest bytes)</code></td>
+</tr>
+<tr>
+<td class="line" id="L105"><a href="#L105">105</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L106"><a href="#L106">106</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Named variants</code></td>
+</tr>
+<tr>
+<td class="line" id="L107"><a href="#L107">107</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_md5(key, message)     # -&gt; 16-byte binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L108"><a href="#L108">108</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_sha1(key, message)    # -&gt; 20-byte binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L109"><a href="#L109">109</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_sha256(key, message)  # -&gt; 32-byte binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L110"><a href="#L110">110</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_sha512(key, message)  # -&gt; 64-byte binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L111"><a href="#L111">111</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L112"><a href="#L112">112</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Hex-string variants</code></td>
+</tr>
+<tr>
+<td class="line" id="L113"><a href="#L113">113</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_md5_hex(key, message)    # -&gt; 32-char hex string</code></td>
+</tr>
+<tr>
+<td class="line" id="L114"><a href="#L114">114</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_sha1_hex(key, message)   # -&gt; 40-char hex string</code></td>
+</tr>
+<tr>
+<td class="line" id="L115"><a href="#L115">115</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_sha256_hex(key, message) # -&gt; 64-char hex string</code></td>
+</tr>
+<tr>
+<td class="line" id="L116"><a href="#L116">116</a></td>
+<td class="hits"></td>
+<td class="source"><code>  hmac_sha512_hex(key, message) # -&gt; 128-char hex string</code></td>
+</tr>
+<tr>
+<td class="line" id="L117"><a href="#L117">117</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L118"><a href="#L118">118</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L119"><a href="#L119">119</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## RFC 4231 Test Vector (TC1, HMAC-SHA256)</code></td>
+</tr>
+<tr>
+<td class="line" id="L120"><a href="#L120">120</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L121"><a href="#L121">121</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L122"><a href="#L122">122</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Key:  &lt;&lt;0x0b, 0x0b, ..., 0x0b&gt;&gt;  # 20 bytes of 0x0b</code></td>
+</tr>
+<tr>
+<td class="line" id="L123"><a href="#L123">123</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Data: "Hi There"</code></td>
+</tr>
+<tr>
+<td class="line" id="L124"><a href="#L124">124</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC-SHA256: b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7</code></td>
+</tr>
+<tr>
+<td class="line" id="L125"><a href="#L125">125</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ```</code></td>
+</tr>
+<tr>
+<td class="line" id="L126"><a href="#L126">126</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L127"><a href="#L127">127</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L128"><a href="#L128">128</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Md5</code></td>
+</tr>
+<tr>
+<td class="line" id="L129"><a href="#L129">129</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Sha1</code></td>
+</tr>
+<tr>
+<td class="line" id="L130"><a href="#L130">130</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Sha256</code></td>
+</tr>
+<tr>
+<td class="line" id="L131"><a href="#L131">131</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Sha512</code></td>
+</tr>
+<tr>
+<td class="line" id="L132"><a href="#L132">132</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L133"><a href="#L133">133</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L134"><a href="#L134">134</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Generic HMAC</code></td>
+</tr>
+<tr>
+<td class="line" id="L135"><a href="#L135">135</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L136"><a href="#L136">136</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L137"><a href="#L137">137</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # This is the heart of the module. All named variants delegate here.</code></td>
+</tr>
+<tr>
+<td class="line" id="L138"><a href="#L138">138</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L139"><a href="#L139">139</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Arguments:</code></td>
+</tr>
+<tr>
+<td class="line" id="L140"><a href="#L140">140</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   hash_fn    — a 1-arity function that takes a binary and returns a binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L141"><a href="#L141">141</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   block_size — the hash function's block size in bytes (64 or 128)</code></td>
+</tr>
+<tr>
+<td class="line" id="L142"><a href="#L142">142</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   key        — the secret key (any length)</code></td>
+</tr>
+<tr>
+<td class="line" id="L143"><a href="#L143">143</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   message    — the data to authenticate (any length)</code></td>
+</tr>
+<tr>
+<td class="line" id="L144"><a href="#L144">144</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L145"><a href="#L145">145</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Returns: the HMAC digest as a binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L146"><a href="#L146">146</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L147"><a href="#L147">147</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L148"><a href="#L148">148</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Compute HMAC using any hash function.</code></td>
+</tr>
+<tr>
+<td class="line" id="L149"><a href="#L149">149</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L150"><a href="#L150">150</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Parameters</code></td>
+</tr>
+<tr>
+<td class="line" id="L151"><a href="#L151">151</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - `hash_fn` — a function `data :: binary -&gt; binary` (e.g. `&amp;Sha256.sha256/1`)</code></td>
+</tr>
+<tr>
+<td class="line" id="L152"><a href="#L152">152</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - `block_size` — block size of the hash function in bytes (64 for MD5/SHA-1/SHA-256, 128 for SHA-512)</code></td>
+</tr>
+<tr>
+<td class="line" id="L153"><a href="#L153">153</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - `key` — secret key, any length</code></td>
+</tr>
+<tr>
+<td class="line" id="L154"><a href="#L154">154</a></td>
+<td class="hits"></td>
+<td class="source"><code>  - `message` — data to authenticate, any length</code></td>
+</tr>
+<tr>
+<td class="line" id="L155"><a href="#L155">155</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L156"><a href="#L156">156</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L157"><a href="#L157">157</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L158"><a href="#L158">158</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; import CodingAdventures.Hmac</code></td>
+</tr>
+<tr>
+<td class="line" id="L159"><a href="#L159">159</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; hmac(&amp;CodingAdventures.Sha256.sha256/1, 64, "key", "message") |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L160"><a href="#L160">160</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "6e9ef29b75fffc5b7abae527d58fdadb2fe42e7219011976917343065f58ed4a"</code></td>
+</tr>
+<tr>
+<td class="line" id="L161"><a href="#L161">161</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L162"><a href="#L162">162</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L163"><a href="#L163">163</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac((binary -&gt; binary), pos_integer, binary, binary) :: binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L164"><a href="#L164">164</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def hmac(hash_fn, block_size, key, message)</code></td>
+</tr>
+<tr>
+<td class="line" id="L165"><a href="#L165">165</a></td>
+<td class="hits"></td>
+<td class="source"><code>      when is_function(hash_fn, 1) and is_integer(block_size) and block_size &gt; 0 and</code></td>
+</tr>
+<tr>
+<td class="line" id="L166"><a href="#L166">166</a></td>
+<td class="hits"></td>
+<td class="source"><code>             is_binary(key) and is_binary(message) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L167"><a href="#L167">167</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 1 — normalize key to exactly block_size bytes</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L168"><a href="#L168">168</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    normalized_key = normalize_key(hash_fn, block_size, key)</code></td>
+</tr>
+<tr>
+<td class="line" id="L169"><a href="#L169">169</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L170"><a href="#L170">170</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 2 — derive inner and outer padded keys</code></td>
+</tr>
+<tr>
+<td class="line" id="L171"><a href="#L171">171</a></td>
+<td class="hits"></td>
+<td class="source"><code>    #   ipad = 0x36 repeated; opad = 0x5C repeated</code></td>
+</tr>
+<tr>
+<td class="line" id="L172"><a href="#L172">172</a></td>
+<td class="hits"></td>
+<td class="source"><code>    #   XOR each byte of the normalized key with ipad/opad byte</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L173"><a href="#L173">173</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    inner_key = xor_bytes(normalized_key, 0x36)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L174"><a href="#L174">174</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    outer_key = xor_bytes(normalized_key, 0x5C)</code></td>
+</tr>
+<tr>
+<td class="line" id="L175"><a href="#L175">175</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L176"><a href="#L176">176</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 3 — nested hash calls</code></td>
+</tr>
+<tr>
+<td class="line" id="L177"><a href="#L177">177</a></td>
+<td class="hits"></td>
+<td class="source"><code>    #   inner hash: H(inner_key || message)</code></td>
+</tr>
+<tr>
+<td class="line" id="L178"><a href="#L178">178</a></td>
+<td class="hits"></td>
+<td class="source"><code>    #   outer hash: H(outer_key || inner_hash)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L179"><a href="#L179">179</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    inner_hash = hash_fn.(inner_key &lt;&gt; message)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L180"><a href="#L180">180</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    hash_fn.(outer_key &lt;&gt; inner_hash)</code></td>
+</tr>
+<tr>
+<td class="line" id="L181"><a href="#L181">181</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L182"><a href="#L182">182</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L183"><a href="#L183">183</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L184"><a href="#L184">184</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Named HMAC Variants</code></td>
+</tr>
+<tr>
+<td class="line" id="L185"><a href="#L185">185</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L186"><a href="#L186">186</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L187"><a href="#L187">187</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Each variant hard-codes the hash function and block size so callers don't</code></td>
+</tr>
+<tr>
+<td class="line" id="L188"><a href="#L188">188</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # have to remember which block size belongs to which hash.</code></td>
+</tr>
+<tr>
+<td class="line" id="L189"><a href="#L189">189</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L190"><a href="#L190">190</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L191"><a href="#L191">191</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC-MD5: 16-byte (128-bit) authentication tag.</code></td>
+</tr>
+<tr>
+<td class="line" id="L192"><a href="#L192">192</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L193"><a href="#L193">193</a></td>
+<td class="hits"></td>
+<td class="source"><code>  MD5 is cryptographically broken for collision resistance but HMAC-MD5 is</code></td>
+</tr>
+<tr>
+<td class="line" id="L194"><a href="#L194">194</a></td>
+<td class="hits"></td>
+<td class="source"><code>  still considered secure as a MAC (because MAC security doesn't require</code></td>
+</tr>
+<tr>
+<td class="line" id="L195"><a href="#L195">195</a></td>
+<td class="hits"></td>
+<td class="source"><code>  collision resistance of the underlying hash). It appears in legacy protocols.</code></td>
+</tr>
+<tr>
+<td class="line" id="L196"><a href="#L196">196</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L197"><a href="#L197">197</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L198"><a href="#L198">198</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L199"><a href="#L199">199</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.Hmac.hmac_md5("Jefe", "what do ya want for nothing?") |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L200"><a href="#L200">200</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "750c783e6ab0b503eaa86e310a5db738"</code></td>
+</tr>
+<tr>
+<td class="line" id="L201"><a href="#L201">201</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L202"><a href="#L202">202</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L203"><a href="#L203">203</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_md5(binary, binary) :: binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L204"><a href="#L204">204</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def hmac_md5(key, message) when is_binary(key) and is_binary(message) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L205"><a href="#L205">205</a></td>
+<td class="hits">7</td>
+<td class="source"><code>    hmac(&amp;Md5.md5/1, 64, key, message)</code></td>
+</tr>
+<tr>
+<td class="line" id="L206"><a href="#L206">206</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L207"><a href="#L207">207</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L208"><a href="#L208">208</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L209"><a href="#L209">209</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC-SHA1: 20-byte (160-bit) authentication tag.</code></td>
+</tr>
+<tr>
+<td class="line" id="L210"><a href="#L210">210</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L211"><a href="#L211">211</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Used in WPA2 (PBKDF2-HMAC-SHA1), older TLS versions, and SSH.</code></td>
+</tr>
+<tr>
+<td class="line" id="L212"><a href="#L212">212</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L213"><a href="#L213">213</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L214"><a href="#L214">214</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L215"><a href="#L215">215</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.Hmac.hmac_sha1("Jefe", "what do ya want for nothing?") |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L216"><a href="#L216">216</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "effcdf6ae5eb2fa2d27416d5f184df9c259a7c79"</code></td>
+</tr>
+<tr>
+<td class="line" id="L217"><a href="#L217">217</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L218"><a href="#L218">218</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L219"><a href="#L219">219</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_sha1(binary, binary) :: binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L220"><a href="#L220">220</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def hmac_sha1(key, message) when is_binary(key) and is_binary(message) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L221"><a href="#L221">221</a></td>
+<td class="hits">7</td>
+<td class="source"><code>    hmac(&amp;Sha1.sha1/1, 64, key, message)</code></td>
+</tr>
+<tr>
+<td class="line" id="L222"><a href="#L222">222</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L223"><a href="#L223">223</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L224"><a href="#L224">224</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L225"><a href="#L225">225</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC-SHA256: 32-byte (256-bit) authentication tag.</code></td>
+</tr>
+<tr>
+<td class="line" id="L226"><a href="#L226">226</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L227"><a href="#L227">227</a></td>
+<td class="hits"></td>
+<td class="source"><code>  The modern standard. Used in TLS 1.3, JWT HS256, AWS Signature V4,</code></td>
+</tr>
+<tr>
+<td class="line" id="L228"><a href="#L228">228</a></td>
+<td class="hits"></td>
+<td class="source"><code>  PBKDF2-HMAC-SHA256.</code></td>
+</tr>
+<tr>
+<td class="line" id="L229"><a href="#L229">229</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L230"><a href="#L230">230</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L231"><a href="#L231">231</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L232"><a href="#L232">232</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; key = :binary.copy(&lt;&lt;0x0b&gt;&gt;, 20)</code></td>
+</tr>
+<tr>
+<td class="line" id="L233"><a href="#L233">233</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.Hmac.hmac_sha256(key, "Hi There") |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L234"><a href="#L234">234</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7"</code></td>
+</tr>
+<tr>
+<td class="line" id="L235"><a href="#L235">235</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L236"><a href="#L236">236</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L237"><a href="#L237">237</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_sha256(binary, binary) :: binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L238"><a href="#L238">238</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def hmac_sha256(key, message) when is_binary(key) and is_binary(message) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L239"><a href="#L239">239</a></td>
+<td class="hits">29</td>
+<td class="source"><code>    hmac(&amp;Sha256.sha256/1, 64, key, message)</code></td>
+</tr>
+<tr>
+<td class="line" id="L240"><a href="#L240">240</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L241"><a href="#L241">241</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L242"><a href="#L242">242</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L243"><a href="#L243">243</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HMAC-SHA512: 64-byte (512-bit) authentication tag.</code></td>
+</tr>
+<tr>
+<td class="line" id="L244"><a href="#L244">244</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L245"><a href="#L245">245</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Used in JWT HS512, TLS PRF for high-security configurations, and PBKDF2</code></td>
+</tr>
+<tr>
+<td class="line" id="L246"><a href="#L246">246</a></td>
+<td class="hits"></td>
+<td class="source"><code>  with SHA-512 for password hashing.</code></td>
+</tr>
+<tr>
+<td class="line" id="L247"><a href="#L247">247</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L248"><a href="#L248">248</a></td>
+<td class="hits"></td>
+<td class="source"><code>  SHA-512's 128-byte block means the key normalization and padding use 128</code></td>
+</tr>
+<tr>
+<td class="line" id="L249"><a href="#L249">249</a></td>
+<td class="hits"></td>
+<td class="source"><code>  bytes of ipad/opad instead of the 64 bytes used by MD5/SHA-1/SHA-256.</code></td>
+</tr>
+<tr>
+<td class="line" id="L250"><a href="#L250">250</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L251"><a href="#L251">251</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L252"><a href="#L252">252</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L253"><a href="#L253">253</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; key = :binary.copy(&lt;&lt;0x0b&gt;&gt;, 20)</code></td>
+</tr>
+<tr>
+<td class="line" id="L254"><a href="#L254">254</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.Hmac.hmac_sha512(key, "Hi There") |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L255"><a href="#L255">255</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854"</code></td>
+</tr>
+<tr>
+<td class="line" id="L256"><a href="#L256">256</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L257"><a href="#L257">257</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L258"><a href="#L258">258</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_sha512(binary, binary) :: binary</code></td>
+</tr>
+<tr>
+<td class="line" id="L259"><a href="#L259">259</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def hmac_sha512(key, message) when is_binary(key) and is_binary(message) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L260"><a href="#L260">260</a></td>
+<td class="hits">14</td>
+<td class="source"><code>    hmac(&amp;Sha512.sha512/1, 128, key, message)</code></td>
+</tr>
+<tr>
+<td class="line" id="L261"><a href="#L261">261</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L262"><a href="#L262">262</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L263"><a href="#L263">263</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L264"><a href="#L264">264</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Hex-string variants</code></td>
+</tr>
+<tr>
+<td class="line" id="L265"><a href="#L265">265</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L266"><a href="#L266">266</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L267"><a href="#L267">267</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc "HMAC-MD5 returning a lowercase hex string."</code></td>
+</tr>
+<tr>
+<td class="line" id="L268"><a href="#L268">268</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_md5_hex(binary, binary) :: String.t()</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L269"><a href="#L269">269</a></td>
+<td class="hits">5</td>
+<td class="source"><code>  def hmac_md5_hex(key, message), do: hmac_md5(key, message) |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L270"><a href="#L270">270</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L271"><a href="#L271">271</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc "HMAC-SHA1 returning a lowercase hex string."</code></td>
+</tr>
+<tr>
+<td class="line" id="L272"><a href="#L272">272</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_sha1_hex(binary, binary) :: String.t()</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L273"><a href="#L273">273</a></td>
+<td class="hits">5</td>
+<td class="source"><code>  def hmac_sha1_hex(key, message), do: hmac_sha1(key, message) |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L274"><a href="#L274">274</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L275"><a href="#L275">275</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc "HMAC-SHA256 returning a lowercase hex string."</code></td>
+</tr>
+<tr>
+<td class="line" id="L276"><a href="#L276">276</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_sha256_hex(binary, binary) :: String.t()</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L277"><a href="#L277">277</a></td>
+<td class="hits">8</td>
+<td class="source"><code>  def hmac_sha256_hex(key, message), do: hmac_sha256(key, message) |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L278"><a href="#L278">278</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L279"><a href="#L279">279</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc "HMAC-SHA512 returning a lowercase hex string."</code></td>
+</tr>
+<tr>
+<td class="line" id="L280"><a href="#L280">280</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @spec hmac_sha512_hex(binary, binary) :: String.t()</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L281"><a href="#L281">281</a></td>
+<td class="hits">8</td>
+<td class="source"><code>  def hmac_sha512_hex(key, message), do: hmac_sha512(key, message) |&gt; Base.encode16(case: :lower)</code></td>
+</tr>
+<tr>
+<td class="line" id="L282"><a href="#L282">282</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L283"><a href="#L283">283</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L284"><a href="#L284">284</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Private helpers</code></td>
+</tr>
+<tr>
+<td class="line" id="L285"><a href="#L285">285</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ---------------------------------------------------------------------------</code></td>
+</tr>
+<tr>
+<td class="line" id="L286"><a href="#L286">286</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L287"><a href="#L287">287</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # normalize_key/3 — bring any key to exactly block_size bytes.</code></td>
+</tr>
+<tr>
+<td class="line" id="L288"><a href="#L288">288</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L289"><a href="#L289">289</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Three cases from RFC 2104 Section 2:</code></td>
+</tr>
+<tr>
+<td class="line" id="L290"><a href="#L290">290</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   len(key) &gt; block_size → hash the key, then zero-pad the hash to block_size</code></td>
+</tr>
+<tr>
+<td class="line" id="L291"><a href="#L291">291</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   len(key) &lt; block_size → zero-pad the key on the right</code></td>
+</tr>
+<tr>
+<td class="line" id="L292"><a href="#L292">292</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   len(key) == block_size → use the key as-is</code></td>
+</tr>
+<tr>
+<td class="line" id="L293"><a href="#L293">293</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L294"><a href="#L294">294</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Note: hashing a long key may produce a digest shorter than block_size</code></td>
+</tr>
+<tr>
+<td class="line" id="L295"><a href="#L295">295</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # (e.g. SHA-256 produces 32 bytes; for block_size=64 we then zero-pad).</code></td>
+</tr>
+<tr>
+<td class="line" id="L296"><a href="#L296">296</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp normalize_key(hash_fn, block_size, key) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L297"><a href="#L297">297</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    key_len = byte_size(key)</code></td>
+</tr>
+<tr>
+<td class="line" id="L298"><a href="#L298">298</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L299"><a href="#L299">299</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    normalized =</code></td>
+</tr>
+<tr>
+<td class="line" id="L300"><a href="#L300">300</a></td>
+<td class="hits"></td>
+<td class="source"><code>      if key_len &gt; block_size do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L301"><a href="#L301">301</a></td>
+<td class="hits">10</td>
+<td class="source"><code>        hash_fn.(key)</code></td>
+</tr>
+<tr>
+<td class="line" id="L302"><a href="#L302">302</a></td>
+<td class="hits"></td>
+<td class="source"><code>      else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L303"><a href="#L303">303</a></td>
+<td class="hits">49</td>
+<td class="source"><code>        key</code></td>
+</tr>
+<tr>
+<td class="line" id="L304"><a href="#L304">304</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end</code></td>
+</tr>
+<tr>
+<td class="line" id="L305"><a href="#L305">305</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L306"><a href="#L306">306</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Zero-pad to exactly block_size</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L307"><a href="#L307">307</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    pad_size = block_size - byte_size(normalized)</code></td>
+</tr>
+<tr>
+<td class="line" id="L308"><a href="#L308">308</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L309"><a href="#L309">309</a></td>
+<td class="hits">59</td>
+<td class="source"><code>    if pad_size &gt; 0 do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L310"><a href="#L310">310</a></td>
+<td class="hits">57</td>
+<td class="source"><code>      normalized &lt;&gt; :binary.copy(&lt;&lt;0x00&gt;&gt;, pad_size)</code></td>
+</tr>
+<tr>
+<td class="line" id="L311"><a href="#L311">311</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L312"><a href="#L312">312</a></td>
+<td class="hits">2</td>
+<td class="source"><code>      normalized</code></td>
+</tr>
+<tr>
+<td class="line" id="L313"><a href="#L313">313</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L314"><a href="#L314">314</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L315"><a href="#L315">315</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L316"><a href="#L316">316</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # xor_bytes/2 — XOR every byte in a binary with a constant value.</code></td>
+</tr>
+<tr>
+<td class="line" id="L317"><a href="#L317">317</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L318"><a href="#L318">318</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # This implements the ipad/opad key modification from RFC 2104.</code></td>
+</tr>
+<tr>
+<td class="line" id="L319"><a href="#L319">319</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Input: a binary of exactly block_size bytes, a single byte value (0x36 or 0x5C).</code></td>
+</tr>
+<tr>
+<td class="line" id="L320"><a href="#L320">320</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Output: a binary of the same length with every byte XOR'd by the constant.</code></td>
+</tr>
+<tr>
+<td class="line" id="L321"><a href="#L321">321</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L322"><a href="#L322">322</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Example: xor_bytes(&lt;&lt;0xAB, 0xCD&gt;&gt;, 0x36) = &lt;&lt;0xAB ^^^ 0x36, 0xCD ^^^ 0x36&gt;&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L323"><a href="#L323">323</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #                                           = &lt;&lt;0x9D, 0xFB&gt;&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L324"><a href="#L324">324</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp xor_bytes(binary, constant) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L325"><a href="#L325">325</a></td>
+<td class="hits">118</td>
+<td class="source"><code>    for &lt;&lt;byte &lt;- binary&gt;&gt;, into: &lt;&lt;&gt;&gt; do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L326"><a href="#L326">326</a></td>
+<td class="hits">9472</td>
+<td class="source"><code>      &lt;&lt;Bitwise.bxor(byte, constant)&gt;&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L327"><a href="#L327">327</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L328"><a href="#L328">328</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L329"><a href="#L329">329</a></td>
+<td class="hits"></td>
+<td class="source"><code>end</code></td>
+</tr>
+</tbody>
+<thead>
+<tr>
+<th>Line</th>
+<th>Hits</th>
+<th>Source</th>
+</tr>
+</thead>
+</table>
+</body>
+</html>
