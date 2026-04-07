@@ -8,7 +8,8 @@ defmodule BuildTool.Validator do
                                     "rust",
                                     "elixir",
                                     "lua",
-                                    "perl"
+                                    "perl",
+                                    "haskell"
                                   ])
 
   def validate_ci_full_build_toolchains(repo_root, packages) do

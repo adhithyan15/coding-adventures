@@ -152,9 +152,7 @@ pub fn format_user_id(info: &IdInfo, show_name: bool, use_real: bool) -> String 
     if show_name {
         #[cfg(unix)]
         {
-            unsafe {
-                uid_to_name(id).unwrap_or_else(|| id.to_string())
-            }
+            unsafe { uid_to_name(id).unwrap_or_else(|| id.to_string()) }
         }
         #[cfg(not(unix))]
         {
@@ -171,9 +169,7 @@ pub fn format_group_id(info: &IdInfo, show_name: bool, use_real: bool) -> String
     if show_name {
         #[cfg(unix)]
         {
-            unsafe {
-                gid_to_name(id).unwrap_or_else(|| id.to_string())
-            }
+            unsafe { gid_to_name(id).unwrap_or_else(|| id.to_string()) }
         }
         #[cfg(not(unix))]
         {
@@ -284,7 +280,7 @@ mod tests {
         let info = get_user_info().unwrap();
         let output = format_user_id(&info, false, false);
         let parsed: Result<u32, _> = output.parse();
-        assert!(parsed.is_ok(), "user id should be numeric, got: {}", output);
+        assert!(parsed.is_ok(), "user id should be numeric");
     }
 
     #[cfg(unix)]
@@ -293,7 +289,9 @@ mod tests {
         let info = get_user_info().unwrap();
         let output = format_user_id(&info, true, false);
         assert!(!output.is_empty(), "user name should not be empty");
-        assert_eq!(output, info.username);
+        if output != info.username {
+            panic!("formatted username should match expected username");
+        }
     }
 
     #[cfg(unix)]
@@ -302,7 +300,7 @@ mod tests {
         let info = get_user_info().unwrap();
         let output = format_group_id(&info, false, false);
         let parsed: Result<u32, _> = output.parse();
-        assert!(parsed.is_ok(), "group id should be numeric, got: {}", output);
+        assert!(parsed.is_ok(), "group id should be numeric");
     }
 
     #[cfg(unix)]
@@ -328,6 +326,9 @@ mod tests {
         // In normal test environment, real and effective should match
         let real = format_user_id(&info, false, true);
         let effective = format_user_id(&info, false, false);
-        assert_eq!(real, effective, "real and effective UID should match in tests");
+        assert_eq!(
+            real, effective,
+            "real and effective UID should match in tests"
+        );
     }
 }

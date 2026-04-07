@@ -1,2 +1,2 @@
-gem install minitest simplecov rake --quiet
+gem install minitest rake --quiet
 ruby -S rake test

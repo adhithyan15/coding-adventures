@@ -126,16 +126,37 @@ module CodingAdventures
     #                     NAME tokens with the TOKEN_CONTEXT_KEYWORD flag
     #                     set, leaving the final keyword-vs-identifier
     #                     decision to the language-specific parser.
+    # soft_keywords    -- list of soft keywords from the soft_keywords:
+    #                     section. These are words that act as keywords
+    #                     only in specific syntactic contexts, remaining
+    #                     ordinary identifiers everywhere else.
+    #
+    #                     Unlike context_keywords (which set a flag on the
+    #                     token), soft keywords produce plain NAME tokens
+    #                     with NO special flag. The lexer is completely
+    #                     unaware of their keyword status -- the parser
+    #                     handles disambiguation entirely based on
+    #                     syntactic position.
+    #
+    #                     This distinction matters because:
+    #                       - context_keywords: lexer hints to parser
+    #                         ("this NAME might be special")
+    #                       - soft_keywords: lexer ignores them completely,
+    #                         parser owns the decision
+    #
+    #                     Examples:
+    #                       Python 3.10+: match, case, _
+    #                       Python 3.12+: type
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :error_definitions,
-                  :reserved_keywords, :groups, :context_keywords
+                  :reserved_keywords, :groups, :context_keywords, :soft_keywords
       attr_accessor :mode, :escape_mode, :case_sensitive, :version, :case_insensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
                      reserved_keywords: [], escape_mode: nil, groups: {},
                      case_sensitive: true, version: 0, case_insensitive: false,
-                     context_keywords: [])
+                     context_keywords: [], soft_keywords: [])
         @definitions = definitions
         @keywords = keywords
         @mode = mode
@@ -148,6 +169,7 @@ module CodingAdventures
         @version = version
         @case_insensitive = case_insensitive
         @context_keywords = context_keywords
+        @soft_keywords = soft_keywords
       end
 
       # Return the set of all defined token names (including aliases).
@@ -424,7 +446,7 @@ module CodingAdventures
               line_number
             )
           end
-          reserved_names = %w[default skip keywords reserved errors].to_set
+          reserved_names = %w[default skip keywords reserved errors context_keywords soft_keywords].to_set
           if reserved_names.include?(group_name)
             raise TokenGrammarError.new(
               "Reserved group name: #{group_name.inspect} " \
@@ -479,6 +501,15 @@ module CodingAdventures
           next
         end
 
+        # soft_keywords: section -- words that act as keywords only in
+        # specific syntactic contexts. Unlike context_keywords, these
+        # produce plain NAME tokens with no special flag. The parser
+        # handles all disambiguation based on syntactic position.
+        if stripped == "soft_keywords:" || stripped == "soft_keywords :"
+          current_section = "soft_keywords"
+          next
+        end
+
         # Inside a section -- indented lines belong to the section.
         if current_section
           if line.start_with?(" ", "\t")
@@ -487,6 +518,8 @@ module CodingAdventures
               grammar.keywords << stripped unless stripped.empty?
             when "context_keywords"
               grammar.context_keywords << stripped unless stripped.empty?
+            when "soft_keywords"
+              grammar.soft_keywords << stripped unless stripped.empty?
             when "reserved"
               grammar.reserved_keywords << stripped unless stripped.empty?
             when "skip"

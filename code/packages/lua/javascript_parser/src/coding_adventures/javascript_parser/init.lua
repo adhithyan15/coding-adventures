@@ -114,7 +114,26 @@ local javascript_lexer = require("coding_adventures.javascript_lexer")
 local parser_pkg       = require("coding_adventures.parser")
 
 local M = {}
-M.VERSION = "0.1.0"
+M.VERSION = "0.2.0"
+
+-- =========================================================================
+-- Valid ECMAScript / JavaScript versions
+-- =========================================================================
+--
+-- Each version maps to grammar files under code/grammars/ecmascript/.
+--
+-- When version is nil or "" → loads code/grammars/javascript.grammar (generic)
+-- When version is "es2015"  → loads code/grammars/ecmascript/es2015.grammar
+--
+-- Recognized versions: es1, es3, es5, es2015..es2025
+
+local VALID_JS_VERSIONS = {
+    ["es1"]    = true, ["es3"]    = true, ["es5"]    = true,
+    ["es2015"] = true, ["es2016"] = true, ["es2017"] = true,
+    ["es2018"] = true, ["es2019"] = true, ["es2020"] = true,
+    ["es2021"] = true, ["es2022"] = true, ["es2023"] = true,
+    ["es2024"] = true, ["es2025"] = true,
+}
 
 -- =========================================================================
 -- Path helpers
@@ -186,22 +205,43 @@ end
 -- to `parse()` or `create_parser()` reuse the cached grammar, avoiding
 -- repeated file I/O and repeated rule compilation.
 
-local _grammar_cache = nil
+-- Cache keyed by version string (or "" for generic).
+local _grammar_cache = {}
 
---- Load and parse `javascript.grammar`, with caching.
--- On the first call, opens the file, parses it with
--- `grammar_tools.parse_parser_grammar`, and caches the result.
--- @return ParserGrammar  The parsed JavaScript parser grammar.
--- @error                 Raises an error if the file cannot be opened or parsed.
-local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+--- Resolve the path to the correct .grammar file for a given version.
+--
+-- @param version string|nil  ECMAScript version tag, or nil/"" for generic.
+-- @return string             Absolute path to the parser grammar file.
+local function resolve_grammar_path(version)
+    local script_dir = get_script_dir()
+    local repo_root  = up(script_dir, 6)
+
+    if not version or version == "" then
+        return repo_root .. "/grammars/javascript.grammar"
     end
 
-    -- Navigate: 6 levels up from this file's directory → code/ root.
-    local script_dir   = get_script_dir()
-    local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/javascript.grammar"
+    if not VALID_JS_VERSIONS[version] then
+        error(
+            "javascript_parser: unknown ECMAScript version '" .. version .. "'. " ..
+            "Valid values are: es1, es3, es5, es2015..es2025, or nil/\"\" for generic."
+        )
+    end
+
+    return repo_root .. "/grammars/ecmascript/" .. version .. ".grammar"
+end
+
+--- Load and parse the grammar for a specific version, with per-version caching.
+--
+-- @param version string|nil  ECMAScript version tag (see resolve_grammar_path).
+-- @return ParserGrammar      The parsed JavaScript parser grammar.
+-- @error                     Raises an error if the file cannot be opened or parsed.
+local function get_grammar(version)
+    local key = version or ""
+    if _grammar_cache[key] then
+        return _grammar_cache[key]
+    end
+
+    local grammar_path = resolve_grammar_path(version)
 
     local f, open_err = io.open(grammar_path, "r")
     if not f then
@@ -216,12 +256,12 @@ local function get_grammar()
     local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
     if not grammar then
         error(
-            "javascript_parser: failed to parse javascript.grammar: " ..
+            "javascript_parser: failed to parse grammar file: " ..
             (parse_err or "unknown error")
         )
     end
 
-    _grammar_cache = grammar
+    _grammar_cache[key] = grammar
     return grammar
 end
 
@@ -247,19 +287,24 @@ end
 --   - Parenthesized expressions: `(a + b) * c`
 --   - Expression statements
 --
--- @param source string  The JavaScript text to parse.
--- @return ASTNode       Root of the AST.
--- @error                Raises an error on lexer or parser failure.
+-- @param source  string       The JavaScript text to parse.
+-- @param version string|nil   ECMAScript version: "es1", "es3", "es5",
+--                             "es2015".."es2025", or nil/"" for generic.
+-- @return ASTNode             Root of the AST.
+-- @error                      Raises an error on lexer or parser failure.
 --
--- Example:
+-- Example (generic):
 --
 --   local javascript_parser = require("coding_adventures.javascript_parser")
 --   local ast = javascript_parser.parse("var x = 5;")
 --   -- ast.rule_name  → "program"
---   -- contains statement → var_declaration
-function M.parse(source)
-    local tokens = javascript_lexer.tokenize(source)
-    local grammar = get_grammar()
+--
+-- Example (versioned):
+--
+--   local ast = javascript_parser.parse("var x = 5;", "es2015")
+function M.parse(source, version)
+    local tokens = javascript_lexer.tokenize(source, version)
+    local grammar = get_grammar(version)
     local gp = parser_pkg.GrammarParser.new(tokens, grammar)
     local ast, err = gp:parse()
     if not ast then
@@ -273,16 +318,17 @@ end
 -- Use this when you want to control parsing yourself — for example, to
 -- use trace mode or to inspect the token stream before parsing.
 --
--- @param source string   The JavaScript text to tokenize.
--- @return GrammarParser  An initialized parser, ready to call `:parse()`.
+-- @param source  string       The JavaScript text to tokenize.
+-- @param version string|nil   ECMAScript version tag (see parse for valid values).
+-- @return GrammarParser       An initialized parser, ready to call `:parse()`.
 --
 -- Example:
 --
---   local p = javascript_parser.create_parser("var x = 1;")
+--   local p = javascript_parser.create_parser("var x = 1;", "es5")
 --   local ast, err = p:parse()
-function M.create_parser(source)
-    local tokens = javascript_lexer.tokenize(source)
-    local grammar = get_grammar()
+function M.create_parser(source, version)
+    local tokens = javascript_lexer.tokenize(source, version)
+    local grammar = get_grammar(version)
     return parser_pkg.GrammarParser.new(tokens, grammar)
 end
 
@@ -291,9 +337,10 @@ end
 -- Exposed so callers can inspect the grammar rules directly — for example,
 -- to enumerate rule names or check the grammar structure.
 --
--- @return ParserGrammar  The parsed JavaScript parser grammar.
-function M.get_grammar()
-    return get_grammar()
+-- @param version string|nil  ECMAScript version tag (see parse for valid values).
+-- @return ParserGrammar      The parsed JavaScript parser grammar.
+function M.get_grammar(version)
+    return get_grammar(version)
 end
 
 return M

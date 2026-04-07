@@ -42,6 +42,22 @@
 use immutable_list::ImmutableList;
 use node_bridge::*;
 
+macro_rules! unwrap_ref {
+    ($env:expr, $value:expr, $ty:ty) => {
+        unwrap_data::<$ty>($env, $value)
+            .as_ref()
+            .expect(concat!(stringify!($ty), " should always be wrapped"))
+    };
+}
+
+macro_rules! unwrap_mut {
+    ($env:expr, $value:expr, $ty:ty) => {
+        unwrap_data_mut::<$ty>($env, $value)
+            .as_mut()
+            .expect(concat!(stringify!($ty), " should always be wrapped"))
+    };
+}
+
 // ---------------------------------------------------------------------------
 // Extra N-API externs not in node-bridge
 // ---------------------------------------------------------------------------
@@ -143,7 +159,7 @@ fn wrap_new_list(env: napi_env, list: ImmutableList) -> napi_value {
         napi_new_instance(env, constructor, 0, ptr::null(), &mut instance);
 
         // Replace the inner ImmutableList with the one we actually want.
-        let inner = unwrap_data_mut::<ImmutableList>(env, instance);
+        let inner = unwrap_mut!(env, instance, ImmutableList);
         let _ = std::mem::replace(inner, list);
 
         instance
@@ -222,7 +238,7 @@ unsafe extern "C" fn list_push(env: napi_env, info: napi_callback_info) -> napi_
             return undefined(env);
         }
     };
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     let new_list = list.push(value);
     wrap_new_list(env, new_list)
 }
@@ -245,7 +261,7 @@ unsafe extern "C" fn list_get(env: napi_env, info: napi_callback_info) -> napi_v
         return undefined(env);
     }
     let index = usize_from_js(env, args[0]);
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     match list.get(index) {
         Some(s) => str_to_js(env, s),
         None => undefined(env),
@@ -274,7 +290,7 @@ unsafe extern "C" fn list_set(env: napi_env, info: napi_callback_info) -> napi_v
             return undefined(env);
         }
     };
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     if index >= list.len() {
         throw_error(env, &format!("index {} out of bounds for list of length {}", index, list.len()));
         return undefined(env);
@@ -295,7 +311,7 @@ unsafe extern "C" fn list_set(env: napi_env, info: napi_callback_info) -> napi_v
 
 unsafe extern "C" fn list_pop(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     if list.is_empty() {
         throw_error(env, "cannot pop from an empty list");
         return undefined(env);
@@ -316,7 +332,7 @@ unsafe extern "C" fn list_pop(env: napi_env, info: napi_callback_info) -> napi_v
 
 unsafe extern "C" fn list_length(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     usize_to_js(env, list.len())
 }
 
@@ -326,7 +342,7 @@ unsafe extern "C" fn list_length(env: napi_env, info: napi_callback_info) -> nap
 
 unsafe extern "C" fn list_is_empty(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     bool_to_js(env, list.is_empty())
 }
 
@@ -340,7 +356,7 @@ unsafe extern "C" fn list_is_empty(env: napi_env, info: napi_callback_info) -> n
 
 unsafe extern "C" fn list_to_array(env: napi_env, info: napi_callback_info) -> napi_value {
     let (this, _args) = get_cb_info(env, info, 0);
-    let list = unwrap_data::<ImmutableList>(env, this);
+    let list = unwrap_ref!(env, this, ImmutableList);
     let arr = array_new(env);
     for (i, elem) in list.iter().enumerate() {
         array_set(env, arr, i as u32, str_to_js(env, elem));

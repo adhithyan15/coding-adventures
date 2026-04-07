@@ -2,6 +2,34 @@
 
 All notable changes to this package are documented here.
 
+## [0.2.0] — 2026-04-05
+
+### Added
+
+- `version` parameter added to `tokenize(source, version)`,
+  `create_lexer(source, version)`, and `get_grammar(version)`.
+- New `create_lexer(source, version)` function — returns an initialized
+  `GrammarLexer` without immediately tokenizing.
+- Version routing: when `version` is `"es1"`, `"es3"`, `"es5"`, or
+  `"es2015"` through `"es2025"`, the corresponding versioned grammar file is
+  loaded from `code/grammars/ecmascript/<version>.tokens`.
+- Generic fallback: passing `nil` or `""` loads the unified
+  `code/grammars/javascript.tokens` as before (backward compatible).
+- Per-version grammar cache: each version is loaded and parsed at most once
+  per process; the cache is a table keyed by version string.
+- `\v` and `\f` escape normalization applied when loading ECMAScript grammar
+  files (Lua's regex engine requires literal control characters instead).
+- Validation: unknown version strings raise a descriptive error immediately.
+- Extended test suite: new `describe("version-aware tokenization")` block
+  covering all recognized ES versions, `create_lexer`, `get_grammar`, cache
+  behavior, and error cases for invalid versions.
+
+### Changed
+
+- `M.VERSION` bumped from `"0.1.0"` to `"0.2.0"`.
+- `_grammar_cache` changed from a single value to a table keyed by version
+  (backward-compatible — no-version calls use key `""`).
+
 ## [0.1.0] — 2026-03-29
 
 ### Added

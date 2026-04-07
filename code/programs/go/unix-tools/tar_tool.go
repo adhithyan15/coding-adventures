@@ -83,17 +83,85 @@ import (
 // =========================================================================
 
 type TarOptions struct {
-	Create     bool   // -c: create archive
-	Extract    bool   // -x: extract archive
-	List       bool   // -t: list archive contents
-	File       string // -f: archive file name
-	Verbose    bool   // -v: verbose listing
-	Directory  string // -C: change to directory before operating
-	Gzip       bool   // -z: gzip compression (stub)
-	Bzip2      bool   // -j: bzip2 compression (stub)
-	Xz         bool   // -J: xz compression (stub)
-	KeepOld    bool   // -k: don't replace existing files
-	StripN     int    // --strip-components: strip N leading path components
+	Create    bool   // -c: create archive
+	Extract   bool   // -x: extract archive
+	List      bool   // -t: list archive contents
+	File      string // -f: archive file name
+	Verbose   bool   // -v: verbose listing
+	Directory string // -C: change to directory before operating
+	Gzip      bool   // -z: gzip compression (stub)
+	Bzip2     bool   // -j: bzip2 compression (stub)
+	Xz        bool   // -J: xz compression (stub)
+	KeepOld   bool   // -k: don't replace existing files
+	StripN    int    // --strip-components: strip N leading path components
+}
+
+func pathWithinBaseDir(baseDir string, candidate string) bool {
+	rel, err := filepath.Rel(baseDir, candidate)
+	if err != nil {
+		return false
+	}
+	return rel == "." || (rel != ".." && !strings.HasPrefix(rel, ".."+string(os.PathSeparator)))
+}
+
+func resolvePathWithinBaseDir(baseDir string, candidate string) (string, error) {
+	candidateAbs, err := filepath.Abs(candidate)
+	if err != nil {
+		return "", err
+	}
+	if !pathWithinBaseDir(baseDir, candidateAbs) {
+		return "", fmt.Errorf("path escapes target directory")
+	}
+
+	rel, err := filepath.Rel(baseDir, candidateAbs)
+	if err != nil {
+		return "", err
+	}
+	if rel == "." {
+		return baseDir, nil
+	}
+
+	current := baseDir
+	for _, part := range strings.Split(rel, string(os.PathSeparator)) {
+		if part == "" || part == "." {
+			continue
+		}
+
+		current = filepath.Join(current, part)
+		info, err := os.Lstat(current)
+		switch {
+		case err == nil && info.Mode()&os.ModeSymlink != 0:
+			resolved, err := filepath.EvalSymlinks(current)
+			if err != nil {
+				return "", err
+			}
+			resolvedAbs, err := filepath.Abs(resolved)
+			if err != nil {
+				return "", err
+			}
+			if !pathWithinBaseDir(baseDir, resolvedAbs) {
+				return "", fmt.Errorf("path escapes target directory")
+			}
+			current = resolvedAbs
+		case err == nil:
+			// Existing non-symlink path segment is already safe.
+		case os.IsNotExist(err):
+			// Missing components cannot redirect yet; keep the path anchored under baseDir.
+		default:
+			return "", err
+		}
+
+		currentAbs, err := filepath.Abs(current)
+		if err != nil {
+			return "", err
+		}
+		if !pathWithinBaseDir(baseDir, currentAbs) {
+			return "", fmt.Errorf("path escapes target directory")
+		}
+		current = currentAbs
+	}
+
+	return current, nil
 }
 
 // =========================================================================
@@ -258,6 +326,11 @@ func tarExtract(files []string, opts TarOptions, stdout io.Writer, stderr io.Wri
 	if opts.Directory != "" {
 		targetDir = opts.Directory
 	}
+	targetDirAbs, err := filepath.Abs(targetDir)
+	if err != nil {
+		fmt.Fprintf(stderr, "tar: %s: %s\n", targetDir, err)
+		return 2
+	}
 
 	// Build a set of requested files for filtering.
 	filterSet := make(map[string]bool)
@@ -299,8 +372,18 @@ func tarExtract(files []string, opts TarOptions, stdout io.Writer, stderr io.Wri
 		}
 
 		// Security: prevent path traversal.
-		targetPath := filepath.Join(targetDir, name)
-		if !strings.HasPrefix(filepath.Clean(targetPath), filepath.Clean(targetDir)) {
+		targetPath := filepath.Join(targetDirAbs, name)
+		targetPathAbs, err := filepath.Abs(targetPath)
+		if err != nil {
+			fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
+			continue
+		}
+		if !pathWithinBaseDir(targetDirAbs, targetPathAbs) {
+			fmt.Fprintf(stderr, "tar: %s: path escapes target directory\n", name)
+			continue
+		}
+		targetPath, err = resolvePathWithinBaseDir(targetDirAbs, targetPathAbs)
+		if err != nil {
 			fmt.Fprintf(stderr, "tar: %s: path escapes target directory\n", name)
 			continue
 		}
@@ -353,7 +436,24 @@ func tarExtract(files []string, opts TarOptions, stdout io.Writer, stderr io.Wri
 				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
 				return 2
 			}
-			err = os.Symlink(header.Linkname, targetPath)
+			if filepath.IsAbs(header.Linkname) {
+				fmt.Fprintf(stderr, "tar: %s: symlink target escapes target directory\n", name)
+				continue
+			}
+			resolvedLinkTarget, err := resolvePathWithinBaseDir(
+				targetDirAbs,
+				filepath.Join(filepath.Dir(targetPath), header.Linkname),
+			)
+			if err != nil {
+				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
+				continue
+			}
+			safeLinkName, err := filepath.Rel(filepath.Dir(targetPath), resolvedLinkTarget)
+			if err != nil {
+				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
+				continue
+			}
+			err = os.Symlink(safeLinkName, targetPath)
 			if err != nil {
 				fmt.Fprintf(stderr, "tar: %s: %s\n", name, err)
 			}

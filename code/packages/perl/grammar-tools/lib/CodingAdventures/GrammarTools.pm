@@ -157,6 +157,7 @@ sub new {
         definitions       => [],
         keywords          => [],
         context_keywords  => [],
+        soft_keywords     => [],
         mode              => '',
         escape_mode       => '',
         skip_definitions  => [],
@@ -169,6 +170,7 @@ sub new {
 sub definitions       { $_[0]->{definitions}       }
 sub keywords          { $_[0]->{keywords}          }
 sub context_keywords  { $_[0]->{context_keywords}  }
+sub soft_keywords     { $_[0]->{soft_keywords}     }
 sub mode              { $_[0]->{mode}              }
 sub escape_mode       { $_[0]->{escape_mode}       }
 sub skip_definitions  { $_[0]->{skip_definitions}  }
@@ -227,7 +229,7 @@ package CodingAdventures::GrammarTools;
 
 # Reserved group names that cannot be used as custom group names
 my %RESERVED_GROUP_NAMES = map { $_ => 1 }
-    qw(default skip keywords reserved errors);
+    qw(default skip keywords reserved errors context_keywords soft_keywords);
 
 # ============================================================================
 # parse_definition($pattern_part, $name_part, $line_number)
@@ -439,6 +441,10 @@ sub parse_token_grammar {
             $current_section = 'context_keywords';
             next;
         }
+        if ($stripped eq 'soft_keywords:' || $stripped eq 'soft_keywords :') {
+            $current_section = 'soft_keywords';
+            next;
+        }
 
         # Inside a section: lines must be indented
         if ($current_section ne '') {
@@ -449,6 +455,9 @@ sub parse_token_grammar {
                 }
                 elsif ($current_section eq 'context_keywords') {
                     push @{ $grammar->{context_keywords} }, $stripped if $stripped ne '';
+                }
+                elsif ($current_section eq 'soft_keywords') {
+                    push @{ $grammar->{soft_keywords} }, $stripped if $stripped ne '';
                 }
                 elsif ($current_section eq 'reserved') {
                     push @{ $grammar->{reserved_keywords} }, $stripped if $stripped ne '';

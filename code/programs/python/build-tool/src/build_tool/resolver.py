@@ -590,6 +590,29 @@ def _parse_perl_deps(package: Package, known_names: dict[str, str]) -> list[str]
 
 
 # ---------------------------------------------------------------------------
+# Haskell dependency parsing
+# ---------------------------------------------------------------------------
+
+
+def _parse_haskell_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+    """Extract internal dependencies from a Haskell package's .cabal file."""
+    cabal_files = list(package.path.glob("*.cabal"))
+    if not cabal_files:
+        return []
+
+    text = cabal_files[0].read_text(encoding="utf-8")
+    internal_deps: list[str] = []
+
+    pattern = re.compile(r"coding-adventures-([a-z0-9-]+)")
+    for match in pattern.finditer(text):
+        dep_name = f"coding-adventures-{match.group(1).lower()}"
+        if dep_name in known_names and known_names[dep_name] != package.name:
+            internal_deps.append(known_names[dep_name])
+
+    return internal_deps
+
+
+# ---------------------------------------------------------------------------
 # Gradle (Java / Kotlin) dependency parsing
 # ---------------------------------------------------------------------------
 
@@ -746,6 +769,11 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             dir_base = pkg.path.name.lower()
             _set_known(dir_base, pkg.name, pkg.path)
 
+        elif pkg.language == "haskell":
+            # Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+            cabal_name = f"coding-adventures-{pkg.path.name}".lower()
+            _set_known(cabal_name, pkg.name, pkg.path)
+
         elif pkg.language in ("java", "kotlin"):
             # Java and Kotlin packages use Gradle composite builds. Dependencies
             # are referenced by directory name in settings.gradle.kts via
@@ -800,6 +828,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_perl_deps(pkg, known_names)
         elif pkg.language == "swift":
             deps = _parse_swift_deps(pkg, known_names)
+        elif pkg.language == "haskell":
+            deps = _parse_haskell_deps(pkg, known_names)
         elif pkg.language in ("java", "kotlin"):
             deps = _parse_gradle_deps(pkg, known_names)
         else:

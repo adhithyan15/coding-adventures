@@ -101,6 +101,7 @@ module CodingAdventures
             error_definitions: #{err_src},
             groups: #{groups_src},
             context_keywords: #{grammar.context_keywords.inspect},
+            soft_keywords: #{grammar.soft_keywords.inspect},
           )
         RUBY
       end

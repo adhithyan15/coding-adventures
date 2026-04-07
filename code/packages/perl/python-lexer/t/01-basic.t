@@ -14,6 +14,12 @@ sub types_of {
     return [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$tokens ];
 }
 
+sub types_of_v {
+    my ($source, $version) = @_;
+    my $tokens = CodingAdventures::PythonLexer->tokenize($source, $version);
+    return [ map { $_->{type} } grep { $_->{type} ne 'EOF' } @$tokens ];
+}
+
 sub values_of {
     my ($source) = @_;
     my $tokens = CodingAdventures::PythonLexer->tokenize($source);
@@ -136,18 +142,18 @@ subtest 'identifier with digits' => sub {
 
 subtest 'integer number' => sub {
     my $tokens = CodingAdventures::PythonLexer->tokenize('42');
-    is( $tokens->[0]{type},  'NUMBER', 'type is NUMBER' );
-    is( $tokens->[0]{value}, '42',     'value is 42' );
+    is( $tokens->[0]{type},  'INT', 'type is INT' );
+    is( $tokens->[0]{value}, '42',  'value is 42' );
 };
 
 subtest 'zero' => sub {
     my $tokens = CodingAdventures::PythonLexer->tokenize('0');
-    is( $tokens->[0]{type},  'NUMBER', 'type is NUMBER' );
-    is( $tokens->[0]{value}, '0',      'value is 0' );
+    is( $tokens->[0]{type},  'INT', 'type is INT' );
+    is( $tokens->[0]{value}, '0',   'value is 0' );
 };
 
 subtest 'numbers separated by operators' => sub {
-    is( types_of('1+2'), [qw(NUMBER PLUS NUMBER)], '1+2 types' );
+    is( types_of('1+2'), [qw(INT PLUS INT)], '1+2 types' );
 };
 
 # ============================================================================
@@ -241,7 +247,7 @@ subtest 'colon' => sub {
 subtest 'simple assignment: x = 1' => sub {
     is(
         types_of('x = 1'),
-        [qw(NAME EQUALS NUMBER)],
+        [qw(NAME EQUALS INT)],
         'assignment types'
     );
     my $tokens = CodingAdventures::PythonLexer->tokenize('x = 1');
@@ -251,7 +257,7 @@ subtest 'simple assignment: x = 1' => sub {
 subtest 'equality check: x == 1' => sub {
     is(
         types_of('x == 1'),
-        [qw(NAME EQUALS_EQUALS NUMBER)],
+        [qw(NAME EQUALS_EQUALS INT)],
         'equality check types'
     );
 };
@@ -336,7 +342,7 @@ subtest 'None literal: x = None' => sub {
 subtest 'spaces between tokens are consumed silently' => sub {
     is(
         types_of('x = 1'),
-        [qw(NAME EQUALS NUMBER)],
+        [qw(NAME EQUALS INT)],
         'no WHITESPACE tokens in output'
     );
 };
@@ -344,7 +350,7 @@ subtest 'spaces between tokens are consumed silently' => sub {
 subtest 'tabs between tokens consumed silently' => sub {
     is(
         types_of("x\t=\t1"),
-        [qw(NAME EQUALS NUMBER)],
+        [qw(NAME EQUALS INT)],
         'only value tokens in output'
     );
 };
@@ -359,7 +365,7 @@ subtest 'column tracking: x = 42' => sub {
     my $tokens = CodingAdventures::PythonLexer->tokenize('x = 42');
     is( $tokens->[0]{col}, 1, 'x at col 1' );
     is( $tokens->[1]{col}, 3, '= at col 3' );
-    is( $tokens->[2]{col}, 5, '42 at col 5' );
+    is( $tokens->[2]{col}, 5, 'INT at col 5' );
 };
 
 subtest 'all tokens on line 1 for single-line input' => sub {
@@ -383,11 +389,10 @@ subtest 'EOF is always last' => sub {
 # Error handling
 # ============================================================================
 
-subtest 'unexpected character @ raises die' => sub {
-    ok(
-        dies { CodingAdventures::PythonLexer->tokenize('@') },
-        'unexpected @ causes die'
-    );
+subtest '@ tokenizes as AT (decorator operator)' => sub {
+    my $tokens = CodingAdventures::PythonLexer->tokenize('@');
+    is( $tokens->[0]{type},  'AT', 'type is AT' );
+    is( $tokens->[0]{value}, '@',  'value is @' );
 };
 
 subtest 'unexpected character $ raises die' => sub {
@@ -395,6 +400,40 @@ subtest 'unexpected character $ raises die' => sub {
         dies { CodingAdventures::PythonLexer->tokenize('$x') },
         'unexpected $ causes die'
     );
+};
+
+# ============================================================================
+# Version support
+# ============================================================================
+
+subtest 'DEFAULT_VERSION is 3.12' => sub {
+    is( CodingAdventures::PythonLexer::DEFAULT_VERSION(), '3.12', 'default version' );
+};
+
+subtest 'SUPPORTED_VERSIONS contains expected versions' => sub {
+    my @versions = @CodingAdventures::PythonLexer::SUPPORTED_VERSIONS;
+    is( scalar @versions, 6, '6 supported versions' );
+    ok( (grep { $_ eq '3.12' } @versions), '3.12 in supported versions' );
+    ok( (grep { $_ eq '2.7' } @versions), '2.7 in supported versions' );
+};
+
+subtest 'tokenize with explicit version parameter' => sub {
+    my $types = types_of_v('x = 1', '3.12');
+    ok( (grep { $_ eq 'NAME' } @$types),   'has NAME' );
+    ok( (grep { $_ eq 'EQUALS' } @$types),  'has EQUALS' );
+    ok( (grep { $_ eq 'INT' } @$types),     'has INT' );
+};
+
+subtest 'tokenize with undef version defaults to 3.12' => sub {
+    my $types = types_of_v('x = 1', undef);
+    ok( (grep { $_ eq 'NAME' } @$types),   'has NAME' );
+    ok( (grep { $_ eq 'INT' } @$types),     'has INT' );
+};
+
+subtest 'tokenize with empty string version defaults to 3.12' => sub {
+    my $types = types_of_v('x = 1', '');
+    ok( (grep { $_ eq 'NAME' } @$types),   'has NAME' );
+    ok( (grep { $_ eq 'INT' } @$types),     'has INT' );
 };
 
 done_testing;

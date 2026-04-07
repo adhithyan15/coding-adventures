@@ -358,3 +358,114 @@ describe("error handling", function()
         end)
     end)
 end)
+
+-- =========================================================================
+-- Version-aware parsing
+-- =========================================================================
+--
+-- The `version` parameter threads through to javascript_lexer and the
+-- versioned parser grammar file under code/grammars/ecmascript/.
+-- No-version calls continue to work (backward compatible).
+
+describe("version-aware parsing", function()
+
+    -- -----------------------------------------------------------------------
+    -- Backward compatibility
+    -- -----------------------------------------------------------------------
+
+    it("parse with no version (backward compatible)", function()
+        local ast = javascript_parser.parse("var x = 5;")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with empty string version (backward compatible)", function()
+        local ast = javascript_parser.parse("var x = 5;", "")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Recognized ECMAScript versions
+    -- -----------------------------------------------------------------------
+
+    it("parse with es1 produces a program node", function()
+        local ast = javascript_parser.parse("var x = 1;", "es1")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with es3 produces a program node", function()
+        local ast = javascript_parser.parse("var x = 1;", "es3")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with es5 produces a program node", function()
+        local ast = javascript_parser.parse("var x = 1;", "es5")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with es2015 produces a program node", function()
+        local ast = javascript_parser.parse("var x = 1;", "es2015")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with es2025 produces a program node", function()
+        local ast = javascript_parser.parse("var x = 1;", "es2025")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- create_parser with version
+    -- -----------------------------------------------------------------------
+
+    it("create_parser with es2015 returns a usable GrammarParser", function()
+        local p = javascript_parser.create_parser("var x = 1;", "es2015")
+        assert.is_not_nil(p)
+        local ast, err = p:parse()
+        assert.is_nil(err)
+        assert.is_not_nil(ast)
+    end)
+
+    it("create_parser with no version works", function()
+        local p = javascript_parser.create_parser("var x = 1;")
+        assert.is_not_nil(p)
+        local ast, err = p:parse()
+        assert.is_nil(err)
+        assert.is_not_nil(ast)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- get_grammar with version
+    -- -----------------------------------------------------------------------
+
+    it("get_grammar with es5 returns a grammar object", function()
+        local g = javascript_parser.get_grammar("es5")
+        assert.is_not_nil(g)
+    end)
+
+    it("get_grammar with no version returns a grammar object", function()
+        local g = javascript_parser.get_grammar()
+        assert.is_not_nil(g)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Error on unknown version
+    -- -----------------------------------------------------------------------
+
+    it("raises an error for unknown version string", function()
+        assert.has_error(function()
+            javascript_parser.parse("var x = 1;", "es99")
+        end)
+    end)
+
+    it("raises an error for typescript version string", function()
+        assert.has_error(function()
+            javascript_parser.parse("var x = 1;", "ts5.0")
+        end)
+    end)
+end)

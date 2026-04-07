@@ -248,10 +248,17 @@ module CodingAdventures
 
     # Extract the info string from a fenced code block opening line.
     def self.extract_info_string(line)
-      m = line.match(/\A[`~]+\s*(.*)$/)
-      return "" unless m
-      raw = (m[1] || "").strip.split(/\s+/).first || ""
-      CommonmarkParser.decode_entities(apply_backslash_escapes(raw))
+      index = 0
+      while index < line.length && (line[index] == "`" || line[index] == "~")
+        index += 1
+      end
+      return "" if index.zero?
+
+      index += 1 while index < line.length && (line[index] == " " || line[index] == "\t")
+      raw = (line[index..] || "").strip
+      token_end = 0
+      token_end += 1 while token_end < raw.length && raw[token_end] != " " && raw[token_end] != "\t"
+      CommonmarkParser.decode_entities(apply_backslash_escapes(raw[0...token_end]))
     end
 
     # Apply backslash escapes — only for ASCII punctuation characters.

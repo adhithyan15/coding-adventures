@@ -33,6 +33,36 @@ var _allowedPath_0 = sync.OnceValue(func() string {
 	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript.tokens"))
 })
 
+var _allowedPath_1 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript/ts1.0.tokens"))
+})
+
+var _allowedPath_2 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript/ts2.0.tokens"))
+})
+
+var _allowedPath_3 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript/ts3.0.tokens"))
+})
+
+var _allowedPath_4 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript/ts4.0.tokens"))
+})
+
+var _allowedPath_5 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript/ts5.0.tokens"))
+})
+
+var _allowedPath_6 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/typescript/ts5.8.tokens"))
+})
+
 // ─────────────────────────────────────────────────────────────────────────────
 // _FileCapabilities — op.File capability namespace
 //
@@ -49,10 +79,16 @@ type _FileCapabilities struct{}
 // bypass via ./foo, foo/../foo/bar, and similar path manipulations.
 func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
 	path = filepath.Clean(path)
-	if path != _allowedPath_0() {
-		return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
+	if path == _allowedPath_0() ||
+		path == _allowedPath_1() ||
+		path == _allowedPath_2() ||
+		path == _allowedPath_3() ||
+		path == _allowedPath_4() ||
+		path == _allowedPath_5() ||
+		path == _allowedPath_6() {
+		return os.ReadFile(path) //nolint:cap
 	}
-	return os.ReadFile(path) //nolint:cap
+	return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

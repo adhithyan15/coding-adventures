@@ -14,6 +14,7 @@ public enum Hasher {
         "lua": [".lua", ".rockspec"],
         "perl": [".pl", ".pm", ".t", ".xs"],
         "swift": [".swift"],
+        "haskell": [".hs", ".cabal"],
     ]
 
     private static let specialFilenames: [String: Set<String>] = [
@@ -26,6 +27,7 @@ public enum Hasher {
         "lua": [],
         "perl": ["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"],
         "swift": ["Package.swift"],
+        "haskell": ["cabal.project"],
     ]
 
     public static func hashPackage(_ package: BuildPackage) -> String {

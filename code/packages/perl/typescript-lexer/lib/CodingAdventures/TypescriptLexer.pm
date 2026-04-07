@@ -6,9 +6,9 @@ package CodingAdventures::TypescriptLexer;
 #
 # This module is a thin wrapper around the grammar infrastructure provided
 # by CodingAdventures::GrammarTools and CodingAdventures::Lexer. It reads
-# the shared `typescript.tokens` grammar file, compiles the token definitions
-# into Perl regexes, and applies them in priority order to tokenize TypeScript
-# source code.
+# the shared `typescript.tokens` grammar file (or a versioned variant),
+# compiles the token definitions into Perl regexes, and applies them in
+# priority order to tokenize TypeScript source code.
 #
 # TypeScript is a strict superset of JavaScript. Every valid JavaScript
 # program is also valid TypeScript. TypeScript adds:
@@ -22,36 +22,32 @@ package CodingAdventures::TypescriptLexer;
 #   - Primitive type keywords: `any`, `void`, `number`, `string`,
 #     `boolean`, `object`, `symbol`, `bigint`
 #
-# # What is TypeScript tokenization?
-# =====================================
+# # Version-aware tokenization
+# =============================
 #
-# Given the input:  interface Foo { bar: number; }
+# Pass an optional `$version` argument to `tokenize()`:
 #
-# The tokenizer produces a flat list of token hashrefs:
+#   "ts1.0" — TypeScript 1.0 (April 2014): initial public release.
+#   "ts2.0" — TypeScript 2.0 (September 2016): non-nullable types.
+#   "ts3.0" — TypeScript 3.0 (July 2018): project references, tuples.
+#   "ts4.0" — TypeScript 4.0 (August 2020): variadic tuple types.
+#   "ts5.0" — TypeScript 5.0 (March 2023): decorators (Stage 3).
+#   "ts5.8" — TypeScript 5.8 (February 2025): granular control-flow.
+#   undef / "" — Generic TypeScript (uses typescript.tokens).
 #
-#   { type => "INTERFACE", value => "interface", line => 1, col => 1  }
-#   { type => "NAME",      value => "Foo",       line => 1, col => 11 }
-#   { type => "LBRACE",    value => "{",         line => 1, col => 15 }
-#   { type => "NAME",      value => "bar",       line => 1, col => 17 }
-#   { type => "COLON",     value => ":",         line => 1, col => 20 }
-#   { type => "NUMBER",    value => "number",    line => 1, col => 22 }
-#   { type => "SEMICOLON", value => ";",         line => 1, col => 28 }
-#   { type => "RBRACE",    value => "}",         line => 1, col => 30 }
-#   { type => "EOF",       value => "",          line => 1, col => 31 }
-#
-# Note: `number` the type keyword produces a NUMBER token with value "number";
-# the literal `42` also produces a NUMBER token with value "42". The token
-# type is the same; the value distinguishes them.
+# Version grammar files live under:
+#   code/grammars/typescript/<version>.tokens
 #
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `typescript.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar($version)` opens the correct .tokens
+#    file, parses it with `CodingAdventures::GrammarTools::parse_token_grammar`,
+#    and caches the result per-version.
 #
-# 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
-#    in the grammar into a `{ name => str, pat => qr/\G.../ }` hashref.
+# 2. **Pattern compilation** — `_build_rules($version)` converts every
+#    TokenDefinition in the grammar into a `{ name => str, pat => qr/\G.../ }`
+#    hashref, cached per-version.
 #
 # 3. **Tokenization** — `tokenize()` walks the source string using Perl's
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
@@ -64,7 +60,7 @@ package CodingAdventures::TypescriptLexer;
 # `dirname(__FILE__)` → `lib/CodingAdventures`
 #
 # From there we climb to the repo root (`code/`) then descend into
-# `grammars/typescript.tokens`:
+# `grammars/`:
 #
 #   lib/CodingAdventures  (dirname of __FILE__)
 #      ↑ up 1 → lib/
@@ -72,29 +68,41 @@ package CodingAdventures::TypescriptLexer;
 #      ↑ up 3 → perl/
 #      ↑ up 4 → packages/
 #      ↑ up 5 → code/                ← repo root
-#   + /grammars/typescript.tokens
+#   + /grammars/typescript.tokens  (or typescript/<version>.tokens)
 #
 # ============================================================================
 
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use File::Basename qw(dirname);
 use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
-# Grammar loading and caching
+# Valid TypeScript versions
 # ============================================================================
 
-my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
-my $_rules;        # arrayref of { name => str, pat => qr// }
-my $_skip_rules;   # arrayref of qr// patterns for skip definitions
-my $_keyword_map;  # hashref mapping keyword string → promoted token type
+my %VALID_VERSIONS = map { $_ => 1 } qw(ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8);
 
-# --- _grammars_dir() ----------------------------------------------------------
+# ============================================================================
+# Per-version caches
+# ============================================================================
+#
+# Each cache is a hashref keyed by version string ("" = generic).
+# This allows different versions to load different grammar files while
+# sharing the common tokenization machinery.
+
+my %_grammar_cache;    # version => TokenGrammar
+my %_rules_cache;      # version => arrayref of { name => str, pat => qr// }
+my %_skip_rules_cache; # version => arrayref of qr//
+my %_keyword_map_cache; # version => hashref  keyword => type
+
+# ============================================================================
+# Path helpers
+# ============================================================================
 
 sub _grammars_dir {
     # __FILE__ = .../code/packages/perl/typescript-lexer/lib/CodingAdventures/TypescriptLexer.pm
@@ -106,40 +114,63 @@ sub _grammars_dir {
     return File::Spec->catdir($dir, 'grammars');
 }
 
-# --- _grammar() ---------------------------------------------------------------
+# --- _resolve_tokens_path($version) ------------------------------------------
 #
-# Load and parse `typescript.tokens`, caching the result.
+# Return the absolute path to the correct .tokens grammar file.
+#
+#   undef / "" → grammars/typescript.tokens         (generic)
+#   "ts5.0"    → grammars/typescript/ts5.0.tokens
+
+sub _resolve_tokens_path {
+    my ($class, $version) = @_;
+    my $grammars = _grammars_dir();
+
+    return File::Spec->catfile($grammars, 'typescript.tokens')
+        unless $version;
+
+    die "CodingAdventures::TypescriptLexer: unknown TypeScript version '$version'. "
+      . "Valid versions: ts1.0 ts2.0 ts3.0 ts4.0 ts5.0 ts5.8"
+        unless $VALID_VERSIONS{$version};
+
+    return File::Spec->catfile($grammars, 'typescript', "$version.tokens");
+}
+
+# --- _grammar($version) -------------------------------------------------------
+#
+# Load and parse the grammar for `$version`, caching the result.
 
 sub _grammar {
-    return $_grammar if $_grammar;
+    my ($class, $version) = @_;
+    $version //= '';
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'typescript.tokens' );
+    return $_grammar_cache{$version} if $_grammar_cache{$version};
+
+    my $tokens_file = $class->_resolve_tokens_path($version);
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::TypescriptLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };
     close $fh;
 
     my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::TypescriptLexer: failed to parse typescript.tokens: $err"
+    die "CodingAdventures::TypescriptLexer: failed to parse '$tokens_file': $err"
         unless $grammar;
 
-    $_grammar = $grammar;
-    return $_grammar;
+    $_grammar_cache{$version} = $grammar;
+    return $grammar;
 }
 
-# --- _build_rules() -----------------------------------------------------------
+# --- _build_rules($version) ---------------------------------------------------
 #
-# Convert TokenGrammar definitions into compiled Perl pattern lists.
-#
-# Skip patterns come first (whitespace, comments).
-# Token patterns follow in grammar definition order.
-#
-# The \G anchor ensures all matches start at the current pos(), never ahead.
+# Convert TokenGrammar definitions into compiled Perl pattern lists,
+# cached per version.
 
 sub _build_rules {
-    return if $_rules;    # already built
+    my ($class, $version) = @_;
+    $version //= '';
 
-    my $grammar = _grammar();
+    return if $_rules_cache{$version};    # already built for this version
+
+    my $grammar = $class->_grammar($version);
     my (@rules, @skip_rules);
 
     # Build skip patterns
@@ -177,19 +208,22 @@ sub _build_rules {
     # Build keyword lookup map from the grammar keywords section.
     my %kw_map;
     $kw_map{$_} = uc($_) for @{ $grammar->keywords };
-    $_keyword_map = \%kw_map;
 
-    $_skip_rules = \@skip_rules;
-    $_rules      = \@rules;
+    $_skip_rules_cache{$version}  = \@skip_rules;
+    $_rules_cache{$version}       = \@rules;
+    $_keyword_map_cache{$version} = \%kw_map;
 }
 
 # ============================================================================
 # Public API
 # ============================================================================
 
-# --- tokenize($source) --------------------------------------------------------
+# --- tokenize($source, $version) ----------------------------------------------
 #
 # Tokenize a TypeScript source string.
+#
+# $version is optional. Valid values: "ts1.0", "ts2.0", "ts3.0", "ts4.0",
+# "ts5.0", "ts5.8", or undef/"" for generic TypeScript.
 #
 # Recognizes all JavaScript tokens plus TypeScript-specific keywords:
 # INTERFACE, TYPE, ENUM, NAMESPACE, DECLARE, READONLY, PUBLIC, PRIVATE,
@@ -200,12 +234,17 @@ sub _build_rules {
 # Return value: arrayref of hashrefs {type, value, line, col}.
 # Last element always has type 'EOF'.
 #
-# Raises: `die` on unexpected input.
+# Raises: `die` on unexpected input or unknown version.
 
 sub tokenize {
-    my ($class_or_self, $source) = @_;
+    my ($class_or_self, $source, $version) = @_;
+    $version //= '';
 
-    _build_rules();
+    $class_or_self->_build_rules($version);
+
+    my $rules       = $_rules_cache{$version};
+    my $skip_rules  = $_skip_rules_cache{$version};
+    my $keyword_map = $_keyword_map_cache{$version};
 
     my @tokens;
     my $line = 1;
@@ -222,7 +261,7 @@ sub tokenize {
         # We advance position without emitting anything, updating line/col.
 
         my $skipped = 0;
-        for my $spat (@$_skip_rules) {
+        for my $spat (@$skip_rules) {
             pos($source) = $pos;
             if ($source =~ /$spat/gc) {
                 my $matched = $&;
@@ -247,14 +286,14 @@ sub tokenize {
         # ---- Try token patterns ----------------------------------------------
 
         my $matched_tok = 0;
-        for my $rule (@$_rules) {
+        for my $rule (@$rules) {
             pos($source) = $pos;
             if ($source =~ /$rule->{pat}/gc) {
                 my $value = $&;
 
                 my $tok_type = $rule->{name};
-                if ($tok_type eq 'NAME' && exists $_keyword_map->{$value}) {
-                    $tok_type = $_keyword_map->{$value};
+                if ($tok_type eq 'NAME' && exists $keyword_map->{$value}) {
+                    $tok_type = $keyword_map->{$value};
                 }
                 push @tokens, {
                     type  => $tok_type,
@@ -309,7 +348,12 @@ CodingAdventures::TypescriptLexer - Grammar-driven TypeScript tokenizer
 
     use CodingAdventures::TypescriptLexer;
 
+    # Generic (latest grammar)
     my $tokens = CodingAdventures::TypescriptLexer->tokenize('interface Foo { x: number }');
+
+    # Version-specific
+    my $tokens = CodingAdventures::TypescriptLexer->tokenize('let x = 1;', 'ts5.0');
+
     for my $tok (@$tokens) {
         printf "%s  %s\n", $tok->{type}, $tok->{value};
     }
@@ -317,14 +361,12 @@ CodingAdventures::TypescriptLexer - Grammar-driven TypeScript tokenizer
 =head1 DESCRIPTION
 
 A thin wrapper around the grammar infrastructure in CodingAdventures::GrammarTools.
-Reads the shared C<typescript.tokens> file, compiles token definitions to Perl regexes,
-and tokenizes TypeScript source into a flat list of token hashrefs.
+Reads the shared C<typescript.tokens> file (or a versioned variant), compiles token
+definitions to Perl regexes, and tokenizes TypeScript source into a flat list of
+token hashrefs.
 
 TypeScript is a strict superset of JavaScript. This lexer recognizes all JavaScript
-tokens plus TypeScript-specific keywords: INTERFACE, TYPE, ENUM, NAMESPACE, DECLARE,
-READONLY, PUBLIC, PRIVATE, PROTECTED, ABSTRACT, IMPLEMENTS, EXTENDS, KEYOF, INFER,
-NEVER, UNKNOWN, ANY, VOID, and type-keyword versions of NUMBER (C<number>), STRING
-(C<string>), BOOLEAN, OBJECT, SYMBOL, BIGINT.
+tokens plus TypeScript-specific keywords.
 
 Each token hashref has four keys: C<type>, C<value>, C<line>, C<col>.
 
@@ -332,14 +374,19 @@ Whitespace is silently consumed. The last token is always C<EOF>.
 
 =head1 METHODS
 
-=head2 tokenize($source)
+=head2 tokenize($source, $version)
 
-Tokenize a TypeScript string. Returns an arrayref of token hashrefs.
+Tokenize a TypeScript string. C<$version> is optional; valid values are
+C<"ts1.0">, C<"ts2.0">, C<"ts3.0">, C<"ts4.0">, C<"ts5.0">, C<"ts5.8">,
+or C<undef>/C<""> for generic TypeScript.
+
+Returns an arrayref of token hashrefs.
 Dies on unexpected input with a descriptive message.
+Dies on unknown version string.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

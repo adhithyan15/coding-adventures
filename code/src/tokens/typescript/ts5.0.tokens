@@ -1,0 +1,134 @@
+# Token definitions for TypeScript 5.0 (March 2023)
+# TypeScript 5.0 added:
+# - Decorators (Stage 3 TC39 proposal — `@decorator` syntax)
+# - `const` type parameters: `function foo<const T>(x: T)`
+# - Multiple config files in `extends`
+# - Bundle size and speed improvements
+# - All ECMAScript 2022 features
+#
+# The keyword `using` (for Explicit Resource Management, Stage 3) became
+# commonly discussed alongside TS 5.x but was formally adopted in 5.2.
+# TypeScript 5.0 has the same core keyword set as 4.x plus improvements
+# to decorator syntax support.
+#
+# Sources: TypeScript 5.0 release notes
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators — multi-character first (longer matches win)
+# ============================================================================
+
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# ============================================================================
+# Keywords — TypeScript 5.0
+# Full TypeScript 5.x keyword set. Matches the generic typescript.tokens
+# but version-tagged to support TypeScript-5.0-specific tooling workflows.
+# ============================================================================
+
+keywords:
+  # JavaScript / ES6+ keywords (target ES2022 in 5.x)
+  var
+  let
+  const
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  in
+  delete
+  void
+  throw
+  try
+  catch
+  finally
+  break
+  continue
+  switch
+  case
+  default
+  with
+  debugger
+  # ES6 class and module syntax
+  class
+  extends
+  super
+  export
+  import
+  from
+  as
+  implements
+  interface
+  public
+  private
+  protected
+  static
+  # TypeScript-specific keywords
+  type
+  enum
+  module
+  readonly
+  abstract
+  declare
+  namespace
+  keyof
+  infer
+  # Primitive and special types
+  any
+  void
+  string
+  number
+  boolean
+  object
+  symbol
+  bigint
+  never
+  unknown

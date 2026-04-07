@@ -1,0 +1,40 @@
+﻿Evaluated 14 Starlark BUILD files
+Discovered 1386 packages
+Git diff: 3 packages changed, 5 affected (including dependents and prerequisites)
+.\build-tool.exe : BUILD/CI validation 
+failed:
+At line:1 char:33
++ ... build-tool; .\build-tool.exe 
+--diff-base origin/main > 
+build_output.t ...
++                 ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpeci 
+   fied: (BUILD/CI validation failed:  
+  :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCo 
+   mmandError
+ 
+  - python/starlark-compiler (C:\Users\
+adhit\Documents\git\coding-adventures\c
+ode\packages\python\starlark-compiler\B
+UILD_windows): undeclared local 
+package refs: 
+python/bytecode-compiler, 
+python/directed-graph, 
+python/grammar-tools, python/lexer, 
+python/parser, python/starlark-lexer, 
+python/starlark-parser, 
+python/state-machine, 
+python/virtual-machine
+  - typescript/arithmetic (C:\Users\adh
+it\Documents\git\coding-adventures\code
+\packages\typescript\arithmetic\BUILD_w
+indows): missing prerequisite refs for 
+standalone builds: 
+typescript/logic-gates, 
+typescript/transistors
+Fix the BUILD file or CI workflow so 
+metadata dependencies and toolchain 
+setup stay correct on clean standalone 
+and full-build runs.

@@ -1,9 +1,0 @@
-[package]
-name = "coding-adventures-ecmascript-es5-lexer"
-version = "0.1.0"
-edition = "2021"
-description = "ECMAScript 5 (2009) lexer — tokenizes ES5 JavaScript source code using the grammar-driven lexer and the es5.tokens grammar file"
-
-[dependencies]
-grammar-tools = { path = "../grammar-tools" }
-lexer = { path = "../lexer" }

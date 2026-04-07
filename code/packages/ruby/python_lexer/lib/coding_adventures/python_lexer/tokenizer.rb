@@ -8,7 +8,7 @@
 # to language tooling. Instead of writing a Python-specific lexer
 # from scratch, we reuse the general-purpose GrammarLexer engine
 # from the coding_adventures_lexer gem, feeding it the Python token
-# definitions from python.tokens.
+# definitions from versioned .tokens files.
 #
 # The insight is simple but profound: the same lexer code that
 # tokenizes one language can tokenize any language, as long as you
@@ -20,9 +20,32 @@
 # engine knows *how* to tokenize (the algorithm), while the .tokens
 # file knows *what* to tokenize (the language-specific patterns).
 #
+# Versioned grammars
+# ------------------
+#
+# Python's token set has evolved across versions. Python 2.7 has
+# print as a keyword; Python 3.0 removed it. Python 3.6 added
+# f-strings. Python 3.8 added the walrus operator (:=). Python
+# 3.10 added soft keywords (match, case). Python 3.12 added the
+# type soft keyword.
+#
+# Each version has its own grammar file:
+#
+#   code/grammars/python/python2.7.tokens
+#   code/grammars/python/python3.0.tokens
+#   code/grammars/python/python3.6.tokens
+#   code/grammars/python/python3.8.tokens
+#   code/grammars/python/python3.10.tokens
+#   code/grammars/python/python3.12.tokens
+#
+# The lexer loads the grammar for the requested version and caches
+# the parsed result so subsequent calls with the same version skip
+# the file I/O and parsing overhead.
+#
 # Usage:
 #   tokens = CodingAdventures::PythonLexer.tokenize("x = 1 + 2")
-#   tokens.each { |t| puts t }
+#   tokens = CodingAdventures::PythonLexer.tokenize("x = 1 + 2", version: "3.8")
+#   tokens = CodingAdventures::PythonLexer.tokenize("print 1", version: "2.7")
 # ================================================================
 
 require "coding_adventures_grammar_tools"
@@ -30,28 +53,76 @@ require "coding_adventures_lexer"
 
 module CodingAdventures
   module PythonLexer
+    # The default Python version used when no version is specified.
+    # We default to the latest grammar we have.
+    DEFAULT_VERSION = "3.12"
+
+    # All Python versions with grammar files in the repository.
+    SUPPORTED_VERSIONS = %w[2.7 3.0 3.6 3.8 3.10 3.12].freeze
+
     # Path to the grammars directory, computed relative to this file.
     # We navigate up from lib/coding_adventures/python_lexer/ to the
     # repository root's code/grammars/ directory.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    PYTHON_TOKENS_PATH = File.join(GRAMMAR_DIR, "python.tokens")
+
+    # Per-version grammar cache. Once a grammar is parsed it is stored
+    # here and reused for all subsequent calls with that version. This
+    # avoids re-reading and re-parsing the .tokens file on every call.
+    #
+    # Thread safety: Ruby's GIL makes Hash#[]= atomic for simple
+    # assignments. Even without it, the worst case is a harmless
+    # double-parse -- the grammar is immutable once constructed.
+    @grammar_cache = {}
+
+    # Build the path to the .tokens file for a given version.
+    #
+    #   grammar_path("3.12") => ".../code/grammars/python/python3.12.tokens"
+    def self.grammar_path(version)
+      File.join(GRAMMAR_DIR, "python", "python#{version}.tokens")
+    end
+
+    # Load and cache the parsed TokenGrammar for the given version.
+    #
+    # @param version [String] Python version string (e.g. "3.12")
+    # @return [CodingAdventures::GrammarTools::TokenGrammar]
+    # @raise [ArgumentError] if the version is not supported
+    def self.load_grammar(version)
+      return @grammar_cache[version] if @grammar_cache.key?(version)
+
+      path = grammar_path(version)
+      unless File.exist?(path)
+        raise ArgumentError,
+          "Unsupported Python version: #{version.inspect}. " \
+          "Supported versions: #{SUPPORTED_VERSIONS.join(", ")}"
+      end
+
+      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
+        File.read(path, encoding: "UTF-8")
+      )
+      @grammar_cache[version] = grammar
+      grammar
+    end
 
     # Tokenize a string of Python source code into an array of Token objects.
     #
     # This is the main entry point. It:
-    # 1. Reads the python.tokens grammar file
-    # 2. Parses it into a TokenGrammar using grammar_tools
+    # 1. Resolves the version (defaults to DEFAULT_VERSION)
+    # 2. Loads the versioned grammar (cached after first load)
     # 3. Feeds the grammar and source into GrammarLexer
     # 4. Returns the resulting token array
     #
     # @param source [String] Python source code to tokenize
+    # @param version [String] Python version (default: "3.12")
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
-    def self.tokenize(source)
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(PYTHON_TOKENS_PATH, encoding: "UTF-8")
-      )
+    def self.tokenize(source, version: DEFAULT_VERSION)
+      grammar = load_grammar(version)
       lexer = CodingAdventures::Lexer::GrammarLexer.new(source, grammar)
       lexer.tokenize
+    end
+
+    # Clear the grammar cache. Primarily useful for testing.
+    def self.clear_cache!
+      @grammar_cache.clear
     end
   end
 end

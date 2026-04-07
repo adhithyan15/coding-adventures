@@ -595,6 +595,51 @@ func parseSwiftDeps(pkg discovery.Package, knownNames map[string]string) []strin
 // We scan settings.gradle.kts for includeBuild("../...") entries, which is
 // the primary mechanism for monorepo-local dependencies. The directory name
 // inside the "../" reference maps directly to our internal package names.
+// parseHaskellDeps extracts internal dependencies from a Haskell .cabal file.
+//
+// A Cabal file lists dependencies in a build-depends block:
+//
+//	build-depends: base >= 4.7 && < 5,
+//	               coding-adventures-logic-gates
+//
+// We scan the file for package names starting with the "coding-adventures-" prefix
+// and map them to internal package names.
+func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	entries, err := os.ReadDir(pkg.Path)
+	if err != nil {
+		return nil
+	}
+
+	var cabalFile string
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".cabal") {
+			cabalFile = filepath.Join(pkg.Path, entry.Name())
+			break
+		}
+	}
+	if cabalFile == "" {
+		return nil
+	}
+
+	data, err := os.ReadFile(cabalFile)
+	if err != nil {
+		return nil
+	}
+
+	var internalDeps []string
+	re := regexp.MustCompile(`coding-adventures-([a-z0-9-]+)`)
+	for _, match := range re.FindAllStringSubmatch(string(data), -1) {
+		if len(match) >= 2 {
+			depName := "coding-adventures-" + strings.ToLower(match[1])
+			if pkgName, ok := knownNames[depName]; ok && pkgName != pkg.Name {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+
+	return internalDeps
+}
+
 func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
@@ -764,6 +809,11 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(dirBase, pkg.Name, pkg.Path)
 
+		case "haskell":
+			// Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
+			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(cabalName, pkg.Name, pkg.Path)
+
 		case "java", "kotlin":
 			// Java and Kotlin packages use Gradle composite builds. Dependencies
 			// are referenced by directory name in settings.gradle.kts via
@@ -826,6 +876,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parsePerlDeps(pkg, knownNames)
 		case "swift":
 			deps = parseSwiftDeps(pkg, knownNames)
+		case "haskell":
+			deps = parseHaskellDeps(pkg, knownNames)
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownNames)
 		}

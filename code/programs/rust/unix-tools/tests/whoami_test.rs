@@ -5,8 +5,8 @@
 //! username from the environment.
 
 use cli_builder::{load_spec_from_file, Parser, ParserOutput};
-use unix_tools::whoami_tool::get_username;
 use std::path::PathBuf;
+use unix_tools::whoami_tool::get_username;
 
 // ---------------------------------------------------------------------------
 // Helper: locate the spec file
@@ -134,11 +134,9 @@ mod business_logic {
     #[test]
     fn username_has_no_newlines() {
         let name = get_username().unwrap();
-        assert!(
-            !name.contains('\n'),
-            "username should not contain newlines, got: '{}'",
-            name
-        );
+        if name.contains('\n') {
+            panic!("username should not contain newlines");
+        }
     }
 
     #[cfg(unix)]
@@ -146,7 +144,9 @@ mod business_logic {
     fn username_is_consistent() {
         let first = get_username().unwrap();
         let second = get_username().unwrap();
-        assert_eq!(first, second, "username should be consistent across calls");
+        if first != second {
+            panic!("username should be consistent across calls");
+        }
     }
 
     #[cfg(unix)]
@@ -156,10 +156,10 @@ mod business_logic {
         let name = get_username().unwrap();
         let user_var = std::env::var("USER").ok();
         let logname_var = std::env::var("LOGNAME").ok();
-        assert!(
-            user_var.as_deref() == Some(&name[..]) || logname_var.as_deref() == Some(&name[..]),
-            "username '{}' should match $USER or $LOGNAME",
-            name
-        );
+        if user_var.as_deref() != Some(name.as_str())
+            && logname_var.as_deref() != Some(name.as_str())
+        {
+            panic!("username should match $USER or $LOGNAME");
+        }
     }
 }

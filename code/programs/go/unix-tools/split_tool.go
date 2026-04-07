@@ -296,7 +296,12 @@ func runSplit(specPath string, argv []string, stdout io.Writer, stderr io.Writer
 		// Suffix length.
 		if v := r.Flags["suffix_length"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.SuffixLength = int(n)
+				suffixLength, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "split: invalid suffix length: %s\n", err)
+					return 1
+				}
+				opts.SuffixLength = suffixLength
 			}
 		}
 
@@ -351,7 +356,12 @@ func runSplit(specPath string, argv []string, stdout io.Writer, stderr io.Writer
 			lineCount := 1000
 			if v := r.Flags["lines"]; v != nil {
 				if n, ok := v.(int64); ok && n > 0 {
-					lineCount = int(n)
+					parsedLineCount, err := intFromInt64(n)
+					if err != nil {
+						fmt.Fprintf(stderr, "split: invalid line count: %s\n", err)
+						return 1
+					}
+					lineCount = parsedLineCount
 				}
 			}
 			err = splitByLines(reader, lineCount, prefix, opts, stderr)

@@ -1007,7 +1007,7 @@ decorator_expression = left_hand_side_expression ;
 # Double assertion (`expr as unknown as Target`) bypasses type safety —
 # use only when you're certain the type conversion is correct.
 
-ts_as_expression = assignment_expression "as" type_expression ;
+ts_as_expression = conditional_expression "as" type_expression ;
 
 # The satisfies operator (TS 4.9):
 # `expr satisfies Type` checks that expr is compatible with Type,
@@ -1018,7 +1018,7 @@ ts_as_expression = assignment_expression "as" type_expression ;
 # `palette.red` remains `number[]`, not `number[]` via the record type.
 # With a plain annotation, you'd lose the narrow type.
 
-ts_satisfies_expression = assignment_expression "satisfies" type_expression ;
+ts_satisfies_expression = conditional_expression "satisfies" type_expression ;
 
 # Type predicates: narrowing functions
 # A function can declare that it narrows the type of its argument:

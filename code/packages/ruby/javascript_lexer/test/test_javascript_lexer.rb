@@ -8,21 +8,25 @@ require_relative "test_helper"
 #
 # These tests verify that the grammar-driven lexer, when loaded
 # with javascript.tokens, correctly tokenizes JavaScript source code.
+#
+# Version-aware tests verify that the `version:` keyword argument
+# selects the correct versioned ECMAScript grammar from
+# code/grammars/ecmascript/.
 # ================================================================
 
 class TestJavascriptLexer < Minitest::Test
   TT = CodingAdventures::Lexer::TokenType
 
-  def tokenize(source)
-    CodingAdventures::JavascriptLexer.tokenize(source)
+  def tokenize(source, version: nil)
+    CodingAdventures::JavascriptLexer.tokenize(source, version: version)
   end
 
-  def token_types(source)
-    tokenize(source).map(&:type)
+  def token_types(source, version: nil)
+    tokenize(source, version: version).map(&:type)
   end
 
-  def token_values(source)
-    tokenize(source).map(&:value)
+  def token_values(source, version: nil)
+    tokenize(source, version: version).map(&:value)
   end
 
   # ------------------------------------------------------------------
@@ -142,11 +146,120 @@ class TestJavascriptLexer < Minitest::Test
   end
 
   # ------------------------------------------------------------------
-  # Grammar path resolution
+  # Grammar path resolution (generic)
   # ------------------------------------------------------------------
 
   def test_grammar_path_exists
     assert File.exist?(CodingAdventures::JavascriptLexer::JS_TOKENS_PATH),
       "javascript.tokens file should exist at #{CodingAdventures::JavascriptLexer::JS_TOKENS_PATH}"
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: nil and empty string both use generic grammar
+  # ------------------------------------------------------------------
+
+  def test_no_version_uses_generic_grammar
+    path = CodingAdventures::JavascriptLexer.resolve_tokens_path(nil)
+    assert_match(/javascript\.tokens$/, path)
+    assert File.exist?(path), "Generic javascript.tokens should exist"
+  end
+
+  def test_empty_string_version_uses_generic_grammar
+    path = CodingAdventures::JavascriptLexer.resolve_tokens_path("")
+    assert_match(/javascript\.tokens$/, path)
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: valid version strings resolve to versioned paths
+  # ------------------------------------------------------------------
+
+  def test_resolve_tokens_path_es1
+    path = CodingAdventures::JavascriptLexer.resolve_tokens_path("es1")
+    assert_match(%r{ecmascript/es1\.tokens$}, path)
+    assert File.exist?(path), "es1.tokens should exist at #{path}"
+  end
+
+  def test_resolve_tokens_path_es5
+    path = CodingAdventures::JavascriptLexer.resolve_tokens_path("es5")
+    assert_match(%r{ecmascript/es5\.tokens$}, path)
+    assert File.exist?(path), "es5.tokens should exist at #{path}"
+  end
+
+  def test_resolve_tokens_path_es2020
+    path = CodingAdventures::JavascriptLexer.resolve_tokens_path("es2020")
+    assert_match(%r{ecmascript/es2020\.tokens$}, path)
+    assert File.exist?(path), "es2020.tokens should exist at #{path}"
+  end
+
+  def test_resolve_tokens_path_es2025
+    path = CodingAdventures::JavascriptLexer.resolve_tokens_path("es2025")
+    assert_match(%r{ecmascript/es2025\.tokens$}, path)
+    assert File.exist?(path), "es2025.tokens should exist at #{path}"
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: all valid versions have grammar files on disk
+  # ------------------------------------------------------------------
+
+  def test_all_valid_versions_have_tokens_files
+    CodingAdventures::JavascriptLexer::VALID_VERSIONS.each do |version|
+      path = CodingAdventures::JavascriptLexer.resolve_tokens_path(version)
+      assert File.exist?(path),
+        "Grammar file for version #{version.inspect} should exist at #{path}"
+    end
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: tokenize with an explicit version
+  # ------------------------------------------------------------------
+
+  def test_tokenize_with_es2020_version
+    tokens = tokenize("let x = 1;", version: "es2020")
+    values = tokens.map(&:value)
+    assert_includes values, "let"
+    assert_includes values, "x"
+  end
+
+  def test_tokenize_with_es5_version
+    tokens = tokenize("var x = 1;", version: "es5")
+    values = tokens.map(&:value)
+    assert_includes values, "var"
+  end
+
+  def test_tokenize_with_es1_version
+    tokens = tokenize("var x = 1;", version: "es1")
+    values = tokens.map(&:value)
+    assert_includes values, "var"
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: unknown version raises ArgumentError
+  # ------------------------------------------------------------------
+
+  def test_unknown_version_raises_argument_error
+    err = assert_raises(ArgumentError) do
+      tokenize("let x = 1;", version: "es9999")
+    end
+    assert_match(/es9999/, err.message)
+    assert_match(/Valid versions/, err.message)
+  end
+
+  def test_unknown_version_error_lists_valid_versions
+    err = assert_raises(ArgumentError) do
+      CodingAdventures::JavascriptLexer.resolve_tokens_path("bogus")
+    end
+    CodingAdventures::JavascriptLexer::VALID_VERSIONS.each do |v|
+      assert_match(/#{Regexp.escape(v)}/, err.message)
+    end
+  end
+
+  # ------------------------------------------------------------------
+  # Backward compatibility: tokenize with no version arg still works
+  # ------------------------------------------------------------------
+
+  def test_backward_compatible_no_version
+    tokens = CodingAdventures::JavascriptLexer.tokenize("let x = 1;")
+    assert_equal TT::KEYWORD, tokens[0].type
+    assert_equal "let", tokens[0].value
   end
 end

@@ -190,3 +190,120 @@ class TestCreateJavaScriptLexer:
         tokens_direct = tokenize_javascript(source)
         tokens_factory = create_javascript_lexer(source).tokenize()
         assert tokens_direct == tokens_factory
+
+
+# ============================================================================
+# Test: Version Parameter
+# ============================================================================
+
+
+class TestVersionParameter:
+    """Test that the ``version`` parameter loads the correct ECMAScript grammar.
+
+    Each ECMAScript version corresponds to a ``.tokens`` file under
+    ``code/grammars/ecmascript/``.  The version-aware API must:
+
+    1. Accept all 14 valid version strings without raising errors.
+    2. Still produce correct tokens — ``break`` is a hard keyword in every ES
+       version, making it a reliable sentinel for "the grammar loaded".
+    3. Raise ``ValueError`` for unknown version strings.
+    4. Treat ``None`` and ``""`` as "use the generic javascript.tokens grammar".
+    """
+
+    def test_no_version_uses_generic_grammar(self) -> None:
+        """Omitting ``version`` (``None``) loads the generic javascript.tokens."""
+        tokens = tokenize_javascript("let x = 1;")
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "let"
+
+    def test_empty_string_uses_generic_grammar(self) -> None:
+        """An empty string also loads the generic javascript.tokens."""
+        tokens = tokenize_javascript("let x = 1;", "")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es1_version(self) -> None:
+        """``es1`` loads the ECMAScript 1 grammar (June 1997)."""
+        # ``break`` is a hard keyword since ES1.
+        tokens = tokenize_javascript("break", "es1")
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "break"
+
+    def test_es3_version(self) -> None:
+        """``es3`` loads the ECMAScript 3 grammar (December 1999)."""
+        tokens = tokenize_javascript("break", "es3")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es5_version(self) -> None:
+        """``es5`` loads the ECMAScript 5 grammar (December 2009)."""
+        tokens = tokenize_javascript("break", "es5")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2015_version(self) -> None:
+        """``es2015`` loads the ES2015 grammar (ES6, June 2015)."""
+        tokens = tokenize_javascript("const x = 1;", "es2015")
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "const"
+
+    def test_es2016_version(self) -> None:
+        """``es2016`` loads the ES2016 grammar."""
+        tokens = tokenize_javascript("break", "es2016")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2017_version(self) -> None:
+        """``es2017`` loads the ES2017 grammar (async/await)."""
+        tokens = tokenize_javascript("break", "es2017")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2018_version(self) -> None:
+        """``es2018`` loads the ES2018 grammar."""
+        tokens = tokenize_javascript("break", "es2018")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2019_version(self) -> None:
+        """``es2019`` loads the ES2019 grammar."""
+        tokens = tokenize_javascript("break", "es2019")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2020_version(self) -> None:
+        """``es2020`` loads the ES2020 grammar (BigInt, ??  optional chaining)."""
+        tokens = tokenize_javascript("break", "es2020")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2021_version(self) -> None:
+        """``es2021`` loads the ES2021 grammar (logical assignment)."""
+        tokens = tokenize_javascript("break", "es2021")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2022_version(self) -> None:
+        """``es2022`` loads the ES2022 grammar (top-level await, class fields)."""
+        tokens = tokenize_javascript("break", "es2022")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2023_version(self) -> None:
+        """``es2023`` loads the ES2023 grammar."""
+        tokens = tokenize_javascript("break", "es2023")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2024_version(self) -> None:
+        """``es2024`` loads the ES2024 grammar."""
+        tokens = tokenize_javascript("break", "es2024")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_es2025_version(self) -> None:
+        """``es2025`` loads the ES2025 grammar (using/await using)."""
+        tokens = tokenize_javascript("const x = 1;", "es2025")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_unknown_version_raises_value_error(self) -> None:
+        """An unrecognized version string must raise ``ValueError``."""
+        import pytest
+        with pytest.raises(ValueError, match="Unknown ECMAScript version"):
+            tokenize_javascript("let x = 1;", "es99")
+
+    def test_version_propagates_to_factory(self) -> None:
+        """``create_javascript_lexer`` with a version should produce valid tokens."""
+        lexer = create_javascript_lexer("break", "es5")
+        tokens = lexer.tokenize()
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "break"
+        assert tokens[-1].type == TokenType.EOF

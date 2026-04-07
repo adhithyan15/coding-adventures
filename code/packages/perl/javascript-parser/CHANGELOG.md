@@ -1,5 +1,23 @@
 # Changelog — CodingAdventures::JavascriptParser
 
+## [0.02] — 2026-04-05
+
+### Added
+
+- `new($source, $version)` — optional `$version` argument passed through to
+  `CodingAdventures::JavascriptLexer->tokenize($source, $version)`.
+- `parse_js($source, $version)` — convenience class method updated to accept
+  optional version.
+- Valid version strings: `"es1"`, `"es3"`, `"es5"`, `"es2015"`.."es2025"`.
+  Passing `undef` or `""` uses the generic grammar (backward compatible).
+- Extended test suite: new version-aware subtests in `t/01-basic.t` covering
+  ES1/ES3/ES5/ES2015/ES2025 versions, `new($source, $version)`, and error
+  cases.
+
+### Changed
+
+- `$VERSION` bumped from `0.01` to `0.02`.
+
 ## [0.01] - 2026-03-29
 
 ### Added

@@ -9,17 +9,25 @@
  * - Type annotation keywords like `number`, `string`, `boolean`
  * - `readonly`, `abstract`, `implements` keywords
  * - All JavaScript features (`let`, `const`, `===`, `!==`, etc.) carry over
+ *
+ * Version-aware API (added in v0.2.0)
+ * ------------------------------------
+ *
+ * `tokenizeTypescript(source, version?)` and `createTypescriptLexer(source, version?)`
+ * both accept an optional TypeScript version string: `"ts1.0"`, `"ts2.0"`,
+ * `"ts3.0"`, `"ts4.0"`, `"ts5.0"`, or `"ts5.8"`. Omitting the version uses the
+ * generic `typescript.tokens` grammar (backwards-compatible with v0.1.x).
  */
 
 import { describe, it, expect } from "vitest";
-import { tokenizeTypescript } from "../src/tokenizer.js";
+import { tokenizeTypescript, createTypescriptLexer } from "../src/index.js";
 
-function tokenTypes(source: string): string[] {
-  return tokenizeTypescript(source).map((t) => t.type);
+function tokenTypes(source: string, version?: string): string[] {
+  return tokenizeTypescript(source, version).map((t) => t.type);
 }
 
-function tokenValues(source: string): string[] {
-  return tokenizeTypescript(source).map((t) => t.value);
+function tokenValues(source: string, version?: string): string[] {
+  return tokenizeTypescript(source, version).map((t) => t.value);
 }
 
 describe("basic expressions", () => {
@@ -171,5 +179,100 @@ describe("literals", () => {
     const tokens = tokenizeTypescript("$foo");
     expect(tokens[0].type).toBe("NAME");
     expect(tokens[0].value).toBe("$foo");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Version-aware API tests (v0.2.0)
+// ---------------------------------------------------------------------------
+
+describe("version-aware tokenization", () => {
+  it("tokenizes with no version (generic grammar — backwards compatible)", () => {
+    const tokens = tokenizeTypescript("let x = 1;");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with empty string version (same as no version)", () => {
+    const tokens = tokenizeTypescript("let x = 1;", "");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with ts5.8 version", () => {
+    const tokens = tokenizeTypescript("let x = 1;", "ts5.8");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+    expect(tokens[tokens.length - 1].type).toBe("EOF");
+  });
+
+  it("tokenizes with ts5.0 version", () => {
+    const tokens = tokenizeTypescript("const y = 2;", "ts5.0");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("const");
+  });
+
+  it("tokenizes with ts4.0 version", () => {
+    const tokens = tokenizeTypescript("var z = 3;", "ts4.0");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("var");
+  });
+
+  it("tokenizes with ts3.0 version", () => {
+    const tokens = tokenizeTypescript("let a = 0;", "ts3.0");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with ts2.0 version", () => {
+    const tokens = tokenizeTypescript("let b = 0;", "ts2.0");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+  });
+
+  it("tokenizes with ts1.0 version", () => {
+    // ts1.0 predates many modern keywords; basic identifiers should still work
+    const tokens = tokenizeTypescript("var c = 0;", "ts1.0");
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("var");
+  });
+
+  it("throws for unknown version string", () => {
+    expect(() => tokenizeTypescript("let x = 1;", "ts99.0")).toThrow(
+      /Unknown TypeScript version "ts99.0"/
+    );
+  });
+
+  it("throws for completely invalid version string", () => {
+    expect(() => tokenizeTypescript("let x = 1;", "latest")).toThrow(
+      /Unknown TypeScript version "latest"/
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// createTypescriptLexer API tests (v0.2.0)
+// ---------------------------------------------------------------------------
+
+describe("createTypescriptLexer", () => {
+  it("returns a GrammarLexer and produces tokens when tokenize() is called", () => {
+    const lexer = createTypescriptLexer("let x = 1;");
+    const tokens = lexer.tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("let");
+    expect(tokens[tokens.length - 1].type).toBe("EOF");
+  });
+
+  it("accepts a version string", () => {
+    const lexer = createTypescriptLexer("const y = 2;", "ts5.8");
+    const tokens = lexer.tokenize();
+    expect(tokens[0].type).toBe("KEYWORD");
+    expect(tokens[0].value).toBe("const");
+  });
+
+  it("throws for unknown version", () => {
+    expect(() => createTypescriptLexer("let x = 1;", "ts0.1")).toThrow(
+      /Unknown TypeScript version "ts0.1"/
+    );
   });
 });

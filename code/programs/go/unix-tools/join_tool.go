@@ -61,17 +61,17 @@ import (
 // =========================================================================
 
 type JoinOptions struct {
-	Field1     int    // Join field for file 1 (1-based, default 1)
-	Field2     int    // Join field for file 2 (1-based, default 1)
-	Separator  string // Field separator (default: whitespace)
-	Empty      string // Replacement for missing fields
-	Format     string // Output format specification
-	IgnoreCase bool   // Case-insensitive field comparison
-	Header     bool   // Treat first line as header
-	Unpaired1  bool   // Print unpairable lines from file 1
-	Unpaired2  bool   // Print unpairable lines from file 2
-	OnlyUnpaired1 bool // Only print unpaired from file 1
-	OnlyUnpaired2 bool // Only print unpaired from file 2
+	Field1        int    // Join field for file 1 (1-based, default 1)
+	Field2        int    // Join field for file 2 (1-based, default 1)
+	Separator     string // Field separator (default: whitespace)
+	Empty         string // Replacement for missing fields
+	Format        string // Output format specification
+	IgnoreCase    bool   // Case-insensitive field comparison
+	Header        bool   // Treat first line as header
+	Unpaired1     bool   // Print unpairable lines from file 1
+	Unpaired2     bool   // Print unpairable lines from file 2
+	OnlyUnpaired1 bool   // Only print unpaired from file 1
+	OnlyUnpaired2 bool   // Only print unpaired from file 2
 }
 
 // =========================================================================
@@ -362,19 +362,34 @@ func runJoin(specPath string, argv []string, stdout io.Writer, stderr io.Writer)
 		// Extract field indices (1-based integers).
 		if v := r.Flags["field1"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.Field1 = int(n)
+				field1, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "join: invalid field1: %s\n", err)
+					return 1
+				}
+				opts.Field1 = field1
 			}
 		}
 		if v := r.Flags["field2"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.Field2 = int(n)
+				field2, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "join: invalid field2: %s\n", err)
+					return 1
+				}
+				opts.Field2 = field2
 			}
 		}
 		// -j sets both fields.
 		if v := r.Flags["join_field"]; v != nil {
 			if n, ok := v.(int64); ok {
-				opts.Field1 = int(n)
-				opts.Field2 = int(n)
+				joinField, err := intFromInt64(n)
+				if err != nil {
+					fmt.Fprintf(stderr, "join: invalid join field: %s\n", err)
+					return 1
+				}
+				opts.Field1 = joinField
+				opts.Field2 = joinField
 			}
 		}
 

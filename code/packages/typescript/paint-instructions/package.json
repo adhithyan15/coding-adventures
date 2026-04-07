@@ -11,7 +11,9 @@
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@coding-adventures/pixel-container": "file:../pixel-container"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",

@@ -7,8 +7,92 @@
       "category": "fs",
       "action": "read",
       "target": "../../../grammars/javascript.grammar",
-      "justification": "Reads parser grammar definition file to build parse tables at initialization time."
+      "justification": "Generic JavaScript parser grammar (no version specified)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es1.grammar",
+      "justification": "ECMAScript 1 parser grammar (June 1997)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es3.grammar",
+      "justification": "ECMAScript 3 parser grammar (December 1999)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es5.grammar",
+      "justification": "ECMAScript 5 parser grammar (December 2009)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2015.grammar",
+      "justification": "ECMAScript 2015 parser grammar (June 2015)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2016.grammar",
+      "justification": "ECMAScript 2016 parser grammar (June 2016)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2017.grammar",
+      "justification": "ECMAScript 2017 parser grammar (June 2017)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2018.grammar",
+      "justification": "ECMAScript 2018 parser grammar (June 2018)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2019.grammar",
+      "justification": "ECMAScript 2019 parser grammar (June 2019)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2020.grammar",
+      "justification": "ECMAScript 2020 parser grammar (June 2020)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2021.grammar",
+      "justification": "ECMAScript 2021 parser grammar (June 2021)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2022.grammar",
+      "justification": "ECMAScript 2022 parser grammar (June 2022)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2023.grammar",
+      "justification": "ECMAScript 2023 parser grammar (June 2023)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2024.grammar",
+      "justification": "ECMAScript 2024 parser grammar (June 2024)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/ecmascript/es2025.grammar",
+      "justification": "ECMAScript 2025 parser grammar (June 2025)."
     }
   ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "justification": "Reads grammar definition files for the selected ECMAScript version. No write, network, or process access needed."
 }

@@ -8,21 +8,24 @@ require_relative "test_helper"
 #
 # These tests verify that the grammar-driven lexer, when loaded
 # with typescript.tokens, correctly tokenizes TypeScript source code.
+#
+# Version-aware tests verify that the `version:` keyword argument
+# selects the correct versioned grammar from code/grammars/typescript/.
 # ================================================================
 
 class TestTypescriptLexer < Minitest::Test
   TT = CodingAdventures::Lexer::TokenType
 
-  def tokenize(source)
-    CodingAdventures::TypescriptLexer.tokenize(source)
+  def tokenize(source, version: nil)
+    CodingAdventures::TypescriptLexer.tokenize(source, version: version)
   end
 
-  def token_types(source)
-    tokenize(source).map(&:type)
+  def token_types(source, version: nil)
+    tokenize(source, version: version).map(&:type)
   end
 
-  def token_values(source)
-    tokenize(source).map(&:value)
+  def token_values(source, version: nil)
+    tokenize(source, version: version).map(&:value)
   end
 
   # ------------------------------------------------------------------
@@ -171,11 +174,102 @@ class TestTypescriptLexer < Minitest::Test
   end
 
   # ------------------------------------------------------------------
-  # Grammar path resolution
+  # Grammar path resolution (generic)
   # ------------------------------------------------------------------
 
   def test_grammar_path_exists
     assert File.exist?(CodingAdventures::TypescriptLexer::TS_TOKENS_PATH),
       "typescript.tokens file should exist at #{CodingAdventures::TypescriptLexer::TS_TOKENS_PATH}"
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: nil and empty string both use generic grammar
+  # ------------------------------------------------------------------
+
+  def test_no_version_uses_generic_grammar
+    path = CodingAdventures::TypescriptLexer.resolve_tokens_path(nil)
+    assert_match(/typescript\.tokens$/, path)
+    assert File.exist?(path), "Generic typescript.tokens should exist"
+  end
+
+  def test_empty_string_version_uses_generic_grammar
+    path = CodingAdventures::TypescriptLexer.resolve_tokens_path("")
+    assert_match(/typescript\.tokens$/, path)
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: valid version strings resolve to versioned paths
+  # ------------------------------------------------------------------
+
+  def test_resolve_tokens_path_ts1_0
+    path = CodingAdventures::TypescriptLexer.resolve_tokens_path("ts1.0")
+    assert_match(%r{typescript/ts1\.0\.tokens$}, path)
+    assert File.exist?(path), "ts1.0.tokens should exist at #{path}"
+  end
+
+  def test_resolve_tokens_path_ts5_8
+    path = CodingAdventures::TypescriptLexer.resolve_tokens_path("ts5.8")
+    assert_match(%r{typescript/ts5\.8\.tokens$}, path)
+    assert File.exist?(path), "ts5.8.tokens should exist at #{path}"
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: all valid versions have grammar files on disk
+  # ------------------------------------------------------------------
+
+  def test_all_valid_versions_have_tokens_files
+    CodingAdventures::TypescriptLexer::VALID_VERSIONS.each do |version|
+      path = CodingAdventures::TypescriptLexer.resolve_tokens_path(version)
+      assert File.exist?(path),
+        "Grammar file for version #{version.inspect} should exist at #{path}"
+    end
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: tokenize with an explicit version
+  # ------------------------------------------------------------------
+
+  def test_tokenize_with_ts5_0_version
+    tokens = tokenize("let x = 1;", version: "ts5.0")
+    values = tokens.map(&:value)
+    assert_includes values, "let"
+    assert_includes values, "x"
+  end
+
+  def test_tokenize_with_ts1_0_version
+    tokens = tokenize("var x = 1;", version: "ts1.0")
+    values = tokens.map(&:value)
+    assert_includes values, "var"
+  end
+
+  # ------------------------------------------------------------------
+  # Version-aware: unknown version raises ArgumentError
+  # ------------------------------------------------------------------
+
+  def test_unknown_version_raises_argument_error
+    err = assert_raises(ArgumentError) do
+      tokenize("let x = 1;", version: "ts99.0")
+    end
+    assert_match(/ts99\.0/, err.message)
+    assert_match(/Valid versions/, err.message)
+  end
+
+  def test_unknown_version_error_lists_valid_versions
+    err = assert_raises(ArgumentError) do
+      CodingAdventures::TypescriptLexer.resolve_tokens_path("bogus")
+    end
+    CodingAdventures::TypescriptLexer::VALID_VERSIONS.each do |v|
+      assert_match(/#{Regexp.escape(v)}/, err.message)
+    end
+  end
+
+  # ------------------------------------------------------------------
+  # Backward compatibility: tokenize with no version arg still works
+  # ------------------------------------------------------------------
+
+  def test_backward_compatible_no_version
+    tokens = CodingAdventures::TypescriptLexer.tokenize("let x = 1;")
+    assert_equal TT::KEYWORD, tokens[0].type
+    assert_equal "let", tokens[0].value
   end
 end

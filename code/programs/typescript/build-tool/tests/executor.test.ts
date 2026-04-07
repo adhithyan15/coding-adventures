@@ -195,12 +195,14 @@ describe("executeBuilds", () => {
 
   it("should execute multiple commands sequentially per package", async () => {
     const pkgDir = path.join(tmpDir, "pkg-multi");
+    const filePath = path.join(pkgDir, "test.txt");
+    const escapedFilePath = filePath.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
     fs.mkdirSync(pkgDir, { recursive: true });
 
-    // First command creates a file, second command reads it.
+    // Use Node instead of shell builtins so this stays portable on Windows.
     const pkg = makePkg("python/pkg-multi", pkgDir, [
-      `echo "hello" > ${path.join(pkgDir, "test.txt")}`,
-      `cat ${path.join(pkgDir, "test.txt")}`,
+      `node -e "require('node:fs').writeFileSync('${escapedFilePath}', 'hello')"`,
+      `node -e "process.stdout.write(require('node:fs').readFileSync('${escapedFilePath}', 'utf8'))"`,
     ]);
     const graph = new DirectedGraph();
     graph.addNode("python/pkg-multi");

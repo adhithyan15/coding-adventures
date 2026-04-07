@@ -760,4 +760,91 @@ class TestTokenGrammar < Minitest::Test
     refute grammar.case_insensitive
     assert_equal 1, grammar.definitions.length
   end
+
+  # -----------------------------------------------------------------------
+  # soft_keywords section
+  # -----------------------------------------------------------------------
+
+  def test_parse_soft_keywords_section
+    source = <<~TOKENS
+      NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+      soft_keywords:
+        match
+        case
+        _
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 1, grammar.definitions.length
+    assert_equal %w[match case _], grammar.soft_keywords
+  end
+
+  def test_parse_soft_keywords_with_space_colon
+    source = "NAME = /[a-z]+/\nsoft_keywords :\n  match\n  case"
+    grammar = GT.parse_token_grammar(source)
+    assert_equal %w[match case], grammar.soft_keywords
+  end
+
+  def test_soft_keywords_default_empty
+    grammar = GT.parse_token_grammar("NUMBER = /[0-9]+/")
+    assert_equal [], grammar.soft_keywords
+  end
+
+  def test_soft_keywords_with_context_keywords
+    # Both context_keywords and soft_keywords can coexist in the same file.
+    source = <<~TOKENS
+      NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+
+      context_keywords:
+        async
+        await
+
+      soft_keywords:
+        match
+        case
+        type
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal %w[async await], grammar.context_keywords
+    assert_equal %w[match case type], grammar.soft_keywords
+  end
+
+  def test_definitions_after_soft_keywords
+    source = <<~TOKENS
+      NAME = /[a-z]+/
+      soft_keywords:
+        match
+      NUMBER = /[0-9]+/
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal 2, grammar.definitions.length
+    assert_equal %w[match], grammar.soft_keywords
+  end
+
+  def test_soft_keywords_reserved_group_name
+    # "soft_keywords" should be a reserved group name, preventing
+    # a pattern group from using it.
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup soft_keywords:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Reserved group name"
+  end
+
+  def test_context_keywords_reserved_group_name
+    # "context_keywords" should also be a reserved group name.
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup context_keywords:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Reserved group name"
+  end
+
+  def test_parse_real_python312_tokens_soft_keywords
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python", "python3.12.tokens")
+    skip("python3.12.tokens not found") unless File.exist?(path)
+    source = File.read(path)
+    grammar = GT.parse_token_grammar(source)
+    assert grammar.soft_keywords.length > 0, "python3.12.tokens should have soft_keywords"
+    assert grammar.soft_keywords.include?("match"), "Expected 'match' in soft_keywords"
+    assert grammar.soft_keywords.include?("case"), "Expected 'case' in soft_keywords"
+  end
 end

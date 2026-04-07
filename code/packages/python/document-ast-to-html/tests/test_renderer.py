@@ -382,7 +382,7 @@ class TestUrlSanitization:
             ],
         }
         html = to_html(make_doc(node))
-        assert "https://example.com" in html
+        assert 'href="https://example.com"' in html
 
 
 class TestEndToEnd:

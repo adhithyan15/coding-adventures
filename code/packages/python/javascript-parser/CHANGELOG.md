@@ -2,6 +2,20 @@
 
 All notable changes to the JavaScript Parser package will be documented in this file.
 
+## [0.2.0] - 2026-04-05
+
+### Added
+- `version` parameter added to `parse_javascript()` and `create_javascript_parser()`.
+  Pass any of the 14 valid ECMAScript version strings to load the corresponding
+  versioned grammar files (both `.tokens` and `.grammar`). Omitting `version`
+  loads the generic grammars — backward compatible.
+- `_resolve_grammar_path(version)` private helper alongside `_GRAMMAR_ROOT`
+  and `_VALID_VERSIONS` constants, mirroring the lexer's design.
+- `version` is forwarded to `tokenize_javascript()` so lexer and parser always
+  use the same versioned grammar.
+- Raises `ValueError` with a clear message for unknown version strings.
+- 17 new version-specific tests; 96% coverage.
+
 ## [0.1.1] - 2026-03-31
 
 ### Fixed

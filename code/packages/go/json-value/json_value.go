@@ -39,13 +39,13 @@
 //
 // This package offers two ways to work with JSON data:
 //
-// 1. JsonValue (typed) -- a Go interface with concrete struct types for each
-//    JSON type. Use this when you need type safety, pattern matching via type
-//    switches, or custom traversal.
+//  1. JsonValue (typed) -- a Go interface with concrete struct types for each
+//     JSON type. Use this when you need type safety, pattern matching via type
+//     switches, or custom traversal.
 //
-// 2. Native Go types (dynamic) -- map[string]interface{}, []interface{},
-//    string, float64/int, bool, nil. Use this when you just want to read
-//    JSON data without caring about the type system.
+//  2. Native Go types (dynamic) -- map[string]interface{}, []interface{},
+//     string, float64/int, bool, nil. Use this when you just want to read
+//     JSON data without caring about the type system.
 //
 // # JSON Has Exactly Six Types
 //
@@ -76,12 +76,18 @@ package jsonvalue
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 
 	jsonparser "github.com/adhithyan15/coding-adventures/code/packages/go/json-parser"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
+)
+
+const (
+	maxNativeInt = int(^uint(0) >> 1)
+	minNativeInt = -maxNativeInt - 1
 )
 
 // ============================================================================
@@ -488,8 +494,8 @@ func unescapeJSONString(s string) string {
 			case 'u':
 				if i+5 < len(s) {
 					hexStr := s[i+2 : i+6]
-					if r, err := strconv.ParseUint(hexStr, 16, 32); err == nil {
-						sb.WriteRune(rune(r))
+					if unescaped, err := strconv.Unquote(`"\u` + hexStr + `"`); err == nil && len(unescaped) > 0 {
+						sb.WriteString(unescaped)
 						i += 6
 						continue
 					}
@@ -584,7 +590,9 @@ func ToNative(value JsonValue) interface{} {
 
 			case *JsonNumber:
 				if v.IsInteger {
-					return rf.Generate(true, false, interface{}(int(v.Value)))
+					if nativeInt, ok := nativeIntValue(v.Value); ok {
+						return rf.Generate(true, false, interface{}(nativeInt))
+					}
 				}
 				return rf.Generate(true, false, interface{}(v.Value))
 
@@ -599,6 +607,16 @@ func ToNative(value JsonValue) interface{} {
 			}
 		}).GetResult()
 	return result
+}
+
+func nativeIntValue(value float64) (int, bool) {
+	if math.IsNaN(value) || math.IsInf(value, 0) || math.Trunc(value) != value {
+		return 0, false
+	}
+	if value < float64(minNativeInt) || value > float64(maxNativeInt) {
+		return 0, false
+	}
+	return int(value), true
 }
 
 // ============================================================================

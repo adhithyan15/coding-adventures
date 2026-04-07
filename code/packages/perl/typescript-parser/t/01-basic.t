@@ -297,4 +297,56 @@ subtest 'missing semicolon raises die' => sub {
     );
 };
 
+# ============================================================================
+# Version-aware parsing
+# ============================================================================
+#
+# The optional $version argument threads through to TypescriptLexer and
+# selects the correct grammar for that TypeScript release.
+# No-version calls continue to work (backward compatible default).
+
+subtest 'parse_ts with no version (backward compatible)' => sub {
+    my $ast = CodingAdventures::TypescriptParser->parse_ts('let x = 5;');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'new + parse with no version (backward compatible)' => sub {
+    my $parser = CodingAdventures::TypescriptParser->new('let x = 5;');
+    my $ast = $parser->parse();
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_ts with ts1.0 produces program node' => sub {
+    my $ast = CodingAdventures::TypescriptParser->parse_ts('var x = 1;', 'ts1.0');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_ts with ts2.0 produces program node' => sub {
+    my $ast = CodingAdventures::TypescriptParser->parse_ts('let x = 1;', 'ts2.0');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_ts with ts5.0 produces program node' => sub {
+    my $ast = CodingAdventures::TypescriptParser->parse_ts('const x = 1;', 'ts5.0');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'parse_ts with ts5.8 produces program node' => sub {
+    my $ast = CodingAdventures::TypescriptParser->parse_ts('let x = 1;', 'ts5.8');
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'new($source, $version) with ts5.0' => sub {
+    my $parser = CodingAdventures::TypescriptParser->new('let x = 1;', 'ts5.0');
+    my $ast = $parser->parse();
+    is( $ast->rule_name, 'program', 'root is program' );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { CodingAdventures::TypescriptParser->parse_ts('let x = 1;', 'ts99.0') },
+        'unknown version ts99.0 causes die'
+    );
+};
+
 done_testing;

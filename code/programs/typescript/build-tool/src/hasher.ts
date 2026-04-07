@@ -60,6 +60,7 @@ export const SOURCE_EXTENSIONS: Record<string, Set<string>> = {
   typescript: new Set([".ts", ".json"]),
   elixir: new Set([".ex", ".exs"]),
   perl: new Set([".pl", ".pm", ".t", ".xs"]),
+  haskell: new Set([".hs", ".cabal"]),
 };
 
 /**
@@ -76,6 +77,7 @@ export const SPECIAL_FILENAMES: Record<string, Set<string>> = {
   typescript: new Set(["package-lock.json"]),
   elixir: new Set(["mix.lock"]),
   perl: new Set(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"]),
+  haskell: new Set(),
 };
 
 // ---------------------------------------------------------------------------
