@@ -108,34 +108,54 @@ where
 ///
 /// HMAC-MD5 remains secure as a MAC even though MD5 is broken for collision
 /// resistance — MAC security is a different property.
+///
+/// # Panics
+/// Panics if `key` is empty.
 pub fn hmac_md5(key: &[u8], message: &[u8]) -> [u8; 16] {
+    assert!(!key.is_empty(), "HMAC key must not be empty");
     let result = hmac(|d| sum_md5(d).to_vec(), 64, key, message);
-    result.try_into().expect("hmac_md5 must produce 16 bytes")
+    // SAFETY: sum_md5 always returns exactly 16 bytes, so try_into cannot fail.
+    result.try_into().expect("hmac_md5: internal invariant — md5 output is always 16 bytes")
 }
 
 /// HMAC-SHA1: 20-byte authentication tag.
 ///
 /// Used in WPA2 (PBKDF2-HMAC-SHA1), SSH, and TOTP/HOTP.
+///
+/// # Panics
+/// Panics if `key` is empty.
 pub fn hmac_sha1(key: &[u8], message: &[u8]) -> [u8; 20] {
+    assert!(!key.is_empty(), "HMAC key must not be empty");
     let result = hmac(|d| sum1(d).to_vec(), 64, key, message);
-    result.try_into().expect("hmac_sha1 must produce 20 bytes")
+    // SAFETY: sum1 always returns exactly 20 bytes, so try_into cannot fail.
+    result.try_into().expect("hmac_sha1: internal invariant — sha1 output is always 20 bytes")
 }
 
 /// HMAC-SHA256: 32-byte authentication tag.
 ///
 /// The modern default for TLS 1.3, JWT HS256, AWS Signature V4.
+///
+/// # Panics
+/// Panics if `key` is empty.
 pub fn hmac_sha256(key: &[u8], message: &[u8]) -> [u8; 32] {
+    assert!(!key.is_empty(), "HMAC key must not be empty");
     let result = hmac(|d| sha256(d).to_vec(), 64, key, message);
-    result.try_into().expect("hmac_sha256 must produce 32 bytes")
+    // SAFETY: sha256 always returns exactly 32 bytes, so try_into cannot fail.
+    result.try_into().expect("hmac_sha256: internal invariant — sha256 output is always 32 bytes")
 }
 
 /// HMAC-SHA512: 64-byte authentication tag.
 ///
 /// Used in JWT HS512 and high-security configurations.
 /// Note: SHA-512 has a 128-byte block, so ipad/opad are 128 bytes.
+///
+/// # Panics
+/// Panics if `key` is empty.
 pub fn hmac_sha512(key: &[u8], message: &[u8]) -> [u8; 64] {
+    assert!(!key.is_empty(), "HMAC key must not be empty");
     let result = hmac(|d| sum512(d).to_vec(), 128, key, message);
-    result.try_into().expect("hmac_sha512 must produce 64 bytes")
+    // SAFETY: sum512 always returns exactly 64 bytes, so try_into cannot fail.
+    result.try_into().expect("hmac_sha512: internal invariant — sha512 output is always 64 bytes")
 }
 
 // ─── Hex-string variants ──────────────────────────────────────────────────────
@@ -158,6 +178,44 @@ pub fn hmac_sha256_hex(key: &[u8], message: &[u8]) -> String {
 /// HMAC-SHA512 as a 128-character lowercase hex string.
 pub fn hmac_sha512_hex(key: &[u8], message: &[u8]) -> String {
     bytes_to_hex(&hmac_sha512(key, message))
+}
+
+// ─── Constant-time tag verification ──────────────────────────────────────────
+
+/// Compare two HMAC tags in constant time.
+///
+/// Use this instead of `==` when checking whether a received tag matches an
+/// expected tag. The `==` operator short-circuits on the first differing byte,
+/// leaking timing information about *how many bytes* match. Over many requests
+/// an attacker can exploit these timing side-channels to reconstruct the
+/// expected tag byte by byte — a **timing attack**.
+///
+/// `verify` uses a bitwise OR accumulator that processes all bytes regardless
+/// of where the first difference occurs, producing a result in time that is
+/// proportional to `min(expected.len(), actual.len())`.
+///
+/// Returns `true` iff `expected` and `actual` are byte-for-byte identical.
+///
+/// # Example
+///
+/// ```
+/// use coding_adventures_hmac::{hmac_sha256, verify};
+/// let key = b"secret";
+/// let tag = hmac_sha256(key, b"message");
+/// assert!(verify(&tag, &tag));
+/// assert!(!verify(&tag, &[0u8; 32]));
+/// ```
+pub fn verify(expected: &[u8], actual: &[u8]) -> bool {
+    if expected.len() != actual.len() {
+        return false;
+    }
+    // XOR each pair of bytes; OR the results. If any byte differs the
+    // accumulator becomes non-zero — but we don't exit early.
+    let diff = expected
+        .iter()
+        .zip(actual.iter())
+        .fold(0u8, |acc, (&a, &b)| acc | (a ^ b));
+    diff == 0
 }
 
 // ─── Private helpers ──────────────────────────────────────────────────────────

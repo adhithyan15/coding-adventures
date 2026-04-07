@@ -50,6 +50,7 @@
 package hmac
 
 import (
+	"crypto/subtle"
 	"encoding/hex"
 
 	gmd5 "github.com/adhithyan15/coding-adventures/code/packages/go/md5"
@@ -78,14 +79,41 @@ func HMAC(hashFn HashFn, blockSize int, key, message []byte) []byte {
 	innerKey := xorBytes(keyPrime, 0x36)
 	outerKey := xorBytes(keyPrime, 0x5C)
 
-	// Step 3 — nested hashes
-	inner := hashFn(append(innerKey, message...))
-	return hashFn(append(outerKey, inner...))
+	// Step 3 — nested hashes.
+	// Build the inner and outer inputs explicitly rather than using append.
+	// append can silently reuse the backing array of innerKey/outerKey when
+	// there is spare capacity (created by make in xorBytes), causing inner
+	// input to overwrite outerKey bytes — a latent mutation bug.
+	innerInput := make([]byte, len(innerKey)+len(message))
+	copy(innerInput, innerKey)
+	copy(innerInput[len(innerKey):], message)
+	inner := hashFn(innerInput)
+
+	outerInput := make([]byte, len(outerKey)+len(inner))
+	copy(outerInput, outerKey)
+	copy(outerInput[len(outerKey):], inner)
+	return hashFn(outerInput)
 }
 
 // ===========================================================================
 // Named variants
 // ===========================================================================
+
+// Verify compares two HMAC tags in constant time.
+//
+// Use this instead of bytes.Equal when checking whether a received tag matches
+// an expected tag. bytes.Equal (and ==) short-circuit on the first differing
+// byte, leaking timing information. Over many requests an attacker can exploit
+// these timing side-channels to reconstruct the expected tag — a timing attack.
+//
+// Verify delegates to crypto/subtle.ConstantTimeCompare, which is guaranteed
+// to run in time proportional to the length of the inputs, independent of
+// their content.
+//
+// Returns true iff expected and actual are byte-for-byte identical.
+func Verify(expected, actual []byte) bool {
+	return subtle.ConstantTimeCompare(expected, actual) == 1
+}
 
 // HmacMD5 returns a 16-byte HMAC-MD5 authentication tag.
 //
@@ -95,6 +123,9 @@ func HMAC(hashFn HashFn, blockSize int, key, message []byte) []byte {
 //	HmacMD5([]byte("Jefe"), []byte("what do ya want for nothing?"))
 //	// 750c783e6ab0b503eaa86e310a5db738
 func HmacMD5(key, message []byte) []byte {
+	if len(key) == 0 {
+		panic("hmac: key must not be empty")
+	}
 	return HMAC(func(d []byte) []byte {
 		s := gmd5.SumMD5(d)
 		return s[:]
@@ -108,6 +139,9 @@ func HmacMD5(key, message []byte) []byte {
 //	HmacSHA1([]byte("Jefe"), []byte("what do ya want for nothing?"))
 //	// effcdf6ae5eb2fa2d27416d5f184df9c259a7c79
 func HmacSHA1(key, message []byte) []byte {
+	if len(key) == 0 {
+		panic("hmac: key must not be empty")
+	}
 	return HMAC(func(d []byte) []byte {
 		s := gsha1.Sum1(d)
 		return s[:]
@@ -123,6 +157,9 @@ func HmacSHA1(key, message []byte) []byte {
 //	HmacSHA256(key, []byte("Hi There"))
 //	// b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7
 func HmacSHA256(key, message []byte) []byte {
+	if len(key) == 0 {
+		panic("hmac: key must not be empty")
+	}
 	return HMAC(func(d []byte) []byte {
 		s := gsha256.Sum256(d)
 		return s[:]
@@ -139,6 +176,9 @@ func HmacSHA256(key, message []byte) []byte {
 //	HmacSHA512(key, []byte("Hi There"))
 //	// 87aa7cdea5ef619d4ff0b4241a1d6cb0...
 func HmacSHA512(key, message []byte) []byte {
+	if len(key) == 0 {
+		panic("hmac: key must not be empty")
+	}
 	return HMAC(func(d []byte) []byte {
 		s := gsha512.Sum512(d)
 		return s[:]

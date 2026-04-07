@@ -74,6 +74,7 @@ RFC 4231 Test Vector (TC1, HMAC-SHA256)
 
 from __future__ import annotations
 
+import hmac as _hmac_stdlib
 from collections.abc import Callable
 
 from coding_adventures_md5 import md5
@@ -158,6 +159,8 @@ def hmac_md5(key: bytes, message: bytes) -> bytes:
     '750c783e6ab0b503eaa86e310a5db738'
 
     """
+    if not key:
+        raise ValueError("HMAC key must not be empty")
     return hmac(md5, 64, key, message)
 
 
@@ -173,6 +176,8 @@ def hmac_sha1(key: bytes, message: bytes) -> bytes:
     'effcdf6ae5eb2fa2d27416d5f184df9c259a7c79'
 
     """
+    if not key:
+        raise ValueError("HMAC key must not be empty")
     return hmac(sha1, 64, key, message)
 
 
@@ -188,6 +193,8 @@ def hmac_sha256(key: bytes, message: bytes) -> bytes:
     'b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7'
 
     """
+    if not key:
+        raise ValueError("HMAC key must not be empty")
     return hmac(sha256, 64, key, message)
 
 
@@ -204,6 +211,8 @@ def hmac_sha512(key: bytes, message: bytes) -> bytes:
     '87aa7cdea5ef619d4ff0b4241a1d6cb0...'
 
     """
+    if not key:
+        raise ValueError("HMAC key must not be empty")
     return hmac(sha512, 128, key, message)
 
 
@@ -230,6 +239,47 @@ def hmac_sha256_hex(key: bytes, message: bytes) -> str:
 def hmac_sha512_hex(key: bytes, message: bytes) -> str:
     """HMAC-SHA512 as a lowercase hex string (128 characters)."""
     return hmac_sha512(key, message).hex()
+
+
+# =============================================================================
+# Constant-time tag verification
+# =============================================================================
+
+
+def verify(expected: bytes, actual: bytes) -> bool:
+    """Compare two HMAC tags in constant time.
+
+    Use this instead of ``==`` when checking whether a received tag matches an
+    expected tag.  The ``==`` operator short-circuits on the first differing
+    byte, leaking timing information about *how many bytes* match.  Over many
+    requests an attacker can exploit these timing differences to reconstruct
+    the expected tag byte by byte — a **timing attack**.
+
+    ``verify`` delegates to :func:`hmac.compare_digest` from the standard
+    library, which is implemented in C and guaranteed to run in constant time.
+
+    Parameters
+    ----------
+    expected:
+        The tag produced locally using the secret key.
+    actual:
+        The tag received from an untrusted source.
+
+    Returns
+    -------
+    bool
+        ``True`` iff ``expected`` and ``actual`` are identical.
+
+    Examples
+    --------
+    >>> tag = hmac_sha256(b"secret", b"message")
+    >>> verify(tag, tag)
+    True
+    >>> verify(tag, b"wrong")
+    False
+
+    """
+    return _hmac_stdlib.compare_digest(expected, actual)
 
 
 # =============================================================================

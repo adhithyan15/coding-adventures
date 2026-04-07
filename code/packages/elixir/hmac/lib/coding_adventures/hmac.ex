@@ -202,6 +202,7 @@ defmodule CodingAdventures.Hmac do
   """
   @spec hmac_md5(binary, binary) :: binary
   def hmac_md5(key, message) when is_binary(key) and is_binary(message) do
+    if byte_size(key) == 0, do: raise(ArgumentError, "HMAC key must not be empty")
     hmac(&Md5.md5/1, 64, key, message)
   end
 
@@ -218,6 +219,7 @@ defmodule CodingAdventures.Hmac do
   """
   @spec hmac_sha1(binary, binary) :: binary
   def hmac_sha1(key, message) when is_binary(key) and is_binary(message) do
+    if byte_size(key) == 0, do: raise(ArgumentError, "HMAC key must not be empty")
     hmac(&Sha1.sha1/1, 64, key, message)
   end
 
@@ -236,6 +238,7 @@ defmodule CodingAdventures.Hmac do
   """
   @spec hmac_sha256(binary, binary) :: binary
   def hmac_sha256(key, message) when is_binary(key) and is_binary(message) do
+    if byte_size(key) == 0, do: raise(ArgumentError, "HMAC key must not be empty")
     hmac(&Sha256.sha256/1, 64, key, message)
   end
 
@@ -257,6 +260,7 @@ defmodule CodingAdventures.Hmac do
   """
   @spec hmac_sha512(binary, binary) :: binary
   def hmac_sha512(key, message) when is_binary(key) and is_binary(message) do
+    if byte_size(key) == 0, do: raise(ArgumentError, "HMAC key must not be empty")
     hmac(&Sha512.sha512/1, 128, key, message)
   end
 
@@ -279,6 +283,41 @@ defmodule CodingAdventures.Hmac do
   @doc "HMAC-SHA512 returning a lowercase hex string."
   @spec hmac_sha512_hex(binary, binary) :: String.t()
   def hmac_sha512_hex(key, message), do: hmac_sha512(key, message) |> Base.encode16(case: :lower)
+
+  # ---------------------------------------------------------------------------
+  # Constant-time tag verification
+  # ---------------------------------------------------------------------------
+
+  @doc """
+  Compare two HMAC tags in constant time.
+
+  Use this instead of `==` when checking whether a received tag matches an
+  expected tag. The `==` operator short-circuits on the first differing byte,
+  leaking information about *how many bytes* match through timing. Over many
+  requests an attacker can use these timing differences to reconstruct the
+  expected tag byte by byte — a **timing attack**.
+
+  `secure_compare/2` takes the same time regardless of where (or whether)
+  the two binaries differ. It delegates to `:crypto.hash_equals/2`, which is
+  an OpenSSL constant-time comparison available in Erlang/OTP 25+.
+
+  Returns `true` iff `a` and `b` are byte-for-byte identical.
+
+  ## Examples
+
+      iex> tag = CodingAdventures.Hmac.hmac_sha256("secret", "message")
+      iex> CodingAdventures.Hmac.secure_compare(tag, tag)
+      true
+      iex> CodingAdventures.Hmac.secure_compare(tag, "wrong")
+      false
+
+  """
+  @spec secure_compare(binary, binary) :: boolean
+  def secure_compare(a, b) when is_binary(a) and is_binary(b) and byte_size(a) == byte_size(b) do
+    :crypto.hash_equals(a, b)
+  end
+
+  def secure_compare(_a, _b), do: false
 
   # ---------------------------------------------------------------------------
   # Private helpers

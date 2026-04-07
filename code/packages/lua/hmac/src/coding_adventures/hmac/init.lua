@@ -118,10 +118,14 @@ end
 
 -- XOR every byte of a string with a constant fill byte.
 -- Returns a new binary string of the same length.
+--
+-- Note: `~` is the Lua 5.4 bitwise XOR operator (integer-only).
+-- This module requires Lua 5.4 or later. On Lua 5.3 use `~` as well
+-- (it was introduced in 5.3). On Lua 5.1/5.2 you would need bit32.bxor.
 local function xor_fill(s, fill)
     local bytes = str_to_bytes(s)
     for i = 1, #bytes do
-        bytes[i] = bytes[i] ~ fill   -- Lua 5.4 bitwise XOR
+        bytes[i] = bytes[i] ~ fill   -- Lua 5.3+ bitwise XOR (integer, 0–255 range safe)
     end
     return bytes_to_str(bytes)
 end
@@ -159,16 +163,19 @@ end
 
 --- HMAC-MD5: returns a table of 16 bytes (RFC 2202).
 function M.hmac_md5(key, message)
+    assert(#key > 0, "HMAC key must not be empty")
     return M.hmac(md5_m.digest, 64, key, message)
 end
 
 --- HMAC-SHA1: returns a table of 20 bytes (RFC 2202).
 function M.hmac_sha1(key, message)
+    assert(#key > 0, "HMAC key must not be empty")
     return M.hmac(sha1_m.digest, 64, key, message)
 end
 
 --- HMAC-SHA256: returns a table of 32 bytes (RFC 4231).
 function M.hmac_sha256(key, message)
+    assert(#key > 0, "HMAC key must not be empty")
     return M.hmac(sha256_m.sha256, 64, key, message)
 end
 
@@ -176,6 +183,7 @@ end
 -- SHA-512 uses 128-byte blocks (64-bit words), so key normalization and
 -- ipad/opad arrays are 128 bytes wide.
 function M.hmac_sha512(key, message)
+    assert(#key > 0, "HMAC key must not be empty")
     return M.hmac(sha512_m.digest, 128, key, message)
 end
 
@@ -207,6 +215,32 @@ end
 --- HMAC-SHA512 as a 128-character lowercase hex string.
 function M.hmac_sha512_hex(key, message)
     return to_hex(M.hmac_sha512(key, message))
+end
+
+-- ─── Constant-time tag verification ─────────────────────────────────────────
+
+--- Compare two HMAC tags (byte tables) in constant time.
+--
+-- Use this instead of table equality when verifying a received tag against
+-- an expected one. A naive loop that returns false on the first mismatch
+-- leaks timing information — an attacker making many requests can measure
+-- how long verification takes to deduce how many bytes match, and
+-- incrementally reconstruct the expected tag (a timing attack).
+--
+-- This function XOR-accumulates all byte differences without short-circuiting.
+-- The loop always runs #expected iterations regardless of where mismatches
+-- occur, so the runtime is independent of tag content.
+--
+-- @param expected table — tag produced locally using the secret key
+-- @param actual   table — tag received from an untrusted source
+-- @return boolean — true iff expected and actual are byte-for-byte identical
+function M.verify(expected, actual)
+    if #expected ~= #actual then return false end
+    local diff = 0
+    for i = 1, #expected do
+        diff = diff | (expected[i] ~ actual[i])   -- bitwise OR and XOR (Lua 5.3+)
+    end
+    return diff == 0
 end
 
 return M

@@ -149,6 +149,7 @@ module CodingAdventures
     # @param message [String] data to authenticate (binary)
     # @return [String] 16-byte binary authentication tag
     def self.hmac_md5(key, message)
+      raise ArgumentError, "HMAC key must not be empty" if key.empty?
       hmac(->(d) { CodingAdventures::Md5.md5(d) }, 64, key, message)
     end
 
@@ -162,6 +163,7 @@ module CodingAdventures
     # @param message [String] data to authenticate (binary)
     # @return [String] 20-byte binary authentication tag
     def self.hmac_sha1(key, message)
+      raise ArgumentError, "HMAC key must not be empty" if key.empty?
       hmac(->(d) { CodingAdventures::Sha1.sha1(d) }, 64, key, message)
     end
 
@@ -174,6 +176,7 @@ module CodingAdventures
     # @param message [String] data to authenticate (binary)
     # @return [String] 32-byte binary authentication tag
     def self.hmac_sha256(key, message)
+      raise ArgumentError, "HMAC key must not be empty" if key.empty?
       hmac(->(d) { CodingAdventures::Sha256.sha256(d) }, 64, key, message)
     end
 
@@ -186,6 +189,7 @@ module CodingAdventures
     # @param message [String] data to authenticate (binary)
     # @return [String] 64-byte binary authentication tag
     def self.hmac_sha512(key, message)
+      raise ArgumentError, "HMAC key must not be empty" if key.empty?
       hmac(->(d) { CodingAdventures::Sha512.sha512(d) }, 128, key, message)
     end
 
@@ -233,5 +237,31 @@ module CodingAdventures
     end
 
     private_class_method :normalize_key, :xor_fill
+
+    # ─── Constant-time tag verification ──────────────────────────────────────
+
+    # Compare two HMAC tags in constant time.
+    #
+    # Use this instead of `==` when checking whether a received tag matches an
+    # expected tag. Ruby's String#== short-circuits on the first differing byte,
+    # leaking timing information about how many bytes match. Over many requests
+    # an attacker can exploit these timing differences to reconstruct the
+    # expected tag byte by byte — a **timing attack**.
+    #
+    # This implementation accumulates XOR differences across all bytes without
+    # short-circuiting, then checks the accumulator at the end.
+    #
+    # @param expected [String] tag produced locally using the secret key
+    # @param actual   [String] tag received from an untrusted source
+    # @return [Boolean] true iff expected and actual are byte-for-byte identical
+    def self.verify(expected, actual)
+      return false if expected.bytesize != actual.bytesize
+
+      exp_bytes = expected.bytes
+      act_bytes = actual.bytes
+      diff = 0
+      exp_bytes.length.times { |i| diff |= exp_bytes[i] ^ act_bytes[i] }
+      diff == 0
+    end
   end
 end

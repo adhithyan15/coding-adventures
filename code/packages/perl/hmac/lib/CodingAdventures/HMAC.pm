@@ -89,6 +89,7 @@ our @EXPORT_OK = qw(
     hmac_sha1    hmac_sha1_hex
     hmac_sha256  hmac_sha256_hex
     hmac_sha512  hmac_sha512_hex
+    verify
 );
 
 # ipad = 0x36 (XOR'd with K' to form inner_key)
@@ -141,6 +142,7 @@ sub hmac {
 # resistance — MAC security and collision resistance are different properties.
 sub hmac_md5 {
     my ($key, $message) = @_;
+    die "HMAC key must not be empty\n" unless length($key) > 0;
     return hmac(sub { CodingAdventures::Md5::digest($_[0]) }, 64, $key, $message);
 }
 
@@ -149,6 +151,7 @@ sub hmac_md5 {
 # Used in WPA2 (PBKDF2-HMAC-SHA1), older TLS/SSH, and TOTP/HOTP.
 sub hmac_sha1 {
     my ($key, $message) = @_;
+    die "HMAC key must not be empty\n" unless length($key) > 0;
     return hmac(sub { CodingAdventures::Sha1::digest($_[0]) }, 64, $key, $message);
 }
 
@@ -157,6 +160,7 @@ sub hmac_sha1 {
 # The modern default for TLS 1.3, JWT HS256, and AWS Signature V4.
 sub hmac_sha256 {
     my ($key, $message) = @_;
+    die "HMAC key must not be empty\n" unless length($key) > 0;
     return hmac(sub { CodingAdventures::SHA256::sha256($_[0]) }, 64, $key, $message);
 }
 
@@ -166,6 +170,7 @@ sub hmac_sha256 {
 # and ipad/opad arrays are 128 bytes wide.
 sub hmac_sha512 {
     my ($key, $message) = @_;
+    die "HMAC key must not be empty\n" unless length($key) > 0;
     return hmac(sub { CodingAdventures::Sha512::digest($_[0]) }, 128, $key, $message);
 }
 
@@ -177,6 +182,35 @@ sub hmac_md5_hex    { join('', map { sprintf('%02x', $_) } @{ hmac_md5(@_) }) }
 sub hmac_sha1_hex   { join('', map { sprintf('%02x', $_) } @{ hmac_sha1(@_) }) }
 sub hmac_sha256_hex { join('', map { sprintf('%02x', $_) } @{ hmac_sha256(@_) }) }
 sub hmac_sha512_hex { join('', map { sprintf('%02x', $_) } @{ hmac_sha512(@_) }) }
+
+# ---------------------------------------------------------------------------
+# Constant-time tag verification
+# ---------------------------------------------------------------------------
+
+# verify($expected_aref, $actual_aref) -> bool
+#
+# Compare two HMAC tags (arrayrefs of byte integers) in constant time.
+#
+# Use this instead of array equality when checking whether a received tag
+# matches an expected tag. A naive loop that returns false on the first
+# differing byte leaks timing information — an attacker making many requests
+# can measure how long verification takes to deduce how many bytes match, and
+# incrementally reconstruct the expected tag (a timing attack).
+#
+# This function XOR-accumulates all byte differences without short-circuiting.
+# The loop runs scalar(@$expected) iterations regardless of where mismatches
+# occur, making execution time independent of tag content.
+#
+# Returns 1 (true) iff expected and actual are byte-for-byte identical.
+sub verify {
+    my ($expected, $actual) = @_;
+    return 0 if scalar(@$expected) != scalar(@$actual);
+    my $diff = 0;
+    for my $i (0 .. $#$expected) {
+        $diff |= $expected->[$i] ^ $actual->[$i];
+    }
+    return $diff == 0 ? 1 : 0;
+}
 
 # ---------------------------------------------------------------------------
 # Private helpers

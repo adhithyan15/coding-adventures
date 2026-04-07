@@ -167,6 +167,7 @@ export function hmac(
  * ```
  */
 export function hmacMD5(key: Uint8Array, message: Uint8Array): Uint8Array {
+  if (key.length === 0) throw new Error("HMAC key must not be empty");
   return hmac(md5, 64, key, message);
 }
 
@@ -185,6 +186,7 @@ export function hmacMD5(key: Uint8Array, message: Uint8Array): Uint8Array {
  * ```
  */
 export function hmacSHA1(key: Uint8Array, message: Uint8Array): Uint8Array {
+  if (key.length === 0) throw new Error("HMAC key must not be empty");
   return hmac(sha1, 64, key, message);
 }
 
@@ -202,6 +204,7 @@ export function hmacSHA1(key: Uint8Array, message: Uint8Array): Uint8Array {
  * ```
  */
 export function hmacSHA256(key: Uint8Array, message: Uint8Array): Uint8Array {
+  if (key.length === 0) throw new Error("HMAC key must not be empty");
   return hmac(sha256, 64, key, message);
 }
 
@@ -220,6 +223,7 @@ export function hmacSHA256(key: Uint8Array, message: Uint8Array): Uint8Array {
  * ```
  */
 export function hmacSHA512(key: Uint8Array, message: Uint8Array): Uint8Array {
+  if (key.length === 0) throw new Error("HMAC key must not be empty");
   return hmac(sha512, 128, key, message);
 }
 
@@ -293,4 +297,39 @@ export function toHex(bytes: Uint8Array): string {
   return Array.from(bytes)
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
+}
+
+// ─── Constant-time tag verification ──────────────────────────────────────────
+
+/**
+ * Compare two HMAC tags in constant time.
+ *
+ * Use this instead of `===` or array comparison when checking whether a
+ * received tag matches an expected tag. Short-circuit comparison leaks timing
+ * information about how many bytes match — over many requests an attacker can
+ * use these timing differences to reconstruct the expected tag byte by byte
+ * (a **timing attack**).
+ *
+ * This implementation uses a bitwise OR accumulator that processes ALL bytes
+ * regardless of where the first mismatch occurs.
+ *
+ * @param expected - Tag produced locally using the secret key
+ * @param actual   - Tag received from an untrusted source
+ * @returns `true` iff `expected` and `actual` are byte-for-byte identical
+ *
+ * @example
+ * ```ts
+ * const key = new TextEncoder().encode("secret");
+ * const tag = hmacSHA256(key, new TextEncoder().encode("message"));
+ * verify(tag, tag); // true
+ * verify(tag, new Uint8Array(32)); // false
+ * ```
+ */
+export function verify(expected: Uint8Array, actual: Uint8Array): boolean {
+  if (expected.length !== actual.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) {
+    diff |= expected[i] ^ actual[i];
+  }
+  return diff === 0;
 }
