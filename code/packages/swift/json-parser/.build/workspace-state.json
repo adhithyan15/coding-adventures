@@ -1,0 +1,97 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "directed-graph",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph",
+          "name" : "DirectedGraph"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph"
+        },
+        "subpath" : "directed-graph"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "grammar-tools",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools",
+          "name" : "GrammarTools"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools"
+        },
+        "subpath" : "grammar-tools"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "json-lexer",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer",
+          "name" : "json-lexer"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer"
+        },
+        "subpath" : "json-lexer"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "lexer",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer",
+          "name" : "Lexer"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer"
+        },
+        "subpath" : "lexer"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "parser",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser",
+          "name" : "Parser"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser"
+        },
+        "subpath" : "parser"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "state-machine",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine",
+          "name" : "StateMachine"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine"
+        },
+        "subpath" : "state-machine"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}
