@@ -159,12 +159,16 @@ end)
 -- ─── Key handling ─────────────────────────────────────────────────────────────
 
 describe("Key handling", function()
-    it("empty key and message SHA-256", function()
-        assert.are.equal(32, #hmac.hmac_sha256("", ""))
+    it("empty key raises error for SHA-256", function()
+        assert.has_error(function() hmac.hmac_sha256("", "") end, "HMAC key must not be empty")
     end)
 
-    it("empty key and message SHA-512", function()
-        assert.are.equal(64, #hmac.hmac_sha512("", ""))
+    it("empty key raises error for SHA-512", function()
+        assert.has_error(function() hmac.hmac_sha512("", "") end, "HMAC key must not be empty")
+    end)
+
+    it("empty message with non-empty key is allowed", function()
+        assert.are.equal(32, #hmac.hmac_sha256("key", ""))
     end)
 
     it("keys of different long lengths produce different tags", function()

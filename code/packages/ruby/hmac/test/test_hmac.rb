@@ -146,12 +146,16 @@ class TestHmacReturnLengths < Minitest::Test
 end
 
 class TestHmacKeyHandling < Minitest::Test
-  def test_empty_key_and_message_sha256
-    assert_equal 32, HMAC.hmac_sha256("", "").bytesize
+  def test_empty_key_raises_sha256
+    assert_raises(ArgumentError) { HMAC.hmac_sha256("", "") }
   end
 
-  def test_empty_key_and_message_sha512
-    assert_equal 64, HMAC.hmac_sha512("", "").bytesize
+  def test_empty_key_raises_sha512
+    assert_raises(ArgumentError) { HMAC.hmac_sha512("", "") }
+  end
+
+  def test_empty_message_with_valid_key_allowed
+    assert_equal 32, HMAC.hmac_sha256("key", "").length
   end
 
   def test_long_keys_of_different_lengths_differ

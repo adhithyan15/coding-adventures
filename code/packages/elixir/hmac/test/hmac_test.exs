@@ -224,9 +224,10 @@ defmodule CodingAdventures.HmacTest do
   # ===========================================================================
 
   describe "key handling" do
-    test "empty key is valid" do
-      result = Hmac.hmac_sha256("", "message")
-      assert byte_size(result) == 32
+    test "empty key raises ArgumentError" do
+      assert_raise ArgumentError, "HMAC key must not be empty", fn ->
+        Hmac.hmac_sha256("", "message")
+      end
     end
 
     test "empty message is valid" do
@@ -234,9 +235,10 @@ defmodule CodingAdventures.HmacTest do
       assert byte_size(result) == 32
     end
 
-    test "empty key and empty message is valid" do
-      result = Hmac.hmac_sha256("", "")
-      assert byte_size(result) == 32
+    test "empty key and empty message raises ArgumentError" do
+      assert_raise ArgumentError, "HMAC key must not be empty", fn ->
+        Hmac.hmac_sha256("", "")
+      end
     end
 
     test "key exactly block size (64 bytes) is not hashed" do

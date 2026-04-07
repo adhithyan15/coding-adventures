@@ -114,8 +114,9 @@ subtest 'Return lengths' => sub {
 # ─── Key handling ─────────────────────────────────────────────────────────────
 
 subtest 'Key handling' => sub {
-    is(scalar @{ hmac_sha256("", "") }, 32, "empty key and message SHA-256");
-    is(scalar @{ hmac_sha512("", "") }, 64, "empty key and message SHA-512");
+    ok(do { local $@; eval { hmac_sha256("", "") }; $@ =~ /key must not be empty/ }, "empty key SHA-256 dies");
+    ok(do { local $@; eval { hmac_sha512("", "") }; $@ =~ /key must not be empty/ }, "empty key SHA-512 dies");
+    is(scalar @{ hmac_sha256("key", "") }, 32, "empty message with non-empty key is allowed");
 
     my $k65 = "\x01" x 65;
     my $k66 = "\x01" x 66;

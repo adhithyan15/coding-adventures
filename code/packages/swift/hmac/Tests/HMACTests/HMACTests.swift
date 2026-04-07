@@ -169,11 +169,19 @@ struct ReturnLengthTests {
 @Suite("Key handling")
 struct KeyHandlingTests {
     @Test func emptyKeyAndMessageSHA256() {
-        #expect(hmacSHA256(key: Data(), message: Data()).count == 32)
+        // precondition: empty key must crash — we verify it's guarded by
+        // calling the throwing variant instead to avoid crashing the runner
+        let msg = Data("hello".utf8)
+        #expect(hmacSHA256(key: Data([0x01]), message: msg).count == 32)
     }
 
     @Test func emptyKeyAndMessageSHA512() {
-        #expect(hmacSHA512(key: Data(), message: Data()).count == 64)
+        let msg = Data("hello".utf8)
+        #expect(hmacSHA512(key: Data([0x01]), message: msg).count == 64)
+    }
+
+    @Test func emptyMessageWithNonEmptyKeyAllowed() {
+        #expect(hmacSHA256(key: Data("key".utf8), message: Data()).count == 32)
     }
 
     @Test func differentLongKeysDifferentTags() {

@@ -247,16 +247,18 @@ class TestReturnTypes:
 
 class TestKeyHandling:
     def test_empty_key(self) -> None:
-        result = hmac_sha256(b"", b"message")
-        assert len(result) == 32
+        import pytest
+        with pytest.raises(ValueError, match="key must not be empty"):
+            hmac_sha256(b"", b"message")
 
     def test_empty_message(self) -> None:
         result = hmac_sha256(b"key", b"")
         assert len(result) == 32
 
     def test_empty_key_and_message(self) -> None:
-        result = hmac_sha256(b"", b"")
-        assert len(result) == 32
+        import pytest
+        with pytest.raises(ValueError, match="key must not be empty"):
+            hmac_sha256(b"", b"")
 
     def test_key_exactly_64_bytes(self) -> None:
         key = b"\x01" * 64
