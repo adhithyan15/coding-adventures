@@ -1,0 +1,19 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/DFA.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.dia"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/NFA.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.dia"
+  }
+}

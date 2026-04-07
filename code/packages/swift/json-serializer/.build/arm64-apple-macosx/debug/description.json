@@ -1,0 +1,2340 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.xctest/Contents/MacOS/json-serializerPackageTests",
+      "packagePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer",
+      "productName" : "json-serializerPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.DirectedGraph-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "DirectedGraph",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/include/DirectedGraph-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "directed_graph"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.GrammarTools-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/CrossValidator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/ParserGrammar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/TokenGrammar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "GrammarTools",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/CrossValidator.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/ParserGrammar.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/TokenGrammar.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/include/GrammarTools-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "grammar_tools"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/CrossValidator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/ParserGrammar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/TokenGrammar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/CrossValidator.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/ParserGrammar.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/TokenGrammar.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.JsonLexer-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/Sources/JsonLexer/JsonLexer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/StateMachine.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "JsonLexer",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonLexer.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/include/JsonLexer-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "json_lexer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonLexer.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/Sources/JsonLexer/JsonLexer.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.JsonParser-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-parser/Sources/JsonParser/JsonParser.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonLexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Parser.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/StateMachine.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "JsonParser",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonParser.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/include/JsonParser-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "json_parser"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonParser.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-parser/Sources/JsonParser/JsonParser.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.JsonSerializer-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/Config.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/JsonSerializer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonLexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonParser.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonValue.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Parser.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/StateMachine.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "JsonSerializer",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonSerializer.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/include/JsonSerializer-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "json_serializer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonSerializer.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/Config.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/JsonSerializer.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.JsonSerializerTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Tests/JsonSerializerTests/JsonSerializerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonSerializer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "JsonSerializerTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonSerializerTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "json_serializer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonSerializerTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Tests/JsonSerializerTests/JsonSerializerTests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.JsonValue-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/Converter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/JsonValue.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonLexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonParser.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Parser.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/StateMachine.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "JsonValue",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonValue.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/Converter.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/JsonValue.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/include/JsonValue-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "json_value"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/Converter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/JsonValue.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonValue.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/Converter.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/JsonValue.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.Lexer-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/GrammarLexer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerContext.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/Token.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Lexer",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/GrammarLexer.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/LexerContext.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/LexerError.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/Token.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/include/Lexer-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "lexer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/GrammarLexer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/LexerContext.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/LexerError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/Token.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/GrammarLexer.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerContext.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerError.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/Token.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.Parser-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTNode.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTWalker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/GrammarParser.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Lexer.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/GrammarTools.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Parser",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Parser.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/ASTNode.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/ASTWalker.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/GrammarParser.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/include/Parser-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "parser"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/ASTNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/ASTWalker.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/GrammarParser.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/Parser.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTNode.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTWalker.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/GrammarParser.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.StateMachine-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/DFA.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/NFA.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "StateMachine",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/StateMachine.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.swift.o",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/include/StateMachine-Swift.h",
+        "-color-diagnostics",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "state_machine"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/StateMachine.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/DFA.swift",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/NFA.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.json-serializerPackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/JsonSerializerTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "json_serializerPackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/json_serializerPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/include/json-serializerPackageTests-Swift.h",
+        "-color-diagnostics",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "json_serializer"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules/json_serializerPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "DirectedGraph" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "DirectedGraph",
+      "-package-name",
+      "directed_graph",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/include/DirectedGraph-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "directed_graph",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "GrammarTools" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "GrammarTools",
+      "-package-name",
+      "grammar_tools",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/CrossValidator.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/ParserGrammar.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/TokenGrammar.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/include/GrammarTools-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "grammar_tools",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "JsonLexer" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "JsonLexer",
+      "-package-name",
+      "json_lexer",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/Sources/JsonLexer/JsonLexer.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/include/JsonLexer-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "json_lexer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "JsonParser" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "JsonParser",
+      "-package-name",
+      "json_parser",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-parser/Sources/JsonParser/JsonParser.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/include/JsonParser-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "json_parser",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "JsonSerializer" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "JsonSerializer",
+      "-package-name",
+      "json_serializer",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/Config.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/JsonSerializer.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/include/JsonSerializer-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "json_serializer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "JsonSerializerTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "JsonSerializerTests",
+      "-package-name",
+      "json_serializer",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Tests/JsonSerializerTests/JsonSerializerTests.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "json_serializer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "JsonValue" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "JsonValue",
+      "-package-name",
+      "json_value",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/Converter.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/JsonValue.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/include/JsonValue-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "json_value",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "Lexer" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Lexer",
+      "-package-name",
+      "lexer",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/GrammarLexer.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerContext.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerError.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/Token.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/include/Lexer-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "lexer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "Parser" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Parser",
+      "-package-name",
+      "parser",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTNode.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTWalker.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/GrammarParser.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/include/Parser-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "parser",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "StateMachine" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "StateMachine",
+      "-package-name",
+      "state_machine",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/DFA.swift",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/NFA.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/include/StateMachine-Swift.h",
+      "-color-diagnostics",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "state_machine",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "json_serializerPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "json_serializerPackageTests",
+      "-package-name",
+      "json_serializer",
+      "-c",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/include/json-serializerPackageTests-Swift.h",
+      "-color-diagnostics",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "json_serializer",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "DirectedGraph" : [
+
+    ],
+    "GrammarTools" : [
+
+    ],
+    "JsonLexer" : [
+      "StateMachine",
+      "Lexer",
+      "GrammarTools",
+      "DirectedGraph"
+    ],
+    "JsonParser" : [
+      "Parser",
+      "JsonLexer",
+      "StateMachine",
+      "Lexer",
+      "GrammarTools",
+      "DirectedGraph"
+    ],
+    "JsonSerializer" : [
+      "JsonValue",
+      "JsonParser",
+      "Parser",
+      "JsonLexer",
+      "StateMachine",
+      "Lexer",
+      "GrammarTools",
+      "DirectedGraph"
+    ],
+    "JsonSerializerTests" : [
+      "JsonSerializer",
+      "JsonValue",
+      "JsonParser",
+      "Parser",
+      "JsonLexer",
+      "StateMachine",
+      "Lexer",
+      "GrammarTools",
+      "DirectedGraph"
+    ],
+    "JsonValue" : [
+      "JsonParser",
+      "Parser",
+      "JsonLexer",
+      "StateMachine",
+      "Lexer",
+      "GrammarTools",
+      "DirectedGraph"
+    ],
+    "Lexer" : [
+      "GrammarTools"
+    ],
+    "Parser" : [
+      "Lexer",
+      "GrammarTools"
+    ],
+    "StateMachine" : [
+
+    ],
+    "json_serializerPackageTests" : [
+      "JsonSerializerTests",
+      "JsonSerializer",
+      "JsonValue",
+      "JsonParser",
+      "Parser",
+      "JsonLexer",
+      "StateMachine",
+      "Lexer",
+      "GrammarTools",
+      "DirectedGraph"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/CrossValidator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/ParserGrammar.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/grammar-tools/Sources/GrammarTools/TokenGrammar.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/Sources/JsonLexer/JsonLexer.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-parser/Sources/JsonParser/JsonParser.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/Config.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/JsonSerializer.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Tests/JsonSerializerTests/JsonSerializerTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/Converter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-value/Sources/JsonValue/JsonValue.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/GrammarLexer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerContext.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/LexerError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/lexer/Sources/Lexer/Token.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTNode.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/ASTWalker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/parser/Sources/Parser/GrammarParser.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/DFA.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/state-machine/Sources/StateMachine/NFA.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/CrossValidator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/ParserGrammar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/GrammarTools.build/TokenGrammar.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonParser.build/JsonParser.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/Converter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonValue.build/JsonValue.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/GrammarLexer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/LexerContext.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/LexerError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Lexer.build/Token.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/ASTNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/ASTWalker.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/Parser.build/GrammarParser.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/DFA.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/StateMachine.build/NFA.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/runner.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json-serializerPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/json_serializerPackageTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

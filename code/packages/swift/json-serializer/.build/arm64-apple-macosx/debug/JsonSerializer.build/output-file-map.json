@@ -1,0 +1,19 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/Config.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/Config.dia"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Sources/JsonSerializer/JsonSerializer.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializer.build/JsonSerializer.dia"
+  }
+}

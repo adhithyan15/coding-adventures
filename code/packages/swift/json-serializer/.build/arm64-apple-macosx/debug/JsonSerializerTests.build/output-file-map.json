@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/Tests/JsonSerializerTests/JsonSerializerTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonSerializerTests.build/JsonSerializerTests.dia"
+  }
+}

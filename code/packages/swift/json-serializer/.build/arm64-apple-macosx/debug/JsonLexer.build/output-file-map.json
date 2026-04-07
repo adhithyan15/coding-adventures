@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-lexer/Sources/JsonLexer/JsonLexer.swift": {
+    "dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.d",
+    "object": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/antigravity/coding-adventures/code/packages/swift/json-serializer/.build/arm64-apple-macosx/debug/JsonLexer.build/JsonLexer.dia"
+  }
+}
