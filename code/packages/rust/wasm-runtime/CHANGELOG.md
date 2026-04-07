@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-06
+
+### Added
+
+- **WASI Tier 3**: 8 new WASI host functions via the new `WasiEnv` struct:
+  - `args_sizes_get` — write argc and argv buffer size to WASM memory
+  - `args_get` — write argv pointer array and null-terminated strings to WASM memory
+  - `environ_sizes_get` — write envc and environ buffer size to WASM memory
+  - `environ_get` — write environ pointer array and null-terminated strings to WASM memory
+  - `clock_res_get` — write clock resolution (nanoseconds) as i64 little-endian
+  - `clock_time_get` — write current clock time (nanoseconds) as i64 little-endian
+  - `random_get` — fill a WASM memory region with random bytes
+  - `sched_yield` — no-op yield returning errno 0
+
+- **`WasiClock` trait** — injectable clock interface for deterministic testing; `SystemClock` uses `std::time::SystemTime` and a lazy `Instant` for monotonic time
+
+- **`WasiRandom` trait** — injectable random interface for deterministic testing; `SystemRandom` uses a hash-based fallback (NOT crypto-secure; documented and swappable)
+
+- **`WasiConfig` struct** — configuration bundle for args, env, stdout/stderr callbacks, clock, and random; implements `Default`
+
+- **`WasiEnv` struct** — full `HostInterface` implementation that resolves all Tier 3 WASI functions; uses `Arc<Mutex<LinearMemory>>` to share memory between host functions and the runtime
+
+- **Integration tests** in `tests/wasi_tier3.rs` — 14 tests covering all 8 new functions with `FakeClock` and `FakeRandom` for deterministic verification
+
+### Changed
+
+- No breaking changes to existing `WasiStub`, `WasmRuntime`, or `WasmInstance` APIs
+
 ## [0.1.0] - 2026-04-05
 
 ### Added
