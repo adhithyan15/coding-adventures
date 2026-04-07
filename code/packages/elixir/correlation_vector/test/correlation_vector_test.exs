@@ -640,5 +640,167 @@ defmodule CodingAdventures.CorrelationVectorTest do
       map = CorrelationVector.serialize(log)
       assert map["enabled"] == false
     end
+
+    test "history for a fresh entry with no contributions returns empty list" do
+      # Exercises the `base_contribs` path where entry exists but has no
+      # contributions and is not deleted — history returns [].
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      # No contribute or delete calls — history must be empty list
+      assert CorrelationVector.history(log, cv_id) == []
+    end
+
+    test "passthrough on a deleted CV raises RuntimeError" do
+      # passthrough delegates to contribute, which guards against deleted entries.
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      log = CorrelationVector.delete(log, cv_id, "dce", "unreachable", %{})
+
+      assert_raise RuntimeError, fn ->
+        CorrelationVector.passthrough(log, cv_id, "some_checker")
+      end
+    end
+
+    test "lineage for a merged node includes all parent entries" do
+      # Exercises lineage when the entry has multiple parent_ids (from merge).
+      # The result must contain entries for each parent, ordered oldest-first.
+      log = CorrelationVector.new()
+      {a, log} = CorrelationVector.create(log, %Origin{source: "src_a", location: "1:1"})
+      {b, log} = CorrelationVector.create(log, %Origin{source: "src_b", location: "2:2"})
+      {merged_id, log} = CorrelationVector.merge(log, [a, b])
+
+      lineage = CorrelationVector.lineage(log, merged_id)
+      lineage_ids = Enum.map(lineage, & &1.id)
+
+      # Both parents and the merged node must appear; merged node is last
+      assert merged_id in lineage_ids
+      assert a in lineage_ids
+      assert b in lineage_ids
+      assert List.last(lineage_ids) == merged_id
+    end
+
+    test "descendants on a deeply nested chain" do
+      # A → B → C → D: descendants(A) should include B, C, D.
+      log = CorrelationVector.new()
+      {a, log} = CorrelationVector.create(log)
+      {b, log} = CorrelationVector.derive(log, a)
+      {c, log} = CorrelationVector.derive(log, b)
+      {d, log} = CorrelationVector.derive(log, c)
+
+      desc = CorrelationVector.descendants(log, a) |> Enum.sort()
+      assert desc == Enum.sort([b, c, d])
+    end
+
+    test "ancestors when parent entry is missing from log" do
+      # If a CV entry lists parent_ids but the parent isn't in the log
+      # (e.g., cross-log reference), ancestors still returns without crashing.
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+
+      # Manually build an entry with a parent_id that doesn't exist in log
+      alias CodingAdventures.CorrelationVector.Entry
+      fake_entry = %Entry{
+        id: cv_id,
+        parent_ids: ["missing_parent.1"],
+        origin: nil,
+        contributions: [],
+        deleted: nil
+      }
+      log = %{log | entries: Map.put(log.entries, cv_id, fake_entry)}
+
+      # Should return the missing parent ID without crashing (it's not in entries,
+      # so its own parent_ids are treated as [])
+      ancs = CorrelationVector.ancestors(log, cv_id)
+      assert "missing_parent.1" in ancs
+    end
+
+    test "meta with atom keys and atom value is stringified for serialization" do
+      # Exercises stringify_keys (atom key → string key) and
+      # stringify_value (atom value → string value) code paths.
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      # atom key + atom value in meta
+      log = CorrelationVector.contribute(log, cv_id, "stage", "tagged", %{status: :active})
+
+      {:ok, json} = CorrelationVector.to_json_string(log)
+      {:ok, log2} = CorrelationVector.from_json_string(json)
+
+      entry = CorrelationVector.get(log2, cv_id)
+      assert List.first(entry.contributions).meta["status"] == "active"
+    end
+
+    test "meta with list value is handled in serialization" do
+      # Exercises the stringify_value list branch (line 837 in implementation).
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      log = CorrelationVector.contribute(log, cv_id, "stage", "tagged", %{"tags" => ["a", "b", "c"]})
+
+      {:ok, json} = CorrelationVector.to_json_string(log)
+      {:ok, log2} = CorrelationVector.from_json_string(json)
+
+      entry = CorrelationVector.get(log2, cv_id)
+      assert List.first(entry.contributions).meta["tags"] == ["a", "b", "c"]
+    end
+
+    test "meta with nested map value is stringified recursively" do
+      # Exercises the stringify_value map branch (line 836): nested maps with
+      # atom keys inside the meta must also have their keys stringified.
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      log = CorrelationVector.contribute(log, cv_id, "stage", "tagged", %{info: %{count: 3}})
+
+      {:ok, json} = CorrelationVector.to_json_string(log)
+      {:ok, log2} = CorrelationVector.from_json_string(json)
+
+      entry = CorrelationVector.get(log2, cv_id)
+      info = List.first(entry.contributions).meta["info"]
+      assert info["count"] == 3
+    end
+
+    test "serialize entry with nil origin produces nil origin in map" do
+      # Exercises the serialize_origin(nil) clause.
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      # nil origin (synthetic entity)
+      map = CorrelationVector.serialize(log)
+      assert map["entries"][cv_id]["origin"] == nil
+    end
+
+    test "roundtrip with disabled log preserves enabled: false" do
+      # Exercises from_json_string + deserialize when enabled is false.
+      log = CorrelationVector.new(false)
+      {_cv_id, log} = CorrelationVector.create(log)
+
+      {:ok, json} = CorrelationVector.to_json_string(log)
+      {:ok, log2} = CorrelationVector.from_json_string(json)
+
+      assert log2.enabled == false
+      assert log2.entries == %{}
+    end
+
+    test "delete then re-delete does not double-wrap the deletion record" do
+      # Calling delete twice on the same CV ID — the second call should overwrite
+      # (or simply update) the deletion record, and not crash.
+      log = CorrelationVector.new()
+      {cv_id, log} = CorrelationVector.create(log)
+      log = CorrelationVector.delete(log, cv_id, "stage1", "first deletion", %{})
+      log = CorrelationVector.delete(log, cv_id, "stage2", "second deletion", %{})
+
+      entry = CorrelationVector.get(log, cv_id)
+      # The second delete overwrites — source should be stage2
+      assert entry.deleted.source == "stage2"
+      assert entry.deleted.reason == "second deletion"
+    end
+
+    test "merge with empty parent list creates a synthetic CV entry" do
+      # Merging with no parents is a valid edge case — the entry has no parent_ids.
+      log = CorrelationVector.new()
+      {merged_id, log} = CorrelationVector.merge(log, [])
+
+      entry = CorrelationVector.get(log, merged_id)
+      assert entry != nil
+      assert entry.parent_ids == []
+      assert String.starts_with?(merged_id, "00000000.")
+    end
   end
 end
