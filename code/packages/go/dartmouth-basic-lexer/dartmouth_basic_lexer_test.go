@@ -2,6 +2,8 @@ package dartmouthlexer
 
 import (
 	"errors"
+	"fmt"
+	"path/filepath"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
@@ -1358,8 +1360,19 @@ func TestCapabilityCage_CapabilityViolationError(t *testing.T) {
 	if len(errMsg) == 0 {
 		t.Fatal("capability violation error message must not be empty")
 	}
-	// The error message must mention the undeclared path.
-	if !containsSubstr(errMsg, "/etc/passwd") {
+	// The error message must mention the undeclared path. The error formatter
+	// uses %q on the filepath.Clean'd path, which on Windows converts forward
+	// slashes to backslashes and then escapes them. We reconstruct the expected
+	// substring the same way so the check is cross-platform.
+	//   Linux:   filepath.Clean("/etc/passwd")  → "/etc/passwd"
+	//            fmt.Sprintf("%q", …)            → `"/etc/passwd"`  → inner: /etc/passwd
+	//   Windows: filepath.Clean("/etc/passwd")  → `\etc\passwd`
+	//            fmt.Sprintf("%q", …)            → `"\\etc\\passwd"` → inner: \\etc\\passwd
+	cleanedPath := filepath.Clean("/etc/passwd")
+	quotedPath := fmt.Sprintf("%q", cleanedPath)
+	// Strip the surrounding double-quotes that %q adds.
+	innerPath := quotedPath[1 : len(quotedPath)-1]
+	if !containsSubstr(errMsg, innerPath) {
 		t.Errorf("expected error to mention requested path, got: %q", errMsg)
 	}
 }
