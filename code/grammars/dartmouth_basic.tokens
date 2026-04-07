@@ -142,10 +142,10 @@ STRING_BODY = /"[^"]*"/ -> STRING
 # This is correct behavior since "SIN" in BASIC is always the sine function.
 # ============================================================
 
-# IMPORTANT: The GrammarLexer prepends \A (or ^) to each regex so patterns
-# only match at the current position in the source. Grouping the alternation
-# with (?:...) ensures the anchor applies to ALL alternatives:
-#   /\A(?:sin|cos|int)/ — anchors all branches correctly.
+# IMPORTANT: The GrammarLexer prepends ^ to each regex and splits top-level
+# alternation with | into separate patterns — each anchored individually.
+# Using bare alternation /sin|cos|int/ produces three anchored alternatives:
+#   ^sin, ^cos, ^int — each tried in order, first match wins.
 #
 # Lookahead note: Some regex engines (PCRE, Python re, Ruby Oniguruma) support
 # negative lookahead (?![a-z0-9]) to prevent "sinew" from matching as BUILTIN_FN.
@@ -159,7 +159,7 @@ STRING_BODY = /"[^"]*"/ -> STRING
 #   3. If a user writes invalid BASIC like "sinx", it will lex as
 #      BUILTIN_FN("sin") + NAME("x"), which the parser will reject anyway.
 # Implementations using PCRE-compatible engines may add (?![a-z0-9]) locally.
-BUILTIN_FN  = /(?:sin|cos|tan|atn|exp|log|abs|sqr|int|rnd|sgn)/
+BUILTIN_FN  = /sin|cos|tan|atn|exp|log|abs|sqr|int|rnd|sgn/
 USER_FN     = /fn[a-z]/
 
 # ============================================================
