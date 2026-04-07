@@ -145,12 +145,20 @@ describe("return lengths", () => {
 // ─── Key handling ─────────────────────────────────────────────────────────────
 
 describe("key handling", () => {
-  it("empty key and message produce 32-byte tag for SHA-256", () => {
-    expect(hmacSHA256(new Uint8Array(0), new Uint8Array(0)).length).toBe(32);
+  it("empty key throws for SHA-256", () => {
+    expect(() => hmacSHA256(new Uint8Array(0), new Uint8Array(0))).toThrow(
+      "HMAC key must not be empty"
+    );
   });
 
-  it("empty key and message produce 64-byte tag for SHA-512", () => {
-    expect(hmacSHA512(new Uint8Array(0), new Uint8Array(0)).length).toBe(64);
+  it("empty key throws for SHA-512", () => {
+    expect(() => hmacSHA512(new Uint8Array(0), new Uint8Array(0))).toThrow(
+      "HMAC key must not be empty"
+    );
+  });
+
+  it("empty message with non-empty key is allowed for SHA-256", () => {
+    expect(hmacSHA256(new Uint8Array([1]), new Uint8Array(0)).length).toBe(32);
   });
 
   it("keys of different lengths beyond block size produce different tags", () => {
