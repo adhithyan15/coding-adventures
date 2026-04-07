@@ -39,6 +39,7 @@ members = [
     "excel-parser",
     "fp-arithmetic",
     "garbage-collector",
+    "hmac",
     "gpu-core",
     "gradient-descent",
     "grammar-tools",
