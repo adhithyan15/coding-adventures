@@ -1,0 +1,10 @@
+{
+  "language": "perl",
+  "package": "CodingAdventures::CorrelationVector",
+  "version": "0.1.0",
+  "dependencies": [
+    "CodingAdventures::SHA256",
+    "CodingAdventures::JsonSerializer"
+  ],
+  "test_framework": "Test2::V0"
+}

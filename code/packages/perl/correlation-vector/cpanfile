@@ -1,0 +1,3 @@
+requires 'coding-adventures-sha256', '0.01';
+requires 'coding-adventures-json-serializer', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };
