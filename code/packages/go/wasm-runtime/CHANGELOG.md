@@ -2,6 +2,41 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-06
+
+### Added
+
+- **WASI Tier 3 host functions** — 8 new implementations replacing the ENOSYS stub:
+  - `args_sizes_get` — reports argument count and packed-buffer size to the guest
+  - `args_get` — writes null-terminated argument strings and pointer array to memory
+  - `environ_sizes_get` — reports environment variable count and buffer size
+  - `environ_get` — writes null-terminated env-var strings and pointer array to memory
+  - `clock_res_get` — writes clock resolution (nanoseconds) as i64 to memory
+  - `clock_time_get` — writes current time (realtime or monotonic) as i64 to memory
+  - `random_get` — fills a memory region with random bytes
+  - `sched_yield` — cooperative yield; returns success immediately (WASM is single-threaded)
+- **`WasiClock` interface** — injectable clock abstraction for deterministic testing
+  - `SystemClock{}` uses `time.Now().UnixNano()` for production
+  - `FakeClock` (in tests) returns fixed nanosecond values
+- **`WasiRandom` interface** — injectable random-byte source
+  - `SystemRandom{}` uses `crypto/rand.Read` for production
+  - `FakeRandom` (in tests) fills buffers with sentinel byte `0xAB`
+- **`WasiConfig` struct** — dependency-injection container for `WasiStub`
+  - Fields: `Args []string`, `Env []string`, `StdoutCallback`, `StderrCallback`, `Clock`, `Random`
+  - All fields have sensible defaults (nil Clock → `SystemClock{}`, nil Random → `SystemRandom{}`)
+- **`NewWasiStubFromConfig(WasiConfig)`** — config-based constructor
+- **`wasi_clock_random.go`** — new file housing `WasiClock`, `WasiRandom`, `SystemClock`, `SystemRandom`
+- **`wasi_stub_tier3_test.go`** — 11 new tests covering all Tier 3 functions plus config-defaults check
+
+### Changed
+
+- `NewWasiStub(stdout, stderr)` preserved for backward compatibility; now initialises `clock` and `random` to system defaults
+- `TestWasiStubUnknownFunction` updated to use a genuinely unknown function name (was using `random_get` which is now implemented)
+
+### Coverage
+
+- 92.2% statement coverage (up from previous baseline)
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

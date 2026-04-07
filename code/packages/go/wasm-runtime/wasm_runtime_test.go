@@ -634,7 +634,9 @@ func TestWasiStubResolvers(t *testing.T) {
 
 func TestWasiStubUnknownFunction(t *testing.T) {
 	wasi := NewWasiStub(nil, nil)
-	stub := wasi.ResolveFunction("wasi_snapshot_preview1", "random_get")
+	// Use a function name that will never be implemented — the WASI spec
+	// does not define "totally_not_a_real_wasi_function".
+	stub := wasi.ResolveFunction("wasi_snapshot_preview1", "totally_not_a_real_wasi_function")
 	if stub == nil {
 		t.Fatal("unknown WASI functions should return a stub")
 	}
