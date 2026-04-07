@@ -21,6 +21,7 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/sha256": "file:../sha256",
     "@coding-adventures/json-value": "file:../json-value",
     "@coding-adventures/json-serializer": "file:../json-serializer",
     "@coding-adventures/json-parser": "file:../json-parser",
