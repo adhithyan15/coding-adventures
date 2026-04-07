@@ -1,0 +1,36 @@
+{
+  "name": "@coding-adventures/dartmouth-basic-lexer",
+  "version": "0.1.0",
+  "description": "Tokenizer for the 1964 Dartmouth BASIC language",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "dartmouth-basic",
+    "basic",
+    "lexer",
+    "tokenizer",
+    "grammar-driven",
+    "computer-science",
+    "education",
+    "programming-language-history",
+    "kemeny",
+    "kurtz"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
