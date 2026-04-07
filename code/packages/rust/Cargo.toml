@@ -183,5 +183,6 @@ members = [
   "paint-metal",
   "algol-lexer",
   "algol-parser",
+  "dartmouth-basic-lexer",
   "register-vm",
 ]

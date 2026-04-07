@@ -1,0 +1,296 @@
+# Dartmouth BASIC 1964 Token Grammar
+# ============================================================
+#
+# This grammar tokenizes the 1964 Dartmouth BASIC language — the original
+# BASIC as implemented on the GE-225 mainframe at Dartmouth College.
+#
+# Dartmouth BASIC was designed by John Kemeny and Thomas Kurtz in 1964 to
+# give non-science students access to computing. Its design goals:
+#
+#   - Easy to learn for complete beginners
+#   - Line-numbered: every statement lives on a numbered line
+#   - Interactive: a teletype prints results as the program runs
+#   - Forgiving: every variable is pre-initialized to 0
+#
+# The teletypes of 1964 only had uppercase characters. This means the entire
+# language is case-insensitive. We normalise the whole source to lowercase
+# before matching (case_sensitive: false), so `print` and `PRINT` both
+# produce KEYWORD("PRINT") (keywords are normalized to uppercase in output).
+#
+# Named "dartmouth_basic" (not "basic") because future dialects --
+# Microsoft BASIC, Applesoft BASIC, GW-BASIC, etc. -- will each get their
+# own grammar file in this directory.
+
+# @version 1
+# @case_insensitive true
+case_sensitive: false
+
+# ============================================================
+# SECTION 1: Multi-character operators (must come before single-char)
+#
+# The three two-character comparison operators must appear before their
+# component characters. Without this ordering, "<=" would lex as two
+# tokens -- LT then EQ -- instead of a single LE token.
+#
+# Truth table of comparison operators in Dartmouth BASIC:
+#
+#   <=  LT or EQ  (in mathematics)
+#   >=  GT or EQ  (in mathematics)
+#   <>  LT or GT  (not-equal in mathematics)
+#
+# All three were standard in the original Dartmouth BASIC spec.
+# ============================================================
+
+LE          = "<="
+GE          = ">="
+NE          = "<>"
+
+# ============================================================
+# SECTION 2: Numeric literals
+#
+# Dartmouth BASIC 1964 stores all numbers as floating-point internally.
+# Even integers like 42 are stored as 42.0. Supported formats:
+#
+#   42        integer-looking but stored as float
+#   3.14      decimal
+#   .5        leading dot (no integer part)
+#   1.5E3     scientific notation: 1.5 x 10^3 = 1500.0
+#   1.5E-3    negative exponent: 1.5 x 10^-3 = 0.0015
+#   1E10      scientific notation without decimal part
+#
+# The regex uses:
+#   [0-9]*   -- optional integer part (for leading-dot numbers like .5)
+#   \.?      -- optional decimal point
+#   [0-9]+   -- required digit run (ensures we don't match empty string)
+#   ([Ee][+-]?[0-9]+)?  -- optional exponent part
+#
+# Because case_sensitive: false lowercases the source, 'E' in "1.5E3"
+# becomes 'e' before matching. The regex handles both [Ee] for generality.
+#
+# LINE_NUM and NUMBER use the same underlying pattern (digit sequences).
+# The post-tokenize hook relabel_line_numbers reclassifies the first NUMBER
+# on each source line as LINE_NUM. LINE_NUM is defined separately here so
+# the hook has a defined token type to produce.
+#
+# NUMBER must come BEFORE LINE_NUM so that floating-point literals like
+# "3.14" are matched by NUMBER (not as LINE_NUM("3") followed by a dot).
+# ============================================================
+
+NUMBER      = /[0-9]*\.?[0-9]+([Ee][+-]?[0-9]+)?/
+LINE_NUM    = /[0-9]+/
+
+# ============================================================
+# SECTION 3: String literals
+#
+# In Dartmouth BASIC 1964, strings appear only in:
+#   PRINT "HELLO WORLD"
+#   DATA "text"   (rare)
+#
+# The 1964 spec has no escape sequences: a double quote cannot appear
+# inside a string literal. This simplifies the grammar -- the string
+# body is simply "anything that is not a double quote".
+#
+# The alias -> STRING means the emitted token type is STRING, not
+# STRING_BODY. The grammar_tools parser interprets this alias, so the
+# downstream parser sees STRING tokens only.
+#
+# String boundaries: the regex includes the surrounding double quotes,
+# so the token value is "HELLO WORLD" including quotes. The compiler
+# will strip them when generating output instructions.
+#
+# In case_sensitive: false mode, the lexer preserves the original source
+# case for STRING tokens (using originalSource) so that string content
+# is not lowercased. The surrounding quotes are included in the value.
+# ============================================================
+
+STRING_BODY = /"[^"]*"/ -> STRING
+
+# ============================================================
+# SECTION 4: Built-in mathematical functions and user-defined functions
+#
+# The 1964 Dartmouth spec defines exactly 11 built-in functions:
+#
+#   Trigonometric:
+#     SIN(X)  -- sine of X (X in radians)
+#     COS(X)  -- cosine of X
+#     TAN(X)  -- tangent of X
+#     ATN(X)  -- arctangent of X, result in radians
+#
+#   Exponential / logarithm:
+#     EXP(X)  -- e raised to the power X
+#     LOG(X)  -- natural logarithm of X (base e)
+#
+#   Rounding / sign:
+#     ABS(X)  -- absolute value of X
+#     SQR(X)  -- square root of X
+#     INT(X)  -- floor of X (largest integer <= X)
+#     SGN(X)  -- sign of X: -1 if X<0, 0 if X=0, 1 if X>0
+#
+#   Random:
+#     RND(X)  -- random number in [0,1); X is ignored but required
+#
+# All patterns are lowercase because case_sensitive: false lowercases the
+# source before matching. The BUILTIN_FN regex uses alternation so all 11
+# function names are tried at each position. It must appear BEFORE NAME so
+# that "sin" is claimed as BUILTIN_FN before NAME can match "s" + "i" + "n".
+#
+# User-defined functions use the form FNA, FNB, ..., FNZ (FN + one letter).
+# USER_FN must also precede NAME for the same reason.
+#
+# Note: because these come before NAME in the grammar, and the lexer uses
+# first-match-wins, "sin" at any position will produce BUILTIN_FN("sin").
+# This is correct behavior since "SIN" in BASIC is always the sine function.
+# ============================================================
+
+# IMPORTANT: The GrammarLexer prepends ^ to each regex and splits top-level
+# alternation with | into separate patterns — each anchored individually.
+# Using bare alternation /sin|cos|int/ produces three anchored alternatives:
+#   ^sin, ^cos, ^int — each tried in order, first match wins.
+#
+# Lookahead note: Some regex engines (PCRE, Python re, Ruby Oniguruma) support
+# negative lookahead (?![a-z0-9]) to prevent "sinew" from matching as BUILTIN_FN.
+# Rust's `regex` crate does NOT support lookahead. We omit the lookahead here
+# because:
+#   1. In valid 1964 Dartmouth BASIC, built-in function names are ALWAYS
+#      followed by '(' — never by alphanumeric characters. The parser enforces
+#      this constraint.
+#   2. Variable names are at most 2 characters (letter + optional digit), so
+#      identifiers like "sinew" cannot appear in valid BASIC programs.
+#   3. If a user writes invalid BASIC like "sinx", it will lex as
+#      BUILTIN_FN("sin") + NAME("x"), which the parser will reject anyway.
+# Implementations using PCRE-compatible engines may add (?![a-z0-9]) locally.
+BUILTIN_FN  = /(?:sin|cos|tan|atn|exp|log|abs|sqr|int|rnd|sgn)/
+USER_FN     = /fn[a-z]/
+
+# ============================================================
+# SECTION 5: Keywords and variable names
+#
+# Variable names in Dartmouth BASIC 1964 are exactly:
+#   - One uppercase letter: A, B, ..., Z  (26 scalars)
+#   - One uppercase letter followed by one digit: A0-A9, ..., Z0-Z9
+#     (260 more)
+#
+# Total: 286 possible variable names. All initialise to 0.
+#
+# Because case_sensitive: false, patterns use lowercase characters.
+# Variable name "X" in source becomes "x" before matching.
+#
+# The NAME pattern uses /[a-z][a-z0-9]*/ (multi-character) rather than
+# /[a-z][0-9]?/ (1-2 chars) to enable keyword promotion:
+#
+#   "let" -> NAME("let") -> keyword lookup: "LET" in keywordSet -> KEYWORD("LET")
+#   "x"   -> NAME("x")   -> keyword lookup: "X" not in keywordSet -> NAME("x")
+#   "a1"  -> NAME("a1")  -> keyword lookup: "A1" not in keywordSet -> NAME("a1")
+#
+# Keyword promotion: the grammar engine reclassifies NAME tokens whose
+# ToUpper(value) appears in the keywords: list as KEYWORD tokens.
+# The emitted KEYWORD token value is normalized to uppercase.
+#
+# Keyword-prefix safety: "forest" -> NAME("forest") -> "FOREST" not in
+# keywordSet -> NAME("forest"). This prevents KEYWORD("FOR") + NAME("est").
+#
+# The parser enforces the single-letter-plus-digit restriction on variable
+# names. The lexer emits NAME for any identifier; the parser validates.
+# ============================================================
+
+NAME        = /[a-z][a-z0-9]*/
+
+keywords:
+  LET
+  PRINT
+  INPUT
+  IF
+  THEN
+  GOTO
+  GOSUB
+  RETURN
+  FOR
+  TO
+  STEP
+  NEXT
+  END
+  STOP
+  REM
+  READ
+  DATA
+  RESTORE
+  DIM
+  DEF
+
+# ============================================================
+# SECTION 6: Single-character operators and punctuation
+#
+# All arithmetic and comparison operators. Note that = is ambiguous:
+#   - In LET X = 5 it is assignment
+#   - In IF X = 5 THEN ... it is equality
+# The parser resolves this by context -- both cases emit EQ here.
+#
+# CARET (^) is exponentiation: 2^3 = 8. Right-associative in BASIC:
+# 2^3^2 = 2^(3^2) = 512.
+#
+# SEMICOLON in PRINT X; Y means print X immediately followed by Y
+# with no space between them. COMMA in PRINT X, Y means print X then
+# advance to the next print zone (column multiple of 14) before printing Y.
+# ============================================================
+
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+CARET       = "^"
+EQ          = "="
+LT          = "<"
+GT          = ">"
+LPAREN      = "("
+RPAREN      = ")"
+COMMA       = ","
+SEMICOLON   = ";"
+
+# ============================================================
+# SECTION 7: Newlines (significant -- kept in token stream)
+#
+# Dartmouth BASIC is line-oriented. The line structure is:
+#
+#   LINE_NUM statement NEWLINE
+#
+# The NEWLINE token is the statement terminator. Without it in the
+# token stream, the parser cannot tell where one statement ends and
+# the next begins. So NEWLINE is NOT in the skip: section.
+#
+# We accept both Unix (\n) and Windows/teletype (\r\n) line endings.
+# The \r? makes the carriage return optional.
+#
+# Note: the GrammarLexer's tokenizeStandard handles \n specially before
+# checking grammar patterns, emitting a hardcoded NEWLINE token with
+# value "\\n". The NEWLINE pattern below handles \r\n sequences.
+# ============================================================
+
+NEWLINE     = /\r?\n/
+
+# ============================================================
+# SECTION 8: Skip patterns (silently consumed)
+#
+# Horizontal whitespace (spaces and tabs) between tokens is ignored.
+# This means `10 LET X=5` and `10 LET X = 5` tokenise identically.
+#
+# Vertical whitespace (newlines) is deliberately kept -- see section 7.
+# ============================================================
+
+skip:
+  WHITESPACE  = /[ \t]+/
+
+# ============================================================
+# SECTION 9: Error recovery
+#
+# If no pattern matches the current character, emit it as UNKNOWN.
+# This prevents the lexer from looping forever on unrecognised input.
+# The parser will fail gracefully on UNKNOWN tokens with a helpful
+# error message pointing to the unexpected character.
+#
+# Note: The Go GrammarLexer does not currently implement the errors:
+# section -- unrecognized characters cause a panic. This section is
+# included for compatibility with Elixir and future Go implementations.
+# ============================================================
+
+errors:
+  UNKNOWN = /./
