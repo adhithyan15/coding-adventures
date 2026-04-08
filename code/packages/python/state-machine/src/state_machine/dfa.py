@@ -57,6 +57,7 @@ determine transitions.
 from __future__ import annotations
 
 from directed_graph import LabeledDirectedGraph
+from directed_graph.algorithms import transitive_closure
 
 from state_machine.types import Action, TransitionRecord
 
@@ -188,7 +189,9 @@ class DFA:
         #
         # Each state becomes a node. Each transition (source, event) -> target
         # becomes a labeled edge from source to target with the event as label.
-        self._graph: LabeledDirectedGraph = LabeledDirectedGraph()
+        # allow_self_loops=True: state machines commonly have self-transitions
+        # (e.g. a DFA that stays in a state when an input doesn't change it).
+        self._graph: LabeledDirectedGraph = LabeledDirectedGraph(allow_self_loops=True)
         for state in states:
             self._graph.add_node(state)
         for (source, event), target in transitions.items():
@@ -408,7 +411,8 @@ class DFA:
         # transitive_closure returns all nodes reachable FROM the initial
         # state (not including the initial state itself), so we union it
         # with {initial} to get the full set of reachable states.
-        reachable = self._graph.transitive_closure(self._initial)
+        # transitive_closure is a module-level algorithm, not a method on the graph.
+        reachable = transitive_closure(self._graph, self._initial)
         return frozenset(reachable | {self._initial})
 
     def is_complete(self) -> bool:
