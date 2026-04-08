@@ -28,5 +28,5 @@ spec = do
             fmap qOut dl `shouldBe` Right 1
             
         it "flipflops correctly" $ do
-            let ff = dFlipFlop 1 1 0 1 0 1
+            let ff = dFlipFlop 1 1 0 1 1 0
             fmap ffQ ff `shouldBe` Right 1
