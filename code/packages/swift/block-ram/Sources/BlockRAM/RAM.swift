@@ -116,36 +116,45 @@ public class DualPortRAM {
             throw BlockRAMError.writeCollision(address: addressA)
         }
 
-        let outA = try _processPort(address: addressA, dataIn: dataInA, writeEnable: writeEnableA, readMode: _readModeA, lastRead: _lastReadA)
+        let currentA = try _array.read(row: addressA)
+        let currentB = try _array.read(row: addressB)
+
+        let outA: [Bit]
+        if writeEnableA == 0 {
+            outA = currentA
+        } else {
+            switch _readModeA {
+            case .readFirst: outA = currentA
+            case .writeFirst: outA = dataInA
+            case .noChange: outA = _lastReadA
+            }
+        }
         _lastReadA = outA
 
-        let outB = try _processPort(address: addressB, dataIn: dataInB, writeEnable: writeEnableB, readMode: _readModeB, lastRead: _lastReadB)
+        let outB: [Bit]
+        if writeEnableB == 0 {
+            outB = currentB
+        } else {
+            switch _readModeB {
+            case .readFirst: outB = currentB
+            case .writeFirst: outB = dataInB
+            case .noChange: outB = _lastReadB
+            }
+        }
         _lastReadB = outB
+
+        if writeEnableA == 1 {
+            try _array.write(row: addressA, data: dataInA)
+        }
+        if writeEnableB == 1 {
+            try _array.write(row: addressB, data: dataInB)
+        }
 
         return (outA, outB)
     }
 
     public var depth: Int { return _depth }
     public var width: Int { return _width }
-
-    private func _processPort(address: Int, dataIn: [Bit], writeEnable: Bit, readMode: ReadMode, lastRead: [Bit]) throws -> [Bit] {
-        if writeEnable == 0 {
-            return try _array.read(row: address)
-        }
-
-        switch readMode {
-        case .readFirst:
-            let result = try _array.read(row: address)
-            try _array.write(row: address, data: dataIn)
-            return result
-        case .writeFirst:
-            try _array.write(row: address, data: dataIn)
-            return dataIn
-        case .noChange:
-            try _array.write(row: address, data: dataIn)
-            return lastRead
-        }
-    }
 
     private func _validateAddress(_ address: Int, name: String) throws {
         guard address >= 0 && address < _depth else {
