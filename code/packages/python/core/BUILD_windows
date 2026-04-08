@@ -1,5 +1,5 @@
 uv venv --quiet --clear
-uv pip install --no-deps -e ../directed-graph --quiet
+uv pip install --no-deps -e ../graph -e ../directed-graph --quiet
 uv pip install --no-deps -e ../state-machine --quiet
 uv pip install --no-deps -e ../branch-predictor --quiet
 uv pip install --no-deps -e ../hazard-detection --quiet

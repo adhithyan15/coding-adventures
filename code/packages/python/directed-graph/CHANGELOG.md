@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-04-08
+
+### Changed (Breaking)
+
+- **Rewritten to extend `Graph[T]` from DT00** (`coding-adventures-graph`).
+  `DirectedGraph` now inherits from `Graph[T]` instead of being a standalone class.
+- **Algorithms moved to module-level pure functions** in `algorithms.py`.
+  Previously algorithms were methods on `DirectedGraph`; now they are standalone
+  functions imported from `directed_graph.algorithms` (and re-exported from
+  `directed_graph` top-level).
+- **`CycleError` removed** — algorithms now raise `ValueError` on cycle detection
+  (matches DT01 spec). A `CycleError = ValueError` alias is exported for backwards
+  compatibility.
+- **`NodeNotFoundError` and `EdgeNotFoundError` removed** — replaced by `KeyError`
+  (base class behaviour from `Graph[T]`).
+- **`topological_sort`, `has_cycle`, etc. are now functions, not methods**.
+  Old: `g.topological_sort()`. New: `topological_sort(g)`.
+- **`nodes()` returns `frozenset[T]`** (was `list`).
+- **`successors()` and `predecessors()` return `frozenset[T]`** (was `list`).
+- **`edges()` returns `frozenset[tuple[T, T, float]]`** including weights (was
+  `list[tuple]` without weights).
+
+### Added
+
+- **`DirectedGraph(Graph[T])`** — inherits from DT00 `Graph[T]`; stores directed
+  edges in inherited `_adj` (forward) plus new `_reverse` (reverse adjacency dict).
+- **`out_degree(node)`** — number of outgoing edges from a node.
+- **`in_degree(node)`** — number of incoming edges to a node.
+- **`neighbors()` override** — returns successors only (forward edges), enabling
+  `bfs`/`dfs` from `graph` package to traverse directed edges correctly.
+- **`strongly_connected_components(graph)`** — Kosaraju's two-pass iterative DFS.
+  Returns `list[frozenset[T]]`.
+- **`LabeledDirectedGraph(Generic[T])`** — composition-based class with mandatory
+  string labels on each edge. New method `edges_labeled()` returns
+  `frozenset[tuple[T, T, str, float]]`.
+- **Iterative DFS** — `has_cycle` and `strongly_connected_components` use explicit
+  stack-based DFS to avoid Python's recursion limit on large graphs.
+- **`allow_self_loops` parameter** — now a positional-or-keyword argument
+  (was keyword-only `*`).
+- **`coding-adventures-graph` dependency** — added to `pyproject.toml` and
+  `BUILD`/`BUILD_windows` scripts.
+- Comprehensive test suite in `tests/test_directed_graph.py` with 95%+ coverage.
+  11 test classes covering all public APIs plus compatibility with Graph algorithms.
+
+### Removed
+
+- `graph.py` — replaced by `directed_graph.py` (new class structure).
+- `labeled_graph.py` — replaced by `LabeledDirectedGraph` in `directed_graph.py`.
+- `visualization.py` — removed (not part of DT01 spec; no `to_dot`/`to_mermaid`).
+- `tests/test_graph.py`, `test_labeled_graph.py`, `test_algorithms.py`,
+  `test_visualization.py` — replaced by `tests/test_directed_graph.py`.
+
 ## [0.1.0] - 2026-03-18
 
 ### Added

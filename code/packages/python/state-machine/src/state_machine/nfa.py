@@ -169,7 +169,9 @@ class NFA:
         #
         # Epsilon transitions use the EPSILON constant ("") as the edge label,
         # preserving the distinction between input-consuming and free transitions.
-        self._graph: LabeledDirectedGraph = LabeledDirectedGraph()
+        # allow_self_loops=True: NFAs frequently have self-loop transitions
+        # (e.g. a state that accepts any character via a self-loop).
+        self._graph: LabeledDirectedGraph = LabeledDirectedGraph(allow_self_loops=True)
         for state in states:
             self._graph.add_node(state)
         for (source, event), targets in transitions.items():

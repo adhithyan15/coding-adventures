@@ -953,7 +953,9 @@ class TestGraphProperty:
 
     def test_graph_has_correct_edges(self):
         t = make_sample_tree()
-        edges = set(t.graph.edges())
+        # edges() returns frozenset[tuple[str, str, float]] — weight is included.
+        # Extract just the (from, to) pairs for simple membership testing.
+        edges = {(u, v) for u, v, _ in t.graph.edges()}
         assert ("A", "B") in edges
         assert ("A", "C") in edges
         assert ("B", "D") in edges
@@ -968,11 +970,17 @@ class TestGraphProperty:
 
     def test_graph_has_no_cycles(self):
         """The underlying graph should have no cycles."""
+        from directed_graph.algorithms import has_cycle
+
         t = make_sample_tree()
-        assert t.graph.has_cycle() is False
+        # has_cycle is a module-level algorithm, not a method on DirectedGraph.
+        assert has_cycle(t.graph) is False
 
     def test_graph_topological_sort_starts_with_root(self):
         """The topological sort of the tree starts with the root."""
+        from directed_graph.algorithms import topological_sort
+
         t = make_sample_tree()
-        topo = t.graph.topological_sort()
+        # topological_sort is a module-level algorithm, not a method on DirectedGraph.
+        topo = topological_sort(t.graph)
         assert topo[0] == "A"
