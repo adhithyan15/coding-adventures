@@ -113,6 +113,28 @@ from typing import Any
 
 from hash_functions import djb2, fnv1a_32
 
+_MASK32: int = 0xFFFFFFFF
+
+
+def _fmix32(h: int) -> int:
+    """MurmurHash3 32-bit finalizer — bijective bit mixer.
+
+    Applies strict avalanche mixing so every output bit depends on every
+    input bit. This breaks the correlation between fnv1a_32 and djb2 when
+    both are used in the double-hashing scheme: without mixing, similar
+    input strings produce correlated h1/h2 values, which causes probe
+    sequences to cluster and pushes the real FPR above the theoretical
+    value.
+
+    The three constants are from Austin Appleby's MurmurHash3 (public domain).
+    """
+    h ^= h >> 16
+    h = (h * 0x85EBCA6B) & _MASK32
+    h ^= h >> 13
+    h = (h * 0xC2B2AE35) & _MASK32
+    h ^= h >> 16
+    return h
+
 
 class BloomFilter:
     """
@@ -230,14 +252,39 @@ class BloomFilter:
         computations. The approach is used by Google's Guava library, Redis,
         and most production Bloom filter implementations.
 
-        h1 = fnv1a_32 (Fowler-Noll-Vo 1a, 32-bit)
-        h2 = djb2     (Dan Bernstein's classic)
+        h1 = fnv1a_32 (Fowler-Noll-Vo 1a, 32-bit) after fmix32 finalizer
+        h2 = djb2     (Dan Bernstein's classic)     after fmix32 finalizer
 
         Both accept bytes; we UTF-8-encode the string representation of element.
+
+        === Why the fmix32 finalizer? ===
+
+        fnv1a_32 and djb2 process bytes in the same left-to-right order. For
+        strings sharing a common prefix (e.g. "unknown_0"..."unknown_9999"),
+        the two hash values are CORRELATED — they accumulate the same prefix
+        state and only diverge in the final bytes. When h1 and h2 are
+        correlated, probe positions cluster rather than spreading uniformly,
+        pushing the real FPR well above the theoretical value.
+
+        The MurmurHash3 fmix32 finalizer is a bijective (invertible) mixing
+        function: every output bit depends on every input bit. Applying it
+        independently to h1 and h2 breaks their correlation without changing
+        the probability space (it is a permutation of [0, 2^32)).
+
+        For djb2, which returns an unbounded integer, we fold the high 32 bits
+        into the low 32 bits (XOR) before applying fmix32, so we use all the
+        entropy without overflow.
+
+        h2 is forced odd (| 1) to guarantee gcd(h2, m) can be at most
+        gcd(odd, m). If m is odd (typical for non-power-of-2 bit arrays), an
+        odd step covers all m positions before repeating — maximising spread.
         """
         raw: bytes = str(element).encode("utf-8")
-        h1: int = fnv1a_32(raw)
-        h2: int = djb2(raw)
+        h1: int = _fmix32(fnv1a_32(raw))
+        # djb2 returns an unbounded integer: fold high bits in before mixing.
+        h2_raw: int = djb2(raw)
+        h2: int = _fmix32((h2_raw ^ (h2_raw >> 32)) & _MASK32)
+        h2 |= 1  # ensure non-zero and odd → all m positions reachable
         return [(h1 + i * h2) % self._m for i in range(self._k)]
 
     def add(self, element: Any) -> None:
