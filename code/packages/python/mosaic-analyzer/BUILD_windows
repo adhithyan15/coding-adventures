@@ -1,5 +1,5 @@
 uv venv --quiet --clear
-uv pip install -e ../graph -e ../directed-graph -e ../grammar-tools -e ../state-machine -e ../lexer -e ../mosaic-lexer -e ../parser -e ../mosaic-parser --quiet
+uv pip install -e ../directed-graph -e ../grammar-tools -e ../state-machine -e ../lexer -e ../mosaic-lexer -e ../parser -e ../mosaic-parser --quiet
 uv pip install --no-deps -e .[dev] --quiet
 uv pip install pytest pytest-cov ruff mypy --quiet
 uv run --no-project python -m pytest tests/ -v
