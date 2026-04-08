@@ -44,6 +44,7 @@ members = [
     "trie",
     "hash-functions",
     "resp-protocol",
+    "skip-list",
 ]
 
 [tool.uv.sources]
@@ -86,6 +87,7 @@ coding-adventures-fenwick-tree = { workspace = true }
 coding-adventures-trie = { workspace = true }
 coding-adventures-hash-functions = { workspace = true }
 coding-adventures-resp-protocol = { workspace = true }
+coding-adventures-skip-list = { workspace = true }
 
 [dependency-groups]
 dev = [
