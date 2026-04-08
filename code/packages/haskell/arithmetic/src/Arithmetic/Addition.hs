@@ -25,16 +25,13 @@ rippleCarryAdder aBits bBits carryIn = do
     if length aBits /= length bBits
     then Left "Inputs must have the same length"
     else do
-        let n = length aBits
-        let eval i cOut
-              | i >= n = return ([], cOut)
-              | otherwise = do
-                  let a = aBits !! (n - 1 - i)
-                  let b = bBits !! (n - 1 - i)
-                  (sumOut, nextC) <- fullAdder a b cOut
-                  (restSum, finalC) <- eval (i + 1) nextC
-                  return (restSum ++ [sumOut], finalC)
-        (sumRev, finalCarry) <- eval 0 carryIn
+        let go cOut [] [] = return ([], cOut)
+            go cOut (a:as) (b:bs) = do
+                (sumOut, nextC) <- fullAdder a b cOut
+                (restSum, finalC) <- go nextC as bs
+                return (sumOut : restSum, finalC)
+            go _ _ _ = Left "Length mismatch"
+        (sumRev, finalCarry) <- go carryIn (reverse aBits) (reverse bBits)
         return (reverse sumRev, finalCarry)
 
 incrementer :: [Bit] -> Either String ([Bit], Bit)

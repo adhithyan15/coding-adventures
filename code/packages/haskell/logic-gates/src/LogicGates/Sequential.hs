@@ -67,7 +67,7 @@ register dataBits clock qBits masterQBits = do
             let cq = currentQ !! i
             let cmq = currentMQ !! i
             phase1 <- dFlipFlop d 0 cq (1 - cq) cmq (1 - cmq)
-            s <- dFlipFlop d clock (qOut phase1) (qBarOut phase1) (ffMasterQ phase1) (1 - ffMasterQ phase1)
+            s <- dFlipFlop d clock (ffQ phase1) (ffQBar phase1) (ffMasterQ phase1) (1 - ffMasterQ phase1)
             return s
 
     states <- mapM eval [0..(n - 1)]
@@ -87,7 +87,7 @@ shiftRegister serialIn clock qBits = do
             let d = dataBits !! i
             let cq = currentQ !! i
             phase1 <- dFlipFlop d 0 cq (1 - cq) 0 1
-            s <- dFlipFlop d clock (qOut phase1) (qBarOut phase1) (ffMasterQ phase1) (1 - ffMasterQ phase1)
+            s <- dFlipFlop d clock (ffQ phase1) (ffQBar phase1) (ffMasterQ phase1) (1 - ffMasterQ phase1)
             return s
 
     states <- mapM eval [0..(len - 1)]
