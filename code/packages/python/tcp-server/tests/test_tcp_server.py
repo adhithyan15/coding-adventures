@@ -393,6 +393,88 @@ class TestShutdown:
 # ---------------------------------------------------------------------------
 
 
+class TestErrorHandling:
+    """Tests for error code-paths: handler exceptions and cleanup with live connections."""
+
+    def test_handler_exception_closes_client_keeps_server_alive(self) -> None:
+        """
+        A handler that raises an exception must close that client connection
+        but keep the server event loop running for subsequent clients.
+
+        This exercises the ``except Exception`` branch in _handle_client
+        (lines 387-391 in tcp_server.py).  The server catches the exception,
+        unregisters and closes the offending socket, then returns to sel.select()
+        to accept new connections.
+        """
+        call_count = [0]
+
+        def sometimes_bad(data: bytes) -> bytes:
+            """Raise on the first call; echo on all subsequent calls."""
+            call_count[0] += 1
+            if call_count[0] == 1:
+                raise RuntimeError("intentional crash on first request")
+            return data
+
+        server = TcpServer(host="127.0.0.1", port=16372, handler=sometimes_bad)
+        start_server(server)
+        try:
+            # First connection: handler raises, server closes this client's socket.
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect(("127.0.0.1", 16372))
+                s.sendall(b"crash me")
+                s.settimeout(1.0)
+                try:
+                    # Server closes the connection after the handler crash.
+                    s.recv(4096)
+                except (ConnectionResetError, OSError):
+                    pass  # platform-specific: some OSes send RST, others FIN
+
+            # Give the event loop a moment to clean up and return to select().
+            time.sleep(0.1)
+
+            # Server is still alive; subsequent connections work normally.
+            response = send_recv(16372, b"still alive")
+            assert response == b"still alive"
+        finally:
+            server.stop()
+
+    def test_cleanup_closes_active_client_connections(self) -> None:
+        """
+        _cleanup() must close client sockets that are still registered in the
+        selector when stop() is called.
+
+        This exercises the cleanup loop in _cleanup() (lines 424-429 in
+        tcp_server.py) that iterates sel.get_map() and closes any remaining
+        connected clients.
+
+        Strategy: connect a client and keep the TCP connection open (no FIN).
+        After the server processes our data the client socket remains registered
+        in the selector waiting for more input.  Calling stop() then exercises
+        the cleanup loop.
+        """
+        server = TcpServer(host="127.0.0.1", port=16373, handler=lambda d: d)
+        t = start_server(server)
+
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            client.connect(("127.0.0.1", 16373))
+            # Send data so the server accepts, registers, and processes this client.
+            # The client stays connected (no close/FIN) so its socket remains
+            # in the selector's fd map when we call stop().
+            client.sendall(b"keep-alive")
+            # Wait for the server to accept and register the client socket.
+            time.sleep(0.1)
+
+            # Stop the server while the client is still in sel.get_map().
+            # _cleanup() must unregister and close it (covering lines 424-429).
+            server.stop()
+            t.join(timeout=2.0)
+        finally:
+            client.close()
+
+        assert not t.is_alive(), "serve() did not exit after stop()"
+
+
 class TestConfiguration:
     """Custom buffer_size and backlog parameters."""
 

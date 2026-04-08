@@ -249,6 +249,34 @@ class HyperLogLog:
         raw: bytes = str(element).encode("utf-8")
         h: int = fnv1a_64(raw)
 
+        # Apply the MurmurHash3 fmix64 finaliser to h.
+        #
+        # Why: FNV-1a is a sequential hash. Its prime (≈ 2^40) means that
+        # a 1-bit difference in the *last* byte of the input only propagates
+        # into bits 40–47 of the product — the top 14+ bits remain nearly
+        # identical for inputs with the same prefix (e.g. "0"…"9", or
+        # "element_0"…"element_999").  Using those top bits as the register
+        # index therefore clusters almost every element into the same register,
+        # causing dramatic undercounting.
+        #
+        # The three-pass fmix64 from MurmurHash3 is a bijective 64-bit
+        # permutation that achieves strict avalanche: every output bit depends
+        # on every input bit.  After mixing, the top-14-bit slice is as
+        # uniformly distributed as the bottom-14-bit slice, so the register
+        # index is correctly spread across all 2^b buckets.
+        #
+        # This technique is standard in production HyperLogLog
+        # implementations (e.g. HyperLogLog++ by Heule, Nunkesser & Hall,
+        # Google, 2013).
+        #
+        # Reference constants: Austin Appleby, MurmurHash3 (public domain).
+        _MASK64: int = 0xFFFFFFFFFFFFFFFF
+        h ^= h >> 33
+        h = (h * 0xFF51AFD7ED558CCD) & _MASK64
+        h ^= h >> 33
+        h = (h * 0xC4CEB9FE1A85EC53) & _MASK64
+        h ^= h >> 33
+
         b: int = self._precision
         # Top b bits select the register.
         #   h >> (64 - b) keeps only the most significant b bits.
@@ -505,7 +533,7 @@ class HyperLogLog:
 
         Examples:
             optimal_precision(0.01)  → 14  (0.81% < 1.00%)
-            optimal_precision(0.05)  → 10  (3.25% < 5.00%)
+            optimal_precision(0.05)  →  9  (4.60% < 5.00%)
         """
         # 1.04 / sqrt(m) <= desired_error  ⟹  m >= (1.04/desired_error)^2
         min_m: float = (1.04 / desired_error) ** 2

@@ -326,9 +326,13 @@ class TestStaticMethods:
         assert p == 14
 
     def test_optimal_precision_5pct_error(self) -> None:
-        """For 5% desired error, precision=10 achieves 3.25% < 5%."""
+        """For 5% desired error, precision=9 achieves 4.6% < 5%.
+
+        Calculation: 1.04 / sqrt(2^9) = 1.04 / sqrt(512) ≈ 0.046 = 4.6% < 5%.
+        Precision=9 (not 10) is the minimum that satisfies the 5% budget.
+        """
         p = HyperLogLog.optimal_precision(0.05)
-        assert p == 10
+        assert p == 9
 
     def test_optimal_precision_result_satisfies_requirement(self) -> None:
         """optimal_precision must always return a precision that actually meets the goal."""
