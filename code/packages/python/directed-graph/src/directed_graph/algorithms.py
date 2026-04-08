@@ -298,7 +298,8 @@ def transitive_closure(graph: DirectedGraph[T], node: T) -> frozenset[T]:
     if not graph.has_node(node):
         raise KeyError(node)
 
-    visited: set[T] = set()
+    # Pre-mark the start node so cycles don't re-add it to the result.
+    visited: set[T] = {node}
     queue: deque[T] = deque()
 
     # Seed with direct successors of the starting node.
@@ -314,6 +315,7 @@ def transitive_closure(graph: DirectedGraph[T], node: T) -> frozenset[T]:
                 visited.add(successor)
                 queue.append(successor)
 
+    visited.discard(node)  # start node is never part of its own reachable set
     return frozenset(visited)
 
 

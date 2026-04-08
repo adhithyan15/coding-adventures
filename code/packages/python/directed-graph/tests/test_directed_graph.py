@@ -593,11 +593,19 @@ class TestTransitiveDependents:
         assert transitive_dependents(g, "A") == frozenset()
 
     def test_linear_chain(self) -> None:
-        """In 0→1→2→3, dependents of 0 = {1,2,3}."""
+        """In 0→1→2→3 (A→B means A depends on B), dependents of 3 = {0,1,2}.
+
+        Edge direction convention: A→B means "A depends on B".
+        transitive_dependents(node) asks "who depends (directly or transitively)
+        on this node?" — answered by following reverse edges (predecessors).
+
+        In the chain: 3 is the root dependency; 0, 1, 2 all transitively depend
+        on 3. Node 0 has no predecessors, so nothing depends on it.
+        """
         g = make_chain(4)
-        assert transitive_dependents(g, 0) == frozenset({1, 2, 3})
-        assert transitive_dependents(g, 1) == frozenset({2, 3})
-        assert transitive_dependents(g, 3) == frozenset()
+        assert transitive_dependents(g, 3) == frozenset({0, 1, 2})
+        assert transitive_dependents(g, 1) == frozenset({0})
+        assert transitive_dependents(g, 0) == frozenset()
 
     def test_diamond(self) -> None:
         """In diamond A→B, A→C, B→D, C→D — dependents of A = {B, C, D}."""
@@ -729,8 +737,10 @@ class TestAffectedNodes:
     def test_single_changed_root(self) -> None:
         g = make_diamond()
         result = affected_nodes(g, frozenset({"A"}))
-        # A has no predecessors, so dependents = B, C, D
-        assert result == frozenset({"A", "B", "C", "D"})
+        # A→B, A→C, B→D, C→D means A depends on B and C; they depend on D.
+        # "Who depends on A?" = nothing (A is a leaf in the dependency graph,
+        # no other node has A as a dependency). So affected = {A} only.
+        assert result == frozenset({"A"})
 
     def test_single_changed_leaf(self) -> None:
         g = make_diamond()
@@ -765,6 +775,9 @@ class TestAffectedNodes:
         assert result == frozenset({"compile", "link", "package", "test"})
 
     def test_multiple_changed_nodes(self) -> None:
+        # A→C, B→D, C→E, D→E: A depends on C; B depends on D; C and D depend on E.
+        # A and B are leaf nodes (nothing depends on them). So changing A or B
+        # affects only A and B themselves (no predecessors).
         g: DirectedGraph[str] = DirectedGraph()
         g.add_edge("A", "C")
         g.add_edge("B", "D")
@@ -772,7 +785,7 @@ class TestAffectedNodes:
         g.add_edge("D", "E")
 
         result = affected_nodes(g, frozenset({"A", "B"}))
-        assert result == frozenset({"A", "B", "C", "D", "E"})
+        assert result == frozenset({"A", "B"})
 
     def test_returns_frozenset(self) -> None:
         g: DirectedGraph[str] = DirectedGraph()
