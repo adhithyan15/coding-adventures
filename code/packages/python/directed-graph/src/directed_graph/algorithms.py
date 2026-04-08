@@ -303,14 +303,16 @@ def transitive_closure(graph: DirectedGraph[T], node: T) -> frozenset[T]:
     queue: deque[T] = deque()
 
     # Seed with direct successors of the starting node.
-    for successor in graph._adj[node]:
+    # Use the public successors() API so this works with both DirectedGraph
+    # and LabeledDirectedGraph (which wraps a DirectedGraph and lacks _adj).
+    for successor in graph.successors(node):
         if successor not in visited:
             visited.add(successor)
             queue.append(successor)
 
     while queue:
         current = queue.popleft()
-        for successor in graph._adj[current]:
+        for successor in graph.successors(current):
             if successor not in visited:
                 visited.add(successor)
                 queue.append(successor)
@@ -360,14 +362,16 @@ def transitive_dependents(graph: DirectedGraph[T], node: T) -> frozenset[T]:
     queue: deque[T] = deque()
 
     # Seed with direct predecessors of the starting node.
-    for predecessor in graph._reverse[node]:
+    # Use the public predecessors() API so this works with both DirectedGraph
+    # and LabeledDirectedGraph (which wraps a DirectedGraph and lacks _reverse).
+    for predecessor in graph.predecessors(node):
         if predecessor not in visited:
             visited.add(predecessor)
             queue.append(predecessor)
 
     while queue:
         current = queue.popleft()
-        for predecessor in graph._reverse[current]:
+        for predecessor in graph.predecessors(current):
             if predecessor not in visited:
                 visited.add(predecessor)
                 queue.append(predecessor)

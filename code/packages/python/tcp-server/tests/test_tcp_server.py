@@ -438,6 +438,46 @@ class TestErrorHandling:
         finally:
             server.stop()
 
+    def test_oserror_from_handler_goes_through_broken_pipe_path(self) -> None:
+        """
+        A handler that raises OSError is caught by the first except clause
+        (``except (BrokenPipeError, ConnectionResetError, OSError)``), NOT by
+        the generic ``except Exception`` below it.  Python picks the first
+        matching clause, so OSError from the handler hits lines 385-386.
+
+        This test covers lines 385-386 (the OSError/BrokenPipe cleanup path).
+        The separate test_handler_exception_closes_client_keeps_server_alive
+        covers lines 390-391 via RuntimeError → except Exception.
+        """
+        call_count = [0]
+
+        def oserror_handler(data: bytes) -> bytes:
+            call_count[0] += 1
+            if call_count[0] == 1:
+                raise OSError("simulated OS-level error from handler")
+            return data
+
+        server = TcpServer(host="127.0.0.1", port=16374, handler=oserror_handler)
+        start_server(server)
+        try:
+            # First client: handler raises OSError → caught by BrokenPipe path.
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect(("127.0.0.1", 16374))
+                s.sendall(b"trigger oserror")
+                s.settimeout(1.0)
+                try:
+                    s.recv(4096)
+                except (ConnectionResetError, OSError):
+                    pass
+
+            time.sleep(0.1)
+
+            # Server must still be alive.
+            response = send_recv(16374, b"still alive after oserror")
+            assert response == b"still alive after oserror"
+        finally:
+            server.stop()
+
     def test_cleanup_closes_active_client_connections(self) -> None:
         """
         _cleanup() must close client sockets that are still registered in the
