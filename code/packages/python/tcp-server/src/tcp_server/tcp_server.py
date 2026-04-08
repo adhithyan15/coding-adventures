@@ -366,13 +366,29 @@ class TcpServer:
                 # We have data: call the handler and send the response.
                 # The handler is a pure function: bytes → bytes. It knows
                 # nothing about sockets or the event loop.
-                response = self._handler(raw)
+                #
+                # Both the handler call and sendall are wrapped in try/except
+                # so that a buggy or crashing handler, or an abrupt client
+                # disconnect mid-send (BrokenPipeError / ConnectionResetError),
+                # only closes *this* client's socket — not the entire server.
+                try:
+                    response = self._handler(raw)
 
-                # syscall 6: sendall() — Python wraps write() in a retry loop
-                # until every byte of `response` has been sent to the OS
-                # kernel's send buffer. This handles the partial-write case
-                # where write() might accept fewer bytes than requested.
-                conn.sendall(response)
+                    # syscall 6: sendall() — Python wraps write() in a retry
+                    # loop until every byte of `response` has been sent to the
+                    # OS kernel's send buffer. This handles the partial-write
+                    # case where write() might accept fewer bytes than requested.
+                    conn.sendall(response)
+                except (BrokenPipeError, ConnectionResetError, OSError):
+                    # Client disconnected mid-send. Clean up this connection
+                    # and continue serving other clients.
+                    self._sel.unregister(conn)
+                    conn.close()
+                except Exception:
+                    # Handler raised an unexpected exception. Close this client
+                    # but keep the server event loop running for other clients.
+                    self._sel.unregister(conn)
+                    conn.close()
             else:
                 # recv() returned b"": the client sent a TCP FIN (graceful
                 # close). We must unregister the fd and close it to free

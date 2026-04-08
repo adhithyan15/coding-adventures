@@ -156,6 +156,13 @@ class BloomFilter:
         expected_items: how many distinct elements you plan to add (n).
         false_positive_rate: target FP rate, e.g. 0.01 = 1%.
         """
+        if expected_items <= 0:
+            raise ValueError(f"expected_items must be a positive integer, got {expected_items!r}")
+        if not (0.0 < false_positive_rate < 1.0):
+            raise ValueError(
+                f"false_positive_rate must be in the open interval (0, 1), got {false_positive_rate!r}"
+            )
+
         n = expected_items
         p = false_positive_rate
 
@@ -191,6 +198,11 @@ class BloomFilter:
         bit_count:  total number of bits m in the bit array.
         hash_count: number of hash functions k.
         """
+        if bit_count <= 0:
+            raise ValueError(f"bit_count must be a positive integer, got {bit_count!r}")
+        if hash_count <= 0:
+            raise ValueError(f"hash_count must be a positive integer, got {hash_count!r}")
+
         # Use __new__ to skip __init__ and set attributes directly.
         bf: BloomFilter = cls.__new__(cls)
         bf._m = bit_count
