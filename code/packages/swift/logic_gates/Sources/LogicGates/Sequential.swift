@@ -368,7 +368,7 @@ public func shiftRegister(
 
     let n = q.count
     // Build the input chain: serialIn → q[0]'s D, q[0] → q[1]'s D, ...
-    var data = [serialIn] + q.dropLast()
+    let data = [serialIn] + q.dropLast()
 
     var newQ: [Int] = []
     var states: [FlipFlopState] = []
