@@ -599,6 +599,8 @@ sub _bfs_path {
 sub _dijkstra {
     my ($graph, $start, $end) = @_;
 
+    return [] unless $graph->has_node($end);
+
     my %dist = map { $_ => 'inf' } $graph->nodes;
     my %parent;
     $dist{$start} = 0;
