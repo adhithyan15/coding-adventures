@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codingadventures.lossfunctions.LossFunctionsTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-04-04T23:23:58.313Z" hostname="Adhithyas-Mac-mini.local" time="0.022">
+  <properties/>
+  <testcase name="testMSEDerivativeSignConvention()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.005"/>
+  <testcase name="testCCEOnlyCorrectClassContributes()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testSingleElementMAE()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testSingleElementMSE()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testMSEDerivative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testCCENonNegative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testMSEParityVector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testMSESymmetry()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testBCEParityVector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testBCENonNegative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testMismatchedLengthThrows()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.002"/>
+  <testcase name="testMAEParityVector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testMAEPerfectPrediction()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testCCEDerivative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testBCEDerivativeFinite()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testEmptyArrayThrows()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testBCEHandlesEdgePredictions()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testCCEParityVector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testMAEDerivative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="testMAEDerivativeAtZero()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testMSEPerfectPrediction()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="testCCEHandlesZeroPredictions()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

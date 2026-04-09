@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codingadventures.activationfunctions.ActivationFunctionsTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-04-04T23:27:11.330Z" hostname="Adhithyas-Mac-mini.local" time="0.023">
+  <properties/>
+  <testcase name="reluDerivNegative()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.005"/>
+  <testcase name="sigmoidDerivAtZero()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhOddSymmetry()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.002"/>
+  <testcase name="tanhDerivAtOne()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhDerivNonNegative()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidLargePositive()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="reluIdempotence()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.001"/>
+  <testcase name="reluZero()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidDerivAtOne()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhRange()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.001"/>
+  <testcase name="sigmoidDerivNonNegative()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidDerivSaturated()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidPositive()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.001"/>
+  <testcase name="sigmoidNegative()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="reluPositive()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="reluNegative()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidAtZero()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhPositive()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidOverflowNeg()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidOverflowPos()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhDerivAtZero()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhNegative()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidSymmetry()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.001"/>
+  <testcase name="reluDerivZero()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="sigmoidRange()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="tanhAtZero()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <testcase name="reluDerivPositive()" classname="com.codingadventures.activationfunctions.ActivationFunctionsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

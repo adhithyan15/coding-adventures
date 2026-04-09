@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codingadventures.wave.WaveTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-04-04T23:38:56.769Z" hostname="Adhithyas-Mac-mini.local" time="0.024">
+  <properties/>
+  <testcase name="construction()" classname="com.codingadventures.wave.WaveTest" time="0.01"/>
+  <testcase name="zero amplitude()" classname="com.codingadventures.wave.WaveTest" time="0.001"/>
+  <testcase name="zero frequency throws()" classname="com.codingadventures.wave.WaveTest" time="0.002"/>
+  <testcase name="high frequency()" classname="com.codingadventures.wave.WaveTest" time="0.001"/>
+  <testcase name="period()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="periodicity()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="trough()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="opposite phase()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="negative amplitude throws()" classname="com.codingadventures.wave.WaveTest" time="0.001"/>
+  <testcase name="zero crossing()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="peak()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="construction with phase()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="angular frequency()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <testcase name="phase shift()" classname="com.codingadventures.wave.WaveTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

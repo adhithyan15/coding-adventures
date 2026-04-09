@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codingadventures.matrix.MatrixTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-04-04T23:36:15.384Z" hostname="Adhithyas-Mac-mini.local" time="0.026">
+  <properties/>
+  <testcase name="subtractMatrices()" classname="com.codingadventures.matrix.MatrixTest" time="0.005"/>
+  <testcase name="subtractScalar()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="addDimensionMismatch()" classname="com.codingadventures.matrix.MatrixTest" time="0.004"/>
+  <testcase name="getDataReturnsCopy()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="dot2x2()" classname="com.codingadventures.matrix.MatrixTest" time="0.001"/>
+  <testcase name="scaleByZero()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="transposeRectangular()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="dotNonSquare()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="addMatrices()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="doubleTranspose()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="addScalar()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="fromArray()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="scale()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="zeros()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="inequality()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="raggedArrayThrows()" classname="com.codingadventures.matrix.MatrixTest" time="0.001"/>
+  <testcase name="immutability()" classname="com.codingadventures.matrix.MatrixTest" time="0.001"/>
+  <testcase name="equality()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="subtractSelf()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="dotIdentity()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="dotDimensionMismatch()" classname="com.codingadventures.matrix.MatrixTest" time="0.001"/>
+  <testcase name="from2DArray()" classname="com.codingadventures.matrix.MatrixTest" time="0.0"/>
+  <testcase name="fromScalar()" classname="com.codingadventures.matrix.MatrixTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

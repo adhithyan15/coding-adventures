@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codingadventures.lossfunctions.LossFunctionsTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-04-04T23:24:16.503Z" hostname="Adhithyas-Mac-mini.local" time="0.024">
+  <properties/>
+  <testcase name="empty array throws()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.005"/>
+  <testcase name="MAE perfect prediction()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.005"/>
+  <testcase name="MSE derivative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="MAE derivative at zero()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="BCE parity vector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="CCE handles zero predictions()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="MAE derivative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="CCE derivative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="single element MAE()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="single element MSE()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="BCE handles edge predictions()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="CCE parity vector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="BCE derivative finite()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="MSE derivative sign convention()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="mismatched length throws()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.002"/>
+  <testcase name="MSE parity vector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="CCE non-negative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.001"/>
+  <testcase name="MSE symmetry()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="CCE only correct class contributes()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="MAE parity vector()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="BCE non-negative()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <testcase name="MSE perfect prediction()" classname="com.codingadventures.lossfunctions.LossFunctionsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

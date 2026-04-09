@@ -1,0 +1,417 @@
+local Graph = require "coding_adventures.graph"
+
+describe("Graph", function()
+  describe("construction", function()
+    it("creates new empty graph", function()
+      local g = Graph.new()
+      assert.equals(0, g:size())
+      assert.same({}, g:nodes())
+      assert.same({}, g:edges())
+    end)
+
+    it("creates graph with adjacency list", function()
+      local g = Graph.new_with_repr(Graph.ADJACENCY_LIST)
+      assert.equals(0, g:size())
+    end)
+
+    it("creates graph with adjacency matrix", function()
+      local g = Graph.new_with_repr(Graph.ADJACENCY_MATRIX)
+      assert.equals(0, g:size())
+    end)
+  end)
+
+  describe("node operations", function()
+    it("adds a node", function()
+      local g = Graph.new()
+      g:add_node("A")
+      assert.is_true(g:has_node("A"))
+      assert.equals(1, g:size())
+    end)
+
+    it("adds multiple nodes", function()
+      local g = Graph.new()
+      g:add_node("A")
+      g:add_node("B")
+      g:add_node("C")
+      assert.equals(3, g:size())
+    end)
+
+    it("duplicate node is noop", function()
+      local g = Graph.new()
+      g:add_node("A")
+      g:add_node("A")
+      assert.equals(1, g:size())
+    end)
+
+    it("removes a node", function()
+      local g = Graph.new()
+      g:add_node("A")
+      g:remove_node("A")
+      assert.equals(0, g:size())
+      assert.is_false(g:has_node("A"))
+    end)
+
+    it("removes node with edges", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("A", "C")
+      g:remove_node("A")
+      assert.is_false(g:has_node("A"))
+      assert.is_true(g:has_node("B"))
+      assert.is_true(g:has_node("C"))
+      assert.equals(0, #g:edges())
+    end)
+
+    it("errors on removing nonexistent node", function()
+      local g = Graph.new()
+      assert.has_error(function() g:remove_node("X") end)
+    end)
+  end)
+
+  describe("edge operations", function()
+    it("adds edge creates nodes", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      assert.is_true(g:has_node("A"))
+      assert.is_true(g:has_node("B"))
+    end)
+
+    it("edge exists in both directions", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      assert.is_true(g:has_edge("A", "B"))
+      assert.is_true(g:has_edge("B", "A"))
+    end)
+
+    it("returns all edges", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("B", "C")
+      local edges = g:edges()
+      assert.equals(2, #edges)
+    end)
+
+    it("adds weighted edge", function()
+      local g = Graph.new()
+      g:add_edge("A", "B", 2.5)
+      assert.equals(2.5, g:edge_weight("A", "B"))
+    end)
+
+    it("removes edge", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:remove_edge("A", "B")
+      assert.is_false(g:has_edge("A", "B"))
+    end)
+
+    it("errors on removing nonexistent edge", function()
+      local g = Graph.new()
+      assert.has_error(function() g:remove_edge("X", "Y") end)
+    end)
+  end)
+
+  describe("neighborhood", function()
+    it("gets neighbors", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("A", "C")
+      g:add_edge("A", "D")
+
+      local neighbors = g:neighbors("A")
+      assert.equals(3, #neighbors)
+      table.sort(neighbors)
+      assert.same({"B", "C", "D"}, neighbors)
+    end)
+
+    it("gets neighbors weighted", function()
+      local g = Graph.new()
+      g:add_edge("A", "B", 1.0)
+      g:add_edge("A", "C", 2.0)
+      g:add_edge("A", "D", 3.0)
+
+      local nw = g:neighbors_weighted("A")
+      assert.equals(1.0, nw["B"])
+      assert.equals(2.0, nw["C"])
+      assert.equals(3.0, nw["D"])
+    end)
+
+    it("gets degree", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("A", "C")
+      g:add_edge("A", "D")
+
+      assert.equals(3, g:degree("A"))
+      assert.equals(1, g:degree("B"))
+    end)
+
+    it("errors on nonexistent node", function()
+      local g = Graph.new()
+      assert.has_error(function() g:neighbors("X") end)
+    end)
+  end)
+
+  describe("BFS", function()
+    it("BFS simple path", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("B", "C")
+      g:add_edge("C", "D")
+
+      local result = Graph.bfs(g, "A")
+      assert.equals(4, #result)
+      assert.equals("A", result[1])
+    end)
+
+    it("BFS tree with multiple branches", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("A", "C")
+      g:add_edge("B", "D")
+      g:add_edge("B", "E")
+
+      local result = Graph.bfs(g, "A")
+      assert.equals(5, #result)
+    end)
+
+    it("BFS disconnected graph", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("C", "D")
+
+      local result = Graph.bfs(g, "A")
+      assert.equals(2, #result)
+    end)
+  end)
+
+  describe("DFS", function()
+    it("DFS simple path", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("B", "D")
+      g:add_edge("A", "C")
+
+      local result = Graph.dfs(g, "A")
+      assert.equals(4, #result)
+      assert.equals("A", result[1])
+    end)
+  end)
+
+  describe("shortest_path", function()
+    it("unweighted graph", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("B", "C")
+      g:add_edge("C", "D")
+
+      local path = Graph.shortest_path(g, "A", "D")
+      assert.equals(4, #path)
+    end)
+
+    it("same start and end", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+
+      local path = Graph.shortest_path(g, "A", "A")
+      assert.same({"A"}, path)
+    end)
+
+    it("no path", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_node("X")
+
+      local path = Graph.shortest_path(g, "A", "X")
+      assert.same({}, path)
+    end)
+
+    it("weighted graph (Dijkstra)", function()
+      local g = Graph.new()
+      g:add_edge("A", "B", 1.0)
+      g:add_edge("B", "D", 10.0)
+      g:add_edge("A", "C", 3.0)
+      g:add_edge("C", "D", 3.0)
+
+      local path = Graph.shortest_path(g, "A", "D")
+      assert.equals(3, #path)
+    end)
+  end)
+
+  describe("cycle_detection", function()
+    it("no cycle in path", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("B", "C")
+      assert.is_false(Graph.has_cycle(g))
+    end)
+
+    it("cycle in triangle", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("B", "C")
+      g:add_edge("C", "A")
+      assert.is_true(Graph.has_cycle(g))
+    end)
+
+    it("no cycle in single node", function()
+      local g = Graph.new()
+      g:add_node("A")
+      assert.is_false(Graph.has_cycle(g))
+    end)
+
+    it("no cycle in two-node graph", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      assert.is_false(Graph.has_cycle(g))
+    end)
+  end)
+
+  describe("connected_components", function()
+    it("three components", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("C", "D")
+      g:add_node("E")
+
+      local components = g:connected_components()
+      assert.equals(3, #components)
+
+      local sizes = {}
+      for _, comp in ipairs(components) do
+        table.insert(sizes, #comp)
+      end
+      table.sort(sizes)
+      assert.same({1, 2, 2}, sizes)
+    end)
+  end)
+
+  describe("is_connected", function()
+    it("empty graph is connected", function()
+      local g = Graph.new()
+      assert.is_true(g:is_connected())
+    end)
+
+    it("single node is connected", function()
+      local g = Graph.new()
+      g:add_node("A")
+      assert.is_true(g:is_connected())
+    end)
+
+    it("two connected nodes", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      assert.is_true(g:is_connected())
+    end)
+
+    it("disconnected graph", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_node("C")
+      assert.is_false(g:is_connected())
+    end)
+
+    it("connected after adding edge", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_node("C")
+      g:add_edge("B", "C")
+      assert.is_true(g:is_connected())
+    end)
+  end)
+
+  describe("minimum_spanning_tree", function()
+    it("simple MST", function()
+      local g = Graph.new()
+      g:add_edge("A", "B", 1.0)
+      g:add_edge("B", "C", 2.0)
+      g:add_edge("C", "A", 3.0)
+
+      local mst = Graph.minimum_spanning_tree(g)
+      assert.is_not_nil(mst)
+      assert.equals(2, #mst)
+
+      local total_weight = 0
+      for _, edge in ipairs(mst) do
+        total_weight = total_weight + edge[3]
+      end
+      assert.equals(3.0, total_weight)
+    end)
+
+    it("disconnected graph returns nil", function()
+      local g = Graph.new()
+      g:add_edge("A", "B")
+      g:add_edge("C", "D")
+      local mst = Graph.minimum_spanning_tree(g)
+      assert.is_nil(mst)
+    end)
+
+    it("single node", function()
+      local g = Graph.new()
+      g:add_node("A")
+      local mst = Graph.minimum_spanning_tree(g)
+      assert.same({}, mst)
+    end)
+
+    it("empty graph", function()
+      local g = Graph.new()
+      local mst = Graph.minimum_spanning_tree(g)
+      assert.same({}, mst)
+    end)
+  end)
+
+  describe("edge_weight", function()
+    it("gets weight", function()
+      local g = Graph.new()
+      g:add_edge("A", "B", 2.5)
+      assert.equals(2.5, g:edge_weight("A", "B"))
+    end)
+
+    it("errors on nonexistent edge", function()
+      local g = Graph.new()
+      assert.has_error(function() g:edge_weight("A", "C") end)
+    end)
+
+    it("symmetric (undirected)", function()
+      local g = Graph.new()
+      g:add_edge("A", "B", 2.5)
+      assert.equals(2.5, g:edge_weight("B", "A"))
+    end)
+  end)
+
+  describe("both representations", function()
+    local function test_repr(repr_type)
+      local g = Graph.new_with_repr(repr_type)
+
+      -- Basic operations
+      g:add_edge("A", "B", 1.0)
+      g:add_edge("B", "C", 2.0)
+      g:add_edge("C", "A", 3.0)
+
+      assert.equals(3, g:size())
+      assert.is_true(g:has_edge("A", "B"))
+      assert.equals(2, g:degree("A"))
+
+      -- BFS
+      local bfs_result = Graph.bfs(g, "A")
+      assert.equals(3, #bfs_result)
+
+      -- Shortest path
+      local path = Graph.shortest_path(g, "A", "C")
+      assert.is_true(#path > 0)
+
+      -- Has cycle
+      assert.is_true(Graph.has_cycle(g))
+
+      -- Connectivity
+      assert.is_true(g:is_connected())
+    end
+
+    it("adjacency list representation works", function()
+      test_repr(Graph.ADJACENCY_LIST)
+    end)
+
+    it("adjacency matrix representation works", function()
+      test_repr(Graph.ADJACENCY_MATRIX)
+    end)
+  end)
+end)
