@@ -1514,3 +1514,32 @@ so updating is a no-op — but the key point is that `prev` is never written to 
 as a separate step).
 
 This bug appeared in the Lua QOI encoder and was fixed before committing.
+
+### 2026-04-08: Parsing pyproject.toml with regex: comment lines containing "[" break section detection
+
+When writing scripts to parse Python `pyproject.toml` files to detect which
+packages are in `[project] dependencies`, a naive regex like:
+
+```
+^\[project\][^[]*?^dependencies\s*=\s*\[([^\]]*)\]
+```
+
+fails if any **comment line** between `[project]` and `dependencies` contains
+a `[` character. For example:
+
+```toml
+[project]
+# When publishing to PyPI, restore: dependencies = ["coding-adventures-foo"]
+dependencies = ["coding-adventures-bar"]
+```
+
+The `[^[]*?` part stops at the `[` in the comment, so the regex never reaches
+the actual `dependencies` line. The match returns `None` even though the
+dependency is present.
+
+**Fix:** Parse line by line, skip lines starting with `#`, and track section
+headers explicitly. Never use `[^[]*?` in a cross-line regex over TOML content.
+
+This bug caused a mass incorrect categorization of 54 packages that had
+`coding-adventures-directed-graph` as a real main dependency as "dev-only",
+leading to three rounds of CI failures and fixes on PR #610.

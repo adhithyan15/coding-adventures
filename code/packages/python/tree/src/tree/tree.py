@@ -273,7 +273,8 @@ class Tree:
         predecessors = self._graph.predecessors(node)
         if len(predecessors) == 0:
             return None
-        return predecessors[0]
+        # predecessors() returns a frozenset (not indexable); extract the sole element.
+        return next(iter(predecessors))
 
     def children(self, node: str) -> list[str]:
         """Return the children of a node (sorted alphabetically).
@@ -380,7 +381,7 @@ class Tree:
         current = node
         while current != self._root:
             predecessors = self._graph.predecessors(current)
-            current = predecessors[0]
+            current = next(iter(predecessors))  # frozenset: extract single element
             d += 1
 
         return d

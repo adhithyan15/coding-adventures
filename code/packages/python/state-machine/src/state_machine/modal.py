@@ -158,7 +158,8 @@ class ModalStateMachine:
         # becomes a labeled edge with the trigger as the label. This makes
         # the mode transition topology available for structural queries
         # (e.g., "which modes are reachable from the initial mode?").
-        self._mode_graph: LabeledDirectedGraph = LabeledDirectedGraph()
+        # allow_self_loops=True: a mode may transition to itself (self-loop) on some trigger.
+        self._mode_graph: LabeledDirectedGraph = LabeledDirectedGraph(allow_self_loops=True)
         for mode in modes:
             self._mode_graph.add_node(mode)
         for (mode, trigger), target_mode in mode_transitions.items():
