@@ -1,1 +1,1 @@
-cpanm Test2::V0 && prove -l -v t/
+cpanm --notest Test2::V0 && prove -l -v t/
