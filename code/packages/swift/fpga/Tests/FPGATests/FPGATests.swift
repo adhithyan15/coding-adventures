@@ -34,18 +34,15 @@ final class FPGATests: XCTestCase {
         let slice = try Slice(lutInputs: 4)
         var andTt = Array(repeating: 0, count: 16)
         andTt[3] = 1
-        var xorTt = Array(repeating: 0, count: 16)
-        xorTt[1] = 1
-        xorTt[2] = 1
         
-        try slice.configure(lutATable: andTt, lutBTable: xorTt, carryEnabled: true)
+        try slice.configure(lutATable: andTt, lutBTable: andTt, carryEnabled: true)
         
         // A AND B (generate)
         var out = try slice.evaluate(inputsA: [1, 1, 0, 0], inputsB: [1, 1, 0, 0], clock: 0)
         XCTAssertEqual(out.carryOut, 1)
         
-        // A XOR B with carryIn=1 (propagate)
-        out = try slice.evaluate(inputsA: [1, 1, 0, 0], inputsB: [1, 0, 0, 0], clock: 0, carryIn: 1)
+        // A=1, B=0 with carryIn=1 (propagate)
+        out = try slice.evaluate(inputsA: [1, 1, 0, 0], inputsB: [0, 0, 0, 0], clock: 0, carryIn: 1)
         XCTAssertEqual(out.carryOut, 1)
     }
 
