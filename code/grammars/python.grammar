@@ -14,10 +14,10 @@
 #   ( x )   grouping
 #   "lit"   literal token match
 
-program      = { statement } ;
-statement    = assignment | expression_stmt ;
+program      = { NEWLINE | statement } ;
+statement    = ( assignment | expression_stmt ) [ NEWLINE ] ;
 assignment   = NAME EQUALS expression ;
 expression_stmt = expression ;
 expression   = term { ( PLUS | MINUS ) term } ;
 term         = factor { ( STAR | SLASH ) factor } ;
-factor       = NUMBER | STRING | NAME | LPAREN expression RPAREN ;
+factor       = INT | FLOAT | NUMBER | STRING | NAME | LPAREN expression RPAREN ;

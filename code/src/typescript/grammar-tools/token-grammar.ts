@@ -188,6 +188,26 @@ export interface TokenGrammar {
    * Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
    */
   readonly contextKeywords?: readonly string[];
+  /**
+   * Soft keywords — words that act as keywords only in specific syntactic
+   * contexts, remaining ordinary identifiers everywhere else.
+   *
+   * Unlike contextKeywords (which set a flag on the token), soft keywords
+   * produce plain NAME tokens with NO special flag. The lexer is completely
+   * unaware of their keyword status — the parser handles disambiguation
+   * entirely based on syntactic position.
+   *
+   * This distinction matters because:
+   *   - contextKeywords: lexer hints to parser ("this NAME might be special")
+   *   - softKeywords: lexer ignores them completely, parser owns the decision
+   *
+   * Examples:
+   *   Python 3.10+: `match`, `case`, `_` (only keywords inside match statements)
+   *   Python 3.12+: `type` (only a keyword in `type X = ...` statements)
+   *
+   * A `soft_keywords:` section in a .tokens file populates this field.
+   */
+  readonly softKeywords?: readonly string[];
 }
 
 function parseMagicComment(line: string): { key: string; value: string } | null {
@@ -442,6 +462,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
   const definitions: TokenDefinition[] = [];
   const keywords: string[] = [];
   const contextKeywords: string[] = [];
+  const softKeywords: string[] = [];
   const skipDefinitions: TokenDefinition[] = [];
   const reservedKeywords: string[] = [];
   const groups: Record<string, PatternGroup> = {};
@@ -478,6 +499,8 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     "keywords",
     "reserved",
     "errors",
+    "context_keywords",
+    "soft_keywords",
   ]);
 
   for (let i = 0; i < lines.length; i++) {
@@ -632,6 +655,10 @@ export function parseTokenGrammar(source: string): TokenGrammar {
       currentSection = "context_keywords";
       continue;
     }
+    if (stripped === "soft_keywords:" || stripped === "soft_keywords :") {
+      currentSection = "soft_keywords";
+      continue;
+    }
 
     // --- Inside a section ---
     const isIndented = line[0] === " " || line[0] === "\t";
@@ -646,6 +673,13 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     if (isIndented && currentSection === "context_keywords") {
       if (stripped) {
         contextKeywords.push(stripped);
+      }
+      continue;
+    }
+
+    if (isIndented && currentSection === "soft_keywords") {
+      if (stripped) {
+        softKeywords.push(stripped);
       }
       continue;
     }
@@ -774,6 +808,7 @@ export function parseTokenGrammar(source: string): TokenGrammar {
     version,
     caseInsensitive,
     contextKeywords: contextKeywords.length > 0 ? contextKeywords : undefined,
+    softKeywords: softKeywords.length > 0 ? softKeywords : undefined,
   };
 }
 

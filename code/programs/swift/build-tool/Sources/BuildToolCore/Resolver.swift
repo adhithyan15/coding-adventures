@@ -30,6 +30,8 @@ public enum Resolver {
                 deps = parsePerlDeps(package: package, knownNames: knownNames)
             case "swift":
                 deps = parseSwiftDeps(package: package, knownNames: knownNames)
+            case "haskell":
+                deps = parseHaskellDeps(package: package, knownNames: knownNames)
             default:
                 deps = []
             }
@@ -96,6 +98,8 @@ public enum Resolver {
                 setKnown("coding-adventures-\(packageDirName)", package.name, path: package.path)
             case "swift":
                 setKnown(packageDirName, package.name, path: package.path)
+            case "haskell":
+                setKnown("coding-adventures-\(packageDirName.replacingOccurrences(of: "_", with: "-"))", package.name, path: package.path)
             default:
                 break
             }
@@ -314,6 +318,21 @@ public enum Resolver {
         return content
             .matches(for: #"requires\s+['"](coding-adventures-[^'"]+)['"]"#)
             .compactMap { knownNames[$0.lowercased()] }
+    }
+
+    private static func parseHaskellDeps(package: BuildPackage, knownNames: [String: String]) -> [String] {
+        guard let cabalPath = firstFile(in: package.path, suffix: ".cabal"),
+              let content = try? String(contentsOfFile: cabalPath, encoding: .utf8) else {
+            return []
+        }
+        return content
+            .matches(for: #"(coding-adventures-[a-zA-Z0-9-]+)"#)
+            .compactMap { depName in
+                guard let pkgName = knownNames[depName.lowercased()], pkgName != package.name else {
+                    return nil
+                }
+                return pkgName
+            }
     }
 
     private static func extractQuotedDeps(from line: String, knownNames: [String: String], into dependencies: inout [String]) {

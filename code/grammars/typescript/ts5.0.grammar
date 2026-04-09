@@ -823,9 +823,9 @@ decorator_expression = left_hand_side_expression ;
 # TypeScript Expression Extensions
 # ============================================================================
 
-ts_as_expression = assignment_expression "as" type_expression ;
+ts_as_expression = conditional_expression "as" type_expression ;
 
-ts_satisfies_expression = assignment_expression "satisfies" type_expression ;
+ts_satisfies_expression = conditional_expression "satisfies" type_expression ;
 
 type_predicate = [ "asserts" ] NAME "is" type_expression
                | "asserts" NAME ;

@@ -219,3 +219,91 @@ class TestCreateTypescriptLexer:
         tokens_direct = tokenize_typescript(source)
         tokens_factory = create_typescript_lexer(source).tokenize()
         assert tokens_direct == tokens_factory
+
+
+# ============================================================================
+# Test: Version Parameter
+# ============================================================================
+
+
+class TestVersionParameter:
+    """Test that the ``version`` parameter loads the correct grammar.
+
+    Each TypeScript version corresponds to a ``.tokens`` file under
+    ``code/grammars/typescript/``.  The version-aware API must:
+
+    1. Accept all six valid version strings without raising errors.
+    2. Still produce correct tokens — the base token types are the same
+       across all versions; versioned grammars only ADD new keywords.
+    3. Raise ``ValueError`` for unknown version strings.
+    4. Treat ``None`` and ``""`` as "use the generic grammar".
+    """
+
+    def test_no_version_uses_generic_grammar(self) -> None:
+        """Omitting ``version`` (``None``) loads the generic typescript.tokens."""
+        tokens = tokenize_typescript("let x = 1;")
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "let"
+
+    def test_empty_string_uses_generic_grammar(self) -> None:
+        """An empty string version also loads the generic typescript.tokens."""
+        tokens = tokenize_typescript("let x = 1;", "")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_ts10_version(self) -> None:
+        """``ts1.0`` loads the TypeScript 1.0 grammar (April 2014).
+
+        In ``ts1.0``, ``interface`` is a *context keyword* — it is lexed as
+        NAME (not KEYWORD) because it can still appear as an identifier in
+        non-declaration positions.  The full list of reserved keywords (like
+        ``let``, ``const``) are always KEYWORD.
+        """
+        # ``var`` is a hard keyword in all TypeScript versions (ES3+).
+        tokens = tokenize_typescript("var x = 1;", "ts1.0")
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "var"
+
+    def test_ts20_version(self) -> None:
+        """``ts2.0`` loads the TypeScript 2.0 grammar (September 2016)."""
+        tokens = tokenize_typescript("let x: never;", "ts2.0")
+        assert any(t.value == "never" for t in tokens)
+
+    def test_ts30_version(self) -> None:
+        """``ts3.0`` loads the TypeScript 3.0 grammar (July 2018)."""
+        tokens = tokenize_typescript("let x: unknown;", "ts3.0")
+        assert any(t.value == "unknown" for t in tokens)
+
+    def test_ts40_version(self) -> None:
+        """``ts4.0`` loads the TypeScript 4.0 grammar (August 2020)."""
+        tokens = tokenize_typescript("let x = 1;", "ts4.0")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_ts50_version(self) -> None:
+        """``ts5.0`` loads the TypeScript 5.0 grammar (March 2023)."""
+        tokens = tokenize_typescript("const x = 1;", "ts5.0")
+        assert tokens[0].type == TokenType.KEYWORD
+
+    def test_ts58_version(self) -> None:
+        """``ts5.8`` loads the TypeScript 5.8 grammar (February 2025).
+
+        In ``ts5.8``, ``using`` is a *context keyword* — it is lexed as NAME
+        (not KEYWORD) because it can still appear as an identifier in other
+        positions.  We verify that the grammar loads and tokenizes correctly
+        by checking for expected NAME tokens.
+        """
+        tokens = tokenize_typescript("const x = 1;", "ts5.8")
+        assert tokens[0].type == TokenType.KEYWORD
+        assert tokens[0].value == "const"
+
+    def test_unknown_version_raises_value_error(self) -> None:
+        """An unrecognized version string must raise ``ValueError``."""
+        import pytest
+        with pytest.raises(ValueError, match="Unknown TypeScript version"):
+            tokenize_typescript("let x = 1;", "ts99.0")
+
+    def test_version_propagates_to_factory(self) -> None:
+        """``create_typescript_lexer`` with a version should produce valid tokens."""
+        lexer = create_typescript_lexer("let x: number = 1;", "ts1.0")
+        tokens = lexer.tokenize()
+        assert any(t.value == "number" for t in tokens)
+        assert tokens[-1].type == TokenType.EOF

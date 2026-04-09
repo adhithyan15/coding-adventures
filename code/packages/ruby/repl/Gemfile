@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+# Development and test dependencies (versions pinned in gemspec).
+group :development, :test do
+  gem "minitest", "~> 5.0"
+  gem "simplecov", "~> 0.22"
+  gem "standard", "~> 1.0"
+  gem "rake", "~> 13.0"
+end

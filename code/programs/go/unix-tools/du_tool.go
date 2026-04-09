@@ -268,7 +268,12 @@ func runDu(specPath string, argv []string, stdout io.Writer, stderr io.Writer) i
 		}
 
 		if depth, ok := r.Flags["max_depth"].(int64); ok {
-			opts.MaxDepth = int(depth)
+			maxDepth, err := intFromInt64(depth)
+			if err != nil {
+				fmt.Fprintf(stderr, "du: invalid max depth: %s\n", err)
+				return 1
+			}
+			opts.MaxDepth = maxDepth
 		}
 
 		opts.Excludes = getStringSlice(r.Flags, "exclude")

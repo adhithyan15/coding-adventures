@@ -3,7 +3,7 @@
 // Source: required_capabilities.json
 // Regenerate:
 //   go run github.com/adhithyan15/coding-adventures/code/programs/go/capability-cage-generator \
-//     --manifest=C:/Users/adhit/Downloads/coding-adventures/.claude/worktrees/go-operations-generator/code/packages/go/python-lexer/required_capabilities.json
+//     --manifest=/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/magical-curie/code/packages/go/python-lexer/required_capabilities.json
 //
 // The JSON file is a development-time artifact; this file is what the
 // runtime enforces. Edit required_capabilities.json and re-run the
@@ -33,6 +33,36 @@ var _allowedPath_0 = sync.OnceValue(func() string {
 	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python.tokens"))
 })
 
+var _allowedPath_1 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python/python2.7.tokens"))
+})
+
+var _allowedPath_2 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python/python3.0.tokens"))
+})
+
+var _allowedPath_3 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python/python3.6.tokens"))
+})
+
+var _allowedPath_4 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python/python3.8.tokens"))
+})
+
+var _allowedPath_5 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python/python3.10.tokens"))
+})
+
+var _allowedPath_6 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/python/python3.12.tokens"))
+})
+
 // ─────────────────────────────────────────────────────────────────────────────
 // _FileCapabilities — op.File capability namespace
 //
@@ -49,7 +79,29 @@ type _FileCapabilities struct{}
 // bypass via ./foo, foo/../foo/bar, and similar path manipulations.
 func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
 	path = filepath.Clean(path)
-	if path != _allowedPath_0() {
+	_allowed := false
+	if path == _allowedPath_0() {
+		_allowed = true
+	}
+	if path == _allowedPath_1() {
+		_allowed = true
+	}
+	if path == _allowedPath_2() {
+		_allowed = true
+	}
+	if path == _allowedPath_3() {
+		_allowed = true
+	}
+	if path == _allowedPath_4() {
+		_allowed = true
+	}
+	if path == _allowedPath_5() {
+		_allowed = true
+	}
+	if path == _allowedPath_6() {
+		_allowed = true
+	}
+	if !_allowed {
 		return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
 	}
 	return os.ReadFile(path) //nolint:cap

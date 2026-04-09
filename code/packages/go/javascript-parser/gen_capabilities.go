@@ -33,6 +33,76 @@ var _allowedPath_0 = sync.OnceValue(func() string {
 	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/javascript.grammar"))
 })
 
+var _allowedPath_1 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es1.grammar"))
+})
+
+var _allowedPath_2 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es3.grammar"))
+})
+
+var _allowedPath_3 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es5.grammar"))
+})
+
+var _allowedPath_4 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2015.grammar"))
+})
+
+var _allowedPath_5 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2016.grammar"))
+})
+
+var _allowedPath_6 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2017.grammar"))
+})
+
+var _allowedPath_7 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2018.grammar"))
+})
+
+var _allowedPath_8 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2019.grammar"))
+})
+
+var _allowedPath_9 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2020.grammar"))
+})
+
+var _allowedPath_10 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2021.grammar"))
+})
+
+var _allowedPath_11 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2022.grammar"))
+})
+
+var _allowedPath_12 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2023.grammar"))
+})
+
+var _allowedPath_13 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2024.grammar"))
+})
+
+var _allowedPath_14 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/ecmascript/es2025.grammar"))
+})
+
 // ─────────────────────────────────────────────────────────────────────────────
 // _FileCapabilities — op.File capability namespace
 //
@@ -49,10 +119,24 @@ type _FileCapabilities struct{}
 // bypass via ./foo, foo/../foo/bar, and similar path manipulations.
 func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
 	path = filepath.Clean(path)
-	if path != _allowedPath_0() {
-		return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
+	if path == _allowedPath_0() ||
+		path == _allowedPath_1() ||
+		path == _allowedPath_2() ||
+		path == _allowedPath_3() ||
+		path == _allowedPath_4() ||
+		path == _allowedPath_5() ||
+		path == _allowedPath_6() ||
+		path == _allowedPath_7() ||
+		path == _allowedPath_8() ||
+		path == _allowedPath_9() ||
+		path == _allowedPath_10() ||
+		path == _allowedPath_11() ||
+		path == _allowedPath_12() ||
+		path == _allowedPath_13() ||
+		path == _allowedPath_14() {
+		return os.ReadFile(path) //nolint:cap
 	}
-	return os.ReadFile(path) //nolint:cap
+	return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

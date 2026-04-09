@@ -68,6 +68,12 @@ local lexer_pkg     = require("coding_adventures.lexer")
 local M = {}
 M.VERSION = "0.1.0"
 
+-- DefaultVersion is the Python version used when no version is specified.
+M.DEFAULT_VERSION = "3.12"
+
+-- SupportedVersions lists all Python versions with grammar files.
+M.SUPPORTED_VERSIONS = {"2.7", "3.0", "3.6", "3.8", "3.10", "3.12"}
+
 -- =========================================================================
 -- Path helpers
 -- =========================================================================
@@ -138,24 +144,43 @@ end
 -- variable. Subsequent calls to `tokenize` reuse the cached grammar.
 -- This avoids repeated file I/O and repeated regex compilation.
 
-local _grammar_cache = nil
+-- Per-version grammar cache. Keys are version strings (e.g., "3.12"),
+-- values are parsed TokenGrammar objects. Once a grammar is parsed for
+-- a given version, it is reused for all subsequent calls.
+local _grammar_cache = {}
 
---- Load and parse the `python.tokens` grammar, with caching.
--- On the first call, opens and parses the file. On subsequent calls,
--- returns the cached TokenGrammar object immediately.
--- @return TokenGrammar  The parsed Python token grammar.
-local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+--- Resolve the version string. If nil or empty, returns DEFAULT_VERSION.
+-- @param version string|nil  The version string to resolve.
+-- @return string             The resolved version string.
+local function resolve_version(version)
+    if not version or version == "" then
+        return M.DEFAULT_VERSION
     end
+    return version
+end
 
-    -- Navigate from this file's directory up to the repo root.
-    -- init.lua is 3 dirs inside the package (src/coding_adventures/python_lexer/).
-    -- The package itself is 3 more dirs inside the repo (packages/lua/python_lexer/).
-    -- Total: 6 levels up lands us at `code/`, the repo root.
+--- Return the path to the versioned grammar file.
+-- @param version string  The Python version (e.g., "3.12").
+-- @return string         Absolute path to the .tokens file.
+local function grammar_path(version)
     local script_dir  = get_script_dir()
     local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/python.tokens"
+    return repo_root .. "/grammars/python/python" .. version .. ".tokens"
+end
+
+--- Load and parse a versioned Python grammar, with per-version caching.
+-- On the first call for a given version, opens and parses the file.
+-- On subsequent calls, returns the cached TokenGrammar object.
+-- @param version string|nil  Python version (e.g., "3.12"). Defaults to DEFAULT_VERSION.
+-- @return TokenGrammar  The parsed Python token grammar.
+local function get_grammar(version)
+    local v = resolve_version(version)
+
+    if _grammar_cache[v] then
+        return _grammar_cache[v]
+    end
+
+    local tokens_path = grammar_path(v)
 
     local f, open_err = io.open(tokens_path, "r")
     if not f then
@@ -169,10 +194,10 @@ local function get_grammar()
 
     local grammar, parse_err = grammar_tools.parse_token_grammar(content)
     if not grammar then
-        error("python_lexer: failed to parse python.tokens: " .. (parse_err or "unknown error"))
+        error("python_lexer: failed to parse python" .. v .. ".tokens: " .. (parse_err or "unknown error"))
     end
 
-    _grammar_cache = grammar
+    _grammar_cache[v] = grammar
     return grammar
 end
 
@@ -180,30 +205,28 @@ end
 -- Public API
 -- =========================================================================
 
---- Tokenize a Python source string.
+--- Tokenize a Python source string using a versioned grammar.
 --
--- Loads the `python.tokens` grammar (cached after first call) and feeds
--- the source to a `GrammarLexer`. Returns the complete flat token list,
--- including a terminal `EOF` token.
+-- Loads the grammar for the given Python version (cached after first call)
+-- and feeds the source to a `GrammarLexer`. Returns the complete flat
+-- token list, including a terminal `EOF` token.
 --
--- Whitespace is consumed silently via the skip patterns in `python.tokens`.
+-- Whitespace is consumed silently via the skip patterns in the grammar.
 -- The caller receives only meaningful tokens: NAME (and keyword subtypes),
 -- NUMBER, STRING, operators, delimiters, and EOF.
 --
--- @param source string  The Python text to tokenize.
--- @return table         Array of Token objects (type, value, line, col).
--- @error                Raises an error on unexpected characters.
+-- @param source  string      The Python text to tokenize.
+-- @param version string|nil  Python version (e.g., "3.12"). Defaults to DEFAULT_VERSION.
+-- @return table              Array of Token objects (type, value, line, col).
+-- @error                     Raises an error on unexpected characters.
 --
 -- Example:
 --
 --   local py_lexer = require("coding_adventures.python_lexer")
---   local tokens = py_lexer.tokenize("def foo(x):")
---   -- tokens[1].type  → "DEF"
---   -- tokens[1].value → "def"
---   -- tokens[2].type  → "NAME"
---   -- tokens[2].value → "foo"
-function M.tokenize(source)
-    local grammar = get_grammar()
+--   local tokens = py_lexer.tokenize("def foo(x):", "3.12")
+--   local tokens = py_lexer.tokenize("def foo(x):")  -- defaults to 3.12
+function M.tokenize(source, version)
+    local grammar = get_grammar(version)
     local gl      = lexer_pkg.GrammarLexer.new(source, grammar)
     local raw     = gl:tokenize()
     local tokens  = {}
@@ -218,14 +241,15 @@ function M.tokenize(source)
     return tokens
 end
 
---- Return the cached (or freshly loaded) TokenGrammar for Python.
+--- Return the cached (or freshly loaded) TokenGrammar for a Python version.
 --
 -- Exposed for callers that want to inspect or reuse the grammar object
 -- directly — for example, to build a custom GrammarLexer with callbacks.
 --
+-- @param version string|nil  Python version (e.g., "3.12"). Defaults to DEFAULT_VERSION.
 -- @return TokenGrammar  The parsed Python token grammar.
-function M.get_grammar()
-    return get_grammar()
+function M.get_grammar(version)
+    return get_grammar(version)
 end
 
 return M

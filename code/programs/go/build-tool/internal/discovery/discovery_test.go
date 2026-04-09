@@ -91,6 +91,13 @@ func TestInferLanguageTypescript(t *testing.T) {
 	}
 }
 
+func TestInferLanguageHaskell(t *testing.T) {
+	lang := inferLanguage("/repo/code/programs/haskell/build-tool")
+	if lang != "haskell" {
+		t.Fatalf("expected haskell, got %s", lang)
+	}
+}
+
 func TestInferLanguageUnknown(t *testing.T) {
 	lang := inferLanguage("/repo/code/packages/zig/something")
 	if lang != "unknown" {

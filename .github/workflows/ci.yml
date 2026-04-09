@@ -33,6 +33,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   # ── Job 1: Detect which languages need toolchains ────────────
   #
@@ -41,6 +44,8 @@ jobs:
   # The build job reads these flags to conditionally install toolchains.
   detect:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       needs_python: ${{ steps.toolchains.outputs.needs_python }}
       needs_ruby: ${{ steps.toolchains.outputs.needs_ruby }}
@@ -50,6 +55,7 @@ jobs:
       needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
+      needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -116,7 +122,8 @@ jobs:
               'needs_rust=true' \
               'needs_elixir=true' \
               'needs_lua=true' \
-              'needs_perl=true' >> "$GITHUB_OUTPUT"
+              'needs_perl=true' \
+              'needs_haskell=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -126,7 +133,8 @@ jobs:
               'needs_rust=${{ steps.detect.outputs.needs_rust }}' \
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
-              'needs_perl=${{ steps.detect.outputs.needs_perl }}' >> "$GITHUB_OUTPUT"
+              'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
+              'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -147,6 +155,8 @@ jobs:
         os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest", "windows-latest"]') || fromJSON('["ubuntu-latest"]') }}
       fail-fast: false
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     defaults:
       run:
         shell: bash
@@ -275,6 +285,13 @@ jobs:
             cpanm --quiet --notest Test2::V0
           fi
 
+      - name: Set up Haskell
+        if: needs.detect.outputs.needs_haskell == 'true'
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.4'
+          cabal-version: '3.10'
+
       - name: Install test runners
         shell: bash
         run: |
@@ -317,6 +334,10 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
             echo "Perl: $(perl --version | head -2 | tail -1)"
             echo "cpanm: $(cpanm --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
+            echo "GHC: $(ghc --version)"
+            echo "Cabal: $(cabal --version)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────

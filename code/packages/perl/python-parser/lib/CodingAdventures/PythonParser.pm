@@ -126,7 +126,12 @@ use CodingAdventures::PythonParser::ASTNode;
 
 sub new {
     my ($class, $source) = @_;
-    my $tokens = CodingAdventures::PythonLexer->tokenize($source);
+    # Pin to legacy grammar — the Perl lexer's regex engine has compatibility
+    # issues with the versioned Python grammars (complex string patterns and
+    # indentation mode). Use the old python.tokens which has simple patterns
+    # and no indentation mode.
+    # TODO: fix Perl lexer regex compatibility for versioned grammars.
+    my $tokens = CodingAdventures::PythonLexer->tokenize($source, 'legacy');
     return bless {
         _tokens => $tokens,
         _pos    => 0,
@@ -608,7 +613,8 @@ sub _parse_primary {
     my $type = $tok->{type};
 
     # --- Numeric literal ---
-    if ($type eq 'NUMBER') {
+    # Accept NUMBER (old grammar), INT, and FLOAT (versioned grammars).
+    if ($type eq 'NUMBER' || $type eq 'INT' || $type eq 'FLOAT') {
         return $self->_node('primary', $self->_leaf($self->_advance()));
     }
 

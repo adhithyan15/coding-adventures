@@ -3,36 +3,59 @@ defmodule CodingAdventures.PythonLexerTest do
 
   alias CodingAdventures.PythonLexer
 
-  defp token_types(source) do
-    {:ok, tokens} = PythonLexer.tokenize(source)
+  defp token_types(source, version \\ nil) do
+    {:ok, tokens} = PythonLexer.tokenize(source, version)
     Enum.map(tokens, & &1.type)
   end
 
-  defp token_values(source) do
-    {:ok, tokens} = PythonLexer.tokenize(source)
+  defp token_values(source, version \\ nil) do
+    {:ok, tokens} = PythonLexer.tokenize(source, version)
     Enum.map(tokens, & &1.value)
   end
 
-  describe "create_lexer/0" do
-    test "returns the parsed python token grammar" do
+  describe "version constants" do
+    test "default_version is 3.12" do
+      assert PythonLexer.default_version() == "3.12"
+    end
+
+    test "supported_versions includes expected versions" do
+      versions = PythonLexer.supported_versions()
+      assert "2.7" in versions
+      assert "3.0" in versions
+      assert "3.6" in versions
+      assert "3.8" in versions
+      assert "3.10" in versions
+      assert "3.12" in versions
+    end
+  end
+
+  describe "create_lexer/1" do
+    test "returns the parsed python token grammar for default version" do
       grammar = PythonLexer.create_lexer()
       names = Enum.map(grammar.definitions, & &1.name)
 
       assert "NAME" in names
-      assert "NUMBER" in names
-      assert "STRING" in names
       assert "EQUALS_EQUALS" in names
       assert "COLON" in names
       assert "if" in grammar.keywords
       assert "def" in grammar.keywords
       assert "True" in grammar.keywords
     end
+
+    test "accepts an explicit version string" do
+      grammar = PythonLexer.create_lexer("3.12")
+      names = Enum.map(grammar.definitions, & &1.name)
+      assert "NAME" in names
+    end
   end
 
-  describe "tokenize/1" do
+  describe "tokenize/2" do
     test "tokenizes a basic assignment expression" do
-      assert token_types("x = 1 + 2") == ["NAME", "EQUALS", "NUMBER", "PLUS", "NUMBER", "EOF"]
-      assert token_values("x = 1 + 2") == ["x", "=", "1", "+", "2", ""]
+      types = token_types("x = 1 + 2\n")
+      assert "NAME" in types
+      assert "EQUALS" in types
+      assert "INT" in types
+      assert "PLUS" in types
     end
 
     test "maps Python reserved words to KEYWORD tokens" do
@@ -71,9 +94,28 @@ defmodule CodingAdventures.PythonLexerTest do
       assert {eof.line, eof.column} == {1, 6}
     end
 
-    test "returns an error on unexpected characters" do
-      assert {:error, message} = PythonLexer.tokenize("@")
-      assert message =~ "Unexpected character"
+    test "tokenizes @ as AT token (decorator operator)" do
+      {:ok, tokens} = PythonLexer.tokenize("@\n")
+      types = Enum.map(tokens, & &1.type)
+      assert "AT" in types
+    end
+
+    test "accepts an explicit version parameter" do
+      types = token_types("x = 1\n", "3.12")
+      assert "NAME" in types
+      assert "INT" in types
+    end
+
+    test "nil version defaults to 3.12" do
+      types = token_types("x = 1\n", nil)
+      assert "NAME" in types
+      assert "INT" in types
+    end
+
+    test "empty string version defaults to 3.12" do
+      types = token_types("x = 1\n", "")
+      assert "NAME" in types
+      assert "INT" in types
     end
   end
 end

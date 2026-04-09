@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- **WASI Tier 3** — eight new WASI host functions beyond the original `fd_write`/`proc_exit`:
+  - `args_sizes_get` — report argument count and total buffer size
+  - `args_get` — copy null-terminated argument strings into WASM linear memory
+  - `environ_sizes_get` — report environment variable count and buffer size
+  - `environ_get` — copy `KEY=VALUE\0` environment strings into WASM linear memory
+  - `clock_res_get` — report clock resolution in nanoseconds (as i64)
+  - `clock_time_get` — read realtime (id 0/2/3) or monotonic (id 1) clock in nanoseconds; returns `EINVAL` for unknown ids
+  - `random_get` — fill a memory buffer with cryptographically secure random bytes
+  - `sched_yield` — cooperative scheduler yield (no-op in single-threaded host)
+- **`WasiClock` abstract base class** — injectable clock interface with `realtime_ns()`, `monotonic_ns()`, `resolution_ns()` methods
+- **`WasiRandom` abstract base class** — injectable random source interface with `fill_bytes(n)` method
+- **`SystemClock`** — production implementation delegating to `time.time_ns()` / `time.monotonic_ns()`
+- **`SystemRandom`** — production implementation delegating to `secrets.token_bytes()`
+- **`WasiConfig` dataclass** — collects all `WasiStub` options in one place: `args`, `env`, `stdout`, `stderr`, `clock`, `random`
+- All new classes exported from `wasm_runtime.__init__`
+- 32 new tests in `tests/test_wasi_tier3.py` covering happy paths, edge cases, no-memory guards, and the `clock_time_get` EINVAL path
+
+### Changed
+
+- `WasiStub.__init__` now accepts an optional `WasiConfig` as its first argument. Old keyword-only `stdout`/`stderr` usage remains fully backwards-compatible.
+- Added `EINVAL = 28` constant for the invalid-argument errno code.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

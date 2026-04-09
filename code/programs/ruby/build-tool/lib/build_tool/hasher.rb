@@ -47,7 +47,8 @@ module BuildTool
       "rust"       => %w[.rs .toml].freeze,
       "elixir"     => %w[.ex .exs].freeze,
       "starlark"   => %w[.star].freeze,
-      "perl"       => %w[.pl .pm .t .xs].freeze
+      "perl"       => %w[.pl .pm .t .xs].freeze,
+      "haskell"    => %w[.hs .cabal].freeze
     }.freeze
 
     # SPECIAL_FILENAMES -- Files to always include regardless of extension.
@@ -62,7 +63,8 @@ module BuildTool
       "rust"       => %w[Cargo.toml Cargo.lock].freeze,
       "elixir"     => %w[mix.exs mix.lock].freeze,
       "starlark"   => [].freeze,
-      "perl"       => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze
+      "perl"       => %w[Makefile.PL Build.PL cpanfile MANIFEST META.json META.yml].freeze,
+      "haskell"    => [].freeze
     }.freeze
 
     module_function

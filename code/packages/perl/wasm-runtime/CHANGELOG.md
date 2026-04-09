@@ -2,6 +2,37 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-06
+
+### Added
+
+- WASI Tier 3 host functions in `WasiStub`:
+  - `args_sizes_get` — report argc and total argv buffer size
+  - `args_get` — write argv pointer array and NUL-terminated arg strings into WASM memory
+  - `environ_sizes_get` — report environment variable count and buffer size
+  - `environ_get` — write environ pointer array and `KEY=VALUE\0` strings into WASM memory
+  - `clock_res_get` — return the resolution of a WASI clock as a 64-bit little-endian nanosecond count
+  - `clock_time_get` — return the current time for realtime (id=0,2,3) or monotonic (id=1) clock; EINVAL for unknown ids
+  - `random_get` — fill a WASM memory buffer with cryptographically secure random bytes
+  - `sched_yield` — no-op scheduling hint, always returns ESUCCESS
+- New file `lib/CodingAdventures/WasmRuntime/WasiClockRandom.pm` providing:
+  - `WasiClock` interface documentation (duck-typed contract)
+  - `SystemClock` — production clock using `Time::HiRes` with CLOCK_MONOTONIC fallback
+  - `WasiRandom` interface documentation
+  - `SystemRandom` — production random source reading `/dev/urandom` with `rand()` fallback
+- `WasiStub::set_memory($mem)` method — inject the LinearMemory instance so memory-accessing
+  WASI functions can operate; mirrors the Go runtime's `SetMemory()` pattern
+- Updated `WasiStub::new()` to accept `args`, `env`, `clock`, `random`, `stdout`, `stderr` kwargs
+  with sensible defaults (SystemClock, SystemRandom, empty args/env)
+- New test file `t/wasi_tier3.t` with 14 subtests covering all 8 new functions, edge cases,
+  and a regression test for square(5)=25
+
+### Changed
+
+- `VERSION` bumped from 0.01 to 0.03
+- `WasmRuntime.pm` now imports `Encode` (core module) for UTF-8 arg/environ encoding
+- `WasmRuntime.pm` now imports `CodingAdventures::WasmRuntime::WasiClockRandom`
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

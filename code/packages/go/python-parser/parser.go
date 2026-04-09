@@ -17,7 +17,7 @@ func getGrammarPath() string {
 }
 
 func CreatePythonParser(source string) (*parser.GrammarParser, error) {
-	tokens, err := pythonlexer.TokenizePython(source)
+	tokens, err := pythonlexer.TokenizePython(source, "")
 	if err != nil {
 		return nil, err
 	}

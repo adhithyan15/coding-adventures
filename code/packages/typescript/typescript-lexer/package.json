@@ -19,6 +19,11 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
+  },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "typescript": "^5.0.0",

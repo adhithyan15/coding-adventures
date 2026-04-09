@@ -39,7 +39,7 @@ module CodingAdventures
     # =====================================================================
 
     # The list of all supported target languages.
-    VALID_LANGUAGES = %w[python go ruby typescript rust elixir perl].freeze
+    VALID_LANGUAGES = %w[python go ruby typescript rust elixir perl lua swift haskell].freeze
 
     # Validates that a package name is kebab-case: lowercase letters and
     # digits, segments separated by single hyphens.
@@ -140,6 +140,9 @@ module CodingAdventures
       when "rust"    then read_rust_deps(pkg_dir)
       when "elixir"  then read_elixir_deps(pkg_dir)
       when "perl"    then read_perl_deps(pkg_dir)
+      when "lua"     then [] # Stub
+      when "swift"   then [] # Stub
+      when "haskell" then read_haskell_deps(pkg_dir)
       else []
       end
     end
@@ -323,6 +326,26 @@ module CodingAdventures
           end
           dep = dep.tr("_", "-")
           deps << dep unless dep.empty?
+        end
+      end
+      deps
+    end
+
+    # Parse a Haskell cabal file for `coding-adventures-dep` entries.
+    #
+    # @param pkg_dir [String] path to the package directory
+    # @return [Array<String>] kebab-case dependency names
+    def self.read_haskell_deps(pkg_dir)
+      cabal_files = Dir[File.join(pkg_dir, "*.cabal")]
+      return [] if cabal_files.empty?
+
+      deps = []
+      self_name = File.basename(pkg_dir)
+      File.readlines(cabal_files.first).each do |line|
+        if line =~ /coding-adventures-([a-zA-Z0-9-]+)/
+          next if line.include?("name:") || line.include?("executable") || line.include?("library")
+          next if Regexp.last_match(1) == self_name
+          deps << $1
         end
       end
       deps
@@ -1171,6 +1194,87 @@ module CodingAdventures
       write_file(File.join(target_dir, "BUILD"), build)
     end
 
+    # Generate Haskell package scaffolding.
+    #
+    # @param target_dir [String] path where files will be written
+    # @param pkg_name [String] kebab-case package name
+    # @param description [String] one-line description
+    # @param layer_ctx [String] layer context string for docs
+    # @param direct_deps [Array<String>] direct dependency names
+    # @param ordered_deps [Array<String>] all deps in install order
+    def self.generate_haskell(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+      pkg_name_haskell = "coding-adventures-#{pkg_name}"
+      module_name = to_camel_case(pkg_name)
+
+      cabal = <<~CABAL
+        cabal-version: 3.0
+        name:          #{pkg_name_haskell}
+        version:       0.1.0
+        synopsis:      #{description}
+        license:       MIT
+        author:        Adhithya Rajasekaran
+        maintainer:    Adhithya Rajasekaran
+        build-type:    Simple
+
+        library
+            exposed-modules:  #{module_name}
+            build-depends:    base >=4.14
+      CABAL
+      ordered_deps.each do |dep|
+        cabal += "                              , coding-adventures-#{dep}\n"
+      end
+      cabal += <<~CABAL
+            hs-source-dirs:   src
+            default-language: Haskell2010
+
+        test-suite spec
+            type:             exitcode-stdio-1.0
+            main-is:          Spec.hs
+            build-depends:    base >=4.14
+                            , #{pkg_name_haskell}
+      CABAL
+      ordered_deps.each do |dep|
+        cabal += "                            , coding-adventures-#{dep}\n"
+      end
+      cabal += <<~CABAL
+            hs-source-dirs:   test
+            default-language: Haskell2010
+      CABAL
+
+      lib_hs = <<~HS
+        module #{module_name} where
+
+        -- | #{description}
+        -- #{layer_ctx}
+        someFunc :: IO ()
+        someFunc = putStrLn "someFunc"
+      HS
+
+      spec_hs = <<~HS
+        import #{module_name}
+
+        main :: IO ()
+        main = do
+            putStrLn "Test suite not yet implemented."
+      HS
+
+      cabal_project = "packages: .\n"
+      ordered_deps.each do |dep|
+        cabal_project += "          ../#{dep}\n"
+      end
+
+      build = "cabal test all\n"
+
+      FileUtils.mkdir_p(File.join(target_dir, "src"))
+      FileUtils.mkdir_p(File.join(target_dir, "test"))
+
+      write_file(File.join(target_dir, "#{pkg_name_haskell}.cabal"), cabal)
+      write_file(File.join(target_dir, "cabal.project"), cabal_project)
+      write_file(File.join(target_dir, "src", "#{module_name}.hs"), lib_hs)
+      write_file(File.join(target_dir, "test", "Spec.hs"), spec_hs)
+      write_file(File.join(target_dir, "BUILD"), build)
+    end
+
     # =====================================================================
     # Common Files (README.md, CHANGELOG.md)
     # =====================================================================
@@ -1329,6 +1433,8 @@ module CodingAdventures
         generate_elixir(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
       when "perl"
         generate_perl(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
+      when "haskell"
+        generate_haskell(target_dir, pkg_name, description, layer_ctx, direct_deps, ordered_deps)
       end
 
       generate_common_files(target_dir, pkg_name, description, lang, layer, direct_deps)

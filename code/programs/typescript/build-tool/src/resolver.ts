@@ -793,6 +793,47 @@ function parsePerlDeps(
 }
 
 // ===========================================================================
+// Dependency Parsing -- Haskell
+// ===========================================================================
+
+/**
+ * Extract internal dependencies from a Haskell Cabal file.
+ *
+ * Looks for dependencies matching `coding-adventures-*`.
+ */
+function parseHaskellDeps(
+  pkg: Package,
+  knownNames: Map<string, string>,
+): string[] {
+  const files: fs.Dirent[] = [];
+  try {
+    files.push(...fs.readdirSync(pkg.path, { withFileTypes: true }));
+  } catch {
+    return [];
+  }
+
+  const cabalFile = files.find(f => f.isFile() && f.name.endsWith(".cabal"));
+  if (!cabalFile) {
+    return [];
+  }
+
+  const text = fs.readFileSync(nodePath.join(pkg.path, cabalFile.name), "utf-8");
+  const internalDeps: string[] = [];
+  const pattern = /coding-adventures-([a-z0-9-]+)/g;
+  let match;
+
+  while ((match = pattern.exec(text)) !== null) {
+    const depName = `coding-adventures-${match[1].toLowerCase()}`;
+    const pkgName = knownNames.get(depName);
+    if (pkgName && pkgName !== pkg.name) {
+      internalDeps.push(pkgName);
+    }
+  }
+
+  return internalDeps;
+}
+
+// ===========================================================================
 // Known Names Mapping
 // ===========================================================================
 
@@ -890,6 +931,13 @@ export function buildKnownNames(packages: Package[]): Map<string, string> {
         known.set(cpanName, pkg.name);
         break;
       }
+
+      case "haskell": {
+        // Haskell Cabal package names use hyphens.
+        const cabalName = `coding-adventures-${dirName}`.toLowerCase();
+        known.set(cabalName, pkg.name);
+        break;
+      }
     }
   }
 
@@ -951,6 +999,9 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
         break;
       case "perl":
         deps = parsePerlDeps(pkg, knownNames);
+        break;
+      case "haskell":
+        deps = parseHaskellDeps(pkg, knownNames);
         break;
       default:
         deps = [];

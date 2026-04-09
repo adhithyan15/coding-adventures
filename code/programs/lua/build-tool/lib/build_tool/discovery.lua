@@ -33,7 +33,7 @@ local Discovery = {}
 -- KNOWN_LANGUAGES lists the language directory names we look for when
 -- inferring which ecosystem a package belongs to.
 local KNOWN_LANGUAGES = {
-    "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl",
+    "python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "haskell",
 }
 
 -- SKIP_DIRS is the set of directory names that should never be traversed
@@ -226,8 +226,8 @@ function Discovery.list_subdirs(directory)
         end
         local handle = io.popen(cmd)
         if handle then
-            for name in handle:lines() do
-                name = name:match("^%s*(.-)%s*$")
+            for raw_name in handle:lines() do
+                local name = raw_name:match("^%s*(.-)%s*$")
                 if name ~= "" then
                     local full_path = directory .. "/" .. name
                     if Discovery.dir_exists(full_path) then

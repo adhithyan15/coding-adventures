@@ -219,15 +219,30 @@ func runUniqWithStdin(specPath string, argv []string, stdout io.Writer, stderr i
 		// Extract integer flags with defaults of 0.
 		skipFields := 0
 		if v, ok := r.Flags["skip_fields"].(int64); ok {
-			skipFields = int(v)
+			parsedSkipFields, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "uniq: invalid skip fields: %s\n", err)
+				return 1
+			}
+			skipFields = parsedSkipFields
 		}
 		skipChars := 0
 		if v, ok := r.Flags["skip_chars"].(int64); ok {
-			skipChars = int(v)
+			parsedSkipChars, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "uniq: invalid skip chars: %s\n", err)
+				return 1
+			}
+			skipChars = parsedSkipChars
 		}
 		checkChars := 0
 		if v, ok := r.Flags["check_chars"].(int64); ok {
-			checkChars = int(v)
+			parsedCheckChars, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "uniq: invalid check chars: %s\n", err)
+				return 1
+			}
+			checkChars = parsedCheckChars
 		}
 
 		// Determine input source.

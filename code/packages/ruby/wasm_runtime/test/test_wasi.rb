@@ -59,8 +59,11 @@ class TestWasi < Minitest::Test
   # ── Stub functions return ENOSYS ───────────────────────────────────
 
   def test_stub_function_returns_enosys
+    # Use a WASI function that is not yet implemented (Tier 3 functions such as
+    # args_sizes_get are now real implementations; use an obscure unimplemented
+    # one like path_open instead).
     wasi = WR::WasiStub.new
-    stub = wasi.resolve_function("wasi_snapshot_preview1", "args_sizes_get")
+    stub = wasi.resolve_function("wasi_snapshot_preview1", "path_open")
     result = stub.call([])
     assert_equal 1, result.length
     assert_equal 52, result[0].value # ENOSYS

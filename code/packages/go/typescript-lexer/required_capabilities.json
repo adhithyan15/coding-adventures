@@ -7,8 +7,44 @@
       "category": "fs",
       "action": "read",
       "target": "../../../grammars/typescript.tokens",
-      "justification": "Reads token grammar definition file to build the lexer DFA at initialization time."
+      "justification": "Generic TypeScript token grammar (no version specified)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts1.0.tokens",
+      "justification": "TypeScript 1.0 token grammar (April 2014)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts2.0.tokens",
+      "justification": "TypeScript 2.0 token grammar (September 2016)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts3.0.tokens",
+      "justification": "TypeScript 3.0 token grammar (July 2018)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts4.0.tokens",
+      "justification": "TypeScript 4.0 token grammar (August 2020)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts5.0.tokens",
+      "justification": "TypeScript 5.0 token grammar (March 2023)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/typescript/ts5.8.tokens",
+      "justification": "TypeScript 5.8 token grammar (February 2025)."
     }
   ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "justification": "Reads grammar definition files for the selected TypeScript version. No write, network, or process access needed."
 }

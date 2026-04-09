@@ -7,8 +7,44 @@
       "category": "fs",
       "action": "read",
       "target": "../../../grammars/python.tokens",
-      "justification": "Reads token grammar definition file to build the lexer DFA at initialization time."
+      "justification": "Reads the legacy minimal Python token grammar (backward compatibility)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/python/python2.7.tokens",
+      "justification": "Reads Python 2.7 token grammar for version-aware tokenization."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/python/python3.0.tokens",
+      "justification": "Reads Python 3.0 token grammar for version-aware tokenization."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/python/python3.6.tokens",
+      "justification": "Reads Python 3.6 token grammar for version-aware tokenization."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/python/python3.8.tokens",
+      "justification": "Reads Python 3.8 token grammar for version-aware tokenization."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/python/python3.10.tokens",
+      "justification": "Reads Python 3.10 token grammar for version-aware tokenization."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "../../../grammars/python/python3.12.tokens",
+      "justification": "Reads Python 3.12 token grammar for version-aware tokenization."
     }
   ],
-  "justification": "Reads grammar definition files. No write, network, or process access needed."
+  "justification": "Reads versioned Python grammar definition files. No write, network, or process access needed."
 }

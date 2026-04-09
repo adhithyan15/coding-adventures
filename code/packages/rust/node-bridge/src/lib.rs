@@ -30,7 +30,7 @@ use std::ptr;
 
 /// Opaque N-API environment handle.
 #[repr(C)]
-pub struct napi_env__{
+pub struct napi_env__ {
     _opaque: [u8; 0],
 }
 pub type napi_env = *mut napi_env__;
@@ -58,9 +58,8 @@ pub type napi_callback =
     Option<unsafe extern "C" fn(env: napi_env, info: napi_callback_info) -> napi_value>;
 
 /// N-API destructor for wrapped data.
-pub type napi_finalize = Option<
-    unsafe extern "C" fn(env: napi_env, data: *mut c_void, hint: *mut c_void),
->;
+pub type napi_finalize =
+    Option<unsafe extern "C" fn(env: napi_env, data: *mut c_void, hint: *mut c_void)>;
 
 /// Property attributes.
 pub type napi_property_attributes = i32;
@@ -103,7 +102,8 @@ extern "C" {
 
     // -- Array operations --------------------------------------------------
     pub fn napi_create_array(env: napi_env, result: *mut napi_value) -> napi_status;
-    pub fn napi_get_array_length(env: napi_env, value: napi_value, result: *mut u32) -> napi_status;
+    pub fn napi_get_array_length(env: napi_env, value: napi_value, result: *mut u32)
+        -> napi_status;
     pub fn napi_get_element(
         env: napi_env,
         object: napi_value,
@@ -191,11 +191,7 @@ extern "C" {
     ) -> napi_status;
 
     // -- Error handling ----------------------------------------------------
-    pub fn napi_throw_error(
-        env: napi_env,
-        code: *const c_char,
-        msg: *const c_char,
-    ) -> napi_status;
+    pub fn napi_throw_error(env: napi_env, code: *const c_char, msg: *const c_char) -> napi_status;
 }
 
 // ---------------------------------------------------------------------------
@@ -214,18 +210,15 @@ fn check_status(status: napi_status, msg: &str) {
 
 pub fn str_to_js(env: napi_env, s: &str) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    let status = unsafe {
-        napi_create_string_utf8(env, s.as_ptr() as *const c_char, s.len(), &mut result)
-    };
+    let status =
+        unsafe { napi_create_string_utf8(env, s.as_ptr() as *const c_char, s.len(), &mut result) };
     check_status(status, "napi_create_string_utf8");
     result
 }
 
 pub fn str_from_js(env: napi_env, val: napi_value) -> Option<String> {
     let mut len: usize = 0;
-    let status = unsafe {
-        napi_get_value_string_utf8(env, val, ptr::null_mut(), 0, &mut len)
-    };
+    let status = unsafe { napi_get_value_string_utf8(env, val, ptr::null_mut(), 0, &mut len) };
     if status != NAPI_OK {
         return None;
     }
@@ -233,7 +226,8 @@ pub fn str_from_js(env: napi_env, val: napi_value) -> Option<String> {
     let mut actual_len: usize = 0;
     let status = unsafe {
         napi_get_value_string_utf8(
-            env, val,
+            env,
+            val,
             buf.as_mut_ptr() as *mut c_char,
             buf.len(),
             &mut actual_len,
@@ -252,24 +246,36 @@ pub fn str_from_js(env: napi_env, val: napi_value) -> Option<String> {
 
 pub fn array_new(env: napi_env) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    check_status(unsafe { napi_create_array(env, &mut result) }, "napi_create_array");
+    check_status(
+        unsafe { napi_create_array(env, &mut result) },
+        "napi_create_array",
+    );
     result
 }
 
 pub fn array_len(env: napi_env, array: napi_value) -> u32 {
     let mut len: u32 = 0;
-    check_status(unsafe { napi_get_array_length(env, array, &mut len) }, "napi_get_array_length");
+    check_status(
+        unsafe { napi_get_array_length(env, array, &mut len) },
+        "napi_get_array_length",
+    );
     len
 }
 
 pub fn array_get(env: napi_env, array: napi_value, index: u32) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    check_status(unsafe { napi_get_element(env, array, index, &mut result) }, "napi_get_element");
+    check_status(
+        unsafe { napi_get_element(env, array, index, &mut result) },
+        "napi_get_element",
+    );
     result
 }
 
 pub fn array_set(env: napi_env, array: napi_value, index: u32, value: napi_value) {
-    check_status(unsafe { napi_set_element(env, array, index, value) }, "napi_set_element");
+    check_status(
+        unsafe { napi_set_element(env, array, index, value) },
+        "napi_set_element",
+    );
 }
 
 pub fn vec_str_to_js(env: napi_env, items: &[String]) -> napi_value {
@@ -316,19 +322,28 @@ pub fn vec_tuple2_str_to_js(env: napi_env, items: &[(String, String)]) -> napi_v
 
 pub fn bool_to_js(env: napi_env, b: bool) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    check_status(unsafe { napi_get_boolean(env, b, &mut result) }, "napi_get_boolean");
+    check_status(
+        unsafe { napi_get_boolean(env, b, &mut result) },
+        "napi_get_boolean",
+    );
     result
 }
 
 pub fn usize_to_js(env: napi_env, n: usize) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    check_status(unsafe { napi_create_int64(env, n as i64, &mut result) }, "napi_create_int64");
+    check_status(
+        unsafe { napi_create_int64(env, n as i64, &mut result) },
+        "napi_create_int64",
+    );
     result
 }
 
 pub fn undefined(env: napi_env) -> napi_value {
     let mut result: napi_value = ptr::null_mut();
-    check_status(unsafe { napi_get_undefined(env, &mut result) }, "napi_get_undefined");
+    check_status(
+        unsafe { napi_get_undefined(env, &mut result) },
+        "napi_get_undefined",
+    );
     result
 }
 
@@ -352,7 +367,14 @@ pub fn get_cb_info(
     let mut argv: Vec<napi_value> = vec![ptr::null_mut(); max_args];
     check_status(
         unsafe {
-            napi_get_cb_info(env, info, &mut argc, argv.as_mut_ptr(), &mut this, ptr::null_mut())
+            napi_get_cb_info(
+                env,
+                info,
+                &mut argc,
+                argv.as_mut_ptr(),
+                &mut this,
+                ptr::null_mut(),
+            )
         },
         "napi_get_cb_info",
     );
@@ -368,22 +390,31 @@ pub fn wrap_data<T>(env: napi_env, this: napi_value, data: T) {
     let boxed = Box::into_raw(Box::new(data));
     check_status(
         unsafe {
-            napi_wrap(env, this, boxed as *mut c_void, Some(free_data::<T>), ptr::null_mut(), ptr::null_mut())
+            napi_wrap(
+                env,
+                this,
+                boxed as *mut c_void,
+                Some(free_data::<T>),
+                ptr::null_mut(),
+                ptr::null_mut(),
+            )
         },
         "napi_wrap",
     );
 }
 
-pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> &'static T {
+pub unsafe fn unwrap_data<T>(env: napi_env, this: napi_value) -> *const T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
-    &*(ptr as *const T)
+    assert!(!ptr.is_null(), "napi_unwrap returned a null data pointer");
+    ptr as *const T
 }
 
-pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> &'static mut T {
+pub unsafe fn unwrap_data_mut<T>(env: napi_env, this: napi_value) -> *mut T {
     let mut ptr: *mut c_void = ptr::null_mut();
     check_status(napi_unwrap(env, this, &mut ptr), "napi_unwrap");
-    &mut *(ptr as *mut T)
+    assert!(!ptr.is_null(), "napi_unwrap returned a null data pointer");
+    ptr as *mut T
 }
 
 unsafe extern "C" fn free_data<T>(_env: napi_env, data: *mut c_void, _hint: *mut c_void) {
@@ -398,7 +429,9 @@ unsafe extern "C" fn free_data<T>(_env: napi_env, data: *mut c_void, _hint: *mut
 
 pub fn throw_error(env: napi_env, msg: &str) {
     let c_msg = CString::new(msg).unwrap_or_else(|_| CString::new("(error)").unwrap());
-    unsafe { napi_throw_error(env, ptr::null(), c_msg.as_ptr()); }
+    unsafe {
+        napi_throw_error(env, ptr::null(), c_msg.as_ptr());
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -474,7 +507,14 @@ pub fn create_function(env: napi_env, name: &str, cb: napi_callback) -> napi_val
     let mut result: napi_value = ptr::null_mut();
     check_status(
         unsafe {
-            napi_create_function(env, c_name.as_ptr(), usize::MAX, cb, ptr::null(), &mut result)
+            napi_create_function(
+                env,
+                c_name.as_ptr(),
+                usize::MAX,
+                cb,
+                ptr::null(),
+                &mut result,
+            )
         },
         "napi_create_function",
     );

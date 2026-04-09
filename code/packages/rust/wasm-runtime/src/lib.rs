@@ -26,6 +26,9 @@
 //! This crate is part of the coding-adventures monorepo, a ground-up
 //! implementation of the computing stack from transistors to operating systems.
 
+use std::sync::{Arc, Mutex};
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
+
 use wasm_execution::{
     evaluate_const_expr, HostFunction, HostInterface, LinearMemory, Table, TrapError,
     WasmEngineConfig, WasmExecutionEngine, WasmValue,
@@ -57,6 +60,175 @@ impl std::fmt::Display for ProcExitError {
 }
 
 impl std::error::Error for ProcExitError {}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WasiClock and WasiRandom traits
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// Provides time information to the WASI host functions.
+///
+/// Implement this trait to inject a fake or deterministic clock for testing.
+/// The production implementation (`SystemClock`) uses the OS wall clock and
+/// a lazy-initialized monotonic start instant.
+///
+/// ## Clock IDs (WASI preview1)
+///
+/// | ID | Meaning                       |
+/// |----|-------------------------------|
+/// |  0 | REALTIME — wall clock (UTC)   |
+/// |  1 | MONOTONIC — never goes back   |
+/// |  2 | PROCESS_CPUTIME (→ realtime)  |
+/// |  3 | THREAD_CPUTIME (→ realtime)   |
+///
+/// All timestamps are in **nanoseconds**.
+pub trait WasiClock: Send + Sync {
+    /// Nanoseconds since Unix epoch (CLOCK_REALTIME).
+    fn realtime_ns(&self) -> i64;
+
+    /// Nanoseconds since an arbitrary monotonic start point (CLOCK_MONOTONIC).
+    ///
+    /// Guaranteed never to go backward on the same host, but the absolute
+    /// value is meaningless across processes.
+    fn monotonic_ns(&self) -> i64;
+
+    /// Clock resolution in nanoseconds for the given clock ID.
+    ///
+    /// For example, many OS clocks have 1 ms (1_000_000 ns) resolution.
+    fn resolution_ns(&self, clock_id: i32) -> i64;
+}
+
+/// Provides random bytes to the WASI `random_get` host function.
+///
+/// Implement this trait to inject a deterministic fake RNG for testing.
+/// The production implementation (`SystemRandom`) uses a hash-based fallback
+/// that is NOT cryptographically secure — swap it for getrandom or ring when
+/// security matters.
+pub trait WasiRandom: Send + Sync {
+    /// Fill `buf` with random (or deterministic-test) bytes.
+    fn fill_bytes(&self, buf: &mut [u8]);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SystemClock — production clock using OS time
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// Production clock backed by `std::time::SystemTime` and `Instant`.
+///
+/// `realtime_ns` calls `SystemTime::now()` on every invocation.
+/// `monotonic_ns` uses a lazy `Instant` initialized on first call so the
+/// returned value is "nanoseconds since first monotonic measurement in this
+/// process", not since boot.
+pub struct SystemClock;
+
+impl WasiClock for SystemClock {
+    fn realtime_ns(&self) -> i64 {
+        // Duration::as_nanos() returns u128; cast to i64 is valid until 2262.
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos() as i64
+    }
+
+    fn monotonic_ns(&self) -> i64 {
+        // OnceLock captures the first call's Instant so subsequent calls
+        // return elapsed time, giving a strictly non-decreasing sequence.
+        use std::sync::OnceLock;
+        static START: OnceLock<Instant> = OnceLock::new();
+        let start = START.get_or_init(Instant::now);
+        start.elapsed().as_nanos() as i64
+    }
+
+    fn resolution_ns(&self, _clock_id: i32) -> i64 {
+        // 1 ms is a conservative resolution that is accurate for most OS
+        // clocks (Linux typically achieves ~100 ns, macOS ~1 µs, Windows
+        // ~15 ms, but 1 ms is a safe lower bound for all platforms).
+        1_000_000
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SystemRandom — production random using hash-based fallback
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// Production random that mixes `SystemTime` with per-byte index.
+///
+/// **This is NOT cryptographically secure.** It is acceptable for WASM
+/// programs that use `random_get` for non-security purposes (e.g., seeding
+/// a game). Swap `SystemRandom` for a `getrandom`- or `ring`-backed
+/// implementation when security is required.
+///
+/// The design is intentionally swappable via `WasiConfig::random`.
+pub struct SystemRandom;
+
+impl WasiRandom for SystemRandom {
+    fn fill_bytes(&self, buf: &mut [u8]) {
+        use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
+
+        // Mix wall-clock time with the byte position to produce pseudorandom
+        // output.  Each byte gets an independent hash so patterns don't
+        // repeat for small buffers.
+        for (i, b) in buf.iter_mut().enumerate() {
+            let mut h = DefaultHasher::new();
+            (SystemTime::now(), i).hash(&mut h);
+            *b = h.finish() as u8;
+        }
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WasiConfig — configuration bundle for WasiStub
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// Configuration for a WASI host implementation.
+///
+/// Pass this to `WasiStub::with_config` to customise arguments, environment
+/// variables, I/O callbacks, and the injected clock / RNG.
+///
+/// ## Example — deterministic test config
+///
+/// ```rust,ignore
+/// let cfg = WasiConfig {
+///     args: vec!["myapp".into(), "hello".into()],
+///     env:  vec!["HOME=/tmp".into()],
+///     clock:  Box::new(FakeClock),
+///     random: Box::new(FakeRandom),
+///     ..Default::default()
+/// };
+/// ```
+pub struct WasiConfig {
+    /// Command-line arguments (`argv`).  The first element is conventionally
+    /// the program name.
+    pub args: Vec<String>,
+
+    /// Environment variables in `"KEY=VALUE"` format.
+    pub env: Vec<String>,
+
+    /// Optional callback invoked for every line written to stdout (fd 1).
+    pub stdout_callback: Option<Box<dyn Fn(&str) + Send + Sync>>,
+
+    /// Optional callback invoked for every line written to stderr (fd 2).
+    pub stderr_callback: Option<Box<dyn Fn(&str) + Send + Sync>>,
+
+    /// Injected clock.  Defaults to `SystemClock`.
+    pub clock: Box<dyn WasiClock>,
+
+    /// Injected random.  Defaults to `SystemRandom`.
+    pub random: Box<dyn WasiRandom>,
+}
+
+impl Default for WasiConfig {
+    fn default() -> Self {
+        Self {
+            args: Vec::new(),
+            env: Vec::new(),
+            stdout_callback: None,
+            stderr_callback: None,
+            clock: Box::new(SystemClock),
+            random: Box::new(SystemRandom),
+        }
+    }
+}
 
 // ══════════════════════════════════════════════════════════════════════════════
 // WasiStub
@@ -163,6 +335,534 @@ impl HostFunction for EnosysFunc {
 
     fn call(&self, _args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
         Ok(vec![WasmValue::I32(52)]) // ENOSYS
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WasiEnv — WASI Tier 3 host interface
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// A full WASI Tier 3 host implementation.
+///
+/// Provides the eight new WASI functions on top of `proc_exit`:
+///
+/// | Function           | Description                                          |
+/// |--------------------|------------------------------------------------------|
+/// | `args_sizes_get`   | Return argc and total args buffer size               |
+/// | `args_get`         | Write argv pointers and null-terminated strings      |
+/// | `environ_sizes_get`| Return envc and total environ buffer size            |
+/// | `environ_get`      | Write environ pointers and null-terminated strings   |
+/// | `clock_res_get`    | Return clock resolution in nanoseconds               |
+/// | `clock_time_get`   | Return current clock time in nanoseconds             |
+/// | `random_get`       | Fill a WASM memory region with random bytes          |
+/// | `sched_yield`      | Yield the scheduler (no-op in single-threaded host)  |
+///
+/// Memory-accessing functions (args_get, environ_get, clock_time_get,
+/// clock_res_get, random_get) need to write directly into WASM linear
+/// memory. Since `HostFunction::call` has no memory parameter, we use a
+/// shared `Arc<Mutex<LinearMemory>>` that is populated by the runtime
+/// **before** the first WASM call. See `WasiEnv::attach_memory`.
+pub struct WasiEnv {
+    /// Command-line arguments.
+    pub args: Vec<String>,
+
+    /// Environment variables in "KEY=VALUE" format.
+    pub env: Vec<String>,
+
+    /// Shared handle to WASM linear memory. Populated via `attach_memory`
+    /// after instantiation.
+    pub memory: Arc<Mutex<Option<LinearMemory>>>,
+
+    /// Injected clock.
+    pub clock: Arc<dyn WasiClock>,
+
+    /// Injected random.
+    pub random: Arc<dyn WasiRandom>,
+}
+
+impl WasiEnv {
+    /// Create a `WasiEnv` from a `WasiConfig`.
+    pub fn new(cfg: WasiConfig) -> Self {
+        WasiEnv {
+            args: cfg.args,
+            env: cfg.env,
+            memory: Arc::new(Mutex::new(None)),
+            clock: Arc::from(cfg.clock),
+            random: Arc::from(cfg.random),
+        }
+    }
+
+    /// Attach linear memory so that memory-accessing host functions can write
+    /// into it.
+    ///
+    /// Call this after `WasmRuntime::instantiate` but before executing any
+    /// WASM that calls WASI memory functions.
+    pub fn attach_memory(&self, mem: LinearMemory) {
+        *self.memory.lock().unwrap() = Some(mem);
+    }
+
+    /// Retrieve the memory after execution (so the caller can inspect it or
+    /// put it back into the `WasmInstance`).
+    pub fn take_memory(&self) -> Option<LinearMemory> {
+        self.memory.lock().unwrap().take()
+    }
+}
+
+impl HostInterface for WasiEnv {
+    fn resolve_function(
+        &self,
+        module_name: &str,
+        name: &str,
+    ) -> Option<Box<dyn HostFunction>> {
+        if module_name != "wasi_snapshot_preview1" {
+            return None;
+        }
+
+        match name {
+            // ── Tier 1: process termination ───────────────────────────────
+            "proc_exit" => Some(Box::new(ProcExitFunc)),
+
+            // ── Tier 3: arguments ─────────────────────────────────────────
+            "args_sizes_get" => Some(Box::new(ArgsSizesGetFunc {
+                args: self.args.clone(),
+                memory: Arc::clone(&self.memory),
+            })),
+            "args_get" => Some(Box::new(ArgsGetFunc {
+                args: self.args.clone(),
+                memory: Arc::clone(&self.memory),
+            })),
+
+            // ── Tier 3: environment ───────────────────────────────────────
+            "environ_sizes_get" => Some(Box::new(EnvironSizesGetFunc {
+                env: self.env.clone(),
+                memory: Arc::clone(&self.memory),
+            })),
+            "environ_get" => Some(Box::new(EnvironGetFunc {
+                env: self.env.clone(),
+                memory: Arc::clone(&self.memory),
+            })),
+
+            // ── Tier 3: clock ─────────────────────────────────────────────
+            "clock_res_get" => Some(Box::new(ClockResGetFunc {
+                clock: Arc::clone(&self.clock),
+                memory: Arc::clone(&self.memory),
+            })),
+            "clock_time_get" => Some(Box::new(ClockTimeGetFunc {
+                clock: Arc::clone(&self.clock),
+                memory: Arc::clone(&self.memory),
+            })),
+
+            // ── Tier 3: random ────────────────────────────────────────────
+            "random_get" => Some(Box::new(RandomGetFunc {
+                random: Arc::clone(&self.random),
+                memory: Arc::clone(&self.memory),
+            })),
+
+            // ── Tier 3: scheduler ─────────────────────────────────────────
+            "sched_yield" => Some(Box::new(SchedYieldFunc)),
+
+            // All other WASI functions return ENOSYS (function not supported).
+            _ => Some(Box::new(EnosysFunc {
+                func_type: FuncType {
+                    params: vec![],
+                    results: vec![ValueType::I32],
+                },
+            })),
+        }
+    }
+
+    fn resolve_global(&self, _: &str, _: &str) -> Option<(GlobalType, WasmValue)> {
+        None
+    }
+
+    fn resolve_memory(&self, _: &str, _: &str) -> Option<LinearMemory> {
+        None
+    }
+
+    fn resolve_table(&self, _: &str, _: &str) -> Option<Table> {
+        None
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Helper: write an i64 as little-endian into shared memory
+// ══════════════════════════════════════════════════════════════════════════════
+
+/// Write a 64-bit integer at `ptr` in WASM linear memory (little-endian).
+///
+/// WASM is always little-endian. We split the i64 into two i32 halves and use
+/// the existing `store_i32` primitives rather than duplicating byte-level code.
+///
+/// ```text
+/// Memory layout (little-endian):
+///   ptr+0 .. ptr+3  — low 32 bits
+///   ptr+4 .. ptr+7  — high 32 bits
+/// ```
+fn write_i64_le(
+    memory: &mut LinearMemory,
+    ptr: usize,
+    value: i64,
+) -> Result<(), TrapError> {
+    let lo = (value & 0xFFFF_FFFF) as i32;
+    let hi = ((value >> 32) & 0xFFFF_FFFF) as i32;
+    memory.store_i32(ptr, lo)?;
+    memory.store_i32(ptr + 4, hi)?;
+    Ok(())
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Helper: write an i32 into shared memory
+// ══════════════════════════════════════════════════════════════════════════════
+
+fn write_i32_le(
+    memory: &mut LinearMemory,
+    ptr: usize,
+    value: i32,
+) -> Result<(), TrapError> {
+    memory.store_i32(ptr, value)
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Tier 3 host functions
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── 1. args_sizes_get ────────────────────────────────────────────────────────
+
+/// WASI `args_sizes_get(argc_ptr: i32, argv_buf_size_ptr: i32) → errno`
+///
+/// Writes two i32 values into linear memory:
+/// - `*argc_ptr` = number of arguments
+/// - `*argv_buf_size_ptr` = total bytes needed for all null-terminated argument
+///   strings
+///
+/// Returns errno 0 (success).
+///
+/// ## WASI Spec
+/// The "buf size" counts every argument as `len(arg_bytes) + 1` (the +1 is
+/// the null terminator `\0`).
+struct ArgsSizesGetFunc {
+    args: Vec<String>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for ArgsSizesGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let argc_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let buf_size_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        let argc = self.args.len() as i32;
+        // Each argument occupies len(utf8) + 1 bytes (null terminator).
+        let buf_size: i32 = self.args.iter().map(|a| a.len() as i32 + 1).sum();
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        write_i32_le(mem, argc_ptr, argc)?;
+        write_i32_le(mem, buf_size_ptr, buf_size)?;
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 2. args_get ──────────────────────────────────────────────────────────────
+
+/// WASI `args_get(argv_ptr: i32, argv_buf_ptr: i32) → errno`
+///
+/// Writes the argv pointer array and the raw argument strings into memory.
+///
+/// ## Memory layout
+///
+/// ```text
+/// argv_ptr:
+///   [i32] → address of "myapp\0"
+///   [i32] → address of "hello\0"
+///   ...
+///
+/// argv_buf_ptr:
+///   b'm' b'y' b'a' b'p' b'p' 0x00
+///   b'h' b'e' b'l' b'l' b'o' 0x00
+/// ```
+///
+/// Each pointer in the argv array points into `argv_buf`.
+struct ArgsGetFunc {
+    args: Vec<String>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for ArgsGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let argv_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let argv_buf_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+
+        // Walk through each argument, writing:
+        // 1. A pointer (i32) into the argv pointer array.
+        // 2. The null-terminated string bytes into the buffer.
+        let mut buf_cursor = argv_buf_ptr;
+        for (i, arg) in self.args.iter().enumerate() {
+            // Write the pointer to this argument into the argv array.
+            let ptr_slot = argv_ptr + i * 4; // 4 bytes per i32 pointer
+            write_i32_le(mem, ptr_slot, buf_cursor as i32)?;
+
+            // Write the argument bytes followed by a null terminator.
+            let bytes = arg.as_bytes();
+            mem.write_bytes(buf_cursor, bytes)?;
+            mem.write_bytes(buf_cursor + bytes.len(), &[0u8])?; // '\0'
+            buf_cursor += bytes.len() + 1;
+        }
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 3. environ_sizes_get ─────────────────────────────────────────────────────
+
+/// WASI `environ_sizes_get(envc_ptr: i32, environ_buf_size_ptr: i32) → errno`
+///
+/// Same shape as `args_sizes_get` but for environment variables.
+/// Each env var is a `"KEY=VALUE"` string.
+struct EnvironSizesGetFunc {
+    env: Vec<String>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for EnvironSizesGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let envc_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let buf_size_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        let envc = self.env.len() as i32;
+        let buf_size: i32 = self.env.iter().map(|e| e.len() as i32 + 1).sum();
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        write_i32_le(mem, envc_ptr, envc)?;
+        write_i32_le(mem, buf_size_ptr, buf_size)?;
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 4. environ_get ───────────────────────────────────────────────────────────
+
+/// WASI `environ_get(environ_ptr: i32, environ_buf_ptr: i32) → errno`
+///
+/// Same layout as `args_get` but for environment variables.
+struct EnvironGetFunc {
+    env: Vec<String>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for EnvironGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let environ_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let environ_buf_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+
+        let mut buf_cursor = environ_buf_ptr;
+        for (i, var) in self.env.iter().enumerate() {
+            let ptr_slot = environ_ptr + i * 4;
+            write_i32_le(mem, ptr_slot, buf_cursor as i32)?;
+
+            let bytes = var.as_bytes();
+            mem.write_bytes(buf_cursor, bytes)?;
+            mem.write_bytes(buf_cursor + bytes.len(), &[0u8])?;
+            buf_cursor += bytes.len() + 1;
+        }
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 5. clock_res_get ─────────────────────────────────────────────────────────
+
+/// WASI `clock_res_get(id: i32, resolution_ptr: i32) → errno`
+///
+/// Writes the clock resolution (in nanoseconds) as an i64 little-endian value
+/// at `resolution_ptr`.
+///
+/// The resolution answers the question: "What is the smallest time difference
+/// this clock can distinguish?" For most OS clocks this is 1 ms (1_000_000 ns).
+struct ClockResGetFunc {
+    clock: Arc<dyn WasiClock>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for ClockResGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let id = args[0].as_i32().map_err(|e| TrapError::new(e.message))?;
+        let resolution_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        let resolution = self.clock.resolution_ns(id);
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        write_i64_le(mem, resolution_ptr, resolution)?;
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 6. clock_time_get ────────────────────────────────────────────────────────
+
+/// WASI `clock_time_get(id: i32, precision: i64, time_ptr: i32) → errno`
+///
+/// Writes the current time for the requested clock as an i64 (nanoseconds)
+/// at `time_ptr`.
+///
+/// ## Clock IDs
+///
+/// | id | meaning                                   |
+/// |----|-------------------------------------------|
+/// |  0 | REALTIME — nanoseconds since Unix epoch   |
+/// |  1 | MONOTONIC — nanoseconds since start       |
+/// |  2 | PROCESS_CPUTIME — mapped to realtime      |
+/// |  3 | THREAD_CPUTIME — mapped to realtime       |
+/// | *  | Returns EINVAL (28)                       |
+///
+/// `precision` is the requested accuracy hint; we ignore it because our clock
+/// always returns the best available precision.
+struct ClockTimeGetFunc {
+    clock: Arc<dyn WasiClock>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for ClockTimeGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I64, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let id = args[0].as_i32().map_err(|e| TrapError::new(e.message))?;
+        // args[1] is precision (i64) — ignored.
+        let time_ptr = args[2].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        // Map clock IDs to time sources.
+        // IDs 0, 2, 3 all map to wall-clock time; ID 1 is monotonic.
+        let ns = match id {
+            0 | 2 | 3 => self.clock.realtime_ns(),
+            1 => self.clock.monotonic_ns(),
+            _ => return Ok(vec![WasmValue::I32(28)]), // EINVAL
+        };
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        write_i64_le(mem, time_ptr, ns)?;
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 7. random_get ────────────────────────────────────────────────────────────
+
+/// WASI `random_get(buf_ptr: i32, buf_len: i32) → errno`
+///
+/// Fills `buf_len` bytes starting at `buf_ptr` with random bytes from the
+/// injected `WasiRandom` implementation.
+///
+/// The WASI spec says this should be cryptographically secure. Our default
+/// `SystemRandom` is NOT crypto-secure — use `WasiConfig::random` to inject
+/// a getrandom- or ring-backed implementation if that matters.
+struct RandomGetFunc {
+    random: Arc<dyn WasiRandom>,
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+}
+
+impl HostFunction for RandomGetFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![ValueType::I32, ValueType::I32],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        let buf_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let buf_len = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        // Allocate a temporary buffer, fill it, then write to WASM memory.
+        let mut buf = vec![0u8; buf_len];
+        self.random.fill_bytes(&mut buf);
+
+        let mut guard = self.memory.lock().unwrap();
+        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        mem.write_bytes(buf_ptr, &buf)?;
+
+        Ok(vec![WasmValue::I32(0)])
+    }
+}
+
+// ── 8. sched_yield ───────────────────────────────────────────────────────────
+
+/// WASI `sched_yield() → errno`
+///
+/// Voluntarily yield the CPU to another thread or process.
+///
+/// In a single-threaded host (this runtime is single-threaded), yielding is a
+/// no-op. We return errno 0 to signal success without actually calling
+/// `std::thread::yield_now()` because WASM modules must not be able to cause
+/// unbounded delays in host scheduling.
+struct SchedYieldFunc;
+
+impl HostFunction for SchedYieldFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(&self, _args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+        Ok(vec![WasmValue::I32(0)]) // Success — yield is a no-op here
     }
 }
 

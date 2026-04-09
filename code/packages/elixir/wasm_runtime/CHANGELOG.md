@@ -2,6 +2,55 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-06
+
+### Added
+
+- **WASI Tier 3 — 8 new host functions with full memory-writing support**
+
+  Previously the WASI stub returned no-op success codes for all arg/env/clock
+  functions. Now these functions actually write data into WASM linear memory.
+
+  - `args_sizes_get` — writes argc and total buffer size (null-terminated bytes)
+  - `args_get` — writes pointer array + null-terminated UTF-8 arg strings
+  - `environ_sizes_get` — writes env-var count and total buffer size
+  - `environ_get` — writes pointer array + `KEY=VALUE\0` env strings
+  - `clock_res_get` — writes clock resolution as i64 (nanoseconds)
+  - `clock_time_get` — writes current time as i64 (nanoseconds since epoch)
+  - `random_get` — fills buffer with cryptographically random bytes
+  - `sched_yield` — returns success immediately (cooperative scheduler hint)
+
+- **`WasiClock` behaviour** (`wasi_clock.ex`)
+  - Defines `realtime_ns/0`, `monotonic_ns/0`, `resolution_ns/1` callbacks
+  - `SystemClock` production implementation backed by `:os.system_time` and
+    `:erlang.monotonic_time`
+
+- **`WasiRandom` behaviour** (`wasi_random.ex`)
+  - Defines `fill_bytes/1` callback
+  - `SystemRandom` production implementation backed by `:crypto.strong_rand_bytes`
+
+- **`WasiConfig` struct** (in `wasi_stub.ex`)
+  - Bundles args, env, stdout, stderr, clock module, and random module
+  - Clock and random are injected as behaviours so tests can swap in fakes
+
+- **`WasiStub.call_with_memory/4`** — new API for calling memory-writing host
+  functions from tests or callers that manage LinearMemory directly.
+  Pattern: `{results, updated_memory} = WasiStub.call_with_memory(fns, name, args, mem)`
+
+- **10 new tests** in `test/wasi_tier3_test.exs`:
+  - `FakeClock` — deterministic clock (fixed timestamps)
+  - `FakeRandom` — deterministic random (all `0xAB`)
+  - Tests for all 8 Tier 3 functions
+  - Regression test: square function still executes correctly
+
+### Changed
+
+- `WasiStub.host_functions/0` now delegates to `WasiStub.host_functions/1`
+  with a default `%WasiConfig{}`.
+- `WasiStub.host_functions/1` accepts a `WasiConfig` to configure args, env,
+  clock, and random. Tier 1 stubs (fd_write, fd_read, fd_close, fd_seek,
+  proc_exit) are unchanged.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

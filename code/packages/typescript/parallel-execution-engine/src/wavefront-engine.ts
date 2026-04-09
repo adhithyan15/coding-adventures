@@ -98,6 +98,19 @@ function assertRegisterIndex(index: number, limit: number, label: string): void 
   }
 }
 
+function materializeUnitTraces(
+  laneTraces: ReadonlyArray<string | undefined>,
+): Record<number, string> {
+  const entries: Array<readonly [number, string]> = [];
+  for (let laneId = 0; laneId < laneTraces.length; laneId++) {
+    const trace = laneTraces[laneId];
+    if (trace !== undefined) {
+      entries.push([laneId, trace]);
+    }
+  }
+  return Object.fromEntries(entries) as Record<number, string>;
+}
+
 /**
  * Create a WavefrontConfig with sensible defaults.
  */
@@ -383,33 +396,33 @@ export class WavefrontEngine {
     const maskBefore = [...this._execMask];
 
     // Execute on active lanes only
-    const unitTraces: Record<number, string> = {};
+    const laneTraces = new Array<string | undefined>(this._config.waveWidth);
 
     for (let laneId = 0; laneId < this._config.waveWidth; laneId++) {
       const laneCore = this._lanes[laneId];
       if (this._execMask[laneId] && !laneCore.halted) {
         try {
           const trace = laneCore.step();
-          unitTraces[laneId] = trace.description;
+          laneTraces[laneId] = trace.description;
           if (trace.halted) {
-            unitTraces[laneId] = "HALTED";
+            laneTraces[laneId] = "HALTED";
           }
         } catch {
-          unitTraces[laneId] = "(error)";
+          laneTraces[laneId] = "(error)";
         }
       } else if (laneCore.halted) {
-        unitTraces[laneId] = "(halted)";
+        laneTraces[laneId] = "(halted)";
       } else {
         // Lane is masked off -- still advance its PC to stay in sync
         if (!laneCore.halted) {
           try {
             laneCore.step();
-            unitTraces[laneId] = "(masked -- result discarded)";
+            laneTraces[laneId] = "(masked -- result discarded)";
           } catch {
-            unitTraces[laneId] = "(masked -- error)";
+            laneTraces[laneId] = "(masked -- error)";
           }
         } else {
-          unitTraces[laneId] = "(halted)";
+          laneTraces[laneId] = "(halted)";
         }
       }
     }
@@ -448,7 +461,7 @@ export class WavefrontEngine {
     ]);
     let firstDesc = "no active lanes";
     for (let i = 0; i < this._config.waveWidth; i++) {
-      const desc = unitTraces[i];
+      const desc = laneTraces[i];
       if (desc !== undefined && !skipStates.has(desc)) {
         firstDesc = desc;
         break;
@@ -465,7 +478,7 @@ export class WavefrontEngine {
       engineName: this.name,
       executionModel: this.executionModel,
       description: `${firstDesc} -- ${activeCount}/${total} lanes active`,
-      unitTraces,
+      unitTraces: materializeUnitTraces(laneTraces),
       activeMask: currentMask,
       activeCount,
       totalCount: total,
@@ -502,11 +515,11 @@ export class WavefrontEngine {
       engineName: this.name,
       executionModel: this.executionModel,
       description: "All lanes halted",
-      unitTraces: Object.fromEntries(
-        Array.from({ length: this._config.waveWidth }, (_, i) => [
-          i,
-          "(halted)",
-        ]),
+      unitTraces: materializeUnitTraces(
+        Array.from(
+          { length: this._config.waveWidth },
+          () => "(halted)",
+        ),
       ),
       activeMask: Array.from(
         { length: this._config.waveWidth },

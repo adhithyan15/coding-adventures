@@ -1,0 +1,120 @@
+# Token definitions for TypeScript 1.0 (October 2012)
+# TypeScript 1.0 was the first public release of TypeScript.
+# It introduced a typed superset of JavaScript with basic type annotations,
+# interfaces, classes, and modules (namespaces using the `module` keyword).
+#
+# TypeScript 1.0 does NOT have:
+# - `readonly` (added in 2.0)
+# - `abstract` (added in 1.6)
+# - `keyof`, `infer`, `unknown` (added in 2.x/3.x)
+# - `never` (added in 2.0)
+# - `bigint` (added in 3.2)
+# - `symbol` (added in 1.5)
+# - `namespace` as a keyword (used `module` instead, `namespace` added in 1.5)
+#
+# Sources: TypeScript 1.0 spec (codeplex.com/typescript), original changelog.
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+NAME        = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+NUMBER      = /[0-9]+/
+STRING      = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Operators — multi-character first (longer matches win)
+# ============================================================================
+
+STRICT_EQUALS     = "==="
+STRICT_NOT_EQUALS = "!=="
+EQUALS_EQUALS     = "=="
+NOT_EQUALS        = "!="
+LESS_EQUALS       = "<="
+GREATER_EQUALS    = ">="
+ARROW             = "=>"
+
+EQUALS      = "="
+PLUS        = "+"
+MINUS       = "-"
+STAR        = "*"
+SLASH       = "/"
+LESS_THAN   = "<"
+GREATER_THAN = ">"
+BANG        = "!"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN      = "("
+RPAREN      = ")"
+LBRACE      = "{"
+RBRACE      = "}"
+LBRACKET    = "["
+RBRACKET    = "]"
+COMMA       = ","
+COLON       = ":"
+SEMICOLON   = ";"
+DOT         = "."
+
+# ============================================================================
+# Keywords — TypeScript 1.0
+# JavaScript keywords inherited by TypeScript plus TS 1.0 additions.
+# ============================================================================
+
+keywords:
+  # JavaScript keywords (from ES5 — TypeScript 1.0 targeted ES3/ES5)
+  var
+  if
+  else
+  while
+  for
+  do
+  function
+  return
+  new
+  this
+  typeof
+  instanceof
+  true
+  false
+  null
+  undefined
+  # ES5 strict-mode reserved words included for completeness
+  in
+  delete
+  void
+  throw
+  try
+  catch
+  finally
+  break
+  continue
+  switch
+  case
+  default
+  with
+  debugger
+  # TypeScript 1.0 additions
+  class
+  extends
+  super
+  export
+  import
+  implements
+  interface
+  public
+  private
+  protected
+  static
+  type
+  enum
+  module
+  # Primitive types (used as type annotation keywords)
+  any
+  void
+  string
+  number
+  boolean
+  object

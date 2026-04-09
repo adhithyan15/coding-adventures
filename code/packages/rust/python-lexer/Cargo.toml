@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-python-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Python lexer — tokenizes Python source code using the grammar-driven lexer and versioned python.tokens grammar files (2.7 through 3.12)"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

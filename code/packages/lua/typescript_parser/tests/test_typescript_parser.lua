@@ -345,3 +345,102 @@ describe("error handling", function()
         end)
     end)
 end)
+
+-- =========================================================================
+-- Version-aware parsing
+-- =========================================================================
+--
+-- The `version` parameter threads through to typescript_lexer and the
+-- versioned parser grammar file under code/grammars/typescript/.
+-- No-version calls continue to work (backward compatible).
+
+describe("version-aware parsing", function()
+
+    -- -----------------------------------------------------------------------
+    -- Backward compatibility
+    -- -----------------------------------------------------------------------
+
+    it("parse with no version (backward compatible)", function()
+        local ast = typescript_parser.parse("let x = 5;")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with empty string version (backward compatible)", function()
+        local ast = typescript_parser.parse("let x = 5;", "")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Recognized TypeScript versions
+    -- -----------------------------------------------------------------------
+
+    it("parse with ts1.0 produces a program node", function()
+        local ast = typescript_parser.parse("var x = 1;", "ts1.0")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with ts2.0 produces a program node", function()
+        local ast = typescript_parser.parse("let x = 2;", "ts2.0")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with ts5.0 produces a program node", function()
+        local ast = typescript_parser.parse("const x = 3;", "ts5.0")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    it("parse with ts5.8 produces a program node", function()
+        local ast = typescript_parser.parse("let x = 4;", "ts5.8")
+        assert.is_not_nil(ast)
+        assert.are.equal("program", ast.rule_name)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- create_parser with version
+    -- -----------------------------------------------------------------------
+
+    it("create_parser with ts5.0 returns a usable GrammarParser", function()
+        local p = typescript_parser.create_parser("let x = 1;", "ts5.0")
+        assert.is_not_nil(p)
+        local ast, err = p:parse()
+        assert.is_nil(err)
+        assert.is_not_nil(ast)
+    end)
+
+    it("create_parser with no version works", function()
+        local p = typescript_parser.create_parser("let x = 1;")
+        assert.is_not_nil(p)
+        local ast, err = p:parse()
+        assert.is_nil(err)
+        assert.is_not_nil(ast)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- get_grammar with version
+    -- -----------------------------------------------------------------------
+
+    it("get_grammar with ts5.8 returns a grammar object", function()
+        local g = typescript_parser.get_grammar("ts5.8")
+        assert.is_not_nil(g)
+    end)
+
+    it("get_grammar with no version returns a grammar object", function()
+        local g = typescript_parser.get_grammar()
+        assert.is_not_nil(g)
+    end)
+
+    -- -----------------------------------------------------------------------
+    -- Error on unknown version
+    -- -----------------------------------------------------------------------
+
+    it("raises an error for unknown version string", function()
+        assert.has_error(function()
+            typescript_parser.parse("let x = 1;", "ts99.0")
+        end)
+    end)
+end)

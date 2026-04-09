@@ -123,7 +123,12 @@ func runNproc(specPath string, argv []string, stdout io.Writer, stderr io.Writer
 		// The cli-builder returns integer flags as int64.
 		ignore := 0
 		if v, ok := r.Flags["ignore"].(int64); ok {
-			ignore = int(v)
+			parsedIgnore, err := intFromInt64(v)
+			if err != nil {
+				fmt.Fprintf(stderr, "nproc: invalid ignore count: %s\n", err)
+				return 1
+			}
+			ignore = parsedIgnore
 		}
 
 		// Calculate and print the result.

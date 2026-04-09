@@ -83,6 +83,8 @@ my %SOURCE_EXTENSIONS = map { $_ => 1 } (
     qw(.md .rst .txt),
     # YAML / TOML (config files that affect build)
     qw(.yaml .yml),
+    # Haskell
+    qw(.hs .cabal),
 );
 
 # SPECIAL_FILENAMES -- specific filenames that count as source regardless

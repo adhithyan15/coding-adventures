@@ -10,12 +10,17 @@ on:
       - 'code/programs/kotlin/**'
       - '.github/workflows/build-kotlin.yml'
 
+permissions:
+  contents: read
+
 jobs:
   build-hello-world:
     name: Hello World (Android)
     # Ubuntu is faster and cheaper than macOS for Android builds.
     # Unlike iOS, Android doesn't require macOS — Gradle runs anywhere.
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout

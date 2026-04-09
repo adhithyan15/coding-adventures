@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/register-vm",
+  "version": "0.1.0",
+  "description": "Generic register-based virtual machine with accumulator model and feedback vectors — implements the V8 Ignition execution model for educational purposes",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["register-vm", "virtual-machine", "bytecode", "v8", "ignition", "feedback-vector", "jit", "education"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

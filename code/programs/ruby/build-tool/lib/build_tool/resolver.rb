@@ -584,6 +584,30 @@ module BuildTool
       internal_deps
     end
 
+    # parse_haskell_deps -- Extract internal dependencies from a Haskell package.
+    #
+    # @param package [Package]
+    # @param known_names [Hash<String, String>]
+    # @return [Array<String>]
+    def parse_haskell_deps(package, known_names)
+      cabal_files = package.path.glob("*.cabal").to_a
+      return [] if cabal_files.empty?
+
+      internal_deps = []
+      pattern = /coding-adventures-([a-z0-9-]+)/
+
+      cabal_files.first.read.lines.each do |line|
+        line.scan(pattern).flatten.each do |dep_base|
+          dep_name = "coding-adventures-#{dep_base.downcase}"
+          next unless known_names.key?(dep_name)
+          next if known_names[dep_name] == package.name
+          internal_deps << known_names[dep_name]
+        end
+      end
+
+      internal_deps
+    end
+
     # parse_gradle_deps -- Extract internal dependencies from settings.gradle.kts.
     #
     # Both Java and Kotlin packages use Gradle as their build system. In this
@@ -713,6 +737,10 @@ module BuildTool
           # Swift SPM package names are the kebab-case directory name.
           dir_base = pkg.path.basename.to_s.downcase
           set_known.call(dir_base, pkg.name, pkg.path)
+        when "haskell"
+          # Haskell Cabal package names use hyphens: "logic-gates" -> "coding-adventures-logic-gates"
+          cabal_name = "coding-adventures-#{pkg.path.basename}".downcase
+          set_known.call(cabal_name, pkg.name, pkg.path)
         when "java", "kotlin"
           # Java and Kotlin use Gradle composite builds. Dependencies are
           # referenced by directory name in settings.gradle.kts.
@@ -755,6 +783,7 @@ module BuildTool
                when "lua"        then parse_lua_deps(pkg, known_names)
                when "perl"       then parse_perl_deps(pkg, known_names)
                when "swift"      then parse_swift_deps(pkg, known_names)
+               when "haskell"    then parse_haskell_deps(pkg, known_names)
                when "java", "kotlin" then parse_gradle_deps(pkg, known_names)
                else []
                end

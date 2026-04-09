@@ -56,6 +56,7 @@ from pathlib import Path
 from typing import Any
 
 from directed_graph import DirectedGraph
+from directed_graph.algorithms import has_cycle
 
 from cli_builder.errors import SpecError
 
@@ -461,7 +462,7 @@ class SpecLoader:
                 if g.has_node(req_id):
                     g.add_edge(flag["id"], req_id)
 
-        if g.has_cycle():
+        if has_cycle(g):
             raise SpecError(
                 f"Circular 'requires' dependency detected in scope '{scope_name}'. "
                 f"Check for flags that mutually require each other."

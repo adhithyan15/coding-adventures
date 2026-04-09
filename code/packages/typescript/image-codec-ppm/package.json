@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/image-codec-ppm",
+  "version": "0.1.0",
+  "description": "IC02: PPM P6 image encoder and decoder using PixelContainer",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/pixel-container": "file:../pixel-container"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

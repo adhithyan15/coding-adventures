@@ -54,6 +54,9 @@ export const VALID_LANGUAGES = [
   "rust",
   "elixir",
   "perl",
+  "lua",
+  "swift",
+  "haskell",
 ] as const;
 
 /**
@@ -180,6 +183,9 @@ export function readDeps(pkgDir: string, lang: string): string[] {
     rust: readRustDeps,
     elixir: readElixirDeps,
     perl: readPerlDeps,
+    lua: () => [],
+    swift: () => [],
+    haskell: readHaskellDeps,
   };
   const reader = readers[lang];
   if (!reader) {
@@ -408,6 +414,33 @@ function readPerlDeps(pkgDir: string): string[] {
     if (line.trim().startsWith("#")) continue;
     const m = line.match(re);
     if (m) {
+      deps.push(m[1]);
+    }
+  }
+  return deps;
+}
+
+export function readHaskellDeps(pkgDir: string): string[] {
+  let files: string[];
+  try {
+    files = fs.readdirSync(pkgDir);
+  } catch {
+    return [];
+  }
+  const cabalFile = files.find((f) => f.endsWith(".cabal"));
+  if (!cabalFile) {
+    return [];
+  }
+  const content = fs.readFileSync(path.join(pkgDir, cabalFile), "utf-8");
+  const deps: string[] = [];
+  const re = /coding-adventures-([a-zA-Z0-9-]+)/;
+  const selfName = path.basename(pkgDir);
+  for (const line of content.split("\n")) {
+    if (line.includes("name:") || line.includes("executable") || line.includes("library")) {
+      continue;
+    }
+    const m = line.match(re);
+    if (m && m[1] && m[1] !== selfName) {
       deps.push(m[1]);
     }
   }
@@ -1659,6 +1692,82 @@ done_testing;
 }
 
 // -------------------------------------------------------------------------
+// Haskell generator
+// -------------------------------------------------------------------------
+
+export function generateHaskell(
+  targetDir: string,
+  pkgName: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+  orderedDeps: string[],
+): void {
+  const pkgNameHaskell = `coding-adventures-${pkgName}`;
+  const moduleName = toCamelCase(pkgName);
+
+  let cabal = `cabal-version: 3.0
+name:          ${pkgNameHaskell}
+version:       0.1.0
+synopsis:      ${description}
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  ${moduleName}
+    build-depends:    base >=4.14
+`;
+  for (const dep of orderedDeps) {
+    cabal += `                      , coding-adventures-${dep}\n`;
+  }
+  cabal += `    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    build-depends:    base >=4.14
+                    , ${pkgNameHaskell}
+`;
+  for (const dep of orderedDeps) {
+    cabal += `                    , coding-adventures-${dep}\n`;
+  }
+  cabal += `    hs-source-dirs:   test
+    default-language: Haskell2010
+`;
+
+  const libHs = `module ${moduleName} where
+
+-- | ${description}
+-- ${layerCtx}
+someFunc :: IO ()
+someFunc = putStrLn "someFunc"
+`;
+
+  const specHs = `import ${moduleName}
+
+main :: IO ()
+main = do
+    putStrLn "Test suite not yet implemented."
+`;
+
+  let cabalProject = `packages: .\n`;
+  for (const dep of orderedDeps) {
+    cabalProject += `          ../${dep}\n`;
+  }
+
+  const build = `cabal test all\n`;
+
+  writeFile(path.join(targetDir, `${pkgNameHaskell}.cabal`), cabal);
+  writeFile(path.join(targetDir, "cabal.project"), cabalProject);
+  writeFile(path.join(targetDir, "src", `${moduleName}.hs`), libHs);
+  writeFile(path.join(targetDir, "test", "Spec.hs"), specHs);
+  writeFile(path.join(targetDir, "BUILD"), build);
+}
+
+// -------------------------------------------------------------------------
 // Common files (README.md + CHANGELOG.md)
 // -------------------------------------------------------------------------
 
@@ -1883,6 +1992,17 @@ export function scaffoldOne(
       ),
     perl: () =>
       generatePerl(
+        targetDir,
+        pkgName,
+        description,
+        layerCtx,
+        directDeps,
+        orderedDeps,
+      ),
+    lua: () => {},
+    swift: () => {},
+    haskell: () =>
+      generateHaskell(
         targetDir,
         pkgName,
         description,

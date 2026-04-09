@@ -201,6 +201,25 @@ pub struct TokenGrammar {
     ///
     /// Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
     pub context_keywords: Vec<String>,
+    /// Soft keywords — words that act as keywords only in specific syntactic
+    /// contexts, remaining ordinary identifiers everywhere else.
+    ///
+    /// Unlike context keywords (which set a flag on the token), soft keywords
+    /// produce plain NAME tokens with NO special flag. The lexer is completely
+    /// unaware of their keyword status — the parser handles disambiguation
+    /// entirely based on syntactic position.
+    ///
+    /// This distinction matters because:
+    ///   - Context keywords: lexer hints to parser ("this NAME might be special")
+    ///   - Soft keywords: lexer ignores them completely, parser owns the decision
+    ///
+    /// Examples:
+    ///   Python 3.10+: `match`, `case`, `_` (only keywords inside match statements)
+    ///   Python 3.12+: `type` (only a keyword in `type X = ...` statements)
+    ///
+    /// Declared via the `soft_keywords:` section in the `.tokens` file.
+    /// Each indented line in that section is one soft keyword.
+    pub soft_keywords: Vec<String>,
 }
 
 // ===========================================================================
@@ -454,6 +473,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut definitions = Vec::new();
     let mut keywords = Vec::new();
     let mut context_keywords = Vec::new();
+    let mut soft_keywords = Vec::new();
     let mut mode: Option<String> = None;
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
@@ -477,7 +497,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     // Reserved group names that cannot be used. These overlap with built-in
     // section names and would cause ambiguity or confusion.
     let reserved_group_names: HashSet<&str> =
-        ["default", "skip", "keywords", "reserved", "errors"].iter().copied().collect();
+        ["default", "skip", "keywords", "reserved", "errors", "context_keywords", "soft_keywords"].iter().copied().collect();
 
     // Regex for validating group names: lowercase identifiers only.
     let group_name_re = regex::Regex::new(r"^[a-z_][a-z0-9_]*$").unwrap();
@@ -603,6 +623,10 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             current_section = String::from("context_keywords");
             continue;
         }
+        if stripped == "soft_keywords:" || stripped == "soft_keywords :" {
+            current_section = String::from("soft_keywords");
+            continue;
+        }
 
         // --- Escapes directive ---
         //
@@ -675,6 +699,8 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
                         keywords.push(stripped.to_string());
                     } else if current_section == "context_keywords" {
                         context_keywords.push(stripped.to_string());
+                    } else if current_section == "soft_keywords" {
+                        soft_keywords.push(stripped.to_string());
                     } else if current_section == "reserved" {
                         reserved_keywords.push(stripped.to_string());
                     } else if current_section == "skip" {
@@ -742,6 +768,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         version,
         case_insensitive,
         context_keywords,
+        soft_keywords,
     })
 }
 
@@ -1098,6 +1125,7 @@ case_sensitive: true,
             version: 0,
             case_insensitive: false,
             context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1126,6 +1154,7 @@ case_sensitive: true,
             version: 0,
             case_insensitive: false,
             context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1154,6 +1183,7 @@ case_sensitive: true,
             version: 0,
             case_insensitive: false,
             context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(!issues.is_empty());
@@ -1361,6 +1391,7 @@ case_sensitive: true,
             version: 0,
             case_insensitive: false,
             context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Unknown mode")));
@@ -1554,6 +1585,7 @@ case_sensitive: true,
             version: 0,
             case_insensitive: false,
             context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Invalid regex")));
@@ -1583,6 +1615,7 @@ case_sensitive: true,
             version: 0,
             case_insensitive: false,
             context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
         };
         let issues = validate_token_grammar(&grammar);
         assert!(issues.iter().any(|i| i.contains("Empty pattern group")));
@@ -1762,5 +1795,77 @@ case_sensitive: true,
         let grammar = parse_token_grammar(source).unwrap();
         assert_eq!(grammar.version, 0);
         assert!(!grammar.case_insensitive);
+    }
+
+    // -----------------------------------------------------------------------
+    // Soft keywords
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_parse_soft_keywords_section() {
+        // The soft_keywords: section lists words that are keywords only in
+        // specific syntactic contexts (e.g. Python's match/case/type).
+        let source = concat!(
+            "NAME = /[a-zA-Z_]+/\n",
+            "soft_keywords:\n",
+            "  match\n",
+            "  case\n",
+            "  type\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.soft_keywords, vec!["match", "case", "type"]);
+        assert_eq!(grammar.definitions.len(), 1);
+    }
+
+    #[test]
+    fn test_parse_soft_keywords_with_space_before_colon() {
+        // "soft_keywords :" (with space) is also valid.
+        let source = "soft_keywords :\n  match\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.soft_keywords, vec!["match"]);
+    }
+
+    #[test]
+    fn test_soft_keywords_default_empty() {
+        // When no soft_keywords: section is present, the field is empty.
+        let source = "NUMBER = /[0-9]+/\n";
+        let grammar = parse_token_grammar(source).unwrap();
+        assert!(grammar.soft_keywords.is_empty());
+    }
+
+    #[test]
+    fn test_soft_keywords_coexist_with_context_keywords() {
+        // Both context_keywords: and soft_keywords: can appear in the same
+        // file. They serve different purposes and are stored separately.
+        let source = concat!(
+            "NAME = /[a-zA-Z_]+/\n",
+            "context_keywords:\n",
+            "  async\n",
+            "  await\n",
+            "soft_keywords:\n",
+            "  match\n",
+            "  case\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.context_keywords, vec!["async", "await"]);
+        assert_eq!(grammar.soft_keywords, vec!["match", "case"]);
+    }
+
+    #[test]
+    fn test_reserved_group_name_soft_keywords() {
+        // "group soft_keywords:" is rejected as reserved.
+        let source = "TEXT = /abc/\ngroup soft_keywords:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved group name"));
+    }
+
+    #[test]
+    fn test_reserved_group_name_context_keywords() {
+        // "group context_keywords:" is rejected as reserved.
+        let source = "TEXT = /abc/\ngroup context_keywords:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved group name"));
     }
 }

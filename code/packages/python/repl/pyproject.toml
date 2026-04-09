@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-repl"
+version = "0.1.0"
+description = "A pluggable, async-eval REPL framework with injectable I/O — standard library only"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["repl", "interactive", "shell", "interpreter", "framework", "education"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Topic :: Education",
+    "Topic :: Software Development :: Interpreters",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+# No runtime dependencies — standard library only (abc, threading, time).
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/packages/python/repl"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/coding_adventures_repl"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "UP",   # pyupgrade (modern Python syntax)
+    "B",    # bugbear (common bugs)
+    "SIM",  # simplify
+    "ANN",  # type annotation enforcement
+]
+ignore = [
+    "ANN401",  # Allow Any in waiting state — state is intentionally opaque
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=coding_adventures_repl --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/coding_adventures_repl"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
