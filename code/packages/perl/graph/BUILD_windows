@@ -1,1 +1,1 @@
-perl Makefile.PL && make && make test
+cpanm --installdeps . && prove -l -v t/
