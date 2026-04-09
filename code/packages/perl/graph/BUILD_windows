@@ -1,1 +1,1 @@
-cpanm --installdeps . && prove -l -v t/
+cpanm Test2::V0 && prove -l -v t/
