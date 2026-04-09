@@ -33,7 +33,8 @@ subtest "Node operations - adjacency list" => sub {
     is($g->len, 1, 'len returns 1 after adding one node');
 
     my @nodes = sort $g->nodes;
-    is_deeply(\@nodes, ['A'], 'nodes returns correct set');
+    is(scalar @nodes, 1, 'nodes returns 1 element');
+    is($nodes[0], 'A', 'nodes contains A');
 
     $g->add_node('B');
     $g->add_node('C');
