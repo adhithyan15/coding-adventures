@@ -73,10 +73,22 @@ jobs:
       - name: Determine diff base
         id: diff-base
         shell: bash
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE="origin/${{ github.event.pull_request.base.ref }}"
-          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            # Validate the base ref before using it to prevent script injection.
+            # Branch names may only contain alphanumerics, dots, hyphens, underscores,
+            # and forward slashes — anything else is rejected.
+            if [[ "$PR_BASE_REF" =~ ^[A-Za-z0-9_./-]+$ ]]; then
+              BASE="origin/$PR_BASE_REF"
+            else
+              echo "::error::Unsafe base ref value: $PR_BASE_REF"
+              exit 1
+            fi
+          elif [ "$GIT_REF" = "refs/heads/main" ]; then
             BASE="HEAD~1"
           else
             git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
@@ -88,8 +100,11 @@ jobs:
       - name: Check if main branch
         id: detect-main
         shell: bash
+        env:
+          GIT_REF: ${{ github.ref }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ github.event_name }}" = "push" ]; then
+          if [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; then
             echo "is_main=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_main=false" >> "$GITHUB_OUTPUT"
