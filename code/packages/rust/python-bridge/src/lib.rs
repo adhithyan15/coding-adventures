@@ -511,6 +511,11 @@ pub unsafe fn runtime_error_class() -> PyObjectPtr {
     get_builtin_exception("RuntimeError")
 }
 
+/// Get the built-in IndexError class.
+pub unsafe fn index_error_class() -> PyObjectPtr {
+    get_builtin_exception("IndexError")
+}
+
 // ---------------------------------------------------------------------------
 // Sentinel value for method/slot arrays
 // ---------------------------------------------------------------------------

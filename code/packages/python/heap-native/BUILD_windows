@@ -1,0 +1,5 @@
+python -m venv .venv --clear
+.venv\Scripts\pip install pytest --quiet
+cargo build --release
+if exist target\release\heap_native.dll copy target\release\heap_native.dll src\heap_native\heap_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v
