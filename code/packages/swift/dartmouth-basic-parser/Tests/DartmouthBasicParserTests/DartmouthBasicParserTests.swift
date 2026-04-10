@@ -229,7 +229,7 @@ final class DartmouthBasicParserTests: XCTestCase {
     // MARK: - Statement 4: IF-THEN
     // =========================================================================
     //
-    // Grammar: if_stmt = "IF" expr relop expr "THEN" LINE_NUM ;
+    // Grammar: if_stmt = "IF" expr relop expr "THEN" NUMBER ;
     //          relop   = EQ | LT | GT | LE | GE | NE ;
     //
     // All six relational operators are tested individually.
@@ -276,7 +276,7 @@ final class DartmouthBasicParserTests: XCTestCase {
     // MARK: - Statement 5: GOTO
     // =========================================================================
     //
-    // Grammar: goto_stmt = "GOTO" LINE_NUM ;
+    // Grammar: goto_stmt = "GOTO" NUMBER ;
     //
     // GOTO is the unconditional jump. Edsger Dijkstra's famous 1968 paper
     // "Go To Statement Considered Harmful" was partly inspired by BASIC's
@@ -300,7 +300,7 @@ final class DartmouthBasicParserTests: XCTestCase {
     // MARK: - Statement 6 & 7: GOSUB / RETURN
     // =========================================================================
     //
-    // Grammar: gosub_stmt  = "GOSUB" LINE_NUM ;
+    // Grammar: gosub_stmt  = "GOSUB" NUMBER ;
     //          return_stmt = "RETURN" ;
     //
     // GOSUB/RETURN implements subroutines. GOSUB pushes the return address

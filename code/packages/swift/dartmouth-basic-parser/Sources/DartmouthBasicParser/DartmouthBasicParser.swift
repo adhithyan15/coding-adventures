@@ -131,39 +131,30 @@
 // THE LINE_NUM vs NUMBER DISAMBIGUATION
 // ============================================================================
 //
-// The grammar rules `goto_stmt`, `gosub_stmt`, and `if_stmt` all reference
-// `LINE_NUM` as the jump target token:
+// The grammar rules `goto_stmt`, `gosub_stmt`, and `if_stmt` use `NUMBER`
+// (not `LINE_NUM`) as the jump target token:
 //
-//   goto_stmt  = "GOTO"  LINE_NUM ;
-//   gosub_stmt = "GOSUB" LINE_NUM ;
-//   if_stmt    = "IF" expr relop expr "THEN" LINE_NUM ;
+//   goto_stmt  = "GOTO"  NUMBER ;
+//   gosub_stmt = "GOSUB" NUMBER ;
+//   if_stmt    = "IF" expr relop expr "THEN" NUMBER ;
 //
-// However, the lexer's `relabelLineNumbers` pass only promotes the FIRST
-// NUMBER on each source line to LINE_NUM. Jump targets like:
+// The lexer's `relabelLineNumbers` pass promotes the FIRST NUMBER on each
+// source line to LINE_NUM (so "10" in "10 GOTO 50" becomes LINE_NUM). Jump
+// targets later in the line — "50" in "GOTO 50", "100" in "THEN 100" — are
+// NOT the first number on their line, so they remain as NUMBER. This is
+// exactly what the grammar expects.
 //
-//   10 GOTO 50         — the "50" is mid-line, lexer emits NUMBER("50")
-//   20 IF X > 0 THEN 100  — "100" is mid-line, lexer emits NUMBER("100")
+// Example token stream for "10 GOTO 50\n":
+//   LINE_NUM("10")  KEYWORD("GOTO")  NUMBER("50")  NEWLINE
+//   ↑ relabeled by               ↑ stays NUMBER (mid-line)
+//     relabelLineNumbers
 //
-// are emitted as NUMBER, not LINE_NUM.
+// The grammar rule `goto_stmt = "GOTO" NUMBER ;` matches this correctly.
 //
-// To bridge this gap, the parser registers a `relabelJumpTargets` pre-parse
-// hook via `GrammarParser.addPreParse`. This hook walks the token list and
-// promotes any NUMBER that immediately follows KEYWORD("GOTO"),
-// KEYWORD("GOSUB"), or KEYWORD("THEN") to LINE_NUM.
-//
-// Why a pre-parse hook rather than a third lexer pass?
-//   The lexer operates purely on the character stream and pattern matching.
-//   It does not know the keyword context (whether a NUMBER follows GOTO or
-//   appears in an arithmetic expression). The parser, after lexing, can see
-//   the full token sequence and can apply context-sensitive relabeling.
-//
-//   A pre-parse hook is the clean integration point: it runs after lexing,
-//   before the grammar rules are applied, and transforms the token list in
-//   place. The GrammarParser.addPreParse API is designed for exactly this.
-//
-// Example:
-//   Token stream after lexing: LINE_NUM("10") KEYWORD("GOTO") NUMBER("50") NEWLINE
-//   After relabelJumpTargets:  LINE_NUM("10") KEYWORD("GOTO") LINE_NUM("50") NEWLINE
+// A previous revision of this file included a `relabelJumpTargets` pre-parse
+// hook that mistakenly promoted those NUMBER tokens to LINE_NUM, which caused
+// parse errors because the grammar then couldn't match a NUMBER at that position.
+// That hook has been removed.
 //
 // ============================================================================
 // USAGE
@@ -239,18 +230,6 @@ public struct DartmouthBasicParser: Sendable {
     public static func parseTokens(_ tokens: [Token]) throws -> ASTNode {
         let grammar = try loadGrammar()
         let parser = GrammarParser(tokens: tokens, grammar: grammar)
-
-        // Register the pre-parse hook that promotes NUMBER tokens in jump-target
-        // positions to LINE_NUM, so the grammar rules `goto_stmt = "GOTO" LINE_NUM`,
-        // `gosub_stmt = "GOSUB" LINE_NUM`, and `if_stmt = "IF" ... "THEN" LINE_NUM`
-        // match correctly.
-        //
-        // The lexer's relabelLineNumbers pass handles line-start positions.
-        // This hook handles mid-line jump targets (GOTO 50, GOSUB 200, THEN 100).
-        parser.addPreParse { tokens in
-            tokens = relabelJumpTargets(tokens)
-        }
-
         return try parser.parse()
     }
 
@@ -293,88 +272,4 @@ public struct DartmouthBasicParser: Sendable {
         return try parseParserGrammar(source: content)
     }
 
-    // =========================================================================
-    // MARK: - Pre-parse Hook: relabelJumpTargets
-    // =========================================================================
-
-    /// Promote NUMBER tokens in jump-target position to LINE_NUM.
-    ///
-    /// The grammar rules for GOTO, GOSUB, and IF-THEN all reference LINE_NUM
-    /// as the jump target:
-    ///
-    ///   goto_stmt  = "GOTO"  LINE_NUM ;
-    ///   gosub_stmt = "GOSUB" LINE_NUM ;
-    ///   if_stmt    = "IF" expr relop expr "THEN" LINE_NUM ;
-    ///
-    /// The lexer's `relabelLineNumbers` pass only promotes numbers at
-    /// line-start. This function handles the mid-line jump targets:
-    ///
-    ///   Input:  ... KEYWORD("GOTO")  NUMBER("50") ...
-    ///   Output: ... KEYWORD("GOTO")  LINE_NUM("50") ...
-    ///
-    ///   Input:  ... KEYWORD("GOSUB") NUMBER("200") ...
-    ///   Output: ... KEYWORD("GOSUB") LINE_NUM("200") ...
-    ///
-    ///   Input:  ... KEYWORD("THEN")  NUMBER("100") ...
-    ///   Output: ... KEYWORD("THEN")  LINE_NUM("100") ...
-    ///
-    /// Algorithm:
-    ///   Walk tokens left-to-right, tracking whether the previous keyword
-    ///   was GOTO, GOSUB, or THEN. When the current token is NUMBER and the
-    ///   previous meaningful token was one of those keywords, relabel to LINE_NUM.
-    ///
-    /// - Parameter tokens: The token stream (modified in place).
-    /// - Returns: A new token array with jump targets promoted.
-    ///
-    static func relabelJumpTargets(_ tokens: [Token]) -> [Token] {
-        // Keywords whose immediately-following NUMBER is a line number, not
-        // an arithmetic value. All three appear in the token stream with
-        // uppercase values (thanks to the GrammarLexer's case-insensitive
-        // keyword normalisation).
-        let jumpPrecedingKeywords: Set<String> = ["GOTO", "GOSUB", "THEN"]
-
-        var result: [Token] = []
-        result.reserveCapacity(tokens.count)
-
-        // `followsJumpKeyword` tracks whether the last KEYWORD token we saw
-        // was GOTO, GOSUB, or THEN. If so, the next NUMBER token is a target.
-        var followsJumpKeyword = false
-
-        for token in tokens {
-            switch token.type {
-            case "KEYWORD":
-                // Check whether this keyword introduces a jump target.
-                followsJumpKeyword = jumpPrecedingKeywords.contains(token.value)
-                result.append(token)
-
-            case "NUMBER" where followsJumpKeyword:
-                // This NUMBER immediately follows GOTO, GOSUB, or THEN.
-                // Relabel it to LINE_NUM so the grammar rule matches.
-                result.append(Token(
-                    type: "LINE_NUM",
-                    value: token.value,
-                    line: token.line,
-                    column: token.column,
-                    flags: token.flags
-                ))
-                followsJumpKeyword = false
-
-            default:
-                // Any non-KEYWORD, non-NUMBER token resets the flag.
-                // This handles edge cases like "IF X > 0 THEN 100":
-                // Between THEN and 100 there are no tokens, so the flag
-                // persists correctly. For more complex cases, we reset on
-                // any intervening non-whitespace token.
-                if token.type != "NEWLINE" && token.type != "EOF" {
-                    // Only reset on real tokens (not structural separators).
-                    // This is conservative — GOTO/GOSUB are always immediately
-                    // followed by the target in valid BASIC programs.
-                    followsJumpKeyword = false
-                }
-                result.append(token)
-            }
-        }
-
-        return result
-    }
 }

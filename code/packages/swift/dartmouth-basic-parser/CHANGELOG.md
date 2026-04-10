@@ -1,5 +1,15 @@
 # Changelog -- DartmouthBasicParser (Swift)
 
+## [0.1.1] -- 2026-04-10
+
+### Fixed
+- Removed the `relabelJumpTargets` pre-parse hook that was incorrectly
+  converting `NUMBER` tokens to `LINE_NUM` for GOTO/GOSUB/IF-THEN targets.
+  The grammar uses `NUMBER` (not `LINE_NUM`) for those positions, so the
+  hook caused parse errors: `"Parse error: Expected NUMBER, got '50'"`.
+  Jump targets like "50" in `GOTO 50` correctly remain as `NUMBER` tokens;
+  the grammar matches them directly.
+
 ## [0.1.0] -- 2026-04-10
 
 ### Added
