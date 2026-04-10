@@ -50,6 +50,7 @@ members = [
     "css-parser",
     "csv-parser",
     "dartmouth-basic-lexer",
+    "dartmouth-basic-parser",
     "deflate",
     "device-driver-framework",
     "device-simulator",
