@@ -1,5 +1,14 @@
 # Changelog -- DartmouthBasicLexer (Swift)
 
+## [0.1.1] -- 2026-04-10
+
+### Added
+- `promoteKeywords(_:)` -- post-processing Pass 0 that converts NAME tokens whose
+  uppercased value is a BASIC keyword into KEYWORD tokens with the uppercase value.
+  Added as a safety net: the GrammarLexer's own keyword-promotion fires when
+  `@case_insensitive true` is set (added back to `dartmouth_basic.tokens`), but
+  this pass ensures correctness even if keyword lookup ever misses.
+
 ## [0.1.0] -- 2026-04-10
 
 ### Added

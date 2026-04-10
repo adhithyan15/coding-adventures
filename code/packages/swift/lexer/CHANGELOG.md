@@ -2,6 +2,16 @@
 
 All notable changes to the Lexer package will be documented in this file.
 
+## [0.1.1] - 2026-04-10
+
+### Fixed
+- `GrammarLexer` now correctly lowercases the source when `case_sensitive: false`
+  is set, even when `@case_insensitive true` is also present in the grammar. Previously
+  the two directives combined would prevent source lowercasing, causing uppercase input
+  like "LET" to fail matching against lowercase patterns like `/[a-z][a-z0-9]*/`.
+  Source lowercasing is now driven solely by `case_sensitive: false`; the `@case_insensitive`
+  flag continues to control per-token keyword-promotion behaviour only.
+
 ## [0.1.0] - 2026-04-04
 
 ### Added

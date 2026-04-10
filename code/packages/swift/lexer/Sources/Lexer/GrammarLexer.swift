@@ -414,11 +414,26 @@ public final class GrammarLexer {
         self._escapeMode = grammar.escapeMode
 
         // Store source (case handling).
-        // For caseInsensitive keyword mode we keep the original source and
-        // normalize per-token during keyword lookup, so non-keyword identifiers
-        // preserve their original casing.
-        let caseSensitive = (grammar.caseSensitive ?? true) && !_caseInsensitive
-        if !caseSensitive && !_caseInsensitive {
+        //
+        // Two orthogonal case directives exist in .tokens files:
+        //
+        //   case_sensitive: false     — the source is lowercased before matching,
+        //                               so lowercase patterns like /[a-z]+/ can match
+        //                               uppercase input like "PRINT".
+        //
+        //   # @case_insensitive true  — keyword lookup compares the uppercased form
+        //                               of each NAME against the keyword set, and emits
+        //                               KEYWORD tokens with their uppercase value.
+        //
+        // A grammar may set BOTH directives (e.g. dartmouth_basic.tokens). In that
+        // case we must STILL lowercase the source: the patterns are lowercase-only,
+        // so skipping the lowercasing step would leave uppercase input unmatched.
+        //
+        // The `_caseInsensitive` flag therefore only controls keyword-promotion
+        // behaviour (lines 1009–1027), not source lowercasing. Source lowercasing
+        // is driven solely by `case_sensitive: false`.
+        let caseSensitive = grammar.caseSensitive ?? true
+        if !caseSensitive {
             self._source = source.lowercased()
         } else {
             self._source = source

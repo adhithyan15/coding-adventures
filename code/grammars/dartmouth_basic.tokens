@@ -16,16 +16,19 @@
 # language is case-insensitive. We normalise the whole source to lowercase
 # before matching (case_sensitive: false), so `print` and `PRINT` both
 # produce KEYWORD("PRINT") (keywords are normalized to uppercase in output).
-# Note: do NOT add `# @case_insensitive true` alongside `case_sensitive: false`.
-# In the Swift GrammarLexer the magic comment sets _caseInsensitive=true, which
-# short-circuits the lowercasing branch — leaving uppercase source that the
-# lowercase patterns cannot match.
+# Both directives are set together:
+#   case_sensitive: false    — source is lowercased before pattern matching
+#   @case_insensitive true   — keyword lookup uppercases NAMEs and emits KEYWORD
+#                              tokens with their uppercase value (e.g. KEYWORD("LET"))
+# The Swift GrammarLexer was updated so that `case_sensitive: false` always
+# lowercases the source regardless of `@case_insensitive true`.
 #
 # Named "dartmouth_basic" (not "basic") because future dialects --
 # Microsoft BASIC, Applesoft BASIC, GW-BASIC, etc. -- will each get their
 # own grammar file in this directory.
 
 # @version 1
+# @case_insensitive true
 case_sensitive: false
 
 # ============================================================
