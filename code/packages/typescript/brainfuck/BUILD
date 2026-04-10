@@ -1,3 +1,5 @@
+cd ../directed-graph && npm ci --quiet
+cd ../state-machine && npm ci --quiet
 cd ../virtual-machine && npm ci --quiet
 cd ../lexer && npm ci --quiet
 cd ../grammar-tools && npm ci --quiet
