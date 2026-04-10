@@ -173,10 +173,22 @@ local function get_script_dir()
     if cwd and cwd ~= "" then
         cwd = cwd:gsub("\\", "/"):gsub("%c+$", "")
         -- Combine cwd + relative dir in Lua string space (no shell involvement).
-        if dir == "." then
-            return cwd
+        local combined = (dir == ".") and cwd or (cwd .. "/" .. dir)
+        -- Resolve any ".." components produced by relative requires like
+        -- "require('../src/...')". The dirname-based up() function strips one
+        -- path component at a time without understanding "..", so an unresolved
+        -- ".." counts as an extra level and shifts the grammar path sideways.
+        -- We resolve by walking parts: ".." pops the last component; "."
+        -- is ignored; everything else is accumulated.
+        local parts = {}
+        for part in combined:gmatch("[^/]+") do
+            if part == ".." then
+                table.remove(parts)     -- pop one level
+            elseif part ~= "." then
+                table.insert(parts, part)
+            end
         end
-        return cwd .. "/" .. dir
+        return "/" .. table.concat(parts, "/")
     end
     return dir
 end

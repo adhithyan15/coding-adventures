@@ -150,6 +150,27 @@ public struct DartmouthBasicLexer: Sendable {
         let lexer = GrammarLexer(source: source, grammar: grammar)
         var tokens = try lexer.tokenize()
 
+        // Pass 0: Promote NAME tokens whose uppercased value is a BASIC keyword
+        // to KEYWORD tokens (with the uppercase value).
+        //
+        // Why this pass is needed
+        // -------------------------
+        // The tokens grammar uses `case_sensitive: false`, which tells the Swift
+        // GrammarLexer to lowercase the source before matching. That ensures that
+        // patterns like `/[a-z][a-z0-9]*/` (NAME) correctly match input such as
+        // "LET" → "let". However, the Swift GrammarLexer builds the keyword lookup
+        // set from the raw keyword list (uppercase: {"LET", "PRINT", ...}) and
+        // performs the lookup without uppercasing the matched value. The result:
+        // "let" is NOT found in {"LET", ...}, so it stays as NAME("let") instead of
+        // becoming KEYWORD("LET").
+        //
+        // This pass closes the gap: for any NAME whose uppercased value is in the
+        // BASIC keyword set, it re-emits the token as KEYWORD with the uppercase
+        // value. This is equivalent to what `@case_insensitive true` achieves in
+        // other grammar_tools implementations but is done here as a post-processing
+        // step to avoid modifying shared infrastructure.
+        tokens = promoteKeywords(tokens)
+
         // Pass 1: Relabel the first NUMBER on each source line as LINE_NUM.
         // Without this pass, "10 LET X = 5" would have two NUMBER tokens
         // (10 and 5) instead of a LINE_NUM and a NUMBER.
@@ -200,6 +221,51 @@ public struct DartmouthBasicLexer: Sendable {
 
         let content = try String(contentsOf: tokensURL, encoding: .utf8)
         return try parseTokenGrammar(source: content)
+    }
+
+    // =========================================================================
+    // MARK: - Post-processing Pass 0: Keyword Promotion
+    // =========================================================================
+
+    /// The complete set of Dartmouth BASIC 1964 reserved keywords (uppercase).
+    ///
+    /// These are all 20 statement keywords from the original 1964 specification.
+    /// The set is stored uppercase so comparison is O(1) after uppercasing the
+    /// candidate value.
+    ///
+    private static let _basicKeywords: Set<String> = [
+        "LET", "PRINT", "INPUT", "IF", "THEN", "GOTO", "GOSUB", "RETURN",
+        "FOR", "TO", "STEP", "NEXT", "END", "STOP", "REM",
+        "READ", "DATA", "RESTORE", "DIM", "DEF"
+    ]
+
+    /// Promote NAME tokens whose uppercased value is a BASIC keyword to KEYWORD.
+    ///
+    /// The Swift GrammarLexer's `case_sensitive: false` path lowercases the
+    /// source before matching, so "LET" in source becomes "let" before the
+    /// NAME regex sees it. However, the keyword lookup compares "let" against
+    /// the uppercase keyword set {"LET", ...} without uppercasing — so the
+    /// promotion never fires inside GrammarLexer.
+    ///
+    /// This pass corrects that: any NAME("let"), NAME("print"), etc. is
+    /// converted to KEYWORD("LET"), KEYWORD("PRINT"), etc.
+    ///
+    /// - Parameter tokens: The raw token stream from GrammarLexer.
+    /// - Returns: A new token array with keyword NAMEs promoted.
+    ///
+    static func promoteKeywords(_ tokens: [Token]) -> [Token] {
+        return tokens.map { token in
+            guard token.type == "NAME" else { return token }
+            let upper = token.value.uppercased()
+            guard _basicKeywords.contains(upper) else { return token }
+            return Token(
+                type: "KEYWORD",
+                value: upper,
+                line: token.line,
+                column: token.column,
+                flags: token.flags
+            )
+        }
     }
 
     // =========================================================================
