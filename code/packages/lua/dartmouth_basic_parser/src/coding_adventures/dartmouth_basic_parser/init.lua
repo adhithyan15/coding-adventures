@@ -188,7 +188,15 @@ local function get_script_dir()
                 table.insert(parts, part)
             end
         end
-        return "/" .. table.concat(parts, "/")
+        -- Reconstruct the absolute path. On Windows the first part is a drive
+        -- letter like "D:" — prepending "/" would produce "/D:/..." which is
+        -- invalid. On Unix the leading "/" belongs before the first component.
+        local joined = table.concat(parts, "/")
+        if #parts > 0 and parts[1]:match("^[A-Za-z]:$") then
+            return joined          -- Windows: "D:/a/coding-adventures/..."
+        else
+            return "/" .. joined   -- Unix: "/home/runner/..."
+        end
     end
     return dir
 end
