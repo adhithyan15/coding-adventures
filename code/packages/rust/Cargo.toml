@@ -136,5 +136,7 @@ members = [
     "sql-execution-engine",
     "sql-csv-source",
     "event-loop",
+    "dartmouth-basic-lexer",
+    "dartmouth-basic-parser",
 ]
 
