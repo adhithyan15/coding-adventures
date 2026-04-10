@@ -50,4 +50,10 @@ defmodule CodingAdventures.Brainfuck do
 
   @doc "Translate and execute a Brainfuck program. Returns a `%BrainfuckResult{}`."
   defdelegate execute_brainfuck(source, input_data \\ ""), to: CodingAdventures.Brainfuck.VM
+
+  @doc "Tokenize Brainfuck source into a token stream."
+  defdelegate tokenize(source), to: CodingAdventures.Brainfuck.Lexer
+
+  @doc "Parse Brainfuck source into an AST."
+  defdelegate parse(source), to: CodingAdventures.Brainfuck.Parser
 end

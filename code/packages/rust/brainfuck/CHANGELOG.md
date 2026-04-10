@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-04-10
+
+### Added
+
+- `lexer.rs`: `Lexer` struct and `tokenize(source: &str) -> Vec<Token>` function. Grammar-driven tokenizer using `brainfuck.tokens`. Each `Token` carries `token_type`, `value`, `line`, and `column` fields. Comment characters are silently skipped.
+- `parser.rs`: `Parser` struct and `parse(source: &str) -> Result<AstNode, ParseError>` function. Grammar-driven parser using `brainfuck.grammar`. Returns an AST rooted at a `Program` node with `Instruction`, `Loop`, and `Command` child variants. Returns a `ParseError` with precise source-location details for unmatched brackets.
+- Grammar files: `brainfuck.tokens` and `brainfuck.grammar` embedded via `include_str!` (shared across all language implementations).
+- New dependencies: `grammar-tools`, `lexer`, and `parser` crates from the coding-adventures workspace.
+- Extensive tests for `tokenize` (command tokens, comment skipping, multi-line source, position tracking) and `parse` (simple programs, nested loops, unmatched bracket errors with line/column).
+
 ## 0.1.0 — 2026-03-20
 
 ### Added
