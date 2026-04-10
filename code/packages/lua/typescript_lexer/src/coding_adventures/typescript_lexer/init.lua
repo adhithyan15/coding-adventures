@@ -136,14 +136,33 @@ local function get_script_dir()
     if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
         local cwd = os.getenv("PWD") or os.getenv("CD") or ""
         if cwd == "" then
-            -- Safe fallback: fixed built-in command, no user input — no injection risk.
-            -- On Windows `cd` prints the current directory; on POSIX `pwd` does the same.
-            local is_win = package.config:sub(1, 1) == "\\"
-            local h = is_win and io.popen("cd") or io.popen("pwd")
+            -- LuaFileSystem gives an absolute cwd without spawning a subprocess.
+            -- busted (our test runner) depends on lfs, so it is available at test time.
+            local ok, lfs = pcall(require, "lfs")
+            if ok and lfs and lfs.currentdir then
+                cwd = lfs.currentdir() or ""
+            end
+        end
+        if cwd == "" then
+            -- Try `pwd` — works in POSIX shells and MSYS/Git-Bash on Windows.
+            -- Safe: fixed command with no user input — no injection risk.
+            local h = io.popen("pwd")
             if h then
-                local line = h:read("*l") or ""
+                local line = (h:read("*l") or ""):gsub("%c+$", "")
                 h:close()
-                cwd = line:gsub("%c+$", "")
+                -- Convert MSYS/Git-Bash path "/d/foo" → "D:/foo" so Windows
+                -- io.open() can find the file (it uses Win32 file APIs).
+                line = line:gsub("^/(%a)/", function(d) return d:upper() .. ":/" end)
+                cwd = line
+            end
+        end
+        if cwd == "" then
+            -- Last resort: cmd.exe `cd` builtin (native Windows cmd context).
+            -- Safe: fixed command with no user input — no injection risk.
+            local h = io.popen("cd")
+            if h then
+                cwd = (h:read("*l") or ""):gsub("%c+$", "")
+                h:close()
             end
         end
         if cwd ~= "" then
