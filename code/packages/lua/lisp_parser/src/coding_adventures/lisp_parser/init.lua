@@ -135,62 +135,6 @@ local function get_script_dir()
     -- path handling (on Linux/macOS this is a no-op).
     src = src:gsub("\\", "/")
     local dir = src:match("(.+)/[^/]+$") or "."
-    -- Security: io.popen is used only with fixed built-in commands ("cd"/"pwd"),
-    -- never with user-controlled input. The previously removed pattern
-    --   io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
-    -- was unsafe because dir could contain shell metacharacters.
-    -- The current approach is safe: no user input reaches the shell.
-    -- Updated: 2026-04-10.
-    if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
-        local cwd = os.getenv("PWD") or os.getenv("CD") or ""
-        if cwd == "" then
-            -- LuaFileSystem gives an absolute cwd without spawning a subprocess.
-            -- busted (our test runner) depends on lfs, so it is available at test time.
-            local ok, lfs = pcall(require, "lfs")
-            if ok and lfs and lfs.currentdir then
-                cwd = lfs.currentdir() or ""
-            end
-        end
-        if cwd == "" then
-            -- Try `pwd` — works in POSIX shells and MSYS/Git-Bash on Windows.
-            -- Safe: fixed command with no user input — no injection risk.
-            local h = io.popen("pwd")
-            if h then
-                local line = (h:read("*l") or ""):gsub("%c+$", "")
-                h:close()
-                -- Convert MSYS/Git-Bash path "/d/foo" → "D:/foo" so Windows
-                -- io.open() can find the file (it uses Win32 file APIs).
-                line = line:gsub("^/(%a)/", function(d) return d:upper() .. ":/" end)
-                cwd = line
-            end
-        end
-        if cwd == "" then
-            -- Last resort: cmd.exe `cd` builtin (native Windows cmd context).
-            -- Safe: fixed command with no user input — no injection risk.
-            local h = io.popen("cd")
-            if h then
-                cwd = (h:read("*l") or ""):gsub("%c+$", "")
-                h:close()
-            end
-        end
-        if cwd ~= "" then
-            cwd = cwd:gsub("\\", "/"):gsub("%c+$", "")
-            dir = cwd .. "/" .. dir
-            -- Normalise .. and . segments so dirname-based traversal works
-            -- correctly when the source was loaded via a relative package.path
-            -- entry (e.g. "../src/?.lua" from a tests/ subdirectory).
-            local is_abs = dir:sub(1, 1) == "/"
-            local parts = {}
-            for seg in dir:gmatch("[^/]+") do
-                if seg == ".." then
-                    if #parts > 0 then table.remove(parts) end
-                elseif seg ~= "." then
-                    table.insert(parts, seg)
-                end
-            end
-            dir = (is_abs and "/" or "") .. table.concat(parts, "/")
-        end
-    end
     return dir
 end
 
@@ -201,7 +145,7 @@ end
 local function up(path, levels)
     local result = path
     for _ = 1, levels do
-        result = dirname(result)
+        result = result .. "/.."
     end
     return result
 end
