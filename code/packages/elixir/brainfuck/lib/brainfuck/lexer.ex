@@ -59,13 +59,13 @@ defmodule CodingAdventures.Brainfuck.Lexer do
   #             brainfuck/
   #               lexer.ex   <-- __DIR__ points here
   #
-  # Navigating up from __DIR__:
-  #   1. brainfuck/   (lib/brainfuck -> lib)
-  #   2. lib/
-  #   3. brainfuck/   (elixir/brainfuck -> elixir)
-  #   4. elixir/
-  #   (4 levels up from __DIR__ reaches code/)
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
+  # Navigating up from __DIR__ (lib/brainfuck/):
+  #   1 → lib/
+  #   2 → brainfuck/   (package root)
+  #   3 → elixir/
+  #   4 → packages/
+  #   5 → code/        ← repo root; grammars/ lives here
+  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
                 |> Path.expand()
 
   @doc """

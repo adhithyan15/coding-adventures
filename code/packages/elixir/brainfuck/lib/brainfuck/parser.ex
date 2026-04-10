@@ -42,8 +42,14 @@ defmodule CodingAdventures.Brainfuck.Parser do
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
 
   # Path to the shared grammars directory.
-  # Same four-level-up navigation as lexer.ex.
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
+  # This file lives at lib/brainfuck/parser.ex — two levels below the package
+  # root. From __DIR__ (lib/brainfuck/) we climb:
+  #   1 → lib/
+  #   2 → brainfuck/  (package root)
+  #   3 → elixir/
+  #   4 → packages/
+  #   5 → code/       ← repo root; grammars/ lives here
+  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
                 |> Path.expand()
 
   @doc """
