@@ -1,0 +1,38 @@
+{
+  "name": "@coding-adventures/dartmouth-basic-parser",
+  "version": "0.1.0",
+  "description": "Parses 1964 Dartmouth BASIC source text into ASTs using the grammar-driven parser — a thin wrapper that loads dartmouth_basic.grammar",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "dartmouth-basic",
+    "basic",
+    "parser",
+    "ast",
+    "grammar-driven",
+    "computer-science",
+    "education",
+    "programming-language-history",
+    "kemeny",
+    "kurtz"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/dartmouth-basic-lexer": "file:../dartmouth-basic-lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

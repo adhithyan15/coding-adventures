@@ -1,0 +1,2 @@
+REM Lua/LuaRocks not available on Windows CI — skip
+exit 0

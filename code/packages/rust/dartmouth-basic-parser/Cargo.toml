@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-dartmouth-basic-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Dartmouth BASIC parser — parses 1964 BASIC source text into an AST using the grammar-driven parser and the dartmouth_basic.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-dartmouth-basic-lexer = { path = "../dartmouth-basic-lexer" }
