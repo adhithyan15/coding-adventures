@@ -195,7 +195,7 @@ class TestBrainfuckLexer < Minitest::Test
 
   def test_only_comments_returns_eof
     # A source with nothing but comments produces an empty command stream.
-    tokens = tokenize("This is a Brainfuck program that does nothing.")
+    tokens = tokenize("This is a Brainfuck program that does nothing at all")
     assert_equal TT::EOF, tokens.last.type
     non_eof = tokens.reject { |t| t.type == TT::EOF }
     assert_empty non_eof, "Only-comment source should produce no command tokens"
@@ -223,7 +223,7 @@ class TestBrainfuckLexer < Minitest::Test
     # Four spaces before "+" means column 5.
     tokens = command_tokens("    +")
     assert_equal 1, tokens.length
-    assert_equal 5, tokens[0].col, "Token after 4 spaces should be at column 5"
+    assert_equal 5, tokens[0].column, "Token after 4 spaces should be at column 5"
   end
 
   def test_eof_always_present
@@ -272,7 +272,7 @@ class TestBrainfuckLexer < Minitest::Test
   def test_canonical_with_inline_comments
     # The same program annotated with comments should produce identical tokens.
     # This is how Brainfuck programs are documented in the wild.
-    source = "++ add two [>+ move+inc <-  decrement  ] end loop"
+    source = "++ add two [>+ move right inc <-  decrement  ] end loop"
     types = token_types(source)
     expected = [
       INC_TYPE, INC_TYPE,

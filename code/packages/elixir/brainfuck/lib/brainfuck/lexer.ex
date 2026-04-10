@@ -82,11 +82,11 @@ defmodule CodingAdventures.Brainfuck.Lexer do
 
       iex> {:ok, tokens} = CodingAdventures.Brainfuck.Lexer.tokenize("+>-<")
       iex> Enum.map(tokens, & &1.type)
-      ["INC", "RIGHT", "DEC", "LEFT", :eof]
+      ["INC", "RIGHT", "DEC", "LEFT", "EOF"]
 
       iex> {:ok, tokens} = CodingAdventures.Brainfuck.Lexer.tokenize("hello world")
       iex> tokens
-      [%Token{type: :eof, ...}]
+      [%Token{type: "EOF", ...}]
   """
   @spec tokenize(String.t()) :: {:ok, [CodingAdventures.Lexer.Token.t()]} | {:error, String.t()}
   def tokenize(source) do

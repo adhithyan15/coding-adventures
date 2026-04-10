@@ -66,7 +66,7 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
       # Only EOF may appear — no command tokens
       types =
         collect_token_types(ast)
-        |> Enum.reject(&(&1 == :eof))
+        |> Enum.reject(&(&1 == "EOF"))
       assert types == []
     end
   end
@@ -89,14 +89,14 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
 
     test "single '+' has INC token in tree" do
       ast = parse!("+")
-      types = collect_token_types(ast) |> Enum.reject(&(&1 == :eof))
+      types = collect_token_types(ast) |> Enum.reject(&(&1 == "EOF"))
       assert types == ["INC"]
     end
 
     test "all six non-bracket commands produce correct token types" do
       # The six non-loop commands in order.
       ast = parse!("><+-.,")
-      types = collect_token_types(ast) |> Enum.reject(&(&1 == :eof))
+      types = collect_token_types(ast) |> Enum.reject(&(&1 == "EOF"))
       assert types == ["RIGHT", "LEFT", "INC", "DEC", "OUTPUT", "INPUT"]
     end
 
@@ -104,7 +104,7 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
       ast = parse!("+->")
       tokens =
         collect_token_types(ast)
-        |> Enum.reject(&(&1 == :eof))
+        |> Enum.reject(&(&1 == "EOF"))
       # We can only check types here (not values) since collect_token_types
       # returns types, not the full token struct. The lexer tests cover values.
       assert tokens == ["INC", "DEC", "RIGHT"]
@@ -112,7 +112,7 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
 
     test "program with only comments produces empty command stream" do
       ast = parse!("this is a comment with no commands")
-      types = collect_token_types(ast) |> Enum.reject(&(&1 == :eof))
+      types = collect_token_types(ast) |> Enum.reject(&(&1 == "EOF"))
       assert types == []
     end
   end
@@ -161,7 +161,7 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
 
     test "LOOP_START and LOOP_END tokens appear in the tree" do
       ast = parse!("[+]")
-      types = collect_token_types(ast) |> Enum.reject(&(&1 == :eof))
+      types = collect_token_types(ast) |> Enum.reject(&(&1 == "EOF"))
       assert "LOOP_START" in types
       assert "LOOP_END" in types
     end
@@ -212,7 +212,7 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
 
     test "produces correct token sequence in tree" do
       ast = parse!("++[>+<-]")
-      types = collect_token_types(ast) |> Enum.reject(&(&1 == :eof))
+      types = collect_token_types(ast) |> Enum.reject(&(&1 == "EOF"))
       expected = ["INC", "INC", "LOOP_START", "RIGHT", "INC", "LEFT", "DEC", "LOOP_END"]
       assert types == expected
     end
@@ -233,7 +233,7 @@ defmodule CodingAdventures.Brainfuck.ParserTest do
     test "annotated version parses identically" do
       source = "++ set cell0\n[ loop while nonzero\n  >+ right and inc\n  <- left and dec\n]"
       ast = parse!(source)
-      types = collect_token_types(ast) |> Enum.reject(&(&1 == :eof))
+      types = collect_token_types(ast) |> Enum.reject(&(&1 == "EOF"))
       expected = ["INC", "INC", "LOOP_START", "RIGHT", "INC", "LEFT", "DEC", "LOOP_END"]
       assert types == expected
     end

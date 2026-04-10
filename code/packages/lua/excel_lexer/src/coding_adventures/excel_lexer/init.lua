@@ -145,6 +145,19 @@ local function get_script_dir()
         local cwd = os.getenv("PWD") or os.getenv("CD") or ""
         if cwd ~= "" then
             dir = cwd:gsub("\\\\", "/"):gsub("%c+$", "") .. "/" .. dir
+            -- Normalise .. and . segments so dirname-based traversal works
+            -- correctly when the source was loaded via a relative package.path
+            -- entry (e.g. "../src/?.lua" from a tests/ subdirectory).
+            local is_abs = dir:sub(1, 1) == "/"
+            local parts = {}
+            for seg in dir:gmatch("[^/]+") do
+                if seg == ".." then
+                    if #parts > 0 then table.remove(parts) end
+                elseif seg ~= "." then
+                    table.insert(parts, seg)
+                end
+            end
+            dir = (is_abs and "/" or "") .. table.concat(parts, "/")
         end
     end
     return dir

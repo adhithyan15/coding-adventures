@@ -14,13 +14,13 @@ defmodule CodingAdventures.Brainfuck.LexerTest do
 
   defp command_types(source) do
     tokenize!(source)
-    |> Enum.reject(&(&1.type == :eof))
+    |> Enum.reject(&(&1.type == "EOF"))
     |> Enum.map(& &1.type)
   end
 
   defp command_values(source) do
     tokenize!(source)
-    |> Enum.reject(&(&1.type == :eof))
+    |> Enum.reject(&(&1.type == "EOF"))
     |> Enum.map(& &1.value)
   end
 
@@ -160,12 +160,12 @@ defmodule CodingAdventures.Brainfuck.LexerTest do
     test "empty string produces only EOF token" do
       {:ok, tokens} = Lexer.tokenize("")
       assert length(tokens) == 1
-      assert hd(tokens).type == :eof
+      assert hd(tokens).type == "EOF"
     end
 
     test "source with only comments produces only EOF token" do
-      {:ok, tokens} = Lexer.tokenize("This is a Brainfuck program that does nothing.")
-      non_eof = Enum.reject(tokens, &(&1.type == :eof))
+      {:ok, tokens} = Lexer.tokenize("This is a Brainfuck program that does nothing at all")
+      non_eof = Enum.reject(tokens, &(&1.type == "EOF"))
       assert non_eof == []
     end
   end
@@ -205,7 +205,7 @@ defmodule CodingAdventures.Brainfuck.LexerTest do
       for source <- ["", "+", "++", "hello", "++[>+<-]"] do
         {:ok, tokens} = Lexer.tokenize(source)
         last = List.last(tokens)
-        assert last.type == :eof,
+        assert last.type == "EOF",
           "EOF must be last token for #{inspect(source)}"
       end
     end
