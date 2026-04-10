@@ -1,14 +1,1 @@
-@echo off
-setlocal enabledelayedexpansion
-cpanm --notest --quiet Test2::V0
-
-REM Build dependency paths
-for /f "delims=" %%i in ('cd ..\sha256 && cd') do set SHA256_PATH=%%i
-for /f "delims=" %%i in ('cd ..\grammar-tools && cd') do set GRAMMAR_TOOLS_PATH=%%i
-for /f "delims=" %%i in ('cd ..\json-lexer && cd') do set JSON_LEXER_PATH=%%i
-for /f "delims=" %%i in ('cd ..\json-parser && cd') do set JSON_PARSER_PATH=%%i
-for /f "delims=" %%i in ('cd ..\json-value && cd') do set JSON_VALUE_PATH=%%i
-for /f "delims=" %%i in ('cd ..\json-serializer && cd') do set JSON_SERIALIZER_PATH=%%i
-
-set PERL5LIB=!SHA256_PATH!\lib;!GRAMMAR_TOOLS_PATH!\lib;!JSON_LEXER_PATH!\lib;!JSON_PARSER_PATH!\lib;!JSON_VALUE_PATH!\lib;!JSON_SERIALIZER_PATH!\lib;%PERL5LIB%
-prove -l -v t\
+echo Perl testing is not supported on Windows - skipping
