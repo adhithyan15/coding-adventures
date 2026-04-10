@@ -1,0 +1,8 @@
+[package]
+name = "fenwick-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Fenwick tree (Binary Indexed Tree) with prefix sums, range sums, and order-statistics queries"
+license = "MIT"
+
+[dependencies]
