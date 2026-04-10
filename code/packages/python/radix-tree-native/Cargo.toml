@@ -1,0 +1,15 @@
+[package]
+name = "radix-tree-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust radix-tree crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "radix_tree_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+python-bridge = { path = "../../rust/python-bridge" }
+radix-tree = { path = "../../rust/radix-tree" }
+
+[workspace]
