@@ -164,7 +164,11 @@ fn dijkstra_shortest_path(graph: &Graph, start: &str, end: &str) -> Vec<String> 
     let mut queue: Vec<(f64, usize, String)> = vec![(0.0, sequence, start.to_string())];
 
     while !queue.is_empty() {
-        queue.sort_by(|left, right| left.0.total_cmp(&right.0).then_with(|| left.1.cmp(&right.1)));
+        queue.sort_by(|left, right| {
+            left.0
+                .total_cmp(&right.0)
+                .then_with(|| left.1.cmp(&right.1))
+        });
         let (distance, _, node) = queue.remove(0);
         if distance > *distances.get(&node).unwrap_or(&f64::INFINITY) {
             continue;

@@ -2,8 +2,7 @@ pub mod algorithms;
 pub mod graph;
 
 pub use algorithms::{
-    bfs, connected_components, dfs, has_cycle, is_connected, minimum_spanning_tree,
-    shortest_path,
+    bfs, connected_components, dfs, has_cycle, is_connected, minimum_spanning_tree, shortest_path,
 };
 pub use graph::{Graph, GraphError, GraphRepr, WeightedEdge};
 
@@ -83,6 +82,10 @@ mod tests {
         for repr in representations() {
             assert_eq!(bfs(&make_path(repr), "A").unwrap(), vec!["A", "B", "C"]);
             assert_eq!(dfs(&make_path(repr), "A").unwrap(), vec!["A", "B", "C"]);
+            assert_eq!(
+                bfs(&make_graph(repr), "London").unwrap(),
+                vec!["London", "Amsterdam", "Paris", "Berlin", "Brussels"]
+            );
             assert!(is_connected(&make_graph(repr)));
             assert!(has_cycle(&make_triangle(repr)));
             assert!(!has_cycle(&make_path(repr)));

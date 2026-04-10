@@ -1,0 +1,15 @@
+[package]
+name = "graph-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust graph crate via python-bridge"
+
+[lib]
+name = "graph_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+python-bridge = { path = "../../rust/python-bridge" }
+graph = { path = "../../rust/graph" }
+
+[workspace]
