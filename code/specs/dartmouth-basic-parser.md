@@ -41,7 +41,13 @@ compiler's and VM's concerns.
 
 ---
 
-## Grammar File: `code/grammars/basic.grammar`
+## Grammar File: `code/grammars/dartmouth_basic.grammar`
+
+> **Implementation note:** The original spec named this file `basic.grammar`, but all
+> implementations use `dartmouth_basic.grammar` for consistency with the lexer's
+> `dartmouth_basic.tokens` file and the naming convention of other grammar pairs
+> (e.g., `json.tokens` + `json.grammar`). The content is identical to what the
+> spec describes.
 
 The grammar file drives the entire parser. The generic `parser` package
 implements a recursive-descent parser with packrat memoisation — no ambiguity,
@@ -527,8 +533,8 @@ code/packages/elixir/dartmouth_basic_parser/
 Grammar file (shared with all language implementations):
 ```
 code/grammars/
-├── basic.tokens   ← defined in lexer spec
-└── basic.grammar  ← defined in this spec
+├── dartmouth_basic.tokens   ← defined in lexer spec
+└── dartmouth_basic.grammar  ← defined in this spec
 ```
 
 ---
@@ -565,7 +571,7 @@ defp get_grammar do
 end
 
 defp load_grammar do
-  path = Path.join([@grammars_dir, "basic.grammar"])
+  path = Path.join([@grammars_dir, "dartmouth_basic.grammar"])
   {:ok, grammar} = ParserGrammar.parse(File.read!(path))
   grammar
 end

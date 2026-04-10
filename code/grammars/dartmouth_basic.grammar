@@ -1,0 +1,368 @@
+# @version 1
+
+# =============================================================================
+# dartmouth_basic.grammar — Parser grammar for 1964 Dartmouth BASIC
+# =============================================================================
+#
+# This grammar file drives the grammar-driven parser engine in every language
+# implementation. The same rules govern Elixir, Go, Lua, Perl, Python, Ruby,
+# Rust, Swift, and TypeScript — a single source of truth for BASIC's syntax.
+#
+# How grammar-driven parsing works
+# ----------------------------------
+# The parser engine reads these rules and interprets them as a recursive-descent
+# parser with packrat memoization. No code generation needed — the engine reads
+# this file at runtime and applies each rule against the token stream produced
+# by the Dartmouth BASIC lexer.
+#
+# Token names (UPPERCASE) are produced by dartmouth_basic_lexer:
+#   LINE_NUM   — the integer at the start of every numbered line (e.g. "10")
+#   NUMBER     — numeric literal in an expression (e.g. "3.14", "1E5")
+#   STRING     — double-quoted string literal (e.g. "HELLO")
+#   NAME       — single-letter or letter+digit variable (A–Z, A0–Z9)
+#   BUILTIN_FN — built-in function name (SIN, COS, TAN, ATN, EXP, LOG, ABS,
+#                                         SQR, INT, RND, SGN)
+#   USER_FN    — user-defined function name (FNA–FNZ)
+#   KEYWORD    — reserved word matched by value in grammar rules below
+#   EQ         — = sign (both assignment and equality comparison in BASIC)
+#   LT         — <
+#   GT         — >
+#   LE         — <=
+#   GE         — >=
+#   NE         — <> (not equal)
+#   PLUS       — +
+#   MINUS      — −
+#   STAR       — *
+#   SLASH      — /
+#   CARET      — ^ (exponentiation, right-associative)
+#   LPAREN     — (
+#   RPAREN     — )
+#   COMMA      — ,
+#   SEMICOLON  — ;
+#   NEWLINE    — end of a logical line (significant in BASIC)
+#
+# Newline significance
+# ---------------------
+# Because this grammar references the NEWLINE token, the parser engine
+# automatically enters "newlines significant" mode: NEWLINE tokens are NOT
+# skipped between rule elements. They act as statement terminators.
+# Every line rule ends with NEWLINE.
+#
+# Expression precedence cascade
+# ------------------------------
+# Precedence is encoded by rule nesting, not by priority annotations:
+#
+#   expr  (lowest:  + −)
+#     └── term (mid:    * /)
+#           └── power (mid:    ^ right-assoc)
+#                 └── unary (−)
+#                       └── primary (atoms)
+#
+# =============================================================================
+
+# =============================================================================
+# program — the top-level rule
+#
+# A BASIC program is a sequence of numbered lines. The program ends at EOF.
+# An empty file with no lines is valid.
+# =============================================================================
+
+program = { line } ;
+
+# =============================================================================
+# line — one numbered statement
+#
+# Every line begins with LINE_NUM, contains exactly one optional statement,
+# and ends with NEWLINE. A bare line number ("10\n") is valid BASIC — it
+# deletes that line when entered in the REPL, and produces a no-op statement
+# node when parsing a stored program.
+# =============================================================================
+
+line = LINE_NUM [ statement ] NEWLINE ;
+
+# =============================================================================
+# statement — one of the 17 statement types
+#
+# Every BASIC statement begins with a distinct keyword (except bare lines),
+# so there is no ambiguity in this alternation. The parser tries each
+# alternative in order.
+# =============================================================================
+
+statement = let_stmt
+          | print_stmt
+          | input_stmt
+          | if_stmt
+          | goto_stmt
+          | gosub_stmt
+          | return_stmt
+          | for_stmt
+          | next_stmt
+          | end_stmt
+          | stop_stmt
+          | rem_stmt
+          | read_stmt
+          | data_stmt
+          | restore_stmt
+          | dim_stmt
+          | def_stmt
+          ;
+
+# =============================================================================
+# LET — variable assignment
+#
+#   10 LET X = 5
+#   20 LET A(3) = X + 1
+#
+# The = in LET is always assignment — never a comparison. Comparison uses
+# the relop rule in if_stmt.
+# =============================================================================
+
+let_stmt = "LET" variable EQ expr ;
+
+# =============================================================================
+# PRINT — output to terminal
+#
+#   10 PRINT                   — blank line
+#   20 PRINT X                 — print X, then newline
+#   30 PRINT X, Y              — print X, advance to next zone, print Y
+#   40 PRINT X; Y              — print X immediately followed by Y (no space)
+#   50 PRINT "HELLO", X        — mix strings and expressions
+#   60 PRINT X,                — trailing comma suppresses final newline
+#
+# print_list is a sequence of print_items separated by COMMA or SEMICOLON.
+# A trailing separator suppresses the final newline at runtime.
+# =============================================================================
+
+print_stmt = "PRINT" [ print_list ] ;
+
+print_list = print_item { print_sep print_item } [ print_sep ] ;
+
+print_item = STRING | expr ;
+
+print_sep = COMMA | SEMICOLON ;
+
+# =============================================================================
+# INPUT — read values from the user at runtime
+#
+#   10 INPUT X
+#   20 INPUT A, B, C
+#
+# Each variable receives one value. The VM reads from the :input_queue
+# (useful for tests) or from stdin.
+# =============================================================================
+
+input_stmt = "INPUT" variable { COMMA variable } ;
+
+# =============================================================================
+# IF ... THEN — conditional branch
+#
+#   10 IF X > 0 THEN 100
+#   20 IF A = B THEN 50
+#   30 IF X <> Y THEN 70
+#
+# The 1964 spec supports ONLY the form:
+#   IF expr relop expr THEN LINE_NUM
+# There is no ELSE clause and no IF ... THEN statement (both came later).
+# The branch target must be a literal line number, not an expression.
+# =============================================================================
+
+if_stmt = "IF" expr relop expr "THEN" NUMBER ;
+
+relop = EQ | LT | GT | LE | GE | NE ;
+
+# =============================================================================
+# GOTO — unconditional jump
+#
+#   10 GOTO 50
+#
+# Jumps to a named line. The compiler emits a JUMP opcode; the VM resolves
+# the target via the line table built from LINE_MARKER opcodes at startup.
+# =============================================================================
+
+goto_stmt = "GOTO" NUMBER ;
+
+# =============================================================================
+# GOSUB / RETURN — subroutine call and return
+#
+#   10 GOSUB 200
+#   ...
+#   200 PRINT "IN SUBROUTINE"
+#   210 RETURN
+#
+# GOSUB pushes the return PC onto the call stack and jumps to the target line.
+# RETURN pops the return PC and resumes execution there. Nesting depth is
+# not bounded by the 1964 spec (no stack overflow detection).
+# =============================================================================
+
+gosub_stmt = "GOSUB" NUMBER ;
+
+return_stmt = "RETURN" ;
+
+# =============================================================================
+# FOR / NEXT — counted loop
+#
+#   10 FOR I = 1 TO 10
+#   20   PRINT I
+#   30 NEXT I
+#
+#   10 FOR I = 10 TO 1 STEP -1
+#   20   PRINT I
+#   30 NEXT I
+#
+# STEP defaults to 1 if omitted. The loop variable must be a plain NAME
+# (not an array element). NEXT must name the same variable as the matching FOR.
+#
+# Edge cases (handled by the VM, not the parser):
+#   FOR I = 5 TO 1          — zero iterations (step +1, 5 > 1 immediately)
+#   FOR I = 5 TO 1 STEP -1  — five iterations: 5, 4, 3, 2, 1
+#   FOR I = 1 TO 1          — exactly one iteration
+# =============================================================================
+
+for_stmt = "FOR" NAME EQ expr "TO" expr [ "STEP" expr ] ;
+
+next_stmt = "NEXT" NAME ;
+
+# =============================================================================
+# END / STOP — program termination
+#
+# END is the normal program end. STOP halts with a "STOP IN LINE n" message
+# and can be resumed in the DTSS system. Both terminate execution in our VM.
+# =============================================================================
+
+end_stmt  = "END" ;
+stop_stmt = "STOP" ;
+
+# =============================================================================
+# REM — remark / comment
+#
+#   10 REM THIS IS A COMMENT
+#
+# The lexer suppresses all tokens between REM and NEWLINE (the suppressRemContent
+# post-tokenize hook). By the time the parser sees the token stream, a REM
+# line contains only: LINE_NUM KEYWORD("REM") NEWLINE
+# The rem_stmt rule therefore has an empty body.
+# =============================================================================
+
+rem_stmt = "REM" ;
+
+# =============================================================================
+# READ / DATA / RESTORE — sequential data pool
+#
+#   10 READ X
+#   20 READ A, B, C
+#   30 DATA 1, 2, 3, 4, 5
+#   40 RESTORE
+#
+# DATA lines define a pool of values (in line-number order). READ pops values
+# sequentially. RESTORE resets the pool pointer to the beginning.
+#
+# DATA values are numeric literals only — the 1964 spec lacks string variables.
+# =============================================================================
+
+read_stmt    = "READ" variable { COMMA variable } ;
+
+data_stmt    = "DATA" NUMBER { COMMA NUMBER } ;
+
+restore_stmt = "RESTORE" ;
+
+# =============================================================================
+# DIM — array dimensioning
+#
+#   10 DIM A(10)
+#   20 DIM A(10), B(20)
+#
+# DIM declares an array with a given maximum index. Without DIM, arrays default
+# to size 10 (indices 0 through 10). DIM allows larger arrays.
+# The size must be a literal integer (not an expression).
+# =============================================================================
+
+dim_stmt = "DIM" dim_decl { COMMA dim_decl } ;
+
+dim_decl = NAME LPAREN NUMBER RPAREN ;
+
+# =============================================================================
+# DEF — user-defined function
+#
+#   10 DEF FNA(X) = X * X
+#   20 DEF FNB(T) = SIN(T) / COS(T)
+#
+# DEF defines a single-argument mathematical function. The name ranges from
+# FNA through FNZ (26 possible functions). The body is any arithmetic
+# expression that may reference the formal parameter and global variables.
+# =============================================================================
+
+def_stmt = "DEF" USER_FN LPAREN NAME RPAREN EQ expr ;
+
+# =============================================================================
+# variable — an lvalue (assignment target) or rvalue (expression term)
+#
+#   X      — scalar variable (single NAME token)
+#   A(I)   — array element (NAME followed by a parenthesised index)
+#
+# The same rule covers both reading and writing a variable. Downstream
+# stages (compiler, VM) track which context each variable appears in.
+#
+# Note: the array form `NAME LPAREN expr RPAREN` must be tried first because
+# the parser picks the longest match in an alternation. Without ordering,
+# `A(I)` could match the scalar form (`NAME`) and leave `(I)` unparsed.
+# =============================================================================
+
+variable = NAME LPAREN expr RPAREN
+         | NAME
+         ;
+
+# =============================================================================
+# Expressions — arithmetic with standard precedence
+#
+# Precedence cascade (lowest to highest binding):
+#
+#   1. expr   — addition (+) and subtraction (−), left-associative
+#   2. term   — multiplication (*) and division (/), left-associative
+#   3. power  — exponentiation (^), RIGHT-associative
+#   4. unary  — unary minus (−), right-to-left
+#   5. primary — literal, variable, function call, parenthesised expression
+#
+# Right-associativity of ^ is achieved by `power` recursing on its right
+# operand: `power = unary [ CARET power ]`. This means:
+#
+#   2 ^ 3 ^ 2  parses as  2 ^ (3 ^ 2) = 512   (not (2^3)^2 = 64)
+#
+# This matches the Dartmouth BASIC 1964 specification.
+# =============================================================================
+
+expr  = term { ( PLUS | MINUS ) term } ;
+
+term  = power { ( STAR | SLASH ) power } ;
+
+# Exponentiation is right-associative via self-reference on the right side.
+# `[ CARET power ]` means zero-or-one occurrence of (CARET followed by power).
+# When it matches, the recursive `power` call ensures right-to-left grouping.
+
+power = unary [ CARET power ] ;
+
+# Unary minus: −X, −3.14, −(X + 1).
+# Unary plus is absent — it is not in the 1964 Dartmouth BASIC spec.
+
+unary = MINUS primary
+      | primary
+      ;
+
+# Primary: atomic units of expressions.
+#
+#   NUMBER           — numeric literal: 42, 3.14, 1E-5
+#   BUILTIN_FN(expr) — built-in function call: SIN(X), ABS(Y−1)
+#   USER_FN(expr)    — user-defined function call: FNA(X)
+#   variable         — scalar or array access: X, A(I)
+#   (expr)           — parenthesised sub-expression: (X + 1)
+#
+# BUILTIN_FN and USER_FN must appear before `variable` in the alternation
+# because both begin with a NAME-like token. The lexer emits BUILTIN_FN and
+# USER_FN as distinct token types, so there is no actual ambiguity — but
+# ordering helps the parser's error messages point at the right rule.
+
+primary = NUMBER
+        | BUILTIN_FN LPAREN expr RPAREN
+        | USER_FN LPAREN expr RPAREN
+        | variable
+        | LPAREN expr RPAREN
+        ;
