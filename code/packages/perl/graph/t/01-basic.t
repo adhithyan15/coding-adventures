@@ -40,7 +40,7 @@ for my $repr (qw(adjacency_list adjacency_matrix)) {
     is($graph->bfs('London'), ['London', 'Amsterdam', 'Paris', 'Berlin', 'Brussels'], "$repr bfs");
     is($graph->dfs('London'), ['London', 'Amsterdam', 'Berlin', 'Paris', 'Brussels'], "$repr dfs");
     ok($graph->is_connected, "$repr connected");
-    ok(!$graph->has_cycle, "$repr acyclic path graph");
+    ok($graph->has_cycle, "$repr cycle detection");
     is($graph->shortest_path('London', 'Berlin'), ['London', 'Amsterdam', 'Berlin'], "$repr shortest path");
     my $mst = $graph->minimum_spanning_tree;
     is(scalar(@$mst), $graph->size - 1, "$repr mst size");
