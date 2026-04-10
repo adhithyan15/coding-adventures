@@ -123,16 +123,28 @@ local function get_script_dir()
     -- path handling (on Linux/macOS this is a no-op).
     src = src:gsub("\\", "/")
     local dir = src:match("(.+)/[^/]+$") or "."
-    -- Security: Do not pass the dir string to io.popen (shell injection risk).
-    -- Instead, use os.getenv to resolve relative paths -- no subprocess or
-    -- shell invocation is involved. The previously removed pattern
+    -- Security: io.popen is used only with fixed built-in commands ("cd"/"pwd"),
+    -- never with user-controlled input. The previously removed pattern
     --   io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
     -- was unsafe because dir could contain shell metacharacters.
-    -- Fixed: 2026-04-10 security review.
+    -- The current approach is safe: no user input reaches the shell.
+    -- Updated: 2026-04-10.
     if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
         local cwd = os.getenv("PWD") or os.getenv("CD") or ""
+        if cwd == "" then
+            -- Safe fallback: fixed built-in command, no user input — no injection risk.
+            -- On Windows `cd` prints the current directory; on POSIX `pwd` does the same.
+            local is_win = package.config:sub(1, 1) == "\\"
+            local h = is_win and io.popen("cd") or io.popen("pwd")
+            if h then
+                local line = h:read("*l") or ""
+                h:close()
+                cwd = line:gsub("%c+$", "")
+            end
+        end
         if cwd ~= "" then
-            dir = cwd:gsub("\\\\", "/"):gsub("%c+$", "") .. "/" .. dir
+            cwd = cwd:gsub("\\", "/"):gsub("%c+$", "")
+            dir = cwd .. "/" .. dir
             -- Normalise .. and . segments so dirname-based traversal works
             -- correctly when the source was loaded via a relative package.path
             -- entry (e.g. "../src/?.lua" from a tests/ subdirectory).
