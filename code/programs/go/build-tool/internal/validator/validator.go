@@ -494,16 +494,22 @@ func validateRustWorkspaceMembers(packages []discovery.Package) []string {
 			continue // standalone — nothing to validate
 		}
 
-		// Parse member names from the members = [ ... ] array.
+		// Parse member names from the members = [ ... ] array, and excluded names
+		// from the exclude = [ ... ] array.
 		// We use a simple line-oriented scan rather than a full TOML parser to
 		// avoid an extra dependency; the format is well-known and highly regular.
 		memberRe := regexp.MustCompile(`"([^"]+)"`)
 		inMembers := false
-		members := make(map[string]int) // name → count (to detect duplicates)
+		inExclude := false
+		members := make(map[string]int)  // name → count (to detect duplicates)
+		excluded := make(map[string]bool) // packages intentionally excluded from workspace
 		for _, line := range strings.Split(string(g.data), "\n") {
 			trimmed := strings.TrimSpace(line)
 			if strings.HasPrefix(trimmed, "members") && strings.Contains(trimmed, "[") {
 				inMembers = true
+			}
+			if strings.HasPrefix(trimmed, "exclude") && strings.Contains(trimmed, "[") {
+				inExclude = true
 			}
 			if inMembers {
 				for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
@@ -511,6 +517,14 @@ func validateRustWorkspaceMembers(packages []discovery.Package) []string {
 				}
 				if strings.Contains(trimmed, "]") {
 					inMembers = false
+				}
+			}
+			if inExclude {
+				for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
+					excluded[m[1]] = true
+				}
+				if strings.Contains(trimmed, "]") {
+					inExclude = false
 				}
 			}
 		}
@@ -531,11 +545,13 @@ func validateRustWorkspaceMembers(packages []discovery.Package) []string {
 			))
 		}
 
-		// Every package with a BUILD file must be a workspace member.
+		// Every package with a BUILD file must be either a workspace member or
+		// explicitly excluded. Packages in the exclude list declare their own
+		// [workspace] (e.g. C-ABI bridge crates) and are intentionally standalone.
 		var missing []string
 		for _, pkg := range g.pkgs {
 			dirName := filepath.Base(pkg.Path)
-			if members[dirName] == 0 {
+			if members[dirName] == 0 && !excluded[dirName] {
 				missing = append(missing, dirName)
 			}
 		}
