@@ -56,6 +56,7 @@ jobs:
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
+      needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -123,7 +124,8 @@ jobs:
               'needs_elixir=true' \
               'needs_lua=true' \
               'needs_perl=true' \
-              'needs_haskell=true' >> "$GITHUB_OUTPUT"
+              'needs_haskell=true' \
+              'needs_dotnet=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -134,7 +136,8 @@ jobs:
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
               'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
-              'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' >> "$GITHUB_OUTPUT"
+              'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
+              'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -291,6 +294,14 @@ jobs:
         with:
           ghc-version: '9.4'
           cabal-version: '3.10'
+
+      - name: Set up .NET
+        if: needs.detect.outputs.needs_dotnet == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          # .NET 9 is the current LTS release. No platform exclusions needed —
+          # actions/setup-dotnet@v4 works identically on Ubuntu, macOS, and Windows.
+          dotnet-version: '9.0'
 
       - name: Install test runners
         shell: bash

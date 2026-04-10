@@ -640,6 +640,67 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 	return internalDeps
 }
 
+// parseDotnetDeps extracts internal monorepo dependencies from a .NET project
+// file (.csproj or .fsproj). It looks for <ProjectReference Include="...">
+// elements, which are the MSBuild mechanism for referencing sibling projects.
+//
+// Example in a .csproj:
+//
+//	<ItemGroup>
+//	  <ProjectReference Include="../logic-gates/logic-gates.csproj" />
+//	</ItemGroup>
+//
+// The path component between "../" and the next "/" is the dependency's
+// directory name. We look that up in knownNames to find the build-tool
+// package name (e.g., "dotnet/logic-gates").
+//
+// For the initial hello-world programs there are no inter-package dependencies,
+// so this function returns nil. It is registered now so that future dotnet
+// packages with dependencies work without additional build-tool changes.
+func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	// Find all .csproj and .fsproj files in the package directory.
+	var projectFiles []string
+	entries, err := os.ReadDir(pkg.Path)
+	if err != nil {
+		return nil
+	}
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if strings.HasSuffix(name, ".csproj") || strings.HasSuffix(name, ".fsproj") {
+			projectFiles = append(projectFiles, filepath.Join(pkg.Path, name))
+		}
+	}
+
+	// Match <ProjectReference Include="../some-dep/some-dep.csproj" />
+	// The dep directory name is the path component after "../".
+	re := regexp.MustCompile(`<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]*"`)
+
+	var internalDeps []string
+	for _, projFile := range projectFiles {
+		data, err := os.ReadFile(projFile)
+		if err != nil {
+			continue
+		}
+		for _, match := range re.FindAllSubmatch(data, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			depDir := strings.ToLower(string(match[1]))
+			// Guard against path traversal.
+			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+				continue
+			}
+			if pkgName, ok := knownNames[depDir]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+	return internalDeps
+}
+
 func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
@@ -821,6 +882,13 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// the internal package name, same as Swift and Rust.
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(dirBase, pkg.Name, pkg.Path)
+
+		case "dotnet":
+			// .NET (C#/F#) packages use MSBuild ProjectReference elements, which
+			// reference sibling directories by name. The directory name maps
+			// directly to the NuGet package name by convention in this repo.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path)
 		}
 	}
 
@@ -880,6 +948,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseHaskellDeps(pkg, knownNames)
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownNames)
+		case "dotnet":
+			deps = parseDotnetDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {
