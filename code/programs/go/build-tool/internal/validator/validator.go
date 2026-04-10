@@ -119,6 +119,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 	}
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
+	problems = append(problems, validateRustWorkspaceMembers(packages)...)
 
 	if len(problems) == 0 {
 		return nil
@@ -427,6 +428,101 @@ func validatePerlBuildFiles(packages []discovery.Package) []string {
 			}
 		}
 	}
+	return problems
+}
+
+// validateRustWorkspaceMembers checks that every Rust package with a BUILD
+// file is listed in code/packages/rust/Cargo.toml and that the workspace has
+// no duplicate member entries.
+//
+// Root cause of the failure mode: when a PR adds packages to the repo and
+// forgets to add them to the workspace, those packages build fine if you run
+// `cargo test` from inside their directory on a branch that never merged them
+// into the workspace. But on the PR merge commit, git's 3-way merge removes
+// the stale workspace entry if the other side deleted it, leaving the package
+// directory without a workspace home and causing Cargo to emit:
+//
+//	error: current package believes it's in a workspace when it's not
+//
+// Checking this at -validate-build-files time means the CI detect job catches
+// the gap before any Rust toolchain is even installed.
+func validateRustWorkspaceMembers(packages []discovery.Package) []string {
+	// Collect all Rust packages discovered by the build tool.
+	var rustPkgs []discovery.Package
+	for _, pkg := range packages {
+		if pkg.Language == "rust" {
+			rustPkgs = append(rustPkgs, pkg)
+		}
+	}
+	if len(rustPkgs) == 0 {
+		return nil
+	}
+
+	// Locate the Rust workspace Cargo.toml. It lives two levels above the
+	// first Rust package: code/packages/rust/<pkg> → code/packages/rust/Cargo.toml.
+	workspaceCargoPath := filepath.Join(filepath.Dir(rustPkgs[0].Path), "Cargo.toml")
+	data, err := os.ReadFile(workspaceCargoPath)
+	if err != nil {
+		// If the file doesn't exist we can't validate — not an error here.
+		return nil
+	}
+
+	// Parse member names from the members = [ ... ] array.
+	// We use a simple regex rather than a full TOML parser to avoid an extra
+	// dependency; the format is well-known and highly regular.
+	memberRe := regexp.MustCompile(`"([^"]+)"`)
+	inMembers := false
+	members := make(map[string]int) // name → count (to detect duplicates)
+	for _, line := range strings.Split(string(data), "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "members") && strings.Contains(trimmed, "[") {
+			inMembers = true
+		}
+		if inMembers {
+			for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
+				members[m[1]]++
+			}
+			if strings.Contains(trimmed, "]") {
+				inMembers = false
+			}
+		}
+	}
+
+	var problems []string
+
+	// Check for duplicates.
+	var dupes []string
+	for name, count := range members {
+		if count > 1 {
+			dupes = append(dupes, name)
+		}
+	}
+	if len(dupes) > 0 {
+		sort.Strings(dupes)
+		problems = append(problems, fmt.Sprintf(
+			"%s: duplicate workspace members (causes Cargo to reject the workspace on newer toolchains): %s",
+			filepath.ToSlash(workspaceCargoPath),
+			strings.Join(dupes, ", "),
+		))
+	}
+
+	// Check that every Rust package with a BUILD file is a workspace member.
+	var missing []string
+	for _, pkg := range rustPkgs {
+		dirName := filepath.Base(pkg.Path)
+		if members[dirName] == 0 {
+			missing = append(missing, dirName)
+		}
+	}
+	if len(missing) > 0 {
+		sort.Strings(missing)
+		problems = append(problems, fmt.Sprintf(
+			"%s: Rust packages with BUILD files are missing from workspace members — add them or the PR merge commit will break `cargo` commands with \"believes it's in a workspace when it's not\": %s",
+			filepath.ToSlash(workspaceCargoPath),
+			strings.Join(missing, ", "),
+		))
+	}
+
 	return problems
 }
 
