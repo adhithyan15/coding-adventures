@@ -152,19 +152,31 @@ local function get_script_dir()
     -- path handling (on Linux/macOS this is a no-op).
     src = src:gsub("\\", "/")
     local dir = src:match("(.+)/[^/]+$") or "."
-    if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
-        local is_win = package.config:sub(1, 1) == "\\"
-        local f
-        if is_win then
-            f = io.popen('cd /d "' .. dir:gsub("/", "\\") .. '" 2>nul && cd')
-        else
-            f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
+    -- If already absolute (Unix: starts with "/"; Windows: "X:") return as-is.
+    if dir:sub(1, 1) == "/" or dir:sub(2, 2) == ":" then
+        return dir
+    end
+    -- The path is relative. Resolve to absolute by fetching the current working
+    -- directory with no arguments — we NEVER interpolate `dir` into the shell
+    -- command string, which would risk command injection if the path contained
+    -- shell metacharacters (single quotes, semicolons, backticks, etc.).
+    -- Instead we obtain the cwd cleanly and join with the relative path in Lua.
+    local is_win = package.config:sub(1, 1) == "\\"
+    local f
+    if is_win then
+        f = io.popen("cd 2>nul")          -- "cd" with no args prints cwd on Windows
+    else
+        f = io.popen("pwd 2>/dev/null")   -- "pwd" with no args is always safe
+    end
+    local cwd = f and f:read("*l")
+    if f then f:close() end
+    if cwd and cwd ~= "" then
+        cwd = cwd:gsub("\\", "/"):gsub("%c+$", "")
+        -- Combine cwd + relative dir in Lua string space (no shell involvement).
+        if dir == "." then
+            return cwd
         end
-        local resolved = f and f:read("*l")
-        if f then f:close() end
-        if resolved and resolved ~= "" then
-            return (resolved:gsub("\\", "/"):gsub("%c+$", ""))
-        end
+        return cwd .. "/" .. dir
     end
     return dir
 end
