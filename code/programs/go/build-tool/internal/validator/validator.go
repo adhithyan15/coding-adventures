@@ -447,80 +447,106 @@ func validatePerlBuildFiles(packages []discovery.Package) []string {
 // Checking this at -validate-build-files time means the CI detect job catches
 // the gap before any Rust toolchain is even installed.
 func validateRustWorkspaceMembers(packages []discovery.Package) []string {
-	// Collect all Rust packages discovered by the build tool.
-	var rustPkgs []discovery.Package
+	// Group Rust packages by the directory that contains their shared Cargo.toml
+	// workspace. For example, packages under code/packages/rust/ share the
+	// workspace at code/packages/rust/Cargo.toml, while standalone programs
+	// under code/programs/rust/ have no shared workspace and are skipped.
+	//
+	// Only directories whose Cargo.toml defines a [workspace] section are
+	// validated. Standalone programs (no parent Cargo.toml, or one without
+	// [workspace]) are exempt — they are intentionally self-contained.
+	type workspaceGroup struct {
+		cargoPath string
+		data      []byte
+		pkgs      []discovery.Package
+	}
+	groups := make(map[string]*workspaceGroup) // workspace dir → group
+
 	for _, pkg := range packages {
-		if pkg.Language == "rust" {
-			rustPkgs = append(rustPkgs, pkg)
+		if pkg.Language != "rust" {
+			continue
 		}
-	}
-	if len(rustPkgs) == 0 {
-		return nil
-	}
-
-	// Locate the Rust workspace Cargo.toml. It lives two levels above the
-	// first Rust package: code/packages/rust/<pkg> → code/packages/rust/Cargo.toml.
-	workspaceCargoPath := filepath.Join(filepath.Dir(rustPkgs[0].Path), "Cargo.toml")
-	data, err := os.ReadFile(workspaceCargoPath)
-	if err != nil {
-		// If the file doesn't exist we can't validate — not an error here.
-		return nil
-	}
-
-	// Parse member names from the members = [ ... ] array.
-	// We use a simple regex rather than a full TOML parser to avoid an extra
-	// dependency; the format is well-known and highly regular.
-	memberRe := regexp.MustCompile(`"([^"]+)"`)
-	inMembers := false
-	members := make(map[string]int) // name → count (to detect duplicates)
-	for _, line := range strings.Split(string(data), "\n") {
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "members") && strings.Contains(trimmed, "[") {
-			inMembers = true
+		parentDir := filepath.Dir(pkg.Path)
+		if g, already := groups[parentDir]; already {
+			if g.data != nil {
+				g.pkgs = append(g.pkgs, pkg)
+			}
+			continue
 		}
-		if inMembers {
-			for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
-				members[m[1]]++
-			}
-			if strings.Contains(trimmed, "]") {
-				inMembers = false
-			}
+		cargoPath := filepath.Join(parentDir, "Cargo.toml")
+		data, err := os.ReadFile(cargoPath)
+		if err != nil || !strings.Contains(string(data), "[workspace]") {
+			// No workspace Cargo.toml in parent (or not a workspace) — standalone.
+			groups[parentDir] = &workspaceGroup{cargoPath: cargoPath}
+			continue
+		}
+		groups[parentDir] = &workspaceGroup{
+			cargoPath: cargoPath,
+			data:      data,
+			pkgs:      []discovery.Package{pkg},
 		}
 	}
 
 	var problems []string
 
-	// Check for duplicates.
-	var dupes []string
-	for name, count := range members {
-		if count > 1 {
-			dupes = append(dupes, name)
+	for _, g := range groups {
+		if g.data == nil {
+			continue // standalone — nothing to validate
 		}
-	}
-	if len(dupes) > 0 {
-		sort.Strings(dupes)
-		problems = append(problems, fmt.Sprintf(
-			"%s: duplicate workspace members (causes Cargo to reject the workspace on newer toolchains): %s",
-			filepath.ToSlash(workspaceCargoPath),
-			strings.Join(dupes, ", "),
-		))
-	}
 
-	// Check that every Rust package with a BUILD file is a workspace member.
-	var missing []string
-	for _, pkg := range rustPkgs {
-		dirName := filepath.Base(pkg.Path)
-		if members[dirName] == 0 {
-			missing = append(missing, dirName)
+		// Parse member names from the members = [ ... ] array.
+		// We use a simple line-oriented scan rather than a full TOML parser to
+		// avoid an extra dependency; the format is well-known and highly regular.
+		memberRe := regexp.MustCompile(`"([^"]+)"`)
+		inMembers := false
+		members := make(map[string]int) // name → count (to detect duplicates)
+		for _, line := range strings.Split(string(g.data), "\n") {
+			trimmed := strings.TrimSpace(line)
+			if strings.HasPrefix(trimmed, "members") && strings.Contains(trimmed, "[") {
+				inMembers = true
+			}
+			if inMembers {
+				for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
+					members[m[1]]++
+				}
+				if strings.Contains(trimmed, "]") {
+					inMembers = false
+				}
+			}
 		}
-	}
-	if len(missing) > 0 {
-		sort.Strings(missing)
-		problems = append(problems, fmt.Sprintf(
-			"%s: Rust packages with BUILD files are missing from workspace members — add them or the PR merge commit will break `cargo` commands with \"believes it's in a workspace when it's not\": %s",
-			filepath.ToSlash(workspaceCargoPath),
-			strings.Join(missing, ", "),
-		))
+
+		// Fail on duplicate entries — Cargo rejects them on newer toolchains.
+		var dupes []string
+		for name, count := range members {
+			if count > 1 {
+				dupes = append(dupes, name)
+			}
+		}
+		if len(dupes) > 0 {
+			sort.Strings(dupes)
+			problems = append(problems, fmt.Sprintf(
+				"%s: duplicate workspace members (causes Cargo to reject the workspace on newer toolchains): %s",
+				filepath.ToSlash(g.cargoPath),
+				strings.Join(dupes, ", "),
+			))
+		}
+
+		// Every package with a BUILD file must be a workspace member.
+		var missing []string
+		for _, pkg := range g.pkgs {
+			dirName := filepath.Base(pkg.Path)
+			if members[dirName] == 0 {
+				missing = append(missing, dirName)
+			}
+		}
+		if len(missing) > 0 {
+			sort.Strings(missing)
+			problems = append(problems, fmt.Sprintf(
+				"%s: Rust packages with BUILD files are missing from workspace members — add them or the PR merge commit will break `cargo` commands with \"believes it's in a workspace when it's not\": %s",
+				filepath.ToSlash(g.cargoPath),
+				strings.Join(missing, ", "),
+			))
+		}
 	}
 
 	return problems
