@@ -127,6 +127,7 @@ members = [
     "document-ast",
     "commonmark-parser",
     "gfm-parser",
+    "graph",
     "document-ast-to-html",
     "commonmark",
     "gfm",
@@ -137,4 +138,3 @@ members = [
     "sql-csv-source",
     "event-loop",
 ]
-
