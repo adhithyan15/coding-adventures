@@ -94,10 +94,12 @@ members = [
     "toml-lexer",
     "toml-parser",
     "transistors",
+    "trie",
     "trig",
     "wave",
     "virtual-memory",
     "tree",
+    "radix-tree",
     "typescript-lexer",
     "typescript-parser",
     "vendor-api-simulators",
@@ -135,3 +137,4 @@ members = [
     "sql-csv-source",
     "event-loop",
 ]
+
