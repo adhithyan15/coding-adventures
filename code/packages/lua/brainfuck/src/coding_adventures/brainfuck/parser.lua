@@ -103,12 +103,18 @@ local function get_script_dir()
     -- path handling (on Linux/macOS this is a no-op).
     src = src:gsub("\\", "/")
     local dir = src:match("(.+)/[^/]+$") or "."
-    -- Security: Do not attempt shell-based path resolution via io.popen.
-    -- Passing unsanitised directory strings to a shell command introduces
-    -- OS command injection risk (path could contain single-quotes or shell
-    -- metacharacters). String-based path arithmetic in up_n_levels works
-    -- correctly for both absolute and relative source paths.
+    -- Security: Do not pass the dir string to io.popen (shell injection risk).
+    -- Instead, use os.getenv to resolve relative paths -- no subprocess or
+    -- shell invocation is involved. The previously removed pattern
+    --   io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
+    -- was unsafe because dir could contain shell metacharacters.
     -- Fixed: 2026-04-10 security review.
+    if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
+        local cwd = os.getenv("PWD") or os.getenv("CD") or ""
+        if cwd ~= "" then
+            dir = cwd:gsub("\\\\", "/"):gsub("%c+$", "") .. "/" .. dir
+        end
+    end
     return dir
 end
 
