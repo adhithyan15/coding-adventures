@@ -21,7 +21,7 @@
 //! - **No version conflicts** — works with any Python 3.x
 //! - **Fully auditable** — every C function call is visible and grep-able
 
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 use std::ptr;
 
@@ -90,8 +90,15 @@ extern "C" {
     pub fn PySet_New(iterable: PyObjectPtr) -> PyObjectPtr;
     pub fn PySet_Add(set: PyObjectPtr, key: PyObjectPtr) -> c_int;
 
-    // -- Integer operations ------------------------------------------------
+    // -- Integer / float operations ---------------------------------------
     pub fn PyLong_FromLong(v: c_long) -> PyObjectPtr;
+    pub fn PyFloat_FromDouble(v: f64) -> PyObjectPtr;
+    pub fn PyFloat_AsDouble(obj: PyObjectPtr) -> f64;
+    pub fn PyNumber_Float(obj: PyObjectPtr) -> PyObjectPtr;
+
+    // -- Dict operations ---------------------------------------------------
+    pub fn PyDict_New() -> PyObjectPtr;
+    pub fn PyDict_SetItem(dict: PyObjectPtr, key: PyObjectPtr, val: PyObjectPtr) -> c_int;
 
     // -- Iterator ----------------------------------------------------------
     pub fn PyObject_GetIter(o: PyObjectPtr) -> PyObjectPtr;
@@ -272,6 +279,31 @@ pub unsafe fn vec_tuple2_str_to_py(items: &[(String, String)]) -> PyObjectPtr {
     list
 }
 
+/// Convert `&[(String, f64)]` to a Python list of (str, float) tuples.
+pub unsafe fn vec_tuple2_str_f64_to_py(items: &[(String, f64)]) -> PyObjectPtr {
+    let list = PyList_New(items.len() as isize);
+    for (i, (a, value)) in items.iter().enumerate() {
+        let tuple = PyTuple_New(2);
+        PyTuple_SetItem(tuple, 0, str_to_py(a));
+        PyTuple_SetItem(tuple, 1, f64_to_py(*value));
+        PyList_SetItem(list, i as isize, tuple);
+    }
+    list
+}
+
+/// Convert `&[(String, String, f64)]` to a Python list of (str, str, float) tuples.
+pub unsafe fn vec_tuple3_str_f64_to_py(items: &[(String, String, f64)]) -> PyObjectPtr {
+    let list = PyList_New(items.len() as isize);
+    for (i, (a, b, value)) in items.iter().enumerate() {
+        let tuple = PyTuple_New(3);
+        PyTuple_SetItem(tuple, 0, str_to_py(a));
+        PyTuple_SetItem(tuple, 1, str_to_py(b));
+        PyTuple_SetItem(tuple, 2, f64_to_py(*value));
+        PyList_SetItem(list, i as isize, tuple);
+    }
+    list
+}
+
 // ---------------------------------------------------------------------------
 // Safe wrappers — Set conversion
 // ---------------------------------------------------------------------------
@@ -337,6 +369,26 @@ pub unsafe fn usize_to_py(n: usize) -> PyObjectPtr {
     PyLong_FromLong(n as c_long)
 }
 
+/// Convert a Rust `f64` to Python float.
+pub unsafe fn f64_to_py(value: f64) -> PyObjectPtr {
+    PyFloat_FromDouble(value)
+}
+
+/// Convert a Python number to Rust `f64`.
+pub unsafe fn f64_from_py(obj: PyObjectPtr) -> Option<f64> {
+    if obj.is_null() {
+        return None;
+    }
+    let float_obj = PyNumber_Float(obj);
+    if float_obj.is_null() {
+        PyErr_Clear();
+        return None;
+    }
+    let value = PyFloat_AsDouble(float_obj);
+    Py_DecRef(float_obj);
+    Some(value)
+}
+
 /// Python `None` (new reference via Py_BuildValue with empty format).
 pub unsafe fn py_none() -> PyObjectPtr {
     // Py_BuildValue("") returns a new reference to Py_None
@@ -375,6 +427,16 @@ pub unsafe fn parse_args_2str(args: PyObjectPtr) -> Option<(String, String)> {
     Some((a, b))
 }
 
+/// Extract one float argument from a Python args tuple.
+pub unsafe fn parse_arg_f64(args: PyObjectPtr, index: isize) -> Option<f64> {
+    let arg = PyTuple_GetItem(args, index);
+    if arg.is_null() {
+        PyErr_Clear();
+        return None;
+    }
+    f64_from_py(arg)
+}
+
 // ---------------------------------------------------------------------------
 // Safe wrappers — Module and exception creation
 // ---------------------------------------------------------------------------
@@ -383,6 +445,19 @@ pub unsafe fn parse_args_2str(args: PyObjectPtr) -> Option<(String, String)> {
 pub unsafe fn module_add_object(module: PyObjectPtr, name: &str, obj: PyObjectPtr) {
     let c_name = CString::new(name).expect("name must not contain NUL");
     PyModule_AddObject(module, c_name.as_ptr(), obj);
+}
+
+/// Convert a `BTreeMap<String, f64>` to a Python dict[str, float].
+pub unsafe fn map_str_f64_to_py(items: &BTreeMap<String, f64>) -> PyObjectPtr {
+    let dict = PyDict_New();
+    for (key, value) in items {
+        let py_key = str_to_py(key);
+        let py_value = f64_to_py(*value);
+        PyDict_SetItem(dict, py_key, py_value);
+        Py_DecRef(py_key);
+        Py_DecRef(py_value);
+    }
+    dict
 }
 
 /// Create a new exception class.

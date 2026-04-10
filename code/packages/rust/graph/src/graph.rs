@@ -117,10 +117,12 @@ impl Graph {
     }
 
     pub fn nodes(&self) -> Vec<String> {
-        match self.repr {
+        let mut nodes = match self.repr {
             GraphRepr::AdjacencyList => self.adj.keys().cloned().collect(),
             GraphRepr::AdjacencyMatrix => self.node_list.clone(),
-        }
+        };
+        nodes.sort();
+        nodes
     }
 
     pub fn add_edge(&mut self, left: impl Into<String>, right: impl Into<String>, weight: f64) {
@@ -168,16 +170,14 @@ impl Graph {
                 Ok(())
             }
             GraphRepr::AdjacencyMatrix => {
-                let left_index = self
-                    .node_index
-                    .get(left)
-                    .copied()
-                    .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))?;
-                let right_index = self
-                    .node_index
-                    .get(right)
-                    .copied()
-                    .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))?;
+                let left_index =
+                    self.node_index.get(left).copied().ok_or_else(|| {
+                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
+                    })?;
+                let right_index =
+                    self.node_index.get(right).copied().ok_or_else(|| {
+                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
+                    })?;
                 if self.matrix[left_index][right_index].is_none() {
                     return Err(GraphError::EdgeNotFound(
                         left.to_string(),
@@ -216,16 +216,14 @@ impl Graph {
                 .copied()
                 .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string())),
             GraphRepr::AdjacencyMatrix => {
-                let left_index = self
-                    .node_index
-                    .get(left)
-                    .copied()
-                    .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))?;
-                let right_index = self
-                    .node_index
-                    .get(right)
-                    .copied()
-                    .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))?;
+                let left_index =
+                    self.node_index.get(left).copied().ok_or_else(|| {
+                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
+                    })?;
+                let right_index =
+                    self.node_index.get(right).copied().ok_or_else(|| {
+                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
+                    })?;
                 self.matrix[left_index][right_index]
                     .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))
             }
@@ -282,11 +280,13 @@ impl Graph {
                     .get(node)
                     .copied()
                     .ok_or_else(|| GraphError::NodeNotFound(node.to_string()))?;
-                Ok(self.matrix[index]
+                let mut neighbors: Vec<String> = self.matrix[index]
                     .iter()
                     .enumerate()
                     .filter_map(|(col, weight)| weight.map(|_| self.node_list[col].clone()))
-                    .collect())
+                    .collect();
+                neighbors.sort();
+                Ok(neighbors)
             }
         }
     }
