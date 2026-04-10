@@ -2,6 +2,6 @@ use strict;
 use warnings;
 use Test2::V0;
 
-use_ok('CodingAdventures::Graph');
+ok(eval { require CodingAdventures::Graph; 1 }, 'CodingAdventures::Graph loads');
 
 done_testing;
