@@ -307,20 +307,54 @@ mod tests {
     use std::thread;
     use std::time::Instant;
 
-    fn send_recv(port: u16, data: &[u8], read_timeout: std::time::Duration) -> io::Result<Vec<u8>> {
+    fn send_recv(
+        port: u16,
+        data: &[u8],
+        expected_len: usize,
+        read_timeout: std::time::Duration,
+    ) -> io::Result<Vec<u8>> {
         let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
         stream.write_all(data).expect("write");
         stream.set_read_timeout(Some(read_timeout)).expect("timeout");
+        let deadline = Instant::now() + Duration::from_secs(5);
+        let mut response = Vec::with_capacity(expected_len);
         let mut buf = vec![0u8; 4096];
-        let n = stream.read(&mut buf)?;
-        buf.truncate(n);
-        Ok(buf)
+
+        while response.len() < expected_len {
+            match stream.read(&mut buf) {
+                Ok(0) => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::UnexpectedEof,
+                        "server closed connection before responding fully",
+                    ));
+                }
+                Ok(n) => response.extend_from_slice(&buf[..n]),
+                Err(err) if err.kind() == io::ErrorKind::WouldBlock => {}
+                Err(err) if err.kind() == io::ErrorKind::TimedOut => {}
+                Err(err) => return Err(err),
+            }
+
+            if Instant::now() >= deadline {
+                return Err(io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "timed out waiting for response",
+                ));
+            }
+        }
+
+        response.truncate(expected_len);
+        Ok(response)
     }
 
     fn wait_until_ready(port: u16, request: &[u8], expected_response: &[u8]) {
         let deadline = Instant::now() + Duration::from_secs(5);
         loop {
-            if let Ok(response) = send_recv(port, request, Duration::from_millis(100)) {
+            if let Ok(response) = send_recv(
+                port,
+                request,
+                expected_response.len(),
+                Duration::from_millis(100),
+            ) {
                 if response == expected_response {
                     return;
                 }
@@ -343,7 +377,7 @@ mod tests {
         let handle = thread::spawn(move || runner.serve_forever().unwrap());
         wait_until_ready(port, b"ready", b"ready");
 
-        let response = send_recv(port, b"hello", Duration::from_secs(2)).expect("read");
+        let response = send_recv(port, b"hello", 5, Duration::from_secs(2)).expect("read");
         assert_eq!(response, b"hello");
 
         server.stop();
@@ -361,7 +395,7 @@ mod tests {
         let handle = thread::spawn(move || runner.serve_forever().unwrap());
         wait_until_ready(port, b"ready", b"READY");
 
-        let response = send_recv(port, b"hello", Duration::from_secs(2)).expect("read");
+        let response = send_recv(port, b"hello", 5, Duration::from_secs(2)).expect("read");
         assert_eq!(response, b"HELLO");
 
         server.stop();
@@ -382,7 +416,7 @@ mod tests {
         let handle = thread::spawn(move || runner.serve_forever().unwrap());
         wait_until_ready(port, b"ready", b"ready");
 
-        let response = send_recv(port, b"buffer", Duration::from_secs(2)).expect("read");
+        let response = send_recv(port, b"buffer", 6, Duration::from_secs(2)).expect("read");
         assert_eq!(response, b"buffer");
 
         server.stop();
