@@ -1,5 +1,3 @@
-requires 'CodingAdventures::HMAC';
-requires 'CodingAdventures::SHA256';
 requires 'POSIX';
 
 on 'test' => sub {
