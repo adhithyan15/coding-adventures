@@ -23,15 +23,99 @@ export interface Token {
   readonly nextChar: number;
 }
 
-// ─── Internal trie ────────────────────────────────────────────────────────────
+// ─── TrieCursor ───────────────────────────────────────────────────────────────
 
-/** One node in the encoding trie. */
-class TrieNode {
-  readonly dictId: number;
-  readonly children: Map<number, TrieNode> = new Map();
+/** Internal node used by TrieCursor. */
+interface CursorNode {
+  dictId: number;
+  children: Map<number, CursorNode>;
+}
 
-  constructor(dictId: number) {
-    this.dictId = dictId;
+function makeCursorNode(dictId: number): CursorNode {
+  return { dictId, children: new Map() };
+}
+
+/**
+ * A step-by-step cursor for navigating a byte-keyed trie.
+ *
+ * Unlike a full trie API (which operates on complete keys), `TrieCursor`
+ * maintains a current position and advances one byte at a time. This is the
+ * core abstraction for streaming dictionary algorithms:
+ *
+ * - **LZ78** (CMP01): `step(byte)` → emit token on miss, `insert` new entry
+ * - **LZW**  (CMP03): same pattern with a pre-seeded 256-entry alphabet
+ *
+ * @example
+ * const cursor = new TrieCursor();
+ * for (const byte of data) {
+ *   if (!cursor.step(byte)) {
+ *     tokens.push({ dictIndex: cursor.dictId, nextChar: byte });
+ *     cursor.insert(byte, nextId++);
+ *     cursor.reset();
+ *   }
+ * }
+ */
+export class TrieCursor {
+  private readonly root: CursorNode;
+  private current: CursorNode;
+
+  constructor() {
+    this.root = makeCursorNode(0);
+    this.current = this.root;
+  }
+
+  /**
+   * Try to follow the child edge for `byte` from the current position.
+   * Returns `true` and advances if the child exists; `false` otherwise (cursor
+   * stays at current position).
+   */
+  step(byte: number): boolean {
+    const child = this.current.children.get(byte);
+    if (child !== undefined) {
+      this.current = child;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Add a child edge for `byte` at the current position with `dictId`.
+   * Does not advance the cursor — call `reset()` to return to root.
+   */
+  insert(byte: number, dictId: number): void {
+    this.current.children.set(byte, makeCursorNode(dictId));
+  }
+
+  /** Reset the cursor to the trie root. */
+  reset(): void {
+    this.current = this.root;
+  }
+
+  /** Dictionary ID at the current cursor position. 0 when at root. */
+  get dictId(): number {
+    return this.current.dictId;
+  }
+
+  /** `true` if the cursor is at the root node. */
+  get atRoot(): boolean {
+    return this.current === this.root;
+  }
+
+  /** Iterate all [path, dictId] pairs stored in the trie (DFS). */
+  *[Symbol.iterator](): Iterator<[number[], number]> {
+    yield* iterNode(this.root, []);
+  }
+}
+
+function* iterNode(
+  node: CursorNode,
+  path: number[],
+): Generator<[number[], number]> {
+  if (node.dictId > 0) yield [[...path], node.dictId];
+  for (const [byte, child] of node.children) {
+    path.push(byte);
+    yield* iterNode(child, path);
+    path.pop();
   }
 }
 
@@ -39,6 +123,10 @@ class TrieNode {
 
 /**
  * Encode bytes into an LZ78 token stream.
+ *
+ * Uses `TrieCursor` to walk the dictionary one byte at a time.
+ * When `cursor.step(byte)` returns `false`, emits a token for the current
+ * `dictId` plus `byte`, records the new sequence, resets to root.
  *
  * @param data        - Input bytes.
  * @param maxDictSize - Maximum dictionary entries (default 65536).
@@ -52,28 +140,24 @@ export function encode(
   data: Uint8Array,
   maxDictSize = 65536,
 ): Token[] {
-  const root = new TrieNode(0);
+  const cursor = new TrieCursor();
   let nextId = 1;
-  let current = root;
   const tokens: Token[] = [];
 
   for (const byte of data) {
-    const child = current.children.get(byte);
-    if (child !== undefined) {
-      current = child;
-    } else {
-      tokens.push({ dictIndex: current.dictId, nextChar: byte });
+    if (!cursor.step(byte)) {
+      tokens.push({ dictIndex: cursor.dictId, nextChar: byte });
       if (nextId < maxDictSize) {
-        current.children.set(byte, new TrieNode(nextId));
+        cursor.insert(byte, nextId);
         nextId++;
       }
-      current = root;
+      cursor.reset();
     }
   }
 
   // Flush partial match at end of stream.
-  if (current !== root) {
-    tokens.push({ dictIndex: current.dictId, nextChar: 0 });
+  if (!cursor.atRoot) {
+    tokens.push({ dictIndex: cursor.dictId, nextChar: 0 });
   }
 
   return tokens;

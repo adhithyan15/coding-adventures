@@ -48,19 +48,103 @@ pub struct Token {
     pub next_char: u8,
 }
 
-// ─── Internal trie ────────────────────────────────────────────────────────────
+// ─── TrieCursor ───────────────────────────────────────────────────────────────
 
-struct TrieNode {
-    dict_id: u16,
-    children: HashMap<u8, usize>, // byte → arena index
+/// A step-by-step cursor for navigating a byte-keyed trie.
+///
+/// Unlike a full trie API (which operates on complete keys), `TrieCursor`
+/// maintains a current position and advances one byte at a time. This is the
+/// core abstraction for streaming dictionary algorithms:
+///
+/// - **LZ78** (CMP01): [`step`](TrieCursor::step) → emit token on miss,
+///   [`insert`](TrieCursor::insert) new entry
+/// - **LZW**  (CMP03): same pattern with a pre-seeded 256-entry alphabet
+///
+/// # Usage
+///
+/// ```
+/// use lz78::TrieCursor;
+///
+/// let mut cursor = TrieCursor::new();
+/// // First 'A' — no child, returns false.
+/// assert!(!cursor.step(b'A'));
+/// cursor.insert(b'A', 1);   // add root → 'A' → id=1
+/// cursor.reset();
+/// // Now 'A' is in the trie.
+/// assert!(cursor.step(b'A'));
+/// assert_eq!(cursor.dict_id(), 1);
+/// ```
+pub struct TrieCursor {
+    /// Arena-based trie: nodes stored in a Vec, referenced by index.
+    /// Index 0 = root.
+    arena: Vec<CursorNode>,
+    current: usize,
 }
 
-impl TrieNode {
+struct CursorNode {
+    dict_id: u16,
+    children: HashMap<u8, usize>,
+}
+
+impl CursorNode {
     fn new(dict_id: u16) -> Self {
+        Self { dict_id, children: HashMap::new() }
+    }
+}
+
+impl TrieCursor {
+    /// Create a new `TrieCursor` with an empty trie. Cursor starts at root.
+    pub fn new() -> Self {
         Self {
-            dict_id,
-            children: HashMap::new(),
+            arena: vec![CursorNode::new(0)],
+            current: 0,
         }
+    }
+
+    /// Try to follow the child edge for `byte` from the current position.
+    ///
+    /// Returns `true` and advances the cursor if the child exists.
+    /// Returns `false` without moving if no such edge exists.
+    pub fn step(&mut self, byte: u8) -> bool {
+        if let Some(&child_idx) = self.arena[self.current].children.get(&byte) {
+            self.current = child_idx;
+            true
+        } else {
+            false
+        }
+    }
+
+    /// Add a child edge for `byte` at the current position with the given dict ID.
+    ///
+    /// Does not advance the cursor — call [`reset`](TrieCursor::reset) to
+    /// return to root.
+    pub fn insert(&mut self, byte: u8, dict_id: u16) {
+        let new_idx = self.arena.len();
+        self.arena.push(CursorNode::new(dict_id));
+        self.arena[self.current].children.insert(byte, new_idx);
+    }
+
+    /// Reset the cursor to the trie root.
+    pub fn reset(&mut self) {
+        self.current = 0;
+    }
+
+    /// Dictionary ID at the current cursor position.
+    ///
+    /// Returns `0` when cursor is at root (representing the empty sequence).
+    pub fn dict_id(&self) -> u16 {
+        self.arena[self.current].dict_id
+    }
+
+    /// Returns `true` if the cursor is at the root node.
+    pub fn at_root(&self) -> bool {
+        self.current == 0
+    }
+}
+
+impl Default for TrieCursor {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -68,8 +152,11 @@ impl TrieNode {
 
 /// Encode bytes into an LZ78 token stream.
 ///
-/// Scans the input left-to-right, following trie edges. When a byte has no
-/// child edge from the current node, emits a token and resets to root.
+/// Uses [`TrieCursor`] to walk the dictionary one byte at a time.
+/// When [`step`](TrieCursor::step) returns `false` (no child edge), emits a
+/// token for the current `dict_id` plus `byte`, records the new sequence, and
+/// resets to root.
+///
 /// If the input ends mid-match, a flush token with `next_char=0` is emitted.
 ///
 /// # Arguments
@@ -87,39 +174,26 @@ impl TrieNode {
 /// assert!(tokens.iter().all(|t| t.dict_index == 0)); // all literals
 /// ```
 pub fn encode(data: &[u8], max_dict_size: usize) -> Vec<Token> {
-    // Arena-based trie: nodes are stored in a Vec, referenced by index.
-    // Index 0 = root.
-    let mut arena: Vec<TrieNode> = vec![TrieNode::new(0)];
+    let mut cursor = TrieCursor::new();
     let mut next_id: u16 = 1;
-    let mut current: usize = 0; // index into arena (0 = root)
     let mut tokens = Vec::new();
 
     for &byte in data {
-        if let Some(&child_idx) = arena[current].children.get(&byte) {
-            current = child_idx;
-        } else {
-            tokens.push(Token {
-                dict_index: arena[current].dict_id,
-                next_char: byte,
-            });
+        if !cursor.step(byte) {
+            tokens.push(Token { dict_index: cursor.dict_id(), next_char: byte });
 
             if (next_id as usize) < max_dict_size {
-                let new_idx = arena.len();
-                arena.push(TrieNode::new(next_id));
-                arena[current].children.insert(byte, new_idx);
+                cursor.insert(byte, next_id);
                 next_id += 1;
             }
 
-            current = 0; // reset to root
+            cursor.reset();
         }
     }
 
     // Flush partial match at end of stream.
-    if current != 0 {
-        tokens.push(Token {
-            dict_index: arena[current].dict_id,
-            next_char: 0,
-        });
+    if !cursor.at_root() {
+        tokens.push(Token { dict_index: cursor.dict_id(), next_char: 0 });
     }
 
     tokens

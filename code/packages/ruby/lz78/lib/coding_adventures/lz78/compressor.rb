@@ -29,46 +29,114 @@ module CodingAdventures
     # Token is a (dict_index, next_char) pair.
     Token = Struct.new(:dict_index, :next_char)
 
-    # Internal trie node used during encoding.
-    # Each node stores a dict_id and a hash of byte → child node.
-    class TrieNode
-      attr_reader :dict_id, :children
+    # TrieCursor is a step-by-step cursor for navigating a byte-keyed trie.
+    #
+    # Unlike a full trie class (which operates on complete keys), TrieCursor
+    # maintains a current position and advances one byte at a time. This is
+    # the core abstraction for streaming dictionary algorithms: LZ78, LZW, etc.
+    #
+    # Usage in LZ78 encoding:
+    #   cursor = TrieCursor.new
+    #   data.each_byte do |byte|
+    #     unless cursor.step(byte)
+    #       emit Token(cursor.dict_id, byte)
+    #       cursor.insert(byte, next_id)
+    #       cursor.reset
+    #     end
+    #   end
+    #   emit flush token unless cursor.at_root?
+    class TrieCursor
+      def initialize
+        # Each node: { byte => {dict_id:, children:} }
+        # We store the trie as nested hashes for simplicity and idiomatic Ruby.
+        @root    = { dict_id: 0, children: {} }
+        @current = @root
+      end
 
-      def initialize(dict_id)
-        @dict_id = dict_id
-        @children = {}
+      # Try to follow the child edge for +byte+ from current position.
+      # Returns true and advances cursor if child exists; returns false otherwise
+      # (cursor unchanged).
+      def step(byte)
+        child = @current[:children][byte]
+        if child
+          @current = child
+          true
+        else
+          false
+        end
+      end
+
+      # Add a child edge for +byte+ at current position with +dict_id+.
+      # Does not advance the cursor — call reset to return to root.
+      def insert(byte, dict_id)
+        @current[:children][byte] = { dict_id: dict_id, children: {} }
+      end
+
+      # Return cursor to the root of the trie.
+      def reset
+        @current = @root
+      end
+
+      # Dictionary ID at the current cursor position.
+      # Returns 0 when at root (empty sequence).
+      def dict_id
+        @current[:dict_id]
+      end
+
+      # True if cursor is at the root node.
+      def at_root?
+        @current.equal?(@root)
+      end
+
+      # Yield [path, dict_id] for every node that has a dict_id > 0 (DFS).
+      def each(&block)
+        each_node(@root, [], &block)
+      end
+
+      include Enumerable
+
+      private
+
+      def each_node(node, path, &block)
+        yield path.dup, node[:dict_id] if node[:dict_id] > 0
+        node[:children].each do |byte, child|
+          path.push(byte)
+          each_node(child, path, &block)
+          path.pop
+        end
       end
     end
 
     module Compressor
       # Encodes bytes into an LZ78 token stream.
       #
+      # Uses TrieCursor to walk the dictionary one byte at a time.
+      # When step(byte) returns false (no child edge), emits a token for the
+      # current dict_id plus byte, records the new sequence, resets to root.
+      #
       # @param data        [String]  binary string (encoding: ASCII-8BIT)
       # @param max_dict    [Integer] maximum dictionary size (default 65536)
       # @return            [Array<Token>]
       def self.encode(data, max_dict: 65536)
-        root    = TrieNode.new(0)
+        cursor  = TrieCursor.new
         next_id = 1
-        current = root
         tokens  = []
 
         data.each_byte do |byte|
-          if (child = current.children[byte])
-            current = child
-          else
-            tokens << Token.new(current.dict_id, byte)
+          unless cursor.step(byte)
+            tokens << Token.new(cursor.dict_id, byte)
 
             if next_id < max_dict
-              current.children[byte] = TrieNode.new(next_id)
+              cursor.insert(byte, next_id)
               next_id += 1
             end
 
-            current = root
+            cursor.reset
           end
         end
 
         # Flush partial match at end of stream.
-        tokens << Token.new(current.dict_id, 0) if current != root
+        tokens << Token.new(cursor.dict_id, 0) unless cursor.at_root?
 
         tokens
       end

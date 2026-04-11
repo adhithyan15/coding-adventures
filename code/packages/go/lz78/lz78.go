@@ -63,61 +63,112 @@ type Token struct {
 	NextChar  byte
 }
 
-// ─── Internal trie ────────────────────────────────────────────────────────────
+// ─── TrieCursor ───────────────────────────────────────────────────────────────
 
-// trieNode is one node in the encoding trie.
-// Each node represents a dictionary entry (a byte sequence reachable from
-// the root). The sequence is implicit in the path from root to this node.
-type trieNode struct {
-	dictID   uint16
-	children map[byte]*trieNode
+// TrieCursor is a step-by-step cursor for navigating a byte-keyed trie.
+//
+// Unlike a full trie API (which operates on complete keys), TrieCursor
+// maintains a current position and advances one byte at a time. This is the
+// core abstraction for streaming dictionary algorithms:
+//
+//   - LZ78 (CMP01): Step(byte) → emit token on miss, Insert new entry
+//   - LZW  (CMP03): same pattern with a pre-seeded 256-entry alphabet
+//
+// Usage:
+//
+//	cursor := NewTrieCursor()
+//	for _, b := range data {
+//	    if !cursor.Step(b) {
+//	        emit Token(cursor.DictID(), b)
+//	        cursor.Insert(b, nextID)
+//	        cursor.Reset()
+//	    }
+//	}
+//	if !cursor.AtRoot() {
+//	    emit flush token
+//	}
+type TrieCursor struct {
+	root    *cursorNode
+	current *cursorNode
 }
 
-func newTrieNode(id uint16) *trieNode {
-	return &trieNode{dictID: id, children: make(map[byte]*trieNode)}
+// cursorNode is one node in a TrieCursor's internal trie.
+// children maps a byte value to the child node for that byte.
+type cursorNode struct {
+	dictID   uint16
+	children map[byte]*cursorNode
+}
+
+// NewTrieCursor creates an empty TrieCursor positioned at root.
+func NewTrieCursor() *TrieCursor {
+	root := &cursorNode{dictID: 0, children: make(map[byte]*cursorNode)}
+	return &TrieCursor{root: root, current: root}
+}
+
+// Step tries to follow the child edge for b from the current position.
+// Returns true if the edge exists and the cursor advanced; false otherwise
+// (cursor stays at current position).
+func (c *TrieCursor) Step(b byte) bool {
+	if child, ok := c.current.children[b]; ok {
+		c.current = child
+		return true
+	}
+	return false
+}
+
+// Insert adds a child edge for b at the current position with the given
+// dictionary ID. Does not advance the cursor — call Reset() to return to root.
+func (c *TrieCursor) Insert(b byte, dictID uint16) {
+	c.current.children[b] = &cursorNode{dictID: dictID, children: make(map[byte]*cursorNode)}
+}
+
+// Reset returns the cursor to the trie root.
+func (c *TrieCursor) Reset() {
+	c.current = c.root
+}
+
+// DictID returns the dictionary ID at the current cursor position.
+// Returns 0 when cursor is at root (representing the empty sequence).
+func (c *TrieCursor) DictID() uint16 {
+	return c.current.dictID
+}
+
+// AtRoot returns true if the cursor is at the root node.
+func (c *TrieCursor) AtRoot() bool {
+	return c.current == c.root
 }
 
 // ─── Encoder ──────────────────────────────────────────────────────────────────
 
 // Encode encodes data into an LZ78 token stream.
 //
-// Scans the input left-to-right, following trie edges for each byte. When a
-// byte has no child edge from the current node, emits a token and resets to the
-// root. Adds a new trie node for the matched sequence plus the new byte.
+// Uses a TrieCursor to walk the dictionary one byte at a time.
+// When Step(b) returns false (no child edge), emits a token for the current
+// dict ID plus b, records the new sequence, and resets to root.
 //
 // If the input ends mid-match, a flush token with NextChar=0 is emitted.
-// Use Compress/Decompress to round-trip data without dealing with the flush
-// sentinel manually.
 //
-//	tokens := Encode([]byte("ABCDE"))
+//	tokens := Encode([]byte("ABCDE"), 65536)
 //	// tokens.count == 5: all literals (no repeated sequences)
 func Encode(data []byte, maxDictSize int) []Token {
-	root := newTrieNode(0)
+	cursor := NewTrieCursor()
 	nextID := uint16(1)
-	current := root
 	var tokens []Token
 
 	for _, b := range data {
-		if child, ok := current.children[b]; ok {
-			// Edge exists — extend the current match.
-			current = child
-		} else {
-			// No edge — emit token and expand dictionary.
-			tokens = append(tokens, Token{DictIndex: current.dictID, NextChar: b})
-
+		if !cursor.Step(b) {
+			tokens = append(tokens, Token{DictIndex: cursor.DictID(), NextChar: b})
 			if int(nextID) < maxDictSize {
-				node := newTrieNode(nextID)
-				current.children[b] = node
+				cursor.Insert(b, nextID)
 				nextID++
 			}
-
-			current = root
+			cursor.Reset()
 		}
 	}
 
 	// Flush partial match at end of stream.
-	if current != root {
-		tokens = append(tokens, Token{DictIndex: current.dictID, NextChar: 0})
+	if !cursor.AtRoot() {
+		tokens = append(tokens, Token{DictIndex: cursor.DictID(), NextChar: 0})
 	}
 
 	return tokens
