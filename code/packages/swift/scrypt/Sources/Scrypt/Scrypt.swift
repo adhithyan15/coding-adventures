@@ -417,7 +417,13 @@ public func scrypt(
     guard p * r <= (1 << 30)             else { throw ScryptError.prTooLarge }
     // p * 128 * r is the actual PBKDF2 output buffer size. Even when p*r ≤ 2^30,
     // p*128*r can reach 128 GiB (e.g. p=2^15, r=2^15). Cap at 2^30 bytes (1 GiB).
-    guard p * 128 * r <= (1 << 30)       else { throw ScryptError.prTooLarge }
+    // Use multipliedReportingOverflow for portability (32-bit targets trap on
+    // Int overflow; graceful error is preferable to a runtime crash).
+    let (bLen128, bLen128Overflowed) = p.multipliedReportingOverflow(by: 128)
+    let (bLen, bLenOverflowed)       = bLen128.multipliedReportingOverflow(by: r)
+    guard !bLen128Overflowed && !bLenOverflowed && bLen <= (1 << 30) else {
+        throw ScryptError.prTooLarge
+    }
 
     // ── Step 1: Expand password + salt into p parallel blocks ─────────────
     // B is p blocks of 128*r bytes each. scrypt's PBKDF2 always uses 1

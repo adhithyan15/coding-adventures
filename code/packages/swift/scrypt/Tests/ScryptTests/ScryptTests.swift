@@ -188,6 +188,17 @@ final class ScryptTests: XCTestCase {
         }
     }
 
+    /// p*128*r > 2^30 must be rejected even when p*r ≤ 2^30 (memory cap).
+    func testBLenTooLarge() {
+        // p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+        // p*128*r = 2^31 > 2^30 (triggers memory-cap guard).
+        XCTAssertThrowsError(
+            try scrypt(password: [], salt: [], n: 2, r: 1 << 24, p: 1, dkLen: 32)
+        ) { error in
+            XCTAssertEqual(error as? ScryptError, ScryptError.prTooLarge)
+        }
+    }
+
     // ── Valid boundary values ─────────────────────────────────────────────────
 
     /// N=2 is the smallest valid N. Verify it runs without error.

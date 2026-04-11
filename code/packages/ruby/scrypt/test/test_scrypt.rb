@@ -151,6 +151,13 @@ class TestScrypt < Minitest::Test
     assert_raises(ArgumentError) { CodingAdventures::Scrypt.scrypt("p", "s", 4, 2**16, 2**15, 32) }
   end
 
+  # p*128*r > 2^30 must raise (memory cap), even when p*r ≤ 2^30.
+  def test_invalid_p_128_r_memory_cap
+    # p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+    # p*128*r = 128 * 2^24 = 2^31 > 2^30 (triggers memory-cap guard).
+    assert_raises(ArgumentError) { CodingAdventures::Scrypt.scrypt("p", "s", 2, 2**24, 1, 32) }
+  end
+
   # ─── Valid Boundary Values ─────────────────────────────────────────────────
 
   # N=2 is the smallest valid cost factor.

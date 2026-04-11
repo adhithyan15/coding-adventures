@@ -121,6 +121,14 @@ describe("input validation", function()
     end)
   end)
 
+  it("p * 128 * r > 2^30 raises error (memory cap)", function()
+    -- p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+    -- p*128*r = 2^31 > 2^30 (triggers memory-cap guard).
+    assert.has_error(function()
+      scrypt.scrypt("pw", "salt", 2, 1, 2 ^ 24, 32)
+    end, "p * 128 * r exceeds memory limit")
+  end)
+
 end)
 
 -- ─── Output Properties ────────────────────────────────────────────────────────

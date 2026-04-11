@@ -242,6 +242,14 @@ defmodule CodingAdventures.ScryptTest do
         Scrypt.scrypt("pass", "salt", 2, 1_073_741_825, 1, 32)
       end
     end
+
+    test "p * 128 * r > 2^30 raises ArgumentError (memory cap)" do
+      # p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+      # p*128*r = 128*2^24 = 2^31 > 2^30 (triggers memory-cap guard).
+      assert_raise ArgumentError, ~r/p \* 128 \* r exceeds memory limit/, fn ->
+        Scrypt.scrypt("pass", "salt", 2, 1, 16_777_216, 32)
+      end
+    end
   end
 
   # ──────────────────────────────────────────────────────────────────────────────

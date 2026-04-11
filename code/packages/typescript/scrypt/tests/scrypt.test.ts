@@ -234,4 +234,12 @@ describe("error cases", () => {
       scrypt(enc("pw"), enc("salt"), 2, 2, 1 << 30, 32),
     ).toThrow("p * r exceeds limit");
   });
+
+  it("p*128*r too large throws (memory cap)", () => {
+    // p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+    // p*128*r = 2^31 > 2^30 (triggers memory-cap guard).
+    expect(() =>
+      scrypt(enc("pw"), enc("salt"), 2, 1 << 24, 1, 32),
+    ).toThrow("p * 128 * r exceeds memory limit");
+  });
 });

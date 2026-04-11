@@ -185,4 +185,10 @@ ok(
     "dk_len > 2^20 dies"
 );
 
+# p=1, r=2^24: p*r = 2^24 passes old guard, but p*128*r = 2^31 > 2^30.
+ok(
+    do { local $@; eval { scrypt("p", "s", 2, 2**24, 1, 32) }; $@ =~ /p \* 128 \* r exceeds memory limit/ },
+    "p * 128 * r > 2^30 dies (memory cap)"
+);
+
 done_testing;
