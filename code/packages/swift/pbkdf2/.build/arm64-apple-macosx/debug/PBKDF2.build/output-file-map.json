@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Sources/PBKDF2/PBKDF2.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.dia"
+  }
+}

@@ -48,6 +48,7 @@ members = [
     "fp-arithmetic",
     "garbage-collector",
     "hmac",
+    "pbkdf2",
     "gpu-core",
     "gradient-descent",
     "grammar-tools",
