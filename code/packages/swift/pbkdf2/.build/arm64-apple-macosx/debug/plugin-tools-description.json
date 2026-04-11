@@ -1,0 +1,1499 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.xctest/Contents/MacOS/PBKDF2PackageTests",
+      "packagePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2",
+      "productName" : "PBKDF2PackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.HMAC-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/hmac/Sources/HMAC/HMAC.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/MD5.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA1.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA256.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA512.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "HMAC",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/HMAC.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/HMAC.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/include/HMAC-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "hmac"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/HMAC.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/HMAC.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/hmac/Sources/HMAC/HMAC.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.MD5-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/md5/Sources/MD5/MD5.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "MD5",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/MD5.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/MD5.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/include/MD5-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "md5"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/MD5.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/MD5.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/md5/Sources/MD5/MD5.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.PBKDF2-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Sources/PBKDF2/PBKDF2.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/HMAC.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PBKDF2",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/include/PBKDF2-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pbkdf2"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Sources/PBKDF2/PBKDF2.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.PBKDF2PackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2Tests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PBKDF2PackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2PackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/include/PBKDF2PackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pbkdf2"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2PackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.PBKDF2Tests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Tests/PBKDF2Tests/PBKDF2Tests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "PBKDF2Tests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2Tests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/PBKDF2Tests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "pbkdf2"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/PBKDF2Tests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/PBKDF2Tests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Tests/PBKDF2Tests/PBKDF2Tests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SHA1-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha1/Sources/SHA1/SHA1.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SHA1",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA1.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/SHA1.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/include/SHA1-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "sha1"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/SHA1.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA1.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha1/Sources/SHA1/SHA1.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SHA256-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha256/Sources/SHA256/SHA256.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SHA256",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA256.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/SHA256.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/include/SHA256-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "sha256"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/SHA256.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA256.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha256/Sources/SHA256/SHA256.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SHA512-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha512/Sources/SHA512/SHA512.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SHA512",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA512.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/SHA512.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/include/SHA512-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "sha512"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/SHA512.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules/SHA512.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha512/Sources/SHA512/SHA512.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "HMAC" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "HMAC",
+      "-package-name",
+      "hmac",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/hmac/Sources/HMAC/HMAC.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/include/HMAC-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "hmac",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "MD5" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "MD5",
+      "-package-name",
+      "md5",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/md5/Sources/MD5/MD5.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/include/MD5-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "md5",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "PBKDF2" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PBKDF2",
+      "-package-name",
+      "pbkdf2",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Sources/PBKDF2/PBKDF2.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/include/PBKDF2-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pbkdf2",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "PBKDF2PackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PBKDF2PackageTests",
+      "-package-name",
+      "pbkdf2",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/include/PBKDF2PackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pbkdf2",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "PBKDF2Tests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "PBKDF2Tests",
+      "-package-name",
+      "pbkdf2",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Tests/PBKDF2Tests/PBKDF2Tests.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "pbkdf2",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SHA1" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SHA1",
+      "-package-name",
+      "sha1",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha1/Sources/SHA1/SHA1.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/include/SHA1-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "sha1",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SHA256" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SHA256",
+      "-package-name",
+      "sha256",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha256/Sources/SHA256/SHA256.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/include/SHA256-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "sha256",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SHA512" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SHA512",
+      "-package-name",
+      "sha512",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha512/Sources/SHA512/SHA512.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/include/SHA512-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "sha512",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "HMAC" : [
+      "SHA512",
+      "SHA256",
+      "SHA1",
+      "MD5"
+    ],
+    "MD5" : [
+
+    ],
+    "PBKDF2" : [
+      "HMAC",
+      "SHA512",
+      "SHA256",
+      "SHA1",
+      "MD5"
+    ],
+    "PBKDF2PackageTests" : [
+      "PBKDF2Tests",
+      "PBKDF2",
+      "HMAC",
+      "SHA512",
+      "SHA256",
+      "SHA1",
+      "MD5"
+    ],
+    "PBKDF2Tests" : [
+      "PBKDF2",
+      "HMAC",
+      "SHA512",
+      "SHA256",
+      "SHA1",
+      "MD5"
+    ],
+    "SHA1" : [
+
+    ],
+    "SHA256" : [
+
+    ],
+    "SHA512" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/hmac/Sources/HMAC/HMAC.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/md5/Sources/MD5/MD5.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Sources/PBKDF2/PBKDF2.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/HMAC.build/HMAC.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/MD5.build/MD5.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2.build/PBKDF2.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/PBKDF2Tests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/SHA1.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/SHA256.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/SHA512.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2PackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/Tests/PBKDF2Tests/PBKDF2Tests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/PBKDF2Tests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha1/Sources/SHA1/SHA1.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA1.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha256/Sources/SHA256/SHA256.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA256.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/sha512/Sources/SHA512/SHA512.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/SHA512.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/exciting-dijkstra/code/packages/swift/pbkdf2/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
