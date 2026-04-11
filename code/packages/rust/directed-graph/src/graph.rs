@@ -1,11 +1,11 @@
-// graph.rs -- Directed Graph with Built-in Algorithms
+// graph.rs -- Directed Graph with Shared Traversal Algorithms
 // ====================================================
 //
-// This module contains the entire directed graph implementation: the data structure,
-// mutation methods, query methods, and graph algorithms. We keep everything in one
-// file because the algorithms need intimate access to the internal adjacency maps,
-// and splitting them into separate modules would just add indirection without any
-// real benefit.
+// This module contains the directed graph implementation: the data structure,
+// mutation methods, query methods, and directed-specific graph algorithms.
+// Shared traversal helpers like BFS live in the `graph` package and are consumed
+// through a small trait seam so we can reuse them without duplicating traversal
+// logic here.
 //
 // Internal Storage
 // ----------------
@@ -32,8 +32,10 @@
 // The trade-off is that every `add_edge` and `remove_edge` must update both
 // maps, but that's O(1) per operation, so it's a good deal.
 
-use std::collections::{BTreeSet, HashMap, HashSet, VecDeque};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::fmt;
+
+use graph_base::{bfs, TraversalGraph};
 
 // ---------------------------------------------------------------------------
 // Custom error types
@@ -43,7 +45,8 @@ use std::fmt;
 // types, because Rust's `Result<T, E>` works best with a unified error type.
 //
 // We implement `Display` and `std::error::Error` manually rather than
-// pulling in the `thiserror` crate — this package has zero dependencies.
+// pulling in the `thiserror` crate. The crate now depends on the shared
+// `graph` package for reusable traversal helpers.
 
 /// All errors that can occur when operating on a [`Graph`].
 ///
@@ -551,30 +554,15 @@ impl Graph {
             return Err(GraphError::NodeNotFound(node.to_string()));
         }
 
-        let mut visited: HashSet<String> = HashSet::new();
-        let mut queue: VecDeque<String> = VecDeque::new();
-
-        // Seed the BFS with the node's immediate successors.
+        let mut reachable: HashSet<String> = HashSet::new();
         if let Some(succs) = self.forward.get(node) {
-            for s in succs {
-                if visited.insert(s.clone()) {
-                    queue.push_back(s.clone());
+            for succ in succs {
+                for reachable_node in bfs(self, succ)? {
+                    reachable.insert(reachable_node);
                 }
             }
         }
-
-        // BFS: explore each reachable node, adding its successors to the queue.
-        while let Some(current) = queue.pop_front() {
-            if let Some(succs) = self.forward.get(&current) {
-                for succ in succs {
-                    if visited.insert(succ.clone()) {
-                        queue.push_back(succ.clone());
-                    }
-                }
-            }
-        }
-
-        Ok(visited)
+        Ok(reachable)
     }
 
     // ------------------------------------------------------------------
@@ -722,6 +710,18 @@ impl fmt::Display for Graph {
             self.size(),
             self.edges().len()
         )
+    }
+}
+
+impl TraversalGraph for Graph {
+    type Error = GraphError;
+
+    fn has_node(&self, node: &str) -> bool {
+        Graph::has_node(self, node)
+    }
+
+    fn neighbors(&self, node: &str) -> Result<Vec<String>, Self::Error> {
+        self.successors(node)
     }
 }
 
@@ -1113,6 +1113,15 @@ mod tests {
         for node in &["B", "C", "D"] {
             assert!(deps.contains(*node));
         }
+    }
+
+    #[test]
+    fn test_shared_graph_bfs_works_on_directed_graph() {
+        let mut g = Graph::new();
+        g.add_edge("A", "B").unwrap();
+        g.add_edge("B", "C").unwrap();
+
+        assert_eq!(bfs(&g, "A").unwrap(), vec!["A", "B", "C"]);
     }
 
     // ═══════════════════════════════════════════════════════════════════════

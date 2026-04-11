@@ -59,3 +59,5 @@ export { translate, TranslationError } from "./translator.js";
 export { BrainfuckError, HANDLERS, TAPE_SIZE } from "./handlers.js";
 export { createBrainfuckVm, executeBrainfuck } from "./vm.js";
 export type { BrainfuckResult } from "./vm.js";
+export { tokenizeBrainfuck } from "./lexer.js";
+export { parseBrainfuck } from "./parser.js";

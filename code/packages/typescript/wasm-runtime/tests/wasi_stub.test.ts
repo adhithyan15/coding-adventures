@@ -51,7 +51,8 @@ describe("WasiStub.resolveFunction", () => {
 
   it("returns a stub for unknown WASI functions", () => {
     const wasi = new WasiStub();
-    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "args_get");
+    // fd_seek is not implemented in Tier 3 — it returns the generic ENOSYS stub.
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_seek");
     expect(fn).toBeDefined();
     // Stub returns ENOSYS (52)
     const result = fn!.call([]);
@@ -285,26 +286,30 @@ describe("proc_exit", () => {
 });
 
 // =========================================================================
-// Stub Functions — ENOSYS for Unimplemented WASI Calls
+// Stub Functions — ENOSYS for Still-Unimplemented WASI Calls
 // =========================================================================
+//
+// Note: args_get, environ_get, and clock_time_get are now implemented in
+// Tier 3 — they no longer return ENOSYS. This suite covers functions that
+// are still unimplemented (less common syscalls).
 
 describe("WASI stub functions", () => {
-  it("returns ENOSYS (52) for args_get", () => {
+  it("returns ENOSYS (52) for fd_seek (unimplemented)", () => {
     const wasi = new WasiStub();
-    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "args_get")!;
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_seek")!;
     expect(fn.call([])).toEqual([i32(52)]);
   });
 
-  it("returns ENOSYS (52) for environ_get", () => {
+  it("returns ENOSYS (52) for fd_close (unimplemented)", () => {
     const wasi = new WasiStub();
-    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "environ_get")!;
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_close")!;
     expect(fn.call([])).toEqual([i32(52)]);
   });
 
-  it("returns ENOSYS (52) for clock_time_get", () => {
+  it("returns ENOSYS (52) for path_open (unimplemented)", () => {
     const wasi = new WasiStub();
-    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "clock_time_get")!;
-    expect(fn.call([i32(0), i32(0)])).toEqual([i32(52)]);
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "path_open")!;
+    expect(fn.call([])).toEqual([i32(52)]);
   });
 });
 

@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-dartmouth-basic-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Tokenizer for the 1964 Dartmouth BASIC language"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

@@ -16,11 +16,37 @@
  * console.log(result); // [25]
  * ```
  *
+ * **With WASI (I/O programs):**
+ *
+ * ```typescript
+ * import { WasmRuntime, WasiStub } from "@coding-adventures/wasm-runtime";
+ *
+ * const output: string[] = [];
+ * const wasi = new WasiStub({
+ *   args: ["myapp", "--verbose"],
+ *   env: { HOME: "/home/user" },
+ *   stdout: (text) => output.push(text),
+ * });
+ * const runtime = new WasmRuntime(wasi);
+ * runtime.loadAndRun(wasmBytes);
+ * console.log(output.join(""));
+ * ```
+ *
  * @module
  */
 
 export const VERSION = "0.1.0";
 
 export { WasmRuntime } from "./wasm_runtime.js";
-export { WasiStub, ProcExitError } from "./wasi_stub.js";
+export {
+  WasiStub,
+  ProcExitError,
+  SystemClock,
+  SystemRandom,
+} from "./wasi_stub.js";
+export type {
+  WasiClock,
+  WasiRandom,
+  WasiConfig,
+} from "./wasi_stub.js";
 export type { WasmInstance } from "./wasm_instance.js";

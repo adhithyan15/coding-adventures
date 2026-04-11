@@ -1,6 +1,6 @@
 # directed-graph
 
-A directed graph library with algorithms for topological sorting, cycle detection, and parallel execution level computation. Part of the [coding-adventures](https://github.com/your-repo/coding-adventures) educational project.
+A directed graph library with algorithms for topological sorting, cycle detection, and parallel execution level computation. It reuses the shared `graph` package for traversal helpers like BFS. Part of the [coding-adventures](https://github.com/your-repo/coding-adventures) educational project.
 
 ## What is a directed graph?
 

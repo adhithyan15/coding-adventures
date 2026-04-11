@@ -5,3 +5,6 @@ edition = "2021"
 
 [dependencies]
 virtual-machine = { path = "../virtual-machine" }
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }

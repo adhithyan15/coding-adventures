@@ -1,0 +1,15 @@
+[package]
+name = "heap-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust heap crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "heap_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+heap = { path = "../../rust/heap" }
+python-bridge = { path = "../../rust/python-bridge" }
+
+[workspace]

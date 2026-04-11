@@ -1,4 +1,3 @@
-[workspace]
 [package]
 name = "polynomial-c"
 version = "0.1.0"
@@ -13,11 +12,3 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 polynomial = { path = "../polynomial" }
-
-[profile.release]
-# Link-Time Optimisation collapses the thin wrapper and the underlying
-# polynomial logic into a single optimised compilation unit. This is
-# especially important here because every exported function is a thin
-# shim; LTO lets the compiler inline the underlying Rust code and
-# eliminate the function-call overhead.
-lto = true

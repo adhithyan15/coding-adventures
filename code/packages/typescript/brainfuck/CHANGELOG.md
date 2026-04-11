@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 -- 2026-04-10
+
+### Added
+
+- `lexer.ts`: `Lexer` class and `tokenize(source)` function. Grammar-driven tokenizer using `brainfuck.tokens`. Each token carries `type`, `value`, `line`, and `column` fields. Comment characters are silently skipped.
+- `parser.ts`: `Parser` class and `parse(source)` function. Grammar-driven parser using `brainfuck.grammar`. Returns an AST rooted at a `program` node with `instruction`, `loop`, and `command` child nodes. Emits precise source-location errors for unmatched brackets.
+- Grammar files: `brainfuck.tokens` and `brainfuck.grammar` bundled as package assets (shared across all language implementations).
+- New dependencies: `@coding-adventures/grammar-tools`, `@coding-adventures/lexer`, and `@coding-adventures/parser`.
+- Extensive tests for `tokenize` (command tokens, comment skipping, multi-line source, position tracking) and `parse` (simple programs, nested loops, unmatched bracket errors).
+
 ## 0.1.0 -- 2026-03-20
 
 ### Added

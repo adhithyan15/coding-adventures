@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/hash-map",
+  "version": "0.1.0",
+  "description": "Immutable hash map wrapper with chainable set/delete operations and iteration helpers",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

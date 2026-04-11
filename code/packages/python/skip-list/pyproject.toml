@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-skip-list"
+version = "0.1.0"
+description = "Skip list: probabilistic sorted data structure with O(log n) expected insert, delete, search"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/skip_list"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=skip_list --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/skip_list"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+ignore = ["ANN401"]

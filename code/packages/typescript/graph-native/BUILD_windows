@@ -1,0 +1,4 @@
+npm ci --quiet
+cargo build --release --manifest-path Cargo.toml
+if exist target\release\graph_native_node.dll copy target\release\graph_native_node.dll graph_native_node.node
+npx vitest run --coverage

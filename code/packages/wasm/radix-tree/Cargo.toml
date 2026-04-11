@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "radix-tree-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust radix-tree crate via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+js-sys = "0.3"
+radix-tree = { path = "../../rust/radix-tree" }
+wasm-bindgen = "0.2"

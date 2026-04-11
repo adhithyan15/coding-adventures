@@ -13,7 +13,52 @@ package brainfuck
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
+	"sync"
 )
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Resolved allowed paths — exact canonical paths, computed once at startup
+//
+// Each var below resolves a relative target from required_capabilities.json
+// to its canonical absolute path, anchored to gen_capabilities.go's directory
+// via runtime.Caller(0). Enforcement uses exact equality, so no other file
+// — even one with the same name in a different directory — can pass the check.
+// ─────────────────────────────────────────────────────────────────────────────
+
+var _allowedPath_0 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/brainfuck.tokens"))
+})
+
+var _allowedPath_1 = sync.OnceValue(func() string {
+	_, _file, _, _ := runtime.Caller(0)
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/brainfuck.grammar"))
+})
+
+// ─────────────────────────────────────────────────────────────────────────────
+// _FileCapabilities — op.File capability namespace
+//
+// Accessible via op.File inside any Operation callback. The field only
+// exists when fs capabilities are declared in required_capabilities.json.
+// Undeclared categories produce a compile error at the call site.
+// ─────────────────────────────────────────────────────────────────────────────
+
+type _FileCapabilities struct{}
+
+// ReadFile reads the file at path.
+// Only paths declared in required_capabilities.json are permitted.
+// The path is cleaned with filepath.Clean before comparison to prevent
+// bypass via ./foo, foo/../foo/bar, and similar path manipulations.
+func (c *_FileCapabilities) ReadFile(path string) ([]byte, error) {
+	path = filepath.Clean(path)
+	if path != _allowedPath_0() && path != _allowedPath_1() {
+		return nil, &_capabilityViolationError{category: "fs", action: "read", requested: path}
+	}
+	return os.ReadFile(path) //nolint:cap
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // OperationResult — three-state outcome
@@ -79,6 +124,7 @@ type Operation[T any] struct {
 	fallback    T
 	propertyBag map[string]any
 	rePanic     bool // if true, panics from the callback are re-panicked rather than caught
+	File        *_FileCapabilities
 }
 
 // AddProperty attaches a named piece of metadata to this operation.
@@ -174,6 +220,7 @@ func StartNew[T any](
 		callback:    fn,
 		fallback:    fallback,
 		propertyBag: make(map[string]any),
+		File:        &_FileCapabilities{},
 	}
 }
 

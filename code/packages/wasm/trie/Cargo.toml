@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "trie-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust trie crate via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+js-sys = "0.3"
+trie = { path = "../../rust/trie" }
+wasm-bindgen = "0.2"

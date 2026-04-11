@@ -25,7 +25,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use branch_predictor::{BranchPredictor, BranchTargetBuffer};
-use cache::{Cache, CacheConfig, CacheHierarchy};
+use cpu_cache::{Cache, CacheConfig, CacheHierarchy};
 use clock::Clock;
 use cpu_pipeline::{
     HazardAction, HazardResponse, Pipeline, PipelineConfig, PipelineSnapshot, PipelineToken,

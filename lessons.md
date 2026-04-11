@@ -4,6 +4,46 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-06: Perl `reverse LIST, $extra` vs `(reverse LIST), $extra` — precedence trap
+
+When building a list that is the reverse of one list plus an extra item, the expression
+`(reverse @$list, $extra)` in Perl is parsed as `reverse(@$list, $extra)` — reversing the
+ENTIRE list including `$extra`. Use explicit double parens: `((reverse @$list), $extra)`.
+
+**Symptom:** `lineage()` returned the entity itself as the FIRST element instead of the last,
+because `$cv_id` was being reversed into the list along with the ancestors.
+
+**Rule:** When using `reverse` in a list construction that includes extra elements, always
+wrap the `reverse` call in its own parens: `my @result = ((reverse @arr), $extra_item);`
+
+---
+
+### 2026-04-06: JSON null sentinel from JsonValue comes back as object, not Perl undef
+
+`CodingAdventures::JsonSerializer::decode` returns `CodingAdventures::JsonValue::Null`
+blessed objects for JSON `null` values — not Perl `undef`. When deserializing stored data
+that contains null fields (e.g., `parent_cv_id`, `deleted`, `origin`), the decoded values
+are Null sentinel objects. Tests like `is($e->{parent_cv_id}, undef)` fail because the
+sentinel is not undef.
+
+**Solution:** Use `CodingAdventures::JsonSerializer::is_null($v)` to detect nulls and
+normalize them back to Perl `undef` in any deserialization code:
+
+```perl
+sub _to_perl_undef {
+    my ($v) = @_;
+    return undef if !defined $v;
+    return undef if CodingAdventures::JsonSerializer::is_null($v);
+    return $v;
+}
+```
+
+**Rule:** Any Perl module that deserializes JSON and stores the result in internal data
+structures must normalize JSON nulls to Perl undef using `is_null()` checks. Never assume
+a JSON null field will come back as Perl undef.
+
+---
+
 ### 2026-04-05: Always verify all agent-written files are staged before committing
 
 When using multiple background agents to write files in parallel, some files may be written after the initial `git add` command. Always run `git status --short` after all agents complete and before committing to catch untracked or unstaged files. In this case, Rust's `src/lib.rs`, Ruby/Elixir/Lua/Perl test updates, and workspace Cargo.toml changes were missed.
@@ -1474,3 +1514,32 @@ so updating is a no-op — but the key point is that `prev` is never written to 
 as a separate step).
 
 This bug appeared in the Lua QOI encoder and was fixed before committing.
+
+### 2026-04-08: Parsing pyproject.toml with regex: comment lines containing "[" break section detection
+
+When writing scripts to parse Python `pyproject.toml` files to detect which
+packages are in `[project] dependencies`, a naive regex like:
+
+```
+^\[project\][^[]*?^dependencies\s*=\s*\[([^\]]*)\]
+```
+
+fails if any **comment line** between `[project]` and `dependencies` contains
+a `[` character. For example:
+
+```toml
+[project]
+# When publishing to PyPI, restore: dependencies = ["coding-adventures-foo"]
+dependencies = ["coding-adventures-bar"]
+```
+
+The `[^[]*?` part stops at the `[` in the comment, so the regex never reaches
+the actual `dependencies` line. The match returns `None` even though the
+dependency is present.
+
+**Fix:** Parse line by line, skip lines starting with `#`, and track section
+headers explicitly. Never use `[^[]*?` in a cross-line regex over TOML content.
+
+This bug caused a mass incorrect categorization of 54 packages that had
+`coding-adventures-directed-graph` as a real main dependency as "dev-only",
+leading to three rounds of CI failures and fixes on PR #610.

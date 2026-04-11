@@ -1,0 +1,8 @@
+[package]
+name = "red-black-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Red-black tree with functional insert/delete helpers and validation"
+license = "MIT"
+
+[dependencies]

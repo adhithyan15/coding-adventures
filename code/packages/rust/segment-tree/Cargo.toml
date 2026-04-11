@@ -1,0 +1,8 @@
+[package]
+name = "segment-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Generic segment tree with range queries and point updates"
+license = "MIT"
+
+[dependencies]

@@ -1,4 +1,3 @@
-[workspace]
 [package]
 name = "gf256-c"
 version = "0.1.0"
@@ -12,8 +11,3 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 gf256 = { path = "../gf256" }
-
-[profile.release]
-# LTO eliminates the thin-shim function-call overhead by inlining the
-# underlying GF256 arithmetic directly into the exported C functions.
-lto = true

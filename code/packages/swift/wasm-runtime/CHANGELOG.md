@@ -2,6 +2,44 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-06
+
+### Added
+
+- **WasiClock protocol** (`WasiClockRandom.swift`): injectable clock interface with
+  `realtimeNs()`, `monotonicNs()`, and `resolutionNs(clockId:)`. Enables deterministic
+  tests without patching global state.
+- **WasiRandom protocol** (`WasiClockRandom.swift`): injectable random interface with
+  `fillBytes(count:)`. Enables deterministic tests.
+- **SystemClock** (production implementation): wraps `Date().timeIntervalSince1970`
+  and `ProcessInfo.processInfo.systemUptime`; advertises 1 ms resolution.
+- **SystemRandom** (production implementation): wraps Swift's `SystemRandomNumberGenerator`
+  (CSPRNG).
+- **WasiConfig struct**: bundles args, env, stdout callback, stderr callback, clock, and
+  random into one injectable value. Replaces the ad-hoc `onStdout` property.
+- **8 new WASI Tier 3 functions** in WasiStub:
+  - `args_sizes_get` — write argc and argv buffer size to memory
+  - `args_get` — write argv pointer table and NUL-terminated string buffer to memory
+  - `environ_sizes_get` — write envc and environ buffer size to memory
+  - `environ_get` — write environ pointer table and "KEY=VALUE\0" buffer to memory
+  - `clock_res_get` — write clock resolution (ns) as i64 to memory
+  - `clock_time_get` — write realtime or monotonic clock reading (ns) as i64 to memory;
+    returns EINVAL (28) for unknown clock IDs
+  - `random_get` — fill guest memory buffer with random bytes from WasiRandom
+  - `sched_yield` — returns success (0), no-op on cooperative runtimes
+- **WasiTier3Tests** (14 new tests): direct unit tests of all Tier 3 host functions using
+  FakeClock, FakeRandom, and direct LinearMemory inspection. Includes regression test
+  verifying square(7)=49 still works after Tier 3 changes.
+
+### Changed
+
+- `WasiStub.init(onStdout:)` is now a convenience initialiser delegating to
+  `init(config:)`. The `onStdout:` label is now required (no default) to prevent
+  "ambiguous use of init" when calling `WasiStub()` with no arguments.
+- `WasiStub` now stores a `WasiConfig` and uses `config.stdout`/`config.stderr`
+  callbacks instead of the old `onStdout` property. Existing behaviour is preserved.
+- Total test count: 24 (was 10).
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

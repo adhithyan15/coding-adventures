@@ -6,7 +6,7 @@ This repository is not just "a lot of packages." It is really four projects livi
 
 1. A computing-stack curriculum, from logic gates and arithmetic up through lexers, parsers, compilers, virtual machines, assemblers, and ISA simulators.
 2. A computer architecture lab, with growing coverage of caches, branch prediction, hazard detection, pipelining, and configurable core design.
-3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, and now Elixir so the concepts are separated from the language.
+3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, Elixir, Lua, Perl, and Swift so the concepts are separated from the language.
 4. A publishing and tooling playground, where each package is treated like a real artifact with tests, metadata, changelogs, and CI.
 
 ## What This Repository Optimizes For
@@ -49,7 +49,7 @@ The goal is to understand instruction formats, execution models, fetch-decode-ex
 
 This is one of the most important themes in the repo:
 
-- `cache`
+- `cpu-cache`
 - `branch-predictor`
 - `hazard-detection`
 - `pipeline`
@@ -73,7 +73,21 @@ This track builds the path from source code to execution:
 
 The goal is to connect programming-language tooling back to the machine beneath it.
 
-### 5. Accelerators and parallel execution
+### 5. In-memory data stores and protocol stacks
+
+This track is about building transport-agnostic, pluggable storage systems:
+
+- `resp-protocol`
+- `in-memory-data-store-protocol`
+- `in-memory-data-store-engine`
+- `in-memory-data-store`
+- `hash-map`, `hash-set`, `skip-list`, `hyperloglog`
+
+The goal is to model a single-node data store as a composition of reusable
+packages that can grow into new protocols, new transports, and new storage
+modules over time.
+
+### 6. Accelerators and parallel execution
 
 This track explores computation outside the classic scalar CPU story:
 
@@ -84,7 +98,7 @@ This track explores computation outside the classic scalar CPU story:
 
 The goal is to study throughput-oriented execution, dataflow, and accelerator-style design.
 
-### 6. Machine learning fundamentals
+### 7. Machine learning fundamentals
 
 This track covers small, foundational learning components that fit naturally with the accelerator story:
 
@@ -93,7 +107,7 @@ This track covers small, foundational learning components that fit naturally wit
 
 The goal is to treat optimization primitives as understandable building blocks rather than opaque library calls.
 
-### 7. Tooling, visualization, and infrastructure
+### 8. Tooling, visualization, and infrastructure
 
 This repo also includes the tools needed to sustain the work:
 
@@ -117,7 +131,7 @@ code/
 
 ## Languages
 
-The repository currently spans six ecosystems:
+The repository currently spans nine core ecosystems:
 
 - Python
 - Ruby
@@ -125,6 +139,9 @@ The repository currently spans six ecosystems:
 - TypeScript
 - Rust
 - Elixir
+- Lua
+- Perl
+- Swift
 
 The language split is intentional. A parser should still be recognizable as a parser when moved from Python to Go. A cache should still look like a cache in Ruby or TypeScript. The repetition is part of the point.
 
@@ -155,9 +172,9 @@ tests prove the behavior
 
 Today the repo contains:
 
-- 167 package directories
-- 12 program directories
-- 6 implementation languages
+- 1496 package directories
+- 122 program directories
+- 9 implementation languages
 
 Those counts matter less than the shape: this is a broad, layered study of computing systems, programming-language tooling, and computer architecture.
 
@@ -179,6 +196,7 @@ If you want to explore the repository by theme:
 
 - Start with [00-architecture.md](./code/specs/00-architecture.md) for the big picture.
 - Read [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track.
+- Read [DT25 in-memory data store](./code/specs/DT25-mini-redis.md) for the current single-node in-memory data store baseline of the DT data-structure series.
 - Read [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) to see how the build system uses graph algorithms.
 - Read [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story.
 

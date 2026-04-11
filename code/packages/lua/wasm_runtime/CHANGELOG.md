@@ -2,6 +2,50 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-06
+
+### Added
+
+- **WASI Tier 3 host functions** — 8 new functions in `WasiStub`:
+  - `args_sizes_get` — query argc and total argv buffer size
+  - `args_get` — fill argv pointer array and null-terminated string buffer
+  - `environ_sizes_get` — query environment variable count and buffer size
+  - `environ_get` — fill environ pointer array and "KEY=VALUE\0" string buffer
+  - `clock_time_get` — read current wall or monotonic time as i64 nanoseconds
+  - `clock_res_get` — query clock resolution as i64 nanoseconds
+  - `random_get` — fill a memory region with pseudo-random bytes
+  - `sched_yield` — cooperative yield (no-op in single-threaded Lua; returns ESUCCESS)
+
+- **`SystemClock` table** — injectable clock implementation using `os.time()` and
+  `os.clock()`. Implements the `WasiClock` interface:
+  `realtime_ns()`, `monotonic_ns()`, `resolution_ns(id)`.
+
+- **`SystemRandom` table** — injectable PRNG implementation using `math.random`.
+  Implements the `WasiRandom` interface: `fill_bytes(n)`.
+
+- **`WasiStub` constructor expanded** — now accepts `args`, `env`, `clock`, and
+  `random` config fields. Defaults to `SystemClock.new()` and `SystemRandom.new()`
+  when not injected. This enables deterministic testing via `FakeClock`/`FakeRandom`.
+
+- **47 new tests** in `tests/test_wasi_tier3.lua` covering all 8 new functions,
+  clock/random injection, regression checks for the existing square test, and
+  edge cases (empty args, empty env, zero-length random fill, EINVAL for unknown
+  clock IDs, ENOSYS for unknown WASI functions).
+
+### Design decisions
+
+- Clock and random are **injected as Lua table objects** (duck-typed interfaces)
+  rather than called directly. This makes them swappable at construction time
+  without modifying WasiStub internals (Dependency Injection pattern).
+
+- `store_i64` is used for i64 writes (clock timestamps, resolutions) rather than
+  manually splitting into two `store_i32` calls. This delegates byte order logic
+  to the existing tested `LinearMemory` implementation.
+
+- `clock_time_get` clock IDs 2 (process) and 3 (thread) both delegate to
+  `realtime_ns()` since Lua has no separate process/thread CPU clocks in its
+  standard library.
+
 ## [0.1.0] - 2026-04-05
 
 ### Added

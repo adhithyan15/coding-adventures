@@ -65,3 +65,24 @@ impl fmt::Display for TreeError {
 }
 
 impl std::error::Error for TreeError {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn display_messages_are_specific() {
+        assert_eq!(
+            TreeError::NodeNotFound("child".into()).to_string(),
+            r#"node not found in tree: "child""#
+        );
+        assert_eq!(
+            TreeError::DuplicateNode("child".into()).to_string(),
+            r#"node already exists in tree: "child""#
+        );
+        assert_eq!(
+            TreeError::RootRemoval.to_string(),
+            "cannot remove the root node"
+        );
+    }
+}

@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_hash_functions"
+version = "0.1.0"
+edition = "2021"
+description = "FNV-1a, DJB2, polynomial rolling, MurmurHash3, and SipHash hash functions"
+
+[dependencies]
+getrandom = "0.2"

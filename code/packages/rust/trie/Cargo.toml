@@ -1,0 +1,8 @@
+[package]
+name = "trie"
+version = "0.1.0"
+edition = "2021"
+description = "Prefix tree mapping string keys to values with prefix and longest-prefix queries"
+license = "MIT"
+
+[dependencies]

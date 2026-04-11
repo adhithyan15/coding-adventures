@@ -50,6 +50,9 @@
 //!                                         └──────────────┘
 //! ```
 
+pub mod lexer;
+pub mod parser;
+
 use std::collections::HashMap;
 use virtual_machine::*;
 

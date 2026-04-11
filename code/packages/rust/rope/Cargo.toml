@@ -1,0 +1,8 @@
+[package]
+name = "rope"
+version = "0.1.0"
+edition = "2021"
+description = "Rope data structure with concat, split, indexing, and rebalance helpers"
+license = "MIT"
+
+[dependencies]

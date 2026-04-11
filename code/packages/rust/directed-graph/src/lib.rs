@@ -26,6 +26,9 @@
 //!   transitively depends on them. These are the packages that need
 //!   rebuilding when something changes.
 //!
+//! The crate builds on the shared `graph` package for reusable traversal
+//! algorithms, so we do not duplicate the BFS/DFS machinery here.
+//!
 //! # Example
 //!
 //! ```
