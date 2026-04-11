@@ -1677,7 +1677,7 @@ mod tests {
             "ERR syntax error",
         );
 
-        let (store, resp) = run(store, "SET", &[b"counter", b"9", b"PX", b"1"]);
+        let (store, resp) = run(store, "SET", &[b"counter", b"9"]);
         assert_eq!(resp, ok());
 
         let (store, resp) = run(store, "INCR", &[b"counter"]);
