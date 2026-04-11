@@ -1,0 +1,20 @@
+[project]
+name = "coding-adventures-scrypt"
+version = "0.1.0"
+description = "scrypt memory-hard key derivation function — RFC 7914"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["coding-adventures-hmac", "coding-adventures-sha256"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=coding_adventures_scrypt --cov-report=term-missing"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
