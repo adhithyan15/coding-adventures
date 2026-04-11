@@ -1,0 +1,8 @@
+[package]
+name = "skip-list"
+version = "0.1.0"
+edition = "2021"
+description = "Sorted skip-list style API for ordered inserts, lookups, ranks, and range queries"
+license = "MIT"
+
+[dependencies]

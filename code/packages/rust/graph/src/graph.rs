@@ -1,6 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 
+use crate::algorithms::TraversalGraph;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GraphRepr {
     AdjacencyList,
@@ -342,6 +344,18 @@ impl fmt::Display for Graph {
             self.edges().len(),
             self.repr
         )
+    }
+}
+
+impl TraversalGraph for Graph {
+    type Error = GraphError;
+
+    fn has_node(&self, node: &str) -> bool {
+        Graph::has_node(self, node)
+    }
+
+    fn neighbors(&self, node: &str) -> Result<Vec<String>, Self::Error> {
+        Graph::neighbors(self, node)
     }
 }
 

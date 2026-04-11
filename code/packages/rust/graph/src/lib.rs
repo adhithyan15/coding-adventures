@@ -2,7 +2,8 @@ pub mod algorithms;
 pub mod graph;
 
 pub use algorithms::{
-    bfs, connected_components, dfs, has_cycle, is_connected, minimum_spanning_tree, shortest_path,
+    bfs, connected_components, dfs, has_cycle, is_connected, minimum_spanning_tree,
+    shortest_path, TraversalGraph,
 };
 pub use graph::{Graph, GraphError, GraphRepr, WeightedEdge};
 

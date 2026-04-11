@@ -1,0 +1,8 @@
+[package]
+name = "resp-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "RESP2 encoder and decoder"
+license = "MIT"
+
+[dependencies]

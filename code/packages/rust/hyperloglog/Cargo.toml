@@ -1,0 +1,9 @@
+[package]
+name = "hyperloglog"
+version = "0.1.0"
+edition = "2021"
+description = "HyperLogLog approximate cardinality estimator"
+license = "MIT"
+
+[dependencies]
+coding_adventures_hash_functions = { path = "../hash-functions" }

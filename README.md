@@ -6,7 +6,7 @@ This repository is not just "a lot of packages." It is really four projects livi
 
 1. A computing-stack curriculum, from logic gates and arithmetic up through lexers, parsers, compilers, virtual machines, assemblers, and ISA simulators.
 2. A computer architecture lab, with growing coverage of caches, branch prediction, hazard detection, pipelining, and configurable core design.
-3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, and now Elixir so the concepts are separated from the language.
+3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, Elixir, Lua, Perl, and Swift so the concepts are separated from the language.
 4. A publishing and tooling playground, where each package is treated like a real artifact with tests, metadata, changelogs, and CI.
 
 ## What This Repository Optimizes For
@@ -49,7 +49,7 @@ The goal is to understand instruction formats, execution models, fetch-decode-ex
 
 This is one of the most important themes in the repo:
 
-- `cache`
+- `cpu-cache`
 - `branch-predictor`
 - `hazard-detection`
 - `pipeline`
@@ -117,7 +117,7 @@ code/
 
 ## Languages
 
-The repository currently spans six ecosystems:
+The repository currently spans nine core ecosystems:
 
 - Python
 - Ruby
@@ -125,6 +125,9 @@ The repository currently spans six ecosystems:
 - TypeScript
 - Rust
 - Elixir
+- Lua
+- Perl
+- Swift
 
 The language split is intentional. A parser should still be recognizable as a parser when moved from Python to Go. A cache should still look like a cache in Ruby or TypeScript. The repetition is part of the point.
 
@@ -155,9 +158,9 @@ tests prove the behavior
 
 Today the repo contains:
 
-- 167 package directories
-- 12 program directories
-- 6 implementation languages
+- 1488 package directories
+- 122 program directories
+- 9 implementation languages
 
 Those counts matter less than the shape: this is a broad, layered study of computing systems, programming-language tooling, and computer architecture.
 
@@ -179,6 +182,7 @@ If you want to explore the repository by theme:
 
 - Start with [00-architecture.md](./code/specs/00-architecture.md) for the big picture.
 - Read [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track.
+- Read [DT25-mini-redis.md](./code/specs/DT25-mini-redis.md) for the single-node Redis baseline of the DT data-structure series.
 - Read [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) to see how the build system uses graph algorithms.
 - Read [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story.
 

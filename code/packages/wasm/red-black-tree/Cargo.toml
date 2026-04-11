@@ -1,0 +1,15 @@
+[workspace]
+
+[package]
+name = "red-black-tree-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust red-black tree crate via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+red-black-tree = { path = "../../rust/red-black-tree" }
+wasm-bindgen = "0.2"
