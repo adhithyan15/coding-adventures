@@ -48,6 +48,8 @@ members = [
     "skip-list",
     "hyperloglog",
     "bloom-filter",
+    "tree-set",
+    "tree-set-native",
     "tcp-server",
     "radix-tree",
 ]
@@ -96,6 +98,8 @@ coding-adventures-resp-protocol = { workspace = true }
 coding-adventures-skip-list = { workspace = true }
 coding-adventures-hyperloglog = { workspace = true }
 coding-adventures-bloom-filter = { workspace = true }
+coding-adventures-tree-set = { workspace = true }
+coding-adventures-tree-set-native = { workspace = true }
 coding-adventures-tcp-server = { workspace = true }
 coding-adventures-radix-tree = { workspace = true }
 

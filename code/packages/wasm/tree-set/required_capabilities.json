@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "wasm/tree-set",
+  "capabilities": [],
+  "justification": "Pure computation compiled to WebAssembly. No host capabilities required."
+}
+

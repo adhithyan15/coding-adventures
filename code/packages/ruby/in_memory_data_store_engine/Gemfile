@@ -1,0 +1,11 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_hash_map", path: "../hash_map"
+gem "coding_adventures_hash_set", path: "../hash_set"
+gem "coding_adventures_heap", path: "../heap"
+gem "coding_adventures_skip_list", path: "../skip_list"
+gem "coding_adventures_hyperloglog", path: "../hyperloglog"
+gem "coding_adventures_resp_protocol", path: "../resp_protocol"
+gem "coding_adventures_in_memory_data_store_protocol", path: "../in_memory_data_store_protocol"

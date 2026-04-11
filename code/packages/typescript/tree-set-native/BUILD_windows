@@ -1,0 +1,7 @@
+npm ci --quiet
+cargo build --release --manifest-path Cargo.toml
+if exist target\release\tree_set_native_node.dll copy /Y target\release\tree_set_native_node.dll tree_set_native_node.node
+if exist target\release\libtree_set_native_node.so copy /Y target\release\libtree_set_native_node.so tree_set_native_node.node
+if exist target\release\libtree_set_native_node.dylib copy /Y target\release\libtree_set_native_node.dylib tree_set_native_node.node
+if exist target\release\tree_set_native_node.node copy /Y target\release\tree_set_native_node.node tree_set_native_node.node
+npx vitest run --coverage
