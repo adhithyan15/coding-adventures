@@ -126,7 +126,7 @@ defmodule CodingAdventures.JsonRpc.Errors do
 
   ## Example
 
-      Errors.make_internal_error("handler crashed: #{inspect(e)}")
+      Errors.make_internal_error("handler crashed")
   """
   @spec make_internal_error(any()) :: map()
   def make_internal_error(data \\ nil) do

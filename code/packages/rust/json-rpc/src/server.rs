@@ -57,7 +57,7 @@
 //! server.serve();
 //! ```
 
-use crate::errors::{ResponseError, INTERNAL_ERROR};
+use crate::errors::ResponseError;
 use crate::message::{Message, Notification, Request, Response};
 use crate::reader::MessageReader;
 use crate::writer::MessageWriter;

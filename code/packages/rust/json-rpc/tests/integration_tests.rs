@@ -95,7 +95,8 @@ fn run_server_collect(
     let mut server = Server::new(reader, writer);
     setup(&mut server);
     server.serve();
-    shared.lock().unwrap().clone()
+    let result = shared.lock().unwrap().clone();
+    result
 }
 
 // ===========================================================================

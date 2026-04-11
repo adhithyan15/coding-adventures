@@ -203,7 +203,7 @@ func ParseMessage(raw string) (Message, error) {
 
 // parseResponse builds a *Response from a JSON object that contains "result" or "error".
 func parseResponse(obj map[string]interface{}) (*Response, error) {
-	id := obj["id"] // may be nil if request was unparseable
+	id := normalizeID(obj["id"]) // normalise float64→int, matching parseRequestOrNotification
 
 	resp := &Response{Id: id}
 
