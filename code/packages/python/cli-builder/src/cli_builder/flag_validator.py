@@ -49,6 +49,7 @@ from __future__ import annotations
 from typing import Any
 
 from directed_graph import DirectedGraph
+from directed_graph.algorithms import transitive_closure
 
 from cli_builder.errors import ParseError
 
@@ -223,7 +224,7 @@ class FlagValidator:
                 continue
             # transitive_closure returns all nodes reachable FROM fid.
             # These are all flags that fid (directly or indirectly) requires.
-            required_ids: set[object] = self._g_flag.transitive_closure(fid)
+            required_ids: set[object] = transitive_closure(self._g_flag, fid)
             for req_id in required_ids:
                 req_id_str = str(req_id)
                 if req_id_str not in present:

@@ -108,60 +108,36 @@ M.VERSION = "0.1.0"
 -- Path helpers
 -- =========================================================================
 
---- Return the directory portion of a file path (without trailing slash).
--- For example:  "/a/b/c/init.lua"  →  "/a/b/c"
--- @param path string The full file path.
--- @return string     The directory portion.
-local function dirname(path)
-    return path:match("(.+)/[^/]+$") or "."
-end
-
---- Return the absolute directory of this source file.
--- Lua embeds the source path in the chunk debug info with a leading "@".
--- We strip that prefix to get the real filesystem path.
--- @return string Absolute directory of this init.lua file.
+--- Return the directory of this source file.
+-- Lua embeds the source path in chunk debug info with a leading "@".
+-- Returns the directory portion of that path (may be relative when the
+-- test runner uses a relative package.path like "../src/?.lua").
+-- @return string Directory of this init.lua file (absolute or relative).
 local function get_script_dir()
     local info = debug.getinfo(1, "S")
     local src  = info.source
     if src:sub(1, 1) == "@" then
         src = src:sub(2)
     end
-    -- Normalize Windows backslashes to forward slashes for cross-platform
-    -- path handling (on Linux/macOS this is a no-op).
+    -- Normalize Windows backslashes to forward slashes.
     src = src:gsub("\\", "/")
-    -- Extract the directory portion of the source path (may be relative
-    -- and may contain .. when busted uses ../src in package.path).
-    local dir = src:match("(.+)/[^/]+$") or "."
-    -- Resolve to an absolute normalised path. Using 'cd dir && pwd' correctly
-    -- resolves any .. components -- unlike string-based dirname traversal.
-    -- Skip on Windows drive paths (C:\...) and fall back to the raw string.
-    if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
-        local is_win = package.config:sub(1, 1) == "\\"
-        local f
-        if is_win then
-            f = io.popen('cd /d "' .. dir:gsub("/", "\\") .. '" 2>nul && cd')
-        else
-            f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
-        end
-        local resolved = f and f:read("*l")
-        if f then f:close() end
-        if resolved and resolved ~= "" then
-            return (resolved:gsub("\\", "/"):gsub("%c+$", ""))
-        end
-    end
-    return dir
+    return src:match("(.+)/[^/]+$") or "."
 end
 
 --- Walk up `levels` directory levels from `path`.
--- Each call to this function strips one path component.
--- For example: up("/a/b/c", 2) → "/a"
+-- Appends `/../` segments so the OS resolves the result when it is passed
+-- to io.open(). Works for both absolute paths (C:/foo, /foo) and relative
+-- paths (../src/foo) without needing to know the working directory.
+-- The old regex-based dirname approach broke on relative paths starting
+-- with `..` because the pattern "(.+)/[^/]+" does not match strings like
+-- ".." that have no slash — causing repo_root to collapse to ".".
 -- @param path   string  Starting directory.
 -- @param levels number  How many levels to climb.
--- @return string        Resulting directory.
+-- @return string        Path with `levels` parent-dir jumps appended.
 local function up(path, levels)
     local result = path
     for _ = 1, levels do
-        result = dirname(result)
+        result = result .. "/.."
     end
     return result
 end

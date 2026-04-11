@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-04-10
+
+### Added
+
+- `lexer.rb`: `Lexer` class and `tokenize(source)` module function. Grammar-driven tokenizer using `brainfuck.tokens`. Each token is a struct with `type`, `value`, `line`, and `column` fields. Comment characters are silently skipped.
+- `parser.rb`: `Parser` class and `parse(source)` module function. Grammar-driven parser using `brainfuck.grammar`. Returns an AST rooted at a `program` node with `instruction`, `loop`, and `command` child nodes. Raises `ParseError` with precise source-location details for unmatched brackets.
+- Grammar files: `brainfuck.tokens` and `brainfuck.grammar` bundled in the gem (shared across all language implementations).
+- New dependencies: `coding_adventures_grammar_tools`, `coding_adventures_lexer`, and `coding_adventures_parser`.
+- Extensive tests for `tokenize` (command tokens, comment skipping, multi-line source, position tracking) and `parse` (simple programs, nested loops, unmatched bracket errors with line/column).
+
 ## 0.1.0 — 2026-03-20
 
 ### Added

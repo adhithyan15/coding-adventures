@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/graph-native",
+  "version": "0.1.0",
+  "description": "Native Node.js addon wrapping the Rust DT00 graph crate",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "graph_native_node.node"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.1.1",
+    "vitest": "^3.1.1"
+  }
+}

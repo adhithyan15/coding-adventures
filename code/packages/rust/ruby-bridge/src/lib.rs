@@ -145,8 +145,14 @@ extern "C" {
     // Used to convert the Fixnum returned by Array#length into a Rust usize.
     pub fn rb_num2long(v: VALUE) -> c_long;
 
-    // -- Integer operations ------------------------------------------------
+    // -- Numeric operations ------------------------------------------------
     pub fn rb_int2inum(v: c_long) -> VALUE;
+    pub fn rb_float_new(v: f64) -> VALUE;
+    pub fn rb_num2dbl(v: VALUE) -> f64;
+
+    // -- Hash operations ---------------------------------------------------
+    pub fn rb_hash_new() -> VALUE;
+    pub fn rb_hash_aset(hash: VALUE, key: VALUE, val: VALUE) -> VALUE;
 
     // -- Data wrapping -----------------------------------------------------
     //
@@ -242,19 +248,19 @@ pub fn define_alloc_func(class: VALUE, func: unsafe extern "C" fn(VALUE) -> VALU
 // ---------------------------------------------------------------------------
 
 pub fn object_class() -> VALUE {
-    unsafe { rb_cObject }
+    path2class("Object")
 }
 
 pub fn standard_error_class() -> VALUE {
-    unsafe { rb_eStandardError }
+    path2class("StandardError")
 }
 
 pub fn arg_error_class() -> VALUE {
-    unsafe { rb_eArgError }
+    path2class("ArgumentError")
 }
 
 pub fn runtime_error_class() -> VALUE {
-    unsafe { rb_eRuntimeError }
+    path2class("RuntimeError")
 }
 
 // ---------------------------------------------------------------------------
@@ -357,6 +363,29 @@ pub fn vec_tuple2_str_to_rb(items: &[(String, String)]) -> VALUE {
     ary
 }
 
+pub fn vec_tuple2_str_f64_to_rb(items: &[(String, f64)]) -> VALUE {
+    let ary = array_new();
+    for (key, value) in items {
+        let pair = array_new();
+        array_push(pair, str_to_rb(key));
+        array_push(pair, f64_to_rb(*value));
+        array_push(ary, pair);
+    }
+    ary
+}
+
+pub fn vec_tuple3_str_f64_to_rb(items: &[(String, String, f64)]) -> VALUE {
+    let ary = array_new();
+    for (left, right, weight) in items {
+        let triple = array_new();
+        array_push(triple, str_to_rb(left));
+        array_push(triple, str_to_rb(right));
+        array_push(triple, f64_to_rb(*weight));
+        array_push(ary, triple);
+    }
+    ary
+}
+
 // ---------------------------------------------------------------------------
 // Safe wrappers — Boolean and Integer
 // ---------------------------------------------------------------------------
@@ -367,6 +396,24 @@ pub fn bool_to_rb(b: bool) -> VALUE {
 
 pub fn usize_to_rb(n: usize) -> VALUE {
     unsafe { rb_int2inum(n as c_long) }
+}
+
+pub fn f64_to_rb(n: f64) -> VALUE {
+    unsafe { rb_float_new(n) }
+}
+
+pub fn f64_from_rb(val: VALUE) -> f64 {
+    unsafe { rb_num2dbl(val) }
+}
+
+pub fn hash_new() -> VALUE {
+    unsafe { rb_hash_new() }
+}
+
+pub fn hash_aset(hash: VALUE, key: VALUE, val: VALUE) {
+    unsafe {
+        rb_hash_aset(hash, key, val);
+    }
 }
 
 // ---------------------------------------------------------------------------

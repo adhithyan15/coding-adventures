@@ -1,0 +1,5 @@
+python -m venv .venv --clear
+.venv\Scripts\pip install pytest pytest-cov --quiet
+cargo build --release
+if exist target\release\graph_native.dll copy target\release\graph_native.dll src\graph_native\graph_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v

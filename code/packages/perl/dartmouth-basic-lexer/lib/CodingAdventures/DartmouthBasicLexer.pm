@@ -260,6 +260,14 @@ sub _build_rules {
     for my $defn ( @{ $grammar->skip_definitions } ) {
         my $pat;
         if ( $defn->is_regex ) {
+            # Security: reject patterns containing Perl code-execution constructs.
+            # (?{ ... }) and (??{ ... }) allow arbitrary Perl code to run inside
+            # a regex match. Die early rather than silently execute injected code.
+            # Fixed: 2026-04-10 security review.
+            my $raw_pat = $defn->pattern;
+            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+                die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
+            }
             $pat = qr/\G(?i:${\$defn->pattern})/;
         } else {
             my $lit = $defn->pattern;
@@ -279,6 +287,14 @@ sub _build_rules {
     for my $defn ( @{ $grammar->definitions } ) {
         my $pat;
         if ( $defn->is_regex ) {
+            # Security: reject patterns containing Perl code-execution constructs.
+            # (?{ ... }) and (??{ ... }) allow arbitrary Perl code to run inside
+            # a regex match. Die early rather than silently execute injected code.
+            # Fixed: 2026-04-10 security review.
+            my $raw_pat = $defn->pattern;
+            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+                die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
+            }
             # Use (?i) so that the uppercase source matches the lowercase patterns
             # defined in the grammar (e.g., /let/ matches "LET" in the source).
             $pat = qr/\G(?i:${\$defn->pattern})/;
@@ -303,6 +319,14 @@ sub _build_rules {
     for my $defn ( @{ $grammar->error_definitions } ) {
         my $pat;
         if ( $defn->is_regex ) {
+            # Security: reject patterns containing Perl code-execution constructs.
+            # (?{ ... }) and (??{ ... }) allow arbitrary Perl code to run inside
+            # a regex match. Die early rather than silently execute injected code.
+            # Fixed: 2026-04-10 security review.
+            my $raw_pat = $defn->pattern;
+            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+                die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
+            }
             $pat = qr/\G(?i:${\$defn->pattern})/;
         } else {
             my $lit = $defn->pattern;

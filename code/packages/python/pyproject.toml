@@ -38,6 +38,18 @@ members = [
     "ml-framework-torch",
     "ml-framework-keras",
     "ml-framework-tf",
+    "graph",
+    "heap",
+    "fenwick-tree",
+    "trie",
+    "hash-functions",
+    "hash-map",
+    "resp-protocol",
+    "skip-list",
+    "hyperloglog",
+    "bloom-filter",
+    "tcp-server",
+    "radix-tree",
 ]
 
 [tool.uv.sources]
@@ -74,6 +86,18 @@ coding-adventures-ml-framework-core = { workspace = true }
 coding-adventures-ml-framework-torch = { workspace = true }
 coding-adventures-ml-framework-keras = { workspace = true }
 coding-adventures-ml-framework-tf = { workspace = true }
+coding-adventures-graph = { workspace = true }
+coding-adventures-heap = { workspace = true }
+coding-adventures-fenwick-tree = { workspace = true }
+coding-adventures-trie = { workspace = true }
+coding-adventures-hash-functions = { workspace = true }
+coding-adventures-hash-map = { workspace = true }
+coding-adventures-resp-protocol = { workspace = true }
+coding-adventures-skip-list = { workspace = true }
+coding-adventures-hyperloglog = { workspace = true }
+coding-adventures-bloom-filter = { workspace = true }
+coding-adventures-tcp-server = { workspace = true }
+coding-adventures-radix-tree = { workspace = true }
 
 [dependency-groups]
 dev = [

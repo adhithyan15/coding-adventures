@@ -1,0 +1,8 @@
+[package]
+name = "radix-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Compressed trie (radix tree / Patricia trie) for string-keyed prefix search"
+license = "MIT"
+
+[dependencies]

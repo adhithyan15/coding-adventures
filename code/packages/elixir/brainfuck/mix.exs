@@ -22,7 +22,11 @@ defmodule CodingAdventures.Brainfuck.MixProject do
 
   defp deps do
     [
-      {:coding_adventures_virtual_machine, path: "../virtual_machine"}
+      {:coding_adventures_virtual_machine, path: "../virtual_machine"},
+      {:coding_adventures_grammar_tools, path: "../grammar_tools"},
+      {:coding_adventures_directed_graph, path: "../directed_graph"},
+      {:coding_adventures_lexer, path: "../lexer"},
+      {:coding_adventures_parser, path: "../parser"}
     ]
   end
 end

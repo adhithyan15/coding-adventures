@@ -25,11 +25,57 @@ Any other character is a comment.
 ## Where It Fits in the Stack
 
 ```
+grammar-tools    ← grammar file parsing
+lexer            ← generic tokenizer framework
+parser           ← generic parser framework
+brainfuck        ← this package: Lexer, Parser, and Interpreter
 virtual-machine  ← stack-based bytecode VM (opcodes reused here)
-brainfuck        ← this package: Brainfuck on top of VM types
 ```
 
+This package now spans the Lexer (Layer 2), Parser (Layer 3), and VM/Interpreter (Layer 5) layers of the coding-adventures stack.
+
+## Package Structure
+
+| File         | Purpose                                          |
+|--------------|--------------------------------------------------|
+| `init.lua`   | Interpreter: `validate`, `compile_to_opcodes`, `run_opcodes`, `interpret` |
+| `lexer.lua`  | Grammar-driven tokenizer (`tokenize`)             |
+| `parser.lua` | Grammar-driven parser (`parse`), returns AST      |
+
 ## Usage
+
+### Lexer
+
+```lua
+local lexer = require("coding_adventures.brainfuck.lexer")
+
+local tokens, err = lexer.tokenize("++[>+<-].")
+for _, tok in ipairs(tokens) do
+    print(tok.type, tok.value, tok.line, tok.column)
+end
+-- COMMAND  +  1  1
+-- COMMAND  +  1  2
+-- LOOP_START  [  1  3
+-- ...
+```
+
+### Parser
+
+```lua
+local parser = require("coding_adventures.brainfuck.parser")
+
+local ast, err = parser.parse("++[>+<-].")
+-- ast.type == "program"
+-- ast.children == {
+--   { type = "instruction", children = {{ type = "command", value = "+" }} },
+--   { type = "instruction", children = {{ type = "command", value = "+" }} },
+--   { type = "loop",        children = { ... } },
+--   { type = "instruction", children = {{ type = "command", value = "." }} },
+-- }
+print(ast.type)  -- "program"
+```
+
+### Interpreter
 
 ```lua
 local bf = require("coding_adventures.brainfuck")
@@ -50,6 +96,14 @@ local ok, msg = bf.validate("[[]")
 ```
 
 ## API
+
+### `lexer.tokenize(source)` → tokens, err
+
+Tokenize Brainfuck source. Returns a list of token tables (`{type, value, line, column}`). Comment characters are skipped. Returns `nil, message` on error.
+
+### `parser.parse(source)` → ast, err
+
+Parse Brainfuck source into an AST. Returns a root node table (`{type = "program", children = {...}}`). Returns `nil, message` with line/column info on unmatched bracket.
 
 ### `bf.validate(program)` → ok, err
 
