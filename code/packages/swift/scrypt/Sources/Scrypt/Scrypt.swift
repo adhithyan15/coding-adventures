@@ -432,7 +432,7 @@ public func scrypt(
     // allowEmptyPassword: true because RFC 7914 test vector 1 uses password=""
     // and scrypt is a protocol-level construct that allows it by specification.
     // The PBKDF2 package's allowEmptyPassword flag exists precisely for this.
-    let bLen = p * 128 * r
+    // bLen was computed above via multipliedReportingOverflow (safe for 32-bit).
     var b = Array(try pbkdf2HmacSHA256(
         password: Data(password), salt: Data(salt), iterations: 1, keyLength: bLen,
         allowEmptyPassword: true
