@@ -218,4 +218,5 @@ members = [
     "wasm-execution",
     "wasm-runtime",
     "wasm-validator",
+    "lz77",
 ]
