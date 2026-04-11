@@ -28,7 +28,7 @@ import string
 
 import pytest
 
-from trie import Trie, TrieError
+from trie import Trie, TrieCursor, TrieError
 from trie.trie import KeyNotFoundError
 
 
@@ -618,3 +618,163 @@ class TestStress:
 
         assert len(t) == len(alive)
         assert t.is_valid()
+
+
+# ─── TrieCursor tests ─────────────────────────────────────────────────────────
+
+
+class TestTrieCursor:
+    """Tests for TrieCursor — step-by-step generic trie traversal."""
+
+    def test_step_on_empty_returns_false(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        assert cursor.step(65) is False
+
+    def test_step_after_insert_returns_true(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.reset()
+        assert cursor.step(65) is True
+
+    def test_value_at_root_is_none(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        assert cursor.value is None
+
+    def test_value_after_step(self) -> None:
+        cursor: TrieCursor[int, str] = TrieCursor()
+        cursor.insert(65, "A-entry")
+        cursor.reset()
+        cursor.step(65)
+        assert cursor.value == "A-entry"
+
+    def test_at_root_initially_true(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        assert cursor.at_root is True
+
+    def test_at_root_false_after_step(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.reset()
+        cursor.step(65)
+        assert cursor.at_root is False
+
+    def test_reset_returns_to_root(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.reset()
+        cursor.step(65)
+        assert not cursor.at_root
+        cursor.reset()
+        assert cursor.at_root
+
+    def test_insert_at_current_position(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        # Insert root→65→node(1)
+        cursor.insert(65, 1)
+        cursor.reset()
+        # Navigate to node(1), then insert node(1)→66→node(2)
+        cursor.step(65)
+        cursor.insert(66, 2)
+        cursor.reset()
+        # Verify root→65→66 exists with value 2
+        assert cursor.step(65)
+        assert cursor.step(66)
+        assert cursor.value == 2
+
+    def test_step_wrong_element_returns_false(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.reset()
+        assert cursor.step(66) is False  # 'B' not in root.children
+
+    def test_step_failed_leaves_cursor_unchanged(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.reset()
+        cursor.step(65)  # now at node(1)
+        cursor.step(66)  # fails, stays at node(1)
+        assert cursor.value == 1
+
+    def test_iteration_empty(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        assert list(cursor) == []
+
+    def test_iteration_single(self) -> None:
+        cursor: TrieCursor[int, str] = TrieCursor()
+        cursor.insert(65, "A")
+        entries = list(cursor)
+        assert entries == [([65], "A")]
+
+    def test_iteration_multiple(self) -> None:
+        cursor: TrieCursor[int, str] = TrieCursor()
+        cursor.insert(65, "A")      # root → 65 → "A"
+        cursor.reset()
+        cursor.step(65)
+        cursor.insert(66, "AB")     # root → 65 → 66 → "AB"
+        cursor.reset()
+        cursor.insert(66, "B")      # root → 66 → "B"
+        entries = sorted(list(cursor), key=lambda p: p[1])
+        assert entries == [([65], "A"), ([65, 66], "AB"), ([66], "B")]
+
+    def test_len_empty(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        assert len(cursor) == 0
+
+    def test_len_after_inserts(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.reset()
+        cursor.step(65)
+        cursor.insert(66, 2)
+        assert len(cursor) == 2
+
+    def test_bool_empty_is_false(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        assert not cursor
+
+    def test_bool_nonempty_is_true(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        assert bool(cursor)
+
+    def test_update_existing_value(self) -> None:
+        cursor: TrieCursor[int, int] = TrieCursor()
+        cursor.insert(65, 1)
+        cursor.insert(65, 99)  # update at same position
+        cursor.reset()
+        cursor.step(65)
+        assert cursor.value == 99
+
+    def test_str_keys(self) -> None:
+        # TrieCursor works with str elements too.
+        cursor: TrieCursor[str, int] = TrieCursor()
+        cursor.insert("a", 1)
+        cursor.reset()
+        cursor.step("a")
+        cursor.insert("b", 2)
+        cursor.reset()
+        assert cursor.step("a")
+        assert cursor.step("b")
+        assert cursor.value == 2
+
+    def test_lz78_simulation(self) -> None:
+        # Simulate LZ78 encoding of "AABCBBABC" using TrieCursor.
+        # Expected tokens: [(0,'A'), (1,'B'), (0,'C'), (0,'B'), (4,'A'), (4,'C')]
+        cursor: TrieCursor[int, int] = TrieCursor()
+        next_id = 1
+        tokens = []
+        data = b"AABCBBABC"
+
+        for byte in data:
+            if not cursor.step(byte):
+                tokens.append((cursor.value or 0, byte))
+                cursor.insert(byte, next_id)
+                next_id += 1
+                cursor.reset()
+
+        if not cursor.at_root:
+            tokens.append((cursor.value or 0, 0))
+
+        assert tokens == [
+            (0, 65), (1, 66), (0, 67), (0, 66), (4, 65), (4, 67)
+        ]

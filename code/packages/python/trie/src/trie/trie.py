@@ -106,8 +106,9 @@ matching prefix for each incoming packet — O(k) per packet.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Generic, Iterator, TypeVar
+from typing import Any, Generic, Hashable, Iterator, TypeVar
 
+K = TypeVar("K", bound=Hashable)
 V = TypeVar("V")
 
 
@@ -568,3 +569,247 @@ class Trie(Generic[V]):
         """
         node = self._find_node(key)
         return node is not None and node.is_end
+
+
+# ─── TrieCursor ───────────────────────────────────────────────────────────────
+
+
+@dataclass
+class _CursorNode(Generic[K, V]):
+    """
+    Internal node of a TrieCursor's trie.
+
+    Generic over key element type K (e.g., int for bytes, str for characters)
+    and value type V. The key element is stored in the PARENT's `children` dict,
+    not in the node itself — the same design as _TrieNode.
+
+    Attributes:
+        children: Maps one key element to the child node for that element.
+        value:    The value stored at this node (None if no value).
+    """
+
+    children: dict[Any, "_CursorNode[K, V]"] = field(default_factory=dict)
+    value: V | None = None
+
+
+class TrieCursor(Generic[K, V]):
+    """
+    A cursor for step-by-step trie traversal.
+
+    Unlike ``Trie`` (which inserts and searches complete keys at once),
+    ``TrieCursor`` maintains a *current position* in a trie and advances one
+    key element at a time. This is the core primitive for streaming algorithms
+    that incrementally match sequences against a growing dictionary:
+
+    - **LZ78** (CMP01): encode input byte-by-byte, emitting a token whenever
+      the current byte has no child edge.
+    - **LZW** (CMP03): same pattern with a pre-seeded 256-entry alphabet.
+    - **Aho-Corasick**: walk an input string against a trie of patterns.
+
+    The cursor is self-contained: it owns its own trie root internally and
+    builds the trie as you call :meth:`insert`.
+
+    === Cursor state machine ===
+
+        (at root)
+            │
+            ├─ step(e) → True   ──→  (at child for e)
+            ├─ step(e) → False  ──→  (still at current node; child missing)
+            │
+            ├─ insert(e, v)  ──→  add child edge e with value v; move there
+            ├─ reset()       ──→  (at root)
+            └─ value         ──→  value at current position (None at root)
+
+    === Example: LZ78 encoding ===
+
+        cursor: TrieCursor[int, int] = TrieCursor()
+        next_id = 1
+        for byte in data:
+            if not cursor.step(byte):
+                emit Token(cursor.value or 0, byte)
+                cursor.insert(byte, next_id)  # add dict entry
+                next_id += 1
+                cursor.reset()
+        if not cursor.at_root:
+            emit Token(cursor.value or 0, 0)   # flush sentinel
+
+    Type Parameters:
+        K: The type of each key element (``int`` for bytes, ``str`` for chars).
+        V: The type of values stored at each node.
+
+    Examples:
+        >>> cursor: TrieCursor[int, str] = TrieCursor()
+        >>> cursor.step(65)        # 'A' — no child yet
+        False
+        >>> cursor.insert(65, "A-entry")   # add root → 65 → node("A-entry")
+        >>> cursor.reset()
+        >>> cursor.step(65)        # now follows the edge
+        True
+        >>> cursor.value
+        'A-entry'
+    """
+
+    def __init__(self) -> None:
+        """Create a TrieCursor with an empty trie. Cursor starts at root."""
+        self._root: _CursorNode[K, V] = _CursorNode()
+        self._current: _CursorNode[K, V] = self._root
+
+    # ── Navigation ────────────────────────────────────────────────────────────
+
+    def step(self, element: K) -> bool:
+        """
+        Try to follow the child edge for ``element`` from the current position.
+
+        If the child exists, the cursor advances to that child and returns
+        ``True``. If not, the cursor stays at the current position and returns
+        ``False``.
+
+        Args:
+            element: One key element (e.g., a byte value or a character).
+
+        Returns:
+            ``True`` if a child edge for ``element`` exists and was followed.
+            ``False`` if no such edge exists (cursor position unchanged).
+
+        Time: O(1) average (dict lookup).
+
+        Example:
+            >>> cursor: TrieCursor[int, int] = TrieCursor()
+            >>> cursor.step(65)
+            False
+            >>> cursor.insert(65, 1)
+            >>> cursor.reset()
+            >>> cursor.step(65)
+            True
+        """
+        child = self._current.children.get(element)
+        if child is None:
+            return False
+        self._current = child
+        return True
+
+    def insert(self, element: K, value: V) -> None:
+        """
+        Add a child edge for ``element`` at the current position.
+
+        Creates a new child node with ``value`` and stores it under ``element``
+        in the current node's children. The cursor does NOT advance after
+        inserting — call :meth:`reset` to go back to root or :meth:`step` to
+        follow the new edge.
+
+        If a child for ``element`` already exists, its value is updated.
+
+        Args:
+            element: The key element for the new edge.
+            value:   The value to store at the new node.
+
+        Time: O(1) average.
+
+        Example:
+            >>> cursor: TrieCursor[int, int] = TrieCursor()
+            >>> cursor.insert(65, 1)   # root → 65 → node(value=1)
+            >>> cursor.step(65)
+            True
+            >>> cursor.value
+            1
+        """
+        existing = self._current.children.get(element)
+        if existing is None:
+            self._current.children[element] = _CursorNode(value=value)
+        else:
+            existing.value = value
+
+    def reset(self) -> None:
+        """
+        Reset the cursor to the root of the trie.
+
+        After reset, :attr:`at_root` is ``True`` and :attr:`value` is
+        whatever value was stored at the root (typically ``None``).
+
+        Time: O(1).
+        """
+        self._current = self._root
+
+    # ── Inspection ────────────────────────────────────────────────────────────
+
+    @property
+    def value(self) -> V | None:
+        """
+        The value stored at the current node.
+
+        Returns ``None`` if no value was stored at this position (e.g., at the
+        root of a freshly created cursor, or at an internal node that has
+        children but no value itself).
+
+        Time: O(1).
+        """
+        return self._current.value
+
+    @property
+    def at_root(self) -> bool:
+        """
+        Return ``True`` if the cursor is at the root node.
+
+        Useful as an end-of-stream check in LZ78/LZW to detect whether a
+        partial match needs to be flushed.
+
+        Time: O(1).
+
+        Example:
+            >>> cursor: TrieCursor[int, int] = TrieCursor()
+            >>> cursor.at_root
+            True
+            >>> cursor.insert(65, 1)
+            >>> cursor.step(65)
+            True
+            >>> cursor.at_root
+            False
+        """
+        return self._current is self._root
+
+    # ── Iteration ─────────────────────────────────────────────────────────────
+
+    def __iter__(self) -> Iterator[tuple[list[K], V]]:
+        """
+        Iterate over all (path, value) pairs stored in the trie.
+
+        Yields tuples of ``([key_elements, ...], value)`` for every node that
+        has a value (i.e., was created by :meth:`insert`). Traversal order is
+        DFS, following children in insertion order.
+
+        Does NOT include the root node (which has no meaningful path).
+
+        Time: O(n) where n is the number of nodes in the trie.
+
+        Example:
+            >>> cursor: TrieCursor[int, str] = TrieCursor()
+            >>> cursor.insert(65, "A")           # root → 65 → "A"
+            >>> cursor.reset()
+            >>> cursor.step(65)
+            True
+            >>> cursor.insert(66, "AB")          # root → 65 → 66 → "AB"
+            >>> cursor.reset()
+            >>> sorted(cursor, key=lambda p: p[1])
+            [([65], 'A'), ([65, 66], 'AB')]
+        """
+        yield from self._iter_node(self._root, [])
+
+    def _iter_node(
+        self,
+        node: _CursorNode[K, V],
+        path: list[K],
+    ) -> Iterator[tuple[list[K], V]]:
+        if node.value is not None:
+            yield (list(path), node.value)
+        for element, child in node.children.items():
+            path.append(element)
+            yield from self._iter_node(child, path)
+            path.pop()
+
+    def __len__(self) -> int:
+        """Return the number of nodes that have a value stored. O(n)."""
+        return sum(1 for _ in self)
+
+    def __bool__(self) -> bool:
+        """Return True if any node has a value stored."""
+        return bool(self._root.children)
