@@ -1,3 +1,2 @@
-bundle config set path vendor/bundle
-bundle install --quiet --full-index
-bundle exec rake test
+eval "$(mise activate bash)" && bundle install --quiet --path vendor/bundle
+eval "$(mise activate bash)" && bundle exec rake test

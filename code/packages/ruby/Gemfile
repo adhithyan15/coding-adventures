@@ -38,6 +38,15 @@ gem "coding_adventures_parser", path: "parser"
 # ── Ordered Data Structures ───────────────────────────────────────────
 gem "coding_adventures_tree_set", path: "tree_set"
 gem "coding_adventures_tree_set_native", path: "tree_set_native"
+gem "coding_adventures_binary_tree", path: "binary_tree"
+gem "coding_adventures_binary_search_tree", path: "binary_search_tree"
+gem "coding_adventures_avl_tree", path: "avl_tree"
+gem "coding_adventures_red_black_tree", path: "red_black_tree"
+gem "coding_adventures_treap", path: "treap"
+gem "coding_adventures_b_tree", path: "b_tree"
+gem "coding_adventures_b_plus_tree", path: "b_plus_tree"
+gem "coding_adventures_suffix_tree", path: "suffix_tree"
+gem "coding_adventures_rope", path: "rope"
 
 # ── Execution (Layers 4a-5) ──────────────────────────────────────────
 gem "coding_adventures_bytecode_compiler", path: "bytecode_compiler"

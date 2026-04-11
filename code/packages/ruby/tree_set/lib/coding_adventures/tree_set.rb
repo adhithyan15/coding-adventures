@@ -2,6 +2,20 @@
 
 module CodingAdventures
   module TreeSet
+    class ComparableEntry
+      attr_reader :value
+
+      def initialize(value, compare)
+        @value = value
+        @compare = compare
+      end
+
+      def <=>(other)
+        other_value = other.is_a?(ComparableEntry) ? other.value : other
+        @compare.call(@value, other_value)
+      end
+    end
+
     class TreeSet
       include Enumerable
 
@@ -11,77 +25,66 @@ module CodingAdventures
 
       def initialize(values = nil, compare = nil, &block)
         @compare = block || compare || method(:default_compare)
-        @values = []
+        @tree = CodingAdventures::AVLTree::AVLTree.empty
         values&.each { |value| add(value) }
       end
 
       def add(value)
-        index = lower_bound(@values, value)
-        return self if index < @values.length && compare(@values[index], value).zero?
-
-        @values.insert(index, value)
+        @tree = @tree.insert(wrap(value))
         self
       end
 
       def delete(value)
-        index = lower_bound(@values, value)
-        return false if index >= @values.length || !compare(@values[index], value).zero?
+        return false unless include?(value)
 
-        @values.delete_at(index)
+        @tree = @tree.delete(wrap(value))
         true
       end
 
       alias discard delete
 
       def include?(value)
-        index = lower_bound(@values, value)
-        index < @values.length && compare(@values[index], value).zero?
+        !@tree.search(wrap(value)).nil?
       end
       alias member? include?
       alias contains? include?
 
       def size
-        @values.length
+        @tree.size
       end
       alias length size
 
       def empty?
-        @values.empty?
+        size.zero?
       end
       alias is_empty? empty?
 
       def min
-        @values.first
+        unwrap(@tree.min_value)
       end
       alias first min
 
       def max
-        @values.last
+        unwrap(@tree.max_value)
       end
       alias last max
 
       def predecessor(value)
-        index = lower_bound(@values, value)
-        return nil if index <= 0
-
-        @values[index - 1]
+        unwrap(@tree.predecessor(wrap(value)))
       end
 
       def successor(value)
-        index = upper_bound(@values, value)
-        return nil if index >= @values.length
-
-        @values[index]
+        unwrap(@tree.successor(wrap(value)))
       end
 
       def rank(value)
-        lower_bound(@values, value)
+        @tree.rank(wrap(value))
       end
 
       def by_rank(rank)
-        return nil if rank.negative? || rank >= @values.length
+        return nil if rank.negative? || rank >= size
 
-        @values[rank]
+        unwrap(@tree.kth_smallest(rank + 1))
       end
 
       def kth_smallest(k)
@@ -91,7 +94,7 @@ module CodingAdventures
       end
 
       def to_a
-        @values.dup
+        @tree.to_sorted_array.map { |entry| unwrap(entry) }
       end
       alias to_list to_a
       alias to_sorted_array to_a
@@ -99,29 +102,30 @@ module CodingAdventures
       def range(minimum, maximum, inclusive = true)
         return [] if compare(minimum, maximum) > 0
 
-        start_index = inclusive ? lower_bound(@values, minimum) : upper_bound(@values, minimum)
-        end_index = inclusive ? upper_bound(@values, maximum) : lower_bound(@values, maximum)
-        @values[start_index...end_index] || []
+        values = to_a
+        start_index = inclusive ? lower_bound(values, minimum) : upper_bound(values, minimum)
+        end_index = inclusive ? upper_bound(values, maximum) : lower_bound(values, maximum)
+        values[start_index...end_index] || []
       end
 
       def union(other)
-        self.class.new(merge_unique(@values, other.to_a), @compare)
+        self.class.new(merge_unique(to_a, other.to_a), @compare)
       end
 
       def intersection(other)
-        self.class.new(intersection_sorted(@values, other.to_a), @compare)
+        self.class.new(intersection_sorted(to_a, other.to_a), @compare)
       end
 
       def difference(other)
-        self.class.new(difference_sorted(@values, other.to_a), @compare)
+        self.class.new(difference_sorted(to_a, other.to_a), @compare)
       end
 
       def symmetric_difference(other)
-        self.class.new(symmetric_difference_sorted(@values, other.to_a), @compare)
+        self.class.new(symmetric_difference_sorted(to_a, other.to_a), @compare)
       end
 
       def subset?(other)
-        is_subset_sorted(@values, other.to_a)
+        is_subset_sorted(to_a, other.to_a)
       end
 
       def superset?(other)
@@ -129,28 +133,37 @@ module CodingAdventures
       end
 
       def disjoint?(other)
-        is_disjoint_sorted(@values, other.to_a)
+        is_disjoint_sorted(to_a, other.to_a)
       end
 
       def equals(other)
-        return false unless other.respond_to?(:to_a) && other.to_a.length == @values.length
+        return false unless other.respond_to?(:to_a) && other.to_a.length == size
 
         other_values = other.to_a
-        @values.each_index.all? { |index| compare(@values[index], other_values[index]).zero? }
+        values = to_a
+        values.each_index.all? { |index| compare(values[index], other_values[index]).zero? }
       end
 
       def each
         return enum_for(:each) unless block_given?
 
-        @values.each { |value| yield value }
+        to_a.each { |value| yield value }
       end
 
       def inspect
-        "TreeSet(#{@values.inspect})"
+        "TreeSet(#{to_a.inspect})"
       end
       alias to_s inspect
 
       private
+
+      def wrap(value)
+        ComparableEntry.new(value, @compare)
+      end
+
+      def unwrap(entry)
+        entry&.value
+      end
 
       def compare(left, right)
         @compare.call(left, right)
@@ -280,9 +293,9 @@ module CodingAdventures
         ri = 0
         while li < left.length && ri < right.length
           order = compare(left[li], right[ri])
-          return false if order < 0
-
-          if order > 0
+          if order < 0
+            return false
+          elsif order > 0
             ri += 1
           else
             li += 1

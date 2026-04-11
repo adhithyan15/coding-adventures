@@ -105,7 +105,7 @@ module CodingAdventures
     #   # |   +-- BinaryOp
     #   # |   +-- Name
     #   # +-- Print
-    class Tree
+    class Tree < CodingAdventures::DirectedGraph::Graph
       # The root node of this tree. Set at construction time, never changes.
       attr_reader :root
 
@@ -118,10 +118,10 @@ module CodingAdventures
       # A tree always starts with a root. You can't have an empty tree
       # (that would be a forest, or nothing at all).
 
-      def initialize(root)
+      def initialize(root = nil)
         @graph = CodingAdventures::DirectedGraph::Graph.new
-        @graph.add_node(root)
         @root = root
+        @graph.add_node(root) unless root.nil?
       end
 
       # ------------------------------------------------------------------
@@ -161,6 +161,7 @@ module CodingAdventures
       # in reverse order (children before parents) so the graph stays
       # consistent at each step.
       def remove_subtree(node)
+        return if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
         raise RootRemovalError.new if node == @root
 
@@ -182,6 +183,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def parent(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         preds = @graph.predecessors(node)
@@ -192,6 +194,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def children(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         @graph.successors(node).sort
@@ -204,6 +207,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def siblings(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         parent_node = parent(node)
@@ -216,6 +220,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def leaf?(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         @graph.successors(node).empty?
@@ -225,6 +230,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def root?(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         node == @root
@@ -237,6 +243,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def depth(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         d = 0
@@ -255,6 +262,8 @@ module CodingAdventures
       #
       # We use BFS from the root, tracking the depth at each level.
       def height
+        return 0 if @root.nil?
+
         max_depth = 0
         queue = [[@root, 0]]
 
@@ -271,21 +280,29 @@ module CodingAdventures
 
       # Return the total number of nodes in the tree.
       def size
+        return 0 if @root.nil?
+
         @graph.size
       end
 
       # Return a sorted list of all nodes in the tree.
       def nodes
+        return [] if @root.nil?
+
         @graph.nodes.sort
       end
 
       # Return all leaf nodes (sorted alphabetically).
       def leaves
+        return [] if @root.nil?
+
         @graph.nodes.select { |n| @graph.successors(n).empty? }.sort
       end
 
       # Return true if the node exists in the tree.
       def has_node?(node)
+        return false if @root.nil?
+
         @graph.has_node?(node)
       end
 
@@ -321,6 +338,8 @@ module CodingAdventures
       # on deep trees. Children are pushed in reverse sorted order so
       # that the smallest pops first.
       def preorder
+        return [] if @root.nil?
+
         result = []
         stack = [@root]
 
@@ -338,6 +357,8 @@ module CodingAdventures
       #
       # Uses a recursive helper. Children visited in sorted order.
       def postorder
+        return [] if @root.nil?
+
         result = []
         postorder_recursive(@root, result)
         result
@@ -348,6 +369,8 @@ module CodingAdventures
       # Classic BFS using a queue. Within each level, children are
       # visited in sorted order.
       def level_order
+        return [] if @root.nil?
+
         result = []
         queue = [@root]
 
@@ -371,6 +394,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def path_to(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         path = []
@@ -395,6 +419,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if a or b is not in the tree.
       def lca(a, b)
+        raise NodeNotFoundError, a if @root.nil?
         raise NodeNotFoundError, a unless @graph.has_node?(a)
         raise NodeNotFoundError, b unless @graph.has_node?(b)
 
@@ -420,6 +445,7 @@ module CodingAdventures
       #
       # Raises NodeNotFoundError if +node+ is not in the tree.
       def subtree(node)
+        raise NodeNotFoundError, node if @root.nil?
         raise NodeNotFoundError, node unless @graph.has_node?(node)
 
         new_tree = Tree.new(node)
@@ -456,6 +482,8 @@ module CodingAdventures
       # - |   for a vertical continuation line
       # - "    " (spaces) for padding where no continuation is needed
       def to_ascii
+        return "" if @root.nil?
+
         lines = []
         ascii_recursive(@root, "", "", lines)
         lines.join("\n")
