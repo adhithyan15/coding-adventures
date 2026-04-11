@@ -6,7 +6,9 @@
 //! The design goal is to build the common Redis surface with our own packages
 //! first, then add distributed features later. That means the crate currently
 //! focuses on core command semantics, storage, TTLs, and AOF replay rather
-//! than replication, cluster mode, pub/sub, scripting, or RESP3.
+//! than replication, cluster mode, pub/sub, scripting, or RESP3. The backend
+//! logic is exposed through a transport-agnostic interface so tests and future
+//! clients can talk to the engine without opening sockets.
 
 mod commands;
 mod server;
@@ -24,6 +26,6 @@ pub use commands::{
     cmd_ttl, cmd_type, cmd_zadd, cmd_zcard, cmd_zrange, cmd_zrangebyscore,
     cmd_zrank, cmd_zrem, cmd_zscore, dispatch, is_mutating,
 };
-pub use server::MiniRedis;
+pub use server::{MiniRedis, MiniRedisEngine, RedisBackend};
 pub use store::{current_time_ms, Database, Store};
 pub use types::{Entry, EntryType, EntryValue, OrderedF64, SortedSet};

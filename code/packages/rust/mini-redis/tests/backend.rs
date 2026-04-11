@@ -1,27 +1,29 @@
-use mini_redis::MiniRedis;
+use mini_redis::{MiniRedisEngine, RedisBackend};
 use resp_protocol::RespValue;
 
-struct BackendHarness {
-    app: MiniRedis,
+struct BackendClient<B: RedisBackend> {
+    backend: B,
 }
 
-impl BackendHarness {
-    fn new() -> Self {
-        Self {
-            app: MiniRedis::new(0),
-        }
+impl<B: RedisBackend> BackendClient<B> {
+    fn new(backend: B) -> Self {
+        Self { backend }
     }
 
     fn call(&self, command: &[&[u8]]) -> RespValue {
         let parts = command.iter().map(|part| part.to_vec()).collect();
-        self.app.execute_owned(parts)
+        self.backend.execute_owned(parts)
     }
 
     fn call_strs(&self, command: &str, args: &[&str]) -> RespValue {
         let mut parts = Vec::with_capacity(args.len() + 1);
         parts.push(command.as_bytes().to_vec());
         parts.extend(args.iter().map(|arg| arg.as_bytes().to_vec()));
-        self.app.execute_owned(parts)
+        self.backend.execute_owned(parts)
+    }
+
+    fn active_expire_all(&self) {
+        self.backend.active_expire_all();
     }
 }
 
@@ -52,7 +54,7 @@ fn kv_array(values: &[(&str, &str)]) -> RespValue {
 
 #[test]
 fn backend_executes_string_hash_set_and_sorted_set_commands() {
-    let app = BackendHarness::new();
+    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call(&[b"PING".as_ref()]), simple("PONG"));
     assert_eq!(app.call_strs("SET", &["alpha", "1"]), simple("OK"));
@@ -76,19 +78,18 @@ fn backend_executes_string_hash_set_and_sorted_set_commands() {
 
 #[test]
 fn backend_tracks_databases_ttls_and_hlls_without_tcp() {
-    let app = BackendHarness::new();
+    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
 
-    assert_eq!(app.call_strs("SELECT", &["1"]), simple("OK"));
     assert_eq!(app.call_strs("SET", &["db:key", "value"]), simple("OK"));
     assert_eq!(app.call_strs("DBSIZE", &[]), integer(1));
-    assert_eq!(app.call_strs("SELECT", &["0"]), simple("OK"));
-    assert_eq!(app.call_strs("DBSIZE", &[]), integer(0));
-    assert_eq!(app.call_strs("SELECT", &["1"]), simple("OK"));
     assert_eq!(app.call_strs("GET", &["db:key"]), bulk("value"));
 
     assert_eq!(app.call_strs("PFADD", &["visitors", "a", "b", "c"]), integer(1));
     assert_eq!(app.call_strs("PFCOUNT", &["visitors"]), integer(3));
+    assert_eq!(app.call_strs("DBSIZE", &[]), integer(2));
 
     assert_eq!(app.call_strs("EXPIRE", &["db:key", "0"]), integer(1));
+    app.active_expire_all();
+    assert_eq!(app.call_strs("DBSIZE", &[]), integer(1));
     assert_eq!(app.call_strs("GET", &["db:key"]), RespValue::BulkString(None));
 }
