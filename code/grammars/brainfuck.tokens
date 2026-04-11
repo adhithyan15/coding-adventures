@@ -1,0 +1,66 @@
+# Token definitions for Brainfuck
+# @version 1
+#
+# Brainfuck has exactly eight meaningful characters. Everything else is a
+# comment — the programmer's way of annotating their code since Brainfuck
+# has no dedicated comment syntax. Comments are skipped at the lexer level
+# so they never reach the parser.
+#
+# Example source showing commands and embedded comments:
+#
+#   +++   set cell 0 to 3
+#   [     loop while cell 0 is nonzero
+#     >+  move right, increment
+#     <-  move left, decrement
+#   ]
+#
+# Tokens are listed in operator-first order. Single-character literals
+# are used throughout — Brainfuck has no multi-character tokens.
+
+# ---------------------------------------------------------------------------
+# Pointer movement
+# ---------------------------------------------------------------------------
+RIGHT = ">"
+LEFT  = "<"
+
+# ---------------------------------------------------------------------------
+# Cell arithmetic
+# ---------------------------------------------------------------------------
+INC   = "+"
+DEC   = "-"
+
+# ---------------------------------------------------------------------------
+# I/O
+# ---------------------------------------------------------------------------
+OUTPUT = "."
+INPUT  = ","
+
+# ---------------------------------------------------------------------------
+# Loop control
+# ---------------------------------------------------------------------------
+LOOP_START = "["
+LOOP_END   = "]"
+
+# ---------------------------------------------------------------------------
+# Skip patterns — consumed silently, never emitted as tokens
+# ---------------------------------------------------------------------------
+# Any character that is not one of the eight commands is a comment. The
+# character class [^><+\-.,\[\]] matches everything except commands.
+# This includes letters, digits, punctuation, spaces, and newlines.
+#
+# Why skip rather than emit? The lexer infrastructure's skip: section
+# discards tokens before they reach the token stream. This keeps the
+# parser grammar clean — it never has to say "instruction or comment"
+# in every single production rule.
+#
+# Why two skip patterns? Splitting whitespace and non-command non-whitespace
+# into two patterns preserves correct line/column tracking. The lexer
+# increments the line counter when it encounters \n. If COMMENT consumed
+# \n as well, the line counter would drift. Separating them ensures:
+#
+#   - WHITESPACE handles all line endings → line counter stays accurate
+#   - COMMENT handles all other non-command characters on the same line
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT    = /[^><+\-.,\[\] \t\r\n]+/

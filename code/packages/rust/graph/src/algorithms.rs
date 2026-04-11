@@ -2,10 +2,18 @@ use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
 use crate::graph::{Graph, GraphError, WeightedEdge};
 
-pub fn bfs(graph: &Graph, start: &str) -> Result<Vec<String>, GraphError> {
-    if !graph.has_node(start) {
-        return Err(GraphError::NodeNotFound(start.to_string()));
-    }
+pub trait TraversalGraph {
+    type Error;
+
+    fn has_node(&self, node: &str) -> bool;
+    fn neighbors(&self, node: &str) -> Result<Vec<String>, Self::Error>;
+}
+
+pub fn bfs<G>(graph: &G, start: &str) -> Result<Vec<String>, G::Error>
+where
+    G: TraversalGraph,
+{
+    let _ = graph.neighbors(start)?;
 
     let mut visited = BTreeSet::new();
     visited.insert(start.to_string());
@@ -24,10 +32,11 @@ pub fn bfs(graph: &Graph, start: &str) -> Result<Vec<String>, GraphError> {
     Ok(result)
 }
 
-pub fn dfs(graph: &Graph, start: &str) -> Result<Vec<String>, GraphError> {
-    if !graph.has_node(start) {
-        return Err(GraphError::NodeNotFound(start.to_string()));
-    }
+pub fn dfs<G>(graph: &G, start: &str) -> Result<Vec<String>, G::Error>
+where
+    G: TraversalGraph,
+{
+    let _ = graph.neighbors(start)?;
 
     let mut visited = BTreeSet::new();
     let mut stack = vec![start.to_string()];

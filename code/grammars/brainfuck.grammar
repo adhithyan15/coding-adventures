@@ -1,0 +1,32 @@
+# Parser grammar for Brainfuck
+# @version 1
+#
+# Brainfuck is a minimal language with one compound construct: the loop.
+# Everything else is a flat sequence of single-character commands.
+#
+# Grammar entry point: program (the first rule).
+#
+# Token names (UPPERCASE) match the types defined in brainfuck.tokens.
+# Comment tokens do not appear here — they are consumed by the lexer's
+# skip: section and never reach the parser.
+
+# A program is a sequence of zero or more instructions. The outer { }
+# means "zero or more repetitions". An empty file is a valid program.
+program = { instruction } ;
+
+# An instruction is either a loop (which nests) or a command (which doesn't).
+# Loop comes first because its leading token LOOP_START is unambiguous —
+# the PEG parser tries alternatives left-to-right and commits immediately
+# on seeing [, without needing to backtrack.
+instruction = loop | command ;
+
+# A loop: open bracket, any number of nested instructions, close bracket.
+# The inner { instruction } means the loop body can be empty ([]), which
+# is legal Brainfuck (an infinite loop if the cell is nonzero, or a no-op
+# if it is zero — commonly used as a "clear cell" idiom: [-]).
+loop = LOOP_START { instruction } LOOP_END ;
+
+# A command is any of the six non-bracket operators. The | means "or".
+# LOOP_START and LOOP_END are intentionally excluded — they are handled
+# by the loop rule above, not as standalone commands.
+command = RIGHT | LEFT | INC | DEC | OUTPUT | INPUT ;

@@ -6,7 +6,7 @@ description = "Configurable processor core integrating pipeline, caches, branch 
 
 [dependencies]
 cpu-pipeline = { path = "../cpu-pipeline" }
-cache = { path = "../cache" }
+cpu_cache = { package = "cpu-cache", path = "../cpu-cache" }
 branch-predictor = { path = "../branch-predictor" }
 hazard-detection = { path = "../hazard-detection" }
 clock = { path = "../clock" }

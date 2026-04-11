@@ -27,7 +27,7 @@
 //! Writes by one core become visible to other cores only when they reach
 //! main memory. Cache coherence is a future extension.
 
-use cache::Cache;
+use cpu_cache::Cache;
 use cpu_pipeline::PipelineSnapshot;
 
 use crate::config::MultiCoreConfig;

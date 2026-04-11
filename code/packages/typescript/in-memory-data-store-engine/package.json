@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/in-memory-data-store-engine",
+  "version": "0.1.0",
+  "description": "Pluggable in-memory datastore engine backed by the TypeScript data structure packages",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "dependencies": {
+    "@coding-adventures/hash-map": "file:../hash-map",
+    "@coding-adventures/hash-set": "file:../hash-set",
+    "@coding-adventures/heap": "file:../heap",
+    "@coding-adventures/hyperloglog": "file:../hyperloglog",
+    "@coding-adventures/in-memory-data-store-protocol": "file:../in-memory-data-store-protocol",
+    "@coding-adventures/skip-list": "file:../skip-list",
+    "@coding-adventures/resp-protocol": "file:../resp-protocol"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "package": "typescript/tree-set-native",
+  "capabilities": [],
+  "justification": "Rust-backed native Node.js addon for ordered numeric sets."
+}
+

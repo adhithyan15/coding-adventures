@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/in-memory-data-store",
+  "version": "0.1.0",
+  "description": "Browser-safe composition layer for the in-memory data store stack",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "dependencies": {
+    "@coding-adventures/in-memory-data-store-engine": "file:../in-memory-data-store-engine",
+    "@coding-adventures/in-memory-data-store-protocol": "file:../in-memory-data-store-protocol",
+    "@coding-adventures/resp-protocol": "file:../resp-protocol"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

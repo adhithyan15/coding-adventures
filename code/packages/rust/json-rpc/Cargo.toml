@@ -1,0 +1,17 @@
+[package]
+name = "coding-adventures-json-rpc"
+version = "0.1.0"
+edition = "2021"
+description = "JSON-RPC 2.0 over stdin/stdout with Content-Length framing — the transport layer for LSP servers"
+
+# No internal coding-adventures dependencies. The spec requires stdlib-only
+# for the transport layer, but we do use serde/serde_json from crates.io for
+# JSON encoding/decoding — they are the de-facto standard in the Rust ecosystem
+# and have no transitive dependencies that introduce unsafe code concerns.
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+# none needed — all tests use the in-memory Cursor type from std::io

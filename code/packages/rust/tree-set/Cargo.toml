@@ -1,0 +1,11 @@
+[package]
+name = "tree-set"
+version = "0.1.0"
+edition = "2021"
+description = "Ordered tree-backed set with AVL and red-black backends"
+license = "MIT"
+
+[dependencies]
+avl-tree = { path = "../avl-tree" }
+red-black-tree = { path = "../red-black-tree" }
+

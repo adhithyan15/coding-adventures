@@ -1,0 +1,15 @@
+[package]
+name = "in-memory-data-store-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Pluggable in-memory data store engine"
+license = "MIT"
+
+[dependencies]
+heap = { path = "../heap" }
+hash-map = { path = "../hash-map" }
+hash-set = { path = "../hash-set" }
+hyperloglog = { path = "../hyperloglog" }
+resp-protocol = { path = "../resp-protocol" }
+skip-list = { path = "../skip-list" }
+in-memory-data-store-protocol = { path = "../in-memory-data-store-protocol" }
