@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/hash-set",
+  "version": "0.1.0",
+  "description": "Immutable hash set wrapper built on the TypeScript hash-map package",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "dependencies": {
+    "@coding-adventures/hash-map": "file:../hash-map"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

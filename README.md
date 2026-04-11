@@ -73,7 +73,21 @@ This track builds the path from source code to execution:
 
 The goal is to connect programming-language tooling back to the machine beneath it.
 
-### 5. Accelerators and parallel execution
+### 5. In-memory data stores and protocol stacks
+
+This track is about building transport-agnostic, pluggable storage systems:
+
+- `resp-protocol`
+- `in-memory-data-store-protocol`
+- `in-memory-data-store-engine`
+- `in-memory-data-store`
+- `hash-map`, `hash-set`, `skip-list`, `hyperloglog`
+
+The goal is to model a single-node data store as a composition of reusable
+packages that can grow into new protocols, new transports, and new storage
+modules over time.
+
+### 6. Accelerators and parallel execution
 
 This track explores computation outside the classic scalar CPU story:
 
@@ -84,7 +98,7 @@ This track explores computation outside the classic scalar CPU story:
 
 The goal is to study throughput-oriented execution, dataflow, and accelerator-style design.
 
-### 6. Machine learning fundamentals
+### 7. Machine learning fundamentals
 
 This track covers small, foundational learning components that fit naturally with the accelerator story:
 
@@ -93,7 +107,7 @@ This track covers small, foundational learning components that fit naturally wit
 
 The goal is to treat optimization primitives as understandable building blocks rather than opaque library calls.
 
-### 7. Tooling, visualization, and infrastructure
+### 8. Tooling, visualization, and infrastructure
 
 This repo also includes the tools needed to sustain the work:
 
@@ -158,7 +172,7 @@ tests prove the behavior
 
 Today the repo contains:
 
-- 1488 package directories
+- 1496 package directories
 - 122 program directories
 - 9 implementation languages
 
