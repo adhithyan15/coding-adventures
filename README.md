@@ -49,7 +49,7 @@ The goal is to understand instruction formats, execution models, fetch-decode-ex
 
 This is one of the most important themes in the repo:
 
-- `cache`
+- `cpu-cache`
 - `branch-predictor`
 - `hazard-detection`
 - `pipeline`

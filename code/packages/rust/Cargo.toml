@@ -21,7 +21,7 @@ members = [
     "brainfuck",
     "branch-predictor",
     "bytecode-compiler",
-    "cache",
+    "cpu-cache",
     "cli-builder",
     "clock",
     "clr-simulator",

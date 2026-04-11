@@ -27,7 +27,7 @@ use std::collections::HashMap;
 use std::fmt;
 
 use branch_predictor::PredictionStats;
-use cache::CacheStats;
+use cpu_cache::CacheStats;
 use cpu_pipeline::PipelineStats;
 
 /// Aggregate statistics from every sub-component of a Core.

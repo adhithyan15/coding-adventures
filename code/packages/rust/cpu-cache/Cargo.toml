@@ -1,0 +1,5 @@
+[package]
+name = "cpu-cache"
+version = "0.1.0"
+edition = "2021"
+description = "Configurable CPU cache hierarchy simulator"
