@@ -1543,3 +1543,26 @@ headers explicitly. Never use `[^[]*?` in a cross-line regex over TOML content.
 This bug caused a mass incorrect categorization of 54 packages that had
 `coding-adventures-directed-graph` as a real main dependency as "dev-only",
 leading to three rounds of CI failures and fixes on PR #610.
+
+---
+
+## Don't commit Elixir coverage HTML artifacts
+
+When `mix test --cover` runs it generates a `cover/` directory containing HTML
+coverage reports (e.g. `cover/Elixir.CodingAdventures.Scrypt.html`). These are
+build artifacts and must **not** be committed.
+
+**Fix:** Always add a `.gitignore` to every new Elixir package before running
+tests locally. Minimum contents:
+
+```
+cover/
+_build/
+deps/
+.elixir_ls/
+```
+
+When staging files with `git add`, never use `git add .` or `git add -A` on an
+Elixir package directory — always stage files explicitly by path to avoid
+accidentally including the `cover/` output. If caught after the fact, use
+`git rm --cached cover/<file>` to remove from tracking.
