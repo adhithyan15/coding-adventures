@@ -53,14 +53,16 @@ var ErrInvalidIterations = errors.New("pbkdf2: iterations must be positive")
 // ErrInvalidKeyLength is returned when key_length is zero or negative.
 var ErrInvalidKeyLength = errors.New("pbkdf2: key_length must be positive")
 
-// prf is the type of a pseudorandom function: PRF(key, message) → []byte.
+// prf is the type of a pseudorandom function: PRF(key, message) → ([]byte, error).
 // In PBKDF2, the password is the key and the iterated data is the message.
-type prf func(key, message []byte) []byte
+// Returning an error allows the PRF to propagate HMAC failures rather than
+// silently returning a zero-value byte slice.
+type prf func(key, message []byte) ([]byte, error)
 
 // pbkdf2Core is the generic PBKDF2 loop used by all public functions.
 //
 // Parameters:
-//   - fn:         PRF(key, msg) → []byte of length hLen
+//   - fn:         PRF(key, msg) → ([]byte, error), output length = hLen
 //   - hLen:       output byte length of fn (20 for SHA-1, 32 for SHA-256, …)
 //   - password:   secret being stretched — becomes the HMAC key
 //   - salt:       unique random value per credential (≥16 bytes recommended)
@@ -90,7 +92,10 @@ func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength i
 		seed := append(append([]byte(nil), salt...), blockIdx...)
 
 		// U_1 = PRF(Password, Salt || INT_32_BE(i))
-		u := fn(password, seed)
+		u, err := fn(password, seed)
+		if err != nil {
+			return nil, fmt.Errorf("pbkdf2: PRF failed on block %d: %w", i, err)
+		}
 
 		// t accumulates the XOR of all U values.
 		t := make([]byte, hLen)
@@ -98,7 +103,10 @@ func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength i
 
 		// U_j = PRF(Password, U_{j-1})  for j = 2..c
 		for j := 1; j < iterations; j++ {
-			u = fn(password, u)
+			u, err = fn(password, u)
+			if err != nil {
+				return nil, fmt.Errorf("pbkdf2: PRF failed on block %d iteration %d: %w", i, j+1, err)
+			}
 			for k := range t {
 				t[k] ^= u[k]
 			}
@@ -122,9 +130,8 @@ func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength i
 //	PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 1, 20)
 //	→ 0c60c80f961f0e71f3a9b524af6012062fe037a6
 func PBKDF2HmacSHA1(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	fn := func(key, msg []byte) []byte {
-		out, _ := hmacpkg.HmacSHA1(key, msg)
-		return out
+	fn := func(key, msg []byte) ([]byte, error) {
+		return hmacpkg.HmacSHA1(key, msg)
 	}
 	return pbkdf2Core(fn, 20, password, salt, iterations, keyLength)
 }
@@ -140,9 +147,8 @@ func PBKDF2HmacSHA1(password, salt []byte, iterations, keyLength int) ([]byte, e
 //	PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 64)
 //	→ 55ac046e56e3089fec1691c22544b605...
 func PBKDF2HmacSHA256(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	fn := func(key, msg []byte) []byte {
-		out, _ := hmacpkg.HmacSHA256(key, msg)
-		return out
+	fn := func(key, msg []byte) ([]byte, error) {
+		return hmacpkg.HmacSHA256(key, msg)
 	}
 	return pbkdf2Core(fn, 32, password, salt, iterations, keyLength)
 }
@@ -151,9 +157,8 @@ func PBKDF2HmacSHA256(password, salt []byte, iterations, keyLength int) ([]byte,
 //
 // Suitable for high-security applications. hLen = 64 (512-bit output).
 func PBKDF2HmacSHA512(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	fn := func(key, msg []byte) []byte {
-		out, _ := hmacpkg.HmacSHA512(key, msg)
-		return out
+	fn := func(key, msg []byte) ([]byte, error) {
+		return hmacpkg.HmacSHA512(key, msg)
 	}
 	return pbkdf2Core(fn, 64, password, salt, iterations, keyLength)
 }

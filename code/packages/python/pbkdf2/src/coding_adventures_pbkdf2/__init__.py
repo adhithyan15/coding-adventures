@@ -75,6 +75,7 @@ RFC 6070 Test Vector (PBKDF2-HMAC-SHA1)
 
 from __future__ import annotations
 
+import math
 import struct
 from collections.abc import Callable
 
@@ -115,8 +116,6 @@ def _pbkdf2(
         raise ValueError(f"PBKDF2 iterations must be positive, got {iterations}")
     if key_length <= 0:
         raise ValueError(f"PBKDF2 key_length must be positive, got {key_length}")
-
-    import math
 
     num_blocks = math.ceil(key_length / h_len)
     dk = bytearray()

@@ -92,11 +92,12 @@ local function _pbkdf2(prf, h_len, password, salt, iterations, key_length)
   if #password == 0 then
     error("PBKDF2 password must not be empty", 2)
   end
-  if type(iterations) ~= "number" or iterations <= 0 or math.floor(iterations) ~= iterations then
-    error("PBKDF2 iterations must be a positive integer", 2)
+  -- Upper bounds prevent unbounded loops or massive allocation from attacker-controlled inputs.
+  if type(iterations) ~= "number" or iterations <= 0 or math.floor(iterations) ~= iterations or iterations > 2^31 then
+    error("PBKDF2 iterations must be a positive integer (max 2^31)", 2)
   end
-  if type(key_length) ~= "number" or key_length <= 0 or math.floor(key_length) ~= key_length then
-    error("PBKDF2 key_length must be a positive integer", 2)
+  if type(key_length) ~= "number" or key_length <= 0 or math.floor(key_length) ~= key_length or key_length > 2^20 then
+    error("PBKDF2 key_length must be a positive integer (max 2^20)", 2)
   end
 
   local num_blocks = math.ceil(key_length / h_len)

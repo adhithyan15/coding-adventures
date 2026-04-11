@@ -74,12 +74,17 @@ defmodule CodingAdventures.Pbkdf2 do
         u1 = prf.(password, seed)
 
         # Accumulate XOR of all U values: start with U_1, then fold in U_2..U_c.
+        # We handle iterations == 1 explicitly to avoid the empty range 2..1//1.
         {t, _last_u} =
-          Enum.reduce(2..iterations//1, {u1, u1}, fn _j, {acc, prev_u} ->
-            next_u = prf.(password, prev_u)
-            new_acc = :crypto.exor(acc, next_u)
-            {new_acc, next_u}
-          end)
+          if iterations == 1 do
+            {u1, u1}
+          else
+            Enum.reduce(2..iterations//1, {u1, u1}, fn _j, {acc, prev_u} ->
+              next_u = prf.(password, prev_u)
+              new_acc = :crypto.exor(acc, next_u)
+              {new_acc, next_u}
+            end)
+          end
 
         t
       end

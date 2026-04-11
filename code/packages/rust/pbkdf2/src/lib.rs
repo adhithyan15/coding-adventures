@@ -156,7 +156,7 @@ pub fn pbkdf2_hmac_sha1(
         return Err(Pbkdf2Error::EmptyPassword);
     }
     pbkdf2_core(
-        |key, msg| hmac_sha1(key, msg).unwrap().to_vec(),
+        |key, msg| hmac_sha1(key, msg).expect("HMAC-SHA1 cannot fail with non-empty validated key").to_vec(),
         20,
         password,
         salt,
@@ -186,7 +186,7 @@ pub fn pbkdf2_hmac_sha256(
         return Err(Pbkdf2Error::EmptyPassword);
     }
     pbkdf2_core(
-        |key, msg| hmac_sha256(key, msg).unwrap().to_vec(),
+        |key, msg| hmac_sha256(key, msg).expect("HMAC-SHA256 cannot fail with non-empty validated key").to_vec(),
         32,
         password,
         salt,
@@ -208,7 +208,7 @@ pub fn pbkdf2_hmac_sha512(
         return Err(Pbkdf2Error::EmptyPassword);
     }
     pbkdf2_core(
-        |key, msg| hmac_sha512(key, msg).unwrap().to_vec(),
+        |key, msg| hmac_sha512(key, msg).expect("HMAC-SHA512 cannot fail with non-empty validated key").to_vec(),
         64,
         password,
         salt,

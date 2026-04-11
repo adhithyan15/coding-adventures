@@ -99,11 +99,14 @@ sub _pbkdf2 {
     die "PBKDF2 password must not be empty\n"
         unless defined($password) && length($password) > 0;
 
+    # The upper bounds (2**31 for iterations, 2**20 for key_length) prevent
+    # an attacker from supplying arbitrarily large values that would cause
+    # unbounded loops or massive memory allocation.
     die "PBKDF2 iterations must be a positive integer\n"
-        unless defined($iterations) && $iterations =~ /^\d+$/ && $iterations > 0;
+        unless defined($iterations) && $iterations =~ /^\d+$/ && $iterations > 0 && $iterations <= 2**31;
 
     die "PBKDF2 key_length must be a positive integer\n"
-        unless defined($key_length) && $key_length =~ /^\d+$/ && $key_length > 0;
+        unless defined($key_length) && $key_length =~ /^\d+$/ && $key_length > 0 && $key_length <= 2**20;
 
     use POSIX qw(ceil);
     my $num_blocks = ceil($key_length / $h_len);
