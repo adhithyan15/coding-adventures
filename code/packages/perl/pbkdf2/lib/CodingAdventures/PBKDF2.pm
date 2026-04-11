@@ -45,6 +45,7 @@ use strict;
 use warnings;
 use bytes;            # force length/substr to operate on raw bytes
 use Exporter 'import';
+use POSIX qw(ceil);   # ceil() for block-count computation
 
 use CodingAdventures::HMAC qw(hmac_sha1 hmac_sha256 hmac_sha512);
 
@@ -108,7 +109,6 @@ sub _pbkdf2 {
     die "PBKDF2 key_length must be a positive integer\n"
         unless defined($key_length) && $key_length =~ /^\d+$/ && $key_length > 0 && $key_length <= 2**20;
 
-    use POSIX qw(ceil);
     my $num_blocks = ceil($key_length / $h_len);
     my $dk         = '';
 

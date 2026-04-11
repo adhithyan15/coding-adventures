@@ -116,6 +116,13 @@ def _pbkdf2(
         raise ValueError(f"PBKDF2 iterations must be positive, got {iterations}")
     if key_length <= 0:
         raise ValueError(f"PBKDF2 key_length must be positive, got {key_length}")
+    # Upper bounds prevent unbounded CPU/memory consumption from attacker-controlled inputs.
+    # RFC 8018 § 5.2 imposes dkLen ≤ (2^32 − 1) × hLen, but we use a tighter
+    # practical limit: iterations ≤ 2^31 and key_length ≤ 2^20 (1 MiB).
+    if iterations > 2**31:
+        raise ValueError(f"PBKDF2 iterations must not exceed 2^31, got {iterations}")
+    if key_length > 2**20:
+        raise ValueError(f"PBKDF2 key_length must not exceed 2^20, got {key_length}")
 
     num_blocks = math.ceil(key_length / h_len)
     dk = bytearray()

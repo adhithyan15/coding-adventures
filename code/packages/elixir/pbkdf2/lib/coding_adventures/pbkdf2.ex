@@ -61,6 +61,14 @@ defmodule CodingAdventures.Pbkdf2 do
     if not is_integer(key_length) or key_length <= 0,
       do: raise(ArgumentError, "PBKDF2 key_length must be positive")
 
+    # Upper bounds prevent unbounded CPU/memory from attacker-controlled inputs.
+    # Elixir integers are arbitrary precision, so these checks are necessary.
+    if iterations > 2_147_483_648,
+      do: raise(ArgumentError, "PBKDF2 iterations must not exceed 2^31")
+
+    if key_length > 1_048_576,
+      do: raise(ArgumentError, "PBKDF2 key_length must not exceed 2^20 (1 MiB)")
+
     num_blocks = ceil(key_length / h_len)
 
     dk =

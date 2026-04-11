@@ -50,8 +50,14 @@ var ErrEmptyPassword = errors.New("pbkdf2: password must not be empty")
 // ErrInvalidIterations is returned when iterations is zero or negative.
 var ErrInvalidIterations = errors.New("pbkdf2: iterations must be positive")
 
-// ErrInvalidKeyLength is returned when key_length is zero or negative.
+// ErrInvalidKeyLength is returned when key_length is zero, negative, or exceeds
+// the RFC 8018 maximum of (2^32−1)×hLen.
 var ErrInvalidKeyLength = errors.New("pbkdf2: key_length must be positive")
+
+// ErrKeyLengthTooLarge is returned when key_length exceeds the practical limit
+// of 2^20 bytes (1 MiB). RFC 8018 § 5.2 imposes (2^32−1)×hLen as the hard
+// limit, but we apply a tighter bound to prevent memory-exhaustion DoS.
+var ErrKeyLengthTooLarge = errors.New("pbkdf2: key_length must not exceed 2^20 (1 MiB)")
 
 // prf is the type of a pseudorandom function: PRF(key, message) → ([]byte, error).
 // In PBKDF2, the password is the key and the iterated data is the message.
@@ -78,8 +84,15 @@ func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength i
 	if keyLength <= 0 {
 		return nil, ErrInvalidKeyLength
 	}
+	// Enforce a practical upper bound to prevent memory-exhaustion DoS.
+	// Also prevents arithmetic overflow in the ceiling computation on 32-bit
+	// builds where int is 32 bits and keyLength + hLen - 1 could wrap negative.
+	if keyLength > 1<<20 {
+		return nil, ErrKeyLengthTooLarge
+	}
 
 	// How many hLen-sized blocks are needed?
+	// Safe from overflow: keyLength ≤ 2^20 and hLen ≤ 64.
 	numBlocks := (keyLength + hLen - 1) / hLen
 	dk := make([]byte, 0, numBlocks*hLen)
 

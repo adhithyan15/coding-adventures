@@ -55,6 +55,9 @@ module CodingAdventures
       raise ArgumentError, "PBKDF2 password must not be empty" if password.empty?
       raise ArgumentError, "PBKDF2 iterations must be positive" unless iterations.is_a?(Integer) && iterations > 0
       raise ArgumentError, "PBKDF2 key_length must be positive" unless key_length.is_a?(Integer) && key_length > 0
+      # Upper bounds prevent unbounded CPU/memory from attacker-controlled inputs.
+      raise ArgumentError, "PBKDF2 iterations must not exceed 2**31" if iterations > 2**31
+      raise ArgumentError, "PBKDF2 key_length must not exceed 2**20" if key_length > 2**20
 
       num_blocks = (key_length.to_f / h_len).ceil
       dk = "".b

@@ -71,6 +71,16 @@ function pbkdf2Core(
   if (keyLength <= 0 || !Number.isInteger(keyLength)) {
     throw new Error("PBKDF2 keyLength must be a positive integer");
   }
+  // Upper bounds prevent unbounded CPU/memory from attacker-controlled inputs.
+  // JavaScript Numbers can represent values up to 2^53; without these bounds,
+  // a caller could pass iterations = Number.MAX_SAFE_INTEGER causing an
+  // effectively infinite loop.
+  if (iterations > 2 ** 31) {
+    throw new Error("PBKDF2 iterations must not exceed 2^31");
+  }
+  if (keyLength > 2 ** 20) {
+    throw new Error("PBKDF2 keyLength must not exceed 2^20 (1 MiB)");
+  }
 
   // How many hLen-sized blocks do we need?
   const numBlocks = Math.ceil(keyLength / hLen);

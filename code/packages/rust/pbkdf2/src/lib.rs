@@ -50,8 +50,16 @@ pub enum Pbkdf2Error {
     EmptyPassword,
     /// Iteration count is zero or would overflow. Must be ≥ 1.
     InvalidIterations,
-    /// Key length is zero. Must be ≥ 1.
+    /// Key length is zero or exceeds the 2^20 practical upper bound.
     InvalidKeyLength,
+    /// Key length exceeds the practical 2^20 limit (1 MiB). RFC 8018 § 5.2
+    /// imposes (2^32−1)×hLen as the hard cap; we apply a tighter bound to
+    /// prevent memory-exhaustion DoS and integer-overflow in block counting.
+    KeyLengthTooLarge,
+    /// The underlying PRF returned an error. This should not happen when the
+    /// password is non-empty (validated before calling the PRF), but is
+    /// returned rather than panicking if the HMAC implementation ever changes.
+    PrfError,
 }
 
 impl std::fmt::Display for Pbkdf2Error {
@@ -60,6 +68,8 @@ impl std::fmt::Display for Pbkdf2Error {
             Pbkdf2Error::EmptyPassword => write!(f, "pbkdf2: password must not be empty"),
             Pbkdf2Error::InvalidIterations => write!(f, "pbkdf2: iterations must be positive"),
             Pbkdf2Error::InvalidKeyLength => write!(f, "pbkdf2: key_length must be positive"),
+            Pbkdf2Error::KeyLengthTooLarge => write!(f, "pbkdf2: key_length must not exceed 2^20 (1 MiB)"),
+            Pbkdf2Error::PrfError => write!(f, "pbkdf2: pseudorandom function returned an error"),
         }
     }
 }
@@ -72,8 +82,11 @@ impl std::error::Error for Pbkdf2Error {}
 
 /// Generic PBKDF2 — used internally by all public convenience functions.
 ///
-/// `prf(key, msg)` must return exactly `h_len` bytes.
-/// The closure is called with `password` as the key.
+/// `prf(key, msg)` must return exactly `h_len` bytes or propagate an error.
+/// Using a fallible closure (`Result`) instead of a panicking one ensures that
+/// PRF failures surface as a `Pbkdf2Error::PrfError` rather than an
+/// unrecoverable panic — important because library panics cannot be caught
+/// across FFI boundaries.
 fn pbkdf2_core<F>(
     prf: F,
     h_len: usize,
@@ -83,7 +96,7 @@ fn pbkdf2_core<F>(
     key_length: usize,
 ) -> Result<Vec<u8>, Pbkdf2Error>
 where
-    F: Fn(&[u8], &[u8]) -> Vec<u8>,
+    F: Fn(&[u8], &[u8]) -> Result<Vec<u8>, Pbkdf2Error>,
 {
     if password.is_empty() {
         return Err(Pbkdf2Error::EmptyPassword);
@@ -94,8 +107,15 @@ where
     if key_length == 0 {
         return Err(Pbkdf2Error::InvalidKeyLength);
     }
+    // Enforce a practical upper bound to prevent memory-exhaustion DoS and to
+    // guarantee the num_blocks cast to u32 cannot truncate silently.
+    // RFC 8018 § 5.2 hard cap is (2^32−1)×hLen; we apply 2^20 (1 MiB).
+    if key_length > 1 << 20 {
+        return Err(Pbkdf2Error::KeyLengthTooLarge);
+    }
 
     // Number of h_len-sized output blocks needed.
+    // Safe: key_length ≤ 2^20 and h_len ≤ 64, so num_blocks ≤ 2^20 / 1 = 2^20 ≤ u32::MAX.
     let num_blocks = key_length.div_ceil(h_len);
     let mut dk = Vec::with_capacity(num_blocks * h_len);
 
@@ -107,7 +127,7 @@ where
         seed.extend_from_slice(&i.to_be_bytes());
 
         // U_1 = PRF(Password, Seed)
-        let u = prf(password, &seed);
+        let u = prf(password, &seed)?;
 
         // t accumulates the XOR of all U values for this block.
         let mut t = u.clone();
@@ -115,7 +135,7 @@ where
         // U_j = PRF(Password, U_{j-1}), XOR each into t.
         let mut prev = u;
         for _ in 1..iterations {
-            let next = prf(password, &prev);
+            let next = prf(password, &prev)?;
             for (a, b) in t.iter_mut().zip(next.iter()) {
                 *a ^= b;
             }
@@ -156,7 +176,7 @@ pub fn pbkdf2_hmac_sha1(
         return Err(Pbkdf2Error::EmptyPassword);
     }
     pbkdf2_core(
-        |key, msg| hmac_sha1(key, msg).expect("HMAC-SHA1 cannot fail with non-empty validated key").to_vec(),
+        |key, msg| hmac_sha1(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
         20,
         password,
         salt,
@@ -186,7 +206,7 @@ pub fn pbkdf2_hmac_sha256(
         return Err(Pbkdf2Error::EmptyPassword);
     }
     pbkdf2_core(
-        |key, msg| hmac_sha256(key, msg).expect("HMAC-SHA256 cannot fail with non-empty validated key").to_vec(),
+        |key, msg| hmac_sha256(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
         32,
         password,
         salt,
@@ -208,7 +228,7 @@ pub fn pbkdf2_hmac_sha512(
         return Err(Pbkdf2Error::EmptyPassword);
     }
     pbkdf2_core(
-        |key, msg| hmac_sha512(key, msg).expect("HMAC-SHA512 cannot fail with non-empty validated key").to_vec(),
+        |key, msg| hmac_sha512(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
         64,
         password,
         salt,

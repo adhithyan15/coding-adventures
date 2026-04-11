@@ -79,8 +79,14 @@ private func pbkdf2Core(
     guard !password.isEmpty else { throw PBKDF2Error.emptyPassword }
     guard iterations > 0 else { throw PBKDF2Error.invalidIterations }
     guard keyLength > 0 else { throw PBKDF2Error.invalidKeyLength }
+    // Upper bounds prevent unbounded CPU/memory from attacker-controlled inputs,
+    // and guard against arithmetic overflow in the ceiling computation below.
+    // Swift's Int is 64-bit and traps on overflow by default, so we check first.
+    guard iterations <= (1 << 31) else { throw PBKDF2Error.invalidIterations }
+    guard keyLength <= (1 << 20) else { throw PBKDF2Error.invalidKeyLength }
 
     // Number of hLen-sized blocks needed.
+    // Safe from overflow: keyLength ≤ 2^20 and hLen ≤ 64, so keyLength + hLen - 1 ≤ 2^20 + 63.
     let numBlocks = (keyLength + hLen - 1) / hLen
     var dk = Data(capacity: numBlocks * hLen)
 
