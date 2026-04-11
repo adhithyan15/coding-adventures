@@ -1,0 +1,15 @@
+[workspace]
+
+[package]
+name = "treap-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust treap crate via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+treap = { path = "../../rust/treap" }
+wasm-bindgen = "0.2"

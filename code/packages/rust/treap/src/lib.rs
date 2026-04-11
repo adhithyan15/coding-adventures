@@ -1,9 +1,9 @@
 //! DT10 Treap.
 
 use std::cmp::Ordering;
-use std::sync::atomic::{AtomicU64, Ordering as AtomicOrdering};
+use std::sync::atomic::{AtomicU32, Ordering as AtomicOrdering};
 
-static PRIORITY_SEED: AtomicU64 = AtomicU64::new(0x9E37_79B9_7F4A_7C15);
+static PRIORITY_SEED: AtomicU32 = AtomicU32::new(0x9E37_79B9);
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct TreapNode<K> {
@@ -244,8 +244,18 @@ fn validate<'a, K: Ord>(
             if parent_priority.is_some_and(|priority| node.priority > priority) {
                 return None;
             }
-            let left = validate(node.left.as_deref(), min, Some(&node.key), Some(node.priority))?;
-            let right = validate(node.right.as_deref(), Some(&node.key), max, Some(node.priority))?;
+            let left = validate(
+                node.left.as_deref(),
+                min,
+                Some(&node.key),
+                Some(node.priority),
+            )?;
+            let right = validate(
+                node.right.as_deref(),
+                Some(&node.key),
+                max,
+                Some(node.priority),
+            )?;
             if node.size != 1 + left + right {
                 return None;
             }
@@ -341,12 +351,12 @@ fn update_metadata<K>(node: &mut Box<TreapNode<K>>) {
 }
 
 fn next_priority() -> f64 {
-    let mut state = PRIORITY_SEED.fetch_add(0x9E37_79B9_7F4A_7C15, AtomicOrdering::Relaxed);
-    state ^= state >> 12;
-    state ^= state << 25;
-    state ^= state >> 27;
-    let mixed = state.wrapping_mul(0x2545F4914F6CDD1D);
-    (mixed as f64) / (u64::MAX as f64)
+    let mut state = PRIORITY_SEED.fetch_add(0x9E37_79B9, AtomicOrdering::Relaxed);
+    state ^= state >> 13;
+    state ^= state << 17;
+    state ^= state >> 5;
+    let mixed = state.wrapping_mul(0x85EB_CA6B);
+    (mixed as f64) / (u32::MAX as f64)
 }
 
 fn bst_predecessor<'a, K: Ord>(root: &'a Option<Box<TreapNode<K>>>, key: &K) -> Option<&'a K> {
@@ -379,10 +389,7 @@ fn bst_successor<'a, K: Ord>(root: &'a Option<Box<TreapNode<K>>>, key: &K) -> Op
     best
 }
 
-fn bst_kth_smallest<'a, K: Ord>(
-    root: &'a Option<Box<TreapNode<K>>>,
-    k: usize,
-) -> Option<&'a K> {
+fn bst_kth_smallest<'a, K: Ord>(root: &'a Option<Box<TreapNode<K>>>, k: usize) -> Option<&'a K> {
     if k == 0 {
         return None;
     }
