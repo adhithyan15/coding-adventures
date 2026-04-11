@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "scrypt memory-hard key derivation function — RFC 7914"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["coding-adventures-hmac", "coding-adventures-sha256"]
+dependencies = ["coding-adventures-hmac", "coding-adventures-sha256", "coding-adventures-pbkdf2"]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov"]

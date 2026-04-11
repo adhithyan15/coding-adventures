@@ -23,7 +23,7 @@ func mustHex(s string) []byte {
 
 func TestRFC6070_SHA1_c1(t *testing.T) {
 	// Password: "password", Salt: "salt", c: 1, dkLen: 20
-	dk, err := pbkdf2.PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 1, 20)
+	dk, err := pbkdf2.PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 1, 20, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -34,7 +34,7 @@ func TestRFC6070_SHA1_c1(t *testing.T) {
 }
 
 func TestRFC6070_SHA1_c4096(t *testing.T) {
-	dk, err := pbkdf2.PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 4096, 20)
+	dk, err := pbkdf2.PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 4096, 20, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -50,6 +50,7 @@ func TestRFC6070_SHA1_LongPasswordSalt(t *testing.T) {
 		[]byte("saltSALTsaltSALTsaltSALTsaltSALTsalt"),
 		4096,
 		25,
+		false,
 	)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -61,7 +62,7 @@ func TestRFC6070_SHA1_LongPasswordSalt(t *testing.T) {
 }
 
 func TestRFC6070_SHA1_NullBytes(t *testing.T) {
-	dk, err := pbkdf2.PBKDF2HmacSHA1([]byte("pass\x00word"), []byte("sa\x00lt"), 4096, 16)
+	dk, err := pbkdf2.PBKDF2HmacSHA1([]byte("pass\x00word"), []byte("sa\x00lt"), 4096, 16, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -76,7 +77,7 @@ func TestRFC6070_SHA1_NullBytes(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 func TestRFC7914_SHA256_c1_64bytes(t *testing.T) {
-	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 64)
+	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 64, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -92,7 +93,7 @@ func TestRFC7914_SHA256_c1_64bytes(t *testing.T) {
 }
 
 func TestSHA256_OutputLength(t *testing.T) {
-	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte("key"), []byte("salt"), 1, 32)
+	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte("key"), []byte("salt"), 1, 32, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -103,8 +104,8 @@ func TestSHA256_OutputLength(t *testing.T) {
 
 func TestSHA256_TruncationConsistency(t *testing.T) {
 	// Requesting fewer bytes must equal the prefix of a longer request.
-	short, _ := pbkdf2.PBKDF2HmacSHA256([]byte("key"), []byte("salt"), 1, 16)
-	full, _ := pbkdf2.PBKDF2HmacSHA256([]byte("key"), []byte("salt"), 1, 32)
+	short, _ := pbkdf2.PBKDF2HmacSHA256([]byte("key"), []byte("salt"), 1, 16, false)
+	full, _ := pbkdf2.PBKDF2HmacSHA256([]byte("key"), []byte("salt"), 1, 32, false)
 	if string(short) != string(full[:16]) {
 		t.Errorf("truncation mismatch: %x vs %x", short, full[:16])
 	}
@@ -112,8 +113,8 @@ func TestSHA256_TruncationConsistency(t *testing.T) {
 
 func TestSHA256_MultiBlock(t *testing.T) {
 	// 64 bytes = 2 blocks of 32; first block must match single-block result.
-	dk64, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 1, 64)
-	dk32, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 1, 32)
+	dk64, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 1, 64, false)
+	dk32, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 1, 32, false)
 	if len(dk64) != 64 {
 		t.Errorf("expected 64 bytes, got %d", len(dk64))
 	}
@@ -127,7 +128,7 @@ func TestSHA256_MultiBlock(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 func TestSHA512_OutputLength(t *testing.T) {
-	dk, err := pbkdf2.PBKDF2HmacSHA512([]byte("secret"), []byte("nacl"), 1, 64)
+	dk, err := pbkdf2.PBKDF2HmacSHA512([]byte("secret"), []byte("nacl"), 1, 64, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -137,8 +138,8 @@ func TestSHA512_OutputLength(t *testing.T) {
 }
 
 func TestSHA512_Truncation(t *testing.T) {
-	short, _ := pbkdf2.PBKDF2HmacSHA512([]byte("secret"), []byte("nacl"), 1, 32)
-	full, _ := pbkdf2.PBKDF2HmacSHA512([]byte("secret"), []byte("nacl"), 1, 64)
+	short, _ := pbkdf2.PBKDF2HmacSHA512([]byte("secret"), []byte("nacl"), 1, 32, false)
+	full, _ := pbkdf2.PBKDF2HmacSHA512([]byte("secret"), []byte("nacl"), 1, 64, false)
 	if string(short) != string(full[:32]) {
 		t.Errorf("truncation mismatch")
 	}
@@ -149,7 +150,7 @@ func TestSHA512_Truncation(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 func TestHexVariant_SHA1(t *testing.T) {
-	h, err := pbkdf2.PBKDF2HmacSHA1Hex([]byte("password"), []byte("salt"), 1, 20)
+	h, err := pbkdf2.PBKDF2HmacSHA1Hex([]byte("password"), []byte("salt"), 1, 20, false)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -159,8 +160,8 @@ func TestHexVariant_SHA1(t *testing.T) {
 }
 
 func TestHexVariant_SHA256MatchesBytes(t *testing.T) {
-	dk, _ := pbkdf2.PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 32)
-	h, _ := pbkdf2.PBKDF2HmacSHA256Hex([]byte("passwd"), []byte("salt"), 1, 32)
+	dk, _ := pbkdf2.PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 32, false)
+	h, _ := pbkdf2.PBKDF2HmacSHA256Hex([]byte("passwd"), []byte("salt"), 1, 32, false)
 	if h != fmt.Sprintf("%x", dk) {
 		t.Errorf("hex mismatch: %s vs %x", h, dk)
 	}
@@ -171,28 +172,39 @@ func TestHexVariant_SHA256MatchesBytes(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 func TestEmptyPassword(t *testing.T) {
-	_, err := pbkdf2.PBKDF2HmacSHA256([]byte{}, []byte("salt"), 1, 32)
+	_, err := pbkdf2.PBKDF2HmacSHA256([]byte{}, []byte("salt"), 1, 32, false)
 	if err != pbkdf2.ErrEmptyPassword {
 		t.Errorf("expected ErrEmptyPassword, got %v", err)
 	}
 }
 
+func TestEmptyPasswordAllowed(t *testing.T) {
+	// When allowEmptyPassword=true, an empty password must succeed.
+	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte{}, []byte("salt"), 1, 32, true)
+	if err != nil {
+		t.Fatalf("unexpected error with allowEmptyPassword=true: %v", err)
+	}
+	if len(dk) != 32 {
+		t.Errorf("expected 32 bytes, got %d", len(dk))
+	}
+}
+
 func TestZeroIterations(t *testing.T) {
-	_, err := pbkdf2.PBKDF2HmacSHA256([]byte("pw"), []byte("salt"), 0, 32)
+	_, err := pbkdf2.PBKDF2HmacSHA256([]byte("pw"), []byte("salt"), 0, 32, false)
 	if err != pbkdf2.ErrInvalidIterations {
 		t.Errorf("expected ErrInvalidIterations, got %v", err)
 	}
 }
 
 func TestNegativeIterations(t *testing.T) {
-	_, err := pbkdf2.PBKDF2HmacSHA256([]byte("pw"), []byte("salt"), -1, 32)
+	_, err := pbkdf2.PBKDF2HmacSHA256([]byte("pw"), []byte("salt"), -1, 32, false)
 	if err != pbkdf2.ErrInvalidIterations {
 		t.Errorf("expected ErrInvalidIterations, got %v", err)
 	}
 }
 
 func TestZeroKeyLength(t *testing.T) {
-	_, err := pbkdf2.PBKDF2HmacSHA256([]byte("pw"), []byte("salt"), 1, 0)
+	_, err := pbkdf2.PBKDF2HmacSHA256([]byte("pw"), []byte("salt"), 1, 0, false)
 	if err != pbkdf2.ErrInvalidKeyLength {
 		t.Errorf("expected ErrInvalidKeyLength, got %v", err)
 	}
@@ -200,7 +212,7 @@ func TestZeroKeyLength(t *testing.T) {
 
 func TestEmptySaltAllowed(t *testing.T) {
 	// RFC 8018 does not forbid empty salt.
-	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte{}, 1, 32)
+	dk, err := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte{}, 1, 32, false)
 	if err != nil {
 		t.Fatalf("unexpected error for empty salt: %v", err)
 	}
@@ -210,32 +222,32 @@ func TestEmptySaltAllowed(t *testing.T) {
 }
 
 func TestDeterministic(t *testing.T) {
-	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("secret"), []byte("nacl"), 100, 32)
-	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("secret"), []byte("nacl"), 100, 32)
+	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("secret"), []byte("nacl"), 100, 32, false)
+	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("secret"), []byte("nacl"), 100, 32, false)
 	if string(a) != string(b) {
 		t.Error("expected deterministic output")
 	}
 }
 
 func TestDifferentSalts(t *testing.T) {
-	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt1"), 1, 32)
-	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt2"), 1, 32)
+	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt1"), 1, 32, false)
+	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt2"), 1, 32, false)
 	if string(a) == string(b) {
 		t.Error("different salts must produce different keys")
 	}
 }
 
 func TestDifferentPasswords(t *testing.T) {
-	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password1"), []byte("salt"), 1, 32)
-	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password2"), []byte("salt"), 1, 32)
+	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password1"), []byte("salt"), 1, 32, false)
+	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password2"), []byte("salt"), 1, 32, false)
 	if string(a) == string(b) {
 		t.Error("different passwords must produce different keys")
 	}
 }
 
 func TestDifferentIterations(t *testing.T) {
-	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 1, 32)
-	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 2, 32)
+	a, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 1, 32, false)
+	b, _ := pbkdf2.PBKDF2HmacSHA256([]byte("password"), []byte("salt"), 2, 32, false)
 	if string(a) == string(b) {
 		t.Error("different iteration counts must produce different keys")
 	}

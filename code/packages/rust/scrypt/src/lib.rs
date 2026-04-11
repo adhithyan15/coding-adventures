@@ -56,13 +56,11 @@
 //!
 //! ## Internal Dependencies
 //!
-//! scrypt uses PBKDF2-HMAC-SHA256 internally. Our PBKDF2 crate rejects empty
-//! passwords (RFC 7914 vector 1 has `password = ""`), so this crate implements
-//! its own internal PBKDF2 that uses the low-level `hmac()` function directly —
-//! which imposes no empty-key restriction.
+//! scrypt uses PBKDF2-HMAC-SHA256 internally via `coding_adventures_pbkdf2`.
+//! RFC 7914 vector 1 uses `password = ""`, which is supported by passing
+//! `allow_empty_password = true` to `pbkdf2_hmac_sha256`.
 
-use coding_adventures_hmac::hmac;
-use coding_adventures_sha256::sha256;
+use coding_adventures_pbkdf2::{pbkdf2_hmac_sha256, Pbkdf2Error};
 
 // ─── Error Type ──────────────────────────────────────────────────────────────
 
@@ -115,100 +113,20 @@ pub enum ScryptError {
     /// from requesting an absurdly large output.
     PRTooLarge,
 
-    /// An internal HMAC computation failed.
+    /// An internal PBKDF2 computation failed.
     ///
-    /// In practice this is unreachable because the internal PBKDF2 uses the
-    /// low-level `hmac()` function which cannot fail. Reserved for future
-    /// error-propagation.
+    /// Propagated from `coding_adventures_pbkdf2` when the internal PBKDF2 call
+    /// returns an error. In practice only `Pbkdf2Error::PrfError` can arise here
+    /// because parameter validation (iterations=1, key_length>0) is done by the
+    /// scrypt parameter checks above, and `allow_empty_password=true` suppresses
+    /// the empty-password guard.
     HmacError,
 }
 
-// ─── Internal PBKDF2-HMAC-SHA256 ─────────────────────────────────────────────
-//
-// RFC 7914 requires PBKDF2-HMAC-SHA256 internally. Our published PBKDF2 crate
-// (coding_adventures_pbkdf2) rejects empty passwords for security, but RFC 7914
-// test vector 1 passes password="" to scrypt. To avoid this mismatch we
-// implement our own internal PBKDF2 using the generic `hmac()` function from the
-// HMAC crate, which has no empty-key restriction.
-//
-// The algorithm (RFC 8018 §5.2):
-//
-//   DK = T_1 || T_2 || ... || T_⌈dkLen/hLen⌉   (first dkLen bytes)
-//
-//   T_i = U_1 XOR U_2 XOR ... XOR U_c
-//
-//   U_1   = PRF(Password, Salt || INT_32_BE(i))
-//   U_j   = PRF(Password, U_{j-1})   for j = 2..c
-//
-// where PRF = HMAC-SHA256 and hLen = 32 bytes.
-
-/// SHA-256 block size (bytes). Used to set the HMAC block size parameter.
-const SHA256_BLOCK_SIZE: usize = 64;
-
-/// SHA-256 digest size (bytes). Each PBKDF2 block is this many bytes.
-const H_LEN: usize = 32;
-
-/// Internal PBKDF2-HMAC-SHA256 that allows empty passwords.
-///
-/// This exists solely because RFC 7914 vector 1 uses `password = b""` and
-/// our published HMAC crate rejects empty keys for safety. We use the
-/// low-level `hmac()` function that has no such guard.
-///
-/// # Parameters
-/// - `password`: the source of entropy (may be empty)
-/// - `salt`: random salt, any length
-/// - `iterations`: number of PRF rounds per output block (≥ 1)
-/// - `key_length`: desired output length in bytes
-fn pbkdf2_sha256_internal(
-    password: &[u8],
-    salt: &[u8],
-    iterations: usize,
-    key_length: usize,
-) -> Vec<u8> {
-    // Determine how many 32-byte (H_LEN) blocks we need to fill key_length bytes.
-    // We always round up: ⌈key_length / H_LEN⌉.
-    let num_blocks = (key_length + H_LEN - 1) / H_LEN;
-
-    // Pre-allocate the output. We'll fill it block by block, then truncate.
-    let mut dk = Vec::with_capacity(num_blocks * H_LEN);
-
-    for i in 1u32..=(num_blocks as u32) {
-        // U_1 = HMAC-SHA256(password, salt || INT_32_BE(i))
-        //
-        // The block index is appended to the salt as a 4-byte big-endian
-        // integer. This makes U_1 unique per block even if the salt is empty.
-        let mut seed = salt.to_vec();
-        seed.extend_from_slice(&i.to_be_bytes());
-
-        // The generic `hmac()` function takes a hash closure and block size.
-        // We wrap sha256 in a closure that returns Vec<u8>.
-        let hmac_fn = |data: &[u8]| sha256(data).to_vec();
-
-        let u1_bytes = hmac(hmac_fn, SHA256_BLOCK_SIZE, password, &seed);
-        // u1_bytes is 32 bytes (sha256 output length).
-
-        // T_i starts as U_1; we XOR subsequent U_j values in.
-        let mut t = u1_bytes.clone();
-        let mut prev = u1_bytes;
-
-        // U_j = HMAC-SHA256(password, U_{j-1}), for j = 2..iterations
-        for _ in 1..iterations {
-            let hmac_fn2 = |data: &[u8]| sha256(data).to_vec();
-            let next = hmac(hmac_fn2, SHA256_BLOCK_SIZE, password, &prev);
-
-            // T_i = T_i XOR U_j
-            for (tk, nk) in t.iter_mut().zip(next.iter()) {
-                *tk ^= nk;
-            }
-            prev = next;
-        }
-
-        dk.extend_from_slice(&t);
+impl From<Pbkdf2Error> for ScryptError {
+    fn from(_: Pbkdf2Error) -> Self {
+        ScryptError::HmacError
     }
-
-    // The last block may extend beyond key_length; truncate to exact size.
-    dk.truncate(key_length);
-    dk
 }
 
 // ─── Salsa20/8 Core ──────────────────────────────────────────────────────────
@@ -528,7 +446,8 @@ pub fn scrypt(
     //
     // Each block B[i] = B[i * 128 * r .. (i+1) * 128 * r]
     let b_len = p * 128 * r;
-    let mut b = pbkdf2_sha256_internal(password, salt, 1, b_len);
+    let mut b = pbkdf2_hmac_sha256(password, salt, 1, b_len, true)
+        .map_err(ScryptError::from)?;
 
     // ── Step 2: Apply ROMix to each block independently ───────────────────────
     //
@@ -552,7 +471,8 @@ pub fn scrypt(
     // A second PBKDF2 call with password=P and salt=B extracts dk_len bytes.
     // Using B (which depends on the memory-hard ROMix) as the salt means the
     // output is only computable after all ROMix steps finish.
-    Ok(pbkdf2_sha256_internal(password, &b, 1, dk_len))
+    pbkdf2_hmac_sha256(password, &b, 1, dk_len, true)
+        .map_err(ScryptError::from)
 }
 
 /// Derive a key using scrypt and return it as a lowercase hex string.
@@ -593,48 +513,6 @@ pub fn scrypt_hex(
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    // ── Internal PBKDF2 tests ─────────────────────────────────────────────────
-
-    #[test]
-    fn pbkdf2_internal_empty_password_allowed() {
-        // The internal PBKDF2 must allow empty passwords (for RFC 7914 vector 1).
-        let result = pbkdf2_sha256_internal(b"", b"salt", 1, 32);
-        assert_eq!(result.len(), 32);
-    }
-
-    #[test]
-    fn pbkdf2_internal_matches_known_value() {
-        // RFC 6070 vector 1: PBKDF2-HMAC-SHA256("password", "salt", 1, 20)
-        // Expected (from RFC 6070 §2, SHA-256 variant):
-        //   120fb6cffccd925779ef5528f5b57de5
-        //   7b8dce2c31a1a4be8c8d5c2a8f8a4b0b
-        // We use first 20 bytes.
-        let result = pbkdf2_sha256_internal(b"password", b"salt", 1, 20);
-        assert_eq!(result.len(), 20);
-        // Just verify length and determinism — the exact value is verified via
-        // the scrypt RFC vectors which chain through PBKDF2 internally.
-    }
-
-    #[test]
-    fn pbkdf2_internal_output_length() {
-        // Verify truncation works for lengths not divisible by 32.
-        let result = pbkdf2_sha256_internal(b"key", b"salt", 1, 17);
-        assert_eq!(result.len(), 17);
-
-        let result = pbkdf2_sha256_internal(b"key", b"salt", 1, 64);
-        assert_eq!(result.len(), 64);
-
-        let result = pbkdf2_sha256_internal(b"key", b"salt", 1, 100);
-        assert_eq!(result.len(), 100);
-    }
-
-    #[test]
-    fn pbkdf2_internal_iterations_change_output() {
-        let r1 = pbkdf2_sha256_internal(b"pw", b"s", 1, 32);
-        let r2 = pbkdf2_sha256_internal(b"pw", b"s", 2, 32);
-        assert_ne!(r1, r2, "Different iteration counts must produce different output");
-    }
 
     // ── Salsa20/8 tests ───────────────────────────────────────────────────────
     //

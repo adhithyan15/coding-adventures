@@ -68,8 +68,7 @@ import (
 	"errors"
 	"fmt"
 
-	hmacpkg "github.com/adhithyan15/coding-adventures/code/packages/go/hmac"
-	gsha256 "github.com/adhithyan15/coding-adventures/code/packages/go/sha256"
+	pbkdf2pkg "github.com/adhithyan15/coding-adventures/code/packages/go/pbkdf2"
 )
 
 // ===========================================================================
@@ -401,91 +400,6 @@ func integerify(x [][]byte) uint64 {
 }
 
 // ===========================================================================
-// pbkdf2Sha256 — Internal PBKDF2-HMAC-SHA256 (RFC 2898 §5.2)
-// ===========================================================================
-//
-// This is a private PBKDF2 implementation that does NOT enforce a non-empty
-// password restriction.  The published hmac.HmacSHA256 function returns
-// ErrEmptyKey for empty passwords, but RFC 7914 test vector 1 uses
-// password="" and salt="".  We implement PBKDF2 here using hmac.HMAC
-// directly (which is exported and does not check for empty key), passing it
-// a SHA-256 hash function.
-//
-// # PBKDF2 Algorithm (RFC 2898 §5.2, simplified for c=1)
-//
-// For each 1-indexed block i from 1 to ⌈keyLength/hLen⌉:
-//
-//	U_1 = PRF(password, salt || INT(i))    // PRF = HMAC-SHA256, hLen = 32
-//	T_i = U_1 XOR U_2 XOR ... XOR U_c     // c = iterations
-//
-// DK = T_1 || T_2 || ... || T_⌈keyLength/hLen⌉  (truncated to keyLength)
-//
-// In scrypt, PBKDF2 is called with c=1 (a single PRF application per block),
-// so the XOR loop body runs just once and T_i = U_1 = PRF(password, salt||INT(i)).
-//
-// # Why Not Use the pbkdf2 Package?
-//
-// The published pbkdf2 package calls hmac.HmacSHA256, which rejects empty
-// keys.  Since RFC 7914 vector 1 exercises password="", we need a bypass.
-// Implementing PBKDF2 inline avoids modifying the published package and keeps
-// the security invariant (empty key rejection) intact for all other callers.
-func pbkdf2Sha256(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	const hLen = 32 // SHA-256 output size in bytes
-
-	// sha256Fn wraps gsha256.Sum256 (which returns [32]byte) into the
-	// hmacpkg.HashFn signature (func([]byte) []byte).
-	sha256Fn := func(data []byte) []byte {
-		s := gsha256.Sum256(data)
-		return s[:]
-	}
-
-	// Compute the number of 32-byte blocks needed to produce keyLength bytes.
-	numBlocks := (keyLength + hLen - 1) / hLen
-	dk := make([]byte, 0, numBlocks*hLen)
-
-	// blockIdx is a 4-byte big-endian counter appended to salt to
-	// differentiate blocks (per PBKDF2 spec: INT(i) is big-endian 32-bit).
-	blockIdx := make([]byte, 4)
-
-	for i := 1; i <= numBlocks; i++ {
-		binary.BigEndian.PutUint32(blockIdx, uint32(i))
-
-		// seed = salt || INT(i)
-		// Allocate fresh; do NOT use append(salt, blockIdx...) as that
-		// could mutate the caller's salt slice if it has spare capacity.
-		seed := make([]byte, len(salt)+4)
-		copy(seed, salt)
-		copy(seed[len(salt):], blockIdx)
-
-		// U_1 = HMAC-SHA256(password, seed)
-		// We call hmacpkg.HMAC directly (not HmacSHA256) to bypass the
-		// empty-key restriction — scrypt allows password="".
-		u := hmacpkg.HMAC(sha256Fn, 64, password, seed)
-		if u == nil {
-			return nil, fmt.Errorf("scrypt: PBKDF2 PRF returned nil on block %d", i)
-		}
-
-		// t = U_1 XOR U_2 XOR ... XOR U_c
-		// For iterations=1 (scrypt's case), this loop body never executes
-		// and t = U_1.
-		t := make([]byte, hLen)
-		copy(t, u)
-		for j := 1; j < iterations; j++ {
-			// U_{j+1} = HMAC-SHA256(password, U_j)
-			u = hmacpkg.HMAC(sha256Fn, 64, password, u)
-			if u == nil {
-				return nil, fmt.Errorf("scrypt: PBKDF2 PRF returned nil on block %d iteration %d", i, j)
-			}
-			for k := range t {
-				t[k] ^= u[k]
-			}
-		}
-		dk = append(dk, t...)
-	}
-	return dk[:keyLength], nil
-}
-
-// ===========================================================================
 // Public API
 // ===========================================================================
 
@@ -554,7 +468,10 @@ func Scrypt(password, salt []byte, n, r, p, dkLen int) ([]byte, error) {
 	// processed independently by ROMix.
 	// ---------------------------------------------------------------------------
 	bLen := p * 128 * r
-	b, err := pbkdf2Sha256(password, salt, 1, bLen)
+	// allowEmptyPassword=true: RFC 7914 test vector 1 uses password="" and
+	// salt="", so scrypt must accept empty passwords even though PBKDF2
+	// normally rejects them.
+	b, err := pbkdf2pkg.PBKDF2HmacSHA256(password, salt, 1, bLen, true)
 	if err != nil {
 		return nil, fmt.Errorf("scrypt: initial PBKDF2 failed: %w", err)
 	}
@@ -580,7 +497,8 @@ func Scrypt(password, salt []byte, n, r, p, dkLen int) ([]byte, error) {
 	// Another round of PBKDF2-HMAC-SHA256 with the original password and the
 	// mixed B as the "salt".  The output is the derived key.
 	// ---------------------------------------------------------------------------
-	return pbkdf2Sha256(password, b, 1, dkLen)
+	// Final PBKDF2 condense step — allowEmptyPassword=true for same reason.
+	return pbkdf2pkg.PBKDF2HmacSHA256(password, b, 1, dkLen, true)
 }
 
 // ScryptHex is a convenience wrapper around Scrypt that returns the derived

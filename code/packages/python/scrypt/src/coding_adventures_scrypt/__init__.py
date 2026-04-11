@@ -78,24 +78,20 @@ RFC 7914 Test Vectors
     → fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc823...
     (verified against Python hashlib.scrypt / OpenSSL)
 
-Internal PBKDF2 vs External Package
-=====================================
-RFC 7914 vector 1 uses an empty password. The coding_adventures_hmac package
-(correctly) rejects empty HMAC keys for security reasons. However, for the
-scrypt internal PBKDF2, the *password* is the HMAC *key*. To pass RFC test
-vectors, this module implements its own internal PBKDF2-SHA256 that bypasses
-the empty-key guard by calling the SHA-256 and HMAC primitives directly.
-
-The public API still validates that the scrypt *password* is non-empty, matching
-the security posture of the other packages in this monorepo.
+PBKDF2 Dependency
+==================
+This module delegates to coding_adventures_pbkdf2.pbkdf2_hmac_sha256 for its
+two PBKDF2-SHA256 calls (Steps 1 and 3 of the scrypt construction). RFC 7914
+test vector 1 uses an empty password, so both calls pass allow_empty_password=True.
+The scrypt public API itself does not enforce non-empty passwords, remaining
+lenient for RFC compatibility.
 """
 
 from __future__ import annotations
 
-import math
 import struct
 
-from coding_adventures_sha256 import sha256
+from coding_adventures_pbkdf2 import pbkdf2_hmac_sha256 as _pbkdf2_hmac_sha256
 
 __version__ = "0.1.0"
 
@@ -105,125 +101,6 @@ __version__ = "0.1.0"
 
 # 2^32 mask for modular arithmetic (Salsa20/8 words are 32-bit)
 _M32: int = 0xFFFFFFFF
-
-
-# =============================================================================
-# Internal HMAC-SHA256 (no empty-key guard — needed for RFC 7914 vector 1)
-# =============================================================================
-#
-# We implement HMAC directly here using SHA-256 rather than delegating to
-# coding_adventures_hmac.hmac_sha256, which (correctly) rejects empty keys.
-# RFC 7914 test vector 1 uses password="" which becomes the HMAC key — so we
-# need to allow it internally.
-#
-# HMAC construction (RFC 2104 § 2):
-#
-#   K' = normalize(K, 64)     ← hash if len > 64, zero-pad if len < 64
-#   ipad_key = K' XOR 0x36×64
-#   opad_key = K' XOR 0x5C×64
-#   HMAC(K, M) = SHA256(opad_key || SHA256(ipad_key || M))
-#
-# The ipad (0x36) and opad (0x5C) constants differ in 4 of 8 bits, maximizing
-# the Hamming distance between the two derived sub-keys.
-
-_IPAD: int = 0x36
-_OPAD: int = 0x5C
-_SHA256_BLOCK: int = 64  # bytes
-
-
-def _hmac_sha256_raw(key: bytes, message: bytes) -> bytes:
-    """HMAC-SHA256 with no restriction on key length (including empty).
-
-    This is intentionally internal — the public API of this package still
-    validates that the scrypt *password* is non-empty. This function exists
-    solely to implement the RFC 7914 test vectors that use empty passwords.
-
-    Parameters
-    ----------
-    key:
-        The HMAC key. May be empty (needed for RFC 7914 vector 1).
-    message:
-        The message to authenticate.
-
-    Returns
-    -------
-    bytes
-        32-byte HMAC-SHA256 tag.
-    """
-    # Step 1 — normalize key to exactly 64 bytes (SHA-256 block size)
-    if len(key) > _SHA256_BLOCK:
-        key = sha256(key)               # hash long keys
-    key_prime = key.ljust(_SHA256_BLOCK, b"\x00")  # zero-pad short/empty keys
-
-    # Step 2 — derive padded sub-keys
-    inner_key = bytes(b ^ _IPAD for b in key_prime)
-    outer_key = bytes(b ^ _OPAD for b in key_prime)
-
-    # Step 3 — nested SHA-256 calls
-    inner = sha256(inner_key + message)
-    return sha256(outer_key + inner)
-
-
-# =============================================================================
-# Internal PBKDF2-SHA256
-# =============================================================================
-#
-# PBKDF2 (RFC 8018 § 5.2) derives a long key from a password by iterating
-# HMAC many times per block. For scrypt, we always call it with iterations=1,
-# so the inner loop degenerates to a single HMAC call per block — but we keep
-# the full implementation for correctness.
-#
-# For each block index i = 1, 2, ..., ceil(dkLen / 32):
-#   U_1 = HMAC-SHA256(password, salt || INT_32_BE(i))
-#   U_2 = HMAC-SHA256(password, U_1)
-#   ...
-#   T_i = U_1 XOR U_2 XOR ... XOR U_c
-#
-# DK = T_1 || T_2 || ... (first dkLen bytes)
-
-
-def _pbkdf2_sha256(
-    password: bytes,
-    salt: bytes,
-    iterations: int,
-    key_length: int,
-) -> bytes:
-    """PBKDF2 key derivation using HMAC-SHA256.
-
-    Uses the internal _hmac_sha256_raw to allow empty passwords (needed for
-    RFC 7914 test vector 1).
-
-    Parameters
-    ----------
-    password:
-        The input password (may be empty for RFC vector compatibility).
-    salt:
-        Random salt bytes.
-    iterations:
-        Number of HMAC iterations per block. scrypt always uses 1.
-    key_length:
-        Desired output length in bytes.
-
-    Returns
-    -------
-    bytes
-        Derived key of exactly *key_length* bytes.
-    """
-    h_len: int = 32  # SHA-256 output size in bytes
-    num_blocks: int = math.ceil(key_length / h_len)
-    dk = b""
-    for i in range(1, num_blocks + 1):
-        # Seed = salt concatenated with block index as big-endian 32-bit int
-        seed = salt + i.to_bytes(4, "big")
-        # First HMAC application
-        u = _hmac_sha256_raw(password, seed)
-        t = bytearray(u)
-        # Remaining iterations (usually none since scrypt uses iterations=1)
-        for _ in range(iterations - 1):
-            u = _hmac_sha256_raw(password, u)
-            t = bytearray(a ^ b for a, b in zip(t, u))
-        dk += bytes(t)
-    return dk[:key_length]
 
 
 # =============================================================================
@@ -609,7 +486,7 @@ def scrypt(
     # purpose is to stretch the password+salt into exactly the right number of
     # bytes to seed p parallel ROMix operations.
     block_len = 128 * r
-    b_total = _pbkdf2_sha256(password, salt, 1, p * block_len)
+    b_total = _pbkdf2_hmac_sha256(password, salt, 1, p * block_len, allow_empty_password=True)
 
     # Split B into p independent blocks of 128r bytes each
     blocks = [b_total[i * block_len : (i + 1) * block_len] for i in range(p)]
@@ -626,7 +503,7 @@ def scrypt(
     #
     # The final PBKDF2 call uses the mixed B' as the salt. This collapses the
     # p × 128r bytes of mixed output into exactly dk_len bytes of derived key.
-    return _pbkdf2_sha256(password, mixed, 1, dk_len)
+    return _pbkdf2_hmac_sha256(password, mixed, 1, dk_len, allow_empty_password=True)
 
 
 def scrypt_hex(

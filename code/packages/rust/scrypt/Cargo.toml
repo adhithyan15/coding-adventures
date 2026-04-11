@@ -7,8 +7,7 @@ license = "MIT"
 authors = ["Adhithya Rajasekaran"]
 
 [dependencies]
-coding_adventures_hmac = { path = "../hmac" }
-coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_pbkdf2 = { path = "../pbkdf2" }
 
 [dev-dependencies]
 hex = "0.4"

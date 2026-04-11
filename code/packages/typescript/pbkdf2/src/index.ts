@@ -36,7 +36,10 @@
  * For new systems consider Argon2id (memory-hard, resists GPU attacks).
  */
 
-import { hmacSHA1, hmacSHA256, hmacSHA512 } from "@coding-adventures/hmac";
+import { hmac, hmacSHA1, hmacSHA256, hmacSHA512 } from "@coding-adventures/hmac";
+import { sha1 } from "@coding-adventures/sha1";
+import { sha256 } from "@coding-adventures/sha256";
+import { sha512 } from "@coding-adventures/sha512";
 
 export const VERSION = "0.1.0";
 
@@ -61,8 +64,9 @@ function pbkdf2Core(
   salt: Uint8Array,
   iterations: number,
   keyLength: number,
+  allowEmptyPassword: boolean = false,
 ): Uint8Array {
-  if (password.length === 0) {
+  if (password.length === 0 && !allowEmptyPassword) {
     throw new Error("PBKDF2 password must not be empty");
   }
   if (iterations <= 0 || !Number.isInteger(iterations)) {
@@ -152,15 +156,14 @@ export function pbkdf2HmacSHA1(
   salt: Uint8Array,
   iterations: number,
   keyLength: number,
+  allowEmptyPassword: boolean = false,
 ): Uint8Array {
-  return pbkdf2Core(
-    (key, msg) => hmacSHA1(key, msg),
-    20,
-    password,
-    salt,
-    iterations,
-    keyLength,
-  );
+  // When allowEmptyPassword is true, bypass the empty-key guard in hmacSHA1
+  // by calling the lower-level hmac() directly with the raw sha1 function.
+  const prf = allowEmptyPassword
+    ? (key: Uint8Array, msg: Uint8Array) => hmac(sha1, 64, key, msg)
+    : (key: Uint8Array, msg: Uint8Array) => hmacSHA1(key, msg);
+  return pbkdf2Core(prf, 20, password, salt, iterations, keyLength, allowEmptyPassword);
 }
 
 /**
@@ -178,15 +181,14 @@ export function pbkdf2HmacSHA256(
   salt: Uint8Array,
   iterations: number,
   keyLength: number,
+  allowEmptyPassword: boolean = false,
 ): Uint8Array {
-  return pbkdf2Core(
-    (key, msg) => hmacSHA256(key, msg),
-    32,
-    password,
-    salt,
-    iterations,
-    keyLength,
-  );
+  // When allowEmptyPassword is true, bypass the empty-key guard in hmacSHA256
+  // by calling the lower-level hmac() directly with the raw sha256 function.
+  const prf = allowEmptyPassword
+    ? (key: Uint8Array, msg: Uint8Array) => hmac(sha256, 64, key, msg)
+    : (key: Uint8Array, msg: Uint8Array) => hmacSHA256(key, msg);
+  return pbkdf2Core(prf, 32, password, salt, iterations, keyLength, allowEmptyPassword);
 }
 
 /**
@@ -199,15 +201,14 @@ export function pbkdf2HmacSHA512(
   salt: Uint8Array,
   iterations: number,
   keyLength: number,
+  allowEmptyPassword: boolean = false,
 ): Uint8Array {
-  return pbkdf2Core(
-    (key, msg) => hmacSHA512(key, msg),
-    64,
-    password,
-    salt,
-    iterations,
-    keyLength,
-  );
+  // When allowEmptyPassword is true, bypass the empty-key guard in hmacSHA512
+  // by calling the lower-level hmac() directly with the raw sha512 function.
+  const prf = allowEmptyPassword
+    ? (key: Uint8Array, msg: Uint8Array) => hmac(sha512, 128, key, msg)
+    : (key: Uint8Array, msg: Uint8Array) => hmacSHA512(key, msg);
+  return pbkdf2Core(prf, 64, password, salt, iterations, keyLength, allowEmptyPassword);
 }
 
 /** Like {@link pbkdf2HmacSHA1} but returns a lowercase hex string. */

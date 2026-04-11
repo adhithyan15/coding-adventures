@@ -77,19 +77,16 @@
  *     expected = "fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc8237830e77376634b373162
  *                  2eaf30d92e22a3886ff109279d9830dac727afb94a83ee6d8360cbdfa2cc0640"
  *
- * Inline PBKDF2: Why Not the @coding-adventures/pbkdf2 Package?
- * ==============================================================
+ * Empty Password Handling
+ * =======================
  * RFC 7914 vector 1 uses an empty password (""). The @coding-adventures/pbkdf2
- * package (and the @coding-adventures/hmac package) reject empty passwords as a
- * security guard against accidental misuse. scrypt is explicitly designed to
- * accept any password — including empty strings — so we implement PBKDF2-HMAC-SHA256
- * inline here, calling hmacSHA256 from @coding-adventures/hmac directly without the
- * empty-password guard. The guard remains in place for direct PBKDF2 and HMAC
- * usage; only scrypt's internal PBKDF2 bypasses it.
+ * package rejects empty passwords by default as a security guard against accidental
+ * misuse. scrypt is explicitly designed to accept any password — including empty
+ * strings — so it calls pbkdf2HmacSHA256 with allowEmptyPassword=true to bypass
+ * that guard. The guard remains in place for all direct PBKDF2 usage.
  */
 
-import { hmac } from "@coding-adventures/hmac";
-import { sha256 } from "@coding-adventures/sha256";
+import { pbkdf2HmacSHA256 } from "@coding-adventures/pbkdf2";
 
 export const VERSION = "0.1.0";
 
@@ -325,60 +322,6 @@ function roMix(bBytes: Uint8Array, n: number, r: number): Uint8Array {
   return out;
 }
 
-// ─── Internal PBKDF2-HMAC-SHA256 ──────────────────────────────────────────────
-//
-// This is a self-contained PBKDF2-HMAC-SHA256 implementation for scrypt's
-// internal use. It intentionally does NOT check for an empty password —
-// RFC 7914 vector 1 uses password="" and this must be accepted.
-//
-// PBKDF2 (RFC 8018 §5.2):
-//   DK = T1 || T2 || ... || Tc
-//   Ti = U1 XOR U2 XOR ... XOR Uiter
-//   U1 = PRF(Password, Salt || INT(i))   ← i = block index, big-endian uint32
-//   Uj = PRF(Password, U(j-1))
-//
-// where PRF = HMAC-SHA256, hLen = 32 bytes.
-//
-// We call `hmac` directly from @coding-adventures/hmac (bypassing the empty-key
-// guard in `hmacSHA256`) with sha256 as the hash function and blockSize=64.
-//
-function pbkdf2Sha256Internal(
-  password: Uint8Array,
-  salt: Uint8Array,
-  iterations: number,
-  keyLength: number,
-): Uint8Array {
-  // HMAC-SHA256 produces 32 bytes (hLen).
-  const hLen = 32;
-  const numBlocks = Math.ceil(keyLength / hLen);
-  const dk = new Uint8Array(numBlocks * hLen);
-
-  for (let i = 1; i <= numBlocks; i++) {
-    // Construct the PBKDF2 seed: Salt || INT(i) where INT(i) is big-endian uint32.
-    // Example: i=1 → [0, 0, 0, 1]
-    const blockIdxBuf = new Uint8Array(4);
-    new DataView(blockIdxBuf.buffer).setUint32(0, i, false); // false = big-endian
-    const seed = new Uint8Array(salt.length + 4);
-    seed.set(salt);
-    seed.set(blockIdxBuf, salt.length);
-
-    // U1 = HMAC-SHA256(password, seed)
-    let u: Uint8Array = hmac(sha256, 64, password, seed);
-    const t = new Uint8Array(u); // T = U1 (XOR accumulator)
-
-    // U2 through U_iterations: each derived from the previous U.
-    for (let j = 1; j < iterations; j++) {
-      u = hmac(sha256, 64, password, u);
-      for (let k = 0; k < hLen; k++) t[k] ^= u[k];
-    }
-
-    dk.set(t, (i - 1) * hLen);
-  }
-
-  // Truncate to the requested key length (the last block may be partial).
-  return dk.slice(0, keyLength);
-}
-
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 /**
@@ -453,7 +396,7 @@ export function scrypt(
   // stretch the password into a large block buffer. The memory-hardness comes
   // from ROMix, not from PBKDF2 iteration count (which is fixed at 1 here).
   const bLen = p * 128 * r;
-  let b = pbkdf2Sha256Internal(password, salt, 1, bLen);
+  let b = pbkdf2HmacSHA256(password, salt, 1, bLen, true);
 
   // ── Step 2: Apply ROMix independently to each p block ───────────────────
   //
@@ -473,7 +416,7 @@ export function scrypt(
   // down to the requested dkLen bytes. The password is used as the PBKDF2
   // password and b is used as the salt — ensuring both inputs influence the
   // final output.
-  return pbkdf2Sha256Internal(password, b, 1, dkLen);
+  return pbkdf2HmacSHA256(password, b, 1, dkLen, true);
 }
 
 /**

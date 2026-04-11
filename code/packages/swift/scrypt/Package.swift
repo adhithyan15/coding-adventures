@@ -10,9 +10,10 @@
 // amounts of memory when performing brute-force attacks, making GPU/ASIC
 // cracking substantially harder.
 //
-// This package depends on HMAC for PBKDF2 key stretching and SHA256 for the
-// raw hash function passed to the internal HMAC implementation (required to
-// support empty passwords as used in RFC 7914 test vectors).
+// This package depends on the PBKDF2 package (which itself depends on HMAC)
+// for the two PBKDF2-HMAC-SHA256 calls that wrap and unwrap the ROMix step.
+// The allowEmptyPassword flag on pbkdf2HmacSHA256 is used here to support
+// RFC 7914 test vector 1 (empty password) without weakening the PBKDF2 API.
 //
 // Part of the coding-adventures educational computing stack.
 //
@@ -26,15 +27,13 @@ let package = Package(
         .library(name: "Scrypt", targets: ["Scrypt"]),
     ],
     dependencies: [
-        .package(path: "../hmac"),
-        .package(path: "../sha256"),
+        .package(path: "../pbkdf2"),
     ],
     targets: [
         .target(
             name: "Scrypt",
             dependencies: [
-                .product(name: "HMAC",   package: "hmac"),
-                .product(name: "SHA256", package: "sha256"),
+                .product(name: "PBKDF2", package: "pbkdf2"),
             ]
         ),
         .testTarget(

@@ -93,20 +93,14 @@
   Empty-Password Handling
   ========================
   RFC 7914 test vector 1 uses password = "" (empty string).
-  Our `hmac_sha256` public API rejects empty keys (HMAC security policy).
-  The internal PBKDF2 used by scrypt bypasses that guard by calling
-  `hmac.hmac(sha256_fn, 64, password, message)` directly, which is the
-  generic HMAC engine that does not enforce the non-empty-key invariant.
-  This matches the RFC specification behaviour.
+  Our `hmac_sha256` public API normally rejects empty keys (HMAC security
+  policy). scrypt passes `allow_empty_password = true` to the PBKDF2 package
+  to bypass that guard, as permitted by the PBKDF2 API and required by the RFC.
 --]]
 
 -- ─── Dependencies ─────────────────────────────────────────────────────────────
 
-local hmac      = require("coding_adventures.hmac")
-local sha256_m  = require("coding_adventures.sha256")
-
--- sha256 function: string → table of 32 byte integers
-local sha256_fn = sha256_m.sha256
+local pbkdf2 = require("coding_adventures.pbkdf2")
 
 -- ─── Utility: 32-bit little-endian word I/O ──────────────────────────────────
 
@@ -321,59 +315,6 @@ local function ro_mix(b_bytes, n, r)
   return table.concat(x)
 end
 
--- ─── Internal PBKDF2-HMAC-SHA256 ─────────────────────────────────────────────
-
--- pbkdf2_sha256_raw: PBKDF2 with HMAC-SHA256, supporting empty passwords.
---
--- This is the private PBKDF2 used by scrypt internally. It bypasses the
--- hmac_sha256 public API (which rejects empty keys) by calling the generic
--- hmac.hmac() engine directly with sha256_fn.
---
--- RFC 7914 §5 specifies c=1 (iterations=1) for both the initial and final
--- PBKDF2 calls within scrypt. This function supports arbitrary iterations
--- for completeness.
---
--- password   — raw byte string, may be empty
--- salt       — raw byte string
--- iterations — number of PRF applications per block
--- key_length — requested output length in bytes
---
--- Returns a raw byte string of exactly key_length bytes.
-local function pbkdf2_sha256_raw(password, salt, iterations, key_length)
-  local h_len = 32  -- SHA-256 digest length in bytes
-  local num_blocks = math.ceil(key_length / h_len)
-  local dk_parts = {}
-
-  for i = 1, num_blocks do
-    -- Append INT_32_BE(i): the block counter as a 4-byte big-endian integer.
-    -- string.pack(">I4", i) is available in Lua 5.3+.
-    local seed = salt .. string.pack(">I4", i)
-
-    -- U_1 = HMAC-SHA256(password, seed)
-    -- We call hmac.hmac() directly to allow empty passwords.
-    local u_arr = hmac.hmac(sha256_fn, 64, password, seed)
-    local u = string.char(table.unpack(u_arr))
-
-    -- t will accumulate XOR of all U values: T_i = U_1 XOR U_2 XOR … XOR U_c
-    local t = { string.byte(u, 1, h_len) }
-
-    -- U_j = HMAC-SHA256(password, U_{j-1}), XOR into t
-    for _ = 2, iterations do
-      u_arr = hmac.hmac(sha256_fn, 64, password, u)
-      u = string.char(table.unpack(u_arr))
-      local u_bytes = { string.byte(u, 1, h_len) }
-      for k = 1, h_len do
-        t[k] = t[k] ~ u_bytes[k]
-      end
-    end
-
-    dk_parts[i] = string.char(table.unpack(t))
-  end
-
-  local dk = table.concat(dk_parts)
-  return dk:sub(1, key_length)
-end
-
 -- ─── Public API ───────────────────────────────────────────────────────────────
 
 local M = {}
@@ -428,7 +369,8 @@ function M.scrypt(password, salt, n, r, p, dk_len)
   -- ── Step 1: Expand password+salt into p mixing blocks ────────────────────
   -- PBKDF2-HMAC-SHA256 with 1 iteration, key length = p × 128r bytes.
   -- The factor 128r comes from: 2r blocks × 64 bytes per block.
-  local b = pbkdf2_sha256_raw(password, salt, 1, p * 128 * r)
+  -- allow_empty_password=true: RFC 7914 §11 vector 1 uses "" as the password.
+  local b = pbkdf2.pbkdf2_hmac_sha256(password, salt, 1, p * 128 * r, true)
 
   -- ── Step 2: ROMix each of the p independent 128r-byte chunks ─────────────
   -- Each chunk is independently hashed through the memory-hard ROMix routine.
@@ -444,7 +386,7 @@ function M.scrypt(password, salt, n, r, p, dk_len)
   -- ── Step 3: Extract the final derived key ────────────────────────────────
   -- A second PBKDF2 call re-uses the password over the mixed block material.
   -- This provides the output stretching (dk_len may differ from 128r×p).
-  return pbkdf2_sha256_raw(password, b_mixed, 1, dk_len)
+  return pbkdf2.pbkdf2_hmac_sha256(password, b_mixed, 1, dk_len, true)
 end
 
 --- scrypt_hex: like scrypt but returns a lowercase hexadecimal string.

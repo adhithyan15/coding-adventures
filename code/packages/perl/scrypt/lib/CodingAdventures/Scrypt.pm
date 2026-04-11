@@ -66,14 +66,15 @@ package CodingAdventures::Scrypt;
 # produce the output. This is the "add-rotate-XOR" (ARX) construction used
 # in ChaCha20, Salsa20, and many other primitives.
 #
-# == Why inline PBKDF2? ==
+# == PBKDF2 empty-password handling ==
 #
 # RFC 7914 vector 1 uses an empty password (""). The CodingAdventures::PBKDF2
-# package rejects empty passwords as a security measure. scrypt itself is the
-# memory-hard layer that protects against brute force; its internal PBKDF2
-# calls (with 1 iteration each) are purely for format conversion and do not
-# need the empty-password guard. We implement a minimal inline PBKDF2 here
-# that calls hmac_sha256 directly.
+# package normally rejects empty passwords as a security measure, but it
+# supports an optional $allow_empty_password flag for exactly this use case.
+# scrypt itself is the memory-hard layer that protects against brute force;
+# its internal PBKDF2 calls (with 1 iteration each) are purely for format
+# conversion and do not need the empty-password guard. We pass
+# allow_empty_password=1 to pbkdf2_hmac_sha256 for both internal calls.
 #
 # == Perl uint32 Arithmetic ==
 #
@@ -93,9 +94,8 @@ use strict;
 use warnings;
 use bytes;            # length/substr operate on raw bytes
 use Exporter 'import';
-use POSIX qw(ceil);
-use CodingAdventures::HMAC qw(hmac);
-use CodingAdventures::SHA256;
+use lib '../pbkdf2/lib';
+use CodingAdventures::PBKDF2 qw(pbkdf2_hmac_sha256);
 
 our $VERSION   = '0.1.0';
 our @EXPORT_OK = qw(scrypt scrypt_hex);
@@ -337,64 +337,6 @@ sub _ro_mix {
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Inline PBKDF2-HMAC-SHA256 (no empty-password guard)
-# ──────────────────────────────────────────────────────────────────────────────
-
-# _pbkdf2_sha256_raw: minimal PBKDF2-HMAC-SHA256 for internal scrypt use.
-#
-# This implements RFC 8018 § 5.2 using CodingAdventures::HMAC::hmac_sha256 as
-# the PRF. It intentionally omits the empty-password check that
-# CodingAdventures::PBKDF2 enforces, because RFC 7914 vector 1 calls scrypt
-# with password="" and the memory-hard ROMix layer provides the security.
-#
-# The function is always called with $iterations = 1 by scrypt itself, so the
-# inner loop over j runs 0 times and the cost is exactly $num_blocks HMAC
-# evaluations.
-#
-# The internal HMAC-SHA256 PRF uses the generic hmac() function from
-# CodingAdventures::HMAC, which does NOT have the empty-key guard. We pass
-# a coderef that calls CodingAdventures::SHA256::sha256 directly.
-# Block size for SHA-256 is 64 bytes.
-#
-# hmac() returns an arrayref of byte integers [0..255].
-# pack("C*", @$arrayref) converts that to a raw binary string.
-#
-# Perl's built-in ^ on two equal-length strings XORs them byte-by-byte.
-
-my $_sha256_prf = sub {
-    my ($key, $msg) = @_;
-    return pack("C*", @{ hmac(sub { CodingAdventures::SHA256::sha256($_[0]) }, 64, $key, $msg) });
-};
-
-sub _pbkdf2_sha256_raw {
-    my ($password, $salt, $iterations, $key_length) = @_;
-
-    my $h_len      = 32;    # SHA-256 output is 32 bytes
-    my $num_blocks = ceil($key_length / $h_len);
-    my $dk         = '';
-
-    for my $i (1 .. $num_blocks) {
-        # Seed = salt || INT(i), where INT(i) is big-endian 4-byte block counter.
-        # pack("N", $i) encodes $i as unsigned 32-bit big-endian.
-        my $seed = $salt . pack("N", $i);
-
-        # U_1 = HMAC-SHA256(password, seed)
-        my $u = $_sha256_prf->($password, $seed);
-        my $t = $u;
-
-        # U_j = HMAC-SHA256(password, U_{j-1}), XOR into accumulator t.
-        for my $j (2 .. $iterations) {
-            $u = $_sha256_prf->($password, $u);
-            $t = $t ^ $u;
-        }
-
-        $dk .= $t;
-    }
-
-    return substr($dk, 0, $key_length);
-}
-
-# ──────────────────────────────────────────────────────────────────────────────
 # Public API
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -442,7 +384,9 @@ sub scrypt {
     # Step 1: derive p*128*r bytes of initial keying material from the
     # password and user-supplied salt. These p blocks of 128*r bytes will
     # each be independently mixed by ROMix.
-    my $b = _pbkdf2_sha256_raw($password, $salt, 1, $p * 128 * $r);
+    # allow_empty_password=1: RFC 7914 vector 1 uses password=""; the
+    # memory-hard ROMix layer (not PBKDF2 iterations) provides security here.
+    my $b = pbkdf2_hmac_sha256($password, $salt, 1, $p * 128 * $r, 1);
 
     # Step 2: apply ROMix to each of the p blocks independently.
     # ROMix is the memory-hard core; each call processes 128*r bytes and
@@ -458,7 +402,8 @@ sub scrypt {
     # The $b_mixed now plays the role of the salt; the password is fed in
     # again so that an attacker who only knows the mixed output (but not the
     # original password) still cannot recover the key.
-    return _pbkdf2_sha256_raw($password, $b_mixed, 1, $dk_len);
+    # allow_empty_password=1 for the same reason as Step 1 above.
+    return pbkdf2_hmac_sha256($password, $b_mixed, 1, $dk_len, 1);
 }
 
 # scrypt_hex: like scrypt, but returns a lowercase hex string.

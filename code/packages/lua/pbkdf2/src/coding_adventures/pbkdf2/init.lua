@@ -36,7 +36,10 @@
   For new systems prefer Argon2id (memory-hard, resists GPU attacks).
 --]]
 
-local hmac = require("coding_adventures.hmac")
+local hmac   = require("coding_adventures.hmac")
+local sha1_m = require("coding_adventures.sha1")
+local sha256_m = require("coding_adventures.sha256")
+local sha512_m = require("coding_adventures.sha512")
 
 local M = {}
 
@@ -82,14 +85,17 @@ end
 
 -- _pbkdf2: generic PBKDF2 implementation.
 --
--- prf:        function(key, msg) → string of h_len bytes
--- h_len:      output byte length of prf
--- password:   secret being stretched (string, raw bytes)
--- salt:       unique random value per credential (string, raw bytes)
--- iterations: number of PRF calls per block
--- key_length: number of derived bytes
-local function _pbkdf2(prf, h_len, password, salt, iterations, key_length)
-  if #password == 0 then
+-- prf:               function(key, msg) → string of h_len bytes
+-- h_len:             output byte length of prf
+-- password:          secret being stretched (string, raw bytes)
+-- salt:              unique random value per credential (string, raw bytes)
+-- iterations:        number of PRF calls per block
+-- key_length:        number of derived bytes
+-- allow_empty_password: if true, bypass the empty-password guard (for internal
+--                    callers like scrypt that legitimately use "" per RFC 7914)
+local function _pbkdf2(prf, h_len, password, salt, iterations, key_length, allow_empty_password)
+  allow_empty_password = allow_empty_password or false
+  if #password == 0 and not allow_empty_password then
     error("PBKDF2 password must not be empty", 2)
   end
   -- Upper bounds prevent unbounded loops or massive allocation from attacker-controlled inputs.
@@ -138,28 +144,42 @@ end
 -- RFC 6070 test vector:
 -- > require("coding_adventures.pbkdf2").pbkdf2_hmac_sha1_hex("password", "salt", 1, 20)
 -- "0c60c80f961f0e71f3a9b524af6012062fe037a6"
-function M.pbkdf2_hmac_sha1(password, salt, iterations, key_length)
+--
+-- @param allow_empty_password  boolean (optional, default false) — pass true to
+--   allow an empty password. Normally forbidden as a security guard; only use
+--   this when the calling spec (e.g. scrypt, RFC 7914 §11 vector 1) requires it.
+function M.pbkdf2_hmac_sha1(password, salt, iterations, key_length, allow_empty_password)
+  -- Use hmac.hmac() directly (no empty-key guard) so that allow_empty_password=true
+  -- works end-to-end. The empty-password guard lives in _pbkdf2 itself.
   return _pbkdf2(
-    function(key, msg) return to_str(hmac.hmac_sha1(key, msg)) end,
-    20, password, salt, iterations, key_length
+    function(key, msg) return to_str(hmac.hmac(sha1_m.digest, 64, key, msg)) end,
+    20, password, salt, iterations, key_length, allow_empty_password
   )
 end
 
 --- PBKDF2 with HMAC-SHA256 as the PRF.
 -- hLen = 32 bytes. Recommended for new systems (OWASP 2023: ≥ 600,000 iterations).
-function M.pbkdf2_hmac_sha256(password, salt, iterations, key_length)
+--
+-- @param allow_empty_password  boolean (optional, default false) — see pbkdf2_hmac_sha1.
+function M.pbkdf2_hmac_sha256(password, salt, iterations, key_length, allow_empty_password)
+  -- Use hmac.hmac() directly (no empty-key guard) so that allow_empty_password=true
+  -- works end-to-end. The empty-password guard lives in _pbkdf2 itself.
   return _pbkdf2(
-    function(key, msg) return to_str(hmac.hmac_sha256(key, msg)) end,
-    32, password, salt, iterations, key_length
+    function(key, msg) return to_str(hmac.hmac(sha256_m.sha256, 64, key, msg)) end,
+    32, password, salt, iterations, key_length, allow_empty_password
   )
 end
 
 --- PBKDF2 with HMAC-SHA512 as the PRF.
 -- hLen = 64 bytes. Suitable for high-security applications.
-function M.pbkdf2_hmac_sha512(password, salt, iterations, key_length)
+--
+-- @param allow_empty_password  boolean (optional, default false) — see pbkdf2_hmac_sha1.
+function M.pbkdf2_hmac_sha512(password, salt, iterations, key_length, allow_empty_password)
+  -- Use hmac.hmac() directly (no empty-key guard) so that allow_empty_password=true
+  -- works end-to-end. The empty-password guard lives in _pbkdf2 itself.
   return _pbkdf2(
-    function(key, msg) return to_str(hmac.hmac_sha512(key, msg)) end,
-    64, password, salt, iterations, key_length
+    function(key, msg) return to_str(hmac.hmac(sha512_m.digest, 128, key, msg)) end,
+    64, password, salt, iterations, key_length, allow_empty_password
   )
 end
 

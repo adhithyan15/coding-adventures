@@ -12,6 +12,7 @@ use lib '../sha256/lib';
 use lib '../sha512/lib';
 use lib '../sha1/lib';
 use lib '../md5/lib';
+use lib '../pbkdf2/lib';
 
 use CodingAdventures::Scrypt qw(scrypt scrypt_hex);
 
@@ -34,8 +35,8 @@ use CodingAdventures::Scrypt qw(scrypt scrypt_hex);
 # Vector 1: password="", salt="", N=16, r=1, p=1, dkLen=64.
 #
 # This vector is specifically designed to test that scrypt handles empty
-# passwords correctly. Our PBKDF2 package rejects empty passwords, so scrypt
-# uses its own inline PBKDF2 implementation.
+# passwords correctly. Our PBKDF2 package normally rejects empty passwords,
+# but scrypt passes allow_empty_password=1 since ROMix provides the security.
 is(
     scrypt_hex("", "", 16, 1, 1, 64),
     "77d6576238657b203b19ca42c18a0497" .

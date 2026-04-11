@@ -51,8 +51,8 @@ module CodingAdventures
     # @param iterations [Integer] Number of PRF calls per block
     # @param key_length [Integer] Number of derived bytes
     # @return [String] Derived key (binary encoding)
-    def self._pbkdf2(prf, h_len, password, salt, iterations, key_length)
-      raise ArgumentError, "PBKDF2 password must not be empty" if password.empty?
+    def self._pbkdf2(prf, h_len, password, salt, iterations, key_length, allow_empty_password: false)
+      raise ArgumentError, "PBKDF2 password must not be empty" if password.empty? && !allow_empty_password
       raise ArgumentError, "PBKDF2 iterations must be positive" unless iterations.is_a?(Integer) && iterations > 0
       raise ArgumentError, "PBKDF2 key_length must be positive" unless key_length.is_a?(Integer) && key_length > 0
       # Upper bounds prevent unbounded CPU/memory from attacker-controlled inputs.
@@ -98,25 +98,46 @@ module CodingAdventures
     # @example RFC 6070 test vector
     #   PBKDF2.pbkdf2_hmac_sha1("password", "salt", 1, 20).unpack1("H*")
     #   #=> "0c60c80f961f0e71f3a9b524af6012062fe037a6"
-    def self.pbkdf2_hmac_sha1(password, salt, iterations, key_length)
-      prf = ->(key, msg) { CodingAdventures::Hmac.hmac_sha1(key, msg) }
-      _pbkdf2(prf, 20, password.b, salt.b, iterations, key_length)
+    def self.pbkdf2_hmac_sha1(password, salt, iterations, key_length, allow_empty_password: false)
+      # When empty passwords are allowed we must use the lower-level Hmac.hmac
+      # directly, because the named variant hmac_sha1 unconditionally rejects
+      # empty keys as a security guard.
+      prf = if allow_empty_password
+        ->(key, msg) { CodingAdventures::Hmac.hmac(->(d) { CodingAdventures::Sha1.sha1(d) }, 64, key, msg) }
+      else
+        ->(key, msg) { CodingAdventures::Hmac.hmac_sha1(key, msg) }
+      end
+      _pbkdf2(prf, 20, password.b, salt.b, iterations, key_length, allow_empty_password: allow_empty_password)
     end
 
     # PBKDF2 with HMAC-SHA256.
     #
     # hLen = 32 bytes. Recommended for new systems (OWASP 2023: ≥ 600,000 iterations).
-    def self.pbkdf2_hmac_sha256(password, salt, iterations, key_length)
-      prf = ->(key, msg) { CodingAdventures::Hmac.hmac_sha256(key, msg) }
-      _pbkdf2(prf, 32, password.b, salt.b, iterations, key_length)
+    def self.pbkdf2_hmac_sha256(password, salt, iterations, key_length, allow_empty_password: false)
+      # When empty passwords are allowed we must use the lower-level Hmac.hmac
+      # directly, because the named variant hmac_sha256 unconditionally rejects
+      # empty keys as a security guard.
+      prf = if allow_empty_password
+        ->(key, msg) { CodingAdventures::Hmac.hmac(->(d) { CodingAdventures::Sha256.sha256(d) }, 64, key, msg) }
+      else
+        ->(key, msg) { CodingAdventures::Hmac.hmac_sha256(key, msg) }
+      end
+      _pbkdf2(prf, 32, password.b, salt.b, iterations, key_length, allow_empty_password: allow_empty_password)
     end
 
     # PBKDF2 with HMAC-SHA512.
     #
     # hLen = 64 bytes. Suitable for high-security applications.
-    def self.pbkdf2_hmac_sha512(password, salt, iterations, key_length)
-      prf = ->(key, msg) { CodingAdventures::Hmac.hmac_sha512(key, msg) }
-      _pbkdf2(prf, 64, password.b, salt.b, iterations, key_length)
+    def self.pbkdf2_hmac_sha512(password, salt, iterations, key_length, allow_empty_password: false)
+      # When empty passwords are allowed we must use the lower-level Hmac.hmac
+      # directly, because the named variant hmac_sha512 unconditionally rejects
+      # empty keys as a security guard.
+      prf = if allow_empty_password
+        ->(key, msg) { CodingAdventures::Hmac.hmac(->(d) { CodingAdventures::Sha512.sha512(d) }, 128, key, msg) }
+      else
+        ->(key, msg) { CodingAdventures::Hmac.hmac_sha512(key, msg) }
+      end
+      _pbkdf2(prf, 64, password.b, salt.b, iterations, key_length, allow_empty_password: allow_empty_password)
     end
 
     # ──────────────────────────────────────────────────────────────────────────

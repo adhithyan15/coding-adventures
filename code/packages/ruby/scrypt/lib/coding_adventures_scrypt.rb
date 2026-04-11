@@ -79,9 +79,9 @@
 # ===========================
 # RFC vector 1 uses an empty-string password (""). Our HMAC gem rejects empty
 # keys as a security measure. To support the RFC vectors correctly, this gem
-# implements PBKDF2-HMAC-SHA256 inline, calling the lower-level
-# CodingAdventures::Hmac.hmac directly (which accepts any key length) rather
-# than the public CodingAdventures::Hmac.hmac_sha256 wrapper.
+# calls CodingAdventures::PBKDF2.pbkdf2_hmac_sha256 with allow_empty_password: true,
+# which bypasses the empty-key guard in the PBKDF2 package while still using
+# the vetted HMAC primitive underneath.
 #
 # IMPORTANT — Binary String Encoding
 # =====================================
@@ -91,6 +91,7 @@
 # surprises. Input strings are coerced at function boundaries.
 
 require "coding_adventures_hmac"
+require "coding_adventures_pbkdf2"
 require_relative "coding_adventures/scrypt/version"
 
 module CodingAdventures
@@ -147,7 +148,7 @@ module CodingAdventures
       # ── Step 1: Expand using PBKDF2-HMAC-SHA256 ──────────────────────────
       # Produce p×128r bytes total (one 128r-byte lane per parallelisation unit).
       # Iteration count = 1 because scrypt provides its own memory-hard mixing.
-      b = pbkdf2_sha256_raw(password, salt, 1, p * 128 * r)
+      b = CodingAdventures::PBKDF2.pbkdf2_hmac_sha256(password, salt, 1, p * 128 * r, allow_empty_password: true)
 
       # ── Step 2: RoMix each lane (memory-hard mixing) ──────────────────────
       # Each 128r-byte lane is processed independently by ro_mix.
@@ -160,7 +161,7 @@ module CodingAdventures
 
       # ── Step 3: Compress using PBKDF2-HMAC-SHA256 ────────────────────────
       # Use the scrambled lanes as the "salt" to produce the final key.
-      pbkdf2_sha256_raw(password, b, 1, dk_len)
+      CodingAdventures::PBKDF2.pbkdf2_hmac_sha256(password, b, 1, dk_len, allow_empty_password: true)
     end
 
     # Derive a key using scrypt, returned as a lowercase hex string.
@@ -171,84 +172,6 @@ module CodingAdventures
     # @return [String] dk_len*2 character lowercase hex string
     def scrypt_hex(password, salt, n, r, p, dk_len)
       scrypt(password, salt, n, r, p, dk_len).unpack1("H*")
-    end
-
-    # ─── Private Helpers ─────────────────────────────────────────────────────
-
-    # PBKDF2-HMAC-SHA256 (RFC 8018 §5.2), implemented inline.
-    #
-    # Why inline? Our HMAC gem's public `hmac_sha256` method rejects empty keys
-    # as a security guard — but RFC 7914 vector 1 uses an empty password.
-    # By calling `CodingAdventures::Hmac.hmac` directly we bypass that guard
-    # while still using the vetted HMAC primitive.
-    #
-    # PBKDF2 structure:
-    #   For each 1-indexed block number i:
-    #     seed = salt || i  (i encoded as big-endian uint32)
-    #     U1   = HMAC(password, seed)
-    #     U2   = HMAC(password, U1)
-    #     ...
-    #     Ui   = HMAC(password, U{i-1})
-    #     Ti   = U1 XOR U2 XOR ... XOR Ui
-    #   DK = T1 || T2 || ... (truncated to key_length bytes)
-    #
-    # With iterations=1, Ti = U1 = HMAC(password, seed). This is exactly what
-    # scrypt calls internally for both the expand and compress phases.
-    #
-    # @param password   [String] binary passphrase (may be empty)
-    # @param salt       [String] binary salt
-    # @param iterations [Integer] number of PRF applications per block (>=1)
-    # @param key_length [Integer] desired output length in bytes
-    # @return [String] binary String of exactly key_length bytes
-    #
-    # @note h_len = 32 for SHA-256 (256-bit digest → 32 bytes)
-    private def pbkdf2_sha256_raw(password, salt, iterations, key_length)
-      # SHA-256 produces 32-byte digests.
-      h_len = 32
-
-      # How many 32-byte PBKDF2 blocks do we need to cover key_length bytes?
-      num_blocks = (key_length.to_f / h_len).ceil
-      dk = "".b
-
-      num_blocks.times do |i|
-        # Block numbers are 1-indexed per RFC 8018.
-        block_num = i + 1
-
-        # seed = salt || block_num (block_num packed as 4-byte big-endian).
-        # "N" pack code = unsigned 32-bit big-endian integer.
-        seed = salt.b + [block_num].pack("N")
-
-        # U1 = HMAC-SHA256(password, seed)
-        u = hmac_sha256_bytes(password, seed)
-        t = u.dup
-
-        # For iterations > 1, XOR successive HMAC outputs together.
-        # With iterations=1 this loop body never executes; Ti = U1.
-        (iterations - 1).times do
-          u = hmac_sha256_bytes(password, u)
-          t = t.bytes.zip(u.bytes).map { |a, b| a ^ b }.pack("C*")
-        end
-
-        dk << t
-      end
-
-      # Truncate to exactly key_length bytes (the last block may be oversized).
-      dk[0, key_length]
-    end
-
-    # Compute HMAC-SHA256 and return the result as a 32-byte binary String.
-    #
-    # This calls CodingAdventures::Hmac.hmac directly — the lower-level method
-    # that does NOT enforce the non-empty key guard — so empty passwords work.
-    # The SHA-256 lambda matches the signature expected by Hmac.hmac: it accepts
-    # a binary String and returns a binary String.
-    #
-    # @param key [String] binary HMAC key (may be empty)
-    # @param msg [String] binary message
-    # @return [String] 32-byte binary authentication tag
-    private def hmac_sha256_bytes(key, msg)
-      sha256_fn = ->(d) { CodingAdventures::Sha256.sha256(d) }
-      CodingAdventures::Hmac.hmac(sha256_fn, 64, key.b, msg.b)
     end
 
     # ─── Salsa20/8 Core ──────────────────────────────────────────────────────
@@ -509,7 +432,7 @@ module CodingAdventures
     # Mark all helpers as private (module_function copies them as public module
     # methods AND private instance methods; `private` in a module_function
     # context applies to instance methods only, so we also use private def above).
-    private :pbkdf2_sha256_raw, :hmac_sha256_bytes, :rotl32, :quarter_round,
+    private :rotl32, :quarter_round,
       :salsa20_8, :xor64, :block_mix, :integerify, :ro_mix
   end
 end

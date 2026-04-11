@@ -41,6 +41,9 @@ import (
 	"fmt"
 
 	hmacpkg "github.com/adhithyan15/coding-adventures/code/packages/go/hmac"
+	gsha1   "github.com/adhithyan15/coding-adventures/code/packages/go/sha1"
+	gsha256 "github.com/adhithyan15/coding-adventures/code/packages/go/sha256"
+	gsha512 "github.com/adhithyan15/coding-adventures/code/packages/go/sha512"
 )
 
 // ErrEmptyPassword is returned when an empty password is supplied.
@@ -68,14 +71,16 @@ type prf func(key, message []byte) ([]byte, error)
 // pbkdf2Core is the generic PBKDF2 loop used by all public functions.
 //
 // Parameters:
-//   - fn:         PRF(key, msg) → ([]byte, error), output length = hLen
-//   - hLen:       output byte length of fn (20 for SHA-1, 32 for SHA-256, …)
-//   - password:   secret being stretched — becomes the HMAC key
-//   - salt:       unique random value per credential (≥16 bytes recommended)
-//   - iterations: number of PRF calls per block
-//   - keyLength:  number of derived bytes to return
-func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	if len(password) == 0 {
+//   - fn:                PRF(key, msg) → ([]byte, error), output length = hLen
+//   - hLen:              output byte length of fn (20 for SHA-1, 32 for SHA-256, …)
+//   - password:          secret being stretched — becomes the HMAC key
+//   - salt:              unique random value per credential (≥16 bytes recommended)
+//   - iterations:        number of PRF calls per block
+//   - keyLength:         number of derived bytes to return
+//   - allowEmptyPassword: when true, an empty password is permitted (needed by
+//     scrypt, which exercises RFC 7914 test vector 1 with password="")
+func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) ([]byte, error) {
+	if len(password) == 0 && !allowEmptyPassword {
 		return nil, ErrEmptyPassword
 	}
 	if iterations <= 0 {
@@ -138,15 +143,28 @@ func pbkdf2Core(fn prf, hLen int, password, salt []byte, iterations, keyLength i
 //
 // hLen = 20 (160-bit SHA-1 output).
 //
+// allowEmptyPassword: when false (the normal case) an empty password is
+// rejected. Pass true only when a protocol explicitly requires it (e.g. scrypt
+// RFC 7914 test vector 1 uses password="").
+//
 // RFC 6070 test vector:
 //
-//	PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 1, 20)
+//	PBKDF2HmacSHA1([]byte("password"), []byte("salt"), 1, 20, false)
 //	→ 0c60c80f961f0e71f3a9b524af6012062fe037a6
-func PBKDF2HmacSHA1(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	fn := func(key, msg []byte) ([]byte, error) {
-		return hmacpkg.HmacSHA1(key, msg)
+func PBKDF2HmacSHA1(password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) ([]byte, error) {
+	var fn prf
+	if allowEmptyPassword {
+		// Use hmacpkg.HMAC directly to bypass the empty-key guard in HmacSHA1.
+		fn = func(key, msg []byte) ([]byte, error) {
+			out := hmacpkg.HMAC(func(d []byte) []byte { s := gsha1.Sum1(d); return s[:] }, 64, key, msg)
+			return out, nil
+		}
+	} else {
+		fn = func(key, msg []byte) ([]byte, error) {
+			return hmacpkg.HmacSHA1(key, msg)
+		}
 	}
-	return pbkdf2Core(fn, 20, password, salt, iterations, keyLength)
+	return pbkdf2Core(fn, 20, password, salt, iterations, keyLength, allowEmptyPassword)
 }
 
 // PBKDF2HmacSHA256 derives a key using PBKDF2 with HMAC-SHA256 as the PRF.
@@ -155,30 +173,55 @@ func PBKDF2HmacSHA1(password, salt []byte, iterations, keyLength int) ([]byte, e
 //
 // hLen = 32 (256-bit SHA-256 output).
 //
+// allowEmptyPassword: when false (the normal case) an empty password is
+// rejected. Pass true only when a protocol explicitly requires it (e.g. scrypt
+// RFC 7914 test vector 1 uses password="").
+//
 // RFC 7914 Appendix B test vector:
 //
-//	PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 64)
+//	PBKDF2HmacSHA256([]byte("passwd"), []byte("salt"), 1, 64, false)
 //	→ 55ac046e56e3089fec1691c22544b605...
-func PBKDF2HmacSHA256(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	fn := func(key, msg []byte) ([]byte, error) {
-		return hmacpkg.HmacSHA256(key, msg)
+func PBKDF2HmacSHA256(password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) ([]byte, error) {
+	var fn prf
+	if allowEmptyPassword {
+		// Use hmacpkg.HMAC directly to bypass the empty-key guard in HmacSHA256.
+		fn = func(key, msg []byte) ([]byte, error) {
+			out := hmacpkg.HMAC(func(d []byte) []byte { s := gsha256.Sum256(d); return s[:] }, 64, key, msg)
+			return out, nil
+		}
+	} else {
+		fn = func(key, msg []byte) ([]byte, error) {
+			return hmacpkg.HmacSHA256(key, msg)
+		}
 	}
-	return pbkdf2Core(fn, 32, password, salt, iterations, keyLength)
+	return pbkdf2Core(fn, 32, password, salt, iterations, keyLength, allowEmptyPassword)
 }
 
 // PBKDF2HmacSHA512 derives a key using PBKDF2 with HMAC-SHA512 as the PRF.
 //
 // Suitable for high-security applications. hLen = 64 (512-bit output).
-func PBKDF2HmacSHA512(password, salt []byte, iterations, keyLength int) ([]byte, error) {
-	fn := func(key, msg []byte) ([]byte, error) {
-		return hmacpkg.HmacSHA512(key, msg)
+//
+// allowEmptyPassword: when false (the normal case) an empty password is
+// rejected. Pass true only when a protocol explicitly requires it.
+func PBKDF2HmacSHA512(password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) ([]byte, error) {
+	var fn prf
+	if allowEmptyPassword {
+		// Use hmacpkg.HMAC directly to bypass the empty-key guard in HmacSHA512.
+		fn = func(key, msg []byte) ([]byte, error) {
+			out := hmacpkg.HMAC(func(d []byte) []byte { s := gsha512.Sum512(d); return s[:] }, 128, key, msg)
+			return out, nil
+		}
+	} else {
+		fn = func(key, msg []byte) ([]byte, error) {
+			return hmacpkg.HmacSHA512(key, msg)
+		}
 	}
-	return pbkdf2Core(fn, 64, password, salt, iterations, keyLength)
+	return pbkdf2Core(fn, 64, password, salt, iterations, keyLength, allowEmptyPassword)
 }
 
 // PBKDF2HmacSHA1Hex is like PBKDF2HmacSHA1 but returns a lowercase hex string.
-func PBKDF2HmacSHA1Hex(password, salt []byte, iterations, keyLength int) (string, error) {
-	dk, err := PBKDF2HmacSHA1(password, salt, iterations, keyLength)
+func PBKDF2HmacSHA1Hex(password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) (string, error) {
+	dk, err := PBKDF2HmacSHA1(password, salt, iterations, keyLength, allowEmptyPassword)
 	if err != nil {
 		return "", err
 	}
@@ -186,8 +229,8 @@ func PBKDF2HmacSHA1Hex(password, salt []byte, iterations, keyLength int) (string
 }
 
 // PBKDF2HmacSHA256Hex is like PBKDF2HmacSHA256 but returns a lowercase hex string.
-func PBKDF2HmacSHA256Hex(password, salt []byte, iterations, keyLength int) (string, error) {
-	dk, err := PBKDF2HmacSHA256(password, salt, iterations, keyLength)
+func PBKDF2HmacSHA256Hex(password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) (string, error) {
+	dk, err := PBKDF2HmacSHA256(password, salt, iterations, keyLength, allowEmptyPassword)
 	if err != nil {
 		return "", err
 	}
@@ -195,8 +238,8 @@ func PBKDF2HmacSHA256Hex(password, salt []byte, iterations, keyLength int) (stri
 }
 
 // PBKDF2HmacSHA512Hex is like PBKDF2HmacSHA512 but returns a lowercase hex string.
-func PBKDF2HmacSHA512Hex(password, salt []byte, iterations, keyLength int) (string, error) {
-	dk, err := PBKDF2HmacSHA512(password, salt, iterations, keyLength)
+func PBKDF2HmacSHA512Hex(password, salt []byte, iterations, keyLength int, allowEmptyPassword bool) (string, error) {
+	dk, err := PBKDF2HmacSHA512(password, salt, iterations, keyLength, allowEmptyPassword)
 	if err != nil {
 		return "", err
 	}

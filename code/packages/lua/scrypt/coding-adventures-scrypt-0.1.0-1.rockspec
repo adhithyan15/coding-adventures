@@ -18,8 +18,7 @@ description = {
 }
 dependencies = {
     "lua >= 5.4",
-    "coding-adventures-hmac >= 0.1",
-    "coding-adventures-sha256 >= 0.1",
+    "coding-adventures-pbkdf2 >= 0.1",
 }
 build = {
     type = "builtin",

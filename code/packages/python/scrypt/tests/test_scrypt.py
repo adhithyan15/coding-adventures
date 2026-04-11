@@ -7,7 +7,7 @@ Test coverage:
 - Determinism (same inputs → same output)
 - Avalanche (different inputs → different outputs)
 - All parameter validation errors
-- Internal helpers: _salsa20_8, _pbkdf2_sha256, _block_mix, _ro_mix
+- Internal helpers: _salsa20_8, _pbkdf2_hmac_sha256 (via pbkdf2 package), _block_mix, _ro_mix
 """
 
 from __future__ import annotations
@@ -20,8 +20,8 @@ from coding_adventures_scrypt import (
     _salsa20_8,
     _rotl32,
     _xor64,
-    _pbkdf2_sha256,
 )
+from coding_adventures_pbkdf2 import pbkdf2_hmac_sha256 as _pbkdf2_sha256
 
 
 # =============================================================================
@@ -38,8 +38,8 @@ def test_rfc7914_vector1() -> None:
     scrypt(P="", S="", N=16, r=1, p=1, dkLen=64)
 
     This vector exercises the empty-password path. The coding_adventures_hmac
-    package rejects empty keys, so scrypt must use its internal _pbkdf2_sha256
-    which calls _hmac_sha256_raw (no empty-key restriction).
+    package rejects empty keys, so scrypt passes allow_empty_password=True to
+    coding_adventures_pbkdf2.pbkdf2_hmac_sha256 for internal use.
 
     Expected value verified against Python's hashlib.scrypt (OpenSSL backend).
     """
@@ -362,26 +362,30 @@ def test_pbkdf2_sha256_output_length() -> None:
 
 
 def test_pbkdf2_sha256_empty_password() -> None:
-    """_pbkdf2_sha256 must work with empty password (RFC 7914 vector 1 needs this)."""
-    result = _pbkdf2_sha256(b"", b"", 1, 32)
+    """pbkdf2_hmac_sha256 must work with empty password when allow_empty_password=True.
+
+    RFC 7914 vector 1 uses an empty password, so scrypt's internal PBKDF2 calls
+    must bypass the empty-password guard.
+    """
+    result = _pbkdf2_sha256(b"", b"", 1, 32, allow_empty_password=True)
     assert isinstance(result, bytes)
     assert len(result) == 32
 
 
 def test_pbkdf2_sha256_known_vector() -> None:
-    """_pbkdf2_sha256 with 1 iteration should match a known PBKDF2-SHA256 result.
+    """pbkdf2_hmac_sha256 with 1 iteration should match a known PBKDF2-SHA256 result.
 
-    This is the same as HMAC-SHA256(password, salt || \\x00\\x00\\x00\\x01)
-    when key_length <= 32.
+    With exactly 1 iteration and key_length <= 32, PBKDF2-SHA256 output equals
+    HMAC-SHA256(password, salt || \\x00\\x00\\x00\\x01). We verify against the
+    real hmac package.
     """
-    import struct
-    from coding_adventures_scrypt import _hmac_sha256_raw  # type: ignore[attr-defined]
+    from coding_adventures_hmac import hmac_sha256
 
     password = b"hello"
     salt = b"world"
     # PBKDF2 block 1: HMAC(password, salt || 0x00000001)
     seed = salt + (1).to_bytes(4, "big")
-    expected_block1 = _hmac_sha256_raw(password, seed)
+    expected_block1 = hmac_sha256(password, seed)
     result = _pbkdf2_sha256(password, salt, 1, 32)
     assert result == expected_block1
 

@@ -47,7 +47,11 @@ use bytes;            # force length/substr to operate on raw bytes
 use Exporter 'import';
 use POSIX qw(ceil);   # ceil() for block-count computation
 
-use CodingAdventures::HMAC qw(hmac_sha1 hmac_sha256 hmac_sha512);
+use CodingAdventures::HMAC qw(hmac hmac_sha1 hmac_sha256 hmac_sha512);
+# CodingAdventures::Sha1, ::SHA256, and ::Sha512 are loaded transitively by
+# CodingAdventures::HMAC above. We call their hash functions directly in the
+# allow_empty_password path to bypass the empty-key guard in the named
+# hmac_sha* wrappers.
 
 our $VERSION   = '0.1.0';
 our @EXPORT_OK = qw(
@@ -88,17 +92,22 @@ sub _to_hex {
 
 # _pbkdf2: generic PBKDF2 loop.
 #
-# $prf:        coderef: ($key, $msg) -> raw byte string of length $h_len
-# $h_len:      output byte length of $prf
-# $password:   secret being stretched (raw byte string)
-# $salt:       unique random value per credential (raw byte string)
-# $iterations: number of PRF calls per block
-# $key_length: number of derived bytes
+# $prf:                coderef: ($key, $msg) -> raw byte string of length $h_len
+# $h_len:              output byte length of $prf
+# $password:           secret being stretched (raw byte string)
+# $salt:               unique random value per credential (raw byte string)
+# $iterations:         number of PRF calls per block
+# $key_length:         number of derived bytes
+# $allow_empty_password: optional boolean (default 0). When true, an empty
+#                      password is permitted. Used by scrypt, which wraps
+#                      PBKDF2 for format conversion only; the memory-hard
+#                      ROMix layer provides the actual brute-force resistance.
 sub _pbkdf2 {
-    my ($prf, $h_len, $password, $salt, $iterations, $key_length) = @_;
+    my ($prf, $h_len, $password, $salt, $iterations, $key_length, $allow_empty_password) = @_;
+    $allow_empty_password //= 0;
 
     die "PBKDF2 password must not be empty\n"
-        unless defined($password) && length($password) > 0;
+        unless defined($password) && (length($password) > 0 || $allow_empty_password);
 
     # The upper bounds (2**31 for iterations, 2**20 for key_length) prevent
     # an attacker from supplying arbitrarily large values that would cause
@@ -146,35 +155,81 @@ sub _pbkdf2 {
 # RFC 6070 test vector:
 #   pbkdf2_hmac_sha1_hex("password", "salt", 1, 20)
 #   => "0c60c80f961f0e71f3a9b524af6012062fe037a6"
+#
+# $allow_empty_password: optional (default 0). Pass 1 to permit empty passwords.
+# When set, the PRF uses the low-level hmac() to bypass the empty-key guard in
+# hmac_sha1(), because an empty password becomes an empty HMAC key. The caller
+# (e.g. scrypt) is responsible for ensuring brute-force resistance at a higher
+# level.
 sub pbkdf2_hmac_sha1 {
-    my ($password, $salt, $iterations, $key_length) = @_;
-    my $prf = sub {
-        my ($key, $msg) = @_;
-        return _arrayref_to_str(hmac_sha1($key, $msg));
-    };
-    return _pbkdf2($prf, 20, $password, $salt, $iterations, $key_length);
+    my ($password, $salt, $iterations, $key_length, $allow_empty_password) = @_;
+    my $prf;
+    if ($allow_empty_password) {
+        # Bypass the hmac_sha1() empty-key guard by calling the generic hmac()
+        # directly with the SHA-1 hash function (block size 64 bytes).
+        $prf = sub {
+            my ($key, $msg) = @_;
+            return _arrayref_to_str(hmac(sub { CodingAdventures::Sha1::digest($_[0]) }, 64, $key, $msg));
+        };
+    } else {
+        $prf = sub {
+            my ($key, $msg) = @_;
+            return _arrayref_to_str(hmac_sha1($key, $msg));
+        };
+    }
+    return _pbkdf2($prf, 20, $password, $salt, $iterations, $key_length, $allow_empty_password);
 }
 
 # PBKDF2 with HMAC-SHA256 as the PRF.
 # hLen = 32 bytes. Recommended for new systems (OWASP 2023: >= 600,000 iterations).
+#
+# $allow_empty_password: optional (default 0). Pass 1 to permit empty passwords.
+# This is used by the scrypt package, which calls PBKDF2 with 1 iteration purely
+# for format conversion; the memory-hard ROMix layer provides brute-force resistance.
+# When set, the PRF uses the low-level hmac() to bypass the empty-key guard in
+# hmac_sha256().
 sub pbkdf2_hmac_sha256 {
-    my ($password, $salt, $iterations, $key_length) = @_;
-    my $prf = sub {
-        my ($key, $msg) = @_;
-        return _arrayref_to_str(hmac_sha256($key, $msg));
-    };
-    return _pbkdf2($prf, 32, $password, $salt, $iterations, $key_length);
+    my ($password, $salt, $iterations, $key_length, $allow_empty_password) = @_;
+    my $prf;
+    if ($allow_empty_password) {
+        # Bypass the hmac_sha256() empty-key guard by calling the generic hmac()
+        # directly with the SHA-256 hash function (block size 64 bytes).
+        $prf = sub {
+            my ($key, $msg) = @_;
+            return _arrayref_to_str(hmac(sub { CodingAdventures::SHA256::sha256($_[0]) }, 64, $key, $msg));
+        };
+    } else {
+        $prf = sub {
+            my ($key, $msg) = @_;
+            return _arrayref_to_str(hmac_sha256($key, $msg));
+        };
+    }
+    return _pbkdf2($prf, 32, $password, $salt, $iterations, $key_length, $allow_empty_password);
 }
 
 # PBKDF2 with HMAC-SHA512 as the PRF.
 # hLen = 64 bytes. Suitable for high-security applications.
+#
+# $allow_empty_password: optional (default 0). Pass 1 to permit empty passwords.
+# When set, the PRF uses the low-level hmac() to bypass the empty-key guard in
+# hmac_sha512().
 sub pbkdf2_hmac_sha512 {
-    my ($password, $salt, $iterations, $key_length) = @_;
-    my $prf = sub {
-        my ($key, $msg) = @_;
-        return _arrayref_to_str(hmac_sha512($key, $msg));
-    };
-    return _pbkdf2($prf, 64, $password, $salt, $iterations, $key_length);
+    my ($password, $salt, $iterations, $key_length, $allow_empty_password) = @_;
+    my $prf;
+    if ($allow_empty_password) {
+        # Bypass the hmac_sha512() empty-key guard by calling the generic hmac()
+        # directly with the SHA-512 hash function (block size 128 bytes).
+        $prf = sub {
+            my ($key, $msg) = @_;
+            return _arrayref_to_str(hmac(sub { CodingAdventures::Sha512::digest($_[0]) }, 128, $key, $msg));
+        };
+    } else {
+        $prf = sub {
+            my ($key, $msg) = @_;
+            return _arrayref_to_str(hmac_sha512($key, $msg));
+        };
+    }
+    return _pbkdf2($prf, 64, $password, $salt, $iterations, $key_length, $allow_empty_password);
 }
 
 # ──────────────────────────────────────────────────────────────────────────────

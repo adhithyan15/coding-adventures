@@ -101,79 +101,16 @@ defmodule CodingAdventures.Scrypt do
   import Bitwise
 
   # ---------------------------------------------------------------------------
-  # Internal PBKDF2-HMAC-SHA256
+  # PBKDF2-HMAC-SHA256 via CodingAdventures.Pbkdf2
   #
-  # We implement our own PBKDF2 core here instead of delegating to
-  # CodingAdventures.PBKDF2, because the RFC 7914 test vectors include an
-  # empty password ("") in test vector 1. Our PBKDF2 module (correctly) rejects
-  # empty passwords for user-facing use, but scrypt's internal use of PBKDF2
-  # is different: the "password" is the actual plaintext bytes fed into the KDF,
-  # not a user-facing secret. The HMAC spec (RFC 2104) and the underlying hash
-  # function handle empty inputs correctly.
-  #
-  # This private PBKDF2 core calls CodingAdventures.HMAC.hmac/4 directly,
-  # bypassing the empty-key guard in the named HMAC variants.
+  # scrypt's internal use of PBKDF2 (RFC 7914 §3) differs from user-facing use:
+  # the "password" here is raw KDF bytes, not a user secret. RFC 7914 test
+  # vector 1 uses an empty password (""), which is mathematically valid for HMAC
+  # (an empty key is zero-padded to the block size). We pass allow_empty_password
+  # true to bypass the user-facing guard in CodingAdventures.Pbkdf2.
   # ---------------------------------------------------------------------------
 
-  alias CodingAdventures.Hmac
-  alias CodingAdventures.Sha256
-
-  # hmac_sha256_raw/2 — HMAC-SHA256 without the empty-key guard.
-  #
-  # Calls the generic Hmac.hmac/4 function directly, which uses the HMAC
-  # construction from RFC 2104. An empty key is handled correctly by the HMAC
-  # algorithm: it is zero-padded to the block size (64 bytes), just like any
-  # other key shorter than 64 bytes. This is mathematically valid.
-  defp hmac_sha256_raw(key, message) do
-    Hmac.hmac(&Sha256.sha256/1, 64, key, message)
-  end
-
-  # pbkdf2_sha256_raw/4 — PBKDF2-HMAC-SHA256 without empty-password validation.
-  #
-  # This is the standard PBKDF2 algorithm (RFC 8018 §5.2) with h_len = 32.
-  # We implement it here to allow empty passwords, which scrypt's RFC test
-  # vectors require. The algorithm is identical to CodingAdventures.Pbkdf2:
-  #
-  #   DK = T_1 || T_2 || ... (first dk_len bytes)
-  #   T_i = U_1 XOR U_2 XOR ... XOR U_c
-  #   U_1 = HMAC(password, salt || INT32BE(i))
-  #   U_j = HMAC(password, U_{j-1})
-  #
-  # The block index i is 1-based and encoded as 4-byte big-endian.
-  defp pbkdf2_sha256_raw(password, salt, iterations, key_length) do
-    h_len = 32
-    num_blocks = ceil(key_length / h_len)
-
-    dk =
-      for i <- 1..num_blocks//1 do
-        # Each block gets a unique seed: salt concatenated with the block index
-        # encoded as a 4-byte big-endian integer. This ensures different blocks
-        # produce different outputs even when salt is the same.
-        seed = salt <> <<i::big-unsigned-integer-size(32)>>
-
-        # U_1: first PRF application
-        u1 = hmac_sha256_raw(password, seed)
-
-        # Fold in U_2..U_c by XOR, carrying the previous U value forward.
-        # iterations == 1 is handled specially to avoid an empty 2..1//1 range.
-        {t, _last_u} =
-          if iterations == 1 do
-            {u1, u1}
-          else
-            Enum.reduce(2..iterations//1, {u1, u1}, fn _j, {acc, prev_u} ->
-              next_u = hmac_sha256_raw(password, prev_u)
-              new_acc = :crypto.exor(acc, next_u)
-              {new_acc, next_u}
-            end)
-          end
-
-        t
-      end
-      |> IO.iodata_to_binary()
-
-    # Truncate to the exact requested length (the last block may have excess)
-    binary_part(dk, 0, key_length)
-  end
+  alias CodingAdventures.Pbkdf2
 
   # ---------------------------------------------------------------------------
   # Salsa20/8 Core (RFC 7914 §3)
@@ -606,7 +543,7 @@ defmodule CodingAdventures.Scrypt do
     # to this specific (password, salt) pair. We use 1 iteration of PBKDF2
     # because scrypt provides the computational cost itself via ROMix.
     block_len = 128 * r
-    b_bytes = pbkdf2_sha256_raw(password, salt, 1, p * block_len)
+    b_bytes = Pbkdf2.pbkdf2_hmac_sha256(password, salt, 1, p * block_len, true)
 
     # ── Step 2: Run ROMix on each of the p blocks independently ───────────────
     # Each 128*r-byte chunk gets its own independent ROMix pass.
@@ -625,7 +562,7 @@ defmodule CodingAdventures.Scrypt do
     # The password is used again to prevent the output from depending only on
     # the intermediate state — an attacker who learns b_mixed still cannot
     # derive the key without knowing the password.
-    pbkdf2_sha256_raw(password, b_mixed, 1, dk_len)
+    Pbkdf2.pbkdf2_hmac_sha256(password, b_mixed, 1, dk_len, true)
   end
 
   @doc """

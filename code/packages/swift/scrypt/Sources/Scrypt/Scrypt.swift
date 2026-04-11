@@ -63,8 +63,7 @@
 // ============================================================================
 
 import Foundation
-import HMAC
-import SHA256
+import PBKDF2
 
 // ============================================================================
 // MARK: - Error Types
@@ -366,94 +365,6 @@ private func roMix(_ bBytes: [UInt8], n: Int, r: Int) -> [UInt8] {
 }
 
 // ============================================================================
-// MARK: - Internal PBKDF2-HMAC-SHA256
-// ============================================================================
-//
-// scrypt uses PBKDF2-HMAC-SHA256 twice: once to expand the password+salt into
-// p parallel blocks (B), and once to compress those blocks back into the final
-// derived key (DK).
-//
-// The outer PBKDF2 package (code/packages/swift/pbkdf2) rejects empty passwords,
-// because empty passwords carry no entropy and are a security anti-pattern for
-// interactive use. However, RFC 7914 test vector 1 uses password="" — it's
-// testing the algorithm correctness, not security policy.
-//
-// To support this test vector without weakening the public PBKDF2 API, scrypt
-// implements PBKDF2-HMAC-SHA256 inline using the lower-level `hmac()` function
-// from the HMAC package, which has no empty-key guard. The `sha256` function is
-// imported directly from the SHA256 package.
-//
-// PRF (pseudorandom function):
-//   prf(key, msg) = HMAC-SHA256(key, msg) = hmac(sha256, 64, key, msg)
-//
-// Block counter encoding: big-endian 32-bit integer appended to the salt.
-//
-//   U_1 = PRF(Password, Salt || INT_32_BE(i))
-//   U_j = PRF(Password, U_{j-1})
-//   T_i = U_1 XOR U_2 XOR ... XOR U_c
-//   DK  = T_1 || T_2 || ... (truncated to dkLen bytes)
-
-/// Internal PBKDF2-HMAC-SHA256 with no empty-password guard.
-///
-/// This is intentionally not public. External callers should use the PBKDF2
-/// package, which enforces security policy. This internal variant exists solely
-/// to support RFC 7914 vector 1 (empty password) without modifying the PBKDF2
-/// package's security invariants.
-///
-/// - Parameters:
-///   - password: HMAC key (may be empty — scrypt supports this per RFC 7914).
-///   - salt: PBKDF2 salt (the scrypt salt on the first call; B on the second).
-///   - iterations: Must be 1 for scrypt usage (RFC 7914 §5).
-///   - keyLength: Number of bytes to produce.
-/// - Returns: Derived key as [UInt8].
-private func pbkdf2HmacSHA256Internal(
-    password: [UInt8],
-    salt: [UInt8],
-    iterations: Int,
-    keyLength: Int
-) throws -> [UInt8] {
-    let hLen = 32  // SHA-256 output size in bytes
-    let numBlocks = (keyLength + hLen - 1) / hLen
-    var dk = [UInt8]()
-    dk.reserveCapacity(numBlocks * hLen)
-
-    // The PRF: HMAC-SHA256 via the generic hmac() function.
-    // We use hmac() directly (not hmacSHA256()) to bypass the empty-key guard.
-    // sha256 is imported from the SHA256 package and matches (Data) -> Data.
-    let prf: (Data, Data) -> Data = { key, msg in
-        hmac(hashFn: sha256, blockSize: 64, key: key, message: msg)
-    }
-
-    for i in 1...numBlocks {
-        // Seed = Salt || INT_32_BE(i)
-        // The big-endian counter makes each block's first U value unique,
-        // preventing blocks from producing identical output even with the same
-        // password and salt.
-        var seed = salt
-        seed.append(UInt8((i >> 24) & 0xFF))
-        seed.append(UInt8((i >> 16) & 0xFF))
-        seed.append(UInt8((i >>  8) & 0xFF))
-        seed.append(UInt8( i        & 0xFF))
-
-        // U_1 = PRF(Password, Seed)
-        let u1 = prf(Data(password), Data(seed))
-        var t = Array(u1)
-        var prev = u1
-
-        // U_j = PRF(Password, U_{j-1}), XOR into t
-        for _ in 1..<iterations {
-            let next = prf(Data(password), prev)
-            for k in 0..<hLen { t[k] ^= next[next.startIndex + k] }
-            prev = next
-        }
-
-        dk.append(contentsOf: t)
-    }
-
-    return Array(dk.prefix(keyLength))
-}
-
-// ============================================================================
 // MARK: - Public API
 // ============================================================================
 //
@@ -508,10 +419,15 @@ public func scrypt(
     // ── Step 1: Expand password + salt into p parallel blocks ─────────────
     // B is p blocks of 128*r bytes each. scrypt's PBKDF2 always uses 1
     // iteration — the memory-hardness comes from ROMix, not PBKDF2 iteration.
+    //
+    // allowEmptyPassword: true because RFC 7914 test vector 1 uses password=""
+    // and scrypt is a protocol-level construct that allows it by specification.
+    // The PBKDF2 package's allowEmptyPassword flag exists precisely for this.
     let bLen = p * 128 * r
-    var b = try pbkdf2HmacSHA256Internal(
-        password: password, salt: salt, iterations: 1, keyLength: bLen
-    )
+    var b = Array(try pbkdf2HmacSHA256(
+        password: Data(password), salt: Data(salt), iterations: 1, keyLength: bLen,
+        allowEmptyPassword: true
+    ))
 
     // ── Step 2: Apply ROMix to each parallel block ────────────────────────
     // Each block is processed independently and can be parallelized (hence
@@ -529,9 +445,10 @@ public func scrypt(
     // compresses it down to dkLen bytes. This means the attacker cannot
     // bypass ROMix — any error in ROMix produces a completely wrong B, and
     // thus a completely wrong final key.
-    return try pbkdf2HmacSHA256Internal(
-        password: password, salt: b, iterations: 1, keyLength: dkLen
-    )
+    return Array(try pbkdf2HmacSHA256(
+        password: Data(password), salt: Data(b), iterations: 1, keyLength: dkLen,
+        allowEmptyPassword: true
+    ))
 }
 
 /// Like `scrypt` but returns the derived key as a lowercase hex string.

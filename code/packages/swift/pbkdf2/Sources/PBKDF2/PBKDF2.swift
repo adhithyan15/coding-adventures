@@ -40,6 +40,9 @@
 
 import Foundation
 import HMAC
+import SHA1
+import SHA256
+import SHA512
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Error type
@@ -62,21 +65,26 @@ public enum PBKDF2Error: Error, Equatable {
 /// Generic PBKDF2 — used internally by all public convenience functions.
 ///
 /// - Parameters:
-///   - prf:        PRF(key, msg) → Data of length `hLen`
-///   - hLen:       Output byte length of `prf`
-///   - password:   Secret being stretched — becomes the HMAC key
-///   - salt:       Unique random value per credential (≥16 bytes recommended)
-///   - iterations: Number of PRF calls per block
-///   - keyLength:  Number of derived bytes to produce
+///   - prf:                PRF(key, msg) → Data of length `hLen`
+///   - hLen:               Output byte length of `prf`
+///   - password:           Secret being stretched — becomes the HMAC key
+///   - salt:               Unique random value per credential (≥16 bytes recommended)
+///   - iterations:         Number of PRF calls per block
+///   - keyLength:          Number of derived bytes to produce
+///   - allowEmptyPassword: When `true`, skips the empty-password guard. Only
+///                         set this for protocol-level usage (e.g. scrypt RFC
+///                         7914 test vectors) where an empty password is valid
+///                         by specification. Default: `false`.
 private func pbkdf2Core(
     prf: (Data, Data) -> Data,
     hLen: Int,
     password: Data,
     salt: Data,
     iterations: Int,
-    keyLength: Int
+    keyLength: Int,
+    allowEmptyPassword: Bool = false
 ) throws -> Data {
-    guard !password.isEmpty else { throw PBKDF2Error.emptyPassword }
+    guard !password.isEmpty || allowEmptyPassword else { throw PBKDF2Error.emptyPassword }
     guard iterations > 0 else { throw PBKDF2Error.invalidIterations }
     guard keyLength > 0 else { throw PBKDF2Error.invalidKeyLength }
     // Upper bounds prevent unbounded CPU/memory from attacker-controlled inputs,
@@ -141,15 +149,20 @@ public func pbkdf2HmacSHA1(
     password: Data,
     salt: Data,
     iterations: Int,
-    keyLength: Int
+    keyLength: Int,
+    allowEmptyPassword: Bool = false
 ) throws -> Data {
+    // Use hmac() directly (not hmacSHA1()) so that an empty password does not
+    // trigger the precondition in the named wrapper. The allowEmptyPassword
+    // guard above is the correct place to enforce the policy.
     try pbkdf2Core(
-        prf: { key, msg in hmacSHA1(key: key, message: msg) },
+        prf: { key, msg in hmac(hashFn: sha1, blockSize: 64, key: key, message: msg) },
         hLen: 20,
         password: password,
         salt: salt,
         iterations: iterations,
-        keyLength: keyLength
+        keyLength: keyLength,
+        allowEmptyPassword: allowEmptyPassword
     )
 }
 
@@ -161,15 +174,20 @@ public func pbkdf2HmacSHA256(
     password: Data,
     salt: Data,
     iterations: Int,
-    keyLength: Int
+    keyLength: Int,
+    allowEmptyPassword: Bool = false
 ) throws -> Data {
+    // Use hmac() directly (not hmacSHA256()) so that an empty password does not
+    // trigger the precondition in the named wrapper. The allowEmptyPassword
+    // guard above is the correct place to enforce the policy.
     try pbkdf2Core(
-        prf: { key, msg in hmacSHA256(key: key, message: msg) },
+        prf: { key, msg in hmac(hashFn: sha256, blockSize: 64, key: key, message: msg) },
         hLen: 32,
         password: password,
         salt: salt,
         iterations: iterations,
-        keyLength: keyLength
+        keyLength: keyLength,
+        allowEmptyPassword: allowEmptyPassword
     )
 }
 
@@ -181,15 +199,20 @@ public func pbkdf2HmacSHA512(
     password: Data,
     salt: Data,
     iterations: Int,
-    keyLength: Int
+    keyLength: Int,
+    allowEmptyPassword: Bool = false
 ) throws -> Data {
+    // Use hmac() directly (not hmacSHA512()) so that an empty password does not
+    // trigger the precondition in the named wrapper. The allowEmptyPassword
+    // guard above is the correct place to enforce the policy.
     try pbkdf2Core(
-        prf: { key, msg in hmacSHA512(key: key, message: msg) },
+        prf: { key, msg in hmac(hashFn: sha512, blockSize: 128, key: key, message: msg) },
         hLen: 64,
         password: password,
         salt: salt,
         iterations: iterations,
-        keyLength: keyLength
+        keyLength: keyLength,
+        allowEmptyPassword: allowEmptyPassword
     )
 }
 

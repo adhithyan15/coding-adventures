@@ -22,6 +22,8 @@ package.path =
   "../../md5/src/?/init.lua;"  ..
   "../../sha1/src/?.lua;"      ..
   "../../sha1/src/?/init.lua;" ..
+  "../../pbkdf2/src/?.lua;"    ..
+  "../../pbkdf2/src/?/init.lua;" ..
   package.path
 
 local scrypt = require("coding_adventures.scrypt")
