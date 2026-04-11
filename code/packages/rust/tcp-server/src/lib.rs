@@ -304,8 +304,14 @@ mod tests {
     use super::*;
     use std::io;
     use std::net::TcpStream;
+    use std::sync::{Mutex, OnceLock};
     use std::thread;
     use std::time::Instant;
+
+    fn network_test_guard() -> std::sync::MutexGuard<'static, ()> {
+        static TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+        TEST_LOCK.get_or_init(|| Mutex::new(())).lock().expect("test lock")
+    }
 
     fn send_recv(
         port: u16,
@@ -347,7 +353,7 @@ mod tests {
     }
 
     fn wait_until_ready(port: u16, request: &[u8], expected_response: &[u8]) {
-        let deadline = Instant::now() + Duration::from_secs(5);
+        let deadline = Instant::now() + Duration::from_secs(15);
         loop {
             if let Ok(response) = send_recv(
                 port,
@@ -370,6 +376,7 @@ mod tests {
 
     #[test]
     fn echo_server_round_trips() {
+        let _guard = network_test_guard();
         let server = TcpServer::new("127.0.0.1", 0);
         server.start().expect("start");
         let port = server.try_address().expect("address").port();
@@ -386,6 +393,7 @@ mod tests {
 
     #[test]
     fn custom_handler_can_transform_bytes() {
+        let _guard = network_test_guard();
         let server = TcpServer::with_handler("127.0.0.1", 0, |_, data| {
             data.iter().map(|byte| byte.to_ascii_uppercase()).collect()
         });
@@ -404,6 +412,7 @@ mod tests {
 
     #[test]
     fn stateful_handler_can_use_connection_buffer() {
+        let _guard = network_test_guard();
         let server = TcpServer::with_handler("127.0.0.1", 0, |conn, data| {
             conn.read_buffer.extend_from_slice(data);
             let response = conn.read_buffer.clone();
