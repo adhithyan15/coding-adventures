@@ -301,7 +301,10 @@ public func deserialiseTokens(_ data: [UInt8]) -> ([Token], Int) {
     let originalLength = Int(readU32(at: 0))
     let tokenCount     = Int(readU32(at: 4))
     var tokens         = [Token]()
-    tokens.reserveCapacity(tokenCount)
+    // Cap reserveCapacity against actual payload size to prevent DoS from a
+    // crafted header claiming billions of tokens (would allocate ~12 GB).
+    let maxPossible = (data.count - 8) / 4
+    tokens.reserveCapacity(min(tokenCount, maxPossible))
 
     for i in 0 ..< tokenCount {
         let base = 8 + i * 4

@@ -387,6 +387,13 @@ sub deserialise_tokens {
     my $token_count     = unpack 'N', substr($data, 4, 4);
     my @tokens;
 
+    # Cap token_count against actual payload size. Perl eagerly materialises
+    # a range list `0 .. N-1`, so an unchecked uint32 from crafted input could
+    # cause a ~34 GB allocation before the loop body runs. Capping first keeps
+    # the range bounded by real data.
+    my $max_possible = int((length($data) - 8) / 4);
+    $token_count = $max_possible if $token_count > $max_possible;
+
     for my $i (0 .. $token_count - 1) {
         my $base = 8 + $i * 4;
         last if $base + 4 > length($data);

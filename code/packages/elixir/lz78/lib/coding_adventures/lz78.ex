@@ -129,34 +129,41 @@ defmodule CodingAdventures.LZ78 do
   """
   def decode(tokens, original_length \\ :all) do
     dict_table = [{0, 0}]
-    output = decode_loop(tokens, dict_table, [], original_length)
+    # Track output size as a separate integer to avoid O(n) length/1 calls
+    # inside the hot loop. Without this, the decoder would be O(n²).
+    output = decode_loop(tokens, dict_table, [], 0, original_length)
     :erlang.list_to_binary(output)
   end
 
-  defp decode_loop([], _table, output, _orig_len), do: Enum.reverse(output)
+  defp decode_loop([], _table, output, _size, _orig_len), do: Enum.reverse(output)
 
-  defp decode_loop([tok | rest], table, output, orig_len) do
-    seq = reconstruct(table, tok.dict_index)
+  defp decode_loop([tok | rest], table, output, size, orig_len) do
+    seq     = reconstruct(table, tok.dict_index)
+    seq_len = length(seq)
+
     output_after_seq = Enum.reduce(seq, output, fn b, acc -> [b | acc] end)
+    size_after_seq   = size + seq_len
 
-    output_after_char =
+    # Append next_char only if we haven't yet reached original_length.
+    {output_after_char, size_after_char} =
       cond do
-        orig_len == :all                    -> [tok.next_char | output_after_seq]
-        length(output_after_seq) < orig_len -> [tok.next_char | output_after_seq]
-        true                                -> output_after_seq
+        orig_len == :all              -> {[tok.next_char | output_after_seq], size_after_seq + 1}
+        size_after_seq < orig_len     -> {[tok.next_char | output_after_seq], size_after_seq + 1}
+        true                          -> {output_after_seq, size_after_seq}
       end
 
     new_table = table ++ [{tok.dict_index, tok.next_char}]
 
     case orig_len do
       :all ->
-        decode_loop(rest, new_table, output_after_char, orig_len)
+        decode_loop(rest, new_table, output_after_char, size_after_char, orig_len)
 
-      n when length(output_after_char) >= n ->
+      # Early exit: O(1) comparison — size_after_char is tracked, not computed.
+      n when size_after_char >= n ->
         output_after_char |> Enum.reverse() |> Enum.take(n)
 
       _ ->
-        decode_loop(rest, new_table, output_after_char, orig_len)
+        decode_loop(rest, new_table, output_after_char, size_after_char, orig_len)
     end
   end
 
@@ -197,7 +204,11 @@ defmodule CodingAdventures.LZ78 do
       token_count::unsigned-big-integer-32,
       rest::binary>> = data
 
-    tokens = parse_tokens(rest, token_count, [])
+    # Cap token_count against actual payload size to prevent DoS from
+    # crafted headers claiming far more tokens than the data contains.
+    max_possible = div(byte_size(rest), 4)
+    safe_count   = min(token_count, max_possible)
+    tokens = parse_tokens(rest, safe_count, [])
     {tokens, original_length}
   end
 
