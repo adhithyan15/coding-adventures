@@ -81,6 +81,8 @@ from __future__ import annotations
 import struct
 from typing import NamedTuple
 
+from trie import TrieCursor
+
 __all__ = [
     "Token",
     "encode",
@@ -110,31 +112,6 @@ class Token(NamedTuple):
     next_char: int
 
 
-# ─── Internal trie ────────────────────────────────────────────────────────────
-
-
-class _TrieNode:
-    """
-    One node in the LZ78 encoding trie.
-
-    Each node represents a dictionary entry: a byte sequence reachable from
-    the root. The sequence itself is not stored; it is implicit in the path
-    from the root to this node.
-
-    Attributes:
-        dict_id:  The dictionary ID assigned to this node (1-based; root = 0).
-        children: Maps a byte value (0–255) to the child node for that byte.
-                  Using int keys (not str) because we're encoding raw bytes, not
-                  text characters.
-    """
-
-    __slots__ = ("dict_id", "children")
-
-    def __init__(self, dict_id: int) -> None:
-        self.dict_id: int = dict_id
-        self.children: dict[int, _TrieNode] = {}
-
-
 # ─── Encoder ──────────────────────────────────────────────────────────────────
 
 
@@ -142,14 +119,16 @@ def encode(data: bytes | bytearray, max_dict_size: int = 65536) -> list[Token]:
     """
     Encode bytes into an LZ78 token stream.
 
-    Scans the input left-to-right, following trie edges for each byte. When
-    a byte has no child edge from the current node, emits a token and resets
-    to the root. Adds a new trie node (dictionary entry) for the matched
-    sequence + the new byte.
+    Uses a ``TrieCursor[int, int]`` to walk the dictionary one byte at a time.
+    The cursor starts at the root (representing the empty sequence, dict ID 0)
+    and advances along child edges as bytes arrive. When a byte has no child
+    edge (``cursor.step(byte)`` returns False), the current cursor position
+    represents the longest match — emit that match's dict ID plus the new byte
+    as a token, record the new sequence, and reset the cursor to root.
 
-    If the input ends while the encoder is mid-match, a flush token is emitted
-    with next_char=0 (sentinel). The compress() function stores the original
-    length so decompress() can discard the sentinel byte.
+    This cursor-based design keeps the encoding loop free of low-level trie
+    node manipulation. The same ``TrieCursor`` abstraction applies to LZW
+    (CMP03) and any other streaming dictionary algorithm.
 
     Args:
         data:          Input bytes to compress.
@@ -166,32 +145,36 @@ def encode(data: bytes | bytearray, max_dict_size: int = 65536) -> list[Token]:
         >>> encode(b"AABCBBABC")
         [Token(0, 65), Token(1, 66), Token(0, 67), Token(0, 66), Token(4, 65), Token(4, 67)]
     """
-    root = _TrieNode(dict_id=0)
+    # TrieCursor[int, int]: key elements are byte values (int 0–255),
+    # values are dictionary IDs (int 1..max_dict_size-1).
+    # The root represents dict entry 0 (the empty sequence / no match).
+    cursor: TrieCursor[int, int] = TrieCursor()
     next_id = 1
-    current = root
     tokens: list[Token] = []
 
     for byte in data:
         byte = int(byte)  # ensure int even from bytearray
-        if byte in current.children:
-            # Edge exists — extend the current match without emitting.
-            current = current.children[byte]
-        else:
-            # No edge — current match is the longest; emit and extend dict.
-            tokens.append(Token(dict_index=current.dict_id, next_char=byte))
 
-            # Add the new sequence to the dictionary if there's room.
+        if cursor.step(byte):
+            # Edge exists — the current match can be extended.
+            pass
+        else:
+            # No edge for this byte — emit token (current dict ID + byte).
+            tokens.append(Token(dict_index=cursor.value or 0, next_char=byte))
+
+            # Record the new sequence in the dictionary if there's room.
             if next_id < max_dict_size:
-                new_node = _TrieNode(dict_id=next_id)
-                current.children[byte] = new_node
+                cursor.insert(byte, next_id)
                 next_id += 1
 
-            # Reset to root for the next match.
-            current = root
+            # Reset cursor to root to start a fresh match.
+            cursor.reset()
 
-    # End-of-stream: if we're mid-match, flush with sentinel next_char=0.
-    if current is not root:
-        tokens.append(Token(dict_index=current.dict_id, next_char=0))
+    # End-of-stream: if cursor is not at root, a partial match needs flushing.
+    # next_char=0 is the sentinel; compress() stores original_length so that
+    # decompress() can truncate and discard this sentinel byte.
+    if not cursor.at_root:
+        tokens.append(Token(dict_index=cursor.value or 0, next_char=0))
 
     return tokens
 
