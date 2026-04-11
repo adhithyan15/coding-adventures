@@ -293,9 +293,35 @@ fn command_parts_from_resp(value: RespValue) -> Option<Vec<Vec<u8>>> {
                     _ => return None,
                 }
             }
-            Some(parts)
+            if parts.is_empty() { None } else { Some(parts) }
         }
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn blank_inline_queries_are_ignored_by_transport_adapter() {
+        assert_eq!(
+            command_parts_from_resp(RespValue::Array(Some(Vec::new()))),
+            None
+        );
+    }
+
+    #[test]
+    fn inline_commands_are_split_into_bulk_string_arguments() {
+        let parts = command_parts_from_resp(RespValue::Array(Some(vec![
+            RespValue::BulkString(Some(b"SET".to_vec())),
+            RespValue::BulkString(Some(b"x".to_vec())),
+            RespValue::BulkString(Some(b"foo".to_vec())),
+        ])));
+        assert_eq!(
+            parts,
+            Some(vec![b"SET".to_vec(), b"x".to_vec(), b"foo".to_vec()])
+        );
     }
 }
 

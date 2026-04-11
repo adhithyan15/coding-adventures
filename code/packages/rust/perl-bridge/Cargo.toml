@@ -1,8 +1,6 @@
 # Zero dependencies. We declare Perl's C API functions ourselves using
 # extern "C" — no perlxs, no Inline::C, no build-time header requirement.
 # These function signatures have been stable since Perl 5.8 (2002).
-[workspace]
-
 [package]
 name = "perl-bridge"
 version = "0.1.0"
