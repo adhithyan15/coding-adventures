@@ -80,14 +80,26 @@ import struct
 from collections.abc import Callable
 
 from coding_adventures_hmac import (
+    hmac as _hmac_core,
     hmac_sha1,
     hmac_sha256,
     hmac_sha512,
 )
+from coding_adventures_sha256 import sha256 as _sha256
 
 # A PRF takes (key: bytes, message: bytes) and returns bytes.
 # In PBKDF2 the password is the HMAC key and the iterated data is the message.
 _PRF = Callable[[bytes, bytes], bytes]
+
+# _hmac_sha256_raw bypasses the empty-key guard in the public hmac_sha256 wrapper.
+# It delegates to the generic hmac() core which places no restriction on key length.
+# Only used when allow_empty_password=True — needed for RFC 7914 scrypt test vector 1.
+def _hmac_sha256_raw(key: bytes, message: bytes) -> bytes:
+    """HMAC-SHA256 with no restriction on key length (including empty).
+
+    Intended only for the allow_empty_password=True path in _pbkdf2.
+    """
+    return _hmac_core(_sha256, 64, key, message)
 
 
 def _pbkdf2(
@@ -97,20 +109,24 @@ def _pbkdf2(
     salt: bytes,
     iterations: int,
     key_length: int,
+    allow_empty_password: bool = False,
 ) -> bytes:
     """Core PBKDF2 loop — not exported; call the concrete variants below.
 
     Parameters
     ----------
-    prf:        Pseudorandom function: (key, msg) → bytes of length h_len.
-    h_len:      Output byte length of prf (20 for SHA-1, 32 for SHA-256, …).
-    password:   The secret being stretched — becomes the HMAC key.
-    salt:       Random value unique per credential (≥16 bytes recommended).
-    iterations: Number of PRF calls per block (higher = slower = harder to
-                brute-force).
-    key_length: Number of bytes to produce.
+    prf:                  Pseudorandom function: (key, msg) → bytes of length h_len.
+    h_len:                Output byte length of prf (20 for SHA-1, 32 for SHA-256, …).
+    password:             The secret being stretched — becomes the HMAC key.
+    salt:                 Random value unique per credential (≥16 bytes recommended).
+    iterations:           Number of PRF calls per block (higher = slower = harder to
+                          brute-force).
+    key_length:           Number of bytes to produce.
+    allow_empty_password: If True, skip the empty-password guard. Needed when PBKDF2
+                          is used internally by scrypt, which must pass RFC 7914 test
+                          vector 1 that uses an empty password. Default: False.
     """
-    if not password:
+    if not password and not allow_empty_password:
         raise ValueError("PBKDF2 password must not be empty")
     if iterations <= 0:
         raise ValueError(f"PBKDF2 iterations must be positive, got {iterations}")
@@ -175,6 +191,7 @@ def pbkdf2_hmac_sha256(
     salt: bytes,
     iterations: int,
     key_length: int,
+    allow_empty_password: bool = False,
 ) -> bytes:
     """PBKDF2 with HMAC-SHA256.
 
@@ -183,12 +200,32 @@ def pbkdf2_hmac_sha256(
 
     Digest size h_len = 32 bytes (256-bit SHA-256 output).
 
+    Parameters
+    ----------
+    password:
+        The secret password. Must be non-empty unless *allow_empty_password* is True.
+    salt:
+        Random salt bytes. Should be at least 16 bytes.
+    iterations:
+        Number of HMAC iterations per block. OWASP 2023 recommends ≥ 600,000.
+    key_length:
+        Desired output length in bytes.
+    allow_empty_password:
+        If True, bypass the empty-password guard. Intended only for internal
+        callers such as scrypt that need RFC 7914 test-vector compatibility.
+        Default: False (callers should always supply a non-empty password).
+
     Example — RFC 7914 Appendix B:
     >>> dk = pbkdf2_hmac_sha256(b"passwd", b"salt", 1, 64)
     >>> dk.hex()[:32]
     '55ac046e56e3089fec1691c22544b605'
     """
-    return _pbkdf2(hmac_sha256, 32, password, salt, iterations, key_length)
+    # When allow_empty_password is True, use _hmac_sha256_raw which bypasses the
+    # empty-key guard in the public hmac_sha256 wrapper. This is needed for
+    # RFC 7914 scrypt test vector 1, which uses an empty password.
+    prf = _hmac_sha256_raw if allow_empty_password else hmac_sha256
+    return _pbkdf2(prf, 32, password, salt, iterations, key_length,
+                   allow_empty_password=allow_empty_password)
 
 
 def pbkdf2_hmac_sha512(

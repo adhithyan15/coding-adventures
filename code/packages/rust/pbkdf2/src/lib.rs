@@ -32,12 +32,15 @@
 //! ```rust
 //! use coding_adventures_pbkdf2::{pbkdf2_hmac_sha256, Pbkdf2Error};
 //!
-//! let dk = pbkdf2_hmac_sha256(b"password", b"salt", 1, 20).unwrap();
+//! let dk = pbkdf2_hmac_sha256(b"password", b"salt", 1, 20, false).unwrap();
 //! // RFC 7914 Appendix B — first 20 bytes:
 //! assert_eq!(dk.len(), 20);
 //! ```
 
-use coding_adventures_hmac::{hmac_sha1, hmac_sha256, hmac_sha512};
+use coding_adventures_hmac::{hmac, hmac_sha1, hmac_sha256, hmac_sha512};
+use coding_adventures_sha1::sum1 as sha1;
+use coding_adventures_sha256::sha256;
+use coding_adventures_sha512::sum512 as sha512;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Error type
@@ -94,11 +97,12 @@ fn pbkdf2_core<F>(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<Vec<u8>, Pbkdf2Error>
 where
     F: Fn(&[u8], &[u8]) -> Result<Vec<u8>, Pbkdf2Error>,
 {
-    if password.is_empty() {
+    if password.is_empty() && !allow_empty_password {
         return Err(Pbkdf2Error::EmptyPassword);
     }
     if iterations == 0 {
@@ -161,7 +165,7 @@ where
 /// # RFC 6070 test vector
 /// ```rust
 /// use coding_adventures_pbkdf2::pbkdf2_hmac_sha1_hex;
-/// let h = pbkdf2_hmac_sha1_hex(b"password", b"salt", 1, 20).unwrap();
+/// let h = pbkdf2_hmac_sha1_hex(b"password", b"salt", 1, 20, false).unwrap();
 /// assert_eq!(h, "0c60c80f961f0e71f3a9b524af6012062fe037a6");
 /// ```
 pub fn pbkdf2_hmac_sha1(
@@ -169,20 +173,31 @@ pub fn pbkdf2_hmac_sha1(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<Vec<u8>, Pbkdf2Error> {
-    // Validate before entering the loop to avoid calling HMAC with an empty
-    // key (which would also error, but Pbkdf2Error is cleaner here).
-    if password.is_empty() {
-        return Err(Pbkdf2Error::EmptyPassword);
+    if allow_empty_password && password.is_empty() {
+        // Use the low-level hmac() which has no empty-key guard,
+        // allowing RFC-compliant use with empty passwords.
+        pbkdf2_core(
+            |key, msg| Ok(hmac(|d| sha1(d).to_vec(), 64, key, msg)),
+            20,
+            password,
+            salt,
+            iterations,
+            key_length,
+            true,
+        )
+    } else {
+        pbkdf2_core(
+            |key, msg| hmac_sha1(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
+            20,
+            password,
+            salt,
+            iterations,
+            key_length,
+            allow_empty_password,
+        )
     }
-    pbkdf2_core(
-        |key, msg| hmac_sha1(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
-        20,
-        password,
-        salt,
-        iterations,
-        key_length,
-    )
 }
 
 /// PBKDF2 with HMAC-SHA256 as the PRF.
@@ -193,7 +208,7 @@ pub fn pbkdf2_hmac_sha1(
 /// # RFC 7914 test vector
 /// ```rust
 /// use coding_adventures_pbkdf2::pbkdf2_hmac_sha256_hex;
-/// let h = pbkdf2_hmac_sha256_hex(b"passwd", b"salt", 1, 64).unwrap();
+/// let h = pbkdf2_hmac_sha256_hex(b"passwd", b"salt", 1, 64, false).unwrap();
 /// assert!(h.starts_with("55ac046e56e3089f"));
 /// ```
 pub fn pbkdf2_hmac_sha256(
@@ -201,18 +216,32 @@ pub fn pbkdf2_hmac_sha256(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<Vec<u8>, Pbkdf2Error> {
-    if password.is_empty() {
-        return Err(Pbkdf2Error::EmptyPassword);
+    if allow_empty_password && password.is_empty() {
+        // Use the low-level hmac() which has no empty-key guard,
+        // allowing RFC-compliant use with empty passwords (e.g. scrypt
+        // RFC 7914 test vector 1: scrypt("", "", 16, 1, 1, 64)).
+        pbkdf2_core(
+            |key, msg| Ok(hmac(|d| sha256(d).to_vec(), 64, key, msg)),
+            32,
+            password,
+            salt,
+            iterations,
+            key_length,
+            true,
+        )
+    } else {
+        pbkdf2_core(
+            |key, msg| hmac_sha256(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
+            32,
+            password,
+            salt,
+            iterations,
+            key_length,
+            allow_empty_password,
+        )
     }
-    pbkdf2_core(
-        |key, msg| hmac_sha256(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
-        32,
-        password,
-        salt,
-        iterations,
-        key_length,
-    )
 }
 
 /// PBKDF2 with HMAC-SHA512 as the PRF.
@@ -223,18 +252,31 @@ pub fn pbkdf2_hmac_sha512(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<Vec<u8>, Pbkdf2Error> {
-    if password.is_empty() {
-        return Err(Pbkdf2Error::EmptyPassword);
+    if allow_empty_password && password.is_empty() {
+        // Use the low-level hmac() which has no empty-key guard.
+        // SHA-512 uses a 128-byte block size.
+        pbkdf2_core(
+            |key, msg| Ok(hmac(|d| sha512(d).to_vec(), 128, key, msg)),
+            64,
+            password,
+            salt,
+            iterations,
+            key_length,
+            true,
+        )
+    } else {
+        pbkdf2_core(
+            |key, msg| hmac_sha512(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
+            64,
+            password,
+            salt,
+            iterations,
+            key_length,
+            allow_empty_password,
+        )
     }
-    pbkdf2_core(
-        |key, msg| hmac_sha512(key, msg).map(|v| v.to_vec()).map_err(|_| Pbkdf2Error::PrfError),
-        64,
-        password,
-        salt,
-        iterations,
-        key_length,
-    )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -251,8 +293,9 @@ pub fn pbkdf2_hmac_sha1_hex(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<String, Pbkdf2Error> {
-    pbkdf2_hmac_sha1(password, salt, iterations, key_length).map(|dk| to_hex(&dk))
+    pbkdf2_hmac_sha1(password, salt, iterations, key_length, allow_empty_password).map(|dk| to_hex(&dk))
 }
 
 /// Like `pbkdf2_hmac_sha256` but returns a lowercase hex string.
@@ -261,8 +304,9 @@ pub fn pbkdf2_hmac_sha256_hex(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<String, Pbkdf2Error> {
-    pbkdf2_hmac_sha256(password, salt, iterations, key_length).map(|dk| to_hex(&dk))
+    pbkdf2_hmac_sha256(password, salt, iterations, key_length, allow_empty_password).map(|dk| to_hex(&dk))
 }
 
 /// Like `pbkdf2_hmac_sha512` but returns a lowercase hex string.
@@ -271,8 +315,9 @@ pub fn pbkdf2_hmac_sha512_hex(
     salt: &[u8],
     iterations: usize,
     key_length: usize,
+    allow_empty_password: bool,
 ) -> Result<String, Pbkdf2Error> {
-    pbkdf2_hmac_sha512(password, salt, iterations, key_length).map(|dk| to_hex(&dk))
+    pbkdf2_hmac_sha512(password, salt, iterations, key_length, allow_empty_password).map(|dk| to_hex(&dk))
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -294,13 +339,13 @@ mod tests {
 
     #[test]
     fn rfc6070_sha1_c1() {
-        let dk = pbkdf2_hmac_sha1(b"password", b"salt", 1, 20).unwrap();
+        let dk = pbkdf2_hmac_sha1(b"password", b"salt", 1, 20, false).unwrap();
         assert_eq!(dk, from_hex("0c60c80f961f0e71f3a9b524af6012062fe037a6"));
     }
 
     #[test]
     fn rfc6070_sha1_c4096() {
-        let dk = pbkdf2_hmac_sha1(b"password", b"salt", 4096, 20).unwrap();
+        let dk = pbkdf2_hmac_sha1(b"password", b"salt", 4096, 20, false).unwrap();
         assert_eq!(dk, from_hex("4b007901b765489abead49d926f721d065a429c1"));
     }
 
@@ -311,6 +356,7 @@ mod tests {
             b"saltSALTsaltSALTsaltSALTsaltSALTsalt",
             4096,
             25,
+            false,
         )
         .unwrap();
         assert_eq!(
@@ -321,7 +367,7 @@ mod tests {
 
     #[test]
     fn rfc6070_sha1_null_bytes() {
-        let dk = pbkdf2_hmac_sha1(b"pass\x00word", b"sa\x00lt", 4096, 16).unwrap();
+        let dk = pbkdf2_hmac_sha1(b"pass\x00word", b"sa\x00lt", 4096, 16, false).unwrap();
         assert_eq!(dk, from_hex("56fa6aa75548099dcc37d7f03425e0c3"));
     }
 
@@ -329,7 +375,7 @@ mod tests {
 
     #[test]
     fn rfc7914_sha256_c1_64bytes() {
-        let dk = pbkdf2_hmac_sha256(b"passwd", b"salt", 1, 64).unwrap();
+        let dk = pbkdf2_hmac_sha256(b"passwd", b"salt", 1, 64, false).unwrap();
         let expected = from_hex(
             "55ac046e56e3089fec1691c22544b605\
              f94185216dde0465e68b9d57c20dacbc\
@@ -341,21 +387,21 @@ mod tests {
 
     #[test]
     fn sha256_output_length() {
-        let dk = pbkdf2_hmac_sha256(b"key", b"salt", 1, 32).unwrap();
+        let dk = pbkdf2_hmac_sha256(b"key", b"salt", 1, 32, false).unwrap();
         assert_eq!(dk.len(), 32);
     }
 
     #[test]
     fn sha256_truncation_consistency() {
-        let short = pbkdf2_hmac_sha256(b"key", b"salt", 1, 16).unwrap();
-        let full = pbkdf2_hmac_sha256(b"key", b"salt", 1, 32).unwrap();
+        let short = pbkdf2_hmac_sha256(b"key", b"salt", 1, 16, false).unwrap();
+        let full = pbkdf2_hmac_sha256(b"key", b"salt", 1, 32, false).unwrap();
         assert_eq!(short, full[..16]);
     }
 
     #[test]
     fn sha256_multi_block() {
-        let dk64 = pbkdf2_hmac_sha256(b"password", b"salt", 1, 64).unwrap();
-        let dk32 = pbkdf2_hmac_sha256(b"password", b"salt", 1, 32).unwrap();
+        let dk64 = pbkdf2_hmac_sha256(b"password", b"salt", 1, 64, false).unwrap();
+        let dk32 = pbkdf2_hmac_sha256(b"password", b"salt", 1, 32, false).unwrap();
         assert_eq!(dk64.len(), 64);
         assert_eq!(&dk64[..32], &dk32[..]);
     }
@@ -364,14 +410,14 @@ mod tests {
 
     #[test]
     fn sha512_output_length() {
-        let dk = pbkdf2_hmac_sha512(b"secret", b"nacl", 1, 64).unwrap();
+        let dk = pbkdf2_hmac_sha512(b"secret", b"nacl", 1, 64, false).unwrap();
         assert_eq!(dk.len(), 64);
     }
 
     #[test]
     fn sha512_truncation() {
-        let short = pbkdf2_hmac_sha512(b"secret", b"nacl", 1, 32).unwrap();
-        let full = pbkdf2_hmac_sha512(b"secret", b"nacl", 1, 64).unwrap();
+        let short = pbkdf2_hmac_sha512(b"secret", b"nacl", 1, 32, false).unwrap();
+        let full = pbkdf2_hmac_sha512(b"secret", b"nacl", 1, 64, false).unwrap();
         assert_eq!(short, full[..32]);
     }
 
@@ -379,14 +425,14 @@ mod tests {
 
     #[test]
     fn hex_sha1_rfc6070() {
-        let h = pbkdf2_hmac_sha1_hex(b"password", b"salt", 1, 20).unwrap();
+        let h = pbkdf2_hmac_sha1_hex(b"password", b"salt", 1, 20, false).unwrap();
         assert_eq!(h, "0c60c80f961f0e71f3a9b524af6012062fe037a6");
     }
 
     #[test]
     fn hex_sha256_matches_bytes() {
-        let dk = pbkdf2_hmac_sha256(b"passwd", b"salt", 1, 32).unwrap();
-        let h = pbkdf2_hmac_sha256_hex(b"passwd", b"salt", 1, 32).unwrap();
+        let dk = pbkdf2_hmac_sha256(b"passwd", b"salt", 1, 32, false).unwrap();
+        let h = pbkdf2_hmac_sha256_hex(b"passwd", b"salt", 1, 32, false).unwrap();
         assert_eq!(h, to_hex(&dk));
     }
 
@@ -395,23 +441,35 @@ mod tests {
     #[test]
     fn empty_password_returns_error() {
         assert_eq!(
-            pbkdf2_hmac_sha256(b"", b"salt", 1, 32),
+            pbkdf2_hmac_sha256(b"", b"salt", 1, 32, false),
             Err(Pbkdf2Error::EmptyPassword)
         );
         assert_eq!(
-            pbkdf2_hmac_sha1(b"", b"salt", 1, 20),
+            pbkdf2_hmac_sha1(b"", b"salt", 1, 20, false),
             Err(Pbkdf2Error::EmptyPassword)
         );
         assert_eq!(
-            pbkdf2_hmac_sha512(b"", b"salt", 1, 64),
+            pbkdf2_hmac_sha512(b"", b"salt", 1, 64, false),
             Err(Pbkdf2Error::EmptyPassword)
         );
     }
 
     #[test]
+    fn empty_password_allowed_when_flag_set() {
+        // When allow_empty_password=true, an empty password is permitted.
+        // This supports use-cases like scrypt RFC 7914 vector 1 (password="").
+        let dk = pbkdf2_hmac_sha256(b"", b"salt", 1, 32, true).unwrap();
+        assert_eq!(dk.len(), 32);
+        let dk1 = pbkdf2_hmac_sha1(b"", b"salt", 1, 20, true).unwrap();
+        assert_eq!(dk1.len(), 20);
+        let dk5 = pbkdf2_hmac_sha512(b"", b"salt", 1, 64, true).unwrap();
+        assert_eq!(dk5.len(), 64);
+    }
+
+    #[test]
     fn zero_iterations_returns_error() {
         assert_eq!(
-            pbkdf2_hmac_sha256(b"pw", b"salt", 0, 32),
+            pbkdf2_hmac_sha256(b"pw", b"salt", 0, 32, false),
             Err(Pbkdf2Error::InvalidIterations)
         );
     }
@@ -419,42 +477,42 @@ mod tests {
     #[test]
     fn zero_key_length_returns_error() {
         assert_eq!(
-            pbkdf2_hmac_sha256(b"pw", b"salt", 1, 0),
+            pbkdf2_hmac_sha256(b"pw", b"salt", 1, 0, false),
             Err(Pbkdf2Error::InvalidKeyLength)
         );
     }
 
     #[test]
     fn empty_salt_is_allowed() {
-        let dk = pbkdf2_hmac_sha256(b"password", b"", 1, 32).unwrap();
+        let dk = pbkdf2_hmac_sha256(b"password", b"", 1, 32, false).unwrap();
         assert_eq!(dk.len(), 32);
     }
 
     #[test]
     fn deterministic() {
-        let a = pbkdf2_hmac_sha256(b"secret", b"nacl", 100, 32).unwrap();
-        let b = pbkdf2_hmac_sha256(b"secret", b"nacl", 100, 32).unwrap();
+        let a = pbkdf2_hmac_sha256(b"secret", b"nacl", 100, 32, false).unwrap();
+        let b = pbkdf2_hmac_sha256(b"secret", b"nacl", 100, 32, false).unwrap();
         assert_eq!(a, b);
     }
 
     #[test]
     fn different_salts() {
-        let a = pbkdf2_hmac_sha256(b"password", b"salt1", 1, 32).unwrap();
-        let b = pbkdf2_hmac_sha256(b"password", b"salt2", 1, 32).unwrap();
+        let a = pbkdf2_hmac_sha256(b"password", b"salt1", 1, 32, false).unwrap();
+        let b = pbkdf2_hmac_sha256(b"password", b"salt2", 1, 32, false).unwrap();
         assert_ne!(a, b);
     }
 
     #[test]
     fn different_passwords() {
-        let a = pbkdf2_hmac_sha256(b"password1", b"salt", 1, 32).unwrap();
-        let b = pbkdf2_hmac_sha256(b"password2", b"salt", 1, 32).unwrap();
+        let a = pbkdf2_hmac_sha256(b"password1", b"salt", 1, 32, false).unwrap();
+        let b = pbkdf2_hmac_sha256(b"password2", b"salt", 1, 32, false).unwrap();
         assert_ne!(a, b);
     }
 
     #[test]
     fn different_iterations() {
-        let a = pbkdf2_hmac_sha256(b"password", b"salt", 1, 32).unwrap();
-        let b = pbkdf2_hmac_sha256(b"password", b"salt", 2, 32).unwrap();
+        let a = pbkdf2_hmac_sha256(b"password", b"salt", 1, 32, false).unwrap();
+        let b = pbkdf2_hmac_sha256(b"password", b"salt", 2, 32, false).unwrap();
         assert_ne!(a, b);
     }
 }

@@ -12,7 +12,10 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/hmac": "file:../hmac"
+    "@coding-adventures/hmac": "file:../hmac",
+    "@coding-adventures/sha1": "file:../sha1",
+    "@coding-adventures/sha256": "file:../sha256",
+    "@coding-adventures/sha512": "file:../sha512"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

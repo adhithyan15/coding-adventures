@@ -50,6 +50,7 @@ members = [
     "garbage-collector",
     "hmac",
     "pbkdf2",
+    "scrypt",
     "gpu-core",
     "gradient-descent",
     "grammar-tools",

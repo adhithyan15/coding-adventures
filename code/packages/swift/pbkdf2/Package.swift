@@ -22,12 +22,18 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../hmac"),
+        .package(path: "../sha1"),
+        .package(path: "../sha256"),
+        .package(path: "../sha512"),
     ],
     targets: [
         .target(
             name: "PBKDF2",
             dependencies: [
-                .product(name: "HMAC", package: "hmac"),
+                .product(name: "HMAC",   package: "hmac"),
+                .product(name: "SHA1",   package: "sha1"),
+                .product(name: "SHA256", package: "sha256"),
+                .product(name: "SHA512", package: "sha512"),
             ]
         ),
         .testTarget(

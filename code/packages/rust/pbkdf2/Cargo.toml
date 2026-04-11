@@ -6,3 +6,6 @@ description = "PBKDF2 (Password-Based Key Derivation Function 2) â€” RFC 8018 â€
 
 [dependencies]
 coding_adventures_hmac = { path = "../hmac" }
+coding_adventures_sha1 = { path = "../sha1" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_sha512 = { path = "../sha512" }

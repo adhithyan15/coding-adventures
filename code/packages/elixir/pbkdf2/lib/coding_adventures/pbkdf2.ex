@@ -45,14 +45,15 @@ defmodule CodingAdventures.Pbkdf2 do
   """
 
   alias CodingAdventures.Hmac
+  alias CodingAdventures.Sha256
 
   # ──────────────────────────────────────────────────────────────────────────────
   # Core loop
   # ──────────────────────────────────────────────────────────────────────────────
 
   @doc false
-  defp pbkdf2_core(prf, h_len, password, salt, iterations, key_length) do
-    if byte_size(password) == 0,
+  defp pbkdf2_core(prf, h_len, password, salt, iterations, key_length, allow_empty_password \\ false) do
+    if byte_size(password) == 0 and not allow_empty_password,
       do: raise(ArgumentError, "PBKDF2 password must not be empty")
 
     if not is_integer(iterations) or iterations <= 0,
@@ -128,9 +129,19 @@ defmodule CodingAdventures.Pbkdf2 do
   `h_len` = 32 bytes (256-bit SHA-256 output).
   Recommended for new systems. OWASP 2023: ≥ 600,000 iterations.
   """
-  def pbkdf2_hmac_sha256(password, salt, iterations, key_length) do
-    prf = fn key, msg -> Hmac.hmac_sha256(key, msg) end
-    pbkdf2_core(prf, 32, password, salt, iterations, key_length)
+  def pbkdf2_hmac_sha256(password, salt, iterations, key_length, allow_empty_password \\ false) do
+    # When allow_empty_password is true (internal use by scrypt), we call
+    # Hmac.hmac/4 directly to bypass the empty-key guard in Hmac.hmac_sha256/2.
+    # An empty password is used as the HMAC key — RFC 2104 specifies zero-padding
+    # short keys to the block size, so empty is well-defined.
+    prf =
+      if allow_empty_password do
+        fn key, msg -> Hmac.hmac(&Sha256.sha256/1, 64, key, msg) end
+      else
+        fn key, msg -> Hmac.hmac_sha256(key, msg) end
+      end
+
+    pbkdf2_core(prf, 32, password, salt, iterations, key_length, allow_empty_password)
   end
 
   @doc """
