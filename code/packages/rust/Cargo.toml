@@ -10,6 +10,7 @@ members = [
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
+    "tree-set",
     "treap",
     "binary-tree",
     "b-tree",

@@ -1,0 +1,15 @@
+[package]
+name = "tree-set-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust tree-set crate via python-bridge"
+
+[lib]
+name = "tree_set_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+python-bridge = { path = "../../rust/python-bridge" }
+tree-set = { path = "../../rust/tree-set" }
+
+[workspace]
