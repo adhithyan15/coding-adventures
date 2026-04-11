@@ -1,8 +1,8 @@
 [package]
-name = "mini-redis"
+name = "in-memory-data-store-engine"
 version = "0.1.0"
 edition = "2021"
-description = "Redis-compatible in-memory database server"
+description = "Pluggable in-memory data store engine"
 license = "MIT"
 
 [dependencies]
@@ -12,4 +12,4 @@ hash-set = { path = "../hash-set" }
 hyperloglog = { path = "../hyperloglog" }
 resp-protocol = { path = "../resp-protocol" }
 skip-list = { path = "../skip-list" }
-tcp-server = { path = "../tcp-server" }
+in-memory-data-store-protocol = { path = "../in-memory-data-store-protocol" }
