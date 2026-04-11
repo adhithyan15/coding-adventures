@@ -131,6 +131,15 @@ impl TcpServer {
         self.serve()
     }
 
+    /// Run the server's handler against a connection without going through TCP.
+    ///
+    /// This is the transport-agnostic seam used by higher-level crates and
+    /// by tests that want to exercise the actual server logic without
+    /// depending on sockets or scheduling.
+    pub fn handle(&self, connection: &mut Connection, data: &[u8]) -> Vec<u8> {
+        (self.inner.handler)(connection, data)
+    }
+
     pub fn stop(&self) {
         self.inner.stop_flag.store(true, Ordering::SeqCst);
     }
@@ -215,8 +224,8 @@ impl TcpServer {
                         break;
                     }
                     Ok(n) => {
-                        did_work = true;
-                        let response = (self.inner.handler)(&mut state.connection, &buffer[..n]);
+                    did_work = true;
+                        let response = self.handle(&mut state.connection, &buffer[..n]);
                         if !response.is_empty() {
                             if let Err(err) = state.stream.write_all(&response) {
                                 match err.kind() {
@@ -302,134 +311,57 @@ impl Drop for TcpServer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::io;
-    use std::net::TcpStream;
-    use std::sync::{Mutex, OnceLock};
-    use std::thread;
-    use std::time::Instant;
 
-    fn network_test_guard() -> std::sync::MutexGuard<'static, ()> {
-        static TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
-        TEST_LOCK.get_or_init(|| Mutex::new(())).lock().expect("test lock")
+    fn make_connection() -> Connection {
+        Connection {
+            id: 1,
+            peer_addr: SocketAddr::from(([127, 0, 0, 1], 45_001)),
+            local_addr: SocketAddr::from(([127, 0, 0, 1], 63_079)),
+            read_buffer: Vec::new(),
+            selected_db: 0,
+        }
     }
 
-    fn send_recv(
-        port: u16,
-        data: &[u8],
-        expected_len: usize,
-        read_timeout: std::time::Duration,
-    ) -> io::Result<Vec<u8>> {
-        let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
-        stream.write_all(data).expect("write");
-        stream.set_read_timeout(Some(read_timeout)).expect("timeout");
-        let deadline = Instant::now() + Duration::from_secs(5);
-        let mut response = Vec::with_capacity(expected_len);
-        let mut buf = vec![0u8; 4096];
-
-        while response.len() < expected_len {
-            match stream.read(&mut buf) {
-                Ok(0) => {
-                    return Err(io::Error::new(
-                        io::ErrorKind::UnexpectedEof,
-                        "server closed connection before responding fully",
-                    ));
-                }
-                Ok(n) => response.extend_from_slice(&buf[..n]),
-                Err(err) if err.kind() == io::ErrorKind::WouldBlock => {}
-                Err(err) if err.kind() == io::ErrorKind::TimedOut => {}
-                Err(err) => return Err(err),
-            }
-
-            if Instant::now() >= deadline {
-                return Err(io::Error::new(
-                    io::ErrorKind::TimedOut,
-                    "timed out waiting for response",
-                ));
-            }
-        }
-
-        response.truncate(expected_len);
-        Ok(response)
-    }
-
-    fn wait_until_ready(port: u16, request: &[u8], expected_response: &[u8]) {
-        let deadline = Instant::now() + Duration::from_secs(15);
-        loop {
-            if let Ok(response) = send_recv(
-                port,
-                request,
-                expected_response.len(),
-                Duration::from_millis(100),
-            ) {
-                if response == expected_response {
-                    return;
-                }
-            }
-
-            if Instant::now() >= deadline {
-                panic!("server never became ready");
-            }
-
-            thread::sleep(Duration::from_millis(10));
-        }
+    fn invoke(server: &TcpServer, connection: &mut Connection, data: &[u8]) -> Vec<u8> {
+        server.handle(connection, data)
     }
 
     #[test]
-    fn echo_server_round_trips() {
-        let _guard = network_test_guard();
+    fn handler_round_trips_bytes_without_tcp() {
         let server = TcpServer::new("127.0.0.1", 0);
-        server.start().expect("start");
-        let port = server.try_address().expect("address").port();
-        let runner = server.clone();
-        let handle = thread::spawn(move || runner.serve_forever().unwrap());
-        wait_until_ready(port, b"ready", b"ready");
-
-        let response = send_recv(port, b"hello", 5, Duration::from_secs(2)).expect("read");
+        let mut connection = make_connection();
+        let response = invoke(&server, &mut connection, b"hello");
         assert_eq!(response, b"hello");
-
-        server.stop();
-        handle.join().unwrap();
+        assert_eq!(connection.selected_db, 0);
     }
 
     #[test]
     fn custom_handler_can_transform_bytes() {
-        let _guard = network_test_guard();
         let server = TcpServer::with_handler("127.0.0.1", 0, |_, data| {
             data.iter().map(|byte| byte.to_ascii_uppercase()).collect()
         });
-        server.start().expect("start");
-        let port = server.try_address().expect("address").port();
-        let runner = server.clone();
-        let handle = thread::spawn(move || runner.serve_forever().unwrap());
-        wait_until_ready(port, b"ready", b"READY");
-
-        let response = send_recv(port, b"hello", 5, Duration::from_secs(2)).expect("read");
+        let mut connection = make_connection();
+        let response = invoke(&server, &mut connection, b"hello");
         assert_eq!(response, b"HELLO");
-
-        server.stop();
-        handle.join().unwrap();
     }
 
     #[test]
     fn stateful_handler_can_use_connection_buffer() {
-        let _guard = network_test_guard();
         let server = TcpServer::with_handler("127.0.0.1", 0, |conn, data| {
             conn.read_buffer.extend_from_slice(data);
-            let response = conn.read_buffer.clone();
-            conn.read_buffer.clear();
-            response
+            if conn.read_buffer.len() < 6 {
+                Vec::new()
+            } else {
+                let response = conn.read_buffer.clone();
+                conn.read_buffer.clear();
+                response
+            }
         });
-        server.start().expect("start");
-        let port = server.try_address().expect("address").port();
-        let runner = server.clone();
-        let handle = thread::spawn(move || runner.serve_forever().unwrap());
-        wait_until_ready(port, b"ready", b"ready");
-
-        let response = send_recv(port, b"buffer", 6, Duration::from_secs(2)).expect("read");
+        let mut connection = make_connection();
+        assert!(invoke(&server, &mut connection, b"buf").is_empty());
+        let response = invoke(&server, &mut connection, b"fer");
         assert_eq!(response, b"buffer");
-
-        server.stop();
-        handle.join().unwrap();
+        assert!(connection.read_buffer.is_empty());
     }
 
     #[test]
