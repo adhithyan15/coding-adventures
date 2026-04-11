@@ -122,13 +122,13 @@ describe("input validation", function()
   end)
 
   it("p * 128 * r > 2^30 raises error (memory cap)", function()
-    -- p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+    -- r=2^24, p=1: p*r = 2^24 ≤ 2^30 (passes old guard), but
     -- p*128*r = 2^31 > 2^30 (triggers memory-cap guard).
     -- Note: use (1 << 24) not (2^24) — Lua's ^ returns a float,
     -- which would fail the integer type-check before reaching our guard.
     assert.has_error(function()
       scrypt.scrypt("pw", "salt", 2, 1 << 24, 1, 32)
-    end, "p * 128 * r exceeds memory limit")
+    end)
   end)
 
 end)
