@@ -217,3 +217,116 @@ impl fmt::Display for RespError {
         f.write_str(&self.message)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resp_error_splits_message_into_type_and_detail() {
+        let error = RespError::new("ERR boom");
+        assert_eq!(error.message, "ERR boom");
+        assert_eq!(error.error_type(), "ERR");
+        assert_eq!(error.detail(), "boom");
+        assert_eq!(error.to_string(), "ERR boom");
+
+        let standalone = RespError::new("ERR");
+        assert_eq!(standalone.error_type(), "ERR");
+        assert_eq!(standalone.detail(), "");
+    }
+
+    #[test]
+    fn resp_value_and_container_conversions_cover_all_variants() {
+        assert_eq!(RespValue::from("ok"), RespValue::SimpleString("ok".to_string()));
+        assert_eq!(
+            RespValue::from(String::from("ok")),
+            RespValue::SimpleString("ok".to_string())
+        );
+
+        let error = RespError::new("ERR boom");
+        assert_eq!(RespValue::from(error.clone()), RespValue::Error(error));
+        assert_eq!(RespValue::from(7_i64), RespValue::Integer(7));
+        assert_eq!(RespValue::from(7_i32), RespValue::Integer(7));
+        assert_eq!(RespValue::from(7_usize), RespValue::Integer(7));
+        assert_eq!(RespValue::from(true), RespValue::Integer(1));
+        assert_eq!(RespValue::from(false), RespValue::Integer(0));
+        assert_eq!(
+            RespValue::from(vec![1_u8, 2, 3]),
+            RespValue::BulkString(Some(vec![1, 2, 3]))
+        );
+        assert_eq!(
+            RespValue::from(&b"abc"[..]),
+            RespValue::BulkString(Some(b"abc".to_vec()))
+        );
+        let byte_array = b"abc";
+        assert_eq!(
+            RespValue::from(byte_array),
+            RespValue::BulkString(Some(b"abc".to_vec()))
+        );
+        assert_eq!(
+            RespValue::from(*b"abc"),
+            RespValue::BulkString(Some(b"abc".to_vec()))
+        );
+        assert_eq!(
+            RespValue::from(Some(vec![4_u8, 5, 6])),
+            RespValue::BulkString(Some(vec![4, 5, 6]))
+        );
+        assert_eq!(RespValue::from(None::<Vec<u8>>), RespValue::BulkString(None));
+
+        let array_values = vec![RespValue::from("nested"), RespValue::from(9_i64)];
+        assert_eq!(
+            RespValue::from(array_values.clone()),
+            RespValue::Array(Some(array_values.clone()))
+        );
+        assert_eq!(
+            RespValue::from(Some(array_values.clone())),
+            RespValue::Array(Some(array_values.clone()))
+        );
+        assert_eq!(RespValue::from(None::<Vec<RespValue>>), RespValue::Array(None));
+        assert_eq!(
+            RespValue::from(RespBulkString::Null),
+            RespValue::BulkString(None)
+        );
+        assert_eq!(
+            RespValue::from(RespBulkString::Bytes(b"bytes".to_vec())),
+            RespValue::BulkString(Some(b"bytes".to_vec()))
+        );
+        assert_eq!(RespValue::from(RespArray::Null), RespValue::Array(None));
+        assert_eq!(
+            RespValue::from(RespArray::Values(array_values.clone())),
+            RespValue::Array(Some(array_values.clone()))
+        );
+
+        assert_eq!(RespBulkString::from(None::<Vec<u8>>), RespBulkString::Null);
+        assert_eq!(
+            RespBulkString::from("abc"),
+            RespBulkString::Bytes(b"abc".to_vec())
+        );
+        assert_eq!(
+            RespBulkString::from(vec![1_u8, 2, 3]),
+            RespBulkString::Bytes(vec![1, 2, 3])
+        );
+        assert_eq!(
+            RespBulkString::from(byte_array),
+            RespBulkString::Bytes(b"abc".to_vec())
+        );
+        assert_eq!(
+            RespBulkString::from(*b"abc"),
+            RespBulkString::Bytes(b"abc".to_vec())
+        );
+        assert_eq!(
+            RespBulkString::from(Some(vec![1_u8, 2, 3])),
+            RespBulkString::Bytes(vec![1, 2, 3])
+        );
+
+        assert_eq!(RespArray::from(None::<Vec<RespValue>>), RespArray::Null);
+        assert_eq!(
+            RespArray::from(vec![RespValue::from("x")]),
+            RespArray::Values(vec![RespValue::from("x")])
+        );
+        assert_eq!(
+            RespArray::from(Some(vec![RespValue::from(1_i64)])),
+            RespArray::Values(vec![RespValue::from(1_i64)])
+        );
+    }
+}

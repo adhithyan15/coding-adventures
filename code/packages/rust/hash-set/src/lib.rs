@@ -366,4 +366,51 @@ mod tests {
         assert!(set.contains(&1));
         assert!(set.contains(&5));
     }
+
+    #[test]
+    fn from_list_with_options_and_free_function_wrappers_work() {
+        let set = HashSet::from_list_with_options([1, 2, 2, 3], 2, "open", "djb2");
+        assert_eq!(set.size(), 3);
+        assert!(set.contains(&1));
+        assert!(set.contains(&2));
+        assert!(set.contains(&3));
+
+        let set = from_list([10, 20]);
+        assert!(contains(&set, &10));
+
+        let set = add(set, 30);
+        assert!(contains(&set, &30));
+
+        let set = remove(set, &20);
+        assert!(!contains(&set, &20));
+
+        let set = discard(set, &99);
+        assert!(contains(&set, &10));
+
+        let other = from_list([30, 40]);
+        let unioned = union(set.clone(), other.clone());
+        let mut unioned_list = unioned.to_list();
+        unioned_list.sort();
+        assert_eq!(unioned_list, vec![10, 30, 40]);
+
+        let intersected = intersection(set.clone(), other.clone());
+        assert_eq!(intersected.to_list().len(), 1);
+
+        let diffed = difference(set.clone(), other.clone());
+        assert_eq!(diffed.to_list().len(), 1);
+
+        let sym = symmetric_difference(set.clone(), other.clone());
+        let mut sym_list = sym.to_list();
+        sym_list.sort();
+        assert_eq!(sym_list, vec![10, 40]);
+
+        assert!(is_subset(&set, &unioned));
+        assert!(is_superset(&unioned, &set));
+        assert!(!is_subset(&unioned, &set));
+        assert!(!is_superset(&set, &unioned));
+        assert!(is_disjoint(&set, &from_list([999])));
+        assert!(!is_disjoint(&set, &other));
+        assert!(equals(&set, &set.clone()));
+        assert!(!equals(&set, &other));
+    }
 }

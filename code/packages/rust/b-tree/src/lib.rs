@@ -154,4 +154,54 @@ mod tests {
         assert!(!tree.contains(&5));
         assert!(tree.is_valid());
     }
+
+    #[test]
+    fn empty_tree_reports_basic_state() {
+        let tree: BTree<i32, &str> = BTree::new(1);
+        assert!(tree.is_valid());
+        assert!(tree.is_empty());
+        assert_eq!(tree.len(), 0);
+        assert_eq!(tree.height(), 0);
+        assert_eq!(tree.min_key(), None);
+        assert_eq!(tree.max_key(), None);
+        assert_eq!(tree.search(&10), None);
+        assert!(!tree.contains(&10));
+    }
+
+    #[test]
+    fn indexing_mutation_and_display_work() {
+        let mut tree = BTree::new(2);
+        tree.insert(2, "two");
+        tree.insert(1, "one");
+        tree.insert(2, "TWO");
+
+        assert_eq!(tree[&2], "TWO");
+        tree[&1] = "ONE";
+        assert_eq!(tree[&1], "ONE");
+
+        let rendered = tree.to_string();
+        assert!(rendered.contains("BTree(t=2"));
+        assert!(rendered.contains("size=2"));
+    }
+
+    #[test]
+    fn range_query_and_inorder_cover_empty_and_populated_cases() {
+        let mut tree = BTree::new(3);
+        tree.insert(10, "ten");
+        tree.insert(20, "twenty");
+        tree.insert(30, "thirty");
+
+        assert_eq!(tree.range_query(&11, &19), Vec::<(i32, &str)>::new());
+        assert_eq!(
+            tree.range_query(&10, &30),
+            vec![(10, "ten"), (20, "twenty"), (30, "thirty")]
+        );
+        assert_eq!(
+            tree.inorder(),
+            vec![(10, "ten"), (20, "twenty"), (30, "thirty")]
+        );
+
+        tree.delete(&99);
+        assert_eq!(tree.len(), 3);
+    }
 }

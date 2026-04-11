@@ -306,3 +306,97 @@ fn class_contains(class: &[u8], byte: u8) -> bool {
     }
     false
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn database_helpers_cover_glob_matching_and_expiration_paths() {
+        assert!(glob_match(b"", b""));
+        assert!(!glob_match(b"", b"x"));
+        assert!(glob_match(b"*", b"abc"));
+        assert!(glob_match(b"a?c", b"abc"));
+        assert!(glob_match(b"user:[1-2]", b"user:1"));
+        assert!(glob_match(b"user:[1-2]", b"user:2"));
+        assert!(!glob_match(b"user:[1-2]", b"user:3"));
+        assert!(glob_match(b"[", b"["));
+        assert!(class_contains(b"a-cx", b'b'));
+        assert!(class_contains(b"a-cx", b'x'));
+        assert!(!class_contains(b"a-cx", b'z'));
+
+        let now = current_time_ms();
+        let expired = now.saturating_sub(1);
+        let future = now.saturating_add(60_000);
+
+        let mut db = Database::empty();
+        db = db.set(b"alive", Entry::string("value", None));
+        db = db.set(b"temp", Entry::string("gone", Some(expired)));
+        db = db.set(b"later", Entry::string("stay", Some(future)));
+
+        let mut same = Database::empty();
+        same = same.set(b"later", Entry::string("stay", Some(future)));
+        same = same.set(b"temp", Entry::string("gone", Some(expired)));
+        same = same.set(b"alive", Entry::string("value", None));
+        assert_eq!(db, same);
+
+        assert!(db.exists(b"alive"));
+        assert_eq!(db.type_of(b"alive"), Some(EntryType::String));
+        assert_eq!(db.dbsize(), 2);
+        assert_eq!(db.keys(b"l*"), vec![b"later".to_vec()]);
+        assert!(db.get(b"temp").is_none());
+
+        let lazy = db.clone().expire_lazy(Some(b"temp"));
+        assert!(lazy.entries.get(&b"temp".to_vec()).is_none());
+
+        let active = db.active_expire();
+        assert!(active.entries.get(&b"temp".to_vec()).is_none());
+        assert!(active.entries.get(&b"later".to_vec()).is_some());
+
+        let cleared = active.clear();
+        assert_eq!(cleared.entries.size(), 0);
+        assert!(cleared.ttl_heap.is_empty());
+    }
+
+    #[test]
+    fn store_selection_and_flush_paths_cover_database_switching() {
+        let mut store = Store::empty().with_active_db(99);
+        assert_eq!(store.active_db, DEFAULT_DB_COUNT - 1);
+
+        store = store.set(b"tail", Entry::string("last", None));
+        store = store.select(0);
+        store = store.set(b"head", Entry::string("first", None));
+
+        {
+            let db = store.current_db_mut();
+            db.entries = db.entries.clone().set(b"manual".to_vec(), Entry::string("ok", None));
+        }
+
+        assert_eq!(store.current_db().dbsize(), 2);
+        assert_eq!(store.keys(b"h*"), vec![b"head".to_vec()]);
+        assert_eq!(store.type_of(b"head"), Some(EntryType::String));
+        assert!(store.exists(b"manual"));
+        assert_eq!(store.dbsize(), 2);
+
+        store = store.delete(b"manual");
+        assert!(!store.exists(b"manual"));
+
+        let mut expired_db = Database::empty();
+        expired_db = expired_db.set(
+            b"gone",
+            Entry::string("bye", Some(current_time_ms().saturating_sub(1))),
+        );
+        store.databases[1] = expired_db;
+        store = store.expire_lazy(None::<&[u8]>);
+        store = store.active_expire_all();
+        assert!(store.databases[1].entries.get(&b"gone".to_vec()).is_none());
+
+        store = store.flushdb();
+        assert_eq!(store.dbsize(), 0);
+        assert_eq!(store.current_db().entries.size(), 0);
+
+        store.databases[1] = Database::empty().set(b"other", Entry::string("x", None));
+        store = store.flushall();
+        assert!(store.databases.iter().all(|db| db.entries.size() == 0));
+    }
+}

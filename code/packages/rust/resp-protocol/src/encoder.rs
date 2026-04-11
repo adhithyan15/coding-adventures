@@ -90,3 +90,60 @@ pub fn encode(value: impl Into<RespValue>) -> Result<Vec<u8>, RespEncodeError> {
         RespValue::Array(value) => encode_array(value),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::{RespArray, RespBulkString, RespError, RespValue};
+
+    #[test]
+    fn encodes_scalar_values_and_nested_arrays() {
+        assert_eq!(encode_simple_string("OK").unwrap(), b"+OK\r\n".to_vec());
+        let err = encode_simple_string("bad\nnews").unwrap_err();
+        match &err {
+            RespEncodeError::SimpleStringContainsNewline { value } => {
+                assert_eq!(value, "bad\nnews");
+            }
+        }
+        assert!(err
+            .to_string()
+            .contains("simple string must not contain carriage return or newline"));
+
+        assert_eq!(encode_error("ERR boom"), b"-ERR boom\r\n".to_vec());
+        assert_eq!(encode_integer(-42), b":-42\r\n".to_vec());
+        assert_eq!(encode_bulk_string(RespBulkString::Null), b"$-1\r\n".to_vec());
+        assert_eq!(
+            encode_bulk_string(RespBulkString::Bytes(b"abc".to_vec())),
+            b"$3\r\nabc\r\n".to_vec()
+        );
+
+        let encoded = encode_array(RespArray::Values(vec![
+            RespValue::from("OK"),
+            RespValue::from(7_i64),
+            RespValue::from(RespBulkString::Null),
+            RespValue::from(RespArray::Values(vec![RespValue::from("nested")])),
+        ]))
+        .unwrap();
+        assert_eq!(encoded, b"*4\r\n+OK\r\n:7\r\n$-1\r\n*1\r\n+nested\r\n".to_vec());
+
+        assert_eq!(encode_array(RespArray::Null).unwrap(), b"*-1\r\n".to_vec());
+    }
+
+    #[test]
+    fn encode_dispatch_covers_all_resp_variants() {
+        assert_eq!(encode(RespValue::from("OK")).unwrap(), b"+OK\r\n".to_vec());
+        assert_eq!(
+            encode(RespValue::from(RespError::new("ERR boom"))).unwrap(),
+            b"-ERR boom\r\n".to_vec()
+        );
+        assert_eq!(encode(RespValue::from(123_i64)).unwrap(), b":123\r\n".to_vec());
+        assert_eq!(
+            encode(RespValue::from(RespBulkString::Bytes(b"payload".to_vec()))).unwrap(),
+            b"$7\r\npayload\r\n".to_vec()
+        );
+        assert_eq!(
+            encode(RespValue::from(RespArray::Null)).unwrap(),
+            b"*-1\r\n".to_vec()
+        );
+    }
+}

@@ -303,3 +303,94 @@ where
         .into_iter()
         .all(|value| right.contains(&value))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::VecDeque;
+
+    #[test]
+    fn sorted_set_and_entry_helpers_cover_all_variants() {
+        assert!(OrderedF64::new(f64::NAN).is_none());
+        assert!(OrderedF64::new(-1.0).unwrap() < OrderedF64::new(0.0).unwrap());
+
+        assert_eq!(EntryType::String.as_str(), "string");
+        assert_eq!(EntryType::Hash.to_string(), "hash");
+        assert_eq!(EntryType::List.to_string(), "list");
+        assert_eq!(EntryType::Set.to_string(), "set");
+        assert_eq!(EntryType::ZSet.to_string(), "zset");
+        assert_eq!(EntryType::Hll.to_string(), "hll");
+
+        let mut zset = SortedSet::new();
+        assert!(zset.is_empty());
+        assert_eq!(zset.len(), 0);
+        assert!(!zset.contains(b"missing"));
+        assert_eq!(zset.score(b"missing"), None);
+        assert_eq!(zset.rank(b"missing"), None);
+
+        assert!(zset.insert(2.0, b"b".to_vec()));
+        assert!(zset.insert(1.0, b"a".to_vec()));
+        assert!(!zset.insert(3.0, b"b".to_vec()));
+        assert_eq!(zset.len(), 2);
+        assert!(zset.contains(b"a"));
+        assert_eq!(zset.score(b"b"), Some(3.0));
+        assert_eq!(
+            zset.ordered_entries(),
+            vec![(b"a".to_vec(), 1.0), (b"b".to_vec(), 3.0)]
+        );
+        assert_eq!(zset.rank(b"a"), Some(0));
+        assert_eq!(zset.rank(b"b"), Some(1));
+        assert_eq!(
+            zset.range_by_index(0, 1),
+            vec![(b"a".to_vec(), 1.0), (b"b".to_vec(), 3.0)]
+        );
+        assert_eq!(zset.range_by_index(-1, -1), vec![(b"b".to_vec(), 3.0)]);
+        assert!(zset.range_by_index(3, 4).is_empty());
+        assert_eq!(
+            zset.range_by_score(1.0, 3.0),
+            vec![(b"a".to_vec(), 1.0), (b"b".to_vec(), 3.0)]
+        );
+        assert!(zset.remove(b"a"));
+        assert!(!zset.remove(b"missing"));
+        assert_eq!(zset.len(), 1);
+
+        let mut hash = DtHashMap::default();
+        hash = hash.set(b"k".to_vec(), b"v".to_vec());
+        let mut same_hash = DtHashMap::default();
+        same_hash = same_hash.set(b"k".to_vec(), b"v".to_vec());
+        let mut other_hash = DtHashMap::default();
+        other_hash = other_hash.set(b"other".to_vec(), b"v".to_vec());
+
+        let mut set = DtHashSet::default();
+        set = set.add(b"a".to_vec());
+        let mut same_set = DtHashSet::default();
+        same_set = same_set.add(b"a".to_vec());
+        let mut other_set = DtHashSet::default();
+        other_set = other_set.add(b"b".to_vec());
+
+        let mut list = VecDeque::new();
+        list.push_back(b"x".to_vec());
+
+        let string_entry = Entry::new(EntryValue::String(b"payload".to_vec()), None);
+        assert_eq!(string_entry.entry_type, EntryType::String);
+        assert_eq!(string_entry.value.entry_type(), EntryType::String);
+
+        let hash_entry = Entry::hash(hash.clone(), None);
+        let list_entry = Entry::list(list.clone(), Some(10));
+        let set_entry = Entry::set(set.clone(), None);
+        let zset_entry = Entry::zset(zset.clone(), None);
+        let hll_entry = Entry::hll(HyperLogLog::new(), None);
+
+        assert_eq!(hash_entry.entry_type, EntryType::Hash);
+        assert_eq!(list_entry.entry_type, EntryType::List);
+        assert_eq!(set_entry.entry_type, EntryType::Set);
+        assert_eq!(zset_entry.entry_type, EntryType::ZSet);
+        assert_eq!(hll_entry.entry_type, EntryType::Hll);
+
+        assert_eq!(Entry::hash(same_hash, None), hash_entry);
+        assert_ne!(Entry::hash(other_hash, None), hash_entry);
+        assert_eq!(Entry::set(same_set, None), set_entry);
+        assert_ne!(Entry::set(other_set, None), set_entry);
+        assert_eq!(Entry::list(list, Some(10)), list_entry);
+    }
+}

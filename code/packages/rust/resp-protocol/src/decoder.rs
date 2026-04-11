@@ -226,3 +226,96 @@ fn decode_inline_command(buffer: &[u8]) -> Result<Option<(RespValue, usize)>, Re
         .collect::<Vec<_>>();
     Ok(Some((RespValue::Array(Some(tokens)), consumed)))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::{RespError, RespValue};
+
+    fn bulk(value: &str) -> RespValue {
+        RespValue::BulkString(Some(value.as_bytes().to_vec()))
+    }
+
+    #[test]
+    fn decode_covers_all_frame_types_and_edge_cases() {
+        assert_eq!(
+            decode(b"+OK\r\n").unwrap(),
+            Some((RespValue::SimpleString("OK".to_string()), 5))
+        );
+        assert_eq!(
+            decode(b"-ERR boom\r\n").unwrap(),
+            Some((RespValue::Error(RespError::new("ERR boom")), 11))
+        );
+        assert_eq!(
+            decode(b":-42\r\n").unwrap(),
+            Some((RespValue::Integer(-42), 6))
+        );
+        assert_eq!(
+            decode(b"$-1\r\n").unwrap(),
+            Some((RespValue::BulkString(None), 5))
+        );
+        assert_eq!(
+            decode(b"$3\r\nfoo\r\n").unwrap(),
+            Some((RespValue::BulkString(Some(b"foo".to_vec())), 9))
+        );
+        assert_eq!(
+            decode(b"*-1\r\n").unwrap(),
+            Some((RespValue::Array(None), 5))
+        );
+        assert_eq!(
+            decode(b"*2\r\n+OK\r\n:1\r\n").unwrap(),
+            Some((
+                RespValue::Array(Some(vec![
+                    RespValue::SimpleString("OK".to_string()),
+                    RespValue::Integer(1),
+                ])),
+                13,
+            ))
+        );
+        assert_eq!(
+            decode(b"PING  PONG\r\n").unwrap(),
+            Some((RespValue::Array(Some(vec![bulk("PING"), bulk("PONG")])), 12))
+        );
+
+        assert_eq!(decode(b"+").unwrap(), None);
+        assert_eq!(decode(b"$3\r\nfo").unwrap(), None);
+        assert_eq!(decode(b"*2\r\n+OK\r\n").unwrap(), None);
+
+        assert!(decode(b"+\xff\r\n").is_err());
+        assert!(decode(b"-\xff\r\n").is_err());
+        assert!(decode(b":foo\r\n").is_err());
+        assert!(decode(b"$\xff\r\n").is_err());
+        assert!(decode(b"$-10\r\n").is_err());
+        assert!(decode(b"*\xff\r\n").is_err());
+        assert!(decode(b"*-10\r\n").is_err());
+    }
+
+    #[test]
+    fn resp_decoder_accumulates_messages_and_preserves_errors() {
+        let mut decoder = RespDecoder::new();
+        assert!(!decoder.has_message());
+        assert!(decoder.get_message().is_err());
+
+        decoder.feed(b"+OK\r\n");
+        assert!(decoder.has_message());
+        assert_eq!(
+            decoder.get_message().unwrap(),
+            RespValue::SimpleString("OK".to_string())
+        );
+        assert!(!decoder.has_message());
+
+        decoder.feed(b":1\r\n");
+        assert!(decoder.has_message());
+        assert_eq!(
+            decoder.decode_all(b"+PONG\r\n").unwrap(),
+            vec![
+                RespValue::Integer(1),
+                RespValue::SimpleString("PONG".to_string()),
+            ]
+        );
+
+        let mut error_decoder = RespDecoder::new();
+        assert!(error_decoder.decode_all(b"*-10\r\n").is_err());
+        assert!(error_decoder.get_message().is_err());
+    }
+}

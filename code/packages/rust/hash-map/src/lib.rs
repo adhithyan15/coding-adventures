@@ -529,6 +529,17 @@ mod tests {
     }
 
     #[test]
+    fn set_overwrites_existing_values() {
+        for strategy in all_strategies() {
+            let map = HashMap::new(4, strategy)
+                .set("hello", 42)
+                .set("hello", 99);
+            assert_eq!(map.get(&"hello"), Some(&99));
+            assert_eq!(map.size(), 1);
+        }
+    }
+
+    #[test]
     fn delete_removes_entries() {
         for strategy in all_strategies() {
             let map = HashMap::new(8, strategy).set("hello", 42).delete(&"hello");
@@ -606,11 +617,109 @@ mod tests {
     }
 
     #[test]
-    fn with_options_accepts_string_names() {
-        let map = HashMap::<i32, i32>::with_options(4, "open_addressing", "murmur3")
+    fn with_options_accepts_aliases_and_hashes() {
+        let strategy_cases = [
+            ("chaining", CollisionStrategy::Chaining),
+            ("open_addressing", CollisionStrategy::OpenAddressing),
+            ("open-addressing", CollisionStrategy::OpenAddressing),
+            ("open", CollisionStrategy::OpenAddressing),
+        ];
+        let hash_cases = [
+            ("siphash", HashAlgorithm::SipHash24),
+            ("siphash_2_4", HashAlgorithm::SipHash24),
+            ("fnv1a", HashAlgorithm::Fnv1a32),
+            ("fnv1a_32", HashAlgorithm::Fnv1a32),
+            ("murmur3", HashAlgorithm::Murmur3_32),
+            ("murmur3_32", HashAlgorithm::Murmur3_32),
+            ("djb2", HashAlgorithm::Djb2),
+        ];
+
+        for (strategy_name, expected_strategy) in strategy_cases {
+            for (hash_name, expected_hash) in hash_cases {
+                let map = HashMap::<&str, i32>::with_options(2, strategy_name, hash_name)
+                    .set("hello", 10);
+                assert_eq!(map.strategy(), expected_strategy);
+                assert_eq!(map.hash_algorithm(), expected_hash);
+                assert_eq!(map.get(&"hello"), Some(&10));
+            }
+        }
+    }
+
+    #[test]
+    fn with_options_rejects_unknown_names() {
+        assert!(
+            std::panic::catch_unwind(|| HashMap::<i32, i32>::with_options(4, "wat", "siphash"))
+                .is_err()
+        );
+        assert!(
+            std::panic::catch_unwind(|| HashMap::<i32, i32>::with_options(4, "chaining", "wat"))
+                .is_err()
+        );
+    }
+
+    #[test]
+    fn free_function_wrappers_cover_common_paths() {
+        let map = new_map::<_, _>(0, "open_addressing", "fnv1a");
+        assert_eq!(capacity(&map), 1);
+        assert_eq!(load_factor(&map), 0.0);
+
+        let map = set(map, "a", 1);
+        let map = set(map, "b", 2);
+        assert_eq!(get(&map, &"a"), Some(&1));
+        assert!(has(&map, &"b"));
+        assert_eq!(size(&map), 2);
+
+        let mut keys = keys(&map);
+        keys.sort();
+        assert_eq!(keys, vec!["a", "b"]);
+
+        let mut values = values(&map);
+        values.sort();
+        assert_eq!(values, vec![1, 2]);
+
+        let mut entries = entries(&map);
+        entries.sort();
+        assert_eq!(entries, vec![("a", 1), ("b", 2)]);
+
+        let map = delete(map, &"a");
+        assert!(!has(&map, &"a"));
+        assert_eq!(size(&map), 1);
+
+        let left = from_entries([("x", 1), ("y", 2)]);
+        let right = from_entries([("y", 99), ("z", 3)]);
+        let merged = merge(left, right);
+        let mut merged_entries = merged.entries();
+        merged_entries.sort();
+        assert_eq!(merged_entries, vec![("x", 1), ("y", 99), ("z", 3)]);
+    }
+
+    #[test]
+    fn into_entries_and_resize_paths_work_for_open_addressing() {
+        let map = HashMap::with_hash_fn(2, CollisionStrategy::OpenAddressing, HashAlgorithm::Djb2)
+            .set("cat", 1)
+            .set("car", 2)
+            .set("cab", 3);
+        assert!(map.capacity() >= 2);
+
+        let mut entries = map.clone().into_entries();
+        entries.sort();
+        assert_eq!(entries.len(), 3);
+        assert_eq!(map.keys().len(), 3);
+
+        let map = HashMap::with_hash_fn(2, CollisionStrategy::OpenAddressing, HashAlgorithm::Djb2)
+            .set("cat", 1)
+            .delete(&"cat")
+            .set("cab", 3);
+        assert_eq!(map.get(&"cab"), Some(&3));
+        assert_eq!(map.size(), 1);
+    }
+
+    #[test]
+    fn load_factor_tracks_size() {
+        let map = HashMap::with_hash_fn(4, CollisionStrategy::Chaining, HashAlgorithm::SipHash24)
             .set(1, 10)
             .set(2, 20);
-        assert_eq!(map.strategy(), CollisionStrategy::OpenAddressing);
-        assert_eq!(map.hash_algorithm(), HashAlgorithm::Murmur3_32);
+        assert_eq!(map.capacity(), 4);
+        assert!((map.load_factor() - 0.5).abs() < f64::EPSILON);
     }
 }

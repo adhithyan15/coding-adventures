@@ -165,4 +165,56 @@ mod tests {
         assert_eq!(tree.iter().copied().collect::<Vec<_>>(), vec![1, 3, 5, 7]);
         assert!(tree.is_valid());
     }
+
+    #[test]
+    fn empty_tree_reports_basic_state() {
+        let tree: BPlusTree<i32, &str> = BPlusTree::new(1);
+        assert!(tree.is_valid());
+        assert!(tree.is_empty());
+        assert_eq!(tree.len(), 0);
+        assert_eq!(tree.height(), 0);
+        assert_eq!(tree.min_key(), None);
+        assert_eq!(tree.max_key(), None);
+        assert_eq!(tree.search(&10), None);
+        assert!(!tree.contains(&10));
+        assert_eq!(tree.full_scan(), Vec::<(i32, &str)>::new());
+    }
+
+    #[test]
+    fn indexing_mutation_items_and_display_work() {
+        let mut tree = BPlusTree::new(2);
+        tree.insert(2, "two");
+        tree.insert(1, "one");
+        tree.insert(3, "three");
+        tree.insert(2, "TWO");
+
+        assert_eq!(tree[&2], "TWO");
+        tree[&1] = "ONE";
+        assert_eq!(tree[&1], "ONE");
+
+        let items = tree.items().map(|(k, v)| (*k, *v)).collect::<Vec<_>>();
+        assert_eq!(items, vec![(1, "ONE"), (2, "TWO"), (3, "three")]);
+
+        let rendered = tree.to_string();
+        assert!(rendered.contains("BPlusTree(t=2"));
+        assert!(rendered.contains("size=3"));
+    }
+
+    #[test]
+    fn scans_cover_missing_and_present_ranges() {
+        let mut tree = BPlusTree::new(3);
+        tree.insert(10, "ten");
+        tree.insert(20, "twenty");
+        tree.insert(30, "thirty");
+
+        assert_eq!(tree.range_scan(&11, &19), Vec::<(i32, &str)>::new());
+        assert_eq!(
+            tree.range_scan(&10, &30),
+            vec![(10, "ten"), (20, "twenty"), (30, "thirty")]
+        );
+        assert_eq!(tree.full_scan(), vec![(10, "ten"), (20, "twenty"), (30, "thirty")]);
+        assert_eq!(tree.iter().copied().collect::<Vec<_>>(), vec![10, 20, 30]);
+        tree.delete(&99);
+        assert_eq!(tree.len(), 3);
+    }
 }

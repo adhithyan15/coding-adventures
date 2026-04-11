@@ -1385,6 +1385,13 @@ mod tests {
         RespValue::Array(Some(values.iter().map(|value| bulk(value)).collect()))
     }
 
+    fn assert_error(resp: RespValue, expected: &str) {
+        match resp {
+            RespValue::Error(err) => assert_eq!(err.message, expected),
+            other => panic!("unexpected response: {other:?}"),
+        }
+    }
+
     #[test]
     fn string_commands_cover_basic_lifecycle() {
         let store = Store::empty();
@@ -1587,5 +1594,523 @@ mod tests {
 
         let (_, resp) = run(store, "PFCOUNT", &[b"merged"]);
         assert_eq!(resp, integer(4));
+    }
+
+    #[test]
+    fn helper_paths_cover_dispatch_and_parser_edges() {
+        let store = Store::empty();
+
+        assert_error(dispatch(store.clone(), &[]).1, "ERR empty command");
+        assert_error(
+            dispatch(store.clone(), &[b"NOPE".to_vec()]).1,
+            "ERR unknown command 'NOPE'",
+        );
+
+        let (_, resp) = run(store.clone(), "PING", &[]);
+        assert_eq!(resp, RespValue::SimpleString("PONG".to_string()));
+
+        let (_, resp) = run(store.clone(), "PING", &[b"hello"]);
+        assert_eq!(resp, bulk("hello"));
+
+        assert_error(
+            run(store.clone(), "PING", &[b"hello", b"world"]).1,
+            "ERR wrong number of arguments for 'PING'",
+        );
+
+        let (_, resp) = run(store.clone(), "ECHO", &[b"hi"]);
+        assert_eq!(resp, bulk("hi"));
+
+        assert_error(
+            run(store.clone(), "ECHO", &[]).1,
+            "ERR wrong number of arguments for 'ECHO'",
+        );
+
+        assert_eq!(ascii_upper(b"ping"), "PING");
+        assert_eq!(
+            bulk_string_bytes(&RespValue::BulkString(Some(b"abc".to_vec()))),
+            Some(b"abc".to_vec())
+        );
+        assert_eq!(
+            bulk_string_bytes(&RespValue::SimpleString("OK".to_string())),
+            Some(b"OK".to_vec())
+        );
+        assert_eq!(
+            bulk_string_bytes(&RespValue::Integer(7)),
+            Some(b"7".to_vec())
+        );
+        assert_eq!(bulk_string_bytes(&RespValue::Array(None)), None);
+
+        assert_eq!(parse_i64(b"42").unwrap(), 42);
+        assert!(parse_i64(b"nope").is_err());
+        assert_eq!(parse_isize(b"-2").unwrap(), -2);
+        assert!(parse_isize(b"nope").is_err());
+        assert_eq!(parse_usize(b"2").unwrap(), 2);
+        assert!(parse_usize(b"-1").is_err());
+        assert_eq!(parse_f64(b"2.5").unwrap(), 2.5);
+        assert!(parse_f64(b"nope").is_err());
+
+        let now_ms = current_time_ms();
+        let expires_now = expiration_from_seconds(0);
+        assert!(expires_now >= now_ms);
+        let expires_later = expiration_from_seconds(1);
+        assert!(expires_later >= now_ms + 1000);
+        let expires_now_ms = expiration_from_millis(0);
+        assert!(expires_now_ms >= now_ms);
+        let expires_later_ms = expiration_from_millis(5);
+        assert!(expires_later_ms >= now_ms + 5);
+        assert!(unix_now_s() <= (current_time_ms() / 1000) as i64 + 1);
+
+        assert!(!is_mutating(&[b"GET".to_vec()]));
+        assert!(is_mutating(&[b"SET".to_vec()]));
+    }
+
+    #[test]
+    fn string_commands_cover_numeric_and_metadata_edges() {
+        let store = Store::empty();
+
+        assert_error(
+            run(store.clone(), "SET", &[b"k", b"v", b"BAD"]).1,
+            "ERR syntax error",
+        );
+        assert_error(
+            run(store.clone(), "SET", &[b"k", b"v", b"NX", b"XX"]).1,
+            "ERR syntax error",
+        );
+
+        let (store, resp) = run(store, "SET", &[b"counter", b"9", b"PX", b"1"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "INCR", &[b"counter"]);
+        assert_eq!(resp, integer(10));
+
+        let (store, resp) = run(store, "DECR", &[b"counter"]);
+        assert_eq!(resp, integer(9));
+
+        assert_error(
+            run(store.clone(), "INCRBY", &[b"counter", b"foo"]).1,
+            "ERR value is not an integer or out of range",
+        );
+
+        let mut overflow_store = Store::empty();
+        overflow_store = overflow_store.set(
+            b"huge",
+            Entry::string(i64::MAX.to_string().into_bytes(), None),
+        );
+        assert_error(
+            run(overflow_store, "INCRBY", &[b"huge", b"1"]).1,
+            "ERR increment or decrement would overflow",
+        );
+
+        let (store, resp) = run(store, "APPEND", &[b"counter", b" world"]);
+        assert_eq!(resp, integer(7));
+
+        let (store, resp) = run(store, "RENAME", &[b"counter", b"renamed"]);
+        assert_eq!(resp, ok());
+
+        let (_, resp) = run(store.clone(), "TYPE", &[b"renamed"]);
+        assert_eq!(resp, RespValue::SimpleString("string".to_string()));
+
+        let (_, resp) = run(store.clone(), "TYPE", &[b"missing"]);
+        assert_eq!(resp, RespValue::SimpleString("none".to_string()));
+
+        let (hash_store, _) = run(Store::empty(), "HSET", &[b"hash", b"field", b"value"]);
+        assert_error(
+            run(hash_store, "APPEND", &[b"hash", b"x"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+
+        assert_error(
+            run(Store::empty(), "RENAME", &[b"missing", b"dst"]).1,
+            "ERR no such key",
+        );
+        assert_error(
+            run(Store::empty(), "GET", &[]).1,
+            "ERR wrong number of arguments for 'GET'",
+        );
+        assert_error(
+            run(Store::empty(), "DEL", &[]).1,
+            "ERR wrong number of arguments for 'DEL'",
+        );
+        assert_error(
+            run(Store::empty(), "EXISTS", &[]).1,
+            "ERR wrong number of arguments for 'EXISTS'",
+        );
+        assert_error(
+            run(Store::empty(), "INCR", &[]).1,
+            "ERR wrong number of arguments for 'INCR'",
+        );
+        assert_error(
+            run(Store::empty(), "DECR", &[]).1,
+            "ERR wrong number of arguments for 'DECR'",
+        );
+        assert_error(
+            run(Store::empty(), "INCRBY", &[b"counter"]).1,
+            "ERR wrong number of arguments for 'INCRBY'",
+        );
+        assert_error(
+            run(Store::empty(), "DECRBY", &[b"counter"]).1,
+            "ERR wrong number of arguments for 'DECRBY'",
+        );
+        assert_error(
+            run(Store::empty(), "APPEND", &[b"k"]).1,
+            "ERR wrong number of arguments for 'APPEND'",
+        );
+        assert_error(
+            run(Store::empty(), "SET", &[b"k"]).1,
+            "ERR wrong number of arguments for 'SET'",
+        );
+    }
+
+    #[test]
+    fn collection_commands_cover_wrong_types_and_bounds() {
+        let store = Store::empty();
+
+        assert_error(
+            run(store.clone(), "HSET", &[b"hash", b"field"]).1,
+            "ERR wrong number of arguments for 'HSET'",
+        );
+
+        let (store, resp) = run(store, "HSET", &[b"hash", b"b", b"2", b"a", b"1"]);
+        assert_eq!(resp, integer(2));
+
+        let (store, resp) = run(store, "HGET", &[b"hash", b"a"]);
+        assert_eq!(resp, bulk("1"));
+
+        let (_, resp) = run(store.clone(), "HGET", &[b"hash", b"missing"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+
+        let (_, resp) = run(store.clone(), "HLEN", &[b"hash"]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store.clone(), "HEXISTS", &[b"hash", b"a"]);
+        assert_eq!(resp, integer(1));
+
+        let (_, resp) = run(store.clone(), "HKEYS", &[b"hash"]);
+        assert_eq!(resp, array(&["a", "b"]));
+
+        let (_, resp) = run(store.clone(), "HVALS", &[b"hash"]);
+        assert_eq!(resp, array(&["1", "2"]));
+
+        let (_, resp) = run(store.clone(), "HGETALL", &[b"hash"]);
+        assert_eq!(resp, RespValue::Array(Some(vec![bulk("a"), bulk("1"), bulk("b"), bulk("2")])));
+
+        assert_error(
+            run(store.clone(), "HDEL", &[b"hash"]).1,
+            "ERR wrong number of arguments for 'HDEL'",
+        );
+
+        let (store, resp) = run(store, "HDEL", &[b"hash", b"a", b"b"]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store, "HGETALL", &[b"hash"]);
+        assert_eq!(resp, RespValue::Array(Some(Vec::new())));
+
+        let (store, _) = run(Store::empty(), "SET", &[b"string", b"value"]);
+        assert_error(
+            run(store.clone(), "HSET", &[b"string", b"field", b"value"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+        assert_error(
+            run(store.clone(), "HGET", &[b"string", b"field"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+
+        assert_error(
+            run(Store::empty(), "LPUSH", &[b"list"]).1,
+            "ERR wrong number of arguments for 'LPUSH'",
+        );
+        let (store, resp) = run(Store::empty(), "LPUSH", &[b"list", b"c", b"b", b"a"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "RPUSH", &[b"list", b"d"]);
+        assert_eq!(resp, integer(4));
+
+        let (_, resp) = run(store.clone(), "LLEN", &[b"list"]);
+        assert_eq!(resp, integer(4));
+
+        let (_, resp) = run(store.clone(), "LRANGE", &[b"list", b"0", b"-1"]);
+        assert_eq!(resp, array(&["a", "b", "c", "d"]));
+
+        let (_, resp) = run(store.clone(), "LINDEX", &[b"list", b"-1"]);
+        assert_eq!(resp, bulk("d"));
+
+        let (_, resp) = run(store.clone(), "LPOP", &[b"list"]);
+        assert_eq!(resp, bulk("a"));
+
+        let (_, resp) = run(store.clone(), "RPOP", &[b"list"]);
+        assert_eq!(resp, bulk("d"));
+
+        assert_error(
+            run(store.clone(), "LRANGE", &[b"list", b"not", b"1"]).1,
+            "ERR value is not an integer or out of range",
+        );
+        assert_error(
+            run(store.clone(), "LINDEX", &[b"list", b"not"]).1,
+            "ERR value is not an integer or out of range",
+        );
+        let (_, resp) = run(Store::empty(), "LPOP", &[b"missing"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+        let (_, resp) = run(Store::empty(), "RPOP", &[b"missing"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+
+        let (store, _) = run(Store::empty(), "SET", &[b"not-a-list", b"value"]);
+        assert_error(
+            run(store.clone(), "LPUSH", &[b"not-a-list", b"x"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+
+        assert_error(
+            run(Store::empty(), "SADD", &[b"set"]).1,
+            "ERR wrong number of arguments for 'SADD'",
+        );
+        let (store, resp) = run(Store::empty(), "SADD", &[b"set", b"a", b"b", b"a"]);
+        assert_eq!(resp, integer(2));
+
+        let (store, resp) = run(store.clone(), "SREM", &[b"set", b"a", b"missing"]);
+        assert_eq!(resp, integer(1));
+
+        let (_, resp) = run(store.clone(), "SISMEMBER", &[b"set", b"a"]);
+        assert_eq!(resp, integer(0));
+
+        let (_, resp) = run(store.clone(), "SMEMBERS", &[b"set"]);
+        assert_eq!(resp, array(&["b"]));
+
+        let (_, resp) = run(store.clone(), "SCARD", &[b"set"]);
+        assert_eq!(resp, integer(1));
+
+        assert_error(run(store.clone(), "SUNION", &[]).1, "ERR wrong number of arguments for 'SUNION'");
+        assert_error(run(store.clone(), "SINTER", &[]).1, "ERR wrong number of arguments for 'SINTER'");
+        assert_error(run(store.clone(), "SDIFF", &[]).1, "ERR wrong number of arguments for 'SDIFF'");
+
+        let (_, resp) = run(Store::empty(), "SREM", &[b"missing", b"a"]);
+        assert_eq!(resp, integer(0));
+
+        let (store, _) = run(Store::empty(), "SET", &[b"not-a-set", b"value"]);
+        assert_error(
+            run(store, "SADD", &[b"not-a-set", b"x"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+    }
+
+    #[test]
+    fn sorted_set_and_hyperloglog_commands_cover_edges() {
+        let store = Store::empty();
+
+        assert_error(
+            run(store.clone(), "ZADD", &[b"z"]).1,
+            "ERR wrong number of arguments for 'ZADD'",
+        );
+
+        let (store, resp) = run(store, "ZADD", &[b"z", b"2", b"b", b"1", b"a", b"3", b"c"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "ZADD", &[b"z", b"4", b"b"]);
+        assert_eq!(resp, integer(0));
+
+        let (_, resp) = run(store.clone(), "ZRANGE", &[b"z", b"0", b"-1"]);
+        assert_eq!(resp, array(&["a", "c", "b"]));
+
+        let (_, resp) = run(store.clone(), "ZRANGEBYSCORE", &[b"z", b"1", b"3"]);
+        assert_eq!(resp, array(&["a", "c"]));
+
+        let (_, resp) = run(store.clone(), "ZRANK", &[b"z", b"b"]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store.clone(), "ZSCORE", &[b"z", b"b"]);
+        assert_eq!(resp, bulk("4"));
+
+        let (_, resp) = run(store.clone(), "ZCARD", &[b"z"]);
+        assert_eq!(resp, integer(3));
+
+        let (_, resp) = run(store.clone(), "ZREM", &[b"z", b"b", b"missing"]);
+        assert_eq!(resp, integer(1));
+
+        let (_, resp) = run(store.clone(), "ZRANK", &[b"z", b"missing"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+
+        let (_, resp) = run(store.clone(), "ZSCORE", &[b"z", b"missing"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+
+        assert_error(
+            run(store.clone(), "ZADD", &[b"z", b"bad", b"x"]).1,
+            "ERR value is not a valid float",
+        );
+        assert_error(
+            run(store.clone(), "ZRANGE", &[b"z", b"bad", b"1"]).1,
+            "ERR value is not an integer or out of range",
+        );
+        assert_error(
+            run(store.clone(), "ZRANGEBYSCORE", &[b"z", b"bad", b"1"]).1,
+            "ERR value is not a valid float",
+        );
+        assert_error(
+            run(Store::empty(), "ZRANGE", &[b"z"]).1,
+            "ERR wrong number of arguments for 'ZRANGE'",
+        );
+
+        let (store, _) = run(Store::empty(), "SET", &[b"zstring", b"v"]);
+        assert_error(
+            run(store.clone(), "ZADD", &[b"zstring", b"1", b"x"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+
+        assert_error(
+            run(store.clone(), "PFADD", &[b"hll"]).1,
+            "ERR wrong number of arguments for 'PFADD'",
+        );
+
+        let (store, resp) = run(store, "PFADD", &[b"hll", b"a", b"b", b"a"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "PFADD", &[b"hll", b"a", b"b"]);
+        assert_eq!(resp, integer(0));
+
+        let (_, resp) = run(store.clone(), "PFCOUNT", &[b"hll"]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store.clone(), "PFCOUNT", &[b"hll", b"missing"]);
+        assert_eq!(resp, integer(2));
+
+        assert_error(run(store.clone(), "PFCOUNT", &[]).1, "ERR wrong number of arguments for 'PFCOUNT'");
+        assert_error(run(store.clone(), "PFMERGE", &[b"merged"]).1, "ERR wrong number of arguments for 'PFMERGE'");
+
+        let (store, resp) = run(store.clone(), "PFADD", &[b"other", b"c"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "PFMERGE", &[b"merged", b"hll", b"other"]);
+        assert_eq!(resp, ok());
+
+        let (_, resp) = run(store.clone(), "PFCOUNT", &[b"merged"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, _) = run(Store::empty(), "SET", &[b"not-hll", b"v"]);
+        assert_error(
+            run(store.clone(), "PFADD", &[b"not-hll", b"x"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+        assert_error(
+            run(store.clone(), "PFCOUNT", &[b"hll", b"not-hll"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+        assert_error(
+            run(store, "PFMERGE", &[b"merged", b"not-hll"]).1,
+            "WRONGTYPE Operation against a key holding the wrong kind of value",
+        );
+    }
+
+    #[test]
+    fn ttl_and_database_commands_cover_selection_and_flush_paths() {
+        let store = Store::empty();
+
+        let (store, resp) = run(store, "SET", &[b"session", b"value"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "EXPIRE", &[b"session", b"1"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "TTL", &[b"session"]);
+        match resp {
+            RespValue::Integer(seconds) => assert!((0..=1).contains(&seconds)),
+            other => panic!("unexpected TTL response: {other:?}"),
+        }
+
+        let (store, resp) = run(store, "PTTL", &[b"session"]);
+        match resp {
+            RespValue::Integer(millis) => assert!((0..=1_000).contains(&millis)),
+            other => panic!("unexpected PTTL response: {other:?}"),
+        }
+
+        let (store, resp) = run(store, "PERSIST", &[b"session"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "TTL", &[b"session"]);
+        assert_eq!(resp, integer(-1));
+
+        let (_, resp) = run(store.clone(), "PERSIST", &[b"session"]);
+        assert_eq!(resp, integer(0));
+
+        let (_, resp) = run(store.clone(), "EXPIRE", &[b"missing", b"1"]);
+        assert_eq!(resp, integer(0));
+
+        let (_, resp) = run(store.clone(), "EXPIREAT", &[b"missing", b"1"]);
+        assert_eq!(resp, integer(0));
+
+        let past = (unix_now_s() - 1).to_string();
+        let (store, resp) = run(store, "EXPIREAT", &[b"session", past.as_bytes()]);
+        assert_eq!(resp, integer(1));
+
+        let (_, resp) = run(store, "GET", &[b"session"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+
+        let (store, _) = run(Store::empty(), "SET", &[b"user:1", b"one"]);
+        let (store, _) = run(store, "SET", &[b"user:2", b"two"]);
+
+        let (_, resp) = run(store.clone(), "DBSIZE", &[]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store.clone(), "INFO", &[]);
+        match resp {
+            RespValue::BulkString(Some(bytes)) => {
+                let text = String::from_utf8(bytes).unwrap();
+                assert!(text.contains("mini_redis_version:0.1.0"));
+                assert!(text.contains("active_db:0"));
+                assert!(text.contains("dbsize:2"));
+            }
+            other => panic!("unexpected INFO response: {other:?}"),
+        }
+
+        let (_, resp) = run(store.clone(), "KEYS", &[b"user:?"]);
+        assert_eq!(resp, array(&["user:1", "user:2"]));
+
+        assert_error(
+            run(store.clone(), "SELECT", &[b"bad"]).1,
+            "ERR value is not an integer or out of range",
+        );
+        assert_error(
+            run(store.clone(), "SELECT", &[b"999"]).1,
+            "ERR DB index out of range",
+        );
+
+        let (store, resp) = run(store, "SELECT", &[b"1"]);
+        assert_eq!(resp, ok());
+        assert_eq!(store.active_db, 1);
+
+        let (store, resp) = run(store, "SET", &[b"db1", b"one"]);
+        assert_eq!(resp, ok());
+
+        assert_error(
+            run(store.clone(), "DBSIZE", &[b"extra"]).1,
+            "ERR wrong number of arguments for 'DBSIZE'",
+        );
+        assert_error(
+            run(store.clone(), "INFO", &[b"extra"]).1,
+            "ERR wrong number of arguments for 'INFO'",
+        );
+        assert_error(
+            run(store.clone(), "FLUSHDB", &[b"extra"]).1,
+            "ERR wrong number of arguments for 'FLUSHDB'",
+        );
+        assert_error(
+            run(store.clone(), "FLUSHALL", &[b"extra"]).1,
+            "ERR wrong number of arguments for 'FLUSHALL'",
+        );
+        assert_error(
+            run(store.clone(), "KEYS", &[b"a", b"b"]).1,
+            "ERR wrong number of arguments for 'KEYS'",
+        );
+
+        let (store, resp) = run(store, "FLUSHDB", &[]);
+        assert_eq!(resp, ok());
+        let (_, resp) = run(store.clone(), "DBSIZE", &[]);
+        assert_eq!(resp, integer(0));
+
+        let (store, _) = run(store, "SELECT", &[b"0"]);
+        let (store, _) = run(store, "SET", &[b"db0", b"zero"]);
+        let (store, _) = run(store, "SELECT", &[b"1"]);
+        let (store, _) = run(store, "SET", &[b"db1", b"one"]);
+        let (store, resp) = run(store, "FLUSHALL", &[]);
+        assert_eq!(resp, ok());
+        let (_, resp) = run(store, "DBSIZE", &[]);
+        assert_eq!(resp, integer(0));
     }
 }

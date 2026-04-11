@@ -422,4 +422,25 @@ mod tests {
         server.stop();
         handle.join().unwrap();
     }
+
+    #[test]
+    fn configuration_helpers_cover_introspection_and_debug_output() {
+        let server = TcpServer::with_options("127.0.0.1", 0, 0, 0, |_, data| data.to_vec());
+
+        assert!(!server.is_running());
+        assert!(server.address().is_none());
+        assert!(server.try_address().is_err());
+
+        let debug = format!("{server:?}");
+        assert_eq!(debug, format!("{server}"));
+        assert!(debug.contains("TcpServer"));
+        assert!(debug.contains("stopped"));
+
+        server.start().expect("start");
+        server.start().expect("second start should be a no-op");
+        assert!(server.is_running());
+        assert!(server.address().is_some());
+        assert!(server.try_address().is_ok());
+        server.stop();
+    }
 }
