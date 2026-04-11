@@ -42,14 +42,21 @@ func makeReader(payload string) *jsonrpc.MessageReader {
 	return jsonrpc.NewReader(bytes.NewReader(makeFramed(payload)))
 }
 
-// readResponse reads and parses the first JSON-RPC response from a bytes.Buffer.
+// readResponse reads the first framed JSON-RPC response from a bytes.Buffer and
+// returns it as a raw map decoded directly from JSON. We decode via the raw JSON
+// bytes (not via MessageToMap) so that all values carry JSON-native types:
+// numbers arrive as float64, strings as string, etc. This keeps type assertions
+// in tests predictable and consistent with what a real JSON-RPC client would see.
 func readResponse(buf *bytes.Buffer) map[string]interface{} {
 	reader := jsonrpc.NewReader(bytes.NewReader(buf.Bytes()))
-	msg, err := reader.ReadMessage()
+	raw, err := reader.ReadRaw()
 	if err != nil {
-		panic(fmt.Sprintf("readResponse: %v", err))
+		panic(fmt.Sprintf("readResponse ReadRaw: %v", err))
 	}
-	d, _ := jsonrpc.MessageToMap(msg)
+	var d map[string]interface{}
+	if err := json.Unmarshal([]byte(raw), &d); err != nil {
+		panic(fmt.Sprintf("readResponse Unmarshal: %v", err))
+	}
 	return d
 }
 

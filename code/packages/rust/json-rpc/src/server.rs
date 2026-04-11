@@ -138,7 +138,7 @@ impl<R: BufRead, W: Write> Server<R, W> {
     /// use coding_adventures_json_rpc::Server;
     /// use std::io::{BufReader, BufWriter, Cursor};
     ///
-    /// let mut server = Server::new(BufReader::new(Cursor::new(b""[..])), BufWriter::new(Cursor::new(vec![])));
+    /// let mut server = Server::new(BufReader::new(Cursor::new(vec![])), BufWriter::new(Cursor::new(vec![])));
     /// server.on_request("ping", |_id, _params| {
     ///     Ok(serde_json::json!("pong"))
     /// });
@@ -166,7 +166,7 @@ impl<R: BufRead, W: Write> Server<R, W> {
     /// use coding_adventures_json_rpc::Server;
     /// use std::io::{BufReader, BufWriter, Cursor};
     ///
-    /// let mut server = Server::new(BufReader::new(Cursor::new(b""[..])), BufWriter::new(Cursor::new(vec![])));
+    /// let mut server = Server::new(BufReader::new(Cursor::new(vec![])), BufWriter::new(Cursor::new(vec![])));
     /// server.on_notification("initialized", |_params| {
     ///     eprintln!("client initialised");
     /// });

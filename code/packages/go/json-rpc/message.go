@@ -162,17 +162,30 @@ func (n *Notification) isMessage() {}
 //	    fmt.Println("Response for id:", m.Id)
 //	}
 func ParseMessage(raw string) (Message, error) {
-	// Step 1: Parse JSON into a generic map. Any error here means the bytes
-	// were not valid UTF-8 JSON.
-	var obj map[string]interface{}
-	if err := json.Unmarshal([]byte(raw), &obj); err != nil {
+	// Step 1: Parse JSON into a generic interface{} first so we can tell the
+	// difference between invalid JSON (ParseError) and valid JSON that is not
+	// an object (InvalidRequest). Unmarshalling directly into
+	// map[string]interface{} would return an error for both cases, masking the
+	// distinction.
+	var generic interface{}
+	if err := json.Unmarshal([]byte(raw), &generic); err != nil {
 		return nil, &ResponseError{
 			Code:    ParseError,
 			Message: fmt.Sprintf("Parse error: %s", err.Error()),
 		}
 	}
 
-	// Step 2: The "jsonrpc" field must be exactly "2.0".
+	// Step 2: The message must be a JSON object. Arrays, strings, numbers, and
+	// booleans are valid JSON but are not valid JSON-RPC messages.
+	obj, ok := generic.(map[string]interface{})
+	if !ok {
+		return nil, &ResponseError{
+			Code:    InvalidRequest,
+			Message: "Invalid Request: message must be a JSON object",
+		}
+	}
+
+	// Step 3: The "jsonrpc" field must be exactly "2.0".
 	// This guards against accidentally connecting a JSON-RPC 1.0 client.
 	v, ok := obj["jsonrpc"]
 	if !ok {
