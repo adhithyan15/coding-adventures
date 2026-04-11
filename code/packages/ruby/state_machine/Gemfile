@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
+gem "coding_adventures_graph", path: "../graph"
 gem "coding_adventures_directed_graph", path: "../directed_graph"
 
 gemspec
