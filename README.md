@@ -182,7 +182,7 @@ If you want to explore the repository by theme:
 
 - Start with [00-architecture.md](./code/specs/00-architecture.md) for the big picture.
 - Read [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track.
-- Read [DT25-mini-redis.md](./code/specs/DT25-mini-redis.md) for the Redis-style culmination of the DT data-structure series.
+- Read [DT25-mini-redis.md](./code/specs/DT25-mini-redis.md) for the single-node Redis baseline of the DT data-structure series.
 - Read [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) to see how the build system uses graph algorithms.
 - Read [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story.
 

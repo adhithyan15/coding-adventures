@@ -1,7 +1,12 @@
 //! DT25 Mini-Redis.
 //!
 //! This crate combines the RESP protocol, TCP server, and a pure command
-//! layer to provide a small Redis-compatible in-memory server.
+//! layer to provide a single-node Redis-compatible in-memory server.
+//!
+//! The design goal is to build the common Redis surface with our own packages
+//! first, then add distributed features later. That means the crate currently
+//! focuses on core command semantics, storage, TTLs, and AOF replay rather
+//! than replication, cluster mode, pub/sub, scripting, or RESP3.
 
 mod commands;
 mod server;
