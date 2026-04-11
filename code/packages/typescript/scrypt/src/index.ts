@@ -389,13 +389,19 @@ export function scrypt(
     // The simpler p*r ≤ 2^30 guard covers all practical cases.
     throw new Error("scrypt: p * r exceeds limit");
   }
+  // p * 128 * r is the actual byte count allocated in Step 1. Even when
+  // p*r ≤ 2^30, p*128*r can reach 128 GiB (e.g. p=2^15, r=2^15). Cap at
+  // 2^30 bytes (1 GiB) and ensure it is a safe integer.
+  const bLen = p * 128 * r;
+  if (!Number.isSafeInteger(bLen) || bLen > (1 << 30)) {
+    throw new Error("scrypt: p * 128 * r exceeds memory limit (2^30 bytes = 1 GiB)");
+  }
 
   // ── Step 1: Expand password + salt into p blocks via PBKDF2 ─────────────
   //
   // PBKDF2 with 1 iteration is used here as a pure pseudo-random function to
   // stretch the password into a large block buffer. The memory-hardness comes
   // from ROMix, not from PBKDF2 iteration count (which is fixed at 1 here).
-  const bLen = p * 128 * r;
   let b = pbkdf2HmacSHA256(password, salt, 1, bLen, true);
 
   // ── Step 2: Apply ROMix independently to each p block ───────────────────

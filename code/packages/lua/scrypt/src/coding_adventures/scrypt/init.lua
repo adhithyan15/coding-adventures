@@ -365,6 +365,11 @@ function M.scrypt(password, salt, n, r, p, dk_len)
   if p * r > 2 ^ 30 then
     error("scrypt p * r exceeds limit", 2)
   end
+  -- p * 128 * r is the actual PBKDF2 output size for Step 1. Even when p*r
+  -- passes the guard above, p*128*r can be up to 128 GiB. Cap at 2^30 bytes.
+  if p * 128 * r > 2 ^ 30 then
+    error("scrypt p * 128 * r exceeds memory limit (2^30 bytes)", 2)
+  end
 
   -- ── Step 1: Expand password+salt into p mixing blocks ────────────────────
   -- PBKDF2-HMAC-SHA256 with 1 iteration, key length = p × 128r bytes.

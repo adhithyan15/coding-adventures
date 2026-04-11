@@ -475,6 +475,11 @@ def scrypt(
         raise ValueError("scrypt dk_len must be between 1 and 2^20")
     if p * r > 2**30:
         raise ValueError("scrypt p * r exceeds limit (2^30)")
+    if p * 128 * r > 2**30:
+        raise ValueError(
+            "scrypt p * 128 * r exceeds memory limit (2^30 bytes = 1 GiB); "
+            "reduce p or r"
+        )
     if n > 2**20:
         raise ValueError("scrypt N must not exceed 2^20")
 

@@ -438,6 +438,14 @@ pub fn scrypt(
     if p.saturating_mul(r) > (1 << 30) {
         return Err(ScryptError::PRTooLarge);
     }
+    // p * 128 * r is the actual PBKDF2 output size for Step 1. Even when
+    // p*r ≤ 2^30, multiplying by 128 gives up to 128 GiB. Use checked_mul
+    // to catch overflow on 32-bit targets and cap at 2^30 bytes (1 GiB).
+    let b_len = p
+        .checked_mul(128)
+        .and_then(|v| v.checked_mul(r))
+        .filter(|&v| v <= (1 << 30))
+        .ok_or(ScryptError::PRTooLarge)?;
 
     // ── Step 1: Expand password into working buffer B ─────────────────────────
     //
@@ -445,7 +453,6 @@ pub fn scrypt(
     // with a single iteration. The salt is the user-provided salt.
     //
     // Each block B[i] = B[i * 128 * r .. (i+1) * 128 * r]
-    let b_len = p * 128 * r;
     let mut b = pbkdf2_hmac_sha256(password, salt, 1, b_len, true)
         .map_err(ScryptError::from)?;
 
@@ -610,6 +617,13 @@ mod tests {
     fn rejects_pr_too_large() {
         // p * r > 2^30
         assert_eq!(scrypt(b"p", b"s", 2, 1 << 15, 1 << 16, 32), Err(ScryptError::PRTooLarge));
+    }
+
+    #[test]
+    fn rejects_b_len_too_large() {
+        // p=1, r=2^24: p*r = 2^24 ≤ 2^30 (passes old guard), but
+        // p*128*r = 2^31 > 2^30 (triggers new memory-cap guard).
+        assert_eq!(scrypt(b"p", b"s", 2, 1 << 24, 1, 32), Err(ScryptError::PRTooLarge));
     }
 
     // ── scrypt output properties ──────────────────────────────────────────────

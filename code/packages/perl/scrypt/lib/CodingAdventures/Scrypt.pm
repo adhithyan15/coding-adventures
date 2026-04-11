@@ -380,6 +380,10 @@ sub scrypt {
         unless defined($dk_len) && $dk_len >= 1 && $dk_len <= 2**20;
     die "scrypt p * r exceeds limit\n"
         unless $p * $r <= 2**30;
+    # p * 128 * r is the actual byte length allocated for the PBKDF2 output in
+    # Step 1. Even when p*r ≤ 2^30, p*128*r can reach 128 GiB. Cap at 2^30.
+    die "scrypt p * 128 * r exceeds memory limit (2^30 bytes)\n"
+        unless $p * 128 * $r <= 2**30;
 
     # Step 1: derive p*128*r bytes of initial keying material from the
     # password and user-supplied salt. These p blocks of 128*r bytes will

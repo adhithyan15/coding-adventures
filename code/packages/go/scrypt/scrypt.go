@@ -460,6 +460,14 @@ func Scrypt(password, salt []byte, n, r, p, dkLen int) ([]byte, error) {
 	if int64(p)*int64(r) > 1<<30 {
 		return nil, ErrPRTooLarge
 	}
+	// p*128*r is the actual PBKDF2 output size allocated in Step 1. Even when
+	// p*r ≤ 2^30, multiplying by 128 gives up to 128 GiB. Cap at 2^30 bytes
+	// (1 GiB) and use int64 arithmetic to avoid 32-bit overflow.
+	bLen64 := int64(p) * 128 * int64(r)
+	if bLen64 > 1<<30 {
+		return nil, ErrPRTooLarge
+	}
+	bLen := int(bLen64)
 
 	// ---------------------------------------------------------------------------
 	// Step 1: Expand password+salt into p×128r bytes via PBKDF2-HMAC-SHA256.
@@ -467,7 +475,6 @@ func Scrypt(password, salt []byte, n, r, p, dkLen int) ([]byte, error) {
 	// The output B is split into p lanes of 128r bytes each.  Each lane is
 	// processed independently by ROMix.
 	// ---------------------------------------------------------------------------
-	bLen := p * 128 * r
 	// allowEmptyPassword=true: RFC 7914 test vector 1 uses password="" and
 	// salt="", so scrypt must accept empty passwords even though PBKDF2
 	// normally rejects them.

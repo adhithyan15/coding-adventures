@@ -415,6 +415,9 @@ public func scrypt(
     // Overflow guard: p*r is used in memory size calculations. Capping at 2^30
     // ensures the intermediate byte count (p * 128 * r) fits in a 64-bit Int.
     guard p * r <= (1 << 30)             else { throw ScryptError.prTooLarge }
+    // p * 128 * r is the actual PBKDF2 output buffer size. Even when p*r ≤ 2^30,
+    // p*128*r can reach 128 GiB (e.g. p=2^15, r=2^15). Cap at 2^30 bytes (1 GiB).
+    guard p * 128 * r <= (1 << 30)       else { throw ScryptError.prTooLarge }
 
     // ── Step 1: Expand password + salt into p parallel blocks ─────────────
     // B is p blocks of 128*r bytes each. scrypt's PBKDF2 always uses 1

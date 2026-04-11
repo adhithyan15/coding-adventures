@@ -140,6 +140,9 @@ module CodingAdventures
       # p * r must not overflow the block-buffer calculation. RFC 7914 §2
       # requires p * r < 2^30.
       raise ArgumentError, "scrypt p * r exceeds limit" if p * r > 2**30
+      # p * 128 * r is the actual PBKDF2 output size for Step 1. Cap at 1 GiB
+      # to prevent memory-exhaustion DoS with adversarial p/r combinations.
+      raise ArgumentError, "scrypt p * 128 * r exceeds memory limit (2^30 bytes)" if p * 128 * r > 2**30
 
       # Coerce inputs to binary encoding once at the boundary
       password = password.b

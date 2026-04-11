@@ -293,6 +293,15 @@ func TestErrorPRTooLarge(t *testing.T) {
 	}
 }
 
+// TestErrorBLenTooLarge verifies that p*128*r > 2^30 is rejected even when
+// p*r ≤ 2^30.  With p=1 and r=1<<24, p*r=2^24 (passes) but p*128*r=2^31.
+func TestErrorBLenTooLarge(t *testing.T) {
+	_, err := scryptpkg.Scrypt([]byte("pw"), []byte("salt"), 2, 1<<24, 1, 1)
+	if err != scryptpkg.ErrPRTooLarge {
+		t.Errorf("p*128*r=2^31: expected ErrPRTooLarge, got %v", err)
+	}
+}
+
 // TestErrorScryptHexPropagates verifies that ScryptHex propagates parameter
 // errors from the underlying Scrypt call.
 func TestErrorScryptHexPropagates(t *testing.T) {

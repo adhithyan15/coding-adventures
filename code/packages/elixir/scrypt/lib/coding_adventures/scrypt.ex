@@ -497,6 +497,11 @@ defmodule CodingAdventures.Scrypt do
 
     if p * r > 1_073_741_824,
       do: raise(ArgumentError, "scrypt p * r exceeds limit")
+
+    # p * 128 * r is the actual PBKDF2 output size allocated in Step 1. Cap
+    # at 2^30 bytes (1 GiB) to prevent memory-exhaustion DoS.
+    if p * 128 * r > 1_073_741_824,
+      do: raise(ArgumentError, "scrypt p * 128 * r exceeds memory limit (2^30 bytes)")
   end
 
   # ---------------------------------------------------------------------------

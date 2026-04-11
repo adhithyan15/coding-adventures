@@ -266,6 +266,16 @@ def test_error_p_r_product_exceeds_limit() -> None:
         scrypt(b"key", b"salt", n=16, r=2**20, p=2**11, dk_len=32)
 
 
+def test_error_p_128_r_memory_limit() -> None:
+    """p*128*r > 2^30 raises ValueError even when p*r ≤ 2^30.
+
+    With p=1 and r=2^24, p*r = 2^24 (passes the p*r guard) but
+    p*128*r = 2^31 which exceeds the 1 GiB memory cap.
+    """
+    with pytest.raises(ValueError, match="p \\* 128 \\* r exceeds memory limit"):
+        scrypt(b"key", b"salt", n=16, r=2**24, p=1, dk_len=32)
+
+
 # =============================================================================
 # Internal Helper Tests
 # =============================================================================
