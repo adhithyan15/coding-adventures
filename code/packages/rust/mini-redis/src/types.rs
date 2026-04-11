@@ -1,8 +1,11 @@
 use core::cmp::Ordering;
 use core::fmt;
-use std::collections::{BTreeMap, BTreeSet, VecDeque};
+use std::collections::VecDeque;
 
+use hash_map::HashMap as DtHashMap;
+use hash_set::HashSet as DtHashSet;
 use hyperloglog::HyperLogLog;
+use skip_list::SkipList;
 
 #[derive(Clone, Copy, Debug)]
 pub struct OrderedF64(pub f64);
@@ -66,85 +69,89 @@ impl fmt::Display for EntryType {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct SortedEntry {
+    score: OrderedF64,
+    member: Vec<u8>,
+}
+
+#[derive(Clone, Debug)]
 pub struct SortedSet {
-    by_score: BTreeMap<OrderedF64, BTreeSet<Vec<u8>>>,
-    by_member: BTreeMap<Vec<u8>, OrderedF64>,
+    members: DtHashMap<Vec<u8>, OrderedF64>,
+    ordering: SkipList<SortedEntry, ()>,
 }
 
 impl SortedSet {
     pub fn new() -> Self {
         Self {
-            by_score: BTreeMap::new(),
-            by_member: BTreeMap::new(),
+            members: DtHashMap::default(),
+            ordering: SkipList::new(),
         }
     }
 
     pub fn len(&self) -> usize {
-        self.by_member.len()
+        self.members.size()
     }
 
     pub fn is_empty(&self) -> bool {
-        self.by_member.is_empty()
+        self.members.size() == 0
     }
 
     pub fn contains(&self, member: &[u8]) -> bool {
-        self.by_member.contains_key(member)
+        self.members.has(&member.to_vec())
     }
 
     pub fn score(&self, member: &[u8]) -> Option<f64> {
-        self.by_member.get(member).map(|score| score.0)
+        self.members.get(&member.to_vec()).map(|score| score.0)
     }
 
     pub fn insert(&mut self, score: f64, member: Vec<u8>) -> bool {
         let score = OrderedF64::new(score).expect("sorted set score cannot be NaN");
-        let is_new = !self.by_member.contains_key(&member);
-        if let Some(old_score) = self.by_member.insert(member.clone(), score) {
-            if let Some(set) = self.by_score.get_mut(&old_score) {
-                set.remove(&member);
-                if set.is_empty() {
-                    self.by_score.remove(&old_score);
-                }
-            }
+        let is_new = !self.members.has(&member);
+        if let Some(old_score) = self.members.get(&member).copied() {
+            let _ = self.ordering.delete(&SortedEntry {
+                score: old_score,
+                member: member.clone(),
+            });
         }
-        self.by_score.entry(score).or_default().insert(member);
+
+        let members = std::mem::take(&mut self.members);
+        self.members = members.set(member.clone(), score);
+        self.ordering.insert(SortedEntry { score, member }, ());
         is_new
     }
 
     pub fn remove(&mut self, member: &[u8]) -> bool {
-        let Some(old_score) = self.by_member.remove(member) else {
+        let member = member.to_vec();
+        let Some(old_score) = self.members.get(&member).copied() else {
             return false;
         };
-        if let Some(set) = self.by_score.get_mut(&old_score) {
-            set.remove(member);
-            if set.is_empty() {
-                self.by_score.remove(&old_score);
-            }
-        }
+
+        let _ = self.ordering.delete(&SortedEntry {
+            score: old_score,
+            member: member.clone(),
+        });
+
+        let members = std::mem::take(&mut self.members);
+        self.members = members.delete(&member);
         true
     }
 
     pub fn rank(&self, member: &[u8]) -> Option<usize> {
-        let mut index = 0usize;
-        for members in self.by_score.values() {
-            for current in members {
-                if current.as_slice() == member {
-                    return Some(index);
-                }
-                index += 1;
+        let member = member.to_vec();
+        for (index, entry) in self.ordering.iter().enumerate() {
+            if entry.member == member {
+                return Some(index);
             }
         }
         None
     }
 
     pub fn ordered_entries(&self) -> Vec<(Vec<u8>, f64)> {
-        let mut out = Vec::with_capacity(self.len());
-        for (score, members) in &self.by_score {
-            for member in members {
-                out.push((member.clone(), score.0));
-            }
-        }
-        out
+        self.ordering
+            .iter()
+            .map(|entry| (entry.member.clone(), entry.score.0))
+            .collect()
     }
 
     pub fn range_by_index(&self, start: isize, end: isize) -> Vec<(Vec<u8>, f64)> {
@@ -180,12 +187,20 @@ impl Default for SortedSet {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+impl PartialEq for SortedSet {
+    fn eq(&self, other: &Self) -> bool {
+        self.ordered_entries() == other.ordered_entries()
+    }
+}
+
+impl Eq for SortedSet {}
+
+#[derive(Clone, Debug)]
 pub enum EntryValue {
     String(Vec<u8>),
-    Hash(BTreeMap<Vec<u8>, Vec<u8>>),
+    Hash(DtHashMap<Vec<u8>, Vec<u8>>),
     List(VecDeque<Vec<u8>>),
-    Set(BTreeSet<Vec<u8>>),
+    Set(DtHashSet<Vec<u8>>),
     ZSet(SortedSet),
     Hll(HyperLogLog),
 }
@@ -202,6 +217,22 @@ impl EntryValue {
         }
     }
 }
+
+impl PartialEq for EntryValue {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::String(left), Self::String(right)) => left == right,
+            (Self::Hash(left), Self::Hash(right)) => hash_map_equal(left, right),
+            (Self::List(left), Self::List(right)) => left == right,
+            (Self::Set(left), Self::Set(right)) => hash_set_equal(left, right),
+            (Self::ZSet(left), Self::ZSet(right)) => left == right,
+            (Self::Hll(left), Self::Hll(right)) => left == right,
+            _ => false,
+        }
+    }
+}
+
+impl Eq for EntryValue {}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Entry {
@@ -224,7 +255,7 @@ impl Entry {
         Self::new(EntryValue::String(value.into()), expires_at)
     }
 
-    pub fn hash(value: BTreeMap<Vec<u8>, Vec<u8>>, expires_at: Option<u64>) -> Self {
+    pub fn hash(value: DtHashMap<Vec<u8>, Vec<u8>>, expires_at: Option<u64>) -> Self {
         Self::new(EntryValue::Hash(value), expires_at)
     }
 
@@ -232,7 +263,7 @@ impl Entry {
         Self::new(EntryValue::List(value), expires_at)
     }
 
-    pub fn set(value: BTreeSet<Vec<u8>>, expires_at: Option<u64>) -> Self {
+    pub fn set(value: DtHashSet<Vec<u8>>, expires_at: Option<u64>) -> Self {
         Self::new(EntryValue::Set(value), expires_at)
     }
 
@@ -243,4 +274,32 @@ impl Entry {
     pub fn hll(value: HyperLogLog, expires_at: Option<u64>) -> Self {
         Self::new(EntryValue::Hll(value), expires_at)
     }
+}
+
+fn hash_map_equal<K, V>(left: &DtHashMap<K, V>, right: &DtHashMap<K, V>) -> bool
+where
+    K: Eq + fmt::Debug + Clone,
+    V: PartialEq + Clone,
+{
+    if left.size() != right.size() {
+        return false;
+    }
+    for (key, value) in left.entries() {
+        if right.get(&key) != Some(&value) {
+            return false;
+        }
+    }
+    true
+}
+
+fn hash_set_equal<T>(left: &DtHashSet<T>, right: &DtHashSet<T>) -> bool
+where
+    T: Eq + fmt::Debug + Clone,
+{
+    if left.size() != right.size() {
+        return false;
+    }
+    left.to_list()
+        .into_iter()
+        .all(|value| right.contains(&value))
 }

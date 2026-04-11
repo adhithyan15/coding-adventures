@@ -6,6 +6,10 @@ description = "Redis-compatible in-memory database server"
 license = "MIT"
 
 [dependencies]
+heap = { path = "../heap" }
+hash-map = { path = "../hash-map" }
+hash-set = { path = "../hash-set" }
 hyperloglog = { path = "../hyperloglog" }
 resp-protocol = { path = "../resp-protocol" }
+skip-list = { path = "../skip-list" }
 tcp-server = { path = "../tcp-server" }

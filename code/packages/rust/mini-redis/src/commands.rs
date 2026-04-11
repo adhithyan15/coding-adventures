@@ -1,5 +1,7 @@
-use std::collections::{BTreeMap, BTreeSet, VecDeque};
+use std::collections::VecDeque;
 
+use hash_map::HashMap as DtHashMap;
+use hash_set::HashSet as DtHashSet;
 use hyperloglog::HyperLogLog;
 use resp_protocol::{RespError, RespValue};
 
@@ -313,16 +315,16 @@ pub fn cmd_hset(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             EntryValue::Hash(map) => map.clone(),
             _ => return (store, wrong_type()),
         },
-        None => BTreeMap::new(),
+        None => DtHashMap::default(),
     };
     let mut added = 0i64;
     for pair in args[1..].chunks(2) {
         let field = pair[0].clone();
         let value = pair[1].clone();
-        if !map.contains_key(&field) {
+        if !map.has(&field) {
             added += 1;
         }
-        map.insert(field, value);
+        map = map.set(field, value);
     }
     let store = store.set(key, Entry::hash(map, expires_at));
     (store, integer(added))
@@ -359,11 +361,12 @@ pub fn cmd_hdel(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     };
     let mut removed = 0i64;
     for field in &args[1..] {
-        if map.remove(field).is_some() {
+        if map.has(field) {
             removed += 1;
+            map = map.delete(field);
         }
     }
-    if map.is_empty() {
+    if map.size() == 0 {
         store = store.delete(key);
     } else {
         store = store.set(key.clone(), Entry::hash(map, expires_at));
@@ -376,8 +379,10 @@ pub fn cmd_hgetall(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
         [key] => match store.get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::Hash(map) => {
-                    let mut out = Vec::with_capacity(map.len() * 2);
-                    for (field, value) in map {
+                    let mut entries = map.entries();
+                    entries.sort_by(|(left, _), (right, _)| left.cmp(right));
+                    let mut out = Vec::with_capacity(entries.len() * 2);
+                    for (field, value) in entries {
                         out.push(RespValue::BulkString(Some(field.clone())));
                         out.push(RespValue::BulkString(Some(value.clone())));
                     }
@@ -395,7 +400,7 @@ pub fn cmd_hlen(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     match args {
         [key] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
-                EntryValue::Hash(map) => (store, integer(map.len() as i64)),
+                EntryValue::Hash(map) => (store, integer(map.size() as i64)),
                 _ => (store, wrong_type()),
             },
             None => (store, integer(0)),
@@ -408,7 +413,7 @@ pub fn cmd_hexists(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     match args {
         [key, field] => match store.clone().get(key) {
             Some(entry) => match &entry.value {
-                EntryValue::Hash(map) => (store, integer(map.contains_key(field) as i64)),
+                EntryValue::Hash(map) => (store, integer(map.has(field) as i64)),
                 _ => (store, wrong_type()),
             },
             None => (store, integer(0)),
@@ -424,10 +429,14 @@ pub fn cmd_hkeys(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 EntryValue::Hash(map) => (
                     store,
                     RespValue::Array(Some(
-                        map.keys()
-                            .cloned()
-                            .map(|field| RespValue::BulkString(Some(field)))
-                            .collect(),
+                        {
+                            let mut keys = map.keys();
+                            keys.sort();
+                            keys
+                        }
+                        .into_iter()
+                        .map(|field| RespValue::BulkString(Some(field)))
+                        .collect(),
                     )),
                 ),
                 _ => (store, wrong_type()),
@@ -445,10 +454,14 @@ pub fn cmd_hvals(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 EntryValue::Hash(map) => (
                     store,
                     RespValue::Array(Some(
-                        map.values()
-                            .cloned()
-                            .map(|value| RespValue::BulkString(Some(value)))
-                            .collect(),
+                        {
+                            let mut entries = map.entries();
+                            entries.sort_by(|(left, _), (right, _)| left.cmp(right));
+                            entries
+                        }
+                        .into_iter()
+                        .map(|(_, value)| RespValue::BulkString(Some(value)))
+                        .collect(),
                     )),
                 ),
                 _ => (store, wrong_type()),
@@ -518,7 +531,12 @@ pub fn cmd_lpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             } else {
                 store = store.set(key.clone(), Entry::list(list, expires_at));
             }
-            (store, value.map_or(RespValue::BulkString(None), |v| RespValue::BulkString(Some(v))))
+            (
+                store,
+                value.map_or(RespValue::BulkString(None), |v| {
+                    RespValue::BulkString(Some(v))
+                }),
+            )
         }
         _ => (store, err("ERR wrong number of arguments for 'LPOP'")),
     }
@@ -541,7 +559,12 @@ pub fn cmd_rpop(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             } else {
                 store = store.set(key.clone(), Entry::list(list, expires_at));
             }
-            (store, value.map_or(RespValue::BulkString(None), |v| RespValue::BulkString(Some(v))))
+            (
+                store,
+                value.map_or(RespValue::BulkString(None), |v| {
+                    RespValue::BulkString(Some(v))
+                }),
+            )
         }
         _ => (store, err("ERR wrong number of arguments for 'RPOP'")),
     }
@@ -616,7 +639,9 @@ pub fn cmd_lindex(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                         let value = list.get(index as usize).cloned();
                         (
                             store,
-                            value.map_or(RespValue::BulkString(None), |v| RespValue::BulkString(Some(v))),
+                            value.map_or(RespValue::BulkString(None), |v| {
+                                RespValue::BulkString(Some(v))
+                            }),
                         )
                     }
                     _ => (store, wrong_type()),
@@ -639,13 +664,14 @@ pub fn cmd_sadd(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             EntryValue::Set(set) => set.clone(),
             _ => return (store, wrong_type()),
         },
-        None => BTreeSet::new(),
+        None => DtHashSet::new(),
     };
     let mut added = 0i64;
     for member in &args[1..] {
-        if set.insert(member.clone()) {
+        if !set.contains(member) {
             added += 1;
         }
+        set = set.add(member.clone());
     }
     let store = store.set(key, Entry::set(set, expires_at));
     (store, integer(added))
@@ -666,8 +692,9 @@ pub fn cmd_srem(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     };
     let mut removed = 0i64;
     for member in &args[1..] {
-        if set.remove(member) {
+        if set.contains(member) {
             removed += 1;
+            set = set.remove(member);
         }
     }
     if set.is_empty() {
@@ -698,10 +725,14 @@ pub fn cmd_smembers(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 EntryValue::Set(set) => (
                     store,
                     RespValue::Array(Some(
-                        set.iter()
-                            .cloned()
-                            .map(|member| RespValue::BulkString(Some(member)))
-                            .collect(),
+                        {
+                            let mut members = set.to_list();
+                            members.sort();
+                            members
+                        }
+                        .into_iter()
+                        .map(|member| RespValue::BulkString(Some(member)))
+                        .collect(),
                     )),
                 ),
                 _ => (store, wrong_type()),
@@ -729,21 +760,24 @@ pub fn cmd_sunion(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     if args.is_empty() {
         return (store, err("ERR wrong number of arguments for 'SUNION'"));
     }
-    let mut out = BTreeSet::new();
+    let mut out = DtHashSet::new();
     for key in args {
         if let Some(entry) = store.get(key) {
             match &entry.value {
                 EntryValue::Set(set) => {
-                    out.extend(set.iter().cloned());
+                    out = out.union(set.clone());
                 }
                 _ => return (store, wrong_type()),
             }
         }
     }
+    let mut members = out.to_list();
+    members.sort();
     (
         store,
         RespValue::Array(Some(
-            out.into_iter()
+            members
+                .into_iter()
                 .map(|member| RespValue::BulkString(Some(member)))
                 .collect(),
         )),
@@ -761,7 +795,7 @@ pub fn cmd_sinter(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             EntryValue::Set(set) => set.clone(),
             _ => return (store, wrong_type()),
         },
-        None => BTreeSet::new(),
+        None => DtHashSet::new(),
     };
     for key in iter {
         let set = match store.get(key) {
@@ -769,14 +803,17 @@ pub fn cmd_sinter(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 EntryValue::Set(set) => set.clone(),
                 _ => return (store, wrong_type()),
             },
-            None => BTreeSet::new(),
+            None => DtHashSet::new(),
         };
-        out = out.intersection(&set).cloned().collect();
+        out = out.intersection(set);
     }
+    let mut members = out.to_list();
+    members.sort();
     (
         store,
         RespValue::Array(Some(
-            out.into_iter()
+            members
+                .into_iter()
                 .map(|member| RespValue::BulkString(Some(member)))
                 .collect(),
         )),
@@ -794,7 +831,7 @@ pub fn cmd_sdiff(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             EntryValue::Set(set) => set.clone(),
             _ => return (store, wrong_type()),
         },
-        None => BTreeSet::new(),
+        None => DtHashSet::new(),
     };
     for key in iter {
         let set = match store.get(key) {
@@ -802,14 +839,17 @@ pub fn cmd_sdiff(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 EntryValue::Set(set) => set.clone(),
                 _ => return (store, wrong_type()),
             },
-            None => BTreeSet::new(),
+            None => DtHashSet::new(),
         };
-        out = out.difference(&set).cloned().collect();
+        out = out.difference(set);
     }
+    let mut members = out.to_list();
+    members.sort();
     (
         store,
         RespValue::Array(Some(
-            out.into_iter()
+            members
+                .into_iter()
                 .map(|member| RespValue::BulkString(Some(member)))
                 .collect(),
         )),
@@ -901,7 +941,10 @@ pub fn cmd_zrangebyscore(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
                 None => (store, RespValue::Array(Some(Vec::new()))),
             }
         }
-        _ => (store, err("ERR wrong number of arguments for 'ZRANGEBYSCORE'")),
+        _ => (
+            store,
+            err("ERR wrong number of arguments for 'ZRANGEBYSCORE'"),
+        ),
     }
 }
 
@@ -926,7 +969,10 @@ pub fn cmd_zscore(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
         [key, member] => match store.get(key) {
             Some(entry) => match &entry.value {
                 EntryValue::ZSet(zset) => match zset.score(member) {
-                    Some(score) => (store, RespValue::BulkString(Some(score.to_string().into_bytes()))),
+                    Some(score) => (
+                        store,
+                        RespValue::BulkString(Some(score.to_string().into_bytes())),
+                    ),
                     None => (store, RespValue::BulkString(None)),
                 },
                 _ => (store, wrong_type()),
@@ -1060,7 +1106,11 @@ pub fn cmd_expire(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
 pub fn cmd_expireat(store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
     match args {
         [key, timestamp] => match parse_i64(timestamp) {
-            Ok(timestamp) => set_expiration(store, key.clone(), expiration_from_seconds(timestamp - unix_now_s())),
+            Ok(timestamp) => set_expiration(
+                store,
+                key.clone(),
+                expiration_from_seconds(timestamp - unix_now_s()),
+            ),
             Err(err) => (store, err),
         },
         _ => (store, err("ERR wrong number of arguments for 'EXPIREAT'")),
@@ -1092,9 +1142,9 @@ pub fn cmd_persist(mut store: Store, args: &[Vec<u8>]) -> (Store, RespValue) {
             }
             let db_index = store.active_db;
             let mut db = store.current_db().clone();
-            if let Some(existing) = db.entries.get_mut(key) {
-                existing.expires_at = None;
-            }
+            let mut updated = entry;
+            updated.expires_at = None;
+            db = db.set(key.clone(), updated);
             store.databases[db_index] = db;
             (store, integer(1))
         }
@@ -1182,7 +1232,10 @@ fn adjust_integer(store: Store, key: Vec<u8>, delta: i64) -> (Store, RespValue) 
         Some(value) => value,
         None => return (store, err("ERR increment or decrement would overflow")),
     };
-    let store = store.set(key, Entry::string(new_value.to_string().into_bytes(), expires_at));
+    let store = store.set(
+        key,
+        Entry::string(new_value.to_string().into_bytes(), expires_at),
+    );
     (store, integer(new_value))
 }
 
@@ -1216,10 +1269,11 @@ fn set_expiration(mut store: Store, key: Vec<u8>, expires_at: u64) -> (Store, Re
     }
     let db_index = store.active_db;
     let mut db = store.current_db().clone();
-    if let Some(current) = db.entries.get_mut(&key) {
+    if let Some(mut current) = db.entries.get(&key).cloned() {
         current.expires_at = Some(expires_at);
+        db = db.set(key.clone(), current);
     }
-    db.ttl_heap.push(std::cmp::Reverse((expires_at, key)));
+    db.ttl_heap.push((expires_at, key));
     store.databases[db_index] = db;
     (store, integer(1))
 }
@@ -1243,25 +1297,37 @@ fn wrong_type() -> RespValue {
 fn parse_i64(bytes: &[u8]) -> Result<i64, RespValue> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not an integer or out of range"))
-        .and_then(|text| text.parse::<i64>().map_err(|_| err("ERR value is not an integer or out of range")))
+        .and_then(|text| {
+            text.parse::<i64>()
+                .map_err(|_| err("ERR value is not an integer or out of range"))
+        })
 }
 
 fn parse_isize(bytes: &[u8]) -> Result<isize, RespValue> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not an integer or out of range"))
-        .and_then(|text| text.parse::<isize>().map_err(|_| err("ERR value is not an integer or out of range")))
+        .and_then(|text| {
+            text.parse::<isize>()
+                .map_err(|_| err("ERR value is not an integer or out of range"))
+        })
 }
 
 fn parse_usize(bytes: &[u8]) -> Result<usize, RespValue> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not an integer or out of range"))
-        .and_then(|text| text.parse::<usize>().map_err(|_| err("ERR value is not an integer or out of range")))
+        .and_then(|text| {
+            text.parse::<usize>()
+                .map_err(|_| err("ERR value is not an integer or out of range"))
+        })
 }
 
 fn parse_f64(bytes: &[u8]) -> Result<f64, RespValue> {
     std::str::from_utf8(bytes)
         .map_err(|_| err("ERR value is not a valid float"))
-        .and_then(|text| text.parse::<f64>().map_err(|_| err("ERR value is not a valid float")))
+        .and_then(|text| {
+            text.parse::<f64>()
+                .map_err(|_| err("ERR value is not a valid float"))
+        })
 }
 
 fn unix_now_s() -> i64 {
@@ -1298,5 +1364,228 @@ pub fn bulk_string_bytes(value: &RespValue) -> Option<Vec<u8>> {
         RespValue::SimpleString(text) => Some(text.as_bytes().to_vec()),
         RespValue::Integer(n) => Some(n.to_string().into_bytes()),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn run(store: Store, command: &str, args: &[&[u8]]) -> (Store, RespValue) {
+        let mut parts = vec![command.as_bytes().to_vec()];
+        parts.extend(args.iter().map(|arg| arg.to_vec()));
+        dispatch(store, &parts)
+    }
+
+    fn bulk(value: &str) -> RespValue {
+        RespValue::BulkString(Some(value.as_bytes().to_vec()))
+    }
+
+    fn array(values: &[&str]) -> RespValue {
+        RespValue::Array(Some(values.iter().map(|value| bulk(value)).collect()))
+    }
+
+    #[test]
+    fn string_commands_cover_basic_lifecycle() {
+        let store = Store::empty();
+
+        let (store, resp) = run(store, "SET", &[b"greeting", b"hello"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "GET", &[b"greeting"]);
+        assert_eq!(resp, bulk("hello"));
+
+        let (store, resp) = run(store, "SET", &[b"greeting", b"world", b"NX"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+
+        let (store, resp) = run(store, "SET", &[b"greeting", b"world", b"XX"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "GET", &[b"greeting"]);
+        assert_eq!(resp, bulk("world"));
+
+        let (store, resp) = run(store, "SET", &[b"user:2", b"two"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "SET", &[b"user:1", b"one"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "KEYS", &[b"user:*"]);
+        assert_eq!(resp, array(&["user:1", "user:2"]));
+
+        let (store, resp) = run(store, "EXISTS", &[b"greeting", b"missing"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "DEL", &[b"greeting"]);
+        assert_eq!(resp, integer(1));
+
+        let (_, resp) = run(store, "GET", &[b"greeting"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+    }
+
+    #[test]
+    fn hash_commands_are_backed_by_internal_map() {
+        let store = Store::empty();
+
+        let (store, resp) = run(
+            store,
+            "HSET",
+            &[b"hash", b"b", b"2", b"a", b"1", b"c", b"3"],
+        );
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "HGET", &[b"hash", b"a"]);
+        assert_eq!(resp, bulk("1"));
+
+        let (store, resp) = run(store, "HLEN", &[b"hash"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "HEXISTS", &[b"hash", b"z"]);
+        assert_eq!(resp, integer(0));
+
+        let (store, resp) = run(store, "HKEYS", &[b"hash"]);
+        assert_eq!(resp, array(&["a", "b", "c"]));
+
+        let (store, resp) = run(store, "HVALS", &[b"hash"]);
+        assert_eq!(resp, array(&["1", "2", "3"]));
+
+        let (store, resp) = run(store, "HGETALL", &[b"hash"]);
+        assert_eq!(
+            resp,
+            RespValue::Array(Some(vec![
+                bulk("a"),
+                bulk("1"),
+                bulk("b"),
+                bulk("2"),
+                bulk("c"),
+                bulk("3"),
+            ]))
+        );
+
+        let (store, resp) = run(store, "HDEL", &[b"hash", b"b", b"c"]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store, "HGETALL", &[b"hash"]);
+        assert_eq!(resp, RespValue::Array(Some(vec![bulk("a"), bulk("1")])));
+    }
+
+    #[test]
+    fn set_commands_are_backed_by_internal_set() {
+        let store = Store::empty();
+
+        let (store, resp) = run(store, "SADD", &[b"alpha", b"a", b"b", b"c"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "SADD", &[b"beta", b"b", b"c", b"d"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "SMEMBERS", &[b"alpha"]);
+        assert_eq!(resp, array(&["a", "b", "c"]));
+
+        let (store, resp) = run(store, "SISMEMBER", &[b"alpha", b"a"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "SREM", &[b"alpha", b"b", b"c"]);
+        assert_eq!(resp, integer(2));
+
+        let (store, resp) = run(store, "SMEMBERS", &[b"alpha"]);
+        assert_eq!(resp, array(&["a"]));
+
+        let (_, resp) = run(store.clone(), "SUNION", &[b"alpha", b"beta"]);
+        assert_eq!(resp, array(&["a", "b", "c", "d"]));
+
+        let (_, resp) = run(store.clone(), "SINTER", &[b"alpha", b"beta"]);
+        assert_eq!(resp, RespValue::Array(Some(Vec::new())));
+
+        let (_, resp) = run(store, "SDIFF", &[b"alpha", b"beta"]);
+        assert_eq!(resp, array(&["a"]));
+    }
+
+    #[test]
+    fn sorted_set_commands_cover_rank_and_range() {
+        let store = Store::empty();
+
+        let (store, resp) = run(
+            store,
+            "ZADD",
+            &[b"scores", b"2", b"b", b"1", b"a", b"3", b"c"],
+        );
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "ZRANGE", &[b"scores", b"0", b"-1"]);
+        assert_eq!(resp, array(&["a", "b", "c"]));
+
+        let (store, resp) = run(store, "ZRANGEBYSCORE", &[b"scores", b"1", b"2"]);
+        assert_eq!(resp, array(&["a", "b"]));
+
+        let (store, resp) = run(store, "ZRANK", &[b"scores", b"b"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "ZSCORE", &[b"scores", b"c"]);
+        assert_eq!(resp, bulk("3"));
+
+        let (store, resp) = run(store, "ZREM", &[b"scores", b"b", b"c"]);
+        assert_eq!(resp, integer(2));
+
+        let (_, resp) = run(store, "ZCARD", &[b"scores"]);
+        assert_eq!(resp, integer(1));
+    }
+
+    #[test]
+    fn ttl_commands_manage_expiration_state() {
+        let store = Store::empty();
+
+        let (store, resp) = run(store, "SET", &[b"session", b"value"]);
+        assert_eq!(resp, ok());
+
+        let (store, resp) = run(store, "EXPIRE", &[b"session", b"10"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "TTL", &[b"session"]);
+        match resp {
+            RespValue::Integer(seconds) => assert!((0..=10).contains(&seconds)),
+            other => panic!("unexpected TTL response: {other:?}"),
+        }
+
+        let (store, resp) = run(store, "PTTL", &[b"session"]);
+        match resp {
+            RespValue::Integer(millis) => assert!((1..=10_000).contains(&millis)),
+            other => panic!("unexpected PTTL response: {other:?}"),
+        }
+
+        let (store, resp) = run(store, "PERSIST", &[b"session"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "TTL", &[b"session"]);
+        assert_eq!(resp, integer(-1));
+
+        let (store, resp) = run(store, "EXPIRE", &[b"session", b"0"]);
+        assert_eq!(resp, integer(1));
+
+        let (_, resp) = run(store, "GET", &[b"session"]);
+        assert_eq!(resp, RespValue::BulkString(None));
+    }
+
+    #[test]
+    fn hyperloglog_commands_approximate_cardinality_and_merge() {
+        let store = Store::empty();
+
+        let (store, resp) = run(store, "PFADD", &[b"visitors", b"a", b"b", b"c"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "PFADD", &[b"visitors", b"a", b"b"]);
+        assert_eq!(resp, integer(0));
+
+        let (store, resp) = run(store, "PFCOUNT", &[b"visitors"]);
+        assert_eq!(resp, integer(3));
+
+        let (store, resp) = run(store, "PFADD", &[b"other", b"c", b"d"]);
+        assert_eq!(resp, integer(1));
+
+        let (store, resp) = run(store, "PFMERGE", &[b"merged", b"visitors", b"other"]);
+        assert_eq!(resp, ok());
+
+        let (_, resp) = run(store, "PFCOUNT", &[b"merged"]);
+        assert_eq!(resp, integer(4));
     }
 }

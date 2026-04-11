@@ -1,5 +1,5 @@
-use core::cmp::Reverse;
-use std::collections::{BTreeMap, BinaryHeap};
+use hash_map::HashMap as DtHashMap;
+use heap::MinHeap;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::types::{Entry, EntryType};
@@ -15,13 +15,13 @@ pub fn current_time_ms() -> u64 {
 
 #[derive(Clone, Debug)]
 pub struct Database {
-    pub entries: BTreeMap<Vec<u8>, Entry>,
-    pub ttl_heap: BinaryHeap<Reverse<(u64, Vec<u8>)>>,
+    pub entries: DtHashMap<Vec<u8>, Entry>,
+    pub ttl_heap: MinHeap<(u64, Vec<u8>)>,
 }
 
 impl PartialEq for Database {
     fn eq(&self, other: &Self) -> bool {
-        self.entries == other.entries
+        database_entries_equal(&self.entries, &other.entries)
     }
 }
 
@@ -30,15 +30,18 @@ impl Eq for Database {}
 impl Database {
     pub fn empty() -> Self {
         Self {
-            entries: BTreeMap::new(),
-            ttl_heap: BinaryHeap::new(),
+            entries: DtHashMap::default(),
+            ttl_heap: MinHeap::new(),
         }
     }
 
     pub fn get(&self, key: impl AsRef<[u8]>) -> Option<&Entry> {
-        let key = key.as_ref();
-        let entry = self.entries.get(key)?;
-        if entry.expires_at.is_some_and(|expires_at| current_time_ms() >= expires_at) {
+        let key = key.as_ref().to_vec();
+        let entry = self.entries.get(&key)?;
+        if entry
+            .expires_at
+            .is_some_and(|expires_at| current_time_ms() >= expires_at)
+        {
             return None;
         }
         Some(entry)
@@ -47,14 +50,15 @@ impl Database {
     pub fn set(mut self, key: impl Into<Vec<u8>>, entry: Entry) -> Self {
         let key = key.into();
         if let Some(expires_at) = entry.expires_at {
-            self.ttl_heap.push(Reverse((expires_at, key.clone())));
+            self.ttl_heap.push((expires_at, key.clone()));
         }
-        self.entries.insert(key, entry);
+        self.entries = self.entries.set(key, entry);
         self
     }
 
     pub fn delete(mut self, key: impl AsRef<[u8]>) -> Self {
-        self.entries.remove(key.as_ref());
+        let key = key.as_ref().to_vec();
+        self.entries = self.entries.delete(&key);
         self
     }
 
@@ -68,16 +72,20 @@ impl Database {
 
     pub fn keys(&self, pattern: impl AsRef<[u8]>) -> Vec<Vec<u8>> {
         let pattern = pattern.as_ref();
-        self.entries
+        let mut keys = self
+            .entries
             .keys()
+            .into_iter()
             .filter(|key| glob_match(pattern, key))
-            .cloned()
-            .collect()
+            .collect::<Vec<_>>();
+        keys.sort();
+        keys
     }
 
     pub fn dbsize(&self) -> usize {
         self.entries
             .keys()
+            .into_iter()
             .filter(|key| self.get(key.as_slice()).is_some())
             .count()
     }
@@ -86,21 +94,21 @@ impl Database {
         let Some(key) = key else {
             return self;
         };
-        let key = key.as_ref();
+        let key = key.as_ref().to_vec();
         let expired = self
             .entries
-            .get(key)
+            .get(&key)
             .and_then(|entry| entry.expires_at)
             .is_some_and(|expires_at| current_time_ms() >= expires_at);
         if expired {
-            self.entries.remove(key);
+            self.entries = self.entries.delete(&key);
         }
         self
     }
 
     pub fn active_expire(mut self) -> Self {
         let now = current_time_ms();
-        while let Some(Reverse((expires_at, key))) = self.ttl_heap.peek().cloned() {
+        while let Some((expires_at, key)) = self.ttl_heap.peek().cloned() {
             if expires_at > now {
                 break;
             }
@@ -111,15 +119,15 @@ impl Database {
                 .and_then(|entry| entry.expires_at)
                 .is_some_and(|current| current == expires_at);
             if should_delete {
-                self.entries.remove(&key);
+                self.entries = self.entries.delete(&key);
             }
         }
         self
     }
 
     pub fn clear(mut self) -> Self {
-        self.entries.clear();
-        self.ttl_heap.clear();
+        self.entries = DtHashMap::default();
+        self.ttl_heap = MinHeap::new();
         self
     }
 }
@@ -232,6 +240,21 @@ fn glob_match(pattern: &[u8], text: &[u8]) -> bool {
     glob_match_inner(pattern, text)
 }
 
+fn database_entries_equal(
+    left: &DtHashMap<Vec<u8>, Entry>,
+    right: &DtHashMap<Vec<u8>, Entry>,
+) -> bool {
+    if left.size() != right.size() {
+        return false;
+    }
+    for (key, value) in left.entries() {
+        if right.get(&key) != Some(&value) {
+            return false;
+        }
+    }
+    true
+}
+
 fn glob_match_inner(pattern: &[u8], text: &[u8]) -> bool {
     if pattern.is_empty() {
         return text.is_empty();
@@ -255,7 +278,9 @@ fn glob_match_inner(pattern: &[u8], text: &[u8]) -> bool {
                     false
                 }
             } else {
-                !text.is_empty() && pattern[0] == text[0] && glob_match_inner(&pattern[1..], &text[1..])
+                !text.is_empty()
+                    && pattern[0] == text[0]
+                    && glob_match_inner(&pattern[1..], &text[1..])
             }
         }
         byte => !text.is_empty() && byte == text[0] && glob_match_inner(&pattern[1..], &text[1..]),
