@@ -135,21 +135,21 @@ describe("validation", function()
   it("zero iterations raises error", function()
     assert.has_error(
       function() pbkdf2.pbkdf2_hmac_sha256("pw", "salt", 0, 32) end,
-      "PBKDF2 iterations must be a positive integer"
+      "PBKDF2 iterations must be a positive integer (max 2^31)"
     )
   end)
 
   it("negative iterations raises error", function()
     assert.has_error(
       function() pbkdf2.pbkdf2_hmac_sha256("pw", "salt", -1, 32) end,
-      "PBKDF2 iterations must be a positive integer"
+      "PBKDF2 iterations must be a positive integer (max 2^31)"
     )
   end)
 
   it("zero key_length raises error", function()
     assert.has_error(
       function() pbkdf2.pbkdf2_hmac_sha256("pw", "salt", 1, 0) end,
-      "PBKDF2 key_length must be a positive integer"
+      "PBKDF2 key_length must be a positive integer (max 2^20)"
     )
   end)
 
