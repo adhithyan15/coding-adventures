@@ -1,0 +1,11 @@
+[package]
+name = "mini-redis"
+version = "0.1.0"
+edition = "2021"
+description = "Redis-compatible in-memory database server"
+license = "MIT"
+
+[dependencies]
+hyperloglog = { path = "../hyperloglog" }
+resp-protocol = { path = "../resp-protocol" }
+tcp-server = { path = "../tcp-server" }
