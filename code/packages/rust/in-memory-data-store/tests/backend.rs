@@ -1,11 +1,11 @@
-use mini_redis::{MiniRedisEngine, RedisBackend};
+use in_memory_data_store::{DataStoreBackend, DataStoreEngine};
 use resp_protocol::RespValue;
 
-struct BackendClient<B: RedisBackend> {
+struct BackendClient<B: DataStoreBackend> {
     backend: B,
 }
 
-impl<B: RedisBackend> BackendClient<B> {
+impl<B: DataStoreBackend> BackendClient<B> {
     fn new(backend: B) -> Self {
         Self { backend }
     }
@@ -71,7 +71,7 @@ fn assert_error_contains(value: RespValue, needle: &str) {
 
 #[test]
 fn backend_executes_string_hash_set_and_sorted_set_commands() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call(&[b"PING".as_ref()]), simple("PONG"));
     assert_eq!(app.call_strs("SET", &["alpha", "1"]), simple("OK"));
@@ -95,7 +95,7 @@ fn backend_executes_string_hash_set_and_sorted_set_commands() {
 
 #[test]
 fn backend_tracks_databases_ttls_and_hlls_without_tcp() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call_strs("SET", &["db:key", "value"]), simple("OK"));
     assert_eq!(app.call_strs("DBSIZE", &[]), integer(1));
@@ -113,7 +113,7 @@ fn backend_tracks_databases_ttls_and_hlls_without_tcp() {
 
 #[test]
 fn upstream_string_cases_cover_basic_lifecycle_and_conditionals() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call_strs("SET", &["x", "foobar"]), simple("OK"));
     assert_eq!(app.call_strs("GET", &["x"]), bulk("foobar"));
@@ -143,7 +143,7 @@ fn upstream_string_cases_cover_basic_lifecycle_and_conditionals() {
 
 #[test]
 fn upstream_hash_cases_cover_fields_keys_values_and_deletes() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(
         app.call_strs("HSET", &["hash", "a", "1", "b", "2", "c", "3"]),
@@ -172,7 +172,7 @@ fn upstream_hash_cases_cover_fields_keys_values_and_deletes() {
 
 #[test]
 fn upstream_set_cases_cover_membership_cardinality_and_errors() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call_strs("SADD", &["set", "foo", "bar"]), integer(2));
     assert_eq!(app.call_strs("SADD", &["set", "foo"]), integer(0));
@@ -189,7 +189,7 @@ fn upstream_set_cases_cover_membership_cardinality_and_errors() {
 
 #[test]
 fn upstream_sorted_set_cases_cover_ordering_scores_and_deletes() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(
         app.call_strs("ZADD", &["scores", "10", "x", "20", "y", "30", "z"]),
@@ -213,7 +213,7 @@ fn upstream_sorted_set_cases_cover_ordering_scores_and_deletes() {
 
 #[test]
 fn upstream_expire_and_persist_cases_cover_immediate_and_absolute_expiry() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call_strs("SET", &["ttl", "value"]), simple("OK"));
     assert_eq!(app.call_strs("TTL", &["ttl"]), integer(-1));
@@ -234,7 +234,7 @@ fn upstream_expire_and_persist_cases_cover_immediate_and_absolute_expiry() {
 
 #[test]
 fn upstream_hyperloglog_cases_cover_cardinality_and_merge() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     assert_eq!(app.call_strs("PFADD", &["hll", "a", "b", "c"]), integer(1));
     assert_eq!(app.call_strs("PFADD", &["hll", "a", "b", "c"]), integer(0));
@@ -247,7 +247,7 @@ fn upstream_hyperloglog_cases_cover_cardinality_and_merge() {
 
 #[test]
 fn upstream_keyspace_cases_cover_keys_dbsize_exists_and_flush() {
-    let app = BackendClient::new(MiniRedisEngine::new(None).expect("failed to create backend"));
+    let app = BackendClient::new(DataStoreEngine::new(None).expect("failed to create backend"));
 
     for key in ["key_x", "key_y", "key_z", "foo_a", "foo_b", "foo_c"] {
         assert_eq!(app.call_strs("SET", &[key, "hello"]), simple("OK"));

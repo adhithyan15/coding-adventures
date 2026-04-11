@@ -1,15 +1,15 @@
-# mini-redis
+# in-memory-data-store
 
-Rust port of DT25 Mini-Redis.
+Composable in-memory data store server in Rust.
 
-This crate is the single-node Redis baseline for the DT series:
+This crate is the current single-node baseline for the DT series:
 
 - RESP2/TCP server
 - in-memory strings, hashes, lists, sets, sorted sets, and HyperLogLog
 - TTLs, database selection, flushing, key inspection, and AOF replay
 - designed to lean on the repo's own packages where possible
 
-What is still missing from real Redis:
+What is still missing from a broader in-memory data platform:
 
 - transactions: `MULTI`, `EXEC`, `WATCH`, `UNWATCH`
 - blocking list operations

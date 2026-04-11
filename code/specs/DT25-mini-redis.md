@@ -1,18 +1,20 @@
-# DT25 — Mini-Redis
+# DT25 — In-Memory Data Store
 
 ## Overview
 
-Mini-Redis is the culmination of the entire DT series. Every data structure
-from DT00 through DT24 comes together in one working system: a Redis-compatible
-in-memory database server that speaks the real Redis wire protocol.
+The in-memory data store is the culmination of the entire DT series. Every
+data structure from DT00 through DT24 comes together in one working system: a
+Redis-compatible in-memory database server that speaks the real Redis wire
+protocol.
 
 The first target is a **single-node** Redis baseline. That means the core
 priority is to get the protocol, command semantics, and in-memory data
 structures right using our own packages where possible. We can layer on the
 distributed Redis features later once the single-node behavior is stable.
 
-When you point `redis-cli` at mini-redis and type `SET foo bar`, then `GET foo`,
-and get back `"bar"` — every layer we have built is doing its job:
+When you point `redis-cli` at the in-memory data store and type `SET foo bar`,
+then `GET foo`, and get back `"bar"` - every layer we have built is doing its
+job:
 
 ```
 redis-cli ──► TCP connection (DT24) ──► RESP parser (DT23)
@@ -67,7 +69,7 @@ DT22: bloom-filter    ─┘   (optional: pre-filter key existence)
 DT23: resp-protocol   ─── wire format encode/decode
 DT24: tcp-server      ─── network I/O layer
 
-DT25: mini-redis      ← [YOU ARE HERE]
+DT25: in-memory data store ← [YOU ARE HERE]
                          Single-node Redis baseline built from the DT stack
 ```
 

@@ -5,80 +5,84 @@ use hash_set::HashSet as DtHashSet;
 use hyperloglog::HyperLogLog;
 use resp_protocol::{RespError, RespValue};
 
+use crate::engine_core::DataStoreEngine;
 use crate::store::{current_time_ms, Store};
 use crate::types::{Entry, EntryValue, SortedSet};
+
+macro_rules! register {
+    ($engine:expr, $name:literal, $mutating:expr, $skip_lazy_expire:expr, $handler:ident) => {
+        $engine.register_command($name, $mutating, $skip_lazy_expire, $handler);
+    };
+}
+
+pub fn register_builtin_commands(engine: &DataStoreEngine) {
+    register!(engine, "PING", false, true, cmd_ping);
+    register!(engine, "ECHO", false, true, cmd_echo);
+    register!(engine, "SET", true, false, cmd_set);
+    register!(engine, "GET", false, false, cmd_get);
+    register!(engine, "DEL", true, false, cmd_del);
+    register!(engine, "EXISTS", false, false, cmd_exists);
+    register!(engine, "TYPE", false, false, cmd_type);
+    register!(engine, "RENAME", true, false, cmd_rename);
+    register!(engine, "INCR", true, false, cmd_incr);
+    register!(engine, "DECR", true, false, cmd_decr);
+    register!(engine, "INCRBY", true, false, cmd_incrby);
+    register!(engine, "DECRBY", true, false, cmd_decrby);
+    register!(engine, "APPEND", true, false, cmd_append);
+    register!(engine, "HSET", true, false, cmd_hset);
+    register!(engine, "HGET", false, false, cmd_hget);
+    register!(engine, "HDEL", true, false, cmd_hdel);
+    register!(engine, "HGETALL", false, false, cmd_hgetall);
+    register!(engine, "HLEN", false, false, cmd_hlen);
+    register!(engine, "HEXISTS", false, false, cmd_hexists);
+    register!(engine, "HKEYS", false, false, cmd_hkeys);
+    register!(engine, "HVALS", false, false, cmd_hvals);
+    register!(engine, "LPUSH", true, false, cmd_lpush);
+    register!(engine, "RPUSH", true, false, cmd_rpush);
+    register!(engine, "LPOP", true, false, cmd_lpop);
+    register!(engine, "RPOP", true, false, cmd_rpop);
+    register!(engine, "LLEN", false, false, cmd_llen);
+    register!(engine, "LRANGE", false, false, cmd_lrange);
+    register!(engine, "LINDEX", false, false, cmd_lindex);
+    register!(engine, "SADD", true, false, cmd_sadd);
+    register!(engine, "SREM", true, false, cmd_srem);
+    register!(engine, "SISMEMBER", false, false, cmd_sismember);
+    register!(engine, "SMEMBERS", false, false, cmd_smembers);
+    register!(engine, "SCARD", false, false, cmd_scard);
+    register!(engine, "SUNION", false, false, cmd_sunion);
+    register!(engine, "SINTER", false, false, cmd_sinter);
+    register!(engine, "SDIFF", false, false, cmd_sdiff);
+    register!(engine, "ZADD", true, false, cmd_zadd);
+    register!(engine, "ZRANGE", false, false, cmd_zrange);
+    register!(engine, "ZRANGEBYSCORE", false, false, cmd_zrangebyscore);
+    register!(engine, "ZRANK", false, false, cmd_zrank);
+    register!(engine, "ZSCORE", false, false, cmd_zscore);
+    register!(engine, "ZCARD", false, false, cmd_zcard);
+    register!(engine, "ZREM", true, false, cmd_zrem);
+    register!(engine, "PFADD", true, false, cmd_pfadd);
+    register!(engine, "PFCOUNT", false, false, cmd_pfcount);
+    register!(engine, "PFMERGE", true, false, cmd_pfmerge);
+    register!(engine, "EXPIRE", true, false, cmd_expire);
+    register!(engine, "EXPIREAT", true, false, cmd_expireat);
+    register!(engine, "TTL", false, false, cmd_ttl);
+    register!(engine, "PTTL", false, false, cmd_pttl);
+    register!(engine, "PERSIST", true, false, cmd_persist);
+    register!(engine, "SELECT", true, true, cmd_select);
+    register!(engine, "FLUSHDB", true, true, cmd_flushdb);
+    register!(engine, "FLUSHALL", true, true, cmd_flushall);
+    register!(engine, "DBSIZE", false, true, cmd_dbsize);
+    register!(engine, "INFO", false, true, cmd_info);
+    register!(engine, "KEYS", false, false, cmd_keys);
+}
 
 pub fn dispatch(store: Store, parts: &[Vec<u8>]) -> (Store, RespValue) {
     if parts.is_empty() {
         return (store, err("ERR empty command"));
     }
 
-    let command = ascii_upper(&parts[0]);
-    let store = match command.as_str() {
-        "SELECT" | "INFO" | "PING" | "ECHO" | "DBSIZE" | "FLUSHDB" | "FLUSHALL" => store,
-        _ => store.expire_lazy(parts.get(1).map(|bytes| bytes.as_slice())),
-    };
-
-    match command.as_str() {
-        "PING" => cmd_ping(store, &parts[1..]),
-        "ECHO" => cmd_echo(store, &parts[1..]),
-        "SET" => cmd_set(store, &parts[1..]),
-        "GET" => cmd_get(store, &parts[1..]),
-        "DEL" => cmd_del(store, &parts[1..]),
-        "EXISTS" => cmd_exists(store, &parts[1..]),
-        "TYPE" => cmd_type(store, &parts[1..]),
-        "RENAME" => cmd_rename(store, &parts[1..]),
-        "INCR" => cmd_incr(store, &parts[1..]),
-        "DECR" => cmd_decr(store, &parts[1..]),
-        "INCRBY" => cmd_incrby(store, &parts[1..]),
-        "DECRBY" => cmd_decrby(store, &parts[1..]),
-        "APPEND" => cmd_append(store, &parts[1..]),
-        "HSET" => cmd_hset(store, &parts[1..]),
-        "HGET" => cmd_hget(store, &parts[1..]),
-        "HDEL" => cmd_hdel(store, &parts[1..]),
-        "HGETALL" => cmd_hgetall(store, &parts[1..]),
-        "HLEN" => cmd_hlen(store, &parts[1..]),
-        "HEXISTS" => cmd_hexists(store, &parts[1..]),
-        "HKEYS" => cmd_hkeys(store, &parts[1..]),
-        "HVALS" => cmd_hvals(store, &parts[1..]),
-        "LPUSH" => cmd_lpush(store, &parts[1..]),
-        "RPUSH" => cmd_rpush(store, &parts[1..]),
-        "LPOP" => cmd_lpop(store, &parts[1..]),
-        "RPOP" => cmd_rpop(store, &parts[1..]),
-        "LLEN" => cmd_llen(store, &parts[1..]),
-        "LRANGE" => cmd_lrange(store, &parts[1..]),
-        "LINDEX" => cmd_lindex(store, &parts[1..]),
-        "SADD" => cmd_sadd(store, &parts[1..]),
-        "SREM" => cmd_srem(store, &parts[1..]),
-        "SISMEMBER" => cmd_sismember(store, &parts[1..]),
-        "SMEMBERS" => cmd_smembers(store, &parts[1..]),
-        "SCARD" => cmd_scard(store, &parts[1..]),
-        "SUNION" => cmd_sunion(store, &parts[1..]),
-        "SINTER" => cmd_sinter(store, &parts[1..]),
-        "SDIFF" => cmd_sdiff(store, &parts[1..]),
-        "ZADD" => cmd_zadd(store, &parts[1..]),
-        "ZRANGE" => cmd_zrange(store, &parts[1..]),
-        "ZRANGEBYSCORE" => cmd_zrangebyscore(store, &parts[1..]),
-        "ZRANK" => cmd_zrank(store, &parts[1..]),
-        "ZSCORE" => cmd_zscore(store, &parts[1..]),
-        "ZCARD" => cmd_zcard(store, &parts[1..]),
-        "ZREM" => cmd_zrem(store, &parts[1..]),
-        "PFADD" => cmd_pfadd(store, &parts[1..]),
-        "PFCOUNT" => cmd_pfcount(store, &parts[1..]),
-        "PFMERGE" => cmd_pfmerge(store, &parts[1..]),
-        "EXPIRE" => cmd_expire(store, &parts[1..]),
-        "EXPIREAT" => cmd_expireat(store, &parts[1..]),
-        "TTL" => cmd_ttl(store, &parts[1..]),
-        "PTTL" => cmd_pttl(store, &parts[1..]),
-        "PERSIST" => cmd_persist(store, &parts[1..]),
-        "SELECT" => cmd_select(store, &parts[1..]),
-        "FLUSHDB" => cmd_flushdb(store, &parts[1..]),
-        "FLUSHALL" => cmd_flushall(store, &parts[1..]),
-        "DBSIZE" => cmd_dbsize(store, &parts[1..]),
-        "INFO" => cmd_info(store, &parts[1..]),
-        "KEYS" => cmd_keys(store, &parts[1..]),
-        _ => (store, err(format!("ERR unknown command '{}'", command))),
-    }
+    let engine = DataStoreEngine::from_store(store);
+    let response = engine.execute_parts(parts);
+    (engine.store(), response)
 }
 
 pub fn is_mutating(parts: &[Vec<u8>]) -> bool {
