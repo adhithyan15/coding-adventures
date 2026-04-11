@@ -302,29 +302,48 @@ impl Drop for TcpServer {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io;
     use std::net::TcpStream;
     use std::thread;
+    use std::time::Instant;
 
-    fn send_recv(port: u16, data: &[u8]) -> Vec<u8> {
+    fn send_recv(port: u16, data: &[u8], read_timeout: std::time::Duration) -> io::Result<Vec<u8>> {
         let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
         stream.write_all(data).expect("write");
-        stream
-            .set_read_timeout(Some(Duration::from_secs(2)))
-            .expect("timeout");
+        stream.set_read_timeout(Some(read_timeout)).expect("timeout");
         let mut buf = vec![0u8; 4096];
-        let n = stream.read(&mut buf).expect("read");
+        let n = stream.read(&mut buf)?;
         buf.truncate(n);
-        buf
+        Ok(buf)
+    }
+
+    fn wait_until_ready(port: u16, request: &[u8], expected_response: &[u8]) {
+        let deadline = Instant::now() + Duration::from_secs(5);
+        loop {
+            if let Ok(response) = send_recv(port, request, Duration::from_millis(100)) {
+                if response == expected_response {
+                    return;
+                }
+            }
+
+            if Instant::now() >= deadline {
+                panic!("server never became ready");
+            }
+
+            thread::sleep(Duration::from_millis(10));
+        }
     }
 
     #[test]
     fn echo_server_round_trips() {
-        let server = TcpServer::new("127.0.0.1", 16_380);
+        let server = TcpServer::new("127.0.0.1", 0);
+        server.start().expect("start");
+        let port = server.try_address().expect("address").port();
         let runner = server.clone();
         let handle = thread::spawn(move || runner.serve_forever().unwrap());
-        thread::sleep(Duration::from_millis(50));
+        wait_until_ready(port, b"ready", b"ready");
 
-        let response = send_recv(16_380, b"hello");
+        let response = send_recv(port, b"hello", Duration::from_secs(2)).expect("read");
         assert_eq!(response, b"hello");
 
         server.stop();
@@ -333,14 +352,16 @@ mod tests {
 
     #[test]
     fn custom_handler_can_transform_bytes() {
-        let server = TcpServer::with_handler("127.0.0.1", 16_381, |_, data| {
+        let server = TcpServer::with_handler("127.0.0.1", 0, |_, data| {
             data.iter().map(|byte| byte.to_ascii_uppercase()).collect()
         });
+        server.start().expect("start");
+        let port = server.try_address().expect("address").port();
         let runner = server.clone();
         let handle = thread::spawn(move || runner.serve_forever().unwrap());
-        thread::sleep(Duration::from_millis(50));
+        wait_until_ready(port, b"ready", b"READY");
 
-        let response = send_recv(16_381, b"hello");
+        let response = send_recv(port, b"hello", Duration::from_secs(2)).expect("read");
         assert_eq!(response, b"HELLO");
 
         server.stop();
@@ -349,17 +370,19 @@ mod tests {
 
     #[test]
     fn stateful_handler_can_use_connection_buffer() {
-        let server = TcpServer::with_handler("127.0.0.1", 16_382, |conn, data| {
+        let server = TcpServer::with_handler("127.0.0.1", 0, |conn, data| {
             conn.read_buffer.extend_from_slice(data);
             let response = conn.read_buffer.clone();
             conn.read_buffer.clear();
             response
         });
+        server.start().expect("start");
+        let port = server.try_address().expect("address").port();
         let runner = server.clone();
         let handle = thread::spawn(move || runner.serve_forever().unwrap());
-        thread::sleep(Duration::from_millis(50));
+        wait_until_ready(port, b"ready", b"ready");
 
-        let response = send_recv(16_382, b"buffer");
+        let response = send_recv(port, b"buffer", Duration::from_secs(2)).expect("read");
         assert_eq!(response, b"buffer");
 
         server.stop();
