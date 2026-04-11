@@ -8,6 +8,7 @@ Weighted undirected graph for Rust with both adjacency-list and adjacency-matrix
 - Weighted undirected edges, including self-loops
 - `bfs`, `dfs`, `is_connected`, `connected_components`, `has_cycle`
 - `shortest_path` and `minimum_spanning_tree`
+- `TraversalGraph` for reusing BFS/DFS helpers from other graph-shaped crates
 
 ## Usage
 
