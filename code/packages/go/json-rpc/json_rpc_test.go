@@ -561,7 +561,7 @@ func TestServer_DispatchesRequestToHandler(t *testing.T) {
 	server.Serve()
 
 	response := readResponse(out)
-	if response["id"] != 1 {
+	if response["id"] != float64(1) {
 		t.Errorf("id: got %v", response["id"])
 	}
 	if response["result"] != float64(3) {
@@ -686,7 +686,7 @@ func TestServer_NullResultIsValid(t *testing.T) {
 	server.Serve()
 
 	response := readResponse(out)
-	if response["id"] != 1 {
+	if response["id"] != float64(1) {
 		t.Errorf("id: got %v", response["id"])
 	}
 	// result key should be present (with null value)
