@@ -1,2 +1,2 @@
-npm test -- --runInBand
-
+npm install --silent --no-package-lock
+npm test
