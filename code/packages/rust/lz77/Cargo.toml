@@ -1,0 +1,7 @@
+[package]
+name = "lz77"
+version = "0.1.0"
+edition = "2021"
+description = "LZ77 lossless compression algorithm (1977) from scratch — CMP00"
+
+[dependencies]
