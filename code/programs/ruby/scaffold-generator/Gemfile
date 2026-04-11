@@ -14,8 +14,10 @@ gem "coding_adventures_cli_builder", path: "../../../packages/ruby/cli_builder"
 # Transitive dependencies of CLI Builder
 # ---------------------------------------------------------------------------
 # CLI Builder depends on state_machine, which depends on directed_graph.
-# Bundler needs local path references for both so it can resolve the full
-# dependency graph without hitting RubyGems.
+# directed_graph depends on graph, so Bundler needs local path references for
+# all three gems so it can resolve the full dependency graph without hitting
+# RubyGems.
+gem "coding_adventures_graph", path: "../../../packages/ruby/graph"
 gem "coding_adventures_state_machine", path: "../../../packages/ruby/state_machine"
 gem "coding_adventures_directed_graph", path: "../../../packages/ruby/directed_graph"
 

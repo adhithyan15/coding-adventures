@@ -10,6 +10,7 @@ members = [
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
+    "tree-set",
     "treap",
     "binary-tree",
     "b-tree",
@@ -47,6 +48,8 @@ members = [
     "font-parser-ruby",
     "fp-arithmetic",
     "garbage-collector",
+    "hmac",
+    "pbkdf2",
     "gpu-core",
     "gradient-descent",
     "grammar-tools",
@@ -220,4 +223,5 @@ members = [
     "wasm-validator",
     "lz77",
     "lz78",
+    "json-rpc",
 ]

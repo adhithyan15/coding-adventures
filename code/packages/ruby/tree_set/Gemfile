@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_graph", path: "../graph"
+gem "coding_adventures_directed_graph", path: "../directed_graph"
+gem "coding_adventures_tree", path: "../tree"
+gem "coding_adventures_binary_tree", path: "../binary_tree"
+gem "coding_adventures_binary_search_tree", path: "../binary_search_tree"
+gem "coding_adventures_avl_tree", path: "../avl_tree"

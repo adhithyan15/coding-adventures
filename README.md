@@ -75,13 +75,14 @@ The goal is to connect programming-language tooling back to the machine beneath 
 
 ### 5. In-memory data stores and protocol stacks
 
-This track is about building transport-agnostic, pluggable storage systems:
+This track is about building transport-agnostic, pluggable storage systems and ordered-set abstractions:
 
 - `resp-protocol`
 - `in-memory-data-store-protocol`
 - `in-memory-data-store-engine`
 - `in-memory-data-store`
-- `hash-map`, `hash-set`, `skip-list`, `hyperloglog`
+- `tree-set`
+- `hash-map`, `hash-set`, `heap`, `skip-list`, `hyperloglog`
 
 The goal is to model a single-node data store as a composition of reusable
 packages that can grow into new protocols, new transports, and new storage
@@ -172,7 +173,7 @@ tests prove the behavior
 
 Today the repo contains:
 
-- 1496 package directories
+- 1503 package directories
 - 122 program directories
 - 9 implementation languages
 

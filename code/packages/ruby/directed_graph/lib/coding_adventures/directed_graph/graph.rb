@@ -161,6 +161,18 @@ module CodingAdventures
         @forward.key?(source) && @forward[source].include?(target)
       end
 
+      def neighbors(node)
+        successors(node)
+      end
+
+      def bfs(start)
+        CodingAdventures::Graph.bfs(self, start)
+      end
+
+      def dfs(start)
+        CodingAdventures::Graph.dfs(self, start)
+      end
+
       # Returns a sorted array of all nodes in the graph.
       #
       # We sort so that test assertions are deterministic regardless of
@@ -298,14 +310,7 @@ module CodingAdventures
         closure = {}
         @forward.each_key do |start_node|
           reachable = Set.new
-          stack = @forward[start_node].to_a
-          until stack.empty?
-            current = stack.pop
-            next if reachable.include?(current)
-
-            reachable.add(current)
-            stack.concat(@forward[current].to_a)
-          end
+          bfs(start_node).each { |node| reachable.add(node) unless node == start_node }
           closure[start_node] = reachable
         end
         closure

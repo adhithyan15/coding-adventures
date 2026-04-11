@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "tree-set-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust tree-set crate via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+tree-set = { path = "../../rust/tree-set" }
+wasm-bindgen = "0.2"
+
