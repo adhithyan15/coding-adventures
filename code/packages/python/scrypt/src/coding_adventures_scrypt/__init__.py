@@ -537,7 +537,7 @@ def scrypt(
     Parameters
     ----------
     password:
-        The secret password. Must be non-empty bytes or bytearray.
+        The secret password. May be empty (RFC 7914 vector 1 uses an empty password).
     salt:
         A random salt. Should be at least 16 bytes; can be any length.
     n:

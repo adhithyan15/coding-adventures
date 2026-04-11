@@ -417,6 +417,9 @@ export function scrypt(
   // of the algorithm. Violating them causes undefined behaviour or silently
   // wrong results.
 
+  if (!Number.isInteger(n) || !Number.isInteger(r) || !Number.isInteger(p) || !Number.isInteger(dkLen)) {
+    throw new Error("scrypt: N, r, p, and dkLen must be integers");
+  }
   if (n < 2 || (n & (n - 1)) !== 0) {
     throw new Error("scrypt: N must be a power of 2 and >= 2");
   }

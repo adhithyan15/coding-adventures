@@ -424,6 +424,8 @@ sub scrypt {
     my ($password, $salt, $n, $r, $p, $dk_len) = @_;
 
     # Validate parameters per RFC 7914 § 2.
+    die "scrypt password must be defined\n" unless defined($password);
+    die "scrypt salt must be defined\n"     unless defined($salt);
     die "scrypt N must be a power of 2 and >= 2\n"
         unless defined($n) && $n >= 2 && ($n & ($n - 1)) == 0;
     die "scrypt N must not exceed 2^20\n"

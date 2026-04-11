@@ -401,20 +401,23 @@ function M.scrypt(password, salt, n, r, p, dk_len)
 
   -- N must be a power of 2 ≥ 2. Test (n & (n-1)) == 0 only holds for powers
   -- of 2; we also require n ≥ 2 (n=1 makes no sense for ROMix).
-  if type(n) ~= "number" or n < 2 or (n & (n - 1)) ~= 0 then
-    error("scrypt N must be a power of 2 and >= 2", 2)
+  -- All numeric parameters must be integers. Use math.type() (Lua 5.3+) to
+  -- reject float values like n=16384.0 or r=1.5 that would pass type() checks
+  -- but silently corrupt the algorithm's block-slicing arithmetic.
+  if math.type(n) ~= "integer" or n < 2 or (n & (n - 1)) ~= 0 then
+    error("scrypt N must be an integer power of 2 and >= 2", 2)
   end
   -- Limit N to prevent runaway memory allocation (2^20 × r × 128 bytes per block).
   if n > 2 ^ 20 then
     error("scrypt N must not exceed 2^20", 2)
   end
-  if type(r) ~= "number" or r < 1 then
+  if math.type(r) ~= "integer" or r < 1 then
     error("scrypt r must be a positive integer", 2)
   end
-  if type(p) ~= "number" or p < 1 then
+  if math.type(p) ~= "integer" or p < 1 then
     error("scrypt p must be a positive integer", 2)
   end
-  if type(dk_len) ~= "number" or dk_len < 1 or dk_len > 2 ^ 20 then
+  if math.type(dk_len) ~= "integer" or dk_len < 1 or dk_len > 2 ^ 20 then
     error("scrypt dk_len must be between 1 and 2^20", 2)
   end
   -- RFC 7914 §2: p * r must not overflow a specific limit.

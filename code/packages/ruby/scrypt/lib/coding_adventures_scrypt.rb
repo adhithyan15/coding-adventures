@@ -117,6 +117,12 @@ module CodingAdventures
     #   # => "77d6576238657b20..."
     def scrypt(password, salt, n, r, p, dk_len)
       # ── Parameter validation ─────────────────────────────────────────────
+      # All numeric parameters must be integers — reject Float inputs that
+      # would otherwise silently pass comparisons but corrupt the algorithm.
+      [n, r, p, dk_len].each do |v|
+        raise ArgumentError, "scrypt parameters N, r, p, and dk_len must be integers" unless v.is_a?(Integer)
+      end
+
       # N must be a power of 2 and at least 2.
       # A power of 2 satisfies: n & (n-1) == 0. We exclude 1 (= 2^0) because
       # RoMix requires at least two entries in the table V.

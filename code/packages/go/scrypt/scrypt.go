@@ -461,6 +461,9 @@ func pbkdf2Sha256(password, salt []byte, iterations, keyLength int) ([]byte, err
 		// We call hmacpkg.HMAC directly (not HmacSHA256) to bypass the
 		// empty-key restriction — scrypt allows password="".
 		u := hmacpkg.HMAC(sha256Fn, 64, password, seed)
+		if u == nil {
+			return nil, fmt.Errorf("scrypt: PBKDF2 PRF returned nil on block %d", i)
+		}
 
 		// t = U_1 XOR U_2 XOR ... XOR U_c
 		// For iterations=1 (scrypt's case), this loop body never executes
