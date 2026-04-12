@@ -1,0 +1,442 @@
+# C# 9.0 (2020) — Lexical Grammar
+# @version 1
+# @csharp_version 9.0
+#
+# .NET 5.0 — November 2020
+#
+# C# 9.0 shipped with .NET 5 — the first release to unify .NET Core and the
+# old .NET Framework under a single platform. The version number was deliberately
+# chosen to skip "4.0" to signal that this was not an incremental update but
+# a new era for the platform.
+#
+# C# 9.0's headlining feature is RECORDS — a new kind of type declaration
+# designed for immutable, data-centric types. Records provide:
+#   - Value-based equality (two records are equal if their properties are equal)
+#   - Automatic ToString() implementation
+#   - Positional syntax for concise declarations
+#   - Non-destructive mutation via `with` expressions
+#
+# Before records, creating an immutable value-like type in C# required:
+#   - Defining a class
+#   - Declaring all properties with `private set` or `init`
+#   - Writing Equals(), GetHashCode(), and ToString()
+#   - Writing a copy constructor if mutation was needed
+#
+# With C# 9.0 records:
+#   record Point(int X, int Y);        // Done — compiler generates everything
+#   var p1 = new Point(1, 2);
+#   var p2 = p1 with { X = 10 };      // Non-destructive mutation
+#   Console.WriteLine(p1 == p2);      // False — value equality
+#
+# Compare to Java records (Java 16, released one month later in March 2021).
+# Both languages converged on similar syntax around the same time, driven by
+# the popularity of Kotlin data classes and Scala case classes.
+#
+# Other notable C# 9.0 additions:
+#   - Top-level statements (no class/method boilerplate for simple programs)
+#   - Init-only setters (`init` accessor for object initializers)
+#   - Target-typed `new` (`Point p = new(1, 2)` — type inferred from context)
+#   - Pattern matching: relational (`> 0`), logical (`and`, `or`, `not`)
+#   - Covariant return types
+#   - `nint` / `nuint` native integer types (alias to IntPtr/UIntPtr)
+#   - Function pointers (`delegate*<int, int>` — for P/Invoke scenarios)
+#
+# What C# 9.0 does NOT have (added in later versions):
+#   - Global usings (C# 10.0, 2021)
+#   - File-scoped namespaces (C# 10.0)
+#   - Record structs (C# 10.0)
+#   - Required members (C# 11.0, 2022)
+#   - Primary constructors for classes (C# 12.0, 2023)
+#   - Collection expressions (C# 12.0)
+#
+# IMPORTANT NOTE ON NEW "KEYWORDS" IN C# 9.0
+# -------------------------------------------
+# C# 9.0 adds several context keywords: `record`, `init`, `with`, `and`,
+# `or`, `not`. These are ALL context keywords — they are lexed as NAME
+# tokens and have special meaning only in specific syntactic positions.
+# The language spec calls them "identifiers with special meaning in context."
+#
+# Why context keywords? Backward compatibility. Programs may have variables
+# or methods named `record`, `init`, `with`, etc. Making them reserved would
+# break existing code. The parser knows from context whether NAME tokens
+# with these spellings are keywords or identifiers.
+#
+# This means the TOKENS FILE for C# 9.0 is STRUCTURALLY IDENTICAL to C# 8.0.
+# No new token types are added. The grammar file adds all the new rules.
+#
+# This tokens file is COMPLETE and SELF-CONTAINED. It includes all tokens from
+# C# 1.0 through 8.0, plus the contextual keywords introduced in C# 9.0.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers follow the same rules as earlier versions. Context keywords
+# like `record`, `init`, `with`, `and`, `or`, `not`, `nint`, `nuint` all
+# lex as NAME tokens. The parser distinguishes by syntactic position.
+#
+# Examples of context keyword usage:
+#   record Point(int X, int Y);         // `record` as type keyword
+#   public int X { get; init; }         // `init` as accessor keyword
+#   var p2 = p1 with { X = 10 };       // `with` as expression keyword
+#   case > 0 and < 100:                 // `and` as pattern keyword
+#   case not null:                      // `not` as pattern keyword
+#   nint ptr = (nint)handle;           // `nint` as type keyword
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 7.0 added binary literals and digit separators. C# 7.2 allowed leading
+# separators after the radix prefix. C# 9.0 does NOT add new numeric literal
+# forms.
+#
+# However, C# 9.0 adds `nint` and `nuint` as context-keyword types for
+# native integers. The actual numeric literals for these types follow the
+# existing INT_NUMBER / UINT_NUMBER patterns — no new token needed.
+#
+#   nint ptr = 42;       // nint variable, integer literal (same token as int)
+#   nuint mask = 0xFF;   // nuint variable, hex literal (same token as uint)
+#
+# Native integers are essentially IntPtr and UIntPtr with arithmetic operators
+# defined. On a 64-bit process, `nint` is 64 bits wide.
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_ULONG     = /0[bB]_?[01][01_]*([uU][lL]|[lL][uU])/ -> NUMBER
+BINARY_LONG      = /0[bB]_?[01][01_]*[lL]/ -> NUMBER
+BINARY_UINT      = /0[bB]_?[01][01_]*[uU]/ -> NUMBER
+BINARY_NUMBER    = /0[bB]_?[01][01_]*/ -> NUMBER
+HEX_ULONG        = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[lL]/ -> NUMBER
+HEX_UINT         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[uU]/ -> NUMBER
+HEX_NUMBER       = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*/ -> NUMBER
+DECIMAL_FLOAT    = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER       = /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER     = /[0-9][0-9_]*([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER      = /[0-9][0-9_]*[lL]/ -> NUMBER
+UINT_NUMBER      = /[0-9][0-9_]*[uU]/ -> NUMBER
+FLOAT_SUFFIX     = /[0-9][0-9_]*[fFdDmM]/ -> NUMBER
+INT_NUMBER       = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# 9.0 does NOT add any new string literal forms. The full set remains:
+#
+#   1. Regular strings:          "hello\nworld"
+#   2. Verbatim strings:         @"C:\Users\file.txt"
+#   3. Character literals:       'a', '\n', '\u0041'
+#   4. Interpolated strings:     $"Hello {name}, age {age + 1}"     (C# 6.0)
+#   5. Interpolated verbatim:    $@"Path: {dir}\{file}"             (C# 6.0)
+#                            or  @$"Path: {dir}\{file}"             (C# 8.0)
+#
+# Raw string literals with triple quotes come in C# 11.0 (2022).
+#
+# Note on `with` expressions and string literals:
+# The `with` keyword is a context keyword and lexes as NAME. It only becomes
+# meaningful in the grammar rule: postfix_expression "with" LBRACE ... RBRACE
+# The tokens themselves do not change.
+
+STRING                   = /"([^"\\]|\\.)*"/
+VERBATIM_STRING          = /@"([^"]|"")*"/
+INTERPOLATED_STRING      = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
+INTERPOLATED_VERBATIM    = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
+CHAR                     = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 9.0 does NOT add any new operators. The context keywords `and`, `or`,
+# `not` are used in pattern positions and lex as NAME, not operator tokens.
+#
+# The full operator set (cumulative through C# 9.0, unchanged from C# 8.0):
+#
+#   C# 1.0:  All basic C-style operators
+#   C# 2.0:  ?? (null coalescing)
+#   C# 3.0:  => (lambda arrow)
+#   C# 6.0:  ?. (null-conditional member access)
+#            ?[ (null-conditional element access)
+#   C# 8.0:  .. (range operator)
+#            ??= (null-coalescing assignment)
+#
+# The `with` expression for records uses NAME for `with` and existing
+# LBRACE/RBRACE for the body. No operator token is needed.
+#
+# Relational patterns (> 0, <= 10) use existing comparison tokens
+# (GREATER_THAN, LESS_EQUALS, etc.) in the pattern position — the parser
+# context determines they are pattern comparators, not expression operators.
+
+QUESTION_QUESTION_EQUALS = "??="
+NULL_CONDITIONAL_DOT     = "?."
+NULL_CONDITIONAL_BRACKET = "?["
+NULL_COALESCING          = "??"
+LAMBDA_ARROW             = "=>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+DOT_DOT                  = ".."
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+COLON_COLON              = "::"
+ARROW                    = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators from C# 1.0. Context for C# 9.0:
+#
+#   CARET (^): In unsafe code, XOR. With Index, "from end": ^1 is last element.
+#   BANG (!): Logical NOT, or postfix null-forgiving operator (C# 8.0).
+#
+# No new single-character operators in C# 9.0.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters. Unchanged through C# 9.0.
+#
+# Note: `with` expressions use LBRACE and RBRACE for the mutation body:
+#   var p2 = p1 with { X = 10, Y = 20 };
+#          // ---- with ---- ^ ---- ^ ---
+#          //                LBRACE  RBRACE
+#
+# Records use LPAREN and RPAREN for positional syntax:
+#   record Point(int X, int Y);
+#   //         ^ ------------ ^
+#   //       LPAREN         RPAREN
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 9.0 reserved keyword count: 79 (UNCHANGED from C# 8.0).
+#
+# All new C# 9.0 "keywords" are CONTEXT KEYWORDS:
+#
+#   record — declares a record type
+#     record Point(int X, int Y);
+#     record class Person { ... }
+#
+#   init — declares an init-only property accessor
+#     public string Name { get; init; }
+#     // `init` can only be called during object initialization
+#
+#   with — non-destructive mutation of records
+#     var p2 = p1 with { X = 10 };
+#
+#   and — logical pattern combinator (in patterns only)
+#     case > 0 and < 100:
+#
+#   or — logical pattern alternation (in patterns only)
+#     case 1 or 2 or 3:
+#
+#   not — logical pattern negation (in patterns only)
+#     case not null:
+#     if (x is not string s) { }
+#
+#   nint — native signed integer (alias for IntPtr + operators)
+#     nint handle = GetHandle();
+#
+#   nuint — native unsigned integer (alias for UIntPtr + operators)
+#     nuint size = GetSize();
+#
+# All of the above lex as NAME and are handled by the grammar.
+#
+# The fact that C# 9.0 adds 0 reserved keywords — despite introducing records,
+# patterns, and top-level statements — is a testament to the grammar team's
+# skill in backward-compatible language design.
+#
+# Reserved keywords (79 total, unchanged since C# 5.0):
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 1.0. Three comment forms:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. XML doc comments: /// ... (lexically identical to line comments)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# C# 9.0 does not add new preprocessor directives. The full set, including
+# the #nullable directive added in C# 8.0:
+#
+#   #nullable enable / disable / restore — nullable reference type analysis
+#   #if / #elif / #else / #endif        — conditional compilation
+#   #define / #undef                    — symbol definition
+#   #region / #endregion               — code folding markers
+#   #error / #warning                  — compiler messages
+#   #line                              — line number manipulation
+#   #pragma                            — miscellaneous compiler directives
+
+PP_NULLABLE  = /#\s*nullable\b[^\n]*/
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/
+  BAD_INTERPOLATED_STRING = /\$"([^"\\{]|\\.)*$/

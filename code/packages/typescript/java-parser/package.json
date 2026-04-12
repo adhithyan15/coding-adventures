@@ -1,0 +1,34 @@
+{
+  "name": "@coding-adventures/java-parser",
+  "version": "0.1.0",
+  "description": "Parses Java source code into ASTs using the grammar-driven parser — a thin wrapper that loads java{version}.grammar",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "java",
+    "parser",
+    "ast",
+    "grammar-driven",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/java-lexer": "file:../java-lexer",
+    "@coding-adventures/directed-graph": "file:../directed-graph"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
