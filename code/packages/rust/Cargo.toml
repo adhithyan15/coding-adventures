@@ -247,4 +247,5 @@ members = [
     "irc-server",
     "irc-net-stdlib",
     "url-parser",
+  "tcp-client",
 ]
