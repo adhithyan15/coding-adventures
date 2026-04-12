@@ -1,0 +1,4 @@
+requires 'File::Path';
+requires 'File::Basename';
+requires 'File::Temp';
+on 'test' => sub { requires 'Test2::V0'; };
