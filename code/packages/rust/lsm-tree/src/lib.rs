@@ -36,7 +36,7 @@ pub struct SSTableMeta<K> {
     pub bloom: BloomFilter,
 }
 
-pub struct LSMTree<K: Ord + Clone + AsRef<[u8]>, V: Clone + AsRef<[u8]>> {
+pub struct LSMTree<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + TryFrom<Vec<u8>>> {
     pub memtable: SkipList<K, MemEntry<V>>,
     pub immutable_memtable: Option<SkipList<K, MemEntry<V>>>,
     pub levels: Vec<Vec<SSTableMeta<K>>>,
@@ -47,20 +47,49 @@ pub struct LSMTree<K: Ord + Clone + AsRef<[u8]>, V: Clone + AsRef<[u8]>> {
     pub data_dir: PathBuf,
 }
 
-impl<K: Ord + Clone + AsRef<[u8]>, V: Clone + AsRef<[u8]>> LSMTree<K, V> {
+impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + TryFrom<Vec<u8>>> LSMTree<K, V> {
     /// Open (or create) an LSM tree rooted at data_dir.
     /// If data_dir contains an existing tree, recover its state.
     pub fn new<P: AsRef<Path>>(data_dir: P) -> io::Result<Self> {
         let wal_path = data_dir.as_ref().join("current.wal");
+        
+        let mut memtable = SkipList::new();
+        let mut seq = 0;
+
+        // Crash Recovery
+        if wal_path.exists() {
+            if let Ok(mut reader) = wal::WalReader::new(&wal_path) {
+                while let Ok(Some((key_bytes, entry))) = reader.read_next() {
+                    let key_res = K::try_from(key_bytes);
+                    let val_opt = match entry.value {
+                        Some(v_bytes) => V::try_from(v_bytes).ok(),
+                        None => None,
+                    };
+                    
+                    if let Ok(key) = key_res {
+                        let mem_entry = MemEntry {
+                            value: val_opt,
+                            record_type: entry.record_type,
+                            seq: entry.seq,
+                        };
+                        memtable.insert(key, mem_entry);
+                        if entry.seq > seq {
+                            seq = entry.seq;
+                        }
+                    }
+                }
+            }
+        }
+
         let wal_writer = wal::WalWriter::new(&wal_path)?;
 
         Ok(Self {
-            memtable: SkipList::new(),
+            memtable,
             immutable_memtable: None,
             levels: vec![Vec::new()], // L0
             wal_path,
             wal_writer,
-            seq: 0,
+            seq,
             snapshot_seqs: HashSet::new(),
             data_dir: data_dir.as_ref().to_path_buf(),
         })
