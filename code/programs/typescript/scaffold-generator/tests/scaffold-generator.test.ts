@@ -39,6 +39,7 @@ import {
   updateRustWorkspace,
   findRepoRoot,
   scaffoldOne,
+  escapeXml,
   VALID_LANGUAGES,
   KEBAB_RE,
 } from "../src/index.js";
@@ -186,6 +187,12 @@ describe("KEBAB_RE", () => {
 
   it("rejects empty string", () => {
     expect(KEBAB_RE.test("")).toBe(false);
+  });
+});
+
+describe("escapeXml", () => {
+  it("escapes XML metacharacters", () => {
+    expect(escapeXml(`a&b<c>"d"'e'`)).toBe("a&amp;b&lt;c&gt;&quot;d&quot;&apos;e&apos;");
   });
 });
 
@@ -398,6 +405,21 @@ describe("readDeps", () => {
 
     const deps = readDeps(pkgDir, "fsharp");
     expect(deps).toEqual(["graph"]);
+  });
+
+  it("rejects traversal-style .NET project references", () => {
+    const pkgDir = path.join(tmpDir, "my-pkg");
+    writeTestFile(pkgDir, "CodingAdventures.MyPkg.csproj", [
+      '<Project Sdk="Microsoft.NET.Sdk">',
+      "  <ItemGroup>",
+      '    <ProjectReference Include="../../evil/CodingAdventures.Evil.csproj" />',
+      '    <ProjectReference Include="../safe-dep/CodingAdventures.SafeDep.csproj" />',
+      "  </ItemGroup>",
+      "</Project>",
+    ].join("\n"));
+
+    const deps = readDeps(pkgDir, "csharp");
+    expect(deps).toEqual(["safe-dep"]);
   });
 
   it("returns empty for .NET package with no project file", () => {
@@ -1063,6 +1085,26 @@ describe("generateCSharp", () => {
     expect(buildWindows).toBe(build);
     expect(capabilities).toContain('"package": "csharp/my-pkg"');
   });
+
+  it("escapes XML in generated project metadata", () => {
+    generateCSharp(
+      tmpDir,
+      "my-pkg",
+      `A & B </Description><Target Name="Injected" />`,
+      "",
+      [],
+    );
+
+    const csproj = fs.readFileSync(
+      path.join(tmpDir, "CodingAdventures.MyPkg.csproj"),
+      "utf-8",
+    );
+
+    expect(csproj).toContain(
+      "<Description>A &amp; B &lt;/Description&gt;&lt;Target Name=&quot;Injected&quot; /&gt;</Description>",
+    );
+    expect(csproj).not.toContain("<Target Name=\"Injected\"");
+  });
 });
 
 describe("generateFSharp", () => {
@@ -1114,6 +1156,26 @@ describe("generateFSharp", () => {
     expect(build).toContain("/p:Threshold=80");
     expect(buildWindows).toBe(build);
     expect(capabilities).toContain('"package": "fsharp/my-pkg"');
+  });
+
+  it("escapes XML in generated project metadata", () => {
+    generateFSharp(
+      tmpDir,
+      "my-pkg",
+      `A & B </Description><Target Name="Injected" />`,
+      "",
+      [],
+    );
+
+    const fsproj = fs.readFileSync(
+      path.join(tmpDir, "CodingAdventures.MyPkg.fsproj"),
+      "utf-8",
+    );
+
+    expect(fsproj).toContain(
+      "<Description>A &amp; B &lt;/Description&gt;&lt;Target Name=&quot;Injected&quot; /&gt;</Description>",
+    );
+    expect(fsproj).not.toContain("<Target Name=\"Injected\"");
   });
 });
 

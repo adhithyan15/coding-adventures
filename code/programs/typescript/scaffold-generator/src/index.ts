@@ -75,6 +75,18 @@ export const VALID_LANGUAGES = [
  */
 export const KEBAB_RE = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 
+/**
+ * Escape text before embedding it in XML element content or attributes.
+ */
+export function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 // =========================================================================
 // Name normalization
 // =========================================================================
@@ -471,11 +483,17 @@ export function readDotnetDeps(pkgDir: string): string[] {
 
   const content = fs.readFileSync(path.join(pkgDir, projectFile), "utf-8");
   const deps: string[] = [];
-  const re = /<ProjectReference\s+Include\s*=\s*"\.\.[\\/](.+?)[\\/][^"]+"/g;
+  const re = /<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]+"/g;
   let match: RegExpExecArray | null;
   while ((match = re.exec(content)) !== null) {
     const depDir = match[1]?.trim();
-    if (depDir) {
+    if (
+      depDir &&
+      depDir !== "." &&
+      depDir !== ".." &&
+      !depDir.includes("/") &&
+      !depDir.includes("\\")
+    ) {
       deps.push(depDir.replace(/_/g, "-"));
     }
   }
@@ -1830,7 +1848,7 @@ export function generateCSharp(
     <PackageId>${projectName}</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>${description}</Description>
+    <Description>${escapeXml(description)}</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 ${projectRefs ? `  <ItemGroup>\n${projectRefs}\n  </ItemGroup>\n` : ""}</Project>
@@ -1935,7 +1953,7 @@ export function generateFSharp(
     <PackageId>${projectName}</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>${description}</Description>
+    <Description>${escapeXml(description)}</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 ${projectRefs ? `  <ItemGroup>\n${projectRefs}\n  </ItemGroup>\n` : ""}  <ItemGroup>
