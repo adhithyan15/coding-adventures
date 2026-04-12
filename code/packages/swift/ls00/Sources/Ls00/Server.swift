@@ -195,7 +195,7 @@ public class LspServer {
     func publishDiagnostics(uri: String, version: Int, diagnostics: [Diagnostic]) {
         let lspDiags: [[String: Any]] = diagnostics.map { d in
             var diag: [String: Any] = [
-                "range": rangeToLSP(d.range),
+                "range": Self.rangeToLSP(d.range),
                 "severity": d.severity.rawValue,
                 "message": d.message,
             ]
@@ -227,12 +227,12 @@ public class LspServer {
 
     /// Convert a Range to an LSP-format dictionary.
     static func rangeToLSP(_ r: Range) -> [String: Any] {
-        return ["start": positionToLSP(r.start), "end": positionToLSP(r.end)]
+        return ["start": Self.positionToLSP(r.start), "end": Self.positionToLSP(r.end)]
     }
 
     /// Convert a Location to an LSP-format dictionary.
     static func locationToLSP(_ l: Location) -> [String: Any] {
-        return ["uri": l.uri, "range": rangeToLSP(l.range)]
+        return ["uri": l.uri, "range": Self.rangeToLSP(l.range)]
     }
 
     /// Extract a Position from JSON params.

@@ -201,7 +201,7 @@ extension LspServer {
         ]
 
         if let range = hoverResult.range {
-            result["range"] = rangeToLSP(range)
+            result["range"] = Self.rangeToLSP(range)
         }
 
         return (result, nil)
@@ -223,7 +223,7 @@ extension LspServer {
         let (location, _) = dp.definition(ast: parseResult.ast!, pos: pos, uri: uri)
         guard let location else { return (nil, nil) }
 
-        return (locationToLSP(location), nil)
+        return (Self.locationToLSP(location), nil)
     }
 
     /// Handle textDocument/references.
@@ -246,7 +246,7 @@ extension LspServer {
         guard parseResult.ast != nil else { return ([] as [Any], nil) }
 
         let (locations, _) = rp.references(ast: parseResult.ast!, pos: pos, uri: uri, includeDecl: includeDecl)
-        let result = locations.map { locationToLSP($0) }
+        let result = locations.map { Self.locationToLSP($0) }
         return (result, nil)
     }
 
@@ -311,7 +311,7 @@ extension LspServer {
         var lspChanges: [String: Any] = [:]
         for (editURI, edits) in edit.changes {
             let lspEdits: [[String: Any]] = edits.map { te in
-                ["range": rangeToLSP(te.range), "newText": te.newText]
+                ["range": Self.rangeToLSP(te.range), "newText": te.newText]
             }
             lspChanges[editURI] = lspEdits
         }
@@ -427,7 +427,7 @@ extension LspServer {
         }
 
         let lspEdits: [[String: Any]] = edits.map { edit in
-            ["range": rangeToLSP(edit.range), "newText": edit.newText]
+            ["range": Self.rangeToLSP(edit.range), "newText": edit.newText]
         }
 
         return (lspEdits, nil)
@@ -443,8 +443,8 @@ extension LspServer {
             var m: [String: Any] = [
                 "name": sym.name,
                 "kind": sym.kind.rawValue,
-                "range": rangeToLSP(sym.range),
-                "selectionRange": rangeToLSP(sym.selectionRange),
+                "range": Self.rangeToLSP(sym.range),
+                "selectionRange": Self.rangeToLSP(sym.selectionRange),
             ]
             if !sym.children.isEmpty {
                 m["children"] = convertDocumentSymbols(sym.children)
