@@ -225,5 +225,9 @@ members = [
     "lzss",
     "lzw",
     "json-rpc",
-    "rpc", "lsm-tree", "write-ahead-log",
+    "rpc",
+    "lsm-tree",
+    "write-ahead-log",
+    "des",
+    "aes",
 ]
