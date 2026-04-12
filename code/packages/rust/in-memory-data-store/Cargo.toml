@@ -8,5 +8,3 @@ license = "MIT"
 [dependencies]
 in-memory-data-store-engine = { path = "../in-memory-data-store-engine" }
 in-memory-data-store-protocol = { path = "../in-memory-data-store-protocol" }
-resp-protocol = { path = "../resp-protocol" }
-tcp-server = { path = "../tcp-server" }
