@@ -1,4 +1,3 @@
-pub mod wal;
 pub mod sstable;
 
 use bloom_filter::BloomFilter;
@@ -41,10 +40,58 @@ pub struct LSMTree<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + A
     pub immutable_memtable: Option<SkipList<K, MemEntry<V>>>,
     pub levels: Vec<Vec<SSTableMeta<K>>>,
     pub wal_path: PathBuf,
-    wal_writer: wal::WalWriter,
+    wal_writer: write_ahead_log::WalWriter,
     pub seq: u64,
     pub snapshot_seqs: HashSet<u64>,
     pub data_dir: PathBuf,
+}
+
+fn serialize_entry<K: AsRef<[u8]>, V: AsRef<[u8]>>(seq: u64, record_type: RecordType, key: &K, value: Option<&V>) -> Vec<u8> {
+    let mut buf = Vec::new();
+    buf.extend_from_slice(&seq.to_le_bytes());
+    buf.push(record_type as u8);
+    let k_bytes = key.as_ref();
+    buf.extend_from_slice(&(k_bytes.len() as u32).to_le_bytes());
+    
+    let v_bytes = value.map_or(&[][..], |v| v.as_ref());
+    buf.extend_from_slice(&(v_bytes.len() as u32).to_le_bytes());
+    
+    buf.extend_from_slice(k_bytes);
+    buf.extend_from_slice(v_bytes);
+    buf
+}
+
+fn deserialize_entry(bytes: &[u8]) -> Option<(Vec<u8>, MemEntry<Vec<u8>>)> {
+    if bytes.len() < 17 { return None; }
+    
+    let mut seq_buf = [0u8; 8];
+    seq_buf.copy_from_slice(&bytes[0..8]);
+    let seq = u64::from_le_bytes(seq_buf);
+    
+    let record_type = match bytes[8] {
+        1 => RecordType::Put,
+        2 => RecordType::Tombstone,
+        _ => return None,
+    };
+    
+    let mut klen_buf = [0u8; 4];
+    klen_buf.copy_from_slice(&bytes[9..13]);
+    let key_len = u32::from_le_bytes(klen_buf) as usize;
+    
+    let mut vlen_buf = [0u8; 4];
+    vlen_buf.copy_from_slice(&bytes[13..17]);
+    let val_len = u32::from_le_bytes(vlen_buf) as usize;
+    
+    if bytes.len() < 17 + key_len + val_len { return None; }
+    
+    let key = bytes[17..17+key_len].to_vec();
+    let val = if record_type == RecordType::Tombstone {
+        None
+    } else {
+        Some(bytes[17+key_len..17+key_len+val_len].to_vec())
+    };
+    
+    Some((key, MemEntry { value: val, record_type, seq }))
 }
 
 impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + TryFrom<Vec<u8>>> LSMTree<K, V> {
@@ -58,30 +105,32 @@ impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + T
 
         // Crash Recovery
         if wal_path.exists() {
-            if let Ok(mut reader) = wal::WalReader::new(&wal_path) {
-                while let Ok(Some((key_bytes, entry))) = reader.read_next() {
-                    let key_res = K::try_from(key_bytes);
-                    let val_opt = match entry.value {
-                        Some(v_bytes) => V::try_from(v_bytes).ok(),
-                        None => None,
-                    };
-                    
-                    if let Ok(key) = key_res {
-                        let mem_entry = MemEntry {
-                            value: val_opt,
-                            record_type: entry.record_type,
-                            seq: entry.seq,
+            if let Ok(mut reader) = write_ahead_log::WalReader::new(&wal_path) {
+                while let Ok(Some(bytes)) = reader.read_next() {
+                    if let Some((key_bytes, entry)) = deserialize_entry(&bytes) {
+                        let key_res = K::try_from(key_bytes);
+                        let val_opt = match entry.value {
+                            Some(v_bytes) => V::try_from(v_bytes).ok(),
+                            None => None,
                         };
-                        memtable.insert(key, mem_entry);
-                        if entry.seq > seq {
-                            seq = entry.seq;
+                        
+                        if let Ok(key) = key_res {
+                            let mem_entry = MemEntry {
+                                value: val_opt,
+                                record_type: entry.record_type,
+                                seq: entry.seq,
+                            };
+                            memtable.insert(key, mem_entry);
+                            if entry.seq > seq {
+                                seq = entry.seq;
+                            }
                         }
                     }
                 }
             }
         }
 
-        let wal_writer = wal::WalWriter::new(&wal_path)?;
+        let wal_writer = write_ahead_log::WalWriter::new(&wal_path)?;
 
         Ok(Self {
             memtable,
@@ -104,7 +153,8 @@ impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + T
         };
 
         // Append to WAL
-        self.wal_writer.append(&key, &entry)?;
+        let data = serialize_entry(self.seq, RecordType::Put, &key, Some(&value));
+        self.wal_writer.append_record(&data)?;
 
         self.memtable.insert(key, entry);
 
@@ -122,7 +172,8 @@ impl<K: Ord + Clone + AsRef<[u8]> + TryFrom<Vec<u8>>, V: Clone + AsRef<[u8]> + T
         };
 
         // Append to WAL
-        self.wal_writer.append(&key, &entry)?;
+        let data = serialize_entry::<K, V>(self.seq, RecordType::Tombstone, &key, None);
+        self.wal_writer.append_record(&data)?;
 
         self.memtable.insert(key, entry);
         Ok(())
