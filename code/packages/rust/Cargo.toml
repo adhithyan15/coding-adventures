@@ -247,4 +247,7 @@ members = [
     "irc-server",
     "irc-net-stdlib",
     "url-parser",
+    "compiler-ir",
+    "compiler-source-map",
+    "brainfuck-ir-compiler",
 ]
