@@ -215,11 +215,11 @@ export function divide(a: GF256, b: GF256): GF256 {
  *   0^0 = 1 by convention (consistent with most numeric libraries)
  *   0^n = 0 for n > 0
  *
- * Note: For very large `exp`, the computation `LOG[base] * exp` may
- * overflow a 32-bit integer if exp > 2^23. Use modular arithmetic on
- * exp first if very large exponents are needed.
  */
 export function power(base: GF256, exp: number): GF256 {
+  if (!Number.isInteger(exp) || exp < 0) {
+    throw new Error("GF256: exponent must be a non-negative integer");
+  }
   if (base === 0) return exp === 0 ? 1 : 0;
   if (exp === 0) return 1;
   return _ALOG[((_LOG[base] * exp) % 255 + 255) % 255];
