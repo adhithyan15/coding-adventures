@@ -1599,3 +1599,18 @@ caused a "invalid redeclaration of 'bLen'" compile error.
 **Rule:** When replacing a `let x = expr` with an overflow-checked version that also binds `x`,
 always remove the original `let x` line. The compiler will catch both declarations at the same
 scope level.
+
+---
+
+### 2026-04-12: TypeScript AES BUILD missing prerequisite for gf256
+
+When implementing `typescript/aes` which depends on `typescript/gf256` via `"file:../gf256"`, the BUILD file omitted the transitive install step. CI failed with:
+
+```
+BUILD/CI validation failed:
+  - typescript/aes: missing prerequisite refs for standalone builds: typescript/gf256
+```
+
+**Fix:** Add `npm install --prefix ../gf256 --silent` before the local `npm install` in the BUILD file. This matches the pattern used in `typescript/reed-solomon`.
+
+**Rule:** Every TypeScript package whose `package.json` has a `"file:../X"` dependency must have `npm install --prefix ../X --silent` as the first line of its BUILD file, before the package's own `npm install`.
