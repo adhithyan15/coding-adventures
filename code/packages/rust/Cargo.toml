@@ -224,5 +224,6 @@ members = [
     "wasm-validator",
     "lz77",
     "lz78",
+    "lzss",
     "json-rpc",
 ]
