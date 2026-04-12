@@ -1628,3 +1628,19 @@ CI runs on Linux where the path is `.venv/bin/python`, causing `sh: .venv/Script
 **Rule:** Always use `.venv/bin/python` in BUILD files. CI runs on Linux. All other Python packages
 in the repo use `.venv/bin/python`. The Windows path `.venv/Scripts/python` only works locally on
 Windows and will fail in CI.
+
+---
+
+## BUILD_windows files required for Windows CI
+
+**Date:** 2026-04-12
+
+**What happened:** Python, Perl, and Ruby ls00 packages failed on Windows CI because the BUILD file
+uses `sh` syntax (`.venv/bin/python`, `for f in ...; do ... done`, etc.) but the build tool runs
+`cmd /C` on Windows. The build tool supports `BUILD_windows` as a platform-specific override.
+
+**Rule:** When creating a new package, check if sibling packages (e.g., json-rpc) have `BUILD_windows`
+files. If they do, create one for the new package too. Key differences for Windows:
+- Python: use `uv run --no-project python` instead of `.venv/bin/python`
+- Perl: skip tests on Windows (matches json-rpc pattern)
+- Ruby: `bundle exec rake test` works on both platforms, but `cd` path separators may differ
