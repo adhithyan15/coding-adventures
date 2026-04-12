@@ -223,6 +223,7 @@ members = [
     "lz77",
     "lz78",
     "lzss",
+    "lzw",
     "json-rpc",
     "rpc", "lsm-tree", "write-ahead-log",
 ]
