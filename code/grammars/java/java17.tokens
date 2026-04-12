@@ -1,0 +1,482 @@
+# Java 17 (2021) — Lexical Grammar
+# @version 1
+# @java_version 17
+#
+# JDK 17 (September 2021) — The second long-term support (LTS) release
+# under Oracle's new release cadence (after Java 11). Java 17 represents
+# three years of evolution from Java 11 LTS, and it is the version that
+# most enterprises migrated to from Java 8/11.
+#
+# Java 17 is a consolidation release: it finalizes several features that
+# had been in preview across Java 14-16:
+#
+#   - SEALED CLASSES AND INTERFACES (JEP 409, finalized) — Restrict which
+#     classes can extend or implement a type. This enables exhaustive
+#     pattern matching and algebraic data types.
+#
+#   - PATTERN MATCHING FOR instanceof (JEP 394, finalized) — The instanceof
+#     operator can now declare a binding variable, eliminating the cast:
+#
+#       // Before (Java 10):
+#       if (obj instanceof String) {
+#           String s = (String) obj;   // redundant cast
+#           use(s);
+#       }
+#
+#       // After (Java 17):
+#       if (obj instanceof String s) {  // binding variable s
+#           use(s);                      // s already typed as String
+#       }
+#
+#   - RECORDS (JEP 395, finalized from Java 16) — Transparent data carriers
+#     that auto-generate equals, hashCode, toString, and accessors:
+#
+#       record Point(int x, int y) {}
+#
+#   - TEXT BLOCKS (JEP 378, finalized from Java 15) — Multi-line string
+#     literals using triple-quote delimiters:
+#
+#       String html = """
+#               <html>
+#                   <body>Hello</body>
+#               </html>
+#               """;
+#
+#   - SWITCH EXPRESSIONS (JEP 361, finalized from Java 14) — Switch as an
+#     expression with arrow labels and yield:
+#
+#       int numLetters = switch (day) {
+#           case MONDAY, FRIDAY, SUNDAY -> 6;
+#           case TUESDAY -> 7;
+#           default -> {
+#               String s = day.toString();
+#               yield s.length();
+#           }
+#       };
+#
+# --------------------------------------------------------------------------
+# LEXICAL CHANGES FROM JAVA 10
+# --------------------------------------------------------------------------
+#
+# Java 17 adds ONE new token type beyond Java 10:
+#
+#   1. TEXT_BLOCK — Triple-quoted multi-line string literal (""" ... """),
+#      first previewed in Java 13, finalized in Java 15. Text blocks are
+#      a new string literal form that makes embedding multi-line text (HTML,
+#      JSON, SQL, etc.) far more readable. The opening """ must be followed
+#      by a line terminator — content starts on the next line.
+#
+# Java 17 adds NO new keywords to the reserved keywords list. The following
+# identifiers have special meaning in certain grammatical contexts but
+# remain valid identifiers (lexed as NAME):
+#
+#   - `var`     (Java 10) — local variable type inference
+#   - `yield`   (Java 14) — produces a value from a switch expression block
+#   - `record`  (Java 16) — declares a record class
+#   - `sealed`  (Java 17) — restricts class/interface extension
+#   - `permits` (Java 17) — lists permitted subtypes of a sealed type
+#
+# The context keyword `non-sealed` deserves special attention: it contains
+# a hyphen, which is NOT a valid identifier character in Java. The lexer
+# produces THREE separate tokens: NAME("non") MINUS NAME("sealed"). The
+# grammar must recognize this three-token sequence as a single modifier.
+# This is unique in Java's history — no other keyword or modifier requires
+# multi-token matching.
+#
+# --------------------------------------------------------------------------
+# ACCUMULATED CHANGES ACROSS VERSIONS
+# --------------------------------------------------------------------------
+#
+# This token file accumulates all lexical changes from Java 1.0 through 17:
+#
+#   Java 1.0 (1996):  48 keywords, all basic operators and delimiters
+#   Java 1.2 (1998):  added `strictfp` keyword
+#   Java 1.4 (2002):  added `assert` keyword
+#   Java 5 (2004):    added `enum` keyword, `@` operator, `...` ellipsis
+#   Java 7 (2011):    added binary literals (0b1010), underscores in
+#                      numeric literals (1_000_000) — LEXICAL changes only
+#   Java 8 (2014):    added `->` arrow operator, `::` double colon operator
+#   Java 9 (2017):    no lexical changes (modules use existing keywords
+#                      contextually, and _ becomes restricted)
+#   Java 10 (2018):   no new tokens (`var` is a NAME, not a keyword)
+#   Java 11 (2018):   no lexical changes
+#   Java 12 (2019):   no lexical changes
+#   Java 13 (2019):   text blocks (preview)
+#   Java 14 (2020):   switch expressions (finalized), records (preview),
+#                      pattern matching for instanceof (preview)
+#   Java 15 (2020):   text blocks (finalized), sealed classes (preview)
+#   Java 16 (2021):   records (finalized), pattern matching (2nd preview)
+#   Java 17 (2021):   sealed classes (finalized), pattern matching
+#                      (finalized), text blocks and records now standard
+#
+# So lexically, Java 17 = Java 10 + TEXT_BLOCK token.
+# All other features (sealed, permits, record, yield, var) are context
+# keywords handled as NAME by the lexer and matched by the grammar.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in Java can contain letters, digits, underscores, and the
+# dollar sign ($). The $ was originally used by the compiler for inner class
+# names (e.g., Outer$Inner.class) and is technically legal in user code,
+# though discouraged by convention.
+#
+# IMPORTANT: The identifiers `var`, `yield`, `record`, `sealed`, and
+# `permits` all match this pattern and are lexed as NAME. The grammar
+# handles their special meanings in the appropriate syntactic contexts.
+# Similarly, `_` (standalone underscore) was restricted in Java 9 — it
+# generates a warning when used as an identifier. But lexically it still
+# matches NAME.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Java 17 inherits the expanded numeric literal forms from Java 7, which
+# added two major enhancements:
+#
+#   1. BINARY LITERALS (Java 7): Integer literals with the 0b or 0B prefix,
+#      analogous to 0x for hex and 0 for octal:
+#
+#        int flags = 0b1010_0011;   // binary: 163
+#        long mask = 0B1111_0000L;  // binary long
+#
+#   2. UNDERSCORES IN NUMERIC LITERALS (Java 7): Underscores can appear
+#      between digits as visual separators, making large numbers readable:
+#
+#        long creditCard = 1234_5678_9012_3456L;
+#        int hexBytes    = 0xFF_EC_DE_5E;
+#        float pi        = 3.14_15_92f;
+#        long maxLong    = 0x7fff_ffff_ffff_ffffL;
+#        int binary      = 0b0010_0101;
+#
+#      Underscores are NOT allowed at the start or end of a number, nor
+#      adjacent to a decimal point, 0x/0b prefix, or type suffix:
+#
+#        int bad1 = _100;       // NOT a number (it's an identifier!)
+#        int bad2 = 100_;       // ILLEGAL
+#        int bad3 = 0x_FF;      // ILLEGAL (adjacent to 0x prefix)
+#        float bad4 = 3._14;    // ILLEGAL (adjacent to decimal point)
+#
+# No changes to numeric literals since Java 7. All variants alias to NUMBER.
+
+BINARY_NUMBER     = /0[bB][01][01_]*[01][lL]?/ -> NUMBER
+BINARY_SHORT      = /0[bB][01][lL]?/ -> NUMBER
+HEX_NUMBER        = /0[xX][0-9a-fA-F][0-9a-fA-F_]*[0-9a-fA-F][lL]?/ -> NUMBER
+HEX_SHORT         = /0[xX][0-9a-fA-F][lL]?/ -> NUMBER
+OCTAL_NUMBER      = /0[0-7_]*[0-7]+[lL]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9_]+)?[fFdD]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9_]+)?[fFdD]?/ -> NUMBER
+SCI_NUMBER        = /[0-9][0-9_]*[eE][+-]?[0-9_]+[fFdD]?/ -> NUMBER
+LONG_NUMBER       = /[0-9][0-9_]*[lL]/ -> NUMBER
+FLOAT_SUFFIX      = /[0-9][0-9_]*[fFdD]/ -> NUMBER
+INT_NUMBER        = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String, character, and text block literals
+# ----------------------------------------------------------------------------
+#
+# Java 17 has THREE string-like literal forms:
+#
+#   1. TRADITIONAL STRINGS (Java 1.0): "hello world"
+#      Single-line, double-quoted. Escape sequences supported.
+#
+#   2. CHARACTER LITERALS (Java 1.0): 'a', '\n', '\u0041'
+#      Single character or escape sequence. Type `char` (16-bit unsigned).
+#
+#   3. TEXT BLOCKS (Java 15, finalized): """..."""
+#      Multi-line string literals. The opening """ must be followed by a
+#      line terminator — the content starts on the NEXT line:
+#
+#        String json = """
+#                {
+#                    "name": "Alice",
+#                    "age": 30
+#                }
+#                """;
+#
+#      Text blocks support the same escape sequences as traditional strings,
+#      plus two new ones:
+#
+#        \s   — a literal space (prevents trailing whitespace stripping)
+#        \    — line continuation (at end of line, suppresses the newline)
+#
+#      The compiler processes text blocks in three phases:
+#        1. Line terminators are normalized to \n (LF)
+#        2. Incidental leading whitespace is stripped (based on the
+#           indentation of the closing """)
+#        3. Escape sequences are interpreted
+#
+#      This means the indentation of the closing """ controls how much
+#      leading whitespace is removed:
+#
+#        String s = """
+#            Hello       // 4 spaces indent
+#            World       // 4 spaces indent
+#            """;        // closing """ at 4 spaces -> all leading 4 removed
+#
+#      Result: "Hello\nWorld\n" (no leading spaces).
+#
+#      Text blocks CANNOT appear on a single line:
+#        String bad = """hello""";   // ILLEGAL — no line terminator after """
+#
+# LEXICAL NOTE: The TEXT_BLOCK regex matches the triple-quote opener,
+# a mandatory line terminator, then any content (including embedded
+# double-quotes that don't form a closing triple-quote), and finally
+# the closing triple-quote. The regex must be matched BEFORE the regular
+# STRING token because """ starts with ".
+#
+# Both regular strings and text blocks alias to STRING_VALUE so the
+# grammar sees a unified string type. The parser does not need to
+# distinguish them.
+
+TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*"""/ -> STRING
+STRING     = /"([^"\\]|\\.)*"/
+CHAR       = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators
+# ============================================================================
+#
+# Java 17 has the same multi-character operators as Java 10. No new
+# operators have been added since the ARROW `->` and DOUBLE_COLON `::`
+# in Java 8.
+#
+# The ARROW token is reused in Java 14+ switch expressions:
+#
+#   // Java 8: lambda expression
+#   (x, y) -> x + y
+#
+#   // Java 14+: switch expression arrow case
+#   case MONDAY -> "start of week";
+#
+# The grammar disambiguates by context — ARROW after lambda_parameters
+# is a lambda, ARROW after switch case labels is a switch rule.
+#
+# Operator match order (most specific first):
+#   1. ELLIPSIS (...) before DOT (.)
+#   2. ARROW (->) before MINUS (-) and GREATER_THAN (>)
+#   3. DOUBLE_COLON (::) before COLON (:)
+#   4. Compound assignments (>>>=, <<=, >>=) before shifts (>>>, <<, >>)
+#   5. Comparison operators (==, !=, <=, >=) before single-char versions
+
+ELLIPSIS                    = "..."
+ARROW                       = "->"
+DOUBLE_COLON                = "::"
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators from Java 10, unchanged. The `@` sign
+# (from Java 5, for annotations) and `?` (ternary operator and wildcard
+# type argument) are included.
+
+AT           = "@"
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters, unchanged from Java 1.0. The ELLIPSIS (...)
+# must be matched before DOT in the operator section above.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Java 17 has 51 keywords — the same count as Java 5 through Java 16. No
+# new reserved keywords have been added since `enum` in Java 5.
+#
+# This is remarkable: despite adding sealed classes, records, text blocks,
+# switch expressions, pattern matching, and local variable type inference
+# across Java 10-17, the language has NOT added a single new reserved
+# keyword. Every new "keyword" is a CONTEXT-SENSITIVE identifier:
+#
+#   - `var`     (Java 10) — restricted identifier, lexed as NAME
+#   - `yield`   (Java 14) — restricted identifier, lexed as NAME
+#   - `record`  (Java 16) — restricted identifier, lexed as NAME
+#   - `sealed`  (Java 17) — restricted identifier, lexed as NAME
+#   - `permits` (Java 17) — restricted identifier, lexed as NAME
+#
+# The reason for this conservative approach is BACKWARD COMPATIBILITY.
+# Making `var` a keyword would break any code using `var` as a variable
+# name. Making `record` a keyword would break any code using `record` as
+# a variable name. And there IS such code in the wild — `record` in
+# particular was a common variable name in database-related code.
+#
+# The most extreme example is `non-sealed`: since it contains a hyphen,
+# it CANNOT be a keyword (or even an identifier). It is lexed as three
+# tokens: NAME("non") MINUS NAME("sealed"). The grammar recognizes this
+# specific sequence in modifier positions. This is unprecedented — Java
+# has never before had a multi-token keyword-like construct.
+#
+# Accumulated keyword history:
+#   Java 1.0 (1996):  48 keywords (abstract, boolean, break, ... while)
+#   Java 1.2 (1998):  + strictfp (49)
+#   Java 1.4 (2002):  + assert (50)
+#   Java 5 (2004):    + enum (51)
+#   Java 7-17:        no new keywords (still 51)
+#
+# The three literal keywords (true, false, null) are included. Technically
+# the JLS calls them "boolean literals" and "null literal" rather than
+# keywords, but they are reserved words that cannot be used as identifiers.
+
+keywords:
+  abstract
+  assert
+  boolean
+  break
+  byte
+  case
+  catch
+  char
+  class
+  continue
+  default
+  do
+  double
+  else
+  enum
+  extends
+  final
+  finally
+  float
+  for
+  if
+  implements
+  import
+  instanceof
+  int
+  interface
+  long
+  native
+  new
+  package
+  private
+  protected
+  public
+  return
+  short
+  static
+  strictfp
+  super
+  switch
+  synchronized
+  this
+  throw
+  throws
+  transient
+  try
+  void
+  volatile
+  while
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# The same two identifiers from Java 1.0 remain reserved but unused:
+#
+# const — Reserved since Java 1.0, never given a meaning. Java uses `final`.
+# goto  — Reserved to produce a helpful error for C programmers. Java uses
+#         labeled break/continue instead.
+#
+# These will likely remain reserved forever. They serve as a reminder of
+# Java's C heritage and as guardrails against accidentally valid C code.
+
+reserved:
+  const
+  goto
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Three comment forms, unchanged since Java 1.0:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. Javadoc comments: /** ... */ (lexically identical to block comments)
+#
+# Note: text blocks use the WHITESPACE token's newline handling for their
+# opening delimiter — the """ must be followed by a line terminator, which
+# is part of the TEXT_BLOCK regex, not a separate whitespace token.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# Malformed literals for better error reporting. Includes unterminated
+# text blocks (triple-quote without closing triple-quote).
+
+errors:
+  BAD_TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*$/
+  BAD_STRING     = /"[^"]*$/
+  BAD_CHAR       = /'[^']*$/

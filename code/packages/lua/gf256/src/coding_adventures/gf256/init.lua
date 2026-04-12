@@ -309,4 +309,97 @@ function M.inverse(a)
     return ALOG[255 - LOG[a + 1] + 1]
 end
 
+-- ============================================================================
+-- new_field(polynomial) — parameterizable field factory
+-- ============================================================================
+--
+-- The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+-- AES uses 0x11B. new_field(poly) builds an independent field table for any
+-- primitive polynomial, returning a table with the same API as this module.
+--
+-- Usage:
+--   local gf = require("coding_adventures.gf256")
+--   local aes = gf.new_field(0x11B)
+--   print(aes.multiply(0x53, 0xCA))   -- 1 (AES GF(2^8) inverses)
+--   print(aes.multiply(0x57, 0x83))   -- 0xC1 (FIPS 197 Appendix B)
+--
+-- Note on Lua 1-based indexing: the field tables use the same i+1 convention
+-- as the module-level LOG and ALOG tables above.
+--
+function M.new_field(polynomial)
+    -- Russian peasant (shift-and-XOR) multiplication for GF(2^8).
+    --
+    -- Log/antilog tables require a primitive generator g such that g^1..g^255
+    -- visits all 255 non-zero field elements. g=2 works for 0x11D but is NOT
+    -- primitive for 0x11B — AES uses g=0x03 (x+1) per FIPS 197 §4.1. Building
+    -- tables with g=2 and 0x11B leaves most log entries at 0, giving wrong
+    -- results. Russian peasant needs no generator assumption.
+    --
+    -- reduce = low byte of the polynomial, used for the overflow reduction step.
+    local reduce = polynomial & 0xFF
+
+    -- gf_mul(a, b): multiply a and b in GF(2^8) via Russian peasant.
+    local function gf_mul(a, b)
+        local result = 0
+        local aa = a
+        local bb = b
+        for _ = 1, 8 do
+            if bb & 1 ~= 0 then result = result ~ aa end
+            local hi = aa & 0x80
+            aa = (aa << 1) & 0xFF
+            if hi ~= 0 then aa = aa ~ reduce end
+            bb = bb >> 1
+        end
+        return result
+    end
+
+    -- gf_pow(base, exp): repeated squaring.
+    -- inverse(a) = gf_pow(a, 254) since a^255 = 1 in GF(2^8).
+    local function gf_pow(base, exp)
+        if base == 0 then
+            if exp == 0 then return 1 end
+            return 0
+        end
+        if exp == 0 then return 1 end
+        local result = 1
+        local b = base
+        local e = exp
+        while e > 0 do
+            if e & 1 ~= 0 then result = gf_mul(result, b) end
+            b = gf_mul(b, b)
+            e = e >> 1
+        end
+        return result
+    end
+
+    -- Return a table with the same API as the module.
+    local F = {}
+
+    -- add and subtract are polynomial-independent (always XOR).
+    function F.add(a, b) return a ~ b end
+    function F.subtract(a, b) return a ~ b end
+
+    function F.multiply(a, b)
+        return gf_mul(a, b)
+    end
+
+    function F.divide(a, b)
+        if b == 0 then error("GF256Field: division by zero") end
+        return gf_mul(a, gf_pow(b, 254))
+    end
+
+    function F.power(base, exp)
+        return gf_pow(base, exp)
+    end
+
+    function F.inverse(a)
+        if a == 0 then error("GF256Field: zero has no multiplicative inverse") end
+        return gf_pow(a, 254)
+    end
+
+    F.polynomial = polynomial
+
+    return F
+end
+
 return M

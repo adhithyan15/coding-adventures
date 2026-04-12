@@ -1,0 +1,2 @@
+requires 'coding-adventures-csharp-lexer', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };

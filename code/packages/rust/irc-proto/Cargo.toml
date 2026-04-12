@@ -1,0 +1,11 @@
+[package]
+name = "irc-proto"
+version = "0.1.0"
+edition = "2021"
+description = "Pure IRC message parsing and serialization (RFC 1459)"
+authors = ["coding-adventures"]
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]

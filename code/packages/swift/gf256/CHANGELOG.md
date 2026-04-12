@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-04-11
+
+### Added
+
+- `GF256Field` struct — parameterizable field factory that accepts any primitive polynomial.
+  Uses Russian peasant (shift-and-XOR) multiplication; no log/antilog tables stored.
+  Initialization is O(1).
+  - `GF256Field(polynomial: 0x11B)` creates the AES GF(2^8) field.
+  - `GF256Field(polynomial: 0x11D)` matches the module-level `GF256` enum functions.
+  - Methods: `multiply(_:_:)`, `divide(_:_:)`, `power(_:_:)`, `inverse(_:)`,
+    `add(_:_:)`, `subtract(_:_:)`.
+  - `polynomial: UInt16` property stores the polynomial used for construction.
+- Tests: AES sanity check (`0x53 × 0xCA = 1`), FIPS 197 Appendix B
+  (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, edge cases.
+
 ## [0.1.0] - 2026-04-03
 
 ### Added

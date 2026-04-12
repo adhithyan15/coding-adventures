@@ -1,0 +1,1595 @@
+# C# 7.0 (2017) — Parser Grammar
+# @version 1
+# @csharp_version 7.0
+#
+# .NET Framework 4.7 / .NET Core 1.1 — March 2017
+#
+# This grammar defines the syntactic structure of C# 7.0. It is COMPLETE and
+# SELF-CONTAINED, including all features from C# 1.0 through C# 7.0.
+#
+# C# 7.0 is a landmark release for TWO reasons:
+#
+#   1. It brings TUPLES as a first-class language feature, making it easy
+#      to group values without defining a class. Other languages (Python,
+#      Haskell, Scala, F#) had tuples for years; C# finally adds them.
+#
+#   2. It begins PATTERN MATCHING, a staple of functional programming
+#      languages (Haskell, ML, F#, Rust, Kotlin) that lets you test the
+#      shape and contents of values in a single expression.
+#
+# The changes are deep and interconnected. Let's walk through each:
+#
+# --- TUPLES AND DECONSTRUCTION ---
+#
+# Before C# 7.0, returning multiple values from a method required either:
+#   a) Defining a class/struct (verbose, creates clutter)
+#   b) Using out parameters (awkward call site syntax)
+#   c) Using System.Tuple<T1,T2> (no named elements, reference type, slow)
+#
+# C# 7.0 adds VALUE TUPLE SYNTAX, backed by System.ValueTuple<T1,T2,...>:
+#
+#   // Tuple type: (int x, int y)
+#   (int x, int y) GetOrigin() => (0, 0);
+#
+#   // Usage:
+#   var origin = GetOrigin();
+#   Console.WriteLine(origin.x);  // named element access
+#
+#   // Destructuring:
+#   var (x, y) = GetOrigin();     // separate variables
+#
+#   // Inline tuple literal:
+#   var pt = (x: 1, y: 2);        // named elements
+#   var pair = (1, "hello");       // unnamed elements
+#
+# Tuples are VALUE TYPES (structs), not reference types. This avoids heap
+# allocation, making them efficient for short-lived groupings.
+#
+# DECONSTRUCTION generalizes to any type with a Deconstruct method:
+#
+#   class Point {
+#       public void Deconstruct(out int x, out int y) { x = X; y = Y; }
+#   }
+#   var (px, py) = new Point(1, 2);  // calls Deconstruct
+#
+# --- PATTERN MATCHING ---
+#
+# Pattern matching in C# 7.0 enriches TWO contexts:
+#
+#   1. THE `is` OPERATOR gains type patterns with variable binding:
+#
+#      // Before C# 7.0:
+#      if (obj is string) {
+#          var s = (string)obj;  // separate cast
+#          Console.WriteLine(s.Length);
+#      }
+#
+#      // C# 7.0:
+#      if (obj is string s) {   // test AND bind in one expression
+#          Console.WriteLine(s.Length);
+#      }
+#
+#   2. SWITCH STATEMENT gains pattern labels with `when` guards:
+#
+#      switch (shape) {
+#          case Circle c when c.Radius > 0:
+#              return Math.PI * c.Radius * c.Radius;
+#          case Rectangle r:
+#              return r.Width * r.Height;
+#          case null:
+#              throw new ArgumentNullException();
+#          default:
+#              return 0;
+#      }
+#
+#      Key differences from classic switch:
+#        - Any type can be switched on (not just int/string/enum)
+#        - Cases can test the runtime type
+#        - Cases can have `when` guard conditions
+#        - Cases are evaluated top-to-bottom (order matters!)
+#        - Fall-through between non-empty cases is still forbidden
+#
+# --- LOCAL FUNCTIONS ---
+#
+# Methods can define helper functions inside their body:
+#
+#   public int Fibonacci(int n) {
+#       if (n < 0) throw new ArgumentException("n must be >= 0");
+#       return Fib(n);  // call the local function
+#
+#       int Fib(int k) => k <= 1 ? k : Fib(k - 1) + Fib(k - 2);
+#   }
+#
+# Local functions can:
+#   - Capture variables from the enclosing method (closures)
+#   - Be recursive
+#   - Be generic
+#   - Be async
+#   - Use expression body (=>)
+#   - Return refs
+#
+# Unlike lambdas, local functions don't allocate a delegate object (unless
+# they capture variables). They are compiled as hidden private methods.
+#
+# --- OUT VARIABLES ---
+#
+# Before C# 7.0, using `out` parameters required a pre-declaration:
+#   int result;
+#   if (int.TryParse(input, out result)) { ... }
+#
+# C# 7.0 allows inline declaration:
+#   if (int.TryParse(input, out int result)) { ... }
+#   if (int.TryParse(input, out var result)) { ... }
+#
+# The `result` variable is in scope for the rest of the enclosing block.
+#
+# --- REF RETURNS AND REF LOCALS ---
+#
+# Methods can return references to variables (not copies):
+#
+#   ref int Find(int[] arr, int target) {
+#       for (int i = 0; i < arr.Length; i++)
+#           if (arr[i] == target) return ref arr[i];
+#       throw new Exception("Not found");
+#   }
+#
+#   ref int item = ref Find(numbers, 42);
+#   item = 99;  // modifies the array element in place!
+#
+# This is for performance: avoiding copies of large structs, or enabling
+# in-place modification. It's similar to C++ references.
+#
+# --- DISCARDS ---
+#
+# The _ identifier (when used as a pattern or out variable) means "ignore":
+#
+#   int.TryParse(s, out _);          // discard the parsed value
+#   var (x, _) = GetPoint();        // ignore the y coordinate
+#   _ = someMethod();               // ignore the return value
+#
+# When used as a regular variable (_), it's still a valid name.
+# The discard semantics only apply in pattern context or out context.
+#
+# --- THROW EXPRESSIONS ---
+#
+# `throw` can now appear in expression context (ternary, ??, =>, etc.):
+#
+#   string name = value ?? throw new ArgumentNullException(nameof(value));
+#   int divisor = d != 0 ? d : throw new DivideByZeroException();
+#   public string Name => _name ?? throw new InvalidOperationException();
+#
+# Before C# 7.0, throw was a statement only.
+#
+# Cumulative features:
+#   C# 1.0: Classes, structs, interfaces, enums, delegates, properties,
+#           events, indexers, operators, foreach, goto, using, lock,
+#           unsafe/fixed, checked/unchecked, attributes, preprocessor
+#   C# 2.0: Generics <T>, nullable T?, null coalescing ??, iterators
+#           (yield return/break), anonymous methods (delegate {}),
+#           partial types, static classes, namespace alias (::)
+#   C# 3.0: Lambda expressions (=>), LINQ query syntax, var keyword,
+#           extension methods, anonymous types (new { }), object/collection
+#           initializers, auto-properties, partial methods, expression trees
+#   C# 4.0: dynamic keyword, named arguments, optional parameters,
+#           generic covariance/contravariance (in/out on type params)
+#   C# 5.0: async/await, caller info attributes
+#   C# 6.0: Expression-bodied members, string interpolation ($""),
+#           null-conditional (?. and ?[), nameof, exception filters (when),
+#           auto-property initializers, getter-only auto-properties,
+#           using static, index initializers
+#   C# 7.0: Tuples and deconstruction, pattern matching (is/switch),
+#           local functions, out variables, ref returns/locals, discards (_),
+#           binary literals (0b...), digit separators (_), throw expressions
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from csharp7.0.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# Unchanged from C# 1.0. Top-level statements arrive in C# 9.0.
+
+compilation_unit = { extern_alias_directive }
+                   { using_directive }
+                   { global_attribute_section }
+                   { namespace_member_declaration } ;
+
+# ============================================================================
+# Extern Alias Directives
+# ============================================================================
+
+extern_alias_directive = "extern" NAME SEMICOLON ;
+
+# ============================================================================
+# Using Directives
+# ============================================================================
+#
+# C# 6.0 added `using static`. C# 7.0 makes no changes here.
+# Global usings arrive in C# 10.0.
+
+using_directive = "using" "static" qualified_name SEMICOLON
+               | "using" qualified_name SEMICOLON
+               | "using" NAME EQUALS qualified_name SEMICOLON ;
+
+# ============================================================================
+# Qualified Names
+# ============================================================================
+
+qualified_name = NAME { DOT NAME }
+               | NAME NAMESPACE_ALIAS NAME { DOT NAME } ;
+
+# ============================================================================
+# Global Attributes
+# ============================================================================
+
+global_attribute_section = LBRACKET global_attribute_target COLON attribute_list [ COMMA ] RBRACKET ;
+
+global_attribute_target = "assembly"
+                        | "module" ;
+
+# ============================================================================
+# Namespace Declarations
+# ============================================================================
+
+namespace_declaration = "namespace" qualified_name LBRACE
+                        { extern_alias_directive }
+                        { using_directive }
+                        { namespace_member_declaration }
+                        RBRACE [ SEMICOLON ] ;
+
+# ============================================================================
+# Namespace Members
+# ============================================================================
+
+namespace_member_declaration = namespace_declaration
+                             | type_declaration ;
+
+type_declaration = class_declaration
+                 | struct_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | delegate_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Attributes
+# ============================================================================
+
+attribute_section = LBRACKET [ attribute_target COLON ] attribute_list [ COMMA ] RBRACKET ;
+
+attribute_target = "field"
+                 | "event"
+                 | "method"
+                 | "param"
+                 | "property"
+                 | "return"
+                 | "type" ;
+
+attribute_list = attribute { COMMA attribute } ;
+
+attribute = qualified_name [ LPAREN [ attribute_arguments ] RPAREN ] ;
+
+attribute_arguments = attribute_argument { COMMA attribute_argument } ;
+
+attribute_argument = [ NAME EQUALS ] expression ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# C# 7.0 does not change class declaration syntax, but class members
+# gain new capabilities (local functions, expression-bodied constructors, etc.).
+
+class_declaration = { attribute_section } { class_modifier } [ "partial" ] "class" NAME
+                    [ type_parameter_list ]
+                    [ COLON class_base_list ]
+                    { type_parameter_constraints_clause }
+                    class_body [ SEMICOLON ] ;
+
+class_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "abstract"
+               | "sealed"
+               | "static" ;
+
+class_base_list = type_name { COMMA type_name } ;
+
+class_body = LBRACE { class_member_declaration } RBRACE ;
+
+# ============================================================================
+# Generic Type Parameters (C# 2.0, C# 4.0 variance)
+# ============================================================================
+#
+# Unchanged through C# 7.0. (The `unmanaged` constraint arrives in C# 7.3,
+# and `notnull` in C# 8.0.)
+
+type_parameter_list = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+type_parameter = { attribute_section } [ variance_annotation ] NAME ;
+
+variance_annotation = "in"
+                    | "out" ;
+
+type_parameter_constraints_clause = "where" NAME COLON type_parameter_constraints ;
+
+type_parameter_constraints = type_parameter_constraint { COMMA type_parameter_constraint } ;
+
+type_parameter_constraint = "class"
+                          | "struct"
+                          | "new" LPAREN RPAREN
+                          | type_name ;
+
+# ============================================================================
+# Type Names (with generics)
+# ============================================================================
+
+type_name = NAME { DOT NAME } [ type_argument_list ] ;
+
+type_argument_list = LESS_THAN type_argument { COMMA type_argument } GREATER_THAN ;
+
+type_argument = type ;
+
+# ============================================================================
+# Class Member Declarations
+# ============================================================================
+#
+# C# 7.0 does not add new KINDS of members (those come in C# 8.0+ with
+# static interface members, records, etc.). But local functions can be
+# declared inside method bodies.
+
+class_member_declaration = constant_declaration
+                         | field_declaration
+                         | method_declaration
+                         | property_declaration
+                         | event_declaration
+                         | indexer_declaration
+                         | operator_declaration
+                         | conversion_operator_declaration
+                         | constructor_declaration
+                         | destructor_declaration
+                         | static_constructor_declaration
+                         | type_declaration
+                         | SEMICOLON ;
+
+# ============================================================================
+# Constant Declarations
+# ============================================================================
+
+constant_declaration = { attribute_section } { constant_modifier } "const" type
+                       constant_declarators SEMICOLON ;
+
+constant_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+constant_declarators = constant_declarator { COMMA constant_declarator } ;
+
+constant_declarator = NAME EQUALS expression ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+
+field_declaration = { attribute_section } { field_modifier } type
+                    variable_declarators SEMICOLON ;
+
+field_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "readonly"
+               | "volatile" ;
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# C# 7.0 adds REF RETURN TYPES.
+#
+# A method can return a reference to a variable instead of a copy:
+#
+#   public ref int FindFirst(int[] arr, Predicate<int> match) {
+#       for (int i = 0; i < arr.Length; i++)
+#           if (match(arr[i])) return ref arr[i];  // return a reference
+#       throw new Exception("Not found");
+#   }
+#
+#   // Caller:
+#   ref int found = ref FindFirst(numbers, x => x > 10);
+#   found = 0;  // modifies the original array element!
+#
+# `ref readonly` return type prevents the caller from modifying through the ref:
+#   public ref readonly Matrix4x4 Identity => ref _identity;
+#
+# Method bodies can now contain local function declarations (C# 7.0).
+
+method_declaration = { attribute_section } { method_modifier } [ "partial" ]
+                     return_type qualified_name [ type_parameter_list ]
+                     LPAREN [ formal_parameter_list ] RPAREN
+                     { type_parameter_constraints_clause }
+                     method_body ;
+
+method_modifier = "public"
+                | "protected"
+                | "internal"
+                | "private"
+                | "new"
+                | "static"
+                | "virtual"
+                | "sealed"
+                | "override"
+                | "abstract"
+                | "extern"
+                | "async" ;
+
+# C# 7.0: return type can now be ref or ref readonly
+return_type = "void"
+            | [ "ref" [ "readonly" ] ] type ;
+
+method_body = block
+            | LAMBDA expression SEMICOLON
+            | SEMICOLON ;
+
+# ============================================================================
+# Formal Parameters
+# ============================================================================
+#
+# C# 7.0 adds the `in` parameter modifier: a readonly reference parameter.
+#
+#   void Process(in Matrix4x4 transform) { ... }
+#
+# The `in` modifier means:
+#   - The argument is passed by reference (no copy for large structs)
+#   - The parameter is read-only inside the method (cannot be assigned)
+#   - The caller does NOT use `in` at the call site (unlike `ref` and `out`)
+#
+# This is an optimization hint: use `in` for large structs that are expensive
+# to copy but should not be modified.
+
+formal_parameter_list = fixed_parameters [ COMMA parameter_array ]
+                      | parameter_array ;
+
+fixed_parameters = fixed_parameter { COMMA fixed_parameter } ;
+
+fixed_parameter = { attribute_section } [ parameter_modifier ] type NAME [ EQUALS expression ] ;
+
+parameter_modifier = "ref"
+                   | "out"
+                   | "in"
+                   | "this" ;
+
+parameter_array = { attribute_section } "params" type NAME ;
+
+# ============================================================================
+# Property Declarations
+# ============================================================================
+#
+# C# 7.0 adds expression-bodied getters AND setters (C# 6.0 only allowed
+# expression-bodied getters).
+#
+#   public string Name {
+#       get => _name;
+#       set => _name = value ?? throw new ArgumentNullException();
+#   }
+#
+# Also, ref-returning properties:
+#   public ref int First => ref _arr[0];
+
+property_declaration = { attribute_section } { property_modifier } [ "ref" [ "readonly" ] ] type
+                       qualified_name
+                       ( LBRACE accessor_declarations RBRACE [ EQUALS expression SEMICOLON ]
+                       | LAMBDA expression SEMICOLON ) ;
+
+property_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new"
+                  | "static"
+                  | "virtual"
+                  | "sealed"
+                  | "override"
+                  | "abstract"
+                  | "extern" ;
+
+accessor_declarations = get_accessor_declaration [ set_accessor_declaration ]
+                      | set_accessor_declaration [ get_accessor_declaration ] ;
+
+get_accessor_declaration = { attribute_section } [ accessor_modifier ] "get"
+                           ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+set_accessor_declaration = { attribute_section } [ accessor_modifier ] "set"
+                           ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+accessor_modifier = "protected"
+                  | "internal"
+                  | "private"
+                  | "protected" "internal"
+                  | "internal" "protected" ;
+
+# ============================================================================
+# Event Declarations
+# ============================================================================
+
+event_declaration = { attribute_section } { event_modifier } "event" type
+                    ( variable_declarators SEMICOLON
+                    | qualified_name LBRACE event_accessor_declarations RBRACE ) ;
+
+event_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "virtual"
+               | "sealed"
+               | "override"
+               | "abstract"
+               | "extern" ;
+
+event_accessor_declarations = add_accessor_declaration remove_accessor_declaration
+                            | remove_accessor_declaration add_accessor_declaration ;
+
+add_accessor_declaration = { attribute_section } "add" block ;
+
+remove_accessor_declaration = { attribute_section } "remove" block ;
+
+# ============================================================================
+# Indexer Declarations
+# ============================================================================
+#
+# C# 7.0 adds ref-returning indexers:
+#   public ref T this[int index] => ref _items[index];
+
+indexer_declaration = { attribute_section } { indexer_modifier } [ "ref" [ "readonly" ] ] type
+                      "this" LBRACKET formal_parameter_list RBRACKET
+                      ( LBRACE accessor_declarations RBRACE
+                      | LAMBDA expression SEMICOLON ) ;
+
+indexer_modifier = "public"
+                 | "protected"
+                 | "internal"
+                 | "private"
+                 | "new"
+                 | "virtual"
+                 | "sealed"
+                 | "override"
+                 | "abstract"
+                 | "extern" ;
+
+# ============================================================================
+# Operator Declarations
+# ============================================================================
+
+operator_declaration = { attribute_section } operator_modifiers type
+                       "operator" overloadable_operator
+                       LPAREN type NAME [ COMMA type NAME ] RPAREN
+                       ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+operator_modifiers = "public" "static" [ "extern" ] ;
+
+overloadable_operator = PLUS
+                      | MINUS
+                      | BANG
+                      | TILDE
+                      | PLUS_PLUS
+                      | MINUS_MINUS
+                      | "true"
+                      | "false"
+                      | STAR
+                      | SLASH
+                      | PERCENT
+                      | AMPERSAND
+                      | PIPE
+                      | CARET
+                      | LEFT_SHIFT
+                      | RIGHT_SHIFT
+                      | EQUALS_EQUALS
+                      | NOT_EQUALS
+                      | LESS_THAN
+                      | GREATER_THAN
+                      | LESS_EQUALS
+                      | GREATER_EQUALS ;
+
+# ============================================================================
+# Conversion Operator Declarations
+# ============================================================================
+
+conversion_operator_declaration = { attribute_section } operator_modifiers
+                                  ( "implicit" | "explicit" ) "operator" type
+                                  LPAREN type NAME RPAREN
+                                  ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+
+constructor_declaration = { attribute_section } { constructor_modifier } NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ constructor_initializer ]
+                          ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+constructor_modifier = "public"
+                     | "protected"
+                     | "internal"
+                     | "private"
+                     | "extern" ;
+
+constructor_initializer = COLON "base" LPAREN [ argument_list ] RPAREN
+                        | COLON "this" LPAREN [ argument_list ] RPAREN ;
+
+# ============================================================================
+# Destructor (Finalizer) Declarations
+# ============================================================================
+
+destructor_declaration = { attribute_section } [ "extern" ] TILDE NAME
+                         LPAREN RPAREN
+                         ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+# ============================================================================
+# Static Constructor Declarations
+# ============================================================================
+
+static_constructor_declaration = { attribute_section } static_constructor_modifiers
+                                 NAME LPAREN RPAREN
+                                 ( block | LAMBDA expression SEMICOLON | SEMICOLON ) ;
+
+static_constructor_modifiers = "static" [ "extern" ]
+                             | "extern" "static" ;
+
+# ============================================================================
+# Struct Declarations
+# ============================================================================
+#
+# C# 7.0 does not change struct declaration syntax. Ref structs and readonly
+# structs arrive in C# 7.2 (a minor point release). We note this here for
+# historical accuracy.
+
+struct_declaration = { attribute_section } { struct_modifier } [ "partial" ] "struct" NAME
+                     [ type_parameter_list ]
+                     [ COLON interface_type_list ]
+                     { type_parameter_constraints_clause }
+                     struct_body [ SEMICOLON ] ;
+
+struct_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new" ;
+
+interface_type_list = type_name { COMMA type_name } ;
+
+struct_body = LBRACE { struct_member_declaration } RBRACE ;
+
+struct_member_declaration = constant_declaration
+                          | field_declaration
+                          | method_declaration
+                          | property_declaration
+                          | event_declaration
+                          | indexer_declaration
+                          | operator_declaration
+                          | conversion_operator_declaration
+                          | constructor_declaration
+                          | static_constructor_declaration
+                          | type_declaration
+                          | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations
+# ============================================================================
+#
+# Interfaces are unchanged in C# 7.0.
+# Default interface methods arrive in C# 8.0.
+
+interface_declaration = { attribute_section } { interface_modifier } [ "partial" ] "interface" NAME
+                        [ type_parameter_list ]
+                        [ COLON interface_type_list ]
+                        { type_parameter_constraints_clause }
+                        interface_body [ SEMICOLON ] ;
+
+interface_modifier = "public"
+                   | "protected"
+                   | "internal"
+                   | "private"
+                   | "new" ;
+
+interface_body = LBRACE { interface_member_declaration } RBRACE ;
+
+interface_member_declaration = interface_method_declaration
+                             | interface_property_declaration
+                             | interface_event_declaration
+                             | interface_indexer_declaration
+                             | SEMICOLON ;
+
+interface_method_declaration = { attribute_section } [ "new" ] return_type NAME
+                              [ type_parameter_list ]
+                              LPAREN [ formal_parameter_list ] RPAREN
+                              { type_parameter_constraints_clause }
+                              SEMICOLON ;
+
+interface_property_declaration = { attribute_section } [ "new" ] type NAME
+                                LBRACE interface_accessors RBRACE ;
+
+interface_accessors = "get" SEMICOLON [ "set" SEMICOLON ]
+                    | "set" SEMICOLON [ "get" SEMICOLON ] ;
+
+interface_event_declaration = { attribute_section } [ "new" ] "event" type NAME SEMICOLON ;
+
+interface_indexer_declaration = { attribute_section } [ "new" ] type "this"
+                               LBRACKET formal_parameter_list RBRACKET
+                               LBRACE interface_accessors RBRACE ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+
+enum_declaration = { attribute_section } { enum_modifier } "enum" NAME
+                   [ COLON integral_type ]
+                   enum_body [ SEMICOLON ] ;
+
+enum_modifier = "public"
+              | "protected"
+              | "internal"
+              | "private"
+              | "new" ;
+
+integral_type = "byte"
+              | "sbyte"
+              | "short"
+              | "ushort"
+              | "int"
+              | "uint"
+              | "long"
+              | "ulong" ;
+
+enum_body = LBRACE [ enum_member_declarations ] RBRACE ;
+
+enum_member_declarations = enum_member_declaration
+                           { COMMA enum_member_declaration } [ COMMA ] ;
+
+enum_member_declaration = { attribute_section } NAME [ EQUALS expression ] ;
+
+# ============================================================================
+# Delegate Declarations
+# ============================================================================
+
+delegate_declaration = { attribute_section } { delegate_modifier } "delegate"
+                       return_type NAME [ type_parameter_list ]
+                       LPAREN [ formal_parameter_list ] RPAREN
+                       { type_parameter_constraints_clause }
+                       SEMICOLON ;
+
+delegate_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# C# 7.0 adds TWO new type forms:
+#
+#   1. TUPLE TYPES: (T1, T2, ...) or (T1 name1, T2 name2, ...)
+#
+#      (int, string)                    — unnamed tuple type
+#      (int x, string name)            — named tuple type
+#      (int, (string first, string last)) — nested tuple
+#
+#      The names are optional and compiler-preserved but NOT part of the
+#      runtime type. At runtime, (int, string) and (int x, string name)
+#      are the same ValueTuple<int, string>. Names are an "alias" checked
+#      only by the compiler and IDE tooling.
+#
+#   2. REF TYPES: ref T and ref readonly T (for ref returns and locals)
+#
+#      ref int        — a reference to an int
+#      ref readonly Matrix4x4  — a read-only reference to a Matrix4x4
+#
+# These are NOT in the general `type` rule here — they appear in return_type
+# and in ref local declarations. This is because ref is a modifier on a
+# variable, not a type in the general sense (you cannot have List<ref int>).
+#
+# NULLABLE REFERENCE TYPES (string?) still require C# 8.0. In C# 7.0,
+# `?` on a reference type is a compile error (or ignored in some contexts).
+
+type = tuple_type { rank_specifier } [ QUESTION ]
+     | value_type { rank_specifier } [ QUESTION ]
+     | reference_type { rank_specifier }
+     | "dynamic" { rank_specifier }
+     | "void" STAR ;
+
+# Tuple types (C# 7.0): exactly two or more elements, separated by commas.
+# A minimum of TWO elements is required — (int) is a parenthesized type, not a tuple.
+# Each element can optionally have a name.
+#
+#   (int x, int y)          — 2-element named tuple
+#   (int, string, bool)     — 3-element unnamed tuple
+#   (int x, string, bool z) — mixed (some named, some not)
+
+tuple_type = LPAREN tuple_element COMMA tuple_element { COMMA tuple_element } RPAREN ;
+
+tuple_element = type [ NAME ] ;
+
+value_type = primitive_type
+           | type_name ;
+
+reference_type = type_name
+               | "object"
+               | "string" ;
+
+primitive_type = numeric_type
+               | "bool" ;
+
+numeric_type = integral_type
+             | floating_point_type
+             | "decimal" ;
+
+floating_point_type = "float"
+                    | "double" ;
+
+rank_specifier = LBRACKET { COMMA } RBRACKET ;
+
+pointer_type = type STAR ;
+
+# ============================================================================
+# Patterns (C# 7.0)
+# ============================================================================
+#
+# Pattern matching is a new mechanism for testing a value's shape and
+# optionally binding it to a variable. In C# 7.0, patterns appear in:
+#   1. `is` expressions: `obj is TYPE var`
+#   2. `switch` case labels: `case TYPE var when guard:`
+#
+# Pattern kinds in C# 7.0:
+#
+#   CONSTANT PATTERN: match against a compile-time constant
+#     case 0:           — integer constant
+#     case null:        — null literal
+#     case Color.Red:   — enum member constant
+#     case "hello":     — string constant
+#
+#   TYPE PATTERN (declaration pattern): test the runtime type and optionally bind
+#     case string s:            — test for string, bind to s
+#     case int i when i > 0:    — test for positive int
+#     obj is string s           — test and bind in expression context
+#
+#   VAR PATTERN: always matches, bind the value
+#     case var x when x.Length > 5:  — matches anything, use in when clause
+#
+# Note: Property patterns ({ Prop: val }), tuple patterns, and positional
+# patterns (Type(args)) are added in C# 8.0. C# 7.0 only has the above three.
+#
+# The DISCARD pattern (_) is available as a simple NAME in C# 7.0; the
+# proper discard pattern syntax in switch expressions comes with C# 8.0.
+
+pattern = constant_pattern
+        | declaration_pattern
+        | var_pattern ;
+
+# Constant pattern: a compile-time constant value.
+# Used in `case` labels. Includes literals and qualified names (enum members).
+constant_pattern = literal
+                 | qualified_name ;
+
+# Declaration (type) pattern: test the runtime type and optionally bind.
+#   obj is string s    — tests if obj is a string; if so, binds it to s
+#   case int i:        — in switch, tests if the switch value is an int
+#
+# The NAME after the type is the binding variable. It is mandatory in the
+# full declaration_pattern (to distinguish from a pure type test which uses
+# the type alone in is-expression context).
+declaration_pattern = type NAME ;
+
+# Var pattern: always matches, binds the value to a variable.
+#   case var x when x.Length > 5:
+#
+# The `var` keyword here is NOT type inference — it means "always match and
+# give me the value under this name." It's most useful paired with `when`:
+#   case var x when x != null && x.Length > 0:
+var_pattern = "var" NAME ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# C# 7.0 adds to statements:
+#
+#   1. LOCAL FUNCTION DECLARATIONS (inside blocks)
+#   2. DECONSTRUCTION DECLARATIONS: var (x, y) = expr;
+#   3. REF LOCAL DECLARATIONS: ref int x = ref arr[0];
+#
+# The local_function_declaration is a NEW statement kind: a full method
+# definition inside another method's body.
+#
+# Deconstruction declarations destructure a tuple (or any Deconstruct-able
+# type) into separate variables in one statement.
+
+block = LBRACE { statement } RBRACE ;
+
+statement = block
+          | local_variable_declaration_statement
+          | local_constant_declaration_statement
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | foreach_statement
+          | switch_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | goto_statement
+          | lock_statement
+          | using_statement
+          | checked_statement
+          | unchecked_statement
+          | labelled_statement
+          | unsafe_statement
+          | fixed_statement
+          | yield_statement
+          | local_function_declaration ;
+
+# --- Local Variable Declaration ---
+#
+# C# 7.0 adds THREE new declaration forms:
+#
+#   1. REF LOCALS: ref var x = ref expr;
+#      ref int item = ref arr[0];  // x is now an alias for arr[0]
+#
+#   2. DECONSTRUCTION with var: var (x, y) = point;
+#      All components use inferred types.
+#
+#   3. TYPED DECONSTRUCTION: (int x, string name) = GetPerson();
+#      Each component has an explicit type.
+#
+# C# 7.0 also adds inline out variable declarations, handled in the
+# argument_list rule (out int result, out var parsed).
+
+local_variable_declaration_statement = local_variable_declaration SEMICOLON ;
+
+local_variable_declaration = [ "ref" [ "readonly" ] ] type variable_declarators
+                           | "var" variable_declarators
+                           | deconstruction_declaration ;
+
+# Deconstruction: var (a, b) = expr
+#   All elements get their types inferred.
+deconstruction_declaration = "var" deconstruction_tuple EQUALS expression
+                           | LPAREN deconstruction_element { COMMA deconstruction_element } RPAREN
+                             EQUALS expression ;
+
+# var (x, y) — the names for the deconstructed variables
+deconstruction_tuple = LPAREN NAME { COMMA NAME } RPAREN ;
+
+# (int x, string name) — typed deconstruction element
+deconstruction_element = type NAME ;
+
+local_constant_declaration_statement = "const" type constant_declarators SEMICOLON ;
+
+empty_statement = SEMICOLON ;
+
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN [ for_initializer ] SEMICOLON [ expression ] SEMICOLON
+                [ for_iterator ] RPAREN statement ;
+
+for_initializer = local_variable_declaration
+                | expression_list ;
+
+for_iterator = expression_list ;
+
+expression_list = expression { COMMA expression } ;
+
+# C# 7.0 enhances foreach with deconstruction support:
+#   foreach (var (key, value) in dictionary) { }
+
+foreach_statement = "foreach" LPAREN
+                    ( type NAME | "var" NAME | "var" deconstruction_tuple )
+                    "in" expression RPAREN statement ;
+
+# --- Switch Statement with Pattern Matching (C# 7.0) ---
+#
+# C# 7.0 dramatically enhances switch. Case labels can now:
+#   - Match on type (with optional variable binding)
+#   - Have a `when` guard condition
+#   - Switch on ANY type (not just integer/string/enum)
+#
+# Example:
+#
+#   object value = GetValue();
+#   switch (value) {
+#       case int i when i > 0:
+#           Console.WriteLine($"Positive integer: {i}");
+#           break;
+#       case string s when s.Length > 0:
+#           Console.WriteLine($"Non-empty string: {s}");
+#           break;
+#       case null:
+#           Console.WriteLine("null");
+#           break;
+#       default:
+#           Console.WriteLine("Something else");
+#           break;
+#   }
+#
+# CASE ORDERING: In C# 7.0 pattern switch, cases are evaluated IN ORDER
+# (unlike the classic int switch where order doesn't matter). A more specific
+# case must come before a more general one. The compiler warns if a case
+# cannot be reached.
+#
+# NOTE: The switch EXPRESSION (returning a value) is C# 8.0, not 7.0.
+# C# 7.0 only enhances the switch STATEMENT.
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+switch_block = LBRACE { switch_section } RBRACE ;
+
+switch_section = { switch_label } { statement } ;
+
+# C# 7.0: switch_label accepts a pattern with optional `when` guard
+switch_label = "case" pattern [ "when" expression ] COLON
+             | "default" COLON ;
+
+# --- Try/Catch/Finally (with C# 6.0 exception filters) ---
+#
+# Unchanged from C# 6.0. The `when` clause is already present.
+
+try_statement = "try" block ( catch_clauses [ finally_clause ]
+                            | finally_clause ) ;
+
+catch_clauses = specific_catch_clause { specific_catch_clause } [ general_catch_clause ]
+              | general_catch_clause ;
+
+specific_catch_clause = "catch" LPAREN type_name [ NAME ] RPAREN
+                        [ "when" LPAREN expression RPAREN ] block ;
+
+general_catch_clause = "catch" block ;
+
+finally_clause = "finally" block ;
+
+# --- Throw ---
+#
+# The throw_statement is unchanged. But throw now also appears as a
+# throw_expression in expression context (C# 7.0). See the expression rules.
+
+throw_statement = "throw" [ expression ] SEMICOLON ;
+
+# --- Return ---
+#
+# C# 7.0 adds `return ref expression` for ref returns.
+#   return ref arr[i];       // return a reference to arr[i]
+
+return_statement = "return" [ [ "ref" ] expression ] SEMICOLON ;
+
+break_statement = "break" SEMICOLON ;
+
+continue_statement = "continue" SEMICOLON ;
+
+goto_statement = "goto" NAME SEMICOLON
+               | "goto" "case" expression SEMICOLON
+               | "goto" "default" SEMICOLON ;
+
+lock_statement = "lock" LPAREN expression RPAREN statement ;
+
+using_statement = "using" LPAREN resource_acquisition RPAREN statement ;
+
+resource_acquisition = type variable_declarators
+                     | expression ;
+
+checked_statement = "checked" block ;
+
+unchecked_statement = "unchecked" block ;
+
+labelled_statement = NAME COLON statement ;
+
+unsafe_statement = "unsafe" block ;
+
+fixed_statement = "fixed" LPAREN type variable_declarators RPAREN statement ;
+
+yield_statement = "yield" "return" expression SEMICOLON
+                | "yield" "break" SEMICOLON ;
+
+# --- Local Function Declaration (C# 7.0) ---
+#
+# A local function is a method defined inside another method. It is:
+#   - Only visible within the enclosing method (scoped)
+#   - Can capture variables from the enclosing scope (closure)
+#   - Compiled to a private static or instance method on the class
+#   - Can be recursive (unlike lambdas, which need a separate declaration)
+#   - Can be async, generic, and use any return type including tuples
+#
+# Example: A recursive helper that uses the parent method's parameter:
+#
+#   int Sum(int[] arr) {
+#       if (arr == null) throw new ArgumentNullException(nameof(arr));
+#       return Compute(arr, 0);
+#
+#       int Compute(int[] a, int i) => i >= a.Length ? 0 : a[i] + Compute(a, i + 1);
+#   }
+#
+# The local function CAN access `arr` from the outer scope. But since it
+# only uses its own parameters here, no closure is needed.
+#
+# Local functions vs. lambdas:
+#   - Local functions have a name (easier debugging)
+#   - Local functions can be recursive without a variable declaration
+#   - Local functions can have attributes, ref parameters, yield return
+#   - Lambdas create a delegate object; local functions may not
+#
+# NOTE: C# 8.0 adds `static` local functions that prevent accidental capture.
+
+local_function_declaration = { attribute_section } { local_function_modifier }
+                             return_type NAME [ type_parameter_list ]
+                             LPAREN [ formal_parameter_list ] RPAREN
+                             { type_parameter_constraints_clause }
+                             ( block | LAMBDA expression SEMICOLON ) ;
+
+local_function_modifier = "async"
+                        | "unsafe" ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# C# 7.0 adds to expressions:
+#
+#   1. THROW EXPRESSION: throw in expression context
+#      str ?? throw new ArgumentNullException()
+#      condition ? result : throw new Exception()
+#
+#   2. TUPLE LITERAL: (expr, expr) or (name: expr, name: expr)
+#      var point = (x: 1, y: 2);
+#      (int a, string b) pair = (42, "hello");
+#
+#   3. IS PATTERN: obj is pattern
+#      if (obj is string s) { }     // declaration pattern
+#      if (obj is 42) { }            // constant pattern
+#      if (obj is var x) { }         // var pattern
+#
+#   4. ASSIGNMENT TO DECONSTRUCTION: (a, b) = expr
+#      This is an assignment form, not a declaration form.
+#
+# Precedence (cumulative, no changes from C# 6.0 except throw expr):
+#
+#   Level 1:  assignment         =, +=, -=, *=, /=, %=, &=, |=, ^=, <<=, >>=
+#             also: (a, b) = expr  (deconstruction assignment, C# 7.0)
+#             also: throw expr    (throw expression, C# 7.0)
+#   Level 2:  ternary            ? :
+#   Level 3:  null coalescing    ??
+#   Level 4:  logical OR         ||
+#   Level 5:  logical AND        &&
+#   Level 6:  bitwise OR         |
+#   Level 7:  bitwise XOR        ^
+#   Level 8:  bitwise AND        &
+#   Level 9:  equality           ==, !=
+#   Level 10: relational         <, >, <=, >=, is (with pattern), as
+#   Level 11: shift              <<, >>
+#   Level 12: additive           +, -
+#   Level 13: multiplicative     *, /, %
+#   Level 14: unary              ++x, --x, +x, -x, ~x, !x, (type)x, &x, *x,
+#                                await x
+#   Level 15: postfix            x++, x--
+#   Level 16: primary            literals, tuples, this, base, new, typeof,
+#                                sizeof, checked, unchecked, default, method call,
+#                                member access (?. and ?[), nameof, interpolated
+
+expression = lambda_expression
+           | assignment_expression ;
+
+# --- Lambda Expressions ---
+#
+# Async lambdas (C# 5.0). Unchanged in C# 7.0.
+
+lambda_expression = lambda_parameters LAMBDA lambda_body ;
+
+lambda_parameters = NAME
+                  | LPAREN [ lambda_parameter_list ] RPAREN ;
+
+lambda_parameter_list = lambda_parameter { COMMA lambda_parameter } ;
+
+lambda_parameter = [ "ref" | "out" | "in" ] [ type ] NAME ;
+
+lambda_body = expression
+            | block ;
+
+# --- Assignment ---
+#
+# C# 7.0 adds two new forms of assignment:
+#
+#   1. THROW EXPRESSION (assignment_expression includes throw_expression)
+#      string name = value ?? throw new ArgumentNullException();
+#
+#   2. DECONSTRUCTION ASSIGNMENT: (a, b) = GetPair();
+#      This is different from deconstruction DECLARATION (var (a, b) = ...).
+#      In deconstruction assignment, the variables ALREADY EXIST:
+#
+#        int x, y;
+#        (x, y) = GetPoint();   // assigns to existing x and y
+#        (x, y) = (y, x);       // swap!
+#
+#      The left side is a tuple of lvalues, not a type declaration.
+
+assignment_expression = conditional_expression
+                      | unary_expression assignment_operator assignment_expression
+                      | deconstruction_assignment
+                      | throw_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS ;
+
+# Deconstruction assignment: (a, b) = expr
+# The left side contains a parenthesized list of assignable targets.
+deconstruction_assignment = LPAREN deconstruction_target { COMMA deconstruction_target } RPAREN
+                            EQUALS expression ;
+
+# Each target is either an lvalue expression or a nested deconstruction.
+deconstruction_target = NAME
+                      | LPAREN deconstruction_target { COMMA deconstruction_target } RPAREN ;
+
+# Throw expression (C# 7.0): throw can appear as an expression.
+# The "value" produced by throw is typed as never/bottom — it never returns.
+#
+#   string name = param ?? throw new ArgumentNullException(nameof(param));
+#   int d = divisor != 0 ? divisor : throw new DivideByZeroException();
+#   public string Title => _title ?? throw new InvalidOperationException();
+
+throw_expression = "throw" expression ;
+
+# --- Ternary Conditional ---
+
+conditional_expression = null_coalescing_expression
+                         [ QUESTION expression COLON expression ] ;
+
+# --- Null Coalescing (C# 2.0) ---
+
+null_coalescing_expression = logical_or_expression { NULL_COALESCE logical_or_expression } ;
+
+# --- Logical OR ---
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+# --- Logical AND ---
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# --- Bitwise OR ---
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+# --- Bitwise XOR ---
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+# --- Bitwise AND ---
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- Equality ---
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# --- Relational ---
+#
+# C# 7.0 changes the `is` operator to accept PATTERNS, not just types.
+#
+# Before C# 7.0:
+#   obj is string      — type test (returns bool, no binding)
+#   obj is MyClass     — type test
+#
+# C# 7.0:
+#   obj is string s    — declaration pattern: test AND bind
+#   obj is 42          — constant pattern: test against literal
+#   obj is var x       — var pattern: always true, bind to x
+#
+# The pattern rule handles all three cases. Note that `is type` (without
+# a variable name) is now handled by the constant_pattern or type alone —
+# in practice, `is ClassName` without a variable is still valid as a
+# type test (the binding variable is optional in the grammar for loose
+# backwards compat, but the spec requires a name for a declaration pattern).
+# We use the is_test form for the bare `is type` case.
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "is" pattern
+                        | "is" type
+                        | "as" type } ;
+
+# --- Shift ---
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT ) additive_expression } ;
+
+# --- Additive ---
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# --- Multiplicative ---
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# --- Unary ---
+#
+# Same as C# 6.0. Await (C# 5.0) remains.
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | BANG unary_expression
+                 | TILDE unary_expression
+                 | "await" unary_expression
+                 | cast_expression
+                 | AMPERSAND unary_expression
+                 | STAR unary_expression
+                 | postfix_expression ;
+
+cast_expression = LPAREN type RPAREN unary_expression ;
+
+# --- Postfix ---
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# C# 7.0 adds:
+#   - Tuple literals: (1, 2), (x: 1, y: 2)
+#   - Inline out variable declarations are handled in argument_list
+
+primary_expression = primary { primary_suffix } ;
+
+primary_suffix = DOT NAME [ type_argument_list ]
+               | NULL_CONDITIONAL_DOT NAME [ type_argument_list ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression_list RBRACKET
+               | NULL_CONDITIONAL_BRACKET expression_list RBRACKET
+               | ARROW NAME ;
+
+primary = literal
+        | interpolated_string
+        | tuple_literal
+        | "this"
+        | "base" DOT NAME
+        | "base" LBRACKET expression_list RBRACKET
+        | typeof_expression
+        | sizeof_expression
+        | checked_expression
+        | unchecked_expression
+        | default_value_expression
+        | nameof_expression
+        | new_expression
+        | anonymous_method_expression
+        | LPAREN expression RPAREN
+        | NAME [ type_argument_list ] ;
+
+# --- Tuple Literal (C# 7.0) ---
+#
+# Tuple literals produce values of tuple types. The elements can be named
+# (giving them compile-time names accessible via .name) or unnamed.
+#
+#   (1, 2)                   — unnamed 2-tuple of (int, int)
+#   (x: 1, y: 2)            — named 2-tuple, elements accessed as .x and .y
+#   ("Alice", 30, true)     — unnamed 3-tuple
+#   (name: "Alice", age: 30) — named 2-tuple
+#
+# The MINIMUM size is 2 elements — otherwise it would be ambiguous with
+# a parenthesized expression.
+#
+# Naming rule: if you name ANY element, you should name ALL of them
+# (the compiler allows mixing, but it's a warning in some analyzers).
+
+tuple_literal = LPAREN tuple_literal_element COMMA tuple_literal_element
+                { COMMA tuple_literal_element } RPAREN ;
+
+tuple_literal_element = [ NAME COLON ] expression ;
+
+# --- Interpolated String (C# 6.0) ---
+
+interpolated_string = INTERPOLATED_STRING
+                    | INTERPOLATED_VERBATIM ;
+
+# --- typeof Expression ---
+
+typeof_expression = "typeof" LPAREN type_or_void RPAREN ;
+
+type_or_void = type | "void" ;
+
+# --- sizeof Expression ---
+
+sizeof_expression = "sizeof" LPAREN type RPAREN ;
+
+# --- checked / unchecked Expressions ---
+
+checked_expression = "checked" LPAREN expression RPAREN ;
+
+unchecked_expression = "unchecked" LPAREN expression RPAREN ;
+
+# --- default Value Expression ---
+#
+# C# 7.1 added the `default` literal (no parenthesized type).
+# We include it here for completeness (7.0 only has default(T) form):
+#   default(int)    — 0
+#   default(string) — null
+#   default         — C# 7.1+ (type inferred from context)
+
+default_value_expression = "default" LPAREN type RPAREN
+                         | "default" ;
+
+# --- nameof Expression (C# 6.0) ---
+
+nameof_expression = "nameof" LPAREN expression RPAREN ;
+
+# --- Anonymous Method Expression (C# 2.0) ---
+
+anonymous_method_expression = "delegate" [ LPAREN [ formal_parameter_list ] RPAREN ] block ;
+
+# --- New Expressions ---
+#
+# Unchanged from C# 6.0 (index initializers included).
+
+new_expression = "new" new_anonymous_type
+               | "new" new_implicitly_typed_array
+               | "new" new_object_expression
+               | "new" new_array_expression ;
+
+new_anonymous_type = LBRACE [ anonymous_type_member { COMMA anonymous_type_member } ] [ COMMA ] RBRACE ;
+
+anonymous_type_member = [ NAME EQUALS ] expression ;
+
+new_implicitly_typed_array = LBRACKET RBRACKET array_initializer ;
+
+new_object_expression = type_name LPAREN [ argument_list ] RPAREN [ object_or_collection_initializer ]
+                      | type_name object_or_collection_initializer ;
+
+object_or_collection_initializer = LBRACE [ initializer_list ] [ COMMA ] RBRACE ;
+
+initializer_list = initializer_item { COMMA initializer_item } ;
+
+initializer_item = NAME EQUALS ( expression | object_or_collection_initializer )
+                 | LBRACKET expression RBRACKET EQUALS expression
+                 | LBRACE expression_list RBRACE
+                 | expression ;
+
+new_array_expression = array_type array_creation_suffix ;
+
+array_type = ( primitive_type | type_name ) ;
+
+array_creation_suffix = rank_specifier { rank_specifier } array_initializer
+                      | LBRACKET expression_list RBRACKET { rank_specifier }
+                        [ array_initializer ] ;
+
+# --- stackalloc Expression (C# 7.2) ---
+#
+# C# 7.2 makes stackalloc usable in general expression context via Span<T>.
+# In C# 7.0, stackalloc is still statement-only in fixed statements.
+# We include the expression form here for proximity to 7.x.
+#
+#   Span<int> buffer = stackalloc int[256];
+
+stackalloc_expression = "stackalloc" type LBRACKET [ expression ] RBRACKET
+                        [ array_initializer ]
+                      | "stackalloc" LBRACKET RBRACKET array_initializer ;
+
+# --- Argument List ---
+#
+# C# 7.0 adds INLINE OUT VARIABLE DECLARATIONS in argument lists.
+#
+# Before C# 7.0, you had to pre-declare out variables:
+#   int result;
+#   bool ok = int.TryParse(s, out result);
+#
+# C# 7.0 lets you declare inline:
+#   bool ok = int.TryParse(s, out int result);
+#   bool ok = int.TryParse(s, out var result);   // type inferred
+#
+# Discards also work:
+#   int.TryParse(s, out _);   // discard the out parameter
+#
+# The grammar adds `out type NAME` and `out var NAME` as argument forms.
+
+argument_list = argument { COMMA argument } ;
+
+argument = [ NAME COLON ]
+           ( "out" type NAME         # inline out variable declaration
+           | "out" "var" NAME        # inline out variable with inferred type
+           | [ "ref" | "out" | "in" ] expression ) ;
+
+# --- LINQ Query Expressions (C# 3.0) ---
+#
+# Unchanged in C# 7.0.
+
+query_expression = from_clause query_body ;
+
+from_clause = "from" [ type ] NAME "in" expression ;
+
+query_body = { query_body_clause } select_or_group_clause [ query_continuation ] ;
+
+query_body_clause = from_clause
+                  | let_clause
+                  | where_clause
+                  | join_clause
+                  | orderby_clause ;
+
+let_clause = "let" NAME EQUALS expression ;
+
+where_clause = "where" expression ;
+
+join_clause = "join" [ type ] NAME "in" expression
+              "on" expression "equals" expression
+              [ "into" NAME ] ;
+
+orderby_clause = "orderby" ordering { COMMA ordering } ;
+
+ordering = expression [ "ascending" | "descending" ] ;
+
+select_or_group_clause = "select" expression
+                        | "group" expression "by" expression ;
+
+query_continuation = "into" NAME query_body ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Unchanged through C# 7.0. (Note: numeric literals now support binary 0b...
+# and digit separators _ — but those are lexer changes, not grammar changes.)
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | VERBATIM_STRING
+        | "true"
+        | "false"
+        | "null" ;

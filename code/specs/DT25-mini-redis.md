@@ -24,7 +24,7 @@ redis-cli ──► TCP connection (DT24) ──► RESP parser (DT23)
                                │  RadixTree[key → Entry]  (DT14)    │
                                │  String  → bytes                   │
                                │  Hash    → HashMap       (DT18)    │
-                               │  List    → linked list             │
+                               │  List    → array list              │
                                │  Set     → HashSet       (DT19)    │
                                │  ZSet    → SkipList      (DT20)    │
                                │  HLL     → HyperLogLog   (DT21)    │
@@ -177,7 +177,7 @@ string keys to typed entries. Every Redis key can hold one of six types:
 │                                                                     │
 │  "counter"  → Entry { type: String,  value: b"42"              }   │
 │  "users"    → Entry { type: Hash,    value: HashMap{...}       }   │
-│  "queue"    → Entry { type: List,    value: LinkedList[...]    }   │
+│  "queue"    → Entry { type: List,    value: ArrayList[...]     }   │
 │  "online"   → Entry { type: Set,     value: HashSet{...}       }   │
 │  "scores"   → Entry { type: ZSet,    value: SkipList[...]      }   │
 │  "visitors" → Entry { type: HLL,     value: HyperLogLog{...}   }   │
@@ -220,12 +220,12 @@ HGETALL key      HashMap of HashMaps  all (field, value) pairs
 HLEN key         HashMap of HashMaps  len(store[key].hash)
 HEXISTS key f    HashMap of HashMaps  field in store[key].hash
 
-LPUSH key v[…]   LinkedList           prepend to list at key
-RPUSH key v[…]   LinkedList           append to list at key
-LPOP key         LinkedList           remove + return head
-RPOP key         LinkedList           remove + return tail
-LLEN key         LinkedList           len(list)
-LRANGE key s e   LinkedList           slice [start, end]
+LPUSH key v[…]   ArrayList            prepend to list at key
+RPUSH key v[…]   ArrayList            append to list at key
+LPOP key         ArrayList            remove + return head
+RPOP key         ArrayList            remove + return tail
+LLEN key         ArrayList            len(list)
+LRANGE key s e   ArrayList            slice [start, end]
 
 SADD key m[…]    HashSet (DT19)       add members
 SREM key m[…]    HashSet (DT19)       remove members
@@ -402,7 +402,7 @@ Store (the in-memory database):
 
 Entry (one value stored at a key):
   type: EntryType                    # String | Hash | List | Set | ZSet | HLL
-  value: bytes | HashMap | LinkedList | HashSet | SkipList | HyperLogLog
+  value: bytes | HashMap | ArrayList | HashSet | SkipList | HyperLogLog
   expires_at: int | None             # Unix milliseconds, None = no TTL
 
 EntryType (enum):
@@ -1025,7 +1025,7 @@ Phase 4: Hash Commands
   Test: HSET multiple fields, HGETALL returns all pairs
 
 Phase 5: List Commands
-  ✓ Doubly-linked list per key
+  ✓ Chunked array list per key
   ✓ LPUSH, RPUSH, LPOP, RPOP, LLEN, LRANGE, LINDEX
   Test: queue/stack semantics, LRANGE slicing
 

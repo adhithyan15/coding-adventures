@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/des",
+  "version": "0.1.0",
+  "description": "DES and 3DES block cipher (FIPS 46-3 / SP 800-67) implemented from scratch",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

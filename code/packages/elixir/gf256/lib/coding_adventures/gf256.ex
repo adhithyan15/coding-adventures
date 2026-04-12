@@ -296,4 +296,116 @@ defmodule CodingAdventures.GF256 do
   Primarily useful for testing and debugging.
   """
   def log_table(), do: @log_table
+
+  # ---------------------------------------------------------------------------
+  # GF256Field — parameterizable field factory
+  # ---------------------------------------------------------------------------
+  #
+  # The functions above are bound to the Reed-Solomon polynomial 0x11D.
+  # AES uses 0x11B. `new_field/1` returns a `%GF256Field{}` struct and
+  # overloaded functions handle field-first calls.
+  #
+  # Operations use Russian peasant (shift-and-XOR) multiplication. No log/antilog
+  # tables — they require g=2 to be a primitive element, which holds for 0x11D
+  # but NOT for 0x11B (AES uses g=0x03 per FIPS 197 §4.1).
+  #
+  # Usage:
+  #   aes = CodingAdventures.GF256.new_field(0x11B)
+  #   CodingAdventures.GF256.multiply(aes, 0x53, 0xCA)  # → 1
+
+  @doc """
+  Create a new GF(2^8) field with the given primitive polynomial.
+
+  Returns a `%CodingAdventures.GF256Field{}` struct. Pass it as the first
+  argument to the field-aware overloads of `multiply/3`, `divide/3`,
+  `power/3`, `inverse/2`.
+
+      aes = CodingAdventures.GF256.new_field(0x11B)
+      CodingAdventures.GF256.multiply(aes, 0x53, 0xCA)  # → 1
+  """
+  def new_field(polynomial) do
+    %CodingAdventures.GF256Field{polynomial: polynomial}
+  end
+
+  # Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+  # reduce is the low byte of the primitive polynomial.
+  defp gf_mul(a, b, reduce) do
+    gf_mul_loop(a, b, reduce, 0, 8)
+  end
+
+  defp gf_mul_loop(_aa, _bb, _reduce, result, 0), do: result
+
+  defp gf_mul_loop(aa, bb, reduce, result, n) do
+    result2 = if (bb &&& 1) != 0, do: bxor(result, aa), else: result
+    hi = aa &&& 0x80
+    aa2 = (aa <<< 1) &&& 0xFF
+    aa3 = if hi != 0, do: bxor(aa2, reduce), else: aa2
+    gf_mul_loop(aa3, bb >>> 1, reduce, result2, n - 1)
+  end
+
+  # Raise base to exp via repeated squaring.
+  defp gf_pow(_base, _reduce, 0), do: 1
+  defp gf_pow(0, _reduce, _exp), do: 0
+
+  defp gf_pow(base, reduce, exp) do
+    gf_pow_loop(base, reduce, exp, 1)
+  end
+
+  defp gf_pow_loop(_b, _reduce, 0, result), do: result
+
+  defp gf_pow_loop(b, reduce, e, result) do
+    result2 = if (e &&& 1) != 0, do: gf_mul(result, b, reduce), else: result
+    b2 = gf_mul(b, b, reduce)
+    gf_pow_loop(b2, reduce, e >>> 1, result2)
+  end
+
+  # Field-aware operation overloads — take a %GF256Field{} as first argument.
+
+  @doc """
+  Multiply two GF(256) elements using a parameterized field.
+
+  When called as `multiply(field, a, b)` where `field` is a `%GF256Field{}`,
+  uses Russian peasant multiplication with that field's polynomial.
+  When called as `multiply(a, b)`, uses the module-level 0x11D tables.
+  """
+  def multiply(%CodingAdventures.GF256Field{polynomial: poly}, a, b) do
+    gf_mul(a, b, poly &&& 0xFF)
+  end
+
+  @doc """
+  Divide a by b using a parameterized field. Raises ArgumentError if b is 0.
+  """
+  def divide(%CodingAdventures.GF256Field{polynomial: poly}, a, b) do
+    if b == 0, do: raise(ArgumentError, "GF256Field: division by zero")
+    reduce = poly &&& 0xFF
+    gf_mul(a, gf_pow(b, reduce, 254), reduce)
+  end
+
+  @doc """
+  Raise base to exp using a parameterized field.
+  """
+  def power(%CodingAdventures.GF256Field{polynomial: poly}, base, exp) do
+    gf_pow(base, poly &&& 0xFF, exp)
+  end
+
+  @doc """
+  Compute the multiplicative inverse using a parameterized field.
+  Raises ArgumentError if a is 0.
+  inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
+  """
+  def inverse(%CodingAdventures.GF256Field{polynomial: poly}, a) do
+    if a == 0, do: raise(ArgumentError, "GF256Field: zero has no multiplicative inverse")
+    gf_pow(a, poly &&& 0xFF, 254)
+  end
+
+  @doc """
+  Add two elements in any GF(2^8) field (XOR is polynomial-independent).
+  Provided for API symmetry with the field overloads.
+  """
+  def add(%CodingAdventures.GF256Field{}, a, b), do: bxor(a, b)
+
+  @doc """
+  Subtract two elements in any GF(2^8) field (same as add).
+  """
+  def subtract(%CodingAdventures.GF256Field{}, a, b), do: bxor(a, b)
 end

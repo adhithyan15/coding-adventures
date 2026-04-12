@@ -10,16 +10,10 @@ require "stringio"
 # Test strategy:
 #   All tests use two in-process test doubles:
 #
-#   MockCodec  — serialises RpcMessage objects to/from a simple
-#                text representation so tests can inspect frames
-#                without depending on a real codec (JSON, etc.).
-#                Format:
-#                  "request:<id>:<method>:<params>"
-#                  "response:<id>:<result>"
-#                  "error_response:<id>:<code>:<message>:<data>"
-#                  "notification:<method>:<params>"
-#                Params/result/data fields use Ruby's #inspect so
-#                they survive a round-trip through decode.
+#   MockCodec  — serialises RpcMessage objects to/from Ruby's Marshal
+#                format so tests can inspect frames without depending on a
+#                real codec (JSON, etc.). Marshal keeps nils, colons, and
+#                nested values intact across a round trip.
 #
 #   MockFramer — stores frames in an Array and pops them on read.
 #                write_frame appends to an output Array.
@@ -51,90 +45,38 @@ R = CodingAdventures::Rpc
 # MockCodec
 # ---------------------------------------------------------------------------
 #
-# Encodes RpcMessage objects to a pipe-delimited text string and decodes
-# them back.  The codec uses Ruby's #inspect/#eval for params/result/data
-# so that any Ruby literal (nil, Hash, Array, String, Integer) round-trips
-# faithfully.
+# Encodes RpcMessage objects to a Marshal byte stream and decodes them
+# back.  This keeps nils, colons, and nested values intact without needing
+# any custom escaping logic.
 #
 # Format examples:
-#   request:1:ping:nil
-#   response:1:{"a"=>1}
-#   error_response:nil:-32700:Parse error:nil
-#   notification:log:{"msg"=>"hi"}
+#   Marshal.dump(RpcRequest.new(id: 1, method: "ping", params: nil))
+#   Marshal.dump(RpcResponse.new(id: 1, result: { "a" => 1 }))
+#   Marshal.dump(RpcErrorResponse.new(id: nil, code: -32700,
+#                                     message: "Parse error", data: nil))
+#   Marshal.dump(RpcNotification.new(method: "log", params: { "msg" => "hi" }))
 #
 class MockCodec
-  SEPARATOR = ":"
-
   def encode(msg)
-    str = case msg
-          when R::RpcRequest
-            "request:#{msg.id}:#{msg.method}:#{msg.params.inspect}"
-          when R::RpcResponse
-            "response:#{msg.id}:#{msg.result.inspect}"
-          when R::RpcErrorResponse
-            "error_response:#{msg.id}:#{msg.code}:#{msg.message}:#{msg.data.inspect}"
-          when R::RpcNotification
-            "notification:#{msg.method}:#{msg.params.inspect}"
-          else
-            raise ArgumentError, "Unknown message type: #{msg.class}"
-          end
-    str.encode(Encoding::BINARY)
+    Marshal.dump(msg).b
   end
 
   def decode(bytes)
-    str  = bytes.force_encoding("UTF-8")
-    type = str.split(SEPARATOR, 2).first
+    raise R::RpcError.new(R::ErrorCodes::PARSE_ERROR, "Undecodable bytes") if bytes == "BAD_BYTES".b
+    raise R::RpcError.new(R::ErrorCodes::INVALID_REQUEST, "Not an RPC message") if bytes == "BAD_SHAPE".b
 
-    case type
-    when "request"
-      # "request:<id>:<method>:<params>"
-      _, raw_id, method, raw_params = str.split(SEPARATOR, 4)
-      id     = parse_id(raw_id)
-      params = eval_value(raw_params) # rubocop:disable Security/Eval
-      R::RpcRequest.new(id: id, method: method, params: params)
-
-    when "response"
-      # "response:<id>:<result>"
-      _, raw_id, raw_result = str.split(SEPARATOR, 3)
-      id     = parse_id(raw_id)
-      result = eval_value(raw_result) # rubocop:disable Security/Eval
-      R::RpcResponse.new(id: id, result: result)
-
-    when "error_response"
-      # "error_response:<id>:<code>:<message>:<data>"
-      _, raw_id, raw_code, message, raw_data = str.split(SEPARATOR, 5)
-      id   = parse_id(raw_id)
-      code = raw_code.to_i
-      data = eval_value(raw_data) # rubocop:disable Security/Eval
-      R::RpcErrorResponse.new(id: id, code: code, message: message, data: data)
-
-    when "notification"
-      # "notification:<method>:<params>"
-      _, method, raw_params = str.split(SEPARATOR, 3)
-      params = eval_value(raw_params) # rubocop:disable Security/Eval
-      R::RpcNotification.new(method: method, params: params)
-
-    when "BAD_BYTES"
+    msg = begin
+      Marshal.load(bytes)
+    rescue StandardError
       raise R::RpcError.new(R::ErrorCodes::PARSE_ERROR, "Undecodable bytes")
-
-    when "BAD_SHAPE"
-      raise R::RpcError.new(R::ErrorCodes::INVALID_REQUEST, "Not an RPC message")
-
-    else
-      raise R::RpcError.new(R::ErrorCodes::INVALID_REQUEST, "Unknown type: #{type}")
     end
-  end
 
-  private
-
-  def parse_id(raw)
-    return nil if raw == "nil"
-    raw.match?(/\A\d+\z/) ? raw.to_i : raw
-  end
-
-  def eval_value(raw)
-    return nil if raw.nil? || raw == "nil"
-    eval(raw) # rubocop:disable Security/Eval
+    case msg
+    when R::RpcRequest, R::RpcResponse, R::RpcErrorResponse, R::RpcNotification
+      msg
+    else
+      raise R::RpcError.new(R::ErrorCodes::INVALID_REQUEST, "Unknown message type: #{msg.class}")
+    end
   end
 end
 

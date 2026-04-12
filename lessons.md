@@ -4,6 +4,22 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
+
+When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
+
+- **Python**: `dependencies` array in `pyproject.toml`
+- **Ruby**: `spec.add_dependency` in `.gemspec` (regex requires `spec.`, not `s.`)
+- **Perl**: `requires 'coding-adventures-xxx';` in `cpanfile`
+- **Go**: `require` in `go.mod`
+- **Swift**: `.package(path: "...")` in `Package.swift`
+- **Rust**: `[dependencies]` in `Cargo.toml`
+- **TypeScript**: `dependencies` in `package.json`
+
+**Rule:** Every package that references a sibling in its BUILD file must also declare the dependency in the language-appropriate metadata file. The Ruby gemspec must use `spec` (not `s`) as the block variable, matching the build tool's regex `spec\.add_dependency`.
+
+---
+
 ### 2026-04-06: Perl `reverse LIST, $extra` vs `(reverse LIST), $extra` — precedence trap
 
 When building a list that is the reverse of one list plus an extra item, the expression
@@ -1599,3 +1615,67 @@ caused a "invalid redeclaration of 'bLen'" compile error.
 **Rule:** When replacing a `let x = expr` with an overflow-checked version that also binds `x`,
 always remove the original `let x` line. The compiler will catch both declarations at the same
 scope level.
+
+---
+
+### 2026-04-12: TypeScript AES BUILD missing prerequisite for gf256
+
+When implementing `typescript/aes` which depends on `typescript/gf256` via `"file:../gf256"`, the BUILD file omitted the transitive install step. CI failed with:
+
+```
+BUILD/CI validation failed:
+  - typescript/aes: missing prerequisite refs for standalone builds: typescript/gf256
+```
+
+**Fix:** Add `npm install --prefix ../gf256 --silent` before the local `npm install` in the BUILD file. This matches the pattern used in `typescript/reed-solomon`.
+
+**Rule:** Every TypeScript package whose `package.json` has a `"file:../X"` dependency must have `npm install --prefix ../X --silent` as the first line of its BUILD file, before the package's own `npm install`.
+
+---
+
+### 2026-04-12: Python packages with local deps must split `uv pip install` calls and declare the dep in pyproject.toml
+
+When `python/aes` depends on `python/gf256`, the build validator requires that:
+
+1. `pyproject.toml` `dependencies` must declare `"coding-adventures-gf256>=0.1.0"` — otherwise the build tool cannot infer the edge in the dependency graph and fails with `undeclared local package refs: python/gf256`.
+2. The BUILD file must install gf256 FIRST with a separate `uv pip install -e ../gf256 --quiet` line, THEN install the package with `uv pip install -e ".[dev]" --quiet`.
+
+Combining them into a single `uv pip install -e ../gf256 -e ".[dev]"` was previously tried but the split is required to match the pattern in `python/reed-solomon`.
+
+**Rule:** Python packages with local deps → declare dep in pyproject.toml `dependencies` AND use two separate `uv pip install` calls in BUILD (local dep first, then the package).
+
+**IMPORTANT UPDATE (2026-04-12):** The above alone is NOT sufficient. uv performs universal resolution across ALL extras (including optional groups), so if ANY optional-dependency group references `coding-adventures-gf256`, uv will attempt a PyPI lookup and fail. The correct pattern is:
+
+1. `pyproject.toml` `dependencies = ["coding-adventures-gf256>=0.1.0"]` — valid PEP 440 for hatchling and provides dep graph edge for validator
+2. `pyproject.toml` `[tool.uv.sources]` section: `coding-adventures-gf256 = { path = "../gf256", editable = true }` — redirects uv to local path, bypassing PyPI
+3. BUILD: `uv pip install -e ../gf256 --quiet` first (explicit ref satisfies the validator's `requiresExplicitPrereqs` check), then `uv pip install -e ".[dev]" --quiet`
+
+Do NOT use `@ file:../gf256` in `dependencies` — hatchling rejects this during wheel metadata build. Do NOT put gf256 in optional-dependency groups — uv resolves ALL extras universally.
+
+---
+## Python BUILD files: Always use Unix venv paths
+
+**Date:** 2026-04-12
+
+**What happened:** Python ls00 BUILD file used `.venv/Scripts/python` (Windows venv layout).
+CI runs on Linux where the path is `.venv/bin/python`, causing `sh: .venv/Scripts/python: not found`.
+
+**Rule:** Always use `.venv/bin/python` in BUILD files. CI runs on Linux. All other Python packages
+in the repo use `.venv/bin/python`. The Windows path `.venv/Scripts/python` only works locally on
+Windows and will fail in CI.
+
+---
+
+## BUILD_windows files required for Windows CI
+
+**Date:** 2026-04-12
+
+**What happened:** Python, Perl, and Ruby ls00 packages failed on Windows CI because the BUILD file
+uses `sh` syntax (`.venv/bin/python`, `for f in ...; do ... done`, etc.) but the build tool runs
+`cmd /C` on Windows. The build tool supports `BUILD_windows` as a platform-specific override.
+
+**Rule:** When creating a new package, check if sibling packages (e.g., json-rpc) have `BUILD_windows`
+files. If they do, create one for the new package too. Key differences for Windows:
+- Python: use `uv run --no-project python` instead of `.venv/bin/python`
+- Perl: skip tests on Windows (matches json-rpc pattern)
+- Ruby: `bundle exec rake test` works on both platforms, but `cd` path separators may differ
