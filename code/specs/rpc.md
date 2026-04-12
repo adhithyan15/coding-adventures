@@ -13,7 +13,8 @@ This spec defines a codec-agnostic `rpc` package that captures those semantics.
 The `json-rpc` package (already implemented) is a thin instantiation of `rpc`
 with a JSON codec and a Content-Length framer. Future packages — `protobuf-rpc`,
 `msgpack-rpc`, `xml-rpc` — will be different instantiations of the same `rpc`
-layer.
+layer. In this monorepo, the same `rpc` abstraction is implemented in Go,
+TypeScript, Python, Ruby, Elixir, Rust, Lua, Perl, and Swift.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -498,6 +499,14 @@ perl/rpc/lib/CodingAdventures/Rpc/
   Server.pm
   Client.pm
   Errors.pm
+
+swift/rpc/Sources/Rpc/
+  Codec.swift
+  Client.swift
+  Errors.swift
+  Framer.swift
+  Message.swift
+  Server.swift
 ```
 
 ---
