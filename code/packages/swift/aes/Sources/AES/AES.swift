@@ -88,7 +88,10 @@ import GF256
 // AES uses the polynomial x^8+x^4+x^3+x+1 = 0x11B, distinct from the
 // Reed-Solomon polynomial 0x11D used by the base GF256 enum.
 
-private let aesField = GF256Field(polynomial: 0x11B)
+// nonisolated(unsafe): GF256Field is a pure value type (all stored properties
+// are immutable `let`) so sharing across concurrency domains is safe. The
+// upstream package does not yet declare Sendable conformance, so we assert it.
+nonisolated(unsafe) private let aesField = GF256Field(polynomial: 0x11B)
 
 // ============================================================================
 // MARK: - S-box Construction
