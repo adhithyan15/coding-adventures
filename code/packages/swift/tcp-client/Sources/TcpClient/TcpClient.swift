@@ -795,6 +795,17 @@ internal func attemptConnect(
         throw mapErrno("socket")
     }
 
+    // Prevent SIGPIPE from killing the process when writing to a closed socket.
+    // On Darwin, SO_NOSIGPIPE is a per-socket option. On Linux, we ignore
+    // SIGPIPE globally (MSG_NOSIGNAL is the per-send alternative, but we use
+    // POSIX write() not send(), so the global ignore is simpler).
+    #if canImport(Darwin)
+    var noSigPipe: Int32 = 1
+    setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &noSigPipe, socklen_t(MemoryLayout<Int32>.size))
+    #elseif canImport(Glibc)
+    signal(SIGPIPE, SIG_IGN)
+    #endif
+
     // If anything fails from here, close the socket to prevent leaks.
     var success = false
     defer {
