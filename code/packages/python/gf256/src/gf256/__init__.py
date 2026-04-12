@@ -224,3 +224,106 @@ def zero() -> GF256:
 def one() -> GF256:
     """Return the multiplicative identity (1)."""
     return 1
+
+
+# =============================================================================
+# GF256Field — Parameterizable Field Factory
+# =============================================================================
+#
+# The functions above are bound to the Reed-Solomon polynomial 0x11D.
+# AES uses the polynomial 0x11B instead. Rather than duplicating all the
+# field arithmetic, GF256Field accepts any primitive polynomial and builds
+# its own independent log/antilog tables.
+#
+# Usage:
+#   aes_field = GF256Field(0x11B)
+#   rs_field  = GF256Field(0x11D)   # same as module-level functions
+#
+#   aes_field.multiply(0x53, 0x8C)  # → 0x01 in AES GF(2^8)
+#   aes_field.inverse(0x53)         # → AES S-box input
+#
+# The module-level functions remain the canonical Reed-Solomon API and are
+# not changed by creating a GF256Field instance.
+
+
+class GF256Field:
+    """A Galois Field GF(2^8) configured for a specific primitive polynomial.
+
+    The module-level functions are fixed to the Reed-Solomon polynomial 0x11D.
+    This class lets you instantiate a field with any primitive polynomial —
+    most notably 0x11B for AES.
+
+    The log/antilog tables are built once in __init__ and cached as instance
+    attributes. All field operations are O(1) table lookups.
+
+    Args:
+        polynomial: The irreducible polynomial for modular reduction,
+                    represented as an integer. The degree-8 term is included:
+                    AES uses 0x11B (x^8+x^4+x^3+x+1),
+                    Reed-Solomon uses 0x11D (x^8+x^4+x^3+x^2+1).
+
+    Examples:
+        >>> f = GF256Field(0x11B)
+        >>> f.multiply(0x53, 0x8C)   # AES field: 0x53 and 0x8C are inverses
+        1
+        >>> f.multiply(0x57, 0x83)   # FIPS 197 Appendix B
+        193
+    """
+
+    def __init__(self, polynomial: int) -> None:
+        self.polynomial = polynomial
+        self._log, self._alog = self._build_tables(polynomial)
+
+    @staticmethod
+    def _build_tables(poly: int) -> tuple[tuple[int, ...], tuple[int, ...]]:
+        """Build log/antilog tables for the given polynomial."""
+        log_table = [0] * 256
+        alog_table = [0] * 256
+        val = 1
+        for i in range(255):
+            alog_table[i] = val
+            log_table[val] = i
+            val <<= 1
+            if val >= 256:
+                val ^= poly
+        alog_table[255] = 1  # g^255 = g^0 = 1 (group wraps)
+        return tuple(log_table), tuple(alog_table)
+
+    # add/subtract are polynomial-independent (always XOR), but included for
+    # API symmetry so callers only need one object.
+
+    def add(self, a: GF256, b: GF256) -> GF256:
+        """Add two field elements: a XOR b (characteristic-2 addition)."""
+        return a ^ b
+
+    def subtract(self, a: GF256, b: GF256) -> GF256:
+        """Subtract two field elements: a XOR b (same as add in GF(2^8))."""
+        return a ^ b
+
+    def multiply(self, a: GF256, b: GF256) -> GF256:
+        """Multiply two field elements using log/antilog tables."""
+        if a == 0 or b == 0:
+            return 0
+        return self._alog[(self._log[a] + self._log[b]) % 255]
+
+    def divide(self, a: GF256, b: GF256) -> GF256:
+        """Divide a by b.  Raises ValueError if b is 0."""
+        if b == 0:
+            raise ValueError("GF256Field: division by zero")
+        if a == 0:
+            return 0
+        return self._alog[(self._log[a] - self._log[b] + 255) % 255]
+
+    def power(self, base: GF256, exp: int) -> GF256:
+        """Raise base to a non-negative integer power."""
+        if base == 0:
+            return 1 if exp == 0 else 0
+        if exp == 0:
+            return 1
+        return self._alog[(self._log[base] * exp % 255 + 255) % 255]
+
+    def inverse(self, a: GF256) -> GF256:
+        """Return the multiplicative inverse of a.  Raises ValueError if a is 0."""
+        if a == 0:
+            raise ValueError("GF256Field: zero has no multiplicative inverse")
+        return self._alog[255 - self._log[a]]

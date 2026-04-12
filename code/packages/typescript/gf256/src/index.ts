@@ -258,3 +258,96 @@ export function zero(): GF256 {
 export function one(): GF256 {
   return 1;
 }
+
+// =============================================================================
+// GF256Field — parameterizable field factory
+// =============================================================================
+//
+// The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses the polynomial 0x11B. `createField` builds an independent field
+// object for any primitive polynomial, reusing the same algorithm.
+//
+// Usage:
+//   const aes = createField(0x11B);
+//   aes.multiply(0x53, 0x8C);  // → 1  (AES GF(2^8) inverses)
+
+/**
+ * A GF(2^8) field configured for a specific primitive polynomial.
+ *
+ * Instances are created via `createField`. All operations are O(1) table lookups.
+ */
+export interface GF256FieldInstance {
+  readonly polynomial: number;
+  add(a: GF256, b: GF256): GF256;
+  subtract(a: GF256, b: GF256): GF256;
+  multiply(a: GF256, b: GF256): GF256;
+  divide(a: GF256, b: GF256): GF256;
+  power(base: GF256, exp: number): GF256;
+  inverse(a: GF256): GF256;
+}
+
+/**
+ * Create a GF(2^8) field for the given primitive polynomial.
+ *
+ * The module-level functions are fixed to the Reed-Solomon polynomial `0x11D`.
+ * Use `createField(0x11B)` for the AES polynomial.
+ *
+ * @param polynomial The irreducible polynomial as an integer with the degree-8
+ *   term included: `0x11B` for AES, `0x11D` for Reed-Solomon.
+ * @returns An object with the same API as the module-level functions, but using
+ *   tables built for `polynomial`.
+ *
+ * @example
+ * ```ts
+ * const aes = createField(0x11B);
+ * aes.multiply(0x53, 0x8C);  // → 1
+ * aes.multiply(0x57, 0x83);  // → 0xC1  (FIPS 197 Appendix B)
+ * ```
+ */
+export function createField(polynomial: number): GF256FieldInstance {
+  // Build log/alog tables for this polynomial.
+  const fieldLog: number[] = new Array(256).fill(0);
+  const fieldAlog: number[] = new Array(256).fill(0);
+
+  let val = 1;
+  for (let i = 0; i < 255; i++) {
+    fieldAlog[i] = val;
+    fieldLog[val] = i;
+    val <<= 1;
+    if (val >= 256) {
+      val ^= polynomial;
+    }
+  }
+  // g^255 = 1 (group order 255, wraps around).
+  fieldAlog[255] = 1;
+
+  return {
+    polynomial,
+
+    // add/subtract are polynomial-independent (always XOR); included for symmetry.
+    add(a: GF256, b: GF256): GF256 { return a ^ b; },
+    subtract(a: GF256, b: GF256): GF256 { return a ^ b; },
+
+    multiply(a: GF256, b: GF256): GF256 {
+      if (a === 0 || b === 0) return 0;
+      return fieldAlog[(fieldLog[a] + fieldLog[b]) % 255];
+    },
+
+    divide(a: GF256, b: GF256): GF256 {
+      if (b === 0) throw new Error("GF256Field: division by zero");
+      if (a === 0) return 0;
+      return fieldAlog[(fieldLog[a] - fieldLog[b] + 255) % 255];
+    },
+
+    power(base: GF256, exp: number): GF256 {
+      if (base === 0) return exp === 0 ? 1 : 0;
+      if (exp === 0) return 1;
+      return fieldAlog[((fieldLog[base] * exp) % 255 + 255) % 255];
+    },
+
+    inverse(a: GF256): GF256 {
+      if (a === 0) throw new Error("GF256Field: zero has no multiplicative inverse");
+      return fieldAlog[255 - fieldLog[a]];
+    },
+  };
+}

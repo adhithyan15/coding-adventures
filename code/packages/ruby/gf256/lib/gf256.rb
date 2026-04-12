@@ -164,4 +164,79 @@ module GF256
   def self.alog_table
     ALOG
   end
+
+  # ===========================================================================
+  # GF256Field — parameterizable field factory
+  # ===========================================================================
+  #
+  # The module-level functions are fixed to the Reed-Solomon polynomial 0x11D.
+  # AES uses 0x11B. GF256::Field accepts any primitive polynomial and builds
+  # its own independent log/antilog tables.
+  #
+  # Usage:
+  #   aes = GF256::Field.new(0x11B)
+  #   aes.multiply(0x53, 0x8C)  # => 1
+  #   aes.inverse(0x53)          # => 0x8C
+
+  class Field
+    attr_reader :polynomial
+
+    # Build a GF(2^8) field for the given primitive polynomial.
+    #
+    # @param polynomial [Integer] the irreducible polynomial (e.g. 0x11B for AES,
+    #   0x11D for Reed-Solomon).
+    def initialize(polynomial)
+      @polynomial = polynomial
+      @log, @alog = build_tables(polynomial)
+    end
+
+    # Add two field elements: a XOR b (characteristic-2; polynomial-independent).
+    def add(a, b) = a ^ b
+
+    # Subtract two field elements: a XOR b (same as add in GF(2^8)).
+    def subtract(a, b) = a ^ b
+
+    # Multiply two field elements using this field's log/antilog tables.
+    def multiply(a, b)
+      return 0 if a == 0 || b == 0
+      @alog[(@log[a] + @log[b]) % 255]
+    end
+
+    # Divide a by b. Raises ArgumentError if b is 0.
+    def divide(a, b)
+      raise ArgumentError, "GF256::Field: division by zero" if b == 0
+      return 0 if a == 0
+      @alog[(@log[a] - @log[b] + 255) % 255]
+    end
+
+    # Raise base to a non-negative integer power.
+    def power(base, exp)
+      return 1 if base == 0 && exp == 0
+      return 0 if base == 0
+      return 1 if exp == 0
+      @alog[((@log[base] * exp) % 255 + 255) % 255]
+    end
+
+    # Return the multiplicative inverse of a. Raises ArgumentError if a is 0.
+    def inverse(a)
+      raise ArgumentError, "GF256::Field: zero has no multiplicative inverse" if a == 0
+      @alog[255 - @log[a]]
+    end
+
+    private
+
+    def build_tables(poly)
+      log_tbl  = Array.new(256, 0)
+      alog_tbl = Array.new(256, 0)
+      val = 1
+      255.times do |i|
+        alog_tbl[i] = val
+        log_tbl[val] = i
+        val <<= 1
+        val ^= poly if val >= 256
+      end
+      alog_tbl[255] = 1  # g^255 = g^0 = 1
+      [log_tbl.freeze, alog_tbl.freeze]
+    end
+  end
 end

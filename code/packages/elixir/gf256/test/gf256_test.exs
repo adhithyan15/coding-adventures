@@ -297,4 +297,67 @@ defmodule CodingAdventures.GF256Test do
       assert GF.multiply(0x53, 0x8C) == 1
     end
   end
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # GF256Field — parameterizable field factory
+  # ────────────────────────────────────────────────────────────────────────────
+
+  describe "new_field and field-aware overloads" do
+    test "new_field returns a GF256Field struct" do
+      field = GF.new_field(0x11B)
+      assert %CodingAdventures.GF256Field{polynomial: 0x11B} = field
+    end
+
+    test "AES field: multiply(0x53, 0x8C) = 1 (inverses in 0x11B)" do
+      aes = GF.new_field(0x11B)
+      assert GF.multiply(aes, 0x53, 0x8C) == 1
+    end
+
+    test "AES field: multiply(0x57, 0x83) = 0xC1 (FIPS 197 Appendix B)" do
+      aes = GF.new_field(0x11B)
+      assert GF.multiply(aes, 0x57, 0x83) == 0xC1
+    end
+
+    test "AES field: inverse(0x53) = 0x8C" do
+      aes = GF.new_field(0x11B)
+      assert GF.inverse(aes, 0x53) == 0x8C
+    end
+
+    test "RS field (0x11D) matches module-level multiply for sample values" do
+      rs = GF.new_field(0x11D)
+      for a <- [0, 1, 0x53, 0xCA, 0xFF], b <- [0, 1, 0x8C, 0x7F, 0xFF] do
+        assert GF.multiply(rs, a, b) == GF.multiply(a, b),
+               "Field(0x11D).multiply(#{a}, #{b}) should match module-level"
+      end
+    end
+
+    test "field multiply is commutative" do
+      aes = GF.new_field(0x11B)
+      for a <- [1, 2, 0x53, 0xFF], b <- [1, 2, 0x8C, 0x7F] do
+        assert GF.multiply(aes, a, b) == GF.multiply(aes, b, a)
+      end
+    end
+
+    test "field inverse times self is 1" do
+      aes = GF.new_field(0x11B)
+      for a <- 1..20 do
+        assert GF.multiply(aes, a, GF.inverse(aes, a)) == 1
+      end
+    end
+
+    test "field divide by zero raises ArgumentError" do
+      aes = GF.new_field(0x11B)
+      assert_raise ArgumentError, fn -> GF.divide(aes, 5, 0) end
+    end
+
+    test "field inverse of zero raises ArgumentError" do
+      aes = GF.new_field(0x11B)
+      assert_raise ArgumentError, fn -> GF.inverse(aes, 0) end
+    end
+
+    test "field add is XOR (polynomial-independent)" do
+      aes = GF.new_field(0x11B)
+      assert GF.add(aes, 0x53, 0xCA) == Bitwise.bxor(0x53, 0xCA)
+    end
+  end
 end

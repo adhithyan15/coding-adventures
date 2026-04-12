@@ -408,3 +408,111 @@ public enum GF256 {
         return tables.alog[255 - logA]
     }
 }
+
+// ============================================================================
+// MARK: - GF256Field — parameterizable field factory
+// ============================================================================
+//
+// The GF256 namespace above is fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses 0x11B. GF256Field accepts any primitive polynomial and builds
+// its own independent log/antilog tables.
+//
+// Usage:
+//   let aes = GF256Field(polynomial: 0x11B)
+//   aes.multiply(0x53, 0x8C)  // → 1   (AES GF(2^8) inverses)
+//   aes.multiply(0x57, 0x83)  // → 0xC1 (FIPS 197 Appendix B)
+
+/// A GF(2^8) field parameterized by an arbitrary primitive polynomial.
+///
+/// The `GF256` enum is fixed to the Reed-Solomon polynomial `0x11D`.
+/// `GF256Field` lets you work with any polynomial — most notably `0x11B`
+/// for AES.
+///
+/// Tables are built once in `init` and cached as stored properties.
+/// All operations are O(1).
+public struct GF256Field {
+
+    /// The primitive (irreducible) polynomial for this field.
+    public let polynomial: UInt16
+
+    // Precomputed lookup tables for this polynomial.
+    private let fieldLog:  [UInt16]
+    private let fieldAlog: [UInt8]
+
+    // ========================================================================
+    // MARK: - Initialization
+    // ========================================================================
+
+    /// Create a GF(2^8) field for the given primitive polynomial.
+    ///
+    /// - Parameter polynomial: The degree-8 irreducible polynomial as a
+    ///   `UInt16`, e.g. `0x11B` for AES or `0x11D` for Reed-Solomon.
+    public init(polynomial: UInt16) {
+        self.polynomial = polynomial
+
+        var log  = [UInt16](repeating: 0, count: 256)
+        var alog = [UInt8](repeating: 0, count: 256)
+
+        var val: UInt16 = 1
+        for i in 0..<255 {
+            alog[i] = UInt8(val)
+            log[Int(val)] = UInt16(i)
+            val <<= 1
+            if val >= 256 {
+                val ^= polynomial
+            }
+        }
+        // g^255 = 1 (the multiplicative group has order 255).
+        alog[255] = 1
+
+        self.fieldLog  = log
+        self.fieldAlog = alog
+    }
+
+    // ========================================================================
+    // MARK: - Operations
+    // ========================================================================
+
+    /// Add two elements: `a XOR b`.
+    /// Addition is polynomial-independent; included for API symmetry.
+    public func add(_ a: UInt8, _ b: UInt8) -> UInt8 { a ^ b }
+
+    /// Subtract two elements: `a XOR b` (identical to add in GF(2^8)).
+    public func subtract(_ a: UInt8, _ b: UInt8) -> UInt8 { a ^ b }
+
+    /// Multiply two elements using this field's log/antilog tables.
+    public func multiply(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        if a == 0 || b == 0 { return 0 }
+        let logA = Int(fieldLog[Int(a)])
+        let logB = Int(fieldLog[Int(b)])
+        return fieldAlog[(logA + logB) % 255]
+    }
+
+    /// Divide `a` by `b`.
+    ///
+    /// - Precondition: `b != 0`.
+    public func divide(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        precondition(b != 0, "GF256Field: division by zero")
+        if a == 0 { return 0 }
+        let logA = Int(fieldLog[Int(a)])
+        let logB = Int(fieldLog[Int(b)])
+        return fieldAlog[(logA - logB + 255) % 255]
+    }
+
+    /// Raise `base` to a non-negative integer power.
+    public func power(_ base: UInt8, _ exp: UInt32) -> UInt8 {
+        if base == 0 { return exp == 0 ? 1 : 0 }
+        if exp == 0  { return 1 }
+        let logBase = Int(fieldLog[Int(base)])
+        let expMod  = Int(exp % 255)
+        return fieldAlog[(logBase * expMod) % 255]
+    }
+
+    /// Compute the multiplicative inverse of `a`.
+    ///
+    /// - Precondition: `a != 0`.
+    public func inverse(_ a: UInt8) -> UInt8 {
+        precondition(a != 0, "GF256Field: zero has no multiplicative inverse")
+        return fieldAlog[255 - Int(fieldLog[Int(a)])]
+    }
+}

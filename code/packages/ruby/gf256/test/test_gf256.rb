@@ -268,3 +268,77 @@ class TestGF256 < Minitest::Test
     assert_equal 0x42, GF256.multiply(0x42, GF256.one)
   end
 end
+
+# =============================================================================
+# GF256::Field — parameterizable field factory
+# =============================================================================
+
+class TestGF256Field < Minitest::Test
+  def aes_field
+    @aes_field ||= GF256::Field.new(0x11B)
+  end
+
+  def rs_field
+    @rs_field ||= GF256::Field.new(0x11D)
+  end
+
+  # ── AES field correctness ─────────────────────────────────────────────────
+
+  def test_aes_multiply_inverses
+    # In AES GF(2^8): 0x53 × 0x8C = 0x01
+    assert_equal 0x01, aes_field.multiply(0x53, 0x8C)
+  end
+
+  def test_aes_fips197_appendix_b
+    # FIPS 197 Appendix B: 0x57 × 0x83 = 0xC1 in GF(2^8, 0x11B)
+    assert_equal 0xC1, aes_field.multiply(0x57, 0x83)
+  end
+
+  def test_aes_inverse
+    assert_equal 0x8C, aes_field.inverse(0x53)
+    assert_equal 1, aes_field.multiply(0x53, aes_field.inverse(0x53))
+  end
+
+  # ── RS field matches module-level functions ───────────────────────────────
+
+  def test_rs_matches_module_multiply
+    [0, 1, 0x53, 0xCA, 0xFF].each do |a|
+      [0, 1, 0x8C, 0x7F, 0xFF].each do |b|
+        assert_equal GF256.multiply(a, b), rs_field.multiply(a, b),
+          "Field(0x11D).multiply(#{a}, #{b}) should match module-level"
+      end
+    end
+  end
+
+  # ── General field properties ──────────────────────────────────────────────
+
+  def test_commutativity
+    [1, 2, 0x53, 0x8C].each do |a|
+      [1, 2, 0x57, 0x83].each do |b|
+        assert_equal aes_field.multiply(a, b), aes_field.multiply(b, a)
+      end
+    end
+  end
+
+  def test_inverse_times_self_is_one
+    (1..20).each do |a|
+      assert_equal 1, aes_field.multiply(a, aes_field.inverse(a))
+    end
+  end
+
+  def test_divide_by_zero_raises
+    assert_raises(ArgumentError) { aes_field.divide(5, 0) }
+  end
+
+  def test_inverse_of_zero_raises
+    assert_raises(ArgumentError) { aes_field.inverse(0) }
+  end
+
+  def test_add_is_xor
+    assert_equal(0x53 ^ 0xCA, aes_field.add(0x53, 0xCA))
+  end
+
+  def test_polynomial_stored
+    assert_equal 0x11B, aes_field.polynomial
+  end
+end

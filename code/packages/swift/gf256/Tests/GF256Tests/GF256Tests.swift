@@ -423,3 +423,145 @@ final class FieldAxiomTests: XCTestCase {
         }
     }
 }
+
+
+// MARK: - GF256Field (parameterizable field factory) Tests
+
+/// Tests for GF256Field — a field factory that accepts any primitive polynomial.
+///
+/// The module-level GF256 enum is fixed to the Reed-Solomon polynomial 0x11D.
+/// GF256Field allows AES (polynomial 0x11B) and other applications to use the
+/// same O(1) log/antilog table algorithm with a different polynomial.
+final class GF256FieldTests: XCTestCase {
+
+    // ── AES field (polynomial 0x11B) ─────────────────────────────────────────
+
+    /// In the AES field (poly 0x11B): 0x53 × 0x8C = 0x01.
+    /// These are multiplicative inverses in AES GF(2^8).
+    func testAESFieldMultiplyInverses() {
+        let aes = GF256Field(polynomial: 0x11B)
+        XCTAssertEqual(aes.multiply(0x53, 0x8C), 0x01)
+    }
+
+    /// FIPS 197 Appendix B test vector: 0x57 × 0x83 = 0xC1 in AES GF(2^8).
+    /// This is the canonical test from the AES specification.
+    func testAESFieldFIPS197() {
+        let aes = GF256Field(polynomial: 0x11B)
+        XCTAssertEqual(aes.multiply(0x57, 0x83), 0xC1)
+    }
+
+    /// inverse(0x53) = 0x8C in the AES field.
+    func testAESFieldInverse() {
+        let aes = GF256Field(polynomial: 0x11B)
+        XCTAssertEqual(aes.inverse(0x53), 0x8C)
+    }
+
+    /// a × inverse(a) = 1 for a in 1..20 using the AES field.
+    func testAESFieldInverseProperty() {
+        let aes = GF256Field(polynomial: 0x11B)
+        for a: UInt8 in 1...20 {
+            XCTAssertEqual(aes.multiply(a, aes.inverse(a)), 1,
+                "AES field: \(a) × inverse(\(a)) should be 1")
+        }
+    }
+
+    /// Multiplication is commutative in the AES field.
+    func testAESFieldCommutativity() {
+        let aes = GF256Field(polynomial: 0x11B)
+        let vals: [UInt8] = [0, 1, 0x53, 0x8C, 0xFF]
+        for a in vals {
+            for b in vals {
+                XCTAssertEqual(aes.multiply(a, b), aes.multiply(b, a),
+                    "AES field: multiply(\(a), \(b)) should equal multiply(\(b), \(a))")
+            }
+        }
+    }
+
+    /// add is XOR regardless of polynomial (characteristic 2).
+    func testAESFieldAddIsXOR() {
+        let aes = GF256Field(polynomial: 0x11B)
+        XCTAssertEqual(aes.add(0x53, 0xCA), 0x53 ^ 0xCA)
+    }
+
+    /// divide by zero panics in the AES field.
+    func testAESFieldDivideByZero() {
+        let aes = GF256Field(polynomial: 0x11B)
+        // XCTAssertThrowsError doesn't work for fatalError; verify non-zero divides work.
+        // We verify the happy path here; the fatalError path is documented behavior.
+        XCTAssertEqual(aes.divide(0x53, 0x8C), aes.multiply(0x53, aes.inverse(0x8C)))
+    }
+
+    /// polynomial property is stored on the field instance.
+    func testAESFieldPolynomialProperty() {
+        let aes = GF256Field(polynomial: 0x11B)
+        XCTAssertEqual(aes.polynomial, 0x11B)
+    }
+
+    // ── RS field (0x11D) matches module-level functions ───────────────────────
+
+    /// GF256Field(0x11D).multiply should match the module-level GF256.multiply
+    /// for a sample of values, verifying backward compatibility.
+    func testRSFieldMatchesModuleMultiply() {
+        let rs = GF256Field(polynomial: 0x11D)
+        let vals: [UInt8] = [0, 1, 0x53, 0xCA, 0xFF]
+        for a in vals {
+            for b in vals {
+                XCTAssertEqual(rs.multiply(a, b), GF256.multiply(a, b),
+                    "RS field multiply(\(a), \(b)) should match module-level")
+            }
+        }
+    }
+
+    /// GF256Field(0x11D).inverse should match GF256.inverse for a sample.
+    func testRSFieldMatchesModuleInverse() {
+        let rs = GF256Field(polynomial: 0x11D)
+        for a: UInt8 in 1...20 {
+            XCTAssertEqual(rs.inverse(a), GF256.inverse(a),
+                "RS field inverse(\(a)) should match module-level")
+        }
+    }
+
+    // ── General field properties ──────────────────────────────────────────────
+
+    /// multiply by zero always returns zero.
+    func testFieldMultiplyByZero() {
+        let aes = GF256Field(polynomial: 0x11B)
+        for a: UInt8 in [0, 1, 0x53, 0xFF] {
+            XCTAssertEqual(aes.multiply(a, 0), 0)
+            XCTAssertEqual(aes.multiply(0, a), 0)
+        }
+    }
+
+    /// multiply by one is the identity.
+    func testFieldMultiplyByOne() {
+        let aes = GF256Field(polynomial: 0x11B)
+        for a: UInt8 in [0, 1, 0x53, 0xFF] {
+            XCTAssertEqual(aes.multiply(a, 1), a)
+            XCTAssertEqual(aes.multiply(1, a), a)
+        }
+    }
+
+    /// divide(x, 1) = x.
+    func testFieldDivideByOne() {
+        let aes = GF256Field(polynomial: 0x11B)
+        for a: UInt8 in [0, 1, 0x53, 0xFF] {
+            XCTAssertEqual(aes.divide(a, 1), a)
+        }
+    }
+
+    /// divide(x, x) = 1 for non-zero x.
+    func testFieldDivideSelf() {
+        let aes = GF256Field(polynomial: 0x11B)
+        for a: UInt8 in 1...10 {
+            XCTAssertEqual(aes.divide(a, a), 1)
+        }
+    }
+
+    /// inverse(inverse(a)) = a.
+    func testFieldInverseOfInverse() {
+        let aes = GF256Field(polynomial: 0x11B)
+        for a: UInt8 in 1...20 {
+            XCTAssertEqual(aes.inverse(aes.inverse(a)), a)
+        }
+    }
+}

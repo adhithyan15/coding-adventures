@@ -325,6 +325,114 @@ sub inverse {
     return $ALOG[ 255 - $LOG[$a] ];
 }
 
+
+# ============================================================================
+# CodingAdventures::GF256::Field — parameterizable field factory
+# ============================================================================
+#
+# The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+# AES uses a different primitive polynomial: 0x11B.
+# GF256::Field accepts any primitive polynomial and builds its own independent
+# log/antilog tables.
+#
+# Usage:
+#   use CodingAdventures::GF256::Field;
+#
+#   my $aes = CodingAdventures::GF256::Field->new(0x11B);
+#   $aes->multiply(0x53, 0x8C);   # => 1   (AES GF(2^8) inverses)
+#   $aes->multiply(0x57, 0x83);   # => 0xC1 (FIPS 197 Appendix B)
+#
+# Backward compatibility: the module-level functions (add, subtract, multiply,
+# divide, power, inverse) remain unchanged and still use 0x11D.
+# ============================================================================
+
+package CodingAdventures::GF256::Field;
+
+use strict;
+use warnings;
+
+# ----------------------------------------------------------------------------
+# new($polynomial) — construct a field for the given primitive polynomial.
+#
+# Builds LOG and ALOG tables using the same algorithm as the module-level code.
+# The tables are stored as array references inside the blessed hash.
+#
+# @param $polynomial  The irreducible polynomial as an integer (e.g. 0x11B for AES,
+#                     0x11D for Reed-Solomon).
+# @return             A blessed GF256::Field object.
+# ----------------------------------------------------------------------------
+sub new {
+    my ($class, $polynomial) = @_;
+
+    my @alog = (0) x 256;
+    my @log  = (0) x 256;
+
+    my $val = 1;
+    for my $i (0 .. 254) {
+        $alog[$i] = $val;
+        $log[$val] = $i;
+        $val <<= 1;
+        if ($val & 0x100) {
+            $val ^= $polynomial;
+            $val &= 0xFF;
+        }
+    }
+    $alog[255] = $alog[0];    # g^255 = g^0 = 1
+
+    return bless {
+        polynomial => $polynomial,
+        alog       => \@alog,
+        log        => \@log,
+    }, $class;
+}
+
+# The primitive polynomial this field was built with.
+sub polynomial { $_[0]->{polynomial} }
+
+# Add two field elements: a XOR b (characteristic 2; polynomial-independent).
+sub add {
+    my ($self, $a, $b) = @_;
+    return $a ^ $b;
+}
+
+# Subtract two field elements: same as add in GF(2^8).
+sub subtract {
+    my ($self, $a, $b) = @_;
+    return $a ^ $b;
+}
+
+# Multiply two field elements using this field's log/antilog tables.
+sub multiply {
+    my ($self, $a, $b) = @_;
+    return 0 if $a == 0 || $b == 0;
+    return $self->{alog}[ ($self->{log}[$a] + $self->{log}[$b]) % 255 ];
+}
+
+# Divide a by b. Dies if b is 0.
+sub divide {
+    my ($self, $a, $b) = @_;
+    die "GF256::Field: division by zero" if $b == 0;
+    return 0 if $a == 0;
+    return $self->{alog}[ ($self->{log}[$a] - $self->{log}[$b] + 255) % 255 ];
+}
+
+# Raise base to a non-negative integer power.
+sub power {
+    my ($self, $base, $exp) = @_;
+    return 1 if $exp == 0;
+    return 0 if $base == 0;
+    return $self->{alog}[ ($self->{log}[$base] * $exp) % 255 ];
+}
+
+# Return the multiplicative inverse of a. Dies if a is 0.
+sub inverse {
+    my ($self, $a) = @_;
+    die "GF256::Field: zero has no multiplicative inverse" if $a == 0;
+    return $self->{alog}[ 255 - $self->{log}[$a] ];
+}
+
+package CodingAdventures::GF256;
+
 1;
 
 __END__

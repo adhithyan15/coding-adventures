@@ -1,5 +1,19 @@
 # Changelog — @coding-adventures/gf256
 
+## [0.2.0] — 2026-04-11
+
+### Added
+
+- `GF256FieldInstance` interface — describes a parameterizable field object.
+- `createField(polynomial: number): GF256FieldInstance` factory function — builds
+  independent LOG/ALOG tables for any primitive polynomial.
+  - `createField(0x11B)` creates the AES GF(2^8) field.
+  - `createField(0x11D)` matches the module-level functions (Reed-Solomon).
+  - Methods: `multiply`, `divide`, `power`, `inverse`, `add`, `subtract`.
+  - `polynomial` property stores the polynomial used for construction.
+- Tests for `createField`: AES sanity check (`0x53 × 0x8C = 1`), FIPS 197 Appendix B
+  (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, error cases.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added

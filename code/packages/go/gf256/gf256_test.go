@@ -347,3 +347,94 @@ func TestZeroAndOne(t *testing.T) {
 		t.Error("One is not multiplicative identity")
 	}
 }
+
+// =============================================================================
+// Field — parameterizable factory
+// =============================================================================
+
+func TestField(t *testing.T) {
+	t.Run("AES field: Multiply(0x53, 0x8C) = 1", func(t *testing.T) {
+		f := gf256.NewField(0x11B)
+		got := f.Multiply(0x53, 0x8C)
+		if got != 1 {
+			t.Errorf("AES field Multiply(0x53, 0x8C) = 0x%02X, want 0x01", got)
+		}
+	})
+
+	t.Run("AES field: Multiply(0x57, 0x83) = 0xC1 (FIPS 197 Appendix B)", func(t *testing.T) {
+		f := gf256.NewField(0x11B)
+		got := f.Multiply(0x57, 0x83)
+		if got != 0xC1 {
+			t.Errorf("AES field Multiply(0x57, 0x83) = 0x%02X, want 0xC1", got)
+		}
+	})
+
+	t.Run("AES field: Inverse(0x53) = 0x8C", func(t *testing.T) {
+		f := gf256.NewField(0x11B)
+		got := f.Inverse(0x53)
+		if got != 0x8C {
+			t.Errorf("AES field Inverse(0x53) = 0x%02X, want 0x8C", got)
+		}
+	})
+
+	t.Run("RS field (0x11D) matches module-level Multiply", func(t *testing.T) {
+		f := gf256.NewField(0x11D)
+		for a := byte(0); a < 32; a++ {
+			for b := byte(0); b < 32; b++ {
+				want := gf256.Multiply(a, b)
+				got := f.Multiply(a, b)
+				if got != want {
+					t.Errorf("Field(0x11D).Multiply(%d,%d) = %d, want %d", a, b, got, want)
+				}
+			}
+		}
+	})
+
+	t.Run("commutativity", func(t *testing.T) {
+		f := gf256.NewField(0x11B)
+		vals := []byte{0, 1, 0x53, 0x8C, 0xFF}
+		for _, a := range vals {
+			for _, b := range vals {
+				if f.Multiply(a, b) != f.Multiply(b, a) {
+					t.Errorf("Multiply(%d,%d) != Multiply(%d,%d)", a, b, b, a)
+				}
+			}
+		}
+	})
+
+	t.Run("inverse times self is 1", func(t *testing.T) {
+		f := gf256.NewField(0x11B)
+		for x := byte(1); x <= 20; x++ {
+			if f.Multiply(x, f.Inverse(x)) != 1 {
+				t.Errorf("x * Inverse(x) != 1 for x = %d", x)
+			}
+		}
+	})
+
+	t.Run("panics on divide by zero", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Error("expected panic for Field.Divide(1, 0)")
+			}
+		}()
+		f := gf256.NewField(0x11B)
+		f.Divide(1, 0)
+	})
+
+	t.Run("panics on inverse of zero", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Error("expected panic for Field.Inverse(0)")
+			}
+		}()
+		f := gf256.NewField(0x11B)
+		f.Inverse(0)
+	})
+
+	t.Run("PrimitivePoly stored", func(t *testing.T) {
+		f := gf256.NewField(0x11B)
+		if f.PrimitivePoly != 0x11B {
+			t.Errorf("PrimitivePoly = 0x%03X, want 0x11B", f.PrimitivePoly)
+		}
+	})
+}

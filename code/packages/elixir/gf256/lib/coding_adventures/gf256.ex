@@ -296,4 +296,133 @@ defmodule CodingAdventures.GF256 do
   Primarily useful for testing and debugging.
   """
   def log_table(), do: @log_table
+
+  # ---------------------------------------------------------------------------
+  # GF256Field — parameterizable field factory
+  # ---------------------------------------------------------------------------
+  #
+  # The functions above are bound to the Reed-Solomon polynomial 0x11D.
+  # AES uses 0x11B. Rather than duplicating the arithmetic, `new_field/1`
+  # builds a `%CodingAdventures.GF256Field{}` struct with independent tables
+  # for any primitive polynomial.
+  #
+  # Usage:
+  #   aes = CodingAdventures.GF256.new_field(0x11B)
+  #   CodingAdventures.GF256.multiply(aes, 0x53, 0x8C)  # → 1
+  #
+  # Overloaded module functions accept either two arguments (module-level,
+  # using the 0x11D tables) or three arguments (field-first).
+
+  @doc """
+  Create a new GF(2^8) field with the given primitive polynomial.
+
+  Returns a `%CodingAdventures.GF256Field{}` struct whose log/antilog tables
+  are built for `polynomial`. Pass this struct as the first argument to the
+  field-aware overloads of `multiply/3`, `divide/3`, `power/3`, `inverse/2`.
+
+      aes = CodingAdventures.GF256.new_field(0x11B)
+      CodingAdventures.GF256.multiply(aes, 0x53, 0x8C)  # → 1
+  """
+  def new_field(polynomial) do
+    {alog, log} = build_tables_for(polynomial)
+    %CodingAdventures.GF256Field{polynomial: polynomial, alog: alog, log: log}
+  end
+
+  # Build runtime log/alog tables for an arbitrary polynomial.
+  # Returns {alog_list, log_list} both as 256-element lists.
+  defp build_tables_for(polynomial) do
+    alog_arr = :array.new(256, default: 0)
+    log_arr  = :array.new(256, default: 0)
+
+    {alog_arr, log_arr} =
+      Enum.reduce(0..254, {alog_arr, log_arr}, fn i, {al, lo} ->
+        val =
+          if i == 0 do
+            1
+          else
+            prev = :array.get(i - 1, al)
+            v = prev * 2
+            if v >= 256, do: Bitwise.bxor(v, polynomial), else: v
+          end
+
+        al = :array.set(i, val, al)
+        lo = :array.set(val, i, lo)
+        {al, lo}
+      end)
+
+    alog_arr = :array.set(255, 1, alog_arr)
+    {:array.to_list(alog_arr), :array.to_list(log_arr)}
+  end
+
+  # Field-aware operation overloads — take a %GF256Field{} as first argument.
+
+  @doc """
+  Multiply two GF(256) elements using a parameterized field.
+
+  When called as `multiply(field, a, b)` where `field` is a `%GF256Field{}`,
+  uses that field's tables (supporting any primitive polynomial).
+  When called as `multiply(a, b)`, uses the module-level 0x11D tables.
+  """
+  def multiply(%CodingAdventures.GF256Field{alog: alog, log: log}, a, b) do
+    if a == 0 or b == 0 do
+      0
+    else
+      log_a = Enum.at(log, a)
+      log_b = Enum.at(log, b)
+      Enum.at(alog, rem(log_a + log_b, 255))
+    end
+  end
+
+  @doc """
+  Divide a by b using a parameterized field. Raises ArgumentError if b is 0.
+  """
+  def divide(%CodingAdventures.GF256Field{alog: alog, log: log}, a, b) do
+    if b == 0, do: raise(ArgumentError, "GF256Field: division by zero")
+    if a == 0 do
+      0
+    else
+      log_a = Enum.at(log, a)
+      log_b = Enum.at(log, b)
+      Enum.at(alog, rem(log_a - log_b + 255, 255))
+    end
+  end
+
+  @doc """
+  Raise base to exp using a parameterized field.
+  """
+  def power(%CodingAdventures.GF256Field{alog: alog, log: log}, _base, 0) do
+    _ = {alog, log}
+    1
+  end
+
+  def power(%CodingAdventures.GF256Field{alog: alog, log: log}, base, exp) do
+    if base == 0 do
+      0
+    else
+      log_base = Enum.at(log, base)
+      idx = rem(rem(log_base * exp, 255) + 255, 255)
+      Enum.at(alog, idx)
+    end
+  end
+
+  @doc """
+  Compute the multiplicative inverse using a parameterized field.
+  Raises ArgumentError if a is 0.
+  """
+  def inverse(%CodingAdventures.GF256Field{alog: alog, log: log}, a) do
+    if a == 0, do: raise(ArgumentError, "GF256Field: zero has no multiplicative inverse")
+    log_a = Enum.at(log, a)
+    Enum.at(alog, 255 - log_a)
+  end
+
+  @doc """
+  Add two elements in any GF(2^8) field (XOR is polynomial-independent).
+  Provided for API symmetry with the field overloads.
+  """
+  def add(%CodingAdventures.GF256Field{}, a, b), do: bxor(a, b)
+
+  @doc """
+  Subtract two elements in any GF(2^8) field (same as add).
+  """
+  def subtract(%CodingAdventures.GF256Field{}, a, b), do: bxor(a, b)
 end

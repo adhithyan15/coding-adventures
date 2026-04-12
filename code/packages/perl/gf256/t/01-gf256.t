@@ -228,4 +228,81 @@ subtest 'field axioms' => sub {
     }
 };
 
+
+# ============================================================================
+# GF256::Field — parameterizable field factory
+# ============================================================================
+# Tests for the CodingAdventures::GF256::Field class, which accepts any
+# primitive polynomial and builds independent log/antilog tables.
+#
+# Key test vectors:
+#   AES field (0x11B): 0x53 × 0x8C = 1  (standard AES inverse pair)
+#   AES field (0x11B): 0x57 × 0x83 = 0xC1  (FIPS 197 Appendix B)
+#   RS field (0x11D):  must match module-level functions (backward compat)
+
+use CodingAdventures::GF256::Field;
+
+subtest 'GF256::Field — AES polynomial (0x11B)' => sub {
+    my $aes = CodingAdventures::GF256::Field->new(0x11B);
+
+    # Canonical AES GF(2^8) inverse pair
+    is( $aes->multiply(0x53, 0x8C), 0x01,
+        'AES field: multiply(0x53, 0x8C) = 1' );
+
+    # FIPS 197 Appendix B
+    is( $aes->multiply(0x57, 0x83), 0xC1,
+        'AES field: multiply(0x57, 0x83) = 0xC1 (FIPS 197)' );
+
+    # inverse(0x53) = 0x8C in AES field
+    is( $aes->inverse(0x53), 0x8C,
+        'AES field: inverse(0x53) = 0x8C' );
+
+    # a * inverse(a) = 1 for a in 1..20
+    for my $a (1 .. 20) {
+        is( $aes->multiply($a, $aes->inverse($a)), 1,
+            "AES field: $a * inverse($a) = 1" );
+    }
+
+    # commutativity
+    for my $a (1, 2, 0x53, 0x8C) {
+        for my $b (1, 2, 0x57, 0x83) {
+            is( $aes->multiply($a, $b), $aes->multiply($b, $a),
+                "AES field: multiply($a, $b) is commutative" );
+        }
+    }
+
+    # add is XOR (polynomial-independent)
+    is( $aes->add(0x53, 0xCA), 0x53 ^ 0xCA,
+        'AES field: add is XOR' );
+
+    # divide by zero dies
+    ok( dies { $aes->divide(5, 0) },
+        'AES field: divide by zero dies' );
+
+    # inverse of zero dies
+    ok( dies { $aes->inverse(0) },
+        'AES field: inverse of zero dies' );
+
+    # polynomial property stored
+    is( $aes->polynomial, 0x11B,
+        'AES field: polynomial property is 0x11B' );
+};
+
+subtest 'GF256::Field — RS polynomial (0x11D) matches module-level' => sub {
+    my $rs = CodingAdventures::GF256::Field->new(0x11D);
+
+    # RS field must agree with the module-level functions (backward compat)
+    for my $a (0, 1, 0x53, 0xCA, 0xFF) {
+        for my $b (0, 1, 0x8C, 0x7F, 0xFF) {
+            is( $rs->multiply($a, $b), multiply($a, $b),
+                "RS field multiply($a, $b) matches module-level" );
+        }
+    }
+
+    for my $a (1 .. 16) {
+        is( $rs->inverse($a), inverse($a),
+            "RS field inverse($a) matches module-level" );
+    }
+};
+
 done_testing;

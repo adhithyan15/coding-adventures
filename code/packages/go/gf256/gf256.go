@@ -167,3 +167,108 @@ func Zero() GF256 { return 0 }
 
 // One returns the multiplicative identity (1).
 func One() GF256 { return 1 }
+
+// =============================================================================
+// Field — parameterizable GF(2^8) field
+// =============================================================================
+//
+// The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses the polynomial 0x11B. Rather than inlining a second set of tables,
+// Field encapsulates a primitive polynomial with its own log/alog tables.
+//
+// Usage:
+//
+//	aesField := gf256.NewField(0x11B)
+//	aesField.Multiply(0x53, 0x8C)  // → 1
+//	aesField.Inverse(0x53)          // → 0x8C
+//
+// The module-level functions remain the canonical Reed-Solomon API.
+
+// Field holds precomputed log/antilog tables for a single primitive polynomial.
+// Create instances with NewField; zero values are invalid.
+type Field struct {
+	// PrimitivePoly is the irreducible polynomial used to build this field.
+	PrimitivePoly int
+
+	log  [256]byte
+	alog [256]int
+}
+
+// NewField constructs a GF(2^8) Field for the given primitive polynomial.
+//
+// primitivePoly is the degree-8 irreducible polynomial as an integer, e.g.:
+//
+//	0x11D  — Reed-Solomon (same as the module-level polynomial)
+//	0x11B  — AES (x^8 + x^4 + x^3 + x + 1)
+//
+// The log/alog tables are built during construction and reused for all
+// subsequent operations. Construction is O(256); all operations are O(1).
+func NewField(primitivePoly int) *Field {
+	f := &Field{PrimitivePoly: primitivePoly}
+	val := 1
+	for i := 0; i < 255; i++ {
+		f.alog[i] = val
+		f.log[val] = byte(i)
+		val <<= 1
+		if val >= 256 {
+			val ^= primitivePoly
+		}
+	}
+	// alog[255] = 1: the multiplicative group has order 255, so g^255 = g^0 = 1.
+	f.alog[255] = 1
+	return f
+}
+
+// Add adds two GF(256) elements: a XOR b.
+// Addition is polynomial-independent in GF(2^8); included for API symmetry.
+func (f *Field) Add(a, b GF256) GF256 { return a ^ b }
+
+// Subtract subtracts two GF(256) elements: a XOR b (same as Add).
+func (f *Field) Subtract(a, b GF256) GF256 { return a ^ b }
+
+// Multiply multiplies two GF(256) elements using this field's log/alog tables.
+func (f *Field) Multiply(a, b GF256) GF256 {
+	if a == 0 || b == 0 {
+		return 0
+	}
+	return byte(f.alog[(int(f.log[a])+int(f.log[b]))%255])
+}
+
+// Divide divides a by b in this GF(256) field.
+// Panics if b is 0.
+func (f *Field) Divide(a, b GF256) GF256 {
+	if b == 0 {
+		panic("gf256.Field: division by zero")
+	}
+	if a == 0 {
+		return 0
+	}
+	return byte(f.alog[(int(f.log[a])-int(f.log[b])+255)%255])
+}
+
+// Power raises a GF(256) element to a non-negative integer power.
+func (f *Field) Power(base GF256, exp int) GF256 {
+	if base == 0 {
+		if exp == 0 {
+			return 1
+		}
+		return 0
+	}
+	if exp == 0 {
+		return 1
+	}
+	idx := (int(f.log[base]) * exp) % 255
+	if idx < 0 {
+		idx += 255
+	}
+	return byte(f.alog[idx])
+}
+
+// Inverse returns the multiplicative inverse of a in this GF(256) field.
+// Panics if a is 0.
+func (f *Field) Inverse(a GF256) GF256 {
+	if a == 0 {
+		panic("gf256.Field: zero has no multiplicative inverse")
+	}
+	return byte(f.alog[255-int(f.log[a])])
+}

@@ -339,3 +339,118 @@ pub fn inverse(a: u8) -> u8 {
     let exp = 255 - t.log[a as usize] as usize;
     t.alog[exp]
 }
+
+// =============================================================================
+// Field — parameterizable GF(2^8) field
+// =============================================================================
+//
+// The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses the polynomial 0x11B. `Field` encapsulates any primitive polynomial
+// with its own log/alog tables so that both polynomials can coexist.
+//
+// Usage:
+//
+// ```rust
+// let aes = Field::new(0x11B);
+// assert_eq!(aes.multiply(0x53, 0x8C), 0x01);  // AES field inverses
+// ```
+
+/// A GF(2^8) field parameterized by an arbitrary primitive polynomial.
+///
+/// The module-level functions are fixed to the Reed-Solomon polynomial `0x11D`.
+/// `Field` lets you work with any polynomial — most notably `0x11B` for AES.
+///
+/// Tables are built once in [`Field::new`] and reused for all operations.
+pub struct Field {
+    /// The primitive (irreducible) polynomial used to build this field.
+    pub primitive_polynomial: u16,
+    log: [u16; 256],
+    alog: [u8; 256],
+}
+
+impl Field {
+    /// Construct a GF(2^8) field for the given primitive polynomial.
+    ///
+    /// `primitive_poly` is the degree-8 irreducible polynomial as an integer:
+    /// - `0x11D` — Reed-Solomon (same as the module-level default)
+    /// - `0x11B` — AES (x^8 + x^4 + x^3 + x + 1)
+    ///
+    /// Construction is O(256); all subsequent operations are O(1).
+    pub fn new(primitive_poly: u16) -> Self {
+        let mut log = [0u16; 256];
+        let mut alog = [0u8; 256];
+
+        let mut val: u16 = 1;
+        for i in 0..255u16 {
+            alog[i as usize] = val as u8;
+            log[val as usize] = i;
+            val <<= 1;
+            if val >= 256 {
+                val ^= primitive_poly;
+            }
+        }
+        // g^255 = 1 (group order 255).
+        alog[255] = 1;
+
+        Self { primitive_polynomial: primitive_poly, log, alog }
+    }
+
+    /// Add two field elements: `a XOR b`.
+    ///
+    /// Addition is polynomial-independent in GF(2^8); included for API symmetry.
+    #[inline]
+    pub fn add(&self, a: u8, b: u8) -> u8 { a ^ b }
+
+    /// Subtract two field elements: `a XOR b` (same as add).
+    #[inline]
+    pub fn subtract(&self, a: u8, b: u8) -> u8 { a ^ b }
+
+    /// Multiply two field elements using this field's log/alog tables.
+    pub fn multiply(&self, a: u8, b: u8) -> u8 {
+        if a == 0 || b == 0 {
+            return 0;
+        }
+        let exp = (self.log[a as usize] as u32 + self.log[b as usize] as u32) % 255;
+        self.alog[exp as usize]
+    }
+
+    /// Divide `a` by `b` in this field.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `b == 0`.
+    pub fn divide(&self, a: u8, b: u8) -> u8 {
+        assert!(b != 0, "GF256::Field: division by zero");
+        if a == 0 {
+            return 0;
+        }
+        let log_a = self.log[a as usize] as i32;
+        let log_b = self.log[b as usize] as i32;
+        let exp = ((log_a - log_b + 255) % 255) as usize;
+        self.alog[exp]
+    }
+
+    /// Raise `base` to a non-negative integer power.
+    pub fn power(&self, base: u8, exp: u32) -> u8 {
+        if base == 0 {
+            return if exp == 0 { 1 } else { 0 };
+        }
+        if exp == 0 {
+            return 1;
+        }
+        let log_base = self.log[base as usize] as u64;
+        let e = ((log_base * exp as u64) % 255) as usize;
+        self.alog[e]
+    }
+
+    /// Compute the multiplicative inverse of `a`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `a == 0`.
+    pub fn inverse(&self, a: u8) -> u8 {
+        assert!(a != 0, "GF256::Field: zero has no multiplicative inverse");
+        let exp = 255 - self.log[a as usize] as usize;
+        self.alog[exp]
+    }
+}

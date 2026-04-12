@@ -1,5 +1,18 @@
 # Changelog — go/gf256
 
+## [0.2.0] — 2026-04-11
+
+### Added
+
+- `Field` struct and `NewField(primitivePoly int) *Field` constructor — parameterizable
+  field factory that accepts any primitive polynomial.
+  - `NewField(0x11B)` creates the AES GF(2^8) field.
+  - `NewField(0x11D)` matches the module-level functions (Reed-Solomon).
+  - Methods: `Multiply`, `Divide`, `Power`, `Inverse`, `Add`, `Subtract`.
+  - `PrimitivePoly` field stores the polynomial used for construction.
+- Tests for `Field`: AES sanity check (`0x53 × 0x8C = 1`), FIPS 197 Appendix B
+  (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, panic cases.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added

@@ -14,6 +14,7 @@
 //! - g^255 == 1 (group order)
 
 use gf256::*;
+use gf256::Field;
 
 // =============================================================================
 // Constants
@@ -387,4 +388,80 @@ fn test_all_nonzero_elements_invertible() {
         assert_ne!(inv, 0, "inverse({}) = 0", a);
         assert_eq!(multiply(a, inv), 1, "{} * {} = {} != 1", a, inv, multiply(a, inv));
     }
+}
+
+// =============================================================================
+// Field — parameterizable factory
+// =============================================================================
+
+#[test]
+fn test_field_aes_multiply_inverses() {
+    // In the AES field (0x11B): 0x53 × 0x8C = 0x01.
+    let f = Field::new(0x11B);
+    assert_eq!(f.multiply(0x53, 0x8C), 0x01, "AES field 0x53 × 0x8C should be 1");
+}
+
+#[test]
+fn test_field_aes_fips197_appendix_b() {
+    // FIPS 197 Appendix B: 0x57 × 0x83 = 0xC1 in GF(2^8, 0x11B).
+    let f = Field::new(0x11B);
+    assert_eq!(f.multiply(0x57, 0x83), 0xC1);
+}
+
+#[test]
+fn test_field_aes_inverse() {
+    let f = Field::new(0x11B);
+    assert_eq!(f.inverse(0x53), 0x8C);
+    assert_eq!(f.multiply(0x53, f.inverse(0x53)), 1);
+}
+
+#[test]
+fn test_field_rs_matches_module_level() {
+    // Field(0x11D) must match the module-level functions.
+    let f = Field::new(0x11D);
+    for a in 0u8..32 {
+        for b in 0u8..32 {
+            assert_eq!(f.multiply(a, b), multiply(a, b),
+                "Field(0x11D).multiply({},{}) mismatch", a, b);
+        }
+    }
+}
+
+#[test]
+fn test_field_commutativity() {
+    let f = Field::new(0x11B);
+    for a in [0u8, 1, 0x53, 0x8C, 0xFF] {
+        for b in [0u8, 1, 0x57, 0x83, 0xFF] {
+            assert_eq!(f.multiply(a, b), f.multiply(b, a));
+        }
+    }
+}
+
+#[test]
+fn test_field_inverse_times_self() {
+    let f = Field::new(0x11B);
+    for a in 1u8..=20 {
+        assert_eq!(f.multiply(a, f.inverse(a)), 1,
+            "{} * inverse({}) != 1 in AES field", a, a);
+    }
+}
+
+#[test]
+#[should_panic(expected = "GF256::Field: division by zero")]
+fn test_field_divide_by_zero_panics() {
+    let f = Field::new(0x11B);
+    f.divide(5, 0);
+}
+
+#[test]
+#[should_panic(expected = "GF256::Field: zero has no multiplicative inverse")]
+fn test_field_inverse_zero_panics() {
+    let f = Field::new(0x11B);
+    f.inverse(0);
+}
+
+#[test]
+fn test_field_primitive_poly_stored() {
+    let f = Field::new(0x11B);
+    assert_eq!(f.primitive_polynomial, 0x11B);
 }

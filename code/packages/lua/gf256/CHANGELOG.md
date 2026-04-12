@@ -2,6 +2,20 @@
 
 All notable changes to the Lua `gf256` package are documented here.
 
+## [0.2.0] — 2026-04-11
+
+### Added
+
+- `new_field(polynomial)` function — parameterizable field factory that accepts any
+  primitive polynomial and returns a table with the same API as the module.
+  - `gf.new_field(0x11B)` creates the AES GF(2^8) field.
+  - `gf.new_field(0x11D)` matches the module-level functions (Reed-Solomon).
+  - Returned table has: `multiply`, `divide`, `power`, `inverse`, `add`, `subtract`,
+    and `polynomial` fields.
+  - Internal tables use the same 1-based Lua indexing convention as the module.
+- Tests: AES sanity check (`0x53 × 0x8C = 1`), FIPS 197 Appendix B
+  (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, error cases.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added

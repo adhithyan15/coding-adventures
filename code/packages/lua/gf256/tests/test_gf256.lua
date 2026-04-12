@@ -274,6 +274,100 @@ describe("known field vectors", function()
 end)
 
 -- ============================================================================
+-- new_field — parameterizable field factory
+-- ============================================================================
+describe("new_field", function()
+
+    -- ── AES field (polynomial 0x11B) ─────────────────────────────────────────
+
+    it("AES field: multiply(0x53, 0x8C) = 1", function()
+        -- In GF(2^8) with polynomial 0x11B (AES), 0x53 and 0x8C are
+        -- multiplicative inverses. This is the canonical AES field sanity check.
+        local aes = gf.new_field(0x11B)
+        assert.are.equal(0x01, aes.multiply(0x53, 0x8C))
+    end)
+
+    it("AES field: multiply(0x57, 0x83) = 0xC1 (FIPS 197 Appendix B)", function()
+        -- This specific product appears in the FIPS 197 specification for AES,
+        -- Appendix B, as a concrete example of GF(2^8) multiplication.
+        local aes = gf.new_field(0x11B)
+        assert.are.equal(0xC1, aes.multiply(0x57, 0x83))
+    end)
+
+    it("AES field: inverse(0x53) = 0x8C", function()
+        local aes = gf.new_field(0x11B)
+        assert.are.equal(0x8C, aes.inverse(0x53))
+    end)
+
+    it("AES field: a * inverse(a) = 1 for a in 1..20", function()
+        local aes = gf.new_field(0x11B)
+        for a = 1, 20 do
+            assert.are.equal(1, aes.multiply(a, aes.inverse(a)),
+                "AES field: " .. a .. " * inverse(" .. a .. ") should be 1")
+        end
+    end)
+
+    it("AES field: commutativity", function()
+        local aes = gf.new_field(0x11B)
+        local vals = {1, 2, 0x53, 0x8C}
+        for _, a in ipairs(vals) do
+            for _, b in ipairs(vals) do
+                assert.are.equal(aes.multiply(a, b), aes.multiply(b, a),
+                    "multiply(" .. a .. ", " .. b .. ") should equal multiply(" .. b .. ", " .. a .. ")")
+            end
+        end
+    end)
+
+    it("AES field: add is XOR (polynomial-independent)", function()
+        local aes = gf.new_field(0x11B)
+        assert.are.equal(0x53 ~ 0xCA, aes.add(0x53, 0xCA))
+    end)
+
+    it("AES field: divide by zero errors", function()
+        local aes = gf.new_field(0x11B)
+        assert.has_error(function()
+            aes.divide(5, 0)
+        end)
+    end)
+
+    it("AES field: inverse of zero errors", function()
+        local aes = gf.new_field(0x11B)
+        assert.has_error(function()
+            aes.inverse(0)
+        end)
+    end)
+
+    it("AES field: polynomial property is stored", function()
+        local aes = gf.new_field(0x11B)
+        assert.are.equal(0x11B, aes.polynomial)
+    end)
+
+    -- ── RS field (0x11D) matches module-level functions ───────────────────────
+
+    it("RS field: multiply matches module-level multiply", function()
+        local rs = gf.new_field(0x11D)
+        local vals = {0, 1, 0x53, 0xCA, 0xFF}
+        for _, a in ipairs(vals) do
+            for _, b in ipairs(vals) do
+                assert.are.equal(
+                    gf.multiply(a, b),
+                    rs.multiply(a, b),
+                    "new_field(0x11D).multiply(" .. a .. ", " .. b .. ") should match module"
+                )
+            end
+        end
+    end)
+
+    it("RS field: inverse matches module-level inverse", function()
+        local rs = gf.new_field(0x11D)
+        for a = 1, 16 do
+            assert.are.equal(gf.inverse(a), rs.inverse(a),
+                "new_field(0x11D).inverse(" .. a .. ") should match module")
+        end
+    end)
+end)
+
+-- ============================================================================
 -- module API / constants
 -- ============================================================================
 describe("module API", function()

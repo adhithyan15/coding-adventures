@@ -5,6 +5,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 0.2.0 — 2026-04-11
+
+### Added
+
+- `Field` struct and `Field::new(primitive_poly: u16)` constructor — parameterizable
+  field factory that accepts any primitive polynomial.
+  - `Field::new(0x11B)` creates the AES GF(2^8) field.
+  - `Field::new(0x11D)` matches the module-level functions (Reed-Solomon).
+  - Methods: `multiply`, `divide`, `power`, `inverse`, `add`, `subtract`.
+  - `primitive_polynomial: u16` field stores the polynomial used for construction.
+- Integration tests for `Field`: AES sanity check (`0x53 × 0x8C = 1`), FIPS 197
+  Appendix B (`0x57 × 0x83 = 0xC1`), RS backward-compat, `#[should_panic]` tests
+  for divide-by-zero and inverse-of-zero.
+
 ## 0.1.0 — Initial release
 
 ### Added

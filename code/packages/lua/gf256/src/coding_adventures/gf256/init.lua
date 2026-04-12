@@ -309,4 +309,84 @@ function M.inverse(a)
     return ALOG[255 - LOG[a + 1] + 1]
 end
 
+-- ============================================================================
+-- new_field(polynomial) — parameterizable field factory
+-- ============================================================================
+--
+-- The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+-- AES uses 0x11B. new_field(poly) builds an independent field table for any
+-- primitive polynomial, returning a table with the same API as this module.
+--
+-- Usage:
+--   local gf = require("coding_adventures.gf256")
+--   local aes = gf.new_field(0x11B)
+--   print(aes.multiply(0x53, 0x8C))   -- 1 (AES GF(2^8) inverses)
+--   print(aes.multiply(0x57, 0x83))   -- 0xC1 (FIPS 197 Appendix B)
+--
+-- Note on Lua 1-based indexing: the field tables use the same i+1 convention
+-- as the module-level LOG and ALOG tables above.
+--
+function M.new_field(polynomial)
+    -- Build independent log/alog tables for this polynomial.
+    local field_log  = {}
+    local field_alog = {}
+
+    -- Initialize to 0.
+    for i = 1, 256 do
+        field_log[i]  = 0
+        field_alog[i] = 0
+    end
+
+    local val = 1
+    for i = 0, 254 do
+        field_alog[i + 1] = val
+        field_log[val + 1] = i
+        val = val << 1
+        if val >= 256 then
+            val = val ~ polynomial
+        end
+    end
+    -- g^255 = 1 (group order 255, wraps around).
+    field_alog[256] = 1
+
+    -- Return a table with the same API as the module.
+    local F = {}
+
+    -- add and subtract are polynomial-independent (always XOR).
+    function F.add(a, b) return a ~ b end
+    function F.subtract(a, b) return a ~ b end
+
+    function F.multiply(a, b)
+        if a == 0 or b == 0 then return 0 end
+        local exp = (field_log[a + 1] + field_log[b + 1]) % 255
+        return field_alog[exp + 1]
+    end
+
+    function F.divide(a, b)
+        if b == 0 then error("GF256Field: division by zero") end
+        if a == 0 then return 0 end
+        local exp = (field_log[a + 1] - field_log[b + 1] + 255) % 255
+        return field_alog[exp + 1]
+    end
+
+    function F.power(base, exp)
+        if base == 0 then
+            if exp == 0 then return 1 end
+            return 0
+        end
+        if exp == 0 then return 1 end
+        local e = ((field_log[base + 1] * exp) % 255 + 255) % 255
+        return field_alog[e + 1]
+    end
+
+    function F.inverse(a)
+        if a == 0 then error("GF256Field: zero has no multiplicative inverse") end
+        return field_alog[255 - field_log[a + 1] + 1]
+    end
+
+    F.polynomial = polynomial
+
+    return F
+end
+
 return M

@@ -1,5 +1,18 @@
 # Changelog — coding-adventures-gf256
 
+## [0.2.0] — 2026-04-11
+
+### Added
+
+- `GF256Field(polynomial)` class — parameterizable field factory that accepts any
+  primitive polynomial and builds independent LOG/ALOG tables.
+  - `GF256Field(0x11B)` creates the AES GF(2^8) field.
+  - `GF256Field(0x11D)` matches the module-level functions (Reed-Solomon).
+  - Methods: `multiply`, `divide`, `power`, `inverse`, `add`, `subtract`.
+  - `polynomial` attribute stores the polynomial used for construction.
+- Tests for `GF256Field`: AES field sanity check (`0x53 × 0x8C = 1`), FIPS 197
+  Appendix B (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, error cases.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added

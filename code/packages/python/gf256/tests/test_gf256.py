@@ -292,3 +292,81 @@ class TestZeroAndOne:
     def test_one_is_multiplicative_identity(self):
         assert multiply(one(), 0x42) == 0x42
         assert multiply(0x42, one()) == 0x42
+
+
+# =============================================================================
+# GF256Field — parameterizable field factory
+# =============================================================================
+
+
+from gf256 import GF256Field
+
+
+class TestGF256Field:
+    """Tests for the GF256Field class with parameterizable polynomials."""
+
+    # ── AES field (0x11B) correctness ─────────────────────────────────────────
+
+    def test_aes_field_multiply_inverses(self):
+        # In AES GF(2^8): 0x53 × 0x8C = 0x01
+        f = GF256Field(0x11B)
+        assert f.multiply(0x53, 0x8C) == 0x01
+
+    def test_aes_field_fips197_appendix_b(self):
+        # FIPS 197 Appendix B: 0x57 × 0x83 = 0xC1 in GF(2^8, 0x11B)
+        f = GF256Field(0x11B)
+        assert f.multiply(0x57, 0x83) == 0xC1
+
+    def test_aes_field_inverse_sanity(self):
+        # 0x53 and 0x8C are multiplicative inverses in AES GF(2^8)
+        f = GF256Field(0x11B)
+        assert f.inverse(0x53) == 0x8C
+        assert f.multiply(0x53, f.inverse(0x53)) == 1
+
+    # ── RS field (0x11D) matches module-level functions ────────────────────────
+
+    def test_rs_field_matches_module_multiply(self):
+        # GF256Field(0x11D) must produce the same results as the module functions
+        f = GF256Field(0x11D)
+        for a in range(0, 256, 8):
+            for b in range(0, 256, 8):
+                assert f.multiply(a, b) == multiply(a, b)
+
+    def test_rs_field_matches_module_inverse(self):
+        f = GF256Field(0x11D)
+        for a in range(1, 256, 8):
+            assert f.inverse(a) == inverse(a)
+
+    # ── General field properties ───────────────────────────────────────────────
+
+    def test_commutativity(self):
+        f = GF256Field(0x11B)
+        for a in range(0, 256, 16):
+            for b in range(0, 256, 16):
+                assert f.multiply(a, b) == f.multiply(b, a)
+
+    def test_inverse_times_self_is_one(self):
+        f = GF256Field(0x11B)
+        for a in range(1, 256):
+            assert f.multiply(a, f.inverse(a)) == 1
+
+    def test_divide_zero_raises(self):
+        f = GF256Field(0x11B)
+        with pytest.raises(ValueError):
+            f.divide(5, 0)
+
+    def test_inverse_zero_raises(self):
+        f = GF256Field(0x11B)
+        with pytest.raises(ValueError):
+            f.inverse(0)
+
+    def test_add_is_xor(self):
+        # add/subtract are polynomial-independent
+        f = GF256Field(0x11B)
+        for a in range(0, 256, 16):
+            for b in range(0, 256, 16):
+                assert f.add(a, b) == (a ^ b)
+
+    def test_polynomial_stored(self):
+        f = GF256Field(0x11B)
+        assert f.polynomial == 0x11B
