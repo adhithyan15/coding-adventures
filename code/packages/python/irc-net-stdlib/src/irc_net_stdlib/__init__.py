@@ -85,6 +85,10 @@ from typing import NewType, Protocol
 
 __version__ = "0.1.0"
 
+# ``accept()`` uses a short socket timeout so ``close()`` can stop a blocked
+# accept loop predictably on Linux, macOS, and Windows.
+_LISTENER_ACCEPT_TIMEOUT_SECONDS = 0.2
+
 # ---------------------------------------------------------------------------
 # Stable interface types — used by ALL irc-net-* packages
 # ---------------------------------------------------------------------------
@@ -409,6 +413,12 @@ class StdlibListener:
         # The factory function ``create_listener()`` does the bind/listen setup
         # so the constructor stays simple and testable in isolation.
         self._sock: socket.socket = sock
+        self._closed: bool = False
+
+        # Some platforms do not immediately unblock a thread in accept() when
+        # another thread closes the listening socket.  A short timeout gives us
+        # a bounded poll interval so close() reliably takes effect everywhere.
+        self._sock.settimeout(_LISTENER_ACCEPT_TIMEOUT_SECONDS)
 
     def accept(self) -> StdlibConnection:
         """Block until a client connects and return a StdlibConnection for it.
@@ -420,7 +430,17 @@ class StdlibListener:
         ``close()`` from another thread, which causes accept() to raise
         ``OSError``.  The event loop catches that error to detect shutdown.
         """
-        client_sock, addr = self._sock.accept()
+        while True:
+            try:
+                client_sock, addr = self._sock.accept()
+                break
+            except TimeoutError as exc:
+                if self._closed:
+                    raise OSError("listener closed") from exc
+            except OSError:
+                if self._closed:
+                    raise
+                raise
 
         # addr is (host, port) for AF_INET sockets.
         # We cast to the typed tuple here so the rest of the code sees the
@@ -436,6 +456,9 @@ class StdlibListener:
         to raise ``OSError``.  The event loop's main loop catches that error
         as the stop signal.
         """
+        self._closed = True
+        with contextlib.suppress(OSError):
+            self._sock.shutdown(socket.SHUT_RDWR)
         with contextlib.suppress(OSError):
             self._sock.close()
 
