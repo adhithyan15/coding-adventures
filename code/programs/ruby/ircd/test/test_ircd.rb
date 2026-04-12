@@ -250,7 +250,9 @@ class TestIntegration < Minitest::Test
       end
       buf << chunk.to_s
       # Got data — try a quick extra read then stop.
-      break if buf.length >= 200
+      # Threshold must be large enough to hold the full IRC welcome sequence
+      # (001–004 + 251 + 375 + 372 lines + 376 = ~600–800 bytes).
+      break if buf.length >= 2048
     end
     buf
   end
