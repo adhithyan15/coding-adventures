@@ -1388,7 +1388,7 @@ mod tests {
 
     fn assert_error(resp: EngineResponse, expected: &str) {
         match resp {
-            EngineResponse::Error(err) => assert_eq!(err.message, expected),
+            EngineResponse::Error(err) => assert_eq!(err, expected),
             other => panic!("unexpected response: {other:?}"),
         }
     }
