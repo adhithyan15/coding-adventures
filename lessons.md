@@ -1704,4 +1704,25 @@ BUILD file only ran busted but didn't install dependencies first.
 
 **Rule:** If a Lua package depends on a native LuaRocks dependency (like `luasocket`), the BUILD file
 must install it: `luarocks install luasocket --local && cd tests && LUA_PATH=...`. Check the
-rockspec's `dependencies` field and ensure BUILD installs all of them.
+rockspec's `dependencies` field and ensure BUILD installs all of them. On Windows, luasocket native
+compilation may fail — use BUILD_windows to skip if needed.
+
+---
+
+## Swift SOCK_STREAM type differs between Darwin and Glibc
+
+**Date:** 2026-04-12
+
+**What happened:** Swift tcp-client failed on Linux CI with "initializer 'init(_:)' requires that
+'__socket_type' conform to 'BinaryFloatingPoint'". On Darwin, `SOCK_STREAM` is an `Int32`. On Linux
+(Glibc), it's a `__socket_type` enum requiring `.rawValue` to extract the integer.
+
+**Rule:** Never use `Int32(SOCK_STREAM)` in cross-platform Swift code. Use platform conditionals:
+```swift
+#if canImport(Darwin)
+let sockType = SOCK_STREAM
+#elseif canImport(Glibc)
+let sockType = Int32(SOCK_STREAM.rawValue)
+#endif
+```
+Same applies to `SOCK_DGRAM` and other socket type constants.
