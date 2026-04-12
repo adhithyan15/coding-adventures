@@ -1,9 +1,11 @@
 defmodule CodingAdventures.JavaParser do
   @moduledoc """
-  Parses Java source code into ASTs using the grammar-driven parser approach.
+  Java parser backed by the shared grammar-driven parser engine.
 
-  This module is part of the coding-adventures monorepo, a ground-up
-  implementation of the computing stack from transistors to operating systems.
+  The parser reads `java<version>.grammar` from `code/grammars/java/`, parses
+  the file into a `ParserGrammar`, caches the parsed grammar in
+  `:persistent_term`, tokenizes Java source with `CodingAdventures.JavaLexer`,
+  and delegates AST construction to `CodingAdventures.Parser.GrammarParser`.
 
   ## Version Support
 
@@ -21,27 +23,39 @@ defmodule CodingAdventures.JavaParser do
   | `"14"`          | `grammars/java/java14.{tokens,grammar}`              |
   | `"17"`          | `grammars/java/java17.{tokens,grammar}`              |
   | `"21"`          | `grammars/java/java21.{tokens,grammar}`              |
-  | `nil` (default) | `grammars/java/java21.{tokens,grammar}` (default)    |
+  | `nil` / `""`    | `grammars/java/java21.{tokens,grammar}` (default)    |
 
   ## Usage
 
-      # Default (Java 21)
-      ast = CodingAdventures.JavaParser.parse("int x = 1 + 2;")
-
-      # Version-specific
-      ast = CodingAdventures.JavaParser.parse("int x = 1 + 2;", "8")
-      ast = CodingAdventures.JavaParser.parse("int x = 1 + 2;", "1.0")
-
-  ## Stub Note
-
-  This is a stub implementation. Function signatures are stable and
-  backwards-compatible.
+      {:ok, ast} = CodingAdventures.JavaParser.parse("public class Hello { }")
+      {:ok, ast} = CodingAdventures.JavaParser.parse("public class Hello { }", "8")
+      grammar = CodingAdventures.JavaParser.create_parser("1.0")
   """
 
+  alias CodingAdventures.GrammarTools.ParserGrammar
+  alias CodingAdventures.JavaLexer
+  alias CodingAdventures.Parser.{GrammarParser, ASTNode}
+
+  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
+                |> Path.expand()
+
+  @default_version "21"
   @valid_versions ~w(1.0 1.1 1.4 5 7 8 10 14 17 21)
 
   @doc """
-  Parse Java source code and return an AST node.
+  Return the default Java version used when no version is specified.
+  """
+  @spec default_version() :: String.t()
+  def default_version, do: @default_version
+
+  @doc """
+  Return the list of supported Java version strings.
+  """
+  @spec supported_versions() :: [String.t()]
+  def supported_versions, do: @valid_versions
+
+  @doc """
+  Parse Java source code and return `{:ok, ast}` on success.
 
   ## Parameters
 
@@ -52,84 +66,97 @@ defmodule CodingAdventures.JavaParser do
 
   ## Returns
 
-  A map representing the root AST node. The root node has `:rule_name` of
-  `"program"` when the full implementation is active.
+  `{:ok, ast}` or `{:error, message}`. The root AST node has `rule_name`
+  `"compilation_unit"`.
 
   ## Examples
 
-      iex> ast = CodingAdventures.JavaParser.parse("int x = 1;")
-      iex> is_map(ast)
-      true
-
-      iex> ast = CodingAdventures.JavaParser.parse("int x = 1;", "8")
-      iex> is_map(ast)
-      true
+      iex> {:ok, ast} = CodingAdventures.JavaParser.parse("public class Hello { }")
+      iex> ast.rule_name
+      "compilation_unit"
 
   ## Errors
 
   Raises `ArgumentError` if `version` is a non-nil string that is not a
   recognised Java version identifier.
   """
-  @spec parse(String.t(), String.t() | nil) :: map()
+  @spec parse(String.t(), String.t() | nil) ::
+          {:ok, ASTNode.t()} | {:error, String.t()}
   def parse(source, version \\ nil) when is_binary(source) do
-    validate_version!(version)
-    # Stub: return a minimal program node until the full grammar-driven
-    # implementation is wired up. The function signature and version
-    # validation are stable.
-    _ = source
-    %{rule_name: "program", children: [], version: version}
+    version = resolve_version(version)
+
+    case JavaLexer.tokenize(source, version) do
+      {:ok, tokens} ->
+        grammar = get_grammar(version)
+        GrammarParser.parse(tokens, grammar)
+
+      {:error, msg} ->
+        {:error, msg}
+    end
   end
 
   @doc """
-  Create a parser context for Java source code.
-
-  Unlike `parse/2`, which eagerly produces the full AST,
-  `create_parser/2` returns a map describing the configured parser state.
-  This is useful when building pipelines or deferred parsing workflows.
+  Parse and return the `ParserGrammar` for the requested Java version.
 
   ## Parameters
 
-  - `source` -- Java source code as a string.
   - `version` -- Optional Java version string (same values as `parse/2`).
 
   ## Returns
 
-  A map with at minimum `:source` and `:version` keys.
+  A `ParserGrammar` struct cached per version.
 
   ## Examples
 
-      iex> parser = CodingAdventures.JavaParser.create_parser("int x = 1;")
-      iex> is_map(parser)
+      iex> grammar = CodingAdventures.JavaParser.create_parser()
+      iex> is_map(grammar)
       true
-
-      iex> parser = CodingAdventures.JavaParser.create_parser("int x = 1;", "8")
-      iex> parser.version
-      "8"
+      iex> grammar.rules |> hd() |> Map.fetch!(:name)
+      "compilation_unit"
 
   ## Errors
 
   Raises `ArgumentError` if `version` is a non-nil string that is not a
   recognised Java version identifier.
   """
-  @spec create_parser(String.t(), String.t() | nil) :: map()
-  def create_parser(source, version \\ nil) when is_binary(source) do
-    validate_version!(version)
-    %{source: source, version: version, language: :java}
+  @spec create_parser(String.t() | nil) :: ParserGrammar.t()
+  def create_parser(version \\ nil) do
+    get_grammar(resolve_version(version))
   end
 
   # ---------------------------------------------------------------------------
   # Private helpers
   # ---------------------------------------------------------------------------
 
-  defp validate_version!(nil), do: :ok
+  defp resolve_version(nil), do: @default_version
+  defp resolve_version(""), do: @default_version
 
-  defp validate_version!(version) when is_binary(version) do
+  defp resolve_version(version) when is_binary(version) do
     unless version in @valid_versions do
       raise ArgumentError,
             "Unknown Java version #{inspect(version)}. " <>
               "Valid values: #{Enum.join(@valid_versions, ", ")}"
     end
 
-    :ok
+    version
+  end
+
+  defp resolve_version(version) do
+    raise ArgumentError,
+          "Unknown Java version #{inspect(version)}. " <>
+            "Valid values: #{Enum.join(@valid_versions, ", ")}"
+  end
+
+  defp get_grammar(version) do
+    case :persistent_term.get({__MODULE__, :grammar, version}, nil) do
+      nil ->
+        grammar_path = Path.join([@grammars_dir, "java", "java#{version}.grammar"])
+        {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
+        :persistent_term.put({__MODULE__, :grammar, version}, grammar)
+        grammar
+
+      grammar ->
+        grammar
+    end
   end
 end

@@ -1,125 +1,92 @@
 defmodule CodingAdventures.JavaLexerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias CodingAdventures.JavaLexer
 
-  # ---------------------------------------------------------------------------
-  # Module loading
-  # ---------------------------------------------------------------------------
-
-  test "module loads" do
-    assert Code.ensure_loaded?(JavaLexer)
+  defp token_types(tokens) do
+    Enum.map(tokens, & &1.type)
   end
 
-  # ---------------------------------------------------------------------------
-  # tokenize/1 -- generic (no version, defaults to Java 21)
-  # ---------------------------------------------------------------------------
-
-  describe "tokenize/1 -- default grammar" do
-    test "returns a list for empty string" do
-      assert is_list(JavaLexer.tokenize(""))
+  describe "version helpers" do
+    test "default_version is Java 21" do
+      assert JavaLexer.default_version() == "21"
     end
 
-    test "returns a list for simple source" do
-      assert is_list(JavaLexer.tokenize("int x = 1;"))
+    test "supported_versions includes all expected releases" do
+      versions = JavaLexer.supported_versions()
+
+      assert "1.0" in versions
+      assert "1.1" in versions
+      assert "1.4" in versions
+      assert "5" in versions
+      assert "7" in versions
+      assert "8" in versions
+      assert "10" in versions
+      assert "14" in versions
+      assert "17" in versions
+      assert "21" in versions
     end
   end
 
-  # ---------------------------------------------------------------------------
-  # tokenize/2 -- version-specific
-  # ---------------------------------------------------------------------------
-
-  describe "tokenize/2 -- versioned grammar" do
-    test "accepts nil version (default grammar)" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", nil))
+  describe "tokenize/2" do
+    test "tokenizes a simple class declaration with the default grammar" do
+      assert {:ok, tokens} = JavaLexer.tokenize("public class Hello { }")
+      assert token_types(tokens) == ["KEYWORD", "KEYWORD", "NAME", "LBRACE", "RBRACE", "EOF"]
+      assert Enum.map(tokens, & &1.value) == ["public", "class", "Hello", "{", "}", ""]
     end
 
-    test "accepts 1.0 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "1.0"))
+    test "treats nil and empty version as Java 21" do
+      assert {:ok, nil_version_tokens} = JavaLexer.tokenize("class Hello { }", nil)
+      assert {:ok, empty_version_tokens} = JavaLexer.tokenize("class Hello { }", "")
+
+      assert token_types(nil_version_tokens) == token_types(empty_version_tokens)
     end
 
-    test "accepts 1.1 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "1.1"))
+    test "accepts all declared version strings" do
+      for version <- JavaLexer.supported_versions() do
+        assert {:ok, tokens} = JavaLexer.tokenize("class Hello { }", version)
+        assert hd(token_types(tokens)) == "KEYWORD"
+      end
     end
 
-    test "accepts 1.4 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "1.4"))
+    test "tokenizes Java 1.0 style declarations" do
+      assert {:ok, tokens} = JavaLexer.tokenize("int x = 1;", "1.0")
+      assert token_types(tokens) == ["KEYWORD", "NAME", "EQUALS", "NUMBER", "SEMICOLON", "EOF"]
     end
 
-    test "accepts 5 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "5"))
-    end
-
-    test "accepts 7 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "7"))
-    end
-
-    test "accepts 8 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "8"))
-    end
-
-    test "accepts 10 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "10"))
-    end
-
-    test "accepts 14 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "14"))
-    end
-
-    test "accepts 17 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "17"))
-    end
-
-    test "accepts 21 version" do
-      assert is_list(JavaLexer.tokenize("int x = 1;", "21"))
+    test "returns only EOF for empty input" do
+      assert {:ok, tokens} = JavaLexer.tokenize("")
+      assert token_types(tokens) == ["EOF"]
     end
 
     test "raises ArgumentError for unknown version" do
       assert_raise ArgumentError, ~r/Unknown Java version "99"/, fn ->
-        JavaLexer.tokenize("int x = 1;", "99")
-      end
-    end
-
-    test "raises ArgumentError for completely invalid version string" do
-      assert_raise ArgumentError, ~r/Unknown Java version "latest"/, fn ->
-        JavaLexer.tokenize("int x = 1;", "latest")
+        JavaLexer.tokenize("class Hello { }", "99")
       end
     end
   end
 
-  # ---------------------------------------------------------------------------
-  # create_lexer/1 and create_lexer/2
-  # ---------------------------------------------------------------------------
+  describe "create_lexer/1" do
+    test "returns the parsed token grammar for the default version" do
+      grammar = JavaLexer.create_lexer()
 
-  describe "create_lexer/2" do
-    test "returns a map" do
-      lexer = JavaLexer.create_lexer("int x = 1;")
-      assert is_map(lexer)
+      assert is_map(grammar)
+      assert grammar.version == 1
+      assert Enum.member?(grammar.keywords, "class")
+      assert Enum.member?(grammar.keywords, "public")
     end
 
-    test "stores source in returned map" do
-      lexer = JavaLexer.create_lexer("int x = 1;")
-      assert lexer.source == "int x = 1;"
-    end
+    test "returns the parsed token grammar for a specific version" do
+      grammar = JavaLexer.create_lexer("8")
 
-    test "stores nil version when not specified" do
-      lexer = JavaLexer.create_lexer("int x = 1;")
-      assert lexer.version == nil
-    end
-
-    test "stores version when 8 specified" do
-      lexer = JavaLexer.create_lexer("int x = 1;", "8")
-      assert lexer.version == "8"
-    end
-
-    test "stores language as java" do
-      lexer = JavaLexer.create_lexer("int x = 1;")
-      assert lexer.language == :java
+      assert is_map(grammar)
+      assert grammar.version == 1
+      assert Enum.member?(grammar.keywords, "class")
     end
 
     test "raises ArgumentError for unknown version" do
       assert_raise ArgumentError, ~r/Unknown Java version/, fn ->
-        JavaLexer.create_lexer("int x = 1;", "99")
+        JavaLexer.create_lexer("latest")
       end
     end
   end

@@ -1399,8 +1399,7 @@ expression = assignment_expression ;
 
 assignment_expression = lambda_expression
                       | conditional_expression
-                        ( assignment_operator assignment_expression
-                        | ) ;
+                        [ assignment_operator assignment_expression ] ;
 
 assignment_operator = EQUALS
                     | PLUS_EQUALS
