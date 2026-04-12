@@ -1,0 +1,20 @@
+[package]
+name = "ircd"
+version = "0.1.0"
+edition = "2021"
+description = "IRC server daemon — wires irc-proto, irc-framing, irc-server, and irc-net-stdlib"
+authors = ["coding-adventures"]
+license = "MIT"
+
+[[bin]]
+name = "ircd"
+path = "src/main.rs"
+
+[dependencies]
+irc-proto   = { path = "../../../packages/rust/irc-proto" }
+irc-framing = { path = "../../../packages/rust/irc-framing" }
+irc-server  = { path = "../../../packages/rust/irc-server" }
+irc-net-stdlib = { path = "../../../packages/rust/irc-net-stdlib" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
