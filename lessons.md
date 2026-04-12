@@ -1615,3 +1615,16 @@ caused a "invalid redeclaration of 'bLen'" compile error.
 **Rule:** When replacing a `let x = expr` with an overflow-checked version that also binds `x`,
 always remove the original `let x` line. The compiler will catch both declarations at the same
 scope level.
+
+---
+
+## Python BUILD files: Always use Unix venv paths
+
+**Date:** 2026-04-12
+
+**What happened:** Python ls00 BUILD file used `.venv/Scripts/python` (Windows venv layout).
+CI runs on Linux where the path is `.venv/bin/python`, causing `sh: .venv/Scripts/python: not found`.
+
+**Rule:** Always use `.venv/bin/python` in BUILD files. CI runs on Linux. All other Python packages
+in the repo use `.venv/bin/python`. The Windows path `.venv/Scripts/python` only works locally on
+Windows and will fail in CI.
