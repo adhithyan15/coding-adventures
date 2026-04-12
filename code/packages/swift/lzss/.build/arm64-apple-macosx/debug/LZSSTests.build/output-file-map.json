@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Tests/LZSSTests/LZSSTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.dia"
+  }
+}

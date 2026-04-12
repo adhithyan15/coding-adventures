@@ -1,0 +1,614 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.xctest/Contents/MacOS/lzssPackageTests",
+      "packagePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss",
+      "productName" : "lzssPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.LZSS-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Sources/LZSS/LZSS.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "LZSS",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/LZSS.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/LZSS.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/include/LZSS-Swift.h",
+        "-profile-coverage-mapping",
+        "-profile-generate",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "lzss"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/LZSS.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/LZSS.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Sources/LZSS/LZSS.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.LZSSTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Tests/LZSSTests/LZSSTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/LZSS.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "LZSSTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/LZSSTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-profile-coverage-mapping",
+        "-profile-generate",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "lzss"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/LZSSTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Tests/LZSSTests/LZSSTests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.lzssPackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/LZSSTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "lzssPackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/lzssPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/include/lzssPackageTests-Swift.h",
+        "-profile-coverage-mapping",
+        "-profile-generate",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "lzss"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules/lzssPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "LZSS" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "LZSS",
+      "-package-name",
+      "lzss",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Sources/LZSS/LZSS.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/include/LZSS-Swift.h",
+      "-profile-coverage-mapping",
+      "-profile-generate",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "lzss",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "LZSSTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "LZSSTests",
+      "-package-name",
+      "lzss",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Tests/LZSSTests/LZSSTests.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-profile-coverage-mapping",
+      "-profile-generate",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "lzss",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "lzssPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "lzssPackageTests",
+      "-package-name",
+      "lzss",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/include/lzssPackageTests-Swift.h",
+      "-profile-coverage-mapping",
+      "-profile-generate",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "lzss",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "LZSS" : [
+
+    ],
+    "LZSSTests" : [
+      "LZSS"
+    ],
+    "lzssPackageTests" : [
+      "LZSSTests",
+      "LZSS"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Sources/LZSS/LZSS.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/Tests/LZSSTests/LZSSTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSS.build/LZSS.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/LZSSTests.build/LZSSTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.build/runner.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/lzssPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/elated-snyder/code/packages/swift/lzss/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
