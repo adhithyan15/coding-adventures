@@ -329,7 +329,7 @@ defmodule CodingAdventures.LZW do
     # BitWriter state: {bit_buffer :: integer, bits_in_buffer :: integer, byte_list :: list}
     initial_writer = {0, 0, []}
 
-    {final_buf, final_bits, final_bytes} =
+    {{final_buf, final_bits, final_bytes}, _final_code_size, _final_next_code} =
       Enum.reduce(codes, {initial_writer, @initial_code_size, @initial_next_code},
         fn code, {{buf, bits, bytes}, code_size, next_code} ->
           # Write `code_size` bits of `code` into the buffer (LSB-first).
