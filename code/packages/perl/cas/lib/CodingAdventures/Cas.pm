@@ -213,23 +213,60 @@ sub find_by_prefix {
         die CodingAdventures::Cas::Error::CasInvalidPrefixError->new($hex_prefix);
     }
 
-    # Decode the hex prefix to a raw byte string.
-    # Odd-length prefixes are right-padded with '0' before decoding:
-    #   "a3f"  → "a3f0"  → bytes \xa3\xf0
-    # This matches the semantics of a nibble-level prefix.
-    my $padded = $hex_prefix;
-    if (length($padded) % 2 == 1) {
-        $padded .= '0';
+    # Odd-length hex prefix handling — the core of correct nibble matching.
+    #
+    # A 7-char prefix like "1bafb97" means: match any key whose hex starts
+    # with the nibbles 1, b, a, f, b, 9, 7.  That is:
+    #   - first 3 bytes exactly [0x1b, 0xaf, 0xb9]
+    #   - high nibble of the 4th byte == 7  (i.e., 4th byte is 0x70..0x7f)
+    #
+    # The naive approach of padding "1bafb97" → "1bafb970" and then passing
+    # 4 bytes to keys_with_prefix() would only match keys starting with exactly
+    # [0x1b, 0xaf, 0xb9, 0x70] — too strict.  A key "1bafb97a..." would not match.
+    #
+    # Correct approach:
+    #   1. Pass only the COMPLETE bytes (floor(len/2)) to keys_with_prefix.
+    #   2. Filter the returned candidates by the trailing nibble.
+    my $is_odd = (length($hex_prefix) % 2 == 1);
+    my $trailing_nibble_val = 0;
+    my $complete_hex = $hex_prefix;
+
+    if ($is_odd) {
+        $trailing_nibble_val = hex(substr($hex_prefix, -1));       # 0-15
+        $complete_hex        = substr($hex_prefix, 0, length($hex_prefix) - 1);
     }
 
-    # Pack the hex pairs into bytes.
+    # Pack the complete hex pairs into raw bytes.
     my $prefix_bytes = '';
-    while ($padded =~ /([0-9a-fA-F]{2})/g) {
+    while ($complete_hex =~ /([0-9a-fA-F]{2})/g) {
         $prefix_bytes .= chr(hex($1));
     }
 
-    # Ask the backend for all keys matching the byte prefix.
-    my $matches = $self->{store}->keys_with_prefix($prefix_bytes);
+    # Ask the backend for all keys matching the complete-byte prefix.
+    my $matches;
+    if ($is_odd && length($prefix_bytes) == 0) {
+        # 1-nibble prefix: scan all 16 possible first bytes (0xN0 through 0xNf).
+        # For example, "a" should match keys in buckets a0/, a1/, …, af/.
+        my @all;
+        for my $lo (0 .. 15) {
+            my $first_byte = ($trailing_nibble_val << 4) | $lo;
+            my $m = $self->{store}->keys_with_prefix(chr($first_byte));
+            push @all, @{$m};
+        }
+        $matches = \@all;
+    } else {
+        $matches = $self->{store}->keys_with_prefix($prefix_bytes);
+
+        if ($is_odd) {
+            # Filter: keep only keys where the (2*n)-th char of the 40-char
+            # hex key equals the trailing nibble.
+            # keys_with_prefix returns 40-char lowercase hex strings.
+            my $n          = length($prefix_bytes);   # number of complete bytes
+            my $nibble_pos = $n * 2;                  # 0-indexed char in hex key
+            my $expected   = lc(sprintf('%x', $trailing_nibble_val));
+            $matches = [ grep { substr($_, $nibble_pos, 1) eq $expected } @{$matches} ];
+        }
+    }
 
     my @sorted = sort @{$matches};
 

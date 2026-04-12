@@ -86,7 +86,10 @@ subtest 'concrete subclass works without die' => sub {
     package MemStore;
     our @ISA = ('CodingAdventures::Cas::BlobStore');
 
-    my %storage;
+    # Use a package variable rather than a lexical so that named subs
+    # (put, get, etc.) can reference it without triggering Perl's
+    # "Variable '%storage' is not available" closure warning.
+    our %storage;
 
     sub new { bless {}, shift }
     sub put    { my ($s, $k, $d) = @_; $storage{$k} = $d }

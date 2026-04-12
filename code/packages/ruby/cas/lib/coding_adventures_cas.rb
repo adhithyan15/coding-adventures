@@ -393,14 +393,58 @@ module CodingAdventures
       #   CasPrefixNotFoundError     — no keys match the prefix
       #   CasAmbiguousPrefixError    — two or more keys match (use a longer prefix)
       def find_by_prefix(hex_prefix)
-        # Validate and decode the hex prefix into a byte string.
-        begin
-          prefix_bytes = CodingAdventures::Cas.decode_hex_prefix(hex_prefix)
-        rescue ArgumentError
-          raise CasInvalidPrefixError.new(hex_prefix)
+        # Validate the prefix.
+        raise CasInvalidPrefixError.new(hex_prefix) if hex_prefix.empty?
+        raise CasInvalidPrefixError.new(hex_prefix) unless hex_prefix.match?(/\A[0-9a-fA-F]+\z/)
+
+        # Odd-length hex prefix handling — the core of correct nibble matching.
+        #
+        # A 7-char prefix like "1bafb97" means: match any key whose hex starts
+        # with the nibbles 1, b, a, f, b, 9, 7.  That is:
+        #   - first 3 bytes exactly [0x1b, 0xaf, 0xb9]
+        #   - high nibble of the 4th byte == 7  (i.e., 4th byte is 0x70..0x7f)
+        #
+        # Padding "1bafb97" → "1bafb970" and passing 4 bytes to keys_with_prefix
+        # would only match keys starting with exactly [0x1b, 0xaf, 0xb9, 0x70],
+        # missing "1bafb97a...", "1bafb97c...", etc.
+        #
+        # Correct approach:
+        #   1. Pass only the COMPLETE bytes (floor(len/2)) to keys_with_prefix.
+        #   2. Filter the returned candidates by checking the trailing nibble.
+        is_odd = (hex_prefix.length % 2 == 1)
+        trailing_nibble_val = nil
+        complete_hex = hex_prefix
+
+        if is_odd
+          trailing_nibble_val = hex_prefix[-1].to_i(16)   # 0–15
+          complete_hex = hex_prefix[0..-2]                 # all but last char
         end
 
-        matches = @store.keys_with_prefix(prefix_bytes)
+        # Decode the complete hex pairs to bytes.
+        # [complete_hex].pack("H*") returns "" for an empty string — that is fine.
+        prefix_bytes = [complete_hex].pack("H*")
+
+        if is_odd && prefix_bytes.empty?
+          # 1-nibble prefix: scan all 16 possible first bytes (0xN0 through 0xNf).
+          # For example, "a" should match keys in buckets a0/, a1/, …, af/.
+          matches = []
+          16.times do |lo|
+            first_byte_val = (trailing_nibble_val << 4) | lo
+            matches.concat(@store.keys_with_prefix([first_byte_val].pack("C")))
+          end
+        else
+          matches = @store.keys_with_prefix(prefix_bytes)
+
+          if is_odd
+            # Filter: keep only keys where the nibble at position (2*n) in the
+            # 40-char hex representation equals the trailing nibble.
+            n = prefix_bytes.bytesize
+            expected_nibble = trailing_nibble_val.to_s(16)
+            matches.select! do |key|
+              CodingAdventures::Cas.key_to_hex(key)[n * 2] == expected_nibble
+            end
+          end
+        end
 
         # Sort for deterministic behaviour (important for tests and stable UX).
         matches.sort!

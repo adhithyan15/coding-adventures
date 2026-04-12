@@ -302,20 +302,84 @@ end
 -- Resolve an abbreviated hex string to the full 20-byte key.
 --
 -- Accepts any non-empty hex string of 1–40 characters.  Odd-length strings
--- are treated as nibble prefixes: "a3f" matches any key starting with
--- 0xa3, 0xf0 (the odd nibble is the high nibble of the next byte).
+-- are treated as nibble prefixes: "1bafb97" matches any key whose 40-char hex
+-- starts with those 7 nibbles, regardless of what the 8th nibble is.
+--
+-- Correct odd-length handling:
+--   "1bafb97" (7 chars)
+--   → pass 3 complete bytes [0x1b, 0xaf, 0xb9] to keys_with_prefix
+--   → filter results: keep only keys where (key_byte[4] >> 4) == 7
 --
 -- Returns (key_string, nil) on success, (nil, err_table) on failure.
 -- Error types: "invalid_prefix", "prefix_not_found", "ambiguous_prefix".
 function M.ContentAddressableStore:find_by_prefix(hex_prefix)
-    local prefix_bytes, err = decode_hex_prefix(hex_prefix)
-    if not prefix_bytes then
-        return nil, { type = "invalid_prefix", prefix = hex_prefix, message = err }
+    -- Validate: non-empty and all hex characters.
+    if hex_prefix == "" then
+        return nil, { type = "invalid_prefix", prefix = hex_prefix, message = "prefix cannot be empty" }
+    end
+    for i = 1, #hex_prefix do
+        local _, verr = hex_nibble(hex_prefix:sub(i, i))
+        if verr then
+            return nil, { type = "invalid_prefix", prefix = hex_prefix, message = verr }
+        end
     end
 
-    local matches, serr = self.store:keys_with_prefix(prefix_bytes)
-    if not matches then
-        return nil, { type = "store_error", message = tostring(serr) }
+    local is_odd = (#hex_prefix % 2 == 1)
+    local trailing_nibble_val = nil
+    local complete_hex = hex_prefix
+
+    if is_odd then
+        -- Extract the trailing nibble value (0–15) and drop it from the hex string.
+        trailing_nibble_val = hex_nibble(hex_prefix:sub(#hex_prefix))
+        complete_hex        = hex_prefix:sub(1, #hex_prefix - 1)
+    end
+
+    -- Encode the complete hex pairs into a binary prefix string.
+    local prefix_bytes = ""
+    for i = 1, #complete_hex, 2 do
+        local hi = hex_nibble(complete_hex:sub(i, i))
+        local lo = hex_nibble(complete_hex:sub(i + 1, i + 1))
+        prefix_bytes = prefix_bytes .. string.char(hi * 16 + lo)
+    end
+
+    local matches = {}
+
+    if is_odd and #prefix_bytes == 0 then
+        -- 1-nibble prefix: scan all 16 possible first bytes (0xN0 through 0xNf).
+        -- For example, "a" must match keys in buckets a0/, a1/, …, af/.
+        for lo = 0, 15 do
+            local first_byte = trailing_nibble_val * 16 + lo
+            local m, serr = self.store:keys_with_prefix(string.char(first_byte))
+            if not m then
+                return nil, { type = "store_error", message = tostring(serr) }
+            end
+            for _, k in ipairs(m) do
+                matches[#matches + 1] = k
+            end
+        end
+    else
+        local m, serr = self.store:keys_with_prefix(prefix_bytes)
+        if not m then
+            return nil, { type = "store_error", message = tostring(serr) }
+        end
+        matches = m
+
+        if is_odd then
+            -- Filter: keep only keys where the high nibble of the next byte
+            -- equals trailing_nibble_val.
+            --
+            -- prefix_bytes has n bytes; the "next" byte is at index n+1 (1-based).
+            -- We use integer division (math.floor(x/16)) for Lua 5.1/5.2 compat.
+            local n = #prefix_bytes
+            local filtered = {}
+            for _, key in ipairs(matches) do
+                local next_byte = key:byte(n + 1)
+                if next_byte and math.floor(next_byte / 16) == trailing_nibble_val then
+                    filtered[#filtered + 1] = key
+                end
+            end
+            matches = filtered
+        end
     end
 
     -- Sort for deterministic behaviour (important for tests).

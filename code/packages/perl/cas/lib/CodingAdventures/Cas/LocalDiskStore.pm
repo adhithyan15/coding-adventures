@@ -55,6 +55,7 @@ use utf8;
 
 use File::Path qw(make_path);
 use File::Basename qw(dirname);
+use CodingAdventures::Cas::BlobStore;
 
 our @ISA = ('CodingAdventures::Cas::BlobStore');
 our $VERSION = '0.01';
