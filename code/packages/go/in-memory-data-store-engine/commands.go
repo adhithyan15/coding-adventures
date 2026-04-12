@@ -619,11 +619,11 @@ func cmdSelect(store *Store, args [][]byte) (*Store, resp.Value) {
 	if len(args) != 1 {
 		return store, errValue("ERR wrong number of arguments for 'SELECT'")
 	}
-	dbIndex, err := parseInt64(args[0])
+	dbIndex, err := parseInt(args[0])
 	if err != nil {
 		return store, errValue(err.Error())
 	}
-	return store.Select(int(dbIndex)), okValue()
+	return store.Select(dbIndex), okValue()
 }
 
 func cmdFlushDB(store *Store, args [][]byte) (*Store, resp.Value) {
@@ -685,6 +685,14 @@ func wrongTypeValue() resp.Value {
 
 func parseInt64(data []byte) (int64, error) {
 	value, err := strconv.ParseInt(string(data), 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("ERR value is not an integer or out of range")
+	}
+	return value, nil
+}
+
+func parseInt(data []byte) (int, error) {
+	value, err := strconv.Atoi(string(data))
 	if err != nil {
 		return 0, fmt.Errorf("ERR value is not an integer or out of range")
 	}

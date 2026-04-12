@@ -198,17 +198,17 @@ func decodeValue(data []byte, offset int) (Value, int, error) {
 		if err != nil {
 			return Value{}, offset, err
 		}
-		length, parseErr := strconv.ParseInt(string(line), 10, 64)
+		length, parseErr := strconv.Atoi(string(line))
 		if parseErr != nil {
 			return Value{}, offset, &DecodeError{Message: fmt.Sprintf("invalid bulk length: %v", parseErr)}
 		}
 		if length < 0 {
 			return NullBulkString(), next, nil
 		}
-		end := next + int(length)
-		if end+2 > len(data) {
+		if length > len(data)-next-2 {
 			return Value{}, offset, io.ErrUnexpectedEOF
 		}
+		end := next + length
 		bulk := append([]byte(nil), data[next:end]...)
 		if !bytes.Equal(data[end:end+2], []byte("\r\n")) {
 			return Value{}, offset, &DecodeError{Message: "bulk string missing CRLF"}
@@ -219,7 +219,7 @@ func decodeValue(data []byte, offset int) (Value, int, error) {
 		if err != nil {
 			return Value{}, offset, err
 		}
-		count, parseErr := strconv.ParseInt(string(line), 10, 64)
+		count, parseErr := strconv.Atoi(string(line))
 		if parseErr != nil {
 			return Value{}, offset, &DecodeError{Message: fmt.Sprintf("invalid array length: %v", parseErr)}
 		}
@@ -228,7 +228,7 @@ func decodeValue(data []byte, offset int) (Value, int, error) {
 		}
 		items := make([]Value, 0, count)
 		cursor := next
-		for i := int64(0); i < count; i++ {
+		for i := 0; i < count; i++ {
 			item, n, err := decodeValue(data, cursor)
 			if err != nil {
 				return Value{}, offset, err
