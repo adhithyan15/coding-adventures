@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/irc-framing",
+  "version": "0.1.0",
+  "description": "Stateful TCP byte-stream to IRC line framer — assembles CRLF-terminated lines from raw socket bytes",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "irc",
+    "framing",
+    "tcp",
+    "buffer",
+    "rfc1459",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

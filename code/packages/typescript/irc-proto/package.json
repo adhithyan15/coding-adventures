@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/irc-proto",
+  "version": "0.1.0",
+  "description": "Pure IRC message parsing and serialization (RFC 1459) — zero dependencies",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "irc",
+    "protocol",
+    "parsing",
+    "serialization",
+    "rfc1459",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
