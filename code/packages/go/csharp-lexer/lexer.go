@@ -2,6 +2,7 @@ package csharplexer
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 
@@ -136,18 +137,15 @@ func NewCSharpLexer(source string, version string) (*lexer.GrammarLexer, error) 
 	if err != nil {
 		return nil, err
 	}
-	return StartNew[*lexer.GrammarLexer]("csharplexer.NewCSharpLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	bytes, err := os.ReadFile(grammarPath)
+	if err != nil {
+		return nil, err
+	}
+	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+	if err != nil {
+		return nil, err
+	}
+	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
 // TokenizeCSharp is the main entry point for lexing C# source code.

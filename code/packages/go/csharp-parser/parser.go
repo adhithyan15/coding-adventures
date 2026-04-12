@@ -2,6 +2,7 @@ package csharpparser
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 
@@ -136,18 +137,15 @@ func NewCSharpParser(source string, version string) (*parser.GrammarParser, erro
 	if err != nil {
 		return nil, err
 	}
-	return StartNew[*parser.GrammarParser]("csharpparser.NewCSharpParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	bytes, err := os.ReadFile(grammarPath)
+	if err != nil {
+		return nil, err
+	}
+	grammar, err := grammartools.ParseParserGrammar(string(bytes))
+	if err != nil {
+		return nil, err
+	}
+	return parser.NewGrammarParser(tokens, grammar), nil
 }
 
 // ParseCSharp is the main entry point for parsing C# source code.

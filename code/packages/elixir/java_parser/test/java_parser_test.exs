@@ -28,7 +28,7 @@ defmodule CodingAdventures.JavaParserTest do
   describe "parse/2" do
     test "parses a simple class declaration with the default grammar" do
       assert {:ok, ast} = JavaParser.parse("public class Hello { }")
-      assert ast.rule_name == "compilation_unit"
+      assert ast.rule_name == "program"
       assert length(ASTNode.find_nodes(ast, "class_declaration")) == 1
     end
 
@@ -43,13 +43,13 @@ defmodule CodingAdventures.JavaParserTest do
     test "accepts all declared version strings" do
       for version <- JavaParser.supported_versions() do
         assert {:ok, ast} = JavaParser.parse("class Hello { }", version)
-        assert ast.rule_name == "compilation_unit"
+        assert ast.rule_name == "program"
       end
     end
 
     test "parses the empty compilation unit" do
       assert {:ok, ast} = JavaParser.parse("")
-      assert ast.rule_name == "compilation_unit"
+      assert ast.rule_name == "program"
       assert ast.children == []
     end
 
@@ -66,7 +66,7 @@ defmodule CodingAdventures.JavaParserTest do
 
       assert is_map(grammar)
       assert grammar.version == 1
-      assert hd(grammar.rules).name == "compilation_unit"
+      assert hd(grammar.rules).name == "program"
     end
 
     test "returns the parsed parser grammar for a specific version" do
@@ -74,7 +74,7 @@ defmodule CodingAdventures.JavaParserTest do
 
       assert is_map(grammar)
       assert grammar.version == 1
-      assert hd(grammar.rules).name == "compilation_unit"
+      assert hd(grammar.rules).name == "program"
     end
 
     test "raises ArgumentError for unknown version" do

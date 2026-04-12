@@ -67,13 +67,13 @@ defmodule CodingAdventures.JavaParser do
   ## Returns
 
   `{:ok, ast}` or `{:error, message}`. The root AST node has `rule_name`
-  `"compilation_unit"`.
+  `"program"`.
 
   ## Examples
 
       iex> {:ok, ast} = CodingAdventures.JavaParser.parse("public class Hello { }")
       iex> ast.rule_name
-      "compilation_unit"
+      "program"
 
   ## Errors
 
@@ -112,7 +112,7 @@ defmodule CodingAdventures.JavaParser do
       iex> is_map(grammar)
       true
       iex> grammar.rules |> hd() |> Map.fetch!(:name)
-      "compilation_unit"
+      "program"
 
   ## Errors
 

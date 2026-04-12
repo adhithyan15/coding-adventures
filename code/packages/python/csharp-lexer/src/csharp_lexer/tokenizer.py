@@ -53,7 +53,7 @@ This module supports all twelve C# versions tracked by the repo. Pass the
   ``using``, file-scoped namespaces, interpolated string handlers,
   ``required`` members (preview), ``CallerArgumentExpression``.
 - ``"11.0"`` — C# 11.0 (2022): required members (``required``), raw string
-  literals (``"""..."""``), generic math, list patterns (``[1, 2, ..]``),
+  literals (triple-quoted strings), generic math, list patterns (``[1, 2, ..]``),
   file-local types (``file``), ref fields.
 - ``"12.0"`` — C# 12.0 (2023): primary constructors, collection expressions
   (``[1, 2, 3]``), inline arrays, optional lambda parameters, ``alias any

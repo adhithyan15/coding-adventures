@@ -122,13 +122,13 @@
 compilation_unit = { extern_alias_directive }
                    { using_directive }
                    { global_attribute_section }
-                   ( { namespace_member_declaration }
-                   | top_level_statements ) ;
+                   ( top_level_statements
+                   | { namespace_member_declaration } ) ;
 
 # Top-level statements (C# 9.0): code at the top level of a file.
 # The file may also have type declarations AFTER the statements.
 
-top_level_statements = { statement } { type_declaration } ;
+top_level_statements = statement { statement } { type_declaration } ;
 
 # ============================================================================
 # Extern Alias Directives

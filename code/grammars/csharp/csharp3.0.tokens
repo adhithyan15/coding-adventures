@@ -439,19 +439,18 @@ skip:
 # Note: C# preprocessor is simpler than C's — it cannot define macros
 # or perform text substitution. It only supports symbol-based conditionals.
 
-preprocessor:
-  PP_IF        = /#\s*if\b[^\n]*/
-  PP_ELIF      = /#\s*elif\b[^\n]*/
-  PP_ELSE      = /#\s*else\b[^\n]*/
-  PP_ENDIF     = /#\s*endif\b[^\n]*/
-  PP_DEFINE    = /#\s*define\b[^\n]*/
-  PP_UNDEF     = /#\s*undef\b[^\n]*/
-  PP_REGION    = /#\s*region\b[^\n]*/
-  PP_ENDREGION = /#\s*endregion\b[^\n]*/
-  PP_ERROR     = /#\s*error\b[^\n]*/
-  PP_WARNING   = /#\s*warning\b[^\n]*/
-  PP_LINE      = /#\s*line\b[^\n]*/
-  PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
 
 # ============================================================================
 # Error recovery tokens

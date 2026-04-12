@@ -137,7 +137,7 @@ INT_NUMBER       = /[0-9][0-9_]*/ -> NUMBER
 STRING                   = /"([^"\\]|\\.)*"/
 VERBATIM_STRING          = /@"([^"]|"")*"/
 INTERPOLATED_STRING      = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
-INTERPOLATED_VERBATIM    = /(\$@|@\$)"([^"{]|""|{{|}})*"/
+INTERPOLATED_VERBATIM    = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
 CHAR                     = /'([^'\\]|\\.)*'/
 
 # ============================================================================
@@ -397,20 +397,19 @@ skip:
 # This directive allows gradual adoption: you can enable nullable analysis
 # file by file, or even section by section within a file.
 
-preprocessor:
-  PP_NULLABLE  = /#\s*nullable\b[^\n]*/
-  PP_IF        = /#\s*if\b[^\n]*/
-  PP_ELIF      = /#\s*elif\b[^\n]*/
-  PP_ELSE      = /#\s*else\b[^\n]*/
-  PP_ENDIF     = /#\s*endif\b[^\n]*/
-  PP_DEFINE    = /#\s*define\b[^\n]*/
-  PP_UNDEF     = /#\s*undef\b[^\n]*/
-  PP_REGION    = /#\s*region\b[^\n]*/
-  PP_ENDREGION = /#\s*endregion\b[^\n]*/
-  PP_ERROR     = /#\s*error\b[^\n]*/
-  PP_WARNING   = /#\s*warning\b[^\n]*/
-  PP_LINE      = /#\s*line\b[^\n]*/
-  PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+PP_NULLABLE  = /#\s*nullable\b[^\n]*/
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
 
 # ============================================================================
 # Error recovery tokens

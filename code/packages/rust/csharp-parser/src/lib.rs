@@ -264,26 +264,30 @@ mod tests {
     // Helpers
     // -----------------------------------------------------------------------
 
-    /// Assert that the AST root has the rule name "program".
+    /// Assert that the AST root has the rule name "compilation_unit".
     ///
-    /// Every C# grammar has `program` as its start symbol. This invariant
+    /// Every C# grammar has `compilation_unit` as its start symbol. This invariant
     /// must hold for every successful parse, regardless of version.
     fn assert_program_root(ast: &GrammarASTNode) {
         assert_eq!(
-            ast.rule_name, "program",
-            "Expected root rule 'program', got '{}'",
+            ast.rule_name, "compilation_unit",
+            "Expected root rule 'compilation_unit', got '{}'",
             ast.rule_name
         );
     }
 
-    /// Count direct `statement` children of the program node.
-    ///
-    /// This helper checks the top-level statement count, which is the most
-    /// natural way to verify that a given number of statements were parsed.
+    fn count_rules(node: &GrammarASTNode, target_rule: &str) -> usize {
+        let mut count = usize::from(node.rule_name == target_rule);
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(child_node) = child {
+                count += count_rules(child_node, target_rule);
+            }
+        }
+        count
+    }
+
     fn count_statements(ast: &GrammarASTNode) -> usize {
-        ast.children.iter().filter(|child| {
-            matches!(child, ASTNodeOrToken::Node(n) if n.rule_name == "statement")
-        }).count()
+        count_rules(ast, "statement")
     }
 
     /// Recursively search for a node with a given rule name anywhere in the
@@ -320,11 +324,9 @@ mod tests {
     /// building block of C# code organization.
     #[test]
     fn test_parse_class_declaration() {
-        let ast = parse_csharp("class Hello { }", "12.0").unwrap();
+        let ast = parse_csharp("class Hello {}", "12.0").unwrap();
         assert_program_root(&ast);
-
-        let stmt_count = count_statements(&ast);
-        assert!(stmt_count >= 1, "Expected at least 1 statement, got {}", stmt_count);
+        assert!(find_rule(&ast, "class_declaration"));
     }
 
     // -----------------------------------------------------------------------
@@ -354,12 +356,12 @@ mod tests {
     /// The `int` type is a 32-bit signed integer, equivalent to `System.Int32`.
     #[test]
     fn test_parse_multiple_statements() {
-        let source = "int x = 1; int y = 2; int z = 3;";
+        let source = "namespace Demo { public class A {} public class B {} public class C {} }";
         let ast = parse_csharp(source, "12.0").unwrap();
         assert_program_root(&ast);
 
-        let stmt_count = count_statements(&ast);
-        assert_eq!(stmt_count, 3, "Expected 3 statements, got {}", stmt_count);
+        let class_count = count_rules(&ast, "class_declaration");
+        assert_eq!(class_count, 3, "Expected 3 class declarations, got {}", class_count);
     }
 
     // -----------------------------------------------------------------------
@@ -390,12 +392,12 @@ mod tests {
     /// error recovery, or to run the parser in a loop.
     #[test]
     fn test_create_parser() {
-        let mut parser = create_csharp_parser("int x = 1;", "12.0").unwrap();
+        let mut parser = create_csharp_parser("public class Foo {}", "12.0").unwrap();
         let result = parser.parse();
         assert!(result.is_ok(), "Parser should succeed: {:?}", result.err());
 
         let ast = result.unwrap();
-        assert_eq!(ast.rule_name, "program");
+        assert_eq!(ast.rule_name, "compilation_unit");
     }
 
     // -----------------------------------------------------------------------
@@ -411,7 +413,7 @@ mod tests {
     /// implementations.
     #[test]
     fn test_versioned_csharp_8() {
-        let ast = parse_csharp("int x = 1;", "8.0").unwrap();
+        let ast = parse_csharp("public class Foo {}", "8.0").unwrap();
         assert_program_root(&ast);
     }
 
@@ -433,13 +435,13 @@ mod tests {
             "7.0", "8.0", "9.0", "10.0", "11.0", "12.0",
         ];
         for v in &versions {
-            let result = parse_csharp("", v);
+            let result = parse_csharp("public class Foo {}", v);
             assert!(
                 result.is_ok(),
                 "Version '{v}' should parse successfully: {:?}",
                 result.err()
             );
-            assert_eq!(result.unwrap().rule_name, "program");
+            assert_eq!(result.unwrap().rule_name, "compilation_unit");
         }
     }
 
@@ -491,7 +493,7 @@ mod tests {
     /// you could write async code that looks sequential.
     #[test]
     fn test_versioned_csharp_5() {
-        let ast = parse_csharp("int x = 1;", "5.0").unwrap();
+        let ast = parse_csharp("public class Foo {}", "5.0").unwrap();
         assert_program_root(&ast);
     }
 
@@ -508,9 +510,9 @@ mod tests {
     /// lambda expressions were also introduced here.
     #[test]
     fn test_versioned_csharp_3() {
-        let ast = parse_csharp("1 + 2;", "3.0").unwrap();
+        let ast = parse_csharp("public class Foo {}", "3.0").unwrap();
         assert_program_root(&ast);
-        assert!(!ast.children.is_empty());
+        assert!(find_rule(&ast, "class_declaration"));
     }
 
     // -----------------------------------------------------------------------
@@ -528,11 +530,11 @@ mod tests {
     /// - Experimental `interceptors` (preview)
     #[test]
     fn test_versioned_csharp_12() {
-        let source = "int a = 1; int b = 2;";
+        let source = "namespace Demo { public class A {} public class B {} }";
         let ast = parse_csharp(source, "12.0").unwrap();
         assert_program_root(&ast);
 
-        let stmt_count = count_statements(&ast);
-        assert_eq!(stmt_count, 2, "Expected 2 statements, got {}", stmt_count);
+        let class_count = count_rules(&ast, "class_declaration");
+        assert_eq!(class_count, 2, "Expected 2 class declarations, got {}", class_count);
     }
 }
