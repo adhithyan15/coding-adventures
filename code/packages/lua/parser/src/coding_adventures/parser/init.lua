@@ -850,7 +850,7 @@ function GrammarParser:parse()
 end
 
 --- Attempt to parse a named rule at the current position.
--- Uses packrat memoization: each (rule, position) pair is computed at most once.
+-- Uses packrat memoization with the seed-and-grow left-recursion technique.
 function GrammarParser:_parse_rule(rule_name)
     local rule = self.rules[rule_name]
     if not rule then return nil end
@@ -877,16 +877,56 @@ function GrammarParser:_parse_rule(rule_name)
     end
 
     local start_pos = self.pos
+    local key
+
+    -- Seed the memo table before parsing to break left-recursive cycles.
+    -- If this rule references itself at the same input position, the memo
+    -- lookup above will see this failure entry and terminate that branch.
+    if idx then
+        key = idx .. ":" .. start_pos
+        self.memo[key] = {
+            children = nil,
+            end_pos = start_pos,
+            ok = false,
+        }
+    end
+
     local children, ok = self:_match_element(rule.body)
 
     -- Cache result
     if idx then
-        local key = idx .. ":" .. start_pos
         self.memo[key] = {
             children = children,
             end_pos = self.pos,
             ok = ok,
         }
+
+        -- If the initial parse succeeded, repeatedly re-parse with the best
+        -- result cached so left-recursive alternatives can consume more input.
+        if ok then
+            while true do
+                local prev_end = self.pos
+                self.pos = start_pos
+                self.memo[key] = {
+                    children = children,
+                    end_pos = prev_end,
+                    ok = true,
+                }
+
+                local new_children, new_ok = self:_match_element(rule.body)
+                if not new_ok or self.pos <= prev_end then
+                    self.pos = prev_end
+                    self.memo[key] = {
+                        children = children,
+                        end_pos = prev_end,
+                        ok = true,
+                    }
+                    break
+                end
+
+                children = new_children
+            end
+        end
     end
 
     if not ok then

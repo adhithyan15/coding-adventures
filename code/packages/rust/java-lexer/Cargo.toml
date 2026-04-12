@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-java-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Java lexer — tokenizes Java source code using the grammar-driven lexer and the java.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

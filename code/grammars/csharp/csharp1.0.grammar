@@ -1,0 +1,2148 @@
+# C# 1.0 (2002) — Parser Grammar
+# @version 1
+# @csharp_version 1.0
+#
+# The C# Language Specification, ECMA-334 1st Edition — 2002
+# Also: ISO/IEC 23270:2003
+#
+# This grammar defines the syntactic structure of C# 1.0, the original
+# release of the C# programming language (.NET Framework 1.0, February 2002).
+# C# was designed by Anders Hejlsberg at Microsoft as a modern, type-safe,
+# object-oriented language for the .NET Common Language Runtime (CLR).
+#
+# C# 1.0 is a MUCH richer language than Java 1.0. While both descend from
+# C's syntactic tradition and share single-inheritance OO with interfaces,
+# C# 1.0 already has:
+#   - Properties with get/set accessors (Java uses get/set methods by convention)
+#   - Indexers (this[int index] — array-like access on any class)
+#   - Delegates (type-safe function pointers — Java used anonymous inner classes)
+#   - Events (language-level observer pattern built on delegates)
+#   - Structs (user-defined value types that live on the stack)
+#   - Operator overloading (+, -, ==, explicit/implicit conversion)
+#   - Attributes ([Serializable], [DllImport] — Java got annotations in 2004)
+#   - foreach loop (Java waited until Java 5 for enhanced for)
+#   - Namespaces with nesting (Java packages are flat declarations)
+#   - goto statement (Java reserved it but never implemented it)
+#   - checked/unchecked arithmetic overflow control
+#   - lock statement for thread synchronization
+#   - using statement for deterministic resource disposal
+#   - ref/out parameter passing modes
+#   - params keyword for variable-length arguments
+#   - Destructors (~ClassName) for cleanup
+#   - unsafe code blocks with pointers
+#   - Preprocessor directives (#if, #region, etc.)
+#
+# What C# 1.0 does NOT have (these come in later versions):
+#   - Generics (C# 2.0, 2005)
+#   - Nullable types int? (C# 2.0)
+#   - Iterators / yield return (C# 2.0)
+#   - Anonymous methods delegate {} (C# 2.0)
+#   - Partial types (C# 2.0)
+#   - Lambda expressions => (C# 3.0, 2007)
+#   - LINQ query syntax (C# 3.0)
+#   - var keyword (C# 3.0)
+#   - Extension methods (C# 3.0)
+#   - dynamic keyword (C# 4.0, 2010)
+#   - async/await (C# 5.0, 2012)
+#   - String interpolation $"" (C# 6.0, 2015)
+#   - Null-conditional ?. (C# 6.0)
+#   - Expression-bodied members => (C# 6.0)
+#   - Pattern matching (C# 7.0, 2017)
+#   - Tuples (C# 7.0)
+#   - Records (C# 9.0, 2020)
+#   - Top-level statements (C# 9.0)
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from csharp1.0.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+#
+# IMPORTANT: The lexer reclassifies all keyword names as KEYWORD tokens.
+# Grammar rules must therefore use "keyword_value" (quoted literals) to
+# match specific keywords, not a KEYWORD token type directly.
+#
+# IMPORTANT: No left recursion allowed. The parser uses PEG semantics with
+# packrat memoization. Use iterative form: `a { op b }` instead of `a = a op b`.
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# A C# source file is called a "compilation unit." Unlike Java, which has
+# a strict order of package-then-imports-then-types, C# is more flexible:
+#
+#   1. Zero or more using directives (import namespaces or create aliases)
+#   2. Zero or more namespace member declarations
+#
+# C# also supports extern alias directives and global attributes at the top
+# level, but we defer those to simplify the grammar. The key structural
+# difference from Java:
+#
+#   - C# has NO package declaration. Namespaces are declared with { } blocks.
+#   - C# using directives can appear inside namespace blocks too.
+#   - C# allows type declarations outside any namespace (the global namespace).
+#   - C# allows nested namespaces (namespace A { namespace B { } }).
+#
+# Reference: ECMA-334, Section 9.1
+
+compilation_unit = { extern_alias_directive }
+                   { using_directive }
+                   { global_attribute_section }
+                   { namespace_member_declaration } ;
+
+# ============================================================================
+# Extern Alias Directives
+# ============================================================================
+#
+# Extern aliases allow referencing two assemblies that contain the same
+# fully-qualified type name. This is rare but necessary for interop:
+#
+#   extern alias GridV1;
+#   extern alias GridV2;
+#
+# After this, GridV1::Grid and GridV2::Grid refer to different types.
+# This feature exists because .NET assemblies are identified by name and
+# version, and two assemblies can legally contain types with the same name.
+#
+# Reference: ECMA-334, Section 9.1
+
+extern_alias_directive = "extern" NAME SEMICOLON ;
+
+# ============================================================================
+# Using Directives
+# ============================================================================
+#
+# Using directives serve two purposes:
+#
+#   1. Import all types from a namespace:
+#      using System;
+#      using System.Collections;
+#
+#   2. Create a type alias:
+#      using Stream = System.IO.Stream;
+#      using IntList = System.Collections.ArrayList;
+#
+# Unlike Java's import, C# using does NOT support wildcard importing of
+# sub-namespaces. `using System;` imports System's types but NOT
+# System.Collections. You must import each namespace explicitly.
+#
+# Using directives can appear at two places:
+#   - At the top of a compilation unit (before any namespace)
+#   - At the start of a namespace declaration body
+#
+# Reference: ECMA-334, Section 9.3
+
+using_directive = "using" qualified_name SEMICOLON
+               | "using" NAME EQUALS qualified_name SEMICOLON ;
+
+# ============================================================================
+# Qualified Names
+# ============================================================================
+#
+# A qualified name is a dot-separated sequence of identifiers, used for
+# namespace names, type names, and member access chains. Examples:
+#
+#   System.Console
+#   System.Collections.ArrayList
+#   MyApp.Data.Models
+#
+# Like Java, the parser cannot distinguish namespace names from type names
+# from field accesses at parse time — that requires semantic analysis.
+
+qualified_name = NAME { DOT NAME } ;
+
+# ============================================================================
+# Global Attributes
+# ============================================================================
+#
+# Global attributes apply to the entire assembly or module, not to a
+# specific type or member:
+#
+#   [assembly: AssemblyVersion("1.0.0.0")]
+#   [assembly: CLSCompliant(true)]
+#   [module: DefaultCharSet(CharSet.Unicode)]
+#
+# These must appear after using directives and before namespace declarations.
+# They are C#'s equivalent of Java's package-level annotations (which came
+# later, in Java 5).
+#
+# Reference: ECMA-334, Section 17.2
+
+global_attribute_section = LBRACKET global_attribute_target COLON attribute_list [ COMMA ] RBRACKET ;
+
+global_attribute_target = "assembly"
+                        | "module" ;
+
+# ============================================================================
+# Namespace Declarations
+# ============================================================================
+#
+# Namespaces in C# are hierarchical containers for types. Unlike Java
+# packages (which are a single flat declaration per file), C# namespaces:
+#
+#   - Use curly braces { } to delimit scope
+#   - Can be nested: namespace A { namespace B { } }
+#   - Can be split across files (any file can contribute to any namespace)
+#   - Can have using directives inside them
+#   - Can be reopened (same namespace declared in multiple blocks)
+#
+# Example:
+#   namespace MyCompany.MyProduct {
+#       using System;
+#
+#       class Program {
+#           static void Main() {
+#               Console.WriteLine("Hello!");
+#           }
+#       }
+#   }
+#
+# The trailing semicolon after the closing brace is optional.
+#
+# Reference: ECMA-334, Section 9.2
+
+namespace_declaration = "namespace" qualified_name LBRACE
+                        { extern_alias_directive }
+                        { using_directive }
+                        { namespace_member_declaration }
+                        RBRACE [ SEMICOLON ] ;
+
+# ============================================================================
+# Namespace Members
+# ============================================================================
+#
+# A namespace can contain nested namespace declarations and type declarations.
+# Type declarations include classes, structs, interfaces, enums, and delegates.
+# This is richer than Java 1.0, which only has classes and interfaces.
+
+namespace_member_declaration = namespace_declaration
+                             | type_declaration ;
+
+type_declaration = class_declaration
+                 | struct_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | delegate_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Attributes
+# ============================================================================
+#
+# Attributes are C#'s metadata annotation system, similar to Java annotations
+# (@Override, @Deprecated) but available from C# 1.0 (Java got annotations in
+# Java 5, 2004). Attributes can be applied to assemblies, types, members,
+# parameters, return values, and more.
+#
+# Syntax:
+#   [Serializable]                              — attribute without arguments
+#   [DllImport("user32.dll")]                   — positional argument
+#   [Obsolete("Use NewMethod", error: true)]    — named argument
+#   [field: NonSerialized]                      — explicit target
+#
+# Attributes are enclosed in square brackets and can have an optional target
+# prefix (field:, method:, return:, etc.) to disambiguate when an attribute
+# could apply to multiple targets.
+#
+# Multiple attributes can share brackets: [Serializable, Obsolete("old")]
+#
+# Reference: ECMA-334, Section 17
+
+attribute_section = LBRACKET [ attribute_target COLON ] attribute_list [ COMMA ] RBRACKET ;
+
+attribute_target = "field"
+                 | "event"
+                 | "method"
+                 | "param"
+                 | "property"
+                 | "return"
+                 | "type" ;
+
+attribute_list = attribute { COMMA attribute } ;
+
+attribute = qualified_name [ LPAREN [ attribute_arguments ] RPAREN ] ;
+
+attribute_arguments = attribute_argument { COMMA attribute_argument } ;
+
+# Attribute arguments can be positional or named. Named arguments use
+# the property = value syntax: [Obsolete(message: "old", error: true)]
+attribute_argument = [ NAME EQUALS ] expression ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# A C# class declaration is similar to Java but with several additions:
+#
+#   [Serializable]
+#   public abstract class Animal : LivingThing, IDrawable, ISerializable {
+#       // fields, methods, properties, events, indexers, operators,
+#       // constructors, destructors, nested types
+#   }
+#
+# Key differences from Java:
+#   - Inheritance uses : instead of extends/implements (single syntax for both)
+#   - C# has four access modifiers: public, protected, internal, private
+#     (internal = assembly-level, like Java's package-private but assembly-wide)
+#   - The `new` keyword as a modifier means "deliberately hiding a base member"
+#   - `sealed` is C#'s equivalent of Java's `final` on classes
+#   - Classes can contain properties, events, indexers, operators, destructors
+#   - Nested types are always supported (Java 1.0 had NO inner classes)
+#
+# Reference: ECMA-334, Section 10
+
+class_declaration = { attribute_section } { class_modifier } "class" NAME
+                    [ COLON class_base_list ]
+                    class_body [ SEMICOLON ] ;
+
+class_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "abstract"
+               | "sealed" ;
+
+# The class base list includes both the base class (if any) and implemented
+# interfaces, separated by commas. The parser cannot distinguish classes from
+# interfaces here — that requires semantic analysis.
+#
+#   class Dog : Animal, IComparable, IDisposable { }
+#
+# C# allows at most one base class (single inheritance of implementation)
+# and any number of interfaces. The base class, if present, must be listed
+# first. But the grammar accepts any order and defers the check.
+
+class_base_list = qualified_name { COMMA qualified_name } ;
+
+class_body = LBRACE { class_member_declaration } RBRACE ;
+
+# ============================================================================
+# Class Member Declarations
+# ============================================================================
+#
+# A C# class can contain MANY more member kinds than a Java 1.0 class:
+#
+#   1. Fields           — instance and static variables (same as Java)
+#   2. Methods          — behaviors (same as Java)
+#   3. Properties       — get/set accessors (C# only — Java uses convention)
+#   4. Events           — observer pattern support (C# only)
+#   5. Indexers         — this[int i] accessor (C# only)
+#   6. Operators        — +, -, ==, etc. overloading (C# only)
+#   7. Constructors     — instance initialization (same as Java)
+#   8. Destructors      — cleanup via ~ClassName (C# only — Java uses finalize())
+#   9. Static ctors     — type initialization (C# only syntax)
+#  10. Nested types     — classes, structs, etc. inside a class (C# from day 1;
+#                         Java added inner classes in Java 1.1)
+#
+# Reference: ECMA-334, Section 10.1
+
+class_member_declaration = constant_declaration
+                         | field_declaration
+                         | method_declaration
+                         | property_declaration
+                         | event_declaration
+                         | indexer_declaration
+                         | operator_declaration
+                         | conversion_operator_declaration
+                         | constructor_declaration
+                         | destructor_declaration
+                         | static_constructor_declaration
+                         | type_declaration
+                         | SEMICOLON ;
+
+# ============================================================================
+# Constant Declarations
+# ============================================================================
+#
+# Constants are compile-time values. Unlike `readonly` fields (which are
+# set at runtime in the constructor), `const` values must be computable at
+# compile time. The compiler inlines them at every use site.
+#
+#   public const double PI = 3.14159265358979;
+#   private const int MAX_RETRIES = 3;
+#   internal const string VERSION = "1.0.0";
+#
+# Only primitive types, string, and enum types can be const. Reference
+# types can only be const if the value is null.
+#
+# Reference: ECMA-334, Section 10.3
+
+constant_declaration = { attribute_section } { constant_modifier } "const" type
+                       constant_declarators SEMICOLON ;
+
+constant_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+constant_declarators = constant_declarator { COMMA constant_declarator } ;
+
+constant_declarator = NAME EQUALS expression ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+#
+# Fields are the instance and static variables of a class. C# fields are
+# similar to Java fields but with additional modifiers:
+#
+#   private int _count;
+#   public static readonly int MaxValue = 100;
+#   internal volatile bool _running = true;
+#   protected new string Name;
+#
+# C# field modifiers include everything Java has plus:
+#   - readonly: value set only in declaration or constructor (like Java final on fields)
+#   - new: explicitly hides a base class member (no Java equivalent)
+#   - internal: assembly-level access
+#
+# Note: `const` fields use constant_declaration, not field_declaration.
+#
+# Reference: ECMA-334, Section 10.4
+
+field_declaration = { attribute_section } { field_modifier } type
+                    variable_declarators SEMICOLON ;
+
+field_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "readonly"
+               | "volatile" ;
+
+# Variable declarators: comma-separated list of name = value pairs.
+#
+#   int x, y = 5, z = x + 1;
+#
+# Unlike Java, C# does NOT allow array brackets after the variable name.
+# `int x[]` is NOT valid C# — you must write `int[] x`. This is cleaner.
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+# Array initializers use curly braces and can be nested:
+#
+#   int[] primes = { 2, 3, 5, 7, 11 };
+#   int[,] matrix = { { 1, 2 }, { 3, 4 } };
+#
+# Trailing comma is permitted: { 1, 2, 3, } is legal.
+# C# uses [,] for multidimensional arrays (true matrices), unlike Java's
+# [][] which creates arrays of arrays (jagged arrays). C# supports both forms.
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# Methods are the behaviors of a class. C# methods are similar to Java
+# methods but have additional modifiers and features:
+#
+#   public virtual string ToString() { return _name; }
+#   protected override void Dispose(bool disposing) { }
+#   private static int Calculate(int x, int y) { return x + y; }
+#   public extern void NativeCall();
+#
+# Key differences from Java:
+#   - `virtual` marks a method as overridable (Java methods are virtual by default)
+#   - `override` explicitly marks an override (Java uses @Override annotation)
+#   - `new` hides a base member (no Java equivalent)
+#   - `sealed override` prevents further overriding
+#   - No `throws` clause — C# has no checked exceptions
+#   - Methods can have ref/out parameters
+#   - Methods can be extern (P/Invoke to native code)
+#
+# IMPORTANT: C# does NOT have checked exceptions. This was a deliberate
+# design choice. Hejlsberg argued that checked exceptions add noise without
+# proportional value, since most callers either rethrow or catch-and-ignore.
+# Java developers have debated this for decades; C# simply chose not to
+# include them.
+#
+# Reference: ECMA-334, Section 10.5
+
+method_declaration = { attribute_section } { method_modifier } return_type
+                     qualified_name LPAREN [ formal_parameter_list ] RPAREN
+                     method_body ;
+
+method_modifier = "public"
+                | "protected"
+                | "internal"
+                | "private"
+                | "new"
+                | "static"
+                | "virtual"
+                | "sealed"
+                | "override"
+                | "abstract"
+                | "extern" ;
+
+return_type = "void"
+            | type ;
+
+# The method body is either a block or a semicolon (for abstract and extern
+# methods that have no C# body).
+
+method_body = block
+            | SEMICOLON ;
+
+# ============================================================================
+# Formal Parameters
+# ============================================================================
+#
+# C# 1.0 has FOUR kinds of parameters — more than any other C-family language
+# at the time:
+#
+#   1. Value parameters (default): void Foo(int x) — copies the value
+#   2. Reference parameters: void Foo(ref int x) — passes by reference
+#   3. Output parameters: void Foo(out int x) — must be assigned before return
+#   4. Parameter arrays: void Foo(params int[] x) — variable-length arguments
+#
+# The ref/out distinction is one of C#'s most distinctive features:
+#
+#   void Swap(ref int a, ref int b) {    // both caller and callee see changes
+#       int temp = a; a = b; b = temp;
+#   }
+#
+#   bool TryParse(string s, out int result) {  // callee must assign result
+#       // ...
+#   }
+#
+# At the call site, ref and out must be explicitly written:
+#   Swap(ref x, ref y);
+#   if (int.TryParse(input, out value)) { ... }
+#
+# The params keyword allows variable-length argument lists:
+#   void Printf(string format, params object[] args) { ... }
+#   Printf("x={0}, y={1}", x, y);  // args is packed into an array
+#
+# Java didn't get varargs until Java 5 (2004), using ... syntax instead.
+#
+# Reference: ECMA-334, Section 10.5.1
+
+formal_parameter_list = fixed_parameters [ COMMA parameter_array ]
+                      | parameter_array ;
+
+fixed_parameters = fixed_parameter { COMMA fixed_parameter } ;
+
+fixed_parameter = { attribute_section } [ parameter_modifier ] type NAME ;
+
+parameter_modifier = "ref"
+                   | "out" ;
+
+# The params parameter must be the last parameter and must be an array type.
+# Only one params parameter is allowed per method.
+
+parameter_array = { attribute_section } "params" type NAME ;
+
+# ============================================================================
+# Property Declarations
+# ============================================================================
+#
+# Properties are one of C#'s signature features. They provide controlled
+# access to data through get and set accessors, while looking like fields
+# to the caller:
+#
+#   private string _name;
+#   public string Name {
+#       get { return _name; }
+#       set { _name = value; }   // 'value' is an implicit parameter
+#   }
+#
+# Why properties matter:
+#   - They enforce encapsulation without the verbosity of get/set methods
+#   - They can have different access levels: public get, private set
+#   - They can be abstract or virtual (polymorphic)
+#   - They can validate values in the setter
+#   - They appear in the CLR metadata as properties (not just methods)
+#
+# Java never adopted properties. Java developers write getX()/setX() methods
+# by convention, which means:
+#   C#: person.Name = "Alice";        Java: person.setName("Alice");
+#   C#: string n = person.Name;       Java: String n = person.getName();
+#
+# The implicit `value` parameter in setters is unique to C# (and later,
+# Kotlin and Swift adopted similar concepts).
+#
+# Reference: ECMA-334, Section 10.6
+
+property_declaration = { attribute_section } { property_modifier } type
+                       qualified_name LBRACE accessor_declarations RBRACE ;
+
+property_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new"
+                  | "static"
+                  | "virtual"
+                  | "sealed"
+                  | "override"
+                  | "abstract"
+                  | "extern" ;
+
+# Accessor declarations: at least one of get or set must be present.
+# Either can appear first. Each can have its own access modifier
+# (but it must be more restrictive than the property's modifier).
+
+accessor_declarations = get_accessor_declaration [ set_accessor_declaration ]
+                      | set_accessor_declaration [ get_accessor_declaration ] ;
+
+get_accessor_declaration = { attribute_section } [ accessor_modifier ] "get"
+                           ( block | SEMICOLON ) ;
+
+set_accessor_declaration = { attribute_section } [ accessor_modifier ] "set"
+                           ( block | SEMICOLON ) ;
+
+# Accessor modifiers must be more restrictive than the property itself.
+# For example, a public property can have a private or protected setter.
+
+accessor_modifier = "protected"
+                  | "internal"
+                  | "private"
+                  | "protected" "internal"
+                  | "internal" "protected" ;
+
+# ============================================================================
+# Event Declarations
+# ============================================================================
+#
+# Events are C#'s language-level implementation of the observer pattern.
+# They are built on top of delegates (type-safe function pointers).
+#
+# Simple event declaration (field-like):
+#   public event EventHandler Click;
+#
+# Explicit event accessors (like properties have get/set):
+#   private EventHandler _click;
+#   public event EventHandler Click {
+#       add { _click += value; }
+#       remove { _click -= value; }
+#   }
+#
+# Events enforce a key invariant: only the declaring class can INVOKE the
+# event (fire it). External code can only SUBSCRIBE (+= ) or UNSUBSCRIBE (-=).
+# This is enforced by the compiler, not just convention.
+#
+# The event pattern is central to .NET GUI programming (Windows Forms, WPF):
+#   button.Click += new EventHandler(OnButtonClick);  // subscribe
+#   button.Click -= new EventHandler(OnButtonClick);  // unsubscribe
+#
+# Java used anonymous inner classes for callbacks until Java 8's lambdas.
+# C# had a cleaner solution from day one.
+#
+# Reference: ECMA-334, Section 10.7
+
+event_declaration = { attribute_section } { event_modifier } "event" type
+                    ( variable_declarators SEMICOLON
+                    | qualified_name LBRACE event_accessor_declarations RBRACE ) ;
+
+event_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "virtual"
+               | "sealed"
+               | "override"
+               | "abstract"
+               | "extern" ;
+
+event_accessor_declarations = add_accessor_declaration remove_accessor_declaration
+                            | remove_accessor_declaration add_accessor_declaration ;
+
+add_accessor_declaration = { attribute_section } "add" block ;
+
+remove_accessor_declaration = { attribute_section } "remove" block ;
+
+# ============================================================================
+# Indexer Declarations
+# ============================================================================
+#
+# Indexers let objects be accessed with array-like syntax: obj[index].
+# They are like properties but with parameters (the index).
+#
+#   public class StringCollection {
+#       private string[] _items;
+#
+#       public string this[int index] {
+#           get { return _items[index]; }
+#           set { _items[index] = value; }
+#       }
+#   }
+#
+# Usage:
+#   StringCollection sc = new StringCollection();
+#   sc[0] = "hello";         // calls set accessor
+#   string s = sc[0];        // calls get accessor
+#
+# Indexers use the `this` keyword instead of a name, because they represent
+# "indexing into this object." They can have multiple parameters for
+# multi-dimensional access: this[int row, int col].
+#
+# Java has no equivalent — you must write get(index)/set(index, value) methods.
+#
+# Reference: ECMA-334, Section 10.8
+
+indexer_declaration = { attribute_section } { indexer_modifier } type "this"
+                      LBRACKET formal_parameter_list RBRACKET
+                      LBRACE accessor_declarations RBRACE ;
+
+indexer_modifier = "public"
+                 | "protected"
+                 | "internal"
+                 | "private"
+                 | "new"
+                 | "virtual"
+                 | "sealed"
+                 | "override"
+                 | "abstract"
+                 | "extern" ;
+
+# ============================================================================
+# Operator Declarations
+# ============================================================================
+#
+# C# supports operator overloading for user-defined types. This is one of
+# the biggest philosophical differences from Java, which explicitly forbids
+# operator overloading.
+#
+# C#'s argument: Types like complex numbers, vectors, matrices, and money
+# amounts are naturally expressed with operators. Writing `a + b` is clearer
+# than `a.Add(b)` for mathematical types.
+#
+# Java's argument: Operator overloading is abused (C++ string class horror
+# stories) and makes code harder to understand because `+` might mean
+# anything. Java chose simplicity.
+#
+# Overloadable unary operators:
+#   +  -  !  ~  ++  --  true  false
+#
+# Overloadable binary operators:
+#   +  -  *  /  %  &  |  ^  <<  >>
+#   ==  !=  <  >  <=  >=
+#
+# The true/false operators are special: they let user-defined types work
+# in boolean contexts (if, while, &&, ||).
+#
+# Comparison operators must be overloaded in pairs: == with !=, < with >, etc.
+#
+# Example:
+#   public struct Vector2 {
+#       public float X, Y;
+#
+#       public static Vector2 operator +(Vector2 a, Vector2 b) {
+#           return new Vector2 { X = a.X + b.X, Y = a.Y + b.Y };
+#       }
+#
+#       public static bool operator ==(Vector2 a, Vector2 b) {
+#           return a.X == b.X && a.Y == b.Y;
+#       }
+#
+#       public static bool operator !=(Vector2 a, Vector2 b) {
+#           return !(a == b);
+#       }
+#   }
+#
+# Reference: ECMA-334, Section 10.9
+
+operator_declaration = { attribute_section } operator_modifiers type
+                       "operator" overloadable_operator
+                       LPAREN type NAME [ COMMA type NAME ] RPAREN
+                       method_body ;
+
+operator_modifiers = "public" "static" [ "extern" ] ;
+
+# The overloadable operators. Note that = (assignment), &&, ||, ?:, ->, [],
+# and () cannot be overloaded directly. && and || are defined in terms of
+# & and | plus the true/false operators.
+
+overloadable_operator = PLUS
+                      | MINUS
+                      | BANG
+                      | TILDE
+                      | PLUS_PLUS
+                      | MINUS_MINUS
+                      | "true"
+                      | "false"
+                      | STAR
+                      | SLASH
+                      | PERCENT
+                      | AMPERSAND
+                      | PIPE
+                      | CARET
+                      | LEFT_SHIFT
+                      | RIGHT_SHIFT
+                      | EQUALS_EQUALS
+                      | NOT_EQUALS
+                      | LESS_THAN
+                      | GREATER_THAN
+                      | LESS_EQUALS
+                      | GREATER_EQUALS ;
+
+# ============================================================================
+# Conversion Operator Declarations
+# ============================================================================
+#
+# C# supports user-defined type conversions with `implicit` and `explicit`
+# keywords. This is part of operator overloading but has its own syntax.
+#
+#   public static implicit operator double(Temperature t) {
+#       return t.Degrees;
+#   }
+#
+#   public static explicit operator int(Temperature t) {
+#       return (int)t.Degrees;
+#   }
+#
+# Implicit conversions happen automatically:
+#   Temperature t = new Temperature(100);
+#   double d = t;   // implicit conversion, no cast needed
+#
+# Explicit conversions require a cast:
+#   int i = (int)t;  // explicit conversion, cast required
+#
+# Guidelines: Use implicit only when the conversion is guaranteed safe
+# (no data loss). Use explicit when precision might be lost.
+#
+# Reference: ECMA-334, Section 10.9.3
+
+conversion_operator_declaration = { attribute_section } operator_modifiers
+                                  ( "implicit" | "explicit" ) "operator" type
+                                  LPAREN type NAME RPAREN method_body ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+#
+# Constructors initialize new objects. Similar to Java constructors, but
+# with some differences:
+#
+#   public class Person {
+#       private string _name;
+#       private int _age;
+#
+#       public Person(string name, int age) : base() {
+#           _name = name;
+#           _age = age;
+#       }
+#
+#       public Person(string name) : this(name, 0) { }
+#   }
+#
+# Key differences from Java:
+#   - Constructor initializers use : instead of a statement inside the body
+#   - `base(args)` and `this(args)` appear after the parameter list, not
+#     as the first statement in the body
+#   - `internal` access modifier (Java has no equivalent)
+#
+# The constructor initializer syntax is cleaner than Java's: the compiler
+# can verify that base/this calls happen exactly once, unconditionally,
+# before any field access.
+#
+# Reference: ECMA-334, Section 10.10
+
+constructor_declaration = { attribute_section } { constructor_modifier } NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ constructor_initializer ] method_body ;
+
+constructor_modifier = "public"
+                     | "protected"
+                     | "internal"
+                     | "private"
+                     | "extern" ;
+
+# Constructor initializers: `base(args)` calls a base class constructor,
+# `this(args)` chains to another constructor in the same class.
+
+constructor_initializer = COLON "base" LPAREN [ argument_list ] RPAREN
+                        | COLON "this" LPAREN [ argument_list ] RPAREN ;
+
+# ============================================================================
+# Destructor (Finalizer) Declarations
+# ============================================================================
+#
+# Destructors in C# use the ~ClassName syntax borrowed from C++, but they
+# are NOT deterministic like C++ destructors. C# destructors are called by
+# the garbage collector at an unpredictable time. They compile to an
+# override of Object.Finalize().
+#
+#   class FileWrapper {
+#       private IntPtr _handle;
+#
+#       ~FileWrapper() {
+#           CloseHandle(_handle);
+#       }
+#   }
+#
+# In practice, C# developers rarely use destructors. The preferred pattern
+# is IDisposable + using statement for deterministic cleanup:
+#
+#   using (var file = new FileStream("data.txt", FileMode.Open)) {
+#       // file is disposed at the end of this block
+#   }
+#
+# This is one of C#'s advantages over Java: the `using` statement guarantees
+# timely cleanup, while Java's try-finally is verbose and error-prone.
+# (Java added try-with-resources in Java 7 to solve the same problem.)
+#
+# Reference: ECMA-334, Section 10.12
+
+destructor_declaration = { attribute_section } [ "extern" ] TILDE NAME
+                         LPAREN RPAREN method_body ;
+
+# ============================================================================
+# Static Constructor Declarations
+# ============================================================================
+#
+# A static constructor (also called a type initializer) runs automatically
+# before the first instance is created or any static member is accessed.
+# It initializes static fields and performs one-time setup.
+#
+#   class Database {
+#       private static string _connectionString;
+#
+#       static Database() {
+#           _connectionString = LoadFromConfig();
+#       }
+#   }
+#
+# Static constructors:
+#   - Have no access modifier (they are always private implicitly)
+#   - Have no parameters
+#   - Are called at most once per AppDomain
+#   - Cannot be called directly
+#
+# Java has static initializer blocks (`static { ... }`) which serve the
+# same purpose but are syntactically different.
+#
+# Reference: ECMA-334, Section 10.11
+
+static_constructor_declaration = { attribute_section } static_constructor_modifiers
+                                 NAME LPAREN RPAREN method_body ;
+
+static_constructor_modifiers = "static" [ "extern" ]
+                             | "extern" "static" ;
+
+# ============================================================================
+# Struct Declarations
+# ============================================================================
+#
+# Structs are C#'s user-defined VALUE types. Unlike classes (which are
+# reference types allocated on the heap), structs are allocated on the
+# stack (or inline in containing objects) and are copied by value.
+#
+#   public struct Point {
+#       public int X, Y;
+#
+#       public Point(int x, int y) { X = x; Y = y; }
+#
+#       public double Distance(Point other) {
+#           int dx = X - other.X;
+#           int dy = Y - other.Y;
+#           return Math.Sqrt(dx * dx + dy * dy);
+#       }
+#   }
+#
+# Value semantics means:
+#   Point a = new Point(1, 2);
+#   Point b = a;        // COPIES the value — b is independent of a
+#   b.X = 99;           // a.X is still 1
+#
+# In Java, this would require cloning. Java has no user-defined value types;
+# only the eight primitive types (int, float, etc.) are value types.
+#
+# Struct restrictions in C# 1.0:
+#   - Cannot have a parameterless constructor (the default zeros all fields)
+#   - Cannot have a destructor
+#   - Cannot inherit from another struct or class (but can implement interfaces)
+#   - Cannot have virtual methods
+#   - Fields cannot have initializers
+#   - Structs are implicitly sealed
+#
+# When to use structs vs classes:
+#   - Struct: small, immutable data (Point, Color, DateTime, decimal)
+#   - Class: large objects, mutable state, polymorphism, heap allocation
+#
+# Reference: ECMA-334, Section 11
+
+struct_declaration = { attribute_section } { struct_modifier } "struct" NAME
+                     [ COLON interface_type_list ]
+                     struct_body [ SEMICOLON ] ;
+
+struct_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new" ;
+
+# Structs can implement interfaces but cannot extend classes or other structs.
+
+interface_type_list = qualified_name { COMMA qualified_name } ;
+
+struct_body = LBRACE { struct_member_declaration } RBRACE ;
+
+# Struct members are the same as class members, minus destructors and with
+# some restrictions (no virtual, no abstract, no protected unless nested).
+
+struct_member_declaration = constant_declaration
+                          | field_declaration
+                          | method_declaration
+                          | property_declaration
+                          | event_declaration
+                          | indexer_declaration
+                          | operator_declaration
+                          | conversion_operator_declaration
+                          | constructor_declaration
+                          | static_constructor_declaration
+                          | type_declaration
+                          | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations
+# ============================================================================
+#
+# Interfaces in C# 1.0 define contracts, like Java interfaces. They can
+# declare methods, properties, events, and indexers — but no fields or
+# implementation (implementation bodies come in C# 8.0).
+#
+#   public interface IComparable {
+#       int CompareTo(object obj);
+#   }
+#
+#   public interface ICollection : IEnumerable {
+#       int Count { get; }
+#       bool IsSynchronized { get; }
+#       object SyncRoot { get; }
+#       void CopyTo(Array array, int index);
+#   }
+#
+# C# interfaces can contain:
+#   - Method signatures (like Java)
+#   - Property signatures (C# only — get and/or set without bodies)
+#   - Event signatures (C# only)
+#   - Indexer signatures (C# only)
+#
+# C# convention: interface names start with I (IDisposable, IEnumerable).
+# This is enforced by style guides and tooling, not the compiler.
+#
+# Unlike Java, C# interfaces can have explicit implementation:
+#   class MyClass : IFoo, IBar {
+#       void IFoo.DoSomething() { }   // only accessible through IFoo reference
+#       void IBar.DoSomething() { }   // only accessible through IBar reference
+#   }
+# This solves the diamond problem when two interfaces have methods with
+# the same signature.
+#
+# Reference: ECMA-334, Section 13
+
+interface_declaration = { attribute_section } { interface_modifier } "interface" NAME
+                        [ COLON interface_type_list ]
+                        interface_body [ SEMICOLON ] ;
+
+interface_modifier = "public"
+                   | "protected"
+                   | "internal"
+                   | "private"
+                   | "new" ;
+
+interface_body = LBRACE { interface_member_declaration } RBRACE ;
+
+interface_member_declaration = interface_method_declaration
+                             | interface_property_declaration
+                             | interface_event_declaration
+                             | interface_indexer_declaration
+                             | SEMICOLON ;
+
+# Interface methods have no body and no modifiers (they are implicitly
+# public and abstract).
+
+interface_method_declaration = { attribute_section } [ "new" ] return_type NAME
+                              LPAREN [ formal_parameter_list ] RPAREN SEMICOLON ;
+
+# Interface properties declare which accessors exist (get, set, or both)
+# but provide no implementation.
+
+interface_property_declaration = { attribute_section } [ "new" ] type NAME
+                                LBRACE interface_accessors RBRACE ;
+
+interface_accessors = "get" SEMICOLON [ "set" SEMICOLON ]
+                    | "set" SEMICOLON [ "get" SEMICOLON ] ;
+
+# Interface events declare the event signature.
+
+interface_event_declaration = { attribute_section } [ "new" ] "event" type NAME SEMICOLON ;
+
+# Interface indexers declare the indexer signature.
+
+interface_indexer_declaration = { attribute_section } [ "new" ] type "this"
+                               LBRACKET formal_parameter_list RBRACKET
+                               LBRACE interface_accessors RBRACE ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+#
+# C# enums are value types (unlike Java enums which are classes). They are
+# a named set of integer constants with an underlying integral type.
+#
+#   public enum Color { Red, Green, Blue }
+#
+#   public enum Permissions : byte {
+#       None = 0,
+#       Read = 1,
+#       Write = 2,
+#       Execute = 4,
+#       All = Read | Write | Execute
+#   }
+#
+# C# enums are simpler than Java enums (which are full classes with
+# constructors, methods, and per-constant bodies). C# enums are just
+# named integers. Java didn't get enums until Java 5 (2004).
+#
+# The underlying type can be any integral type: byte, sbyte, short, ushort,
+# int, uint, long, ulong. Default is int.
+#
+# The [Flags] attribute enables bitwise combination:
+#   [Flags]
+#   enum Permissions { Read = 1, Write = 2, Execute = 4 }
+#   Permissions p = Permissions.Read | Permissions.Write;
+#
+# Reference: ECMA-334, Section 14
+
+enum_declaration = { attribute_section } { enum_modifier } "enum" NAME
+                   [ COLON integral_type ]
+                   enum_body [ SEMICOLON ] ;
+
+enum_modifier = "public"
+              | "protected"
+              | "internal"
+              | "private"
+              | "new" ;
+
+integral_type = "byte"
+              | "sbyte"
+              | "short"
+              | "ushort"
+              | "int"
+              | "uint"
+              | "long"
+              | "ulong" ;
+
+enum_body = LBRACE [ enum_member_declarations ] RBRACE ;
+
+enum_member_declarations = enum_member_declaration
+                           { COMMA enum_member_declaration } [ COMMA ] ;
+
+enum_member_declaration = { attribute_section } NAME [ EQUALS expression ] ;
+
+# ============================================================================
+# Delegate Declarations
+# ============================================================================
+#
+# Delegates are C#'s type-safe function pointers. They define a method
+# signature that any matching method can be assigned to.
+#
+#   public delegate void EventHandler(object sender, EventArgs e);
+#   public delegate int Comparison(object x, object y);
+#   public delegate bool Predicate(object item);
+#
+# Usage:
+#   EventHandler handler = new EventHandler(OnClick);
+#   handler(this, EventArgs.Empty);   // invoke the delegate
+#
+# Delegates are the foundation of C#'s event system and callback patterns.
+# They are type-safe (the compiler checks that assigned methods match the
+# signature), multicast (multiple methods can be combined with +=), and
+# support asynchronous invocation (BeginInvoke/EndInvoke).
+#
+# Java had no equivalent until Java 8's functional interfaces and lambda
+# expressions. Before that, Java used anonymous inner classes.
+#
+# Delegates are reference types that inherit from System.MulticastDelegate.
+# The compiler generates a class with Invoke(), BeginInvoke(), and EndInvoke()
+# methods automatically.
+#
+# Reference: ECMA-334, Section 15
+
+delegate_declaration = { attribute_section } { delegate_modifier } "delegate"
+                       return_type NAME LPAREN [ formal_parameter_list ] RPAREN
+                       SEMICOLON ;
+
+delegate_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# C# 1.0's type system is split into two categories:
+#
+#   1. Value types — live on the stack (or inline in objects), copied by value
+#      - Primitive types: bool, byte, sbyte, short, ushort, int, uint,
+#        long, ulong, char, float, double, decimal
+#      - Struct types (user-defined value types)
+#      - Enum types
+#
+#   2. Reference types — live on the heap, accessed by reference
+#      - Class types
+#      - Interface types
+#      - Delegate types
+#      - Array types
+#      - string, object (keyword aliases for System.String, System.Object)
+#
+# C# has MORE primitive types than Java because it has unsigned variants:
+#   byte (unsigned 8-bit) vs sbyte (signed 8-bit) — Java byte is signed
+#   ushort (unsigned 16-bit) — Java has no equivalent
+#   uint (unsigned 32-bit) — Java has no equivalent
+#   ulong (unsigned 64-bit) — Java has no equivalent
+#   decimal (128-bit decimal) — Java has no equivalent
+#
+# C# also has keyword aliases for built-in types:
+#   int → System.Int32     string → System.String
+#   bool → System.Boolean  object → System.Object
+#   etc.
+# These are exact synonyms, not different types.
+#
+# Array types in C# come in two forms:
+#   int[] — single-dimensional (like Java)
+#   int[,] — rectangular multidimensional (true matrix, C# only)
+#   int[][] — jagged (array of arrays, like Java's multidimensional arrays)
+#
+# Reference: ECMA-334, Section 4
+
+type = value_type { rank_specifier }
+     | reference_type { rank_specifier }
+     | "void" STAR ;
+
+value_type = primitive_type
+           | qualified_name ;
+
+reference_type = qualified_name
+               | "object"
+               | "string" ;
+
+primitive_type = numeric_type
+               | "bool" ;
+
+numeric_type = integral_type
+             | floating_point_type
+             | "decimal" ;
+
+floating_point_type = "float"
+                    | "double" ;
+
+# Rank specifiers indicate array dimensions:
+#   int[]     — rank 1 (single-dimensional)
+#   int[,]    — rank 2 (two-dimensional rectangular array)
+#   int[,,]   — rank 3 (three-dimensional rectangular array)
+#
+# Multiple rank specifiers create jagged arrays:
+#   int[][]   — array of arrays (jagged)
+#   int[][,]  — array of 2D arrays
+#
+# The commas inside the brackets distinguish rectangular from jagged:
+#   int[,] is a SINGLE two-dimensional array (rows * cols contiguous memory)
+#   int[][] is an array OF arrays (each sub-array can have different length)
+
+rank_specifier = LBRACKET { COMMA } RBRACKET ;
+
+# Pointer types are only valid in unsafe contexts. A pointer type is formed
+# by appending * to any unmanaged type:
+#   int* p;          — pointer to int
+#   void* vp;        — pointer to unspecified type
+#   int** pp;        — pointer to pointer to int
+#
+# Pointer types are NOT reference types and NOT value types — they exist
+# outside the normal type system. The garbage collector does not track them.
+
+pointer_type = type STAR ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# C# 1.0 supports 22 statement forms — more than Java 1.0's 16. The
+# additional statements reflect C#'s richer feature set:
+#
+#   Java 1.0 has these (C# has them too):
+#     block, empty, expression, if/else, while, do-while, for, switch,
+#     try/catch/finally, throw, return, break, continue, synchronized/lock,
+#     labelled
+#
+#   C# 1.0 adds these (Java 1.0 does not have):
+#     foreach    — iterate over collections (Java added in Java 5)
+#     goto       — jump to label, case, or default (Java reserved but never used)
+#     using      — deterministic resource disposal (Java added try-with-resources in 7)
+#     checked    — enable overflow checking for a block
+#     unchecked  — disable overflow checking for a block
+#     lock       — same as Java's synchronized (different keyword)
+#     unsafe     — enable pointer operations in a block
+#     fixed      — pin managed objects for pointer access
+#     local const— const declarations in method scope
+#
+# Reference: ECMA-334, Section 8
+
+block = LBRACE { statement } RBRACE ;
+
+statement = block
+          | local_variable_declaration_statement
+          | local_constant_declaration_statement
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | foreach_statement
+          | switch_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | goto_statement
+          | lock_statement
+          | using_statement
+          | checked_statement
+          | unchecked_statement
+          | labelled_statement
+          | unsafe_statement
+          | fixed_statement ;
+
+# --- Local Variable Declaration ---
+#
+# Local variables can be declared anywhere in a block (like Java 1.0,
+# unlike C89 which required declarations at block start).
+#
+#   int x = 5;
+#   string name = "Alice";
+#   int[] data = new int[10];
+#
+# Reference: ECMA-334, Section 8.5.1
+
+local_variable_declaration_statement = type variable_declarators SEMICOLON ;
+
+# --- Local Constant Declaration ---
+#
+# Local constants are compile-time values within a method scope:
+#   const int maxRetries = 3;
+#   const string greeting = "Hello";
+#
+# Reference: ECMA-334, Section 8.5.2
+
+local_constant_declaration_statement = "const" type constant_declarators SEMICOLON ;
+
+# --- Empty Statement ---
+#
+# Just a semicolon. Legal but usually a bug.
+#   while (PollForData()) ;    // busy-wait loop
+
+empty_statement = SEMICOLON ;
+
+# --- Expression Statement ---
+#
+# An expression used as a statement. Only side-effecting expressions are
+# meaningful: assignments, method calls, increment/decrement, object creation.
+#
+#   x = 5;
+#   Console.WriteLine("hello");
+#   i++;
+#   new MyObject();
+
+expression_statement = expression SEMICOLON ;
+
+# --- If/Else ---
+#
+# Standard conditional. Dangling-else ambiguity resolved by PEG ordered
+# choice — else binds to nearest if.
+#
+#   if (x > 0) {
+#       Console.WriteLine("positive");
+#   } else if (x < 0) {
+#       Console.WriteLine("negative");
+#   } else {
+#       Console.WriteLine("zero");
+#   }
+#
+# Reference: ECMA-334, Section 8.7.1
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+# --- While Loop ---
+#
+# Condition-first loop. Body may never execute.
+#
+#   while (enumerator.MoveNext()) {
+#       Process(enumerator.Current);
+#   }
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+# --- Do-While Loop ---
+#
+# Body-first loop. Body executes at least once.
+#
+#   do {
+#       line = reader.ReadLine();
+#       Process(line);
+#   } while (line != null);
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+# --- For Loop ---
+#
+# Classic C-style three-part for loop. The init part can be a local
+# variable declaration or an expression list.
+#
+#   for (int i = 0; i < array.Length; i++) {
+#       Console.WriteLine(array[i]);
+#   }
+#
+#   for (;;) { /* infinite loop */ }
+#
+# Reference: ECMA-334, Section 8.8.3
+
+for_statement = "for" LPAREN [ for_initializer ] SEMICOLON [ expression ] SEMICOLON
+                [ for_iterator ] RPAREN statement ;
+
+for_initializer = local_variable_declaration
+                | expression_list ;
+
+for_iterator = expression_list ;
+
+local_variable_declaration = type variable_declarators ;
+
+expression_list = expression { COMMA expression } ;
+
+# --- Foreach Loop ---
+#
+# Iterate over any collection that implements IEnumerable. This is one of
+# C# 1.0's advantages over Java 1.0 (Java added enhanced for-each in Java 5).
+#
+#   foreach (string name in names) {
+#       Console.WriteLine(name);
+#   }
+#
+#   foreach (DictionaryEntry entry in table) {
+#       Console.WriteLine(entry.Key + " = " + entry.Value);
+#   }
+#
+# The foreach loop compiles to:
+#   IEnumerator e = collection.GetEnumerator();
+#   try {
+#       while (e.MoveNext()) {
+#           ElementType element = (ElementType)e.Current;
+#           // loop body
+#       }
+#   } finally {
+#       if (e is IDisposable d) d.Dispose();
+#   }
+#
+# Reference: ECMA-334, Section 8.8.4
+
+foreach_statement = "foreach" LPAREN type NAME "in" expression RPAREN statement ;
+
+# --- Switch Statement ---
+#
+# Multi-way branch. C# switch has the same fall-through semantics as C
+# and Java, BUT with a crucial difference: C# REQUIRES break (or goto,
+# return, throw) at the end of each non-empty case. Implicit fall-through
+# through a non-empty case is a compile-time error. This prevents one of
+# C's most common bug patterns.
+#
+#   switch (command) {
+#       case "start":
+#           Start();
+#           break;           // required!
+#       case "stop":
+#           Stop();
+#           break;           // required!
+#       case "exit":
+#       case "quit":         // empty fall-through IS allowed
+#           Exit();
+#           break;
+#       default:
+#           Console.WriteLine("Unknown command");
+#           break;
+#   }
+#
+# In C# 1.0, switch expressions must be integral types, char, string, or enum.
+# C# has string switching from day one — Java didn't get this until Java 7.
+#
+# Reference: ECMA-334, Section 8.7.2
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+switch_block = LBRACE { switch_section } RBRACE ;
+
+switch_section = { switch_label } { statement } ;
+
+switch_label = "case" expression COLON
+             | "default" COLON ;
+
+# --- Try/Catch/Finally ---
+#
+# C#'s exception handling is nearly identical to Java's, with ONE major
+# difference: C# has NO checked exceptions. Every exception in C# is
+# unchecked — methods are not required to declare what they throw, and
+# callers are not required to catch anything.
+#
+# Anders Hejlsberg argued against checked exceptions:
+#   "The concern I have about checked exceptions is the handcuffs they put
+#   on programmers. You end up with catch (Exception e) { throw e; } or
+#   worse, catch (Exception e) {} — eating the exception."
+#
+# C# try/catch supports catching with just a type (no variable):
+#   catch (IOException) { /* don't need the exception object */ }
+#
+# It also supports a bare catch (catches any exception, including non-CLS):
+#   catch { /* catches everything, including non-.NET exceptions */ }
+#
+# Reference: ECMA-334, Section 8.10
+
+try_statement = "try" block ( catch_clauses [ finally_clause ]
+                            | finally_clause ) ;
+
+catch_clauses = specific_catch_clause { specific_catch_clause } [ general_catch_clause ]
+              | general_catch_clause ;
+
+specific_catch_clause = "catch" LPAREN qualified_name [ NAME ] RPAREN block ;
+
+general_catch_clause = "catch" block ;
+
+finally_clause = "finally" block ;
+
+# --- Throw ---
+#
+# Throws an exception. Unlike Java, C# allows re-throwing the current
+# exception with a bare `throw;` (no expression), which preserves the
+# original stack trace. Java re-throws destroy the trace unless you use
+# the original exception reference.
+#
+#   throw new ArgumentNullException("name");
+#   throw new InvalidOperationException("bad state", innerException);
+#
+#   catch (Exception ex) {
+#       Log(ex);
+#       throw;    // re-throw, preserving stack trace
+#   }
+
+throw_statement = "throw" [ expression ] SEMICOLON ;
+
+# --- Return ---
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+# --- Break and Continue ---
+#
+# break exits the nearest enclosing loop or switch.
+# continue skips to the next iteration of the nearest enclosing loop.
+#
+# Unlike Java, C# does NOT support labeled break/continue for nested loops.
+# Instead, C# has goto for this purpose (which is considered acceptable in
+# C# for breaking out of nested loops, unlike in Java where goto is forbidden).
+
+break_statement = "break" SEMICOLON ;
+
+continue_statement = "continue" SEMICOLON ;
+
+# --- Goto ---
+#
+# C# has a real, working goto statement — one of its most surprising
+# features for Java developers. Java reserved `goto` as a keyword but
+# never implemented it (producing a compile error if you try to use it).
+#
+# C# goto has three forms:
+#
+#   goto label;           — jump to a labeled statement
+#   goto case expression; — jump to a case in a switch
+#   goto default;         — jump to the default case in a switch
+#
+# The goto-case and goto-default forms are unique to C# and solve a real
+# problem: when you want to explicitly fall through to another case in a
+# switch (since implicit fall-through is forbidden in C#).
+#
+#   switch (state) {
+#       case 0:
+#           Initialize();
+#           goto case 1;        // explicit fall-through
+#       case 1:
+#           Process();
+#           break;
+#   }
+#
+# Plain goto is restricted: you cannot jump into a block from outside, or
+# jump out of a finally block. These restrictions prevent the worst abuses.
+#
+# Reference: ECMA-334, Section 8.9.3
+
+goto_statement = "goto" NAME SEMICOLON
+               | "goto" "case" expression SEMICOLON
+               | "goto" "default" SEMICOLON ;
+
+# --- Lock Statement ---
+#
+# Acquires a mutual-exclusion lock on an object. This is C#'s equivalent
+# of Java's synchronized block — same semantics, different keyword.
+#
+#   lock (syncRoot) {
+#       count++;
+#       NotifyObservers();
+#   }
+#
+# The lock compiles to:
+#   Monitor.Enter(syncRoot);
+#   try { ... }
+#   finally { Monitor.Exit(syncRoot); }
+#
+# Reference: ECMA-334, Section 8.12
+
+lock_statement = "lock" LPAREN expression RPAREN statement ;
+
+# --- Using Statement ---
+#
+# Ensures deterministic disposal of resources. The expression must implement
+# IDisposable. The Dispose() method is called at the end, even if an
+# exception occurs.
+#
+#   using (StreamReader reader = new StreamReader("data.txt")) {
+#       string line = reader.ReadLine();
+#       // reader.Dispose() called automatically here
+#   }
+#
+# This is one of C# 1.0's significant advantages over Java 1.0. Java
+# developers had to write verbose try/finally blocks for resource cleanup.
+# Java didn't get try-with-resources until Java 7 (2011), nine years later.
+#
+# The using statement can declare a new variable or use an existing one:
+#   using (var stream = File.OpenRead("data")) { }  // (with var in C# 3.0+)
+#   using (existingStream) { }                       // use existing variable
+#
+# Reference: ECMA-334, Section 8.13
+
+using_statement = "using" LPAREN resource_acquisition RPAREN statement ;
+
+resource_acquisition = type variable_declarators
+                     | expression ;
+
+# --- Checked and Unchecked Statements ---
+#
+# These control integer arithmetic overflow behavior. By default, C#
+# arithmetic silently wraps around on overflow (like C and Java). The
+# checked/unchecked keywords override this:
+#
+#   checked {
+#       int x = int.MaxValue;
+#       int y = x + 1;     // throws OverflowException!
+#   }
+#
+#   unchecked {
+#       int x = int.MaxValue;
+#       int y = x + 1;     // silently wraps to int.MinValue
+#   }
+#
+# Java has no equivalent — Java arithmetic always wraps silently. C# gives
+# you the choice, which is especially valuable for financial calculations
+# where silent overflow could mean losing money.
+#
+# The checked/unchecked keywords also work as expression-level operators:
+#   int y = checked(x + 1);
+#   int z = unchecked(x * x);
+#
+# Reference: ECMA-334, Section 8.11
+
+checked_statement = "checked" block ;
+
+unchecked_statement = "unchecked" block ;
+
+# --- Labelled Statement ---
+#
+# Any statement can be labelled. Labels are used as targets for goto.
+#
+#   retry:
+#       result = TryOperation();
+#       if (!result) goto retry;
+#
+# Labels have block scope (like local variables).
+
+labelled_statement = NAME COLON statement ;
+
+# --- Unsafe Statement ---
+#
+# Enables pointer operations inside a block. Unsafe code is one of C#'s
+# most distinctive features — no other mainstream managed language allows
+# raw pointer manipulation.
+#
+#   unsafe {
+#       int x = 42;
+#       int* p = &x;         // address-of operator
+#       *p = 99;             // dereference and assign
+#       Console.WriteLine(x); // prints 99
+#   }
+#
+# Unsafe code requires the /unsafe compiler flag and is typically used for:
+#   - Interop with native (C/C++) libraries via P/Invoke
+#   - Performance-critical algorithms (image processing, parsing)
+#   - Interfacing with hardware or OS APIs
+#
+# The entire method or type can be marked unsafe, or just a block:
+#   unsafe class FastBuffer { }
+#   void Process() { unsafe { /* pointer code */ } }
+#
+# Reference: ECMA-334, Section 18
+
+unsafe_statement = "unsafe" block ;
+
+# --- Fixed Statement ---
+#
+# Pins a managed object in memory so that the garbage collector will not
+# move it. This is required when taking the address of a managed field,
+# because the GC normally moves objects during compaction.
+#
+#   fixed (int* p = &myObject.field) {
+#       // p is valid here — the GC won't move myObject
+#       *p = 42;
+#   }
+#   // after the fixed block, the object is unpinned
+#
+#   fixed (byte* p = byteArray) {
+#       // p points to the first element of the array
+#       for (int i = 0; i < byteArray.Length; i++) {
+#           *(p + i) = 0xFF;
+#       }
+#   }
+#
+# The fixed statement is only valid in unsafe contexts.
+#
+# Reference: ECMA-334, Section 18.6
+
+fixed_statement = "fixed" LPAREN type variable_declarators RPAREN statement ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# C# 1.0 expressions follow C's precedence model, nearly identical to Java,
+# encoded via rule nesting from lowest to highest precedence. The main
+# differences from Java:
+#
+#   - `as` and `is` operators at the relational level (Java has only instanceof)
+#   - `checked` and `unchecked` as expression-level operators
+#   - `typeof`, `sizeof` as expressions
+#   - `default(T)` expression for default values
+#   - No `>>>` unsigned right shift (C# has unsigned types instead)
+#   - Delegate invocation syntax (same as method call)
+#   - Array element access uses [] (same as Java)
+#   - Pointer operators *, ->, & in unsafe code
+#
+# Precedence (lowest to highest):
+#
+#   Level 1:  assignment         =, +=, -=, *=, /=, %=, &=, |=, ^=, <<=, >>=
+#   Level 2:  ternary            ? :
+#   Level 3:  logical OR         ||
+#   Level 4:  logical AND        &&
+#   Level 5:  bitwise OR         |
+#   Level 6:  bitwise XOR        ^
+#   Level 7:  bitwise AND        &
+#   Level 8:  equality           ==, !=
+#   Level 9:  relational         <, >, <=, >=, is, as
+#   Level 10: shift              <<, >>
+#   Level 11: additive           +, -
+#   Level 12: multiplicative     *, /, %
+#   Level 13: unary              ++x, --x, +x, -x, ~x, !x, (type)x, &x, *x
+#   Level 14: postfix            x++, x--
+#   Level 15: primary            literals, this, base, new, typeof, sizeof,
+#                                checked, unchecked, default, method call,
+#                                member access, element access, parenthesized
+#
+# Reference: ECMA-334, Section 7
+
+# --- Assignment ---
+#
+# Assignment is right-associative: `a = b = c` means `a = (b = c)`.
+#
+# C# has 11 assignment operators (Java has 12 — the extra one is >>>=).
+
+expression = assignment_expression ;
+
+assignment_expression = conditional_expression
+                      | unary_expression assignment_operator assignment_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS ;
+
+# --- Ternary Conditional ---
+#
+# condition ? valueIfTrue : valueIfFalse
+#
+#   int abs = (x >= 0) ? x : -x;
+
+conditional_expression = logical_or_expression
+                         [ QUESTION expression COLON expression ] ;
+
+# --- Logical OR ---
+#
+# Short-circuit: if left is true, right is not evaluated.
+#
+#   if (name == null || name.Length == 0) { ... }
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+# --- Logical AND ---
+#
+# Short-circuit: if left is false, right is not evaluated.
+#
+#   if (obj != null && obj.IsValid()) { ... }
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# --- Bitwise OR ---
+#
+# Performs bitwise OR on integer operands. No short-circuit.
+#
+#   Permissions flags = Permissions.Read | Permissions.Write;
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+# --- Bitwise XOR ---
+#
+# Exclusive or. Useful for toggling bits and swap without temp.
+#
+#   int toggled = flags ^ mask;
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+# --- Bitwise AND ---
+#
+# Masks bits. Used with flags enums.
+#
+#   bool canRead = (permissions & Permissions.Read) != 0;
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- Equality ---
+#
+# == and != compare by value for value types, by reference for reference
+# types. HOWEVER, C# allows == to be overloaded (unlike Java where == is
+# always reference equality for objects). The string type overloads == to
+# compare by value — a common source of confusion for Java developers.
+#
+#   if (name == "Alice") { }        // works! string == is content comparison
+#   if (x == null) { }              // null check
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# --- Relational ---
+#
+# Numeric comparisons plus the `is` and `as` type operators.
+#
+# `is` tests whether an object is a specific type (like Java's instanceof):
+#   if (obj is string) { ... }
+#
+# `as` performs a safe cast that returns null on failure (instead of throwing):
+#   string s = obj as string;
+#   if (s != null) { ... }
+#
+# The `as` operator is unique to C# — Java has no equivalent. In Java, you
+# must use instanceof followed by a cast, which evaluates the type twice.
+# C# `as` is a single operation:
+#
+#   Java:  if (obj instanceof String) { String s = (String)obj; ... }
+#   C#:    string s = obj as string; if (s != null) { ... }
+#
+# Reference: ECMA-334, Section 7.9
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "is" type
+                        | "as" type } ;
+
+# --- Shift ---
+#
+# Two shift operators (NOT three — C# has no >>>):
+#   <<   left shift (fills with zeros)
+#   >>   signed right shift for signed types, unsigned for unsigned types
+#
+# C# does not need >>> because >> already does the right thing when applied
+# to unsigned types (uint, ulong). Java needs >>> because Java has no
+# unsigned types, so >> always sign-extends.
+#
+#   uint mask = 0xFF000000;
+#   uint high = mask >> 24;   // unsigned shift — fills with zeros
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT ) additive_expression } ;
+
+# --- Additive ---
+#
+# Addition and subtraction. Like Java, + is overloaded for string
+# concatenation (the ONLY operator overloading built into the language
+# before user-defined overloading).
+#
+# C# also allows delegate combination with + and removal with -:
+#   EventHandler combined = handler1 + handler2;
+#   combined -= handler1;
+#
+#   string greeting = "Hello, " + name + "!";
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# --- Multiplicative ---
+#
+# Multiplication, division, and remainder. Integer division truncates
+# toward zero. The % operator works on floating-point values (like Java,
+# unlike C89).
+#
+#   decimal price = quantity * unitPrice;
+#   int quotient = total / pageSize;
+#   int remainder = total % pageSize;
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# --- Unary ---
+#
+# Prefix operators, type casts, and address/dereference operators (unsafe).
+#
+# Cast expressions:
+#   (int) 3.14              // numeric conversion
+#   (string) obj            // reference cast (may throw InvalidCastException)
+#   (IDisposable) stream    // interface cast
+#
+# Address-of and dereference (unsafe only):
+#   int* p = &x;            // address-of
+#   int y = *p;             // dereference
+#
+# Reference: ECMA-334, Section 7.6
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | BANG unary_expression
+                 | TILDE unary_expression
+                 | cast_expression
+                 | AMPERSAND unary_expression
+                 | STAR unary_expression
+                 | postfix_expression ;
+
+# --- Cast Expression ---
+#
+# Type casts in C#. Two interpretations of parenthesized expressions:
+#   (int) x       — cast to int (unambiguous because int is a keyword)
+#   (MyClass) x   — cast to MyClass (ambiguous — could be parenthesized expr)
+#
+# PEG ordered choice resolves: try cast first, backtrack if it fails.
+# For primitive types, the cast is always unambiguous.
+# For reference types, the parser attempts the cast interpretation first.
+
+cast_expression = LPAREN type RPAREN unary_expression ;
+
+# --- Postfix ---
+#
+# Post-increment and post-decrement. Return the OLD value.
+#
+#   array[i++]     // access element at i, THEN increment i
+#   count--        // use count, THEN decrement
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Primary expressions are the atoms of the expression grammar. After parsing
+# a primary, we chain any number of suffix operations: member access,
+# method calls, element access, and pointer member access (unsafe).
+#
+# C# primaries are richer than Java 1.0 primaries because C# has:
+#   - typeof(T) — get System.Type object
+#   - sizeof(T) — get size of value type in bytes
+#   - checked(expr) and unchecked(expr) — overflow control
+#   - default(T) — default value of a type
+#   - base[index] — base class indexer access
+#   - delegate creation: new EventHandler(method)
+#
+# Reference: ECMA-334, Section 7.5
+
+primary_expression = primary { primary_suffix } ;
+
+# Primary suffixes chain after a primary to form member access, method
+# calls, element access, and pointer member access.
+
+primary_suffix = DOT NAME
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression_list RBRACKET
+               | ARROW NAME ;
+
+# The core primary forms. Order matters — PEG tries each in sequence.
+
+primary = literal
+        | "this"
+        | "base" DOT NAME
+        | "base" LBRACKET expression_list RBRACKET
+        | typeof_expression
+        | sizeof_expression
+        | checked_expression
+        | unchecked_expression
+        | default_value_expression
+        | new_expression
+        | LPAREN expression RPAREN
+        | NAME ;
+
+# --- typeof Expression ---
+#
+# Returns the System.Type object for a type. Used for reflection.
+#
+#   Type t = typeof(string);      // System.String
+#   Type t = typeof(int);         // System.Int32
+#   Type t = typeof(void);        // System.Void
+#
+# Java's equivalent: String.class, int.class
+
+typeof_expression = "typeof" LPAREN type_or_void RPAREN ;
+
+type_or_void = type | "void" ;
+
+# --- sizeof Expression ---
+#
+# Returns the size in bytes of a value type. Only valid in unsafe context
+# for user-defined types, but works without unsafe for built-in types.
+#
+#   int size = sizeof(int);       // 4
+#   int size = sizeof(double);    // 8
+
+sizeof_expression = "sizeof" LPAREN type RPAREN ;
+
+# --- checked / unchecked Expressions ---
+#
+# Expression-level overflow control (complementing the statement forms).
+#
+#   int y = checked(x + 1);      // throws on overflow
+#   int z = unchecked(x * x);    // wraps on overflow
+
+checked_expression = "checked" LPAREN expression RPAREN ;
+
+unchecked_expression = "unchecked" LPAREN expression RPAREN ;
+
+# --- default Value Expression ---
+#
+# Returns the default value for a type:
+#   default(int) → 0
+#   default(bool) → false
+#   default(string) → null
+#   default(DateTime) → DateTime.MinValue (all fields zero)
+#
+# In C# 1.0, default expressions are used primarily in generic code patterns,
+# though generics themselves arrive in C# 2.0. The expression is still valid
+# and useful for understanding default initialization.
+
+default_value_expression = "default" LPAREN type RPAREN ;
+
+# --- New Expression ---
+#
+# Object creation, array creation, and delegate creation.
+#
+# Object creation:
+#   new ArrayList()
+#   new Point(1, 2)
+#   new StringBuilder("hello")
+#
+# Array creation:
+#   new int[10]
+#   new string[5]
+#   new int[3, 4]             // rectangular array
+#   new int[3][]              // jagged array
+#   new int[] { 1, 2, 3 }    // with initializer
+#
+# Delegate creation:
+#   new EventHandler(OnClick)
+#   new Comparison(MyCompare)
+
+new_expression = "new" new_object_expression
+               | "new" new_array_expression ;
+
+# Object creation: type followed by constructor arguments.
+
+new_object_expression = qualified_name LPAREN [ argument_list ] RPAREN ;
+
+# Array creation has multiple forms:
+#   new int[10]                     — dimension expression(s)
+#   new int[3, 4]                   — multidimensional
+#   new int[3][]                    — jagged
+#   new int[] { 1, 2, 3 }          — with initializer
+#   new int[,] { {1,2}, {3,4} }    — multidimensional with initializer
+
+new_array_expression = array_type array_creation_suffix ;
+
+array_type = ( primitive_type | qualified_name ) ;
+
+array_creation_suffix = rank_specifier { rank_specifier } array_initializer
+                      | LBRACKET expression_list RBRACKET { rank_specifier }
+                        [ array_initializer ] ;
+
+# --- Argument List ---
+#
+# Arguments passed to method calls and constructors. Each argument can
+# optionally have a ref or out modifier.
+#
+#   Foo(1, "hello", ref x, out y)
+
+argument_list = argument { COMMA argument } ;
+
+argument = [ "ref" | "out" ] expression ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# C# 1.0 has six kinds of literals, similar to Java:
+#
+#   Integer literals:    42, 0xFF, 42L, 42U, 42UL (more suffix variants than Java)
+#   Floating-point:      3.14, 3.14f, 3.14d, 3.14m (decimal suffix unique to C#)
+#   Character literals:  'a', '\n', '\u0041'
+#   String literals:     "hello", @"C:\path" (verbatim strings unique to C#)
+#   Boolean literals:    true, false
+#   Null literal:        null
+#
+# Reference: ECMA-334, Section 2.4.4
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | VERBATIM_STRING
+        | "true"
+        | "false"
+        | "null" ;

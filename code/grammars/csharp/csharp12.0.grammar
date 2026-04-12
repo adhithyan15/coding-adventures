@@ -1,0 +1,1518 @@
+# C# 12.0 (2023) — Parser Grammar
+# @version 1
+# @csharp_version 12.0
+#
+# .NET 8.0 (LTS) — November 2023
+#
+# This grammar defines the syntactic structure of C# 12.0. It is COMPLETE and
+# SELF-CONTAINED, including all features from C# 1.0 through C# 12.0.
+#
+# Cumulative feature timeline (what this grammar includes):
+#
+#   C# 1.0 (2002): Classes, structs, interfaces, enums, delegates, properties,
+#                   events, indexers, operators, foreach, using, goto, unsafe
+#   C# 2.0 (2005): Generics, nullable types (int?), yield return, anonymous
+#                   methods, partial types, null coalescing (??)
+#   C# 3.0 (2007): Lambda expressions, LINQ query syntax, var, extension
+#                   methods, object/collection initializers, anonymous types
+#   C# 4.0 (2010): dynamic keyword, named/optional arguments, covariant/
+#                   contravariant generic type parameters
+#   C# 5.0 (2012): async/await, caller info attributes
+#   C# 6.0 (2015): Expression-bodied members, string interpolation ($""),
+#                   null-conditional (?.), nameof, exception filters (when),
+#                   auto-property initializers, using static
+#   C# 7.0 (2017): Tuples and deconstruction, pattern matching (is/switch),
+#                   local functions, out variables, ref returns, discards (_),
+#                   binary literals, digit separators, throw expressions
+#   C# 7.1-7.3:    async Main, default literal, tuple name inference,
+#                   ref struct, stackalloc in expressions
+#   C# 8.0 (2019): Nullable reference types, async streams, ranges/indices,
+#                   switch expressions, property/tuple/positional patterns,
+#                   using declarations, static local functions, default
+#                   interface methods, null-coalescing assignment (??=)
+#   C# 9.0 (2020): Records, init-only setters, top-level statements,
+#                   `with` expressions, target-typed new, relational patterns,
+#                   logical patterns (not/and/or)
+#   C# 10.0 (2021): Global usings, file-scoped namespaces, record structs,
+#                    extended property patterns
+#   C# 11.0 (2022): Raw string literals, list patterns, required members,
+#                    scoped parameters, checked operators, generic attributes,
+#                    >>> unsigned right shift, file-local types
+#   C# 12.0 (2023): THIS VERSION — see below
+#
+# C# 12.0 new grammar features:
+#
+#   1. PRIMARY CONSTRUCTORS FOR ALL TYPES:
+#      Before C# 12.0, only records had primary constructors:
+#        record Person(string Name, int Age);   // C# 9.0, records only
+#
+#      C# 12.0 extends primary constructors to ALL classes and structs:
+#        class HttpService(HttpClient client, ILogger logger) { }
+#        struct Color(byte r, byte g, byte b) { }
+#
+#      The parameters become available throughout the type body (in field
+#      initializers, methods, properties). Unlike records, primary constructor
+#      parameters are NOT automatically turned into properties — you must
+#      explicitly declare properties and optionally capture parameters.
+#
+#      This is inspired by Kotlin's primary constructors, which have the same
+#      syntax. Kotlin developers feel right at home with C# 12.0 classes.
+#
+#   2. COLLECTION EXPRESSIONS:
+#      A unified syntax for creating any collection type using [ ]:
+#        int[] arr = [1, 2, 3];
+#        List<int> list = [1, 2, 3];
+#        Span<int> span = [1, 2, 3];
+#        ImmutableArray<int> ia = [1, 2, 3];
+#
+#      The SPREAD ELEMENT (.. expr) inserts all elements of another collection:
+#        int[] combined = [.. first, .. second];
+#        List<int> withNew = [.. existing, 99, 100];
+#
+#      The type is inferred from the target context (like target-typed new).
+#      A type participates in collection expressions by either:
+#        - Being a well-known type (array, Span, List, etc.)
+#        - Having the [CollectionBuilder] attribute pointing to a static Create method
+#
+#      This unifies many previously inconsistent ways to create collections:
+#        new int[] { 1, 2, 3 }      — old array syntax
+#        new List<int> { 1, 2, 3 }  — old list syntax
+#        ImmutableArray.Create(1, 2, 3)  — no initializer syntax at all!
+#
+#   3. INLINE ARRAYS (no new grammar — just attribute and single-field struct):
+#      [InlineArray(10)]
+#      struct Buffer<T> { private T _element; }
+#
+#      Creates a fixed-size array stored inline (no heap allocation).
+#      Works like C's struct with array member, but type-safe and bounds-checked.
+#      Used internally by .NET runtime for Span implementations.
+#
+#   4. DEFAULT LAMBDA PARAMETERS:
+#      Before C# 12.0, lambda parameters could not have default values.
+#      Methods could; lambdas could not. This inconsistency is fixed:
+#
+#        var add = (int x, int y = 0) => x + y;
+#        add(5)     // y defaults to 0 → returns 5
+#        add(5, 3)  // returns 8
+#
+#      This makes lambdas as powerful as methods for APIs that use
+#      delegate parameters.
+#
+#   5. REF READONLY PARAMETERS:
+#      A new parameter passing mode: pass by reference, but the callee
+#      cannot modify the value:
+#
+#        void PrintInfo(ref readonly Matrix4x4 matrix) {
+#            // can read matrix.M11, etc.
+#            // CANNOT: matrix.M11 = 1.0f;  — compile error
+#        }
+#
+#      The difference from `in`:
+#        - `in`:         always pass by reference, callee has read-only access
+#        - `ref readonly`: same, but the declaration is more explicit about intent
+#        - Caller syntax: M(ref matrix) — identical to `ref`, clarifying at call site
+#
+#      The `in` parameter was sometimes confusing because callers didn't
+#      know if the value was being passed by reference (no `in` at call site
+#      is allowed). `ref readonly` forces the caller to write `ref`, making
+#      the by-reference nature explicit.
+#
+#   6. USING ALIAS FOR ANY TYPE:
+#      Before C# 12.0, using aliases could only refer to named types:
+#        using IntList = List<int>;          // OK
+#        using Point = (int X, int Y);       // ERROR before 12.0
+#
+#      C# 12.0 allows aliases for any type:
+#        using Point = (int X, int Y);       // tuple type
+#        using UnsafePtr = int*;             // pointer type
+#        using IntArray = int[];             // array type
+#        using NullableInt = int?;           // nullable type
+#
+#      This is primarily useful for tuple types, which had no alias support.
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from csharp12.0.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword (lexer emits KEYWORD token with this value)
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# Same as C# 11.0. Top-level statements (C# 9.0), global usings (C# 10.0),
+# and file-scoped namespaces (C# 10.0) are all supported.
+
+compilation_unit = { extern_alias_directive }
+                   { using_directive }
+                   { global_attribute_section }
+                   ( top_level_statements
+                   | { namespace_member_declaration } ) ;
+
+top_level_statements = statement { statement } { type_declaration } ;
+
+# ============================================================================
+# Extern Alias Directives
+# ============================================================================
+
+extern_alias_directive = "extern" NAME SEMICOLON ;
+
+# ============================================================================
+# Using Directives
+# ============================================================================
+#
+# C# 12.0 allows using aliases for ANY type — not just named types.
+# Previously only named types (qualified names with optional generic args)
+# could appear after the `=` in a using alias. Now ANY type can appear:
+#
+#   using Point = (int X, int Y);           // tuple type alias
+#   using UnsafeBuffer = byte*;             // pointer type alias (unsafe)
+#   using IntArray = int[];                 // array type alias
+#   using MaybeString = string?;            // nullable reference type alias
+#   using Numbers = System.Collections.Generic.List<int>;  // still works
+#
+# This is a grammar change: the right-hand side of using aliases becomes
+# a full `type` production rather than just `qualified_name`.
+#
+# Context keywords `global`, `static` are handled as before.
+
+using_directive = [ "global" ] "using" "static" qualified_name SEMICOLON
+               | [ "global" ] "using" qualified_name SEMICOLON
+               | [ "global" ] "using" NAME EQUALS type SEMICOLON ;
+
+# ============================================================================
+# Qualified Names and Type Names
+# ============================================================================
+
+qualified_name = name_part { DOT name_part } ;
+
+name_part = NAME [ COLON_COLON NAME ] [ type_argument_list ] ;
+
+type_argument_list = LESS_THAN type_argument { COMMA type_argument } GREATER_THAN ;
+
+type_argument = type ;
+
+# ============================================================================
+# Global Attributes
+# ============================================================================
+
+global_attribute_section = LBRACKET global_attribute_target COLON attribute_list [ COMMA ] RBRACKET ;
+
+global_attribute_target = "assembly"
+                        | "module" ;
+
+# ============================================================================
+# Namespace Declarations
+# ============================================================================
+#
+# File-scoped namespaces (C# 10.0) and traditional block-scoped namespaces.
+# Unchanged in C# 12.0.
+
+namespace_declaration = "namespace" qualified_name LBRACE
+                        { extern_alias_directive }
+                        { using_directive }
+                        { namespace_member_declaration }
+                        RBRACE [ SEMICOLON ]
+                      | "namespace" qualified_name SEMICOLON
+                        { extern_alias_directive }
+                        { using_directive }
+                        { namespace_member_declaration } ;
+
+# ============================================================================
+# Namespace Members
+# ============================================================================
+
+namespace_member_declaration = namespace_declaration
+                             | type_declaration ;
+
+type_declaration = class_declaration
+                 | struct_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | delegate_declaration
+                 | record_declaration
+                 | record_struct_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Attributes
+# ============================================================================
+#
+# Generic attributes (C# 11.0) are supported by qualified_name already
+# including type arguments. No changes in C# 12.0.
+
+attribute_section = LBRACKET [ attribute_target COLON ] attribute_list [ COMMA ] RBRACKET ;
+
+attribute_target = "field"
+                 | "event"
+                 | "method"
+                 | "param"
+                 | "property"
+                 | "return"
+                 | "type" ;
+
+attribute_list = attribute { COMMA attribute } ;
+
+attribute = qualified_name [ LPAREN [ attribute_arguments ] RPAREN ] ;
+
+attribute_arguments = attribute_argument { COMMA attribute_argument } ;
+
+attribute_argument = [ NAME EQUALS ] expression ;
+
+# ============================================================================
+# Class Declarations
+# ============================================================================
+#
+# C# 12.0 adds PRIMARY CONSTRUCTORS for classes.
+#
+# WHAT IS A PRIMARY CONSTRUCTOR?
+# --------------------------------
+# A primary constructor places constructor parameters directly in the class
+# header, adjacent to the class name:
+#
+#   class CustomerService(IRepository repo, ILogger logger)
+#   {
+#       // `repo` and `logger` are in scope throughout this class
+#       public Customer? Find(int id) => repo.Find(id);
+#   }
+#
+# COMPARISON WITH RECORDS:
+#   record Person(string Name, int Age);      // C# 9.0
+#
+#   // The record auto-generates:
+#   //   public string Name { get; init; }
+#   //   public int Age { get; init; }
+#   //   Equals, GetHashCode, ToString, Deconstruct
+#
+#   class PersonService(string name, int age) {  // C# 12.0
+#       // Does NOT auto-generate Name or Age properties
+#       // name and age are just parameters available in the body
+#       // You capture them explicitly:
+#       public string Name { get; } = name;   // explicit capture
+#   }
+#
+# WHY IS THIS USEFUL?
+# Primary constructors shine for DEPENDENCY INJECTION patterns. In modern
+# C#, almost every class receives its dependencies through the constructor:
+#
+#   // Before C# 12.0 — lots of repetitive boilerplate:
+#   public class OrderService {
+#       private readonly IOrderRepository _repo;
+#       private readonly IPaymentGateway _payment;
+#       private readonly ILogger<OrderService> _logger;
+#
+#       public OrderService(
+#           IOrderRepository repo,
+#           IPaymentGateway payment,
+#           ILogger<OrderService> logger) {
+#           _repo = repo;
+#           _payment = payment;
+#           _logger = logger;
+#       }
+#   }
+#
+#   // After C# 12.0 — primary constructor eliminates all of the above:
+#   public class OrderService(
+#       IOrderRepository repo,
+#       IPaymentGateway payment,
+#       ILogger<OrderService> logger)
+#   {
+#       public async Task<Order> PlaceOrderAsync(Cart cart) {
+#           _logger.LogInformation("Placing order");
+#           var order = new Order(cart);
+#           await _repo.SaveAsync(order);
+#           await _payment.ChargeAsync(cart.Total);
+#           return order;
+#       }
+#   }
+#
+# GRAMMAR CHANGE:
+#   class_declaration now optionally includes ( formal_parameter_list )
+#   after the class name, exactly like record declarations.
+
+class_declaration = { attribute_section } { class_modifier } [ "partial" ] "class" NAME
+                    [ type_parameter_list ]
+                    [ LPAREN [ formal_parameter_list ] RPAREN ]
+                    [ COLON class_base_list ]
+                    { type_parameter_constraint_clause }
+                    class_body [ SEMICOLON ] ;
+
+class_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "file"
+               | "new"
+               | "abstract"
+               | "sealed"
+               | "static" ;
+
+class_base_list = type { COMMA type } ;
+
+class_body = LBRACE { class_member_declaration } RBRACE ;
+
+# ============================================================================
+# Generic Type Parameters (C# 2.0)
+# ============================================================================
+
+type_parameter_list = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+type_parameter = { attribute_section } [ "in" | "out" ] NAME ;
+
+type_parameter_constraint_clause = "where" NAME COLON type_parameter_constraints ;
+
+type_parameter_constraints = type_parameter_constraint
+                             { COMMA type_parameter_constraint } ;
+
+type_parameter_constraint = "class"
+                          | "struct"
+                          | "unmanaged"
+                          | "notnull"
+                          | "new" LPAREN RPAREN
+                          | type ;
+
+# ============================================================================
+# Class Member Declarations
+# ============================================================================
+
+class_member_declaration = constant_declaration
+                         | field_declaration
+                         | method_declaration
+                         | property_declaration
+                         | event_declaration
+                         | indexer_declaration
+                         | operator_declaration
+                         | checked_operator_declaration
+                         | conversion_operator_declaration
+                         | constructor_declaration
+                         | destructor_declaration
+                         | static_constructor_declaration
+                         | type_declaration
+                         | SEMICOLON ;
+
+# ============================================================================
+# Constant Declarations
+# ============================================================================
+
+constant_declaration = { attribute_section } { constant_modifier } "const" type
+                       constant_declarators SEMICOLON ;
+
+constant_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "new" ;
+
+constant_declarators = constant_declarator { COMMA constant_declarator } ;
+
+constant_declarator = NAME EQUALS expression ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+#
+# `required` modifier (C# 11.0): field must be set in object initializer.
+# `ref` modifier: for ref fields in ref struct (C# 11.0).
+# Unchanged in C# 12.0.
+
+field_declaration = { attribute_section } { field_modifier } type
+                    variable_declarators SEMICOLON ;
+
+field_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "file"
+               | "new"
+               | "static"
+               | "readonly"
+               | "volatile"
+               | "required"
+               | "ref" ;
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+
+method_declaration = { attribute_section } { method_modifier } [ "partial" ]
+                     return_type qualified_name [ type_parameter_list ]
+                     LPAREN [ formal_parameter_list ] RPAREN
+                     { type_parameter_constraint_clause }
+                     method_body ;
+
+method_modifier = "public"
+                | "protected"
+                | "internal"
+                | "private"
+                | "file"
+                | "new"
+                | "static"
+                | "virtual"
+                | "sealed"
+                | "override"
+                | "abstract"
+                | "extern"
+                | "async" ;
+
+return_type = "void"
+            | [ "ref" [ "readonly" ] ] type ;
+
+method_body = block
+            | LAMBDA_ARROW expression SEMICOLON
+            | SEMICOLON ;
+
+# ============================================================================
+# Formal Parameters
+# ============================================================================
+#
+# C# 12.0 changes:
+#   1. `ref readonly` is now a parameter modifier (not just `in`).
+#      `ref readonly T param` — passed by reference, callee cannot modify.
+#      At the call site, the caller writes `ref arg` (making the by-ref explicit).
+#
+#   2. Default parameter values are now allowed in lambda expressions.
+#      This is a grammar change at the lambda_parameter level.
+#
+# The `scoped` modifier (C# 11.0) is still supported for lifetime control.
+
+formal_parameter_list = fixed_parameters [ COMMA parameter_array ]
+                      | parameter_array ;
+
+fixed_parameters = fixed_parameter { COMMA fixed_parameter } ;
+
+fixed_parameter = { attribute_section } [ "scoped" ] [ parameter_modifier ] type NAME
+                  [ EQUALS expression ] ;
+
+# ref readonly (C# 12.0) joins the parameter modifier list.
+parameter_modifier = "ref" "readonly"
+                   | "ref"
+                   | "out"
+                   | "in"
+                   | "this" ;
+
+parameter_array = { attribute_section } "params" type NAME ;
+
+# ============================================================================
+# Property Declarations
+# ============================================================================
+#
+# `required` properties (C# 11.0), init-only setters (C# 9.0).
+# Unchanged in C# 12.0.
+
+property_declaration = { attribute_section } { property_modifier } [ "ref" [ "readonly" ] ] type
+                       qualified_name
+                       ( LBRACE accessor_declarations RBRACE [ EQUALS expression SEMICOLON ]
+                       | LAMBDA_ARROW expression SEMICOLON ) ;
+
+property_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "file"
+                  | "new"
+                  | "static"
+                  | "virtual"
+                  | "sealed"
+                  | "override"
+                  | "abstract"
+                  | "extern"
+                  | "required" ;
+
+accessor_declarations = get_accessor_declaration [ set_accessor_declaration ]
+                      | set_accessor_declaration [ get_accessor_declaration ] ;
+
+get_accessor_declaration = { attribute_section } [ accessor_modifier ] "get"
+                           ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+set_accessor_declaration = { attribute_section } [ accessor_modifier ] ( "set" | "init" )
+                           ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+accessor_modifier = "protected" "internal"
+                  | "internal" "protected"
+                  | "private" "protected"
+                  | "protected" "private"
+                  | "protected"
+                  | "internal"
+                  | "private" ;
+
+# ============================================================================
+# Event Declarations
+# ============================================================================
+
+event_declaration = { attribute_section } { event_modifier } "event" type
+                    ( variable_declarators SEMICOLON
+                    | qualified_name LBRACE event_accessor_declarations RBRACE ) ;
+
+event_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "new"
+               | "static"
+               | "virtual"
+               | "sealed"
+               | "override"
+               | "abstract"
+               | "extern" ;
+
+event_accessor_declarations = add_accessor_declaration remove_accessor_declaration
+                            | remove_accessor_declaration add_accessor_declaration ;
+
+add_accessor_declaration    = { attribute_section } "add" block ;
+remove_accessor_declaration = { attribute_section } "remove" block ;
+
+# ============================================================================
+# Indexer Declarations
+# ============================================================================
+
+indexer_declaration = { attribute_section } { indexer_modifier } [ "ref" [ "readonly" ] ] type
+                      "this" LBRACKET formal_parameter_list RBRACKET
+                      ( LBRACE accessor_declarations RBRACE
+                      | LAMBDA_ARROW expression SEMICOLON ) ;
+
+indexer_modifier = "public"
+                 | "protected"
+                 | "internal"
+                 | "private"
+                 | "new"
+                 | "virtual"
+                 | "sealed"
+                 | "override"
+                 | "abstract"
+                 | "extern" ;
+
+# ============================================================================
+# Operator Declarations
+# ============================================================================
+#
+# Includes >>> operator overloading (C# 11.0) and checked operators (C# 11.0).
+
+operator_declaration = { attribute_section } operator_modifiers type
+                       "operator" overloadable_operator
+                       LPAREN type NAME [ COMMA type NAME ] RPAREN
+                       ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+operator_modifiers = "public" "static" [ "extern" ] ;
+
+overloadable_operator = PLUS
+                      | MINUS
+                      | BANG
+                      | TILDE
+                      | PLUS_PLUS
+                      | MINUS_MINUS
+                      | "true"
+                      | "false"
+                      | STAR
+                      | SLASH
+                      | PERCENT
+                      | AMPERSAND
+                      | PIPE
+                      | CARET
+                      | LEFT_SHIFT
+                      | RIGHT_SHIFT
+                      | UNSIGNED_RIGHT_SHIFT
+                      | EQUALS_EQUALS
+                      | NOT_EQUALS
+                      | LESS_THAN
+                      | GREATER_THAN
+                      | LESS_EQUALS
+                      | GREATER_EQUALS ;
+
+# ============================================================================
+# Checked Operator Declarations (C# 11.0)
+# ============================================================================
+
+checked_operator_declaration = { attribute_section } operator_modifiers type
+                               "operator" "checked" checked_overloadable_operator
+                               LPAREN type NAME [ COMMA type NAME ] RPAREN
+                               ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+checked_overloadable_operator = PLUS
+                              | MINUS
+                              | STAR
+                              | SLASH
+                              | PLUS_PLUS
+                              | MINUS_MINUS ;
+
+# ============================================================================
+# Conversion Operator Declarations
+# ============================================================================
+
+conversion_operator_declaration = { attribute_section } operator_modifiers
+                                  ( "implicit" | "explicit" ) "operator"
+                                  [ "checked" ] type
+                                  LPAREN type NAME RPAREN
+                                  ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+
+constructor_declaration = { attribute_section } { constructor_modifier } NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ constructor_initializer ]
+                          ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+constructor_modifier = "public"
+                     | "protected"
+                     | "internal"
+                     | "private"
+                     | "extern" ;
+
+constructor_initializer = COLON "base" LPAREN [ argument_list ] RPAREN
+                        | COLON "this" LPAREN [ argument_list ] RPAREN ;
+
+# ============================================================================
+# Destructor (Finalizer) Declarations
+# ============================================================================
+
+destructor_declaration = { attribute_section } [ "extern" ] TILDE NAME
+                         LPAREN RPAREN
+                         ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+# ============================================================================
+# Static Constructor Declarations
+# ============================================================================
+
+static_constructor_declaration = { attribute_section } static_constructor_modifiers
+                                 NAME LPAREN RPAREN
+                                 ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+static_constructor_modifiers = "static" [ "extern" ]
+                             | "extern" "static" ;
+
+# ============================================================================
+# Struct Declarations
+# ============================================================================
+#
+# C# 12.0 adds PRIMARY CONSTRUCTORS for structs, mirroring the change to
+# classes. Before C# 12.0, structs (unlike record structs) required full
+# constructor declarations. Now:
+#
+#   struct Color(byte r, byte g, byte b) {
+#       public byte R { get; } = r;
+#       public byte G { get; } = g;
+#       public byte B { get; } = b;
+#   }
+#
+# The struct primary constructor parameters are available throughout the
+# struct body for field/property initializers and method implementations.
+# Unlike record structs, they are NOT automatically promoted to properties.
+#
+# COMPARISON WITH RECORD STRUCT (C# 10.0):
+#   record struct Color(byte R, byte G, byte B);   // auto-generates R, G, B properties
+#   struct Color(byte r, byte g, byte b) { ... }   // manual — you define what to keep
+#
+# The record struct is preferred when you want the full auto-generated
+# equality/deconstruct/ToString behavior. The plain struct primary constructor
+# is preferred when you need precise control over what gets stored.
+
+struct_declaration = { attribute_section } { struct_modifier } [ "partial" ]
+                     [ "ref" ] "struct" NAME
+                     [ type_parameter_list ]
+                     [ LPAREN [ formal_parameter_list ] RPAREN ]
+                     [ COLON interface_type_list ]
+                     { type_parameter_constraint_clause }
+                     struct_body [ SEMICOLON ] ;
+
+struct_modifier = "public"
+               | "protected"
+               | "internal"
+               | "private"
+               | "file"
+               | "new"
+               | "readonly" ;
+
+interface_type_list = type { COMMA type } ;
+
+struct_body = LBRACE { struct_member_declaration } RBRACE ;
+
+struct_member_declaration = constant_declaration
+                          | field_declaration
+                          | method_declaration
+                          | property_declaration
+                          | event_declaration
+                          | indexer_declaration
+                          | operator_declaration
+                          | checked_operator_declaration
+                          | conversion_operator_declaration
+                          | constructor_declaration
+                          | static_constructor_declaration
+                          | type_declaration
+                          | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations
+# ============================================================================
+#
+# Default interface methods (C# 8.0). No changes in C# 12.0.
+
+interface_declaration = { attribute_section } { interface_modifier } [ "partial" ]
+                        "interface" NAME
+                        [ type_parameter_list ]
+                        [ COLON interface_type_list ]
+                        { type_parameter_constraint_clause }
+                        interface_body [ SEMICOLON ] ;
+
+interface_modifier = "public"
+                   | "protected"
+                   | "internal"
+                   | "private"
+                   | "file"
+                   | "new" ;
+
+interface_body = LBRACE { interface_member_declaration } RBRACE ;
+
+interface_member_declaration = interface_method_declaration
+                             | interface_property_declaration
+                             | interface_event_declaration
+                             | interface_indexer_declaration
+                             | interface_constant_declaration
+                             | interface_operator_declaration
+                             | type_declaration
+                             | SEMICOLON ;
+
+interface_method_declaration = { attribute_section } { interface_method_modifier }
+                              return_type NAME [ type_parameter_list ]
+                              LPAREN [ formal_parameter_list ] RPAREN
+                              { type_parameter_constraint_clause }
+                              ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+interface_method_modifier = "new"
+                          | "public"
+                          | "protected"
+                          | "internal"
+                          | "private"
+                          | "static"
+                          | "virtual"
+                          | "abstract"
+                          | "sealed"
+                          | "override"
+                          | "extern"
+                          | "async" ;
+
+interface_property_declaration = { attribute_section } { interface_method_modifier }
+                                type NAME
+                                LBRACE accessor_declarations RBRACE
+                                [ EQUALS expression SEMICOLON ] ;
+
+interface_event_declaration = { attribute_section } { interface_method_modifier }
+                             "event" type NAME
+                             ( SEMICOLON
+                             | LBRACE event_accessor_declarations RBRACE ) ;
+
+interface_indexer_declaration = { attribute_section } { interface_method_modifier }
+                               type "this" LBRACKET formal_parameter_list RBRACKET
+                               LBRACE accessor_declarations RBRACE ;
+
+interface_constant_declaration = { attribute_section } { interface_method_modifier }
+                                "const" type NAME EQUALS expression SEMICOLON ;
+
+interface_operator_declaration = { attribute_section } "public" "static"
+                                type "operator" overloadable_operator
+                                LPAREN type NAME [ COMMA type NAME ] RPAREN
+                                ( block | LAMBDA_ARROW expression SEMICOLON | SEMICOLON ) ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+
+enum_declaration = { attribute_section } { enum_modifier } "enum" NAME
+                   [ COLON integral_type ]
+                   enum_body [ SEMICOLON ] ;
+
+enum_modifier = "public"
+              | "protected"
+              | "internal"
+              | "private"
+              | "file"
+              | "new" ;
+
+integral_type = "byte"
+              | "sbyte"
+              | "short"
+              | "ushort"
+              | "int"
+              | "uint"
+              | "long"
+              | "ulong" ;
+
+enum_body = LBRACE [ enum_member_declarations ] RBRACE ;
+
+enum_member_declarations = enum_member_declaration
+                           { COMMA enum_member_declaration } [ COMMA ] ;
+
+enum_member_declaration = { attribute_section } NAME [ EQUALS expression ] ;
+
+# ============================================================================
+# Delegate Declarations
+# ============================================================================
+
+delegate_declaration = { attribute_section } { delegate_modifier } "delegate"
+                       return_type NAME [ type_parameter_list ]
+                       LPAREN [ formal_parameter_list ] RPAREN
+                       { type_parameter_constraint_clause }
+                       SEMICOLON ;
+
+delegate_modifier = "public"
+                  | "protected"
+                  | "internal"
+                  | "private"
+                  | "file"
+                  | "new" ;
+
+# ============================================================================
+# Record Declarations (C# 9.0)
+# ============================================================================
+#
+# Records are immutable reference types with value-based equality, auto-generated
+# ToString, Deconstruct, and `with` expression support.
+# Unchanged in C# 12.0.
+
+record_declaration = { attribute_section } { record_modifier } "record" NAME
+                     [ type_parameter_list ]
+                     [ LPAREN [ formal_parameter_list ] RPAREN ]
+                     [ COLON class_base_list ]
+                     { type_parameter_constraint_clause }
+                     ( class_body | SEMICOLON ) ;
+
+record_modifier = "public"
+                | "protected"
+                | "internal"
+                | "private"
+                | "file"
+                | "new"
+                | "abstract"
+                | "sealed" ;
+
+# ============================================================================
+# Record Struct Declarations (C# 10.0)
+# ============================================================================
+#
+# Value-type records with value-based equality and optional immutability.
+# Unchanged in C# 12.0.
+
+record_struct_declaration = { attribute_section } { record_struct_modifier }
+                            "record" "struct" NAME
+                            [ type_parameter_list ]
+                            [ LPAREN [ formal_parameter_list ] RPAREN ]
+                            [ COLON interface_type_list ]
+                            { type_parameter_constraint_clause }
+                            ( struct_body | SEMICOLON ) ;
+
+record_struct_modifier = "public"
+                       | "protected"
+                       | "internal"
+                       | "private"
+                       | "file"
+                       | "new"
+                       | "readonly" ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# C# 12.0 allows more types in using aliases (any type, not just named types).
+# The type grammar itself is unchanged.
+
+type = nullable_type
+     | non_nullable_type ;
+
+non_nullable_type = tuple_type { rank_specifier }
+                  | value_type { rank_specifier }
+                  | reference_type { rank_specifier }
+                  | "void" STAR ;
+
+nullable_type = non_nullable_type QUESTION ;
+
+value_type = primitive_type
+           | qualified_name ;
+
+reference_type = qualified_name
+               | "object"
+               | "string"
+               | "dynamic" ;
+
+primitive_type = numeric_type
+               | "bool" ;
+
+numeric_type = integral_type
+             | floating_point_type
+             | "decimal" ;
+
+floating_point_type = "float"
+                    | "double" ;
+
+rank_specifier = LBRACKET { COMMA } RBRACKET ;
+
+pointer_type = type STAR ;
+
+tuple_type = LPAREN tuple_element COMMA tuple_element { COMMA tuple_element } RPAREN ;
+
+tuple_element = type [ NAME ] ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# No new statement forms in C# 12.0. Complete set through C# 11.0.
+
+block = LBRACE { statement } RBRACE ;
+
+statement = block
+          | local_variable_declaration_statement
+          | local_constant_declaration_statement
+          | using_declaration_statement
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | foreach_statement
+          | await_foreach_statement
+          | switch_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | goto_statement
+          | lock_statement
+          | using_statement
+          | await_using_statement
+          | checked_statement
+          | unchecked_statement
+          | labelled_statement
+          | unsafe_statement
+          | fixed_statement
+          | yield_statement
+          | local_function_declaration ;
+
+# --- Local Variable Declaration ---
+#
+# `scoped` modifier (C# 11.0) for lifetime control.
+
+local_variable_declaration_statement = local_variable_declaration SEMICOLON ;
+
+local_variable_declaration = [ "scoped" ] [ "ref" [ "readonly" ] ] type variable_declarators
+                           | "var" variable_declarators
+                           | deconstruction_declaration ;
+
+deconstruction_declaration = "var" deconstruction_tuple EQUALS expression
+                           | LPAREN deconstruction_element { COMMA deconstruction_element } RPAREN
+                             EQUALS expression ;
+
+deconstruction_tuple = LPAREN NAME { COMMA NAME } RPAREN ;
+
+deconstruction_element = type NAME ;
+
+local_constant_declaration_statement = "const" type constant_declarators SEMICOLON ;
+
+using_declaration_statement = [ "await" ] "using" [ "ref" ] type variable_declarators SEMICOLON ;
+
+empty_statement = SEMICOLON ;
+expression_statement = expression SEMICOLON ;
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+while_statement = "while" LPAREN expression RPAREN statement ;
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+for_statement = "for" LPAREN [ for_initializer ] SEMICOLON [ expression ] SEMICOLON
+                [ for_iterator ] RPAREN statement ;
+
+for_initializer = local_variable_declaration | expression_list ;
+for_iterator    = expression_list ;
+expression_list = expression { COMMA expression } ;
+
+foreach_statement = "foreach" LPAREN ( type NAME | "var" NAME
+                    | "var" deconstruction_tuple ) "in" expression RPAREN statement ;
+
+await_foreach_statement = "await" "foreach" LPAREN ( type NAME | "var" NAME )
+                          "in" expression RPAREN statement ;
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+switch_block = LBRACE { switch_section } RBRACE ;
+switch_section = { switch_label } { statement } ;
+switch_label = "case" pattern [ "when" expression ] COLON
+             | "default" COLON ;
+
+try_statement = "try" block ( catch_clauses [ finally_clause ] | finally_clause ) ;
+
+catch_clauses = specific_catch_clause { specific_catch_clause } [ general_catch_clause ]
+              | general_catch_clause ;
+
+specific_catch_clause = "catch" LPAREN type [ NAME ] RPAREN
+                        [ "when" LPAREN expression RPAREN ] block ;
+
+general_catch_clause = "catch" block ;
+finally_clause = "finally" block ;
+
+throw_statement    = "throw" [ expression ] SEMICOLON ;
+return_statement   = "return" [ [ "ref" ] expression ] SEMICOLON ;
+break_statement    = "break" SEMICOLON ;
+continue_statement = "continue" SEMICOLON ;
+
+goto_statement = "goto" NAME SEMICOLON
+               | "goto" "case" expression SEMICOLON
+               | "goto" "default" SEMICOLON ;
+
+lock_statement = "lock" LPAREN expression RPAREN statement ;
+
+using_statement = "using" LPAREN resource_acquisition RPAREN statement ;
+resource_acquisition = type variable_declarators | expression ;
+
+await_using_statement = "await" "using" LPAREN resource_acquisition RPAREN statement ;
+
+checked_statement   = "checked" block ;
+unchecked_statement = "unchecked" block ;
+labelled_statement  = NAME COLON statement ;
+unsafe_statement    = "unsafe" block ;
+fixed_statement     = "fixed" LPAREN type variable_declarators RPAREN statement ;
+
+yield_statement = "yield" "return" expression SEMICOLON
+                | "yield" "break" SEMICOLON ;
+
+local_function_declaration = { attribute_section } { local_function_modifier }
+                             return_type NAME [ type_parameter_list ]
+                             LPAREN [ formal_parameter_list ] RPAREN
+                             { type_parameter_constraint_clause }
+                             ( block | LAMBDA_ARROW expression SEMICOLON ) ;
+
+local_function_modifier = "static"
+                        | "async"
+                        | "unsafe" ;
+
+# ============================================================================
+# Patterns (C# 7.0–11.0)
+# ============================================================================
+#
+# Complete pattern system through C# 11.0. No new patterns in C# 12.0.
+#
+# The full taxonomy:
+#   C# 7.0:  constant, type (declaration), var
+#   C# 8.0:  property, tuple, positional, discard (_)
+#   C# 9.0:  relational (>, <, >=, <=), logical (not, and, or)
+#   C# 10.0: extended property patterns ({ X.Y: value })
+#   C# 11.0: list patterns ([1, .., 10])
+
+pattern = list_pattern
+        | relational_pattern
+        | logical_not_pattern
+        | logical_and_pattern
+        | logical_or_pattern
+        | discard_pattern
+        | constant_pattern
+        | var_pattern
+        | declaration_pattern
+        | property_pattern
+        | tuple_pattern
+        | positional_pattern ;
+
+constant_pattern = literal | qualified_name ;
+
+# Relational patterns (C# 9.0): ordered comparisons in pattern position.
+relational_pattern = ( GREATER_THAN | LESS_THAN | GREATER_EQUALS | LESS_EQUALS ) expression ;
+
+# Logical patterns (C# 9.0): `not`, `and`, `or` as context keywords.
+# These compose patterns: `not null`, `>0 and <100`, `"a" or "b"`.
+logical_not_pattern = NAME pattern ;          # NAME == "not"
+logical_and_pattern = pattern NAME pattern ;  # NAME == "and"
+logical_or_pattern  = pattern NAME pattern ;  # NAME == "or"
+
+declaration_pattern = type NAME ;
+var_pattern = "var" NAME ;
+discard_pattern = NAME ;  # _ as identifier
+
+# Property pattern (C# 8.0, extended in C# 10.0).
+property_pattern = [ type ] LBRACE [ property_subpattern_list ] RBRACE [ NAME ] ;
+property_subpattern_list = property_subpattern { COMMA property_subpattern } ;
+property_subpattern = name_chain COLON pattern ;
+name_chain = NAME { DOT NAME } ;  # extended property patterns: X.Y.Z
+
+# Tuple pattern (C# 8.0).
+tuple_pattern = LPAREN subpattern { COMMA subpattern } RPAREN ;
+
+# Positional pattern (C# 8.0): via Deconstruct.
+positional_pattern = type LPAREN [ subpattern { COMMA subpattern } ] RPAREN
+                     [ property_pattern ] [ NAME ] ;
+
+subpattern = [ NAME COLON ] pattern ;
+
+# List pattern (C# 11.0): match arrays and lists element-by-element.
+list_pattern = LBRACKET [ list_pattern_element { COMMA list_pattern_element } ] RBRACKET
+               [ NAME ] ;
+
+list_pattern_element = slice_pattern | pattern ;
+slice_pattern = DOT_DOT [ "var" NAME ] ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# C# 12.0 adds COLLECTION EXPRESSIONS as a new expression form.
+#
+# COLLECTION EXPRESSIONS (C# 12.0)
+# ----------------------------------
+# Collection expressions create collections using [ ] syntax:
+#
+#   int[] arr = [1, 2, 3];
+#   List<string> names = ["Alice", "Bob"];
+#   Span<byte> bytes = [0x00, 0xFF, 0x7F];
+#
+# The SPREAD ELEMENT (.. expr) inlines another collection's elements:
+#   int[] a = [1, 2, 3];
+#   int[] b = [4, 5, 6];
+#   int[] c = [.. a, .. b, 7];  // [1, 2, 3, 4, 5, 6, 7]
+#
+# The type is determined by the TARGET context (like target-typed new).
+# A type supports collection expressions if it is:
+#   - A known type: array T[], List<T>, Span<T>, ReadOnlySpan<T>,
+#     ImmutableArray<T>, HashSet<T>, and more
+#   - A type with [CollectionBuilder] attribute
+#
+# DISAMBIGUATION:
+# [ ] appears in multiple grammatical contexts in C#:
+#   1. Array type:     int[] — in type position
+#   2. Array access:   arr[0] — after primary expression
+#   3. List pattern:   [1, 2, 3] — in pattern position (C# 11.0)
+#   4. Collection expr: [1, 2, 3] — in expression position (C# 12.0)
+#   5. Attribute:      [Serializable] — at statement/declaration start
+#
+# The grammar resolves these through context. In expression position,
+# [ not immediately following a primary_expression ] starts a collection expr.
+#
+# SPREAD vs SLICE:
+#   In list patterns:       [1, .., 3]      — .. is a slice pattern
+#   In collection exprs:    [1, .. other, 3] — ..expr is a spread element
+#   The DOT_DOT token is the same; the grammar context differs.
+#
+# Updated precedence table (lowest to highest, C# 12.0):
+# Same as C# 11.0 — no new operators.
+
+expression = lambda_expression
+           | assignment_expression ;
+
+# --- Lambda Expressions ---
+#
+# C# 12.0 adds DEFAULT PARAMETER VALUES for lambda parameters:
+#
+#   Func<int, int, int> add = (int x, int y = 0) => x + y;
+#   add(5)     // y defaults to 0
+#   add(5, 3)  // returns 8
+#
+# This aligns lambdas with methods, which have supported default parameters
+# since C# 4.0. It enables patterns like:
+#
+#   button.Click += (object? sender, EventArgs e = default) => HandleClick();
+#
+# Grammar change: lambda_parameter now allows [ EQUALS expression ] at the end.
+
+lambda_expression = [ "async" ] lambda_parameters LAMBDA_ARROW
+                    ( expression | block ) ;
+
+lambda_parameters = NAME
+                  | LPAREN [ lambda_parameter_list ] RPAREN ;
+
+lambda_parameter_list = lambda_parameter { COMMA lambda_parameter } ;
+
+# C# 12.0: lambda parameters can now have default values.
+lambda_parameter = [ "scoped" ] [ "ref" | "out" | "in" ] [ type ] NAME [ EQUALS expression ] ;
+
+# --- Assignment ---
+
+assignment_expression = conditional_expression
+                      | unary_expression assignment_operator assignment_expression
+                      | throw_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS
+                    | QUESTION_QUESTION_EQUALS ;
+
+throw_expression = "throw" expression ;
+
+# --- Ternary, Null Coalescing, Logical ---
+
+conditional_expression = null_coalescing_expression
+                         [ QUESTION expression COLON expression ] ;
+
+null_coalescing_expression = logical_or_expression
+                             { NULL_COALESCING logical_or_expression } ;
+
+logical_or_expression  = logical_and_expression { OR_OR logical_and_expression } ;
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+bitwise_or_expression  = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "is" pattern
+                        | "as" type } ;
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+multiplicative_expression = range_expression
+                            { ( STAR | SLASH | PERCENT ) range_expression } ;
+
+range_expression = unary_expression [ DOT_DOT [ unary_expression ] ]
+                 | DOT_DOT [ unary_expression ] ;
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | BANG unary_expression
+                 | TILDE unary_expression
+                 | CARET unary_expression
+                 | "await" unary_expression
+                 | cast_expression
+                 | AMPERSAND unary_expression
+                 | STAR unary_expression
+                 | postfix_expression ;
+
+cast_expression = LPAREN type RPAREN unary_expression ;
+
+postfix_expression = primary_expression { postfix_operator } ;
+
+postfix_operator = PLUS_PLUS
+                 | MINUS_MINUS
+                 | BANG ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# C# 12.0 adds:
+#   - collection_expression: [ element1, .. spread, element2, ... ]
+#
+# All other primaries are unchanged from C# 11.0.
+
+primary_expression = primary { primary_suffix } ;
+
+primary_suffix = DOT NAME [ type_argument_list ]
+               | NULL_CONDITIONAL_DOT NAME [ type_argument_list ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET argument_list RBRACKET
+               | NULL_CONDITIONAL_BRACKET argument_list RBRACKET
+               | BANG
+               | "with" LBRACE [ with_initializer_list ] RBRACE ;
+
+primary = literal
+        | raw_string_literal
+        | interpolated_string
+        | collection_expression
+        | "this"
+        | "base" DOT NAME
+        | "base" LBRACKET argument_list RBRACKET
+        | typeof_expression
+        | sizeof_expression
+        | checked_expression
+        | unchecked_expression
+        | default_value_expression
+        | nameof_expression
+        | new_expression
+        | stackalloc_expression
+        | switch_expression
+        | LPAREN expression RPAREN
+        | NAME [ type_argument_list ] ;
+
+# --- Collection Expression (C# 12.0) ---
+#
+# A COLLECTION EXPRESSION creates a collection from a list of elements and/or
+# spread elements. The target type determines what collection is created.
+#
+# Grammar:
+#   [ ]                                  — empty collection
+#   [ expr ]                             — single element
+#   [ expr, expr, expr ]                 — multiple elements
+#   [ .. spread_expr ]                   — spread: inline all elements
+#   [ expr, .. spread_expr, expr ]       — mix of elements and spreads
+#
+# Examples:
+#
+#   // Array creation — equivalent to new[] { 1, 2, 3 }
+#   int[] nums = [1, 2, 3];
+#
+#   // List creation — equivalent to new List<int> { 1, 2, 3 }
+#   List<int> list = [1, 2, 3];
+#
+#   // Span — stack-allocated, no heap:
+#   Span<byte> bytes = [0x01, 0x02, 0x03];
+#
+#   // Combining with spread:
+#   int[] first = [1, 2, 3];
+#   int[] second = [4, 5, 6];
+#   int[] all = [.. first, .. second];   // [1, 2, 3, 4, 5, 6]
+#
+#   // Mixing elements and spreads:
+#   string[] greetings = ["Hello", .. names.Select(n => $"Hi {n}"), "Bye"];
+#
+# The spread element (.. expr) is different from the slice pattern (..):
+#   Pattern:    [1, .., 3]       — slice matches any number of elements
+#   Expression: [1, .. other, 3] — spread inlines all elements of `other`
+#
+# The grammar uses the same DOT_DOT token; context determines meaning.
+# In a collection expression (expression context), .. must be followed by
+# an expression. In a list pattern (pattern context), .. is a slice.
+
+collection_expression = LBRACKET [ collection_element { COMMA collection_element } [ COMMA ] ] RBRACKET ;
+
+collection_element = spread_element
+                   | expression ;
+
+# Spread element: inline all elements of the target expression.
+spread_element = DOT_DOT expression ;
+
+# --- Raw String Literals (C# 11.0) ---
+
+raw_string_literal = RAW_STRING
+                   | RAW_INTERPOLATED_STRING ;
+
+# --- Interpolated String (C# 6.0) ---
+
+interpolated_string = INTERPOLATED_STRING
+                    | INTERPOLATED_VERBATIM ;
+
+# --- WITH Expression (C# 9.0) ---
+
+with_initializer_list = with_initializer { COMMA with_initializer } ;
+with_initializer = NAME EQUALS expression ;
+
+# --- typeof / sizeof / checked / unchecked / default / nameof ---
+
+typeof_expression   = "typeof" LPAREN type_or_void RPAREN ;
+type_or_void        = type | "void" ;
+sizeof_expression   = "sizeof" LPAREN type RPAREN ;
+checked_expression  = "checked" LPAREN expression RPAREN ;
+unchecked_expression = "unchecked" LPAREN expression RPAREN ;
+
+default_value_expression = "default" LPAREN type RPAREN
+                         | "default" ;
+
+nameof_expression = "nameof" LPAREN nameof_member_access RPAREN ;
+nameof_member_access = NAME { DOT NAME } ;
+
+# --- New Expression ---
+
+new_expression = "new" ( anonymous_object_creation
+                       | new_array_expression
+                       | new_object_expression
+                       | target_typed_new ) ;
+
+new_object_expression = type LPAREN [ argument_list ] RPAREN [ object_or_collection_initializer ] ;
+
+# Target-typed new (C# 9.0).
+target_typed_new = LPAREN [ argument_list ] RPAREN [ object_or_collection_initializer ] ;
+
+object_or_collection_initializer = object_initializer | collection_initializer ;
+
+object_initializer = LBRACE [ member_initializer { COMMA member_initializer } ] [ COMMA ] RBRACE ;
+member_initializer = NAME EQUALS ( expression | object_initializer ) ;
+
+collection_initializer = LBRACE element_initializer { COMMA element_initializer } [ COMMA ] RBRACE ;
+element_initializer = expression | LBRACE expression_list RBRACE ;
+
+anonymous_object_creation = LBRACE [ anonymous_member { COMMA anonymous_member } ] [ COMMA ] RBRACE ;
+anonymous_member = [ NAME EQUALS ] expression ;
+
+new_array_expression = array_type array_creation_suffix ;
+array_type = ( primitive_type | qualified_name ) ;
+array_creation_suffix = rank_specifier { rank_specifier } array_initializer
+                      | LBRACKET expression_list RBRACKET { rank_specifier }
+                        [ array_initializer ] ;
+
+stackalloc_expression = "stackalloc" type LBRACKET [ expression ] RBRACKET
+                        [ array_initializer ]
+                      | "stackalloc" LBRACKET RBRACKET array_initializer ;
+
+# --- Switch Expression (C# 8.0) ---
+
+switch_expression = primary_expression "switch" LBRACE
+                    switch_expression_arm { COMMA switch_expression_arm }
+                    [ COMMA ] RBRACE ;
+
+switch_expression_arm = pattern [ "when" expression ] LAMBDA_ARROW expression ;
+
+# --- Argument List ---
+
+argument_list = argument { COMMA argument } ;
+
+argument = [ NAME COLON ] [ "ref" | "out" | "in" | "scoped" ] expression ;
+
+# ============================================================================
+# LINQ Query Expressions (C# 3.0)
+# ============================================================================
+#
+# Unchanged through C# 12.0.
+
+query_expression = from_clause query_body ;
+from_clause = "from" [ type ] NAME "in" expression ;
+query_body = { query_body_clause } select_or_group_clause [ query_continuation ] ;
+
+query_body_clause = from_clause
+                  | let_clause
+                  | where_clause
+                  | join_clause
+                  | join_into_clause
+                  | orderby_clause ;
+
+let_clause   = "let" NAME EQUALS expression ;
+where_clause = "where" expression ;
+join_clause  = "join" [ type ] NAME "in" expression "on" expression "equals" expression ;
+join_into_clause = "join" [ type ] NAME "in" expression
+                   "on" expression "equals" expression "into" NAME ;
+orderby_clause = "orderby" ordering { COMMA ordering } ;
+ordering = expression [ "ascending" | "descending" ] ;
+
+select_or_group_clause = "select" expression
+                       | "group" expression "by" expression ;
+
+query_continuation = "into" NAME query_body ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | VERBATIM_STRING
+        | RAW_STRING
+        | "true"
+        | "false"
+        | "null" ;
