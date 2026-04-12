@@ -1,0 +1,2 @@
+go build -o ircd.exe .
+go test ./... -v -cover
