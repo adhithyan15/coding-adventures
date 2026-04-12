@@ -333,6 +333,17 @@ unsafe fn render_clip(hdc: windows::Win32::Graphics::Gdi::HDC, clip: &PaintClip)
 /// ```
 #[cfg(target_os = "windows")]
 pub fn render(scene: &PaintScene) -> PixelContainer {
+    // Validate that dimensions are finite, non-negative, and within u32 range
+    // before casting. NaN, negative, or infinite values would produce nonsensical
+    // results from `as u32` (saturating cast in release mode).
+    if scene.width < 0.0
+        || scene.height < 0.0
+        || !scene.width.is_finite()
+        || !scene.height.is_finite()
+    {
+        return PixelContainer::new(0, 0);
+    }
+
     let width = scene.width as u32;
     let height = scene.height as u32;
 
