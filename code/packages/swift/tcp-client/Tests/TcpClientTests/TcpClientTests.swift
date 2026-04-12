@@ -32,6 +32,17 @@ import Darwin
 import Glibc
 #endif
 
+// Disambiguate POSIX bind() from Swift's Sequence.bind — inside closures like
+// withMemoryRebound, the compiler sees the instance method first. Wrapping it
+// in a free function at module scope resolves the ambiguity.
+private func posixBind(_ fd: Int32, _ addr: UnsafePointer<sockaddr>, _ len: socklen_t) -> Int32 {
+    #if canImport(Darwin)
+    return Darwin.bind(fd, addr, len)
+    #elseif canImport(Glibc)
+    return Glibc.bind(fd, addr, len)
+    #endif
+}
+
 // ============================================================================
 // Test helpers: mini TCP servers
 // ============================================================================
@@ -68,7 +79,7 @@ func startEchoServer() -> (port: UInt16, cleanup: () -> Void) {
 
     let bindResult = withUnsafePointer(to: &addr) { addrPtr in
         addrPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sockPtr in
-            bind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
+            posixBind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
         }
     }
     precondition(bindResult == 0, "Failed to bind server socket")
@@ -151,7 +162,7 @@ func startSilentServer() -> (port: UInt16, cleanup: () -> Void) {
 
     _ = withUnsafePointer(to: &addr) { addrPtr in
         addrPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sockPtr in
-            bind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
+            posixBind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
         }
     }
     listen(serverFd, 1)
@@ -214,7 +225,7 @@ func startPartialServer(data: Data) -> (port: UInt16, cleanup: () -> Void) {
 
     _ = withUnsafePointer(to: &addr) { addrPtr in
         addrPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sockPtr in
-            bind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
+            posixBind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
         }
     }
     listen(serverFd, 1)
@@ -283,7 +294,7 @@ func startRequestResponseServer(response: Data) -> (port: UInt16, cleanup: () ->
 
     _ = withUnsafePointer(to: &addr) { addrPtr in
         addrPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sockPtr in
-            bind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
+            posixBind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
         }
     }
     listen(serverFd, 1)
@@ -360,7 +371,7 @@ func startHalfCloseServer(response: Data) -> (port: UInt16, receivedData: () -> 
 
     _ = withUnsafePointer(to: &addr) { addrPtr in
         addrPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sockPtr in
-            bind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
+            posixBind(serverFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
         }
     }
     listen(serverFd, 1)
@@ -660,7 +671,7 @@ final class TcpClientTests: XCTestCase {
 
         _ = withUnsafePointer(to: &addr) { addrPtr in
             addrPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { sockPtr in
-                bind(tempFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
+                posixBind(tempFd, sockPtr, socklen_t(MemoryLayout<sockaddr_in>.size))
             }
         }
         listen(tempFd, 1)
