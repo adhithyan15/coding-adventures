@@ -1,4 +1,3 @@
 uv venv --quiet --clear
-uv pip install -e ../gf256 --quiet
 uv pip install -e ".[dev]" --quiet
 uv run python -m pytest tests/ -v

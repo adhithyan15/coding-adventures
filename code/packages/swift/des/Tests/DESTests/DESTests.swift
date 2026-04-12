@@ -74,10 +74,10 @@ final class DESTests: XCTestCase {
 
     // NIST SP 800-20 Table B.2: variable-key, plain=0000000000000000
     func testNIST_keyPT1() {
-        // Row 1: Key bit 1 set → CT=95A8D71813DAA94D
+        // Row 1: Key bit 1 set → CT=95A8D72813DAA94D  (NIST SP 800-20 Table B.2)
         let key   = h("8001010101010101")
         let plain = h("0000000000000000")
-        let ct    = h("95a8d71813daa94d")
+        let ct    = h("95a8d72813daa94d")
         XCTAssertEqual(desEncryptBlock(plain, key: key), ct)
         XCTAssertEqual(desDecryptBlock(ct, key: key), plain)
     }
