@@ -235,6 +235,7 @@ members = [
     "lz78",
     "lzss",
     "lzw",
+    "huffman-tree",
     "json-rpc",
     "ls00",
     "rpc",
