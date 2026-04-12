@@ -19,6 +19,29 @@ class TestJavaParser < Minitest::Test
   ASTNode = CodingAdventures::Parser::ASTNode
   TT = CodingAdventures::Lexer::TokenType
 
+  def find_rule(node, rule_name)
+    return nil unless node.is_a?(ASTNode)
+    return node if node.rule_name == rule_name
+
+    node.children.each do |child|
+      found = find_rule(child, rule_name)
+      return found if found
+    end
+
+    nil
+  end
+
+  def find_rules(node, rule_name, results = [])
+    return results unless node.is_a?(ASTNode)
+
+    results << node if node.rule_name == rule_name
+    node.children.each do |child|
+      find_rules(child, rule_name, results)
+    end
+
+    results
+  end
+
   def parse(source, version: nil)
     CodingAdventures::JavaParser.parse(source, version: version)
   end
@@ -32,10 +55,10 @@ class TestJavaParser < Minitest::Test
 
     assert_equal "program", ast.rule_name
 
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
+    stmt = find_rule(ast, "statement")
     assert_equal "statement", stmt.rule_name
 
-    var_decl = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "var_declaration" }
+    var_decl = find_rule(ast, "var_declaration")
     refute_nil var_decl, "Expected a var_declaration node"
   end
 
@@ -46,9 +69,8 @@ class TestJavaParser < Minitest::Test
   def test_assignment
     ast = parse("x = 5;")
 
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    assignment = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "assignment" }
-    refute_nil assignment, "Expected an assignment node"
+    assignment = find_rule(ast, "assignment_expression")
+    refute_nil assignment, "Expected an assignment_expression node"
   end
 
   # ------------------------------------------------------------------
@@ -58,9 +80,8 @@ class TestJavaParser < Minitest::Test
   def test_expression_statement
     ast = parse("1 + 2;")
 
-    stmt = ast.children.find { |c| c.is_a?(ASTNode) }
-    expr_stmt = stmt.children.find { |c| c.is_a?(ASTNode) && c.rule_name == "expression_stmt" }
-    refute_nil expr_stmt, "Expected expression_stmt for bare expression"
+    expr_stmt = find_rule(ast, "expression_statement")
+    refute_nil expr_stmt, "Expected expression_statement for bare expression"
   end
 
   # ------------------------------------------------------------------
@@ -83,7 +104,7 @@ class TestJavaParser < Minitest::Test
     ast = parse("int x = 1;int y = 2;")
 
     assert_equal "program", ast.rule_name
-    statements = ast.children.select { |c| c.is_a?(ASTNode) && c.rule_name == "statement" }
+    statements = find_rules(ast, "statement")
     assert_equal 2, statements.length, "Expected 2 statements"
   end
 

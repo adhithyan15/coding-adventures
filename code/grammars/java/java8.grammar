@@ -164,6 +164,8 @@
 #
 # Reference: JLS SE 8, Section 7.3
 
+program = { program_item } ;
+program_item = package_declaration | import_declaration | type_declaration | method_declaration | statement ;
 compilation_unit = { annotation } [ package_declaration ]
                    { import_declaration }
                    { type_declaration } ;
@@ -1003,7 +1005,7 @@ class_type = qualified_name [ type_arguments ] ;
 # Reference: JLS SE 8, Chapter 14
 
 statement = block
-          | local_variable_declaration_statement
+          | var_declaration
           | empty_statement
           | expression_statement
           | if_statement
@@ -1028,8 +1030,8 @@ statement = block
 
 block = LBRACE { block_statement } RBRACE ;
 
-block_statement = local_variable_declaration_statement
-               | class_declaration
+block_statement = var_declaration
+                | class_declaration
                | statement ;
 
 # --- Local Variable Declaration ---
@@ -1041,6 +1043,8 @@ block_statement = local_variable_declaration_statement
 #   Function<String, Integer> f = Integer::parseInt;      // method ref (Java 8)
 #
 # Reference: JLS SE 8, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
 
 local_variable_declaration_statement = { annotation } [ "final" ] type variable_declarators SEMICOLON ;
 
@@ -1399,8 +1403,7 @@ expression = assignment_expression ;
 
 assignment_expression = lambda_expression
                       | conditional_expression
-                        ( assignment_operator assignment_expression
-                        | ) ;
+                        [ assignment_operator assignment_expression ] ;
 
 assignment_operator = EQUALS
                     | PLUS_EQUALS

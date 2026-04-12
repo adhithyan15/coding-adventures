@@ -60,9 +60,9 @@
 use std::fs;
 use std::path::PathBuf;
 
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_java_lexer::tokenize_java;
+use grammar_tools::parser_grammar::parse_parser_grammar;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 // ===========================================================================
 // Grammar file location
@@ -99,9 +99,7 @@ fn grammar_path(version: &str) -> Result<PathBuf, String> {
 
     match version {
         // Early Java releases used the "1.x" naming convention.
-        "1.0" | "1.1" | "1.4" => {
-            Ok(root.join("java").join(format!("java{version}.grammar")))
-        }
+        "1.0" | "1.1" | "1.4" => Ok(root.join("java").join(format!("java{version}.grammar"))),
 
         // Modern Java versions (post-J2SE renaming).
         "5" | "7" | "8" | "10" | "14" | "17" | "21" => {
@@ -167,8 +165,8 @@ pub fn create_java_parser(source: &str, version: &str) -> Result<GrammarParser, 
     let path = grammar_path(version)?;
 
     // Step 3: Read the parser grammar from disk.
-    let grammar_text = fs::read_to_string(&path)
-        .map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
+    let grammar_text =
+        fs::read_to_string(&path).map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
 
     // Step 4: Parse the grammar text into a structured ParserGrammar.
     let grammar = parse_parser_grammar(&grammar_text)
@@ -236,10 +234,14 @@ mod tests {
         );
     }
 
-    fn count_statements(ast: &GrammarASTNode) -> usize {
-        ast.children.iter().filter(|child| {
-            matches!(child, ASTNodeOrToken::Node(n) if n.rule_name == "statement")
-        }).count()
+    fn count_nodes(ast: &GrammarASTNode, target_rule: &str) -> usize {
+        let mut count = usize::from(ast.rule_name == target_rule);
+        for child in &ast.children {
+            if let ASTNodeOrToken::Node(child_node) = child {
+                count += count_nodes(child_node, target_rule);
+            }
+        }
+        count
     }
 
     fn find_rule(node: &GrammarASTNode, target_rule: &str) -> bool {
@@ -268,8 +270,10 @@ mod tests {
         let ast = parse_java("class Hello { }", "21").unwrap();
         assert_program_root(&ast);
 
-        let stmt_count = count_statements(&ast);
-        assert!(stmt_count >= 1, "Expected at least 1 statement, got {}", stmt_count);
+        assert!(
+            find_rule(&ast, "class_declaration") || find_rule(&ast, "type_declaration"),
+            "Expected a class/type declaration node"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -295,8 +299,12 @@ mod tests {
         let ast = parse_java(source, "21").unwrap();
         assert_program_root(&ast);
 
-        let stmt_count = count_statements(&ast);
-        assert_eq!(stmt_count, 3, "Expected 3 statements, got {}", stmt_count);
+        let decl_count = count_nodes(&ast, "var_declaration");
+        assert_eq!(
+            decl_count, 3,
+            "Expected 3 variable declarations, got {}",
+            decl_count
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -345,13 +353,14 @@ mod tests {
     /// program (the simplest valid input).
     #[test]
     fn test_all_versioned_grammars() {
-        let versions = [
-            "1.0", "1.1", "1.4",
-            "5", "7", "8", "10", "14", "17", "21",
-        ];
+        let versions = ["1.0", "1.1", "1.4", "5", "7", "8", "10", "14", "17", "21"];
         for v in &versions {
             let result = parse_java("", v);
-            assert!(result.is_ok(), "Version '{v}' should parse successfully: {:?}", result.err());
+            assert!(
+                result.is_ok(),
+                "Version '{v}' should parse successfully: {:?}",
+                result.err()
+            );
             assert_eq!(result.unwrap().rule_name, "program");
         }
     }
@@ -381,6 +390,9 @@ mod tests {
     #[test]
     fn test_create_parser_unknown_version() {
         let result = create_java_parser("int x = 1;", "bad-version");
-        assert!(result.is_err(), "Expected Err from create_java_parser with bad version");
+        assert!(
+            result.is_err(),
+            "Expected Err from create_java_parser with bad version"
+        );
     }
 }

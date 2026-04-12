@@ -1,0 +1,5 @@
+[package]
+name = "lzss"
+version = "0.1.0"
+edition = "2021"
+description = "LZSS lossless compression algorithm (1982) — CMP02"

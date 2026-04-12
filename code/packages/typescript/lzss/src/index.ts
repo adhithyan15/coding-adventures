@@ -1,0 +1,16 @@
+export {
+  type Literal,
+  type Match,
+  type Token,
+  literal,
+  match,
+  encode,
+  decode,
+  compress,
+  decompress,
+  serialiseTokens,
+  deserialiseTokens,
+  DEFAULT_WINDOW_SIZE,
+  DEFAULT_MAX_MATCH,
+  DEFAULT_MIN_MATCH,
+} from "./lzss.js";

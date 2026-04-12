@@ -1,126 +1,85 @@
 defmodule CodingAdventures.JavaParserTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias CodingAdventures.JavaParser
+  alias CodingAdventures.Parser.ASTNode
 
-  # ---------------------------------------------------------------------------
-  # Module loading
-  # ---------------------------------------------------------------------------
+  describe "version helpers" do
+    test "default_version is Java 21" do
+      assert JavaParser.default_version() == "21"
+    end
 
-  test "module loads" do
-    assert Code.ensure_loaded?(JavaParser)
+    test "supported_versions includes all expected releases" do
+      versions = JavaParser.supported_versions()
+
+      assert "1.0" in versions
+      assert "1.1" in versions
+      assert "1.4" in versions
+      assert "5" in versions
+      assert "7" in versions
+      assert "8" in versions
+      assert "10" in versions
+      assert "14" in versions
+      assert "17" in versions
+      assert "21" in versions
+    end
   end
 
-  # ---------------------------------------------------------------------------
-  # parse/1 -- generic (no version, defaults to Java 21)
-  # ---------------------------------------------------------------------------
-
-  describe "parse/1 -- default grammar" do
-    test "returns a map for empty string" do
-      assert is_map(JavaParser.parse(""))
+  describe "parse/2" do
+    test "parses a simple class declaration with the default grammar" do
+      assert {:ok, ast} = JavaParser.parse("public class Hello { }")
+      assert ast.rule_name == "compilation_unit"
+      assert length(ASTNode.find_nodes(ast, "class_declaration")) == 1
     end
 
-    test "returns a map with rule_name key" do
-      ast = JavaParser.parse("int x = 1;")
-      assert Map.has_key?(ast, :rule_name)
-    end
-  end
+    test "treats nil and empty version as Java 21" do
+      assert {:ok, nil_version_ast} = JavaParser.parse("class Hello { }", nil)
+      assert {:ok, empty_version_ast} = JavaParser.parse("class Hello { }", "")
 
-  # ---------------------------------------------------------------------------
-  # parse/2 -- version-specific
-  # ---------------------------------------------------------------------------
-
-  describe "parse/2 -- versioned grammar" do
-    test "accepts nil version (default grammar)" do
-      assert is_map(JavaParser.parse("int x = 1;", nil))
+      assert nil_version_ast.rule_name == empty_version_ast.rule_name
+      assert length(ASTNode.find_nodes(nil_version_ast, "class_declaration")) == 1
     end
 
-    test "accepts 1.0 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "1.0"))
+    test "accepts all declared version strings" do
+      for version <- JavaParser.supported_versions() do
+        assert {:ok, ast} = JavaParser.parse("class Hello { }", version)
+        assert ast.rule_name == "compilation_unit"
+      end
     end
 
-    test "accepts 1.1 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "1.1"))
-    end
-
-    test "accepts 1.4 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "1.4"))
-    end
-
-    test "accepts 5 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "5"))
-    end
-
-    test "accepts 7 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "7"))
-    end
-
-    test "accepts 8 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "8"))
-    end
-
-    test "accepts 10 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "10"))
-    end
-
-    test "accepts 14 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "14"))
-    end
-
-    test "accepts 17 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "17"))
-    end
-
-    test "accepts 21 version" do
-      assert is_map(JavaParser.parse("int x = 1;", "21"))
+    test "parses the empty compilation unit" do
+      assert {:ok, ast} = JavaParser.parse("")
+      assert ast.rule_name == "compilation_unit"
+      assert ast.children == []
     end
 
     test "raises ArgumentError for unknown version" do
       assert_raise ArgumentError, ~r/Unknown Java version "99"/, fn ->
-        JavaParser.parse("int x = 1;", "99")
-      end
-    end
-
-    test "raises ArgumentError for completely invalid version string" do
-      assert_raise ArgumentError, ~r/Unknown Java version "latest"/, fn ->
-        JavaParser.parse("int x = 1;", "latest")
+        JavaParser.parse("class Hello { }", "99")
       end
     end
   end
 
-  # ---------------------------------------------------------------------------
-  # create_parser/1 and create_parser/2
-  # ---------------------------------------------------------------------------
+  describe "create_parser/1" do
+    test "returns the parsed parser grammar for the default version" do
+      grammar = JavaParser.create_parser()
 
-  describe "create_parser/2" do
-    test "returns a map" do
-      parser = JavaParser.create_parser("int x = 1;")
-      assert is_map(parser)
+      assert is_map(grammar)
+      assert grammar.version == 1
+      assert hd(grammar.rules).name == "compilation_unit"
     end
 
-    test "stores source in returned map" do
-      parser = JavaParser.create_parser("int x = 1;")
-      assert parser.source == "int x = 1;"
-    end
+    test "returns the parsed parser grammar for a specific version" do
+      grammar = JavaParser.create_parser("8")
 
-    test "stores nil version when not specified" do
-      parser = JavaParser.create_parser("int x = 1;")
-      assert parser.version == nil
-    end
-
-    test "stores version when 8 specified" do
-      parser = JavaParser.create_parser("int x = 1;", "8")
-      assert parser.version == "8"
-    end
-
-    test "stores language as java" do
-      parser = JavaParser.create_parser("int x = 1;")
-      assert parser.language == :java
+      assert is_map(grammar)
+      assert grammar.version == 1
+      assert hd(grammar.rules).name == "compilation_unit"
     end
 
     test "raises ArgumentError for unknown version" do
       assert_raise ArgumentError, ~r/Unknown Java version/, fn ->
-        JavaParser.create_parser("int x = 1;", "99")
+        JavaParser.create_parser("latest")
       end
     end
   end

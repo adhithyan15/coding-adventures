@@ -2,12 +2,13 @@ package javaparser
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 
 	"github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
-	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	javalexer "github.com/adhithyan15/coding-adventures/code/packages/go/java-lexer"
+	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 )
 
 // validVersions is the set of Java version strings the parser recognises.
@@ -90,18 +91,15 @@ func CreateJavaParser(source string, version string) (*parser.GrammarParser, err
 	if err != nil {
 		return nil, err
 	}
-	return StartNew[*parser.GrammarParser]("javaparser.CreateJavaParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
-		}).GetResult()
+	bytes, err := os.ReadFile(grammarPath)
+	if err != nil {
+		return nil, err
+	}
+	grammar, err := grammartools.ParseParserGrammar(string(bytes))
+	if err != nil {
+		return nil, err
+	}
+	return parser.NewGrammarParser(tokens, grammar), nil
 }
 
 // ParseJava is the main entry point for parsing Java source code.

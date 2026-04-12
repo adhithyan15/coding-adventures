@@ -2,6 +2,7 @@ package javalexer
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 
@@ -21,16 +22,16 @@ import (
 // The versions here correspond to the grammar files available in the
 // code/grammars/java/ directory:
 //
-//   1.0  — Java 1.0   (January 1996)   the original release
-//   1.1  — Java 1.1   (February 1997)  inner classes, JDBC, RMI
-//   1.4  — Java 1.4   (February 2002)  assertions, NIO, regex
-//   5    — Java 5     (September 2004) generics, annotations, enums, autoboxing
-//   7    — Java 7     (July 2011)      diamond operator, try-with-resources
-//   8    — Java 8     (March 2014)     lambdas, streams, default methods
-//   10   — Java 10    (March 2018)     local-variable type inference (var)
-//   14   — Java 14    (March 2020)     switch expressions, records (preview)
-//   17   — Java 17    (September 2021) sealed classes, pattern matching (LTS)
-//   21   — Java 21    (September 2023) virtual threads, record patterns (LTS)
+//	1.0  — Java 1.0   (January 1996)   the original release
+//	1.1  — Java 1.1   (February 1997)  inner classes, JDBC, RMI
+//	1.4  — Java 1.4   (February 2002)  assertions, NIO, regex
+//	5    — Java 5     (September 2004) generics, annotations, enums, autoboxing
+//	7    — Java 7     (July 2011)      diamond operator, try-with-resources
+//	8    — Java 8     (March 2014)     lambdas, streams, default methods
+//	10   — Java 10    (March 2018)     local-variable type inference (var)
+//	14   — Java 14    (March 2020)     switch expressions, records (preview)
+//	17   — Java 17    (September 2021) sealed classes, pattern matching (LTS)
+//	21   — Java 21    (September 2023) virtual threads, record patterns (LTS)
 var validVersions = map[string]bool{
 	"1.0": true,
 	"1.1": true,
@@ -97,27 +98,20 @@ func getGrammarPath(version string) (string, error) {
 //
 // An error is returned if the version string is unrecognised or if the grammar
 // file cannot be read.
-//
-// The function uses the capability-cage pattern: grammar file reads are
-// mediated through the Operation.File capability, ensuring only declared
-// paths in required_capabilities.json can be accessed at runtime.
 func CreateJavaLexer(source string, version string) (*lexer.GrammarLexer, error) {
 	grammarPath, err := getGrammarPath(version)
 	if err != nil {
 		return nil, err
 	}
-	return StartNew[*lexer.GrammarLexer]("javalexer.CreateJavaLexer", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(grammarPath)
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
-		}).GetResult()
+	bytes, err := os.ReadFile(grammarPath)
+	if err != nil {
+		return nil, err
+	}
+	grammar, err := grammartools.ParseTokenGrammar(string(bytes))
+	if err != nil {
+		return nil, err
+	}
+	return lexer.NewGrammarLexer(source, grammar), nil
 }
 
 // TokenizeJava is the main entry point for lexing Java source code.

@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/b-tree",
+  "version": "0.1.0",
+  "description": "A generic B-tree data structure with proactive top-down splitting and all delete cases (DT11)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

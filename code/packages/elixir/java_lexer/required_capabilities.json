@@ -2,6 +2,13 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "elixir/java_lexer",
-  "capabilities": [],
-  "justification": "Pure lexing. Text-in, token-stream-out with no filesystem, network, process, or environment access needed."
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads shared Java token grammar files from code/grammars/java/ to configure the lexer."
+    }
+  ],
+  "justification": "Reads shared Java token grammar files (java<version>.tokens) from code/grammars/java/ at runtime."
 }
