@@ -1,0 +1,5 @@
+requires 'coding-adventures-json-rpc';
+
+on 'test' => sub {
+    requires 'Test::More';
+};
