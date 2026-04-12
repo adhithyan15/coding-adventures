@@ -1,0 +1,946 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cover/Elixir.CodingAdventures.ArrayList.html</title>
+<style>/*
+ %CopyrightBegin%
+
+ SPDX-License-Identifier: Apache-2.0
+
+ Copyright Milton Mazzarri <me@milmazz.uno>
+ Copyright Ericsson AB 2018-2025. All Rights Reserved.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ %CopyrightEnd%
+*/
+
+body {
+  font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #000;
+  border-top: 2px solid #ddd;
+  background-color: #fff;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  font-weight: 100;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+
+h1 code {
+  font-size: 0.96em;
+}
+
+code {
+  font: 12px monospace;
+}
+
+footer {
+  background: #eee;
+  width: 100%;
+  padding: 10px 0;
+  text-align: right;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex: 1;
+  order: 2;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  border: 1px solid #cbcbcb;
+  color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+table thead {
+  display: none;
+}
+table td.line,
+table td.line a,
+table td.hits {
+  width: 20px;
+  background: #eaeaea;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 0 10px;
+  color: #949494;
+}
+table td.hits {
+  width: 10px;
+  text-align: right;
+  padding: 2px 5px;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+}
+tr.miss td.line,
+tr.miss td.line a,
+tr.miss td.hits {
+  background-color: #ffdce0;
+  border-color: #fdaeb7;
+}
+tr.miss td {
+  background-color: #ffeef0;
+}
+tr.hit td.line,
+tr.hit td.line a,
+tr.hit td.hits {
+  background-color: #cdffd8;
+  border-color: #bef5cb;
+}
+tr.hit td {
+  background-color: #e6ffed;
+}
+td.source {
+  padding-left: 15px;
+  line-height: 15px;
+  white-space: pre;
+  font: 12px monospace;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(95%);
+    background-color: #000000;
+  }
+  a:link {
+    color: #2B507D;
+  }
+  a:visited, a:active {
+    color: #85ABD5;
+  }
+}
+</style>
+</head>
+<body>
+<h1><code>cover/Elixir.CodingAdventures.ArrayList.html</code></h1>
+<footer><p>File generated from <code>/Users/adhithya/Downloads/Codex/coding-adventures/code/packages/elixir/array_list/lib/coding_adventures/array_list.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-04-11 at 19:22:43</p></footer>
+<table>
+<tbody>
+<tr>
+<td class="line" id="L1"><a href="#L1">1</a></td>
+<td class="hits"></td>
+<td class="source"><code>defmodule CodingAdventures.ArrayList do</code></td>
+</tr>
+<tr>
+<td class="line" id="L2"><a href="#L2">2</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @moduledoc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L3"><a href="#L3">3</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Chunked array-backed ordered sequence.</code></td>
+</tr>
+<tr>
+<td class="line" id="L4"><a href="#L4">4</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L5"><a href="#L5">5</a></td>
+<td class="hits"></td>
+<td class="source"><code>  The list is stored as a sequence of fixed-size chunks. End operations only</code></td>
+</tr>
+<tr>
+<td class="line" id="L6"><a href="#L6">6</a></td>
+<td class="hits"></td>
+<td class="source"><code>  touch a single chunk, keeping the working set bounded by the configured</code></td>
+</tr>
+<tr>
+<td class="line" id="L7"><a href="#L7">7</a></td>
+<td class="hits"></td>
+<td class="source"><code>  chunk size instead of the full list length.</code></td>
+</tr>
+<tr>
+<td class="line" id="L8"><a href="#L8">8</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L9"><a href="#L9">9</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L10"><a href="#L10">10</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @default_chunk_size 32</code></td>
+</tr>
+<tr>
+<td class="line" id="L11"><a href="#L11">11</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L12"><a href="#L12">12</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defstruct chunks: [], len: 0, chunk_size: @default_chunk_size</code></td>
+</tr>
+<tr>
+<td class="line" id="L13"><a href="#L13">13</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L14"><a href="#L14">14</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @type t :: %__MODULE__{</code></td>
+</tr>
+<tr>
+<td class="line" id="L15"><a href="#L15">15</a></td>
+<td class="hits"></td>
+<td class="source"><code>          chunks: [[any()]],</code></td>
+</tr>
+<tr>
+<td class="line" id="L16"><a href="#L16">16</a></td>
+<td class="hits"></td>
+<td class="source"><code>          len: non_neg_integer(),</code></td>
+</tr>
+<tr>
+<td class="line" id="L17"><a href="#L17">17</a></td>
+<td class="hits"></td>
+<td class="source"><code>          chunk_size: pos_integer()</code></td>
+</tr>
+<tr>
+<td class="line" id="L18"><a href="#L18">18</a></td>
+<td class="hits"></td>
+<td class="source"><code>        }</code></td>
+</tr>
+<tr>
+<td class="line" id="L19"><a href="#L19">19</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L20"><a href="#L20">20</a></td>
+<td class="hits">4</td>
+<td class="source"><code>  def new(opts \\ []) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L21"><a href="#L21">21</a></td>
+<td class="hits">8</td>
+<td class="source"><code>    chunk_size = normalize_chunk_size(Keyword.get(opts, :chunk_size, @default_chunk_size))</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L22"><a href="#L22">22</a></td>
+<td class="hits">7</td>
+<td class="source"><code>    %__MODULE__{chunk_size: chunk_size}</code></td>
+</tr>
+<tr>
+<td class="line" id="L23"><a href="#L23">23</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L24"><a href="#L24">24</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L25"><a href="#L25">25</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>  def from_list(items, opts \\ []) when is_list(items) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L26"><a href="#L26">26</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    list = new(opts)</code></td>
+</tr>
+<tr>
+<td class="line" id="L27"><a href="#L27">27</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L28"><a href="#L28">28</a></td>
+<td class="hits"></td>
+<td class="source"><code>    items</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L29"><a href="#L29">29</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    |&gt; Enum.chunk_every(list.chunk_size)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L30"><a href="#L30">30</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    |&gt; Enum.reduce(list, fn chunk, acc -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L31"><a href="#L31">31</a></td>
+<td class="hits">5</td>
+<td class="source"><code>      %{acc | chunks: acc.chunks ++ [chunk], len: acc.len + length(chunk)}</code></td>
+</tr>
+<tr>
+<td class="line" id="L32"><a href="#L32">32</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L33"><a href="#L33">33</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L34"><a href="#L34">34</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L35"><a href="#L35">35</a></td>
+<td class="hits">2</td>
+<td class="source"><code>  def to_list(%__MODULE__{chunks: chunks}), do: Enum.flat_map(chunks, &amp; &amp;1)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L36"><a href="#L36">36</a></td>
+<td class="hits">2</td>
+<td class="source"><code>  def len(%__MODULE__{len: len}), do: len</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L37"><a href="#L37">37</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  def is_empty(list), do: len(list) == 0</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L38"><a href="#L38">38</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  def chunk_size(%__MODULE__{chunk_size: chunk_size}), do: chunk_size</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L39"><a href="#L39">39</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  def chunk_count(%__MODULE__{chunks: chunks}), do: length(chunks)</code></td>
+</tr>
+<tr>
+<td class="line" id="L40"><a href="#L40">40</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L41"><a href="#L41">41</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def push_left(%__MODULE__{chunks: []} = list, value) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L42"><a href="#L42">42</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>    %{list | chunks: [[value]], len: list.len + 1}</code></td>
+</tr>
+<tr>
+<td class="line" id="L43"><a href="#L43">43</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L44"><a href="#L44">44</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L45"><a href="#L45">45</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def push_left(%__MODULE__{chunks: [first | rest], chunk_size: chunk_size} = list, value) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L46"><a href="#L46">46</a></td>
+<td class="hits">1</td>
+<td class="source"><code>    if length(first) &lt; chunk_size do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L47"><a href="#L47">47</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      %{list | chunks: [[value | first] | rest], len: list.len + 1}</code></td>
+</tr>
+<tr>
+<td class="line" id="L48"><a href="#L48">48</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L49"><a href="#L49">49</a></td>
+<td class="hits">1</td>
+<td class="source"><code>      %{list | chunks: [[value], first | rest], len: list.len + 1}</code></td>
+</tr>
+<tr>
+<td class="line" id="L50"><a href="#L50">50</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L51"><a href="#L51">51</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L52"><a href="#L52">52</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L53"><a href="#L53">53</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def push_right(%__MODULE__{chunks: []} = list, value) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L54"><a href="#L54">54</a></td>
+<td class="hits">1</td>
+<td class="source"><code>    %{list | chunks: [[value]], len: list.len + 1}</code></td>
+</tr>
+<tr>
+<td class="line" id="L55"><a href="#L55">55</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L56"><a href="#L56">56</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L57"><a href="#L57">57</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def push_right(%__MODULE__{chunks: chunks, chunk_size: chunk_size} = list, value) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L58"><a href="#L58">58</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    {last_chunk, rest} = List.pop_at(chunks, -1)</code></td>
+</tr>
+<tr>
+<td class="line" id="L59"><a href="#L59">59</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L60"><a href="#L60">60</a></td>
+<td class="hits">2</td>
+<td class="source"><code>    if length(last_chunk) &lt; chunk_size do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L61"><a href="#L61">61</a></td>
+<td class="hits">1</td>
+<td class="source"><code>      %{list | chunks: rest ++ [last_chunk ++ [value]], len: list.len + 1}</code></td>
+</tr>
+<tr>
+<td class="line" id="L62"><a href="#L62">62</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L63"><a href="#L63">63</a></td>
+<td class="hits">1</td>
+<td class="source"><code>      %{list | chunks: chunks ++ [[value]], len: list.len + 1}</code></td>
+</tr>
+<tr>
+<td class="line" id="L64"><a href="#L64">64</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L65"><a href="#L65">65</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L66"><a href="#L66">66</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L67"><a href="#L67">67</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  def pop_left(%__MODULE__{chunks: []} = list), do: {list, nil}</code></td>
+</tr>
+<tr>
+<td class="line" id="L68"><a href="#L68">68</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L69"><a href="#L69">69</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def pop_left(%__MODULE__{chunks: [first | rest]} = list) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L70"><a href="#L70">70</a></td>
+<td class="hits">1</td>
+<td class="source"><code>    case first do</code></td>
+</tr>
+<tr>
+<td class="line" id="L71"><a href="#L71">71</a></td>
+<td class="hits"></td>
+<td class="source"><code>      [head | tail] -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L72"><a href="#L72">72</a></td>
+<td class="hits">1</td>
+<td class="source"><code>        next_chunks = if tail == [], do: rest, else: [tail | rest]</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L73"><a href="#L73">73</a></td>
+<td class="hits">1</td>
+<td class="source"><code>        {%{list | chunks: next_chunks, len: list.len - 1}, head}</code></td>
+</tr>
+<tr>
+<td class="line" id="L74"><a href="#L74">74</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L75"><a href="#L75">75</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      [] -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L76"><a href="#L76">76</a></td>
+<td class="hits"></td>
+<td class="source"><code>        {list, nil}</code></td>
+</tr>
+<tr>
+<td class="line" id="L77"><a href="#L77">77</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L78"><a href="#L78">78</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L79"><a href="#L79">79</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L80"><a href="#L80">80</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  def pop_right(%__MODULE__{chunks: []} = list), do: {list, nil}</code></td>
+</tr>
+<tr>
+<td class="line" id="L81"><a href="#L81">81</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L82"><a href="#L82">82</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def pop_right(%__MODULE__{chunks: chunks} = list) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L83"><a href="#L83">83</a></td>
+<td class="hits">1</td>
+<td class="source"><code>    {last_chunk, rest} = List.pop_at(chunks, -1)</code></td>
+</tr>
+<tr>
+<td class="line" id="L84"><a href="#L84">84</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L85"><a href="#L85">85</a></td>
+<td class="hits">1</td>
+<td class="source"><code>    case List.pop_at(last_chunk, -1) do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L86"><a href="#L86">86</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>      {nil, _} -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L87"><a href="#L87">87</a></td>
+<td class="hits"></td>
+<td class="source"><code>        {list, nil}</code></td>
+</tr>
+<tr>
+<td class="line" id="L88"><a href="#L88">88</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L89"><a href="#L89">89</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {value, next_last} -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L90"><a href="#L90">90</a></td>
+<td class="hits">1</td>
+<td class="source"><code>        next_chunks = if next_last == [], do: rest, else: rest ++ [next_last]</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L91"><a href="#L91">91</a></td>
+<td class="hits">1</td>
+<td class="source"><code>        {%{list | chunks: next_chunks, len: list.len - 1}, value}</code></td>
+</tr>
+<tr>
+<td class="line" id="L92"><a href="#L92">92</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L93"><a href="#L93">93</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L94"><a href="#L94">94</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L95"><a href="#L95">95</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def index(%__MODULE__{len: len} = list, idx) when is_integer(idx) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L96"><a href="#L96">96</a></td>
+<td class="hits">3</td>
+<td class="source"><code>    idx = normalize_index(idx, len)</code></td>
+</tr>
+<tr>
+<td class="line" id="L97"><a href="#L97">97</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L98"><a href="#L98">98</a></td>
+<td class="hits">3</td>
+<td class="source"><code>    if idx &lt; 0 or idx &gt;= len do</code></td>
+</tr>
+<tr>
+<td class="line" id="L99"><a href="#L99">99</a></td>
+<td class="hits"></td>
+<td class="source"><code>      nil</code></td>
+</tr>
+<tr>
+<td class="line" id="L100"><a href="#L100">100</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L101"><a href="#L101">101</a></td>
+<td class="hits">2</td>
+<td class="source"><code>      fetch_by_index(list.chunks, idx, 0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L102"><a href="#L102">102</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L103"><a href="#L103">103</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L104"><a href="#L104">104</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L105"><a href="#L105">105</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def range(%__MODULE__{len: len} = list, start, stop) when is_integer(start) and is_integer(stop) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L106"><a href="#L106">106</a></td>
+<td class="hits">3</td>
+<td class="source"><code>    start = normalize_index(start, len)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L107"><a href="#L107">107</a></td>
+<td class="hits">3</td>
+<td class="source"><code>    stop = normalize_index(stop, len)</code></td>
+</tr>
+<tr>
+<td class="line" id="L108"><a href="#L108">108</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L109"><a href="#L109">109</a></td>
+<td class="hits">3</td>
+<td class="source"><code>    if start &gt; stop or start &gt;= len do</code></td>
+</tr>
+<tr>
+<td class="line" id="L110"><a href="#L110">110</a></td>
+<td class="hits"></td>
+<td class="source"><code>      []</code></td>
+</tr>
+<tr>
+<td class="line" id="L111"><a href="#L111">111</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L112"><a href="#L112">112</a></td>
+<td class="hits">2</td>
+<td class="source"><code>      list.chunks</code></td>
+</tr>
+<tr>
+<td class="line" id="L113"><a href="#L113">113</a></td>
+<td class="hits"></td>
+<td class="source"><code>      |&gt; collect_range(start, stop, 0, [])</code></td>
+</tr>
+<tr>
+<td class="line" id="L114"><a href="#L114">114</a></td>
+<td class="hits"></td>
+<td class="source"><code>      |&gt; Enum.reverse()</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L115"><a href="#L115">115</a></td>
+<td class="hits">2</td>
+<td class="source"><code>      |&gt; List.flatten()</code></td>
+</tr>
+<tr>
+<td class="line" id="L116"><a href="#L116">116</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L117"><a href="#L117">117</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L118"><a href="#L118">118</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L119"><a href="#L119">119</a></td>
+<td class="hits">7</td>
+<td class="source"><code>  defp normalize_chunk_size(size) when is_integer(size) and size &gt; 0, do: size</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L120"><a href="#L120">120</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  defp normalize_chunk_size(other), do: raise(ArgumentError, "invalid chunk size: #{inspect(other)}")</code></td>
+</tr>
+<tr>
+<td class="line" id="L121"><a href="#L121">121</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L122"><a href="#L122">122</a></td>
+<td class="hits">3</td>
+<td class="source"><code>  defp normalize_index(index, len) when index &lt; 0, do: len + index</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L123"><a href="#L123">123</a></td>
+<td class="hits">6</td>
+<td class="source"><code>  defp normalize_index(index, _len), do: index</code></td>
+</tr>
+<tr>
+<td class="line" id="L124"><a href="#L124">124</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L125"><a href="#L125">125</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>  defp fetch_by_index([], _index, _offset), do: nil</code></td>
+</tr>
+<tr>
+<td class="line" id="L126"><a href="#L126">126</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L127"><a href="#L127">127</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp fetch_by_index([chunk | rest], index, offset) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L128"><a href="#L128">128</a></td>
+<td class="hits">4</td>
+<td class="source"><code>    chunk_len = length(chunk)</code></td>
+</tr>
+<tr>
+<td class="line" id="L129"><a href="#L129">129</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L130"><a href="#L130">130</a></td>
+<td class="hits">4</td>
+<td class="source"><code>    if index &lt; offset + chunk_len do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L131"><a href="#L131">131</a></td>
+<td class="hits">2</td>
+<td class="source"><code>      Enum.at(chunk, index - offset)</code></td>
+</tr>
+<tr>
+<td class="line" id="L132"><a href="#L132">132</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L133"><a href="#L133">133</a></td>
+<td class="hits">2</td>
+<td class="source"><code>      fetch_by_index(rest, index, offset + chunk_len)</code></td>
+</tr>
+<tr>
+<td class="line" id="L134"><a href="#L134">134</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L135"><a href="#L135">135</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L136"><a href="#L136">136</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L137"><a href="#L137">137</a></td>
+<td class="hits">1</td>
+<td class="source"><code>  defp collect_range([], _start, _stop, _offset, acc), do: acc</code></td>
+</tr>
+<tr>
+<td class="line" id="L138"><a href="#L138">138</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L139"><a href="#L139">139</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp collect_range([chunk | rest], start, stop, offset, acc) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L140"><a href="#L140">140</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    chunk_len = length(chunk)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L141"><a href="#L141">141</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    chunk_start = offset</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L142"><a href="#L142">142</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    chunk_stop = offset + chunk_len - 1</code></td>
+</tr>
+<tr>
+<td class="line" id="L143"><a href="#L143">143</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L144"><a href="#L144">144</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    cond do</code></td>
+</tr>
+<tr>
+<td class="line" id="L145"><a href="#L145">145</a></td>
+<td class="hits"></td>
+<td class="source"><code>      stop &lt; chunk_start -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L146"><a href="#L146">146</a></td>
+<td class="hits">1</td>
+<td class="source"><code>        acc</code></td>
+</tr>
+<tr>
+<td class="line" id="L147"><a href="#L147">147</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L148"><a href="#L148">148</a></td>
+<td class="hits">5</td>
+<td class="source"><code>      start &gt; chunk_stop -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L149"><a href="#L149">149</a></td>
+<td class="hits">1</td>
+<td class="source"><code>        collect_range(rest, start, stop, offset + chunk_len, acc)</code></td>
+</tr>
+<tr>
+<td class="line" id="L150"><a href="#L150">150</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L151"><a href="#L151">151</a></td>
+<td class="hits">4</td>
+<td class="source"><code>      true -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L152"><a href="#L152">152</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        from = max(start - offset, 0)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L153"><a href="#L153">153</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        to = min(stop - offset, chunk_len - 1)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L154"><a href="#L154">154</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        slice = Enum.slice(chunk, from..to)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L155"><a href="#L155">155</a></td>
+<td class="hits">4</td>
+<td class="source"><code>        collect_range(rest, start, stop, offset + chunk_len, [slice | acc])</code></td>
+</tr>
+<tr>
+<td class="line" id="L156"><a href="#L156">156</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L157"><a href="#L157">157</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L158"><a href="#L158">158</a></td>
+<td class="hits"></td>
+<td class="source"><code>end</code></td>
+</tr>
+</tbody>
+<thead>
+<tr>
+<th>Line</th>
+<th>Hits</th>
+<th>Source</th>
+</tr>
+</thead>
+</table>
+</body>
+</html>
