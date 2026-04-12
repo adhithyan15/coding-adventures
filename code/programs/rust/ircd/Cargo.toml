@@ -15,3 +15,6 @@ irc-proto   = { path = "../../../packages/rust/irc-proto" }
 irc-framing = { path = "../../../packages/rust/irc-framing" }
 irc-server  = { path = "../../../packages/rust/irc-server" }
 irc-net-stdlib = { path = "../../../packages/rust/irc-net-stdlib" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

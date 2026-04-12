@@ -370,7 +370,7 @@ fn main() {
     //    Note: ctrlc is not added as a dependency to keep this zero-dependency.
     //    Instead, we run the server in a background thread and join it.
     //    (A full production server would use ctrlc or signal-hook crate here.)
-    let _el_for_shutdown = Arc::clone(&event_loop);
+    let el_for_shutdown = Arc::clone(&event_loop);
 
     // Run the server loop in the current thread.
     // The loop blocks until stop() is called.
@@ -381,7 +381,6 @@ fn main() {
     // a simple thread that reads from stdin can work as a fallback.
     #[cfg(unix)]
     {
-        use std::thread;
         let el_sig = Arc::clone(&el_for_shutdown);
         unsafe {
             libc_signal_setup(el_sig);
