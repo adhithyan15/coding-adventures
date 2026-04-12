@@ -86,6 +86,14 @@
 #
 # Reference: JLS 1.1, Section 7.3
 
+program = { program_item } ;
+
+program_item = package_declaration
+             | import_declaration
+             | type_declaration
+             | method_declaration
+             | statement ;
+
 compilation_unit = [ package_declaration ] { import_declaration } { type_declaration } ;
 
 # ============================================================================
@@ -673,7 +681,7 @@ class_type = qualified_name ;
 # Reference: JLS 1.1, Chapter 14; Inner Classes Specification
 
 statement = block
-          | local_variable_declaration_statement
+          | var_declaration
           | local_class_declaration
           | empty_statement
           | expression_statement
@@ -707,7 +715,7 @@ block = LBRACE { block_statement } RBRACE ;
 # We use block_statement as the unit inside blocks so that local variable
 # declarations are allowed alongside regular statements.
 
-block_statement = local_variable_declaration_statement
+block_statement = var_declaration
                | statement ;
 
 # --- Local Variable Declaration ---
@@ -721,6 +729,8 @@ block_statement = local_variable_declaration_statement
 #   int[] counts = new int[10];
 #
 # Reference: JLS 1.1, Section 14.3
+
+var_declaration = local_variable_declaration_statement ;
 
 local_variable_declaration_statement = [ "final" ] type variable_declarators SEMICOLON ;
 
@@ -1032,8 +1042,8 @@ labelled_statement = NAME COLON statement ;
 
 expression = assignment_expression ;
 
-assignment_expression = conditional_expression
-                      | unary_expression assignment_operator assignment_expression ;
+assignment_expression = unary_expression assignment_operator assignment_expression
+                      | conditional_expression ;
 
 assignment_operator = EQUALS
                     | PLUS_EQUALS

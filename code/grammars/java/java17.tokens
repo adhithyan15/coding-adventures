@@ -242,7 +242,7 @@ INT_NUMBER        = /[0-9][0-9_]*/ -> NUMBER
 # grammar sees a unified string type. The parser does not need to
 # distinguish them.
 
-TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"(?!""))*"""/ -> STRING
+TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*"""/ -> STRING
 STRING     = /"([^"\\]|\\.)*"/
 CHAR       = /'([^'\\]|\\.)*'/
 
@@ -477,6 +477,6 @@ skip:
 # text blocks (triple-quote without closing triple-quote).
 
 errors:
-  BAD_TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"(?!""))*$/
+  BAD_TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*$/
   BAD_STRING     = /"[^"]*$/
   BAD_CHAR       = /'[^']*$/

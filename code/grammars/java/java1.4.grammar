@@ -83,6 +83,8 @@
 #
 # Reference: JLS 2nd Ed, Section 7.3
 
+program = { program_item } ;
+program_item = package_declaration | import_declaration | type_declaration | method_declaration | statement ;
 compilation_unit = [ package_declaration ] { import_declaration } { type_declaration } ;
 
 # ============================================================================
@@ -615,7 +617,7 @@ class_type = qualified_name ;
 # Reference: JLS 2nd Ed, Chapter 14
 
 statement = block
-          | local_variable_declaration_statement
+          | var_declaration
           | empty_statement
           | expression_statement
           | if_statement
@@ -648,8 +650,8 @@ block = LBRACE { block_statement } RBRACE ;
 # Block statements include both statements and local variable declarations.
 # Since Java 1.1, local class declarations are also allowed inside blocks.
 
-block_statement = local_variable_declaration_statement
-               | class_declaration
+block_statement = var_declaration
+                | class_declaration
                | statement ;
 
 # --- Local Variable Declaration ---
@@ -668,6 +670,8 @@ block_statement = local_variable_declaration_statement
 #   int[] counts = new int[10];
 #
 # Reference: JLS 2nd Ed, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
 
 local_variable_declaration_statement = [ "final" ] type variable_declarators SEMICOLON ;
 
@@ -1016,8 +1020,8 @@ assert_statement = "assert" expression [ COLON expression ] SEMICOLON ;
 
 expression = assignment_expression ;
 
-assignment_expression = conditional_expression
-                      | unary_expression assignment_operator assignment_expression ;
+assignment_expression = unary_expression assignment_operator assignment_expression
+                      | conditional_expression ;
 
 assignment_operator = EQUALS
                     | PLUS_EQUALS

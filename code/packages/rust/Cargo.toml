@@ -62,6 +62,8 @@ members = [
     "interrupt-handler",
     "javascript-lexer",
     "javascript-parser",
+    "java-lexer",
+    "java-parser",
     "jit-compiler",
     "json-lexer",
     "json-parser",

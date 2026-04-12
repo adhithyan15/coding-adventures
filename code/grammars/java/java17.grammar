@@ -228,6 +228,8 @@
 #
 # Reference: JLS 17, Section 7.3
 
+program = { program_item } ;
+program_item = package_declaration | import_declaration | type_declaration | method_declaration | statement ;
 compilation_unit = { annotation } [ package_declaration ]
                    { import_declaration }
                    { type_declaration } ;
@@ -1037,7 +1039,7 @@ local_var_type = type
 # Reference: JLS 17, Chapter 14
 
 statement = block
-          | local_variable_declaration_statement
+          | var_declaration
           | empty_statement
           | expression_statement
           | if_statement
@@ -1060,8 +1062,8 @@ statement = block
 
 block = LBRACE { block_statement } RBRACE ;
 
-block_statement = local_variable_declaration_statement
-               | class_declaration
+block_statement = var_declaration
+                | class_declaration
                | record_declaration
                | statement ;
 
@@ -1077,6 +1079,8 @@ block_statement = local_variable_declaration_statement
 #   final var names = new ArrayList<String>();
 #
 # Reference: JLS 17, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
 
 local_variable_declaration_statement = { annotation } [ "final" ] local_var_type
                                        variable_declarators SEMICOLON ;
@@ -1367,8 +1371,8 @@ lambda_body = expression
 #
 # Right-associative: `a = b = c` means `a = (b = c)`.
 
-assignment_expression = conditional_expression
-                      | unary_expression assignment_operator assignment_expression ;
+assignment_expression = unary_expression assignment_operator assignment_expression
+                      | conditional_expression ;
 
 assignment_operator = EQUALS
                     | PLUS_EQUALS

@@ -249,7 +249,7 @@ INT_NUMBER        = /[0-9][0-9_]*/ -> NUMBER
 # a newline, then any content (including newlines), then triple-quote.
 # We use a non-greedy match to find the FIRST closing """.
 
-TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|\"{1,2}(?!"""))*"""/
+TEXT_BLOCK = /"""[ \t]*\n([^"\\]|\\.|"[^"\\]|""[^"\\])*"""/
 STRING     = /"([^"\\]|\\.)*"/
 CHAR       = /'([^'\\]|\\.)*'/
 

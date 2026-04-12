@@ -113,7 +113,29 @@
 # Use iterative form: `a { op b }` instead of `a = a op b`.
 
 # ============================================================================
-# Compilation Unit (Entry Point)
+# Program Entry Point
+# ============================================================================
+#
+# The parser entry point is a snippet-friendly `program` rule that accepts:
+#
+#   1. Package / import declarations
+#   2. Type declarations
+#   3. Method declarations
+#   4. Statement lists
+#
+# This keeps the grammar usable for both full compilation units and the
+# smaller code snippets exercised by the tests.
+
+program = { program_item } ;
+
+program_item = package_declaration
+             | import_declaration
+             | type_declaration
+             | method_declaration
+             | statement ;
+
+# ============================================================================
+# Compilation Unit
 # ============================================================================
 #
 # A Java source file (.java) is a "compilation unit." Every file has the
@@ -855,7 +877,7 @@ local_var_type = type
 # Reference: JLS 21, Chapter 14
 
 statement = block
-          | local_variable_declaration_statement
+          | var_declaration
           | empty_statement
           | expression_statement
           | if_statement
@@ -878,7 +900,7 @@ statement = block
 
 block = LBRACE { block_statement } RBRACE ;
 
-block_statement = local_variable_declaration_statement
+block_statement = var_declaration
                | class_declaration
                | statement ;
 
@@ -895,6 +917,8 @@ block_statement = local_variable_declaration_statement
 #   @NonNull var x = getName();          // annotated + var
 #
 # Reference: JLS 21, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
 
 local_variable_declaration_statement = { annotation } [ "final" ] local_var_type
                                        variable_declarators SEMICOLON ;
@@ -1511,8 +1535,8 @@ lambda_body = expression
 #
 # Right-associative: `a = b = c` means `a = (b = c)`.
 
-assignment_expression = conditional_expression
-                      | unary_expression assignment_operator assignment_expression ;
+assignment_expression = unary_expression assignment_operator assignment_expression
+                      | conditional_expression ;
 
 assignment_operator = EQUALS
                     | PLUS_EQUALS
