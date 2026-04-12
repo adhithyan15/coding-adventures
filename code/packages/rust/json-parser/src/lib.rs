@@ -1,209 +1,22 @@
-//! # JSON Parser — parsing JSON source text into an AST.
-//!
-//! This crate is the second half of the JSON front-end pipeline. Where the
-//! `json-lexer` crate breaks source text into tokens, this crate arranges
-//! those tokens into a tree that reflects the **structure** of the data —
-//! an Abstract Syntax Tree (AST).
-//!
-//! # The parsing pipeline
-//!
-//! Parsing JSON requires four cooperating components:
-//!
-//! ```text
-//! Source text  ("{\"name\": \"Alice\", \"age\": 30}")
-//!       |
-//!       v
-//! json-lexer           → Vec<Token>
-//!       |                [LBRACE, STRING("name"), COLON, STRING("Alice"),
-//!       |                 COMMA, STRING("age"), COLON, NUMBER("30"), RBRACE, EOF]
-//!       v
-//! json.grammar         → ParserGrammar (rules: value, object, pair, array)
-//!       |
-//!       v
-//! GrammarParser        → GrammarASTNode tree
-//!       |
-//!       |                value
-//!       |                  └── object
-//!       |                        ├── LBRACE
-//!       |                        ├── pair
-//!       |                        │     ├── STRING("name")
-//!       |                        │     ├── COLON
-//!       |                        │     └── value
-//!       |                        │           └── STRING("Alice")
-//!       |                        ├── COMMA
-//!       |                        ├── pair
-//!       |                        │     ├── STRING("age")
-//!       |                        │     ├── COLON
-//!       |                        │     └── value
-//!       |                        │           └── NUMBER("30")
-//!       |                        └── RBRACE
-//!       v
-//! [application logic consumes the AST]
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together.
-//! It knows where to find the `json.grammar` file and provides two public
-//! entry points.
-//!
-//! # Grammar-driven parsing
-//!
-//! The `GrammarParser` is a **recursive descent parser with backtracking and
-//! packrat memoization**. JSON's grammar is only four rules:
-//!
-//! - `value` — the start symbol: object | array | STRING | NUMBER | TRUE | FALSE | NULL
-//! - `object` — `{ [ pair { , pair } ] }`
-//! - `pair` — `STRING : value`
-//! - `array` — `[ [ value { , value } ] ]`
-//!
-//! The mutual recursion between `value`, `object`, and `array` allows JSON
-//! to represent arbitrarily deep nested structures.
-//!
-//! # Why JSON?
-//!
-//! JSON is an ideal first target for the parser infrastructure because:
-//!
-//! 1. **Universally known** — every developer has worked with JSON.
-//! 2. **Minimal grammar** — only 4 rules (vs. Starlark's ~40).
-//! 3. **No ambiguity** — every token unambiguously identifies the construct.
-//! 4. **Recursive** — objects and arrays nest arbitrarily deep.
-//! 5. **Real-world usage** — parsing JSON is genuinely useful.
+//! JSON parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_json_lexer::tokenize_json;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `json.grammar` file.
-///
-/// Uses the same strategy as the json-lexer crate: `env!("CARGO_MANIFEST_DIR")`
-/// gives us the compile-time path to this crate's directory, and we navigate
-/// up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     json.grammar          <-- target file
-///   packages/
-///     rust/
-///       json-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/json.grammar")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarParser` configured for JSON source text.
-///
-/// This function performs two major steps:
-///
-/// 1. **Tokenization** — uses `tokenize_json` from the json-lexer crate
-///    to break the source into tokens (STRING, NUMBER, TRUE, FALSE, NULL,
-///    and structural delimiters).
-///
-/// 2. **Grammar loading** — reads and parses the `json.grammar` file,
-///    which defines 4 rules: value, object, pair, and array.
-///
-/// The returned `GrammarParser` is ready to call `.parse()` on.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `json.grammar` file cannot be read or parsed.
-/// - The source text fails tokenization (unexpected character).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_json_parser::create_json_parser;
-///
-/// let mut parser = create_json_parser("{\"key\": 42}");
-/// let ast = parser.parse().expect("parse failed");
-/// println!("{:?}", ast.rule_name);
-/// ```
 pub fn create_json_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source using the json-lexer.
-    //
-    // This produces a Vec<Token> with JSON token types:
-    // STRING, NUMBER, TRUE, FALSE, NULL, LBRACE, RBRACE,
-    // LBRACKET, RBRACKET, COLON, COMMA, and EOF.
     let tokens = tokenize_json(source);
-
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The grammar file defines the syntactic structure of JSON in EBNF
-    // notation. It has just four rules:
-    //   value  = object | array | STRING | NUMBER | TRUE | FALSE | NULL ;
-    //   object = LBRACE [ pair { COMMA pair } ] RBRACE ;
-    //   pair   = STRING COLON value ;
-    //   array  = LBRACKET [ value { COMMA value } ] RBRACKET ;
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read json.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains a list of GrammarRule objects, each with
-    // a name and a body (a tree of GrammarElement nodes representing the
-    // EBNF structure).
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse json.grammar: {e}"));
-
-    // Step 4: Create the parser.
-    //
-    // The GrammarParser takes ownership of both the tokens and the grammar.
-    // It builds internal indexes (rule lookup, memo cache) for efficient
-    // parsing.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
-/// Parse JSON source text into an AST.
-///
-/// This is the most convenient entry point — it handles tokenization,
-/// grammar loading, parser creation, and parsing in one call.
-///
-/// The returned `GrammarASTNode` has `rule_name` set to `"value"` (the
-/// start symbol of the JSON grammar) with children corresponding to the
-/// structure of the JSON document.
-///
-/// # Panics
-///
-/// Panics if tokenization fails, the grammar file is missing/invalid,
-/// or the source text has a syntax error.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_json_parser::parse_json;
-///
-/// let ast = parse_json("{\"key\": 42}");
-/// assert_eq!(ast.rule_name, "value");
-/// ```
 pub fn parse_json(source: &str) -> GrammarASTNode {
-    // Create a parser wired to the JSON grammar and tokens.
-    let mut json_parser = create_json_parser(source);
-
-    // Parse and unwrap — any GrammarParseError becomes a panic.
-    //
-    // In a production tool, you would propagate the error via Result.
-    // For this educational codebase, panicking with a descriptive message
-    // is sufficient.
-    json_parser
+    let mut parser = create_json_parser(source);
+    parser
         .parse()
         .unwrap_or_else(|e| panic!("JSON parse failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -486,3 +299,4 @@ mod tests {
         assert!(has_pair, "Expected 'pair' rule");
     }
 }
+

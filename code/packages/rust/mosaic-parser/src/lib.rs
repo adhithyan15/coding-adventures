@@ -34,31 +34,9 @@
 //! - `when_block` — `when @NAME { { node_content } }`
 //! - `each_block` — `each @NAME as NAME { { node_content } }`
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 use mosaic_lexer::tokenize;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `mosaic.grammar` file.
-///
-/// ```text
-/// code/
-///   grammars/
-///     mosaic.grammar          ← target
-///   packages/
-///     rust/
-///       mosaic-parser/
-///         Cargo.toml          ← CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/mosaic.grammar")
-}
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -79,12 +57,7 @@ fn grammar_path() -> String {
 /// Panics if the grammar file is missing/invalid, or if tokenization fails.
 pub fn create_mosaic_parser(source: &str) -> GrammarParser {
     let tokens = tokenize(source);
-
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read mosaic.grammar: {e}"));
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse mosaic.grammar: {e}"));
-
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
@@ -258,7 +231,10 @@ mod tests {
         "#;
         let ast = parse(src);
         assert_file_root(&ast);
-        assert!(find_rule(&ast, "property_assignment"), "Expected property_assignment");
+        assert!(
+            find_rule(&ast, "property_assignment"),
+            "Expected property_assignment"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -274,7 +250,10 @@ mod tests {
         "#;
         let ast = parse(src);
         assert_file_root(&ast);
-        assert!(find_rule(&ast, "property_assignment"), "Expected property_assignment");
+        assert!(
+            find_rule(&ast, "property_assignment"),
+            "Expected property_assignment"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -426,7 +405,10 @@ mod tests {
         "#;
         let ast = parse(src);
         assert_file_root(&ast);
-        assert!(find_rule(&ast, "property_assignment"), "Expected property_assignment");
+        assert!(
+            find_rule(&ast, "property_assignment"),
+            "Expected property_assignment"
+        );
     }
 
     // -----------------------------------------------------------------------

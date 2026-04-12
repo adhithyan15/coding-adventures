@@ -68,35 +68,9 @@
 //! 5. **All modern patterns** — recursion, mutual recursion, operator
 //!    precedence, optional parts, and repetition.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_algol_lexer::tokenize_algol;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `algol.grammar` file.
-///
-/// Uses the same strategy as the algol-lexer crate: `env!("CARGO_MANIFEST_DIR")`
-/// gives us the compile-time path to this crate's directory, and we navigate
-/// up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     algol.grammar         <-- target file
-///   packages/
-///     rust/
-///       algol-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/algol.grammar")
-}
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -137,32 +111,7 @@ pub fn create_algol_parser(source: &str) -> GrammarParser {
     // Comments and whitespace have already been consumed.
     let tokens = tokenize_algol(source);
 
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The grammar file defines the syntactic structure of ALGOL 60 in EBNF
-    // notation. Key rules include:
-    //   program     = block ;
-    //   block       = BEGIN { declaration SEMICOLON } statement { SEMICOLON statement } END ;
-    //   statement   = [ label COLON ] unlabeled_stmt | [ label COLON ] cond_stmt ;
-    //   assign_stmt = left_part { left_part } expression ;
-    //   for_stmt    = FOR IDENT ASSIGN for_list DO statement ;
-    //   arith_expr  = IF bool_expr THEN simple_arith ELSE arith_expr | simple_arith ;
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read algol.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains a list of GrammarRule objects, each with
-    // a name and a body (a tree of GrammarElement nodes representing the
-    // EBNF structure).
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse algol.grammar: {e}"));
-
-    // Step 4: Create the parser.
-    //
-    // The GrammarParser takes ownership of both the tokens and the grammar.
-    // It builds internal indexes (rule lookup, memo cache) for efficient
-    // parsing.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
@@ -259,8 +208,10 @@ mod tests {
         assert_program_root(&ast);
 
         // Must find a block rule
-        assert!(find_rule(&ast, "block"),
-            "Expected 'block' rule in minimal program AST");
+        assert!(
+            find_rule(&ast, "block"),
+            "Expected 'block' rule in minimal program AST"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -272,8 +223,7 @@ mod tests {
     fn test_parse_block_structure() {
         let ast = parse_algol("begin integer n; n := 0 end");
         assert_program_root(&ast);
-        assert!(find_rule(&ast, "block"),
-            "Expected 'block' rule in AST");
+        assert!(find_rule(&ast, "block"), "Expected 'block' rule in AST");
     }
 
     // -----------------------------------------------------------------------
@@ -286,8 +236,10 @@ mod tests {
         let ast = parse_algol("begin integer x; x := 42 end");
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "assign_stmt"),
-            "Expected 'assign_stmt' rule in AST");
+        assert!(
+            find_rule(&ast, "assign_stmt"),
+            "Expected 'assign_stmt' rule in AST"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -322,8 +274,10 @@ mod tests {
         let ast = parse_algol("begin integer x; if x = 0 then x := 1 end");
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "cond_stmt"),
-            "Expected 'cond_stmt' rule for if/then statement");
+        assert!(
+            find_rule(&ast, "cond_stmt"),
+            "Expected 'cond_stmt' rule for if/then statement"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -338,8 +292,10 @@ mod tests {
         let ast = parse_algol(source);
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "cond_stmt"),
-            "Expected 'cond_stmt' rule for if/then/else");
+        assert!(
+            find_rule(&ast, "cond_stmt"),
+            "Expected 'cond_stmt' rule for if/then/else"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -350,12 +306,15 @@ mod tests {
     /// exercises the `for_stmt` rule with the `step ... until` for_elem form.
     #[test]
     fn test_parse_for_loop_step_until() {
-        let source = "begin integer i, sum; sum := 0; for i := 1 step 1 until 10 do sum := sum + i end";
+        let source =
+            "begin integer i, sum; sum := 0; for i := 1 step 1 until 10 do sum := sum + i end";
         let ast = parse_algol(source);
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "for_stmt"),
-            "Expected 'for_stmt' rule in AST");
+        assert!(
+            find_rule(&ast, "for_stmt"),
+            "Expected 'for_stmt' rule in AST"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -368,8 +327,10 @@ mod tests {
         let ast = parse_algol("begin integer x, y; x := 1; y := 2 end");
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "type_decl"),
-            "Expected 'type_decl' in AST for integer declaration");
+        assert!(
+            find_rule(&ast, "type_decl"),
+            "Expected 'type_decl' in AST for integer declaration"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -382,8 +343,10 @@ mod tests {
         let ast = parse_algol("begin real pi; pi := 3.14 end");
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "type_decl"),
-            "Expected 'type_decl' for real declaration");
+        assert!(
+            find_rule(&ast, "type_decl"),
+            "Expected 'type_decl' for real declaration"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -452,8 +415,10 @@ mod tests {
         let ast = parse_algol(source);
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "bool_expr") || find_rule(&ast, "bool_factor"),
-            "Expected boolean expression rule in AST");
+        assert!(
+            find_rule(&ast, "bool_expr") || find_rule(&ast, "bool_factor"),
+            "Expected boolean expression rule in AST"
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -467,8 +432,7 @@ mod tests {
         let ast = parse_algol(source);
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "goto_stmt"),
-            "Expected 'goto_stmt' in AST");
+        assert!(find_rule(&ast, "goto_stmt"), "Expected 'goto_stmt' in AST");
     }
 
     // -----------------------------------------------------------------------
@@ -501,7 +465,9 @@ mod tests {
         let ast = parse_algol(source);
         assert_program_root(&ast);
 
-        assert!(find_rule(&ast, "for_stmt"),
-            "Expected 'for_stmt' rule in AST");
+        assert!(
+            find_rule(&ast, "for_stmt"),
+            "Expected 'for_stmt' rule in AST"
+        );
     }
 }

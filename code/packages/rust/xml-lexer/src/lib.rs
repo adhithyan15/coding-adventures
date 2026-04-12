@@ -1,133 +1,10 @@
-//! # XML Lexer — tokenizing XML source text with pattern groups.
-//!
-//! [XML](https://www.w3.org/XML/) (Extensible Markup Language) is a markup
-//! language for structured data. Unlike JSON, XML is **context-sensitive**
-//! at the lexical level: the same character has different meaning depending
-//! on where it appears.
-//!
-//! For example, the equals sign `=`:
-//! - Inside a tag `<div class="main">`: attribute delimiter
-//! - Outside a tag `1 + 1 = 2`: plain text content
-//!
-//! A flat list of patterns cannot distinguish these contexts. This crate
-//! solves the problem using **pattern groups** and an **on-token callback**
-//! — two features of the grammar-driven lexer infrastructure.
-//!
-//! # Architecture
-//!
-//! ```text
-//! xml.tokens           (grammar file — 5 pattern groups)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar with groups)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes using active group's patterns)
-//!        |
-//!        v
-//! xml-lexer            (this crate — callback + glue layer)
-//! ```
-//!
-//! # Pattern Groups
-//!
-//! The `xml.tokens` grammar defines 5 pattern groups:
-//!
-//! | Group     | Active when...                        | Recognizes                           |
-//! |-----------|---------------------------------------|--------------------------------------|
-//! | default   | Between tags (initial state)          | TEXT, entities, tag/comment openers   |
-//! | tag       | Inside `<tag ...>` or `</tag>`        | TAG_NAME, ATTR_EQUALS, ATTR_VALUE    |
-//! | comment   | Inside `<!-- ... -->`                 | COMMENT_TEXT, COMMENT_END            |
-//! | cdata     | Inside `<![CDATA[ ... ]]>`            | CDATA_TEXT, CDATA_END                |
-//! | pi        | Inside `<? ... ?>`                    | PI_TARGET, PI_TEXT, PI_END           |
-//!
-//! # The Callback — `xml_on_token`
-//!
-//! The [`xml_on_token`] function fires after each token match. It examines
-//! the token's type name and pushes/pops groups on the lexer's group stack:
-//!
-//! ```text
-//! default ──OPEN_TAG_START──> tag ──TAG_CLOSE──> default
-//!         ──CLOSE_TAG_START─> tag ──SELF_CLOSE─> default
-//!         ──COMMENT_START───> comment ──COMMENT_END──> default
-//!         ──CDATA_START─────> cdata ──CDATA_END──> default
-//!         ──PI_START────────> pi ──PI_END──> default
-//! ```
-//!
-//! For comment, CDATA, and PI groups, the callback also disables skip
-//! patterns (so whitespace is preserved as content) and re-enables them
-//! when leaving the group.
-//!
-//! # Public API
-//!
-//! - [`create_xml_lexer`] — returns a `GrammarLexer` with the callback registered.
-//! - [`tokenize_xml`] — convenience function that returns `Vec<Token>` directly.
-//! - [`xml_on_token`] — the callback function, exposed for testing and reuse.
+//! XML lexer backed by compiled token grammar and callback-driven pattern groups.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::{GrammarLexer, LexerContext};
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `xml_rust.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     xml_rust.tokens       <-- this is what we want
-///   packages/
-///     rust/
-///       xml-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// We use `xml_rust.tokens` instead of `xml.tokens` because the original
-/// grammar uses negative lookahead patterns (`(?!...)`) which Python's
-/// regex engine supports but Rust's `regex` crate does not. The Rust
-/// variant replaces lookahead with equivalent alternation patterns.
-///
-/// The relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/xml_rust.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/xml_rust.tokens")
-}
-
-// ===========================================================================
-// XML On-Token Callback
-// ===========================================================================
-//
-// This callback drives the pattern group transitions. It is the heart of
-// the XML lexer — without it, the lexer would only use the default group
-// and fail to tokenize anything inside tags, comments, CDATA, or PIs.
-//
-// The logic is a simple state machine:
-// - Opening delimiters push a group onto the stack
-// - Closing delimiters pop the group off the stack
-// - Comment/CDATA/PI groups disable skip (whitespace is content)
-// ===========================================================================
-
-/// Resolve a token's effective type name.
-///
-/// The grammar-driven lexer uses `type_name` for custom token types defined
-/// in the `.tokens` file (like `OPEN_TAG_START`, `TAG_NAME`, etc.). Built-in
-/// types (like `Eof`) use the `type_` field instead. This helper returns
-/// the type name string regardless of which field holds it.
-///
-/// Most XML tokens are custom types, so `type_name` is almost always `Some`.
-/// The only exception is `EOF`, which is a built-in type.
 fn effective_type_name(token: &Token) -> &str {
     match &token.type_name {
         Some(name) => name.as_str(),
@@ -138,45 +15,10 @@ fn effective_type_name(token: &Token) -> &str {
     }
 }
 
-/// Callback that switches pattern groups for XML tokenization.
-///
-/// This function fires after each token match. It examines the token's
-/// type name and pushes/pops pattern groups on the lexer's group stack:
-///
-/// - **`OPEN_TAG_START`** (`<`) or **`CLOSE_TAG_START`** (`</`):
-///   Push the `"tag"` group so the lexer recognizes tag names, attributes,
-///   and tag closers.
-///
-/// - **`TAG_CLOSE`** (`>`) or **`SELF_CLOSE`** (`/>`):
-///   Pop the `"tag"` group to return to default (text content).
-///
-/// - **`COMMENT_START`** (`<!--`):
-///   Push `"comment"` group and disable skip (whitespace is significant).
-///
-/// - **`COMMENT_END`** (`-->`):
-///   Pop `"comment"` group and re-enable skip.
-///
-/// - **`CDATA_START`** (`<![CDATA[`):
-///   Push `"cdata"` group and disable skip.
-///
-/// - **`CDATA_END`** (`]]>`):
-///   Pop `"cdata"` group and re-enable skip.
-///
-/// - **`PI_START`** (`<?`):
-///   Push `"pi"` group and disable skip.
-///
-/// - **`PI_END`** (`?>`):
-///   Pop `"pi"` group and re-enable skip.
 pub fn xml_on_token(token: &Token, ctx: &mut LexerContext) {
     let type_name = effective_type_name(token);
 
     match type_name {
-        // --- Tag boundaries ---
-        //
-        // When we see `<` (open tag) or `</` (close tag), we enter tag
-        // mode where the lexer recognizes tag names, attributes, etc.
-        // When we see `>` or `/>`, we leave tag mode and return to the
-        // default group where text content and entities are recognized.
         "OPEN_TAG_START" | "CLOSE_TAG_START" => {
             ctx.push_group("tag")
                 .expect("'tag' group must exist in xml.tokens grammar");
@@ -184,12 +26,6 @@ pub fn xml_on_token(token: &Token, ctx: &mut LexerContext) {
         "TAG_CLOSE" | "SELF_CLOSE" => {
             ctx.pop_group();
         }
-
-        // --- Comment boundaries ---
-        //
-        // Comments preserve all whitespace — `<!-- hello  world -->` should
-        // keep the double space. We disable skip patterns so the lexer does
-        // not silently consume whitespace inside comments.
         "COMMENT_START" => {
             ctx.push_group("comment")
                 .expect("'comment' group must exist in xml.tokens grammar");
@@ -199,11 +35,6 @@ pub fn xml_on_token(token: &Token, ctx: &mut LexerContext) {
             ctx.pop_group();
             ctx.set_skip_enabled(true);
         }
-
-        // --- CDATA boundaries ---
-        //
-        // CDATA sections are raw text — no entity processing, no tag
-        // recognition. Like comments, whitespace is significant content.
         "CDATA_START" => {
             ctx.push_group("cdata")
                 .expect("'cdata' group must exist in xml.tokens grammar");
@@ -213,12 +44,6 @@ pub fn xml_on_token(token: &Token, ctx: &mut LexerContext) {
             ctx.pop_group();
             ctx.set_skip_enabled(true);
         }
-
-        // --- Processing instruction boundaries ---
-        //
-        // PIs like `<?xml version="1.0"?>` contain a target name and
-        // optional text content. Whitespace is significant (it separates
-        // the target from the content and appears within the content).
         "PI_START" => {
             ctx.push_group("pi")
                 .expect("'pi' group must exist in xml.tokens grammar");
@@ -228,134 +53,23 @@ pub fn xml_on_token(token: &Token, ctx: &mut LexerContext) {
             ctx.pop_group();
             ctx.set_skip_enabled(true);
         }
-
-        // All other tokens (TEXT, TAG_NAME, ATTR_VALUE, etc.) do not
-        // trigger group transitions — the lexer stays in its current group.
         _ => {}
     }
 }
 
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for XML source text.
-///
-/// This function:
-/// 1. Reads the `xml.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-/// 4. Registers the [`xml_on_token`] callback for pattern group switching.
-///
-/// The returned lexer is ready to call `.tokenize()` on. Use this when you
-/// need access to the lexer object itself (e.g., for incremental tokenization
-/// or custom error handling).
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. This should never
-/// happen in practice — the grammar file is checked into the repository and
-/// validated by the grammar-tools test suite.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_xml_lexer::create_xml_lexer;
-///
-/// let mut lexer = create_xml_lexer("<div>hello</div>");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_xml_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read xml_rust.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar now contains pattern groups (tag, comment, cdata, pi)
-    // in addition to the default group. Each group has its own set of token
-    // patterns that are active only when that group is at the top of the stack.
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse xml_rust.tokens: {e}"));
-
-    // Step 3: Create the lexer and register the callback.
-    //
-    // The callback is what makes this lexer context-sensitive. Without it,
-    // only the default group's patterns would ever be active.
+    let grammar = _grammar::token_grammar();
     let mut lexer = GrammarLexer::new(source, &grammar);
     lexer.set_on_token(Some(Box::new(xml_on_token)));
     lexer
 }
 
-/// Tokenize XML source text into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, callback registration, and tokenization in one call.
-/// The returned vector always ends with an `EOF` token.
-///
-/// # Token types
-///
-/// **Default group** (content between tags):
-/// - **TEXT** — text content (e.g., `Hello world`)
-/// - **ENTITY_REF** — entity reference (e.g., `&amp;`)
-/// - **CHAR_REF** — character reference (e.g., `&#65;`, `&#x41;`)
-/// - **OPEN_TAG_START** — `<`
-/// - **CLOSE_TAG_START** — `</`
-/// - **COMMENT_START** — `<!--`
-/// - **CDATA_START** — `<![CDATA[`
-/// - **PI_START** — `<?`
-///
-/// **Tag group** (inside tags):
-/// - **TAG_NAME** — tag or attribute name (e.g., `div`, `class`)
-/// - **ATTR_EQUALS** — `=`
-/// - **ATTR_VALUE** — quoted attribute value (e.g., `"main"`)
-/// - **TAG_CLOSE** — `>`
-/// - **SELF_CLOSE** — `/>`
-///
-/// **Comment group**:
-/// - **COMMENT_TEXT** — comment content
-/// - **COMMENT_END** — `-->`
-///
-/// **CDATA group**:
-/// - **CDATA_TEXT** — raw text content
-/// - **CDATA_END** — `]]>`
-///
-/// **Processing instruction group**:
-/// - **PI_TARGET** — PI target name (e.g., `xml`)
-/// - **PI_TEXT** — PI content
-/// - **PI_END** — `?>`
-///
-/// **Always present**:
-/// - **EOF** — end of input
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains characters that don't match any token pattern in the active group.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_xml_lexer::tokenize_xml;
-///
-/// let tokens = tokenize_xml("<p>Hello &amp; world</p>");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
 pub fn tokenize_xml(source: &str) -> Vec<Token> {
     let mut xml_lexer = create_xml_lexer(source);
     xml_lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("XML tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -970,3 +684,4 @@ mod tests {
         assert!(types.contains(&"CDATA_END"));
     }
 }
+

@@ -13,7 +13,7 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"program"#.to_string(),
             body: GrammarElement::Repetition { element: Box::new(GrammarElement::RuleReference { name: r#"statement"#.to_string() }) },
-            line_number: 22,
+            line_number: 27,
         },
         GrammarRule {
             name: r#"statement"#.to_string(),
@@ -22,7 +22,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"method_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"expression_stmt"#.to_string() },
             ] },
-            line_number: 23,
+            line_number: 28,
         },
         GrammarRule {
             name: r#"assignment"#.to_string(),
@@ -31,7 +31,7 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::TokenReference { name: r#"EQUALS"#.to_string() },
                 GrammarElement::RuleReference { name: r#"expression"#.to_string() },
             ] },
-            line_number: 24,
+            line_number: 29,
         },
         GrammarRule {
             name: r#"method_call"#.to_string(),
@@ -50,12 +50,12 @@ pub fn parser_grammar() -> ParserGrammar {
                     ] }) },
                 GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
             ] },
-            line_number: 25,
+            line_number: 30,
         },
         GrammarRule {
             name: r#"expression_stmt"#.to_string(),
             body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-            line_number: 26,
+            line_number: 31,
         },
         GrammarRule {
             name: r#"expression"#.to_string(),
@@ -69,7 +69,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"term"#.to_string() },
                     ] }) },
             ] },
-            line_number: 27,
+            line_number: 32,
         },
         GrammarRule {
             name: r#"term"#.to_string(),
@@ -83,7 +83,7 @@ pub fn parser_grammar() -> ParserGrammar {
                         GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                     ] }) },
             ] },
-            line_number: 28,
+            line_number: 33,
         },
         GrammarRule {
             name: r#"factor"#.to_string(),
@@ -98,7 +98,7 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
             ] },
-            line_number: 29,
+            line_number: 34,
         },
     ],
         version: 1,

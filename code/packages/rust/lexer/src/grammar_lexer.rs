@@ -379,7 +379,7 @@ fn compile_patterns(definitions: &[TokenDefinition], case_sensitive: bool) -> Ve
         .iter()
         .map(|defn| {
             let regex_str = if defn.is_regex {
-                format!("^{}", defn.pattern)
+                format!("^(?:{})", defn.pattern)
             } else {
                 format!("^{}", regex::escape(&defn.pattern))
             };
@@ -512,12 +512,6 @@ pub struct GrammarLexer<'a> {
     /// is significant (e.g., CDATA, raw strings).
     skip_enabled: bool,
 
-    /// Whether the grammar is case-sensitive. When `false`, the source
-    /// string is lowercased before tokenization so that keywords and
-    /// patterns match regardless of case. This is useful for languages
-    /// like SQL and BASIC where `SELECT` and `select` are equivalent.
-    case_sensitive: bool,
-
     /// Pre-tokenize hooks: transform source text before lexing.
     /// Each hook is a function `String -> String`. Multiple hooks compose left-to-right.
     pre_tokenize_hooks: Vec<Box<dyn Fn(String) -> String>>,
@@ -605,11 +599,11 @@ impl<'a> GrammarLexer<'a> {
             .definitions
             .iter()
             .map(|defn| {
-                let regex_str = if defn.is_regex {
-                    format!("^{}", defn.pattern)
-                } else {
-                    format!("^{}", regex::escape(&defn.pattern))
-                };
+            let regex_str = if defn.is_regex {
+                format!("^(?:{})", defn.pattern)
+            } else {
+                format!("^{}", regex::escape(&defn.pattern))
+            };
                 CompiledPattern {
                     name: defn.name.clone(),
                     pattern: RegexBuilder::new(&regex_str)
@@ -655,7 +649,6 @@ impl<'a> GrammarLexer<'a> {
             group_stack: vec!["default".to_string()],
             on_token: None,
             skip_enabled: true,
-            case_sensitive,
             pre_tokenize_hooks: Vec::new(),
             post_tokenize_hooks: Vec::new(),
             case_insensitive,
