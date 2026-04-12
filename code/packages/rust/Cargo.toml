@@ -234,6 +234,8 @@ members = [
     "rpc",
     "lsm-tree",
     "write-ahead-log",
+    "des",
+    "aes",
     "irc-proto",
     "irc-framing",
     "irc-server",
