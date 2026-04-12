@@ -1651,6 +1651,8 @@ Combining them into a single `uv pip install -e ../gf256 -e ".[dev]"` was previo
 3. BUILD: `uv pip install -e ../gf256 --quiet` first (explicit ref satisfies the validator's `requiresExplicitPrereqs` check), then `uv pip install -e ".[dev]" --quiet`
 
 Do NOT use `@ file:../gf256` in `dependencies` — hatchling rejects this during wheel metadata build. Do NOT put gf256 in optional-dependency groups — uv resolves ALL extras universally.
+
+---
 ## Python BUILD files: Always use Unix venv paths
 
 **Date:** 2026-04-12
