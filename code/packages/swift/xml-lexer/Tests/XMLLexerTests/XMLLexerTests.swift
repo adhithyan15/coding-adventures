@@ -249,7 +249,7 @@ final class XMLLexerTests: XCTestCase {
         XCTAssertEqual(pairs[0].1, "&#65;")
     }
     
-    func testHex CharacterReference() throws {
+    func testHexCharacterReference() throws {
         let pairs = try tokenPairs("&#x41;")
         XCTAssertEqual(pairs.count, 1)
         XCTAssertEqual(pairs[0].0, "CHAR_REF")
