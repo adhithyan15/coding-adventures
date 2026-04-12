@@ -1,0 +1,5 @@
+{
+  "perl": true,
+  "grammar_tools": true,
+  "csharp_lexer": true
+}

@@ -1,0 +1,462 @@
+# C# 3.0 (2007) — Lexical Grammar
+# @version 1
+# @csharp_version 3.0
+#
+# .NET Framework 3.5 — November 2007
+#
+# C# 3.0 shipped with Visual Studio 2008 and .NET Framework 3.5. This
+# release introduced LINQ (Language Integrated Query) — one of the most
+# influential features in C#'s history. LINQ lets you write SQL-like queries
+# over any collection, database, or data source directly in C#:
+#
+#   var adults = from person in people
+#                where person.Age >= 18
+#                orderby person.Name
+#                select person;
+#
+# To make LINQ work elegantly, C# 3.0 added a whole constellation of
+# supporting features — none of which required new reserved keywords:
+#
+#   - Lambda expressions (x => x * 2)
+#   - Anonymous types (new { Name = "Alice", Age = 30 })
+#   - Object and collection initializers
+#   - Type inference with `var`
+#   - Extension methods
+#   - Auto-properties
+#   - Partial methods
+#   - Expression trees
+#
+# The remarkable design decision: EVERY new feature in C# 3.0 is based on
+# context keywords (not reserved words). This means existing code using
+# identifiers like `var`, `from`, `select`, etc. continues to compile.
+#
+# Compare with Java: Java added generics in Java 5 (2004) but its generics
+# use type erasure. C# 3.0 added LINQ, which has no Java equivalent. The
+# Java world had to wait for Streams (Java 8, 2014) for a similar but
+# more limited feature.
+#
+# The key new LEXICAL change in C# 3.0 is the lambda arrow token:
+#
+#   => (fat arrow, pronounced "goes to" or "maps to")
+#
+# This MUST be listed before the = token so that "=>" is matched as a
+# single LAMBDA token, not as EQUALS followed by GREATER_THAN.
+#
+# What C# 3.0 does NOT have (added in later versions):
+#   - No dynamic keyword (C# 4.0, 2010)
+#   - No named/optional arguments (C# 4.0)
+#   - No async/await (C# 5.0, 2012)
+#   - No string interpolation $"" (C# 6.0, 2015)
+#   - No null-conditional ?. (C# 6.0)
+#   - No pattern matching (C# 7.0, 2017)
+#   - No tuples (int x, int y) (C# 7.0)
+#   - No records (C# 9.0, 2020)
+#   - No raw string literals """ (C# 11.0, 2022)
+#
+# Accumulated features in C# 3.0:
+#   C# 1.0: Properties, delegates, events, structs, operator overloading,
+#           indexers, attributes, preprocessor, unsafe code, namespaces,
+#           foreach, goto, unsigned types, decimal, verbatim strings
+#   C# 2.0: Generics, nullable types (T?), null coalescing (??),
+#           iterators (yield return/break), anonymous methods (delegate {}),
+#           partial types, static classes, namespace alias (::)
+#   C# 3.0: Lambda expressions (=>), LINQ query syntax, var keyword,
+#           extension methods, anonymous types, object/collection initializers,
+#           expression trees, auto-properties, partial methods
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers are unchanged from C# 2.0. C# 3.0 adds many context keywords,
+# but ALL of them are lexed as NAME tokens. None are reserved.
+#
+# Context keywords in C# 3.0 (can still be used as identifiers):
+#
+#   var       — local variable type inference ("implicitly typed")
+#   from      — LINQ query: introduces the range variable
+#   select    — LINQ query: projection clause
+#   where     — LINQ query: filter clause (also C# 2.0 generic constraints)
+#   group     — LINQ query: grouping clause
+#   into      — LINQ query: continuation after select/group
+#   orderby   — LINQ query: sorting clause
+#   ascending — LINQ query: ascending sort direction (default)
+#   descending— LINQ query: descending sort direction
+#   join      — LINQ query: inner join with another sequence
+#   on        — LINQ query: condition in join clause
+#   equals    — LINQ query: equality in join condition
+#   let       — LINQ query: introduce a computed intermediate variable
+#   by        — LINQ query: used in group...by clause
+#
+# These are ALL emitted as NAME tokens. The parser recognizes them by
+# checking the token's text value in the appropriate syntactic position.
+#
+# Verbatim identifiers (@from, @select, etc.) also remain valid — though
+# using context keywords as identifiers is rare and confusing in practice.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Unchanged from C# 2.0. C# 3.0 adds no new numeric literal forms.
+#
+# Supported numeric literals through C# 3.0:
+#
+#   Hexadecimal integers:   0xFF, 0xDEAD, 0xCAFEBABE_UL (no separator yet)
+#   Decimal integers:       42, 42L, 42U, 42UL
+#   Floating-point:         3.14, 3.14f, 1e10, .5m
+#
+# Suffixes:
+#   U/u — unsigned (uint or ulong depending on value)
+#   L/l — long (long or ulong depending on U suffix)
+#   UL/ul/LU/lu — unsigned long (always ulong)
+#   F/f — float (32-bit IEEE 754)
+#   D/d — double (64-bit IEEE 754)
+#   M/m — decimal (128-bit decimal floating-point, used in finance)
+#
+# IMPORTANT: Still no binary literals (0b...) and no digit separators (_).
+# Those arrive in C# 7.0 (2017).
+#
+# All numeric variants alias to NUMBER so the parser sees one token type.
+
+HEX_ULONG      = /0[xX][0-9a-fA-F]+([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG       = /0[xX][0-9a-fA-F]+[lL]/ -> NUMBER
+HEX_UINT       = /0[xX][0-9a-fA-F]+[uU]/ -> NUMBER
+HEX_NUMBER     = /0[xX][0-9a-fA-F]+/ -> NUMBER
+DECIMAL_FLOAT  = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER     = /[0-9]+[eE][+-]?[0-9]+[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER   = /[0-9]+([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER    = /[0-9]+[lL]/ -> NUMBER
+UINT_NUMBER    = /[0-9]+[uU]/ -> NUMBER
+FLOAT_SUFFIX   = /[0-9]+[fFdDmM]/ -> NUMBER
+INT_NUMBER     = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Unchanged from C# 2.0. Three string-like literal forms:
+#
+#   1. Regular strings:   "hello\nworld"
+#      - Backslash escape sequences: \n \t \r \\ \" \' \0 \a \b \f \v
+#      - Unicode escapes:            \uXXXX, \UXXXXXXXX, \xN...
+#
+#   2. Verbatim strings:  @"C:\Users\alice\file.txt"
+#      - No escape sequences (backslash is literal)
+#      - Use "" to embed a double-quote character
+#      - Can span multiple lines
+#
+#   3. Character literals: 'a', '\n', '\u0041'
+#
+# String interpolation ($"...{expr}...") does NOT exist yet — that is C# 6.0.
+
+STRING         = /"([^"\\]|\\.)*"/
+VERBATIM_STRING = /@"([^"]|"")*"/
+CHAR           = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 3.0 adds ONE new multi-character operator:
+#
+#   => — the "fat arrow" or "lambda arrow"
+#
+# The => token introduces lambda expressions, one of the most-used features
+# in modern C#. Lambda expressions are anonymous functions written concisely:
+#
+#   x => x * 2                    // expression lambda: takes x, returns x*2
+#   (x, y) => x + y               // two parameters
+#   (int x, int y) => x + y       // explicitly typed parameters
+#   () => Console.WriteLine("hi") // no parameters
+#   x => { Console.WriteLine(x); return x; }  // statement lambda (block body)
+#
+# The => token is used in two distinct contexts in C# 3.0:
+#
+#   1. Lambda expressions:  Func<int, int> square = x => x * x;
+#   2. (Future) Expression-bodied members in C# 6.0 — not yet!
+#
+# IMPORTANT: LAMBDA (=>) must come BEFORE EQUALS (=) in this list.
+# If = were first, the lexer would match "=" and leave ">" for later,
+# producing EQUALS GREATER_THAN instead of a single LAMBDA token.
+#
+# IMPORTANT: LAMBDA (=>) must also come BEFORE EQUALS_EQUALS (==) for
+# the same reason — order-of-definition determines matching priority.
+#
+# Historical note: The => syntax was borrowed from functional programming
+# (Haskell uses ->, ML uses =>, and mathematics uses ↦). The C# team chose
+# => to distinguish it from the pointer arrow -> (used in unsafe code).
+#
+# C# 2.0 already added:
+#   ?? — null coalescing (renamed to NULL_COALESCE in 5.0 files, here QUESTION_QUESTION)
+#   :: — namespace alias qualifier (COLON_COLON)
+
+LAMBDA               = "=>"
+COLON_COLON          = "::"
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+QUESTION_QUESTION    = "??"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# Unchanged from C# 2.0. The ? token serves three purposes in C# 3.0:
+#
+#   1. Ternary operator:   condition ? thenExpr : elseExpr
+#   2. Nullable suffix:    int? age = null;
+#   3. (In ? position for) type inference: the parser context disambiguates
+#
+# C# 3.0 does NOT have:
+#   - The ?. null-conditional operator (added in C# 6.0)
+#   - The .. range operator (added in C# 8.0)
+#   - The >>> unsigned right shift (added in C# 11.0)
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Unchanged from C# 2.0. The same delimiter set as C# 1.0.
+# Note: :: is handled by COLON_COLON above.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 3.0 adds NO new reserved keywords. Every new feature in C# 3.0 uses
+# context keywords (NAME tokens) that the parser recognizes by value.
+#
+# This was a deliberate design choice. Before C# 3.0, adding any feature
+# required reserving a new keyword, which would break any existing code
+# using that word as an identifier. But C# already had a large installed
+# base by 2007. Making `var`, `from`, `select`, etc. reserved would have
+# broken real code.
+#
+# The solution: context-sensitive keywords. The lexer always emits them as
+# NAME tokens. The parser knows their special meaning from the surrounding
+# syntactic structure:
+#
+#   var x = 42;         // `var` here is a type inference instruction
+#   int var = 5;        // `var` here is a VALID identifier name!
+#
+#   from x in list      // `from` here starts a LINQ query
+#   string from = "NY"; // `from` here is a VALID identifier!
+#
+# Context keywords added in C# 3.0 (NOT in this list, lexed as NAME):
+#
+#   var         — implicit type (only special as a local variable type)
+#   from        — LINQ: range variable introduction
+#   select      — LINQ: projection
+#   where       — LINQ filter / generic constraint (was already in 2.0!)
+#   group       — LINQ: grouping
+#   into        — LINQ: continuation identifier
+#   orderby     — LINQ: sorting
+#   ascending   — LINQ: ascending direction (default, can be omitted)
+#   descending  — LINQ: descending direction
+#   join        — LINQ: inner join
+#   on          — LINQ: join condition
+#   equals      — LINQ: join equality
+#   let         — LINQ: intermediate variable
+#   by          — LINQ: used in group...by
+#
+# Context keywords from C# 2.0 (still NOT reserved):
+#
+#   partial     — partial class/struct/interface/method
+#   where       — generic type parameter constraint (also C# 3.0 LINQ)
+#   global      — global:: namespace alias qualifier
+#   yield       — listed as reserved keyword since C# 2.0 (see below)
+#
+# NOTE: In C# 2.0, `yield` was listed as a reserved keyword even though
+# it behaves contextually. We preserve that choice here.
+#
+# Total reserved keywords: 78 (same as C# 2.0, no change in 3.0)
+
+keywords:
+  abstract
+  as
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+  yield
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 2.0. C# 3.0 adds no new comment forms.
+#
+# C# has three comment forms:
+#   1. Line comments:       // this is a comment to end of line
+#   2. Block comments:      /* multi-line, cannot nest */
+#   3. XML doc comments:    /// <summary>...</summary>
+#                           (lexically identical to line comments — the
+#                            IDE/toolchain gives them special treatment)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# Unchanged from C# 2.0. C# 3.0 adds no new preprocessor directives.
+#
+# Preprocessor directives in C# are line-based, like C/C++. They allow
+# conditional compilation (#if), defining symbols (#define), and pragmas.
+#
+# Note: C# preprocessor is simpler than C's — it cannot define macros
+# or perform text substitution. It only supports symbol-based conditionals.
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/

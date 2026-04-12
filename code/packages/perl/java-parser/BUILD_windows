@@ -1,0 +1,2 @@
+REM prereqs: ../grammar-tools ../java-lexer
+echo Perl testing is not supported on Windows - skipping

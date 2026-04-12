@@ -1,0 +1,12 @@
+[package]
+name = "irc-server"
+version = "0.1.0"
+edition = "2021"
+description = "RFC 1459 IRC server state machine (channels, nicks, command dispatch)"
+authors = ["coding-adventures"]
+license = "MIT"
+
+[dependencies]
+irc-proto = { path = "../irc-proto" }
+
+[dev-dependencies]

@@ -1,0 +1,379 @@
+# C# 4.0 (2010) — Lexical Grammar
+# @version 1
+# @csharp_version 4.0
+#
+# .NET Framework 4.0 — April 2010
+#
+# C# 4.0 shipped with Visual Studio 2010 and .NET Framework 4.0. The
+# headline feature is `dynamic` — a type that bypasses compile-time type
+# checking and defers member resolution to runtime via the DLR (Dynamic
+# Language Runtime).
+#
+# The DLR was built to host dynamic languages like IronPython and IronRuby
+# on .NET. C# 4.0 leveraged the DLR to add dynamic dispatch to a
+# statically-typed language:
+#
+#   dynamic obj = GetSomething();
+#   obj.Quack();      // compiles even if we don't know obj's type
+#   // At runtime: if obj doesn't have Quack(), a RuntimeBinderException
+#
+# This is also how Excel COM interop works in C# 4.0:
+#
+#   // Before C# 4.0 — painful COM interop:
+#   ((Excel.Range)worksheet.Cells[1, 1]).Value2 = "Hello";
+#
+#   // C# 4.0 with dynamic:
+#   worksheet.Cells[1, 1].Value = "Hello";  // dynamic dispatch!
+#
+# C# 4.0 also adds named and optional arguments, which were LONG requested
+# by developers coming from VB.NET (which had them since VB6):
+#
+#   void PrintOrder(string name, int count = 1, bool rush = false) { }
+#   PrintOrder("Widget");                     // count=1, rush=false
+#   PrintOrder("Widget", rush: true);         // named + optional
+#   PrintOrder(count: 3, name: "Gadget");     // named, any order
+#
+# And generic variance with in/out on type parameters:
+#
+#   interface IEnumerable<out T> { }  // covariant — can use Dog where Animal is expected
+#   interface IComparer<in T> { }     // contravariant — can use Animal comparer for Dog
+#
+# KEY LEXICAL FACT: C# 4.0 adds NO new operators and NO new punctuation.
+# The `dynamic` keyword is technically contextual (you can name a variable
+# `dynamic`) but in practice it is treated as a type keyword. It is lexed
+# as a NAME token — the parser recognizes it in type positions.
+#
+# Named arguments use the existing COLON token: `name: value`.
+# Optional parameters use the existing EQUALS token: `int x = 0`.
+# Variance uses the existing `in` and `out` keywords in new positions.
+#
+# This means the token file for C# 4.0 is IDENTICAL to C# 3.0, except for
+# documentation updates.
+#
+# Accumulated features through C# 4.0:
+#   C# 1.0: Properties, delegates, events, structs, operator overloading,
+#           indexers, attributes, preprocessor, unsafe code, namespaces,
+#           foreach, goto, unsigned types, decimal, verbatim strings
+#   C# 2.0: Generics, nullable types (T?), null coalescing (??),
+#           iterators (yield return/break), anonymous methods (delegate {}),
+#           partial types, static classes, namespace alias (::)
+#   C# 3.0: Lambda expressions (=>), LINQ query syntax, var keyword,
+#           extension methods, anonymous types, object/collection initializers,
+#           expression trees, auto-properties, partial methods
+#   C# 4.0: dynamic keyword, named arguments, optional parameters,
+#           generic covariance/contravariance (in/out on type params)
+#
+# What C# 4.0 does NOT have (added in later versions):
+#   - No async/await (C# 5.0, 2012)
+#   - No string interpolation $"" (C# 6.0, 2015)
+#   - No null-conditional ?. (C# 6.0)
+#   - No expression-bodied members (C# 6.0)
+#   - No pattern matching (C# 7.0, 2017)
+#   - No tuples (int x, int y) (C# 7.0)
+#   - No records (C# 9.0, 2020)
+#   - No raw string literals """ (C# 11.0, 2022)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers are unchanged from C# 3.0. C# 4.0 adds `dynamic` as a context
+# keyword but it is NOT reserved — it can still be used as an identifier.
+#
+# Context keywords in C# 4.0 (NOT reserved, lexed as NAME):
+#
+#   dynamic     — the dynamic type (context keyword, usable as identifier)
+#
+#   Also inherited from C# 3.0:
+#   var, from, select, where, group, into, orderby, ascending, descending,
+#   join, on, equals, let, by
+#
+#   And from C# 2.0:
+#   partial, global, yield (yield is reserved), get, set, add, remove,
+#   value, alias
+#
+# The `dynamic` keyword is unusual: in C# 4.0, you CAN have a field, local
+# variable, or type named `dynamic`. The compiler treats it as the dynamic
+# type only when it appears in a type position:
+#
+#   dynamic x = 5;         // `dynamic` as a type
+#   class dynamic { }      // legal — `dynamic` as a class name (confusing!)
+#
+# In practice, almost no code uses `dynamic` as an identifier name, because
+# it would be incredibly confusing. But the language spec allows it.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Unchanged from C# 3.0. C# 4.0 adds no new numeric literal forms.
+# Binary literals (0b...) and digit separators (_) arrive in C# 7.0.
+
+HEX_ULONG      = /0[xX][0-9a-fA-F]+([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG       = /0[xX][0-9a-fA-F]+[lL]/ -> NUMBER
+HEX_UINT       = /0[xX][0-9a-fA-F]+[uU]/ -> NUMBER
+HEX_NUMBER     = /0[xX][0-9a-fA-F]+/ -> NUMBER
+DECIMAL_FLOAT  = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER     = /[0-9]+[eE][+-]?[0-9]+[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER   = /[0-9]+([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER    = /[0-9]+[lL]/ -> NUMBER
+UINT_NUMBER    = /[0-9]+[uU]/ -> NUMBER
+FLOAT_SUFFIX   = /[0-9]+[fFdDmM]/ -> NUMBER
+INT_NUMBER     = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Unchanged from C# 3.0. String interpolation ($"...") arrives in C# 6.0.
+
+STRING         = /"([^"\\]|\\.)*"/
+VERBATIM_STRING = /@"([^"]|"")*"/
+CHAR           = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 4.0 adds NO new operators. The operator set is identical to C# 3.0.
+#
+# Accumulated operators through C# 4.0:
+#
+#   C# 1.0: == != <= >= && || ++ -- += -= *= /= %= &= |= ^= <<= >>= << >>
+#           -> (pointer member access)
+#   C# 2.0: ?? (null coalescing), :: (namespace alias qualifier)
+#   C# 3.0: => (lambda fat arrow)
+#   C# 4.0: (none new)
+#
+# Named arguments use COLON (existing), e.g.: Method(name: "Alice")
+# Optional parameters use EQUALS (existing), e.g.: void F(int x = 0)
+# Variance keywords (in, out) are existing reserved keywords in new positions.
+#
+# IMPORTANT: LAMBDA (=>) still must come before EQUALS (=) to prevent
+# "=>" from being lexed as two separate tokens.
+
+LAMBDA               = "=>"
+COLON_COLON          = "::"
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+QUESTION_QUESTION    = "??"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# Unchanged from C# 3.0.
+#
+# C# 4.0 does NOT have:
+#   - The ?. null-conditional operator (added in C# 6.0)
+#   - The .. range operator (added in C# 8.0)
+#   - The >>> unsigned right shift (added in C# 11.0)
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Unchanged from C# 3.0.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 4.0 adds NO new reserved keywords. Like C# 3.0, all new features use
+# context keywords (NAME tokens).
+#
+# `dynamic` is the new context keyword in C# 4.0. It is NOT in this list.
+# The lexer emits it as a NAME token; the parser recognizes it in type
+# positions.
+#
+# A note on `in` and `out` in variance annotations:
+#
+#   `in` is already a RESERVED keyword (used in foreach: foreach (x IN ...))
+#   `out` is already a RESERVED keyword (for `out` parameters)
+#
+#   In C# 4.0, both are REUSED in type parameter position for variance:
+#   interface IEnumerable<out T> { }  // `out` here = covariant
+#   interface IComparer<in T> { }     // `in` here = contravariant
+#
+#   This reuse is legal because the syntactic position is unambiguous:
+#   inside a type parameter list (after <), `in` and `out` cannot be
+#   the start of a statement or the start of a parameter declaration.
+#
+# Reserved keyword count: 78 (same as C# 2.0 and 3.0 — no change in 4.0)
+
+keywords:
+  abstract
+  as
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+  yield
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 3.0. C# 4.0 adds no new comment forms.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# Unchanged from C# 3.0. C# 4.0 adds no new preprocessor directives.
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/
