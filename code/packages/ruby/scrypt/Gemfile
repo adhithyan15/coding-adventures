@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# Transitive dependencies of coding_adventures_hmac must be declared here
+# with local path references so Bundler can resolve them without hitting
+# RubyGems (these gems only exist in the monorepo).
+gem "coding_adventures_md5",    path: "../md5"
+gem "coding_adventures_sha1",   path: "../sha1"
+gem "coding_adventures_sha256", path: "../sha256"
+gem "coding_adventures_sha512", path: "../sha512"
+gem "coding_adventures_hmac",   path: "../hmac"
+gem "coding_adventures_pbkdf2", path: "../pbkdf2"
+
+gemspec

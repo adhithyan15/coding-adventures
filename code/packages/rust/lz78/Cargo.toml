@@ -1,0 +1,5 @@
+[package]
+name = "lz78"
+version = "0.1.0"
+edition = "2021"
+description = "LZ78 lossless compression algorithm (1978) — CMP01"

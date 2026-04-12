@@ -209,6 +209,14 @@ sub _build_rules {
     for my $defn ( @{ $grammar->skip_definitions } ) {
         my $pat;
         if ( $defn->is_regex ) {
+            # Security: reject patterns containing Perl code-execution constructs.
+            # (?{ ... }) and (??{ ... }) allow arbitrary Perl code to run inside
+            # a regex match. Die early rather than silently execute injected code.
+            # Fixed: 2026-04-10 security review.
+            my $raw_pat = $defn->pattern;
+            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+                die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
+            }
             $pat = qr/\G(?:${\$defn->pattern})/s;
         } else {
             my $lit = $defn->pattern;
@@ -221,6 +229,14 @@ sub _build_rules {
     for my $defn ( @{ $grammar->definitions } ) {
         my $pat;
         if ( $defn->is_regex ) {
+            # Security: reject patterns containing Perl code-execution constructs.
+            # (?{ ... }) and (??{ ... }) allow arbitrary Perl code to run inside
+            # a regex match. Die early rather than silently execute injected code.
+            # Fixed: 2026-04-10 security review.
+            my $raw_pat = $defn->pattern;
+            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+                die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
+            }
             $pat = qr/\G(?:${\$defn->pattern})/s;
         } else {
             my $lit = $defn->pattern;

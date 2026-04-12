@@ -9,10 +9,16 @@ description = {
 }
 dependencies = {
     "lua >= 5.4",
+    "coding-adventures-grammar-tools >= 0.1.0",
+    "coding-adventures-lexer >= 0.1.0",
+    "coding-adventures-state-machine >= 0.1.0",
+    "coding-adventures-directed-graph >= 0.1.0",
 }
 build = {
     type = "builtin",
     modules = {
         ["coding_adventures.brainfuck"] = "src/coding_adventures/brainfuck/init.lua",
+        ["coding_adventures.brainfuck.lexer"] = "src/coding_adventures/brainfuck/lexer.lua",
+        ["coding_adventures.brainfuck.parser"] = "src/coding_adventures/brainfuck/parser.lua",
     },
 }

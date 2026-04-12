@@ -20,6 +20,9 @@ Gem::Specification.new do |spec|
     "rubygems_mfa_required" => "true"
   }
   spec.add_dependency "coding_adventures_virtual_machine", "~> 0.1"
+  spec.add_dependency "coding_adventures_grammar_tools", "~> 0.1"
+  spec.add_dependency "coding_adventures_lexer", "~> 0.1"
+  spec.add_dependency "coding_adventures_parser", "~> 0.1"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "simplecov", "~> 0.22"
   spec.add_development_dependency "rake", "~> 13.0"

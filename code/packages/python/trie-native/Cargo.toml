@@ -1,0 +1,15 @@
+[package]
+name = "trie-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust trie crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "trie_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+python-bridge = { path = "../../rust/python-bridge" }
+trie = { path = "../../rust/trie" }
+
+[workspace]

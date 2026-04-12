@@ -134,20 +134,6 @@ local function get_script_dir()
     -- path handling (on Linux/macOS this is a no-op).
     src = src:gsub("\\", "/")
     local dir = src:match("(.+)/[^/]+$") or "."
-    if dir:sub(1, 1) ~= "/" and dir:sub(2, 2) ~= ":" then
-        local is_win = package.config:sub(1, 1) == "\\"
-        local f
-        if is_win then
-            f = io.popen('cd /d "' .. dir:gsub("/", "\\") .. '" 2>nul && cd')
-        else
-            f = io.popen("cd '" .. dir .. "' 2>/dev/null && pwd")
-        end
-        local resolved = f and f:read("*l")
-        if f then f:close() end
-        if resolved and resolved ~= "" then
-            return (resolved:gsub("\\", "/"):gsub("%c+$", ""))
-        end
-    end
     return dir
 end
 
@@ -158,7 +144,7 @@ end
 local function up(path, levels)
     local result = path
     for _ = 1, levels do
-        result = dirname(result)
+        result = result .. "/.."
     end
     return result
 end

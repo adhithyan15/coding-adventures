@@ -2,6 +2,18 @@
 
 All notable changes to the Brainfuck interpreter (Go) package.
 
+## [0.3.0] - 2026-04-10
+
+### Added
+
+- `lexer.go`: `Lexer` struct and `Tokenize(source string) []Token` function. Grammar-driven tokenizer using `brainfuck.tokens`. Each token carries `Type`, `Value`, `Line`, and `Column` fields for precise source location. Comment characters are silently skipped.
+- `parser.go`: `Parser` struct and `Parse(source string) *ASTNode` function. Grammar-driven parser using `brainfuck.grammar`. Returns an AST rooted at a `program` node with `instruction`, `loop`, and `command` child nodes. Emits precise source-location errors for unmatched brackets.
+- `_tokens_grammar.go`: Embedded `brainfuck.tokens` grammar file (shared across all language implementations).
+- `_parser_grammar.go`: Embedded `brainfuck.grammar` grammar file (shared across all language implementations).
+- New dependencies: `grammar-tools`, `lexer`, and `parser` packages from the coding-adventures stack.
+- `lexer_test.go`: Extensive tests for tokenization — command tokens, comment skipping, multi-line source, empty input, and token position tracking.
+- `parser_test.go`: Extensive tests for AST construction — simple programs, nested loops, loop skip/execute paths, unmatched bracket errors with line/column reporting.
+
 ## [0.2.1] - 2026-04-02
 
 ### Fixed

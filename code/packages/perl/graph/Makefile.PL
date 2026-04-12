@@ -5,12 +5,11 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME             => 'CodingAdventures::Graph',
     VERSION_FROM     => 'lib/CodingAdventures/Graph.pm',
-    ABSTRACT         => 'Undirected graph data structure from scratch',
+    ABSTRACT         => 'Pure-Perl undirected weighted graph implementation',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
-    PREREQ_PM        => {
-    },
+    PREREQ_PM        => {},
     TEST_REQUIRES    => {
         'Test2::V0' => 0,
     },

@@ -1,41 +1,28 @@
 # coding_adventures_graph
 
-An undirected graph data structure implementation from scratch.
+DT00 graph for Ruby.
 
-## Where it fits in the stack
+This gem provides an undirected weighted graph with adjacency-list and
+adjacency-matrix backends plus BFS, DFS, connectivity checks, shortest path,
+connected components, cycle detection, and minimum spanning tree.
 
-This package provides a foundational undirected graph data structure for use across the coding-adventures project.
+## Usage
 
-## Installation
+```ruby
+require "coding_adventures_graph"
 
-```bash
-gem install coding_adventures_graph
+graph = CodingAdventures::Graph::Graph.new
+graph.add_edge("London", "Paris", 300.0)
+graph.add_edge("London", "Amsterdam", 520.0)
+graph.add_edge("Amsterdam", "Berlin", 655.0)
+
+CodingAdventures::Graph.bfs(graph, "London")
+CodingAdventures::Graph.shortest_path(graph, "London", "Berlin")
 ```
 
-For development:
+## Development
 
 ```bash
 bundle install
 bundle exec rake test
 ```
-
-## Quick Start
-
-```ruby
-require "coding_adventures_graph"
-
-g = CodingAdventures::Graph::Graph.new
-g.add_edge("A", "B")
-g.add_edge("B", "C")
-
-puts g.nodes    # ["A", "B", "C"]
-puts g.edges    # [["A", "B"], ["B", "C"]]
-```
-
-## Running Tests
-
-```bash
-bundle exec rake test
-```
-
-Tests require 95%+ coverage.

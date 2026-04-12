@@ -1,0 +1,9 @@
+[package]
+name = "hash-map"
+version = "0.1.0"
+edition = "2021"
+description = "Hash map with chaining and open addressing collision strategies"
+license = "MIT"
+
+[dependencies]
+coding_adventures_hash_functions = { path = "../hash-functions" }

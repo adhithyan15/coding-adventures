@@ -1,0 +1,13 @@
+[package]
+name = "coding_adventures_scrypt"
+version = "0.1.0"
+edition = "2021"
+description = "scrypt password-based key derivation function (RFC 7914)"
+license = "MIT"
+authors = ["Adhithya Rajasekaran"]
+
+[dependencies]
+coding_adventures_pbkdf2 = { path = "../pbkdf2" }
+
+[dev-dependencies]
+hex = "0.4"

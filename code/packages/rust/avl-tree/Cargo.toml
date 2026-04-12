@@ -1,0 +1,8 @@
+[package]
+name = "avl-tree"
+version = "0.1.0"
+edition = "2021"
+description = "AVL tree with functional insert/delete helpers and balance validation"
+license = "MIT"
+
+[dependencies]

@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.name          = "coding_adventures_graph"
   spec.version       = CodingAdventures::Graph::VERSION
   spec.authors       = ["Adhithya Rajasekaran"]
-  spec.summary       = "Undirected graph data structure from scratch"
-  spec.description   = "An undirected graph library implementation from scratch."
+  spec.summary       = "Undirected weighted graph with BFS, DFS, shortest path, and MST"
+  spec.description   = "DT00 graph for Ruby with adjacency-list and adjacency-matrix representations plus classic graph algorithms."
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
@@ -17,7 +17,6 @@ Gem::Specification.new do |spec|
     "source_code_uri" => "https://github.com/adhithyan15/coding-adventures",
     "rubygems_mfa_required" => "true"
   }
-  # Development dependencies
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "simplecov", "~> 0.22"
   spec.add_development_dependency "rake", "~> 13.0"

@@ -1,0 +1,8 @@
+[package]
+name = "binary-search-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Binary search tree with functional insert/delete helpers and order statistics"
+license = "MIT"
+
+[dependencies]

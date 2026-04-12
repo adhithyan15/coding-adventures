@@ -2,4 +2,7 @@
 name = "graph"
 version = "0.1.0"
 edition = "2021"
-description = "Undirected graph data structure from scratch"
+description = "Weighted undirected graph with adjacency-list and adjacency-matrix representations"
+license = "MIT"
+
+[dependencies]

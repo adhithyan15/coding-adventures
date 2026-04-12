@@ -1,16 +1,10 @@
-/**
- * Undirected Graph Library
- *
- * An undirected graph implementation from scratch.
- */
-
-export { Graph, GraphRepr } from "./graph";
+export { Graph, GraphRepr, compareNodes, type WeightedEdge } from "./graph.js";
 export {
   bfs,
-  dfs,
-  isConnected,
   connectedComponents,
+  dfs,
   hasCycle,
-  shortestPath,
+  isConnected,
   minimumSpanningTree,
-} from "./algorithms";
+  shortestPath,
+} from "./algorithms.js";

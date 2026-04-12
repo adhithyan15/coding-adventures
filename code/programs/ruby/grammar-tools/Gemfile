@@ -7,6 +7,7 @@ gem "coding_adventures_grammar_tools", path: "../../../packages/ruby/grammar_too
 
 # CLI Builder and its transitive dependencies.
 gem "coding_adventures_cli_builder",  path: "../../../packages/ruby/cli_builder"
+gem "coding_adventures_graph",         path: "../../../packages/ruby/graph"
 gem "coding_adventures_state_machine", path: "../../../packages/ruby/state_machine"
 gem "coding_adventures_directed_graph", path: "../../../packages/ruby/directed_graph"
 

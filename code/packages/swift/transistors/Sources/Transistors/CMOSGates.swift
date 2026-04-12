@@ -409,7 +409,7 @@ public struct CMOSXor {
     public var circuit: CircuitParams { nand1.circuit }
 
     public func evaluate(va: Double, vb: Double) -> GateOutput {
-        let vdd = circuit.vdd
+
         // Build XOR from NAND: XOR(A,B) = NAND(NAND(A, NAND(A,B)), NAND(B, NAND(A,B)))
         let abNand = nand1.evaluate(va: va, vb: vb)
         let v_ab = abNand.voltage

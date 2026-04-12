@@ -1,9 +1,7 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## 0.1.0
 
-## [0.1.0] - 2026-04-09
-
-### Added
-
-- Initial release
+- Add the initial DT00 graph package for Ruby.
+- Provide adjacency-list and adjacency-matrix graph representations.
+- Provide BFS, DFS, connectivity, cycle detection, shortest path, and minimum spanning tree.

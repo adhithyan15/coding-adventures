@@ -1,0 +1,8 @@
+[package]
+name = "b-plus-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Ordered B+ tree-style map with range scans and iteration"
+license = "MIT"
+
+[dependencies]

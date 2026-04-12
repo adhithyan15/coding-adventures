@@ -1543,3 +1543,59 @@ headers explicitly. Never use `[^[]*?` in a cross-line regex over TOML content.
 This bug caused a mass incorrect categorization of 54 packages that had
 `coding-adventures-directed-graph` as a real main dependency as "dev-only",
 leading to three rounds of CI failures and fixes on PR #610.
+
+---
+
+## Don't commit Elixir coverage HTML artifacts
+
+When `mix test --cover` runs it generates a `cover/` directory containing HTML
+coverage reports (e.g. `cover/Elixir.CodingAdventures.Scrypt.html`). These are
+build artifacts and must **not** be committed.
+
+**Fix:** Always add a `.gitignore` to every new Elixir package before running
+tests locally. Minimum contents:
+
+```
+cover/
+_build/
+deps/
+.elixir_ls/
+```
+
+When staging files with `git add`, never use `git add .` or `git add -A` on an
+Elixir package directory — always stage files explicitly by path to avoid
+accidentally including the `cover/` output. If caught after the fact, use
+`git rm --cached cover/<file>` to remove from tracking.
+
+---
+
+### 2026-04-11: Lua `^` operator returns float — use `<<` for integer powers of 2 in tests
+
+In Lua 5.4, the `^` operator always returns a **float**, even for integer operands.
+`2^24` evaluates to `16777216.0` (a float), not `16777216` (an integer).
+
+Any parameter validation that uses `math.type(x) ~= "integer"` will reject float values
+before reaching later guards. This caused a test failure where `scrypt.scrypt("pw", "salt", 2, 1, 2^24, 32)` triggered "p must be a positive integer" instead of the expected "p * 128 * r exceeds memory limit" — because `2^24` was a float that failed the type check.
+
+**Rule:** In Lua tests that pass powers of 2 as integer parameters, use the bitwise left shift
+`1 << 24` instead of `2^24`. Bitwise operations in Lua 5.4 always return integers.
+
+```lua
+-- WRONG: 2^24 is a float in Lua
+scrypt.scrypt("pw", "salt", 2, 1, 2^24, 32)
+
+-- CORRECT: 1<<24 is an integer in Lua 5.4
+scrypt.scrypt("pw", "salt", 2, 1 << 24, 1, 32)
+```
+
+---
+
+### 2026-04-11: Swift `let bLen` redeclaration after adding overflow-safe guard
+
+When adding an overflow-safe `multipliedReportingOverflow` guard for `bLen` in Swift,
+the new `let (bLen, ...)` declaration introduced before the original `let bLen = p * 128 * r`
+caused a "invalid redeclaration of 'bLen'" compile error.
+
+**Rule:** When replacing a `let x = expr` with an overflow-checked version that also binds `x`,
+always remove the original `let x` line. The compiler will catch both declarations at the same
+scope level.

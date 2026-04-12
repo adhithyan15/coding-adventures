@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "hash-map-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust hash-map crate via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+hash-map = { path = "../../rust/hash-map" }
+js-sys = "0.3"
+wasm-bindgen = "0.2"

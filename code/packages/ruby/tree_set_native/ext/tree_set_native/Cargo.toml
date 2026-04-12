@@ -1,0 +1,14 @@
+[workspace]
+
+[package]
+name = "tree-set-native-ruby"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "tree_set_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
+tree-set = { path = "../../../../rust/tree-set" }
