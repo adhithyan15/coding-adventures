@@ -1,2 +1,2 @@
-# depends on: ../sha1
+: ../sha1
 echo Perl testing is not supported on Windows - skipping
