@@ -215,11 +215,11 @@ export function divide(a: GF256, b: GF256): GF256 {
  *   0^0 = 1 by convention (consistent with most numeric libraries)
  *   0^n = 0 for n > 0
  *
- * Note: For very large `exp`, the computation `LOG[base] * exp` may
- * overflow a 32-bit integer if exp > 2^23. Use modular arithmetic on
- * exp first if very large exponents are needed.
  */
 export function power(base: GF256, exp: number): GF256 {
+  if (!Number.isInteger(exp) || exp < 0) {
+    throw new Error("GF256: exponent must be a non-negative integer");
+  }
   if (base === 0) return exp === 0 ? 1 : 0;
   if (exp === 0) return 1;
   return _ALOG[((_LOG[base] * exp) % 255 + 255) % 255];
@@ -257,4 +257,124 @@ export function zero(): GF256 {
  */
 export function one(): GF256 {
   return 1;
+}
+
+// =============================================================================
+// GF256Field — parameterizable field factory
+// =============================================================================
+//
+// The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses the polynomial 0x11B. `createField` builds an independent field
+// object for any primitive polynomial, reusing the same algorithm.
+//
+// Usage:
+//   const aes = createField(0x11B);
+//   aes.multiply(0x53, 0xCA);  // → 1  (AES GF(2^8) inverses)
+
+/**
+ * A GF(2^8) field configured for a specific primitive polynomial.
+ *
+ * Instances are created via `createField`. All operations are O(1) table lookups.
+ */
+export interface GF256FieldInstance {
+  readonly polynomial: number;
+  add(a: GF256, b: GF256): GF256;
+  subtract(a: GF256, b: GF256): GF256;
+  multiply(a: GF256, b: GF256): GF256;
+  divide(a: GF256, b: GF256): GF256;
+  power(base: GF256, exp: number): GF256;
+  inverse(a: GF256): GF256;
+}
+
+/**
+ * Create a GF(2^8) field for the given primitive polynomial.
+ *
+ * The module-level functions are fixed to the Reed-Solomon polynomial `0x11D`.
+ * Use `createField(0x11B)` for the AES polynomial.
+ *
+ * @param polynomial The irreducible polynomial as an integer with the degree-8
+ *   term included: `0x11B` for AES, `0x11D` for Reed-Solomon.
+ * @returns An object with the same API as the module-level functions, but using
+ *   tables built for `polynomial`.
+ *
+ * @example
+ * ```ts
+ * const aes = createField(0x11B);
+ * aes.multiply(0x53, 0xCA);  // → 1   (AES GF(2^8) inverses)
+ * aes.multiply(0x57, 0x83);  // → 0xC1  (FIPS 197 Appendix B)
+ * ```
+ */
+export function createField(polynomial: number): GF256FieldInstance {
+  // Russian peasant (shift-and-XOR) multiplication for GF(2^8).
+  //
+  // Log/antilog tables require a *primitive* generator g such that g^1..g^255
+  // visits all 255 non-zero elements. g=2 works for 0x11D (Reed-Solomon) but
+  // is NOT primitive for 0x11B (AES uses g=0x03 per FIPS 197 §4.1). Using
+  // g=2 with 0x11B leaves most log entries at 0, producing wrong results.
+  //
+  // Russian peasant multiplication needs no generator assumption:
+  //   for each bit of b (LSB first):
+  //     if bit set: result ^= a
+  //     carry = a & 0x80; a = (a << 1) & 0xFF
+  //     if carry: a ^= reduce   (reduce = polynomial & 0xFF = low-byte constant)
+  const reduce = polynomial & 0xFF;
+
+  function gfMul(a: GF256, b: GF256): GF256 {
+    let result = 0;
+    let aa = a;
+    let bb = b;
+    for (let i = 0; i < 8; i++) {
+      if (bb & 1) result ^= aa;
+      const hi = aa & 0x80;
+      aa = (aa << 1) & 0xFF;
+      if (hi) aa ^= reduce;
+      bb >>= 1;
+    }
+    return result;
+  }
+
+  // Raise base to exp via repeated squaring.
+  // inverse(a) = power(a, 254) since a^255 = 1 in GF(2^8).
+  function gfPow(base: GF256, exp: number): GF256 {
+    if (base === 0) return exp === 0 ? 1 : 0;
+    if (exp === 0) return 1;
+    let result = 1;
+    let b = base;
+    let e = exp;
+    while (e > 0) {
+      if (e & 1) result = gfMul(result, b);
+      b = gfMul(b, b);
+      e >>= 1;
+    }
+    return result;
+  }
+
+  return {
+    polynomial,
+
+    // add/subtract are polynomial-independent (always XOR); included for symmetry.
+    add(a: GF256, b: GF256): GF256 { return a ^ b; },
+    subtract(a: GF256, b: GF256): GF256 { return a ^ b; },
+
+    multiply(a: GF256, b: GF256): GF256 {
+      return gfMul(a, b);
+    },
+
+    divide(a: GF256, b: GF256): GF256 {
+      if (b === 0) throw new Error("GF256Field: division by zero");
+      return gfMul(a, gfPow(b, 254));
+    },
+
+    power(base: GF256, exp: number): GF256 {
+      if (!Number.isInteger(exp) || exp < 0) {
+        throw new Error("GF256Field: exponent must be a non-negative integer");
+      }
+      return gfPow(base, exp);
+    },
+
+    inverse(a: GF256): GF256 {
+      if (a === 0) throw new Error("GF256Field: zero has no multiplicative inverse");
+      return gfPow(a, 254);
+    },
+  };
 }

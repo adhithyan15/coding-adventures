@@ -14,6 +14,7 @@ import {
   inverse,
   zero,
   one,
+  createField,
 } from "../src/index.js";
 
 // =============================================================================
@@ -380,5 +381,76 @@ describe("one()", () => {
   it("is multiplicative identity", () => {
     expect(multiply(one(), 0x42)).toBe(0x42);
     expect(multiply(0x42, one())).toBe(0x42);
+  });
+});
+
+// =============================================================================
+// createField — parameterizable field factory
+// =============================================================================
+
+describe("createField", () => {
+  describe("AES field (0x11B)", () => {
+    const aes = createField(0x11B);
+
+    it("multiply(0x53, 0xCA) = 1 — AES GF(2^8) inverses", () => {
+      expect(aes.multiply(0x53, 0xCA)).toBe(0x01);
+    });
+
+    it("multiply(0x57, 0x83) = 0xC1 — FIPS 197 Appendix B", () => {
+      expect(aes.multiply(0x57, 0x83)).toBe(0xC1);
+    });
+
+    it("inverse(0x53) = 0xCA", () => {
+      expect(aes.inverse(0x53)).toBe(0xCA);
+    });
+
+    it("multiply(a, inverse(a)) = 1 for a in 1..20", () => {
+      for (let a = 1; a <= 20; a++) {
+        expect(aes.multiply(a, aes.inverse(a))).toBe(1);
+      }
+    });
+
+    it("commutativity", () => {
+      const vals = [0, 1, 0x53, 0xCA, 0xFF];
+      for (const a of vals) {
+        for (const b of vals) {
+          expect(aes.multiply(a, b)).toBe(aes.multiply(b, a));
+        }
+      }
+    });
+
+    it("add is XOR (polynomial-independent)", () => {
+      expect(aes.add(0x53, 0xCA)).toBe(0x53 ^ 0xCA);
+    });
+
+    it("divide by zero throws", () => {
+      expect(() => aes.divide(5, 0)).toThrow("GF256Field: division by zero");
+    });
+
+    it("inverse of zero throws", () => {
+      expect(() => aes.inverse(0)).toThrow("GF256Field: zero has no multiplicative inverse");
+    });
+
+    it("polynomial property is stored", () => {
+      expect(aes.polynomial).toBe(0x11B);
+    });
+  });
+
+  describe("RS field (0x11D) matches module-level functions", () => {
+    const rs = createField(0x11D);
+
+    it("multiply matches module multiply for sample values", () => {
+      for (let a = 0; a < 16; a++) {
+        for (let b = 0; b < 16; b++) {
+          expect(rs.multiply(a, b)).toBe(multiply(a, b));
+        }
+      }
+    });
+
+    it("inverse matches module inverse for sample values", () => {
+      for (let a = 1; a <= 16; a++) {
+        expect(rs.inverse(a)).toBe(inverse(a));
+      }
+    });
   });
 });
