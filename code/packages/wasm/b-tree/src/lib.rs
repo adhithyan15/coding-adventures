@@ -59,11 +59,21 @@ impl WasmBTree {
 
     #[wasm_bindgen(js_name = "rangeQuery")]
     pub fn range_query(&self, low: i32, high: i32) -> Array {
-        entries_array(self.inner.range_query(&low, &high))
+        entries_array(
+            self.inner
+                .range_query(&low, &high)
+                .into_iter()
+                .map(|(&k, v)| (k, v.clone())),
+        )
     }
 
     pub fn inorder(&self) -> Array {
-        entries_array(self.inner.inorder())
+        entries_array(
+            self.inner
+                .inorder()
+                .into_iter()
+                .map(|(&k, v)| (k, v.clone())),
+        )
     }
 
     pub fn len(&self) -> usize {
@@ -85,7 +95,7 @@ impl WasmBTree {
 
     #[wasm_bindgen(js_name = "toString")]
     pub fn to_string_value(&self) -> String {
-        self.inner.to_string()
+        format!("BTree {{ len: {}, height: {} }}", self.inner.len(), self.inner.height())
     }
 }
 
