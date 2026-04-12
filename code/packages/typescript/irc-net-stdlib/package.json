@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/irc-net-stdlib",
+  "version": "0.1.0",
+  "description": "Node.js net-module IRC event loop — TCP connections, lifecycle callbacks, no protocol knowledge",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "irc",
+    "network",
+    "tcp",
+    "event-loop",
+    "nodejs",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
