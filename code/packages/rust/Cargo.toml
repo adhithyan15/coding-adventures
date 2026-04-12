@@ -22,6 +22,7 @@ members = [
     "brainfuck",
     "branch-predictor",
     "bytecode-compiler",
+    "cas",
     "cpu-cache",
     "cli-builder",
     "clock",
