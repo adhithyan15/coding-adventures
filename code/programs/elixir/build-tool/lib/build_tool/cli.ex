@@ -43,6 +43,8 @@ defmodule BuildTool.CLI do
   alias BuildTool.{Cache, Discovery, DirectedGraph, Executor, GitDiff, Hasher, Plan, Reporter, Resolver, StarlarkEvaluator, Validator}
   alias CodingAdventures.ProgressBar
 
+  @all_toolchains ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"]
+
   # ---------------------------------------------------------------------------
   # Entry point
   # ---------------------------------------------------------------------------
@@ -78,6 +80,7 @@ defmodule BuildTool.CLI do
           diff_base: :string,
           cache_file: :string,
           validate_build_files: :boolean,
+          detect_languages: :boolean,
           emit_plan: :string,
           plan_file: :string
         ],
@@ -98,6 +101,7 @@ defmodule BuildTool.CLI do
     diff_base = Keyword.get(opts, :diff_base, "origin/main")
     cache_file = Keyword.get(opts, :cache_file, ".build-cache.json")
     validate_build_files = Keyword.get(opts, :validate_build_files, false)
+    detect_languages = Keyword.get(opts, :detect_languages, false)
     emit_plan_path = Keyword.get(opts, :emit_plan, nil)
     plan_file_path = Keyword.get(opts, :plan_file, nil)
 
@@ -116,12 +120,12 @@ defmodule BuildTool.CLI do
     else
       do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
         validate_build_files,
-        emit_plan_path, plan_file_path)
+        detect_languages, emit_plan_path, plan_file_path)
     end
   end
 
   defp do_build(repo_root, force, dry_run, jobs, language, diff_base, cache_file,
-               validate_build_files, emit_plan_path, plan_file_path) do
+               validate_build_files, detect_languages, emit_plan_path, plan_file_path) do
     # The build starts from the code/ directory inside the repo root.
     code_root = Path.join(repo_root, "code")
 
@@ -160,7 +164,7 @@ defmodule BuildTool.CLI do
             case Validator.validate_build_contracts(repo_root, packages) do
               nil ->
                 do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-                  cache_file, emit_plan_path, plan_file_path)
+                  cache_file, detect_languages, emit_plan_path, plan_file_path)
 
               validation_error ->
                 IO.puts(:stderr, "BUILD/CI validation failed:")
@@ -173,14 +177,14 @@ defmodule BuildTool.CLI do
             end
           else
             do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-              cache_file, emit_plan_path, plan_file_path)
+              cache_file, detect_languages, emit_plan_path, plan_file_path)
           end
       end
     end
   end
 
   defp do_build_packages(packages, repo_root, force, dry_run, jobs, diff_base,
-                         cache_file, emit_plan_path, _plan_file_path) do
+                         cache_file, detect_languages, emit_plan_path, _plan_file_path) do
     IO.puts("Discovered #{length(packages)} packages")
 
     # Step 4: Resolve dependencies.
@@ -226,10 +230,16 @@ defmodule BuildTool.CLI do
     # --emit-plan: write the build plan to a file and exit without building.
     # This is used by CI to compute the plan in a fast "detect" job and
     # share it across build jobs on multiple platforms.
-    if emit_plan_path != nil do
+    cond do
+      detect_languages ->
+        languages_needed = compute_languages_needed(packages, affected_set, force_override)
+        output_language_flags(languages_needed)
+
+      emit_plan_path != nil ->
       return_emit_plan(packages, graph, repo_root, diff_base, force_override, affected_set,
         emit_plan_path)
-    else
+
+      true ->
       do_execute_builds(packages, graph, repo_root, force_override, dry_run, jobs, diff_base,
         cache_file, affected_set)
     end
@@ -279,11 +289,7 @@ defmodule BuildTool.CLI do
       |> Enum.sort()
 
     # Determine which languages are needed.
-    langs_needed =
-      packages
-      |> Enum.map(& &1.language)
-      |> Enum.uniq()
-      |> Map.new(fn lang -> {lang, true} end)
+    langs_needed = compute_languages_needed(packages, affected_set, force)
 
     plan = %Plan{
       diff_base: diff_base,
@@ -446,6 +452,50 @@ defmodule BuildTool.CLI do
         do_find_repo_root(parent)
       end
     end
+  end
+
+  defp compute_languages_needed(_packages, _affected_set, true) do
+    Map.new(@all_toolchains, fn toolchain -> {toolchain, true} end)
+  end
+
+  defp compute_languages_needed(_packages, nil, _force) do
+    Map.new(@all_toolchains, fn toolchain -> {toolchain, true} end)
+    |> Map.put("go", true)
+  end
+
+  defp compute_languages_needed(packages, affected_set, _force) do
+    Enum.reduce(packages, Map.new(@all_toolchains, fn toolchain -> {toolchain, false} end), fn pkg, acc ->
+      if MapSet.member?(affected_set, pkg.name) do
+        Map.put(acc, toolchain_for_language(pkg.language), true)
+      else
+        acc
+      end
+    end)
+    |> Map.put("go", true)
+  end
+
+  defp toolchain_for_language(language) do
+    case language do
+      "wasm" -> "rust"
+      lang when lang in ["csharp", "fsharp", "dotnet"] -> "dotnet"
+      _ -> language
+    end
+  end
+
+  defp output_language_flags(languages_needed) do
+    github_output = System.get_env("GITHUB_OUTPUT")
+
+    Enum.each(@all_toolchains, fn toolchain ->
+      value = Map.get(languages_needed, toolchain, false)
+      line = "needs_#{toolchain}=#{if value, do: "true", else: "false"}"
+      IO.puts(line)
+
+      if github_output not in [nil, ""] do
+        File.write!(github_output, line <> "\n", [:append])
+      end
+    end)
+
+    0
   end
 
 end

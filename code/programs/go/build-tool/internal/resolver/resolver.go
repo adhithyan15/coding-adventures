@@ -343,6 +343,28 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 	return internalDeps
 }
 
+func dependencyScope(language string) string {
+	switch language {
+	case "csharp", "fsharp", "dotnet":
+		return "dotnet"
+	case "wasm":
+		return "wasm"
+	default:
+		return language
+	}
+}
+
+func inDependencyScope(packageLanguage, scope string) bool {
+	switch scope {
+	case "dotnet":
+		return packageLanguage == "csharp" || packageLanguage == "fsharp" || packageLanguage == "dotnet"
+	case "wasm":
+		return packageLanguage == "wasm" || packageLanguage == "rust"
+	default:
+		return packageLanguage == scope
+	}
+}
+
 // parseElixirDeps extracts internal dependencies from an Elixir mix.exs file.
 //
 // Elixir mix.exs declares internal path dependencies usually like:
@@ -782,7 +804,7 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 	}
 
 	for _, pkg := range packages {
-		if language != "" && pkg.Language != language {
+		if language != "" && !inDependencyScope(pkg.Language, language) {
 			continue
 		}
 		switch pkg.Language {
@@ -833,6 +855,16 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// "logic-gates" → "logic-gates"
 			crateName := strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(crateName, pkg.Name, pkg.Path)
+			if cargoName := readCargoPackageName(pkg.Path); cargoName != "" {
+				setKnown(cargoName, pkg.Name, pkg.Path)
+			}
+
+		case "wasm":
+			crateName := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(crateName, pkg.Name, pkg.Path)
+			if cargoName := readCargoPackageName(pkg.Path); cargoName != "" {
+				setKnown(cargoName, pkg.Name, pkg.Path)
+			}
 
 		case "elixir":
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
@@ -883,7 +915,7 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
 			setKnown(dirBase, pkg.Name, pkg.Path)
 
-		case "dotnet":
+		case "dotnet", "csharp", "fsharp":
 			// .NET (C#/F#) packages use MSBuild ProjectReference elements, which
 			// reference sibling directories by name. The directory name maps
 			// directly to the NuGet package name by convention in this repo.
@@ -893,6 +925,21 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 	}
 
 	return known
+}
+
+func readCargoPackageName(pkgPath string) string {
+	data, err := os.ReadFile(filepath.Join(pkgPath, "Cargo.toml"))
+	if err != nil {
+		return ""
+	}
+
+	re := regexp.MustCompile(`(?m)^\s*name\s*=\s*"([^"]+)"`)
+	match := re.FindSubmatch(data)
+	if len(match) != 2 {
+		return ""
+	}
+
+	return strings.ToLower(strings.TrimSpace(string(match[1])))
 }
 
 // ResolveDependencies parses package metadata to discover dependencies
@@ -917,7 +964,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 	knownNamesByLanguage := make(map[string]map[string]string)
 	for _, pkg := range packages {
 		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
-			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
+			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, dependencyScope(pkg.Language))
 		}
 	}
 
@@ -936,6 +983,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseTypescriptDeps(pkg, knownNames)
 		case "rust":
 			deps = parseRustDeps(pkg, knownNames)
+		case "wasm":
+			deps = parseRustDeps(pkg, knownNames)
 		case "elixir":
 			deps = parseElixirDeps(pkg, knownNames)
 		case "lua":
@@ -948,7 +997,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseHaskellDeps(pkg, knownNames)
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownNames)
-		case "dotnet":
+		case "dotnet", "csharp", "fsharp":
 			deps = parseDotnetDeps(pkg, knownNames)
 		}
 

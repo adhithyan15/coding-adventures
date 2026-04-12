@@ -7,9 +7,16 @@ public enum Resolver {
             graph.addNode(package.name)
         }
 
-        let knownNames = buildKnownNames(packages: packages)
+        var knownNamesByScope: [String: [String: String]] = [:]
+        for package in packages {
+            let scope = dependencyScope(for: package.language)
+            if knownNamesByScope[scope] == nil {
+                knownNamesByScope[scope] = buildKnownNames(packages: packages, language: scope)
+            }
+        }
 
         for package in packages {
+            let knownNames = knownNamesByScope[dependencyScope(for: package.language)] ?? [:]
             let deps: [String]
             switch package.language {
             case "python":
@@ -20,7 +27,7 @@ public enum Resolver {
                 deps = parseGoDeps(package: package, knownNames: knownNames)
             case "typescript":
                 deps = parseTypeScriptDeps(package: package, knownNames: knownNames)
-            case "rust":
+            case "rust", "wasm":
                 deps = parseRustDeps(package: package, knownNames: knownNames)
             case "elixir":
                 deps = parseElixirDeps(package: package, knownNames: knownNames)
@@ -32,6 +39,8 @@ public enum Resolver {
                 deps = parseSwiftDeps(package: package, knownNames: knownNames)
             case "haskell":
                 deps = parseHaskellDeps(package: package, knownNames: knownNames)
+            case "csharp", "fsharp", "dotnet":
+                deps = parseDotnetDeps(package: package, knownNames: knownNames)
             default:
                 deps = []
             }
@@ -44,7 +53,7 @@ public enum Resolver {
         return graph
     }
 
-    public static func buildKnownNames(packages: [BuildPackage]) -> [String: String] {
+    public static func buildKnownNames(packages: [BuildPackage], language: String? = nil) -> [String: String] {
         var known: [String: String] = [:]
 
         func setKnown(_ key: String, _ value: String, path: String) {
@@ -55,6 +64,9 @@ public enum Resolver {
         }
 
         for package in packages {
+            if let language, !isPackageLanguage(package.language, in: language) {
+                continue
+            }
             let packageDirName = (package.path as NSString).lastPathComponent.lowercased()
             switch package.language {
             case "python":
@@ -81,8 +93,11 @@ public enum Resolver {
                    let match = content.firstMatch(for: #""name"\s*:\s*"([^"]+)""#) {
                     setKnown(match.lowercased(), package.name, path: package.path)
                 }
-            case "rust":
+            case "rust", "wasm":
                 setKnown(packageDirName, package.name, path: package.path)
+                if let cargoName = readCargoPackageName(in: package.path) {
+                    setKnown(cargoName, package.name, path: package.path)
+                }
             case "elixir":
                 let baseName = packageDirName.replacingOccurrences(of: "-", with: "_")
                 setKnown("coding_adventures_\(baseName)", package.name, path: package.path)
@@ -100,6 +115,8 @@ public enum Resolver {
                 setKnown(packageDirName, package.name, path: package.path)
             case "haskell":
                 setKnown("coding-adventures-\(packageDirName.replacingOccurrences(of: "_", with: "-"))", package.name, path: package.path)
+            case "csharp", "fsharp", "dotnet":
+                setKnown(packageDirName, package.name, path: package.path)
             default:
                 break
             }
@@ -128,6 +145,31 @@ public enum Resolver {
             }
             if let packageName = knownNames[depDirectory] {
                 dependencies.append(packageName)
+            }
+        }
+
+        return dependencies
+    }
+
+    private static func parseDotnetDeps(package: BuildPackage, knownNames: [String: String]) -> [String] {
+        let projectFiles = filePaths(in: package.path, suffixes: [".csproj", ".fsproj"])
+        guard !projectFiles.isEmpty else {
+            return []
+        }
+
+        var dependencies: [String] = []
+        for projectFile in projectFiles {
+            guard let content = try? String(contentsOfFile: projectFile, encoding: .utf8) else {
+                continue
+            }
+            for match in content.matches(for: #"<ProjectReference\s+Include\s*=\s*"\.\.[\\/]+([^/\\"]+)[\\/][^"]*""#) {
+                let depDir = match.lowercased()
+                if depDir.contains("/") || depDir.contains("\\") || depDir == ".." {
+                    continue
+                }
+                if let packageName = knownNames[depDir] {
+                    dependencies.append(packageName)
+                }
             }
         }
 
@@ -333,6 +375,46 @@ public enum Resolver {
                 }
                 return pkgName
             }
+    }
+
+    private static func dependencyScope(for language: String) -> String {
+        switch language {
+        case "csharp", "fsharp", "dotnet":
+            return "dotnet"
+        case "wasm":
+            return "wasm"
+        default:
+            return language
+        }
+    }
+
+    private static func isPackageLanguage(_ packageLanguage: String, in scope: String) -> Bool {
+        switch scope {
+        case "dotnet":
+            return ["csharp", "fsharp", "dotnet"].contains(packageLanguage)
+        case "wasm":
+            return ["wasm", "rust"].contains(packageLanguage)
+        default:
+            return packageLanguage == scope
+        }
+    }
+
+    private static func readCargoPackageName(in directory: String) -> String? {
+        let cargoPath = (directory as NSString).appendingPathComponent("Cargo.toml")
+        guard let content = try? String(contentsOfFile: cargoPath, encoding: .utf8) else {
+            return nil
+        }
+        return content.firstMatch(for: #"(?m)^\s*name\s*=\s*"([^"]+)""#)?.lowercased()
+    }
+
+    private static func filePaths(in directory: String, suffixes: [String]) -> [String] {
+        guard let entries = try? FileManager.default.contentsOfDirectory(atPath: directory) else {
+            return []
+        }
+        return entries
+            .sorted()
+            .filter { entry in suffixes.contains { entry.hasSuffix($0) } }
+            .map { (directory as NSString).appendingPathComponent($0) }
     }
 
     private static func extractQuotedDeps(from line: String, knownNames: [String: String], into dependencies: inout [String]) {

@@ -3,7 +3,7 @@
  *
  * These tests verify the core logic of the scaffold generator:
  *   1. Name normalization (kebab -> snake, camel, joined-lower)
- *   2. Dependency reading for all 6 languages
+ *   2. Dependency reading for all supported languages
  *   3. Transitive closure (BFS)
  *   4. Topological sort (Kahn's algorithm)
  *   5. File generation (verify critical fields per language)
@@ -33,6 +33,8 @@ import {
   generateElixir,
   generatePerl,
   generateHaskell,
+  generateCSharp,
+  generateFSharp,
   generateCommonFiles,
   updateRustWorkspace,
   findRepoRoot,
@@ -188,7 +190,7 @@ describe("KEBAB_RE", () => {
 });
 
 // =========================================================================
-// 3. Dependency reading tests (all 6 languages)
+// 3. Dependency reading tests
 // =========================================================================
 
 describe("readDeps", () => {
@@ -365,6 +367,44 @@ describe("readDeps", () => {
     const pkgDir = path.join(tmpDir, "no-cpanfile");
     fs.mkdirSync(pkgDir, { recursive: true });
     expect(readDeps(pkgDir, "perl")).toEqual([]);
+  });
+
+  // --- C# / F# ---
+
+  it("reads C# deps from ProjectReference entries", () => {
+    const pkgDir = path.join(tmpDir, "my-pkg");
+    writeTestFile(pkgDir, "CodingAdventures.MyPkg.csproj", [
+      '<Project Sdk="Microsoft.NET.Sdk">',
+      "  <ItemGroup>",
+      '    <ProjectReference Include="../logic-gates/CodingAdventures.LogicGates.csproj" />',
+      '    <ProjectReference Include="../state_machine/CodingAdventures.StateMachine.csproj" />',
+      "  </ItemGroup>",
+      "</Project>",
+    ].join("\n"));
+
+    const deps = readDeps(pkgDir, "csharp");
+    expect(deps).toEqual(["logic-gates", "state-machine"]);
+  });
+
+  it("reads F# deps from ProjectReference entries", () => {
+    const pkgDir = path.join(tmpDir, "my-pkg");
+    writeTestFile(pkgDir, "CodingAdventures.MyPkg.fsproj", [
+      '<Project Sdk="Microsoft.NET.Sdk">',
+      "  <ItemGroup>",
+      '    <ProjectReference Include="../graph/CodingAdventures.Graph.fsproj" />',
+      "  </ItemGroup>",
+      "</Project>",
+    ].join("\n"));
+
+    const deps = readDeps(pkgDir, "fsharp");
+    expect(deps).toEqual(["graph"]);
+  });
+
+  it("returns empty for .NET package with no project file", () => {
+    const pkgDir = path.join(tmpDir, "no-project");
+    fs.mkdirSync(pkgDir, { recursive: true });
+    expect(readDeps(pkgDir, "csharp")).toEqual([]);
+    expect(readDeps(pkgDir, "fsharp")).toEqual([]);
   });
 
   // --- Unknown language ---
@@ -973,6 +1013,110 @@ describe("generatePerl", () => {
   });
 });
 
+describe("generateCSharp", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    removeDir(tmpDir);
+  });
+
+  it("creates a library project and test project", () => {
+    generateCSharp(tmpDir, "my-pkg", "A test package", "", []);
+
+    const csproj = fs.readFileSync(
+      path.join(tmpDir, "CodingAdventures.MyPkg.csproj"),
+      "utf-8",
+    );
+    const testProject = fs.readFileSync(
+      path.join(
+        tmpDir,
+        "tests",
+        "CodingAdventures.MyPkg.Tests",
+        "CodingAdventures.MyPkg.Tests.csproj",
+      ),
+      "utf-8",
+    );
+
+    expect(csproj).toContain("<TargetFramework>net9.0</TargetFramework>");
+    expect(csproj).toContain("<PackageId>CodingAdventures.MyPkg</PackageId>");
+    expect(testProject).toContain('PackageReference Include="xunit"');
+    expect(testProject).toContain('PackageReference Include="coverlet.msbuild"');
+    expect(testProject).toContain('ProjectReference Include="../../CodingAdventures.MyPkg.csproj"');
+  });
+
+  it("creates BUILD files and required capabilities metadata", () => {
+    generateCSharp(tmpDir, "my-pkg", "A test package", "", []);
+
+    const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
+    const buildWindows = fs.readFileSync(path.join(tmpDir, "BUILD_windows"), "utf-8");
+    const capabilities = fs.readFileSync(
+      path.join(tmpDir, "required_capabilities.json"),
+      "utf-8",
+    );
+
+    expect(build).toContain("dotnet test tests/CodingAdventures.MyPkg.Tests/CodingAdventures.MyPkg.Tests.csproj");
+    expect(build).toContain("/p:Threshold=80");
+    expect(buildWindows).toBe(build);
+    expect(capabilities).toContain('"package": "csharp/my-pkg"');
+  });
+});
+
+describe("generateFSharp", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    removeDir(tmpDir);
+  });
+
+  it("creates a library project and test project", () => {
+    generateFSharp(tmpDir, "my-pkg", "A test package", "", []);
+
+    const fsproj = fs.readFileSync(
+      path.join(tmpDir, "CodingAdventures.MyPkg.fsproj"),
+      "utf-8",
+    );
+    const testProject = fs.readFileSync(
+      path.join(
+        tmpDir,
+        "tests",
+        "CodingAdventures.MyPkg.Tests",
+        "CodingAdventures.MyPkg.Tests.fsproj",
+      ),
+      "utf-8",
+    );
+
+    expect(fsproj).toContain("<TargetFramework>net9.0</TargetFramework>");
+    expect(fsproj).toContain('<Compile Include="MyPkg.fs" />');
+    expect(testProject).toContain('PackageReference Include="xunit"');
+    expect(testProject).toContain('PackageReference Include="coverlet.msbuild"');
+    expect(testProject).toContain('ProjectReference Include="../../CodingAdventures.MyPkg.fsproj"');
+  });
+
+  it("creates BUILD files and required capabilities metadata", () => {
+    generateFSharp(tmpDir, "my-pkg", "A test package", "", []);
+
+    const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
+    const buildWindows = fs.readFileSync(path.join(tmpDir, "BUILD_windows"), "utf-8");
+    const capabilities = fs.readFileSync(
+      path.join(tmpDir, "required_capabilities.json"),
+      "utf-8",
+    );
+
+    expect(build).toContain("dotnet test tests/CodingAdventures.MyPkg.Tests/CodingAdventures.MyPkg.Tests.fsproj");
+    expect(build).toContain("/p:Threshold=80");
+    expect(buildWindows).toBe(build);
+    expect(capabilities).toContain('"package": "fsharp/my-pkg"');
+  });
+});
+
 // =========================================================================
 // 7. Common files tests
 // =========================================================================
@@ -1112,8 +1256,8 @@ describe("findRepoRoot", () => {
 // =========================================================================
 
 describe("VALID_LANGUAGES", () => {
-  it("contains all 10 supported languages", () => {
-    expect(VALID_LANGUAGES).toHaveLength(10);
+  it("contains all supported languages, including C# and F#", () => {
+    expect(VALID_LANGUAGES).toHaveLength(12);
     expect(VALID_LANGUAGES).toContain("python");
     expect(VALID_LANGUAGES).toContain("go");
     expect(VALID_LANGUAGES).toContain("ruby");
@@ -1124,6 +1268,8 @@ describe("VALID_LANGUAGES", () => {
     expect(VALID_LANGUAGES).toContain("lua");
     expect(VALID_LANGUAGES).toContain("swift");
     expect(VALID_LANGUAGES).toContain("haskell");
+    expect(VALID_LANGUAGES).toContain("csharp");
+    expect(VALID_LANGUAGES).toContain("fsharp");
   });
 });
 
@@ -1329,5 +1475,75 @@ describe("scaffoldOne", () => {
     );
     expect(fs.existsSync(pkgDir)).toBe(true);
     expect(fs.existsSync(path.join(pkgDir, "mix.exs"))).toBe(true);
+  });
+
+  it("creates a complete C# package", () => {
+    scaffoldOne(
+      "test-pkg",
+      "library",
+      "csharp",
+      [],
+      0,
+      "A test package",
+      false,
+      repoRoot,
+      () => {},
+    );
+
+    const pkgDir = path.join(
+      repoRoot,
+      "code",
+      "packages",
+      "csharp",
+      "test-pkg",
+    );
+    expect(fs.existsSync(path.join(pkgDir, "CodingAdventures.TestPkg.csproj"))).toBe(true);
+    expect(fs.existsSync(path.join(pkgDir, "BUILD"))).toBe(true);
+    expect(fs.existsSync(path.join(pkgDir, "BUILD_windows"))).toBe(true);
+    expect(
+      fs.existsSync(
+        path.join(
+          pkgDir,
+          "tests",
+          "CodingAdventures.TestPkg.Tests",
+          "CodingAdventures.TestPkg.Tests.csproj",
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it("creates a complete F# package", () => {
+    scaffoldOne(
+      "test-pkg",
+      "library",
+      "fsharp",
+      [],
+      0,
+      "A test package",
+      false,
+      repoRoot,
+      () => {},
+    );
+
+    const pkgDir = path.join(
+      repoRoot,
+      "code",
+      "packages",
+      "fsharp",
+      "test-pkg",
+    );
+    expect(fs.existsSync(path.join(pkgDir, "CodingAdventures.TestPkg.fsproj"))).toBe(true);
+    expect(fs.existsSync(path.join(pkgDir, "BUILD"))).toBe(true);
+    expect(fs.existsSync(path.join(pkgDir, "BUILD_windows"))).toBe(true);
+    expect(
+      fs.existsSync(
+        path.join(
+          pkgDir,
+          "tests",
+          "CodingAdventures.TestPkg.Tests",
+          "CodingAdventures.TestPkg.Tests.fsproj",
+        ),
+      ),
+    ).toBe(true);
   });
 });

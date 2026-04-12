@@ -853,9 +853,46 @@ function parseHaskellDeps(
  * @returns A Map from dependency names to internal package names.
  */
 export function buildKnownNames(packages: Package[]): Map<string, string> {
+  return buildKnownNamesForScope(packages, "");
+}
+
+function dependencyScope(language: string): string {
+  if (language === "csharp" || language === "fsharp" || language === "dotnet") {
+    return "dotnet";
+  }
+  if (language === "wasm") {
+    return "wasm";
+  }
+  return language;
+}
+
+function inDependencyScope(packageLanguage: string, scope: string): boolean {
+  if (scope === "dotnet") {
+    return ["csharp", "fsharp", "dotnet"].includes(packageLanguage);
+  }
+  if (scope === "wasm") {
+    return ["wasm", "rust"].includes(packageLanguage);
+  }
+  return packageLanguage === scope;
+}
+
+function readCargoPackageName(pkgPath: string): string | null {
+  const cargoTomlPath = nodePath.join(pkgPath, "Cargo.toml");
+  if (!fs.existsSync(cargoTomlPath)) {
+    return null;
+  }
+
+  const match = fs.readFileSync(cargoTomlPath, "utf-8").match(/^\s*name\s*=\s*"([^"]+)"/m);
+  return match ? match[1].trim().toLowerCase() : null;
+}
+
+function buildKnownNamesForScope(packages: Package[], scope: string): Map<string, string> {
   const known = new Map<string, string>();
 
   for (const pkg of packages) {
+    if (scope && !inDependencyScope(pkg.language, scope)) {
+      continue;
+    }
     const dirName = nodePath.basename(pkg.path);
 
     switch (pkg.language) {
@@ -899,10 +936,15 @@ export function buildKnownNames(packages: Package[]): Map<string, string> {
         break;
       }
 
-      case "rust": {
+      case "rust":
+      case "wasm": {
         // Rust crate names use the directory name directly (kebab-case).
         const crateName = dirName.toLowerCase();
         known.set(crateName, pkg.name);
+        const cargoName = readCargoPackageName(pkg.path);
+        if (cargoName) {
+          known.set(cargoName, pkg.name);
+        }
         break;
       }
 
@@ -938,10 +980,53 @@ export function buildKnownNames(packages: Package[]): Map<string, string> {
         known.set(cabalName, pkg.name);
         break;
       }
+      case "csharp":
+      case "fsharp":
+      case "dotnet": {
+        known.set(dirName.toLowerCase(), pkg.name);
+        break;
+      }
     }
   }
 
   return known;
+}
+
+function parseDotnetDeps(
+  pkg: Package,
+  knownNames: Map<string, string>,
+): string[] {
+  let entries: string[];
+  try {
+    entries = fs.readdirSync(pkg.path);
+  } catch {
+    return [];
+  }
+
+  const projectFiles = entries
+    .filter((entry) => entry.endsWith(".csproj") || entry.endsWith(".fsproj"))
+    .map((entry) => nodePath.join(pkg.path, entry));
+
+  const internalDeps: string[] = [];
+  const re = /<ProjectReference\s+Include\s*=\s*"\.\.[\\/]+([^/\\"]+)[\\/][^"]*"/g;
+
+  for (const projectFile of projectFiles) {
+    const text = fs.readFileSync(projectFile, "utf-8");
+    let match: RegExpExecArray | null;
+    re.lastIndex = 0;
+    while ((match = re.exec(text)) !== null) {
+      const depDir = match[1].toLowerCase();
+      if (depDir.includes("/") || depDir.includes("\\") || depDir === "..") {
+        continue;
+      }
+      const pkgName = knownNames.get(depDir);
+      if (pkgName) {
+        internalDeps.push(pkgName);
+      }
+    }
+  }
+
+  return internalDeps;
 }
 
 // ===========================================================================
@@ -969,10 +1054,17 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
   }
 
   // Build the name-mapping table.
-  const knownNames = buildKnownNames(packages);
+  const knownNamesByScope = new Map<string, Map<string, string>>();
+  for (const pkg of packages) {
+    const scope = dependencyScope(pkg.language);
+    if (!knownNamesByScope.has(scope)) {
+      knownNamesByScope.set(scope, buildKnownNamesForScope(packages, scope));
+    }
+  }
 
   // Parse dependencies for each package.
   for (const pkg of packages) {
+    const knownNames = knownNamesByScope.get(dependencyScope(pkg.language)) ?? new Map<string, string>();
     let deps: string[];
 
     switch (pkg.language) {
@@ -989,6 +1081,7 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
         deps = parseTypescriptDeps(pkg, knownNames);
         break;
       case "rust":
+      case "wasm":
         deps = parseRustDeps(pkg, knownNames);
         break;
       case "elixir":
@@ -1002,6 +1095,11 @@ export function resolveDependencies(packages: Package[]): DirectedGraph {
         break;
       case "haskell":
         deps = parseHaskellDeps(pkg, knownNames);
+        break;
+      case "csharp":
+      case "fsharp":
+      case "dotnet":
+        deps = parseDotnetDeps(pkg, knownNames);
         break;
       default:
         deps = [];

@@ -69,13 +69,22 @@ except ImportError:
     Tracker = None  # type: ignore[assignment, misc]
 
 
-# ALL_LANGUAGES is the canonical list of supported languages in the monorepo.
-# The order is stable and matches the order used in CI toolchain setup.
-ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"]
+# ALL_TOOLCHAINS is the canonical list of supported build toolchains in the
+# monorepo. The order is stable and matches the order used in CI setup.
+ALL_TOOLCHAINS = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"]
 
 # SHARED_PREFIXES are repo paths that, when changed, mean ALL languages need
 # rebuilding. Only the CI workflow itself fans out to a full rebuild.
 SHARED_PREFIXES = [".github/workflows/ci.yml"]
+
+
+def _toolchain_for_language(language: str) -> str:
+    """Map a package language to the toolchain CI needs to install."""
+    if language == "wasm":
+        return "rust"
+    if language in {"csharp", "fsharp", "dotnet"}:
+        return "dotnet"
+    return language
 
 
 def _expand_affected_set_with_prereqs(
@@ -166,7 +175,23 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--language",
-        choices=["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "all"],
+        choices=[
+            "python",
+            "ruby",
+            "go",
+            "typescript",
+            "rust",
+            "elixir",
+            "lua",
+            "perl",
+            "swift",
+            "haskell",
+            "wasm",
+            "csharp",
+            "fsharp",
+            "dotnet",
+            "all",
+        ],
         default="all",
         help="Only build packages of this language",
     )
@@ -353,12 +378,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.detect_languages:
         languages_needed: dict[str, bool] = {"go": True}
         if args.force or affected_set is None:
-            for lang in ALL_LANGUAGES:
+            for lang in ALL_TOOLCHAINS:
                 languages_needed[lang] = True
         else:
             for pkg in packages:
                 if pkg.name in affected_set:
-                    languages_needed[pkg.language] = True
+                    languages_needed[_toolchain_for_language(pkg.language)] = True
         _output_language_flags(languages_needed)
         return 0
 
@@ -471,7 +496,7 @@ def _emit_plan(
     # at least one affected package uses that language.
     languages_needed: dict[str, bool] = {}
     for pkg in packages:
-        lang = pkg.language
+        lang = _toolchain_for_language(pkg.language)
         if lang not in languages_needed:
             languages_needed[lang] = False
         if affected_set is None or pkg.name in affected_set:
@@ -680,7 +705,7 @@ def _output_language_flags(languages_needed: dict[str, bool]) -> None:
     all_needed = {"go": True}  # Go is always needed
     all_needed.update(languages_needed)
 
-    for lang in ALL_LANGUAGES:
+    for lang in ALL_TOOLCHAINS:
         value = all_needed.get(lang, False)
         line = f"needs_{lang}={'true' if value else 'false'}"
         print(line)

@@ -66,7 +66,7 @@ class TestDiscovery < Minitest::Test
 
   def test_infer_language_unknown
     path = Pathname("/repo/code/packages/haskell/something")
-    assert_equal "unknown", BuildTool::Discovery.infer_language(path)
+    assert_equal "haskell", BuildTool::Discovery.infer_language(path)
   end
 
   # -- infer_package_name tests ------------------------------------------------

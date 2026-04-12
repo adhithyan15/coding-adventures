@@ -51,7 +51,7 @@ This produces a single static binary with no runtime dependencies.
 | `-force` | false | Rebuild everything regardless of cache |
 | `-dry-run` | false | Show what would build without executing |
 | `-jobs` | NumCPU | Maximum parallel build jobs |
-| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, or all |
+| `-language` | all | Filter to: python, ruby, go, rust, typescript, elixir, lua, perl, swift, wasm, csharp, fsharp, dotnet, or all |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
 
@@ -66,6 +66,13 @@ The tool is organized into seven internal packages, each responsible for one pha
 5. **executor** -- Parallel execution with goroutines + semaphore
 6. **gitdiff** -- Git-based change detection for incremental builds
 7. **reporter** -- Terminal-friendly build report formatting
+
+## Shared toolchains
+
+Some package languages share an underlying toolchain:
+
+- `wasm` packages currently resolve dependencies like Rust crates and use the Rust toolchain in CI planning.
+- `csharp` and `fsharp` packages are grouped under the `.NET` toolchain for CI planning and dependency resolution.
 
 ## Go concurrency advantage
 

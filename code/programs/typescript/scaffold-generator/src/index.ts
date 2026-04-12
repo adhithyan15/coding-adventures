@@ -4,8 +4,9 @@
  * === What This Program Does ===
  *
  * This tool generates correctly-structured, CI-ready package directories
- * for the coding-adventures monorepo. It supports all six languages:
- * Python, Go, Ruby, TypeScript, Rust, and Elixir.
+ * for the coding-adventures monorepo. It supports the repo's current
+ * scaffoldable language set: Python, Go, Ruby, TypeScript, Rust, Elixir,
+ * Perl, Lua, Swift, Haskell, C#, and F#.
  *
  * === Why This Tool Exists ===
  *
@@ -33,6 +34,7 @@
 
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { Parser, ParseErrors } from "@coding-adventures/cli-builder";
 import type { ParseResult, HelpResult, VersionResult } from "@coding-adventures/cli-builder";
 
@@ -41,7 +43,7 @@ import type { ParseResult, HelpResult, VersionResult } from "@coding-adventures/
 // =========================================================================
 
 /**
- * All six languages supported by the scaffold generator.
+ * All languages supported by the scaffold generator.
  *
  * These match the directory names under `code/packages/<lang>/` and
  * `code/programs/<lang>/` in the monorepo.
@@ -57,6 +59,8 @@ export const VALID_LANGUAGES = [
   "lua",
   "swift",
   "haskell",
+  "csharp",
+  "fsharp",
 ] as const;
 
 /**
@@ -173,6 +177,7 @@ export function resolveDepDir(repoRoot: string, lang: string, dep: string): stri
  *   - TypeScript: package.json with `"file:../dep"` values
  *   - Rust: Cargo.toml with `path = "../dep"` entries
  *   - Elixir: mix.exs with `path: "../dep"` entries
+ *   - C# / F#: .csproj / .fsproj with `<ProjectReference Include="../dep/...">`
  */
 export function readDeps(pkgDir: string, lang: string): string[] {
   const readers: Record<string, (dir: string) => string[]> = {
@@ -186,6 +191,8 @@ export function readDeps(pkgDir: string, lang: string): string[] {
     lua: () => [],
     swift: () => [],
     haskell: readHaskellDeps,
+    csharp: readDotnetDeps,
+    fsharp: readDotnetDeps,
   };
   const reader = readers[lang];
   if (!reader) {
@@ -442,6 +449,34 @@ export function readHaskellDeps(pkgDir: string): string[] {
     const m = line.match(re);
     if (m && m[1] && m[1] !== selfName) {
       deps.push(m[1]);
+    }
+  }
+  return deps;
+}
+
+export function readDotnetDeps(pkgDir: string): string[] {
+  let files: string[];
+  try {
+    files = fs.readdirSync(pkgDir);
+  } catch {
+    return [];
+  }
+
+  const projectFile = files.find(
+    (file) => file.endsWith(".csproj") || file.endsWith(".fsproj"),
+  );
+  if (!projectFile) {
+    return [];
+  }
+
+  const content = fs.readFileSync(path.join(pkgDir, projectFile), "utf-8");
+  const deps: string[] = [];
+  const re = /<ProjectReference\s+Include\s*=\s*"\.\.[\\/](.+?)[\\/][^"]+"/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(content)) !== null) {
+    const depDir = match[1]?.trim();
+    if (depDir) {
+      deps.push(depDir.replace(/_/g, "-"));
     }
   }
   return deps;
@@ -1768,6 +1803,214 @@ main = do
 }
 
 // -------------------------------------------------------------------------
+// C# generator
+// -------------------------------------------------------------------------
+
+export function generateCSharp(
+  targetDir: string,
+  pkgName: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+): void {
+  const camel = toCamelCase(pkgName);
+  const projectName = `CodingAdventures.${camel}`;
+  const testProjectName = `${projectName}.Tests`;
+
+  const projectRefs = directDeps
+    .map((dep) => `    <ProjectReference Include="../${dep}/CodingAdventures.${toCamelCase(dep)}.csproj" />`)
+    .join("\n");
+
+  const csproj = `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>${projectName}</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>${description}</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+${projectRefs ? `  <ItemGroup>\n${projectRefs}\n  </ItemGroup>\n` : ""}</Project>
+`;
+
+  const graphCs = `namespace ${projectName};
+
+/// <summary>
+/// ${description}
+/// ${layerCtx}
+/// </summary>
+public static class ${camel}
+{
+    public static string Ping() => "${pkgName}";
+}
+`;
+
+  const testCsproj = `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <ProjectReference Include="../../${projectName}.csproj" />
+  </ItemGroup>
+</Project>
+`;
+
+  const testCs = `namespace ${testProjectName};
+
+public sealed class ${camel}Tests
+{
+    [Fact]
+    public void PingReturnsPackageName()
+    {
+        Assert.Equal("${pkgName}", ${projectName}.${camel}.Ping());
+    }
+}
+`;
+
+  const build = `dotnet test tests/${testProjectName}/${testProjectName}.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line\n`;
+
+  writeFile(path.join(targetDir, `${projectName}.csproj`), csproj);
+  writeFile(path.join(targetDir, `${camel}.cs`), graphCs);
+  writeFile(path.join(targetDir, "tests", testProjectName, `${testProjectName}.csproj`), testCsproj);
+  writeFile(path.join(targetDir, "tests", testProjectName, `${camel}Tests.cs`), testCs);
+  writeFile(path.join(targetDir, "BUILD"), build);
+  writeFile(path.join(targetDir, "BUILD_windows"), build);
+  writeFile(
+    path.join(targetDir, "required_capabilities.json"),
+    JSON.stringify(
+      {
+        $schema:
+          "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+        version: 1,
+        package: `csharp/${pkgName}`,
+        capabilities: [],
+        justification:
+          "Pure in-memory library and tests. No filesystem, process, environment, or network access needed.",
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
+
+// -------------------------------------------------------------------------
+// F# generator
+// -------------------------------------------------------------------------
+
+export function generateFSharp(
+  targetDir: string,
+  pkgName: string,
+  description: string,
+  layerCtx: string,
+  directDeps: string[],
+): void {
+  const camel = toCamelCase(pkgName);
+  const projectName = `CodingAdventures.${camel}`;
+  const testProjectName = `${projectName}.Tests`;
+
+  const projectRefs = directDeps
+    .map((dep) => `    <ProjectReference Include="../${dep}/CodingAdventures.${toCamelCase(dep)}.fsproj" />`)
+    .join("\n");
+
+  const fsproj = `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>${projectName}</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>${description}</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+${projectRefs ? `  <ItemGroup>\n${projectRefs}\n  </ItemGroup>\n` : ""}  <ItemGroup>
+    <Compile Include="${camel}.fs" />
+  </ItemGroup>
+</Project>
+`;
+
+  const moduleFs = `namespace ${projectName}
+
+/// ${description}
+/// ${layerCtx}
+module ${camel} =
+    let ping () = "${pkgName}"
+`;
+
+  const testFsproj = `<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../${projectName}.fsproj" />
+    <Compile Include="${camel}Tests.fs" />
+  </ItemGroup>
+</Project>
+`;
+
+  const testFs = `namespace ${testProjectName}
+
+open Xunit
+open ${projectName}
+
+type ${camel}Tests() =
+    [<Fact>]
+    member _.\`\`Ping returns package name\`\`() =
+        Assert.Equal("${pkgName}", ${camel}.ping())
+`;
+
+  const build = `dotnet test tests/${testProjectName}/${testProjectName}.fsproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line\n`;
+
+  writeFile(path.join(targetDir, `${projectName}.fsproj`), fsproj);
+  writeFile(path.join(targetDir, `${camel}.fs`), moduleFs);
+  writeFile(path.join(targetDir, "tests", testProjectName, `${testProjectName}.fsproj`), testFsproj);
+  writeFile(path.join(targetDir, "tests", testProjectName, `${camel}Tests.fs`), testFs);
+  writeFile(path.join(targetDir, "BUILD"), build);
+  writeFile(path.join(targetDir, "BUILD_windows"), build);
+  writeFile(
+    path.join(targetDir, "required_capabilities.json"),
+    JSON.stringify(
+      {
+        $schema:
+          "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+        version: 1,
+        package: `fsharp/${pkgName}`,
+        capabilities: [],
+        justification:
+          "Pure in-memory library and tests. No filesystem, process, environment, or network access needed.",
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
+
+// -------------------------------------------------------------------------
 // Common files (README.md + CHANGELOG.md)
 // -------------------------------------------------------------------------
 
@@ -2010,6 +2253,10 @@ export function scaffoldOne(
         directDeps,
         orderedDeps,
       ),
+    csharp: () =>
+      generateCSharp(targetDir, pkgName, description, layerCtx, directDeps),
+    fsharp: () =>
+      generateFSharp(targetDir, pkgName, description, layerCtx, directDeps),
   };
 
   generators[lang]();
@@ -2032,6 +2279,8 @@ export function scaffoldOne(
     );
   } else if (lang === "go") {
     output(`  Run: cd ${targetDir} && go mod tidy`);
+  } else if (lang === "csharp" || lang === "fsharp") {
+    output(`  Run: cd ${targetDir} && dotnet test`);
   }
 }
 
@@ -2051,7 +2300,7 @@ export function scaffoldOne(
  */
 export function main(argv: string[] = process.argv): void {
   const specFile = path.resolve(
-    path.dirname(new URL(import.meta.url).pathname),
+    path.dirname(fileURLToPath(import.meta.url)),
     "..",
     "..",
     "..",
@@ -2164,8 +2413,15 @@ export function main(argv: string[] = process.argv): void {
 const isMainModule =
   typeof process !== "undefined" &&
   process.argv[1] &&
-  (process.argv[1].endsWith("scaffold-generator/src/index.ts") ||
-    process.argv[1].endsWith("scaffold-generator/dist/index.js"));
+  (() => {
+    const entry = process.argv[1].replace(/\\/g, "/");
+    return (
+      entry.endsWith("scaffold-generator/src/index.ts") ||
+      entry.endsWith("scaffold-generator/dist/index.js") ||
+      entry.endsWith("/src/index.ts") ||
+      entry.endsWith("/dist/index.js")
+    );
+  })();
 
 if (isMainModule) {
   main();

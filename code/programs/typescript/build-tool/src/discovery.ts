@@ -161,6 +161,12 @@ export function inferLanguage(dirPath: string): string {
     "elixir",
     "lua",
     "perl",
+    "swift",
+    "haskell",
+    "wasm",
+    "csharp",
+    "fsharp",
+    "dotnet",
   ];
   for (const lang of knownLanguages) {
     if (parts.includes(lang)) {

@@ -240,7 +240,7 @@ public struct CLIOptions: Equatable {
     }
 }
 
-public let allLanguages = [
+public let allPackageLanguages = [
     "python",
     "ruby",
     "go",
@@ -251,6 +251,24 @@ public let allLanguages = [
     "perl",
     "swift",
     "haskell",
+    "wasm",
+    "csharp",
+    "fsharp",
+    "dotnet",
+]
+
+public let allToolchains = [
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "haskell",
+    "dotnet",
 ]
 
 public let sharedPrefixes = [

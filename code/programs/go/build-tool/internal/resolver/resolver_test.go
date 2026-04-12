@@ -236,6 +236,54 @@ let package = Package(name: "md5")
 	}
 }
 
+func TestResolveDependenciesWasmCanReferenceRustCrate(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"wasm-graph/Cargo.toml": `[package]
+name = "graph-wasm"
+
+[dependencies]
+graph = { path = "../../rust/graph" }
+`,
+		"rust-graph/Cargo.toml": `[package]
+name = "graph"
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "wasm/graph", Path: filepath.Join(root, "wasm-graph"), Language: "wasm"},
+		{Name: "rust/graph", Path: filepath.Join(root, "rust-graph"), Language: "rust"},
+	}
+
+	graph := ResolveDependencies(packages)
+	if !graph.HasEdge("rust/graph", "wasm/graph") {
+		t.Fatalf("expected rust/graph -> wasm/graph edge, got %v", graph.Edges())
+	}
+}
+
+func TestResolveDependenciesDotnetScopeSupportsCrossLanguageProjectReferences(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"csharp-graph/CodingAdventures.Graph.csproj": `<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../fsharp-helpers/CodingAdventures.Helpers.fsproj" />
+  </ItemGroup>
+</Project>
+`,
+		"fsharp-helpers/CodingAdventures.Helpers.fsproj": `<Project Sdk="Microsoft.NET.Sdk">
+</Project>
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "csharp/graph", Path: filepath.Join(root, "csharp-graph"), Language: "csharp"},
+		{Name: "fsharp/helpers", Path: filepath.Join(root, "fsharp-helpers"), Language: "fsharp"},
+	}
+
+	graph := ResolveDependencies(packages)
+	if !graph.HasEdge("fsharp/helpers", "csharp/graph") {
+		t.Fatalf("expected fsharp/helpers -> csharp/graph edge, got %v", graph.Edges())
+	}
+}
+
 func TestParseHaskellDepsSkipsSelfReference(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"build-tool/coding-adventures-build-tool.cabal": `cabal-version: 3.0
@@ -266,6 +314,22 @@ test-suite spec
 
 	if len(deps) != 1 || deps[0] != "haskell/logic-gates" {
 		t.Fatalf("expected only haskell/logic-gates dependency, got %v", deps)
+	}
+}
+
+func TestDependencyScopeMapsSharedToolchainFamilies(t *testing.T) {
+	tests := map[string]string{
+		"python": "python",
+		"wasm":   "wasm",
+		"csharp": "dotnet",
+		"fsharp": "dotnet",
+		"dotnet": "dotnet",
+	}
+
+	for language, want := range tests {
+		if got := dependencyScope(language); got != want {
+			t.Fatalf("dependencyScope(%q) = %q, want %q", language, got, want)
+		}
 	}
 }
 

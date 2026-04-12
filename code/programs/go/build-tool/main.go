@@ -140,7 +140,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to language: python, ruby, go, rust, typescript, elixir, dotnet, all")
+	language := flag.String("language", "all", "Filter to package language: python, ruby, go, rust, typescript, elixir, lua, perl, swift, wasm, csharp, fsharp, dotnet, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -458,9 +458,20 @@ func run() int {
 	return 0
 }
 
-// allLanguages is the canonical list of supported languages in the monorepo.
-// The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"}
+// allToolchains is the canonical list of build toolchains we may need in CI.
+// The order is stable and matches the order used in CI setup.
+var allToolchains = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"}
+
+func toolchainForPackageLanguage(language string) string {
+	switch language {
+	case "wasm":
+		return "rust"
+	case "csharp", "fsharp", "dotnet":
+		return "dotnet"
+	default:
+		return language
+	}
+}
 
 // sharedPrefixes are repo paths that, when changed, mean ALL languages
 // need rebuilding. Keep this list intentionally narrow: only changes to
@@ -510,14 +521,14 @@ func detectNeededLanguages(
 
 	if force || affectedSet == nil {
 		// Force mode or shared files changed: all languages needed.
-		for _, lang := range allLanguages {
+		for _, lang := range allToolchains {
 			needed[lang] = true
 		}
 	} else {
 		// Only mark languages that have affected packages.
 		for _, pkg := range packages {
 			if affectedSet[pkg.Name] {
-				needed[pkg.Language] = true
+				needed[toolchainForPackageLanguage(pkg.Language)] = true
 			}
 		}
 	}
@@ -536,7 +547,7 @@ func detectNeededLanguages(
 		}
 	}
 
-	for _, lang := range allLanguages {
+	for _, lang := range allToolchains {
 		value := needed[lang]
 		line := fmt.Sprintf("needs_%s=%t", lang, value)
 		fmt.Println(line)
@@ -564,7 +575,7 @@ func computeLanguagesNeeded(
 	needed["go"] = true
 
 	if force || affectedSet == nil {
-		for _, lang := range allLanguages {
+		for _, lang := range allToolchains {
 			needed[lang] = true
 		}
 		return needed
@@ -572,7 +583,7 @@ func computeLanguagesNeeded(
 
 	for _, pkg := range packages {
 		if affectedSet[pkg.Name] {
-			needed[pkg.Language] = true
+			needed[toolchainForPackageLanguage(pkg.Language)] = true
 		}
 	}
 	return needed
@@ -672,7 +683,7 @@ func outputLanguageFlags(needed map[string]bool) int {
 		}
 	}
 
-	for _, lang := range allLanguages {
+	for _, lang := range allToolchains {
 		value := needed[lang]
 		line := fmt.Sprintf("needs_%s=%t", lang, value)
 		fmt.Println(line)
