@@ -225,4 +225,5 @@ members = [
     "lz77",
     "lz78",
     "json-rpc",
+    "rpc",
 ]
