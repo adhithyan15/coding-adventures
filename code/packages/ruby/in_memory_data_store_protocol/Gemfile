@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_resp_protocol", path: "../resp_protocol"

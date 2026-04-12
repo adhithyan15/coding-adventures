@@ -66,14 +66,14 @@ Typical parameters: N=2^14 (interactive), N=2^20 (sensitive), r=8, p=1.
 Password: ""
 Salt:     ""
 N=16, r=1, p=1, dkLen=64
-DK: 77d6576238657b203b19ca42c18a0497f9b3fc3d0d863d2c4dfcbff56b8b6e4c
-    0e3e7e6cf64cf7d6d58a28b8faecbc77c7c0d68eb6c36fc4c83c6c24e1ac1d24
+DK: 77d6576238657b203b19ca42c18a0497f16b4844e3074ae8dfdffa3fede21442f
+    cd0069ded0948f8326a753a0fc81f17e8d3e0fb2e0d3628cf35e20c38d18906
 
 Password: "password"
 Salt:     "NaCl"
 N=1024, r=8, p=16, dkLen=64
-DK: fdbabe1c9d3472007856e7190d01e72cc0044298eb1c1127886d3a3f48f2f7b0
-    d9a34e8c2ded1f83e8eb37e9677f83a38ae1d0a8da30dd1d4bc4ca26a96e38db
+DK: fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc8237830e77376634b373162
+    2eaf30d92e22a3886ff109279d9830dac727afb94a83ee6d8360cbdfa2cc0640
 ```
 
 ## Package Matrix
