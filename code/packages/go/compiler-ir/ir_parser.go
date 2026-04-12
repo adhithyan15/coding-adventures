@@ -36,11 +36,23 @@ import (
 //
 // ──────────────────────────────────────────────────────────────────────────────
 
+// Maximum limits for IR text parsing. These prevent denial-of-service
+// from adversarial input by capping memory allocation.
+const (
+	maxLines               = 1_000_000 // max lines in an IR text file
+	maxOperandsPerInstr    = 16        // max operands per instruction
+	maxRegisterIndex       = 65535     // max virtual register index (v0..v65535)
+)
+
 // Parse converts IR text into an IrProgram.
 // Returns an error if the text is malformed.
 func Parse(text string) (*IrProgram, error) {
 	program := &IrProgram{Version: 1}
 	lines := strings.Split(text, "\n")
+
+	if len(lines) > maxLines {
+		return nil, fmt.Errorf("input too large: %d lines (max %d)", len(lines), maxLines)
+	}
 
 	for lineNum, line := range lines {
 		trimmed := strings.TrimSpace(line)
@@ -162,6 +174,9 @@ func parseInstructionLine(line string, lineNum int) (IrInstruction, error) {
 		// Rejoin and split by comma to handle "v0, v1, 42" format
 		operandStr := strings.Join(fields[1:], " ")
 		parts := strings.Split(operandStr, ",")
+		if len(parts) > maxOperandsPerInstr {
+			return IrInstruction{}, fmt.Errorf("line %d: too many operands (%d, max %d)", lineNum, len(parts), maxOperandsPerInstr)
+		}
 		for _, part := range parts {
 			part = strings.TrimSpace(part)
 			if part == "" {
@@ -193,6 +208,9 @@ func parseOperand(s string) (IrOperand, error) {
 	if len(s) > 1 && s[0] == 'v' {
 		idx, err := strconv.Atoi(s[1:])
 		if err == nil {
+			if idx < 0 || idx > maxRegisterIndex {
+				return nil, fmt.Errorf("register index %d out of range (max %d)", idx, maxRegisterIndex)
+			}
 			return IrRegister{Index: idx}, nil
 		}
 		// Not a valid register number — fall through to label

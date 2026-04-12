@@ -676,6 +676,33 @@ _start:
 	}
 }
 
+func TestParseTooManyOperands(t *testing.T) {
+	// Build a line with more than maxOperandsPerInstr operands
+	operands := make([]string, 20)
+	for i := range operands {
+		operands[i] = "v0"
+	}
+	text := ".version 1\n.entry _start\n_start:\n  ADD " + strings.Join(operands, ", ") + "  ; #0\n"
+	_, err := Parse(text)
+	if err == nil {
+		t.Fatal("expected error for too many operands")
+	}
+	if !strings.Contains(err.Error(), "too many operands") {
+		t.Errorf("expected 'too many operands' error, got: %v", err)
+	}
+}
+
+func TestParseRegisterIndexTooLarge(t *testing.T) {
+	text := ".version 1\n.entry _start\n_start:\n  LOAD_IMM v99999999, 0  ; #0\n"
+	_, err := Parse(text)
+	if err == nil {
+		t.Fatal("expected error for register index too large")
+	}
+	if !strings.Contains(err.Error(), "out of range") {
+		t.Errorf("expected 'out of range' error, got: %v", err)
+	}
+}
+
 func TestParseSyscall(t *testing.T) {
 	text := `.version 1
 .entry _start

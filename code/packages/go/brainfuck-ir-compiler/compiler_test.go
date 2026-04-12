@@ -543,3 +543,29 @@ func TestCompileInvalidAST(t *testing.T) {
 		t.Error("expected error for non-program AST node")
 	}
 }
+
+func TestCompileZeroTapeSize(t *testing.T) {
+	ast, err := brainfuck.ParseBrainfuck("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	config := ReleaseConfig()
+	config.TapeSize = 0
+	_, err = Compile(ast, "test.bf", config)
+	if err == nil {
+		t.Error("expected error for zero tape size")
+	}
+}
+
+func TestCompileNegativeTapeSize(t *testing.T) {
+	ast, err := brainfuck.ParseBrainfuck("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	config := ReleaseConfig()
+	config.TapeSize = -1
+	_, err = Compile(ast, "test.bf", config)
+	if err == nil {
+		t.Error("expected error for negative tape size")
+	}
+}

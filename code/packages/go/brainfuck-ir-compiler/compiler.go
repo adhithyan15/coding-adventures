@@ -78,9 +78,12 @@ func Compile(ast *parser.ASTNode, filename string, config BuildConfig) (*Compile
 		loopCount: 0,
 	}
 
-	// Validate that we received a "program" node
+	// Validate inputs
 	if ast.RuleName != "program" {
 		return nil, fmt.Errorf("expected 'program' AST node, got %q", ast.RuleName)
+	}
+	if config.TapeSize <= 0 {
+		return nil, fmt.Errorf("invalid TapeSize %d: must be positive", config.TapeSize)
 	}
 
 	// Add tape data declaration
