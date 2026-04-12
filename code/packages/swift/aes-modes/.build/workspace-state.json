@@ -1,0 +1,41 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "aes",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes",
+          "name" : "AES"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes"
+        },
+        "subpath" : "aes"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "gf256",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/gf256",
+          "name" : "GF256"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/gf256"
+        },
+        "subpath" : "gf256"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

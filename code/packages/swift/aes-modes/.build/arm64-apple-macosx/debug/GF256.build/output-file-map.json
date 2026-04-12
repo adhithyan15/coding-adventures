@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/GF256.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/gf256/Sources/GF256/GF256.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/GF256.build/GF256.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/GF256.build/GF256.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/GF256.build/GF256~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/GF256.build/GF256.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/GF256.build/GF256.dia"
+  }
+}

@@ -242,10 +242,12 @@ members = [
     "write-ahead-log",
     "des",
     "aes",
+    "aes-modes",
     "irc-proto",
     "irc-framing",
     "irc-server",
     "irc-net-stdlib",
     "url-parser",
-  "tcp-client",
+    "tcp-client",
+    "chacha20-poly1305",
 ]

@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/AESModes.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/Sources/AESModes/AESModes.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/AESModes.build/AESModes.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/AESModes.build/AESModes.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/AESModes.build/AESModes~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/AESModes.build/AESModes.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/aes-modes/.build/arm64-apple-macosx/debug/AESModes.build/AESModes.dia"
+  }
+}

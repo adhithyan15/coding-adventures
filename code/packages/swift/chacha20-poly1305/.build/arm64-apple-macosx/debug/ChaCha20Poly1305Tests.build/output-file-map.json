@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/.build/arm64-apple-macosx/debug/ChaCha20Poly1305Tests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/Tests/ChaCha20Poly1305Tests/ChaCha20Poly1305Tests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/.build/arm64-apple-macosx/debug/ChaCha20Poly1305Tests.build/ChaCha20Poly1305Tests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/.build/arm64-apple-macosx/debug/ChaCha20Poly1305Tests.build/ChaCha20Poly1305Tests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/.build/arm64-apple-macosx/debug/ChaCha20Poly1305Tests.build/ChaCha20Poly1305Tests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/.build/arm64-apple-macosx/debug/ChaCha20Poly1305Tests.build/ChaCha20Poly1305Tests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/sleepy-dhawan/code/packages/swift/chacha20-poly1305/.build/arm64-apple-macosx/debug/ChaCha20Poly1305Tests.build/ChaCha20Poly1305Tests.dia"
+  }
+}
