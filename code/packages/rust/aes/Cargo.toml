@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_aes"
+version = "0.1.0"
+edition = "2021"
+description = "AES block cipher (FIPS 197) implemented from scratch using GF(2^8) arithmetic"
+
+[dependencies]
+gf256 = { path = "../gf256" }

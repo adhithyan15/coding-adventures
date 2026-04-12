@@ -2,13 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/verilog-parser",
-  "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    }
-  ],
-  "justification": "Reads grammar rule definitions from code/grammars/*.grammar at runtime to configure the parser. The grammar file is loaded once at initialization via the filesystem."
+  "capabilities": [],
+  "justification": "Pure computation. The Verilog parser grammar is embedded as generated Rust code, so no filesystem, network, process, or environment access is needed."
 }

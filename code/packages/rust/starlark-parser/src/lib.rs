@@ -1,213 +1,22 @@
-//! # Starlark Parser — parsing Starlark source code into an AST.
-//!
-//! This crate is the second half of the Starlark front-end pipeline. Where
-//! the `starlark-lexer` crate breaks source text into tokens, this crate
-//! arranges those tokens into a tree that reflects the **structure** of the
-//! code — an Abstract Syntax Tree (AST).
-//!
-//! # The parsing pipeline
-//!
-//! Parsing Starlark requires four cooperating components:
-//!
-//! ```text
-//! Source code  ("def f(x):\n    return x + 1\n")
-//!       |
-//!       v
-//! starlark-lexer        → Vec<Token>
-//!       |                  [KEYWORD("def"), NAME("f"), LPAREN, NAME("x"),
-//!       |                   RPAREN, COLON, NEWLINE, INDENT,
-//!       |                   KEYWORD("return"), NAME("x"), PLUS, INT("1"),
-//!       |                   NEWLINE, DEDENT, EOF]
-//!       v
-//! starlark.grammar      → ParserGrammar (rules like "def_stmt = ...")
-//!       |
-//!       v
-//! GrammarParser         → GrammarASTNode tree
-//!       |
-//!       |                  file
-//!       |                    └── statement
-//!       |                          └── def_stmt
-//!       |                                ├── KEYWORD("def")
-//!       |                                ├── NAME("f")
-//!       |                                ├── LPAREN
-//!       |                                ├── parameters
-//!       |                                │     └── NAME("x")
-//!       |                                ├── RPAREN
-//!       |                                ├── COLON
-//!       |                                └── suite
-//!       |                                      └── return_stmt
-//!       v
-//! [future stages: type checking, evaluation]
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together.
-//! It knows where to find the `starlark.grammar` file and provides two
-//! public entry points.
-//!
-//! # Grammar-driven parsing
-//!
-//! The `GrammarParser` is a **recursive descent parser with backtracking and
-//! packrat memoization**. It reads grammar rules from the `.grammar` file
-//! and interprets them at runtime:
-//!
-//! - **Sequence** (`a b c`): match all elements in order.
-//! - **Alternation** (`a | b`): try each choice until one succeeds.
-//! - **Repetition** (`{ a }`): match zero or more times.
-//! - **Optional** (`[ a ]`): match zero or one time.
-//! - **Literals** (`"def"`): match a token with exactly that value.
-//! - **Token references** (`NAME`, `INT`): match a token of that type.
-//! - **Rule references** (`expression`): recursively parse a named rule.
-//!
-//! Packrat memoization caches the result of every (rule, position) attempt,
-//! preventing the exponential backtracking that would otherwise occur with
-//! Starlark's ~40-rule grammar.
-//!
-//! # Why Starlark?
-//!
-//! Starlark is an ideal language for a parser project because:
-//!
-//! 1. **Real-world usage** — it powers Bazel, Buck, and other build systems.
-//! 2. **Manageable complexity** — ~40 grammar rules (vs. Python's ~100+).
-//! 3. **Deterministic** — no `while`, no recursion, always terminates.
-//! 4. **Significant whitespace** — exercises the INDENT/DEDENT mechanism.
-//! 5. **Rich expressions** — 15 precedence levels, comprehensions, lambdas.
+//! Starlark parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_starlark_lexer::tokenize_starlark;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `starlark.grammar` file.
-///
-/// Uses the same strategy as the starlark-lexer crate: `env!("CARGO_MANIFEST_DIR")`
-/// gives us the compile-time path to this crate's directory, and we navigate
-/// up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     starlark.grammar      <-- target file
-///   packages/
-///     rust/
-///       starlark-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/starlark.grammar")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarParser` configured for Starlark source code.
-///
-/// This function performs two major steps:
-///
-/// 1. **Tokenization** — uses `tokenize_starlark` from the starlark-lexer crate
-///    to break the source into tokens. This includes indentation tracking,
-///    keyword promotion, and reserved keyword rejection.
-///
-/// 2. **Grammar loading** — reads and parses the `starlark.grammar` file,
-///    which defines ~40 rules covering statements, expressions, comprehensions,
-///    function definitions, and more.
-///
-/// The returned `GrammarParser` is ready to call `.parse()` on.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `starlark.grammar` file cannot be read or parsed.
-/// - The source code fails tokenization (reserved keyword, unexpected char).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_starlark_parser::create_starlark_parser;
-///
-/// let mut parser = create_starlark_parser("x = 1\n");
-/// let ast = parser.parse().expect("parse failed");
-/// println!("{:?}", ast.rule_name);
-/// ```
 pub fn create_starlark_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source using the starlark-lexer.
-    //
-    // This produces a Vec<Token> with all the Starlark token types:
-    // NAME, KEYWORD, INT, FLOAT, STRING, operators, delimiters,
-    // INDENT, DEDENT, NEWLINE, and EOF.
     let tokens = tokenize_starlark(source);
-
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The grammar file defines the syntactic structure of Starlark in EBNF
-    // notation. It has rules like:
-    //   file = { NEWLINE | statement } ;
-    //   statement = compound_stmt | simple_stmt ;
-    //   ...
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read starlark.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains a list of GrammarRule objects, each with
-    // a name and a body (a tree of GrammarElement nodes representing the
-    // EBNF structure).
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse starlark.grammar: {e}"));
-
-    // Step 4: Create the parser.
-    //
-    // The GrammarParser takes ownership of both the tokens and the grammar.
-    // It builds internal indexes (rule lookup, memo cache) for efficient
-    // parsing.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
-/// Parse Starlark source code into an AST.
-///
-/// This is the most convenient entry point — it handles tokenization,
-/// grammar loading, parser creation, and parsing in one call.
-///
-/// The returned `GrammarASTNode` has `rule_name` set to `"file"` (the
-/// start symbol of the Starlark grammar) and children corresponding
-/// to the statements in the source.
-///
-/// # Panics
-///
-/// Panics if tokenization fails, the grammar file is missing/invalid,
-/// or the source code has a syntax error.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_starlark_parser::parse_starlark;
-///
-/// let ast = parse_starlark("x = 1 + 2\n");
-/// assert_eq!(ast.rule_name, "file");
-/// ```
 pub fn parse_starlark(source: &str) -> GrammarASTNode {
-    // Create a parser wired to the Starlark grammar and tokens.
-    let mut starlark_parser = create_starlark_parser(source);
-
-    // Parse and unwrap — any GrammarParseError becomes a panic.
-    //
-    // In a production tool, you would propagate the error via Result.
-    // For this educational codebase, panicking with a descriptive message
-    // is sufficient.
-    starlark_parser
+    let mut parser = create_starlark_parser(source);
+    parser
         .parse()
         .unwrap_or_else(|e| panic!("Starlark parse failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -437,3 +246,4 @@ mod tests {
         false
     }
 }
+

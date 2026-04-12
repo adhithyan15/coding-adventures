@@ -1,14 +1,10 @@
-use std::fs;
+//! Excel parser backed by compiled parser grammar and reference token normalization.
 
 use coding_adventures_excel_lexer::tokenize_excel_formula;
-use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/excel.grammar")
-}
+mod _grammar;
 
 fn previous_significant_token(tokens: &[Token], index: usize) -> Option<&Token> {
     let mut i = index;
@@ -49,7 +45,8 @@ fn normalize_excel_reference_tokens(tokens: Vec<Token>) -> Vec<Token> {
                     value: token.value,
                     line: token.line,
                     column: token.column,
-                    type_name: Some("COLUMN_REF".to_string()), flags: None,
+                    type_name: Some("COLUMN_REF".to_string()),
+                    flags: None,
                 };
             }
 
@@ -59,7 +56,8 @@ fn normalize_excel_reference_tokens(tokens: Vec<Token>) -> Vec<Token> {
                     value: token.value,
                     line: token.line,
                     column: token.column,
-                    type_name: Some("ROW_REF".to_string()), flags: None,
+                    type_name: Some("ROW_REF".to_string()),
+                    flags: None,
                 };
             }
 
@@ -70,10 +68,7 @@ fn normalize_excel_reference_tokens(tokens: Vec<Token>) -> Vec<Token> {
 
 pub fn create_excel_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_excel_formula(source);
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read excel.grammar: {e}"));
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse excel.grammar: {e}"));
+    let grammar = _grammar::parser_grammar();
 
     let mut parser = GrammarParser::new(tokens, grammar);
     parser.add_pre_parse(Box::new(normalize_excel_reference_tokens));
@@ -112,3 +107,4 @@ mod tests {
         assert_eq!(parser.parse().expect("parse").rule_name, "formula");
     }
 }
+

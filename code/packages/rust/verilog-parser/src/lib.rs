@@ -1,167 +1,22 @@
-//! # Verilog Parser -- parsing Verilog HDL source code into an AST.
-//!
-//! This crate is the second half of the Verilog front-end pipeline. Where
-//! the `verilog-lexer` crate breaks source text into tokens, this crate
-//! arranges those tokens into a tree that reflects the **structure** of the
-//! hardware description -- an Abstract Syntax Tree (AST).
-//!
-//! # The parsing pipeline
-//!
-//! Parsing Verilog requires four cooperating components:
-//!
-//! ```text
-//! Source code  ("module top; endmodule")
-//!       |
-//!       v
-//! verilog-lexer        -> Vec<Token>
-//!       |                [KEYWORD("module"), NAME("top"),
-//!       |                 SEMICOLON(";"), KEYWORD("endmodule"), EOF]
-//!       v
-//! verilog.grammar      -> ParserGrammar (rules like "source_text = ...")
-//!       |
-//!       v
-//! GrammarParser        -> GrammarASTNode tree
-//!       |
-//!       |                source_text
-//!       |                  +-- description
-//!       |                        +-- module_declaration
-//!       |                              +-- KEYWORD("module")
-//!       |                              +-- NAME("top")
-//!       |                              +-- SEMICOLON(";")
-//!       |                              +-- KEYWORD("endmodule")
-//!       v
-//! [future stages: synthesis, simulation]
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together.
-//! It knows where to find the `verilog.grammar` file and provides two
-//! public entry points.
+//! Verilog parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 use coding_adventures_verilog_lexer::tokenize_verilog;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `verilog.grammar` file.
-///
-/// Uses the same strategy as the verilog-lexer crate:
-/// `env!("CARGO_MANIFEST_DIR")` gives us the compile-time path to this
-/// crate's directory, and we navigate up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     verilog.grammar       <-- target file
-///   packages/
-///     rust/
-///       verilog-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/verilog.grammar")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarParser` configured for Verilog source code.
-///
-/// This function performs two major steps:
-///
-/// 1. **Tokenization** -- uses `tokenize_verilog` from the verilog-lexer
-///    crate to break the source into tokens.
-///
-/// 2. **Grammar loading** -- reads and parses the `verilog.grammar` file,
-///    which defines rules for modules, ports, assignments, always blocks,
-///    case statements, expressions, and more.
-///
-/// The returned `GrammarParser` is ready to call `.parse()` on.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `verilog.grammar` file cannot be read or parsed.
-/// - The source code fails tokenization (unexpected character).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_verilog_parser::create_verilog_parser;
-///
-/// let mut parser = create_verilog_parser("module top; endmodule");
-/// let ast = parser.parse().expect("parse failed");
-/// println!("{:?}", ast.rule_name);
-/// ```
 pub fn create_verilog_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source using the verilog-lexer.
-    //
-    // The lexer reads verilog.tokens and produces tokens like:
-    //   KEYWORD("module"), NAME("top"), SEMICOLON(";"), KEYWORD("endmodule"), EOF
     let tokens = tokenize_verilog(source);
-
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The verilog.grammar file defines the syntactic structure of Verilog
-    // in EBNF notation. It covers everything from module declarations to
-    // full expression precedence with ternary, logical, bitwise, shift,
-    // arithmetic, and unary operators.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read verilog.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains rule definitions like:
-    //   source_text = { description }
-    //   module_declaration = "module" NAME [ port_list ] SEMICOLON ...
-    //   expression = ternary_expr
-    //   etc.
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse verilog.grammar: {e}"));
-
-    // Step 4: Create the parser, ready to produce an AST.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
-/// Parse Verilog source code into an AST.
-///
-/// This is the most convenient entry point -- it handles tokenization,
-/// grammar loading, parser creation, and parsing in one call.
-///
-/// The returned `GrammarASTNode` has `rule_name` set to `"source_text"` (the
-/// start symbol of the Verilog grammar) with children corresponding
-/// to the module declarations in the source.
-///
-/// # Panics
-///
-/// Panics if tokenization fails, the grammar file is missing/invalid,
-/// or the source code has a syntax error.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_verilog_parser::parse_verilog;
-///
-/// let ast = parse_verilog("module top; endmodule");
-/// assert_eq!(ast.rule_name, "source_text");
-/// ```
 pub fn parse_verilog(source: &str) -> GrammarASTNode {
-    let mut verilog_parser = create_verilog_parser(source);
-
-    verilog_parser
+    let mut parser = create_verilog_parser(source);
+    parser
         .parse()
         .unwrap_or_else(|e| panic!("Verilog parse failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -597,3 +452,4 @@ endmodule";
         );
     }
 }
+
