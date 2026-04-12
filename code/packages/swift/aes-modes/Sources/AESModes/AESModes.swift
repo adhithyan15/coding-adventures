@@ -105,10 +105,14 @@ public enum AESModes {
         guard padLen >= 1, padLen <= blockSize else {
             throw AESModesError.invalidPaddingValue(padLen)
         }
+        // Constant-time padding validation: accumulate differences with OR
+        // instead of returning early on the first mismatch (prevents timing attacks)
+        var padDiff: UInt8 = 0
         for i in (data.count - padLen)..<data.count {
-            guard data[i] == UInt8(padLen) else {
-                throw AESModesError.inconsistentPadding
-            }
+            padDiff |= data[i] ^ UInt8(padLen)
+        }
+        guard padDiff == 0 else {
+            throw AESModesError.inconsistentPadding
         }
         return Array(data[..<(data.count - padLen)])
     }

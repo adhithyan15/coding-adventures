@@ -67,12 +67,16 @@ sub pkcs7_unpad {
     die "pkcs7_unpad: data must be non-empty and multiple of 16\n"
         unless $len > 0 && $len % 16 == 0;
     my $pad_val = ord(substr($data, -1));
-    die "pkcs7_unpad: invalid padding value $pad_val\n"
+    die "Invalid PKCS#7 padding\n"
         unless $pad_val >= 1 && $pad_val <= 16;
+    # Constant-time padding validation: accumulate differences with OR
+    # instead of returning early on the first mismatch (prevents timing attacks)
     my @bytes = unpack('C*', substr($data, $len - $pad_val));
+    my $diff = 0;
     for my $b (@bytes) {
-        die "pkcs7_unpad: inconsistent padding\n" unless $b == $pad_val;
+        $diff |= $b ^ $pad_val;
     }
+    die "Invalid PKCS#7 padding\n" if $diff;
     return substr($data, 0, $len - $pad_val);
 }
 

@@ -74,12 +74,16 @@ defmodule CodingAdventures.AesModes do
     end
     pad_val = :binary.at(data, len - 1)
     if pad_val < 1 or pad_val > 16 do
-      raise ArgumentError, "pkcs7_unpad: invalid padding value #{pad_val}"
+      raise ArgumentError, "Invalid PKCS#7 padding"
     end
+    # Constant-time padding validation: accumulate differences with OR
+    # instead of short-circuiting on the first mismatch (prevents timing attacks)
     padding_region = binary_part(data, len - pad_val, pad_val)
-    expected = :binary.copy(<<pad_val>>, pad_val)
-    if padding_region != expected do
-      raise ArgumentError, "pkcs7_unpad: inconsistent padding"
+    diff = padding_region
+      |> :binary.bin_to_list()
+      |> Enum.reduce(0, fn byte, acc -> Bitwise.bor(acc, Bitwise.bxor(byte, pad_val)) end)
+    if diff != 0 do
+      raise ArgumentError, "Invalid PKCS#7 padding"
     end
     binary_part(data, 0, len - pad_val)
   end
@@ -353,8 +357,13 @@ defmodule CodingAdventures.AesModes do
     {j0_hi, j0_lo} = bytes_to_u128(j0_enc)
     expected_tag = u128_to_bytes({bxor(tag_hi, j0_hi), bxor(tag_lo, j0_lo)})
 
-    # Constant-time-ish comparison
-    if tag == expected_tag do
+    # Constant-time tag comparison: accumulate byte differences with OR
+    # instead of short-circuiting on the first mismatch (prevents timing attacks)
+    diff = :binary.bin_to_list(expected_tag)
+      |> Enum.zip(:binary.bin_to_list(tag))
+      |> Enum.reduce(0, fn {a, b}, acc -> Bitwise.bor(acc, Bitwise.bxor(a, b)) end)
+
+    if diff == 0 do
       plaintext = ctr_process(ciphertext, key, iv, 2, <<>>)
       {:ok, plaintext}
     else

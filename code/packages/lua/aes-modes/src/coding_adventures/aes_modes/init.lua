@@ -66,10 +66,14 @@ end
 function M.pkcs7_unpad(data)
     assert(#data > 0 and #data % 16 == 0, "pkcs7_unpad: data must be non-empty and multiple of 16")
     local pad_val = data:byte(#data)
-    assert(pad_val >= 1 and pad_val <= 16, "pkcs7_unpad: invalid padding value " .. pad_val)
+    assert(pad_val >= 1 and pad_val <= 16, "Invalid PKCS#7 padding")
+    -- Constant-time padding validation: accumulate differences with OR
+    -- instead of returning early on the first mismatch (prevents timing attacks)
+    local diff = 0
     for i = #data - pad_val + 1, #data do
-        assert(data:byte(i) == pad_val, "pkcs7_unpad: inconsistent padding")
+        diff = diff | (data:byte(i) ~ pad_val)
     end
+    assert(diff == 0, "Invalid PKCS#7 padding")
     return data:sub(1, #data - pad_val)
 end
 

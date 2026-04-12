@@ -72,13 +72,16 @@ pub fn pkcs7_unpad(data: &[u8]) -> Result<Vec<u8>, String> {
     }
     let pad_len = *data.last().unwrap() as usize;
     if pad_len < 1 || pad_len > BLOCK_SIZE {
-        return Err(format!("Invalid PKCS#7 padding value: {}", pad_len));
+        return Err("Invalid PKCS#7 padding".into());
     }
-    // Verify all padding bytes
+    // Constant-time padding validation: accumulate differences with OR
+    // so the loop always takes the same time regardless of which byte fails.
+    let mut diff: u8 = 0;
     for &b in &data[data.len() - pad_len..] {
-        if b as usize != pad_len {
-            return Err("Invalid PKCS#7 padding: inconsistent padding bytes".into());
-        }
+        diff |= b ^ (pad_len as u8);
+    }
+    if diff != 0 {
+        return Err("Invalid PKCS#7 padding".into());
     }
     Ok(data[..data.len() - pad_len].to_vec())
 }

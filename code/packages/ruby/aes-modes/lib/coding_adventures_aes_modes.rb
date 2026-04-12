@@ -56,13 +56,18 @@ module CodingAdventures
       pad_len = data.getbyte(data.bytesize - 1)
 
       if pad_len < 1 || pad_len > BLOCK_SIZE
-        raise ArgumentError, "Invalid padding value: #{pad_len}"
+        raise ArgumentError, "Invalid PKCS#7 padding"
       end
 
+      # Constant-time padding validation: accumulate differences with OR
+      # instead of returning early on the first mismatch (prevents timing attacks)
+      diff = 0
       1.upto(pad_len) do |i|
-        if data.getbyte(data.bytesize - i) != pad_len
-          raise ArgumentError, "Invalid padding: expected #{pad_len} but found #{data.getbyte(data.bytesize - i)}"
-        end
+        diff |= data.getbyte(data.bytesize - i) ^ pad_len
+      end
+
+      if diff != 0
+        raise ArgumentError, "Invalid PKCS#7 padding"
       end
 
       data.byteslice(0, data.bytesize - pad_len)
@@ -386,7 +391,14 @@ module CodingAdventures
       enc_j0 = CodingAdventures::Aes.aes_encrypt_block(j0, key)
       expected_tag = xor_bytes(s, enc_j0)
 
-      unless expected_tag == tag
+      # Constant-time tag comparison: accumulate byte differences with OR
+      # instead of short-circuiting on the first mismatch (prevents timing attacks)
+      diff = 0
+      16.times do |i|
+        diff |= expected_tag.getbyte(i) ^ tag.getbyte(i)
+      end
+
+      unless diff == 0
         raise ArgumentError, "Authentication tag mismatch --- ciphertext may have been tampered with"
       end
 

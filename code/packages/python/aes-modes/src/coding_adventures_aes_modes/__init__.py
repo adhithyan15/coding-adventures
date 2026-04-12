@@ -102,15 +102,17 @@ def pkcs7_unpad(data: bytes) -> bytes:
     pad_len = data[-1]
 
     if pad_len < 1 or pad_len > BLOCK_SIZE:
-        msg = f"Invalid padding value: {pad_len}"
-        raise ValueError(msg)
+        raise ValueError("Invalid PKCS#7 padding")
 
-    # Verify ALL padding bytes match. In a real implementation, this should
-    # be constant-time to prevent timing side-channels. Here we prioritize clarity.
+    # Verify ALL padding bytes match using constant-time comparison to prevent
+    # timing side-channels. We accumulate differences with OR rather than
+    # returning early on the first mismatch — this ensures the loop always
+    # takes the same time regardless of which byte (if any) is wrong.
+    diff = 0
     for i in range(1, pad_len + 1):
-        if data[-i] != pad_len:
-            msg = f"Invalid padding: expected {pad_len} but found {data[-i]} at position -{i}"
-            raise ValueError(msg)
+        diff |= data[-i] ^ pad_len
+    if diff != 0:
+        raise ValueError("Invalid PKCS#7 padding")
 
     return data[:-pad_len]
 
@@ -636,8 +638,13 @@ def gcm_decrypt(
     s = _ghash(h, ghash_input)
     expected_tag = xor_bytes(s, aes_encrypt_block(j0, key))
 
-    # Verify the tag. In production, use constant-time comparison!
-    if expected_tag != tag:
+    # Verify the tag using constant-time comparison to prevent timing attacks.
+    # We OR together all byte differences — if any byte differs, diff will be
+    # non-zero, but an attacker cannot tell WHICH byte from the timing.
+    diff = 0
+    for a_byte, b_byte in zip(expected_tag, tag):
+        diff |= a_byte ^ b_byte
+    if diff != 0:
         msg = "Authentication tag mismatch --- ciphertext may have been tampered with"
         raise ValueError(msg)
 

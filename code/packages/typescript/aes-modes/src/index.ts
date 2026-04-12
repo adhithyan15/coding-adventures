@@ -109,13 +109,16 @@ export function pkcs7Unpad(data: Uint8Array): Uint8Array {
   }
   const padLen = data[data.length - 1];
   if (padLen < 1 || padLen > BLOCK_SIZE) {
-    throw new Error(`Invalid PKCS#7 padding value: ${padLen}`);
+    throw new Error("Invalid PKCS#7 padding");
   }
-  // Verify all padding bytes
+  // Constant-time padding validation: accumulate differences with OR
+  // so the loop always takes the same time regardless of which byte fails.
+  let diff = 0;
   for (let i = data.length - padLen; i < data.length; i++) {
-    if (data[i] !== padLen) {
-      throw new Error("Invalid PKCS#7 padding: inconsistent padding bytes");
-    }
+    diff |= data[i] ^ padLen;
+  }
+  if (diff !== 0) {
+    throw new Error("Invalid PKCS#7 padding");
   }
   return data.slice(0, data.length - padLen);
 }

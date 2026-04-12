@@ -64,13 +64,17 @@ func pkcs7Unpad(data []byte) ([]byte, error) {
 
 	padLen := int(data[len(data)-1])
 	if padLen < 1 || padLen > blockSize {
-		return nil, fmt.Errorf("invalid padding value: %d", padLen)
+		return nil, errors.New("invalid PKCS#7 padding")
 	}
 
+	// Constant-time padding validation: accumulate differences with OR
+	// so the loop always takes the same time regardless of which byte fails.
+	var diff byte
 	for i := 1; i <= padLen; i++ {
-		if data[len(data)-i] != byte(padLen) {
-			return nil, fmt.Errorf("invalid padding: expected %d but found %d", padLen, data[len(data)-i])
-		}
+		diff |= data[len(data)-i] ^ byte(padLen)
+	}
+	if diff != 0 {
+		return nil, errors.New("invalid PKCS#7 padding")
 	}
 
 	return data[:len(data)-padLen], nil
@@ -447,11 +451,14 @@ func DecryptGCM(ciphertext, key, iv, aad, tag []byte) ([]byte, error) {
 	}
 	expectedTag := xorBytes(s, encJ0)
 
-	// Verify tag (not constant-time — educational code)
+	// Constant-time tag verification: OR together all byte differences so an
+	// attacker cannot tell which byte (if any) differs from the timing.
+	var diff byte
 	for i := range tag {
-		if tag[i] != expectedTag[i] {
-			return nil, errors.New("authentication tag mismatch — ciphertext may have been tampered with")
-		}
+		diff |= tag[i] ^ expectedTag[i]
+	}
+	if diff != 0 {
+		return nil, errors.New("authentication tag mismatch — ciphertext may have been tampered with")
 	}
 
 	// Decrypt using CTR starting at counter=2
