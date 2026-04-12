@@ -339,3 +339,131 @@ pub fn inverse(a: u8) -> u8 {
     let exp = 255 - t.log[a as usize] as usize;
     t.alog[exp]
 }
+
+// =============================================================================
+// Field — parameterizable GF(2^8) field
+// =============================================================================
+//
+// The functions above are fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses the polynomial 0x11B. `Field` encapsulates any primitive polynomial
+// with its own log/alog tables so that both polynomials can coexist.
+//
+// Usage:
+//
+// ```rust
+// let aes = Field::new(0x11B);
+// assert_eq!(aes.multiply(0x53, 0xCA), 0x01);  // AES field inverses
+// ```
+
+/// A GF(2^8) field parameterized by an arbitrary primitive polynomial.
+///
+/// The module-level functions are fixed to the Reed-Solomon polynomial `0x11D`.
+/// `Field` lets you work with any polynomial — most notably `0x11B` for AES.
+///
+/// Operations use Russian peasant (shift-and-XOR) multiplication. No log/antilog
+/// tables are stored. This approach works correctly for any irreducible polynomial
+/// regardless of which element is a primitive generator. (Log/antilog tables with
+/// g=2 fail for `0x11B` because x is not a primitive element of the AES field;
+/// AES uses g=0x03 per FIPS 197 §4.1.)
+pub struct Field {
+    /// The primitive (irreducible) polynomial used to build this field.
+    pub primitive_polynomial: u16,
+    /// Low byte of the polynomial, used as the reduction constant in gf_mul.
+    reduce: u8,
+}
+
+impl Field {
+    /// Construct a GF(2^8) field for the given primitive polynomial.
+    ///
+    /// `primitive_poly` is the degree-8 irreducible polynomial as an integer:
+    /// - `0x11D` — Reed-Solomon (same as the module-level default)
+    /// - `0x11B` — AES (x^8 + x^4 + x^3 + x + 1)
+    pub fn new(primitive_poly: u16) -> Self {
+        Self {
+            primitive_polynomial: primitive_poly,
+            reduce: (primitive_poly & 0xFF) as u8,
+        }
+    }
+
+    /// Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+    fn gf_mul(&self, a: u8, b: u8) -> u8 {
+        let mut result: u8 = 0;
+        let mut aa = a;
+        let mut bb = b;
+        for _ in 0..8 {
+            if bb & 1 != 0 {
+                result ^= aa;
+            }
+            let hi = aa & 0x80;
+            aa <<= 1;
+            if hi != 0 {
+                aa ^= self.reduce;
+            }
+            bb >>= 1;
+        }
+        result
+    }
+
+    /// Raise base to exp via repeated squaring.
+    fn gf_pow(&self, base: u8, exp: u32) -> u8 {
+        if base == 0 {
+            return if exp == 0 { 1 } else { 0 };
+        }
+        if exp == 0 {
+            return 1;
+        }
+        let mut result: u8 = 1;
+        let mut b = base;
+        let mut e = exp;
+        while e > 0 {
+            if e & 1 != 0 {
+                result = self.gf_mul(result, b);
+            }
+            b = self.gf_mul(b, b);
+            e >>= 1;
+        }
+        result
+    }
+
+    /// Add two field elements: `a XOR b`.
+    ///
+    /// Addition is polynomial-independent in GF(2^8); included for API symmetry.
+    #[inline]
+    pub fn add(&self, a: u8, b: u8) -> u8 { a ^ b }
+
+    /// Subtract two field elements: `a XOR b` (same as add).
+    #[inline]
+    pub fn subtract(&self, a: u8, b: u8) -> u8 { a ^ b }
+
+    /// Multiply two field elements using Russian peasant multiplication.
+    pub fn multiply(&self, a: u8, b: u8) -> u8 {
+        self.gf_mul(a, b)
+    }
+
+    /// Divide `a` by `b` in this field.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `b == 0`.
+    pub fn divide(&self, a: u8, b: u8) -> u8 {
+        assert!(b != 0, "GF256::Field: division by zero");
+        self.gf_mul(a, self.gf_pow(b, 254))
+    }
+
+    /// Raise `base` to a non-negative integer power.
+    pub fn power(&self, base: u8, exp: u32) -> u8 {
+        self.gf_pow(base, exp)
+    }
+
+    /// Compute the multiplicative inverse of `a`.
+    ///
+    /// inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
+    ///
+    /// # Panics
+    ///
+    /// Panics if `a == 0`.
+    pub fn inverse(&self, a: u8) -> u8 {
+        assert!(a != 0, "GF256::Field: zero has no multiplicative inverse");
+        self.gf_pow(a, 254)
+    }
+}

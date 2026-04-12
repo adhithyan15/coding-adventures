@@ -408,3 +408,124 @@ public enum GF256 {
         return tables.alog[255 - logA]
     }
 }
+
+// ============================================================================
+// MARK: - GF256Field — parameterizable field factory
+// ============================================================================
+//
+// The GF256 namespace above is fixed to the Reed-Solomon polynomial 0x11D.
+// AES uses 0x11B. GF256Field accepts any primitive polynomial and builds
+// its own independent log/antilog tables.
+//
+// Usage:
+//   let aes = GF256Field(polynomial: 0x11B)
+//   aes.multiply(0x53, 0xCA)  // → 1   (AES GF(2^8) inverses)
+//   aes.multiply(0x57, 0x83)  // → 0xC1 (FIPS 197 Appendix B)
+//
+// Operations use Russian peasant (shift-and-XOR) multiplication — no log/antilog
+// tables. This works correctly for any irreducible polynomial. Log/antilog tables
+// with g=2 fail for 0x11B because x is not a primitive element of the AES field
+// (AES uses g=0x03 per FIPS 197 §4.1); Russian peasant needs no generator.
+
+/// A GF(2^8) field parameterized by an arbitrary primitive polynomial.
+///
+/// The `GF256` enum is fixed to the Reed-Solomon polynomial `0x11D`.
+/// `GF256Field` lets you work with any polynomial — most notably `0x11B`
+/// for AES.
+///
+/// Operations use Russian peasant multiplication and repeated squaring.
+/// No log/antilog tables are stored, so initialization is O(1).
+public struct GF256Field {
+
+    /// The primitive (irreducible) polynomial for this field.
+    public let polynomial: UInt16
+
+    // Low byte of the polynomial used as the reduction constant in gfMul.
+    private let reduce: UInt8
+
+    // ========================================================================
+    // MARK: - Initialization
+    // ========================================================================
+
+    /// Create a GF(2^8) field for the given primitive polynomial.
+    ///
+    /// - Parameter polynomial: The degree-8 irreducible polynomial as a
+    ///   `UInt16`, e.g. `0x11B` for AES or `0x11D` for Reed-Solomon.
+    public init(polynomial: UInt16) {
+        self.polynomial = polynomial
+        self.reduce = UInt8(polynomial & 0xFF)
+    }
+
+    // ========================================================================
+    // MARK: - Private helpers
+    // ========================================================================
+
+    /// Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+    private func gfMul(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        var result: UInt8 = 0
+        var aa = a
+        var bb = b
+        for _ in 0..<8 {
+            if bb & 1 != 0 { result ^= aa }
+            let hi = aa & 0x80
+            aa <<= 1
+            if hi != 0 { aa ^= reduce }
+            bb >>= 1
+        }
+        return result
+    }
+
+    /// Raise base to exp via repeated squaring.
+    private func gfPow(_ base: UInt8, _ exp: UInt32) -> UInt8 {
+        if base == 0 { return exp == 0 ? 1 : 0 }
+        if exp == 0  { return 1 }
+        var result: UInt8 = 1
+        var b = base
+        var e = exp
+        while e > 0 {
+            if e & 1 != 0 { result = gfMul(result, b) }
+            b = gfMul(b, b)
+            e >>= 1
+        }
+        return result
+    }
+
+    // ========================================================================
+    // MARK: - Operations
+    // ========================================================================
+
+    /// Add two elements: `a XOR b`.
+    /// Addition is polynomial-independent; included for API symmetry.
+    public func add(_ a: UInt8, _ b: UInt8) -> UInt8 { a ^ b }
+
+    /// Subtract two elements: `a XOR b` (identical to add in GF(2^8)).
+    public func subtract(_ a: UInt8, _ b: UInt8) -> UInt8 { a ^ b }
+
+    /// Multiply two elements using Russian peasant multiplication.
+    public func multiply(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        gfMul(a, b)
+    }
+
+    /// Divide `a` by `b`.
+    ///
+    /// - Precondition: `b != 0`.
+    public func divide(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        precondition(b != 0, "GF256Field: division by zero")
+        return gfMul(a, gfPow(b, 254))
+    }
+
+    /// Raise `base` to a non-negative integer power.
+    public func power(_ base: UInt8, _ exp: UInt32) -> UInt8 {
+        gfPow(base, exp)
+    }
+
+    /// Compute the multiplicative inverse of `a`.
+    ///
+    /// inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
+    ///
+    /// - Precondition: `a != 0`.
+    public func inverse(_ a: UInt8) -> UInt8 {
+        precondition(a != 0, "GF256Field: zero has no multiplicative inverse")
+        return gfPow(a, 254)
+    }
+}

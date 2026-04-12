@@ -173,7 +173,7 @@ tests prove the behavior
 
 Today the repo contains:
 
-- 1513 package directories
+- 1572 package directories
 - 122 program directories
 - 9 implementation languages
 

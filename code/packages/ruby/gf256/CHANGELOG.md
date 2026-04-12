@@ -1,5 +1,18 @@
 # Changelog — coding_adventures_gf256 (Ruby)
 
+## [0.2.0] — 2026-04-11
+
+### Added
+
+- `GF256::Field` class — parameterizable field factory that accepts any primitive polynomial.
+  Uses Russian peasant (shift-and-XOR) multiplication; no log/antilog tables.
+  - `GF256::Field.new(0x11B)` creates the AES GF(2^8) field.
+  - `GF256::Field.new(0x11D)` matches the module-level functions (Reed-Solomon).
+  - Methods: `multiply`, `divide`, `power`, `inverse`, `add`, `subtract`.
+  - `polynomial` attr_reader stores the polynomial used for construction.
+- Tests: `TestGF256Field` class with AES sanity check (`0x53 × 0xCA = 1`), FIPS 197
+  Appendix B (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, error cases.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added
