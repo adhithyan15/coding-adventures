@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+  <!--
+    F# is a top-to-bottom language: a module can only reference symbols defined
+    above it. Unlike C#, the F# compiler processes files strictly in the order
+    they appear here. For a single-file project this doesn't matter, but the
+    <Compile Include="..."> entry must still be present — the SDK does not
+    auto-discover .fs files the way it auto-discovers .cs files.
+  -->
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+</Project>

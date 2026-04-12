@@ -59,6 +59,10 @@ var sourceExtensions = map[string]map[string]bool{
 	"starlark":   {".star": true},
 	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
 	"haskell":    {".hs": true, ".cabal": true},
+	// .cs and .fs are C# and F# source files. .csproj and .fsproj are the
+	// project manifests — equivalent to Cargo.toml or go.mod. Changes to
+	// any of these should invalidate the build cache and trigger a rebuild.
+	"dotnet": {".cs": true, ".fs": true, ".csproj": true, ".fsproj": true},
 }
 
 // specialFilenames maps languages to filenames that should always be
@@ -73,6 +77,11 @@ var specialFilenames = map[string]map[string]bool{
 	"starlark":   {},
 	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
 	"haskell":    {},
+	// global.json pins the .NET SDK version — a change here should trigger
+	// a rebuild even if no source files changed. NuGet.Config controls the
+	// package feed sources (case-insensitive filename on Windows, so both
+	// variants are tracked).
+	"dotnet": {"global.json": true, "NuGet.Config": true, "nuget.config": true},
 }
 
 // collectSourceFiles walks the package directory and returns all source
