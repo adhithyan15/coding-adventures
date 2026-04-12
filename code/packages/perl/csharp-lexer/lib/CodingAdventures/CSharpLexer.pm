@@ -228,7 +228,7 @@ sub _build_rules {
             # a regex match. These constructs should never appear in a grammar
             # file from disk. Die early rather than silently execute injected code.
             my $raw_pat = $defn->pattern;
-            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+            if ( $raw_pat =~ /\(\?\{|\(\?\?\{/ ) {
                 die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
             }
             $pat = qr/\G(?:${\$defn->pattern})/;
@@ -245,7 +245,7 @@ sub _build_rules {
         if ( $defn->is_regex ) {
             # Security: reject patterns containing Perl code-execution constructs.
             my $raw_pat = $defn->pattern;
-            if ( $raw_pat =~ /\(\?{|\(\?\?{/ ) {
+            if ( $raw_pat =~ /\(\?\{|\(\?\?\{/ ) {
                 die "Security error: unsafe Perl regex code construct in grammar pattern '$raw_pat'\n";
             }
             $pat = qr/\G(?:${\$defn->pattern})/;

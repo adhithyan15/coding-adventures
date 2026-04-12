@@ -117,9 +117,9 @@ class TestCSharpLexer < Minitest::Test
   end
 
   def test_keyword_var
-    # `var` is C# 3.0+ type inference keyword
+    # `var` is a contextual keyword in C# 3.0+, so the lexer still emits NAME.
     tokens = tokenize("var", version: "3.0")
-    assert_equal TT::KEYWORD, tokens[0].type
+    assert_equal TT::NAME, tokens[0].type
     assert_equal "var", tokens[0].value
   end
 

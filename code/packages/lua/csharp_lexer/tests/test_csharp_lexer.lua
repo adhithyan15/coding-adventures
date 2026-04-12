@@ -161,7 +161,7 @@ describe("number tokens", function()
     end)
 
     it("tokenizes multiple numbers separated by operators", function()
-        local tokens = csharp_lexer.tokenize_csharp("1+2")
+        local tokens = csharp_lexer.tokenize_csharp("1 + 2")
         local t = types(tokens)
         assert.are.same({"NUMBER", "PLUS", "NUMBER"}, t)
     end)

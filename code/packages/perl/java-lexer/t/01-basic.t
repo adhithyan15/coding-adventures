@@ -157,10 +157,10 @@ subtest 'EOF is always last' => sub {
 # Error handling
 # ============================================================================
 
-subtest 'unexpected character @ raises die' => sub {
+subtest 'unexpected character ` raises die' => sub {
     ok(
-        dies { CodingAdventures::JavaLexer->tokenize('@') },
-        'unexpected @ causes die'
+        dies { CodingAdventures::JavaLexer->tokenize('`') },
+        'unexpected ` causes die'
     );
 };
 

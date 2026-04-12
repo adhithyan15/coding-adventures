@@ -74,6 +74,11 @@ our $VERSION = '0.01';
 use CodingAdventures::CSharpLexer;
 use CodingAdventures::CSharpParser::ASTNode;
 
+my %TYPE_KEYWORDS = map { $_ => 1 } qw(
+    BOOL BYTE CHAR DECIMAL DOUBLE DYNAMIC FLOAT INT LONG NINT NUINT
+    OBJECT SBYTE SHORT STRING UINT ULONG USHORT
+);
+
 # ============================================================================
 # Constructor
 # ============================================================================
@@ -165,6 +170,27 @@ sub _node {
     return CodingAdventures::CSharpParser::ASTNode->new($rule_name, \@children);
 }
 
+sub _is_type_token {
+    my ($self, $tok) = @_;
+    return 0 unless $tok;
+    return 1 if $tok->{type} eq 'NAME';
+    return 1 if $TYPE_KEYWORDS{$tok->{type}};
+    return 0;
+}
+
+sub _consume_type_token {
+    my ($self) = @_;
+    my $tok = $self->_peek();
+    unless ($self->_is_type_token($tok)) {
+        die sprintf(
+            "CodingAdventures::CSharpParser: parse error at line %d col %d: "
+          . "expected type name but got %s ('%s')\n",
+            $tok->{line}, $tok->{col}, $tok->{type}, $tok->{value}
+        );
+    }
+    return $self->_advance();
+}
+
 # ============================================================================
 # Public API
 # ============================================================================
@@ -232,13 +258,17 @@ sub _parse_statement {
 
     # Variable declaration: NAME NAME EQUALS ... (type name = expr ;)
     # Also handles keyword types like INT, STRING, BOOL, etc.
-    if ($type eq 'NAME') {
+    if ($self->_is_type_token($tok)) {
         my $next = $self->_peek_ahead(1);
-        # If NAME is followed by another NAME, it's a type declaration
+        # If a type token is followed by NAME, it's a variable declaration.
         if ($next->{type} eq 'NAME') {
             return $self->_node('statement', $self->_parse_var_declaration());
         }
-        # If NAME is followed by EQUALS, it's an assignment
+    }
+
+    if ($type eq 'NAME') {
+        my $next = $self->_peek_ahead(1);
+        # If NAME is followed by EQUALS, it's an assignment.
         if ($next->{type} eq 'EQUALS') {
             return $self->_node('statement', $self->_parse_assignment_stmt());
         }
@@ -254,7 +284,7 @@ sub _parse_statement {
 sub _parse_var_declaration {
     my ($self) = @_;
     my @ch;
-    push @ch, $self->_leaf($self->_advance());          # type (NAME)
+    push @ch, $self->_leaf($self->_consume_type_token());
     push @ch, $self->_leaf($self->_expect('NAME'));      # variable name
     push @ch, $self->_leaf($self->_expect('EQUALS'));
     push @ch, $self->_parse_expression();
@@ -316,10 +346,10 @@ sub _parse_for_stmt {
     push @ch, $self->_leaf($self->_expect('LPAREN'));
 
     # --- Initializer ---
-    if ($self->_check('NAME') && $self->_peek_ahead(1)->{type} eq 'NAME') {
+    if ($self->_is_type_token($self->_peek()) && $self->_peek_ahead(1)->{type} eq 'NAME') {
         # type name = expr
         my @init_ch;
-        push @init_ch, $self->_leaf($self->_advance());     # type
+        push @init_ch, $self->_leaf($self->_consume_type_token());
         push @init_ch, $self->_leaf($self->_expect('NAME'));
         push @init_ch, $self->_leaf($self->_expect('EQUALS'));
         push @init_ch, $self->_parse_expression();
@@ -371,7 +401,7 @@ sub _parse_foreach_stmt {
     my @ch;
     push @ch, $self->_leaf($self->_expect('FOREACH'));
     push @ch, $self->_leaf($self->_expect('LPAREN'));
-    push @ch, $self->_leaf($self->_advance());             # element type (NAME)
+    push @ch, $self->_leaf($self->_consume_type_token());  # element type
     push @ch, $self->_leaf($self->_expect('NAME'));         # element variable name
     push @ch, $self->_leaf($self->_expect('IN'));           # in keyword
     push @ch, $self->_parse_expression();                   # iterable expression
