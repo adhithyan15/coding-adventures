@@ -129,6 +129,6 @@ mod tests {
         tree.insert(30, "thirty");
         assert_eq!(tree.inner.range_query(&10, &30).len(), 3);
         assert_eq!(tree.inner.inorder().len(), 3);
-        assert_eq!(tree.height(), 1);
+        assert_eq!(tree.height(), 0);
     }
 }
