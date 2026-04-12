@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-04-12
+
+### Added
+
+- `XORn` — N-input XOR gate (parity checker). Chains two-input `XOR` gates in a
+  linear fold: `XORn(a, b, c) = XOR(XOR(a, b), c)`. Returns 1 when an odd number
+  of inputs are 1. Used by the Intel 8008 gate-level simulator to compute the
+  Parity flag: `P = NOT(XORn(@bits))` (P=1 means even parity, matching 8008
+  hardware convention). Exported from `@EXPORT_OK`.
+
 ## [0.3.0] - 2026-03-29
 
 ### Changed

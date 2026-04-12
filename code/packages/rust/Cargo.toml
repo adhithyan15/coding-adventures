@@ -247,5 +247,7 @@ members = [
     "irc-server",
     "irc-net-stdlib",
     "url-parser",
-  "tcp-client",
+    "tcp-client",
+    "intel8008-simulator",
+    "intel8008-gatelevel",
 ]
