@@ -216,6 +216,8 @@ module GF256
 
     # Raise base to a non-negative integer power via repeated squaring.
     def power(base, exp)
+      raise ArgumentError, "GF256::Field: exponent must be non-negative" if exp < 0
+      raise ArgumentError, "GF256::Field: exponent too large (max 2^32 - 1)" if exp > 0xFFFF_FFFF
       gf_pow(base, exp)
     end
 

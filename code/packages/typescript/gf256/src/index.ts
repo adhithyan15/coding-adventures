@@ -366,6 +366,9 @@ export function createField(polynomial: number): GF256FieldInstance {
     },
 
     power(base: GF256, exp: number): GF256 {
+      if (!Number.isInteger(exp) || exp < 0) {
+        throw new Error("GF256Field: exponent must be a non-negative integer");
+      }
       return gfPow(base, exp);
     },
 

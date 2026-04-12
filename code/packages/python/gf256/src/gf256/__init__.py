@@ -350,6 +350,10 @@ class GF256Field:
 
     def power(self, base: GF256, exp: int) -> GF256:
         """Raise base to a non-negative integer power."""
+        if exp < 0:
+            raise ValueError("GF256Field: exponent must be non-negative")
+        if exp > 0xFFFF_FFFF:
+            raise ValueError("GF256Field: exponent too large (max 2^32 - 1)")
         return self._gf_pow(base, exp, self._reduce)
 
     def inverse(self, a: GF256) -> GF256:
