@@ -1,0 +1,7 @@
+[package]
+name = "url-parser"
+version = "0.1.0"
+edition = "2021"
+description = "RFC 1738 URL parser with relative resolution and percent-encoding"
+
+[dependencies]

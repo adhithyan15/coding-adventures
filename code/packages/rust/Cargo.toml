@@ -203,6 +203,8 @@ members = [
     "paint-codec-png",
     "paint-instructions",
     "paint-metal",
+    "paint-vm-direct2d",
+    "paint-vm-gdi",
     "pixel-container",
     "png",
     "point2d",
@@ -240,4 +242,5 @@ members = [
     "irc-framing",
     "irc-server",
     "irc-net-stdlib",
+    "url-parser",
 ]
