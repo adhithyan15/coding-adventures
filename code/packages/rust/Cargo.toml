@@ -224,5 +224,5 @@ members = [
     "lz78",
     "lzss",
     "json-rpc",
-    "rpc",
+    "rpc", "lsm-tree",
 ]
