@@ -303,14 +303,14 @@ defmodule CodingAdventures.GF256Test do
   # ────────────────────────────────────────────────────────────────────────────
 
   describe "new_field and field-aware overloads" do
-    test "new_field returns a GF256Field struct" do
+    test "new_field returns a GF256Field struct with polynomial set" do
       field = GF.new_field(0x11B)
       assert %CodingAdventures.GF256Field{polynomial: 0x11B} = field
     end
 
-    test "AES field: multiply(0x53, 0x8C) = 1 (inverses in 0x11B)" do
+    test "AES field: multiply(0x53, 0xCA) = 1 (inverses in 0x11B)" do
       aes = GF.new_field(0x11B)
-      assert GF.multiply(aes, 0x53, 0x8C) == 1
+      assert GF.multiply(aes, 0x53, 0xCA) == 1
     end
 
     test "AES field: multiply(0x57, 0x83) = 0xC1 (FIPS 197 Appendix B)" do
@@ -318,9 +318,9 @@ defmodule CodingAdventures.GF256Test do
       assert GF.multiply(aes, 0x57, 0x83) == 0xC1
     end
 
-    test "AES field: inverse(0x53) = 0x8C" do
+    test "AES field: inverse(0x53) = 0xCA" do
       aes = GF.new_field(0x11B)
-      assert GF.inverse(aes, 0x53) == 0x8C
+      assert GF.inverse(aes, 0x53) == 0xCA
     end
 
     test "RS field (0x11D) matches module-level multiply for sample values" do

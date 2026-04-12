@@ -179,19 +179,24 @@ func One() GF256 { return 1 }
 // Usage:
 //
 //	aesField := gf256.NewField(0x11B)
-//	aesField.Multiply(0x53, 0x8C)  // → 1
-//	aesField.Inverse(0x53)          // → 0x8C
+//	aesField.Multiply(0x53, 0xCA)  // → 1
+//	aesField.Inverse(0x53)          // → 0xCA
 //
 // The module-level functions remain the canonical Reed-Solomon API.
 
-// Field holds precomputed log/antilog tables for a single primitive polynomial.
+// Field is a GF(2^8) field parameterized by an arbitrary primitive polynomial.
 // Create instances with NewField; zero values are invalid.
+//
+// Operations use Russian peasant (shift-and-XOR) multiplication — no log/antilog
+// tables. This works correctly for any irreducible polynomial regardless of
+// which element is a primitive generator. (Log/antilog tables with g=2 fail for
+// 0x11B because x is not a primitive element of that field; AES uses g=0x03.)
 type Field struct {
 	// PrimitivePoly is the irreducible polynomial used to build this field.
 	PrimitivePoly int
 
-	log  [256]byte
-	alog [256]int
+	// reduce is the low byte of PrimitivePoly, used in Russian peasant multiply.
+	reduce byte
 }
 
 // NewField constructs a GF(2^8) Field for the given primitive polynomial.
@@ -200,54 +205,34 @@ type Field struct {
 //
 //	0x11D  — Reed-Solomon (same as the module-level polynomial)
 //	0x11B  — AES (x^8 + x^4 + x^3 + x + 1)
-//
-// The log/alog tables are built during construction and reused for all
-// subsequent operations. Construction is O(256); all operations are O(1).
 func NewField(primitivePoly int) *Field {
-	f := &Field{PrimitivePoly: primitivePoly}
-	val := 1
-	for i := 0; i < 255; i++ {
-		f.alog[i] = val
-		f.log[val] = byte(i)
-		val <<= 1
-		if val >= 256 {
-			val ^= primitivePoly
+	return &Field{
+		PrimitivePoly: primitivePoly,
+		reduce:        byte(primitivePoly & 0xFF),
+	}
+}
+
+// gfMul multiplies a and b in GF(2^8) using Russian peasant multiplication.
+// reduce is the low byte of the primitive polynomial.
+func gfMul(a, b, reduce byte) byte {
+	var result byte
+	aa := a
+	for i := 0; i < 8; i++ {
+		if b&1 != 0 {
+			result ^= aa
 		}
+		hi := aa & 0x80
+		aa <<= 1
+		if hi != 0 {
+			aa ^= reduce
+		}
+		b >>= 1
 	}
-	// alog[255] = 1: the multiplicative group has order 255, so g^255 = g^0 = 1.
-	f.alog[255] = 1
-	return f
+	return result
 }
 
-// Add adds two GF(256) elements: a XOR b.
-// Addition is polynomial-independent in GF(2^8); included for API symmetry.
-func (f *Field) Add(a, b GF256) GF256 { return a ^ b }
-
-// Subtract subtracts two GF(256) elements: a XOR b (same as Add).
-func (f *Field) Subtract(a, b GF256) GF256 { return a ^ b }
-
-// Multiply multiplies two GF(256) elements using this field's log/alog tables.
-func (f *Field) Multiply(a, b GF256) GF256 {
-	if a == 0 || b == 0 {
-		return 0
-	}
-	return byte(f.alog[(int(f.log[a])+int(f.log[b]))%255])
-}
-
-// Divide divides a by b in this GF(256) field.
-// Panics if b is 0.
-func (f *Field) Divide(a, b GF256) GF256 {
-	if b == 0 {
-		panic("gf256.Field: division by zero")
-	}
-	if a == 0 {
-		return 0
-	}
-	return byte(f.alog[(int(f.log[a])-int(f.log[b])+255)%255])
-}
-
-// Power raises a GF(256) element to a non-negative integer power.
-func (f *Field) Power(base GF256, exp int) GF256 {
+// gfPow raises base to exp in GF(2^8) via repeated squaring.
+func gfPow(base, reduce byte, exp int) byte {
 	if base == 0 {
 		if exp == 0 {
 			return 1
@@ -257,18 +242,52 @@ func (f *Field) Power(base GF256, exp int) GF256 {
 	if exp == 0 {
 		return 1
 	}
-	idx := (int(f.log[base]) * exp) % 255
-	if idx < 0 {
-		idx += 255
+	result := byte(1)
+	b := base
+	e := exp
+	for e > 0 {
+		if e&1 != 0 {
+			result = gfMul(result, b, reduce)
+		}
+		b = gfMul(b, b, reduce)
+		e >>= 1
 	}
-	return byte(f.alog[idx])
+	return result
+}
+
+// Add adds two GF(256) elements: a XOR b.
+// Addition is polynomial-independent in GF(2^8); included for API symmetry.
+func (f *Field) Add(a, b GF256) GF256 { return a ^ b }
+
+// Subtract subtracts two GF(256) elements: a XOR b (same as Add).
+func (f *Field) Subtract(a, b GF256) GF256 { return a ^ b }
+
+// Multiply multiplies two GF(256) elements using Russian peasant multiplication.
+func (f *Field) Multiply(a, b GF256) GF256 {
+	return gfMul(a, b, f.reduce)
+}
+
+// Divide divides a by b in this GF(256) field.
+// Panics if b is 0.
+func (f *Field) Divide(a, b GF256) GF256 {
+	if b == 0 {
+		panic("gf256.Field: division by zero")
+	}
+	// divide(a,b) = a * b^(-1) = a * b^254
+	return gfMul(a, gfPow(b, f.reduce, 254), f.reduce)
+}
+
+// Power raises a GF(256) element to a non-negative integer power.
+func (f *Field) Power(base GF256, exp int) GF256 {
+	return gfPow(base, f.reduce, exp)
 }
 
 // Inverse returns the multiplicative inverse of a in this GF(256) field.
 // Panics if a is 0.
+// inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
 func (f *Field) Inverse(a GF256) GF256 {
 	if a == 0 {
 		panic("gf256.Field: zero has no multiplicative inverse")
 	}
-	return byte(f.alog[255-int(f.log[a])])
+	return gfPow(a, f.reduce, 254)
 }

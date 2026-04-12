@@ -339,7 +339,7 @@ sub inverse {
 #   use CodingAdventures::GF256::Field;
 #
 #   my $aes = CodingAdventures::GF256::Field->new(0x11B);
-#   $aes->multiply(0x53, 0x8C);   # => 1   (AES GF(2^8) inverses)
+#   $aes->multiply(0x53, 0xCA);   # => 1   (AES GF(2^8) inverses)
 #   $aes->multiply(0x57, 0x83);   # => 0xC1 (FIPS 197 Appendix B)
 #
 # Backward compatibility: the module-level functions (add, subtract, multiply,
@@ -354,8 +354,11 @@ use warnings;
 # ----------------------------------------------------------------------------
 # new($polynomial) — construct a field for the given primitive polynomial.
 #
-# Builds LOG and ALOG tables using the same algorithm as the module-level code.
-# The tables are stored as array references inside the blessed hash.
+# Uses Russian peasant (shift-and-XOR) multiplication — no log/antilog tables.
+# This works for any irreducible polynomial regardless of which element is a
+# primitive generator. Log/antilog tables with g=2 fail for 0x11B because x
+# is not a primitive element of the AES field (AES uses g=0x03 per FIPS 197
+# §4.1); Russian peasant needs no generator assumption.
 #
 # @param $polynomial  The irreducible polynomial as an integer (e.g. 0x11B for AES,
 #                     0x11D for Reed-Solomon).
@@ -364,30 +367,47 @@ use warnings;
 sub new {
     my ($class, $polynomial) = @_;
 
-    my @alog = (0) x 256;
-    my @log  = (0) x 256;
-
-    my $val = 1;
-    for my $i (0 .. 254) {
-        $alog[$i] = $val;
-        $log[$val] = $i;
-        $val <<= 1;
-        if ($val & 0x100) {
-            $val ^= $polynomial;
-            $val &= 0xFF;
-        }
-    }
-    $alog[255] = $alog[0];    # g^255 = g^0 = 1
-
     return bless {
         polynomial => $polynomial,
-        alog       => \@alog,
-        log        => \@log,
+        # reduce = low byte of the polynomial, used in the multiplication step.
+        reduce     => $polynomial & 0xFF,
     }, $class;
 }
 
 # The primitive polynomial this field was built with.
 sub polynomial { $_[0]->{polynomial} }
+
+# Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+sub _gf_mul {
+    my ($self, $a, $b) = @_;
+    my $result = 0;
+    my $aa = $a;
+    my $reduce = $self->{reduce};
+    for my $i (0 .. 7) {
+        $result ^= $aa if $b & 1;
+        my $hi = $aa & 0x80;
+        $aa = ($aa << 1) & 0xFF;
+        $aa ^= $reduce if $hi;
+        $b >>= 1;
+    }
+    return $result;
+}
+
+# Raise base to exp via repeated squaring.
+sub _gf_pow {
+    my ($self, $base, $exp) = @_;
+    return 1 if $exp == 0;
+    return 0 if $base == 0;
+    my $result = 1;
+    my $b = $base;
+    my $e = $exp;
+    while ($e > 0) {
+        $result = $self->_gf_mul($result, $b) if $e & 1;
+        $b = $self->_gf_mul($b, $b);
+        $e >>= 1;
+    }
+    return $result;
+}
 
 # Add two field elements: a XOR b (characteristic 2; polynomial-independent).
 sub add {
@@ -401,34 +421,31 @@ sub subtract {
     return $a ^ $b;
 }
 
-# Multiply two field elements using this field's log/antilog tables.
+# Multiply two field elements using Russian peasant multiplication.
 sub multiply {
     my ($self, $a, $b) = @_;
-    return 0 if $a == 0 || $b == 0;
-    return $self->{alog}[ ($self->{log}[$a] + $self->{log}[$b]) % 255 ];
+    return $self->_gf_mul($a, $b);
 }
 
 # Divide a by b. Dies if b is 0.
 sub divide {
     my ($self, $a, $b) = @_;
     die "GF256::Field: division by zero" if $b == 0;
-    return 0 if $a == 0;
-    return $self->{alog}[ ($self->{log}[$a] - $self->{log}[$b] + 255) % 255 ];
+    return $self->_gf_mul($a, $self->_gf_pow($b, 254));
 }
 
 # Raise base to a non-negative integer power.
 sub power {
     my ($self, $base, $exp) = @_;
-    return 1 if $exp == 0;
-    return 0 if $base == 0;
-    return $self->{alog}[ ($self->{log}[$base] * $exp) % 255 ];
+    return $self->_gf_pow($base, $exp);
 }
 
 # Return the multiplicative inverse of a. Dies if a is 0.
+# inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
 sub inverse {
     my ($self, $a) = @_;
     die "GF256::Field: zero has no multiplicative inverse" if $a == 0;
-    return $self->{alog}[ 255 - $self->{log}[$a] ];
+    return $self->_gf_pow($a, 254);
 }
 
 package CodingAdventures::GF256;

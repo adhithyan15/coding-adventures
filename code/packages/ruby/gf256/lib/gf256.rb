@@ -170,24 +170,31 @@ module GF256
   # ===========================================================================
   #
   # The module-level functions are fixed to the Reed-Solomon polynomial 0x11D.
-  # AES uses 0x11B. GF256::Field accepts any primitive polynomial and builds
-  # its own independent log/antilog tables.
+  # AES uses 0x11B. GF256::Field accepts any primitive polynomial and uses
+  # Russian peasant multiplication (no log/antilog tables needed).
   #
   # Usage:
   #   aes = GF256::Field.new(0x11B)
-  #   aes.multiply(0x53, 0x8C)  # => 1
-  #   aes.inverse(0x53)          # => 0x8C
+  #   aes.multiply(0x53, 0xCA)  # => 1
+  #   aes.inverse(0x53)          # => 0xCA
 
   class Field
     attr_reader :polynomial
 
     # Build a GF(2^8) field for the given primitive polynomial.
     #
+    # Uses Russian peasant (shift-and-XOR) multiplication — no log/antilog tables.
+    # This works correctly for any irreducible polynomial without needing a
+    # specific primitive generator. (Log/antilog tables require g=2 to be a
+    # primitive element, which holds for 0x11D but not for 0x11B — AES uses
+    # g=0x03 per FIPS 197 §4.1.)
+    #
     # @param polynomial [Integer] the irreducible polynomial (e.g. 0x11B for AES,
     #   0x11D for Reed-Solomon).
     def initialize(polynomial)
       @polynomial = polynomial
-      @log, @alog = build_tables(polynomial)
+      # Low byte of the polynomial used for the reduction step in gf_mul.
+      @reduce = polynomial & 0xFF
     end
 
     # Add two field elements: a XOR b (characteristic-2; polynomial-independent).
@@ -196,47 +203,59 @@ module GF256
     # Subtract two field elements: a XOR b (same as add in GF(2^8)).
     def subtract(a, b) = a ^ b
 
-    # Multiply two field elements using this field's log/antilog tables.
+    # Multiply two field elements using Russian peasant multiplication.
     def multiply(a, b)
-      return 0 if a == 0 || b == 0
-      @alog[(@log[a] + @log[b]) % 255]
+      gf_mul(a, b)
     end
 
     # Divide a by b. Raises ArgumentError if b is 0.
     def divide(a, b)
       raise ArgumentError, "GF256::Field: division by zero" if b == 0
-      return 0 if a == 0
-      @alog[(@log[a] - @log[b] + 255) % 255]
+      gf_mul(a, gf_pow(b, 254))
     end
 
-    # Raise base to a non-negative integer power.
+    # Raise base to a non-negative integer power via repeated squaring.
     def power(base, exp)
-      return 1 if base == 0 && exp == 0
-      return 0 if base == 0
-      return 1 if exp == 0
-      @alog[((@log[base] * exp) % 255 + 255) % 255]
+      gf_pow(base, exp)
     end
 
     # Return the multiplicative inverse of a. Raises ArgumentError if a is 0.
+    # inverse(a) = a^254 since a^255 = 1 (Fermat's little theorem for GF(2^8)).
     def inverse(a)
       raise ArgumentError, "GF256::Field: zero has no multiplicative inverse" if a == 0
-      @alog[255 - @log[a]]
+      gf_pow(a, 254)
     end
 
     private
 
-    def build_tables(poly)
-      log_tbl  = Array.new(256, 0)
-      alog_tbl = Array.new(256, 0)
-      val = 1
-      255.times do |i|
-        alog_tbl[i] = val
-        log_tbl[val] = i
-        val <<= 1
-        val ^= poly if val >= 256
+    # Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+    # @reduce is the low byte of the primitive polynomial.
+    def gf_mul(a, b)
+      result = 0
+      aa = a
+      8.times do
+        result ^= aa if b & 1 != 0
+        hi = aa & 0x80
+        aa = (aa << 1) & 0xFF
+        aa ^= @reduce if hi != 0
+        b >>= 1
       end
-      alog_tbl[255] = 1  # g^255 = g^0 = 1
-      [log_tbl.freeze, alog_tbl.freeze]
+      result
+    end
+
+    # Raise base to exp via repeated squaring.
+    def gf_pow(base, exp)
+      return exp == 0 ? 1 : 0 if base == 0
+      return 1 if exp == 0
+      result = 1
+      b = base
+      e = exp
+      while e > 0
+        result = gf_mul(result, b) if e & 1 != 0
+        b = gf_mul(b, b)
+        e >>= 1
+      end
+      result
     end
   end
 end

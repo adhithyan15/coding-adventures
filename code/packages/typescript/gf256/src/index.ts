@@ -269,7 +269,7 @@ export function one(): GF256 {
 //
 // Usage:
 //   const aes = createField(0x11B);
-//   aes.multiply(0x53, 0x8C);  // → 1  (AES GF(2^8) inverses)
+//   aes.multiply(0x53, 0xCA);  // → 1  (AES GF(2^8) inverses)
 
 /**
  * A GF(2^8) field configured for a specific primitive polynomial.
@@ -300,26 +300,54 @@ export interface GF256FieldInstance {
  * @example
  * ```ts
  * const aes = createField(0x11B);
- * aes.multiply(0x53, 0x8C);  // → 1
+ * aes.multiply(0x53, 0xCA);  // → 1   (AES GF(2^8) inverses)
  * aes.multiply(0x57, 0x83);  // → 0xC1  (FIPS 197 Appendix B)
  * ```
  */
 export function createField(polynomial: number): GF256FieldInstance {
-  // Build log/alog tables for this polynomial.
-  const fieldLog: number[] = new Array(256).fill(0);
-  const fieldAlog: number[] = new Array(256).fill(0);
+  // Russian peasant (shift-and-XOR) multiplication for GF(2^8).
+  //
+  // Log/antilog tables require a *primitive* generator g such that g^1..g^255
+  // visits all 255 non-zero elements. g=2 works for 0x11D (Reed-Solomon) but
+  // is NOT primitive for 0x11B (AES uses g=0x03 per FIPS 197 §4.1). Using
+  // g=2 with 0x11B leaves most log entries at 0, producing wrong results.
+  //
+  // Russian peasant multiplication needs no generator assumption:
+  //   for each bit of b (LSB first):
+  //     if bit set: result ^= a
+  //     carry = a & 0x80; a = (a << 1) & 0xFF
+  //     if carry: a ^= reduce   (reduce = polynomial & 0xFF = low-byte constant)
+  const reduce = polynomial & 0xFF;
 
-  let val = 1;
-  for (let i = 0; i < 255; i++) {
-    fieldAlog[i] = val;
-    fieldLog[val] = i;
-    val <<= 1;
-    if (val >= 256) {
-      val ^= polynomial;
+  function gfMul(a: GF256, b: GF256): GF256 {
+    let result = 0;
+    let aa = a;
+    let bb = b;
+    for (let i = 0; i < 8; i++) {
+      if (bb & 1) result ^= aa;
+      const hi = aa & 0x80;
+      aa = (aa << 1) & 0xFF;
+      if (hi) aa ^= reduce;
+      bb >>= 1;
     }
+    return result;
   }
-  // g^255 = 1 (group order 255, wraps around).
-  fieldAlog[255] = 1;
+
+  // Raise base to exp via repeated squaring.
+  // inverse(a) = power(a, 254) since a^255 = 1 in GF(2^8).
+  function gfPow(base: GF256, exp: number): GF256 {
+    if (base === 0) return exp === 0 ? 1 : 0;
+    if (exp === 0) return 1;
+    let result = 1;
+    let b = base;
+    let e = exp;
+    while (e > 0) {
+      if (e & 1) result = gfMul(result, b);
+      b = gfMul(b, b);
+      e >>= 1;
+    }
+    return result;
+  }
 
   return {
     polynomial,
@@ -329,25 +357,21 @@ export function createField(polynomial: number): GF256FieldInstance {
     subtract(a: GF256, b: GF256): GF256 { return a ^ b; },
 
     multiply(a: GF256, b: GF256): GF256 {
-      if (a === 0 || b === 0) return 0;
-      return fieldAlog[(fieldLog[a] + fieldLog[b]) % 255];
+      return gfMul(a, b);
     },
 
     divide(a: GF256, b: GF256): GF256 {
       if (b === 0) throw new Error("GF256Field: division by zero");
-      if (a === 0) return 0;
-      return fieldAlog[(fieldLog[a] - fieldLog[b] + 255) % 255];
+      return gfMul(a, gfPow(b, 254));
     },
 
     power(base: GF256, exp: number): GF256 {
-      if (base === 0) return exp === 0 ? 1 : 0;
-      if (exp === 0) return 1;
-      return fieldAlog[((fieldLog[base] * exp) % 255 + 255) % 255];
+      return gfPow(base, exp);
     },
 
     inverse(a: GF256): GF256 {
       if (a === 0) throw new Error("GF256Field: zero has no multiplicative inverse");
-      return fieldAlog[255 - fieldLog[a]];
+      return gfPow(a, 254);
     },
   };
 }

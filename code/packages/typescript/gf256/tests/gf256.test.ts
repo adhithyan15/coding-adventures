@@ -392,16 +392,16 @@ describe("createField", () => {
   describe("AES field (0x11B)", () => {
     const aes = createField(0x11B);
 
-    it("multiply(0x53, 0x8C) = 1 — AES GF(2^8) inverses", () => {
-      expect(aes.multiply(0x53, 0x8C)).toBe(0x01);
+    it("multiply(0x53, 0xCA) = 1 — AES GF(2^8) inverses", () => {
+      expect(aes.multiply(0x53, 0xCA)).toBe(0x01);
     });
 
     it("multiply(0x57, 0x83) = 0xC1 — FIPS 197 Appendix B", () => {
       expect(aes.multiply(0x57, 0x83)).toBe(0xC1);
     });
 
-    it("inverse(0x53) = 0x8C", () => {
-      expect(aes.inverse(0x53)).toBe(0x8C);
+    it("inverse(0x53) = 0xCA", () => {
+      expect(aes.inverse(0x53)).toBe(0xCA);
     });
 
     it("multiply(a, inverse(a)) = 1 for a in 1..20", () => {
@@ -411,7 +411,7 @@ describe("createField", () => {
     });
 
     it("commutativity", () => {
-      const vals = [0, 1, 0x53, 0x8C, 0xFF];
+      const vals = [0, 1, 0x53, 0xCA, 0xFF];
       for (const a of vals) {
         for (const b of vals) {
           expect(aes.multiply(a, b)).toBe(aes.multiply(b, a));

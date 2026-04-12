@@ -8,11 +8,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - `CodingAdventures.GF256Field` struct — parameterizable field for any primitive polynomial.
-  - `new_field/1` constructor builds independent LOG/ALOG tables for the given polynomial.
+  Uses Russian peasant (shift-and-XOR) multiplication; no log/antilog tables stored.
+  - `new_field/1` creates a `%GF256Field{polynomial: poly}` struct.
   - `GF256.new_field(0x11B)` creates the AES GF(2^8) field.
   - Field-aware 3-arity overloads: `multiply/3`, `divide/3`, `power/3`, `inverse/2`,
     `add/3`, `subtract/3` — accept `%GF256Field{}` as first argument.
-- Tests: AES field `multiply(0x53, 0x8C) = 0x01`, FIPS 197 `multiply(0x57, 0x83) = 0xC1`,
+- Tests: AES field `multiply(0x53, 0xCA) = 0x01`, FIPS 197 `multiply(0x57, 0x83) = 0xC1`,
   RS backward-compat verification, commutativity, error cases.
 
 ## [0.1.0] — 2026-04-03

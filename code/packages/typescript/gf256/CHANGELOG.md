@@ -5,13 +5,15 @@
 ### Added
 
 - `GF256FieldInstance` interface — describes a parameterizable field object.
-- `createField(polynomial: number): GF256FieldInstance` factory function — builds
-  independent LOG/ALOG tables for any primitive polynomial.
+- `createField(polynomial: number): GF256FieldInstance` factory function — uses
+  Russian peasant (shift-and-XOR) multiplication for any primitive polynomial.
+  Works correctly for any irreducible polynomial without requiring a specific
+  primitive generator (g=2 fails for `0x11B` — AES uses g=0x03).
   - `createField(0x11B)` creates the AES GF(2^8) field.
   - `createField(0x11D)` matches the module-level functions (Reed-Solomon).
   - Methods: `multiply`, `divide`, `power`, `inverse`, `add`, `subtract`.
   - `polynomial` property stores the polynomial used for construction.
-- Tests for `createField`: AES sanity check (`0x53 × 0x8C = 1`), FIPS 197 Appendix B
+- Tests for `createField`: AES sanity check (`0x53 × 0xCA = 1`), FIPS 197 Appendix B
   (`0x57 × 0x83 = 0xC1`), RS backward-compat, commutativity, error cases.
 
 ## [0.1.0] — 2026-04-03

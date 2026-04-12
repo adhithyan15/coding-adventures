@@ -353,11 +353,11 @@ func TestZeroAndOne(t *testing.T) {
 // =============================================================================
 
 func TestField(t *testing.T) {
-	t.Run("AES field: Multiply(0x53, 0x8C) = 1", func(t *testing.T) {
+	t.Run("AES field: Multiply(0x53, 0xCA) = 1", func(t *testing.T) {
 		f := gf256.NewField(0x11B)
-		got := f.Multiply(0x53, 0x8C)
+		got := f.Multiply(0x53, 0xCA)
 		if got != 1 {
-			t.Errorf("AES field Multiply(0x53, 0x8C) = 0x%02X, want 0x01", got)
+			t.Errorf("AES field Multiply(0x53, 0xCA) = 0x%02X, want 0x01", got)
 		}
 	})
 
@@ -369,11 +369,11 @@ func TestField(t *testing.T) {
 		}
 	})
 
-	t.Run("AES field: Inverse(0x53) = 0x8C", func(t *testing.T) {
+	t.Run("AES field: Inverse(0x53) = 0xCA", func(t *testing.T) {
 		f := gf256.NewField(0x11B)
 		got := f.Inverse(0x53)
-		if got != 0x8C {
-			t.Errorf("AES field Inverse(0x53) = 0x%02X, want 0x8C", got)
+		if got != 0xCA {
+			t.Errorf("AES field Inverse(0x53) = 0x%02X, want 0xCA", got)
 		}
 	})
 
@@ -392,7 +392,7 @@ func TestField(t *testing.T) {
 
 	t.Run("commutativity", func(t *testing.T) {
 		f := gf256.NewField(0x11B)
-		vals := []byte{0, 1, 0x53, 0x8C, 0xFF}
+		vals := []byte{0, 1, 0x53, 0xCA, 0xFF}
 		for _, a := range vals {
 			for _, b := range vals {
 				if f.Multiply(a, b) != f.Multiply(b, a) {

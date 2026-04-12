@@ -419,8 +419,13 @@ public enum GF256 {
 //
 // Usage:
 //   let aes = GF256Field(polynomial: 0x11B)
-//   aes.multiply(0x53, 0x8C)  // → 1   (AES GF(2^8) inverses)
+//   aes.multiply(0x53, 0xCA)  // → 1   (AES GF(2^8) inverses)
 //   aes.multiply(0x57, 0x83)  // → 0xC1 (FIPS 197 Appendix B)
+//
+// Operations use Russian peasant (shift-and-XOR) multiplication — no log/antilog
+// tables. This works correctly for any irreducible polynomial. Log/antilog tables
+// with g=2 fail for 0x11B because x is not a primitive element of the AES field
+// (AES uses g=0x03 per FIPS 197 §4.1); Russian peasant needs no generator.
 
 /// A GF(2^8) field parameterized by an arbitrary primitive polynomial.
 ///
@@ -428,16 +433,15 @@ public enum GF256 {
 /// `GF256Field` lets you work with any polynomial — most notably `0x11B`
 /// for AES.
 ///
-/// Tables are built once in `init` and cached as stored properties.
-/// All operations are O(1).
+/// Operations use Russian peasant multiplication and repeated squaring.
+/// No log/antilog tables are stored, so initialization is O(1).
 public struct GF256Field {
 
     /// The primitive (irreducible) polynomial for this field.
     public let polynomial: UInt16
 
-    // Precomputed lookup tables for this polynomial.
-    private let fieldLog:  [UInt16]
-    private let fieldAlog: [UInt8]
+    // Low byte of the polynomial used as the reduction constant in gfMul.
+    private let reduce: UInt8
 
     // ========================================================================
     // MARK: - Initialization
@@ -449,24 +453,41 @@ public struct GF256Field {
     ///   `UInt16`, e.g. `0x11B` for AES or `0x11D` for Reed-Solomon.
     public init(polynomial: UInt16) {
         self.polynomial = polynomial
+        self.reduce = UInt8(polynomial & 0xFF)
+    }
 
-        var log  = [UInt16](repeating: 0, count: 256)
-        var alog = [UInt8](repeating: 0, count: 256)
+    // ========================================================================
+    // MARK: - Private helpers
+    // ========================================================================
 
-        var val: UInt16 = 1
-        for i in 0..<255 {
-            alog[i] = UInt8(val)
-            log[Int(val)] = UInt16(i)
-            val <<= 1
-            if val >= 256 {
-                val ^= polynomial
-            }
+    /// Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+    private func gfMul(_ a: UInt8, _ b: UInt8) -> UInt8 {
+        var result: UInt8 = 0
+        var aa = a
+        var bb = b
+        for _ in 0..<8 {
+            if bb & 1 != 0 { result ^= aa }
+            let hi = aa & 0x80
+            aa <<= 1
+            if hi != 0 { aa ^= reduce }
+            bb >>= 1
         }
-        // g^255 = 1 (the multiplicative group has order 255).
-        alog[255] = 1
+        return result
+    }
 
-        self.fieldLog  = log
-        self.fieldAlog = alog
+    /// Raise base to exp via repeated squaring.
+    private func gfPow(_ base: UInt8, _ exp: UInt32) -> UInt8 {
+        if base == 0 { return exp == 0 ? 1 : 0 }
+        if exp == 0  { return 1 }
+        var result: UInt8 = 1
+        var b = base
+        var e = exp
+        while e > 0 {
+            if e & 1 != 0 { result = gfMul(result, b) }
+            b = gfMul(b, b)
+            e >>= 1
+        }
+        return result
     }
 
     // ========================================================================
@@ -480,12 +501,9 @@ public struct GF256Field {
     /// Subtract two elements: `a XOR b` (identical to add in GF(2^8)).
     public func subtract(_ a: UInt8, _ b: UInt8) -> UInt8 { a ^ b }
 
-    /// Multiply two elements using this field's log/antilog tables.
+    /// Multiply two elements using Russian peasant multiplication.
     public func multiply(_ a: UInt8, _ b: UInt8) -> UInt8 {
-        if a == 0 || b == 0 { return 0 }
-        let logA = Int(fieldLog[Int(a)])
-        let logB = Int(fieldLog[Int(b)])
-        return fieldAlog[(logA + logB) % 255]
+        gfMul(a, b)
     }
 
     /// Divide `a` by `b`.
@@ -493,26 +511,21 @@ public struct GF256Field {
     /// - Precondition: `b != 0`.
     public func divide(_ a: UInt8, _ b: UInt8) -> UInt8 {
         precondition(b != 0, "GF256Field: division by zero")
-        if a == 0 { return 0 }
-        let logA = Int(fieldLog[Int(a)])
-        let logB = Int(fieldLog[Int(b)])
-        return fieldAlog[(logA - logB + 255) % 255]
+        return gfMul(a, gfPow(b, 254))
     }
 
     /// Raise `base` to a non-negative integer power.
     public func power(_ base: UInt8, _ exp: UInt32) -> UInt8 {
-        if base == 0 { return exp == 0 ? 1 : 0 }
-        if exp == 0  { return 1 }
-        let logBase = Int(fieldLog[Int(base)])
-        let expMod  = Int(exp % 255)
-        return fieldAlog[(logBase * expMod) % 255]
+        gfPow(base, exp)
     }
 
     /// Compute the multiplicative inverse of `a`.
     ///
+    /// inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
+    ///
     /// - Precondition: `a != 0`.
     public func inverse(_ a: UInt8) -> UInt8 {
         precondition(a != 0, "GF256Field: zero has no multiplicative inverse")
-        return fieldAlog[255 - Int(fieldLog[Int(a)])]
+        return gfPow(a, 254)
     }
 }

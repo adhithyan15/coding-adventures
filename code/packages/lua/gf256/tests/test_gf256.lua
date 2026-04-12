@@ -280,11 +280,11 @@ describe("new_field", function()
 
     -- ── AES field (polynomial 0x11B) ─────────────────────────────────────────
 
-    it("AES field: multiply(0x53, 0x8C) = 1", function()
-        -- In GF(2^8) with polynomial 0x11B (AES), 0x53 and 0x8C are
-        -- multiplicative inverses. This is the canonical AES field sanity check.
+    it("AES field: multiply(0x53, 0xCA) = 1", function()
+        -- In GF(2^8) with polynomial 0x11B (AES), 0x53 and 0xCA are
+        -- multiplicative inverses. Verified via Russian peasant multiplication.
         local aes = gf.new_field(0x11B)
-        assert.are.equal(0x01, aes.multiply(0x53, 0x8C))
+        assert.are.equal(0x01, aes.multiply(0x53, 0xCA))
     end)
 
     it("AES field: multiply(0x57, 0x83) = 0xC1 (FIPS 197 Appendix B)", function()
@@ -294,9 +294,9 @@ describe("new_field", function()
         assert.are.equal(0xC1, aes.multiply(0x57, 0x83))
     end)
 
-    it("AES field: inverse(0x53) = 0x8C", function()
+    it("AES field: inverse(0x53) = 0xCA", function()
         local aes = gf.new_field(0x11B)
-        assert.are.equal(0x8C, aes.inverse(0x53))
+        assert.are.equal(0xCA, aes.inverse(0x53))
     end)
 
     it("AES field: a * inverse(a) = 1 for a in 1..20", function()
@@ -309,7 +309,7 @@ describe("new_field", function()
 
     it("AES field: commutativity", function()
         local aes = gf.new_field(0x11B)
-        local vals = {1, 2, 0x53, 0x8C}
+        local vals = {1, 2, 0x53, 0xCA}
         for _, a in ipairs(vals) do
             for _, b in ipairs(vals) do
                 assert.are.equal(aes.multiply(a, b), aes.multiply(b, a),

@@ -308,9 +308,9 @@ class TestGF256Field:
     # ── AES field (0x11B) correctness ─────────────────────────────────────────
 
     def test_aes_field_multiply_inverses(self):
-        # In AES GF(2^8): 0x53 × 0x8C = 0x01
+        # In AES GF(2^8): 0x53 × 0xCA = 0x01
         f = GF256Field(0x11B)
-        assert f.multiply(0x53, 0x8C) == 0x01
+        assert f.multiply(0x53, 0xCA) == 0x01
 
     def test_aes_field_fips197_appendix_b(self):
         # FIPS 197 Appendix B: 0x57 × 0x83 = 0xC1 in GF(2^8, 0x11B)
@@ -318,9 +318,9 @@ class TestGF256Field:
         assert f.multiply(0x57, 0x83) == 0xC1
 
     def test_aes_field_inverse_sanity(self):
-        # 0x53 and 0x8C are multiplicative inverses in AES GF(2^8)
+        # 0x53 and 0xCA are multiplicative inverses in AES GF(2^8)
         f = GF256Field(0x11B)
-        assert f.inverse(0x53) == 0x8C
+        assert f.inverse(0x53) == 0xCA
         assert f.multiply(0x53, f.inverse(0x53)) == 1
 
     # ── RS field (0x11D) matches module-level functions ────────────────────────

@@ -285,8 +285,8 @@ class TestGF256Field < Minitest::Test
   # ── AES field correctness ─────────────────────────────────────────────────
 
   def test_aes_multiply_inverses
-    # In AES GF(2^8): 0x53 × 0x8C = 0x01
-    assert_equal 0x01, aes_field.multiply(0x53, 0x8C)
+    # In AES GF(2^8): 0x53 × 0xCA = 0x01
+    assert_equal 0x01, aes_field.multiply(0x53, 0xCA)
   end
 
   def test_aes_fips197_appendix_b
@@ -295,7 +295,7 @@ class TestGF256Field < Minitest::Test
   end
 
   def test_aes_inverse
-    assert_equal 0x8C, aes_field.inverse(0x53)
+    assert_equal 0xCA, aes_field.inverse(0x53)
     assert_equal 1, aes_field.multiply(0x53, aes_field.inverse(0x53))
   end
 

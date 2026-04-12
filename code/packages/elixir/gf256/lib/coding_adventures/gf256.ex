@@ -302,56 +302,61 @@ defmodule CodingAdventures.GF256 do
   # ---------------------------------------------------------------------------
   #
   # The functions above are bound to the Reed-Solomon polynomial 0x11D.
-  # AES uses 0x11B. Rather than duplicating the arithmetic, `new_field/1`
-  # builds a `%CodingAdventures.GF256Field{}` struct with independent tables
-  # for any primitive polynomial.
+  # AES uses 0x11B. `new_field/1` returns a `%GF256Field{}` struct and
+  # overloaded functions handle field-first calls.
+  #
+  # Operations use Russian peasant (shift-and-XOR) multiplication. No log/antilog
+  # tables — they require g=2 to be a primitive element, which holds for 0x11D
+  # but NOT for 0x11B (AES uses g=0x03 per FIPS 197 §4.1).
   #
   # Usage:
   #   aes = CodingAdventures.GF256.new_field(0x11B)
-  #   CodingAdventures.GF256.multiply(aes, 0x53, 0x8C)  # → 1
-  #
-  # Overloaded module functions accept either two arguments (module-level,
-  # using the 0x11D tables) or three arguments (field-first).
+  #   CodingAdventures.GF256.multiply(aes, 0x53, 0xCA)  # → 1
 
   @doc """
   Create a new GF(2^8) field with the given primitive polynomial.
 
-  Returns a `%CodingAdventures.GF256Field{}` struct whose log/antilog tables
-  are built for `polynomial`. Pass this struct as the first argument to the
-  field-aware overloads of `multiply/3`, `divide/3`, `power/3`, `inverse/2`.
+  Returns a `%CodingAdventures.GF256Field{}` struct. Pass it as the first
+  argument to the field-aware overloads of `multiply/3`, `divide/3`,
+  `power/3`, `inverse/2`.
 
       aes = CodingAdventures.GF256.new_field(0x11B)
-      CodingAdventures.GF256.multiply(aes, 0x53, 0x8C)  # → 1
+      CodingAdventures.GF256.multiply(aes, 0x53, 0xCA)  # → 1
   """
   def new_field(polynomial) do
-    {alog, log} = build_tables_for(polynomial)
-    %CodingAdventures.GF256Field{polynomial: polynomial, alog: alog, log: log}
+    %CodingAdventures.GF256Field{polynomial: polynomial}
   end
 
-  # Build runtime log/alog tables for an arbitrary polynomial.
-  # Returns {alog_list, log_list} both as 256-element lists.
-  defp build_tables_for(polynomial) do
-    alog_arr = :array.new(256, default: 0)
-    log_arr  = :array.new(256, default: 0)
+  # Russian peasant multiplication: a * b mod p(x) in GF(2^8).
+  # reduce is the low byte of the primitive polynomial.
+  defp gf_mul(a, b, reduce) do
+    gf_mul_loop(a, b, reduce, 0, 8)
+  end
 
-    {alog_arr, log_arr} =
-      Enum.reduce(0..254, {alog_arr, log_arr}, fn i, {al, lo} ->
-        val =
-          if i == 0 do
-            1
-          else
-            prev = :array.get(i - 1, al)
-            v = prev * 2
-            if v >= 256, do: Bitwise.bxor(v, polynomial), else: v
-          end
+  defp gf_mul_loop(_aa, _bb, _reduce, result, 0), do: result
 
-        al = :array.set(i, val, al)
-        lo = :array.set(val, i, lo)
-        {al, lo}
-      end)
+  defp gf_mul_loop(aa, bb, reduce, result, n) do
+    result2 = if (bb &&& 1) != 0, do: bxor(result, aa), else: result
+    hi = aa &&& 0x80
+    aa2 = (aa <<< 1) &&& 0xFF
+    aa3 = if hi != 0, do: bxor(aa2, reduce), else: aa2
+    gf_mul_loop(aa3, bb >>> 1, reduce, result2, n - 1)
+  end
 
-    alog_arr = :array.set(255, 1, alog_arr)
-    {:array.to_list(alog_arr), :array.to_list(log_arr)}
+  # Raise base to exp via repeated squaring.
+  defp gf_pow(_base, _reduce, 0), do: 1
+  defp gf_pow(0, _reduce, _exp), do: 0
+
+  defp gf_pow(base, reduce, exp) do
+    gf_pow_loop(base, reduce, exp, 1)
+  end
+
+  defp gf_pow_loop(_b, _reduce, 0, result), do: result
+
+  defp gf_pow_loop(b, reduce, e, result) do
+    result2 = if (e &&& 1) != 0, do: gf_mul(result, b, reduce), else: result
+    b2 = gf_mul(b, b, reduce)
+    gf_pow_loop(b2, reduce, e >>> 1, result2)
   end
 
   # Field-aware operation overloads — take a %GF256Field{} as first argument.
@@ -360,59 +365,37 @@ defmodule CodingAdventures.GF256 do
   Multiply two GF(256) elements using a parameterized field.
 
   When called as `multiply(field, a, b)` where `field` is a `%GF256Field{}`,
-  uses that field's tables (supporting any primitive polynomial).
+  uses Russian peasant multiplication with that field's polynomial.
   When called as `multiply(a, b)`, uses the module-level 0x11D tables.
   """
-  def multiply(%CodingAdventures.GF256Field{alog: alog, log: log}, a, b) do
-    if a == 0 or b == 0 do
-      0
-    else
-      log_a = Enum.at(log, a)
-      log_b = Enum.at(log, b)
-      Enum.at(alog, rem(log_a + log_b, 255))
-    end
+  def multiply(%CodingAdventures.GF256Field{polynomial: poly}, a, b) do
+    gf_mul(a, b, poly &&& 0xFF)
   end
 
   @doc """
   Divide a by b using a parameterized field. Raises ArgumentError if b is 0.
   """
-  def divide(%CodingAdventures.GF256Field{alog: alog, log: log}, a, b) do
+  def divide(%CodingAdventures.GF256Field{polynomial: poly}, a, b) do
     if b == 0, do: raise(ArgumentError, "GF256Field: division by zero")
-    if a == 0 do
-      0
-    else
-      log_a = Enum.at(log, a)
-      log_b = Enum.at(log, b)
-      Enum.at(alog, rem(log_a - log_b + 255, 255))
-    end
+    reduce = poly &&& 0xFF
+    gf_mul(a, gf_pow(b, reduce, 254), reduce)
   end
 
   @doc """
   Raise base to exp using a parameterized field.
   """
-  def power(%CodingAdventures.GF256Field{alog: alog, log: log}, _base, 0) do
-    _ = {alog, log}
-    1
-  end
-
-  def power(%CodingAdventures.GF256Field{alog: alog, log: log}, base, exp) do
-    if base == 0 do
-      0
-    else
-      log_base = Enum.at(log, base)
-      idx = rem(rem(log_base * exp, 255) + 255, 255)
-      Enum.at(alog, idx)
-    end
+  def power(%CodingAdventures.GF256Field{polynomial: poly}, base, exp) do
+    gf_pow(base, poly &&& 0xFF, exp)
   end
 
   @doc """
   Compute the multiplicative inverse using a parameterized field.
   Raises ArgumentError if a is 0.
+  inverse(a) = a^254 since a^255 = 1 in GF(2^8) (Fermat's little theorem).
   """
-  def inverse(%CodingAdventures.GF256Field{alog: alog, log: log}, a) do
+  def inverse(%CodingAdventures.GF256Field{polynomial: poly}, a) do
     if a == 0, do: raise(ArgumentError, "GF256Field: zero has no multiplicative inverse")
-    log_a = Enum.at(log, a)
-    Enum.at(alog, 255 - log_a)
+    gf_pow(a, poly &&& 0xFF, 254)
   end
 
   @doc """

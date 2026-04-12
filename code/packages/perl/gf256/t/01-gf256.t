@@ -233,10 +233,10 @@ subtest 'field axioms' => sub {
 # GF256::Field — parameterizable field factory
 # ============================================================================
 # Tests for the CodingAdventures::GF256::Field class, which accepts any
-# primitive polynomial and builds independent log/antilog tables.
+# primitive polynomial and uses Russian peasant multiplication.
 #
 # Key test vectors:
-#   AES field (0x11B): 0x53 × 0x8C = 1  (standard AES inverse pair)
+#   AES field (0x11B): 0x53 × 0xCA = 1  (standard AES inverse pair)
 #   AES field (0x11B): 0x57 × 0x83 = 0xC1  (FIPS 197 Appendix B)
 #   RS field (0x11D):  must match module-level functions (backward compat)
 
@@ -246,16 +246,16 @@ subtest 'GF256::Field — AES polynomial (0x11B)' => sub {
     my $aes = CodingAdventures::GF256::Field->new(0x11B);
 
     # Canonical AES GF(2^8) inverse pair
-    is( $aes->multiply(0x53, 0x8C), 0x01,
-        'AES field: multiply(0x53, 0x8C) = 1' );
+    is( $aes->multiply(0x53, 0xCA), 0x01,
+        'AES field: multiply(0x53, 0xCA) = 1' );
 
     # FIPS 197 Appendix B
     is( $aes->multiply(0x57, 0x83), 0xC1,
         'AES field: multiply(0x57, 0x83) = 0xC1 (FIPS 197)' );
 
-    # inverse(0x53) = 0x8C in AES field
-    is( $aes->inverse(0x53), 0x8C,
-        'AES field: inverse(0x53) = 0x8C' );
+    # inverse(0x53) = 0xCA in AES field
+    is( $aes->inverse(0x53), 0xCA,
+        'AES field: inverse(0x53) = 0xCA' );
 
     # a * inverse(a) = 1 for a in 1..20
     for my $a (1 .. 20) {
@@ -264,7 +264,7 @@ subtest 'GF256::Field — AES polynomial (0x11B)' => sub {
     }
 
     # commutativity
-    for my $a (1, 2, 0x53, 0x8C) {
+    for my $a (1, 2, 0x53, 0xCA) {
         for my $b (1, 2, 0x57, 0x83) {
             is( $aes->multiply($a, $b), $aes->multiply($b, $a),
                 "AES field: multiply($a, $b) is commutative" );

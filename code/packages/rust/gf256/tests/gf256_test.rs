@@ -396,9 +396,9 @@ fn test_all_nonzero_elements_invertible() {
 
 #[test]
 fn test_field_aes_multiply_inverses() {
-    // In the AES field (0x11B): 0x53 × 0x8C = 0x01.
+    // In the AES field (0x11B): 0x53 × 0xCA = 0x01.
     let f = Field::new(0x11B);
-    assert_eq!(f.multiply(0x53, 0x8C), 0x01, "AES field 0x53 × 0x8C should be 1");
+    assert_eq!(f.multiply(0x53, 0xCA), 0x01, "AES field 0x53 × 0xCA should be 1");
 }
 
 #[test]
@@ -411,7 +411,7 @@ fn test_field_aes_fips197_appendix_b() {
 #[test]
 fn test_field_aes_inverse() {
     let f = Field::new(0x11B);
-    assert_eq!(f.inverse(0x53), 0x8C);
+    assert_eq!(f.inverse(0x53), 0xCA);
     assert_eq!(f.multiply(0x53, f.inverse(0x53)), 1);
 }
 
@@ -430,7 +430,7 @@ fn test_field_rs_matches_module_level() {
 #[test]
 fn test_field_commutativity() {
     let f = Field::new(0x11B);
-    for a in [0u8, 1, 0x53, 0x8C, 0xFF] {
+    for a in [0u8, 1, 0x53, 0xCA, 0xFF] {
         for b in [0u8, 1, 0x57, 0x83, 0xFF] {
             assert_eq!(f.multiply(a, b), f.multiply(b, a));
         }
