@@ -1,1 +1,1 @@
-cd tests && set "LUA_PATH=..\src\?.lua;..\src\?\init.lua;;" && busted . --verbose --pattern=test_
+cd tests && set LUA_PATH=..\src\?.lua;..\src\?\init.lua;; && busted . --verbose --pattern=test_
