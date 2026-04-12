@@ -288,7 +288,7 @@ class TestServer < Minitest::Test
   # ── 4.2 Returns -32601 for unregistered method ────────────────────────────
 
   def test_sends_method_not_found_for_unknown_request
-    req = R::RpcRequest.new(id: 2, method: "unknown/method")
+    req = R::RpcRequest.new(id: 2, method: "unknown_method")
     server, framer = make_server(req)
 
     server.serve

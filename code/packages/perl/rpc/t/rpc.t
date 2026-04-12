@@ -58,13 +58,17 @@ use parent 'CodingAdventures::Rpc::Codec';
 use CodingAdventures::Rpc::Message qw(:all);
 
 # Encode a scalar value to a compact string.
-# hashref: "k1=v1,k2=v2"  |  undef: "undef"  |  anything else: stringified
+# hashref: "\x01"-separated "k\x02v" pairs  |  undef: "undef"  |  scalar: stringified
+#
+# We deliberately avoid comma and equals as separators — test values like
+# "Hello, World" contain commas, which would break a comma-separated format.
+# Non-printable ASCII \x01 (SOH) and \x02 (STX) never appear in test values.
 sub _enc_val {
     my ($v) = @_;
     return 'undef' unless defined $v;
     if (ref($v) eq 'HASH') {
-        return join(',', map { "$_=" . (defined $v->{$_} ? $v->{$_} : 'undef') }
-                        sort keys %$v);
+        return join("\x01", map { "$_\x02" . (defined $v->{$_} ? $v->{$_} : 'undef') }
+                            sort keys %$v);
     }
     return "$v";
 }
@@ -73,9 +77,11 @@ sub _enc_val {
 sub _dec_val {
     my ($s) = @_;
     return undef if $s eq 'undef';
-    if ($s =~ /=/) {
-        my %h = map { my ($k,$v) = split /=/, $_, 2; ($k, $v eq 'undef' ? undef : $v) }
-                split /,/, $s;
+    if ($s =~ /\x02/) {
+        my %h = map {
+            my ($k, $v) = split /\x02/, $_, 2;
+            ($k, (!defined $v || $v eq 'undef') ? undef : $v)
+        } split /\x01/, $s;
         return \%h;
     }
     return $s;
@@ -772,7 +778,9 @@ subtest 'Client: request ids monotonically increase from 1' => sub {
     $client->request('b');
     $client->request('c');
 
-    my @ids = map { MockCodec->new->decode($_)->[0]{id} } @written;
+    # decode() returns a list ($msg, $err).  Use list-context slice [0] to get
+    # the message (not the last element which decode() would return in scalar context).
+    my @ids = map { (MockCodec->new->decode($_))[0]->{id} } @written;
     is( $ids[0], 1, 'first request id = 1' );
     is( $ids[1], 2, 'second request id = 2');
     is( $ids[2], 3, 'third request id = 3' );

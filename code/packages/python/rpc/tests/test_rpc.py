@@ -778,7 +778,9 @@ class TestRpcClient:
 
     def test_remote_error_attributes(self) -> None:
         codec = MockCodec()
-        err = RpcErrorResponse(code=INTERNAL_ERROR, message="crash", id=7, data="tb")
+        # The client auto-assigns id=1 for its first request, so the error response
+        # must carry id=1 to match — otherwise the client keeps reading and hits EOF.
+        err = RpcErrorResponse(code=INTERNAL_ERROR, message="crash", id=1, data="tb")
         read_buf = frames_to_buf(codec.encode(err))
         client: RpcClient = RpcClient(codec, MockFramer(read_buf, io.BytesIO()))
 
