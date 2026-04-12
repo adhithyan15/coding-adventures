@@ -50,8 +50,11 @@ package CodingAdventures::BuildTool::Executor;
 use strict;
 use warnings;
 use POSIX qw(WIFEXITED WEXITSTATUS WNOHANG);
+use Cwd ();
+use File::Spec ();
 
 our $VERSION = '0.01';
+our $WINDOWS_BASH;
 
 # new -- Constructor.
 #
@@ -284,13 +287,7 @@ sub _run_single {
     my $status = 'pass';
 
     for my $cmd (@cmds) {
-        # Run the command in the package directory.
-        # We capture combined stdout and stderr using a shell redirect.
-        # The backtick operator (`) is Perl's shorthand for command substitution.
-        # We use system() instead to stream output and check the exit code.
-        my $full_cmd = "cd \Q$path\E && $cmd 2>&1";
-        my $out = `$full_cmd`;
-        my $exit_code = $? >> 8;
+        my ($out, $exit_code) = $self->_run_command_in_dir($path, $cmd);
 
         push @output, "\$ $cmd\n$out";  # \$ is a literal $ ($ $cmd would deref $cmd)
 
@@ -308,6 +305,77 @@ sub _run_single {
         duration => $duration,
         output   => join("\n", @output),
     };
+}
+
+sub _run_command_in_dir {
+    my ($self, $path, $cmd) = @_;
+
+    my $cwd = Cwd::getcwd();
+    if (!chdir $path) {
+        return ("chdir $path failed: $!\n", 1);
+    }
+
+    my @shell = _shell_argv($cmd);
+    my $output = '';
+
+    my $opened = open(my $fh, '-|', @shell);
+    if (!$opened) {
+        my $err = "failed to start command: $!\n";
+        chdir $cwd or die "chdir $cwd failed: $!";
+        return ($err, 1);
+    }
+
+    local $/;
+    $output = <$fh> // '';
+    close $fh;
+    my $exit_code = $? >> 8;
+
+    chdir $cwd or die "chdir $cwd failed: $!";
+    return ($output, $exit_code);
+}
+
+sub _shell_argv {
+    my ($cmd) = @_;
+    my $redirected = "$cmd 2>&1";
+
+    if ($^O eq 'MSWin32') {
+        my $bash = _windows_bash();
+        return ($bash, '-lc', _command_for_windows_bash($redirected)) if defined $bash;
+        return ('cmd', '/d', '/s', '/c', $redirected);
+    }
+
+    return ('sh', '-lc', $redirected);
+}
+
+sub _command_for_windows_bash {
+    my ($cmd) = @_;
+    $cmd =~ s{([A-Za-z]):([\\/][^\s'"]*)}{_bashify_windows_path($1, $2)}ge;
+    return $cmd;
+}
+
+sub _bashify_windows_path {
+    my ($drive, $rest) = @_;
+    $rest =~ s{\\}{/}g;
+    return '/' . lc($drive) . $rest;
+}
+
+sub _windows_bash {
+    return $WINDOWS_BASH if defined $WINDOWS_BASH;
+
+    my @candidates = grep { defined $_ && $_ ne '' } (
+        File::Spec->catfile($ENV{ProgramFiles} // '', 'Git', 'bin', 'bash.exe'),
+        File::Spec->catfile($ENV{'ProgramFiles(x86)'} // '', 'Git', 'bin', 'bash.exe'),
+    );
+
+    for my $candidate (@candidates) {
+        if (-f $candidate) {
+            $WINDOWS_BASH = $candidate;
+            return $WINDOWS_BASH;
+        }
+    }
+
+    $WINDOWS_BASH = undef;
+    return $WINDOWS_BASH;
 }
 
 # _cpu_count -- Detect the number of logical CPUs.

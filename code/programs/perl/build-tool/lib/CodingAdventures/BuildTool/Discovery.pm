@@ -143,7 +143,11 @@ sub discover {
                 # (Avoids registering the same package multiple times when
                 # both BUILD and BUILD_mac exist.)
                 my $canonical = File::Spec->catfile($dir, $build_file);
-                return unless $fullpath eq $canonical;
+                my $normalized_fullpath = $fullpath;
+                my $normalized_canonical = $canonical;
+                $normalized_fullpath =~ s{\\}{/}g;
+                $normalized_canonical =~ s{\\}{/}g;
+                return unless $normalized_fullpath eq $normalized_canonical;
 
                 # Read the BUILD commands — non-blank, non-comment lines.
                 my @commands = _read_commands($canonical);

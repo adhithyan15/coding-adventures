@@ -418,6 +418,21 @@ sub build_known_names {
             # .NET packages refer to sibling package directories via
             # <ProjectReference Include="../graph/Graph.csproj" />.
             _set_known(\%known, lc($dir_name), $pkg);
+            my @project_files;
+            File::Find::find(
+                {
+                    wanted => sub {
+                        return if -d $File::Find::name;
+                        return unless $_ =~ /\.(?:csproj|fsproj)\z/;
+                        push @project_files, $File::Find::name;
+                    },
+                    no_chdir => 1,
+                },
+                $pkg->{path},
+            );
+            for my $project_file (@project_files) {
+                $known{ _normalize_path($project_file) } = $pkg->{name};
+            }
         }
     }
 
