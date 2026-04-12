@@ -239,4 +239,5 @@ members = [
     "irc-framing",
     "irc-server",
     "irc-net-stdlib",
+    "url-parser",
 ]
