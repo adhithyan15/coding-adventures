@@ -1,0 +1,1 @@
+cd ../json-rpc && uv venv -q .venv && uv pip install -q -e ".[dev]" && cd ../ls00 && uv venv -q .venv && uv pip install -q -e ".[dev]" && uv pip install -q -e ../json-rpc && .venv/Scripts/python -m pytest tests/ -v --tb=short --cov=ls00 --cov-report=term-missing

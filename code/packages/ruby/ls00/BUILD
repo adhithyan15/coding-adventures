@@ -1,0 +1,1 @@
+cd ../json_rpc && bundle config set --local path vendor/bundle && bundle install --quiet && cd ../ls00 && bundle config set --local path vendor/bundle && bundle install --quiet && bundle exec ruby -Ilib -Itest -e "Dir.glob('test/test_*.rb').sort.each { |f| require \"./#{f}\" }"

@@ -1,0 +1,60 @@
+# Cargo.toml -- WASM LSP Server Wrapper
+# ======================================
+#
+# This crate wraps the pure-Rust `coding-adventures-ls00` LSP framework
+# for use in browsers, Deno, and Node.js via WebAssembly. It uses
+# wasm-bindgen to generate JavaScript bindings that expose a
+# `WasmLspServer` class with a message-passing API.
+#
+# Why a separate crate?
+#
+# The core `ls00` crate reads and writes over stdio using
+# Content-Length-framed JSON-RPC. Browsers and web workers do not have
+# stdio. This wrapper replaces the stdio transport with a callback-based
+# message-passing interface:
+#
+#   - Client sends JSON string in via `handleMessage(json)`
+#   - Server sends JSON string out via a registered JS callback
+#
+# The core LSP logic (document manager, parse cache, capability
+# advertisement, semantic token encoding) is reused unchanged.
+#
+# Build with:
+#   wasm-pack build --target web     (for browsers)
+#   wasm-pack build --target nodejs  (for Node.js/Deno)
+#   cargo test                       (for native unit tests)
+
+# This crate is NOT part of the main Rust workspace at code/packages/rust/.
+# It lives in code/packages/wasm/ and declares its own workspace root.
+[workspace]
+
+[package]
+name = "ls00-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the ls00 LSP framework via wasm-bindgen"
+license = "MIT"
+
+[lib]
+# cdylib produces a .wasm file that wasm-pack can process.
+# rlib is needed for cargo test (native unit tests).
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# wasm-bindgen provides the #[wasm_bindgen] macro that generates JS glue code.
+wasm-bindgen = "0.2"
+
+# js-sys provides Rust bindings to JavaScript built-in objects (Function, etc.).
+js-sys = "0.3"
+
+# serde + serde_json for JSON serialization of LSP messages.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# The core LSP framework, referenced by relative path.
+coding-adventures-ls00 = { path = "../../rust/ls00" }
+
+[dev-dependencies]
+# wasm-bindgen-test is used for in-browser/Node WASM tests (not used here
+# because we guard our tests with #[cfg(not(target_arch = "wasm32"))]).
+# wasm-bindgen-test = "0.3"
