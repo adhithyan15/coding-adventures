@@ -1,0 +1,30 @@
+{
+  "name": "@coding-adventures/ls00",
+  "version": "0.1.0",
+  "description": "Generic Language Server Protocol (LSP) framework",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "lsp",
+    "language-server-protocol",
+    "editor",
+    "ide",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/json-rpc": "file:../json-rpc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
