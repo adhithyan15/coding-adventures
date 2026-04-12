@@ -46,8 +46,8 @@ Two locks protect shared state
 
     Think of it as a mutex around the "IRC brain".
 
-**``_conns_lock``** (a ``threading.Lock``):
-    Protects the ``_conns: dict[ConnId, StdlibConnection]`` mapping.  Two
+    **``_conns_lock``** (a ``threading.Lock``):
+        Protects the ``_conns: dict[ConnId, Connection]`` mapping.  Two
     threads that accept connections simultaneously could both try to insert
     into this dict, and a ``send_to()`` call racing against a worker thread
     removing a closed connection could read a half-updated map.  The lock
@@ -493,9 +493,9 @@ class StdlibEventLoop:
         # (though in practice the clean shutdown path is via listener.close()).
         self._running: bool = False
 
-        # Map from ConnId → StdlibConnection for all currently-open connections.
+        # Map from ConnId → Connection for all currently-open connections.
         # Protected by _conns_lock.  Must hold _conns_lock to read or write.
-        self._conns: dict[ConnId, StdlibConnection] = {}
+        self._conns: dict[ConnId, Connection] = {}
 
         # Lock protecting _conns.  Use with: with self._conns_lock: ...
         # This is a non-reentrant mutex.  A thread that already holds it must
@@ -590,7 +590,7 @@ class StdlibEventLoop:
         # Step 1: look up the connection while holding the lock.
         # We release the lock before writing so other threads aren't blocked
         # while we wait for the kernel's send buffer to accept our bytes.
-        conn: StdlibConnection | None = None
+        conn: Connection | None = None
         with self._conns_lock:
             conn = self._conns.get(conn_id)
 
@@ -602,7 +602,7 @@ class StdlibEventLoop:
 
     # ── Internal: worker thread ────────────────────────────────────────────
 
-    def _worker(self, conn: StdlibConnection, handler: Handler) -> None:
+    def _worker(self, conn: Connection, handler: Handler) -> None:
         """Service a single connection from its own thread.
 
         This method is the entry point for every connection's worker thread.

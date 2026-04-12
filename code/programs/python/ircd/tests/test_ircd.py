@@ -36,7 +36,7 @@ import pytest
 from ircd import Config, DriverHandler, parse_args
 
 if TYPE_CHECKING:
-    pass
+    from irc_net_stdlib import EventLoop
 
 
 # ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ if TYPE_CHECKING:
 _TIMEOUT = 5.0  # seconds — generous but not infinite
 
 
-def _start_server(motd: list[str] | None = None) -> tuple[int, object]:
+def _start_server(motd: list[str] | None = None) -> tuple[int, EventLoop]:
     """Start an ircd server on a free port and return (port, loop).
 
     The caller is responsible for calling ``loop.stop()`` when done.

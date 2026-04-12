@@ -49,11 +49,29 @@ import threading
 from dataclasses import dataclass, field
 
 from irc_framing import Framer
-from irc_net_stdlib import ConnId, EventLoop, StdlibEventLoop, create_listener
-from irc_proto import ParseError, parse, serialize
+from irc_net_stdlib import (
+    ConnId as NetConnId,
+)
+from irc_net_stdlib import (
+    EventLoop,
+    StdlibEventLoop,
+    create_listener,
+)
+from irc_proto import Message, ParseError, parse, serialize
+from irc_server import ConnId as ServerConnId
 from irc_server import IRCServer
 
 __version__ = "0.1.0"
+
+
+def _to_server_conn_id(conn_id: NetConnId) -> ServerConnId:
+    """Convert a transport-layer connection id into an IRC-server connection id."""
+    return ServerConnId(int(conn_id))
+
+
+def _to_net_conn_id(conn_id: ServerConnId) -> NetConnId:
+    """Convert an IRC-server connection id back into a transport-layer id."""
+    return NetConnId(int(conn_id))
 
 
 # ---------------------------------------------------------------------------
@@ -111,14 +129,14 @@ class DriverHandler:
         # One Framer per live connection.  Framers accumulate partial IRC lines
         # across multiple ``on_data`` calls until a full CRLF-terminated line is
         # available.  Protected by ``_framers_lock`` for defensive thread safety.
-        self._framers: dict[ConnId, Framer] = {}
+        self._framers: dict[NetConnId, Framer] = {}
         self._framers_lock = threading.Lock()
 
     # ------------------------------------------------------------------
     # Handler protocol — called by the event loop
     # ------------------------------------------------------------------
 
-    def on_connect(self, conn_id: ConnId, host: str) -> None:
+    def on_connect(self, conn_id: NetConnId, host: str) -> None:
         """Record a new connection and notify the IRC state machine.
 
         We create a ``Framer`` for this connection so subsequent ``on_data``
@@ -137,10 +155,10 @@ class DriverHandler:
             self._framers[conn_id] = Framer()
 
         # Notify the server.  Returns [] (no initial responses).
-        responses = self._server.on_connect(conn_id, host)
+        responses = self._server.on_connect(_to_server_conn_id(conn_id), host)
         self._send_responses(responses)
 
-    def on_data(self, conn_id: ConnId, data: bytes) -> None:
+    def on_data(self, conn_id: NetConnId, data: bytes) -> None:
         """Feed raw bytes into the per-connection framer and dispatch messages.
 
         This is the hot path — called for every TCP ``recv()`` that returns
@@ -185,10 +203,10 @@ class DriverHandler:
                 # disconnecting the client.
                 continue
 
-            responses = self._server.on_message(conn_id, msg)
+            responses = self._server.on_message(_to_server_conn_id(conn_id), msg)
             self._send_responses(responses)
 
-    def on_disconnect(self, conn_id: ConnId) -> None:
+    def on_disconnect(self, conn_id: NetConnId) -> None:
         """Clean up state for a closed connection.
 
         We notify ``IRCServer`` (which broadcasts a QUIT to all channels the
@@ -197,7 +215,7 @@ class DriverHandler:
         ``send_to`` for this ``conn_id`` will be a silent no-op (handled by
         the event loop itself).
         """
-        responses = self._server.on_disconnect(conn_id)
+        responses = self._server.on_disconnect(_to_server_conn_id(conn_id))
         self._send_responses(responses)
 
         with self._framers_lock:
@@ -207,7 +225,7 @@ class DriverHandler:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _send_responses(self, responses: list[tuple[ConnId, object]]) -> None:
+    def _send_responses(self, responses: list[tuple[ServerConnId, Message]]) -> None:
         """Serialize and deliver a list of ``(ConnId, Message)`` responses.
 
         ``IRCServer`` returns responses as a list of ``(ConnId, Message)``
@@ -218,12 +236,9 @@ class DriverHandler:
         free of any dependency on ``irc-proto``'s serialization side — the server
         only needs to *construct* ``Message`` objects, not wire-encode them.
         """
-        from irc_proto import Message as IrcMessage
-
         for target_conn_id, msg in responses:
-            if isinstance(msg, IrcMessage):
-                wire = serialize(msg)
-                self._loop.send_to(target_conn_id, wire)
+            wire = serialize(msg)
+            self._loop.send_to(_to_net_conn_id(target_conn_id), wire)
 
 
 # ---------------------------------------------------------------------------
