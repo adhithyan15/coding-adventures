@@ -155,7 +155,13 @@ pub fn decode(tokens: &[Token], original_length: Option<usize>) -> Vec<u8> {
         match tok {
             Token::Literal(b) => output.push(*b),
             Token::Match { offset, length } => {
-                let start = output.len() - *offset as usize;
+                let off = *offset as usize;
+                // Guard against malformed tokens: offset=0 or offset > output
+                // would cause integer underflow or out-of-bounds panic.
+                if off == 0 || off > output.len() {
+                    continue;
+                }
+                let start = output.len() - off;
                 for i in 0..*length as usize {
                     let byte = output[start + i];
                     output.push(byte);

@@ -170,7 +170,11 @@ public func decode(_ tokens: [Token], originalLength: Int? = nil) -> [UInt8] {
         case .literal(let b):
             output.append(b)
         case .match(let offset, let length):
-            let start = output.count - Int(offset)
+            let off = Int(offset)
+            // Guard against malformed tokens: offset=0 or offset > output
+            // would produce a negative or out-of-bounds start index.
+            guard off > 0, off <= output.count else { break }
+            let start = output.count - off
             for i in 0..<Int(length) {
                 output.append(output[start + i])
             }

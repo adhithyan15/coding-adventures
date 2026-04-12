@@ -194,10 +194,16 @@ function M.decode(tokens, original_length)
             output[#output + 1] = tok.byte
         else
             -- Match: copy `tok.length` bytes starting at `tok.offset` back.
+            -- Guard against malformed tokens: offset=0 or offset > #output
+            -- would make start <= 0 and produce nil reads.
             local start = #output - tok.offset + 1
-            for _ = 1, tok.length do
-                output[#output + 1] = output[start]
-                start = start + 1
+            if tok.offset < 1 or start < 1 then
+                -- skip invalid match token
+            else
+                for _ = 1, tok.length do
+                    output[#output + 1] = output[start]
+                    start = start + 1
+                end
             end
         end
 

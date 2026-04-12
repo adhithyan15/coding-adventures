@@ -221,7 +221,13 @@ sub decode {
             push @output, $tok->{byte};
         } else {
             # Match: copy $tok->{length} bytes from $offset positions back.
-            my $start = scalar(@output) - $tok->{offset};
+            # Guard against malformed tokens: offset=0 or offset > output length
+            # would give a negative $start or read from the wrong position.
+            my $off   = $tok->{offset};
+            my $start = scalar(@output) - $off;
+            if ($off < 1 || $start < 0) {
+                next;  # skip invalid match token
+            }
             for my $i (0 .. $tok->{length} - 1) {
                 push @output, $output[$start + $i];
             }

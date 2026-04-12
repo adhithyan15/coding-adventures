@@ -145,11 +145,16 @@ defmodule CodingAdventures.LZSS do
           [b | output]
 
         %{kind: :match, offset: off, length: len} ->
-          # Copy len bytes from off positions back, byte-by-byte for overlap.
+          # Guard against malformed tokens: offset=0 or offset > output length
+          # would yield an invalid start_idx, causing nil reads and ArgumentError.
           current_len = length(output)
-          start_idx   = current_len - off
-          # Output is reversed; index from the tail.
-          copy_from_output(output, start_idx, current_len, len, output)
+          if off < 1 or off > current_len do
+            output  # skip invalid match token
+          else
+            start_idx = current_len - off
+            # Output is reversed; index from the tail.
+            copy_from_output(output, start_idx, current_len, len, output)
+          end
       end
 
     case orig_len do
@@ -213,7 +218,8 @@ defmodule CodingAdventures.LZSS do
       rest::binary>> = data
 
     # Cap block_count against actual payload size to prevent DoS.
-    max_possible = div(byte_size(rest), 1)
+    # Each block needs at least 2 bytes (1 flag + 1 payload byte minimum).
+    max_possible = div(byte_size(rest), 2)
     safe_count   = min(block_count, max_possible)
     tokens = parse_blocks(rest, safe_count, [])
     {tokens, original_length}
