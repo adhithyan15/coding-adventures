@@ -11,5 +11,5 @@ pub use in_memory_data_store_engine::{
     current_time_ms, Database, DataStoreBackend, DataStoreEngine, Entry, EntryType, EntryValue,
     OrderedF64, SortedSet, Store,
 };
-pub use in_memory_data_store_protocol::{command_frame_from_resp, CommandFrame};
-pub use pipeline::DataStorePipeline;
+pub use in_memory_data_store_protocol::{CommandFrame, EngineResponse};
+pub use pipeline::DataStoreManager;

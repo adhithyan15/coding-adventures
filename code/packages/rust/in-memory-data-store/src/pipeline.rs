@@ -5,16 +5,15 @@ use std::time::Duration;
 use std::path::PathBuf;
 
 use in_memory_data_store_engine::DataStoreEngine;
-use in_memory_data_store_protocol::command_frame_from_resp;
-use resp_protocol::{decode, encode, RespError, RespValue};
+use in_memory_data_store_protocol::{CommandFrame, EngineResponse};
 
-pub struct DataStorePipeline {
+pub struct DataStoreManager {
     engine: Arc<DataStoreEngine>,
     expirer_stop: Arc<AtomicBool>,
     expirer_handle: Mutex<Option<JoinHandle<()>>>,
 }
 
-impl DataStorePipeline {
+impl DataStoreManager {
     pub fn new(aof_path: Option<PathBuf>) -> std::io::Result<Self> {
         let engine = Arc::new(DataStoreEngine::new(aof_path)?);
 
@@ -56,42 +55,14 @@ impl DataStorePipeline {
         }
     }
 
-    /// Process a raw bytes payload containing RESP protocol messages.
-    /// Manages the state of incomplete data internally if tracking is externalized.
-    pub fn execute(&self, buffer: &mut Vec<u8>, selected_db: &mut usize) -> Vec<u8> {
-        let mut responses = Vec::new();
-
-        loop {
-            match decode(buffer) {
-                Ok(Some((value, consumed))) => {
-                    buffer.drain(..consumed);
-                    let Some(frame) = command_frame_from_resp(value) else {
-                        let response = RespValue::Error(RespError::new(
-                            "ERR protocol error: expected array of bulk strings",
-                        ));
-                        responses.extend(encode(response).unwrap());
-                        continue;
-                    };
-                    
-                    let (active_db, response) = self.engine.execute_with_db(*selected_db, &frame, true);
-                    *selected_db = active_db;
-                    responses.extend(encode(response).unwrap());
-                }
-                Ok(None) => break, // Incomplete data, exit loop wait for more
-                Err(err) => {
-                    buffer.clear();
-                    let response = RespValue::Error(RespError::new(format!("ERR {err}")));
-                    responses.extend(encode(response).unwrap());
-                    break;
-                }
-            }
-        }
-
-        responses
+    pub fn execute(&self, selected_db: &mut usize, frame: &CommandFrame) -> EngineResponse {
+        let (active_db, response) = self.engine.execute_with_db(*selected_db, frame, true);
+        *selected_db = active_db;
+        response
     }
 }
 
-impl Drop for DataStorePipeline {
+impl Drop for DataStoreManager {
     fn drop(&mut self) {
         self.stop_background_workers();
     }

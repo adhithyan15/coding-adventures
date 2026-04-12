@@ -7,3 +7,4 @@ description = "Mini Redis TCP server"
 [dependencies]
 in-memory-data-store = { path = "../../../packages/rust/in-memory-data-store" }
 tcp-server = { path = "../../../packages/rust/tcp-server" }
+resp-protocol = { path = "../../../packages/rust/resp-protocol" }

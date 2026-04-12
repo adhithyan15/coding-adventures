@@ -1,10 +1,14 @@
+mod resp_adapter;
+
 use std::env;
 use std::path::PathBuf;
 use std::process;
 use std::sync::Arc;
 
-use in_memory_data_store::DataStorePipeline;
+use in_memory_data_store::DataStoreManager;
 use tcp_server::TcpServer;
+use resp_protocol::{decode, encode, RespError, RespValue};
+use resp_adapter::{command_frame_from_resp, engine_response_to_resp};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -48,21 +52,49 @@ fn main() {
 
     println!("Starting mini-redis on {}:{}", host, port);
     
-    let pipeline_result = DataStorePipeline::new(aof_path.clone());
+    let pipeline_result = DataStoreManager::new(aof_path.clone());
     match pipeline_result {
-        Ok(pipeline) => {
+        Ok(manager) => {
             if let Some(ref path) = aof_path {
                 println!("Using AOF persistence at {:?}", path);
             } else {
                 println!("Running without persistence.");
             }
 
-            pipeline.start_background_workers();
-            let shared_pipeline = Arc::new(pipeline);
+            manager.start_background_workers();
+            let shared_manager = Arc::new(manager);
 
             let server = TcpServer::with_handler(host, port, move |conn, data| {
                 conn.read_buffer.extend_from_slice(data);
-                shared_pipeline.execute(&mut conn.read_buffer, &mut conn.selected_db)
+                let mut responses = Vec::new();
+                
+                loop {
+                    match decode(&conn.read_buffer) {
+                        Ok(Some((value, consumed))) => {
+                            conn.read_buffer.drain(..consumed);
+                            let Some(frame) = command_frame_from_resp(value) else {
+                                let response = RespValue::Error(RespError::new(
+                                    "ERR protocol error: expected array of bulk strings",
+                                ));
+                                responses.extend(encode(response).unwrap());
+                                continue;
+                            };
+                            
+                            let engine_resp = shared_manager.execute(&mut conn.selected_db, &frame);
+                            let resp_val = engine_response_to_resp(engine_resp);
+                            responses.extend(encode(resp_val).unwrap());
+                        }
+                        Ok(None) => break,
+                        Err(err) => {
+                            conn.read_buffer.clear();
+                            let response = RespValue::Error(RespError::new(format!("ERR {err}")));
+                            responses.extend(encode(response).unwrap());
+                            break;
+                        }
+                    }
+                }
+                
+                responses
             });
 
             if let Err(e) = server.serve_forever() {
@@ -71,7 +103,7 @@ fn main() {
             }
         }
         Err(e) => {
-            eprintln!("Failed to initialize pipeline: {}", e);
+            eprintln!("Failed to initialize data store: {}", e);
             process::exit(1);
         }
     }
