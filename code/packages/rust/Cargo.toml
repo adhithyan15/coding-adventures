@@ -230,5 +230,11 @@ members = [
     "lzss",
     "lzw",
     "json-rpc",
-    "rpc", "lsm-tree", "write-ahead-log",
+    "rpc",
+    "lsm-tree",
+    "write-ahead-log",
+    "irc-proto",
+    "irc-framing",
+    "irc-server",
+    "irc-net-stdlib",
 ]
