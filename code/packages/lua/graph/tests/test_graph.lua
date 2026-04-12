@@ -1,4 +1,11 @@
-package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
+local script = arg and arg[0] or "tests/test_graph.lua"
+local script_dir = script:match("^(.*)[/\\][^/\\]+$") or "."
+local package_root = script_dir:gsub("[/\\]tests$", "")
+if package_root == "tests" then
+    package_root = "."
+end
+
+package.path = package_root .. "/src/?.lua;" .. package_root .. "/src/?/init.lua;" .. package.path
 
 local graph = require("coding_adventures.graph")
 local Graph = graph.Graph

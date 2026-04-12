@@ -17,6 +17,10 @@ local function compare_nodes(left, right)
     return 0
 end
 
+local function compare_nodes_less(left, right)
+    return compare_nodes(left, right) < 0
+end
+
 local function canonical_endpoints(left, right)
     if compare_nodes(left, right) <= 0 then
         return left, right
@@ -149,7 +153,7 @@ function Graph:nodes()
             result[i] = self._node_list[i]
         end
     end
-    table.sort(result, compare_nodes)
+    table.sort(result, compare_nodes_less)
     return result
 end
 
@@ -283,7 +287,7 @@ function Graph:neighbors(node)
         for neighbor, _ in pairs(neighbors) do
             result[#result + 1] = neighbor
         end
-        table.sort(result, compare_nodes)
+        table.sort(result, compare_nodes_less)
         return result
     end
 
@@ -298,7 +302,7 @@ function Graph:neighbors(node)
             result[#result + 1] = self._node_list[col]
         end
     end
-    table.sort(result, compare_nodes)
+    table.sort(result, compare_nodes_less)
     return result
 end
 
@@ -499,7 +503,7 @@ local function shortest_path(graph, start, goal)
             for neighbor, _ in pairs(neighbors) do
                 keys[#keys + 1] = neighbor
             end
-            table.sort(keys, compare_nodes)
+            table.sort(keys, compare_nodes_less)
 
             for _, neighbor in ipairs(keys) do
                 local next_distance = distances[current.node] + neighbors[neighbor]

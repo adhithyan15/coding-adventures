@@ -45,7 +45,8 @@ our $VERSION = '0.01';
 # which ecosystem a package belongs to. The order does not matter for
 # correctness but we list them alphabetically for readability.
 my @KNOWN_LANGUAGES = qw(
-    elixir go lua perl python ruby rust starlark typescript
+    python ruby go rust typescript elixir lua perl swift wasm haskell starlark
+    java kotlin csharp fsharp dotnet
 );
 
 # SKIP_DIRS -- directory names that we never descend into during the walk.
@@ -56,7 +57,7 @@ my @KNOWN_LANGUAGES = qw(
 my %SKIP_DIRS = map { $_ => 1 } qw(
     .git .hg .svn .venv .tox .mypy_cache .pytest_cache .ruff_cache
     __pycache__ node_modules vendor dist build target .claude Pods
-    _build blib
+    _build blib .build .gradle gradle-build
 );
 
 # new -- Constructor.

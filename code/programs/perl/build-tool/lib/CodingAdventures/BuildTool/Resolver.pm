@@ -302,16 +302,15 @@ sub resolve {
     # Add all packages as nodes first — even isolated packages with no deps.
     for my $pkg (@{$packages_ref}) {
         $graph->add_node($pkg->{name});
-        my $scope = _dependency_scope($pkg->{language});
-        if (!exists $known_names_by_scope{$scope}) {
-            $known_names_by_scope{$scope} = { $self->build_known_names($packages_ref, $scope) };
+        my $language = $pkg->{language};
+        if (!exists $known_names_by_scope{$language}) {
+            $known_names_by_scope{$language} = { $self->build_known_names($packages_ref, $language) };
         }
     }
 
     # Parse dependencies for each package and add edges.
     for my $pkg (@{$packages_ref}) {
-        my $scope = _dependency_scope($pkg->{language});
-        my @deps = $self->resolve_dependencies($pkg, $known_names_by_scope{$scope});
+        my @deps = $self->resolve_dependencies($pkg, $known_names_by_scope{$pkg->{language}});
         for my $dep (@deps) {
             # Edge: dep -> pkg (dep must be built before pkg).
             $graph->add_edge($dep, $pkg->{name});
@@ -336,9 +335,10 @@ sub resolve {
 # @param \@packages -- arrayref of package hashrefs.
 # @return hash mapping ecosystem name -> graph node name.
 sub build_known_names {
-    my ($self, $packages_ref, $scope) = @_;
+    my ($self, $packages_ref, $language) = @_;
     my %known;
-    $scope //= '';
+    $language //= '';
+    my $scope = $language eq '' ? '' : _dependency_scope($language);
 
     for my $pkg (@{$packages_ref}) {
         next if $scope ne '' && !_in_dependency_scope($pkg->{language}, $scope);
@@ -371,11 +371,17 @@ sub build_known_names {
             _set_known(\%known, $npm_name, $pkg);
             _set_known(\%known, lc($dir_name), $pkg);
 
-        } elsif ($lang eq 'rust' || $lang eq 'wasm') {
+        } elsif ($lang eq 'rust') {
             # Rust: bare crate name (hyphens, lowercase).
             my $crate_name = $dir_name;
             $crate_name =~ tr/A-Z/a-z/;
             _set_known(\%known, $crate_name, $pkg);
+            my $cargo_name = _read_cargo_package_name($pkg);
+            _set_known(\%known, $cargo_name, $pkg) if defined $cargo_name;
+
+        } elsif ($lang eq 'wasm') {
+            # WASM wrappers should resolve through their explicit Cargo package
+            # names (for example "graph-wasm"), not bare Rust crate names.
             my $cargo_name = _read_cargo_package_name($pkg);
             _set_known(\%known, $cargo_name, $pkg) if defined $cargo_name;
 
@@ -409,21 +415,9 @@ sub build_known_names {
             _set_known(\%known, $cabal_name, $pkg);
 
         } elsif ($lang eq 'csharp' || $lang eq 'fsharp' || $lang eq 'dotnet') {
-            my @project_files;
-            File::Find::find(
-                {
-                    wanted => sub {
-                        return if -d $File::Find::name;
-                        return unless $_ =~ /\.(?:csproj|fsproj)\z/;
-                        push @project_files, $File::Find::name;
-                    },
-                    no_chdir => 1,
-                },
-                $pkg->{path},
-            );
-            for my $project_file (@project_files) {
-                $known{ _normalize_path($project_file) } = $pkg->{name};
-            }
+            # .NET packages refer to sibling package directories via
+            # <ProjectReference Include="../graph/Graph.csproj" />.
+            _set_known(\%known, lc($dir_name), $pkg);
         }
     }
 
@@ -708,8 +702,14 @@ sub _parse_dotnet_deps {
     for my $project_file (@project_files) {
         my $text = _slurp($project_file) // next;
         while ($text =~ /<ProjectReference\s+Include\s*=\s*"([^"]+)"/g) {
-            my $resolved = File::Spec->rel2abs($1, $pkg->{path});
-            my $key = _normalize_path($resolved);
+            my $include = $1;
+            next if File::Spec->file_name_is_absolute($include);
+            my $cleaned = File::Spec->canonpath($include);
+            my @parts = grep { defined $_ && $_ ne '' } File::Spec->splitdir($cleaned);
+            next if !@parts;
+            my $dep_dir = @parts >= 2 ? $parts[-2] : $parts[0];
+            next if !defined $dep_dir || $dep_dir eq '.' || $dep_dir eq '..';
+            my $key = lc $dep_dir;
             push @deps, $known_ref->{$key} if exists $known_ref->{$key};
         }
     }
