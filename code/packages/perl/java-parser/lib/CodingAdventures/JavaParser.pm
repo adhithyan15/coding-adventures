@@ -67,6 +67,10 @@ our $VERSION = '0.01';
 use CodingAdventures::JavaLexer;
 use CodingAdventures::JavaParser::ASTNode;
 
+my %TYPE_KEYWORDS = map { $_ => 1 } qw(
+    BOOLEAN BYTE CHAR DOUBLE FLOAT INT LONG SHORT
+);
+
 # ============================================================================
 # Constructor
 # ============================================================================
@@ -157,6 +161,27 @@ sub _node {
     return CodingAdventures::JavaParser::ASTNode->new($rule_name, \@children);
 }
 
+sub _is_type_token {
+    my ($self, $tok) = @_;
+    return 0 unless $tok;
+    return 1 if $tok->{type} eq 'NAME';
+    return 1 if $TYPE_KEYWORDS{$tok->{type}};
+    return 0;
+}
+
+sub _consume_type_token {
+    my ($self) = @_;
+    my $tok = $self->_peek();
+    unless ($self->_is_type_token($tok)) {
+        die sprintf(
+            "CodingAdventures::JavaParser: parse error at line %d col %d: "
+          . "expected type name but got %s ('%s')\n",
+            $tok->{line}, $tok->{col}, $tok->{type}, $tok->{value}
+        );
+    }
+    return $self->_advance();
+}
+
 # ============================================================================
 # Public API
 # ============================================================================
@@ -216,15 +241,19 @@ sub _parse_statement {
         return $self->_node('statement', $self->_parse_block());
     }
 
-    # Variable declaration: NAME NAME EQUALS ... (type name = expr ;)
-    # Also handles keyword types like INT, LONG, etc.
-    if ($type eq 'NAME') {
+    # Variable declaration: type name = expr ;
+    # Handles both reference types (NAME) and primitive type keywords (INT, etc).
+    if ($self->_is_type_token($tok)) {
         my $next = $self->_peek_ahead(1);
-        # If NAME is followed by another NAME, it's a type declaration
+        # If a type token is followed by NAME, it's a variable declaration.
         if ($next->{type} eq 'NAME') {
             return $self->_node('statement', $self->_parse_var_declaration());
         }
-        # If NAME is followed by EQUALS, it's an assignment
+    }
+
+    if ($type eq 'NAME') {
+        my $next = $self->_peek_ahead(1);
+        # If NAME is followed by EQUALS, it's an assignment.
         if ($next->{type} eq 'EQUALS') {
             return $self->_node('statement', $self->_parse_assignment_stmt());
         }
@@ -234,13 +263,13 @@ sub _parse_statement {
     return $self->_node('statement', $self->_parse_expression_stmt());
 }
 
-# var_declaration = NAME NAME EQUALS expression SEMICOLON ;
+# var_declaration = type NAME EQUALS expression SEMICOLON ;
 #
 # Example:  int x = 5;   String y = "hello";
 sub _parse_var_declaration {
     my ($self) = @_;
     my @ch;
-    push @ch, $self->_leaf($self->_advance());          # type (NAME)
+    push @ch, $self->_leaf($self->_consume_type_token());
     push @ch, $self->_leaf($self->_expect('NAME'));      # variable name
     push @ch, $self->_leaf($self->_expect('EQUALS'));
     push @ch, $self->_parse_expression();
@@ -302,10 +331,10 @@ sub _parse_for_stmt {
     push @ch, $self->_leaf($self->_expect('LPAREN'));
 
     # --- Initializer ---
-    if ($self->_check('NAME') && $self->_peek_ahead(1)->{type} eq 'NAME') {
+    if ($self->_is_type_token($self->_peek()) && $self->_peek_ahead(1)->{type} eq 'NAME') {
         # type name = expr
         my @init_ch;
-        push @init_ch, $self->_leaf($self->_advance());     # type
+        push @init_ch, $self->_leaf($self->_consume_type_token());
         push @init_ch, $self->_leaf($self->_expect('NAME'));
         push @init_ch, $self->_leaf($self->_expect('EQUALS'));
         push @init_ch, $self->_parse_expression();
