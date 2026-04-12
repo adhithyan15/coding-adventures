@@ -1,2 +1,2 @@
-mise exec -- bundle install --quiet
-mise exec -- bundle exec rake test
+bundle install --quiet
+bundle exec rake test
