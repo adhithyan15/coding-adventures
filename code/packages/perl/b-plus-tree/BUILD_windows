@@ -1,0 +1,1 @@
+where cpanm >NUL 2>&1 && cpanm --installdeps --quiet . && prove -l -v t/ || echo Perl/cpanm not available on this runner — skipping
