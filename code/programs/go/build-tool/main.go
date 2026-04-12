@@ -140,7 +140,7 @@ func run() int {
 	force := flag.Bool("force", false, "Rebuild everything regardless of cache")
 	dryRun := flag.Bool("dry-run", false, "Show what would build without executing")
 	jobs := flag.Int("jobs", runtime.NumCPU(), "Max parallel jobs")
-	language := flag.String("language", "all", "Filter to language: python, ruby, go, rust, typescript, elixir, all")
+	language := flag.String("language", "all", "Filter to language: python, ruby, go, rust, typescript, elixir, dotnet, all")
 	diffBase := flag.String("diff-base", "origin/main", "Git ref to diff against for change detection (default: origin/main)")
 	cacheFile := flag.String("cache-file", ".build-cache.json", "Path to cache file (fallback when git diff unavailable)")
 	detectLanguages := flag.Bool("detect-languages", false, "Output which language toolchains are needed based on git diff, then exit")
@@ -460,7 +460,7 @@ func run() int {
 
 // allLanguages is the canonical list of supported languages in the monorepo.
 // The order is stable and matches the order used in CI toolchain setup.
-var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"}
+var allLanguages = []string{"python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell", "dotnet"}
 
 // sharedPrefixes are repo paths that, when changed, mean ALL languages
 // need rebuilding. Keep this list intentionally narrow: only changes to

@@ -81,6 +81,7 @@ func IsStarlarkBuild(content string) bool {
 		"perl_library(", "perl_binary(",
 		"java_library(", "java_binary(",
 		"kotlin_library(", "kotlin_binary(",
+		"dotnet_library(", "dotnet_binary(",
 	}
 
 	for _, line := range strings.Split(content, "\n") {
@@ -306,6 +307,15 @@ func GenerateCommands(t Target) []string {
 		return []string{
 			"gradle build",
 			"gradle test",
+		}
+
+	case "dotnet_library", "dotnet_binary":
+		// --disable-build-servers prevents the MSBuild background server from
+		// persisting between steps, which causes port-binding failures on CI
+		// when the same runner executes multiple build invocations.
+		return []string{
+			"dotnet build --disable-build-servers",
+			"dotnet test --disable-build-servers",
 		}
 
 	default:
