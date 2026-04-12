@@ -34,34 +34,9 @@
 //! | Delimiters     | `{`, `}`, `<`, `>`, `:`, `;`, `,`, `.`, `=`, `@`     |
 //! | Skip           | whitespace, `//` line comments, `/* */` block comments|
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `mosaic.tokens` grammar file.
-///
-/// We navigate from `CARGO_MANIFEST_DIR` (the `mosaic-lexer/` directory)
-/// up three levels to `code/`, then into `grammars/`:
-///
-/// ```text
-/// code/
-///   grammars/
-///     mosaic.tokens          ← target
-///   packages/
-///     rust/
-///       mosaic-lexer/
-///         Cargo.toml         ← CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/mosaic.tokens")
-}
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -88,10 +63,7 @@ fn grammar_path() -> String {
 /// let tokens = lexer.tokenize().expect("tokenization failed");
 /// ```
 pub fn create_mosaic_lexer(source: &str) -> GrammarLexer<'_> {
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read mosaic.tokens: {e}"));
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse mosaic.tokens: {e}"));
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
@@ -299,7 +271,10 @@ mod tests {
     #[test]
     fn test_delimiters() {
         let tokens = tokenize("{ } < > : ; , . = @");
-        let non_eof: Vec<&Token> = tokens.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
 
         assert_eq!(non_eof.len(), 10, "Expected 10 delimiter tokens");
         assert_eq!(non_eof[0].value, "{");

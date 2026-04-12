@@ -66,42 +66,9 @@
 //! with the `algol.tokens` grammar file. When a new operator is added, you
 //! edit the grammar — no Rust code changes needed.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
-
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `algol.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     algol.tokens          <-- this is what we want
-///   packages/
-///     rust/
-///       algol-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/algol.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/algol.tokens")
-}
+mod _grammar;
 
 // ===========================================================================
 // Public API
@@ -137,28 +104,7 @@ fn grammar_path() -> String {
 /// }
 /// ```
 pub fn create_algol_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read the file at runtime (not compile time) because the grammar file
-    // may be updated independently of this crate. This also avoids bloating
-    // the binary with embedded grammar text.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read algol.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (patterns, names) — operators, literals, IDENT
-    //   - Skip patterns — WHITESPACE and COMMENT (comment...;)
-    //   - Keywords — begin, end, if, then, else, for, etc.
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse algol.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    //
-    // The GrammarLexer compiles all token patterns into anchored regexes
-    // and is ready to tokenize the source string.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
@@ -376,8 +322,11 @@ mod tests {
         // The grammar's string pattern strips the quotes
         // (or keeps them, depending on grammar-tools behavior)
         // so we check the value contains "hello".
-        assert!(pairs[0].1.contains("hello"),
-            "Expected string value to contain 'hello', got {:?}", pairs[0].1);
+        assert!(
+            pairs[0].1.contains("hello"),
+            "Expected string value to contain 'hello', got {:?}",
+            pairs[0].1
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -463,7 +412,10 @@ mod tests {
     #[test]
     fn test_tokenize_keyword_begin() {
         let tokens = tokenize_algol("begin");
-        let non_eof: Vec<&Token> = tokens.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
 
         assert_eq!(non_eof.len(), 1);
         assert_eq!(non_eof[0].type_, TokenType::Keyword);
@@ -477,7 +429,10 @@ mod tests {
     #[test]
     fn test_tokenize_keyword_end() {
         let tokens = tokenize_algol("end");
-        let non_eof: Vec<&Token> = tokens.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
 
         assert_eq!(non_eof.len(), 1);
         assert_eq!(non_eof[0].type_, TokenType::Keyword);
@@ -493,16 +448,42 @@ mod tests {
     #[test]
     fn test_tokenize_all_keywords() {
         let keywords = [
-            "begin", "end", "if", "then", "else", "for", "do",
-            "step", "until", "while", "goto", "switch", "procedure",
-            "integer", "real", "boolean", "string", "array", "own",
-            "label", "value", "true", "false", "not", "and", "or",
-            "impl", "eqv", "div", "mod",
+            "begin",
+            "end",
+            "if",
+            "then",
+            "else",
+            "for",
+            "do",
+            "step",
+            "until",
+            "while",
+            "goto",
+            "switch",
+            "procedure",
+            "integer",
+            "real",
+            "boolean",
+            "string",
+            "array",
+            "own",
+            "label",
+            "value",
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "impl",
+            "eqv",
+            "div",
+            "mod",
         ];
 
         for kw in &keywords {
             let tokens = tokenize_algol(kw);
-            let non_eof: Vec<&Token> = tokens.iter()
+            let non_eof: Vec<&Token> = tokens
+                .iter()
                 .filter(|t| t.type_ != TokenType::Eof)
                 .collect();
 
@@ -526,11 +507,22 @@ mod tests {
     #[test]
     fn test_keyword_boundary() {
         let tokens = tokenize_algol("beginning");
-        let non_eof: Vec<&Token> = tokens.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
 
-        assert_eq!(non_eof.len(), 1, "Expected 1 token, not BEGIN + IDENT('ning')");
-        assert_eq!(non_eof[0].type_, TokenType::Name,
-            "Expected IDENT (Name type), got {:?}", non_eof[0].type_);
+        assert_eq!(
+            non_eof.len(),
+            1,
+            "Expected 1 token, not BEGIN + IDENT('ning')"
+        );
+        assert_eq!(
+            non_eof[0].type_,
+            TokenType::Name,
+            "Expected IDENT (Name type), got {:?}",
+            non_eof[0].type_
+        );
         assert_eq!(non_eof[0].value, "beginning");
     }
 
@@ -617,22 +609,34 @@ mod tests {
     fn test_tokenize_arithmetic_operators() {
         // PLUS maps to TokenType::Plus
         let tokens_plus = tokenize_algol("+");
-        let non_eof: Vec<&Token> = tokens_plus.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens_plus
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof[0].type_, TokenType::Plus);
 
         // MINUS maps to TokenType::Minus
         let tokens_minus = tokenize_algol("-");
-        let non_eof: Vec<&Token> = tokens_minus.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens_minus
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof[0].type_, TokenType::Minus);
 
         // STAR maps to TokenType::Star
         let tokens_star = tokenize_algol("*");
-        let non_eof: Vec<&Token> = tokens_star.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens_star
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof[0].type_, TokenType::Star);
 
         // SLASH maps to TokenType::Slash
         let tokens_slash = tokenize_algol("/");
-        let non_eof: Vec<&Token> = tokens_slash.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+        let non_eof: Vec<&Token> = tokens_slash
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .collect();
         assert_eq!(non_eof[0].type_, TokenType::Slash);
     }
 
@@ -692,12 +696,14 @@ mod tests {
 
         for (src, expected_type) in cases {
             let tokens = tokenize_algol(src);
-            let non_eof: Vec<&Token> = tokens.iter().filter(|t| t.type_ != TokenType::Eof).collect();
+            let non_eof: Vec<&Token> = tokens
+                .iter()
+                .filter(|t| t.type_ != TokenType::Eof)
+                .collect();
 
             assert_eq!(non_eof.len(), 1, "Expected 1 token for {:?}", src);
             assert_eq!(
-                non_eof[0].type_,
-                *expected_type,
+                non_eof[0].type_, *expected_type,
                 "Expected {:?} for {:?}, got {:?}",
                 expected_type, src, non_eof[0].type_
             );
@@ -716,8 +722,12 @@ mod tests {
         let pairs = token_pairs(&tokens);
 
         // Expected: IDENT("x"), ASSIGN(":="), INTEGER_LIT("1")
-        assert_eq!(pairs.len(), 3,
-            "Expected 3 tokens (IDENT, ASSIGN, INTEGER_LIT), got {:?}", pairs);
+        assert_eq!(
+            pairs.len(),
+            3,
+            "Expected 3 tokens (IDENT, ASSIGN, INTEGER_LIT), got {:?}",
+            pairs
+        );
         assert_eq!(pairs[0].0, "NAME");
         assert_eq!(pairs[1].0, "ASSIGN");
         assert_eq!(pairs[1].1, ":=");
@@ -736,8 +746,12 @@ mod tests {
         let pairs = token_pairs(&tokens);
 
         // Expected: IDENT("x"), POWER("**"), INTEGER_LIT("2")
-        assert_eq!(pairs.len(), 3,
-            "Expected 3 tokens (IDENT, POWER, INTEGER_LIT), got {:?}", pairs);
+        assert_eq!(
+            pairs.len(),
+            3,
+            "Expected 3 tokens (IDENT, POWER, INTEGER_LIT), got {:?}",
+            pairs
+        );
         assert_eq!(pairs[0].0, "NAME");
         assert_eq!(pairs[1].0, "POWER");
         assert_eq!(pairs[1].1, "**");
@@ -766,12 +780,21 @@ mod tests {
         // COMMENT in the skip: section as /comment[^;]*;/ which is tried
         // before regular token patterns.
         assert!(
-            pairs.iter().all(|(name, _)| *name != "comment" && *name != "COMMENT"),
-            "Comment tokens should not appear in output: {:?}", pairs
+            pairs
+                .iter()
+                .all(|(name, _)| *name != "comment" && *name != "COMMENT"),
+            "Comment tokens should not appear in output: {:?}",
+            pairs
         );
         // After the comment, we expect x := 1
-        let has_ident_x = pairs.iter().any(|(name, val)| *name == "NAME" && *val == "x");
-        assert!(has_ident_x, "Expected IDENT('x') after comment, got {:?}", pairs);
+        let has_ident_x = pairs
+            .iter()
+            .any(|(name, val)| *name == "NAME" && *val == "x");
+        assert!(
+            has_ident_x,
+            "Expected IDENT('x') after comment, got {:?}",
+            pairs
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -797,10 +820,14 @@ mod tests {
 
         // Values should be identical.
         for i in 0..pairs_compact.len() {
-            assert_eq!(pairs_compact[i].1, pairs_spaced[i].1,
-                "Token {i} value mismatch between compact and spaced");
-            assert_eq!(pairs_compact[i].1, pairs_newlines[i].1,
-                "Token {i} value mismatch between compact and newlines");
+            assert_eq!(
+                pairs_compact[i].1, pairs_spaced[i].1,
+                "Token {i} value mismatch between compact and spaced"
+            );
+            assert_eq!(
+                pairs_compact[i].1, pairs_newlines[i].1,
+                "Token {i} value mismatch between compact and newlines"
+            );
         }
     }
 
@@ -815,8 +842,7 @@ mod tests {
         let tokens = tokenize_algol("x := 1 + 2 * 3");
         let pairs = token_pairs(&tokens);
 
-        assert_eq!(pairs.len(), 7,
-            "Expected 7 tokens, got {:?}", pairs);
+        assert_eq!(pairs.len(), 7, "Expected 7 tokens, got {:?}", pairs);
         assert_eq!(pairs[0], ("NAME", "x"));
         assert_eq!(pairs[1], ("ASSIGN", ":="));
         assert_eq!(pairs[2], ("INTEGER_LIT", "1"));
@@ -835,7 +861,9 @@ mod tests {
     #[test]
     fn test_create_lexer() {
         let mut lexer = create_algol_lexer("x := 42");
-        let tokens = lexer.tokenize().expect("Lexer should tokenize successfully");
+        let tokens = lexer
+            .tokenize()
+            .expect("Lexer should tokenize successfully");
 
         // Should produce: IDENT("x"), ASSIGN(":="), INTEGER_LIT("42"), EOF
         assert!(tokens.len() >= 4);
@@ -855,7 +883,11 @@ mod tests {
         let pairs = token_pairs(&tokens);
 
         // begin integer x ; x := 42 end
-        assert!(pairs.len() >= 7, "Expected at least 7 tokens, got {:?}", pairs);
+        assert!(
+            pairs.len() >= 7,
+            "Expected at least 7 tokens, got {:?}",
+            pairs
+        );
 
         // begin: KEYWORD
         assert_eq!(pairs[0].1, "begin");
@@ -867,8 +899,11 @@ mod tests {
         assert_eq!(integer_tok.type_, TokenType::Keyword);
 
         // end: KEYWORD
-        let end_tok = tokens.iter().filter(|t| t.type_ != TokenType::Eof)
-            .last().unwrap();
+        let end_tok = tokens
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof)
+            .last()
+            .unwrap();
         assert_eq!(end_tok.value, "end");
         assert_eq!(end_tok.type_, TokenType::Keyword);
     }

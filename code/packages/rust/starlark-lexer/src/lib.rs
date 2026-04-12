@@ -1,207 +1,21 @@
-//! # Starlark Lexer — tokenizing Starlark source code.
-//!
-//! [Starlark](https://github.com/bazelbuild/starlark/blob/master/spec.md) is
-//! a deterministic subset of Python designed for configuration files. It is the
-//! language used by Bazel BUILD files, Buck TARGETS files, and other build
-//! systems. Because Starlark is intentionally limited (no `while` loops, no
-//! `class`, no recursion), it guarantees that configuration evaluation always
-//! terminates.
-//!
-//! This crate provides a lexer (tokenizer) for Starlark. It does **not**
-//! hand-write tokenization rules. Instead, it loads the `starlark.tokens`
-//! grammar file — a declarative description of every token in the language —
-//! and feeds it to the generic [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # Architecture
-//!
-//! The tokenization pipeline has three layers:
-//!
-//! ```text
-//! starlark.tokens      (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together
-//! for Starlark specifically. It knows where to find `starlark.tokens` and
-//! provides two public entry points:
-//!
-//! - [`create_starlark_lexer`] — returns a `GrammarLexer` for fine-grained control.
-//! - [`tokenize_starlark`] — convenience function that returns `Vec<Token>` directly.
-//!
-//! # Why grammar-driven instead of hand-written?
-//!
-//! A hand-written lexer for Starlark would be ~500 lines of Rust with
-//! character-by-character logic for every token type. The grammar-driven
-//! approach replaces all that with a 235-line declarative grammar file plus
-//! ~30 lines of Rust glue code. When the language evolves (e.g., adding a
-//! new operator), you edit the grammar file — no Rust code changes needed.
-//!
-//! The tradeoff is performance: regex matching is slower than hand-tuned
-//! character loops. For configuration files (typically <10,000 lines),
-//! this difference is negligible.
-//!
-//! # Indentation mode
-//!
-//! Starlark uses significant indentation, just like Python. The grammar file
-//! declares `mode: indentation`, which tells the `GrammarLexer` to:
-//!
-//! 1. Track an indentation stack (starts at `[0]`).
-//! 2. Emit `INDENT` tokens when indentation increases.
-//! 3. Emit `DEDENT` tokens when indentation decreases.
-//! 4. Emit `NEWLINE` tokens at logical line boundaries.
-//! 5. Suppress `INDENT`/`DEDENT`/`NEWLINE` inside brackets `()`, `[]`, `{}`.
-//! 6. Reject tab characters in leading whitespace.
-//!
-//! # Reserved keywords
-//!
-//! Starlark deliberately excludes many Python features. The grammar file
-//! lists reserved keywords like `class`, `import`, `while`, `try`, etc.
-//! If the lexer encounters one of these words, it raises an error rather
-//! than silently tokenizing it. This catches common mistakes early —
-//! a user writing `class Foo:` gets a clear "reserved keyword" error
-//! instead of a confusing parse failure later.
+//! Starlark lexer backed by compiled token grammar.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `starlark.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     starlark.tokens       <-- this is what we want
-///   packages/
-///     rust/
-///       starlark-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/starlark.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/starlark.tokens")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for Starlark source code.
-///
-/// This function:
-/// 1. Reads the `starlark.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on. Use this when you
-/// need access to the lexer object itself (e.g., for incremental tokenization
-/// or custom error handling).
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. This should never
-/// happen in practice — the grammar file is checked into the repository and
-/// validated by the grammar-tools test suite. A panic here indicates a
-/// broken build or missing file.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_starlark_lexer::create_starlark_lexer;
-///
-/// let mut lexer = create_starlark_lexer("x = 1 + 2");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_starlark_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // We read the file at runtime (not compile time) because the grammar file
-    // may be updated independently of this crate. This also avoids bloating
-    // the binary with embedded grammar text.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read starlark.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (patterns, names, aliases)
-    //   - Skip patterns (whitespace, comments)
-    //   - Keywords (def, if, else, etc.)
-    //   - Reserved keywords (class, import, while, etc.)
-    //   - Mode (indentation)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse starlark.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    //
-    // The GrammarLexer compiles all token patterns into anchored regexes
-    // and is ready to tokenize the source string.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
-/// Tokenize Starlark source code into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, and tokenization in one call. The returned vector always
-/// ends with an `EOF` token.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains a reserved keyword or unexpected character (via `LexerError`
-/// propagation).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_starlark_lexer::tokenize_starlark;
-///
-/// let tokens = tokenize_starlark("def greet(name):\n    return name\n");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
 pub fn tokenize_starlark(source: &str) -> Vec<Token> {
-    // Create a fresh lexer for this source text.
-    let mut starlark_lexer = create_starlark_lexer(source);
-
-    // Tokenize and unwrap — any LexerError becomes a panic.
-    //
-    // In a production compiler, you would want to propagate the error
-    // via Result. For this educational codebase, panicking with a clear
-    // message is sufficient and keeps the API simple.
-    starlark_lexer
+    let mut lexer = create_starlark_lexer(source);
+    lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Starlark tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -571,3 +385,4 @@ mod tests {
         assert_eq!(dedent_count, 2, "Expected 2 DEDENT tokens for nested blocks");
     }
 }
+

@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "sql-lexer-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust SQL lexer"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+grammar_wasm_support = { package = "grammar-wasm-support", path = "../../rust/grammar-wasm-support" }
+language_lexer = { package = "coding-adventures-sql-lexer", path = "../../rust/sql-lexer" }
+wasm-bindgen = "0.2"

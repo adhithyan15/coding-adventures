@@ -1,163 +1,22 @@
-//! # Ruby Parser — parsing Ruby source code into an AST.
-//!
-//! This crate is the second half of the Ruby front-end pipeline. Where the
-//! `ruby-lexer` crate breaks source text into tokens, this crate arranges
-//! those tokens into a tree that reflects the **structure** of the code —
-//! an Abstract Syntax Tree (AST).
-//!
-//! # The parsing pipeline
-//!
-//! Parsing Ruby requires four cooperating components:
-//!
-//! ```text
-//! Source code  ("def add(a, b)\n  a + b\nend")
-//!       |
-//!       v
-//! ruby-lexer           → Vec<Token>
-//!       |                [KEYWORD("def"), NAME("add"), LPAREN,
-//!       |                 NAME("a"), COMMA, NAME("b"), RPAREN,
-//!       |                 NAME("a"), PLUS, NAME("b"),
-//!       |                 KEYWORD("end"), EOF]
-//!       v
-//! ruby.grammar         → ParserGrammar (rules like "program = ...")
-//!       |
-//!       v
-//! GrammarParser        → GrammarASTNode tree
-//!       |
-//!       |                program
-//!       |                  └── statement
-//!       |                        └── def_statement
-//!       |                              ├── KEYWORD("def")
-//!       |                              ├── NAME("add")
-//!       |                              ├── parameters
-//!       |                              ├── body
-//!       |                              └── KEYWORD("end")
-//!       v
-//! [future stages: interpretation]
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together.
-//! It knows where to find the `ruby.grammar` file and provides two public
-//! entry points.
-//!
-//! # Ruby syntax
-//!
-//! Ruby uses `end` keywords to terminate blocks (unlike braces in C-family
-//! languages or indentation in Python). This makes it easy to parse with
-//! a grammar-driven approach since block boundaries are explicitly marked
-//! by tokens.
+//! Ruby parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 use coding_adventures_ruby_lexer::tokenize_ruby;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `ruby.grammar` file.
-///
-/// Uses the same strategy as the ruby-lexer crate:
-/// `env!("CARGO_MANIFEST_DIR")` gives us the compile-time path to this
-/// crate's directory, and we navigate up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     ruby.grammar          <-- target file
-///   packages/
-///     rust/
-///       ruby-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/ruby.grammar")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarParser` configured for Ruby source code.
-///
-/// This function performs two major steps:
-///
-/// 1. **Tokenization** — uses `tokenize_ruby` from the ruby-lexer crate
-///    to break the source into tokens.
-///
-/// 2. **Grammar loading** — reads and parses the `ruby.grammar` file,
-///    which defines rules for programs, statements, expressions, method
-///    definitions, class definitions, and control flow.
-///
-/// The returned `GrammarParser` is ready to call `.parse()` on.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `ruby.grammar` file cannot be read or parsed.
-/// - The source code fails tokenization (unexpected character).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_ruby_parser::create_ruby_parser;
-///
-/// let mut parser = create_ruby_parser("x = 1 + 2");
-/// let ast = parser.parse().expect("parse failed");
-/// println!("{:?}", ast.rule_name);
-/// ```
 pub fn create_ruby_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source using the ruby-lexer.
     let tokens = tokenize_ruby(source);
-
-    // Step 2: Read the parser grammar from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read ruby.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse ruby.grammar: {e}"));
-
-    // Step 4: Create the parser.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
-/// Parse Ruby source code into an AST.
-///
-/// This is the most convenient entry point — it handles tokenization,
-/// grammar loading, parser creation, and parsing in one call.
-///
-/// The returned `GrammarASTNode` has `rule_name` set to `"program"` (the
-/// start symbol of the Ruby grammar) with children corresponding to the
-/// statements in the source.
-///
-/// # Panics
-///
-/// Panics if tokenization fails, the grammar file is missing/invalid,
-/// or the source code has a syntax error.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_ruby_parser::parse_ruby;
-///
-/// let ast = parse_ruby("x = 1 + 2");
-/// assert_eq!(ast.rule_name, "program");
-/// ```
 pub fn parse_ruby(source: &str) -> GrammarASTNode {
-    let mut ruby_parser = create_ruby_parser(source);
-
-    ruby_parser
+    let mut parser = create_ruby_parser(source);
+    parser
         .parse()
         .unwrap_or_else(|e| panic!("Ruby parse failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -180,20 +39,6 @@ mod tests {
         ast.children.iter().filter(|child| {
             matches!(child, ASTNodeOrToken::Node(n) if n.rule_name == "statement")
         }).count()
-    }
-
-    fn find_rule(node: &GrammarASTNode, target_rule: &str) -> bool {
-        if node.rule_name == target_rule {
-            return true;
-        }
-        for child in &node.children {
-            if let ASTNodeOrToken::Node(child_node) = child {
-                if find_rule(child_node, target_rule) {
-                    return true;
-                }
-            }
-        }
-        false
     }
 
     // -----------------------------------------------------------------------
@@ -285,3 +130,4 @@ mod tests {
         assert!(!ast.children.is_empty());
     }
 }
+
