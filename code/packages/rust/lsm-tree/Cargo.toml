@@ -8,5 +8,3 @@ skip-list = { path = "../skip-list" }
 bloom-filter = { path = "../bloom-filter" }
 write-ahead-log = { path = "../write-ahead-log" }
 
-[dev-dependencies]
-tempfile = "3.27.0"
