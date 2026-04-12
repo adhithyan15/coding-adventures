@@ -125,11 +125,16 @@ public struct CSVParser {
     }
     
     private static func isNewlineStart(_ ch: Character) -> Bool {
-        return ch == "\n" || ch == "\r"
+        return ch == "\n" || ch == "\r" || ch == "\r\n"
     }
     
     private static func consumeNewline(_ source: [Character], _ i: Int) -> Int {
+        if source[i] == "\r\n" {
+            // Already clustered as a single character, no need to peek ahead
+            return i
+        }
         if source[i] == "\r" && i + 1 < source.count && source[i + 1] == "\n" {
+            // Fallback just in case `Array(source)` isn't perfectly clustered or if we switched to unicodeScalars in the future
             return i + 1
         }
         return i
