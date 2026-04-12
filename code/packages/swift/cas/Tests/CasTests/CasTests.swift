@@ -299,25 +299,15 @@ final class InMemoryStoreTests: XCTestCase {
 
     // findByPrefix: ambiguous prefix → CasError.ambiguousPrefix.
     func testFindByPrefixAmbiguous() throws {
-        var cas = ContentAddressableStore(store: InMemoryStore())
-        // We need two objects that share a hex prefix. Rather than fabricating
-        // keys, we'll store two different objects and manufacture a prefix that
-        // matches both by working directly on the in-memory store.
-        //
-        // Strategy: we use the full-hex comparison. If the two stored keys
-        // happen to share a prefix, great. In practice the SHA-1 values of
-        // "foo" and "bar" share nothing obvious, so we directly insert two
-        // crafted keys into a fresh InMemoryStore and wrap it in CAS.
-
         // Craft two keys that share the prefix "a3f4" (first two bytes = 0xa3, 0xf4).
+        // We insert them directly into an InMemoryStore so we control the keys
+        // precisely, then wrap the store in a CAS for the prefix lookup.
         let key1: [UInt8] = [0xa3, 0xf4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                               0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]
         let key2: [UInt8] = [0xa3, 0xf4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                               0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02]
 
         var store = InMemoryStore()
-        // Insert both keys directly so that get() could never verify them —
-        // but we only need prefix lookup here.
         try store.put(key: key1, data: [0x01])
         try store.put(key: key2, data: [0x02])
         let cas = ContentAddressableStore(store: store)
