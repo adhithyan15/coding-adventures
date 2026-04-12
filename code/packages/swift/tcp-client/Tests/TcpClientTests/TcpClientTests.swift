@@ -32,6 +32,14 @@ import Darwin
 import Glibc
 #endif
 
+// On Darwin, SOCK_STREAM is an Int32 constant. On Linux (Glibc), it's a
+// __socket_type enum whose raw value must be extracted explicitly.
+#if canImport(Darwin)
+private let sockStream = SOCK_STREAM
+#elseif canImport(Glibc)
+private let sockStream = Int32(SOCK_STREAM.rawValue)
+#endif
+
 // Disambiguate POSIX bind() from Swift's Sequence.bind — inside closures like
 // withMemoryRebound, the compiler sees the instance method first. Wrapping it
 // in a free function at module scope resolves the ambiguity.
@@ -63,7 +71,7 @@ private func posixBind(_ fd: Int32, _ addr: UnsafePointer<sockaddr>, _ len: sock
 /// Start a local echo server that reads data and sends it back verbatim.
 /// Returns the port number the server is listening on.
 func startEchoServer() -> (port: UInt16, cleanup: () -> Void) {
-    let serverFd = socket(AF_INET, Int32(SOCK_STREAM), 0)
+    let serverFd = socket(AF_INET, sockStream, 0)
     precondition(serverFd >= 0, "Failed to create server socket")
 
     // Allow port reuse to prevent "address already in use" errors
@@ -148,7 +156,7 @@ func startEchoServer() -> (port: UInt16, cleanup: () -> Void) {
 /// Start a server that accepts a connection but never sends any data.
 /// Used for read timeout tests.
 func startSilentServer() -> (port: UInt16, cleanup: () -> Void) {
-    let serverFd = socket(AF_INET, Int32(SOCK_STREAM), 0)
+    let serverFd = socket(AF_INET, sockStream, 0)
     precondition(serverFd >= 0)
 
     var reuseAddr: Int32 = 1
@@ -211,7 +219,7 @@ func startSilentServer() -> (port: UInt16, cleanup: () -> Void) {
 /// Start a server that sends exactly the given data, then closes the connection.
 /// Used for partial-read and EOF tests.
 func startPartialServer(data: Data) -> (port: UInt16, cleanup: () -> Void) {
-    let serverFd = socket(AF_INET, Int32(SOCK_STREAM), 0)
+    let serverFd = socket(AF_INET, sockStream, 0)
     precondition(serverFd >= 0)
 
     var reuseAddr: Int32 = 1
@@ -280,7 +288,7 @@ func startPartialServer(data: Data) -> (port: UInt16, cleanup: () -> Void) {
 /// Start a server that reads a request, then sends the given response.
 /// Used for request-response pattern tests (like HTTP).
 func startRequestResponseServer(response: Data) -> (port: UInt16, cleanup: () -> Void) {
-    let serverFd = socket(AF_INET, Int32(SOCK_STREAM), 0)
+    let serverFd = socket(AF_INET, sockStream, 0)
     precondition(serverFd >= 0)
 
     var reuseAddr: Int32 = 1
@@ -357,7 +365,7 @@ func startRequestResponseServer(response: Data) -> (port: UInt16, cleanup: () ->
 /// Start a server that reads until EOF (client shutdown), then sends a response.
 /// Used for half-close tests.
 func startHalfCloseServer(response: Data) -> (port: UInt16, receivedData: () -> Data, cleanup: () -> Void) {
-    let serverFd = socket(AF_INET, Int32(SOCK_STREAM), 0)
+    let serverFd = socket(AF_INET, sockStream, 0)
     precondition(serverFd >= 0)
 
     var reuseAddr: Int32 = 1
@@ -663,7 +671,7 @@ final class TcpClientTests: XCTestCase {
     // Test 11: Connection refused when nothing is listening
     func testConnectionRefused() {
         // Bind a socket, get the port, then immediately close it
-        let tempFd = socket(AF_INET, Int32(SOCK_STREAM), 0)
+        let tempFd = socket(AF_INET, sockStream, 0)
         var addr = sockaddr_in()
         addr.sin_family = sa_family_t(AF_INET)
         addr.sin_port = UInt16(0).bigEndian
