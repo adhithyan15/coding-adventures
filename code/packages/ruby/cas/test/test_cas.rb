@@ -83,14 +83,18 @@ class TestHexUtilities < Minitest::Test
   end
 
   def test_all_zeros_key
-    key = "\x00" * 20
+    # Force binary (ASCII-8BIT) encoding so assert_equal doesn't fail on
+    # encoding mismatch: hex_to_key always returns ASCII-8BIT via pack("H*").
+    key = ("\x00" * 20).b
     hex = CAS.key_to_hex(key)
     assert_equal "00" * 20, hex
     assert_equal key, CAS.hex_to_key(hex)
   end
 
   def test_all_ff_key
-    key = "\xff" * 20
+    # "\xff" in a UTF-8 source file produces encoding UTF-8 + valid:false, but
+    # hex_to_key returns ASCII-8BIT.  Force binary so the encodings match.
+    key = ("\xff" * 20).b
     hex = CAS.key_to_hex(key)
     assert_equal "ff" * 20, hex
     assert_equal key, CAS.hex_to_key(hex)

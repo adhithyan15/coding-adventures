@@ -182,9 +182,16 @@ describe("cas", function()
         end)
 
         it("creates root directory", function()
-            local f = io.open(tmpdir, "r")
+            -- Verify the root directory exists by creating a temporary probe
+            -- file inside it.  On Windows, io.open() on a directory path returns
+            -- nil (you cannot fopen() a directory), so we use an indirect check.
+            local probe_path = tmpdir .. "/probe_dir_check"
+            local f = io.open(probe_path, "w")
             assert.is_not_nil(f, "root directory should exist")
-            if f then f:close() end
+            if f then
+                f:close()
+                os.remove(probe_path)
+            end
         end)
 
         it("put and get round-trip a small blob", function()
@@ -245,13 +252,11 @@ describe("cas", function()
             local data = "fanout test"
             store:put(key, data)
 
-            -- The directory root/a3/ must exist.
+            -- The file root/a3/<38-hex-zeros> must exist at the 2/38 path.
+            -- Its existence also proves the fanout directory root/a3/ was created.
+            -- (Checking the directory with io.open() fails on Windows because
+            --  you cannot fopen() a directory there; we use the file itself.)
             local dir = tmpdir .. "/a3"
-            local f1 = io.open(dir, "r")
-            assert.is_not_nil(f1, "fanout dir root/a3 should exist")
-            if f1 then f1:close() end
-
-            -- The file root/a3/<38-hex-zeros> must exist.
             local filename = string.rep("00", 19)   -- 38 chars
             local filepath = dir .. "/" .. filename
             local f2 = io.open(filepath, "rb")
