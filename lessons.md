@@ -1677,3 +1677,31 @@ files. If they do, create one for the new package too. Key differences for Windo
 - Python: use `uv run --no-project python` instead of `.venv/bin/python`
 - Perl: skip tests on Windows (matches json-rpc pattern)
 - Ruby: `bundle exec rake test` works on both platforms, but `cd` path separators may differ
+
+---
+
+## Swift POSIX bind() ambiguity in closures
+
+**Date:** 2026-04-12
+
+**What happened:** Swift tcp-client tests failed on macOS CI with "use of 'bind' refers to instance
+method rather than global function 'bind' in module 'Darwin'". Inside `withMemoryRebound` closures,
+Swift's type checker sees the Sequence.bind instance method before the Darwin.bind POSIX function.
+
+**Rule:** Never call POSIX `bind()` directly inside Swift closures. Create a `posixBind()` wrapper at
+module scope that dispatches to `Darwin.bind` or `Glibc.bind` via `#if canImport`. Same applies to
+other POSIX functions that collide with Swift stdlib names (`read`, `write`, `close` — though those
+are less ambiguous in practice).
+
+---
+
+## Lua packages with native dependencies need luarocks install in BUILD
+
+**Date:** 2026-04-12
+
+**What happened:** Lua tcp-client tests failed on macOS CI because `luasocket` was not installed. The
+BUILD file only ran busted but didn't install dependencies first.
+
+**Rule:** If a Lua package depends on a native LuaRocks dependency (like `luasocket`), the BUILD file
+must install it: `luarocks install luasocket --local && cd tests && LUA_PATH=...`. Check the
+rockspec's `dependencies` field and ensure BUILD installs all of them.
