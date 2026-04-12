@@ -4,6 +4,22 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
+
+When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
+
+- **Python**: `dependencies` array in `pyproject.toml`
+- **Ruby**: `spec.add_dependency` in `.gemspec` (regex requires `spec.`, not `s.`)
+- **Perl**: `requires 'coding-adventures-xxx';` in `cpanfile`
+- **Go**: `require` in `go.mod`
+- **Swift**: `.package(path: "...")` in `Package.swift`
+- **Rust**: `[dependencies]` in `Cargo.toml`
+- **TypeScript**: `dependencies` in `package.json`
+
+**Rule:** Every package that references a sibling in its BUILD file must also declare the dependency in the language-appropriate metadata file. The Ruby gemspec must use `spec` (not `s`) as the block variable, matching the build tool's regex `spec\.add_dependency`.
+
+---
+
 ### 2026-04-06: Perl `reverse LIST, $extra` vs `(reverse LIST), $extra` — precedence trap
 
 When building a list that is the reverse of one list plus an extra item, the expression
