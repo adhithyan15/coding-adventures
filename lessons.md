@@ -1627,3 +1627,11 @@ When `python/aes` depends on `python/gf256`, the build validator requires that:
 Combining them into a single `uv pip install -e ../gf256 -e ".[dev]"` was previously tried but the split is required to match the pattern in `python/reed-solomon`.
 
 **Rule:** Python packages with local deps → declare dep in pyproject.toml `dependencies` AND use two separate `uv pip install` calls in BUILD (local dep first, then the package).
+
+**IMPORTANT UPDATE (2026-04-12):** The above alone is NOT sufficient. uv performs universal resolution across ALL extras (including optional groups), so if ANY optional-dependency group references `coding-adventures-gf256`, uv will attempt a PyPI lookup and fail. The correct pattern is:
+
+1. `pyproject.toml` `dependencies = ["coding-adventures-gf256>=0.1.0"]` — valid PEP 440 for hatchling and provides dep graph edge for validator
+2. `pyproject.toml` `[tool.uv.sources]` section: `coding-adventures-gf256 = { path = "../gf256", editable = true }` — redirects uv to local path, bypassing PyPI
+3. BUILD: `uv pip install -e ../gf256 --quiet` first (explicit ref satisfies the validator's `requiresExplicitPrereqs` check), then `uv pip install -e ".[dev]" --quiet`
+
+Do NOT use `@ file:../gf256` in `dependencies` — hatchling rejects this during wheel metadata build. Do NOT put gf256 in optional-dependency groups — uv resolves ALL extras universally.
