@@ -1,0 +1,324 @@
+# Parser grammar for Nib
+# @version 1
+#
+# Nib is a safe, statically-typed toy language that compiles to Intel 4004 machine code.
+# This grammar defines the syntax rules that the parser reads after the lexer has
+# produced a stream of tokens (see nib.tokens).
+#
+# NOTATION (repo standard):
+#   UPPERCASE    token kinds from nib.tokens (custom operators, literals)
+#   "keyword"    quoted keyword literals (match token.value for keyword tokens)
+#   lowercase    grammar rules (non-terminals, defined below)
+#   |            alternation (or)
+#   { x }        zero or more repetitions of x
+#   [ x ]        optional (zero or one occurrence of x)
+#   ( x )        grouping
+#   ;            rule terminator
+#
+# TOKEN MATCHING RULES:
+#   - UPPERCASE names match by token type (WRAP_ADD, SAT_ADD, RANGE, ARROW, …)
+#   - Quoted literals ("fn", "let", "if", …) match keyword token values
+#   - NAME matches identifier tokens
+#   - INT_LIT and HEX_LIT match their respective literal tokens
+#
+# ENTRY POINT: program
+#
+# KEY DESIGN DECISIONS (documented inline throughout the grammar):
+#   - For-loop range uses RANGE token (not .. operator) — see for_stmt note
+#   - Expression precedence: logical < equality < relational < additive < bitwise < unary
+#   - STAR and SLASH are in the token set (reserved) but not in arithmetic rules (v2)
+#   - Wrap/sat operations are at the same precedence as PLUS/MINUS — they are add variants
+#   - call_expr appears before NAME in primary to avoid NAME consuming the function name
+
+# ---------------------------------------------------------------------------
+# Top-level structure
+# ---------------------------------------------------------------------------
+
+# A Nib program is a sequence of top-level declarations.
+# There is no "main" block or module wrapper — the entry point is a function
+# named "main" that the compiler looks for by convention.
+# Having only top-level declarations (no top-level statements) keeps the
+# compilation model simple: declarations are collected first, then compiled.
+program       = { top_decl } ;
+
+# Top-level declarations: compile-time constants, static (RAM-mapped) variables,
+# and function definitions. These are the only three things that can appear at
+# the top level of a Nib source file.
+top_decl      = const_decl
+              | static_decl
+              | fn_decl
+              ;
+
+# ---------------------------------------------------------------------------
+# Constants and statics
+# ---------------------------------------------------------------------------
+
+# Compile-time constant. Value must be a constant expression (folded at compile time).
+# No RAM is allocated; the constant is inlined wherever it is used.
+# Example: const MAX_DIGITS: u4 = 9;
+# The colon-type annotation is mandatory — Nib has no type inference for declarations.
+const_decl    = "const" NAME COLON type EQ expr SEMICOLON ;
+
+# Static variable. Allocated in the 4004's RAM at a fixed address.
+# Total static RAM across all static declarations must be ≤ 160 bytes.
+# The initial value is written to RAM at program startup before main() is called.
+# Example: static digit_count: u8 = 0;
+static_decl   = "static" NAME COLON type EQ expr SEMICOLON ;
+
+# ---------------------------------------------------------------------------
+# Function declarations
+# ---------------------------------------------------------------------------
+
+# Function declaration. Return type is optional — omitting it declares a void function.
+# Examples:
+#   fn main() { ... }                    void function, no parameters
+#   fn add(a: u4, b: u4) -> u4 { ... }  returns u4, two parameters
+# The ARROW token (->) precedes the return type annotation.
+fn_decl       = "fn" NAME LPAREN [ param_list ] RPAREN [ ARROW type ] block ;
+
+# A non-empty parameter list: one or more params separated by commas.
+param_list    = param { COMMA param } ;
+
+# A single parameter: name followed by colon and type.
+# Example: a: u4
+# Nib has no default arguments, no variadic parameters, no &mut references.
+# All parameters are passed by value — this simplifies the calling convention
+# for the 4004's tiny 3-level call stack.
+param         = NAME COLON type ;
+
+# ---------------------------------------------------------------------------
+# Block and statements
+# ---------------------------------------------------------------------------
+
+# A block is a brace-enclosed sequence of statements.
+# Blocks create lexical scope for let declarations.
+# All function bodies, if-branches, else-branches, and for-loop bodies are blocks.
+# Requiring braces (rather than single-statement bodies) eliminates the
+# dangling-else ambiguity at the grammar level.
+block         = LBRACE { stmt } RBRACE ;
+
+# A statement is one of six forms.
+# Nib has no expression statements for bare function calls (like C's `f();`) —
+# all statements must have visible side effects in their syntax:
+#   - let introduces a new variable
+#   - assignment writes to an existing variable
+#   - return exits the function
+#   - for iterates over a range
+#   - if conditionally executes a block
+#   - expr_stmt allows a call expression to be used as a statement (for side effects)
+stmt          = let_stmt
+              | assign_stmt
+              | return_stmt
+              | for_stmt
+              | if_stmt
+              | expr_stmt
+              ;
+
+# Local variable declaration. The type annotation is mandatory.
+# Nib v1: let is immutable after initialization — there is no way to rebind
+# a let-declared variable. If you need a mutable counter, use for-loop variables.
+# Example: let carry: bool = false;
+let_stmt      = "let" NAME COLON type EQ expr SEMICOLON ;
+
+# Assignment to an existing variable (let, static, or for-loop variable).
+# Simple assignment only — no compound assignment (+=, -=, etc.) in v1.
+# Example: digit_count = digit_count +% 1;
+assign_stmt   = NAME EQ expr SEMICOLON ;
+
+# Return statement. Void functions use a bare return with a dummy expression
+# or no expression — in v1 we require an expression for non-void functions.
+# Example: return result;
+return_stmt   = "return" expr SEMICOLON ;
+
+# For loop. The only loop construct in Nib v1.
+# Syntax: for NAME: type in lower_expr RANGE upper_expr { ... }
+#
+# WHY RANGE IS A TOKEN NOT A SYNTAX RULE:
+# The RANGE token ".." is produced by the lexer as a single token, not parsed
+# as two dot operators. This matters because Nib has no floating-point and no
+# struct field access — the only use of "." in source is the range separator.
+# Making RANGE a lexer token means the parser rule for_stmt simply consumes
+# the RANGE token between the two bound expressions, rather than needing to
+# distinguish "." "." (two separate tokens) from ".5" (malformed float).
+#
+# WHY LOOP BOUNDS MUST BE CONST/LITERAL:
+# The Intel 4004 has no indirect addressing for jump targets. A loop must be
+# implemented with a DJNZ (decrement and jump if not zero) pattern where the
+# trip count is loaded into a register. If the bounds are not compile-time
+# constants, the compiler cannot generate static 4004 code without runtime
+# bounds-check overhead — and 160 bytes of RAM leaves no room for that.
+# The compiler enforces: both bound expressions must reduce to constant values
+# during semantic analysis.
+#
+# Example: for i: u4 in 0..8 { ... }
+for_stmt      = "for" NAME COLON type "in" expr RANGE expr block ;
+
+# Conditional statement. The else branch is optional.
+# Both branches must be full blocks (not single statements).
+# Requiring braces eliminates the dangling-else ambiguity.
+# Example: if carry { digit = 0; } else { digit = digit +% 1; }
+if_stmt       = "if" expr block [ "else" block ] ;
+
+# Expression statement: a call expression followed by a semicolon.
+# This allows functions with side effects to be called in statement position.
+# Example: update_display(row, col);
+# Only call expressions are meaningful here — other expression forms have
+# no side effects in Nib v1.
+expr_stmt     = expr SEMICOLON ;
+
+# ---------------------------------------------------------------------------
+# Types
+# ---------------------------------------------------------------------------
+
+# Nib's type system is intentionally minimal, matching what the 4004 can hold.
+#
+#   u4   — unsigned 4-bit integer, values 0–15.
+#          This is the native data size of the Intel 4004. All register operations
+#          work on 4-bit "nibbles". A u4 fits in a single 4004 register (R0–R15).
+#
+#   u8   — unsigned 8-bit integer, values 0–255.
+#          Two nibbles stored in a register pair (e.g. P0 = R0:R1).
+#          The 4004 handles 8-bit values via FIM (fetch immediate to pair) and
+#          multi-step add/subtract sequences.
+#
+#   bcd  — Binary-Coded Decimal nibble, values 0–9.
+#          The Intel 4004 was designed for decimal calculators, and has special
+#          DAA (decimal adjust accumulator) support for BCD arithmetic.
+#          A bcd value is stored as a u4 (nibble) but constrained to 0–9.
+#          The compiler inserts range checks; values 10–15 are invalid.
+#
+#   bool — Boolean: true (1) or false (0).
+#          Stored as a nibble (u4) under the hood — the 4004 has no bit-packed
+#          type. Arithmetic on bool is undefined; only logical operators apply.
+#
+# WHY NO SIGNED TYPES?
+# The 4004 has no signed arithmetic instructions. Two's complement negation
+# would require a DAA workaround and waste precious RAM. Nib v1 keeps everything
+# unsigned. Signed arithmetic can be layered on top in a library using +% and CY.
+#
+# WHY NO FLOAT?
+# The 4004 has no floating-point hardware. A software float library would consume
+# hundreds of bytes of ROM and RAM — untenable given the constraints.
+type          = "u4" | "u8" | "bcd" | "bool" ;
+
+# ---------------------------------------------------------------------------
+# Expressions — operator precedence hierarchy
+# ---------------------------------------------------------------------------
+#
+# Precedence levels (lowest to highest):
+#
+#   Level 1 — Logical OR   (||)        or_expr
+#   Level 2 — Logical AND  (&&)        and_expr
+#   Level 3 — Equality     (==, !=)    eq_expr
+#   Level 4 — Comparison   (<,>,<=,>=) cmp_expr
+#   Level 5 — Additive     (+,-,+%,+?) add_expr
+#   Level 6 — Bitwise      (&, |, ^)   bitwise_expr
+#   Level 7 — Unary        (!, ~)      unary_expr
+#   Level 8 — Primary                  primary
+#
+# WHY THIS ORDERING?
+# Following C-family conventions for levels 1–4 and 7–8 matches programmer
+# expectations. The interesting decision is levels 5–6:
+#
+#   Bitwise ABOVE additive — this is the same as Java/Rust.
+#   In C, bitwise is BELOW equality, which causes the famous bug:
+#     if (x & MASK == 0) { ... }   // intended: (x & MASK) == 0
+#     // but actually: x & (MASK == 0) because == binds tighter than &
+#   By putting bitwise above additive (but below relational), we avoid this.
+#   The tradeoff is that `a + b & c` is parsed as `a + (b & c)`,
+#   which requires explicit parentheses for the rare case where you want
+#   `(a + b) & c`. Given the 4004's use cases (masks and nibble manipulation),
+#   the bitwise-above-additive convention is more natural.
+#
+# Operators at the same level are LEFT-ASSOCIATIVE:
+#   a +% b +% c = (a +% b) +% c
+#   a == b == c is a parse error (you must parenthesise one comparison)
+#   — actually the grammar allows chaining at level 3 but the type checker
+#   rejects it because bool == bool requires bool == bool == bool to return bool
+#   from the first ==, then bool == bool for the second, which is fine.
+#   So chained == compiles but has C-like semantics: left-to-right.
+
+# Entry point for all expression contexts.
+expr          = or_expr ;
+
+# Logical OR: a || b. Short-circuits: if a is true, b is not evaluated.
+# On the 4004, short-circuit evaluation is implemented with a conditional branch:
+#   if a is true, skip the evaluation of b and set result to true.
+# { LOR and_expr } makes this left-associative: a || b || c = (a || b) || c.
+or_expr       = and_expr { LOR and_expr } ;
+
+# Logical AND: a && b. Short-circuits: if a is false, b is not evaluated.
+# 4004 implementation: conditional branch on a, evaluate b only if a is true.
+and_expr      = eq_expr { LAND eq_expr } ;
+
+# Equality operators: == and !=.
+# Both operands must have the same type. Result type is always bool.
+# Example: carry == true, digit != 9
+eq_expr       = cmp_expr { ( EQ_EQ | NEQ ) cmp_expr } ;
+
+# Relational comparison: <, >, <=, >=.
+# Operands must be numeric (u4, u8, or bcd). Result type is always bool.
+# The 4004 has no compare-and-set instruction; comparisons are implemented
+# using subtraction and checking the carry/borrow flag.
+cmp_expr      = add_expr { ( LT | GT | LEQ | GEQ ) add_expr } ;
+
+# Additive operators: +, -, +% (wrapping add), +? (saturating add).
+# All four are at the same precedence level because they are all "addition variants".
+# The programmer chooses the overflow semantics explicitly:
+#   PLUS    — may overflow (compiler warns if it can prove this)
+#   MINUS   — subtraction (borrows from next nibble in multi-byte types)
+#   WRAP_ADD (+%) — wraps at type max: u4 15 +% 1 = 0
+#   SAT_ADD (+?) — clamps at type max: u4 15 +? 1 = 15
+# On the 4004, all four map to ADD (add to accumulator) with post-processing:
+#   PLUS/MINUS: use raw ADD/SUB, carry = overflow bit
+#   WRAP_ADD: mask result to type width (AND 0xF for u4)
+#   SAT_ADD: add, then conditional clamp if carry is set
+add_expr      = bitwise_expr { ( PLUS | MINUS | WRAP_ADD | SAT_ADD ) bitwise_expr } ;
+
+# Bitwise operators: &, |, ^.
+# Maps directly to 4004 ANL, ORL, XRL instructions.
+# Useful for nibble manipulation: extract high nibble with `x & 0xF0`, etc.
+# Note: ~ (bitwise NOT) is a unary operator at the next level up, not binary.
+bitwise_expr  = unary_expr { ( AMP | PIPE | CARET ) unary_expr } ;
+
+# Unary operators: ! (logical NOT) and ~ (bitwise NOT).
+# Both are right-recursive: !!x = !(!x), ~~x = ~(~x).
+# The base case delegates to primary.
+# WHY RIGHT-RECURSIVE: `!~x` should parse as `!(~x)`, not `(!~)x`.
+# Right recursion naturally gives right-to-left application of unary operators,
+# which matches the intuitive reading of prefix chains.
+unary_expr    = ( BANG | TILDE ) unary_expr
+              | primary
+              ;
+
+# Primary expressions: the leaves of the expression tree.
+# Listed in order of specificity — call_expr before NAME because a function call
+# starts with a NAME token; if NAME were listed first, the parser would consume
+# the function name as a variable reference and never try call_expr.
+primary       = INT_LIT
+              | HEX_LIT
+              | "true"
+              | "false"
+              | call_expr
+              | NAME
+              | LPAREN expr RPAREN
+              ;
+
+# ---------------------------------------------------------------------------
+# Function calls
+# ---------------------------------------------------------------------------
+
+# Function call: NAME followed by a parenthesised argument list.
+# The argument list is optional — zero-argument calls look like: reset().
+# call_expr must appear before NAME in primary (see note above).
+#
+# CALL DEPTH CONSTRAINT:
+# The Intel 4004 has a 3-level hardware call stack (PC0, PC1, PC2).
+# One level is always occupied by the current function's return address.
+# That leaves 2 levels for nested calls. Nib enforces: no call chain may
+# exceed depth 2. The compiler builds a static call graph and verifies this.
+# Recursion is not allowed (same constraint, caught separately as a cycle check).
+call_expr     = NAME LPAREN [ arg_list ] RPAREN ;
+
+# Argument list: one or more expressions separated by commas.
+arg_list      = expr { COMMA expr } ;
