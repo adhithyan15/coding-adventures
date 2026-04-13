@@ -66,7 +66,7 @@
 
 use perl_bridge::{
     av_to_f64_vec, die, f64_to_sv, f64_vec_to_av, i64_to_sv, sv_to_f64, sv_to_i64,
-    AV, CV, IV, SV, SvREFCNT_dec, newSViv, sv_2iv, sv_2nv,
+    xs_boot_finish, xs_bootstrap, AV, CV, IV, SV, SvREFCNT_dec, newSViv, sv_2iv, sv_2nv,
 };
 use std::ffi::{c_char, c_int, CString};
 use std::panic::catch_unwind;
@@ -83,6 +83,7 @@ use std::panic::catch_unwind;
 // Returns a CV* (code value); we don't use the return value.
 
 extern "C" {
+    #[link_name = "Perl_newXS"]
     fn newXS(name: *const c_char, subaddr: unsafe extern "C" fn(*mut CV), filename: *const c_char)
         -> *mut CV;
 }
@@ -641,8 +642,9 @@ extern "C" fn xs_gcd(_cv: *mut CV) {
 ///
 /// Called by DynaLoader when the module is first loaded.
 #[no_mangle]
-pub unsafe extern "C" fn boot_CodingAdventures__PolynomialNative(_cv: *mut CV) {
+pub unsafe extern "C" fn boot_CodingAdventures__PolynomialNative(cv: *mut CV) {
     let file = b"PolynomialNative.so\0".as_ptr() as *const c_char;
+    let ax = xs_bootstrap(cv, file);
 
     newXS(b"CodingAdventures::PolynomialNative::normalize\0".as_ptr() as *const c_char,
           xs_normalize, file);
@@ -668,4 +670,5 @@ pub unsafe extern "C" fn boot_CodingAdventures__PolynomialNative(_cv: *mut CV) {
           xs_modulo, file);
     newXS(b"CodingAdventures::PolynomialNative::gcd\0".as_ptr() as *const c_char,
           xs_gcd, file);
+    xs_boot_finish(ax);
 }
