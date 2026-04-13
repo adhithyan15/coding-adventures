@@ -5,7 +5,7 @@ import {
   InvalidBarcode1DConfigurationError,
   DEFAULT_BARCODE_1D_RENDER_CONFIG,
   computeBarcode1DLayout,
-  drawBarcode1D,
+  layoutBarcode1D,
   runsFromBinaryPattern,
   runsFromWidthPattern,
   totalModules,
@@ -99,22 +99,21 @@ describe("computeBarcode1DLayout()", () => {
   });
 });
 
-describe("drawBarcode1D()", () => {
-  it("creates a draw scene with bars and human-readable text", () => {
+describe("layoutBarcode1D()", () => {
+  it("creates a paint scene with bar rects and scene metadata", () => {
     const runs = runsFromBinaryPattern("101", {
       sourceLabel: "start",
       sourceIndex: -1,
       role: "guard",
     });
 
-    const scene = drawBarcode1D(runs, {
-      humanReadableText: "012345",
+    const scene = layoutBarcode1D(runs, {
       label: "Test barcode",
       metadata: { symbology: "test" },
     });
 
     expect(scene.width).toBe((DEFAULT_BARCODE_1D_RENDER_CONFIG.quietZoneModules * 2 + 3) * DEFAULT_BARCODE_1D_RENDER_CONFIG.moduleWidth);
-    expect(scene.instructions).toHaveLength(3);
+    expect(scene.instructions).toHaveLength(2);
     expect(scene.metadata?.label).toBe("Test barcode");
     expect(scene.metadata?.symbology).toBe("test");
   });
@@ -127,8 +126,22 @@ describe("drawBarcode1D()", () => {
     });
 
     expect(() =>
-      drawBarcode1D(runs, {
+      layoutBarcode1D(runs, {
         renderConfig: { moduleWidth: 0 },
+      }),
+    ).toThrow(InvalidBarcode1DConfigurationError);
+  });
+
+  it("rejects human-readable text until text metrics exist", () => {
+    const runs = runsFromBinaryPattern("101", {
+      sourceLabel: "start",
+      sourceIndex: -1,
+      role: "guard",
+    });
+
+    expect(() =>
+      layoutBarcode1D(runs, {
+        humanReadableText: "012345",
       }),
     ).toThrow(InvalidBarcode1DConfigurationError);
   });
