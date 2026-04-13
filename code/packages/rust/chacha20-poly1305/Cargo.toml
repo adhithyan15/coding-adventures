@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_chacha20_poly1305"
+version = "0.1.0"
+edition = "2021"
+description = "ChaCha20-Poly1305 authenticated encryption (RFC 8439) — stream cipher, MAC, and AEAD"
+
+[dev-dependencies]
+hex = "0.4"

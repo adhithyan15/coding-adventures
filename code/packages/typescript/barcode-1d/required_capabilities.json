@@ -3,5 +3,5 @@
   "version": 1,
   "package": "typescript/barcode-1d",
   "capabilities": [],
-  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+  "justification": "Local barcode layout and native rendering pipeline. No filesystem, network, process spawning, or environment access required for the package API."
 }

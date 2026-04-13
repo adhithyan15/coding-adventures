@@ -572,6 +572,58 @@ export function orN(...inputs: Bit[]): Bit {
   return result;
 }
 
+/**
+ * XOR with N inputs — a parity checker (reduces a sequence of bits via XOR).
+ *
+ * Returns 1 if an ODD number of inputs are 1 (odd parity).
+ * Returns 0 if an EVEN number of inputs are 1 (even parity).
+ *
+ * This is the gate basis for the Intel 8008's Parity flag:
+ *     P = NOT(xorN(...result_bits))
+ * P=1 means even parity (even number of 1-bits in the result).
+ *
+ * Hardware analogy: chain of 2-input XOR gates:
+ *     xorN(a, b, c, d) = XOR(XOR(XOR(a, b), c), d)
+ *
+ * This is also called a "parity tree" in digital logic. It forms the
+ * spine of error-detection codes (like parity bits in DRAM, or CRC).
+ *
+ * Truth table for 3 inputs:
+ *     A  B  C  | # of 1s | Output
+ *     ---------+---------+-------
+ *     0  0  0  |    0    |   0    (even)
+ *     0  0  1  |    1    |   1    (odd)
+ *     0  1  0  |    1    |   1    (odd)
+ *     0  1  1  |    2    |   0    (even)
+ *     1  0  0  |    1    |   1    (odd)
+ *     1  0  1  |    2    |   0    (even)
+ *     1  1  0  |    2    |   0    (even)
+ *     1  1  1  |    3    |   1    (odd)
+ *
+ * @param bits - Two or more Bit values (0 or 1).
+ * @returns 1 if odd number of 1s, 0 if even number of 1s.
+ *
+ * @example
+ * xorN(0, 0)          // => 0  (zero 1-bits = even)
+ * xorN(1, 0)          // => 1  (one 1-bit = odd)
+ * xorN(1, 1)          // => 0  (two 1-bits = even)
+ * xorN(1, 1, 1)       // => 1  (three 1-bits = odd)
+ * xorN(1, 0, 1, 0)    // => 0  (two 1-bits = even)
+ */
+export function xorN(...inputs: Bit[]): Bit {
+  if (inputs.length === 0) {
+    return 0 as Bit;
+  }
+  if (inputs.length === 1) {
+    return inputs[0];
+  }
+  let result = inputs[0];
+  for (let i = 1; i < inputs.length; i++) {
+    result = XOR(result, inputs[i]);
+  }
+  return result;
+}
+
 // ===========================================================================
 // MULTIPLEXER AND DEMULTIPLEXER
 // ===========================================================================

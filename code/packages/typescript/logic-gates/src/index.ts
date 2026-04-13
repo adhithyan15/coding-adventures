@@ -23,7 +23,7 @@ export {
 } from "./gates.js";
 
 // Multi-input gates
-export { andN, orN } from "./gates.js";
+export { andN, orN, xorN } from "./gates.js";
 
 // Multiplexer and demultiplexer (basic 2:1 versions from gates.ts)
 export { mux, dmux } from "./gates.js";

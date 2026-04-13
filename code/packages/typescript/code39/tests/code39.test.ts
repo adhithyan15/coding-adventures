@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { renderSvg } from "@coding-adventures/draw-instructions-svg";
 import {
   VERSION,
   BarcodeError,
@@ -10,9 +9,8 @@ import {
   encodeCode39Char,
   encodeCode39,
   expandCode39Runs,
-  drawOneDimensionalBarcode,
+  layoutCode39,
   drawCode39,
-  renderCode39,
 } from "../src/index.js";
 
 describe("VERSION", () => {
@@ -69,14 +67,14 @@ describe("expandCode39Runs()", () => {
   it("expands one data character into three encoded symbols with gaps", () => {
     const runs = expandCode39Runs("A");
     expect(runs).toHaveLength(29);
-    expect(runs[0]).toMatchObject({ color: "bar", sourceChar: "*", sourceIndex: 0 });
-    expect(runs[9]).toMatchObject({ color: "space", isInterCharacterGap: true });
+    expect(runs[0]).toMatchObject({ color: "bar", sourceLabel: "*", sourceIndex: 0, role: "start" });
+    expect(runs[9]).toMatchObject({ color: "space", role: "inter-character-gap" });
   });
 });
 
-describe("drawOneDimensionalBarcode()", () => {
-  it("builds a reusable draw scene", () => {
-    const scene = drawOneDimensionalBarcode(expandCode39Runs("AB"), "AB");
+describe("layoutCode39()", () => {
+  it("builds a reusable paint scene", () => {
+    const scene = layoutCode39("AB");
     expect(scene.width).toBeGreaterThan(0);
     expect(scene.instructions.length).toBeGreaterThan(0);
     expect(scene.metadata?.symbology).toBe("code39");
@@ -84,11 +82,18 @@ describe("drawOneDimensionalBarcode()", () => {
 
   it("rejects invalid configuration", () => {
     expect(() =>
-      drawOneDimensionalBarcode(expandCode39Runs("A"), "A", {
-        ...DEFAULT_RENDER_CONFIG,
-        wideUnit: 4,
+      layoutCode39("A", {
+        renderConfig: { moduleWidth: 0 },
       }),
     ).toThrow(InvalidConfigurationError);
+  });
+
+  it("inherits the shared 1D defaults", () => {
+    expect(DEFAULT_RENDER_CONFIG).toMatchObject({
+      moduleWidth: 4,
+      barHeight: 120,
+      includeHumanReadableText: false,
+    });
   });
 });
 
@@ -96,22 +101,5 @@ describe("drawCode39()", () => {
   it("returns a scene with a label", () => {
     const scene = drawCode39("A");
     expect(scene.metadata?.label).toBe("Code 39 barcode for A");
-  });
-});
-
-describe("renderCode39()", () => {
-  it("renders through any draw renderer", () => {
-    const output = renderCode39("OK", {
-      render(scene) {
-        return `${scene.width}:${scene.instructions.length}`;
-      },
-    });
-    expect(output).toMatch(/^\d+:\d+$/);
-  });
-
-  it("works with the svg renderer package", () => {
-    const svg = renderCode39("A", { render: renderSvg });
-    expect(svg).toContain("<svg");
-    expect(svg).toContain("Code 39 barcode for A");
   });
 });

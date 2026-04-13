@@ -603,3 +603,57 @@ func ORn(inputs ...int) int {
 		}).PanicOnUnexpected().GetResult()
 	return result
 }
+
+// XORn computes the N-input XOR gate — reduces a sequence of bits via XOR.
+//
+// Returns 1 if an ODD number of inputs are 1 (odd parity).
+//
+// This is a left-fold over the two-input XOR gate:
+//
+//	XORn(a, b, c, d) = XOR(XOR(XOR(a, b), c), d)
+//
+// Key property: XORn is 1 when the count of 1-bits in the inputs is odd.
+//
+// # Applications
+//
+// XORn is the building block for parity computation. The Intel 8008 uses
+// a Parity flag (P) that is 1 when the result has EVEN parity — an even
+// number of 1-bits. In hardware:
+//
+//	P = NOT(XORn(bit0, bit1, ..., bit7))
+//
+// Because XORn = 1 means odd number of 1s, NOT(XORn) = 1 means even.
+//
+// This is physically implemented as a chain of XOR gates on the ALU output:
+//
+//	XOR(XOR(XOR(XOR(XOR(XOR(XOR(b0, b1), b2), b3), b4), b5), b6), b7)
+//
+// Then a NOT to invert (even parity = P = 1 on the 8008).
+//
+// # Usage
+//
+//	XORn(1, 0, 1, 0) // → 0 (even count of 1s → XOR chain = 0)
+//	XORn(1, 1, 1, 0) // → 1 (odd count of 1s  → XOR chain = 1)
+//	// For 8008 Parity flag: P = NOT(XORn(resultBits...))
+//	// P=1 means even parity; P=0 means odd parity.
+//
+// Panics if fewer than 2 inputs are provided.
+func XORn(inputs ...int) int {
+	result, _ := StartNew[int]("logic-gates.XORn", 0,
+		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
+			if len(inputs) < 2 {
+				panic("logicgates: XORn requires at least 2 inputs")
+			}
+			validateBits(inputs, "inputs")
+			// Left-fold: chain two-input XOR gates.
+			// Each XOR asks "are these two bits different?"
+			// After folding all bits, the result is 1 iff an odd number
+			// of inputs were 1 — which is exactly the parity bit.
+			res := inputs[0]
+			for _, v := range inputs[1:] {
+				res = XOR(res, v)
+			}
+			return rf.Generate(true, false, res)
+		}).PanicOnUnexpected().GetResult()
+	return result
+}
