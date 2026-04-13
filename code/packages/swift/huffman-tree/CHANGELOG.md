@@ -8,8 +8,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Initial implementation of `HuffmanTree` (DT27).
-- Private `MinHeap<T>` struct (generic, array-based binary min-heap) with
-  custom comparator closure — embedded within the module, no external dependency.
+- Depends on the standalone `Heap` package for the generic min-heap used during
+  deterministic greedy construction.
 - Private `PriorityKey: Comparable` struct encoding the four-level tie-breaking
   rule: `{weight, leafFlag, symbolOrMax, orderOrMax}`.
 - Private `Node` indirect enum with `.leaf(symbol:weight:)` and

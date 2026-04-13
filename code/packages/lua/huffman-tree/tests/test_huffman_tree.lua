@@ -8,7 +8,7 @@
 --
 -- Uses Busted test framework: https://olivinelabs.com/busted/
 
-package.path = "../src/?.lua;../src/?/init.lua;" .. package.path
+package.path = "../src/?.lua;../src/?/init.lua;../../heap/src/?.lua;../../heap/src/?/init.lua;" .. package.path
 
 local HuffmanTree = require("coding_adventures.huffman_tree")
 

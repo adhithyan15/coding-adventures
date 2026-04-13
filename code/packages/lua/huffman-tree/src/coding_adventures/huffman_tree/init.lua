@@ -86,12 +86,13 @@
 --     B → 10       (length 2,  code = 0+1=1, shifted 1 bit → 10)
 --     C → 11       (length 2,  code = 10+1 = 11)
 --
--- Embedded Min-Heap
--- -----------------
+-- Heap Package
+-- ------------
 --
--- Lua does not have a built-in priority queue. We embed a simple binary heap
--- (array-based) with a custom comparator. The heap stores items with a priority
--- tuple: {weight, leaf_flag, symbol_or_huge, order_or_huge}.
+-- This package depends on coding_adventures.heap for the array-backed binary
+-- min-heap used during greedy construction. Heap items are stored as
+-- {priority, node} pairs, where priority is the 4-tuple used for
+-- deterministic tie-breaking.
 --
 -- A binary heap uses a parent/child indexing trick:
 --   - Root is at index 1.
@@ -110,107 +111,18 @@ local M = {}
 
 M.VERSION = "0.1.0"
 
--- ── Embedded Min-Heap ─────────────────────────────────────────────────────────
+local heap_module = require("coding_adventures.heap")
+local MinHeap = heap_module.MinHeap
 
--- new_heap creates an empty binary min-heap.
---
--- Each element is stored as {priority, data} where priority is a 4-element
--- table {weight, leaf_flag, symbol_or_huge, order_or_huge}.
---
--- The comparison function compares two priority tuples lexicographically,
--- implementing the four-level tie-breaking rule described above.
---
--- @return table  A heap object with :push(priority, data) and :pop() methods.
-local function new_heap()
-    local h = {items = {}, size = 0}
+local function compare_entries(left, right)
+    local a = left[1]
+    local b = right[1]
 
-    -- cmp_priority compares two 4-element priority tuples lexicographically.
-    -- Returns true if a has higher priority than b (a < b in min-heap terms).
-    --
-    -- A priority tuple is: {weight, leaf_flag, symbol_or_huge, order_or_huge}
-    --
-    -- Comparison:
-    --   First compare weight (lower wins).
-    --   On tie: compare leaf_flag (0=leaf wins over 1=internal).
-    --   On tie: compare symbol/huge (lower symbol wins; internal nodes use math.huge).
-    --   On tie: compare order/huge (lower order wins; leaves use math.huge).
-    local function cmp_priority(a, b)
-        if a[1] ~= b[1] then return a[1] < b[1] end
-        if a[2] ~= b[2] then return a[2] < b[2] end
-        if a[3] ~= b[3] then return a[3] < b[3] end
-        return a[4] < b[4]
-    end
-
-    -- sift_up restores the heap property after inserting at index i.
-    -- It repeatedly swaps the new element with its parent as long as it has
-    -- higher priority (smaller key) than its parent.
-    local function sift_up(items, i)
-        while i > 1 do
-            local parent = math.floor(i / 2)
-            if cmp_priority(items[i][1], items[parent][1]) then
-                items[i], items[parent] = items[parent], items[i]
-                i = parent
-            else
-                break
-            end
-        end
-    end
-
-    -- sift_down restores the heap property after removing the root.
-    -- It repeatedly swaps the displaced element with the smaller of its two
-    -- children as long as it has lower priority (larger key) than a child.
-    local function sift_down(items, size, i)
-        while true do
-            local left  = 2 * i
-            local right = 2 * i + 1
-            local smallest = i
-
-            if left <= size and cmp_priority(items[left][1], items[smallest][1]) then
-                smallest = left
-            end
-            if right <= size and cmp_priority(items[right][1], items[smallest][1]) then
-                smallest = right
-            end
-
-            if smallest == i then break end
-
-            items[i], items[smallest] = items[smallest], items[i]
-            i = smallest
-        end
-    end
-
-    -- push adds a new item to the heap.
-    --
-    -- @param priority  table  4-element priority tuple {weight, leaf_flag, sym, ord}.
-    -- @param data       any    The payload associated with this priority.
-    function h:push(priority, data)
-        self.size = self.size + 1
-        self.items[self.size] = {priority, data}
-        sift_up(self.items, self.size)
-    end
-
-    -- pop removes and returns the item with the highest priority (smallest key).
-    --
-    -- @return priority, data  The priority tuple and associated data.
-    -- @return nil             If the heap is empty.
-    function h:pop()
-        if self.size == 0 then return nil end
-        local top = self.items[1]
-        self.items[1] = self.items[self.size]
-        self.items[self.size] = nil
-        self.size = self.size - 1
-        if self.size > 0 then
-            sift_down(self.items, self.size, 1)
-        end
-        return top[1], top[2]
-    end
-
-    -- len returns the number of items currently in the heap.
-    function h:len()
-        return self.size
-    end
-
-    return h
+    if a[1] ~= b[1] then return a[1] < b[1] and -1 or 1 end
+    if a[2] ~= b[2] then return a[2] < b[2] and -1 or 1 end
+    if a[3] ~= b[3] then return a[3] < b[3] and -1 or 1 end
+    if a[4] ~= b[4] then return a[4] < b[4] and -1 or 1 end
+    return 0
 end
 
 -- ── Node Constructors ──────────────────────────────────────────────────────────
@@ -309,26 +221,28 @@ function HuffmanTree.build(weights)
         end
     end
 
-    local heap = new_heap()
+    local heap = MinHeap.new(compare_entries)
 
     -- Seed the heap with one leaf per symbol.
     for _, pair in ipairs(weights) do
         local leaf = new_leaf(pair[1], pair[2])
-        heap:push(node_priority(leaf), leaf)
+        heap:push({node_priority(leaf), leaf})
     end
 
     local order_counter = 0
 
     -- Merge phase: repeatedly combine the two smallest nodes.
     while heap:len() > 1 do
-        local _, left  = heap:pop()
-        local _, right = heap:pop()
+        local left_entry = heap:pop()
+        local right_entry = heap:pop()
+        local left = left_entry[2]
+        local right = right_entry[2]
         local internal = new_internal(left, right, order_counter)
         order_counter = order_counter + 1
-        heap:push(node_priority(internal), internal)
+        heap:push({node_priority(internal), internal})
     end
 
-    local _, root = heap:pop()
+    local root = heap:pop()[2]
 
     local tree = {
         _root         = root,
