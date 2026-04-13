@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/barcode-layout-1d",
+  "version": "0.1.0",
+  "description": "Shared linear barcode geometry and PaintScene layout",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/paint-instructions": "file:../paint-instructions"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

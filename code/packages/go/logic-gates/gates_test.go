@@ -345,3 +345,55 @@ func TestORn_InvalidInput(t *testing.T) {
 	assertPanics(t, "ORn(0,2)", func() { ORn(0, 2) })
 	assertPanics(t, "ORn(5,0)", func() { ORn(5, 0) })
 }
+
+// =========================================================================
+// XORn Gate Tests
+// =========================================================================
+
+func TestXORn(t *testing.T) {
+	// Two-input: should match XOR truth table
+	if XORn(0, 0) != 0 {
+		t.Error("XORn(0,0) should be 0")
+	}
+	if XORn(0, 1) != 1 {
+		t.Error("XORn(0,1) should be 1")
+	}
+	if XORn(1, 0) != 1 {
+		t.Error("XORn(1,0) should be 1")
+	}
+	if XORn(1, 1) != 0 {
+		t.Error("XORn(1,1) should be 0")
+	}
+
+	// Three inputs: XOR(XOR(a,b),c)
+	if XORn(1, 0, 0) != 1 {
+		t.Error("XORn(1,0,0) should be 1 (one 1-bit → odd)")
+	}
+	if XORn(1, 1, 0) != 0 {
+		t.Error("XORn(1,1,0) should be 0 (two 1-bits → even)")
+	}
+	if XORn(1, 1, 1) != 1 {
+		t.Error("XORn(1,1,1) should be 1 (three 1-bits → odd)")
+	}
+
+	// Eight inputs — parity of a full byte
+	// 0b00000011 = 3 (two 1-bits → even parity → XORn = 0)
+	if XORn(1, 1, 0, 0, 0, 0, 0, 0) != 0 {
+		t.Error("XORn(0b00000011) should be 0 (even parity)")
+	}
+	// 0b00000111 = 7 (three 1-bits → odd parity → XORn = 1)
+	if XORn(1, 1, 1, 0, 0, 0, 0, 0) != 1 {
+		t.Error("XORn(0b00000111) should be 1 (odd parity)")
+	}
+	// All ones (8 ones → even → XORn = 0)
+	if XORn(1, 1, 1, 1, 1, 1, 1, 1) != 0 {
+		t.Error("XORn(all 1s) should be 0 (even parity)")
+	}
+}
+
+func TestXORn_InvalidInput(t *testing.T) {
+	assertPanics(t, "XORn(single)", func() { XORn(0) })
+	assertPanics(t, "XORn(empty)", func() { XORn() })
+	assertPanics(t, "XORn(0,2)", func() { XORn(0, 2) })
+	assertPanics(t, "XORn(5,0)", func() { XORn(5, 0) })
+}

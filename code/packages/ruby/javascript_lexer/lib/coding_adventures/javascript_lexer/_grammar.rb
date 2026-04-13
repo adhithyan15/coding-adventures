@@ -220,4 +220,6 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
   reserved_keywords: [],
   error_definitions: [],
   groups: {},
+  context_keywords: [],
+  soft_keywords: [],
 )
