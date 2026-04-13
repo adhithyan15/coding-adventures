@@ -216,14 +216,14 @@ sub compress {
     $ll_freq{256}++;  # end-of-data marker
 
     # Pass 2b: Build canonical Huffman trees.
-    my $ll_tree = CodingAdventures::HuffmanTree::build(
+    my $ll_tree = CodingAdventures::HuffmanTree->build(
         [ map { [$_, $ll_freq{$_}] } keys %ll_freq ]
     );
     my $ll_code_table = $ll_tree->canonical_code_table();  # {symbol → bit_string}
 
     my $dist_code_table = {};
     if (%dist_freq) {
-        my $dist_tree = CodingAdventures::HuffmanTree::build(
+        my $dist_tree = CodingAdventures::HuffmanTree->build(
             [ map { [$_, $dist_freq{$_}] } keys %dist_freq ]
         );
         $dist_code_table = $dist_tree->canonical_code_table();

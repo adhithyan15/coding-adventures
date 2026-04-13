@@ -55,16 +55,16 @@ module CodingAdventures
     # Table: [symbol, base_length, extra_bits]
 
     LENGTH_TABLE = [
-      [257,   3, 0], [258,   4, 0], [259,   5, 0], [260,   6, 0],
-      [261,   7, 0], [262,   8, 0], [263,   9, 0], [264,  10, 0],
-      [265,  11, 1], [266,  13, 1], [267,  15, 1], [268,  17, 1],
-      [269,  19, 2], [270,  23, 2], [271,  27, 2], [272,  31, 2],
-      [273,  35, 3], [274,  43, 3], [275,  51, 3], [276,  59, 3],
-      [277,  67, 4], [278,  83, 4], [279,  99, 4], [280, 115, 4],
+      [257, 3, 0], [258, 4, 0], [259, 5, 0], [260, 6, 0],
+      [261, 7, 0], [262, 8, 0], [263, 9, 0], [264, 10, 0],
+      [265, 11, 1], [266, 13, 1], [267, 15, 1], [268, 17, 1],
+      [269, 19, 2], [270, 23, 2], [271, 27, 2], [272, 31, 2],
+      [273, 35, 3], [274, 43, 3], [275, 51, 3], [276, 59, 3],
+      [277, 67, 4], [278, 83, 4], [279, 99, 4], [280, 115, 4],
       [281, 131, 5], [282, 163, 5], [283, 195, 5], [284, 227, 5]
     ].freeze
 
-    LENGTH_BASE  = LENGTH_TABLE.to_h { |sym, base, _| [sym, base] }.freeze
+    LENGTH_BASE = LENGTH_TABLE.to_h { |sym, base, _| [sym, base] }.freeze
     LENGTH_EXTRA = LENGTH_TABLE.to_h { |sym, _, extra| [sym, extra] }.freeze
 
     # -------------------------------------------------------------------------
@@ -72,15 +72,15 @@ module CodingAdventures
     # -------------------------------------------------------------------------
 
     DIST_TABLE = [
-      [ 0,    1,  0], [ 1,    2,  0], [ 2,    3,  0], [ 3,    4,  0],
-      [ 4,    5,  1], [ 5,    7,  1], [ 6,    9,  2], [ 7,   13,  2],
-      [ 8,   17,  3], [ 9,   25,  3], [10,   33,  4], [11,   49,  4],
-      [12,   65,  5], [13,   97,  5], [14,  129,  6], [15,  193,  6],
-      [16,  257,  7], [17,  385,  7], [18,  513,  8], [19,  769,  8],
-      [20, 1025,  9], [21, 1537,  9], [22, 2049, 10], [23, 3073, 10]
+      [0, 1, 0], [1, 2, 0], [2, 3, 0], [3, 4, 0],
+      [4, 5, 1], [5, 7, 1], [6, 9, 2], [7, 13, 2],
+      [8, 17, 3], [9, 25, 3], [10, 33, 4], [11, 49, 4],
+      [12, 65, 5], [13, 97, 5], [14, 129, 6], [15, 193, 6],
+      [16, 257, 7], [17, 385, 7], [18, 513, 8], [19, 769, 8],
+      [20, 1025, 9], [21, 1537, 9], [22, 2049, 10], [23, 3073, 10]
     ].freeze
 
-    DIST_BASE  = DIST_TABLE.to_h { |code, base, _| [code, base] }.freeze
+    DIST_BASE = DIST_TABLE.to_h { |code, base, _| [code, base] }.freeze
     DIST_EXTRA = DIST_TABLE.to_h { |code, _, extra| [code, extra] }.freeze
 
     class << self
@@ -177,7 +177,7 @@ module CodingAdventures
                  [ll_lengths.size].pack("n") +
                  [dist_lengths.size].pack("n")
 
-        ll_bytes   = ll_lengths.map { |sym, len| [sym, len].pack("nC") }.join
+        ll_bytes = ll_lengths.map { |sym, len| [sym, len].pack("nC") }.join
         dist_bytes = dist_lengths.map { |sym, len| [sym, len].pack("nC") }.join
 
         (header + ll_bytes + dist_bytes + bit_stream).b
@@ -217,7 +217,7 @@ module CodingAdventures
         end
 
         # Reconstruct canonical codes (bit_string → symbol).
-        ll_rev_map   = reconstruct_canonical_codes(ll_lengths)
+        ll_rev_map = reconstruct_canonical_codes(ll_lengths)
         dist_rev_map = reconstruct_canonical_codes(dist_lengths)
 
         # Unpack bit stream.
