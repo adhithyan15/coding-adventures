@@ -1,0 +1,3026 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>cover/Elixir.CodingAdventures.HuffmanTree.html</title>
+<style>/*
+ %CopyrightBegin%
+
+ SPDX-License-Identifier: Apache-2.0
+
+ Copyright Milton Mazzarri <me@milmazz.uno>
+ Copyright Ericsson AB 2018-2025. All Rights Reserved.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+ %CopyrightEnd%
+*/
+
+body {
+  font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #000;
+  border-top: 2px solid #ddd;
+  background-color: #fff;
+
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  width: 100%;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 0;
+  font-weight: 100;
+  font-size: 1.1em;
+  letter-spacing: 1px;
+}
+
+h1 code {
+  font-size: 0.96em;
+}
+
+code {
+  font: 12px monospace;
+}
+
+footer {
+  background: #eee;
+  width: 100%;
+  padding: 10px 0;
+  text-align: right;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex: 1;
+  order: 2;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  border: 1px solid #cbcbcb;
+  color: #000;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+table thead {
+  display: none;
+}
+table td.line,
+table td.line a,
+table td.hits {
+  width: 20px;
+  background: #eaeaea;
+  text-align: center;
+  text-decoration: none;
+  font-size: 11px;
+  padding: 0 10px;
+  color: #949494;
+}
+table td.hits {
+  width: 10px;
+  text-align: right;
+  padding: 2px 5px;
+  color: rgba(0, 0, 0, 0.6);
+  background-color: #f0f0f0;
+}
+tr.miss td.line,
+tr.miss td.line a,
+tr.miss td.hits {
+  background-color: #ffdce0;
+  border-color: #fdaeb7;
+}
+tr.miss td {
+  background-color: #ffeef0;
+}
+tr.hit td.line,
+tr.hit td.line a,
+tr.hit td.hits {
+  background-color: #cdffd8;
+  border-color: #bef5cb;
+}
+tr.hit td {
+  background-color: #e6ffed;
+}
+td.source {
+  padding-left: 15px;
+  line-height: 15px;
+  white-space: pre;
+  font: 12px monospace;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    filter: invert(100%) hue-rotate(180deg) brightness(105%) contrast(95%);
+    background-color: #000000;
+  }
+  a:link {
+    color: #2B507D;
+  }
+  a:visited, a:active {
+    color: #85ABD5;
+  }
+}
+</style>
+</head>
+<body>
+<h1><code>cover/Elixir.CodingAdventures.HuffmanTree.html</code></h1>
+<footer><p>File generated from <code>/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/elixir/huffman_tree/lib/coding_adventures/huffman_tree.ex</code> by <a href="http://erlang.org/doc/man/cover.html">cover</a> at 2026-04-12 at 16:51:17</p></footer>
+<table>
+<tbody>
+<tr>
+<td class="line" id="L1"><a href="#L1">1</a></td>
+<td class="hits"></td>
+<td class="source"><code>defmodule CodingAdventures.HuffmanTree do</code></td>
+</tr>
+<tr>
+<td class="line" id="L2"><a href="#L2">2</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @moduledoc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L3"><a href="#L3">3</a></td>
+<td class="hits"></td>
+<td class="source"><code>  HuffmanTree — DT27: Huffman Tree data structure.</code></td>
+</tr>
+<tr>
+<td class="line" id="L4"><a href="#L4">4</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L5"><a href="#L5">5</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## What Is a Huffman Tree?</code></td>
+</tr>
+<tr>
+<td class="line" id="L6"><a href="#L6">6</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L7"><a href="#L7">7</a></td>
+<td class="hits"></td>
+<td class="source"><code>  A Huffman tree is a full binary tree (every internal node has exactly two</code></td>
+</tr>
+<tr>
+<td class="line" id="L8"><a href="#L8">8</a></td>
+<td class="hits"></td>
+<td class="source"><code>  children) built from a symbol alphabet so that each symbol gets a unique</code></td>
+</tr>
+<tr>
+<td class="line" id="L9"><a href="#L9">9</a></td>
+<td class="hits"></td>
+<td class="source"><code>  variable-length bit code. Symbols that appear often get short codes; symbols</code></td>
+</tr>
+<tr>
+<td class="line" id="L10"><a href="#L10">10</a></td>
+<td class="hits"></td>
+<td class="source"><code>  that appear rarely get long codes. The total bits needed to encode a message</code></td>
+</tr>
+<tr>
+<td class="line" id="L11"><a href="#L11">11</a></td>
+<td class="hits"></td>
+<td class="source"><code>  is minimised — it is the theoretically optimal prefix-free code for a given</code></td>
+</tr>
+<tr>
+<td class="line" id="L12"><a href="#L12">12</a></td>
+<td class="hits"></td>
+<td class="source"><code>  symbol frequency distribution.</code></td>
+</tr>
+<tr>
+<td class="line" id="L13"><a href="#L13">13</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L14"><a href="#L14">14</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Think of it like Morse code. In Morse, `E` is `.` (one dot) and `Z` is</code></td>
+</tr>
+<tr>
+<td class="line" id="L15"><a href="#L15">15</a></td>
+<td class="hits"></td>
+<td class="source"><code>  `--..` (four symbols). The designers knew `E` is the most common letter in</code></td>
+</tr>
+<tr>
+<td class="line" id="L16"><a href="#L16">16</a></td>
+<td class="hits"></td>
+<td class="source"><code>  English so they gave it the shortest code. Huffman's algorithm does this</code></td>
+</tr>
+<tr>
+<td class="line" id="L17"><a href="#L17">17</a></td>
+<td class="hits"></td>
+<td class="source"><code>  automatically and optimally for any alphabet with any frequency distribution.</code></td>
+</tr>
+<tr>
+<td class="line" id="L18"><a href="#L18">18</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L19"><a href="#L19">19</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Algorithm: Greedy Construction via Min-Heap</code></td>
+</tr>
+<tr>
+<td class="line" id="L20"><a href="#L20">20</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L21"><a href="#L21">21</a></td>
+<td class="hits"></td>
+<td class="source"><code>  1. Create one leaf node per distinct symbol, each with its frequency as its</code></td>
+</tr>
+<tr>
+<td class="line" id="L22"><a href="#L22">22</a></td>
+<td class="hits"></td>
+<td class="source"><code>     weight. Push all leaves onto a min-heap keyed by weight.</code></td>
+</tr>
+<tr>
+<td class="line" id="L23"><a href="#L23">23</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L24"><a href="#L24">24</a></td>
+<td class="hits"></td>
+<td class="source"><code>  2. While the heap has more than one node:</code></td>
+</tr>
+<tr>
+<td class="line" id="L25"><a href="#L25">25</a></td>
+<td class="hits"></td>
+<td class="source"><code>     a. Pop the two nodes with the smallest weight.</code></td>
+</tr>
+<tr>
+<td class="line" id="L26"><a href="#L26">26</a></td>
+<td class="hits"></td>
+<td class="source"><code>     b. Create a new internal node whose weight = sum of the two children.</code></td>
+</tr>
+<tr>
+<td class="line" id="L27"><a href="#L27">27</a></td>
+<td class="hits"></td>
+<td class="source"><code>     c. Set left = the first popped node, right = the second popped node.</code></td>
+</tr>
+<tr>
+<td class="line" id="L28"><a href="#L28">28</a></td>
+<td class="hits"></td>
+<td class="source"><code>     d. Push the new internal node back onto the heap.</code></td>
+</tr>
+<tr>
+<td class="line" id="L29"><a href="#L29">29</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L30"><a href="#L30">30</a></td>
+<td class="hits"></td>
+<td class="source"><code>  3. The one remaining node is the root of the Huffman tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L31"><a href="#L31">31</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L32"><a href="#L32">32</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Tie-Breaking Rules (Deterministic Output)</code></td>
+</tr>
+<tr>
+<td class="line" id="L33"><a href="#L33">33</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L34"><a href="#L34">34</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Without tie-breaking, different implementations could build structurally</code></td>
+</tr>
+<tr>
+<td class="line" id="L35"><a href="#L35">35</a></td>
+<td class="hits"></td>
+<td class="source"><code>  different trees from the same input — producing different (but equally valid)</code></td>
+</tr>
+<tr>
+<td class="line" id="L36"><a href="#L36">36</a></td>
+<td class="hits"></td>
+<td class="source"><code>  code lengths. Deterministic tie-breaking ensures the canonical code table is</code></td>
+</tr>
+<tr>
+<td class="line" id="L37"><a href="#L37">37</a></td>
+<td class="hits"></td>
+<td class="source"><code>  identical everywhere.</code></td>
+</tr>
+<tr>
+<td class="line" id="L38"><a href="#L38">38</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L39"><a href="#L39">39</a></td>
+<td class="hits"></td>
+<td class="source"><code>    1. Lowest weight pops first.</code></td>
+</tr>
+<tr>
+<td class="line" id="L40"><a href="#L40">40</a></td>
+<td class="hits"></td>
+<td class="source"><code>    2. Leaf nodes have higher priority than internal nodes at equal weight</code></td>
+</tr>
+<tr>
+<td class="line" id="L41"><a href="#L41">41</a></td>
+<td class="hits"></td>
+<td class="source"><code>       ("leaf-before-internal" rule).</code></td>
+</tr>
+<tr>
+<td class="line" id="L42"><a href="#L42">42</a></td>
+<td class="hits"></td>
+<td class="source"><code>    3. Among leaves of equal weight, lower symbol value wins.</code></td>
+</tr>
+<tr>
+<td class="line" id="L43"><a href="#L43">43</a></td>
+<td class="hits"></td>
+<td class="source"><code>    4. Among internal nodes of equal weight, earlier-created node wins</code></td>
+</tr>
+<tr>
+<td class="line" id="L44"><a href="#L44">44</a></td>
+<td class="hits"></td>
+<td class="source"><code>       (insertion-order FIFO).</code></td>
+</tr>
+<tr>
+<td class="line" id="L45"><a href="#L45">45</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L46"><a href="#L46">46</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Prefix-Free Property: Why It Works</code></td>
+</tr>
+<tr>
+<td class="line" id="L47"><a href="#L47">47</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L48"><a href="#L48">48</a></td>
+<td class="hits"></td>
+<td class="source"><code>  In a Huffman tree:</code></td>
+</tr>
+<tr>
+<td class="line" id="L49"><a href="#L49">49</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - Symbols live ONLY at the leaves, never at internal nodes.</code></td>
+</tr>
+<tr>
+<td class="line" id="L50"><a href="#L50">50</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - The code for a symbol is the path from root to its leaf</code></td>
+</tr>
+<tr>
+<td class="line" id="L51"><a href="#L51">51</a></td>
+<td class="hits"></td>
+<td class="source"><code>      (left edge = '0', right edge = '1').</code></td>
+</tr>
+<tr>
+<td class="line" id="L52"><a href="#L52">52</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L53"><a href="#L53">53</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Since one leaf is never an ancestor of another leaf, no code can be a prefix</code></td>
+</tr>
+<tr>
+<td class="line" id="L54"><a href="#L54">54</a></td>
+<td class="hits"></td>
+<td class="source"><code>  of another code. This is the prefix-free property, and it means the bit</code></td>
+</tr>
+<tr>
+<td class="line" id="L55"><a href="#L55">55</a></td>
+<td class="hits"></td>
+<td class="source"><code>  stream can be decoded unambiguously without separator characters: just walk</code></td>
+</tr>
+<tr>
+<td class="line" id="L56"><a href="#L56">56</a></td>
+<td class="hits"></td>
+<td class="source"><code>  the tree bit by bit until you hit a leaf.</code></td>
+</tr>
+<tr>
+<td class="line" id="L57"><a href="#L57">57</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L58"><a href="#L58">58</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Canonical Codes (DEFLATE / zlib Style)</code></td>
+</tr>
+<tr>
+<td class="line" id="L59"><a href="#L59">59</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L60"><a href="#L60">60</a></td>
+<td class="hits"></td>
+<td class="source"><code>  The standard tree-walk produces valid codes, but different tree shapes can</code></td>
+</tr>
+<tr>
+<td class="line" id="L61"><a href="#L61">61</a></td>
+<td class="hits"></td>
+<td class="source"><code>  produce different codes for the same symbol lengths. Canonical codes</code></td>
+</tr>
+<tr>
+<td class="line" id="L62"><a href="#L62">62</a></td>
+<td class="hits"></td>
+<td class="source"><code>  normalise this: given only the code *lengths*, you can reconstruct the exact</code></td>
+</tr>
+<tr>
+<td class="line" id="L63"><a href="#L63">63</a></td>
+<td class="hits"></td>
+<td class="source"><code>  canonical code table without transmitting the tree structure.</code></td>
+</tr>
+<tr>
+<td class="line" id="L64"><a href="#L64">64</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L65"><a href="#L65">65</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Algorithm:</code></td>
+</tr>
+<tr>
+<td class="line" id="L66"><a href="#L66">66</a></td>
+<td class="hits"></td>
+<td class="source"><code>    1. Collect (symbol, code_length) pairs from the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L67"><a href="#L67">67</a></td>
+<td class="hits"></td>
+<td class="source"><code>    2. Sort by (code_length, symbol_value).</code></td>
+</tr>
+<tr>
+<td class="line" id="L68"><a href="#L68">68</a></td>
+<td class="hits"></td>
+<td class="source"><code>    3. Assign codes numerically:</code></td>
+</tr>
+<tr>
+<td class="line" id="L69"><a href="#L69">69</a></td>
+<td class="hits"></td>
+<td class="source"><code>         code[0] = 0 (left-padded to length[0] bits)</code></td>
+</tr>
+<tr>
+<td class="line" id="L70"><a href="#L70">70</a></td>
+<td class="hits"></td>
+<td class="source"><code>         code[i] = (code[i-1] + 1) &lt;&lt; (length[i] - length[i-1])</code></td>
+</tr>
+<tr>
+<td class="line" id="L71"><a href="#L71">71</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L72"><a href="#L72">72</a></td>
+<td class="hits"></td>
+<td class="source"><code>  This is exactly what DEFLATE uses: the compressed stream contains only the</code></td>
+</tr>
+<tr>
+<td class="line" id="L73"><a href="#L73">73</a></td>
+<td class="hits"></td>
+<td class="source"><code>  length table, not the tree, saving space.</code></td>
+</tr>
+<tr>
+<td class="line" id="L74"><a href="#L74">74</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L75"><a href="#L75">75</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Example</code></td>
+</tr>
+<tr>
+<td class="line" id="L76"><a href="#L76">76</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L77"><a href="#L77">77</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L78"><a href="#L78">78</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.code_table(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L79"><a href="#L79">79</a></td>
+<td class="hits"></td>
+<td class="source"><code>      %{65 =&gt; "0", 66 =&gt; "11", 67 =&gt; "10"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L80"><a href="#L80">80</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.weight(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L81"><a href="#L81">81</a></td>
+<td class="hits"></td>
+<td class="source"><code>      6</code></td>
+</tr>
+<tr>
+<td class="line" id="L82"><a href="#L82">82</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L83"><a href="#L83">83</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Series</code></td>
+</tr>
+<tr>
+<td class="line" id="L84"><a href="#L84">84</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L85"><a href="#L85">85</a></td>
+<td class="hits"></td>
+<td class="source"><code>      DT27 (HuffmanTree) — this module.</code></td>
+</tr>
+<tr>
+<td class="line" id="L86"><a href="#L86">86</a></td>
+<td class="hits"></td>
+<td class="source"><code>      CMP04 (Huffman Coding) — uses DT27 to compress/decompress data.</code></td>
+</tr>
+<tr>
+<td class="line" id="L87"><a href="#L87">87</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L88"><a href="#L88">88</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L89"><a href="#L89">89</a></td>
+<td class="hits"></td>
+<td class="source"><code>  import Bitwise</code></td>
+</tr>
+<tr>
+<td class="line" id="L90"><a href="#L90">90</a></td>
+<td class="hits"></td>
+<td class="source"><code>  alias CodingAdventures.Heap.MinHeap</code></td>
+</tr>
+<tr>
+<td class="line" id="L91"><a href="#L91">91</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L92"><a href="#L92">92</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── Node representation ────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L93"><a href="#L93">93</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L94"><a href="#L94">94</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # We represent the Huffman tree using tagged tuples:</code></td>
+</tr>
+<tr>
+<td class="line" id="L95"><a href="#L95">95</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L96"><a href="#L96">96</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   {:leaf, symbol, weight}</code></td>
+</tr>
+<tr>
+<td class="line" id="L97"><a href="#L97">97</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #     - symbol: non-negative integer (e.g. byte value 0..255)</code></td>
+</tr>
+<tr>
+<td class="line" id="L98"><a href="#L98">98</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #     - weight: frequency count (positive integer)</code></td>
+</tr>
+<tr>
+<td class="line" id="L99"><a href="#L99">99</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L100"><a href="#L100">100</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   {:internal, weight, left, right, order}</code></td>
+</tr>
+<tr>
+<td class="line" id="L101"><a href="#L101">101</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #     - weight: sum of children's weights</code></td>
+</tr>
+<tr>
+<td class="line" id="L102"><a href="#L102">102</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #     - left:   left child node (reached by '0' bit)</code></td>
+</tr>
+<tr>
+<td class="line" id="L103"><a href="#L103">103</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #     - right:  right child node (reached by '1' bit)</code></td>
+</tr>
+<tr>
+<td class="line" id="L104"><a href="#L104">104</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #     - order:  monotonic counter for tie-breaking (FIFO among internals)</code></td>
+</tr>
+<tr>
+<td class="line" id="L105"><a href="#L105">105</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L106"><a href="#L106">106</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Using tagged tuples is idiomatic Elixir — pattern matching on the first</code></td>
+</tr>
+<tr>
+<td class="line" id="L107"><a href="#L107">107</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # element is fast and readable, and the immutable data plays well with</code></td>
+</tr>
+<tr>
+<td class="line" id="L108"><a href="#L108">108</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # the recursive tree-walking style we use throughout.</code></td>
+</tr>
+<tr>
+<td class="line" id="L109"><a href="#L109">109</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L110"><a href="#L110">110</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── Priority key ──────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L111"><a href="#L111">111</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L112"><a href="#L112">112</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # The heap compares nodes by a 4-element tuple, lower = higher priority:</code></td>
+</tr>
+<tr>
+<td class="line" id="L113"><a href="#L113">113</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L114"><a href="#L114">114</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   {weight, type_flag, symbol_or_max, order_or_max}</code></td>
+</tr>
+<tr>
+<td class="line" id="L115"><a href="#L115">115</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L116"><a href="#L116">116</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   type_flag: 0 = leaf (higher priority), 1 = internal</code></td>
+</tr>
+<tr>
+<td class="line" id="L117"><a href="#L117">117</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   symbol_or_max: leaf → symbol value; internal → max_int (unused)</code></td>
+</tr>
+<tr>
+<td class="line" id="L118"><a href="#L118">118</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   order_or_max:  internal → insertion order; leaf → max_int (unused)</code></td>
+</tr>
+<tr>
+<td class="line" id="L119"><a href="#L119">119</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L120"><a href="#L120">120</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # This single comparison key encodes all four tie-breaking rules at once.</code></td>
+</tr>
+<tr>
+<td class="line" id="L121"><a href="#L121">121</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # By packing them into a tuple we can use Elixir's built-in tuple comparison</code></td>
+</tr>
+<tr>
+<td class="line" id="L122"><a href="#L122">122</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # (lexicographic) without any custom comparator logic.</code></td>
+</tr>
+<tr>
+<td class="line" id="L123"><a href="#L123">123</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L124"><a href="#L124">124</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @max_int :math.pow(2, 62) |&gt; trunc()</code></td>
+</tr>
+<tr>
+<td class="line" id="L125"><a href="#L125">125</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L126"><a href="#L126">126</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp node_priority({:leaf, symbol, weight}) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L127"><a href="#L127">127</a></td>
+<td class="hits">479</td>
+<td class="source"><code>    {weight, 0, symbol, @max_int}</code></td>
+</tr>
+<tr>
+<td class="line" id="L128"><a href="#L128">128</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L129"><a href="#L129">129</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L130"><a href="#L130">130</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp node_priority({:internal, weight, _left, _right, order}) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L131"><a href="#L131">131</a></td>
+<td class="hits">406</td>
+<td class="source"><code>    {weight, 1, @max_int, order}</code></td>
+</tr>
+<tr>
+<td class="line" id="L132"><a href="#L132">132</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L133"><a href="#L133">133</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L134"><a href="#L134">134</a></td>
+<td class="hits">742</td>
+<td class="source"><code>  defp node_weight({:leaf, _sym, weight}), do: weight</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L135"><a href="#L135">135</a></td>
+<td class="hits">616</td>
+<td class="source"><code>  defp node_weight({:internal, weight, _l, _r, _o}), do: weight</code></td>
+</tr>
+<tr>
+<td class="line" id="L136"><a href="#L136">136</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L137"><a href="#L137">137</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── build/1 ───────────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L138"><a href="#L138">138</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L139"><a href="#L139">139</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L140"><a href="#L140">140</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Construct a Huffman tree from a list of `{symbol, frequency}` pairs.</code></td>
+</tr>
+<tr>
+<td class="line" id="L141"><a href="#L141">141</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L142"><a href="#L142">142</a></td>
+<td class="hits"></td>
+<td class="source"><code>  The greedy algorithm uses a min-heap. At each step it pops the two</code></td>
+</tr>
+<tr>
+<td class="line" id="L143"><a href="#L143">143</a></td>
+<td class="hits"></td>
+<td class="source"><code>  lowest-weight nodes, combines them into a new internal node, and pushes the</code></td>
+</tr>
+<tr>
+<td class="line" id="L144"><a href="#L144">144</a></td>
+<td class="hits"></td>
+<td class="source"><code>  internal node back. The single remaining node is the root.</code></td>
+</tr>
+<tr>
+<td class="line" id="L145"><a href="#L145">145</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L146"><a href="#L146">146</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Tie-breaking (for deterministic output across implementations)</code></td>
+</tr>
+<tr>
+<td class="line" id="L147"><a href="#L147">147</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L148"><a href="#L148">148</a></td>
+<td class="hits"></td>
+<td class="source"><code>    1. Lowest weight pops first.</code></td>
+</tr>
+<tr>
+<td class="line" id="L149"><a href="#L149">149</a></td>
+<td class="hits"></td>
+<td class="source"><code>    2. Leaves before internal nodes at equal weight.</code></td>
+</tr>
+<tr>
+<td class="line" id="L150"><a href="#L150">150</a></td>
+<td class="hits"></td>
+<td class="source"><code>    3. Lower symbol value wins among leaves of equal weight.</code></td>
+</tr>
+<tr>
+<td class="line" id="L151"><a href="#L151">151</a></td>
+<td class="hits"></td>
+<td class="source"><code>    4. Earlier-created internal node wins among internal nodes of equal</code></td>
+</tr>
+<tr>
+<td class="line" id="L152"><a href="#L152">152</a></td>
+<td class="hits"></td>
+<td class="source"><code>       weight (FIFO insertion order).</code></td>
+</tr>
+<tr>
+<td class="line" id="L153"><a href="#L153">153</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L154"><a href="#L154">154</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Arguments</code></td>
+</tr>
+<tr>
+<td class="line" id="L155"><a href="#L155">155</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L156"><a href="#L156">156</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `weights` — list of `{symbol, frequency}` pairs. Each symbol must be a</code></td>
+</tr>
+<tr>
+<td class="line" id="L157"><a href="#L157">157</a></td>
+<td class="hits"></td>
+<td class="source"><code>      non-negative integer; each frequency must be &gt; 0.</code></td>
+</tr>
+<tr>
+<td class="line" id="L158"><a href="#L158">158</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L159"><a href="#L159">159</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Returns</code></td>
+</tr>
+<tr>
+<td class="line" id="L160"><a href="#L160">160</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L161"><a href="#L161">161</a></td>
+<td class="hits"></td>
+<td class="source"><code>  A `{root_node, symbol_count}` pair representing the immutable tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L162"><a href="#L162">162</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L163"><a href="#L163">163</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Raises</code></td>
+</tr>
+<tr>
+<td class="line" id="L164"><a href="#L164">164</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L165"><a href="#L165">165</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `ArgumentError` if `weights` is empty or any frequency is ≤ 0.</code></td>
+</tr>
+<tr>
+<td class="line" id="L166"><a href="#L166">166</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L167"><a href="#L167">167</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L168"><a href="#L168">168</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L169"><a href="#L169">169</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L170"><a href="#L170">170</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.symbol_count(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L171"><a href="#L171">171</a></td>
+<td class="hits"></td>
+<td class="source"><code>      3</code></td>
+</tr>
+<tr>
+<td class="line" id="L172"><a href="#L172">172</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L173"><a href="#L173">173</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def build([]) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L174"><a href="#L174">174</a></td>
+<td class="hits">1</td>
+<td class="source"><code>    raise ArgumentError, "weights must not be empty"</code></td>
+</tr>
+<tr>
+<td class="line" id="L175"><a href="#L175">175</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L176"><a href="#L176">176</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L177"><a href="#L177">177</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def build(weights) when is_list(weights) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L178"><a href="#L178">178</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Validate all frequencies are positive</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L179"><a href="#L179">179</a></td>
+<td class="hits">76</td>
+<td class="source"><code>    Enum.each(weights, fn {sym, freq} -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L180"><a href="#L180">180</a></td>
+<td class="hits">483</td>
+<td class="source"><code>      if freq &lt;= 0 do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L181"><a href="#L181">181</a></td>
+<td class="hits">3</td>
+<td class="source"><code>        raise ArgumentError,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L182"><a href="#L182">182</a></td>
+<td class="hits">3</td>
+<td class="source"><code>              "frequency must be positive; got symbol=#{sym}, freq=#{freq}"</code></td>
+</tr>
+<tr>
+<td class="line" id="L183"><a href="#L183">183</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end</code></td>
+</tr>
+<tr>
+<td class="line" id="L184"><a href="#L184">184</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L185"><a href="#L185">185</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L186"><a href="#L186">186</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Build the min-heap. Each element is {priority_tuple, node}.</code></td>
+</tr>
+<tr>
+<td class="line" id="L187"><a href="#L187">187</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # We use a custom comparator that compares the 4-element priority tuples</code></td>
+</tr>
+<tr>
+<td class="line" id="L188"><a href="#L188">188</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # lexicographically (Elixir's default &lt; operator works on tuples).</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L189"><a href="#L189">189</a></td>
+<td class="hits">73</td>
+<td class="source"><code>    comparator = fn {pa, _na}, {pb, _nb} -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L190"><a href="#L190">190</a></td>
+<td class="hits">6651</td>
+<td class="source"><code>      cond do</code></td>
+</tr>
+<tr class="miss">
+<td class="line" id="L191"><a href="#L191">191</a></td>
+<td class="hits"><pre style="display: inline;">:-(</pre></td>
+<td class="source"><code>        pa == pb -&gt; 0</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L192"><a href="#L192">192</a></td>
+<td class="hits">6651</td>
+<td class="source"><code>        pa &lt; pb -&gt; -1</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L193"><a href="#L193">193</a></td>
+<td class="hits">2488</td>
+<td class="source"><code>        true -&gt; 1</code></td>
+</tr>
+<tr>
+<td class="line" id="L194"><a href="#L194">194</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end</code></td>
+</tr>
+<tr>
+<td class="line" id="L195"><a href="#L195">195</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L196"><a href="#L196">196</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L197"><a href="#L197">197</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Push all leaf nodes onto the heap</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L198"><a href="#L198">198</a></td>
+<td class="hits">73</td>
+<td class="source"><code>    heap =</code></td>
+</tr>
+<tr>
+<td class="line" id="L199"><a href="#L199">199</a></td>
+<td class="hits"></td>
+<td class="source"><code>      Enum.reduce(weights, MinHeap.new(comparator), fn {sym, freq}, acc -&gt;</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L200"><a href="#L200">200</a></td>
+<td class="hits">479</td>
+<td class="source"><code>        leaf = {:leaf, sym, freq}</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L201"><a href="#L201">201</a></td>
+<td class="hits">479</td>
+<td class="source"><code>        MinHeap.push(acc, {node_priority(leaf), leaf})</code></td>
+</tr>
+<tr>
+<td class="line" id="L202"><a href="#L202">202</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L203"><a href="#L203">203</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L204"><a href="#L204">204</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Greedy merge loop: always combine the two lightest nodes</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L205"><a href="#L205">205</a></td>
+<td class="hits">73</td>
+<td class="source"><code>    {root, _order} = merge_loop(heap, 0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L206"><a href="#L206">206</a></td>
+<td class="hits"></td>
+<td class="source"><code>    {root, length(weights)}</code></td>
+</tr>
+<tr>
+<td class="line" id="L207"><a href="#L207">207</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L208"><a href="#L208">208</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L209"><a href="#L209">209</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Repeatedly pop two lightest nodes, merge them into an internal node,</code></td>
+</tr>
+<tr>
+<td class="line" id="L210"><a href="#L210">210</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # push the result back. Stop when only one node remains.</code></td>
+</tr>
+<tr>
+<td class="line" id="L211"><a href="#L211">211</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp merge_loop(heap, order_counter) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L212"><a href="#L212">212</a></td>
+<td class="hits">479</td>
+<td class="source"><code>    if MinHeap.size(heap) == 1 do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L213"><a href="#L213">213</a></td>
+<td class="hits">73</td>
+<td class="source"><code>      {_priority, root} = MinHeap.peek(heap)</code></td>
+</tr>
+<tr>
+<td class="line" id="L214"><a href="#L214">214</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {root, order_counter}</code></td>
+</tr>
+<tr>
+<td class="line" id="L215"><a href="#L215">215</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr>
+<td class="line" id="L216"><a href="#L216">216</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Pop the two lightest nodes</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L217"><a href="#L217">217</a></td>
+<td class="hits">406</td>
+<td class="source"><code>      {{_p1, left}, heap1} = MinHeap.pop(heap)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L218"><a href="#L218">218</a></td>
+<td class="hits">406</td>
+<td class="source"><code>      {{_p2, right}, heap2} = MinHeap.pop(heap1)</code></td>
+</tr>
+<tr>
+<td class="line" id="L219"><a href="#L219">219</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L220"><a href="#L220">220</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Combine: new weight = sum of children's weights</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L221"><a href="#L221">221</a></td>
+<td class="hits">406</td>
+<td class="source"><code>      combined_weight = node_weight(left) + node_weight(right)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L222"><a href="#L222">222</a></td>
+<td class="hits">406</td>
+<td class="source"><code>      internal = {:internal, combined_weight, left, right, order_counter}</code></td>
+</tr>
+<tr>
+<td class="line" id="L223"><a href="#L223">223</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L224"><a href="#L224">224</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Push the new internal node back</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L225"><a href="#L225">225</a></td>
+<td class="hits">406</td>
+<td class="source"><code>      heap3 = MinHeap.push(heap2, {node_priority(internal), internal})</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L226"><a href="#L226">226</a></td>
+<td class="hits">406</td>
+<td class="source"><code>      merge_loop(heap3, order_counter + 1)</code></td>
+</tr>
+<tr>
+<td class="line" id="L227"><a href="#L227">227</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L228"><a href="#L228">228</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L229"><a href="#L229">229</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L230"><a href="#L230">230</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── code_table/1 ──────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L231"><a href="#L231">231</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L232"><a href="#L232">232</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L233"><a href="#L233">233</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Return `%{symbol =&gt; bit_string}` for all symbols in the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L234"><a href="#L234">234</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L235"><a href="#L235">235</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Left edges are `"0"`, right edges are `"1"`. For a single-symbol tree the</code></td>
+</tr>
+<tr>
+<td class="line" id="L236"><a href="#L236">236</a></td>
+<td class="hits"></td>
+<td class="source"><code>  convention is `%{symbol =&gt; "0"}` (one bit per occurrence).</code></td>
+</tr>
+<tr>
+<td class="line" id="L237"><a href="#L237">237</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L238"><a href="#L238">238</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Time: O(n) where n = number of distinct symbols.</code></td>
+</tr>
+<tr>
+<td class="line" id="L239"><a href="#L239">239</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L240"><a href="#L240">240</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L241"><a href="#L241">241</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L242"><a href="#L242">242</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L243"><a href="#L243">243</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.code_table(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L244"><a href="#L244">244</a></td>
+<td class="hits"></td>
+<td class="source"><code>      %{65 =&gt; "0", 66 =&gt; "11", 67 =&gt; "10"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L245"><a href="#L245">245</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L246"><a href="#L246">246</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def code_table({root, _count}) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L247"><a href="#L247">247</a></td>
+<td class="hits">37</td>
+<td class="source"><code>    walk(root, "", %{})</code></td>
+</tr>
+<tr>
+<td class="line" id="L248"><a href="#L248">248</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L249"><a href="#L249">249</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L250"><a href="#L250">250</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Recursively walk the tree, accumulating the bit prefix</code></td>
+</tr>
+<tr>
+<td class="line" id="L251"><a href="#L251">251</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp walk({:leaf, symbol, _weight}, prefix, table) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L252"><a href="#L252">252</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Single-leaf edge case: no edges traversed; use "0" by convention</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L253"><a href="#L253">253</a></td>
+<td class="hits">128</td>
+<td class="source"><code>    code = if prefix == "", do: "0", else: prefix</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L254"><a href="#L254">254</a></td>
+<td class="hits">128</td>
+<td class="source"><code>    Map.put(table, symbol, code)</code></td>
+</tr>
+<tr>
+<td class="line" id="L255"><a href="#L255">255</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L256"><a href="#L256">256</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L257"><a href="#L257">257</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp walk({:internal, _w, left, right, _o}, prefix, table) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L258"><a href="#L258">258</a></td>
+<td class="hits">91</td>
+<td class="source"><code>    table = walk(left, prefix &lt;&gt; "0", table)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L259"><a href="#L259">259</a></td>
+<td class="hits">91</td>
+<td class="source"><code>    walk(right, prefix &lt;&gt; "1", table)</code></td>
+</tr>
+<tr>
+<td class="line" id="L260"><a href="#L260">260</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L261"><a href="#L261">261</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L262"><a href="#L262">262</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── code_for/2 ────────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L263"><a href="#L263">263</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L264"><a href="#L264">264</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L265"><a href="#L265">265</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Return the bit string for a specific symbol, or `nil` if not in the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L266"><a href="#L266">266</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L267"><a href="#L267">267</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Walks the tree searching for the leaf with `symbol`; does NOT build the</code></td>
+</tr>
+<tr>
+<td class="line" id="L268"><a href="#L268">268</a></td>
+<td class="hits"></td>
+<td class="source"><code>  full code table.</code></td>
+</tr>
+<tr>
+<td class="line" id="L269"><a href="#L269">269</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L270"><a href="#L270">270</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Time: O(n) worst case (full tree traversal).</code></td>
+</tr>
+<tr>
+<td class="line" id="L271"><a href="#L271">271</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L272"><a href="#L272">272</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L273"><a href="#L273">273</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L274"><a href="#L274">274</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L275"><a href="#L275">275</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.code_for(tree, 65)</code></td>
+</tr>
+<tr>
+<td class="line" id="L276"><a href="#L276">276</a></td>
+<td class="hits"></td>
+<td class="source"><code>      "0"</code></td>
+</tr>
+<tr>
+<td class="line" id="L277"><a href="#L277">277</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.code_for(tree, 99)</code></td>
+</tr>
+<tr>
+<td class="line" id="L278"><a href="#L278">278</a></td>
+<td class="hits"></td>
+<td class="source"><code>      nil</code></td>
+</tr>
+<tr>
+<td class="line" id="L279"><a href="#L279">279</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L280"><a href="#L280">280</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def code_for({root, _count}, symbol) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L281"><a href="#L281">281</a></td>
+<td class="hits">10</td>
+<td class="source"><code>    find_code(root, symbol, "")</code></td>
+</tr>
+<tr>
+<td class="line" id="L282"><a href="#L282">282</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L283"><a href="#L283">283</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L284"><a href="#L284">284</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp find_code({:leaf, sym, _w}, symbol, prefix) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L285"><a href="#L285">285</a></td>
+<td class="hits">25</td>
+<td class="source"><code>    if sym == symbol do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L286"><a href="#L286">286</a></td>
+<td class="hits">9</td>
+<td class="source"><code>      if prefix == "", do: "0", else: prefix</code></td>
+</tr>
+<tr>
+<td class="line" id="L287"><a href="#L287">287</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr>
+<td class="line" id="L288"><a href="#L288">288</a></td>
+<td class="hits"></td>
+<td class="source"><code>      nil</code></td>
+</tr>
+<tr>
+<td class="line" id="L289"><a href="#L289">289</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L290"><a href="#L290">290</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L291"><a href="#L291">291</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L292"><a href="#L292">292</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp find_code({:internal, _w, left, right, _o}, symbol, prefix) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L293"><a href="#L293">293</a></td>
+<td class="hits">24</td>
+<td class="source"><code>    case find_code(left, symbol, prefix &lt;&gt; "0") do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L294"><a href="#L294">294</a></td>
+<td class="hits">15</td>
+<td class="source"><code>      nil -&gt; find_code(right, symbol, prefix &lt;&gt; "1")</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L295"><a href="#L295">295</a></td>
+<td class="hits">9</td>
+<td class="source"><code>      result -&gt; result</code></td>
+</tr>
+<tr>
+<td class="line" id="L296"><a href="#L296">296</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L297"><a href="#L297">297</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L298"><a href="#L298">298</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L299"><a href="#L299">299</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── canonical_code_table/1 ────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L300"><a href="#L300">300</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L301"><a href="#L301">301</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L302"><a href="#L302">302</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Return canonical Huffman codes (DEFLATE-style).</code></td>
+</tr>
+<tr>
+<td class="line" id="L303"><a href="#L303">303</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L304"><a href="#L304">304</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Sorted by `{code_length, symbol_value}`; codes assigned numerically.</code></td>
+</tr>
+<tr>
+<td class="line" id="L305"><a href="#L305">305</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Useful when you need to transmit only code lengths, not the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L306"><a href="#L306">306</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L307"><a href="#L307">307</a></td>
+<td class="hits"></td>
+<td class="source"><code>  The canonical code algorithm:</code></td>
+</tr>
+<tr>
+<td class="line" id="L308"><a href="#L308">308</a></td>
+<td class="hits"></td>
+<td class="source"><code>    1. Collect `{symbol, code_length}` pairs from the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L309"><a href="#L309">309</a></td>
+<td class="hits"></td>
+<td class="source"><code>    2. Sort by `{code_length, symbol_value}`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L310"><a href="#L310">310</a></td>
+<td class="hits"></td>
+<td class="source"><code>    3. Assign codes numerically:</code></td>
+</tr>
+<tr>
+<td class="line" id="L311"><a href="#L311">311</a></td>
+<td class="hits"></td>
+<td class="source"><code>         code[0] = 0 (left-padded to length[0] bits)</code></td>
+</tr>
+<tr>
+<td class="line" id="L312"><a href="#L312">312</a></td>
+<td class="hits"></td>
+<td class="source"><code>         code[i] = (code[i-1] + 1) &lt;&lt; (length[i] - length[i-1])</code></td>
+</tr>
+<tr>
+<td class="line" id="L313"><a href="#L313">313</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L314"><a href="#L314">314</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Time: O(n log n).</code></td>
+</tr>
+<tr>
+<td class="line" id="L315"><a href="#L315">315</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L316"><a href="#L316">316</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L317"><a href="#L317">317</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L318"><a href="#L318">318</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L319"><a href="#L319">319</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.canonical_code_table(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L320"><a href="#L320">320</a></td>
+<td class="hits"></td>
+<td class="source"><code>      %{65 =&gt; "0", 66 =&gt; "10", 67 =&gt; "11"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L321"><a href="#L321">321</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L322"><a href="#L322">322</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def canonical_code_table({root, _count}) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L323"><a href="#L323">323</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Step 1: collect code lengths for all leaves</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L324"><a href="#L324">324</a></td>
+<td class="hits">8</td>
+<td class="source"><code>    lengths = collect_lengths(root, 0, %{})</code></td>
+</tr>
+<tr>
+<td class="line" id="L325"><a href="#L325">325</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L326"><a href="#L326">326</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Single-leaf edge case: assign length 1 by convention</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L327"><a href="#L327">327</a></td>
+<td class="hits">8</td>
+<td class="source"><code>    if map_size(lengths) == 1 do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L328"><a href="#L328">328</a></td>
+<td class="hits">1</td>
+<td class="source"><code>      [{sym, _len}] = Map.to_list(lengths)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L329"><a href="#L329">329</a></td>
+<td class="hits">1</td>
+<td class="source"><code>      %{sym =&gt; "0"}</code></td>
+</tr>
+<tr>
+<td class="line" id="L330"><a href="#L330">330</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr>
+<td class="line" id="L331"><a href="#L331">331</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Step 2: sort by {length, symbol}</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L332"><a href="#L332">332</a></td>
+<td class="hits">7</td>
+<td class="source"><code>      sorted = Enum.sort_by(Map.to_list(lengths), fn {sym, len} -&gt; {len, sym} end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L333"><a href="#L333">333</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L334"><a href="#L334">334</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Step 3: assign canonical codes numerically</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L335"><a href="#L335">335</a></td>
+<td class="hits">7</td>
+<td class="source"><code>      [{_first_sym, first_len} | _rest] = sorted</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L336"><a href="#L336">336</a></td>
+<td class="hits">7</td>
+<td class="source"><code>      {result, _code_val, _prev_len} =</code></td>
+</tr>
+<tr>
+<td class="line" id="L337"><a href="#L337">337</a></td>
+<td class="hits"></td>
+<td class="source"><code>        Enum.reduce(sorted, {%{}, 0, first_len}, fn {sym, len}, {acc, code_val, prev_len} -&gt;</code></td>
+</tr>
+<tr>
+<td class="line" id="L338"><a href="#L338">338</a></td>
+<td class="hits"></td>
+<td class="source"><code>          # Shift left if the length increased</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L339"><a href="#L339">339</a></td>
+<td class="hits">27</td>
+<td class="source"><code>          shifted_code =</code></td>
+</tr>
+<tr>
+<td class="line" id="L340"><a href="#L340">340</a></td>
+<td class="hits"></td>
+<td class="source"><code>            if len &gt; prev_len do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L341"><a href="#L341">341</a></td>
+<td class="hits">13</td>
+<td class="source"><code>              code_val &lt;&lt;&lt; (len - prev_len)</code></td>
+</tr>
+<tr>
+<td class="line" id="L342"><a href="#L342">342</a></td>
+<td class="hits"></td>
+<td class="source"><code>            else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L343"><a href="#L343">343</a></td>
+<td class="hits">14</td>
+<td class="source"><code>              code_val</code></td>
+</tr>
+<tr>
+<td class="line" id="L344"><a href="#L344">344</a></td>
+<td class="hits"></td>
+<td class="source"><code>            end</code></td>
+</tr>
+<tr>
+<td class="line" id="L345"><a href="#L345">345</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L346"><a href="#L346">346</a></td>
+<td class="hits"></td>
+<td class="source"><code>          # Format as zero-padded binary string of the correct length</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L347"><a href="#L347">347</a></td>
+<td class="hits">27</td>
+<td class="source"><code>          bit_str = Integer.to_string(shifted_code, 2) |&gt; String.pad_leading(len, "0")</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L348"><a href="#L348">348</a></td>
+<td class="hits">27</td>
+<td class="source"><code>          {Map.put(acc, sym, bit_str), shifted_code + 1, len}</code></td>
+</tr>
+<tr>
+<td class="line" id="L349"><a href="#L349">349</a></td>
+<td class="hits"></td>
+<td class="source"><code>        end)</code></td>
+</tr>
+<tr>
+<td class="line" id="L350"><a href="#L350">350</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L351"><a href="#L351">351</a></td>
+<td class="hits">7</td>
+<td class="source"><code>      result</code></td>
+</tr>
+<tr>
+<td class="line" id="L352"><a href="#L352">352</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L353"><a href="#L353">353</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L354"><a href="#L354">354</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L355"><a href="#L355">355</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Recursively collect code lengths. At each leaf, d = depth = code length.</code></td>
+</tr>
+<tr>
+<td class="line" id="L356"><a href="#L356">356</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Single-leaf root has depth 0, but we treat it as length 1 by convention.</code></td>
+</tr>
+<tr>
+<td class="line" id="L357"><a href="#L357">357</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp collect_lengths({:leaf, symbol, _w}, depth, lengths) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L358"><a href="#L358">358</a></td>
+<td class="hits">28</td>
+<td class="source"><code>    length = if depth &gt; 0, do: depth, else: 1</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L359"><a href="#L359">359</a></td>
+<td class="hits">28</td>
+<td class="source"><code>    Map.put(lengths, symbol, length)</code></td>
+</tr>
+<tr>
+<td class="line" id="L360"><a href="#L360">360</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L361"><a href="#L361">361</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L362"><a href="#L362">362</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp collect_lengths({:internal, _w, left, right, _o}, depth, lengths) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L363"><a href="#L363">363</a></td>
+<td class="hits">20</td>
+<td class="source"><code>    lengths = collect_lengths(left, depth + 1, lengths)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L364"><a href="#L364">364</a></td>
+<td class="hits">20</td>
+<td class="source"><code>    collect_lengths(right, depth + 1, lengths)</code></td>
+</tr>
+<tr>
+<td class="line" id="L365"><a href="#L365">365</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L366"><a href="#L366">366</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L367"><a href="#L367">367</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── decode_all/3 ──────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L368"><a href="#L368">368</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L369"><a href="#L369">369</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L370"><a href="#L370">370</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Decode exactly `count` symbols from a bit string by walking the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L371"><a href="#L371">371</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L372"><a href="#L372">372</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Arguments</code></td>
+</tr>
+<tr>
+<td class="line" id="L373"><a href="#L373">373</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L374"><a href="#L374">374</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `tree` — a Huffman tree as returned by `build/1`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L375"><a href="#L375">375</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `bits` — a string of `"0"` and `"1"` characters.</code></td>
+</tr>
+<tr>
+<td class="line" id="L376"><a href="#L376">376</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `count` — the exact number of symbols to decode.</code></td>
+</tr>
+<tr>
+<td class="line" id="L377"><a href="#L377">377</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L378"><a href="#L378">378</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Returns</code></td>
+</tr>
+<tr>
+<td class="line" id="L379"><a href="#L379">379</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L380"><a href="#L380">380</a></td>
+<td class="hits"></td>
+<td class="source"><code>  A list of decoded symbols of length == `count`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L381"><a href="#L381">381</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L382"><a href="#L382">382</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Raises</code></td>
+</tr>
+<tr>
+<td class="line" id="L383"><a href="#L383">383</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L384"><a href="#L384">384</a></td>
+<td class="hits"></td>
+<td class="source"><code>    - `ArgumentError` if the bit stream is exhausted before `count` symbols</code></td>
+</tr>
+<tr>
+<td class="line" id="L385"><a href="#L385">385</a></td>
+<td class="hits"></td>
+<td class="source"><code>      are decoded.</code></td>
+</tr>
+<tr>
+<td class="line" id="L386"><a href="#L386">386</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L387"><a href="#L387">387</a></td>
+<td class="hits"></td>
+<td class="source"><code>  For a single-leaf tree, each `"0"` bit decodes to that symbol.</code></td>
+</tr>
+<tr>
+<td class="line" id="L388"><a href="#L388">388</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L389"><a href="#L389">389</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Multi-leaf trees: after the path from root reaches a leaf, the bit index is</code></td>
+</tr>
+<tr>
+<td class="line" id="L390"><a href="#L390">390</a></td>
+<td class="hits"></td>
+<td class="source"><code>  already past the last consumed bit — no extra advance needed.</code></td>
+</tr>
+<tr>
+<td class="line" id="L391"><a href="#L391">391</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L392"><a href="#L392">392</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Time: O(total bits consumed).</code></td>
+</tr>
+<tr>
+<td class="line" id="L393"><a href="#L393">393</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L394"><a href="#L394">394</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L395"><a href="#L395">395</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L396"><a href="#L396">396</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L397"><a href="#L397">397</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.decode_all(tree, "010011", 4)</code></td>
+</tr>
+<tr>
+<td class="line" id="L398"><a href="#L398">398</a></td>
+<td class="hits"></td>
+<td class="source"><code>      [65, 65, 66, 67]</code></td>
+</tr>
+<tr>
+<td class="line" id="L399"><a href="#L399">399</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L400"><a href="#L400">400</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def decode_all({root, _count}, bits, count) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L401"><a href="#L401">401</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Single-leaf trees encode each symbol as a single '0' bit.</code></td>
+</tr>
+<tr>
+<td class="line" id="L402"><a href="#L402">402</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Multi-leaf trees: reaching a leaf means the bit index is already past</code></td>
+</tr>
+<tr>
+<td class="line" id="L403"><a href="#L403">403</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # the last consumed bit — no extra advance needed.</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L404"><a href="#L404">404</a></td>
+<td class="hits">13</td>
+<td class="source"><code>    single_leaf = match?({:leaf, _, _}, root)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L405"><a href="#L405">405</a></td>
+<td class="hits">13</td>
+<td class="source"><code>    decode_loop(root, bits, count, root, 0, [], single_leaf)</code></td>
+</tr>
+<tr>
+<td class="line" id="L406"><a href="#L406">406</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L407"><a href="#L407">407</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L408"><a href="#L408">408</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # decode_loop: walk the tree consuming bits, collecting symbols.</code></td>
+</tr>
+<tr>
+<td class="line" id="L409"><a href="#L409">409</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #</code></td>
+</tr>
+<tr>
+<td class="line" id="L410"><a href="#L410">410</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # Arguments:</code></td>
+</tr>
+<tr>
+<td class="line" id="L411"><a href="#L411">411</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   node         — current position in the tree</code></td>
+</tr>
+<tr>
+<td class="line" id="L412"><a href="#L412">412</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   bits         — the full bit string</code></td>
+</tr>
+<tr>
+<td class="line" id="L413"><a href="#L413">413</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   count        — how many more symbols to collect</code></td>
+</tr>
+<tr>
+<td class="line" id="L414"><a href="#L414">414</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   root         — kept to reset after each symbol</code></td>
+</tr>
+<tr>
+<td class="line" id="L415"><a href="#L415">415</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   i            — current bit index</code></td>
+</tr>
+<tr>
+<td class="line" id="L416"><a href="#L416">416</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   result       — accumulated symbols (reversed for efficiency)</code></td>
+</tr>
+<tr>
+<td class="line" id="L417"><a href="#L417">417</a></td>
+<td class="hits"></td>
+<td class="source"><code>  #   single_leaf  — true if the tree has exactly one leaf</code></td>
+</tr>
+<tr>
+<td class="line" id="L418"><a href="#L418">418</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp decode_loop(_node, _bits, 0, _root, _i, result, _single_leaf) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L419"><a href="#L419">419</a></td>
+<td class="hits">12</td>
+<td class="source"><code>    Enum.reverse(result)</code></td>
+</tr>
+<tr>
+<td class="line" id="L420"><a href="#L420">420</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L421"><a href="#L421">421</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L422"><a href="#L422">422</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp decode_loop({:leaf, sym, _w}, bits, remaining, root, i, result, single_leaf) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L423"><a href="#L423">423</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # We have landed on a leaf — emit the symbol and restart from root.</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L424"><a href="#L424">424</a></td>
+<td class="hits">47</td>
+<td class="source"><code>    new_result = [sym | result]</code></td>
+</tr>
+<tr>
+<td class="line" id="L425"><a href="#L425">425</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L426"><a href="#L426">426</a></td>
+<td class="hits">47</td>
+<td class="source"><code>    if single_leaf do</code></td>
+</tr>
+<tr>
+<td class="line" id="L427"><a href="#L427">427</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Single-leaf tree: consume the '0' bit for this symbol</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L428"><a href="#L428">428</a></td>
+<td class="hits">6</td>
+<td class="source"><code>      new_i = if i &lt; byte_size(bits), do: i + 1, else: i</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L429"><a href="#L429">429</a></td>
+<td class="hits">6</td>
+<td class="source"><code>      decode_loop(root, bits, remaining - 1, root, new_i, new_result, single_leaf)</code></td>
+</tr>
+<tr>
+<td class="line" id="L430"><a href="#L430">430</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr>
+<td class="line" id="L431"><a href="#L431">431</a></td>
+<td class="hits"></td>
+<td class="source"><code>      # Multi-leaf: bit index already advanced past the consumed bit</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L432"><a href="#L432">432</a></td>
+<td class="hits">41</td>
+<td class="source"><code>      decode_loop(root, bits, remaining - 1, root, i, new_result, single_leaf)</code></td>
+</tr>
+<tr>
+<td class="line" id="L433"><a href="#L433">433</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L434"><a href="#L434">434</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L435"><a href="#L435">435</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L436"><a href="#L436">436</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp decode_loop({:internal, _w, left, right, _o}, bits, remaining, root, i, result, single_leaf) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L437"><a href="#L437">437</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Internal node: consume the next bit to decide left or right</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L438"><a href="#L438">438</a></td>
+<td class="hits">58</td>
+<td class="source"><code>    if i &gt;= byte_size(bits) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L439"><a href="#L439">439</a></td>
+<td class="hits">1</td>
+<td class="source"><code>      raise ArgumentError,</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L440"><a href="#L440">440</a></td>
+<td class="hits">1</td>
+<td class="source"><code>            "Bit stream exhausted after #{length(result)} symbols; expected #{length(result) + remaining}"</code></td>
+</tr>
+<tr>
+<td class="line" id="L441"><a href="#L441">441</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L442"><a href="#L442">442</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L443"><a href="#L443">443</a></td>
+<td class="hits">57</td>
+<td class="source"><code>    bit = String.at(bits, i)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L444"><a href="#L444">444</a></td>
+<td class="hits">57</td>
+<td class="source"><code>    next_node = if bit == "0", do: left, else: right</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L445"><a href="#L445">445</a></td>
+<td class="hits">57</td>
+<td class="source"><code>    decode_loop(next_node, bits, remaining, root, i + 1, result, single_leaf)</code></td>
+</tr>
+<tr>
+<td class="line" id="L446"><a href="#L446">446</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L447"><a href="#L447">447</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L448"><a href="#L448">448</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── weight/1 ──────────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L449"><a href="#L449">449</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L450"><a href="#L450">450</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L451"><a href="#L451">451</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Total weight of the tree = sum of all leaf frequencies = root weight.</code></td>
+</tr>
+<tr>
+<td class="line" id="L452"><a href="#L452">452</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L453"><a href="#L453">453</a></td>
+<td class="hits"></td>
+<td class="source"><code>  O(1) — stored at the root.</code></td>
+</tr>
+<tr>
+<td class="line" id="L454"><a href="#L454">454</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L455"><a href="#L455">455</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L456"><a href="#L456">456</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L457"><a href="#L457">457</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L458"><a href="#L458">458</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.weight(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L459"><a href="#L459">459</a></td>
+<td class="hits"></td>
+<td class="source"><code>      6</code></td>
+</tr>
+<tr>
+<td class="line" id="L460"><a href="#L460">460</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L461"><a href="#L461">461</a></td>
+<td class="hits">12</td>
+<td class="source"><code>  def weight({root, _count}), do: node_weight(root)</code></td>
+</tr>
+<tr>
+<td class="line" id="L462"><a href="#L462">462</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L463"><a href="#L463">463</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── depth/1 ───────────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L464"><a href="#L464">464</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L465"><a href="#L465">465</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L466"><a href="#L466">466</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Maximum code length = depth of the deepest leaf.</code></td>
+</tr>
+<tr>
+<td class="line" id="L467"><a href="#L467">467</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L468"><a href="#L468">468</a></td>
+<td class="hits"></td>
+<td class="source"><code>  O(n) — must traverse the tree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L469"><a href="#L469">469</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L470"><a href="#L470">470</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L471"><a href="#L471">471</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L472"><a href="#L472">472</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L473"><a href="#L473">473</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.depth(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L474"><a href="#L474">474</a></td>
+<td class="hits"></td>
+<td class="source"><code>      2</code></td>
+</tr>
+<tr>
+<td class="line" id="L475"><a href="#L475">475</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L476"><a href="#L476">476</a></td>
+<td class="hits">5</td>
+<td class="source"><code>  def depth({root, _count}), do: max_depth(root, 0)</code></td>
+</tr>
+<tr>
+<td class="line" id="L477"><a href="#L477">477</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L478"><a href="#L478">478</a></td>
+<td class="hits">14</td>
+<td class="source"><code>  defp max_depth({:leaf, _sym, _w}, d), do: d</code></td>
+</tr>
+<tr>
+<td class="line" id="L479"><a href="#L479">479</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L480"><a href="#L480">480</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp max_depth({:internal, _w, left, right, _o}, d) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L481"><a href="#L481">481</a></td>
+<td class="hits">9</td>
+<td class="source"><code>    max(max_depth(left, d + 1), max_depth(right, d + 1))</code></td>
+</tr>
+<tr>
+<td class="line" id="L482"><a href="#L482">482</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L483"><a href="#L483">483</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L484"><a href="#L484">484</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── symbol_count/1 ────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L485"><a href="#L485">485</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L486"><a href="#L486">486</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L487"><a href="#L487">487</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Number of distinct symbols (= number of leaf nodes).</code></td>
+</tr>
+<tr>
+<td class="line" id="L488"><a href="#L488">488</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L489"><a href="#L489">489</a></td>
+<td class="hits"></td>
+<td class="source"><code>  O(1) — stored at construction time.</code></td>
+</tr>
+<tr>
+<td class="line" id="L490"><a href="#L490">490</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L491"><a href="#L491">491</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L492"><a href="#L492">492</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L493"><a href="#L493">493</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L494"><a href="#L494">494</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.symbol_count(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L495"><a href="#L495">495</a></td>
+<td class="hits"></td>
+<td class="source"><code>      3</code></td>
+</tr>
+<tr>
+<td class="line" id="L496"><a href="#L496">496</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L497"><a href="#L497">497</a></td>
+<td class="hits">11</td>
+<td class="source"><code>  def symbol_count({_root, count}), do: count</code></td>
+</tr>
+<tr>
+<td class="line" id="L498"><a href="#L498">498</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L499"><a href="#L499">499</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── leaves/1 ──────────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L500"><a href="#L500">500</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L501"><a href="#L501">501</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L502"><a href="#L502">502</a></td>
+<td class="hits"></td>
+<td class="source"><code>  In-order traversal of leaves.</code></td>
+</tr>
+<tr>
+<td class="line" id="L503"><a href="#L503">503</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L504"><a href="#L504">504</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Returns `[{symbol, code}, ...]`, left subtree before right subtree.</code></td>
+</tr>
+<tr>
+<td class="line" id="L505"><a href="#L505">505</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Useful for visualisation and debugging.</code></td>
+</tr>
+<tr>
+<td class="line" id="L506"><a href="#L506">506</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L507"><a href="#L507">507</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Time: O(n).</code></td>
+</tr>
+<tr>
+<td class="line" id="L508"><a href="#L508">508</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L509"><a href="#L509">509</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L510"><a href="#L510">510</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L511"><a href="#L511">511</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L512"><a href="#L512">512</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.leaves(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L513"><a href="#L513">513</a></td>
+<td class="hits"></td>
+<td class="source"><code>      [{65, "0"}, {67, "10"}, {66, "11"}]</code></td>
+</tr>
+<tr>
+<td class="line" id="L514"><a href="#L514">514</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L515"><a href="#L515">515</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def leaves({root, _count} = tree) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L516"><a href="#L516">516</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    table = code_table(tree)</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L517"><a href="#L517">517</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    in_order_leaves(root, table, [])</code></td>
+</tr>
+<tr>
+<td class="line" id="L518"><a href="#L518">518</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L519"><a href="#L519">519</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L520"><a href="#L520">520</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp in_order_leaves({:leaf, sym, _w}, table, acc) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L521"><a href="#L521">521</a></td>
+<td class="hits">22</td>
+<td class="source"><code>    acc ++ [{sym, Map.fetch!(table, sym)}]</code></td>
+</tr>
+<tr>
+<td class="line" id="L522"><a href="#L522">522</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L523"><a href="#L523">523</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L524"><a href="#L524">524</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp in_order_leaves({:internal, _w, left, right, _o}, table, acc) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L525"><a href="#L525">525</a></td>
+<td class="hits"></td>
+<td class="source"><code>    acc</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L526"><a href="#L526">526</a></td>
+<td class="hits">16</td>
+<td class="source"><code>    |&gt; then(&amp;in_order_leaves(left, table, &amp;1))</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L527"><a href="#L527">527</a></td>
+<td class="hits">16</td>
+<td class="source"><code>    |&gt; then(&amp;in_order_leaves(right, table, &amp;1))</code></td>
+</tr>
+<tr>
+<td class="line" id="L528"><a href="#L528">528</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L529"><a href="#L529">529</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L530"><a href="#L530">530</a></td>
+<td class="hits"></td>
+<td class="source"><code>  # ─── is_valid/1 ────────────────────────────────────────────────────────────</code></td>
+</tr>
+<tr>
+<td class="line" id="L531"><a href="#L531">531</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L532"><a href="#L532">532</a></td>
+<td class="hits"></td>
+<td class="source"><code>  @doc """</code></td>
+</tr>
+<tr>
+<td class="line" id="L533"><a href="#L533">533</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Check structural invariants. For testing only.</code></td>
+</tr>
+<tr>
+<td class="line" id="L534"><a href="#L534">534</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L535"><a href="#L535">535</a></td>
+<td class="hits"></td>
+<td class="source"><code>    1. Every internal node has exactly 2 children (full binary tree).</code></td>
+</tr>
+<tr>
+<td class="line" id="L536"><a href="#L536">536</a></td>
+<td class="hits"></td>
+<td class="source"><code>    2. `weight(internal) == weight(left) + weight(right)`.</code></td>
+</tr>
+<tr>
+<td class="line" id="L537"><a href="#L537">537</a></td>
+<td class="hits"></td>
+<td class="source"><code>    3. No symbol appears in more than one leaf.</code></td>
+</tr>
+<tr>
+<td class="line" id="L538"><a href="#L538">538</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L539"><a href="#L539">539</a></td>
+<td class="hits"></td>
+<td class="source"><code>  Returns `true` if all invariants hold.</code></td>
+</tr>
+<tr>
+<td class="line" id="L540"><a href="#L540">540</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L541"><a href="#L541">541</a></td>
+<td class="hits"></td>
+<td class="source"><code>  ## Examples</code></td>
+</tr>
+<tr>
+<td class="line" id="L542"><a href="#L542">542</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L543"><a href="#L543">543</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; tree = CodingAdventures.HuffmanTree.build([{65, 3}, {66, 2}, {67, 1}])</code></td>
+</tr>
+<tr>
+<td class="line" id="L544"><a href="#L544">544</a></td>
+<td class="hits"></td>
+<td class="source"><code>      iex&gt; CodingAdventures.HuffmanTree.is_valid(tree)</code></td>
+</tr>
+<tr>
+<td class="line" id="L545"><a href="#L545">545</a></td>
+<td class="hits"></td>
+<td class="source"><code>      true</code></td>
+</tr>
+<tr>
+<td class="line" id="L546"><a href="#L546">546</a></td>
+<td class="hits"></td>
+<td class="source"><code>  """</code></td>
+</tr>
+<tr>
+<td class="line" id="L547"><a href="#L547">547</a></td>
+<td class="hits"></td>
+<td class="source"><code>  def is_valid({root, _count}) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L548"><a href="#L548">548</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    {valid, _seen} = check_invariants(root, MapSet.new())</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L549"><a href="#L549">549</a></td>
+<td class="hits">6</td>
+<td class="source"><code>    valid</code></td>
+</tr>
+<tr>
+<td class="line" id="L550"><a href="#L550">550</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L551"><a href="#L551">551</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L552"><a href="#L552">552</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp check_invariants({:leaf, sym, _w}, seen) do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L553"><a href="#L553">553</a></td>
+<td class="hits">273</td>
+<td class="source"><code>    if MapSet.member?(seen, sym) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L554"><a href="#L554">554</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {false, seen}</code></td>
+</tr>
+<tr>
+<td class="line" id="L555"><a href="#L555">555</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr>
+<td class="line" id="L556"><a href="#L556">556</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {true, MapSet.put(seen, sym)}</code></td>
+</tr>
+<tr>
+<td class="line" id="L557"><a href="#L557">557</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L558"><a href="#L558">558</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L559"><a href="#L559">559</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr>
+<td class="line" id="L560"><a href="#L560">560</a></td>
+<td class="hits"></td>
+<td class="source"><code>  defp check_invariants({:internal, weight, left, right, _o}, seen) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L561"><a href="#L561">561</a></td>
+<td class="hits"></td>
+<td class="source"><code>    # Check weight invariant: internal.weight == left.weight + right.weight</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L562"><a href="#L562">562</a></td>
+<td class="hits">267</td>
+<td class="source"><code>    if weight != node_weight(left) + node_weight(right) do</code></td>
+</tr>
+<tr>
+<td class="line" id="L563"><a href="#L563">563</a></td>
+<td class="hits"></td>
+<td class="source"><code>      {false, seen}</code></td>
+</tr>
+<tr>
+<td class="line" id="L564"><a href="#L564">564</a></td>
+<td class="hits"></td>
+<td class="source"><code>    else</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L565"><a href="#L565">565</a></td>
+<td class="hits">267</td>
+<td class="source"><code>      {valid_left, seen2} = check_invariants(left, seen)</code></td>
+</tr>
+<tr>
+<td class="line" id="L566"><a href="#L566">566</a></td>
+<td class="hits"></td>
+<td class="source"><code></code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L567"><a href="#L567">567</a></td>
+<td class="hits">267</td>
+<td class="source"><code>      if valid_left do</code></td>
+</tr>
+<tr class="hit">
+<td class="line" id="L568"><a href="#L568">568</a></td>
+<td class="hits">267</td>
+<td class="source"><code>        check_invariants(right, seen2)</code></td>
+</tr>
+<tr>
+<td class="line" id="L569"><a href="#L569">569</a></td>
+<td class="hits"></td>
+<td class="source"><code>      else</code></td>
+</tr>
+<tr>
+<td class="line" id="L570"><a href="#L570">570</a></td>
+<td class="hits"></td>
+<td class="source"><code>        {false, seen2}</code></td>
+</tr>
+<tr>
+<td class="line" id="L571"><a href="#L571">571</a></td>
+<td class="hits"></td>
+<td class="source"><code>      end</code></td>
+</tr>
+<tr>
+<td class="line" id="L572"><a href="#L572">572</a></td>
+<td class="hits"></td>
+<td class="source"><code>    end</code></td>
+</tr>
+<tr>
+<td class="line" id="L573"><a href="#L573">573</a></td>
+<td class="hits"></td>
+<td class="source"><code>  end</code></td>
+</tr>
+<tr>
+<td class="line" id="L574"><a href="#L574">574</a></td>
+<td class="hits"></td>
+<td class="source"><code>end</code></td>
+</tr>
+</tbody>
+<thead>
+<tr>
+<th>Line</th>
+<th>Hits</th>
+<th>Source</th>
+</tr>
+</thead>
+</table>
+</body>
+</html>
