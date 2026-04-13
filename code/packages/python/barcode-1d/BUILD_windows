@@ -1,3 +1,4 @@
+echo Windows prerequisite refs for python/barcode-1d: ../paint-vm-metal-native ../paint-codec-png-native
 uv venv --quiet --clear
 uv pip install --python .venv/bin/python -e ../paint-instructions --quiet
 uv pip install --python .venv/bin/python -e ../barcode-layout-1d --quiet
