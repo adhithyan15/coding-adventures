@@ -8,7 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Adhithya Rajasekaran"]
   spec.summary       = "Tokenizes Python source code using a grammar-driven lexer"
   spec.description   = "A thin wrapper around the grammar-driven lexer engine that loads " \
-                        "python.tokens to tokenize Python source code from Ruby. " \
+                        "versioned python{version}.tokens grammars to tokenize Python " \
+                        "source code from Ruby. " \
                         "Demonstrates cross-language grammar reuse."
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"
   spec.license       = "MIT"
