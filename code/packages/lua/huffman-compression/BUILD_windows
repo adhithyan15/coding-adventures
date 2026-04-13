@@ -1,0 +1,3 @@
+luarocks show coding-adventures-huffman-tree 1>nul 2>nul || (cd ../huffman-tree && luarocks make --local --deps-mode=none coding-adventures-huffman-tree-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-huffman-compression-0.1.0-1.rockspec
+cd tests && set LUA_PATH=..\src\?.lua;..\src\?\init.lua;..\..\huffman-tree\src\?.lua;..\..\huffman-tree\src\?\init.lua;; && busted . --verbose --pattern=test_
