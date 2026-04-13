@@ -98,7 +98,6 @@ module CodingAdventures
 
         if original_length == 0
           # Empty input: LL tree has only symbol 256 (end-of-data), code "0".
-          header = [0, 1, 0].pack("NnN")[0, 8]  # pack N=4B, n=2B, n=2B
           header = [0].pack("N") + [1].pack("n") + [0].pack("n")
           ll_entry = [256, 1].pack("nC")
           bit_stream = "\x00".b
@@ -153,10 +152,10 @@ module CodingAdventures
 
             bits << ll_code_table[sym]
             # Extra bits for length, LSB-first.
-            extra_bits_count.times { |i| bits << (((extra_val >> i) & 1).to_s) }
+            extra_bits_count.times { |i| bits << ((extra_val >> i) & 1).to_s }
             bits << dist_code_table[dc]
             # Extra bits for distance, LSB-first.
-            dist_extra_bits.times { |i| bits << (((dist_extra_val >> i) & 1).to_s) }
+            dist_extra_bits.times { |i| bits << ((dist_extra_val >> i) & 1).to_s }
           end
         end
         # End-of-data symbol.
@@ -174,8 +173,8 @@ module CodingAdventures
           .sort_by { |sym, len| [len, sym] }
 
         header = [original_length].pack("N") +
-                 [ll_lengths.size].pack("n") +
-                 [dist_lengths.size].pack("n")
+          [ll_lengths.size].pack("n") +
+          [dist_lengths.size].pack("n")
 
         ll_bytes = ll_lengths.map { |sym, len| [sym, len].pack("nC") }.join
         dist_bytes = dist_lengths.map { |sym, len| [sym, len].pack("nC") }.join
@@ -309,7 +308,7 @@ module CodingAdventures
       def unpack_bits_lsb_first(data)
         bits = +""
         data.each_byte do |byte|
-          8.times { |i| bits << (((byte >> i) & 1).to_s) }
+          8.times { |i| bits << ((byte >> i) & 1).to_s }
         end
         bits
       end
