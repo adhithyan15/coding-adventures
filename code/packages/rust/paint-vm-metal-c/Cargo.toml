@@ -1,0 +1,12 @@
+[package]
+name = "paint-vm-metal-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the Metal Paint VM"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+paint-metal = { path = "../paint-metal" }
