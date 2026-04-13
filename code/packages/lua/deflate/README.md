@@ -1,16 +1,16 @@
-# deflate (Rust)
+# coding-adventures-deflate (Lua)
 
 **CMP05 — DEFLATE lossless compression (1996)**
 
 ## Usage
 
-```rust
-use deflate::{compress, decompress};
+```lua
+local deflate = require("coding_adventures.deflate")
 
-let data = b"hello hello hello world";
-let compressed = compress(data).unwrap();
-let original = decompress(&compressed).unwrap();
-assert_eq!(original, data);
+local data = "hello hello hello world"
+local compressed = deflate.compress(data)
+local original = deflate.decompress(compressed)
+assert(original == data)
 ```
 
 ## Wire Format

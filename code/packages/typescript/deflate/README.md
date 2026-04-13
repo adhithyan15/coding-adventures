@@ -1,16 +1,15 @@
-# deflate (Rust)
+# @coding-adventures/deflate
 
 **CMP05 — DEFLATE lossless compression (1996)**
 
 ## Usage
 
-```rust
-use deflate::{compress, decompress};
+```typescript
+import { compress, decompress } from "@coding-adventures/deflate";
 
-let data = b"hello hello hello world";
-let compressed = compress(data).unwrap();
-let original = decompress(&compressed).unwrap();
-assert_eq!(original, data);
+const data = new TextEncoder().encode("hello hello hello world");
+const compressed = compress(data);
+const original = decompress(compressed);
 ```
 
 ## Wire Format

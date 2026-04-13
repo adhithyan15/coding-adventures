@@ -1,16 +1,15 @@
-# deflate (Rust)
+# coding_adventures_deflate (Ruby)
 
 **CMP05 — DEFLATE lossless compression (1996)**
 
 ## Usage
 
-```rust
-use deflate::{compress, decompress};
+```ruby
+require "coding_adventures_deflate"
 
-let data = b"hello hello hello world";
-let compressed = compress(data).unwrap();
-let original = decompress(&compressed).unwrap();
-assert_eq!(original, data);
+data = "hello hello hello world"
+compressed = CodingAdventures::Deflate.compress(data)
+original = CodingAdventures::Deflate.decompress(compressed)
 ```
 
 ## Wire Format

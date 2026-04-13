@@ -1,16 +1,16 @@
-# deflate (Rust)
+# coding_adventures_deflate (Elixir)
 
 **CMP05 — DEFLATE lossless compression (1996)**
 
 ## Usage
 
-```rust
-use deflate::{compress, decompress};
+```elixir
+alias CodingAdventures.Deflate
 
-let data = b"hello hello hello world";
-let compressed = compress(data).unwrap();
-let original = decompress(&compressed).unwrap();
-assert_eq!(original, data);
+data = "hello hello hello world"
+compressed = Deflate.compress(data)
+original = Deflate.decompress(compressed)
+# original == data
 ```
 
 ## Wire Format
