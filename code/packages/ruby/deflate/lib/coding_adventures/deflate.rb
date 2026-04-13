@@ -232,7 +232,7 @@ module CodingAdventures
         end
 
         next_huffman_symbol = lambda do |rev_map|
-          acc = ""
+          acc = +""
           loop do
             acc << bits[bit_pos]
             bit_pos += 1
