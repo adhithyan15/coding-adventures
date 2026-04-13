@@ -2,6 +2,9 @@
 name = "deflate"
 version = "0.1.0"
 edition = "2021"
-description = "Zero-dependency deflate (RFC 1951) and zlib (RFC 1950) compression"
+description = "DEFLATE lossless compression algorithm (1996) — CMP05"
+license = "MIT"
 
 [dependencies]
+huffman-tree = { path = "../huffman-tree" }
+lzss = { path = "../lzss" }
