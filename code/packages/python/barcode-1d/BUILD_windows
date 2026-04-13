@@ -4,5 +4,5 @@ uv pip install --python .venv\Scripts\python.exe -e ../paint-instructions --quie
 uv pip install --python .venv\Scripts\python.exe -e ../barcode-layout-1d --quiet
 uv pip install --python .venv\Scripts\python.exe -e ../code39 --quiet
 uv pip install --python .venv\Scripts\python.exe -e ../pixel_container --quiet
-uv pip install --python .venv --no-deps -e .[dev] --quiet
+uv pip install --python .venv\Scripts\python.exe -e .[dev] --quiet
 .venv\Scripts\python.exe -m pytest tests -v
