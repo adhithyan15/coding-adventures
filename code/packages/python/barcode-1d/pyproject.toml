@@ -13,11 +13,13 @@ readme = "README.md"
 dependencies = [
     "coding-adventures-code39",
     "coding-adventures-pixel_container",
-    "coding-adventures-paint-vm-metal-native",
-    "coding-adventures-paint-codec-png-native",
 ]
 
 [project.optional-dependencies]
+native = [
+    "coding-adventures-paint-vm-metal-native",
+    "coding-adventures-paint-codec-png-native",
+]
 dev = ["pytest>=8.0", "pytest-cov>=5.0"]
 
 [tool.hatch.build.targets.wheel]
