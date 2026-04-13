@@ -1,1 +1,1 @@
-echo Skipping ruby/paint_codec_png_native on Windows -- mingw-ucrt Ruby native extension is crashing in CI; prerequisite refs: ../pixel_container
+bundle install --quiet && bundle exec rake compile && bundle exec rake test

@@ -49,7 +49,7 @@ fn main() {
 }
 
 fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
-    // All Ruby C API symbols used by ruby-bridge and gf256_native.
+    // All Ruby C API symbols used by ruby-bridge and paint_vm_metal_native.
     let symbols: &[(&str, bool)] = &[
         // ruby-bridge symbols:
         ("rb_define_module", false),
@@ -77,8 +77,8 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_eStandardError", true),
         ("rb_eArgError", true),
         ("rb_eRuntimeError", true),
-        // gf256_native-specific:
-        ("rb_define_const", false),
+        // paint_vm_metal_native-specific:
+        ("rb_str_new", false),
     ];
 
     let def_path = PathBuf::from(out_dir).join(format!("{}.def", so_name));
