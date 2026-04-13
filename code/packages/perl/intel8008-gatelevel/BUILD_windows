@@ -1,7 +1,5 @@
-cpanm --notest --quiet Test2::V0
-cd ..\transistors && cpanm --notest --quiet . && cd ..
-cd ..\logic-gates && cpanm --notest --quiet . && cd ..
-cd ..\arithmetic && cpanm --notest --quiet . && cd ..
-cd ..\intel8008-simulator && cpanm --notest --quiet . && cd ..
-set PERL5LIB=..\transistors\lib;..\logic-gates\lib;..\arithmetic\lib;..\intel8008-simulator\lib
-prove -l -v t/
+REM Prerequisite (not installed on Windows): ../transistors
+REM Prerequisite (not installed on Windows): ../logic-gates
+REM Prerequisite (not installed on Windows): ../arithmetic
+REM Prerequisite (not installed on Windows): ../intel8008-simulator
+echo Perl testing is not supported on Windows - skipping

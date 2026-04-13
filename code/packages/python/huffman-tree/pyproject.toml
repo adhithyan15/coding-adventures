@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-huffman-tree"
+version = "0.1.0"
+description = "Huffman tree data structure — optimal prefix-free codes via greedy min-heap construction"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+keywords = ["huffman", "compression", "data-structure", "algorithm", "education"]
+dependencies = [
+    "coding-adventures-heap",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Archiving :: Compression",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/coding_adventures_huffman_tree"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=coding_adventures_huffman_tree --cov-report=term-missing --cov-fail-under=90"
+
+[tool.coverage.run]
+source = ["coding_adventures_huffman_tree"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+ignore = ["ANN101", "ANN102"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
