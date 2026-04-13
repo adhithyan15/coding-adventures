@@ -33,8 +33,7 @@
 #![allow(non_snake_case, non_camel_case_types)]
 
 use perl_bridge::{
-    die, CV, IV, SV,
-    newSViv, sv_2iv,
+    die, xs_boot_finish, xs_bootstrap, CV, IV, SV, newSViv, sv_2iv,
 };
 use std::ffi::c_char;
 use std::panic::catch_unwind;
@@ -44,6 +43,7 @@ use std::panic::catch_unwind;
 // ---------------------------------------------------------------------------
 
 extern "C" {
+    #[link_name = "Perl_newXS"]
     fn newXS(name: *const c_char, subaddr: unsafe extern "C" fn(*mut CV), filename: *const c_char)
         -> *mut CV;
 }
@@ -293,8 +293,9 @@ extern "C" fn xs_inverse(_cv: *mut CV) {
 // ---------------------------------------------------------------------------
 
 #[no_mangle]
-pub unsafe extern "C" fn boot_CodingAdventures__GF256Native(_cv: *mut CV) {
+pub unsafe extern "C" fn boot_CodingAdventures__GF256Native(cv: *mut CV) {
     let file = b"GF256Native.so\0".as_ptr() as *const c_char;
+    let ax = xs_bootstrap(cv, file);
 
     newXS(b"CodingAdventures::GF256Native::add\0".as_ptr() as *const c_char,
           xs_add, file);
@@ -308,4 +309,5 @@ pub unsafe extern "C" fn boot_CodingAdventures__GF256Native(_cv: *mut CV) {
           xs_power, file);
     newXS(b"CodingAdventures::GF256Native::inverse\0".as_ptr() as *const c_char,
           xs_inverse, file);
+    xs_boot_finish(ax);
 }

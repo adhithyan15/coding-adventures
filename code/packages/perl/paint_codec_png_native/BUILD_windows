@@ -1,0 +1,1 @@
+echo Skipping perl/paint_codec_png_native on Windows -- Perl import library is not available
