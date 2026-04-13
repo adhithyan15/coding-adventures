@@ -28,9 +28,9 @@ the same tree, but with every node annotated with its resolved type.  Later
 stages (IR generation, optimization) can then trust those annotations without
 doing type inference again.
 
-    ──────────────────────────────────────────────────────────────────────────────
-    SCOPE: LANGUAGE SEMANTICS ONLY — NOT HARDWARE CONSTRAINTS
-    ──────────────────────────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────────────────────────────
+SCOPE: LANGUAGE SEMANTICS ONLY — NOT HARDWARE CONSTRAINTS
+──────────────────────────────────────────────────────────────────────────────
 
 ``TypeChecker`` enforces *language-level* invariants only.  Examples of what
 belongs here:
@@ -46,13 +46,13 @@ Examples of what does *not* belong here:
   ✗  "Total RAM usage must be ≤ 160 B" ← target-specific resource constraint
   ✗  "Register count must be ≤ 16"     ← CPU architecture detail
 
-    Hardware and ISA constraints belong in each backend's own validator (e.g.,
-    ``Intel4004Validator``, ``ArmValidator``), which runs *after* IR generation and
-    *before* code emission.  Keeping them out of the type checker makes the design
-    composable: the same Nib frontend can target Intel 4004, ARM, or a future ISA
-    without ever touching this layer.
+Hardware and ISA constraints belong in each backend's own validator (e.g.,
+``Intel4004Validator``, ``ArmValidator``), which runs *after* IR generation and
+*before* code emission.  Keeping them out of the type checker makes the design
+composable: the same Nib frontend can target Intel 4004, ARM, or a future ISA
+without ever touching this layer.
 
-    ──────────────────────────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────────────────────────────
 WHY A PROTOCOL?
 ──────────────────────────────────────────────────────────────────────────────
 
