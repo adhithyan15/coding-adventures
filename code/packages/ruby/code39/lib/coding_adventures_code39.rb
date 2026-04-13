@@ -1,24 +1,15 @@
 # frozen_string_literal: true
 
-require "coding_adventures_draw_instructions"
+require "coding_adventures_barcode_layout_1d"
 require_relative "coding_adventures/code39/version"
 
 module CodingAdventures
-  # Code 39 encoder that stops at a backend-neutral draw scene.
+  # Code 39 encoder that stops at a backend-neutral paint scene.
   module Code39
     module_function
 
-    DEFAULT_RENDER_CONFIG = {
-      narrow_unit: 4,
-      wide_unit: 12,
-      bar_height: 120,
-      quiet_zone_units: 10,
-      include_human_readable_text: true,
-    }.freeze
-
-    TEXT_MARGIN = 8
-    TEXT_FONT_SIZE = 16
-    TEXT_BLOCK_HEIGHT = TEXT_MARGIN + TEXT_FONT_SIZE + 4
+    DEFAULT_LAYOUT_CONFIG = CodingAdventures::BarcodeLayout1D::DEFAULT_BARCODE_1D_LAYOUT_CONFIG
+    DEFAULT_RENDER_CONFIG = DEFAULT_LAYOUT_CONFIG
 
     PATTERNS = {
       "0" => "bwbWBwBwb", "1" => "BwbWbwbwB", "2" => "bwBWbwbwB", "3" => "BwBWbwbwb",
@@ -33,6 +24,8 @@ module CodingAdventures
       "-" => "bWbwbwBwB", "." => "BWbwbwBwb", " " => "bWBwbwBwb", "$" => "bWbWbWbwb",
       "/" => "bWbWbwbWb", "+" => "bWbwbWbWb", "%" => "bwbWbWbWb", "*" => "bWbwBwBwb",
     }.freeze
+
+    BAR_SPACE_COLORS = %w[bar space bar space bar space bar space bar].freeze
 
     def normalize_code39(data)
       normalized = data.upcase
@@ -59,69 +52,42 @@ module CodingAdventures
 
     def expand_code39_runs(data)
       encoded = encode_code39(data)
-      colors = %w[bar space bar space bar space bar space bar]
       encoded.each_with_index.flat_map do |encoded_char, source_index|
-        runs = encoded_char[:pattern].chars.each_with_index.map do |element, index|
-          {
-            color: colors[index],
-            width: element == "W" ? "wide" : "narrow",
-            source_char: encoded_char[:char],
-            source_index: source_index,
-            is_inter_character_gap: false,
-          }
-        end
+        runs = CodingAdventures::BarcodeLayout1D.runs_from_width_pattern(
+          encoded_char[:pattern],
+          BAR_SPACE_COLORS,
+          source_char: encoded_char[:char],
+          source_index: source_index,
+        )
         if source_index < encoded.length - 1
           runs << {
             color: "space",
-            width: "narrow",
+            modules: 1,
             source_char: encoded_char[:char],
             source_index: source_index,
-            is_inter_character_gap: true,
+            role: "inter-character-gap",
+            metadata: {},
           }
         end
         runs
       end
     end
 
-    def draw_code39(data, config = DEFAULT_RENDER_CONFIG)
+    def layout_code39(data, config = DEFAULT_LAYOUT_CONFIG)
       normalized = normalize_code39(data)
-      quiet_zone_width = config[:quiet_zone_units] * config[:narrow_unit]
-      instructions = []
-      cursor_x = quiet_zone_width
-
-      expand_code39_runs(normalized).each do |run|
-        width = run[:width] == "wide" ? config[:wide_unit] : config[:narrow_unit]
-        if run[:color] == "bar"
-          instructions << CodingAdventures::DrawInstructions.draw_rect(
-            x: cursor_x,
-            y: 0,
-            width: width,
-            height: config[:bar_height],
-            metadata: { char: run[:source_char], index: run[:source_index] },
-          )
-        end
-        cursor_x += width
-      end
-
-      if config[:include_human_readable_text]
-        instructions << CodingAdventures::DrawInstructions.draw_text(
-          x: (cursor_x + quiet_zone_width) / 2,
-          y: config[:bar_height] + TEXT_MARGIN + TEXT_FONT_SIZE - 2,
-          value: normalized,
-          metadata: { role: "label" },
-        )
-      end
-
-      CodingAdventures::DrawInstructions.create_scene(
-        width: cursor_x + quiet_zone_width,
-        height: config[:bar_height] + (config[:include_human_readable_text] ? TEXT_BLOCK_HEIGHT : 0),
-        instructions: instructions,
-        metadata: { label: "Code 39 barcode for #{normalized}", symbology: "code39" },
+      CodingAdventures::BarcodeLayout1D.layout_barcode_1d(
+        expand_code39_runs(normalized),
+        config,
+        {
+          fill: "#000000",
+          background: "#ffffff",
+          metadata: { symbology: "code39", data: normalized },
+        },
       )
     end
 
-    def render_code39(data, renderer, config = DEFAULT_RENDER_CONFIG)
-      renderer.render(draw_code39(data, config))
+    def draw_code39(data, config = DEFAULT_LAYOUT_CONFIG)
+      layout_code39(data, config)
     end
   end
 end

@@ -1,9 +1,9 @@
 # code39
 
-Dependency-free Code 39 encoder that emits backend-neutral draw scenes.
+Dependency-free Code 39 encoder that emits backend-neutral paint scenes.
 
-This package deliberately stops at draw instructions so the same barcode logic
-can later feed SVG, PNG, Canvas, or terminal renderers.
+This package deliberately stops at `PaintScene` so the same barcode logic can
+later feed native Paint VMs, Canvas, SVG, or future image codecs.
 
 ## Development
 

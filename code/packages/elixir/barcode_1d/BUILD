@@ -1,0 +1,1 @@
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then cd ../paint_vm_metal_native && bash BUILD && cd ../paint_codec_png_native && bash BUILD && cd ../barcode_1d && mix deps.get --quiet && mix test --cover; else mix deps.get --quiet && mix test --cover; fi
