@@ -1,147 +1,81 @@
 import { describe, expect, it } from "vitest";
+
 import {
-  VERSION,
-  Barcode1DError,
-  InvalidBarcode1DConfigurationError,
-  DEFAULT_BARCODE_1D_RENDER_CONFIG,
-  computeBarcode1DLayout,
-  drawBarcode1D,
-  runsFromBinaryPattern,
-  runsFromWidthPattern,
-  totalModules,
-  type Barcode1DRun,
-} from "../src/index.js";
+  SUPPORTED_BARCODE_1D_SYMBOLOGIES,
+  getPaintBackend,
+  layoutBarcode1D,
+  renderBarcode1DToPng,
+  renderPaintSceneToPng,
+} from "../index.js";
 
-describe("VERSION", () => {
-  it("stays at 0.1.0", () => {
-    expect(VERSION).toBe("0.1.0");
-  });
-});
-
-describe("runsFromBinaryPattern()", () => {
-  it("coalesces adjacent modules into alternating runs", () => {
-    expect(
-      runsFromBinaryPattern("110100", {
-        sourceLabel: "start",
-        sourceIndex: -1,
-        role: "guard",
-      }),
-    ).toEqual<Barcode1DRun[]>([
-      { color: "bar", modules: 2, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-      { color: "space", modules: 1, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-      { color: "bar", modules: 1, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-      { color: "space", modules: 2, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-    ]);
-  });
-
-  it("rejects non-binary input", () => {
-    expect(() =>
-      runsFromBinaryPattern("10A1", {
-        sourceLabel: "bad",
-        sourceIndex: 0,
-        role: "data",
-      }),
-    ).toThrow(Barcode1DError);
-  });
-});
-
-describe("runsFromWidthPattern()", () => {
-  it("converts symbolic narrow and wide markers into numeric runs", () => {
-    expect(
-      runsFromWidthPattern("NWNNW", {
-        sourceLabel: "0",
-        sourceIndex: 0,
-        role: "data",
-      }),
-    ).toEqual<Barcode1DRun[]>([
-      { color: "bar", modules: 1, sourceLabel: "0", sourceIndex: 0, role: "data" },
-      { color: "space", modules: 3, sourceLabel: "0", sourceIndex: 0, role: "data" },
-      { color: "bar", modules: 1, sourceLabel: "0", sourceIndex: 0, role: "data" },
-      { color: "space", modules: 1, sourceLabel: "0", sourceIndex: 0, role: "data" },
-      { color: "bar", modules: 3, sourceLabel: "0", sourceIndex: 0, role: "data" },
+describe("SUPPORTED_BARCODE_1D_SYMBOLOGIES", () => {
+  it("lists the supported symbologies", () => {
+    expect(SUPPORTED_BARCODE_1D_SYMBOLOGIES).toEqual([
+      "code39",
+      "codabar",
+      "code128",
+      "ean-13",
+      "itf",
+      "upc-a",
     ]);
   });
 });
 
-describe("computeBarcode1DLayout()", () => {
-  it("computes total modules and symbol spans from explicit descriptors", () => {
-    const runs: Barcode1DRun[] = [
-      { color: "bar", modules: 1, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-      { color: "space", modules: 1, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-      { color: "bar", modules: 1, sourceLabel: "start", sourceIndex: -1, role: "guard" },
-      { color: "space", modules: 1, sourceLabel: "A", sourceIndex: 0, role: "data" },
-      { color: "bar", modules: 2, sourceLabel: "A", sourceIndex: 0, role: "data" },
-    ];
-
-    const layout = computeBarcode1DLayout(runs, {
-      quietZoneModules: 10,
-      symbols: [
-        { label: "start", modules: 3, sourceIndex: -1, role: "guard" },
-        { label: "A", modules: 3, sourceIndex: 0, role: "data" },
-      ],
+describe("layoutBarcode1D()", () => {
+  it("routes Code 39 through the shared layout pipeline", () => {
+    const scene = layoutBarcode1D({
+      symbology: "code39",
+      data: "ADHITHYA",
     });
 
-    expect(layout.contentModules).toBe(6);
-    expect(layout.totalModules).toBe(26);
-    expect(layout.symbolLayouts).toEqual([
-      { label: "start", startModule: 0, endModule: 3, sourceIndex: -1, role: "guard" },
-      { label: "A", startModule: 3, endModule: 6, sourceIndex: 0, role: "data" },
-    ]);
+    expect(scene.metadata?.symbology).toBe("code39");
+    expect(scene.instructions.length).toBeGreaterThan(0);
   });
 
-  it("rejects consecutive runs of the same color", () => {
-    expect(() =>
-      computeBarcode1DLayout([
-        { color: "bar", modules: 1, sourceLabel: "A", sourceIndex: 0, role: "data" },
-        { color: "bar", modules: 1, sourceLabel: "A", sourceIndex: 0, role: "data" },
-      ]),
-    ).toThrow(Barcode1DError);
+  it("passes Codabar guard options through", () => {
+    const scene = layoutBarcode1D({
+      symbology: "codabar",
+      data: "40156",
+      start: "B",
+      stop: "D",
+    });
+
+    expect(scene.metadata?.start).toBe("B");
+    expect(scene.metadata?.stop).toBe("D");
   });
 });
 
-describe("drawBarcode1D()", () => {
-  it("creates a draw scene with bars and human-readable text", () => {
-    const runs = runsFromBinaryPattern("101", {
-      sourceLabel: "start",
-      sourceIndex: -1,
-      role: "guard",
-    });
+describe("native rendering", () => {
+  it("reports the active paint backend for this platform", () => {
+    const backend = getPaintBackend();
 
-    const scene = drawBarcode1D(runs, {
-      humanReadableText: "012345",
-      label: "Test barcode",
-      metadata: { symbology: "test" },
-    });
-
-    expect(scene.width).toBe((DEFAULT_BARCODE_1D_RENDER_CONFIG.quietZoneModules * 2 + 3) * DEFAULT_BARCODE_1D_RENDER_CONFIG.moduleWidth);
-    expect(scene.instructions).toHaveLength(3);
-    expect(scene.metadata?.label).toBe("Test barcode");
-    expect(scene.metadata?.symbology).toBe("test");
+    if (process.platform === "darwin") {
+      expect(backend).toBe("paint-metal");
+    } else if (process.platform === "win32") {
+      expect(backend).toBe("paint-vm-direct2d");
+    } else {
+      expect(backend).toBe("unsupported");
+    }
   });
 
-  it("rejects invalid render config", () => {
-    const runs = runsFromBinaryPattern("101", {
-      sourceLabel: "start",
-      sourceIndex: -1,
-      role: "guard",
+  it("renders a PaintScene directly to PNG bytes", () => {
+    const scene = layoutBarcode1D({
+      symbology: "code39",
+      data: "ADHITHYA",
+    });
+    const png = renderPaintSceneToPng(scene);
+
+    expect(Buffer.isBuffer(png)).toBe(true);
+    expect(Array.from(png.subarray(0, 8))).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
+  });
+
+  it("renders a high-level barcode request to PNG bytes", () => {
+    const png = renderBarcode1DToPng({
+      symbology: "upc-a",
+      data: "03600029145",
     });
 
-    expect(() =>
-      drawBarcode1D(runs, {
-        renderConfig: { moduleWidth: 0 },
-      }),
-    ).toThrow(InvalidBarcode1DConfigurationError);
-  });
-});
-
-describe("totalModules()", () => {
-  it("adds module widths", () => {
-    expect(
-      totalModules([
-        { color: "bar", modules: 1, sourceLabel: "A", sourceIndex: 0, role: "data" },
-        { color: "space", modules: 2, sourceLabel: "A", sourceIndex: 0, role: "data" },
-        { color: "bar", modules: 3, sourceLabel: "A", sourceIndex: 0, role: "data" },
-      ]),
-    ).toBe(6);
+    expect(Buffer.isBuffer(png)).toBe(true);
+    expect(png.length).toBeGreaterThan(8);
   });
 });

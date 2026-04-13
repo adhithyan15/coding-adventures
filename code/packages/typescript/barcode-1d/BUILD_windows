@@ -1,0 +1,4 @@
+npm ci --quiet
+cargo build --release --manifest-path Cargo.toml
+if exist target\release\barcode_1d_native_node.dll copy target\release\barcode_1d_native_node.dll barcode_1d_native_node.node
+npx vitest run --coverage

@@ -1,4 +1,3 @@
-cd ../draw-instructions && npm install --silent
-cd ../draw-instructions-svg && npm install --silent
-npm install --silent
+cd ../barcode-layout-1d && npm ci --quiet
+npm ci --quiet
 npx vitest run --coverage
