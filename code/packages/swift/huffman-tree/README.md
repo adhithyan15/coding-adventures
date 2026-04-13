@@ -22,6 +22,9 @@ Add to your `Package.swift`:
 .package(url: "https://github.com/adhithyan15/coding-adventures.git", from: "0.1.0")
 ```
 
+This package depends on the standalone `Heap` package for the shared min-heap
+implementation used during tree construction.
+
 ## Usage
 
 ```swift

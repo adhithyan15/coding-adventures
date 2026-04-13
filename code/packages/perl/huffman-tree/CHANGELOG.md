@@ -8,9 +8,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Initial implementation of `CodingAdventures::HuffmanTree` (DT27).
-- Embedded min-heap (array-based binary min-heap, indices 0-based) with
-  4-tuple priority comparator using Perl's floating-point infinity (`9**9**9`)
-  as the sentinel for unused tie-breaking fields.
+- Depends on `CodingAdventures::Heap` for the comparator-based min-heap used
+  during deterministic greedy construction.
 - `build(\@weights)` — greedy construction from `[[$symbol, $freq], ...]` pairs
   with four-level tie-breaking rules matching the Python reference implementation.
 - `code_table()` — returns `{symbol => bitstring}` hashref for all symbols.

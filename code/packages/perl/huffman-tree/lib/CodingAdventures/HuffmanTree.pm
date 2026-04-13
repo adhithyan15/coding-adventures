@@ -2,6 +2,7 @@ package CodingAdventures::HuffmanTree;
 
 use strict;
 use warnings;
+use CodingAdventures::Heap;
 
 our $VERSION = '0.1.0';
 
@@ -106,125 +107,31 @@ when moving to a longer length.
 
 =back
 
-=head2 Embedded Min-Heap
+=head2 Heap Dependency
 
-Perl does not have a built-in priority queue. This module embeds a simple
-array-based binary min-heap with a custom 4-tuple comparator. Each heap item
-stores a priority tuple C<[$weight, $leaf_flag, $sym_or_inf, $order_or_inf]>
-alongside the node data.
-
-A binary heap uses index arithmetic:
-  Root at index 0.
-  Parent of index i is at int((i-1)/2).
-  Left child of i at 2*i+1, right child at 2*i+2.
-
-Push: append, sift up.  Pop: swap root with last, shrink, sift down.
-Both O(log n).
+This module depends on L<CodingAdventures::Heap> for the shared min-heap used
+during greedy construction. Heap items are stored as C<[$priority, $node]>
+pairs, and the comparator compares the four-element priority tuples
+lexicographically.
 
 =cut
-
-# ---------------------------------------------------------------------------
-# Embedded Min-Heap
-# ---------------------------------------------------------------------------
-
-# _heap_new returns a new empty heap (arrayref of [$priority, $node] pairs).
-sub _heap_new {
-    return { items => [], size => 0 };
-}
-
-# _heap_cmp compares two 4-element priority tuples lexicographically.
-#
-# A priority tuple is: [$weight, $leaf_flag, $sym_or_inf, $order_or_inf]
-#
-# Returns true (1) if tuple $a has higher priority than $b (a < b in min terms).
-# Uses Inf (9**9**9) as the "infinity" sentinel for unused fields, which Perl
-# compares as a very large floating-point number.
-sub _heap_cmp {
-    my ($a, $b) = @_;
-    for my $i (0..3) {
-        return 1 if $a->[$i] < $b->[$i];
-        return 0 if $a->[$i] > $b->[$i];
-    }
-    return 0;  # equal
-}
-
-# _heap_sift_up restores the heap property after inserting at the given index.
-sub _heap_sift_up {
-    my ($h, $i) = @_;
-    my $items = $h->{items};
-    while ($i > 0) {
-        my $parent = int(($i - 1) / 2);
-        if (_heap_cmp($items->[$i][0], $items->[$parent][0])) {
-            @{$items}[$i, $parent] = @{$items}[$parent, $i];
-            $i = $parent;
-        } else {
-            last;
-        }
-    }
-}
-
-# _heap_sift_down restores the heap property after removing the root.
-sub _heap_sift_down {
-    my ($h, $i) = @_;
-    my $items = $h->{items};
-    my $size  = $h->{size};
-    while (1) {
-        my $left     = 2 * $i + 1;
-        my $right    = 2 * $i + 2;
-        my $smallest = $i;
-
-        if ($left < $size && _heap_cmp($items->[$left][0], $items->[$smallest][0])) {
-            $smallest = $left;
-        }
-        if ($right < $size && _heap_cmp($items->[$right][0], $items->[$smallest][0])) {
-            $smallest = $right;
-        }
-
-        last if $smallest == $i;
-
-        @{$items}[$i, $smallest] = @{$items}[$smallest, $i];
-        $i = $smallest;
-    }
-}
-
-# _heap_push adds an item to the heap.
-#
-# @param $h         (hashref) heap state.
-# @param $priority  (arrayref) 4-element priority tuple.
-# @param $node      (hashref)  node data.
-sub _heap_push {
-    my ($h, $priority, $node) = @_;
-    $h->{items}[$h->{size}] = [$priority, $node];
-    $h->{size}++;
-    _heap_sift_up($h, $h->{size} - 1);
-}
-
-# _heap_pop removes and returns the highest-priority item.
-#
-# @param $h  (hashref) heap state.
-# @return ($priority, $node) or undef if empty.
-sub _heap_pop {
-    my ($h) = @_;
-    return undef if $h->{size} == 0;
-    my $top = $h->{items}[0];
-    $h->{size}--;
-    if ($h->{size} > 0) {
-        $h->{items}[0] = $h->{items}[$h->{size}];
-        $h->{items}[$h->{size}] = undef;
-        _heap_sift_down($h, 0);
-    } else {
-        $h->{items}[0] = undef;
-    }
-    return ($top->[0], $top->[1]);
-}
-
-# ---------------------------------------------------------------------------
-# Node Constructors
-# ---------------------------------------------------------------------------
 
 # _INF is the infinity sentinel used for unused priority tuple fields.
 # In Perl, 9**9**9 evaluates to the floating-point infinity.
 use constant _INF => 9**9**9;
+
+sub _entry_compare {
+    my ($left, $right) = @_;
+    my $a = $left->[0];
+    my $b = $right->[0];
+
+    for my $i (0..3) {
+        return -1 if $a->[$i] < $b->[$i];
+        return 1 if $a->[$i] > $b->[$i];
+    }
+
+    return 0;
+}
 
 # _new_leaf creates a leaf node.
 #
@@ -312,26 +219,28 @@ sub build {
             if $pair->[1] <= 0;
     }
 
-    my $heap = _heap_new();
+    my $heap = CodingAdventures::Heap::MinHeap->new(\&_entry_compare);
 
     # Seed the heap with one leaf per symbol.
     for my $pair (@$weights) {
         my $leaf = _new_leaf($pair->[0], $pair->[1]);
-        _heap_push($heap, _node_priority($leaf), $leaf);
+        $heap->push([_node_priority($leaf), $leaf]);
     }
 
     my $order_counter = 0;
 
     # Merge phase: pop two smallest, create internal, push back.
-    while ($heap->{size} > 1) {
-        my (undef, $left)  = _heap_pop($heap);
-        my (undef, $right) = _heap_pop($heap);
+    while ($heap->size() > 1) {
+        my $left_entry  = $heap->pop();
+        my $right_entry = $heap->pop();
+        my $left = $left_entry->[1];
+        my $right = $right_entry->[1];
         my $internal = _new_internal($left, $right, $order_counter);
         $order_counter++;
-        _heap_push($heap, _node_priority($internal), $internal);
+        $heap->push([_node_priority($internal), $internal]);
     }
 
-    my (undef, $root) = _heap_pop($heap);
+    my $root = $heap->pop()->[1];
 
     return bless {
         _root         => $root,

@@ -14,9 +14,15 @@ let package = Package(
     products: [
         .library(name: "HuffmanTree", targets: ["HuffmanTree"]),
     ],
+    dependencies: [
+        .package(path: "../heap"),
+    ],
     targets: [
         .target(
             name: "HuffmanTree",
+            dependencies: [
+                .product(name: "Heap", package: "heap"),
+            ],
             path: "Sources/HuffmanTree"
         ),
         .testTarget(

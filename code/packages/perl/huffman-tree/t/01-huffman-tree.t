@@ -1,7 +1,26 @@
 use strict;
 use warnings;
-use Test2::V0;
+use Test::More;
 use CodingAdventures::HuffmanTree;
+no warnings 'redefine';
+
+sub is ($$;$) {
+    my ($got, $expected, $name) = @_;
+    if (ref($got) || ref($expected)) {
+        return Test::More::is_deeply($got, $expected, $name);
+    }
+    return Test::More::is($got, $expected, $name);
+}
+
+sub dies (&) {
+    my ($code) = @_;
+    return !eval { $code->(); 1 };
+}
+
+sub lives (&) {
+    my ($code) = @_;
+    return eval { $code->(); 1 } ? 1 : 0;
+}
 
 # ── Build validation ──────────────────────────────────────────────────────────
 

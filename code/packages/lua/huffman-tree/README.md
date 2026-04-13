@@ -88,6 +88,11 @@ Tie-breaking (for identical output across all implementations):
 3. Lower symbol value among equal-weight leaves.
 4. Earlier-created (FIFO) among equal-weight internal nodes.
 
+## Dependency
+
+This package depends on `coding-adventures-heap` for the standalone `MinHeap`
+used during tree construction.
+
 ## API
 
 | Function | Description |
@@ -117,7 +122,9 @@ Tie-breaking (for identical output across all implementations):
 ## Running Tests
 
 ```bash
-cd tests && LUA_PATH="../src/?.lua;../src/?/init.lua;;" busted . --verbose --pattern=test_
+luarocks show coding-adventures-heap 1>/dev/null 2>/dev/null || (cd ../heap && luarocks make --local --deps-mode=none coding-adventures-heap-0.1.0-1.rockspec)
+luarocks make --local --deps-mode=none coding-adventures-huffman-tree-0.1.0-1.rockspec
+cd tests && LUA_PATH="../src/?.lua;../src/?/init.lua;../../heap/src/?.lua;../../heap/src/?/init.lua;;" busted . --verbose --pattern=test_
 ```
 
 ## License

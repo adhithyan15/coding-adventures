@@ -20,6 +20,9 @@ frequency distribution.
 cpanm CodingAdventures::HuffmanTree
 ```
 
+Tree construction uses the separate `CodingAdventures::Heap` package for the
+shared min-heap implementation.
+
 ## Usage
 
 ```perl

@@ -8,8 +8,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Initial implementation of `CodingAdventures.HuffmanTree` (DT27).
-- Embedded min-heap (array-based binary heap) with 4-tuple priority comparator
-  for deterministic tie-breaking: `{weight, leaf_flag, symbol_or_huge, order_or_huge}`.
+- Depends on `coding-adventures-heap` for the comparator-based min-heap used
+  during deterministic greedy construction.
 - `HuffmanTree.build(weights)` — greedy construction from `{{symbol, freq}, ...}` pairs
   with four-level tie-breaking rules identical to the Python reference implementation.
 - `tree:code_table()` — returns `{[symbol] = bitstring}` for all symbols.

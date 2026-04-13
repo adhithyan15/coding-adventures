@@ -12,6 +12,7 @@
 // "--.." (four symbols). The designers knew "E" is the most common letter in
 // English so they gave it the shortest code. Huffman's algorithm does this
 // automatically and optimally for any alphabet with any frequency distribution.
+import Heap
 //
 // ============================================================
 // Algorithm: Greedy construction via min-heap
@@ -64,131 +65,13 @@
 // length table, not the tree, saving space.
 //
 // ============================================================
-// Embedded Min-Heap
+// Heap Package
 // ============================================================
 //
-// Swift does not have a built-in min-priority queue. This module embeds a
-// private `MinHeap<T>` struct with a custom comparator closure.
-//
-// A binary heap uses index arithmetic on an array:
-//   Root at index 0.
-//   Parent of index i: (i - 1) / 2
-//   Left child of i:   2*i + 1
-//   Right child of i:  2*i + 2
-//
-// Push: append to the end, then sift up (swap with parent while smaller).
-// Pop:  replace root with last element, shrink, sift down (swap with smaller
-//       child while larger than either child).
-//
-// Both operations are O(log n).
+// This package depends on the standalone Heap package for the generic min-heap
+// used during greedy construction. Heap items are stored as `(PriorityKey, Node)`
+// pairs so the Huffman-specific tie-breaking remains local to this module.
 // ============================================================================
-
-// MARK: - Embedded Min-Heap
-
-/// A generic min-heap with a custom comparator.
-///
-/// Elements are stored in an array using the standard binary heap layout.
-/// The comparator defines the ordering: `isHigherPriority(a, b)` should
-/// return `true` when `a` should be popped before `b`.
-///
-/// Example usage:
-/// ```swift
-/// var heap = MinHeap<Int> { $0 < $1 }
-/// heap.push(5)
-/// heap.push(2)
-/// heap.pop()  // returns 2
-/// ```
-private struct MinHeap<T> {
-    /// The raw storage array. Index 0 is the heap root.
-    private var storage: [T] = []
-
-    /// The comparator: returns `true` if `a` has higher priority than `b`.
-    private let isHigherPriority: (T, T) -> Bool
-
-    /// Creates an empty heap with the given priority comparator.
-    init(isHigherPriority: @escaping (T, T) -> Bool) {
-        self.isHigherPriority = isHigherPriority
-    }
-
-    /// The number of elements currently in the heap.
-    var count: Int { storage.count }
-
-    /// Returns true when the heap contains no elements.
-    var isEmpty: Bool { storage.isEmpty }
-
-    // MARK: - Private index helpers
-
-    /// Returns the index of the parent of `i`. Undefined for `i == 0`.
-    private func parentIndex(_ i: Int) -> Int { (i - 1) / 2 }
-
-    /// Returns the index of the left child of `i`.
-    private func leftIndex(_ i: Int) -> Int { 2 * i + 1 }
-
-    /// Returns the index of the right child of `i`.
-    private func rightIndex(_ i: Int) -> Int { 2 * i + 2 }
-
-    // MARK: - Push
-
-    /// Inserts a new element into the heap.
-    ///
-    /// Appends to the end and sifts up to restore the heap property.
-    /// Time: O(log n).
-    mutating func push(_ element: T) {
-        storage.append(element)
-        siftUp(from: storage.count - 1)
-    }
-
-    /// Restores the heap property by moving the element at `index` up
-    /// toward the root as long as it has higher priority than its parent.
-    private mutating func siftUp(from index: Int) {
-        var i = index
-        while i > 0 {
-            let parent = parentIndex(i)
-            if isHigherPriority(storage[i], storage[parent]) {
-                storage.swapAt(i, parent)
-                i = parent
-            } else {
-                break
-            }
-        }
-    }
-
-    // MARK: - Pop
-
-    /// Removes and returns the element with the highest priority.
-    ///
-    /// Moves the last element to the root and sifts down to restore the heap.
-    /// Time: O(log n).
-    ///
-    /// - Returns: The highest-priority element, or `nil` if empty.
-    mutating func pop() -> T? {
-        guard !storage.isEmpty else { return nil }
-        if storage.count == 1 { return storage.removeFirst() }
-        let top = storage[0]
-        storage[0] = storage.removeLast()
-        siftDown(from: 0)
-        return top
-    }
-
-    /// Restores the heap property by moving the element at `index` down
-    /// toward the leaves as long as a child has higher priority.
-    private mutating func siftDown(from index: Int) {
-        var i = index
-        let n = storage.count
-        while true {
-            let left  = leftIndex(i)
-            let right = rightIndex(i)
-            var best  = i
-
-            if left  < n && isHigherPriority(storage[left],  storage[best]) { best = left  }
-            if right < n && isHigherPriority(storage[right], storage[best]) { best = right }
-
-            if best == i { break }
-            storage.swapAt(i, best)
-            i = best
-        }
-    }
-}
 
 // MARK: - Priority Key
 

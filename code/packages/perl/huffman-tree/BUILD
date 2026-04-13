@@ -1,2 +1,1 @@
-cpanm --installdeps --quiet .
-prove -l -v t/
+PERL5LIB=$(cd ../heap && pwd)/lib:${PERL5LIB:-} prove -l -v t/

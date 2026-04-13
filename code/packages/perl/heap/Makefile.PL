@@ -3,14 +3,13 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME             => 'CodingAdventures::HuffmanTree',
-    VERSION_FROM     => 'lib/CodingAdventures/HuffmanTree.pm',
-    ABSTRACT         => 'Huffman Tree optimal prefix-free entropy coding — DT27',
+    NAME             => 'CodingAdventures::Heap',
+    VERSION_FROM     => 'lib/CodingAdventures/Heap.pm',
+    ABSTRACT         => 'Comparator-based binary min-heaps and max-heaps',
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
     PREREQ_PM        => {
-        'CodingAdventures::Heap' => 0,
     },
     META_MERGE       => {
         'meta-spec' => { version => 2 },

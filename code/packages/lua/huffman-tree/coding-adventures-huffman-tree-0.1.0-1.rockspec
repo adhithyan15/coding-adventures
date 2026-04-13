@@ -9,6 +9,7 @@ description = {
 }
 dependencies = {
     "lua >= 5.4",
+    "coding-adventures-heap >= 0.1.0",
 }
 build = {
     type = "builtin",
