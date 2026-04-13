@@ -105,8 +105,8 @@ module CodingAdventures
         end
 
         # Pass 1: LZSS tokenization.
-        bytes = data.bytes
-        tokens = CodingAdventures::LZSS::Compressor.encode(bytes)
+        # Compressor.encode expects a binary String and calls .bytes internally.
+        tokens = CodingAdventures::LZSS::Compressor.encode(data)
 
         # Pass 2a: Tally frequencies.
         ll_freq = Hash.new(0)
