@@ -1,0 +1,7 @@
+uv venv --quiet --clear
+uv pip install --python .venv/bin/python -e ../paint-instructions --quiet
+uv pip install --python .venv/bin/python -e ../barcode-layout-1d --quiet
+uv pip install --python .venv/bin/python -e ../code39 --quiet
+uv pip install --python .venv/bin/python -e ../pixel_container --quiet
+uv pip install --python .venv/bin/python -e ".[dev]" --quiet
+if [ -f .venv/Scripts/python.exe ]; then .venv/Scripts/python.exe -m pytest tests/ -v; else .venv/bin/python -m pytest tests/ -v; fi

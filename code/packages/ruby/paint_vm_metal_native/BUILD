@@ -1,0 +1,1 @@
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then (cd ext/paint_vm_metal_native && ruby extconf.rb && make) && ruby -Ilib -I../paint_instructions/lib -I../pixel_container/lib test/paint_vm_metal_native_test.rb; else echo Skipping ruby/paint_vm_metal_native on non-macOS-arm64; fi
