@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.0"
 
   spec.add_dependency "coding-adventures-huffman-tree", "~> 0.1"
-  spec.add_dependency "coding-adventures-lzss",         "~> 0.1"
+  spec.add_dependency "coding_adventures_lzss",         "~> 0.1"
 
   spec.add_development_dependency "minitest",  "~> 5.0"
   spec.add_development_dependency "rake"

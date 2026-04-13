@@ -198,12 +198,12 @@ sub compress {
     }
 
     # Pass 1: LZSS tokenization.
-    my @data_bytes = unpack('C*', $data);
-    my $tokens = encode(\@data_bytes);
+    # encode() takes a byte string (not an array ref) and returns a list of tokens.
+    my @tokens = encode($data);
 
     # Pass 2a: Tally frequencies.
     my (%ll_freq, %dist_freq);
-    for my $tok (@$tokens) {
+    for my $tok (@tokens) {
         if ($tok->{kind} eq 'literal') {
             $ll_freq{$tok->{byte}}++;
         } else {
@@ -231,7 +231,7 @@ sub compress {
 
     # Pass 2c: Encode token stream to bit string.
     my $bits = '';
-    for my $tok (@$tokens) {
+    for my $tok (@tokens) {
         if ($tok->{kind} eq 'literal') {
             $bits .= $ll_code_table->{$tok->{byte}};
         } else {

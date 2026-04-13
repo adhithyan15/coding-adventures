@@ -517,6 +517,88 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
 }
 
 // ---------------------------------------------------------------------------
+// zlib compatibility shim
+// ---------------------------------------------------------------------------
+//
+// The rust/png package (and other packages) depend on `deflate::zlib_compress`,
+// which was part of the original zero-dependency deflate implementation.
+// We provide it here as a stored-block DEFLATE stream wrapped in a zlib envelope
+// (RFC 1950). Stored blocks (BTYPE=00) are always RFC 1951-compatible and require
+// no Huffman coding — the data is copied verbatim with a minimal block header.
+//
+// zlib envelope:
+//   [CMF=0x78][FLG=0x9C]   — deflate method, default compression
+//   [DEFLATE data]          — one or more stored blocks
+//   [Adler-32 checksum BE]  — integrity check over the uncompressed data
+
+/// Compute Adler-32 checksum (RFC 1950 §2.2).
+pub fn adler32(data: &[u8]) -> u32 {
+    const MOD_ADLER: u32 = 65521;
+    let (mut a, mut b) = (1u32, 0u32);
+    for &byte in data {
+        a = (a + byte as u32) % MOD_ADLER;
+        b = (b + a) % MOD_ADLER;
+    }
+    (b << 16) | a
+}
+
+/// Compress `data` into a raw (no-header) DEFLATE stream using stored blocks.
+///
+/// Stored blocks have BTYPE=00 and copy data verbatim; every standard DEFLATE
+/// decompressor (zlib, zstd, etc.) handles them. Blocks are limited to 65535
+/// bytes each per RFC 1951 §3.2.4.
+fn deflate_compress_stored(data: &[u8]) -> Vec<u8> {
+    // Each stored block: [BFINAL+BTYPE byte][LEN 2B LE][NLEN 2B LE][data]
+    // BTYPE=00, BFINAL=1 only for the last block.
+    let mut out = Vec::new();
+
+    if data.is_empty() {
+        // Empty stored block: BFINAL=1, BTYPE=00, LEN=0, NLEN=0xFFFF.
+        out.extend_from_slice(&[0x01, 0x00, 0x00, 0xFF, 0xFF]);
+        return out;
+    }
+
+    let chunks: Vec<&[u8]> = data.chunks(65535).collect();
+    let n = chunks.len();
+    for (i, chunk) in chunks.iter().enumerate() {
+        let bfinal: u8 = if i + 1 == n { 1 } else { 0 };
+        let btype: u8 = 0; // stored
+        // First byte: bits 0=BFINAL, bits 1-2=BTYPE, rest=0.
+        out.push(bfinal | (btype << 1));
+        let len = chunk.len() as u16;
+        let nlen = !len;
+        out.push((len & 0xFF) as u8);
+        out.push((len >> 8) as u8);
+        out.push((nlen & 0xFF) as u8);
+        out.push((nlen >> 8) as u8);
+        out.extend_from_slice(chunk);
+    }
+    out
+}
+
+/// Compress `data` using the zlib format (RFC 1950).
+///
+/// Returns: [CMF=0x78][FLG=0x9C][stored DEFLATE blocks][Adler-32 BE 4 bytes].
+///
+/// This uses stored (non-compressed) DEFLATE blocks, which are always valid
+/// per RFC 1951. The output is decompressable by any zlib-compatible library.
+///
+/// Note: For CMP05 (educational) wire-format compression, use `compress` instead.
+pub fn zlib_compress(data: &[u8]) -> Vec<u8> {
+    let mut out = Vec::new();
+    // zlib header: CMF=0x78 (deflate, window=32768), FLG=0x9C (no dict, lvl=6).
+    // (CMF * 256 + FLG) must be divisible by 31: 0x789C = 30876 = 996 × 31. ✓
+    out.extend_from_slice(&[0x78, 0x9C]);
+    out.extend_from_slice(&deflate_compress_stored(data));
+    let checksum = adler32(data);
+    out.push((checksum >> 24) as u8);
+    out.push((checksum >> 16) as u8);
+    out.push((checksum >> 8) as u8);
+    out.push(checksum as u8);
+    out
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 

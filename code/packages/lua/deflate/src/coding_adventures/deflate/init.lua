@@ -242,7 +242,8 @@ function M.compress(data)
   end
 
   -- Pass 1: LZSS tokenization.
-  local tokens = LZSS.encode(data)
+  -- encode_string accepts a Lua string (encode takes a byte-array table).
+  local tokens = LZSS.encode_string(data)
 
   -- Pass 2a: Tally frequencies.
   local ll_freq = {}
