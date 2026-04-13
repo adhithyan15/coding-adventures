@@ -98,7 +98,7 @@ class TestPKCS7Padding:
         """Unpadding with mismatched padding bytes raises ValueError."""
         # Last byte says 3, but padding bytes don't match
         bad = b"0123456789abc" + bytes([3, 2, 3])
-        with pytest.raises(ValueError, match="Invalid padding"):
+        with pytest.raises(ValueError, match="Invalid PKCS#7 padding"):
             pkcs7_unpad(bad)
 
     def test_unpad_zero_padding_value(self) -> None:
