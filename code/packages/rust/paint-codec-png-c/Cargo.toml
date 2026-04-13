@@ -1,0 +1,12 @@
+[package]
+name = "paint-codec-png-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the PNG paint codec"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+paint-codec-png = { path = "../paint-codec-png" }
+paint-instructions = { path = "../paint-instructions" }

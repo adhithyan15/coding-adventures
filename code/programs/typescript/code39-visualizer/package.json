@@ -13,8 +13,9 @@
   },
   "dependencies": {
     "@coding-adventures/code39": "file:../../../packages/typescript/code39",
-    "@coding-adventures/draw-instructions-svg": "file:../../../packages/typescript/draw-instructions-svg",
     "@coding-adventures/lattice-transpiler": "file:../../../packages/typescript/lattice-transpiler",
+    "@coding-adventures/paint-vm-canvas": "file:../../../packages/typescript/paint-vm-canvas",
+    "@coding-adventures/paint-vm-svg": "file:../../../packages/typescript/paint-vm-svg",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

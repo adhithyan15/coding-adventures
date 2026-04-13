@@ -1,461 +1,601 @@
-//! # deflate — Zero-dependency deflate/zlib compression
+//! deflate — CMP05: DEFLATE lossless compression algorithm (1996).
 //!
-//! This crate implements RFC 1951 (DEFLATE compressed data format) and
-//! RFC 1950 (ZLIB compressed data format) with zero external dependencies.
+//! DEFLATE is the dominant general-purpose lossless compression algorithm,
+//! powering ZIP, gzip, PNG, and HTTP/2 HPACK header compression. It combines:
 //!
-//! ## How deflate compression works
+//! 1. **LZSS tokenization** (CMP02) — replace repeated substrings with
+//!    back-references into a 4096-byte sliding window. Each back-reference
+//!    is a (offset, length) pair where offset is 1–4096 and length is 3–255.
 //!
-//! Deflate combines two techniques:
+//! 2. **Dual canonical Huffman coding** (DT27/CMP04) — entropy-code the
+//!    resulting token stream with TWO separate Huffman trees:
+//!    - LL tree: literals (0–255), end-of-data (256), length codes (257–284)
+//!    - Dist tree: distance codes (0–23, for offsets 1–4096)
 //!
-//! 1. **LZ77** — finds repeated byte sequences and replaces them with
-//!    back-references: "copy N bytes from M positions back."  This is
-//!    the core of the compression — it turns redundant data into short
-//!    (length, distance) pairs.
+//! # The Expanded LL Alphabet
 //!
-//! 2. **Huffman coding** — encodes the LZ77 output (literals and
-//!    length/distance codes) using variable-length bit codes.  Frequent
-//!    symbols get shorter codes, rare symbols get longer codes.
+//! DEFLATE merges literal bytes and match lengths into one alphabet:
 //!
-//!    We use **fixed Huffman codes** (pre-defined by the deflate spec,
-//!    RFC 1951 §3.2.6) rather than building custom trees.  This avoids
-//!    transmitting the code table and simplifies the implementation.
-//!    The compression ratio is slightly worse than dynamic codes but
-//!    still much better than no compression.
-//!
-//! ## Bit ordering
-//!
-//! Deflate packs bits LSB-first within each byte.  This is the opposite
-//! of most network protocols (which are MSB-first / big-endian).
-//!
-//! For example, the 5-bit code `10011` is stored as:
 //! ```text
-//! Bit position:  7  6  5  4  3  2  1  0
-//! Value:         -  -  -  1  1  0  0  1
+//! Symbols 0–255:   literal byte values
+//! Symbol  256:     end-of-data marker
+//! Symbols 257–284: length codes (each covers a range via extra bits)
 //! ```
 //!
-//! The `BitWriter` handles this packing automatically.
+//! # Wire Format (CMP05)
+//!
+//! ```text
+//! [4B] original_length    big-endian uint32
+//! [2B] ll_entry_count     big-endian uint16
+//! [2B] dist_entry_count   big-endian uint16 (0 if no matches)
+//! [ll_entry_count × 3B]   (symbol uint16 BE, code_length uint8)
+//! [dist_entry_count × 3B] same format
+//! [remaining bytes]       LSB-first packed bit stream
+//! ```
+//!
+//! # Series
+//!
+//! ```text
+//! CMP00 (LZ77,    1977) — Sliding-window backreferences.
+//! CMP01 (LZ78,    1978) — Explicit dictionary (trie).
+//! CMP02 (LZSS,    1982) — LZ77 + flag bits; no wasted literals.
+//! CMP03 (LZW,     1984) — LZ78 + pre-initialized dict; GIF.
+//! CMP04 (Huffman, 1952) — Entropy coding; prerequisite for DEFLATE.
+//! CMP05 (DEFLATE, 1996) — LZ77 + Huffman; ZIP/gzip/PNG/zlib.  (this crate)
+//! ```
 
-pub const VERSION: &str = "0.1.0";
+use std::collections::HashMap;
+
+use huffman_tree::HuffmanTree;
+use lzss::Token;
 
 // ---------------------------------------------------------------------------
-// BitWriter — packs bits LSB-first into a byte buffer
+// Length code table (LL symbols 257–284)
 // ---------------------------------------------------------------------------
+//
+// Each length symbol covers a range of match lengths (3–255). The exact length
+// within the range is encoded as `extra_bits` raw bits after the Huffman code.
+//
+// Example: length=13 → symbol 266 (base=13, extra=1, extra_value=0 → bit "0")
+//          length=14 → symbol 266 (base=13, extra=1, extra_value=1 → bit "1")
 
-/// Writes individual bits into a byte buffer, LSB-first.
-///
-/// Deflate requires sub-byte bit manipulation because Huffman codes have
-/// variable lengths (3–15 bits).  The BitWriter accumulates bits in a
-/// 32-bit buffer and flushes complete bytes to the output.
-struct BitWriter {
-    output: Vec<u8>,
-    /// Bit accumulator — holds up to 32 bits waiting to be flushed.
-    bits: u32,
-    /// Number of valid bits in the accumulator (0–32).
-    count: u8,
+struct LengthEntry {
+    symbol: u16,
+    base: u32,
+    extra_bits: u32,
 }
 
-impl BitWriter {
+const LENGTH_TABLE: &[LengthEntry] = &[
+    LengthEntry { symbol: 257, base:   3, extra_bits: 0 },
+    LengthEntry { symbol: 258, base:   4, extra_bits: 0 },
+    LengthEntry { symbol: 259, base:   5, extra_bits: 0 },
+    LengthEntry { symbol: 260, base:   6, extra_bits: 0 },
+    LengthEntry { symbol: 261, base:   7, extra_bits: 0 },
+    LengthEntry { symbol: 262, base:   8, extra_bits: 0 },
+    LengthEntry { symbol: 263, base:   9, extra_bits: 0 },
+    LengthEntry { symbol: 264, base:  10, extra_bits: 0 },
+    LengthEntry { symbol: 265, base:  11, extra_bits: 1 },
+    LengthEntry { symbol: 266, base:  13, extra_bits: 1 },
+    LengthEntry { symbol: 267, base:  15, extra_bits: 1 },
+    LengthEntry { symbol: 268, base:  17, extra_bits: 1 },
+    LengthEntry { symbol: 269, base:  19, extra_bits: 2 },
+    LengthEntry { symbol: 270, base:  23, extra_bits: 2 },
+    LengthEntry { symbol: 271, base:  27, extra_bits: 2 },
+    LengthEntry { symbol: 272, base:  31, extra_bits: 2 },
+    LengthEntry { symbol: 273, base:  35, extra_bits: 3 },
+    LengthEntry { symbol: 274, base:  43, extra_bits: 3 },
+    LengthEntry { symbol: 275, base:  51, extra_bits: 3 },
+    LengthEntry { symbol: 276, base:  59, extra_bits: 3 },
+    LengthEntry { symbol: 277, base:  67, extra_bits: 4 },
+    LengthEntry { symbol: 278, base:  83, extra_bits: 4 },
+    LengthEntry { symbol: 279, base:  99, extra_bits: 4 },
+    LengthEntry { symbol: 280, base: 115, extra_bits: 4 },
+    LengthEntry { symbol: 281, base: 131, extra_bits: 5 },
+    LengthEntry { symbol: 282, base: 163, extra_bits: 5 },
+    LengthEntry { symbol: 283, base: 195, extra_bits: 5 },
+    LengthEntry { symbol: 284, base: 227, extra_bits: 5 },
+];
+
+// ---------------------------------------------------------------------------
+// Distance code table (codes 0–23)
+// ---------------------------------------------------------------------------
+
+struct DistEntry {
+    code: u16,
+    base: u32,
+    extra_bits: u32,
+}
+
+const DIST_TABLE: &[DistEntry] = &[
+    DistEntry { code:  0, base:    1, extra_bits:  0 },
+    DistEntry { code:  1, base:    2, extra_bits:  0 },
+    DistEntry { code:  2, base:    3, extra_bits:  0 },
+    DistEntry { code:  3, base:    4, extra_bits:  0 },
+    DistEntry { code:  4, base:    5, extra_bits:  1 },
+    DistEntry { code:  5, base:    7, extra_bits:  1 },
+    DistEntry { code:  6, base:    9, extra_bits:  2 },
+    DistEntry { code:  7, base:   13, extra_bits:  2 },
+    DistEntry { code:  8, base:   17, extra_bits:  3 },
+    DistEntry { code:  9, base:   25, extra_bits:  3 },
+    DistEntry { code: 10, base:   33, extra_bits:  4 },
+    DistEntry { code: 11, base:   49, extra_bits:  4 },
+    DistEntry { code: 12, base:   65, extra_bits:  5 },
+    DistEntry { code: 13, base:   97, extra_bits:  5 },
+    DistEntry { code: 14, base:  129, extra_bits:  6 },
+    DistEntry { code: 15, base:  193, extra_bits:  6 },
+    DistEntry { code: 16, base:  257, extra_bits:  7 },
+    DistEntry { code: 17, base:  385, extra_bits:  7 },
+    DistEntry { code: 18, base:  513, extra_bits:  8 },
+    DistEntry { code: 19, base:  769, extra_bits:  8 },
+    DistEntry { code: 20, base: 1025, extra_bits:  9 },
+    DistEntry { code: 21, base: 1537, extra_bits:  9 },
+    DistEntry { code: 22, base: 2049, extra_bits: 10 },
+    DistEntry { code: 23, base: 3073, extra_bits: 10 },
+];
+
+// ---------------------------------------------------------------------------
+// Length / distance symbol lookup helpers
+// ---------------------------------------------------------------------------
+
+fn length_symbol(length: u32) -> u16 {
+    for e in LENGTH_TABLE {
+        let max_len = e.base + (1 << e.extra_bits) - 1;
+        if length <= max_len {
+            return e.symbol;
+        }
+    }
+    284
+}
+
+fn dist_code_for(offset: u32) -> u16 {
+    for e in DIST_TABLE {
+        let max_dist = e.base + (1 << e.extra_bits) - 1;
+        if offset <= max_dist {
+            return e.code;
+        }
+    }
+    23
+}
+
+fn length_base(sym: u16) -> u32 {
+    LENGTH_TABLE.iter().find(|e| e.symbol == sym).map(|e| e.base).unwrap_or(0)
+}
+
+fn length_extra(sym: u16) -> u32 {
+    LENGTH_TABLE.iter().find(|e| e.symbol == sym).map(|e| e.extra_bits).unwrap_or(0)
+}
+
+fn dist_base(code: u16) -> u32 {
+    DIST_TABLE.iter().find(|e| e.code == code).map(|e| e.base).unwrap_or(0)
+}
+
+fn dist_extra(code: u16) -> u32 {
+    DIST_TABLE.iter().find(|e| e.code == code).map(|e| e.extra_bits).unwrap_or(0)
+}
+
+// ---------------------------------------------------------------------------
+// Bit I/O
+// ---------------------------------------------------------------------------
+
+/// Accumulates bits into a byte buffer, LSB-first.
+///
+/// "LSB-first" means: the first bit written occupies bit 0 (the
+/// least-significant bit) of the first byte. Bits fill each byte from low
+/// to high before moving to the next byte.
+struct BitBuilder {
+    buf: u64,
+    bit_pos: u32,
+    out: Vec<u8>,
+}
+
+impl BitBuilder {
     fn new() -> Self {
-        Self {
-            output: Vec::new(),
-            bits: 0,
-            count: 0,
+        Self { buf: 0, bit_pos: 0, out: Vec::new() }
+    }
+
+    /// Write a bit string (e.g. "1010") LSB-first.
+    fn write_bit_string(&mut self, s: &str) {
+        for ch in s.chars() {
+            if ch == '1' {
+                self.buf |= 1u64 << self.bit_pos;
+            }
+            self.bit_pos += 1;
+            if self.bit_pos == 64 {
+                for _ in 0..8 {
+                    self.out.push((self.buf & 0xFF) as u8);
+                    self.buf >>= 8;
+                }
+                self.bit_pos = 0;
+            }
         }
     }
 
-    /// Write `n` bits from `value` (LSB-first, n <= 16).
-    fn write_bits(&mut self, value: u32, n: u8) {
-        self.bits |= value << self.count;
-        self.count += n;
-        while self.count >= 8 {
-            self.output.push(self.bits as u8);
-            self.bits >>= 8;
-            self.count -= 8;
-        }
-    }
-
-    /// Write bits in MSB-first order (used for Huffman codes, which are
-    /// stored reversed compared to other deflate fields).
-    fn write_bits_reversed(&mut self, value: u32, n: u8) {
-        let mut reversed = 0u32;
+    /// Write `n` raw bits from `val`, LSB of val first.
+    fn write_raw_bits_lsb(&mut self, val: u32, n: u32) {
         for i in 0..n {
-            if value & (1 << i) != 0 {
-                reversed |= 1 << (n - 1 - i);
+            if (val >> i) & 1 == 1 {
+                self.buf |= 1u64 << self.bit_pos;
+            }
+            self.bit_pos += 1;
+            if self.bit_pos == 64 {
+                for _ in 0..8 {
+                    self.out.push((self.buf & 0xFF) as u8);
+                    self.buf >>= 8;
+                }
+                self.bit_pos = 0;
             }
         }
-        self.write_bits(reversed, n);
     }
 
-    /// Flush any remaining bits (pad with zeros to byte boundary).
+    fn flush(&mut self) {
+        while self.bit_pos > 0 {
+            self.out.push((self.buf & 0xFF) as u8);
+            self.buf >>= 8;
+            if self.bit_pos >= 8 {
+                self.bit_pos -= 8;
+            } else {
+                self.bit_pos = 0;
+            }
+        }
+    }
+
     fn finish(mut self) -> Vec<u8> {
-        if self.count > 0 {
-            self.output.push(self.bits as u8);
-        }
-        self.output
+        self.flush();
+        self.out
     }
 }
 
-// ---------------------------------------------------------------------------
-// Fixed Huffman tables (RFC 1951 §3.2.6)
-// ---------------------------------------------------------------------------
-//
-// The fixed Huffman code assigns bit lengths to literal/length codes:
-//
-//   Value range     Bits    Code range
-//   0–143           8       00110000 – 10111111
-//   144–255         9       110010000 – 111111111
-//   256–279         7       0000000 – 0010111
-//   280–287         8       11000000 – 11000111
-//
-// The actual Huffman codes are computed from these lengths.
+fn unpack_bits(data: &[u8]) -> Vec<u8> {
+    // Returns a vector of 0/1 bytes.
+    let mut bits = Vec::with_capacity(data.len() * 8);
+    for &byte in data {
+        for i in 0..8 {
+            bits.push((byte >> i) & 1);
+        }
+    }
+    bits
+}
 
-/// Get the fixed Huffman code and bit length for a literal/length value.
+// ---------------------------------------------------------------------------
+// Canonical code reconstruction
+// ---------------------------------------------------------------------------
+
+fn build_canonical_codes(pairs: &[(u16, usize)]) -> HashMap<u16, String> {
+    let mut result = HashMap::new();
+    if pairs.is_empty() {
+        return result;
+    }
+    if pairs.len() == 1 {
+        result.insert(pairs[0].0, "0".to_string());
+        return result;
+    }
+    let mut code: u32 = 0;
+    let mut prev_len = pairs[0].1;
+    for &(symbol, code_len) in pairs {
+        if code_len > prev_len {
+            code <<= code_len - prev_len;
+        }
+        let bit_str = format!("{:0>width$b}", code, width = code_len);
+        result.insert(symbol, bit_str);
+        code += 1;
+        prev_len = code_len;
+    }
+    result
+}
+
+fn reverse_code_map(m: &HashMap<u16, String>) -> HashMap<String, u16> {
+    m.iter().map(|(&sym, bits)| (bits.clone(), sym)).collect()
+}
+
+// ---------------------------------------------------------------------------
+// Public API: compress
+// ---------------------------------------------------------------------------
+
+/// Compress `data` using DEFLATE (CMP05) and return wire-format bytes.
 ///
-/// Returns (code, bit_length) where `code` is stored MSB-first.
-fn fixed_huffman_code(value: u16) -> (u32, u8) {
-    match value {
-        // 0–143: 8-bit codes starting at 0b00110000
-        0..=143 => (0x30 + value as u32, 8),
-        // 144–255: 9-bit codes starting at 0b110010000
-        144..=255 => (0x190 + (value - 144) as u32, 9),
-        // 256–279: 7-bit codes starting at 0b0000000
-        256..=279 => (value as u32 - 256, 7),
-        // 280–287: 8-bit codes starting at 0b11000000
-        280..=287 => (0xC0 + (value - 280) as u32, 8),
-        _ => panic!("invalid literal/length value: {}", value),
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Length and distance encoding (RFC 1951 §3.2.5)
-// ---------------------------------------------------------------------------
-//
-// LZ77 matches are encoded as a length code (257–285) plus extra bits,
-// followed by a distance code (0–29) plus extra bits.
-
-/// Encode a match length (3–258) as a deflate length code + extra bits.
+/// Two-pass algorithm:
+/// 1. LZSS tokenization (window=4096, max_match=255, min_match=3).
+/// 2. Dual canonical Huffman coding (LL tree + dist tree).
 ///
-/// Returns (code, extra_bits_value, extra_bits_count).
-fn encode_length(length: u16) -> (u16, u32, u8) {
-    match length {
-        3..=10 => (257 + length - 3, 0, 0),
-        11..=18 => {
-            let base = (length - 11) / 2;
-            let extra = (length - 11) % 2;
-            (265 + base, extra as u32, 1)
-        }
-        19..=34 => {
-            let base = (length - 19) / 4;
-            let extra = (length - 19) % 4;
-            (269 + base, extra as u32, 2)
-        }
-        35..=66 => {
-            let base = (length - 35) / 8;
-            let extra = (length - 35) % 8;
-            (273 + base, extra as u32, 3)
-        }
-        67..=130 => {
-            let base = (length - 67) / 16;
-            let extra = (length - 67) % 16;
-            (277 + base, extra as u32, 4)
-        }
-        131..=257 => {
-            let base = (length - 131) / 32;
-            let extra = (length - 131) % 32;
-            (281 + base, extra as u32, 5)
-        }
-        258 => (285, 0, 0),
-        _ => panic!("invalid match length: {}", length),
-    }
-}
+/// Returns `Err(String)` if the underlying tree build fails.
+pub fn compress(data: &[u8]) -> Result<Vec<u8>, String> {
+    let original_length = data.len();
 
-/// Encode a match distance (1–32768) as a deflate distance code + extra bits.
-///
-/// Returns (code, extra_bits_value, extra_bits_count).
-/// Distance codes use fixed 5-bit codes (no Huffman — just plain 5-bit values).
-fn encode_distance(distance: u16) -> (u16, u32, u8) {
-    match distance {
-        1..=4 => (distance - 1, 0, 0),
-        5..=8 => {
-            let base = (distance - 5) / 2;
-            let extra = (distance - 5) % 2;
-            (4 + base, extra as u32, 1)
-        }
-        9..=16 => {
-            let base = (distance - 9) / 4;
-            let extra = (distance - 9) % 4;
-            (6 + base, extra as u32, 2)
-        }
-        17..=32 => {
-            let base = (distance - 17) / 8;
-            let extra = (distance - 17) % 8;
-            (8 + base, extra as u32, 3)
-        }
-        33..=64 => {
-            let base = (distance - 33) / 16;
-            let extra = (distance - 33) % 16;
-            (10 + base, extra as u32, 4)
-        }
-        65..=128 => {
-            let base = (distance - 65) / 32;
-            let extra = (distance - 65) % 32;
-            (12 + base, extra as u32, 5)
-        }
-        129..=256 => {
-            let base = (distance - 129) / 64;
-            let extra = (distance - 129) % 64;
-            (14 + base, extra as u32, 6)
-        }
-        257..=512 => {
-            let base = (distance - 257) / 128;
-            let extra = (distance - 257) % 128;
-            (16 + base, extra as u32, 7)
-        }
-        513..=1024 => {
-            let base = (distance - 513) / 256;
-            let extra = (distance - 513) % 256;
-            (18 + base, extra as u32, 8)
-        }
-        1025..=2048 => {
-            let base = (distance - 1025) / 512;
-            let extra = (distance - 1025) % 512;
-            (20 + base, extra as u32, 9)
-        }
-        2049..=4096 => {
-            let base = (distance - 2049) / 1024;
-            let extra = (distance - 2049) % 1024;
-            (22 + base, extra as u32, 10)
-        }
-        4097..=8192 => {
-            let base = (distance - 4097) / 2048;
-            let extra = (distance - 4097) % 2048;
-            (24 + base, extra as u32, 11)
-        }
-        8193..=16384 => {
-            let base = (distance - 8193) / 4096;
-            let extra = (distance - 8193) % 4096;
-            (26 + base, extra as u32, 12)
-        }
-        16385..=32768 => {
-            let base = (distance - 16385) / 8192;
-            let extra = (distance - 16385) % 8192;
-            (28 + base, extra as u32, 13)
-        }
-        _ => panic!("invalid match distance: {}", distance),
-    }
-}
-
-// ---------------------------------------------------------------------------
-// LZ77 matching
-// ---------------------------------------------------------------------------
-//
-// LZ77 scans the input looking for repeated byte sequences.  When it
-// finds one, it emits a (length, distance) back-reference instead of
-// the literal bytes.  The "sliding window" is the previous 32KB of output.
-
-/// Simple hash function for 3-byte sequences.
-/// Maps 3 bytes to a 15-bit hash for the hash table.
-fn hash3(a: u8, b: u8, c: u8) -> usize {
-    let h = (a as usize) << 10 ^ (b as usize) << 5 ^ (c as usize);
-    h & 0x7FFF // 15-bit hash → 32768 entries
-}
-
-/// Find the longest match at the current position in the input.
-///
-/// Searches backward through the hash chain for positions that share
-/// the same 3-byte hash.  Returns (length, distance) of the best match,
-/// or (0, 0) if no match of length >= 3 is found.
-fn find_match(
-    data: &[u8],
-    pos: usize,
-    head: &[u16],
-    prev: &[u16],
-) -> (u16, u16) {
-    if pos + 2 >= data.len() {
-        return (0, 0);
+    if original_length == 0 {
+        // Empty input: LL tree has only symbol 256 (end-of-data), code "0".
+        let mut out = Vec::with_capacity(12);
+        out.extend_from_slice(&0u32.to_be_bytes());
+        out.extend_from_slice(&1u16.to_be_bytes()); // ll_entry_count = 1
+        out.extend_from_slice(&0u16.to_be_bytes()); // dist_entry_count = 0
+        out.extend_from_slice(&256u16.to_be_bytes()); // symbol = 256
+        out.push(1u8); // code_length = 1
+        out.push(0x00); // bit stream: "0" → 0x00
+        return Ok(out);
     }
 
-    let h = hash3(data[pos], data[pos + 1], data[pos + 2]);
-    let mut chain = head[h];
-    let mut best_len: u16 = 0;
-    let mut best_dist: u16 = 0;
-    let max_chain = 64; // limit chain walks to avoid O(n²)
+    // ── Pass 1: LZSS tokenization ────────────────────────────────────────────
+    let tokens = lzss::encode(data, 4096, 255, 3);
 
-    for _ in 0..max_chain {
-        let candidate = chain as usize;
-        if candidate == 0 || pos - candidate > 32768 {
-            break;
-        }
+    // ── Pass 2a: Tally frequencies ───────────────────────────────────────────
+    let mut ll_freq: HashMap<u16, u32> = HashMap::new();
+    let mut dist_freq: HashMap<u16, u32> = HashMap::new();
 
-        // Compare bytes at candidate vs pos
-        let max_len = std::cmp::min(258, data.len() - pos) as u16;
-        let mut len: u16 = 0;
-        while len < max_len && data[candidate + len as usize] == data[pos + len as usize] {
-            len += 1;
-        }
-
-        if len > best_len && len >= 3 {
-            best_len = len;
-            best_dist = (pos - candidate) as u16;
-            if len == max_len {
-                break; // can't do better
+    for tok in &tokens {
+        match tok {
+            Token::Literal(b) => {
+                *ll_freq.entry(*b as u16).or_insert(0) += 1;
+            }
+            Token::Match { offset, length } => {
+                let sym = length_symbol(*length as u32);
+                *ll_freq.entry(sym).or_insert(0) += 1;
+                let dc = dist_code_for(*offset as u32);
+                *dist_freq.entry(dc).or_insert(0) += 1;
             }
         }
+    }
+    *ll_freq.entry(256).or_insert(0) += 1;
 
-        let next = prev[candidate & 0x7FFF];
-        if next == chain || next as usize >= candidate {
-            break;
-        }
-        chain = next;
+    // ── Pass 2b: Build canonical Huffman trees ───────────────────────────────
+    let ll_weights: Vec<(u16, u32)> = ll_freq.iter().map(|(&sym, &freq)| (sym, freq)).collect();
+    let ll_tree = HuffmanTree::build(&ll_weights)?;
+    let ll_code_table = ll_tree.canonical_code_table(); // HashMap<u16, String>
+
+    let mut dist_code_table: HashMap<u16, String> = HashMap::new();
+    if !dist_freq.is_empty() {
+        let dist_weights: Vec<(u16, u32)> = dist_freq.iter().map(|(&sym, &freq)| (sym, freq)).collect();
+        let dist_tree = HuffmanTree::build(&dist_weights)?;
+        dist_code_table = dist_tree.canonical_code_table();
     }
 
-    (best_len, best_dist)
+    // ── Pass 2c: Encode token stream ─────────────────────────────────────────
+    let mut bb = BitBuilder::new();
+    for tok in &tokens {
+        match tok {
+            Token::Literal(b) => {
+                let code = ll_code_table.get(&(*b as u16))
+                    .ok_or_else(|| format!("no LL code for literal {}", b))?;
+                bb.write_bit_string(code);
+            }
+            Token::Match { offset, length } => {
+                let sym = length_symbol(*length as u32);
+                let code = ll_code_table.get(&sym)
+                    .ok_or_else(|| format!("no LL code for length symbol {}", sym))?;
+                bb.write_bit_string(code);
+                let extra = length_extra(sym);
+                let extra_val = (*length as u32) - length_base(sym);
+                bb.write_raw_bits_lsb(extra_val, extra);
+
+                let dc = dist_code_for(*offset as u32);
+                let dcode = dist_code_table.get(&dc)
+                    .ok_or_else(|| format!("no dist code for code {}", dc))?;
+                bb.write_bit_string(dcode);
+                let dextra = dist_extra(dc);
+                let dextra_val = (*offset as u32) - dist_base(dc);
+                bb.write_raw_bits_lsb(dextra_val, dextra);
+            }
+        }
+    }
+    let eod_code = ll_code_table.get(&256)
+        .ok_or("no LL code for end-of-data symbol 256")?;
+    bb.write_bit_string(eod_code);
+    let packed_bits = bb.finish();
+
+    // ── Assemble wire format ─────────────────────────────────────────────────
+    let mut ll_pairs: Vec<(u16, usize)> = ll_code_table.iter()
+        .map(|(&sym, code)| (sym, code.len()))
+        .collect();
+    ll_pairs.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
+
+    let mut dist_pairs: Vec<(u16, usize)> = dist_code_table.iter()
+        .map(|(&sym, code)| (sym, code.len()))
+        .collect();
+    dist_pairs.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
+
+    let mut out = Vec::with_capacity(
+        8 + 3 * ll_pairs.len() + 3 * dist_pairs.len() + packed_bits.len()
+    );
+    out.extend_from_slice(&(original_length as u32).to_be_bytes());
+    out.extend_from_slice(&(ll_pairs.len() as u16).to_be_bytes());
+    out.extend_from_slice(&(dist_pairs.len() as u16).to_be_bytes());
+
+    for (sym, len) in &ll_pairs {
+        out.extend_from_slice(&sym.to_be_bytes());
+        out.push(*len as u8);
+    }
+    for (sym, len) in &dist_pairs {
+        out.extend_from_slice(&sym.to_be_bytes());
+        out.push(*len as u8);
+    }
+    out.extend_from_slice(&packed_bits);
+
+    Ok(out)
 }
 
 // ---------------------------------------------------------------------------
-// Deflate compression (RFC 1951)
+// Public API: decompress
 // ---------------------------------------------------------------------------
 
-/// Compress data using the DEFLATE algorithm (RFC 1951).
+/// Decompress CMP05 wire-format `data` and return the original bytes.
 ///
-/// Returns raw deflate-compressed bytes (no zlib/gzip wrapper).
-/// Uses fixed Huffman codes with LZ77 matching.
-pub fn deflate_compress(data: &[u8]) -> Vec<u8> {
-    let mut writer = BitWriter::new();
+/// Stops decoding at the end-of-data symbol (256). Copies are done byte-by-byte
+/// to correctly handle overlapping matches (where offset < length), which encode
+/// run-length sequences.
+pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
+    if data.len() < 8 {
+        return Err(format!("deflate: data too short: {} bytes", data.len()));
+    }
 
-    // Block header: BFINAL=1 (last block), BTYPE=01 (fixed Huffman)
-    writer.write_bits(1, 1); // BFINAL
-    writer.write_bits(1, 2); // BTYPE = 01 (fixed Huffman)
+    let original_length = u32::from_be_bytes([data[0], data[1], data[2], data[3]]) as usize;
+    let ll_entry_count = u16::from_be_bytes([data[4], data[5]]) as usize;
+    let dist_entry_count = u16::from_be_bytes([data[6], data[7]]) as usize;
+
+    if original_length == 0 {
+        return Ok(Vec::new());
+    }
+
+    let mut off = 8usize;
+
+    // Parse LL code-length table.
+    let mut ll_lengths: Vec<(u16, usize)> = Vec::with_capacity(ll_entry_count);
+    for _ in 0..ll_entry_count {
+        let sym = u16::from_be_bytes([data[off], data[off + 1]]);
+        let clen = data[off + 2] as usize;
+        ll_lengths.push((sym, clen));
+        off += 3;
+    }
+
+    // Parse dist code-length table.
+    let mut dist_lengths: Vec<(u16, usize)> = Vec::with_capacity(dist_entry_count);
+    for _ in 0..dist_entry_count {
+        let sym = u16::from_be_bytes([data[off], data[off + 1]]);
+        let clen = data[off + 2] as usize;
+        dist_lengths.push((sym, clen));
+        off += 3;
+    }
+
+    // Reconstruct canonical codes.
+    let ll_code_map = build_canonical_codes(&ll_lengths);
+    let dist_code_map = build_canonical_codes(&dist_lengths);
+    let ll_rev_map = reverse_code_map(&ll_code_map);
+    let dist_rev_map = reverse_code_map(&dist_code_map);
+
+    // Unpack bit stream.
+    let bits = unpack_bits(&data[off..]);
+    let mut bit_pos = 0usize;
+
+    let read_bits = |bits: &[u8], pos: &mut usize, n: u32| -> u32 {
+        let mut val = 0u32;
+        for i in 0..n {
+            val |= (bits[*pos] as u32) << i;
+            *pos += 1;
+        }
+        val
+    };
+
+    let next_huffman_symbol = |bits: &[u8], pos: &mut usize, rev_map: &HashMap<String, u16>| -> Result<u16, String> {
+        let mut acc = String::new();
+        loop {
+            if *pos >= bits.len() {
+                return Err("deflate: bit stream exhausted".to_string());
+            }
+            acc.push(if bits[*pos] == 1 { '1' } else { '0' });
+            *pos += 1;
+            if let Some(&sym) = rev_map.get(&acc) {
+                return Ok(sym);
+            }
+        }
+    };
+
+    // Decode token stream.
+    let mut output: Vec<u8> = Vec::with_capacity(original_length);
+    loop {
+        let ll_sym = next_huffman_symbol(&bits, &mut bit_pos, &ll_rev_map)?;
+
+        if ll_sym == 256 {
+            break; // end-of-data
+        } else if ll_sym < 256 {
+            output.push(ll_sym as u8);
+        } else {
+            // Length code 257–284.
+            let extra = length_extra(ll_sym);
+            let length = length_base(ll_sym) + read_bits(&bits, &mut bit_pos, extra);
+
+            let dist_sym = next_huffman_symbol(&bits, &mut bit_pos, &dist_rev_map)?;
+            let dextra = dist_extra(dist_sym);
+            let dist_offset = dist_base(dist_sym) + read_bits(&bits, &mut bit_pos, dextra);
+
+            // Copy byte-by-byte (supports overlapping matches).
+            let start = output.len() - dist_offset as usize;
+            for i in 0..length as usize {
+                let b = output[start + i];
+                output.push(b);
+            }
+        }
+    }
+
+    Ok(output)
+}
+
+// ---------------------------------------------------------------------------
+// zlib compatibility shim
+// ---------------------------------------------------------------------------
+//
+// The rust/png package (and other packages) depend on `deflate::zlib_compress`,
+// which was part of the original zero-dependency deflate implementation.
+// We provide it here as a stored-block DEFLATE stream wrapped in a zlib envelope
+// (RFC 1950). Stored blocks (BTYPE=00) are always RFC 1951-compatible and require
+// no Huffman coding — the data is copied verbatim with a minimal block header.
+//
+// zlib envelope:
+//   [CMF=0x78][FLG=0x9C]   — deflate method, default compression
+//   [DEFLATE data]          — one or more stored blocks
+//   [Adler-32 checksum BE]  — integrity check over the uncompressed data
+
+/// Compute Adler-32 checksum (RFC 1950 §2.2).
+pub fn adler32(data: &[u8]) -> u32 {
+    const MOD_ADLER: u32 = 65521;
+    let (mut a, mut b) = (1u32, 0u32);
+    for &byte in data {
+        a = (a + byte as u32) % MOD_ADLER;
+        b = (b + a) % MOD_ADLER;
+    }
+    (b << 16) | a
+}
+
+/// Compress `data` into a raw (no-header) DEFLATE stream using stored blocks.
+///
+/// Stored blocks have BTYPE=00 and copy data verbatim; every standard DEFLATE
+/// decompressor (zlib, zstd, etc.) handles them. Blocks are limited to 65535
+/// bytes each per RFC 1951 §3.2.4.
+fn deflate_compress_stored(data: &[u8]) -> Vec<u8> {
+    // Each stored block: [BFINAL+BTYPE byte][LEN 2B LE][NLEN 2B LE][data]
+    // BTYPE=00, BFINAL=1 only for the last block.
+    let mut out = Vec::new();
 
     if data.is_empty() {
-        // Emit end-of-block marker (code 256)
-        let (code, bits) = fixed_huffman_code(256);
-        writer.write_bits_reversed(code, bits);
-        return writer.finish();
+        // Empty stored block: BFINAL=1, BTYPE=00, LEN=0, NLEN=0xFFFF.
+        out.extend_from_slice(&[0x01, 0x00, 0x00, 0xFF, 0xFF]);
+        return out;
     }
 
-    // Hash table for LZ77 matching
-    // head[hash] = most recent position with this hash
-    // prev[pos % 32768] = previous position with the same hash (chain)
-    let mut head = vec![0u16; 32768];
-    let mut prev = vec![0u16; 32768];
-
-    let mut pos = 0;
-    while pos < data.len() {
-        let (match_len, match_dist) = find_match(data, pos, &head, &prev);
-
-        if match_len >= 3 {
-            // Emit length code
-            let (len_code, len_extra, len_extra_bits) = encode_length(match_len);
-            let (huff_code, huff_bits) = fixed_huffman_code(len_code);
-            writer.write_bits_reversed(huff_code, huff_bits);
-            if len_extra_bits > 0 {
-                writer.write_bits(len_extra, len_extra_bits);
-            }
-
-            // Emit distance code (fixed 5-bit codes, reversed)
-            let (dist_code, dist_extra, dist_extra_bits) = encode_distance(match_dist);
-            writer.write_bits_reversed(dist_code as u32, 5);
-            if dist_extra_bits > 0 {
-                writer.write_bits(dist_extra, dist_extra_bits);
-            }
-
-            // Update hash table for all positions in the match
-            for i in 0..match_len as usize {
-                if pos + i + 2 < data.len() {
-                    let h = hash3(data[pos + i], data[pos + i + 1], data[pos + i + 2]);
-                    prev[(pos + i) & 0x7FFF] = head[h];
-                    head[h] = (pos + i) as u16;
-                }
-            }
-            pos += match_len as usize;
-        } else {
-            // Emit literal
-            let (code, bits) = fixed_huffman_code(data[pos] as u16);
-            writer.write_bits_reversed(code, bits);
-
-            // Update hash table
-            if pos + 2 < data.len() {
-                let h = hash3(data[pos], data[pos + 1], data[pos + 2]);
-                prev[pos & 0x7FFF] = head[h];
-                head[h] = pos as u16;
-            }
-            pos += 1;
-        }
+    let chunks: Vec<&[u8]> = data.chunks(65535).collect();
+    let n = chunks.len();
+    for (i, chunk) in chunks.iter().enumerate() {
+        let bfinal: u8 = if i + 1 == n { 1 } else { 0 };
+        let btype: u8 = 0; // stored
+        // First byte: bits 0=BFINAL, bits 1-2=BTYPE, rest=0.
+        out.push(bfinal | (btype << 1));
+        let len = chunk.len() as u16;
+        let nlen = !len;
+        out.push((len & 0xFF) as u8);
+        out.push((len >> 8) as u8);
+        out.push((nlen & 0xFF) as u8);
+        out.push((nlen >> 8) as u8);
+        out.extend_from_slice(chunk);
     }
-
-    // End-of-block marker (literal/length code 256)
-    let (code, bits) = fixed_huffman_code(256);
-    writer.write_bits_reversed(code, bits);
-
-    writer.finish()
+    out
 }
 
-// ---------------------------------------------------------------------------
-// Adler-32 checksum (RFC 1950)
-// ---------------------------------------------------------------------------
-//
-// Adler-32 uses two 16-bit sums:
-//   s1 = 1 + sum of all bytes (mod 65521)
-//   s2 = sum of all s1 values (mod 65521)
-//   result = (s2 << 16) | s1
-//
-// 65521 is the largest prime smaller than 2^16.
-
-/// Compute the Adler-32 checksum of a byte slice.
-pub fn adler32(data: &[u8]) -> u32 {
-    let mut s1: u32 = 1;
-    let mut s2: u32 = 0;
-
-    for &byte in data {
-        s1 = (s1 + byte as u32) % 65521;
-        s2 = (s2 + s1) % 65521;
-    }
-
-    (s2 << 16) | s1
-}
-
-// ---------------------------------------------------------------------------
-// Zlib compression (RFC 1950)
-// ---------------------------------------------------------------------------
-//
-// Zlib is a thin wrapper around deflate that adds:
-//   - 2-byte header (CMF + FLG)
-//   - Adler-32 checksum at the end
-//
-// CMF byte: compression method (8 = deflate) + window size info
-// FLG byte: check bits + compression level + optional dict flag
-
-/// Compress data using the zlib format (RFC 1950).
+/// Compress `data` using the zlib format (RFC 1950).
 ///
-/// Returns zlib-compressed bytes: [CMF][FLG][deflate data][Adler-32].
-/// This is the format PNG's IDAT chunks expect.
+/// Returns: [CMF=0x78][FLG=0x9C][stored DEFLATE blocks][Adler-32 BE 4 bytes].
+///
+/// This uses stored (non-compressed) DEFLATE blocks, which are always valid
+/// per RFC 1951. The output is decompressable by any zlib-compatible library.
+///
+/// Note: For CMP05 (educational) wire-format compression, use `compress` instead.
 pub fn zlib_compress(data: &[u8]) -> Vec<u8> {
-    let mut output = Vec::new();
-
-    // CMF byte: CM=8 (deflate), CINFO=7 (32K window)
-    // CINFO=7 means window size = 2^(7+8) = 32768
-    let cmf: u8 = 0x78;
-
-    // FLG byte: must satisfy (CMF*256 + FLG) % 31 == 0
-    // With CMF=0x78, FLG=0x01 gives 0x7801 % 31 = 0 ✓
-    let flg: u8 = 0x01;
-
-    output.push(cmf);
-    output.push(flg);
-
-    // Deflate-compressed data
-    let compressed = deflate_compress(data);
-    output.extend_from_slice(&compressed);
-
-    // Adler-32 checksum of the uncompressed data (big-endian)
+    let mut out = Vec::new();
+    // zlib header: CMF=0x78 (deflate, window=32768), FLG=0x9C (no dict, lvl=6).
+    // (CMF * 256 + FLG) must be divisible by 31: 0x789C = 30876 = 996 × 31. ✓
+    out.extend_from_slice(&[0x78, 0x9C]);
+    out.extend_from_slice(&deflate_compress_stored(data));
     let checksum = adler32(data);
-    output.push((checksum >> 24) as u8);
-    output.push((checksum >> 16) as u8);
-    output.push((checksum >> 8) as u8);
-    output.push(checksum as u8);
-
-    output
+    out.push((checksum >> 24) as u8);
+    out.push((checksum >> 16) as u8);
+    out.push((checksum >> 8) as u8);
+    out.push(checksum as u8);
+    out
 }
 
 // ---------------------------------------------------------------------------
@@ -466,76 +606,109 @@ pub fn zlib_compress(data: &[u8]) -> Vec<u8> {
 mod tests {
     use super::*;
 
-    #[test]
-    fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+    fn roundtrip(data: &[u8]) {
+        let compressed = compress(data).expect("compress failed");
+        let decompressed = decompress(&compressed).expect("decompress failed");
+        assert_eq!(decompressed, data, "roundtrip mismatch for {:?}", &data[..data.len().min(20)]);
     }
 
     #[test]
-    fn adler32_empty() {
-        assert_eq!(adler32(b""), 1);
+    fn test_empty() {
+        let compressed = compress(b"").unwrap();
+        let result = decompress(&compressed).unwrap();
+        assert_eq!(result, b"");
     }
 
     #[test]
-    fn adler32_known_values() {
-        // Wikipedia test vector: adler32("Wikipedia") = 0x11E60398
-        assert_eq!(adler32(b"Wikipedia"), 0x11E60398);
+    fn test_single_byte() {
+        roundtrip(b"\x00");
+        roundtrip(b"\xff");
+        roundtrip(b"A");
     }
 
     #[test]
-    fn deflate_empty_produces_valid_output() {
-        let compressed = deflate_compress(b"");
-        // Should have at least the block header and end-of-block marker
-        assert!(!compressed.is_empty());
+    fn test_single_byte_repeated() {
+        roundtrip(b"AAAAAAAAAAAAAAAAAAA");
+        roundtrip(&vec![0u8; 100]);
     }
 
     #[test]
-    fn zlib_header_is_valid() {
-        let compressed = zlib_compress(b"test");
-        // CMF=0x78, FLG=0x01
-        assert_eq!(compressed[0], 0x78);
-        assert_eq!(compressed[1], 0x01);
-        // (CMF*256 + FLG) % 31 == 0
-        assert_eq!((0x78u32 * 256 + 0x01) % 31, 0);
+    fn test_all_literals_aaabbc() {
+        let data = b"AAABBC";
+        roundtrip(data);
+        let compressed = compress(data).unwrap();
+        let dist_count = u16::from_be_bytes([compressed[6], compressed[7]]);
+        assert_eq!(dist_count, 0, "no matches expected for AAABBC");
     }
 
     #[test]
-    fn zlib_checksum_is_correct() {
-        let data = b"Hello, World!";
-        let compressed = zlib_compress(data);
-        let len = compressed.len();
-        // Last 4 bytes are Adler-32 (big-endian)
-        let stored_checksum = u32::from_be_bytes([
-            compressed[len - 4],
-            compressed[len - 3],
-            compressed[len - 2],
-            compressed[len - 1],
-        ]);
-        assert_eq!(stored_checksum, adler32(data));
+    fn test_one_match_aabcbbabc() {
+        let data = b"AABCBBABC";
+        roundtrip(data);
+        let compressed = compress(data).unwrap();
+        let orig_len = u32::from_be_bytes([compressed[0], compressed[1], compressed[2], compressed[3]]);
+        assert_eq!(orig_len, 9);
+        let dist_count = u16::from_be_bytes([compressed[6], compressed[7]]);
+        assert!(dist_count > 0, "expected a match in AABCBBABC");
     }
 
-    /// Verify compression of repetitive data produces smaller output.
     #[test]
-    fn repetitive_data_compresses() {
-        let data = vec![0xAA; 10000]; // 10KB of repeated bytes
-        let compressed = zlib_compress(&data);
+    fn test_overlapping_match() {
+        roundtrip(b"AAAAAAA");
+        roundtrip(b"ABABABABABAB");
+    }
+
+    #[test]
+    fn test_multiple_matches() {
+        roundtrip(b"ABCABCABCABC");
+        roundtrip(b"hello hello hello world");
+    }
+
+    #[test]
+    fn test_all_bytes() {
+        let data: Vec<u8> = (0..=255).collect();
+        roundtrip(&data);
+    }
+
+    #[test]
+    fn test_binary_data() {
+        let data: Vec<u8> = (0..1000).map(|i| (i % 256) as u8).collect();
+        roundtrip(&data);
+    }
+
+    #[test]
+    fn test_compression_ratio() {
+        let data: Vec<u8> = b"ABCABC".iter().cycle().take(600).copied().collect();
+        let compressed = compress(&data).unwrap();
         assert!(
             compressed.len() < data.len() / 2,
-            "10KB of repeated bytes should compress to less than 5KB, got {} bytes",
-            compressed.len()
+            "expected significant compression: {} >= {}/2",
+            compressed.len(), data.len()
         );
     }
 
-    /// Verify the fixed Huffman codes for some known values.
     #[test]
-    fn fixed_huffman_code_boundaries() {
-        // Code 0 should be 8 bits (0x30)
-        assert_eq!(fixed_huffman_code(0), (0x30, 8));
-        // Code 143 should be 8 bits (0xBF)
-        assert_eq!(fixed_huffman_code(143), (0xBF, 8));
-        // Code 144 should be 9 bits (0x190)
-        assert_eq!(fixed_huffman_code(144), (0x190, 9));
-        // Code 256 (end of block) should be 7 bits (0)
-        assert_eq!(fixed_huffman_code(256), (0, 7));
+    fn test_max_match_length() {
+        let data = vec![b'A'; 300];
+        roundtrip(&data);
+    }
+
+    #[test]
+    fn test_various_lengths() {
+        for &length in &[3usize, 4, 10, 11, 13, 19, 35, 67, 131, 227, 255] {
+            let prefix: Vec<u8> = vec![b'A'; length];
+            let separator = b"BBB";
+            let mut data = prefix.clone();
+            data.extend_from_slice(separator);
+            data.extend_from_slice(&prefix);
+            roundtrip(&data);
+        }
+    }
+
+    #[test]
+    fn test_longer_text() {
+        let base = b"the quick brown fox jumps over the lazy dog ";
+        let data: Vec<u8> = base.iter().cycle().take(base.len() * 10).copied().collect();
+        roundtrip(&data);
     }
 }

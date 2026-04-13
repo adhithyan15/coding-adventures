@@ -45,6 +45,10 @@ input {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
 #root {
   min-height: 100vh;
 }
@@ -244,9 +248,36 @@ h3 {
     linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 244, 234, 0.92));
 }
 
+.renderer-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.renderer-toggle button {
+  border: 1px solid rgba(22, 18, 13, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: $muted;
+  @include label-text;
+  padding: 10px 16px;
+}
+
+.renderer-toggle button.active {
+  border-color: rgba(125, 43, 16, 0.25);
+  background: rgba(189, 79, 31, 0.12);
+  color: $accent-deep;
+  font-weight: 700;
+}
+
 .barcode-frame svg {
   display: block;
   min-width: max-content;
+}
+
+.barcode-frame canvas {
+  display: block;
 }
 
 .barcode-legend {

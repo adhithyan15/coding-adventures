@@ -1,0 +1,3 @@
+luarocks remove --force coding-adventures-paint-instructions 1>NUL 2>NUL || ver >NUL
+luarocks make --local --no-manifest coding-adventures-paint-instructions-0.1.0-1.rockspec
+cd tests && busted . --verbose --pattern=test_

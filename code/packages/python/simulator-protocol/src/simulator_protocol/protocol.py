@@ -116,7 +116,7 @@ buys you.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Generic, Protocol, TypeVar
+from typing import Generic, Protocol, TypeVar, runtime_checkable
 
 # ---------------------------------------------------------------------------
 # Type variables
@@ -271,8 +271,7 @@ class ExecutionResult(Generic[StateT]):
 # ---------------------------------------------------------------------------
 # Simulator Protocol
 # ---------------------------------------------------------------------------
-
-
+@runtime_checkable
 class Simulator(Protocol[StateT]):
     """Generic interface all architecture simulators implement.
 
