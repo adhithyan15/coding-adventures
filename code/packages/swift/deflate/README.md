@@ -1,16 +1,15 @@
-# deflate (Rust)
+# deflate (Swift)
 
 **CMP05 — DEFLATE lossless compression (1996)**
 
 ## Usage
 
-```rust
-use deflate::{compress, decompress};
+```swift
+import Deflate
 
-let data = b"hello hello hello world";
-let compressed = compress(data).unwrap();
-let original = decompress(&compressed).unwrap();
-assert_eq!(original, data);
+let data = Array("hello hello hello world".utf8)
+let compressed   = try Deflate.compress(data)
+let decompressed = try Deflate.decompress(compressed)
 ```
 
 ## Wire Format
