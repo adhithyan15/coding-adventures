@@ -1,0 +1,7 @@
+cpanm --notest --quiet Test2::V0
+cd ..\transistors && cpanm --notest --quiet . && cd ..
+cd ..\logic-gates && cpanm --notest --quiet . && cd ..
+cd ..\arithmetic && cpanm --notest --quiet . && cd ..
+cd ..\intel8008-simulator && cpanm --notest --quiet . && cd ..
+set PERL5LIB=..\transistors\lib;..\logic-gates\lib;..\arithmetic\lib;..\intel8008-simulator\lib
+prove -l -v t/
