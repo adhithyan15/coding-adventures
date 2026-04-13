@@ -50,7 +50,7 @@ tokens = CodingAdventures::PythonLexer.tokenize("print 'hello'", version: "2.7")
 
 ## Dependencies
 
-- `coding_adventures_grammar_tools` -- reads the `.tokens` grammar files
+- `coding_adventures_grammar_tools` -- loads compiled versioned `.tokens` grammars
 - `coding_adventures_lexer` -- the grammar-driven lexer engine
 
 ## Development
