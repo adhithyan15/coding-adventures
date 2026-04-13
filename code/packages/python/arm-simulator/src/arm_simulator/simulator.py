@@ -78,6 +78,8 @@ When I=0, operand2's lowest 4 bits are the register number (Rm).
     HLT                -> halt             (custom encoding)
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from cpu_simulator.cpu import CPU
@@ -503,6 +505,165 @@ class ARMSimulator:
     def step(self) -> PipelineTrace:
         """Execute one instruction and return its pipeline trace."""
         return self.cpu.step()
+
+    def reset(self) -> None:
+        """Reset the simulator to power-on state (simulator-protocol).
+
+        Because the ``CPU`` class does not expose a ``reset()`` method, we
+        recreate it from scratch with the same parameters.  This clears all
+        registers, zeroes memory, sets PC to 0, and clears the halted flag.
+
+        After ``reset()``:
+          - All 16 registers (R0–R15) are 0.
+          - PC is 0.
+          - Memory is zeroed.
+          - ``cpu.halted`` is False.
+          - ``cpu.cycle`` counter is 0.
+        """
+        memory_size = self.cpu.memory.size
+        self.cpu = CPU(
+            decoder=self.decoder,
+            executor=self.executor,
+            num_registers=16,
+            bit_width=32,
+            memory_size=memory_size,
+        )
+
+    def load(self, program: bytes) -> None:
+        """Load binary program into memory at address 0 (simulator-protocol).
+
+        Writes the program bytes into the CPU's memory starting at offset 0
+        and resets the program counter to 0.  Does NOT reset other CPU state
+        (registers, halted flag) — call ``reset()`` first if needed.
+
+        Args:
+            program: Raw 32-bit little-endian ARM instruction bytes.
+        """
+        self.cpu.load_program(program)
+
+    def get_state(self) -> "ARMState":
+        """Return a frozen snapshot of the current ARM CPU state.
+
+        Conforms to the ``Simulator[ARMState]`` protocol.
+
+        Captures the full CPU state as immutable data:
+          - Register values are copied into a tuple (R0–R15).
+          - PC is ``registers[15]`` — also stored as a convenience field.
+          - Condition flags are ``(False, False, False, False)`` in the
+            current MVP (no S-bit instructions implemented).
+          - Memory is copied into a ``bytes`` object (immutable snapshot).
+          - ``halted`` reflects ``cpu.halted``.
+
+        Returns:
+            A frozen ``ARMState`` snapshot.
+
+        Examples
+        --------
+        >>> sim = ARMSimulator()
+        >>> state = sim.get_state()
+        >>> state.pc
+        0
+        >>> state.halted
+        False
+        """
+        from arm_simulator.state import ARMState
+
+        num_regs = self.cpu.registers.num_registers
+        register_values = tuple(self.cpu.registers.read(i) for i in range(num_regs))
+
+        # Condition flags: our MVP instructions all use S=0, so no flags
+        # are updated. We expose them as a 4-tuple (N, Z, C, V) of False.
+        # When S-bit instructions are added, this should read from a CPSR.
+        flags: tuple[bool, bool, bool, bool] = (False, False, False, False)
+
+        return ARMState(
+            registers=register_values,
+            pc=self.cpu.pc,
+            flags=flags,
+            memory=bytes(self.cpu.memory._data),
+            halted=self.cpu.halted,
+        )
+
+    def execute(
+        self,
+        program: bytes,
+        max_steps: int = 100_000,
+    ) -> "ExecutionResult[ARMState]":
+        """Load program, run to HLT or max_steps, return ExecutionResult.
+
+        Conforms to the ``Simulator[ARMState]`` protocol.  This is the
+        recommended entry point for end-to-end testing:
+
+            result = sim.execute(machine_code)
+            assert result.ok
+            assert result.final_state.registers[2] == 3  # R2 = 3
+
+        The method:
+          1. Resets the simulator (all registers zeroed, PC = 0).
+          2. Loads the program bytes at address 0.
+          3. Steps until the HLT sentinel (0xFFFFFFFF) or ``max_steps``.
+          4. Returns a full ``ExecutionResult`` with trace and final state.
+
+        Note: existing ``run()`` is unchanged and continues to return
+        ``list[PipelineTrace]`` as before.
+
+        Args:
+            program:   Raw 32-bit little-endian ARM machine-code bytes.
+            max_steps: Safety limit to prevent infinite loops (default 100,000).
+
+        Returns:
+            ``ExecutionResult[ARMState]`` with:
+            - ``halted``:      True if the HLT sentinel was reached.
+            - ``steps``:       Number of instructions executed.
+            - ``final_state``: Frozen ``ARMState`` at termination.
+            - ``error``:       None on clean halt; error string otherwise.
+            - ``traces``:      List of ``StepTrace`` (one per instruction).
+
+        Examples
+        --------
+        >>> sim = ARMSimulator()
+        >>> from arm_simulator.simulator import assemble, encode_hlt
+        >>> result = sim.execute(assemble([encode_hlt()]))
+        >>> result.ok
+        True
+        >>> result.steps
+        1
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+        from arm_simulator.state import ARMState  # noqa: F401
+
+        self.reset()
+        self.load(program)
+
+        protocol_traces: list[StepTrace] = []
+        steps = 0
+
+        while not self.cpu.halted and steps < max_steps:
+            pc_before = self.cpu.pc
+            pipeline_trace = self.cpu.step()
+            protocol_traces.append(
+                StepTrace(
+                    pc_before=pc_before,
+                    pc_after=self.cpu.pc,
+                    mnemonic=pipeline_trace.decode.mnemonic,
+                    description=(
+                        f"{pipeline_trace.decode.mnemonic} @ 0x{pc_before:08X}"
+                    ),
+                )
+            )
+            steps += 1
+
+        return ExecutionResult(
+            halted=self.cpu.halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=(
+                None
+                if self.cpu.halted
+                else f"max_steps ({max_steps}) exceeded"
+            ),
+            traces=protocol_traces,
+        )
 
 
 def assemble(instructions: list[int]) -> bytes:

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.1] - 2026-04-12
+
+### Changed
+
+- Clarified architectural scope in README and module docstring: `TypeChecker`
+  enforces **language-level** invariants only (type mismatches, undeclared
+  variables, language-mandated no-recursion, static for-bounds).  Hardware and
+  ISA constraints (call depth limits, RAM budgets, register counts) belong in
+  each backend's own `IrValidator`, not here.  This makes the design
+  composable: the same frontend type checker targets any ISA without
+  modification.
+- Updated pipeline diagrams in README and docstring to show the Backend
+  Validator stage that sits between IR generation and code emission.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

@@ -19,6 +19,7 @@ Test organization:
     - test_program_*        : Complete example programs
     - test_reset_*          : Reset behavior
     - test_memory_*         : M pseudo-register / memory access
+    - TestSimulatorProtocol : simulator-protocol conformance tests
 """
 
 from __future__ import annotations
@@ -886,6 +887,168 @@ class TestReset:
         sim.run(bytes([0x26, 0x00, 0x2E, 0x10, 0x36, 0x42, 0x76]))
         sim.reset()
         assert all(b == 0 for b in sim.memory)
+
+
+# ---------------------------------------------------------------------------
+# simulator-protocol conformance tests
+# ---------------------------------------------------------------------------
+
+
+class TestSimulatorProtocol:
+    """Verify Intel8008Simulator conforms to the Simulator[Intel8008State] protocol.
+
+    These tests exercise the three new methods added for protocol conformance:
+    ``get_state()``, ``execute()``, and ``load()``.
+
+    They do NOT import from ``simulator_protocol`` directly — they test the
+    public API surface that consumers of the protocol will use.
+    """
+
+    def test_get_state_returns_intel8008_state(self) -> None:
+        """get_state() must return an Intel8008State instance."""
+        from intel8008_simulator import Intel8008State
+
+        sim = make_sim()
+        state = sim.get_state()
+        assert isinstance(state, Intel8008State)
+
+    def test_get_state_is_frozen(self) -> None:
+        """Intel8008State must be immutable — assignment raises FrozenInstanceError."""
+        import dataclasses
+
+        sim = make_sim()
+        state = sim.get_state()
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            state.a = 99  # type: ignore[misc]
+
+    def test_get_state_initial_values(self) -> None:
+        """A fresh simulator's state snapshot should have all-zero registers and PC=0."""
+        sim = make_sim()
+        state = sim.get_state()
+        assert state.pc == 0
+        assert state.a == 0
+        assert state.b == 0
+        assert state.halted is False
+        assert state.stack_depth == 0
+        assert len(state.stack) == 8
+        assert len(state.memory) == 16384
+
+    def test_get_state_reflects_current_registers(self) -> None:
+        """After running a program, get_state() must reflect the final register values."""
+        sim = make_sim()
+        # MVI A, 42; HLT
+        sim.run(bytes([0x3E, 0x2A, 0x76]))
+        state = sim.get_state()
+        assert state.a == 42
+        assert state.halted is True
+
+    def test_get_state_memory_is_immutable_snapshot(self) -> None:
+        """Mutating the simulator's memory after get_state() must not change the snapshot."""
+        sim = make_sim()
+        # Write 0xFF to memory[0x10] via MVI M then grab state
+        program = bytes([
+            0x26, 0x00,   # MVI H, 0
+            0x2E, 0x10,   # MVI L, 0x10
+            0x36, 0xFF,   # MVI M, 0xFF
+            0x76,         # HLT
+        ])
+        sim.run(program)
+        state = sim.get_state()
+        # Confirm the snapshot has 0xFF at offset 0x10
+        assert state.memory[0x10] == 0xFF
+        # Now mutate the simulator's live memory
+        sim._memory[0x10] = 0x00
+        # The snapshot must NOT change
+        assert state.memory[0x10] == 0xFF
+
+    def test_execute_returns_execution_result(self) -> None:
+        """execute() must return an ExecutionResult with the expected fields."""
+        from simulator_protocol import ExecutionResult
+
+        sim = make_sim()
+        result = sim.execute(bytes([0x76]))  # HLT
+        assert isinstance(result, ExecutionResult)
+        assert hasattr(result, "halted")
+        assert hasattr(result, "steps")
+        assert hasattr(result, "final_state")
+        assert hasattr(result, "error")
+        assert hasattr(result, "traces")
+
+    def test_execute_simple_program_halts(self) -> None:
+        """A program ending in HLT must produce result.ok == True."""
+        sim = make_sim()
+        # MVI A, 7; HLT  (2 instructions)
+        result = sim.execute(bytes([0x3E, 0x07, 0x76]))
+        assert result.ok is True
+        assert result.halted is True
+        assert result.error is None
+
+    def test_execute_max_steps_exceeded(self) -> None:
+        """When max_steps is hit without HLT, result.ok must be False with an error."""
+        sim = make_sim()
+        # An infinite-ish loop: JMP 0x0000 (3 bytes)
+        # 0x7C = JMP, lo=0x00, hi=0x00 → jump back to 0x0000 forever
+        result = sim.execute(bytes([0x7C, 0x00, 0x00]), max_steps=10)
+        assert result.ok is False
+        assert result.halted is False
+        assert result.error is not None
+        assert "max_steps" in result.error
+        assert result.steps == 10
+
+    def test_execute_final_state_accessible(self) -> None:
+        """final_state on ExecutionResult must expose Intel8008State fields."""
+        from intel8008_simulator import Intel8008State
+
+        sim = make_sim()
+        # MVI A, 0x55; MVI B, 0xAA; HLT
+        result = sim.execute(bytes([0x3E, 0x55, 0x06, 0xAA, 0x76]))
+        state = result.final_state
+        assert isinstance(state, Intel8008State)
+        assert state.a == 0x55
+        assert state.b == 0xAA
+        assert state.halted is True
+
+    def test_execute_traces_match_steps(self) -> None:
+        """The length of result.traces must equal result.steps."""
+        sim = make_sim()
+        # MVI A,1; MVI B,2; HLT  → 3 instructions
+        result = sim.execute(bytes([0x3E, 0x01, 0x06, 0x02, 0x76]))
+        assert result.steps == 3
+        assert len(result.traces) == 3
+
+    def test_execute_trace_has_correct_structure(self) -> None:
+        """Each StepTrace in result.traces must have pc_before, pc_after, mnemonic, description."""
+        from simulator_protocol import StepTrace
+
+        sim = make_sim()
+        result = sim.execute(bytes([0x76]))  # HLT at PC=0
+        assert len(result.traces) == 1
+        trace = result.traces[0]
+        assert isinstance(trace, StepTrace)
+        assert trace.pc_before == 0
+        assert isinstance(trace.mnemonic, str)
+        assert isinstance(trace.description, str)
+        assert "0x" in trace.description  # description includes hex PC
+
+    def test_execute_resets_between_calls(self) -> None:
+        """Calling execute() twice must produce independent results (implicit reset)."""
+        sim = make_sim()
+        # First run: MVI A, 10; HLT
+        r1 = sim.execute(bytes([0x3E, 0x0A, 0x76]))
+        # Second run: MVI A, 20; HLT
+        r2 = sim.execute(bytes([0x3E, 0x14, 0x76]))
+        assert r1.final_state.a == 10
+        assert r2.final_state.a == 20
+
+    def test_load_alias_works(self) -> None:
+        """load() is a valid alias for load_program(program, 0)."""
+        sim = make_sim()
+        sim.reset()
+        sim.load(bytes([0x3E, 0x07, 0x76]))  # MVI A,7; HLT
+        # Manually step until halted
+        while not sim.halted:
+            sim.step()
+        assert sim.a == 7
 
     def test_reset_clears_stack(self) -> None:
         sim = make_sim()
