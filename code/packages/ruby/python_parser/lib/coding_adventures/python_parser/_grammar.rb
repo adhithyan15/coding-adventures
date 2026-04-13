@@ -16,14 +16,20 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
   rules: [
     GT::GrammarRule.new(
       name: "program",
-      body: GT::Repetition.new(element: GT::RuleReference.new(name: "statement", is_token: false)),
+      body: GT::Repetition.new(element: GT::Alternation.new(choices: [
+          GT::RuleReference.new(name: "NEWLINE", is_token: true),
+          GT::RuleReference.new(name: "statement", is_token: false),
+        ])),
       line_number: 17,
     ),
     GT::GrammarRule.new(
       name: "statement",
-      body: GT::Alternation.new(choices: [
-        GT::RuleReference.new(name: "assignment", is_token: false),
-        GT::RuleReference.new(name: "expression_stmt", is_token: false),
+      body: GT::Sequence.new(elements: [
+        GT::Group.new(element: GT::Alternation.new(choices: [
+            GT::RuleReference.new(name: "assignment", is_token: false),
+            GT::RuleReference.new(name: "expression_stmt", is_token: false),
+          ])),
+        GT::OptionalElement.new(element: GT::RuleReference.new(name: "NEWLINE", is_token: true)),
       ]),
       line_number: 18,
     ),
@@ -72,6 +78,8 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
     GT::GrammarRule.new(
       name: "factor",
       body: GT::Alternation.new(choices: [
+        GT::RuleReference.new(name: "INT", is_token: true),
+        GT::RuleReference.new(name: "FLOAT", is_token: true),
         GT::RuleReference.new(name: "NUMBER", is_token: true),
         GT::RuleReference.new(name: "STRING", is_token: true),
         GT::RuleReference.new(name: "NAME", is_token: true),

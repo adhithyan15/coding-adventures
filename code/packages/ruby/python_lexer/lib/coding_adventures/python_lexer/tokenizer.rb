@@ -53,8 +53,8 @@ require "coding_adventures_lexer"
 
 module CodingAdventures
   module PythonLexer
-    # The default Python version used when no version is specified.
-    # We default to the latest grammar we have.
+    # Standalone callers default to the latest versioned grammar.
+    # The parser explicitly opts into the generic grammar when it needs it.
     DEFAULT_VERSION = "3.12"
 
     # All Python versions with grammar files in the repository.
@@ -64,6 +64,7 @@ module CodingAdventures
     # We navigate up from lib/coding_adventures/python_lexer/ to the
     # repository root's code/grammars/ directory.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
+    COMPILED_GRAMMAR_DIR = __dir__
 
     # Per-version grammar cache. Once a grammar is parsed it is stored
     # here and reused for all subsequent calls with that version. This
@@ -75,30 +76,40 @@ module CodingAdventures
     @grammar_cache = {}
 
     # Build the path to the .tokens file for a given version.
-    #
-    #   grammar_path("3.12") => ".../code/grammars/python/python3.12.tokens"
     def self.grammar_path(version)
-      File.join(GRAMMAR_DIR, "python", "python#{version}.tokens")
+      if version.nil? || version.empty?
+        File.join(GRAMMAR_DIR, "python.tokens")
+      else
+        File.join(GRAMMAR_DIR, "python", "python#{version}.tokens")
+      end
+    end
+
+    def self.compiled_grammar_path(version)
+      if version.nil? || version.empty?
+        File.join(COMPILED_GRAMMAR_DIR, "_grammar.rb")
+      else
+        File.join(COMPILED_GRAMMAR_DIR, "_grammar_#{version.tr(".", "_")}.rb")
+      end
     end
 
     # Load and cache the parsed TokenGrammar for the given version.
     #
-    # @param version [String] Python version string (e.g. "3.12")
+    # @param version [String, nil] Python version string (e.g. "3.12") or nil
     # @return [CodingAdventures::GrammarTools::TokenGrammar]
     # @raise [ArgumentError] if the version is not supported
     def self.load_grammar(version)
       return @grammar_cache[version] if @grammar_cache.key?(version)
 
-      path = grammar_path(version)
-      unless File.exist?(path)
+      if !version.nil? && !version.empty? && !SUPPORTED_VERSIONS.include?(version)
         raise ArgumentError,
           "Unsupported Python version: #{version.inspect}. " \
           "Supported versions: #{SUPPORTED_VERSIONS.join(", ")}"
       end
 
-      grammar = CodingAdventures::GrammarTools.parse_token_grammar(
-        File.read(path, encoding: "UTF-8")
-      )
+      path = grammar_path(version)
+      raise ArgumentError, "Missing Python grammar file: #{path}" unless File.exist?(path)
+
+      grammar = CodingAdventures::GrammarTools.load_token_grammar(compiled_grammar_path(version))
       @grammar_cache[version] = grammar
       grammar
     end
@@ -112,7 +123,7 @@ module CodingAdventures
     # 4. Returns the resulting token array
     #
     # @param source [String] Python source code to tokenize
-    # @param version [String] Python version (default: "3.12")
+    # @param version [String, nil] Python version or nil for the generic grammar
     # @return [Array<CodingAdventures::Lexer::Token>] the token stream
     def self.tokenize(source, version: DEFAULT_VERSION)
       grammar = load_grammar(version)
@@ -123,6 +134,7 @@ module CodingAdventures
     # Clear the grammar cache. Primarily useful for testing.
     def self.clear_cache!
       @grammar_cache.clear
+      CodingAdventures::GrammarTools.clear_compiled_grammar_cache!
     end
   end
 end

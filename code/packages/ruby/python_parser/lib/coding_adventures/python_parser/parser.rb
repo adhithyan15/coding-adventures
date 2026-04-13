@@ -37,6 +37,11 @@ module CodingAdventures
     # Paths to the grammar files, computed relative to this file.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     PYTHON_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "python.grammar")
+    COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
+
+    def self.parser_grammar
+      @parser_grammar ||= CodingAdventures::GrammarTools.load_parser_grammar(COMPILED_GRAMMAR_PATH)
+    end
 
     # Parse a string of Python source code into a generic AST.
     #
@@ -51,15 +56,10 @@ module CodingAdventures
     # @return [CodingAdventures::Parser::ASTNode] the root AST node
     def self.parse(source)
       # Step 1: Tokenize using the Python lexer
-      tokens = CodingAdventures::PythonLexer.tokenize(source)
+      tokens = CodingAdventures::PythonLexer.tokenize(source, version: nil)
 
-      # Step 2: Load and parse the Python grammar
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(PYTHON_GRAMMAR_PATH, encoding: "UTF-8")
-      )
-
-      # Step 3: Parse tokens using the grammar-driven parser
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      # Step 2: Parse tokens using the compiled grammar.
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar)
       parser.parse
     end
   end
