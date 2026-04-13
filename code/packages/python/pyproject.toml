@@ -10,9 +10,12 @@ members = [
     "arithmetic",
     "cpu-simulator",
     "arm-simulator",
+    "arm1-simulator",
     "riscv-simulator",
     "wasm-simulator",
     "intel4004-simulator",
+    "intel8008-simulator",
+    "intel8008-gatelevel",
     "assembler",
     "grammar-tools",
     "state-machine",
@@ -24,6 +27,7 @@ members = [
     "compiler-pipeline",
     "html-renderer",
     "clr-simulator",
+    "jvm-simulator",
     "fp-arithmetic",
     "clock",
     "gpu-core",
@@ -32,6 +36,7 @@ members = [
     "device-simulator",
     "cache",
     "compute-runtime",
+    "rom-bios",
     "vendor-api-simulators",
     "blas-library",
     "ml-framework-core",
@@ -52,6 +57,7 @@ members = [
     "tree-set-native",
     "tcp-server",
     "radix-tree",
+    "simulator-protocol",
 ]
 
 [tool.uv.sources]
@@ -59,9 +65,12 @@ coding-adventures-logic-gates = { workspace = true }
 coding-adventures-arithmetic = { workspace = true }
 coding-adventures-cpu-simulator = { workspace = true }
 coding-adventures-arm-simulator = { workspace = true }
+coding-adventures-arm1-simulator = { workspace = true }
 coding-adventures-riscv-simulator = { workspace = true }
 coding-adventures-wasm-simulator = { workspace = true }
 coding-adventures-intel4004-simulator = { workspace = true }
+coding-adventures-intel8008-simulator = { workspace = true }
+coding-adventures-intel8008-gatelevel = { workspace = true }
 coding-adventures-assembler = { workspace = true }
 coding-adventures-directed-graph = { workspace = true }
 coding-adventures-lexer = { workspace = true }
@@ -74,6 +83,7 @@ coding-adventures-jit-compiler = { workspace = true }
 coding-adventures-compiler-pipeline = { workspace = true }
 coding-adventures-html-renderer = { workspace = true }
 coding-adventures-clr-simulator = { workspace = true }
+coding-adventures-jvm-simulator = { workspace = true }
 coding-adventures-fp-arithmetic = { workspace = true }
 coding-adventures-clock = { workspace = true }
 coding-adventures-gpu-core = { workspace = true }
@@ -82,6 +92,7 @@ coding-adventures-compute-unit = { workspace = true }
 coding-adventures-device-simulator = { workspace = true }
 coding-adventures-cache = { workspace = true }
 coding-adventures-compute-runtime = { workspace = true }
+coding-adventures-rom-bios = { workspace = true }
 coding-adventures-vendor-api-simulators = { workspace = true }
 coding-adventures-blas-library = { workspace = true }
 coding-adventures-ml-framework-core = { workspace = true }
@@ -102,6 +113,7 @@ coding-adventures-tree-set = { workspace = true }
 coding-adventures-tree-set-native = { workspace = true }
 coding-adventures-tcp-server = { workspace = true }
 coding-adventures-radix-tree = { workspace = true }
+coding-adventures-simulator-protocol = { workspace = true }
 
 [dependency-groups]
 dev = [
