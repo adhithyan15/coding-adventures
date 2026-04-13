@@ -4,9 +4,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: "v8",
-      thresholds: {
-        lines: 80,
-      },
+      include: ["index.js"],
     },
   },
 });

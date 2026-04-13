@@ -6,6 +6,7 @@ members = [
     "arithmetic",
     "arm-simulator",
     "assembler",
+    "barcode-layout-1d",
     "bitset",
     "binary-search-tree",
     "avl-tree",

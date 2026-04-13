@@ -1,7 +1,7 @@
 /**
- * @coding-adventures/barcode-1d
+ * @coding-adventures/barcode-layout-1d
  *
- * This package is the shared geometry layer for linear barcodes.
+ * Shared geometry layer for linear barcodes.
  *
  * Barcode symbologies still own the interesting domain rules:
  * - which inputs are valid
@@ -9,17 +9,16 @@
  * - which symbol table to use
  * - where start/stop or guard patterns belong
  *
- * Once a symbology has answered those questions, however, most 1D formats look
- * the same: they become a left-to-right stream of bars and spaces measured in
- * modules. This package owns that seam.
+ * Once a symbology has answered those questions, most 1D formats reduce to a
+ * left-to-right stream of bars and spaces measured in modules. This package
+ * owns the layout step from those runs into a rect-only PaintScene.
  */
 import {
-  createScene,
-  drawRect,
-  drawText,
-  type DrawMetadata,
-  type DrawScene,
-} from "@coding-adventures/draw-instructions";
+  paintRect,
+  paintScene,
+  type PaintInstruction,
+  type PaintScene,
+} from "@coding-adventures/paint-instructions";
 
 export const VERSION = "0.1.0";
 
@@ -76,21 +75,22 @@ export interface Barcode1DRenderConfig {
   background: string;
 }
 
-export interface DrawBarcode1DOptions {
+export interface PaintBarcode1DOptions {
   renderConfig?: Partial<Barcode1DRenderConfig>;
   humanReadableText?: string | null;
-  metadata?: DrawMetadata;
+  metadata?: Record<string, string | number | boolean>;
   label?: string;
   symbols?: Barcode1DSymbolDescriptor[];
 }
 
-const TEXT_DESCENT_ALLOWANCE = 4;
+export type DrawBarcode1DOptions = PaintBarcode1DOptions;
+export type LayoutBarcode1DOptions = PaintBarcode1DOptions;
 
 export const DEFAULT_BARCODE_1D_RENDER_CONFIG: Barcode1DRenderConfig = {
   moduleWidth: 4,
   barHeight: 120,
   quietZoneModules: 10,
-  includeHumanReadableText: true,
+  includeHumanReadableText: false,
   textFontSize: 16,
   textMargin: 8,
   foreground: "#000000",
@@ -125,6 +125,12 @@ function validateRenderConfig(config: Barcode1DRenderConfig): void {
 
   if (config.textMargin < 0) {
     throw new InvalidBarcode1DConfigurationError("textMargin must be zero or greater");
+  }
+
+  if (config.includeHumanReadableText) {
+    throw new InvalidBarcode1DConfigurationError(
+      "Human-readable text is disabled for barcode-layout-1d until text metrics and glyph shaping are finished",
+    );
   }
 }
 
@@ -238,12 +244,6 @@ export interface RunsFromBinaryPatternOptions {
   role: Barcode1DRunRole;
 }
 
-/**
- * Convert a binary string such as `101` or `110100101` into module runs.
- *
- * The first bit is assumed to describe a bar. This matches the barcode formats
- * we currently implement.
- */
 export function runsFromBinaryPattern(
   pattern: string,
   options: RunsFromBinaryPatternOptions,
@@ -295,9 +295,6 @@ export interface RunsFromWidthPatternOptions extends RunsFromBinaryPatternOption
   startingColor?: Barcode1DRunColor;
 }
 
-/**
- * Convert a symbolic width pattern such as `NWNNW` into numeric module runs.
- */
 export function runsFromWidthPattern(
   pattern: string,
   options: RunsFromWidthPatternOptions,
@@ -339,16 +336,23 @@ export function runsFromWidthPattern(
   return runs;
 }
 
-export function drawBarcode1D(
+export function layoutBarcode1D(
   runs: Barcode1DRun[],
-  options: DrawBarcode1DOptions = {},
-): DrawScene {
+  options: LayoutBarcode1DOptions = {},
+): PaintScene {
   const config = mergeRenderConfig(options.renderConfig);
+
+  if (options.humanReadableText !== undefined && options.humanReadableText !== null) {
+    throw new InvalidBarcode1DConfigurationError(
+      "Human-readable text is disabled for barcode-layout-1d until text metrics and glyph shaping are finished",
+    );
+  }
+
   const layout = computeBarcode1DLayout(runs, {
     quietZoneModules: config.quietZoneModules,
     symbols: options.symbols,
   });
-  const instructions = [];
+  const instructions: PaintInstruction[] = [];
   let moduleCursor = layout.leftQuietZoneModules;
 
   for (const run of runs) {
@@ -357,12 +361,15 @@ export function drawBarcode1D(
 
     if (run.color === "bar") {
       instructions.push(
-        drawRect(x, 0, width, config.barHeight, config.foreground, {
-          sourceLabel: run.sourceLabel,
-          sourceIndex: run.sourceIndex,
-          role: run.role,
-          moduleStart: moduleCursor,
-          moduleEnd: moduleCursor + run.modules,
+        paintRect(x, 0, width, config.barHeight, {
+          fill: config.foreground,
+          metadata: {
+            sourceLabel: run.sourceLabel,
+            sourceIndex: run.sourceIndex,
+            role: run.role,
+            moduleStart: moduleCursor,
+            moduleEnd: moduleCursor + run.modules,
+          },
         }),
       );
     }
@@ -370,34 +377,12 @@ export function drawBarcode1D(
     moduleCursor += run.modules;
   }
 
-  const hasText =
-    config.includeHumanReadableText && options.humanReadableText !== undefined && options.humanReadableText !== null;
-
-  const textBlockHeight = hasText
-    ? config.textMargin + config.textFontSize + TEXT_DESCENT_ALLOWANCE
-    : 0;
-
-  if (hasText) {
-    instructions.push(
-      drawText(
-        (layout.totalModules * config.moduleWidth) / 2,
-        config.barHeight + config.textMargin + config.textFontSize - 2,
-        options.humanReadableText ?? "",
-        {
-          fontSize: config.textFontSize,
-          fill: config.foreground,
-          metadata: { role: "human-readable-text" },
-        },
-      ),
-    );
-  }
-
-  return createScene(
+  return paintScene(
     layout.totalModules * config.moduleWidth,
-    config.barHeight + textBlockHeight,
+    config.barHeight,
+    config.background,
     instructions,
     {
-      background: config.background,
       metadata: {
         ...options.metadata,
         label: options.label ?? "1D barcode",
@@ -405,7 +390,16 @@ export function drawBarcode1D(
         rightQuietZoneModules: layout.rightQuietZoneModules,
         contentModules: layout.contentModules,
         totalModules: layout.totalModules,
+        moduleWidthPx: config.moduleWidth,
+        barHeightPx: config.barHeight,
       },
     },
   );
+}
+
+export function drawBarcode1D(
+  runs: Barcode1DRun[],
+  options: DrawBarcode1DOptions = {},
+): PaintScene {
+  return layoutBarcode1D(runs, options);
 }
