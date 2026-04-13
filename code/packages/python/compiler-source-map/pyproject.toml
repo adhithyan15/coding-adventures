@@ -20,7 +20,14 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed",
 ]
-dependencies = []
+dependencies = [
+    "coding-adventures-compiler-ir",
+]
+
+[tool.uv.sources]
+# Sibling packages are installed via local file paths — not from PyPI.
+# This tells uv where to find them during local development.
+coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
