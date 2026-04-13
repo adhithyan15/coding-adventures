@@ -1,5 +1,4 @@
-# Windows: Perl native extension requires Perl DLL import library to link against.
-# The Perl DLL symbols (PL_markstack_ptr, sv_2iv, etc.) are not available
-# on Windows CI runners without a full Perl development install.
-# Linux and macOS CI runners cover this package fully.
+# Windows: Perl native extensions still need the Perl DLL import library and
+# headers available locally. Windows CI runners here do not provide that full
+# Perl development toolchain yet, so we skip the package there.
 echo Skipping perl/polynomial_native on Windows — Perl import library not available

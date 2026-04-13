@@ -9,12 +9,12 @@ WHAT IS A TYPE CHECKER?
 A compiler typically passes source code through several stages:
 
     Source text
-        → Lexer        (characters → tokens)
-        → Parser       (tokens → AST)
-        → Type Checker (untyped AST → typed AST)   ← this layer
-        → IR Compiler  (typed AST → IR)
-        → Backend Validator (IR → validated IR)     ← ISA/hardware checks here
-        → Code Generator (validated IR → machine code / bytecode)
+    → Lexer        (characters → tokens)
+    → Parser       (tokens → AST)
+    → Type Checker (untyped AST → typed AST)   ← this layer
+    → IR Compiler  (typed AST → IR)
+    → Backend Validator (IR → validated IR)     ← ISA/hardware checks here
+    → Code Generator (validated IR → machine code / bytecode)
 
 The type checker's job is to *verify* that a program is type-safe and to
 *annotate* the AST with type information that later stages need.

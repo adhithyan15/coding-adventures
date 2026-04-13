@@ -90,7 +90,7 @@ export interface SvgContext {
   filterCounter: number;
 }
 
-function makeSvgContext(): SvgContext {
+export function createSvgContext(): SvgContext {
   return { defs: [], elements: [], clipCounter: 0, filterCounter: 0 };
 }
 
@@ -675,7 +675,7 @@ export function createSvgVM(): PaintVM<SvgContext> {
  */
 export function renderToSvgString(scene: PaintScene): string {
   const vm = createSvgVM();
-  const ctx = makeSvgContext();
+  const ctx = createSvgContext();
   vm.execute(scene, ctx);
   return assembleSvg(scene, ctx);
 }

@@ -1042,3 +1042,149 @@ class Intel8008Simulator:
                 break
 
         return traces
+
+    # ------------------------------------------------------------------
+    # simulator-protocol conformance — get_state() and execute()
+    # ------------------------------------------------------------------
+
+    def load(self, program: bytes) -> None:
+        """Load program bytes into memory at address 0 (simulator-protocol).
+
+        This is a thin alias for ``load_program(program, start_address=0)``
+        that satisfies the ``Simulator[StateT]`` protocol's ``load()``
+        signature.
+
+        For fine-grained control (non-zero start address), use
+        ``load_program()`` directly.
+
+        Args:
+            program: Raw machine-code bytes to write into memory at offset 0.
+        """
+        self.load_program(program, start_address=0)
+
+    def get_state(self) -> "Intel8008State":
+        """Return a frozen snapshot of the current CPU state.
+
+        Conforms to the ``Simulator[Intel8008State]`` protocol.
+
+        The returned ``Intel8008State`` is fully immutable:
+          - Registers and flags are captured by value.
+          - The stack is converted from a mutable list to an immutable tuple.
+          - Memory is converted from a mutable bytearray to immutable bytes.
+
+        This means you can safely store the result and compare it later,
+        even if the simulator continues executing after this call.
+
+        Returns:
+            A frozen ``Intel8008State`` snapshot.
+
+        Examples
+        --------
+        >>> sim = Intel8008Simulator()
+        >>> state = sim.get_state()
+        >>> state.pc
+        0
+        >>> state.halted
+        False
+        """
+        from intel8008_simulator.state import Intel8008Flags as StateFlags
+        from intel8008_simulator.state import Intel8008State
+
+        return Intel8008State(
+            a=self.a,
+            b=self.b,
+            c=self.c,
+            d=self.d,
+            e=self.e,
+            h=self.h,
+            l=self.l,
+            pc=self.pc,
+            flags=StateFlags(
+                carry=self._flags.carry,
+                zero=self._flags.zero,
+                sign=self._flags.sign,
+                parity=self._flags.parity,
+            ),
+            stack=tuple(self._stack),
+            stack_depth=self._stack_depth,
+            memory=bytes(self._memory),
+            halted=self._halted,
+        )
+
+    def execute(
+        self,
+        program: bytes,
+        max_steps: int = 100_000,
+    ) -> "ExecutionResult[Intel8008State]":
+        """Load program, run to HALT or max_steps, return ExecutionResult.
+
+        Conforms to the ``Simulator[Intel8008State]`` protocol.  This is the
+        recommended entry point for end-to-end testing:
+
+            result = sim.execute(machine_code)
+            assert result.ok
+            assert result.final_state.a == 3
+
+        The method:
+          1. Resets the simulator to power-on state.
+          2. Loads the program bytes at address 0.
+          3. Steps until HLT or ``max_steps`` is reached.
+          4. Returns an ``ExecutionResult`` with the full trace and final state.
+
+        Note: existing ``run()`` is unchanged and continues to return
+        ``list[Intel8008Trace]`` as before.
+
+        Args:
+            program:   Raw Intel 8008 machine-code bytes.
+            max_steps: Safety limit to prevent infinite loops (default 100,000).
+
+        Returns:
+            ``ExecutionResult[Intel8008State]`` with:
+            - ``halted``: True if a HLT instruction was reached.
+            - ``steps``:  Number of instructions executed.
+            - ``final_state``: Frozen ``Intel8008State`` at termination.
+            - ``error``:  None on clean halt; error string if max_steps exceeded.
+            - ``traces``: List of ``StepTrace`` (one per instruction).
+
+        Examples
+        --------
+        >>> sim = Intel8008Simulator()
+        >>> result = sim.execute(bytes([0x76]))  # HLT
+        >>> result.ok
+        True
+        >>> result.steps
+        1
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+        from intel8008_simulator.state import Intel8008State  # noqa: F401
+
+        self.reset()
+        self.load(program)
+
+        protocol_traces: list[StepTrace] = []
+        steps = 0
+
+        while not self._halted and steps < max_steps:
+            pc_before = self.pc
+            raw_trace = self.step()
+            protocol_traces.append(
+                StepTrace(
+                    pc_before=pc_before,
+                    pc_after=self.pc,
+                    mnemonic=raw_trace.mnemonic,
+                    description=f"{raw_trace.mnemonic} @ 0x{pc_before:04X}",
+                )
+            )
+            steps += 1
+
+        return ExecutionResult(
+            halted=self._halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=(
+                None
+                if self._halted
+                else f"max_steps ({max_steps}) exceeded"
+            ),
+            traces=protocol_traces,
+        )
