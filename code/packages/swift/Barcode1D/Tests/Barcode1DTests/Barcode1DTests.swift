@@ -8,6 +8,22 @@ final class Barcode1DTests: XCTestCase {
         XCTAssertEqual(scene.height, 120)
     }
 
+    func testBuildSceneAdditionalSymbologies() throws {
+        let cases: [(String, String, String)] = [
+            ("40156", "codabar", "codabar"),
+            ("Code 128", "code128", "code128"),
+            ("400638133393", "ean-13", "ean-13"),
+            ("123456", "itf", "itf"),
+            ("03600029145", "upc-a", "upc-a"),
+        ]
+
+        for (input, symbology, expected) in cases {
+            let scene = try Barcode1D.buildScene(input, symbology: symbology)
+            XCTAssertEqual(scene.metadata["symbology"], expected)
+            XCTAssertGreaterThan(scene.width, 0)
+        }
+    }
+
     func testRenderPNGSignature() throws {
         #if os(macOS) && arch(arm64)
         let png = try Barcode1D.renderPNG("HELLO-123")

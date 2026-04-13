@@ -1,8 +1,16 @@
 package.path = (
     "../src/?.lua;" ..
     "../src/?/init.lua;" ..
+    "../../codabar/src/?.lua;" ..
+    "../../codabar/src/?/init.lua;" ..
+    "../../code128/src/?.lua;" ..
+    "../../code128/src/?/init.lua;" ..
     "../../code39/src/?.lua;" ..
     "../../code39/src/?/init.lua;" ..
+    "../../ean_13/src/?.lua;" ..
+    "../../ean_13/src/?/init.lua;" ..
+    "../../itf/src/?.lua;" ..
+    "../../itf/src/?/init.lua;" ..
     "../../barcode_layout_1d/src/?.lua;" ..
     "../../barcode_layout_1d/src/?/init.lua;" ..
     "../../paint_instructions/src/?.lua;" ..
@@ -13,6 +21,8 @@ package.path = (
     "../../paint_vm_metal_native/src/?/init.lua;" ..
     "../../paint_codec_png_native/src/?.lua;" ..
     "../../paint_codec_png_native/src/?/init.lua;" ..
+    "../../upc_a/src/?.lua;" ..
+    "../../upc_a/src/?/init.lua;" ..
     package.path
 )
 
@@ -28,6 +38,22 @@ describe("barcode_1d", function()
 
     it("reports backend availability", function()
         assert.is_true(barcode_1d.current_backend() == nil or barcode_1d.current_backend() == "metal")
+    end)
+
+    it("builds scenes for additional symbologies", function()
+        local cases = {
+            {"codabar", "40156"},
+            {"code128", "Code 128"},
+            {"ean-13", "400638133393"},
+            {"itf", "123456"},
+            {"upc-a", "03600029145"},
+        }
+
+        for _, case in ipairs(cases) do
+            local scene = barcode_1d.build_scene(case[2], case[1])
+            assert.is_true(scene.width > 0)
+            assert.is_truthy(scene.metadata.symbology)
+        end
     end)
 
     it("renders PNG bytes when Metal is available", function()

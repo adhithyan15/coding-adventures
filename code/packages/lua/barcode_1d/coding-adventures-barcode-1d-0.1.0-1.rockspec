@@ -13,7 +13,12 @@ description = {
 
 dependencies = {
     "lua >= 5.4",
+    "coding-adventures-codabar == 0.1.0-1",
+    "coding-adventures-code128 == 0.1.0-1",
     "coding-adventures-code39 == 0.1.0-1",
+    "coding-adventures-ean-13 == 0.1.0-1",
+    "coding-adventures-itf == 0.1.0-1",
+    "coding-adventures-upc-a == 0.1.0-1",
 }
 
 build = {
