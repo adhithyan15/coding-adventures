@@ -1,0 +1,9 @@
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding-adventures-huffman-tree", path: "../huffman-tree"
+gem "coding_adventures_heap", path: "../heap"
+gem "minitest", "~> 5.0"
+gem "rake"
+gem "standard", "~> 1.0"
