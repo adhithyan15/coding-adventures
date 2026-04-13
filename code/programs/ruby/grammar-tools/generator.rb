@@ -132,8 +132,6 @@ module GrammarToolsProgram
         compile_python_grammar("python")
         compile_go_tokens("python")
         compile_go_grammar("python")
-        compile_ruby_tokens("python")
-        compile_ruby_grammar("python")
         compile_typescript_tokens("python")
         compile_typescript_grammar("python")
       end
@@ -252,7 +250,7 @@ module GrammarToolsProgram
       end
 
       section("python versioned (ruby)") do
-        compile_ruby_python_versions("python_lexer")
+        compile_ruby_python_versions("python_lexer", "python_parser")
       end
     end
 
@@ -435,10 +433,11 @@ module GrammarToolsProgram
       end
     end
 
-    def compile_ruby_python_versions(lexer_pkg)
+    def compile_ruby_python_versions(lexer_pkg, parser_pkg)
       PYTHON_VERSIONS.each do |version|
         suffix = version.tr(".", "_")
         compile_ruby_token_file(@grammars.join("python", "python#{version}.tokens"), lexer_pkg, "_grammar_#{suffix}.rb")
+        compile_ruby_parser_file(@grammars.join("python", "python#{version}.grammar"), parser_pkg, "_grammar_#{suffix}.rb")
       end
     end
 
