@@ -255,4 +255,5 @@ members = [
     "tcp-client",
     "intel8008-simulator",
     "intel8008-gatelevel",
+    "x25519",
 ]
