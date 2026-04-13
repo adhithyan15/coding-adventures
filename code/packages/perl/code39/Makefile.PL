@@ -9,7 +9,9 @@ WriteMakefile(
     AUTHOR           => 'coding-adventures',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.026000',
-    PREREQ_PM        => {},
+    PREREQ_PM        => {
+        'CodingAdventures::BarcodeLayout1D' => 0,
+    },
     TEST_REQUIRES    => { 'Test2::V0' => 0 },
     META_MERGE       => {
         'meta-spec' => { version => 2 },

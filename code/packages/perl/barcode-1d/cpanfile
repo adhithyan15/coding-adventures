@@ -1,1 +1,5 @@
+requires 'coding-adventures-code39';
+requires 'coding-adventures-pixel-container';
+requires 'coding-adventures-paint_vm_metal_native';
+requires 'coding-adventures-paint_codec_png_native';
 on 'test' => sub { requires 'Test2::V0'; };
