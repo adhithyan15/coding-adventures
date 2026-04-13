@@ -3,14 +3,23 @@ defmodule CodingAdventures.Barcode1D do
   High-level 1D barcode pipeline for Elixir.
 
   This package keeps the layers separated:
-  - barcode package (`CodingAdventures.Code39`) owns encoding
+  - barcode packages own encoding
   - `barcode_layout_1d` owns geometry
   - native Paint VM packages own pixels and image encoding
   """
 
-  alias CodingAdventures.{Code39, PaintCodecPngNative, PaintVmMetalNative}
+  alias CodingAdventures.{
+    Codabar,
+    Code128,
+    Code39,
+    Ean13,
+    Itf,
+    PaintCodecPngNative,
+    PaintVmMetalNative,
+    UpcA
+  }
 
-  @type symbology :: :code39 | String.t()
+  @type symbology :: :codabar | :code128 | :code39 | :ean13 | :itf | :upca | String.t()
   @type render_error ::
           :unsupported_symbology
           | :metal_backend_unavailable
@@ -62,7 +71,12 @@ defmodule CodingAdventures.Barcode1D do
     layout_config = Keyword.get(opts, :layout_config, Code39.default_layout_config())
 
     case normalize_symbology(symbology) do
+      :codabar -> {:ok, Codabar.layout_codabar(data, layout_config)}
+      :code128 -> {:ok, Code128.layout_code128(data, layout_config)}
       :code39 -> {:ok, Code39.layout_code39(data, layout_config)}
+      :ean13 -> {:ok, Ean13.layout_ean_13(data, layout_config)}
+      :itf -> {:ok, Itf.layout_itf(data, layout_config)}
+      :upca -> {:ok, UpcA.layout_upc_a(data, layout_config)}
       :unsupported -> {:error, :unsupported_symbology}
     end
   end
@@ -100,7 +114,19 @@ defmodule CodingAdventures.Barcode1D do
 
   defp execute_scene(scene, :metal), do: PaintVmMetalNative.render(scene)
 
+  defp normalize_symbology(:codabar), do: :codabar
+  defp normalize_symbology(:code128), do: :code128
   defp normalize_symbology(:code39), do: :code39
+  defp normalize_symbology(:ean13), do: :ean13
+  defp normalize_symbology(:itf), do: :itf
+  defp normalize_symbology(:upca), do: :upca
+  defp normalize_symbology("codabar"), do: :codabar
+  defp normalize_symbology("code128"), do: :code128
   defp normalize_symbology("code39"), do: :code39
+  defp normalize_symbology("ean13"), do: :ean13
+  defp normalize_symbology("ean-13"), do: :ean13
+  defp normalize_symbology("itf"), do: :itf
+  defp normalize_symbology("upca"), do: :upca
+  defp normalize_symbology("upc-a"), do: :upca
   defp normalize_symbology(_symbology), do: :unsupported
 end

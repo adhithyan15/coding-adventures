@@ -9,13 +9,29 @@ def test_build_scene() -> None:
     assert scene.background == "#ffffff"
 
 
+@pytest.mark.parametrize(
+    ("symbology", "data"),
+    [
+        ("codabar", "40156"),
+        ("code128", "Code 128"),
+        ("ean13", "400638133393"),
+        ("itf", "123456"),
+        ("upca", "03600029145"),
+    ],
+)
+def test_build_scene_for_additional_symbologies(symbology: str, data: str) -> None:
+    scene = barcode_1d.build_scene(data, symbology=symbology)
+    assert scene.width > 0
+    assert scene.metadata["symbology"]
+
+
 def test_current_backend_probe() -> None:
     assert barcode_1d.current_backend() in {"metal", None}
 
 
 def test_build_scene_rejects_unsupported_symbology() -> None:
     with pytest.raises(barcode_1d.UnsupportedSymbologyError):
-        barcode_1d.build_scene("HELLO-123", symbology="ean13")
+        barcode_1d.build_scene("HELLO-123", symbology="qr")
 
 
 def test_render_pixels_fails_without_native_backend(monkeypatch: pytest.MonkeyPatch) -> None:

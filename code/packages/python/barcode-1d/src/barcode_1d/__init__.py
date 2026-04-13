@@ -6,8 +6,13 @@ import importlib
 import platform
 from typing import Any
 
+import codabar
+import code128
 import code39
+import ean_13
+import itf
 from pixel_container import PixelContainer
+import upc_a
 
 __version__ = "0.1.0"
 
@@ -47,6 +52,16 @@ def _normalize_symbology(symbology: str) -> str:
     normalized = symbology.replace("-", "").replace("_", "").lower()
     if normalized == "code39":
         return "code39"
+    if normalized == "codabar":
+        return "codabar"
+    if normalized == "code128":
+        return "code128"
+    if normalized == "ean13":
+        return "ean13"
+    if normalized == "itf":
+        return "itf"
+    if normalized == "upca":
+        return "upca"
     raise UnsupportedSymbologyError(f"unsupported symbology: {symbology}")
 
 
@@ -59,6 +74,16 @@ def build_scene(
     match _normalize_symbology(symbology):
         case "code39":
             return code39.layout_code39(data, layout_config)
+        case "codabar":
+            return codabar.layout_codabar(data, layout_config)
+        case "code128":
+            return code128.layout_code128(data, layout_config)
+        case "ean13":
+            return ean_13.layout_ean_13(data, layout_config)
+        case "itf":
+            return itf.layout_itf(data, layout_config)
+        case "upca":
+            return upc_a.layout_upc_a(data, layout_config)
 
 
 def _load_module(module_name: str):

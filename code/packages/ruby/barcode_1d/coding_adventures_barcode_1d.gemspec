@@ -19,9 +19,14 @@ Gem::Specification.new do |spec|
     "rubygems_mfa_required" => "true",
   }
 
+  spec.add_dependency "coding_adventures_codabar", "~> 0.1"
+  spec.add_dependency "coding_adventures_code128", "~> 0.1"
   spec.add_dependency "coding_adventures_code39", "~> 0.1"
+  spec.add_dependency "coding_adventures_ean_13", "~> 0.1"
+  spec.add_dependency "coding_adventures_itf", "~> 0.1"
   spec.add_dependency "coding_adventures_paint_vm_metal_native", "~> 0.1"
   spec.add_dependency "coding_adventures_paint_codec_png_native", "~> 0.1"
+  spec.add_dependency "coding_adventures_upc_a", "~> 0.1"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"
 end

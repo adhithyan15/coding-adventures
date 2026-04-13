@@ -11,8 +11,13 @@ license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 dependencies = [
+    "coding-adventures-codabar",
+    "coding-adventures-code128",
     "coding-adventures-code39",
+    "coding-adventures-ean-13",
+    "coding-adventures-itf",
     "coding-adventures-pixel_container",
+    "coding-adventures-upc-a",
 ]
 
 [project.optional-dependencies]
