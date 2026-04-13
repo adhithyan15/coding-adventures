@@ -23,7 +23,8 @@
   "dependencies": {
     "@coding-adventures/transistors": "file:../transistors",
     "@coding-adventures/logic-gates": "file:../logic-gates",
-    "@coding-adventures/arithmetic": "file:../arithmetic"
+    "@coding-adventures/arithmetic": "file:../arithmetic",
+    "@coding-adventures/intel8008-simulator": "file:../intel8008-simulator"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
