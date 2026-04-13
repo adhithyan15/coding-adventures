@@ -4,6 +4,24 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-12: Never commit build artifacts — agents running tests will generate them
+
+When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
+
+**Symptom:** Windows CI fails with "Filename too long" for deeply nested Swift `.build/` paths. Repo bloats by thousands of files.
+
+**Rule:** After agents complete, always check `git status` for build artifacts before committing. Use specific file paths in `git add` rather than directory globs. Never commit: `.build/`, `cover/`, `vendor/`, `node_modules/`, `.venv/`, `deps/`, `_build/`, `__pycache__/`, `blib/`, `MYMETA.*`, `pm_to_blib`, `Makefile` (Perl-generated), `go.sum`.
+
+---
+
+### 2026-04-12: Security fixes that change error messages require updating test assertions
+
+When unifying error messages for security (e.g., generic "Invalid PKCS#7 padding" to prevent padding oracle attacks), tests that assert specific old messages (`match="Invalid padding value"`, `toThrow("inconsistent padding bytes")`) will fail. Always grep all test files for the old messages after making security changes.
+
+**Rule:** After changing error messages in source code, run `grep -r "old message pattern" */test* */t/` to find all test assertions that need updating.
+
+---
+
 ### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
 
 When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
