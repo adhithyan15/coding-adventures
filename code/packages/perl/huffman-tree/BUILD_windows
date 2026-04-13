@@ -1,2 +1,1 @@
-cpanm --notest --quiet Test2::V0
 cd ..\heap && cd ..\huffman-tree && set PERL5LIB=..\heap\lib;%PERL5LIB% && prove -l -v t/

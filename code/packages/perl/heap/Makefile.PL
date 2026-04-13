@@ -11,9 +11,6 @@ WriteMakefile(
     MIN_PERL_VERSION => '5.026000',
     PREREQ_PM        => {
     },
-    TEST_REQUIRES    => {
-        'Test2::V0' => 0,
-    },
     META_MERGE       => {
         'meta-spec' => { version => 2 },
         resources   => {

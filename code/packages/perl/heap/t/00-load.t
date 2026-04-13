@@ -1,6 +1,11 @@
 use strict;
 use warnings;
-use Test2::V0;
+use Test::More;
+
+sub lives (&) {
+    my ($code) = @_;
+    return eval { $code->(); 1 } ? 1 : 0;
+}
 
 ok lives {
     require CodingAdventures::Heap;
