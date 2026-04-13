@@ -1,0 +1,50 @@
+# frozen_string_literal: true
+
+require "rake/testtask"
+require "rbconfig"
+
+DLEXT = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/paint_vm_metal_native", __dir__)
+LIB_DIR = File.expand_path("lib", __dir__)
+
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+             when /darwin/
+               "libpaint_vm_metal_native.dylib"
+             when /mingw|mswin|cygwin/
+               "paint_vm_metal_native.dll"
+             else
+               "libpaint_vm_metal_native.so"
+             end
+
+TARGET = "paint_vm_metal_native.#{DLEXT}"
+
+desc "Compile the Rust native extension"
+task :compile do
+  cd EXT_DIR do
+    sh "cargo build --release"
+  end
+
+  src = File.join(EXT_DIR, "target", "release", CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+  puts "Installed #{TARGET} to lib/"
+end
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_test.rb"]
+end
+
+task test: :compile
+
+desc "Remove build artifacts"
+task :clean do
+  cd EXT_DIR do
+    sh "cargo clean" if File.exist?("Cargo.toml")
+  end
+  rm_f Dir[File.join(LIB_DIR, "paint_vm_metal_native.*")]
+end
+
+task default: :test

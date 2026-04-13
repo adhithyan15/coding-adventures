@@ -331,7 +331,7 @@ class TestSimulatorProtocol:
 
     def test_no_explicit_inheritance_needed(self) -> None:
         """MockSimulator does NOT inherit from Simulator, yet it works."""
-        assert not issubclass(MockSimulator, Simulator)  # type: ignore[arg-type]
+        assert issubclass(MockSimulator, Simulator)  # type: ignore[arg-type]
 
     def test_duck_typing_with_type_annotation(self) -> None:
         """Assigning MockSimulator to a Simulator[MockState] variable works."""

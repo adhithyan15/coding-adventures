@@ -1,0 +1,4 @@
+module CPaintCodecPNGNative {
+    header "include/paint_codec_png_c.h"
+    export *
+}
