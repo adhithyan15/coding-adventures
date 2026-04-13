@@ -22,7 +22,9 @@ Series:
   CMP02 (LZSS,     1982) — LZ77 + flag bits; no wasted literals.
   CMP03 (LZW,      1984) — LZ78 + pre-initialised alphabet; GIF.
   CMP04 (Huffman,  1952) — Entropy coding; prerequisite for DEFLATE.   ← YOU ARE HERE
-  CMP05 (DEFLATE,  1996) — LZ77 + Huffman; ZIP/gzip/PNG/zlib.
+  CMP05 (DEFLATE,  1996) — LZSS + dual Huffman; ZIP/gzip/PNG/zlib standard.
+  CMP06 (Brotli,   2013) — DEFLATE + context modeling + static dict; HTTPS.
+  CMP07 (Zstd,     2016) — ANS/FSE + LZ4 matching; modern universal codec.
 ```
 
 ## Historical Context

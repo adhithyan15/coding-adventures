@@ -1,0 +1,33 @@
+{
+  "name": "@coding-adventures/deflate",
+  "version": "0.1.0",
+  "description": "DEFLATE lossless compression algorithm (1996) from scratch — CMP05",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "deflate",
+    "compression",
+    "lzss",
+    "huffman",
+    "lossless",
+    "cmp05",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/huffman-tree": "file:../huffman-tree",
+    "@coding-adventures/lzss": "file:../lzss"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

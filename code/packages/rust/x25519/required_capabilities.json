@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "rust/x25519",
+  "capabilities": [],
+  "justification": "Pure computation. X25519 key agreement performed entirely in memory with no OS access."
+}
