@@ -104,7 +104,7 @@ class TestPKCS7Padding:
     def test_unpad_zero_padding_value(self) -> None:
         """Padding value of 0 is invalid."""
         bad = b"0123456789abcde" + b"\x00"
-        with pytest.raises(ValueError, match="Invalid padding value"):
+        with pytest.raises(ValueError, match="Invalid PKCS#7 padding"):
             pkcs7_unpad(bad)
 
 

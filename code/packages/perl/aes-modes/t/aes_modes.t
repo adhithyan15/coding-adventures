@@ -42,9 +42,9 @@ subtest 'pkcs7 round-trip' => sub {
 
 subtest 'pkcs7_unpad — rejects invalid padding' => sub {
     like(dies { CodingAdventures::AESModes::pkcs7_unpad("\0" x 16) },
-        qr/invalid padding/, 'rejects zero pad value');
+        qr/Invalid PKCS#7 padding/, 'rejects zero pad value');
     like(dies { CodingAdventures::AESModes::pkcs7_unpad('A' x 13 . "\x01\x01\x03") },
-        qr/inconsistent/, 'rejects inconsistent padding');
+        qr/Invalid PKCS#7 padding/, 'rejects inconsistent padding');
 };
 
 # ============================================================================

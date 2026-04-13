@@ -88,14 +88,14 @@ describe("PKCS#7 Padding", () => {
   it("rejects invalid padding value 0", () => {
     const bad = new Uint8Array(16);
     bad[15] = 0;
-    expect(() => pkcs7Unpad(bad)).toThrow("Invalid PKCS#7 padding value");
+    expect(() => pkcs7Unpad(bad)).toThrow("Invalid PKCS#7 padding");
   });
 
   it("rejects inconsistent padding bytes", () => {
     const bad = new Uint8Array(16);
     bad[15] = 2;
     bad[14] = 3; // Should be 2
-    expect(() => pkcs7Unpad(bad)).toThrow("inconsistent padding bytes");
+    expect(() => pkcs7Unpad(bad)).toThrow("Invalid PKCS#7 padding");
   });
 
   it("rejects non-multiple-of-16 input", () => {
