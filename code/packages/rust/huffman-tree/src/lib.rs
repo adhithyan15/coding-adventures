@@ -301,7 +301,10 @@ impl HuffmanTree {
         while heap.len() > 1 {
             let left = heap.pop().unwrap().node;
             let right = heap.pop().unwrap().node;
-            let combined_weight = left.weight() + right.weight();
+            let combined_weight = left
+                .weight()
+                .checked_add(right.weight())
+                .ok_or("frequency overflow: combined weight exceeds u32::MAX")?;
             let internal = Internal {
                 weight: combined_weight,
                 left: Box::new(left),
