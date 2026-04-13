@@ -2,6 +2,7 @@ defmodule CodingAdventures.Barcode1DTest do
   use ExUnit.Case, async: false
 
   alias CodingAdventures.Barcode1D
+  alias CodingAdventures.PixelContainer
 
   test "renders a code39 barcode to PNG when Metal is available" do
     case Barcode1D.current_backend() do
@@ -56,6 +57,45 @@ defmodule CodingAdventures.Barcode1DTest do
       {:error, reason} ->
         assert Barcode1D.render_pixels("HELLO-123", symbology: :code39) == {:error, reason}
       end
+  end
+
+  test "renders pixels with injected executor hooks" do
+    assert {:ok, pixels} =
+             Barcode1D.render_pixels("HELLO-123",
+               symbology: :code39,
+               backend_result: {:ok, :metal},
+               scene_executor: fn scene, :metal ->
+                 {:ok,
+                  %PixelContainer{
+                    width: scene.width,
+                    height: scene.height,
+                    data: :binary.copy(<<0, 0, 0, 255>>, scene.width * scene.height)
+                  }}
+               end
+             )
+
+    assert pixels.width > 0
+    assert pixels.height > 0
+    assert byte_size(pixels.data) == pixels.width * pixels.height * 4
+  end
+
+  test "renders png with injected codec hooks" do
+    assert {:ok, png} =
+             Barcode1D.render_png("HELLO-123",
+               symbology: :code39,
+               backend_result: {:ok, :metal},
+               scene_executor: fn scene, :metal ->
+                 {:ok,
+                  %PixelContainer{
+                    width: scene.width,
+                    height: scene.height,
+                    data: :binary.copy(<<255, 255, 255, 255>>, scene.width * scene.height)
+                  }}
+               end,
+               png_encoder: fn %PixelContainer{data: data} -> {:ok, "PNG:" <> data} end
+             )
+
+    assert String.starts_with?(png, "PNG:")
   end
 
   test "returns a clean error for unsupported symbologies" do

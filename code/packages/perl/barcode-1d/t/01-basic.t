@@ -26,9 +26,18 @@ subtest 'current_backend' => sub {
 };
 
 subtest 'render_png' => sub {
-  return unless defined CodingAdventures::Barcode1D::current_backend();
-  my $png = CodingAdventures::Barcode1D->render_png('HELLO-123', 'code39');
-  is(substr($png, 0, 8), "\x89PNG\r\n\x1a\n", 'png signature');
+  my $backend = CodingAdventures::Barcode1D::current_backend();
+  if (defined $backend) {
+    my $png = CodingAdventures::Barcode1D->render_png('HELLO-123', 'code39');
+    is(substr($png, 0, 8), "\x89PNG\r\n\x1a\n", 'png signature');
+    return;
+  }
+
+  like(
+    dies { CodingAdventures::Barcode1D->render_png('HELLO-123', 'code39') },
+    qr/no native Paint VM is available for this host/,
+    'returns a clean backend-unavailable error when no native backend exists',
+  );
 };
 
 done_testing;

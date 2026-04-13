@@ -133,11 +133,6 @@ SSize_t perl_bridge_av_len(AV *av) {
     return av_len(av);
 }
 
-AV *perl_bridge_av_make(SSize_t size, SV **items) {
-    dTHX;
-    return av_make(size, items);
-}
-
 SV *perl_bridge_newRV_noinc(SV *value) {
     dTHX;
     return newRV_noinc(value);

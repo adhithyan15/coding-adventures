@@ -75,9 +75,12 @@ defmodule CodingAdventures.Barcode1D do
   @spec render_pixels(String.t(), keyword()) ::
           {:ok, CodingAdventures.PixelContainer.t()} | {:error, render_error()}
   def render_pixels(data, opts \\ []) do
+    backend_result = Keyword.get_lazy(opts, :backend_result, &current_backend/0)
+    executor = Keyword.get(opts, :scene_executor, &execute_scene/2)
+
     with {:ok, scene} <- build_scene(data, opts),
-         {:ok, backend} <- current_backend(),
-         {:ok, pixels} <- execute_scene(scene, backend) do
+         {:ok, backend} <- backend_result,
+         {:ok, pixels} <- executor.(scene, backend) do
       {:ok, pixels}
     end
   end
@@ -87,8 +90,10 @@ defmodule CodingAdventures.Barcode1D do
   """
   @spec render_png(String.t(), keyword()) :: {:ok, binary()} | {:error, render_error()}
   def render_png(data, opts \\ []) do
+    encoder = Keyword.get(opts, :png_encoder, &PaintCodecPngNative.encode/1)
+
     with {:ok, pixels} <- render_pixels(data, opts),
-         {:ok, png} <- PaintCodecPngNative.encode(pixels) do
+         {:ok, png} <- encoder.(pixels) do
       {:ok, png}
     end
   end

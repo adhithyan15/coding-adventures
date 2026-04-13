@@ -222,8 +222,6 @@ extern "C" {
     fn raw_av_fetch(av: *mut AV, key: isize, lval: c_int) -> *mut *mut SV;
     #[link_name = "perl_bridge_av_len"]
     fn raw_av_len(av: *mut AV) -> isize;
-    #[link_name = "perl_bridge_av_make"]
-    fn raw_av_make(size: isize, strp: *mut *mut SV) -> *mut AV;
     #[link_name = "perl_bridge_newRV_noinc"]
     fn raw_newRV_noinc(sv: *mut SV) -> *mut SV;
     #[link_name = "perl_bridge_sv_rv"]
@@ -330,10 +328,6 @@ pub unsafe fn av_fetch(av: *mut AV, key: isize, lval: c_int) -> *mut *mut SV {
 
 pub unsafe fn av_len(av: *mut AV) -> isize {
     raw_av_len(av)
-}
-
-pub unsafe fn av_make(size: isize, strp: *mut *mut SV) -> *mut AV {
-    raw_av_make(size, strp)
 }
 
 pub unsafe fn newRV_noinc(sv: *mut SV) -> *mut SV {

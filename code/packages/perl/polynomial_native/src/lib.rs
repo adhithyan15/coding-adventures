@@ -46,9 +46,8 @@
 #![allow(non_snake_case, non_camel_case_types)]
 
 use perl_bridge::{
-    av_to_f64_vec, die, f64_to_sv, f64_vec_to_av, newRV_noinc, newSViv, newXS, sv_2nv,
-    xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return, SvREFCNT_dec, SvROK, SvRV, AV, CV, IV,
-    SV,
+    av_push, av_to_f64_vec, die, f64_to_sv, f64_vec_to_av, newAV, newRV_noinc, newSViv, newXS,
+    sv_2nv, xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return, SvROK, SvRV, AV, CV, IV, SV,
 };
 use std::ffi::c_char;
 
@@ -318,18 +317,6 @@ extern "C" fn xs_evaluate(_cv: *mut CV) {
 }
 
 // ---------------------------------------------------------------------------
-// av_make — build an AV from a C array of SV*
-// ---------------------------------------------------------------------------
-//
-// `av_make(size, strp)` allocates a new AV (Perl array) of `size` elements,
-// copying the SV* pointers from `strp`. It increments refcounts as needed.
-// This lets us return an arrayref-of-arrayrefs without `av_store`.
-
-extern "C" {
-    fn av_make(size: i32, strp: *mut *mut SV) -> *mut AV;
-}
-
-// ---------------------------------------------------------------------------
 // Additional XSUBs: divmod_poly, divide, modulo, gcd
 // ---------------------------------------------------------------------------
 
@@ -374,14 +361,11 @@ extern "C" fn xs_divmod_poly(_cv: *mut CV) {
                     let quot_sv = poly_to_sv(&q);
                     let rem_sv = poly_to_sv(&r);
                     // Build an AV of [quot_sv, rem_sv] then wrap in an RV.
-                    // av_make copies the pointers and increments refcounts.
-                    let mut items_arr: [*mut SV; 2] = [quot_sv, rem_sv];
-                    let outer_av = av_make(2, items_arr.as_mut_ptr());
+                    // av_push transfers ownership of the SVs to the AV.
+                    let outer_av = newAV();
+                    av_push(outer_av, quot_sv);
+                    av_push(outer_av, rem_sv);
                     let outer_sv = newRV_noinc(outer_av as *mut SV);
-                    // We own quot_sv and rem_sv; av_make incremented their
-                    // refcounts, so we release our initial references.
-                    SvREFCNT_dec(quot_sv);
-                    SvREFCNT_dec(rem_sv);
                     set_return(base, ax, 0, outer_sv);
                     xsub_return(1, ax);
                 }
