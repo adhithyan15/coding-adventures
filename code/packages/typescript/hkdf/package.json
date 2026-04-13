@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/hkdf",
+  "version": "0.1.0",
+  "description": "HKDF (HMAC-based Extract-and-Expand Key Derivation Function, RFC 5869) — implemented from scratch",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/hmac": "file:../hmac"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

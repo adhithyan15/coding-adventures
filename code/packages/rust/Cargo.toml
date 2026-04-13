@@ -54,6 +54,7 @@ members = [
     "fsharp-lexer",
     "fsharp-parser",
     "garbage-collector",
+    "hkdf",
     "hmac",
     "pbkdf2",
     "scrypt",
