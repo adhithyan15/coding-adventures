@@ -266,4 +266,5 @@ members = [
     "intel8008-simulator",
     "intel8008-gatelevel",
     "upc-a",
+    "x25519",
 ]
