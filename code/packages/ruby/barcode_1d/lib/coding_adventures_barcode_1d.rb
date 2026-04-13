@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
+require "coding_adventures_codabar"
+require "coding_adventures_code128"
 require "coding_adventures_code39"
+require "coding_adventures_ean_13"
+require "coding_adventures_itf"
+require "coding_adventures_upc_a"
 require_relative "coding_adventures/barcode_1d/version"
 
 module CodingAdventures
@@ -22,8 +27,18 @@ module CodingAdventures
 
     def build_scene(data, symbology: :code39, layout_config: DEFAULT_LAYOUT_CONFIG)
       case normalize_symbology(symbology)
+      when :codabar
+        CodingAdventures::Codabar.layout_codabar(data, layout_config)
+      when :code128
+        CodingAdventures::Code128.layout_code128(data, layout_config)
       when :code39
         CodingAdventures::Code39.layout_code39(data, layout_config)
+      when :ean13
+        CodingAdventures::Ean13.layout_ean_13(data, layout_config)
+      when :itf
+        CodingAdventures::Itf.layout_itf(data, layout_config)
+      when :upca
+        CodingAdventures::UpcA.layout_upc_a(data, layout_config)
       end
     end
 
@@ -49,7 +64,12 @@ module CodingAdventures
 
     def normalize_symbology(symbology)
       normalized = symbology.to_s.delete("_-").downcase
+      return :codabar if normalized == "codabar"
+      return :code128 if normalized == "code128"
       return :code39 if normalized == "code39"
+      return :ean13 if normalized == "ean13"
+      return :itf if normalized == "itf"
+      return :upca if normalized == "upca"
 
       raise UnsupportedSymbologyError, "unsupported symbology: #{symbology}"
     end

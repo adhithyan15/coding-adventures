@@ -30,6 +30,37 @@ defmodule CodingAdventures.Barcode1DTest do
     assert scene.width > 0
   end
 
+  test "accepts string names for additional symbologies" do
+    cases = [
+      {"codabar", "40156"},
+      {"code128", "Code 128"},
+      {"ean-13", "400638133393"},
+      {"itf", "123456"},
+      {"upc-a", "03600029145"}
+    ]
+
+    Enum.each(cases, fn {symbology, data} ->
+      assert {:ok, scene} = Barcode1D.build_scene(data, symbology: symbology)
+      assert scene.width > 0
+    end)
+  end
+
+  test "builds scenes for additional symbologies" do
+    cases = [
+      {:codabar, "40156"},
+      {:code128, "Code 128"},
+      {:ean13, "400638133393"},
+      {:itf, "123456"},
+      {:upca, "03600029145"}
+    ]
+
+    Enum.each(cases, fn {symbology, data} ->
+      assert {:ok, scene} = Barcode1D.build_scene(data, symbology: symbology)
+      assert scene.width > 0
+      assert scene.metadata.symbology
+    end)
+  end
+
   test "resolves backend selection for supported and future platforms" do
     assert Barcode1D.current_backend({:unix, :darwin}, "aarch64-apple-darwin") == {:ok, :metal}
 
@@ -99,7 +130,7 @@ defmodule CodingAdventures.Barcode1DTest do
   end
 
   test "returns a clean error for unsupported symbologies" do
-    assert Barcode1D.render_png("HELLO-123", symbology: :ean_13) == {:error, :unsupported_symbology}
+    assert Barcode1D.render_png("HELLO-123", symbology: :qr) == {:error, :unsupported_symbology}
   end
 
   test "rejects non-binary barcode payloads" do
