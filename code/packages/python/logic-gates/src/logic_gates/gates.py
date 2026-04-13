@@ -516,3 +516,58 @@ def OR_N(*inputs: int) -> int:
         msg = "OR_N requires at least 2 inputs"
         raise ValueError(msg)
     return reduce(OR, inputs)
+
+
+def XOR_N(*bits: int) -> int:
+    """N-input XOR gate — reduces a sequence of bits via XOR (parity checker).
+
+    XOR_N(a, b, c, d) = XOR(XOR(XOR(a, b), c), d)
+
+    Returns 1 if an odd number of inputs are 1 (odd parity).
+    Returns 0 if an even number of inputs are 1 (even parity).
+
+    This is how the 8008's parity flag is computed in hardware: a chain
+    of XOR gates reduces 8 bits to a single parity bit. The result tells
+    you whether the number of 1-bits in the byte is odd (XOR_N=1) or
+    even (XOR_N=0).
+
+    For the 8008 P flag: P = NOT(XOR_N(*result_bits))
+    (P=1 means even parity — even number of 1-bits in the result)
+
+    Truth table examples:
+        XOR_N(0, 0) = 0   (0 ones → even parity → 0)
+        XOR_N(1, 0) = 1   (1 one  → odd parity  → 1)
+        XOR_N(1, 1) = 0   (2 ones → even parity → 0)
+        XOR_N(1, 1, 1) = 1 (3 ones → odd parity → 1)
+
+    Unlike AND_N and OR_N, XOR_N accepts 0 or 1 inputs:
+        XOR_N()    → 0  (zero ones is even parity, XOR identity is 0)
+        XOR_N(a,)  → a  (single input passes through unchanged)
+
+    This mirrors the mathematical definition: XOR is the addition
+    operation in GF(2) (the Galois Field with two elements {0, 1}).
+    XOR_N over N bits computes the sum modulo 2 of those N bits.
+
+    Hardware note: for 8 bits, a balanced binary XOR tree uses 7 gates:
+        level 1: XOR(b0,b1), XOR(b2,b3), XOR(b4,b5), XOR(b6,b7) — 4 gates
+        level 2: XOR(^0^1, ^2^3), XOR(^4^5, ^6^7)               — 2 gates
+        level 3: XOR(^^01^^23, ^^45^^67)                          — 1 gate
+    Total: 7 XOR gates for an 8-bit parity tree.
+
+    Args:
+        *bits: Any number of bit values (each must be 0 or 1).
+
+    Returns:
+        0 or 1.
+
+    Example:
+        >>> XOR_N(0, 0, 0, 0, 0, 0, 1, 1)
+        0
+        >>> XOR_N(0, 0, 0, 0, 0, 0, 0, 1)
+        1
+    """
+    for i, b in enumerate(bits):
+        _validate_bit(b, f"bit[{i}]")
+    if not bits:
+        return 0
+    return reduce(XOR, bits)

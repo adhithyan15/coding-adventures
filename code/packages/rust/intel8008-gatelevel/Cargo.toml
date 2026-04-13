@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-intel8008-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "Intel 8008 gate-level simulator — every operation routes through real logic gates"
+license = "MIT"
+
+[dependencies]
+logic-gates = { path = "../logic-gates" }
+arithmetic = { path = "../arithmetic" }
+coding-adventures-intel8008-simulator = { path = "../intel8008-simulator" }
