@@ -15,12 +15,11 @@ A compiler typically transforms source text through a series of stages:
 
 ```
 Source text
-  → Lexer             (characters → tokens)
-  → Parser            (tokens → untyped AST)
-  → Type Checker      (untyped AST → typed AST)   ← this layer (language semantics)
-  → IR Compiler       (typed AST → IR)
-  → Backend Validator (IR → validated IR)          ← ISA/hardware checks live here
-  → Code Generator    (validated IR → machine code / bytecode)
+  → Lexer        (characters → tokens)
+  → Parser       (tokens → untyped AST)
+  → Type Checker (untyped AST → typed AST)   ← this layer
+  → IR Compiler  (typed AST → intermediate representation)
+  → Code Generator (IR → bytecode / machine code)
 ```
 
 The **type checker** sits between the parser and the IR compiler.  Its two
@@ -31,24 +30,6 @@ jobs are:
 2. **Annotate** the AST with type information — stamp each node with its
    resolved type so that later stages (IR generation, optimization) don't
    need to re-derive it.
-
-### What TypeChecker does NOT do
-
-`TypeChecker` enforces **language-level invariants only**.  It must not
-enforce hardware or ISA constraints.  For example:
-
-| Belongs in `TypeChecker`           | Belongs in the backend validator        |
-|------------------------------------|-----------------------------------------|
-| Type mismatch (`Int + String`)     | Call depth ≤ 2 (Intel 4004 limit)       |
-| Undeclared variable                | Total RAM ≤ 160 bytes (4004 limit)      |
-| Language-level no-recursion rule   | Register count ≤ 16 (architecture rule) |
-| Static for-loop bounds (language)  | Instruction encoding constraints        |
-
-Hardware and ISA constraints belong in each backend's own validator (e.g.,
-the `IrValidator` in the `intel-4004-backend` package), which runs *after* IR
-generation.  This separation keeps the design **composable**: the same Nib
-type checker works unchanged whether you target Intel 4004, ARM, WASM, or any
-future ISA.
 
 For example, given the Nib expression `1 + "hello"`, the type checker would:
 
@@ -253,27 +234,19 @@ typed_ast = compile_nib(checker, my_ast)
 ## How This Fits in the Compiler Pipeline
 
 ```
-coding-adventures-type-checker-protocol   ← you are here (language semantics only)
+coding-adventures-type-checker-protocol   ← you are here
         ↑ implemented by
 coding-adventures-nib-type-checker
 coding-adventures-lattice-type-checker
 … etc.
-        ↓ produces TypeCheckResult[TypedAST]
-coding-adventures-compiler-ir             (IR generation)
-        ↓ produces IR
-intel-4004-backend IrValidator            (ISA/hardware constraint checks)
-arm-backend IrValidator                   (different ISA, same Nib frontend)
-        ↓
-coding-adventures-bytecode-compiler / machine code
+        ↓ consumes TypeCheckResult
+coding-adventures-compiler-ir
+coding-adventures-bytecode-compiler
 ```
 
 The protocol lives at the **bottom** of the type-checking layer.  It has zero
 dependencies (only Python stdlib).  Every concrete type checker in the repo
 depends on it; nothing below it does.
-
-Because hardware constraints are enforced separately in each backend validator,
-the **same frontend type checker** can target any ISA.  Adding a new backend
-never requires touching `TypeChecker` or any language-level checker.
 
 ---
 
