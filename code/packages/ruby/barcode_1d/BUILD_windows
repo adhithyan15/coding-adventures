@@ -1,0 +1,1 @@
+echo Skipping ruby/barcode_1d on Windows -- depends on ruby/paint_codec_png_native, which is not stable on mingw-ucrt CI; prerequisite refs: ../code39 ../barcode_layout_1d ../paint_instructions ../pixel_container ../paint_vm_metal_native ../paint_codec_png_native
