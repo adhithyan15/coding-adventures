@@ -163,5 +163,5 @@ void perl_bridge_warn_message(const char *message) {
 
 void perl_bridge_xs_boot_finish(I32 ax) {
     dTHX;
-    Perl_xs_boot_epilog(ax);
+    Perl_xs_boot_epilog(aTHX_ ax);
 }
