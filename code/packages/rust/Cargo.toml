@@ -243,6 +243,8 @@ members = [
     "write-ahead-log",
     "des",
     "aes",
+    "aes-modes",
+    "chacha20-poly1305",
     "irc-proto",
     "irc-framing",
     "irc-server",
