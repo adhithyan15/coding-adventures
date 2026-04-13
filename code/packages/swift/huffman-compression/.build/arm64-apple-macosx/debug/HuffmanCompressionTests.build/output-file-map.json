@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/.build/arm64-apple-macosx/debug/HuffmanCompressionTests.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/Tests/HuffmanCompressionTests/HuffmanCompressionTests.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/.build/arm64-apple-macosx/debug/HuffmanCompressionTests.build/HuffmanCompressionTests.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/.build/arm64-apple-macosx/debug/HuffmanCompressionTests.build/HuffmanCompressionTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/.build/arm64-apple-macosx/debug/HuffmanCompressionTests.build/HuffmanCompressionTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/.build/arm64-apple-macosx/debug/HuffmanCompressionTests.build/HuffmanCompressionTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-compression/.build/arm64-apple-macosx/debug/HuffmanCompressionTests.build/HuffmanCompressionTests.dia"
+  }
+}

@@ -1,0 +1,9 @@
+[package]
+name = "huffman-compression"
+version = "0.1.0"
+edition = "2021"
+description = "Huffman lossless compression algorithm (1952) — CMP04"
+license = "MIT"
+
+[dependencies]
+huffman-tree = { path = "../huffman-tree" }
