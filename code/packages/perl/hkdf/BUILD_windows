@@ -1,2 +1,2 @@
-set PERL5LIB=../md5/lib;../sha1/lib;../sha256/lib;../sha512/lib;../hmac/lib
-prove -l -v t/
+REM prereqs: ../md5 ../sha1 ../sha256 ../sha512 ../hmac
+echo Perl testing is not supported on Windows - skipping
