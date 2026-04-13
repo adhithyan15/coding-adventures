@@ -13,7 +13,8 @@ A compiler typically passes source code through several stages:
         → Parser       (tokens → AST)
         → Type Checker (untyped AST → typed AST)   ← this layer
         → IR Compiler  (typed AST → IR)
-        → Code Generator (IR → machine code / bytecode)
+        → Backend Validator (IR → validated IR)     ← ISA/hardware checks here
+        → Code Generator (validated IR → machine code / bytecode)
 
 The type checker's job is to *verify* that a program is type-safe and to
 *annotate* the AST with type information that later stages need.
@@ -26,6 +27,30 @@ If the program *is* type-safe, the type checker produces a *typed AST* —
 the same tree, but with every node annotated with its resolved type.  Later
 stages (IR generation, optimization) can then trust those annotations without
 doing type inference again.
+
+──────────────────────────────────────────────────────────────────────────────
+SCOPE: LANGUAGE SEMANTICS ONLY — NOT HARDWARE CONSTRAINTS
+──────────────────────────────────────────────────────────────────────────────
+
+``TypeChecker`` enforces *language-level* invariants only.  Examples of what
+belongs here:
+
+  ✓  Type mismatches (``Int + String``)
+  ✓  Use of undeclared variables
+  ✓  A language rule that forbids recursion
+  ✓  Static bounds checks on for-loop ranges (when the language specifies them)
+
+Examples of what does *not* belong here:
+
+  ✗  "Call depth must be ≤ 2"          ← ISA/hardware limit, not a language rule
+  ✗  "Total RAM usage must be ≤ 160 B" ← target-specific resource constraint
+  ✗  "Register count must be ≤ 16"     ← CPU architecture detail
+
+Hardware and ISA constraints belong in each backend's own validator (e.g.,
+``Intel4004Validator``, ``ArmValidator``), which runs *after* IR generation and
+*before* code emission.  Keeping them out of the type checker makes the design
+composable: the same Nib frontend can target Intel 4004, ARM, or a future ISA
+without ever touching this layer.
 
 ──────────────────────────────────────────────────────────────────────────────
 WHY A PROTOCOL?
@@ -277,6 +302,16 @@ class TypeChecker(Protocol[ASTIn, ASTOut]):
       at the first.
     - The ``typed_ast`` field in the result may be partially annotated when
       errors are present.
+
+    Scope — language semantics only
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    This protocol is for *language-level* type checking.  It must NOT enforce
+    hardware or ISA constraints such as call-depth limits, RAM budgets, or
+    register counts.  Those belong in the backend's own validator (e.g.,
+    ``IrValidator`` in the intel-4004-backend), which runs after IR generation.
+
+    This separation makes the design composable: the same frontend type checker
+    can target Intel 4004, ARM, WASM, or any future ISA without modification.
     """
 
     def check(self, ast: ASTIn) -> TypeCheckResult[ASTOut]:
