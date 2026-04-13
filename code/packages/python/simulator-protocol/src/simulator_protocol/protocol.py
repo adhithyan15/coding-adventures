@@ -272,7 +272,6 @@ class ExecutionResult(Generic[StateT]):
 # Simulator Protocol
 # ---------------------------------------------------------------------------
 
-
 @runtime_checkable
 class Simulator(Protocol[StateT]):
     """Generic interface all architecture simulators implement.

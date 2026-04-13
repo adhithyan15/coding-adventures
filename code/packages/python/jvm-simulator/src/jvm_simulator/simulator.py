@@ -112,6 +112,8 @@ i32.add, local.set 0, end) -- the stack machine model is the same, only
 the opcode names and encoding differ.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import IntEnum
 
@@ -367,6 +369,165 @@ class JVMSimulator:
                 break
             traces.append(self.step())
         return traces
+
+    # -------------------------------------------------------------------
+    # simulator-protocol conformance methods
+    # -------------------------------------------------------------------
+
+    def get_state(self) -> "JVMState":
+        """Return a frozen snapshot of the current JVM simulator state.
+
+        All mutable lists are converted to tuples so the result is a true
+        immutable value.  The snapshot will not change even if the simulator
+        continues executing after this call returns.
+
+        This method satisfies the ``Simulator[JVMState]`` protocol from the
+        ``simulator-protocol`` package.
+
+        Returns
+        -------
+        JVMState:
+            Frozen dataclass capturing: operand stack, locals, constants,
+            program counter, halted flag, and return value.
+
+        Examples
+        --------
+        >>> sim = JVMSimulator()
+        >>> sim.load(bytes([0x04, 0xB1]))  # iconst_1, return
+        >>> sim.run()
+        [...]
+        >>> state = sim.get_state()
+        >>> state.halted
+        True
+        """
+        from jvm_simulator.state import JVMState
+
+        return JVMState(
+            stack=tuple(self.stack),
+            locals=tuple(self.locals),
+            constants=tuple(self.constants),
+            pc=self.pc,
+            halted=self.halted,
+            return_value=self.return_value,
+        )
+
+    def execute(
+        self,
+        program: bytes,
+        max_steps: int = 100_000,
+    ) -> "ExecutionResult[JVMState]":
+        """Load program, run to RETURN/IRETURN or max_steps, return ExecutionResult.
+
+        This is the protocol-conforming entry point for the
+        ``Simulator[JVMState]`` protocol defined in the ``simulator-protocol``
+        package.  It resets internal state, loads the program, runs the
+        execution loop, and returns a rich result type.
+
+        The existing ``load()`` and ``run()`` methods are unchanged — this
+        method calls them internally and adapts the return value.
+
+        Parameters
+        ----------
+        program:
+            Raw JVM bytecode bytes.
+        max_steps:
+            Maximum instructions to execute before giving up (default 100,000).
+
+        Returns
+        -------
+        ExecutionResult[JVMState]:
+            - ``halted``: True if RETURN/IRETURN was reached.
+            - ``steps``: total instructions executed.
+            - ``final_state``: frozen ``JVMState`` snapshot at termination.
+            - ``error``: None on clean halt; error string otherwise.
+            - ``traces``: one ``StepTrace`` per instruction executed.
+
+        Examples
+        --------
+        >>> sim = JVMSimulator()
+        >>> from jvm_simulator.simulator import assemble_jvm, JVMOpcode
+        >>> program = assemble_jvm(
+        ...     (JVMOpcode.ICONST_1,),
+        ...     (JVMOpcode.ICONST_2,),
+        ...     (JVMOpcode.IADD,),
+        ...     (JVMOpcode.ISTORE_0,),
+        ...     (JVMOpcode.RETURN,),
+        ... )
+        >>> result = sim.execute(program)
+        >>> result.ok
+        True
+        >>> result.final_state.locals[0]
+        3
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+
+        from jvm_simulator.state import JVMState
+
+        # Reset state and load the program
+        self.load(program)
+
+        step_traces: list[StepTrace] = []
+        steps = 0
+        error: str | None = None
+
+        try:
+            while not self.halted and steps < max_steps:
+                pc_before = self.pc
+                jvm_trace = self.step()
+                step_traces.append(
+                    StepTrace(
+                        pc_before=pc_before,
+                        pc_after=self.pc,
+                        mnemonic=jvm_trace.opcode,
+                        description=jvm_trace.description,
+                    )
+                )
+                steps += 1
+        except Exception as exc:
+            error = str(exc)
+
+        if error is None and not self.halted:
+            error = f"max_steps ({max_steps}) exceeded"
+
+        return ExecutionResult(
+            halted=self.halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=error,
+            traces=step_traces,
+        )
+
+    def reset(self) -> None:
+        """Reset all simulator state to initial values.
+
+        Clears the stack, locals, constants, program counter, halted flag,
+        return value, and bytecode buffer.  After ``reset()``, the simulator
+        is in the same state as a freshly constructed ``JVMSimulator()``.
+
+        This method satisfies the ``reset()`` requirement of the
+        ``Simulator[JVMState]`` protocol.
+
+        Examples
+        --------
+        >>> sim = JVMSimulator()
+        >>> sim.load(bytes([0x04, 0xB1]))  # iconst_1, return
+        >>> sim.run()
+        [...]
+        >>> sim.halted
+        True
+        >>> sim.reset()
+        >>> sim.halted
+        False
+        >>> sim.stack
+        []
+        """
+        self.stack = []
+        self.locals = [None] * self._num_locals
+        self.constants = []
+        self.pc = 0
+        self.halted = False
+        self.return_value = None
+        self._bytecode = b""
 
     # -------------------------------------------------------------------
     # Private: instruction dispatch and execution
