@@ -78,6 +78,37 @@ export abstract class GenericTypeChecker<AST> implements TypeChecker<AST, AST> {
   }
 
   private normalizeKind(kind: string): string {
-    return kind.replace(/\W+/g, "_").replace(/^_+|_+$/g, "");
+    let normalized = "";
+    let lastWasUnderscore = false;
+
+    for (const char of kind) {
+      const isAlphaNumeric =
+        (char >= "a" && char <= "z") ||
+        (char >= "A" && char <= "Z") ||
+        (char >= "0" && char <= "9");
+
+      if (isAlphaNumeric) {
+        normalized += char;
+        lastWasUnderscore = false;
+        continue;
+      }
+
+      if (!lastWasUnderscore) {
+        normalized += "_";
+        lastWasUnderscore = true;
+      }
+    }
+
+    let start = 0;
+    while (start < normalized.length && normalized[start] === "_") {
+      start += 1;
+    }
+
+    let end = normalized.length;
+    while (end > start && normalized[end - 1] === "_") {
+      end -= 1;
+    }
+
+    return normalized.slice(start, end);
   }
 }

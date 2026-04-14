@@ -1,0 +1,33 @@
+{
+  "name": "@coding-adventures/nib-type-checker",
+  "version": "0.1.0",
+  "description": "Type-checks Nib ASTs and returns annotated ASTs with diagnostics",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "nib",
+    "type-checker",
+    "compiler",
+    "intel4004",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/nib-parser": "file:../nib-parser",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/type-checker-protocol": "file:../type-checker-protocol"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

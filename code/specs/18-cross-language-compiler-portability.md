@@ -9,6 +9,14 @@ implementation language, while preserving a recognizable pipeline shape:
 lexer -> parser -> type checker -> IR compiler -> optimizer -> backend validator -> backend compiler -> assembler/packager
 ```
 
+Near-term concrete scope:
+
+- every supported implementation language should eventually have a real
+  `nib-lexer` and `nib-parser`
+- later compiler stages can remain abstract until each language bucket has the
+  prerequisites to support them honestly
+- `starlark` is intentionally excluded from this portability push
+
 ## Supported Implementation Buckets
 
 - `python`
@@ -25,30 +33,31 @@ lexer -> parser -> type checker -> IR compiler -> optimizer -> backend validator
 
 ## Porting Strategy
 
-1. Port shared infrastructure first.
-   Start with packages like `type-checker-protocol` that do not depend on a
-   particular source language.
-2. Port one full frontend sequence in a non-Python language.
-   TypeScript is the first good candidate because the repo already has
-   `typescript-lexer` and `typescript-parser`.
+1. Port language lanes instead of isolated packages.
+   A useful slice is a runnable `nib-lexer` + `nib-parser`, not just a shared
+   utility package in isolation.
+2. Reuse the shared grammar files whenever possible.
+   `code/grammars/nib.tokens` and `code/grammars/nib.grammar` remain the source
+   of truth; language-specific wrappers should stay thin.
 3. Keep target constraints out of frontend semantics.
    Language type checkers should remain target-agnostic; hardware constraints
    belong in backend validators.
 4. Preserve package naming symmetry where possible.
-   A compiler written in another implementation language should still use
-   recognizable package names such as `nib-type-checker` or
-   `intel-4004-ir-validator`.
+   A ported Nib frontend should still use recognizable package names such as
+   `nib-lexer`, `nib-parser`, and later `nib-type-checker`.
 
 ## Immediate Rollout
 
 - Python:
   source of truth today for the Nib pipeline
 - TypeScript:
-  first non-Python shared semantic-analysis infrastructure
-- Go / Rust:
-  next strong candidates for shared compiler infrastructure ports
+  first non-Python Nib frontend lane (`type-checker-protocol`, `nib-lexer`,
+  `nib-parser`)
+- Go / Rust / Ruby / Elixir / Lua / Perl / Swift / WASM:
+  port `nib-lexer` and `nib-parser` next, using each bucket's existing generic
+  lexer/parser substrate where available
 - Remaining languages:
-  follow the same package shape once the protocol/framework pattern settles
+  follow the same package shape once the Nib frontend lane pattern settles
 
 ## Near-Term Package Targets
 
@@ -57,10 +66,13 @@ Shared infrastructure:
 - `type-checker-protocol`
 - future generic IR support packages
 
-Language-specific pipeline candidates:
+Concrete language-specific pipeline targets:
 
 - `nib-lexer`
 - `nib-parser`
+
+Abstract / later-stage candidates:
+
 - `nib-type-checker`
 - `nib-ir-compiler`
 - `nib-compiler`

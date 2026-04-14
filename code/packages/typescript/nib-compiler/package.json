@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/nib-compiler",
+  "version": "0.1.0",
+  "description": "Compile Nib source into Intel HEX",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/intel-4004-assembler": "file:../intel-4004-assembler",
+    "@coding-adventures/intel-4004-packager": "file:../intel-4004-packager",
+    "@coding-adventures/ir-optimizer": "file:../ir-optimizer",
+    "@coding-adventures/ir-to-intel-4004-compiler": "file:../ir-to-intel-4004-compiler",
+    "@coding-adventures/nib-ir-compiler": "file:../nib-ir-compiler",
+    "@coding-adventures/nib-parser": "file:../nib-parser",
+    "@coding-adventures/nib-type-checker": "file:../nib-type-checker",
+    "@coding-adventures/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "@coding-adventures/intel4004-simulator": "file:../intel4004-simulator",
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
