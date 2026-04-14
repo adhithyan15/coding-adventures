@@ -286,6 +286,19 @@ describe("buildKnownNames", () => {
     expect(known.get("logic-gates")).toBe("rust/logic-gates");
   });
 
+  it("should map WASM packages by Cargo package name without claiming bare Rust crate names", () => {
+    const pkgPath = path.join(tmpDir, "avl-tree");
+    writeFile(
+      path.join(pkgPath, "Cargo.toml"),
+      `[package]\nname = "avl-tree-wasm"\n`,
+    );
+    const pkg = makePkg("wasm/avl-tree", pkgPath, "wasm");
+
+    const known = buildKnownNames([pkg]);
+    expect(known.get("avl-tree")).toBeUndefined();
+    expect(known.get("avl-tree-wasm")).toBe("wasm/avl-tree");
+  });
+
   it("should map Elixir packages with hyphen-to-underscore conversion", () => {
     const pkgPath = path.join(tmpDir, "logic-gates");
     fs.mkdirSync(pkgPath, { recursive: true });
@@ -386,6 +399,68 @@ describe("resolveDependencies", () => {
 
     const graph = resolveDependencies([gates, arith]);
     expect(graph.successors("rust/logic-gates")).toContain("rust/arithmetic");
+  });
+
+  it("should resolve WASM dependencies to the Rust crate on shared basenames", () => {
+    const wasmDir = path.join(tmpDir, "wasm-avl-tree");
+    const rustDir = path.join(tmpDir, "rust-avl-tree");
+    writeFile(
+      path.join(wasmDir, "Cargo.toml"),
+      `[package]\nname = "avl-tree-wasm"\n\n[dependencies]\navl-tree = { path = "../../rust/avl-tree" }\n`,
+    );
+    writeFile(path.join(rustDir, "Cargo.toml"), `[package]\nname = "avl-tree"\n`);
+
+    const wasmPkg = makePkg("wasm/avl-tree", wasmDir, "wasm");
+    const rustPkg = makePkg("rust/avl-tree", rustDir, "rust");
+
+    const graph = resolveDependencies([wasmPkg, rustPkg]);
+    expect(graph.successors("rust/avl-tree")).toContain("wasm/avl-tree");
+    expect(graph.successors("wasm/avl-tree")).not.toContain("wasm/avl-tree");
+  });
+
+  it("should resolve .NET project references across C# and F#", () => {
+    const csharpDir = path.join(tmpDir, "csharp-graph");
+    const fsharpDir = path.join(tmpDir, "fsharp-helpers");
+    writeFile(
+      path.join(csharpDir, "CodingAdventures.Graph.csproj"),
+      `<Project Sdk="Microsoft.NET.Sdk">\n  <ItemGroup>\n    <ProjectReference Include="../fsharp-helpers/CodingAdventures.Helpers.fsproj" />\n  </ItemGroup>\n</Project>\n`,
+    );
+    writeFile(
+      path.join(fsharpDir, "CodingAdventures.Helpers.fsproj"),
+      `<Project Sdk="Microsoft.NET.Sdk">\n</Project>\n`,
+    );
+
+    const graphPkg = makePkg("csharp/graph", csharpDir, "csharp");
+    const helpersPkg = makePkg("fsharp/helpers", fsharpDir, "fsharp");
+
+    const graph = resolveDependencies([graphPkg, helpersPkg]);
+    expect(graph.successors("fsharp/helpers")).toContain("csharp/graph");
+  });
+
+  it("should prefer same-language .NET packages when basenames collide", () => {
+    const csharpGraphDir = path.join(tmpDir, "csharp", "graph");
+    const csharpBitsetDir = path.join(tmpDir, "csharp", "bitset");
+    const fsharpBitsetDir = path.join(tmpDir, "fsharp", "bitset");
+    writeFile(
+      path.join(csharpGraphDir, "CodingAdventures.Graph.csproj"),
+      `<Project Sdk="Microsoft.NET.Sdk">\n  <ItemGroup>\n    <ProjectReference Include="../bitset/CodingAdventures.Bitset.csproj" />\n  </ItemGroup>\n</Project>\n`,
+    );
+    writeFile(
+      path.join(csharpBitsetDir, "CodingAdventures.Bitset.csproj"),
+      `<Project Sdk="Microsoft.NET.Sdk">\n</Project>\n`,
+    );
+    writeFile(
+      path.join(fsharpBitsetDir, "CodingAdventures.Bitset.fsproj"),
+      `<Project Sdk="Microsoft.NET.Sdk">\n</Project>\n`,
+    );
+
+    const graphPkg = makePkg("csharp/graph", csharpGraphDir, "csharp");
+    const csharpBitsetPkg = makePkg("csharp/bitset", csharpBitsetDir, "csharp");
+    const fsharpBitsetPkg = makePkg("fsharp/bitset", fsharpBitsetDir, "fsharp");
+
+    const graph = resolveDependencies([graphPkg, csharpBitsetPkg, fsharpBitsetPkg]);
+    expect(graph.successors("csharp/bitset")).toContain("csharp/graph");
+    expect(graph.successors("fsharp/bitset")).not.toContain("csharp/graph");
   });
 
   it("should resolve Elixir dependencies from mix.exs", () => {

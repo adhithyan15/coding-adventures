@@ -10,21 +10,22 @@ import (
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 )
 
-// TestAllLanguagesConstant verifies the canonical language list is complete.
-func TestAllLanguagesConstant(t *testing.T) {
+// TestAllToolchainsConstant verifies the canonical toolchain list is complete.
+func TestAllToolchainsConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
 		"swift": true, "haskell": true, "dotnet": true,
 	}
-	if len(allLanguages) != len(expected) {
-		t.Errorf("allLanguages has %d entries, want %d", len(allLanguages), len(expected))
+	if len(allToolchains) != len(expected) {
+		t.Errorf("allToolchains has %d entries, want %d", len(allToolchains), len(expected))
 	}
-	for _, lang := range allLanguages {
+	for _, lang := range allToolchains {
 		if !expected[lang] {
-			t.Errorf("unexpected language in allLanguages: %s", lang)
+			t.Errorf("unexpected toolchain in allToolchains: %s", lang)
 		}
 	}
 }
@@ -32,18 +33,17 @@ func TestAllLanguagesConstant(t *testing.T) {
 // TestSharedPrefixesAreNarrow ensures only true shared build infrastructure
 // forces all-language rebuilds.
 func TestSharedPrefixesAreNarrow(t *testing.T) {
-	if len(sharedPrefixes) == 0 {
-		t.Error("sharedPrefixes should not be empty")
-	}
-	// Verify key prefixes are present.
 	found := map[string]bool{}
 	for _, p := range sharedPrefixes {
 		found[p] = true
 	}
-	for _, want := range []string{".github/workflows/ci.yml"} {
-		if !found[want] {
-			t.Errorf("sharedPrefixes missing %q", want)
-		}
+
+	if found[gitdiff.CIWorkflowPath] {
+		t.Fatalf("%q should be analyzed diff-by-diff, not blindly forced via sharedPrefixes", gitdiff.CIWorkflowPath)
+	}
+
+	if gitdiff.CIWorkflowPath != ".github/workflows/ci.yml" {
+		t.Fatalf("unexpected ci workflow path: %q", gitdiff.CIWorkflowPath)
 	}
 
 	// Regression guard: the following paths must NOT be in sharedPrefixes.
@@ -67,6 +67,29 @@ func TestSharedPrefixesAreNarrow(t *testing.T) {
 	}
 }
 
+func TestComputeLanguagesNeededIncludesSafeCIWorkflowToolchains(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/logic-gates", Language: "python"},
+	}
+
+	needed := computeLanguagesNeeded(
+		packages,
+		map[string]bool{"python/logic-gates": true},
+		false,
+		map[string]bool{"dotnet": true},
+	)
+
+	for _, toolchain := range []string{"go", "python", "dotnet"} {
+		if !needed[toolchain] {
+			t.Fatalf("expected %s to be enabled, got %v", toolchain, needed)
+		}
+	}
+
+	if needed["rust"] {
+		t.Fatalf("did not expect unrelated rust toolchain: %v", needed)
+	}
+}
+
 // TestCollectAffectedLanguages verifies language detection from affected sets.
 func TestCollectAffectedLanguages(t *testing.T) {
 	packages := []discovery.Package{
@@ -77,6 +100,9 @@ func TestCollectAffectedLanguages(t *testing.T) {
 		{Name: "typescript/starlark-vm", Language: "typescript"},
 		{Name: "rust/starlark-vm", Language: "rust"},
 		{Name: "elixir/starlark_vm", Language: "elixir"},
+		{Name: "wasm/graph", Language: "wasm"},
+		{Name: "csharp/graph", Language: "csharp"},
+		{Name: "fsharp/graph", Language: "fsharp"},
 	}
 
 	tests := []struct {
@@ -112,11 +138,11 @@ func TestCollectAffectedLanguages(t *testing.T) {
 			needed := map[string]bool{"go": true} // go always needed
 			for _, pkg := range packages {
 				if tt.affectedSet[pkg.Name] {
-					needed[pkg.Language] = true
+					needed[toolchainForPackageLanguage(pkg.Language)] = true
 				}
 			}
 
-			for _, lang := range allLanguages {
+			for _, lang := range allToolchains {
 				want := tt.wantLangs[lang]
 				got := needed[lang]
 				if got != want {
@@ -135,12 +161,12 @@ func TestForceModeSetsAllLanguages(t *testing.T) {
 	// Simulate force mode.
 	force := true
 	if force {
-		for _, lang := range allLanguages {
+		for _, lang := range allToolchains {
 			needed[lang] = true
 		}
 	}
 
-	for _, lang := range allLanguages {
+	for _, lang := range allToolchains {
 		if !needed[lang] {
 			t.Errorf("force mode: language %s should be needed", lang)
 		}
@@ -156,12 +182,12 @@ func TestNilAffectedSetMeansAllLanguages(t *testing.T) {
 	// Simulate nil affected set (git diff unavailable).
 	var affectedSet map[string]bool
 	if affectedSet == nil {
-		for _, lang := range allLanguages {
+		for _, lang := range allToolchains {
 			needed[lang] = true
 		}
 	}
 
-	for _, lang := range allLanguages {
+	for _, lang := range allToolchains {
 		if !needed[lang] {
 			t.Errorf("nil affectedSet: language %s should be needed", lang)
 		}
@@ -179,12 +205,30 @@ func TestGoAlwaysNeeded(t *testing.T) {
 	needed := map[string]bool{"go": true}
 	for _, pkg := range packages {
 		if affectedSet[pkg.Name] {
-			needed[pkg.Language] = true
+			needed[toolchainForPackageLanguage(pkg.Language)] = true
 		}
 	}
 
 	if !needed["go"] {
 		t.Error("Go should always be needed (build tool is Go)")
+	}
+}
+
+func TestToolchainForPackageLanguage(t *testing.T) {
+	tests := map[string]string{
+		"wasm":    "rust",
+		"csharp":  "dotnet",
+		"fsharp":  "dotnet",
+		"dotnet":  "dotnet",
+		"python":  "python",
+		"swift":   "swift",
+		"unknown": "unknown",
+	}
+
+	for language, want := range tests {
+		if got := toolchainForPackageLanguage(language); got != want {
+			t.Fatalf("toolchainForPackageLanguage(%q) = %q, want %q", language, got, want)
+		}
 	}
 }
 

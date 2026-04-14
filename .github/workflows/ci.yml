@@ -316,7 +316,7 @@ jobs:
         with:
           # .NET 9 is the current LTS release. No platform exclusions needed —
           # actions/setup-dotnet@v4 works identically on Ubuntu, macOS, and Windows.
-          dotnet-version: '9.0'
+          dotnet-version: '9.0.x'
 
       - name: Install test runners
         shell: bash
@@ -364,6 +364,9 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
             echo "GHC: $(ghc --version)"
             echo "Cabal: $(cabal --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_dotnet }}" = "true" ]; then
+            echo ".NET: $(dotnet --version)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────
