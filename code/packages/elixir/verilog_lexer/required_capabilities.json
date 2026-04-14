@@ -2,13 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "elixir/verilog_lexer",
-  "capabilities": [
-    {
-      "category": "fs",
-      "action": "read",
-      "target": "*",
-      "justification": "Reads grammar and token definition files from the filesystem to configure the package at initialization time."
-    }
-  ],
-  "justification": "Reads token pattern definitions from code/grammars/*.tokens at runtime to configure the tokenizer. The grammar file is loaded once at initialization via the filesystem."
+  "capabilities": [],
+  "justification": "Uses compiled Verilog token grammars embedded in Elixir modules. Tokenization is pure and does not require filesystem access."
 }

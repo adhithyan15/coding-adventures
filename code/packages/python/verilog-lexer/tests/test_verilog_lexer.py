@@ -412,3 +412,22 @@ class TestCompleteSnippets:
         types = token_types(tokens)
         assert "HASH" in types
         assert "DOT" in types
+
+
+class TestVersions:
+    """Version-selection behaviour for compiled Verilog grammars."""
+
+    def test_default_version_matches_explicit_2005(self) -> None:
+        default_tokens = tokenize_verilog("module m; endmodule", preprocess=False)
+        explicit_tokens = tokenize_verilog(
+            "module m; endmodule", preprocess=False, version="2005"
+        )
+        assert token_values(default_tokens) == token_values(explicit_tokens)
+
+    def test_rejects_unknown_version(self) -> None:
+        try:
+            tokenize_verilog("module m; endmodule", preprocess=False, version="2099")
+        except ValueError as exc:
+            assert "Unknown Verilog version" in str(exc)
+        else:
+            raise AssertionError("Expected ValueError for unknown Verilog version")

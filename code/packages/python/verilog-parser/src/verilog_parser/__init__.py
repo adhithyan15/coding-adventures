@@ -22,9 +22,16 @@ Usage::
     print(ast.rule_name)  # "source_text"
 """
 
-from verilog_parser.parser import create_verilog_parser, parse_verilog
+from verilog_parser.parser import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_verilog_parser,
+    parse_verilog,
+)
 
 __all__ = [
+    "DEFAULT_VERSION",
+    "SUPPORTED_VERSIONS",
     "create_verilog_parser",
     "parse_verilog",
 ]

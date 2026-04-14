@@ -737,3 +737,20 @@ class TestCreateVerilogParser:
         parser = create_verilog_parser("module m; endmodule", preprocess=False)
         ast = parser.parse()
         assert ast.rule_name == "source_text"
+
+
+class TestVersions:
+    """Version-selection behaviour for compiled Verilog grammars."""
+
+    def test_default_version_matches_explicit_2005(self) -> None:
+        default_ast = parse_verilog("module empty; endmodule")
+        explicit_ast = parse_verilog("module empty; endmodule", version="2005")
+        assert default_ast.rule_name == explicit_ast.rule_name
+
+    def test_rejects_unknown_version(self) -> None:
+        try:
+            parse_verilog("module empty; endmodule", version="2099")
+        except ValueError as exc:
+            assert "Unknown Verilog version" in str(exc)
+        else:
+            raise AssertionError("Expected ValueError for unknown Verilog version")

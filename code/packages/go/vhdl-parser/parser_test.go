@@ -77,6 +77,24 @@ func TestParseEmptyEntity(t *testing.T) {
 	}
 }
 
+func TestParseVersionedVhdl(t *testing.T) {
+	for _, version := range []string{"1987", "1993", "2002", "2008", "2019"} {
+		ast, err := ParseVhdlVersion("entity top is end entity top;", version)
+		if err != nil {
+			t.Fatalf("version %s: %v", version, err)
+		}
+		if ast.RuleName != "design_file" {
+			t.Fatalf("version %s: expected design_file root, got %s", version, ast.RuleName)
+		}
+	}
+}
+
+func TestParseVhdlVersionRejectsUnknownVersion(t *testing.T) {
+	if _, err := ParseVhdlVersion("entity top is end entity top;", "2099"); err == nil {
+		t.Fatal("expected unknown VHDL version to fail")
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Test: Entity with ports
 // ---------------------------------------------------------------------------
