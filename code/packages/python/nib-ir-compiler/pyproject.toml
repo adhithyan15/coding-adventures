@@ -25,7 +25,7 @@ dependencies = [
     "coding-adventures-compiler-source-map",
     "coding-adventures-directed-graph",
     "coding-adventures-grammar-tools",
-    "coding-adventures-lang-parser",
+    "coding-adventures-parser",
     "coding-adventures-lexer",
     "coding-adventures-nib-lexer",
     "coding-adventures-nib-parser",
@@ -41,7 +41,7 @@ coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
 coding-adventures-compiler-source-map = { path = "../compiler-source-map", editable = true }
 coding-adventures-directed-graph = { path = "../directed-graph", editable = true }
 coding-adventures-grammar-tools = { path = "../grammar-tools", editable = true }
-coding-adventures-lang-parser = { path = "../parser", editable = true }
+coding-adventures-parser = { path = "../parser", editable = true }
 coding-adventures-lexer = { path = "../lexer", editable = true }
 coding-adventures-nib-lexer = { path = "../nib-lexer", editable = true }
 coding-adventures-nib-parser = { path = "../nib-parser", editable = true }

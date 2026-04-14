@@ -170,8 +170,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from dataclasses import replace
+
 from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
+from lexer.tokenizer import TokenType
 
 # ---------------------------------------------------------------------------
 # Grammar File Location
@@ -311,4 +314,15 @@ def tokenize_nib(source: str) -> list[Token]:
         #  Token(EOF, '')]
     """
     lexer = create_nib_lexer(source)
-    return lexer.tokenize()
+    raw = lexer.tokenize()
+
+    # The GrammarLexer uses the keywords: section in nib.tokens, which causes
+    # keyword tokens to come back with type=TokenType.KEYWORD and value="fn",
+    # "let", etc.  Nib convention (and all downstream consumers) expect the
+    # type to equal the lowercase keyword text — Token("fn", "fn"),
+    # Token("let", "let"), etc.  This post-processing pass promotes
+    # TokenType.KEYWORD → the value string as the type.
+    return [
+        replace(tok, type=tok.value) if tok.type is TokenType.KEYWORD else tok
+        for tok in raw
+    ]

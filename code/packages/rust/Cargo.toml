@@ -191,6 +191,7 @@ members = [
     "bezier2d",
     "caesar-cipher",
     "correlation-vector",
+    "brotli",
     "deflate",
     "draw-instructions-metal",
     "draw-instructions-metal-mac-window",
