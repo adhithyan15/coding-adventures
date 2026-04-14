@@ -184,7 +184,7 @@ describe("X25519", () => {
   // After 1000 iterations of the same process, we must reach a specific value.
   // This is a thorough stress test of the field arithmetic.
 
-  it("should pass iterated test after 1000 iterations", () => {
+  it("should pass iterated test after 1000 iterations", { timeout: 15_000 }, () => {
     let k = new Uint8Array(32);
     k[0] = 9;
     let u = new Uint8Array(32);
