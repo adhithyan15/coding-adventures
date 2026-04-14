@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "coding-adventures-parser"
+name = "coding-adventures-lang-parser"
 version = "0.1.0"
 description = "Parses token streams into abstract syntax trees using recursive descent — Layer 7 of the computing stack"
 requires-python = ">=3.12"

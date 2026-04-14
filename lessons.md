@@ -1746,3 +1746,48 @@ let sockType = Int32(SOCK_STREAM.rawValue)
 #endif
 ```
 Same applies to `SOCK_DGRAM` and other socket type constants.
+
+---
+
+## Intel 4004 backend: AND_IMM is a no-op on 4-bit hardware
+
+**Date:** 2026-04-13
+
+**What happened:** The `intel-4004-backend` codegen emitted `AND R1` for `AND_IMM v, v, 15`. The
+Intel 4004 assembler rejected this because the 4004 ISA has no bitwise AND instruction. The codegen
+was trying to mask a register to 0xF to implement u4 wrapping, but this is unnecessary on 4004
+hardware because all registers are 4-bit (0–15) — they can never hold a value > 15.
+
+**Rule:** On the Intel 4004, `AND_IMM vR, vR, 15` and `AND_IMM vR, vR, 255` are both no-ops. Emit a
+comment only. Any other mask value is unsupported (would require a RAM lookup table). Do not emit
+an `AND` mnemonic — the 4004 ISA does not have one.
+
+---
+
+## Intel 4004 backend: ADD_IMM R1-corruption when source is v1
+
+**Date:** 2026-04-13
+
+**What happened:** The `_emit_add_imm` function used R1 as a scratch register unconditionally. When
+the source virtual register was v1 (which maps to physical R1), the pattern was:
+  `LDM k; XCH R1; LD R1; ADD R1; XCH Rdst`
+The `XCH R1` loaded the scratch value (k) into R1, destroying the original source value. So
+`ADD_IMM v2, v1, 0` (copy v1 into v2) produced v2=0 instead of v2=5.
+
+**Rule:** In the Intel 4004 codegen, always check if the source register is R1 before selecting R1
+as the scratch register. If src==R1, use R14 (or another safe scratch) instead. Also special-case
+k==0 as a pure copy: `LD Rsrc; XCH Rdst` (no scratch needed at all).
+
+---
+
+## Intel 4004 simulator: use HLT opcode (0x01), not JUN $ self-loop, for HALT
+
+**Date:** 2026-04-13
+
+**What happened:** The backend emitted `JUN $` (jump to self) as the halt idiom. The Intel 4004
+simulator (`intel4004-simulator` package) does not detect self-loops as a halt condition, so
+`result.ok` was `False` and execution always hit `max_steps` with an error.
+
+**Rule:** When targeting `intel4004-simulator`, emit `HLT` (assembled as opcode 0x01, which is not a
+real 4004 instruction but is the simulator's halt sentinel) to terminate execution cleanly. The
+assembler accepts `HLT` and encodes it as `0x01`. This gives `result.ok=True` after execution.
