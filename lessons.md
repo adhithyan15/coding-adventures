@@ -1826,3 +1826,21 @@ double-quote characters to uv, causing:
   `uv pip install -e ../dep1 -e ../dep2 .[dev] --quiet`
 NOT:
   `uv pip install -e ../dep1 -e ../dep2 -e ".[dev]" --quiet`
+
+---
+
+## BUILD_windows: -e .[dev] (no quotes) — not .[dev] alone — is the correct form
+
+**Date:** 2026-04-14
+
+**What happened:** Removing both the quotes AND the `-e` flag broke non-editable installs on
+Windows. With `.[dev]` (no `-e`), `uv` installs to `.venv\Lib\site-packages\`. Modules that
+compute relative paths via `__file__` parent-walking get the wrong depth:
+- Windows site-packages: `.venv\Lib\site-packages\pkg\module.py` (4 levels from source)
+- Linux site-packages: `.venv/lib/python3.x/site-packages/pkg/module.py` (6 levels from source)
+A 6-parent walk from Windows site-packages lands at `code\packages\python\` instead of `code\`.
+
+**Rule:** In `BUILD_windows`, always use `-e .[dev]` (editable, no quotes):
+  `uv pip install -e ../dep .[dev]`   ← WRONG: non-editable breaks __file__ paths
+  `uv pip install -e ".[dev]"`        ← WRONG: cmd.exe passes literal quotes to uv
+  `uv pip install -e .[dev]`          ← CORRECT: editable install, no quotes ✓
