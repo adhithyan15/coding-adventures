@@ -15,6 +15,7 @@ cd ../intel-4004-ir-validator && npm ci --quiet
 cd ../ir-to-intel-4004-compiler && npm ci --quiet
 cd ../intel-4004-assembler && npm ci --quiet
 cd ../intel-4004-packager && npm ci --quiet
+cd ../simulator-protocol && npm ci --quiet
 cd ../intel4004-simulator && npm ci --quiet
 npm ci --quiet
 npx vitest run --coverage
