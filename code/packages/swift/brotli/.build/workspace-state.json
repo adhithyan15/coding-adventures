@@ -1,0 +1,41 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "heap",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/heap",
+          "name" : "Heap"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/heap"
+        },
+        "subpath" : "heap"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "huffman-tree",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-tree",
+          "name" : "huffman-tree"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/huffman-tree"
+        },
+        "subpath" : "huffman-tree"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}
