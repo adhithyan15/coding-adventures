@@ -251,6 +251,19 @@ def decode_hex(hex_text: str) -> tuple[int, bytes]:
         byte_count = record_bytes[0]
         address = (record_bytes[1] << 8) | record_bytes[2]
         rec_type = record_bytes[3]
+
+        # Validate that the record is long enough to hold byte_count data bytes
+        # plus the trailing checksum byte.  Without this check, a record that
+        # claims byte_count=255 but only contains a few bytes would either raise
+        # an IndexError on stored_cs or silently truncate data, causing a
+        # bad-data condition that bypasses checksum verification.
+        expected_len = 4 + byte_count + 1  # header(4) + data(byte_count) + checksum(1)
+        if len(record_bytes) < expected_len:
+            raise ValueError(
+                f"line {line_num}: record claims {byte_count} data bytes "
+                f"but only {len(record_bytes)} total bytes present (need {expected_len})"
+            )
+
         data = record_bytes[4 : 4 + byte_count]
         stored_cs = record_bytes[4 + byte_count]
 
@@ -275,6 +288,19 @@ def decode_hex(hex_text: str) -> tuple[int, bytes]:
 
     origin = min(segments)
     end = max(addr + len(data) for addr, data in segments.items())
+
+    # Guard against adversarial inputs that claim widely-separated addresses
+    # (e.g., one record at 0x0000 and one at 0xFFFF) which would cause a large
+    # allocation even if almost no data is present.  The 4004 ROM is at most
+    # 4 KB (0x1000 bytes), so we cap at 0x1000.  Increase this if the decoder
+    # is ever reused for non-4004 targets.
+    _MAX_IMAGE_SIZE = 0x1000  # 4 KB — maximum 4004 ROM size
+    if (end - origin) > _MAX_IMAGE_SIZE:
+        raise ValueError(
+            f"decoded image too large: {end - origin} bytes "
+            f"(maximum {_MAX_IMAGE_SIZE} bytes for Intel 4004 ROM)"
+        )
+
     buf = bytearray(end - origin)
     for addr, data in segments.items():
         buf[addr - origin : addr - origin + len(data)] = data
