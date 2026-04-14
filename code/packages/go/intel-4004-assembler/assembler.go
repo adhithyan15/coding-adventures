@@ -264,41 +264,41 @@ func oneOperand(mnemonic string, operands []string) string {
 	return operands[0]
 }
 
-func parseRegister(name string) int {
+func parseRegister(name string) uint8 {
 	if !strings.HasPrefix(strings.ToUpper(name), "R") {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register name: '%s'", name)})
 	}
-	value, err := strconv.Atoi(name[1:])
-	if err != nil || value < 0 || value > 15 {
+	value, err := strconv.ParseUint(name[1:], 10, 4)
+	if err != nil {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register name: '%s'", name)})
 	}
-	return value
+	return uint8(value)
 }
 
-func parsePair(name string) int {
+func parsePair(name string) uint8 {
 	if !strings.HasPrefix(strings.ToUpper(name), "P") {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register pair name: '%s'", name)})
 	}
-	value, err := strconv.Atoi(name[1:])
-	if err != nil || value < 0 || value > 7 {
+	value, err := strconv.ParseUint(name[1:], 10, 3)
+	if err != nil {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register pair name: '%s'", name)})
 	}
-	return value
+	return uint8(value)
 }
 
 func parseNumber(value string) (int, error) {
 	if strings.HasPrefix(strings.ToLower(value), "0x") {
-		parsed, err := strconv.ParseInt(value[2:], 16, 64)
+		parsed, err := strconv.ParseUint(value[2:], 16, 16)
 		if err != nil {
 			return 0, AssemblerError{Message: fmt.Sprintf("Invalid numeric literal: '%s'", value)}
 		}
 		return int(parsed), nil
 	}
-	parsed, err := strconv.Atoi(value)
+	parsed, err := strconv.ParseUint(value, 10, 16)
 	if err != nil {
 		return 0, AssemblerError{Message: fmt.Sprintf("Invalid numeric literal: '%s'", value)}
 	}
-	return parsed, nil
+	return int(parsed), nil
 }
 
 func resolveOperand(operand string, symbols map[string]int, pc int) (int, error) {

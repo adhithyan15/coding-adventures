@@ -580,11 +580,11 @@ func tokenTypeName(token lexer.Token) string {
 
 func parseLiteral(value string, typeName string) int {
 	if typeName == "HEX_LIT" {
-		parsed, _ := strconv.ParseInt(value[2:], 16, 64)
+		parsed, _ := strconv.ParseUint(value[2:], 16, 16)
 		return int(parsed)
 	}
-	parsed, _ := strconv.Atoi(value)
-	return parsed
+	parsed, _ := strconv.ParseUint(value, 10, 16)
+	return int(parsed)
 }
 
 func extractConstInt(subject any) int {
