@@ -1,4 +1,5 @@
 uv venv --quiet --clear
+uv pip install --no-deps -e ../simulator-protocol --quiet
 uv pip install --no-deps -e ../virtual-machine --quiet
 uv pip install --no-deps -e ../arithmetic --quiet
 uv pip install --no-deps -e ../logic-gates --quiet

@@ -10,5 +10,4 @@ draw-instructions-pixels = { path = "../draw-instructions-pixels" }
 objc-bridge = { path = "../objc-bridge" }
 
 [dev-dependencies]
-code39 = { path = "../code39" }
 draw-instructions-png = { path = "../draw-instructions-png" }

@@ -656,6 +656,161 @@ class CLRSimulator:
             traces.append(self.step())
         return traces
 
+    # -------------------------------------------------------------------
+    # simulator-protocol conformance methods
+    # -------------------------------------------------------------------
+
+    def get_state(self) -> CLRState:
+        """Return a frozen snapshot of the current CLR simulator state.
+
+        All mutable lists are converted to tuples so the result is a true
+        immutable value.  The snapshot will not change even if the simulator
+        continues executing after this call returns.
+
+        This method satisfies the ``Simulator[CLRState]`` protocol from the
+        ``simulator-protocol`` package.
+
+        Returns
+        -------
+        CLRState:
+            Frozen dataclass capturing: evaluation stack, local variable
+            slots, program counter, and halted flag.
+
+        Examples
+        --------
+        >>> sim = CLRSimulator()
+        >>> sim.load(assemble_clr((CLROpcode.LDC_I4_1,), (CLROpcode.RET,)))
+        >>> sim.run()
+        [...]
+        >>> state = sim.get_state()
+        >>> state.halted
+        True
+        """
+        from clr_simulator.state import CLRState
+
+        return CLRState(
+            stack=tuple(self.stack),
+            locals=tuple(self.locals),
+            pc=self.pc,
+            halted=self.halted,
+        )
+
+    def execute(
+        self,
+        program: bytes,
+        max_steps: int = 100_000,
+    ) -> "ExecutionResult[CLRState]":
+        """Load program, run to RET or max_steps, return ExecutionResult.
+
+        This is the protocol-conforming entry point for the
+        ``Simulator[CLRState]`` protocol defined in the ``simulator-protocol``
+        package.  It resets internal state, loads the program, runs the
+        execution loop, and returns a rich result type.
+
+        The existing ``load()`` and ``run()`` methods are unchanged — this
+        method calls them internally and adapts the return value.
+
+        Parameters
+        ----------
+        program:
+            Raw CLR IL bytecode bytes.
+        max_steps:
+            Maximum instructions to execute before giving up (default 100,000).
+
+        Returns
+        -------
+        ExecutionResult[CLRState]:
+            - ``halted``: True if RET was reached.
+            - ``steps``: total instructions executed.
+            - ``final_state``: frozen ``CLRState`` snapshot at termination.
+            - ``error``: None on clean halt; error string otherwise.
+            - ``traces``: one ``StepTrace`` per instruction executed.
+
+        Examples
+        --------
+        >>> sim = CLRSimulator()
+        >>> from clr_simulator.simulator import assemble_clr, encode_ldc_i4, encode_stloc, CLROpcode
+        >>> program = assemble_clr(
+        ...     encode_ldc_i4(1),
+        ...     encode_ldc_i4(2),
+        ...     (CLROpcode.ADD,),
+        ...     encode_stloc(0),
+        ...     (CLROpcode.RET,),
+        ... )
+        >>> result = sim.execute(program)
+        >>> result.ok
+        True
+        >>> result.final_state.locals[0]
+        3
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+
+        from clr_simulator.state import CLRState
+
+        # Reset and load
+        self.load(program)
+
+        step_traces: list[StepTrace] = []
+        steps = 0
+        error: str | None = None
+
+        try:
+            while not self.halted and steps < max_steps:
+                pc_before = self.pc
+                clr_trace = self.step()
+                step_traces.append(
+                    StepTrace(
+                        pc_before=pc_before,
+                        pc_after=self.pc,
+                        mnemonic=clr_trace.opcode,
+                        description=clr_trace.description,
+                    )
+                )
+                steps += 1
+        except Exception as exc:
+            error = str(exc)
+
+        if error is None and not self.halted:
+            error = f"max_steps ({max_steps}) exceeded"
+
+        return ExecutionResult(
+            halted=self.halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=error,
+            traces=step_traces,
+        )
+
+    def reset(self) -> None:
+        """Reset all simulator state to initial values.
+
+        Clears the evaluation stack, locals, program counter, bytecode,
+        and halted flag.  After ``reset()``, the simulator is in the same
+        state as a freshly constructed ``CLRSimulator()``.
+
+        This method satisfies the ``reset()`` requirement of the
+        ``Simulator[CLRState]`` protocol.
+
+        Examples
+        --------
+        >>> sim = CLRSimulator()
+        >>> sim.load(bytes([0x17, 0x2A]))  # ldc.i4.1, ret
+        >>> sim.run()
+        [...]
+        >>> sim.halted
+        True
+        >>> sim.reset()
+        >>> sim.halted
+        False
+        >>> sim.stack
+        []
+        """
+        self.stack = []
+        self.locals = [None] * len(self.locals)
+        self.pc = 0
+        self.bytecode = b""
+        self.halted = False
+
     # --- Private helper methods ---
 
     def _execute_arithmetic(

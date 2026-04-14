@@ -1,0 +1,8 @@
+requires 'perl', '5.016';
+requires 'coding-adventures-logic-gates', '0';
+requires 'coding-adventures-arithmetic',  '0';
+requires 'coding-adventures-intel8008-simulator', '0';
+
+on test => sub {
+    requires 'Test2::V0';
+};

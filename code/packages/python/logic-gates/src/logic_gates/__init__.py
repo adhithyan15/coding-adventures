@@ -27,6 +27,7 @@ from logic_gates.gates import (
     XOR,
     AND_N,
     OR_N,
+    XOR_N,
     nand_and,
     nand_not,
     nand_or,
@@ -59,6 +60,7 @@ __all__ = [
     # Multi-input gates
     "AND_N",
     "OR_N",
+    "XOR_N",
     # Sequential logic
     "sr_latch",
     "d_latch",

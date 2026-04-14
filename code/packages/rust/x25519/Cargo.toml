@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_x25519"
+version = "0.1.0"
+edition = "2021"
+description = "X25519 elliptic curve Diffie-Hellman (RFC 7748) implemented from scratch"
+
+[dependencies]

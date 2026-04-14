@@ -1,0 +1,1 @@
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then cargo build --release && cd tests && busted . --verbose --pattern=test_; else echo Skipping lua/paint_vm_metal_native on non-macOS-arm64; fi

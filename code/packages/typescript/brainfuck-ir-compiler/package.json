@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/brainfuck-ir-compiler",
+  "version": "0.1.0",
+  "description": "Brainfuck AOT compiler — translates Brainfuck ASTs to general-purpose IR",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/compiler-source-map": "file:../compiler-source-map",
+    "@coding-adventures/brainfuck": "file:../brainfuck",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "rust/hkdf",
+  "capabilities": [],
+  "justification": "Pure computation. HKDF key derivation performed entirely in memory with no OS access."
+}

@@ -328,6 +328,17 @@ unsafe fn render_clip(rt: &ID2D1RenderTarget, clip: &PaintClip) {
 /// ```
 #[cfg(target_os = "windows")]
 pub fn render(scene: &PaintScene) -> PixelContainer {
+    // Validate that dimensions are finite, non-negative, and within u32 range
+    // before casting. NaN, negative, or infinite values would produce nonsensical
+    // results from `as u32` (saturating cast in release mode).
+    if scene.width < 0.0
+        || scene.height < 0.0
+        || !scene.width.is_finite()
+        || !scene.height.is_finite()
+    {
+        return PixelContainer::new(0, 0);
+    }
+
     let width = scene.width as u32;
     let height = scene.height as u32;
 
@@ -447,6 +458,17 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
     let mut data_ptr: *mut u8 = std::ptr::null_mut();
     lock.GetDataPointer(&mut data_size, &mut data_ptr)
         .expect("Failed to get data pointer");
+
+    // Validate that the returned buffer is large enough for our pixel loop.
+    // Without this check, an unusual stride or truncated buffer could cause
+    // an out-of-bounds read in the BGRA→RGBA conversion loop below.
+    let required_size = (height as usize - 1) * stride as usize + width as usize * 4;
+    assert!(
+        data_size as usize >= required_size,
+        "WIC bitmap data too small: got {} bytes, need {} bytes",
+        data_size,
+        required_size
+    );
 
     let pbgra_slice = std::slice::from_raw_parts(data_ptr, data_size as usize);
     let total_pixels = (width as usize) * (height as usize);

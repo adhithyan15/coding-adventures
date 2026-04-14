@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_md5",    path: "../md5"
+gem "coding_adventures_sha1",   path: "../sha1"
+gem "coding_adventures_sha256", path: "../sha256"
+gem "coding_adventures_sha512", path: "../sha512"
+gem "coding_adventures_hmac",   path: "../hmac"

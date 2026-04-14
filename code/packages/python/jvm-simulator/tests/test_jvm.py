@@ -971,3 +971,114 @@ class TestStep:
         sim.load(assemble_jvm((JVMOpcode.BIPUSH, 42), (JVMOpcode.RETURN,)))
         sim.step()
         assert sim.pc == 2  # bipush is 2 bytes
+
+
+# ===========================================================================
+# simulator-protocol conformance tests
+# ===========================================================================
+# These tests verify that JVMSimulator satisfies the Simulator[JVMState]
+# protocol: get_state(), execute(), and reset() behave correctly and
+# the returned types match the protocol contract.
+
+
+class TestSimulatorProtocolConformance:
+    """Verify Simulator[JVMState] protocol conformance for JVMSimulator."""
+
+    def test_get_state_returns_jvm_state(self) -> None:
+        """get_state() returns a JVMState frozen dataclass with correct field types."""
+        from jvm_simulator.state import JVMState
+
+        sim = JVMSimulator()
+        state = sim.get_state()
+
+        assert isinstance(state, JVMState)
+        assert isinstance(state.stack, tuple)
+        assert isinstance(state.locals, tuple)
+        assert isinstance(state.constants, tuple)
+        assert isinstance(state.pc, int)
+        assert isinstance(state.halted, bool)
+
+    def test_get_state_is_immutable_snapshot(self) -> None:
+        """get_state() snapshots are independent — mutating sim does not affect them."""
+        sim = JVMSimulator()
+        sim.load(assemble_jvm((JVMOpcode.ICONST_1,), (JVMOpcode.RETURN,)))
+        state_before = sim.get_state()
+        sim.step()  # push 1 onto stack
+        state_after = sim.get_state()
+
+        # The snapshot taken before step() must NOT reflect the new stack
+        assert state_before.stack == ()
+        assert state_after.stack == (1,)
+
+    def test_execute_simple_program_ok(self) -> None:
+        """execute() runs x = 1 + 2 and returns ok=True with correct final state."""
+        from simulator_protocol import ExecutionResult
+
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.ICONST_1,),
+            (JVMOpcode.ICONST_2,),
+            (JVMOpcode.IADD,),
+            (JVMOpcode.ISTORE_0,),
+            (JVMOpcode.RETURN,),
+        )
+        result = sim.execute(program)
+
+        assert isinstance(result, ExecutionResult)
+        assert result.ok
+        assert result.halted
+        assert result.error is None
+        assert result.final_state.locals[0] == 3
+        assert result.steps == 5
+
+    def test_execute_ireturn_captures_return_value(self) -> None:
+        """execute() stores the IRETURN return value in final_state.return_value."""
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.BIPUSH, 42),
+            (JVMOpcode.IRETURN,),
+        )
+        result = sim.execute(program)
+
+        assert result.ok
+        assert result.final_state.return_value == 42
+
+    def test_execute_traces_contain_step_traces(self) -> None:
+        """execute() populates result.traces with one StepTrace per instruction."""
+        from simulator_protocol import StepTrace
+
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.ICONST_3,),
+            (JVMOpcode.ISTORE_0,),
+            (JVMOpcode.RETURN,),
+        )
+        result = sim.execute(program)
+
+        assert len(result.traces) == 3
+        for trace in result.traces:
+            assert isinstance(trace, StepTrace)
+            assert isinstance(trace.mnemonic, str)
+            assert len(trace.mnemonic) > 0
+
+    def test_reset_clears_state(self) -> None:
+        """reset() restores the simulator to its initial power-on state."""
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.ICONST_5,),
+            (JVMOpcode.ISTORE_0,),
+            (JVMOpcode.RETURN,),
+        )
+        sim.execute(program)
+
+        # After execution the simulator is halted with locals[0] = 5
+        assert sim.halted
+        assert sim.locals[0] == 5
+
+        sim.reset()
+
+        assert not sim.halted
+        assert sim.stack == []
+        assert sim.locals[0] is None
+        assert sim.pc == 0
+        assert sim.return_value is None

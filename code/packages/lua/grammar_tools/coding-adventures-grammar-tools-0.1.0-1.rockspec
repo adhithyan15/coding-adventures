@@ -19,5 +19,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.grammar_tools"] = "src/coding_adventures/grammar_tools/init.lua",
+        ["coding_adventures.grammar_tools.compiler"] = "src/coding_adventures/grammar_tools/compiler.lua",
     },
 }
