@@ -269,7 +269,7 @@ func parseRegister(name string) uint8 {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register name: '%s'", name)})
 	}
 	value, err := strconv.ParseUint(name[1:], 10, 4)
-	if err != nil {
+	if err != nil || value > 15 {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register name: '%s'", name)})
 	}
 	return uint8(value)
@@ -280,7 +280,7 @@ func parsePair(name string) uint8 {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register pair name: '%s'", name)})
 	}
 	value, err := strconv.ParseUint(name[1:], 10, 3)
-	if err != nil {
+	if err != nil || value > 7 {
 		panic(AssemblerError{Message: fmt.Sprintf("Invalid register pair name: '%s'", name)})
 	}
 	return uint8(value)
@@ -292,11 +292,17 @@ func parseNumber(value string) (int, error) {
 		if err != nil {
 			return 0, AssemblerError{Message: fmt.Sprintf("Invalid numeric literal: '%s'", value)}
 		}
+		if parsed > uint64(^uint(0)>>1) {
+			return 0, AssemblerError{Message: fmt.Sprintf("Numeric literal out of range: '%s'", value)}
+		}
 		return int(parsed), nil
 	}
 	parsed, err := strconv.ParseUint(value, 10, 16)
 	if err != nil {
 		return 0, AssemblerError{Message: fmt.Sprintf("Invalid numeric literal: '%s'", value)}
+	}
+	if parsed > uint64(^uint(0)>>1) {
+		return 0, AssemblerError{Message: fmt.Sprintf("Numeric literal out of range: '%s'", value)}
 	}
 	return int(parsed), nil
 }
