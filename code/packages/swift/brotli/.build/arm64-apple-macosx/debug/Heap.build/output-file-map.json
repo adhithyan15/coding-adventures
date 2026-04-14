@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/Heap.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/heap/Sources/Heap/Heap.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/Heap.build/Heap.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/Heap.build/Heap.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/Heap.build/Heap~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/Heap.build/Heap.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/happy-snyder/code/packages/swift/brotli/.build/arm64-apple-macosx/debug/Heap.build/Heap.dia"
+  }
+}
