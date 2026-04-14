@@ -1,21 +1,50 @@
 //! VHDL parser backed by compiled parser grammar.
 
-use coding_adventures_vhdl_lexer::tokenize_vhdl;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+pub const DEFAULT_VERSION: &str = coding_adventures_vhdl_lexer::DEFAULT_VERSION;
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown VHDL version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
+}
+
 pub fn create_vhdl_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_vhdl(source);
-    let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    create_vhdl_parser_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL parser grammar missing default version")
+}
+
+pub fn create_vhdl_parser_with_version(source: &str, version: &str) -> Result<GrammarParser, String> {
+    let version = validate_version(version)?;
+    let tokens = coding_adventures_vhdl_lexer::tokenize_vhdl_with_version(source, version)?;
+    let grammar = _grammar::parser_grammar(version)
+        .expect("compiled VHDL parser grammar missing supported version");
+    Ok(GrammarParser::new(tokens, grammar))
 }
 
 pub fn parse_vhdl(source: &str) -> GrammarASTNode {
-    let mut parser = create_vhdl_parser(source);
+    parse_vhdl_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL parser grammar missing default version")
+}
+
+pub fn parse_vhdl_with_version(source: &str, version: &str) -> Result<GrammarASTNode, String> {
+    let mut parser = create_vhdl_parser_with_version(source, version)?;
     parser
         .parse()
-        .unwrap_or_else(|e| panic!("VHDL parse failed: {e}"))
+        .map_err(|e| format!("VHDL parse failed: {e}"))
 }
 
 #[cfg(test)]
@@ -529,6 +558,21 @@ entity c is end entity c;";
             find_rule(&ast, "entity_declaration"),
             "Expected entity_declaration rule in AST"
         );
+    }
+
+    #[test]
+    fn test_default_version_matches_explicit_2008() {
+        let default_ast = parse_vhdl("entity empty is end entity empty;");
+        let explicit_ast =
+            parse_vhdl_with_version("entity empty is end entity empty;", "2008").unwrap();
+        assert_eq!(default_ast.rule_name, explicit_ast.rule_name);
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = parse_vhdl_with_version("entity empty is end entity empty;", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown VHDL version"));
     }
 }
 

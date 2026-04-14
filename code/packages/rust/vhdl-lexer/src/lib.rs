@@ -7,6 +7,24 @@ use lexer::token::{Token, TokenType};
 
 mod _grammar;
 
+pub const DEFAULT_VERSION: &str = "2008";
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown VHDL version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
+}
+
 fn normalize_case(tokens: &mut [Token], keywords: &HashSet<String>) {
     for token in tokens.iter_mut() {
         let should_normalize = match token.type_ {
@@ -29,19 +47,36 @@ fn normalize_case(tokens: &mut [Token], keywords: &HashSet<String>) {
 }
 
 pub fn create_vhdl_lexer(source: &str) -> GrammarLexer<'_> {
-    let grammar = _grammar::token_grammar();
-    GrammarLexer::new(source, &grammar)
+    create_vhdl_lexer_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL token grammar missing default version")
+}
+
+pub fn create_vhdl_lexer_with_version<'src>(
+    source: &'src str,
+    version: &str,
+) -> Result<GrammarLexer<'src>, String> {
+    let version = validate_version(version)?;
+    let grammar = _grammar::token_grammar(version)
+        .expect("compiled VHDL token grammar missing supported version");
+    Ok(GrammarLexer::new(source, &grammar))
 }
 
 pub fn tokenize_vhdl(source: &str) -> Vec<Token> {
-    let grammar = _grammar::token_grammar();
+    tokenize_vhdl_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL token grammar missing default version")
+}
+
+pub fn tokenize_vhdl_with_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    let version = validate_version(version)?;
+    let grammar = _grammar::token_grammar(version)
+        .expect("compiled VHDL token grammar missing supported version");
     let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
     let mut vhdl_lexer = GrammarLexer::new(source, &grammar);
     let mut tokens = vhdl_lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("VHDL tokenization failed: {e}"));
+        .map_err(|e| format!("VHDL tokenization failed: {e}"))?;
     normalize_case(&mut tokens, &keyword_set);
-    tokens
+    Ok(tokens)
 }
 
 #[cfg(test)]
@@ -770,6 +805,21 @@ end entity counter;
 
         let has_integer = pairs.iter().any(|(_, v)| *v == "integer");
         assert!(has_integer, "Expected 'integer' type name");
+    }
+
+    #[test]
+    fn test_default_version_matches_explicit_2008() {
+        let default_tokens = tokenize_vhdl("entity top is end entity top;");
+        let explicit_tokens =
+            tokenize_vhdl_with_version("entity top is end entity top;", "2008").unwrap();
+        assert_eq!(default_tokens.len(), explicit_tokens.len());
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = tokenize_vhdl_with_version("entity top is end entity top;", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown VHDL version"));
     }
 }
 

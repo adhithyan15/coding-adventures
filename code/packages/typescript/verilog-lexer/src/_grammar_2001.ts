@@ -1,0 +1,331 @@
+// AUTO-GENERATED FILE — DO NOT EDIT
+// Source: verilog.tokens
+// Regenerate with: grammar-tools compile-tokens verilog.tokens
+//
+// This file embeds a TokenGrammar as native TypeScript object literals.
+// Import it directly instead of reading and parsing the .tokens file at
+// runtime.
+
+import type { TokenGrammar } from "@coding-adventures/grammar-tools";
+
+export const TOKEN_GRAMMAR: TokenGrammar = {
+  version: 0,
+  caseInsensitive: false,
+  caseSensitive: true,
+  definitions: [
+    {
+      name: "STRING",
+      pattern: "\"([^\"\\\\]|\\\\.)*\"",
+      isRegex: true,
+      lineNumber: 46,
+    },
+    {
+      name: "SIZED_NUMBER",
+      pattern: "[0-9]*'[sS]?[bBoOdDhH][0-9a-fA-F_xXzZ]+",
+      isRegex: true,
+      lineNumber: 73,
+    },
+    {
+      name: "REAL_NUMBER",
+      pattern: "[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?",
+      isRegex: true,
+      lineNumber: 77,
+    },
+    {
+      name: "NUMBER",
+      pattern: "[0-9][0-9_]*",
+      isRegex: true,
+      lineNumber: 81,
+    },
+    {
+      name: "SYSTEM_ID",
+      pattern: "\\$[a-zA-Z_][a-zA-Z0-9_$]*",
+      isRegex: true,
+      lineNumber: 109,
+    },
+    {
+      name: "DIRECTIVE",
+      pattern: "`[a-zA-Z_][a-zA-Z0-9_]*",
+      isRegex: true,
+      lineNumber: 110,
+    },
+    {
+      name: "ESCAPED_IDENT",
+      pattern: "\\\\[^ \\t\\r\\n]+",
+      isRegex: true,
+      lineNumber: 111,
+    },
+    {
+      name: "NAME",
+      pattern: "[a-zA-Z_][a-zA-Z0-9_$]*",
+      isRegex: true,
+      lineNumber: 114,
+    },
+    {
+      name: "ARITH_LEFT_SHIFT",
+      pattern: "<<<",
+      isRegex: false,
+      lineNumber: 126,
+    },
+    {
+      name: "ARITH_RIGHT_SHIFT",
+      pattern: ">>>",
+      isRegex: false,
+      lineNumber: 127,
+    },
+    {
+      name: "CASE_EQ",
+      pattern: "===",
+      isRegex: false,
+      lineNumber: 136,
+    },
+    {
+      name: "CASE_NEQ",
+      pattern: "!==",
+      isRegex: false,
+      lineNumber: 137,
+    },
+    {
+      name: "LOGIC_AND",
+      pattern: "&&",
+      isRegex: false,
+      lineNumber: 145,
+    },
+    {
+      name: "LOGIC_OR",
+      pattern: "||",
+      isRegex: false,
+      lineNumber: 146,
+    },
+    {
+      name: "LEFT_SHIFT",
+      pattern: "<<",
+      isRegex: false,
+      lineNumber: 147,
+    },
+    {
+      name: "RIGHT_SHIFT",
+      pattern: ">>",
+      isRegex: false,
+      lineNumber: 148,
+    },
+    {
+      name: "EQUALS_EQUALS",
+      pattern: "==",
+      isRegex: false,
+      lineNumber: 149,
+    },
+    {
+      name: "NOT_EQUALS",
+      pattern: "!=",
+      isRegex: false,
+      lineNumber: 150,
+    },
+    {
+      name: "LESS_EQUALS",
+      pattern: "<=",
+      isRegex: false,
+      lineNumber: 151,
+    },
+    {
+      name: "GREATER_EQUALS",
+      pattern: ">=",
+      isRegex: false,
+      lineNumber: 152,
+    },
+    {
+      name: "POWER",
+      pattern: "**",
+      isRegex: false,
+      lineNumber: 153,
+    },
+    {
+      name: "TRIGGER",
+      pattern: "->",
+      isRegex: false,
+      lineNumber: 154,
+    },
+    {
+      name: "PLUS",
+      pattern: "+",
+      isRegex: false,
+      lineNumber: 168,
+    },
+    {
+      name: "MINUS",
+      pattern: "-",
+      isRegex: false,
+      lineNumber: 169,
+    },
+    {
+      name: "STAR",
+      pattern: "*",
+      isRegex: false,
+      lineNumber: 170,
+    },
+    {
+      name: "SLASH",
+      pattern: "/",
+      isRegex: false,
+      lineNumber: 171,
+    },
+    {
+      name: "PERCENT",
+      pattern: "%",
+      isRegex: false,
+      lineNumber: 172,
+    },
+    {
+      name: "AMP",
+      pattern: "&",
+      isRegex: false,
+      lineNumber: 173,
+    },
+    {
+      name: "PIPE",
+      pattern: "|",
+      isRegex: false,
+      lineNumber: 174,
+    },
+    {
+      name: "CARET",
+      pattern: "^",
+      isRegex: false,
+      lineNumber: 175,
+    },
+    {
+      name: "TILDE",
+      pattern: "~",
+      isRegex: false,
+      lineNumber: 176,
+    },
+    {
+      name: "BANG",
+      pattern: "!",
+      isRegex: false,
+      lineNumber: 177,
+    },
+    {
+      name: "LESS_THAN",
+      pattern: "<",
+      isRegex: false,
+      lineNumber: 178,
+    },
+    {
+      name: "GREATER_THAN",
+      pattern: ">",
+      isRegex: false,
+      lineNumber: 179,
+    },
+    {
+      name: "EQUALS",
+      pattern: "=",
+      isRegex: false,
+      lineNumber: 180,
+    },
+    {
+      name: "QUESTION",
+      pattern: "?",
+      isRegex: false,
+      lineNumber: 181,
+    },
+    {
+      name: "COLON",
+      pattern: ":",
+      isRegex: false,
+      lineNumber: 182,
+    },
+    {
+      name: "LPAREN",
+      pattern: "(",
+      isRegex: false,
+      lineNumber: 194,
+    },
+    {
+      name: "RPAREN",
+      pattern: ")",
+      isRegex: false,
+      lineNumber: 195,
+    },
+    {
+      name: "LBRACKET",
+      pattern: "[",
+      isRegex: false,
+      lineNumber: 196,
+    },
+    {
+      name: "RBRACKET",
+      pattern: "]",
+      isRegex: false,
+      lineNumber: 197,
+    },
+    {
+      name: "LBRACE",
+      pattern: "{",
+      isRegex: false,
+      lineNumber: 198,
+    },
+    {
+      name: "RBRACE",
+      pattern: "}",
+      isRegex: false,
+      lineNumber: 199,
+    },
+    {
+      name: "SEMICOLON",
+      pattern: ";",
+      isRegex: false,
+      lineNumber: 200,
+    },
+    {
+      name: "COMMA",
+      pattern: ",",
+      isRegex: false,
+      lineNumber: 201,
+    },
+    {
+      name: "DOT",
+      pattern: ".",
+      isRegex: false,
+      lineNumber: 202,
+    },
+    {
+      name: "HASH",
+      pattern: "#",
+      isRegex: false,
+      lineNumber: 203,
+    },
+    {
+      name: "AT",
+      pattern: "@",
+      isRegex: false,
+      lineNumber: 204,
+    },
+  ],
+  keywords: ["always","and","assign","begin","buf","case","casex","casez","default","defparam","else","end","endcase","endfunction","endgenerate","endmodule","endtask","for","function","generate","genvar","if","initial","inout","input","integer","localparam","module","nand","negedge","nor","not","or","output","parameter","posedge","real","reg","signed","supply0","supply1","task","tri","unsigned","wire","xnor","xor"],
+  mode: undefined,
+  escapeMode: undefined,
+  skipDefinitions: [
+    {
+      name: "LINE_COMMENT",
+      pattern: "\\/\\/[^\\n]*",
+      isRegex: true,
+      lineNumber: 31,
+    },
+    {
+      name: "BLOCK_COMMENT",
+      pattern: "\\/\\*([^*]|\\*[^/])*\\*\\/",
+      isRegex: true,
+      lineNumber: 32,
+    },
+    {
+      name: "WHITESPACE",
+      pattern: "[ \\t\\r\\n]+",
+      isRegex: true,
+      lineNumber: 33,
+    },
+  ],
+  reservedKeywords: [],
+  errorDefinitions: [],
+  groups: {},
+};

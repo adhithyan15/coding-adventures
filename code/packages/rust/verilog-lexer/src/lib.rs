@@ -7,16 +7,49 @@ use lexer::token::Token;
 
 mod _grammar;
 
+pub const DEFAULT_VERSION: &str = "2005";
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown Verilog version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
+}
+
 pub fn create_verilog_lexer(source: &str) -> GrammarLexer<'_> {
-    let grammar = _grammar::token_grammar();
-    GrammarLexer::new(source, &grammar)
+    create_verilog_lexer_with_version(source, DEFAULT_VERSION)
+        .expect("compiled Verilog token grammar missing default version")
+}
+
+pub fn create_verilog_lexer_with_version<'src>(
+    source: &'src str,
+    version: &str,
+) -> Result<GrammarLexer<'src>, String> {
+    let version = validate_version(version)?;
+    let grammar = _grammar::token_grammar(version)
+        .expect("compiled Verilog token grammar missing supported version");
+    Ok(GrammarLexer::new(source, &grammar))
 }
 
 pub fn tokenize_verilog(source: &str) -> Vec<Token> {
-    let mut lexer = create_verilog_lexer(source);
+    tokenize_verilog_with_version(source, DEFAULT_VERSION)
+        .expect("compiled Verilog token grammar missing default version")
+}
+
+pub fn tokenize_verilog_with_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_verilog_lexer_with_version(source, version)?;
     lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("Verilog tokenization failed: {e}"))
+        .map_err(|e| format!("Verilog tokenization failed: {e}"))
 }
 
 pub fn tokenize_verilog_preprocessed(source: &str) -> Vec<Token> {
@@ -543,6 +576,21 @@ endmodule
 
         let has_trigger = pairs.iter().any(|(_, v)| *v == "->");
         assert!(has_trigger, "Expected '->' token");
+    }
+
+    #[test]
+    fn test_default_version_matches_explicit_2005() {
+        let default_tokens = tokenize_verilog("module top; endmodule");
+        let explicit_tokens =
+            tokenize_verilog_with_version("module top; endmodule", "2005").unwrap();
+        assert_eq!(default_tokens.len(), explicit_tokens.len());
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = tokenize_verilog_with_version("module top; endmodule", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown Verilog version"));
     }
 }
 

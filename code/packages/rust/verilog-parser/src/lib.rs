@@ -1,21 +1,50 @@
 //! Verilog parser backed by compiled parser grammar.
 
-use coding_adventures_verilog_lexer::tokenize_verilog;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
+pub const DEFAULT_VERSION: &str = coding_adventures_verilog_lexer::DEFAULT_VERSION;
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown Verilog version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
+}
+
 pub fn create_verilog_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_verilog(source);
-    let grammar = _grammar::parser_grammar();
-    GrammarParser::new(tokens, grammar)
+    create_verilog_parser_with_version(source, DEFAULT_VERSION)
+        .expect("compiled Verilog parser grammar missing default version")
+}
+
+pub fn create_verilog_parser_with_version(source: &str, version: &str) -> Result<GrammarParser, String> {
+    let version = validate_version(version)?;
+    let tokens = coding_adventures_verilog_lexer::tokenize_verilog_with_version(source, version)?;
+    let grammar = _grammar::parser_grammar(version)
+        .expect("compiled Verilog parser grammar missing supported version");
+    Ok(GrammarParser::new(tokens, grammar))
 }
 
 pub fn parse_verilog(source: &str) -> GrammarASTNode {
-    let mut parser = create_verilog_parser(source);
+    parse_verilog_with_version(source, DEFAULT_VERSION)
+        .expect("compiled Verilog parser grammar missing default version")
+}
+
+pub fn parse_verilog_with_version(source: &str, version: &str) -> Result<GrammarASTNode, String> {
+    let mut parser = create_verilog_parser_with_version(source, version)?;
     parser
         .parse()
-        .unwrap_or_else(|e| panic!("Verilog parse failed: {e}"))
+        .map_err(|e| format!("Verilog parse failed: {e}"))
 }
 
 #[cfg(test)]
@@ -450,6 +479,21 @@ endmodule";
             find_rule(&ast, "block_statement"),
             "Expected block_statement rule in AST"
         );
+    }
+
+    #[test]
+    fn test_default_version_matches_explicit_2005() {
+        let default_ast = parse_verilog("module empty; endmodule");
+        let explicit_ast =
+            parse_verilog_with_version("module empty; endmodule", "2005").unwrap();
+        assert_eq!(default_ast.rule_name, explicit_ast.rule_name);
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = parse_verilog_with_version("module empty; endmodule", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown Verilog version"));
     }
 }
 
