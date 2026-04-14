@@ -252,6 +252,7 @@ members = [
     "lsm-tree",
     "write-ahead-log",
     "des",
+    "ed25519",
     "aes",
     "aes-modes",
     "chacha20-poly1305",

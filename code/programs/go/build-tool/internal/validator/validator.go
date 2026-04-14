@@ -73,13 +73,15 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		}
 
 		referenced := referencedPackages(pkg, pathToPkg)
-		if len(referenced) == 0 && !requiresExplicitPrereqs[pkg.Language] {
+		referencedFuzzy := referencedPackagesFuzzy(pkg, pathToPkg)
+		if len(referenced) == 0 && len(referencedFuzzy) == 0 && !requiresExplicitPrereqs[pkg.Language] {
 			continue
 		}
 
 		prereqs := transitivePredecessors(graph, pkg.Name)
 		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames)
-		delete(referenced, pkg.Name) // Self-references are allowed.
+		delete(referenced, pkg.Name)      // Self-references are allowed.
+		delete(referencedFuzzy, pkg.Name) // Self-references are allowed.
 
 		var hidden []string
 		for dep := range referenced {
@@ -89,10 +91,13 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		}
 		sort.Strings(hidden)
 
+		// Use fuzzy resolution for the missing-prereq check: BUILD files
+		// often point at subdirectories (e.g. ../sha512/lib) rather than
+		// the package root, and those should satisfy the prereq.
 		var missing []string
 		if requiresExplicitPrereqs[pkg.Language] {
 			for dep := range prereqs {
-				if !referenced[dep] {
+				if !referencedFuzzy[dep] {
 					missing = append(missing, dep)
 				}
 			}
@@ -155,11 +160,47 @@ func referencedPackages(pkg discovery.Package, pathToPkg map[string]string) map[
 	return found
 }
 
+// referencedPackagesFuzzy is like referencedPackages but uses ancestor-walking
+// resolution so that subdirectory references (e.g. ../sha512/lib) resolve to
+// their parent package.
+func referencedPackagesFuzzy(pkg discovery.Package, pathToPkg map[string]string) map[string]bool {
+	found := make(map[string]bool)
+	for _, command := range pkg.BuildCommands {
+		for _, raw := range relPathRe.FindAllString(command, -1) {
+			name, ok := resolvePackageRefFuzzy(pkg.Path, raw, pathToPkg)
+			if ok {
+				found[name] = true
+			}
+		}
+	}
+	return found
+}
+
 func resolvePackageRef(pkgPath, raw string, pathToPkg map[string]string) (string, bool) {
 	normalized := strings.ReplaceAll(raw, "\\", "/")
 	abs := filepath.Clean(filepath.Join(pkgPath, filepath.FromSlash(normalized)))
 	name, ok := pathToPkg[abs]
 	return name, ok
+}
+
+// resolvePackageRefFuzzy is like resolvePackageRef but also walks up the
+// directory tree. BUILD files often reference subdirectories of a sibling
+// package (e.g. ../sha512/lib) rather than the package root. This variant
+// is used only for the "missing prerequisite" check so that legitimate
+// subdirectory references count as satisfying a declared dependency.
+func resolvePackageRefFuzzy(pkgPath, raw string, pathToPkg map[string]string) (string, bool) {
+	normalized := strings.ReplaceAll(raw, "\\", "/")
+	abs := filepath.Clean(filepath.Join(pkgPath, filepath.FromSlash(normalized)))
+	for dir := abs; ; dir = filepath.Dir(dir) {
+		if name, ok := pathToPkg[dir]; ok {
+			return name, true
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
+		}
+	}
+	return "", false
 }
 
 func transitivePredecessors(graph *directedgraph.Graph, node string) map[string]bool {

@@ -1749,6 +1749,13 @@ Same applies to `SOCK_DGRAM` and other socket type constants.
 
 ---
 
+### 2026-04-13: BUILD validator path resolution fails on subdirectory references
+
+Perl BUILD files use `PERL5LIB=../sha512/lib` to set include paths, referencing a subdirectory of the sibling package rather than its root. The build tool validator's `resolvePackageRef` did exact-match lookups against `pathToPkg`, which only stores package root directories. The path `../sha512/lib` resolved to `/path/to/perl/sha512/lib` which didn't match `/path/to/perl/sha512`, causing false "missing prerequisite refs" errors.
+
+**Fix:** Added `resolvePackageRefFuzzy` that walks up the directory tree to find the nearest ancestor in `pathToPkg`. Used only for the "missing prerequisite" check (Python, TypeScript, Perl) to avoid surfacing false "undeclared ref" positives on pre-existing packages.
+
+**Rule:** When BUILD files reference sibling packages, they may point at subdirectories (e.g. `../sha512/lib`, `../hmac/src`). The validator must handle these by walking up to the package root. Keep the strict exact-match for "undeclared ref" detection to avoid false positives.
 ## Intel 4004 backend: AND_IMM is a no-op on 4-bit hardware
 
 **Date:** 2026-04-13
