@@ -1256,15 +1256,15 @@ When TypeScript packages export `.ts` source (not compiled `.d.ts`), `tsc -b` fo
 
 **Rule:** For Vite-based TypeScript programs that use `file:` dependencies, never use `tsc -b` in the build script. Rely on Vite's TypeScript handling for production builds.
 
-### 2026-03-29: Swift IS available on Windows — don't skip it
+### 2026-03-29: Swift is NOT supported on Windows CI — always skip with a guard
 
-When Swift's `BUILD` file (`swift test`) failed on Windows CI with "'swift' is not recognized", the initial reaction was to create a `BUILD_windows` that skips tests. This was wrong — Swift has been available on Windows since Swift 5.3 (2020). The real issue was that the CI workflow had no Swift setup step.
+`swift-actions/setup-swift@v3` does not support Windows and `winget` Swift installs are not reliable on GitHub-hosted Windows runners. Swift tests will fail with "swift not found" or similar errors on `windows-latest`.
 
-**Fix:** Add `swift-actions/setup-swift@v3` to the CI workflow with a `needs_swift` conditional (matching the pattern used for Python, Ruby, etc.). The build tool already emits `needs_swift=true|false` — the CI workflow just wasn't reading it.
-
-**Rule:** When a language tool is missing on a CI runner, investigate whether it can be installed via an action before skipping. Don't assume a language isn't supported on a platform — check first. Swift runs on macOS, Linux, and Windows.
-
-**Update (same day):** `swift-actions/setup-swift@v3` does NOT support Windows yet — it throws "Windows is not supported yet" at runtime. But that doesn't mean Swift can't run on Windows CI! Instead of skipping, install Swift directly via `winget install --id Swift.Toolchain` (following https://www.swift.org/install/windows/). The CI workflow uses `swift-actions/setup-swift` on macOS/Linux and `winget` on Windows. Don't skip a platform just because one action doesn't support it — there's always a manual install path.
+**Rule:** Every Swift `BUILD_windows` must use the skip guard pattern:
+```
+where swift >nul 2>nul && swift test || echo Swift not available on this runner — skipping
+```
+This means: if `swift` happens to be in PATH (it won't be on GitHub Windows runners), run the tests; otherwise print a skip message and exit 0. Never write a `BUILD_windows` for a Swift package that unconditionally runs `swift test`.
 
 ---
 
