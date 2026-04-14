@@ -605,6 +605,16 @@ class _Compiler:
         regs[name_tok.value] = var_reg
         next_reg += 1
 
+        # Propagate the declared type down to expression sub-nodes so that
+        # _compile_add_expr picks the correct AND_IMM mask (15 for u4, 255 for
+        # u8/bcd).  The type checker annotates numeric literals with U4 as an
+        # untyped sentinel; without propagation, "100 +% 200" in a u8 context
+        # would incorrectly emit AND_IMM 15 instead of AND_IMM 255.
+        if nib_type is not None:
+            from nib_type_checker.types import NibType as _NT
+            if nib_type != _NT.U4:
+                _propagate_context_type(expr_node, nib_type)
+
         # Compile the initializer expression. The result lands in the scratch
         # register (v1). We then copy v1 → vN via ADD_IMM vN, v1, 0.
         result_reg = self._compile_expr(expr_node, regs)
@@ -975,6 +985,13 @@ class _Compiler:
         if t_name == "HEX_LIT":
             # Hexadecimal literal: parse and load into v1.
             val = int(tok.value, 16)
+            self._emit(IrOp.LOAD_IMM, scratch, IrImmediate(value=val))
+            return scratch
+
+        # After the nib-lexer keyword reclassification, `true` and `false`
+        # tokens have type="true"/"false" (not type="NAME").  Handle both.
+        if t_name in ("true", "false"):
+            val = 1 if t_name == "true" else 0
             self._emit(IrOp.LOAD_IMM, scratch, IrImmediate(value=val))
             return scratch
 
@@ -1564,6 +1581,38 @@ def _is_expr_node(node: ASTNode) -> bool:
         "expr", "or_expr", "and_expr", "eq_expr", "cmp_expr",
         "add_expr", "bitwise_expr", "unary_expr", "primary", "call_expr",
     )
+
+
+def _propagate_context_type(node: ASTNode | Token, declared_type: "NibType") -> None:
+    """Override numeric-literal type annotations with the declared context type.
+
+    The type checker annotates numeric literal expressions with NibType.U4 as
+    a "representative" untyped sentinel.  When those literals appear inside a
+    ``let`` or ``assign`` statement whose declared type is U8 or BCD, the IR
+    compiler must use a 255 mask for ``AND_IMM`` (not 15).
+
+    This helper walks the expression tree and replaces every NibType.U4 (or
+    None) annotation with ``declared_type``, so ``_compile_add_expr`` reads
+    the correct type.  We only override when ``declared_type != U4`` to avoid
+    unnecessary mutation for purely u4 contexts.
+
+    Nodes that already have a non-U4 type (e.g., a u8 variable reference) are
+    left untouched — their type was set by the type checker from the symbol
+    table and is authoritative.
+
+    Args:
+        node:          The root expression AST node to walk.
+        declared_type: The type from the enclosing let/assign declaration.
+    """
+    if isinstance(node, Token):
+        return
+    from nib_type_checker.types import NibType  # local import to avoid circularity
+    existing: NibType | None = getattr(node, "_nib_type", None)
+    if existing is None or existing == NibType.U4:
+        node._nib_type = declared_type  # type: ignore[attr-defined]
+    for child in node.children:
+        if isinstance(child, ASTNode):
+            _propagate_context_type(child, declared_type)
 
 
 def _extract_const_int(expr: ASTNode | Token) -> int:
