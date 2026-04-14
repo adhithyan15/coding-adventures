@@ -1,5 +1,20 @@
 # Changelog — intel-4004-packager
 
+## [0.2.0] — 2026-04-14
+
+### Changed
+
+- Scope narrowed: package is now **hex encoder/decoder only** — no pipeline deps
+- Removed `Intel4004Packager`, `PackageResult`, `PackageError` (moved to `nib-compiler`)
+- Removed end-to-end integration tests (moved to `nib-compiler`)
+- `pyproject.toml` now has zero runtime dependencies
+
+### Kept
+
+- `encode_hex(binary, origin=0) -> str` — binary → Intel HEX
+- `decode_hex(hex_text) -> (origin, bytes)` — Intel HEX → binary
+- `test_hex_encoder.py` (44 tests, 96% coverage)
+
 ## [0.1.0] — 2026-04-13
 
 ### Added

@@ -1,132 +1,90 @@
 # intel-4004-packager
 
-The final stage of the Nib → Intel 4004 compiler pipeline. Takes compiled binary bytes and wraps them in **Intel HEX** format — the standard used by EPROM programmers since 1973.
+Converts raw binary machine code into the **Intel HEX** format used by
+EPROM programmers to burn ROM chips, and parses Intel HEX back to binary
+for round-trip verification.
 
-## Pipeline Position
+This is a standalone utility package with **no runtime dependencies**.
+Pipeline orchestration (Nib source → binary → Intel HEX) lives in
+`nib-compiler`.
+
+## Where it fits
 
 ```
-Nib source text
-    → nib-parser           (text → AST)
-    → nib-type-checker     (AST → typed AST)
-    → nib-ir-compiler      (typed AST → IrProgram)
-    → ir-optimizer         (IrProgram → optimized IrProgram)
-    → intel-4004-backend   (IrProgram → assembly text)
-    → intel-4004-assembler (assembly text → binary bytes)
-    → intel-4004-packager  (binary → Intel HEX)  ← this package
+nib-compiler                    ← full pipeline orchestrator
+    ↓  ...all compile stages...
+    ↓
+intel-4004-assembler            ← assembly text → binary bytes
+    ↓
+intel-4004-packager  ← YOU ARE HERE: binary bytes → Intel HEX
 ```
 
-## Quick Start
+## Intel HEX format
 
-### Full pipeline (Nib source → Intel HEX)
+Intel HEX dates back to 1973 and is the industry-standard format for
+programming ROM chips.  Each line is a *record*:
 
-```python
-from intel_4004_packager import Intel4004Packager
-
-packager = Intel4004Packager()
-result = packager.pack_source("""
-    fn main() -> u4 {
-        let x: u4 = 7
-        return x
-    }
-""")
-
-# Write to file and burn to EPROM
-with open("firmware.hex", "w") as f:
-    f.write(result.hex_text)
-
-# Or inspect intermediate stages for debugging
-print(result.asm_text)      # Intel 4004 assembly
-print(result.binary.hex())  # Raw bytes
+```
+:LLAAAATTDD...CC
 ```
 
-### Lower-level: binary → Intel HEX
+| Field | Width | Meaning |
+|---|---|---|
+| `:` | 1 char | Start code (always colon) |
+| `LL` | 1 byte | Byte count for this record |
+| `AAAA` | 2 bytes | Load address (big-endian) |
+| `TT` | 1 byte | Record type: `00` = data, `01` = EOF |
+| `DD...` | LL bytes | Data bytes |
+| `CC` | 1 byte | Checksum: `(0x100 - sum(preceding bytes)) & 0xFF` |
+
+Records hold 16 data bytes each.  The final record is always:
+
+```
+:00000001FF
+```
+
+The checksum invariant: `sum(all bytes in record) % 256 == 0`.
+
+## Usage
 
 ```python
 from intel_4004_packager import encode_hex, decode_hex
 
-# Encode
-binary = bytes([0xD7, 0x01])   # LDM 7, HLT
+# Convert assembled bytes to Intel HEX
+binary = bytes([0xD7, 0x01])          # LDM 7; HLT
 hex_text = encode_hex(binary)
-print(hex_text)
-# :020000000000D70126
+# :02000000D70126
 # :00000001FF
 
-# Decode (for round-trip testing or loading from file)
+# Parse Intel HEX back to binary (round-trip)
 origin, recovered = decode_hex(hex_text)
+assert origin == 0
 assert recovered == binary
-```
 
-## Intel HEX Format
-
-Each line is a record:
-
-```
-:LLAAAATTDDDDDD...CC
- ││││││││││││││ └── checksum (two's complement of all prior bytes)
- ││││││││└───────── data bytes (LL × 2 hex chars)
- │││││└──────────── record type (00=data, 01=EOF)
- │└───────────────── address (16-bit big-endian)
- └────────────────── byte count
-```
-
-The checksum ensures that every byte (including the checksum byte itself) sums to 0 mod 256. EPROM programmers verify this before burning.
-
-Example for two bytes at address 0x000:
-```
-:020000000000D70126
-:00000001FF
-```
-
-## End-to-End Testing
-
-The packager tests verify correctness all the way to register state using `Intel4004Simulator`:
-
-```python
-from intel4004_simulator import Intel4004Simulator
-from intel_4004_packager import Intel4004Packager
-
-packager = Intel4004Packager()
-result = packager.pack_source("fn main() -> u4 { return 9 }")
-
-sim = Intel4004Simulator()
-exec_result = sim.execute(result.binary, max_steps=10_000)
-
-assert exec_result.ok
-assert exec_result.final_state.registers[1] == 9   # return value in R1
+# ROM at non-zero base address (e.g. second 256-byte page)
+hex_page2 = encode_hex(binary, origin=0x100)
 ```
 
 ## API
 
-### `Intel4004Packager`
+### `encode_hex(binary: bytes, origin: int = 0) -> str`
 
-| Method | Description |
-|---|---|
-| `pack_source(source: str) -> PackageResult` | Run the full pipeline |
+Encodes `binary` as a multi-line Intel HEX string.
 
-Constructor options:
-- `optimize=True` — enable IR optimizer (default: `True`)
-- `origin=0x000` — ROM base address for Intel HEX (default: `0x000`)
+- `origin`: ROM load address (default 0x000; must fit in 16 bits)
+- Returns a string ending with `:00000001FF\n`
+- Raises `ValueError` if `origin + len(binary)` exceeds 0xFFFF
 
-### `PackageResult`
+### `decode_hex(hex_text: str) -> tuple[int, bytes]`
 
-| Field | Type | Description |
-|---|---|---|
-| `typed_ast` | `ASTNode` | Type-checked AST |
-| `raw_ir` | `IrProgram` | IR before optimization |
-| `optimized_ir` | `IrProgram` | IR after optimization |
-| `asm_text` | `str` | Intel 4004 assembly text |
-| `binary` | `bytes` | Raw machine code |
-| `hex_text` | `str` | Intel HEX ROM image |
+Parses Intel HEX back to `(origin, binary)`.
 
-### `PackageError`
+- Raises `ValueError` on checksum errors or malformed records
 
-Raised when any pipeline stage fails:
+## Running tests
 
-```python
-try:
-    result = packager.pack_source(source)
-except PackageError as e:
-    print(e.stage)    # "parse", "typecheck", "ir_compile", etc.
-    print(e.message)
-    print(e.cause)    # original exception, if any
+```bash
+uv run pytest tests/ -v
 ```
+
+44 tests, 96% coverage.

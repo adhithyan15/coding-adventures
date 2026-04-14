@@ -320,22 +320,40 @@ class TestAndImm:
         lines = asm_lines(prog)
         assert any("no-op" in ln.lower() or "255" in ln for ln in lines)
 
-    def test_and_imm_15_emits_ldm_and_sequence(self) -> None:
-        """AND_IMM with 15 should load 0xF into scratch and AND."""
+    def test_and_imm_15_is_noop(self) -> None:
+        """AND_IMM mask=15 is a no-op on 4004 (registers are 4-bit hardware).
+
+        The 4004 has no AND instruction. Masking to 0xF is hardware-enforced
+        since registers can never exceed 15. The codegen emits a comment.
+        """
         prog = single_instr(
             IrOp.AND_IMM, [IrRegister(2), IrRegister(2), IrImmediate(15)]
         )
         lines = asm_lines(prog)
-        assert any("LDM 15" in ln for ln in lines)
-        assert any("AND R1" in ln for ln in lines)
+        # No real instructions emitted — only the ORG header and a comment.
+        def is_real_instr(ln: str) -> bool:
+            s = ln.strip()
+            return bool(s) and not s.startswith(";") and not s.startswith("ORG")
+        assert not any(is_real_instr(ln) for ln in lines)
 
-    def test_and_imm_small_mask(self) -> None:
-        """AND_IMM with mask ≤ 15 should use LDM+scratch sequence."""
+    def test_and_imm_255_is_noop(self) -> None:
+        """AND_IMM mask=255 is a no-op on 4004 (8-bit pairs naturally cap at 255)."""
+        prog = single_instr(
+            IrOp.AND_IMM, [IrRegister(2), IrRegister(2), IrImmediate(255)]
+        )
+        lines = asm_lines(prog)
+        def is_real_instr(ln: str) -> bool:
+            s = ln.strip()
+            return bool(s) and not s.startswith(";") and not s.startswith("ORG")
+        assert not any(is_real_instr(ln) for ln in lines)
+
+    def test_and_imm_arbitrary_mask_emits_comment(self) -> None:
+        """AND_IMM with an unsupported mask emits a comment (no real instruction)."""
         prog = single_instr(
             IrOp.AND_IMM, [IrRegister(2), IrRegister(2), IrImmediate(7)]
         )
         lines = asm_lines(prog)
-        assert any("LDM 7" in ln for ln in lines)
+        assert any("AND_IMM" in ln for ln in lines)
 
 
 # ---------------------------------------------------------------------------
@@ -506,13 +524,13 @@ class TestRet:
 
 
 class TestHalt:
-    """HALT → JUN $ (infinite self-loop)."""
+    """HALT → HLT (simulator halt sentinel, opcode 0x01)."""
 
-    def test_halt_emits_jun_dollar(self) -> None:
-        """Should emit JUN $ (jump to current address)."""
+    def test_halt_emits_hlt(self) -> None:
+        """Should emit HLT — the simulator's halt opcode, not JUN $."""
         prog = single_instr(IrOp.HALT, [])
         lines = asm_lines(prog)
-        assert any("JUN $" in ln for ln in lines)
+        assert any("HLT" in ln for ln in lines)
 
 
 # ---------------------------------------------------------------------------
