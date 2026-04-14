@@ -1,4 +1,4 @@
-requires 'coding-adventures-directed-graph';
+requires 'CodingAdventures::DirectedGraph';
 
 # Test dependencies
 on 'test' => sub {

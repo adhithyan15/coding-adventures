@@ -241,9 +241,19 @@ mod tests {
 
     #[test]
     fn next_state_unknown_throws() {
-        let chain = simple_chain();
+        // `to_js_error` calls `JsValue::from_str` which invokes the wasm-bindgen
+        // FFI layer and panics on native (non-wasm32) targets.  We test the
+        // identical error path via the underlying Rust type instead, since the
+        // WASM wrapper is a thin `map_err(to_js_error)` delegation.
+        use coding_adventures_markov_chain::MarkovChain;
+        let mut inner = MarkovChain::new(1, 0.0, vec![]);
+        inner
+            .train(&[
+                "sunny", "cloudy", "rainy", "sunny", "sunny", "cloudy", "sunny",
+            ])
+            .unwrap();
         assert!(
-            chain.next_state("unknown_state_xyz").is_err(),
+            inner.next_state("unknown_state_xyz").is_err(),
             "expected error for unknown state"
         );
     }
