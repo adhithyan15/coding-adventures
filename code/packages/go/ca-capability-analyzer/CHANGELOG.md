@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.2] - 2026-04-13
+
+### Security
+
+- **Explicit FFI opt-in for Go**: `import "C"` and `plugin.Open` are no longer
+  treated the same as the irreducibly dangerous constructs. They remain blocked
+  by default, but packages may now opt in explicitly by declaring both a matching
+  `banned_construct_exceptions` entry and the corresponding `ffi` capability
+  (`ffi:call:*` for `import "C"`, `ffi:load:*` for `plugin.Open`).
+
+- **`LoadManifestData`**: Added a richer manifest loader that returns both declared
+  capabilities and `banned_construct_exceptions`, while keeping `LoadManifest`
+  as a compatibility helper for callers that only need declared capabilities.
+
+- **CAP002 guidance**: Violations for partially-declared FFI constructs now explain
+  the missing opt-in step, so packages know whether they still need the manifest
+  exception, the `ffi` capability, or both.
+
 ## [1.0.1] - 2026-03-26
 
 ### Security

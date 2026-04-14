@@ -583,14 +583,14 @@ func f() { os.ReadFile("x") }
 	}
 }
 
-// TestAnalyzeDir_BannedConstructFails verifies that a banned construct produces
-// a CAP002 violation regardless of what the manifest declares.
+// TestAnalyzeDir_BannedConstructFails verifies that a restricted construct still
+// produces CAP002 unless the package explicitly opts in through both manifest
+// exception metadata and matching ffi capabilities.
 func TestAnalyzeDir_BannedConstructFails(t *testing.T) {
 	dir := t.TempDir()
 	writeGoFile(t, dir, "foo.go", `package foo
 import "C"
 `)
-	// Even with an empty manifest (or no manifest), CGo is always banned.
 
 	result, err := AnalyzeDir(dir)
 	if err != nil {
@@ -608,6 +608,165 @@ import "C"
 	}
 	if !hasCAP002 {
 		t.Errorf("expected CAP002 violation, got %v", result.Violations)
+	}
+}
+
+func TestAnalyzeDir_CGoAllowedWithExplicitOptIn(t *testing.T) {
+	dir := t.TempDir()
+	writeGoFile(t, dir, "foo.go", `package foo
+import "C"
+`)
+	writeManifest(t, dir, `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [
+			{
+				"category": "ffi",
+				"action": "call",
+				"target": "libexample",
+				"justification": "Calls reviewed native code."
+			}
+		],
+		"banned_construct_exceptions": [
+			{
+				"construct": "import \"C\"",
+				"language": "go",
+				"justification": "Bridge to reviewed native implementation."
+			}
+		],
+		"justification": "Reviewed FFI package."
+	}`)
+
+	result, err := AnalyzeDir(dir)
+	if err != nil {
+		t.Fatalf("AnalyzeDir: %v", err)
+	}
+	if !result.Passed() {
+		t.Fatalf("expected explicit CGo opt-in to pass, got violations: %v", result.Violations)
+	}
+	if len(result.Banned) != 0 {
+		t.Fatalf("expected no remaining banned constructs, got %v", result.Banned)
+	}
+}
+
+func TestAnalyzeDir_CGoExceptionWithoutFFICapabilityFails(t *testing.T) {
+	dir := t.TempDir()
+	writeGoFile(t, dir, "foo.go", `package foo
+import "C"
+`)
+	writeManifest(t, dir, `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [],
+		"banned_construct_exceptions": [
+			{
+				"construct": "import \"C\"",
+				"language": "go",
+				"justification": "Bridge to reviewed native implementation."
+			}
+		],
+		"justification": "Missing ffi capability."
+	}`)
+
+	result, err := AnalyzeDir(dir)
+	if err != nil {
+		t.Fatalf("AnalyzeDir: %v", err)
+	}
+
+	if result.Passed() {
+		t.Fatal("expected missing ffi capability to fail")
+	}
+	if len(result.Violations) == 0 || result.Violations[0].Code != "CAP002" {
+		t.Fatalf("expected CAP002 violation, got %v", result.Violations)
+	}
+	if got := result.Violations[0].Message; !strings.Contains(got, "ffi:call:*") {
+		t.Fatalf("expected ffi:call hint in %q", got)
+	}
+}
+
+func TestAnalyzeDir_PluginOpenAllowedWithExplicitOptIn(t *testing.T) {
+	dir := t.TempDir()
+	writeGoFile(t, dir, "foo.go", `package foo
+import "plugin"
+func load(path string) {
+	_, _ = plugin.Open(path)
+}
+`)
+	writeManifest(t, dir, `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [
+			{
+				"category": "ffi",
+				"action": "load",
+				"target": "barcode-renderer",
+				"justification": "Loads a reviewed native bridge."
+			}
+		],
+		"banned_construct_exceptions": [
+			{
+				"construct": "plugin.Open()",
+				"language": "go",
+				"justification": "Loads a reviewed native bridge."
+			}
+		],
+		"justification": "Reviewed plugin-based FFI package."
+	}`)
+
+	result, err := AnalyzeDir(dir)
+	if err != nil {
+		t.Fatalf("AnalyzeDir: %v", err)
+	}
+	if !result.Passed() {
+		t.Fatalf("expected explicit plugin.Open opt-in to pass, got violations: %v", result.Violations)
+	}
+}
+
+func TestAnalyzeDir_UnsafePointerStillFailsEvenWithException(t *testing.T) {
+	dir := t.TempDir()
+	writeGoFile(t, dir, "foo.go", `package foo
+import "unsafe"
+func f(x int) uintptr {
+	return uintptr(unsafe.Pointer(&x))
+}
+`)
+	writeManifest(t, dir, `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [
+			{
+				"category": "ffi",
+				"action": "call",
+				"target": "libexample",
+				"justification": "Calls reviewed native code."
+			}
+		],
+		"banned_construct_exceptions": [
+			{
+				"construct": "unsafe.Pointer",
+				"language": "go",
+				"justification": "Attempted exception should not be honored."
+			}
+		],
+		"justification": "Unsafe should stay blocked."
+	}`)
+
+	result, err := AnalyzeDir(dir)
+	if err != nil {
+		t.Fatalf("AnalyzeDir: %v", err)
+	}
+	if result.Passed() {
+		t.Fatal("expected unsafe.Pointer to remain banned")
+	}
+	hasCAP002 := false
+	for _, v := range result.Violations {
+		if v.Code == "CAP002" {
+			hasCAP002 = true
+			break
+		}
+	}
+	if !hasCAP002 {
+		t.Fatalf("expected CAP002 violation, got %v", result.Violations)
 	}
 }
 

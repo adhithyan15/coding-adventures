@@ -36,6 +36,22 @@ func TestLoadManifest_NoFile(t *testing.T) {
 	}
 }
 
+// TestLoadManifestData_NoFile verifies that the richer manifest loader returns
+// empty maps for both declared capabilities and banned-construct exceptions.
+func TestLoadManifestData_NoFile(t *testing.T) {
+	dir := t.TempDir()
+	m, err := LoadManifestData(dir)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+	if len(m.Declared) != 0 {
+		t.Errorf("expected empty declared map, got %v", m.Declared)
+	}
+	if len(m.BannedConstructExceptions) != 0 {
+		t.Errorf("expected empty exception map, got %v", m.BannedConstructExceptions)
+	}
+}
+
 // TestLoadManifest_EmptyCapabilities verifies that a manifest with an empty
 // capabilities array returns an empty map.
 func TestLoadManifest_EmptyCapabilities(t *testing.T) {
@@ -164,6 +180,42 @@ func TestLoadManifest_MultipleCapabilities(t *testing.T) {
 	}
 }
 
+// TestLoadManifestData_BannedConstructExceptions verifies that manifest
+// exceptions are parsed and canonicalized for language-specific lookup.
+func TestLoadManifestData_BannedConstructExceptions(t *testing.T) {
+	dir := t.TempDir()
+	writeManifest(t, dir, `{
+		"version": 1,
+		"package": "go/test-pkg",
+		"capabilities": [],
+		"banned_construct_exceptions": [
+			{
+				"construct": "import \"C\" (CGo)",
+				"language": "go",
+				"justification": "Reviewed C bridge."
+			},
+			{
+				"construct": "plugin.Open()",
+				"language": "go",
+				"justification": "Reviewed plugin loader."
+			}
+		],
+		"justification": "Explicit FFI package."
+	}`)
+
+	m, err := LoadManifestData(dir)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
+
+	if !m.BannedConstructExceptions[`go:import "C"`] {
+		t.Errorf("expected import C exception, got %v", m.BannedConstructExceptions)
+	}
+	if !m.BannedConstructExceptions["go:plugin.Open"] {
+		t.Errorf("expected plugin.Open exception, got %v", m.BannedConstructExceptions)
+	}
+}
+
 // TestLoadManifest_InvalidJSON verifies that malformed JSON returns an error.
 func TestLoadManifest_InvalidJSON(t *testing.T) {
 	dir := t.TempDir()
@@ -222,6 +274,26 @@ func TestCanonicalCapabilityString(t *testing.T) {
 		if got != tc.want {
 			t.Errorf("canonicalCapabilityString(%q, %q, %q) = %q, want %q",
 				tc.category, tc.action, tc.target, got, tc.want)
+		}
+	}
+}
+
+func TestCanonicalBannedConstructExceptionKey(t *testing.T) {
+	cases := []struct {
+		language  string
+		construct string
+		want      string
+	}{
+		{"go", `import "C" (CGo)`, `go:import "C"`},
+		{"Go", "plugin.Open()", "go:plugin.Open"},
+		{"go", "reflect.Value.Call()", "go:reflect.Value.Call"},
+	}
+
+	for _, tc := range cases {
+		got := canonicalBannedConstructExceptionKey(tc.language, tc.construct)
+		if got != tc.want {
+			t.Errorf("canonicalBannedConstructExceptionKey(%q, %q) = %q, want %q",
+				tc.language, tc.construct, got, tc.want)
 		}
 	}
 }
