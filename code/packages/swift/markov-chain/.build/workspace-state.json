@@ -1,0 +1,27 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "directed-graph",
+          "kind" : "fileSystem",
+          "location" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/directed-graph",
+          "name" : "DirectedGraph"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/directed-graph"
+        },
+        "subpath" : "directed-graph"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

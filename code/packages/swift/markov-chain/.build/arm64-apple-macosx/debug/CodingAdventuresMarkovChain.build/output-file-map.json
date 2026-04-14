@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/primary.swiftdeps"
+  },
+  "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Sources/CodingAdventuresMarkovChain/MarkovChain.swift": {
+    "dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.d",
+    "object": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.swift.o",
+    "swiftmodule": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.swiftdeps",
+    "diagnostics": "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.dia"
+  }
+}

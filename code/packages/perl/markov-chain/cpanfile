@@ -1,0 +1,6 @@
+requires 'CodingAdventures::DirectedGraph';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test::More';
+};

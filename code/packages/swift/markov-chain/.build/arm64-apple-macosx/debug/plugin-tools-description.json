@@ -1,0 +1,780 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.xctest/Contents/MacOS/CodingAdventuresMarkovChainPackageTests",
+      "packagePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain",
+      "productName" : "CodingAdventuresMarkovChainPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.CodingAdventuresMarkovChain-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Sources/CodingAdventuresMarkovChain/MarkovChain.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "CodingAdventuresMarkovChain",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChain.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/include/CodingAdventuresMarkovChain-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "markov_chain"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChain.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Sources/CodingAdventuresMarkovChain/MarkovChain.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.CodingAdventuresMarkovChainPackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChainTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "CodingAdventuresMarkovChainPackageTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChainPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/include/CodingAdventuresMarkovChainPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "markov_chain"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChainPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.CodingAdventuresMarkovChainTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Tests/CodingAdventuresMarkovChainTests/MarkovChainTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChain.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "CodingAdventuresMarkovChainTests",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChainTests.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/MarkovChainTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "markov_chain"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/MarkovChainTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/CodingAdventuresMarkovChainTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Tests/CodingAdventuresMarkovChainTests/MarkovChainTests.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.DirectedGraph-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources",
+      "importPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "DirectedGraph",
+      "moduleOutputPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule",
+      "objects" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/include/DirectedGraph-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "directed_graph"
+      ],
+      "outputFileMapPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules/DirectedGraph.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift"
+      ],
+      "tempsPath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "CodingAdventuresMarkovChain" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "CodingAdventuresMarkovChain",
+      "-package-name",
+      "markov_chain",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Sources/CodingAdventuresMarkovChain/MarkovChain.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/include/CodingAdventuresMarkovChain-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "markov_chain",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "CodingAdventuresMarkovChainPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "CodingAdventuresMarkovChainPackageTests",
+      "-package-name",
+      "markov_chain",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/include/CodingAdventuresMarkovChainPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "markov_chain",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "CodingAdventuresMarkovChainTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "CodingAdventuresMarkovChainTests",
+      "-package-name",
+      "markov_chain",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Tests/CodingAdventuresMarkovChainTests/MarkovChainTests.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "markov_chain",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "DirectedGraph" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "DirectedGraph",
+      "-package-name",
+      "directed_graph",
+      "-c",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift",
+      "-I",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/include/DirectedGraph-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "directed_graph",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "CodingAdventuresMarkovChain" : [
+      "DirectedGraph"
+    ],
+    "CodingAdventuresMarkovChainPackageTests" : [
+      "CodingAdventuresMarkovChainTests",
+      "CodingAdventuresMarkovChain",
+      "DirectedGraph"
+    ],
+    "CodingAdventuresMarkovChainTests" : [
+      "CodingAdventuresMarkovChain",
+      "DirectedGraph"
+    ],
+    "DirectedGraph" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Sources/CodingAdventuresMarkovChain/MarkovChain.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChain.build/MarkovChain.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/MarkovChainTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/Graph.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/Tests/CodingAdventuresMarkovChainTests/MarkovChainTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/CodingAdventuresMarkovChainTests.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/directed-graph/Sources/DirectedGraph/Graph.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/DirectedGraph.build/sources"
+    },
+    "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/adhithya/Downloads/coding-adventures/.claude/worktrees/dt28-work/code/packages/swift/markov-chain/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

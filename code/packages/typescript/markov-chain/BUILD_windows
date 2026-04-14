@@ -1,0 +1,5 @@
+cd ../graph && mise exec -- npm ci --quiet
+cd ../directed-graph && mise exec -- npm ci --quiet
+cd ../markov-chain
+mise exec -- npm ci --quiet
+mise exec -- npm run test:coverage
