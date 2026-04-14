@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-nib-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Nib parser — parses Nib source text into a grammar AST using the grammar-driven Rust parser."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-nib-lexer = { path = "../nib-lexer" }
