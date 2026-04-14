@@ -1,2 +1,2 @@
-mise exec -- go mod tidy
-mise exec -- go test ./... -v -cover
+go mod tidy
+go test ./... -v -cover

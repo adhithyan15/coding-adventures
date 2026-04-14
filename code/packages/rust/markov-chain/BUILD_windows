@@ -1,4 +1,1 @@
-#!/usr/bin/env bash
-set -euo pipefail
-cd "$(dirname "$0")"
-mise exec -- cargo test -p coding-adventures-markov-chain
+cargo test -p coding-adventures-markov-chain -- --nocapture
