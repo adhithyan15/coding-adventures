@@ -1,10 +1,15 @@
 import Foundation
 import BarcodeLayout1D
+import Codabar
+import Code128
 import Code39
+import EAN13
+import ITF
 import PaintCodecPNGNative
 import PaintInstructions
 import PaintVmMetalNative
 import PixelContainer
+import UPCA
 
 public enum Barcode1DError: Error, Equatable {
     case unsupportedSymbology(String)
@@ -27,7 +32,22 @@ public enum Barcode1D {
         let normalized = symbology.replacingOccurrences(of: "-", with: "")
             .replacingOccurrences(of: "_", with: "")
             .lowercased()
+        if normalized == "codabar" {
+            return normalized
+        }
+        if normalized == "code128" {
+            return normalized
+        }
         if normalized == "code39" {
+            return normalized
+        }
+        if normalized == "ean13" {
+            return normalized
+        }
+        if normalized == "itf" {
+            return normalized
+        }
+        if normalized == "upca" {
             return normalized
         }
         throw Barcode1DError.unsupportedSymbology(symbology)
@@ -39,8 +59,18 @@ public enum Barcode1D {
         layoutConfig: Barcode1DLayoutConfig = defaultLayoutConfig
     ) throws -> PaintScene {
         switch try normalizeSymbology(symbology) {
+        case "codabar":
+            return try layoutCodabar(data, config: layoutConfig)
+        case "code128":
+            return try layoutCode128(data, config: layoutConfig)
         case "code39":
             return try layoutCode39(data, config: layoutConfig)
+        case "ean13":
+            return try layoutEAN13(data, config: layoutConfig)
+        case "itf":
+            return try layoutITF(data, config: layoutConfig)
+        case "upca":
+            return try layoutUPCA(data, config: layoutConfig)
         default:
             throw Barcode1DError.unsupportedSymbology(symbology)
         }
