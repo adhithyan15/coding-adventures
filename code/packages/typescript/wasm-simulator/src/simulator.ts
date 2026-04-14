@@ -78,6 +78,13 @@
  * a standalone simulator that directly implements the WASM execution model.
  */
 
+import {
+  ExecutionResult,
+  StepTrace,
+} from "@coding-adventures/simulator-protocol";
+
+import type { WasmState } from "./state.js";
+
 // ---------------------------------------------------------------------------
 // Opcode constants
 // ---------------------------------------------------------------------------
@@ -203,6 +210,10 @@ export interface WasmStepTrace {
   localsSnapshot: number[];
   description: string;
   halted: boolean;
+}
+
+function freezeArray<T>(values: readonly T[]): readonly T[] {
+  return Object.freeze([...values]);
 }
 
 /**
@@ -657,5 +668,66 @@ export class WasmSimulator {
       traces.push(this.step());
     }
     return traces;
+  }
+
+  getState(): WasmState {
+    return Object.freeze({
+      stack: freezeArray(this.stack),
+      locals: freezeArray(this.locals),
+      pc: this.pc,
+      halted: this.halted,
+      cycle: this.cycle,
+    });
+  }
+
+  execute(
+    program: Uint8Array,
+    maxSteps: number = 100_000
+  ): ExecutionResult<WasmState> {
+    this.load(program);
+
+    const traces: StepTrace[] = [];
+    let steps = 0;
+    let error: string | null = null;
+
+    try {
+      while (!this.halted && steps < maxSteps) {
+        const pcBefore = this.pc;
+        const trace = this.step();
+        traces.push(
+          new StepTrace(
+            pcBefore,
+            this.pc,
+            trace.instruction.mnemonic,
+            trace.description
+          )
+        );
+        steps += 1;
+      }
+    } catch (caught) {
+      error = caught instanceof Error ? caught.message : String(caught);
+    }
+
+    if (error === null && !this.halted) {
+      error = `max_steps (${maxSteps}) exceeded`;
+    }
+
+    return new ExecutionResult({
+      halted: this.halted,
+      steps,
+      finalState: this.getState(),
+      error,
+      traces,
+    });
+  }
+
+  reset(): void {
+    const localCount = this.locals.length;
+    this.stack = [];
+    this.locals = new Array(localCount).fill(0);
+    this.pc = 0;
+    this.bytecode = new Uint8Array(0);
+    this.halted = false;
+    this.cycle = 0;
   }
 }
