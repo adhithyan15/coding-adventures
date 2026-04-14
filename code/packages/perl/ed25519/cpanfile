@@ -1,5 +1,5 @@
 # Runtime dependency
-requires 'coding-adventures-sha512';
+requires 'CodingAdventures::Sha512';
 
 # Test dependencies
 on 'test' => sub {
