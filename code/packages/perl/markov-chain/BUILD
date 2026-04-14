@@ -1,3 +1,1 @@
-(cd ../directed-graph && cpanm --notest --quiet .)
-cpanm --installdeps --quiet .
-prove -l -v t/
+prove -I../directed-graph/lib -l -v t/
