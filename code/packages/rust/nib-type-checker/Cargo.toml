@@ -1,0 +1,9 @@
+[package]
+name = "nib-type-checker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+parser = { path = "../parser" }
+type-checker-protocol = { path = "../type-checker-protocol" }
+coding-adventures-nib-parser = { path = "../nib-parser" }
