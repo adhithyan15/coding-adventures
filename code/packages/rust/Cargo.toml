@@ -88,6 +88,7 @@ members = [
     "lisp-vm",
     "logic-gates",
     "loss-functions",
+    "markov-chain",
     "matrix",
     "ml-framework-core",
     "ml-framework-keras",
