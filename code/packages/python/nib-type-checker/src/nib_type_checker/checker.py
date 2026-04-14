@@ -276,12 +276,21 @@ def _is_numeric_literal_expr(node: ASTNode | Token) -> bool:
     for child in node.children:
         if isinstance(child, Token):
             t_name = child.type if isinstance(child.type, str) else child.type.name
-            # Operator tokens are fine; NAME tokens mean a variable is involved.
+            # After the nib-lexer keyword reclassification, `true` and `false`
+            # come back with type="true"/"false" (not type="NAME").  Check for
+            # both the reclassified form and the NAME+value form.
+            if t_name in ("true", "false"):
+                return False  # boolean keyword token — not a numeric literal
+            # Comparison and logical operators produce bool, not a numeric type.
+            # Expressions like `1 == 1` or `a < b` are NOT numeric literals.
+            if t_name in ("EQ_EQ", "NEQ", "LEQ", "GEQ", "LT", "GT", "LAND", "LOR"):
+                return False
+            # NAME tokens mean a variable is involved.
             if t_name == "NAME":
                 if child.value in ("true", "false"):
                     return False  # boolean literal — not a numeric literal
                 return False  # variable reference
-            # Other tokens (operators, punctuation) are neutral.
+            # Other tokens (arithmetic operators, punctuation) are neutral.
         elif isinstance(child, ASTNode):
             has_any_child = True
             if not _is_numeric_literal_expr(child):
@@ -439,7 +448,9 @@ class NibTypeChecker:
                     fn_nodes.append((fn_name, decl))
                     # Build call graph entry
                     calls = _collect_calls_in_node(decl)
-                    calls.discard(fn_name)  # self-call detected via cycle check
+                    # Do NOT discard fn_name from calls here. A self-call (fn_name
+                    # in calls) is a valid direct-recursion cycle that _has_cycle()
+                    # will detect as a back-edge when it visits fn_name as GREY.
                     call_graph[fn_name] = calls
 
         # Check for recursion (cycles in call graph).
@@ -1060,6 +1071,10 @@ class NibTypeChecker:
             # this to the declared type. Returning U4 as a representative
             # numeric type allows comparison operators and binary ops to work.
             return NibType.U4
+        # After the nib-lexer keyword reclassification, `true` and `false`
+        # tokens have type="true"/"false" (not type="NAME").  Handle both.
+        if t_name in ("true", "false"):
+            return NibType.BOOL
         if t_name == "NAME":
             if tok.value in ("true", "false"):
                 return NibType.BOOL
@@ -1263,6 +1278,10 @@ class NibTypeChecker:
             t_name = first.type if isinstance(first.type, str) else first.type.name
             if t_name in ("INT_LIT", "HEX_LIT"):
                 return NibType.U4
+            # After the nib-lexer keyword reclassification, `true` and `false`
+            # tokens have type="true"/"false" (not type="NAME").  Handle both.
+            if t_name in ("true", "false"):
+                return NibType.BOOL
             if t_name == "NAME":
                 if first.value in ("true", "false"):
                     return NibType.BOOL

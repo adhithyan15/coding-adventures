@@ -63,7 +63,7 @@ The output is a plain text string with one instruction per line:
   - Labels are NOT indented: ``loop_start:``
   - Instructions are indented with 4 spaces: ``    LDM 5``
   - Comments use ``;``: ``; this is a comment``
-  - HALT becomes an infinite self-loop: ``    JUN $``
+  - HALT becomes the simulator halt instruction: ``    HLT``
   - Syscalls emit a comment (not natively supported on 4004)
 
 Example output::
@@ -424,7 +424,14 @@ class CodeGenerator:
     #   XCH Rn       — Rn = Rn + k
 
     def _emit_add_imm(self, ops: list) -> list[str]:
-        """Emit ADD_IMM using R1 as scratch for the immediate."""
+        """Emit ADD_IMM: dest = src + k.
+
+        Special cases:
+        - k == 0: pure register copy — ``LD Rsrc; XCH Rdst`` (no scratch needed,
+          avoids the R1-corruption bug where R1 is used as both source and scratch).
+        - k > 0 and src == R1: use R14 as scratch instead of R1, since R1 IS the source.
+        - k > 0 otherwise: use R1 as scratch for the immediate nibble.
+        """
         if len(ops) < 3:
             return [f"{_INDENT}; ADD_IMM: missing operands"]
         dst, src, imm = ops[0], ops[1], ops[2]
@@ -437,13 +444,25 @@ class CodeGenerator:
         rn = _preg(src.index)
         rr = _preg(dst.index)
 
+        if k == 0:
+            # Pure register copy: no arithmetic needed, no scratch register needed.
+            # ``LD Rn`` loads Rn into ACC; ``XCH Rr`` stores ACC into Rr.
+            # This is correct even when src == dst (nop) or src == R1.
+            return [
+                f"{_INDENT}LD {rn}",
+                f"{_INDENT}XCH {rr}",
+            ]
+
         if k <= 15:
-            # Use R1 as scratch to hold the immediate
+            # When src is R1, we cannot use R1 as scratch — the LDM/XCH R1 sequence
+            # would overwrite the source value before we read it.
+            # Use R14 (part of scratch pair P7) as the scratch register instead.
+            scratch = "R1" if src.index != 1 else "R14"
             return [
                 f"{_INDENT}LDM {k}",
-                f"{_INDENT}XCH R1",
+                f"{_INDENT}XCH {scratch}",
                 f"{_INDENT}LD {rn}",
-                f"{_INDENT}ADD R1",
+                f"{_INDENT}ADD {scratch}",
                 f"{_INDENT}XCH {rr}",
             ]
         else:
@@ -507,26 +526,22 @@ class CodeGenerator:
         rr = _preg(dst.index)
 
         if mask == 255:
-            # 8-bit AND_IMM with 0xFF is a no-op — pairs hold 8 bits naturally.
+            # u8 AND_IMM with 0xFF: the 4004 stores u8 values in register pairs
+            # (R2:R3, R4:R5, ...).  Each nibble is 4 bits, so a pair is naturally
+            # 8 bits.  No instruction needed.
             return [f"{_INDENT}; AND_IMM 255 is a no-op on 4004 (8-bit pair)"]
 
-        if mask <= 15:
-            # 4-bit mask: load 0xF into R1 (scratch), then AND
-            return [
-                f"{_INDENT}LDM {mask}",
-                f"{_INDENT}XCH R1",
-                f"{_INDENT}LD {rn}",
-                f"{_INDENT}AND R1",
-                f"{_INDENT}XCH {rr}",
-            ]
-        else:
-            # General 8-bit mask (not 0xFF): use scratch pair P7
-            return [
-                f"{_INDENT}FIM P7, {mask}",
-                f"{_INDENT}LD {rn}",
-                f"{_INDENT}AND R14",
-                f"{_INDENT}XCH {rr}",
-            ]
+        if mask == 15:
+            # u4 AND_IMM with 0xF: the 4004 accumulator and all registers are
+            # 4-bit (a single nibble), so values are always in range 0–15.
+            # The AND is hardware-enforced — no instruction needed.
+            # (The carry flag captures overflow separately; the low nibble is clean.)
+            return [f"{_INDENT}; AND_IMM 15 is a no-op on 4004 (4-bit register)"]
+
+        # General mask (rare — Nib only generates mask=15 and mask=255 in practice).
+        # The 4004 has no native AND instruction, so we emit a placeholder comment.
+        # A full implementation would require a nibble-by-nibble lookup table in RAM.
+        return [f"{_INDENT}; AND_IMM {mask} (unsupported on 4004 — requires RAM lookup table)"]
 
     # ------------------------------------------------------------------
     # AND vR, vA, vB  →  LD Ra; AND Rb; XCH Rr
@@ -741,16 +756,20 @@ class CodeGenerator:
         return [f"{_INDENT}BBL 0"]
 
     # ------------------------------------------------------------------
-    # HALT  →  JUN $   (infinite self-loop)
+    # HALT  →  HLT   (simulator halt instruction)
     # ------------------------------------------------------------------
     #
-    # The 4004 has no OS and no halt instruction.  The canonical way to
-    # stop execution is an infinite self-loop.  ``$`` is the assembler
-    # symbol for "current address" — so ``JUN $`` jumps to itself forever.
+    # The original Intel 4004 has no halt instruction — the canonical way
+    # to stop is an infinite self-loop (JUN $).  However, our simulator
+    # adds a synthetic ``HLT`` opcode (0x01) that causes a clean halt and
+    # sets ``halted=True``, which is required for ``result.ok`` to be True.
+    #
+    # When targeting real EPROM hardware instead of the simulator, replace
+    # HLT with ``JUN $`` in the assembler output.
 
     def _emit_halt(self) -> list[str]:
-        """Emit HALT: JUN $ (infinite self-loop)."""
-        return [f"{_INDENT}JUN $"]
+        """Emit HALT: HLT (simulator halt, opcode 0x01)."""
+        return [f"{_INDENT}HLT"]
 
     # ------------------------------------------------------------------
     # NOP  →  NOP

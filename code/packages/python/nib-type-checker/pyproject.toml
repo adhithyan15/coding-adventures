@@ -17,7 +17,7 @@ keywords = ["nib", "intel4004", "type-checker", "compiler", "embedded", "educati
 dependencies = [
     "coding-adventures-directed-graph",
     "coding-adventures-grammar-tools",
-    "coding-adventures-lang-parser",
+    "coding-adventures-parser",
     "coding-adventures-lexer",
     "coding-adventures-nib-lexer",
     "coding-adventures-nib-parser",

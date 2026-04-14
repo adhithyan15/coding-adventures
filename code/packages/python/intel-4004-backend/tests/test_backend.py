@@ -161,11 +161,11 @@ class TestBackendHappyPath:
         assert asm.startswith("    ORG 0x000")
 
     def test_minimal_program_contains_ldm_and_halt(self) -> None:
-        """The 'load 5 + halt' program should contain LDM 5 and JUN $."""
+        """The 'load 5 + halt' program should contain LDM 5 and HLT."""
         backend = Intel4004Backend()
         asm = backend.compile(make_simple_prog())
         assert "LDM 5" in asm
-        assert "JUN $" in asm
+        assert "HLT" in asm
 
     def test_minimal_program_contains_start_label(self) -> None:
         """The _start label should appear in the output."""
@@ -306,7 +306,7 @@ class TestExactAssembly:
         assert lines[1] == "_start:"
         assert lines[2] == "    LDM 5"
         assert lines[3] == "    XCH R2"
-        assert lines[4] == "    JUN $"
+        assert lines[4] == "    HLT"
 
     def test_loop_program_has_correct_structure(self) -> None:
         """The countdown loop program should have the expected structural elements."""
