@@ -43,7 +43,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 This package enforces *language-level* invariants only. Hardware constraints
 (call depth ≤ 2, total RAM ≤ 160 bytes, register count) belong in the
-`intel-4004-backend` validator, which runs after IR generation. This keeps
+`intel-4004-ir-validator`, which runs after IR generation. This keeps
 the type checker target-independent — the same checker works for any
 compilation target.
 

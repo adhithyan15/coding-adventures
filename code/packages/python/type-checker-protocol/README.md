@@ -45,7 +45,7 @@ enforce hardware or ISA constraints.  For example:
 | Static for-loop bounds (language)  | Instruction encoding constraints        |
 
 Hardware and ISA constraints belong in each backend's own validator (e.g.,
-the `IrValidator` in the `intel-4004-backend` package), which runs *after* IR
+the `IrValidator` in the `intel-4004-ir-validator` package), which runs *after* IR
 generation.  This separation keeps the design **composable**: the same Nib
 type checker works unchanged whether you target Intel 4004, ARM, WASM, or any
 future ISA.
@@ -261,7 +261,8 @@ coding-adventures-lattice-type-checker
         ↓ produces TypeCheckResult[TypedAST]
 coding-adventures-compiler-ir             (IR generation)
         ↓ produces IR
-intel-4004-backend IrValidator            (ISA/hardware constraint checks)
+intel-4004-ir-validator IrValidator       (ISA/hardware constraint checks)
+ir-to-intel-4004-compiler                 (Intel 4004 assembly generation)
 arm-backend IrValidator                   (different ISA, same Nib frontend)
         ↓
 coding-adventures-bytecode-compiler / machine code

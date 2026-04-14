@@ -111,7 +111,7 @@ class Intel4004Assembler:
 
         Args:
             text: Multi-line Intel 4004 assembly source, as produced by
-                  the ``intel-4004-backend`` code generator.
+                  the ``ir-to-intel-4004-compiler`` code generator.
 
         Returns:
             A ``bytes`` object containing the raw machine code.

@@ -36,7 +36,7 @@ regardless of what machine the program is compiled for. It does NOT check:
 
 - **Call depth ≤ 2** — that is a constraint of the Intel 4004's 3-level
   hardware call stack, not the Nib language. It belongs in the
-  ``intel-4004-backend`` validator.
+  ``intel-4004-ir-validator`` package.
 
 - **Total static RAM ≤ 160 bytes** — also a hardware constraint.
 

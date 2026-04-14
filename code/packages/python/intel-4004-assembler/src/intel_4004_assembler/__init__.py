@@ -4,7 +4,7 @@ Overview
 --------
 
 This package is PR 10 in the Nib language -> Intel 4004 compiler pipeline.
-It sits *after* the ``intel-4004-backend`` (which produces assembly text
+It sits *after* the ``ir-to-intel-4004-compiler`` package (which produces assembly text
 from an ``IrProgram``) and produces raw binary bytes suitable for loading
 into a simulator or burning into a ROM.
 
@@ -19,7 +19,7 @@ The pipeline so far::
     IrProgram
         ↓  (ir-optimizer)
     Optimised IrProgram
-        ↓  (intel-4004-backend)
+        ↓  (ir-to-intel-4004-compiler)
     Assembly text             <- intel-4004-assembler reads THIS
         ↓  (this package)
     Binary bytes              -> fed to intel4004-simulator
