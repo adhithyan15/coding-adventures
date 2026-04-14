@@ -1,0 +1,5 @@
+uv venv --quiet --clear
+uv pip install -e ../sha512 --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov --quiet
+uv run --no-project python -m pytest tests\ -v
