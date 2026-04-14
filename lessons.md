@@ -12,6 +12,8 @@ When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake
 
 **Rule:** After agents complete, always check `git status` for build artifacts before committing. Use specific file paths in `git add` rather than directory globs. Never commit: `.build/`, `cover/`, `vendor/`, `node_modules/`, `.venv/`, `deps/`, `_build/`, `__pycache__/`, `blib/`, `MYMETA.*`, `pm_to_blib`, `Makefile` (Perl-generated), `go.sum`.
 
+**Prevention:** Every new Swift package MUST include a `.gitignore` containing `.build/` and `.swiftpm/`. These directories are created by `swift test` and can contain thousands of deeply nested files that break Windows CI with "Filename too long" errors. The `.gitignore` prevents this even if an agent runs tests and does `git add .`.
+
 ---
 
 ### 2026-04-12: Security fixes that change error messages require updating test assertions
@@ -1258,13 +1260,17 @@ When TypeScript packages export `.ts` source (not compiled `.d.ts`), `tsc -b` fo
 
 ### 2026-03-29: Swift is NOT supported on Windows CI — always skip with a guard
 
-`swift-actions/setup-swift@v3` does not support Windows and `winget` Swift installs are not reliable on GitHub-hosted Windows runners. Swift tests will fail with "swift not found" or similar errors on `windows-latest`.
+`swift-actions/setup-swift@v3` does not support Windows and `winget` Swift installs are not reliable on GitHub-hosted Windows runners. Swift tests on Windows CI consistently fail — do not attempt to run them.
 
 **Rule:** Every Swift `BUILD_windows` must use the skip guard pattern:
+
 ```
 where swift >nul 2>nul && swift test || echo Swift not available on this runner — skipping
 ```
-This means: if `swift` happens to be in PATH (it won't be on GitHub Windows runners), run the tests; otherwise print a skip message and exit 0. Never write a `BUILD_windows` for a Swift package that unconditionally runs `swift test`.
+
+A plain `swift test` (or any `swift` command without this guard) in `BUILD_windows` will fail the CI `build (windows-latest)` job with "'swift' is not recognized as an internal or external command".
+
+**Also required:** Every Swift package must have a `.gitignore` with `.build/` and `.swiftpm/` excluded, so running `swift test` locally does not pollute the git tree.
 
 ---
 
