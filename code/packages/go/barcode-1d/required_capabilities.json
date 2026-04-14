@@ -3,5 +3,5 @@
   "version": 1,
   "package": "go/barcode-1d",
   "capabilities": [],
-  "justification": "Thin orchestration layer over pure Go barcode, layout, raster Paint VM, and PNG codec packages. No filesystem, network, process, environment, or FFI access needed."
+  "justification": "Pure orchestration over local barcode, layout, renderer, and codec packages. Platform-specific FFI is isolated inside the selected backend packages."
 }

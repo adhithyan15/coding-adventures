@@ -1,6 +1,12 @@
 // Package paintinstructions defines a tiny backend-neutral paint scene model.
 package paintinstructions
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 const Version = "0.1.0"
 
 type MetadataValue interface{}
@@ -8,6 +14,13 @@ type Metadata map[string]MetadataValue
 
 type PaintInstruction interface {
 	InstructionKind() string
+}
+
+type PaintColorRGBA8 struct {
+	R byte
+	G byte
+	B byte
+	A byte
 }
 
 type PaintRectInstruction struct {
@@ -52,4 +65,56 @@ func CreateScene(width, height int, instructions []PaintInstruction, background 
 
 func PaintSceneOf(width, height int, instructions []PaintInstruction, background string, metadata Metadata) PaintScene {
 	return CreateScene(width, height, instructions, background, metadata)
+}
+
+func ParseColorRGBA8(value string) (PaintColorRGBA8, error) {
+	value = strings.TrimSpace(value)
+	if !strings.HasPrefix(value, "#") {
+		return PaintColorRGBA8{}, fmt.Errorf("paint color must start with #")
+	}
+
+	hex := value[1:]
+	switch len(hex) {
+	case 3:
+		hex = strings.Repeat(string(hex[0]), 2) +
+			strings.Repeat(string(hex[1]), 2) +
+			strings.Repeat(string(hex[2]), 2) + "ff"
+	case 4:
+		hex = strings.Repeat(string(hex[0]), 2) +
+			strings.Repeat(string(hex[1]), 2) +
+			strings.Repeat(string(hex[2]), 2) +
+			strings.Repeat(string(hex[3]), 2)
+	case 6:
+		hex += "ff"
+	case 8:
+	default:
+		return PaintColorRGBA8{}, fmt.Errorf("paint color must be #rgb, #rgba, #rrggbb, or #rrggbbaa")
+	}
+
+	channel := func(offset int) (byte, error) {
+		value, err := strconv.ParseUint(hex[offset:offset+2], 16, 8)
+		if err != nil {
+			return 0, fmt.Errorf("paint color contains invalid hex digits")
+		}
+		return byte(value), nil
+	}
+
+	r, err := channel(0)
+	if err != nil {
+		return PaintColorRGBA8{}, err
+	}
+	g, err := channel(2)
+	if err != nil {
+		return PaintColorRGBA8{}, err
+	}
+	b, err := channel(4)
+	if err != nil {
+		return PaintColorRGBA8{}, err
+	}
+	a, err := channel(6)
+	if err != nil {
+		return PaintColorRGBA8{}, err
+	}
+
+	return PaintColorRGBA8{R: r, G: g, B: b, A: a}, nil
 }

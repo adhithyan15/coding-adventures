@@ -1,1 +1,1 @@
-go test ./... -v -cover
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then REPO_ROOT=$(git rev-parse --show-toplevel) && (cd "$REPO_ROOT/code/packages/rust/paint-vm-metal-c" && cargo build --release) && (cd "$REPO_ROOT/code/packages/rust/paint-codec-png-c" && cargo build --release) && CGO_ENABLED=1 go test ./... -v -cover; else go test ./... -v -cover; fi

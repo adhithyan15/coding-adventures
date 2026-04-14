@@ -18,6 +18,13 @@ func TestBuildSceneUsesDefaultCode39(t *testing.T) {
 	}
 }
 
+func TestCurrentBackendProbe(t *testing.T) {
+	backend := CurrentBackend()
+	if backend != "metal" && backend != "gdi" && backend != "raster" {
+		t.Fatalf("unexpected backend: %s", backend)
+	}
+}
+
 func TestRenderPNGForCodabar(t *testing.T) {
 	pngBytes, err := RenderPNG("40156", &Options{Symbology: "codabar"})
 	if err != nil {
