@@ -3,6 +3,7 @@
  */
 
 import { describe, it, expect } from "vitest";
+import type { Simulator } from "@coding-adventures/simulator-protocol";
 import {
   WasmDecoder,
   WasmSimulator,
@@ -14,6 +15,7 @@ import {
   encodeLocalGet,
   encodeLocalSet,
 } from "../src/simulator.js";
+import type { WasmState } from "../src/state.js";
 
 describe("TestEncoding", () => {
   /** Verify instruction encoding produces correct byte sequences. */
@@ -347,5 +349,48 @@ describe("TestWasmSimulator", () => {
     ]);
     sim.run(program);
     expect(sim.locals[0]).toBe(300);
+  });
+});
+
+describe("TestSimulatorProtocol", () => {
+  it("supports_structural_protocol_typing", () => {
+    const sim: Simulator<WasmState> = new WasmSimulator(4);
+    const result = sim.execute(
+      assembleWasm([
+        encodeI32Const(1),
+        encodeI32Const(2),
+        encodeI32Add(),
+        encodeLocalSet(0),
+        encodeEnd(),
+      ])
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.finalState.locals[0]).toBe(3);
+  });
+
+  it("get_state_returns_immutable_snapshot", () => {
+    const sim = new WasmSimulator(4);
+    sim.run(
+      assembleWasm([encodeI32Const(7), encodeLocalSet(0), encodeEnd()])
+    );
+
+    const state = sim.getState();
+    expect(state.locals[0]).toBe(7);
+    expect(Object.isFrozen(state)).toBe(true);
+    expect(Object.isFrozen(state.locals)).toBe(true);
+    expect(Object.isFrozen(state.stack)).toBe(true);
+  });
+
+  it("execute_reports_max_steps_failures", () => {
+    const sim = new WasmSimulator(4);
+    const result = sim.execute(
+      assembleWasm([encodeI32Const(1), encodeI32Const(2), encodeI32Add()]),
+      2
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.error).toMatch(/max_steps/);
+    expect(result.steps).toBe(2);
   });
 });

@@ -11,3 +11,4 @@ export {
 } from "./simulator.js";
 
 export type { CLRTrace } from "./simulator.js";
+export type { CLRState } from "./state.js";
