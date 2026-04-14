@@ -1791,3 +1791,38 @@ simulator (`intel4004-simulator` package) does not detect self-loops as a halt c
 **Rule:** When targeting `intel4004-simulator`, emit `HLT` (assembled as opcode 0x01, which is not a
 real 4004 instruction but is the simulator's halt sentinel) to terminate execution cleanly. The
 assembler accepts `HLT` and encodes it as `0x01`. This gives `result.ok=True` after execution.
+
+---
+
+## BUILD_windows: use .venv\Scripts\python (backslash), not .venv/Scripts/python
+
+**Date:** 2026-04-14
+
+**What happened:** New Python packages in this PR used `.venv/Scripts/python -m pytest` in their
+`BUILD_windows` files. The build tool (`executor.go:shellCommandForOS`) runs BUILD_windows commands
+via `cmd /C <command>`. In cmd.exe, `/` is the switch delimiter, so `.venv/Scripts/python` is parsed
+as command `.venv` with option `/Scripts/python`, causing:
+  `'.venv' is not recognized as an internal or external command`
+
+**Rule:** In ALL `BUILD_windows` files, ALWAYS use backslashes for the venv path:
+  `.venv\Scripts\python -m pytest tests/ -v`
+NOT:
+  `.venv/Scripts/python -m pytest tests/ -v`
+
+Look at any existing `BUILD_windows` file (e.g., `cas/BUILD_windows`, `bitset/BUILD_windows`) as
+the reference — they all use `.venv\Scripts\python`.
+
+---
+
+## BUILD_windows: do NOT quote .[dev] extras on Windows
+
+**Date:** 2026-04-14
+
+**What happened:** `uv pip install -e ".[dev]"` fails on Windows because cmd.exe passes the literal
+double-quote characters to uv, causing:
+  `error: Failed to parse: '".[dev]"' — Expected package name starting with alphanumeric`
+
+**Rule:** In `BUILD_windows` files, use `.[dev]` (no quotes, no `-e` flag for the current package):
+  `uv pip install -e ../dep1 -e ../dep2 .[dev] --quiet`
+NOT:
+  `uv pip install -e ../dep1 -e ../dep2 -e ".[dev]" --quiet`
