@@ -279,8 +279,8 @@ class TestCallDepth:
         depth_errors = [e for e in errors if e.rule == "call_depth"]
         assert depth_errors == []
 
-    def test_recursive_call_does_not_infinite_loop(self) -> None:
-        """A self-recursive function should not cause infinite DFS."""
+    def test_recursive_call_reports_error(self) -> None:
+        """A self-recursive function is rejected as unsupported."""
         prog = IrProgram(entry_label="recurse")
         prog.add_instruction(
             IrInstruction(IrOp.LABEL, [IrLabel("recurse")], id=-1)
@@ -289,9 +289,24 @@ class TestCallDepth:
             IrInstruction(IrOp.CALL, [IrLabel("recurse")], id=0)
         )
         prog.add_instruction(IrInstruction(IrOp.RET, [], id=1))
-        # Should terminate and return a list (not infinite-loop)
         errors = IrValidator().validate(prog)
-        assert isinstance(errors, list)
+        depth_errors = [e for e in errors if e.rule == "call_depth"]
+        assert len(depth_errors) == 1
+        assert "recursive" in depth_errors[0].message.lower()
+
+    def test_mutual_recursion_reports_error(self) -> None:
+        """A cyclic call graph is rejected before code generation."""
+        prog = IrProgram(entry_label="a")
+        prog.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("a")], id=-1))
+        prog.add_instruction(IrInstruction(IrOp.CALL, [IrLabel("b")], id=0))
+        prog.add_instruction(IrInstruction(IrOp.RET, [], id=1))
+        prog.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("b")], id=-1))
+        prog.add_instruction(IrInstruction(IrOp.CALL, [IrLabel("a")], id=2))
+        prog.add_instruction(IrInstruction(IrOp.RET, [], id=3))
+        errors = IrValidator().validate(prog)
+        depth_errors = [e for e in errors if e.rule == "call_depth"]
+        assert len(depth_errors) == 1
+        assert "cycle" in depth_errors[0].message.lower()
 
 
 # ---------------------------------------------------------------------------

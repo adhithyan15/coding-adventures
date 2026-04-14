@@ -104,38 +104,23 @@ it is a *language-level rule* — the programmer must explicitly opt into
 BCD-aware arithmetic. Making it visible in the source and checkable without
 any target knowledge is the right design.
 
-### 6. For-loop bounds must be compile-time constants
+### 6. For-loop bounds must be numeric
 
-The 4004 code generator emits DJNZ (decrement-and-jump-if-not-zero) loops,
-which require a statically known trip count. Therefore both bounds of a
-`for i: T in start..end` loop must be either integer literals or
-`const`-declared names:
+The Nib type checker verifies that `for i: T in start..end` uses numeric
+start/end expressions. Whether a particular backend can lower those bounds
+efficiently is a later-stage concern:
 
 ```nib
-const N: u8 = 10;
-
 fn main() {
-    for i: u8 in 0..N { }        // OK — const bound
-    for i: u8 in 0..10 { }       // OK — literal bound
-
     let n: u8 = 10;
-    for i: u8 in 0..n { }        // ERROR — runtime variable
+    for i: u8 in 0..n { }        // OK — numeric runtime bound
+
+    let done: bool = false;
+    for i: u8 in 0..done { }     // ERROR — bool is not numeric
 }
 ```
 
-### 7. No recursion
-
-The Intel 4004 has a 3-level hardware call stack. Recursion requires an
-unbounded stack, which is physically impossible. The type checker detects
-cycles in the static call graph using DFS:
-
-```nib
-fn f() { f(); }          // ERROR: direct recursion
-fn a() { b(); }
-fn b() { a(); }          // ERROR: mutual recursion (a → b → a)
-```
-
-### 8. If/for conditions must be bool
+### 7. If/for conditions must be bool
 
 Unlike C (where any non-zero integer is "truthy"), Nib requires explicit
 boolean conditions. This prevents the classic bug of `if (x = 0)` vs
@@ -149,7 +134,7 @@ fn main() {
 }
 ```
 
-### 9. Return type must match declaration
+### 8. Return type must match declaration
 
 ```nib
 fn f() -> u4 {
@@ -162,6 +147,7 @@ fn f() -> u4 {
 Hardware constraints belong in the backend validator, not the type checker:
 
 - **Call depth ≤ 2** — Intel 4004 hardware limit (3-level stack, one in use)
+- **Recursive call graphs** — target limitation enforced before 4004 assembly
 - **Total static RAM ≤ 160 bytes** — Intel 4004 hardware limit
 - **Physical register count** — CPU architecture detail
 

@@ -11,14 +11,13 @@ categories:
 2. **Type mismatch errors** — wrong type on the RHS of an assignment or let.
 3. **Undeclared name errors** — using a variable before declaring it.
 4. **BCD restriction errors** — using an illegal operator with bcd operands.
-5. **For-loop bound errors** — non-const bound in a for-loop range.
-6. **Recursion errors** — direct and mutual recursion.
-7. **If-condition errors** — non-bool condition in an if statement.
-8. **Function call errors** — wrong argument count or types.
-9. **Return type errors** — return expression type doesn't match declaration.
-10. **Scope tests** — shadowing, inner/outer scopes.
-11. **NibType and helpers** — unit tests for the types module.
-12. **ScopeChain** — unit tests for the scope module.
+5. **For-loop semantics** — numeric loop bounds type-check, including runtime values.
+6. **If-condition errors** — non-bool condition in an if statement.
+7. **Function call errors** — wrong argument count or types.
+8. **Return type errors** — return expression type doesn't match declaration.
+9. **Scope tests** — shadowing, inner/outer scopes.
+10. **NibType and helpers** — unit tests for the types module.
+11. **ScopeChain** — unit tests for the scope module.
 
 We test the full pipeline — parse then type-check — via the ``tc()`` helper,
 which mirrors the real-world usage pattern exactly.
@@ -346,58 +345,33 @@ def test_bcd_plus_variable_error() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 5. For-loop bound errors
+# 5. For-loop semantics
 # ---------------------------------------------------------------------------
 
 
 def test_for_runtime_bound_variable() -> None:
-    """A runtime variable as for-loop bound is an error."""
+    """A runtime numeric variable is a valid loop bound."""
     result = tc("fn main() { let n: u8 = 10; for i: u8 in 0..n { } }")
-    assert not result.ok
-    assert any(
-        "const" in e.message.lower() or "literal" in e.message.lower()
-        for e in result.errors
-    )
+    assert result.ok
 
 
-def test_for_static_bound_error() -> None:
-    """A static (RAM) variable as for-loop bound is an error (not const)."""
-    result = tc("static n: u8 = 10; fn main() { for i: u8 in 0..n { } }")
+def test_for_bool_bound_error() -> None:
+    """A boolean loop bound is still a type error."""
+    result = tc("fn main() { let done: bool = false; for i: u8 in 0..done { } }")
     assert not result.ok
-    assert any(
-        "const" in e.message.lower() or "literal" in e.message.lower()
-        for e in result.errors
-    )
+    assert any("numeric" in e.message.lower() for e in result.errors)
 
 
 # ---------------------------------------------------------------------------
-# 6. Recursion errors
+# Backend recursion checks now live in intel-4004-ir-validator tests.
 # ---------------------------------------------------------------------------
 
 
-def test_direct_recursion_error() -> None:
-    """A function that calls itself is a recursion error."""
-    result = tc("fn f() { f(); }")
-    assert not result.ok
-    assert any("recursi" in e.message.lower() for e in result.errors)
-
-
-def test_mutual_recursion_error() -> None:
-    """Two mutually recursive functions are a recursion error."""
-    result = tc("fn a() { b(); } fn b() { a(); }")
-    assert not result.ok
-    assert any("recursi" in e.message.lower() for e in result.errors)
-
-
-def test_three_way_recursion_error() -> None:
     """A three-way cycle (a→b→c→a) is a recursion error."""
-    result = tc("fn a() { b(); } fn b() { c(); } fn c() { a(); }")
-    assert not result.ok
-    assert any("recursi" in e.message.lower() for e in result.errors)
 
 
 # ---------------------------------------------------------------------------
-# 7. If-condition errors
+# 6. If-condition errors
 # ---------------------------------------------------------------------------
 
 
@@ -423,7 +397,7 @@ def test_if_condition_bcd() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 8. Function call errors
+# 7. Function call errors
 # ---------------------------------------------------------------------------
 
 
@@ -455,7 +429,7 @@ def test_call_arg_type_u8_for_u4() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 9. Return type errors
+# 8. Return type errors
 # ---------------------------------------------------------------------------
 
 
@@ -483,7 +457,7 @@ def test_return_type_mismatch_u4_for_bool() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 10. Scope tests
+# 9. Scope tests
 # ---------------------------------------------------------------------------
 
 
@@ -539,7 +513,7 @@ def test_for_loop_var_visible_in_body() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 11. NibType and helpers unit tests
+# 10. NibType and helpers unit tests
 # ---------------------------------------------------------------------------
 
 
@@ -613,7 +587,7 @@ def test_is_numeric() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 12. ScopeChain unit tests
+# 11. ScopeChain unit tests
 # ---------------------------------------------------------------------------
 
 

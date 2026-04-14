@@ -17,7 +17,12 @@ from typing import runtime_checkable
 
 import pytest
 
-from type_checker_protocol import TypeCheckResult, TypeChecker, TypeErrorDiagnostic
+from type_checker_protocol import (
+    GenericTypeChecker,
+    TypeCheckResult,
+    TypeChecker,
+    TypeErrorDiagnostic,
+)
 from type_checker_protocol.protocol import ASTIn, ASTOut  # noqa: F401 — imported for annotation use
 
 
@@ -81,6 +86,31 @@ class MultiErrorTypeChecker:
         ]
         typed = TypedNode(kind=ast.kind, value=ast.value, resolved_type="error")
         return TypeCheckResult(typed_ast=typed, errors=errors)
+
+
+class RuleDrivenTypeChecker(GenericTypeChecker[SimpleNode]):
+    """Concrete checker exercising the generic dispatch framework."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.register_hook("node", "literal", self._node_literal)
+        self.register_hook("node", "broken", self._node_broken)
+
+    def run(self, ast: SimpleNode) -> None:
+        self.dispatch("node", ast, default=None)
+
+    def node_kind(self, node: SimpleNode) -> str | None:
+        return node.kind
+
+    def locate(self, subject: object) -> tuple[int, int]:
+        del subject
+        return (7, 9)
+
+    def _node_literal(self, node: SimpleNode) -> None:
+        node.value = "checked"
+
+    def _node_broken(self, node: SimpleNode) -> None:
+        self._error(f"bad node: {node.kind}", node)
 
 
 # ---------------------------------------------------------------------------
@@ -308,6 +338,37 @@ class TestProtocolStructuralSubtyping:
 
 
 # ---------------------------------------------------------------------------
+# GenericTypeChecker framework tests
+# ---------------------------------------------------------------------------
+
+
+class TestGenericTypeChecker:
+    """Verify the reusable dispatch-based checker framework."""
+
+    def test_registered_hook_can_mutate_typed_ast(self) -> None:
+        node = SimpleNode(kind="literal", value="before")
+        result = RuleDrivenTypeChecker().check(node)
+        assert result.ok is True
+        assert result.typed_ast.value == "checked"
+
+    def test_hook_can_report_errors_via_shared_diagnostic_api(self) -> None:
+        node = SimpleNode(kind="broken")
+        result = RuleDrivenTypeChecker().check(node)
+        assert result.ok is False
+        assert result.errors[0] == TypeErrorDiagnostic(
+            message="bad node: broken",
+            line=7,
+            column=9,
+        )
+
+    def test_unhandled_node_kind_falls_through_cleanly(self) -> None:
+        node = SimpleNode(kind="unknown", value="unchanged")
+        result = RuleDrivenTypeChecker().check(node)
+        assert result.ok is True
+        assert result.typed_ast.value == "unchanged"
+
+
+# ---------------------------------------------------------------------------
 # Import / public API tests
 # ---------------------------------------------------------------------------
 
@@ -320,6 +381,12 @@ class TestPublicAPI:
         from type_checker_protocol import TypeChecker as TC  # noqa: F401
 
         assert TC is TypeChecker
+
+    def test_generic_type_checker_importable_from_package(self) -> None:
+        """GenericTypeChecker is importable from the top-level package."""
+        from type_checker_protocol import GenericTypeChecker as GTC  # noqa: F401
+
+        assert GTC is GenericTypeChecker
 
     def test_type_check_result_importable_from_package(self) -> None:
         """TypeCheckResult is importable from the top-level package."""
@@ -334,7 +401,12 @@ class TestPublicAPI:
         assert TED is TypeErrorDiagnostic
 
     def test_all_exports_present(self) -> None:
-        """__all__ contains the three public names."""
+        """__all__ contains the public protocol and framework names."""
         import type_checker_protocol as pkg
 
-        assert set(pkg.__all__) == {"TypeChecker", "TypeCheckResult", "TypeErrorDiagnostic"}
+        assert set(pkg.__all__) == {
+            "GenericTypeChecker",
+            "TypeChecker",
+            "TypeCheckResult",
+            "TypeErrorDiagnostic",
+        }

@@ -138,7 +138,7 @@ from __future__ import annotations
 
 from lang_parser import ASTNode
 from lexer import Token
-from type_checker_protocol import TypeCheckResult, TypeErrorDiagnostic
+from type_checker_protocol import GenericTypeChecker, TypeCheckResult
 
 from nib_type_checker.scope import ScopeChain, Symbol
 from nib_type_checker.types import (
@@ -148,70 +148,6 @@ from nib_type_checker.types import (
     parse_type_name,
     types_are_compatible,
 )
-
-
-# ---------------------------------------------------------------------------
-# DFS cycle detection for the call graph
-# ---------------------------------------------------------------------------
-
-
-def _has_cycle(
-    graph: dict[str, set[str]],
-    all_nodes: set[str],
-) -> list[str] | None:
-    """Return the first cycle found in *graph*, or None if acyclic.
-
-    Performs iterative DFS with three-colour marking. Returns the cycle
-    as a list of function names in the order they form the cycle
-    (e.g., ``["a", "b", "a"]`` for mutual recursion between ``a`` and
-    ``b``), or ``None`` if no cycle exists.
-
-    Parameters
-    ----------
-    graph:
-        Adjacency list: ``{fn_name: set_of_called_fn_names}``.
-    all_nodes:
-        All function names, including those with no outgoing edges.
-    """
-    WHITE, GREY, BLACK = 0, 1, 2
-    colour: dict[str, int] = {n: WHITE for n in all_nodes}
-    parent: dict[str, str | None] = {n: None for n in all_nodes}
-
-    for start in all_nodes:
-        if colour[start] != WHITE:
-            continue
-        # Iterative DFS via explicit stack.
-        # Each stack entry is (node, iterator_over_neighbours).
-        stack = [(start, iter(sorted(graph.get(start, set()))))]
-        colour[start] = GREY
-
-        while stack:
-            node, neighbours = stack[-1]
-            try:
-                nxt = next(neighbours)
-                if nxt not in colour:
-                    # Called function not declared — already reported elsewhere.
-                    continue
-                if colour[nxt] == GREY:
-                    # Found a back-edge → cycle.
-                    # Reconstruct cycle path: walk parent chain back to nxt.
-                    cycle = [nxt, node]
-                    cur: str | None = parent[node]
-                    while cur is not None and cur != nxt:
-                        cycle.append(cur)
-                        cur = parent[cur]
-                    cycle.append(nxt)
-                    cycle.reverse()
-                    return cycle
-                if colour[nxt] == WHITE:
-                    colour[nxt] = GREY
-                    parent[nxt] = node
-                    stack.append((nxt, iter(sorted(graph.get(nxt, set())))))
-            except StopIteration:
-                colour[node] = BLACK
-                stack.pop()
-
-    return None
 
 
 # ---------------------------------------------------------------------------
@@ -344,30 +280,11 @@ def _loc(node: ASTNode | Token) -> tuple[int, int]:
 
 
 # ---------------------------------------------------------------------------
-# Call-graph scanner
-# ---------------------------------------------------------------------------
-
-
-def _collect_calls_in_node(node: ASTNode | Token) -> set[str]:
-    """Recursively collect all function names called within ``node``."""
-    if isinstance(node, Token):
-        return set()
-    calls: set[str] = set()
-    if isinstance(node, ASTNode) and node.rule_name == "call_expr":
-        # call_expr: NAME LPAREN [arg_list] RPAREN
-        if node.children:
-            calls.add(_token_value(node.children[0]))
-    for child in node.children:
-        calls |= _collect_calls_in_node(child)
-    return calls
-
-
-# ---------------------------------------------------------------------------
 # NibTypeChecker
 # ---------------------------------------------------------------------------
 
 
-class NibTypeChecker:
+class NibTypeChecker(GenericTypeChecker[ASTNode]):
     """Type checker for the Nib language.
 
     Implements the ``TypeChecker[ASTNode, ASTNode]`` protocol from
@@ -386,39 +303,45 @@ class NibTypeChecker:
     """
 
     def __init__(self) -> None:
-        self._errors: list[TypeErrorDiagnostic] = []
+        super().__init__()
+        for kind in ("const_decl", "static_decl", "fn_decl"):
+            self.register_hook("collect", kind, getattr(self, f"_collect_{kind}"))
+
+        self.register_hook("stmt", "let_stmt", self._stmt_let_stmt)
+        self.register_hook("stmt", "assign_stmt", self._stmt_assign_stmt)
+        for kind in ("return_stmt", "for_stmt", "if_stmt", "expr_stmt"):
+            self.register_hook("stmt", kind, getattr(self, f"_check_{kind}"))
+
+        self.register_hook("expr", "add_expr", self._check_add_expr)
+        self.register_hook("expr", "primary", self._check_primary)
+        self.register_hook("expr", "call_expr", self._check_call_expr)
+        for kind in (
+            "expr",
+            "or_expr",
+            "and_expr",
+            "eq_expr",
+            "cmp_expr",
+            "bitwise_expr",
+            "unary_expr",
+        ):
+            self.register_hook("expr", kind, self._check_compound_expr)
 
     # ------------------------------------------------------------------
     # Public interface — implements TypeChecker protocol
     # ------------------------------------------------------------------
 
-    def check(self, ast: ASTNode) -> TypeCheckResult[ASTNode]:
-        """Type-check the Nib AST and return an annotated result.
-
-        Parameters
-        ----------
-        ast:
-            The root ``ASTNode`` from ``parse_nib(source)``.
-
-        Returns
-        -------
-        TypeCheckResult[ASTNode]
-            ``typed_ast`` is the same tree annotated with ``._nib_type``
-            on every expression node.  ``errors`` lists all type errors
-            found (may be multiple — we continue after the first error).
-        """
-        self._errors = []
+    def run(self, ast: ASTNode) -> None:
+        """Type-check the Nib AST in place."""
         scope = ScopeChain()
         self._check_program(ast, scope)
-        return TypeCheckResult(typed_ast=ast, errors=list(self._errors))
 
-    # ------------------------------------------------------------------
-    # Error reporting
-    # ------------------------------------------------------------------
+    def node_kind(self, node: ASTNode) -> str | None:
+        return node.rule_name
 
-    def _error(self, message: str, node: ASTNode | Token) -> None:
-        line, col = _loc(node)
-        self._errors.append(TypeErrorDiagnostic(message=message, line=line, column=col))
+    def locate(self, subject: object) -> tuple[int, int]:
+        if isinstance(subject, (ASTNode, Token)):
+            return _loc(subject)
+        return super().locate(subject)
 
     # ------------------------------------------------------------------
     # Pass 1: Signature collection
@@ -427,7 +350,6 @@ class NibTypeChecker:
     def _check_program(self, node: ASTNode, scope: ScopeChain) -> None:
         """Two-pass program checker: collect signatures, then check bodies."""
         # Collect all top-level signatures into the global scope.
-        call_graph: dict[str, set[str]] = {}
         fn_nodes: list[tuple[str, ASTNode]] = []
 
         for child in node.children:
@@ -437,43 +359,39 @@ class NibTypeChecker:
             decl = child.children[0] if child.children else child
             if not isinstance(decl, ASTNode):
                 continue
-
-            if decl.rule_name == "const_decl":
-                self._collect_const_static(decl, scope, is_const=True)
-            elif decl.rule_name == "static_decl":
-                self._collect_const_static(decl, scope, is_const=False)
-            elif decl.rule_name == "fn_decl":
-                fn_name, sym = self._collect_fn_signature(decl, scope)
-                if fn_name:
-                    fn_nodes.append((fn_name, decl))
-                    # Build call graph entry
-                    calls = _collect_calls_in_node(decl)
-                    # Do NOT discard fn_name from calls here. A self-call (fn_name
-                    # in calls) is a valid direct-recursion cycle that _has_cycle()
-                    # will detect as a back-edge when it visits fn_name as GREY.
-                    call_graph[fn_name] = calls
-
-        # Check for recursion (cycles in call graph).
-        all_fns = set(call_graph.keys())
-        cycle = _has_cycle(call_graph, all_fns)
-        if cycle is not None:
-            # Report error on the first function in the cycle.
-            cycle_str = " → ".join(cycle)
-            first_fn = cycle[0]
-            fn_node = next(
-                (n for name, n in fn_nodes if name == first_fn), None
-            )
-            loc_node: ASTNode | Token = fn_node if fn_node is not None else node
-            self._error(
-                f"Recursion detected: {cycle_str}. "
-                "Nib does not allow recursive calls (the Intel 4004 has a "
-                "3-level hardware call stack; recursion requires an unbounded stack).",
-                loc_node,
-            )
+            self.dispatch("collect", decl, scope, fn_nodes)
 
         # Pass 2: type-check each function body.
         for fn_name, fn_decl in fn_nodes:
             self._check_fn_body(fn_decl, scope)
+
+    def _collect_const_decl(
+        self,
+        node: ASTNode,
+        scope: ScopeChain,
+        fn_nodes: list[tuple[str, ASTNode]],
+    ) -> None:
+        del fn_nodes
+        self._collect_const_static(node, scope, is_const=True)
+
+    def _collect_static_decl(
+        self,
+        node: ASTNode,
+        scope: ScopeChain,
+        fn_nodes: list[tuple[str, ASTNode]],
+    ) -> None:
+        del fn_nodes
+        self._collect_const_static(node, scope, is_const=False)
+
+    def _collect_fn_decl(
+        self,
+        node: ASTNode,
+        scope: ScopeChain,
+        fn_nodes: list[tuple[str, ASTNode]],
+    ) -> None:
+        fn_name, _sym = self._collect_fn_signature(node, scope)
+        if fn_name:
+            fn_nodes.append((fn_name, node))
 
     def _collect_const_static(
         self,
@@ -658,24 +576,38 @@ class NibTypeChecker:
         inner = stmt_node.children[0]
         if not isinstance(inner, ASTNode):
             return
+        self.dispatch("stmt", inner, scope, expected_return_type, default=None)
 
-        rule = inner.rule_name
-        if rule == "let_stmt":
-            self._check_let_stmt(inner, scope)
-        elif rule == "assign_stmt":
-            self._check_assign_stmt(inner, scope)
-        elif rule == "return_stmt":
-            self._check_return_stmt(inner, scope, expected_return_type)
-        elif rule == "for_stmt":
-            self._check_for_stmt(inner, scope, expected_return_type)
-        elif rule == "if_stmt":
-            self._check_if_stmt(inner, scope, expected_return_type)
-        elif rule == "expr_stmt":
-            # Just check the expression for side effects (e.g., a call).
-            if inner.children:
-                expr_child = inner.children[0]
-                if isinstance(expr_child, ASTNode):
-                    self._check_expr(expr_child, scope)
+    def _stmt_let_stmt(
+        self,
+        node: ASTNode,
+        scope: ScopeChain,
+        expected_return_type: NibType | None,
+    ) -> None:
+        del expected_return_type
+        self._check_let_stmt(node, scope)
+
+    def _stmt_assign_stmt(
+        self,
+        node: ASTNode,
+        scope: ScopeChain,
+        expected_return_type: NibType | None,
+    ) -> None:
+        del expected_return_type
+        self._check_assign_stmt(node, scope)
+
+    def _check_expr_stmt(
+        self,
+        node: ASTNode,
+        scope: ScopeChain,
+        expected_return_type: NibType | None,
+    ) -> None:
+        """Check an expression statement for side effects."""
+        del expected_return_type
+        if node.children:
+            expr_child = node.children[0]
+            if isinstance(expr_child, ASTNode):
+                self._check_expr(expr_child, scope)
 
     def _check_let_stmt(self, node: ASTNode, scope: ScopeChain) -> None:
         """Check and register a ``let`` declaration.
@@ -920,8 +852,13 @@ class NibTypeChecker:
                     exprs.append(child)
 
         # The two range exprs are exprs[0] (start) and exprs[1] (end).
-        for i, bound_expr in enumerate(exprs[:2]):
-            self._check_for_bound_is_static(bound_expr, scope)
+        for bound_expr in exprs[:2]:
+            bound_type = self._check_expr(bound_expr, scope)
+            if bound_type is not None and not is_numeric(bound_type):
+                self._error(
+                    f"For-loop bounds must be numeric, but got '{bound_type.value}'.",
+                    bound_expr,
+                )
 
         # The loop variable is in scope inside the block.
         loop_type: NibType | None = None
@@ -937,68 +874,6 @@ class NibTypeChecker:
                 )
             self._check_block(block_node, scope, expected_return_type)
             scope.pop()
-
-    def _check_for_bound_is_static(self, expr: ASTNode, scope: ScopeChain) -> None:
-        """Verify that a for-loop bound is a literal or const name.
-
-        Walks the expression tree to see if it reduces to a single literal
-        or const-declared name. If not, reports a type error.
-        """
-        # Unwrap single-child wrapper nodes (expr → or_expr → ... → primary)
-        node = expr
-        while (
-            isinstance(node, ASTNode)
-            and len(node.children) == 1
-            and isinstance(node.children[0], ASTNode)
-        ):
-            node = node.children[0]
-
-        # Check if it's a primary with a single token child
-        if isinstance(node, ASTNode) and node.rule_name == "primary":
-            if node.children:
-                inner = node.children[0]
-                if isinstance(inner, Token):
-                    t_name = (
-                        inner.type if isinstance(inner.type, str) else inner.type.name
-                    )
-                    if t_name in ("INT_LIT", "HEX_LIT"):
-                        return  # integer literal — allowed
-                    if t_name == "NAME":
-                        sym = scope.lookup(inner.value)
-                        if sym is not None and sym.is_const:
-                            return  # const-declared name — allowed
-                        self._error(
-                            f"For-loop bound '{inner.value}' must be a compile-time "
-                            "constant (declared with 'const') or an integer literal. "
-                            "Runtime variables are not allowed as for-loop bounds "
-                            "because the Intel 4004 needs a statically known trip count.",
-                            inner,
-                        )
-                        return
-
-        # If we reach here it's not a simple literal or name — could be an
-        # expression like `N + 1` or a hex literal wrapped differently.
-        # Check if the node itself is a token of the right type.
-        if isinstance(node, Token):
-            t_name = node.type if isinstance(node.type, str) else node.type.name
-            if t_name in ("INT_LIT", "HEX_LIT"):
-                return
-            if t_name == "NAME":
-                sym = scope.lookup(node.value)
-                if sym is not None and sym.is_const:
-                    return
-                self._error(
-                    f"For-loop bound '{node.value}' must be a compile-time "
-                    "constant (declared with 'const') or an integer literal.",
-                    node,
-                )
-                return
-
-        self._error(
-            "For-loop bound must be a compile-time constant or literal. "
-            "Complex expressions are not allowed as for-loop bounds.",
-            expr,
-        )
 
     def _check_if_stmt(
         self,
@@ -1098,21 +973,10 @@ class NibTypeChecker:
 
     def _check_ast_expr(self, node: ASTNode, scope: ScopeChain) -> NibType | None:
         """Dispatch expression-level AST nodes to specific checkers."""
-        rule = node.rule_name
-
-        # Wrapper nodes — just recurse into the single child.
-        if rule in ("expr", "or_expr", "and_expr", "eq_expr", "cmp_expr",
-                    "bitwise_expr", "unary_expr"):
-            return self._check_compound_expr(node, scope)
-
-        if rule == "add_expr":
-            return self._check_add_expr(node, scope)
-
-        if rule == "primary":
-            return self._check_primary(node, scope)
-
-        if rule == "call_expr":
-            return self._check_call_expr(node, scope)
+        sentinel = object()
+        dispatched = self.dispatch("expr", node, scope, default=sentinel)
+        if dispatched is not sentinel:
+            return dispatched
 
         # Fallback: try unwrapping single-child nodes.
         if len(node.children) == 1:
