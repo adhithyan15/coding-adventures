@@ -1,0 +1,87 @@
+# ================================================================
+# Deploy Nib Web Playground to GitHub Pages
+# ================================================================
+
+name: Deploy Nib Web Playground
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "code/programs/typescript/nib-web/**"
+      - "code/packages/typescript/compiler-ir/**"
+      - "code/packages/typescript/compiler-source-map/**"
+      - "code/packages/typescript/directed-graph/**"
+      - "code/packages/typescript/grammar-tools/**"
+      - "code/packages/typescript/intel-4004-assembler/**"
+      - "code/packages/typescript/intel-4004-ir-validator/**"
+      - "code/packages/typescript/intel-4004-packager/**"
+      - "code/packages/typescript/intel4004-simulator/**"
+      - "code/packages/typescript/ir-optimizer/**"
+      - "code/packages/typescript/ir-to-intel-4004-compiler/**"
+      - "code/packages/typescript/lexer/**"
+      - "code/packages/typescript/nib-ir-compiler/**"
+      - "code/packages/typescript/nib-lexer/**"
+      - "code/packages/typescript/nib-parser/**"
+      - "code/packages/typescript/nib-type-checker/**"
+      - "code/packages/typescript/parser/**"
+      - "code/packages/typescript/simulator-protocol/**"
+      - "code/packages/typescript/state-machine/**"
+      - "code/packages/typescript/type-checker-protocol/**"
+      - ".github/workflows/deploy-nib-web.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies (compiler chain)
+        run: |
+          cd code/packages/typescript/directed-graph && npm install
+          cd ../grammar-tools && npm install
+          cd ../lexer && npm install
+          cd ../state-machine && npm install
+          cd ../parser && npm install
+          cd ../type-checker-protocol && npm install
+          cd ../nib-lexer && npm install
+          cd ../compiler-ir && npm install
+          cd ../compiler-source-map && npm install
+          cd ../nib-parser && npm install
+          cd ../nib-type-checker && npm install
+          cd ../nib-ir-compiler && npm install
+          cd ../ir-optimizer && npm install
+          cd ../intel-4004-ir-validator && npm install
+          cd ../ir-to-intel-4004-compiler && npm install
+          cd ../intel-4004-assembler && npm install
+          cd ../intel-4004-packager && npm install
+          cd ../simulator-protocol && npm install
+          cd ../intel4004-simulator && npm install
+
+      - name: Install dependencies (app)
+        run: |
+          cd code/programs/typescript/nib-web
+          npm install
+
+      - name: Build
+        run: |
+          cd code/programs/typescript/nib-web
+          npm run build
+
+      - name: Deploy to GitHub Pages (nib-web/ subdirectory)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: code/programs/typescript/nib-web/dist
+          destination_dir: nib-web
+          keep_files: true
