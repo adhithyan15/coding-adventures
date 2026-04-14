@@ -10,6 +10,7 @@ import (
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 )
 
 // TestAllToolchainsConstant verifies the canonical toolchain list is complete.
@@ -32,18 +33,17 @@ func TestAllToolchainsConstant(t *testing.T) {
 // TestSharedPrefixesAreNarrow ensures only true shared build infrastructure
 // forces all-language rebuilds.
 func TestSharedPrefixesAreNarrow(t *testing.T) {
-	if len(sharedPrefixes) == 0 {
-		t.Error("sharedPrefixes should not be empty")
-	}
-	// Verify key prefixes are present.
 	found := map[string]bool{}
 	for _, p := range sharedPrefixes {
 		found[p] = true
 	}
-	for _, want := range []string{".github/workflows/ci.yml"} {
-		if !found[want] {
-			t.Errorf("sharedPrefixes missing %q", want)
-		}
+
+	if found[gitdiff.CIWorkflowPath] {
+		t.Fatalf("%q should be analyzed diff-by-diff, not blindly forced via sharedPrefixes", gitdiff.CIWorkflowPath)
+	}
+
+	if gitdiff.CIWorkflowPath != ".github/workflows/ci.yml" {
+		t.Fatalf("unexpected ci workflow path: %q", gitdiff.CIWorkflowPath)
 	}
 
 	// Regression guard: the following paths must NOT be in sharedPrefixes.
@@ -64,6 +64,29 @@ func TestSharedPrefixesAreNarrow(t *testing.T) {
 		if found[dontWant] {
 			t.Errorf("sharedPrefixes must NOT contain %q — it causes spurious full-toolchain installs", dontWant)
 		}
+	}
+}
+
+func TestComputeLanguagesNeededIncludesSafeCIWorkflowToolchains(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/logic-gates", Language: "python"},
+	}
+
+	needed := computeLanguagesNeeded(
+		packages,
+		map[string]bool{"python/logic-gates": true},
+		false,
+		map[string]bool{"dotnet": true},
+	)
+
+	for _, toolchain := range []string{"go", "python", "dotnet"} {
+		if !needed[toolchain] {
+			t.Fatalf("expected %s to be enabled, got %v", toolchain, needed)
+		}
+	}
+
+	if needed["rust"] {
+		t.Fatalf("did not expect unrelated rust toolchain: %v", needed)
 	}
 }
 
