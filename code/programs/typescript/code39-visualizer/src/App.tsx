@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DEFAULT_RENDER_CONFIG,
-  drawCode39,
+  layoutCode39,
   encodeCode39,
   expandCode39Runs,
   normalizeCode39,
   type BarcodeRun,
   type EncodedCharacter,
 } from "@coding-adventures/code39";
-import { renderSvg } from "@coding-adventures/draw-instructions-svg";
+import type { PaintScene } from "@coding-adventures/paint-instructions";
+import { createCanvasVM } from "@coding-adventures/paint-vm-canvas";
+import { assembleSvg, createSvgContext, createSvgVM } from "@coding-adventures/paint-vm-svg";
 
 const DEFAULT_VALUE = "CODE39-123";
 const SUPPORTED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
+const CANVAS_VM = createCanvasVM();
+const SVG_VM = createSvgVM();
+
+type PreviewRenderer = "svg" | "canvas";
 
 interface BarcodeModel {
   input: string;
@@ -19,6 +25,7 @@ interface BarcodeModel {
   encodedCharacters: EncodedCharacter[];
   runs: BarcodeRun[];
   symbolLayouts: SymbolLayout[];
+  scene: PaintScene;
   svg: string;
   width: number;
   height: number;
@@ -33,19 +40,21 @@ interface SymbolLayout {
 }
 
 function runWidth(run: BarcodeRun): number {
-  return run.width === "wide" ? DEFAULT_RENDER_CONFIG.wideUnit : DEFAULT_RENDER_CONFIG.narrowUnit;
+  return run.modules * DEFAULT_RENDER_CONFIG.moduleWidth;
 }
 
 function buildSymbolLayouts(
   encodedCharacters: EncodedCharacter[],
   runs: BarcodeRun[],
 ): SymbolLayout[] {
-  const quietZone = DEFAULT_RENDER_CONFIG.quietZoneUnits * DEFAULT_RENDER_CONFIG.narrowUnit;
+  const quietZone = DEFAULT_RENDER_CONFIG.quietZoneModules * DEFAULT_RENDER_CONFIG.moduleWidth;
   const layouts: SymbolLayout[] = [];
   let cursorX = quietZone;
 
   encodedCharacters.forEach((encodedCharacter, sourceIndex) => {
-    const symbolRuns = runs.filter((run) => run.sourceIndex === sourceIndex && !run.isInterCharacterGap);
+    const symbolRuns = runs.filter(
+      (run) => run.sourceIndex === sourceIndex && run.role !== "inter-character-gap",
+    );
     const width = symbolRuns.reduce((sum, run) => sum + runWidth(run), 0);
 
     layouts.push({
@@ -59,7 +68,7 @@ function buildSymbolLayouts(
     cursorX += width;
 
     if (sourceIndex < encodedCharacters.length - 1) {
-      cursorX += DEFAULT_RENDER_CONFIG.narrowUnit;
+      cursorX += DEFAULT_RENDER_CONFIG.moduleWidth;
     }
   });
 
@@ -71,10 +80,14 @@ function buildBarcodeModel(input: string): BarcodeModel {
   const encodedCharacters = encodeCode39(normalized);
   const runs = expandCode39Runs(normalized);
   const symbolLayouts = buildSymbolLayouts(encodedCharacters, runs);
-  const scene = drawCode39(normalized, {
-    ...DEFAULT_RENDER_CONFIG,
-    includeHumanReadableText: false,
+  const scene = layoutCode39(normalized, {
+    renderConfig: {
+      ...DEFAULT_RENDER_CONFIG,
+      includeHumanReadableText: false,
+    },
   });
+  const svgContext = createSvgContext();
+  SVG_VM.execute(scene, svgContext);
 
   return {
     input,
@@ -82,20 +95,21 @@ function buildBarcodeModel(input: string): BarcodeModel {
     encodedCharacters,
     runs,
     symbolLayouts,
-    svg: renderSvg(scene),
+    scene,
+    svg: assembleSvg(scene, svgContext),
     width: scene.width,
     height: scene.height,
   };
 }
 
 function runLabel(run: BarcodeRun): string {
-  const role = run.color === "bar" ? "bar" : "space";
-  const width = run.width === "wide" ? "wide" : "narrow";
-  return `${role} (${width})`;
+  return `${run.color} (${run.modules} module${run.modules === 1 ? "" : "s"})`;
 }
 
 export function App() {
   const [value, setValue] = useState(DEFAULT_VALUE);
+  const [renderer, setRenderer] = useState<PreviewRenderer>("svg");
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   let model: BarcodeModel | null = null;
   let errorMessage: string | null = null;
@@ -109,6 +123,26 @@ export function App() {
   const barCount = model?.runs.filter((run) => run.color === "bar").length ?? 0;
   const spaceCount = model?.runs.filter((run) => run.color === "space").length ?? 0;
 
+  useEffect(() => {
+    if (renderer !== "canvas" || model === null || canvasRef.current === null) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    if (context === null) {
+      return;
+    }
+
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    canvas.width = Math.ceil(model.width * devicePixelRatio);
+    canvas.height = Math.ceil(model.height * devicePixelRatio);
+    canvas.style.width = `${model.width}px`;
+    canvas.style.height = `${model.height}px`;
+    context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    CANVAS_VM.execute(model.scene, context);
+  }, [model, renderer]);
+
   return (
     <div className="app">
       <header className="hero">
@@ -117,7 +151,7 @@ export function App() {
           <h1>Code 39 Visualizer</h1>
           <p className="lede">
             Type any standard Code 39 value and this app will normalize it, encode it, and
-            render the resulting barcode as SVG.
+            render the resulting barcode through the selected browser Paint VM.
           </p>
         </div>
 
@@ -128,11 +162,11 @@ export function App() {
           </div>
           <div>
             <dt>Output</dt>
-            <dd>SVG</dd>
+            <dd>{renderer === "svg" ? "SVG Paint VM" : "Canvas Paint VM"}</dd>
           </div>
           <div>
             <dt>Pipeline</dt>
-            <dd>Input -&gt; Runs -&gt; Draw Scene -&gt; SVG</dd>
+            <dd>Input -&gt; Runs -&gt; Paint Scene -&gt; Paint VM execute()</dd>
           </div>
         </dl>
       </header>
@@ -178,7 +212,10 @@ export function App() {
         <section className="panel preview-panel">
           <div className="panel-heading">
             <h2>Barcode Preview</h2>
-            <p>The bars below come from the shared draw scene and are serialized by the SVG backend.</p>
+            <p>
+              The preview below executes the shared PaintScene through either the SVG Paint VM
+              or the Canvas Paint VM. The backend stays separate from the barcode package.
+            </p>
           </div>
 
           {model === null ? (
@@ -187,10 +224,33 @@ export function App() {
             </div>
           ) : (
             <>
+              <div className="renderer-toggle" role="group" aria-label="preview renderer">
+                <button
+                  type="button"
+                  className={renderer === "svg" ? "active" : ""}
+                  onClick={() => setRenderer("svg")}
+                >
+                  SVG Paint VM
+                </button>
+                <button
+                  type="button"
+                  className={renderer === "canvas" ? "active" : ""}
+                  onClick={() => setRenderer("canvas")}
+                >
+                  Canvas Paint VM
+                </button>
+              </div>
               <div
                 className="barcode-frame"
-                dangerouslySetInnerHTML={{ __html: model.svg }}
-              />
+              >
+                {renderer === "svg" ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: model.svg }}
+                  />
+                ) : (
+                  <canvas ref={canvasRef} aria-label="barcode canvas preview" />
+                )}
+              </div>
               <div className="barcode-legend" aria-label="encoded symbol alignment">
                 <div
                   className="barcode-legend-track"
@@ -238,6 +298,10 @@ export function App() {
                     {model.width} x {model.height}
                   </dd>
                 </div>
+                <div>
+                  <dt>Renderer</dt>
+                  <dd>{renderer}</dd>
+                </div>
               </dl>
             </>
           )}
@@ -280,13 +344,13 @@ export function App() {
             <div className="run-strip" aria-label="barcode run stream">
               {model.runs.map((run, index) => (
                 <div
-                  key={`${run.sourceChar}-${index}`}
-                  className={`run-chip ${run.color} ${run.width}`}
-                  title={`${run.sourceChar} -> ${runLabel(run)}`}
+                  key={`${run.sourceLabel}-${index}`}
+                  className={`run-chip ${run.color} ${run.modules > 1 ? "wide" : "narrow"}`}
+                  title={`${run.sourceLabel} -> ${runLabel(run)}`}
                 >
-                  <span>{run.sourceChar}</span>
+                  <span>{run.sourceLabel}</span>
                   <small>{runLabel(run)}</small>
-                  {run.isInterCharacterGap ? <em>gap</em> : null}
+                  {run.role === "inter-character-gap" ? <em>gap</em> : null}
                 </div>
               ))}
             </div>

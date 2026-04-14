@@ -8,10 +8,11 @@ cd ../../../packages/typescript/lattice-parser && npm install
 cd ../../../packages/typescript/lattice-ast-to-css && npm install
 cd ../../../packages/typescript/pixel-container && npm install
 cd ../../../packages/typescript/paint-instructions && npm install
+cd ../../../packages/typescript/paint-vm && npm install
+cd ../../../packages/typescript/paint-vm-canvas && npm install
+cd ../../../packages/typescript/paint-vm-svg && npm install
 cd ../../../packages/typescript/barcode-layout-1d && npm install
 cd ../../../packages/typescript/code39 && npm install
-cd ../../../packages/typescript/draw-instructions && npm install
-cd ../../../packages/typescript/draw-instructions-svg && npm install
 cd ../../../packages/typescript/lattice-transpiler && npm install
 cd ../../../programs/typescript/code39-visualizer && npm install
 npm run build

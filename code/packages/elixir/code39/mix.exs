@@ -22,7 +22,8 @@ defmodule CodingAdventures.Code39.MixProject do
 
   defp deps do
     [
-      {:coding_adventures_draw_instructions, path: "../draw_instructions"}
+      {:coding_adventures_paint_instructions, path: "../paint_instructions"},
+      {:coding_adventures_barcode_layout_1d, path: "../barcode_layout_1d"}
     ]
   end
 end

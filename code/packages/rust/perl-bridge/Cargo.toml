@@ -1,6 +1,5 @@
-# Zero dependencies. We declare Perl's C API functions ourselves using
-# extern "C" — no perlxs, no Inline::C, no build-time header requirement.
-# These function signatures have been stable since Perl 5.8 (2002).
+# Zero Rust dependencies. Perl's C API is exposed through a tiny local shim
+# instead of XS wrapper crates, macros, or external bridge dependencies.
 [package]
 name = "perl-bridge"
 version = "0.1.0"

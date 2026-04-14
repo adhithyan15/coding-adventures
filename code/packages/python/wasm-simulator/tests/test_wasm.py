@@ -337,3 +337,118 @@ class TestWasmSimulator:
         ])
         sim.run(program)
         assert sim.locals[0] == 300
+
+
+# ===========================================================================
+# simulator-protocol conformance tests
+# ===========================================================================
+# These tests verify that WasmSimulator satisfies the Simulator[WasmState]
+# protocol: get_state(), execute(), and reset() behave correctly and
+# the returned types match the protocol contract.
+
+
+class TestSimulatorProtocolConformance:
+    """Verify Simulator[WasmState] protocol conformance for WasmSimulator."""
+
+    def test_get_state_returns_wasm_state(self) -> None:
+        """get_state() returns a WasmState frozen dataclass with correct field types."""
+        from wasm_simulator.state import WasmState
+
+        sim = WasmSimulator(num_locals=4)
+        state = sim.get_state()
+
+        assert isinstance(state, WasmState)
+        assert isinstance(state.stack, tuple)
+        assert isinstance(state.locals, tuple)
+        assert isinstance(state.pc, int)
+        assert isinstance(state.halted, bool)
+        assert isinstance(state.cycle, int)
+
+    def test_get_state_is_immutable_snapshot(self) -> None:
+        """get_state() snapshots are independent — mutating sim does not affect them."""
+        sim = WasmSimulator(num_locals=4)
+        program = assemble_wasm([encode_i32_const(1), encode_end()])
+        sim.load(program)
+        state_before = sim.get_state()
+        sim.step()  # push 1 onto the stack
+        state_after = sim.get_state()
+
+        # Snapshot taken before step() must NOT reflect the new stack
+        assert state_before.stack == ()
+        assert state_after.stack == (1,)
+
+    def test_execute_simple_program_ok(self) -> None:
+        """execute() runs x = 1 + 2 and returns ok=True with correct final state."""
+        from simulator_protocol import ExecutionResult
+
+        sim = WasmSimulator(num_locals=4)
+        program = assemble_wasm([
+            encode_i32_const(1),
+            encode_i32_const(2),
+            encode_i32_add(),
+            encode_local_set(0),
+            encode_end(),
+        ])
+        result = sim.execute(program)
+
+        assert isinstance(result, ExecutionResult)
+        assert result.ok
+        assert result.halted
+        assert result.error is None
+        assert result.final_state.locals[0] == 3
+        assert result.steps == 5
+
+    def test_execute_cycle_counter_in_final_state(self) -> None:
+        """execute() captures the cycle counter in final_state.cycle."""
+        sim = WasmSimulator(num_locals=4)
+        program = assemble_wasm([
+            encode_i32_const(7),
+            encode_local_set(0),
+            encode_end(),
+        ])
+        result = sim.execute(program)
+
+        assert result.ok
+        # 3 instructions executed: i32.const, local.set, end
+        assert result.final_state.cycle == 3
+
+    def test_execute_traces_contain_step_traces(self) -> None:
+        """execute() populates result.traces with one StepTrace per instruction."""
+        from simulator_protocol import StepTrace
+
+        sim = WasmSimulator(num_locals=4)
+        program = assemble_wasm([
+            encode_i32_const(3),
+            encode_local_set(0),
+            encode_end(),
+        ])
+        result = sim.execute(program)
+
+        assert len(result.traces) == 3
+        for trace in result.traces:
+            assert isinstance(trace, StepTrace)
+            assert isinstance(trace.mnemonic, str)
+            assert len(trace.mnemonic) > 0
+
+    def test_reset_clears_state(self) -> None:
+        """reset() restores the simulator to its initial power-on state."""
+        sim = WasmSimulator(num_locals=4)
+        program = assemble_wasm([
+            encode_i32_const(5),
+            encode_local_set(0),
+            encode_end(),
+        ])
+        sim.execute(program)
+
+        # After execution the simulator is halted with locals[0] = 5
+        assert sim.halted
+        assert sim.locals[0] == 5
+        assert sim.cycle > 0
+
+        sim.reset()
+
+        assert not sim.halted
+        assert sim.stack == []
+        assert sim.locals[0] == 0
+        assert sim.pc == 0
+        assert sim.cycle == 0

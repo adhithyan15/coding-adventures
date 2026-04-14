@@ -1100,3 +1100,113 @@ class TestErrorCases:
         """load() respects the num_locals parameter."""
         sim.load(assemble_clr((CLROpcode.RET,)), num_locals=4)
         assert len(sim.locals) == 4
+
+
+# ===========================================================================
+# simulator-protocol conformance tests
+# ===========================================================================
+# These tests verify that CLRSimulator satisfies the Simulator[CLRState]
+# protocol: get_state(), execute(), and reset() behave correctly and
+# the returned types match the protocol contract.
+
+
+class TestSimulatorProtocolConformance:
+    """Verify Simulator[CLRState] protocol conformance for CLRSimulator."""
+
+    def test_get_state_returns_clr_state(self) -> None:
+        """get_state() returns a CLRState frozen dataclass with correct field types."""
+        from clr_simulator.state import CLRState
+
+        sim = CLRSimulator()
+        state = sim.get_state()
+
+        assert isinstance(state, CLRState)
+        assert isinstance(state.stack, tuple)
+        assert isinstance(state.locals, tuple)
+        assert isinstance(state.pc, int)
+        assert isinstance(state.halted, bool)
+
+    def test_get_state_is_immutable_snapshot(self) -> None:
+        """get_state() snapshots are independent — mutating sim does not affect them."""
+        sim = CLRSimulator()
+        sim.load(assemble_clr(encode_ldc_i4(1), (CLROpcode.RET,)))
+        state_before = sim.get_state()
+        sim.step()  # push 1 onto the evaluation stack
+        state_after = sim.get_state()
+
+        # The snapshot taken before step() must NOT reflect the new stack
+        assert state_before.stack == ()
+        assert state_after.stack == (1,)
+
+    def test_execute_simple_program_ok(self) -> None:
+        """execute() runs x = 1 + 2 and returns ok=True with correct final state."""
+        from simulator_protocol import ExecutionResult
+
+        sim = CLRSimulator()
+        program = assemble_clr(
+            encode_ldc_i4(1),
+            encode_ldc_i4(2),
+            (CLROpcode.ADD,),
+            encode_stloc(0),
+            (CLROpcode.RET,),
+        )
+        result = sim.execute(program)
+
+        assert isinstance(result, ExecutionResult)
+        assert result.ok
+        assert result.halted
+        assert result.error is None
+        assert result.final_state.locals[0] == 3
+        assert result.steps == 5
+
+    def test_execute_large_constant(self) -> None:
+        """execute() handles the full 5-byte ldc.i4 form (values > 127)."""
+        sim = CLRSimulator()
+        program = assemble_clr(
+            encode_ldc_i4(1000),
+            encode_stloc(0),
+            (CLROpcode.RET,),
+        )
+        result = sim.execute(program)
+
+        assert result.ok
+        assert result.final_state.locals[0] == 1000
+
+    def test_execute_traces_contain_step_traces(self) -> None:
+        """execute() populates result.traces with one StepTrace per instruction."""
+        from simulator_protocol import StepTrace
+
+        sim = CLRSimulator()
+        program = assemble_clr(
+            encode_ldc_i4(3),
+            encode_stloc(0),
+            (CLROpcode.RET,),
+        )
+        result = sim.execute(program)
+
+        assert len(result.traces) == 3
+        for trace in result.traces:
+            assert isinstance(trace, StepTrace)
+            assert isinstance(trace.mnemonic, str)
+            assert len(trace.mnemonic) > 0
+
+    def test_reset_clears_state(self) -> None:
+        """reset() restores the simulator to its initial power-on state."""
+        sim = CLRSimulator()
+        program = assemble_clr(
+            encode_ldc_i4(5),
+            encode_stloc(0),
+            (CLROpcode.RET,),
+        )
+        sim.execute(program)
+
+        # After execution the simulator is halted with locals[0] = 5
+        assert sim.halted
+        assert sim.locals[0] == 5
+
+        sim.reset()
+
+        assert not sim.halted
+        assert sim.stack == []
+        assert sim.locals[0] is None
+        assert sim.pc == 0

@@ -1,0 +1,6 @@
+uv venv --quiet --clear
+uv pip install --python .venv\Scripts\python.exe -e ../pixel_container --quiet
+uv pip install --python .venv\Scripts\python.exe pytest --quiet
+set PYO3_PYTHON=.venv\Scripts\python.exe&& cargo build --release
+copy target\release\paint_codec_png_native.dll src\paint_codec_png_native\paint_codec_png_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python.exe -m pytest tests -v

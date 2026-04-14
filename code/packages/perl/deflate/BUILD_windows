@@ -1,0 +1,1 @@
+cd ..\heap && cd ..\huffman-tree && cd ..\lzss && cd ..\deflate && set PERL5LIB=..\heap\lib;..\huffman-tree\lib;..\lzss\lib;%PERL5LIB% && perl -I..\heap\lib -I..\huffman-tree\lib -I..\lzss\lib -Ilib t\00-load.t && perl -I..\heap\lib -I..\huffman-tree\lib -I..\lzss\lib -Ilib t\01-deflate.t

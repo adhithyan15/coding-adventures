@@ -20,11 +20,17 @@ func TestEncodeAndDraw(t *testing.T) {
 	if len(runs) != 29 {
 		t.Fatalf("expected 29 runs, got %d", len(runs))
 	}
+	if runs[9].Role != "inter-character-gap" {
+		t.Fatalf("unexpected run role: %#v", runs[9])
+	}
 	scene, err := DrawCode39("A", DefaultRenderConfig)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if scene.Metadata["symbology"] != "code39" {
 		t.Fatalf("unexpected scene metadata: %#v", scene.Metadata)
+	}
+	if scene.Height != DefaultRenderConfig.BarHeight {
+		t.Fatalf("unexpected scene height: %d", scene.Height)
 	}
 }
