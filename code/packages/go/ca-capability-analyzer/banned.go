@@ -1,11 +1,11 @@
 package main
 
-// banned.go detects banned code constructs in a Go AST file.
+// banned.go detects restricted code constructs in a Go AST file.
 //
-// Banned constructs are flagged unconditionally — no manifest entry can
-// authorize them. They represent code patterns that defeat static capability
-// analysis entirely by providing dynamic or native code execution paths that
-// the AST walker cannot see through.
+// Most of these constructs remain hard CAP002 violations. The only exceptions
+// the Go analyzer currently allows are the FFI-style bridges (`import "C"` and
+// `plugin.Open`) when a package explicitly opts in through both
+// banned_construct_exceptions and matching ffi capabilities.
 //
 // # The Five Banned Categories
 //
@@ -42,7 +42,17 @@ import (
 	"strings"
 )
 
-// DetectBanned returns all banned constructs found in f.
+const (
+	bannedConstructUnsafePointer       = "unsafe.Pointer"
+	bannedConstructImportC             = `import "C"`
+	bannedConstructPluginOpen          = "plugin.Open"
+	bannedConstructReflectCall         = "reflect.Value.Call"
+	bannedConstructReflectCallSlice    = "reflect.Value.CallSlice"
+	bannedConstructReflectMethodByName = "reflect.Value.MethodByName"
+	bannedConstructLinkname            = "//go:linkname"
+)
+
+// DetectBanned returns all restricted constructs found in f.
 //
 // The caller is responsible for not passing gen_capabilities.go to this
 // function — generated files are exempt from all checks.
@@ -75,9 +85,10 @@ func detectCgo(fset *token.FileSet, f *ast.File, filename string) []BannedConstr
 		if spec.Path.Value == `"C"` {
 			pos := fset.Position(spec.Pos())
 			found = append(found, BannedConstruct{
-				File: filename,
-				Line: pos.Line,
-				Kind: `import "C" (CGo)`,
+				File:      filename,
+				Line:      pos.Line,
+				Construct: bannedConstructImportC,
+				Kind:      `import "C" (CGo)`,
 			})
 		}
 	}
@@ -118,9 +129,10 @@ func detectUnsafe(fset *token.FileSet, f *ast.File, filename string) []BannedCon
 		if ident.Name == localName && sel.Sel.Name == "Pointer" {
 			pos := fset.Position(call.Pos())
 			found = append(found, BannedConstruct{
-				File: filename,
-				Line: pos.Line,
-				Kind: "unsafe.Pointer conversion",
+				File:      filename,
+				Line:      pos.Line,
+				Construct: bannedConstructUnsafePointer,
+				Kind:      "unsafe.Pointer conversion",
 			})
 		}
 		return true
@@ -159,9 +171,10 @@ func detectPlugin(fset *token.FileSet, f *ast.File, filename string) []BannedCon
 		if ident.Name == localName && sel.Sel.Name == "Open" {
 			pos := fset.Position(call.Pos())
 			found = append(found, BannedConstruct{
-				File: filename,
-				Line: pos.Line,
-				Kind: "plugin.Open (dynamic library loading)",
+				File:      filename,
+				Line:      pos.Line,
+				Construct: bannedConstructPluginOpen,
+				Kind:      "plugin.Open (dynamic library loading)",
 			})
 		}
 		return true
@@ -204,8 +217,8 @@ func detectReflect(fset *token.FileSet, f *ast.File, filename string) []BannedCo
 	}
 
 	bannedMethods := map[string]bool{
-		"Call":        true,
-		"CallSlice":   true,
+		"Call":         true,
+		"CallSlice":    true,
 		"MethodByName": true,
 	}
 
@@ -221,10 +234,18 @@ func detectReflect(fset *token.FileSet, f *ast.File, filename string) []BannedCo
 		}
 		if bannedMethods[sel.Sel.Name] {
 			pos := fset.Position(call.Pos())
+			construct := bannedConstructReflectCall
+			switch sel.Sel.Name {
+			case "CallSlice":
+				construct = bannedConstructReflectCallSlice
+			case "MethodByName":
+				construct = bannedConstructReflectMethodByName
+			}
 			found = append(found, BannedConstruct{
-				File: filename,
-				Line: pos.Line,
-				Kind: "reflect." + sel.Sel.Name + " (dynamic dispatch)",
+				File:      filename,
+				Line:      pos.Line,
+				Construct: construct,
+				Kind:      "reflect." + sel.Sel.Name + " (dynamic dispatch)",
 			})
 		}
 		return true
@@ -249,14 +270,40 @@ func detectLinkname(fset *token.FileSet, f *ast.File, filename string) []BannedC
 			if strings.Contains(c.Text, "go:linkname") {
 				pos := fset.Position(c.Pos())
 				found = append(found, BannedConstruct{
-					File: filename,
-					Line: pos.Line,
-					Kind: "//go:linkname directive",
+					File:      filename,
+					Line:      pos.Line,
+					Construct: bannedConstructLinkname,
+					Kind:      "//go:linkname directive",
 				})
 			}
 		}
 	}
 	return found
+}
+
+// normalizeBannedConstructName canonicalizes manifest and detection identifiers
+// so a package can write either "plugin.Open" or "plugin.Open()" and still
+// match the same restricted construct.
+func normalizeBannedConstructName(construct string) string {
+	construct = strings.TrimSpace(construct)
+	switch {
+	case strings.HasPrefix(construct, bannedConstructImportC):
+		return bannedConstructImportC
+	case strings.HasPrefix(construct, bannedConstructPluginOpen):
+		return bannedConstructPluginOpen
+	case strings.HasPrefix(construct, bannedConstructUnsafePointer):
+		return bannedConstructUnsafePointer
+	case strings.HasPrefix(construct, bannedConstructReflectCallSlice):
+		return bannedConstructReflectCallSlice
+	case strings.HasPrefix(construct, bannedConstructReflectCall):
+		return bannedConstructReflectCall
+	case strings.HasPrefix(construct, bannedConstructReflectMethodByName):
+		return bannedConstructReflectMethodByName
+	case strings.Contains(construct, "go:linkname"):
+		return bannedConstructLinkname
+	default:
+		return strings.TrimSuffix(construct, "()")
+	}
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -293,4 +340,3 @@ func importLocalName(f *ast.File, importPath string) string {
 	parts := strings.Split(importPath, "/")
 	return parts[len(parts)-1]
 }
-
