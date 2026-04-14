@@ -4,15 +4,15 @@
 OVERVIEW
 =============================================================================
 
-The type checker is the third stage of the Nib compiler pipeline:
+    The type checker is the third stage of the Nib compiler pipeline:
 
     Source text
         → Nib Lexer      (characters → tokens)
         → Nib Parser     (tokens → untyped ASTNode tree)
         → Type Checker   (untyped AST → typed AST)   ← this module
         → IR Compiler    (typed AST → IR)
-        → Backend Validator  (IR → validated IR for specific ISA)
-        → Code Generator (validated IR → Intel 4004 machine code)
+        → Intel 4004 IR Validator  (IR → validated IR for specific ISA)
+        → IR-to-Intel-4004 Compiler (validated IR → Intel 4004 assembly)
 
 The ``NibTypeChecker`` class implements the ``TypeChecker[ASTNode, ASTNode]``
 protocol from ``type_checker_protocol``. Calling ``check(ast)`` performs two
@@ -87,7 +87,7 @@ WHAT IS NOT CHECKED HERE
 =============================================================================
 
 - **Call depth ≤ 2**: This is a 3-level hardware call stack constraint on
-  the Intel 4004. It belongs in the Intel4004BackendValidator, which runs
+  the Intel 4004. It belongs in the Intel 4004 IR validator package, which runs
   after IR generation.
 
 - **Total static RAM ≤ 160 bytes**: Also a hardware constraint — checked

@@ -23,7 +23,7 @@ from compiler_ir import (
     IrRegister,
 )
 
-from intel_4004_backend.validator import IrValidationError, IrValidator
+from intel_4004_ir_validator import IrValidationError, IrValidator
 
 # ---------------------------------------------------------------------------
 # Helpers

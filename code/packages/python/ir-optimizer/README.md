@@ -15,7 +15,7 @@ Frontend (e.g., nib-compiler)
     ↓ IrProgram
 ir-optimizer        ← this package
     ↓ IrProgram (optimized)
-Backend (e.g., intel-4004-backend)
+Backend (e.g., ir-to-intel-4004-compiler)
     ↓
 Machine Code / ROM
 ```

@@ -260,7 +260,8 @@ PR 3: type-checker-protocol — defines TypeChecker[In, Out] protocol
 PR 4: nib-grammar-spec    — formal grammar specification
 PR 5: nib-type-checker    — ← THIS PACKAGE
 PR 6: nib-ir-compiler     — compiles typed AST to architecture-independent IR
-PR 7: intel-4004-backend  — validates IR and generates 4004 machine code
+PR 7: intel-4004-ir-validator — validates IR for Intel 4004 hardware limits
+PR 8: ir-to-intel-4004-compiler — generates Intel 4004 assembly text
 ```
 
 ## Development

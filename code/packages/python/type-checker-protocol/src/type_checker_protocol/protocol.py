@@ -308,7 +308,7 @@ class TypeChecker(Protocol[ASTIn, ASTOut]):
     This protocol is for *language-level* type checking.  It must NOT enforce
     hardware or ISA constraints such as call-depth limits, RAM budgets, or
     register counts.  Those belong in the backend's own validator (e.g.,
-    ``IrValidator`` in the intel-4004-backend), which runs after IR generation.
+    ``IrValidator`` in the intel-4004-ir-validator package), which runs after IR generation.
 
     This separation makes the design composable: the same frontend type checker
     can target Intel 4004, ARM, WASM, or any future ISA without modification.
