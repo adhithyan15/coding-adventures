@@ -56,7 +56,7 @@ public enum BuildTool {
             handle?.closeFile()
         }
 
-        for language in allLanguages {
+        for language in allToolchains {
             let value = languagesNeeded[language] ?? false
             let line = "needs_\(language)=\(value ? "true" : "false")"
             print(line)
@@ -95,12 +95,31 @@ public enum BuildTool {
 
         var force = options.force
         var affectedSet: Set<String>? = nil
+        var ciToolchains = Set<String>()
 
         if !force {
             let changedFiles = GitDiff.getChangedFiles(repoRoot: repoRoot, diffBase: options.diffBase)
             if !changedFiles.isEmpty {
+                if changedFiles.contains(CIWorkflow.workflowPath) {
+                    let ciChange = CIWorkflow.analyzeChanges(repoRoot: repoRoot, diffBase: options.diffBase)
+                    if ciChange.requiresFullRebuild {
+                        print("Git diff: ci.yml changed in shared ways -- rebuilding everything")
+                        force = true
+                    } else {
+                        ciToolchains = ciChange.toolchains
+                        if !ciToolchains.isEmpty {
+                            print(
+                                "Git diff: ci.yml changed only toolchain-scoped setup for \(CIWorkflow.sortedToolchains(ciToolchains).joined(separator: ", "))"
+                            )
+                        }
+                    }
+                }
+
                 let sharedChanged = changedFiles.contains { file in
-                    sharedPrefixes.contains { prefix in
+                    guard file != CIWorkflow.workflowPath else {
+                        return false
+                    }
+                    return sharedPrefixes.contains { prefix in
                         file == prefix || file.hasPrefix(prefix + "/")
                     }
                 }
@@ -137,12 +156,20 @@ public enum BuildTool {
                 graph: graph,
                 affectedSet: affectedSet,
                 force: force,
+                ciToolchains: ciToolchains,
                 repoRoot: repoRoot
             )
         }
 
         if options.detectLanguages {
-            outputLanguageFlags(computeLanguagesNeeded(packages: packages, affectedSet: affectedSet, force: force))
+            outputLanguageFlags(
+                computeLanguagesNeeded(
+                    packages: packages,
+                    affectedSet: affectedSet,
+                    force: force,
+                    ciToolchains: ciToolchains
+                )
+            )
             return 0
         }
 
@@ -260,6 +287,7 @@ public enum BuildTool {
         graph: DirectedGraph,
         affectedSet: Set<String>?,
         force: Bool,
+        ciToolchains: Set<String>,
         repoRoot: String
     ) throws -> Int32 {
         let affectedPackages = affectedSet.map { Array($0).sorted() }
@@ -275,7 +303,12 @@ public enum BuildTool {
             )
         }
         let dependencyEdges = graph.edges().map { [$0.0, $0.1] }
-        let languagesNeeded = computeLanguagesNeeded(packages: packages, affectedSet: affectedSet, force: force)
+        let languagesNeeded = computeLanguagesNeeded(
+            packages: packages,
+            affectedSet: affectedSet,
+            force: force,
+            ciToolchains: ciToolchains
+        )
         let plan = BuildPlan(
             schemaVersion: PlanIO.currentSchemaVersion,
             diffBase: options.diffBase,
@@ -295,17 +328,26 @@ public enum BuildTool {
         return 0
     }
 
-    private static func computeLanguagesNeeded(packages: [BuildPackage], affectedSet: Set<String>?, force: Bool) -> [String: Bool] {
-        var languagesNeeded: [String: Bool] = Dictionary(uniqueKeysWithValues: allLanguages.map { ($0, false) })
+    private static func computeLanguagesNeeded(
+        packages: [BuildPackage],
+        affectedSet: Set<String>?,
+        force: Bool,
+        ciToolchains: Set<String>
+    ) -> [String: Bool] {
+        var languagesNeeded: [String: Bool] = Dictionary(uniqueKeysWithValues: allToolchains.map { ($0, false) })
+        languagesNeeded["go"] = true
         if force || affectedSet == nil {
-            for package in packages {
-                languagesNeeded[package.language] = true
+            for toolchain in allToolchains {
+                languagesNeeded[toolchain] = true
             }
             return languagesNeeded
         }
 
         for package in packages where affectedSet?.contains(package.name) == true {
-            languagesNeeded[package.language] = true
+            languagesNeeded[toolchainForPackageLanguage(package.language)] = true
+        }
+        for toolchain in ciToolchains {
+            languagesNeeded[toolchain] = true
         }
         return languagesNeeded
     }

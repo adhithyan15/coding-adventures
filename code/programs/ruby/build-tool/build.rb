@@ -57,6 +57,7 @@ require_relative "lib/build_tool/executor"
 require_relative "lib/build_tool/reporter"
 require_relative "lib/build_tool/starlark_evaluator"
 require_relative "lib/build_tool/git_diff"
+require_relative "lib/build_tool/ci_workflow"
 require_relative "lib/build_tool/plan"
 require_relative "lib/build_tool/validator"
 
@@ -64,14 +65,24 @@ module BuildTool
   module CLI
     module_function
 
-    # ALL_LANGUAGES is the canonical list of supported languages in the monorepo.
-    # The order is stable and matches the order used in CI toolchain setup.
+    # ALL_LANGUAGES is the canonical list of package languages this CLI builds.
     ALL_LANGUAGES = %w[python ruby go typescript rust elixir lua perl swift haskell].freeze
 
-    # SHARED_PREFIXES are repo paths that, when changed, mean ALL languages
-    # need rebuilding. Only changes to the CI workflow itself fan out to
-    # a full rebuild — deployment-only workflows do NOT.
-    SHARED_PREFIXES = [".github/workflows/ci.yml"].freeze
+    # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
+    ALL_TOOLCHAINS = (ALL_LANGUAGES + ["dotnet"]).freeze
+
+    # SHARED_PREFIXES are repo paths that, when changed, still mean every
+    # toolchain needs rebuilding. ci.yml is handled separately via patch
+    # analysis so toolchain-scoped edits do not fan out across the repo.
+    SHARED_PREFIXES = [].freeze
+
+    def toolchain_for_package_language(language)
+      case language
+      when "wasm" then "rust"
+      when "csharp", "fsharp", "dotnet" then "dotnet"
+      else language
+      end
+    end
 
     # find_repo_root -- Walk up from `start` (or cwd) looking for a `.git` dir.
     #
@@ -309,11 +320,28 @@ module BuildTool
       # Git is the source of truth — no cache file needed for primary workflow.
       # Fallback: hash-based cache (when git diff is unavailable).
       affected_set = nil
+      ci_toolchains = Set.new
 
       unless options[:force]
         changed_files = GitDiff.get_changed_files(root.to_s, options[:diff_base])
         if changed_files && !changed_files.empty?
+          if changed_files.include?(CIWorkflow::CI_WORKFLOW_PATH)
+            ci_change = CIWorkflow.analyze_changes(root, options[:diff_base])
+            if ci_change.requires_full_rebuild
+              puts "Git diff: ci.yml changed in shared ways — rebuilding everything"
+              options[:force] = true
+              affected_set = nil
+            else
+              ci_toolchains = ci_change.toolchains
+              unless ci_toolchains.empty?
+                puts "Git diff: ci.yml changed only toolchain-scoped setup for " \
+                     "#{CIWorkflow.sorted_toolchains(ci_toolchains).join(', ')}"
+              end
+            end
+          end
+
           shared_changed = changed_files.any? do |f|
+            next false if f == CIWorkflow::CI_WORKFLOW_PATH
             SHARED_PREFIXES.any? { |prefix| f == prefix || f.start_with?("#{prefix}/") }
           end
 
@@ -348,12 +376,12 @@ module BuildTool
 
       # -- Step 6a: Emit plan (early exit) --------------------------------------
       if options[:emit_plan]
-        return emit_build_plan(options, root, packages, graph, affected_set)
+        return emit_build_plan(options, root, packages, graph, affected_set, ci_toolchains)
       end
 
       # -- Step 6b: Detect languages (early exit) -------------------------------
       if options[:detect_languages]
-        return detect_needed_languages(packages, affected_set, options[:force])
+        return detect_needed_languages(packages, affected_set, options[:force], ci_toolchains)
       end
 
       # -- Step 7: Hash all packages --------------------------------------------
@@ -427,7 +455,7 @@ module BuildTool
     # @param graph [DirectedGraph] Dependency graph.
     # @param affected_set [Hash<String, Boolean>, nil] Affected packages.
     # @return [Integer] Exit code.
-    def emit_build_plan(options, root, packages, graph, affected_set)
+    def emit_build_plan(options, root, packages, graph, affected_set, ci_toolchains)
       # Convert affected_set to a sorted array (or nil for "all").
       affected_list = if affected_set
                         affected_set.keys.sort
@@ -461,7 +489,7 @@ module BuildTool
       end
 
       # Compute languages needed.
-      languages_needed = compute_languages_needed(packages, affected_set, options[:force])
+      languages_needed = compute_languages_needed(packages, affected_set, options[:force], ci_toolchains)
 
       bp = Plan::BuildPlan.new(
         diff_base: options[:diff_base],
@@ -631,8 +659,8 @@ module BuildTool
     # @param affected_set [Hash<String, Boolean>, nil] Affected packages.
     # @param force [Boolean] Whether --force was set.
     # @return [Integer] Exit code (always 0).
-    def detect_needed_languages(packages, affected_set, force)
-      languages_needed = compute_languages_needed(packages, affected_set, force)
+    def detect_needed_languages(packages, affected_set, force, ci_toolchains)
+      languages_needed = compute_languages_needed(packages, affected_set, force, ci_toolchains)
       output_language_flags(languages_needed)
       0
     end
@@ -646,17 +674,20 @@ module BuildTool
     # @param affected_set [Hash<String, Boolean>, nil]
     # @param force [Boolean]
     # @return [Hash<String, Boolean>]
-    def compute_languages_needed(packages, affected_set, force)
-      needed = { "go" => true }
+    def compute_languages_needed(packages, affected_set, force, ci_toolchains = Set.new)
+      needed = ALL_TOOLCHAINS.each_with_object({}) { |lang, acc| acc[lang] = false }
+      needed["go"] = true
 
       if force || affected_set.nil?
-        ALL_LANGUAGES.each { |lang| needed[lang] = true }
+        ALL_TOOLCHAINS.each { |lang| needed[lang] = true }
         return needed
       end
 
       packages.each do |pkg|
-        needed[pkg.language] = true if affected_set.key?(pkg.name)
+        needed[toolchain_for_package_language(pkg.language)] = true if affected_set.key?(pkg.name)
       end
+
+      ci_toolchains.each { |toolchain| needed[toolchain] = true }
 
       needed
     end
@@ -677,7 +708,7 @@ module BuildTool
                   end
                 end
 
-      ALL_LANGUAGES.each do |lang|
+      ALL_TOOLCHAINS.each do |lang|
         value = languages_needed.fetch(lang, false)
         line = "needs_#{lang}=#{value}"
         puts line
