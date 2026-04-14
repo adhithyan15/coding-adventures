@@ -10,11 +10,21 @@ defmodule CodingAdventures.VerilogParserTest do
       assert hd(grammar.rules).name == "source_text"
     end
 
-    test "supports selecting an explicit language edition" do
-      default_rule_names = Enum.map(VerilogParser.create_parser().rules, & &1.name)
-      versioned_rule_names = Enum.map(VerilogParser.create_parser("2005").rules, & &1.name)
+    test "reports supported versions and default version" do
+      assert VerilogParser.default_version() == "2005"
+      assert VerilogParser.supported_versions() == ~w(1995 2001 2005)
+      assert VerilogParser.resolve_version!(nil) == "2005"
+      assert VerilogParser.resolve_version!("") == "2005"
+    end
 
-      assert default_rule_names == versioned_rule_names
+    test "supports selecting every explicit language edition" do
+      default_rule_names = Enum.map(VerilogParser.create_parser().rules, & &1.name)
+
+      for version <- VerilogParser.supported_versions() do
+        versioned_rule_names = Enum.map(VerilogParser.create_parser(version).rules, & &1.name)
+        assert versioned_rule_names == default_rule_names
+        assert VerilogParser.resolve_version!(version) == version
+      end
     end
 
     test "raises for an unknown language edition" do
@@ -28,6 +38,15 @@ defmodule CodingAdventures.VerilogParserTest do
     test "parses a simple module" do
       {:ok, %ASTNode{} = ast} = VerilogParser.parse("module empty; endmodule")
       assert ast.rule_name == "source_text"
+    end
+
+    test "parses a simple module in every supported edition" do
+      for version <- VerilogParser.supported_versions() do
+        {:ok, %ASTNode{} = ast} =
+          VerilogParser.parse("module empty; endmodule", version: version)
+
+        assert ast.rule_name == "source_text"
+      end
     end
 
     test "supports preprocessing and explicit versions together" do
