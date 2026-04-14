@@ -329,6 +329,52 @@ class IrValidator:
                     if callee.name not in call_graph:
                         call_graph[callee.name] = []
 
+        def find_cycle() -> list[str] | None:
+            """Return one recursive cycle, or None if the graph is acyclic."""
+            visiting: set[str] = set()
+            visited: set[str] = set()
+            path: list[str] = []
+
+            def dfs(node: str) -> list[str] | None:
+                if node in visiting:
+                    if node in path:
+                        start = path.index(node)
+                        return path[start:] + [node]
+                    return [node, node]
+                if node in visited:
+                    return None
+
+                visiting.add(node)
+                visited.add(node)
+                path.append(node)
+                for child in call_graph.get(node, []):
+                    cycle = dfs(child)
+                    if cycle is not None:
+                        return cycle
+                path.pop()
+                visiting.remove(node)
+                return None
+
+            for label in call_graph:
+                cycle = dfs(label)
+                if cycle is not None:
+                    return cycle
+            return None
+
+        cycle = find_cycle()
+        if cycle is not None:
+            cycle_str = " -> ".join(cycle)
+            return [
+                IrValidationError(
+                    rule="call_depth",
+                    message=(
+                        "Recursive call graphs are not supported on the Intel 4004. "
+                        f"Found cycle: {cycle_str}. "
+                        "Refactor the recursion into an iterative loop or inline helper calls."
+                    ),
+                )
+            ]
+
         # DFS: find maximum depth reachable from any label in the graph.
         # "depth" here means the number of CALL edges traversed (not
         # counting the implicit _start frame).
@@ -337,7 +383,6 @@ class IrValidator:
         def dfs(node: str, depth: int, visited: set[str]) -> int:
             """Return maximum call depth reachable from node."""
             if node in visited:
-                # Cycle — treat as no further depth to avoid infinite loop
                 return depth
             visited = visited | {node}
             children = call_graph.get(node, [])

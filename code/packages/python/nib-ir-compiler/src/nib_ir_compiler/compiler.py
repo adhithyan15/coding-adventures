@@ -278,6 +278,7 @@ class _Compiler:
     _program: IrProgram = field(init=False)
     _loop_count: int = field(default=0)
     _if_count: int = field(default=0)
+    _const_values: dict[str, int] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Initialize the IR program after field init."""
@@ -296,6 +297,10 @@ class _Compiler:
             inner = _unwrap_top_decl(child)
             if inner is None:
                 continue
+            if inner.rule_name == "const_decl":
+                name, _nib_type, init_val = _extract_decl_info(inner)
+                if name is not None:
+                    self._const_values[name] = init_val
             if inner.rule_name == "static_decl":
                 self._emit_static_data(inner)
 
@@ -759,29 +764,33 @@ class _Compiler:
         type_str = loop_type.value if loop_type else "?"
         self._emit_comment(f"for {loop_var_tok.value}: {type_str}")
 
-        # Allocate a register for the loop variable.
-        loop_reg = IrRegister(index=next_reg)
-        regs[loop_var_tok.value] = loop_reg
-        next_reg += 1
+        default_start = Token(type="INT_LIT", value="0", line=1, column=1)
+        default_end = Token(type="INT_LIT", value="1", line=1, column=1)
 
-        # Allocate a temp register for the loop condition result.
+        # Evaluate the bounds once when entering the loop, then keep the
+        # cached end bound in a dedicated register for the duration.
+        start_source_reg = self._compile_expr(
+            bound_exprs[0] if len(bound_exprs) >= 1 else default_start,
+            regs,
+        )
+        end_source_reg = self._compile_expr(
+            bound_exprs[1] if len(bound_exprs) >= 2 else default_end,
+            regs,
+        )
+
+        loop_reg = IrRegister(index=next_reg)
+        next_reg += 1
+        end_reg = IrRegister(index=next_reg)
+        next_reg += 1
         cmp_reg = IrRegister(index=next_reg)
         next_reg += 1
 
-        # Extract start and end constant values.
-        start_val = 0
-        end_val = 1
-        if len(bound_exprs) >= 1:
-            start_val = _extract_const_int(bound_exprs[0])
-        if len(bound_exprs) >= 2:
-            end_val = _extract_const_int(bound_exprs[1])
+        if start_source_reg.index != loop_reg.index:
+            self._emit(IrOp.ADD_IMM, loop_reg, start_source_reg, IrImmediate(value=0))
+        if end_source_reg.index != end_reg.index:
+            self._emit(IrOp.ADD_IMM, end_reg, end_source_reg, IrImmediate(value=0))
 
-        # Initialise the loop variable.
-        self._emit(
-            IrOp.LOAD_IMM,
-            loop_reg,
-            IrImmediate(value=start_val),
-        )
+        regs[loop_var_tok.value] = loop_reg
 
         loop_num = self._loop_count
         self._loop_count += 1
@@ -790,18 +799,12 @@ class _Compiler:
 
         self._emit_label(start_label)
 
-        # Test condition: cmp_reg = (loop_reg < end_val)
-        # Load end_val into scratch and compare.
-        self._emit(
-            IrOp.LOAD_IMM,
-            IrRegister(index=_REG_SCRATCH),
-            IrImmediate(value=end_val),
-        )
+        # Test condition: cmp_reg = (loop_reg < end_reg)
         self._emit(
             IrOp.CMP_LT,
             cmp_reg,
             loop_reg,
-            IrRegister(index=_REG_SCRATCH),
+            end_reg,
         )
         # Branch to end if condition is false (i.e., i >= end_val).
         self._emit(
@@ -1004,6 +1007,13 @@ class _Compiler:
             if val_str == "false":
                 # Boolean false → 0.
                 self._emit(IrOp.LOAD_IMM, scratch, IrImmediate(value=0))
+                return scratch
+            if val_str in self._const_values:
+                self._emit(
+                    IrOp.LOAD_IMM,
+                    scratch,
+                    IrImmediate(value=self._const_values[val_str]),
+                )
                 return scratch
             # Variable reference: return the variable's dedicated register.
             if val_str in regs:

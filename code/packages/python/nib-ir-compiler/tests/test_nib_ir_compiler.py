@@ -478,6 +478,27 @@ class TestForLoops:
         # Should have 4 labels: loop_0_start, loop_0_end, loop_1_start, loop_1_end
         assert len(set(label_names)) >= 4
 
+    def test_for_loop_runtime_upper_bound_compiles(self) -> None:
+        """Loop bounds can come from a runtime numeric variable."""
+        p = compile_source("fn main() { let n: u8 = 5; for i: u8 in 0..n { } }")
+        cmp_lt = [
+            i for i in p.instructions
+            if i.opcode == IrOp.CMP_LT
+        ]
+        assert len(cmp_lt) >= 1
+
+    def test_const_name_loads_immediate_value(self) -> None:
+        """Top-level const names are lowered as immediates when referenced."""
+        p = compile_source("const C: u4 = 3; fn main() { let x: u4 = C; }")
+        load_3 = [
+            i for i in p.instructions
+            if i.opcode == IrOp.LOAD_IMM
+            and len(i.operands) >= 2
+            and hasattr(i.operands[1], "value")
+            and i.operands[1].value == 3
+        ]
+        assert len(load_3) >= 1
+
 
 # ---------------------------------------------------------------------------
 # 9. If statements

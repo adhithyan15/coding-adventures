@@ -37,8 +37,10 @@ from type_checker_protocol.protocol import (
     TypeChecker,
     TypeErrorDiagnostic,
 )
+from type_checker_protocol.generic import GenericTypeChecker
 
 __all__ = [
+    "GenericTypeChecker",
     "TypeChecker",
     "TypeCheckResult",
     "TypeErrorDiagnostic",

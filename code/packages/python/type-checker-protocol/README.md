@@ -1,11 +1,12 @@
 # coding-adventures-type-checker-protocol
 
-Generic type-checker protocol for the coding-adventures compiler stack.
+Generic type-checker protocol and framework for the coding-adventures compiler stack.
 
 This package defines the **shared interface** that all language type checkers
-in this repository must implement.  Future languages — Nib, and others — each
-ship their own type checker, but they all speak the same protocol so the
-compiler pipeline can compose them uniformly.
+in this repository must implement, and a small reusable framework for
+building AST-driven checkers on top of that interface. Future languages —
+Nib, TypeScript, C, and others — can ship their own type checker while still
+plugging cleanly into the same compiler pipeline.
 
 ---
 
@@ -185,6 +186,18 @@ nib_checker: TypeChecker[NibNode, TypedNibNode] = LatticeTypeChecker()  # type e
 **Structural typing — no inheritance needed.**  A class automatically
 satisfies the protocol as long as it has the right `check` method.  You never
 need to write `class MyChecker(TypeChecker[...])`.
+
+### `GenericTypeChecker[AST]`
+
+For projects that want more than a bare protocol, the package also exports a
+small framework class:
+
+- owns the standard `check(ast) -> TypeCheckResult[ast]` lifecycle
+- accumulates diagnostics through a shared `_error(...)` helper
+- dispatches full AST nodes to language-specific handlers or hooks
+
+That makes it practical to build a Nib checker today and a TypeScript or C
+checker later without rewriting the common orchestration each time.
 
 ---
 
