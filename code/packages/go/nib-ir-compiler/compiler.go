@@ -105,7 +105,9 @@ func (c *Compiler) extractDeclInfo(node *parser.ASTNode) declInfo {
 				info.name = value.Value
 			}
 			if tokenTypeName(value) == "INT_LIT" || tokenTypeName(value) == "HEX_LIT" {
-				info.initValue = parseLiteral(value.Value, tokenTypeName(value))
+				if parsed, ok := parseLiteral(value.Value, tokenTypeName(value)); ok {
+					info.initValue = parsed
+				}
 			}
 		}
 	}
@@ -363,7 +365,9 @@ func (c *Compiler) compileExpr(node any, registers map[string]int) int {
 func (c *Compiler) compileTokenExpr(token lexer.Token, registers map[string]int) int {
 	typeName := tokenTypeName(token)
 	if typeName == "INT_LIT" || typeName == "HEX_LIT" {
-		c.emit(ir.OpLoadImm, ir.IrRegister{Index: regScratch}, ir.IrImmediate{Value: parseLiteral(token.Value, typeName)})
+		if parsed, ok := parseLiteral(token.Value, typeName); ok {
+			c.emit(ir.OpLoadImm, ir.IrRegister{Index: regScratch}, ir.IrImmediate{Value: parsed})
+		}
 		return regScratch
 	}
 	if token.Value == "true" || token.Value == "false" {
@@ -578,19 +582,38 @@ func tokenTypeName(token lexer.Token) string {
 	return token.Type.String()
 }
 
-func parseLiteral(value string, typeName string) int {
+func parseLiteral(value string, typeName string) (int, bool) {
+	parsed, ok := parseUintLiteral(value, typeName)
+	if !ok {
+		return 0, false
+	}
+	if converted, ok := checkedIntFromUint(parsed); ok {
+		return converted, true
+	}
+	return 0, false
+}
+
+func parseUintLiteral(value string, typeName string) (uint64, bool) {
 	if typeName == "HEX_LIT" {
-		parsed, _ := strconv.ParseUint(value[2:], 16, 16)
-		if parsed > uint64(^uint(0)>>1) {
-			return 0
+		parsed, err := strconv.ParseUint(value[2:], 16, 16)
+		if err != nil {
+			return 0, false
 		}
-		return int(parsed)
+		return parsed, true
 	}
-	parsed, _ := strconv.ParseUint(value, 10, 16)
-	if parsed > uint64(^uint(0)>>1) {
-		return 0
+	parsed, err := strconv.ParseUint(value, 10, 16)
+	if err != nil {
+		return 0, false
 	}
-	return int(parsed)
+	return parsed, true
+}
+
+func checkedIntFromUint(value uint64) (int, bool) {
+	maxInt := uint64(^uint(0) >> 1)
+	if value > maxInt {
+		return 0, false
+	}
+	return int(value), true
 }
 
 func extractConstInt(subject any) int {
@@ -598,7 +621,9 @@ func extractConstInt(subject any) int {
 	case lexer.Token:
 		typeName := tokenTypeName(value)
 		if typeName == "INT_LIT" || typeName == "HEX_LIT" {
-			return parseLiteral(value.Value, typeName)
+			if parsed, ok := parseLiteral(value.Value, typeName); ok {
+				return parsed
+			}
 		}
 	case *parser.ASTNode:
 		for _, child := range value.Children {

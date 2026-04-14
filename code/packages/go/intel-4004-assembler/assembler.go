@@ -207,6 +207,9 @@ func encodeInstruction(mnemonic string, operands []string, symbols map[string]in
 		if err != nil {
 			return nil, err
 		}
+		if immediate < 0 || immediate > 0xFF {
+			return nil, AssemblerError{Message: fmt.Sprintf("FIM immediate out of range: '%d'", immediate)}
+		}
 		return []byte{byte(0x20 | (2 * parsePair(operands[0]))), byte(immediate)}, nil
 	case "JCN":
 		if len(operands) != 2 {
@@ -292,19 +295,27 @@ func parseNumber(value string) (int, error) {
 		if err != nil {
 			return 0, AssemblerError{Message: fmt.Sprintf("Invalid numeric literal: '%s'", value)}
 		}
-		if parsed > uint64(^uint(0)>>1) {
-			return 0, AssemblerError{Message: fmt.Sprintf("Numeric literal out of range: '%s'", value)}
+		if converted, ok := checkedIntFromUint(parsed); ok {
+			return converted, nil
 		}
-		return int(parsed), nil
+		return 0, AssemblerError{Message: fmt.Sprintf("Numeric literal out of range: '%s'", value)}
 	}
 	parsed, err := strconv.ParseUint(value, 10, 16)
 	if err != nil {
 		return 0, AssemblerError{Message: fmt.Sprintf("Invalid numeric literal: '%s'", value)}
 	}
-	if parsed > uint64(^uint(0)>>1) {
-		return 0, AssemblerError{Message: fmt.Sprintf("Numeric literal out of range: '%s'", value)}
+	if converted, ok := checkedIntFromUint(parsed); ok {
+		return converted, nil
 	}
-	return int(parsed), nil
+	return 0, AssemblerError{Message: fmt.Sprintf("Numeric literal out of range: '%s'", value)}
+}
+
+func checkedIntFromUint(value uint64) (int, bool) {
+	maxInt := uint64(^uint(0) >> 1)
+	if value > maxInt {
+		return 0, false
+	}
+	return int(value), true
 }
 
 func resolveOperand(operand string, symbols map[string]int, pc int) (int, error) {

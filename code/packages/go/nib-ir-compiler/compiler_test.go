@@ -16,3 +16,9 @@ func TestCompileSourceProducesIR(t *testing.T) {
 		t.Fatal("expected instructions")
 	}
 }
+
+func TestParseLiteralRejectsOverflow(t *testing.T) {
+	if parsed, ok := parseLiteral("70000", "INT_LIT"); ok {
+		t.Fatalf("expected overflow to be rejected, got %d", parsed)
+	}
+}
