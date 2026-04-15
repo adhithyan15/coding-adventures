@@ -282,45 +282,43 @@ bool_term    = bool_factor { "or" bool_factor } ;
 
 bool_factor  = bool_secondary { "and" bool_secondary } ;
 
-bool_secondary = "not" bool_secondary
-               | bool_primary ;
+bool_secondary = "not" bool_secondary | bool_primary ;
 
 bool_primary = "true"
              | "false"
-             | variable
-             | proc_call
              | relation
+             | proc_call
+             | variable
              | LPAREN bool_expr RPAREN ;
 
-# Relational comparison between two arithmetic expressions.
-# Produces a boolean value.
+# A relation compares two arithmetic expressions.
+# Note: the operands are simple_arith (not full arith_expr) to avoid ambiguity
+# with the conditional expression form.
 relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
 
-# ---------------------------------------------------------------------------
-# Variables, calls, and designational expressions
-# ---------------------------------------------------------------------------
-
-# A variable is either a simple variable name or a subscripted array reference.
-# Examples:
-#   x
-#   A[i]
-#   matrix[i, j]
-variable     = NAME [ LBRACKET subscript_list RBRACKET ] ;
-
-subscript_list = expression { COMMA expression } ;
-
-# Procedure call used in expression context (its return value is consumed).
-# The same syntactic form as proc_stmt, but appears where expressions are allowed.
-proc_call    = NAME LPAREN actual_params RPAREN ;
-
-# Designational expression — ALGOL's computed-goto target expression language.
-# Can be:
-#   - a simple label name or integer label
-#   - a switch designator with subscripts
-#   - a conditional designational expression
+# Designational expression: used as the target of goto statements.
+# Resolves to a label — either a direct label, a switch subscript, or
+# a conditional jump (if b then label1 else label2).
 desig_expr   = "if" bool_expr "then" simple_desig "else" desig_expr
              | simple_desig ;
 
-simple_desig = label
-             | NAME LBRACKET subscript_list RBRACKET
-             | LPAREN desig_expr RPAREN ;
+simple_desig = NAME LBRACKET arith_expr RBRACKET
+             | LPAREN desig_expr RPAREN
+             | label ;
+
+# ---------------------------------------------------------------------------
+# Variables and calls
+# ---------------------------------------------------------------------------
+
+# A variable is a name, optionally subscripted for array access.
+#   x          scalar variable
+#   A[i]       one-dimensional array element
+#   B[i, j]    two-dimensional array element
+variable     = NAME [ LBRACKET subscripts RBRACKET ] ;
+
+subscripts   = arith_expr { COMMA arith_expr } ;
+
+# A procedure call with arguments. The no-argument form (proc_stmt with no parens)
+# is handled in the statement rules. Here we require parentheses — this form
+# is used when a procedure call appears inside an expression.
+proc_call    = NAME LPAREN actual_params RPAREN ;
