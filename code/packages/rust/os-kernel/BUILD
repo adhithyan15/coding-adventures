@@ -1,1 +1,1 @@
-rust_package()
+cargo test -p os-kernel -- --nocapture
