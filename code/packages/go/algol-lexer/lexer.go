@@ -61,12 +61,18 @@
 package algollexer
 
 import (
+	"fmt"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
 )
+
+var validAlgolVersions = map[string]bool{
+	"algol60": true,
+}
 
 // getGrammarPath computes the absolute path to the algol.tokens grammar file.
 //
@@ -85,11 +91,17 @@ import (
 //	    go/
 //	      algol-lexer/
 //	        lexer.go        <-- we are here (3 levels below code/)
-func getGrammarPath() string {
+func getGrammarPath(version string) (string, error) {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "algol.tokens")
+	if version == "" {
+		version = "algol60"
+	}
+	if !validAlgolVersions[version] {
+		return "", fmt.Errorf("unknown ALGOL version %q: valid versions are algol60", version)
+	}
+	return filepath.Join(root, "algol", version+".tokens"), nil
 }
 
 // CreateAlgolLexer loads the ALGOL 60 token grammar and returns a configured
@@ -101,10 +113,19 @@ func getGrammarPath() string {
 // (the keyword "comment" through the next ";") are also consumed silently.
 //
 // Returns an error if the grammar file cannot be read or parsed.
-func CreateAlgolLexer(source string) (*lexer.GrammarLexer, error) {
+func CreateAlgolLexer(source string, version ...string) (*lexer.GrammarLexer, error) {
+	effectiveVersion := ""
+	if len(version) > 0 {
+		effectiveVersion = version[0]
+	}
+	grammarPath, err := getGrammarPath(effectiveVersion)
+	if err != nil {
+		return nil, err
+	}
+
 	return StartNew[*lexer.GrammarLexer]("algollexer.CreateAlgolLexer", nil,
 		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
+			bytes, err := op.File.ReadFile(grammarPath)
 			if err != nil {
 				return rf.Fail(nil, err)
 			}
@@ -137,10 +158,16 @@ func CreateAlgolLexer(source string) (*lexer.GrammarLexer, error) {
 //	EOF("")
 //
 // Returns an error if the grammar file cannot be loaded.
-func TokenizeAlgol(source string) ([]lexer.Token, error) {
-	algolLexer, err := CreateAlgolLexer(source)
+func TokenizeAlgol(source string, version ...string) ([]lexer.Token, error) {
+	algolLexer, err := CreateAlgolLexer(source, version...)
 	if err != nil {
 		return nil, err
 	}
-	return algolLexer.Tokenize(), nil
+	tokens := algolLexer.Tokenize()
+	for i := range tokens {
+		if tokens[i].TypeName == "KEYWORD" {
+			tokens[i].TypeName = strings.ToUpper(tokens[i].Value)
+		}
+	}
+	return tokens, nil
 }
