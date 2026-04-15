@@ -1,0 +1,24 @@
+cabal-version:      2.4
+name:               power-supply
+version:            0.1.0.0
+synopsis:           Power supply mock.
+description:        Educational package implementing power supply component.
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+
+library
+    exposed-modules:  PowerSupply
+    build-depends:    base >= 4.7 && < 5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite power-supply-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    PowerSupplySpec
+    build-depends:    base >= 4.7 && < 5
+                    , power-supply
+                    , hspec == 2.*
