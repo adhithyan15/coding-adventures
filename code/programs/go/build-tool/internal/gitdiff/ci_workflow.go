@@ -58,11 +58,13 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	"java": {
 		"needs_java", "setup-java", "java-version", "java --version",
 		"temurin", "set up jdk", "set up gradle", "setup-gradle",
+		"disable long-lived gradle services",
 		"gradle_opts", "org.gradle.daemon", "org.gradle.vfs.watch",
 	},
 	"kotlin": {
 		"needs_kotlin", "setup-java", "java-version",
 		"temurin", "set up jdk", "set up gradle", "setup-gradle",
+		"disable long-lived gradle services",
 		"gradle_opts", "org.gradle.daemon", "org.gradle.vfs.watch",
 	},
 	"dotnet": {
@@ -234,6 +236,8 @@ func isToolchainScopedStructuralLine(content string) bool {
 		strings.HasPrefix(content, "shell:"),
 		strings.HasPrefix(content, "with:"),
 		strings.HasPrefix(content, "env:"),
+		strings.HasPrefix(content, "{"),
+		strings.HasPrefix(content, "}"),
 		strings.HasPrefix(content, "else"),
 		strings.HasPrefix(content, "fi"),
 		strings.HasPrefix(content, "then"),
