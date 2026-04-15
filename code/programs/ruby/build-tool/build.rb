@@ -69,7 +69,9 @@ module BuildTool
     ALL_LANGUAGES = %w[python ruby go typescript rust elixir lua perl swift haskell].freeze
 
     # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
-    ALL_TOOLCHAINS = (ALL_LANGUAGES + ["dotnet"]).freeze
+    ALL_TOOLCHAINS = %w[
+      python ruby go typescript rust elixir lua perl swift java kotlin haskell dotnet
+    ].freeze
 
     # SHARED_PREFIXES are repo paths that, when changed, still mean every
     # toolchain needs rebuilding. ci.yml is handled separately via patch

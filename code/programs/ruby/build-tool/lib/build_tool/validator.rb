@@ -15,6 +15,8 @@ module BuildTool
       "elixir",
       "lua",
       "perl",
+      "java",
+      "kotlin",
       "haskell"
     ].freeze
 

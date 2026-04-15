@@ -116,6 +116,39 @@ const TOOLCHAIN_MARKERS: &[(&str, &[&str])] = &[
         ],
     ),
     (
+        "java",
+        &[
+            "needs_java",
+            "setup-java",
+            "java-version",
+            "java --version",
+            "temurin",
+            "set up jdk",
+            "set up gradle",
+            "setup-gradle",
+            "disable long-lived gradle services",
+            "gradle_opts",
+            "org.gradle.daemon",
+            "org.gradle.vfs.watch",
+        ],
+    ),
+    (
+        "kotlin",
+        &[
+            "needs_kotlin",
+            "setup-java",
+            "java-version",
+            "temurin",
+            "set up jdk",
+            "set up gradle",
+            "setup-gradle",
+            "disable long-lived gradle services",
+            "gradle_opts",
+            "org.gradle.daemon",
+            "org.gradle.vfs.watch",
+        ],
+    ),
+    (
         "dotnet",
         &[
             "needs_dotnet",
@@ -290,6 +323,8 @@ fn is_toolchain_scoped_structural_line(content: &str) -> bool {
         "shell:",
         "with:",
         "env:",
+        "{",
+        "}",
         "else",
         "fi",
         "then",
@@ -364,6 +399,34 @@ mod tests {
 
         assert!(!change.requires_full_rebuild);
         assert_eq!(sorted_toolchains(&change.toolchains), vec!["dotnet"]);
+    }
+
+    #[test]
+    fn test_analyze_ci_workflow_patch_allows_shared_jvm_toolchain_changes() {
+        let change = analyze_ci_workflow_patch(
+            r#"
+@@ -314,0 +315,17 @@
++      - name: Set up JDK 21
++        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
++        uses: actions/setup-java@v4
++        with:
++          distribution: 'temurin'
++          java-version: '21'
++      - name: Set up Gradle
++        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
++        uses: gradle/actions/setup-gradle@v4
++      - name: Disable long-lived Gradle services on Windows CI
++        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
++        shell: bash
++        run: |
++          {
++            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
++          } >> "$GITHUB_ENV"
+"#,
+        );
+
+        assert!(!change.requires_full_rebuild);
+        assert_eq!(sorted_toolchains(&change.toolchains), vec!["java", "kotlin"]);
     }
 
     #[test]
