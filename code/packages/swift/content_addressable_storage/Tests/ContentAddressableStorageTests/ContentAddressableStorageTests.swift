@@ -20,7 +20,7 @@
 
 import XCTest
 import Foundation
-@testable import Cas
+@testable import ContentAddressableStorage
 
 // ============================================================================
 // MARK: - Helpers
