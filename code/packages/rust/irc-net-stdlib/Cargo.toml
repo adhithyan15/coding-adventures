@@ -1,0 +1,14 @@
+[package]
+name = "irc-net-stdlib"
+version = "0.1.0"
+edition = "2021"
+description = "stdlib TCP event loop for IRC: one thread per connection"
+authors = ["coding-adventures"]
+license = "MIT"
+
+[dependencies]
+irc-proto = { path = "../irc-proto" }
+irc-framing = { path = "../irc-framing" }
+irc-server = { path = "../irc-server" }
+
+[dev-dependencies]

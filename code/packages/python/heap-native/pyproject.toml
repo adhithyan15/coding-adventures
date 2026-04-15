@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coding-adventures-heap-native"
+version = "0.1.0"
+description = "Rust-backed heap for Python via python-bridge (zero deps)"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

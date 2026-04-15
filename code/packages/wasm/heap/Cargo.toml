@@ -1,0 +1,15 @@
+[workspace]
+
+[package]
+name = "heap-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for Rust min-heaps and max-heaps via wasm-bindgen"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+heap = { path = "../../rust/heap" }
+wasm-bindgen = "0.2"

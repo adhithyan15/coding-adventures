@@ -1,0 +1,18 @@
+[package]
+name = "paint-vm-gdi"
+version = "0.1.0"
+edition = "2021"
+description = "GDI renderer for the paint-instructions scene model (P2D07)"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+
+[dependencies.windows]
+version = "0.58"
+features = [
+    "Win32_Graphics_Gdi",
+    "Win32_Foundation",
+]
+
+[dev-dependencies]
+paint-codec-png = { path = "../paint-codec-png" }

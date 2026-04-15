@@ -1,0 +1,5 @@
+uv venv --quiet --clear
+uv pip install -e ../md5 -e ../sha1 -e ../sha256 -e ../sha512 -e ../hmac --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov --quiet
+uv run --no-project python -m pytest tests\ -v

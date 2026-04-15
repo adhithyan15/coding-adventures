@@ -21,7 +21,7 @@ use branch_predictor::{
     AlwaysNotTakenPredictor, AlwaysTakenPredictor, BackwardTakenForwardNotTaken, BranchPredictor,
     OneBitPredictor, TwoBitPredictor, TwoBitState,
 };
-use cache::CacheConfig;
+use cpu_cache::CacheConfig;
 use cpu_pipeline::PipelineConfig;
 
 // =========================================================================

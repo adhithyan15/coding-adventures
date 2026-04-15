@@ -98,6 +98,27 @@ func TestInferLanguageHaskell(t *testing.T) {
 	}
 }
 
+func TestInferLanguageWasm(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/wasm/graph")
+	if lang != "wasm" {
+		t.Fatalf("expected wasm, got %s", lang)
+	}
+}
+
+func TestInferLanguageCSharp(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/csharp/graph")
+	if lang != "csharp" {
+		t.Fatalf("expected csharp, got %s", lang)
+	}
+}
+
+func TestInferLanguageFSharp(t *testing.T) {
+	lang := inferLanguage("/repo/code/packages/fsharp/graph")
+	if lang != "fsharp" {
+		t.Fatalf("expected fsharp, got %s", lang)
+	}
+}
+
 func TestInferLanguageUnknown(t *testing.T) {
 	lang := inferLanguage("/repo/code/packages/zig/something")
 	if lang != "unknown" {

@@ -55,10 +55,16 @@ Package Structure
 from brainfuck.opcodes import Op
 from brainfuck.translator import translate
 from brainfuck.vm import create_brainfuck_vm, execute_brainfuck
+from brainfuck.lexer import tokenize_brainfuck, create_brainfuck_lexer
+from brainfuck.parser import parse_brainfuck, create_brainfuck_parser
 
 __all__ = [
     "Op",
     "translate",
     "create_brainfuck_vm",
     "execute_brainfuck",
+    "tokenize_brainfuck",
+    "create_brainfuck_lexer",
+    "parse_brainfuck",
+    "create_brainfuck_parser",
 ]

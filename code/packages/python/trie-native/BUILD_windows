@@ -1,0 +1,5 @@
+python -m venv .venv --clear
+.venv\Scripts\pip install pytest --quiet
+cargo build --release
+if exist target\release\trie_native.dll copy target\release\trie_native.dll src\trie_native\trie_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v

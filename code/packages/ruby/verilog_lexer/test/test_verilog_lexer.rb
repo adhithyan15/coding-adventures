@@ -456,4 +456,20 @@ class TestVerilogLexer < Minitest::Test
     types = tokens.map(&:type)
     assert_equal [TT::KEYWORD, TT::NAME, TT::SEMICOLON, TT::EOF], types
   end
+
+  def test_default_version_matches_explicit_2005
+    default_tokens = tokenize("module m; endmodule")
+    explicit_tokens = CodingAdventures::VerilogLexer.tokenize(
+      "module m; endmodule",
+      version: "2005"
+    )
+    assert_equal default_tokens.map(&:value), explicit_tokens.map(&:value)
+  end
+
+  def test_rejects_unknown_version
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::VerilogLexer.tokenize("module m; endmodule", version: "2099")
+    end
+    assert_match(/Unknown Verilog version/, error.message)
+  end
 end

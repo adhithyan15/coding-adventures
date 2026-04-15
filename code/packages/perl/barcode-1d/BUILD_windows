@@ -1,0 +1,1 @@
+echo Skipping perl/barcode-1d on Windows -- prerequisite refs: ..\barcode-layout-1d ..\codabar ..\code128 ..\code39 ..\ean-13 ..\itf ..\paint-instructions ..\paint_codec_png_native ..\paint_vm_metal_native ..\pixel-container ..\upc-a

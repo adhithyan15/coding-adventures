@@ -1,193 +1,51 @@
-//! # VHDL Parser -- parsing VHDL (IEEE 1076-2008) source code into an AST.
-//!
-//! This crate is the second half of the VHDL front-end pipeline. Where the
-//! `vhdl-lexer` crate breaks source text into tokens, this crate arranges
-//! those tokens into a tree that reflects the **structure** of the hardware
-//! description -- an Abstract Syntax Tree (AST).
-//!
-//! # The parsing pipeline
-//!
-//! Parsing VHDL requires four cooperating components:
-//!
-//! ```text
-//! Source code  ("entity empty is end entity empty;")
-//!       |
-//!       v
-//! vhdl-lexer           -> Vec<Token>
-//!       |                [KEYWORD("entity"), NAME("empty"),
-//!       |                 KEYWORD("is"), KEYWORD("end"),
-//!       |                 KEYWORD("entity"), NAME("empty"),
-//!       |                 SEMICOLON(";"), EOF]
-//!       v
-//! vhdl.grammar         -> ParserGrammar (rules like "design_file = ...")
-//!       |
-//!       v
-//! GrammarParser        -> GrammarASTNode tree
-//!       |
-//!       |                design_file
-//!       |                  +-- design_unit
-//!       |                        +-- library_unit
-//!       |                              +-- entity_declaration
-//!       |                                    +-- KEYWORD("entity")
-//!       |                                    +-- NAME("empty")
-//!       |                                    +-- KEYWORD("is")
-//!       |                                    +-- KEYWORD("end")
-//!       |                                    +-- KEYWORD("entity")
-//!       |                                    +-- NAME("empty")
-//!       |                                    +-- SEMICOLON(";")
-//!       v
-//! [future stages: synthesis, simulation]
-//! ```
-//!
-//! # VHDL vs Verilog
-//!
-//! VHDL takes a fundamentally different approach than Verilog. Where Verilog
-//! has a single `module` construct that defines both interface and implementation,
-//! VHDL separates them:
-//!
-//! - **Entity** = interface (ports, generics) -- like a pin diagram on a chip
-//! - **Architecture** = implementation -- the internal logic
-//!
-//! This separation allows multiple architectures for the same entity (e.g.,
-//! behavioral vs structural), which is useful for simulation vs synthesis.
-//!
-//! This crate is the thin glue layer that wires these components together.
-//! It knows where to find the `vhdl.grammar` file and provides two public
-//! entry points.
+//! VHDL parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
-use coding_adventures_vhdl_lexer::tokenize_vhdl;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `vhdl.grammar` file.
-///
-/// Uses the same strategy as the vhdl-lexer crate:
-/// `env!("CARGO_MANIFEST_DIR")` gives us the compile-time path to this
-/// crate's directory, and we navigate up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     vhdl.grammar          <-- target file
-///   packages/
-///     rust/
-///       vhdl-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/vhdl.grammar")
+pub const DEFAULT_VERSION: &str = coding_adventures_vhdl_lexer::DEFAULT_VERSION;
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown VHDL version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
 }
 
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarParser` configured for VHDL source code.
-///
-/// This function performs two major steps:
-///
-/// 1. **Tokenization** -- uses `tokenize_vhdl` from the vhdl-lexer crate
-///    to break the source into tokens. The lexer normalizes all identifiers
-///    and keywords to lowercase (VHDL is case-insensitive).
-///
-/// 2. **Grammar loading** -- reads and parses the `vhdl.grammar` file,
-///    which defines rules for entities, architectures, processes, signal
-///    assignments, if/elsif/else, case/when, expressions, and more.
-///
-/// The returned `GrammarParser` is ready to call `.parse()` on.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `vhdl.grammar` file cannot be read or parsed.
-/// - The source code fails tokenization (unexpected character).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_vhdl_parser::create_vhdl_parser;
-///
-/// let mut parser = create_vhdl_parser("entity top is end entity top;");
-/// let ast = parser.parse().expect("parse failed");
-/// println!("{:?}", ast.rule_name);
-/// ```
 pub fn create_vhdl_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source using the vhdl-lexer.
-    //
-    // The lexer reads vhdl.tokens and produces tokens like:
-    //   KEYWORD("entity"), NAME("empty"), KEYWORD("is"),
-    //   KEYWORD("end"), KEYWORD("entity"), NAME("empty"),
-    //   SEMICOLON(";"), EOF
-    //
-    // All identifiers and keywords are normalized to lowercase because
-    // VHDL is case-insensitive. This means downstream code only needs
-    // to match against lowercase strings.
-    let tokens = tokenize_vhdl(source);
-
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The vhdl.grammar file defines the syntactic structure of VHDL in
-    // EBNF notation. It covers everything from design_file (the root)
-    // through entities, architectures, processes, and the full
-    // expression precedence tower (logical -> relational -> shift ->
-    // adding -> multiplying -> unary -> power -> primary).
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read vhdl.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    //
-    // The ParserGrammar contains rule definitions like:
-    //   design_file = { design_unit }
-    //   entity_declaration = "entity" NAME "is" ...
-    //   expression = logical_expr
-    //   etc.
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse vhdl.grammar: {e}"));
-
-    // Step 4: Create the parser, ready to produce an AST.
-    GrammarParser::new(tokens, grammar)
+    create_vhdl_parser_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL parser grammar missing default version")
 }
 
-/// Parse VHDL source code into an AST.
-///
-/// This is the most convenient entry point -- it handles tokenization,
-/// grammar loading, parser creation, and parsing in one call.
-///
-/// The returned `GrammarASTNode` has `rule_name` set to `"design_file"` (the
-/// start symbol of the VHDL grammar) with children corresponding to the
-/// design units in the source.
-///
-/// # Panics
-///
-/// Panics if tokenization fails, the grammar file is missing/invalid,
-/// or the source code has a syntax error.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_vhdl_parser::parse_vhdl;
-///
-/// let ast = parse_vhdl("entity top is end entity top;");
-/// assert_eq!(ast.rule_name, "design_file");
-/// ```
+pub fn create_vhdl_parser_with_version(source: &str, version: &str) -> Result<GrammarParser, String> {
+    let version = validate_version(version)?;
+    let tokens = coding_adventures_vhdl_lexer::tokenize_vhdl_with_version(source, version)?;
+    let grammar = _grammar::parser_grammar(version)
+        .expect("compiled VHDL parser grammar missing supported version");
+    Ok(GrammarParser::new(tokens, grammar))
+}
+
 pub fn parse_vhdl(source: &str) -> GrammarASTNode {
-    let mut vhdl_parser = create_vhdl_parser(source);
-
-    vhdl_parser
-        .parse()
-        .unwrap_or_else(|e| panic!("VHDL parse failed: {e}"))
+    parse_vhdl_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL parser grammar missing default version")
 }
 
-// ===========================================================================
-// Tests
-// ===========================================================================
+pub fn parse_vhdl_with_version(source: &str, version: &str) -> Result<GrammarASTNode, String> {
+    let mut parser = create_vhdl_parser_with_version(source, version)?;
+    parser
+        .parse()
+        .map_err(|e| format!("VHDL parse failed: {e}"))
+}
 
 #[cfg(test)]
 mod tests {
@@ -701,4 +559,20 @@ entity c is end entity c;";
             "Expected entity_declaration rule in AST"
         );
     }
+
+    #[test]
+    fn test_default_version_matches_explicit_2008() {
+        let default_ast = parse_vhdl("entity empty is end entity empty;");
+        let explicit_ast =
+            parse_vhdl_with_version("entity empty is end entity empty;", "2008").unwrap();
+        assert_eq!(default_ast.rule_name, explicit_ast.rule_name);
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = parse_vhdl_with_version("entity empty is end entity empty;", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown VHDL version"));
+    }
 }
+

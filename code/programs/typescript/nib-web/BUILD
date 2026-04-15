@@ -1,0 +1,25 @@
+cd ../../../packages/typescript/directed-graph && npm ci --quiet
+cd ../../../packages/typescript/grammar-tools && npm ci --quiet
+cd ../../../packages/typescript/lexer && npm ci --quiet
+cd ../../../packages/typescript/state-machine && npm ci --quiet
+cd ../../../packages/typescript/parser && npm ci --quiet
+cd ../../../packages/typescript/type-checker-protocol && npm ci --quiet
+cd ../../../packages/typescript/nib-lexer && npm ci --quiet
+cd ../../../packages/typescript/lattice-lexer && npm ci --quiet
+cd ../../../packages/typescript/lattice-parser && npm ci --quiet
+cd ../../../packages/typescript/lattice-ast-to-css && npm ci --quiet
+cd ../../../packages/typescript/lattice-transpiler && npm ci --quiet
+cd ../../../packages/typescript/vite-plugin-lattice && npm ci --quiet
+cd ../../../packages/typescript/compiler-ir && npm ci --quiet
+cd ../../../packages/typescript/compiler-source-map && npm ci --quiet
+cd ../../../packages/typescript/nib-parser && npm ci --quiet
+cd ../../../packages/typescript/nib-type-checker && npm ci --quiet
+cd ../../../packages/typescript/nib-ir-compiler && npm ci --quiet
+cd ../../../packages/typescript/ir-optimizer && npm ci --quiet
+cd ../../../packages/typescript/intel-4004-ir-validator && npm ci --quiet
+cd ../../../packages/typescript/ir-to-intel-4004-compiler && npm ci --quiet
+cd ../../../packages/typescript/intel-4004-assembler && npm ci --quiet
+cd ../../../packages/typescript/intel-4004-packager && npm ci --quiet
+cd ../../../packages/typescript/simulator-protocol && npm ci --quiet
+cd ../../../packages/typescript/intel4004-simulator && npm ci --quiet
+cd ../../../programs/typescript/nib-web && npm ci --quiet && npm run build && npm test

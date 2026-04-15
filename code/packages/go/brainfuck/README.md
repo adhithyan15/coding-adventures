@@ -4,33 +4,66 @@ A complete Brainfuck interpreter implemented in Go, built on top of the `virtual
 
 ## Where It Fits in the Stack
 
-This package is Layer 6 in the coding-adventures computing stack:
+This package spans Layers 2–6 in the coding-adventures computing stack:
 
 ```
 Layer 7: Programs (build tool, etc.)
 Layer 6: Language Implementations ← brainfuck (this package)
 Layer 5: Virtual Machine           ← virtual-machine (types reused here)
 Layer 4: Compiler
-Layer 3: Parser / AST
-Layer 2: Lexer / Tokens
+Layer 3: Parser / AST              ← brainfuck (this package)
+Layer 2: Lexer / Tokens            ← brainfuck (this package)
 Layer 1: Logic Gates
 ```
 
-The Brainfuck interpreter reuses the virtual-machine package's types (`CodeObject`, `Instruction`, `VMTrace`, `OpCode`) but implements its own execution loop, since Brainfuck's tape-based memory model is fundamentally different from the stack-based `VirtualMachine`.
+The Brainfuck interpreter reuses the virtual-machine package's types (`CodeObject`, `Instruction`, `VMTrace`, `OpCode`) but implements its own execution loop, since Brainfuck's tape-based memory model is fundamentally different from the stack-based `VirtualMachine`. It also ships its own grammar-driven lexer and parser so the full tokenize → parse → translate → execute pipeline is available.
 
 ## Package Structure
 
-| File               | Purpose                                      |
-|--------------------|----------------------------------------------|
-| `opcodes.go`       | Opcode constants and character-to-opcode map  |
-| `translator.go`    | Source code to bytecode translation            |
-| `handlers.go`      | BrainfuckVM struct and execution logic         |
-| `vm.go`            | BrainfuckResult, factory, convenience executor |
-| `translator_test.go` | Translator unit tests                       |
-| `handlers_test.go` | Individual opcode handler tests                |
-| `vm_test.go`       | End-to-end integration tests                   |
+| File                  | Purpose                                      |
+|-----------------------|----------------------------------------------|
+| `opcodes.go`          | Opcode constants and character-to-opcode map  |
+| `lexer.go`            | Grammar-driven tokenizer (`Tokenize`)         |
+| `parser.go`           | Grammar-driven parser (`Parse`), returns AST  |
+| `translator.go`       | Source code to bytecode translation            |
+| `handlers.go`         | BrainfuckVM struct and execution logic         |
+| `vm.go`               | BrainfuckResult, factory, convenience executor |
+| `_tokens_grammar.go`  | Embedded brainfuck.tokens grammar file        |
+| `_parser_grammar.go`  | Embedded brainfuck.grammar grammar file       |
+| `lexer_test.go`       | Lexer unit tests                              |
+| `parser_test.go`      | Parser unit tests                             |
+| `translator_test.go`  | Translator unit tests                         |
+| `handlers_test.go`    | Individual opcode handler tests                |
+| `vm_test.go`          | End-to-end integration tests                   |
 
 ## Usage
+
+### Lexer
+
+```go
+import "github.com/adhithyan15/coding-adventures/code/packages/go/brainfuck"
+
+tokens := brainfuck.Tokenize("++[>+<-].")
+for _, tok := range tokens {
+    fmt.Printf("%s %q at %d:%d\n", tok.Type, tok.Value, tok.Line, tok.Column)
+}
+// COMMAND "+" at 1:1
+// COMMAND "+" at 1:2
+// LOOP_START "[" at 1:3
+// ...
+```
+
+### Parser
+
+```go
+ast := brainfuck.Parse("++[>+<-].")
+// Returns an *ASTNode with Type "program" and Children:
+//   instruction → command "+"
+//   instruction → command "+"
+//   loop → [ instruction → command ">" , ... ]
+//   instruction → command "."
+fmt.Println(ast.Type) // "program"
+```
 
 ### Quick Execution
 

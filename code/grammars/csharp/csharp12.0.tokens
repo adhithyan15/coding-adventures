@@ -1,0 +1,383 @@
+# C# 12.0 (2023) — Lexical Grammar
+# @version 1
+# @csharp_version 12.0
+#
+# .NET 8.0 (LTS) — November 2023
+#
+# C# 12.0 ships with .NET 8.0, which is a LONG-TERM SUPPORT release (supported
+# for three years, until November 2026). This makes .NET 8.0 the target for
+# enterprise adoption and long-term stability. C# 12.0 is thus the "stable"
+# version for many production systems.
+#
+# C# 12.0 focuses on USABILITY IMPROVEMENTS and filling gaps in the language:
+#
+#   1. PRIMARY CONSTRUCTORS FOR ALL TYPES: Record classes (C# 9.0) and record
+#      structs (C# 10.0) had primary constructors. C# 12.0 extends this to
+#      ALL classes and structs. `class Service(ILogger logger)` is now valid.
+#
+#   2. COLLECTION EXPRESSIONS: A unified syntax for creating collections.
+#      `[1, 2, 3]` works for arrays, List<T>, Span<T>, ImmutableArray<T>,
+#      and any type with the [CollectionBuilder] attribute. The spread
+#      operator `..` inserts elements from another collection inline.
+#
+#   3. INLINE ARRAYS: `[InlineArray(10)] struct Buffer { }` allocates a
+#      fixed-size array inline in the struct (no heap). Like C's fixed-size
+#      arrays in structs, but type-safe.
+#
+#   4. DEFAULT LAMBDA PARAMETERS: `(int x, int y = 0) => x + y` — lambdas
+#      can now have optional parameters with default values.
+#
+#   5. `ref readonly` PARAMETERS: `void M(ref readonly T value)` — pass by
+#      reference but callee cannot modify. Cleaner than `in` for some use cases.
+#
+#   6. ALIAS ANY TYPE: `using MyPoint = (int X, int Y)` — using aliases can
+#      now refer to tuples, pointers, arrays, and nullable types (not just
+#      named types as before).
+#
+#   7. EXPERIMENTAL ATTRIBUTE: Framework attribute to mark experimental APIs.
+#      No grammar change — just attribute usage.
+#
+# What C# 12.0 does NOT have (planned for future versions):
+#   - Discriminated unions (under design)
+#   - Extensions (improved extension methods — design in progress)
+#   - Roles and shapes (C# type classes — research phase)
+#
+# IMPORTANT LEXICAL NOTE for collection expressions:
+#   Collection expressions [1, 2, 3] reuse EXISTING tokens: LBRACKET,
+#   NUMBER, COMMA, RBRACKET. The grammar context distinguishes them from
+#   array access and list patterns. No new tokens are needed for collection
+#   expressions themselves.
+#
+# This tokens file is COMPLETE and SELF-CONTAINED. It includes all tokens
+# from C# 1.0 through C# 11.0, plus any additions in C# 12.0.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character tokens before single-char.
+# Raw string tokens must precede regular STRING tokens.
+
+# ============================================================================
+# Identifiers
+# ============================================================================
+#
+# Unchanged from C# 1.0. Context keywords (`required`, `scoped`, `file`,
+# `primary` etc.) are all lexed as NAME and given special meaning only in
+# specific grammatical positions.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ============================================================================
+# Numeric Literals
+# ============================================================================
+#
+# No changes in C# 12.0. Complete set from C# 7.0–7.2:
+#   Binary:     0b1010_1100  (C# 7.0)
+#   Hex:        0xFF_FF      (C# 7.0, leading _ since 7.2)
+#   Separators: 1_000_000    (C# 7.0)
+#
+# Suffixes: L=long, U=uint, UL=ulong, F=float, D=double, M=decimal.
+# All variants alias to NUMBER for the parser.
+
+BINARY_ULONG     = /0[bB]_?[01][01_]*([uU][lL]|[lL][uU])/ -> NUMBER
+BINARY_LONG      = /0[bB]_?[01][01_]*[lL]/ -> NUMBER
+BINARY_UINT      = /0[bB]_?[01][01_]*[uU]/ -> NUMBER
+BINARY_NUMBER    = /0[bB]_?[01][01_]*/ -> NUMBER
+HEX_ULONG        = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[lL]/ -> NUMBER
+HEX_UINT         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[uU]/ -> NUMBER
+HEX_NUMBER       = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*/ -> NUMBER
+DECIMAL_FLOAT    = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER       = /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER     = /[0-9][0-9_]*([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER      = /[0-9][0-9_]*[lL]/ -> NUMBER
+UINT_NUMBER      = /[0-9][0-9_]*[uU]/ -> NUMBER
+FLOAT_SUFFIX     = /[0-9][0-9_]*[fFdDmM]/ -> NUMBER
+INT_NUMBER       = /[0-9][0-9_]*/ -> NUMBER
+
+# ============================================================================
+# String and Character Literals
+# ============================================================================
+#
+# No new string token forms in C# 12.0. The complete set includes raw string
+# literals added in C# 11.0.
+#
+# Complete string literal catalog for C# 12.0:
+#
+#   1. Regular strings:             "hello\nworld"       C# 1.0
+#   2. Verbatim strings:            @"C:\Users\"         C# 1.0
+#   3. Character literals:          'a', '\n', '\u0041'  C# 1.0
+#   4. Interpolated strings:        $"Hi {name}"         C# 6.0
+#   5. Interpolated verbatim:       $@"Hi {name}"        C# 6.0 ($@ or @$)
+#   6. Raw string literals:         """content"""        C# 11.0
+#   7. Raw interpolated strings:    $"""Hello, {name}""" C# 11.0
+#   8. Double-dollar raw strings:   $$"""{{expr}}"""     C# 11.0
+#
+# The RAW STRING tokens must come before regular STRING to avoid the lexer
+# matching the first two quotes of """ as a regular empty string "".
+#
+# RAW STRING RECAP (C# 11.0 addition):
+#   - Delimited by three or more double-quote characters
+#   - Opening and closing delimiter must have the same quote count
+#   - No escape sequences inside — content is completely literal
+#   - Perfect for embedding JSON, XML, SQL, regex without escaping
+#   - Multiline: closing delimiter column sets the indentation trim
+#   - $""" ... {expr} ... """ — one $ means {expr} is interpolation
+#   - $$""" ... {{expr}} ... """ — two $$s mean {{expr}} is interpolation
+#   - Scales: $$$""" {{{expr}}} """ for triple-brace interpolation
+
+RAW_INTERPOLATED_STRING  = /\${1,}"""[\s\S]*?"""+/
+RAW_STRING               = /"""[\s\S]*?"""+/
+STRING                   = /"([^"\\]|\\.)*"/
+VERBATIM_STRING          = /@"([^"]|"")*"/
+INTERPOLATED_STRING      = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
+INTERPOLATED_VERBATIM    = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
+CHAR                     = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character Operators
+# ============================================================================
+#
+# No new operator tokens in C# 12.0. The complete set through C# 11.0:
+#
+#   C# 1.0:  ==, !=, <=, >=, &&, ||, ++, --, +=, -=, *=, /=, %=, &=, |=,
+#             ^=, <<=, >>=, ::, ->
+#   C# 2.0:  ?? (null coalescing)
+#   C# 3.0:  => (lambda arrow)
+#   C# 6.0:  ?. (null-conditional member access), ?[ (null-conditional index)
+#   C# 8.0:  .. (range), ??= (null-coalescing assignment)
+#   C# 11.0: >>> (unsigned right shift), >>>= (unsigned right shift assignment)
+#
+# Ordering is critical — longer tokens must appear before shorter ones:
+#   >>>= before >>= before >> before >
+#   ??=  before ??
+#   ..   before .
+
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+QUESTION_QUESTION_EQUALS    = "??="
+NULL_CONDITIONAL_DOT        = "?."
+NULL_CONDITIONAL_BRACKET    = "?["
+NULL_COALESCING             = "??"
+LAMBDA_ARROW                = "=>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+DOT_DOT                     = ".."
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+COLON_COLON                 = "::"
+ARROW                       = "->"
+
+# ============================================================================
+# Single-character Operators
+# ============================================================================
+#
+# Unchanged from C# 1.0. Context-dependent meanings:
+#   CARET:   XOR (binary) or "from end" index prefix (C# 8.0)
+#   BANG:    logical NOT (prefix) or null-forgiving (postfix, C# 8.0)
+#   LBRACKET in a value context: start of collection expression (C# 12.0)
+#   DOT_DOT in collection expression: spread element
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Unchanged since C# 1.0. In C# 12.0, LBRACKET in expression context now has
+# a third meaning (beyond array access and list patterns): collection expression.
+# The grammar context distinguishes these uses; no new token is needed.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 12.0 has the same 79 reserved keywords as C# 5.0+. New C# 12.0 features
+# use existing tokens in new positions rather than introducing new keywords.
+#
+# CUMULATIVE CONTEXT KEYWORDS (not reserved — can still be used as names):
+#
+#   C# 2.0:  partial, yield, where (generic constraints)
+#   C# 3.0:  var, from, select, where (LINQ), group, into, orderby,
+#             ascending, descending, join, on, equals, let, by
+#   C# 4.0:  dynamic
+#   C# 5.0:  async, await (contextual in practice)
+#   C# 6.0:  nameof, when (exception filters), value (in setters)
+#   C# 7.0:  _ (discard)
+#   C# 9.0:  init (init-only setter), record, nint, nuint, with
+#   C# 10.0: global (global using), file (file-scoped namespace after parsing)
+#   C# 11.0: required, scoped, file (file access modifier), checked (in operator)
+#
+# Key point: NONE of these are reserved. You could (theoretically) name a
+# variable `required` or `scoped` and C# would still compile your code. The
+# compiler resolves the meaning from context. This is different from Java and
+# Python, where all language-defined words are reserved.
+#
+# The 79 reserved keywords (stable since C# 5.0 added async/await):
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip Patterns (Whitespace and Comments)
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor Directives
+# ============================================================================
+#
+# No new preprocessor directives in C# 12.0. Complete set through C# 8.0:
+
+PP_NULLABLE  = /#\s*nullable\b[^\n]*/
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error Recovery Tokens
+# ============================================================================
+
+errors:
+  BAD_RAW_STRING           = /"""[^"]*$/
+  BAD_STRING               = /"[^"]*$/
+  BAD_CHAR                 = /'[^']*$/
+  BAD_VERBATIM_STRING      = /@"([^"]|"")*$/
+  BAD_INTERPOLATED_STRING  = /\$"([^"\\{]|\\.)*$/

@@ -1,0 +1,419 @@
+# C# 5.0 (2012) — Lexical Grammar
+# @version 1
+# @csharp_version 5.0
+#
+# .NET Framework 4.5 — August 2012
+#
+# C# 5.0 shipped with Visual Studio 2012 and .NET Framework 4.5. This
+# release is defined by a single, transformative feature: async/await.
+#
+# Anders Hejlsberg and the C# team introduced async/await to solve the
+# "callback hell" problem in asynchronous programming. Before async/await,
+# writing non-blocking code required chaining callbacks, which produced
+# deeply nested, hard-to-read code. Async/await lets you write asynchronous
+# code that LOOKS synchronous:
+#
+#   // Before (callback-based):
+#   void LoadData() {
+#       client.DownloadStringAsync(url, result => {
+#           var parsed = Parse(result, data => {
+#               Display(data);
+#           });
+#       });
+#   }
+#
+#   // After (async/await):
+#   async Task LoadDataAsync() {
+#       string result = await client.DownloadStringAsync(url);
+#       var parsed = await Parse(result);
+#       Display(parsed);
+#   }
+#
+# This was revolutionary. JavaScript later adopted the same async/await
+# syntax (ES2017), as did Python (3.5), Rust, Kotlin, Swift, and Dart.
+# C# was the first mainstream language to get it right.
+#
+# The other C# 5.0 feature is caller info attributes:
+#   - [CallerMemberName] — name of the calling method
+#   - [CallerFilePath]   — source file path of the caller
+#   - [CallerLineNumber] — line number in the source file
+#
+# These are attribute-based and require NO lexical or grammar changes.
+# They are resolved at compile time by the compiler injecting values.
+#
+# Accumulated features through C# 5.0:
+#   C# 1.0: Properties, delegates, events, structs, operator overloading,
+#           indexers, attributes, preprocessor, unsafe code, namespaces,
+#           foreach, goto, unsigned types, decimal, verbatim strings
+#   C# 2.0: Generics, nullable types (T?), null coalescing (??),
+#           iterators (yield return/break), anonymous methods (delegate {}),
+#           partial types, static classes, namespace alias (::)
+#   C# 3.0: Lambda expressions (=>), LINQ query syntax, var keyword,
+#           extension methods, anonymous types, object/collection initializers,
+#           expression trees, auto-properties, partial methods
+#   C# 4.0: dynamic keyword, named arguments, optional parameters,
+#           generic covariance/contravariance (in/out on type params)
+#   C# 5.0: async/await, caller info attributes
+#
+# What C# 5.0 does NOT have (added in later versions):
+#   - No string interpolation $"" (added in C# 6.0, 2015)
+#   - No null-conditional ?. (added in C# 6.0)
+#   - No expression-bodied members (added in C# 6.0)
+#   - No nameof operator (added in C# 6.0)
+#   - No exception filters (added in C# 6.0)
+#   - No pattern matching (added in C# 7.0, 2017)
+#   - No tuples (int x, int y) (added in C# 7.0)
+#   - No local functions (added in C# 7.0)
+#   - No out variables (added in C# 7.0)
+#   - No binary literals 0b... (added in C# 7.0)
+#   - No digit separators 1_000 (added in C# 7.0)
+#   - No records (added in C# 9.0, 2020)
+#   - No raw string literals """ (added in C# 11.0, 2022)
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in C# can contain letters, digits, and underscores. The
+# dollar sign ($) is NOT allowed in identifiers (unlike Java/JavaScript).
+#
+# C# also has "verbatim identifiers": prefixing any identifier (including
+# keywords) with @ makes it a valid identifier. This exists for interop
+# with other .NET languages that may use C# keywords as names:
+#
+#   int @class = 5;       // legal — @class is an identifier, not the keyword
+#   int @async = 10;      // legal — even contextual keywords can be escaped
+#
+# The @ prefix is NOT part of the identifier's name — it's just an escape
+# mechanism.
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 5.0 supports the same numeric literal forms as C# 1.0:
+#
+#   1. Hex integers:      0x1A, 0XFF, 0x1AL, 0x1AUL
+#   2. Decimal integers:  42, 42L, 42U, 42UL, 42LU
+#   3. Floating point:    3.14, 3.14f, 3.14d, 3.14m, 1e10, 1e10f
+#
+# Suffixes:
+#   U/u — unsigned (uint or ulong depending on value)
+#   L/l — long (long or ulong depending on U suffix)
+#   UL/ul/LU/lu — unsigned long (always ulong)
+#   F/f — float (32-bit IEEE 754)
+#   D/d — double (64-bit IEEE 754)
+#   M/m — decimal (128-bit decimal floating-point)
+#
+# IMPORTANT: There are still NO binary literals (0b...) and NO digit
+# separators (_). Those arrive in C# 7.0 (2017).
+#
+# IMPORTANT: There are still NO octal literals (unlike Java and C).
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+HEX_ULONG      = /0[xX][0-9a-fA-F]+([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG       = /0[xX][0-9a-fA-F]+[lL]/ -> NUMBER
+HEX_UINT       = /0[xX][0-9a-fA-F]+[uU]/ -> NUMBER
+HEX_NUMBER     = /0[xX][0-9a-fA-F]+/ -> NUMBER
+DECIMAL_FLOAT  = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER     = /[0-9]+[eE][+-]?[0-9]+[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER   = /[0-9]+([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER    = /[0-9]+[lL]/ -> NUMBER
+UINT_NUMBER    = /[0-9]+[uU]/ -> NUMBER
+FLOAT_SUFFIX   = /[0-9]+[fFdDmM]/ -> NUMBER
+INT_NUMBER     = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# 5.0 has the same three string-like literal forms as C# 1.0:
+#
+#   1. Regular strings:  "hello\nworld"
+#   2. Verbatim strings: @"C:\Users\file.txt"
+#   3. Character literals: 'a', '\n', '\u0041'
+#
+# String interpolation ($"...{expr}...") does NOT exist yet — that is C# 6.0.
+
+STRING         = /"([^"\\]|\\.)*"/
+VERBATIM_STRING = /@"([^"]|"")*"/
+CHAR           = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 5.0 adds NO new operators compared to C# 1.0. The operator set
+# has grown since 1.0 through previous versions:
+#
+#   C# 2.0 added: ?? (null coalescing), :: (namespace alias qualifier)
+#   C# 3.0 added: => (lambda arrow / fat arrow)
+#
+# The => token is particularly important: it transforms from C# 1.0's
+# arrow (->) which was only for unsafe pointer member access, to C# 3.0's
+# fat arrow (=>) for lambda expressions. Both coexist:
+#
+#   x => x * 2             // lambda expression (C# 3.0+)
+#   ptr->field             // unsafe pointer member access (C# 1.0+)
+#
+# Multi-character operators must come before single-character operators
+# so that "==" is matched before "=" and "=>" is matched before "=".
+
+NULL_COALESCE        = "??"
+LEFT_SHIFT_EQUALS    = "<<="
+RIGHT_SHIFT_EQUALS   = ">>="
+LAMBDA               = "=>"
+EQUALS_EQUALS        = "=="
+NOT_EQUALS           = "!="
+LESS_EQUALS          = "<="
+GREATER_EQUALS       = ">="
+AND_AND              = "&&"
+OR_OR                = "||"
+PLUS_PLUS            = "++"
+MINUS_MINUS          = "--"
+PLUS_EQUALS          = "+="
+MINUS_EQUALS         = "-="
+STAR_EQUALS          = "*="
+SLASH_EQUALS         = "/="
+PERCENT_EQUALS       = "%="
+AMPERSAND_EQUALS     = "&="
+PIPE_EQUALS          = "|="
+CARET_EQUALS         = "^="
+LEFT_SHIFT           = "<<"
+RIGHT_SHIFT          = ">>"
+NAMESPACE_ALIAS      = "::"
+ARROW                = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# C# 5.0 does NOT yet have:
+#   - The ?. null-conditional operator (added in C# 6.0)
+#   - The .. range operator (added in C# 8.0)
+#   - The >>> unsigned right shift (added in C# 11.0)
+#
+# The ? token does double duty: it's the ternary operator and part of
+# nullable type syntax (int?). The lexer emits QUESTION for both; the
+# parser disambiguates based on context.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 5.0 has 79 reserved keywords (77 from C# 1.0 + 2 new ones). The new
+# additions since C# 1.0:
+#
+#   C# 2.0 added no new RESERVED keywords — yield, partial, where, etc.
+#   are all contextual keywords (not reserved). This was a deliberate
+#   design choice to avoid breaking existing code that might use those
+#   as identifiers.
+#
+#   C# 5.0 adds TWO new reserved keywords:
+#
+#   async  — marks a method as asynchronous. An async method can contain
+#            await expressions. The compiler transforms async methods into
+#            state machines that suspend at each await point and resume
+#            when the awaited task completes.
+#
+#            async Task<string> FetchDataAsync() {
+#                string data = await httpClient.GetStringAsync(url);
+#                return data;
+#            }
+#
+#   await  — suspends execution of an async method until the awaited
+#            Task (or Task<T>) completes. Control returns to the caller,
+#            and when the task finishes, the method resumes from where
+#            it left off.
+#
+#            string result = await DownloadAsync(url);
+#            // execution resumes here after the download completes
+#
+# IMPORTANT: In the C# specification, `async` is actually a CONTEXTUAL
+# keyword (it can be used as an identifier in non-modifier positions).
+# However, for grammar clarity we list it here because its behavior as
+# a method modifier is its primary role.
+#
+# The `await` keyword is also technically contextual — it is only a
+# keyword inside async methods. Outside async methods, `await` can be
+# used as an identifier. This was done so that code written before C# 5.0
+# that used `await` as a variable name would continue to compile.
+#
+# Contextual keywords accumulated through C# 5.0 (NOT reserved, usable
+# as identifiers in other positions):
+#
+#   C# 2.0:  yield, partial, where, get, set, add, remove, value, alias,
+#            global, var (context: local variable type inference in 3.0)
+#   C# 3.0:  from, select, where (LINQ), join, on, equals, into, let,
+#            orderby, ascending, descending, group, by
+#   C# 4.0:  dynamic
+#
+# We include async and await as reserved keywords for practical grammar
+# purposes.
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Same as C# 1.0. Three comment forms:
+#   1. Line comments:    // to end of line
+#   2. Block comments:   /* ... */ (cannot nest)
+#   3. XML doc comments: /// ... (lexically identical to line comments)
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# Same as C# 1.0. No new preprocessor directives in C# 2.0 through 5.0.
+
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/

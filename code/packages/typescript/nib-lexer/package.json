@@ -1,0 +1,33 @@
+{
+  "name": "@coding-adventures/nib-lexer",
+  "version": "0.1.0",
+  "description": "Tokenizes Nib source text using the grammar-driven lexer",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "nib",
+    "lexer",
+    "tokenizer",
+    "compiler",
+    "intel4004",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

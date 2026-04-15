@@ -1,204 +1,21 @@
-//! # Lattice Lexer — tokenizing Lattice source text.
-//!
-//! [Lattice](https://github.com/coding-adventures) is a CSS superset language
-//! that adds variables, mixins, control flow, functions, and modules to CSS.
-//! This crate tokenizes Lattice source text into a stream of [`Token`] objects
-//! using the generic grammar-driven [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # What is Lattice?
-//!
-//! CSS itself has no concept of reuse — every rule is written out in full.
-//! Lattice extends CSS with programming constructs that let you write
-//! maintainable stylesheets:
-//!
-//! ```text
-//! $primary: #4a90d9;            ← variable declaration
-//! $spacing: 8px;
-//!
-//! @mixin flex-center {          ← reusable block of declarations
-//!   display: flex;
-//!   align-items: center;
-//!   justify-content: center;
-//! }
-//!
-//! .card {
-//!   @include flex-center;       ← expand the mixin
-//!   color: $primary;            ← use the variable
-//!   padding: $spacing * 2;      ← arithmetic expression
-//! }
-//! ```
-//!
-//! # New Token Types
-//!
-//! Lattice introduces 5 token types not found in CSS:
-//!
-//! | Token           | Pattern              | Example           |
-//! |-----------------|----------------------|-------------------|
-//! | `VARIABLE`      | `$[a-zA-Z_][...]`    | `$color`, `$size` |
-//! | `EQUALS_EQUALS` | `==`                 | `$theme == dark`  |
-//! | `NOT_EQUALS`    | `!=`                 | `$x != 0`         |
-//! | `GREATER_EQUALS`| `>=`                 | `$n >= 10`        |
-//! | `LESS_EQUALS`   | `<=`                 | `$n <= 100`       |
-//!
-//! All standard CSS tokens are preserved unchanged. Single-line comments
-//! (`// ...`) are also supported — CSS only supports block comments (`/* */`).
-//!
-//! # Architecture
-//!
-//! This crate is a thin wrapper. The real work happens in two other crates:
-//!
-//! ```text
-//! lattice.tokens         (grammar file: declares all token patterns)
-//!        |
-//!        v
-//! grammar-tools          (parse_token_grammar: .tokens → TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer    (tokenize: source text → Vec<Token>)
-//!        |
-//!        v
-//! This crate             (knows WHERE to find lattice.tokens; glues it together)
-//! ```
-//!
-//! # Grammar File Location
-//!
-//! The `lattice.tokens` grammar file lives in `code/grammars/` at the
-//! repository root. We locate it using `env!("CARGO_MANIFEST_DIR")`, which
-//! the Rust compiler sets to the directory of this crate's `Cargo.toml`.
-//! From there we navigate up to the `grammars/` directory:
-//!
-//! ```text
-//! code/
-//!   grammars/
-//!     lattice.tokens        ← target file
-//!   packages/
-//!     rust/
-//!       lattice-lexer/
-//!         Cargo.toml        ← CARGO_MANIFEST_DIR points here
-//!         src/
-//!           lib.rs          ← we are here
-//! ```
-//!
-//! The relative path from `CARGO_MANIFEST_DIR` to the grammar file is:
-//! `../../../grammars/lattice.tokens`
+//! Lattice lexer backed by compiled token grammar.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `lattice.tokens` grammar file.
-///
-/// Uses `env!("CARGO_MANIFEST_DIR")` — a compile-time macro that expands
-/// to the absolute path of the directory containing this crate's `Cargo.toml`.
-/// We then navigate three levels up (rust/ → packages/ → code/) and into
-/// the `grammars/` subdirectory.
-///
-/// This approach has two advantages over `file!()` (which gives the source
-/// file path): it works even when the binary is run from a different working
-/// directory, and it produces a stable path regardless of how the workspace
-/// is laid out on disk.
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/lattice.tokens")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a [`GrammarLexer`] configured for Lattice source text.
-///
-/// This function:
-/// 1. Reads `lattice.tokens` from disk using the compile-time-resolved path.
-/// 2. Parses it into a [`grammar_tools::token_grammar::TokenGrammar`].
-/// 3. Constructs a [`GrammarLexer`] bound to the given source text.
-///
-/// The returned lexer can be used for fine-grained control — call `.tokenize()`
-/// on it to get the token stream, or inspect the grammar for debugging.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. In practice, this
-/// only happens if the repository is missing `code/grammars/lattice.tokens`,
-/// which would indicate a broken checkout. Normal usage should never panic.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_lattice_lexer::create_lattice_lexer;
-///
-/// let mut lexer = create_lattice_lexer("$color: red;");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// println!("Got {} tokens", tokens.len());
-/// ```
 pub fn create_lattice_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    //
-    // The file is read at runtime (not baked in at compile time) so that
-    // grammar changes don't require recompiling this crate. The path is
-    // computed at compile time via env!(), so there is no overhead from
-    // directory traversal at runtime.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read lattice.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a TokenGrammar struct.
-    //
-    // TokenGrammar contains:
-    //   - Named token definitions with regex or literal patterns
-    //   - Skip patterns (whitespace, comments — consumed without emitting tokens)
-    //   - Type aliases (STRING_DQ and STRING_SQ both emit as STRING)
-    //   - Error patterns (BAD_STRING, BAD_URL — cause LexerError)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse lattice.tokens: {e}"));
-
-    // Step 3: Create and return the GrammarLexer.
-    //
-    // GrammarLexer compiles each pattern into an anchored regex (^pattern)
-    // and stores them in priority order. The lexer is ready to call
-    // .tokenize() on.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
-/// Tokenize Lattice source text into a flat vector of tokens.
-///
-/// This is the main entry point for the Lattice tokenizer. Pass in a string
-/// of Lattice source, get back a `Vec<Token>` ending with an `EOF` token.
-///
-/// Internally, this calls [`create_lattice_lexer`] then `.tokenize()`.
-/// For most callers, this is all you need.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains characters that don't match any token pattern (a `LexerError`).
-/// In the latter case, the panic message includes the offending position.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_lattice_lexer::tokenize_lattice;
-///
-/// let tokens = tokenize_lattice("$color: red; h1 { color: $color; }");
-/// for token in &tokens {
-///     println!("{:?} = {:?}", token.type_name, token.value);
-/// }
-/// ```
 pub fn tokenize_lattice(source: &str) -> Vec<Token> {
     let mut lexer = create_lattice_lexer(source);
     lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("Lattice tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -646,3 +463,4 @@ mod tests {
         assert_eq!(info[1].1, "button(");
     }
 }
+

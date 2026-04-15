@@ -122,6 +122,12 @@ extern "C" {
 
     // -- Number operations -------------------------------------------------
     pub fn napi_create_int64(env: napi_env, value: i64, result: *mut napi_value) -> napi_status;
+    pub fn napi_create_double(env: napi_env, value: f64, result: *mut napi_value) -> napi_status;
+    pub fn napi_get_value_double(
+        env: napi_env,
+        value: napi_value,
+        result: *mut f64,
+    ) -> napi_status;
 
     // -- Undefined/null ----------------------------------------------------
     pub fn napi_get_undefined(env: napi_env, result: *mut napi_value) -> napi_status;
@@ -316,6 +322,32 @@ pub fn vec_tuple2_str_to_js(env: napi_env, items: &[(String, String)]) -> napi_v
     arr
 }
 
+pub fn vec_tuple2_str_f64_to_js(env: napi_env, items: &[(String, f64)]) -> napi_value {
+    let arr = array_new(env);
+    for (i, (key, value)) in items.iter().enumerate() {
+        let pair = array_new(env);
+        array_set(env, pair, 0, str_to_js(env, key));
+        array_set(env, pair, 1, f64_to_js(env, *value));
+        array_set(env, arr, i as u32, pair);
+    }
+    arr
+}
+
+pub fn vec_tuple3_str_f64_to_js(
+    env: napi_env,
+    items: &[(String, String, f64)],
+) -> napi_value {
+    let arr = array_new(env);
+    for (i, (left, right, weight)) in items.iter().enumerate() {
+        let triple = array_new(env);
+        array_set(env, triple, 0, str_to_js(env, left));
+        array_set(env, triple, 1, str_to_js(env, right));
+        array_set(env, triple, 2, f64_to_js(env, *weight));
+        array_set(env, arr, i as u32, triple);
+    }
+    arr
+}
+
 // ---------------------------------------------------------------------------
 // Safe wrappers — Boolean, Number, Undefined, Null
 // ---------------------------------------------------------------------------
@@ -336,6 +368,24 @@ pub fn usize_to_js(env: napi_env, n: usize) -> napi_value {
         "napi_create_int64",
     );
     result
+}
+
+pub fn f64_to_js(env: napi_env, n: f64) -> napi_value {
+    let mut result: napi_value = ptr::null_mut();
+    check_status(
+        unsafe { napi_create_double(env, n, &mut result) },
+        "napi_create_double",
+    );
+    result
+}
+
+pub fn f64_from_js(env: napi_env, val: napi_value) -> Option<f64> {
+    let mut result = 0.0;
+    let status = unsafe { napi_get_value_double(env, val, &mut result) };
+    if status != NAPI_OK {
+        return None;
+    }
+    Some(result)
 }
 
 pub fn undefined(env: napi_env) -> napi_value {

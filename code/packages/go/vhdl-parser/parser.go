@@ -66,12 +66,16 @@
 package vhdlparser
 
 import (
-	"path/filepath"
-	"runtime"
+	"fmt"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/parser"
 	vhdllexer "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer"
+	vhdlv1987 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-parser/internal/grammars/v1987"
+	vhdlv1993 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-parser/internal/grammars/v1993"
+	vhdlv2002 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-parser/internal/grammars/v2002"
+	vhdlv2008 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-parser/internal/grammars/v2008"
+	vhdlv2019 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-parser/internal/grammars/v2019"
 )
 
 // getGrammarPath resolves the absolute path to vhdl.grammar.
@@ -90,11 +94,28 @@ import (
 //	        parser.go      <-- we are here
 //
 // So from parser.go: ../../../grammars/vhdl.grammar
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "vhdl.grammar")
+const DefaultVersion = vhdllexer.DefaultVersion
+
+func parserGrammarForVersion(version string) (*grammartools.ParserGrammar, error) {
+	resolved, err := vhdllexer.ResolveVersion(version)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resolved {
+	case "1987":
+		return vhdlv1987.ParserGrammarData, nil
+	case "1993":
+		return vhdlv1993.ParserGrammarData, nil
+	case "2002":
+		return vhdlv2002.ParserGrammarData, nil
+	case "2008":
+		return vhdlv2008.ParserGrammarData, nil
+	case "2019":
+		return vhdlv2019.ParserGrammarData, nil
+	default:
+		return nil, fmt.Errorf("compiled VHDL parser grammar missing version %q", resolved)
+	}
 }
 
 // CreateVhdlParser tokenizes VHDL source and returns a configured
@@ -116,36 +137,29 @@ func getGrammarPath() string {
 //	if err != nil { ... }
 //	ast, err := p.Parse()
 func CreateVhdlParser(source string) (*parser.GrammarParser, error) {
+	return CreateVhdlParserVersion(source, DefaultVersion)
+}
+
+// CreateVhdlParserVersion tokenizes VHDL source and returns a configured
+// GrammarParser for the requested VHDL edition.
+func CreateVhdlParserVersion(source string, version string) (*parser.GrammarParser, error) {
 	// Step 1: Tokenize the VHDL source.
 	// The lexer normalizes all identifiers and keywords to lowercase
 	// (VHDL is case-insensitive) and produces a flat list of tokens
 	// ending with EOF.
-	tokens, err := vhdllexer.TokenizeVhdl(source)
+	tokens, err := vhdllexer.TokenizeVhdlVersion(source, version)
+	if err != nil {
+		return nil, err
+	}
+
+	grammar, err := parserGrammarForVersion(version)
 	if err != nil {
 		return nil, err
 	}
 
 	return StartNew[*parser.GrammarParser]("vhdlparser.CreateVhdlParser", nil,
-		func(op *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
-			// Step 2: Read the grammar specification from disk.
-			// The grammar file is a BNF-like text file that defines the syntax
-			// rules for VHDL (entity_declaration, architecture_body, expression,
-			// process_statement, etc.).
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 3: Parse the grammar text into structured rule objects.
-			// ParseParserGrammar returns a ParserGrammar containing a list of
-			// GrammarRule objects, each with a name and body (the rule's definition
-			// expressed as GrammarElement nodes: Sequence, Alternation, etc.).
-			grammar, err := grammartools.ParseParserGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-
-			// Step 4: Create the parser.
+		func(_ *Operation[*parser.GrammarParser], rf *ResultFactory[*parser.GrammarParser]) *OperationResult[*parser.GrammarParser] {
+			// Step 2: Create the parser from the compiled grammar.
 			// NewGrammarParser builds a packrat parser with memoization that
 			// will interpret the grammar rules against the token stream.
 			return rf.Generate(true, false, parser.NewGrammarParser(tokens, grammar))
@@ -186,7 +200,13 @@ func CreateVhdlParser(source string) (*parser.GrammarParser, error) {
 //	if err != nil { log.Fatal(err) }
 //	// Walk ast.Children to inspect the parsed structure
 func ParseVhdl(source string) (*parser.ASTNode, error) {
-	vhdlParser, err := CreateVhdlParser(source)
+	return ParseVhdlVersion(source, DefaultVersion)
+}
+
+// ParseVhdlVersion tokenizes and parses VHDL source code using the requested
+// VHDL edition.
+func ParseVhdlVersion(source string, version string) (*parser.ASTNode, error) {
+	vhdlParser, err := CreateVhdlParserVersion(source, version)
 	if err != nil {
 		return nil, err
 	}

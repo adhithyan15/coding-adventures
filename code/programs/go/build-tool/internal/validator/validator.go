@@ -73,13 +73,15 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		}
 
 		referenced := referencedPackages(pkg, pathToPkg)
-		if len(referenced) == 0 && !requiresExplicitPrereqs[pkg.Language] {
+		referencedFuzzy := referencedPackagesFuzzy(pkg, pathToPkg)
+		if len(referenced) == 0 && len(referencedFuzzy) == 0 && !requiresExplicitPrereqs[pkg.Language] {
 			continue
 		}
 
 		prereqs := transitivePredecessors(graph, pkg.Name)
 		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames)
-		delete(referenced, pkg.Name) // Self-references are allowed.
+		delete(referenced, pkg.Name)      // Self-references are allowed.
+		delete(referencedFuzzy, pkg.Name) // Self-references are allowed.
 
 		var hidden []string
 		for dep := range referenced {
@@ -89,10 +91,13 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		}
 		sort.Strings(hidden)
 
+		// Use fuzzy resolution for the missing-prereq check: BUILD files
+		// often point at subdirectories (e.g. ../sha512/lib) rather than
+		// the package root, and those should satisfy the prereq.
 		var missing []string
 		if requiresExplicitPrereqs[pkg.Language] {
 			for dep := range prereqs {
-				if !referenced[dep] {
+				if !referencedFuzzy[dep] {
 					missing = append(missing, dep)
 				}
 			}
@@ -119,6 +124,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 	}
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
+	problems = append(problems, validateRustWorkspaceMembers(packages)...)
 
 	if len(problems) == 0 {
 		return nil
@@ -154,11 +160,47 @@ func referencedPackages(pkg discovery.Package, pathToPkg map[string]string) map[
 	return found
 }
 
+// referencedPackagesFuzzy is like referencedPackages but uses ancestor-walking
+// resolution so that subdirectory references (e.g. ../sha512/lib) resolve to
+// their parent package.
+func referencedPackagesFuzzy(pkg discovery.Package, pathToPkg map[string]string) map[string]bool {
+	found := make(map[string]bool)
+	for _, command := range pkg.BuildCommands {
+		for _, raw := range relPathRe.FindAllString(command, -1) {
+			name, ok := resolvePackageRefFuzzy(pkg.Path, raw, pathToPkg)
+			if ok {
+				found[name] = true
+			}
+		}
+	}
+	return found
+}
+
 func resolvePackageRef(pkgPath, raw string, pathToPkg map[string]string) (string, bool) {
 	normalized := strings.ReplaceAll(raw, "\\", "/")
 	abs := filepath.Clean(filepath.Join(pkgPath, filepath.FromSlash(normalized)))
 	name, ok := pathToPkg[abs]
 	return name, ok
+}
+
+// resolvePackageRefFuzzy is like resolvePackageRef but also walks up the
+// directory tree. BUILD files often reference subdirectories of a sibling
+// package (e.g. ../sha512/lib) rather than the package root. This variant
+// is used only for the "missing prerequisite" check so that legitimate
+// subdirectory references count as satisfying a declared dependency.
+func resolvePackageRefFuzzy(pkgPath, raw string, pathToPkg map[string]string) (string, bool) {
+	normalized := strings.ReplaceAll(raw, "\\", "/")
+	abs := filepath.Clean(filepath.Join(pkgPath, filepath.FromSlash(normalized)))
+	for dir := abs; ; dir = filepath.Dir(dir) {
+		if name, ok := pathToPkg[dir]; ok {
+			return name, true
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
+		}
+	}
+	return "", false
 }
 
 func transitivePredecessors(graph *directedgraph.Graph, node string) map[string]bool {
@@ -427,6 +469,143 @@ func validatePerlBuildFiles(packages []discovery.Package) []string {
 			}
 		}
 	}
+	return problems
+}
+
+// validateRustWorkspaceMembers checks that every Rust package with a BUILD
+// file is listed in code/packages/rust/Cargo.toml and that the workspace has
+// no duplicate member entries.
+//
+// Root cause of the failure mode: when a PR adds packages to the repo and
+// forgets to add them to the workspace, those packages build fine if you run
+// `cargo test` from inside their directory on a branch that never merged them
+// into the workspace. But on the PR merge commit, git's 3-way merge removes
+// the stale workspace entry if the other side deleted it, leaving the package
+// directory without a workspace home and causing Cargo to emit:
+//
+//	error: current package believes it's in a workspace when it's not
+//
+// Checking this at -validate-build-files time means the CI detect job catches
+// the gap before any Rust toolchain is even installed.
+func validateRustWorkspaceMembers(packages []discovery.Package) []string {
+	// Group Rust packages by the directory that contains their shared Cargo.toml
+	// workspace. For example, packages under code/packages/rust/ share the
+	// workspace at code/packages/rust/Cargo.toml, while standalone programs
+	// under code/programs/rust/ have no shared workspace and are skipped.
+	//
+	// Only directories whose Cargo.toml defines a [workspace] section are
+	// validated. Standalone programs (no parent Cargo.toml, or one without
+	// [workspace]) are exempt — they are intentionally self-contained.
+	type workspaceGroup struct {
+		cargoPath string
+		data      []byte
+		pkgs      []discovery.Package
+	}
+	groups := make(map[string]*workspaceGroup) // workspace dir → group
+
+	for _, pkg := range packages {
+		if pkg.Language != "rust" {
+			continue
+		}
+		parentDir := filepath.Dir(pkg.Path)
+		if g, already := groups[parentDir]; already {
+			if g.data != nil {
+				g.pkgs = append(g.pkgs, pkg)
+			}
+			continue
+		}
+		cargoPath := filepath.Join(parentDir, "Cargo.toml")
+		data, err := os.ReadFile(cargoPath)
+		if err != nil || !strings.Contains(string(data), "[workspace]") {
+			// No workspace Cargo.toml in parent (or not a workspace) — standalone.
+			groups[parentDir] = &workspaceGroup{cargoPath: cargoPath}
+			continue
+		}
+		groups[parentDir] = &workspaceGroup{
+			cargoPath: cargoPath,
+			data:      data,
+			pkgs:      []discovery.Package{pkg},
+		}
+	}
+
+	var problems []string
+
+	for _, g := range groups {
+		if g.data == nil {
+			continue // standalone — nothing to validate
+		}
+
+		// Parse member names from the members = [ ... ] array, and excluded names
+		// from the exclude = [ ... ] array.
+		// We use a simple line-oriented scan rather than a full TOML parser to
+		// avoid an extra dependency; the format is well-known and highly regular.
+		memberRe := regexp.MustCompile(`"([^"]+)"`)
+		inMembers := false
+		inExclude := false
+		members := make(map[string]int)  // name → count (to detect duplicates)
+		excluded := make(map[string]bool) // packages intentionally excluded from workspace
+		for _, line := range strings.Split(string(g.data), "\n") {
+			trimmed := strings.TrimSpace(line)
+			if strings.HasPrefix(trimmed, "members") && strings.Contains(trimmed, "[") {
+				inMembers = true
+			}
+			if strings.HasPrefix(trimmed, "exclude") && strings.Contains(trimmed, "[") {
+				inExclude = true
+			}
+			if inMembers {
+				for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
+					members[m[1]]++
+				}
+				if strings.Contains(trimmed, "]") {
+					inMembers = false
+				}
+			}
+			if inExclude {
+				for _, m := range memberRe.FindAllStringSubmatch(line, -1) {
+					excluded[m[1]] = true
+				}
+				if strings.Contains(trimmed, "]") {
+					inExclude = false
+				}
+			}
+		}
+
+		// Fail on duplicate entries — Cargo rejects them on newer toolchains.
+		var dupes []string
+		for name, count := range members {
+			if count > 1 {
+				dupes = append(dupes, name)
+			}
+		}
+		if len(dupes) > 0 {
+			sort.Strings(dupes)
+			problems = append(problems, fmt.Sprintf(
+				"%s: duplicate workspace members (causes Cargo to reject the workspace on newer toolchains): %s",
+				filepath.ToSlash(g.cargoPath),
+				strings.Join(dupes, ", "),
+			))
+		}
+
+		// Every package with a BUILD file must be either a workspace member or
+		// explicitly excluded. Packages in the exclude list declare their own
+		// [workspace] (e.g. C-ABI bridge crates) and are intentionally standalone.
+		var missing []string
+		for _, pkg := range g.pkgs {
+			dirName := filepath.Base(pkg.Path)
+			if members[dirName] == 0 && !excluded[dirName] {
+				missing = append(missing, dirName)
+			}
+		}
+		if len(missing) > 0 {
+			sort.Strings(missing)
+			problems = append(problems, fmt.Sprintf(
+				"%s: Rust packages with BUILD files are missing from workspace members — add them or the PR merge commit will break `cargo` commands with \"believes it's in a workspace when it's not\": %s",
+				filepath.ToSlash(g.cargoPath),
+				strings.Join(missing, ", "),
+			))
+		}
+	}
+
 	return problems
 }
 

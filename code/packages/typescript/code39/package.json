@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/code39",
   "version": "0.1.0",
-  "description": "Dependency-free Code 39 encoder that emits backend-neutral draw instructions",
+  "description": "Dependency-free Code 39 encoder that emits backend-neutral PaintScene output",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -12,10 +12,9 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/draw-instructions": "file:../draw-instructions"
+    "@coding-adventures/barcode-layout-1d": "file:../barcode-layout-1d"
   },
   "devDependencies": {
-    "@coding-adventures/draw-instructions-svg": "file:../draw-instructions-svg",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",
     "@vitest/coverage-v8": "^3.0.0"

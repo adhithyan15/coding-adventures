@@ -1,0 +1,1658 @@
+# Java 17 (2021) — Parser Grammar
+# @version 1
+# @java_version 17
+#
+# JDK 17 (September 2021) — The second LTS release under the new cadence.
+# This grammar is COMPLETE and SELF-CONTAINED. It includes every syntactic
+# feature from Java 1.0 through Java 17:
+#
+#   Java 1.0 (1996):  Classes, interfaces, methods, fields, constructors,
+#                      static initializers, all statements and expressions.
+#   Java 1.1 (1997):  Inner classes, anonymous classes, instance initializers.
+#   Java 1.2 (1998):  strictfp modifier on classes, interfaces, and methods.
+#   Java 1.4 (2002):  assert statement.
+#   Java 5 (2004):    Generics, enums, annotations, enhanced for, varargs,
+#                      static imports.
+#   Java 7 (2011):    Diamond operator, try-with-resources, multi-catch,
+#                      strings in switch (semantic, not syntactic).
+#   Java 8 (2014):    Lambda expressions, method references, default and
+#                      static interface methods, type annotations.
+#   Java 9 (2017):    Private interface methods, effectively-final variables
+#                      in try-with-resources (no grammar change needed),
+#                      module declarations (separate grammar; not included).
+#   Java 10 (2018):   Local variable type inference (`var`).
+#   Java 14 (2020):   Switch expressions with arrow cases and `yield`.
+#   Java 16 (2021):   Records (transparent data carriers).
+#   Java 17 (2021):   Sealed classes/interfaces, pattern matching for
+#                      instanceof.
+#
+# --------------------------------------------------------------------------
+# JAVA 17 FEATURES — SEALED CLASSES AND INTERFACES (JEP 409)
+# --------------------------------------------------------------------------
+#
+# Sealed classes and interfaces RESTRICT which types can extend or
+# implement them. This is the foundation for algebraic data types in Java
+# and enables exhaustive pattern matching in future switch expressions.
+#
+# A sealed type declares its permitted subtypes with a `permits` clause:
+#
+#   public sealed interface Shape
+#       permits Circle, Rectangle, Triangle {
+#       double area();
+#   }
+#
+#   public final class Circle implements Shape {
+#       private final double radius;
+#       // ...
+#   }
+#
+#   public sealed class Rectangle implements Shape
+#       permits Square {
+#       // ...
+#   }
+#
+#   public final class Square extends Rectangle {
+#       // ...
+#   }
+#
+# Every direct subtype of a sealed type MUST be one of:
+#   - `final`      — cannot be further extended
+#   - `sealed`     — extends the hierarchy with its own permits
+#   - `non-sealed` — opens the hierarchy back up for free extension
+#
+# The `non-sealed` modifier is unique in Java: it is the ONLY modifier
+# that contains a hyphen. Since hyphens are not valid in identifiers,
+# the lexer produces THREE tokens: NAME("non") MINUS NAME("sealed").
+# The grammar recognizes this specific sequence as a single modifier.
+#
+#   public non-sealed class OpenShape implements Shape {
+#       // anyone can extend OpenShape
+#   }
+#
+# `sealed` and `permits` are CONTEXT KEYWORDS — they are valid identifiers
+# everywhere except in class/interface declaration headers. You can still
+# have a variable named `sealed` or a method called `permits`.
+#
+# --------------------------------------------------------------------------
+# JAVA 17 FEATURES — PATTERN MATCHING FOR instanceof (JEP 394)
+# --------------------------------------------------------------------------
+#
+# The instanceof operator can now declare a BINDING VARIABLE that is
+# automatically cast to the tested type:
+#
+#   // Before (Java 10):
+#   if (obj instanceof String) {
+#       String s = (String) obj;   // tedious, error-prone cast
+#       System.out.println(s.length());
+#   }
+#
+#   // After (Java 17):
+#   if (obj instanceof String s) {  // binding variable `s`
+#       System.out.println(s.length());  // `s` is already String
+#   }
+#
+# The binding variable's scope is determined by FLOW ANALYSIS:
+#
+#   // s is in scope in the true branch:
+#   if (obj instanceof String s) {
+#       use(s);  // OK
+#   }
+#   // s is NOT in scope here (obj might not be String)
+#
+#   // s is in scope after && (short-circuit guarantees the check passed):
+#   if (obj instanceof String s && s.length() > 5) {
+#       use(s);  // OK
+#   }
+#
+#   // s is in scope after negation + ||:
+#   if (!(obj instanceof String s)) {
+#       return;
+#   }
+#   use(s);  // OK — we only reach here if instanceof was true
+#
+# The old form `expr instanceof Type` (without binding) still works.
+# Pattern matching is detected by the grammar: if a NAME follows the
+# type in an instanceof expression, it's a type pattern with binding.
+#
+# --------------------------------------------------------------------------
+# JAVA 16 FEATURES — RECORDS (JEP 395)
+# --------------------------------------------------------------------------
+#
+# Records are transparent data carriers — immutable classes where the
+# state IS the API. The compiler generates:
+#   - A canonical constructor
+#   - Accessor methods (named after components, NOT getX() style)
+#   - equals(), hashCode(), and toString()
+#
+#   record Point(int x, int y) {}
+#
+# This is equivalent to roughly 50+ lines of traditional Java code.
+# Records can have:
+#   - Custom constructors (compact or canonical)
+#   - Additional methods
+#   - Static fields and methods
+#   - Nested type declarations
+#   - Implementation of interfaces
+#
+# Records CANNOT have:
+#   - Instance fields beyond the record components
+#   - Explicit extends clause (they implicitly extend java.lang.Record)
+#   - The abstract modifier (they are implicitly final)
+#
+# `record` is a CONTEXT KEYWORD — the lexer emits NAME("record"), and
+# the grammar matches it with a literal "record" in declaration context.
+#
+# --------------------------------------------------------------------------
+# JAVA 14 FEATURES — SWITCH EXPRESSIONS (JEP 361)
+# --------------------------------------------------------------------------
+#
+# Switch is now an EXPRESSION that produces a value, in addition to the
+# traditional statement form. Two new syntactic elements:
+#
+#   1. ARROW CASES — using `->` instead of `:`, with no fall-through:
+#
+#        int numLetters = switch (day) {
+#            case MONDAY, FRIDAY, SUNDAY -> 6;
+#            case TUESDAY                -> 7;
+#            default                     -> 5;
+#        };
+#
+#   2. YIELD STATEMENT — produces a value from a switch expression block:
+#
+#        int result = switch (s) {
+#            case "Foo", "Bar" -> 1;
+#            default -> {
+#                int len = s.length();
+#                yield len * 2;   // yield produces the value
+#            }
+#        };
+#
+# `yield` is a CONTEXT KEYWORD — it is only recognized as a keyword inside
+# switch expression blocks. Elsewhere, `yield` is a valid identifier
+# (important for backward compatibility with Thread.yield()).
+#
+# Arrow cases can also have multiple case constants separated by commas:
+#   case MONDAY, TUESDAY, WEDNESDAY -> handleWeekday();
+#
+# The traditional colon-form switch also gains multiple case constants:
+#   case 1, 2, 3: handleSmall(); break;
+#
+# --------------------------------------------------------------------------
+# JAVA 14 FEATURES — TEXT BLOCKS (Finalized in Java 15)
+# --------------------------------------------------------------------------
+#
+# Text blocks are multi-line string literals using triple double-quotes.
+# They are lexed as STRING tokens (see java17.tokens). The grammar does
+# not need special handling — STRING already appears in the literal rule.
+#
+# --------------------------------------------------------------------------
+# ACCUMULATED FEATURES FROM EARLIER VERSIONS
+# --------------------------------------------------------------------------
+#
+# All features from Java 10 and earlier are preserved:
+#   - Local variable type inference (var) from Java 10
+#   - Private interface methods from Java 9
+#   - Lambdas, method references, default methods from Java 8
+#   - Diamond operator, try-with-resources, multi-catch from Java 7
+#   - Generics, enums, annotations, enhanced for, varargs from Java 5
+#   - Inner classes, anonymous classes from Java 1.1
+#   - Everything from Java 1.0
+#
+# Format:
+#   rule_name = definition ;
+#
+# UPPERCASE names reference tokens from java17.tokens.
+# lowercase names reference other grammar rules.
+#
+# Notation:
+#   |       alternation (ordered choice — PEG semantics, first match wins)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   match a keyword or literal token value
+#
+# IMPORTANT: No left recursion. PEG with packrat memoization.
+# Use iterative form: `a { op b }` instead of `a = a op b`.
+
+# ============================================================================
+# Compilation Unit (Entry Point)
+# ============================================================================
+#
+# A Java source file (.java) is a "compilation unit." Every file has the
+# same top-level structure:
+#
+#   1. Optional package declaration (with optional annotations)
+#   2. Zero or more import declarations (including static imports from Java 5)
+#   3. Zero or more type declarations (classes, interfaces, enums,
+#      annotation types, records)
+#
+# Reference: JLS 17, Section 7.3
+
+program = { program_item } ;
+program_item = package_declaration | import_declaration | type_declaration | method_declaration | statement ;
+compilation_unit = { annotation } [ package_declaration ]
+                   { import_declaration }
+                   { type_declaration } ;
+
+# ============================================================================
+# Package Declaration
+# ============================================================================
+#
+# Packages provide namespacing. In Java 5+, packages can be annotated
+# (done in a special package-info.java file):
+#
+#   @Deprecated
+#   package com.example.legacy;
+#
+# Reference: JLS 17, Section 7.4
+
+package_declaration = "package" qualified_name SEMICOLON ;
+
+# ============================================================================
+# Import Declarations
+# ============================================================================
+#
+# Four forms (since Java 5):
+#
+#   import java.util.List;                      — single type import
+#   import java.util.*;                         — type import on demand
+#   import static java.lang.Math.PI;            — single static import
+#   import static java.lang.Math.*;             — static import on demand
+#
+# Reference: JLS 17, Section 7.5
+
+import_declaration = "import" [ "static" ] qualified_name [ DOT STAR ] SEMICOLON ;
+
+# ============================================================================
+# Type Declarations
+# ============================================================================
+#
+# A type declaration is one of:
+#   - A class declaration (since 1.0, sealed in Java 17)
+#   - An interface declaration (since 1.0, sealed in Java 17)
+#   - An enum declaration (since Java 5)
+#   - An annotation type declaration (since Java 5)
+#   - A record declaration (since Java 16)
+#   - A stray semicolon (permitted at top level)
+#
+# Reference: JLS 17, Section 7.6
+
+type_declaration = class_declaration
+                 | interface_declaration
+                 | enum_declaration
+                 | annotation_type_declaration
+                 | record_declaration
+                 | SEMICOLON ;
+
+# ============================================================================
+# Qualified Names
+# ============================================================================
+#
+# Dot-separated identifier chains used for package names, class names,
+# and field/method access paths. The parser cannot distinguish between
+# these uses — type resolution happens in a later phase.
+#
+#   java.lang.Object
+#   System.out.println
+#   com.example.service.UserManager
+
+qualified_name = NAME { DOT NAME } ;
+
+# ============================================================================
+# Annotations
+# ============================================================================
+#
+# Metadata declarations beginning with @. Three syntactic forms:
+#
+#   @Override                              — marker annotation (no arguments)
+#   @SuppressWarnings("unchecked")         — single-element annotation
+#   @Table(name = "users", schema = "pub") — normal annotation (key=value pairs)
+#
+# Java 8 added TYPE ANNOTATIONS (JSR 308), which extend where annotations
+# can appear. Annotations can now modify types themselves:
+#
+#   @NonNull String name;                  — annotation on type
+#   List<@NonNull String> names;           — annotation inside type argument
+#   String @NonNull [] array;              — annotation on array type
+#   (@NonNull String) obj                  — annotation on cast type
+#   obj instanceof @NonNull String         — annotation on instanceof type
+#
+# Reference: JLS 17, Section 9.7
+
+annotation = AT qualified_name [ LPAREN [ element_value_pairs | element_value ] RPAREN ] ;
+
+annotations = { annotation } ;
+
+element_value_pairs = element_value_pair { COMMA element_value_pair } ;
+
+element_value_pair = NAME EQUALS element_value ;
+
+# An element value can be an expression, a nested annotation, or an array:
+#
+#   @Version(1)                            — expression
+#   @Outer(@Inner("value"))                — nested annotation
+#   @SuppressWarnings({"unchecked", "dep"}) — array
+
+element_value = annotation
+             | element_value_array
+             | expression ;
+
+element_value_array = LBRACE [ element_value { COMMA element_value } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Annotation Type Declarations
+# ============================================================================
+#
+# Defined with @interface (AT followed by "interface" keyword):
+#
+#   public @interface Author {
+#       String name();
+#       int year() default 2004;
+#       String[] reviewers() default {};
+#   }
+#
+# Reference: JLS 17, Section 9.6
+
+annotation_type_declaration = { class_modifier } AT "interface" NAME
+                              annotation_type_body ;
+
+annotation_type_body = LBRACE { annotation_type_element_declaration } RBRACE ;
+
+annotation_type_element_declaration = annotation_element_declaration
+                                    | field_declaration
+                                    | class_declaration
+                                    | interface_declaration
+                                    | enum_declaration
+                                    | annotation_type_declaration
+                                    | SEMICOLON ;
+
+annotation_element_declaration = { method_modifier } type NAME LPAREN RPAREN
+                                 [ "default" element_value ] SEMICOLON ;
+
+# ============================================================================
+# Class Declarations (UPDATED for Java 17 — Sealed Classes)
+# ============================================================================
+#
+# Java 17 adds sealed classes (JEP 409). A sealed class restricts which
+# other classes may extend it, using a `permits` clause:
+#
+#   public sealed class Shape
+#       permits Circle, Rectangle, Triangle {
+#       // ...
+#   }
+#
+# Subclasses of a sealed class must be one of:
+#   - `final` — cannot be extended further
+#   - `sealed` — continues the sealed hierarchy with its own permits
+#   - `non-sealed` — reopens the hierarchy for unrestricted extension
+#
+# The `permits` clause is optional when all permitted subtypes are
+# declared in the same compilation unit (the compiler infers them):
+#
+#   sealed interface Node {   // permits Leaf, Branch inferred
+#       record Leaf(int value) implements Node {}
+#       record Branch(Node left, Node right) implements Node {}
+#   }
+#
+# The class_modifier rule now includes "sealed" and non_sealed_modifier
+# (the three-token sequence "non" MINUS "sealed"):
+#
+#   sealed class Foo permits Bar, Baz {}          // sealed modifier
+#   non-sealed class Bar extends Foo {}           // non-sealed modifier
+#   final class Baz extends Foo {}                // final (already existed)
+#
+# Reference: JLS 17, Section 8.1
+
+class_declaration = { class_modifier } "class" NAME [ type_parameters ]
+                    [ "extends" class_type ]
+                    [ "implements" interface_type_list ]
+                    [ permits_clause ]
+                    class_body ;
+
+# --- Class Modifiers ---
+#
+# Java 17 adds two new modifier forms for sealed class hierarchies:
+#
+#   "sealed"  — a context keyword matched as a literal NAME token. The
+#               class can only be extended by types listed in its permits
+#               clause (or inferred from the same compilation unit).
+#
+#   non_sealed_modifier — the infamous three-token sequence: NAME("non")
+#               MINUS NAME("sealed"). This is the ONLY modifier in Java
+#               that requires multiple tokens. The hyphen makes it
+#               impossible to be a single identifier, so the grammar must
+#               match it as three tokens. A non-sealed class is a subclass
+#               of a sealed class that permits unrestricted extension.
+#
+# These are ordered so that non_sealed_modifier is tried before "sealed"
+# alone, since "non" by itself would not match "sealed" and cause a
+# mismatch. The PEG ordered choice ensures correct parsing.
+
+class_modifier = annotation
+               | "public"
+               | "protected"
+               | "private"
+               | "abstract"
+               | "final"
+               | "static"
+               | "strictfp"
+               | non_sealed_modifier
+               | "sealed" ;
+
+# --- The non-sealed Modifier ---
+#
+# `non-sealed` is lexed as three tokens: NAME("non") MINUS NAME("sealed").
+# This is unprecedented in Java — no other modifier or keyword spans
+# multiple tokens. The grammar handles it by matching the exact sequence.
+#
+# Why a hyphen? The JEP authors wanted a modifier that:
+#   1. Clearly communicates "the opposite of sealed"
+#   2. Cannot conflict with existing identifiers (since `non-sealed`
+#      is not a valid identifier, it cannot shadow existing names)
+#   3. Reads naturally in English
+#
+# The three-token approach was deliberately chosen over alternatives like
+# `nonsealed`, `unsealed`, or `open` because those ARE valid identifiers
+# and could break existing code.
+
+non_sealed_modifier = "non" MINUS "sealed" ;
+
+# --- Permits Clause (Java 17) ---
+#
+# Lists the types that are permitted to directly extend/implement a
+# sealed type. Each permitted type must be a class_type (possibly
+# qualified with a package name).
+#
+#   sealed interface Expr permits Literal, BinOp, UnaryOp {}
+#
+# The permits clause is optional even on sealed types — if omitted,
+# the compiler infers permitted subtypes from the same compilation unit.
+
+permits_clause = "permits" class_type { COMMA class_type } ;
+
+class_body = LBRACE { class_body_declaration } RBRACE ;
+
+class_body_declaration = static_initializer
+                       | instance_initializer
+                       | constructor_declaration
+                       | method_declaration
+                       | field_declaration
+                       | class_declaration
+                       | interface_declaration
+                       | enum_declaration
+                       | annotation_type_declaration
+                       | record_declaration
+                       | SEMICOLON ;
+
+# ============================================================================
+# Interface Declarations (UPDATED for Java 17 — Sealed Interfaces)
+# ============================================================================
+#
+# Interfaces can now be sealed, just like classes. A sealed interface
+# restricts which types can implement it:
+#
+#   public sealed interface Expr
+#       permits Literal, BinOp, UnaryOp {
+#       int eval();
+#   }
+#
+# Sealed interfaces are the primary way to model algebraic data types
+# (sum types) in Java. Combined with records for the product types:
+#
+#   sealed interface Expr permits Literal, Add, Multiply {
+#       record Literal(int value) implements Expr {}
+#       record Add(Expr left, Expr right) implements Expr {}
+#       record Multiply(Expr left, Expr right) implements Expr {}
+#   }
+#
+# This pattern is analogous to:
+#   - Haskell:  `data Expr = Literal Int | Add Expr Expr | Multiply Expr Expr`
+#   - Rust:     `enum Expr { Literal(i32), Add(Box<Expr>, Box<Expr>), ... }`
+#   - Kotlin:   `sealed interface Expr { data class Literal(...) : Expr ... }`
+#
+# The interface_modifier rule gains the same sealed/non-sealed modifiers
+# as class_modifier.
+#
+# Java 8 and 9 features are preserved:
+#   - Default methods (Java 8): methods with implementations
+#   - Static methods (Java 8): utility methods on the interface
+#   - Private methods (Java 9): helpers for default methods
+#
+# Reference: JLS 17, Section 9.1
+
+interface_declaration = { interface_modifier } "interface" NAME [ type_parameters ]
+                        [ "extends" interface_type_list ]
+                        [ permits_clause ]
+                        interface_body ;
+
+interface_modifier = annotation
+                   | "public"
+                   | "protected"
+                   | "private"
+                   | "abstract"
+                   | "static"
+                   | "strictfp"
+                   | non_sealed_modifier
+                   | "sealed" ;
+
+interface_body = LBRACE { interface_body_declaration } RBRACE ;
+
+# Interface body declarations now include default methods, static methods,
+# private methods, and record declarations alongside the traditional
+# abstract method signatures and constant fields.
+
+interface_body_declaration = interface_method_declaration
+                           | interface_field_declaration
+                           | class_declaration
+                           | interface_declaration
+                           | enum_declaration
+                           | annotation_type_declaration
+                           | record_declaration
+                           | SEMICOLON ;
+
+interface_field_declaration = { field_modifier } type variable_declarators SEMICOLON ;
+
+# --- Interface Methods (Java 8/9 expansion) ---
+#
+# Before Java 8, interface methods were implicitly public and abstract — they
+# could only be signatures, never implementations. Java 8 added two new kinds:
+#
+#   default void forEach(Consumer<T> action) { ... }   — default method
+#   static <T> Comparator<T> naturalOrder() { ... }    — static method
+#
+# Java 9 added a third:
+#
+#   private void helper() { ... }                       — private method
+#   private static void staticHelper() { ... }          — private static method
+#
+# The modifier set for interface methods:
+#   - public (always, implicitly or explicitly)
+#   - abstract (the traditional form — no body)
+#   - default (Java 8 — provides a body that implementations inherit)
+#   - static (Java 8 — utility method, called on the interface itself)
+#   - private (Java 9 — helper for default methods, not inherited)
+#   - strictfp (since Java 1.2)
+
+interface_method_declaration = { interface_method_modifier } [ type_parameters ]
+                              result_type method_declarator [ throws_clause ] method_body ;
+
+interface_method_modifier = annotation
+                          | "public"
+                          | "private"
+                          | "abstract"
+                          | "default"
+                          | "static"
+                          | "strictfp" ;
+
+interface_type_list = class_type { COMMA class_type } ;
+
+# ============================================================================
+# Enum Declarations
+# ============================================================================
+#
+# Type-safe enumerated constants (Java 5). Enums are full classes that can
+# have fields, methods, constructors, and per-constant class bodies.
+#
+#   public enum Planet {
+#       MERCURY(3.303e+23, 2.4397e6),
+#       EARTH  (5.976e+24, 6.37814e6);
+#
+#       private final double mass, radius;
+#       Planet(double mass, double radius) { this.mass = mass; this.radius = radius; }
+#       double surfaceGravity() { return 6.67300E-11 * mass / (radius * radius); }
+#   }
+#
+# Reference: JLS 17, Section 8.9
+
+enum_declaration = { class_modifier } "enum" NAME
+                   [ "implements" interface_type_list ]
+                   enum_body ;
+
+enum_body = LBRACE [ enum_constant_list ] [ COMMA ] [ SEMICOLON { class_body_declaration } ] RBRACE ;
+
+enum_constant_list = enum_constant { COMMA enum_constant } ;
+
+enum_constant = annotations NAME [ LPAREN [ argument_list ] RPAREN ] [ class_body ] ;
+
+# ============================================================================
+# Record Declarations (Java 16, JEP 395)
+# ============================================================================
+#
+# Records are transparent, immutable data carriers. They are a restricted
+# form of class that automatically generates:
+#   - A canonical constructor (matching the record components)
+#   - Accessor methods for each component (named after the component)
+#   - equals(), hashCode(), and toString() methods
+#
+# Basic record declaration:
+#
+#   record Point(int x, int y) {}
+#
+# This generates:
+#   - Constructor: Point(int x, int y)
+#   - Accessors:   int x(), int y()
+#   - equals/hashCode based on x and y
+#   - toString: "Point[x=1, y=2]"
+#
+# Records can have:
+#   - Custom compact constructor (validates/normalizes, no explicit assignment):
+#
+#       record Range(int lo, int hi) {
+#           Range {                             // compact constructor
+#               if (lo > hi) throw new IllegalArgumentException();
+#           }
+#       }
+#
+#   - Custom canonical constructor (full parameter list):
+#
+#       record Range(int lo, int hi) {
+#           Range(int lo, int hi) {             // canonical constructor
+#               this.lo = Math.min(lo, hi);
+#               this.hi = Math.max(lo, hi);
+#           }
+#       }
+#
+#   - Additional instance methods, static methods, and static fields
+#   - Implementations of interfaces
+#   - Nested type declarations
+#   - Annotations on record components (propagated to fields/accessors/params)
+#
+# Records CANNOT have:
+#   - Instance fields beyond the record components
+#   - An extends clause (records implicitly extend java.lang.Record)
+#   - The abstract modifier (records are implicitly final)
+#
+# `record` is a CONTEXT KEYWORD: the lexer emits NAME("record"), and the
+# grammar matches it as "record" in declaration context. This means:
+#
+#   record Point(int x, int y) {}  // LEGAL — record declaration
+#   int record = 42;               // LEGAL — record as variable name
+#   record.process();              // LEGAL — record as variable in expression
+#
+# Reference: JLS 17, Section 8.10
+
+record_declaration = { class_modifier } "record" NAME [ type_parameters ]
+                     record_components
+                     [ "implements" interface_type_list ]
+                     record_body ;
+
+# --- Record Components ---
+#
+# The parenthesized list of components defines the record's state. Each
+# component is a type followed by a name, optionally annotated. The
+# last component can be a varargs parameter (allowing record MyRecord(int... values)).
+#
+#   record Point(int x, int y) {}
+#   record Entry<K, V>(K key, V value) {}
+#   record Named(@NonNull String name, int id) {}
+
+record_components = LPAREN [ record_component_list ] RPAREN ;
+
+record_component_list = record_component { COMMA record_component }
+                      | record_component { COMMA record_component } COMMA varargs_record_component
+                      | varargs_record_component ;
+
+record_component = { annotation } type NAME ;
+
+varargs_record_component = { annotation } type ELLIPSIS NAME ;
+
+# --- Record Body ---
+#
+# A record body can contain:
+#   - A compact constructor (just a block, no explicit parameter list)
+#   - A canonical constructor (parameter list matching the components)
+#   - Additional methods, static fields, nested types
+#   - No instance field declarations (beyond the components)
+#
+# The compact constructor has no parameter list — it implicitly has
+# the same parameters as the record components. It is written as just
+# the record name followed by a block:
+#
+#   record Range(int lo, int hi) {
+#       Range { if (lo > hi) throw new IAE(); }   // compact constructor
+#   }
+#
+# We handle this by treating record_body like class_body but also
+# allowing compact constructors.
+
+record_body = LBRACE { record_body_declaration } RBRACE ;
+
+record_body_declaration = compact_constructor_declaration
+                        | constructor_declaration
+                        | method_declaration
+                        | field_declaration
+                        | class_declaration
+                        | interface_declaration
+                        | enum_declaration
+                        | annotation_type_declaration
+                        | record_declaration
+                        | static_initializer
+                        | SEMICOLON ;
+
+# A compact constructor has modifiers and the record name, but NO
+# parameter list — just a block body directly:
+#
+#   public Range {
+#       if (lo > hi) throw new IllegalArgumentException();
+#       // implicit: this.lo = lo; this.hi = hi; at end
+#   }
+
+compact_constructor_declaration = { constructor_modifier } NAME block ;
+
+# ============================================================================
+# Generics — Type Parameters and Type Arguments
+# ============================================================================
+#
+# Type parameters (declaration side) and type arguments (use side) were
+# introduced in Java 5. Java 7 added the DIAMOND OPERATOR which allows
+# empty type arguments in constructor calls:
+#
+#   // Java 5/6: full type arguments required on both sides
+#   List<String> list = new ArrayList<String>();
+#
+#   // Java 7+: diamond operator infers type arguments
+#   List<String> list = new ArrayList<>();
+#
+# The diamond is parsed as type_arguments with zero arguments:
+# LESS_THAN GREATER_THAN (i.e., `<>`). We handle this in the grammar by
+# making the type argument list optional within the angle brackets.
+#
+# Reference: JLS 17, Section 4.4, 4.5
+
+# --- Type Parameters (Declaration Side) ---
+#
+#   <T>                           — unbounded
+#   <T extends Number>            — upper bounded
+#   <T extends Comparable<T>>     — recursive bound (F-bounded polymorphism)
+#   <K, V>                        — multiple type parameters
+#   <T extends A & B & C>         — intersection bound
+
+type_parameters = LESS_THAN type_parameter { COMMA type_parameter } GREATER_THAN ;
+
+type_parameter = { annotation } NAME [ "extends" bound ] ;
+
+bound = class_type { AMPERSAND class_type } ;
+
+# --- Type Arguments (Use Side) ---
+#
+#   List<String>                       — concrete type argument
+#   Map<String, Integer>               — multiple type arguments
+#   List<?>                            — unbounded wildcard
+#   List<? extends Number>             — upper-bounded wildcard (covariance)
+#   List<? super Integer>              — lower-bounded wildcard (contravariance)
+#   new ArrayList<>()                  — diamond operator (Java 7)
+#
+# The diamond operator is an EMPTY type argument list: `<>`. We support
+# this by allowing type_arguments to contain zero type arguments.
+
+type_arguments = LESS_THAN [ type_argument { COMMA type_argument } ] GREATER_THAN ;
+
+type_argument = { annotation } type
+              | { annotation } QUESTION [ ( "extends" | "super" ) type ] ;
+
+# ============================================================================
+# Field Declarations
+# ============================================================================
+#
+# Fields are instance and class variables of a class:
+#
+#   private int count;
+#   public static final double PI = 3.14159;
+#   @Deprecated protected volatile List<String> names = new ArrayList<>();
+#
+# Note: `var` CANNOT be used for field declarations. This is enforced by
+# the grammar — field_declaration uses `type`, not `local_var_type`.
+#
+# Reference: JLS 17, Section 8.3
+
+field_declaration = { field_modifier } type variable_declarators SEMICOLON ;
+
+field_modifier = annotation
+               | "public"
+               | "protected"
+               | "private"
+               | "static"
+               | "final"
+               | "transient"
+               | "volatile" ;
+
+variable_declarators = variable_declarator { COMMA variable_declarator } ;
+
+variable_declarator = NAME { LBRACKET RBRACKET } [ EQUALS variable_initializer ] ;
+
+variable_initializer = expression
+                     | array_initializer ;
+
+array_initializer = LBRACE [ variable_initializer { COMMA variable_initializer } ] [ COMMA ] RBRACE ;
+
+# ============================================================================
+# Method Declarations
+# ============================================================================
+#
+# Methods are behaviors of a class. Java 5 added type parameters (generic
+# methods), annotations, and varargs. No syntactic changes in Java 7-17
+# beyond the accumulated modifier additions.
+#
+#   @Override
+#   public <T extends Comparable<T>> T max(T a, T b) {
+#       return a.compareTo(b) >= 0 ? a : b;
+#   }
+#
+# Reference: JLS 17, Section 8.4
+
+method_declaration = { method_modifier } [ type_parameters ] result_type method_declarator
+                     [ throws_clause ] method_body ;
+
+method_modifier = annotation
+                | "public"
+                | "protected"
+                | "private"
+                | "static"
+                | "abstract"
+                | "final"
+                | "synchronized"
+                | "native"
+                | "strictfp" ;
+
+result_type = "void"
+            | type ;
+
+method_declarator = NAME LPAREN [ formal_parameter_list ] RPAREN { LBRACKET RBRACKET } ;
+
+# ============================================================================
+# Formal Parameters and Varargs
+# ============================================================================
+#
+# Java 5 introduced varargs (Object... args). The last parameter can use
+# the ELLIPSIS syntax to accept zero or more arguments.
+#
+# Note: `var` CANNOT be used for method parameters. The grammar enforces
+# this — formal_parameter uses `type`, not `local_var_type`.
+#
+#   void printf(String format, Object... args)
+#   void process(@NonNull final String name, @Nullable Object... extras)
+#
+# Reference: JLS 17, Section 8.4.1
+
+formal_parameter_list = formal_parameter { COMMA formal_parameter }
+                      | formal_parameter { COMMA formal_parameter } COMMA varargs_parameter
+                      | varargs_parameter ;
+
+formal_parameter = { annotation } [ "final" ] type NAME { LBRACKET RBRACKET } ;
+
+varargs_parameter = { annotation } [ "final" ] type ELLIPSIS NAME ;
+
+throws_clause = "throws" class_type { COMMA class_type } ;
+
+method_body = block
+            | SEMICOLON ;
+
+# ============================================================================
+# Constructor Declarations
+# ============================================================================
+#
+# Constructors initialize new objects. They look like methods but have no
+# return type. Java 5 added type parameters, annotations, and varargs.
+#
+#   @Inject
+#   public <T extends Config> Service(T config, Logger... loggers) {
+#       this.config = config;
+#   }
+#
+# Reference: JLS 17, Section 8.8
+
+constructor_declaration = { constructor_modifier } [ type_parameters ] NAME
+                          LPAREN [ formal_parameter_list ] RPAREN
+                          [ throws_clause ] constructor_body ;
+
+constructor_modifier = annotation
+                     | "public"
+                     | "protected"
+                     | "private" ;
+
+constructor_body = LBRACE [ explicit_constructor_invocation ] { block_statement } RBRACE ;
+
+# Explicit constructor invocation: `this(args)` or `super(args)`.
+# Can have type arguments for generic constructors (Java 5):
+#
+#   <String>this(arg)
+#   <Integer>super(arg)
+
+explicit_constructor_invocation = [ type_arguments ] "this" LPAREN [ argument_list ] RPAREN SEMICOLON
+                                | [ type_arguments ] "super" LPAREN [ argument_list ] RPAREN SEMICOLON ;
+
+# ============================================================================
+# Static Initializers and Instance Initializers
+# ============================================================================
+#
+# Static initializers run when the class is loaded. Instance initializers
+# (Java 1.1) run when each instance is created.
+#
+# Reference: JLS 17, Section 8.6, 8.7
+
+static_initializer = "static" block ;
+
+instance_initializer = block ;
+
+# ============================================================================
+# Type System
+# ============================================================================
+#
+# Java's type system divides into primitive types and reference types.
+# Reference types include class types (possibly parameterized with generics)
+# and array types. Java 8 added TYPE ANNOTATIONS (JSR 308, JEP 104), which
+# allow annotations to appear on type uses:
+#
+#   @NonNull String name;
+#   List<@NonNull String> names;
+#   String @NonNull [] array;
+#
+# Type table (Java 17):
+#
+#   Type                        Example
+#   ----                        -------
+#   Primitive type              int, boolean, double
+#   Raw class type              Object, String, List
+#   Parameterized type          List<String>, Map<K, V>
+#   Diamond-inferred type       new ArrayList<>()
+#   Wildcard parameterized      List<?>, List<? extends Number>
+#   Array of primitive          int[], double[][]
+#   Array of reference          String[], List<String>[]
+#   Annotated type              @NonNull String, List<@NonNull String>
+#
+# Reference: JLS 17, Chapter 4
+
+type = { annotation } primitive_type { LBRACKET RBRACKET }
+     | { annotation } class_type { LBRACKET RBRACKET } ;
+
+primitive_type = "boolean"
+               | "byte"
+               | "short"
+               | "int"
+               | "long"
+               | "char"
+               | "float"
+               | "double" ;
+
+# A class type is a reference to a class or interface with optional type
+# arguments. For inner classes of generic outer classes, intermediate
+# segments can also have type arguments (Outer<T>.Inner), but we simplify
+# by allowing type arguments after the full qualified name.
+
+class_type = { annotation } qualified_name [ type_arguments ] ;
+
+# ============================================================================
+# LOCAL VARIABLE TYPE INFERENCE — `var` (Java 10, JEP 286)
+# ============================================================================
+#
+# The `local_var_type` rule captures the Java 10 addition. In local
+# variable contexts (and ONLY local contexts), the programmer can write
+# `var` instead of an explicit type, and the compiler infers the type from
+# the initializer expression.
+#
+# Because `var` is NOT a keyword, it arrives at the parser as a NAME token
+# with text value "var". The grammar literal `"var"` matches this token.
+#
+# `var` is ONLY allowed in three specific contexts:
+#   1. Local variable declarations with initializers
+#   2. Enhanced for-loop variables
+#   3. Try-with-resources variables
+#
+# Reference: JLS 17, Section 14.4
+
+local_var_type = type
+               | "var" ;
+
+# ============================================================================
+# Statements
+# ============================================================================
+#
+# Java 17 inherits all statement forms from prior versions and adds:
+#   - Switch EXPRESSION (usable as a statement too) with arrow cases
+#   - Yield statement (inside switch expression blocks)
+#
+# The `var` support in local variables, enhanced for, and try-with-resources
+# is preserved from Java 10.
+#
+# Statement forms:
+#   - Block                         { ... }
+#   - Local variable declaration    var x = 10; / int x = 10;
+#   - Empty statement               ;
+#   - Expression statement          x = 5; / method(); / i++;
+#   - If/else                       if (cond) s1 [else s2]
+#   - While                         while (cond) s
+#   - Do-while                      do s while (cond);
+#   - For (classic)                 for (init; cond; update) s
+#   - Enhanced for                  for (var x : coll) s
+#   - Switch (statement)            switch (expr) { cases }
+#   - Try/catch/finally             try { } catch (E e) { } finally { }
+#   - Try-with-resources            try (var r = expr) { }
+#   - Throw                         throw expr;
+#   - Return                        return [expr];
+#   - Break                         break [label];
+#   - Continue                      continue [label];
+#   - Yield                         yield expr;  (in switch expressions)
+#   - Synchronized                  synchronized (expr) { }
+#   - Assert                        assert expr [: msg];
+#   - Labelled                      label: s
+#
+# Reference: JLS 17, Chapter 14
+
+statement = block
+          | var_declaration
+          | empty_statement
+          | expression_statement
+          | if_statement
+          | while_statement
+          | do_while_statement
+          | for_statement
+          | enhanced_for_statement
+          | switch_statement
+          | try_statement
+          | throw_statement
+          | return_statement
+          | break_statement
+          | continue_statement
+          | yield_statement
+          | synchronized_statement
+          | assert_statement
+          | labelled_statement ;
+
+# --- Block ---
+
+block = LBRACE { block_statement } RBRACE ;
+
+block_statement = var_declaration
+                | class_declaration
+               | record_declaration
+               | statement ;
+
+# --- Local Variable Declaration (supports var from Java 10) ---
+#
+# This is where `var` makes its appearance:
+#
+#   // Traditional (Java 1.0+):
+#   final List<String> names = new ArrayList<>();
+#
+#   // With var (Java 10):
+#   var names = new ArrayList<String>();
+#   final var names = new ArrayList<String>();
+#
+# Reference: JLS 17, Section 14.4
+
+var_declaration = local_variable_declaration_statement ;
+
+local_variable_declaration_statement = { annotation } [ "final" ] local_var_type
+                                       variable_declarators SEMICOLON ;
+
+# --- Empty Statement ---
+
+empty_statement = SEMICOLON ;
+
+# --- Expression Statement ---
+
+expression_statement = expression SEMICOLON ;
+
+# --- If/Else ---
+#
+# The dangling-else ambiguity is resolved by PEG ordered choice — `else`
+# always binds to the nearest `if`.
+
+if_statement = "if" LPAREN expression RPAREN statement [ "else" statement ] ;
+
+# --- While Loop ---
+
+while_statement = "while" LPAREN expression RPAREN statement ;
+
+# --- Do-While Loop ---
+
+do_while_statement = "do" statement "while" LPAREN expression RPAREN SEMICOLON ;
+
+# --- Classic For Loop ---
+
+for_statement = "for" LPAREN for_init SEMICOLON [ expression ] SEMICOLON [ for_update ] RPAREN
+                statement ;
+
+for_init = { annotation } [ "final" ] local_var_type variable_declarators
+         | [ expression_list ] ;
+
+for_update = expression_list ;
+
+expression_list = expression { COMMA expression } ;
+
+# --- Enhanced For (For-Each) Loop (supports var from Java 10) ---
+#
+#   for (String name : names) { ... }     // Java 5
+#   for (var name : names) { ... }        // Java 10
+#   for (final var name : names) { ... }  // Java 10
+
+enhanced_for_statement = "for" LPAREN { annotation } [ "final" ] local_var_type NAME
+                         COLON expression RPAREN statement ;
+
+# ============================================================================
+# Switch Statement and Switch Expression (UPDATED for Java 14, JEP 361)
+# ============================================================================
+#
+# Java 14 finalized switch EXPRESSIONS, which transform switch from a
+# statement-only construct into one that can produce a value. There are
+# now two forms of switch:
+#
+#   1. SWITCH STATEMENT (traditional, since Java 1.0):
+#      Uses colon-style case labels with fall-through:
+#
+#        switch (day) {
+#            case MONDAY:
+#            case TUESDAY:
+#                System.out.println("early week");
+#                break;
+#            default:
+#                System.out.println("other");
+#        }
+#
+#   2. SWITCH EXPRESSION (Java 14):
+#      Uses arrow-style case labels (no fall-through) and produces a value:
+#
+#        int numLetters = switch (day) {
+#            case MONDAY, FRIDAY, SUNDAY -> 6;
+#            case TUESDAY                -> 7;
+#            default -> {
+#                String s = day.toString();
+#                yield s.length();   // yield produces the value
+#            }
+#        };
+#
+# Both forms can appear in the same code. The syntactic distinction is
+# whether the cases use `:` (colon, traditional) or `->` (arrow, new).
+# A single switch block must use EITHER colon or arrow labels, not both
+# (this is a semantic constraint; the grammar permits mixing).
+#
+# Multiple case constants per label (Java 14):
+#
+#   case MONDAY, TUESDAY, WEDNESDAY -> handleWeekday();  // arrow form
+#   case 1, 2, 3: handleSmall(); break;                  // colon form
+#
+# The switch expression is parsed as a PRIMARY expression in the
+# expression grammar, since it can appear anywhere an expression is valid:
+#
+#   return switch(x) { case 1 -> "one"; default -> "other"; };
+#   var result = switch(x) { case 1 -> "one"; default -> "other"; };
+#
+# Reference: JLS 17, Section 14.11
+
+switch_statement = "switch" LPAREN expression RPAREN switch_block ;
+
+# A switch block contains either colon-style or arrow-style rules (or a
+# mix, which the grammar permits but the compiler rejects). We parse
+# both forms uniformly.
+
+switch_block = LBRACE { switch_rule } RBRACE ;
+
+# A switch rule is either:
+#   - Colon-style: `case EXPR, EXPR: stmts` or `default: stmts`
+#   - Arrow-style: `case EXPR, EXPR -> expr;` or `default -> expr;`
+#
+# The arrow-style body can be:
+#   - An expression followed by semicolon
+#   - A block (which may contain yield for switch expressions)
+#   - A throw statement
+
+switch_rule = switch_label COLON { block_statement }
+            | switch_label ARROW switch_rule_body ;
+
+switch_rule_body = block
+                 | "throw" expression SEMICOLON
+                 | expression SEMICOLON ;
+
+# Switch labels now support multiple case constants separated by commas
+# (Java 14). Each case constant is an expression (for traditional values)
+# or a qualified name (for enum constants).
+#
+#   case 1, 2, 3:                    — multiple integer constants
+#   case MONDAY, TUESDAY:            — multiple enum constants
+#   case "hello", "world":           — multiple string constants
+#   default:                         — the default label
+
+switch_label = "case" case_constant { COMMA case_constant }
+             | "default" ;
+
+case_constant = expression ;
+
+# --- Yield Statement (Java 14) ---
+#
+# The `yield` statement produces a value from a switch expression block.
+# It is analogous to `return` for methods, but for switch expression arms:
+#
+#   int result = switch (s) {
+#       case "Foo" -> 1;
+#       default -> {
+#           int len = s.length();
+#           yield len * 2;         // produces the value for this arm
+#       }
+#   };
+#
+# `yield` is a CONTEXT KEYWORD — it is a NAME token whose text is "yield".
+# The grammar matches it with the literal "yield". Outside of switch
+# expressions, `yield` remains a valid identifier (important for
+# Thread.yield() compatibility).
+#
+# Reference: JLS 17, Section 14.21
+
+yield_statement = "yield" expression SEMICOLON ;
+
+# --- Try/Catch/Finally (Java 7 multi-catch, Java 10 var) ---
+#
+# Java 7 added:
+#   - Try-with-resources (automatic resource management)
+#   - Multi-catch (catch multiple exceptions in one clause)
+#
+# Java 9 added:
+#   - Effectively-final variable references in try-with-resources
+#
+# Java 10 added:
+#   - `var` in try-with-resources
+#
+# Reference: JLS 17, Section 14.20
+
+try_statement = "try" resource_specification block { catch_clause } [ finally_clause ]
+              | "try" block ( catch_clause { catch_clause } [ finally_clause ]
+                            | finally_clause ) ;
+
+resource_specification = LPAREN resource { SEMICOLON resource } [ SEMICOLON ] RPAREN ;
+
+resource = { annotation } [ "final" ] local_var_type NAME EQUALS expression
+         | qualified_name ;
+
+# --- Multi-Catch (Java 7) ---
+
+catch_clause = "catch" LPAREN catch_formal_parameter RPAREN block ;
+
+catch_formal_parameter = { annotation } [ "final" ] catch_type NAME ;
+
+catch_type = class_type { PIPE class_type } ;
+
+finally_clause = "finally" block ;
+
+# --- Throw ---
+
+throw_statement = "throw" expression SEMICOLON ;
+
+# --- Return ---
+
+return_statement = "return" [ expression ] SEMICOLON ;
+
+# --- Break and Continue ---
+
+break_statement = "break" [ NAME ] SEMICOLON ;
+
+continue_statement = "continue" [ NAME ] SEMICOLON ;
+
+# --- Synchronized Statement ---
+
+synchronized_statement = "synchronized" LPAREN expression RPAREN block ;
+
+# --- Assert Statement (from Java 1.4) ---
+
+assert_statement = "assert" expression [ COLON expression ] SEMICOLON ;
+
+# --- Labelled Statement ---
+
+labelled_statement = NAME COLON statement ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# The expression grammar has been expanded significantly across Java 5-17.
+# Java 8 added lambdas and method references. Java 14 added switch
+# expressions. Java 17 added pattern matching for instanceof.
+#
+# Precedence (lowest to highest):
+#
+#   Level 0:  lambda              (params) -> body
+#   Level 1:  assignment          =, +=, -=, *=, /=, %=, &=, |=, ^=,
+#                                 <<=, >>=, >>>=
+#   Level 2:  ternary             ? :
+#   Level 3:  logical OR          ||
+#   Level 4:  logical AND         &&
+#   Level 5:  bitwise OR          |
+#   Level 6:  bitwise XOR         ^
+#   Level 7:  bitwise AND         &
+#   Level 8:  equality            ==, !=
+#   Level 9:  relational          <, >, <=, >=, instanceof [pattern]
+#   Level 10: shift               <<, >>, >>>
+#   Level 11: additive            +, -
+#   Level 12: multiplicative      *, /, %
+#   Level 13: unary               ++x, --x, +x, -x, ~x, !x, (type)x
+#   Level 14: postfix             x++, x--
+#   Level 15: primary             literals, this, super, new, switch expr,
+#                                 method call, field access, array access,
+#                                 parenthesized, method reference (::)
+#
+# Reference: JLS 17, Chapter 15
+
+# --- Lambda Expressions (Java 8) ---
+#
+# Lambda expressions are anonymous functions. They consist of a parameter
+# list, the arrow token (->), and a body (either an expression or a block):
+#
+#   () -> 42                               // no params, expression body
+#   x -> x * 2                             // single param (parens optional)
+#   (x, y) -> x + y                        // multiple params
+#   (int x, int y) -> x + y               // explicitly typed
+#   (x, y) -> { return x + y; }            // block body
+#
+# Reference: JLS 17, Section 15.27
+
+expression = lambda_expression
+           | assignment_expression ;
+
+lambda_expression = lambda_parameters ARROW lambda_body ;
+
+lambda_parameters = NAME
+                  | LPAREN [ lambda_parameter_list ] RPAREN ;
+
+# Lambda parameters can use `var` for explicitly-typed inferred parameters
+# (Java 11, JEP 323). All parameters must be uniformly var, typed, or inferred:
+#
+#   (var x, var y) -> x + y    // Java 11: var in lambda params
+#   (x, y) -> x + y            // inferred (no var)
+#   (int x, int y) -> x + y   // explicitly typed
+
+lambda_parameter_list = lambda_parameter { COMMA lambda_parameter } ;
+
+lambda_parameter = { annotation } [ "final" ] type NAME
+                 | { annotation } [ "final" ] "var" NAME
+                 | { annotation } [ "final" ] NAME ;
+
+lambda_body = expression
+            | block ;
+
+# --- Assignment ---
+#
+# Right-associative: `a = b = c` means `a = (b = c)`.
+
+assignment_expression = unary_expression assignment_operator assignment_expression
+                      | conditional_expression ;
+
+assignment_operator = EQUALS
+                    | PLUS_EQUALS
+                    | MINUS_EQUALS
+                    | STAR_EQUALS
+                    | SLASH_EQUALS
+                    | PERCENT_EQUALS
+                    | AMPERSAND_EQUALS
+                    | PIPE_EQUALS
+                    | CARET_EQUALS
+                    | LEFT_SHIFT_EQUALS
+                    | RIGHT_SHIFT_EQUALS
+                    | UNSIGNED_RIGHT_SHIFT_EQUALS ;
+
+# --- Ternary Conditional ---
+
+conditional_expression = logical_or_expression
+                         [ QUESTION assignment_expression COLON assignment_expression ] ;
+
+# --- Logical OR ---
+
+logical_or_expression = logical_and_expression { OR_OR logical_and_expression } ;
+
+# --- Logical AND ---
+
+logical_and_expression = bitwise_or_expression { AND_AND bitwise_or_expression } ;
+
+# --- Bitwise OR ---
+
+bitwise_or_expression = bitwise_xor_expression { PIPE bitwise_xor_expression } ;
+
+# --- Bitwise XOR ---
+
+bitwise_xor_expression = bitwise_and_expression { CARET bitwise_and_expression } ;
+
+# --- Bitwise AND ---
+
+bitwise_and_expression = equality_expression { AMPERSAND equality_expression } ;
+
+# --- Equality ---
+
+equality_expression = relational_expression
+                      { ( EQUALS_EQUALS | NOT_EQUALS ) relational_expression } ;
+
+# ============================================================================
+# Relational Expressions (UPDATED for Java 17 — Pattern Matching)
+# ============================================================================
+#
+# Java 17 finalizes PATTERN MATCHING FOR instanceof (JEP 394). The
+# instanceof operator now supports two forms:
+#
+#   1. TRADITIONAL TYPE CHECK (since Java 1.0):
+#      expr instanceof Type
+#      Returns true if expr is an instance of Type. No binding.
+#
+#   2. PATTERN MATCHING (Java 17):
+#      expr instanceof Type name
+#      Returns true AND binds the variable `name` with type `Type` in
+#      the scope where the match succeeds:
+#
+#        if (obj instanceof String s) {
+#            // s is in scope here, typed as String
+#            System.out.println(s.length());
+#        }
+#
+# The binding variable's scope is determined by FLOW ANALYSIS — it is
+# available wherever the compiler can prove the instanceof check succeeded:
+#
+#   // In the true-branch of if:
+#   if (obj instanceof String s) { use(s); }
+#
+#   // After short-circuit && (left side must be true for right to execute):
+#   if (obj instanceof String s && s.length() > 5) { use(s); }
+#
+#   // After negation with early return:
+#   if (!(obj instanceof String s)) { return; }
+#   use(s);  // s is in scope — we only reach here if instanceof was true
+#
+# The grammar extends relational_expression to accept an optional `pattern`
+# after `instanceof` instead of just a `type`. A type_pattern is a type
+# followed by a NAME (the binding variable), optionally with `final` and
+# annotations.
+#
+# Reference: JLS 17, Section 15.20.2, 14.30
+
+relational_expression = shift_expression
+                        { ( LESS_THAN | GREATER_THAN | LESS_EQUALS | GREATER_EQUALS )
+                          shift_expression
+                        | "instanceof" pattern } ;
+
+# --- Patterns (Java 17) ---
+#
+# Java 17 supports only TYPE PATTERNS (a type followed by a binding
+# variable name). Future Java versions will add more pattern kinds
+# (deconstruction patterns in Java 21, etc.), but Java 17 has only:
+#
+#   type_pattern = [final] {annotation} type NAME
+#
+# The `pattern` rule is structured as an extension point — future
+# versions will add alternatives like record_pattern and guarded_pattern.
+#
+# The old form `instanceof type` (without binding) must still work.
+# We handle this by making the NAME optional in the grammar and letting
+# the presence/absence of a trailing NAME distinguish:
+#
+#   obj instanceof String       // traditional: type check only
+#   obj instanceof String s     // Java 17: type pattern with binding
+#
+# In PEG ordered choice, we try the pattern form (type + NAME) first.
+# If there's no NAME after the type, we fall back to the plain type form.
+#
+# The `final` modifier and annotations are optional on the binding variable:
+#
+#   obj instanceof final String s       // binding is effectively final
+#   obj instanceof @NonNull String s    // annotated binding
+
+pattern = type_pattern ;
+
+type_pattern = [ "final" ] { annotation } type NAME
+             | type ;
+
+# --- Shift ---
+
+shift_expression = additive_expression
+                   { ( LEFT_SHIFT | RIGHT_SHIFT | UNSIGNED_RIGHT_SHIFT ) additive_expression } ;
+
+# --- Additive ---
+
+additive_expression = multiplicative_expression
+                      { ( PLUS | MINUS ) multiplicative_expression } ;
+
+# --- Multiplicative ---
+
+multiplicative_expression = unary_expression
+                            { ( STAR | SLASH | PERCENT ) unary_expression } ;
+
+# --- Unary ---
+
+unary_expression = PLUS_PLUS unary_expression
+                 | MINUS_MINUS unary_expression
+                 | PLUS unary_expression
+                 | MINUS unary_expression
+                 | unary_expression_not_plus_minus ;
+
+unary_expression_not_plus_minus = TILDE unary_expression
+                                | BANG unary_expression
+                                | cast_expression
+                                | postfix_expression ;
+
+# --- Cast Expression ---
+#
+# Java 8 added intersection casts with `&` for specifying multiple bounds:
+#
+#   (Serializable & Comparable<String>) obj
+#
+# Reference: JLS 17, Section 15.16
+
+cast_expression = LPAREN primitive_type { LBRACKET RBRACKET } RPAREN unary_expression
+                | LPAREN class_type { AMPERSAND class_type } { LBRACKET RBRACKET } RPAREN
+                  unary_expression_not_plus_minus ;
+
+# --- Postfix ---
+
+postfix_expression = primary_expression { PLUS_PLUS | MINUS_MINUS } ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Primary expressions are the atoms of the expression grammar. After parsing
+# a primary, we chain any number of suffix operations (method calls, field
+# accesses, array indexing, and method references).
+#
+# Java 14 additions:
+#   - Switch expression as a primary (switch can now produce a value)
+#
+# Java 8 additions:
+#   - Method references via `::` (handled as a primary_suffix)
+#
+# Java 7 additions:
+#   - Diamond operator in `new`: `new ArrayList<>()`
+#
+# Reference: JLS 17, Section 15.8-15.13
+
+primary_expression = primary { primary_suffix } ;
+
+# --- Primary Suffixes ---
+#
+# Suffixes enable chaining: obj.field.method(arg)[index]::methodRef
+
+primary_suffix = DOUBLE_COLON [ type_arguments ] ( NAME | "new" )
+               | DOT [ type_arguments ] NAME
+               | DOT "class"
+               | DOT "this"
+               | DOT "super"
+               | DOT "new" [ type_arguments ] NAME [ type_arguments ]
+                   LPAREN [ argument_list ] RPAREN [ class_body ]
+               | LPAREN [ argument_list ] RPAREN
+               | LBRACKET expression RBRACKET ;
+
+# --- Primary Forms ---
+#
+# The core primary forms. Java 14 adds the SWITCH EXPRESSION as a primary.
+# A switch expression can appear anywhere an expression is expected:
+#
+#   var x = switch (day) {
+#       case MONDAY -> "start";
+#       default -> "other";
+#   };
+#
+#   return switch (code) { case 200 -> "OK"; default -> "Error"; };
+#
+# Switch expressions are parsed as primary expressions because they can
+# appear in any expression context and chain with suffixes.
+#
+# Method references on `super`:
+#   - super::method
+# are handled here. Type::method and Type::new are handled as NAME
+# followed by DOUBLE_COLON in primary_suffix.
+
+primary = literal
+        | "this"
+        | "super" DOUBLE_COLON [ type_arguments ] ( NAME | "new" )
+        | "super" DOT [ type_arguments ] NAME
+        | "super" LPAREN [ argument_list ] RPAREN
+        | "new" [ type_arguments ] class_type LPAREN [ argument_list ] RPAREN [ class_body ]
+        | "new" array_creation_type array_dimension_exprs { LBRACKET RBRACKET }
+        | "new" array_creation_type { LBRACKET RBRACKET } array_initializer
+        | switch_expression
+        | LPAREN expression RPAREN
+        | NAME ;
+
+argument_list = expression { COMMA expression } ;
+
+# --- Switch Expression (Java 14) ---
+#
+# A switch expression is syntactically identical to a switch statement
+# except that it produces a value. The grammar reuses the same switch_block
+# rule. The distinction between statement and expression is semantic:
+#   - As a statement: `switch (x) { ... }` — appears where a statement goes
+#   - As an expression: `var y = switch (x) { ... };` — appears in primary
+#
+# Both forms use the same switch_block, with the same arrow/colon rules.
+
+switch_expression = "switch" LPAREN expression RPAREN switch_block ;
+
+# --- Array Creation ---
+
+array_creation_type = primitive_type
+                    | class_type ;
+
+array_dimension_exprs = LBRACKET expression RBRACKET
+                        { LBRACKET expression RBRACKET } ;
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Seven kinds of literals in Java 17. The LEXICAL forms have expanded
+# across versions (binary literals and underscores from Java 7, text
+# blocks from Java 15), but the grammar sees them all as standard tokens.
+#
+#   Integer:   42, 0xFF, 077, 0b1010, 1_000_000, 42L
+#   Float:     3.14, 2.0e10, 3.14f, 3.14d
+#   Character: 'a', '\n', '\u0041'
+#   String:    "hello", "line1\nline2"
+#   Text block: """
+#               multi-line
+#               content
+#               """
+#   Boolean:   true, false
+#   Null:      null
+#
+# Text blocks are lexed as STRING tokens (see java17.tokens), so the
+# grammar does not need a separate rule for them. The STRING token
+# covers both traditional strings and text blocks.
+
+literal = NUMBER
+        | CHAR
+        | STRING
+        | "true"
+        | "false"
+        | "null" ;

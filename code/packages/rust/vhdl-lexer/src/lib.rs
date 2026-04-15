@@ -1,192 +1,44 @@
-//! # VHDL Lexer — tokenizing VHDL (IEEE 1076-2008) source code.
-//!
-//! [VHDL](https://en.wikipedia.org/wiki/VHDL) (VHSIC Hardware Description
-//! Language) is a strongly-typed, verbose HDL designed by the US Department of
-//! Defense. Unlike Verilog, which is terse and C-like, VHDL is Ada-like — it
-//! favors explicit declarations, strong typing, and readability over
-//! conciseness.
-//!
-//! This crate provides a lexer (tokenizer) for VHDL. It loads the
-//! `vhdl.tokens` grammar file — a declarative description of every token in
-//! VHDL — and feeds it to the generic [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # No preprocessor
-//!
-//! Unlike Verilog (which has a C-like preprocessor with `` `define ``,
-//! `` `ifdef ``, etc.), VHDL has **no preprocessor**. What you write is what
-//! the compiler sees. Configurations and generics serve the role that macros
-//! and conditional compilation play in Verilog.
-//!
-//! # Case insensitivity
-//!
-//! VHDL is case-insensitive: `ENTITY`, `Entity`, and `entity` all refer to
-//! the same keyword. After tokenization, this crate normalizes all NAME and
-//! KEYWORD token values to lowercase using [`str::to_lowercase()`]. This
-//! ensures consistent downstream processing — parsers and tools only need
-//! to match against lowercase strings.
-//!
-//! Extended identifiers (delimited by backslashes, like `\My Name\`) are
-//! NOT normalized. The VHDL standard specifies that extended identifiers
-//! preserve their case.
-//!
-//! # Architecture
-//!
-//! ```text
-//! vhdl.tokens          (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//!        |
-//!        v
-//! vhdl-lexer           (THIS CRATE: wires grammar + lexer + case normalization)
-//! ```
-//!
-//! # Token types
-//!
-//! The VHDL lexer produces these token categories:
-//!
-//! - **NAME** — identifiers like `clk`, `data_in`, `std_logic` (lowercased)
-//! - **KEYWORD** — reserved words: `entity`, `architecture`, `signal`, etc. (lowercased)
-//! - **NUMBER** — plain integers: `42`, `0`, `1_000_000`
-//! - **REAL_NUMBER** — floating-point: `3.14`, `1.0E-3`
-//! - **BASED_LITERAL** — based numbers: `16#FF#`, `2#1010#`
-//! - **BIT_STRING** — bit string literals: `B"1010"`, `X"FF"`, `O"77"`
-//! - **CHAR_LITERAL** — character literals: `'0'`, `'1'`, `'X'`, `'Z'`
-//! - **STRING** — string literals: `"hello"`, `"He said ""hi"""`
-//! - **EXTENDED_IDENT** — extended identifiers: `\my name\`, `\VHDL-2008\`
-//! - **Operators** — `:=`, `<=`, `=>`, `/=`, `**`, `<>`, `+`, `-`, `*`, `/`
-//! - **Delimiters** — `(`, `)`, `[`, `]`, `;`, `,`, `.`, `:`
-//! - **EOF** — end of file
+//! VHDL lexer backed by compiled token grammar with post-tokenization case normalization.
 
 use std::collections::HashSet;
-use std::fs;
 
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::{Token, TokenType};
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `vhdl.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// ```text
-/// code/
-///   grammars/
-///     vhdl.tokens           <-- this is what we want
-///   packages/
-///     rust/
-///       vhdl-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/vhdl.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/vhdl.tokens")
+pub const DEFAULT_VERSION: &str = "2008";
+pub const SUPPORTED_VERSIONS: &[&str] = _grammar::SUPPORTED_VERSIONS;
+
+fn validate_version(version: &str) -> Result<&str, String> {
+    if SUPPORTED_VERSIONS.contains(&version) {
+        Ok(version)
+    } else {
+        Err(format!(
+            "Unknown VHDL version '{version}'. Valid values: {}",
+            SUPPORTED_VERSIONS
+                .iter()
+                .map(|value| format!("\"{}\"", value))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ))
+    }
 }
 
-// ===========================================================================
-// Case normalization
-// ===========================================================================
-
-/// Normalize token values for VHDL's case-insensitive semantics.
-///
-/// VHDL treats identifiers and keywords as case-insensitive. The standard
-/// says that `ENTITY`, `Entity`, and `entity` are all the same thing.
-/// We implement this by lowercasing NAME and KEYWORD token values after
-/// tokenization.
-///
-/// ## Why this is tricky
-///
-/// The grammar-driven lexer maps many VHDL token types (CHAR_LITERAL,
-/// BIT_STRING, BASED_LITERAL, EXTENDED_IDENT, REAL_NUMBER, etc.) to the
-/// generic `TokenType::Name` because the `TokenType` enum doesn't have
-/// dedicated variants for them. To distinguish "real" identifiers from
-/// these other token types, we check the `type_name` field:
-///
-/// - `type_name == Some("NAME")` — a real identifier, must be lowercased
-/// - `type_name == Some("CHAR_LITERAL")` — character literal, preserve case
-/// - `type_name == Some("BIT_STRING")` — bit string, preserve case
-/// - `type_name == Some("EXTENDED_IDENT")` — extended identifier, preserve case
-/// - etc.
-///
-/// ## Keyword promotion
-///
-/// Because the grammar's keyword list is lowercase ("entity", "signal", etc.),
-/// the lexer fails to promote uppercase identifiers like "ENTITY" to keywords.
-/// After lowercasing NAME tokens, we re-check them against the keyword set and
-/// promote matches to `TokenType::Keyword`.
-///
-/// ## What gets normalized and what doesn't
-///
-/// | Token type      | type_name        | Normalized? | Reason                          |
-/// |-----------------|------------------|-------------|---------------------------------|
-/// | Identifier      | NAME             | Yes         | VHDL is case-insensitive        |
-/// | Keyword         | (any)            | Yes         | Keywords are identifiers too    |
-/// | String          | STRING           | No          | String content is user data     |
-/// | Character lit   | CHAR_LITERAL     | No          | 'A' and 'a' are different chars |
-/// | Bit string      | BIT_STRING       | No          | X"FF" is a numeric literal      |
-/// | Based literal   | BASED_LITERAL    | No          | 16#FF# is a numeric literal     |
-/// | Extended ident  | EXTENDED_IDENT   | No          | VHDL standard says preserve case|
-/// | Real number     | REAL_NUMBER      | No          | 1.0E-3 is a numeric literal     |
-/// | Operators       | (various)        | No          | No alphabetic content           |
 fn normalize_case(tokens: &mut [Token], keywords: &HashSet<String>) {
     for token in tokens.iter_mut() {
-        // Step 1: Determine if this token should be case-normalized.
-        //
-        // We only normalize tokens that represent VHDL identifiers — those
-        // with type_name "NAME" — and existing keywords. All other token
-        // types (CHAR_LITERAL, BIT_STRING, BASED_LITERAL, EXTENDED_IDENT,
-        // REAL_NUMBER, STRING, operators, delimiters) keep their original case.
         let should_normalize = match token.type_ {
-            // Existing keywords always get normalized.
             TokenType::Keyword => true,
-
-            // For Name tokens, check the type_name to distinguish real
-            // identifiers from other token types that happen to use
-            // TokenType::Name as a fallback.
-            TokenType::Name => {
-                match token.type_name.as_deref() {
-                    // Explicit NAME — this is a real identifier.
-                    Some("NAME") => true,
-                    // No type_name — treat as identifier (shouldn't happen
-                    // with grammar-driven lexer, but be safe).
-                    None => true,
-                    // Anything else (CHAR_LITERAL, BIT_STRING, BASED_LITERAL,
-                    // EXTENDED_IDENT, REAL_NUMBER, operators like VAR_ASSIGN,
-                    // ARROW, etc.) — do NOT normalize.
-                    Some(_) => false,
-                }
-            }
-
-            // All other TokenType variants (Number, String, Plus, etc.)
-            // need no normalization.
+            TokenType::Name => match token.type_name.as_deref() {
+                Some("NAME") => true,
+                None => true,
+                Some(_) => false,
+            },
             _ => false,
         };
 
         if should_normalize {
-            // Step 2: Lowercase the value.
             token.value = token.value.to_lowercase();
-
-            // Step 3: Keyword promotion.
-            //
-            // If this was a NAME token and its lowercased value matches
-            // a keyword, promote it to Keyword type. This handles the case
-            // where the source writes "ENTITY" — the grammar's keyword list
-            // has "entity", so the initial tokenization produces a NAME.
-            // After lowercasing, we can now match and promote.
             if token.type_ == TokenType::Name && keywords.contains(&token.value) {
                 token.type_ = TokenType::Keyword;
             }
@@ -194,132 +46,38 @@ fn normalize_case(tokens: &mut [Token], keywords: &HashSet<String>) {
     }
 }
 
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for VHDL source code.
-///
-/// This function:
-/// 1. Reads the `vhdl.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on.
-///
-/// **Note:** This function does NOT apply case normalization. If you want
-/// lowercased NAME/KEYWORD values (which is the VHDL-correct behavior),
-/// use [`tokenize_vhdl`] instead, or manually call [`normalize_case`]
-/// on the output.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_vhdl_lexer::create_vhdl_lexer;
-///
-/// let mut lexer = create_vhdl_lexer("entity top is end entity top;");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_vhdl_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read vhdl.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (NAME, NUMBER, BASED_LITERAL, REAL_NUMBER,
-    //     BIT_STRING, CHAR_LITERAL, STRING, EXTENDED_IDENT, operators,
-    //     delimiters)
-    //   - Skip patterns (whitespace, single-line comments with --)
-    //   - Keywords (entity, architecture, signal, process, etc.)
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse vhdl.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
-    GrammarLexer::new(source, &grammar)
+    create_vhdl_lexer_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL token grammar missing default version")
 }
 
-/// Tokenize VHDL source code into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, tokenization, and case normalization in one call. The
-/// returned vector always ends with an `EOF` token.
-///
-/// All NAME and KEYWORD token values are lowercased to implement VHDL's
-/// case-insensitive semantics. For example:
-///
-/// ```text
-/// Input:   "ENTITY Top IS END ENTITY Top;"
-/// Output:  KEYWORD("entity") NAME("top") KEYWORD("is") KEYWORD("end")
-///          KEYWORD("entity") NAME("top") ...
-/// ```
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_vhdl_lexer::tokenize_vhdl;
-///
-/// let tokens = tokenize_vhdl("SIGNAL clk : STD_LOGIC;");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// // Output:
-/// //   Keyword "signal"      <-- lowercased
-/// //   Name "clk"
-/// //   ...
-/// //   Name "std_logic"      <-- lowercased
-/// ```
+pub fn create_vhdl_lexer_with_version<'src>(
+    source: &'src str,
+    version: &str,
+) -> Result<GrammarLexer<'src>, String> {
+    let version = validate_version(version)?;
+    let grammar = _grammar::token_grammar(version)
+        .expect("compiled VHDL token grammar missing supported version");
+    Ok(GrammarLexer::new(source, &grammar))
+}
+
 pub fn tokenize_vhdl(source: &str) -> Vec<Token> {
-    // Step 1: Read and parse the grammar file.
-    //
-    // We need the grammar both for creating the lexer AND for building
-    // the keyword set used in case normalization. So we parse it here
-    // rather than delegating to create_vhdl_lexer.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read vhdl.tokens: {e}"));
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse vhdl.tokens: {e}"));
+    tokenize_vhdl_with_version(source, DEFAULT_VERSION)
+        .expect("compiled VHDL token grammar missing default version")
+}
 
-    // Step 2: Build the keyword set for case-insensitive promotion.
-    //
-    // The grammar's keyword list is lowercase ("entity", "signal", etc.).
-    // We'll use this set to promote NAME tokens whose lowercased value
-    // matches a keyword.
+pub fn tokenize_vhdl_with_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+    let version = validate_version(version)?;
+    let grammar = _grammar::token_grammar(version)
+        .expect("compiled VHDL token grammar missing supported version");
     let keyword_set: HashSet<String> = grammar.keywords.iter().cloned().collect();
-
-    // Step 3: Create the lexer and tokenize.
     let mut vhdl_lexer = GrammarLexer::new(source, &grammar);
     let mut tokens = vhdl_lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("VHDL tokenization failed: {e}"));
-
-    // Step 4: Post-tokenize case normalization.
-    //
-    // This is the key difference from the Verilog lexer. Verilog is
-    // case-sensitive (wire != Wire != WIRE), but VHDL is not. We lowercase
-    // all NAME and KEYWORD values, then re-check for keyword promotion.
+        .map_err(|e| format!("VHDL tokenization failed: {e}"))?;
     normalize_case(&mut tokens, &keyword_set);
-
-    tokens
+    Ok(tokens)
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -1048,4 +806,20 @@ end entity counter;
         let has_integer = pairs.iter().any(|(_, v)| *v == "integer");
         assert!(has_integer, "Expected 'integer' type name");
     }
+
+    #[test]
+    fn test_default_version_matches_explicit_2008() {
+        let default_tokens = tokenize_vhdl("entity top is end entity top;");
+        let explicit_tokens =
+            tokenize_vhdl_with_version("entity top is end entity top;", "2008").unwrap();
+        assert_eq!(default_tokens.len(), explicit_tokens.len());
+    }
+
+    #[test]
+    fn test_unknown_version_rejected() {
+        let err = tokenize_vhdl_with_version("entity top is end entity top;", "2099")
+            .expect_err("unknown versions should be rejected");
+        assert!(err.contains("Unknown VHDL version"));
+    }
 }
+

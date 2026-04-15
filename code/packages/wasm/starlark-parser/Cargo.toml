@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "starlark-parser-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust Starlark parser"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+grammar_wasm_support = { package = "grammar-wasm-support", path = "../../rust/grammar-wasm-support" }
+language_parser = { package = "coding-adventures-starlark-parser", path = "../../rust/starlark-parser" }
+wasm-bindgen = "0.2"

@@ -1,0 +1,296 @@
+# Token definitions for Verilog (IEEE 1364-2001)
+#
+# Baseline note: this edition currently starts from the shared Verilog 2005 token grammar.
+# Edition-specific deltas can be tightened incrementally without changing package APIs.
+#
+# Verilog is a Hardware Description Language (HDL) for describing digital
+# circuits. Where software languages describe computations that execute over
+# time on a fixed machine, Verilog describes physical structures â€" gates,
+# wires, flip-flops â€" that exist simultaneously and operate in parallel.
+#
+# This token file covers the synthesizable subset: constructs that map to
+# real hardware. Simulation-only constructs (delays, file I/O, $display)
+# are tokenized but excluded from the parser grammar.
+#
+# Format:
+#   TOKEN_NAME = /regex/       â€" regex-based token pattern
+#   TOKEN_NAME = "literal"     â€" exact literal match
+#   TOKEN_NAME = /regex/ -> T  â€" regex pattern, emitted as token type T
+#
+# Order matters: first match wins. Multi-character tokens must come before
+# single-character ones (e.g., === before ==, <<< before <<).
+
+# ============================================================================
+# Skip Patterns
+# ============================================================================
+#
+# Verilog has two comment styles, inherited from C:
+#   // single-line comment (to end of line)
+#   /* block comment (can span multiple lines) */
+#
+# Whitespace (spaces, tabs, newlines) is insignificant between tokens.
+
+skip:
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^/])*\*\//
+  WHITESPACE    = /[ \t\r\n]+/
+
+# ============================================================================
+# String Literals
+# ============================================================================
+#
+# Verilog strings are double-quoted with C-style escape sequences:
+#   "Hello, world!\n"
+#   "Value is %d"
+#
+# Strings are primarily used with system tasks like $display (simulation),
+# but they can also appear in parameter values and attributes.
+
+STRING = /"([^"\\]|\\.)*"/
+
+# ============================================================================
+# Number Literals
+# ============================================================================
+#
+# Verilog has a unique number format inherited from hardware design needs.
+# Every signal has a specific bit width, so numbers carry size information:
+#
+#   [size]'[signed][base]digits
+#
+# Examples:
+#   4'b1010       â€" 4-bit binary value (decimal 10)
+#   8'hFF         â€" 8-bit hex value (decimal 255)
+#   32'd42        â€" 32-bit decimal value
+#   'o77          â€" unsized octal value
+#   16'hDEAD      â€" 16-bit hex (57005)
+#   8'b1010_0011  â€" underscores are visual separators (ignored)
+#   4'bxxzz       â€" x = unknown, z = high-impedance (hardware states!)
+#
+# The x and z values are unique to hardware: they represent physical states
+# that don't exist in software. A wire with no driver is 'z' (floating).
+# A flip-flop before initialization is 'x' (unknown).
+#
+# Ordering: sized literals first, then reals, then plain integers.
+# This ensures 4'b1010 is one SIZED_NUMBER token, not NUMBER TICK NAME.
+
+SIZED_NUMBER = /[0-9]*'[sS]?[bBoOdDhH][0-9a-fA-F_xXzZ]+/
+
+# Real numbers: 3.14, 1.5e-3, 2.0E10
+# Must come before NUMBER so 3.14 is one token, not NUMBER DOT NUMBER.
+REAL_NUMBER = /[0-9]+\.[0-9]+([eE][+-]?[0-9]+)?/
+
+# Plain integers: 42, 0, 1_000_000
+# Underscores are visual separators (ignored by tools).
+NUMBER = /[0-9][0-9_]*/
+
+# ============================================================================
+# Special Identifiers
+# ============================================================================
+#
+# Verilog has three kinds of identifiers beyond plain names:
+#
+# 1. System tasks/functions â€" prefixed with $
+#    $display("x = %d", x);  â€" print to simulation console
+#    $time                    â€" current simulation time
+#    $finish                  â€" end simulation
+#    $random                  â€" random number generator
+#
+# 2. Compiler directives â€" prefixed with backtick (`)
+#    `define WIDTH 8          â€" macro definition
+#    `ifdef USE_CACHE         â€" conditional compilation
+#    `include "types.v"       â€" file inclusion
+#    `timescale 1ns/1ps       â€" time unit specification
+#
+#    The preprocessor hook handles `define/`ifdef/`include before
+#    tokenization. Remaining directives (like `timescale) pass through.
+#
+# 3. Escaped identifiers â€" prefixed with backslash (\)
+#    \my.odd.name             â€" allows any characters in identifiers
+#    \bus[0]                  â€" square brackets in identifier
+#    Terminated by whitespace. Used when identifier needs special characters.
+
+SYSTEM_ID     = /\$[a-zA-Z_][a-zA-Z0-9_$]*/
+DIRECTIVE     = /`[a-zA-Z_][a-zA-Z0-9_]*/
+ESCAPED_IDENT = /\\[^ \t\r\n]+/
+
+# Regular identifiers: start with letter or underscore.
+NAME = /[a-zA-Z_][a-zA-Z0-9_$]*/
+
+# ============================================================================
+# Three-Character Operators
+# ============================================================================
+#
+# Arithmetic shift operators (preserve sign bit):
+#   a >>> 2  â€" shift right, fill with sign bit (not zero)
+#   a <<< 2  â€" shift left (same as <<, but semantically distinct)
+#
+# These must come before << and >> (first-match-wins).
+
+ARITH_LEFT_SHIFT  = "<<<"
+ARITH_RIGHT_SHIFT = ">>>"
+
+# Case equality/inequality (4-state comparison):
+#   a === b  â€" true only if every bit matches, including x and z
+#   a !== b  â€" true if any bit differs, including x and z
+#
+# Compare with == and !=, which return x if either operand has x or z bits.
+# In synthesis, === and !== are equivalent to == and != (no x/z in hardware).
+
+CASE_EQ  = "==="
+CASE_NEQ = "!=="
+
+# ============================================================================
+# Two-Character Operators
+# ============================================================================
+#
+# Must come before their single-character components.
+
+LOGIC_AND       = "&&"
+LOGIC_OR        = "||"
+LEFT_SHIFT      = "<<"
+RIGHT_SHIFT     = ">>"
+EQUALS_EQUALS   = "=="
+NOT_EQUALS      = "!="
+LESS_EQUALS     = "<="
+GREATER_EQUALS  = ">="
+POWER           = "**"
+TRIGGER         = "->"
+
+# ============================================================================
+# Single-Character Operators
+# ============================================================================
+#
+# Note on & | ^ ~ : These serve double duty in Verilog.
+# As binary operators:  a & b  (bitwise AND of two operands)
+# As unary operators:   &a     (reduction AND â€" AND all bits of a together)
+#
+# Reduction operators are unique to hardware languages. &8'b11111111 = 1
+# because all bits are 1. ^8'b10101010 = 0 because XOR of all bits is 0.
+# The lexer produces the same token; the parser distinguishes by context.
+
+PLUS            = "+"
+MINUS           = "-"
+STAR            = "*"
+SLASH           = "/"
+PERCENT         = "%"
+AMP             = "&"
+PIPE            = "|"
+CARET           = "^"
+TILDE           = "~"
+BANG            = "!"
+LESS_THAN       = "<"
+GREATER_THAN    = ">"
+EQUALS          = "="
+QUESTION        = "?"
+COLON           = ":"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# The # (hash) and @ (at) delimiters are special to Verilog:
+#   #10          â€" delay of 10 time units (simulation only)
+#   #(8, 16)     â€" parameter override during instantiation
+#   @(posedge clk)  â€" sensitivity list (wait for clock edge)
+#   @(*)         â€" sensitivity to all signals read in the block
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+LBRACE    = "{"
+RBRACE    = "}"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+HASH      = "#"
+AT        = "@"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# These are the synthesizable Verilog keywords. When the lexer matches a
+# NAME token whose value is in this list, it reclassifies it as KEYWORD.
+#
+# Keywords are grouped by function:
+#
+# Module structure:
+#   module, endmodule, input, output, inout
+#
+# Data types:
+#   wire, reg, integer, real, signed, unsigned, tri, supply0, supply1
+#
+# Procedural:
+#   always, initial, begin, end, if, else, case, casex, casez, endcase,
+#   default, for
+#
+# Assignment:
+#   assign
+#
+# Module instantiation:
+#   defparam
+#
+# Parameters:
+#   parameter, localparam
+#
+# Generate:
+#   generate, endgenerate, genvar
+#
+# Sensitivity:
+#   posedge, negedge, or
+#
+# Functions/tasks:
+#   function, endfunction, task, endtask
+#
+# Gates (built-in primitives):
+#   and, nand, or, nor, xor, xnor, not, buf
+
+keywords:
+  always
+  and
+  assign
+  begin
+  buf
+  case
+  casex
+  casez
+  default
+  defparam
+  else
+  end
+  endcase
+  endfunction
+  endgenerate
+  endmodule
+  endtask
+  for
+  function
+  generate
+  genvar
+  if
+  initial
+  inout
+  input
+  integer
+  localparam
+  module
+  nand
+  negedge
+  nor
+  not
+  or
+  output
+  parameter
+  posedge
+  real
+  reg
+  signed
+  supply0
+  supply1
+  task
+  tri
+  unsigned
+  wire
+  xnor
+  xor

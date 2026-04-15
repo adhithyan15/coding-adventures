@@ -343,6 +343,28 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 	return internalDeps
 }
 
+func dependencyScope(language string) string {
+	switch language {
+	case "csharp", "fsharp", "dotnet":
+		return "dotnet"
+	case "wasm":
+		return "wasm"
+	default:
+		return language
+	}
+}
+
+func inDependencyScope(packageLanguage, scope string) bool {
+	switch scope {
+	case "dotnet":
+		return packageLanguage == "csharp" || packageLanguage == "fsharp" || packageLanguage == "dotnet"
+	case "wasm":
+		return packageLanguage == "wasm" || packageLanguage == "rust"
+	default:
+		return packageLanguage == scope
+	}
+}
+
 // parseElixirDeps extracts internal dependencies from an Elixir mix.exs file.
 //
 // Elixir mix.exs declares internal path dependencies usually like:
@@ -640,6 +662,67 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 	return internalDeps
 }
 
+// parseDotnetDeps extracts internal monorepo dependencies from a .NET project
+// file (.csproj or .fsproj). It looks for <ProjectReference Include="...">
+// elements, which are the MSBuild mechanism for referencing sibling projects.
+//
+// Example in a .csproj:
+//
+//	<ItemGroup>
+//	  <ProjectReference Include="../logic-gates/logic-gates.csproj" />
+//	</ItemGroup>
+//
+// The path component between "../" and the next "/" is the dependency's
+// directory name. We look that up in knownNames to find the build-tool
+// package name (e.g., "dotnet/logic-gates").
+//
+// For the initial hello-world programs there are no inter-package dependencies,
+// so this function returns nil. It is registered now so that future dotnet
+// packages with dependencies work without additional build-tool changes.
+func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []string {
+	// Find all .csproj and .fsproj files in the package directory.
+	var projectFiles []string
+	entries, err := os.ReadDir(pkg.Path)
+	if err != nil {
+		return nil
+	}
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if strings.HasSuffix(name, ".csproj") || strings.HasSuffix(name, ".fsproj") {
+			projectFiles = append(projectFiles, filepath.Join(pkg.Path, name))
+		}
+	}
+
+	// Match <ProjectReference Include="../some-dep/some-dep.csproj" />
+	// The dep directory name is the path component after "../".
+	re := regexp.MustCompile(`<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]*"`)
+
+	var internalDeps []string
+	for _, projFile := range projectFiles {
+		data, err := os.ReadFile(projFile)
+		if err != nil {
+			continue
+		}
+		for _, match := range re.FindAllSubmatch(data, -1) {
+			if len(match) < 2 {
+				continue
+			}
+			depDir := strings.ToLower(string(match[1]))
+			// Guard against path traversal.
+			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+				continue
+			}
+			if pkgName, ok := knownNames[depDir]; ok {
+				internalDeps = append(internalDeps, pkgName)
+			}
+		}
+	}
+	return internalDeps
+}
+
 func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
 	settingsFile := filepath.Join(pkg.Path, "settings.gradle.kts")
 	data, err := os.ReadFile(settingsFile)
@@ -701,39 +784,81 @@ func buildKnownNames(packages []discovery.Package) map[string]string {
 
 func buildKnownNamesForLanguage(packages []discovery.Package, language string) map[string]string {
 	known := make(map[string]string)
+	knownLanguage := make(map[string]string)
+	scope := dependencyScope(language)
 
 	// setKnown inserts key→value, letting library packages overwrite programs
-	// but never letting programs overwrite library packages.
-	setKnown := func(key, value, pkgPath string) {
+	// but never letting programs overwrite library packages. Within shared
+	// toolchain families, collisions are resolved deterministically so wrapper
+	// ecosystems do not shadow the canonical implementation names:
+	//   - WASM scope prefers Rust crate names for bare crate identifiers.
+	//   - .NET scope prefers the caller's exact language (C#, F#, or dotnet).
+	setKnown := func(key, value, pkgPath, pkgLanguage string) {
 		existing, exists := known[key]
 		if !exists {
 			known[key] = value
+			knownLanguage[key] = pkgLanguage
 			return
 		}
+
+		existingLanguage := knownLanguage[key]
+		existingIsProgram := strings.Contains(filepath.ToSlash(existing), "/programs/")
+		currentIsProgram := strings.Contains(filepath.ToSlash(pkgPath), "/programs/")
+
+		switch {
+		case existingIsProgram && !currentIsProgram:
+			known[key] = value
+			knownLanguage[key] = pkgLanguage
+			return
+		case !existingIsProgram && currentIsProgram:
+			return
+		}
+
+		switch scope {
+		case "wasm":
+			if existingLanguage == "rust" {
+				return
+			}
+			if pkgLanguage == "rust" {
+				known[key] = value
+				knownLanguage[key] = pkgLanguage
+				return
+			}
+		case "dotnet":
+			if existingLanguage == language {
+				return
+			}
+			if pkgLanguage == language {
+				known[key] = value
+				knownLanguage[key] = pkgLanguage
+				return
+			}
+		}
+
 		// Key already set. Allow the overwrite only if the current pkg is
 		// a library (not a program) — that is, when the existing entry came
 		// from a program and we now have the definitive library entry.
 		_ = existing
-		normalized := filepath.ToSlash(pkgPath)
-		if !strings.Contains(normalized, "/programs/") {
+		if !currentIsProgram {
 			known[key] = value
+			knownLanguage[key] = pkgLanguage
 		}
 	}
 
 	for _, pkg := range packages {
-		if language != "" && pkg.Language != language {
+		if language != "" && !inDependencyScope(pkg.Language, scope) {
 			continue
 		}
 		switch pkg.Language {
 		case "python":
 			// Convert dir name to PyPI name: "logic-gates" → "coding-adventures-logic-gates"
 			pypiName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(pypiName, pkg.Name, pkg.Path)
+			setKnown(pypiName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "ruby":
 			// Convert dir name to gem name: "logic_gates" → "coding_adventures_logic_gates"
 			gemName := "coding_adventures_" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(gemName, pkg.Name, pkg.Path)
+			setKnown(gemName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "go":
 			// For Go, read the module path from go.mod.  Go module paths are
@@ -748,6 +873,7 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 				if strings.HasPrefix(line, "module ") {
 					modulePath := strings.TrimSpace(strings.TrimPrefix(line, "module "))
 					known[strings.ToLower(modulePath)] = pkg.Name
+					knownLanguage[strings.ToLower(modulePath)] = pkg.Language
 					break
 				}
 			}
@@ -755,15 +881,15 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 		case "typescript":
 			// Convert dir name to npm scoped name: "logic-gates" → "@coding-adventures/logic-gates"
 			npmName := "@coding-adventures/" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(npmName, pkg.Name, pkg.Path)
-			setKnown(strings.ToLower(filepath.Base(pkg.Path)), pkg.Name, pkg.Path)
+			setKnown(npmName, pkg.Name, pkg.Path, pkg.Language)
+			setKnown(strings.ToLower(filepath.Base(pkg.Path)), pkg.Name, pkg.Path, pkg.Language)
 
 			packageJSON := filepath.Join(pkg.Path, "package.json")
 			data, err := os.ReadFile(packageJSON)
 			if err == nil {
 				re := regexp.MustCompile(`"name"\s*:\s*"([^"]+)"`)
 				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
-					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path)
+					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path, pkg.Language)
 				}
 			}
 
@@ -771,21 +897,34 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// Rust crate names use the directory name directly (kebab-case).
 			// "logic-gates" → "logic-gates"
 			crateName := strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(crateName, pkg.Name, pkg.Path)
+			setKnown(crateName, pkg.Name, pkg.Path, pkg.Language)
+			if cargoName := readCargoPackageName(pkg.Path); cargoName != "" {
+				setKnown(cargoName, pkg.Name, pkg.Path, pkg.Language)
+			}
+
+		case "wasm":
+			// WASM wrappers should resolve through their explicit Cargo package
+			// names (e.g. "graph-wasm"), not by bare directory names like
+			// "graph". The bare crate names belong to the canonical Rust crates
+			// they wrap; reusing them here can create self-loops when the Rust
+			// package is absent from discovery.
+			if cargoName := readCargoPackageName(pkg.Path); cargoName != "" {
+				setKnown(cargoName, pkg.Name, pkg.Path, pkg.Language)
+			}
 
 		case "elixir":
 			// Elixir mix names replace hyphens with underscores: "logic-gates" → "coding_adventures_logic_gates"
 			baseName := strings.ReplaceAll(strings.ToLower(filepath.Base(pkg.Path)), "-", "_")
 			appName := "coding_adventures_" + baseName
-			setKnown(appName, pkg.Name, pkg.Path)
-			setKnown(baseName, pkg.Name, pkg.Path)
+			setKnown(appName, pkg.Name, pkg.Path, pkg.Language)
+			setKnown(baseName, pkg.Name, pkg.Path, pkg.Language)
 
 			mixExs := filepath.Join(pkg.Path, "mix.exs")
 			data, err := os.ReadFile(mixExs)
 			if err == nil {
 				re := regexp.MustCompile(`app:\s*:([a-z0-9_]+)`)
 				if match := re.FindStringSubmatch(string(data)); len(match) == 2 {
-					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path)
+					setKnown(strings.ToLower(strings.TrimSpace(match[1])), pkg.Name, pkg.Path, pkg.Language)
 				}
 			}
 
@@ -794,25 +933,25 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// Note: Lua directory names use underscores, rockspec names use hyphens.
 			rockspecName := "coding-adventures-" + strings.ReplaceAll(
 				strings.ToLower(filepath.Base(pkg.Path)), "_", "-")
-			setKnown(rockspecName, pkg.Name, pkg.Path)
+			setKnown(rockspecName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "perl":
 			// Perl CPAN distribution names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
 			// This matches the Python convention exactly.
 			cpanName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(cpanName, pkg.Name, pkg.Path)
+			setKnown(cpanName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "swift":
 			// Swift SPM package names are the kebab-case directory name, matching
 			// the `name:` field in Package.swift. .package(path: "../logic-gates")
 			// references the directory name "logic-gates" directly.
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(dirBase, pkg.Name, pkg.Path)
+			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
 
 		case "haskell":
 			// Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
 			cabalName := "coding-adventures-" + strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(cabalName, pkg.Name, pkg.Path)
+			setKnown(cabalName, pkg.Name, pkg.Path, pkg.Language)
 
 		case "java", "kotlin":
 			// Java and Kotlin packages use Gradle composite builds. Dependencies
@@ -820,11 +959,33 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			// includeBuild("../dep-name"). The directory name maps directly to
 			// the internal package name, same as Swift and Rust.
 			dirBase := strings.ToLower(filepath.Base(pkg.Path))
-			setKnown(dirBase, pkg.Name, pkg.Path)
+			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
+
+		case "dotnet", "csharp", "fsharp":
+			// .NET (C#/F#) packages use MSBuild ProjectReference elements, which
+			// reference sibling directories by name. The directory name maps
+			// directly to the NuGet package name by convention in this repo.
+			dirBase := strings.ToLower(filepath.Base(pkg.Path))
+			setKnown(dirBase, pkg.Name, pkg.Path, pkg.Language)
 		}
 	}
 
 	return known
+}
+
+func readCargoPackageName(pkgPath string) string {
+	data, err := os.ReadFile(filepath.Join(pkgPath, "Cargo.toml"))
+	if err != nil {
+		return ""
+	}
+
+	re := regexp.MustCompile(`(?m)^\s*name\s*=\s*"([^"]+)"`)
+	match := re.FindSubmatch(data)
+	if len(match) != 2 {
+		return ""
+	}
+
+	return strings.ToLower(strings.TrimSpace(string(match[1])))
 }
 
 // ResolveDependencies parses package metadata to discover dependencies
@@ -868,6 +1029,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseTypescriptDeps(pkg, knownNames)
 		case "rust":
 			deps = parseRustDeps(pkg, knownNames)
+		case "wasm":
+			deps = parseRustDeps(pkg, knownNames)
 		case "elixir":
 			deps = parseElixirDeps(pkg, knownNames)
 		case "lua":
@@ -880,6 +1043,8 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 			deps = parseHaskellDeps(pkg, knownNames)
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownNames)
+		case "dotnet", "csharp", "fsharp":
+			deps = parseDotnetDeps(pkg, knownNames)
 		}
 
 		for _, depName := range deps {

@@ -1,0 +1,8 @@
+[package]
+name = "binary-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Binary tree with traversal, shape, and array-conversion helpers"
+license = "MIT"
+
+[dependencies]

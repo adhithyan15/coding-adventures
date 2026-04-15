@@ -56,6 +56,9 @@ jobs:
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
+      needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
+      needs_java: ${{ steps.toolchains.outputs.needs_java }}
+      needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -72,10 +75,22 @@ jobs:
       - name: Determine diff base
         id: diff-base
         shell: bash
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE="origin/${{ github.event.pull_request.base.ref }}"
-          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            # Validate the base ref before using it to prevent script injection.
+            # Branch names may only contain alphanumerics, dots, hyphens, underscores,
+            # and forward slashes — anything else is rejected.
+            if [[ "$PR_BASE_REF" =~ ^[A-Za-z0-9_./-]+$ ]]; then
+              BASE="origin/$PR_BASE_REF"
+            else
+              echo "::error::Unsafe base ref value: $PR_BASE_REF"
+              exit 1
+            fi
+          elif [ "$GIT_REF" = "refs/heads/main" ]; then
             BASE="HEAD~1"
           else
             git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
@@ -87,8 +102,11 @@ jobs:
       - name: Check if main branch
         id: detect-main
         shell: bash
+        env:
+          GIT_REF: ${{ github.ref }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ] && [ "${{ github.event_name }}" = "push" ]; then
+          if [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; then
             echo "is_main=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_main=false" >> "$GITHUB_OUTPUT"
@@ -123,7 +141,11 @@ jobs:
               'needs_elixir=true' \
               'needs_lua=true' \
               'needs_perl=true' \
-              'needs_haskell=true' >> "$GITHUB_OUTPUT"
+              'needs_haskell=true' \
+              'needs_dotnet=true' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_java=true' \
+              'needs_kotlin=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -134,7 +156,11 @@ jobs:
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
               'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
-              'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' >> "$GITHUB_OUTPUT"
+              'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
+              'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_java=${{ steps.detect.outputs.needs_java }}' \
+              'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -271,6 +297,31 @@ jobs:
           elixir-version: '1.16'
           otp-version: '26.0'
 
+      # ── Java / Kotlin ──────────────────────────────────────────
+      #
+      # Both Java and Kotlin packages use Gradle and JDK 21.
+      # A single JDK + Gradle setup covers both languages since
+      # Kotlin/JVM runs on the same JVM.
+
+      - name: Set up JDK 21
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Disable long-lived Gradle services on Windows CI
+        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
+        shell: bash
+        run: |
+          {
+            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
+          } >> "$GITHUB_ENV"
+
       - name: Install cpanm and test dependencies (Perl)
         if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
         shell: bash
@@ -291,6 +342,14 @@ jobs:
         with:
           ghc-version: '9.4'
           cabal-version: '3.10'
+
+      - name: Set up .NET
+        if: needs.detect.outputs.needs_dotnet == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          # .NET 9 is the current LTS release. No platform exclusions needed —
+          # actions/setup-dotnet@v4 works identically on Ubuntu, macOS, and Windows.
+          dotnet-version: '9.0.x'
 
       - name: Install test runners
         shell: bash
@@ -338,6 +397,9 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
             echo "GHC: $(ghc --version)"
             echo "Cabal: $(cabal --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_dotnet }}" = "true" ]; then
+            echo ".NET: $(dotnet --version)"
           fi
 
       # ── Download build plan (skip discovery in build job) ─────

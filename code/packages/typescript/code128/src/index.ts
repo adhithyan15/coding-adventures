@@ -11,13 +11,13 @@
  * - a stop pattern with a different width than ordinary data symbols
  */
 import {
-  drawBarcode1D,
+  layoutBarcode1D,
   runsFromBinaryPattern,
   type Barcode1DRun,
   type Barcode1DSymbolDescriptor,
-  type DrawBarcode1DOptions,
-} from "@coding-adventures/barcode-1d";
-import type { DrawScene } from "@coding-adventures/draw-instructions";
+  type PaintBarcode1DOptions,
+} from "@coding-adventures/barcode-layout-1d";
+import type { PaintScene } from "@coding-adventures/paint-instructions";
 
 export const VERSION = "0.1.0";
 
@@ -133,22 +133,20 @@ export function expandCode128Runs(data: string): Barcode1DRun[] {
   );
 }
 
-export function drawCode128(
+export function layoutCode128(
   data: string,
-  options: Omit<DrawBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
-    humanReadableText?: string | null;
+  options: Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
     metadata?: Record<string, string | number | boolean>;
     label?: string;
   } = {},
-): DrawScene {
+): PaintScene {
   const normalized = normalizeCode128B(data);
   const encoded = encodeCode128B(normalized);
   const checksum = encoded[encoded.length - 2]?.value ?? 0;
 
-  return drawBarcode1D(expandCode128Runs(normalized), {
+  return layoutBarcode1D(expandCode128Runs(normalized), {
     ...options,
     symbols: buildSymbols(encoded),
-    humanReadableText: options.humanReadableText ?? normalized,
     label: options.label ?? `Code 128 barcode for ${normalized}`,
     metadata: {
       ...options.metadata,
@@ -157,4 +155,14 @@ export function drawCode128(
       checksum,
     },
   });
+}
+
+export function drawCode128(
+  data: string,
+  options: Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
+    metadata?: Record<string, string | number | boolean>;
+    label?: string;
+  } = {},
+): PaintScene {
+  return layoutCode128(data, options);
 }

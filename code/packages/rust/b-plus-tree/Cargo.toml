@@ -1,0 +1,8 @@
+[package]
+name = "coding-adventures-b-plus-tree"
+version = "0.1.0"
+edition = "2021"
+description = "B+ tree implementation with leaf linked list for O(k) range scans (DT12)"
+license = "MIT"
+
+[dependencies]

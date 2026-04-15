@@ -1,170 +1,21 @@
-//! # CSS Lexer — tokenizing CSS source code.
-//!
-//! [CSS](https://www.w3.org/Style/CSS/) (Cascading Style Sheets) is the
-//! language that describes the presentation of HTML and XML documents. CSS
-//! tokenization is notably more complex than JSON or Starlark because of
-//! compound tokens (e.g., `10px` is a single DIMENSION token, not NUMBER +
-//! IDENT), context-dependent disambiguation (e.g., `#fff` as a color vs.
-//! `#header` as an ID selector — both are HASH tokens, with the grammar
-//! handling disambiguation), and diverse token types (at-keywords, function
-//! tokens, URL tokens, unicode ranges, and CSS nesting).
-//!
-//! This crate provides a lexer (tokenizer) for CSS. It does **not**
-//! hand-write tokenization rules. Instead, it loads the `css.tokens`
-//! grammar file — a declarative description of every token in CSS — and
-//! feeds it to the generic [`GrammarLexer`] from the `lexer` crate.
-//!
-//! # Architecture
-//!
-//! The tokenization pipeline has three layers:
-//!
-//! ```text
-//! css.tokens           (grammar file on disk)
-//!        |
-//!        v
-//! grammar-tools        (parses .tokens -> TokenGrammar struct)
-//!        |
-//!        v
-//! lexer::GrammarLexer  (tokenizes source using TokenGrammar)
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together
-//! for CSS specifically. It knows where to find `css.tokens` and provides
-//! two public entry points:
-//!
-//! - [`create_css_lexer`] — returns a `GrammarLexer` for fine-grained control.
-//! - [`tokenize_css`] — convenience function that returns `Vec<Token>` directly.
-//!
-//! # Why grammar-driven instead of hand-written?
-//!
-//! A hand-written CSS lexer would be hundreds of lines of Rust with intricate
-//! logic for dimension tokens, escape sequences, URL tokens, and at-keywords.
-//! The grammar-driven approach replaces all of that with a declarative grammar
-//! file plus ~30 lines of Rust glue code. When CSS evolves (e.g., adding new
-//! function tokens or at-rules), you edit the grammar file — no Rust code
-//! changes needed.
+//! CSS lexer backed by compiled token grammar.
 
-use std::fs;
-
-use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `css.tokens` grammar file.
-///
-/// We use `env!("CARGO_MANIFEST_DIR")` to get the directory containing this
-/// crate's `Cargo.toml` at compile time. From there, we navigate up to the
-/// `grammars/` directory at the repository root.
-///
-/// The directory structure looks like:
-///
-/// ```text
-/// code/
-///   grammars/
-///     css.tokens            <-- this is what we want
-///   packages/
-///     rust/
-///       css-lexer/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR points here
-///         src/
-///           lib.rs          <-- we are here
-/// ```
-///
-/// So the relative path from CARGO_MANIFEST_DIR to the grammar file is:
-/// `../../../grammars/css.tokens`
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/css.tokens")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarLexer` configured for CSS source code.
-///
-/// This function:
-/// 1. Reads the `css.tokens` grammar file from disk.
-/// 2. Parses it into a `TokenGrammar` using `grammar-tools`.
-/// 3. Constructs a `GrammarLexer` with the grammar and the given source.
-///
-/// The returned lexer is ready to call `.tokenize()` on. Use this when you
-/// need access to the lexer object itself (e.g., for incremental tokenization
-/// or custom error handling).
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read or parsed. This should never
-/// happen in practice — the grammar file is checked into the repository and
-/// validated by the grammar-tools test suite. A panic here indicates a
-/// broken build or missing file.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_css_lexer::create_css_lexer;
-///
-/// let mut lexer = create_css_lexer("body { color: red; }");
-/// let tokens = lexer.tokenize().expect("tokenization failed");
-/// for token in &tokens {
-///     println!("{}", token);
-/// }
-/// ```
 pub fn create_css_lexer(source: &str) -> GrammarLexer<'_> {
-    // Step 1: Read the grammar file from disk.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read css.tokens: {e}"));
-
-    // Step 2: Parse the grammar text into a structured TokenGrammar.
-    //
-    // The TokenGrammar contains:
-    //   - Token definitions (DIMENSION, NUMBER, HASH, STRING, IDENT, etc.)
-    //   - Skip patterns (whitespace, comments)
-    //   - No keywords (CSS does not have reserved keywords at the token level)
-    //   - Mode: default (no indentation tracking)
-    let grammar = parse_token_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse css.tokens: {e}"));
-
-    // Step 3: Create and return the lexer.
+    let grammar = _grammar::token_grammar();
     GrammarLexer::new(source, &grammar)
 }
 
-/// Tokenize CSS source code into a vector of tokens.
-///
-/// This is the most convenient entry point — it handles grammar loading,
-/// lexer creation, and tokenization in one call. The returned vector always
-/// ends with an `EOF` token.
-///
-/// # Panics
-///
-/// Panics if the grammar file cannot be read/parsed, or if the source
-/// contains an unexpected character (via `LexerError` propagation).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_css_lexer::tokenize_css;
-///
-/// let tokens = tokenize_css("h1 { font-size: 16px; }");
-/// for token in &tokens {
-///     println!("{:?} {:?}", token.type_, token.value);
-/// }
-/// ```
 pub fn tokenize_css(source: &str) -> Vec<Token> {
-    let mut css_lexer = create_css_lexer(source);
-
-    css_lexer
+    let mut lexer = create_css_lexer(source);
+    lexer
         .tokenize()
         .unwrap_or_else(|e| panic!("CSS tokenization failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -340,3 +191,4 @@ mod tests {
         assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
     }
 }
+

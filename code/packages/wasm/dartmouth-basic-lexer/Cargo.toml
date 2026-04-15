@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "dartmouth-basic-lexer-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust Dartmouth BASIC lexer"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+grammar_wasm_support = { package = "grammar-wasm-support", path = "../../rust/grammar-wasm-support" }
+language_lexer = { package = "coding-adventures-dartmouth-basic-lexer", path = "../../rust/dartmouth-basic-lexer" }
+wasm-bindgen = "0.2"

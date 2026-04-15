@@ -1,0 +1,8 @@
+[package]
+name = "coding-adventures-b-tree"
+version = "0.1.0"
+edition = "2021"
+description = "B-tree implementation with proactive top-down splitting and CLRS deletion (DT11)"
+license = "MIT"
+
+[dependencies]

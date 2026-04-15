@@ -1,0 +1,8 @@
+[package]
+name = "ir-to-intel-4004-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+intel-4004-ir-validator = { path = "../intel-4004-ir-validator" }

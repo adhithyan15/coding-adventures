@@ -62,7 +62,7 @@ export function latticePlugin(options: LatticePluginOptions = {}): Plugin {
             server = await createServer({
               server: { middlewareMode: true },
               appType: "custom",
-              optimizeDeps: { disabled: true },
+              optimizeDeps: { noDiscovery: true },
             });
             isBuildModeServer = true;
           }
@@ -97,7 +97,7 @@ export default css;
             server = await createServer({
               server: { middlewareMode: true },
               appType: "custom",
-              optimizeDeps: { disabled: true },
+              optimizeDeps: { noDiscovery: true },
             });
             isBuildModeServer = true;
           }

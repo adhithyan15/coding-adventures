@@ -744,4 +744,20 @@ class TestVhdlLexer < Minitest::Test
   def test_version_defined
     assert_equal "0.1.0", CodingAdventures::VhdlLexer::VERSION
   end
+
+  def test_default_version_matches_explicit_2008
+    default_tokens = tokenize("entity e is end entity e;")
+    explicit_tokens = CodingAdventures::VhdlLexer.tokenize(
+      "entity e is end entity e;",
+      version: "2008"
+    )
+    assert_equal default_tokens.map(&:value), explicit_tokens.map(&:value)
+  end
+
+  def test_rejects_unknown_version
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::VhdlLexer.tokenize("entity e is end entity e;", version: "2099")
+    end
+    assert_match(/Unknown VHDL version/, error.message)
+  end
 end

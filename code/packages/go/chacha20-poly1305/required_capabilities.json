@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "go/chacha20-poly1305",
+  "capabilities": [],
+  "justification": "Pure computation. ChaCha20-Poly1305 AEAD performed entirely in memory with no OS access."
+}

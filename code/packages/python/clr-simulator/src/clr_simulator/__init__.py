@@ -4,6 +4,8 @@ A simulator for Microsoft's Common Language Runtime Intermediate Language,
 the bytecode that powers .NET (C#, F#, VB.NET).
 """
 
+from __future__ import annotations
+
 from clr_simulator.simulator import (
     CEQ_BYTE,
     CGT_BYTE,
@@ -16,12 +18,14 @@ from clr_simulator.simulator import (
     encode_ldloc,
     encode_stloc,
 )
+from clr_simulator.state import CLRState
 
 __all__ = [
     "CEQ_BYTE",
     "CGT_BYTE",
     "CLROpcode",
     "CLRSimulator",
+    "CLRState",
     "CLRTrace",
     "CLT_BYTE",
     "assemble_clr",

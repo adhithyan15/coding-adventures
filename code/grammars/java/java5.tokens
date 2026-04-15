@@ -1,0 +1,376 @@
+# Java 5 (2004) — Lexical Grammar
+# @version 1
+# @java_version 5
+#
+# JDK 5.0 (originally called 1.5) — September 2004
+#
+# Java 5 is the single largest revision in Java's history. Internally
+# codenamed "Tiger," this release transformed the language from a verbose,
+# cast-heavy descendant of C++ into something approaching modern type
+# safety. The changes were so sweeping that Sun decided to rebrand the
+# version number: what would have been JDK 1.5 became "Java 5" (though
+# the internal version string still reads 1.5.0).
+#
+# The headline features — generics, enums, annotations, enhanced for,
+# varargs, and static imports — were all driven by real pain points that
+# Java programmers had been suffering for nearly a decade:
+#
+#   - Generics eliminate unsafe casts from collection access
+#   - Enums replace the fragile "int constant" pattern
+#   - Annotations replace boilerplate configuration (XML, marker interfaces)
+#   - Enhanced for eliminates iterator boilerplate
+#   - Varargs eliminate manual array construction for variadic methods
+#   - Static imports reduce verbosity for utility classes
+#
+# Lexically, Java 5 adds very few tokens — the grammar does the heavy
+# lifting. Only three new tokens are needed:
+#
+#   1. The `enum` keyword (brand new — unlike assert/strictfp, enum was
+#      NOT reserved in any prior version)
+#   2. The `@` at-sign operator (for annotations)
+#   3. The `...` ellipsis operator (for varargs)
+#
+# The `<` and `>` tokens already exist as comparison operators and are
+# reused for generics. The parser disambiguates via context — in type
+# positions, `<` begins a type argument list; in expression positions,
+# it remains a less-than operator. This is one of the most complex
+# parsing challenges in Java 5 and is handled entirely in the grammar.
+#
+# Accumulated tokens from prior versions:
+#   - Java 1.0 (1996): 48 keywords, all operators and delimiters
+#   - Java 1.1 (1997): no lexical changes (inner classes are syntactic)
+#   - Java 1.2 (1998): added `strictfp` keyword
+#   - Java 1.4 (2002): added `assert` keyword
+#   - Java 5 (2004):   added `enum` keyword, `@` operator, `...` operator
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in Java can contain letters, digits, underscores, and the
+# dollar sign ($). The $ was originally used by the compiler for inner class
+# names (e.g., Outer$Inner.class) and is technically legal in user code,
+# though discouraged by convention. The Java Language Specification defines
+# identifiers using Unicode categories, but we use the ASCII subset here
+# since the tokenizer operates on ASCII source.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Java 5 inherits all numeric literal forms from Java 1.0 unchanged:
+#
+#   1. Hex integers:     0x1A, 0XFF, 0x1AL (long)
+#   2. Octal integers:   077, 077L (leading zero makes it octal!)
+#   3. Decimal integers:  42, 42L, 42l
+#   4. Floating point:    3.14, 3.14f, 3.14F, 3.14d, 3.14D, 1e10, 1e10f
+#
+# The long suffix (L or l) marks an integer as 64-bit. The float suffixes
+# (f/F for 32-bit float, d/D for 64-bit double) distinguish precision.
+# Lowercase l is legal but discouraged because it looks like the digit 1.
+#
+# IMPORTANT: Octal literals are a source of bugs! The literal 010 is 8,
+# not 10. This "leading zero means octal" rule was inherited from C and
+# has confused generations of programmers. Python 3 removed it entirely,
+# requiring the explicit 0o prefix instead.
+#
+# No new numeric literal forms were added until Java 7 (binary literals
+# 0b1010 and underscores in numbers 1_000_000).
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+HEX_NUMBER        = /0[xX][0-9a-fA-F]+[lL]?/ -> NUMBER
+OCTAL_NUMBER      = /0[0-7]+[lL]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?[fFdD]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]+([eE][+-]?[0-9]+)?[fFdD]?/ -> NUMBER
+SCI_NUMBER        = /[0-9]+[eE][+-]?[0-9]+[fFdD]?/ -> NUMBER
+LONG_NUMBER       = /[0-9]+[lL]/ -> NUMBER
+FLOAT_SUFFIX      = /[0-9]+[fFdD]/ -> NUMBER
+INT_NUMBER        = /[0-9]+/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Java has BOTH string literals ("hello") and character literals ('a'),
+# unlike JavaScript which only has string literals. Character literals
+# hold exactly one character (or one escape sequence) and have type char
+# (a 16-bit unsigned integer representing a Unicode code point in the
+# Basic Multilingual Plane).
+#
+# Both support the same escape sequences:
+#   \\    backslash
+#   \"    double quote (in strings)
+#   \'    single quote (in chars)
+#   \n    newline (line feed)
+#   \r    carriage return
+#   \t    horizontal tab
+#   \b    backspace
+#   \f    form feed
+#   \0    null character
+#   \ooo  octal escape (1-3 octal digits, max \377)
+#   \uHHHH  Unicode escape (exactly 4 hex digits)
+#
+# Unicode escapes (\uHHHH) are actually processed BEFORE lexing in the
+# Java specification — they are a source-level encoding, not a string
+# escape. This means \u0022 can terminate a string! This is a famous
+# Java quirk. Our regex treats them as normal escapes for simplicity.
+#
+# No changes to string/char literals in Java 5. Text blocks (""") don't
+# arrive until Java 13.
+
+STRING = /"([^"\\]|\\.)*"/
+CHAR   = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# Java 5 adds one new multi-character operator: the ellipsis `...` for
+# varargs. The ellipsis must come before the DOT token in the match order,
+# since `...` starts with `.` and first-match-wins.
+#
+# Java 5 also inherits all operators from Java 1.0 unchanged, including
+# the unsigned right shift >>> that Java shares with JavaScript.
+#
+# IMPORTANT: The `<` and `>` tokens are NOT changed. They remain single-
+# character operators. The parser disambiguates their use as:
+#   - Less-than / greater-than comparison operators in expressions
+#   - Generic type delimiters in type contexts (List<String>)
+#
+# This dual use of `<` and `>` is the source of Java's infamous "double
+# closing angle bracket" problem. Before Java 7's diamond operator,
+# nested generics required a space:
+#
+#   List<List<String>>    // ERROR in Java 5! >> is the right-shift operator
+#   List<List<String> >   // OK in Java 5 (space separates the two >)
+#
+# Java 7 fixed this with a special parser rule. In Java 5, the lexer
+# greedily matches >> as RIGHT_SHIFT, and the grammar must handle it.
+# Our PEG grammar resolves this: in type contexts, we match GREATER_THAN
+# individually, so >> as RIGHT_SHIFT is never produced inside type arguments.
+
+ELLIPSIS                    = "..."
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# Java 5 adds the `@` at-sign as a new single-character operator for
+# annotations. The @ symbol was previously unused in Java source code
+# (it appeared only in Javadoc tags like @param and @return, which live
+# inside comments and are invisible to the lexer).
+#
+# All other single-character operators are inherited from Java 1.0.
+#
+# Note: The `?` token takes on new significance in Java 5 — it is used
+# for wildcard type arguments (List<?>, List<? extends Number>). However,
+# lexically it is the same QUESTION token used for the ternary operator.
+# The grammar disambiguates by context.
+
+AT           = "@"
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters, unchanged from Java 1.0. The dot (.) serves
+# double duty: it is both the decimal point in floating-point literals AND
+# the member access operator (object.field). The lexer handles this by
+# matching numeric literals first.
+#
+# Note: The ELLIPSIS token `...` must be matched before DOT in the operator
+# section above, since the lexer uses first-match-wins ordering.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Java 5 has 51 keywords (48 from Java 1.0 + strictfp from 1.2 + assert
+# from 1.4 + enum from 5.0) plus the three literal keywords true, false,
+# and null (54 total keyword-like reserved tokens).
+#
+# The `enum` keyword is genuinely new — unlike `assert` and `strictfp`,
+# which were added as reserved words in earlier versions, `enum` was NOT
+# reserved before Java 5. This means that any pre-Java-5 code using `enum`
+# as a variable name (which was legal!) will break when compiled with
+# Java 5. Sun provided the -source flag to handle this transition:
+#
+#   javac -source 1.4 OldCode.java    // allows `enum` as identifier
+#   javac -source 1.5 NewCode.java    // treats `enum` as keyword
+#
+# The `assert` keyword (from Java 1.4) is included. It enables runtime
+# assertion checking:
+#
+#   assert x > 0 : "x must be positive";
+#
+# The `strictfp` keyword (from Java 1.2) forces strict IEEE 754 floating-
+# point arithmetic. Without it, the JVM is free to use extended precision
+# on x87 FPUs, which can produce different results on different platforms.
+# With it, Java truly achieves "write once, run anywhere" for floating-point:
+#
+#   strictfp class StrictMath { ... }
+#
+# Note: `@interface` for annotation type declarations is NOT a keyword.
+# It is composed of the AT token followed by the "interface" keyword.
+# The parser handles this combination in the grammar.
+
+keywords:
+  abstract
+  assert
+  boolean
+  break
+  byte
+  case
+  catch
+  char
+  class
+  continue
+  default
+  do
+  double
+  else
+  enum
+  extends
+  final
+  finally
+  float
+  for
+  if
+  implements
+  import
+  instanceof
+  int
+  interface
+  long
+  native
+  new
+  package
+  private
+  protected
+  public
+  return
+  short
+  static
+  strictfp
+  super
+  switch
+  synchronized
+  this
+  throw
+  throws
+  transient
+  try
+  void
+  volatile
+  while
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# The same two identifiers from Java 1.0 remain reserved but unused:
+#
+# const — C/C++ uses this for immutable variables. Java chose `final`
+#   instead. const has never been given a meaning in any Java version.
+#
+# goto — Reserved to produce a helpful error if C programmers try to use
+#   it. Java uses labeled break/continue instead.
+#
+# Both remain reserved through all Java versions to this day.
+
+reserved:
+  const
+  goto
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Java has three comment forms, unchanged since 1.0:
+#   1. Line comments:  // to end of line
+#   2. Block comments: /* ... */ (cannot nest)
+#   3. Javadoc comments: /** ... */ (lexically identical to block comments)
+#
+# In Java 5, annotations like @Override and @Deprecated formalize what
+# Javadoc tags like @deprecated had been doing informally. But the comment
+# syntax itself is unchanged — Javadoc comments are still processed by the
+# javadoc tool, not the compiler.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# These patterns match malformed literals so the lexer can report a
+# meaningful error ("unterminated string literal") instead of producing
+# a confusing cascade of errors from the parser.
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/

@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "python/ed25519",
+  "capabilities": [],
+  "justification": "Pure computation. Ed25519 signing and verification performed entirely in memory with no OS access."
+}

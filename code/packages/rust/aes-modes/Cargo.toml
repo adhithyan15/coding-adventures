@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_aes_modes"
+version = "0.1.0"
+edition = "2021"
+description = "AES modes of operation — ECB, CBC, CTR, GCM"
+
+[dependencies]
+coding_adventures_aes = { path = "../aes" }
+
+[dev-dependencies]
+hex = "0.4"

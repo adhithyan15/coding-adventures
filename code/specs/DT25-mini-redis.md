@@ -1,13 +1,20 @@
-# DT25 — Mini-Redis
+# DT25 — In-Memory Data Store
 
 ## Overview
 
-Mini-Redis is the culmination of the entire DT series. Every data structure
-from DT00 through DT24 comes together in one working system: a Redis-compatible
-in-memory database server that speaks the real Redis wire protocol.
+The in-memory data store is the culmination of the entire DT series. Every
+data structure from DT00 through DT24 comes together in one working system: a
+Redis-compatible in-memory database server that speaks the real Redis wire
+protocol.
 
-When you point `redis-cli` at mini-redis and type `SET foo bar`, then `GET foo`,
-and get back `"bar"` — every layer we have built is doing its job:
+The first target is a **single-node** Redis baseline. That means the core
+priority is to get the protocol, command semantics, and in-memory data
+structures right using our own packages where possible. We can layer on the
+distributed Redis features later once the single-node behavior is stable.
+
+When you point `redis-cli` at the in-memory data store and type `SET foo bar`,
+then `GET foo`, and get back `"bar"` - every layer we have built is doing its
+job:
 
 ```
 redis-cli ──► TCP connection (DT24) ──► RESP parser (DT23)
@@ -17,7 +24,7 @@ redis-cli ──► TCP connection (DT24) ──► RESP parser (DT23)
                                │  RadixTree[key → Entry]  (DT14)    │
                                │  String  → bytes                   │
                                │  Hash    → HashMap       (DT18)    │
-                               │  List    → linked list             │
+                               │  List    → array list              │
                                │  Set     → HashSet       (DT19)    │
                                │  ZSet    → SkipList      (DT20)    │
                                │  HLL     → HyperLogLog   (DT21)    │
@@ -27,9 +34,11 @@ redis-cli ──► TCP connection (DT24) ──► RESP parser (DT23)
                                RESP encoder (DT23) ──► TCP (DT24) ──► redis-cli
 ```
 
-This is not a toy. A correct implementation passes the real Redis test suite.
-You can connect any Redis client library — redis-py, Jedis, ioredis, go-redis
-— and it will work.
+This is not full Redis parity yet. The goal for this phase is a single-node
+server that behaves like Redis for the common in-memory command surface and
+RESP2 client/server flow. You should be able to connect normal Redis clients
+and exercise the supported commands, but cluster, replication, Lua, and the
+rest of Redis's distributed surface are still future work.
 
 ## Layer Position
 
@@ -60,8 +69,8 @@ DT22: bloom-filter    ─┘   (optional: pre-filter key existence)
 DT23: resp-protocol   ─── wire format encode/decode
 DT24: tcp-server      ─── network I/O layer
 
-DT25: mini-redis      ← [YOU ARE HERE]
-                         The completed system. All DTs combined.
+DT25: in-memory data store ← [YOU ARE HERE]
+                         Single-node Redis baseline built from the DT stack
 ```
 
 **Depends on:** Everything. DT25 is the integration point for the entire series.
@@ -81,6 +90,52 @@ What makes Redis fast is not magic. It is fast because:
 4. RESP (DT23) is trivially fast to parse and encode
 
 Mini-redis gives you the same foundation in a codebase you wrote yourself.
+
+### Single-Node First
+
+The implementation strategy is intentionally conservative:
+
+- Keep the server single-node and in-memory first.
+- Prefer our own packages for storage, protocol, and support layers.
+- Make the supported command surface behave correctly before adding
+  distributed or operational complexity.
+- Avoid introducing a generic lexer/parser stack for the wire path unless a
+  command family truly needs it.
+
+That approach keeps the 10+ language ports tractable and makes the shared
+architecture easier to reason about.
+
+### What We Are Still Missing From Real Redis
+
+This is the gap list we should keep visible while the single-node baseline is
+being completed:
+
+- **Transactions and optimistic coordination:** `MULTI`, `EXEC`, `WATCH`,
+  `UNWATCH`, and the queuing semantics around them.
+- **Blocking list operations:** `BLPOP`, `BRPOP`, `BLMOVE`, `BRPOPLPUSH`, and
+  the related timeout/unblock behavior.
+- **Pub/Sub:** `SUBSCRIBE`, `PSUBSCRIBE`, `PUBLISH`, and the push-message
+  protocol flow.
+- **Scripting:** `EVAL`, `EVALSHA`, script caching, and atomic script
+  execution semantics.
+- **Streams:** `XADD`, `XREAD`, consumer groups, pending-entry tracking, and
+  stream trimming.
+- **Key scanning and cursor iteration:** `SCAN`, `HSCAN`, `SSCAN`, `ZSCAN`
+  and their incremental iteration rules.
+- **Replication and failover:** primary/replica sync, `PSYNC`, Sentinel-style
+  promotion, and reconnect logic.
+- **Cluster mode:** hash-slot routing, `MOVED`/`ASK` redirects, resharding,
+  and topology awareness.
+- **Persistence beyond AOF replay:** RDB snapshots, AOF rewrite, crash-safe
+  durability guarantees, and recovery semantics.
+- **Memory management and eviction:** `maxmemory`, LRU/LFU/random eviction,
+  and accurate memory accounting.
+- **Protocol expansion:** RESP3, `HELLO`, client tracking, push replies,
+  maps/sets/attributes, and related compatibility details.
+- **Operational surface:** ACLs, modules, `CLIENT` administration, `CONFIG`,
+  `INFO` parity, and keyspace notifications.
+- **Command parity and edge cases:** all the option variants, subcommands,
+  error messages, and ordering semantics that real Redis clients expect.
 
 ### Command Flow: Tracing a Request End-to-End
 
@@ -122,7 +177,7 @@ string keys to typed entries. Every Redis key can hold one of six types:
 │                                                                     │
 │  "counter"  → Entry { type: String,  value: b"42"              }   │
 │  "users"    → Entry { type: Hash,    value: HashMap{...}       }   │
-│  "queue"    → Entry { type: List,    value: LinkedList[...]    }   │
+│  "queue"    → Entry { type: List,    value: ArrayList[...]     }   │
 │  "online"   → Entry { type: Set,     value: HashSet{...}       }   │
 │  "scores"   → Entry { type: ZSet,    value: SkipList[...]      }   │
 │  "visitors" → Entry { type: HLL,     value: HyperLogLog{...}   }   │
@@ -165,12 +220,12 @@ HGETALL key      HashMap of HashMaps  all (field, value) pairs
 HLEN key         HashMap of HashMaps  len(store[key].hash)
 HEXISTS key f    HashMap of HashMaps  field in store[key].hash
 
-LPUSH key v[…]   LinkedList           prepend to list at key
-RPUSH key v[…]   LinkedList           append to list at key
-LPOP key         LinkedList           remove + return head
-RPOP key         LinkedList           remove + return tail
-LLEN key         LinkedList           len(list)
-LRANGE key s e   LinkedList           slice [start, end]
+LPUSH key v[…]   ArrayList            prepend to list at key
+RPUSH key v[…]   ArrayList            append to list at key
+LPOP key         ArrayList            remove + return head
+RPOP key         ArrayList            remove + return tail
+LLEN key         ArrayList            len(list)
+LRANGE key s e   ArrayList            slice [start, end]
 
 SADD key m[…]    HashSet (DT19)       add members
 SREM key m[…]    HashSet (DT19)       remove members
@@ -347,7 +402,7 @@ Store (the in-memory database):
 
 Entry (one value stored at a key):
   type: EntryType                    # String | Hash | List | Set | ZSet | HLL
-  value: bytes | HashMap | LinkedList | HashSet | SkipList | HyperLogLog
+  value: bytes | HashMap | ArrayList | HashSet | SkipList | HyperLogLog
   expires_at: int | None             # Unix milliseconds, None = no TTL
 
 EntryType (enum):
@@ -970,7 +1025,7 @@ Phase 4: Hash Commands
   Test: HSET multiple fields, HGETALL returns all pairs
 
 Phase 5: List Commands
-  ✓ Doubly-linked list per key
+  ✓ Chunked array list per key
   ✓ LPUSH, RPUSH, LPOP, RPOP, LLEN, LRANGE, LINDEX
   Test: queue/stack semantics, LRANGE slicing
 
@@ -1002,12 +1057,12 @@ Phase 10: AOF Persistence
   ✓ Configurable fsync policy
   Test: data survives simulated restart, AOF is valid RESP
 
-Phase 11: Additional Commands
+Phase 11: Single-Node Admin Commands
   ✓ SELECT (switch databases 0-15)
   ✓ FLUSHDB, FLUSHALL
   ✓ DBSIZE
   ✓ INFO (server stats string)
-  ✓ MULTI/EXEC (basic transaction support)
+  Future work: MULTI/EXEC/WATCH and the rest of the distributed surface
 ```
 
 ## Future Extensions
@@ -1015,6 +1070,10 @@ Phase 11: Additional Commands
 **RDB Snapshots:** A periodic full serialisation of the store to a binary
 file. Faster to load than replaying a long AOF. Redis uses both: RDB for
 recovery and AOF for durability.
+
+**Transactions:** `MULTI`, `EXEC`, `WATCH`, and `UNWATCH`. Queue commands
+inside a transaction, abort when watches are invalidated, and preserve Redis'
+single-threaded atomic execution model.
 
 **Pub/Sub:** `SUBSCRIBE channel` and `PUBLISH channel msg`. The server
 maintains a map of `channel → set of subscribers`. On PUBLISH, iterate the

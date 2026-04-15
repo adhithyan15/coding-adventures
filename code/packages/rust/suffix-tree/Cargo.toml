@@ -1,0 +1,8 @@
+[package]
+name = "suffix-tree"
+version = "0.1.0"
+edition = "2021"
+description = "Suffix tree-style string index with search and substring helpers"
+license = "MIT"
+
+[dependencies]

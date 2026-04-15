@@ -18,6 +18,8 @@
 
 import { describe, it, expect } from "vitest";
 import { Intel4004Simulator } from "../src/simulator.js";
+import type { Intel4004State } from "../src/state.js";
+import type { Simulator } from "@coding-adventures/simulator-protocol";
 
 // =========================================================================
 // 1. Basic instructions
@@ -1301,5 +1303,40 @@ describe("TestTraceRaw2", () => {
     const sim = new Intel4004Simulator();
     const traces = sim.run(new Uint8Array([0xd5, 0x01])); // LDM 5, HLT
     expect(traces[0].raw2).toBeUndefined();
+  });
+});
+
+describe("TestSimulatorProtocol", () => {
+  it("supports_structural_protocol_typing", () => {
+    const sim: Simulator<Intel4004State> = new Intel4004Simulator();
+    const result = sim.execute(new Uint8Array([0xd7, 0x01]));
+    expect(result.ok).toBe(true);
+    expect(result.finalState.accumulator).toBe(7);
+  });
+
+  it("get_state_returns_immutable_snapshot", () => {
+    const sim = new Intel4004Simulator();
+    sim.run(new Uint8Array([0xd7, 0xb0, 0x01]));
+
+    const state = sim.getState();
+    expect(state.registers[0]).toBe(7);
+    expect(Object.isFrozen(state)).toBe(true);
+    expect(Object.isFrozen(state.registers)).toBe(true);
+    expect(Object.isFrozen(state.ram)).toBe(true);
+    expect(() => ((state as { accumulator: number }).accumulator = 99)).toThrow();
+  });
+
+  it("execute_returns_normalized_traces", () => {
+    const sim = new Intel4004Simulator();
+    const result = sim.execute(new Uint8Array([0xd1, 0xb0, 0x01]));
+
+    expect(result.ok).toBe(true);
+    expect(result.steps).toBe(3);
+    expect(result.traces.map((trace) => trace.mnemonic)).toEqual([
+      "LDM 1",
+      "XCH R0",
+      "HLT",
+    ]);
+    expect(result.finalState.registers[0]).toBe(1);
   });
 });

@@ -1,0 +1,20 @@
+{
+  "name": "@coding-adventures/tree-set",
+  "version": "0.1.0",
+  "description": "Browser-safe ordered set with sorted iteration, rank, range, and set algebra",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.1.1",
+    "typescript": "^5.0.0",
+    "vitest": "^3.1.1"
+  }
+}
+

@@ -1,1 +1,1 @@
-echo Perl testing is not supported on Windows - skipping
+echo Skipping perl/code39 on Windows -- prerequisite refs: ..\barcode-layout-1d ..\paint-instructions

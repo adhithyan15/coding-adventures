@@ -1,0 +1,6 @@
+uv venv --quiet --clear
+uv pip install --no-deps -e ..\gf256 --quiet
+uv pip install --no-deps -e ..\aes --quiet
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov --quiet
+uv run --no-project python -m pytest tests\ -v

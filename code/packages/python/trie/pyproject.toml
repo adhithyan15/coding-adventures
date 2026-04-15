@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-trie"
-version = "0.1.0"
-description = "Prefix tree (trie) mapping string keys to values with O(k) insert, search, and prefix queries"
+version = "0.2.0"
+description = "Prefix tree (trie) with string-key Trie and generic TrieCursor for streaming algorithms"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

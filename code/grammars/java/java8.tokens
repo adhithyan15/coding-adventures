@@ -1,0 +1,423 @@
+# Java 8 (2014) — Lexical Grammar
+# @version 1
+# @java_version 8
+#
+# JDK 8 — March 2014
+#
+# Java 8 is the second-biggest release in Java's history, after Java 5.
+# Where Java 5 added generics, enums, and annotations, Java 8 transforms
+# how Java programmers WRITE CODE — shifting from imperative, stateful
+# iteration to functional, declarative pipelines.
+#
+# The headline feature is lambda expressions, which allow passing behavior
+# as data. Before Java 8, the only way to pass behavior was via anonymous
+# inner classes:
+#
+#   // Java 7 (anonymous class)
+#   button.addActionListener(new ActionListener() {
+#       @Override
+#       public void actionPerformed(ActionEvent e) {
+#           System.out.println("Clicked!");
+#       }
+#   });
+#
+#   // Java 8 (lambda expression)
+#   button.addActionListener(e -> System.out.println("Clicked!"));
+#
+# This transformation required surprisingly few lexical changes — only TWO
+# new tokens:
+#
+#   1. The ARROW operator `->` for lambda expressions.
+#      This separates the parameter list from the body:
+#        (x, y) -> x + y
+#        name -> name.toUpperCase()
+#        () -> System.out.println("hello")
+#
+#   2. The DOUBLE_COLON operator `::` for method references.
+#      This allows referencing a method without calling it:
+#        String::valueOf          — static method reference
+#        System.out::println      — instance method reference on a bound receiver
+#        String::length           — instance method reference on an unbound receiver
+#        ArrayList::new           — constructor reference
+#
+# Both tokens are entirely new — `->` was unused in all prior Java versions,
+# and `::` was unused in Java source code (though it appeared in JVM
+# internal class naming for inner classes, e.g., Outer::Inner).
+#
+# Java 8 also inherits all Java 7 lexical additions:
+#
+#   - Binary integer literals: 0b1010, 0B1111_0000
+#     Java 7 added base-2 literals, complementing hex (0x) and octal (0).
+#     This is especially useful for bit manipulation code where seeing
+#     the individual bits matters more than the decimal value.
+#
+#   - Underscores in numeric literals: 1_000_000, 0xFF_EC_DE_5E
+#     Underscores can appear between digits to improve readability.
+#     They are purely cosmetic — 1_000_000 is the same as 1000000.
+#     Rules: no underscores at start/end of number, not adjacent to
+#     decimal point, not adjacent to 0x/0b prefix, not adjacent to
+#     L/F/D suffix.
+#
+# Accumulated tokens from prior versions:
+#   - Java 1.0 (1996): 48 keywords, all operators and delimiters
+#   - Java 1.1 (1997): no lexical changes (inner classes are syntactic)
+#   - Java 1.2 (1998): added `strictfp` keyword
+#   - Java 1.4 (2002): added `assert` keyword
+#   - Java 5 (2004):   added `enum` keyword, `@` operator, `...` operator
+#   - Java 7 (2011):   binary literals (0b), underscores in numbers
+#   - Java 8 (2014):   added `->` operator, `::` operator
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones (e.g., == before =).
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Identifiers in Java can contain letters, digits, underscores, and the
+# dollar sign ($). The $ was originally used by the compiler for inner class
+# names (e.g., Outer$Inner.class) and is technically legal in user code,
+# though discouraged by convention. The Java Language Specification defines
+# identifiers using Unicode categories, but we use the ASCII subset here
+# since the tokenizer operates on ASCII source.
+
+NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# Java 8 inherits all numeric literal forms from Java 7, which added two
+# important extensions to the Java 5 numeric system:
+#
+#   1. Binary integer literals (Java 7):
+#      0b1010       — binary 10
+#      0B1111       — binary 15
+#      0b1010L      — binary long
+#
+#      Binary literals use the 0b or 0B prefix, following the same pattern
+#      as hex (0x). This was added because bit manipulation is common in
+#      Java (flags, masks, protocols) and binary is far more readable than
+#      hex for individual bit patterns.
+#
+#   2. Underscores in numeric literals (Java 7):
+#      1_000_000         — one million (decimal)
+#      0xFF_EC_DE_5E     — hex with underscores
+#      0b0010_1010       — binary with underscores
+#      3.141_592_653     — floating-point with underscores
+#
+#      Underscores can appear anywhere between digits. They are stripped by
+#      the compiler and have no effect on the value. This was inspired by
+#      Ada, Ruby, and other languages that allow digit grouping.
+#
+#      Restrictions (compile-time errors):
+#        - No underscore at the beginning or end of a number
+#        - No underscore adjacent to the decimal point
+#        - No underscore adjacent to the 0x, 0b, or 0B prefix
+#        - No underscore adjacent to the L, F, or D suffix
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+#
+# IMPORTANT: The regex patterns include optional underscores between digits.
+# The underscore patterns use [0-9]([0-9_]*[0-9])? to match "digits with
+# optional underscores between them" — ensuring underscores appear only
+# between digits, never at the start or end.
+
+BINARY_NUMBER     = /0[bB][01]([01_]*[01])?[lL]?/ -> NUMBER
+HEX_NUMBER        = /0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?[lL]?/ -> NUMBER
+OCTAL_NUMBER      = /0[0-7]([0-7_]*[0-7])?[lL]?/ -> NUMBER
+FLOAT_NUMBER      = /[0-9]([0-9_]*[0-9])?\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9]([0-9_]*[0-9])?([eE][+-]?[0-9]([0-9_]*[0-9])?)?[fFdD]?/ -> NUMBER
+SCI_NUMBER        = /[0-9]([0-9_]*[0-9])?[eE][+-]?[0-9]([0-9_]*[0-9])?[fFdD]?/ -> NUMBER
+LONG_NUMBER       = /[0-9]([0-9_]*[0-9])?[lL]/ -> NUMBER
+FLOAT_SUFFIX      = /[0-9]([0-9_]*[0-9])?[fFdD]/ -> NUMBER
+INT_NUMBER        = /[0-9]([0-9_]*[0-9])?/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# Java 8 inherits the same string and character literal forms from Java 1.0.
+# Both support the same escape sequences:
+#   \\    backslash
+#   \"    double quote (in strings)
+#   \'    single quote (in chars)
+#   \n    newline (line feed)
+#   \r    carriage return
+#   \t    horizontal tab
+#   \b    backspace
+#   \f    form feed
+#   \0    null character
+#   \ooo  octal escape (1-3 octal digits, max \377)
+#   \uHHHH  Unicode escape (exactly 4 hex digits)
+#
+# No changes to string/char literals in Java 8. Text blocks (""") arrive
+# in Java 13.
+
+STRING = /"([^"\\]|\\.)*"/
+CHAR   = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# Java 8 adds TWO new multi-character operators:
+#
+#   1. ARROW `->` — the lambda operator. This token separates the parameter
+#      list from the body of a lambda expression:
+#
+#        (x, y) -> x + y
+#        n -> n * 2
+#        () -> { return 42; }
+#
+#      The arrow operator was chosen over alternatives considered during
+#      Project Lambda's design:
+#        - `=>` (C#, Scala) — rejected because `=` followed by `>` was
+#          already valid Java (assignment followed by comparison), though
+#          not in a useful context
+#        - `#` (early proposal) — rejected for readability
+#        - `->` (Haskell, Erlang) — chosen for clarity and no ambiguity
+#          with existing Java tokens
+#
+#      IMPORTANT: `->` must come BEFORE `-` and `>` in the token list to
+#      ensure first-match-wins produces ARROW, not MINUS followed by
+#      GREATER_THAN.
+#
+#   2. DOUBLE_COLON `::` — the method reference operator. This token
+#      separates a type or expression from a method or constructor name:
+#
+#        String::valueOf        — reference to a static method
+#        System.out::println    — reference to an instance method on a receiver
+#        String::length         — reference to an instance method (unbound)
+#        ArrayList::new         — reference to a constructor
+#
+#      Method references are syntactic sugar for lambdas. `String::valueOf`
+#      is equivalent to `x -> String.valueOf(x)`. They exist because many
+#      lambdas simply delegate to an existing method, and writing out the
+#      lambda is unnecessary boilerplate.
+#
+#      IMPORTANT: `::` must come BEFORE `:` in the token list. The single
+#      colon is used for the ternary operator, switch labels, enhanced for
+#      loops, and assert messages — it must not greedily consume the first
+#      colon of a method reference.
+#
+# All operators from prior versions are preserved. The ellipsis `...` (from
+# Java 5) must still come before DOT.
+
+ELLIPSIS                    = "..."
+ARROW                       = "->"
+DOUBLE_COLON                = "::"
+UNSIGNED_RIGHT_SHIFT_EQUALS = ">>>="
+UNSIGNED_RIGHT_SHIFT        = ">>>"
+LEFT_SHIFT_EQUALS           = "<<="
+RIGHT_SHIFT_EQUALS          = ">>="
+EQUALS_EQUALS               = "=="
+NOT_EQUALS                  = "!="
+LESS_EQUALS                 = "<="
+GREATER_EQUALS              = ">="
+AND_AND                     = "&&"
+OR_OR                       = "||"
+PLUS_PLUS                   = "++"
+MINUS_MINUS                 = "--"
+PLUS_EQUALS                 = "+="
+MINUS_EQUALS                = "-="
+STAR_EQUALS                 = "*="
+SLASH_EQUALS                = "/="
+PERCENT_EQUALS              = "%="
+AMPERSAND_EQUALS            = "&="
+PIPE_EQUALS                 = "|="
+CARET_EQUALS                = "^="
+LEFT_SHIFT                  = "<<"
+RIGHT_SHIFT                 = ">>"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators are inherited unchanged from Java 5.
+#
+# Note: The `?` token continues to serve double duty — it is both the
+# ternary conditional operator AND the wildcard type argument (List<?>,
+# List<? extends Number>). The grammar disambiguates by context.
+
+AT           = "@"
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Standard C-family delimiters, unchanged from Java 1.0. The dot (.) serves
+# double duty: it is both the decimal point in floating-point literals AND
+# the member access operator (object.field). The lexer handles this by
+# matching numeric literals first.
+#
+# Note: The ELLIPSIS token `...` must be matched before DOT in the operator
+# section above, since the lexer uses first-match-wins ordering.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# Java 8 has the same 51 keywords as Java 5 (54 total including true, false,
+# and null). No new keywords were added in Java 6, 7, or 8.
+#
+# This was a deliberate design choice. Adding a new keyword would break any
+# existing code using that word as an identifier. Java 5 got away with adding
+# `enum` because it was a rarely-used identifier name. But the Project Lambda
+# team (Brian Goetz, et al.) specifically avoided introducing keywords like
+# `lambda`, `fun`, or `function` — instead, they designed lambda syntax using
+# the new `->` operator token, which could not appear in any valid pre-Java-8
+# code.
+#
+# Similarly, `default` is NOT a new keyword — it has been a keyword since
+# Java 1.0 (used in switch statements). Java 8 gives it a SECOND meaning:
+# default methods in interfaces. The parser disambiguates by context — inside
+# a switch block, `default:` is a switch label; inside an interface body,
+# `default` before a method introduces a default method implementation.
+#
+# The same applies to `static` — it has been a keyword since Java 1.0.
+# Java 8 allows `static` methods in interfaces, giving it a new CONTEXT
+# but not a new token.
+#
+# Accumulated keywords:
+#   - Java 1.0 (1996): 48 keywords (abstract, boolean, break, byte, case,
+#     catch, char, class, continue, default, do, double, else, extends,
+#     final, finally, float, for, if, implements, import, instanceof, int,
+#     interface, long, native, new, package, private, protected, public,
+#     return, short, static, super, switch, synchronized, this, throw,
+#     throws, transient, try, void, volatile, while, true, false, null)
+#   - Java 1.2 (1998): +strictfp (49 keywords)
+#   - Java 1.4 (2002): +assert (50 keywords)
+#   - Java 5 (2004):   +enum (51 keywords)
+#   - Java 7 (2011):   no new keywords
+#   - Java 8 (2014):   no new keywords
+
+keywords:
+  abstract
+  assert
+  boolean
+  break
+  byte
+  case
+  catch
+  char
+  class
+  continue
+  default
+  do
+  double
+  else
+  enum
+  extends
+  final
+  finally
+  float
+  for
+  if
+  implements
+  import
+  instanceof
+  int
+  interface
+  long
+  native
+  new
+  package
+  private
+  protected
+  public
+  return
+  short
+  static
+  strictfp
+  super
+  switch
+  synchronized
+  this
+  throw
+  throws
+  transient
+  try
+  void
+  volatile
+  while
+  true
+  false
+  null
+
+# ============================================================================
+# Future reserved words
+# ============================================================================
+#
+# The same two identifiers from Java 1.0 remain reserved but unused:
+#
+# const — C/C++ uses this for immutable variables. Java chose `final`
+#   instead. const has never been given a meaning in any Java version.
+#
+# goto — Reserved to produce a helpful error if C programmers try to use
+#   it. Java uses labeled break/continue instead.
+#
+# Both remain reserved through all Java versions to this day.
+
+reserved:
+  const
+  goto
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Java has three comment forms, unchanged since 1.0:
+#   1. Line comments:  // to end of line
+#   2. Block comments: /* ... */ (cannot nest)
+#   3. Javadoc comments: /** ... */ (lexically identical to block comments)
+#
+# No changes to comment syntax in Java 8.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+#
+# These patterns match malformed literals so the lexer can report a
+# meaningful error ("unterminated string literal") instead of producing
+# a confusing cascade of errors from the parser.
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/

@@ -1,0 +1,9 @@
+[package]
+name = "hash-set"
+version = "0.1.0"
+edition = "2021"
+description = "Hash set built on top of the DT18 hash map"
+license = "MIT"
+
+[dependencies]
+hash-map = { path = "../hash-map" }

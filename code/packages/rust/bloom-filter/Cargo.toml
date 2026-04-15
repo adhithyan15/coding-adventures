@@ -1,0 +1,9 @@
+[package]
+name = "bloom-filter"
+version = "0.1.0"
+edition = "2021"
+description = "Bloom filter for probabilistic set membership"
+license = "MIT"
+
+[dependencies]
+coding_adventures_hash_functions = { path = "../hash-functions" }

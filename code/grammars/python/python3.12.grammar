@@ -153,7 +153,7 @@ type_param = NAME [ COLON expression ]
 
 assign_stmt = expression_list
               [ COLON expression [ EQUALS expression_list ]
-              | ( EQUALS expression_list )+
+              | EQUALS expression_list { EQUALS expression_list }
               | augmented_assign_op expression_list ] ;
 
 augmented_assign_op = PLUS_EQUALS | MINUS_EQUALS | STAR_EQUALS | SLASH_EQUALS

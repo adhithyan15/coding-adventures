@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "python-parser-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly bindings for the Rust Python parser"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+grammar_wasm_support = { package = "grammar-wasm-support", path = "../../rust/grammar-wasm-support" }
+language_lexer = { package = "coding-adventures-python-lexer", path = "../../rust/python-lexer" }
+language_parser = { package = "coding-adventures-python-parser", path = "../../rust/python-parser" }
+wasm-bindgen = "0.2"

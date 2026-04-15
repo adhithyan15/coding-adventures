@@ -12,7 +12,10 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/virtual-machine": "file:../virtual-machine"
+    "@coding-adventures/virtual-machine": "file:../virtual-machine",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/parser": "file:../parser"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

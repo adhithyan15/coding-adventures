@@ -31,12 +31,16 @@
 package vhdllexer
 
 import (
-	"path/filepath"
-	"runtime"
+	"fmt"
 	"strings"
 
 	grammartools "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-tools"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/lexer"
+	vhdlv1987 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v1987"
+	vhdlv1993 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v1993"
+	vhdlv2002 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v2002"
+	vhdlv2008 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v2008"
+	vhdlv2019 "github.com/adhithyan15/coding-adventures/code/packages/go/vhdl-lexer/internal/grammars/v2019"
 )
 
 // ============================================================================
@@ -49,11 +53,46 @@ import (
 // to lexer.go at compile time. From there, we navigate three levels up
 // (vhdl-lexer → go → packages → code) and into grammars/.
 
-func getGrammarPath() string {
-	_, filename, _, _ := runtime.Caller(0)
-	parent := filepath.Dir(filename)
-	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "vhdl.tokens")
+const DefaultVersion = "2008"
+
+var supportedVersions = map[string]struct{}{
+	"1987": {},
+	"1993": {},
+	"2002": {},
+	"2008": {},
+	"2019": {},
+}
+
+func ResolveVersion(version string) (string, error) {
+	if version == "" {
+		return DefaultVersion, nil
+	}
+	if _, ok := supportedVersions[version]; !ok {
+		return "", fmt.Errorf("unknown VHDL version %q: valid versions are 1987, 1993, 2002, 2008, 2019", version)
+	}
+	return version, nil
+}
+
+func tokenGrammarForVersion(version string) (*grammartools.TokenGrammar, error) {
+	resolved, err := ResolveVersion(version)
+	if err != nil {
+		return nil, err
+	}
+
+	switch resolved {
+	case "1987":
+		return vhdlv1987.TokenGrammarData, nil
+	case "1993":
+		return vhdlv1993.TokenGrammarData, nil
+	case "2002":
+		return vhdlv2002.TokenGrammarData, nil
+	case "2008":
+		return vhdlv2008.TokenGrammarData, nil
+	case "2019":
+		return vhdlv2019.TokenGrammarData, nil
+	default:
+		return nil, fmt.Errorf("compiled VHDL token grammar missing version %q", resolved)
+	}
 }
 
 // ============================================================================
@@ -117,16 +156,17 @@ func normalizeCaseInsensitiveTokens(tokens []lexer.Token, keywordSet map[string]
 // parses it into token patterns, and creates a GrammarLexer configured for
 // VHDL source code.
 func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
+	return createLexerFromSourceVersion(source, DefaultVersion)
+}
+
+func createLexerFromSourceVersion(source string, version string) (*lexer.GrammarLexer, error) {
+	grammar, err := tokenGrammarForVersion(version)
+	if err != nil {
+		return nil, err
+	}
+
 	return StartNew[*lexer.GrammarLexer]("vhdllexer.createLexerFromSource", nil,
-		func(op *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+		func(_ *Operation[*lexer.GrammarLexer], rf *ResultFactory[*lexer.GrammarLexer]) *OperationResult[*lexer.GrammarLexer] {
 			return rf.Generate(true, false, lexer.NewGrammarLexer(source, grammar))
 		}).GetResult()
 }
@@ -144,7 +184,13 @@ func createLexerFromSource(source string) (*lexer.GrammarLexer, error) {
 //	if err != nil { ... }
 //	tokens := lex.Tokenize()
 func CreateVhdlLexer(source string) (*lexer.GrammarLexer, error) {
-	return createLexerFromSource(source)
+	return CreateVhdlLexerVersion(source, DefaultVersion)
+}
+
+// CreateVhdlLexerVersion creates a GrammarLexer configured for the requested
+// VHDL edition.
+func CreateVhdlLexerVersion(source string, version string) (*lexer.GrammarLexer, error) {
+	return createLexerFromSourceVersion(source, version)
 }
 
 // ============================================================================
@@ -154,9 +200,9 @@ func CreateVhdlLexer(source string) (*lexer.GrammarLexer, error) {
 // TokenizeVhdl tokenizes VHDL source code with case normalization.
 //
 // This is the main entry point for tokenizing VHDL. It:
-//   1. Creates a grammar-driven lexer from the vhdl.tokens grammar
-//   2. Runs the lexer to produce raw tokens
-//   3. Normalizes NAME and KEYWORD values to lowercase
+//  1. Creates a grammar-driven lexer from the vhdl.tokens grammar
+//  2. Runs the lexer to produce raw tokens
+//  3. Normalizes NAME and KEYWORD values to lowercase
 //
 // The result is a flat list of Token objects, always ending with an EOF token.
 //
@@ -172,17 +218,18 @@ func CreateVhdlLexer(source string) (*lexer.GrammarLexer, error) {
 //	`)
 //	// [Token(KEYWORD, "entity"), Token(NAME, "and_gate"), Token(KEYWORD, "is"), ...]
 func TokenizeVhdl(source string) ([]lexer.Token, error) {
-	return StartNew[[]lexer.Token]("vhdllexer.TokenizeVhdl", nil,
-		func(op *Operation[[]lexer.Token], rf *ResultFactory[[]lexer.Token]) *OperationResult[[]lexer.Token] {
-			bytes, err := op.File.ReadFile(getGrammarPath())
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
-			grammar, err := grammartools.ParseTokenGrammar(string(bytes))
-			if err != nil {
-				return rf.Fail(nil, err)
-			}
+	return TokenizeVhdlVersion(source, DefaultVersion)
+}
 
+// TokenizeVhdlVersion tokenizes VHDL source code using the requested edition.
+func TokenizeVhdlVersion(source string, version string) ([]lexer.Token, error) {
+	grammar, err := tokenGrammarForVersion(version)
+	if err != nil {
+		return nil, err
+	}
+
+	return StartNew[[]lexer.Token]("vhdllexer.TokenizeVhdl", nil,
+		func(_ *Operation[[]lexer.Token], rf *ResultFactory[[]lexer.Token]) *OperationResult[[]lexer.Token] {
 			// Build the keyword set for post-tokenization reclassification.
 			// The grammar lexer only matches keywords by exact string equality,
 			// so "ENTITY" won't match "entity" in the keyword list. Our

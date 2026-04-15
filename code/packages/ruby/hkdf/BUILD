@@ -1,0 +1,1 @@
+cd ../md5 && bundle install --quiet && cd ../sha1 && bundle install --quiet && cd ../sha256 && bundle install --quiet && cd ../sha512 && bundle install --quiet && cd ../hmac && bundle install --quiet && cd ../hkdf && bundle install --quiet && bundle exec rake test

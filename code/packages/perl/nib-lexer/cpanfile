@@ -1,0 +1,3 @@
+requires 'coding-adventures-grammar-tools', '0.01';
+requires 'coding-adventures-lexer', '0.01';
+on 'test' => sub { requires 'Test2::V0'; };

@@ -22,6 +22,9 @@ classifiers = [
 ]
 dependencies = [
     "coding-adventures-virtual-machine",
+    "coding-adventures-lexer",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-parser",
 ]
 
 [project.urls]

@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "paint-codec-png-native-python"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping paint-codec-png via python-bridge"
+
+[lib]
+name = "paint_codec_png_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+paint-codec-png = { path = "../../rust/paint-codec-png" }
+paint-instructions = { path = "../../rust/paint-instructions" }
+python-bridge = { path = "../../rust/python-bridge" }

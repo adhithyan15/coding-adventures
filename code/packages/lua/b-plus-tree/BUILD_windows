@@ -1,0 +1,1 @@
+where lua >NUL 2>&1 && (cd tests && set LUA_PATH=../src/?.lua;../src/?/init.lua;; && busted . --verbose --pattern=test_) || echo Lua/busted not available on this runner — skipping

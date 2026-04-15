@@ -1,0 +1,15 @@
+[package]
+name = "fenwick-tree-native"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping the Rust fenwick-tree crate via python-bridge (zero third-party deps)"
+
+[lib]
+name = "fenwick_tree_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+fenwick-tree = { path = "../../rust/fenwick-tree" }
+python-bridge = { path = "../../rust/python-bridge" }
+
+[workspace]

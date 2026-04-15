@@ -1,0 +1,5 @@
+python -m venv .venv --clear
+.venv\Scripts\pip install pytest --quiet
+cargo build --release
+if exist target\release\radix_tree_native.dll copy target\release\radix_tree_native.dll src\radix_tree_native\radix_tree_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v
