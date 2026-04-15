@@ -148,7 +148,24 @@ class WasmExecutionEngine:
         register_all_instructions(self._vm)
         register_control(self._vm)
 
-        self._vm.execute_with_context(code, ctx)
+        current_code = code
+        while True:
+            self._vm.execute_with_context(current_code, ctx)
+
+            pending_code = getattr(ctx, "_pending_code", None)
+            if pending_code is not None:
+                delattr(ctx, "_pending_code")
+                current_code = pending_code
+                self._vm.halted = False
+                continue
+
+            if ctx.returned and ctx.saved_frames:
+                current_code = self._resume_saved_frame(ctx)
+                self._vm.halted = False
+                ctx.returned = False
+                continue
+
+            break
 
         # Collect return values from the typed stack
         result_count = len(func_type.results)
@@ -158,3 +175,24 @@ class WasmExecutionEngine:
                 results.insert(0, self._vm.pop_typed())
 
         return results
+
+    def _resume_saved_frame(self, ctx: WasmExecutionContext) -> CodeObject:
+        frame = ctx.saved_frames.pop()
+        if len(self._vm.typed_stack) < frame.return_arity:
+            raise TrapError("callee returned fewer values than expected")
+
+        results: list[WasmValue] = []
+        for _ in range(frame.return_arity):
+            results.insert(0, self._vm.pop_typed())
+
+        while len(self._vm.typed_stack) > frame.stack_height:
+            self._vm.pop_typed()
+
+        for result in results:
+            self._vm.push_typed(result)
+
+        ctx.typed_locals = list(frame.locals)
+        ctx.label_stack = list(frame.label_stack)
+        ctx.control_flow_map = frame.control_flow_map
+        self._vm.jump_to(frame.return_pc)
+        return frame.code
