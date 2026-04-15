@@ -23,6 +23,38 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsSharedJVMToolchainChanges(t *testing.T) {
+	patch := `
+@@ -314,0 +315,17 @@
++      - name: Set up JDK 21
++        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
++        uses: actions/setup-java@v4
++        with:
++          distribution: 'temurin'
++          java-version: '21'
++      - name: Set up Gradle
++        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
++        uses: gradle/actions/setup-gradle@v4
++      - name: Disable long-lived Gradle services on Windows CI
++        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
++        shell: bash
++        run: |
++          {
++            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
++          } >> "$GITHUB_ENV"
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatalf("expected JVM toolchain change to stay incremental")
+	}
+
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 2 || got[0] != "java" || got[1] != "kotlin" {
+		t.Fatalf("expected java and kotlin toolchains, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchIgnoresCommentOnlyChanges(t *testing.T) {
 	patch := `
 @@ -316,2 +316,2 @@

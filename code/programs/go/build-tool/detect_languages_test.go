@@ -18,7 +18,7 @@ func TestAllToolchainsConstant(t *testing.T) {
 	expected := map[string]bool{
 		"python": true, "ruby": true, "go": true,
 		"typescript": true, "rust": true, "elixir": true, "lua": true, "perl": true,
-		"swift": true, "haskell": true, "dotnet": true,
+		"swift": true, "java": true, "kotlin": true, "haskell": true, "dotnet": true,
 	}
 	if len(allToolchains) != len(expected) {
 		t.Errorf("allToolchains has %d entries, want %d", len(allToolchains), len(expected))
@@ -220,6 +220,8 @@ func TestToolchainForPackageLanguage(t *testing.T) {
 		"csharp":  "dotnet",
 		"fsharp":  "dotnet",
 		"dotnet":  "dotnet",
+		"java":    "java",
+		"kotlin":  "kotlin",
 		"python":  "python",
 		"swift":   "swift",
 		"unknown": "unknown",
