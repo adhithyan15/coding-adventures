@@ -68,7 +68,7 @@ require "coding_adventures_sha1"
 require_relative "coding_adventures/content_addressable_storage/version"
 
 module CodingAdventures
-  module Cas
+  module ContentAddressableStorage
     # ─── Hex Utilities ─────────────────────────────────────────────────────────
     #
     # Keys are 20-byte binary Strings (Encoding::BINARY / ASCII-8BIT). Humans

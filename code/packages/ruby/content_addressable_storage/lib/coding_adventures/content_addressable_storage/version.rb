@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CodingAdventures
-  module Cas
+  module ContentAddressableStorage
     # Semantic version of the coding_adventures_content_addressable_storage gem.
     #
     # Follows Semantic Versioning 2.0.0 (semver.org):
