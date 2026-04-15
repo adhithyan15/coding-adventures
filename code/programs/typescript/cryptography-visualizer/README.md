@@ -7,6 +7,7 @@ The app uses the same layered architecture as other visualizers in the repositor
 1. `@coding-adventures/caesar-cipher` provides the Caesar cipher encrypt/decrypt, brute force, and frequency analysis functions.
 2. `@coding-adventures/lattice-transpiler` compiles the app's `.lattice` styles into CSS in the browser.
 3. The React app renders interactive panels that expose each step of the encryption process.
+4. The output panel can copy the current ciphertext to the clipboard for quick reuse.
 
 ## What The App Shows
 
@@ -39,4 +40,4 @@ npm run dev
 
 ## Architecture
 
-The Caesar cipher operations come from the `@coding-adventures/caesar-cipher` package. The Atbash cipher is currently implemented inline in the app (the formula is trivial: `25 - position`). A dedicated `@coding-adventures/atbash-cipher` package will replace the inline implementation when it becomes available.
+The Caesar cipher operations come from the `@coding-adventures/caesar-cipher` package, and the Atbash cipher operations come from `@coding-adventures/atbash-cipher`.

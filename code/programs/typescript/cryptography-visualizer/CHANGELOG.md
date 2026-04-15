@@ -8,7 +8,7 @@ All notable changes to this package will be documented in this file.
 
 - Initial scaffold for the cryptography visualizer web app
 - Caesar cipher integration via `@coding-adventures/caesar-cipher` package
-- Inline Atbash cipher implementation (to be replaced by dedicated package later)
+- Atbash cipher integration via `@coding-adventures/atbash-cipher` package
 - Substitution table showing the full A-Z cipher mapping
 - Step-by-step panel showing each character transformation
 - Frequency analysis chart comparing ciphertext vs English letter distributions

@@ -1,7 +1,11 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { App } from "../src/App.js";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("App", () => {
   it("renders with default Caesar cipher and HELLO WORLD", () => {
@@ -108,5 +112,33 @@ describe("App", () => {
 
     expect(screen.queryByRole("heading", { name: "Frequency Analysis" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Brute Force Attack" })).not.toBeInTheDocument();
+  });
+
+  it("copies the current ciphertext to the clipboard", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(window.navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy ciphertext" }));
+
+    expect(writeText).toHaveBeenCalledWith("KHOOR ZRUOG");
+    expect(await screen.findByText("Ciphertext copied to clipboard.")).toBeInTheDocument();
+  });
+
+  it("shows feedback when clipboard copy is unavailable", async () => {
+    Object.defineProperty(window.navigator, "clipboard", {
+      configurable: true,
+      value: undefined,
+    });
+
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy ciphertext" }));
+
+    expect(await screen.findByText("Clipboard copy is unavailable in this browser.")).toBeInTheDocument();
   });
 });

@@ -27,14 +27,13 @@
  *
  * The Caesar cipher operations (encrypt, decrypt, brute force, frequency
  * analysis) come from the `@coding-adventures/caesar-cipher` package. The
- * Atbash cipher is implemented inline since it is trivial (a single formula:
- * `25 - position`). The Atbash operations come from the
+ * Atbash cipher operations come from the
  * `@coding-adventures/atbash-cipher` package.
  *
  * @module App
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   encrypt as caesarEncrypt,
   bruteForce,
@@ -129,6 +128,7 @@ export function App() {
   const [plaintext, setPlaintext] = useState(DEFAULT_PLAINTEXT);
   const [selectedCipher, setSelectedCipher] = useState<CipherType>("caesar");
   const [shift, setShift] = useState(DEFAULT_SHIFT);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">("idle");
 
   // ---- Compute the cipher output ----
 
@@ -155,6 +155,34 @@ export function App() {
   const ciphertextFrequencies = computeFrequencies(ciphertext);
   const bruteForceResults = bruteForce(ciphertext);
   const freqAnalysis = frequencyAnalysis(ciphertext);
+
+  useEffect(() => {
+    if (copyStatus === "idle") {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCopyStatus("idle");
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [copyStatus]);
+
+  async function handleCopyCiphertext(): Promise<void> {
+    if (typeof navigator === "undefined" || navigator.clipboard?.writeText === undefined) {
+      setCopyStatus("error");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(ciphertext);
+      setCopyStatus("success");
+    } catch {
+      setCopyStatus("error");
+    }
+  }
 
   return (
     <div className="app">
@@ -270,6 +298,26 @@ export function App() {
             <p>
               The encrypted result after applying the {selectedCipher === "caesar" ? `Caesar cipher with shift ${shift}` : "Atbash cipher"}.
             </p>
+          </div>
+          <div className="output-actions">
+            <button
+              type="button"
+              className="copy-button"
+              onClick={() => void handleCopyCiphertext()}
+              aria-label="Copy ciphertext"
+            >
+              Copy ciphertext
+            </button>
+            {copyStatus === "success" && (
+              <span className="copy-feedback success" role="status">
+                Ciphertext copied to clipboard.
+              </span>
+            )}
+            {copyStatus === "error" && (
+              <span className="copy-feedback error" role="status">
+                Clipboard copy is unavailable in this browser.
+              </span>
+            )}
           </div>
           <div className="output-text" data-testid="ciphertext-output">
             {ciphertext || "\u00A0"}
