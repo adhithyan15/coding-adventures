@@ -253,7 +253,21 @@ public let allLanguages = [
     "haskell",
 ]
 
-public let allToolchains = allLanguages + ["dotnet"]
+public let allToolchains = [
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "java",
+    "kotlin",
+    "haskell",
+    "dotnet",
+]
 
 public let sharedPrefixes: [String] = []
 

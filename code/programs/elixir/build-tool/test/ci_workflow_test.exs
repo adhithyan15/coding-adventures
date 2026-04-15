@@ -18,6 +18,32 @@ defmodule BuildTool.CIWorkflowTest do
     assert CIWorkflow.sorted_toolchains(change.toolchains) == ["dotnet"]
   end
 
+  test "allows shared jvm toolchain changes" do
+    change =
+      CIWorkflow.analyze_patch("""
+      @@ -314,0 +315,17 @@
+      +      - name: Set up JDK 21
+      +        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+      +        uses: actions/setup-java@v4
+      +        with:
+      +          distribution: 'temurin'
+      +          java-version: '21'
+      +      - name: Set up Gradle
+      +        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
+      +        uses: gradle/actions/setup-gradle@v4
+      +      - name: Disable long-lived Gradle services on Windows CI
+      +        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
+      +        shell: bash
+      +        run: |
+      +          {
+      +            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
+      +          } >> "$GITHUB_ENV"
+      """)
+
+    refute change.requires_full_rebuild
+    assert CIWorkflow.sorted_toolchains(change.toolchains) == ["java", "kotlin"]
+  end
+
   test "ignores comment-only changes" do
     change =
       CIWorkflow.analyze_patch("""

@@ -79,7 +79,21 @@ except ImportError:
 ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"]
 
 # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
-ALL_TOOLCHAINS = [*ALL_LANGUAGES, "dotnet"]
+ALL_TOOLCHAINS = [
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "java",
+    "kotlin",
+    "haskell",
+    "dotnet",
+]
 
 # SHARED_PREFIXES are repo paths that, when changed, still mean every
 # toolchain needs rebuilding. ci.yml is handled separately via patch analysis

@@ -9,6 +9,8 @@ defmodule BuildTool.Validator do
                                     "elixir",
                                     "lua",
                                     "perl",
+                                    "java",
+                                    "kotlin",
                                     "haskell"
                                   ])
 

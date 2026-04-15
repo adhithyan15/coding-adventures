@@ -54,6 +54,18 @@ _TOOLCHAIN_MARKERS: dict[str, tuple[str, ...]] = {
         "needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
         "ghc --version", "cabal --version", "set up haskell",
     ),
+    "java": (
+        "needs_java", "setup-java", "java-version", "java --version",
+        "temurin", "set up jdk", "set up gradle", "setup-gradle",
+        "disable long-lived gradle services",
+        "gradle_opts", "org.gradle.daemon", "org.gradle.vfs.watch",
+    ),
+    "kotlin": (
+        "needs_kotlin", "setup-java", "java-version",
+        "temurin", "set up jdk", "set up gradle", "setup-gradle",
+        "disable long-lived gradle services",
+        "gradle_opts", "org.gradle.daemon", "org.gradle.vfs.watch",
+    ),
     "dotnet": (
         "needs_dotnet", "setup-dotnet", "dotnet-version", "dotnet --version",
         "set up .net",
@@ -191,7 +203,7 @@ def _touches_shared_ci_behavior(content: str) -> bool:
 
 def _is_toolchain_scoped_structural_line(content: str) -> bool:
     return content.startswith((
-        "if:", "run:", "shell:", "with:", "env:", "else", "fi", "then",
+        "if:", "run:", "shell:", "with:", "env:", "{", "}", "else", "fi", "then",
         "printf ", "echo ", "curl ", "powershell ", "call ", "cd ",
     ))
 

@@ -60,6 +60,8 @@ const ALL_TOOLCHAINS = [
   "lua",
   "perl",
   "swift",
+  "java",
+  "kotlin",
   "haskell",
   "dotnet",
 ];

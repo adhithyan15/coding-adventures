@@ -19,6 +19,31 @@ describe("analyzeCIWorkflowPatch", () => {
     expect(sortedToolchains(change.toolchains)).toEqual(["dotnet"]);
   });
 
+  it("allows shared jvm toolchain changes", () => {
+    const change = analyzeCIWorkflowPatch(`
+@@ -314,0 +315,17 @@
++      - name: Set up JDK 21
++        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
++        uses: actions/setup-java@v4
++        with:
++          distribution: 'temurin'
++          java-version: '21'
++      - name: Set up Gradle
++        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true'
++        uses: gradle/actions/setup-gradle@v4
++      - name: Disable long-lived Gradle services on Windows CI
++        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true') && runner.os == 'Windows'
++        shell: bash
++        run: |
++          {
++            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
++          } >> "$GITHUB_ENV"
+`);
+
+    expect(change.requiresFullRebuild).toBe(false);
+    expect(sortedToolchains(change.toolchains)).toEqual(["java", "kotlin"]);
+  });
+
   it("ignores comment-only changes", () => {
     const change = analyzeCIWorkflowPatch(`
 @@ -316,2 +316,2 @@
