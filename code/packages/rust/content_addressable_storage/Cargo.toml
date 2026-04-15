@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_content_addressable_storage"
+version = "0.1.0"
+edition = "2021"
+description = "Generic content-addressable storage with pluggable backends"
+
+[dependencies]
+coding_adventures_sha1 = { path = "../sha1" }
