@@ -88,6 +88,32 @@ jobs:
         }))
     end)
 
+    it("allows normalized outputs for jvm toolchains", function()
+        write_file(tmpdir .. "/.github/workflows/ci.yml", [[
+jobs:
+  detect:
+    outputs:
+      needs_java: ${{ steps.toolchains.outputs.needs_java }}
+      needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
+    steps:
+      - name: Normalize toolchain requirements
+        id: toolchains
+        run: |
+          printf '%s\n' \
+            'needs_java=true' \
+            'needs_kotlin=true' >> "$GITHUB_OUTPUT"
+  build:
+    steps:
+      - name: Full build on main merge
+        run: ./build-tool -root . -force -validate-build-files -language all
+]])
+
+        assert.is_nil(Validator.validate_ci_full_build_toolchains(tmpdir, {
+            { language = "java" },
+            { language = "kotlin" },
+        }))
+    end)
+
     it("flags Lua isolated-build violations", function()
         make_dir(tmpdir .. "/code/packages/lua/problem_pkg")
         write_file(tmpdir .. "/code/packages/lua/problem_pkg/BUILD", [[

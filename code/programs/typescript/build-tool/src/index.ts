@@ -35,6 +35,11 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { parseArgs } from "node:util";
 import { discoverPackages } from "./discovery.js";
+import {
+  CI_WORKFLOW_PATH,
+  analyzeCIWorkflowChanges,
+  sortedToolchains,
+} from "./ci-workflow.js";
 import { resolveDependencies } from "./resolver.js";
 import { getChangedFiles, mapFilesToPackages } from "./gitdiff.js";
 import { hashPackage, hashDeps } from "./hasher.js";
@@ -55,6 +60,8 @@ const ALL_TOOLCHAINS = [
   "lua",
   "perl",
   "swift",
+  "java",
+  "kotlin",
   "haskell",
   "dotnet",
 ];
@@ -212,6 +219,7 @@ Options:
   // Git is the source of truth -- no cache file needed.
   // Fallback: hash-based cache (for local dev when not on a branch).
   let affectedSet: Set<string> | null = null;
+  let ciToolchains = new Set<string>();
   let force = values.force ?? false;
   const dryRun = values["dry-run"] ?? false;
   const diffBase = values["diff-base"] ?? "origin/main";
@@ -220,8 +228,26 @@ Options:
     // Try git-diff mode first (the default).
     const changedFiles = getChangedFiles(root, diffBase);
     if (changedFiles.length > 0) {
-      const sharedPrefixes = [".github/"];
-      const sharedChanged = changedFiles.some(f => sharedPrefixes.some(p => f.startsWith(p)));
+      if (changedFiles.includes(CI_WORKFLOW_PATH)) {
+        const ciChange = analyzeCIWorkflowChanges(root, diffBase);
+        if (ciChange.requiresFullRebuild) {
+          console.log("Git diff: ci.yml changed in shared ways -- rebuilding everything");
+          force = true;
+          affectedSet = null;
+        } else {
+          ciToolchains = ciChange.toolchains;
+          if (ciToolchains.size > 0) {
+            console.log(
+              `Git diff: ci.yml changed only toolchain-scoped setup for ${sortedToolchains(ciToolchains).join(", ")}`,
+            );
+          }
+        }
+      }
+
+      const sharedPrefixes: string[] = [];
+      const sharedChanged = changedFiles.some((f) =>
+        f !== CI_WORKFLOW_PATH && sharedPrefixes.some((p) => f.startsWith(p)),
+      );
 
       if (sharedChanged) {
         console.log("Git diff: shared files changed -- rebuilding everything");
@@ -272,6 +298,10 @@ Options:
       if (affectedSet.has(pkg.name)) {
         langsNeeded[toolchainForLanguage(pkg.language)] = true;
       }
+    }
+
+    for (const toolchain of ciToolchains) {
+      langsNeeded[toolchain] = true;
     }
   }
 

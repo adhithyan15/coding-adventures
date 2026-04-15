@@ -253,6 +253,31 @@ public let allLanguages = [
     "haskell",
 ]
 
-public let sharedPrefixes = [
-    ".github/workflows/ci.yml",
+public let allToolchains = [
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "java",
+    "kotlin",
+    "haskell",
+    "dotnet",
 ]
+
+public let sharedPrefixes: [String] = []
+
+public func toolchainForPackageLanguage(_ language: String) -> String {
+    switch language {
+    case "wasm":
+        return "rust"
+    case "csharp", "fsharp", "dotnet":
+        return "dotnet"
+    default:
+        return language
+    }
+}

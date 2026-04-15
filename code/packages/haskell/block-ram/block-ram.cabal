@@ -1,0 +1,31 @@
+cabal-version:      2.4
+name:               block-ram
+version:            0.1.0.0
+synopsis:           Block RAM and SRAM simulators.
+description:        Educational package implementing block ram and sram cells.
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+
+library
+    exposed-modules:  BlockRAM
+                    , BlockRAM.Types
+                    , BlockRAM.SRAM
+                    , BlockRAM.RAM
+                    , BlockRAM.BRAM
+    build-depends:    base >= 4.7 && < 5
+                    , logic-gates
+                    , containers
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite block-ram-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    BlockRAMSpec
+    build-depends:    base >= 4.7 && < 5
+                    , block-ram
+                    , logic-gates
+                    , hspec == 2.*

@@ -1,0 +1,30 @@
+cabal-version:      2.4
+name:               arithmetic
+version:            0.1.0.0
+synopsis:           Arithmetic logic unit and related combinational circuits.
+description:        Educational package implementing ALUs and adders.
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+
+library
+    exposed-modules:  Arithmetic
+                    , Arithmetic.Addition
+                    , Arithmetic.Subtraction
+                    , Arithmetic.Comparison
+                    , Arithmetic.ALU
+    build-depends:    base >= 4.7 && < 5
+                    , logic-gates
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite arithmetic-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    ArithmeticSpec
+    build-depends:    base >= 4.7 && < 5
+                    , arithmetic
+                    , logic-gates
+                    , hspec == 2.*
