@@ -21,6 +21,7 @@ import qualified Data.Set as Set
 import Data.Set (Set)
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import Data.Time.Format (defaultTimeLocale, formatTime)
+import qualified DirectedGraph as DG
 import GHC.Conc (getNumCapabilities)
 import System.Directory
     ( canonicalizePath
@@ -115,13 +116,6 @@ data PlanDocument = PlanDocument
     , planPackages :: [PlanItem]
     }
     deriving (Eq, Read, Show)
-
-data Graph = Graph
-    { graphNodes :: Set String
-    , graphOutgoing :: Map String (Set String)
-    , graphIncoming :: Map String (Set String)
-    }
-    deriving (Eq, Show)
 
 defaultConfig :: Config
 defaultConfig =
@@ -462,7 +456,7 @@ filterByLanguage requested
     | requested == "all" = id
     | otherwise = filter (\pkg -> packageLanguage pkg == requested)
 
-resolveDependencies :: [Package] -> IO Graph
+resolveDependencies :: [Package] -> IO DG.DirectedGraph
 resolveDependencies packages = do
     aliasScopes <- buildAliasScopes packages
     dependencyPairs <-
@@ -472,9 +466,12 @@ resolveDependencies packages = do
     pure $
         foldl
             (\graph (pkg, deps) ->
-                foldl (\inner dep -> addEdge dep (packageName pkg) inner) (addNode (packageName pkg) graph) deps
+                foldl
+                    (\inner dep -> DG.addEdge dep (packageName pkg) inner)
+                    (DG.addNode (packageName pkg) graph)
+                    deps
             )
-            emptyGraph
+            DG.empty
             dependencyPairs
 
 buildAliasScopes :: [Package] -> IO (Map String (Map String String))
@@ -717,87 +714,6 @@ wordsBy predicate input =
             let (word, rest) = break predicate remaining
              in word : wordsBy predicate rest
 
-emptyGraph :: Graph
-emptyGraph = Graph Set.empty Map.empty Map.empty
-
-addNode :: String -> Graph -> Graph
-addNode node graph =
-    graph
-        { graphNodes = Set.insert node (graphNodes graph)
-        , graphOutgoing = Map.insertWith Set.union node Set.empty (graphOutgoing graph)
-        , graphIncoming = Map.insertWith Set.union node Set.empty (graphIncoming graph)
-        }
-
-addEdge :: String -> String -> Graph -> Graph
-addEdge fromNode toNode =
-    withNodes
-  where
-    withNodes graph =
-        let graphWithNodes = addNode toNode (addNode fromNode graph)
-         in graphWithNodes
-                { graphOutgoing = Map.insertWith Set.union fromNode (Set.singleton toNode) (graphOutgoing graphWithNodes)
-                , graphIncoming = Map.insertWith Set.union toNode (Set.singleton fromNode) (graphIncoming graphWithNodes)
-                }
-
-allDependencies :: Graph -> String -> [String]
-allDependencies graph start = sort (go Set.empty [start])
-  where
-    go visited [] = Set.toList visited
-    go visited (current : rest) =
-        let directDeps = Set.toList (Map.findWithDefault Set.empty current (graphIncoming graph))
-            unseen = filter (`Set.notMember` visited) directDeps
-         in go (foldr Set.insert visited unseen) (unseen ++ rest)
-
-allDependents :: Graph -> String -> [String]
-allDependents graph start = sort (go Set.empty [start])
-  where
-    go visited [] = Set.toList visited
-    go visited (current : rest) =
-        let directDependents = Set.toList (Map.findWithDefault Set.empty current (graphOutgoing graph))
-            unseen = filter (`Set.notMember` visited) directDependents
-         in go (foldr Set.insert visited unseen) (unseen ++ rest)
-
-independentGroups :: Graph -> Either String [[String]]
-independentGroups graph = loop initialInDegree Set.empty initialReady
-  where
-    initialInDegree =
-        Map.fromList
-            [ (node, Set.size (Map.findWithDefault Set.empty node (graphIncoming graph)))
-            | node <- Set.toList (graphNodes graph)
-            ]
-    initialReady =
-        sort [node | (node, degree) <- Map.toList initialInDegree, degree == 0]
-
-    loop inDegree processed [] =
-        if Set.size processed == Set.size (graphNodes graph)
-            then Right []
-            else Left "cycle detected in dependency graph"
-    loop inDegree processed ready =
-        let updatedDegrees =
-                foldl
-                    (\degrees node ->
-                        let successors = Set.toList (Map.findWithDefault Set.empty node (graphOutgoing graph))
-                         in foldl
-                                (\inner successor ->
-                                    Map.adjust (\value -> max 0 (value - 1)) successor inner
-                                )
-                                degrees
-                                successors
-                    )
-                    inDegree
-                    ready
-            processed' = foldr Set.insert processed ready
-            nextReady =
-                sort
-                    [ node
-                    | (node, degree) <- Map.toList updatedDegrees
-                    , degree == 0
-                    , node `Set.notMember` processed'
-                    ]
-         in case loop updatedDegrees processed' nextReady of
-                Left err -> Left err
-                Right rest -> Right (ready : rest)
-
 hashPackages :: [Package] -> IO (Map String String)
 hashPackages packages =
     fmap Map.fromList $
@@ -886,12 +802,12 @@ shouldHashFile pkg path =
                 _ -> []
      in name == buildName || name `elem` manifestNames || extension `elem` sourceExtensions
 
-hashDependencyClosure :: Graph -> Map String String -> String -> String
+hashDependencyClosure :: DG.DirectedGraph -> Map String String -> String -> String
 hashDependencyClosure graph packageHashes pkgName =
     fallbackHash $
         concat
             [ dep ++ ":" ++ Map.findWithDefault "" dep packageHashes ++ "\n"
-            | dep <- allDependencies graph pkgName
+            | dep <- DG.transitivePredecessors pkgName graph
             ]
 
 hashString :: String -> IO String
@@ -946,7 +862,7 @@ needsBuild cache pkgName pkgHash depHash =
         Just entry ->
             cachePackageHash entry /= pkgHash || cacheDependencyHash entry /= depHash
 
-detectAffectedPackages :: FilePath -> String -> [Package] -> Graph -> IO (Maybe (Set String))
+detectAffectedPackages :: FilePath -> String -> [Package] -> DG.DirectedGraph -> IO (Maybe (Set String))
 detectAffectedPackages repoRoot diffBase packages graph = do
     diffBaseFiles <- gitLines repoRoot ["diff", "--name-only", diffBase ++ "...HEAD"]
     worktreeFiles <- gitLines repoRoot ["diff", "--name-only"]
@@ -966,7 +882,7 @@ detectAffectedPackages repoRoot diffBase packages graph = do
             pure
                 (Just
                     (Set.unions
-                        [ Set.insert pkgName (Set.fromList (allDependents graph pkgName))
+                        [ Set.insert pkgName (Set.fromList (DG.transitiveDependents pkgName graph))
                         | pkgName <- Set.toList directHits
                         ]
                     )
@@ -1003,7 +919,7 @@ writePlan ::
     -> BuildCache
     -> Map String String
     -> Map String String
-    -> Graph
+    -> DG.DirectedGraph
     -> Config
     -> Maybe (Set String)
     -> IO ()
@@ -1037,7 +953,7 @@ buildReason ::
     -> Map String String
     -> Config
     -> Maybe (Set String)
-    -> Graph
+    -> DG.DirectedGraph
     -> Package
     -> Maybe String
 buildReason cache packageHashes dependencyHashes cfg affectedSet _graph pkg
@@ -1059,7 +975,7 @@ buildReason cache packageHashes dependencyHashes cfg affectedSet _graph pkg
 
 executeBuilds ::
        [Package]
-    -> Graph
+    -> DG.DirectedGraph
     -> BuildCache
     -> Map String String
     -> Map String String
@@ -1067,15 +983,27 @@ executeBuilds ::
     -> Maybe (Set String)
     -> IO [BuildResult]
 executeBuilds packages graph cache packageHashes dependencyHashes cfg affectedSet =
-    case independentGroups graph of
-        Left err ->
+    case DG.independentGroups graph of
+        Left DG.CycleError ->
             pure
                 [ BuildResult
                     { resultPackageName = packageName pkg
                     , resultStatus = "failed"
                     , resultDurationSeconds = 0
                     , resultStdout = ""
-                    , resultStderr = err
+                    , resultStderr = "cycle detected in dependency graph"
+                    , resultReturnCode = 1
+                    }
+                | pkg <- packages
+                ]
+        Left (DG.NodeNotFound missingNode) ->
+            pure
+                [ BuildResult
+                    { resultPackageName = packageName pkg
+                    , resultStatus = "failed"
+                    , resultDurationSeconds = 0
+                    , resultStdout = ""
+                    , resultStderr = "node not found in dependency graph: " ++ missingNode
                     , resultReturnCode = 1
                     }
                 | pkg <- packages
@@ -1103,7 +1031,7 @@ executeBuilds packages graph cache packageHashes dependencyHashes cfg affectedSe
                 mapMaybe
                     (\pkgName -> do
                         pkg <- Map.lookup pkgName packageMap
-                        let deps = Set.fromList (allDependencies graph pkgName)
+                        let deps = Set.fromList (DG.transitivePredecessors pkgName graph)
                         if not (Set.null (Set.intersection deps failedPackages))
                             then
                                 Just

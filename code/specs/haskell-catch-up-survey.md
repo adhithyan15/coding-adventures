@@ -2,9 +2,9 @@
 
 ## Snapshot
 
-- Haskell package count: `8`
+- Haskell package count: `10`
 - Rust package count: `283`
-- Shared package names today: `arithmetic`, `block-ram`, `clock`, `fpga`, `logic-gates`
+- Shared package names today: `arithmetic`, `block-ram`, `clock`, `directed-graph`, `fpga`, `graph`, `logic-gates`
 - Haskell-only package names today: `discrete-waveform`, `electronics`, `power-supply`
 
 The largest gap is not in one vertical. Rust already has broad coverage across:
@@ -30,7 +30,6 @@ Haskell is currently concentrated around digital logic and electronics.
 
 These unblock more Haskell package growth immediately:
 
-- `directed-graph`
 - `file-system`
 - `cli-builder`
 - `content_addressable_storage`

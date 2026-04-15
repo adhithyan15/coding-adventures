@@ -11,6 +11,7 @@ library
     exposed-modules:  BuildTool
     build-depends:    base >=4.14
                     , containers
+                    , directed-graph
                     , directory
                     , filepath
                     , process
