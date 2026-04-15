@@ -19,7 +19,10 @@ dependencies = [
 
 [tool.uv.sources]
 coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
+coding-adventures-virtual-machine = { path = "../virtual-machine", editable = true }
+coding-adventures-wasm-execution = { path = "../wasm-execution", editable = true }
 coding-adventures-wasm-leb128 = { path = "../wasm-leb128", editable = true }
+coding-adventures-wasm-module-parser = { path = "../wasm-module-parser", editable = true }
 coding-adventures-wasm-opcodes = { path = "../wasm-opcodes", editable = true }
 coding-adventures-wasm-types = { path = "../wasm-types", editable = true }
 coding-adventures-wasm-module-encoder = { path = "../wasm-module-encoder", editable = true }
@@ -28,7 +31,10 @@ coding-adventures-wasm-validator = { path = "../wasm-validator", editable = true
 
 [project.optional-dependencies]
 dev = [
+    "coding-adventures-virtual-machine",
+    "coding-adventures-wasm-execution",
     "coding-adventures-wasm-module-encoder",
+    "coding-adventures-wasm-module-parser",
     "coding-adventures-wasm-runtime",
     "coding-adventures-wasm-validator",
     "pytest>=8.0",

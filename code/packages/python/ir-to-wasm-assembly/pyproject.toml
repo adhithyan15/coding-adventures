@@ -24,15 +24,19 @@ coding-adventures-ir-to-wasm-compiler = { path = "../ir-to-wasm-compiler", edita
 coding-adventures-ir-to-wasm-validator = { path = "../ir-to-wasm-validator", editable = true }
 coding-adventures-wasm-execution = { path = "../wasm-execution", editable = true }
 coding-adventures-wasm-leb128 = { path = "../wasm-leb128", editable = true }
+coding-adventures-wasm-module-encoder = { path = "../wasm-module-encoder", editable = true }
 coding-adventures-wasm-opcodes = { path = "../wasm-opcodes", editable = true }
 coding-adventures-wasm-types = { path = "../wasm-types", editable = true }
 coding-adventures-wasm-assembler = { path = "../wasm-assembler", editable = true }
 coding-adventures-wasm-runtime = { path = "../wasm-runtime", editable = true }
+coding-adventures-wasm-validator = { path = "../wasm-validator", editable = true }
 
 [project.optional-dependencies]
 dev = [
     "coding-adventures-wasm-assembler",
+    "coding-adventures-wasm-module-encoder",
     "coding-adventures-wasm-runtime",
+    "coding-adventures-wasm-validator",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.4",
