@@ -475,7 +475,6 @@ func TestBuildResourceKeysDoesNotIncludeGlobalCabalStoreLockWithoutCabalCommand(
 		t.Fatalf("expected keys not to include global cabal-store lock, got %v", keys)
 	}
 }
-
 func TestBuildResourceKeysIncludesGlobalGradleLockForJavaOnWindows(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD": "gradle test",
