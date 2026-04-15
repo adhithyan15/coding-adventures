@@ -95,6 +95,7 @@ members = [
     "ml-framework-tf",
     "ml-framework-torch",
     "os-kernel",
+    "os-kernel-simulator",
     "parallel-execution-engine",
     "parser",
     "perceptron",
