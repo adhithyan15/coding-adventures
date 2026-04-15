@@ -1,2 +1,2 @@
-REM prereqs: ../grammar-tools
+REM prereqs: ../grammar-tools ../lexer
 echo Perl testing is not supported on Windows - skipping

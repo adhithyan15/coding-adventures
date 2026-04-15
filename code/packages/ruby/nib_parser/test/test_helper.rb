@@ -9,4 +9,4 @@ SimpleCov.start do
 end
 
 require "minitest/autorun"
-require "coding_adventures_sql_parser"
+require "coding_adventures_nib_parser"

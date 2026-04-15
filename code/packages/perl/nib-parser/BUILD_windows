@@ -1,2 +1,2 @@
-REM prereqs: ../grammar-tools ../starlark-lexer
+REM prereqs: ../grammar-tools ../lexer ../parser ../nib-lexer
 echo Perl testing is not supported on Windows - skipping
