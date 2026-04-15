@@ -4,6 +4,26 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-15: SDK-style C# package projects must exclude nested test sources
+
+SDK-style `.csproj` files include `**/*.cs` by default. In this monorepo, package tests live under each package's `tests/` directory, so a new library project will accidentally compile its own xUnit test files unless the package project excludes them explicitly.
+
+**Symptom:** `dotnet test` fails while building the library project itself with errors like `CS0400: The type or namespace name 'Xunit' could not be found` and `CS0246: The type or namespace name 'FactAttribute' could not be found`, even though the test project has the correct xUnit package references.
+
+**Rule:** Every new C# package with in-package `tests/` folders must add this exclusion block to the library `.csproj`:
+
+```xml
+<ItemGroup>
+  <Compile Remove="tests\\**\\*.cs" />
+  <EmbeddedResource Remove="tests\\**" />
+  <None Remove="tests\\**" />
+</ItemGroup>
+```
+
+This keeps the library assembly focused on production code while the test project references it normally.
+
+---
+
 ### 2026-04-12: Never commit build artifacts — agents running tests will generate them
 
 When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
