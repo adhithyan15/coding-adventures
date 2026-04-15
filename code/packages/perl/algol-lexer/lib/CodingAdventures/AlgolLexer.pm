@@ -139,6 +139,7 @@ my $_grammar;      # CodingAdventures::GrammarTools::TokenGrammar
 my $_rules;        # arrayref of { name => str, pat => qr// }
 my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 my $_keywords;     # hashref of lowercase_word => TOKEN_TYPE
+my $_grammar_version;
 
 # --- _grammars_dir() ----------------------------------------------------------
 #
@@ -163,20 +164,31 @@ sub _grammars_dir {
 # Load and parse `algol.tokens`, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
-sub _grammar {
-    return $_grammar if $_grammar;
+sub _normalize_version {
+    my ($version) = @_;
+    $version = 'algol60' if !defined($version) || $version eq '';
+    die "CodingAdventures::AlgolLexer: unknown ALGOL version '$version' (valid: algol60)"
+        unless $version eq 'algol60';
+    return $version;
+}
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'algol.tokens' );
+sub _grammar {
+    my ($version) = @_;
+    $version = _normalize_version($version);
+    return $_grammar if $_grammar && defined $_grammar_version && $_grammar_version eq $version;
+
+    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'algol', "$version.tokens" );
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::AlgolLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };
     close $fh;
 
     my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::AlgolLexer: failed to parse algol.tokens: $err"
+    die "CodingAdventures::AlgolLexer: failed to parse $version.tokens: $err"
         unless $grammar;
 
     $_grammar = $grammar;
+    $_grammar_version = $version;
     return $_grammar;
 }
 
@@ -206,9 +218,15 @@ sub _grammar {
 #   we emit the alias as the token type; otherwise we emit the definition name.
 
 sub _build_rules {
-    return if $_rules;    # already built
+    my ($version) = @_;
+    $version = _normalize_version($version);
+    return if $_rules && defined $_grammar_version && $_grammar_version eq $version;
 
-    my $grammar = _grammar();
+    $_rules = undef;
+    $_skip_rules = undef;
+    $_keywords = undef;
+
+    my $grammar = _grammar($version);
     my (@rules, @skip_rules);
 
     # Build skip patterns
@@ -318,9 +336,12 @@ sub _build_rules {
 #   `die` with a "LexerError" message on unexpected input.
 
 sub tokenize {
-    my ($class_or_self, $source) = @_;
+    my ($class_or_self, $source, %opts) = @_;
+    my $version = _normalize_version(delete($opts{version}));
+    die "CodingAdventures::AlgolLexer: unknown options: " . join(", ", sort keys %opts)
+        if %opts;
 
-    _build_rules();
+    _build_rules($version);
 
     my @tokens;
     my $line = 1;

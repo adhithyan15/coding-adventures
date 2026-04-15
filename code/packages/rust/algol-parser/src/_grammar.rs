@@ -1,6 +1,6 @@
 // AUTO-GENERATED FILE — DO NOT EDIT
-// Source: algol.grammar
-// Regenerate with: grammar-tools compile-grammar algol.grammar
+// Source: algol60.grammar
+// Regenerate with: grammar-tools compile-grammar algol60.grammar
 //
 // This file embeds a ParserGrammar as native Rust data structures.
 // Call `parser_grammar()` instead of reading and parsing the .grammar file.
@@ -652,16 +652,16 @@ pub fn parser_grammar() -> ParserGrammar {
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Literal { value: r#"true"#.to_string() },
                 GrammarElement::Literal { value: r#"false"#.to_string() },
-                GrammarElement::RuleReference { name: r#"relation"#.to_string() },
-                GrammarElement::RuleReference { name: r#"proc_call"#.to_string() },
                 GrammarElement::RuleReference { name: r#"variable"#.to_string() },
+                GrammarElement::RuleReference { name: r#"proc_call"#.to_string() },
+                GrammarElement::RuleReference { name: r#"relation"#.to_string() },
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
                     GrammarElement::RuleReference { name: r#"bool_expr"#.to_string() },
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
             ] },
-            line_number: 287,
+            line_number: 288,
         },
         GrammarRule {
             name: r#"relation"#.to_string(),
@@ -680,6 +680,39 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 297,
         },
         GrammarRule {
+            name: r#"variable"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"LBRACKET"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"subscript_list"#.to_string() },
+                        GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 308,
+        },
+        GrammarRule {
+            name: r#"subscript_list"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
+                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
+                        GrammarElement::RuleReference { name: r#"expression"#.to_string() },
+                    ] }) },
+            ] },
+            line_number: 310,
+        },
+        GrammarRule {
+            name: r#"proc_call"#.to_string(),
+            body: GrammarElement::Sequence { elements: vec![
+                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
+                GrammarElement::RuleReference { name: r#"actual_params"#.to_string() },
+                GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
+            ] },
+            line_number: 314,
+        },
+        GrammarRule {
             name: r#"desig_expr"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Sequence { elements: vec![
@@ -692,15 +725,16 @@ pub fn parser_grammar() -> ParserGrammar {
                 ] },
                 GrammarElement::RuleReference { name: r#"simple_desig"#.to_string() },
             ] },
-            line_number: 302,
+            line_number: 321,
         },
         GrammarRule {
             name: r#"simple_desig"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::RuleReference { name: r#"label"#.to_string() },
                 GrammarElement::Sequence { elements: vec![
                     GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
                     GrammarElement::TokenReference { name: r#"LBRACKET"#.to_string() },
-                    GrammarElement::RuleReference { name: r#"arith_expr"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"subscript_list"#.to_string() },
                     GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
                 ] },
                 GrammarElement::Sequence { elements: vec![
@@ -708,40 +742,6 @@ pub fn parser_grammar() -> ParserGrammar {
                     GrammarElement::RuleReference { name: r#"desig_expr"#.to_string() },
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
-                GrammarElement::RuleReference { name: r#"label"#.to_string() },
-            ] },
-            line_number: 305,
-        },
-        GrammarRule {
-            name: r#"variable"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"LBRACKET"#.to_string() },
-                        GrammarElement::RuleReference { name: r#"subscripts"#.to_string() },
-                        GrammarElement::TokenReference { name: r#"RBRACKET"#.to_string() },
-                    ] }) },
-            ] },
-            line_number: 317,
-        },
-        GrammarRule {
-            name: r#"subscripts"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::RuleReference { name: r#"arith_expr"#.to_string() },
-                GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
-                        GrammarElement::TokenReference { name: r#"COMMA"#.to_string() },
-                        GrammarElement::RuleReference { name: r#"arith_expr"#.to_string() },
-                    ] }) },
-            ] },
-            line_number: 319,
-        },
-        GrammarRule {
-            name: r#"proc_call"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::TokenReference { name: r#"LPAREN"#.to_string() },
-                GrammarElement::RuleReference { name: r#"actual_params"#.to_string() },
-                GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
             ] },
             line_number: 324,
         },

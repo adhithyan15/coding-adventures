@@ -1,13 +1,11 @@
 // AUTO-GENERATED FILE — DO NOT EDIT
-// Source: algol.tokens
-// Regenerate with: grammar-tools compile-tokens algol.tokens
+// Source: algol60.tokens
+// Regenerate with: grammar-tools compile-tokens algol60.tokens
 //
 // This file embeds a TokenGrammar as native Rust data structures.
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
-#[allow(unused_imports)]
-use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
-#[allow(unused_imports)]
+use grammar_tools::token_grammar::{TokenDefinition, TokenGrammar};
 use std::collections::HashMap;
 
 pub fn token_grammar() -> TokenGrammar {
@@ -201,13 +199,13 @@ pub fn token_grammar() -> TokenGrammar {
             },
         ],
         reserved_keywords: vec![],
+        context_keywords: vec![],
+        soft_keywords: vec![],
         escapes: None,
         error_definitions: vec![],
         groups: HashMap::new(),
         case_sensitive: true,
         version: 1,
         case_insensitive: false,
-        context_keywords: vec![],
-        soft_keywords: vec![],
     }
 }

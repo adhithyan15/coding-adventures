@@ -30,7 +30,7 @@ import (
 
 var _allowedPath_0 = sync.OnceValue(func() string {
 	_, _file, _, _ := runtime.Caller(0)
-	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/algol.tokens"))
+	return filepath.Clean(filepath.Join(filepath.Dir(_file), "../../../grammars/algol/algol60.tokens"))
 })
 
 // ─────────────────────────────────────────────────────────────────────────────

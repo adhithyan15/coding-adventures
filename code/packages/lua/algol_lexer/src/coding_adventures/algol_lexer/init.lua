@@ -113,15 +113,26 @@ end
 -- variable.  Subsequent calls to `tokenize` reuse the cached grammar.
 -- This avoids repeated file I/O and repeated regex compilation.
 
-local _grammar_cache = nil
+local _grammar_cache = {}
+
+local function normalize_version(version)
+    if version == nil or version == "" then
+        return "algol60"
+    end
+    if version ~= "algol60" then
+        error("algol_lexer: unknown ALGOL version '" .. tostring(version) .. "' (valid: algol60)")
+    end
+    return version
+end
 
 --- Load and parse the `algol.tokens` grammar, with caching.
 -- On the first call, opens and parses the file.  On subsequent calls,
 -- returns the cached TokenGrammar object immediately.
 -- @return TokenGrammar  The parsed ALGOL 60 token grammar.
-local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+local function get_grammar(version)
+    version = normalize_version(version)
+    if _grammar_cache[version] then
+        return _grammar_cache[version]
     end
 
     -- Navigate from this file's directory up to the repo root.
@@ -130,7 +141,7 @@ local function get_grammar()
     -- Total: 6 levels up lands us at `code/`, the repo root.
     local script_dir  = get_script_dir()
     local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/algol.tokens"
+    local tokens_path = repo_root .. "/grammars/algol/" .. version .. ".tokens"
 
     local f, open_err = io.open(tokens_path, "r")
     if not f then
@@ -144,10 +155,10 @@ local function get_grammar()
 
     local grammar, parse_err = grammar_tools.parse_token_grammar(content)
     if not grammar then
-        error("algol_lexer: failed to parse algol.tokens: " .. (parse_err or "unknown error"))
+        error("algol_lexer: failed to parse " .. version .. ".tokens: " .. (parse_err or "unknown error"))
     end
 
-    _grammar_cache = grammar
+    _grammar_cache[version] = grammar
     return grammar
 end
 
@@ -181,8 +192,8 @@ end
 --   -- tokens[1].value → "begin"
 --   -- tokens[3].type  → "NAME"
 --   -- tokens[3].value → "x"
-function M.tokenize(source)
-    local grammar = get_grammar()
+function M.tokenize(source, version)
+    local grammar = get_grammar(version)
     local gl      = lexer_pkg.GrammarLexer.new(source, grammar)
     local raw     = gl:tokenize()
     local tokens  = {}
@@ -203,8 +214,8 @@ end
 -- directly — for example, to build a custom GrammarLexer with callbacks.
 --
 -- @return TokenGrammar  The parsed ALGOL 60 token grammar.
-function M.get_grammar()
-    return get_grammar()
+function M.get_grammar(version)
+    return get_grammar(version)
 end
 
 return M

@@ -143,7 +143,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars   = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const ALGOL_GRAMMAR_PATH = join(GRAMMARS_DIR, "algol.grammar");
+const VALID_VERSIONS = new Set(["algol60"]);
+
+function resolveGrammarPath(version = "algol60"): string {
+  if (!VALID_VERSIONS.has(version)) {
+    const valid = Array.from(VALID_VERSIONS).sort().join(", ");
+    throw new Error(`Unknown ALGOL version ${JSON.stringify(version)}. Valid versions: ${valid}`);
+  }
+  return join(GRAMMARS_DIR, "algol", `${version}.grammar`);
+}
 
 /**
  * Parse ALGOL 60 source text and return an AST.
@@ -178,7 +186,7 @@ const ALGOL_GRAMMAR_PATH = join(GRAMMARS_DIR, "algol.grammar");
  *       "begin integer i; integer s; s := 0; for i := 1 step 1 until 10 do s := s + i end"
  *     );
  */
-export function parseAlgol(source: string): ASTNode {
+export function parseAlgol(source: string, version = "algol60"): ASTNode {
   /**
    * Step 1: Tokenize.
    * The algol-lexer handles:
@@ -188,7 +196,7 @@ export function parseAlgol(source: string): ASTNode {
    *   - Whitespace skipping
    *   - Position tracking (line/column)
    */
-  const tokens = tokenizeAlgol(source);
+  const tokens = tokenizeAlgol(source, version);
 
   /**
    * Step 2: Load the grammar.
@@ -196,7 +204,7 @@ export function parseAlgol(source: string): ASTNode {
    * parseParserGrammar converts the text into a structured object that
    * the GrammarParser can use for recursive descent.
    */
-  const grammarText = readFileSync(ALGOL_GRAMMAR_PATH, "utf-8");
+  const grammarText = readFileSync(resolveGrammarPath(version), "utf-8");
   const grammar = parseParserGrammar(grammarText);
 
   /**
