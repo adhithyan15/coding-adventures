@@ -1,6 +1,0 @@
-[package]
-name = "riscv-rt"
-version = "0.1.0"
-edition = "2021"
-description = "Tiny RISC-V runtime helpers for QEMU bare-metal bring-up"
-

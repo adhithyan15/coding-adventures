@@ -1,6 +1,0 @@
-[package]
-name = "uart-16550"
-version = "0.1.0"
-edition = "2021"
-description = "Minimal NS16550 UART driver for QEMU virt bring-up"
-

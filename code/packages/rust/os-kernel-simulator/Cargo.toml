@@ -1,0 +1,10 @@
+[package]
+name = "os-kernel-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "S04 OS Kernel simulator -- minimal monolithic kernel with process management, scheduler, and syscalls"
+
+[dependencies]
+riscv-simulator = { path = "../riscv-simulator" }
+display = { path = "../display" }
+interrupt-handler = { path = "../interrupt-handler" }
