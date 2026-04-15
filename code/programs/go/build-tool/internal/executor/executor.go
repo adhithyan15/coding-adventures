@@ -454,6 +454,13 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:luarocks-tree"] = true
 		}
 
+		if pkg.Language == "haskell" && strings.Contains(command, "cabal ") {
+			// Cabal mutates the shared store under ~/.cabal and coordinates builds
+			// through package database locks. Parallel package tests can contend on
+			// those global resources, so serialize Cabal-backed Haskell BUILDs.
+			keys["global:cabal-store"] = true
+		}
+
 		for _, raw := range relPathRe.FindAllString(command, -1) {
 			normalized := strings.ReplaceAll(raw, "\\", "/")
 			abs := filepath.Clean(filepath.Join(pkg.Path, filepath.FromSlash(normalized)))

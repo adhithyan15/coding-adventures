@@ -434,6 +434,48 @@ func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaRemovesOnLinux(t *test
 	}
 }
 
+func TestBuildResourceKeysIncludesGlobalCabalStoreLockForHaskellBuilds(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi",
+	})
+
+	pkg := discovery.Package{
+		Name:          "haskell/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi"},
+		Language:      "haskell",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "haskell/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if !strings.Contains(joined, "global:cabal-store") {
+		t.Fatalf("expected keys to include global cabal-store lock, got %v", keys)
+	}
+}
+
+func TestBuildResourceKeysDoesNotIncludeGlobalCabalStoreLockWithoutCabalCommand(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg/BUILD": "echo haskell build skipped",
+	})
+
+	pkg := discovery.Package{
+		Name:          "haskell/pkg",
+		Path:          filepath.Join(root, "pkg"),
+		BuildCommands: []string{"echo haskell build skipped"},
+		Language:      "haskell",
+	}
+
+	keys := buildResourceKeys(pkg, map[string]string{
+		filepath.Join(root, "pkg"): "haskell/pkg",
+	})
+	joined := strings.Join(keys, ",")
+	if strings.Contains(joined, "global:cabal-store") {
+		t.Fatalf("expected keys not to include global cabal-store lock, got %v", keys)
+	}
+}
+
 func TestExecuteBuildsSerializesSharedBuildResources(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("uses shell commands that are only asserted on Unix runners")
