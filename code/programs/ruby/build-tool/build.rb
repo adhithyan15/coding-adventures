@@ -660,7 +660,7 @@ module BuildTool
     # @param force [Boolean] Whether --force was set.
     # @return [Integer] Exit code (always 0).
     def detect_needed_languages(packages, affected_set, force, ci_toolchains)
-      languages_needed = compute_languages_needed(packages, affected_set, force, ci_toolchains)
+      languages_needed = CIWorkflow.compute_languages_needed(packages, affected_set, force, ci_toolchains)
       output_language_flags(languages_needed)
       0
     end
@@ -675,21 +675,7 @@ module BuildTool
     # @param force [Boolean]
     # @return [Hash<String, Boolean>]
     def compute_languages_needed(packages, affected_set, force, ci_toolchains = Set.new)
-      needed = ALL_TOOLCHAINS.each_with_object({}) { |lang, acc| acc[lang] = false }
-      needed["go"] = true
-
-      if force || affected_set.nil?
-        ALL_TOOLCHAINS.each { |lang| needed[lang] = true }
-        return needed
-      end
-
-      packages.each do |pkg|
-        needed[toolchain_for_package_language(pkg.language)] = true if affected_set.key?(pkg.name)
-      end
-
-      ci_toolchains.each { |toolchain| needed[toolchain] = true }
-
-      needed
+      CIWorkflow.compute_languages_needed(packages, affected_set, force, ci_toolchains)
     end
 
     # output_language_flags -- Print language flags to stdout and $GITHUB_OUTPUT.

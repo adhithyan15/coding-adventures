@@ -8,6 +8,7 @@ module BuildTool
     module_function
 
     CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
+    ALL_TOOLCHAINS = (%w[python ruby go typescript rust elixir lua perl swift haskell] + ["dotnet"]).freeze
 
     Change = Data.define(:toolchains, :requires_full_rebuild)
 
@@ -98,6 +99,32 @@ module BuildTool
 
     def sorted_toolchains(toolchains)
       toolchains.to_a.sort
+    end
+
+    def toolchain_for_package_language(language)
+      case language
+      when "wasm" then "rust"
+      when "csharp", "fsharp", "dotnet" then "dotnet"
+      else language
+      end
+    end
+
+    def compute_languages_needed(packages, affected_set, force, ci_toolchains = Set.new)
+      needed = ALL_TOOLCHAINS.each_with_object({}) { |lang, acc| acc[lang] = false }
+      needed["go"] = true
+
+      if force || affected_set.nil?
+        ALL_TOOLCHAINS.each { |lang| needed[lang] = true }
+        return needed
+      end
+
+      packages.each do |pkg|
+        needed[toolchain_for_package_language(pkg.language)] = true if affected_set.key?(pkg.name)
+      end
+
+      ci_toolchains.each { |toolchain| needed[toolchain] = true }
+
+      needed
     end
 
     def classify_hunk(lines)

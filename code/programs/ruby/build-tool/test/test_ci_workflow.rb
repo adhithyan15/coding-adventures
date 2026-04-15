@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "test_helper"
-require_relative "../build"
 
 class TestCIWorkflow < Minitest::Test
   def test_analyze_patch_allows_toolchain_scoped_dotnet_changes
@@ -49,7 +48,7 @@ class TestCIWorkflow < Minitest::Test
       )
     ]
 
-    needed = BuildTool::CLI.compute_languages_needed(
+    needed = BuildTool::CIWorkflow.compute_languages_needed(
       packages,
       { "python/logic-gates" => true },
       false,
@@ -60,5 +59,19 @@ class TestCIWorkflow < Minitest::Test
     assert needed["python"]
     assert needed["dotnet"]
     refute needed["rust"]
+  end
+
+  def test_compute_languages_needed_enables_everything_for_force
+    needed = BuildTool::CIWorkflow.compute_languages_needed([], nil, true)
+
+    BuildTool::CIWorkflow::ALL_TOOLCHAINS.each do |toolchain|
+      assert needed[toolchain], "expected #{toolchain} to be enabled"
+    end
+  end
+
+  def test_toolchain_for_package_language_maps_non_native_languages
+    assert_equal "rust", BuildTool::CIWorkflow.toolchain_for_package_language("wasm")
+    assert_equal "dotnet", BuildTool::CIWorkflow.toolchain_for_package_language("csharp")
+    assert_equal "python", BuildTool::CIWorkflow.toolchain_for_package_language("python")
   end
 end
