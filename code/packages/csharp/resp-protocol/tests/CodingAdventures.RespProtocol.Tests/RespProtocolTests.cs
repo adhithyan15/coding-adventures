@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace CodingAdventures.RespProtocol.Tests;
 
 public sealed class RespProtocolTests
@@ -64,6 +66,49 @@ public sealed class RespProtocolTests
         Assert.Equal(combined.Length, result.Consumed);
     }
 
+    [Fact]
+    public void SupportsNullValuesAndArrayHelpers()
+    {
+        var bulk = Assert.IsType<RespBulkString>(RespProtocol.Decode("$-1\r\n")!.Value);
+        Assert.Null(bulk.Value);
+
+        var array = Assert.IsType<RespArray>(RespProtocol.Decode("*-1\r\n")!.Value);
+        Assert.Null(array.Value);
+
+        var combined = RespProtocol.ConcatBytes([RespProtocol.EncodeInteger(1), RespProtocol.EncodeBulkString("a")]);
+        Assert.Equal(":1\r\n$1\r\na\r\n", Encoding.UTF8.GetString(combined));
+    }
+
+    [Fact]
+    public void HandlesPartialAndInvalidFrames()
+    {
+        Assert.Null(RespProtocol.Decode("$5\r\nhel"));
+        Assert.Null(RespProtocol.Decode("*2\r\n$4\r\nPING\r\n$5\r\nhel"));
+        Assert.Throws<RespDecodeError>(() => RespProtocol.Decode(":abc\r\n"));
+        Assert.Throws<RespDecodeError>(() => RespProtocol.Decode("$-2\r\n"));
+        Assert.Throws<RespDecodeError>(() => RespProtocol.Decode("*-2\r\n"));
+        Assert.Throws<RespDecodeError>(() => RespProtocol.Decode("$3\r\nabcx\r\n"));
+    }
+
+    [Fact]
+    public void DecoderSurfacesErrorsAndEmptyQueue()
+    {
+        var decoder = new RespDecoder();
+        decoder.Feed("PING\r\n");
+        Assert.True(decoder.HasMessage());
+        Assert.IsType<RespArray>(decoder.GetMessage());
+        Assert.False(decoder.HasMessage());
+        Assert.Throws<RespDecodeError>(() => decoder.GetMessage());
+
+        Assert.Throws<RespDecodeError>(() => decoder.Feed(":oops\r\n"));
+    }
+
+    [Fact]
+    public void RejectsUnsupportedEncodeTypes()
+    {
+        Assert.Throws<RespEncodeError>(() => RespProtocol.Encode(new UnknownRespValue()));
+    }
+
     private static void AssertSimpleString(RespDecodeResult? result, string expected)
     {
         Assert.NotNull(result);
@@ -91,4 +136,6 @@ public sealed class RespProtocolTests
         var value = Assert.IsType<RespBulkString>(result!.Value);
         Assert.Equal(expected, value.Value);
     }
+
+    private sealed class UnknownRespValue() : RespValue("unknown");
 }

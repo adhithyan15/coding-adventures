@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Include>[CodingAdventures.InMemoryDataStoreEngine]*</Include>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EngineTests.fs" />

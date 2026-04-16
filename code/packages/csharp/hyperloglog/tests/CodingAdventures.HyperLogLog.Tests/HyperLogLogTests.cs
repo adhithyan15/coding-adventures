@@ -62,4 +62,24 @@ public sealed class HyperLogLogTests
         Assert.Equal(14, HyperLogLog.OptimalPrecision(0.01));
         Assert.True(HyperLogLog.ErrorRateForPrecision(14) > 0.008);
     }
+
+    [Fact]
+    public void SupportsConstructionCloningAndRepresentation()
+    {
+        Assert.Throws<HyperLogLogError>(() => new HyperLogLog(2));
+        Assert.Null(HyperLogLog.TryWithPrecision(99));
+
+        var first = HyperLogLog.WithPrecision(8);
+        first.AddBytes([1, 2, 3]);
+        first.Add(true).Add(123).Add(new { Name = "sample" });
+
+        var clone = first.Clone();
+
+        Assert.True(first.Equals(clone));
+        Assert.True(first.Equals((object)clone));
+        Assert.Equal(first.GetHashCode(), clone.GetHashCode());
+        Assert.Equal(8, first.Precision());
+        Assert.Equal(256, first.NumRegisters());
+        Assert.Contains("precision=8", first.ToString());
+    }
 }

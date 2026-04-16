@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Include>[CodingAdventures.SkipList]*</Include>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="SkipListTests.fs" />

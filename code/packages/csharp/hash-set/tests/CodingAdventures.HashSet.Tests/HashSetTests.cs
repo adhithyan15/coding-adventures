@@ -48,4 +48,26 @@ public sealed class HashSetTests
         Assert.True(left.IsDisjoint(disjoint));
         Assert.True(left.Equals(HashSet<string>.FromList(["beta", "alpha"])));
     }
+
+    [Fact]
+    public void ExposesUtilityMembersAndEqualityContracts()
+    {
+        var empty = new HashSet<string>();
+        Assert.True(empty.IsEmpty());
+        Assert.Equal(0, empty.Len());
+
+        var set = empty.Add("alpha").Add("beta");
+        var clone = set.Clone();
+        var discarded = set.Discard("missing").Discard("alpha");
+
+        Assert.True(set.Contains("alpha"));
+        Assert.Equal(["alpha", "beta"], set.OrderBy(value => value).ToList());
+        Assert.Equal(["alpha", "beta"], clone.ToList().OrderBy(value => value).ToList());
+        Assert.Equal(["beta"], discarded.ToList());
+        Assert.False(discarded.IsEmpty());
+
+        Assert.True(set.Equals((object)HashSet<string>.FromList(["beta", "alpha"])));
+        Assert.False(set.Equals((object?)null));
+        Assert.Equal(set.GetHashCode(), HashSet<string>.FromList(["alpha", "beta"]).GetHashCode());
+    }
 }

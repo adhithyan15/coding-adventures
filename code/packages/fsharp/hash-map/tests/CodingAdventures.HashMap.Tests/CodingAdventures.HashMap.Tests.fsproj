@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <Include>[CodingAdventures.HashMap]*</Include>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="HashMapTests.fs" />

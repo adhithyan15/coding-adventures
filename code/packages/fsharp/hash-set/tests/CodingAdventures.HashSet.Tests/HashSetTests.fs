@@ -15,3 +15,17 @@ type HashSetTests() =
 
         let diff = unioned.Difference(HashSet([ "a" ]))
         Assert.False(diff.Has "a")
+
+    [<Fact>]
+    member _.``supports clone membership and relations``() =
+        let left = HashSet([ "a"; "b" ])
+        let right = HashSet([ "b"; "c" ])
+        let clone = left.Clone()
+        let intersection = left.Intersection(right)
+        let removed = left.Remove("a")
+
+        Assert.True(left.Contains "a")
+        Assert.False(HashSet<string>().IsEmpty() |> not)
+        Assert.True((clone.ToList() |> List.sort) = [ "a"; "b" ])
+        Assert.True(intersection.ToList() = [ "b" ])
+        Assert.True(removed.ToList() = [ "b" ])

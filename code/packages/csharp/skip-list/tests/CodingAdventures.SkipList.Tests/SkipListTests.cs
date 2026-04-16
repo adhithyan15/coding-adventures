@@ -76,4 +76,44 @@ public sealed class SkipListTests
 
         Assert.Equal([(5, "z"), (10, "a"), (10, "b")], list.ToList());
     }
+
+    [Fact]
+    public void ExposesHelpersAndBoundaryBehaviors()
+    {
+        var list = SkipList<int, string>.WithParams(maxLevel: -1, probability: 2);
+        var emptyStrings = new SkipList<string, int>();
+        Assert.True(list.IsEmpty());
+        Assert.Equal(1, list.MaxLevel());
+        Assert.Equal(0.5, list.Probability());
+        Assert.Equal(1, list.CurrentMax());
+        Assert.Null(emptyStrings.Min());
+        Assert.Null(emptyStrings.Max());
+        Assert.Empty(list.RangeQuery(10, 1, inclusive: true));
+
+        list.Insert(1, "one");
+        list.Insert(2, "two");
+        list.Insert(2, "two-updated");
+        list.Insert(3, "three");
+
+        Assert.True(list.Contains(2));
+        Assert.True(list.ContainsKey(3));
+        Assert.False(list.Contains(99));
+        Assert.Equal("two-updated", list.Search(2));
+        Assert.Equal(3, list.Len());
+        Assert.Equal(3, list.Size());
+        Assert.Equal(1, list.Min());
+        Assert.Equal(3, list.Max());
+        Assert.Equal(1, list.ByRank(0));
+        Assert.Null(list.Rank(99));
+        Assert.True(list.CurrentMax() >= 1);
+        Assert.Equal(
+            [
+                new KeyValuePair<int, string>(1, "one"),
+                new KeyValuePair<int, string>(2, "two-updated"),
+                new KeyValuePair<int, string>(3, "three")
+            ],
+            list.Entries());
+        Assert.True(list.Delete(3));
+        Assert.False(list.Delete(3));
+    }
 }
