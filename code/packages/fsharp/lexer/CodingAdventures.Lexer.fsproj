@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.Lexer.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Lexer.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>F# wrappers for the lexer package</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../csharp/lexer/CodingAdventures.Lexer.csproj" />
+    <ProjectReference Include="../../csharp/grammar-tools/CodingAdventures.GrammarTools.csproj" />
+    <Compile Include="Lexer.fs" />
+  </ItemGroup>
+</Project>
