@@ -24,6 +24,7 @@ from wasm_types import (
     ExternalKind,
     FuncType,
     FunctionBody,
+    Import,
     Limits,
     MemoryType,
     ValueType,
@@ -33,6 +34,17 @@ from wasm_types import (
 _LOOP_START_RE = re.compile(r"^loop_\d+_start$")
 _IF_ELSE_RE = re.compile(r"^if_\d+_else$")
 _FUNCTION_COMMENT_RE = re.compile(r"^function:\s*([A-Za-z_][A-Za-z0-9_]*)\((.*)\)$")
+
+_SYSCALL_WRITE = 1
+_SYSCALL_READ = 2
+_SYSCALL_EXIT = 10
+_SYSCALL_ARG0 = 4
+
+_WASI_MODULE = "wasi_snapshot_preview1"
+_WASI_IOVEC_OFFSET = 0
+_WASI_COUNT_OFFSET = 8
+_WASI_BYTE_OFFSET = 12
+_WASI_SCRATCH_SIZE = 16
 
 _MEMORY_OPS = frozenset(
     {
@@ -97,6 +109,23 @@ class _FunctionIR:
     max_reg: int
 
 
+@dataclass(frozen=True)
+class _WasiImport:
+    syscall_number: int
+    name: str
+    func_type: FuncType
+
+    @property
+    def type_key(self) -> str:
+        return f"wasi::{self.name}"
+
+
+@dataclass(frozen=True)
+class _WasiContext:
+    function_indices: dict[int, int]
+    scratch_base: int | None
+
+
 class IrToWasmCompiler:
     """Compile a generic IrProgram into a WasmModule."""
 
@@ -111,16 +140,36 @@ class IrToWasmCompiler:
                 signatures[signature.label] = signature
 
         functions = self._split_functions(program, signatures)
-        function_indices = {function.label: index for index, function in enumerate(functions)}
-        type_indices, types = self._build_type_table(functions)
+        imports = self._collect_wasi_imports(program)
+        type_indices, types = self._build_type_table(functions, imports)
         data_offsets = self._layout_data(program.data)
+        scratch_base = None
+        if self._needs_wasi_scratch(program):
+            scratch_base = _align_up(sum(decl.size for decl in program.data), 4)
 
         module = WasmModule()
         module.types.extend(types)
+        module.imports.extend(
+            Import(
+                module_name=_WASI_MODULE,
+                name=imp.name,
+                kind=ExternalKind.FUNCTION,
+                type_info=type_indices[imp.type_key],
+            )
+            for imp in imports
+        )
+        function_index_base = len(imports)
+        function_indices = {
+            function.label: function_index_base + index
+            for index, function in enumerate(functions)
+        }
         module.functions.extend(type_indices[function.label] for function in functions)
 
-        if self._needs_memory(program):
-            total_bytes = sum(decl.size for decl in program.data)
+        total_bytes = sum(decl.size for decl in program.data)
+        if scratch_base is not None:
+            total_bytes = max(total_bytes, scratch_base + _WASI_SCRATCH_SIZE)
+
+        if self._needs_memory(program) or scratch_base is not None:
             page_count = max(1, math.ceil(total_bytes / 65536)) if total_bytes else 1
             module.memories.append(MemoryType(limits=Limits(min=page_count, max=None)))
             module.exports.append(Export(name="memory", kind=ExternalKind.MEMORY, index=0))
@@ -133,6 +182,10 @@ class IrToWasmCompiler:
                 for decl, offset in ((decl, data_offsets[decl.label]) for decl in program.data)
             )
 
+        wasi_context = _WasiContext(
+            function_indices={imp.syscall_number: index for index, imp in enumerate(imports)},
+            scratch_base=scratch_base,
+        )
         for function in functions:
             module.code.append(
                 _FunctionLowerer(
@@ -140,6 +193,7 @@ class IrToWasmCompiler:
                     signatures=signatures,
                     function_indices=function_indices,
                     data_offsets=data_offsets,
+                    wasi_context=wasi_context,
                 ).lower()
             )
             if function.signature.export_name is not None:
@@ -156,10 +210,17 @@ class IrToWasmCompiler:
     def _build_type_table(
         self,
         functions: list[_FunctionIR],
+        imports: list[_WasiImport],
     ) -> tuple[dict[str, int], list[FuncType]]:
         type_indices: dict[FuncType, int] = {}
         function_types: list[FuncType] = []
         function_to_type_index: dict[str, int] = {}
+
+        for imp in imports:
+            if imp.func_type not in type_indices:
+                type_indices[imp.func_type] = len(function_types)
+                function_types.append(imp.func_type)
+            function_to_type_index[imp.type_key] = type_indices[imp.func_type]
 
         for function in functions:
             func_type = FuncType(
@@ -185,6 +246,56 @@ class IrToWasmCompiler:
         if program.data:
             return True
         return any(instr.opcode in _MEMORY_OPS for instr in program.instructions)
+
+    def _needs_wasi_scratch(self, program: IrProgram) -> bool:
+        for instruction in program.instructions:
+            if instruction.opcode != IrOp.SYSCALL or not instruction.operands:
+                continue
+            syscall = _expect_immediate(instruction.operands[0], "SYSCALL number").value
+            if syscall in (_SYSCALL_WRITE, _SYSCALL_READ):
+                return True
+        return False
+
+    def _collect_wasi_imports(self, program: IrProgram) -> list[_WasiImport]:
+        required_syscalls: set[int] = set()
+        for instruction in program.instructions:
+            if instruction.opcode != IrOp.SYSCALL or not instruction.operands:
+                continue
+            required_syscalls.add(_expect_immediate(instruction.operands[0], "SYSCALL number").value)
+
+        ordered_imports = (
+            _WasiImport(
+                syscall_number=_SYSCALL_WRITE,
+                name="fd_write",
+                func_type=FuncType(
+                    params=(ValueType.I32, ValueType.I32, ValueType.I32, ValueType.I32),
+                    results=(ValueType.I32,),
+                ),
+            ),
+            _WasiImport(
+                syscall_number=_SYSCALL_READ,
+                name="fd_read",
+                func_type=FuncType(
+                    params=(ValueType.I32, ValueType.I32, ValueType.I32, ValueType.I32),
+                    results=(ValueType.I32,),
+                ),
+            ),
+            _WasiImport(
+                syscall_number=_SYSCALL_EXIT,
+                name="proc_exit",
+                func_type=FuncType(
+                    params=(ValueType.I32,),
+                    results=(),
+                ),
+            ),
+        )
+
+        supported_syscalls = {imp.syscall_number for imp in ordered_imports}
+        unsupported = sorted(required_syscalls - supported_syscalls)
+        if unsupported:
+            raise WasmLoweringError(f"unsupported SYSCALL number(s): {', '.join(map(str, unsupported))}")
+
+        return [imp for imp in ordered_imports if imp.syscall_number in required_syscalls]
 
     def _split_functions(
         self,
@@ -232,11 +343,13 @@ class _FunctionLowerer:
         signatures: dict[str, FunctionSignature],
         function_indices: dict[str, int],
         data_offsets: dict[str, int],
+        wasi_context: _WasiContext,
     ) -> None:
         self.function = function
         self.signatures = signatures
         self.function_indices = function_indices
         self.data_offsets = data_offsets
+        self.wasi_context = wasi_context
         self.param_count = function.signature.param_count
         self._bytes = bytearray()
         self._instructions = function.instructions
@@ -452,9 +565,94 @@ class _FunctionLowerer:
             case IrOp.NOP:
                 self._emit_opcode("nop")
             case IrOp.SYSCALL:
-                raise WasmLoweringError("SYSCALL lowering is not implemented yet")
+                self._emit_syscall(instruction)
             case _:
                 raise WasmLoweringError(f"unsupported opcode: {instruction.opcode.name}")
+
+    def _emit_syscall(self, instruction: IrInstruction) -> None:
+        syscall = _expect_immediate(instruction.operands[0], "SYSCALL number").value
+
+        if syscall == _SYSCALL_WRITE:
+            self._emit_wasi_write()
+            return
+        if syscall == _SYSCALL_READ:
+            self._emit_wasi_read()
+            return
+        if syscall == _SYSCALL_EXIT:
+            self._emit_wasi_exit()
+            return
+        raise WasmLoweringError(f"unsupported SYSCALL number: {syscall}")
+
+    def _emit_wasi_write(self) -> None:
+        scratch_base = self._require_wasi_scratch()
+        iovec_ptr = scratch_base + _WASI_IOVEC_OFFSET
+        nwritten_ptr = scratch_base + _WASI_COUNT_OFFSET
+        byte_ptr = scratch_base + _WASI_BYTE_OFFSET
+
+        self._emit_i32_const(byte_ptr)
+        self._emit_local_get(_SYSCALL_ARG0)
+        self._emit_opcode("i32.store8")
+        self._emit_memarg(0, 0)
+
+        self._emit_store_const_i32(iovec_ptr, byte_ptr)
+        self._emit_store_const_i32(iovec_ptr + 4, 1)
+
+        self._emit_i32_const(1)
+        self._emit_i32_const(iovec_ptr)
+        self._emit_i32_const(1)
+        self._emit_i32_const(nwritten_ptr)
+        self._emit_wasi_call(_SYSCALL_WRITE)
+        self._emit_local_set(_REG_SCRATCH)
+
+    def _emit_wasi_read(self) -> None:
+        scratch_base = self._require_wasi_scratch()
+        iovec_ptr = scratch_base + _WASI_IOVEC_OFFSET
+        nread_ptr = scratch_base + _WASI_COUNT_OFFSET
+        byte_ptr = scratch_base + _WASI_BYTE_OFFSET
+
+        self._emit_i32_const(byte_ptr)
+        self._emit_i32_const(0)
+        self._emit_opcode("i32.store8")
+        self._emit_memarg(0, 0)
+
+        self._emit_store_const_i32(iovec_ptr, byte_ptr)
+        self._emit_store_const_i32(iovec_ptr + 4, 1)
+
+        self._emit_i32_const(0)
+        self._emit_i32_const(iovec_ptr)
+        self._emit_i32_const(1)
+        self._emit_i32_const(nread_ptr)
+        self._emit_wasi_call(_SYSCALL_READ)
+        self._emit_local_set(_REG_SCRATCH)
+
+        self._emit_i32_const(byte_ptr)
+        self._emit_opcode("i32.load8_u")
+        self._emit_memarg(0, 0)
+        self._emit_local_set(_SYSCALL_ARG0)
+
+    def _emit_wasi_exit(self) -> None:
+        self._emit_local_get(_SYSCALL_ARG0)
+        self._emit_wasi_call(_SYSCALL_EXIT)
+        self._emit_i32_const(0)
+        self._emit_opcode("return")
+
+    def _emit_store_const_i32(self, address: int, value: int) -> None:
+        self._emit_i32_const(address)
+        self._emit_i32_const(value)
+        self._emit_opcode("i32.store")
+        self._emit_memarg(2, 0)
+
+    def _emit_wasi_call(self, syscall_number: int) -> None:
+        function_index = self.wasi_context.function_indices.get(syscall_number)
+        if function_index is None:
+            raise WasmLoweringError(f"missing WASI import for SYSCALL {syscall_number}")
+        self._emit_opcode("call")
+        self._emit_u32(function_index)
+
+    def _require_wasi_scratch(self) -> int:
+        if self.wasi_context.scratch_base is None:
+            raise WasmLoweringError("SYSCALL lowering requires WASM scratch memory")
+        return self.wasi_context.scratch_base
 
     def _emit_binary_numeric(self, wasm_op: str, instruction: IrInstruction) -> None:
         dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
@@ -583,6 +781,11 @@ def _make_function_ir(
             for operand in instruction.operands
             if isinstance(operand, IrRegister)
         ]
+        + [
+            _SYSCALL_ARG0
+            for instruction in instructions
+            if instruction.opcode == IrOp.SYSCALL
+        ]
     )
 
     return _FunctionIR(
@@ -634,6 +837,10 @@ def _expect_label(operand: object, context: str) -> IrLabel:
     if not isinstance(operand, IrLabel):
         raise WasmLoweringError(f"{context}: expected label, got {operand!r}")
     return operand
+
+
+def _align_up(value: int, alignment: int) -> int:
+    return ((value + alignment - 1) // alignment) * alignment
 
 
 _REG_SCRATCH = 1

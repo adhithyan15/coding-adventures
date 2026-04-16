@@ -6,6 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- **`fd_read`** — WASI stdin support for imported modules using `fd_read`
 - **WASI Tier 3** — eight new WASI host functions beyond the original `fd_write`/`proc_exit`:
   - `args_sizes_get` — report argument count and total buffer size
   - `args_get` — copy null-terminated argument strings into WASM linear memory
@@ -19,13 +20,14 @@ All notable changes to this package will be documented in this file.
 - **`WasiRandom` abstract base class** — injectable random source interface with `fill_bytes(n)` method
 - **`SystemClock`** — production implementation delegating to `time.time_ns()` / `time.monotonic_ns()`
 - **`SystemRandom`** — production implementation delegating to `secrets.token_bytes()`
-- **`WasiConfig` dataclass** — collects all `WasiStub` options in one place: `args`, `env`, `stdout`, `stderr`, `clock`, `random`
+- **`WasiConfig` dataclass** — collects all `WasiHost` options in one place: `args`, `env`, `stdout`, `stderr`, `clock`, `random`
 - All new classes exported from `wasm_runtime.__init__`
 - 32 new tests in `tests/test_wasi_tier3.py` covering happy paths, edge cases, no-memory guards, and the `clock_time_get` EINVAL path
 
 ### Changed
 
-- `WasiStub.__init__` now accepts an optional `WasiConfig` as its first argument. Old keyword-only `stdout`/`stderr` usage remains fully backwards-compatible.
+- `WasiHost.__init__` now accepts an optional `WasiConfig` as its first argument. Keyword-only `stdout`/`stderr` usage remains supported.
+- `WasiConfig` now accepts `stdin`, a byte-reader callable used by `fd_read`.
 - Added `EINVAL = 28` constant for the invalid-argument errno code.
 
 ## [0.1.0] - 2026-04-05

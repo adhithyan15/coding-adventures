@@ -36,7 +36,7 @@ print(print_ir(result.program))
 | `<` LEFT  | `ADD_IMM v1, v1, -1`                             |
 | `+` INC   | `LOAD_BYTE v2, v0, v1` + `ADD_IMM` + `AND_IMM` + `STORE_BYTE` |
 | `-` DEC   | Same as INC but with delta -1                     |
-| `.` OUTPUT | `LOAD_BYTE` + `ADD v4, v2, v6` + `SYSCALL 1`  |
+| `.` OUTPUT | `LOAD_BYTE` + `ADD_IMM v4, v2, 0` + `SYSCALL 1` |
 | `,` INPUT  | `SYSCALL 2` + `STORE_BYTE v4, v0, v1`           |
 
 ## Build Modes

@@ -1,16 +1,17 @@
-"""wasi_stub.py --- WASI host implementation (Tiers 1-3).
+"""wasi_host.py --- WASI host implementation (Tiers 1-3).
 
 WebAssembly System Interface (WASI) provides a portable POSIX-like API so
 that WASM modules can talk to the outside world (files, clocks, random
 numbers, command-line args, environment variables) without depending on any
 specific operating system.
 
-This module implements a *stub* host: enough WASI surface area to run
-real programs that only need the basics.
+This module implements the runtime's WASI host surface so real programs
+can talk to the outside world through imported WASI functions.
 
   Tier 1 (already existed)
   ─────────────────────────
   - fd_write        — write iovec buffers to stdout or stderr
+  - fd_read         — read iovec buffers from stdin
   - proc_exit       — terminate the WASM program with an exit code
 
   Tier 3 (new in this revision)
@@ -59,6 +60,7 @@ from wasm_types import FuncType, ValueType
 # WASI errno constants
 # ---------------------------------------------------------------------------
 ESUCCESS = 0    # no error
+EBADF = 8       # bad file descriptor
 EINVAL = 28     # invalid argument  (e.g. unknown clock id)
 ENOSYS = 52     # function not (yet) implemented
 
@@ -158,13 +160,15 @@ class SystemRandom(WasiRandom):
 
 @dataclass
 class WasiConfig:
-    """All knobs you can pass to a WasiStub.
+    """All knobs you can pass to a WasiHost.
 
     Fields
     ──────
     args    — command-line arguments as a list of strings.  args[0] is
               conventionally the program name.
     env     — environment variables as a {key: value} dict.
+    stdin   — callable that receives a byte count and returns up to that
+              many bytes of input. If None, reads always return EOF.
     stdout  — callable that receives each piece of text written to fd 1.
               If None, output is silently discarded.
     stderr  — same but for fd 2.
@@ -174,6 +178,7 @@ class WasiConfig:
 
     args: list[str] = field(default_factory=list)
     env: dict[str, str] = field(default_factory=dict)
+    stdin: Callable[[int], bytes | bytearray | str | None] | None = None
     stdout: Callable[[str], None] | None = None
     stderr: Callable[[str], None] | None = None
     clock: WasiClock = field(default_factory=SystemClock)
@@ -224,29 +229,29 @@ class _HostFunc:
 
 
 # ---------------------------------------------------------------------------
-# WasiStub — the main host object
+# WasiHost — the main host object
 # ---------------------------------------------------------------------------
 
 
-class WasiStub:
+class WasiHost:
     """WASI host implementation covering Tiers 1 and 3.
 
     Usage (simple — backwards-compatible with old keyword-arg style)
     ────────────────────────────────────────────────────────────────
-    stub = WasiStub(stdout=print, stderr=print)
+    host = WasiHost(stdout=print, stderr=print)
 
     Usage (full config)
     ────────────────────────────────────────────────────────────────
-    from wasm_runtime.wasi_stub import WasiConfig, FakeClock
+    from wasm_runtime.wasi_host import WasiConfig, FakeClock
     cfg = WasiConfig(args=["myapp", "--flag"], env={"HOME": "/tmp"},
                      stdout=print, clock=FakeClock())
-    stub = WasiStub(cfg)
+    host = WasiHost(cfg)
 
     Backwards compatibility
     ───────────────────────
     The old constructor accepted ``stdout`` and ``stderr`` as keyword
     arguments directly.  That form still works: passing keyword-only
-    ``stdout``/``stderr`` to ``WasiStub()`` creates a ``WasiConfig``
+    ``stdout``/``stderr`` to ``WasiHost()`` creates a ``WasiConfig``
     internally.  If you pass a ``WasiConfig`` as the first positional
     argument, keyword args are ignored.
     """
@@ -259,11 +264,12 @@ class WasiStub:
         stderr: Callable[[str], None] | None = None,
     ) -> None:
         # If no config was given, build one from the legacy keyword arguments.
-        # This keeps old call-sites like WasiStub(stdout=captured.append)
+        # This keeps straightforward call-sites like WasiHost(stdout=print)
         # working without any changes.
         if config is None:
             config = WasiConfig(stdout=stdout, stderr=stderr)
 
+        self._stdin = config.stdin or (lambda _n: b"")
         self._stdout = config.stdout or (lambda _t: None)
         self._stderr = config.stderr or (lambda _t: None)
         self._args = config.args
@@ -292,6 +298,7 @@ class WasiStub:
         # Map each WASI function name to its maker method.
         dispatch: dict[str, Any] = {
             "fd_write": self._make_fd_write,
+            "fd_read": self._make_fd_read,
             "proc_exit": self._make_proc_exit,
             "args_sizes_get": self._make_args_sizes_get,
             "args_get": self._make_args_get,
@@ -319,7 +326,7 @@ class WasiStub:
         return None
 
     # ------------------------------------------------------------------
-    # Tier 1: fd_write and proc_exit
+    # Tier 1: fd_write, fd_read, and proc_exit
     # ------------------------------------------------------------------
 
     def _make_fd_write(self) -> _HostFunc:
@@ -336,7 +343,7 @@ class WasiStub:
           [base+0 .. base+3]  buf_ptr   (i32, little-endian)
           [base+4 .. base+7]  buf_len   (i32, little-endian)
         """
-        stub = self
+        host = self
 
         def fd_write_impl(args: list[WasmValue]) -> list[WasmValue]:
             fd = args[0].value
@@ -344,10 +351,10 @@ class WasiStub:
             iovs_len = args[2].value
             nwritten_ptr = args[3].value
 
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
 
-            mem = stub._instance_memory
+            mem = host._instance_memory
             total_written = 0
 
             for idx in range(iovs_len):
@@ -364,9 +371,9 @@ class WasiStub:
                 total_written += buf_len
 
                 if fd == 1:
-                    stub._stdout(text)
+                    host._stdout(text)
                 elif fd == 2:
-                    stub._stderr(text)
+                    host._stderr(text)
 
             mem.store_i32(nwritten_ptr, total_written)
             return [i32(ESUCCESS)]
@@ -377,6 +384,62 @@ class WasiStub:
                 results=(ValueType.I32,),
             ),
             fd_write_impl,
+        )
+
+    def _make_fd_read(self) -> _HostFunc:
+        """Build the fd_read host function.
+
+        fd_read(fd, iovs_ptr, iovs_len, nread_ptr) -> errno
+
+        WASI uses the same iovec layout for reads and writes. Each entry
+        describes a writable buffer in WASM memory. We copy up to ``buf_len``
+        bytes into each buffer in order and stop early on EOF.
+        """
+        host = self
+
+        def fd_read_impl(args: list[WasmValue]) -> list[WasmValue]:
+            fd = args[0].value
+            iovs_ptr = args[1].value
+            iovs_len = args[2].value
+            nread_ptr = args[3].value
+
+            if host._instance_memory is None:
+                return [i32(ENOSYS)]
+            if fd != 0:
+                return [i32(EBADF)]
+
+            mem = host._instance_memory
+            total_read = 0
+
+            for idx in range(iovs_len):
+                buf_ptr = mem.load_i32(iovs_ptr + idx * 8) & 0xFFFFFFFF
+                buf_len = mem.load_i32(iovs_ptr + idx * 8 + 4) & 0xFFFFFFFF
+
+                chunk = host._stdin(buf_len)
+                if chunk is None:
+                    chunk_bytes = b""
+                elif isinstance(chunk, str):
+                    chunk_bytes = chunk.encode("latin-1")
+                else:
+                    chunk_bytes = bytes(chunk)
+
+                chunk_bytes = chunk_bytes[:buf_len]
+                for offset, byte in enumerate(chunk_bytes):
+                    mem.store_i32_8(buf_ptr + offset, byte)
+
+                total_read += len(chunk_bytes)
+                if len(chunk_bytes) < buf_len:
+                    break
+
+            mem.store_i32(nread_ptr, total_read)
+            return [i32(ESUCCESS)]
+
+        return _HostFunc(
+            FuncType(
+                params=(ValueType.I32, ValueType.I32, ValueType.I32, ValueType.I32),
+                results=(ValueType.I32,),
+            ),
+            fd_read_impl,
         )
 
     def _make_proc_exit(self) -> _HostFunc:
@@ -420,17 +483,17 @@ class WasiStub:
           "hello\0" = 6 bytes
           total = 12 bytes, argc = 2
         """
-        stub = self
+        host = self
 
         def args_sizes_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             argc_ptr = args[0].value & 0xFFFFFFFF
             argv_buf_size_ptr = args[1].value & 0xFFFFFFFF
 
-            argc = len(stub._args)
-            buf_size = sum(len(arg.encode("utf-8")) + 1 for arg in stub._args)
+            argc = len(host._args)
+            buf_size = sum(len(arg.encode("utf-8")) + 1 for arg in host._args)
 
             mem.store_i32(argc_ptr, argc)
             mem.store_i32(argv_buf_size_ptr, buf_size)
@@ -459,17 +522,17 @@ class WasiStub:
           argv_ptr:       [ptr_to_"a\\0"] [ptr_to_"bb\\0"]
           argv_buf_ptr:   'a' '\\0' 'b' 'b' '\\0'
         """
-        stub = self
+        host = self
 
         def args_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             argv_ptr = args[0].value & 0xFFFFFFFF
             argv_buf_ptr = args[1].value & 0xFFFFFFFF
 
             offset = argv_buf_ptr
-            for i, arg in enumerate(stub._args):
+            for i, arg in enumerate(host._args):
                 # Write the pointer for this arg into the argv array.
                 # Each pointer is 4 bytes (i32) in WASM's 32-bit address space.
                 mem.store_i32(argv_ptr + i * 4, offset)
@@ -505,16 +568,16 @@ class WasiStub:
         Example: env = {"HOME": "/home/user"}
           "HOME=/home/user\\0" = 15 bytes, count = 1
         """
-        stub = self
+        host = self
 
         def environ_sizes_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             count_ptr = args[0].value & 0xFFFFFFFF
             buf_size_ptr = args[1].value & 0xFFFFFFFF
 
-            env_strings = [f"{k}={v}" for k, v in stub._env.items()]
+            env_strings = [f"{k}={v}" for k, v in host._env.items()]
             count = len(env_strings)
             buf_size = sum(len(s.encode("utf-8")) + 1 for s in env_strings)
 
@@ -539,16 +602,16 @@ class WasiStub:
         The layout in memory is identical to args_get: an array of i32
         pointers followed by the packed null-terminated strings.
         """
-        stub = self
+        host = self
 
         def environ_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             environ_ptr = args[0].value & 0xFFFFFFFF
             environ_buf_ptr = args[1].value & 0xFFFFFFFF
 
-            env_strings = [f"{k}={v}" for k, v in stub._env.items()]
+            env_strings = [f"{k}={v}" for k, v in host._env.items()]
             offset = environ_buf_ptr
             for i, s in enumerate(env_strings):
                 mem.store_i32(environ_ptr + i * 4, offset)
@@ -589,16 +652,16 @@ class WasiStub:
           2 = PROCESS_CPUTIME  (CPU time consumed by this process)
           3 = THREAD_CPUTIME   (CPU time consumed by this thread)
         """
-        stub = self
+        host = self
 
         def clock_res_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             clock_id = args[0].value
             resolution_ptr = args[1].value & 0xFFFFFFFF
 
-            resolution = stub._clock.resolution_ns(clock_id)
+            resolution = host._clock.resolution_ns(clock_id)
             # WASI clock timestamps are i64 (nanoseconds fit comfortably).
             mem.store_i64(resolution_ptr, resolution)
             return [i32(ESUCCESS)]
@@ -633,12 +696,12 @@ class WasiStub:
         The precision parameter is i64 in the WASI spec, so the FuncType
         must declare ValueType.I64 for that slot.
         """
-        stub = self
+        host = self
 
         def clock_time_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             clock_id = args[0].value
             # args[1] is precision (i64) — we accept it but don't use it.
             time_ptr = args[2].value & 0xFFFFFFFF
@@ -646,11 +709,11 @@ class WasiStub:
             if clock_id == 1:
                 # Monotonic: guaranteed not to go backwards — ideal for
                 # measuring elapsed durations (timeouts, benchmarks).
-                ns = stub._clock.monotonic_ns()
+                ns = host._clock.monotonic_ns()
             elif clock_id in (0, 2, 3):
                 # Realtime, process CPU time, thread CPU time.
                 # We map the latter two to realtime for simplicity.
-                ns = stub._clock.realtime_ns()
+                ns = host._clock.realtime_ns()
             else:
                 # Unknown clock — return EINVAL without touching memory.
                 return [i32(EINVAL)]
@@ -685,16 +748,16 @@ class WasiStub:
         We delegate to ``WasiRandom.fill_bytes()`` which defaults to
         ``secrets.token_bytes()`` — the OS CSPRNG.
         """
-        stub = self
+        host = self
 
         def random_get_impl(args: list[WasmValue]) -> list[WasmValue]:
-            if stub._instance_memory is None:
+            if host._instance_memory is None:
                 return [i32(ENOSYS)]
-            mem = stub._instance_memory
+            mem = host._instance_memory
             buf_ptr = args[0].value & 0xFFFFFFFF
             buf_len = args[1].value & 0xFFFFFFFF
 
-            rand_bytes = stub._random.fill_bytes(buf_len)
+            rand_bytes = host._random.fill_bytes(buf_len)
             for i, byte in enumerate(rand_bytes):
                 mem.store_i32_8(buf_ptr + i, byte)
             return [i32(ESUCCESS)]

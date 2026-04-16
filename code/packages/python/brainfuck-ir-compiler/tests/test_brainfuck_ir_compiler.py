@@ -266,6 +266,27 @@ class TestOutputCommand:
                     return
         pytest.fail("Expected SYSCALL 1 (write) for OUTPUT")
 
+    def test_output_copies_value_with_add_imm_zero(self) -> None:
+        from compiler_ir import IrImmediate, IrRegister
+
+        result = compile_source(".", release_config())
+        for instr in result.program.instructions:
+            if instr.opcode != IrOp.ADD_IMM or len(instr.operands) < 3:
+                continue
+            dst = instr.operands[0]
+            src = instr.operands[1]
+            imm = instr.operands[2]
+            if (
+                isinstance(dst, IrRegister)
+                and dst.index == 4
+                and isinstance(src, IrRegister)
+                and src.index == 2
+                and isinstance(imm, IrImmediate)
+                and imm.value == 0
+            ):
+                return
+        pytest.fail("Expected ADD_IMM v4, v2, 0 for OUTPUT")
+
 
 class TestInputCommand:
     """Tests for the ',' (INPUT) command."""

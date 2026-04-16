@@ -44,7 +44,7 @@ can grow into a full implementation tier by tier.
 
 WASI sits **above** the WASM runtime (W01). The runtime calls WASI host functions
 through the `HostInterface` import resolution mechanism already in place. WASI does
-not add new packages; it expands `WasiStub` inside `wasm-runtime`.
+not add new packages; it expands `WasiHost` inside `wasm-runtime`.
 
 ---
 
@@ -1331,7 +1331,7 @@ sent by the host into WASM memory, and `sock_send` delivers WASM data to the hos
 
 ### Storing WASI State
 
-Each language's `WasiStub` will need to carry additional state as tiers are
+Each language's WASI host implementation will need to carry additional state as tiers are
 implemented:
 
 | Field              | Purpose                                    |

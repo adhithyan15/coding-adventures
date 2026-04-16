@@ -35,6 +35,32 @@ def print_module(module: WasmModule) -> str:
             f"results={_types_csv(func_type.results)}"
         )
 
+    for imp in module.imports:
+        if imp.kind == ExternalKind.FUNCTION:
+            lines.append(f".import function {imp.module_name} {imp.name} type={imp.type_info}")
+        elif imp.kind == ExternalKind.MEMORY:
+            memory = imp.type_info
+            max_part = "none" if memory.limits.max is None else str(memory.limits.max)
+            lines.append(
+                f".import memory {imp.module_name} {imp.name} "
+                f"min={memory.limits.min} max={max_part}"
+            )
+        elif imp.kind == ExternalKind.TABLE:
+            table = imp.type_info
+            max_part = "none" if table.limits.max is None else str(table.limits.max)
+            elem = "funcref" if table.element_type == 0x70 else str(table.element_type)
+            lines.append(
+                f".import table {imp.module_name} {imp.name} "
+                f"elem={elem} min={table.limits.min} max={max_part}"
+            )
+        elif imp.kind == ExternalKind.GLOBAL:
+            global_type = imp.type_info
+            lines.append(
+                f".import global {imp.module_name} {imp.name} "
+                f"type={_type_name(global_type.value_type)} "
+                f"mutable={str(global_type.mutable).lower()}"
+            )
+
     for index, memory in enumerate(module.memories):
         max_part = "none" if memory.limits.max is None else str(memory.limits.max)
         lines.append(f".memory {index} min={memory.limits.min} max={max_part}")
@@ -102,13 +128,17 @@ def _blocktype_name(value: object) -> str:
 def _types_csv(types: tuple[ValueType, ...]) -> str:
     if not types:
         return "none"
+    return ",".join(_type_name(value_type) for value_type in types)
+
+
+def _type_name(value_type: ValueType) -> str:
     type_names = {
         ValueType.I32: "i32",
         ValueType.I64: "i64",
         ValueType.F32: "f32",
         ValueType.F64: "f64",
     }
-    return ",".join(type_names[value_type] for value_type in types)
+    return type_names[value_type]
 
 
 def _const_offset(expr: bytes) -> int:

@@ -13,8 +13,11 @@ from wasm_types import (
     ExternalKind,
     FuncType,
     FunctionBody,
+    GlobalType,
+    Import,
     Limits,
     MemoryType,
+    TableType,
     ValueType,
     WasmModule,
 )
@@ -35,6 +38,7 @@ def parse_assembly(text: str) -> WasmModule:
     memories: dict[int, MemoryType] = {}
     functions: dict[int, int] = {}
     code: dict[int, FunctionBody] = {}
+    imports: list[Import] = []
     exports: list[Export] = []
     data_segments: list[DataSegment] = []
 
@@ -50,6 +54,44 @@ def parse_assembly(text: str) -> WasmModule:
 
         if current_func_index is not None and not line.startswith("."):
             current_body.extend(_assemble_instruction(line))
+            continue
+
+        if line.startswith(".import "):
+            _, kind_text, module_name, name, *rest = line.split()
+            kv = {piece.split("=", 1)[0]: piece.split("=", 1)[1] for piece in rest}
+            kind = _parse_external_kind(kind_text)
+            if kind == ExternalKind.FUNCTION:
+                type_info = int(kv["type"])
+            elif kind == ExternalKind.MEMORY:
+                max_text = kv["max"]
+                type_info = MemoryType(
+                    limits=Limits(
+                        min=int(kv["min"]),
+                        max=None if max_text == "none" else int(max_text),
+                    )
+                )
+            elif kind == ExternalKind.TABLE:
+                max_text = kv["max"]
+                type_info = TableType(
+                    element_type=_parse_element_type(kv["elem"]),
+                    limits=Limits(
+                        min=int(kv["min"]),
+                        max=None if max_text == "none" else int(max_text),
+                    ),
+                )
+            else:
+                type_info = GlobalType(
+                    value_type=_parse_value_type(kv["type"]),
+                    mutable=kv["mutable"] == "true",
+                )
+            imports.append(
+                Import(
+                    module_name=module_name,
+                    name=name,
+                    kind=kind,
+                    type_info=type_info,
+                )
+            )
             continue
 
         if line.startswith(".type "):
@@ -115,6 +157,7 @@ def parse_assembly(text: str) -> WasmModule:
         raise WasmAssemblerError("unterminated .func block")
 
     module.types = [types[index] for index in sorted(types)]
+    module.imports = imports
     module.memories = [memories[index] for index in sorted(memories)]
     module.functions = [functions[index] for index in sorted(functions)]
     module.code = [code[index] for index in sorted(code)]
@@ -160,13 +203,7 @@ def _assemble_instruction(line: str) -> bytes:
 def _parse_types(text: str) -> tuple[ValueType, ...]:
     if text == "none":
         return ()
-    mapping = {
-        "i32": ValueType.I32,
-        "i64": ValueType.I64,
-        "f32": ValueType.F32,
-        "f64": ValueType.F64,
-    }
-    return tuple(mapping[piece] for piece in text.split(","))
+    return tuple(_parse_value_type(piece) for piece in text.split(","))
 
 
 def _parse_external_kind(text: str) -> ExternalKind:
@@ -177,6 +214,22 @@ def _parse_external_kind(text: str) -> ExternalKind:
         "global": ExternalKind.GLOBAL,
     }
     return mapping[text]
+
+
+def _parse_value_type(text: str) -> ValueType:
+    mapping = {
+        "i32": ValueType.I32,
+        "i64": ValueType.I64,
+        "f32": ValueType.F32,
+        "f64": ValueType.F64,
+    }
+    return mapping[text]
+
+
+def _parse_element_type(text: str) -> int:
+    if text == "funcref":
+        return 0x70
+    return int(text)
 
 
 def _encode_blocktype(text: str) -> bytes:
