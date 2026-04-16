@@ -5,14 +5,13 @@ module CssParser
     , tokenizeAndParseCss
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified CssLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for css-parser built on the generic parser package"
+description = "Haskell css-parser backed by compiled parser grammar data"
 
 data CssParserError
     = CssParserLexerError LexerError
@@ -20,7 +19,7 @@ data CssParserError
     deriving (Eq, Show)
 
 parseCssTokens :: [Token] -> Either ParseError ASTNode
-parseCssTokens = parseTokens
+parseCssTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseCss :: String -> Either CssParserError ASTNode
 tokenizeAndParseCss source =

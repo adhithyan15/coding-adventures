@@ -4,15 +4,15 @@ module VhdlLexer
     , tokenizeVhdl
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for vhdl-lexer built on the generic lexer package"
+description = "Haskell vhdl-lexer backed by compiled token grammar data"
 
 vhdlLexerKeywords :: [String]
-vhdlLexerKeywords = []
+vhdlLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeVhdl :: String -> Either LexerError [Token]
-tokenizeVhdl = tokenize defaultLexerConfig {lexerKeywords = vhdlLexerKeywords}
+tokenizeVhdl = tokenizeWithGrammar tokenGrammarData

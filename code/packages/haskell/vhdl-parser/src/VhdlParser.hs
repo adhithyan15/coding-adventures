@@ -5,14 +5,13 @@ module VhdlParser
     , tokenizeAndParseVhdl
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified VhdlLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for vhdl-parser built on the generic parser package"
+description = "Haskell vhdl-parser backed by compiled parser grammar data"
 
 data VhdlParserError
     = VhdlParserLexerError LexerError
@@ -20,7 +19,7 @@ data VhdlParserError
     deriving (Eq, Show)
 
 parseVhdlTokens :: [Token] -> Either ParseError ASTNode
-parseVhdlTokens = parseTokens
+parseVhdlTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseVhdl :: String -> Either VhdlParserError ASTNode
 tokenizeAndParseVhdl source =

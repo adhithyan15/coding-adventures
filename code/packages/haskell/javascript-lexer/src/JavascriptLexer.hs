@@ -4,15 +4,15 @@ module JavascriptLexer
     , tokenizeJavascript
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for javascript-lexer built on the generic lexer package"
+description = "Haskell javascript-lexer backed by compiled token grammar data"
 
 javascriptLexerKeywords :: [String]
-javascriptLexerKeywords = []
+javascriptLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeJavascript :: String -> Either LexerError [Token]
-tokenizeJavascript = tokenize defaultLexerConfig {lexerKeywords = javascriptLexerKeywords}
+tokenizeJavascript = tokenizeWithGrammar tokenGrammarData

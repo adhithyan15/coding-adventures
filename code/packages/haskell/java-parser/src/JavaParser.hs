@@ -5,14 +5,13 @@ module JavaParser
     , tokenizeAndParseJava
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified JavaLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for java-parser built on the generic parser package"
+description = "Haskell java-parser backed by compiled parser grammar data"
 
 data JavaParserError
     = JavaParserLexerError LexerError
@@ -20,7 +19,7 @@ data JavaParserError
     deriving (Eq, Show)
 
 parseJavaTokens :: [Token] -> Either ParseError ASTNode
-parseJavaTokens = parseTokens
+parseJavaTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseJava :: String -> Either JavaParserError ASTNode
 tokenizeAndParseJava source =

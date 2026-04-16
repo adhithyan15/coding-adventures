@@ -4,15 +4,15 @@ module AlgolLexer
     , tokenizeAlgol
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for algol-lexer built on the generic lexer package"
+description = "Haskell algol-lexer backed by compiled token grammar data"
 
 algolLexerKeywords :: [String]
-algolLexerKeywords = []
+algolLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeAlgol :: String -> Either LexerError [Token]
-tokenizeAlgol = tokenize defaultLexerConfig {lexerKeywords = algolLexerKeywords}
+tokenizeAlgol = tokenizeWithGrammar tokenGrammarData

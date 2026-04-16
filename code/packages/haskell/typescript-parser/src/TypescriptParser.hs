@@ -5,14 +5,13 @@ module TypescriptParser
     , tokenizeAndParseTypescript
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified TypescriptLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for typescript-parser built on the generic parser package"
+description = "Haskell typescript-parser backed by compiled parser grammar data"
 
 data TypescriptParserError
     = TypescriptParserLexerError LexerError
@@ -20,7 +19,7 @@ data TypescriptParserError
     deriving (Eq, Show)
 
 parseTypescriptTokens :: [Token] -> Either ParseError ASTNode
-parseTypescriptTokens = parseTokens
+parseTypescriptTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseTypescript :: String -> Either TypescriptParserError ASTNode
 tokenizeAndParseTypescript source =

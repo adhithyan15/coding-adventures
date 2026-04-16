@@ -4,15 +4,15 @@ module PythonLexer
     , tokenizePython
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for python-lexer built on the generic lexer package"
+description = "Haskell python-lexer backed by compiled token grammar data"
 
 pythonLexerKeywords :: [String]
-pythonLexerKeywords = []
+pythonLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizePython :: String -> Either LexerError [Token]
-tokenizePython = tokenize defaultLexerConfig {lexerKeywords = pythonLexerKeywords}
+tokenizePython = tokenizeWithGrammar tokenGrammarData

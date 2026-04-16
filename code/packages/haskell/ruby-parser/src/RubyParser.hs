@@ -5,14 +5,13 @@ module RubyParser
     , tokenizeAndParseRuby
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified RubyLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for ruby-parser built on the generic parser package"
+description = "Haskell ruby-parser backed by compiled parser grammar data"
 
 data RubyParserError
     = RubyParserLexerError LexerError
@@ -20,7 +19,7 @@ data RubyParserError
     deriving (Eq, Show)
 
 parseRubyTokens :: [Token] -> Either ParseError ASTNode
-parseRubyTokens = parseTokens
+parseRubyTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseRuby :: String -> Either RubyParserError ASTNode
 tokenizeAndParseRuby source =

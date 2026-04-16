@@ -4,15 +4,15 @@ module EcmascriptEs3Lexer
     , tokenizeEcmascriptEs3
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for ecmascript-es3-lexer built on the generic lexer package"
+description = "Haskell ecmascript-es3-lexer backed by compiled token grammar data"
 
 ecmascriptEs3LexerKeywords :: [String]
-ecmascriptEs3LexerKeywords = []
+ecmascriptEs3LexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeEcmascriptEs3 :: String -> Either LexerError [Token]
-tokenizeEcmascriptEs3 = tokenize defaultLexerConfig {lexerKeywords = ecmascriptEs3LexerKeywords}
+tokenizeEcmascriptEs3 = tokenizeWithGrammar tokenGrammarData

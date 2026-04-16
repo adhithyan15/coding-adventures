@@ -5,14 +5,13 @@ module FsharpParser
     , tokenizeAndParseFsharp
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified FsharpLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for fsharp-parser built on the generic parser package"
+description = "Haskell fsharp-parser backed by compiled parser grammar data"
 
 data FsharpParserError
     = FsharpParserLexerError LexerError
@@ -20,7 +19,7 @@ data FsharpParserError
     deriving (Eq, Show)
 
 parseFsharpTokens :: [Token] -> Either ParseError ASTNode
-parseFsharpTokens = parseTokens
+parseFsharpTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseFsharp :: String -> Either FsharpParserError ASTNode
 tokenizeAndParseFsharp source =

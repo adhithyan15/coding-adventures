@@ -5,14 +5,13 @@ module LatticeParser
     , tokenizeAndParseLattice
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified LatticeLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for lattice-parser built on the generic parser package"
+description = "Haskell lattice-parser backed by compiled parser grammar data"
 
 data LatticeParserError
     = LatticeParserLexerError LexerError
@@ -20,7 +19,7 @@ data LatticeParserError
     deriving (Eq, Show)
 
 parseLatticeTokens :: [Token] -> Either ParseError ASTNode
-parseLatticeTokens = parseTokens
+parseLatticeTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseLattice :: String -> Either LatticeParserError ASTNode
 tokenizeAndParseLattice source =

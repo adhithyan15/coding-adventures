@@ -5,14 +5,13 @@ module MosaicParser
     , tokenizeAndParseMosaic
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified MosaicLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for mosaic-parser built on the generic parser package"
+description = "Haskell mosaic-parser backed by compiled parser grammar data"
 
 data MosaicParserError
     = MosaicParserLexerError LexerError
@@ -20,7 +19,7 @@ data MosaicParserError
     deriving (Eq, Show)
 
 parseMosaicTokens :: [Token] -> Either ParseError ASTNode
-parseMosaicTokens = parseTokens
+parseMosaicTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseMosaic :: String -> Either MosaicParserError ASTNode
 tokenizeAndParseMosaic source =
