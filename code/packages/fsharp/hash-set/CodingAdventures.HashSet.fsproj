@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <PackageId>CodingAdventures.HashSet.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# hash set helpers for Mini-Redis</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="HashSet.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../hash-map/CodingAdventures.HashMap.fsproj" />
+  </ItemGroup>
+</Project>
