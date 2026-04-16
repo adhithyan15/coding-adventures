@@ -25,20 +25,48 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 
 func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	patch := `
-@@ -300,0 +301,12 @@
+@@ -300,0 +301,34 @@
 +      - name: Set up Swift (Windows)
 +        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
 +        shell: pwsh
 +        run: |
 +          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
-+          $swiftRoot = Join-Path $env:LOCALAPPDATA 'Programs\Swift'
-+          $toolchainBin = Get-ChildItem -Path (Join-Path $swiftRoot 'Toolchains') -Filter swift.exe -Recurse -File | Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty DirectoryName
-+          if (-not $toolchainBin) { throw 'swift.exe not found after winget install' }
++          $wingetExitCode = $LASTEXITCODE
++          if ($wingetExitCode -ne 0) {
++            Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
++          }
++          $swiftRoots = @(
++            (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
++            (Join-Path $env:ProgramFiles 'Swift')
++          ) | Where-Object { Test-Path $_ }
++          $swiftExe = @(
++            (Get-Command swift -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue)
++            ($swiftRoots | ForEach-Object {
++              Get-ChildItem -Path $_ -Filter swift.exe -Recurse -File -ErrorAction SilentlyContinue |
++                Sort-Object FullName -Descending |
++                Select-Object -First 1 -ExpandProperty FullName
++            })
++          ) | Where-Object { $_ } | Select-Object -First 1
++          if (-not $swiftExe) {
++            if ($wingetExitCode -ne 0) {
++              throw "winget install exited with code $wingetExitCode and swift.exe was not found"
++            }
++            throw 'swift.exe not found after winget install'
++          }
++          $toolchainBin = Split-Path -Parent $swiftExe
 +          $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 +          $env:Path = "$toolchainBin;$env:Path"
-+          $sdkRoot = Get-ChildItem -Path (Join-Path $swiftRoot 'Platforms') -Directory | Sort-Object Name -Descending | Select-Object -First 1 | ForEach-Object { Join-Path $_.FullName 'Windows.platform\Developer\SDKs\Windows.sdk' }
-+          if ($sdkRoot -and (Test-Path $sdkRoot)) { "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append }
-+          swift --version
++          Write-Host "Using Swift from $swiftExe"
++          $sdkRoot = $swiftRoots | ForEach-Object {
++            Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
++              Sort-Object FullName -Descending |
++              Select-Object -First 1 -ExpandProperty FullName
++          } | Where-Object { $_ } | Select-Object -First 1
++          if ($sdkRoot) {
++            "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
++            Write-Host "Using SDKROOT=$sdkRoot"
++          }
++          & $swiftExe --version
 `
 
 	change := AnalyzeCIWorkflowPatch(patch)

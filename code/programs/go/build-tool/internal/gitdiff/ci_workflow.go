@@ -53,7 +53,7 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	},
 	"swift": {
 		"needs_swift", "swift.toolchain", "winget install --id swift.toolchain",
-		"swift --version", "set up swift",
+		"swift --version", "set up swift", "swift.exe", "sdkroot",
 	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
@@ -244,6 +244,8 @@ func isToolchainScopedStructuralLine(content string) bool {
 		strings.HasPrefix(normalized, "with:"),
 		strings.HasPrefix(normalized, "env:"),
 		strings.HasPrefix(normalized, "$"),
+		strings.HasPrefix(normalized, "("),
+		strings.HasPrefix(normalized, ")"),
 		strings.HasPrefix(normalized, "["),
 		strings.HasPrefix(normalized, "{"),
 		strings.HasPrefix(normalized, "}"),
@@ -256,10 +258,20 @@ func isToolchainScopedStructuralLine(content string) bool {
 		strings.HasPrefix(normalized, "powershell "),
 		strings.HasPrefix(normalized, "winget "),
 		strings.HasPrefix(normalized, "foreach "),
+		strings.HasPrefix(normalized, "where-object "),
+		strings.HasPrefix(normalized, "sort-object "),
+		strings.HasPrefix(normalized, "select-object "),
+		strings.HasPrefix(normalized, "split-path "),
+		strings.HasPrefix(normalized, "get-command "),
+		strings.HasPrefix(normalized, "join-path "),
+		strings.HasPrefix(normalized, "test-path "),
+		strings.HasPrefix(normalized, "write-host "),
+		strings.HasPrefix(normalized, "write-warning "),
 		strings.HasPrefix(normalized, "write-output "),
 		strings.HasPrefix(normalized, "out-file "),
 		strings.HasPrefix(normalized, "set-content "),
 		strings.HasPrefix(normalized, "get-childitem "),
+		strings.HasPrefix(normalized, "& "),
 		strings.HasPrefix(normalized, "call "),
 		strings.HasPrefix(normalized, "cd "):
 		return true
