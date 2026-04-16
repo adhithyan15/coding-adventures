@@ -100,6 +100,7 @@ module CodingAdventures
             reserved_keywords: #{grammar.reserved_keywords.inspect},
             error_definitions: #{err_src},
             groups: #{groups_src},
+            layout_keywords: #{grammar.layout_keywords.inspect},
             context_keywords: #{grammar.context_keywords.inspect},
             soft_keywords: #{grammar.soft_keywords.inspect},
           )

@@ -339,6 +339,79 @@ class TestGrammarLexer < Minitest::Test
   end
 
   # -----------------------------------------------------------------------
+  # Layout mode (Haskell-style prototype)
+  # -----------------------------------------------------------------------
+
+  def haskell_layout_grammar
+    GT.parse_token_grammar(<<~TOKENS)
+      mode: layout
+      NAME = /[a-zA-Z_][a-zA-Z0-9_]*/
+      NUMBER = /[0-9]+/
+      EQUALS = "="
+      SEMICOLON = ";"
+      LBRACE = "{"
+      RBRACE = "}"
+      LPAREN = "("
+      RPAREN = ")"
+
+      keywords:
+        let
+        in
+        where
+        do
+        of
+
+      layout_keywords:
+        let
+        where
+        do
+        of
+
+      skip:
+        WHITESPACE = /[ \\t\\r]+/
+    TOKENS
+  end
+
+  def filtered_layout_tokens(source)
+    GL.new(source, haskell_layout_grammar).tokenize.reject do |token|
+      %w[NEWLINE EOF].include?(token.type_name)
+    end
+  end
+
+  def test_layout_mode_inserts_virtual_tokens_for_let_block
+    tokens = filtered_layout_tokens(<<~HS)
+      let
+        x = 1
+        y = 2
+      in x
+    HS
+
+    assert_equal [
+      "KEYWORD:let",
+      "VIRTUAL_LBRACE:{",
+      "NAME:x",
+      "EQUALS:=",
+      "NUMBER:1",
+      "VIRTUAL_SEMICOLON:;",
+      "NAME:y",
+      "EQUALS:=",
+      "NUMBER:2",
+      "VIRTUAL_RBRACE:}",
+      "KEYWORD:in",
+      "NAME:x"
+    ], tokens.map { |token| "#{token.type_name}:#{token.value}" }
+  end
+
+  def test_layout_mode_skips_virtual_open_when_explicit_brace_present
+    tokens = filtered_layout_tokens("let { x = 1; y = 2 } in x\n")
+    types = tokens.map(&:type_name)
+
+    refute_includes types, "VIRTUAL_LBRACE"
+    refute_includes types, "VIRTUAL_SEMICOLON"
+    refute_includes types, "VIRTUAL_RBRACE"
+  end
+
+  # -----------------------------------------------------------------------
   # Starlark integration
   # -----------------------------------------------------------------------
 
