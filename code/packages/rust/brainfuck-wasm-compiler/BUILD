@@ -1,1 +1,1 @@
-rust_library(name = "brainfuck_wasm_compiler")
+cargo test -p brainfuck-wasm-compiler
