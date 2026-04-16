@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "fsharp/wasm-execution",
+  "capabilities": [],
+  "justification": "Pure F# WebAssembly execution engine built on native F# wasm packages."
+}
