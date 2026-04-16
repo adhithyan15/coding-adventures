@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 from compiler_ir import (
     IDGenerator,
     IrDataDecl,
@@ -11,7 +12,7 @@ from compiler_ir import (
     IrRegister,
 )
 from wasm_module_encoder import encode_module
-from wasm_runtime import WasmRuntime
+from wasm_runtime import ProcExitError, WasiConfig, WasiHost, WasmRuntime
 
 from ir_to_wasm_compiler import (
     FunctionSignature,
@@ -21,8 +22,8 @@ from ir_to_wasm_compiler import (
 )
 
 
-def _runtime_result(module, export_name: str, args: list[int]) -> list[int | float]:
-    runtime = WasmRuntime()
+def _runtime_result(module, export_name: str, args: list[int], host=None) -> list[int | float]:
+    runtime = WasmRuntime(host=host)
     wasm_bytes = encode_module(module)
     return runtime.load_and_run(wasm_bytes, export_name, args)
 
@@ -192,3 +193,81 @@ def test_missing_function_signature_raises() -> None:
         assert "missing function signature" in str(exc)
     else:  # pragma: no cover - defensive branch
         raise AssertionError("expected missing signature error")
+
+
+def test_compile_syscall_write_uses_wasi_fd_write() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(65)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[FunctionSignature(label="_start", param_count=0, export_name="_start")],
+    )
+
+    output: list[str] = []
+    host = WasiHost(config=WasiConfig(stdout=output.append))
+    assert _runtime_result(module, "_start", [], host=host) == [0]
+    assert output == ["A"]
+    assert [imp.name for imp in module.imports] == ["fd_write"]
+
+
+def test_compile_syscall_read_uses_wasi_fd_read() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(2)], id=gen.next()))
+    program.add_instruction(
+        IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(4), IrImmediate(0)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[FunctionSignature(label="_start", param_count=0, export_name="_start")],
+    )
+
+    host = WasiHost(config=WasiConfig(stdin=lambda _n: b"Z"))
+    assert _runtime_result(module, "_start", [], host=host) == [90]
+    assert [imp.name for imp in module.imports] == ["fd_read"]
+
+
+def test_compile_syscall_exit_uses_wasi_proc_exit() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(7)], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(10)], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[FunctionSignature(label="_start", param_count=0, export_name="_start")],
+    )
+
+    with pytest.raises(ProcExitError) as exc_info:
+        _runtime_result(module, "_start", [], host=WasiHost())
+    assert exc_info.value.exit_code == 7
+    assert [imp.name for imp in module.imports] == ["proc_exit"]
+
+
+def test_unsupported_syscall_raises() -> None:
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(99)], id=IDGenerator().next()))
+
+    try:
+        IrToWasmCompiler().compile(
+            program,
+            function_signatures=[FunctionSignature(label="_start", param_count=0, export_name="_start")],
+        )
+    except WasmLoweringError as exc:
+        assert "unsupported SYSCALL" in str(exc)
+    else:  # pragma: no cover - defensive branch
+        raise AssertionError("expected unsupported syscall error")

@@ -49,7 +49,7 @@ Each Brainfuck command maps to a specific sequence of IR instructions:
   │              │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1             │
   │ - (DEC)      │ LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1;              │
   │              │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1             │
-  │ . (OUTPUT)   │ LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1        │
+  │ . (OUTPUT)   │ LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1     │
   │ , (INPUT)    │ SYSCALL 2; STORE_BYTE v4, v0, v1                        │
   └──────────────┴─────────────────────────────────────────────────────────┘
 
@@ -461,7 +461,7 @@ class _Compiler:
             # OUTPUT: write the current cell's value to stdout.
             #
             # We load the cell into v2, then copy to v4 (the syscall arg register)
-            # using ADD v4, v2, v6 (v6 = 0), then call syscall 1 (write).
+            # using ADD_IMM v4, v2, 0, then call syscall 1 (write).
             id1 = self._emit(
                 IrOp.LOAD_BYTE,
                 IrRegister(index=_REG_TEMP),
@@ -470,10 +470,10 @@ class _Compiler:
             )
             ir_ids.append(id1)
             id2 = self._emit(
-                IrOp.ADD,
+                IrOp.ADD_IMM,
                 IrRegister(index=_REG_SYS_ARG),
                 IrRegister(index=_REG_TEMP),
-                IrRegister(index=_REG_ZERO),
+                IrImmediate(value=0),
             )
             ir_ids.append(id2)
             id3 = self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_WRITE))

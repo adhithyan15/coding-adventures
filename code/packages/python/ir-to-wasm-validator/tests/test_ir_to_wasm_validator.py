@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from compiler_ir import IDGenerator, IrInstruction, IrLabel, IrOp, IrProgram
+from compiler_ir import IDGenerator, IrImmediate, IrInstruction, IrLabel, IrOp, IrProgram
 from ir_to_wasm_compiler import FunctionSignature
 
 from ir_to_wasm_validator import WasmIrValidator
@@ -22,7 +22,7 @@ def test_validator_accepts_supported_program() -> None:
 def test_validator_reports_lowering_error() -> None:
     program = IrProgram(entry_label="_fn_main")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_main")], id=-1))
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [], id=IDGenerator().next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(99)], id=IDGenerator().next()))
 
     errors = WasmIrValidator().validate(
         program,
@@ -31,4 +31,18 @@ def test_validator_reports_lowering_error() -> None:
 
     assert len(errors) == 1
     assert errors[0].rule == "lowering"
-    assert "SYSCALL" in errors[0].message
+    assert "unsupported SYSCALL" in errors[0].message
+
+
+def test_validator_accepts_supported_syscall_program() -> None:
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=IDGenerator().next()))
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=IDGenerator().next()))
+
+    errors = WasmIrValidator().validate(
+        program,
+        [FunctionSignature(label="_start", param_count=0, export_name="_start")],
+    )
+
+    assert errors == []
