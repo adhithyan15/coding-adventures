@@ -1,4 +1,3 @@
 packages:
   .
-  ../wasm-leb128
   ../wasm-types
