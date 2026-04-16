@@ -171,6 +171,116 @@ local function build_add_wasm()
     ))
 end
 
+--- Build a WASM binary with one imported function and one local export.
+--
+-- Implements:
+--   (module
+--     (type (func (param i32) (result i32)))
+--     (type (func (result i32)))
+--     (import "env" "host" (func (type 0)))
+--     (func (type 1)
+--       i32.const 42)
+--     (export "local" (func 1)))
+local function build_import_plus_local_wasm()
+    local header = { 0x00, 0x61, 0x73, 0x6D, 0x01, 0x00, 0x00, 0x00 }
+
+    local type_payload = concat_bytes(
+        leb128(2),
+        { 0x60, 0x01, 0x7F, 0x01, 0x7F },
+        { 0x60, 0x00, 0x01, 0x7F }
+    )
+    local type_section = build_section(1, type_payload)
+
+    local import_mod = { 0x65, 0x6E, 0x76 }   -- "env"
+    local import_name = { 0x68, 0x6F, 0x73, 0x74 }  -- "host"
+    local import_payload = concat_bytes(
+        leb128(1),
+        leb128(#import_mod), import_mod,
+        leb128(#import_name), import_name,
+        { 0x00 },
+        leb128(0)
+    )
+    local import_section = build_section(2, import_payload)
+
+    local function_section = build_section(3, concat_bytes(leb128(1), leb128(1)))
+
+    local export_name = { 0x6C, 0x6F, 0x63, 0x61, 0x6C }  -- "local"
+    local export_payload = concat_bytes(
+        leb128(1),
+        leb128(#export_name), export_name,
+        { 0x00 },
+        leb128(1)
+    )
+    local export_section = build_section(7, export_payload)
+
+    local body_code = {
+        0x41, 0x2A,  -- i32.const 42
+        0x0B,        -- end
+    }
+    local body = concat_bytes(leb128(0), body_code)
+    local code_payload = concat_bytes(leb128(1), leb128(#body), body)
+    local code_section = build_section(10, code_payload)
+
+    return bytes_to_string(concat_bytes(
+        header, type_section, import_section, function_section, export_section, code_section
+    ))
+end
+
+--- Build a WASM binary that breaks out of a loop and continues afterward.
+--
+-- Implements:
+--   (module
+--     (type (func (result i32)))
+--     (func (type 0)
+--       block
+--         loop
+--           i32.const 1
+--           br_if 1
+--           br 0
+--         end
+--       end
+--       i32.const 7)
+--     (export "after_break" (func 0)))
+local function build_break_then_return_wasm()
+    local header = { 0x00, 0x61, 0x73, 0x6D, 0x01, 0x00, 0x00, 0x00 }
+
+    local type_payload = concat_bytes(
+        leb128(1),
+        { 0x60, 0x00, 0x01, 0x7F }
+    )
+    local type_section = build_section(1, type_payload)
+
+    local function_section = build_section(3, concat_bytes(leb128(1), leb128(0)))
+
+    local export_name = { 0x61, 0x66, 0x74, 0x65, 0x72, 0x5F, 0x62, 0x72, 0x65, 0x61, 0x6B }  -- "after_break"
+    local export_payload = concat_bytes(
+        leb128(1),
+        leb128(#export_name), export_name,
+        { 0x00 },
+        leb128(0)
+    )
+    local export_section = build_section(7, export_payload)
+
+    local body_code = {
+        0x02, 0x40,  -- block
+        0x03, 0x40,  -- loop
+        0x41, 0x01,  -- i32.const 1
+        0x0D, 0x01,  -- br_if 1
+        0x0C, 0x00,  -- br 0
+        0x0B,        -- end loop
+        0x0B,        -- end block
+        0x41, 0x07,  -- i32.const 7
+        0x0B,        -- end function
+    }
+    local body = concat_bytes(leb128(0), body_code)
+    local code_payload = concat_bytes(leb128(1), leb128(#body), body)
+    local code_section = build_section(10, code_payload)
+
+    return bytes_to_string(concat_bytes(
+        header, type_section, function_section, export_section, code_section
+    ))
+end
+
 
 -- ============================================================================
 -- TESTS
@@ -225,6 +335,34 @@ describe("wasm_runtime", function()
             local results = runtime:call(instance, "square", { 5 })
             assert.equals(1, #results)
             assert.equals(25, results[1])
+        end)
+
+        it("keeps local function indices stable after imported functions", function()
+            local runtime = m.WasmRuntime.new({
+                resolve_function = function(_self, module_name, name)
+                    assert.equals("env", module_name)
+                    assert.equals("host", name)
+                    return {
+                        call = function(_args)
+                            return { m.i32(7) }
+                        end,
+                    }
+                end,
+            })
+            local module = runtime:load(build_import_plus_local_wasm())
+            local instance = runtime:instantiate(module)
+            local results = runtime:call(instance, "local", {})
+            assert.equals(1, #results)
+            assert.equals(42, results[1])
+        end)
+
+        it("continues past branch-target end opcodes inside structured control", function()
+            local runtime = m.WasmRuntime.new()
+            local module = runtime:load(build_break_then_return_wasm())
+            local instance = runtime:instantiate(module)
+            local results = runtime:call(instance, "after_break", {})
+            assert.equals(1, #results)
+            assert.equals(7, results[1])
         end)
 
         it("errors on unknown export name", function()

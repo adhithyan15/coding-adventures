@@ -217,6 +217,8 @@ function WasmRuntime:instantiate(module)
     --   2. { kind = 0, type_index = N, module_name = "env", name = "foo" }
     -- We normalize here.
 
+    local next_func_index = 1
+
     for _, imp in ipairs(module.imports or {}) do
         local imp_kind, imp_mod, imp_name
         if imp.desc then
@@ -234,13 +236,13 @@ function WasmRuntime:instantiate(module)
 
         if imp_kind == "func" then
             local type_idx = (imp.desc and imp.desc.type_idx) or imp.type_index or imp.typeInfo or 0
-            func_types[#func_types + 1] = module.types[type_idx + 1]
-            func_bodies[#func_bodies + 1] = nil
+            func_types[next_func_index] = module.types[type_idx + 1]
             local host_func = nil
             if self._host and self._host.resolve_function then
                 host_func = self._host:resolve_function(imp_mod, imp_name)
             end
-            host_functions[#host_functions + 1] = host_func
+            host_functions[next_func_index] = host_func
+            next_func_index = next_func_index + 1
 
         elseif imp_kind == "mem" then
             if self._host and self._host.resolve_memory then
@@ -275,10 +277,10 @@ function WasmRuntime:instantiate(module)
     -- body is in module.codes at the same position.
 
     for i, type_idx in ipairs(module.functions or {}) do
-        func_types[#func_types + 1] = module.types[type_idx + 1]
+        func_types[next_func_index] = module.types[type_idx + 1]
         local code_entry = (module.codes or {})[i]
-        func_bodies[#func_bodies + 1] = code_entry
-        host_functions[#host_functions + 1] = nil
+        func_bodies[next_func_index] = code_entry
+        next_func_index = next_func_index + 1
     end
 
     -- ── Step 3: Allocate memory ──────────────────────────────────────
@@ -310,7 +312,9 @@ function WasmRuntime:instantiate(module)
     -- expression that may reference previously defined globals).
 
     for _, global_def in ipairs(module.globals or {}) do
-        global_types[#global_types + 1] = global_def.global_type or global_def.type_info
+        global_types[#global_types + 1] = global_def.global_type
+            or global_def.type_info
+            or { value_type = global_def.val_type, mutable = global_def.mutable }
         local init_expr = global_def.init_expr or global_def.init or {}
         local value = wasm_execution.evaluate_const_expr(init_expr, globals_list)
         globals_list[#globals_list + 1] = value
