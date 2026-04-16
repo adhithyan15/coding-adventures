@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.codingadventures.wasmexecution.WasmExecution;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,14 @@ import org.junit.jupiter.api.Test;
 class WasiStubParityTest {
     @Test
     void supportsArgsEnvClockRandomYieldAndFallbacks() {
+        Map<String, String> env = new LinkedHashMap<>();
+        env.put("HOME", "/tmp");
+        env.put("TERM", "xterm");
         WasmRuntime.WasiStub wasi = new WasmRuntime.WasiStub(
                 new WasmRuntime.WasiConfig(
                         count -> new byte[0],
                         List.of("prog", "--flag"),
-                        Map.of("HOME", "/tmp", "TERM", "xterm"),
+                        env,
                         text -> {},
                         text -> {},
                         new WasmRuntime.WasiClock() {

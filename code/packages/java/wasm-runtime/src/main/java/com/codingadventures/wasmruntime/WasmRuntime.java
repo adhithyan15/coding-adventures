@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -295,7 +296,7 @@ public final class WasmRuntime {
         ) {
             this.stdin = stdin;
             this.args = List.copyOf(args);
-            this.env = Map.copyOf(env);
+            this.env = Collections.unmodifiableMap(new LinkedHashMap<>(env));
             this.stdout = stdout;
             this.stderr = stderr;
             this.clock = clock;
