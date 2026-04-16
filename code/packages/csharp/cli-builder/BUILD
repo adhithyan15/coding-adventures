@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.CliBuilder.Tests/CodingAdventures.CliBuilder.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=60 /p:ThresholdType=line '/p:Exclude=[CodingAdventures.JsonValue]*%2c[CodingAdventures.DirectedGraph]*'

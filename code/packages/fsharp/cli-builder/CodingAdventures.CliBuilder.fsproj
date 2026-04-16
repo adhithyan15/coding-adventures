@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.CliBuilder.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.CliBuilder.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>F#-friendly facade for declarative CLI parsing from JSON specs</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="CliBuilder.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../csharp/cli-builder/CodingAdventures.CliBuilder.csproj" />
+  </ItemGroup>
+</Project>
