@@ -130,7 +130,9 @@ func render(scene paintinstructions.PaintScene) (*pixelcontainer.PixelContainer,
 		pixels.Data[i] = raw[i+2]
 		pixels.Data[i+1] = raw[i+1]
 		pixels.Data[i+2] = raw[i]
-		pixels.Data[i+3] = raw[i+3]
+		// GDI leaves the alpha byte unset for DIB-backed fills, so normalize
+		// the exported pixel buffer to fully opaque RGBA like the Rust backend.
+		pixels.Data[i+3] = 255
 	}
 	return pixels, nil
 }
