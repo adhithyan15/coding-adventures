@@ -1,2 +1,2 @@
 packages: .
-          /private/tmp/coding-adventures-haskell-data-structures/code/packages/haskell/bitset
+          ../bitset

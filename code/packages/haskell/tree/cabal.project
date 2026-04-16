@@ -1,3 +1,3 @@
 packages: .
-          /private/tmp/coding-adventures-haskell-data-structures/code/packages/haskell/directed-graph
-          /private/tmp/coding-adventures-haskell-data-structures/code/packages/haskell/graph
+          ../directed-graph
+          ../graph
