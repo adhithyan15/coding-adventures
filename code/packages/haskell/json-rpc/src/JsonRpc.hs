@@ -36,41 +36,14 @@ module JsonRpc
     , serveHandles
     ) where
 
-import Control.Applicative ((<|>))
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BSC
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
-import Data.Char (chr, digitToInt, isDigit, ord)
-import Data.List (intercalate)
 import Data.Maybe (mapMaybe)
-import Numeric (showHex)
 import System.IO (Handle, hFlush)
-import Text.ParserCombinators.ReadP
-    ( ReadP
-    , between
-    , char
-    , choice
-    , eof
-    , many
-    , munch1
-    , option
-    , pfail
-    , readP_to_S
-    , satisfy
-    , sepBy
-    , skipSpaces
-    , string
-    )
-
-data JsonValue
-    = JsonNull
-    | JsonBool Bool
-    | JsonNumber Double
-    | JsonString String
-    | JsonArray [JsonValue]
-    | JsonObject [(String, JsonValue)]
-    deriving (Eq, Show)
+import JsonSerializer (renderJson)
+import JsonValue (JsonValue(..), parseJson)
 
 parseErrorCode, invalidRequestCode, methodNotFoundCode, invalidParamsCode, internalErrorCode :: Int
 parseErrorCode = -32700
@@ -133,32 +106,6 @@ invalidParamsResponse =
 internalErrorResponse :: Maybe JsonValue -> ResponseError
 internalErrorResponse =
     ResponseError internalErrorCode "Internal error"
-
-parseJson :: String -> Either String JsonValue
-parseJson input =
-    case [value | (value, rest) <- readP_to_S (skipSpaces *> jsonValueParser <* skipSpaces <* eof) input, null rest] of
-        [] -> Left "invalid json"
-        values -> Right (last values)
-
-renderJson :: JsonValue -> String
-renderJson value =
-    case value of
-        JsonNull -> "null"
-        JsonBool True -> "true"
-        JsonBool False -> "false"
-        JsonNumber numberValue
-            | isWholeNumber numberValue -> show (round numberValue :: Integer)
-            | otherwise -> show numberValue
-        JsonString textValue -> "\"" ++ concatMap escapeJsonChar textValue ++ "\""
-        JsonArray values -> "[" ++ intercalate "," (map renderJson values) ++ "]"
-        JsonObject fields ->
-            "{"
-                ++ intercalate
-                    ","
-                    [ renderJson (JsonString fieldName) ++ ":" ++ renderJson fieldValue
-                    | (fieldName, fieldValue) <- fields
-                    ]
-                ++ "}"
 
 parseMessage :: BS.ByteString -> Either ResponseError Message
 parseMessage payload =
@@ -441,110 +388,3 @@ findHeaderSeparator =
 stripTrailingCarriageReturn :: BS.ByteString -> BS.ByteString
 stripTrailingCarriageReturn =
     BS.dropWhileEnd (== 13)
-
-jsonValueParser :: ReadP JsonValue
-jsonValueParser =
-    skipSpaces *> choice
-        [ JsonNull <$ string "null"
-        , JsonBool True <$ string "true"
-        , JsonBool False <$ string "false"
-        , JsonString <$> jsonStringLiteral
-        , JsonArray <$> between (char '[' *> skipSpaces) (skipSpaces *> char ']') (jsonValueParser `sepBy` (skipSpaces *> char ',' *> skipSpaces))
-        , JsonObject <$> between (char '{' *> skipSpaces) (skipSpaces *> char '}') (jsonPairParser `sepBy` (skipSpaces *> char ',' *> skipSpaces))
-        , JsonNumber <$> jsonNumberParser
-        ]
-
-jsonPairParser :: ReadP (String, JsonValue)
-jsonPairParser = do
-    key <- jsonStringLiteral
-    skipSpaces
-    _ <- char ':'
-    skipSpaces
-    value <- jsonValueParser
-    pure (key, value)
-
-jsonStringLiteral :: ReadP String
-jsonStringLiteral =
-    between (char '"') (char '"') (many jsonCharacterParser)
-
-jsonCharacterParser :: ReadP Char
-jsonCharacterParser =
-    escaped <|> plain
-  where
-    plain = satisfyNot ['"', '\\']
-    escaped = do
-        _ <- char '\\'
-        choice
-            [ '"' <$ char '"'
-            , '\\' <$ char '\\'
-            , '/' <$ char '/'
-            , '\b' <$ char 'b'
-            , '\f' <$ char 'f'
-            , '\n' <$ char 'n'
-            , '\r' <$ char 'r'
-            , '\t' <$ char 't'
-            , unicodeEscape
-            ]
-    unicodeEscape = do
-        _ <- char 'u'
-        hexDigits <- countExactly 4 hexDigitParser
-        pure (chr (foldl (\acc digitValue -> acc * 16 + digitToInt digitValue) 0 hexDigits))
-
-jsonNumberParser :: ReadP Double
-jsonNumberParser = do
-    sign <- option "" (string "-")
-    whole <- ifZeroPrefixedNumber
-    fractional <- option "" ((:) <$> char '.' <*> munch1 isDigit)
-    exponentPart <- option "" exponentParser
-    pure (read (sign ++ whole ++ fractional ++ exponentPart))
-  where
-    ifZeroPrefixedNumber =
-        (string "0")
-            <|> ((:) <$> satisfyDigitOneToNine <*> manyDigitParser)
-    exponentParser = do
-        exponentMarker <- choice [char 'e', char 'E']
-        exponentSign <- option "" (string "+" <|> string "-")
-        exponentDigits <- munch1 isDigit
-        pure (exponentMarker : exponentSign ++ exponentDigits)
-
-manyDigitParser :: ReadP String
-manyDigitParser =
-    many (satisfy isDigit)
-
-satisfyDigitOneToNine :: ReadP Char
-satisfyDigitOneToNine =
-    satisfy (`elem` ['1' .. '9'])
-
-hexDigitParser :: ReadP Char
-hexDigitParser =
-    satisfy (`elem` (['0' .. '9'] ++ ['a' .. 'f'] ++ ['A' .. 'F']))
-
-satisfyNot :: [Char] -> ReadP Char
-satisfyNot disallowed =
-    satisfy (`notElem` disallowed)
-
-countExactly :: Int -> ReadP a -> ReadP [a]
-countExactly n parser
-    | n <= 0 = pure []
-    | otherwise = (:) <$> parser <*> countExactly (n - 1) parser
-
-escapeJsonChar :: Char -> String
-escapeJsonChar charValue =
-    case charValue of
-        '"' -> "\\\""
-        '\\' -> "\\\\"
-        '\b' -> "\\b"
-        '\f' -> "\\f"
-        '\n' -> "\\n"
-        '\r' -> "\\r"
-        '\t' -> "\\t"
-        _ | ord charValue < 0x20 -> "\\u" ++ padHex (showHex (ord charValue) "")
-        _ -> [charValue]
-
-padHex :: String -> String
-padHex hexDigits =
-    replicate (4 - length hexDigits) '0' ++ hexDigits
-
-isWholeNumber :: Double -> Bool
-isWholeNumber numberValue =
-    numberValue == fromIntegral (round numberValue :: Integer)

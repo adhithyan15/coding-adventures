@@ -1,31 +1,24 @@
 cabal-version: 3.0
-name:          coding-adventures-json-rpc
+name:          sha256
 version:       0.1.0
-synopsis:      JSON-RPC 2.0 transport and dispatch for Haskell
+synopsis:      SHA-256 cryptographic hash function (FIPS 180-4) implemented from scratch
 license:       MIT
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
 build-type:    Simple
 
 library
-    exposed-modules:  JsonRpc
+    exposed-modules:  Sha256
     build-depends:    base >=4.14
-                    , bytestring
-                    , containers
-                    , json-serializer
-                    , json-value
     hs-source-dirs:   src
     default-language: Haskell2010
 
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
-    other-modules:    JsonRpcSpec
+    other-modules:    Sha256Spec
     hs-source-dirs:   test
     build-depends:    base >=4.14
-                    , bytestring
+                    , sha256
                     , hspec == 2.*
-                    , json-serializer
-                    , json-value
-                    , coding-adventures-json-rpc
     default-language: Haskell2010
