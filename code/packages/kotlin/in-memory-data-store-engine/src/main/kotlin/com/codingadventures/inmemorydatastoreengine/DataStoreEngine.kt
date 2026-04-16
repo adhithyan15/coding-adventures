@@ -1,0 +1,493 @@
+package com.codingadventures.inmemorydatastoreengine
+
+import com.codingadventures.hashmap.HashMap
+import com.codingadventures.hashset.HashSet
+import com.codingadventures.heap.MinHeap
+import com.codingadventures.inmemorydatastoreprotocol.CommandFrame
+import com.codingadventures.inmemorydatastoreprotocol.EngineResponse
+import com.codingadventures.inmemorydatastoreprotocol.bulkString
+import com.codingadventures.inmemorydatastoreprotocol.error
+import com.codingadventures.inmemorydatastoreprotocol.integer
+import com.codingadventures.inmemorydatastoreprotocol.ok
+import java.time.Instant
+import java.util.Locale
+
+class DataStoreEngine {
+    private val store = Store(16)
+
+    fun executeFrame(frame: CommandFrame?): EngineResponse {
+        if (frame == null) return error("ERR protocol error: expected array of bulk strings")
+        store.activeDatabase().activeExpire()
+        return when (frame.command) {
+            "PING" -> ping(frame.args)
+            "ECHO" -> echo(frame.args)
+            "SET" -> set(frame.args)
+            "GET" -> get(frame.args)
+            "DEL" -> del(frame.args)
+            "EXISTS" -> exists(frame.args)
+            "KEYS" -> keys(frame.args)
+            "TYPE" -> type(frame.args)
+            "APPEND" -> append(frame.args)
+            "INCR" -> incrBy(frame.args, 1)
+            "DECR" -> incrBy(frame.args, -1)
+            "INCRBY" -> incrBy(frame.args, null)
+            "DECRBY" -> decrBy(frame.args)
+            "HSET" -> hset(frame.args)
+            "HGET" -> hget(frame.args)
+            "HDEL" -> hdel(frame.args)
+            "HGETALL" -> hgetall(frame.args)
+            "HLEN" -> hlen(frame.args)
+            "HEXISTS" -> hexists(frame.args)
+            "HKEYS" -> hkeys(frame.args)
+            "HVALS" -> hvals(frame.args)
+            "LPUSH" -> pushList(frame.args, true)
+            "RPUSH" -> pushList(frame.args, false)
+            "LPOP" -> popList(frame.args, true)
+            "RPOP" -> popList(frame.args, false)
+            "LLEN" -> llen(frame.args)
+            "LINDEX" -> lindex(frame.args)
+            "LRANGE" -> lrange(frame.args)
+            "SADD" -> sadd(frame.args)
+            "SREM" -> srem(frame.args)
+            "SISMEMBER" -> sismember(frame.args)
+            "SMEMBERS" -> smembers(frame.args)
+            "SCARD" -> scard(frame.args)
+            "EXPIRE" -> expire(frame.args, false)
+            "EXPIREAT" -> expire(frame.args, true)
+            "PTTL" -> pttl(frame.args)
+            "PERSIST" -> persist(frame.args)
+            "SELECT" -> select(frame.args)
+            "FLUSHDB" -> flushdb(frame.args)
+            "FLUSHALL" -> flushall(frame.args)
+            "DBSIZE" -> dbsize(frame.args)
+            "INFO" -> info(frame.args)
+            else -> error("ERR unknown command '${frame.command.lowercase(Locale.ROOT)}'")
+        }
+    }
+
+    companion object {
+        fun currentTimeMs(): Long = Instant.now().toEpochMilli()
+    }
+
+    private fun ping(args: List<ByteArray>): EngineResponse = when (args.size) {
+        0 -> EngineResponse.SimpleString("PONG")
+        1 -> bulkString(args.first())
+        else -> wrongArity("ping")
+    }
+
+    private fun echo(args: List<ByteArray>): EngineResponse = if (args.size == 1) bulkString(args.first()) else wrongArity("echo")
+
+    private fun set(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("set")
+        store.activeDatabase().set(ByteSequence(args[0]), Entry.string(args[1], null))
+        return ok()
+    }
+
+    private fun get(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("get")
+        val entry = keyEntry(args.first()) ?: return bulkString(null)
+        if (entry.type != EntryType.STRING) return wrongType()
+        return bulkString(entry.value as ByteArray)
+    }
+
+    private fun del(args: List<ByteArray>): EngineResponse {
+        if (args.isEmpty()) return wrongArity("del")
+        return integer(args.count { store.activeDatabase().delete(ByteSequence(it)) }.toLong())
+    }
+
+    private fun exists(args: List<ByteArray>): EngineResponse {
+        if (args.isEmpty()) return wrongArity("exists")
+        return integer(args.count { keyEntry(it) != null }.toLong())
+    }
+
+    private fun keys(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("keys")
+        return EngineResponse.ArrayValue(store.activeDatabase().keys(args.first()).map { bulkString(it.bytes) })
+    }
+
+    private fun type(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("type")
+        return EngineResponse.SimpleString(keyEntry(args.first())?.type?.wireName ?: "none")
+    }
+
+    private fun append(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("append")
+        val key = ByteSequence(args[0])
+        val suffix = args[1]
+        val entry = keyEntry(args[0])
+        if (entry == null) {
+            store.activeDatabase().set(key, Entry.string(suffix, null))
+            return integer(suffix.size.toLong())
+        }
+        if (entry.type != EntryType.STRING) return wrongType()
+        val combined = (entry.value as ByteArray) + suffix
+        entry.value = combined
+        return integer(combined.size.toLong())
+    }
+
+    private fun incrBy(args: List<ByteArray>, fixedDelta: Long?): EngineResponse {
+        if ((fixedDelta == null && args.size != 2) || (fixedDelta != null && args.size != 1)) {
+            return wrongArity(if (fixedDelta == null) "incrby" else if (fixedDelta > 0) "incr" else "decr")
+        }
+        val delta = fixedDelta ?: parseLong(args[1]) ?: return integerParseError()
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first())
+        val current = when {
+            entry == null -> 0L
+            entry.type != EntryType.STRING -> return wrongType()
+            else -> parseLong(entry.value as ByteArray) ?: return integerParseError()
+        }
+        val next = current + delta
+        store.activeDatabase().set(key, Entry.string(next.toString().encodeToByteArray(), entry?.expiresAtMs))
+        return integer(next)
+    }
+
+    private fun decrBy(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("decrby")
+        val delta = parseLong(args[1]) ?: return integerParseError()
+        return incrBy(listOf(args[0], (-delta).toString().encodeToByteArray()), null)
+    }
+
+    private fun hset(args: List<ByteArray>): EngineResponse {
+        if (args.size < 3 || args.size % 2 == 0) return wrongArity("hset")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first()) ?: Entry.hash(HashMap(), null).also { store.activeDatabase().set(key, it) }
+        if (entry.type != EntryType.HASH) return wrongType()
+        val hash = entry.value as HashMap<ByteSequence, ByteArray>
+        var added = 0L
+        for (index in 1 until args.size step 2) {
+            val field = ByteSequence(args[index])
+            if (!hash.has(field)) added += 1
+            hash.set(field, args[index + 1])
+        }
+        return integer(added)
+    }
+
+    private fun hget(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("hget")
+        val entry = keyEntry(args.first()) ?: return bulkString(null)
+        if (entry.type != EntryType.HASH) return wrongType()
+        return bulkString((entry.value as HashMap<ByteSequence, ByteArray>)[ByteSequence(args[1])])
+    }
+
+    private fun hdel(args: List<ByteArray>): EngineResponse {
+        if (args.size < 2) return wrongArity("hdel")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.HASH) return wrongType()
+        val hash = entry.value as HashMap<ByteSequence, ByteArray>
+        var removed = 0L
+        for (field in args.drop(1)) if (hash.delete(ByteSequence(field))) removed += 1
+        if (hash.isEmpty()) store.activeDatabase().delete(key)
+        return integer(removed)
+    }
+
+    private fun hgetall(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("hgetall")
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.HASH) return wrongType()
+        val responses = mutableListOf<EngineResponse>()
+        for ((field, value) in (entry.value as HashMap<ByteSequence, ByteArray>).entries()) {
+            responses += bulkString(field.bytes)
+            responses += bulkString(value)
+        }
+        return EngineResponse.ArrayValue(responses)
+    }
+
+    private fun hlen(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("hlen")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.HASH) return wrongType()
+        return integer((entry.value as HashMap<ByteSequence, ByteArray>).size.toLong())
+    }
+
+    private fun hexists(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("hexists")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.HASH) return wrongType()
+        return integer(if ((entry.value as HashMap<ByteSequence, ByteArray>).has(ByteSequence(args[1]))) 1 else 0)
+    }
+
+    private fun hkeys(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("hkeys")
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.HASH) return wrongType()
+        return EngineResponse.ArrayValue((entry.value as HashMap<ByteSequence, ByteArray>).keys().map { bulkString(it.bytes) })
+    }
+
+    private fun hvals(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("hvals")
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.HASH) return wrongType()
+        return EngineResponse.ArrayValue((entry.value as HashMap<ByteSequence, ByteArray>).values().map(::bulkString))
+    }
+
+    private fun pushList(args: List<ByteArray>, left: Boolean): EngineResponse {
+        if (args.size < 2) return wrongArity(if (left) "lpush" else "rpush")
+        val entry = ensureList(args.first()) ?: return wrongType()
+        val list = entry.value as MutableList<ByteArray>
+        for (value in args.drop(1)) if (left) list.add(0, value) else list.add(value)
+        return integer(list.size.toLong())
+    }
+
+    private fun popList(args: List<ByteArray>, left: Boolean): EngineResponse {
+        if (args.size != 1) return wrongArity(if (left) "lpop" else "rpop")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first()) ?: return bulkString(null)
+        if (entry.type != EntryType.LIST) return wrongType()
+        val list = entry.value as MutableList<ByteArray>
+        val value = list.removeAt(if (left) 0 else list.lastIndex)
+        if (list.isEmpty()) store.activeDatabase().delete(key)
+        return bulkString(value)
+    }
+
+    private fun llen(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("llen")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.LIST) return wrongType()
+        return integer((entry.value as MutableList<ByteArray>).size.toLong())
+    }
+
+    private fun lindex(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("lindex")
+        val entry = keyEntry(args.first()) ?: return bulkString(null)
+        if (entry.type != EntryType.LIST) return wrongType()
+        val list = entry.value as MutableList<ByteArray>
+        val index = parseInt(args[1]) ?: return error("ERR value is not an integer or out of range")
+        val resolved = if (index < 0) list.size + index else index
+        return if (resolved in list.indices) bulkString(list[resolved]) else bulkString(null)
+    }
+
+    private fun lrange(args: List<ByteArray>): EngineResponse {
+        if (args.size != 3) return wrongArity("lrange")
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.LIST) return wrongType()
+        val list = entry.value as MutableList<ByteArray>
+        val startValue = parseInt(args[1]) ?: return error("ERR value is not an integer or out of range")
+        val stopValue = parseInt(args[2]) ?: return error("ERR value is not an integer or out of range")
+        val start = (if (startValue < 0) list.size + startValue else startValue).coerceAtLeast(0)
+        val stop = (if (stopValue < 0) list.size + stopValue else stopValue).coerceAtMost(list.lastIndex)
+        if (list.isEmpty() || start > stop || start >= list.size) return EngineResponse.ArrayValue(emptyList())
+        return EngineResponse.ArrayValue((start..stop).map { bulkString(list[it]) })
+    }
+
+    private fun sadd(args: List<ByteArray>): EngineResponse {
+        if (args.size < 2) return wrongArity("sadd")
+        val entry = ensureSet(args.first()) ?: return wrongType()
+        val set = entry.value as HashSet<ByteSequence>
+        var added = 0L
+        for (value in args.drop(1).map(::ByteSequence)) {
+            if (!set.contains(value)) {
+                set.add(value)
+                added += 1
+            }
+        }
+        return integer(added)
+    }
+
+    private fun srem(args: List<ByteArray>): EngineResponse {
+        if (args.size < 2) return wrongArity("srem")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.SET) return wrongType()
+        val set = entry.value as HashSet<ByteSequence>
+        val removed = args.drop(1).count { set.remove(ByteSequence(it)) }
+        if (set.isEmpty()) store.activeDatabase().delete(key)
+        return integer(removed.toLong())
+    }
+
+    private fun sismember(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("sismember")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.SET) return wrongType()
+        return integer(if ((entry.value as HashSet<ByteSequence>).contains(ByteSequence(args[1]))) 1 else 0)
+    }
+
+    private fun smembers(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("smembers")
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.SET) return wrongType()
+        return EngineResponse.ArrayValue((entry.value as HashSet<ByteSequence>).items().sorted().map { bulkString(it.bytes) })
+    }
+
+    private fun scard(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("scard")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.SET) return wrongType()
+        return integer((entry.value as HashSet<ByteSequence>).size.toLong())
+    }
+
+    private fun expire(args: List<ByteArray>, absoluteSeconds: Boolean): EngineResponse {
+        if (args.size != 2) return wrongArity(if (absoluteSeconds) "expireat" else "expire")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        val parsed = parseLong(args[1]) ?: return integerParseError()
+        val expiresAt = if (absoluteSeconds) parsed * 1000L else currentTimeMs() + parsed * 1000L
+        entry.expiresAtMs = expiresAt
+        store.activeDatabase().ttlHeap.push(ExpiryRecord(expiresAt, key))
+        return integer(1)
+    }
+
+    private fun pttl(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("pttl")
+        val entry = keyEntry(args.first()) ?: return integer(-2)
+        if (entry.expiresAtMs == null) return integer(-1)
+        return integer(maxOf(-1, entry.expiresAtMs!! - currentTimeMs()))
+    }
+
+    private fun persist(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("persist")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.expiresAtMs == null) return integer(0)
+        entry.expiresAtMs = null
+        return integer(1)
+    }
+
+    private fun select(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("select")
+        val index = parseInt(args.first()) ?: return error("ERR DB index is out of range")
+        if (index !in 0 until store.databaseCount()) return error("ERR DB index is out of range")
+        store.select(index)
+        return ok()
+    }
+
+    private fun flushdb(args: List<ByteArray>): EngineResponse = if (args.isEmpty()) {
+        store.flushdb(); ok()
+    } else wrongArity("flushdb")
+
+    private fun flushall(args: List<ByteArray>): EngineResponse = if (args.isEmpty()) {
+        store.flushall(); ok()
+    } else wrongArity("flushall")
+
+    private fun dbsize(args: List<ByteArray>): EngineResponse = if (args.isEmpty()) integer(store.activeDatabase().dbsize().toLong()) else wrongArity("dbsize")
+
+    private fun info(args: List<ByteArray>): EngineResponse {
+        if (args.isNotEmpty()) return wrongArity("info")
+        val text = "# Server\r\nmini_redis_kotlin:0.1.0\r\nactive_db:${store.activeDb}\r\ndbsize:${store.activeDatabase().dbsize()}\r\n"
+        return bulkString(text.encodeToByteArray())
+    }
+
+    private fun keyEntry(rawKey: ByteArray): Entry? {
+        val key = ByteSequence(rawKey)
+        store.activeDatabase().expireLazy(key)
+        return store.activeDatabase().get(key)
+    }
+
+    private fun ensureList(rawKey: ByteArray): Entry? {
+        val key = ByteSequence(rawKey)
+        store.activeDatabase().expireLazy(key)
+        val current = store.activeDatabase().get(key)
+        if (current == null) {
+            return Entry.list(mutableListOf(), null).also { store.activeDatabase().set(key, it) }
+        }
+        return current.takeIf { it.type == EntryType.LIST }
+    }
+
+    private fun ensureSet(rawKey: ByteArray): Entry? {
+        val key = ByteSequence(rawKey)
+        store.activeDatabase().expireLazy(key)
+        val current = store.activeDatabase().get(key)
+        if (current == null) {
+            return Entry.set(HashSet(), null).also { store.activeDatabase().set(key, it) }
+        }
+        return current.takeIf { it.type == EntryType.SET }
+    }
+
+    private fun wrongArity(command: String): EngineResponse = error("ERR wrong number of arguments for '$command' command")
+    private fun wrongType(): EngineResponse = error("WRONGTYPE Operation against a key holding the wrong kind of value")
+    private fun integerParseError(): EngineResponse = error("ERR value is not an integer or out of range")
+    private fun parseLong(bytes: ByteArray): Long? = bytes.decodeToString().toLongOrNull()
+    private fun parseInt(bytes: ByteArray): Int? = bytes.decodeToString().toIntOrNull()
+}
+
+enum class EntryType(val wireName: String) { STRING("string"), HASH("hash"), LIST("list"), SET("set") }
+
+data class Entry(val type: EntryType, var value: Any, var expiresAtMs: Long?) {
+    companion object {
+        fun string(value: ByteArray, expiresAtMs: Long?) = Entry(EntryType.STRING, value, expiresAtMs)
+        fun hash(value: HashMap<ByteSequence, ByteArray>, expiresAtMs: Long?) = Entry(EntryType.HASH, value, expiresAtMs)
+        fun list(value: MutableList<ByteArray>, expiresAtMs: Long?) = Entry(EntryType.LIST, value, expiresAtMs)
+        fun set(value: HashSet<ByteSequence>, expiresAtMs: Long?) = Entry(EntryType.SET, value, expiresAtMs)
+    }
+}
+
+class Store(count: Int) {
+    private val databases = List(count) { Database() }
+    var activeDb: Int = 0
+        private set
+
+    fun activeDatabase(): Database = databases[activeDb]
+    fun select(index: Int) { activeDb = index }
+    fun databaseCount(): Int = databases.size
+    fun flushdb() = activeDatabase().clear()
+    fun flushall() = databases.forEach { it.clear() }
+}
+
+class Database {
+    private val entries = HashMap<ByteSequence, Entry>()
+    val ttlHeap = MinHeap<ExpiryRecord>()
+
+    fun get(key: ByteSequence): Entry? {
+        val entry = entries[key] ?: return null
+        return if (entry.expiresAtMs != null && entry.expiresAtMs!! <= DataStoreEngine.currentTimeMs()) null else entry
+    }
+
+    fun set(key: ByteSequence, entry: Entry) {
+        entries.set(key, entry)
+        entry.expiresAtMs?.let { ttlHeap.push(ExpiryRecord(it, key)) }
+    }
+
+    fun delete(key: ByteSequence): Boolean = entries.delete(key)
+
+    fun expireLazy(key: ByteSequence) {
+        val entry = entries[key] ?: return
+        if (entry.expiresAtMs != null && entry.expiresAtMs!! <= DataStoreEngine.currentTimeMs()) entries.delete(key)
+    }
+
+    fun activeExpire() {
+        val now = DataStoreEngine.currentTimeMs()
+        while (!ttlHeap.isEmpty()) {
+            val record = ttlHeap.peek() ?: break
+            if (record.expiresAtMs > now) break
+            ttlHeap.pop()
+            val entry = entries[record.key]
+            if (entry != null && entry.expiresAtMs == record.expiresAtMs) entries.delete(record.key)
+        }
+    }
+
+    fun keys(pattern: ByteArray): List<ByteSequence> = entries.keys().filter {
+        expireLazy(it)
+        entries[it] != null && globMatch(pattern, it.bytes)
+    }.sorted()
+
+    fun dbsize(): Int {
+        activeExpire()
+        return entries.size
+    }
+
+    fun clear() = entries.clear()
+}
+
+data class ExpiryRecord(val expiresAtMs: Long, val key: ByteSequence) : Comparable<ExpiryRecord> {
+    override fun compareTo(other: ExpiryRecord): Int = compareValuesBy(this, other, ExpiryRecord::expiresAtMs, ExpiryRecord::key)
+}
+
+class ByteSequence(val bytes: ByteArray) : Comparable<ByteSequence> {
+    override fun equals(other: Any?): Boolean = other is ByteSequence && bytes.contentEquals(other.bytes)
+    override fun hashCode(): Int = bytes.contentHashCode()
+    override fun compareTo(other: ByteSequence): Int {
+        val limit = minOf(bytes.size, other.bytes.size)
+        for (index in 0 until limit) {
+            val diff = bytes[index].toUByte().compareTo(other.bytes[index].toUByte())
+            if (diff != 0) return diff
+        }
+        return bytes.size.compareTo(other.bytes.size)
+    }
+}
+
+private fun globMatch(pattern: ByteArray, text: ByteArray, p: Int = 0, t: Int = 0): Boolean {
+    if (p == pattern.size) return t == text.size
+    if (pattern[p] == '*'.code.toByte()) return (t..text.size).any { globMatch(pattern, text, p + 1, it) }
+    if (t == text.size) return false
+    return if (pattern[p] == '?'.code.toByte() || pattern[p] == text[t]) globMatch(pattern, text, p + 1, t + 1) else false
+}
