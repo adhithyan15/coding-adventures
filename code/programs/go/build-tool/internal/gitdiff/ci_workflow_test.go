@@ -23,25 +23,32 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 	}
 }
 
-func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDartChanges(t *testing.T) {
+func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	patch := `
-@@ -300,0 +301,6 @@
-+      - name: Set up Dart
-+        if: needs.detect.outputs.needs_dart == 'true'
-+        uses: dart-lang/setup-dart@v1
-@@ -393,0 +397,3 @@
-+          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
-+            echo "Dart: $(dart --version 2>&1)"
+@@ -300,0 +301,15 @@
++      - name: Set up Swift (Windows)
++        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
++        shell: pwsh
++        run: |
++          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
++          foreach ($level in "Machine", "User") {
++            [Environment]::GetEnvironmentVariables($level).GetEnumerator() | ForEach-Object {
++              if ($_.Name -eq "Path") {
++                $_.Value = ("$env:Path;$($_.Value)" -split ';' | Select-Object -Unique) -join ';'
++              }
++              Set-Content -Path "Env:$($_.Name)" -Value $_.Value
++            }
++          }
 `
 
 	change := AnalyzeCIWorkflowPatch(patch)
 	if change.RequiresFullRebuild {
-		t.Fatalf("expected toolchain-scoped dart change to stay incremental")
+		t.Fatalf("expected swift toolchain change to stay incremental")
 	}
 
 	got := SortedToolchains(change.Toolchains)
-	if len(got) != 1 || got[0] != "dart" {
-		t.Fatalf("expected dart toolchain only, got %v", got)
+	if len(got) != 1 || got[0] != "swift" {
+		t.Fatalf("expected swift toolchain only, got %v", got)
 	}
 }
 

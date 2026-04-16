@@ -1,1 +1,1 @@
-echo Swift is not available on Windows CI -- skipping build
+swift test --enable-code-coverage --verbose

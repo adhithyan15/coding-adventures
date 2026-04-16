@@ -51,8 +51,9 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	"perl": {
 		"needs_perl", "cpanm", "perl --version", "install cpanm",
 	},
-	"dart": {
-		"needs_dart", "setup-dart", "dart --version", "set up dart",
+	"swift": {
+		"needs_swift", "swift.toolchain", "winget install --id swift.toolchain",
+		"swift --version", "set up swift",
 	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
@@ -233,23 +234,34 @@ func lineTouchesSharedCIBehavior(content string) bool {
 }
 
 func isToolchainScopedStructuralLine(content string) bool {
+	normalized := strings.ToLower(strings.TrimSpace(content))
 	switch {
-	case strings.HasPrefix(content, "if:"),
-		strings.HasPrefix(content, "run:"),
-		strings.HasPrefix(content, "shell:"),
-		strings.HasPrefix(content, "with:"),
-		strings.HasPrefix(content, "env:"),
-		strings.HasPrefix(content, "{"),
-		strings.HasPrefix(content, "}"),
-		strings.HasPrefix(content, "else"),
-		strings.HasPrefix(content, "fi"),
-		strings.HasPrefix(content, "then"),
-		strings.HasPrefix(content, "printf "),
-		strings.HasPrefix(content, "echo "),
-		strings.HasPrefix(content, "curl "),
-		strings.HasPrefix(content, "powershell "),
-		strings.HasPrefix(content, "call "),
-		strings.HasPrefix(content, "cd "):
+	case strings.HasPrefix(normalized, "if:"),
+		strings.HasPrefix(normalized, "if ("),
+		strings.HasPrefix(normalized, "if("),
+		strings.HasPrefix(normalized, "run:"),
+		strings.HasPrefix(normalized, "shell:"),
+		strings.HasPrefix(normalized, "with:"),
+		strings.HasPrefix(normalized, "env:"),
+		strings.HasPrefix(normalized, "$"),
+		strings.HasPrefix(normalized, "["),
+		strings.HasPrefix(normalized, "{"),
+		strings.HasPrefix(normalized, "}"),
+		strings.HasPrefix(normalized, "else"),
+		strings.HasPrefix(normalized, "fi"),
+		strings.HasPrefix(normalized, "then"),
+		strings.HasPrefix(normalized, "printf "),
+		strings.HasPrefix(normalized, "echo "),
+		strings.HasPrefix(normalized, "curl "),
+		strings.HasPrefix(normalized, "powershell "),
+		strings.HasPrefix(normalized, "winget "),
+		strings.HasPrefix(normalized, "foreach "),
+		strings.HasPrefix(normalized, "write-output "),
+		strings.HasPrefix(normalized, "out-file "),
+		strings.HasPrefix(normalized, "set-content "),
+		strings.HasPrefix(normalized, "get-childitem "),
+		strings.HasPrefix(normalized, "call "),
+		strings.HasPrefix(normalized, "cd "):
 		return true
 	default:
 		return false
