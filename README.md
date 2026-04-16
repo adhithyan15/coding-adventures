@@ -20,24 +20,24 @@ This repo is part computing-stack curriculum, part polyglot package lab, part to
 
 As of this refresh, the repo contains:
 
-- 2198 package directories across 17 package language roots
+- 2279 package directories across 17 package language roots
 - 135 program directories across 14 program language roots
 - 309 Markdown specs in `code/specs/`
 - 12 learning files in `code/learning/`
-- 41 shared grammar source files in `code/grammars/`
+- 185 shared grammar source files in `code/grammars/`
 
 ### Package Languages
 
 | Language | Package dirs |
 | --- | ---: |
-| csharp | 8 |
-| dart | 1 |
+| csharp | 13 |
+| dart | 6 |
 | elixir | 221 |
-| fsharp | 8 |
+| fsharp | 13 |
 | go | 227 |
-| haskell | 17 |
-| java | 41 |
-| kotlin | 41 |
+| haskell | 79 |
+| java | 43 |
+| kotlin | 43 |
 | lua | 189 |
 | perl | 193 |
 | python | 266 |
