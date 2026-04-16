@@ -1,16 +1,15 @@
 cabal-version: 3.0
-name:          coding-adventures-json-rpc
+name:          cli-builder
 version:       0.1.0
-synopsis:      JSON-RPC 2.0 transport and dispatch for Haskell
+synopsis:      Declarative CLI parsing from JSON specs
 license:       MIT
 author:        Adhithya Rajasekaran
 maintainer:    Adhithya Rajasekaran
 build-type:    Simple
 
 library
-    exposed-modules:  JsonRpc
+    exposed-modules:  CliBuilder
     build-depends:    base >=4.14
-                    , bytestring
                     , containers
                     , json-serializer
                     , json-value
@@ -20,12 +19,12 @@ library
 test-suite spec
     type:             exitcode-stdio-1.0
     main-is:          Spec.hs
-    other-modules:    JsonRpcSpec
+    other-modules:    CliBuilderSpec
     hs-source-dirs:   test
     build-depends:    base >=4.14
-                    , bytestring
-                    , hspec == 2.*
+                    , cli-builder
+                    , containers
                     , json-serializer
                     , json-value
-                    , coding-adventures-json-rpc
+                    , hspec == 2.*
     default-language: Haskell2010

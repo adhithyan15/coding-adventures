@@ -1,3 +1,2 @@
 packages: .
           ../json-value
-          ../json-serializer
