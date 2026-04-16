@@ -5,14 +5,13 @@ module StarlarkParser
     , tokenizeAndParseStarlark
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified StarlarkLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for starlark-parser built on the generic parser package"
+description = "Haskell starlark-parser backed by compiled parser grammar data"
 
 data StarlarkParserError
     = StarlarkParserLexerError LexerError
@@ -20,7 +19,7 @@ data StarlarkParserError
     deriving (Eq, Show)
 
 parseStarlarkTokens :: [Token] -> Either ParseError ASTNode
-parseStarlarkTokens = parseTokens
+parseStarlarkTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseStarlark :: String -> Either StarlarkParserError ASTNode
 tokenizeAndParseStarlark source =

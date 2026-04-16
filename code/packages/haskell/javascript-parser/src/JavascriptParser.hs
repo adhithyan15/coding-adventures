@@ -5,14 +5,13 @@ module JavascriptParser
     , tokenizeAndParseJavascript
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified JavascriptLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for javascript-parser built on the generic parser package"
+description = "Haskell javascript-parser backed by compiled parser grammar data"
 
 data JavascriptParserError
     = JavascriptParserLexerError LexerError
@@ -20,7 +19,7 @@ data JavascriptParserError
     deriving (Eq, Show)
 
 parseJavascriptTokens :: [Token] -> Either ParseError ASTNode
-parseJavascriptTokens = parseTokens
+parseJavascriptTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseJavascript :: String -> Either JavascriptParserError ASTNode
 tokenizeAndParseJavascript source =

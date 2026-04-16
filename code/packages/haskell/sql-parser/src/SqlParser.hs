@@ -5,14 +5,13 @@ module SqlParser
     , tokenizeAndParseSql
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified SqlLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for sql-parser built on the generic parser package"
+description = "Haskell sql-parser backed by compiled parser grammar data"
 
 data SqlParserError
     = SqlParserLexerError LexerError
@@ -20,7 +19,7 @@ data SqlParserError
     deriving (Eq, Show)
 
 parseSqlTokens :: [Token] -> Either ParseError ASTNode
-parseSqlTokens = parseTokens
+parseSqlTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseSql :: String -> Either SqlParserError ASTNode
 tokenizeAndParseSql source =

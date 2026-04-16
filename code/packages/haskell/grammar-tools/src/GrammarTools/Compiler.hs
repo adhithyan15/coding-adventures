@@ -87,7 +87,9 @@ compileTokenDefinition definition =
         ++ " "
         ++ show (tokenDefinitionLineNumber definition)
         ++ " "
+        ++ "("
         ++ compileMaybeString (tokenDefinitionAlias definition)
+        ++ ")"
 
 compileGroups :: Map.Map String PatternGroup -> Int -> String
 compileGroups groups indentLevel

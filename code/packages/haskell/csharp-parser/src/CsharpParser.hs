@@ -5,14 +5,13 @@ module CsharpParser
     , tokenizeAndParseCsharp
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified CsharpLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for csharp-parser built on the generic parser package"
+description = "Haskell csharp-parser backed by compiled parser grammar data"
 
 data CsharpParserError
     = CsharpParserLexerError LexerError
@@ -20,7 +19,7 @@ data CsharpParserError
     deriving (Eq, Show)
 
 parseCsharpTokens :: [Token] -> Either ParseError ASTNode
-parseCsharpTokens = parseTokens
+parseCsharpTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseCsharp :: String -> Either CsharpParserError ASTNode
 tokenizeAndParseCsharp source =

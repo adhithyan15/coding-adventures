@@ -5,14 +5,13 @@ module PythonParser
     , tokenizeAndParsePython
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified PythonLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for python-parser built on the generic parser package"
+description = "Haskell python-parser backed by compiled parser grammar data"
 
 data PythonParserError
     = PythonParserLexerError LexerError
@@ -20,7 +19,7 @@ data PythonParserError
     deriving (Eq, Show)
 
 parsePythonTokens :: [Token] -> Either ParseError ASTNode
-parsePythonTokens = parseTokens
+parsePythonTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParsePython :: String -> Either PythonParserError ASTNode
 tokenizeAndParsePython source =

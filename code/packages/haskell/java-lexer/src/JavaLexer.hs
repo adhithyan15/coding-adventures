@@ -4,15 +4,15 @@ module JavaLexer
     , tokenizeJava
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for java-lexer built on the generic lexer package"
+description = "Haskell java-lexer backed by compiled token grammar data"
 
 javaLexerKeywords :: [String]
-javaLexerKeywords = []
+javaLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeJava :: String -> Either LexerError [Token]
-tokenizeJava = tokenize defaultLexerConfig {lexerKeywords = javaLexerKeywords}
+tokenizeJava = tokenizeWithGrammar tokenGrammarData

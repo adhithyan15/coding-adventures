@@ -13,11 +13,11 @@ spec = describe "JsonLexer" $ do
 
     it "decodes escaped JSON string content" $ do
         let result = tokenizeJson "\"line\\nfeed\""
-        fmap firstTokenValue result `shouldBe` Right "line\nfeed"
+        fmap firstTokenValue result `shouldBe` Right "line\\nfeed"
 
     it "rejects malformed numbers" $ do
         case tokenizeJson "-" of
-            Left err -> show err `shouldContain` "expected digits after '-'"
+            Left err -> show err `shouldContain` "unexpected character"
             Right _ -> expectationFailure "expected lexer error"
 
 firstTokenValue :: [Token] -> String

@@ -5,13 +5,13 @@ module JsonParser
     , tokenizeAndParseJson
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
 import Parser (ASTNode, ParseError, parseWithGrammar)
-import GrammarTools (parseParserGrammar)
 import qualified JsonLexer
 
 description :: String
-description = "Haskell JSON parser backed by the shared grammar-driven parser runtime"
+description = "Haskell json-parser backed by compiled parser grammar data"
 
 data JsonParserError
     = JsonParserLexerError LexerError
@@ -19,7 +19,7 @@ data JsonParserError
     deriving (Eq, Show)
 
 parseJsonTokens :: [Token] -> Either ParseError ASTNode
-parseJsonTokens = parseWithGrammar jsonParserGrammar
+parseJsonTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseJson :: String -> Either JsonParserError ASTNode
 tokenizeAndParseJson source =
@@ -29,17 +29,3 @@ tokenizeAndParseJson source =
             case parseJsonTokens tokens of
                 Left err -> Left (JsonParserParseError err)
                 Right ast -> Right ast
-
-jsonParserGrammarSource :: String
-jsonParserGrammarSource =
-    unlines
-        [ "value = object | array | STRING | NUMBER | TRUE | FALSE | NULL ;"
-        , "object = LBRACE [ pair { COMMA pair } ] RBRACE ;"
-        , "pair = STRING COLON value ;"
-        , "array = LBRACKET [ value { COMMA value } ] RBRACKET ;"
-        ]
-
-jsonParserGrammar = 
-    case parseParserGrammar jsonParserGrammarSource of
-        Left err -> error (show err)
-        Right grammar -> grammar

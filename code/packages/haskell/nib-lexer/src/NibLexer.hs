@@ -4,15 +4,15 @@ module NibLexer
     , tokenizeNib
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for nib-lexer built on the generic lexer package"
+description = "Haskell nib-lexer backed by compiled token grammar data"
 
 nibLexerKeywords :: [String]
-nibLexerKeywords = []
+nibLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeNib :: String -> Either LexerError [Token]
-tokenizeNib = tokenize defaultLexerConfig {lexerKeywords = nibLexerKeywords}
+tokenizeNib = tokenizeWithGrammar tokenGrammarData

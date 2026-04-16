@@ -5,14 +5,13 @@ module DartmouthBasicParser
     , tokenizeAndParseDartmouthBasic
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified DartmouthBasicLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for dartmouth-basic-parser built on the generic parser package"
+description = "Haskell dartmouth-basic-parser backed by compiled parser grammar data"
 
 data DartmouthBasicParserError
     = DartmouthBasicParserLexerError LexerError
@@ -20,7 +19,7 @@ data DartmouthBasicParserError
     deriving (Eq, Show)
 
 parseDartmouthBasicTokens :: [Token] -> Either ParseError ASTNode
-parseDartmouthBasicTokens = parseTokens
+parseDartmouthBasicTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseDartmouthBasic :: String -> Either DartmouthBasicParserError ASTNode
 tokenizeAndParseDartmouthBasic source =

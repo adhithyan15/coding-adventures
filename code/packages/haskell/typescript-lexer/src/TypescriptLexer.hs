@@ -4,15 +4,15 @@ module TypescriptLexer
     , tokenizeTypescript
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for typescript-lexer built on the generic lexer package"
+description = "Haskell typescript-lexer backed by compiled token grammar data"
 
 typescriptLexerKeywords :: [String]
-typescriptLexerKeywords = []
+typescriptLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeTypescript :: String -> Either LexerError [Token]
-tokenizeTypescript = tokenize defaultLexerConfig {lexerKeywords = typescriptLexerKeywords}
+tokenizeTypescript = tokenizeWithGrammar tokenGrammarData

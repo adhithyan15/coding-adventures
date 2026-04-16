@@ -5,14 +5,13 @@ module ExcelParser
     , tokenizeAndParseExcel
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified ExcelLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for excel-parser built on the generic parser package"
+description = "Haskell excel-parser backed by compiled parser grammar data"
 
 data ExcelParserError
     = ExcelParserLexerError LexerError
@@ -20,7 +19,7 @@ data ExcelParserError
     deriving (Eq, Show)
 
 parseExcelTokens :: [Token] -> Either ParseError ASTNode
-parseExcelTokens = parseTokens
+parseExcelTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseExcel :: String -> Either ExcelParserError ASTNode
 tokenizeAndParseExcel source =

@@ -4,15 +4,15 @@ module CssLexer
     , tokenizeCss
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for css-lexer built on the generic lexer package"
+description = "Haskell css-lexer backed by compiled token grammar data"
 
 cssLexerKeywords :: [String]
-cssLexerKeywords = []
+cssLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeCss :: String -> Either LexerError [Token]
-tokenizeCss = tokenize defaultLexerConfig {lexerKeywords = cssLexerKeywords}
+tokenizeCss = tokenizeWithGrammar tokenGrammarData

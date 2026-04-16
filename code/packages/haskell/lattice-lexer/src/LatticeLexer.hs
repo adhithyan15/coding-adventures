@@ -4,15 +4,15 @@ module LatticeLexer
     , tokenizeLattice
     ) where
 
-import Lexer (LexerConfig(..), LexerError, Token, defaultLexerConfig, tokenize)
+import Generated.TokenGrammar (tokenGrammarData)
+import GrammarTools.TokenGrammar (tokenGrammarKeywords)
+import Lexer (LexerError, Token, tokenizeWithGrammar)
 
--- Thin wrapper around the shared lexer package so language-specific ports can
--- grow their own keyword tables and token helpers incrementally.
 description :: String
-description = "Haskell starter wrapper for lattice-lexer built on the generic lexer package"
+description = "Haskell lattice-lexer backed by compiled token grammar data"
 
 latticeLexerKeywords :: [String]
-latticeLexerKeywords = []
+latticeLexerKeywords = tokenGrammarKeywords tokenGrammarData
 
 tokenizeLattice :: String -> Either LexerError [Token]
-tokenizeLattice = tokenize defaultLexerConfig {lexerKeywords = latticeLexerKeywords}
+tokenizeLattice = tokenizeWithGrammar tokenGrammarData

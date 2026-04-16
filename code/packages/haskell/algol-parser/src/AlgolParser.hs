@@ -5,14 +5,13 @@ module AlgolParser
     , tokenizeAndParseAlgol
     ) where
 
+import Generated.ParserGrammar (parserGrammarData)
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
 import qualified AlgolLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for algol-parser built on the generic parser package"
+description = "Haskell algol-parser backed by compiled parser grammar data"
 
 data AlgolParserError
     = AlgolParserLexerError LexerError
@@ -20,7 +19,7 @@ data AlgolParserError
     deriving (Eq, Show)
 
 parseAlgolTokens :: [Token] -> Either ParseError ASTNode
-parseAlgolTokens = parseTokens
+parseAlgolTokens = parseWithGrammar parserGrammarData
 
 tokenizeAndParseAlgol :: String -> Either AlgolParserError ASTNode
 tokenizeAndParseAlgol source =
