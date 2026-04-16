@@ -1,3 +1,3 @@
 # Parser
 
-F# wrapper helpers for the C# parser implementation.
+Pure F# grammar-driven parser using the shared grammar-tools grammar model.

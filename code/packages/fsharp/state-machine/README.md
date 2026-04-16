@@ -1,3 +1,3 @@
 # State Machine
 
-F# wrapper helpers for the C# state-machine implementation.
+Pure F# deterministic, nondeterministic, modal, and pushdown state machines.

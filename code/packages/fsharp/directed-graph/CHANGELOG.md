@@ -2,4 +2,4 @@
 
 ## 0.1.0
 
-- add initial F# directed-graph wrapper
+- replace the initial C# wrapper with a native F# directed graph implementation

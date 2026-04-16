@@ -6,14 +6,13 @@
     <PackageId>CodingAdventures.Parser.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>F# wrappers for the parser package</Description>
+    <Description>Pure F# grammar-driven parser built on the shared grammar model</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../csharp/parser/CodingAdventures.Parser.csproj" />
     <ProjectReference Include="../../csharp/grammar-tools/CodingAdventures.GrammarTools.csproj" />
-    <ProjectReference Include="../../csharp/lexer/CodingAdventures.Lexer.csproj" />
+    <ProjectReference Include="../../fsharp/lexer/CodingAdventures.Lexer.fsproj" />
     <Compile Include="Parser.fs" />
   </ItemGroup>
 </Project>

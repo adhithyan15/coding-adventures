@@ -6,12 +6,11 @@
     <PackageId>CodingAdventures.StateMachine.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>F# wrappers for the state-machine package</Description>
+    <Description>Pure F# deterministic, nondeterministic, modal, and pushdown state machines</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../csharp/state-machine/CodingAdventures.StateMachine.csproj" />
     <Compile Include="StateMachine.fs" />
   </ItemGroup>
 </Project>
