@@ -1,3 +1,3 @@
 # Directed Graph
 
-F# wrapper helpers for the C# directed-graph implementation.
+Pure F# directed graph operations with topological sorting, dependency grouping, transitive queries, and labeled edges.

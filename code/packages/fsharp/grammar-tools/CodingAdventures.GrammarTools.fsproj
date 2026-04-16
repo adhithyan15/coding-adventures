@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <AssemblyName>CodingAdventures.DirectedGraph.FSharp</AssemblyName>
+    <AssemblyName>CodingAdventures.GrammarTools.FSharp</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageId>CodingAdventures.DirectedGraph.FSharp</PackageId>
+    <PackageId>CodingAdventures.GrammarTools.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>Pure F# directed graph with cycle detection, topological sorting, and dependency queries</Description>
+    <Description>Pure F# parsers and data models for .tokens and .grammar files</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="DirectedGraph.fs" />
+    <Compile Include="GrammarTools.fs" />
   </ItemGroup>
 </Project>
