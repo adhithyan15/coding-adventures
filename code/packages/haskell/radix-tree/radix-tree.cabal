@@ -1,0 +1,27 @@
+cabal-version: 3.0
+name:          radix-tree
+version:       0.1.0
+synopsis:      Haskell radix tree for keyspace indexing and prefix matching
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  RadixTree
+    build-depends:    base >=4.14
+                    , bytestring
+                    , containers
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    RadixTreeSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hspec == 2.*
+                    , radix-tree
+    default-language: Haskell2010
