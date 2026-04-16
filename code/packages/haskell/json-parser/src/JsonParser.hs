@@ -6,13 +6,12 @@ module JsonParser
     ) where
 
 import Lexer (LexerError, Token)
-import Parser (ASTNode, ParseError, parseTokens)
+import Parser (ASTNode, ParseError, parseWithGrammar)
+import GrammarTools (parseParserGrammar)
 import qualified JsonLexer
 
--- Starter parser wrapper that composes the shared parser engine with the
--- sibling lexer package for this language family.
 description :: String
-description = "Haskell starter wrapper for json-parser built on the generic parser package"
+description = "Haskell JSON parser backed by the shared grammar-driven parser runtime"
 
 data JsonParserError
     = JsonParserLexerError LexerError
@@ -20,7 +19,7 @@ data JsonParserError
     deriving (Eq, Show)
 
 parseJsonTokens :: [Token] -> Either ParseError ASTNode
-parseJsonTokens = parseTokens
+parseJsonTokens = parseWithGrammar jsonParserGrammar
 
 tokenizeAndParseJson :: String -> Either JsonParserError ASTNode
 tokenizeAndParseJson source =
@@ -30,3 +29,17 @@ tokenizeAndParseJson source =
             case parseJsonTokens tokens of
                 Left err -> Left (JsonParserParseError err)
                 Right ast -> Right ast
+
+jsonParserGrammarSource :: String
+jsonParserGrammarSource =
+    unlines
+        [ "value = object | array | STRING | NUMBER | TRUE | FALSE | NULL ;"
+        , "object = LBRACE [ pair { COMMA pair } ] RBRACE ;"
+        , "pair = STRING COLON value ;"
+        , "array = LBRACKET [ value { COMMA value } ] RBRACKET ;"
+        ]
+
+jsonParserGrammar = 
+    case parseParserGrammar jsonParserGrammarSource of
+        Left err -> error (show err)
+        Right grammar -> grammar
