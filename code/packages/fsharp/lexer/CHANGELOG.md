@@ -2,4 +2,4 @@
 
 ## 0.1.0
 
-- add initial F# lexer wrapper
+- replace the initial C# wrapper with a native F# lexer implementation

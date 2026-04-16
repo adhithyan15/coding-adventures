@@ -6,12 +6,11 @@
     <PackageId>CodingAdventures.DirectedGraph.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
-    <Description>F# wrappers for the directed-graph package</Description>
+    <Description>Pure F# directed graph with cycle detection, topological sorting, and dependency queries</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../csharp/directed-graph/CodingAdventures.DirectedGraph.csproj" />
     <Compile Include="DirectedGraph.fs" />
   </ItemGroup>
 </Project>

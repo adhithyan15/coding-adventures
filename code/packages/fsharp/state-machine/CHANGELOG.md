@@ -2,4 +2,4 @@
 
 ## 0.1.0
 
-- add initial F# state-machine wrapper
+- replace the initial C# wrapper with native F# automata implementations
