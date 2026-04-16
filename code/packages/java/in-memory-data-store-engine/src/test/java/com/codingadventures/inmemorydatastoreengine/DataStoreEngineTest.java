@@ -39,6 +39,28 @@ class DataStoreEngineTest {
         engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SADD"), bytes("tags"), bytes("red"), bytes("blue"))));
         EngineResponse.IntegerValue scard = (EngineResponse.IntegerValue) engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SCARD"), bytes("tags"))));
         assertEquals(2, scard.value());
+
+        EngineResponse.IntegerValue zadd = (EngineResponse.IntegerValue) engine.executeFrame(CommandFrame.fromParts(List.of(
+            bytes("ZADD"), bytes("scores"), bytes("1"), bytes("alice"), bytes("2"), bytes("bob"), bytes("1.5"), bytes("cara")
+        )));
+        assertEquals(3, zadd.value());
+        EngineResponse.ArrayValue zrange = (EngineResponse.ArrayValue) engine.executeFrame(CommandFrame.fromParts(List.of(
+            bytes("ZRANGE"), bytes("scores"), bytes("0"), bytes("-1"), bytes("WITHSCORES")
+        )));
+        assertEquals(6, zrange.value().size());
+        EngineResponse.IntegerValue zrank = (EngineResponse.IntegerValue) engine.executeFrame(CommandFrame.fromParts(List.of(
+            bytes("ZRANK"), bytes("scores"), bytes("cara")
+        )));
+        assertEquals(1, zrank.value());
+
+        EngineResponse.IntegerValue pfadd = (EngineResponse.IntegerValue) engine.executeFrame(CommandFrame.fromParts(List.of(
+            bytes("PFADD"), bytes("visitors"), bytes("alice"), bytes("bob")
+        )));
+        assertEquals(1, pfadd.value());
+        EngineResponse.IntegerValue pfcount = (EngineResponse.IntegerValue) engine.executeFrame(CommandFrame.fromParts(List.of(
+            bytes("PFCOUNT"), bytes("visitors")
+        )));
+        assertTrue(pfcount.value() >= 2);
     }
 
     @Test

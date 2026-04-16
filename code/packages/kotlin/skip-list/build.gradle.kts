@@ -1,7 +1,7 @@
 layout.buildDirectory = file("gradle-build")
 
 plugins {
-    java
+    kotlin("jvm") version "2.1.20"
     `java-library`
 }
 
@@ -12,6 +12,12 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
+
 tasks.withType<JavaCompile> {
     sourceCompatibility = "21"
     targetCompatibility = "21"
@@ -19,12 +25,7 @@ tasks.withType<JavaCompile> {
 }
 
 dependencies {
-    api("com.codingadventures:hash-map")
-    api("com.codingadventures:hash-set")
-    api("com.codingadventures:heap")
-    api("com.codingadventures:hyperloglog")
-    api("com.codingadventures:in-memory-data-store-protocol")
-    api("com.codingadventures:skip-list")
+    testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
