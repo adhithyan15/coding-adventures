@@ -1,8 +1,8 @@
-"""JVM simulator package built on disassembled JVM bytecode."""
+"""Version-aware JVM bytecode disassembler package."""
 
 from __future__ import annotations
 
-from jvm_bytecode_disassembler import (
+from jvm_bytecode_disassembler.disassembler import (
     JVMInstruction,
     JVMMethodBody,
     JVMOpcode,
@@ -14,17 +14,11 @@ from jvm_bytecode_disassembler import (
     encode_istore,
 )
 
-from jvm_simulator.simulator import JVMSimulator, JVMTrace
-from jvm_simulator.state import JVMState
-
 __all__ = [
-    "JVMOpcode",
     "JVMInstruction",
     "JVMMethodBody",
+    "JVMOpcode",
     "JVMVersion",
-    "JVMSimulator",
-    "JVMState",
-    "JVMTrace",
     "assemble_jvm",
     "disassemble_method_body",
     "encode_iconst",

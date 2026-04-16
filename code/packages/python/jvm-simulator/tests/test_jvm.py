@@ -7,6 +7,7 @@ JVM bytecode.
 """
 
 import pytest
+from jvm_bytecode_disassembler import disassemble_method_body
 
 from jvm_simulator.simulator import (
     JVMOpcode,
@@ -18,10 +19,32 @@ from jvm_simulator.simulator import (
     encode_istore,
 )
 
-
 # ===========================================================================
 # Helper encoding tests
 # ===========================================================================
+
+
+class _FakeMethodRef:
+    def __init__(self, descriptor: str) -> None:
+        self.descriptor = descriptor
+
+
+class _FakeHost:
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, object, list[object]]] = []
+
+    def get_static(self, reference: object) -> object:
+        self.calls.append(("get_static", reference, []))
+        return {"kind": "print-stream"}
+
+    def invoke_virtual(
+        self,
+        reference: object,
+        receiver: object,
+        args: list[object],
+    ) -> object | None:
+        self.calls.append(("invoke_virtual", receiver, args))
+        return None
 
 
 class TestEncodeIconst:
@@ -54,12 +77,20 @@ class TestEncodeIconst:
         result = encode_iconst(-128)
         assert result == bytes([0x10, 0x80])
 
+    def test_iconst_128_uses_sipush(self) -> None:
+        """Values beyond bipush range fall back to sipush."""
+        assert encode_iconst(128) == bytes([0x11, 0x00, 0x80])
+
+    def test_iconst_negative_129_uses_sipush(self) -> None:
+        """Negative values below -128 also use sipush when possible."""
+        assert encode_iconst(-129) == bytes([0x11, 0xFF, 0x7F])
+
     def test_iconst_out_of_range_raises(self) -> None:
-        """Values outside signed byte range raise ValueError."""
-        with pytest.raises(ValueError, match="outside signed byte range"):
-            encode_iconst(128)
-        with pytest.raises(ValueError, match="outside signed byte range"):
-            encode_iconst(-129)
+        """Values outside signed short range still raise ValueError."""
+        with pytest.raises(ValueError, match="outside signed short range"):
+            encode_iconst(32768)
+        with pytest.raises(ValueError, match="outside signed short range"):
+            encode_iconst(-32769)
 
 
 class TestEncodeIstore:
@@ -1082,3 +1113,86 @@ class TestSimulatorProtocolConformance:
         assert sim.locals[0] is None
         assert sim.pc == 0
         assert sim.return_value is None
+
+
+class TestDisassembledMethodFacade:
+    """Verify the simulator's disassembled-bytecode API."""
+
+    def test_load_method_executes_disassembled_body(self) -> None:
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.ICONST_1,),
+                (JVMOpcode.ICONST_2,),
+                (JVMOpcode.IADD,),
+                (JVMOpcode.IRETURN,),
+            ),
+            max_stack=2,
+            max_locals=0,
+        )
+
+        sim = JVMSimulator()
+        sim.load_method(method)
+        traces = sim.run()
+
+        assert sim.halted is True
+        assert sim.return_value == 3
+        assert traces[-1].opcode == "ireturn"
+
+    def test_load_method_supports_real_constant_pool_indices(self) -> None:
+        method = disassemble_method_body(
+            assemble_jvm((JVMOpcode.LDC, 9), (JVMOpcode.IRETURN,)),
+            max_stack=1,
+            max_locals=0,
+            constant_pool={9: 300},
+        )
+
+        sim = JVMSimulator()
+        sim.load_method(method)
+        sim.run()
+
+        assert sim.return_value == 300
+
+    def test_load_method_with_host_executes_getstatic_and_invokevirtual(self) -> None:
+        host = _FakeHost()
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.GETSTATIC, 7),
+                (JVMOpcode.LDC, 13),
+                (JVMOpcode.INVOKEVIRTUAL, 15),
+                (JVMOpcode.RETURN,),
+            ),
+            max_stack=2,
+            max_locals=0,
+            constant_pool={
+                7: "java/lang/System.out",
+                13: "Hello, world!",
+                15: _FakeMethodRef("(Ljava/lang/String;)V"),
+            },
+        )
+
+        sim = JVMSimulator(host=host)
+        sim.load_method(method)
+        traces = sim.run()
+
+        assert sim.halted is True
+        assert host.calls == [
+            ("get_static", "java/lang/System.out", []),
+            ("invoke_virtual", {"kind": "print-stream"}, ["Hello, world!"]),
+        ]
+        assert [trace.opcode for trace in traces] == [
+            "getstatic",
+            "ldc",
+            "invokevirtual",
+            "return",
+        ]
+
+    def test_host_required_for_getstatic(self) -> None:
+        method = disassemble_method_body(
+            assemble_jvm((JVMOpcode.GETSTATIC, 7), (JVMOpcode.RETURN,)),
+            constant_pool={7: "java/lang/System.out"},
+        )
+        sim = JVMSimulator()
+        sim.load_method(method)
+
+        with pytest.raises(RuntimeError, match="No JVM host is configured"):
+            sim.step()
