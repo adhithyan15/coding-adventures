@@ -24,6 +24,9 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | 07b | ARM Simulator | Instruction Set Architecture |
 | 07c | WASM Simulator | Instruction Set Architecture |
 | 07d | Intel 4004 Simulator | Instruction Set Architecture |
+| 07e | ARM1 Simulator | Instruction Set Architecture |
+| 07f | Intel 8008 Simulator | Instruction Set Architecture |
+| 07g | GE-225 Simulator | Instruction Set Architecture |
 | 08 | CPU Simulator | Hardware |
 | 09 | Arithmetic (ALU) | Hardware |
 | 10 | Logic Gates | Hardware |
