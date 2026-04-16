@@ -21,6 +21,8 @@ on:
     branches: [main]
     paths:
       - "code/programs/typescript/logic-gates-visualizer/**"
+      - "code/packages/typescript/draw-instructions/**"
+      - "code/packages/typescript/draw-instructions-canvas/**"
       - "code/packages/typescript/logic-gates/**"
       - "code/packages/typescript/transistors/**"
       - "code/packages/typescript/ui-components/**"
@@ -44,19 +46,17 @@ jobs:
 
       - name: Install dependencies (packages)
         run: |
-          cd code/packages/typescript/transistors && npm install
-          cd ../logic-gates && npm install
-          cd ../ui-components && npm install
+          (cd code/packages/typescript/logic-gates && npm install)
+          (cd code/packages/typescript/transistors && npm install)
+          (cd code/packages/typescript/draw-instructions && npm install)
+          (cd code/packages/typescript/draw-instructions-canvas && npm install)
+          (cd code/packages/typescript/ui-components && npm install)
 
       - name: Install dependencies (app)
-        run: |
-          cd code/programs/typescript/logic-gates-visualizer
-          npm install
+        run: (cd code/programs/typescript/logic-gates-visualizer && npm install)
 
       - name: Build
-        run: |
-          cd code/programs/typescript/logic-gates-visualizer
-          npm run build
+        run: (cd code/programs/typescript/logic-gates-visualizer && npm run build)
 
       - name: Deploy to GitHub Pages (logic-gates/ subdirectory)
         uses: peaceiris/actions-gh-pages@v4
