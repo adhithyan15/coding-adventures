@@ -1,0 +1,12 @@
+[package]
+name = "bitset-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the Rust bitset crate — for .NET/C interop"
+license = "MIT"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+bitset = { path = "../bitset" }

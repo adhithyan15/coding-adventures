@@ -20,36 +20,43 @@ This repo is part computing-stack curriculum, part polyglot package lab, part to
 
 As of this refresh, the repo contains:
 
-- 2014 package directories across 11 package language roots
-- 131 program directories across 13 program language roots
-- 303 Markdown specs in `code/specs/`
+- 2289 package directories across 17 package language roots
+- 135 program directories across 14 program language roots
+- 310 Markdown specs in `code/specs/`
 - 12 learning files in `code/learning/`
-- 41 shared grammar source files in `code/grammars/`
+- 185 shared grammar source files in `code/grammars/`
 
 ### Package Languages
 
 | Language | Package dirs |
 | --- | ---: |
-| elixir | 216 |
-| go | 215 |
-| lua | 186 |
-| perl | 190 |
-| python | 256 |
-| ruby | 244 |
-| rust | 269 |
+| csharp | 13 |
+| dart | 16 |
+| elixir | 221 |
+| fsharp | 13 |
+| go | 227 |
+| haskell | 79 |
+| java | 43 |
+| kotlin | 43 |
+| lua | 189 |
+| perl | 193 |
+| python | 266 |
+| ruby | 247 |
+| rust | 284 |
 | starlark | 3 |
-| swift | 121 |
-| typescript | 247 |
-| wasm | 67 |
+| swift | 123 |
+| typescript | 260 |
+| wasm | 69 |
 
 ### Program Languages
 
 | Language | Program dirs |
 | --- | ---: |
+| dart | 1 |
 | dotnet | 2 |
 | elixir | 13 |
 | go | 14 |
-| haskell | 1 |
+| haskell | 2 |
 | kotlin | 5 |
 | lua | 6 |
 | perl | 4 |
@@ -58,7 +65,7 @@ As of this refresh, the repo contains:
 | rust | 14 |
 | static | 1 |
 | swift | 9 |
-| typescript | 34 |
+| typescript | 36 |
 
 ## Main Themes
 
@@ -153,6 +160,7 @@ tests prove the behavior
 
 The root `mise.toml` currently pins:
 
+- Dart `latest`
 - Go `latest`
 - Python `3.12`
 - Ruby `3.4`

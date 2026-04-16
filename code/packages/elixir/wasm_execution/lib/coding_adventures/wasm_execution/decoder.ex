@@ -41,10 +41,12 @@ defmodule CodingAdventures.WasmExecution.Decoder do
     <<_::binary-size(offset), opcode_byte::8, _::binary>> = code
     offset = offset + 1
 
-    info = case WasmOpcodes.get_opcode(opcode_byte) do
-      {:ok, opcode_map} -> opcode_map
-      {:error, _} -> nil
-    end
+    info =
+      case WasmOpcodes.get_opcode(opcode_byte) do
+        {:ok, opcode_map} -> opcode_map
+        {:error, _} -> nil
+      end
+
     immediates = if info, do: Map.get(info, :immediates, []), else: []
 
     {operand, new_offset} = decode_immediates(code, offset, immediates)
@@ -105,8 +107,12 @@ defmodule CodingAdventures.WasmExecution.Decoder do
         <<_::binary-size(offset), type_byte::8, _::binary>> = code
 
         cond do
-          type_byte == 0x40 -> {0x40, offset + 1}
-          type_byte in [0x7F, 0x7E, 0x7D, 0x7C] -> {type_byte, offset + 1}
+          type_byte == 0x40 ->
+            {0x40, offset + 1}
+
+          type_byte in [0x7F, 0x7E, 0x7D, 0x7C] ->
+            {type_byte, offset + 1}
+
           true ->
             {value, consumed} = unwrap_leb!(WasmLeb128.decode_signed(code, offset))
             {value, offset + consumed}
@@ -114,7 +120,10 @@ defmodule CodingAdventures.WasmExecution.Decoder do
 
       "memarg" ->
         {align, align_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, offset))
-        {mem_offset, offset_size} = unwrap_leb!(WasmLeb128.decode_unsigned(code, offset + align_size))
+
+        {mem_offset, offset_size} =
+          unwrap_leb!(WasmLeb128.decode_unsigned(code, offset + align_size))
+
         {%{align: align, offset: mem_offset}, offset + align_size + offset_size}
 
       "vec_labelidx" ->
@@ -192,7 +201,9 @@ defmodule CodingAdventures.WasmExecution.Decoder do
 
   Returns `%{instruction_index => %{end_pc: end_index, else_pc: else_index | nil}}`.
   """
-  @spec build_control_flow_map([decoded_instruction()]) :: %{non_neg_integer() => control_target()}
+  @spec build_control_flow_map([decoded_instruction()]) :: %{
+          non_neg_integer() => control_target()
+        }
   def build_control_flow_map(instructions) do
     {result, _stack} =
       instructions

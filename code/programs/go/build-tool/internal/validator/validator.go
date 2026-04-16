@@ -47,6 +47,7 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"elixir":     true,
 	"lua":        true,
 	"perl":       true,
+	"dart":       true,
 	"haskell":    true,
 }
 
@@ -542,7 +543,7 @@ func validateRustWorkspaceMembers(packages []discovery.Package) []string {
 		memberRe := regexp.MustCompile(`"([^"]+)"`)
 		inMembers := false
 		inExclude := false
-		members := make(map[string]int)  // name → count (to detect duplicates)
+		members := make(map[string]int)   // name → count (to detect duplicates)
 		excluded := make(map[string]bool) // packages intentionally excluded from workspace
 		for _, line := range strings.Split(string(g.data), "\n") {
 			trimmed := strings.TrimSpace(line)

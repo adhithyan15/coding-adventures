@@ -1,0 +1,14 @@
+name: coding_adventures_graph
+description: >
+  Undirected graph with adjacency-list and adjacency-matrix representations;
+  BFS, DFS, shortest path, MST, cycle detection, and connected components.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0

@@ -1,0 +1,8 @@
+packages:
+  .
+  ../grammar-tools
+  ../lexer
+  ../graph
+  ../directed-graph
+  ../state-machine
+

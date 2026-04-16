@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.Parser.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Parser.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# grammar-driven parser built on the F# grammar tools package</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../fsharp/grammar-tools/CodingAdventures.GrammarTools.fsproj" />
+    <ProjectReference Include="../../fsharp/lexer/CodingAdventures.Lexer.fsproj" />
+    <Compile Include="Parser.fs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,36 @@
+cabal-version: 3.0
+name:          dartmouth-basic-lexer
+version:       0.1.0
+synopsis:      Haskell starter wrapper for dartmouth-basic-lexer built on the generic lexer package
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  DartmouthBasicLexer
+    other-modules:    Generated.TokenGrammar
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , graph
+                    , directed-graph
+                    , state-machine
+                    , lexer
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    DartmouthBasicLexerSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , dartmouth-basic-lexer
+                    , hspec == 2.*
+    default-language: Haskell2010
+
+
+

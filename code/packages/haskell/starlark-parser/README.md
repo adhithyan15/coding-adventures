@@ -1,0 +1,11 @@
+# starlark-parser
+
+Haskell starter wrapper for starlark-parser built on the generic parser package
+
+## Type
+
+library
+
+## Dependencies
+
+graph, directed-graph, state-machine, lexer, parser, starlark-lexer

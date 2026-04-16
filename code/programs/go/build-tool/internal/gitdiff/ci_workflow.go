@@ -51,6 +51,9 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	"perl": {
 		"needs_perl", "cpanm", "perl --version", "install cpanm",
 	},
+	"dart": {
+		"needs_dart", "setup-dart", "dart --version", "set up dart",
+	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
 		"ghc --version", "cabal --version", "set up haskell",

@@ -38,16 +38,17 @@
 //
 // args_get(argv_ptr, argv_buf_ptr) writes two parallel data structures:
 //
-//   argv array (at argv_ptr):
-//     [ptr_to_arg0][ptr_to_arg1]...[ptr_to_argN]
-//     Each entry is a 4-byte little-endian i32 pointing into argv_buf.
+//	argv array (at argv_ptr):
+//	  [ptr_to_arg0][ptr_to_arg1]...[ptr_to_argN]
+//	  Each entry is a 4-byte little-endian i32 pointing into argv_buf.
 //
-//   argv_buf (at argv_buf_ptr):
-//     arg0\0arg1\0...argN\0
-//     Each argument is a null-terminated UTF-8 string.
+//	argv_buf (at argv_buf_ptr):
+//	  arg0\0arg1\0...argN\0
+//	  Each argument is a null-terminated UTF-8 string.
 //
 // The total buffer size returned by args_sizes_get is:
-//     sum(len(arg) + 1 for each arg)   ← +1 for the null terminator
+//
+//	sum(len(arg) + 1 for each arg)   ← +1 for the null terminator
 //
 // environ_get follows exactly the same layout for environment variables.
 //
@@ -55,11 +56,10 @@
 // WASI ERROR CODES (errno)
 // ════════════════════════════════════════════════════════════════════════
 //
-//  0  — ESUCCESS : success
-//  28 — EINVAL   : invalid argument (e.g., unknown clock ID)
-//  29 — EIO      : I/O error (e.g., entropy source failure)
-//  52 — ENOSYS   : function not implemented
-//
+//	0  — ESUCCESS : success
+//	28 — EINVAL   : invalid argument (e.g., unknown clock ID)
+//	29 — EIO      : I/O error (e.g., entropy source failure)
+//	52 — ENOSYS   : function not implemented
 package wasmruntime
 
 import (
@@ -72,6 +72,7 @@ import (
 // WASI error codes.
 const (
 	wasiESuccess = 0
+	wasiEBadf    = 8
 	wasiEInval   = 28
 	wasiEIO      = 29
 	wasiENosys   = 52
@@ -121,6 +122,10 @@ type WasiConfig struct {
 	// If nil, stdout output is silently discarded.
 	StdoutCallback func(string)
 
+	// StdinCallback supplies up to count bytes for fd 0 (stdin).
+	// Returning nil or an empty slice signals EOF.
+	StdinCallback func(count int) []byte
+
 	// StderrCallback receives lines written to fd 2 (stderr).
 	// If nil, stderr output is silently discarded.
 	StderrCallback func(string)
@@ -144,6 +149,7 @@ type WasiConfig struct {
 // construct.
 type WasiStub struct {
 	StdoutCallback func(text string)
+	StdinCallback  func(count int) []byte
 	StderrCallback func(text string)
 	instanceMemory *wasmexecution.LinearMemory
 	args           []string
@@ -170,6 +176,7 @@ func NewWasiStub(stdout, stderr func(string)) *WasiStub {
 	}
 	return &WasiStub{
 		StdoutCallback: stdout,
+		StdinCallback:  func(int) []byte { return nil },
 		StderrCallback: stderr,
 		clock:          SystemClock{},
 		random:         SystemRandom{},
@@ -192,6 +199,10 @@ func NewWasiStubFromConfig(config WasiConfig) *WasiStub {
 	if stderr == nil {
 		stderr = func(string) {}
 	}
+	stdin := config.StdinCallback
+	if stdin == nil {
+		stdin = func(int) []byte { return nil }
+	}
 	clock := config.Clock
 	if clock == nil {
 		clock = SystemClock{}
@@ -202,6 +213,7 @@ func NewWasiStubFromConfig(config WasiConfig) *WasiStub {
 	}
 	return &WasiStub{
 		StdoutCallback: stdout,
+		StdinCallback:  stdin,
 		StderrCallback: stderr,
 		args:           config.Args,
 		env:            config.Env,
@@ -236,6 +248,8 @@ func (w *WasiStub) ResolveFunction(moduleName, name string) *wasmexecution.HostF
 	switch name {
 	case "fd_write":
 		return w.makeFdWrite()
+	case "fd_read":
+		return w.makeFdRead()
 	case "proc_exit":
 		return w.makeProcExit()
 	case "args_sizes_get":
@@ -329,6 +343,60 @@ func (w *WasiStub) makeFdWrite() *wasmexecution.HostFunction {
 			}
 
 			mem.StoreI32(int(nwrittenPtr), totalWritten)
+			return []wasmexecution.WasmValue{wasmexecution.I32(int32(wasiESuccess))}
+		},
+	}
+}
+
+// makeFdRead creates the fd_read host function.
+//
+// Signature: fd_read(fd: i32, iovs_ptr: i32, iovs_len: i32, nread_ptr: i32) -> errno
+//
+// WASI uses the same iovec layout for reads and writes. Each entry describes
+// a writable buffer in WASM memory. We copy bytes from stdin into each buffer
+// in order and stop early on EOF or a short read.
+func (w *WasiStub) makeFdRead() *wasmexecution.HostFunction {
+	return &wasmexecution.HostFunction{
+		Type: wasmtypes.FuncType{
+			Params:  []wasmtypes.ValueType{wasmtypes.ValueTypeI32, wasmtypes.ValueTypeI32, wasmtypes.ValueTypeI32, wasmtypes.ValueTypeI32},
+			Results: []wasmtypes.ValueType{wasmtypes.ValueTypeI32},
+		},
+		Call: func(args []wasmexecution.WasmValue) []wasmexecution.WasmValue {
+			if w.instanceMemory == nil {
+				return []wasmexecution.WasmValue{wasmexecution.I32(int32(wasiENosys))}
+			}
+
+			fd := wasmexecution.AsI32(args[0])
+			if fd != 0 {
+				return []wasmexecution.WasmValue{wasmexecution.I32(int32(wasiEBadf))}
+			}
+
+			iovsPtr := wasmexecution.AsI32(args[1])
+			iovsLen := wasmexecution.AsI32(args[2])
+			nreadPtr := wasmexecution.AsI32(args[3])
+			mem := w.instanceMemory
+			totalRead := int32(0)
+
+			for i := int32(0); i < iovsLen; i++ {
+				bufPtr := uint32(mem.LoadI32(int(iovsPtr + i*8)))
+				bufLen := int(uint32(mem.LoadI32(int(iovsPtr + i*8 + 4))))
+
+				chunk := w.StdinCallback(bufLen)
+				if len(chunk) > bufLen {
+					chunk = chunk[:bufLen]
+				}
+
+				for j, b := range chunk {
+					mem.StoreI32_8(int(bufPtr)+j, int32(b))
+				}
+
+				totalRead += int32(len(chunk))
+				if len(chunk) < bufLen {
+					break
+				}
+			}
+
+			mem.StoreI32(int(nreadPtr), totalRead)
 			return []wasmexecution.WasmValue{wasmexecution.I32(int32(wasiESuccess))}
 		},
 	}

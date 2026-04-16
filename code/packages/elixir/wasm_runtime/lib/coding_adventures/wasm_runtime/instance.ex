@@ -26,10 +26,10 @@ defmodule CodingAdventures.WasmRuntime.Instance do
   defstruct [:vm, :context, :validated_module]
 
   @type t :: %__MODULE__{
-    vm: any(),
-    context: Engine.execution_context(),
-    validated_module: ValidatedModule.t()
-  }
+          vm: any(),
+          context: Engine.execution_context(),
+          validated_module: ValidatedModule.t()
+        }
 
   @doc """
   Create a WASM instance from a validated module.

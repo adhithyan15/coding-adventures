@@ -23,6 +23,28 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDartChanges(t *testing.T) {
+	patch := `
+@@ -300,0 +301,6 @@
++      - name: Set up Dart
++        if: needs.detect.outputs.needs_dart == 'true'
++        uses: dart-lang/setup-dart@v1
+@@ -393,0 +397,3 @@
++          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
++            echo "Dart: $(dart --version 2>&1)"
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatalf("expected toolchain-scoped dart change to stay incremental")
+	}
+
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "dart" {
+		t.Fatalf("expected dart toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchAllowsSharedJVMToolchainChanges(t *testing.T) {
 	patch := `
 @@ -314,0 +315,17 @@

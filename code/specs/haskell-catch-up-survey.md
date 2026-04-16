@@ -2,9 +2,9 @@
 
 ## Snapshot
 
-- Haskell package count: `13`
+- Haskell package count: `17`
 - Rust package count: `283`
-- Shared package names today: `arithmetic`, `block-ram`, `clock`, `directed-graph`, `fpga`, `graph`, `lexer`, `logic-gates`, `parser`, `state-machine`
+- Shared package names today: `arithmetic`, `block-ram`, `clock`, `compiler-source-map`, `content-addressable-storage`, `directed-graph`, `fpga`, `grammar-tools`, `graph`, `json-rpc`, `lexer`, `logic-gates`, `parser`, `state-machine`
 - Haskell-only package names today: `discrete-waveform`, `electronics`, `power-supply`
 
 The largest gap is not in one vertical. Rust already has broad coverage across:
@@ -32,15 +32,11 @@ These unblock more Haskell package growth immediately:
 
 - `file-system`
 - `cli-builder`
-- `content_addressable_storage`
-- `json-rpc`
 
 ### Tier 2
 
 These make Haskell more competitive for language tooling and compiler work:
 
-- `compiler-source-map`
-- `grammar-tools`
 - richer grammar-driven lexer and parser layers
 - source formatting and diagnostics helpers
 
@@ -60,8 +56,8 @@ These extend Haskell beyond the current hardware-focused cluster:
 ## Proposed Strategy
 
 1. Stabilize the Haskell `build-tool` and `scaffold-generator` so new packages are cheap to add.
-2. Port Tier 1 packages first to support package creation, dependency modeling, file IO, and simple CLIs.
-3. Build out Tier 2 now that `state-machine`, `lexer`, and `parser` exist, so generated Haskell packages can share the same parsing/tooling substrate Rust already has.
+2. Port the remaining Tier 1 packages next so Haskell can cover file IO and richer CLI ergonomics inside the repo tooling lane.
+3. Build out Tier 2 on top of `state-machine`, `lexer`, `parser`, `grammar-tools`, `compiler-source-map`, `json-rpc`, and `content-addressable-storage`, so generated Haskell packages can share the same parsing, transport, and compiler substrate Rust already has.
 4. Use the scaffold generator to create the missing packages with consistent `cabal`, `BUILD`, docs, and tests before filling in implementation details.
 
 ## Near-Term Goal

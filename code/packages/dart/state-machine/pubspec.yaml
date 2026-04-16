@@ -1,0 +1,17 @@
+name: coding_adventures_state_machine
+description: >
+  Formal automata for Dart: DFA, NFA, minimization, modal state machines,
+  and a deterministic pushdown automaton.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_directed_graph:
+    path: ../directed-graph
+
+dev_dependencies:
+  test: ^1.25.0

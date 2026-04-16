@@ -1,0 +1,36 @@
+cabal-version: 3.0
+name:          fsharp-lexer
+version:       0.1.0
+synopsis:      Haskell starter wrapper for fsharp-lexer built on the generic lexer package
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  FsharpLexer
+    other-modules:    Generated.TokenGrammar
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , graph
+                    , directed-graph
+                    , state-machine
+                    , lexer
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    FsharpLexerSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , fsharp-lexer
+                    , hspec == 2.*
+    default-language: Haskell2010
+
+
+

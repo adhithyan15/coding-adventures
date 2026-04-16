@@ -698,6 +698,64 @@ func TestParseTypescriptDepsExternalSkipped(t *testing.T) {
 	}
 }
 
+func TestBuildKnownNamesDart(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "dart/logic-gates", Path: "/repo/packages/dart/logic-gates", Language: "dart"},
+	}
+	known := BuildKnownNames(packages)
+	if known["coding_adventures_logic_gates"] != "dart/logic-gates" {
+		t.Fatalf("expected dart/logic-gates, got %s", known["coding_adventures_logic_gates"])
+	}
+	if known["logic_gates"] != "dart/logic-gates" {
+		t.Fatalf("expected unprefixed mapping for dart/logic-gates, got %s", known["logic_gates"])
+	}
+}
+
+func TestParseDartDeps(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/pubspec.yaml": `name: pkg_a
+dependencies:
+  coding_adventures_pkg_b: ^0.1.0
+dev_dependencies:
+  pkg_c:
+    path: ../pkg-c
+`,
+		"pkg-b/pubspec.yaml": `name: coding_adventures_pkg_b
+`,
+		"pkg-c/pubspec.yaml": `name: pkg_c
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "dart/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "dart"},
+		{Name: "dart/pkg-b", Path: filepath.Join(root, "pkg-b"), Language: "dart"},
+		{Name: "dart/pkg-c", Path: filepath.Join(root, "pkg-c"), Language: "dart"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseDartDeps(packages[0], known)
+
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParseDartDepsExternalSkipped(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/pubspec.yaml": `name: pkg_a
+dependencies:
+  collection: ^1.18.0
+  args: ^2.6.0
+`,
+	})
+
+	pkg := discovery.Package{Name: "dart/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "dart"}
+	deps := parseDartDeps(pkg, map[string]string{})
+	if len(deps) != 0 {
+		t.Fatalf("expected external deps to be skipped, got %d", len(deps))
+	}
+}
+
 func TestBuildKnownNamesRust(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/logic-gates", Path: "/repo/packages/rust/logic-gates", Language: "rust"},

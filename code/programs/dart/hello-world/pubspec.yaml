@@ -1,0 +1,7 @@
+name: hello_world
+description: The first Dart program for the coding-adventures monorepo.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
