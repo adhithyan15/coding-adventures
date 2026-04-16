@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.WasmRuntime.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.WasmRuntime.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# WebAssembly runtime</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="WasmRuntime.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../wasm-module-parser/CodingAdventures.WasmModuleParser.fsproj" />
+    <ProjectReference Include="../wasm-validator/CodingAdventures.WasmValidator.fsproj" />
+    <ProjectReference Include="../wasm-execution/CodingAdventures.WasmExecution.fsproj" />
+    <ProjectReference Include="../wasm-types/CodingAdventures.WasmTypes.fsproj" />
+  </ItemGroup>
+</Project>
