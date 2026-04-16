@@ -56,6 +56,7 @@ var sourceExtensions = map[string]map[string]bool{
 	"typescript": {".ts": true, ".tsx": true, ".json": true},
 	"rust":       {".rs": true, ".toml": true},
 	"elixir":     {".ex": true, ".exs": true},
+	"dart":       {".dart": true, ".yaml": true},
 	"starlark":   {".star": true},
 	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
 	"haskell":    {".hs": true, ".cabal": true},
@@ -74,6 +75,7 @@ var specialFilenames = map[string]map[string]bool{
 	"typescript": {"package.json": true, "tsconfig.json": true, "vitest.config.ts": true},
 	"rust":       {"Cargo.toml": true, "Cargo.lock": true},
 	"elixir":     {"mix.exs": true, "mix.lock": true},
+	"dart":       {"pubspec.yaml": true, "pubspec.lock": true, "analysis_options.yaml": true},
 	"starlark":   {},
 	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
 	"haskell":    {},
@@ -89,7 +91,7 @@ var specialFilenames = map[string]map[string]bool{
 // relative path for deterministic hashing.
 //
 // The collection rules:
-//   - BUILD, BUILD_mac, BUILD_linux are always included.
+//   - BUILD, BUILD_mac, BUILD_linux, and BUILD_windows are always included.
 //   - Files matching the language's extensions are included.
 //   - Special filenames (go.mod, Gemfile, etc.) are included.
 //   - Everything else is ignored.
@@ -114,7 +116,7 @@ func collectSourceFiles(pkg discovery.Package) []string {
 		name := info.Name()
 
 		// Always include BUILD files — they define how the package is built.
-		if name == "BUILD" || name == "BUILD_mac" || name == "BUILD_linux" {
+		if name == "BUILD" || name == "BUILD_mac" || name == "BUILD_linux" || name == "BUILD_windows" {
 			files = append(files, path)
 			return nil
 		}

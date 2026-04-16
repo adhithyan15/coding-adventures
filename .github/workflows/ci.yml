@@ -55,6 +55,7 @@ jobs:
       needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
+      needs_dart: ${{ steps.toolchains.outputs.needs_dart }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
       needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
       needs_java: ${{ steps.toolchains.outputs.needs_java }}
@@ -141,6 +142,7 @@ jobs:
               'needs_elixir=true' \
               'needs_lua=true' \
               'needs_perl=true' \
+              'needs_dart=true' \
               'needs_haskell=true' \
               'needs_dotnet=true' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
@@ -156,6 +158,7 @@ jobs:
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
               'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
+              'needs_dart=${{ steps.detect.outputs.needs_dart }}' \
               'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
               'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
@@ -297,6 +300,10 @@ jobs:
           elixir-version: '1.16'
           otp-version: '26.0'
 
+      - name: Set up Dart
+        if: needs.detect.outputs.needs_dart == 'true'
+        uses: dart-lang/setup-dart@v1
+
       # ── Java / Kotlin ──────────────────────────────────────────
       #
       # Both Java and Kotlin packages use Gradle and JDK 21.
@@ -385,6 +392,9 @@ jobs:
           if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
+            echo "Dart: $(dart --version 2>&1)"
           fi
           if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ]; then
             echo "Lua: $(lua -v)"
