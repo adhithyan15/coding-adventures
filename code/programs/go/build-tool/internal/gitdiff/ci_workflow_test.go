@@ -25,20 +25,20 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 
 func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	patch := `
-@@ -300,0 +301,15 @@
+@@ -300,0 +301,12 @@
 +      - name: Set up Swift (Windows)
 +        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
 +        shell: pwsh
 +        run: |
 +          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
-+          foreach ($level in "Machine", "User") {
-+            [Environment]::GetEnvironmentVariables($level).GetEnumerator() | ForEach-Object {
-+              if ($_.Name -eq "Path") {
-+                $_.Value = ("$env:Path;$($_.Value)" -split ';' | Select-Object -Unique) -join ';'
-+              }
-+              Set-Content -Path "Env:$($_.Name)" -Value $_.Value
-+            }
-+          }
++          $swiftRoot = Join-Path $env:LOCALAPPDATA 'Programs\Swift'
++          $toolchainBin = Get-ChildItem -Path (Join-Path $swiftRoot 'Toolchains') -Filter swift.exe -Recurse -File | Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty DirectoryName
++          if (-not $toolchainBin) { throw 'swift.exe not found after winget install' }
++          $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
++          $env:Path = "$toolchainBin;$env:Path"
++          $sdkRoot = Get-ChildItem -Path (Join-Path $swiftRoot 'Platforms') -Directory | Sort-Object Name -Descending | Select-Object -First 1 | ForEach-Object { Join-Path $_.FullName 'Windows.platform\Developer\SDKs\Windows.sdk' }
++          if ($sdkRoot -and (Test-Path $sdkRoot)) { "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append }
++          swift --version
 `
 
 	change := AnalyzeCIWorkflowPatch(patch)
