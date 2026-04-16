@@ -94,6 +94,29 @@ class TestLocalVariables:
         assert as_i32(result[0]) == 99
 
 
+class TestCalls:
+    """Test function calls across module-defined functions."""
+
+    def test_module_function_call_returns_result(self) -> None:
+        caller = FunctionBody(locals=(), code=bytes([0x41, 0x06, 0x10, 0x01, 0x0B]))
+        callee = FunctionBody(locals=(), code=bytes([0x20, 0x00, 0x41, 0x02, 0x6C, 0x0B]))
+        engine = WasmExecutionEngine(
+            memory=None,
+            tables=[],
+            globals=[],
+            global_types=[],
+            func_types=[
+                FuncType(params=(), results=(ValueType.I32,)),
+                FuncType(params=(ValueType.I32,), results=(ValueType.I32,)),
+            ],
+            func_bodies=[caller, callee],
+            host_functions=[None, None],
+        )
+
+        result = engine.call_function(0, [])
+        assert as_i32(result[0]) == 12
+
+
 class TestLinearMemory:
     """Test LinearMemory directly."""
 

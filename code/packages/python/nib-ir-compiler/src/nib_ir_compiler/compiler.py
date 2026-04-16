@@ -279,6 +279,7 @@ class _Compiler:
     _loop_count: int = field(default=0)
     _if_count: int = field(default=0)
     _const_values: dict[str, int] = field(default_factory=dict)
+    _next_free_reg: int = field(default=_REG_VAR_BASE)
 
     def __post_init__(self) -> None:
         """Initialize the IR program after field init."""
@@ -472,9 +473,11 @@ class _Compiler:
         for param_name, _ in params:
             regs[param_name] = IrRegister(index=next_reg)
             next_reg += 1
+        self._next_free_reg = next_reg
 
         # Compile the function body (block).
         next_reg = self._compile_block(block_node, regs, next_reg)
+        self._next_free_reg = next_reg
 
         # Always emit RET at end of function to ensure well-formed IR.
         # (If the source has an explicit return, we'll have already emitted one,
@@ -502,9 +505,11 @@ class _Compiler:
         Returns:
             The updated ``next_reg`` after all statements in the block.
         """
+        self._next_free_reg = max(self._next_free_reg, next_reg)
         for child in block.children:
             if isinstance(child, ASTNode) and child.rule_name == "stmt":
                 next_reg = self._compile_stmt(child, regs, next_reg)
+                self._next_free_reg = max(self._next_free_reg, next_reg)
         return next_reg
 
     def _compile_stmt(
@@ -767,26 +772,27 @@ class _Compiler:
         default_start = Token(type="INT_LIT", value="0", line=1, column=1)
         default_end = Token(type="INT_LIT", value="1", line=1, column=1)
 
-        # Evaluate the bounds once when entering the loop, then keep the
-        # cached end bound in a dedicated register for the duration.
-        start_source_reg = self._compile_expr(
-            bound_exprs[0] if len(bound_exprs) >= 1 else default_start,
-            regs,
-        )
-        end_source_reg = self._compile_expr(
-            bound_exprs[1] if len(bound_exprs) >= 2 else default_end,
-            regs,
-        )
-
         loop_reg = IrRegister(index=next_reg)
         next_reg += 1
         end_reg = IrRegister(index=next_reg)
         next_reg += 1
         cmp_reg = IrRegister(index=next_reg)
         next_reg += 1
+        self._next_free_reg = max(self._next_free_reg, next_reg)
 
+        # Evaluate the bounds once when entering the loop, then keep the
+        # cached end bound in a dedicated register for the duration.
+        start_source_reg = self._compile_expr(
+            bound_exprs[0] if len(bound_exprs) >= 1 else default_start,
+            regs,
+        )
         if start_source_reg.index != loop_reg.index:
             self._emit(IrOp.ADD_IMM, loop_reg, start_source_reg, IrImmediate(value=0))
+
+        end_source_reg = self._compile_expr(
+            bound_exprs[1] if len(bound_exprs) >= 2 else default_end,
+            regs,
+        )
         if end_source_reg.index != end_reg.index:
             self._emit(IrOp.ADD_IMM, end_reg, end_source_reg, IrImmediate(value=0))
 
@@ -1098,20 +1104,63 @@ class _Compiler:
 
         self._emit_comment(f"call {fn_tok.value}({len(arg_exprs)} args)")
 
-        # Compile each argument into v2, v3, v4, ...
-        # The calling convention reserves v2+ for argument passing.
-        for i, arg_expr in enumerate(arg_exprs):
-            arg_reg = IrRegister(index=_REG_VAR_BASE + i)
+        # Preserve caller locals before repurposing v2, v3, ... for outbound
+        # arguments. This keeps calls composable even when the caller has live
+        # locals already resident in the argument registers.
+        live_regs = sorted({reg.index for reg in regs.values()})
+        next_temp_reg = self._next_free_reg
+        saved_regs: list[tuple[IrRegister, IrRegister]] = []
+        for reg_index in live_regs:
+            original = IrRegister(index=reg_index)
+            saved = IrRegister(index=next_temp_reg)
+            next_temp_reg += 1
+            self._emit(
+                IrOp.ADD_IMM,
+                saved,
+                original,
+                IrImmediate(value=0),
+            )
+            saved_regs.append((original, saved))
+
+        # Compile arguments into temporary registers first so later argument
+        # setup cannot clobber earlier results before the CALL is emitted.
+        arg_temps: list[IrRegister] = []
+        for arg_expr in arg_exprs:
+            temp_reg = IrRegister(index=next_temp_reg)
+            next_temp_reg += 1
             result_reg = self._compile_expr(arg_expr, regs)
-            if result_reg.index != arg_reg.index:
+            if result_reg.index != temp_reg.index:
                 self._emit(
                     IrOp.ADD_IMM,
-                    arg_reg,
+                    temp_reg,
                     result_reg,
                     IrImmediate(value=0),
                 )
+            arg_temps.append(temp_reg)
+
+        self._next_free_reg = max(self._next_free_reg, next_temp_reg)
+
+        # Move the temporary argument values into the ABI-defined call slots.
+        for i, temp_reg in enumerate(arg_temps):
+            arg_reg = IrRegister(index=_REG_VAR_BASE + i)
+            if temp_reg.index == arg_reg.index:
+                continue
+            self._emit(
+                IrOp.ADD_IMM,
+                arg_reg,
+                temp_reg,
+                IrImmediate(value=0),
+            )
 
         self._emit(IrOp.CALL, IrLabel(name=f"_fn_{fn_tok.value}"))
+
+        for original, saved in saved_regs:
+            self._emit(
+                IrOp.ADD_IMM,
+                original,
+                saved,
+                IrImmediate(value=0),
+            )
 
         return IrRegister(index=_REG_SCRATCH)
 

@@ -636,6 +636,29 @@ class TestFunctionDeclarations:
         )
         assert has_arg_setup
 
+    def test_fn_call_preserves_live_local_registers(self) -> None:
+        """Calls should restore caller locals after repurposing v2+ for arguments."""
+        p = compile_source(
+            "fn id(a: u4) -> u4 { return a; } "
+            "fn main() -> u4 { let x: u4 = 2; id(x); return x; }"
+        )
+
+        call_index = next(
+            index
+            for index, instruction in enumerate(p.instructions)
+            if instruction.opcode == IrOp.CALL
+            and instruction.operands
+            and hasattr(instruction.operands[0], "name")
+            and instruction.operands[0].name == "_fn_id"
+        )
+        restore_instr = p.instructions[call_index + 1]
+
+        assert restore_instr.opcode == IrOp.ADD_IMM
+        assert hasattr(restore_instr.operands[0], "index")
+        assert hasattr(restore_instr.operands[1], "index")
+        assert restore_instr.operands[0].index == 2
+        assert restore_instr.operands[1].index > 2
+
 
 # ---------------------------------------------------------------------------
 # 11. Return statements

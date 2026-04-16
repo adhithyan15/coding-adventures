@@ -1,0 +1,640 @@
+"""Lower the generic compiler IR into a WebAssembly 1.0 module."""
+
+from __future__ import annotations
+
+import math
+import re
+from dataclasses import dataclass
+
+from compiler_ir import (
+    IrDataDecl,
+    IrImmediate,
+    IrInstruction,
+    IrLabel,
+    IrOp,
+    IrProgram,
+    IrRegister,
+)
+from wasm_leb128 import encode_signed, encode_unsigned
+from wasm_opcodes import get_opcode_by_name
+from wasm_types import (
+    BlockType,
+    DataSegment,
+    Export,
+    ExternalKind,
+    FuncType,
+    FunctionBody,
+    Limits,
+    MemoryType,
+    ValueType,
+    WasmModule,
+)
+
+_LOOP_START_RE = re.compile(r"^loop_\d+_start$")
+_IF_ELSE_RE = re.compile(r"^if_\d+_else$")
+_FUNCTION_COMMENT_RE = re.compile(r"^function:\s*([A-Za-z_][A-Za-z0-9_]*)\((.*)\)$")
+
+_MEMORY_OPS = frozenset(
+    {
+        IrOp.LOAD_ADDR,
+        IrOp.LOAD_BYTE,
+        IrOp.STORE_BYTE,
+        IrOp.LOAD_WORD,
+        IrOp.STORE_WORD,
+    }
+)
+
+_OPCODE = {
+    name: get_opcode_by_name(name).opcode  # type: ignore[union-attr]
+    for name in (
+        "nop",
+        "block",
+        "loop",
+        "if",
+        "else",
+        "end",
+        "br",
+        "br_if",
+        "return",
+        "call",
+        "local.get",
+        "local.set",
+        "i32.load",
+        "i32.load8_u",
+        "i32.store",
+        "i32.store8",
+        "i32.const",
+        "i32.eqz",
+        "i32.eq",
+        "i32.ne",
+        "i32.lt_s",
+        "i32.gt_s",
+        "i32.add",
+        "i32.sub",
+        "i32.and",
+    )
+}
+
+
+class WasmLoweringError(Exception):
+    """Raised when an IrProgram cannot be lowered to WASM."""
+
+
+@dataclass(frozen=True)
+class FunctionSignature:
+    """WASM-facing signature metadata for a lowered IR function."""
+
+    label: str
+    param_count: int
+    export_name: str | None = None
+
+
+@dataclass(frozen=True)
+class _FunctionIR:
+    label: str
+    instructions: list[IrInstruction]
+    signature: FunctionSignature
+    max_reg: int
+
+
+class IrToWasmCompiler:
+    """Compile a generic IrProgram into a WasmModule."""
+
+    def compile(
+        self,
+        program: IrProgram,
+        function_signatures: list[FunctionSignature] | None = None,
+    ) -> WasmModule:
+        signatures = infer_function_signatures_from_comments(program)
+        if function_signatures:
+            for signature in function_signatures:
+                signatures[signature.label] = signature
+
+        functions = self._split_functions(program, signatures)
+        function_indices = {function.label: index for index, function in enumerate(functions)}
+        type_indices, types = self._build_type_table(functions)
+        data_offsets = self._layout_data(program.data)
+
+        module = WasmModule()
+        module.types.extend(types)
+        module.functions.extend(type_indices[function.label] for function in functions)
+
+        if self._needs_memory(program):
+            total_bytes = sum(decl.size for decl in program.data)
+            page_count = max(1, math.ceil(total_bytes / 65536)) if total_bytes else 1
+            module.memories.append(MemoryType(limits=Limits(min=page_count, max=None)))
+            module.exports.append(Export(name="memory", kind=ExternalKind.MEMORY, index=0))
+            module.data.extend(
+                DataSegment(
+                    memory_index=0,
+                    offset_expr=_const_expr(offset),
+                    data=bytes([decl.init & 0xFF]) * decl.size,
+                )
+                for decl, offset in ((decl, data_offsets[decl.label]) for decl in program.data)
+            )
+
+        for function in functions:
+            module.code.append(
+                _FunctionLowerer(
+                    function=function,
+                    signatures=signatures,
+                    function_indices=function_indices,
+                    data_offsets=data_offsets,
+                ).lower()
+            )
+            if function.signature.export_name is not None:
+                module.exports.append(
+                    Export(
+                        name=function.signature.export_name,
+                        kind=ExternalKind.FUNCTION,
+                        index=function_indices[function.label],
+                    )
+                )
+
+        return module
+
+    def _build_type_table(
+        self,
+        functions: list[_FunctionIR],
+    ) -> tuple[dict[str, int], list[FuncType]]:
+        type_indices: dict[FuncType, int] = {}
+        function_types: list[FuncType] = []
+        function_to_type_index: dict[str, int] = {}
+
+        for function in functions:
+            func_type = FuncType(
+                params=(ValueType.I32,) * function.signature.param_count,
+                results=(ValueType.I32,),
+            )
+            if func_type not in type_indices:
+                type_indices[func_type] = len(function_types)
+                function_types.append(func_type)
+            function_to_type_index[function.label] = type_indices[func_type]
+
+        return function_to_type_index, function_types
+
+    def _layout_data(self, decls: list[IrDataDecl]) -> dict[str, int]:
+        offsets: dict[str, int] = {}
+        cursor = 0
+        for decl in decls:
+            offsets[decl.label] = cursor
+            cursor += decl.size
+        return offsets
+
+    def _needs_memory(self, program: IrProgram) -> bool:
+        if program.data:
+            return True
+        return any(instr.opcode in _MEMORY_OPS for instr in program.instructions)
+
+    def _split_functions(
+        self,
+        program: IrProgram,
+        signatures: dict[str, FunctionSignature],
+    ) -> list[_FunctionIR]:
+        functions: list[_FunctionIR] = []
+        start_index: int | None = None
+        start_label: str | None = None
+
+        for index, instruction in enumerate(program.instructions):
+            label_name = _function_label_name(instruction)
+            if label_name is None:
+                continue
+
+            if start_label is not None and start_index is not None:
+                functions.append(
+                    _make_function_ir(
+                        label=start_label,
+                        instructions=program.instructions[start_index:index],
+                        signatures=signatures,
+                    )
+                )
+
+            start_label = label_name
+            start_index = index
+
+        if start_label is not None and start_index is not None:
+            functions.append(
+                _make_function_ir(
+                    label=start_label,
+                    instructions=program.instructions[start_index:],
+                    signatures=signatures,
+                )
+            )
+
+        return functions
+
+
+class _FunctionLowerer:
+    def __init__(
+        self,
+        *,
+        function: _FunctionIR,
+        signatures: dict[str, FunctionSignature],
+        function_indices: dict[str, int],
+        data_offsets: dict[str, int],
+    ) -> None:
+        self.function = function
+        self.signatures = signatures
+        self.function_indices = function_indices
+        self.data_offsets = data_offsets
+        self.param_count = function.signature.param_count
+        self._bytes = bytearray()
+        self._instructions = function.instructions
+        self._label_to_index = {
+            label.name: index
+            for index, instruction in enumerate(self._instructions)
+            if instruction.opcode == IrOp.LABEL
+            for label in instruction.operands
+            if isinstance(label, IrLabel)
+        }
+
+    def lower(self) -> FunctionBody:
+        self._copy_params_into_ir_registers()
+        self._emit_region(1, len(self._instructions))
+        self._emit_opcode("end")
+
+        return FunctionBody(
+            locals=(ValueType.I32,) * (self.function.max_reg + 1),
+            code=bytes(self._bytes),
+        )
+
+    def _copy_params_into_ir_registers(self) -> None:
+        for param_index in range(self.param_count):
+            self._emit_opcode("local.get")
+            self._emit_u32(param_index)
+            self._emit_opcode("local.set")
+            self._emit_u32(self._local_index(_REG_VAR_BASE + param_index))
+
+    def _emit_region(self, start: int, end: int) -> None:
+        index = start
+        while index < end:
+            instruction = self._instructions[index]
+
+            if instruction.opcode == IrOp.COMMENT:
+                index += 1
+                continue
+
+            label_name = _label_name(instruction)
+            if label_name is not None and _LOOP_START_RE.match(label_name):
+                index = self._emit_loop(index)
+                continue
+
+            if (
+                instruction.opcode in (IrOp.BRANCH_Z, IrOp.BRANCH_NZ)
+                and len(instruction.operands) == 2
+                and isinstance(instruction.operands[1], IrLabel)
+                and _IF_ELSE_RE.match(instruction.operands[1].name)
+            ):
+                index = self._emit_if(index)
+                continue
+
+            if instruction.opcode == IrOp.LABEL:
+                index += 1
+                continue
+
+            if instruction.opcode in (IrOp.JUMP, IrOp.BRANCH_Z, IrOp.BRANCH_NZ):
+                msg = f"unexpected unstructured control flow in {self.function.label}"
+                raise WasmLoweringError(msg)
+
+            self._emit_simple(instruction)
+            index += 1
+
+    def _emit_if(self, branch_index: int) -> int:
+        branch = self._instructions[branch_index]
+        cond_reg = _expect_register(branch.operands[0], "if condition")
+        else_label = _expect_label(branch.operands[1], "if else label").name
+        end_label = else_label.removesuffix("_else") + "_end"
+
+        else_index = self._require_label_index(else_label)
+        end_index = self._require_label_index(end_label)
+        jump_index = self._find_last_jump_to_label(branch_index + 1, else_index, end_label)
+
+        self._emit_local_get(cond_reg.index)
+        if branch.opcode == IrOp.BRANCH_NZ:
+            self._emit_opcode("i32.eqz")
+        self._emit_opcode("if")
+        self._bytes.append(int(BlockType.EMPTY))
+
+        self._emit_region(branch_index + 1, jump_index)
+
+        if else_index + 1 < end_index:
+            self._emit_opcode("else")
+            self._emit_region(else_index + 1, end_index)
+
+        self._emit_opcode("end")
+        return end_index + 1
+
+    def _emit_loop(self, label_index: int) -> int:
+        start_label = _label_name(self._instructions[label_index])
+        if start_label is None:
+            raise WasmLoweringError("loop lowering expected a start label")
+        end_label = start_label.removesuffix("_start") + "_end"
+
+        end_index = self._require_label_index(end_label)
+        branch_index = self._find_first_branch_to_label(label_index + 1, end_index, end_label)
+        backedge_index = self._find_last_jump_to_label(branch_index + 1, end_index, start_label)
+
+        branch = self._instructions[branch_index]
+        cond_reg = _expect_register(branch.operands[0], "loop condition")
+
+        self._emit_opcode("block")
+        self._bytes.append(int(BlockType.EMPTY))
+        self._emit_opcode("loop")
+        self._bytes.append(int(BlockType.EMPTY))
+
+        self._emit_region(label_index + 1, branch_index)
+
+        self._emit_local_get(cond_reg.index)
+        if branch.opcode == IrOp.BRANCH_Z:
+            self._emit_opcode("i32.eqz")
+        self._emit_opcode("br_if")
+        self._emit_u32(1)
+
+        self._emit_region(branch_index + 1, backedge_index)
+        self._emit_opcode("br")
+        self._emit_u32(0)
+
+        self._emit_opcode("end")
+        self._emit_opcode("end")
+        return end_index + 1
+
+    def _emit_simple(self, instruction: IrInstruction) -> None:
+        match instruction.opcode:
+            case IrOp.LOAD_IMM:
+                dst = _expect_register(instruction.operands[0], "LOAD_IMM dst")
+                imm = _expect_immediate(instruction.operands[1], "LOAD_IMM imm")
+                self._emit_i32_const(imm.value)
+                self._emit_local_set(dst.index)
+            case IrOp.LOAD_ADDR:
+                dst = _expect_register(instruction.operands[0], "LOAD_ADDR dst")
+                label = _expect_label(instruction.operands[1], "LOAD_ADDR label")
+                if label.name not in self.data_offsets:
+                    raise WasmLoweringError(f"unknown data label: {label.name}")
+                self._emit_i32_const(self.data_offsets[label.name])
+                self._emit_local_set(dst.index)
+            case IrOp.LOAD_BYTE:
+                dst = _expect_register(instruction.operands[0], "LOAD_BYTE dst")
+                base = _expect_register(instruction.operands[1], "LOAD_BYTE base")
+                offset = _expect_register(instruction.operands[2], "LOAD_BYTE offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_opcode("i32.load8_u")
+                self._emit_memarg(0, 0)
+                self._emit_local_set(dst.index)
+            case IrOp.STORE_BYTE:
+                src = _expect_register(instruction.operands[0], "STORE_BYTE src")
+                base = _expect_register(instruction.operands[1], "STORE_BYTE base")
+                offset = _expect_register(instruction.operands[2], "STORE_BYTE offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_local_get(src.index)
+                self._emit_opcode("i32.store8")
+                self._emit_memarg(0, 0)
+            case IrOp.LOAD_WORD:
+                dst = _expect_register(instruction.operands[0], "LOAD_WORD dst")
+                base = _expect_register(instruction.operands[1], "LOAD_WORD base")
+                offset = _expect_register(instruction.operands[2], "LOAD_WORD offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_opcode("i32.load")
+                self._emit_memarg(2, 0)
+                self._emit_local_set(dst.index)
+            case IrOp.STORE_WORD:
+                src = _expect_register(instruction.operands[0], "STORE_WORD src")
+                base = _expect_register(instruction.operands[1], "STORE_WORD base")
+                offset = _expect_register(instruction.operands[2], "STORE_WORD offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_local_get(src.index)
+                self._emit_opcode("i32.store")
+                self._emit_memarg(2, 0)
+            case IrOp.ADD:
+                self._emit_binary_numeric("i32.add", instruction)
+            case IrOp.ADD_IMM:
+                dst = _expect_register(instruction.operands[0], "ADD_IMM dst")
+                src = _expect_register(instruction.operands[1], "ADD_IMM src")
+                imm = _expect_immediate(instruction.operands[2], "ADD_IMM imm")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(imm.value)
+                self._emit_opcode("i32.add")
+                self._emit_local_set(dst.index)
+            case IrOp.SUB:
+                self._emit_binary_numeric("i32.sub", instruction)
+            case IrOp.AND:
+                self._emit_binary_numeric("i32.and", instruction)
+            case IrOp.AND_IMM:
+                dst = _expect_register(instruction.operands[0], "AND_IMM dst")
+                src = _expect_register(instruction.operands[1], "AND_IMM src")
+                imm = _expect_immediate(instruction.operands[2], "AND_IMM imm")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(imm.value)
+                self._emit_opcode("i32.and")
+                self._emit_local_set(dst.index)
+            case IrOp.CMP_EQ:
+                self._emit_binary_numeric("i32.eq", instruction)
+            case IrOp.CMP_NE:
+                self._emit_binary_numeric("i32.ne", instruction)
+            case IrOp.CMP_LT:
+                self._emit_binary_numeric("i32.lt_s", instruction)
+            case IrOp.CMP_GT:
+                self._emit_binary_numeric("i32.gt_s", instruction)
+            case IrOp.CALL:
+                label = _expect_label(instruction.operands[0], "CALL target")
+                signature = self.signatures.get(label.name)
+                if signature is None:
+                    raise WasmLoweringError(f"missing function signature for {label.name}")
+                if label.name not in self.function_indices:
+                    raise WasmLoweringError(f"unknown function label: {label.name}")
+                for param_index in range(signature.param_count):
+                    self._emit_local_get(_REG_VAR_BASE + param_index)
+                self._emit_opcode("call")
+                self._emit_u32(self.function_indices[label.name])
+                self._emit_local_set(_REG_SCRATCH)
+            case IrOp.RET | IrOp.HALT:
+                self._emit_local_get(_REG_SCRATCH)
+                self._emit_opcode("return")
+            case IrOp.NOP:
+                self._emit_opcode("nop")
+            case IrOp.SYSCALL:
+                raise WasmLoweringError("SYSCALL lowering is not implemented yet")
+            case _:
+                raise WasmLoweringError(f"unsupported opcode: {instruction.opcode.name}")
+
+    def _emit_binary_numeric(self, wasm_op: str, instruction: IrInstruction) -> None:
+        dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+        left = _expect_register(instruction.operands[1], f"{instruction.opcode.name} lhs")
+        right = _expect_register(instruction.operands[2], f"{instruction.opcode.name} rhs")
+        self._emit_local_get(left.index)
+        self._emit_local_get(right.index)
+        self._emit_opcode(wasm_op)
+        self._emit_local_set(dst.index)
+
+    def _emit_address(self, base_index: int, offset_index: int) -> None:
+        self._emit_local_get(base_index)
+        self._emit_local_get(offset_index)
+        self._emit_opcode("i32.add")
+
+    def _emit_local_get(self, reg_index: int) -> None:
+        self._emit_opcode("local.get")
+        self._emit_u32(self._local_index(reg_index))
+
+    def _emit_local_set(self, reg_index: int) -> None:
+        self._emit_opcode("local.set")
+        self._emit_u32(self._local_index(reg_index))
+
+    def _emit_i32_const(self, value: int) -> None:
+        self._emit_opcode("i32.const")
+        self._bytes.extend(encode_signed(value))
+
+    def _emit_memarg(self, align: int, offset: int) -> None:
+        self._emit_u32(align)
+        self._emit_u32(offset)
+
+    def _emit_opcode(self, name: str) -> None:
+        self._bytes.append(_OPCODE[name])
+
+    def _emit_u32(self, value: int) -> None:
+        self._bytes.extend(encode_unsigned(value))
+
+    def _local_index(self, reg_index: int) -> int:
+        return self.param_count + reg_index
+
+    def _require_label_index(self, label: str) -> int:
+        if label not in self._label_to_index:
+            raise WasmLoweringError(f"missing label {label} in {self.function.label}")
+        return self._label_to_index[label]
+
+    def _find_first_branch_to_label(self, start: int, end: int, label: str) -> int:
+        for index in range(start, end):
+            instruction = self._instructions[index]
+            if instruction.opcode not in (IrOp.BRANCH_Z, IrOp.BRANCH_NZ):
+                continue
+            target = _label_name_from_operand(instruction.operands[1])
+            if target == label:
+                return index
+        raise WasmLoweringError(f"expected branch to {label} in {self.function.label}")
+
+    def _find_last_jump_to_label(self, start: int, end: int, label: str) -> int:
+        for index in range(end - 1, start - 1, -1):
+            instruction = self._instructions[index]
+            if instruction.opcode != IrOp.JUMP:
+                continue
+            target = _label_name_from_operand(instruction.operands[0])
+            if target == label:
+                return index
+        raise WasmLoweringError(f"expected jump to {label} in {self.function.label}")
+
+
+def infer_function_signatures_from_comments(program: IrProgram) -> dict[str, FunctionSignature]:
+    """Infer Nib-style function signatures from debug COMMENT instructions."""
+
+    signatures: dict[str, FunctionSignature] = {}
+    pending_comment: str | None = None
+
+    for instruction in program.instructions:
+        if instruction.opcode == IrOp.COMMENT:
+            pending_comment = _label_name_from_operand(instruction.operands[0])
+            continue
+
+        label_name = _function_label_name(instruction)
+        if label_name is not None:
+            if label_name == "_start":
+                signatures[label_name] = FunctionSignature(
+                    label=label_name,
+                    param_count=0,
+                    export_name="_start",
+                )
+            elif label_name.startswith("_fn_") and pending_comment is not None:
+                export_name = label_name.removeprefix("_fn_")
+                match = _FUNCTION_COMMENT_RE.match(pending_comment)
+                if match and match.group(1) == export_name:
+                    params_blob = match.group(2).strip()
+                    param_count = 0 if not params_blob else len(
+                        [piece for piece in params_blob.split(",") if piece.strip()]
+                    )
+                    signatures[label_name] = FunctionSignature(
+                        label=label_name,
+                        param_count=param_count,
+                        export_name=export_name,
+                    )
+            pending_comment = None
+            continue
+
+        if instruction.opcode != IrOp.COMMENT:
+            pending_comment = None
+
+    return signatures
+
+
+def _make_function_ir(
+    *,
+    label: str,
+    instructions: list[IrInstruction],
+    signatures: dict[str, FunctionSignature],
+) -> _FunctionIR:
+    if label == "_start":
+        signature = signatures.get(label, FunctionSignature(label=label, param_count=0, export_name="_start"))
+    else:
+        signature = signatures.get(label)
+        if signature is None:
+            raise WasmLoweringError(f"missing function signature for {label}")
+
+    max_reg = max(
+        [1, _REG_VAR_BASE + max(signature.param_count - 1, 0)]
+        + [
+            operand.index
+            for instruction in instructions
+            for operand in instruction.operands
+            if isinstance(operand, IrRegister)
+        ]
+    )
+
+    return _FunctionIR(
+        label=label,
+        instructions=instructions,
+        signature=signature,
+        max_reg=max_reg,
+    )
+
+
+def _const_expr(value: int) -> bytes:
+    return bytes([_OPCODE["i32.const"]]) + encode_signed(value) + bytes([_OPCODE["end"]])
+
+
+def _function_label_name(instruction: IrInstruction) -> str | None:
+    label_name = _label_name(instruction)
+    if label_name == "_start" or (label_name is not None and label_name.startswith("_fn_")):
+        return label_name
+    return None
+
+
+def _label_name(instruction: IrInstruction) -> str | None:
+    if instruction.opcode != IrOp.LABEL or not instruction.operands:
+        return None
+    if not isinstance(instruction.operands[0], IrLabel):
+        return None
+    return instruction.operands[0].name
+
+
+def _label_name_from_operand(operand: object) -> str:
+    if not isinstance(operand, IrLabel):
+        raise WasmLoweringError(f"expected label operand, got {operand!r}")
+    return operand.name
+
+
+def _expect_register(operand: object, context: str) -> IrRegister:
+    if not isinstance(operand, IrRegister):
+        raise WasmLoweringError(f"{context}: expected register, got {operand!r}")
+    return operand
+
+
+def _expect_immediate(operand: object, context: str) -> IrImmediate:
+    if not isinstance(operand, IrImmediate):
+        raise WasmLoweringError(f"{context}: expected immediate, got {operand!r}")
+    return operand
+
+
+def _expect_label(operand: object, context: str) -> IrLabel:
+    if not isinstance(operand, IrLabel):
+        raise WasmLoweringError(f"{context}: expected label, got {operand!r}")
+    return operand
+
+
+_REG_SCRATCH = 1
+_REG_VAR_BASE = 2
