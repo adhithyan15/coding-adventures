@@ -27,6 +27,7 @@
 //   keywords:                              -- begins the keywords section
 //   reserved:                              -- begins the reserved keywords section
 //   context_keywords:                      -- begins the context keywords section
+//   layout_keywords:                       -- begins the layout keywords section
 //   skip:                                  -- begins the skip patterns section
 //   group NAME:                            -- begins a named pattern group
 //
@@ -189,7 +190,7 @@ public struct TokenGrammar: Sendable, Equatable {
     /// List of reserved words from the keywords: section.
     public let keywords: [String]
 
-    /// Optional lexer mode (e.g. "indentation").
+    /// Optional lexer mode (e.g. "indentation" or "layout").
     public let mode: String?
 
     /// Controls how STRING tokens are processed.
@@ -205,6 +206,9 @@ public struct TokenGrammar: Sendable, Equatable {
     /// positions but identifiers in others (e.g. async, yield, get, set).
     /// The lexer emits these as NAME tokens with TOKEN_CONTEXT_KEYWORD flag.
     public let contextKeywords: [String]?
+
+    /// Keywords that introduce implicit layout blocks in layout mode.
+    public let layoutKeywords: [String]?
 
     /// Named pattern groups for context-sensitive lexing.
     public let groups: [String: PatternGroup]?
@@ -226,6 +230,7 @@ public struct TokenGrammar: Sendable, Equatable {
         skipDefinitions: [TokenDefinition]? = nil,
         reservedKeywords: [String]? = nil,
         contextKeywords: [String]? = nil,
+        layoutKeywords: [String]? = nil,
         groups: [String: PatternGroup]? = nil,
         caseSensitive: Bool? = nil,
         version: Int = 0,
@@ -238,6 +243,7 @@ public struct TokenGrammar: Sendable, Equatable {
         self.skipDefinitions = skipDefinitions
         self.reservedKeywords = reservedKeywords
         self.contextKeywords = contextKeywords
+        self.layoutKeywords = layoutKeywords
         self.groups = groups
         self.caseSensitive = caseSensitive
         self.version = version
@@ -472,8 +478,9 @@ private func parseDefinition(
 /// 2. **Keywords mode** -- entered on `keywords:`, collects keyword names.
 /// 3. **Reserved mode** -- entered on `reserved:`, collects reserved words.
 /// 4. **Context keywords mode** -- entered on `context_keywords:`.
-/// 5. **Skip mode** -- entered on `skip:`, collects skip definitions.
-/// 6. **Group mode** -- entered on `group NAME:`, collects group definitions.
+/// 5. **Layout keywords mode** -- entered on `layout_keywords:`.
+/// 6. **Skip mode** -- entered on `skip:`, collects skip definitions.
+/// 7. **Group mode** -- entered on `group NAME:`, collects group definitions.
 ///
 /// A non-indented line exits any section and returns to definition mode.
 ///
@@ -488,6 +495,7 @@ public func parseTokenGrammar(source: String) throws -> TokenGrammar {
     var skipDefinitions: [TokenDefinition] = []
     var reservedKeywords: [String] = []
     var contextKeywords: [String] = []
+    var layoutKeywords: [String] = []
     var groups: [String: PatternGroup] = [:]
     // Mutable builder for group definitions (PatternGroup is immutable)
     var groupBuilders: [String: [TokenDefinition]] = [:]
@@ -503,7 +511,9 @@ public func parseTokenGrammar(source: String) throws -> TokenGrammar {
     let identifierPattern = try! NSRegularExpression(pattern: #"^[a-zA-Z_][a-zA-Z0-9_]*$"#)
     let groupNamePattern = try! NSRegularExpression(pattern: #"^[a-z_][a-z0-9_]*$"#)
 
-    let reservedGroupNames: Set<String> = ["default", "skip", "keywords", "reserved", "errors"]
+    let reservedGroupNames: Set<String> = [
+        "default", "skip", "keywords", "reserved", "errors", "context_keywords", "layout_keywords",
+    ]
 
     // Section tracking
     var currentSection = "definitions"
@@ -623,6 +633,10 @@ public func parseTokenGrammar(source: String) throws -> TokenGrammar {
             currentSection = "context_keywords"
             continue
         }
+        if stripped == "layout_keywords:" || stripped == "layout_keywords :" {
+            currentSection = "layout_keywords"
+            continue
+        }
         if stripped == "errors:" || stripped == "errors :" {
             currentSection = "errors"
             continue
@@ -648,6 +662,13 @@ public func parseTokenGrammar(source: String) throws -> TokenGrammar {
         if isIndented && currentSection == "context_keywords" {
             if !stripped.isEmpty {
                 contextKeywords.append(stripped)
+            }
+            continue
+        }
+
+        if isIndented && currentSection == "layout_keywords" {
+            if !stripped.isEmpty {
+                layoutKeywords.append(stripped)
             }
             continue
         }
@@ -744,6 +765,7 @@ public func parseTokenGrammar(source: String) throws -> TokenGrammar {
         skipDefinitions: skipDefinitions.isEmpty ? nil : skipDefinitions,
         reservedKeywords: reservedKeywords.isEmpty ? nil : reservedKeywords,
         contextKeywords: contextKeywords.isEmpty ? nil : contextKeywords,
+        layoutKeywords: layoutKeywords.isEmpty ? nil : layoutKeywords,
         groups: hasGroups ? groups : nil,
         caseSensitive: caseSensitive ? nil : false,
         version: version,
@@ -817,8 +839,12 @@ public func validateTokenGrammar(_ grammar: TokenGrammar) -> [String] {
     }
 
     // Validate mode value
-    if let modeVal = grammar.mode, modeVal != "indentation" {
+    if let modeVal = grammar.mode, modeVal != "indentation", modeVal != "layout" {
         issues.append("Unknown mode: '\(modeVal)'")
+    }
+
+    if grammar.mode == "layout", (grammar.layoutKeywords ?? []).isEmpty {
+        issues.append("Layout mode requires a non-empty layout_keywords section")
     }
 
     // Validate escapeMode value

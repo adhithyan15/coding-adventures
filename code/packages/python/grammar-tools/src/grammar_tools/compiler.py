@@ -228,6 +228,7 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
         f"{i1}reserved_keywords={grammar.reserved_keywords!r},",
         f"{i1}error_definitions={err_src},",
         f"{i1}groups={groups_src},",
+        f"{i1}layout_keywords={grammar.layout_keywords!r},",
         ")",
     ])
 

@@ -55,6 +55,7 @@ TokenGrammar(
   errorDefinitions: ${_compileTokenDefinitionList(grammar.errorDefinitions)},
   groups: ${_compileGroups(grammar.groups)},
   caseSensitive: ${grammar.caseSensitive},
+  layoutKeywords: ${_compileStringList(grammar.layoutKeywords)},
   contextKeywords: ${_compileStringList(grammar.contextKeywords)},
   softKeywords: ${_compileStringList(grammar.softKeywords)},
 )''';

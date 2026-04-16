@@ -105,6 +105,7 @@ export function compileTokenGrammar(
     `  escapeMode: ${grammar.escapeMode !== undefined ? JSON.stringify(grammar.escapeMode) : "undefined"},`,
     `  skipDefinitions: ${skipLit},`,
     `  reservedKeywords: ${JSON.stringify(grammar.reservedKeywords ?? [])},`,
+    `  layoutKeywords: ${JSON.stringify(grammar.layoutKeywords ?? [])},`,
     `  contextKeywords: ${JSON.stringify(grammar.contextKeywords ?? [])},`,
     `  errorDefinitions: ${errLit},`,
     `  groups: ${groupsLit},`,

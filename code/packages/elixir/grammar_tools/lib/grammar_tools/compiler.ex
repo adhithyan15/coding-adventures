@@ -100,6 +100,7 @@ defmodule CodingAdventures.GrammarTools.Compiler do
         reserved_keywords: #{inspect(grammar.reserved_keywords)},
         error_definitions: #{err_src},
         groups: #{groups_src},
+        layout_keywords: #{inspect(grammar.layout_keywords)},
         case_sensitive: #{grammar.case_sensitive},
         version: #{grammar.version},
         case_insensitive: #{grammar.case_insensitive},

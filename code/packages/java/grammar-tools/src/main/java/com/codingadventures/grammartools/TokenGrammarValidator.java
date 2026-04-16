@@ -35,8 +35,13 @@ public final class TokenGrammarValidator {
         issues.addAll(validateDefinitions(grammar.getErrorDefinitions(), "error pattern"));
 
         // Validate mode
-        if (grammar.getMode() != null && !"indentation".equals(grammar.getMode())) {
-            issues.add("Unknown lexer mode '" + grammar.getMode() + "' (only 'indentation' is supported)");
+        if (grammar.getMode() != null
+                && !"indentation".equals(grammar.getMode())
+                && !"layout".equals(grammar.getMode())) {
+            issues.add("Unknown lexer mode '" + grammar.getMode() + "' (only 'indentation' and 'layout' are supported)");
+        }
+        if ("layout".equals(grammar.getMode()) && grammar.getLayoutKeywords().isEmpty()) {
+            issues.add("Layout mode requires a non-empty layout_keywords section");
         }
 
         // Validate escape mode

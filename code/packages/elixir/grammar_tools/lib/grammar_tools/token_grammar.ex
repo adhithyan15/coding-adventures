@@ -40,6 +40,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             keywords: [],
             skip_definitions: [],
             reserved_keywords: [],
+            layout_keywords: [],
             context_keywords: [],
             soft_keywords: [],
             mode: nil,
@@ -76,6 +77,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
           keywords: [String.t()],
           skip_definitions: [token_definition()],
           reserved_keywords: [String.t()],
+          layout_keywords: [String.t()],
           context_keywords: [String.t()],
           soft_keywords: [String.t()],
           mode: String.t() | nil,
@@ -193,8 +195,8 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
                     "Line #{line_number}: Invalid group name: #{inspect(group_name)} " <>
                       "(must be a lowercase identifier like 'tag' or 'cdata')"}}
 
-                group_name in ~w(default skip keywords reserved errors context_keywords soft_keywords) ->
-                  reserved_names = Enum.join(Enum.sort(~w(context_keywords default errors keywords reserved skip soft_keywords)), ", ")
+                group_name in ~w(default skip keywords reserved errors layout_keywords context_keywords soft_keywords) ->
+                  reserved_names = Enum.join(Enum.sort(~w(context_keywords default errors keywords layout_keywords reserved skip soft_keywords)), ", ")
 
                   {:halt,
                    {:error,
@@ -228,11 +230,14 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             stripped in ["context_keywords:", "context_keywords :"] ->
               {:cont, %{acc | section: :context_keywords}}
 
+            stripped in ["layout_keywords:", "layout_keywords :"] ->
+              {:cont, %{acc | section: :layout_keywords}}
+
             stripped in ["soft_keywords:", "soft_keywords :"] ->
               {:cont, %{acc | section: :soft_keywords}}
 
             # Inside a section �� indented lines are section entries
-            acc.section in [:keywords, :reserved, :context_keywords, :soft_keywords] and
+            acc.section in [:keywords, :reserved, :context_keywords, :layout_keywords, :soft_keywords] and
                 (String.starts_with?(line, " ") or String.starts_with?(line, "\t")) ->
               word = stripped
 
@@ -247,6 +252,10 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
 
                 :context_keywords ->
                   grammar = %{acc.grammar | context_keywords: acc.grammar.context_keywords ++ [word]}
+                  {:cont, %{acc | grammar: grammar}}
+
+                :layout_keywords ->
+                  grammar = %{acc.grammar | layout_keywords: acc.grammar.layout_keywords ++ [word]}
                   {:cont, %{acc | grammar: grammar}}
 
                 :soft_keywords ->
@@ -301,7 +310,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
             # Non-indented line exits any section
             true ->
               section =
-                if acc.section in [:keywords, :reserved, :skip, :errors, :context_keywords, :soft_keywords] or match?({:group, _}, acc.section),
+                if acc.section in [:keywords, :reserved, :skip, :errors, :context_keywords, :layout_keywords, :soft_keywords] or match?({:group, _}, acc.section),
                   do: :definitions,
                   else: acc.section
 
@@ -405,10 +414,17 @@ defmodule CodingAdventures.GrammarTools.TokenGrammar do
     # Validate error definitions
     issues = issues ++ validate_definitions(grammar.error_definitions, "error pattern")
 
-    # Validate mode — only "indentation" is supported currently
+    # Validate mode — only "indentation" and "layout" are supported currently
     issues =
-      if grammar.mode != nil and grammar.mode != "indentation" do
-        issues ++ ["Unknown lexer mode '#{grammar.mode}' (only 'indentation' is supported)"]
+      if grammar.mode != nil and grammar.mode not in ["indentation", "layout"] do
+        issues ++ ["Unknown lexer mode '#{grammar.mode}' (only 'indentation' and 'layout' are supported)"]
+      else
+        issues
+      end
+
+    issues =
+      if grammar.mode == "layout" and grammar.layout_keywords == [] do
+        issues ++ ["Layout mode requires a non-empty layout_keywords section"]
       else
         issues
       end

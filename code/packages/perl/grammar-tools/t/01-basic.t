@@ -120,6 +120,14 @@ subtest 'parse_token_grammar: mode directive' => sub {
     is($g->mode, 'indentation', 'mode parsed');
 };
 
+subtest 'parse_token_grammar: layout keywords section' => sub {
+    my $src = "mode: layout\nNAME = /[a-z]+/\nlayout_keywords:\n  let\n  where\n  do\n  of\n";
+    my ($g, $err) = CodingAdventures::GrammarTools->parse_token_grammar($src);
+    ok(!$err, 'no error');
+    is($g->mode, 'layout', 'layout mode parsed');
+    is($g->layout_keywords, ['let', 'where', 'do', 'of'], 'layout keywords parsed');
+};
+
 subtest 'parse_token_grammar: escapes directive' => sub {
     my $src = "escapes: none\nNUMBER = /[0-9]+/\n";
     my ($g, $err) = CodingAdventures::GrammarTools->parse_token_grammar($src);
@@ -169,6 +177,14 @@ subtest 'validate_token_grammar: flags unknown mode' => sub {
     my $issues = CodingAdventures::GrammarTools->validate_token_grammar($g);
     ok(scalar @$issues > 0, 'issue reported for unknown mode');
     like($issues->[0], qr/mode/i, 'issue mentions mode');
+};
+
+subtest 'validate_token_grammar: layout mode requires layout keywords' => sub {
+    my $src = "NUMBER = /[0-9]+/\n";
+    my ($g) = CodingAdventures::GrammarTools->parse_token_grammar($src);
+    $g->{mode} = 'layout';
+    my $issues = CodingAdventures::GrammarTools->validate_token_grammar($g);
+    ok(grep(/layout_keywords/, @$issues), 'issue reported for missing layout keywords');
 };
 
 # ============================================================================

@@ -679,6 +679,7 @@ mod v_2_7 {
             case_sensitive: true,
             version: 1,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: vec![],
             soft_keywords: vec![],
         }
@@ -1245,6 +1246,7 @@ mod v_3_0 {
             case_sensitive: true,
             version: 1,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: vec![],
             soft_keywords: vec![],
         }
@@ -1818,6 +1820,7 @@ mod v_3_6 {
             case_sensitive: true,
             version: 1,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: vec![],
             soft_keywords: vec![],
         }
@@ -2447,6 +2450,7 @@ mod v_3_8 {
             case_sensitive: true,
             version: 1,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: vec![],
             soft_keywords: vec![],
         }
@@ -3111,6 +3115,7 @@ mod v_3_10 {
             case_sensitive: true,
             version: 1,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: vec![],
             soft_keywords: vec![r#"match"#.to_string(), r#"case"#.to_string(), r#"_"#.to_string()],
         }
@@ -3775,6 +3780,7 @@ mod v_3_12 {
             case_sensitive: true,
             version: 1,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: vec![],
             soft_keywords: vec![r#"match"#.to_string(), r#"case"#.to_string(), r#"_"#.to_string(), r#"type"#.to_string()],
         }

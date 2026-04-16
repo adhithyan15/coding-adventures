@@ -194,6 +194,7 @@ pub fn token_grammar() -> TokenGrammar {
         case_sensitive: false,
         version: 1,
         case_insensitive: true,
+            layout_keywords: vec![],
         context_keywords: vec![],
         soft_keywords: vec![],
     }

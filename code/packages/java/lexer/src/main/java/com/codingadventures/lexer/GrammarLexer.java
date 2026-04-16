@@ -1,43 +1,92 @@
+// ============================================================================
+// GrammarLexer.java — Grammar-driven tokenizer
+// ============================================================================
+//
+// Instead of hardcoding which characters map to which tokens, this lexer
+// reads token definitions from a TokenGrammar (parsed from a .tokens file)
+// and uses those definitions to drive tokenization at runtime.
+//
+// How it works:
+//
+//   1. Compile each TokenDefinition into a Java regex Pattern.
+//      Literal patterns are escaped with Pattern.quote().
+//      Regex patterns are anchored at the start with \A.
+//
+//   2. At each position in the source, try patterns in priority order
+//      (first match wins). Skip patterns are tried first; if one matches,
+//      the lexer consumes the matched text silently (no token produced).
+//
+//   3. When a definition has an alias (e.g. STRING_DQ -> STRING), the
+//      emitted token uses the alias as its type name.
+//
+//   4. After tokenization, keywords in the grammar's keyword list are
+//      promoted: a NAME token whose value matches a keyword gets its
+//      type changed to KEYWORD.
+//
+//   5. If no pattern matches at a position, the lexer raises a LexerError.
+//
+// Layer: TE (text/language layer)
+// ============================================================================
+
 package com.codingadventures.lexer;
 
-import com.codingadventures.directedgraph.Graph;
 import com.codingadventures.grammartools.TokenDefinition;
 import com.codingadventures.grammartools.TokenGrammar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A lexer that tokenizes source code using a {@link TokenGrammar}.
+ *
+ * <p>This is the runtime equivalent of tools like Lex/Flex: it takes a
+ * declarative description of tokens and produces a token stream.
+ */
 public final class GrammarLexer {
-    private enum MatcherStage {
-        SKIP,
-        TOKEN,
-        ERROR
-    }
 
+    // A compiled pattern ready for matching
     private record CompiledPattern(String name, Pattern regex, String alias) {}
-    private record MatcherNode(MatcherStage stage, CompiledPattern pattern) {}
 
     private final TokenGrammar grammar;
-    private final List<MatcherNode> matcherPipeline;
+    private final List<CompiledPattern> patterns;
+    private final List<CompiledPattern> skipPatterns;
+    private final List<CompiledPattern> errorPatterns;
     private final Set<String> keywordSet;
     private final Set<String> reservedSet;
     private final Set<String> contextKeywordSet;
+    private final Set<String> layoutKeywordSet;
 
+    /**
+     * Create a new GrammarLexer from a TokenGrammar.
+     *
+     * @param grammar the parsed .tokens file
+     */
     public GrammarLexer(TokenGrammar grammar) {
         this.grammar = grammar;
-        this.matcherPipeline = buildMatcherPipeline(grammar);
+        this.patterns = compileDefinitions(grammar.getDefinitions());
+        this.skipPatterns = compileDefinitions(grammar.getSkipDefinitions());
+        this.errorPatterns = compileDefinitions(grammar.getErrorDefinitions());
         this.keywordSet = new HashSet<>(grammar.getKeywords());
         this.reservedSet = new HashSet<>(grammar.getReservedKeywords());
         this.contextKeywordSet = new HashSet<>(grammar.getContextKeywords());
+        this.layoutKeywordSet = new HashSet<>(grammar.getLayoutKeywords());
     }
 
+    /**
+     * Tokenize source code into a list of tokens.
+     *
+     * <p>The returned list always ends with an EOF token.
+     *
+     * @param source the source code text
+     * @return list of tokens
+     * @throws LexerError if source cannot be tokenized
+     */
     public List<Token> tokenize(String source) throws LexerError {
+        // Optionally lowercase source for case-insensitive languages
         String workingSource = grammar.isCaseSensitive() ? source : source.toLowerCase();
 
         List<Token> tokens = new ArrayList<>();
@@ -47,160 +96,226 @@ public final class GrammarLexer {
         boolean precededByNewline = false;
 
         while (pos < workingSource.length()) {
+            // --- Try skip patterns first ---
+            boolean skipped = false;
+            for (CompiledPattern sp : skipPatterns) {
+                Matcher m = sp.regex.matcher(workingSource);
+                m.region(pos, workingSource.length());
+                if (m.lookingAt()) {
+                    String matched = m.group();
+                    // Track newlines in skipped content
+                    for (char ch : matched.toCharArray()) {
+                        if (ch == '\n') {
+                            line++;
+                            column = 1;
+                            precededByNewline = true;
+                        } else {
+                            column++;
+                        }
+                    }
+                    pos += matched.length();
+                    skipped = true;
+                    break;
+                }
+            }
+            if (skipped) continue;
+
+            // --- Try token patterns ---
             boolean matched = false;
-            for (MatcherNode matcherNode : matcherPipeline) {
-                Matcher matcher = matcherNode.pattern.regex.matcher(workingSource);
-                matcher.region(pos, workingSource.length());
-                if (!matcher.lookingAt()) {
-                    continue;
+            for (CompiledPattern cp : patterns) {
+                Matcher m = cp.regex.matcher(workingSource);
+                m.region(pos, workingSource.length());
+                if (m.lookingAt()) {
+                    // Use original source for the token value (preserve case)
+                    String value = source.substring(pos, pos + m.group().length());
+                    String typeName = cp.alias != null ? cp.alias : cp.name;
+
+                    // Check for reserved keywords
+                    if ("NAME".equals(typeName) && reservedSet.contains(value)) {
+                        throw new LexerError("Reserved keyword '" + value + "'", line, column);
+                    }
+
+                    // Build flags
+                    int flags = 0;
+                    if (precededByNewline) flags |= Token.FLAG_PRECEDED_BY_NEWLINE;
+                    if ("NAME".equals(typeName) && contextKeywordSet.contains(
+                            grammar.isCaseSensitive() ? value : value.toLowerCase())) {
+                        flags |= Token.FLAG_CONTEXT_KEYWORD;
+                    }
+
+                    Token token = new Token(TokenType.GRAMMAR, value, line, column, typeName, flags);
+                    tokens.add(token);
+
+                    // Advance position and track line/column
+                    for (char ch : value.toCharArray()) {
+                        if (ch == '\n') {
+                            line++;
+                            column = 1;
+                        } else {
+                            column++;
+                        }
+                    }
+                    pos += value.length();
+                    matched = true;
+                    precededByNewline = false;
+                    break;
                 }
+            }
+            if (matched) continue;
 
-                String matchedValue = source.substring(pos, pos + matcher.group().length());
-                switch (matcherNode.stage) {
-                    case SKIP -> {
-                        for (char ch : matchedValue.toCharArray()) {
-                            if (ch == '\n') {
-                                line++;
-                                column = 1;
-                                precededByNewline = true;
-                            } else {
-                                column++;
-                            }
-                        }
-                        pos += matchedValue.length();
+            // --- Try error recovery patterns ---
+            boolean errorMatched = false;
+            for (CompiledPattern ep : errorPatterns) {
+                Matcher m = ep.regex.matcher(workingSource);
+                m.region(pos, workingSource.length());
+                if (m.lookingAt()) {
+                    String value = source.substring(pos, pos + m.group().length());
+                    String typeName = ep.alias != null ? ep.alias : ep.name;
+                    Token token = new Token(TokenType.GRAMMAR, value, line, column, typeName, 0);
+                    tokens.add(token);
+
+                    for (char ch : value.toCharArray()) {
+                        if (ch == '\n') { line++; column = 1; }
+                        else column++;
                     }
-
-                    case TOKEN -> {
-                        String typeName = matcherNode.pattern.alias != null
-                                ? matcherNode.pattern.alias
-                                : matcherNode.pattern.name;
-
-                        if ("NAME".equals(typeName) && reservedSet.contains(matchedValue)) {
-                            throw new LexerError("Reserved keyword '" + matchedValue + "'", line, column);
-                        }
-
-                        int flags = 0;
-                        if (precededByNewline) {
-                            flags |= Token.FLAG_PRECEDED_BY_NEWLINE;
-                        }
-                        if ("NAME".equals(typeName) && contextKeywordSet.contains(
-                                grammar.isCaseSensitive() ? matchedValue : matchedValue.toLowerCase())) {
-                            flags |= Token.FLAG_CONTEXT_KEYWORD;
-                        }
-
-                        tokens.add(new Token(TokenType.GRAMMAR, matchedValue, line, column, typeName, flags));
-
-                        for (char ch : matchedValue.toCharArray()) {
-                            if (ch == '\n') {
-                                line++;
-                                column = 1;
-                            } else {
-                                column++;
-                            }
-                        }
-                        pos += matchedValue.length();
-                        precededByNewline = false;
-                    }
-
-                    case ERROR -> {
-                        String typeName = matcherNode.pattern.alias != null
-                                ? matcherNode.pattern.alias
-                                : matcherNode.pattern.name;
-                        tokens.add(new Token(TokenType.GRAMMAR, matchedValue, line, column, typeName, 0));
-
-                        for (char ch : matchedValue.toCharArray()) {
-                            if (ch == '\n') {
-                                line++;
-                                column = 1;
-                            } else {
-                                column++;
-                            }
-                        }
-                        pos += matchedValue.length();
-                    }
+                    pos += value.length();
+                    errorMatched = true;
+                    break;
                 }
-
-                matched = true;
-                break;
             }
+            if (errorMatched) continue;
 
-            if (matched) {
-                continue;
-            }
-
+            // No pattern matched
             throw new LexerError("Unexpected character '" + source.charAt(pos) + "'", line, column);
         }
 
+        // Keyword promotion: NAME tokens whose values match keywords become KEYWORD
         promoteKeywords(tokens);
+
+        if ("layout".equals(grammar.getMode())) {
+            tokens = applyLayout(tokens);
+        }
+
+        // Add EOF token
         tokens.add(new Token(TokenType.EOF, "", line, column, "EOF", 0));
         return tokens;
     }
 
-    private void promoteKeywords(List<Token> tokens) {
-        if (keywordSet.isEmpty()) {
-            return;
+    private List<Token> applyLayout(List<Token> tokens) {
+        List<Token> result = new ArrayList<>();
+        List<Integer> layoutStack = new ArrayList<>();
+        int pendingLayouts = 0;
+        int suppressDepth = 0;
+
+        for (int i = 0; i < tokens.size(); i++) {
+            Token token = tokens.get(i);
+            String typeName = token.effectiveTypeName();
+
+            if ("NEWLINE".equals(typeName)) {
+                result.add(token);
+                Token nextToken = nextLayoutToken(tokens, i + 1);
+                if (suppressDepth == 0 && nextToken != null) {
+                    while (!layoutStack.isEmpty() && nextToken.getColumn() < layoutStack.get(layoutStack.size() - 1)) {
+                        result.add(virtualLayoutToken("VIRTUAL_RBRACE", "}", nextToken));
+                        layoutStack.remove(layoutStack.size() - 1);
+                    }
+
+                    if (!layoutStack.isEmpty()
+                            && !"EOF".equals(nextToken.effectiveTypeName())
+                            && !"}".equals(nextToken.getValue())
+                            && nextToken.getColumn() == layoutStack.get(layoutStack.size() - 1)) {
+                        result.add(virtualLayoutToken("VIRTUAL_SEMICOLON", ";", nextToken));
+                    }
+                }
+                continue;
+            }
+
+            if ("EOF".equals(typeName)) {
+                while (!layoutStack.isEmpty()) {
+                    result.add(virtualLayoutToken("VIRTUAL_RBRACE", "}", token));
+                    layoutStack.remove(layoutStack.size() - 1);
+                }
+                result.add(token);
+                continue;
+            }
+
+            if (pendingLayouts > 0) {
+                if ("{".equals(token.getValue())) {
+                    pendingLayouts -= 1;
+                } else {
+                    for (int count = 0; count < pendingLayouts; count++) {
+                        layoutStack.add(token.getColumn());
+                        result.add(virtualLayoutToken("VIRTUAL_LBRACE", "{", token));
+                    }
+                    pendingLayouts = 0;
+                }
+            }
+
+            result.add(token);
+
+            if (!typeName.startsWith("VIRTUAL_")) {
+                if ("(".equals(token.getValue()) || "[".equals(token.getValue()) || "{".equals(token.getValue())) {
+                    suppressDepth++;
+                } else if ((")".equals(token.getValue()) || "]".equals(token.getValue()) || "}".equals(token.getValue())) && suppressDepth > 0) {
+                    suppressDepth--;
+                }
+            }
+
+            if (layoutKeywordSet.contains(token.getValue()) || layoutKeywordSet.contains(token.getValue().toLowerCase())) {
+                pendingLayouts += 1;
+            }
         }
-        for (int index = 0; index < tokens.size(); index++) {
-            Token token = tokens.get(index);
-            if ("NAME".equals(token.getTypeName())) {
-                String checkValue = grammar.isCaseSensitive() ? token.getValue() : token.getValue().toLowerCase();
+
+        return result;
+    }
+
+    private Token nextLayoutToken(List<Token> tokens, int startIndex) {
+        for (int i = startIndex; i < tokens.size(); i++) {
+            if (!"NEWLINE".equals(tokens.get(i).effectiveTypeName())) {
+                return tokens.get(i);
+            }
+        }
+        return null;
+    }
+
+    private Token virtualLayoutToken(String typeName, String value, Token anchor) {
+        return new Token(TokenType.GRAMMAR, value, anchor.getLine(), anchor.getColumn(), typeName, 0);
+    }
+
+    /**
+     * Promote NAME tokens whose values match keywords to KEYWORD type.
+     */
+    private void promoteKeywords(List<Token> tokens) {
+        if (keywordSet.isEmpty()) return;
+        for (int i = 0; i < tokens.size(); i++) {
+            Token t = tokens.get(i);
+            if ("NAME".equals(t.getTypeName())) {
+                String checkValue = grammar.isCaseSensitive() ? t.getValue() : t.getValue().toLowerCase();
                 if (keywordSet.contains(checkValue)) {
-                    tokens.set(index, new Token(TokenType.KEYWORD, token.getValue(), token.getLine(), token.getColumn(),
-                            "KEYWORD", token.getFlags()));
+                    tokens.set(i, new Token(TokenType.KEYWORD, t.getValue(), t.getLine(), t.getColumn(),
+                            "KEYWORD", t.getFlags()));
                 }
             }
         }
     }
 
+    /**
+     * Compile a list of TokenDefinitions into regex patterns.
+     */
     private static List<CompiledPattern> compileDefinitions(List<TokenDefinition> definitions) {
         List<CompiledPattern> result = new ArrayList<>();
-        for (TokenDefinition definition : definitions) {
-            String regexString = definition.isRegex()
-                    ? "\\G(?:" + definition.getPattern() + ")"
-                    : "\\G" + Pattern.quote(definition.getPattern());
-            result.add(new CompiledPattern(
-                    definition.getName(),
-                    Pattern.compile(regexString),
-                    definition.getAlias()
-            ));
+        for (TokenDefinition defn : definitions) {
+            String regexStr;
+            if (defn.isRegex()) {
+                // Anchor regex at current position with \G
+                regexStr = "\\G(?:" + defn.getPattern() + ")";
+            } else {
+                // Escape literal and anchor
+                regexStr = "\\G" + Pattern.quote(defn.getPattern());
+            }
+            Pattern regex = Pattern.compile(regexStr);
+            result.add(new CompiledPattern(defn.getName(), regex, defn.getAlias()));
         }
         return result;
-    }
-
-    private static List<MatcherNode> buildMatcherPipeline(TokenGrammar grammar) {
-        Graph pipelineGraph = new Graph();
-        Map<String, MatcherNode> nodeMetadata = new HashMap<>();
-        pipelineGraph.addNode("__start__");
-
-        String previousNode = "__start__";
-        previousNode = appendMatchers(previousNode, "skip", MatcherStage.SKIP,
-                compileDefinitions(grammar.getSkipDefinitions()), pipelineGraph, nodeMetadata);
-        previousNode = appendMatchers(previousNode, "token", MatcherStage.TOKEN,
-                compileDefinitions(grammar.getDefinitions()), pipelineGraph, nodeMetadata);
-        appendMatchers(previousNode, "error", MatcherStage.ERROR,
-                compileDefinitions(grammar.getErrorDefinitions()), pipelineGraph, nodeMetadata);
-
-        List<MatcherNode> orderedMatchers = new ArrayList<>();
-        for (String nodeId : pipelineGraph.topologicalSort()) {
-            MatcherNode node = nodeMetadata.get(nodeId);
-            if (node != null) {
-                orderedMatchers.add(node);
-            }
-        }
-        return orderedMatchers;
-    }
-
-    private static String appendMatchers(String previousNode, String prefix, MatcherStage stage,
-                                         List<CompiledPattern> patterns, Graph pipelineGraph,
-                                         Map<String, MatcherNode> nodeMetadata) {
-        String currentPrevious = previousNode;
-        for (int index = 0; index < patterns.size(); index++) {
-            String nodeId = prefix + ":" + index;
-            pipelineGraph.addNode(nodeId);
-            pipelineGraph.addEdge(currentPrevious, nodeId);
-            nodeMetadata.put(nodeId, new MatcherNode(stage, patterns.get(index)));
-            currentPrevious = nodeId;
-        }
-        return currentPrevious;
     }
 }

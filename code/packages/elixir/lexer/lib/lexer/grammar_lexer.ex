@@ -274,6 +274,7 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       # -- Context keywords ---
       # MapSet of context-sensitive keywords (emitted as NAME with flag).
       :context_keyword_set,
+      :layout_keyword_set,
       # In Elixir, bare atoms (:field) must come before keyword pairs
       # (field: default) in defstruct lists. That is why group_patterns
       # appears above and case_insensitive / group_stack / etc. appear below.
@@ -388,8 +389,14 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
 
     state = init_state(effective_source, grammar, on_token)
 
+    tokenizer =
+      case grammar.mode do
+        "layout" -> &tokenize_layout/2
+        _ -> &tokenize_standard/2
+      end
+
     # Stage 2: Tokenize the source.
-    case tokenize_standard(state, []) do
+    case tokenizer.(state, []) do
       {:ok, tokens} ->
         # Stage 3: Post-tokenize hooks transform the token list.
         # Each hook is a function ([Token.t()] -> [Token.t()]) that receives
@@ -463,6 +470,9 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
     context_keyword_set =
       MapSet.new(Map.get(grammar, :context_keywords, []) || [])
 
+    layout_keyword_set =
+      MapSet.new(Map.get(grammar, :layout_keywords, []) || [])
+
     %State{
       source: source,
       patterns: patterns,
@@ -475,6 +485,7 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
       case_insensitive: grammar.case_insensitive,
       group_patterns: group_patterns,
       context_keyword_set: context_keyword_set,
+      layout_keyword_set: layout_keyword_set,
       group_stack: ["default"],
       on_token: on_token,
       skip_enabled: true,
@@ -564,6 +575,97 @@ defmodule CodingAdventures.Lexer.GrammarLexer do
           end
         end
     end
+  end
+
+  defp tokenize_layout(state, tokens) do
+    case tokenize_standard(state, tokens) do
+      {:ok, toks} -> {:ok, apply_layout(toks, state.layout_keyword_set)}
+      other -> other
+    end
+  end
+
+  defp apply_layout(tokens, layout_keyword_set) do
+    {result, _layout_stack, _pending_layouts, _suppress_depth} =
+      Enum.with_index(tokens)
+      |> Enum.reduce({[], [], 0, 0}, fn {token, index}, {acc, stack, pending, suppress_depth} ->
+        cond do
+          token.type == "NEWLINE" ->
+            next_token = next_layout_token(tokens, index + 1)
+
+            {acc, stack} =
+              if suppress_depth == 0 and next_token do
+                dedented =
+                  Enum.reduce_while(stack, {acc, stack}, fn column, {inner_acc, inner_stack} ->
+                    if next_token.column < column do
+                      {:cont,
+                       {[virtual_layout_token("VIRTUAL_RBRACE", "}", next_token) | inner_acc],
+                        tl(inner_stack)}}
+                    else
+                      {:halt, {inner_acc, inner_stack}}
+                    end
+                  end)
+
+                {inner_acc, inner_stack} = dedented
+
+                inner_acc =
+                  if inner_stack != [] and next_token.type != "EOF" and next_token.value != "}" and next_token.column == hd(inner_stack) do
+                    [virtual_layout_token("VIRTUAL_SEMICOLON", ";", next_token) | inner_acc]
+                  else
+                    inner_acc
+                  end
+
+                {inner_acc, inner_stack}
+              else
+                {acc, stack}
+              end
+
+            {[token | acc], stack, pending, suppress_depth}
+
+          token.type == "EOF" ->
+            closing = Enum.map(stack, fn _ -> virtual_layout_token("VIRTUAL_RBRACE", "}", token) end)
+            {Enum.reverse(closing) ++ [token | acc], [], pending, suppress_depth}
+
+          pending > 0 and token.value == "{" ->
+            new_suppress = update_layout_suppress_depth(suppress_depth, token)
+            {[token | acc], stack, pending - 1, new_suppress}
+
+          pending > 0 ->
+            injected = Enum.map(1..pending, fn _ -> virtual_layout_token("VIRTUAL_LBRACE", "{", token) end)
+            new_stack = Enum.map(1..pending, fn _ -> token.column end) ++ stack
+            new_suppress = update_layout_suppress_depth(suppress_depth, token)
+            {[token | Enum.reverse(injected) ++ acc], new_stack, 0, new_suppress}
+
+          true ->
+            new_suppress = update_layout_suppress_depth(suppress_depth, token)
+            new_pending = if layout_keyword?(layout_keyword_set, token), do: pending + 1, else: pending
+            {[token | acc], stack, new_pending, new_suppress}
+        end
+      end)
+
+    result |> Enum.reverse()
+  end
+
+  defp next_layout_token(tokens, start_index) do
+    tokens
+    |> Enum.drop(start_index)
+    |> Enum.find(fn token -> token.type != "NEWLINE" end)
+  end
+
+  defp virtual_layout_token(type, value, anchor) do
+    %Token{type: type, value: value, line: anchor.line, column: anchor.column}
+  end
+
+  defp update_layout_suppress_depth(depth, %Token{type: type, value: value}) do
+    cond do
+      String.starts_with?(type, "VIRTUAL_") -> depth
+      value in ["(", "[", "{"] -> depth + 1
+      value in [")", "]", "}"] and depth > 0 -> depth - 1
+      true -> depth
+    end
+  end
+
+  defp layout_keyword?(layout_keyword_set, %Token{value: value}) do
+    MapSet.member?(layout_keyword_set, value) or MapSet.member?(layout_keyword_set, String.downcase(value))
   end
 
   defp try_newline_or_token(remaining, state, tokens) do
