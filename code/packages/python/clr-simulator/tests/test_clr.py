@@ -18,20 +18,19 @@ mirrors the instruction categories:
 import struct
 
 import pytest
+from clr_bytecode_disassembler import CLRInstruction, CLRMethodBody
 
 from clr_simulator.simulator import (
     CEQ_BYTE,
     CGT_BYTE,
+    CLT_BYTE,
     CLROpcode,
     CLRSimulator,
-    CLRTrace,
-    CLT_BYTE,
     assemble_clr,
     encode_ldc_i4,
     encode_ldloc,
     encode_stloc,
 )
-
 
 # ===================================================================
 # Fixtures
@@ -116,14 +115,14 @@ class TestLdcI4S:
         """ldc.i4.s can push -128 (minimum signed int8)."""
         bytecode = assemble_clr(encode_ldc_i4(-128), (CLROpcode.RET,))
         sim.load(bytecode)
-        traces = sim.run()
+        sim.run()
         assert sim.stack == [-128]
 
     def test_ldc_i4_s_max_value(self, sim: CLRSimulator) -> None:
         """ldc.i4.s can push 127 (maximum signed int8)."""
         bytecode = assemble_clr(encode_ldc_i4(127), (CLROpcode.RET,))
         sim.load(bytecode)
-        traces = sim.run()
+        sim.run()
         assert sim.stack == [127]
 
     def test_ldc_i4_s_encoding(self) -> None:
@@ -165,21 +164,21 @@ class TestLdcI4:
         """ldc.i4 can push large negative values."""
         bytecode = assemble_clr(encode_ldc_i4(-1000), (CLROpcode.RET,))
         sim.load(bytecode)
-        traces = sim.run()
+        sim.run()
         assert sim.stack == [-1000]
 
     def test_ldc_i4_max_int32(self, sim: CLRSimulator) -> None:
         """ldc.i4 can push the maximum int32 value."""
         bytecode = assemble_clr(encode_ldc_i4(2_147_483_647), (CLROpcode.RET,))
         sim.load(bytecode)
-        traces = sim.run()
+        sim.run()
         assert sim.stack == [2_147_483_647]
 
     def test_ldc_i4_min_int32(self, sim: CLRSimulator) -> None:
         """ldc.i4 can push the minimum int32 value."""
         bytecode = assemble_clr(encode_ldc_i4(-2_147_483_648), (CLROpcode.RET,))
         sim.load(bytecode)
-        traces = sim.run()
+        sim.run()
         assert sim.stack == [-2_147_483_648]
 
     def test_ldc_i4_encoding(self) -> None:
@@ -1210,3 +1209,54 @@ class TestSimulatorProtocolConformance:
         assert sim.stack == []
         assert sim.locals[0] is None
         assert sim.pc == 0
+
+
+class _FakeSignature:
+    def __init__(
+        self,
+        parameter_types: tuple[str, ...],
+        return_type: str = "void",
+    ) -> None:
+        self.parameter_types = parameter_types
+        self.return_type = return_type
+
+
+class _FakeMethodRef:
+    def __init__(self) -> None:
+        self.declaring_type = "System.Console"
+        self.name = "WriteLine"
+        self.signature = _FakeSignature(("string",))
+
+
+class _FakeHost:
+    def __init__(self) -> None:
+        self.messages: list[str] = []
+
+    def call_method(self, method: object, args: list[object | None]) -> None:
+        _ = method
+        self.messages.append(f"{args[0]}")
+        return None
+
+
+def test_execute_disassembled_method_body_with_host_call() -> None:
+    host = _FakeHost()
+    sim = CLRSimulator(host=host)
+    body = CLRMethodBody(
+        metadata_version="v4.0.30319",
+        declaring_type="Program",
+        name="Main",
+        max_stack=8,
+        local_count=0,
+        instructions=(
+            CLRInstruction(offset=0, opcode="ldstr", operand="Hello, world!", size=5),
+            CLRInstruction(offset=5, opcode="call", operand=_FakeMethodRef(), size=5),
+            CLRInstruction(offset=10, opcode="ret"),
+        ),
+        il_bytes=bytes.fromhex("7201000070280d00000a2a"),
+    )
+
+    sim.load_method_body(body)
+    traces = sim.run()
+
+    assert host.messages == ["Hello, world!"]
+    assert [trace.opcode for trace in traces] == ["ldstr", "call", "ret"]
