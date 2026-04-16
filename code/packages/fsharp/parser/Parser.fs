@@ -2,7 +2,7 @@ namespace CodingAdventures.Parser.FSharp
 
 open System
 open System.Collections.Generic
-open CodingAdventures.GrammarTools
+open CodingAdventures.GrammarTools.FSharp
 open CodingAdventures.Lexer.FSharp
 
 type GrammarParseError(message: string, ?token: Token) =
