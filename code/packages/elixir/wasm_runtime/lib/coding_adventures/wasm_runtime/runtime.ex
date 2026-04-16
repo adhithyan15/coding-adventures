@@ -43,7 +43,6 @@ defmodule CodingAdventures.WasmRuntime.Runtime do
   def instantiate_bytes(wasm_bytes, host_functions \\ nil) when is_binary(wasm_bytes) do
     with {:ok, wasm_module} <- parse_module(wasm_bytes),
          {:ok, validated} <- WasmValidator.validate(wasm_module) do
-
       # Auto-register WASI stubs if needed and no explicit host functions provided
       final_host_fns = host_functions || auto_host_functions(wasm_module)
 
@@ -68,6 +67,7 @@ defmodule CodingAdventures.WasmRuntime.Runtime do
   defp parse_module(wasm_bytes) do
     # The parser may return {:ok, module} or raise
     result = WasmModuleParser.parse(wasm_bytes)
+
     case result do
       {:ok, wasm_module} -> {:ok, wasm_module}
       {:error, _} = err -> err
@@ -78,9 +78,10 @@ defmodule CodingAdventures.WasmRuntime.Runtime do
   end
 
   defp auto_host_functions(wasm_module) do
-    has_wasi = Enum.any?(wasm_module.imports, fn imp ->
-      imp.module_name == "wasi_snapshot_preview1"
-    end)
+    has_wasi =
+      Enum.any?(wasm_module.imports, fn imp ->
+        imp.module_name == "wasi_snapshot_preview1"
+      end)
 
     if has_wasi, do: WasiStub.host_functions(), else: %{}
   end

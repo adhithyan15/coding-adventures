@@ -75,7 +75,13 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
       cf_entry = Map.get(ctx.control_flow_map, vm.pc)
       end_pc = if cf_entry, do: cf_entry.end_pc, else: vm.pc + 1
 
-      label = %{kind: :block, arity: arity, target_pc: end_pc + 1, stack_height: length(vm.typed_stack)}
+      label = %{
+        kind: :block,
+        arity: arity,
+        target_pc: end_pc + 1,
+        stack_height: length(vm.typed_stack)
+      }
+
       ctx = %{ctx | label_stack: [label | ctx.label_stack]}
       {nil, GenericVM.advance_pc(vm), ctx}
     end)
@@ -97,7 +103,13 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
       end_pc = if cf_entry, do: cf_entry.end_pc, else: vm.pc + 1
       else_pc = if cf_entry, do: cf_entry.else_pc, else: nil
 
-      label = %{kind: :block, arity: arity, target_pc: end_pc + 1, stack_height: length(vm.typed_stack)}
+      label = %{
+        kind: :block,
+        arity: arity,
+        target_pc: end_pc + 1,
+        stack_height: length(vm.typed_stack)
+      }
+
       ctx = %{ctx | label_stack: [label | ctx.label_stack]}
 
       if condition.value != 0 do
@@ -116,6 +128,7 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
       case ctx.label_stack do
         [label | _rest] ->
           {nil, GenericVM.jump_to(vm, label.target_pc - 1), ctx}
+
         _ ->
           raise TrapError, "else without matching if"
       end
@@ -126,6 +139,7 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
         [_label | rest_labels] ->
           ctx = %{ctx | label_stack: rest_labels}
           {nil, GenericVM.advance_pc(vm), ctx}
+
         [] ->
           # Function end -- halt execution
           vm = %{vm | halted: true}
@@ -146,6 +160,7 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
     # 0x0D: br_if -- conditional branch
     |> GenericVM.register_context_opcode(0x0D, fn vm, instr, _code, ctx ->
       {condition, vm} = GenericVM.pop_typed(vm)
+
       if condition.value != 0 do
         depth = instr.operand
         {vm, ctx} = do_branch(vm, ctx, depth)
@@ -193,12 +208,21 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
     vm = trim_typed_stack(vm, label.stack_height)
 
     # Push back the result values
-    vm = Enum.reduce(Enum.reverse(result_values), vm, fn val, acc_vm ->
-      GenericVM.push_typed(acc_vm, val)
-    end)
+    vm =
+      Enum.reduce(Enum.reverse(result_values), vm, fn val, acc_vm ->
+        GenericVM.push_typed(acc_vm, val)
+      end)
 
-    # Pop labels up to and including the target depth
-    labels_remaining = Enum.drop(ctx.label_stack, depth + 1)
+    # Loop branches target the loop header and keep the loop label active for
+    # subsequent iterations. Block/if branches exit the target construct, so
+    # those labels are popped as part of the branch.
+    labels_remaining =
+      if label.kind == :loop do
+        Enum.drop(ctx.label_stack, depth)
+      else
+        Enum.drop(ctx.label_stack, depth + 1)
+      end
+
     ctx = %{ctx | label_stack: labels_remaining}
 
     # Jump to the label's target
@@ -211,6 +235,7 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
   end
 
   defp pop_n_typed(vm, 0), do: {[], vm}
+
   defp pop_n_typed(vm, n) do
     Enum.reduce(1..n, {[], vm}, fn _, {acc, acc_vm} ->
       {val, acc_vm} = GenericVM.pop_typed(acc_vm)
@@ -220,8 +245,9 @@ defmodule CodingAdventures.WasmExecution.Instructions.Control do
 
   defp trim_typed_stack(vm, target_height) do
     current = length(vm.typed_stack)
+
     if current > target_height do
-      %{vm | typed_stack: Enum.take(vm.typed_stack, -(target_height))}
+      %{vm | typed_stack: Enum.take(vm.typed_stack, -target_height)}
     else
       vm
     end

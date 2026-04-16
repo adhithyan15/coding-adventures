@@ -100,10 +100,7 @@ fn read_i64_le(mem: &LinearMemory, offset: usize) -> i64 {
 ///   buf_size = len("myapp") + 1 + len("hello") + 1 = 6 + 6 = 12
 #[test]
 fn test_args_sizes_get() {
-    let wasi = make_env(
-        vec!["myapp".to_string(), "hello".to_string()],
-        vec![],
-    );
+    let wasi = make_env(vec!["myapp".to_string(), "hello".to_string()], vec![]);
 
     // Memory layout:
     //   offset 0 → argc (i32)
@@ -113,7 +110,7 @@ fn test_args_sizes_get() {
         .expect("args_sizes_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(4)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(4)], None)
         .expect("args_sizes_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)], "errno should be 0");
@@ -140,10 +137,7 @@ fn test_args_sizes_get() {
 ///   offset 106: b'h' b'e' b'l' b'l' b'o' 0x00
 #[test]
 fn test_args_get() {
-    let wasi = make_env(
-        vec!["myapp".to_string(), "hello".to_string()],
-        vec![],
-    );
+    let wasi = make_env(vec!["myapp".to_string(), "hello".to_string()], vec![]);
 
     let func = wasi
         .resolve_function_for_test("args_get")
@@ -152,7 +146,7 @@ fn test_args_get() {
     // argv pointer array at offset 0 (8 bytes for 2 pointers).
     // argv buffer at offset 100.
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(100)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(100)], None)
         .expect("args_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)], "errno should be 0");
@@ -187,17 +181,14 @@ fn test_args_get() {
 /// "HOME=/home/user" has 15 bytes, +1 for '\0' = 16.
 #[test]
 fn test_environ_sizes_get() {
-    let wasi = make_env(
-        vec![],
-        vec!["HOME=/home/user".to_string()],
-    );
+    let wasi = make_env(vec![], vec!["HOME=/home/user".to_string()]);
 
     let func = wasi
         .resolve_function_for_test("environ_sizes_get")
         .expect("environ_sizes_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(4)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(4)], None)
         .expect("environ_sizes_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -216,10 +207,7 @@ fn test_environ_sizes_get() {
 /// `environ_get` with `HOME=/home/user` should write the pointer and string.
 #[test]
 fn test_environ_get() {
-    let wasi = make_env(
-        vec![],
-        vec!["HOME=/home/user".to_string()],
-    );
+    let wasi = make_env(vec![], vec!["HOME=/home/user".to_string()]);
 
     let func = wasi
         .resolve_function_for_test("environ_get")
@@ -227,7 +215,7 @@ fn test_environ_get() {
 
     // Pointer array at 0; buffer at 200.
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(200)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(200)], None)
         .expect("environ_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -261,7 +249,7 @@ fn test_clock_time_get_realtime() {
 
     // id=0 (REALTIME), precision=0, time_ptr=0
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I64(0), WasmValue::I32(0)])
+        .call(&[WasmValue::I32(0), WasmValue::I64(0), WasmValue::I32(0)], None)
         .expect("clock_time_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -288,7 +276,7 @@ fn test_clock_time_get_monotonic() {
         .expect("clock_time_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(1), WasmValue::I64(0), WasmValue::I32(0)])
+        .call(&[WasmValue::I32(1), WasmValue::I64(0), WasmValue::I32(0)], None)
         .expect("clock_time_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -315,7 +303,7 @@ fn test_clock_res_get() {
         .expect("clock_res_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(0)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(0)], None)
         .expect("clock_res_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -341,7 +329,7 @@ fn test_random_get() {
         .expect("random_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(4)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(4)], None)
         .expect("random_get should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -350,6 +338,115 @@ fn test_random_get() {
     let mem = mem_guard.as_ref().unwrap();
     let bytes = read_bytes(mem, 0, 4);
     assert_eq!(bytes, vec![0xAB, 0xAB, 0xAB, 0xAB]);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Test 8b: fd_write emits stdout and reports bytes written
+// ══════════════════════════════════════════════════════════════════════════════
+
+#[test]
+fn test_fd_write_emits_stdout() {
+    let output = std::sync::Arc::new(std::sync::Mutex::new(String::new()));
+    let output_clone = output.clone();
+    let wasi = WasiEnv::new(WasiConfig {
+        stdout_callback: Some(Box::new(move |text| {
+            output_clone.lock().unwrap().push_str(text);
+        })),
+        ..Default::default()
+    });
+
+    let mut mem = LinearMemory::new(1, None);
+    mem.store_i32(0, 32).unwrap();
+    mem.store_i32(4, 2).unwrap();
+    mem.write_bytes(32, b"Hi").unwrap();
+    wasi.attach_memory(mem);
+
+    let func = wasi
+        .resolve_function_for_test("fd_write")
+        .expect("fd_write should be registered");
+    let result = func
+        .call(
+            &[
+                WasmValue::I32(1),
+                WasmValue::I32(0),
+                WasmValue::I32(1),
+                WasmValue::I32(16),
+            ],
+            None,
+        )
+        .expect("fd_write should succeed");
+
+    assert_eq!(result, vec![WasmValue::I32(0)]);
+    assert_eq!(output.lock().unwrap().as_str(), "Hi");
+
+    let mem_guard = wasi.memory.lock().unwrap();
+    let mem = mem_guard.as_ref().unwrap();
+    assert_eq!(read_i32_le(mem, 16), 2);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Test 8c: fd_read fills guest memory from stdin
+// ══════════════════════════════════════════════════════════════════════════════
+
+#[test]
+fn test_fd_read_reads_stdin_into_guest_memory() {
+    let wasi = WasiEnv::new(WasiConfig {
+        stdin_callback: Some(Box::new(|count| b"Yo"[..count.min(2)].to_vec())),
+        ..Default::default()
+    });
+
+    let mut mem = LinearMemory::new(1, None);
+    mem.store_i32(0, 32).unwrap();
+    mem.store_i32(4, 2).unwrap();
+    wasi.attach_memory(mem);
+
+    let func = wasi
+        .resolve_function_for_test("fd_read")
+        .expect("fd_read should be registered");
+    let result = func
+        .call(
+            &[
+                WasmValue::I32(0),
+                WasmValue::I32(0),
+                WasmValue::I32(1),
+                WasmValue::I32(16),
+            ],
+            None,
+        )
+        .expect("fd_read should succeed");
+
+    assert_eq!(result, vec![WasmValue::I32(0)]);
+
+    let mem_guard = wasi.memory.lock().unwrap();
+    let mem = mem_guard.as_ref().unwrap();
+    assert_eq!(read_i32_le(mem, 16), 2);
+    assert_eq!(read_bytes(mem, 32, 2), b"Yo");
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Test 8d: fd_read rejects non-stdin file descriptors
+// ══════════════════════════════════════════════════════════════════════════════
+
+#[test]
+fn test_fd_read_rejects_non_stdin_fd() {
+    let wasi = make_env(vec![], vec![]);
+
+    let func = wasi
+        .resolve_function_for_test("fd_read")
+        .expect("fd_read should be registered");
+    let result = func
+        .call(
+            &[
+                WasmValue::I32(3),
+                WasmValue::I32(0),
+                WasmValue::I32(1),
+                WasmValue::I32(16),
+            ],
+            None,
+        )
+        .expect("fd_read should not trap");
+
+    assert_eq!(result, vec![WasmValue::I32(8)]);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -365,7 +462,7 @@ fn test_sched_yield() {
         .resolve_function_for_test("sched_yield")
         .expect("sched_yield should be registered");
 
-    let result = func.call(&[]).expect("sched_yield should succeed");
+    let result = func.call(&[], None).expect("sched_yield should succeed");
     assert_eq!(result, vec![WasmValue::I32(0)]);
 }
 
@@ -398,9 +495,7 @@ fn test_square_regression() {
     wasm.extend_from_slice(&[0x01, 0x00]);
 
     // Export section: "square"
-    let export_section = vec![
-        0x01, 0x06, b's', b'q', b'u', b'a', b'r', b'e', 0x00, 0x00,
-    ];
+    let export_section = vec![0x01, 0x06, b's', b'q', b'u', b'a', b'r', b'e', 0x00, 0x00];
     wasm.push(0x07);
     wasm.push(export_section.len() as u8);
     wasm.extend_from_slice(&export_section);
@@ -415,8 +510,8 @@ fn test_square_regression() {
     let body_size = body.len() as u8;
     let mut code_section2 = vec![0x01u8]; // 1 function
     code_section2.push(body_size + 1); // body length (body + 0 locals byte)
-    // Actually body already includes the locals byte (0x00)
-    // Let's just build it correctly
+                                       // Actually body already includes the locals byte (0x00)
+                                       // Let's just build it correctly
     let full_body = body.clone();
     let mut cs = vec![0x01u8];
     cs.push(full_body.len() as u8);
@@ -444,7 +539,7 @@ fn test_clock_time_get_invalid_id() {
         .expect("clock_time_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(99), WasmValue::I64(0), WasmValue::I32(0)])
+        .call(&[WasmValue::I32(99), WasmValue::I64(0), WasmValue::I32(0)], None)
         .expect("call should not trap");
 
     assert_eq!(result, vec![WasmValue::I32(28)], "should return EINVAL=28");
@@ -463,7 +558,7 @@ fn test_args_sizes_get_empty() {
         .expect("args_sizes_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(4)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(4)], None)
         .expect("should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
@@ -486,14 +581,14 @@ fn test_wasi_env_proc_exit_and_enosys() {
     let proc_exit = wasi
         .resolve_function_for_test("proc_exit")
         .expect("proc_exit should be registered");
-    let trap = proc_exit.call(&[WasmValue::I32(0)]);
+    let trap = proc_exit.call(&[WasmValue::I32(0)], None);
     assert!(trap.is_err(), "proc_exit should trap");
 
     // Unknown function should return ENOSYS (52)
     let enosys = wasi
         .resolve_function_for_test("fd_sync")
         .expect("fd_sync should fall back to ENOSYS");
-    let result = enosys.call(&[]).unwrap();
+    let result = enosys.call(&[], None).unwrap();
     assert_eq!(result, vec![WasmValue::I32(52)]);
 }
 
@@ -510,7 +605,7 @@ fn test_random_get_zero_length() {
         .expect("random_get should be registered");
 
     let result = func
-        .call(&[WasmValue::I32(0), WasmValue::I32(0)])
+        .call(&[WasmValue::I32(0), WasmValue::I32(0)], None)
         .expect("random_get(0, 0) should succeed");
 
     assert_eq!(result, vec![WasmValue::I32(0)]);
