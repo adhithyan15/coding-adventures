@@ -1,2 +1,1 @@
-PACKAGES=$(go list ./... | grep -v '/examples/')
-go test $PACKAGES -v -cover
+go test . -v -cover
