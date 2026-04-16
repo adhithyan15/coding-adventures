@@ -25,7 +25,7 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedDotnetChanges(t *testing.T) 
 
 func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	patch := `
-@@ -300,0 +301,34 @@
+@@ -300,0 +301,54 @@
 +      - name: Set up Swift (Windows)
 +        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
 +        shell: pwsh
@@ -34,6 +34,30 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 +          $wingetExitCode = $LASTEXITCODE
 +          if ($wingetExitCode -ne 0) {
 +            Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
++          }
++          $currentPathEntries = @($env:Path -split ';')
++          $currentPathSet = @{}
++          foreach ($entry in $currentPathEntries) {
++            if (-not [string]::IsNullOrWhiteSpace($entry)) {
++              $currentPathSet[$entry] = $true
++            }
++          }
++          $registryPathEntries = @(
++            [System.Environment]::GetEnvironmentVariable('Path', 'User')
++            [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
++          ) | Where-Object { $_ } | ForEach-Object { $_ -split ';' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
++          $newPathEntries = @()
++          foreach ($entry in $registryPathEntries) {
++            if (-not $currentPathSet.ContainsKey($entry)) {
++              $currentPathSet[$entry] = $true
++              $newPathEntries += $entry
++            }
++          }
++          foreach ($entry in $newPathEntries) {
++            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
++          }
++          if ($newPathEntries.Count -gt 0) {
++            $env:Path = "$env:Path;$($newPathEntries -join ';')"
 +          }
 +          $swiftRoots = @(
 +            (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
@@ -54,19 +78,29 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 +            throw 'swift.exe not found after winget install'
 +          }
 +          $toolchainBin = Split-Path -Parent $swiftExe
-+          $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-+          $env:Path = "$toolchainBin;$env:Path"
++          if (-not $currentPathSet.ContainsKey($toolchainBin)) {
++            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
++            $env:Path = "$env:Path;$toolchainBin"
++            $currentPathSet[$toolchainBin] = $true
++          }
 +          Write-Host "Using Swift from $swiftExe"
-+          $sdkRoot = $swiftRoots | ForEach-Object {
++          $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
++          if (-not $sdkRoot) {
++            $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'Machine')
++          }
++          if (-not $sdkRoot) {
++            $sdkRoot = $swiftRoots | ForEach-Object {
 +            Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
 +              Sort-Object FullName -Descending |
 +              Select-Object -First 1 -ExpandProperty FullName
-+          } | Where-Object { $_ } | Select-Object -First 1
++            } | Where-Object { $_ } | Select-Object -First 1
++          }
 +          if ($sdkRoot) {
 +            "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
++            $env:SDKROOT = $sdkRoot
 +            Write-Host "Using SDKROOT=$sdkRoot"
 +          }
-+          & $swiftExe --version
++          where.exe swift
 `
 
 	change := AnalyzeCIWorkflowPatch(patch)

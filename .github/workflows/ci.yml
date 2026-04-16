@@ -300,6 +300,34 @@ jobs:
             Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
           }
 
+          $currentPathEntries = @($env:Path -split ';')
+          $currentPathSet = @{}
+          foreach ($entry in $currentPathEntries) {
+            if (-not [string]::IsNullOrWhiteSpace($entry)) {
+              $currentPathSet[$entry] = $true
+            }
+          }
+
+          $registryPathEntries = @(
+            [System.Environment]::GetEnvironmentVariable('Path', 'User')
+            [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
+          ) | Where-Object { $_ } | ForEach-Object { $_ -split ';' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+          $newPathEntries = @()
+          foreach ($entry in $registryPathEntries) {
+            if (-not $currentPathSet.ContainsKey($entry)) {
+              $currentPathSet[$entry] = $true
+              $newPathEntries += $entry
+            }
+          }
+
+          foreach ($entry in $newPathEntries) {
+            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          }
+          if ($newPathEntries.Count -gt 0) {
+            $env:Path = "$env:Path;$($newPathEntries -join ';')"
+          }
+
           $swiftRoots = @(
             (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
             (Join-Path $env:ProgramFiles 'Swift')
@@ -322,22 +350,32 @@ jobs:
           }
 
           $toolchainBin = Split-Path -Parent $swiftExe
-          $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          $env:Path = "$toolchainBin;$env:Path"
+          if (-not $currentPathSet.ContainsKey($toolchainBin)) {
+            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            $env:Path = "$env:Path;$toolchainBin"
+            $currentPathSet[$toolchainBin] = $true
+          }
           Write-Host "Using Swift from $swiftExe"
 
-          $sdkRoot = $swiftRoots | ForEach-Object {
+          $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
+          if (-not $sdkRoot) {
+            $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'Machine')
+          }
+          if (-not $sdkRoot) {
+            $sdkRoot = $swiftRoots | ForEach-Object {
             Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
               Sort-Object FullName -Descending |
               Select-Object -First 1 -ExpandProperty FullName
-          } | Where-Object { $_ } | Select-Object -First 1
+            } | Where-Object { $_ } | Select-Object -First 1
+          }
 
           if ($sdkRoot) {
             "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            $env:SDKROOT = $sdkRoot
             Write-Host "Using SDKROOT=$sdkRoot"
           }
 
-          & $swiftExe --version
+          where.exe swift
 
       - name: Install cargo-tarpaulin
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
@@ -436,7 +474,11 @@ jobs:
             echo "Cargo: $(cargo --version)"
           fi
           if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
-            echo "Swift: $(swift --version | head -1)"
+            if [ "$RUNNER_OS" = "Windows" ]; then
+              echo "Swift: $(swift -version | head -1 || command -v swift)"
+            else
+              echo "Swift: $(swift --version | head -1)"
+            fi
           fi
           if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
