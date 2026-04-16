@@ -35,6 +35,28 @@ class DataStoreEngineTest {
         engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SADD"), bytes("tags"), bytes("red"), bytes("blue"))))
         val scard = engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SCARD"), bytes("tags")))) as EngineResponse.IntegerValue
         assertEquals(2, scard.value)
+
+        val zadd = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("ZADD"), bytes("scores"), bytes("1"), bytes("alice"), bytes("2"), bytes("bob"), bytes("1.5"), bytes("cara"))),
+        ) as EngineResponse.IntegerValue
+        assertEquals(3, zadd.value)
+        val zrange = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("ZRANGE"), bytes("scores"), bytes("0"), bytes("-1"), bytes("WITHSCORES"))),
+        ) as EngineResponse.ArrayValue
+        assertEquals(6, zrange.value?.size)
+        val zrank = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("ZRANK"), bytes("scores"), bytes("cara"))),
+        ) as EngineResponse.IntegerValue
+        assertEquals(1, zrank.value)
+
+        val pfadd = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("PFADD"), bytes("visitors"), bytes("alice"), bytes("bob"))),
+        ) as EngineResponse.IntegerValue
+        assertEquals(1, pfadd.value)
+        val pfcount = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("PFCOUNT"), bytes("visitors"))),
+        ) as EngineResponse.IntegerValue
+        assertTrue(pfcount.value >= 2)
     }
 
     @Test

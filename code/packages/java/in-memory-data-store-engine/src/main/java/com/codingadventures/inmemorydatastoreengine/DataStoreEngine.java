@@ -3,15 +3,19 @@ package com.codingadventures.inmemorydatastoreengine;
 import com.codingadventures.hashmap.HashMap;
 import com.codingadventures.hashset.HashSet;
 import com.codingadventures.heap.MinHeap;
+import com.codingadventures.hyperloglog.HyperLogLog;
 import com.codingadventures.inmemorydatastoreprotocol.CommandFrame;
 import com.codingadventures.inmemorydatastoreprotocol.EngineResponse;
+import com.codingadventures.skiplist.SkipList;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public final class DataStoreEngine {
     private final Store store = new Store(16);
@@ -55,6 +59,16 @@ public final class DataStoreEngine {
             case "SISMEMBER" -> sismember(frame.args());
             case "SMEMBERS" -> smembers(frame.args());
             case "SCARD" -> scard(frame.args());
+            case "ZADD" -> zadd(frame.args());
+            case "ZRANGE" -> zrange(frame.args());
+            case "ZRANGEBYSCORE" -> zrangeByScore(frame.args());
+            case "ZRANK" -> zrank(frame.args());
+            case "ZSCORE" -> zscore(frame.args());
+            case "ZCARD" -> zcard(frame.args());
+            case "ZREM" -> zrem(frame.args());
+            case "PFADD" -> pfadd(frame.args());
+            case "PFCOUNT" -> pfcount(frame.args());
+            case "PFMERGE" -> pfmerge(frame.args());
             case "EXPIRE" -> expire(frame.args(), false);
             case "EXPIREAT" -> expire(frame.args(), true);
             case "PTTL" -> pttl(frame.args());
@@ -424,6 +438,145 @@ public final class DataStoreEngine {
         return EngineResponse.integer(set.size());
     }
 
+    private EngineResponse zadd(List<byte[]> args) {
+        if (args.size() < 3 || args.size() % 2 == 0) return wrongArity("zadd");
+        ByteSequence key = wrap(args.getFirst());
+        Entry entry = keyEntry(args.getFirst());
+        SortedSet zset;
+        Long expiresAt = null;
+        if (entry == null) {
+            zset = new SortedSet();
+            store.activeDatabase().set(key, Entry.zset(zset, null));
+        } else {
+            if (entry.type != EntryType.ZSET) return wrongType();
+            zset = (SortedSet) entry.value;
+            expiresAt = entry.expiresAtMs;
+        }
+        long added = 0;
+        for (int index = 1; index < args.size(); index += 2) {
+            Double score = parseDouble(args.get(index));
+            if (score == null) return floatParseError();
+            if (zset.insert(score, wrap(args.get(index + 1)))) {
+                added++;
+            }
+        }
+        if (entry != null) entry.expiresAtMs = expiresAt;
+        return EngineResponse.integer(added);
+    }
+
+    private EngineResponse zrange(List<byte[]> args) {
+        if (args.size() < 3 || args.size() > 4) return wrongArity("zrange");
+        Integer start = parseInt(args.get(1));
+        Integer end = parseInt(args.get(2));
+        if (start == null || end == null) return integerParseError();
+        Entry entry = keyEntry(args.getFirst());
+        if (entry == null) return EngineResponse.array(List.of());
+        if (entry.type != EntryType.ZSET) return wrongType();
+        boolean withScores = args.size() == 4 && equalsIgnoreCase(args.get(3), "WITHSCORES");
+        return EngineResponse.array(flattenZset(((SortedSet) entry.value).rangeByIndex(start, end), withScores));
+    }
+
+    private EngineResponse zrangeByScore(List<byte[]> args) {
+        if (args.size() < 3 || args.size() > 4) return wrongArity("zrangebyscore");
+        Double min = parseDouble(args.get(1));
+        Double max = parseDouble(args.get(2));
+        if (min == null || max == null) return floatParseError();
+        Entry entry = keyEntry(args.getFirst());
+        if (entry == null) return EngineResponse.array(List.of());
+        if (entry.type != EntryType.ZSET) return wrongType();
+        boolean withScores = args.size() == 4 && equalsIgnoreCase(args.get(3), "WITHSCORES");
+        return EngineResponse.array(flattenZset(((SortedSet) entry.value).rangeByScore(min, max), withScores));
+    }
+
+    private EngineResponse zrank(List<byte[]> args) {
+        if (args.size() != 2) return wrongArity("zrank");
+        Entry entry = keyEntry(args.getFirst());
+        if (entry == null) return EngineResponse.nullBulkString();
+        if (entry.type != EntryType.ZSET) return wrongType();
+        Integer rank = ((SortedSet) entry.value).rank(wrap(args.get(1)));
+        return rank == null ? EngineResponse.nullBulkString() : EngineResponse.integer(rank);
+    }
+
+    private EngineResponse zscore(List<byte[]> args) {
+        if (args.size() != 2) return wrongArity("zscore");
+        Entry entry = keyEntry(args.getFirst());
+        if (entry == null) return EngineResponse.nullBulkString();
+        if (entry.type != EntryType.ZSET) return wrongType();
+        Double score = ((SortedSet) entry.value).score(wrap(args.get(1)));
+        return score == null ? EngineResponse.nullBulkString() : EngineResponse.bulkString(formatScore(score).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private EngineResponse zcard(List<byte[]> args) {
+        if (args.size() != 1) return wrongArity("zcard");
+        Entry entry = keyEntry(args.getFirst());
+        if (entry == null) return EngineResponse.integer(0);
+        if (entry.type != EntryType.ZSET) return wrongType();
+        return EngineResponse.integer(((SortedSet) entry.value).size());
+    }
+
+    private EngineResponse zrem(List<byte[]> args) {
+        if (args.size() < 2) return wrongArity("zrem");
+        ByteSequence key = wrap(args.getFirst());
+        Entry entry = keyEntry(args.getFirst());
+        if (entry == null) return EngineResponse.integer(0);
+        if (entry.type != EntryType.ZSET) return wrongType();
+        SortedSet zset = (SortedSet) entry.value;
+        long removed = 0;
+        for (int index = 1; index < args.size(); index++) {
+            if (zset.remove(wrap(args.get(index)))) removed++;
+        }
+        if (zset.isEmpty()) store.activeDatabase().delete(key);
+        return EngineResponse.integer(removed);
+    }
+
+    private EngineResponse pfadd(List<byte[]> args) {
+        if (args.size() < 2) return wrongArity("pfadd");
+        ByteSequence key = wrap(args.getFirst());
+        Entry entry = keyEntry(args.getFirst());
+        HyperLogLog sketch;
+        Long expiresAt = null;
+        if (entry == null) {
+            sketch = new HyperLogLog();
+            store.activeDatabase().set(key, Entry.hll(sketch, null));
+        } else {
+            if (entry.type != EntryType.HLL) return wrongType();
+            sketch = (HyperLogLog) entry.value;
+            expiresAt = entry.expiresAtMs;
+        }
+        HyperLogLog before = sketch.copy();
+        for (int index = 1; index < args.size(); index++) {
+            sketch.add(args.get(index));
+        }
+        if (entry != null) entry.expiresAtMs = expiresAt;
+        return EngineResponse.integer(before.equals(sketch) ? 0 : 1);
+    }
+
+    private EngineResponse pfcount(List<byte[]> args) {
+        if (args.isEmpty()) return wrongArity("pfcount");
+        HyperLogLog aggregate = null;
+        for (byte[] rawKey : args) {
+            Entry entry = keyEntry(rawKey);
+            if (entry == null) continue;
+            if (entry.type != EntryType.HLL) return wrongType();
+            aggregate = aggregate == null ? ((HyperLogLog) entry.value).copy() : aggregate.merge((HyperLogLog) entry.value);
+        }
+        return EngineResponse.integer((aggregate == null ? new HyperLogLog() : aggregate).count());
+    }
+
+    private EngineResponse pfmerge(List<byte[]> args) {
+        if (args.size() < 2) return wrongArity("pfmerge");
+        HyperLogLog merged = null;
+        for (int index = 1; index < args.size(); index++) {
+            Entry entry = keyEntry(args.get(index));
+            if (entry == null) continue;
+            if (entry.type != EntryType.HLL) return wrongType();
+            merged = merged == null ? ((HyperLogLog) entry.value).copy() : merged.merge((HyperLogLog) entry.value);
+        }
+        Entry destination = keyEntry(args.getFirst());
+        store.activeDatabase().set(wrap(args.getFirst()), Entry.hll(merged == null ? new HyperLogLog() : merged, destination == null ? null : destination.expiresAtMs));
+        return EngineResponse.ok();
+    }
+
     private EngineResponse expire(List<byte[]> args, boolean absoluteSeconds) {
         if (args.size() != 2) return wrongArity(absoluteSeconds ? "expireat" : "expire");
         ByteSequence key = wrap(args.getFirst());
@@ -539,6 +692,10 @@ public final class DataStoreEngine {
         return EngineResponse.error("ERR value is not an integer or out of range");
     }
 
+    private static EngineResponse floatParseError() {
+        return EngineResponse.error("ERR value is not a valid float");
+    }
+
     private static long parseLong(byte[] bytes) {
         try {
             return Long.parseLong(new String(bytes, StandardCharsets.UTF_8));
@@ -555,8 +712,36 @@ public final class DataStoreEngine {
         }
     }
 
+    private static Double parseDouble(byte[] bytes) {
+        try {
+            double value = Double.parseDouble(new String(bytes, StandardCharsets.UTF_8));
+            return Double.isFinite(value) ? value : null;
+        } catch (NumberFormatException error) {
+            return null;
+        }
+    }
+
+    private static boolean equalsIgnoreCase(byte[] bytes, String text) {
+        return new String(bytes, StandardCharsets.UTF_8).equalsIgnoreCase(text);
+    }
+
+    private static String formatScore(double score) {
+        return BigDecimal.valueOf(score).stripTrailingZeros().toPlainString();
+    }
+
+    private static List<EngineResponse> flattenZset(List<Map.Entry<ByteSequence, Double>> values, boolean withScores) {
+        ArrayList<EngineResponse> responses = new ArrayList<>();
+        for (Map.Entry<ByteSequence, Double> entry : values) {
+            responses.add(EngineResponse.bulkString(entry.getKey().bytes()));
+            if (withScores) {
+                responses.add(EngineResponse.bulkString(formatScore(entry.getValue()).getBytes(StandardCharsets.UTF_8)));
+            }
+        }
+        return responses;
+    }
+
     private enum EntryType {
-        STRING("string"), HASH("hash"), LIST("list"), SET("set");
+        STRING("string"), HASH("hash"), LIST("list"), SET("set"), ZSET("zset"), HLL("hll");
 
         private final String wireName;
 
@@ -590,6 +775,100 @@ public final class DataStoreEngine {
 
         private static Entry set(HashSet<ByteSequence> value, Long expiresAtMs) {
             return new Entry(EntryType.SET, value, expiresAtMs);
+        }
+
+        private static Entry zset(SortedSet value, Long expiresAtMs) {
+            return new Entry(EntryType.ZSET, value, expiresAtMs);
+        }
+
+        private static Entry hll(HyperLogLog value, Long expiresAtMs) {
+            return new Entry(EntryType.HLL, value, expiresAtMs);
+        }
+    }
+
+    private record SortedEntry(double score, ByteSequence member) {
+    }
+
+    private static final class SortedSet {
+        private final HashMap<ByteSequence, Double> members = new HashMap<>();
+        private final SkipList<SortedEntry, Byte> ordering = new SkipList<>((left, right) -> {
+            int byScore = Double.compare(left.score(), right.score());
+            return byScore != 0 ? byScore : left.member().compareTo(right.member());
+        });
+
+        private boolean insert(double score, ByteSequence member) {
+            if (Double.isNaN(score)) {
+                throw new IllegalArgumentException("sorted set score cannot be NaN");
+            }
+            boolean isNew = !members.has(member);
+            if (!isNew) {
+                ordering.delete(new SortedEntry(members.get(member), member));
+            }
+            members.set(member, score);
+            ordering.insert(new SortedEntry(score, member), (byte) 0);
+            return isNew;
+        }
+
+        private boolean remove(ByteSequence member) {
+            if (!members.has(member)) {
+                return false;
+            }
+            double score = members.get(member);
+            ordering.delete(new SortedEntry(score, member));
+            members.delete(member);
+            return true;
+        }
+
+        private Integer rank(ByteSequence member) {
+            if (!members.has(member)) {
+                return null;
+            }
+            return ordering.rank(new SortedEntry(members.get(member), member));
+        }
+
+        private Double score(ByteSequence member) {
+            return members.get(member);
+        }
+
+        private long size() {
+            return members.size();
+        }
+
+        private boolean isEmpty() {
+            return members.isEmpty();
+        }
+
+        private List<Map.Entry<ByteSequence, Double>> orderedEntries() {
+            ArrayList<Map.Entry<ByteSequence, Double>> result = new ArrayList<>();
+            for (Map.Entry<SortedEntry, Byte> entry : ordering.entries()) {
+                result.add(Map.entry(entry.getKey().member(), entry.getKey().score()));
+            }
+            return result;
+        }
+
+        private List<Map.Entry<ByteSequence, Double>> rangeByIndex(int start, int end) {
+            List<Map.Entry<ByteSequence, Double>> entries = orderedEntries();
+            if (entries.isEmpty()) return List.of();
+            int length = entries.size();
+            int normalizedStart = start < 0 ? length + start : start;
+            int normalizedEnd = end < 0 ? length + end : end;
+            if (normalizedStart < 0 || normalizedEnd < 0 || normalizedStart >= length || normalizedStart > normalizedEnd) {
+                return List.of();
+            }
+            return new ArrayList<>(entries.subList(normalizedStart, Math.min(length, normalizedEnd + 1)));
+        }
+
+        private List<Map.Entry<ByteSequence, Double>> rangeByScore(double min, double max) {
+            if (Double.isNaN(min) || Double.isNaN(max)) {
+                throw new IllegalArgumentException("sorted set score cannot be NaN");
+            }
+            ArrayList<Map.Entry<ByteSequence, Double>> result = new ArrayList<>();
+            for (Map.Entry<ByteSequence, Double> entry : orderedEntries()) {
+                if (entry.getValue() >= min && entry.getValue() <= max) {
+                    result.add(entry);
+                }
+            }
+            return result;
         }
     }
 

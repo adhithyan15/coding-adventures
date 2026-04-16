@@ -3,12 +3,15 @@ package com.codingadventures.inmemorydatastoreengine
 import com.codingadventures.hashmap.HashMap
 import com.codingadventures.hashset.HashSet
 import com.codingadventures.heap.MinHeap
+import com.codingadventures.hyperloglog.HyperLogLog
 import com.codingadventures.inmemorydatastoreprotocol.CommandFrame
 import com.codingadventures.inmemorydatastoreprotocol.EngineResponse
 import com.codingadventures.inmemorydatastoreprotocol.bulkString
 import com.codingadventures.inmemorydatastoreprotocol.error
 import com.codingadventures.inmemorydatastoreprotocol.integer
 import com.codingadventures.inmemorydatastoreprotocol.ok
+import com.codingadventures.skiplist.SkipList
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.Locale
 
@@ -52,6 +55,16 @@ class DataStoreEngine {
             "SISMEMBER" -> sismember(frame.args)
             "SMEMBERS" -> smembers(frame.args)
             "SCARD" -> scard(frame.args)
+            "ZADD" -> zadd(frame.args)
+            "ZRANGE" -> zrange(frame.args)
+            "ZRANGEBYSCORE" -> zrangeByScore(frame.args)
+            "ZRANK" -> zrank(frame.args)
+            "ZSCORE" -> zscore(frame.args)
+            "ZCARD" -> zcard(frame.args)
+            "ZREM" -> zrem(frame.args)
+            "PFADD" -> pfadd(frame.args)
+            "PFCOUNT" -> pfcount(frame.args)
+            "PFMERGE" -> pfmerge(frame.args)
             "EXPIRE" -> expire(frame.args, false)
             "EXPIREAT" -> expire(frame.args, true)
             "PTTL" -> pttl(frame.args)
@@ -317,6 +330,115 @@ class DataStoreEngine {
         return integer((entry.value as HashSet<ByteSequence>).size.toLong())
     }
 
+    private fun zadd(args: List<ByteArray>): EngineResponse {
+        if (args.size < 3 || args.size % 2 == 0) return wrongArity("zadd")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first())
+        val zset = when {
+            entry == null -> SortedSet().also { store.activeDatabase().set(key, Entry.zset(it, null)) }
+            entry.type != EntryType.ZSET -> return wrongType()
+            else -> entry.value as SortedSet
+        }
+        var added = 0L
+        for (index in 1 until args.size step 2) {
+            val score = parseDouble(args[index]) ?: return floatParseError()
+            if (zset.insert(score, ByteSequence(args[index + 1]))) added += 1
+        }
+        return integer(added)
+    }
+
+    private fun zrange(args: List<ByteArray>): EngineResponse {
+        if (args.size !in 3..4) return wrongArity("zrange")
+        val start = parseInt(args[1]) ?: return integerParseError()
+        val end = parseInt(args[2]) ?: return integerParseError()
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.ZSET) return wrongType()
+        val withScores = args.size == 4 && args[3].decodeToString().equals("WITHSCORES", ignoreCase = true)
+        return EngineResponse.ArrayValue(flattenZset((entry.value as SortedSet).rangeByIndex(start, end), withScores))
+    }
+
+    private fun zrangeByScore(args: List<ByteArray>): EngineResponse {
+        if (args.size !in 3..4) return wrongArity("zrangebyscore")
+        val min = parseDouble(args[1]) ?: return floatParseError()
+        val max = parseDouble(args[2]) ?: return floatParseError()
+        val entry = keyEntry(args.first()) ?: return EngineResponse.ArrayValue(emptyList())
+        if (entry.type != EntryType.ZSET) return wrongType()
+        val withScores = args.size == 4 && args[3].decodeToString().equals("WITHSCORES", ignoreCase = true)
+        return EngineResponse.ArrayValue(flattenZset((entry.value as SortedSet).rangeByScore(min, max), withScores))
+    }
+
+    private fun zrank(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("zrank")
+        val entry = keyEntry(args.first()) ?: return bulkString(null)
+        if (entry.type != EntryType.ZSET) return wrongType()
+        return (entry.value as SortedSet).rank(ByteSequence(args[1]))?.let { integer(it.toLong()) } ?: bulkString(null)
+    }
+
+    private fun zscore(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("zscore")
+        val entry = keyEntry(args.first()) ?: return bulkString(null)
+        if (entry.type != EntryType.ZSET) return wrongType()
+        return (entry.value as SortedSet).score(ByteSequence(args[1]))
+            ?.let { bulkString(formatScore(it).encodeToByteArray()) }
+            ?: bulkString(null)
+    }
+
+    private fun zcard(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("zcard")
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.ZSET) return wrongType()
+        return integer((entry.value as SortedSet).size().toLong())
+    }
+
+    private fun zrem(args: List<ByteArray>): EngineResponse {
+        if (args.size < 2) return wrongArity("zrem")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first()) ?: return integer(0)
+        if (entry.type != EntryType.ZSET) return wrongType()
+        val zset = entry.value as SortedSet
+        val removed = args.drop(1).count { zset.remove(ByteSequence(it)) }
+        if (zset.isEmpty()) store.activeDatabase().delete(key)
+        return integer(removed.toLong())
+    }
+
+    private fun pfadd(args: List<ByteArray>): EngineResponse {
+        if (args.size < 2) return wrongArity("pfadd")
+        val key = ByteSequence(args.first())
+        val entry = keyEntry(args.first())
+        val sketch = when {
+            entry == null -> HyperLogLog().also { store.activeDatabase().set(key, Entry.hll(it, null)) }
+            entry.type != EntryType.HLL -> return wrongType()
+            else -> entry.value as HyperLogLog
+        }
+        val before = sketch.copy()
+        args.drop(1).forEach(sketch::add)
+        return integer(if (before == sketch) 0 else 1)
+    }
+
+    private fun pfcount(args: List<ByteArray>): EngineResponse {
+        if (args.isEmpty()) return wrongArity("pfcount")
+        var aggregate: HyperLogLog? = null
+        for (rawKey in args) {
+            val entry = keyEntry(rawKey) ?: continue
+            if (entry.type != EntryType.HLL) return wrongType()
+            aggregate = if (aggregate == null) (entry.value as HyperLogLog).copy() else aggregate.merge(entry.value as HyperLogLog)
+        }
+        return integer((aggregate ?: HyperLogLog()).count().toLong())
+    }
+
+    private fun pfmerge(args: List<ByteArray>): EngineResponse {
+        if (args.size < 2) return wrongArity("pfmerge")
+        var merged: HyperLogLog? = null
+        for (rawKey in args.drop(1)) {
+            val entry = keyEntry(rawKey) ?: continue
+            if (entry.type != EntryType.HLL) return wrongType()
+            merged = if (merged == null) (entry.value as HyperLogLog).copy() else merged.merge(entry.value as HyperLogLog)
+        }
+        val expiresAt = keyEntry(args.first())?.expiresAtMs
+        store.activeDatabase().set(ByteSequence(args.first()), Entry.hll(merged ?: HyperLogLog(), expiresAt))
+        return ok()
+    }
+
     private fun expire(args: List<ByteArray>, absoluteSeconds: Boolean): EngineResponse {
         if (args.size != 2) return wrongArity(if (absoluteSeconds) "expireat" else "expire")
         val key = ByteSequence(args.first())
@@ -396,11 +518,20 @@ class DataStoreEngine {
     private fun wrongArity(command: String): EngineResponse = error("ERR wrong number of arguments for '$command' command")
     private fun wrongType(): EngineResponse = error("WRONGTYPE Operation against a key holding the wrong kind of value")
     private fun integerParseError(): EngineResponse = error("ERR value is not an integer or out of range")
+    private fun floatParseError(): EngineResponse = error("ERR value is not a valid float")
     private fun parseLong(bytes: ByteArray): Long? = bytes.decodeToString().toLongOrNull()
     private fun parseInt(bytes: ByteArray): Int? = bytes.decodeToString().toIntOrNull()
+    private fun parseDouble(bytes: ByteArray): Double? = bytes.decodeToString().toDoubleOrNull()?.takeIf(Double::isFinite)
+    private fun formatScore(score: Double): String = BigDecimal.valueOf(score).stripTrailingZeros().toPlainString()
+    private fun flattenZset(values: List<Pair<ByteSequence, Double>>, withScores: Boolean): List<EngineResponse> = buildList {
+        values.forEach { (member, score) ->
+            add(bulkString(member.bytes))
+            if (withScores) add(bulkString(formatScore(score).encodeToByteArray()))
+        }
+    }
 }
 
-enum class EntryType(val wireName: String) { STRING("string"), HASH("hash"), LIST("list"), SET("set") }
+enum class EntryType(val wireName: String) { STRING("string"), HASH("hash"), LIST("list"), SET("set"), ZSET("zset"), HLL("hll") }
 
 data class Entry(val type: EntryType, var value: Any, var expiresAtMs: Long?) {
     companion object {
@@ -408,6 +539,54 @@ data class Entry(val type: EntryType, var value: Any, var expiresAtMs: Long?) {
         fun hash(value: HashMap<ByteSequence, ByteArray>, expiresAtMs: Long?) = Entry(EntryType.HASH, value, expiresAtMs)
         fun list(value: MutableList<ByteArray>, expiresAtMs: Long?) = Entry(EntryType.LIST, value, expiresAtMs)
         fun set(value: HashSet<ByteSequence>, expiresAtMs: Long?) = Entry(EntryType.SET, value, expiresAtMs)
+        fun zset(value: SortedSet, expiresAtMs: Long?) = Entry(EntryType.ZSET, value, expiresAtMs)
+        fun hll(value: HyperLogLog, expiresAtMs: Long?) = Entry(EntryType.HLL, value, expiresAtMs)
+    }
+}
+
+data class SortedEntry(val score: Double, val member: ByteSequence)
+
+class SortedSet {
+    private val members = HashMap<ByteSequence, Double>()
+    private val ordering = SkipList<SortedEntry, Byte>(comparator = { left, right ->
+        compareValuesBy(left, right, SortedEntry::score, SortedEntry::member)
+    })
+
+    fun insert(score: Double, member: ByteSequence): Boolean {
+        require(!score.isNaN()) { "sorted set score cannot be NaN" }
+        val isNew = !members.has(member)
+        members[member]?.let { ordering.delete(SortedEntry(it, member)) }
+        members.set(member, score)
+        ordering.insert(SortedEntry(score, member), 0)
+        return isNew
+    }
+
+    fun remove(member: ByteSequence): Boolean {
+        val score = members[member] ?: return false
+        ordering.delete(SortedEntry(score, member))
+        members.delete(member)
+        return true
+    }
+
+    fun rank(member: ByteSequence): Int? = members[member]?.let { ordering.rank(SortedEntry(it, member)) }
+    fun score(member: ByteSequence): Double? = members[member]
+    fun size(): Int = members.size
+    fun isEmpty(): Boolean = members.isEmpty()
+    fun orderedEntries(): List<Pair<ByteSequence, Double>> = ordering.entries().map { it.first.member to it.first.score }
+
+    fun rangeByIndex(start: Int, end: Int): List<Pair<ByteSequence, Double>> {
+        val entries = orderedEntries()
+        if (entries.isEmpty()) return emptyList()
+        val length = entries.size
+        val normalizedStart = if (start < 0) length + start else start
+        val normalizedEnd = if (end < 0) length + end else end
+        if (normalizedStart < 0 || normalizedEnd < 0 || normalizedStart >= length || normalizedStart > normalizedEnd) return emptyList()
+        return entries.subList(normalizedStart, minOf(length, normalizedEnd + 1))
+    }
+
+    fun rangeByScore(min: Double, max: Double): List<Pair<ByteSequence, Double>> {
+        require(!min.isNaN() && !max.isNaN()) { "sorted set score cannot be NaN" }
+        return orderedEntries().filter { (_, score) -> score in min..max }
     }
 }
 
