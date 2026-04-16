@@ -283,4 +283,5 @@ members = [
     "intel-4004-assembler",
     "intel-4004-packager",
     "nib-compiler",
+  "bitset-c",
 ]
