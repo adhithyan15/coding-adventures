@@ -3,6 +3,7 @@ package barcode1d
 
 import (
 	"fmt"
+	"runtime"
 	"strings"
 
 	barcodelayout1d "github.com/adhithyan15/coding-adventures/code/packages/go/barcode-layout-1d"
@@ -11,9 +12,7 @@ import (
 	code39 "github.com/adhithyan15/coding-adventures/code/packages/go/code39"
 	ean13 "github.com/adhithyan15/coding-adventures/code/packages/go/ean-13"
 	itf "github.com/adhithyan15/coding-adventures/code/packages/go/itf"
-	paintcodecpng "github.com/adhithyan15/coding-adventures/code/packages/go/paint-codec-png"
 	paintinstructions "github.com/adhithyan15/coding-adventures/code/packages/go/paint-instructions"
-	paintvmraster "github.com/adhithyan15/coding-adventures/code/packages/go/paint-vm-raster"
 	pixelcontainer "github.com/adhithyan15/coding-adventures/code/packages/go/pixel-container"
 	upca "github.com/adhithyan15/coding-adventures/code/packages/go/upc-a"
 )
@@ -43,9 +42,15 @@ var DefaultOptions = Options{
 	LayoutConfig: DefaultLayoutConfig,
 }
 
-// CurrentBackend reports the backend that the Go orchestration package uses.
 func CurrentBackend() string {
-	return "raster"
+	switch {
+	case runtime.GOOS == "darwin" && runtime.GOARCH == "arm64":
+		return "metal"
+	case runtime.GOOS == "windows":
+		return "gdi"
+	default:
+		return "raster"
+	}
 }
 
 func normalizeSymbology(symbology string) (string, error) {
@@ -109,14 +114,14 @@ func RenderPixels(data string, options *Options) (*pixelcontainer.PixelContainer
 	if err != nil {
 		return nil, err
 	}
-	return paintvmraster.Render(scene)
+	return renderPixelsForCurrentBackend(scene)
 }
 
 // RenderPNG renders the barcode to PNG bytes.
 func RenderPNG(data string, options *Options) ([]byte, error) {
-	pixels, err := RenderPixels(data, options)
+	scene, err := BuildScene(data, options)
 	if err != nil {
 		return nil, err
 	}
-	return paintcodecpng.EncodePNG(pixels)
+	return renderPNGForCurrentBackend(scene)
 }
