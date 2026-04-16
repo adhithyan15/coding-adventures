@@ -1,1 +1,1 @@
-cd ../grammar-tools && gradle jar && cd ../lexer && gradle jar && cd ../parser && gradle test
+dotnet test tests/CodingAdventures.Parser.Tests/CodingAdventures.Parser.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=80 /p:ThresholdType=line
