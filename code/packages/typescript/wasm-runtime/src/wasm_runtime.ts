@@ -265,6 +265,15 @@ export class WasmRuntime {
       host: this.host,
     };
 
+    const memoryBinder = this.host as
+      | (HostInterface & {
+          setMemory?: (memory: LinearMemory) => void;
+        })
+      | null;
+    if (memory && memoryBinder && typeof memoryBinder.setMemory === "function") {
+      memoryBinder.setMemory(memory);
+    }
+
     // Step 9: Call start function (if present).
     if (module.start !== null && module.start !== undefined) {
       const engine = new WasmExecutionEngine({

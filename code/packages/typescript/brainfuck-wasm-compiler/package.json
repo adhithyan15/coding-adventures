@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/brainfuck-wasm-compiler",
+  "version": "0.1.0",
+  "description": "Compile Brainfuck source all the way to raw WebAssembly bytes",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/brainfuck": "file:../brainfuck",
+    "@coding-adventures/brainfuck-ir-compiler": "file:../brainfuck-ir-compiler",
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/ir-optimizer": "file:../ir-optimizer",
+    "@coding-adventures/ir-to-wasm-compiler": "file:../ir-to-wasm-compiler",
+    "@coding-adventures/ir-to-wasm-validator": "file:../ir-to-wasm-validator",
+    "@coding-adventures/wasm-module-encoder": "file:../wasm-module-encoder",
+    "@coding-adventures/wasm-types": "file:../wasm-types",
+    "@coding-adventures/wasm-validator": "file:../wasm-validator"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.0",
+    "@coding-adventures/wasm-runtime": "file:../wasm-runtime",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
