@@ -21,7 +21,7 @@ This repo is part computing-stack curriculum, part polyglot package lab, part to
 As of this refresh, the repo contains:
 
 - 2014 package directories across 11 package language roots
-- 131 program directories across 13 program language roots
+- 132 program directories across 14 program language roots
 - 303 Markdown specs in `code/specs/`
 - 12 learning files in `code/learning/`
 - 41 shared grammar source files in `code/grammars/`
@@ -46,6 +46,7 @@ As of this refresh, the repo contains:
 
 | Language | Program dirs |
 | --- | ---: |
+| dart | 1 |
 | dotnet | 2 |
 | elixir | 13 |
 | go | 14 |
@@ -153,6 +154,7 @@ tests prove the behavior
 
 The root `mise.toml` currently pins:
 
+- Dart `latest`
 - Go `latest`
 - Python `3.12`
 - Ruby `3.4`

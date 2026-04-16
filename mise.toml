@@ -1,5 +1,6 @@
 [tools]
 cabal = "3.16.1.0"
+dart = "latest"
 ghc = "9.14.1"
 go = "latest"
 python = "3.12"
