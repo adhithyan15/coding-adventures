@@ -20,7 +20,7 @@
       "id": "language",
       "short": "l",
       "long": "language",
-      "description": "Target language(s). Comma-separated or 'all' for all 12 scaffold languages: python, go, ruby, typescript, rust, elixir, perl, lua, swift, haskell, csharp, fsharp",
+      "description": "Target language(s). Comma-separated or 'all' for all 14 scaffold languages: python, go, ruby, typescript, rust, elixir, perl, lua, swift, haskell, csharp, fsharp, java, kotlin",
       "type": "string",
       "default": "all"
     },
