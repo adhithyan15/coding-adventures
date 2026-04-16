@@ -55,11 +55,12 @@ jobs:
       needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
       needs_lua: ${{ steps.toolchains.outputs.needs_lua }}
       needs_perl: ${{ steps.toolchains.outputs.needs_perl }}
-      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
+      needs_dart: ${{ steps.toolchains.outputs.needs_dart }}
       needs_haskell: ${{ steps.toolchains.outputs.needs_haskell }}
       needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
       needs_java: ${{ steps.toolchains.outputs.needs_java }}
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -142,12 +143,14 @@ jobs:
               'needs_elixir=true' \
               'needs_lua=true' \
               'needs_perl=true' \
-              'needs_swift=true' \
+              'needs_dart=true' \
               'needs_haskell=true' \
               'needs_dotnet=true' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
               'needs_java=true' \
               'needs_kotlin=true' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_swift=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -158,12 +161,14 @@ jobs:
               'needs_elixir=${{ steps.detect.outputs.needs_elixir }}' \
               'needs_lua=${{ steps.detect.outputs.needs_lua }}' \
               'needs_perl=${{ steps.detect.outputs.needs_perl }}' \
-              'needs_swift=${{ steps.detect.outputs.needs_swift }}' \
+              'needs_dart=${{ steps.detect.outputs.needs_dart }}' \
               'needs_haskell=${{ steps.detect.outputs.needs_haskell }}' \
               'needs_dotnet=${{ steps.detect.outputs.needs_dotnet }}' >> "$GITHUB_OUTPUT"
             printf '%s\n' \
               'needs_java=${{ steps.detect.outputs.needs_java }}' \
               'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_swift=${{ steps.detect.outputs.needs_swift }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -289,6 +294,21 @@ jobs:
         if: needs.detect.outputs.needs_rust == 'true'
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install cargo-tarpaulin
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        run: cargo install cargo-tarpaulin
+
+      - name: Set up Elixir
+        if: needs.detect.outputs.needs_elixir == 'true'
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.16'
+          otp-version: '26.0'
+
+      - name: Set up Dart
+        if: needs.detect.outputs.needs_dart == 'true'
+        uses: dart-lang/setup-dart@v1
+
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
@@ -377,17 +397,6 @@ jobs:
 
           where.exe swift
 
-      - name: Install cargo-tarpaulin
-        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        run: cargo install cargo-tarpaulin
-
-      - name: Set up Elixir
-        if: needs.detect.outputs.needs_elixir == 'true'
-        uses: erlef/setup-beam@v1
-        with:
-          elixir-version: '1.16'
-          otp-version: '26.0'
-
       # ── Java / Kotlin ──────────────────────────────────────────
       #
       # Both Java and Kotlin packages use Gradle and JDK 21.
@@ -474,15 +483,14 @@ jobs:
             echo "Cargo: $(cargo --version)"
           fi
           if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
-            if [ "$RUNNER_OS" = "Windows" ]; then
-              echo "Swift: $(swift -version | head -1 || command -v swift)"
-            else
-              echo "Swift: $(swift --version | head -1)"
-            fi
+            echo "Swift: $(swift --version | head -1)"
           fi
           if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
+            echo "Dart: $(dart --version 2>&1)"
           fi
           if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ]; then
             echo "Lua: $(lua -v)"
@@ -518,8 +526,20 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
+      - name: Build and test affected Swift packages on Windows
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
+        shell: pwsh
+        run: |
+          $planFlag = @()
+          if (Test-Path 'build-plan.json') {
+            Write-Host 'Using pre-computed build plan'
+            $planFlag = @('-plan-file', 'build-plan.json')
+          }
+          & ./build-tool.exe -root . @planFlag -validate-build-files -language swift
+
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
+        if: runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false)
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi

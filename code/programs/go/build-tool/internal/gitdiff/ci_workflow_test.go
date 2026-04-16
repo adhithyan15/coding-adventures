@@ -114,6 +114,34 @@ func TestAnalyzeCIWorkflowPatchAllowsToolchainScopedSwiftChanges(t *testing.T) {
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsWindowsSwiftOnlyBuildStep(t *testing.T) {
+	patch := `
+@@ -430,0 +431,9 @@
++      - name: Build and test affected Swift packages on Windows
++        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
++        shell: pwsh
++        run: |
++          $planFlag = @()
++          if (Test-Path 'build-plan.json') {
++            Write-Host 'Using pre-computed build plan'
++            $planFlag = @('-plan-file', 'build-plan.json')
++          }
++          & ./build-tool.exe -root . @planFlag -validate-build-files -language swift
+@@ -440,0 +450,1 @@
++        if: runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false)
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatalf("expected windows swift-only build step to stay incremental")
+	}
+
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "swift" {
+		t.Fatalf("expected swift toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchAllowsSharedJVMToolchainChanges(t *testing.T) {
 	patch := `
 @@ -314,0 +315,17 @@

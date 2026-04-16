@@ -54,6 +54,10 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 	"swift": {
 		"needs_swift", "swift.toolchain", "winget install --id swift.toolchain",
 		"swift --version", "swift -version", "set up swift", "swift.exe", "sdkroot",
+		"-language swift", "swift packages",
+	},
+	"dart": {
+		"needs_dart", "setup-dart", "dart --version", "set up dart",
 	},
 	"haskell": {
 		"needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
@@ -78,15 +82,10 @@ var ciWorkflowToolchainMarkers = map[string][]string{
 }
 
 var ciWorkflowUnsafeMarkers = []string{
-	"./build-tool",
-	"build-tool.exe",
 	"-detect-languages",
 	"-emit-plan",
 	"-force",
-	"-plan-file",
-	"-validate-build-files",
 	"actions/checkout",
-	"build-plan",
 	"cancel-in-progress:",
 	"concurrency:",
 	"diff-base",
