@@ -221,8 +221,17 @@ subtest 'LEFT (<) — ADD_IMM v1, v1, -1' => sub {
 
 subtest 'OUTPUT (.) — SYSCALL 1' => sub {
     my $result = must_compile('.', $Cfg->release_config);
+    my $found_copy = 0;
     my $found = 0;
     for my $instr (@{ $result->{program}{instructions} }) {
+        if ($instr->{opcode} == $IrOp->ADD_IMM
+            && @{ $instr->{operands} } == 3
+            && $instr->{operands}[0]->{index} == 4
+            && $instr->{operands}[1]->{index} == 2
+            && $instr->{operands}[2]->{value} == 0)
+        {
+            $found_copy = 1;
+        }
         if ($instr->{opcode} == $IrOp->SYSCALL
             && @{ $instr->{operands} }
             && $instr->{operands}[0]->{value} == 1)
@@ -231,6 +240,7 @@ subtest 'OUTPUT (.) — SYSCALL 1' => sub {
             last;
         }
     }
+    ok($found_copy, 'ADD_IMM copy into syscall arg register for OUTPUT');
     ok($found, 'SYSCALL 1 (write) for OUTPUT');
 };
 

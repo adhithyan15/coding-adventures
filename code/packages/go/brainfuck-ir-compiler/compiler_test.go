@@ -217,9 +217,27 @@ func TestCompileLeft(t *testing.T) {
 func TestCompileOutput(t *testing.T) {
 	result := mustCompile(t, ".", ReleaseConfig())
 
-	// OUTPUT produces: LOAD_BYTE + move to arg reg + SYSCALL 1
+	// OUTPUT produces: LOAD_BYTE + ADD_IMM copy to arg reg + SYSCALL 1
 	if countOpcode(result.Program, ir.OpSyscall) < 1 {
 		t.Error("expected SYSCALL for OUTPUT")
+	}
+	foundCopy := false
+	for _, instr := range result.Program.Instructions {
+		if instr.Opcode == ir.OpAddImm && len(instr.Operands) == 3 {
+			dst, dstOK := instr.Operands[0].(ir.IrRegister)
+			src, srcOK := instr.Operands[1].(ir.IrRegister)
+			imm, immOK := instr.Operands[2].(ir.IrImmediate)
+			if dstOK && srcOK && immOK &&
+				dst.Index == regSysArg &&
+				src.Index == regTemp &&
+				imm.Value == 0 {
+				foundCopy = true
+				break
+			}
+		}
+	}
+	if !foundCopy {
+		t.Error("expected ADD_IMM copy into syscall argument register")
 	}
 
 	// Verify syscall number is 1 (write)

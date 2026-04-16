@@ -140,7 +140,7 @@ type WasiConfig struct {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// WASISTUB — the host implementation
+// WASIHOST — the host implementation
 // ════════════════════════════════════════════════════════════════════════
 
 // WasiStub provides WASI host functions to the execution engine.
@@ -158,6 +158,10 @@ type WasiStub struct {
 	random         WasiRandom
 }
 
+// WasiHost is the preferred name for the full WASI host implementation.
+// WasiStub remains as a backwards-compatible alias.
+type WasiHost = WasiStub
+
 // NewWasiStub creates a new WASI stub with stdout/stderr callbacks only.
 //
 // This preserves backward compatibility with existing call sites that use
@@ -171,16 +175,22 @@ func NewWasiStub(stdout, stderr func(string)) *WasiStub {
 	if stdout == nil {
 		stdout = func(string) {}
 	}
+	stdin := func(int) []byte { return nil }
 	if stderr == nil {
 		stderr = func(string) {}
 	}
 	return &WasiStub{
 		StdoutCallback: stdout,
-		StdinCallback:  func(int) []byte { return nil },
+		StdinCallback:  stdin,
 		StderrCallback: stderr,
 		clock:          SystemClock{},
 		random:         SystemRandom{},
 	}
+}
+
+// NewWasiHost creates a new WASI host with stdout/stderr callbacks only.
+func NewWasiHost(stdout, stderr func(string)) *WasiHost {
+	return NewWasiStub(stdout, stderr)
 }
 
 // NewWasiStubFromConfig creates a WasiStub from a WasiConfig.
@@ -195,13 +205,13 @@ func NewWasiStubFromConfig(config WasiConfig) *WasiStub {
 	if stdout == nil {
 		stdout = func(string) {}
 	}
-	stderr := config.StderrCallback
-	if stderr == nil {
-		stderr = func(string) {}
-	}
 	stdin := config.StdinCallback
 	if stdin == nil {
 		stdin = func(int) []byte { return nil }
+	}
+	stderr := config.StderrCallback
+	if stderr == nil {
+		stderr = func(string) {}
 	}
 	clock := config.Clock
 	if clock == nil {
@@ -220,6 +230,11 @@ func NewWasiStubFromConfig(config WasiConfig) *WasiStub {
 		clock:          clock,
 		random:         random,
 	}
+}
+
+// NewWasiHostFromConfig creates a WasiHost from a WasiConfig.
+func NewWasiHostFromConfig(config WasiConfig) *WasiHost {
+	return NewWasiStubFromConfig(config)
 }
 
 // SetMemory sets the instance's memory (needed for fd_write, args_get, etc.).
@@ -289,7 +304,7 @@ func (w *WasiStub) ResolveTable(moduleName, name string) *wasmexecution.Table {
 }
 
 // ════════════════════════════════════════════════════════════════════════
-// TIER 1: fd_write and proc_exit
+// TIER 1: fd_write, fd_read, and proc_exit
 // ════════════════════════════════════════════════════════════════════════
 
 // makeFdWrite creates the fd_write host function.

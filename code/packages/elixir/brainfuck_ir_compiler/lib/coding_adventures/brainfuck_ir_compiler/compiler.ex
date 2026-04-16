@@ -64,7 +64,7 @@ defmodule CodingAdventures.BrainfuckIrCompiler.Compiler do
   <  →  ADD_IMM v1, v1, -1
   +  →  LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, 1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1
   -  →  LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1
-  .  →  LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1
+  .  →  LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1
   ,  →  SYSCALL 2; STORE_BYTE v4, v0, v1
   [  →  LABEL loop_N_start; LOAD_BYTE v2, v0, v1; BRANCH_Z v2, loop_N_end
   ]  →  JUMP loop_N_start; LABEL loop_N_end
@@ -533,7 +533,7 @@ defmodule CodingAdventures.BrainfuckIrCompiler.Compiler do
   # ── OUTPUT: write current cell to stdout ──────────────────────────────────────
   #
   # LOAD_BYTE v2, v0, v1          ← load current cell
-  # ADD       v4, v2, v6          ← copy to syscall arg (v2 + 0 = v2)
+  # ADD_IMM   v4, v2, 0           ← copy to syscall arg without relying on v6
   # SYSCALL   1                   ← write byte
 
   defp compile_output(state) do
@@ -545,10 +545,10 @@ defmodule CodingAdventures.BrainfuckIrCompiler.Compiler do
       ])
 
     {id2, state} =
-      emit(state, :add, [
+      emit(state, :add_imm, [
         %IrRegister{index: @reg_sys_arg},
         %IrRegister{index: @reg_temp},
-        %IrRegister{index: @reg_zero}
+        %IrImmediate{value: 0}
       ])
 
     {id3, state} = emit(state, :syscall, [%IrImmediate{value: @syscall_write}])

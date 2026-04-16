@@ -387,6 +387,12 @@ pub struct WasiEnv {
     pub stdin_callback: Arc<dyn Fn(usize) -> Vec<u8> + Send + Sync>,
 }
 
+/// Preferred name for the full WASI host surface.
+///
+/// `WasiEnv` remains available, but new call sites should prefer `WasiHost`
+/// to match the other language runtimes in the repo.
+pub type WasiHost = WasiEnv;
+
 impl WasiEnv {
     /// Create a `WasiEnv` from a `WasiConfig`.
     pub fn new(cfg: WasiConfig) -> Self {
@@ -1545,6 +1551,12 @@ mod tests {
         let _wasi = WasiStub::new(move |text: &str| {
             output_clone.lock().unwrap().push(text.to_string());
         });
+    }
+
+    #[test]
+    fn test_wasi_host_alias_creation() {
+        let host = WasiHost::new(WasiConfig::default());
+        assert!(host.memory.lock().unwrap().is_none());
     }
 
     #[test]

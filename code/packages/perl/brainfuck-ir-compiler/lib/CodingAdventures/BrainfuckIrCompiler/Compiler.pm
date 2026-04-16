@@ -41,7 +41,7 @@ package CodingAdventures::BrainfuckIrCompiler::Compiler;
 #             │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1
 #   - (DEC)   │ LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1;
 #             │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1
-#   . (OUTPUT)│ LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1
+#   . (OUTPUT)│ LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1
 #   , (INPUT) │ SYSCALL 2; STORE_BYTE v4, v0, v1
 #
 # ============================================================================
@@ -351,9 +351,9 @@ sub _compile_command {
         my $id1 = _emit($c, $OpLoadByte,
             _reg(REG_TEMP), _reg(REG_TAPE_BASE), _reg(REG_TAPE_PTR));
         push @ir_ids, $id1;
-        # Move cell value to syscall argument register (ADD v4, v2, v6 = v2 + 0)
-        my $id2 = _emit($c, $OpAdd,
-            _reg(REG_SYS_ARG), _reg(REG_TEMP), _reg(REG_ZERO));
+        # Copy cell value to the syscall argument register without using v6.
+        my $id2 = _emit($c, $OpAddImm,
+            _reg(REG_SYS_ARG), _reg(REG_TEMP), _imm(0));
         push @ir_ids, $id2;
         # Syscall 1 = write byte
         my $id3 = _emit($c, $OpSyscall, _imm(SYSCALL_WRITE));

@@ -65,7 +65,7 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
   This avoids overlap between different regions of memory in the tests.
   """
 
-  alias CodingAdventures.WasmRuntime.{WasiStub, WasiConfig}
+  alias CodingAdventures.WasmRuntime.{WasiHost, WasiStub, WasiConfig}
   alias CodingAdventures.WasmExecution.{LinearMemory, Values}
 
   # Create a 1-page (64 KiB) linear memory, zero-initialized.
@@ -85,6 +85,11 @@ defmodule CodingAdventures.WasmRuntime.WasiTier3Test do
   # ===========================================================================
   # 1. args_sizes_get
   # ===========================================================================
+
+  test "WasiHost delegates to WasiStub" do
+    config = test_config(["myapp"], %{})
+    assert WasiHost.host_functions(config) == WasiStub.host_functions(config)
+  end
 
   test "args_sizes_get with [\"myapp\", \"hello\"] writes argc=2 and buf_size=12" do
     # "myapp\0" = 6 bytes, "hello\0" = 6 bytes, total = 12

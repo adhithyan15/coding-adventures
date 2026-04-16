@@ -612,7 +612,7 @@ func TestInstantiateWithImportedGlobal(t *testing.T) {
 
 func TestWasiStub(t *testing.T) {
 	var stdout []string
-	wasi := NewWasiStub(
+	wasi := NewWasiHost(
 		func(text string) { stdout = append(stdout, text) },
 		nil,
 	)
@@ -649,7 +649,7 @@ func TestWasiStub(t *testing.T) {
 }
 
 func TestWasiStubResolvers(t *testing.T) {
-	wasi := NewWasiStub(nil, nil)
+	wasi := NewWasiHost(nil, nil)
 
 	// These should all return nil.
 	if wasi.ResolveGlobal("wasi_snapshot_preview1", "anything") != nil {
@@ -664,7 +664,7 @@ func TestWasiStubResolvers(t *testing.T) {
 }
 
 func TestWasiStubUnknownFunction(t *testing.T) {
-	wasi := NewWasiStub(nil, nil)
+	wasi := NewWasiHost(nil, nil)
 	// Use a function name that will never be implemented — the WASI spec
 	// does not define "totally_not_a_real_wasi_function".
 	stub := wasi.ResolveFunction("wasi_snapshot_preview1", "totally_not_a_real_wasi_function")
@@ -682,7 +682,7 @@ func TestWasiStubUnknownFunction(t *testing.T) {
 }
 
 func TestWasiStubFdWriteNoMemory(t *testing.T) {
-	wasi := NewWasiStub(nil, nil)
+	wasi := NewWasiHost(nil, nil)
 	fdWrite := wasi.ResolveFunction("wasi_snapshot_preview1", "fd_write")
 
 	// fd_write without memory set should return ENOSYS.
@@ -699,7 +699,7 @@ func TestWasiStubFdWriteNoMemory(t *testing.T) {
 
 func TestWasiStubFdWriteStdout(t *testing.T) {
 	var output string
-	wasi := NewWasiStub(func(text string) { output += text }, nil)
+	wasi := NewWasiHost(func(text string) { output += text }, nil)
 
 	mem := wasmexecution.NewLinearMemory(1, -1)
 	wasi.SetMemory(mem)
@@ -732,7 +732,7 @@ func TestWasiStubFdWriteStdout(t *testing.T) {
 
 func TestWasiStubFdWriteStderr(t *testing.T) {
 	var errOutput string
-	wasi := NewWasiStub(nil, func(text string) { errOutput += text })
+	wasi := NewWasiHost(nil, func(text string) { errOutput += text })
 
 	mem := wasmexecution.NewLinearMemory(1, -1)
 	wasi.SetMemory(mem)
@@ -765,7 +765,7 @@ func TestProcExitError(t *testing.T) {
 }
 
 func TestWasiProcExitNonZero(t *testing.T) {
-	wasi := NewWasiStub(nil, nil)
+	wasi := NewWasiHost(nil, nil)
 	procExit := wasi.ResolveFunction("wasi_snapshot_preview1", "proc_exit")
 
 	defer func() {
@@ -782,6 +782,62 @@ func TestWasiProcExitNonZero(t *testing.T) {
 		}
 	}()
 	procExit.Call([]wasmexecution.WasmValue{wasmexecution.I32(1)})
+}
+
+func TestWasiStubFdReadStdin(t *testing.T) {
+	wasi := NewWasiHostFromConfig(WasiConfig{
+		StdinCallback: func(n int) []byte {
+			if n > 3 {
+				n = 3
+			}
+			return []byte("hey")[:n]
+		},
+	})
+
+	mem := wasmexecution.NewLinearMemory(1, -1)
+	wasi.SetMemory(mem)
+	mem.StoreI32(100, 200)
+	mem.StoreI32(104, 3)
+
+	fdRead := wasi.ResolveFunction("wasi_snapshot_preview1", "fd_read")
+	result := fdRead.Call([]wasmexecution.WasmValue{
+		wasmexecution.I32(0),
+		wasmexecution.I32(100),
+		wasmexecution.I32(1),
+		wasmexecution.I32(300),
+	})
+
+	if wasmexecution.AsI32(result[0]) != 0 {
+		t.Fatalf("expected success(0), got %d", wasmexecution.AsI32(result[0]))
+	}
+	bytes := []byte{
+		byte(mem.LoadI32_8u(200)),
+		byte(mem.LoadI32_8u(201)),
+		byte(mem.LoadI32_8u(202)),
+	}
+	if string(bytes) != "hey" {
+		t.Fatalf("expected stdin bytes at buffer, got %q", string(bytes))
+	}
+	if nread := mem.LoadI32(300); nread != 3 {
+		t.Fatalf("expected nread=3, got %d", nread)
+	}
+}
+
+func TestWasiStubFdReadRejectsNonStdinFd(t *testing.T) {
+	wasi := NewWasiHostFromConfig(WasiConfig{
+		StdinCallback: func(n int) []byte { return make([]byte, n) },
+	})
+	wasi.SetMemory(wasmexecution.NewLinearMemory(1, -1))
+	fdRead := wasi.ResolveFunction("wasi_snapshot_preview1", "fd_read")
+	result := fdRead.Call([]wasmexecution.WasmValue{
+		wasmexecution.I32(1),
+		wasmexecution.I32(0),
+		wasmexecution.I32(0),
+		wasmexecution.I32(0),
+	})
+	if wasmexecution.AsI32(result[0]) != wasiEBadf {
+		t.Fatalf("expected EBADF(%d), got %d", wasiEBadf, wasmexecution.AsI32(result[0]))
+	}
 }
 
 // ════════════════════════════════════════════════════════════════════════

@@ -327,11 +327,11 @@ func (c *compiler) compileCommand(node *parser.ASTNode) error {
 			ir.IrRegister{Index: regTapeBase},
 			ir.IrRegister{Index: regTapePtr})
 		irIDs = append(irIDs, id1)
-		// Move to syscall argument register
-		id2 := c.emit(ir.OpAdd,
+		// Copy to the syscall argument register without depending on v6.
+		id2 := c.emit(ir.OpAddImm,
 			ir.IrRegister{Index: regSysArg},
 			ir.IrRegister{Index: regTemp},
-			ir.IrRegister{Index: regZero})
+			ir.IrImmediate{Value: 0})
 		irIDs = append(irIDs, id2)
 		// Syscall 1 = write byte
 		id3 := c.emit(ir.OpSyscall, ir.IrImmediate{Value: syscallWrite})

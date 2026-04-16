@@ -36,6 +36,17 @@ class TestWasi < Minitest::Test
     assert_kind_of WE::HostFunction, result
   end
 
+  def test_wasi_host_alias_matches_stub
+    assert_equal WR::WasiHost, WR::WasiStub
+  end
+
+  def test_resolve_fd_read
+    wasi = WR::WasiHost.new
+    result = wasi.resolve_function("wasi_snapshot_preview1", "fd_read")
+    refute_nil result
+    assert_kind_of WE::HostFunction, result
+  end
+
   def test_resolve_proc_exit
     wasi = WR::WasiStub.new
     result = wasi.resolve_function("wasi_snapshot_preview1", "proc_exit")
@@ -133,6 +144,22 @@ class TestWasi < Minitest::Test
     assert_equal ["Hello"], captured
     # nwritten should be 5
     assert_equal 5, mem.load_i32(16)
+  end
+
+  def test_fd_read_reads_stdin
+    wasi = WR::WasiHost.new(stdin: ->(_count) { "hi" })
+    mem = WE::LinearMemory.new(1)
+    wasi.set_memory(mem)
+    mem.store_i32(0, 0x0200)
+    mem.store_i32(4, 2)
+
+    fd_read = wasi.resolve_function("wasi_snapshot_preview1", "fd_read")
+    result = fd_read.call([WE.i32(0), WE.i32(0), WE.i32(1), WE.i32(0x0100)])
+
+    assert_equal 0, result[0].value
+    assert_equal 2, mem.load_i32(0x0100)
+    assert_equal "h".ord, mem.load_i32_8u(0x0200)
+    assert_equal "i".ord, mem.load_i32_8u(0x0201)
   end
 
   def test_fd_write_captures_stderr

@@ -303,6 +303,13 @@ subtest 'WasiStub resolves fd_write' => sub {
     ok($fn, 'fd_write resolved');
 };
 
+subtest 'WasiHost aliases WasiStub' => sub {
+    my $host = CodingAdventures::WasmRuntime::WasiHost->new();
+    isa_ok($host, 'CodingAdventures::WasmRuntime::WasiStub');
+    my $fn = $host->resolve_function('wasi_snapshot_preview1', 'fd_read');
+    ok($fn, 'fd_read resolved through WasiHost alias');
+};
+
 subtest 'WasiStub returns undef for unknown functions' => sub {
     my $stub = CodingAdventures::WasmRuntime::WasiStub->new();
     my $fn = $stub->resolve_function('wasi_snapshot_preview1', 'unknown');

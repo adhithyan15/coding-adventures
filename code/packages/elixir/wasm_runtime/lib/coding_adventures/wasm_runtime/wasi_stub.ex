@@ -42,6 +42,28 @@ defmodule CodingAdventures.WasmRuntime.WasiConfig do
             random: CodingAdventures.WasmRuntime.SystemRandom
 end
 
+defmodule CodingAdventures.WasmRuntime.WasiHost do
+  @moduledoc """
+  Preferred alias for the WASI host helper surface.
+
+  `WasiStub` remains available for backwards compatibility, but new code
+  should use `WasiHost` to reflect that this module now exposes real host
+  behavior rather than a pure placeholder.
+  """
+
+  alias CodingAdventures.WasmRuntime.WasiStub
+
+  @spec host_functions() :: map()
+  defdelegate host_functions(), to: WasiStub
+
+  @spec host_functions(CodingAdventures.WasmRuntime.WasiConfig.t()) :: map()
+  defdelegate host_functions(config), to: WasiStub
+
+  @spec call_with_memory(map(), String.t(), [CodingAdventures.WasmExecution.Values.wasm_value()], CodingAdventures.WasmExecution.LinearMemory.t()) ::
+          {[CodingAdventures.WasmExecution.Values.wasm_value()], CodingAdventures.WasmExecution.LinearMemory.t()}
+  defdelegate call_with_memory(host_fns, func_name, wasm_args, memory), to: WasiStub
+end
+
 defmodule CodingAdventures.WasmRuntime.WasiStub do
   @moduledoc """
   WASI Tier 3 host function implementations.

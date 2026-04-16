@@ -25,7 +25,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { WasiStub, ProcExitError } from "../src/wasi_stub.js";
+import { WasiHost, WasiStub, ProcExitError } from "../src/wasi_stub.js";
 import { LinearMemory, i32 } from "@coding-adventures/wasm-execution";
 
 // =========================================================================
@@ -33,12 +33,24 @@ import { LinearMemory, i32 } from "@coding-adventures/wasm-execution";
 // =========================================================================
 
 describe("WasiStub.resolveFunction", () => {
+  it("exports WasiHost as the preferred alias", () => {
+    expect(WasiHost).toBe(WasiStub);
+  });
+
   it("returns a HostFunction for 'fd_write'", () => {
     const wasi = new WasiStub();
     const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_write");
     expect(fn).toBeDefined();
     expect(fn!.type.params.length).toBe(4); // fd, iovs_ptr, iovs_len, nwritten_ptr
     expect(fn!.type.results.length).toBe(1); // errno return
+  });
+
+  it("returns a HostFunction for 'fd_read'", () => {
+    const wasi = new WasiHost();
+    const fn = wasi.resolveFunction("wasi_snapshot_preview1", "fd_read");
+    expect(fn).toBeDefined();
+    expect(fn!.type.params.length).toBe(4);
+    expect(fn!.type.results.length).toBe(1);
   });
 
   it("returns a HostFunction for 'proc_exit'", () => {
@@ -242,6 +254,33 @@ describe("fd_write", () => {
     const result = fdWrite.call([i32(1), i32(0), i32(1), i32(0)]);
 
     expect(result).toEqual([i32(52)]); // ENOSYS
+  });
+});
+
+describe("fd_read", () => {
+  it("reads stdin bytes into guest memory", () => {
+    const wasi = new WasiHost({
+      stdin: () => new TextEncoder().encode("hi"),
+    });
+    const memory = new LinearMemory(1);
+    wasi.setMemory(memory);
+    memory.storeI32(0, 0x0200);
+    memory.storeI32(4, 2);
+
+    const fdRead = wasi.resolveFunction("wasi_snapshot_preview1", "fd_read")!;
+    const result = fdRead.call([i32(0), i32(0), i32(1), i32(0x0100)]);
+
+    expect(result).toEqual([i32(0)]);
+    expect(memory.loadI32(0x0100)).toBe(2);
+    expect(memory.loadI32_8u(0x0200)).toBe("h".charCodeAt(0));
+    expect(memory.loadI32_8u(0x0201)).toBe("i".charCodeAt(0));
+  });
+
+  it("rejects non-stdin file descriptors", () => {
+    const wasi = new WasiHost({ stdin: () => new Uint8Array([1]) });
+    wasi.setMemory(new LinearMemory(1));
+    const fdRead = wasi.resolveFunction("wasi_snapshot_preview1", "fd_read")!;
+    expect(fdRead.call([i32(1), i32(0), i32(0), i32(0)])).toEqual([i32(8)]);
   });
 });
 

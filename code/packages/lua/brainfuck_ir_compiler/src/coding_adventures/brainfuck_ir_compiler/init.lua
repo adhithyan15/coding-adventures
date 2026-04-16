@@ -482,7 +482,7 @@ end
 -- │                  │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1            │
 -- │ - (DEC)          │ LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1;             │
 -- │                  │ AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1            │
--- │ . (OUTPUT)       │ LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1       │
+-- │ . (OUTPUT)       │ LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1    │
 -- │ , (INPUT)        │ SYSCALL 2; STORE_BYTE v4, v0, v1                      │
 -- └──────────────────┴────────────────────────────────────────────────────────┘
 
@@ -555,16 +555,12 @@ function Compiler:compile_command(node)
             ir.new_register(REG_TAPE_PTR),
         })
         -- Step 2: copy v2 → v4 (syscall arg register).
-        -- We use ADD v4, v2, v6 (v4 = v2 + 0 = v2) to move the value.
-        -- v6 is the zero register set up in debug prologue, but since the
-        -- OUTPUT command is used in both debug and release, we use LOAD_IMM
-        -- to zero v4 first, then ADD the cell value. Actually the Go compiler
-        -- uses ADD v4, v2, v6 where v6 = 0. In release mode v6 may be unset,
-        -- but this matches the Go compiler exactly. We follow Go behavior.
-        ir_ids[#ir_ids + 1] = self:emit(ir.IrOp.ADD, {
+        -- Use ADD_IMM with 0 so release builds do not depend on the
+        -- debug-only zero register v6 being initialized.
+        ir_ids[#ir_ids + 1] = self:emit(ir.IrOp.ADD_IMM, {
             ir.new_register(REG_SYS_ARG),
             ir.new_register(REG_TEMP),
-            ir.new_register(REG_ZERO),
+            ir.new_immediate(0),
         })
         -- Step 3: syscall 1 = write.
         ir_ids[#ir_ids + 1] = self:emit(ir.IrOp.SYSCALL, {

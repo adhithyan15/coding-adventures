@@ -392,6 +392,7 @@ package CodingAdventures::WasmRuntime::WasiStub;
 # Parameters (all optional):
 #   args    => \@array   — command-line arguments (like ARGV). Default: [].
 #   env     => \%hash    — environment variables {KEY => VALUE}. Default: {}.
+#   stdin   => \&coderef — callback invoked with a byte count for fd_read.
 #   stdout  => \&coderef — callback invoked with each line of stdout output.
 #   stderr  => \&coderef — callback invoked with stderr output (reserved).
 #   clock   => $obj      — object implementing WasiClock interface.
@@ -409,6 +410,7 @@ sub new {
     return bless {
         args            => $args{args}   // [],
         env             => $args{env}    // {},
+        stdin_callback  => $args{stdin}  // sub { [] },
         stdout_callback => $args{stdout} // sub {},
         stderr_callback => $args{stderr} // sub {},
         clock           => $args{clock}  // CodingAdventures::WasmRuntime::SystemClock->new(),
@@ -449,6 +451,48 @@ sub resolve_function {
         # to signal "0 bytes written" without doing any real I/O.
         return sub {
             my ($args) = @_;
+            return [ CodingAdventures::WasmExecution::i32(0) ];
+        };
+    }
+
+    if ($name eq 'fd_read') {
+        # fd_read(fd, iovs_ptr, iovs_len, nread_ptr) → errno
+        #
+        # Reads bytes from stdin into the guest buffers described by the iovec
+        # array. Only fd 0 is supported.
+        return sub {
+            my ($args) = @_;
+            my $memory    = $self->{instance_memory};
+            return [ CodingAdventures::WasmExecution::i32(52) ] unless $memory;
+
+            my $fd        = $args->[0]{value};
+            my $iovs_ptr  = $args->[1]{value} & 0xFFFFFFFF;
+            my $iovs_len  = $args->[2]{value} & 0x7FFFFFFF;
+            my $nread_ptr = $args->[3]{value} & 0xFFFFFFFF;
+
+            return [ CodingAdventures::WasmExecution::i32(8) ] unless $fd == 0;
+
+            my $total_read = 0;
+            for my $i (0 .. $iovs_len - 1) {
+                my $buf_ptr = $memory->load_i32($iovs_ptr + $i * 8) & 0xFFFFFFFF;
+                my $buf_len = $memory->load_i32($iovs_ptr + $i * 8 + 4) & 0xFFFFFFFF;
+
+                my $raw = $self->{stdin_callback}->($buf_len);
+                my @bytes =
+                    !defined $raw ? ()
+                  : ref($raw) eq 'ARRAY' ? @$raw
+                  : unpack('C*', $raw);
+                splice(@bytes, $buf_len) if @bytes > $buf_len;
+
+                for my $j (0 .. $#bytes) {
+                    $memory->store_i32_8($buf_ptr + $j, $bytes[$j]);
+                }
+
+                $total_read += scalar @bytes;
+                last if scalar(@bytes) < $buf_len;
+            }
+
+            $memory->store_i32($nread_ptr, $total_read);
             return [ CodingAdventures::WasmExecution::i32(0) ];
         };
     }
@@ -721,6 +765,10 @@ sub resolve_table  { return undef }
 sub resolve_global { return undef }
 
 sub exit_code { return $_[0]->{exit_code} }
+
+package CodingAdventures::WasmRuntime::WasiHost;
+
+our @ISA = ('CodingAdventures::WasmRuntime::WasiStub');
 
 1;
 
