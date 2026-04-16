@@ -1,5 +1,9 @@
-import BuildTool
+import Test.Hspec
+
+import BuildToolSpec (buildToolSpec)
 
 main :: IO ()
-main = do
-    putStrLn "Test suite not yet implemented."
+main = hspec spec
+
+spec :: Spec
+spec = buildToolSpec
