@@ -1,0 +1,7 @@
+packages:
+  .
+  ../wasm-execution
+  ../wasm-leb128
+  ../wasm-module-parser
+  ../wasm-types
+  ../wasm-validator
