@@ -17,11 +17,13 @@ defmodule CodingAdventures.WasmExecution.Instructions.Memory do
   end
 
   defp effective_addr(base, operand) do
-    mem_offset = case operand do
-      %{offset: o} -> o
-      %{"memarg" => %{offset: o}} -> o
-      _ -> 0
-    end
+    mem_offset =
+      case operand do
+        %{offset: o} -> o
+        %{"memarg" => %{offset: o}} -> o
+        _ -> 0
+      end
+
     band(base, 0xFFFFFFFF) + mem_offset
   end
 

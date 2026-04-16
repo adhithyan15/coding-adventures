@@ -158,9 +158,9 @@ func TestInstantiateWithDataSegments(t *testing.T) {
 			{
 				Locals: nil,
 				Code: []byte{
-					0x41, 0x00,       // i32.const 0
+					0x41, 0x00, // i32.const 0
 					0x28, 0x02, 0x00, // i32.load offset=0
-					0x0B,             // end
+					0x0B, // end
 				},
 			},
 		},
@@ -170,7 +170,7 @@ func TestInstantiateWithDataSegments(t *testing.T) {
 		Data: []wasmtypes.DataSegment{
 			{
 				MemoryIndex: 0,
-				OffsetExpr:  []byte{0x41, 0x00, 0x0B}, // i32.const 0; end
+				OffsetExpr:  []byte{0x41, 0x00, 0x0B},       // i32.const 0; end
 				Data:        []byte{0x63, 0x00, 0x00, 0x00}, // 99 in little-endian
 			},
 		},
@@ -276,6 +276,37 @@ func TestInstantiateWithMemoryMax(t *testing.T) {
 // ════════════════════════════════════════════════════════════════════════
 // RUNTIME — CALL ERROR PATHS
 // ════════════════════════════════════════════════════════════════════════
+
+func TestInstantiateBindsMemoryIntoWasiStub(t *testing.T) {
+	wasi := NewWasiStub(nil, nil)
+	module := &wasmtypes.WasmModule{
+		Types: []wasmtypes.FuncType{
+			{Params: nil, Results: nil},
+		},
+		Functions: []uint32{0},
+		Code: []wasmtypes.FunctionBody{
+			{Locals: nil, Code: []byte{0x0B}},
+		},
+		Memories: []wasmtypes.MemoryType{
+			{Limits: wasmtypes.Limits{Min: 1}},
+		},
+		Exports: []wasmtypes.Export{
+			{Name: "noop", Kind: wasmtypes.ExternalKindFunction, Index: 0},
+		},
+	}
+
+	runtime := New(wasi)
+	instance, err := runtime.Instantiate(module)
+	if err != nil {
+		t.Fatalf("instantiation failed: %v", err)
+	}
+	if instance.Memory == nil {
+		t.Fatal("expected instance memory to be allocated")
+	}
+	if wasi.instanceMemory != instance.Memory {
+		t.Fatal("expected runtime to bind instance memory into WasiStub")
+	}
+}
 
 func TestCallExportNotFound(t *testing.T) {
 	module := &wasmtypes.WasmModule{
@@ -410,17 +441,17 @@ func TestInstantiateWithStartFunction(t *testing.T) {
 	startIdx := uint32(0)
 	module := &wasmtypes.WasmModule{
 		Types: []wasmtypes.FuncType{
-			{Params: nil, Results: nil},                                                // start fn type
-			{Params: nil, Results: []wasmtypes.ValueType{wasmtypes.ValueTypeI32}},      // getter type
+			{Params: nil, Results: nil}, // start fn type
+			{Params: nil, Results: []wasmtypes.ValueType{wasmtypes.ValueTypeI32}}, // getter type
 		},
 		Functions: []uint32{0, 1},
 		Code: []wasmtypes.FunctionBody{
 			{
 				Locals: nil,
 				Code: []byte{
-					0x41, 0x2A,       // i32.const 42
-					0x24, 0x00,       // global.set 0
-					0x0B,             // end
+					0x41, 0x2A, // i32.const 42
+					0x24, 0x00, // global.set 0
+					0x0B, // end
 				},
 			},
 			{
@@ -515,7 +546,7 @@ func TestInstantiateWithImports(t *testing.T) {
 				Code: []byte{
 					0x20, 0x00, // local.get 0
 					0x10, 0x00, // call 0 (the imported "double" function)
-					0x0B,       // end
+					0x0B, // end
 				},
 			},
 		},
@@ -674,8 +705,8 @@ func TestWasiStubFdWriteStdout(t *testing.T) {
 	wasi.SetMemory(mem)
 
 	// Set up an iov at offset 100: pointer=200, length=5
-	mem.StoreI32(100, 200)      // buf_ptr = 200
-	mem.StoreI32(104, 5)        // buf_len = 5
+	mem.StoreI32(100, 200)               // buf_ptr = 200
+	mem.StoreI32(104, 5)                 // buf_len = 5
 	mem.WriteBytes(200, []byte("Hello")) // The actual string data
 
 	fdWrite := wasi.ResolveFunction("wasi_snapshot_preview1", "fd_write")
@@ -712,7 +743,7 @@ func TestWasiStubFdWriteStderr(t *testing.T) {
 
 	fdWrite := wasi.ResolveFunction("wasi_snapshot_preview1", "fd_write")
 	result := fdWrite.Call([]wasmexecution.WasmValue{
-		wasmexecution.I32(2),   // fd = stderr
+		wasmexecution.I32(2), // fd = stderr
 		wasmexecution.I32(100),
 		wasmexecution.I32(1),
 		wasmexecution.I32(300),
