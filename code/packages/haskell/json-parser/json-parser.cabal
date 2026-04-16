@@ -13,6 +13,7 @@ library
                     , graph
                     , directed-graph
                     , state-machine
+                    , grammar-tools
                     , lexer
                     , parser
                     , json-lexer
@@ -25,6 +26,8 @@ test-suite spec
     other-modules:    JsonParserSpec
     hs-source-dirs:   test
     build-depends:    base >=4.14
+                    , lexer
+                    , parser
                     , json-parser
                     , hspec == 2.*
     default-language: Haskell2010
