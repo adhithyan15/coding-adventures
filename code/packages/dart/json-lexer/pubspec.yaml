@@ -1,6 +1,6 @@
-name: coding_adventures_lexer
+name: coding_adventures_json_lexer
 description: >
-  Generic hand-written tokenizer for Dart with a formal tokenizer dispatch DFA.
+  Grammar-driven JSON lexer for Dart backed by the shared TokenGrammar format.
 version: 0.1.0
 repository: https://github.com/adhithyan15/coding-adventures
 publish_to: none
@@ -11,8 +11,8 @@ environment:
 dependencies:
   coding_adventures_grammar_tools:
     path: ../grammar-tools
-  coding_adventures_state_machine:
-    path: ../state-machine
+  coding_adventures_lexer:
+    path: ../lexer
 
 dev_dependencies:
   test: ^1.25.0
