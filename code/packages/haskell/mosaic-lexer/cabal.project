@@ -1,0 +1,6 @@
+packages:
+  .
+  ../lexer
+  ../graph
+  ../directed-graph
+  ../state-machine
