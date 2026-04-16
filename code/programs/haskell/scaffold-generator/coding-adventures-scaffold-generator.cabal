@@ -1,0 +1,34 @@
+cabal-version: 3.0
+name:          coding-adventures-scaffold-generator
+version:       0.1.0
+synopsis:      Haskell scaffold generator for coding-adventures
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  ScaffoldGenerator
+    build-depends:    base >=4.14
+                    , containers
+                    , directory
+                    , filepath
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable scaffold-generator
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    base >=4.14
+                    , coding-adventures-scaffold-generator
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    ScaffoldGeneratorSpec
+    build-depends:    base >=4.14
+                    , coding-adventures-scaffold-generator
+                    , hspec == 2.*
+    hs-source-dirs:   test
+    default-language: Haskell2010
