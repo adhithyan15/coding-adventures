@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.Gf256.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>GF(2^8) arithmetic for Reed-Solomon and related byte-oriented codes</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Gf256.fs" />
+  </ItemGroup>
+</Project>
