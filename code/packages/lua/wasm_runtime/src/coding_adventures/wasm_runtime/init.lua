@@ -692,6 +692,7 @@ end
 
 -- WASI errno constants.
 local ESUCCESS = 0   -- No error.
+local EBADF    = 8   -- Bad file descriptor.
 local EINVAL   = 28  -- Invalid argument.
 local ENOSYS   = 52  -- Function not implemented.
 
@@ -723,6 +724,9 @@ function WasiStub.new(config)
 
     -- Environment variables: a list of "KEY=VALUE" strings.
     self.env = config.env or {}
+
+    -- Input callback for fd_read. Defaults to EOF.
+    self.stdin_cb = config.stdin or function(_n) return "" end
 
     -- Output callbacks for fd_write.
     self.stdout_cb = config.stdout or function(_t) end
@@ -767,6 +771,7 @@ function WasiStub:resolve_function(module_name, name)
 
     -- Dispatch to specific implementations.
     if name == "fd_write"            then return self:_make_fd_write()
+    elseif name == "fd_read"         then return self:_make_fd_read()
     elseif name == "proc_exit"       then return self:_make_proc_exit()
     elseif name == "args_sizes_get"  then return self:_make_args_sizes_get()
     elseif name == "args_get"        then return self:_make_args_get()
@@ -866,6 +871,64 @@ function WasiStub:_make_fd_write()
             -- Write total bytes written back to the WASM program.
             memory:store_i32(nwritten_ptr, total_written)
 
+            return { wasm_execution.i32(ESUCCESS) }
+        end
+    }
+end
+
+
+-- ── fd_read ───────────────────────────────────────────────────────────────────
+--
+-- fd_read(fd: i32, iovs_ptr: i32, iovs_len: i32, nread_ptr: i32) → i32
+--
+-- Reads bytes from stdin into guest buffers. Only fd=0 (stdin) is supported.
+
+function WasiStub:_make_fd_read()
+    local self_ref = self
+    return {
+        call = function(args)
+            local fd         = args[1].value
+            local iovs_ptr   = args[2].value
+            local iovs_len   = args[3].value
+            local nread_ptr  = args[4].value
+
+            local memory = self_ref.memory
+            if not memory then
+                return { wasm_execution.i32(ENOSYS) }
+            end
+            if fd ~= 0 then
+                return { wasm_execution.i32(EBADF) }
+            end
+
+            local total_read = 0
+
+            for i = 0, iovs_len - 1 do
+                local buf_ptr = memory:load_i32(iovs_ptr + i * 8) & 0xFFFFFFFF
+                local buf_len = memory:load_i32(iovs_ptr + i * 8 + 4) & 0xFFFFFFFF
+
+                local chunk = self_ref.stdin_cb(buf_len)
+                if type(chunk) == "table" then
+                    local chars = {}
+                    for _, byte in ipairs(chunk) do
+                        chars[#chars + 1] = string.char(byte)
+                    end
+                    chunk = table.concat(chars)
+                elseif chunk == nil then
+                    chunk = ""
+                end
+
+                chunk = string.sub(chunk, 1, buf_len)
+                for j = 1, #chunk do
+                    memory:store_i32_8(buf_ptr + (j - 1), string.byte(chunk, j))
+                end
+
+                total_read = total_read + #chunk
+                if #chunk < buf_len then
+                    break
+                end
+            end
+
+            memory:store_i32(nread_ptr, total_read)
             return { wasm_execution.i32(ESUCCESS) }
         end
     }
@@ -1227,6 +1290,8 @@ function WasiStub:_make_enosys_stub(_name)
         end
     }
 end
+
+M.WasiHost = WasiStub
 
 
 return M

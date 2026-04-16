@@ -459,7 +459,36 @@ subtest 'clock_time_get(id=2): process clock → realtime' => sub {
 };
 
 # ============================================================================
-# Test 14: existing square test still passes (regression)
+# Test 14: fd_read copies stdin bytes into guest buffers
+# ============================================================================
+
+subtest 'fd_read: copies stdin bytes into guest buffers' => sub {
+    my $stub = CodingAdventures::WasmRuntime::WasiHost->new(
+        stdin  => sub { return 'hi' },
+        clock  => FakeClock->new(),
+        random => FakeRandom->new(),
+    );
+    my $mem = CodingAdventures::WasmExecution::LinearMemory->new(1, undef);
+    $stub->set_memory($mem);
+
+    $mem->store_i32(0, 200);
+    $mem->store_i32(4, 2);
+
+    my $result = _call($stub, 'fd_read', [
+        i32(0),
+        i32(0),
+        i32(1),
+        i32(100),
+    ]);
+
+    is($result->[0]{value}, 0, 'fd_read returns ESUCCESS');
+    is($mem->load_i32(100), 2, 'nread = 2');
+    is($mem->load_i32_8u(200), ord('h'), 'first byte copied');
+    is($mem->load_i32_8u(201), ord('i'), 'second byte copied');
+};
+
+# ============================================================================
+# Test 15: existing square test still passes (regression)
 # ============================================================================
 #
 # This verifies that Tier 3 additions did not break the existing end-to-end

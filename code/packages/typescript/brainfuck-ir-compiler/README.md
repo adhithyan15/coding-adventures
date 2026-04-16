@@ -52,7 +52,7 @@ Presets:
 | `<` | ADD_IMM v1, v1, -1 |
 | `+` | LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, 1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1 |
 | `-` | LOAD_BYTE v2, v0, v1; ADD_IMM v2, v2, -1; AND_IMM v2, v2, 255; STORE_BYTE v2, v0, v1 |
-| `.` | LOAD_BYTE v2, v0, v1; ADD v4, v2, v6; SYSCALL 1 |
+| `.` | LOAD_BYTE v2, v0, v1; ADD_IMM v4, v2, 0; SYSCALL 1 |
 | `,` | SYSCALL 2; STORE_BYTE v4, v0, v1 |
 
 ## Stack position

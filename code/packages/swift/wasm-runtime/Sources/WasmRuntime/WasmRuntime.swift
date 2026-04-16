@@ -121,6 +121,9 @@ public struct WasiConfig {
     /// Environment variables as a dictionary (analogous to C's environ).
     public var env: [String: String]
 
+    /// Optional callback invoked when the program reads from stdin (fd 0).
+    public var stdin: ((Int) -> [UInt8])?
+
     /// Optional callback invoked whenever the program writes to stdout (fd 1).
     public var stdout: ((String) -> Void)?
 
@@ -136,6 +139,7 @@ public struct WasiConfig {
     public init(
         args: [String] = [],
         env: [String: String] = [:],
+        stdin: ((Int) -> [UInt8])? = nil,
         stdout: ((String) -> Void)? = nil,
         stderr: ((String) -> Void)? = nil,
         clock: WasiClock = SystemClock(),
@@ -143,6 +147,7 @@ public struct WasiConfig {
     ) {
         self.args = args
         self.env = env
+        self.stdin = stdin
         self.stdout = stdout
         self.stderr = stderr
         self.clock = clock
@@ -204,6 +209,9 @@ public class WasiStub: HostInterface {
     // Returned by any WASI function that is not yet implemented.
     private let ENOSYS: Int32 = 52
 
+    // EBADF: errno 8 — "Bad file descriptor"
+    private let EBADF: Int32 = 8
+
     // EINVAL: errno 28 — "Invalid argument"
     // Returned when an unknown clock ID is requested.
     private let EINVAL: Int32 = 28
@@ -247,6 +255,15 @@ public class WasiStub: HostInterface {
                 call: { [weak self] args in
                     guard let self = self else { return [.i32(52)] }
                     return try self.fdWrite(args)
+                }
+            )
+
+        case "fd_read":
+            return HostFunction(
+                type: FuncType(params: [.i32, .i32, .i32, .i32], results: [.i32]),
+                call: { [weak self] args in
+                    guard let self = self else { return [.i32(52)] }
+                    return try self.fdRead(args)
                 }
             )
 
@@ -390,7 +407,7 @@ public class WasiStub: HostInterface {
     }
 
     // ========================================================================
-    // MARK: - Tier 1: fd_write
+    // MARK: - Tier 1: fd_write / fd_read
     // ========================================================================
     //
     // fd_write(fd: i32, iovs: i32, iovsLen: i32, nwritten: i32) -> i32
@@ -445,6 +462,38 @@ public class WasiStub: HostInterface {
         try mem.storeI32(Int(nwrittenPtr), totalBytes)
 
         return [.i32(0)]  // Success (errno = 0)
+    }
+
+    private func fdRead(_ args: [WasmValue]) throws -> [WasmValue] {
+        guard let mem = memory else { return [.i32(ENOSYS)] }
+
+        let fd = try args[0].asI32()
+        let iovsPtr = try args[1].asI32()
+        let iovsLen = try args[2].asI32()
+        let nreadPtr = try args[3].asI32()
+
+        guard fd == 0 else { return [.i32(EBADF)] }
+
+        var totalBytes: Int32 = 0
+
+        for i in 0..<iovsLen {
+            let iovOffset = Int(iovsPtr) + Int(i) * 8
+            let ptr = try mem.loadI32(iovOffset)
+            let len = try mem.loadI32(iovOffset + 4)
+            let chunk = Array((config.stdin?(Int(len)) ?? []).prefix(Int(len)))
+
+            for (offset, byte) in chunk.enumerated() {
+                try mem.storeI32_8(Int(ptr) + offset, Int32(byte))
+            }
+
+            totalBytes &+= Int32(chunk.count)
+            if chunk.count < Int(len) {
+                break
+            }
+        }
+
+        try mem.storeI32(Int(nreadPtr), totalBytes)
+        return [.i32(0)]
     }
 
     // ========================================================================
@@ -978,3 +1027,5 @@ public class WasmRuntime {
         return try call(&instance, name: entry, args: args)
     }
 }
+
+public typealias WasiHost = WasiStub

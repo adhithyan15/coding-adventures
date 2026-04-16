@@ -259,6 +259,7 @@ export class SystemRandom implements WasiRandom {
  * All fields are optional. Sensible defaults are provided:
  * - No command-line args (empty array).
  * - No environment variables (empty object).
+ * - stdin reads EOF by default.
  * - stdout/stderr silently discarded.
  * - System clock and cryptographic random.
  *
@@ -501,6 +502,12 @@ export class WasiStub implements HostInterface {
     };
   }
 
+  // ── fd_read ───────────────────────────────────────────────────────
+  //
+  // fd_read(fd: i32, iovs_ptr: i32, iovs_len: i32, nread_ptr: i32) -> i32
+  //
+  // Reads bytes into guest memory buffers. Only fd=0 (stdin) is supported.
+  //
   private makeFdRead(): HostFunction {
     const self = this;
     return {
@@ -915,3 +922,9 @@ function normalizeInputChunk(
   }
   return bytes.subarray(0, maxLen);
 }
+
+/**
+ * Preferred name for the full WASI host surface.
+ * `WasiStub` remains as a backwards-compatible alias.
+ */
+export const WasiHost = WasiStub;
