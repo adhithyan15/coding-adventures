@@ -902,9 +902,15 @@ local function register_all_instructions(vm)
             ctx.label_stack[#ctx.label_stack] = nil
             vm:advance_pc()
         else
-            -- End of function
-            ctx.returned = true
-            vm.halted = true
+            -- Only the final end of the function should halt execution.
+            -- Structured control can legally jump to later end opcodes and
+            -- continue with more instructions afterward.
+            if vm.pc >= #code.instructions then
+                ctx.returned = true
+                vm.halted = true
+            else
+                vm:advance_pc()
+            end
         end
     end)
 
