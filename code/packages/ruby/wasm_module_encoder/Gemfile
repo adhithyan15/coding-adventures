@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+gem "coding_adventures_wasm_leb128", path: "../wasm_leb128"
+gem "coding_adventures_wasm_types", path: "../wasm_types"

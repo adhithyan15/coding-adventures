@@ -180,9 +180,17 @@ module CodingAdventures
               vm.advance_pc
               "end (block)"
             else
-              ctx[:returned] = true
-              vm.halted = true
-              "end (function)"
+              # Branches can legally jump to a block's `end` instruction after
+              # its label has already been popped. Only the final `end` of the
+              # function should stop execution.
+              if vm.pc >= ctx[:current_instructions].length - 1
+                ctx[:returned] = true
+                vm.halted = true
+                "end (function)"
+              else
+                vm.advance_pc
+                "end (continue)"
+              end
             end
           })
 
