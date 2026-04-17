@@ -10,8 +10,10 @@ import com.codingadventures.inmemorydatastoreprotocol.bulkString
 import com.codingadventures.inmemorydatastoreprotocol.error
 import com.codingadventures.inmemorydatastoreprotocol.integer
 import com.codingadventures.inmemorydatastoreprotocol.ok
+import com.codingadventures.radixtree.RadixTree
 import com.codingadventures.skiplist.SkipList
 import java.math.BigDecimal
+import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.util.Locale
 
@@ -30,6 +32,7 @@ class DataStoreEngine {
             "EXISTS" -> exists(frame.args)
             "KEYS" -> keys(frame.args)
             "TYPE" -> type(frame.args)
+            "RENAME" -> rename(frame.args)
             "APPEND" -> append(frame.args)
             "INCR" -> incrBy(frame.args, 1)
             "DECR" -> incrBy(frame.args, -1)
@@ -55,6 +58,9 @@ class DataStoreEngine {
             "SISMEMBER" -> sismember(frame.args)
             "SMEMBERS" -> smembers(frame.args)
             "SCARD" -> scard(frame.args)
+            "SUNION" -> setOperation(frame.args, "sunion", SetOperation.UNION)
+            "SINTER" -> setOperation(frame.args, "sinter", SetOperation.INTERSECTION)
+            "SDIFF" -> setOperation(frame.args, "sdiff", SetOperation.DIFFERENCE)
             "ZADD" -> zadd(frame.args)
             "ZRANGE" -> zrange(frame.args)
             "ZRANGEBYSCORE" -> zrangeByScore(frame.args)
@@ -67,6 +73,7 @@ class DataStoreEngine {
             "PFMERGE" -> pfmerge(frame.args)
             "EXPIRE" -> expire(frame.args, false)
             "EXPIREAT" -> expire(frame.args, true)
+            "TTL" -> ttl(frame.args)
             "PTTL" -> pttl(frame.args)
             "PERSIST" -> persist(frame.args)
             "SELECT" -> select(frame.args)
@@ -121,6 +128,19 @@ class DataStoreEngine {
     private fun type(args: List<ByteArray>): EngineResponse {
         if (args.size != 1) return wrongArity("type")
         return EngineResponse.SimpleString(keyEntry(args.first())?.type?.wireName ?: "none")
+    }
+
+    private fun rename(args: List<ByteArray>): EngineResponse {
+        if (args.size != 2) return wrongArity("rename")
+        val source = ByteSequence(args[0])
+        store.activeDatabase().expireLazy(source)
+        val entry = store.activeDatabase().get(source) ?: return error("ERR no such key")
+        val destination = ByteSequence(args[1])
+        if (source != destination) {
+            store.activeDatabase().delete(source)
+            store.activeDatabase().set(destination, entry)
+        }
+        return ok()
     }
 
     private fun append(args: List<ByteArray>): EngineResponse {
@@ -330,6 +350,27 @@ class DataStoreEngine {
         return integer((entry.value as HashSet<ByteSequence>).size.toLong())
     }
 
+    private fun setOperation(args: List<ByteArray>, command: String, operation: SetOperation): EngineResponse {
+        if (args.isEmpty()) return wrongArity(command)
+        var result = HashSet<ByteSequence>()
+        var first = true
+        for (rawKey in args) {
+            val entry = keyEntry(rawKey)
+            val next = if (entry == null) {
+                HashSet()
+            } else {
+                castSet(entry.value, entry.type) ?: return wrongType()
+            }
+            result = when (operation) {
+                SetOperation.UNION -> if (first) next.copy() else result.union(next)
+                SetOperation.INTERSECTION -> if (first) next.copy() else result.intersection(next)
+                SetOperation.DIFFERENCE -> if (first) next.copy() else result.difference(next)
+            }
+            first = false
+        }
+        return EngineResponse.ArrayValue(result.items().sorted().map { bulkString(it.bytes) })
+    }
+
     private fun zadd(args: List<ByteArray>): EngineResponse {
         if (args.size < 3 || args.size % 2 == 0) return wrongArity("zadd")
         val key = ByteSequence(args.first())
@@ -450,6 +491,20 @@ class DataStoreEngine {
         return integer(1)
     }
 
+    private fun ttl(args: List<ByteArray>): EngineResponse {
+        if (args.size != 1) return wrongArity("ttl")
+        val key = ByteSequence(args.first())
+        store.activeDatabase().expireLazy(key)
+        val entry = store.activeDatabase().get(key) ?: return integer(-2)
+        if (entry.expiresAtMs == null) return integer(-1)
+        val remaining = entry.expiresAtMs!! - currentTimeMs()
+        if (remaining < 0) {
+            store.activeDatabase().delete(key)
+            return integer(-2)
+        }
+        return integer(remaining / 1000L)
+    }
+
     private fun pttl(args: List<ByteArray>): EngineResponse {
         if (args.size != 1) return wrongArity("pttl")
         val entry = keyEntry(args.first()) ?: return integer(-2)
@@ -515,6 +570,8 @@ class DataStoreEngine {
         return current.takeIf { it.type == EntryType.SET }
     }
 
+    private fun castSet(value: Any, type: EntryType): HashSet<ByteSequence>? = if (type == EntryType.SET) value as HashSet<ByteSequence> else null
+
     private fun wrongArity(command: String): EngineResponse = error("ERR wrong number of arguments for '$command' command")
     private fun wrongType(): EngineResponse = error("WRONGTYPE Operation against a key holding the wrong kind of value")
     private fun integerParseError(): EngineResponse = error("ERR value is not an integer or out of range")
@@ -530,6 +587,8 @@ class DataStoreEngine {
         }
     }
 }
+
+enum class SetOperation { UNION, INTERSECTION, DIFFERENCE }
 
 enum class EntryType(val wireName: String) { STRING("string"), HASH("hash"), LIST("list"), SET("set"), ZSET("zset"), HLL("hll") }
 
@@ -605,6 +664,7 @@ class Store(count: Int) {
 class Database {
     private val entries = HashMap<ByteSequence, Entry>()
     val ttlHeap = MinHeap<ExpiryRecord>()
+    private var keyIndex = RadixTree<ByteSequence>()
 
     fun get(key: ByteSequence): Entry? {
         val entry = entries[key] ?: return null
@@ -613,14 +673,17 @@ class Database {
 
     fun set(key: ByteSequence, entry: Entry) {
         entries.set(key, entry)
+        keyIndex.insert(indexKey(key), key)
         entry.expiresAtMs?.let { ttlHeap.push(ExpiryRecord(it, key)) }
     }
 
-    fun delete(key: ByteSequence): Boolean = entries.delete(key)
+    fun delete(key: ByteSequence): Boolean = entries.delete(key).also { deleted ->
+        if (deleted) keyIndex.delete(indexKey(key))
+    }
 
     fun expireLazy(key: ByteSequence) {
         val entry = entries[key] ?: return
-        if (entry.expiresAtMs != null && entry.expiresAtMs!! <= DataStoreEngine.currentTimeMs()) entries.delete(key)
+        if (entry.expiresAtMs != null && entry.expiresAtMs!! <= DataStoreEngine.currentTimeMs()) delete(key)
     }
 
     fun activeExpire() {
@@ -630,22 +693,38 @@ class Database {
             if (record.expiresAtMs > now) break
             ttlHeap.pop()
             val entry = entries[record.key]
-            if (entry != null && entry.expiresAtMs == record.expiresAtMs) entries.delete(record.key)
+            if (entry != null && entry.expiresAtMs == record.expiresAtMs) delete(record.key)
         }
     }
 
-    fun keys(pattern: ByteArray): List<ByteSequence> = entries.keys().filter {
-        expireLazy(it)
-        entries[it] != null && globMatch(pattern, it.bytes)
-    }.sorted()
+    fun keys(pattern: ByteArray): List<ByteSequence> {
+        val prefix = literalPrefix(pattern)
+        val candidates = if (prefix.isEmpty()) keyIndex.keys() else keyIndex.wordsWithPrefix(indexKey(prefix))
+        return candidates.map(::fromIndexKey).filter {
+            expireLazy(it)
+            entries[it] != null && globMatch(pattern, it.bytes)
+        }.sorted()
+    }
 
     fun dbsize(): Int {
         activeExpire()
         return entries.size
     }
 
-    fun clear() = entries.clear()
+    fun clear() {
+        entries.clear()
+        keyIndex = RadixTree()
+    }
 }
+
+private fun literalPrefix(pattern: ByteArray): ByteArray =
+    pattern.copyOf(pattern.indexOfFirst { it == '*'.code.toByte() || it == '?'.code.toByte() }.let { if (it == -1) pattern.size else it })
+
+private fun indexKey(key: ByteSequence): String = indexKey(key.bytes)
+
+private fun indexKey(bytes: ByteArray): String = String(bytes, StandardCharsets.ISO_8859_1)
+
+private fun fromIndexKey(key: String): ByteSequence = ByteSequence(key.toByteArray(StandardCharsets.ISO_8859_1))
 
 data class ExpiryRecord(val expiresAtMs: Long, val key: ByteSequence) : Comparable<ExpiryRecord> {
     override fun compareTo(other: ExpiryRecord): Int = compareValuesBy(this, other, ExpiryRecord::expiresAtMs, ExpiryRecord::key)

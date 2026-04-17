@@ -9,6 +9,9 @@ import kotlin.test.assertTrue
 
 class DataStoreEngineTest {
     private fun bytes(value: String) = value.encodeToByteArray()
+    private fun arrayStrings(value: EngineResponse.ArrayValue): List<String> = value.value!!.map {
+        (it as EngineResponse.BulkString).value!!.decodeToString()
+    }
 
     @Test
     fun handlesStringRoundTripsAndIntegers() {
@@ -72,5 +75,46 @@ class DataStoreEngineTest {
         engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SET"), bytes("alpha"), bytes("db1"))))
         val dbsize = engine.executeFrame(CommandFrame.fromParts(listOf(bytes("DBSIZE")))) as EngineResponse.IntegerValue
         assertEquals(1, dbsize.value)
+    }
+
+    @Test
+    fun handlesIndexedKeysRenameAndTtl() {
+        val engine = DataStoreEngine()
+        engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SET"), bytes("user:1"), bytes("Ada"))))
+        engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SET"), bytes("user:2"), bytes("Lin"))))
+        engine.executeFrame(CommandFrame.fromParts(listOf(bytes("RENAME"), bytes("user:1"), bytes("user:one"))))
+
+        val userKeys = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("KEYS"), bytes("user:*"))),
+        ) as EngineResponse.ArrayValue
+        assertEquals(listOf("user:2", "user:one"), arrayStrings(userKeys))
+
+        engine.executeFrame(CommandFrame.fromParts(listOf(bytes("EXPIRE"), bytes("user:one"), bytes("10"))))
+        val ttl = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("TTL"), bytes("user:one"))),
+        ) as EngineResponse.IntegerValue
+        assertTrue(ttl.value in 0..10)
+    }
+
+    @Test
+    fun handlesSetAlgebraCommands() {
+        val engine = DataStoreEngine()
+        engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SADD"), bytes("left"), bytes("a"), bytes("b"), bytes("c"))))
+        engine.executeFrame(CommandFrame.fromParts(listOf(bytes("SADD"), bytes("right"), bytes("b"), bytes("c"), bytes("d"))))
+
+        val union = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("SUNION"), bytes("left"), bytes("right"))),
+        ) as EngineResponse.ArrayValue
+        assertEquals(listOf("a", "b", "c", "d"), arrayStrings(union))
+
+        val intersection = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("SINTER"), bytes("left"), bytes("right"))),
+        ) as EngineResponse.ArrayValue
+        assertEquals(listOf("b", "c"), arrayStrings(intersection))
+
+        val difference = engine.executeFrame(
+            CommandFrame.fromParts(listOf(bytes("SDIFF"), bytes("left"), bytes("right"))),
+        ) as EngineResponse.ArrayValue
+        assertEquals(listOf("a"), arrayStrings(difference))
     }
 }
