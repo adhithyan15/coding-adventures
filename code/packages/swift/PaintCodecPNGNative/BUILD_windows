@@ -1,1 +1,1 @@
-echo swift/PaintCodecPNGNative is not wired for Windows in this package yet
+swift test --enable-code-coverage --verbose

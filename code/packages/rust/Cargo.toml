@@ -218,6 +218,7 @@ members = [
     "paint-codec-png-c",
     "paint-instructions",
     "paint-metal",
+    "paint-vm-direct2d-c",
     "paint-vm-direct2d",
     "paint-vm-gdi",
     "paint-vm-metal-c",

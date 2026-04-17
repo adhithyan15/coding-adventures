@@ -1,0 +1,4 @@
+module CPaintVmDirect2DNative {
+    header "include/paint_vm_direct2d_c.h"
+    export *
+}

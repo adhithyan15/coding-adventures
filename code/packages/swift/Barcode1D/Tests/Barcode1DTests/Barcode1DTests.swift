@@ -25,11 +25,11 @@ final class Barcode1DTests: XCTestCase {
     }
 
     func testRenderPNGSignature() throws {
-        #if os(macOS) && arch(arm64)
+        #if os(Windows) || (os(macOS) && arch(arm64))
         let png = try Barcode1D.renderPNG("HELLO-123")
         XCTAssertEqual(Array(png.prefix(8)), [137, 80, 78, 71, 13, 10, 26, 10])
         #else
-        throw XCTSkip("Metal-backed barcode rendering is only exercised on macOS arm64")
+        throw XCTSkip("Native barcode rendering is only exercised on macOS arm64 and Windows")
         #endif
     }
 }

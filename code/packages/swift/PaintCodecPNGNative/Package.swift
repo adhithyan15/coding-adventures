@@ -19,13 +19,19 @@ let package = Package(
         ),
         .target(
             name: "PaintCodecPNGNative",
-            dependencies: ["CPaintCodecPNGNative", "PixelContainer"],
+            dependencies: [
+                "PixelContainer",
+                .target(
+                    name: "CPaintCodecPNGNative",
+                    condition: .when(platforms: [.macOS, .linux])
+                ),
+            ],
             path: "Sources/PaintCodecPNGNative",
             linkerSettings: [
                 .unsafeFlags([
                     "-L", "\(packageDirectory)/Sources/CPaintCodecPNGNative",
                     "-l", "paint_codec_png_c",
-                ]),
+                ], .when(platforms: [.macOS, .linux])),
             ]
         ),
         .testTarget(

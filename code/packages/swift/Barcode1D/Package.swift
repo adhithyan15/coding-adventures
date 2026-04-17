@@ -16,6 +16,7 @@ let package = Package(
         .package(path: "../ITF"),
         .package(path: "../PaintInstructions"),
         .package(path: "../PaintVmMetalNative"),
+        .package(path: "../PaintVmDirect2DNative"),
         .package(path: "../PaintCodecPNGNative"),
         .package(path: "../PixelContainer"),
         .package(path: "../UPCA"),
@@ -31,21 +32,32 @@ let package = Package(
                 "EAN13",
                 "ITF",
                 "PaintInstructions",
-                "PaintVmMetalNative",
                 "PaintCodecPNGNative",
                 "PixelContainer",
                 "UPCA",
+                .product(name: "PaintVmMetalNative", package: "PaintVmMetalNative", condition: .when(platforms: [.macOS])),
+                .product(name: "PaintVmDirect2DNative", package: "PaintVmDirect2DNative", condition: .when(platforms: [.windows])),
             ],
             path: "Sources/Barcode1D"
         ),
         .executableTarget(
             name: "Barcode1DExample",
-            dependencies: ["Barcode1D", "PaintVmMetalNative", "PaintCodecPNGNative"],
+            dependencies: [
+                "Barcode1D",
+                "PaintCodecPNGNative",
+                .product(name: "PaintVmMetalNative", package: "PaintVmMetalNative", condition: .when(platforms: [.macOS])),
+                .product(name: "PaintVmDirect2DNative", package: "PaintVmDirect2DNative", condition: .when(platforms: [.windows])),
+            ],
             path: "Sources/Barcode1DExample"
         ),
         .testTarget(
             name: "Barcode1DTests",
-            dependencies: ["Barcode1D", "PaintVmMetalNative", "PaintCodecPNGNative"],
+            dependencies: [
+                "Barcode1D",
+                "PaintCodecPNGNative",
+                .product(name: "PaintVmMetalNative", package: "PaintVmMetalNative", condition: .when(platforms: [.macOS])),
+                .product(name: "PaintVmDirect2DNative", package: "PaintVmDirect2DNative", condition: .when(platforms: [.windows])),
+            ],
             path: "Tests/Barcode1DTests"
         ),
     ]

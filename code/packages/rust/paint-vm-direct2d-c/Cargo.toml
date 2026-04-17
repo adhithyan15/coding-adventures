@@ -1,0 +1,13 @@
+[package]
+name = "paint-vm-direct2d-c"
+version = "0.1.0"
+edition = "2021"
+description = "C ABI wrapper for the Windows Paint VM with Direct2D and GDI fallback"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
+paint-vm-direct2d = { path = "../paint-vm-direct2d" }
+paint-vm-gdi = { path = "../paint-vm-gdi" }
