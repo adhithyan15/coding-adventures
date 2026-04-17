@@ -101,6 +101,34 @@ subtest 'infer python language' => sub {
 };
 
 # ---------------------------------------------------------------------------
+# Test 4b: Infer C# language
+# ---------------------------------------------------------------------------
+subtest 'infer csharp language' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'packages/csharp/graph');
+
+    my $d = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $d->discover();
+    my @pkgs = @{ $d->packages() };
+
+    is($pkgs[0]{language}, 'csharp', 'language is csharp');
+};
+
+# ---------------------------------------------------------------------------
+# Test 4c: Infer wasm language
+# ---------------------------------------------------------------------------
+subtest 'infer wasm language' => sub {
+    my $root = tempdir(CLEANUP => 1);
+    make_pkg($root, 'packages/wasm/graph');
+
+    my $d = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $d->discover();
+    my @pkgs = @{ $d->packages() };
+
+    is($pkgs[0]{language}, 'wasm', 'language is wasm');
+};
+
+# ---------------------------------------------------------------------------
 # Test 5: Skip .git directories
 # ---------------------------------------------------------------------------
 subtest 'skip .git directories' => sub {

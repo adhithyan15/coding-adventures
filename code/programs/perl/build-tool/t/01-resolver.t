@@ -14,6 +14,7 @@ use lib "$Bin/../lib";
 use Test2::V0;
 use File::Temp qw(tempdir);
 use File::Path qw(make_path);
+use File::Spec ();
 
 use CodingAdventures::BuildTool::Resolver;
 
@@ -132,6 +133,19 @@ subtest 'rust dep parsed from Cargo.toml' => sub {
     is($deps[0],     'rust/logic-gates', 'dep is rust/logic-gates');
 };
 
+subtest 'wasm dep parsed through rust scope' => sub {
+    my $pkg     = make_pkg(name => 'wasm/arithmetic',  language => 'wasm');
+    my $dep_pkg = make_pkg(name => 'rust/logic-gates', language => 'rust');
+    write_file("$pkg->{path}/Cargo.toml",
+        "[package]\nname = \"arithmetic-wasm\"\n\n[dependencies]\nlogic-gates = { path = \"../../packages/rust/logic-gates\" }\n");
+
+    my %known = $r->build_known_names([$pkg, $dep_pkg], 'rust');
+    my @deps  = $r->resolve_dependencies($pkg, \%known);
+
+    is(scalar @deps, 1,                 'one dep');
+    is($deps[0],     'rust/logic-gates', 'dep is rust/logic-gates');
+};
+
 subtest 'elixir dep parsed from mix.exs' => sub {
     my $pkg     = make_pkg(name => 'elixir/arithmetic',  language => 'elixir');
     my $dep_pkg = make_pkg(name => 'elixir/logic-gates', language => 'elixir');
@@ -156,6 +170,21 @@ subtest 'lua dep parsed from rockspec' => sub {
 
     is(scalar @deps, 1,               'one dep');
     is($deps[0],     'lua/logic-gates', 'dep is lua/logic-gates');
+};
+
+subtest '.NET dep parsed from project reference' => sub {
+    my $pkg     = make_pkg(name => 'fsharp/graph-tests', language => 'fsharp');
+    my $dep_pkg = make_pkg(name => 'csharp/graph',      language => 'csharp');
+    write_file("$dep_pkg->{path}/CodingAdventures.Graph.csproj",
+        "<Project Sdk=\"Microsoft.NET.Sdk\"></Project>\n");
+    write_file("$pkg->{path}/CodingAdventures.Graph.Tests.fsproj",
+        "<Project Sdk=\"Microsoft.NET.Sdk\">\n  <ItemGroup>\n    <ProjectReference Include=\"../graph/CodingAdventures.Graph.csproj\" />\n  </ItemGroup>\n</Project>\n");
+
+    my %known = $r->build_known_names([$pkg, $dep_pkg], 'dotnet');
+    my @deps  = $r->resolve_dependencies($pkg, \%known);
+
+    is(scalar @deps, 1,           'one dep');
+    is($deps[0],     'csharp/graph', 'dep is csharp/graph');
 };
 
 # ---------------------------------------------------------------------------
@@ -275,6 +304,17 @@ subtest 'known name for Rust' => sub {
     my $pkg   = make_pkg(name => 'rust/logic-gates', language => 'rust');
     my %known = $r->build_known_names([$pkg]);
     ok(exists $known{'logic-gates'}, 'rust known name registered');
+};
+
+subtest 'known name for .NET project file' => sub {
+    my $pkg = make_pkg(name => 'csharp/graph', language => 'csharp');
+    write_file("$pkg->{path}/CodingAdventures.Graph.csproj",
+        "<Project Sdk=\"Microsoft.NET.Sdk\"></Project>\n");
+
+    my %known = $r->build_known_names([$pkg], 'dotnet');
+    my $expected = lc File::Spec->canonpath("$pkg->{path}/CodingAdventures.Graph.csproj");
+    ok(exists $known{$expected}, 'dotnet project path registered');
+    is($known{$expected}, 'csharp/graph', 'maps correctly');
 };
 
 # ---------------------------------------------------------------------------
