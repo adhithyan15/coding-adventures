@@ -7,3 +7,4 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Initial JVM mini-redis core package
+- RESP-backed AOF persistence and replay support for durable manager instances
