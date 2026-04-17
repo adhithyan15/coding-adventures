@@ -5,143 +5,134 @@ module X25519
     , generateKeypair
     ) where
 
-import Control.Exception (IOException, bracket, catch)
-import qualified Data.ByteString as BS
+import Data.Bits ((.&.), (.|.), shiftL, shiftR)
 import Data.Word (Word8)
-import System.Directory (findExecutable, getTemporaryDirectory, removeFile)
-import System.Exit (ExitCode(..))
-import System.IO (hClose, openBinaryTempFile)
-import System.IO.Error (catchIOError)
-import System.Process (readProcessWithExitCode)
 
 description :: String
-description = "X25519 key agreement (RFC 7748) backed by the local OpenSSL toolchain"
+description = "X25519 key agreement (RFC 7748) implemented from scratch in pure Haskell"
 
-x25519 :: [Word8] -> [Word8] -> IO (Either String [Word8])
+x25519 :: [Word8] -> [Word8] -> Either String [Word8]
 x25519 privateKey publicKey
     | length privateKey /= 32 =
-        pure (Left ("X25519 private key must be 32 bytes, got " ++ show (length privateKey)))
+        Left ("X25519 private key must be 32 bytes, got " ++ show (length privateKey))
     | length publicKey /= 32 =
-        pure (Left ("X25519 public key must be 32 bytes, got " ++ show (length publicKey)))
+        Left ("X25519 public key must be 32 bytes, got " ++ show (length publicKey))
     | otherwise =
-        withTempBinaryFile "x25519-private-" (x25519PrivatePrefix <> privateKey) $ \privatePath ->
-            withTempBinaryFile "x25519-public-" (x25519PublicPrefix <> publicKey) $ \publicPath ->
-                withEmptyTempFile "x25519-secret-" $ \secretPath -> do
-                    runResult <-
-                        runOpenSSL
-                            [ "pkeyutl"
-                            , "-derive"
-                            , "-inkey", privatePath
-                            , "-keyform", "DER"
-                            , "-peerkey", publicPath
-                            , "-peerform", "DER"
-                            , "-out", secretPath
-                            ]
-                    case runResult of
-                        Left err -> pure (Left err)
-                        Right () -> do
-                            secret <- BS.unpack <$> BS.readFile secretPath
-                            pure $
-                                if length secret == 32
-                                    then Right secret
-                                    else Left ("OpenSSL returned " ++ show (length secret) ++ " bytes for X25519 shared secret")
+        let result = montgomeryLadder privateKey publicKey
+         in if all (== 0) result
+                then Left "X25519 produced the all-zeros output (low-order point)"
+                else Right result
 
-x25519Base :: [Word8] -> IO (Either String [Word8])
-x25519Base privateKey
-    | length privateKey /= 32 =
-        pure (Left ("X25519 private key must be 32 bytes, got " ++ show (length privateKey)))
-    | otherwise =
-        withTempBinaryFile "x25519-private-" (x25519PrivatePrefix <> privateKey) $ \privatePath ->
-            withEmptyTempFile "x25519-public-der-" $ \publicPath -> do
-                runResult <-
-                    runOpenSSL
-                        [ "pkey"
-                        , "-inform", "DER"
-                        , "-in", privatePath
-                        , "-outform", "DER"
-                        , "-pubout"
-                        , "-out", publicPath
-                        ]
-                case runResult of
-                    Left err -> pure (Left err)
-                    Right () -> do
-                        publicDer <- BS.unpack <$> BS.readFile publicPath
-                        pure (extractPrefixed x25519PublicPrefix publicDer "X25519 public key")
+x25519Base :: [Word8] -> Either String [Word8]
+x25519Base privateKey = x25519 privateKey basePoint
 
-generateKeypair :: [Word8] -> IO (Either String [Word8])
+generateKeypair :: [Word8] -> Either String [Word8]
 generateKeypair = x25519Base
 
-x25519PrivatePrefix :: [Word8]
-x25519PrivatePrefix = hexToBytes "302e020100300506032b656e04220420"
+basePoint :: [Word8]
+basePoint = 9 : replicate 31 0
 
-x25519PublicPrefix :: [Word8]
-x25519PublicPrefix = hexToBytes "302a300506032b656e032100"
+prime :: Integer
+prime = (2 ^ (255 :: Integer)) - 19
 
-extractPrefixed :: [Word8] -> [Word8] -> String -> Either String [Word8]
-extractPrefixed prefixValue encoded label
-    | take (length prefixValue) encoded /= prefixValue =
-        Left ("Unexpected OpenSSL DER output for " ++ label)
-    | otherwise =
-        Right (drop (length prefixValue) encoded)
+modP :: Integer -> Integer
+modP value =
+    let reduced = value `mod` prime
+     in if reduced < 0 then reduced + prime else reduced
 
-runOpenSSL :: [String] -> IO (Either String ())
-runOpenSSL arguments = do
-    maybePath <- findExecutable "openssl"
-    case maybePath of
-        Nothing -> pure (Left "openssl executable was not found on PATH")
-        Just executablePath -> do
-            result <-
-                catch
-                    (do
-                        (exitCode, _, stderrOutput) <- readProcessWithExitCode executablePath arguments ""
-                        pure (Right (exitCode, stderrOutput)))
-                    (\err -> pure (Left (show (err :: IOException))))
-            pure $
-                case result of
-                    Left err -> Left err
-                    Right (ExitSuccess, _) -> Right ()
-                    Right (ExitFailure _, stderrOutput) ->
-                        Left ("OpenSSL failed: " ++ trim stderrOutput)
+addP :: Integer -> Integer -> Integer
+addP left right = modP (left + right)
 
-withTempBinaryFile :: String -> [Word8] -> (FilePath -> IO a) -> IO a
-withTempBinaryFile template contents =
-    bracket create cleanup
+subP :: Integer -> Integer -> Integer
+subP left right = modP (left - right)
+
+mulP :: Integer -> Integer -> Integer
+mulP left right = modP (left * right)
+
+squareP :: Integer -> Integer
+squareP value = mulP value value
+
+invP :: Integer -> Integer
+invP value = powMod (modP value) (prime - 2) prime
+
+powMod :: Integer -> Integer -> Integer -> Integer
+powMod _ 0 modulus = 1 `mod` modulus
+powMod baseValue exponent modulus = go baseValue exponent 1
   where
-    create = do
-        tempDirectory <- getTemporaryDirectory
-        (path, handle) <- openBinaryTempFile tempDirectory template
-        BS.hPut handle (BS.pack contents)
-        hClose handle
-        pure path
-    cleanup path = ignoreIo (removeFile path)
+    go _ 0 acc = acc
+    go current power acc
+        | odd power =
+            go next (power `div` 2) ((acc * current) `mod` modulus)
+        | otherwise =
+            go next (power `div` 2) acc
+      where
+        next = (current * current) `mod` modulus
 
-withEmptyTempFile :: String -> (FilePath -> IO a) -> IO a
-withEmptyTempFile template =
-    bracket create cleanup
+decodeLittleEndian :: [Word8] -> Integer
+decodeLittleEndian =
+    foldr step 0 . zip [0 ..]
   where
-    create = do
-        tempDirectory <- getTemporaryDirectory
-        (path, handle) <- openBinaryTempFile tempDirectory template
-        hClose handle
-        pure path
-    cleanup path = ignoreIo (removeFile path)
+    step (indexValue, byteValue) acc =
+        acc + (fromIntegral byteValue `shiftL` (8 * indexValue))
 
-ignoreIo :: IO () -> IO ()
-ignoreIo action =
-    catchIOError action (\_ -> pure ())
+encodeLittleEndian32 :: Integer -> [Word8]
+encodeLittleEndian32 value =
+    [ fromIntegral ((normalized `shiftR` (8 * indexValue)) .&. 0xff)
+    | indexValue <- [0 .. 31]
+    ]
+  where
+    normalized = modP value
 
-trim :: String -> String
-trim =
-    reverse . dropWhile (`elem` ['\n', '\r', ' ']) . reverse
+clampScalar :: [Word8] -> [Word8]
+clampScalar bytesValue =
+    case bytesValue of
+        [] -> []
+        firstByte : _ ->
+            let middleBytes = take 30 (drop 1 bytesValue)
+                lastByte = bytesValue !! 31
+             in (firstByte .&. 248)
+                    : middleBytes
+                    ++ [ (lastByte .&. 127) .|. 64 ]
 
-hexToBytes :: String -> [Word8]
-hexToBytes [] = []
-hexToBytes (a : b : rest) = fromIntegral (hexDigit a * 16 + hexDigit b) : hexToBytes rest
-hexToBytes _ = []
+montgomeryLadder :: [Word8] -> [Word8] -> [Word8]
+montgomeryLadder scalarBytes uBytes =
+    encodeLittleEndian32 result
+  where
+    clampedScalar = clampScalar scalarBytes
+    maskedUBytes = take 31 uBytes ++ [last uBytes .&. 0x7f]
+    x1 = decodeLittleEndian maskedUBytes
+    (x2End, z2End, x3End, z3End, lastBit) =
+        foldl ladderStep (1, 0, x1, 1, 0 :: Int) [254, 253 .. 0]
+    (x2Final, z2Final) =
+        if lastBit == 1
+            then (x3End, z3End)
+            else (x2End, z2End)
+    result = mulP x2Final (invP z2Final)
 
-hexDigit :: Char -> Int
-hexDigit character
-    | character >= '0' && character <= '9' = fromEnum character - fromEnum '0'
-    | character >= 'a' && character <= 'f' = 10 + fromEnum character - fromEnum 'a'
-    | character >= 'A' && character <= 'F' = 10 + fromEnum character - fromEnum 'A'
-    | otherwise = 0
+    ladderStep (x2, z2, x3, z3, previousBit) bitIndex =
+        let bitValue = scalarBit clampedScalar bitIndex
+            (x2Swapped, z2Swapped, x3Swapped, z3Swapped) =
+                if bitValue /= previousBit
+                    then (x3, z3, x2, z2)
+                    else (x2, z2, x3, z3)
+            a = addP x2Swapped z2Swapped
+            aa = squareP a
+            b = subP x2Swapped z2Swapped
+            bb = squareP b
+            e = subP aa bb
+            c = addP x3Swapped z3Swapped
+            d = subP x3Swapped z3Swapped
+            da = mulP d a
+            cb = mulP c b
+            x3Next = squareP (addP da cb)
+            z3Next = mulP x1 (squareP (subP da cb))
+            x2Next = mulP aa bb
+            z2Next = mulP e (addP bb (mulP 121666 e))
+         in (x2Next, z2Next, x3Next, z3Next, bitValue)
+
+scalarBit :: [Word8] -> Int -> Int
+scalarBit scalarBytes bitIndex =
+    fromIntegral ((scalarBytes !! byteIndex `shiftR` bitOffset) .&. 1)
+  where
+    byteIndex = bitIndex `div` 8
+    bitOffset = bitIndex `mod` 8

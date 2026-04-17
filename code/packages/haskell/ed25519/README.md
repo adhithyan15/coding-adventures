@@ -1,6 +1,6 @@
 # ed25519
 
-Ed25519 digital signatures (RFC 8032) backed by the local OpenSSL toolchain
+Ed25519 digital signatures (RFC 8032) implemented from scratch in pure Haskell
 
 ## Type
 
@@ -8,6 +8,5 @@ library
 
 ## Dependencies
 
-- bytestring
-- directory
-- process
+- base
+- sha512

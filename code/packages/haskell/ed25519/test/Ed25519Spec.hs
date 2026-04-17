@@ -8,28 +8,28 @@ import Test.Hspec
 spec :: Spec
 spec = describe "Ed25519" $ do
     it "matches the RFC 8032 empty-message vector" $ do
-        generated <- generateKeypair vector1Seed
+        let generated = generateKeypair vector1Seed
         generated `shouldBe` Right (vector1Public, vector1Seed <> vector1Public)
-        signature <- sign [] (vector1Seed <> vector1Public)
+        let signature = sign [] (vector1Seed <> vector1Public)
         signature `shouldBe` Right vector1Signature
-        verified <- verify [] vector1Signature vector1Public
+        let verified = verify [] vector1Signature vector1Public
         verified `shouldBe` True
 
     it "matches the RFC 8032 one-byte vector" $ do
-        generated <- generateKeypair vector2Seed
+        let generated = generateKeypair vector2Seed
         generated `shouldBe` Right (vector2Public, vector2Seed <> vector2Public)
-        signature <- sign [0x72] (vector2Seed <> vector2Public)
+        let signature = sign [0x72] (vector2Seed <> vector2Public)
         signature `shouldBe` Right vector2Signature
-        verified <- verify [0x72] vector2Signature vector2Public
+        let verified = verify [0x72] vector2Signature vector2Public
         verified `shouldBe` True
 
     it "rejects a tampered signature" $ do
         let tampered = flipFirstBit vector2Signature
-        verified <- verify [0x72] tampered vector2Public
+        let verified = verify [0x72] tampered vector2Public
         verified `shouldBe` False
 
     it "rejects a different message" $ do
-        verified <- verify [0x73] vector2Signature vector2Public
+        let verified = verify [0x73] vector2Signature vector2Public
         verified `shouldBe` False
 
 vector1Seed :: [Word8]

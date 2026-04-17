@@ -8,25 +8,25 @@ spec :: Spec
 spec = describe "X25519" $ do
     it "derives Alice's public key from the RFC vector" $ do
         x25519Base alicePrivate
-            `shouldReturn` Right alicePublic
+            `shouldBe` Right alicePublic
 
     it "derives Bob's public key from the RFC vector" $ do
         x25519Base bobPrivate
-            `shouldReturn` Right bobPublic
+            `shouldBe` Right bobPublic
 
     it "derives the RFC shared secret" $ do
         x25519 alicePrivate bobPublic
-            `shouldReturn` Right sharedSecret
+            `shouldBe` Right sharedSecret
 
     it "agrees on the same shared secret from both sides" $ do
-        sharedAB <- x25519 alicePrivate bobPublic
-        sharedBA <- x25519 bobPrivate alicePublic
+        let sharedAB = x25519 alicePrivate bobPublic
+        let sharedBA = x25519 bobPrivate alicePublic
         sharedAB `shouldBe` Right sharedSecret
         sharedBA `shouldBe` Right sharedSecret
 
     it "generateKeypair matches x25519Base" $ do
         generateKeypair alicePrivate
-            `shouldReturn` Right alicePublic
+            `shouldBe` Right alicePublic
 
 alicePrivate :: [Word8]
 alicePrivate = hexToBytes "77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a"
