@@ -136,4 +136,3 @@ class Parser {
 }
 
 String _quoted(String value) => '"$value"';
-

@@ -4,6 +4,69 @@ abstract class AstNode {
   const AstNode();
 }
 
+class ASTNode extends AstNode {
+  ASTNode({
+    required this.ruleName,
+    required List<Object> children,
+    this.startLine,
+    this.startColumn,
+    this.endLine,
+    this.endColumn,
+  }) : children = List<Object>.unmodifiable(children);
+
+  final String ruleName;
+  final List<Object> children;
+  final int? startLine;
+  final int? startColumn;
+  final int? endLine;
+  final int? endColumn;
+
+  bool get isLeaf => children.length == 1 && children.first is Token;
+
+  Token? get token => isLeaf ? children.first as Token : null;
+
+  ASTNode copyWith({
+    String? ruleName,
+    List<Object>? children,
+    int? startLine,
+    int? startColumn,
+    int? endLine,
+    int? endColumn,
+  }) {
+    return ASTNode(
+      ruleName: ruleName ?? this.ruleName,
+      children: children ?? this.children,
+      startLine: startLine ?? this.startLine,
+      startColumn: startColumn ?? this.startColumn,
+      endLine: endLine ?? this.endLine,
+      endColumn: endColumn ?? this.endColumn,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ASTNode &&
+        other.ruleName == ruleName &&
+        _listEquals(other.children, children) &&
+        other.startLine == startLine &&
+        other.startColumn == startColumn &&
+        other.endLine == endLine &&
+        other.endColumn == endColumn;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      ruleName,
+      Object.hashAll(children),
+      startLine,
+      startColumn,
+      endLine,
+      endColumn,
+    );
+  }
+}
+
 abstract class Expression extends AstNode {
   const Expression();
 }
@@ -18,7 +81,8 @@ class NumberLiteral extends Expression implements Statement {
   final int value;
 
   @override
-  bool operator ==(Object other) => other is NumberLiteral && other.value == value;
+  bool operator ==(Object other) =>
+      other is NumberLiteral && other.value == value;
 
   @override
   int get hashCode => value.hashCode;
@@ -30,7 +94,8 @@ class StringLiteral extends Expression implements Statement {
   final String value;
 
   @override
-  bool operator ==(Object other) => other is StringLiteral && other.value == value;
+  bool operator ==(Object other) =>
+      other is StringLiteral && other.value == value;
 
   @override
   int get hashCode => value.hashCode;
@@ -49,11 +114,7 @@ class Name extends Expression implements Statement {
 }
 
 class BinaryOp extends Expression implements Statement {
-  const BinaryOp({
-    required this.left,
-    required this.op,
-    required this.right,
-  });
+  const BinaryOp({required this.left, required this.op, required this.right});
 
   final Expression left;
   final String op;
@@ -72,10 +133,7 @@ class BinaryOp extends Expression implements Statement {
 }
 
 class Assignment extends Statement {
-  const Assignment({
-    required this.target,
-    required this.value,
-  });
+  const Assignment({required this.target, required this.value});
 
   final Name target;
   final Expression value;
@@ -102,7 +160,8 @@ class Program extends AstNode {
   }
 
   @override
-  int get hashCode => statements.fold<int>(0, (value, item) => value ^ item.hashCode);
+  int get hashCode =>
+      statements.fold<int>(0, (value, item) => value ^ item.hashCode);
 }
 
 class ParseError implements Exception {
@@ -114,6 +173,12 @@ class ParseError implements Exception {
   @override
   String toString() => '$message at line ${token.line}, column ${token.column}';
 }
+
+bool isASTNode(Object child) => child is ASTNode;
+
+bool isLeafNode(ASTNode node) => node.isLeaf;
+
+Token? getLeafToken(ASTNode node) => node.token;
 
 bool _listEquals(List<Object?> left, List<Object?> right) {
   if (identical(left, right)) {
