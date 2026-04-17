@@ -5,6 +5,7 @@ import com.codingadventures.inmemorydatastoreprotocol.EngineResponse;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +13,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class DataStoreEngineTest {
     private static byte[] bytes(String value) {
         return value.getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static List<String> arrayStrings(EngineResponse.ArrayValue value) {
+        ArrayList<String> decoded = new ArrayList<>();
+        assertNotNull(value.value());
+        for (EngineResponse item : value.value()) {
+            EngineResponse.BulkString bulk = (EngineResponse.BulkString) item;
+            decoded.add(new String(bulk.value(), StandardCharsets.UTF_8));
+        }
+        return decoded;
     }
 
     @Test
@@ -76,5 +87,46 @@ class DataStoreEngineTest {
         engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SET"), bytes("alpha"), bytes("db1"))));
         EngineResponse.IntegerValue dbsize = (EngineResponse.IntegerValue) engine.executeFrame(CommandFrame.fromParts(List.of(bytes("DBSIZE"))));
         assertEquals(1, dbsize.value());
+    }
+
+    @Test
+    void handlesIndexedKeysRenameAndTtl() {
+        DataStoreEngine engine = new DataStoreEngine();
+        engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SET"), bytes("user:1"), bytes("Ada"))));
+        engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SET"), bytes("user:2"), bytes("Lin"))));
+        engine.executeFrame(CommandFrame.fromParts(List.of(bytes("RENAME"), bytes("user:1"), bytes("user:one"))));
+
+        EngineResponse.ArrayValue userKeys = (EngineResponse.ArrayValue) engine.executeFrame(
+            CommandFrame.fromParts(List.of(bytes("KEYS"), bytes("user:*")))
+        );
+        assertEquals(List.of("user:2", "user:one"), arrayStrings(userKeys));
+
+        engine.executeFrame(CommandFrame.fromParts(List.of(bytes("EXPIRE"), bytes("user:one"), bytes("10"))));
+        EngineResponse.IntegerValue ttl = (EngineResponse.IntegerValue) engine.executeFrame(
+            CommandFrame.fromParts(List.of(bytes("TTL"), bytes("user:one")))
+        );
+        assertTrue(ttl.value() >= 0 && ttl.value() <= 10);
+    }
+
+    @Test
+    void handlesSetAlgebraCommands() {
+        DataStoreEngine engine = new DataStoreEngine();
+        engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SADD"), bytes("left"), bytes("a"), bytes("b"), bytes("c"))));
+        engine.executeFrame(CommandFrame.fromParts(List.of(bytes("SADD"), bytes("right"), bytes("b"), bytes("c"), bytes("d"))));
+
+        EngineResponse.ArrayValue union = (EngineResponse.ArrayValue) engine.executeFrame(
+            CommandFrame.fromParts(List.of(bytes("SUNION"), bytes("left"), bytes("right")))
+        );
+        assertEquals(List.of("a", "b", "c", "d"), arrayStrings(union));
+
+        EngineResponse.ArrayValue intersection = (EngineResponse.ArrayValue) engine.executeFrame(
+            CommandFrame.fromParts(List.of(bytes("SINTER"), bytes("left"), bytes("right")))
+        );
+        assertEquals(List.of("b", "c"), arrayStrings(intersection));
+
+        EngineResponse.ArrayValue difference = (EngineResponse.ArrayValue) engine.executeFrame(
+            CommandFrame.fromParts(List.of(bytes("SDIFF"), bytes("left"), bytes("right")))
+        );
+        assertEquals(List.of("a"), arrayStrings(difference));
     }
 }

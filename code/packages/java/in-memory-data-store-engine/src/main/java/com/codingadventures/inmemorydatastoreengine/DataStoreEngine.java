@@ -6,6 +6,7 @@ import com.codingadventures.heap.MinHeap;
 import com.codingadventures.hyperloglog.HyperLogLog;
 import com.codingadventures.inmemorydatastoreprotocol.CommandFrame;
 import com.codingadventures.inmemorydatastoreprotocol.EngineResponse;
+import com.codingadventures.radixtree.RadixTree;
 import com.codingadventures.skiplist.SkipList;
 
 import java.math.BigDecimal;
@@ -34,6 +35,7 @@ public final class DataStoreEngine {
             case "EXISTS" -> exists(frame.args());
             case "KEYS" -> keys(frame.args());
             case "TYPE" -> type(frame.args());
+            case "RENAME" -> rename(frame.args());
             case "APPEND" -> append(frame.args());
             case "INCR" -> incrBy(frame.args(), 1);
             case "DECR" -> incrBy(frame.args(), -1);
@@ -59,6 +61,9 @@ public final class DataStoreEngine {
             case "SISMEMBER" -> sismember(frame.args());
             case "SMEMBERS" -> smembers(frame.args());
             case "SCARD" -> scard(frame.args());
+            case "SUNION" -> setOperation(frame.args(), "sunion", SetOperation.UNION);
+            case "SINTER" -> setOperation(frame.args(), "sinter", SetOperation.INTERSECTION);
+            case "SDIFF" -> setOperation(frame.args(), "sdiff", SetOperation.DIFFERENCE);
             case "ZADD" -> zadd(frame.args());
             case "ZRANGE" -> zrange(frame.args());
             case "ZRANGEBYSCORE" -> zrangeByScore(frame.args());
@@ -71,6 +76,7 @@ public final class DataStoreEngine {
             case "PFMERGE" -> pfmerge(frame.args());
             case "EXPIRE" -> expire(frame.args(), false);
             case "EXPIREAT" -> expire(frame.args(), true);
+            case "TTL" -> ttl(frame.args());
             case "PTTL" -> pttl(frame.args());
             case "PERSIST" -> persist(frame.args());
             case "SELECT" -> select(frame.args());
@@ -153,6 +159,20 @@ public final class DataStoreEngine {
         store.activeDatabase().expireLazy(key);
         Entry entry = store.activeDatabase().get(key);
         return EngineResponse.simpleString(entry == null ? "none" : entry.type.wireName);
+    }
+
+    private EngineResponse rename(List<byte[]> args) {
+        if (args.size() != 2) return wrongArity("rename");
+        ByteSequence source = wrap(args.get(0));
+        store.activeDatabase().expireLazy(source);
+        Entry entry = store.activeDatabase().get(source);
+        if (entry == null) return EngineResponse.error("ERR no such key");
+        ByteSequence destination = wrap(args.get(1));
+        if (!source.equals(destination)) {
+            store.activeDatabase().delete(source);
+            store.activeDatabase().set(destination, entry);
+        }
+        return EngineResponse.ok();
     }
 
     private EngineResponse append(List<byte[]> args) {
@@ -438,6 +458,30 @@ public final class DataStoreEngine {
         return EngineResponse.integer(set.size());
     }
 
+    private EngineResponse setOperation(List<byte[]> args, String command, SetOperation operation) {
+        if (args.isEmpty()) return wrongArity(command);
+        HashSet<ByteSequence> result = new HashSet<>();
+        boolean first = true;
+        for (byte[] rawKey : args) {
+            Entry entry = keyEntry(rawKey);
+            HashSet<ByteSequence> next = entry == null ? new HashSet<>() : castSet(entry.value, entry.type);
+            if (next == null) return wrongType();
+            result = switch (operation) {
+                case UNION -> first ? next.copy() : result.union(next);
+                case INTERSECTION -> first ? next.copy() : result.intersection(next);
+                case DIFFERENCE -> first ? next.copy() : result.difference(next);
+            };
+            first = false;
+        }
+        List<ByteSequence> values = new ArrayList<>(result.items());
+        values.sort(ByteSequence::compareTo);
+        ArrayList<EngineResponse> responses = new ArrayList<>();
+        for (ByteSequence value : values) {
+            responses.add(EngineResponse.bulkString(value.bytes()));
+        }
+        return EngineResponse.array(responses);
+    }
+
     private EngineResponse zadd(List<byte[]> args) {
         if (args.size() < 3 || args.size() % 2 == 0) return wrongArity("zadd");
         ByteSequence key = wrap(args.getFirst());
@@ -590,6 +634,21 @@ public final class DataStoreEngine {
         return EngineResponse.integer(1);
     }
 
+    private EngineResponse ttl(List<byte[]> args) {
+        if (args.size() != 1) return wrongArity("ttl");
+        ByteSequence key = wrap(args.getFirst());
+        store.activeDatabase().expireLazy(key);
+        Entry entry = store.activeDatabase().get(key);
+        if (entry == null) return EngineResponse.integer(-2);
+        if (entry.expiresAtMs == null) return EngineResponse.integer(-1);
+        long remaining = entry.expiresAtMs - currentTimeMs();
+        if (remaining < 0) {
+            store.activeDatabase().delete(key);
+            return EngineResponse.integer(-2);
+        }
+        return EngineResponse.integer(remaining / 1000L);
+    }
+
     private EngineResponse pttl(List<byte[]> args) {
         if (args.size() != 1) return wrongArity("pttl");
         ByteSequence key = wrap(args.getFirst());
@@ -676,6 +735,11 @@ public final class DataStoreEngine {
         return (HashMap<ByteSequence, byte[]>) value;
     }
 
+    @SuppressWarnings("unchecked")
+    private HashSet<ByteSequence> castSet(Object value, EntryType type) {
+        return type == EntryType.SET ? (HashSet<ByteSequence>) value : null;
+    }
+
     private static ByteSequence wrap(byte[] bytes) {
         return new ByteSequence(bytes);
     }
@@ -710,6 +774,32 @@ public final class DataStoreEngine {
         } catch (NumberFormatException error) {
             return null;
         }
+    }
+
+    private static byte[] literalPrefix(byte[] pattern) {
+        int length = 0;
+        while (length < pattern.length && pattern[length] != '*' && pattern[length] != '?') {
+            length++;
+        }
+        return Arrays.copyOf(pattern, length);
+    }
+
+    private static String indexKey(ByteSequence key) {
+        return indexKey(key.bytes());
+    }
+
+    private static String indexKey(byte[] bytes) {
+        return new String(bytes, StandardCharsets.ISO_8859_1);
+    }
+
+    private static ByteSequence fromIndexKey(String key) {
+        return new ByteSequence(key.getBytes(StandardCharsets.ISO_8859_1));
+    }
+
+    private enum SetOperation {
+        UNION,
+        INTERSECTION,
+        DIFFERENCE
     }
 
     private static Double parseDouble(byte[] bytes) {
@@ -875,6 +965,7 @@ public final class DataStoreEngine {
     private static final class Database {
         private final HashMap<ByteSequence, Entry> entries = new HashMap<>();
         private final MinHeap<ExpiryRecord> ttlHeap = new MinHeap<>();
+        private RadixTree<ByteSequence> keyIndex = new RadixTree<>();
 
         private Entry get(ByteSequence key) {
             Entry entry = entries.get(key);
@@ -885,17 +976,22 @@ public final class DataStoreEngine {
 
         private void set(ByteSequence key, Entry entry) {
             entries.set(key, entry);
+            keyIndex.insert(indexKey(key), key);
             if (entry.expiresAtMs != null) ttlHeap.push(new ExpiryRecord(entry.expiresAtMs, key));
         }
 
         private boolean delete(ByteSequence key) {
-            return entries.delete(key);
+            boolean deleted = entries.delete(key);
+            if (deleted) {
+                keyIndex.delete(indexKey(key));
+            }
+            return deleted;
         }
 
         private void expireLazy(ByteSequence key) {
             Entry entry = entries.get(key);
             if (entry != null && entry.expiresAtMs != null && entry.expiresAtMs <= currentTimeMs()) {
-                entries.delete(key);
+                delete(key);
             }
         }
 
@@ -907,14 +1003,17 @@ public final class DataStoreEngine {
                 ttlHeap.pop();
                 Entry entry = entries.get(record.key);
                 if (entry != null && entry.expiresAtMs != null && entry.expiresAtMs.equals(record.expiresAtMs)) {
-                    entries.delete(record.key);
+                    delete(record.key);
                 }
             }
         }
 
         private List<ByteSequence> keys(byte[] pattern) {
             List<ByteSequence> keys = new ArrayList<>();
-            for (ByteSequence key : entries.keys()) {
+            byte[] prefix = literalPrefix(pattern);
+            List<String> candidates = prefix.length == 0 ? keyIndex.keys() : keyIndex.wordsWithPrefix(indexKey(prefix));
+            for (String candidate : candidates) {
+                ByteSequence key = fromIndexKey(candidate);
                 expireLazy(key);
                 if (entries.get(key) != null && globMatch(pattern, key.bytes())) keys.add(key);
             }
@@ -929,6 +1028,7 @@ public final class DataStoreEngine {
 
         private void clear() {
             entries.clear();
+            keyIndex = new RadixTree<>();
         }
     }
 

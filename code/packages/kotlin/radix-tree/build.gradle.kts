@@ -25,13 +25,6 @@ tasks.withType<JavaCompile> {
 }
 
 dependencies {
-    api("com.codingadventures:hash-map")
-    api("com.codingadventures:hash-set")
-    api("com.codingadventures:heap")
-    api("com.codingadventures:hyperloglog")
-    api("com.codingadventures:in-memory-data-store-protocol")
-    api("com.codingadventures:radix-tree")
-    api("com.codingadventures:skip-list")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
