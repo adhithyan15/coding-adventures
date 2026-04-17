@@ -572,8 +572,9 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "STAR" },
       { type: "token_reference", name: "AMPERSAND" },
       { type: "token_reference", name: "VARIABLE" },
+      { type: "token_reference", name: "PERCENTAGE" },
     ] },
-    lineNumber: 330,
+    lineNumber: 331,
   },
   {
     name: "subclass_selector",
@@ -585,12 +586,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "pseudo_class" },
       { type: "rule_reference", name: "pseudo_element" },
     ] },
-    lineNumber: 333,
+    lineNumber: 334,
   },
   {
     name: "placeholder_selector",
     body: { type: "token_reference", name: "PLACEHOLDER" },
-    lineNumber: 337,
+    lineNumber: 338,
   },
   {
     name: "class_selector",
@@ -598,12 +599,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "DOT" },
       { type: "token_reference", name: "IDENT" },
     ] },
-    lineNumber: 339,
+    lineNumber: 340,
   },
   {
     name: "id_selector",
     body: { type: "token_reference", name: "HASH" },
-    lineNumber: 341,
+    lineNumber: 342,
   },
   {
     name: "attribute_selector",
@@ -617,7 +618,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RBRACKET" },
     ] },
-    lineNumber: 343,
+    lineNumber: 344,
   },
   {
     name: "attr_matcher",
@@ -629,7 +630,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "DOLLAR_EQUALS" },
       { type: "token_reference", name: "STAR_EQUALS" },
     ] },
-    lineNumber: 345,
+    lineNumber: 346,
   },
   {
     name: "attr_value",
@@ -637,7 +638,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "IDENT" },
       { type: "token_reference", name: "STRING" },
     ] },
-    lineNumber: 348,
+    lineNumber: 349,
   },
   {
     name: "pseudo_class",
@@ -653,12 +654,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "token_reference", name: "IDENT" },
       ] },
     ] },
-    lineNumber: 350,
+    lineNumber: 351,
   },
   {
     name: "pseudo_class_args",
     body: { type: "repetition", element: { type: "rule_reference", name: "pseudo_class_arg" } },
-    lineNumber: 353,
+    lineNumber: 354,
   },
   {
     name: "pseudo_class_arg",
@@ -685,7 +686,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "token_reference", name: "RBRACKET" },
       ] },
     ] },
-    lineNumber: 355,
+    lineNumber: 356,
   },
   {
     name: "pseudo_element",
@@ -693,7 +694,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "COLON_COLON" },
       { type: "token_reference", name: "IDENT" },
     ] },
-    lineNumber: 360,
+    lineNumber: 361,
   },
   {
     name: "block",
@@ -702,12 +703,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "block_contents" },
       { type: "token_reference", name: "RBRACE" },
     ] },
-    lineNumber: 370,
+    lineNumber: 371,
   },
   {
     name: "block_contents",
     body: { type: "repetition", element: { type: "rule_reference", name: "block_item" } },
-    lineNumber: 372,
+    lineNumber: 373,
   },
   {
     name: "block_item",
@@ -716,7 +717,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "at_rule" },
       { type: "rule_reference", name: "declaration_or_nested" },
     ] },
-    lineNumber: 374,
+    lineNumber: 375,
   },
   {
     name: "lattice_block_item",
@@ -728,7 +729,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "extend_directive" },
       { type: "rule_reference", name: "at_root_directive" },
     ] },
-    lineNumber: 380,
+    lineNumber: 381,
   },
   {
     name: "content_directive",
@@ -736,7 +737,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "literal", value: "@content" },
       { type: "token_reference", name: "SEMICOLON" },
     ] },
-    lineNumber: 390,
+    lineNumber: 391,
   },
   {
     name: "extend_directive",
@@ -745,7 +746,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "selector_list" },
       { type: "token_reference", name: "SEMICOLON" },
     ] },
-    lineNumber: 398,
+    lineNumber: 399,
   },
   {
     name: "at_root_directive",
@@ -759,7 +760,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "block" },
         ] } },
     ] },
-    lineNumber: 403,
+    lineNumber: 404,
   },
   {
     name: "declaration_or_nested",
@@ -767,7 +768,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "declaration" },
       { type: "rule_reference", name: "qualified_rule" },
     ] },
-    lineNumber: 405,
+    lineNumber: 406,
   },
   {
     name: "declaration",
@@ -785,7 +786,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "rule_reference", name: "block" },
       ] },
     ] },
-    lineNumber: 414,
+    lineNumber: 415,
   },
   {
     name: "property",
@@ -793,7 +794,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "IDENT" },
       { type: "token_reference", name: "CUSTOM_PROPERTY" },
     ] },
-    lineNumber: 417,
+    lineNumber: 418,
   },
   {
     name: "priority",
@@ -801,7 +802,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "BANG" },
       { type: "literal", value: "important" },
     ] },
-    lineNumber: 419,
+    lineNumber: 420,
   },
   {
     name: "value_list",
@@ -809,7 +810,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "value" },
       { type: "repetition", element: { type: "rule_reference", name: "value" } },
     ] },
-    lineNumber: 430,
+    lineNumber: 431,
   },
   {
     name: "value",
@@ -830,7 +831,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "MINUS" },
       { type: "rule_reference", name: "map_literal" },
     ] },
-    lineNumber: 432,
+    lineNumber: 433,
   },
   {
     name: "function_call",
@@ -842,12 +843,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       ] },
       { type: "token_reference", name: "URL_TOKEN" },
     ] },
-    lineNumber: 438,
+    lineNumber: 439,
   },
   {
     name: "function_args",
     body: { type: "repetition", element: { type: "rule_reference", name: "function_arg" } },
-    lineNumber: 441,
+    lineNumber: 442,
   },
   {
     name: "function_arg",
@@ -871,7 +872,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "token_reference", name: "RPAREN" },
       ] },
     ] },
-    lineNumber: 443,
+    lineNumber: 444,
   },
 ],
 };

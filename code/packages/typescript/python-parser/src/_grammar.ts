@@ -13,14 +13,20 @@ export const PARSER_GRAMMAR: ParserGrammar = {
   rules: [
   {
     name: "program",
-    body: { type: "repetition", element: { type: "rule_reference", name: "statement" } },
+    body: { type: "repetition", element: { type: "alternation", choices: [
+        { type: "token_reference", name: "NEWLINE" },
+        { type: "rule_reference", name: "statement" },
+      ] } },
     lineNumber: 17,
   },
   {
     name: "statement",
-    body: { type: "alternation", choices: [
-      { type: "rule_reference", name: "assignment" },
-      { type: "rule_reference", name: "expression_stmt" },
+    body: { type: "sequence", elements: [
+      { type: "group", element: { type: "alternation", choices: [
+          { type: "rule_reference", name: "assignment" },
+          { type: "rule_reference", name: "expression_stmt" },
+        ] } },
+      { type: "optional", element: { type: "token_reference", name: "NEWLINE" } },
     ] },
     lineNumber: 18,
   },
@@ -69,6 +75,8 @@ export const PARSER_GRAMMAR: ParserGrammar = {
   {
     name: "factor",
     body: { type: "alternation", choices: [
+      { type: "token_reference", name: "INT" },
+      { type: "token_reference", name: "FLOAT" },
       { type: "token_reference", name: "NUMBER" },
       { type: "token_reference", name: "STRING" },
       { type: "token_reference", name: "NAME" },

@@ -14,7 +14,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
   {
     name: "program",
     body: { type: "repetition", element: { type: "rule_reference", name: "statement" } },
-    lineNumber: 22,
+    lineNumber: 27,
   },
   {
     name: "statement",
@@ -23,7 +23,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "rule_reference", name: "method_call" },
       { type: "rule_reference", name: "expression_stmt" },
     ] },
-    lineNumber: 23,
+    lineNumber: 28,
   },
   {
     name: "assignment",
@@ -32,7 +32,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
       { type: "token_reference", name: "EQUALS" },
       { type: "rule_reference", name: "expression" },
     ] },
-    lineNumber: 24,
+    lineNumber: 29,
   },
   {
     name: "method_call",
@@ -51,12 +51,12 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         ] } },
       { type: "token_reference", name: "RPAREN" },
     ] },
-    lineNumber: 25,
+    lineNumber: 30,
   },
   {
     name: "expression_stmt",
     body: { type: "rule_reference", name: "expression" },
-    lineNumber: 26,
+    lineNumber: 31,
   },
   {
     name: "expression",
@@ -70,7 +70,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "term" },
         ] } },
     ] },
-    lineNumber: 27,
+    lineNumber: 32,
   },
   {
     name: "term",
@@ -84,7 +84,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
           { type: "rule_reference", name: "factor" },
         ] } },
     ] },
-    lineNumber: 28,
+    lineNumber: 33,
   },
   {
     name: "factor",
@@ -99,7 +99,7 @@ export const PARSER_GRAMMAR: ParserGrammar = {
         { type: "token_reference", name: "RPAREN" },
       ] },
     ] },
-    lineNumber: 29,
+    lineNumber: 34,
   },
 ],
 };
