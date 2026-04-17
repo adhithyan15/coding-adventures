@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.CliBuilder.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.CliBuilder.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# declarative CLI parsing from JSON specs with validation, help generation, and subcommand routing</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="CliBuilder.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../directed-graph/CodingAdventures.DirectedGraph.fsproj" />
+    <ProjectReference Include="../json-value/CodingAdventures.JsonValue.fsproj" />
+  </ItemGroup>
+</Project>
