@@ -1,345 +1,823 @@
 <!DOCTYPE html>
 <!--
-  Coding Adventures — Landing Page
+  Coding Adventures - Landing Page
   =================================
-  A single static HTML page that serves as the root index for
-  https://adhithyan15.github.io/coding-adventures/.
+  Static root page for:
+  https://adhithyan15.github.io/coding-adventures/
 
-  No build step. No framework. Just HTML + inline CSS + inline JS so the
-  workflow can deploy a single file without any npm install.
-
-  Design goals:
-  - Dark theme matching the sub-apps (transistors, logic-gates, lattice, busicom)
-  - Card grid — one card per deployed sub-app
-  - Responsive: 2-column on desktop, 1-column on mobile
-  - Accessible: semantic HTML, aria-labels, sufficient colour contrast
+  No build step. No framework. Just one HTML file with inline CSS so the
+  root GitHub Pages deploy can publish it directly.
 -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Coding Adventures is a learning-first computing lab with interactive visualizers, language playgrounds, and browser-based docs spanning transistors, arithmetic, CPUs, parsers, and compilers."
+  />
   <title>Coding Adventures</title>
   <style>
-    /* ── Reset & base ────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #0f1117;
-      --surface:     #1a1d27;
-      --surface-hover: #22263a;
-      --border:      #2e3248;
-      --accent:      #6c8ef5;
-      --accent-dim:  #3d5adc;
-      --text:        #e4e7f0;
-      --text-muted:  #8891b0;
-      --tag-bg:      #1e2540;
-      --tag-text:    #8fa8ff;
-      --radius:      12px;
-      --gap:         24px;
+      --bg: #09111b;
+      --bg-deep: #060c14;
+      --panel: rgba(14, 24, 39, 0.86);
+      --panel-strong: rgba(18, 31, 50, 0.96);
+      --panel-soft: rgba(20, 36, 57, 0.72);
+      --border: rgba(146, 170, 201, 0.16);
+      --border-strong: rgba(125, 211, 252, 0.24);
+      --text: #ecf3ff;
+      --muted: #9eb0c9;
+      --accent: #7dd3fc;
+      --accent-warm: #f59e0b;
+      --accent-green: #34d399;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 999px;
+      --page-width: 1160px;
     }
 
-    html { font-size: 16px; }
+    html { font-size: 16px; scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                   "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      color: var(--text);
+      font-family: "Segoe UI", Inter, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      background:
+        radial-gradient(circle at top left, rgba(125, 211, 252, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 28%),
+        linear-gradient(180deg, #0b1523 0%, var(--bg) 45%, var(--bg-deep) 100%);
     }
 
-    /* ── Layout ──────────────────────────────────────────────────────── */
+    a { color: inherit; }
+
     .page {
-      flex: 1;
-      max-width: 900px;
+      width: min(var(--page-width), calc(100% - 32px));
       margin: 0 auto;
-      padding: 64px 24px 48px;
-      width: 100%;
+      padding: 28px 0 56px;
     }
 
-    /* ── Header ──────────────────────────────────────────────────────── */
-    header { margin-bottom: 56px; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
 
     .logo {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
       text-decoration: none;
     }
 
-    .logo-icon {
-      width: 36px; height: 36px;
-      background: var(--accent);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(125, 211, 252, 0.22), rgba(52, 211, 153, 0.2));
+      border: 1px solid rgba(125, 211, 252, 0.24);
+      font-size: 1.1rem;
     }
 
     .logo-text {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -0.01em;
-    }
-
-    h1 {
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .subtitle {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      max-width: 560px;
-      line-height: 1.7;
-    }
-
-    /* ── Section label ───────────────────────────────────────────────── */
-    .section-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
-
-    /* ── Card grid ───────────────────────────────────────────────────── */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: var(--gap);
-    }
-
-    /* ── App card ────────────────────────────────────────────────────── */
-    .card {
       display: flex;
       flex-direction: column;
-      background: var(--surface);
+      gap: 2px;
+    }
+
+    .logo-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-subtitle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .topnav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-link,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
       text-decoration: none;
-      color: inherit;
-      transition: background 0.15s ease, border-color 0.15s ease,
-                  transform 0.15s ease, box-shadow 0.15s ease;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.02);
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .nav-link:hover,
+    .button:hover,
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
+      gap: 28px;
+      padding: 34px;
+      border-radius: 30px;
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+        var(--panel);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      overflow: hidden;
       position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -90px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(125, 211, 252, 0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      background: rgba(125, 211, 252, 0.08);
+      color: #cfefff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 4vw, 4.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      margin-bottom: 18px;
+      max-width: 12ch;
+    }
+
+    .hero h1 .accent {
+      color: var(--accent);
+    }
+
+    .hero-copy {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 62ch;
+      margin-bottom: 22px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, rgba(125, 211, 252, 0.2), rgba(52, 211, 153, 0.16));
+      border-color: rgba(125, 211, 252, 0.34);
+    }
+
+    .hero-notes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .note-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #d8e7ff;
+      margin-bottom: 6px;
+    }
+
+    .note-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .hero-panel {
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(20, 36, 57, 0.92), rgba(12, 20, 32, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-kicker {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .panel-title {
+      font-size: 1.35rem;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+
+    .panel-copy {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .panel-list {
+      display: grid;
+      gap: 12px;
+      list-style: none;
+    }
+
+    .panel-list li {
+      padding: 14px 14px 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .panel-list strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.96rem;
+    }
+
+    .panel-list span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .section {
+      margin-top: 34px;
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .section-copy {
+      color: var(--muted);
+      max-width: 62ch;
+      font-size: 0.98rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 248px;
+      padding: 22px;
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        var(--panel-soft);
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      text-decoration: none;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
       overflow: hidden;
     }
 
     .card::before {
-      /* subtle top-edge accent glow */
       content: "";
       position: absolute;
-      inset: 0 0 auto 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent-dim), var(--accent));
-      opacity: 0;
-      transition: opacity 0.15s ease;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(125, 211, 252, 0), rgba(125, 211, 252, 0.9), rgba(245, 158, 11, 0.72));
+      opacity: 0.9;
     }
 
-    .card:hover {
-      background: var(--surface-hover);
-      border-color: var(--accent-dim);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(108, 142, 245, 0.12);
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
-    .card:hover::before { opacity: 1; }
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(125, 211, 252, 0.1);
+      border: 1px solid rgba(125, 211, 252, 0.14);
+      color: #d7f2ff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
-    .card-icon {
-      font-size: 2rem;
-      margin-bottom: 16px;
-      display: block;
-      line-height: 1;
+    .card-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
     }
 
     .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 8px;
-      color: var(--text);
+      font-size: 1.34rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
     }
 
     .card-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.65;
+      color: var(--muted);
+      font-size: 0.95rem;
       flex: 1;
-      margin-bottom: 20px;
     }
 
-    /* ── Tag row ─────────────────────────────────────────────────────── */
     .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
     }
 
     .tag {
-      font-size: 0.72rem;
-      font-weight: 500;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      border: 1px solid rgba(143, 168, 255, 0.15);
-      border-radius: 4px;
-      padding: 2px 8px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d5e3f8;
+      font-size: 0.76rem;
+      font-weight: 600;
       letter-spacing: 0.02em;
     }
 
-    /* ── Footer ──────────────────────────────────────────────────────── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .info-card {
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(14, 24, 39, 0.82);
+      border: 1px solid var(--border);
+    }
+
+    .info-card h3 {
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .info-card p {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
     footer {
-      text-align: center;
-      padding: 24px;
-      color: var(--text-muted);
-      font-size: 0.82rem;
+      margin-top: 38px;
+      padding: 20px 0 8px;
       border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
     }
 
     footer a {
-      color: var(--accent);
+      color: var(--text);
       text-decoration: none;
     }
+
     footer a:hover { text-decoration: underline; }
 
-    /* ── Responsive ──────────────────────────────────────────────────── */
-    @media (max-width: 480px) {
-      .page { padding: 40px 16px 32px; }
-      .grid { grid-template-columns: 1fr; }
+    @media (max-width: 980px) {
+      .hero,
+      .cards,
+      .info-grid,
+      .hero-notes {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(var(--page-width), calc(100% - 22px)); }
+
+      .topbar,
+      .section-header,
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding: 24px;
+        border-radius: 24px;
+      }
     }
   </style>
 </head>
 <body>
+  <main class="page">
+    <div class="topbar">
+      <a class="logo" href="/coding-adventures/">
+        <span class="logo-mark" aria-hidden="true">CA</span>
+        <span class="logo-text">
+          <span class="logo-title">coding-adventures</span>
+          <span class="logo-subtitle">Interactive computing lab</span>
+        </span>
+      </a>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="#stack">Explore the stack</a>
+        <a class="nav-link" href="#languages">Languages and tooling</a>
+        <a
+          class="nav-link"
+          href="https://github.com/adhithyan15/coding-adventures"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub repo
+        </a>
+      </nav>
+    </div>
 
-<main class="page">
-  <header>
-    <a class="logo" href="/coding-adventures/">
-      <span class="logo-icon" aria-hidden="true">⚡</span>
-      <span class="logo-text">coding-adventures</span>
-    </a>
-    <h1>Building computers<br>from first principles</h1>
-    <p class="subtitle">
-      Interactive visualizers and documentation that walk through the full
-      computing stack — from individual transistors all the way up to
-      programming languages. Every layer is explorable, every concept is live.
-    </p>
-  </header>
-
-  <p class="section-label">Interactive apps</p>
-
-  <nav class="grid" aria-label="Interactive applications">
-
-    <!-- Transistors -->
-    <a class="card" href="/coding-adventures/transistors/" aria-label="Transistor Visualizer">
-      <span class="card-icon" aria-hidden="true">🔬</span>
-      <div class="card-title">Transistor Visualizer</div>
-      <p class="card-desc">
-        An interactive tour through the history of electronic amplification —
-        from the 1906 vacuum tube triode through BJTs and MOSFETs to modern
-        CMOS. Each era includes real simulation models with live parameter
-        controls and annotated physics.
-      </p>
-      <div class="tags">
-        <span class="tag">Vacuum Tube</span>
-        <span class="tag">BJT</span>
-        <span class="tag">MOSFET</span>
-        <span class="tag">CMOS</span>
-        <span class="tag">Layer 0</span>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Learning-first monorepo</div>
+        <h1>From vacuum tubes to <span class="accent">languages</span> you can run.</h1>
+        <p class="hero-copy">
+          Coding Adventures is a hands-on map of the computing stack. The repo mixes
+          visualizers, playgrounds, specs, and real packages so you can trace how ideas
+          connect across hardware, arithmetic, CPUs, parsers, runtimes, and developer tools.
+        </p>
+        <div class="actions">
+          <a class="button button-primary" href="#stack">Start with the stack</a>
+          <a class="button" href="#languages">Open the playgrounds</a>
+        </div>
+        <div class="hero-notes">
+          <div class="note">
+            <div class="note-title">Build by layers</div>
+            <div class="note-text">Start with transistors, then climb into gates, arithmetic, processors, and compilers.</div>
+          </div>
+          <div class="note">
+            <div class="note-title">Learn by running</div>
+            <div class="note-text">Most pages are interactive, so the concepts move while you inspect them.</div>
+          </div>
+          <div class="note">
+            <div class="note-title">Follow the repo</div>
+            <div class="note-text">Every app sits on top of the same monorepo of specs, packages, and experiments.</div>
+          </div>
+        </div>
       </div>
-    </a>
 
-    <!-- Logic Gates -->
-    <a class="card" href="/coding-adventures/logic-gates/" aria-label="Logic Gates Visualizer">
-      <span class="card-icon" aria-hidden="true">⚙️</span>
-      <div class="card-title">Logic Gates Visualizer</div>
-      <p class="card-desc">
-        Click-to-toggle interactive logic gates — NOT, AND, OR, XOR — with
-        live truth table highlighting, IEEE standard gate symbols, and
-        expandable CMOS transistor diagrams showing exactly how each gate is
-        physically built.
-      </p>
-      <div class="tags">
-        <span class="tag">Boolean Logic</span>
-        <span class="tag">Truth Tables</span>
-        <span class="tag">CMOS</span>
-        <span class="tag">Layer 1</span>
+      <aside class="hero-panel">
+        <div class="panel-kicker">What lives here</div>
+        <div class="panel-title">A study track, not just a link list.</div>
+        <p class="panel-copy">
+          The homepage now reflects the newer projects already deployed to GitHub Pages,
+          especially the CPU and arithmetic work that was missing from the old root page.
+        </p>
+        <ul class="panel-list">
+          <li>
+            <strong>Hardware track</strong>
+            <span>Vacuum tubes, transistors, logic gates, decimal machines, ALUs, and ARM-era CPUs.</span>
+          </li>
+          <li>
+            <strong>Language track</strong>
+            <span>Markdown, CSS tooling, Nib, and explainable pipelines from source text to output.</span>
+          </li>
+          <li>
+            <strong>Repo track</strong>
+            <span>Specs, learning notes, polyglot packages, and browser apps all built as one connected system.</span>
+          </li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="section" id="stack">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Start Here</div>
+          <h2 class="section-title">Walk up the computing stack.</h2>
+        </div>
+        <p class="section-copy">
+          These pages are the clearest path through the repo's architecture story: how physical
+          switching becomes logic, how logic becomes arithmetic, and how that turns into full CPUs.
+        </p>
       </div>
-    </a>
 
-    <!-- Busicom Calculator -->
-    <a class="card" href="/coding-adventures/busicom/" aria-label="Busicom 141-PF Calculator Simulator">
-      <span class="card-icon" aria-hidden="true">🧮</span>
-      <div class="card-title">Busicom 141-PF Calculator</div>
-      <p class="card-desc">
-        A faithful simulation of the 1971 Busicom 141-PF — the world's first
-        microprocessor-based calculator — powered by a cycle-accurate Intel
-        4004 CPU implementation. Watch the ALU, gate-level execution, and
-        transistor activity in real time as you type.
-      </p>
-      <div class="tags">
-        <span class="tag">Intel 4004</span>
-        <span class="tag">CPU Simulation</span>
-        <span class="tag">ALU</span>
-        <span class="tag">Layer 4</span>
+      <div class="cards">
+        <a class="card" href="/coding-adventures/transistors/" aria-label="Open Transistor Visualizer">
+          <div class="card-meta">
+            <span class="card-badge">Layer 0</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Transistor Visualizer</div>
+          <p class="card-desc">
+            Trace the shift from vacuum tubes to BJTs, MOSFETs, and CMOS with live device models,
+            controls, and explanations of the physics behind gain, switching, and scaling.
+          </p>
+          <div class="tags">
+            <span class="tag">Vacuum tube</span>
+            <span class="tag">BJT</span>
+            <span class="tag">MOSFET</span>
+            <span class="tag">CMOS</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/logic-gates/" aria-label="Open Logic Gates Visualizer">
+          <div class="card-meta">
+            <span class="card-badge">Layer 1</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Logic Gates Visualizer</div>
+          <p class="card-desc">
+            Toggle NOT, AND, OR, and XOR gates while following truth tables, gate symbols, and
+            the CMOS transistor layouts that make each digital building block work.
+          </p>
+          <div class="tags">
+            <span class="tag">Boolean logic</span>
+            <span class="tag">Truth tables</span>
+            <span class="tag">CMOS diagrams</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/arithmetic/" aria-label="Open Arithmetic Visualizer">
+          <div class="card-meta">
+            <span class="card-badge">Layer 2</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Arithmetic Visualizer</div>
+          <p class="card-desc">
+            Follow how half adders become ripple-carry adders, ALUs, subtraction via two's
+            complement, multiplication via shift-and-add, and simple CPU execution traces.
+          </p>
+          <div class="tags">
+            <span class="tag">Adders</span>
+            <span class="tag">ALU</span>
+            <span class="tag">CPU step-through</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/eniac/" aria-label="Open ENIAC Visualizer">
+          <div class="card-meta">
+            <span class="card-badge">History</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">ENIAC Visualizer</div>
+          <p class="card-desc">
+            See decimal arithmetic before binary won: triode switches, decade ring counters,
+            accumulators, and side-by-side comparisons between ENIAC pulse logic and later binary machines.
+          </p>
+          <div class="tags">
+            <span class="tag">Vacuum tubes</span>
+            <span class="tag">Decimal arithmetic</span>
+            <span class="tag">ENIAC</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/busicom/" aria-label="Open Busicom 141-PF Calculator">
+          <div class="card-meta">
+            <span class="card-badge">Layer 4</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Busicom 141-PF Calculator</div>
+          <p class="card-desc">
+            Explore a faithful simulator of the first microprocessor-based calculator, powered by
+            an Intel 4004 implementation with live ALU, gate-level, and transistor activity.
+          </p>
+          <div class="tags">
+            <span class="tag">Intel 4004</span>
+            <span class="tag">Calculator simulation</span>
+            <span class="tag">Microprocessor history</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/arm1-web/" aria-label="Open ARM1 Web Simulator">
+          <div class="card-meta">
+            <span class="card-badge">CPU internals</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">ARM1 Processor Simulator</div>
+          <p class="card-desc">
+            Step through the 1985 ARM1 across registers, decode, pipeline, barrel shifter,
+            memory, and execution trace views to see a classic RISC design from multiple angles.
+          </p>
+          <div class="tags">
+            <span class="tag">ARM1</span>
+            <span class="tag">Pipeline</span>
+            <span class="tag">Barrel shifter</span>
+          </div>
+        </a>
       </div>
-    </a>
+    </section>
 
-    <!-- Lattice Docs -->
-    <a class="card" href="/coding-adventures/lattice/" aria-label="Lattice CSS Language Documentation">
-      <span class="card-icon" aria-hidden="true">🎨</span>
-      <div class="card-title">Lattice Docs &amp; Playground</div>
-      <p class="card-desc">
-        Interactive documentation and live playground for Lattice — a CSS
-        superset that adds variables, mixins, control flow, functions, and
-        modules. The full transpiler runs in your browser; edits compile to
-        plain CSS in real time.
-      </p>
-      <div class="tags">
-        <span class="tag">CSS</span>
-        <span class="tag">Transpiler</span>
-        <span class="tag">Live Playground</span>
-        <span class="tag">Language</span>
+    <section class="section" id="languages">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Playgrounds</div>
+          <h2 class="section-title">Language and tooling experiments.</h2>
+        </div>
+        <p class="section-copy">
+          The repo is also a language-tooling lab. These projects lean into parsers, transpilers,
+          renderers, and browser-native docs that explain the path from source text to output.
+        </p>
       </div>
-    </a>
 
-    <!-- CommonMark Demo -->
-    <a class="card" href="/coding-adventures/commonmark/" aria-label="CommonMark Live Demo">
-      <span class="card-icon" aria-hidden="true">📝</span>
-      <div class="card-title">CommonMark Live Demo</div>
-      <p class="card-desc">
-        A split-pane Markdown editor with live HTML preview, powered entirely
-        by our own CommonMark 0.31.2 parser and renderer built from scratch
-        in TypeScript. Type Markdown on the left, see rendered HTML on the
-        right — no third-party libraries.
-      </p>
-      <div class="tags">
-        <span class="tag">Markdown</span>
-        <span class="tag">Parser</span>
-        <span class="tag">Live Preview</span>
-        <span class="tag">Language</span>
+      <div class="cards">
+        <a class="card" href="/coding-adventures/lattice/" aria-label="Open Lattice Docs and Playground">
+          <div class="card-meta">
+            <span class="card-badge">CSS language</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Lattice Docs and Playground</div>
+          <p class="card-desc">
+            Learn the Lattice CSS superset through examples, language docs, and a live browser
+            playground that transpiles variables, mixins, functions, modules, and control flow to plain CSS.
+          </p>
+          <div class="tags">
+            <span class="tag">CSS</span>
+            <span class="tag">Transpiler</span>
+            <span class="tag">Live docs</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/commonmark/" aria-label="Open CommonMark Live Demo">
+          <div class="card-meta">
+            <span class="card-badge">Parser</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">CommonMark Live Demo</div>
+          <p class="card-desc">
+            Write Markdown on one side and watch the HTML render on the other, powered by a
+            CommonMark parser and renderer built from scratch in TypeScript rather than a third-party library.
+          </p>
+          <div class="tags">
+            <span class="tag">Markdown</span>
+            <span class="tag">Renderer</span>
+            <span class="tag">Live preview</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/nib-web/" aria-label="Open Nib Playground">
+          <div class="card-meta">
+            <span class="card-badge">Compiler path</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Nib Playground</div>
+          <p class="card-desc">
+            Compile Nib source to Intel 4004 assembly, binary, and Intel HEX in the browser, then
+            run the result inside the repo's own 4004 simulator to close the loop from source to machine.
+          </p>
+          <div class="tags">
+            <span class="tag">Nib</span>
+            <span class="tag">Intel 4004</span>
+            <span class="tag">Browser compiler</span>
+          </div>
+        </a>
+
+        <a class="card" href="/coding-adventures/code39/" aria-label="Open Code39 Visualizer">
+          <div class="card-meta">
+            <span class="card-badge">Explainable rendering</span>
+            <span class="card-arrow" aria-hidden="true">-></span>
+          </div>
+          <div class="card-title">Code39 Visualizer</div>
+          <p class="card-desc">
+            Walk through the full barcode pipeline from input text to normalized symbols, encoded
+            runs, draw instructions, and final SVG output instead of treating barcode generation as a black box.
+          </p>
+          <div class="tags">
+            <span class="tag">Code39</span>
+            <span class="tag">SVG</span>
+            <span class="tag">Draw instructions</span>
+          </div>
+        </a>
       </div>
-    </a>
+    </section>
 
-  </nav>
-</main>
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <div class="section-label">Why This Repo</div>
+          <h2 class="section-title">A monorepo designed to teach while it builds.</h2>
+        </div>
+        <p class="section-copy">
+          The live pages are only the visible surface. Underneath them is a much larger system of
+          specs, learning notes, packages, and experiments that keep the project grounded in explanation.
+        </p>
+      </div>
 
-<footer>
-  <a href="https://github.com/adhithyan15/coding-adventures" target="_blank" rel="noopener noreferrer">
-    github.com/adhithyan15/coding-adventures
-  </a>
-</footer>
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Specs first</h3>
+          <p>
+            Major ideas in the repo usually begin as design docs and learning notes before they
+            become packages, visualizers, or browser apps.
+          </p>
+        </div>
+        <div class="info-card">
+          <h3>Cross-layer thinking</h3>
+          <p>
+            The same concept often appears more than once, letting you compare how it looks in
+            hardware, in language tooling, and in runnable software.
+          </p>
+        </div>
+        <div class="info-card">
+          <h3>Polyglot on purpose</h3>
+          <p>
+            Coding Adventures spans multiple ecosystems, so the pages here are backed by a broader
+            package lab instead of isolated demos.
+          </p>
+        </div>
+      </div>
+    </section>
 
+    <footer>
+      <div>Built as a static root page for GitHub Pages, with the rest of the site deployed from the monorepo's individual apps.</div>
+      <a
+        href="https://github.com/adhithyan15/coding-adventures"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        github.com/adhithyan15/coding-adventures
+      </a>
+    </footer>
+  </main>
 </body>
 </html>
