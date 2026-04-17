@@ -48,6 +48,7 @@ var ciManagedToolchainLanguages = map[string]bool{
 	"lua":        true,
 	"perl":       true,
 	"dart":       true,
+	"swift":      true,
 	"haskell":    true,
 }
 

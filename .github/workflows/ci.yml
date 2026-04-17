@@ -60,6 +60,7 @@ jobs:
       needs_dotnet: ${{ steps.toolchains.outputs.needs_dotnet }}
       needs_java: ${{ steps.toolchains.outputs.needs_java }}
       needs_kotlin: ${{ steps.toolchains.outputs.needs_kotlin }}
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
     steps:
@@ -148,6 +149,8 @@ jobs:
             printf '%s\n' \
               'needs_java=true' \
               'needs_kotlin=true' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_swift=true' >> "$GITHUB_OUTPUT"
           else
             printf '%s\n' \
               'needs_python=${{ steps.detect.outputs.needs_python }}' \
@@ -164,6 +167,8 @@ jobs:
             printf '%s\n' \
               'needs_java=${{ steps.detect.outputs.needs_java }}' \
               'needs_kotlin=${{ steps.detect.outputs.needs_kotlin }}' >> "$GITHUB_OUTPUT"
+            printf '%s\n' \
+              'needs_swift=${{ steps.detect.outputs.needs_swift }}' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload build plan
@@ -304,6 +309,94 @@ jobs:
         if: needs.detect.outputs.needs_dart == 'true'
         uses: dart-lang/setup-dart@v1
 
+      - name: Set up Swift (Windows)
+        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
+          $wingetExitCode = $LASTEXITCODE
+
+          if ($wingetExitCode -ne 0) {
+            Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
+          }
+
+          $currentPathEntries = @($env:Path -split ';')
+          $currentPathSet = @{}
+          foreach ($entry in $currentPathEntries) {
+            if (-not [string]::IsNullOrWhiteSpace($entry)) {
+              $currentPathSet[$entry] = $true
+            }
+          }
+
+          $registryPathEntries = @(
+            [System.Environment]::GetEnvironmentVariable('Path', 'User')
+            [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
+          ) | Where-Object { $_ } | ForEach-Object { $_ -split ';' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+          $newPathEntries = @()
+          foreach ($entry in $registryPathEntries) {
+            if (-not $currentPathSet.ContainsKey($entry)) {
+              $currentPathSet[$entry] = $true
+              $newPathEntries += $entry
+            }
+          }
+
+          foreach ($entry in $newPathEntries) {
+            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          }
+          if ($newPathEntries.Count -gt 0) {
+            $env:Path = "$env:Path;$($newPathEntries -join ';')"
+          }
+
+          $swiftRoots = @(
+            (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
+            (Join-Path $env:ProgramFiles 'Swift')
+          ) | Where-Object { Test-Path $_ }
+
+          $swiftExe = @(
+            (Get-Command swift -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue)
+            ($swiftRoots | ForEach-Object {
+              Get-ChildItem -Path $_ -Filter swift.exe -Recurse -File -ErrorAction SilentlyContinue |
+                Sort-Object FullName -Descending |
+                Select-Object -First 1 -ExpandProperty FullName
+            })
+          ) | Where-Object { $_ } | Select-Object -First 1
+
+          if (-not $swiftExe) {
+            if ($wingetExitCode -ne 0) {
+              throw "winget install exited with code $wingetExitCode and swift.exe was not found"
+            }
+            throw 'swift.exe not found after winget install'
+          }
+
+          $toolchainBin = Split-Path -Parent $swiftExe
+          if (-not $currentPathSet.ContainsKey($toolchainBin)) {
+            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            $env:Path = "$env:Path;$toolchainBin"
+            $currentPathSet[$toolchainBin] = $true
+          }
+          Write-Host "Using Swift from $swiftExe"
+
+          $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
+          if (-not $sdkRoot) {
+            $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'Machine')
+          }
+          if (-not $sdkRoot) {
+            $sdkRoot = $swiftRoots | ForEach-Object {
+            Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
+              Sort-Object FullName -Descending |
+              Select-Object -First 1 -ExpandProperty FullName
+            } | Where-Object { $_ } | Select-Object -First 1
+          }
+
+          if ($sdkRoot) {
+            "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            $env:SDKROOT = $sdkRoot
+            Write-Host "Using SDKROOT=$sdkRoot"
+          }
+
+          where.exe swift
+
       # ── Java / Kotlin ──────────────────────────────────────────
       #
       # Both Java and Kotlin packages use Gradle and JDK 21.
@@ -389,6 +482,9 @@ jobs:
             echo "Rust: $(rustc --version)"
             echo "Cargo: $(cargo --version)"
           fi
+          if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
+            echo "Swift: $(swift --version | head -1)"
+          fi
           if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
             echo "Elixir: $(elixir --version)"
             echo "Mix: $(mix --version)"
@@ -430,8 +526,20 @@ jobs:
             go build -o ../../../../build-tool .
           fi
 
+      - name: Build and test affected Swift packages on Windows
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
+        shell: pwsh
+        run: |
+          $planFlag = @()
+          if (Test-Path 'build-plan.json') {
+            Write-Host 'Using pre-computed build plan'
+            $planFlag = @('-plan-file', 'build-plan.json')
+          }
+          & ./build-tool.exe -root . @planFlag -validate-build-files -language swift
+
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
+        if: runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false)
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi

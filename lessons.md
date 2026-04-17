@@ -4,26 +4,6 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
-### 2026-04-15: SDK-style C# package projects must exclude nested test sources
-
-SDK-style `.csproj` files include `**/*.cs` by default. In this monorepo, package tests live under each package's `tests/` directory, so a new library project will accidentally compile its own xUnit test files unless the package project excludes them explicitly.
-
-**Symptom:** `dotnet test` fails while building the library project itself with errors like `CS0400: The type or namespace name 'Xunit' could not be found` and `CS0246: The type or namespace name 'FactAttribute' could not be found`, even though the test project has the correct xUnit package references.
-
-**Rule:** Every new C# package with in-package `tests/` folders must add this exclusion block to the library `.csproj`:
-
-```xml
-<ItemGroup>
-  <Compile Remove="tests\\**\\*.cs" />
-  <EmbeddedResource Remove="tests\\**" />
-  <None Remove="tests\\**" />
-</ItemGroup>
-```
-
-This keeps the library assembly focused on production code while the test project references it normally.
-
----
-
 ### 2026-04-12: Never commit build artifacts — agents running tests will generate them
 
 When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
@@ -1300,17 +1280,11 @@ When TypeScript packages export `.ts` source (not compiled `.d.ts`), `tsc -b` fo
 
 **Rule:** For Vite-based TypeScript programs that use `file:` dependencies, never use `tsc -b` in the build script. Rely on Vite's TypeScript handling for production builds.
 
-### 2026-03-29: Swift is NOT supported on Windows CI — always skip with a guard
+### 2026-04-16: Swift Windows CI requires explicit toolchain install, then real tests may run
 
-`swift-actions/setup-swift@v3` does not support Windows and `winget` Swift installs are not reliable on GitHub-hosted Windows runners. Swift tests on Windows CI consistently fail — do not attempt to run them.
+Swift packages can run on GitHub-hosted Windows CI, but only after `.github/workflows/ci.yml` installs the Swift toolchain with `winget install --id Swift.Toolchain` and refreshes the job environment so `swift.exe` is visible in later steps.
 
-**Rule:** Every Swift `BUILD_windows` must use the skip guard pattern:
-
-```
-where swift >nul 2>nul && swift test || echo Swift not available on this runner — skipping
-```
-
-A plain `swift test` (or any `swift` command without this guard) in `BUILD_windows` will fail the CI `build (windows-latest)` job with "'swift' is not recognized as an internal or external command".
+**Rule:** For Windows-compatible Swift packages, use a real `swift test` in `BUILD_windows`. Only keep a Windows skip if the package genuinely depends on Apple-only frameworks or another macOS-only capability.
 
 **Also required:** Every Swift package must have a `.gitignore` with `.build/` and `.swiftpm/` excluded, so running `swift test` locally does not pollute the git tree.
 
