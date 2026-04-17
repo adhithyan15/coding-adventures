@@ -1,0 +1,1 @@
+if exist "%ProgramFiles%\\cabal\\bin\\cabal.exe" (cabal test all) else (echo cabal not found -- skipping)
