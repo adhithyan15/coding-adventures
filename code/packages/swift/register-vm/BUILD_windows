@@ -1,1 +1,1 @@
-echo "Swift packages are not supported on Windows; skipping."
+swift test

@@ -20,19 +20,26 @@ let package = Package(
         ),
         .target(
             name: "PaintVmMetalNative",
-            dependencies: ["CPaintVmMetalNative", "PaintInstructions", "PixelContainer"],
+            dependencies: [
+                "PaintInstructions",
+                "PixelContainer",
+                .target(
+                    name: "CPaintVmMetalNative",
+                    condition: .when(platforms: [.macOS])
+                ),
+            ],
             path: "Sources/PaintVmMetalNative",
             linkerSettings: [
                 .unsafeFlags([
                     "-L", "\(packageDirectory)/Sources/CPaintVmMetalNative",
                     "-l", "paint_vm_metal_c",
-                ]),
-                .linkedFramework("Metal"),
-                .linkedFramework("CoreGraphics"),
-                .linkedFramework("CoreText"),
-                .linkedFramework("CoreFoundation"),
-                .linkedFramework("AppKit"),
-                .linkedLibrary("objc"),
+                ], .when(platforms: [.macOS])),
+                .linkedFramework("Metal", .when(platforms: [.macOS])),
+                .linkedFramework("CoreGraphics", .when(platforms: [.macOS])),
+                .linkedFramework("CoreText", .when(platforms: [.macOS])),
+                .linkedFramework("CoreFoundation", .when(platforms: [.macOS])),
+                .linkedFramework("AppKit", .when(platforms: [.macOS])),
+                .linkedLibrary("objc", .when(platforms: [.macOS])),
             ]
         ),
         .testTarget(

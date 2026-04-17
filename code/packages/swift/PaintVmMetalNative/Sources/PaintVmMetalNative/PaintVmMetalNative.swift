@@ -1,4 +1,6 @@
+#if canImport(CPaintVmMetalNative)
 import CPaintVmMetalNative
+#endif
 import PaintInstructions
 import PixelContainer
 
@@ -12,6 +14,7 @@ private func toCColor(_ color: PaintColorRGBA8) -> paint_rgba8_color_t {
 
 public enum PaintVmMetalNative {
     public static func render(_ scene: PaintScene) throws -> PixelContainer {
+        #if canImport(CPaintVmMetalNative) && os(macOS) && arch(arm64)
         let rects = scene.instructions.map { instruction in
             paint_rect_instruction_t(
                 x: UInt32(instruction.x),
@@ -46,5 +49,9 @@ public enum PaintVmMetalNative {
         var pixels = PixelContainer(width: outBuffer.width, height: outBuffer.height)
         pixels.data = bytes
         return pixels
+        #else
+        _ = scene
+        throw PaintVmMetalNativeError.renderFailed
+        #endif
     }
 }

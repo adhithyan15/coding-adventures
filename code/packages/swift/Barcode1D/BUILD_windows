@@ -1,1 +1,1 @@
-echo swift/Barcode1D is only wired for the macOS Metal backend today
+swift test --enable-code-coverage --verbose
