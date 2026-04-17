@@ -7,8 +7,8 @@
       "category": "fs",
       "action": "read",
       "target": "*",
-      "justification": "The default SpecLoader path reads CLI spec JSON files from the local filesystem, and file or directory argument validation may inspect referenced paths."
+      "justification": "The native F# SpecLoader reads CLI spec JSON files from the local filesystem, and file or directory argument validation may inspect referenced paths."
     }
   ],
-  "justification": "The F# facade exposes the shared CLI-builder engine, which loads specs from disk by default and may validate file or directory arguments against the local filesystem."
+  "justification": "The pure F# CLI builder loads specs from disk by default and may validate file or directory arguments against the local filesystem."
 }

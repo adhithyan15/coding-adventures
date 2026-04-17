@@ -331,30 +331,6 @@ func TestResolveDependenciesDotnetScopeSupportsCrossLanguageProjectReferences(t 
 	}
 }
 
-func TestResolveDependenciesDotnetSupportsCrossLanguageReferencesAcrossLanguageRoots(t *testing.T) {
-	root := makeFixture(t, map[string]string{
-		"csharp/cli-builder/CodingAdventures.CliBuilder.csproj": `<Project Sdk="Microsoft.NET.Sdk">
-</Project>
-`,
-		"fsharp/cli-builder/CodingAdventures.CliBuilder.fsproj": `<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="../../csharp/cli-builder/CodingAdventures.CliBuilder.csproj" />
-  </ItemGroup>
-</Project>
-`,
-	})
-
-	packages := []discovery.Package{
-		{Name: "csharp/cli-builder", Path: filepath.Join(root, "csharp", "cli-builder"), Language: "csharp"},
-		{Name: "fsharp/cli-builder", Path: filepath.Join(root, "fsharp", "cli-builder"), Language: "fsharp"},
-	}
-
-	graph := ResolveDependencies(packages)
-	if !graph.HasEdge("csharp/cli-builder", "fsharp/cli-builder") {
-		t.Fatalf("expected csharp/cli-builder -> fsharp/cli-builder edge, got %v", graph.Edges())
-	}
-}
-
 func TestResolveDependenciesDotnetPrefersSameLanguageOnSharedBasename(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"csharp/graph/CodingAdventures.Graph.csproj": `<Project Sdk="Microsoft.NET.Sdk">

@@ -6,5 +6,5 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
-- Initial F# facade for the shared .NET CLI Builder engine
-- F# wrappers for spec loading, parsing, token classification, validation, and help generation
+- Native F# implementation for CLI spec loading, parsing, validation, and help generation
+- Pure F# token classification, positional resolution, flag validation, and subcommand routing

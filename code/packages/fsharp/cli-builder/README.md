@@ -1,9 +1,7 @@
 # cli-builder
 
-Declarative CLI parsing for F#. This initial port exposes an F#-friendly surface
-over the shared .NET CLI-builder engine so F# consumers can load specs, parse
-argv, and generate help without waiting for a full second implementation to
-settle.
+Declarative CLI parsing for F# with a native implementation for spec loading,
+flag validation, help generation, and subcommand routing.
 
 ## Layer 3
 
@@ -11,10 +9,10 @@ This package is part of Layer 3 of the coding-adventures computing stack.
 
 ## What It Includes
 
-- `SpecLoader` and `Parser` wrappers that accept F# sequences naturally
-- Access to the shared CLI-builder models, results, and error types
-- F# entry points for `TokenClassifier`, `PositionalResolver`, `FlagValidator`, and `HelpGenerator`
-- A behavior-aligned path for F# while the native translation catches up
+- Native F# models for CLI specs, flags, arguments, commands, and parser results
+- `SpecLoader` support for file-backed and in-memory JSON specs
+- `TokenClassifier`, `PositionalResolver`, `FlagValidator`, and `HelpGenerator`
+- `Parser` support for GNU, POSIX, subcommand-first, and traditional parsing modes
 
 ## Example
 
