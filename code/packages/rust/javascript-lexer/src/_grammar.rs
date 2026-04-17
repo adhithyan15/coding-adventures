@@ -271,6 +271,7 @@ mod generic {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -719,6 +720,7 @@ mod v_es1 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -1195,6 +1197,7 @@ mod v_es3 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -1671,6 +1674,7 @@ mod v_es5 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -2216,6 +2220,7 @@ mod v_es2015 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -2775,6 +2780,7 @@ mod v_es2016 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -3334,6 +3340,7 @@ mod v_es2017 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -3893,6 +3900,7 @@ mod v_es2018 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -4452,6 +4460,7 @@ mod v_es2019 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -5053,6 +5062,7 @@ mod v_es2020 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -5675,6 +5685,7 @@ mod v_es2021 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -6304,6 +6315,7 @@ mod v_es2022 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -6940,6 +6952,7 @@ mod v_es2023 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -7576,6 +7589,7 @@ mod v_es2024 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -8219,6 +8233,7 @@ mod v_es2025 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"using"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }

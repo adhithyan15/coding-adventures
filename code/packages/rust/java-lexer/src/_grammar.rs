@@ -501,6 +501,7 @@ mod v_1_0 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -970,6 +971,7 @@ mod v_1_1 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -1439,6 +1441,7 @@ mod v_1_4 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -1922,6 +1925,7 @@ mod v_5 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -2412,6 +2416,7 @@ mod v_7 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -2916,6 +2921,7 @@ mod v_8 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -3434,6 +3440,7 @@ mod v_10 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -3966,6 +3973,7 @@ mod v_14 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -4498,6 +4506,7 @@ mod v_17 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -5023,6 +5032,7 @@ mod v_21 {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }

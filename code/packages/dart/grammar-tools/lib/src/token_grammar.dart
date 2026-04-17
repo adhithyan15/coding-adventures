@@ -71,6 +71,7 @@ class TokenGrammar {
     this.errorDefinitions = const [],
     Map<String, PatternGroup> groups = const {},
     this.caseSensitive = true,
+    this.layoutKeywords = const [],
     this.contextKeywords = const [],
     this.softKeywords = const [],
   }) : groups = UnmodifiableMapView(Map<String, PatternGroup>.from(groups));
@@ -86,6 +87,7 @@ class TokenGrammar {
   final List<TokenDefinition> errorDefinitions;
   final Map<String, PatternGroup> groups;
   final bool caseSensitive;
+  final List<String> layoutKeywords;
   final List<String> contextKeywords;
   final List<String> softKeywords;
 
@@ -129,6 +131,7 @@ TokenGrammar parseTokenGrammar(String source) {
   final errorDefinitions = <TokenDefinition>[];
   final groups = <String, PatternGroup>{};
   final contextKeywords = <String>[];
+  final layoutKeywords = <String>[];
   final softKeywords = <String>[];
 
   String? currentSection;
@@ -210,6 +213,9 @@ TokenGrammar parseTokenGrammar(String source) {
         'keywords',
         'reserved',
         'errors',
+        'layout_keywords',
+        'context_keywords',
+        'soft_keywords',
       };
       if (reservedNames.contains(groupName)) {
         throw TokenGrammarError(
@@ -248,6 +254,10 @@ TokenGrammar parseTokenGrammar(String source) {
       currentSection = 'context_keywords';
       continue;
     }
+    if (stripped == 'layout_keywords:' || stripped == 'layout_keywords :') {
+      currentSection = 'layout_keywords';
+      continue;
+    }
     if (stripped == 'soft_keywords:' || stripped == 'soft_keywords :') {
       currentSection = 'soft_keywords';
       continue;
@@ -262,6 +272,8 @@ TokenGrammar parseTokenGrammar(String source) {
           reservedKeywords.add(stripped);
         } else if (currentSection == 'context_keywords') {
           contextKeywords.add(stripped);
+        } else if (currentSection == 'layout_keywords') {
+          layoutKeywords.add(stripped);
         } else if (currentSection == 'soft_keywords') {
           softKeywords.add(stripped);
         } else if (currentSection == 'skip') {
@@ -330,6 +342,7 @@ TokenGrammar parseTokenGrammar(String source) {
     errorDefinitions: errorDefinitions,
     groups: groups,
     caseSensitive: caseSensitive,
+    layoutKeywords: layoutKeywords,
     contextKeywords: contextKeywords,
     softKeywords: softKeywords,
   );
@@ -343,10 +356,15 @@ List<String> validateTokenGrammar(TokenGrammar grammar) {
     _validateDefinitions(grammar.errorDefinitions, 'error pattern'),
   );
 
-  if (grammar.mode != null && grammar.mode != 'indentation') {
+  if (grammar.mode != null &&
+      grammar.mode != 'indentation' &&
+      grammar.mode != 'layout') {
     issues.add(
-      "Unknown lexer mode '${grammar.mode}' (only 'indentation' is supported)",
+      "Unknown lexer mode '${grammar.mode}' (only 'indentation' and 'layout' are supported)",
     );
+  }
+  if (grammar.mode == 'layout' && grammar.layoutKeywords.isEmpty) {
+    issues.add('Layout mode requires a non-empty layout_keywords section');
   }
   if (grammar.escapeMode != null && grammar.escapeMode != 'none') {
     issues.add(

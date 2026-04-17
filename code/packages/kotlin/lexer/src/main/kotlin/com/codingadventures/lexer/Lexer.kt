@@ -1,8 +1,21 @@
+// ============================================================================
+// Lexer.kt — Token types and grammar-driven lexer
+// ============================================================================
+//
+// A lexer (also called a tokenizer or scanner) breaks source code into a
+// stream of tokens. This file contains all the types and the GrammarLexer.
+//
+// Layer: TE (text/language layer)
+// ============================================================================
+
 package com.codingadventures.lexer
 
-import com.codingadventures.directedgraph.Graph
 import com.codingadventures.grammartools.TokenDefinition
 import com.codingadventures.grammartools.TokenGrammar
+
+// ---------------------------------------------------------------------------
+// Token types
+// ---------------------------------------------------------------------------
 
 enum class TokenType {
     NAME, NUMBER, STRING, KEYWORD,
@@ -11,12 +24,17 @@ enum class TokenType {
     LPAREN, RPAREN, COMMA, COLON, SEMICOLON,
     LBRACE, RBRACE, LBRACKET, RBRACKET,
     DOT, BANG, NEWLINE, EOF,
-    GRAMMAR
+    GRAMMAR  // Grammar-driven token — actual type is in typeName
 }
 
+/** Bitmask flag: a line break appeared before this token. */
 const val FLAG_PRECEDED_BY_NEWLINE = 1
+/** Bitmask flag: this is a context-sensitive keyword. */
 const val FLAG_CONTEXT_KEYWORD = 2
 
+/**
+ * An immutable token from source code.
+ */
 data class Token(
     val type: TokenType,
     val value: String,
@@ -30,19 +48,41 @@ data class Token(
     override fun toString() = "Token(${effectiveTypeName()}, \"$value\", $line:$column)"
 }
 
+// ---------------------------------------------------------------------------
+// Exceptions
+// ---------------------------------------------------------------------------
+
 class LexerError(message: String, val line: Int, val column: Int) :
     Exception("Lexer error at $line:$column: $message")
 
-private data class CompiledPattern(val name: String, val regex: Regex, val alias: String?)
-private enum class MatcherStage { SKIP, TOKEN, ERROR }
-private data class MatcherNode(val stage: MatcherStage, val pattern: CompiledPattern)
+// ---------------------------------------------------------------------------
+// Compiled pattern
+// ---------------------------------------------------------------------------
 
+private data class CompiledPattern(val name: String, val regex: Regex, val alias: String?)
+
+// ---------------------------------------------------------------------------
+// Grammar-driven lexer
+// ---------------------------------------------------------------------------
+
+/**
+ * A lexer driven by a [TokenGrammar]. Compiles token definitions into
+ * regexes and tries them in priority order at each source position.
+ */
 class GrammarLexer(private val grammar: TokenGrammar) {
-    private val matcherPipeline = buildMatcherPipeline(grammar)
+
+    private val patterns = compileDefinitions(grammar.definitions)
+    private val skipPatterns = compileDefinitions(grammar.skipDefinitions)
+    private val errorPatterns = compileDefinitions(grammar.errorDefinitions)
     private val keywordSet = grammar.keywords.toSet()
     private val reservedSet = grammar.reservedKeywords.toSet()
     private val contextKeywordSet = grammar.contextKeywords.toSet()
+    private val layoutKeywordSet = grammar.layoutKeywords.toSet()
 
+    /**
+     * Tokenize source code into a list of tokens.
+     * The returned list always ends with an EOF token.
+     */
     fun tokenize(source: String): List<Token> {
         val working = if (grammar.caseSensitive) source else source.lowercase()
         val tokens = mutableListOf<Token>()
@@ -52,130 +92,157 @@ class GrammarLexer(private val grammar: TokenGrammar) {
         var precededByNewline = false
 
         while (pos < working.length) {
-            var matched = false
-            for (matcherNode in matcherPipeline) {
-                val match = matcherNode.pattern.regex.find(working, pos)
-                if (match == null || match.range.first != pos) continue
-
-                val value = source.substring(pos, pos + match.value.length)
-                when (matcherNode.stage) {
-                    MatcherStage.SKIP -> {
-                        for (ch in value) {
-                            if (ch == '\n') {
-                                line++
-                                column = 1
-                                precededByNewline = true
-                            } else {
-                                column++
-                            }
-                        }
-                        pos += value.length
+            // Try skip patterns first
+            var skipped = false
+            for (sp in skipPatterns) {
+                val m = sp.regex.find(working, pos)
+                if (m != null && m.range.first == pos) {
+                    for (ch in m.value) {
+                        if (ch == '\n') { line++; column = 1; precededByNewline = true }
+                        else column++
                     }
-
-                    MatcherStage.TOKEN -> {
-                        val typeName = matcherNode.pattern.alias ?: matcherNode.pattern.name
-                        if (typeName == "NAME" && value in reservedSet) {
-                            throw LexerError("Reserved keyword '$value'", line, column)
-                        }
-
-                        var flags = 0
-                        if (precededByNewline) flags = flags or FLAG_PRECEDED_BY_NEWLINE
-                        val checkValue = if (grammar.caseSensitive) value else value.lowercase()
-                        if (typeName == "NAME" && checkValue in contextKeywordSet) {
-                            flags = flags or FLAG_CONTEXT_KEYWORD
-                        }
-
-                        tokens += Token(TokenType.GRAMMAR, value, line, column, typeName, flags)
-                        for (ch in value) {
-                            if (ch == '\n') {
-                                line++
-                                column = 1
-                            } else {
-                                column++
-                            }
-                        }
-                        pos += value.length
-                        precededByNewline = false
-                    }
-
-                    MatcherStage.ERROR -> {
-                        val typeName = matcherNode.pattern.alias ?: matcherNode.pattern.name
-                        tokens += Token(TokenType.GRAMMAR, value, line, column, typeName)
-                        for (ch in value) {
-                            if (ch == '\n') {
-                                line++
-                                column = 1
-                            } else {
-                                column++
-                            }
-                        }
-                        pos += value.length
-                    }
+                    pos += m.value.length
+                    skipped = true
+                    break
                 }
-
-                matched = true
-                break
             }
+            if (skipped) continue
 
+            // Try token patterns
+            var matched = false
+            for (cp in patterns) {
+                val m = cp.regex.find(working, pos)
+                if (m != null && m.range.first == pos) {
+                    val value = source.substring(pos, pos + m.value.length)
+                    val typeName = cp.alias ?: cp.name
+
+                    if (typeName == "NAME" && value in reservedSet)
+                        throw LexerError("Reserved keyword '$value'", line, column)
+
+                    var flags = 0
+                    if (precededByNewline) flags = flags or FLAG_PRECEDED_BY_NEWLINE
+                    val checkVal = if (grammar.caseSensitive) value else value.lowercase()
+                    if (typeName == "NAME" && checkVal in contextKeywordSet)
+                        flags = flags or FLAG_CONTEXT_KEYWORD
+
+                    tokens.add(Token(TokenType.GRAMMAR, value, line, column, typeName, flags))
+                    for (ch in value) {
+                        if (ch == '\n') { line++; column = 1 } else column++
+                    }
+                    pos += value.length
+                    matched = true
+                    precededByNewline = false
+                    break
+                }
+            }
             if (matched) continue
+
+            // Try error recovery patterns
+            var errorMatched = false
+            for (ep in errorPatterns) {
+                val m = ep.regex.find(working, pos)
+                if (m != null && m.range.first == pos) {
+                    val value = source.substring(pos, pos + m.value.length)
+                    tokens.add(Token(TokenType.GRAMMAR, value, line, column, ep.alias ?: ep.name))
+                    for (ch in value) {
+                        if (ch == '\n') { line++; column = 1 } else column++
+                    }
+                    pos += value.length
+                    errorMatched = true
+                    break
+                }
+            }
+            if (errorMatched) continue
+
             throw LexerError("Unexpected character '${source[pos]}'", line, column)
         }
 
+        // Keyword promotion
         if (keywordSet.isNotEmpty()) {
-            for (index in tokens.indices) {
-                val token = tokens[index]
-                if (token.typeName == "NAME") {
-                    val checkValue = if (grammar.caseSensitive) token.value else token.value.lowercase()
-                    if (checkValue in keywordSet) {
-                        tokens[index] = Token(TokenType.KEYWORD, token.value, token.line, token.column, "KEYWORD", token.flags)
+            for (i in tokens.indices) {
+                val t = tokens[i]
+                if (t.typeName == "NAME") {
+                    val checkVal = if (grammar.caseSensitive) t.value else t.value.lowercase()
+                    if (checkVal in keywordSet) {
+                        tokens[i] = Token(TokenType.KEYWORD, t.value, t.line, t.column, "KEYWORD", t.flags)
                     }
                 }
             }
         }
 
-        tokens += Token(TokenType.EOF, "", line, column, "EOF")
-        return tokens
+        tokens.add(Token(TokenType.EOF, "", line, column, "EOF"))
+        return if (grammar.mode == "layout") applyLayout(tokens) else tokens
     }
 
-    private fun compileDefinitions(definitions: List<TokenDefinition>): List<CompiledPattern> =
-        definitions.map { definition ->
-            val regexString = if (definition.isRegex) {
-                "\\G(?:${definition.pattern})"
-            } else {
-                "\\G${Regex.escape(definition.pattern)}"
+    private fun applyLayout(tokens: List<Token>): List<Token> {
+        val result = mutableListOf<Token>()
+        val layoutStack = mutableListOf<Int>()
+        var pendingLayouts = 0
+        var suppressDepth = 0
+
+        for ((index, token) in tokens.withIndex()) {
+            val typeName = token.effectiveTypeName()
+
+            if (typeName == "NEWLINE") {
+                result += token
+                val nextToken = tokens.drop(index + 1).firstOrNull { it.effectiveTypeName() != "NEWLINE" }
+                if (suppressDepth == 0 && nextToken != null) {
+                    while (layoutStack.isNotEmpty() && nextToken.column < layoutStack.last()) {
+                        result += Token(TokenType.GRAMMAR, "}", nextToken.line, nextToken.column, "VIRTUAL_RBRACE")
+                        layoutStack.removeAt(layoutStack.lastIndex)
+                    }
+                    if (layoutStack.isNotEmpty() &&
+                        nextToken.effectiveTypeName() != "EOF" &&
+                        nextToken.value != "}" &&
+                        nextToken.column == layoutStack.last()
+                    ) {
+                        result += Token(TokenType.GRAMMAR, ";", nextToken.line, nextToken.column, "VIRTUAL_SEMICOLON")
+                    }
+                }
+                continue
             }
-            CompiledPattern(definition.name, Regex(regexString), definition.alias)
+
+            if (typeName == "EOF") {
+                while (layoutStack.isNotEmpty()) {
+                    result += Token(TokenType.GRAMMAR, "}", token.line, token.column, "VIRTUAL_RBRACE")
+                    layoutStack.removeAt(layoutStack.lastIndex)
+                }
+                result += token
+                continue
+            }
+
+            if (pendingLayouts > 0) {
+                if (token.value == "{") {
+                    pendingLayouts -= 1
+                } else {
+                    repeat(pendingLayouts) {
+                        layoutStack += token.column
+                        result += Token(TokenType.GRAMMAR, "{", token.line, token.column, "VIRTUAL_LBRACE")
+                    }
+                    pendingLayouts = 0
+                }
+            }
+
+            result += token
+
+            if (!typeName.startsWith("VIRTUAL_")) {
+                when (token.value) {
+                    "(", "[", "{" -> suppressDepth += 1
+                    ")", "]", "}" -> if (suppressDepth > 0) suppressDepth -= 1
+                }
+            }
+
+            if (layoutKeywordSet.contains(token.value) || layoutKeywordSet.contains(token.value.lowercase())) {
+                pendingLayouts += 1
+            }
         }
 
-    private fun buildMatcherPipeline(grammar: TokenGrammar): List<MatcherNode> {
-        val pipelineGraph = Graph()
-        val nodeMetadata = linkedMapOf<String, MatcherNode>()
-        pipelineGraph.addNode("__start__")
-
-        var previousNode = "__start__"
-        previousNode = appendMatchers(previousNode, "skip", MatcherStage.SKIP, compileDefinitions(grammar.skipDefinitions), pipelineGraph, nodeMetadata)
-        previousNode = appendMatchers(previousNode, "token", MatcherStage.TOKEN, compileDefinitions(grammar.definitions), pipelineGraph, nodeMetadata)
-        appendMatchers(previousNode, "error", MatcherStage.ERROR, compileDefinitions(grammar.errorDefinitions), pipelineGraph, nodeMetadata)
-
-        return pipelineGraph.topologicalSort().mapNotNull(nodeMetadata::get)
+        return result
     }
 
-    private fun appendMatchers(
-        previousNode: String,
-        prefix: String,
-        stage: MatcherStage,
-        patterns: List<CompiledPattern>,
-        pipelineGraph: Graph,
-        nodeMetadata: MutableMap<String, MatcherNode>,
-    ): String {
-        var currentPrevious = previousNode
-        patterns.forEachIndexed { index, pattern ->
-            val nodeId = "$prefix:$index"
-            pipelineGraph.addNode(nodeId)
-            pipelineGraph.addEdge(currentPrevious, nodeId)
-            nodeMetadata[nodeId] = MatcherNode(stage, pattern)
-            currentPrevious = nodeId
+    private fun compileDefinitions(defs: List<TokenDefinition>): List<CompiledPattern> =
+        defs.map { defn ->
+            val pattern = if (defn.isRegex) "\\G(?:${defn.pattern})" else "\\G${Regex.escape(defn.pattern)}"
+            CompiledPattern(defn.name, Regex(pattern), defn.alias)
         }
-        return currentPrevious
-    }
 }

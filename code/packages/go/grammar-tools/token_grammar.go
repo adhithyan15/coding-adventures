@@ -57,6 +57,7 @@ type TokenGrammar struct {
 	ErrorDefinitions []TokenDefinition        // Error recovery patterns tried when no normal token matches
 	ReservedKeywords []string                 // Keywords that cause lex errors
 	Groups           map[string]*PatternGroup // Named pattern groups for context-sensitive lexing
+	LayoutKeywords   []string                 // Keywords that introduce Haskell-style layout contexts
 	CaseSensitive    bool                     // Whether the lexer should match case-sensitively (default true)
 
 	// ContextKeywords are context-sensitive keywords — words that are keywords
@@ -264,6 +265,7 @@ var reservedGroupNames = map[string]bool{
 	"keywords":         true,
 	"reserved":         true,
 	"errors":           true,
+	"layout_keywords":  true,
 	"context_keywords": true,
 	"soft_keywords":    true,
 }
@@ -415,6 +417,10 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 			currentSection = "context_keywords"
 			continue
 		}
+		if stripped == "layout_keywords:" || stripped == "layout_keywords :" {
+			currentSection = "layout_keywords"
+			continue
+		}
 		if stripped == "soft_keywords:" || stripped == "soft_keywords :" {
 			currentSection = "soft_keywords"
 			continue
@@ -433,6 +439,10 @@ func parseTokenGrammarImpl(source string) (*TokenGrammar, error) {
 				case currentSection == "context_keywords":
 					if stripped != "" {
 						grammar.ContextKeywords = append(grammar.ContextKeywords, stripped)
+					}
+				case currentSection == "layout_keywords":
+					if stripped != "" {
+						grammar.LayoutKeywords = append(grammar.LayoutKeywords, stripped)
 					}
 				case currentSection == "soft_keywords":
 					if stripped != "" {
@@ -610,7 +620,7 @@ func validateDefinitions(definitions []TokenDefinition, label string) []string {
 //   - Invalid regex patterns (cannot be compiled by Go's regexp)
 //   - Empty patterns
 //   - Non-UPPER_CASE token names and aliases
-//   - Invalid lexer mode (only "indentation" is supported)
+//   - Invalid lexer mode (only "indentation" and "layout" are supported)
 //   - Invalid escape mode (only "none" is supported)
 //   - Invalid group names
 //   - Empty pattern groups (no definitions)
@@ -636,11 +646,14 @@ func validateTokenGrammarImpl(grammar *TokenGrammar) []string {
 	issues = append(issues, validateDefinitions(grammar.ErrorDefinitions, "error pattern")...)
 
 	// Validate mode
-	if grammar.Mode != "" && grammar.Mode != "indentation" {
+	if grammar.Mode != "" && grammar.Mode != "indentation" && grammar.Mode != "layout" {
 		issues = append(issues, fmt.Sprintf(
-			"Unknown lexer mode '%s' (only 'indentation' is supported)",
+			"Unknown lexer mode '%s' (only 'indentation' and 'layout' are supported)",
 			grammar.Mode,
 		))
+	}
+	if grammar.Mode == "layout" && len(grammar.LayoutKeywords) == 0 {
+		issues = append(issues, "Layout mode requires a non-empty layout_keywords section")
 	}
 
 	// Validate escape mode

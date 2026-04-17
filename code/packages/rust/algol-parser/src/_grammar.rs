@@ -1,6 +1,6 @@
 // AUTO-GENERATED FILE — DO NOT EDIT
-// Source: algol60.grammar
-// Regenerate with: grammar-tools compile-grammar algol60.grammar
+// Source: algol.grammar
+// Regenerate with: grammar-tools compile-grammar algol.grammar
 //
 // This file embeds a ParserGrammar as native Rust data structures.
 // Call `parser_grammar()` instead of reading and parsing the .grammar file.

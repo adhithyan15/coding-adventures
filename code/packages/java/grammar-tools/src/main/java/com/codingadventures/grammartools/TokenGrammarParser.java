@@ -54,7 +54,7 @@ public final class TokenGrammarParser {
 
     // Reserved group names that cannot be used as pattern groups
     private static final java.util.Set<String> RESERVED_GROUP_NAMES = java.util.Set.of(
-            "default", "skip", "keywords", "reserved", "errors"
+            "default", "skip", "keywords", "reserved", "errors", "layout_keywords", "context_keywords"
     );
 
     private TokenGrammarParser() {} // utility class
@@ -174,6 +174,9 @@ public final class TokenGrammarParser {
             if ("context_keywords:".equals(stripped) || "context_keywords :".equals(stripped)) {
                 currentSection = "context_keywords"; continue;
             }
+            if ("layout_keywords:".equals(stripped) || "layout_keywords :".equals(stripped)) {
+                currentSection = "layout_keywords"; continue;
+            }
 
             // --- Inside a section (indented lines) ---
             if (currentSection != null) {
@@ -230,6 +233,9 @@ public final class TokenGrammarParser {
                 break;
             case "context_keywords":
                 grammar.getContextKeywords().add(stripped);
+                break;
+            case "layout_keywords":
+                grammar.getLayoutKeywords().add(stripped);
                 break;
             case "skip":
                 parseAndAddDefinition(grammar.getSkipDefinitions(), stripped, lineNumber, "skip pattern");

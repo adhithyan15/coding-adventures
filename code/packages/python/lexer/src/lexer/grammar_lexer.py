@@ -371,6 +371,10 @@ class GrammarLexer:
         # Indentation mode flag. When active, the lexer maintains an
         # indentation stack and emits INDENT/DEDENT/NEWLINE tokens.
         self._indentation_mode = grammar.mode == "indentation"
+        self._layout_mode = grammar.mode == "layout"
+        self._layout_keyword_set: frozenset[str] = frozenset(
+            getattr(grammar, "layout_keywords", []) or []
+        )
 
         # Whether the grammar has skip patterns defined. When skip patterns
         # exist, they replace the default whitespace-skipping behavior.
@@ -625,6 +629,8 @@ class GrammarLexer:
         # Stage 2: Core tokenization — dispatch to standard or indentation mode.
         if self._indentation_mode:
             tokens = self._tokenize_indentation()
+        elif self._layout_mode:
+            tokens = self._tokenize_layout()
         else:
             tokens = self._tokenize_standard()
 
@@ -941,6 +947,85 @@ class GrammarLexer:
         ))
 
         return tokens
+
+    def _tokenize_layout(self) -> list[Token]:
+        return self._apply_layout(self._tokenize_standard())
+
+    def _apply_layout(self, tokens: list[Token]) -> list[Token]:
+        result: list[Token] = []
+        layout_stack: list[int] = []
+        pending_layouts = 0
+        suppress_depth = 0
+
+        for index, token in enumerate(tokens):
+            type_name = token.type if isinstance(token.type, str) else token.type.value
+
+            if type_name == "NEWLINE":
+                result.append(token)
+                next_token = self._next_layout_token(tokens, index + 1)
+                if suppress_depth == 0 and next_token is not None:
+                    while layout_stack and next_token.column < layout_stack[-1]:
+                        result.append(self._virtual_layout_token("VIRTUAL_RBRACE", "}", next_token))
+                        layout_stack.pop()
+
+                    next_type = next_token.type if isinstance(next_token.type, str) else next_token.type.value
+                    if (
+                        layout_stack
+                        and next_type != "EOF"
+                        and next_token.value != "}"
+                        and next_token.column == layout_stack[-1]
+                    ):
+                        result.append(self._virtual_layout_token("VIRTUAL_SEMICOLON", ";", next_token))
+                continue
+
+            if type_name == "EOF":
+                while layout_stack:
+                    result.append(self._virtual_layout_token("VIRTUAL_RBRACE", "}", token))
+                    layout_stack.pop()
+                result.append(token)
+                continue
+
+            if pending_layouts > 0:
+                if token.value == "{":
+                    pending_layouts -= 1
+                else:
+                    for _ in range(pending_layouts):
+                        layout_stack.append(token.column)
+                        result.append(self._virtual_layout_token("VIRTUAL_LBRACE", "{", token))
+                    pending_layouts = 0
+
+            result.append(token)
+
+            if not self._is_virtual_layout_token(token):
+                if token.value in ("(", "[", "{"):
+                    suppress_depth += 1
+                elif token.value in (")", "]", "}") and suppress_depth > 0:
+                    suppress_depth -= 1
+
+            if self._is_layout_keyword(token):
+                pending_layouts += 1
+
+        return result
+
+    def _next_layout_token(self, tokens: list[Token], start_index: int) -> Token | None:
+        for token in tokens[start_index:]:
+            type_name = token.type if isinstance(token.type, str) else token.type.value
+            if type_name != "NEWLINE":
+                return token
+        return None
+
+    def _virtual_layout_token(self, type_name: str, value: str, anchor: Token) -> Token:
+        return Token(type=type_name, value=value, line=anchor.line, column=anchor.column)
+
+    def _is_virtual_layout_token(self, token: Token) -> bool:
+        type_name = token.type if isinstance(token.type, str) else token.type.value
+        return type_name.startswith("VIRTUAL_")
+
+    def _is_layout_keyword(self, token: Token) -> bool:
+        if not self._layout_keyword_set:
+            return False
+        value = token.value or ""
+        return value in self._layout_keyword_set or value.lower() in self._layout_keyword_set
 
     def _process_line_start(
         self, indent_stack: list[int],

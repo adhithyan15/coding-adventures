@@ -517,6 +517,9 @@ export class GrammarLexer {
   /** Whether indentation mode is active. */
   private readonly _indentationMode: boolean;
 
+  /** Whether Haskell-style layout mode is active. */
+  private readonly _layoutMode: boolean;
+
   /**
    * Whether token matching is case-sensitive.
    *
@@ -601,6 +604,9 @@ export class GrammarLexer {
    */
   private readonly _contextKeywordSet: ReadonlySet<string>;
 
+  /** Layout introducer keywords used when layout mode is active. */
+  private readonly _layoutKeywordSet: ReadonlySet<string>;
+
   /** Pre-tokenize hooks: transform source text before lexing. */
   private _preTokenizeHooks: Array<(source: string) => string> = [];
 
@@ -627,6 +633,8 @@ export class GrammarLexer {
     this._reservedSet = new Set(grammar.reservedKeywords ?? []);
     this._contextKeywordSet = new Set(grammar.contextKeywords ?? []);
     this._indentationMode = grammar.mode === "indentation";
+    this._layoutMode = grammar.mode === "layout";
+    this._layoutKeywordSet = new Set(grammar.layoutKeywords ?? []);
     this._hasSkipPatterns = (grammar.skipDefinitions ?? []).length > 0;
 
     // Build alias map: definition name -> alias name.
@@ -811,6 +819,8 @@ export class GrammarLexer {
     let tokens: Token[];
     if (this._indentationMode) {
       tokens = this._tokenizeIndentation();
+    } else if (this._layoutMode) {
+      tokens = this._tokenizeLayout();
     } else {
       tokens = this._tokenizeStandard();
     }
@@ -1108,6 +1118,112 @@ export class GrammarLexer {
     this._skipEnabled = true;
 
     return tokens;
+  }
+
+  private _tokenizeLayout(): Token[] {
+    return this._applyLayout(this._tokenizeStandard());
+  }
+
+  private _applyLayout(tokens: Token[]): Token[] {
+    const result: Token[] = [];
+    const layoutStack: number[] = [];
+    let pendingLayouts = 0;
+    let suppressDepth = 0;
+
+    for (let index = 0; index < tokens.length; index++) {
+      const token = tokens[index];
+      const typeName = token.typeName ?? token.type;
+
+      if (typeName === "NEWLINE") {
+        result.push(token);
+        const nextToken = this._nextLayoutToken(tokens, index + 1);
+        if (suppressDepth === 0 && nextToken !== null) {
+          while (layoutStack.length > 0 && nextToken.column < layoutStack[layoutStack.length - 1]) {
+            result.push(this._virtualLayoutToken("VIRTUAL_RBRACE", "}", nextToken));
+            layoutStack.pop();
+          }
+
+          if (
+            layoutStack.length > 0 &&
+            (nextToken.typeName ?? nextToken.type) !== "EOF" &&
+            nextToken.value !== "}" &&
+            nextToken.column === layoutStack[layoutStack.length - 1]
+          ) {
+            result.push(this._virtualLayoutToken("VIRTUAL_SEMICOLON", ";", nextToken));
+          }
+        }
+        continue;
+      }
+
+      if (typeName === "EOF") {
+        while (layoutStack.length > 0) {
+          result.push(this._virtualLayoutToken("VIRTUAL_RBRACE", "}", token));
+          layoutStack.pop();
+        }
+        result.push(token);
+        continue;
+      }
+
+      if (pendingLayouts > 0) {
+        if (token.value === "{") {
+          pendingLayouts -= 1;
+        } else {
+          for (let count = 0; count < pendingLayouts; count++) {
+            layoutStack.push(token.column);
+            result.push(this._virtualLayoutToken("VIRTUAL_LBRACE", "{", token));
+          }
+          pendingLayouts = 0;
+        }
+      }
+
+      result.push(token);
+
+      if (!this._isVirtualLayoutToken(token)) {
+        if (token.value === "(" || token.value === "[" || token.value === "{") {
+          suppressDepth += 1;
+        } else if ((token.value === ")" || token.value === "]" || token.value === "}") && suppressDepth > 0) {
+          suppressDepth -= 1;
+        }
+      }
+
+      if (this._isLayoutKeyword(token)) {
+        pendingLayouts += 1;
+      }
+    }
+
+    return result;
+  }
+
+  private _nextLayoutToken(tokens: Token[], startIndex: number): Token | null {
+    for (let index = startIndex; index < tokens.length; index++) {
+      const token = tokens[index];
+      if ((token.typeName ?? token.type) !== "NEWLINE") {
+        return token;
+      }
+    }
+    return null;
+  }
+
+  private _virtualLayoutToken(typeName: string, value: string, anchor: Token): Token {
+    return {
+      type: typeName,
+      typeName,
+      value,
+      line: anchor.line,
+      column: anchor.column,
+    };
+  }
+
+  private _isVirtualLayoutToken(token: Token): boolean {
+    return (token.typeName ?? token.type).startsWith("VIRTUAL_");
+  }
+
+  private _isLayoutKeyword(token: Token): boolean {
+    if (this._layoutKeywordSet.size === 0) {
+      return false;
+    }
+    const value = token.value ?? "";
+    return this._layoutKeywordSet.has(value) || this._layoutKeywordSet.has(value.toLowerCase());
   }
 
   /**

@@ -220,6 +220,9 @@ pub struct TokenGrammar {
     /// Declared via the `soft_keywords:` section in the `.tokens` file.
     /// Each indented line in that section is one soft keyword.
     pub soft_keywords: Vec<String>,
+    /// Keywords that introduce a Haskell-style layout context when
+    /// `mode == "layout"`.
+    pub layout_keywords: Vec<String>,
 }
 
 // ===========================================================================
@@ -474,6 +477,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     let mut keywords = Vec::new();
     let mut context_keywords = Vec::new();
     let mut soft_keywords = Vec::new();
+    let mut layout_keywords = Vec::new();
     let mut mode: Option<String> = None;
     let mut skip_definitions = Vec::new();
     let mut reserved_keywords = Vec::new();
@@ -497,7 +501,19 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
     // Reserved group names that cannot be used. These overlap with built-in
     // section names and would cause ambiguity or confusion.
     let reserved_group_names: HashSet<&str> =
-        ["default", "skip", "keywords", "reserved", "errors", "context_keywords", "soft_keywords"].iter().copied().collect();
+        [
+            "default",
+            "skip",
+            "keywords",
+            "reserved",
+            "errors",
+            "layout_keywords",
+            "context_keywords",
+            "soft_keywords",
+        ]
+        .iter()
+        .copied()
+        .collect();
 
     // Regex for validating group names: lowercase identifiers only.
     let group_name_re = regex::Regex::new(r"^[a-z_][a-z0-9_]*$").unwrap();
@@ -623,6 +639,10 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
             current_section = String::from("context_keywords");
             continue;
         }
+        if stripped == "layout_keywords:" || stripped == "layout_keywords :" {
+            current_section = String::from("layout_keywords");
+            continue;
+        }
         if stripped == "soft_keywords:" || stripped == "soft_keywords :" {
             current_section = String::from("soft_keywords");
             continue;
@@ -699,6 +719,8 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
                         keywords.push(stripped.to_string());
                     } else if current_section == "context_keywords" {
                         context_keywords.push(stripped.to_string());
+                    } else if current_section == "layout_keywords" {
+                        layout_keywords.push(stripped.to_string());
                     } else if current_section == "soft_keywords" {
                         soft_keywords.push(stripped.to_string());
                     } else if current_section == "reserved" {
@@ -769,6 +791,7 @@ pub fn parse_token_grammar(source: &str) -> Result<TokenGrammar, TokenGrammarErr
         case_insensitive,
         context_keywords,
         soft_keywords,
+        layout_keywords,
     })
 }
 
@@ -855,9 +878,12 @@ pub fn validate_token_grammar(grammar: &TokenGrammar) -> Vec<String> {
 
     // Validate mode value if present.
     if let Some(ref mode) = grammar.mode {
-        if mode != "indentation" {
-            issues.push(format!("Unknown mode '{}' (expected 'indentation')", mode));
+        if mode != "indentation" && mode != "layout" {
+            issues.push(format!("Unknown mode '{}' (expected 'indentation' or 'layout')", mode));
         }
+    }
+    if grammar.mode.as_deref() == Some("layout") && grammar.layout_keywords.is_empty() {
+        issues.push("Layout mode requires a non-empty layout_keywords section".to_string());
     }
 
     // Validate escape mode if present.
@@ -1124,6 +1150,7 @@ keywords:
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
         };
@@ -1153,6 +1180,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
         };
@@ -1182,6 +1210,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
         };
@@ -1390,6 +1419,7 @@ skip:
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
         };
@@ -1584,6 +1614,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
         };
@@ -1614,6 +1645,7 @@ case_sensitive: true,
 case_sensitive: true,
             version: 0,
             case_insensitive: false,
+            layout_keywords: vec![],
             context_keywords: Vec::new(),
             soft_keywords: Vec::new(),
         };
@@ -1852,6 +1884,44 @@ case_sensitive: true,
     }
 
     #[test]
+    fn test_parse_layout_keywords_section() {
+        let source = concat!(
+            "mode: layout\n",
+            "NAME = /[a-zA-Z_]+/\n",
+            "layout_keywords:\n",
+            "  let\n",
+            "  where\n",
+            "  do\n",
+            "  of\n",
+        );
+        let grammar = parse_token_grammar(source).unwrap();
+        assert_eq!(grammar.mode.as_deref(), Some("layout"));
+        assert_eq!(grammar.layout_keywords, vec!["let", "where", "do", "of"]);
+    }
+
+    #[test]
+    fn test_layout_mode_requires_layout_keywords() {
+        let grammar = TokenGrammar {
+            definitions: vec![],
+            keywords: vec![],
+            mode: Some("layout".to_string()),
+            skip_definitions: vec![],
+            reserved_keywords: vec![],
+            escapes: None,
+            error_definitions: vec![],
+            groups: HashMap::new(),
+            case_sensitive: true,
+            version: 0,
+            case_insensitive: false,
+            layout_keywords: vec![],
+            context_keywords: Vec::new(),
+            soft_keywords: Vec::new(),
+        };
+        let issues = validate_token_grammar(&grammar);
+        assert!(issues.iter().any(|issue| issue.contains("layout_keywords")));
+    }
+
+    #[test]
     fn test_reserved_group_name_soft_keywords() {
         // "group soft_keywords:" is rejected as reserved.
         let source = "TEXT = /abc/\ngroup soft_keywords:\n  FOO = /x/\n";
@@ -1864,6 +1934,14 @@ case_sensitive: true,
     fn test_reserved_group_name_context_keywords() {
         // "group context_keywords:" is rejected as reserved.
         let source = "TEXT = /abc/\ngroup context_keywords:\n  FOO = /x/\n";
+        let result = parse_token_grammar(source);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().message.contains("Reserved group name"));
+    }
+
+    #[test]
+    fn test_reserved_group_name_layout_keywords() {
+        let source = "TEXT = /abc/\ngroup layout_keywords:\n  FOO = /x/\n";
         let result = parse_token_grammar(source);
         assert!(result.is_err());
         assert!(result.unwrap_err().message.contains("Reserved group name"));

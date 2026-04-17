@@ -255,6 +255,7 @@ mod generic {
             case_insensitive: false,
             context_keywords: vec![],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -752,6 +753,7 @@ mod v_ts1_0 {
             case_insensitive: false,
             context_keywords: vec![r#"get"#.to_string(), r#"set"#.to_string(), r#"type"#.to_string(), r#"interface"#.to_string(), r#"namespace"#.to_string(), r#"module"#.to_string(), r#"declare"#.to_string(), r#"abstract"#.to_string(), r#"readonly"#.to_string(), r#"is"#.to_string(), r#"keyof"#.to_string(), r#"asserts"#.to_string(), r#"unique"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -1304,6 +1306,7 @@ mod v_ts2_0 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"type"#.to_string(), r#"interface"#.to_string(), r#"namespace"#.to_string(), r#"module"#.to_string(), r#"declare"#.to_string(), r#"abstract"#.to_string(), r#"readonly"#.to_string(), r#"is"#.to_string(), r#"keyof"#.to_string(), r#"asserts"#.to_string(), r#"unique"#.to_string(), r#"never"#.to_string(), r#"infer"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -1870,6 +1873,7 @@ mod v_ts3_0 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"type"#.to_string(), r#"interface"#.to_string(), r#"namespace"#.to_string(), r#"module"#.to_string(), r#"declare"#.to_string(), r#"abstract"#.to_string(), r#"readonly"#.to_string(), r#"is"#.to_string(), r#"keyof"#.to_string(), r#"asserts"#.to_string(), r#"unique"#.to_string(), r#"infer"#.to_string(), r#"never"#.to_string(), r#"unknown"#.to_string(), r#"override"#.to_string(), r#"out"#.to_string(), r#"satisfies"#.to_string(), r#"accessor"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -2499,6 +2503,7 @@ mod v_ts4_0 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"type"#.to_string(), r#"interface"#.to_string(), r#"namespace"#.to_string(), r#"module"#.to_string(), r#"declare"#.to_string(), r#"abstract"#.to_string(), r#"readonly"#.to_string(), r#"is"#.to_string(), r#"keyof"#.to_string(), r#"asserts"#.to_string(), r#"unique"#.to_string(), r#"infer"#.to_string(), r#"never"#.to_string(), r#"unknown"#.to_string(), r#"override"#.to_string(), r#"out"#.to_string(), r#"satisfies"#.to_string(), r#"accessor"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -3135,6 +3140,7 @@ mod v_ts5_0 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"type"#.to_string(), r#"interface"#.to_string(), r#"namespace"#.to_string(), r#"module"#.to_string(), r#"declare"#.to_string(), r#"abstract"#.to_string(), r#"readonly"#.to_string(), r#"is"#.to_string(), r#"keyof"#.to_string(), r#"asserts"#.to_string(), r#"unique"#.to_string(), r#"infer"#.to_string(), r#"never"#.to_string(), r#"unknown"#.to_string(), r#"override"#.to_string(), r#"out"#.to_string(), r#"satisfies"#.to_string(), r#"accessor"#.to_string(), r#"using"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }
@@ -3778,6 +3784,7 @@ mod v_ts5_8 {
             case_insensitive: false,
             context_keywords: vec![r#"as"#.to_string(), r#"from"#.to_string(), r#"of"#.to_string(), r#"get"#.to_string(), r#"set"#.to_string(), r#"static"#.to_string(), r#"using"#.to_string(), r#"type"#.to_string(), r#"interface"#.to_string(), r#"namespace"#.to_string(), r#"module"#.to_string(), r#"declare"#.to_string(), r#"abstract"#.to_string(), r#"readonly"#.to_string(), r#"is"#.to_string(), r#"keyof"#.to_string(), r#"asserts"#.to_string(), r#"unique"#.to_string(), r#"infer"#.to_string(), r#"never"#.to_string(), r#"unknown"#.to_string(), r#"override"#.to_string(), r#"out"#.to_string(), r#"satisfies"#.to_string(), r#"accessor"#.to_string()],
             soft_keywords: vec![],
+            layout_keywords: vec![],
         }
     }
 }

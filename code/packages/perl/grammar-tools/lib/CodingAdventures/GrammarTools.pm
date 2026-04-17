@@ -142,7 +142,7 @@ sub definitions { $_[0]->{definitions} }
 # Fields:
 #   definitions       — ordered arrayref of TokenDefinition objects
 #   keywords          — arrayref of keyword strings
-#   mode              — lexer mode, e.g. "indentation"
+#   mode              — lexer mode, e.g. "indentation" or "layout"
 #   escape_mode       — escape processing mode, e.g. "none"
 #   skip_definitions  — arrayref of skip-pattern TokenDefinition objects
 #   error_definitions — arrayref of error-recovery TokenDefinition objects
@@ -157,6 +157,7 @@ sub new {
         definitions       => [],
         keywords          => [],
         context_keywords  => [],
+        layout_keywords   => [],
         soft_keywords     => [],
         mode              => '',
         escape_mode       => '',
@@ -170,6 +171,7 @@ sub new {
 sub definitions       { $_[0]->{definitions}       }
 sub keywords          { $_[0]->{keywords}          }
 sub context_keywords  { $_[0]->{context_keywords}  }
+sub layout_keywords   { $_[0]->{layout_keywords}   }
 sub soft_keywords     { $_[0]->{soft_keywords}     }
 sub mode              { $_[0]->{mode}              }
 sub escape_mode       { $_[0]->{escape_mode}       }
@@ -229,7 +231,7 @@ package CodingAdventures::GrammarTools;
 
 # Reserved group names that cannot be used as custom group names
 my %RESERVED_GROUP_NAMES = map { $_ => 1 }
-    qw(default skip keywords reserved errors context_keywords soft_keywords);
+    qw(default skip keywords reserved errors context_keywords layout_keywords soft_keywords);
 
 # ============================================================================
 # parse_definition($pattern_part, $name_part, $line_number)
@@ -441,6 +443,10 @@ sub parse_token_grammar {
             $current_section = 'context_keywords';
             next;
         }
+        if ($stripped eq 'layout_keywords:' || $stripped eq 'layout_keywords :') {
+            $current_section = 'layout_keywords';
+            next;
+        }
         if ($stripped eq 'soft_keywords:' || $stripped eq 'soft_keywords :') {
             $current_section = 'soft_keywords';
             next;
@@ -455,6 +461,9 @@ sub parse_token_grammar {
                 }
                 elsif ($current_section eq 'context_keywords') {
                     push @{ $grammar->{context_keywords} }, $stripped if $stripped ne '';
+                }
+                elsif ($current_section eq 'layout_keywords') {
+                    push @{ $grammar->{layout_keywords} }, $stripped if $stripped ne '';
                 }
                 elsif ($current_section eq 'soft_keywords') {
                     push @{ $grammar->{soft_keywords} }, $stripped if $stripped ne '';
@@ -558,8 +567,11 @@ sub validate_token_grammar {
     push @issues, @{ _validate_definitions($grammar->error_definitions, 'error pattern') };
 
     # Validate lexer mode
-    if ($grammar->mode ne '' && $grammar->mode ne 'indentation') {
-        push @issues, "Unknown lexer mode '" . $grammar->mode . "' (only 'indentation' is supported)";
+    if ($grammar->mode ne '' && $grammar->mode ne 'indentation' && $grammar->mode ne 'layout') {
+        push @issues, "Unknown lexer mode '" . $grammar->mode . "' (only 'indentation' and 'layout' are supported)";
+    }
+    if ($grammar->mode eq 'layout' && !@{ $grammar->layout_keywords }) {
+        push @issues, "Layout mode requires a non-empty layout_keywords section";
     }
 
     # Validate escape mode

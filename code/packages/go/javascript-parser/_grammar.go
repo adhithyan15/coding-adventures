@@ -14,29 +14,29 @@ import gt "github.com/adhithyan15/coding-adventures/code/packages/go/grammar-too
 var ParserGrammarData = &gt.ParserGrammar{
 	Version: 1,
 	Rules:   []gt.GrammarRule{
-		{Name: `program`, Body: gt.Repetition{Element: gt.RuleReference{Name: `statement`, IsToken: false}}, LineNumber: 23},
+		{Name: `program`, Body: gt.Repetition{Element: gt.RuleReference{Name: `statement`, IsToken: false}}, LineNumber: 28},
 		{Name: `statement`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `var_declaration`, IsToken: false},
 					gt.RuleReference{Name: `assignment`, IsToken: false},
 					gt.RuleReference{Name: `expression_stmt`, IsToken: false},
-				}}, LineNumber: 24},
+				}}, LineNumber: 29},
 		{Name: `var_declaration`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `KEYWORD`, IsToken: true},
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `expression`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 25},
+				}}, LineNumber: 30},
 		{Name: `assignment`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `NAME`, IsToken: true},
 					gt.RuleReference{Name: `EQUALS`, IsToken: true},
 					gt.RuleReference{Name: `expression`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 26},
+				}}, LineNumber: 31},
 		{Name: `expression_stmt`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `expression`, IsToken: false},
 					gt.RuleReference{Name: `SEMICOLON`, IsToken: true},
-				}}, LineNumber: 27},
+				}}, LineNumber: 32},
 		{Name: `expression`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `term`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -46,7 +46,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 								}}},
 							gt.RuleReference{Name: `term`, IsToken: false},
 						}}},
-				}}, LineNumber: 28},
+				}}, LineNumber: 33},
 		{Name: `term`, Body: gt.Sequence{Elements: []gt.GrammarElement{
 					gt.RuleReference{Name: `factor`, IsToken: false},
 					gt.Repetition{Element: gt.Sequence{Elements: []gt.GrammarElement{
@@ -56,7 +56,7 @@ var ParserGrammarData = &gt.ParserGrammar{
 								}}},
 							gt.RuleReference{Name: `factor`, IsToken: false},
 						}}},
-				}}, LineNumber: 29},
+				}}, LineNumber: 34},
 		{Name: `factor`, Body: gt.Alternation{Choices: []gt.GrammarElement{
 					gt.RuleReference{Name: `NUMBER`, IsToken: true},
 					gt.RuleReference{Name: `STRING`, IsToken: true},
@@ -67,6 +67,6 @@ var ParserGrammarData = &gt.ParserGrammar{
 						gt.RuleReference{Name: `expression`, IsToken: false},
 						gt.RuleReference{Name: `RPAREN`, IsToken: true},
 					}},
-				}}, LineNumber: 30},
+				}}, LineNumber: 35},
 	},
 }
