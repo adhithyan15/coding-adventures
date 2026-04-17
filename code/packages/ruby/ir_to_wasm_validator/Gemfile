@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+gem "coding_adventures_ir_to_wasm_compiler", path: "../ir_to_wasm_compiler"
+gem "coding_adventures_compiler_ir", path: "../compiler-ir"
+gem "coding_adventures_wasm_leb128", path: "../wasm_leb128"
+gem "coding_adventures_wasm_opcodes", path: "../wasm_opcodes"
+gem "coding_adventures_wasm_types", path: "../wasm_types"

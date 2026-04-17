@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "simplecov"
+SimpleCov.start do
+  enable_coverage :branch
+  minimum_coverage 80
+end
+
+require "minitest/autorun"
+require "coding_adventures_wasm_module_encoder"
+
+WT = CodingAdventures::WasmTypes
+WME = CodingAdventures::WasmModuleEncoder
