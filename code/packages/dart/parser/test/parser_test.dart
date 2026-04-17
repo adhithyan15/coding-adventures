@@ -19,9 +19,18 @@ void main() {
 
   group('parser', () {
     test('parses literals and names', () {
-      expect(parseTokens([tok('NUMBER', '42'), eof()]), Program([const NumberLiteral(42)]));
-      expect(parseTokens([tok('STRING', 'hello'), eof()]), Program([const StringLiteral('hello')]));
-      expect(parseTokens([tok('NAME', 'x'), eof()]), Program([const Name('x')]));
+      expect(
+        parseTokens([tok('NUMBER', '42'), eof()]),
+        Program([const NumberLiteral(42)]),
+      );
+      expect(
+        parseTokens([tok('STRING', 'hello'), eof()]),
+        Program([const StringLiteral('hello')]),
+      );
+      expect(
+        parseTokens([tok('NAME', 'x'), eof()]),
+        Program([const Name('x')]),
+      );
     });
 
     test('parses binary operators with precedence', () {
@@ -99,7 +108,10 @@ void main() {
       ]);
 
       expect(program.statements, hasLength(2));
-      expect(program.statements.first, const Assignment(target: Name('x'), value: NumberLiteral(1)));
+      expect(
+        program.statements.first,
+        const Assignment(target: Name('x'), value: NumberLiteral(1)),
+      );
       expect(
         program.statements.last,
         const BinaryOp(left: Name('x'), op: '+', right: NumberLiteral(2)),
@@ -113,7 +125,11 @@ void main() {
 
     test('throws parse errors with location', () {
       expect(
-        () => parseTokens([tok('LPAREN', '(', 3, 7), tok('NUMBER', '1', 3, 8), eof(3, 9)]),
+        () => parseTokens([
+          tok('LPAREN', '(', 3, 7),
+          tok('NUMBER', '1', 3, 8),
+          eof(3, 9),
+        ]),
         throwsA(isA<ParseError>()),
       );
       try {
