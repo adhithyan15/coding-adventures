@@ -1,1 +1,1 @@
-swift test --enable-code-coverage --verbose
+echo swift/PaintVmMetalNative is only supported on macOS arm64
