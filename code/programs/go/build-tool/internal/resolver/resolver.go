@@ -739,14 +739,19 @@ func parseHaskellDeps(pkg discovery.Package, knownNames map[string]string) []str
 //	  <ProjectReference Include="../logic-gates/logic-gates.csproj" />
 //	</ItemGroup>
 //
-// The path component between "../" and the next "/" is the dependency's
-// directory name. We look that up in knownNames to find the build-tool
-// package name (e.g., "dotnet/logic-gates").
+// We first resolve the referenced project path relative to the current project
+// file and look up the owning package by its exact package directory. This
+// supports cross-language references such as ../../csharp/cli-builder/...
+// where relying on a single sibling directory name would either miss the
+// dependency or resolve it to the caller's own language variant.
+//
+// If the exact path lookup misses, we fall back to the historical directory
+// basename lookup so one-level sibling references keep working.
 //
 // For the initial hello-world programs there are no inter-package dependencies,
 // so this function returns nil. It is registered now so that future dotnet
 // packages with dependencies work without additional build-tool changes.
-func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []string {
+func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string, knownPaths map[string]string) []string {
 	// Find all .csproj and .fsproj files in the package directory.
 	var projectFiles []string
 	entries, err := os.ReadDir(pkg.Path)
@@ -763,9 +768,9 @@ func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []stri
 		}
 	}
 
-	// Match <ProjectReference Include="../some-dep/some-dep.csproj" />
-	// The dep directory name is the path component after "../".
-	re := regexp.MustCompile(`<ProjectReference\s+Include\s*=\s*"\.\.[\\/]([^/\\"]+)[\\/][^"]*"`)
+	// Match the full ProjectReference path so we can resolve exact package
+	// directories, not just one-level sibling names.
+	re := regexp.MustCompile(`<ProjectReference\s+Include\s*=\s*"([^"]+)"`)
 
 	var internalDeps []string
 	for _, projFile := range projectFiles {
@@ -777,17 +782,38 @@ func parseDotnetDeps(pkg discovery.Package, knownNames map[string]string) []stri
 			if len(match) < 2 {
 				continue
 			}
-			depDir := strings.ToLower(string(match[1]))
-			// Guard against path traversal.
-			if strings.ContainsAny(depDir, "/\\") || depDir == ".." {
+			includePath := strings.ReplaceAll(string(match[1]), `\`, `/`)
+			depProjectPath := filepath.Clean(filepath.Join(filepath.Dir(projFile), filepath.FromSlash(includePath)))
+			depDir := filepath.Clean(filepath.Dir(depProjectPath))
+
+			if pkgName, ok := knownPaths[depDir]; ok {
+				if pkgName != pkg.Name {
+					internalDeps = append(internalDeps, pkgName)
+				}
 				continue
 			}
-			if pkgName, ok := knownNames[depDir]; ok {
+
+			depBase := strings.ToLower(filepath.Base(depDir))
+			if depBase == ".." || strings.ContainsAny(depBase, `/\`) {
+				continue
+			}
+			if pkgName, ok := knownNames[depBase]; ok && pkgName != pkg.Name {
 				internalDeps = append(internalDeps, pkgName)
 			}
 		}
 	}
 	return internalDeps
+}
+
+func buildKnownDotnetPaths(packages []discovery.Package) map[string]string {
+	known := make(map[string]string)
+	for _, pkg := range packages {
+		switch pkg.Language {
+		case "dotnet", "csharp", "fsharp":
+			known[filepath.Clean(pkg.Path)] = pkg.Name
+		}
+	}
+	return known
 }
 
 func parseGradleDeps(pkg discovery.Package, knownNames map[string]string) []string {
@@ -1090,6 +1116,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 
 	// Build the ecosystem-specific name mapping table.
 	knownNamesByLanguage := make(map[string]map[string]string)
+	knownDotnetPaths := buildKnownDotnetPaths(packages)
 	for _, pkg := range packages {
 		if _, ok := knownNamesByLanguage[pkg.Language]; !ok {
 			knownNamesByLanguage[pkg.Language] = buildKnownNamesForLanguage(packages, pkg.Language)
@@ -1128,7 +1155,7 @@ func ResolveDependencies(packages []discovery.Package) *directedgraph.Graph {
 		case "java", "kotlin":
 			deps = parseGradleDeps(pkg, knownNames)
 		case "dotnet", "csharp", "fsharp":
-			deps = parseDotnetDeps(pkg, knownNames)
+			deps = parseDotnetDeps(pkg, knownNames, knownDotnetPaths)
 		}
 
 		for _, depName := range deps {
