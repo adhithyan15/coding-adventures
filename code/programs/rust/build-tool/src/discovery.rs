@@ -117,7 +117,22 @@ fn infer_language(path: &Path) -> String {
     let path_str = path.to_string_lossy().replace('\\', "/");
     let parts: Vec<&str> = path_str.split('/').collect();
 
-    for lang in &["python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl"] {
+    for lang in &[
+        "python",
+        "ruby",
+        "go",
+        "rust",
+        "typescript",
+        "elixir",
+        "lua",
+        "perl",
+        "swift",
+        "haskell",
+        "wasm",
+        "csharp",
+        "fsharp",
+        "dotnet",
+    ] {
         for part in &parts {
             if part == lang {
                 return lang.to_string();

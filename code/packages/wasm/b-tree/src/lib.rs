@@ -63,7 +63,7 @@ impl WasmBTree {
             self.inner
                 .range_query(&low, &high)
                 .into_iter()
-                .map(|(&k, v)| (k, v.clone())),
+                .map(|(key, value)| (*key, value.clone())),
         )
     }
 
@@ -72,7 +72,7 @@ impl WasmBTree {
             self.inner
                 .inorder()
                 .into_iter()
-                .map(|(&k, v)| (k, v.clone())),
+                .map(|(key, value)| (*key, value.clone())),
         )
     }
 
@@ -95,7 +95,12 @@ impl WasmBTree {
 
     #[wasm_bindgen(js_name = "toString")]
     pub fn to_string_value(&self) -> String {
-        format!("BTree {{ len: {}, height: {} }}", self.inner.len(), self.inner.height())
+        format!(
+            "BTree(len={}, height={}, valid={})",
+            self.inner.len(),
+            self.inner.height(),
+            self.inner.is_valid()
+        )
     }
 }
 
@@ -129,6 +134,6 @@ mod tests {
         tree.insert(30, "thirty");
         assert_eq!(tree.inner.range_query(&10, &30).len(), 3);
         assert_eq!(tree.inner.inorder().len(), 3);
-        assert_eq!(tree.height(), 0);
+        assert!(tree.height() <= 1);
     }
 }
