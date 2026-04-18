@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-04-18
+
+### Added
+
+- sequence relations `lasto` and `subsequenceo`
+- pytest coverage for final-element reasoning and ordered-subsequence search
+
 ## [0.3.0] - 2026-04-18
 
 ### Added
