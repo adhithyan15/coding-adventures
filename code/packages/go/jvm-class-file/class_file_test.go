@@ -433,6 +433,42 @@ func TestParseRejectsTruncatedClassFile(t *testing.T) {
 	}
 }
 
+func TestClassReaderRejectsNegativeLengths(t *testing.T) {
+	reader := &classReader{data: []byte{0x01, 0x02}}
+	_, err := reader.read(-1)
+	if err == nil {
+		t.Fatal("expected negative-length error")
+	}
+	if !strings.Contains(err.Error(), "Unexpected end of class-file data") {
+		t.Fatalf("unexpected error: %v", err)
+	}
+}
+
+func TestParseTreatsNestedCodeAttributeAsOpaque(t *testing.T) {
+	parsed, err := ParseClassFile(buildNestedCodeAttributeFixtureClass())
+	if err != nil {
+		t.Fatalf("parse failed: %v", err)
+	}
+
+	method := parsed.FindMethod("run", "()V")
+	if method == nil {
+		t.Fatal("expected run method")
+	}
+	codeAttribute := method.CodeAttribute()
+	if codeAttribute == nil {
+		t.Fatal("expected top-level Code attribute")
+	}
+	if len(codeAttribute.NestedAttributes) != 1 {
+		t.Fatalf("expected one nested attribute, got %d", len(codeAttribute.NestedAttributes))
+	}
+	if codeAttribute.NestedAttributes[0].Name != "Code" {
+		t.Fatalf("expected nested Code attribute to remain opaque, got %s", codeAttribute.NestedAttributes[0].Name)
+	}
+	if len(codeAttribute.NestedAttributes[0].Info) == 0 {
+		t.Fatal("expected opaque nested Code payload bytes")
+	}
+}
+
 func mustHexBytes(encoded string) []byte {
 	decoded, err := hex.DecodeString(encoded)
 	if err != nil {
@@ -496,6 +532,69 @@ func buildWideConstantFixtureClass() []byte {
 	classBytes = appendU2(classBytes, 0)
 	classBytes = appendU2(classBytes, 1)
 	classBytes = append(classBytes, fieldInfo...)
+	classBytes = appendU2(classBytes, 1)
+	classBytes = append(classBytes, methodInfo...)
+	classBytes = appendU2(classBytes, 0)
+	return classBytes
+}
+
+func buildNestedCodeAttributeFixtureClass() []byte {
+	entries := [][]byte{
+		utf8Entry("NestedCodeExample"),
+		classEntry(1),
+		utf8Entry("java/lang/Object"),
+		classEntry(3),
+		utf8Entry("run"),
+		utf8Entry("()V"),
+		utf8Entry("Code"),
+	}
+
+	nestedCodePayload := []byte{}
+	nestedCodePayload = appendU2(nestedCodePayload, 0)
+	nestedCodePayload = appendU2(nestedCodePayload, 0)
+	nestedCodePayload = appendU4(nestedCodePayload, 0)
+	nestedCodePayload = appendU2(nestedCodePayload, 0)
+	nestedCodePayload = appendU2(nestedCodePayload, 0)
+
+	nestedAttribute := []byte{}
+	nestedAttribute = appendU2(nestedAttribute, 7)
+	nestedAttribute = appendU4(nestedAttribute, uint32(len(nestedCodePayload)))
+	nestedAttribute = append(nestedAttribute, nestedCodePayload...)
+
+	codeAttributeBody := []byte{}
+	codeAttributeBody = appendU2(codeAttributeBody, 0)
+	codeAttributeBody = appendU2(codeAttributeBody, 0)
+	codeAttributeBody = appendU4(codeAttributeBody, 1)
+	codeAttributeBody = append(codeAttributeBody, 0xB1)
+	codeAttributeBody = appendU2(codeAttributeBody, 0)
+	codeAttributeBody = appendU2(codeAttributeBody, 1)
+	codeAttributeBody = append(codeAttributeBody, nestedAttribute...)
+
+	codeAttribute := []byte{}
+	codeAttribute = appendU2(codeAttribute, 7)
+	codeAttribute = appendU4(codeAttribute, uint32(len(codeAttributeBody)))
+	codeAttribute = append(codeAttribute, codeAttributeBody...)
+
+	methodInfo := []byte{}
+	methodInfo = appendU2(methodInfo, ACC_PUBLIC|ACC_STATIC)
+	methodInfo = appendU2(methodInfo, 5)
+	methodInfo = appendU2(methodInfo, 6)
+	methodInfo = appendU2(methodInfo, 1)
+	methodInfo = append(methodInfo, codeAttribute...)
+
+	classBytes := []byte{}
+	classBytes = appendU4(classBytes, 0xCAFEBABE)
+	classBytes = appendU2(classBytes, 0)
+	classBytes = appendU2(classBytes, 61)
+	classBytes = appendU2(classBytes, 8)
+	for _, entry := range entries {
+		classBytes = append(classBytes, entry...)
+	}
+	classBytes = appendU2(classBytes, ACC_PUBLIC|ACC_SUPER)
+	classBytes = appendU2(classBytes, 2)
+	classBytes = appendU2(classBytes, 4)
+	classBytes = appendU2(classBytes, 0)
+	classBytes = appendU2(classBytes, 0)
 	classBytes = appendU2(classBytes, 1)
 	classBytes = append(classBytes, methodInfo...)
 	classBytes = appendU2(classBytes, 0)

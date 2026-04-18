@@ -699,7 +699,7 @@ func ParseClassFile(data []byte) (*JVMClassFile, error) {
 		return nil, err
 	}
 	for index := uint16(0); index < classAttributesCount; index++ {
-		if _, err := parseAttribute(reader, constantPool); err != nil {
+		if _, err := parseAttribute(reader, constantPool, false); err != nil {
 			return nil, err
 		}
 	}
@@ -759,7 +759,7 @@ func parseMethod(reader *classReader, constantPool []JVMConstantPoolEntry) (JVMM
 	}
 	attributes := make([]JVMMethodAttribute, 0, attributesCount)
 	for index := uint16(0); index < attributesCount; index++ {
-		attribute, err := parseAttribute(reader, constantPool)
+		attribute, err := parseAttribute(reader, constantPool, true)
 		if err != nil {
 			return JVMMethodInfo{}, err
 		}
@@ -773,7 +773,11 @@ func parseMethod(reader *classReader, constantPool []JVMConstantPoolEntry) (JVMM
 	}, nil
 }
 
-func parseAttribute(reader *classReader, constantPool []JVMConstantPoolEntry) (JVMMethodAttribute, error) {
+func parseAttribute(
+	reader *classReader,
+	constantPool []JVMConstantPoolEntry,
+	allowCode bool,
+) (JVMMethodAttribute, error) {
 	nameIndex, err := reader.u2()
 	if err != nil {
 		return nil, err
@@ -786,12 +790,12 @@ func parseAttribute(reader *classReader, constantPool []JVMConstantPoolEntry) (J
 	if err != nil {
 		return nil, err
 	}
-	payload, err := reader.read(int(length))
+	payload, err := readU4Payload(reader, length)
 	if err != nil {
 		return nil, err
 	}
 
-	if name != "Code" {
+	if name != "Code" || !allowCode {
 		return JVMAttributeInfo{Name: name, Info: payload}, nil
 	}
 
@@ -808,7 +812,7 @@ func parseAttribute(reader *classReader, constantPool []JVMConstantPoolEntry) (J
 	if err != nil {
 		return nil, err
 	}
-	code, err := codeReader.read(int(codeLength))
+	code, err := readU4Payload(codeReader, codeLength)
 	if err != nil {
 		return nil, err
 	}
@@ -829,7 +833,7 @@ func parseAttribute(reader *classReader, constantPool []JVMConstantPoolEntry) (J
 	}
 	nestedAttributes := make([]JVMAttributeInfo, 0, nestedAttributesCount)
 	for index := uint16(0); index < nestedAttributesCount; index++ {
-		attribute, err := parseAttribute(codeReader, constantPool)
+		attribute, err := parseAttribute(codeReader, constantPool, false)
 		if err != nil {
 			return nil, err
 		}
@@ -885,7 +889,7 @@ func skipMember(reader *classReader) error {
 		if err != nil {
 			return err
 		}
-		if _, err := reader.read(int(attributeLength)); err != nil {
+		if _, err := readU4Payload(reader, attributeLength); err != nil {
 			return err
 		}
 	}
@@ -902,10 +906,10 @@ func (r *classReader) remaining() int {
 }
 
 func (r *classReader) read(length int) ([]byte, error) {
-	end := r.offset + length
-	if end > len(r.data) {
+	if length < 0 || length > r.remaining() {
 		return nil, classFileError("Unexpected end of class-file data")
 	}
+	end := r.offset + length
 	chunk := r.data[r.offset:end]
 	r.offset = end
 	return chunk, nil
@@ -937,6 +941,14 @@ func (r *classReader) u4() (uint32, error) {
 
 func classFileError(format string, args ...any) error {
 	return ClassFileFormatError{Message: fmt.Sprintf(format, args...)}
+}
+
+func readU4Payload(reader *classReader, length uint32) ([]byte, error) {
+	maxInt := ^uint(0) >> 1
+	if uint64(length) > uint64(maxInt) {
+		return nil, classFileError("Class-file payload length %d exceeds host int capacity", length)
+	}
+	return reader.read(int(length))
 }
 
 func appendU2(buffer []byte, value uint16) []byte {

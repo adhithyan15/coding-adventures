@@ -2069,3 +2069,19 @@ initialization, so `go test`/`go vet` failed with `undefined: addConstant`.
 **Rule:** When a local Go helper needs recursion, declare it in two steps:
   `var addConstant func(...) (...)`
   `addConstant = func(...) (...) { ... addConstant(...) ... }`
+
+---
+
+## Go binary parsers must validate attacker-controlled lengths before `int` conversion
+
+**Date:** 2026-04-18
+
+**What happened:** A new Go JVM class-file parser converted `u4` payload lengths straight to
+platform `int` and let nested `Code` attributes recurse as though they were method-level code.
+On malformed input, that combination can turn bogus lengths into slice panics on 32-bit builds or
+drive stack growth through unbounded recursive attribute parsing.
+
+**Rule:** In Go binary parsers, never cast attacker-controlled lengths to `int` until they pass an
+explicit host-capacity check, and never recursively decode nested structures unless the format
+requires it. When an attribute is only meaningful at one structural level, treat deeper copies as
+opaque bytes.
