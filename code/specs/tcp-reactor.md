@@ -34,6 +34,11 @@ kqueue / epoll / iocp
 - Accepted streams are switched to nonblocking mode and registered with the backend.
 - Read events drain input.
 - Write events flush queued output when nonblocking writes would otherwise stall.
+- Active connections are capped so a flood of idle sockets cannot grow the
+  reactor state without bound.
+- Queued outbound bytes are capped per connection. When a handler would exceed
+  the configured budget, the reactor closes that connection instead of buffering
+  unbounded response data.
 - A stop flag allows clean shutdown without panicking under concurrent load.
 
 ## Public API
@@ -45,6 +50,8 @@ kqueue / epoll / iocp
 - `TcpReactor::serve()`
 - `TcpReactor::stop_handle()`
 - `TcpReactor::local_addr()`
+- `TcpReactor::set_max_connections(max_connections)`
+- `TcpReactor::set_max_pending_write_bytes(max_pending_write_bytes)`
 - macOS/BSD convenience: `TcpReactor::bind_kqueue(addr, handler)`
 
 ## Data Flow
@@ -63,6 +70,8 @@ Output:
 
 - unit tests for lifecycle basics
 - macOS/BSD end-to-end test with many concurrent echo clients
+- macOS/BSD connection-cap test
+- macOS/BSD pending-write-budget overflow test
 - server shutdown test
 
 ## Future Extensions

@@ -10,6 +10,14 @@ without blocking the process per connection.
 
 On macOS and BSD, it can be exercised locally through the `kqueue` backend.
 
+The reactor now includes two safety rails that matter for real servers:
+
+- a configurable cap on active connections
+- a configurable cap on queued outbound bytes per connection
+
+Those guards keep a slow reader or connection flood from turning the example
+reactor into an unbounded memory sink.
+
 ## Development
 
 ```bash

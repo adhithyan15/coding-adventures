@@ -11,7 +11,7 @@ use native_event_core::{
 };
 use std::collections::BTreeMap;
 use std::io::{self, Read, Write};
-use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::net::{Shutdown, SocketAddr, TcpListener, TcpStream};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
@@ -20,6 +20,8 @@ pub type ConnectionId = u64;
 pub type Handler = Arc<dyn Fn(ConnectionInfo, &[u8]) -> Vec<u8> + Send + Sync + 'static>;
 
 const LISTENER_TOKEN: Token = Token(1);
+const DEFAULT_MAX_CONNECTIONS: usize = 1_024;
+const DEFAULT_MAX_PENDING_WRITE_BYTES: usize = 64 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ConnectionInfo {
@@ -52,6 +54,8 @@ pub struct TcpReactor<B> {
     next_token: AtomicU64,
     stop_flag: Arc<AtomicBool>,
     read_buffer_size: usize,
+    max_connections: usize,
+    max_pending_write_bytes: usize,
     handler: Handler,
 }
 
@@ -78,8 +82,18 @@ impl<B: EventBackend> TcpReactor<B> {
             next_token: AtomicU64::new(2),
             stop_flag: Arc::new(AtomicBool::new(false)),
             read_buffer_size: 4096,
+            max_connections: DEFAULT_MAX_CONNECTIONS,
+            max_pending_write_bytes: DEFAULT_MAX_PENDING_WRITE_BYTES,
             handler: Arc::new(handler),
         })
+    }
+
+    pub fn set_max_connections(&mut self, max_connections: usize) {
+        self.max_connections = max_connections.max(1);
+    }
+
+    pub fn set_max_pending_write_bytes(&mut self, max_pending_write_bytes: usize) {
+        self.max_pending_write_bytes = max_pending_write_bytes.max(1);
     }
 
     pub fn local_addr(&self) -> SocketAddr {
@@ -125,6 +139,10 @@ impl<B: EventBackend> TcpReactor<B> {
             match self.listener.accept() {
                 Ok((stream, peer_addr)) => {
                     stream.set_nonblocking(true)?;
+                    if self.connections.len() >= self.max_connections {
+                        let _ = stream.shutdown(Shutdown::Both);
+                        continue;
+                    }
                     let local_addr = stream.local_addr()?;
                     let token = Token(self.next_token.fetch_add(1, Ordering::SeqCst));
                     let info = ConnectionInfo {
@@ -160,6 +178,10 @@ impl<B: EventBackend> TcpReactor<B> {
         let mut buffer = vec![0u8; self.read_buffer_size];
 
         if let Some(state) = self.connections.get_mut(&token) {
+            if state.pending_write.len() >= self.max_pending_write_bytes {
+                return self.reregister(token, Interest::WRITABLE);
+            }
+
             loop {
                 match state.stream.read(&mut buffer) {
                     Ok(0) => {
@@ -169,6 +191,15 @@ impl<B: EventBackend> TcpReactor<B> {
                     Ok(n) => {
                         let response = (self.handler)(state.info, &buffer[..n]);
                         if !response.is_empty() {
+                            if state
+                                .pending_write
+                                .len()
+                                .saturating_add(response.len())
+                                > self.max_pending_write_bytes
+                            {
+                                close_after_read = true;
+                                break;
+                            }
                             state.pending_write.extend_from_slice(&response);
                             interest |= Interest::WRITABLE;
                         }
@@ -316,7 +347,6 @@ use std::os::fd::AsRawFd;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::net::{Shutdown, TcpStream};
     use std::sync::{Arc, Barrier};
     use std::thread;
 
@@ -363,5 +393,75 @@ mod tests {
         stop.stop();
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    #[test]
+    fn rejects_connections_above_the_configured_cap() {
+        let mut reactor =
+            TcpReactor::bind_kqueue(("127.0.0.1", 0), |_, bytes| bytes.to_vec()).expect("bind");
+        reactor.set_max_connections(2);
+        let addr = reactor.local_addr();
+
+        let client_a = TcpStream::connect(addr).expect("connect a");
+        let client_b = TcpStream::connect(addr).expect("connect b");
+        reactor.accept_ready().expect("accept first batch");
+        assert_eq!(reactor.connections.len(), 2, "two clients should be admitted");
+
+        let mut client_c = TcpStream::connect(addr).expect("connect c");
+        reactor.accept_ready().expect("reject over-limit client");
+        assert_eq!(
+            reactor.connections.len(),
+            2,
+            "reactor should refuse connections past the configured cap"
+        );
+
+        client_c
+            .write_all(b"ignored")
+            .expect("write should reach the socket before close");
+        let mut response = [0u8; 1];
+        let read = client_c.read(&mut response).expect("read rejection result");
+        assert_eq!(read, 0, "refused client should observe connection close");
+
+        drop(client_a);
+        drop(client_b);
+    }
+
+    #[cfg(any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    ))]
+    #[test]
+    fn closes_connections_that_exceed_the_pending_write_budget() {
+        let mut reactor = TcpReactor::bind_kqueue(("127.0.0.1", 0), |_, _| vec![1u8; 64])
+            .expect("bind");
+        reactor.set_max_pending_write_bytes(32);
+        let addr = reactor.local_addr();
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"trigger").expect("write request");
+        reactor.accept_ready().expect("accept client");
+
+        let token = *reactor
+            .connections
+            .keys()
+            .next()
+            .expect("accepted connection token");
+        reactor
+            .read_ready(token)
+            .expect("overflowing write budget should close cleanly");
+        assert!(
+            !reactor.connections.contains_key(&token),
+            "reactor should drop connections whose queued output exceeds the limit"
+        );
     }
 }
