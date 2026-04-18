@@ -1,0 +1,8 @@
+[package]
+name = "macos-job-backend-launchd-files"
+version = "0.1.0"
+edition = "2021"
+description = "macOS launchd backend file generation for native job installation"
+
+[dependencies]
+os-job-core = { path = "../os-job-core" }

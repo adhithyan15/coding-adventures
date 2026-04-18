@@ -1,0 +1,8 @@
+[package]
+name = "linux-job-backend-systemd-files"
+version = "0.1.0"
+edition = "2021"
+description = "Linux systemd user unit backend file generation for native job installation"
+
+[dependencies]
+os-job-core = { path = "../os-job-core" }
