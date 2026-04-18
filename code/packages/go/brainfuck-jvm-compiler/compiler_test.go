@@ -56,7 +56,11 @@ func TestWriteClassFileWritesClasspathLayout(t *testing.T) {
 	if err != nil {
 		t.Fatalf("write failed: %v", err)
 	}
-	expected := filepath.Join(outputDir, "BrainfuckProgram.class")
+	canonicalOutputDir, err := filepath.EvalSymlinks(outputDir)
+	if err != nil {
+		t.Fatalf("canonicalize failed: %v", err)
+	}
+	expected := filepath.Join(canonicalOutputDir, "BrainfuckProgram.class")
 	if result.ClassFilePath != expected {
 		t.Fatalf("expected %q, got %q", expected, result.ClassFilePath)
 	}

@@ -1,5 +1,5 @@
-import { mkdirSync, lstatSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { closeSync, constants, lstatSync, mkdirSync, openSync, realpathSync, writeSync } from "node:fs";
+import { dirname, join, parse, resolve } from "node:path";
 
 import {
   ACC_PUBLIC,
@@ -849,17 +849,39 @@ export function writeClassFile(artifact: JVMClassArtifact, outputDir: string): s
   if (!JAVA_BINARY_NAME_RE.test(artifact.className)) {
     throw new JvmBackendError(`Class name "${artifact.className}" escapes the requested classpath root`);
   }
-  const root = resolve(outputDir);
-  ensureNoSymlinkPath(root);
-  const target = resolve(root, artifact.classFilename);
-  if (!target.startsWith(root + "/") && target !== join(root, artifact.classFilename)) {
-    throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
+  let root = resolve(outputDir);
+  try {
+    const metadata = lstatSync(root);
+    if (metadata.isSymbolicLink() || !metadata.isDirectory()) {
+      throw new JvmBackendError(`Refusing to write through symlinked or invalid directory ${root}`);
+    }
+    root = realpathSync.native(root);
+  } catch (error) {
+    if (!isNodeErrorCode(error, "ENOENT")) {
+      throw error;
+    }
   }
+  ensureDirectoryPath(root);
+  const relativePath = validatedOutputRelativePath(artifact.classFilename);
+  const target = join(root, relativePath);
   const parent = dirname(target);
-  ensurePathChain(parent, root);
-  mkdirSync(parent, { recursive: true });
-  ensureNoSymlinkPath(parent);
-  writeFileSync(target, artifact.classBytes);
+  ensureDirectoryPath(parent);
+
+  let descriptor: number | null = null;
+  try {
+    descriptor = openSync(
+      target,
+      constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | constants.O_NOFOLLOW,
+      0o644,
+    );
+  } catch (error) {
+    throw new JvmBackendError("class_filename points at a symlinked or invalid output file");
+  }
+  try {
+    writeSync(descriptor, artifact.classBytes);
+  } finally {
+    closeSync(descriptor);
+  }
   return target;
 }
 
@@ -1017,26 +1039,51 @@ function asLabel(operand: IrOperand): IrLabel {
   return operand;
 }
 
-function ensurePathChain(path: string, root: string): void {
-  const relativeParts = path.slice(root.length).split("/").filter(Boolean);
-  let current = root;
-  for (const part of relativeParts) {
-    current = join(current, part);
-    ensureNoSymlinkPath(current);
+function ensureDirectoryPath(path: string): void {
+  const absolute = resolve(path);
+  const parsed = parse(absolute);
+  let current = parsed.root;
+  if (current !== "") {
+    ensureExistingDirectory(current);
+  }
+  for (const component of absolute.slice(parsed.root.length).split("/").filter(Boolean)) {
+    current = join(current, component);
+    try {
+      ensureExistingDirectory(current);
+    } catch (error) {
+      if (!isNodeErrorCode(error, "ENOENT")) {
+        throw error;
+      }
+      mkdirSync(current);
+      ensureExistingDirectory(current);
+    }
   }
 }
 
-function ensureNoSymlinkPath(path: string): void {
+function ensureExistingDirectory(path: string): void {
   try {
     const stat = lstatSync(path);
-    if (stat.isSymbolicLink()) {
+    if (stat.isSymbolicLink() || !stat.isDirectory()) {
       throw new JvmBackendError(`Refusing to write through symlinked or invalid directory ${path}`);
     }
   } catch (error) {
-    if (!(error instanceof Error) || !("code" in error) || (error as NodeJS.ErrnoException).code !== "ENOENT") {
+    if (!isNodeErrorCode(error, "ENOENT")) {
       throw error;
     }
+    throw error;
   }
+}
+
+function validatedOutputRelativePath(classFilename: string): string {
+  const parts = classFilename.split("/").filter(Boolean);
+  if (parts.length === 0 || parts.some((component) => component === "." || component === "..")) {
+    throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
+  }
+  return join(...parts);
+}
+
+function isNodeErrorCode(error: unknown, code: string): error is NodeJS.ErrnoException {
+  return error instanceof Error && "code" in error && (error as NodeJS.ErrnoException).code === code;
 }
 
 function u1(value: number): Uint8Array {

@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -34,7 +34,7 @@ describe("brainfuck-jvm-compiler", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-bf-jvm-"));
     try {
       const result = writeClassFile("+.", tempdir);
-      expect(result.classFilePath).toBe(join(tempdir, "BrainfuckProgram.class"));
+      expect(result.classFilePath).toBe(join(realpathSync.native(tempdir), "BrainfuckProgram.class"));
     } finally {
       rmSync(tempdir, { recursive: true, force: true });
     }

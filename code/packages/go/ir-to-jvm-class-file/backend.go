@@ -2,6 +2,7 @@ package irtojvmclassfile
 
 import (
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,6 +11,7 @@ import (
 
 	ir "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-ir"
 	jvmclassfile "github.com/adhithyan15/coding-adventures/code/packages/go/jvm-class-file"
+	"golang.org/x/sys/unix"
 )
 
 // The backend intentionally targets the same "boring" JVM subset as the
@@ -1285,44 +1287,50 @@ func WriteClassFile(artifact *JVMClassArtifact, outputDir string) (string, error
 	if root == "" {
 		root = "."
 	}
-	if err := os.MkdirAll(root, 0o755); err != nil {
-		return "", backendError("failed to create output root: %v", err)
-	}
-	if err := rejectSymlink(root); err != nil {
+	rootFD, absoluteRoot, err := secureOpenRoot(root)
+	if err != nil {
 		return "", err
 	}
+	openFDs := []int{rootFD}
+	defer func() {
+		for i := len(openFDs) - 1; i >= 0; i-- {
+			_ = unix.Close(openFDs[i])
+		}
+	}()
 
-	current := root
+	currentFD := rootFD
 	for _, component := range strings.Split(filepath.Dir(relativePath), string(filepath.Separator)) {
 		if component == "." || component == "" {
 			continue
 		}
-		current = filepath.Join(current, component)
-		if _, statErr := os.Lstat(current); statErr != nil {
-			if !os.IsNotExist(statErr) {
-				return "", backendError("failed to inspect output directory %q: %v", component, statErr)
-			}
-			if mkdirErr := os.Mkdir(current, 0o755); mkdirErr != nil && !os.IsExist(mkdirErr) {
-				return "", backendError("failed to create output directory %q: %v", component, mkdirErr)
-			}
+		if mkdirErr := unix.Mkdirat(currentFD, component, 0o755); mkdirErr != nil && !errors.Is(mkdirErr, unix.EEXIST) {
+			return "", backendError("failed to create output directory %q: %v", component, mkdirErr)
 		}
-		if err := rejectSymlink(current); err != nil {
+		nextFD, openErr := openDirectoryNoFollowAt(currentFD, component)
+		if openErr != nil {
 			return "", backendError("class_filename contains a symlinked or invalid directory component: %s", component)
 		}
+		openFDs = append(openFDs, nextFD)
+		currentFD = nextFD
 	}
 
-	target := filepath.Join(root, relativePath)
-	if info, statErr := os.Lstat(target); statErr == nil {
-		if info.Mode()&os.ModeSymlink != 0 {
-			return "", backendError("class_filename points at a symlinked or invalid output file")
-		}
-	} else if !os.IsNotExist(statErr) {
-		return "", backendError("failed to inspect output file: %v", statErr)
+	fileFD, openErr := unix.Openat(
+		currentFD,
+		filepath.Base(relativePath),
+		unix.O_WRONLY|unix.O_CREAT|unix.O_TRUNC|unix.O_NOFOLLOW|unix.O_CLOEXEC,
+		0o644,
+	)
+	if openErr != nil {
+		return "", backendError("class_filename points at a symlinked or invalid output file")
 	}
-
-	if err := os.WriteFile(target, artifact.ClassBytes, 0o644); err != nil {
+	if err := writeAll(fileFD, artifact.ClassBytes); err != nil {
+		_ = unix.Close(fileFD)
 		return "", backendError("failed to write class file: %v", err)
 	}
+	if err := unix.Close(fileFD); err != nil {
+		return "", backendError("failed to close class file: %v", err)
+	}
+	target := filepath.Join(absoluteRoot, relativePath)
 	return target, nil
 }
 
@@ -1350,6 +1358,71 @@ func rejectSymlink(path string) error {
 	}
 	if info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
 		return backendError("symlinked or invalid path component")
+	}
+	return nil
+}
+
+func secureOpenRoot(root string) (int, string, error) {
+	if info, err := os.Lstat(root); err == nil {
+		if info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
+			return -1, "", backendError("symlinked or invalid path component")
+		}
+		canonicalRoot, err := filepath.EvalSymlinks(root)
+		if err != nil {
+			return -1, "", backendError("failed to resolve output root: %v", err)
+		}
+		rootFD, err := unix.Open(canonicalRoot, unix.O_RDONLY|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
+		if err != nil {
+			return -1, "", backendError("failed to open output root: %v", err)
+		}
+		return rootFD, canonicalRoot, nil
+	} else if !os.IsNotExist(err) {
+		return -1, "", backendError("failed to inspect output root: %v", err)
+	}
+
+	absoluteRoot, err := filepath.Abs(root)
+	if err != nil {
+		return -1, "", backendError("failed to resolve output root: %v", err)
+	}
+	absoluteRoot = filepath.Clean(absoluteRoot)
+	currentFD, err := unix.Open(string(filepath.Separator), unix.O_RDONLY|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
+	if err != nil {
+		return -1, "", backendError("failed to open filesystem root: %v", err)
+	}
+	parts := strings.Split(strings.TrimPrefix(filepath.ToSlash(absoluteRoot), "/"), "/")
+	if len(parts) == 1 && parts[0] == "" {
+		return currentFD, absoluteRoot, nil
+	}
+	for _, component := range parts {
+		if component == "" {
+			continue
+		}
+		if mkdirErr := unix.Mkdirat(currentFD, component, 0o755); mkdirErr != nil && !errors.Is(mkdirErr, unix.EEXIST) {
+			_ = unix.Close(currentFD)
+			return -1, "", backendError("failed to create output root component %q: %v", component, mkdirErr)
+		}
+		nextFD, openErr := openDirectoryNoFollowAt(currentFD, component)
+		if openErr != nil {
+			_ = unix.Close(currentFD)
+			return -1, "", backendError("symlinked or invalid path component")
+		}
+		_ = unix.Close(currentFD)
+		currentFD = nextFD
+	}
+	return currentFD, absoluteRoot, nil
+}
+
+func openDirectoryNoFollowAt(parentFD int, component string) (int, error) {
+	return unix.Openat(parentFD, component, unix.O_RDONLY|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
+}
+
+func writeAll(fd int, data []byte) error {
+	for len(data) > 0 {
+		written, err := unix.Write(fd, data)
+		if err != nil {
+			return err
+		}
+		data = data[written:]
 	}
 	return nil
 }

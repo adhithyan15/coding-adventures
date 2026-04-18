@@ -179,7 +179,9 @@ mod tests {
         let output_root = unique_temp_dir("nib-jvm-write");
         fs::create_dir_all(&output_root).unwrap();
         let result = write_class_file("fn main() { let x: u4 = 7; }", &output_root).unwrap();
-        let expected = output_root.join("NibProgram.class");
+        let expected = fs::canonicalize(&output_root)
+            .unwrap()
+            .join("NibProgram.class");
         assert_eq!(result.class_file_path.as_deref(), Some(expected.as_path()));
         let _ = fs::remove_dir_all(output_root);
     }

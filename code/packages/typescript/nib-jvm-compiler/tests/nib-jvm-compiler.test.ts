@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -34,7 +34,7 @@ describe("nib-jvm-compiler", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-nib-jvm-"));
     try {
       const result = writeClassFile("fn main() -> u4 { return 7; }", tempdir);
-      expect(result.classFilePath).toBe(join(tempdir, "NibProgram.class"));
+      expect(result.classFilePath).toBe(join(realpathSync.native(tempdir), "NibProgram.class"));
     } finally {
       rmSync(tempdir, { recursive: true, force: true });
     }

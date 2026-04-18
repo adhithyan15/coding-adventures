@@ -167,7 +167,9 @@ mod tests {
         let output_root = unique_temp_dir("brainfuck-jvm-write");
         fs::create_dir_all(&output_root).unwrap();
         let result = write_class_file("+.", &output_root).unwrap();
-        let expected = output_root.join("BrainfuckProgram.class");
+        let expected = fs::canonicalize(&output_root)
+            .unwrap()
+            .join("BrainfuckProgram.class");
         assert_eq!(result.class_file_path.as_deref(), Some(expected.as_path()));
         assert!(expected.exists());
         let _ = fs::remove_dir_all(output_root);

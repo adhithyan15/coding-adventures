@@ -340,7 +340,7 @@ pub fn build_minimal_class_file(
     for constant in &params.constants {
         match constant {
             MinimalClassConstant::Integer(value) => {
-                pool.integer(*value);
+                pool.integer(*value)?;
             }
             MinimalClassConstant::String(value) => {
                 pool.string(value)?;
@@ -653,15 +653,15 @@ impl ConstantPoolBuilder {
             .collect()
     }
 
-    fn add(&mut self, key: String, payload: Vec<u8>) -> u16 {
+    fn add(&mut self, key: String, payload: Vec<u8>) -> Result<u16, ClassFileFormatError> {
         if let Some(index) = self.keys.get(&key) {
-            return *index;
+            return Ok(*index);
         }
         self.entries.push(payload);
-        let index =
-            u16::try_from(self.entries.len()).expect("constant pool entry count should fit in u16");
+        let index = u16::try_from(self.entries.len())
+            .map_err(|_| class_file_error("constant pool exceeds u16 count"))?;
         self.keys.insert(key, index);
-        index
+        Ok(index)
     }
 
     fn utf8(&mut self, value: &str) -> Result<u16, ClassFileFormatError> {
@@ -672,10 +672,10 @@ impl ConstantPoolBuilder {
         let mut payload = vec![CONSTANT_UTF8];
         append_u2(&mut payload, length);
         payload.extend_from_slice(encoded);
-        Ok(self.add(format!("Utf8:{value}"), payload))
+        self.add(format!("Utf8:{value}"), payload)
     }
 
-    fn integer(&mut self, value: i32) -> u16 {
+    fn integer(&mut self, value: i32) -> Result<u16, ClassFileFormatError> {
         let mut payload = vec![CONSTANT_INTEGER];
         append_i4(&mut payload, value);
         self.add(format!("Integer:{value}"), payload)
@@ -685,14 +685,14 @@ impl ConstantPoolBuilder {
         let name_index = self.utf8(value)?;
         let mut payload = vec![CONSTANT_CLASS];
         append_u2(&mut payload, name_index);
-        Ok(self.add(format!("Class:{value}"), payload))
+        self.add(format!("Class:{value}"), payload)
     }
 
     fn string(&mut self, value: &str) -> Result<u16, ClassFileFormatError> {
         let string_index = self.utf8(value)?;
         let mut payload = vec![CONSTANT_STRING];
         append_u2(&mut payload, string_index);
-        Ok(self.add(format!("String:{value}"), payload))
+        self.add(format!("String:{value}"), payload)
     }
 }
 
@@ -875,25 +875,25 @@ mod tests {
             let mut payload = vec![CONSTANT_NAME_AND_TYPE];
             append_u2(&mut payload, pool.utf8("VALUE").unwrap());
             append_u2(&mut payload, pool.utf8("I").unwrap());
-            pool.add("Nat:VALUE:I".to_string(), payload)
+            pool.add("Nat:VALUE:I".to_string(), payload).unwrap()
         };
         let field_ref = {
             let mut payload = vec![CONSTANT_FIELDREF];
             append_u2(&mut payload, this_class_index);
             append_u2(&mut payload, field_nat);
-            pool.add("Field:demo/Refs:VALUE:I".to_string(), payload)
+            pool.add("Field:demo/Refs:VALUE:I".to_string(), payload).unwrap()
         };
         let method_nat = {
             let mut payload = vec![CONSTANT_NAME_AND_TYPE];
             append_u2(&mut payload, pool.utf8("helper").unwrap());
             append_u2(&mut payload, pool.utf8("()I").unwrap());
-            pool.add("Nat:helper:()I".to_string(), payload)
+            pool.add("Nat:helper:()I".to_string(), payload).unwrap()
         };
         let method_ref = {
             let mut payload = vec![CONSTANT_METHODREF];
             append_u2(&mut payload, this_class_index);
             append_u2(&mut payload, method_nat);
-            pool.add("Method:demo/Refs:helper:()I".to_string(), payload)
+            pool.add("Method:demo/Refs:helper:()I".to_string(), payload).unwrap()
         };
 
         let mut code_attribute_body = Vec::new();

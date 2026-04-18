@@ -9,8 +9,12 @@
 //! GraalVM Native Image to accept.
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::ffi::CString;
 use std::fmt;
 use std::fs;
+use std::io::Write;
+use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
+use std::os::unix::ffi::OsStrExt;
 use std::path::{Path, PathBuf};
 
 use compiler_ir::{IrInstruction, IrOp, IrOperand, IrProgram};
@@ -276,14 +280,15 @@ impl ConstantPoolBuilder {
             .collect()
     }
 
-    fn add(&mut self, key: String, payload: Vec<u8>) -> u16 {
+    fn add(&mut self, key: String, payload: Vec<u8>) -> Result<u16, JvmBackendError> {
         if let Some(index) = self.indices.get(&key) {
-            return *index;
+            return Ok(*index);
         }
         self.entries.push(payload);
-        let index = u16::try_from(self.entries.len()).expect("constant pool should fit in u16");
+        let index = u16::try_from(self.entries.len())
+            .map_err(|_| JvmBackendError::new("constant pool exceeds u16 count"))?;
         self.indices.insert(key, index);
-        index
+        Ok(index)
     }
 
     fn utf8(&mut self, value: &str) -> Result<u16, JvmBackendError> {
@@ -294,10 +299,10 @@ impl ConstantPoolBuilder {
         let mut payload = vec![CONSTANT_UTF8];
         append_u2(&mut payload, length);
         payload.extend_from_slice(encoded);
-        Ok(self.add(format!("Utf8:{value}"), payload))
+        self.add(format!("Utf8:{value}"), payload)
     }
 
-    fn integer(&mut self, value: i32) -> u16 {
+    fn integer(&mut self, value: i32) -> Result<u16, JvmBackendError> {
         let mut payload = vec![CONSTANT_INTEGER];
         append_i4(&mut payload, value);
         self.add(format!("Integer:{value}"), payload)
@@ -307,14 +312,14 @@ impl ConstantPoolBuilder {
         let name_index = self.utf8(internal_name)?;
         let mut payload = vec![CONSTANT_CLASS];
         append_u2(&mut payload, name_index);
-        Ok(self.add(format!("Class:{internal_name}"), payload))
+        self.add(format!("Class:{internal_name}"), payload)
     }
 
     fn name_and_type(&mut self, name: &str, descriptor: &str) -> Result<u16, JvmBackendError> {
         let mut payload = vec![CONSTANT_NAME_AND_TYPE];
         append_u2(&mut payload, self.utf8(name)?);
         append_u2(&mut payload, self.utf8(descriptor)?);
-        Ok(self.add(format!("NameAndType:{name}:{descriptor}"), payload))
+        self.add(format!("NameAndType:{name}:{descriptor}"), payload)
     }
 
     fn field_ref(
@@ -326,7 +331,7 @@ impl ConstantPoolBuilder {
         let mut payload = vec![CONSTANT_FIELDREF];
         append_u2(&mut payload, self.class_ref(owner)?);
         append_u2(&mut payload, self.name_and_type(name, descriptor)?);
-        Ok(self.add(format!("Fieldref:{owner}:{name}:{descriptor}"), payload))
+        self.add(format!("Fieldref:{owner}:{name}:{descriptor}"), payload)
     }
 
     fn method_ref(
@@ -338,7 +343,7 @@ impl ConstantPoolBuilder {
         let mut payload = vec![CONSTANT_METHODREF];
         append_u2(&mut payload, self.class_ref(owner)?);
         append_u2(&mut payload, self.name_and_type(name, descriptor)?);
-        Ok(self.add(format!("Methodref:{owner}:{name}:{descriptor}"), payload))
+        self.add(format!("Methodref:{owner}:{name}:{descriptor}"), payload)
     }
 }
 
@@ -617,7 +622,7 @@ impl<'a> JvmClassLowerer<'a> {
         }
         let index = self.cp.integer(i32::try_from(value).map_err(|_| {
             JvmBackendError::new(format!("Immediate {value} is outside JVM int range"))
-        })?);
+        })?)?;
         if index <= u8::MAX.into() {
             builder.emit_u1_instruction(OP_LDC, index as u8);
         } else {
@@ -1284,51 +1289,166 @@ pub fn write_class_file(
     output_dir: impl AsRef<Path>,
 ) -> Result<PathBuf, JvmBackendError> {
     validate_class_name(&artifact.class_name)?;
-    let root = output_dir.as_ref();
+    let root = if output_dir.as_ref().as_os_str().is_empty() {
+        Path::new(".")
+    } else {
+        output_dir.as_ref()
+    };
     let relative_path = validated_output_relative_path(&artifact.class_filename())?;
-    fs::create_dir_all(root).map_err(io_err("write"))?;
-
-    let mut current = root.to_path_buf();
+    let (root_fd, absolute_root) = secure_open_root(root)?;
+    let mut open_dirs = vec![root_fd];
     for component in relative_path
         .iter()
         .take(relative_path.components().count().saturating_sub(1))
     {
-        current.push(component);
-        if current.exists() {
-            let metadata = fs::symlink_metadata(&current).map_err(io_err("write"))?;
-            if metadata.file_type().is_symlink() || !metadata.is_dir() {
-                return Err(JvmBackendError::new(
-                    "class_filename contains a symlinked or invalid directory component",
-                ));
-            }
-        } else {
-            fs::create_dir(&current).map_err(io_err("write"))?;
-        }
+        let parent_fd = open_dirs.last().expect("root fd should exist");
+        mkdir_at(parent_fd, Path::new(component)).map_err(io_err("write"))?;
+        let next_fd = open_directory_at(parent_fd, Path::new(component)).map_err(|_| {
+            JvmBackendError::new(
+                "class_filename contains a symlinked or invalid directory component",
+            )
+        })?;
+        open_dirs.push(next_fd);
     }
 
-    let target = root.join(&relative_path);
-    if let Some(parent) = target.parent() {
-        let metadata = fs::symlink_metadata(parent).map_err(io_err("write"))?;
-        if metadata.file_type().is_symlink() {
-            return Err(JvmBackendError::new(
-                "class_filename contains a symlinked or invalid directory component",
-            ));
-        }
-    }
-    if target.exists() {
-        let metadata = fs::symlink_metadata(&target).map_err(io_err("write"))?;
-        if metadata.file_type().is_symlink() || metadata.is_dir() {
-            return Err(JvmBackendError::new(
-                "class_filename points at a symlinked or invalid output file",
-            ));
-        }
-    }
-    fs::write(&target, &artifact.class_bytes).map_err(io_err("write"))?;
+    let parent_fd = open_dirs.last().expect("root fd should exist");
+    let file_fd = open_output_file_at(
+        parent_fd,
+        relative_path.file_name().expect("filename should exist"),
+    )
+    .map_err(|_| JvmBackendError::new("class_filename points at a symlinked or invalid output file"))?;
+    let mut output: fs::File = file_fd.into();
+    output
+        .write_all(&artifact.class_bytes)
+        .map_err(io_err("write"))?;
+    output.flush().map_err(io_err("write"))?;
+    let target = absolute_root.join(&relative_path);
     Ok(target)
 }
 
 fn io_err(stage: &'static str) -> impl Fn(std::io::Error) -> JvmBackendError {
     move |err| JvmBackendError::new(format!("[{stage}] {err}"))
+}
+
+fn secure_open_root(root: &Path) -> Result<(OwnedFd, PathBuf), JvmBackendError> {
+    if let Ok(metadata) = fs::symlink_metadata(root) {
+        if metadata.file_type().is_symlink() || !metadata.is_dir() {
+            return Err(JvmBackendError::new(
+                "class_filename contains a symlinked or invalid directory component",
+            ));
+        }
+        let canonical_root = fs::canonicalize(root).map_err(io_err("write"))?;
+        let root_fd = open_existing_directory(&canonical_root)?;
+        return Ok((root_fd, canonical_root));
+    }
+    let absolute_root = normalize_absolute_path(root)?;
+    let mut current_fd = open_root_directory()?;
+    let mut components = absolute_root.components();
+    let _ = components.next();
+    for component in components {
+        let std::path::Component::Normal(name) = component else {
+            continue;
+        };
+        mkdir_at(&current_fd, Path::new(name)).map_err(io_err("write"))?;
+        current_fd = open_directory_at(&current_fd, Path::new(name)).map_err(|_| {
+            JvmBackendError::new("class_filename contains a symlinked or invalid directory component")
+        })?;
+    }
+    Ok((current_fd, absolute_root))
+}
+
+fn normalize_absolute_path(path: &Path) -> Result<PathBuf, JvmBackendError> {
+    let absolute = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map_err(io_err("write"))?
+            .join(path)
+    };
+    let mut normalized = PathBuf::from("/");
+    for component in absolute.components() {
+        match component {
+            std::path::Component::RootDir => normalized = PathBuf::from("/"),
+            std::path::Component::CurDir => {}
+            std::path::Component::ParentDir => {
+                normalized.pop();
+            }
+            std::path::Component::Normal(part) => normalized.push(part),
+            std::path::Component::Prefix(_) => {
+                return Err(JvmBackendError::new("windows-style paths are not supported"));
+            }
+        }
+    }
+    Ok(normalized)
+}
+
+fn open_root_directory() -> Result<OwnedFd, JvmBackendError> {
+    let root = CString::new("/").expect("root path literal must not contain NUL");
+    let flags = libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
+    let raw_fd = unsafe { libc::open(root.as_ptr(), flags) };
+    if raw_fd < 0 {
+        return Err(JvmBackendError::new(format!(
+            "[write] {}",
+            std::io::Error::last_os_error()
+        )));
+    }
+    Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
+}
+
+fn open_existing_directory(path: &Path) -> Result<OwnedFd, JvmBackendError> {
+    let name = CString::new(path.as_os_str().as_bytes())
+        .map_err(|_| JvmBackendError::new("[write] path contains NUL"))?;
+    let flags = libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
+    let raw_fd = unsafe { libc::open(name.as_ptr(), flags) };
+    if raw_fd < 0 {
+        return Err(JvmBackendError::new(format!(
+            "[write] {}",
+            std::io::Error::last_os_error()
+        )));
+    }
+    Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
+}
+
+fn mkdir_at(parent_fd: &OwnedFd, component: &Path) -> Result<(), std::io::Error> {
+    let name = component_to_c_string(component)?;
+    let result = unsafe { libc::mkdirat(parent_fd.as_raw_fd(), name.as_ptr(), 0o755) };
+    if result == 0 {
+        return Ok(());
+    }
+    let error = std::io::Error::last_os_error();
+    if error.kind() == std::io::ErrorKind::AlreadyExists {
+        return Ok(());
+    }
+    Err(error)
+}
+
+fn open_directory_at(parent_fd: &OwnedFd, component: &Path) -> Result<OwnedFd, std::io::Error> {
+    let name = component_to_c_string(component)?;
+    let flags = libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
+    let raw_fd = unsafe { libc::openat(parent_fd.as_raw_fd(), name.as_ptr(), flags, 0) };
+    if raw_fd < 0 {
+        return Err(std::io::Error::last_os_error());
+    }
+    Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
+}
+
+fn open_output_file_at(
+    parent_fd: &OwnedFd,
+    file_name: &std::ffi::OsStr,
+) -> Result<OwnedFd, std::io::Error> {
+    let name = CString::new(file_name.as_bytes())
+        .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidInput, "path contains NUL"))?;
+    let flags = libc::O_WRONLY | libc::O_CREAT | libc::O_TRUNC | libc::O_NOFOLLOW | libc::O_CLOEXEC;
+    let raw_fd = unsafe { libc::openat(parent_fd.as_raw_fd(), name.as_ptr(), flags, 0o644) };
+    if raw_fd < 0 {
+        return Err(std::io::Error::last_os_error());
+    }
+    Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
+}
+
+fn component_to_c_string(component: &Path) -> Result<CString, std::io::Error> {
+    CString::new(component.as_os_str().as_bytes())
+        .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidInput, "path contains NUL"))
 }
 
 fn validated_output_relative_path(class_filename: &str) -> Result<PathBuf, JvmBackendError> {
@@ -1450,7 +1570,8 @@ mod tests {
         let output_root = unique_temp_dir("ir-to-jvm-write");
         fs::create_dir_all(&output_root).unwrap();
         let target = write_class_file(&artifact, &output_root).unwrap();
-        assert_eq!(target, output_root.join("demo/Example.class"));
+        let canonical_root = fs::canonicalize(&output_root).unwrap();
+        assert_eq!(target, canonical_root.join("demo/Example.class"));
         assert_eq!(fs::read(&target).unwrap(), artifact.class_bytes);
         let _ = fs::remove_dir_all(output_root);
     }

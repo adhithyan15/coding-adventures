@@ -7,6 +7,7 @@ description = "Lower compiler-ir programs into conservative JVM class files"
 [dependencies]
 compiler-ir = { path = "../compiler-ir" }
 jvm-class-file = { path = "../jvm-class-file" }
+libc = "0.2"
 
 [dev-dependencies]
 brainfuck = { path = "../brainfuck" }

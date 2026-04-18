@@ -22,6 +22,7 @@ require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/nib-lexer v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/state-machine v0.0.0 // indirect
 	github.com/adhithyan15/coding-adventures/code/packages/go/type-checker-protocol v0.0.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
 )
 
 replace (

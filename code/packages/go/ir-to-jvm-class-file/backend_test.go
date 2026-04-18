@@ -75,7 +75,11 @@ func TestWriteClassFileUsesClasspathLayout(t *testing.T) {
 	if err != nil {
 		t.Fatalf("write failed: %v", err)
 	}
-	expected := filepath.Join(outputDir, "demo", "Example.class")
+	canonicalOutputDir, err := filepath.EvalSymlinks(outputDir)
+	if err != nil {
+		t.Fatalf("canonicalize failed: %v", err)
+	}
+	expected := filepath.Join(canonicalOutputDir, "demo", "Example.class")
 	if target != expected {
 		t.Fatalf("expected %q, got %q", expected, target)
 	}
@@ -122,6 +126,25 @@ func TestWriteClassFileRejectsSymlinkedParentDirectory(t *testing.T) {
 	_, err = WriteClassFile(artifact, root)
 	if err == nil || !strings.Contains(err.Error(), "symlinked or invalid directory component") {
 		t.Fatalf("expected symlink rejection, got %v", err)
+	}
+}
+
+func TestWriteClassFileRejectsOutputRootWithSymlinkedAncestor(t *testing.T) {
+	artifact, err := LowerIRToJvmClassFile(simpleProgram(), JvmBackendConfig{
+		ClassName:       "demo.Example",
+		EmitMainWrapper: true,
+	})
+	if err != nil {
+		t.Fatalf("lower failed: %v", err)
+	}
+	root := t.TempDir()
+	sink := t.TempDir()
+	if err := os.Symlink(sink, filepath.Join(root, "linked-root")); err != nil {
+		t.Fatalf("symlink failed: %v", err)
+	}
+	_, err = WriteClassFile(artifact, filepath.Join(root, "linked-root", "nested"))
+	if err == nil || !strings.Contains(err.Error(), "symlinked or invalid path component") {
+		t.Fatalf("expected root symlink rejection, got %v", err)
 	}
 }
 
