@@ -9,11 +9,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
 const NIB_TOKENS_PATH = join(GRAMMARS_DIR, "nib.tokens");
 
-export function tokenizeNib(source: string): Token[] {
+export interface TokenizeNibOptions {
+  readonly preserveSourceInfo?: boolean;
+}
+
+export function tokenizeNib(
+  source: string,
+  options: TokenizeNibOptions = {},
+): Token[] {
   const grammarText = readFileSync(NIB_TOKENS_PATH, "utf-8");
   const grammar = parseTokenGrammar(grammarText);
 
-  return grammarTokenize(source, grammar).map((token) => {
+  return grammarTokenize(source, grammar, {
+    preserveSourceInfo: options.preserveSourceInfo,
+  }).map((token) => {
     if (token.type === "KEYWORD") {
       return { ...token, type: token.value };
     }

@@ -33,6 +33,14 @@ const doc = printNibSourceToDoc(ugly);
 const formatted = formatNib(ugly, { printWidth: 24 });
 ```
 
+Comments and blank lines now flow through the source-based path too:
+
+```ts
+const formattedWithComments = formatNib(
+  "// header\nfn main(){let x:u4=5; // keep\n// done\n}",
+);
+```
+
 ## Exports
 
 - `printNibDoc(ast)` — lower a parsed Nib AST into `Doc`
@@ -43,8 +51,9 @@ const formatted = formatNib(ugly, { printWidth: 24 });
 ## Notes
 
 - v1 canonicalizes syntax and spacing for the full Nib grammar
-- v1 does not preserve comments because the current Nib lexer removes them
+- source-based entry points preserve line comments and blank lines using the
+  lexer/parser `preserveSourceInfo` path
+- AST-only entry points preserve node-attached trivia, but cannot recover EOF
+  comments unless the caller carries the token stream separately
 - formatted output has no trailing newline and no trailing whitespace
-- the package `BUILD` currently validates behavior with tests instead of
-  `tsc --noEmit` because the shared TypeScript `lexer` package has an upstream
-  source-level type error on `main` that is outside this formatter change
+- the execution path remains `Doc -> LayoutTree -> PaintScene -> paint-vm-ascii`
