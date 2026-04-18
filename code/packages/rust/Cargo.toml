@@ -227,6 +227,7 @@ members = [
     "paint-codec-png",
     "paint-codec-png-c",
     "paint-instructions",
+    "paint-vm-ascii",
     "paint-metal",
     "paint-vm-direct2d-c",
     "paint-vm-direct2d",

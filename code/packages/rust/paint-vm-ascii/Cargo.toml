@@ -1,0 +1,8 @@
+[package]
+name = "paint-vm-ascii"
+version = "0.1.0"
+edition = "2021"
+description = "Terminal backend for backend-neutral paint scenes"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
