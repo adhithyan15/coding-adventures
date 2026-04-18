@@ -108,6 +108,23 @@ commit SHA.
 
 ---
 
+### 2026-04-18: Never expose caller-controlled FFI input enums as Rust `repr(C)` enums
+
+At the C ABI boundary, foreign callers can pass any integer bit pattern for an
+enum field. If a Rust `repr(C)` enum is embedded directly in an input struct and
+the caller supplies an out-of-range discriminant, Rust can observe invalid enum
+values, which is undefined behavior before normal validation code ever runs.
+
+**Symptom:** Security review flags FFI input structs that use Rust enums for
+caller-controlled fields such as mount-target kind or surface preference.
+
+**Rule:** For all FFI input structs, represent enum-like fields as primitive
+integers (`u32`, `c_int`, etc.) in both the Rust ABI struct and the C header,
+then validate/convert them explicitly with `match`/`TryFrom` before using them
+as internal enums.
+
+---
+
 ### 2026-04-17: Use a fresh git worktree before editing shared manifests in a noisy repo
 
 When a worktree already contains unrelated untracked package directories or
@@ -497,6 +514,7 @@ When TypeScript packages depend on each other via `"file:../other-pkg"` referenc
 - [ ] `file:../` dependencies for internal packages
 - [ ] `"@vitest/coverage-v8": "^3.0.0"` in devDependencies (missed on 5 packages in the S-series work — display, interrupt-handler, rom-bios, bootloader, os-kernel, system-board)
 - [ ] BUILD file uses `npm install --silent` (not `npm ci`) unless package-lock.json is committed and in sync
+- [ ] Run the real coverage gate locally with `npx vitest run --coverage` (or the package `BUILD` file) for every changed TypeScript package, not just `tsc` or plain `vitest run`
 
 ---
 
