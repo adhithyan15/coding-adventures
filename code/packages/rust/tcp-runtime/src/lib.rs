@@ -99,12 +99,12 @@ impl From<TcpRuntimeOptions> for StreamReactorOptions {
     }
 }
 
-pub struct TcpRuntime<P> {
-    reactor: StreamReactor<P>,
+pub struct TcpRuntime<P, S = ()> {
+    reactor: StreamReactor<P, S>,
     local_addr: SocketAddr,
 }
 
-impl<P: TransportPlatform> TcpRuntime<P> {
+impl<P: TransportPlatform> TcpRuntime<P, ()> {
     pub fn bind<F>(
         platform: P,
         address: BindAddress,
@@ -114,16 +114,53 @@ impl<P: TransportPlatform> TcpRuntime<P> {
     where
         F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
     {
+        TcpRuntime::bind_with_state(
+            platform,
+            address,
+            options,
+            |_| (),
+            move |info, _, bytes| handler(info, bytes),
+            |_, _| {},
+        )
+    }
+}
+
+impl<P: TransportPlatform, S: Send + 'static> TcpRuntime<P, S> {
+    pub fn bind_with_state<I, F, C>(
+        platform: P,
+        address: BindAddress,
+        options: TcpRuntimeOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
         // The listener address is only known after bind succeeds, so a small
         // one-time cell bridges that value into the per-read handler closure.
         let local_addr_cell = Arc::new(OnceLock::new());
         let handler_local_addr = Arc::clone(&local_addr_cell);
+        let init_local_addr = Arc::clone(&local_addr_cell);
+        let close_local_addr = Arc::clone(&local_addr_cell);
 
-        let reactor = StreamReactor::bind(
+        let reactor = StreamReactor::bind_with_state(
             platform,
             address,
             options.into(),
-            move |info: StreamConnectionInfo, bytes: &[u8]| {
+            move |info: StreamConnectionInfo| {
+                let local_addr = *init_local_addr
+                    .get()
+                    .expect("tcp-runtime initializes the local listener address before serving");
+                init(TcpConnectionInfo {
+                    id: info.id,
+                    peer_addr: info.peer_addr,
+                    local_addr,
+                })
+            },
+            move |info: StreamConnectionInfo, state: &mut S, bytes: &[u8]| {
                 let local_addr = *handler_local_addr
                     .get()
                     .expect("tcp-runtime initializes the local listener address before serving");
@@ -133,12 +170,26 @@ impl<P: TransportPlatform> TcpRuntime<P> {
                         peer_addr: info.peer_addr,
                         local_addr,
                     },
+                    state,
                     bytes,
                 );
                 StreamHandlerResult {
                     write: result.write,
                     close: result.close,
                 }
+            },
+            move |info: StreamConnectionInfo, state: S| {
+                let local_addr = *close_local_addr
+                    .get()
+                    .expect("tcp-runtime initializes the local listener address before serving");
+                on_close(
+                    TcpConnectionInfo {
+                        id: info.id,
+                        peer_addr: info.peer_addr,
+                        local_addr,
+                    },
+                    state,
+                );
             },
         )?;
 
@@ -182,7 +233,7 @@ impl<P: TransportPlatform> TcpRuntime<P> {
     target_os = "netbsd",
     target_os = "dragonfly"
 ))]
-impl TcpRuntime<transport_platform::bsd::KqueueTransportPlatform> {
+impl TcpRuntime<transport_platform::bsd::KqueueTransportPlatform, ()> {
     pub fn bind_kqueue<A, F>(
         addr: A,
         options: TcpRuntimeOptions,
@@ -198,8 +249,42 @@ impl TcpRuntime<transport_platform::bsd::KqueueTransportPlatform> {
     }
 }
 
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+impl<S: Send + 'static> TcpRuntime<transport_platform::bsd::KqueueTransportPlatform, S> {
+    pub fn bind_kqueue_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
+        let address = resolve_first_socket_addr(addr)?;
+        let platform = transport_platform::bsd::KqueueTransportPlatform::new()?;
+        Self::bind_with_state(
+            platform,
+            BindAddress::Ip(address),
+            options,
+            init,
+            handler,
+            on_close,
+        )
+    }
+}
+
 #[cfg(target_os = "linux")]
-impl TcpRuntime<transport_platform::linux::EpollTransportPlatform> {
+impl TcpRuntime<transport_platform::linux::EpollTransportPlatform, ()> {
     pub fn bind_epoll<A, F>(
         addr: A,
         options: TcpRuntimeOptions,
@@ -215,8 +300,36 @@ impl TcpRuntime<transport_platform::linux::EpollTransportPlatform> {
     }
 }
 
+#[cfg(target_os = "linux")]
+impl<S: Send + 'static> TcpRuntime<transport_platform::linux::EpollTransportPlatform, S> {
+    pub fn bind_epoll_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
+        let address = resolve_first_socket_addr(addr)?;
+        let platform = transport_platform::linux::EpollTransportPlatform::new()?;
+        Self::bind_with_state(
+            platform,
+            BindAddress::Ip(address),
+            options,
+            init,
+            handler,
+            on_close,
+        )
+    }
+}
+
 #[cfg(target_os = "windows")]
-impl TcpRuntime<transport_platform::windows::WindowsTransportPlatform> {
+impl TcpRuntime<transport_platform::windows::WindowsTransportPlatform, ()> {
     pub fn bind_windows<A, F>(
         addr: A,
         options: TcpRuntimeOptions,
@@ -229,6 +342,34 @@ impl TcpRuntime<transport_platform::windows::WindowsTransportPlatform> {
         let address = resolve_first_socket_addr(addr)?;
         let platform = transport_platform::windows::WindowsTransportPlatform::new()?;
         Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl<S: Send + 'static> TcpRuntime<transport_platform::windows::WindowsTransportPlatform, S> {
+    pub fn bind_windows_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
+        let address = resolve_first_socket_addr(addr)?;
+        let platform = transport_platform::windows::WindowsTransportPlatform::new()?;
+        Self::bind_with_state(
+            platform,
+            BindAddress::Ip(address),
+            options,
+            init,
+            handler,
+            on_close,
+        )
     }
 }
 
@@ -339,6 +480,93 @@ mod tests {
             "handler should record at least one local address"
         );
         assert!(seen.iter().all(|candidate| *candidate == addr));
+    }
+
+    #[test]
+    fn stateful_handlers_preserve_session_state_across_reads() {
+        let mut runtime = TcpRuntime::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            |_| Vec::<u8>::new(),
+            |_, state, bytes| {
+                state.extend_from_slice(bytes);
+                if state.ends_with(b"\n") {
+                    TcpHandlerResult::write(state.clone())
+                } else {
+                    TcpHandlerResult::default()
+                }
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client
+            .set_read_timeout(Some(Duration::from_millis(200)))
+            .expect("read timeout");
+
+        client.write_all(b"hel").expect("write first fragment");
+        let mut probe = [0u8; 16];
+        let err = client.read(&mut probe).expect_err("no response yet");
+        assert!(
+            matches!(
+                err.kind(),
+                io::ErrorKind::WouldBlock | io::ErrorKind::TimedOut
+            ),
+            "expected no response before newline, got {err}"
+        );
+
+        client.write_all(b"lo\n").expect("write second fragment");
+        let mut echoed = [0u8; 6];
+        client.read_exact(&mut echoed).expect("read response");
+        assert_eq!(&echoed, b"hello\n");
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn close_callback_receives_final_connection_state_once() {
+        let closed = Arc::new(Mutex::new(Vec::<(ConnectionId, Vec<u8>)>::new()));
+        let closed_observer = Arc::clone(&closed);
+        let mut runtime = TcpRuntime::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            |_| Vec::<u8>::new(),
+            |_, state, bytes| {
+                state.extend_from_slice(bytes);
+                TcpHandlerResult::close()
+            },
+            move |info, state| {
+                closed_observer
+                    .lock()
+                    .expect("close observer mutex poisoned")
+                    .push((info.id, state));
+            },
+        )
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"bye").expect("write request");
+        let mut sink = [0u8; 1];
+        let _ = client.read(&mut sink);
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+
+        let observed = closed.lock().expect("close observer mutex poisoned");
+        assert_eq!(observed.len(), 1, "close callback should run exactly once");
+        assert_eq!(observed[0].1, b"bye".to_vec());
     }
 
     #[test]
