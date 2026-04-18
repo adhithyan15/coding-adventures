@@ -80,6 +80,21 @@ When unifying error messages for security (e.g., generic "Invalid PKCS#7 padding
 
 ### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
 
+---
+
+### 2026-04-18: Linux `epoll_event` FFI mirrors must use the kernel's packed layout
+
+The Linux kernel declares `struct epoll_event` as packed. Modeling it as a
+plain `#[repr(C)]` Rust struct can appear to work for single events but corrupt
+or drop readiness information once `epoll_wait` returns multiple events.
+
+**Symptom:** Linux CI flakes or fails in higher-level readiness tests with
+missing readable streams, even though the logic above `epoll` looks correct.
+
+**Rule:** Any Rust FFI mirror of Linux `epoll_event` must use the kernel's
+packed layout and should be covered by a test that waits on multiple ready file
+descriptors at once.
+
 When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
 
 - **Python**: `dependencies` array in `pyproject.toml`
