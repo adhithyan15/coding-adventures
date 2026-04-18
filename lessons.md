@@ -1930,3 +1930,18 @@ parallel package builds invoked `dotnet test`. Setting only `DOTNET_CLI_HOME` wa
 **Rule:** For Linux `dotnet` BUILD scripts that may run in parallel, set both `HOME="$PWD/.dotnet"`
 and `DOTNET_CLI_HOME="$PWD/.dotnet"` so the CLI's first-run state is fully package-local and does not
 race with sibling package invocations.
+
+---
+
+## BUILD_windows: use `set "VAR=value"` for path-bearing env vars
+
+**Date:** 2026-04-17
+
+**What happened:** The Windows BUILD scripts for the new .NET document packages used plain
+`set DOTNET_CLI_HOME=%CD%\.dotnet`. In `cmd.exe`, a working directory path containing characters like
+`&`, `|`, `(`, or `)` can change how the command line is parsed.
+
+**Rule:** In `BUILD_windows`, always use the defensive quoted assignment form for environment
+variables, especially when the value includes `%CD%` or another path:
+  `set "DOTNET_CLI_HOME=%CD%\.dotnet"`
+Also quote path arguments passed to commands such as `dotnet test`.
