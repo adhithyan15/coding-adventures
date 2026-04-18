@@ -57,6 +57,21 @@ describe("renderToAscii()", () => {
     expect(renderToAscii(scene, opts)).toBe("Hi");
   });
 
+  it("replaces unsafe terminal control glyphs", () => {
+    const scene = paintScene(2, 1, "#fff", [
+      {
+        kind: "glyph_run",
+        glyphs: [
+          { glyph_id: 0x1b, x: 0, y: 0 },
+          { glyph_id: "A".codePointAt(0)!, x: 1, y: 0 },
+        ],
+        font_ref: "mono",
+        font_size: 12,
+      },
+    ]);
+    expect(renderToAscii(scene, opts)).toBe("?A");
+  });
+
   it("clips child output", () => {
     const scene = paintScene(10, 1, "#fff", [
       paintClip(0, 0, 3, 1, [
