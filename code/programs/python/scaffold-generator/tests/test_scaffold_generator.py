@@ -17,6 +17,7 @@ from scaffold_generator import (  # noqa: E402
     to_joined_lower,
     dir_name,
     KEBAB_RE,
+    find_repo_root,
     read_deps,
     transitive_closure,
     topological_sort,
@@ -195,6 +196,31 @@ class TestDependencyResolution:
             f.write("python -m pip install -e ../x -e .[dev] --quiet\n")
         with pytest.raises(ValueError, match="circular"):
             topological_sort(["x", "y"], "python", tmp)
+
+
+class TestRepoRootDetection:
+    """Worktrees expose ``.git`` as a file, not a directory."""
+
+    def test_find_repo_root_accepts_a_git_directory(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            os.mkdir(os.path.join(tmp, ".git"))
+            nested = os.path.join(tmp, "code", "packages")
+            os.makedirs(nested)
+
+            monkeypatch.chdir(nested)
+
+            assert os.path.realpath(find_repo_root()) == os.path.realpath(tmp)
+
+    def test_find_repo_root_accepts_a_git_file(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            with open(os.path.join(tmp, ".git"), "w", encoding="utf-8") as handle:
+                handle.write("gitdir: /tmp/example-worktree\n")
+            nested = os.path.join(tmp, "code", "packages")
+            os.makedirs(nested)
+
+            monkeypatch.chdir(nested)
+
+            assert os.path.realpath(find_repo_root()) == os.path.realpath(tmp)
 
 
 # =========================================================================
