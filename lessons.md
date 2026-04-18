@@ -4,20 +4,39 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
-### 2026-04-17: Do not set a Rust crate to Edition 2024 unless the workspace toolchain supports it
+### 2026-04-17: Use a fresh git worktree before editing shared manifests in a noisy repo
 
-Setting `edition = "2024"` in a member crate blocks Cargo from parsing the entire
-workspace when the installed Cargo version does not yet support Edition 2024.
-This failure happens before Cargo can even target a different package, so one
-early-edition manifest can stop all unrelated Rust work.
+When a worktree already contains unrelated untracked package directories or
+other agents are actively building in the same checkout, shared files like
+workspace manifests can pick up accidental references to crates that are not
+part of the intended change. In this case, a Rust event-loop PR accidentally
+committed `job-*` workspace members from the surrounding dirty tree, and CI
+failed because those package directories were never pushed with the branch.
 
-**Symptom:** `cargo test -p <some-other-crate>` fails while loading the workspace,
-with an error like `feature edition2024 is required` pointing at an unrelated
-member crate.
+**Symptom:** CI fails with errors like `failed to load manifest for workspace member ... No such file or directory`, even though the feature itself builds locally in isolation.
 
-**Rule:** In the shared Rust workspace, keep crate editions at `2021` unless the
-repo has explicitly upgraded the workspace toolchain and the crate actually needs
-Edition 2024 features.
+**Rule:** If the source worktree has unrelated untracked files, package
+directories, or active agent work, create a fresh `git worktree` from
+`origin/main` before staging or committing shared manifest changes. Replay only
+the intended commits there, then push from the clean worktree.
+
+---
+
+### 2026-04-17: Socket tests should not assume immediate accept batching or instant EOF propagation
+
+Local TCP tests can be timing-sensitive even on loopback. A listener may not
+see every new connection in the very first `accept()` burst, and a client that
+was refused server-side may not observe EOF immediately on the next `read()`.
+Tests that assume either behavior become flaky under the repo build tool and CI.
+
+**Symptom:** a readiness or connection-cap test passes in one direct `cargo test`
+run but fails under CI or under the repo build tool with missing accepted
+connections or a refused client that never reports close quickly enough.
+
+**Rule:** In socket tests, wait for the expected accepted-connection count with
+bounded retries, and assert the stable invariant you actually care about
+(`connections.len()`, state transitions, explicit errors) instead of requiring
+an immediate EOF from the peer.
 
 ---
 

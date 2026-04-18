@@ -12,3 +12,8 @@ All notable changes to this package will be documented in this file.
 - end-to-end concurrent echo test on top of `kqueue`
 - configurable limits for active connections and per-connection queued writes
 - tests covering connection-cap rejection and write-budget overflow shutdown
+
+### Fixed
+
+- stabilized socket-cap tests so they rely on bounded retries and reactor state
+  instead of immediate loopback close propagation

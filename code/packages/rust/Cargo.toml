@@ -293,10 +293,5 @@ members = [
     "intel-4004-assembler",
     "intel-4004-packager",
     "nib-compiler",
-  "bitset-c",
-  "job-core",
-  "job-backend-launchd-files",
-  "job-backend-systemd-files",
-  "job-backend-windows-xml",
-  "job-runtime",
+    "bitset-c",
 ]
