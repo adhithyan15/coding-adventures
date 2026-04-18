@@ -1,0 +1,12 @@
+# Changelog
+
+All notable changes to this package will be documented in this file.
+
+## [0.1.0] - 2026-04-17
+
+### Added
+
+- `TcpReactor` generic over `native-event-core::EventBackend`
+- `StopHandle` for cooperative shutdown
+- macOS/BSD `bind_kqueue` convenience constructor
+- end-to-end concurrent echo test on top of `kqueue`

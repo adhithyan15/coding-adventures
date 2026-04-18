@@ -4,6 +4,23 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-17: Do not set a Rust crate to Edition 2024 unless the workspace toolchain supports it
+
+Setting `edition = "2024"` in a member crate blocks Cargo from parsing the entire
+workspace when the installed Cargo version does not yet support Edition 2024.
+This failure happens before Cargo can even target a different package, so one
+early-edition manifest can stop all unrelated Rust work.
+
+**Symptom:** `cargo test -p <some-other-crate>` fails while loading the workspace,
+with an error like `feature edition2024 is required` pointing at an unrelated
+member crate.
+
+**Rule:** In the shared Rust workspace, keep crate editions at `2021` unless the
+repo has explicitly upgraded the workspace toolchain and the crate actually needs
+Edition 2024 features.
+
+---
+
 ### 2026-04-12: Never commit build artifacts — agents running tests will generate them
 
 When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
@@ -1873,3 +1890,37 @@ A 6-parent walk from Windows site-packages lands at `code\packages\python\` inst
   `uv pip install -e ../dep .[dev]`   ← WRONG: non-editable breaks __file__ paths
   `uv pip install -e ".[dev]"`        ← WRONG: cmd.exe passes literal quotes to uv
   `uv pip install -e .[dev]`          ← CORRECT: editable install, no quotes ✓
+
+---
+
+## Rust workspace builds: keep the toolchain current when dependencies adopt new editions
+
+**Date:** 2026-04-17
+
+**What happened:** `cargo build --workspace` failed while resolving the wider Rust workspace because
+an external dependency (`uefi-macros`) now requires the Edition 2024 manifest feature. Older Cargo
+versions reject that manifest before our own crates even begin compiling.
+
+**Rule:** Before declaring a Rust workspace build broken, check the active toolchain and upgrade
+stable when necessary:
+  `rustup toolchain install stable`
+If a dependency has adopted a newer edition, rerun the workspace build with the refreshed stable
+toolchain instead of assuming the local Cargo version is sufficient.
+
+---
+
+## Python BUILD files: include transitive local siblings required by editable installs
+
+**Date:** 2026-04-17
+
+**What happened:** The new `ir-to-jvm-class-file` package installed
+`../brainfuck` as an editable sibling, but its `BUILD` file omitted
+`../virtual-machine`, which `coding-adventures-brainfuck` depends on. `uv pip`
+then tried to satisfy `coding-adventures-virtual-machine` from the package
+registry and failed dependency resolution before tests even started.
+
+**Rule:** When a Python `BUILD` file installs sibling packages with `-e ../pkg`,
+include any additional local siblings that those editable packages require if
+they are not available from PyPI. For repo-local packages, install leaf-to-root
+so `uv pip` never falls back to the registry for a dependency that only exists
+inside this repository.
