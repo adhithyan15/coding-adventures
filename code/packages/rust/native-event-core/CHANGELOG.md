@@ -10,3 +10,8 @@ All notable changes to this package will be documented in this file.
 - `EventBackend` trait and `NativeEventLoop` wrapper
 - Linux, BSD/macOS, and Windows backend modules
 - fake-backend unit tests and macOS/BSD kqueue integration tests
+
+### Fixed
+
+- backend event translation now uses direct token metadata lookups instead of
+  scanning all registered sources per event

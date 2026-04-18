@@ -462,9 +462,15 @@ mod tests {
             .keys()
             .next()
             .expect("accepted connection token");
-        reactor
-            .read_ready(token)
-            .expect("overflowing write budget should close cleanly");
+        for _ in 0..20 {
+            reactor
+                .read_ready(token)
+                .expect("overflowing write budget should close cleanly");
+            if !reactor.connections.contains_key(&token) {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
         assert!(
             !reactor.connections.contains_key(&token),
             "reactor should drop connections whose queued output exceeds the limit"

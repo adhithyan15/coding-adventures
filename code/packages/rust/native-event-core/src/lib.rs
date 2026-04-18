@@ -7,6 +7,7 @@
 //! source kinds, normalized events, and backend polling traits. It deliberately
 //! does not know about TCP request parsing, WebSocket framing, or widget trees.
 
+use std::collections::BTreeMap;
 use std::io;
 use std::ops::{BitOr, BitOrAssign};
 use std::time::Duration;
@@ -213,21 +214,56 @@ impl<B: EventBackend> NativeEventLoop<B> {
     }
 }
 
+type SourceState = (Token, SourceKind, Interest);
+
+#[derive(Default)]
+struct SourceRegistry {
+    by_source: BTreeMap<SourceRef, SourceState>,
+    by_token: BTreeMap<Token, SourceKind>,
+}
+
+impl SourceRegistry {
+    fn len(&self) -> usize {
+        self.by_source.len()
+    }
+
+    fn get(&self, source: &SourceRef) -> Option<&SourceState> {
+        self.by_source.get(source)
+    }
+
+    fn insert(&mut self, source: SourceRef, token: Token, kind: SourceKind, interest: Interest) {
+        if let Some((previous_token, _, _)) = self.by_source.insert(source, (token, kind, interest))
+        {
+            self.by_token.remove(&previous_token);
+        }
+        self.by_token.insert(token, kind);
+    }
+
+    fn remove(&mut self, source: &SourceRef) -> Option<SourceState> {
+        let state = self.by_source.remove(source)?;
+        self.by_token.remove(&state.0);
+        Some(state)
+    }
+
+    fn kind_for_token(&self, token: Token) -> SourceKind {
+        self.by_token.get(&token).copied().unwrap_or(SourceKind::Io)
+    }
+}
+
 #[cfg(target_os = "linux")]
 pub mod linux {
     use super::*;
-    use std::collections::BTreeMap;
 
     pub struct LinuxBackend {
         poller: epoll::Epoll,
-        sources: BTreeMap<SourceRef, (Token, SourceKind, Interest)>,
+        sources: SourceRegistry,
     }
 
     impl LinuxBackend {
         pub fn new() -> io::Result<Self> {
             Ok(Self {
                 poller: epoll::Epoll::new(true)?,
-                sources: BTreeMap::new(),
+                sources: SourceRegistry::default(),
             })
         }
     }
@@ -242,7 +278,7 @@ pub mod linux {
         ) -> io::Result<()> {
             let event = epoll::EpollEvent::new(token.0, to_epoll_interest(interest));
             self.poller.add(source.raw() as i32, event)?;
-            self.sources.insert(source, (token, kind, interest));
+            self.sources.insert(source, token, kind, interest);
             Ok(())
         }
 
@@ -255,7 +291,7 @@ pub mod linux {
         ) -> io::Result<()> {
             let event = epoll::EpollEvent::new(token.0, to_epoll_interest(interest));
             self.poller.modify(source.raw() as i32, event)?;
-            self.sources.insert(source, (token, kind, interest));
+            self.sources.insert(source, token, kind, interest);
             Ok(())
         }
 
@@ -273,12 +309,7 @@ pub mod linux {
                 .into_iter()
                 .map(|event| {
                     let token = Token(event.token());
-                    let source = self
-                        .sources
-                        .values()
-                        .find(|(registered_token, _, _)| *registered_token == token)
-                        .map(|(_, kind, _)| *kind)
-                        .unwrap_or(SourceKind::Io);
+                    let source = self.sources.kind_for_token(token);
                     NativeEvent::readiness(
                         token,
                         source,
@@ -316,18 +347,17 @@ pub mod linux {
 ))]
 pub mod bsd {
     use super::*;
-    use std::collections::BTreeMap;
 
     pub struct KqueueBackend {
         poller: kqueue::Kqueue,
-        sources: BTreeMap<SourceRef, (Token, SourceKind, Interest)>,
+        sources: SourceRegistry,
     }
 
     impl KqueueBackend {
         pub fn new() -> io::Result<Self> {
             Ok(Self {
                 poller: kqueue::Kqueue::new()?,
-                sources: BTreeMap::new(),
+                sources: SourceRegistry::default(),
             })
         }
     }
@@ -347,7 +377,7 @@ pub mod bsd {
                 interest,
                 kqueue::EventFlags::ADD | kqueue::EventFlags::ENABLE | kqueue::EventFlags::CLEAR,
             )?;
-            self.sources.insert(source, (token, kind, interest));
+            self.sources.insert(source, token, kind, interest);
             Ok(())
         }
 
@@ -368,7 +398,7 @@ pub mod bsd {
                 interest,
                 kqueue::EventFlags::ADD | kqueue::EventFlags::ENABLE | kqueue::EventFlags::CLEAR,
             )?;
-            self.sources.insert(source, (token, kind, interest));
+            self.sources.insert(source, token, kind, interest);
             Ok(())
         }
 
@@ -387,12 +417,7 @@ pub mod bsd {
                 .into_iter()
                 .map(|event| {
                     let token = Token(event.token());
-                    let source = self
-                        .sources
-                        .values()
-                        .find(|(registered_token, _, _)| *registered_token == token)
-                        .map(|(_, kind, _)| *kind)
-                        .unwrap_or(SourceKind::Io);
+                    let source = self.sources.kind_for_token(token);
                     NativeEvent::readiness(
                         token,
                         source,
@@ -449,18 +474,17 @@ pub mod bsd {
 #[cfg(target_os = "windows")]
 pub mod windows {
     use super::*;
-    use std::collections::BTreeMap;
 
     pub struct IocpBackend {
         poller: iocp::CompletionPort,
-        sources: BTreeMap<SourceRef, (Token, SourceKind, Interest)>,
+        sources: SourceRegistry,
     }
 
     impl IocpBackend {
         pub fn new(concurrency: u32) -> io::Result<Self> {
             Ok(Self {
                 poller: iocp::CompletionPort::new(concurrency)?,
-                sources: BTreeMap::new(),
+                sources: SourceRegistry::default(),
             })
         }
     }
@@ -475,7 +499,7 @@ pub mod windows {
         ) -> io::Result<()> {
             self.poller
                 .associate_handle(source.raw() as *mut std::ffi::c_void, token.0 as usize)?;
-            self.sources.insert(source, (token, kind, interest));
+            self.sources.insert(source, token, kind, interest);
             Ok(())
         }
 
@@ -486,7 +510,7 @@ pub mod windows {
             kind: SourceKind,
             interest: Interest,
         ) -> io::Result<()> {
-            self.sources.insert(source, (token, kind, interest));
+            self.sources.insert(source, token, kind, interest);
             Ok(())
         }
 
@@ -498,12 +522,7 @@ pub mod windows {
         fn poll(&mut self, timeout: PollTimeout) -> io::Result<Vec<NativeEvent>> {
             let packet = self.poller.get(timeout.into_duration())?;
             let token = Token(packet.completion_key as u64);
-            let source = self
-                .sources
-                .values()
-                .find(|(registered_token, _, _)| *registered_token == token)
-                .map(|(_, kind, _)| *kind)
-                .unwrap_or(SourceKind::Io);
+            let source = self.sources.kind_for_token(token);
             Ok(vec![NativeEvent::completion(
                 token,
                 source,

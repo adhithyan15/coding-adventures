@@ -31,6 +31,8 @@ epoll / kqueue / iocp
 - `SourceKind` distinguishes ordinary I/O from wakeups or timers in the event model.
 - `NativeEvent` is the normalized output of polling.
 - `EventBackend` is the trait implemented by platform backends.
+- backend implementations keep direct token-to-source-kind metadata so event
+  translation remains constant-time under load.
 
 ## Public API
 
