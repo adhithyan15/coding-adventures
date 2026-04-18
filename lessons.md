@@ -76,6 +76,16 @@ When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the bui
 
 ---
 
+### 2026-04-17: Python build validation only whitelists sibling refs that appear in dependency metadata
+
+For Python packages, adding a sibling path only under `[tool.uv.sources]` is not enough to satisfy the build validator's `undeclared local package refs` check. If a BUILD script installs a sibling package for tests or tooling, that sibling must also appear in `dependencies` or an appropriate `[project.optional-dependencies]` group so the validator can see the edge in the package metadata.
+
+**Symptom:** CI detect or CodeQL fails in the build validation phase with `undeclared local package refs: python/<package>` even though the BUILD file and `tool.uv.sources` both mention the sibling path.
+
+**Rule:** For Python packages, declare every BUILD-installed sibling package in `pyproject.toml` dependency metadata as well as in `[tool.uv.sources]`. If the sibling is test-only, put it in the `dev` extra and prefer installing `.[dev]` from BUILD rather than duplicating a standalone `-e ../package` entry.
+
+---
+
 ### 2026-04-06: Perl `reverse LIST, $extra` vs `(reverse LIST), $extra` — precedence trap
 
 When building a list that is the reverse of one list plus an extra item, the expression
