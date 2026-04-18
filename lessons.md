@@ -40,6 +40,24 @@ an immediate EOF from the peer.
 
 ---
 
+### 2026-04-18: Event-loop tests must not require independent sources to co-occur in one poll batch
+
+Native event loops report what is ready now, not what was ready "as a group"
+across the whole scenario. A wakeup, a timer expiry, and two client-readable
+streams may be delivered across separate `poll()` calls or separate event
+batches even when all of them happen during the same short test window.
+
+**Symptom:** a transport test flakes or fails by asserting that two different
+resources both appear in the same returned `Vec<Event>` instead of tracking
+whether each resource was observed at least once before the deadline.
+
+**Rule:** For event-loop and reactor tests, accumulate observations across
+multiple `poll()` iterations and assert the stable outcome ("did we ever see A
+and B?") rather than requiring unrelated readiness sources to appear in the
+same poll batch.
+
+---
+
 ### 2026-04-12: Never commit build artifacts — agents running tests will generate them
 
 When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.

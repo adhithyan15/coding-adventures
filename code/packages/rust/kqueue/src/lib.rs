@@ -2,8 +2,8 @@
 //!
 //! Thin Rust wrapper over BSD/macOS `kqueue` and `kevent`.
 //!
-//! The wrapper focuses on the TCP-first readiness path: read and write filters,
-//! token-carrying registrations, and blocking waits.
+//! The wrapper started with the TCP-first readiness path and now also exposes
+//! enough timer and user-event surface to support higher transport layers.
 
 use std::io;
 use std::ops::{BitOr, BitOrAssign};
@@ -22,6 +22,8 @@ mod imp {
     use std::os::fd::{AsRawFd, FromRawFd, OwnedFd, RawFd};
     const EVFILT_READ: i16 = -1;
     const EVFILT_WRITE: i16 = -2;
+    const EVFILT_TIMER: i16 = -7;
+    const EVFILT_USER: i16 = -10;
 
     const EV_ADD: u16 = 0x0001;
     const EV_DELETE: u16 = 0x0002;
@@ -31,6 +33,7 @@ mod imp {
     const EV_CLEAR: u16 = 0x0020;
     const EV_ERROR: u16 = 0x4000;
     const EV_EOF: u16 = 0x8000;
+    const NOTE_TRIGGER: u32 = 0x0100_0000;
 
     #[repr(C)]
     #[derive(Clone, Copy, Debug, Default)]
@@ -79,6 +82,8 @@ mod imp {
     pub enum Filter {
         Read,
         Write,
+        Timer,
+        User,
     }
 
     impl Filter {
@@ -86,6 +91,8 @@ mod imp {
             match self {
                 Self::Read => EVFILT_READ,
                 Self::Write => EVFILT_WRITE,
+                Self::Timer => EVFILT_TIMER,
+                Self::User => EVFILT_USER,
             }
         }
 
@@ -93,6 +100,8 @@ mod imp {
             match raw {
                 EVFILT_READ => Ok(Self::Read),
                 EVFILT_WRITE => Ok(Self::Write),
+                EVFILT_TIMER => Ok(Self::Timer),
+                EVFILT_USER => Ok(Self::User),
                 _ => Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     format!("unsupported kqueue filter {}", raw),
@@ -175,8 +184,40 @@ mod imp {
             )
         }
 
+        pub fn timer(ident: usize, token: u64, timeout_ms: u64) -> Self {
+            Self {
+                ident,
+                filter: Filter::Timer,
+                flags: EventFlags::ADD | EventFlags::ENABLE | EventFlags::ONE_SHOT,
+                fflags: 0,
+                data: timeout_ms.min(i64::MAX as u64) as i64,
+                token,
+            }
+        }
+
+        pub fn user(ident: usize, token: u64) -> Self {
+            Self {
+                ident,
+                filter: Filter::User,
+                flags: EventFlags::ADD | EventFlags::ENABLE | EventFlags::CLEAR,
+                fflags: 0,
+                data: 0,
+                token,
+            }
+        }
+
         pub fn with_flags(mut self, flags: EventFlags) -> Self {
             self.flags = flags;
+            self
+        }
+
+        pub fn with_fflags(mut self, fflags: u32) -> Self {
+            self.fflags = fflags;
+            self
+        }
+
+        pub fn with_data(mut self, data: i64) -> Self {
+            self.data = data;
             self
         }
     }
@@ -232,6 +273,14 @@ mod imp {
             matches!(self.filter, Filter::Write)
         }
 
+        pub const fn is_timer(self) -> bool {
+            matches!(self.filter, Filter::Timer)
+        }
+
+        pub const fn is_user(self) -> bool {
+            matches!(self.filter, Filter::User)
+        }
+
         pub const fn is_error(self) -> bool {
             (self.flags & EV_ERROR) != 0
         }
@@ -239,6 +288,10 @@ mod imp {
         pub const fn is_eof(self) -> bool {
             (self.flags & EV_EOF) != 0
         }
+    }
+
+    pub const fn note_trigger() -> u32 {
+        NOTE_TRIGGER
     }
 
     impl TryFrom<RawKevent> for KqueueEvent {
@@ -381,6 +434,45 @@ mod imp {
                 .expect("wait");
             assert!(events.is_empty());
         }
+
+        #[test]
+        fn timer_event_fires() {
+            let queue = Kqueue::new().expect("create kqueue");
+            queue
+                .apply(KqueueChange::timer(77, 77, 5))
+                .expect("register timer");
+
+            let events = queue
+                .wait(4, Some(Duration::from_millis(50)))
+                .expect("wait");
+
+            assert_eq!(events.len(), 1);
+            assert_eq!(events[0].token(), 77);
+            assert!(events[0].is_timer());
+        }
+
+        #[test]
+        fn user_event_can_be_triggered() {
+            let queue = Kqueue::new().expect("create kqueue");
+            queue
+                .apply(KqueueChange::user(88, 88))
+                .expect("register user event");
+            queue
+                .apply(
+                    KqueueChange::user(88, 88)
+                        .with_flags(EventFlags::ENABLE | EventFlags::CLEAR)
+                        .with_fflags(note_trigger()),
+                )
+                .expect("trigger user event");
+
+            let events = queue
+                .wait(4, Some(Duration::from_millis(50)))
+                .expect("wait");
+
+            assert_eq!(events.len(), 1);
+            assert_eq!(events[0].token(), 88);
+            assert!(events[0].is_user());
+        }
     }
 }
 
@@ -405,6 +497,8 @@ mod imp {
     pub enum Filter {
         Read,
         Write,
+        Timer,
+        User,
     }
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -457,7 +551,23 @@ mod imp {
             Self
         }
 
+        pub const fn timer(_ident: usize, _token: u64, _timeout_ms: u64) -> Self {
+            Self
+        }
+
+        pub const fn user(_ident: usize, _token: u64) -> Self {
+            Self
+        }
+
         pub const fn with_flags(self, _flags: EventFlags) -> Self {
+            self
+        }
+
+        pub const fn with_fflags(self, _fflags: u32) -> Self {
+            self
+        }
+
+        pub const fn with_data(self, _data: i64) -> Self {
             self
         }
     }
@@ -494,6 +604,14 @@ mod imp {
             false
         }
 
+        pub const fn is_timer(self) -> bool {
+            false
+        }
+
+        pub const fn is_user(self) -> bool {
+            false
+        }
+
         pub const fn is_error(self) -> bool {
             false
         }
@@ -501,6 +619,10 @@ mod imp {
         pub const fn is_eof(self) -> bool {
             false
         }
+    }
+
+    pub const fn note_trigger() -> u32 {
+        0x0100_0000
     }
 
     #[derive(Debug)]
