@@ -1,0 +1,14 @@
+[package]
+name = "brainfuck-jvm-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Brainfuck to JVM class-file compiler"
+
+[dependencies]
+brainfuck = { path = "../brainfuck" }
+brainfuck-ir-compiler = { path = "../brainfuck-ir-compiler" }
+compiler-ir = { path = "../compiler-ir" }
+ir-optimizer = { path = "../ir-optimizer" }
+ir-to-jvm-class-file = { path = "../ir-to-jvm-class-file" }
+jvm-class-file = { path = "../jvm-class-file" }
+parser = { path = "../parser" }
