@@ -8,6 +8,7 @@ It deliberately starts with the reusable semantic pieces:
 - atoms, numbers, strings, variables, and compound terms
 - substitutions and unification
 - goals and backtracking search
+- delayed disequality constraints via `neq(...)`
 - helpers like `fresh`, `conj`, `disj`, `run_all`, and `run_n`
 
 The later Prolog implementation should lower parsed clauses and queries into
@@ -16,19 +17,20 @@ this API instead of inventing a second execution model.
 ## Quick Start
 
 ```python
-from logic_core import atom, disj, eq, run_all, term, var
+from logic_core import State, atom, conj, eq, neq, run_all, var
 
 X = var("X")
 
-answers = run_all(
+assert run_all(
     X,
-    disj(
-        eq(term("parent", X, atom("bart")), term("parent", atom("homer"), atom("bart"))),
+    conj(
+        neq(X, atom("homer")),
         eq(X, atom("marge")),
     ),
-)
+) == [atom("marge")]
 
-assert answers == [atom("homer"), atom("marge")]
+state = list(neq(X, atom("homer"))(State()))[0]
+assert state.constraints
 ```
 
 ## Dependencies
