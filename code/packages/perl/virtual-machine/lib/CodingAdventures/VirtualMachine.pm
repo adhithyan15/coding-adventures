@@ -910,13 +910,16 @@ sub register_context_opcode {
 sub execute_with_context {
     my ($self, $code, $context) = @_;
     $self->{_current_context} = $context;
-    my $instrs = $code->instructions();
-    while ( !$self->{halted} && $self->{pc} < scalar(@$instrs) ) {
+    $self->{_program} = $code;
+    while ( !$self->{halted} ) {
+        my $current_code = $self->{_program} || $code;
+        my $instrs = $current_code->instructions();
+        last if $self->{pc} >= scalar(@$instrs);
         # Call pre-step hook if registered
         if ($self->{_pre_step_hook}) {
-            $self->{_pre_step_hook}->($self, $code, $context);
+            $self->{_pre_step_hook}->($self, $current_code, $context);
         }
-        $self->step($code);
+        $self->step($current_code);
     }
     $self->{_current_context} = undef;
 }

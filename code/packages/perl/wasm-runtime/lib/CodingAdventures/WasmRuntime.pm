@@ -53,6 +53,7 @@ use lib '../wasm-validator/lib';
 use lib '../wasm-execution/lib';
 
 use CodingAdventures::WasmModuleParser qw(parse);
+use CodingAdventures::WasmLeb128 ();
 use CodingAdventures::WasmValidator ();  # import nothing; call fully qualified
 use CodingAdventures::WasmExecution qw(i32 i64 f32 f64 evaluate_const_expr);
 use CodingAdventures::WasmRuntime::WasiClockRandom ();
@@ -114,37 +115,42 @@ sub instantiate {
 
         if ($kind eq 'func') {
             my $type_idx = $imp->{desc}{idx};
+            $type_idx = $imp->{desc}{type_idx} unless defined $type_idx;
             push @func_types, $module->{types}[$type_idx];
             push @func_bodies, undef;  # no body for imports
 
             # Try to resolve from host
             my $host_func = undef;
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 $host_func = $self->{host}->resolve_function(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
             }
             push @host_functions, $host_func;
         }
         elsif ($kind eq 'mem') {
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 $memory = $self->{host}->resolve_memory(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
             }
         }
         elsif ($kind eq 'table') {
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 my $t = $self->{host}->resolve_table(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
                 push @tables, $t if $t;
             }
         }
         elsif ($kind eq 'global') {
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 my $g = $self->{host}->resolve_global(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
                 if ($g) {
                     push @global_types, $g->{type};
@@ -184,9 +190,10 @@ sub instantiate {
     # Step 3: Allocate memory (from memory section, if not imported)
     if (!$memory && scalar(@{ $module->{memories} || [] }) > 0) {
         my $mem_type = $module->{memories}[0];
+        my $limits = $mem_type->{limits} || $mem_type;
         $memory = CodingAdventures::WasmExecution::LinearMemory->new(
-            $mem_type->{min},
-            $mem_type->{max},
+            $mem_type->{min} // $limits->{min},
+            $mem_type->{max} // $limits->{max},
         );
     }
 
@@ -207,7 +214,7 @@ sub instantiate {
 
     # Step 6: Apply data segments
     if ($memory) {
-        for my $seg (@{ $module->{data} || [] }) {
+        for my $seg (@{ _normalize_data_segments($module->{data} || []) }) {
             my $offset = evaluate_const_expr($seg->{offset_expr}, \@globals);
             my $offset_num = $offset->{value};
             $memory->write_bytes($offset_num, $seg->{data});
@@ -248,6 +255,10 @@ sub instantiate {
         exports        => \%exports,
     };
 
+    if ($self->{host} && $memory && $self->{host}->can('set_memory')) {
+        $self->{host}->set_memory($memory);
+    }
+
     # Step 8: Call start function (if present)
     if (defined $module->{start}) {
         my $engine = CodingAdventures::WasmExecution::Engine->new(
@@ -263,6 +274,48 @@ sub instantiate {
     }
 
     return $instance;
+}
+
+sub _normalize_data_segments {
+    my ($segments) = @_;
+    my @normalized;
+
+    for my $segment (@{ $segments || [] }) {
+        if (ref($segment) eq 'HASH') {
+            push @normalized, $segment;
+            next;
+        }
+
+        my $bytes = $segment || [];
+        my $pos = 0;
+        my ($count, $cc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
+        $pos += $cc;
+
+        for (1 .. $count) {
+            my ($memory_index, $mc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
+            $pos += $mc;
+
+            my @offset_expr;
+            while ($pos <= $#$bytes) {
+                my $byte = $bytes->[$pos++];
+                push @offset_expr, $byte;
+                last if $byte == 0x0B;
+            }
+
+            my ($size, $sc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
+            $pos += $sc;
+            my @data = $size > 0 ? @{$bytes}[$pos .. $pos + $size - 1] : ();
+            $pos += $size;
+
+            push @normalized, {
+                memory_index => $memory_index,
+                offset_expr  => \@offset_expr,
+                data         => \@data,
+            };
+        }
+    }
+
+    return \@normalized;
 }
 
 # ---- Call -----------------------------------------------------------------
@@ -447,10 +500,40 @@ sub resolve_function {
     if ($name eq 'fd_write') {
         # fd_write(fd, iovs_ptr, iovs_len, nwritten_ptr) → errno
         #
-        # Writes scattered buffers to a file descriptor. This stub returns 0
-        # to signal "0 bytes written" without doing any real I/O.
+        # Writes scattered buffers to a file descriptor. This implementation
+        # supports stdout/stderr so compiled Brainfuck and Nib programs can
+        # exercise observable WASI output during tests.
         return sub {
             my ($args) = @_;
+            my $memory       = $self->{instance_memory};
+            return [ CodingAdventures::WasmExecution::i32(52) ] unless $memory;
+
+            my $fd           = $args->[0]{value};
+            my $iovs_ptr     = $args->[1]{value} & 0xFFFFFFFF;
+            my $iovs_len     = $args->[2]{value} & 0x7FFFFFFF;
+            my $nwritten_ptr = $args->[3]{value} & 0xFFFFFFFF;
+
+            return [ CodingAdventures::WasmExecution::i32(8) ] unless $fd == 1 || $fd == 2;
+
+            my @bytes;
+            for my $i (0 .. $iovs_len - 1) {
+                my $buf_ptr = $memory->load_i32($iovs_ptr + $i * 8) & 0xFFFFFFFF;
+                my $buf_len = $memory->load_i32($iovs_ptr + $i * 8 + 4) & 0xFFFFFFFF;
+
+                for my $j (0 .. $buf_len - 1) {
+                    push @bytes, $memory->load_i32_8u($buf_ptr + $j);
+                }
+            }
+
+            my $text = pack('C*', @bytes);
+            if ($fd == 1) {
+                $self->{stdout_callback}->($text);
+            }
+            else {
+                $self->{stderr_callback}->($text);
+            }
+
+            $memory->store_i32($nwritten_ptr, scalar @bytes);
             return [ CodingAdventures::WasmExecution::i32(0) ];
         };
     }
