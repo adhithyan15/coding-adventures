@@ -10,30 +10,41 @@ that make relational programs feel like programs:
 - facts and rules
 - immutable clause databases
 - recursive solving with depth-first backtracking
+- disequality constraints via `neq(...)`
+- `all_different(...)` for small puzzle-style searches
 - end-to-end query helpers like `solve_all()` and `solve_n()`
 
 ## Quick Start
 
 ```python
-from logic_engine import atom, conj, fact, fresh, program, relation, rule, solve_all, var
+from logic_engine import all_different, atom, conj, fact, neq, program, relation, solve_n, var
 
-parent = relation("parent", 2)
-ancestor = relation("ancestor", 2)
+color = relation("color", 1)
 
-X = var("X")
-Y = var("Y")
+WA = var("WA")
+NT = var("NT")
+SA = var("SA")
 
-family = program(
-    fact(parent("homer", "bart")),
-    fact(parent("homer", "lisa")),
-    rule(ancestor(X, Y), parent(X, Y)),
-    rule(
-        ancestor(X, Y),
-        fresh(1, lambda z: conj(parent(X, z), ancestor(z, Y))),
+palette = program(
+    fact(color("red")),
+    fact(color("green")),
+    fact(color("blue")),
+)
+
+answers = solve_n(
+    palette,
+    3,
+    (WA, NT, SA),
+    conj(
+        color(WA),
+        color(NT),
+        color(SA),
+        all_different(WA, NT, SA),
+        neq(WA, atom("blue")),
     ),
 )
 
-assert solve_all(family, Y, ancestor("homer", Y)) == [atom("bart"), atom("lisa")]
+assert answers
 ```
 
 ## Dependencies

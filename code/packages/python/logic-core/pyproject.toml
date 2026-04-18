@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-core"
-version = "0.1.0"
-description = "Logic programming core: terms, unification, goals, and search"
+version = "0.2.0"
+description = "Logic programming core: terms, unification, goals, search, and disequality constraints"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -25,7 +25,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP00-logic-core.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP02-disequality-constraints.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

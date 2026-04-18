@@ -306,4 +306,7 @@ members = [
   "artifact-store",
   "skill-store",
   "memory-store",
+  "window-core",
+  "window-appkit",
+  "window-win32",
 ]

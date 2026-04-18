@@ -15,6 +15,7 @@ The package provides:
 - logic variables
 - substitutions
 - unification
+- delayed disequality constraints
 - reification
 - goals
 - states
@@ -260,6 +261,7 @@ This is the relational core of the system.
 The first package version should include:
 
 - `eq(a, b)` — unify two terms
+- `neq(a, b)` — require two terms to remain different
 - `succeed()`
 - `fail()`
 - `conj(g1, g2, ...)`
@@ -277,18 +279,19 @@ Goal : State → Stream[State]
 A state should minimally contain:
 
 - current substitution
+- current disequality constraints
 - fresh-variable counter
 
 ```python
 @dataclass(frozen=True, slots=True)
 class State:
     substitution: Substitution
+    constraints: tuple[Disequality, ...]
     next_var_id: int
 ```
 
 Later extensions may add:
 
-- constraint store
 - trace / proof tree metadata
 - search depth counters
 
@@ -333,6 +336,7 @@ from logic_core import (
     atom,
     term,
     var,
+    neq,
     eq,
     conj,
     disj,
@@ -378,6 +382,7 @@ LogicVar
 Compound
 Substitution
 State
+Disequality
 
 atom(name: str | Symbol) -> Atom
 num(value: int | float) -> Number
@@ -392,6 +397,7 @@ reify(term: Term, subst: Substitution) -> Term
 succeed() -> Goal
 fail() -> Goal
 eq(left: Term, right: Term) -> Goal
+neq(left: Term, right: Term) -> Goal
 conj(*goals: Goal) -> Goal
 disj(*goals: Goal) -> Goal
 fresh(count: int, fn: Callable[..., Goal]) -> Goal
@@ -412,7 +418,7 @@ To keep the first version teachable and correct, it should not include:
 - arithmetic predicates
 - dynamic predicates (`assert`, `retract`)
 - tabling
-- CLP constraints
+- finite-domain / CLP constraints
 
 Those all belong in higher layers.
 
@@ -469,6 +475,8 @@ Required tests:
 - substitution walking resolves chains
 - reification fully resolves nested structures
 - `eq` yields one state on success and zero on failure
+- `neq` stores delayed constraints when disequality is undecided
+- `eq` rechecks stored disequalities after unification
 - conjunction threads substitutions correctly
 - disjunction yields multiple answers
 - `fresh` produces distinct variables
@@ -479,8 +487,6 @@ Required tests:
 
 - fair interleaving search in addition to depth-first search
 - proof traces / explanation trees
-- constraint store
-- disequality constraints
 - arithmetic relations
 - tabling / memoization
 - Datalog subset on the same term substrate

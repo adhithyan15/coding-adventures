@@ -144,11 +144,13 @@ This package introduces a *declarative expression layer* above LP00.
 The engine should support:
 
 - `eq(left, right)`
+- `neq(left, right)`
 - `succeed()`
 - `fail()`
 - `conj(g1, g2, ...)`
 - `disj(g1, g2, ...)`
 - `fresh(count, fn)`
+- `all_different(...)`
 - relation calls like `parent(X, Y)`
 
 Unlike LP00, these are not plain `State -> Iterator[State]` functions. They are
@@ -161,6 +163,7 @@ GoalExpr :=
     Succeed
   | Fail
   | Eq(term, term)
+  | Neq(term, term)
   | Conj(goal[])
   | Disj(goal[])
   | Fresh(vars, goal)
@@ -237,9 +240,11 @@ from logic_engine import (
     fact,
     fresh,
     logic_list,
+    neq,
     program,
     relation,
     rule,
+    all_different,
     solve_all,
     solve_n,
     term,
@@ -288,9 +293,11 @@ program(*clauses: Clause) -> Program
 succeed() -> GoalExpr
 fail() -> GoalExpr
 eq(left: object, right: object) -> GoalExpr
+neq(left: object, right: object) -> GoalExpr
 conj(*goals: GoalExpr) -> GoalExpr
 disj(*goals: GoalExpr) -> GoalExpr
 fresh(count: int, fn: Callable[..., GoalExpr]) -> GoalExpr
+all_different(*terms: object) -> GoalExpr
 
 solve(program: Program, goal: GoalExpr) -> Iterator[State]
 solve_all(program: Program, query: object | tuple[object, ...], goal: GoalExpr) -> list[Term | tuple[Term, ...]]
@@ -329,7 +336,7 @@ To keep the first engine slice focused, it should not yet include:
 - dynamic predicates (`assert`, `retract`)
 - arithmetic built-ins
 - tabling
-- constraints
+- finite-domain constraints beyond disequality
 - module systems
 
 ## Python Package Location

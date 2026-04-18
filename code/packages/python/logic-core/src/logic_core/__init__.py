@@ -26,6 +26,7 @@ from symbol_core import Symbol, sym
 __all__ = [
     "Atom",
     "Compound",
+    "Disequality",
     "Goal",
     "LogicVar",
     "Number",
@@ -41,6 +42,7 @@ __all__ = [
     "fail",
     "fresh",
     "logic_list",
+    "neq",
     "num",
     "reify",
     "run",
@@ -53,7 +55,7 @@ __all__ = [
     "var",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 @dataclass(frozen=True, slots=True)
@@ -193,7 +195,10 @@ def _coerce_term(value: object) -> Term:
     if isinstance(value, Symbol):
         return atom(value)
     if isinstance(value, bool):
-        msg = "bool values are ambiguous in logic-core; use atoms or numbers explicitly"
+        msg = (
+            "bool values are ambiguous in logic-core; use atoms or "
+            "numbers explicitly"
+        )
         raise TypeError(msg)
     if isinstance(value, int | float):
         return num(value)
@@ -263,10 +268,19 @@ class Substitution:
 
 
 @dataclass(frozen=True, slots=True)
+class Disequality:
+    """A delayed constraint that two terms must never become equal."""
+
+    left: Term
+    right: Term
+
+
+@dataclass(frozen=True, slots=True)
 class State:
     """One point in the search tree."""
 
     substitution: Substitution = field(default_factory=Substitution)
+    constraints: tuple[Disequality, ...] = ()
     next_var_id: int = 0
 
 
@@ -353,6 +367,36 @@ def reify(value: object, substitution: Substitution) -> Term:
     return walked
 
 
+def _reconcile_disequalities(
+    substitution: Substitution,
+    constraints: tuple[Disequality, ...],
+) -> tuple[Disequality, ...] | None:
+    """Re-check delayed disequalities after a substitution changes.
+
+    Each constraint falls into one of three buckets:
+
+    - violated: the two sides are equal now -> fail the whole state
+    - satisfied: the two sides can no longer unify -> drop the constraint
+    - pending: equality is still possible later -> keep a normalized copy
+    """
+
+    pending: list[Disequality] = []
+    for constraint in constraints:
+        left = reify(constraint.left, substitution)
+        right = reify(constraint.right, substitution)
+
+        if left == right:
+            return None
+
+        trial = unify(left, right, substitution)
+        if trial is None:
+            continue
+
+        pending.append(Disequality(left=left, right=right))
+
+    return tuple(pending)
+
+
 def succeed() -> Goal:
     """Return a goal that yields its input state unchanged."""
 
@@ -379,7 +423,53 @@ def eq(left: object, right: object) -> Goal:
         unified = unify(left, right, state.substitution)
         if unified is None:
             return
-        yield State(substitution=unified, next_var_id=state.next_var_id)
+        constraints = _reconcile_disequalities(unified, state.constraints)
+        if constraints is None:
+            return
+        yield State(
+            substitution=unified,
+            constraints=constraints,
+            next_var_id=state.next_var_id,
+        )
+
+    return goal
+
+
+def neq(left: object, right: object) -> Goal:
+    """Create a goal that enforces disequality, immediately or lazily.
+
+    If the terms are already provably different, the goal succeeds immediately.
+    If they are already equal, the goal fails immediately.
+    Otherwise the engine stores a delayed disequality constraint that future
+    unifications must continue to respect.
+    """
+
+    def goal(state: State) -> Iterator[State]:
+        normalized = Disequality(
+            left=reify(left, state.substitution),
+            right=reify(right, state.substitution),
+        )
+
+        if normalized.left == normalized.right:
+            return
+
+        trial = unify(normalized.left, normalized.right, state.substitution)
+        if trial is None:
+            yield state
+            return
+
+        constraints = _reconcile_disequalities(
+            state.substitution,
+            state.constraints + (normalized,),
+        )
+        if constraints is None:
+            return
+
+        yield State(
+            substitution=state.substitution,
+            constraints=constraints,
+            next_var_id=state.next_var_id,
+        )
 
     return goal
 
@@ -425,6 +515,7 @@ def fresh(count: int, fn: Callable[..., Goal]) -> Goal:
         )
         next_state = State(
             substitution=state.substitution,
+            constraints=state.constraints,
             next_var_id=state.next_var_id + count,
         )
         produced_goal = fn(*variables)

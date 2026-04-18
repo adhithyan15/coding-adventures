@@ -4,6 +4,39 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: Default to a fresh git worktree before starting substantive repo work
+
+In this repo, the main checkout often contains unrelated untracked files, active
+agent output, or in-progress specs on other branches. Trying to begin work in
+that noisy tree can block the required `git merge origin/main` step or create a
+risk of mixing unrelated changes into the feature.
+
+**Symptom:** `git merge origin/main` fails because untracked local files would be
+overwritten, or the worktree is too noisy to safely isolate a new package/spec
+change.
+
+**Rule:** Before doing substantive work, create a fresh `git worktree` from
+`origin/main` on a dedicated feature branch and do the implementation there.
+Treat this as the default, not an exception, whenever the source checkout is
+shared or noisy.
+### 2026-04-18: Dart decompressors must validate backreferences before indexing decoded output
+
+For byte-oriented compression formats like LZ77, the decoder is a trust
+boundary whenever it accepts token streams or compressed bytes from outside the
+process. A malformed token with `offset == 0` or `offset > decoded_prefix_len`
+can trigger a `RangeError` if the implementation blindly indexes into the
+already-decoded output buffer.
+
+**Symptom:** Security review flags a denial-of-service bug because `decode()`
+crashes on hostile compressed input instead of rejecting it cleanly.
+
+**Rule:** Every Dart decoder for backreference-based formats must validate
+token fields before copying. Backreferences need `offset > 0` and
+`offset <= output.length`, and malformed or truncated streams should throw
+`FormatException` rather than indexing past buffer bounds.
+
+---
+
 ### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
 Switching a Lua rockspec from `git://` to `https://` fixes transport security,
@@ -96,6 +129,21 @@ When unifying error messages for security (e.g., generic "Invalid PKCS#7 padding
 ---
 
 ### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
+
+---
+
+### 2026-04-18: Linux `epoll_event` FFI mirrors must use the kernel's packed layout
+
+The Linux kernel declares `struct epoll_event` as packed. Modeling it as a
+plain `#[repr(C)]` Rust struct can appear to work for single events but corrupt
+or drop readiness information once `epoll_wait` returns multiple events.
+
+**Symptom:** Linux CI flakes or fails in higher-level readiness tests with
+missing readable streams, even though the logic above `epoll` looks correct.
+
+**Rule:** Any Rust FFI mirror of Linux `epoll_event` must use the kernel's
+packed layout and should be covered by a test that waits on multiple ready file
+descriptors at once.
 
 When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
 
@@ -2149,6 +2197,18 @@ writing ranges like `0u .. count - 1u`.
 
 ---
 
+## Nonblocking accept tests must try `accept()` before waiting for a fresh readiness edge
+
+**Date:** 2026-04-18
+
+**What happened:** While generalising `transport-platform` provider tests across BSD, Linux, and
+Windows, an accept helper waited for a new listener-readiness event before attempting `accept()`.
+That failed on macOS because an earlier poll had already observed readiness, yet queued
+connections were still waiting to be accepted.
+
+**Rule:** In nonblocking listener tests, always attempt `accept()` first and only fall back to
+waiting for readiness when it returns `WouldBlock`. Do not require a second readiness edge before
+draining already-queued connections.
 ## `git worktree add` inherits the current checkout unless you pin the base explicitly
 
 **Date:** 2026-04-18
