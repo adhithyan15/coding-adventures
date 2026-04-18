@@ -23,6 +23,8 @@ use resp_adapter::{command_frame_from_resp, engine_response_to_resp};
 use resp_protocol::{decode, encode, RespError, RespValue};
 use tcp_runtime::{PlatformError, StopHandle, TcpHandlerResult, TcpRuntime, TcpRuntimeOptions};
 
+const MAX_BUFFERED_REQUEST_BYTES: usize = 1024 * 1024;
+
 #[cfg(any(
     target_os = "macos",
     target_os = "freebsd",
@@ -141,6 +143,13 @@ fn handle_connection_data(
     state: &mut RedisConnectionState,
     data: &[u8],
 ) -> TcpHandlerResult {
+    if state.read_buffer.len().saturating_add(data.len()) > MAX_BUFFERED_REQUEST_BYTES {
+        state.read_buffer.clear();
+        return TcpHandlerResult::write_and_close(protocol_error_response(
+            "ERR protocol error: request exceeds maximum buffered size",
+        ));
+    }
+
     state.read_buffer.extend_from_slice(data);
     let mut responses = Vec::new();
 
@@ -453,6 +462,53 @@ mod tests {
             .expect("write second fragment");
         let response = read_response(&mut stream).expect("read pong");
         assert_eq!(response, RespValue::SimpleString("PONG".to_string()));
+
+        server.stop();
+        handle.join().expect("server thread").expect("server exit");
+    }
+
+    #[test]
+    fn closes_connections_with_an_error_when_buffered_input_exceeds_the_cap() {
+        let (server, handle, addr) = start_server();
+        let mut stream = connect_with_retries(addr).expect("connect");
+
+        let oversized = MAX_BUFFERED_REQUEST_BYTES + 1;
+        let header = format!("*1\r\n${oversized}\r\n");
+        stream
+            .write_all(header.as_bytes())
+            .expect("write oversized header");
+
+        let first_chunk = vec![b'a'; MAX_BUFFERED_REQUEST_BYTES - header.len()];
+        stream.write_all(&first_chunk).expect("write first chunk");
+        let final_chunk = [b'b'; 1];
+        stream.write_all(&final_chunk).expect("write overflow byte");
+
+        let response = read_response(&mut stream).expect("read oversized error");
+        assert_eq!(
+            response,
+            RespValue::Error(RespError::new(
+                "ERR protocol error: request exceeds maximum buffered size"
+            ))
+        );
+
+        let mut probe = [0u8; 1];
+        match stream.read(&mut probe) {
+            Ok(0) => {}
+            Ok(_) => panic!("server should close after rejecting an oversized request"),
+            Err(err) => {
+                assert!(
+                    matches!(
+                        err.kind(),
+                        ErrorKind::WouldBlock
+                            | ErrorKind::TimedOut
+                            | ErrorKind::BrokenPipe
+                            | ErrorKind::ConnectionReset
+                            | ErrorKind::UnexpectedEof
+                    ),
+                    "expected close-like behavior after oversized request, got {err}"
+                );
+            }
+        }
 
         server.stop();
         handle.join().expect("server thread").expect("server exit");

@@ -2430,3 +2430,19 @@ shared across parallel package builds.
 directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
 `DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
 uses temp-backed shared-memory state during first-run migrations.
+
+---
+
+## Stateful TCP protocol servers must cap incomplete per-connection input buffers
+
+**Date:** 2026-04-18
+
+**What happened:** While preparing the `mini-redis` migration onto `tcp-runtime` for push, security
+review caught that the new per-connection RESP session state buffered partial frames in a `Vec<u8>`
+with no maximum size. A client could hold a socket open and stream an incomplete array or bulk
+string forever, causing unbounded heap growth and eventual process OOM.
+
+**Rule:** Any TCP server in this repo that buffers partial protocol frames per connection must enforce
+an explicit maximum buffered-input size. When a client exceeds that cap, clear the buffered state,
+return a protocol error when possible, and close the connection instead of allowing unbounded memory
+growth.

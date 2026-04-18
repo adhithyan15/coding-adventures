@@ -34,3 +34,5 @@ All notable changes to this package will be documented in this file.
 
 - cross-target compile coverage for the new `tcp-runtime`-backed server on
   Linux and Windows targets
+- a bounded per-connection buffered-input cap so incomplete RESP frames cannot
+  grow memory without limit
