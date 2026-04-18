@@ -20,8 +20,10 @@ __all__ = [
     "conso",
     "emptyo",
     "heado",
+    "listo",
     "membero",
     "permuteo",
+    "reverseo",
     "selecto",
     "tailo",
 ]
@@ -49,6 +51,27 @@ def tailo(items: object, tail: object) -> GoalExpr:
     """Relate ``tail`` to everything after the first element of a list."""
 
     return fresh(1, lambda head: conso(head, tail, items))
+
+
+def listo(value: object) -> GoalExpr:
+    """Succeed exactly when ``value`` is a proper finite list.
+
+    A canonical list is either:
+
+    - the empty list ``[]``
+    - or a cons cell whose tail is itself a proper list
+    """
+
+    return disj(
+        emptyo(value),
+        fresh(
+            2,
+            lambda head, tail: conj(
+                conso(head, tail, value),
+                defer(listo, tail),
+            ),
+        ),
+    )
 
 
 def membero(member: object, items: object) -> GoalExpr:
@@ -119,6 +142,22 @@ def permuteo(items: object, permutation: object) -> GoalExpr:
                 selecto(head, items, remaining),
                 conso(head, perm_tail, permutation),
                 defer(permuteo, remaining, perm_tail),
+            ),
+        ),
+    )
+
+
+def reverseo(items: object, reversed_items: object) -> GoalExpr:
+    """Relate ``reversed_items`` to the reverse ordering of ``items``."""
+
+    return disj(
+        conj(emptyo(items), emptyo(reversed_items)),
+        fresh(
+            3,
+            lambda head, tail, reversed_tail: conj(
+                conso(head, tail, items),
+                defer(reverseo, tail, reversed_tail),
+                appendo(reversed_tail, logic_list([head]), reversed_items),
             ),
         ),
     )
