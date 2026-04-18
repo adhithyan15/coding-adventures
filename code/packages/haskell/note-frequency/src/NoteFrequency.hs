@@ -67,18 +67,20 @@ frequency :: Note -> Double
 frequency note = 440.0 * 2 ** (fromIntegral (semitonesFromA4 note) / 12.0)
 
 parseNote :: String -> Either String Note
-parseNote [] = Left invalidShape
-parseNote (rawLetter:rest)
-    | canonicalLetter `notElem` "ABCDEFG" = Left invalidShape
-    | otherwise = do
-        let (accidentalValue, octaveText) = case rest of
-                '#':xs -> ("#", xs)
-                'b':xs -> ("b", xs)
-                xs     -> ("", xs)
-        octaveValue <- maybe (Left invalidShape) Right (readMaybe octaveText)
-        createNote canonicalLetter accidentalValue octaveValue
+parseNote input = case input of
+    [] -> Left invalidShape
+    (rawLetter:rest) ->
+        let canonicalLetter = toUpper rawLetter
+        in if canonicalLetter `notElem` "ABCDEFG"
+           then Left invalidShape
+           else do
+            let (accidentalValue, octaveText) = case rest of
+                    '#':xs -> ("#", xs)
+                    'b':xs -> ("b", xs)
+                    xs     -> ("", xs)
+            octaveValue <- maybe (Left invalidShape) Right (readMaybe octaveText)
+            createNote canonicalLetter accidentalValue octaveValue
   where
-    canonicalLetter = toUpper rawLetter
     invalidShape = "Invalid note. Expected <letter><optional # or b><octave>, for example 'A4', 'C#5', or 'Db3'."
 
 noteToFrequency :: String -> Either String Double
