@@ -2579,6 +2579,21 @@ decode error.
 **Rule:** Any Python decoder for bytecode, constant pools, or table-indexed formats must reject
 negative indexes before indexing. Do not rely on `IndexError` alone for bounds validation, because
 Python sequence semantics treat negative values as valid offsets from the end.
+
+---
+
+## Zero-length decoders must validate the full canonical empty encoding
+
+**Date:** 2026-04-18
+
+**What happened:** The first Dart `deflate` decoder returned immediately when the declared output
+length was zero. That skipped the normal end-of-stream validation, so malformed payloads could add
+extra bytes after the empty end-of-block marker and still be accepted as a valid empty stream.
+
+**Rule:** For compressed or serialized formats with a canonical empty representation, zero-length
+decoders must validate the entire empty encoding, not just the declared output length. Reject any
+extra table entries, payload bits, or trailing bytes before returning success.
+
 ## Lua BUILD validators require declared local deps and `--deps-mode=none` consistency
 
 **Date:** 2026-04-18
