@@ -1,0 +1,439 @@
+//! # tcp-runtime
+//!
+//! TCP-specific runtime layer above `stream-reactor`.
+//!
+//! `stream-reactor` owns generic byte-stream progression. This crate adds the
+//! TCP-facing surface that application servers want to depend on: listener
+//! options, stream options, concrete connection metadata, and host-OS
+//! convenience constructors.
+
+use std::net::{SocketAddr, ToSocketAddrs};
+use std::sync::{Arc, OnceLock};
+use std::time::Duration;
+
+pub use stream_reactor::{ConnectionId, StopHandle};
+use stream_reactor::{
+    StreamConnectionInfo, StreamHandlerResult, StreamReactor, StreamReactorOptions,
+};
+use transport_platform::TransportPlatform;
+pub use transport_platform::{BindAddress, ListenerOptions, PlatformError, StreamOptions};
+
+/// `TcpConnectionInfo` is the TCP-flavored metadata that handlers see for each
+/// read chunk. It includes both sides of the socket so protocols can log,
+/// route, or enforce policy without consulting lower layers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TcpConnectionInfo {
+    pub id: ConnectionId,
+    pub peer_addr: SocketAddr,
+    pub local_addr: SocketAddr,
+}
+
+/// `TcpHandlerResult` keeps the phase-one handler contract intentionally small:
+/// queue these bytes, and optionally close once the queued output drains.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct TcpHandlerResult {
+    pub write: Vec<u8>,
+    pub close: bool,
+}
+
+impl TcpHandlerResult {
+    pub fn write(bytes: impl Into<Vec<u8>>) -> Self {
+        Self {
+            write: bytes.into(),
+            close: false,
+        }
+    }
+
+    pub const fn close() -> Self {
+        Self {
+            write: Vec::new(),
+            close: true,
+        }
+    }
+
+    pub fn write_and_close(bytes: impl Into<Vec<u8>>) -> Self {
+        Self {
+            write: bytes.into(),
+            close: true,
+        }
+    }
+}
+
+/// `TcpRuntimeOptions` is the TCP policy surface that callers configure.
+/// Listener options feed binding defaults, stream options shape accepted socket
+/// policy, and the remaining knobs forward into the generic stream runtime.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TcpRuntimeOptions {
+    pub listener: ListenerOptions,
+    pub stream: StreamOptions,
+    pub read_buffer_size: usize,
+    pub max_connections: usize,
+    pub max_pending_write_bytes: usize,
+    pub poll_timeout: Duration,
+}
+
+impl Default for TcpRuntimeOptions {
+    fn default() -> Self {
+        let defaults = StreamReactorOptions::default();
+        Self {
+            listener: defaults.listener,
+            stream: defaults.stream,
+            read_buffer_size: defaults.read_buffer_size,
+            max_connections: defaults.max_connections,
+            max_pending_write_bytes: defaults.max_pending_write_bytes,
+            poll_timeout: defaults.poll_timeout,
+        }
+    }
+}
+
+impl From<TcpRuntimeOptions> for StreamReactorOptions {
+    fn from(value: TcpRuntimeOptions) -> Self {
+        Self {
+            listener: value.listener,
+            stream: value.stream,
+            read_buffer_size: value.read_buffer_size,
+            max_connections: value.max_connections,
+            max_pending_write_bytes: value.max_pending_write_bytes,
+            poll_timeout: value.poll_timeout,
+        }
+    }
+}
+
+pub struct TcpRuntime<P> {
+    reactor: StreamReactor<P>,
+    local_addr: SocketAddr,
+}
+
+impl<P: TransportPlatform> TcpRuntime<P> {
+    pub fn bind<F>(
+        platform: P,
+        address: BindAddress,
+        options: TcpRuntimeOptions,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        // The listener address is only known after bind succeeds, so a small
+        // one-time cell bridges that value into the per-read handler closure.
+        let local_addr_cell = Arc::new(OnceLock::new());
+        let handler_local_addr = Arc::clone(&local_addr_cell);
+
+        let reactor = StreamReactor::bind(
+            platform,
+            address,
+            options.into(),
+            move |info: StreamConnectionInfo, bytes: &[u8]| {
+                let local_addr = *handler_local_addr
+                    .get()
+                    .expect("tcp-runtime initializes the local listener address before serving");
+                let result = handler(
+                    TcpConnectionInfo {
+                        id: info.id,
+                        peer_addr: info.peer_addr,
+                        local_addr,
+                    },
+                    bytes,
+                );
+                StreamHandlerResult {
+                    write: result.write,
+                    close: result.close,
+                }
+            },
+        )?;
+
+        let local_addr = reactor.local_addr();
+        local_addr_cell
+            .set(local_addr)
+            .expect("local listener address should be set exactly once");
+
+        Ok(Self {
+            reactor,
+            local_addr,
+        })
+    }
+
+    pub fn set_max_connections(&mut self, max_connections: usize) {
+        self.reactor.set_max_connections(max_connections);
+    }
+
+    pub fn set_max_pending_write_bytes(&mut self, max_pending_write_bytes: usize) {
+        self.reactor
+            .set_max_pending_write_bytes(max_pending_write_bytes);
+    }
+
+    pub fn local_addr(&self) -> SocketAddr {
+        self.local_addr
+    }
+
+    pub fn stop_handle(&self) -> StopHandle {
+        self.reactor.stop_handle()
+    }
+
+    pub fn serve(&mut self) -> Result<(), PlatformError> {
+        self.reactor.serve()
+    }
+}
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+impl TcpRuntime<transport_platform::bsd::KqueueTransportPlatform> {
+    pub fn bind_kqueue<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        let address = resolve_first_socket_addr(addr)?;
+        let platform = transport_platform::bsd::KqueueTransportPlatform::new()?;
+        Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+}
+
+#[cfg(target_os = "linux")]
+impl TcpRuntime<transport_platform::linux::EpollTransportPlatform> {
+    pub fn bind_epoll<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        let address = resolve_first_socket_addr(addr)?;
+        let platform = transport_platform::linux::EpollTransportPlatform::new()?;
+        Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl TcpRuntime<transport_platform::windows::WindowsTransportPlatform> {
+    pub fn bind_windows<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        let address = resolve_first_socket_addr(addr)?;
+        let platform = transport_platform::windows::WindowsTransportPlatform::new()?;
+        Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+}
+
+fn resolve_first_socket_addr<A: ToSocketAddrs>(addr: A) -> Result<SocketAddr, PlatformError> {
+    addr.to_socket_addrs()
+        .map_err(PlatformError::from)?
+        .next()
+        .ok_or_else(|| PlatformError::Io("no socket addresses resolved".into()))
+}
+
+#[cfg(all(
+    test,
+    any(
+        target_os = "macos",
+        target_os = "freebsd",
+        target_os = "openbsd",
+        target_os = "netbsd",
+        target_os = "dragonfly"
+    )
+))]
+mod tests {
+    use super::*;
+    use std::io::{self, Read, Write};
+    use std::net::{Shutdown, TcpStream};
+    use std::sync::{Arc, Barrier, Mutex};
+    use std::thread;
+
+    #[test]
+    fn serves_many_concurrent_echo_clients_without_crashing() {
+        let mut runtime = TcpRuntime::bind_kqueue(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            |_, bytes| TcpHandlerResult::write(bytes.to_vec()),
+        )
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let client_count = 24usize;
+        let barrier = Arc::new(Barrier::new(client_count));
+        let mut clients = Vec::new();
+
+        for i in 0..client_count {
+            let barrier = Arc::clone(&barrier);
+            clients.push(thread::spawn(move || -> Result<Vec<u8>, String> {
+                barrier.wait();
+                let mut stream = TcpStream::connect(addr).map_err(|e| e.to_string())?;
+                let payload = format!("client-{i}-payload").into_bytes();
+                stream.write_all(&payload).map_err(|e| e.to_string())?;
+                stream
+                    .shutdown(Shutdown::Write)
+                    .map_err(|e| e.to_string())?;
+
+                let mut echoed = Vec::new();
+                stream.read_to_end(&mut echoed).map_err(|e| e.to_string())?;
+                Ok(echoed)
+            }));
+        }
+
+        for (i, client) in clients.into_iter().enumerate() {
+            let echoed = client.join().expect("client thread").expect("client io");
+            assert_eq!(echoed, format!("client-{i}-payload").into_bytes());
+        }
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn handler_receives_the_listener_local_address() {
+        let seen = Arc::new(Mutex::new(Vec::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let mut runtime = TcpRuntime::bind_kqueue(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            move |info, bytes| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.local_addr);
+                TcpHandlerResult::write(bytes.to_vec())
+            },
+        )
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"local-address").expect("write request");
+        client.shutdown(Shutdown::Write).expect("shutdown write");
+
+        let mut echoed = Vec::new();
+        client.read_to_end(&mut echoed).expect("read echoed bytes");
+        assert_eq!(echoed, b"local-address");
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+
+        let seen = seen.lock().expect("seen mutex poisoned");
+        assert!(
+            !seen.is_empty(),
+            "handler should record at least one local address"
+        );
+        assert!(seen.iter().all(|candidate| *candidate == addr));
+    }
+
+    #[test]
+    fn rejects_connections_above_the_configured_cap() {
+        let options = TcpRuntimeOptions {
+            max_connections: 2,
+            ..TcpRuntimeOptions::default()
+        };
+        let mut runtime = TcpRuntime::bind_kqueue(("127.0.0.1", 0), options, |_, bytes| {
+            TcpHandlerResult::write(bytes.to_vec())
+        })
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let _client_a = TcpStream::connect(addr).expect("connect a");
+        let _client_b = TcpStream::connect(addr).expect("connect b");
+        thread::sleep(Duration::from_millis(50));
+
+        let mut client_c = TcpStream::connect(addr).expect("connect c");
+        let outcome = attempt_round_trip(&mut client_c, b"overflow");
+        match outcome {
+            Ok(response) => assert_ne!(response, b"overflow"),
+            Err(err) => assert!(matches!(
+                err.kind(),
+                io::ErrorKind::BrokenPipe
+                    | io::ErrorKind::ConnectionReset
+                    | io::ErrorKind::ConnectionAborted
+                    | io::ErrorKind::NotConnected
+            )),
+        }
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn closes_connections_that_exceed_the_pending_write_budget() {
+        let options = TcpRuntimeOptions {
+            max_pending_write_bytes: 32,
+            ..TcpRuntimeOptions::default()
+        };
+        let mut runtime = TcpRuntime::bind_kqueue(("127.0.0.1", 0), options, |_, _| {
+            TcpHandlerResult::write(vec![1u8; 64])
+        })
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        let outcome = attempt_round_trip(&mut client, b"trigger");
+        match outcome {
+            Ok(response) => assert_ne!(response, vec![1u8; 64]),
+            Err(err) => assert!(matches!(
+                err.kind(),
+                io::ErrorKind::BrokenPipe
+                    | io::ErrorKind::ConnectionReset
+                    | io::ErrorKind::ConnectionAborted
+                    | io::ErrorKind::NotConnected
+            )),
+        }
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn stop_handle_shuts_down_the_server() {
+        let mut runtime = TcpRuntime::bind_kqueue(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            |_, bytes| TcpHandlerResult::write(bytes.to_vec()),
+        )
+        .expect("bind");
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+        thread::sleep(Duration::from_millis(20));
+        stop.stop();
+
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    fn attempt_round_trip(stream: &mut TcpStream, payload: &[u8]) -> io::Result<Vec<u8>> {
+        stream.write_all(payload)?;
+        stream.shutdown(Shutdown::Write)?;
+        let mut response = Vec::new();
+        stream.read_to_end(&mut response)?;
+        Ok(response)
+    }
+}
