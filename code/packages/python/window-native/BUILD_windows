@@ -1,0 +1,6 @@
+python -m venv .venv --clear
+.venv\Scripts\pip install pytest pytest-cov ruff --quiet
+cargo build --release
+if exist target\release\window_native.dll copy target\release\window_native.dll src\window_native\window_native.pyd
+set PYTHONPATH=src&& .venv\Scripts\python -m ruff check src tests
+set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v
