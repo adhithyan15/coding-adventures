@@ -76,3 +76,11 @@ module CommonmarkParserTests =
     let ``parse rejects excessive block nesting`` () =
         let deeplyNested = String.replicate 65 "> " + "boom"
         Assert.Throws<InvalidOperationException>(fun () -> CommonmarkParser.Parse deeplyNested |> ignore)
+
+    [<Fact>]
+    let ``parse treats oversized ordered marker as paragraph`` () =
+        let doc = CommonmarkParser.Parse "999999999999999999999. item"
+
+        match doc.Children with
+        | [ ParagraphNode [ TextNode value ] ] -> Assert.Contains("999999999999999999999. item", value)
+        | _ -> Assert.Fail("Expected paragraph")

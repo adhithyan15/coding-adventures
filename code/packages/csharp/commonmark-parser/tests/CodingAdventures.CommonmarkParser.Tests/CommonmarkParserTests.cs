@@ -91,4 +91,12 @@ public class CommonmarkParserTests
         var deeplyNested = string.Concat(Enumerable.Repeat("> ", 65)) + "boom";
         Assert.Throws<InvalidOperationException>(() => CommonmarkParser.Parse(deeplyNested));
     }
+
+    [Fact]
+    public void Parse_TreatsOversizedOrderedMarkerAsParagraph()
+    {
+        var doc = CommonmarkParser.Parse("999999999999999999999. item");
+        var paragraph = Assert.IsType<ParagraphNode>(Assert.Single(doc.Children));
+        Assert.Contains(paragraph.Children, node => node is TextNode text && text.Value.Contains("999999999999999999999. item"));
+    }
 }

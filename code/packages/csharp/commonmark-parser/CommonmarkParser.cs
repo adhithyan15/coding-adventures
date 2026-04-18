@@ -420,8 +420,16 @@ internal sealed partial class BlockParser
         var orderedMatch = OrderedListRegex.Match(line);
         if (orderedMatch.Success)
         {
+            if (!int.TryParse(orderedMatch.Groups["num"].Value, out var parsedStart))
+            {
+                ordered = false;
+                start = 0;
+                text = string.Empty;
+                return false;
+            }
+
             ordered = true;
-            start = int.Parse(orderedMatch.Groups["num"].Value);
+            start = parsedStart;
             text = orderedMatch.Groups["text"].Value;
             return true;
         }

@@ -1902,3 +1902,17 @@ graphs, so simultaneous `dotnet test` runs raced on shared `obj/` files like
 **Rule:** When multiple .NET packages in the repo can build the same transitive project graph in
 parallel, their `BUILD` scripts must use `dotnet test --artifacts-path .artifacts` (or an equivalent
 isolated artifacts path) so each package invocation gets its own build outputs and intermediate files.
+
+---
+
+## Markdown ordered-list markers must parse integers without throwing
+
+**Date:** 2026-04-17
+
+**What happened:** The C# and F# CommonMark parsers used direct `int.Parse` conversion for ordered
+list markers. Extremely large numeric markers like `999999999999999999999. item` caused overflow
+exceptions instead of being treated as non-list input.
+
+**Rule:** When parsing user-controlled numeric tokens in language tooling, use `TryParse`-style
+conversion and treat overflow as invalid syntax or plain text. Never let oversized numeric literals
+crash the parser.

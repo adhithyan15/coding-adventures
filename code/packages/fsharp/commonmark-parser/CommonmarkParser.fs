@@ -38,7 +38,9 @@ module private Common =
     let tryParseListItemStart (line: string) =
         let orderedMatch = orderedListRegex.Match(line)
         if orderedMatch.Success then
-            Some(true, int orderedMatch.Groups["num"].Value, orderedMatch.Groups["text"].Value)
+            match Int32.TryParse orderedMatch.Groups["num"].Value with
+            | true, parsedStart -> Some(true, parsedStart, orderedMatch.Groups["text"].Value)
+            | false, _ -> None
         else
             let bulletMatch = bulletListRegex.Match(line)
             if bulletMatch.Success then
