@@ -10,6 +10,7 @@ that make relational programs feel like programs:
 - facts and rules
 - immutable clause databases
 - recursive solving with depth-first backtracking
+- deferred recursive goal builders via `defer(...)`
 - disequality constraints via `neq(...)`
 - `all_different(...)` for small puzzle-style searches
 - end-to-end query helpers like `solve_all()` and `solve_n()`
