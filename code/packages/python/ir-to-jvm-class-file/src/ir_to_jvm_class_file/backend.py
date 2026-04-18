@@ -62,6 +62,7 @@ _OP_ISHL = 0x78
 _OP_ISHR = 0x7A
 _OP_IAND = 0x7E
 _OP_IOR = 0x80
+_OP_I2B = 0x91
 _OP_IFEQ = 0x99
 _OP_IFNE = 0x9A
 _OP_IF_ICMPEQ = 0x9F
@@ -90,12 +91,14 @@ _DESC_NOARGS_INT = "()I"
 _DESC_NOARGS_VOID = "()V"
 _DESC_INT_TO_INT = "(I)I"
 _DESC_INT_INT_TO_VOID = "(II)V"
+_DESC_ARRAYS_FILL_BYTE_RANGE = "([BIIB)V"
 _DESC_PRINTSTREAM_WRITE = "(I)V"
 _DESC_INPUTSTREAM_READ = "()I"
 
 _JAVA_BINARY_NAME_RE = re.compile(
     r"[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*"
 )
+_MAX_STATIC_DATA_BYTES = 16 * 1024 * 1024
 
 
 class JvmBackendError(ValueError):
@@ -479,6 +482,11 @@ class _JvmClassLowerer:
                 raise JvmBackendError(f"Negative data size for {declaration.label!r}")
             offsets[declaration.label] = offset
             offset += declaration.size
+            if offset > _MAX_STATIC_DATA_BYTES:
+                raise JvmBackendError(
+                    "Total static data exceeds the JVM backend limit of "
+                    f"{_MAX_STATIC_DATA_BYTES} bytes"
+                )
         return offsets
 
     def _max_register_index(self) -> int:
@@ -573,19 +581,15 @@ class _JvmClassLowerer:
         )
 
         for declaration in self.program.data:
-            if declaration.init == 0:
+            if declaration.init == 0 or declaration.size == 0:
                 continue
             start = data_offsets[declaration.label]
-            for offset in range(declaration.size):
-                self._emit_push_int(builder, start + offset)
-                self._emit_push_int(builder, declaration.init)
-                builder.emit_u2_instruction(
-                    _OP_INVOKESTATIC,
-                    self._method_ref(
-                        self._helper_mem_store_byte,
-                        _DESC_INT_INT_TO_VOID,
-                    ),
-                )
+            self._emit_fill_byte_range(
+                builder,
+                start=start,
+                size=declaration.size,
+                value=declaration.init,
+            )
 
         builder.emit_opcode(_OP_RETURN)
         return _MethodSpec(
@@ -632,6 +636,31 @@ class _JvmClassLowerer:
             code=builder.assemble(),
             max_stack=3,
             max_locals=2,
+        )
+
+    def _emit_fill_byte_range(
+        self,
+        builder: _BytecodeBuilder,
+        *,
+        start: int,
+        size: int,
+        value: int,
+    ) -> None:
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._helper_mem_field, _DESC_BYTE_ARRAY),
+        )
+        self._emit_push_int(builder, start)
+        self._emit_push_int(builder, start + size)
+        self._emit_push_int(builder, value)
+        builder.emit_opcode(_OP_I2B)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self.cp.method_ref(
+                "java/util/Arrays",
+                "fill",
+                _DESC_ARRAYS_FILL_BYTE_RANGE,
+            ),
         )
 
     def _build_mem_load_byte_method(self) -> _MethodSpec:

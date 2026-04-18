@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+from compiler_ir import IrDataDecl
 from jvm_class_file import parse_class_file
 
 from ir_to_jvm_class_file import (
@@ -117,6 +118,17 @@ def test_write_class_file_rejects_symlinked_parent_directory() -> None:
         os.symlink(sink, Path(tempdir) / "demo")
         with pytest.raises(JvmBackendError, match="symlinked or invalid directory"):
             write_class_file(artifact, tempdir)
+
+
+def test_large_static_data_is_rejected() -> None:
+    program = _simple_program()
+    program.add_data(IrDataDecl(label="huge", size=(16 * 1024 * 1024) + 1, init=1))
+
+    with pytest.raises(JvmBackendError, match="Total static data exceeds"):
+        lower_ir_to_jvm_class_file(
+            program=program,
+            config=JvmBackendConfig(class_name="TooMuchData"),
+        )
 
 
 @pytest.mark.skipif(

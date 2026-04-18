@@ -23,3 +23,6 @@
 - Rewrite `write_class_file()` to anchor output writes on directory file
   descriptors and reject symlinked path components, closing a symlink-race
   overwrite hole in the original output-path validation.
+- Bound total static data size and switch non-zero data initialization to
+  compact `java.util.Arrays.fill()` range calls so hostile IR cannot explode
+  the generated class initializer into a denial-of-service sized method body.
