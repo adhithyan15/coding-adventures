@@ -2553,6 +2553,18 @@ uses temp-backed shared-memory state during first-run migrations.
 
 ---
 
+## Python bytecode or pool decoders must reject negative indexes explicitly
+
+**Date:** 2026-04-18
+
+**What happened:** The first `logic-bytecode` decoder used tuple indexing inside `_pool_get()` and
+relied on catching `IndexError` for bounds checks. Python accepts negative sequence indexes, so
+malformed bytecode like `operand=-1` silently resolved to the last pool entry instead of raising a
+decode error.
+
+**Rule:** Any Python decoder for bytecode, constant pools, or table-indexed formats must reject
+negative indexes before indexing. Do not rely on `IndexError` alone for bounds validation, because
+Python sequence semantics treat negative values as valid offsets from the end.
 ## Lua BUILD validators require declared local deps and `--deps-mode=none` consistency
 
 **Date:** 2026-04-18
