@@ -139,6 +139,21 @@ This backend is intentionally implemented in pure TypeScript rather than in a
 Rust crate. Node-based TypeScript can call the Rust native backends; the pure
 browser path should stay browser-native.
 
+### `window-c` (Rust C ABI)
+
+Native bridge foundation for languages that already consume repository-owned C
+wrappers.
+
+Responsibilities:
+
+- expose a stable C ABI over the shared `window-core` model
+- translate plain C structs into `WindowAttributes`
+- create native windows through `window-appkit` on Apple platforms today
+- reserve the same ABI for Win32-backed creation once `window-win32` grows real
+  native creation
+- give Go, Swift, C#, F#, and other C-interop languages one backend-neutral
+  entry point
+
 ### Future Backends
 
 - `window-wayland`
@@ -146,6 +161,70 @@ browser path should stay browser-native.
 
 Linux is intentionally deferred because "Linux windowing" is not one thing.
 Wayland and X11 deserve honest backends, not a rushed false abstraction.
+
+---
+
+## Polyglot Package Families
+
+This repository now treats windowing as a package family rather than as a
+Rust-only API.
+
+### Shared Contract Packages
+
+Every language may ship a `window-core` package that mirrors the repository
+contract:
+
+- identity types like `WindowId`
+- logical and physical size structs
+- `SurfacePreference`
+- `MountTarget`
+- `WindowAttributes` and builder validation
+- normalized `WindowEvent` values
+- render-target tags and backend-neutral errors
+
+These packages do not need native interop in order to be useful. They are the
+shared semantic layer.
+
+### Runtime-Bridge Native Packages
+
+Languages with existing runtime-specific Rust bridge crates should add native
+window packages that preserve the same contract while delegating native work to
+Rust:
+
+- Python via `python-bridge`
+- Ruby via `ruby-bridge`
+- Lua via `lua-bridge`
+- Perl via `perl-bridge`
+- Node/TypeScript-on-Node via `node-bridge`
+- Elixir via `erl-nif-bridge`
+
+These packages should expose the same concepts as `window-core`, but the native
+object lifetime is owned by the runtime-specific bridge layer rather than by a
+C ABI.
+
+### C-Interop Native Packages
+
+Languages that already wrap repository-owned C shims should build on
+`window-c`:
+
+- Go
+- Swift
+- C#
+- F#
+
+These ports should not talk directly to Objective-C or Win32 from every
+language package. The Rust `window-c` shim is the stable native seam.
+
+### Pure Browser Package
+
+The browser implementation is special:
+
+- `window-canvas` is pure TypeScript
+- it does not go through Rust
+- it still mirrors the same `window-core` contract and `WindowEvent` meanings
+
+This preserves one abstraction while respecting the browser's actual runtime
+model.
 
 ---
 
@@ -379,6 +458,33 @@ each mounted canvas is one window host.
 
 ---
 
+## C ABI Shape
+
+The first C wrapper is intentionally small and backend-neutral.
+
+It owns:
+
+- C enums mirroring `SurfacePreference`
+- C enums describing mount-target kind and render-target kind
+- POD structs for logical size, physical size, and attributes
+- opaque window handles
+- error retrieval through a thread-local last-error message function
+
+The initial exported operations are:
+
+- create a native window on the current platform
+- query id, logical size, physical size, and scale factor
+- request redraw
+- set title
+- set visibility
+- inspect the render-target kind
+- retrieve platform-specific target payloads when available
+
+This ABI is not the widget toolkit. It is the portable seam that lets higher
+level language packages start creating and managing native presentation hosts.
+
+---
+
 ## Phased Delivery
 
 ### Phase 1
@@ -392,12 +498,21 @@ each mounted canvas is one window host.
 
 ### Phase 2
 
-- wire native creation and event translation for AppKit and Win32
+- add `window-c`
+- implement the pure TypeScript `window-core` and `window-canvas` packages
+- wire browser mount handling, DPR synchronization, and normalized DOM events
+- expose macOS native creation through the C ABI
 - refactor existing macOS window display crates to consume `window-appkit`
-- implement the pure TypeScript `window-canvas` backend against the same
-  contract
 
 ### Phase 3
+
+- add language-level `window-core` mirrors in the supported package families
+- add bridge-backed native packages for Python, Ruby, Lua, Perl, Node, and
+  Elixir
+- add C-interop native packages for Go, Swift, C#, and F#
+- wire native creation and event translation for Win32 through the same seams
+
+### Phase 4
 
 - add Wayland and/or X11 backends
 - integrate more advanced lifecycle, IME, clipboard, and accessibility support
@@ -423,7 +538,13 @@ each mounted canvas is one window host.
 
 - TypeScript unit tests for mount-target logic and backing-store size
   synchronization math
-- TypeScript browser tests later for DOM event translation
+- TypeScript unit tests for normalized DOM event translation and redraw
+  scheduling
+
+### C ABI
+
+- Rust unit tests for C-struct conversion and error propagation
+- platform-gated smoke tests for native window creation where available
 
 ---
 
