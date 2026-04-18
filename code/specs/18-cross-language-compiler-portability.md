@@ -96,8 +96,15 @@ For the JVM lane, portability should follow the same honesty rule as the rest
 of the compiler stack:
 
 - Python is allowed to be the first source-of-truth implementation
+- Go now has the first truthful portability foothold through `jvm-class-file`
 - other implementation buckets should not grow `brainfuck-jvm-compiler` or
   `nib-jvm-compiler` wrappers until they also have a real local
   `ir-to-jvm-class-file`
 - orchestration packages should sit on top of a real backend in the same
   language bucket, not shell out to Python behind the user's back
+
+That means the next Go JVM step should be:
+
+```text
+compiler-ir -> ir-to-jvm-class-file -> jvm-class-file -> .class
+```

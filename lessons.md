@@ -2075,6 +2075,34 @@ empty-input path into a huge bogus loop range and causing an `ArgumentOutOfRange
 
 ---
 
+## Recursive local functions in Go need a `var` declaration before assignment
+
+**Date:** 2026-04-18
+
+**What happened:** A new Go `jvm-class-file` helper used `addConstant := func(...)` and then called
+`addConstant(...)` recursively inside its own body to normalize `int` to `int32`. Go does not let a
+function literal declared with short assignment refer to that identifier recursively during its own
+initialization, so `go test`/`go vet` failed with `undefined: addConstant`.
+
+**Rule:** When a local Go helper needs recursion, declare it in two steps:
+  `var addConstant func(...) (...)`
+  `addConstant = func(...) (...) { ... addConstant(...) ... }`
+
+---
+
+## Go binary parsers must validate attacker-controlled lengths before `int` conversion
+
+**Date:** 2026-04-18
+
+**What happened:** A new Go JVM class-file parser converted `u4` payload lengths straight to
+platform `int` and let nested `Code` attributes recurse as though they were method-level code.
+On malformed input, that combination can turn bogus lengths into slice panics on 32-bit builds or
+drive stack growth through unbounded recursive attribute parsing.
+
+**Rule:** In Go binary parsers, never cast attacker-controlled lengths to `int` until they pass an
+explicit host-capacity check, and never recursively decode nested structures unless the format
+requires it. When an attribute is only meaningful at one structural level, treat deeper copies as
+opaque bytes.
 ## C# tests using `BinaryPrimitives` need an explicit `using System.Buffers.Binary`
 
 **Date:** 2026-04-18
