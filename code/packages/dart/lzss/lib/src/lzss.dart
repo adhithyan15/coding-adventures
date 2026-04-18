@@ -9,6 +9,13 @@ const int defaultMaxMatch = 255;
 /// Default minimum profitable match length used by the CMP02 specification.
 const int defaultMinMatch = 3;
 
+/// Default upper bound for output declared by untrusted compressed payloads.
+///
+/// LZSS is cheap to parse but potentially expensive to expand. Capping the
+/// declared output size keeps a hostile header from forcing the decoder to
+/// allocate an arbitrarily large result.
+const int defaultMaxDecompressedSize = 64 * 1024 * 1024;
+
 /// A single LZSS token in the teaching-friendly token stream.
 ///
 /// LZSS alternates between two ideas:
@@ -77,8 +84,9 @@ Match match(int offset, int length) => Match(offset, length);
 ) {
   var bestOffset = 0;
   var bestLength = 0;
-  final lookaheadEnd =
-      cursor + maxMatch < data.length ? cursor + maxMatch : data.length;
+  final lookaheadEnd = cursor + maxMatch < data.length
+      ? cursor + maxMatch
+      : data.length;
 
   for (var position = windowStart; position < cursor; position += 1) {
     var length = 0;
@@ -240,7 +248,12 @@ Uint8List serialiseTokens(List<Token> tokens, int originalLength) {
 /// The header tells us how many blocks to expect, while [originalLength] tells
 /// us when the final partial block has described enough output. Together these
 /// checks let the parser fail closed on truncated, padded, or overlong data.
-({List<Token> tokens, int originalLength}) deserialiseTokens(Uint8List data) {
+({List<Token> tokens, int originalLength}) deserialiseTokens(
+  Uint8List data, [
+  int maxOriginalLength = defaultMaxDecompressedSize,
+]) {
+  _validateMaxDecompressedSize(maxOriginalLength);
+
   if (data.length < 8) {
     throw const FormatException(
       'Malformed LZSS token stream: header is incomplete.',
@@ -254,6 +267,11 @@ Uint8List serialiseTokens(List<Token> tokens, int originalLength) {
   );
   final originalLength = view.getUint32(0, Endian.big);
   final blockCount = view.getUint32(4, Endian.big);
+  if (originalLength > maxOriginalLength) {
+    throw FormatException(
+      'Malformed LZSS token stream: declared output length $originalLength exceeds limit $maxOriginalLength.',
+    );
+  }
 
   if (originalLength == 0) {
     if (blockCount != 0 || data.length != 8) {
@@ -360,8 +378,11 @@ Uint8List compress(
 }
 
 /// Decompresses bytes produced by [compress].
-Uint8List decompress(Uint8List data) {
-  final decoded = deserialiseTokens(data);
+Uint8List decompress(
+  Uint8List data, [
+  int maxDecompressedSize = defaultMaxDecompressedSize,
+]) {
+  final decoded = deserialiseTokens(data, maxDecompressedSize);
   return decode(decoded.tokens, decoded.originalLength);
 }
 
@@ -395,6 +416,16 @@ void _validateOriginalLength(int originalLength) {
       originalLength,
       'originalLength',
       'Must be a non-negative byte length.',
+    );
+  }
+}
+
+void _validateMaxDecompressedSize(int maxDecompressedSize) {
+  if (maxDecompressedSize <= 0) {
+    throw RangeError.value(
+      maxDecompressedSize,
+      'maxDecompressedSize',
+      'Must be a positive byte limit.',
     );
   }
 }

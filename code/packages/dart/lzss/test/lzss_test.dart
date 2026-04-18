@@ -107,6 +107,11 @@ void main() {
       final data = Uint8List.fromList(<int>[...repeated, ...suffix]);
       expect(decompress(compress(data)), data);
     });
+
+    test('custom decompression limit can allow a larger trusted payload', () {
+      final data = _enc('hello');
+      expect(decompress(compress(data), data.length), data);
+    });
   });
 
   group('parameters', () {
@@ -164,10 +169,7 @@ void main() {
 
   group('decode validation', () {
     test('negative declared lengths are rejected', () {
-      expect(
-        () => decode(<Token>[literal(65)], -2),
-        throwsRangeError,
-      );
+      expect(() => decode(<Token>[literal(65)], -2), throwsRangeError);
     });
 
     test('overlapping match decoding is supported', () {
@@ -264,6 +266,20 @@ void main() {
       );
     });
 
+    test('non-positive decompression limits are rejected', () {
+      expect(
+        () => deserialiseTokens(
+          Uint8List.fromList(<int>[0, 0, 0, 0, 0, 0, 0, 0]),
+          0,
+        ),
+        throwsRangeError,
+      );
+      expect(
+        () => decompress(Uint8List.fromList(<int>[0, 0, 0, 0, 0, 0, 0, 0]), 0),
+        throwsRangeError,
+      );
+    });
+
     test('declared empty outputs must stay empty', () {
       expect(
         () => deserialiseTokens(
@@ -318,6 +334,20 @@ void main() {
       );
     });
 
+    test('declared output lengths above the configured cap are rejected', () {
+      expect(
+        () => deserialiseTokens(
+          Uint8List.fromList(<int>[0, 0, 0, 5, 0, 0, 0, 0]),
+          4,
+        ),
+        throwsA(isA<FormatException>()),
+      );
+      expect(
+        () => decompress(Uint8List.fromList(<int>[0, 0, 0, 5, 0, 0, 0, 0]), 4),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
     test('invalid serialised matches are rejected', () {
       expect(
         () => serialiseTokens(<Token>[match(0, 3)], 3),
@@ -327,10 +357,7 @@ void main() {
         () => serialiseTokens(<Token>[match(1, 0)], 1),
         throwsA(isA<FormatException>()),
       );
-      expect(
-        () => serialiseTokens(<Token>[literal(65)], -1),
-        throwsRangeError,
-      );
+      expect(() => serialiseTokens(<Token>[literal(65)], -1), throwsRangeError);
     });
   });
 

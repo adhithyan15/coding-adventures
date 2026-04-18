@@ -11,6 +11,7 @@ token-level teaching API and a one-shot byte-oriented API.
 - `compress` and `decompress` for one-shot binary compression
 - `serialiseTokens` and `deserialiseTokens` for the CMP02 block wire format
 - Overlap-safe decoding plus strict malformed-input validation
+- A configurable decompressed-size cap for hostile or untrusted inputs
 
 ## Usage
 
@@ -28,9 +29,10 @@ void main() {
 
   final compressed = compress(data);
   final original = decompress(compressed);
+  final trusted = decompress(compressed, data.length);
 
   print(tokens);
-  print(decoded.length == original.length);
+  print(decoded.length == original.length && trusted.length == data.length);
 }
 ```
 
