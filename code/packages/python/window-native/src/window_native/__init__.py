@@ -4,6 +4,7 @@ window_native -- Native window bridge for Python.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from enum import Enum, IntEnum
 
@@ -49,6 +50,18 @@ class LogicalSize:
 class PhysicalSize:
     width: int
     height: int
+
+
+def _normalize_dimension(name: str, value: float) -> float:
+    try:
+        number = float(value)
+    except (TypeError, ValueError) as exc:
+        raise TypeError(f"{name} must be numeric") from exc
+
+    if not math.isfinite(number) or number < 0.0:
+        raise WindowError(f"{name} must be a finite, non-negative number")
+
+    return number
 
 
 class Window:
@@ -115,6 +128,9 @@ def create_window(
     decorations: bool = True,
     transparent: bool = False,
 ) -> Window:
+    width = _normalize_dimension("width", width)
+    height = _normalize_dimension("height", height)
+
     handle = _create_window(
         title,
         width,

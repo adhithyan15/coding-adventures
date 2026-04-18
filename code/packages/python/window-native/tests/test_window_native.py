@@ -28,6 +28,23 @@ def test_render_target_kind_strings_are_stable() -> None:
     assert RenderTargetKind.BROWSER_CANVAS.value == "browser-canvas"
 
 
+@pytest.mark.parametrize(
+    ("width", "height"),
+    [
+        (-1.0, 240.0),
+        (320.0, -1.0),
+        (float("inf"), 240.0),
+        (320.0, float("nan")),
+    ],
+)
+def test_create_window_rejects_invalid_sizes_before_native_boundary(
+    width: float,
+    height: float,
+) -> None:
+    with pytest.raises(WindowError, match="finite, non-negative"):
+        create_window(width=width, height=height, visible=False)
+
+
 @pytest.mark.skipif(sys.platform != "darwin", reason="macOS-only smoke path")
 def test_create_hidden_window_and_query_basic_state() -> None:
     window = create_window(

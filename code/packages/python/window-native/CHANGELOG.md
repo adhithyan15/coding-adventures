@@ -12,3 +12,5 @@ this file.
   enums, a `Window` wrapper, and `create_window(...)`.
 - Added tests for the macOS hidden-window smoke path and non-macOS unsupported
   behavior.
+- Hardened the package BUILD scripts against symlinked artifact destinations and
+  validated window sizes before crossing the Python/Rust boundary.

@@ -307,6 +307,10 @@ unsafe extern "C" fn py_create_window(_module: PyObjectPtr, args: PyObjectPtr) -
             return ptr::null_mut();
         }
     };
+    let initial_size = match LogicalSize::new(width, height).validate() {
+        Ok(size) => size,
+        Err(error) => return set_window_error(error.to_string()),
+    };
     let preferred_surface = match parse_arg_i32(args, 3) {
         Some(value) => match map_surface(value) {
             Ok(surface) => surface,
@@ -348,7 +352,7 @@ unsafe extern "C" fn py_create_window(_module: PyObjectPtr, args: PyObjectPtr) -
 
     let attributes = WindowAttributes {
         title,
-        initial_size: LogicalSize::new(width, height),
+        initial_size,
         min_size: None,
         max_size: None,
         visible,
@@ -358,6 +362,9 @@ unsafe extern "C" fn py_create_window(_module: PyObjectPtr, args: PyObjectPtr) -
         preferred_surface,
         mount_target: MountTarget::Native,
     };
+    if let Err(error) = attributes.validate() {
+        return set_window_error(error.to_string());
+    }
 
     let mut guard = match registry().lock() {
         Ok(value) => value,

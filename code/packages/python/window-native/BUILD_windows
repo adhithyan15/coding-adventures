@@ -1,6 +1,6 @@
 python -m venv .venv --clear
 .venv\Scripts\pip install pytest pytest-cov ruff --quiet
 cargo build --release
-if exist target\release\window_native.dll copy target\release\window_native.dll src\window_native\window_native.pyd
+.venv\Scripts\python -c "from pathlib import Path; import shutil; source = Path(r'target\\release\\window_native.dll'); destination = Path(r'src\\window_native\\window_native.pyd'); checks = (Path('src'), destination.parent, destination); source.is_file() or (_ for _ in ()).throw(SystemExit(0)); [(_ for _ in ()).throw(SystemExit(f'refusing to copy build artifact through symlinked path: {candidate}')) for candidate in checks if candidate.exists() and candidate.is_symlink()]; (not destination.exists() or destination.is_file()) or (_ for _ in ()).throw(SystemExit(f'refusing to overwrite non-file destination: {destination}')); shutil.copyfile(source, destination)"
 set PYTHONPATH=src&& .venv\Scripts\python -m ruff check src tests
 set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v
