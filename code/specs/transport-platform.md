@@ -115,6 +115,15 @@ library-OS / unikernel provider
 `transport-platform` is below connection state machines and buffering policy,
 but above raw poller details.
 
+One implementation note matters for the current codebase:
+
+- the public seam is the stable goal
+- the very first provider implementation may talk directly to a raw backend like
+  `kqueue` while `native-event-core` grows fuller timer and wakeup coverage
+
+That does not change the intended layering above the seam. It only keeps the
+first implementation practical while the lower native crates continue maturing.
+
 ---
 
 ## Design Goals

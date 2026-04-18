@@ -186,6 +186,7 @@ members = [
     "native-event-core",
     "bloom-filter",
     "resp-protocol",
+    "transport-platform",
     "tcp-reactor",
     "tcp-server",
     "in-memory-data-store-engine",
