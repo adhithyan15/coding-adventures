@@ -1,0 +1,16 @@
+name: scaffold_generator
+description: >
+  Generate CI-ready Dart package and program scaffolding for the
+  coding-adventures monorepo.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_cli_builder:
+    path: ../../../packages/dart/cli-builder
+
+dev_dependencies:
+  test: ^1.25.0
