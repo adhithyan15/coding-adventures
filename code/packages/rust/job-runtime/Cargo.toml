@@ -1,0 +1,11 @@
+[package]
+name = "job-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Cross-platform job runtime that selects the local native scheduler backend"
+
+[dependencies]
+job-core = { path = "../job-core" }
+job-backend-launchd-files = { path = "../job-backend-launchd-files" }
+job-backend-systemd-files = { path = "../job-backend-systemd-files" }
+job-backend-windows-xml = { path = "../job-backend-windows-xml" }
