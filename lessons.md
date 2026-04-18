@@ -39,6 +39,22 @@ change.
 Treat this as the default, not an exception, whenever the source checkout is
 shared or noisy.
 
+### 2026-04-18: Dart decompressors must cap declared output size from untrusted headers
+
+Compression formats often encode the original byte length in the payload
+header. If the decoder trusts that field blindly, an attacker can declare a
+huge output size and force the process to allocate or append toward that size,
+turning decompression into a memory-exhaustion denial of service.
+
+**Symptom:** Security review flags `decompress()` because a crafted payload can
+claim an arbitrarily large `originalLength`, and the Dart implementation
+attempts to honor it without any upper bound.
+
+**Rule:** Any Dart decompressor that consumes a declared output length from
+untrusted bytes must enforce a sane maximum decompressed size before decoding.
+Expose the cap as an override for trusted callers, but fail closed by default
+with `FormatException` when the header exceeds the limit.
+
 ### 2026-04-18: Dart decompressors must validate backreferences before indexing decoded output
 
 For byte-oriented compression formats like LZ77, the decoder is a trust
