@@ -17,7 +17,9 @@ Nib source
 
 The goal of v1 is not perfect source preservation. The goal is to make valid,
 badly-formatted Nib code print into one stable canonical form with very little
-language-specific machinery.
+language-specific machinery while still preserving the most important source
+trivia that users expect a formatter to keep: line comments and intentional
+blank lines.
 
 This package is the first proof that:
 
@@ -40,9 +42,18 @@ V1 supports canonical formatting for the full Nib v1 grammar:
 - parenthesized expressions
 - call expressions
 
-V1 intentionally does **not** preserve comments. The current Nib lexer strips
-line comments before parsing, so the formatter has no trivia stream to work
-with yet.
+V1 now preserves comment and blank-line trivia through the source-based
+formatting path:
+
+- line comments from the Nib lexer skip stream
+- blank lines between top-level declarations
+- blank lines between statements inside blocks
+- comments before a closing `}`
+- comments at end of file
+
+The formatter does **not** aim for perfect token-by-token trivia fidelity.
+Instead it normalizes comment placement into a stable canonical form using the
+preserved lexer/parser trivia stream.
 
 ---
 
@@ -94,6 +105,11 @@ Default options:
 `formatNib()` is the main convenience API. It parses source, lowers to `Doc`,
 runs layout, converts the layout to paint, and finally renders through
 `paint-vm-ascii`.
+
+Source-based entry points preserve EOF trivia by parsing through a formatter
+oriented Nib parser path that keeps the original token stream. AST-only entry
+points preserve node-attached trivia, but cannot recover comments that live
+only on the synthetic EOF token.
 
 ---
 
@@ -157,6 +173,19 @@ if condition {
 - A single space around `=`, `->`, and infix operators
 - No trailing whitespace
 
+### Comments and blank lines
+
+- Leading line comments are preserved before the declaration, statement, or
+  closing brace they precede.
+- Line comments written after a declaration or statement stay trailing on that
+  line when the preserved trivia shows the comment began before the next
+  newline.
+- Blank lines between top-level declarations and block statements are preserved
+  in canonical form.
+- End-of-file comments are preserved.
+- Comment text is emitted exactly as written, including the original `//`
+  prefix.
+
 ---
 
 ## Lowering strategy
@@ -176,6 +205,13 @@ Nib-specific logic only handles:
 - distinguishing statement and declaration forms
 - preserving explicit parenthesized expressions
 - stitching the expression precedence ladder together
+- interpreting preserved lexer/parser trivia as leading comments, trailing
+  comments, and blank lines
+
+To preserve comments, the source-based formatter path parses Nib with
+`preserveSourceInfo: true` and retains the original token list long enough to
+recover trivia attached to the synthetic EOF token and to structural tokens
+such as `RBRACE` and `"else"`.
 
 This is the central design goal of the package: most formatting should come
 from the shared document algebra standard library, not from hand-written
@@ -191,6 +227,9 @@ The package must cover:
 - ugly input normalization for complete Nib programs
 - line-wrapping behavior for long parameter lists, argument lists, and infix
   chains
+- comment preservation for top-level declarations, statements, blocks, `else`
+  boundaries, and EOF
+- blank-line preservation for declarations and statements
 - idempotence: formatting already-formatted code should not change it again
 - error handling for unsupported AST shapes and malformed nodes
 

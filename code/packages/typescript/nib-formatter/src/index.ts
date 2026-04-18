@@ -9,6 +9,16 @@
  * exactly the sort of language wrapper this formatter architecture is meant to
  * support: a small amount of AST extraction logic on top of a mostly-shared
  * document algebra toolkit.
+ *
+ * This revision adds the first real trivia-preservation layer on top of that
+ * stack. The lexer/parser now keep line comments and blank-line information
+ * behind an opt-in flag, and this formatter interprets that trivia in a small
+ * number of places:
+ *
+ * - anchored sequences such as top-level declarations and block statements
+ * - boundaries such as `if ... else` and `fn ... {`
+ * - the synthetic EOF token, which is the only place true end-of-file comments
+ *   live after lexing
  */
 
 import {
@@ -23,7 +33,8 @@ import {
 } from "@coding-adventures/format-doc";
 import { docToPaintScene, type DocPaintOptions } from "@coding-adventures/format-doc-to-paint";
 import { callLike, delimitedList, infixChain } from "@coding-adventures/format-doc-std";
-import { parseNib } from "@coding-adventures/nib-parser";
+import type { Token, Trivia } from "@coding-adventures/lexer";
+import { parseNib, parseNibDocument } from "@coding-adventures/nib-parser";
 import { renderToAscii } from "@coding-adventures/paint-vm-ascii";
 import type { ASTNode } from "@coding-adventures/parser";
 
@@ -55,13 +66,33 @@ export interface NibFormatOptions extends LayoutOptions {
   paint?: DocPaintOptions;
 }
 
-/** A minimal structural token shape as it appears inside the grammar AST. */
-interface TokenLike {
-  readonly type: string;
-  readonly value: string;
+interface PrintNibDocOptions {
+  readonly eofTrivia?: readonly Trivia[];
 }
 
-type NodeChild = ASTNode | TokenLike;
+interface TriviaCommentSegment {
+  readonly text: string;
+  readonly newlinesBefore: number;
+}
+
+interface TriviaDisposition {
+  readonly inlineTrailingComment: string | null;
+  readonly leadingComments: readonly TriviaCommentSegment[];
+  readonly trailingNewlinesBeforeAnchor: number;
+}
+
+interface SequenceEntry {
+  doc: Doc;
+  readonly blankLinesBefore: number;
+  readonly attachable: boolean;
+}
+
+interface SequenceItem {
+  readonly anchor: ASTNode;
+  readonly doc: Doc;
+}
+
+type NodeChild = ASTNode | Token;
 
 const DEFAULT_FORMAT_OPTIONS: NibFormatOptions = {
   printWidth: 80,
@@ -75,24 +106,44 @@ const DEFAULT_FORMAT_OPTIONS: NibFormatOptions = {
  * This expects the root `program` AST from `nib-parser`.
  */
 export function printNibDoc(ast: ASTNode): Doc {
-  if (ast.ruleName !== "program") {
-    throw new Error(`printNibDoc() expects a 'program' AST node, got '${ast.ruleName}'`);
-  }
-
-  const declarations = childNodes(ast).map((decl) => printTopLevel(decl));
-  return joinWithBlankLines(declarations);
+  return printNibDocWithOptions(ast, {});
 }
 
 /** Parse Nib source and lower it to `Doc` in one step. */
 export function printNibSourceToDoc(source: string): Doc {
-  return printNibDoc(parseNib(source));
+  const document = parseNibDocument(source, {
+    preserveSourceInfo: true,
+  });
+
+  return printNibDocWithOptions(document.ast, {
+    eofTrivia: getEofTrivia(document.tokens),
+  });
 }
 
 /** Run the full formatter pipeline on a parsed Nib AST. */
 export function formatNibAst(ast: ASTNode, options: NibFormatOptions): string {
+  return renderDocToAscii(printNibDoc(ast), options);
+}
+
+/** Parse and format Nib source into canonical ASCII text. */
+export function formatNib(
+  source: string,
+  options: Partial<NibFormatOptions> = {},
+): string {
+  const document = parseNibDocument(source, {
+    preserveSourceInfo: true,
+  });
+  const doc = printNibDocWithOptions(document.ast, {
+    eofTrivia: getEofTrivia(document.tokens),
+  });
+
+  return renderDocToAscii(doc, resolveOptions(options));
+}
+
+function renderDocToAscii(doc: Doc, options: Partial<NibFormatOptions> = {}): string {
   const resolved = resolveOptions(options);
   const scene = docToPaintScene(
-    printNibDoc(ast),
+    doc,
     {
       printWidth: resolved.printWidth,
       indentWidth: resolved.indentWidth,
@@ -106,12 +157,17 @@ export function formatNibAst(ast: ASTNode, options: NibFormatOptions): string {
   return renderToAscii(scene, { scaleX: 1, scaleY: 1 });
 }
 
-/** Parse and format Nib source into canonical ASCII text. */
-export function formatNib(
-  source: string,
-  options: Partial<NibFormatOptions> = {},
-): string {
-  return formatNibAst(parseNib(source), resolveOptions(options));
+function printNibDocWithOptions(ast: ASTNode, options: PrintNibDocOptions): Doc {
+  if (ast.ruleName !== "program") {
+    throw new Error(`printNibDoc() expects a 'program' AST node, got '${ast.ruleName}'`);
+  }
+
+  const declarations = childRules(ast, "top_decl").map((decl) => ({
+    anchor: decl,
+    doc: printTopLevel(decl),
+  }));
+
+  return printAnchoredSequence(declarations, options.eofTrivia, 1);
 }
 
 function resolveOptions(options: Partial<NibFormatOptions>): NibFormatOptions {
@@ -131,8 +187,8 @@ function childNodes(node: ASTNode): ASTNode[] {
   return node.children.filter(isAstNode);
 }
 
-function childTokens(node: ASTNode): TokenLike[] {
-  const tokens: TokenLike[] = [];
+function childTokens(node: ASTNode): Token[] {
+  const tokens: Token[] = [];
 
   for (const child of node.children) {
     if (!isAstNode(child)) {
@@ -143,9 +199,22 @@ function childTokens(node: ASTNode): TokenLike[] {
   return tokens;
 }
 
-function firstToken(node: ASTNode, tokenType?: string): TokenLike | null {
+function firstToken(node: ASTNode, tokenType?: string): Token | null {
   for (const child of node.children) {
     if (isAstNode(child)) {
+      continue;
+    }
+    if (tokenType === undefined || child.type === tokenType) {
+      return child;
+    }
+  }
+  return null;
+}
+
+function lastToken(node: ASTNode, tokenType?: string): Token | null {
+  for (let index = node.children.length - 1; index >= 0; index -= 1) {
+    const child = node.children[index];
+    if (!child || isAstNode(child)) {
       continue;
     }
     if (tokenType === undefined || child.type === tokenType) {
@@ -175,7 +244,7 @@ function unwrapSingleChild(node: ASTNode): ASTNode {
   return inner;
 }
 
-function requireToken(node: ASTNode, tokenType: string, context: string): TokenLike {
+function requireToken(node: ASTNode, tokenType: string, context: string): Token {
   const token = firstToken(node, tokenType);
   if (!token) {
     throw new Error(`Expected token '${tokenType}' while formatting ${context}`);
@@ -234,7 +303,14 @@ function printFunctionDeclaration(node: ASTNode): Doc {
     returnType ? concat([text(" -> "), printType(returnType)]) : nil(),
   ]);
 
-  return group(concat([signature, text(" "), printBlock(block)]));
+  return group(
+    joinAcrossTrivia(
+      signature,
+      printBlock(block),
+      leadingTriviaOf(firstToken(block, "LBRACE")),
+      " ",
+    ),
+  );
 }
 
 function printParameterList(node: ASTNode | null): Doc {
@@ -259,15 +335,20 @@ function printParam(node: ASTNode): Doc {
 }
 
 function printBlock(node: ASTNode): Doc {
-  const statements = childRules(node, "stmt").map((stmt) => printStatement(unwrapSingleChild(stmt)));
+  const statements = childRules(node, "stmt").map((stmt) => ({
+    anchor: stmt,
+    doc: printStatement(unwrapSingleChild(stmt)),
+  }));
+  const closeBrace = lastToken(node, "RBRACE");
+  const body = printAnchoredSequence(statements, leadingTriviaOf(closeBrace), 0);
 
-  if (statements.length === 0) {
+  if (body.kind === "nil") {
     return concat([text("{"), text(" "), text("}")]);
   }
 
   return concat([
     text("{"),
-    indent(concat([hardline(), joinWithHardlines(statements)])),
+    indent(concat([hardline(), body])),
     hardline(),
     text("}"),
   ]);
@@ -360,19 +441,24 @@ function printForStatement(node: ASTNode): Doc {
     throw new Error("Malformed for_stmt: expected loop type, bounds, and block");
   }
 
+  const header = concat([
+    text("for "),
+    text(loopVar),
+    text(": "),
+    printType(typeNode),
+    text(" in "),
+    printExpression(bounds[0]!),
+    text(".."),
+    printExpression(bounds[1]!),
+  ]);
+
   return group(
-    concat([
-      text("for "),
-      text(loopVar),
-      text(": "),
-      printType(typeNode),
-      text(" in "),
-      printExpression(bounds[0]!),
-      text(".."),
-      printExpression(bounds[1]!),
-      text(" "),
+    joinAcrossTrivia(
+      header,
       printBlock(blockNode),
-    ]),
+      leadingTriviaOf(firstToken(blockNode, "LBRACE")),
+      " ",
+    ),
   );
 }
 
@@ -386,15 +472,35 @@ function printIfStatement(node: ASTNode): Doc {
     throw new Error("Malformed if_stmt: expected condition and then-block");
   }
 
-  return group(
-    concat([
-      text("if "),
-      printExpression(condition),
-      text(" "),
+  const ifHead = concat([text("if "), printExpression(condition)]);
+  const thenDoc = group(
+    joinAcrossTrivia(
+      ifHead,
       printBlock(thenBlock),
-      elseBlock ? concat([text(" else "), printBlock(elseBlock)]) : nil(),
-    ]),
+      leadingTriviaOf(firstToken(thenBlock, "LBRACE")),
+      " ",
+    ),
   );
+
+  if (!elseBlock) {
+    return thenDoc;
+  }
+
+  const elseToken = childTokens(node).find((token) => token.value === "else");
+  if (!elseToken) {
+    throw new Error("Malformed if_stmt: expected else token before else-block");
+  }
+
+  const elseDoc = group(
+    joinAcrossTrivia(
+      text("else"),
+      printBlock(elseBlock),
+      leadingTriviaOf(firstToken(elseBlock, "LBRACE")),
+      " ",
+    ),
+  );
+
+  return group(joinAcrossTrivia(thenDoc, elseDoc, leadingTriviaOf(elseToken), " "));
 }
 
 function printType(node: ASTNode): Doc {
@@ -503,28 +609,197 @@ function printCallExpression(node: ASTNode): Doc {
   return callLike(text(callee), args);
 }
 
-function joinWithHardlines(parts: readonly Doc[]): Doc {
-  const out: Doc[] = [];
-  for (let index = 0; index < parts.length; index += 1) {
-    if (index > 0) {
-      out.push(hardline());
-    }
-    out.push(parts[index]!);
+function printAnchoredSequence(
+  items: readonly SequenceItem[],
+  boundaryTrivia: readonly Trivia[] | undefined,
+  baseBlankLinesBetweenItems: number,
+): Doc {
+  const entries: SequenceEntry[] = [];
+  let lastAttachableIndex: number | null = null;
+
+  for (const item of items) {
+    const disposition = classifyTrivia(leadingTriviaOf(item.anchor), lastAttachableIndex !== null);
+    lastAttachableIndex = applyTriviaDisposition(
+      entries,
+      lastAttachableIndex,
+      disposition,
+      item.doc,
+      baseBlankLinesBetweenItems,
+    );
   }
-  return concat(out);
+
+  const boundaryDisposition = classifyTrivia(boundaryTrivia, lastAttachableIndex !== null);
+  applyTriviaDisposition(entries, lastAttachableIndex, boundaryDisposition, null, 0);
+
+  return renderEntries(entries);
 }
 
-function joinWithBlankLines(parts: readonly Doc[]): Doc {
-  if (parts.length === 0) {
+function joinAcrossTrivia(
+  left: Doc,
+  right: Doc,
+  trivia: readonly Trivia[] | undefined,
+  inlineSeparator: string,
+): Doc {
+  if (!hasCommentTrivia(trivia)) {
+    return concat([left, text(inlineSeparator), right]);
+  }
+
+  const entries: SequenceEntry[] = [
+    { doc: left, blankLinesBefore: 0, attachable: true },
+  ];
+
+  applyTriviaDisposition(
+    entries,
+    0,
+    classifyTrivia(trivia, true),
+    right,
+    0,
+  );
+
+  return renderEntries(entries);
+}
+
+function applyTriviaDisposition(
+  entries: SequenceEntry[],
+  lastAttachableIndex: number | null,
+  disposition: TriviaDisposition,
+  anchorDoc: Doc | null,
+  baseBlankLinesBeforeAnchor: number,
+): number | null {
+  let effectiveLeadingComments = [...disposition.leadingComments];
+
+  if (disposition.inlineTrailingComment !== null) {
+    if (lastAttachableIndex !== null) {
+      const entry = entries[lastAttachableIndex];
+      entry.doc = appendTrailingComment(entry.doc, disposition.inlineTrailingComment);
+    } else {
+      effectiveLeadingComments = [
+        { text: disposition.inlineTrailingComment, newlinesBefore: 0 },
+        ...effectiveLeadingComments,
+      ];
+    }
+  }
+
+  let firstVisibleForAnchor = true;
+  const hadPreviousAttachable = lastAttachableIndex !== null;
+  let nextAttachableIndex = lastAttachableIndex;
+
+  const pushEntry = (doc: Doc, sourceNewlinesBefore: number, attachable: boolean): void => {
+    const sourceBlankLines = blankLinesFromNewlines(sourceNewlinesBefore);
+    const blankLinesBefore =
+      entries.length === 0
+        ? 0
+        : firstVisibleForAnchor && hadPreviousAttachable
+          ? Math.max(baseBlankLinesBeforeAnchor, sourceBlankLines)
+          : sourceBlankLines;
+
+    entries.push({
+      doc,
+      blankLinesBefore,
+      attachable,
+    });
+
+    firstVisibleForAnchor = false;
+    if (attachable) {
+      nextAttachableIndex = entries.length - 1;
+    }
+  };
+
+  for (const comment of effectiveLeadingComments) {
+    pushEntry(text(comment.text), comment.newlinesBefore, false);
+  }
+
+  if (anchorDoc !== null) {
+    pushEntry(anchorDoc, disposition.trailingNewlinesBeforeAnchor, true);
+  }
+
+  return nextAttachableIndex;
+}
+
+function renderEntries(entries: readonly SequenceEntry[]): Doc {
+  if (entries.length === 0) {
     return nil();
   }
 
   const out: Doc[] = [];
-  for (let index = 0; index < parts.length; index += 1) {
+  for (let index = 0; index < entries.length; index += 1) {
     if (index > 0) {
-      out.push(hardline(), hardline());
+      for (let lineIndex = 0; lineIndex < entries[index]!.blankLinesBefore + 1; lineIndex += 1) {
+        out.push(hardline());
+      }
     }
-    out.push(parts[index]!);
+    out.push(entries[index]!.doc);
   }
+
   return concat(out);
+}
+
+function appendTrailingComment(doc: Doc, commentText: string): Doc {
+  return concat([doc, text(" "), text(commentText)]);
+}
+
+function leadingTriviaOf(anchor: ASTNode | Token | null): readonly Trivia[] | undefined {
+  return anchor?.leadingTrivia;
+}
+
+function getEofTrivia(tokens: readonly Token[]): readonly Trivia[] | undefined {
+  const eof = tokens[tokens.length - 1];
+  return eof?.type === "EOF" ? eof.leadingTrivia : undefined;
+}
+
+function hasCommentTrivia(trivia: readonly Trivia[] | undefined): boolean {
+  return (trivia ?? []).some((item) => item.type === "LINE_COMMENT");
+}
+
+function classifyTrivia(
+  trivia: readonly Trivia[] | undefined,
+  canAttachInlineToPrevious: boolean,
+): TriviaDisposition {
+  const comments: TriviaCommentSegment[] = [];
+  let pendingNewlines = 0;
+
+  for (const item of trivia ?? []) {
+    if (item.type === "LINE_COMMENT") {
+      comments.push({
+        text: item.value,
+        newlinesBefore: pendingNewlines,
+      });
+      pendingNewlines = 0;
+      continue;
+    }
+
+    pendingNewlines += countNewlines(item.value);
+  }
+
+  if (
+    canAttachInlineToPrevious
+    && comments.length > 0
+    && comments[0]!.newlinesBefore === 0
+  ) {
+    return {
+      inlineTrailingComment: comments[0]!.text,
+      leadingComments: comments.slice(1),
+      trailingNewlinesBeforeAnchor: pendingNewlines,
+    };
+  }
+
+  return {
+    inlineTrailingComment: null,
+    leadingComments: comments,
+    trailingNewlinesBeforeAnchor: pendingNewlines,
+  };
+}
+
+function countNewlines(value: string): number {
+  let count = 0;
+  for (const ch of value) {
+    if (ch === "\n") {
+      count += 1;
+    }
+  }
+  return count;
+}
+
+function blankLinesFromNewlines(newlines: number): number {
+  return Math.max(0, newlines - 1);
 }
