@@ -61,7 +61,7 @@ pub enum window_c_mount_target_kind_t {
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
 pub struct window_c_mount_target_t {
-    pub kind: window_c_mount_target_kind_t,
+    pub kind: u32,
     pub value: *const c_char,
 }
 
@@ -78,7 +78,7 @@ pub struct window_c_window_attributes_t {
     pub resizable: u8,
     pub decorations: u8,
     pub transparent: u8,
-    pub preferred_surface: window_c_surface_preference_t,
+    pub preferred_surface: u32,
     pub mount_target: window_c_mount_target_t,
 }
 
@@ -319,7 +319,7 @@ fn convert_attributes(
         resizable: attributes.resizable != 0,
         decorations: attributes.decorations != 0,
         transparent: attributes.transparent != 0,
-        preferred_surface: map_surface(attributes.preferred_surface),
+        preferred_surface: map_surface(attributes.preferred_surface)?,
         mount_target: convert_mount_target(attributes.mount_target)?,
     })
 }
@@ -328,30 +328,48 @@ fn convert_mount_target(
     target: window_c_mount_target_t,
 ) -> Result<MountTarget, WindowError> {
     match target.kind {
-        window_c_mount_target_kind_t::WINDOW_C_MOUNT_NATIVE => Ok(MountTarget::Native),
-        window_c_mount_target_kind_t::WINDOW_C_MOUNT_BROWSER_BODY => Ok(MountTarget::BrowserBody),
-        window_c_mount_target_kind_t::WINDOW_C_MOUNT_ELEMENT_ID => {
+        value if value == window_c_mount_target_kind_t::WINDOW_C_MOUNT_NATIVE as u32 => {
+            Ok(MountTarget::Native)
+        }
+        value if value == window_c_mount_target_kind_t::WINDOW_C_MOUNT_BROWSER_BODY as u32 => {
+            Ok(MountTarget::BrowserBody)
+        }
+        value if value == window_c_mount_target_kind_t::WINDOW_C_MOUNT_ELEMENT_ID as u32 => {
             Ok(MountTarget::ElementId(
                 c_string(target.value, true)?.unwrap_or_default(),
             ))
         }
-        window_c_mount_target_kind_t::WINDOW_C_MOUNT_QUERY_SELECTOR => {
+        value if value == window_c_mount_target_kind_t::WINDOW_C_MOUNT_QUERY_SELECTOR as u32 => {
             Ok(MountTarget::QuerySelector(
                 c_string(target.value, true)?.unwrap_or_default(),
             ))
         }
+        _ => Err(WindowError::InvalidAttributes(
+            "mount target kind must be a known window-c constant",
+        )),
     }
 }
 
-fn map_surface(preference: window_c_surface_preference_t) -> SurfacePreference {
+fn map_surface(preference: u32) -> Result<SurfacePreference, WindowError> {
     match preference {
-        window_c_surface_preference_t::WINDOW_C_SURFACE_DEFAULT => SurfacePreference::Default,
-        window_c_surface_preference_t::WINDOW_C_SURFACE_METAL => SurfacePreference::Metal,
-        window_c_surface_preference_t::WINDOW_C_SURFACE_DIRECT2D => SurfacePreference::Direct2D,
-        window_c_surface_preference_t::WINDOW_C_SURFACE_CAIRO => SurfacePreference::Cairo,
-        window_c_surface_preference_t::WINDOW_C_SURFACE_CANVAS2D => {
-            SurfacePreference::Canvas2D
+        value if value == window_c_surface_preference_t::WINDOW_C_SURFACE_DEFAULT as u32 => {
+            Ok(SurfacePreference::Default)
         }
+        value if value == window_c_surface_preference_t::WINDOW_C_SURFACE_METAL as u32 => {
+            Ok(SurfacePreference::Metal)
+        }
+        value if value == window_c_surface_preference_t::WINDOW_C_SURFACE_DIRECT2D as u32 => {
+            Ok(SurfacePreference::Direct2D)
+        }
+        value if value == window_c_surface_preference_t::WINDOW_C_SURFACE_CAIRO as u32 => {
+            Ok(SurfacePreference::Cairo)
+        }
+        value if value == window_c_surface_preference_t::WINDOW_C_SURFACE_CANVAS2D as u32 => {
+            Ok(SurfacePreference::Canvas2D)
+        }
+        _ => Err(WindowError::InvalidAttributes(
+            "surface preference must be a known window-c constant",
+        )),
     }
 }
 
@@ -493,9 +511,9 @@ mod tests {
             resizable: 0,
             decorations: 1,
             transparent: 0,
-            preferred_surface: window_c_surface_preference_t::WINDOW_C_SURFACE_CANVAS2D,
+            preferred_surface: window_c_surface_preference_t::WINDOW_C_SURFACE_CANVAS2D as u32,
             mount_target: window_c_mount_target_t {
-                kind: window_c_mount_target_kind_t::WINDOW_C_MOUNT_QUERY_SELECTOR,
+                kind: window_c_mount_target_kind_t::WINDOW_C_MOUNT_QUERY_SELECTOR as u32,
                 value: selector.as_ptr(),
             },
         })
@@ -529,6 +547,32 @@ mod tests {
         assert_eq!(
             error,
             WindowError::InvalidAttributes("required C strings must not be null")
+        );
+    }
+
+    #[test]
+    fn invalid_surface_constants_are_rejected() {
+        let error = map_surface(99).unwrap_err();
+        assert_eq!(
+            error,
+            WindowError::InvalidAttributes(
+                "surface preference must be a known window-c constant"
+            )
+        );
+    }
+
+    #[test]
+    fn invalid_mount_target_constants_are_rejected() {
+        let error = convert_mount_target(window_c_mount_target_t {
+            kind: 77,
+            value: std::ptr::null(),
+        })
+        .unwrap_err();
+        assert_eq!(
+            error,
+            WindowError::InvalidAttributes(
+                "mount target kind must be a known window-c constant"
+            )
         );
     }
 }

@@ -33,7 +33,7 @@ typedef enum window_c_mount_target_kind_t {
 } window_c_mount_target_kind_t;
 
 typedef struct window_c_mount_target_t {
-    window_c_mount_target_kind_t kind;
+    uint32_t kind;
     const char *value;
 } window_c_mount_target_t;
 
@@ -48,7 +48,7 @@ typedef struct window_c_window_attributes_t {
     uint8_t resizable;
     uint8_t decorations;
     uint8_t transparent;
-    window_c_surface_preference_t preferred_surface;
+    uint32_t preferred_surface;
     window_c_mount_target_t mount_target;
 } window_c_window_attributes_t;
 
