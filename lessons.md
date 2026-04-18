@@ -2129,3 +2129,18 @@ a crafted large count could force a huge useless loop or combine badly with unsi
 **Rule:** In F# binary deserialisers, always derive a `maxPossible` item count from the remaining
 payload bytes and cap the header count before looping. Then guard the zero case explicitly before
 writing ranges like `0u .. count - 1u`.
+
+---
+
+## `git worktree add` inherits the current checkout unless you pin the base explicitly
+
+**Date:** 2026-04-18
+
+**What happened:** A new compression worktree was first created with `git worktree add ... -b ...`
+from a checkout that was itself on a feature branch. The new worktree silently inherited that
+feature branch's commit instead of starting from `origin/main`, which would have polluted the next
+PR with unrelated history.
+
+**Rule:** When creating a fresh implementation worktree in this repo, always pin the starting point
+explicitly: `git worktree add <path> -b <branch> origin/main`. Do not rely on the current checkout's
+HEAD being the correct base.
