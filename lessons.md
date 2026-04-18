@@ -2446,3 +2446,21 @@ shared across parallel package builds.
 directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
 `DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
 uses temp-backed shared-memory state during first-run migrations.
+
+---
+
+## Lua BUILD validators require declared local deps and `--deps-mode=none` consistency
+
+**Date:** 2026-04-18
+
+**What happened:** The Ruby/Elixir/Lua convergence PR passed package-local Lua tests but failed the
+monorepo BUILD validator. One new Lua package bootstrapped sibling rocks and then ran a final
+`luarocks make` without `--deps-mode=none`, another Windows BUILD disabled dependency resolution but
+forgot to bootstrap a local rockspec dependency, and a third BUILD bootstrapped `wasm_runtime` even
+though it was only used by tests through direct `package.path` entries rather than as a declared
+rockspec dependency.
+
+**Rule:** For Lua packages, keep the BUILD bootstrap set aligned with declared local rockspec
+dependencies. If sibling rocks are installed first, the final `luarocks make` should also use
+`--deps-mode=none`, and any extra test-only source-path wiring should stay in the test file instead
+of appearing as an undeclared sibling bootstrap in `BUILD`.
