@@ -106,6 +106,56 @@ token fields before copying. Backreferences need `offset > 0` and
 
 ---
 
+### 2026-04-18: BUILD files must avoid shell quotes and line-continuation backslashes that confuse the repo runner
+
+The repo build tool does not execute BUILD files exactly like an interactive
+shell script file. Commands that look fine in isolation, such as quoted extras
+like `'.[dev]'` or backslash-continued multi-line commands, can be mangled by
+the runner's wrapper and fail in CI with errors like `unexpected end of file`
+or `\: not found`.
+
+**Symptom:** a BUILD file passes local spot checks but CI fails before the
+package itself runs, usually with plain shell parse errors instead of package
+test failures.
+
+**Rule:** Keep BUILD scripts wrapper-safe: avoid embedded shell quotes when a
+simple escaped token works, and prefer separate commands or subshells over
+trailing `\` continuations.
+
+---
+
+### 2026-04-18: Lua packages tested with `busted` must install or expose `LUA_PATH` first
+
+Lua test files often `require("coding_adventures.<package>")`, which expects
+the package to be installed via LuaRocks or the source tree to be visible
+through `LUA_PATH`. Running `busted` from `tests/` without either setup makes
+CI fail with `module 'coding_adventures.<package>' not found` even though the
+source file exists in `src/`.
+
+**Symptom:** the Unix or Windows BUILD passes control to `busted`, but the
+test process cannot load the package module because it only sees the `tests/`
+working directory and default Lua search paths.
+
+**Rule:** For Lua packages in this repo, BUILD scripts must either run
+`luarocks make --local` first or export a `LUA_PATH` that points at
+`../src/?.lua` and `../src/?/init.lua` before invoking `busted`. Prefer doing
+both when the package already ships a rockspec.
+
+---
+
+### 2026-04-18: Elixir coverage thresholds require tests for delegates and error branches too
+
+Small Elixir packages can miss the repo's `80%` coverage threshold even when
+their primary happy-path tests pass, because delegate helpers and negative
+parsing branches still count toward the total module coverage.
+
+**Symptom:** `mix test --cover` reports green tests but fails the package build
+with coverage in the low 70s because helper modules such as request/response
+heads or invalid-parse branches were never exercised.
+
+**Rule:** When adding a new Elixir package with coverage enforcement, include
+tests for delegate helpers (`header`, `content_length`, `content_type`) and
+invalid input branches, not just the main success path.
 ### 2026-04-18: Dart binary deserializers should reject both short and padded payloads
 
 When a package defines a fixed-width wire format, accepting undersized payloads
@@ -2317,6 +2367,14 @@ writing ranges like `0u .. count - 1u`.
 
 ---
 
+## BUILD scripts that visit sibling packages should use subshells so later commands stay in the original package
+
+**Date:** 2026-04-18
+
+**What happened:** A new TypeScript `http1` BUILD script installed `../http-core` with `cd ../http-core && npm install ...` and then immediately ran `npm install` and `vitest` on the next lines. Because the `cd` changed the shell's working directory for the rest of the script, the later commands accidentally re-ran inside `http-core` instead of `http1`.
+
+**Rule:** In BUILD scripts, when you need to temporarily run a command in a sibling package, wrap it in a subshell like `(cd ../dep && npm install ...)`. Do not rely on `cd ... && cmd` when more commands follow afterward.
+
 ## Nonblocking accept tests must try `accept()` before waiting for a fresh readiness edge
 
 **Date:** 2026-04-18
@@ -2329,6 +2387,7 @@ connections were still waiting to be accepted.
 **Rule:** In nonblocking listener tests, always attempt `accept()` first and only fall back to
 waiting for readiness when it returns `WouldBlock`. Do not require a second readiness edge before
 draining already-queued connections.
+
 ## `git worktree add` inherits the current checkout unless you pin the base explicitly
 
 **Date:** 2026-04-18
@@ -2386,6 +2445,51 @@ the LuaRocks install tree instead of the repo, so parser-driven tests could not 
 those siblings already know how to install their transitive local rocks. In tests that exercise
 grammar-backed lexers/parsers, put the sibling `src/` directories for those lexers ahead of
 installed rocks on `package.path` so in-repo grammar files resolve correctly.
+
+---
+
+## Rust workspace merge resolutions must deduplicate member entries before pushing
+
+**Date:** 2026-04-18
+
+**What happened:** A PR branch merged `origin/main` after adding new Rust `http-core` and `http1`
+packages. The conflict resolution kept both sides' `window-core`, `window-appkit`, and
+`window-win32` entries in `code/packages/rust/Cargo.toml`, which older Cargo tolerated but the
+CI detect step now rejects as duplicate workspace members before any package builds run.
+
+**Rule:** After resolving Rust workspace `members` conflicts, scan the final list for duplicates
+and run a workspace-level manifest check before pushing. A merged workspace must contain each
+package exactly once, even when both branches added adjacent member blocks.
+
+---
+
+## Shell BUILD files are line-oriented, so multiline control flow breaks under the repo build tool
+
+**Date:** 2026-04-18
+
+**What happened:** The Python `http-core` and `http1` packages used a normal multiline POSIX `if`
+block in their Unix `BUILD` files. Those scripts passed `sh -n`, but CI still failed because the
+repo build tool reads shell BUILD files as separate command lines and executes each line with its
+own `sh -c`, so `if`, `then`, and `fi` never reached the same shell process.
+
+**Rule:** In shell BUILD files, treat each non-comment line as an independent command. Keep
+control flow on a single line, or express it with standalone one-line conditionals and `&&`/`||`
+chains that remain valid when each BUILD line runs in its own shell.
+
+---
+
+## Python package BUILD installs must not use `--no-deps` when tests rely on `dev` extras
+
+**Date:** 2026-04-18
+
+**What happened:** The Python `http-core` CI fix kept the shell BUILD file line-safe, but the
+editable install still used `--no-deps`. In both `uv pip install -e .[dev]` and the fallback
+`pip install .[dev]` flow, that flag suppresses the optional `dev` dependencies too, so the build
+completed without `pytest` and then failed at test time with `No module named pytest`.
+
+**Rule:** If a Python BUILD script installs a package via `.[dev]` so tests can run, do not add
+`--no-deps` to that install step. Use explicit prerequisite installs only for local package
+dependencies, and let the package's declared test extras install normally.
 
 ---
 
