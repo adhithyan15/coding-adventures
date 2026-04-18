@@ -1887,3 +1887,18 @@ drive unbounded recursion and risk `StackOverflowException` or disproportionate 
 **Rule:** For any parser that recursively descends into user-controlled structure, add hard limits at
 the parser boundary for maximum input size and maximum nesting depth. Enforce the limit in every
 recursive entry point, not just the top-level public API.
+
+---
+
+## .NET BUILD scripts for related packages must isolate artifacts for parallel CI
+
+**Date:** 2026-04-17
+
+**What happened:** The new C# and F# document packages built fine locally one at a time, but CI runs
+affected packages in parallel. `commonmark-parser` and `gfm-parser` share transitive `ProjectReference`
+graphs, so simultaneous `dotnet test` runs raced on shared `obj/` files like
+`AssemblyInfoInputs.cache`, causing intermittent MSBuild failures on macOS.
+
+**Rule:** When multiple .NET packages in the repo can build the same transitive project graph in
+parallel, their `BUILD` scripts must use `dotnet test --artifacts-path .artifacts` (or an equivalent
+isolated artifacts path) so each package invocation gets its own build outputs and intermediate files.

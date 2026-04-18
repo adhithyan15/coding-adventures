@@ -8,3 +8,4 @@ All notable changes to this package will be documented in this file.
 
 - Pure C# document AST package covering shared document, inline, and GFM extension nodes
 - xUnit coverage for node typing, core structure, and extension shapes
+- BUILD scripts now use `dotnet test --artifacts-path .artifacts` so transitive .NET project builds do not collide under parallel CI

@@ -8,3 +8,4 @@ All notable changes to this package will be documented in this file.
 
 - Pure F# GFM parser package layered on top of the pure F# CommonMark parser core
 - xUnit coverage for task items, tables, and strikethrough
+- BUILD scripts now use `dotnet test --artifacts-path .artifacts` so transitive .NET project builds do not collide under parallel CI
