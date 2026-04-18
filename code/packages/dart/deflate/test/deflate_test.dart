@@ -171,6 +171,28 @@ void main() {
       );
     });
 
+    test('rejects non-canonical empty payloads with trailing data', () {
+      final bad = Uint8List(13);
+      final header = ByteData.sublistView(bad);
+      header.setUint32(0, 0, Endian.big);
+      header.setUint16(4, 1, Endian.big);
+      header.setUint16(6, 0, Endian.big);
+      header.setUint16(8, 256, Endian.big);
+      bad[10] = 1;
+      bad[11] = 0x00;
+      bad[12] = 0x99;
+      expect(
+        () => decompress(bad),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('canonical zero-length encoding'),
+          ),
+        ),
+      );
+    });
+
     test('rejects invalid table symbols and lengths', () {
       final invalidLl = Uint8List(11);
       final llHeader = ByteData.sublistView(invalidLl);
@@ -396,29 +418,32 @@ void main() {
       );
     });
 
-    test('rejects early end-of-data markers that underflow the declared length',
-        () {
-      final bad = Uint8List(15);
-      final header = ByteData.sublistView(bad);
-      header.setUint32(0, 1, Endian.big);
-      header.setUint16(4, 2, Endian.big);
-      header.setUint16(8, 65, Endian.big);
-      bad[10] = 1;
-      header.setUint16(11, 256, Endian.big);
-      bad[13] = 1;
-      bad[14] = 0x01;
-      expect(
-        () => decompress(bad),
-        throwsA(
-          isA<FormatException>().having(
-            (error) => error.message,
-            'message',
-            contains(
-                'decoded output length 0 does not match declared length 1'),
+    test(
+      'rejects early end-of-data markers that underflow the declared length',
+      () {
+        final bad = Uint8List(15);
+        final header = ByteData.sublistView(bad);
+        header.setUint32(0, 1, Endian.big);
+        header.setUint16(4, 2, Endian.big);
+        header.setUint16(8, 65, Endian.big);
+        bad[10] = 1;
+        header.setUint16(11, 256, Endian.big);
+        bad[13] = 1;
+        bad[14] = 0x01;
+        expect(
+          () => decompress(bad),
+          throwsA(
+            isA<FormatException>().having(
+              (error) => error.message,
+              'message',
+              contains(
+                'decoded output length 0 does not match declared length 1',
+              ),
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
 
     test('rejects truncated extra-bit payloads', () {
       final bad = Uint8List(18);

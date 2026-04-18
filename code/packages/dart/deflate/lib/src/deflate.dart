@@ -270,6 +270,16 @@ Uint8List decompress(
   }
 
   if (originalLength == 0) {
+    if (llEntryCount != 1 ||
+        distEntryCount != 0 ||
+        llLengths.length != 1 ||
+        llLengths.single != (256, 1) ||
+        data.length != offset + 1 ||
+        data[offset] != 0x00) {
+      throw const FormatException(
+        'Malformed DEFLATE stream: empty payload must use the canonical zero-length encoding.',
+      );
+    }
     return Uint8List(0);
   }
   if (llLengths.isEmpty) {
