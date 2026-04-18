@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/paint-vm-ascii",
+  "version": "0.1.0",
+  "description": "Terminal/ASCII backend for PaintVM",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/paint-instructions": "file:../paint-instructions",
+    "@coding-adventures/paint-vm": "file:../paint-vm"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

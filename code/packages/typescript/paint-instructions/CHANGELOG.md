@@ -1,5 +1,11 @@
 # Changelog — @coding-adventures/paint-instructions
 
+## Unreleased
+
+### Fixed
+
+- import the `PixelContainer` type locally as well as re-exporting it so sibling TypeScript packages can type-check against `paintImage()` and `PaintImage.src`
+
 ## 0.1.0 — 2026-04-03
 
 Initial release implementing the P2D00 PaintInstructions IR spec.
