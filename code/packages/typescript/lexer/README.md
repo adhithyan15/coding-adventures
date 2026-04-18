@@ -13,6 +13,8 @@ NAME("x")  EQUALS("=")  NUMBER("1")  PLUS("+")  NUMBER("2")  EOF
 ```
 
 Each token has a **type** (what kind of thing it is), a **value** (the actual text), and a **position** (line and column numbers for error reporting).
+Formatter-oriented callers can also opt into richer source preservation so
+comments, whitespace, and exact offsets survive lexing.
 
 ## Two Lexer Implementations
 
@@ -45,6 +47,11 @@ import { grammarTokenize } from "@coding-adventures/lexer";
 
 const grammar = parseTokenGrammar(readFileSync("python.tokens", "utf-8"));
 const tokens = grammarTokenize("x = 1 + 2", grammar);
+
+// Rich source mode for formatter pipelines:
+const richTokens = grammarTokenize("  // lead\nx = 1", grammar, {
+  preserveSourceInfo: true,
+});
 ```
 
 ## Token Format
@@ -57,8 +64,19 @@ interface Token {
   value: string;   // e.g., "x", "42", "+", "if"
   line: number;    // 1-based line number
   column: number;  // 1-based column number
+  // Optional in rich source mode:
+  startOffset?: number;
+  endOffset?: number;
+  endLine?: number;
+  endColumn?: number;
+  tokenIndex?: number;
+  leadingTrivia?: Trivia[];
 }
 ```
+
+When `preserveSourceInfo` is enabled on `GrammarLexer` or `grammarTokenize()`,
+the lexer also preserves named skip matches as `Trivia` values attached to the
+next emitted token.
 
 ## How It Fits in the Stack
 

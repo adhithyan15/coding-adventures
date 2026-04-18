@@ -43,7 +43,7 @@
  *     const tokens = lexer.tokenize();
  */
 
-export type { Token } from "./token.js";
+export type { Token, Trivia } from "./token.js";
 export {
   TOKEN_PRECEDED_BY_NEWLINE,
   TOKEN_CONTEXT_KEYWORD,
@@ -51,4 +51,4 @@ export {
 export { tokenize, LexerError } from "./tokenizer.js";
 export type { LexerConfig } from "./tokenizer.js";
 export { grammarTokenize, GrammarLexer, LexerContext } from "./grammar-lexer.js";
-export type { OnTokenCallback } from "./grammar-lexer.js";
+export type { OnTokenCallback, GrammarLexerOptions } from "./grammar-lexer.js";
