@@ -15,3 +15,4 @@ All notable changes to this package will be documented in this file.
 - Rewrote the Unix `BUILD` script in explicit POSIX shell form to avoid shell parsing differences in CI
 - Removed quoted extras syntax from the Unix `BUILD` script so the repo build tool's shell wrapper does not truncate the command
 - Collapsed the Unix `BUILD` flow into line-safe one-command conditionals because the repo build tool executes shell BUILD files one line at a time
+- Removed `--no-deps` from the editable dev install so CI still pulls in `pytest` and the other declared `dev` extras

@@ -2408,3 +2408,18 @@ own `sh -c`, so `if`, `then`, and `fi` never reached the same shell process.
 **Rule:** In shell BUILD files, treat each non-comment line as an independent command. Keep
 control flow on a single line, or express it with standalone one-line conditionals and `&&`/`||`
 chains that remain valid when each BUILD line runs in its own shell.
+
+---
+
+## Python package BUILD installs must not use `--no-deps` when tests rely on `dev` extras
+
+**Date:** 2026-04-18
+
+**What happened:** The Python `http-core` CI fix kept the shell BUILD file line-safe, but the
+editable install still used `--no-deps`. In both `uv pip install -e .[dev]` and the fallback
+`pip install .[dev]` flow, that flag suppresses the optional `dev` dependencies too, so the build
+completed without `pytest` and then failed at test time with `No module named pytest`.
+
+**Rule:** If a Python BUILD script installs a package via `.[dev]` so tests can run, do not add
+`--no-deps` to that install step. Use explicit prerequisite installs only for local package
+dependencies, and let the package's declared test extras install normally.
