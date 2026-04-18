@@ -37,6 +37,24 @@ token fields before copying. Backreferences need `offset > 0` and
 
 ---
 
+### 2026-04-18: Dart binary deserializers should reject both short and padded payloads
+
+When a package defines a fixed-width wire format, accepting undersized payloads
+as "empty" messages or silently ignoring extra bytes creates a fail-open
+boundary. That can hide tampering and lets callers treat malformed compressed
+data as if it were valid.
+
+**Symptom:** Security review flags insecure deserialization because a parser
+accepts incomplete headers or trailing attacker-controlled bytes instead of
+failing closed.
+
+**Rule:** For Dart binary formats, validate the exact expected byte length from
+the header before decoding any entries, and validate that the reconstructed
+payload length exactly matches any declared output length. Reject incomplete
+payloads, extra trailing bytes, underflow, and overflow with `FormatException`.
+
+---
+
 ### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
 Switching a Lua rockspec from `git://` to `https://` fixes transport security,
