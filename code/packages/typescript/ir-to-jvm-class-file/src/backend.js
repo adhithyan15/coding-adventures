@@ -1,5 +1,6 @@
-import { closeSync, constants, lstatSync, mkdirSync, openSync, realpathSync, writeSync } from "node:fs";
-import { dirname, join, parse, resolve } from "node:path";
+import { realpathSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { join, resolve } from "node:path";
 import { ACC_PUBLIC, ACC_STATIC, ACC_SUPER, } from "@coding-adventures/jvm-class-file";
 import { IrOp, } from "@coding-adventures/compiler-ir";
 const ACC_PRIVATE = 0x0002;
@@ -696,38 +697,18 @@ export function writeClassFile(artifact, outputDir) {
     if (!JAVA_BINARY_NAME_RE.test(artifact.className)) {
         throw new JvmBackendError(`Class name "${artifact.className}" escapes the requested classpath root`);
     }
-    let root = resolve(outputDir);
-    try {
-        const metadata = lstatSync(root);
-        if (metadata.isSymbolicLink() || !metadata.isDirectory()) {
-            throw new JvmBackendError(`Refusing to write through symlinked or invalid directory ${root}`);
-        }
-        root = realpathSync.native(root);
-    }
-    catch (error) {
-        if (!isNodeErrorCode(error, "ENOENT")) {
-            throw error;
-        }
-    }
-    ensureDirectoryPath(root);
     const relativePath = validatedOutputRelativePath(artifact.classFilename);
-    const target = join(root, relativePath);
-    const parent = dirname(target);
-    ensureDirectoryPath(parent);
-    let descriptor = null;
-    try {
-        descriptor = openSync(target, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | constants.O_NOFOLLOW, 0o644);
+    const root = resolve(outputDir);
+    const payload = Buffer.from(artifact.classBytes).toString("base64");
+    const result = spawnSync("python3", ["-c", SECURE_CLASS_WRITER, root, relativePath, payload], { encoding: "utf8" });
+    if (result.error) {
+        throw new JvmBackendError(`Failed to invoke secure class-file writer: ${result.error.message}`);
     }
-    catch (error) {
-        throw new JvmBackendError("class_filename points at a symlinked or invalid output file");
+    if (result.status !== 0) {
+        const message = result.stderr.trim() || "secure class-file writer failed";
+        throw new JvmBackendError(message);
     }
-    try {
-        writeSync(descriptor, artifact.classBytes);
-    }
-    finally {
-        closeSync(descriptor);
-    }
-    return target;
+    return join(realpathSync.native(root), ...relativePath.split("/"));
 }
 function emitLoadIntLocal(code, index) {
     code.emitU1(OP_ILOAD);
@@ -825,41 +806,6 @@ function asLabel(operand) {
     }
     return operand;
 }
-function ensureDirectoryPath(path) {
-    const absolute = resolve(path);
-    const parsed = parse(absolute);
-    let current = parsed.root;
-    if (current !== "") {
-        ensureExistingDirectory(current);
-    }
-    for (const component of absolute.slice(parsed.root.length).split("/").filter(Boolean)) {
-        current = join(current, component);
-        try {
-            ensureExistingDirectory(current);
-        }
-        catch (error) {
-            if (!isNodeErrorCode(error, "ENOENT")) {
-                throw error;
-            }
-            mkdirSync(current);
-            ensureExistingDirectory(current);
-        }
-    }
-}
-function ensureExistingDirectory(path) {
-    try {
-        const stat = lstatSync(path);
-        if (stat.isSymbolicLink() || !stat.isDirectory()) {
-            throw new JvmBackendError(`Refusing to write through symlinked or invalid directory ${path}`);
-        }
-    }
-    catch (error) {
-        if (!isNodeErrorCode(error, "ENOENT")) {
-            throw error;
-        }
-        throw error;
-    }
-}
 function validatedOutputRelativePath(classFilename) {
     const parts = classFilename.split("/").filter(Boolean);
     if (parts.length === 0 || parts.some((component) => component === "." || component === "..")) {
@@ -867,9 +813,71 @@ function validatedOutputRelativePath(classFilename) {
     }
     return join(...parts);
 }
-function isNodeErrorCode(error, code) {
-    return error instanceof Error && "code" in error && error.code === code;
-}
+const SECURE_CLASS_WRITER = `
+import base64
+import os
+import pathlib
+import sys
+
+root = pathlib.Path(sys.argv[1])
+if not root.is_absolute():
+    root = pathlib.Path.cwd() / root
+relative_path = pathlib.PurePosixPath(sys.argv[2])
+payload = base64.b64decode(sys.argv[3])
+
+open_directory_flags = os.O_RDONLY
+if hasattr(os, "O_DIRECTORY"):
+    open_directory_flags |= os.O_DIRECTORY
+if hasattr(os, "O_NOFOLLOW"):
+    open_directory_flags |= os.O_NOFOLLOW
+
+open_file_flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+if hasattr(os, "O_NOFOLLOW"):
+    open_file_flags |= os.O_NOFOLLOW
+
+directory_fds = []
+try:
+    missing_parts = []
+    current_root = root
+    while True:
+        try:
+            metadata = os.lstat(current_root)
+            if not os.path.isdir(current_root) or os.path.islink(current_root):
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+            canonical_root = pathlib.Path(os.path.realpath(current_root))
+            break
+        except FileNotFoundError:
+            parent = current_root.parent
+            if parent == current_root:
+                raise
+            missing_parts.insert(0, current_root.name)
+            current_root = parent
+
+    current_fd = os.open(canonical_root, open_directory_flags)
+    directory_fds.append(current_fd)
+    for component in missing_parts:
+        try:
+            os.mkdir(component, dir_fd=current_fd)
+        except FileExistsError:
+            pass
+        next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
+        directory_fds.append(next_fd)
+        current_fd = next_fd
+    for component in relative_path.parts[:-1]:
+        try:
+            os.mkdir(component, dir_fd=current_fd)
+        except FileExistsError:
+            pass
+        next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
+        directory_fds.append(next_fd)
+        current_fd = next_fd
+    file_fd = os.open(relative_path.name, open_file_flags, 0o644, dir_fd=current_fd)
+    with os.fdopen(file_fd, "wb", closefd=True) as handle:
+        handle.write(payload)
+finally:
+    for directory_fd in reversed(directory_fds):
+        os.close(directory_fd)
+`;
 function u1(value) {
     return Uint8Array.of(value & 0xff);
 }
