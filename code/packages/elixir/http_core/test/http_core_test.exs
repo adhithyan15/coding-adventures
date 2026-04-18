@@ -11,9 +11,15 @@ defmodule CodingAdventures.HttpCoreTest do
     assert to_string(version) == "HTTP/1.1"
   end
 
+  test "rejects invalid versions" do
+    assert {:error, {:invalid_version, "HTTP/one.one"}} = HttpVersion.parse("HTTP/one.one")
+    assert {:error, {:invalid_version, "not-http"}} = HttpVersion.parse("not-http")
+  end
+
   test "find_header is case insensitive" do
     headers = [%Header{name: "Content-Type", value: "text/plain"}]
     assert HttpCore.find_header(headers, "content-type") == "text/plain"
+    assert HttpCore.find_header(headers, "content-length") == nil
   end
 
   test "content helpers" do
@@ -24,6 +30,12 @@ defmodule CodingAdventures.HttpCoreTest do
 
     assert HttpCore.parse_content_length(headers) == 42
     assert HttpCore.parse_content_type(headers) == {"text/html", "utf-8"}
+  end
+
+  test "content helpers reject malformed values" do
+    assert HttpCore.parse_content_length([%Header{name: "Content-Length", value: "nope"}]) == nil
+    assert HttpCore.parse_content_type([%Header{name: "Content-Type", value: ""}]) == nil
+    assert HttpCore.parse_content_type([]) == nil
   end
 
   test "heads delegate to helpers" do
@@ -42,6 +54,10 @@ defmodule CodingAdventures.HttpCoreTest do
     }
 
     assert RequestHead.content_length(request) == 5
+    assert RequestHead.header(request, "content-length") == "5"
+    assert RequestHead.content_type(request) == nil
+    assert ResponseHead.header(response, "content-type") == "application/json"
+    assert ResponseHead.content_length(response) == nil
     assert ResponseHead.content_type(response) == {"application/json", nil}
   end
 

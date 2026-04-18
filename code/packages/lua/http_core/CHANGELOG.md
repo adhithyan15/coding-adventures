@@ -13,3 +13,4 @@ All notable changes to this package will be documented in this file.
 ### Fixed
 
 - Pinned the rockspec source to an immutable HTTPS git ref for reproducible installs
+- Installed the package before running tests and set `LUA_PATH` so `busted` can load the module in CI

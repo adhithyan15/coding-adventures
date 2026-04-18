@@ -22,6 +22,41 @@ token fields before copying. Backreferences need `offset > 0` and
 
 ---
 
+### 2026-04-18: Lua packages tested with `busted` must install or expose `LUA_PATH` first
+
+Lua test files often `require("coding_adventures.<package>")`, which expects
+the package to be installed via LuaRocks or the source tree to be visible
+through `LUA_PATH`. Running `busted` from `tests/` without either setup makes
+CI fail with `module 'coding_adventures.<package>' not found` even though the
+source file exists in `src/`.
+
+**Symptom:** the Unix or Windows BUILD passes control to `busted`, but the
+test process cannot load the package module because it only sees the `tests/`
+working directory and default Lua search paths.
+
+**Rule:** For Lua packages in this repo, BUILD scripts must either run
+`luarocks make --local` first or export a `LUA_PATH` that points at
+`../src/?.lua` and `../src/?/init.lua` before invoking `busted`. Prefer doing
+both when the package already ships a rockspec.
+
+---
+
+### 2026-04-18: Elixir coverage thresholds require tests for delegates and error branches too
+
+Small Elixir packages can miss the repo's `80%` coverage threshold even when
+their primary happy-path tests pass, because delegate helpers and negative
+parsing branches still count toward the total module coverage.
+
+**Symptom:** `mix test --cover` reports green tests but fails the package build
+with coverage in the low 70s because helper modules such as request/response
+heads or invalid-parse branches were never exercised.
+
+**Rule:** When adding a new Elixir package with coverage enforcement, include
+tests for delegate helpers (`header`, `content_length`, `content_type`) and
+invalid input branches, not just the main success path.
+
+---
+
 ### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
 Switching a Lua rockspec from `git://` to `https://` fixes transport security,
