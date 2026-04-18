@@ -15,3 +15,7 @@ All notable changes to this package will be documented in this file.
 ### Security
 
 - Added cycle tracking to `DeepEqual` so cyclic object graphs cannot trigger unbounded recursion or stack exhaustion
+
+### Changed
+
+- Linux BUILD scripts now set package-local `TMPDIR`, `HOME`, and `DOTNET_CLI_HOME` so parallel CI avoids `.NET` first-run migration mutex collisions

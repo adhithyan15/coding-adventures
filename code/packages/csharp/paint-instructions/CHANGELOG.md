@@ -11,3 +11,7 @@ All notable changes to this package will be documented in this file.
 - Builder helpers for creating paint scenes without hand-populating every record field
 - Support for URI-backed and `PixelContainer`-backed paint images
 - xUnit coverage for builder behavior, option application, and instruction tagging
+
+### Changed
+
+- Linux BUILD scripts now set package-local `TMPDIR`, `HOME`, and `DOTNET_CLI_HOME` so parallel CI avoids `.NET` first-run migration mutex collisions

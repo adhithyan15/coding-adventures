@@ -11,3 +11,7 @@ All notable changes to this package will be documented in this file.
 - Custom error types for duplicate handlers, unknown instructions, null contexts, and unsupported export
 - Structural comparison support used by patch diffing
 - xUnit coverage for dispatch, patching, export, and deep equality behavior
+
+### Changed
+
+- Linux BUILD scripts now set package-local `TMPDIR`, `HOME`, and `DOTNET_CLI_HOME` so parallel CI avoids `.NET` first-run migration mutex collisions

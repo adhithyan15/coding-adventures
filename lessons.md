@@ -2363,3 +2363,19 @@ cyclic object graphs and trigger unbounded recursion plus process-killing stack 
 **Rule:** Any public recursive comparison or traversal helper in shared runtime packages must track
 visited reference pairs before descending into reference types. Do not assume consumers will only
 pass the acyclic data structures you had in mind during implementation.
+
+---
+
+## Linux `.NET` BUILD scripts may need package-local `TMPDIR`, not just `HOME`
+
+**Date:** 2026-04-18
+
+**What happened:** The paint foundation PR still failed on Ubuntu after setting package-local
+`HOME` and `DOTNET_CLI_HOME`. The failing F# package hit `NuGet-Migrations` again, and the CI log
+showed the mutex trying to allocate shared state under `/tmp/.dotnet/shm/...`, which is still
+shared across parallel package builds.
+
+**Rule:** For Linux `.NET` BUILD scripts that can run in parallel, create a package-local temporary
+directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
+`DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
+uses temp-backed shared-memory state during first-run migrations.
