@@ -62,14 +62,19 @@ const ast = parser.parse();
 ### Grammar-driven parser
 
 ```typescript
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
-import { tokenize } from "@coding-adventures/lexer";
+import { parseParserGrammar, parseTokenGrammar } from "@coding-adventures/grammar-tools";
+import { grammarTokenize } from "@coding-adventures/lexer";
 import { GrammarParser } from "@coding-adventures/parser";
 import { readFileSync } from "fs";
 
+const tokenGrammar = parseTokenGrammar(readFileSync("python.tokens", "utf-8"));
 const grammar = parseParserGrammar(readFileSync("python.grammar", "utf-8"));
-const tokens = tokenize("x = 1 + 2");
-const parser = new GrammarParser(tokens, grammar);
+const tokens = grammarTokenize("x = 1 + 2", tokenGrammar, {
+  preserveSourceInfo: true,
+});
+const parser = new GrammarParser(tokens, grammar, {
+  preserveSourceInfo: true,
+});
 const ast = parser.parse();
 // ast.ruleName === "program"
 ```
@@ -91,7 +96,14 @@ const ast = parser.parse();
 
 | Type | Description |
 |------|-------------|
-| `ASTNode` | Generic node with `ruleName` and `children` |
+| `ASTNode` | Generic node with `ruleName`, `children`, and optional source spans |
+
+When `preserveSourceInfo` is enabled on `GrammarParser`, grammar-driven AST
+nodes also retain:
+
+- `startOffset` / `endOffset`
+- `firstTokenIndex` / `lastTokenIndex`
+- `leadingTrivia`
 
 ## Dependencies
 

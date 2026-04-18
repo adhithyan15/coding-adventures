@@ -56,7 +56,7 @@
 
 import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 
-import type { Token } from "./token.js";
+import type { Token, Trivia } from "./token.js";
 import { TOKEN_CONTEXT_KEYWORD } from "./token.js";
 import { LexerError } from "./tokenizer.js";
 
@@ -191,6 +191,10 @@ function processEscapes(s: string): string {
  * - The EOF token
  */
 export type OnTokenCallback = (token: Token, ctx: LexerContext) => void;
+
+export interface GrammarLexerOptions {
+  readonly preserveSourceInfo?: boolean;
+}
 
 // ---------------------------------------------------------------------------
 // Lexer Context — Callback Interface for Group Transitions
@@ -544,7 +548,7 @@ export class GrammarLexer {
   private readonly _patterns: CompiledPattern[];
 
   /** Compiled skip patterns (comments, whitespace). */
-  private readonly _skipPatterns: RegExp[];
+  private readonly _skipPatterns: CompiledPattern[];
 
   /** Compiled patterns per group. "default" + named groups. */
   private readonly _groupPatterns: Record<string, CompiledPattern[]>;
@@ -613,8 +617,18 @@ export class GrammarLexer {
   /** Post-tokenize hooks: transform token list after lexing. */
   private _postTokenizeHooks: Array<(tokens: Token[]) => Token[]> = [];
 
-  constructor(source: string, grammar: TokenGrammar) {
+  /** Whether token/trivia source metadata should be preserved. */
+  private readonly _preserveSourceInfo: boolean;
+
+  /** Trivia collected since the previous emitted token. */
+  private _pendingTrivia: Trivia[] = [];
+
+  /** Sequential token index assigned in emission order. */
+  private _nextTokenIndex: number = 0;
+
+  constructor(source: string, grammar: TokenGrammar, options?: GrammarLexerOptions) {
     this._grammar = grammar;
+    this._preserveSourceInfo = options?.preserveSourceInfo === true;
     this._caseInsensitive = grammar.caseInsensitive === true;
     this._caseSensitive = grammar.caseSensitive !== false && !this._caseInsensitive;
     // Only lowercase the source for the legacy caseSensitive:false pattern-level mode.
@@ -670,7 +684,10 @@ export class GrammarLexer {
     // These are tried before token patterns at each position.
     this._skipPatterns = (grammar.skipDefinitions ?? []).map((defn) => {
       const patternSource = defn.isRegex ? defn.pattern : escapeRegExp(defn.pattern);
-      return new RegExp(patternSource, reFlags);
+      return {
+        name: defn.name,
+        pattern: new RegExp(patternSource, reFlags),
+      };
     });
 
     // --- Pattern groups ---
@@ -814,6 +831,8 @@ export class GrammarLexer {
     // Reset extension state for reuse.
     this._lastEmittedToken = null;
     this._bracketDepths = { paren: 0, bracket: 0, brace: 0 };
+    this._pendingTrivia = [];
+    this._nextTokenIndex = 0;
 
     // Stage 2: Core tokenization.
     let tokens: Token[];
@@ -874,7 +893,7 @@ export class GrammarLexer {
         // Without skip patterns, use the hardcoded behavior: skip
         // spaces, tabs, carriage returns silently.
         if (char === " " || char === "\t" || char === "\r") {
-          this._advance();
+          this._consumeDefaultWhitespace();
           continue;
         }
       }
@@ -888,9 +907,9 @@ export class GrammarLexer {
           line: this._line,
           column: this._column,
         };
-        tokens.push(newlineTok);
-        this._lastEmittedToken = newlineTok;
+        const startOffset = this._pos;
         this._advance();
+        this._emitToken(tokens, this._withOptionalSourceInfo(newlineTok, startOffset));
         continue;
       }
 
@@ -921,14 +940,12 @@ export class GrammarLexer {
           // Apply suppression: if the callback suppressed this
           // token, don't add it to the output.
           if (!ctx._suppressed) {
-            tokens.push(token);
-            this._lastEmittedToken = token;
+            this._emitToken(tokens, token);
           }
 
           // Append any tokens emitted by the callback.
           for (const emitted of ctx._emitted) {
-            tokens.push(emitted);
-            this._lastEmittedToken = emitted;
+            this._emitToken(tokens, emitted);
           }
 
           // Apply group stack actions in order.
@@ -945,8 +962,7 @@ export class GrammarLexer {
             this._skipEnabled = ctx._skipEnabled;
           }
         } else {
-          tokens.push(token);
-          this._lastEmittedToken = token;
+          this._emitToken(tokens, token);
         }
         continue;
       }
@@ -959,12 +975,13 @@ export class GrammarLexer {
     }
 
     // --- Append EOF sentinel ---
-    tokens.push({
+    const eof: Token = {
       type: "EOF",
       value: "",
       line: this._line,
       column: this._column,
-    });
+    };
+    this._emitToken(tokens, this._withOptionalSourceInfo(eof, this._pos));
 
     // Reset group stack and skip flag for reuse (in case tokenize is
     // called again on the same instance).
@@ -1017,7 +1034,9 @@ export class GrammarLexer {
         if (result === "skip") {
           continue;
         }
-        tokens.push(...result);
+        for (const token of result) {
+          this._emitToken(tokens, token);
+        }
         atLineStart = false;
         if (this._pos >= this._source.length) {
           break;
@@ -1029,14 +1048,18 @@ export class GrammarLexer {
       // Newline handling
       if (char === "\n") {
         if (bracketDepth === 0) {
-          tokens.push({
+          const newlineTok: Token = {
             type: "NEWLINE",
             value: "\\n",
             line: this._line,
             column: this._column,
-          });
+          };
+          const startOffset = this._pos;
+          this._advance();
+          this._emitToken(tokens, this._withOptionalSourceInfo(newlineTok, startOffset));
+        } else {
+          this._advance();
         }
-        this._advance();
         atLineStart = true;
         continue;
       }
@@ -1046,7 +1069,7 @@ export class GrammarLexer {
         bracketDepth > 0 &&
         (char === " " || char === "\t" || char === "\r")
       ) {
-        this._advance();
+        this._consumeDefaultWhitespace();
         continue;
       }
 
@@ -1070,8 +1093,7 @@ export class GrammarLexer {
         }
         // Track bracket depth (shared for callback access)
         this._updateBracketDepth(tok.value);
-        tokens.push(tok);
-        this._lastEmittedToken = tok;
+        this._emitToken(tokens, tok);
         continue;
       }
 
@@ -1085,12 +1107,12 @@ export class GrammarLexer {
     // EOF: emit remaining DEDENTs
     while (indentStack.length > 1) {
       indentStack.pop();
-      tokens.push({
+      this._emitToken(tokens, this._withOptionalSourceInfo({
         type: "DEDENT",
         value: "",
         line: this._line,
         column: this._column,
-      });
+      }, this._pos));
     }
 
     // Final NEWLINE if needed
@@ -1098,20 +1120,20 @@ export class GrammarLexer {
       tokens.length === 0 ||
       tokens[tokens.length - 1].type !== "NEWLINE"
     ) {
-      tokens.push({
+      this._emitToken(tokens, this._withOptionalSourceInfo({
         type: "NEWLINE",
         value: "\\n",
         line: this._line,
         column: this._column,
-      });
+      }, this._pos));
     }
 
-    tokens.push({
+    this._emitToken(tokens, this._withOptionalSourceInfo({
       type: "EOF",
       value: "",
       line: this._line,
       column: this._column,
-    });
+    }, this._pos));
 
     // Reset group stack for reuse.
     this._groupStack = ["default"];
@@ -1205,13 +1227,13 @@ export class GrammarLexer {
   }
 
   private _virtualLayoutToken(typeName: string, value: string, anchor: Token): Token {
-    return {
+    return this._withOptionalSourceInfo({
       type: typeName,
       typeName,
       value,
       line: anchor.line,
       column: anchor.column,
-    };
+    }, anchor.startOffset ?? this._pos);
   }
 
   private _isVirtualLayoutToken(token: Token): boolean {
@@ -1234,6 +1256,9 @@ export class GrammarLexer {
    */
   private _processLineStart(indentStack: number[]): "skip" | Token[] {
     let indent = 0;
+    const indentStartLine = this._line;
+    const indentStartColumn = this._column;
+    const indentStartOffset = this._pos;
     while (this._pos < this._source.length) {
       const char = this._source[this._pos];
       if (char === " ") {
@@ -1250,33 +1275,73 @@ export class GrammarLexer {
       }
     }
 
+    if (indent > 0 && this._preserveSourceInfo) {
+      this._pushTrivia(
+        "WHITESPACE",
+        this._source.slice(indentStartOffset, this._pos),
+        indentStartLine,
+        indentStartColumn,
+        indentStartOffset,
+      );
+    }
+
     // Blank line or EOF
     if (this._pos >= this._source.length) {
       return "skip";
     }
     if (this._source[this._pos] === "\n") {
+      const newlineStartLine = this._line;
+      const newlineStartColumn = this._column;
+      const newlineStartOffset = this._pos;
       this._advance(); // Consume newline to avoid infinite loop
+      this._pushTrivia(
+        "NEWLINE",
+        "\n",
+        newlineStartLine,
+        newlineStartColumn,
+        newlineStartOffset,
+      );
       return "skip";
     }
 
     // Comment-only line — check skip patterns
     const remaining = this._source.slice(this._pos);
     for (const pat of this._skipPatterns) {
-      const match = pat.exec(remaining);
+      const match = pat.pattern.exec(remaining);
       if (match !== null && match.index === 0) {
         const peekPos = this._pos + match[0].length;
         if (
           peekPos >= this._source.length ||
           this._source[peekPos] === "\n"
         ) {
+          const triviaStartLine = this._line;
+          const triviaStartColumn = this._column;
+          const triviaStartOffset = this._pos;
           for (let i = 0; i < match[0].length; i++) {
             this._advance();
           }
+          this._pushTrivia(
+            pat.name,
+            match[0],
+            triviaStartLine,
+            triviaStartColumn,
+            triviaStartOffset,
+          );
           if (
             this._pos < this._source.length &&
             this._source[this._pos] === "\n"
           ) {
+            const newlineStartLine = this._line;
+            const newlineStartColumn = this._column;
+            const newlineStartOffset = this._pos;
             this._advance();
+            this._pushTrivia(
+              "NEWLINE",
+              "\n",
+              newlineStartLine,
+              newlineStartColumn,
+              newlineStartOffset,
+            );
           }
           return "skip";
         }
@@ -1289,24 +1354,24 @@ export class GrammarLexer {
 
     if (indent > currentIndent) {
       indentStack.push(indent);
-      indentTokens.push({
+      indentTokens.push(this._withOptionalSourceInfo({
         type: "INDENT",
         value: "",
         line: this._line,
         column: 1,
-      });
+      }, this._pos));
     } else if (indent < currentIndent) {
       while (
         indentStack.length > 1 &&
         indentStack[indentStack.length - 1] > indent
       ) {
         indentStack.pop();
-        indentTokens.push({
+        indentTokens.push(this._withOptionalSourceInfo({
           type: "DEDENT",
           value: "",
           line: this._line,
           column: 1,
-        });
+        }, this._pos));
       }
       if (indentStack[indentStack.length - 1] !== indent) {
         throw new LexerError(
@@ -1334,11 +1399,15 @@ export class GrammarLexer {
   private _trySkip(): boolean {
     const remaining = this._source.slice(this._pos);
     for (const pat of this._skipPatterns) {
-      const match = pat.exec(remaining);
+      const match = pat.pattern.exec(remaining);
       if (match !== null && match.index === 0) {
+        const startLine = this._line;
+        const startColumn = this._column;
+        const startOffset = this._pos;
         for (let i = 0; i < match[0].length; i++) {
           this._advance();
         }
+        this._pushTrivia(pat.name, match[0], startLine, startColumn, startOffset);
         return true;
       }
     }
@@ -1365,6 +1434,7 @@ export class GrammarLexer {
         let value = match[0];
         const startLine = this._line;
         const startColumn = this._column;
+        const startOffset = this._pos;
 
         // For case-insensitive grammars, normalize NAME tokens to uppercase for
         // keyword lookup. Keywords are stored uppercase in _keywordSet.
@@ -1441,10 +1511,83 @@ export class GrammarLexer {
           this._advance();
         }
 
-        return tok;
+        return this._withOptionalSourceInfo(tok, startOffset);
       }
     }
     return null;
+  }
+
+  private _consumeDefaultWhitespace(): void {
+    const startLine = this._line;
+    const startColumn = this._column;
+    const startOffset = this._pos;
+    while (this._pos < this._source.length) {
+      const char = this._source[this._pos];
+      if (char !== " " && char !== "\t" && char !== "\r") {
+        break;
+      }
+      this._advance();
+    }
+    if (this._pos > startOffset) {
+      this._pushTrivia(
+        "WHITESPACE",
+        this._source.slice(startOffset, this._pos),
+        startLine,
+        startColumn,
+        startOffset,
+      );
+    }
+  }
+
+  private _pushTrivia(
+    type: string,
+    value: string,
+    line: number,
+    column: number,
+    startOffset: number,
+  ): void {
+    if (!this._preserveSourceInfo) {
+      return;
+    }
+    this._pendingTrivia.push({
+      type,
+      value,
+      line,
+      column,
+      endLine: this._line,
+      endColumn: this._column,
+      startOffset,
+      endOffset: this._pos,
+    });
+  }
+
+  private _withOptionalSourceInfo(token: Token, startOffset: number): Token {
+    if (!this._preserveSourceInfo) {
+      return token;
+    }
+    return {
+      ...token,
+      startOffset,
+      endOffset: this._pos,
+      endLine: this._line,
+      endColumn: this._column,
+    };
+  }
+
+  private _emitToken(tokens: Token[], token: Token): void {
+    let finalized = token;
+    if (this._preserveSourceInfo) {
+      finalized = {
+        ...token,
+        tokenIndex: this._nextTokenIndex++,
+        ...(this._pendingTrivia.length > 0
+          ? { leadingTrivia: [...this._pendingTrivia] }
+          : {}),
+      };
+      this._pendingTrivia = [];
+    }
+    tokens.push(finalized);
+    this._lastEmittedToken = finalized;
   }
 
   /**
@@ -1488,6 +1631,7 @@ export class GrammarLexer {
 export function grammarTokenize(
   source: string,
   grammar: TokenGrammar,
+  options?: GrammarLexerOptions,
 ): Token[] {
-  return new GrammarLexer(source, grammar).tokenize();
+  return new GrammarLexer(source, grammar, options).tokenize();
 }

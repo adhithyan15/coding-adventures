@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-18
+
+### Added
+
+- Optional rich source preservation for `GrammarLexer` and `grammarTokenize()`
+  via `{ preserveSourceInfo: true }`.
+- `Trivia` type for preserved skip matches such as whitespace and comments.
+- Optional token metadata fields:
+  - `startOffset` / `endOffset`
+  - `endLine` / `endColumn`
+  - `tokenIndex`
+  - `leadingTrivia`
+- `typeName?: string` on `Token` so layout-mode virtual tokens and similar
+  source-preserving callers can remain type-safe.
+
 ## [0.2.0] - 2026-03-21
 
 ### Added
