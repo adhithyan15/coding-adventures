@@ -243,12 +243,89 @@ Those can be added later in higher-level music notation packages.
 - both therefore produce the same frequency
 - this package treats them as different spellings of the same pitch
 
-## 10. Prototype Scope
+## 10. Rollout Scope
 
-The first implementation target is:
+This abstraction is small enough that it should exist everywhere we offer a
+runtime package interface. The goal is not to create fifteen unrelated
+implementations. The goal is to create one tiny musical concept with the same
+shape in every host ecosystem.
+
+The rollout target for this layer is:
 
 - Python package: `code/packages/python/note-frequency/`
+- Go package: `code/packages/go/note-frequency/`
+- Ruby package: `code/packages/ruby/note-frequency/`
+- Rust package: `code/packages/rust/note-frequency/`
+- TypeScript package: `code/packages/typescript/note-frequency/`
+- Elixir package: `code/packages/elixir/note-frequency/`
+- Lua package: `code/packages/lua/note-frequency/`
+- Perl package: `code/packages/perl/note-frequency/`
+- Swift package: `code/packages/swift/note-frequency/`
+- Java package: `code/packages/java/note-frequency/`
+- Kotlin package: `code/packages/kotlin/note-frequency/`
+- C# package: `code/packages/csharp/note-frequency/`
+- F# package: `code/packages/fsharp/note-frequency/`
+- Dart package: `code/packages/dart/note-frequency/`
+- Haskell package: `code/packages/haskell/note-frequency/`
+- WebAssembly package: `code/packages/wasm/note-frequency/`
 
-This package is intended as a teaching prototype and as the symbolic front door
-for later note events, melody parsing, oscillators, envelopes, and renderers.
+`starlark` is intentionally out of scope here because it is used in this repo
+for build-rule infrastructure rather than as a user-facing runtime package
+ecosystem.
 
+Every implementation should expose the same three ideas:
+
+- parse a typed note label into a structured `Note`
+- compute the semitone distance from `A4`
+- compute the equal-tempered frequency in Hertz
+
+Language-specific naming can vary slightly to stay idiomatic, but the semantics
+must stay aligned with this spec.
+
+## 11. Cross-Language Parity Vectors
+
+Every implementation should agree on these examples within normal
+double-precision floating-point tolerance:
+
+| Input | Expected result |
+|------:|-----------------|
+| `A4` | semitones from `A4` = `0`, frequency = `440.0` |
+| `A5` | semitones from `A4` = `12`, frequency = `880.0` |
+| `A3` | semitones from `A4` = `-12`, frequency = `220.0` |
+| `C4` | semitones from `A4` = `-9`, frequency = `261.6255653005986...` |
+| `C#4` | frequency equals `Db4` |
+| `g4` | parses successfully and normalizes the letter to uppercase |
+
+Every implementation should also reject these malformed strings:
+
+- `""`
+- `A`
+- `H4`
+- `#4`
+- `4A`
+- `A##4`
+- `Bb`
+
+Every implementation should also reject unsupported spellings that are
+syntactically shaped like a note but outside this version's scope, such as:
+
+- `E#4`
+- `Cb4`
+- `B#3`
+- `Fb5`
+
+## 12. Why This Layer Comes First
+
+This package is intentionally small because it is the first symbolic step from
+music notation into signal generation.
+
+Later packages can build on it:
+
+- note events add duration and start time
+- oscillators turn frequency into a waveform over time
+- envelopes shape how notes begin and end
+- renderers and audio devices turn sampled waveforms into speaker output
+
+But all of those higher layers still need one simple answer first:
+
+> "When the user types `A4`, what exact frequency do we mean?"
