@@ -4,6 +4,23 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
+
+Switching a Lua rockspec from `git://` to `https://` fixes transport security,
+but it does not make installs reproducible. If the rockspec points at a moving
+branch tip with no immutable tag or commit, the published package version can
+resolve to different source code over time.
+
+**Symptom:** Security review flags a supply-chain integrity issue because a
+`0.1.0-1` rockspec can fetch whatever happens to be at the repository head at
+install time.
+
+**Rule:** Every Lua rockspec that installs from GitHub must use `https://` and
+must pin the `source` table to an immutable git ref, such as a release tag or
+commit SHA.
+
+---
+
 ### 2026-04-17: Use a fresh git worktree before editing shared manifests in a noisy repo
 
 When a worktree already contains unrelated untracked package directories or
