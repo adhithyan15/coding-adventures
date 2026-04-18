@@ -127,8 +127,24 @@ module private ParserLimits =
             invalidOp $"Markdown nesting exceeds the supported depth limit of {maxParseDepth}."
 
 module private InlineParsing =
+    let private maxInlineSearchWindow = 4096
+
     let private startsWithAt (text: string) index (value: string) =
         index + value.Length <= text.Length && text.Substring(index, value.Length).Equals(value, StringComparison.Ordinal)
+
+    let private findStringWithinWindow (text: string) (value: string) start =
+        let searchLength = min (text.Length - start) maxInlineSearchWindow
+        if searchLength <= 0 then
+            -1
+        else
+            text.IndexOf(value, start, searchLength, StringComparison.Ordinal)
+
+    let private findCharWithinWindow (text: string) (value: char) start window =
+        let searchLength = min (text.Length - start) window
+        if searchLength <= 0 then
+            -1
+        else
+            text.IndexOf(value, start, searchLength)
 
     let private removeTrailingBreakSpaces (buffer: StringBuilder) =
         let mutable count = 0
@@ -169,7 +185,7 @@ module private InlineParsing =
         if text[index] <> '&' then
             None
         else
-            let end' = text.IndexOf(';', index + 1)
+            let end' = findCharWithinWindow text ';' (index + 1) 16
             if end' < 0 || end' - index > 16 then
                 None
             else
@@ -185,7 +201,8 @@ module private InlineParsing =
         let mutable depth = 0
         let mutable result = -1
         let mutable i = start
-        while i < text.Length && result < 0 do
+        let limit = min text.Length (start + maxInlineSearchWindow)
+        while i < limit && result < 0 do
             if text[i] = '[' then depth <- depth + 1
             elif text[i] = ']' then
                 if depth = 0 then result <- i else depth <- depth - 1
@@ -196,7 +213,8 @@ module private InlineParsing =
         let mutable depth = 1
         let mutable result = -1
         let mutable i = start
-        while i < text.Length && result < 0 do
+        let limit = min text.Length (start + maxInlineSearchWindow)
+        while i < limit && result < 0 do
             if text[i] = '(' then depth <- depth + 1
             elif text[i] = ')' then
                 depth <- depth - 1
@@ -235,7 +253,7 @@ module private InlineParsing =
                 false
             else
                 let start = index + delimiter.Length
-                let end' = text.IndexOf(delimiter, start, StringComparison.Ordinal)
+                let end' = findStringWithinWindow text delimiter start
                 if end' < 0 || end' = start then
                     false
                 else
@@ -252,7 +270,7 @@ module private InlineParsing =
                 while index + tickCount < text.Length && text[index + tickCount] = '`' do
                     tickCount <- tickCount + 1
                 let delimiter = String('`', tickCount)
-                let end' = text.IndexOf(delimiter, index + tickCount, StringComparison.Ordinal)
+                let end' = findStringWithinWindow text delimiter (index + tickCount)
                 if end' < 0 then
                     false
                 else
@@ -313,7 +331,7 @@ module private InlineParsing =
             if text[index] <> '<' then
                 false
             else
-                let end' = text.IndexOf('>', index + 1)
+                let end' = findCharWithinWindow text '>' (index + 1) maxInlineSearchWindow
                 if end' < 0 then
                     false
                 else

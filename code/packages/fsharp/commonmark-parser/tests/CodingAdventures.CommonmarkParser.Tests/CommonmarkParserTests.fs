@@ -84,3 +84,12 @@ module CommonmarkParserTests =
         match doc.Children with
         | [ ParagraphNode [ TextNode value ] ] -> Assert.Contains("999999999999999999999. item", value)
         | _ -> Assert.Fail("Expected paragraph")
+
+    [<Fact>]
+    let ``parse handles delimiter heavy malformed input without failure`` () =
+        let malformed = String.replicate 5000 "["
+        let doc = CommonmarkParser.Parse malformed
+
+        match doc.Children with
+        | [ ParagraphNode _ ] -> ()
+        | _ -> Assert.Fail("Expected paragraph")

@@ -1945,3 +1945,18 @@ race with sibling package invocations.
 variables, especially when the value includes `%CD%` or another path:
   `set "DOTNET_CLI_HOME=%CD%\.dotnet"`
 Also quote path arguments passed to commands such as `dotnet test`.
+
+---
+
+## Inline parsers need bounded unmatched-delimiter searches
+
+**Date:** 2026-04-17
+
+**What happened:** The C# and F# CommonMark inline parsers tried link, image, emphasis, and code-span
+parsing at each character and, on malformed input, could rescan the full remaining suffix looking for
+closers that were not there. Depth and total input limits were not enough to prevent quadratic work on
+delimiter-heavy hostile input.
+
+**Rule:** Any inline parser that retries delimiter or bracket parsing character-by-character must cap
+how far a failed unmatched-delimiter search can scan. If a closer is not found within the bounded
+window, treat the opener as literal text and move on instead of rescanning the full tail again.

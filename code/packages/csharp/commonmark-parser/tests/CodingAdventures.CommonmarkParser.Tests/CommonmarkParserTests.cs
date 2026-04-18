@@ -99,4 +99,12 @@ public class CommonmarkParserTests
         var paragraph = Assert.IsType<ParagraphNode>(Assert.Single(doc.Children));
         Assert.Contains(paragraph.Children, node => node is TextNode text && text.Value.Contains("999999999999999999999. item"));
     }
+
+    [Fact]
+    public void Parse_HandlesDelimiterHeavyMalformedInputWithoutFailure()
+    {
+        var malformed = new string('[', 5000);
+        var doc = CommonmarkParser.Parse(malformed);
+        Assert.IsType<ParagraphNode>(Assert.Single(doc.Children));
+    }
 }

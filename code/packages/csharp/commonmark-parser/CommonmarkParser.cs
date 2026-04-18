@@ -555,6 +555,8 @@ internal sealed partial class BlockParser
 
 internal static class InlineParser
 {
+    private const int MaxInlineSearchWindow = 4_096;
+
     public static IReadOnlyList<IInlineNode> Parse(string text, bool enableGfm, int depth)
     {
         MarkdownParser.EnsureWithinLimits(text.Length, depth);
@@ -616,7 +618,7 @@ internal static class InlineParser
         }
 
         var start = index + delimiter.Length;
-        var end = text.IndexOf(delimiter, start, StringComparison.Ordinal);
+        var end = FindStringWithinWindow(text, delimiter, start);
         if (end < 0 || end == start)
         {
             return false;
@@ -642,7 +644,7 @@ internal static class InlineParser
         }
 
         var delimiter = new string('`', tickCount);
-        var end = text.IndexOf(delimiter, index + tickCount, StringComparison.Ordinal);
+        var end = FindStringWithinWindow(text, delimiter, index + tickCount);
         if (end < 0)
         {
             return false;
@@ -733,7 +735,7 @@ internal static class InlineParser
             return false;
         }
 
-        var end = text.IndexOf('>', index + 1);
+        var end = FindCharWithinWindow(text, '>', index + 1);
         if (end < 0)
         {
             return false;
@@ -776,7 +778,7 @@ internal static class InlineParser
             return false;
         }
 
-        var end = text.IndexOf(';', index + 1);
+        var end = FindCharWithinWindow(text, ';', index + 1, 16);
         if (end < 0 || end - index > 16)
         {
             return false;
@@ -824,7 +826,8 @@ internal static class InlineParser
     private static int FindClosingBracket(string text, int start)
     {
         var depth = 0;
-        for (var i = start; i < text.Length; i++)
+        var limit = Math.Min(text.Length, start + MaxInlineSearchWindow);
+        for (var i = start; i < limit; i++)
         {
             if (text[i] == '[')
             {
@@ -847,7 +850,8 @@ internal static class InlineParser
     private static int FindClosingParen(string text, int start)
     {
         var depth = 1;
-        for (var i = start; i < text.Length; i++)
+        var limit = Math.Min(text.Length, start + MaxInlineSearchWindow);
+        for (var i = start; i < limit; i++)
         {
             if (text[i] == '(')
             {
@@ -864,6 +868,28 @@ internal static class InlineParser
         }
 
         return -1;
+    }
+
+    private static int FindStringWithinWindow(string text, string value, int start)
+    {
+        var searchLength = Math.Min(text.Length - start, MaxInlineSearchWindow);
+        if (searchLength <= 0)
+        {
+            return -1;
+        }
+
+        return text.IndexOf(value, start, searchLength, StringComparison.Ordinal);
+    }
+
+    private static int FindCharWithinWindow(string text, char value, int start, int? explicitWindow = null)
+    {
+        var searchLength = Math.Min(text.Length - start, explicitWindow ?? MaxInlineSearchWindow);
+        if (searchLength <= 0)
+        {
+            return -1;
+        }
+
+        return text.IndexOf(value, start, searchLength);
     }
 
     private static bool RemoveTrailingBreakSpaces(StringBuilder buffer)
