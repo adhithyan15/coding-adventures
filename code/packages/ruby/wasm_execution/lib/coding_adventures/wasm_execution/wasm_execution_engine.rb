@@ -108,8 +108,26 @@ module CodingAdventures
 
         # Reset the VM and execute.
         @vm.reset
+        current_code = code
+        loop do
+          @vm.execute_with_context(current_code, ctx)
 
-        @vm.execute_with_context(code, ctx)
+          pending_code = ctx.delete(:pending_code)
+          unless pending_code.nil?
+            current_code = pending_code
+            @vm.halted = false
+            next
+          end
+
+          if ctx[:returned] && !ctx[:saved_frames].empty?
+            current_code = resume_saved_frame(ctx)
+            @vm.halted = false
+            ctx[:returned] = false
+            next
+          end
+
+          break
+        end
 
         # Collect return values from the typed stack.
         result_count = func_type.results.length
@@ -120,6 +138,25 @@ module CodingAdventures
         end
 
         results
+      end
+
+      private
+
+      def resume_saved_frame(ctx)
+        frame = ctx[:saved_frames].pop
+        raise TrapError, "callee returned fewer values than expected" if @vm.typed_stack.length < frame[:return_arity]
+
+        results = []
+        frame[:return_arity].times { results.unshift(@vm.pop_typed) }
+
+        @vm.pop_typed while @vm.typed_stack.length > frame[:stack_height]
+        results.each { |result| @vm.push_typed(result) }
+
+        ctx[:typed_locals] = frame[:locals]
+        ctx[:label_stack] = frame[:label_stack]
+        ctx[:control_flow_map] = frame[:control_flow_map]
+        @vm.jump_to(frame[:return_pc])
+        frame[:code]
       end
     end
   end
