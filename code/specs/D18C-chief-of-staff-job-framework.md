@@ -40,14 +40,14 @@ This spec therefore separates:
 Job author (TS / Python / Ruby / Go / Rust / ...)
     |
     v
-job-core
+os-job-core
   - JobSpec
   - validation
   - trigger math
   - portable client API
     |
     v
-job-runtime
+os-job-runtime
   - install
   - uninstall
   - run_now
@@ -127,6 +127,9 @@ type JobRuntime = {
 Equivalent APIs in Ruby, Python, Go, Rust, and other languages must preserve the same
 field names and behavior.
 
+For strict cross-platform admission rules, see companion spec `D18E - Chief of
+Staff Job Portability Validator`.
+
 ---
 
 ## OS backends
@@ -160,21 +163,21 @@ Primary backend: Task Scheduler
 The shared `JobSpec` supports all trigger kinds above, but each native backend must
 surface unsupported cases explicitly instead of silently approximating them.
 
-- `job-backend-launchd-files`
+- `macos-job-backend-launchd-files`
   Supports `interval`, `daily`, `weekly`, `monthly`, and `at_login`
-- `job-backend-launchd-files`
+- `macos-job-backend-launchd-files`
   Rejects `once`, `at_boot`, stdin payloads, and interval anchors in the pure
   LaunchAgent path
-- `job-backend-systemd-files`
+- `linux-job-backend-systemd-files`
   Supports `once`, `interval` without anchor, `daily`, `weekly`, `monthly`, and
   `at_login`
-- `job-backend-systemd-files`
+- `linux-job-backend-systemd-files`
   Rejects `at_boot` in the `systemd --user` scope, plus stdin payloads and
   interval anchors
-- `job-backend-windows-xml`
+- `windows-job-backend-task-xml`
   Supports `once`, `interval` with a minimum period of 60 seconds, `daily`,
   `weekly`, `monthly`, `at_login`, and `at_boot`
-- `job-backend-windows-xml`
+- `windows-job-backend-task-xml`
   Rejects stdin payloads and environment injection in the pure XML path until a
   shell-free Windows launcher exists
 
@@ -191,13 +194,13 @@ This backend is useful for tests, development sandboxes, and constrained environ
 
 ### Required pure packages
 
-- `job-core`
+- `os-job-core`
   Pure data types, validation, trigger calculations, serialization
-- `job-backend-launchd-files`
+- `macos-job-backend-launchd-files`
   Generates plist files as plain text without native dependencies
-- `job-backend-systemd-files`
+- `linux-job-backend-systemd-files`
   Generates unit files as plain text
-- `job-backend-windows-xml`
+- `windows-job-backend-task-xml`
   Generates Task Scheduler XML as plain text
 
 These packages should work everywhere, even if installation must be handed off to a
@@ -205,9 +208,9 @@ small helper binary or CLI command.
 
 ### Optional native packages
 
-- `job-backend-macos-native`
-- `job-backend-windows-com`
-- `job-backend-linux-dbus-systemd`
+- `macos-job-backend-native`
+- `windows-job-backend-com`
+- `linux-job-backend-dbus-systemd`
 
 These can improve installation, status inspection, and error reporting, but they are
 optional.
@@ -284,14 +287,14 @@ just printed to a terminal.
 
 ## Initial package plan
 
-- `code/packages/rust/job-core`
-- `code/packages/rust/job-runtime`
-- `code/packages/rust/job-backend-launchd-files`
-- `code/packages/rust/job-backend-systemd-files`
-- `code/packages/rust/job-backend-windows-xml`
-- `code/packages/typescript/job-core`
-- `code/packages/python/job-core`
-- `code/packages/ruby/job-core`
+- `code/packages/rust/os-job-core`
+- `code/packages/rust/os-job-runtime`
+- `code/packages/rust/macos-job-backend-launchd-files`
+- `code/packages/rust/linux-job-backend-systemd-files`
+- `code/packages/rust/windows-job-backend-task-xml`
+- `code/packages/typescript/os-job-core`
+- `code/packages/python/os-job-core`
+- `code/packages/ruby/os-job-core`
 
 The shared schema and validation rules should be identical in every language, with Rust
 acting as the reference implementation for backend adapters.
