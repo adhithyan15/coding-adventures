@@ -1943,3 +1943,90 @@ include any additional local siblings that those editable packages require if
 they are not available from PyPI. For repo-local packages, install leaf-to-root
 so `uv pip` never falls back to the registry for a dependency that only exists
 inside this repository.
+
+---
+
+## Pure markdown parsers need explicit nesting and input-size limits
+
+**Date:** 2026-04-17
+
+**What happened:** The new pure C# and F# CommonMark parsers recursively re-parsed nested blockquotes,
+lists, emphasis, links, and images without any depth guard. A maliciously deep markdown payload could
+drive unbounded recursion and risk `StackOverflowException` or disproportionate resource use.
+
+**Rule:** For any parser that recursively descends into user-controlled structure, add hard limits at
+the parser boundary for maximum input size and maximum nesting depth. Enforce the limit in every
+recursive entry point, not just the top-level public API.
+
+---
+
+## .NET BUILD scripts for related packages must isolate artifacts for parallel CI
+
+**Date:** 2026-04-17
+
+**What happened:** The new C# and F# document packages built fine locally one at a time, but CI runs
+affected packages in parallel. `commonmark-parser` and `gfm-parser` share transitive `ProjectReference`
+graphs, so simultaneous `dotnet test` runs raced on shared `obj/` files like
+`AssemblyInfoInputs.cache`, causing intermittent MSBuild failures on macOS.
+
+**Rule:** When multiple .NET packages in the repo can build the same transitive project graph in
+parallel, their `BUILD` scripts must use `dotnet test --artifacts-path .artifacts` (or an equivalent
+isolated artifacts path) so each package invocation gets its own build outputs and intermediate files.
+
+---
+
+## Markdown ordered-list markers must parse integers without throwing
+
+**Date:** 2026-04-17
+
+**What happened:** The C# and F# CommonMark parsers used direct `int.Parse` conversion for ordered
+list markers. Extremely large numeric markers like `999999999999999999999. item` caused overflow
+exceptions instead of being treated as non-list input.
+
+**Rule:** When parsing user-controlled numeric tokens in language tooling, use `TryParse`-style
+conversion and treat overflow as invalid syntax or plain text. Never let oversized numeric literals
+crash the parser.
+
+---
+
+## .NET CLI on Linux may need package-local HOME, not just DOTNET_CLI_HOME
+
+**Date:** 2026-04-17
+
+**What happened:** Even after isolating `.NET` build outputs with `--artifacts-path`, Ubuntu CI still
+failed intermittently in the CLI startup path with a `NuGet-Migrations` mutex/first-run error while
+parallel package builds invoked `dotnet test`. Setting only `DOTNET_CLI_HOME` was not enough.
+
+**Rule:** For Linux `dotnet` BUILD scripts that may run in parallel, set both `HOME="$PWD/.dotnet"`
+and `DOTNET_CLI_HOME="$PWD/.dotnet"` so the CLI's first-run state is fully package-local and does not
+race with sibling package invocations.
+
+---
+
+## BUILD_windows: use `set "VAR=value"` for path-bearing env vars
+
+**Date:** 2026-04-17
+
+**What happened:** The Windows BUILD scripts for the new .NET document packages used plain
+`set DOTNET_CLI_HOME=%CD%\.dotnet`. In `cmd.exe`, a working directory path containing characters like
+`&`, `|`, `(`, or `)` can change how the command line is parsed.
+
+**Rule:** In `BUILD_windows`, always use the defensive quoted assignment form for environment
+variables, especially when the value includes `%CD%` or another path:
+  `set "DOTNET_CLI_HOME=%CD%\.dotnet"`
+Also quote path arguments passed to commands such as `dotnet test`.
+
+---
+
+## Inline parsers need bounded unmatched-delimiter searches
+
+**Date:** 2026-04-17
+
+**What happened:** The C# and F# CommonMark inline parsers tried link, image, emphasis, and code-span
+parsing at each character and, on malformed input, could rescan the full remaining suffix looking for
+closers that were not there. Depth and total input limits were not enough to prevent quadratic work on
+delimiter-heavy hostile input.
+
+**Rule:** Any inline parser that retries delimiter or bracket parsing character-by-character must cap
+how far a failed unmatched-delimiter search can scan. If a closer is not found within the bounded
+window, treat the opener as literal text and move on instead of rescanning the full tail again.
