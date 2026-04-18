@@ -1,0 +1,10 @@
+[package]
+name = "stream-reactor"
+version = "0.1.0"
+edition = "2021"
+description = "Generic byte-stream reactor built on top of transport-platform"
+license = "MIT"
+
+[dependencies]
+transport-platform = { path = "../transport-platform" }
+
