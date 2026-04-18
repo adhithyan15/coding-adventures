@@ -4,6 +4,24 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: Dart decompressors must validate backreferences before indexing decoded output
+
+For byte-oriented compression formats like LZ77, the decoder is a trust
+boundary whenever it accepts token streams or compressed bytes from outside the
+process. A malformed token with `offset == 0` or `offset > decoded_prefix_len`
+can trigger a `RangeError` if the implementation blindly indexes into the
+already-decoded output buffer.
+
+**Symptom:** Security review flags a denial-of-service bug because `decode()`
+crashes on hostile compressed input instead of rejecting it cleanly.
+
+**Rule:** Every Dart decoder for backreference-based formats must validate
+token fields before copying. Backreferences need `offset > 0` and
+`offset <= output.length`, and malformed or truncated streams should throw
+`FormatException` rather than indexing past buffer bounds.
+
+---
+
 ### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
 Switching a Lua rockspec from `git://` to `https://` fixes transport security,
