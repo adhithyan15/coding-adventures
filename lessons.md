@@ -2342,3 +2342,18 @@ their resized trailing zeros still attached. Decoding still worked, but the expo
 **Rule:** When a little-endian polynomial builder grows arrays in place during iterative
 algorithms like Berlekamp-Massey, trim trailing zero coefficients before returning the public
 result. Keep at least one coefficient so the zero-error locator remains `[1]`.
+
+---
+
+## Rust workspace merge resolutions must deduplicate member entries before pushing
+
+**Date:** 2026-04-18
+
+**What happened:** A PR branch merged `origin/main` after adding new Rust `http-core` and `http1`
+packages. The conflict resolution kept both sides' `window-core`, `window-appkit`, and
+`window-win32` entries in `code/packages/rust/Cargo.toml`, which older Cargo tolerated but the
+CI detect step now rejects as duplicate workspace members before any package builds run.
+
+**Rule:** After resolving Rust workspace `members` conflicts, scan the final list for duplicates
+and run a workspace-level manifest check before pushing. A merged workspace must contain each
+package exactly once, even when both branches added adjacent member blocks.
