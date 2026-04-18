@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/format-doc-std",
+  "version": "0.1.0",
+  "description": "Reusable syntax templates for @coding-adventures/format-doc",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/format-doc": "file:../format-doc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
