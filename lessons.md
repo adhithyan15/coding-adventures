@@ -2221,3 +2221,32 @@ PR with unrelated history.
 **Rule:** When creating a fresh implementation worktree in this repo, always pin the starting point
 explicitly: `git worktree add <path> -b <branch> origin/main`. Do not rely on the current checkout's
 HEAD being the correct base.
+
+---
+
+## C# packages that reference a type with the same name as its namespace need an explicit alias
+
+**Date:** 2026-04-18
+
+**What happened:** The new C# `reed-solomon` package referenced the `gf256` helper as `Gf256.*`
+after importing `using CodingAdventures.Gf256;`. Because the referenced package exposes both the
+namespace `CodingAdventures.Gf256` and the type `Gf256`, the compiler bound `Gf256` as the
+namespace, not the class, and every static arithmetic call failed to compile.
+
+**Rule:** In C# ports where a referenced package exposes a type with the same name as its
+namespace, add an explicit type alias such as `using FieldMath = CodingAdventures.Gf256.Gf256;`
+and call the aliased type. Do not rely on unqualified `Gf256.*` style references compiling.
+
+---
+
+## Trim trailing zero coefficients before exposing little-endian locator polynomials
+
+**Date:** 2026-04-18
+
+**What happened:** The first F# `reed-solomon` pass returned Berlekamp-Massey locator arrays with
+their resized trailing zeros still attached. Decoding still worked, but the exposed
+`ErrorLocator` polynomial had an inflated apparent degree and failed degree-sensitive tests.
+
+**Rule:** When a little-endian polynomial builder grows arrays in place during iterative
+algorithms like Berlekamp-Massey, trim trailing zero coefficients before returning the public
+result. Keep at least one coefficient so the zero-error locator remains `[1]`.
