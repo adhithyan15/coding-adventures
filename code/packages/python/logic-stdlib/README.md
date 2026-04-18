@@ -15,16 +15,19 @@ The first slice includes:
 - `tailo(...)`
 - `membero(...)`
 - `appendo(...)`
+- `selecto(...)`
+- `permuteo(...)`
 
 ## Quick Start
 
 ```python
 from logic_engine import atom, logic_list, program, solve_all, solve_n, var
-from logic_stdlib import appendo, membero
+from logic_stdlib import appendo, membero, permuteo
 
 X = var("X")
 Prefix = var("Prefix")
 Suffix = var("Suffix")
+Order = var("Order")
 
 assert solve_all(program(), X, membero(X, logic_list(["tea", "cake"]))) == [
     atom("tea"),
@@ -42,6 +45,16 @@ assert answers == [
     (logic_list([]), logic_list(["tea", "cake"])),
     (logic_list(["tea"]), logic_list(["cake"])),
     (logic_list(["tea", "cake"]), logic_list([])),
+]
+
+assert solve_n(
+    program(),
+    2,
+    Order,
+    permuteo(logic_list(["tea", "cake", "jam"]), Order),
+) == [
+    logic_list(["tea", "cake", "jam"]),
+    logic_list(["tea", "jam", "cake"]),
 ]
 ```
 

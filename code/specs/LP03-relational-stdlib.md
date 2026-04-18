@@ -288,8 +288,6 @@ Later milestones may add:
 - `listo`
 - `lengtho`
 - `reverseo`
-- `selecto`
-- `permuteo`
 - arithmetic relations
 - finite-domain helpers
 

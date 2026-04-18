@@ -21,6 +21,8 @@ __all__ = [
     "emptyo",
     "heado",
     "membero",
+    "permuteo",
+    "selecto",
     "tailo",
 ]
 
@@ -82,6 +84,41 @@ def appendo(left: object, right: object, combined: object) -> GoalExpr:
                 conso(head, left_tail, left),
                 conso(head, out_tail, combined),
                 defer(appendo, left_tail, right, out_tail),
+            ),
+        ),
+    )
+
+
+def selecto(member: object, items: object, remainder: object) -> GoalExpr:
+    """Relate one chosen element to the list with that element removed."""
+
+    return fresh(
+        3,
+        lambda head, tail, rest_tail: disj(
+            conj(
+                conso(member, tail, items),
+                eq(tail, remainder),
+            ),
+            conj(
+                conso(head, tail, items),
+                conso(head, rest_tail, remainder),
+                defer(selecto, member, tail, rest_tail),
+            ),
+        ),
+    )
+
+
+def permuteo(items: object, permutation: object) -> GoalExpr:
+    """Relate a list to every ordering of its elements."""
+
+    return disj(
+        conj(emptyo(items), emptyo(permutation)),
+        fresh(
+            3,
+            lambda head, remaining, perm_tail: conj(
+                selecto(head, items, remaining),
+                conso(head, perm_tail, permutation),
+                defer(permuteo, remaining, perm_tail),
             ),
         ),
     )

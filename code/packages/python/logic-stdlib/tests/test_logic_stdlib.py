@@ -5,6 +5,8 @@ from logic_engine import (
 )
 from logic_engine import (
     atom,
+    conj,
+    eq,
     logic_list,
     program,
     solve_all,
@@ -19,6 +21,8 @@ from logic_stdlib import (
     emptyo,
     heado,
     membero,
+    permuteo,
+    selecto,
     tailo,
 )
 
@@ -27,7 +31,7 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
         assert logic_engine_version == "0.3.0"
 
 
@@ -99,3 +103,57 @@ class TestListRelations:
             (logic_list(["tea"]), logic_list(["cake"])),
             (logic_list(["tea", "cake"]), logic_list([])),
         ]
+
+    def test_selecto_can_remove_a_known_element(self) -> None:
+        remainder = var("Remainder")
+
+        assert solve_all(
+            program(),
+            remainder,
+            selecto("cake", logic_list(["tea", "cake", "jam"]), remainder),
+        ) == [logic_list(["tea", "jam"])]
+
+    def test_selecto_enumerates_all_element_and_remainder_pairs(self) -> None:
+        item = var("Item")
+        remainder = var("Remainder")
+
+        assert solve_all(
+            program(),
+            (item, remainder),
+            selecto(item, logic_list(["tea", "cake", "jam"]), remainder),
+        ) == [
+            (atom("tea"), logic_list(["cake", "jam"])),
+            (atom("cake"), logic_list(["tea", "jam"])),
+            (atom("jam"), logic_list(["tea", "cake"])),
+        ]
+
+    def test_permuteo_enumerates_every_permutation_of_a_small_list(self) -> None:
+        order = var("Order")
+
+        assert solve_all(
+            program(),
+            order,
+            permuteo(logic_list(["tea", "cake", "jam"]), order),
+        ) == [
+            logic_list(["tea", "cake", "jam"]),
+            logic_list(["tea", "jam", "cake"]),
+            logic_list(["cake", "tea", "jam"]),
+            logic_list(["cake", "jam", "tea"]),
+            logic_list(["jam", "tea", "cake"]),
+            logic_list(["jam", "cake", "tea"]),
+        ]
+
+    def test_permuteo_can_validate_a_specific_ordering(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                permuteo(
+                    logic_list(["tea", "jam"]),
+                    logic_list(["jam", "tea"]),
+                ),
+            ),
+        ) == [atom("ok")]
