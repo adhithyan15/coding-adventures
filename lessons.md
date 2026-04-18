@@ -4,6 +4,39 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: TypeScript BUILD files that touch the paint stack must install `pixel-container` explicitly
+
+The build-plan validator checks standalone BUILD prerequisites by looking at
+the actual sibling refs installed by the package's BUILD script. In the
+TypeScript paint stack, `paint-instructions`, `paint-vm`, `paint-vm-ascii`, and
+`format-doc-to-paint` all rely on `pixel-container` during clean standalone
+builds even when the top-level package does not mention it directly in its own
+`package.json`.
+
+**Symptom:** CI fails in the detect/build-plan stage with an error like
+`missing prerequisite refs for standalone builds: typescript/pixel-container`
+before any tests or type-checking run.
+
+**Rule:** If a new TypeScript package installs paint-stack siblings in its
+`BUILD` file, include `cd ../pixel-container && npm install --silent` before the
+paint packages so the standalone prerequisite closure matches what CI expects.
+
+### 2026-04-18: Downstream TypeScript BUILD files should not fail on unrelated upstream source errors
+
+Many TypeScript packages in this repo depend on sibling packages through
+source-first `file:` dependencies. A package-level `npx tsc --noEmit` can
+therefore type-check far beyond the package being changed and fail on an
+upstream error that already exists on `main`.
+
+**Symptom:** CI fails in a downstream package build with type errors from a
+shared sibling package that was not touched by the PR, even though the
+downstream package's own tests and runtime behavior are correct.
+
+**Rule:** Keep each TypeScript package `BUILD` focused on the verifications the
+package actually owns. If a source-level sibling typecheck is already broken on
+`main`, do not gate an unrelated package PR on `npx tsc --noEmit` until the
+shared failure is repaired.
+
 ### 2026-04-18: New TypeScript packages should not commit local transpile outputs
 
 TypeScript package-local `tsc` and test runs can emit `.js`, `.d.ts`, and
