@@ -1,0 +1,8 @@
+[package]
+name = "epoll"
+version = "0.1.0"
+edition = "2021"
+description = "Thin Rust wrapper over Linux epoll for readiness-based event polling"
+license = "MIT"
+
+[dependencies]

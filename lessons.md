@@ -4,6 +4,42 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-17: Use a fresh git worktree before editing shared manifests in a noisy repo
+
+When a worktree already contains unrelated untracked package directories or
+other agents are actively building in the same checkout, shared files like
+workspace manifests can pick up accidental references to crates that are not
+part of the intended change. In this case, a Rust event-loop PR accidentally
+committed `job-*` workspace members from the surrounding dirty tree, and CI
+failed because those package directories were never pushed with the branch.
+
+**Symptom:** CI fails with errors like `failed to load manifest for workspace member ... No such file or directory`, even though the feature itself builds locally in isolation.
+
+**Rule:** If the source worktree has unrelated untracked files, package
+directories, or active agent work, create a fresh `git worktree` from
+`origin/main` before staging or committing shared manifest changes. Replay only
+the intended commits there, then push from the clean worktree.
+
+---
+
+### 2026-04-17: Socket tests should not assume immediate accept batching or instant EOF propagation
+
+Local TCP tests can be timing-sensitive even on loopback. A listener may not
+see every new connection in the very first `accept()` burst, and a client that
+was refused server-side may not observe EOF immediately on the next `read()`.
+Tests that assume either behavior become flaky under the repo build tool and CI.
+
+**Symptom:** a readiness or connection-cap test passes in one direct `cargo test`
+run but fails under CI or under the repo build tool with missing accepted
+connections or a refused client that never reports close quickly enough.
+
+**Rule:** In socket tests, wait for the expected accepted-connection count with
+bounded retries, and assert the stable invariant you actually care about
+(`connections.len()`, state transitions, explicit errors) instead of requiring
+an immediate EOF from the peer.
+
+---
+
 ### 2026-04-12: Never commit build artifacts — agents running tests will generate them
 
 When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
@@ -1873,3 +1909,37 @@ A 6-parent walk from Windows site-packages lands at `code\packages\python\` inst
   `uv pip install -e ../dep .[dev]`   ← WRONG: non-editable breaks __file__ paths
   `uv pip install -e ".[dev]"`        ← WRONG: cmd.exe passes literal quotes to uv
   `uv pip install -e .[dev]`          ← CORRECT: editable install, no quotes ✓
+
+---
+
+## Rust workspace builds: keep the toolchain current when dependencies adopt new editions
+
+**Date:** 2026-04-17
+
+**What happened:** `cargo build --workspace` failed while resolving the wider Rust workspace because
+an external dependency (`uefi-macros`) now requires the Edition 2024 manifest feature. Older Cargo
+versions reject that manifest before our own crates even begin compiling.
+
+**Rule:** Before declaring a Rust workspace build broken, check the active toolchain and upgrade
+stable when necessary:
+  `rustup toolchain install stable`
+If a dependency has adopted a newer edition, rerun the workspace build with the refreshed stable
+toolchain instead of assuming the local Cargo version is sufficient.
+
+---
+
+## Python BUILD files: include transitive local siblings required by editable installs
+
+**Date:** 2026-04-17
+
+**What happened:** The new `ir-to-jvm-class-file` package installed
+`../brainfuck` as an editable sibling, but its `BUILD` file omitted
+`../virtual-machine`, which `coding-adventures-brainfuck` depends on. `uv pip`
+then tried to satisfy `coding-adventures-virtual-machine` from the package
+registry and failed dependency resolution before tests even started.
+
+**Rule:** When a Python `BUILD` file installs sibling packages with `-e ../pkg`,
+include any additional local siblings that those editable packages require if
+they are not available from PyPI. For repo-local packages, install leaf-to-root
+so `uv pip` never falls back to the registry for a dependency that only exists
+inside this repository.

@@ -1,0 +1,9 @@
+[package]
+name = "tcp-reactor"
+version = "0.1.0"
+edition = "2021"
+description = "Small nonblocking TCP reactor built on top of native-event-core"
+license = "MIT"
+
+[dependencies]
+native-event-core = { path = "../native-event-core" }
