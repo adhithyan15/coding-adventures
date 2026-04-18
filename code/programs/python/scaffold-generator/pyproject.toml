@@ -1,6 +1,6 @@
 [project]
 name = "coding-adventures-scaffold-generator"
-version = "1.0.0"
+version = "1.0.1"
 description = "Generate CI-ready package scaffolding for the coding-adventures monorepo"
 requires-python = ">=3.12"
 dependencies = [

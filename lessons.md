@@ -4,6 +4,39 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: TypeScript BUILD files that touch the paint stack must install `pixel-container` explicitly
+
+The build-plan validator checks standalone BUILD prerequisites by looking at
+the actual sibling refs installed by the package's BUILD script. In the
+TypeScript paint stack, `paint-instructions`, `paint-vm`, `paint-vm-ascii`, and
+`format-doc-to-paint` all rely on `pixel-container` during clean standalone
+builds even when the top-level package does not mention it directly in its own
+`package.json`.
+
+**Symptom:** CI fails in the detect/build-plan stage with an error like
+`missing prerequisite refs for standalone builds: typescript/pixel-container`
+before any tests or type-checking run.
+
+**Rule:** If a new TypeScript package installs paint-stack siblings in its
+`BUILD` file, include `cd ../pixel-container && npm install --silent` before the
+paint packages so the standalone prerequisite closure matches what CI expects.
+
+### 2026-04-18: Downstream TypeScript BUILD files should not fail on unrelated upstream source errors
+
+Many TypeScript packages in this repo depend on sibling packages through
+source-first `file:` dependencies. A package-level `npx tsc --noEmit` can
+therefore type-check far beyond the package being changed and fail on an
+upstream error that already exists on `main`.
+
+**Symptom:** CI fails in a downstream package build with type errors from a
+shared sibling package that was not touched by the PR, even though the
+downstream package's own tests and runtime behavior are correct.
+
+**Rule:** Keep each TypeScript package `BUILD` focused on the verifications the
+package actually owns. If a source-level sibling typecheck is already broken on
+`main`, do not gate an unrelated package PR on `npx tsc --noEmit` until the
+shared failure is repaired.
+
 ### 2026-04-18: New TypeScript packages should not commit local transpile outputs
 
 TypeScript package-local `tsc` and test runs can emit `.js`, `.d.ts`, and
@@ -105,6 +138,23 @@ install time.
 **Rule:** Every Lua rockspec that installs from GitHub must use `https://` and
 must pin the `source` table to an immutable git ref, such as a release tag or
 commit SHA.
+
+---
+
+### 2026-04-18: Never expose caller-controlled FFI input enums as Rust `repr(C)` enums
+
+At the C ABI boundary, foreign callers can pass any integer bit pattern for an
+enum field. If a Rust `repr(C)` enum is embedded directly in an input struct and
+the caller supplies an out-of-range discriminant, Rust can observe invalid enum
+values, which is undefined behavior before normal validation code ever runs.
+
+**Symptom:** Security review flags FFI input structs that use Rust enums for
+caller-controlled fields such as mount-target kind or surface preference.
+
+**Rule:** For all FFI input structs, represent enum-like fields as primitive
+integers (`u32`, `c_int`, etc.) in both the Rust ABI struct and the C header,
+then validate/convert them explicitly with `match`/`TryFrom` before using them
+as internal enums.
 
 ---
 
@@ -497,6 +547,7 @@ When TypeScript packages depend on each other via `"file:../other-pkg"` referenc
 - [ ] `file:../` dependencies for internal packages
 - [ ] `"@vitest/coverage-v8": "^3.0.0"` in devDependencies (missed on 5 packages in the S-series work — display, interrupt-handler, rom-bios, bootloader, os-kernel, system-board)
 - [ ] BUILD file uses `npm install --silent` (not `npm ci`) unless package-lock.json is committed and in sync
+- [ ] Run the real coverage gate locally with `npx vitest run --coverage` (or the package `BUILD` file) for every changed TypeScript package, not just `tsc` or plain `vitest run`
 
 ---
 
@@ -2321,7 +2372,6 @@ algorithms like Berlekamp-Massey, trim trailing zero coefficients before returni
 result. Keep at least one coefficient so the zero-error locator remains `[1]`.
 
 ---
-
 ## Lua BUILDs must stage sibling rocks and tests must prefer source lexers when grammars live in-tree
 
 **Date:** 2026-04-18
@@ -2336,3 +2386,63 @@ the LuaRocks install tree instead of the repo, so parser-driven tests could not 
 those siblings already know how to install their transitive local rocks. In tests that exercise
 grammar-backed lexers/parsers, put the sibling `src/` directories for those lexers ahead of
 installed rocks on `package.path` so in-repo grammar files resolve correctly.
+
+---
+
+## .NET package BUILD coverage should target the package under test, not every referenced assembly
+
+**Date:** 2026-04-18
+
+**What happened:** The first `paint-instructions` BUILD run failed coverage even though its own test
+surface was solid because coverlet also measured the referenced `pixel-container` assembly inside the
+same run. That dragged the total below the repo threshold and hid the real package coverage signal.
+
+**Rule:** For .NET package BUILD scripts in this repo, pass an explicit coverlet include filter such
+as `"/p:Include=[CodingAdventures.PaintInstructions]*"` or `"/p:Include=[CodingAdventures.PaintVm]*"`
+so coverage thresholds apply to the package being verified rather than all transitive project
+references.
+
+---
+
+## F# tests that populate `Metadata` should build a concrete `Dictionary` before upcasting
+
+**Date:** 2026-04-18
+
+**What happened:** Two new F# paint tests populated `Metadata` with `dict [...] :> IReadOnlyDictionary<string, obj>`.
+F# inferred the intermediate value as `IDictionary<string, objnull>`, which then failed the stricter
+`IReadOnlyDictionary<string, obj>` type expected by the package records.
+
+**Rule:** In F# tests and builders for these packages, create a concrete
+`Dictionary<string, obj>`, populate it, and only then upcast to `IReadOnlyDictionary<string, obj>`.
+Do not rely on `dict [...]` preserving the exact metadata interface type you need.
+
+---
+
+## Public recursive comparison helpers need cycle tracking before they reach shared runtime packages
+
+**Date:** 2026-04-18
+
+**What happened:** The first C# `paint-vm` pass exposed a public `DeepEqual(object?, object?)`
+helper that recursively walked dictionaries, enumerables, and reflected properties without
+tracking visited reference pairs. It worked for the intended paint records, but a caller could pass
+cyclic object graphs and trigger unbounded recursion plus process-killing stack exhaustion.
+
+**Rule:** Any public recursive comparison or traversal helper in shared runtime packages must track
+visited reference pairs before descending into reference types. Do not assume consumers will only
+pass the acyclic data structures you had in mind during implementation.
+
+---
+
+## Linux `.NET` BUILD scripts may need package-local `TMPDIR`, not just `HOME`
+
+**Date:** 2026-04-18
+
+**What happened:** The paint foundation PR still failed on Ubuntu after setting package-local
+`HOME` and `DOTNET_CLI_HOME`. The failing F# package hit `NuGet-Migrations` again, and the CI log
+showed the mutex trying to allocate shared state under `/tmp/.dotnet/shm/...`, which is still
+shared across parallel package builds.
+
+**Rule:** For Linux `.NET` BUILD scripts that can run in parallel, create a package-local temporary
+directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
+`DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
+uses temp-backed shared-memory state during first-run migrations.
