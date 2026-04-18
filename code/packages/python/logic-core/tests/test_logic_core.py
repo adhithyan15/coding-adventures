@@ -13,6 +13,7 @@ from symbol_core import sym
 from logic_core import (
     Atom,
     Compound,
+    Disequality,
     LogicVar,
     Number,
     State,
@@ -26,6 +27,7 @@ from logic_core import (
     fail,
     fresh,
     logic_list,
+    neq,
     num,
     reify,
     run_all,
@@ -42,7 +44,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
 
 
 class TestTermConstruction:
@@ -152,6 +154,41 @@ class TestGoalsAndSearch:
         x = var("X")
 
         assert run_all(x, eq(x, atom("homer"))) == [atom("homer")]
+
+    def test_neq_fails_on_equal_terms(self) -> None:
+        assert run_all(var("X"), neq(atom("homer"), atom("homer"))) == []
+
+    def test_neq_succeeds_immediately_on_obviously_different_terms(self) -> None:
+        x = var("X")
+
+        assert run_all(x, neq(atom("homer"), atom("marge"))) == [x]
+
+    def test_neq_records_delayed_constraints_for_open_terms(self) -> None:
+        x = var("X")
+        states = list(neq(x, atom("homer"))(State()))
+
+        assert len(states) == 1
+        assert states[0].substitution == Substitution()
+        assert states[0].constraints == (
+            Disequality(left=x, right=atom("homer")),
+        )
+
+    def test_eq_fails_when_it_would_violate_a_stored_disequality(self) -> None:
+        x = var("X")
+        goal = conj(
+            neq(x, atom("homer")),
+            eq(x, atom("homer")),
+        )
+
+        assert run_all(x, goal) == []
+
+    def test_eq_satisfies_and_drops_disequality_constraints(self) -> None:
+        x = var("X")
+        states = list(conj(neq(x, atom("homer")), eq(x, atom("marge")))(State()))
+
+        assert len(states) == 1
+        assert states[0].constraints == ()
+        assert states[0].substitution.reify(x) == atom("marge")
 
     def test_disjunction_emits_multiple_answers(self) -> None:
         x = var("X")
