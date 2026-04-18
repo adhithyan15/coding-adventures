@@ -2629,6 +2629,22 @@ object across the whole execution when handlers can change `$vm->{_program}` mid
 
 ---
 
+## WASI host shims must cap guest-controlled iovec counts and byte totals
+
+**Date:** 2026-04-18
+
+**What happened:** During the Perl convergence security review, the new `fd_write` host shim in
+`wasm-runtime` trusted guest-controlled `iovs_len` and `buf_len` values and copied every requested
+byte into host memory before invoking stdout/stderr callbacks. A malicious guest could request a
+huge scatter/gather write and force excessive host CPU and memory usage. The same trust boundary
+exists for `fd_read`.
+
+**Rule:** In WASI host implementations, treat `iovs_len`, per-buffer lengths, and total read/write
+bytes as untrusted input. Enforce explicit upper bounds before copying guest data, and prefer
+streaming bounded chunks over accumulating arbitrarily large host-side buffers.
+
+---
+
 ## Reactor tests must tolerate deferred socket readability after a write-ready step
 
 **Date:** 2026-04-18

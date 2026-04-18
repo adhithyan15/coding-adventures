@@ -487,6 +487,48 @@ subtest 'fd_read: copies stdin bytes into guest buffers' => sub {
     is($mem->load_i32_8u(201), ord('i'), 'second byte copied');
 };
 
+subtest 'fd_write: rejects oversized iovec counts before copying guest data' => sub {
+    my @output;
+    my $stub = CodingAdventures::WasmRuntime::WasiHost->new(
+        stdout => sub { push @output, $_[0] },
+        clock  => FakeClock->new(),
+        random => FakeRandom->new(),
+    );
+    my $mem = CodingAdventures::WasmExecution::LinearMemory->new(1, undef);
+    $stub->set_memory($mem);
+
+    my $result = _call($stub, 'fd_write', [
+        i32(1),
+        i32(0),
+        i32(1025),
+        i32(100),
+    ]);
+
+    is($result->[0]{value}, 28, 'fd_write returns EINVAL for oversized iovec counts');
+    is(\@output, [], 'stdout callback is not invoked');
+};
+
+subtest 'fd_read: rejects oversized iovec counts before requesting stdin' => sub {
+    my $read_calls = 0;
+    my $stub = CodingAdventures::WasmRuntime::WasiHost->new(
+        stdin  => sub { $read_calls++; return 'blocked'; },
+        clock  => FakeClock->new(),
+        random => FakeRandom->new(),
+    );
+    my $mem = CodingAdventures::WasmExecution::LinearMemory->new(1, undef);
+    $stub->set_memory($mem);
+
+    my $result = _call($stub, 'fd_read', [
+        i32(0),
+        i32(0),
+        i32(1025),
+        i32(100),
+    ]);
+
+    is($result->[0]{value}, 28, 'fd_read returns EINVAL for oversized iovec counts');
+    is($read_calls, 0, 'stdin callback is not invoked');
+};
+
 # ============================================================================
 # Test 15: existing square test still passes (regression)
 # ============================================================================

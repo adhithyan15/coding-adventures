@@ -440,6 +440,12 @@ sub load_and_run {
 
 package CodingAdventures::WasmRuntime::WasiStub;
 
+use constant {
+    _WASI_MAX_IOVECS   => 1024,
+    _WASI_MAX_RW_BYTES => 1024 * 1024,
+    _WASI_ERRNO_INVAL  => 28,
+};
+
 # constructor — create a new WasiStub with optional configuration.
 #
 # Parameters (all optional):
@@ -514,26 +520,33 @@ sub resolve_function {
             my $nwritten_ptr = $args->[3]{value} & 0xFFFFFFFF;
 
             return [ CodingAdventures::WasmExecution::i32(8) ] unless $fd == 1 || $fd == 2;
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $iovs_len > _WASI_MAX_IOVECS;
 
-            my @bytes;
+            my $callback = $fd == 1 ? $self->{stdout_callback} : $self->{stderr_callback};
+            my $total_written = 0;
             for my $i (0 .. $iovs_len - 1) {
                 my $buf_ptr = $memory->load_i32($iovs_ptr + $i * 8) & 0xFFFFFFFF;
                 my $buf_len = $memory->load_i32($iovs_ptr + $i * 8 + 4) & 0xFFFFFFFF;
+                return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                    if $buf_len > _WASI_MAX_RW_BYTES || $total_written + $buf_len > _WASI_MAX_RW_BYTES;
 
-                for my $j (0 .. $buf_len - 1) {
-                    push @bytes, $memory->load_i32_8u($buf_ptr + $j);
+                my $offset = 0;
+                while ($offset < $buf_len) {
+                    my $chunk_len = $buf_len - $offset;
+                    $chunk_len = 4096 if $chunk_len > 4096;
+                    my @chunk_bytes;
+                    for my $j (0 .. $chunk_len - 1) {
+                        push @chunk_bytes, $memory->load_i32_8u($buf_ptr + $offset + $j);
+                    }
+                    $callback->(pack('C*', @chunk_bytes));
+                    $offset += $chunk_len;
                 }
+
+                $total_written += $buf_len;
             }
 
-            my $text = pack('C*', @bytes);
-            if ($fd == 1) {
-                $self->{stdout_callback}->($text);
-            }
-            else {
-                $self->{stderr_callback}->($text);
-            }
-
-            $memory->store_i32($nwritten_ptr, scalar @bytes);
+            $memory->store_i32($nwritten_ptr, $total_written);
             return [ CodingAdventures::WasmExecution::i32(0) ];
         };
     }
@@ -554,11 +567,15 @@ sub resolve_function {
             my $nread_ptr = $args->[3]{value} & 0xFFFFFFFF;
 
             return [ CodingAdventures::WasmExecution::i32(8) ] unless $fd == 0;
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $iovs_len > _WASI_MAX_IOVECS;
 
             my $total_read = 0;
             for my $i (0 .. $iovs_len - 1) {
                 my $buf_ptr = $memory->load_i32($iovs_ptr + $i * 8) & 0xFFFFFFFF;
                 my $buf_len = $memory->load_i32($iovs_ptr + $i * 8 + 4) & 0xFFFFFFFF;
+                return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                    if $buf_len > _WASI_MAX_RW_BYTES || $total_read + $buf_len > _WASI_MAX_RW_BYTES;
 
                 my $raw = $self->{stdin_callback}->($buf_len);
                 my @bytes =

@@ -12,6 +12,9 @@ All notable changes to this package will be documented in this file.
   stack so instantiation works across the new compiler pipeline.
 - Implemented observable `fd_write` output and injected guest memory into the
   host, which unblocks Brainfuck and Nib end-to-end runtime tests.
+- Capped guest-controlled WASI iovec counts and total read/write bytes so
+  untrusted modules cannot force unbounded host-side copying through
+  `fd_write` or `fd_read`.
 
 ## [0.3.0] - 2026-04-06
 
