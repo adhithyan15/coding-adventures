@@ -87,6 +87,21 @@ heads or invalid-parse branches were never exercised.
 **Rule:** When adding a new Elixir package with coverage enforcement, include
 tests for delegate helpers (`header`, `content_length`, `content_type`) and
 invalid input branches, not just the main success path.
+### 2026-04-18: Dart binary deserializers should reject both short and padded payloads
+
+When a package defines a fixed-width wire format, accepting undersized payloads
+as "empty" messages or silently ignoring extra bytes creates a fail-open
+boundary. That can hide tampering and lets callers treat malformed compressed
+data as if it were valid.
+
+**Symptom:** Security review flags insecure deserialization because a parser
+accepts incomplete headers or trailing attacker-controlled bytes instead of
+failing closed.
+
+**Rule:** For Dart binary formats, validate the exact expected byte length from
+the header before decoding any entries, and validate that the reconstructed
+payload length exactly matches any declared output length. Reject incomplete
+payloads, extra trailing bytes, underflow, and overflow with `FormatException`.
 
 ---
 
@@ -2221,6 +2236,21 @@ drive stack growth through unbounded recursive attribute parsing.
 explicit host-capacity check, and never recursively decode nested structures unless the format
 requires it. When an attribute is only meaningful at one structural level, treat deeper copies as
 opaque bytes.
+
+---
+
+## In large Rust workspaces, avoid `cargo fmt --all` for package-scoped feature work
+
+**Date:** 2026-04-18
+
+**What happened:** A Rust JVM rollout worker ran `cargo fmt --all` from the shared workspace while
+working on a handful of new packages. That reformatted hundreds of unrelated crates and buried the
+actual feature diff under incidental workspace churn.
+
+**Rule:** In this monorepo, use package-scoped Rust formatting for feature work:
+  `cargo fmt -p package-a -p package-b`
+or format only the files inside the package write set. Do not run `cargo fmt --all` unless the PR
+is intentionally a workspace-wide formatting change.
 ## C# tests using `BinaryPrimitives` need an explicit `using System.Buffers.Binary`
 
 **Date:** 2026-04-18
@@ -2283,3 +2313,32 @@ PR with unrelated history.
 **Rule:** When creating a fresh implementation worktree in this repo, always pin the starting point
 explicitly: `git worktree add <path> -b <branch> origin/main`. Do not rely on the current checkout's
 HEAD being the correct base.
+
+---
+
+## C# packages that reference a type with the same name as its namespace need an explicit alias
+
+**Date:** 2026-04-18
+
+**What happened:** The new C# `reed-solomon` package referenced the `gf256` helper as `Gf256.*`
+after importing `using CodingAdventures.Gf256;`. Because the referenced package exposes both the
+namespace `CodingAdventures.Gf256` and the type `Gf256`, the compiler bound `Gf256` as the
+namespace, not the class, and every static arithmetic call failed to compile.
+
+**Rule:** In C# ports where a referenced package exposes a type with the same name as its
+namespace, add an explicit type alias such as `using FieldMath = CodingAdventures.Gf256.Gf256;`
+and call the aliased type. Do not rely on unqualified `Gf256.*` style references compiling.
+
+---
+
+## Trim trailing zero coefficients before exposing little-endian locator polynomials
+
+**Date:** 2026-04-18
+
+**What happened:** The first F# `reed-solomon` pass returned Berlekamp-Massey locator arrays with
+their resized trailing zeros still attached. Decoding still worked, but the exposed
+`ErrorLocator` polynomial had an inflated apparent degree and failed degree-sensitive tests.
+
+**Rule:** When a little-endian polynomial builder grows arrays in place during iterative
+algorithms like Berlekamp-Massey, trim trailing zero coefficients before returning the public
+result. Keep at least one coefficient so the zero-error locator remains `[1]`.

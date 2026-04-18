@@ -1,0 +1,10 @@
+[package]
+name = "artifact-store"
+version = "0.1.0"
+edition = "2021"
+description = "Typed artifact store built on storage-core"
+
+[dependencies]
+storage-core = { path = "../storage-core" }
+coding-adventures-json-value = { path = "../json-value" }
+coding-adventures-json-serializer = { path = "../json-serializer" }

@@ -108,3 +108,12 @@ That means the next Go JVM step should be:
 ```text
 compiler-ir -> ir-to-jvm-class-file -> jvm-class-file -> .class
 ```
+
+The next honest cross-language JVM wave targets the buckets that already have
+both recognizable Brainfuck and Nib compiler lanes:
+
+- Go
+- Rust
+- TypeScript
+
+The rollout contract for that wave lives in `04j-multi-language-jvm-rollout.md`.

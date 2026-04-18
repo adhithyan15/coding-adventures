@@ -1,0 +1,17 @@
+[package]
+name = "ir-to-jvm-class-file"
+version = "0.1.0"
+edition = "2021"
+description = "Lower compiler-ir programs into conservative JVM class files"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+jvm-class-file = { path = "../jvm-class-file" }
+libc = "0.2"
+
+[dev-dependencies]
+brainfuck = { path = "../brainfuck" }
+brainfuck-ir-compiler = { path = "../brainfuck-ir-compiler" }
+coding-adventures-nib-parser = { path = "../nib-parser" }
+nib-ir-compiler = { path = "../nib-ir-compiler" }
+nib-type-checker = { path = "../nib-type-checker" }
