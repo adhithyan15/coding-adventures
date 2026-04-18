@@ -104,6 +104,21 @@ def test_write_class_file_rejects_path_escaping_artifact() -> None:
         write_class_file(artifact, tempdir)
 
 
+def test_write_class_file_rejects_symlinked_parent_directory() -> None:
+    artifact = lower_ir_to_jvm_class_file(
+        program=_simple_program(),
+        config=JvmBackendConfig(class_name="demo.Example"),
+    )
+
+    with (
+        tempfile.TemporaryDirectory() as tempdir,
+        tempfile.TemporaryDirectory() as sink,
+    ):
+        os.symlink(sink, Path(tempdir) / "demo")
+        with pytest.raises(JvmBackendError, match="symlinked or invalid directory"):
+            write_class_file(artifact, tempdir)
+
+
 @pytest.mark.skipif(
     "GRAALVM_HOME" not in os.environ,
     reason="GRAALVM_HOME is not set for local runtime smoke tests",

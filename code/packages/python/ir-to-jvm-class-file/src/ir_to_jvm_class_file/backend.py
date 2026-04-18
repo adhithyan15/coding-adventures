@@ -8,12 +8,21 @@ ordinary array loads/stores, and ordinary method calls.
 
 from __future__ import annotations
 
+import os
 import re
 import struct
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
 
-from compiler_ir import IrImmediate, IrInstruction, IrLabel, IrOp, IrProgram, IrRegister
+from compiler_ir import (
+    IrImmediate,
+    IrInstruction,
+    IrLabel,
+    IrOp,
+    IrProgram,
+    IrRegister,
+)
 from jvm_class_file import ACC_PUBLIC, ACC_STATIC, ACC_SUPER
 
 _ACC_PRIVATE = 0x0002
@@ -1194,15 +1203,57 @@ def write_class_file(artifact: JVMClassArtifact, output_dir: str | Path) -> Path
     """Write a generated class file into a classpath root."""
 
     root = Path(output_dir)
-    target = root / artifact.class_filename
-    root_resolved = root.resolve()
-    target_resolved = target.resolve()
-    if not target_resolved.is_relative_to(root_resolved):
-        raise JvmBackendError(
-            "class_filename escapes the requested output directory"
-        )
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_bytes(artifact.class_bytes)
+    relative_path = _validated_output_relative_path(artifact.class_filename)
+    root.mkdir(parents=True, exist_ok=True)
+
+    open_directory_flags = os.O_RDONLY
+    if hasattr(os, "O_DIRECTORY"):
+        open_directory_flags |= os.O_DIRECTORY
+    if hasattr(os, "O_NOFOLLOW"):
+        open_directory_flags |= os.O_NOFOLLOW
+
+    open_file_flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+    if hasattr(os, "O_NOFOLLOW"):
+        open_file_flags |= os.O_NOFOLLOW
+
+    directory_fds: list[int] = []
+    try:
+        current_fd = os.open(root, open_directory_flags)
+        directory_fds.append(current_fd)
+
+        # Traverse relative output components through directory FDs so later
+        # writes cannot be redirected by swapping in a symlink after validation.
+        for component in relative_path.parts[:-1]:
+            with suppress(FileExistsError):
+                os.mkdir(component, dir_fd=current_fd)
+            try:
+                next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
+            except OSError as exc:
+                raise JvmBackendError(
+                    "class_filename contains a symlinked or invalid directory "
+                    f"component: {component}"
+                ) from exc
+            directory_fds.append(next_fd)
+            current_fd = next_fd
+
+        try:
+            file_fd = os.open(
+                relative_path.name,
+                open_file_flags,
+                0o644,
+                dir_fd=current_fd,
+            )
+        except OSError as exc:
+            raise JvmBackendError(
+                "class_filename points at a symlinked or invalid output file"
+            ) from exc
+        with os.fdopen(file_fd, "wb", closefd=True) as handle:
+            handle.write(artifact.class_bytes)
+    finally:
+        for directory_fd in reversed(directory_fds):
+            os.close(directory_fd)
+
+    target = root / relative_path
     return target
 
 
@@ -1236,3 +1287,12 @@ def _as_immediate(operand: object, context: str) -> IrImmediate:
             f"{context} must be an IrImmediate, got {type(operand).__name__}"
         )
     return operand
+
+
+def _validated_output_relative_path(class_filename: str) -> Path:
+    relative_path = Path(class_filename)
+    if relative_path.is_absolute():
+        raise JvmBackendError("class_filename escapes the requested output directory")
+    if any(component in ("", ".", "..") for component in relative_path.parts):
+        raise JvmBackendError("class_filename escapes the requested output directory")
+    return relative_path

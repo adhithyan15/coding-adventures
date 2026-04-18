@@ -20,3 +20,6 @@
 - Declare the package's test-only sibling dependencies in `pyproject.toml`
   so the build validator accepts the BUILD graph during CI, and remove the
   now-redundant standalone `grammar-tools` editable install from `BUILD`.
+- Rewrite `write_class_file()` to anchor output writes on directory file
+  descriptors and reject symlinked path components, closing a symlink-race
+  overwrite hole in the original output-path validation.
