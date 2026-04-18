@@ -49,7 +49,9 @@ class _CursorNode {
 /// sequence, and [reset]s to the trie root.
 class TrieCursor {
   /// Creates an empty trie cursor positioned at the root.
-  TrieCursor() : _root = _CursorNode(0), _current = _CursorNode(0) {
+  TrieCursor()
+      : _root = _CursorNode(0),
+        _current = _CursorNode(0) {
     _current = _root;
   }
 
@@ -185,7 +187,9 @@ Uint8List serialiseTokens(List<Token> tokens, int originalLength) {
 /// Deserialises the CMP01 wire format back into tokens and original length.
 ({List<Token> tokens, int originalLength}) deserialiseTokens(Uint8List data) {
   if (data.length < 8) {
-    return (tokens: const <Token>[], originalLength: 0);
+    throw const FormatException(
+      'Malformed LZ78 token stream: header is incomplete.',
+    );
   }
 
   final view = ByteData.view(
@@ -195,16 +199,16 @@ Uint8List serialiseTokens(List<Token> tokens, int originalLength) {
   );
   final originalLength = view.getUint32(0, Endian.big);
   final tokenCount = view.getUint32(4, Endian.big);
+  final expectedLength = 8 + tokenCount * 4;
+  if (data.length != expectedLength) {
+    throw FormatException(
+      'Malformed LZ78 token stream: expected $expectedLength bytes, got ${data.length}.',
+    );
+  }
   final tokens = <Token>[];
 
   for (var index = 0; index < tokenCount; index++) {
     final base = 8 + index * 4;
-    if (base + 4 > data.length) {
-      throw const FormatException(
-        'Malformed LZ78 token stream: truncated data.',
-      );
-    }
-
     final current = token(
       view.getUint16(base, Endian.big),
       view.getUint8(base + 2),

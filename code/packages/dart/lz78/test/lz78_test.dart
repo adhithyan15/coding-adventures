@@ -239,6 +239,36 @@ void main() {
         throwsA(isA<FormatException>()),
       );
     });
+
+    test('incomplete headers are rejected', () {
+      expect(
+        () => deserialiseTokens(Uint8List.fromList(<int>[0, 0, 0, 2])),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('trailing bytes beyond the declared token stream are rejected', () {
+      expect(
+        () => deserialiseTokens(
+          Uint8List.fromList(<int>[
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            65,
+            0,
+            99,
+          ]),
+        ),
+        throwsA(isA<FormatException>()),
+      );
+    });
   });
 
   group('behaviour', () {
