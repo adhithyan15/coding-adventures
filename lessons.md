@@ -2083,3 +2083,13 @@ a crafted large count could force a huge useless loop or combine badly with unsi
 **Rule:** In F# binary deserialisers, always derive a `maxPossible` item count from the remaining
 payload bytes and cap the header count before looping. Then guard the zero case explicitly before
 writing ranges like `0u .. count - 1u`.
+
+---
+
+## BUILD scripts that visit sibling packages should use subshells so later commands stay in the original package
+
+**Date:** 2026-04-18
+
+**What happened:** A new TypeScript `http1` BUILD script installed `../http-core` with `cd ../http-core && npm install ...` and then immediately ran `npm install` and `vitest` on the next lines. Because the `cd` changed the shell's working directory for the rest of the script, the later commands accidentally re-ran inside `http-core` instead of `http1`.
+
+**Rule:** In BUILD scripts, when you need to temporarily run a command in a sibling package, wrap it in a subshell like `(cd ../dep && npm install ...)`. Do not rely on `cd ... && cmd` when more commands follow afterward.
