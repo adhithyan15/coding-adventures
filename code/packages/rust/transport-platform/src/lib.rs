@@ -940,6 +940,19 @@ pub mod linux {
             }
         }
 
+        fn configure_listener_socket(
+            socket: &Socket,
+            address: SocketAddr,
+            options: ListenerOptions,
+        ) -> Result<(), PlatformError> {
+            socket.set_reuse_address(options.reuse_address)?;
+            if address.is_ipv6() {
+                socket.set_only_v6(true)?;
+            }
+            Self::set_socket_reuse_port(socket, options.reuse_port)?;
+            Ok(())
+        }
+
         fn set_socket_reuse_port(socket: &Socket, reuse_port: bool) -> Result<(), PlatformError> {
             if !reuse_port {
                 return Ok(());
@@ -1148,8 +1161,7 @@ pub mod linux {
                 Type::STREAM,
                 Some(Protocol::TCP),
             )?;
-            socket.set_reuse_address(options.reuse_address)?;
-            Self::set_socket_reuse_port(&socket, options.reuse_port)?;
+            Self::configure_listener_socket(&socket, address, options)?;
             socket.bind(&address.into())?;
             socket.listen(options.backlog.min(i32::MAX as u32) as i32)?;
             socket.set_nonblocking(true)?;
@@ -1547,6 +1559,7 @@ pub mod windows {
     use std::net::{Ipv4Addr, SocketAddrV4};
     use std::os::windows::io::AsRawSocket;
     use std::thread;
+    use windows_sys::Win32::Networking::WinSock::{setsockopt, SOCKET_ERROR, SOL_SOCKET};
 
     type SocketHandle = usize;
     type Short = i16;
@@ -1559,6 +1572,7 @@ pub mod windows {
     const POLLRDNORM: Short = 0x0100;
     const POLLIN: Short = POLLRDNORM;
     const POLLOUT: Short = POLLWRNORM;
+    const SO_EXCLUSIVEADDRUSE: i32 = -5;
 
     #[repr(C)]
     #[derive(Clone, Copy)]
@@ -1625,6 +1639,37 @@ pub mod windows {
             } else {
                 Domain::IPV6
             }
+        }
+
+        fn configure_listener_socket(
+            socket: &Socket,
+            address: SocketAddr,
+            options: ListenerOptions,
+        ) -> Result<(), PlatformError> {
+            if address.is_ipv6() {
+                socket.set_only_v6(true)?;
+            }
+
+            // On Windows, SO_REUSEADDR for TCP listeners allows less isolated
+            // rebinding semantics than Unix server code expects, so the
+            // transport seam prefers exclusive ownership of the port.
+            let value: i32 = 1;
+            let result = unsafe {
+                setsockopt(
+                    socket.as_raw_socket() as SocketHandle,
+                    SOL_SOCKET as i32,
+                    SO_EXCLUSIVEADDRUSE as i32,
+                    (&value as *const i32).cast(),
+                    std::mem::size_of_val(&value) as i32,
+                )
+            };
+            if result == SOCKET_ERROR {
+                return Err(PlatformError::from(io::Error::last_os_error()));
+            }
+
+            let _ = options.reuse_address;
+            Self::set_socket_reuse_port(socket, options.reuse_port)?;
+            Ok(())
         }
 
         fn set_socket_reuse_port(_socket: &Socket, reuse_port: bool) -> Result<(), PlatformError> {
@@ -1772,8 +1817,7 @@ pub mod windows {
                 Type::STREAM,
                 Some(Protocol::TCP),
             )?;
-            socket.set_reuse_address(options.reuse_address)?;
-            Self::set_socket_reuse_port(&socket, options.reuse_port)?;
+            Self::configure_listener_socket(&socket, address, options)?;
             socket.bind(&address.into())?;
             socket.listen(options.backlog.min(i32::MAX as u32) as i32)?;
             socket.set_nonblocking(true)?;
@@ -2319,6 +2363,26 @@ mod tests {
     }
 
     #[cfg(any(target_os = "linux", target_os = "windows"))]
+    fn assert_ipv6_listener_stays_ipv6_only<P: TransportPlatform>(platform: &mut P) {
+        let listener = platform
+            .bind_listener(
+                BindAddress::Ip("[::]:0".parse().expect("ipv6 wildcard addr")),
+                ListenerOptions::default(),
+            )
+            .expect("bind ipv6 listener");
+        let addr = platform.local_addr(listener).expect("ipv6 listener addr");
+
+        let result = TcpStream::connect_timeout(
+            &SocketAddr::from(([127, 0, 0, 1], addr.port())),
+            Duration::from_millis(200),
+        );
+        assert!(
+            result.is_err(),
+            "ipv6 wildcard listener unexpectedly accepted an ipv4 connection",
+        );
+    }
+
+    #[cfg(any(target_os = "linux", target_os = "windows"))]
     fn assert_peer_shutdown_is_observable<P: TransportPlatform>(platform: &mut P) {
         let listener = platform
             .bind_listener(
@@ -2458,6 +2522,12 @@ mod tests {
             let mut platform = EpollTransportPlatform::new().expect("create platform");
             assert_peer_shutdown_is_observable(&mut platform);
         }
+
+        #[test]
+        fn ipv6_listener_stays_ipv6_only() {
+            let mut platform = EpollTransportPlatform::new().expect("create platform");
+            assert_ipv6_listener_stays_ipv6_only(&mut platform);
+        }
     }
 
     #[cfg(target_os = "windows")]
@@ -2481,6 +2551,12 @@ mod tests {
         fn peer_shutdown_is_observable() {
             let mut platform = WindowsTransportPlatform::new().expect("create platform");
             assert_peer_shutdown_is_observable(&mut platform);
+        }
+
+        #[test]
+        fn ipv6_listener_stays_ipv6_only() {
+            let mut platform = WindowsTransportPlatform::new().expect("create platform");
+            assert_ipv6_listener_stays_ipv6_only(&mut platform);
         }
     }
 }

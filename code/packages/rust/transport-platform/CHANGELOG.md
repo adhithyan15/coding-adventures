@@ -19,3 +19,11 @@ All notable changes to this package will be documented in this file.
   those runners
 - `required_capabilities.json` declaring that the crate itself does not claim
   extra repository capability requirements
+
+### Fixed
+
+- Linux and Windows listeners now force IPv6 sockets into IPv6-only mode so an
+  IPv6 bind does not silently widen into dual-stack exposure
+- Windows listeners now use exclusive address ownership instead of mapping the
+  cross-platform `reuse_address` flag onto Winsock's unsafe TCP listener
+  `SO_REUSEADDR` semantics
