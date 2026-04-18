@@ -11,6 +11,7 @@ from logic_engine.engine import (
     Clause,
     Compound,
     ConjExpr,
+    DeferredExpr,
     Disequality,
     DisjExpr,
     EqExpr,
@@ -31,6 +32,7 @@ from logic_engine.engine import (
     all_different,
     atom,
     conj,
+    defer,
     disj,
     eq,
     fact,
@@ -58,6 +60,7 @@ __all__ = [
     "Clause",
     "Compound",
     "ConjExpr",
+    "DeferredExpr",
     "DisjExpr",
     "EqExpr",
     "FailExpr",
@@ -77,6 +80,7 @@ __all__ = [
     "all_different",
     "atom",
     "conj",
+    "defer",
     "disj",
     "eq",
     "fact",
@@ -97,4 +101,4 @@ __all__ = [
     "var",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"

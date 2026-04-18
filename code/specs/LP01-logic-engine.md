@@ -145,6 +145,7 @@ The engine should support:
 
 - `eq(left, right)`
 - `neq(left, right)`
+- `defer(builder, *args)`
 - `succeed()`
 - `fail()`
 - `conj(g1, g2, ...)`
@@ -164,6 +165,7 @@ GoalExpr :=
   | Fail
   | Eq(term, term)
   | Neq(term, term)
+  | Defer(builder, term[])
   | Conj(goal[])
   | Disj(goal[])
   | Fresh(vars, goal)
@@ -233,6 +235,7 @@ The first Python API should look like this:
 
 ```python
 from logic_engine import (
+    defer,
     atom,
     conj,
     disj,
@@ -294,6 +297,7 @@ succeed() -> GoalExpr
 fail() -> GoalExpr
 eq(left: object, right: object) -> GoalExpr
 neq(left: object, right: object) -> GoalExpr
+defer(builder: Callable[..., GoalExpr], *args: object) -> GoalExpr
 conj(*goals: GoalExpr) -> GoalExpr
 disj(*goals: GoalExpr) -> GoalExpr
 fresh(count: int, fn: Callable[..., GoalExpr]) -> GoalExpr
@@ -303,6 +307,10 @@ solve(program: Program, goal: GoalExpr) -> Iterator[State]
 solve_all(program: Program, query: object | tuple[object, ...], goal: GoalExpr) -> list[Term | tuple[Term, ...]]
 solve_n(program: Program, n: int, query: object | tuple[object, ...], goal: GoalExpr) -> list[Term | tuple[Term, ...]]
 ```
+
+`defer(...)` exists so higher-level helper libraries can define recursive
+goal builders without forcing eager Python recursion while the expression tree
+is still being constructed.
 
 The package should also re-export the core term constructors from LP00:
 

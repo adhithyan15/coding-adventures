@@ -13,3 +13,4 @@ All notable changes to this package will be documented in this file.
 ### Fixed
 
 - Rewrote the Unix `BUILD` script in explicit POSIX shell form to avoid shell parsing differences in CI
+- Removed quoted extras syntax from the Unix `BUILD` script so the repo build tool's shell wrapper does not truncate the command

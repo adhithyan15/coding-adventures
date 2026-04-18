@@ -1,0 +1,8 @@
+[package]
+name = "window-win32"
+version = "0.1.0"
+edition = "2021"
+description = "Win32 desktop window backend for window-core"
+
+[dependencies]
+window-core = { path = "../window-core" }

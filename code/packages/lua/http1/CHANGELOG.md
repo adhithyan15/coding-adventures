@@ -13,3 +13,4 @@ All notable changes to this package will be documented in this file.
 ### Fixed
 
 - Pinned the rockspec source to an immutable HTTPS git ref for reproducible installs
+- Relaxed error-message assertions so tests accept the parser's detailed invalid-header and invalid-length messages

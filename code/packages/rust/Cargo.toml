@@ -301,6 +301,9 @@ members = [
     "intel-4004-packager",
     "nib-compiler",
     "bitset-c",
-  "http-core",
-  "http1",
+    "http-core",
+    "http1",
+    "window-core",
+    "window-appkit",
+    "window-win32",
 ]

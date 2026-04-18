@@ -37,6 +37,24 @@ token fields before copying. Backreferences need `offset > 0` and
 
 ---
 
+### 2026-04-18: BUILD files must avoid shell quotes and line-continuation backslashes that confuse the repo runner
+
+The repo build tool does not execute BUILD files exactly like an interactive
+shell script file. Commands that look fine in isolation, such as quoted extras
+like `'.[dev]'` or backslash-continued multi-line commands, can be mangled by
+the runner's wrapper and fail in CI with errors like `unexpected end of file`
+or `\: not found`.
+
+**Symptom:** a BUILD file passes local spot checks but CI fails before the
+package itself runs, usually with plain shell parse errors instead of package
+test failures.
+
+**Rule:** Keep BUILD scripts wrapper-safe: avoid embedded shell quotes when a
+simple escaped token works, and prefer separate commands or subshells over
+trailing `\` continuations.
+
+---
+
 ### 2026-04-18: Lua packages tested with `busted` must install or expose `LUA_PATH` first
 
 Lua test files often `require("coding_adventures.<package>")`, which expects

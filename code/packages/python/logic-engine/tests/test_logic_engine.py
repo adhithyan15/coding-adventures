@@ -11,6 +11,7 @@ import pytest
 
 from logic_engine import (
     Clause,
+    DeferredExpr,
     Disequality,
     Program,
     State,
@@ -18,6 +19,7 @@ from logic_engine import (
     all_different,
     atom,
     conj,
+    defer,
     disj,
     eq,
     fact,
@@ -40,7 +42,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.2.0"
+        assert __version__ == "0.3.0"
 
 
 class TestRelationsAndClauses:
@@ -261,6 +263,11 @@ class TestQueryHelpers:
         with pytest.raises(TypeError):
             solve_all(program(), var("X"), object())
 
+    def test_defer_creates_a_goal_expression(self) -> None:
+        deferred = defer(eq, "tea", "tea")
+
+        assert isinstance(deferred, DeferredExpr)
+
 
 class TestDisequalityConstraints:
     """Disequality is the first real puzzle-oriented constraint."""
@@ -315,6 +322,31 @@ class TestDisequalityConstraints:
             (atom("red"), atom("blue"), atom("green")),
             (atom("green"), atom("red"), atom("blue")),
         ]
+
+
+class TestDeferredRecursiveHelpers:
+    """Deferred goal builders unlock recursive Python helper libraries."""
+
+    def test_defer_supports_recursive_helper_goals(self) -> None:
+        def member_like(item: object, items: object) -> object:
+            return fresh(
+                2,
+                lambda head, tail: disj(
+                    eq(items, term(".", item, tail)),
+                    conj(
+                        eq(items, term(".", head, tail)),
+                        defer(member_like, item, tail),
+                    ),
+                ),
+            )
+
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            member_like(item, logic_list(["tea", "cake", "jam"])),
+        ) == [atom("tea"), atom("cake"), atom("jam")]
 
 
 class TestListRelations:
