@@ -21,6 +21,22 @@ before any tests or type-checking run.
 `BUILD` file, include `cd ../pixel-container && npm install --silent` before the
 paint packages so the standalone prerequisite closure matches what CI expects.
 
+### 2026-04-18: Platform-specific Python native packages still need platform-neutral coverage
+
+When a Python package wraps native windowing or other OS APIs, one platform may
+exercise the full smoke path locally while another CI platform skips it. If the
+tests only cover the native happy path, Linux or Windows can still fail the
+repo coverage gate even though the wrapper logic itself is correct.
+
+**Symptom:** macOS passes because a native smoke test runs, but Ubuntu fails
+coverage because the same test is skipped and the wrapper methods around the
+native bindings are never exercised.
+
+**Rule:** For platform-specific Python native packages, add mocked wrapper tests
+for argument normalization, handle lifecycle, and method delegation so the
+Python facade stays above coverage thresholds even when native smoke tests are
+skipped off-platform.
+
 ### 2026-04-18: Downstream TypeScript BUILD files should not fail on unrelated upstream source errors
 
 Many TypeScript packages in this repo depend on sibling packages through

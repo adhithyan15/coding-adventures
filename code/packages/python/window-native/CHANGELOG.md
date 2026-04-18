@@ -20,3 +20,5 @@ this file.
 - Reworked the Unix `BUILD` execution again so the staged import directory is
   created and reused without depending on shell variables surviving across
   separate repo runner invocations.
+- Added platform-neutral wrapper tests so Linux CI still covers the Python
+  window facade when the native AppKit smoke path is skipped.
