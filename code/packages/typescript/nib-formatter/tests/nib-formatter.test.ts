@@ -93,6 +93,30 @@ describe("formatNib()", () => {
     expect(formatNibAst(ast, { printWidth: 80 })).toBe("fn main() {\n  return 0;\n}");
   });
 
+  it("preserves top-level comments and blank lines through the source-based path", () => {
+    expect(
+      formatNib("// file header\nconst MAX:u4=9;\n\n// entry point\nfn main(){return MAX;}"),
+    ).toBe(
+      "// file header\nconst MAX: u4 = 9;\n\n// entry point\nfn main() {\n  return MAX;\n}",
+    );
+  });
+
+  it("preserves trailing statement comments and comments before closing braces", () => {
+    expect(
+      formatNib("fn main(){let x:u4=5; // keep me\n// before closing\n}"),
+    ).toBe(
+      "fn main() {\n  let x: u4 = 5; // keep me\n  // before closing\n}",
+    );
+  });
+
+  it("preserves comments before else blocks and at end of file", () => {
+    expect(
+      formatNib("fn main(){if ready{return 1;} // not ready yet\nelse{return 0;}} // eof"),
+    ).toBe(
+      "fn main() {\n  if ready {\n    return 1;\n  } // not ready yet\n  else {\n    return 0;\n  }\n} // eof",
+    );
+  });
+
   it("fails loudly on unsupported AST rule names", () => {
     const ast = {
       ruleName: "program",

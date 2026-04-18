@@ -52,6 +52,7 @@ Phase one of `tcp-runtime` supports:
 - many accepted TCP connections
 - TCP-specific listener and stream configuration through `TcpRuntimeOptions`
 - TCP-specific connection metadata for handlers
+- per-connection application state above the TCP transport
 - queued-write and connection-admission limits inherited from `stream-reactor`
 - cooperative shutdown through a stop handle
 - host-OS convenience constructors:
@@ -97,6 +98,24 @@ This keeps the runtime useful for:
 
 without coupling the runtime to framing rules.
 
+### Connection State
+
+Real TCP servers such as Redis and IRC keep connection-local protocol state that
+must survive across many reads:
+
+- partially buffered request bytes
+- selected logical database or channel/session context
+- authentication or negotiation state
+
+`tcp-runtime` should support that pattern directly instead of forcing each
+application to bolt on an external map keyed by connection id.
+
+Phase one should therefore expose stateful bind variants that:
+
+- initialize per-connection state from `TcpConnectionInfo`
+- pass mutable state into each read callback
+- optionally observe final state during close teardown
+
 ### `TcpRuntimeOptions`
 
 `tcp-runtime` owns the TCP policy surface that applications care about:
@@ -129,6 +148,7 @@ Phase-one public API:
 - `TcpRuntimeOptions`
 - `StopHandle`
 - `TcpRuntime::bind(platform, address, options, handler)`
+- `TcpRuntime::bind_with_state(platform, address, options, init, handler, on_close)`
 - `TcpRuntime::serve()`
 - `TcpRuntime::local_addr()`
 - `TcpRuntime::stop_handle()`
@@ -136,8 +156,11 @@ Phase-one public API:
 - `TcpRuntime::set_max_pending_write_bytes(max)`
 - convenience constructors:
   - `TcpRuntime::bind_kqueue(addr, options, handler)`
+  - `TcpRuntime::bind_kqueue_with_state(addr, options, init, handler, on_close)`
   - `TcpRuntime::bind_epoll(addr, options, handler)`
+  - `TcpRuntime::bind_epoll_with_state(addr, options, init, handler, on_close)`
   - `TcpRuntime::bind_windows(addr, options, handler)`
+  - `TcpRuntime::bind_windows_with_state(addr, options, init, handler, on_close)`
 
 ## Relationship To `stream-reactor`
 
@@ -177,6 +200,8 @@ Phase one should include:
 - connection-cap test through the `TcpRuntime` surface
 - queued-write-budget overflow test through the `TcpRuntime` surface
 - local-address visibility test for handler metadata
+- per-connection state persistence test through the `TcpRuntime` surface
+- close-callback test through the `TcpRuntime` surface
 - Linux and Windows target compile coverage through `cargo check`
 
 ## Future Work

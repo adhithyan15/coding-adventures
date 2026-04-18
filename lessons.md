@@ -106,6 +106,56 @@ token fields before copying. Backreferences need `offset > 0` and
 
 ---
 
+### 2026-04-18: BUILD files must avoid shell quotes and line-continuation backslashes that confuse the repo runner
+
+The repo build tool does not execute BUILD files exactly like an interactive
+shell script file. Commands that look fine in isolation, such as quoted extras
+like `'.[dev]'` or backslash-continued multi-line commands, can be mangled by
+the runner's wrapper and fail in CI with errors like `unexpected end of file`
+or `\: not found`.
+
+**Symptom:** a BUILD file passes local spot checks but CI fails before the
+package itself runs, usually with plain shell parse errors instead of package
+test failures.
+
+**Rule:** Keep BUILD scripts wrapper-safe: avoid embedded shell quotes when a
+simple escaped token works, and prefer separate commands or subshells over
+trailing `\` continuations.
+
+---
+
+### 2026-04-18: Lua packages tested with `busted` must install or expose `LUA_PATH` first
+
+Lua test files often `require("coding_adventures.<package>")`, which expects
+the package to be installed via LuaRocks or the source tree to be visible
+through `LUA_PATH`. Running `busted` from `tests/` without either setup makes
+CI fail with `module 'coding_adventures.<package>' not found` even though the
+source file exists in `src/`.
+
+**Symptom:** the Unix or Windows BUILD passes control to `busted`, but the
+test process cannot load the package module because it only sees the `tests/`
+working directory and default Lua search paths.
+
+**Rule:** For Lua packages in this repo, BUILD scripts must either run
+`luarocks make --local` first or export a `LUA_PATH` that points at
+`../src/?.lua` and `../src/?/init.lua` before invoking `busted`. Prefer doing
+both when the package already ships a rockspec.
+
+---
+
+### 2026-04-18: Elixir coverage thresholds require tests for delegates and error branches too
+
+Small Elixir packages can miss the repo's `80%` coverage threshold even when
+their primary happy-path tests pass, because delegate helpers and negative
+parsing branches still count toward the total module coverage.
+
+**Symptom:** `mix test --cover` reports green tests but fails the package build
+with coverage in the low 70s because helper modules such as request/response
+heads or invalid-parse branches were never exercised.
+
+**Rule:** When adding a new Elixir package with coverage enforcement, include
+tests for delegate helpers (`header`, `content_length`, `content_type`) and
+invalid input branches, not just the main success path.
 ### 2026-04-18: Dart binary deserializers should reject both short and padded payloads
 
 When a package defines a fixed-width wire format, accepting undersized payloads
@@ -2317,6 +2367,14 @@ writing ranges like `0u .. count - 1u`.
 
 ---
 
+## BUILD scripts that visit sibling packages should use subshells so later commands stay in the original package
+
+**Date:** 2026-04-18
+
+**What happened:** A new TypeScript `http1` BUILD script installed `../http-core` with `cd ../http-core && npm install ...` and then immediately ran `npm install` and `vitest` on the next lines. Because the `cd` changed the shell's working directory for the rest of the script, the later commands accidentally re-ran inside `http-core` instead of `http1`.
+
+**Rule:** In BUILD scripts, when you need to temporarily run a command in a sibling package, wrap it in a subshell like `(cd ../dep && npm install ...)`. Do not rely on `cd ... && cmd` when more commands follow afterward.
+
 ## Nonblocking accept tests must try `accept()` before waiting for a fresh readiness edge
 
 **Date:** 2026-04-18
@@ -2329,6 +2387,7 @@ connections were still waiting to be accepted.
 **Rule:** In nonblocking listener tests, always attempt `accept()` first and only fall back to
 waiting for readiness when it returns `WouldBlock`. Do not require a second readiness edge before
 draining already-queued connections.
+
 ## `git worktree add` inherits the current checkout unless you pin the base explicitly
 
 **Date:** 2026-04-18
@@ -2386,6 +2445,51 @@ the LuaRocks install tree instead of the repo, so parser-driven tests could not 
 those siblings already know how to install their transitive local rocks. In tests that exercise
 grammar-backed lexers/parsers, put the sibling `src/` directories for those lexers ahead of
 installed rocks on `package.path` so in-repo grammar files resolve correctly.
+
+---
+
+## Rust workspace merge resolutions must deduplicate member entries before pushing
+
+**Date:** 2026-04-18
+
+**What happened:** A PR branch merged `origin/main` after adding new Rust `http-core` and `http1`
+packages. The conflict resolution kept both sides' `window-core`, `window-appkit`, and
+`window-win32` entries in `code/packages/rust/Cargo.toml`, which older Cargo tolerated but the
+CI detect step now rejects as duplicate workspace members before any package builds run.
+
+**Rule:** After resolving Rust workspace `members` conflicts, scan the final list for duplicates
+and run a workspace-level manifest check before pushing. A merged workspace must contain each
+package exactly once, even when both branches added adjacent member blocks.
+
+---
+
+## Shell BUILD files are line-oriented, so multiline control flow breaks under the repo build tool
+
+**Date:** 2026-04-18
+
+**What happened:** The Python `http-core` and `http1` packages used a normal multiline POSIX `if`
+block in their Unix `BUILD` files. Those scripts passed `sh -n`, but CI still failed because the
+repo build tool reads shell BUILD files as separate command lines and executes each line with its
+own `sh -c`, so `if`, `then`, and `fi` never reached the same shell process.
+
+**Rule:** In shell BUILD files, treat each non-comment line as an independent command. Keep
+control flow on a single line, or express it with standalone one-line conditionals and `&&`/`||`
+chains that remain valid when each BUILD line runs in its own shell.
+
+---
+
+## Python package BUILD installs must not use `--no-deps` when tests rely on `dev` extras
+
+**Date:** 2026-04-18
+
+**What happened:** The Python `http-core` CI fix kept the shell BUILD file line-safe, but the
+editable install still used `--no-deps`. In both `uv pip install -e .[dev]` and the fallback
+`pip install .[dev]` flow, that flag suppresses the optional `dev` dependencies too, so the build
+completed without `pytest` and then failed at test time with `No module named pytest`.
+
+**Rule:** If a Python BUILD script installs a package via `.[dev]` so tests can run, do not add
+`--no-deps` to that install step. Use explicit prerequisite installs only for local package
+dependencies, and let the package's declared test extras install normally.
 
 ---
 
@@ -2449,6 +2553,47 @@ uses temp-backed shared-memory state during first-run migrations.
 
 ---
 
+## Stateful TCP protocol servers must cap incomplete per-connection input buffers
+
+**Date:** 2026-04-18
+
+**What happened:** While preparing the `mini-redis` migration onto `tcp-runtime` for push, security
+review caught that the new per-connection RESP session state buffered partial frames in a `Vec<u8>`
+with no maximum size. A client could hold a socket open and stream an incomplete array or bulk
+string forever, causing unbounded heap growth and eventual process OOM.
+
+**Rule:** Any TCP server in this repo that buffers partial protocol frames per connection must enforce
+an explicit maximum buffered-input size. When a client exceeds that cap, clear the buffered state,
+return a protocol error when possible, and close the connection instead of allowing unbounded memory
+growth.
+
+## Python bytecode or pool decoders must reject negative indexes explicitly
+
+**Date:** 2026-04-18
+
+**What happened:** The first `logic-bytecode` decoder used tuple indexing inside `_pool_get()` and
+relied on catching `IndexError` for bounds checks. Python accepts negative sequence indexes, so
+malformed bytecode like `operand=-1` silently resolved to the last pool entry instead of raising a
+decode error.
+
+**Rule:** Any Python decoder for bytecode, constant pools, or table-indexed formats must reject
+negative indexes before indexing. Do not rely on `IndexError` alone for bounds validation, because
+Python sequence semantics treat negative values as valid offsets from the end.
+
+---
+
+## Zero-length decoders must validate the full canonical empty encoding
+
+**Date:** 2026-04-18
+
+**What happened:** The first Dart `deflate` decoder returned immediately when the declared output
+length was zero. That skipped the normal end-of-stream validation, so malformed payloads could add
+extra bytes after the empty end-of-block marker and still be accepted as a valid empty stream.
+
+**Rule:** For compressed or serialized formats with a canonical empty representation, zero-length
+decoders must validate the entire empty encoding, not just the declared output length. Reject any
+extra table entries, payload bits, or trailing bytes before returning success.
+
 ## Lua BUILD validators require declared local deps and `--deps-mode=none` consistency
 
 **Date:** 2026-04-18
@@ -2481,3 +2626,46 @@ following the switched program.
 **Rule:** In Perl VM loops that support context handlers capable of swapping programs, always
 re-read the active code object and instruction list on each step. Do not cache the starting code
 object across the whole execution when handlers can change `$vm->{_program}` mid-run.
+
+---
+
+## Reactor tests must tolerate deferred socket readability after a write-ready step
+
+**Date:** 2026-04-18
+
+**What happened:** The new `stream-reactor` state-persistence test passed locally but failed on
+macOS CI because it assumed one `write_ready()` call meant the client socket would immediately yield
+the echoed frame on the very next `read_exact()`. In practice, the write flush and client-side
+readability can lag by a poll turn or scheduler slice.
+
+**Rule:** In reactor/socket tests, do not assume client-visible readability immediately follows a
+single server-side write-ready step. Use bounded retries around both the reactor progression and the
+client read so the test asserts eventual delivery rather than same-tick delivery.
+
+## Copying a `.NET` package skeleton requires renaming the project files, not just changing `PackageId`
+
+**Date:** 2026-04-18
+
+**What happened:** The first `paint-vm-ascii` pass copied the existing `paint-vm` package and only
+changed namespaces plus `PackageId`. The copied backend still used the file name
+`CodingAdventures.PaintVm.csproj`, so MSBuild treated the backend and the shared runtime as the
+same project identity inside `.artifacts`, which broke test references and ref-assembly resolution.
+
+**Rule:** When cloning a `.NET` package in this repo, rename the project files and test project
+files to the new package name immediately, and set explicit `AssemblyName`/`RootNamespace` values.
+Changing `PackageId` alone is not enough to keep build outputs distinct.
+
+---
+
+## F# interpolated strings get brittle when expressions contain quoted literals
+
+**Date:** 2026-04-18
+
+**What happened:** The first F# `paint-vm-svg` build failed with dozens of `FS3373` errors because
+interpolated SVG strings embedded expressions like `safeNum value "field"` and
+`defaultArg fill "none"` directly inside `$"..."`. The nested quoted literals inside the
+interpolation made the parser unhappy even though the logic itself was fine.
+
+**Rule:** In F#, avoid putting expressions with quoted string literals directly inside interpolated
+strings. Bind those values first with `let`, or switch to `sprintf` when composing dense XML/HTML
+attribute strings.
