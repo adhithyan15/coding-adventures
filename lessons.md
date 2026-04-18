@@ -2319,3 +2319,20 @@ their resized trailing zeros still attached. Decoding still worked, but the expo
 **Rule:** When a little-endian polynomial builder grows arrays in place during iterative
 algorithms like Berlekamp-Massey, trim trailing zero coefficients before returning the public
 result. Keep at least one coefficient so the zero-error locator remains `[1]`.
+
+---
+
+## Lua BUILDs must stage sibling rocks and tests must prefer source lexers when grammars live in-tree
+
+**Date:** 2026-04-18
+
+**What happened:** The first Lua `nib_type_checker` / `nib_ir_compiler` / `nib_wasm_compiler`
+BUILD files called `luarocks make` on sibling packages directly, which failed because those
+packages depend on other local rocks that are not published. After installing the rocks, the
+tests still failed because the installed `nib_lexer` resolved `grammars/nib.tokens` relative to
+the LuaRocks install tree instead of the repo, so parser-driven tests could not find the grammar.
+
+**Rule:** For Lua packages in this repo, BUILD files should invoke sibling package `BUILD`s when
+those siblings already know how to install their transitive local rocks. In tests that exercise
+grammar-backed lexers/parsers, put the sibling `src/` directories for those lexers ahead of
+installed rocks on `package.path` so in-repo grammar files resolve correctly.

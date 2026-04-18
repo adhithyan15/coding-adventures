@@ -13,6 +13,7 @@ dependencies = {
     "coding-adventures-wasm-types >= 0.1.0",
     "coding-adventures-wasm-opcodes >= 0.1.0",
     "coding-adventures-wasm-module-parser >= 0.1.0",
+    "coding-adventures-wasm-execution >= 0.1.0",
     "coding-adventures-virtual-machine >= 0.1.0",
 }
 build = {
