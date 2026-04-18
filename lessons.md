@@ -2377,3 +2377,18 @@ CI detect step now rejects as duplicate workspace members before any package bui
 **Rule:** After resolving Rust workspace `members` conflicts, scan the final list for duplicates
 and run a workspace-level manifest check before pushing. A merged workspace must contain each
 package exactly once, even when both branches added adjacent member blocks.
+
+---
+
+## Shell BUILD files are line-oriented, so multiline control flow breaks under the repo build tool
+
+**Date:** 2026-04-18
+
+**What happened:** The Python `http-core` and `http1` packages used a normal multiline POSIX `if`
+block in their Unix `BUILD` files. Those scripts passed `sh -n`, but CI still failed because the
+repo build tool reads shell BUILD files as separate command lines and executes each line with its
+own `sh -c`, so `if`, `then`, and `fi` never reached the same shell process.
+
+**Rule:** In shell BUILD files, treat each non-comment line as an independent command. Keep
+control flow on a single line, or express it with standalone one-line conditionals and `&&`/`||`
+chains that remain valid when each BUILD line runs in its own shell.

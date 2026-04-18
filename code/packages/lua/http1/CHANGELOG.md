@@ -14,3 +14,4 @@ All notable changes to this package will be documented in this file.
 
 - Pinned the rockspec source to an immutable HTTPS git ref for reproducible installs
 - Relaxed error-message assertions so tests accept the parser's detailed invalid-header and invalid-length messages
+- Relaxed the malformed-head assertions again so they accept the source-location prefix that Lua `pcall` adds around parser errors in CI

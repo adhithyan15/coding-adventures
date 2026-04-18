@@ -48,7 +48,7 @@ describe("http1", function()
         end)
 
         assert.is_false(ok)
-        assert.is_truthy(string.match(err, "^invalid HTTP/1 header:"))
+        assert.is_truthy(string.match(err, "invalid HTTP/1 header:"))
     end)
 
     it("rejects invalid content length", function()
@@ -57,6 +57,6 @@ describe("http1", function()
         end)
 
         assert.is_false(ok)
-        assert.is_truthy(string.match(err, "^invalid Content%-Length:"))
+        assert.is_truthy(string.match(err, "invalid Content%-Length:"))
     end)
 end)
