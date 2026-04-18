@@ -2054,3 +2054,18 @@ empty-input path into a huge bogus loop range and causing an `ArgumentOutOfRange
 **Rule:** When looping over an unsigned count in F#, always guard the zero case before writing
 `count - 1u`. Prefer:
   `if count = 0u then [] else for index in 0u .. count - 1u do ...`
+
+---
+
+## Recursive local functions in Go need a `var` declaration before assignment
+
+**Date:** 2026-04-18
+
+**What happened:** A new Go `jvm-class-file` helper used `addConstant := func(...)` and then called
+`addConstant(...)` recursively inside its own body to normalize `int` to `int32`. Go does not let a
+function literal declared with short assignment refer to that identifier recursively during its own
+initialization, so `go test`/`go vet` failed with `undefined: addConstant`.
+
+**Rule:** When a local Go helper needs recursion, declare it in two steps:
+  `var addConstant func(...) (...)`
+  `addConstant = func(...) (...) { ... addConstant(...) ... }`
