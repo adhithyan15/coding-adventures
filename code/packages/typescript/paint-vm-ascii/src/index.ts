@@ -149,6 +149,17 @@ function fullClip(cols: number, rows: number): ClipBounds {
   return { minCol: 0, minRow: 0, maxCol: cols, maxRow: rows };
 }
 
+function isSafeTerminalCodePoint(codePoint: number): boolean {
+  if (codePoint < 0x20) return false;
+  if (codePoint >= 0x7f && codePoint <= 0x9f) return false;
+  if (codePoint === 0x200e || codePoint === 0x200f || codePoint === 0x061c) {
+    return false;
+  }
+  if (codePoint >= 0x202a && codePoint <= 0x202e) return false;
+  if (codePoint >= 0x2066 && codePoint <= 0x2069) return false;
+  return true;
+}
+
 function isIdentityTransform(
   transform: [number, number, number, number, number, number] | undefined,
 ): boolean {
@@ -307,7 +318,9 @@ function handleGlyphRun(
   for (const glyph of inst.glyphs) {
     let ch = "?";
     try {
-      ch = String.fromCodePoint(glyph.glyph_id);
+      ch = isSafeTerminalCodePoint(glyph.glyph_id)
+        ? String.fromCodePoint(glyph.glyph_id)
+        : "?";
     } catch {
       ch = "?";
     }
