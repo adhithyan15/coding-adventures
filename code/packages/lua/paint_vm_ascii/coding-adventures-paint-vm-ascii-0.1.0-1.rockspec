@@ -3,6 +3,7 @@ version = "0.1.0-1"
 
 source = {
     url = "https://github.com/adhithyan15/coding-adventures.git",
+    tag = "fdb7fc4228d726fe376301d46b4343b0634b3d0b",
 }
 
 description = {
