@@ -1,42 +1,35 @@
-# P2D03 — FormatDoc: Document Algebra IR and Text Backend
+# P2D03 — FormatDoc: Document Algebra, Layout Tree, and Paint Bridge
 
 ## Overview
 
-`format-doc` is the pretty-printing layer that sits above layout and paint.
-It does not print strings directly. Instead it builds a backend-neutral `Doc`
-tree that describes:
+`format-doc` is the pretty-printing layer that sits above paint. It does not
+emit strings directly. Instead it builds a backend-neutral `Doc` tree and
+realizes that tree into a backend-neutral `DocLayoutTree`.
 
-- literal text
-- optional break points
-- grouping
-- indentation
-- conditional content that depends on whether a group breaks
-- annotations that later backends can preserve
-
-The first concrete backend is `format-doc-text`, which realizes a `Doc`
-into lines and then serializes those lines to a plain string.
-
-This keeps the pipeline open for future targets:
+The concrete output path for v1 is:
 
 ```text
 AST + trivia + formatter rules
   -> Doc
-  -> realized line/span layout
-  -> text backend
-
-AST + trivia + formatter rules
-  -> Doc
-  -> realized line/span layout
-  -> layout-to-paint-doc   (future)
+  -> DocLayoutTree
   -> PaintScene
-  -> paint-vm-ascii / canvas / svg
+  -> paint-vm-ascii
+  -> terminal string
 ```
 
-The key design rule is simple:
+This is the important architectural rule:
 
 - `Doc` is the stable semantic IR
-- line breaking happens during realization
-- plain text is only one backend, not the definition of the document
+- `DocLayoutTree` is the first realized layout form
+- `PaintScene` is the first concrete rendering scene
+- terminal text comes from `paint-vm-ascii`, not from a direct string backend
+
+That keeps the formatter compatible with future output targets such as:
+
+- canvas
+- svg
+- editor-native paint pipelines
+- streamed render data over the network
 
 ---
 
@@ -49,21 +42,20 @@ Owns:
 - `Doc` node types
 - combinators (`text`, `group`, `indent`, `line`, ...)
 - the width-fitting realization algorithm
-- the realized line/span layout data structure
+- the `DocLayoutTree` data structure
 
-### `@coding-adventures/format-doc-text`
+### `@coding-adventures/format-doc-to-paint`
 
 Owns:
 
-- `renderLayoutToText(layout) -> string`
-- `renderDocToText(doc, options) -> string`
-- tabs/spaces serialization policy for indentation
+- `docLayoutToPaintScene(layout) -> PaintScene`
+- `docToPaintScene(doc, layoutOptions, paintOptions) -> PaintScene`
 
-This split mirrors the paint stack:
+This split mirrors the existing layout and paint stacks:
 
 ```text
-paint-instructions  -> paint-vm-* backends
-format-doc          -> format-doc-text backend
+layout-ir          -> layout-to-paint
+format-doc         -> format-doc-to-paint
 ```
 
 ---
@@ -105,42 +97,47 @@ The intentionally missing v1 features are:
 - `breakParent`
 - `align`
 
-These can be added later without changing the core execution model.
+These can be added later without changing the execution model.
 
 ---
 
-## Realized layout
+## DocLayoutTree
 
-`format-doc` realizes a `Doc` into a line/span structure:
+`format-doc` realizes a `Doc` into a line-oriented layout tree.
 
 ```typescript
-interface LayoutSpan {
+interface DocLayoutSpan {
+  column: number;
   text: string;
   annotations: DocAnnotation[];
 }
 
-interface LayoutLine {
+interface DocLayoutLine {
+  row: number;
   indentColumns: number;
-  spans: LayoutSpan[];
+  width: number;
+  spans: DocLayoutSpan[];
 }
 
-interface LayoutDocument {
+interface DocLayoutTree {
   printWidth: number;
   indentWidth: number;
-  useTabs: boolean;
-  maxColumn: number;
-  lines: LayoutLine[];
+  lineHeight: number;
+  width: number;
+  height: number;
+  lines: DocLayoutLine[];
 }
 ```
 
-This representation is more useful than a final string because it preserves:
+This layout tree is intentionally simple:
 
-- line boundaries
-- indentation in columns
-- text segments
-- annotation stacks
+- coordinates are in monospace cell units
+- each line has a row index
+- each span has a starting column
+- width and height are concrete layout extents
 
-That makes it suitable for future paint conversion and editor features.
+This is enough to drive `paint-vm-ascii` today while still being a proper
+layout stage that later backends can refine.
 
 ---
 
@@ -149,14 +146,13 @@ That makes it suitable for future paint conversion and editor features.
 ```typescript
 interface LayoutOptions {
   printWidth: number;
-  indentWidth?: number;  // default 2
-  useTabs?: boolean;     // default false
+  indentWidth?: number; // default 2
+  lineHeight?: number;  // default 1
 }
 ```
 
-V1 intentionally keeps configuration small. The formatter pipeline can grow
-more style controls later, but width and indentation are enough to prove the
-core abstraction.
+V1 intentionally keeps configuration small. Width, indentation, and line
+height are enough to prove the pipeline.
 
 ---
 
@@ -185,7 +181,12 @@ The realization algorithm is a structured, width-aware interpreter.
 It walks a stack of commands:
 
 ```typescript
-{ indent: number, mode: "flat" | "break", annotations: DocAnnotation[], doc: Doc }
+{
+  indentLevels: number,
+  mode: "flat" | "break",
+  annotations: DocAnnotation[],
+  doc: Doc
+}
 ```
 
 When it encounters a `group`, it asks:
@@ -219,26 +220,33 @@ practical systems like Prettier.
 
 ---
 
-## Text backend
+## Paint bridge
 
-`format-doc-text` consumes `LayoutDocument` and produces plain text.
+`format-doc-to-paint` converts a `DocLayoutTree` into a `PaintScene`.
 
-### Indentation
+### Mapping rules
 
-Each line carries `indentColumns`, not literal indentation bytes.
-The text backend chooses how to serialize that:
+Each layout line maps to one or more `glyph_run` instructions:
 
-- spaces only when `useTabs = false`
-- as many tabs as possible, then spaces, when `useTabs = true`
+- `x = span.column + glyph_offset`
+- `y = line.row * lineHeight`
+- `glyph_id = Unicode code point`
 
-This is why the text backend belongs in a separate package.
+The v1 bridge is deliberately simple:
 
-### Final string rules
+- font metrics are treated as already resolved by the monospace cell layout
+- all glyphs use the same `font_ref` and `font_size`
+- annotations stay on the layout tree for now; they are not yet projected into
+  `PaintInstruction.metadata`
 
-- concatenate indentation and span text for each line
-- join lines with `\n`
-- preserve internal blank lines
-- do not trim annotation content
+### Scene dimensions
+
+```typescript
+scene.width  = layout.width
+scene.height = layout.height
+```
+
+Background defaults to `"transparent"`.
 
 ---
 
@@ -264,13 +272,16 @@ group(
 )
 ```
 
-renders as:
+realizes to this layout tree shape when the width is narrow:
 
 ```text
-foo(bar, baz)
+row 0: "foo("
+row 1: "  bar,"
+row 2: "  baz"
+row 3: ")"
 ```
 
-with a wide `printWidth`, and as:
+The paint bridge converts that to glyph runs, and `paint-vm-ascii` renders:
 
 ```text
 foo(
@@ -279,8 +290,6 @@ foo(
 )
 ```
 
-with a narrow `printWidth`.
-
 ---
 
 ## Future extensions
@@ -288,9 +297,9 @@ with a narrow `printWidth`.
 The v1 design intentionally leaves room for:
 
 - richer `Doc` combinators (`fill`, `align`, `lineSuffix`)
-- a `Doc -> PaintScene` bridge through line/span layout
-- syntax-aware formatter packages that compile AST nodes into `Doc`
-- annotations that carry AST node ids, token classes, or source spans
+- paint projection that preserves annotations in metadata
+- non-terminal paint backends
+- language-specific formatter packages that compile AST nodes into `Doc`
 
 The most important stability promise is:
 

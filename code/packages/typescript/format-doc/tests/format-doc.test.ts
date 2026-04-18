@@ -58,10 +58,14 @@ describe("layoutDoc()", () => {
     );
 
     const layout = layoutDoc(doc, { printWidth: 80 });
+    expect(layout.width).toBe(13);
+    expect(layout.height).toBe(1);
     expect(layout.lines).toEqual([
       {
+        row: 0,
         indentColumns: 0,
-        spans: [{ text: "foo(bar, baz)", annotations: [] }],
+        width: 13,
+        spans: [{ column: 0, text: "foo(bar, baz)", annotations: [] }],
       },
     ]);
   });
@@ -78,10 +82,10 @@ describe("layoutDoc()", () => {
 
     const layout = layoutDoc(doc, { printWidth: 10, indentWidth: 2 });
     expect(layout.lines).toEqual([
-      { indentColumns: 0, spans: [{ text: "foo(", annotations: [] }] },
-      { indentColumns: 2, spans: [{ text: "bar,", annotations: [] }] },
-      { indentColumns: 2, spans: [{ text: "baz", annotations: [] }] },
-      { indentColumns: 0, spans: [{ text: ")", annotations: [] }] },
+      { row: 0, indentColumns: 0, width: 4, spans: [{ column: 0, text: "foo(", annotations: [] }] },
+      { row: 1, indentColumns: 2, width: 6, spans: [{ column: 2, text: "bar,", annotations: [] }] },
+      { row: 2, indentColumns: 2, width: 5, spans: [{ column: 2, text: "baz", annotations: [] }] },
+      { row: 3, indentColumns: 0, width: 1, spans: [{ column: 0, text: ")", annotations: [] }] },
     ]);
   });
 
@@ -89,8 +93,8 @@ describe("layoutDoc()", () => {
     const doc = group(concat([text("a"), hardline(), text("b")]));
     const layout = layoutDoc(doc, { printWidth: 80 });
     expect(layout.lines).toEqual([
-      { indentColumns: 0, spans: [{ text: "a", annotations: [] }] },
-      { indentColumns: 0, spans: [{ text: "b", annotations: [] }] },
+      { row: 0, indentColumns: 0, width: 1, spans: [{ column: 0, text: "a", annotations: [] }] },
+      { row: 1, indentColumns: 0, width: 1, spans: [{ column: 0, text: "b", annotations: [] }] },
     ]);
   });
 
@@ -105,13 +109,13 @@ describe("layoutDoc()", () => {
     );
 
     expect(layoutDoc(doc, { printWidth: 40 }).lines).toEqual([
-      { indentColumns: 0, spans: [{ text: "[value]", annotations: [] }] },
+      { row: 0, indentColumns: 0, width: 7, spans: [{ column: 0, text: "[value]", annotations: [] }] },
     ]);
 
     expect(layoutDoc(doc, { printWidth: 3 }).lines).toEqual([
-      { indentColumns: 0, spans: [{ text: "[", annotations: [] }] },
-      { indentColumns: 2, spans: [{ text: "value,", annotations: [] }] },
-      { indentColumns: 0, spans: [{ text: "]", annotations: [] }] },
+      { row: 0, indentColumns: 0, width: 1, spans: [{ column: 0, text: "[", annotations: [] }] },
+      { row: 1, indentColumns: 2, width: 8, spans: [{ column: 2, text: "value,", annotations: [] }] },
+      { row: 2, indentColumns: 0, width: 1, spans: [{ column: 0, text: "]", annotations: [] }] },
     ]);
   });
 
@@ -124,11 +128,13 @@ describe("layoutDoc()", () => {
 
     const layout = layoutDoc(doc, { printWidth: 80 });
     expect(layout.lines[0]).toEqual({
+      row: 0,
       indentColumns: 0,
+      width: 10,
       spans: [
-        { text: "alpha", annotations: ["lhs"] },
-        { text: " ", annotations: [] },
-        { text: "beta", annotations: [{ role: "rhs" }] },
+        { column: 0, text: "alpha", annotations: ["lhs"] },
+        { column: 5, text: " ", annotations: [] },
+        { column: 6, text: "beta", annotations: [{ role: "rhs" }] },
       ],
     });
   });
@@ -136,6 +142,12 @@ describe("layoutDoc()", () => {
   it("tracks the widest realized column", () => {
     const doc = concat([text("abc"), hardline(), text("abcdef")]);
     const layout = layoutDoc(doc, { printWidth: 80 });
-    expect(layout.maxColumn).toBe(6);
+    expect(layout.width).toBe(6);
+  });
+
+  it("uses lineHeight to compute the layout tree height", () => {
+    const doc = concat([text("x"), hardline(), text("y"), hardline(), text("z")]);
+    const layout = layoutDoc(doc, { printWidth: 80, lineHeight: 2 });
+    expect(layout.height).toBe(6);
   });
 });

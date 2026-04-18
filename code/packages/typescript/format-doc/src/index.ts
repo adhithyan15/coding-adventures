@@ -3,15 +3,14 @@
  *
  * This package defines a small document algebra for pretty-printers.
  *
- * The important idea is that a formatter should not emit strings directly.
- * Instead it builds a semantic `Doc` tree that says where text exists, where
- * breaks are allowed, which sections should stay together if possible, and
- * which spans carry metadata for later consumers.
+ * A formatter should not emit strings directly. Instead it builds a semantic
+ * `Doc` tree that records where text exists, where breaks are allowed, which
+ * sections should stay together if possible, and which spans carry metadata for
+ * later consumers.
  *
  * `layoutDoc()` is the first execution phase. It realizes the `Doc` tree into a
- * line/span layout, choosing flat vs broken groups based on the configured
- * print width. Plain text output is deliberately left to
- * `@coding-adventures/format-doc-text`.
+ * backend-neutral `DocLayoutTree`, choosing flat vs broken groups based on the
+ * configured print width.
  */
 
 // ============================================================================
@@ -45,31 +44,35 @@ export type Doc =
   | { kind: "annotate"; annotation: DocAnnotation; content: Doc };
 
 /** One realized span of text, annotated with the metadata active at emission time. */
-export interface LayoutSpan {
+export interface DocLayoutSpan {
+  column: number;
   text: string;
   annotations: readonly DocAnnotation[];
 }
 
-/** One realized line of output. */
-export interface LayoutLine {
+/** One realized line in the layout tree. */
+export interface DocLayoutLine {
+  row: number;
   indentColumns: number;
-  spans: readonly LayoutSpan[];
+  width: number;
+  spans: readonly DocLayoutSpan[];
 }
 
 /** The backend-neutral result of realizing a `Doc` tree. */
-export interface LayoutDocument {
+export interface DocLayoutTree {
   printWidth: number;
   indentWidth: number;
-  useTabs: boolean;
-  maxColumn: number;
-  lines: readonly LayoutLine[];
+  lineHeight: number;
+  width: number;
+  height: number;
+  lines: readonly DocLayoutLine[];
 }
 
 /** Configuration for the width-aware realization pass. */
 export interface LayoutOptions {
   printWidth: number;
   indentWidth?: number;
-  useTabs?: boolean;
+  lineHeight?: number;
 }
 
 type Mode = "flat" | "break";
@@ -81,14 +84,16 @@ interface Command {
   doc: Doc;
 }
 
-interface MutableLayoutSpan {
+interface MutableDocLayoutSpan {
+  column: number;
   text: string;
   annotations: readonly DocAnnotation[];
 }
 
-interface MutableLayoutLine {
+interface MutableDocLayoutLine {
+  row: number;
   indentColumns: number;
-  spans: MutableLayoutSpan[];
+  spans: MutableDocLayoutSpan[];
 }
 
 // ============================================================================
@@ -203,21 +208,20 @@ export function annotate(annotation: DocAnnotation, content: Doc): Doc {
 // ============================================================================
 
 /**
- * Realize a `Doc` tree into a backend-neutral line/span layout.
+ * Realize a `Doc` tree into a backend-neutral layout tree.
  *
  * This is the core interpreter for the document algebra. It walks the doc with
- * a stack of commands, decides when groups fit, and emits a structured set of
- * lines and spans that later backends can turn into strings, paint commands, or
- * other output forms.
+ * a stack of commands, decides when groups fit, and emits positioned text spans
+ * arranged into lines in monospace cell units.
  */
-export function layoutDoc(doc: Doc, options: LayoutOptions): LayoutDocument {
+export function layoutDoc(doc: Doc, options: LayoutOptions): DocLayoutTree {
   if (options.printWidth <= 0) {
     throw new Error("layoutDoc() requires printWidth > 0");
   }
 
   const indentWidth = options.indentWidth ?? 2;
-  const useTabs = options.useTabs ?? false;
-  const lines: MutableLayoutLine[] = [{ indentColumns: 0, spans: [] }];
+  const lineHeight = options.lineHeight ?? 1;
+  const lines: MutableDocLayoutLine[] = [{ row: 0, indentColumns: 0, spans: [] }];
   let current = lines[0]!;
   let column = 0;
   let maxColumn = 0;
@@ -232,10 +236,10 @@ export function layoutDoc(doc: Doc, options: LayoutOptions): LayoutDocument {
     }
 
     const last = current.spans[current.spans.length - 1];
-    if (last && sameAnnotations(last.annotations, annotations)) {
+    if (last && sameAnnotations(last.annotations, annotations) && last.column + last.text.length === column) {
       last.text += value;
     } else {
-      current.spans.push({ text: value, annotations: [...annotations] });
+      current.spans.push({ column, text: value, annotations: [...annotations] });
     }
 
     column += value.length;
@@ -246,7 +250,7 @@ export function layoutDoc(doc: Doc, options: LayoutOptions): LayoutDocument {
 
   const pushLineBreak = (indentLevels: number): void => {
     const indentColumns = indentLevels * indentWidth;
-    current = { indentColumns, spans: [] };
+    current = { row: lines.length, indentColumns, spans: [] };
     lines.push(current);
     column = indentColumns;
     if (column > maxColumn) {
@@ -349,12 +353,20 @@ export function layoutDoc(doc: Doc, options: LayoutOptions): LayoutDocument {
     }
   }
 
+  const finalizedLines: DocLayoutLine[] = lines.map((lineData) => ({
+    row: lineData.row,
+    indentColumns: lineData.indentColumns,
+    width: lineWidth(lineData),
+    spans: lineData.spans,
+  }));
+
   return {
     printWidth: options.printWidth,
     indentWidth,
-    useTabs,
-    maxColumn,
-    lines,
+    lineHeight,
+    width: maxColumn,
+    height: finalizedLines.length * lineHeight,
+    lines: finalizedLines,
   };
 }
 
@@ -386,6 +398,14 @@ function sameAnnotations(
     }
   }
   return true;
+}
+
+function lineWidth(line: MutableDocLayoutLine): number {
+  if (line.spans.length === 0) {
+    return line.indentColumns;
+  }
+  const last = line.spans[line.spans.length - 1]!;
+  return last.column + last.text.length;
 }
 
 /**
