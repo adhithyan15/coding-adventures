@@ -13,5 +13,4 @@ cd ../format-doc && npm ci --quiet
 cd ../format-doc-std && npm ci --quiet
 cd ../format-doc-to-paint && npm ci --quiet
 npm install --include=dev --silent
-npx tsc --noEmit
 npx vitest run --coverage

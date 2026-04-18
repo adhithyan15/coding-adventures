@@ -45,3 +45,6 @@ const formatted = formatNib(ugly, { printWidth: 24 });
 - v1 canonicalizes syntax and spacing for the full Nib grammar
 - v1 does not preserve comments because the current Nib lexer removes them
 - formatted output has no trailing newline and no trailing whitespace
+- the package `BUILD` currently validates behavior with tests instead of
+  `tsc --noEmit` because the shared TypeScript `lexer` package has an upstream
+  source-level type error on `main` that is outside this formatter change
