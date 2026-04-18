@@ -2040,3 +2040,17 @@ delimiter-heavy hostile input.
 **Rule:** Any inline parser that retries delimiter or bracket parsing character-by-character must cap
 how far a failed unmatched-delimiter search can scan. If a closer is not found within the bounded
 window, treat the opener as literal text and move on instead of rescanning the full tail again.
+
+---
+
+## F# unsigned ranges need a zero-count guard before subtracting one
+
+**Date:** 2026-04-18
+
+**What happened:** An F# deserialiser loop used `for index in 0u .. count - 1u` with a `uint32`
+token count. When `count = 0u`, subtracting one underflowed to `UInt32.MaxValue`, turning the
+empty-input path into a huge bogus loop range and causing an `ArgumentOutOfRangeException`.
+
+**Rule:** When looping over an unsigned count in F#, always guard the zero case before writing
+`count - 1u`. Prefer:
+  `if count = 0u then [] else for index in 0u .. count - 1u do ...`
