@@ -8,6 +8,7 @@ ordinary array loads/stores, and ordinary method calls.
 
 from __future__ import annotations
 
+import re
 import struct
 from dataclasses import dataclass
 from pathlib import Path
@@ -82,6 +83,10 @@ _DESC_INT_TO_INT = "(I)I"
 _DESC_INT_INT_TO_VOID = "(II)V"
 _DESC_PRINTSTREAM_WRITE = "(I)V"
 _DESC_INPUTSTREAM_READ = "()I"
+
+_JAVA_BINARY_NAME_RE = re.compile(
+    r"[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*"
+)
 
 
 class JvmBackendError(ValueError):
@@ -356,9 +361,10 @@ class _JvmClassLowerer:
     def _validate_class_name(self) -> None:
         if not self.config.class_name:
             raise JvmBackendError("class_name must not be empty")
-        if "/" in self.config.class_name:
+        if not _JAVA_BINARY_NAME_RE.fullmatch(self.config.class_name):
             raise JvmBackendError(
-                "class_name must use Java binary-name syntax with dots, not slashes"
+                "class_name must be a legal Java binary name made of "
+                "dot-separated identifiers"
             )
 
     def _collect_labels(self) -> dict[str, int]:
@@ -1189,6 +1195,12 @@ def write_class_file(artifact: JVMClassArtifact, output_dir: str | Path) -> Path
 
     root = Path(output_dir)
     target = root / artifact.class_filename
+    root_resolved = root.resolve()
+    target_resolved = target.resolve()
+    if not target_resolved.is_relative_to(root_resolved):
+        raise JvmBackendError(
+            "class_filename escapes the requested output directory"
+        )
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(artifact.class_bytes)
     return target

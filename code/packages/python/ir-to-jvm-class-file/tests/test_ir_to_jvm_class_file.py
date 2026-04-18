@@ -10,9 +10,11 @@ from jvm_class_file import parse_class_file
 
 from ir_to_jvm_class_file import (
     JvmBackendConfig,
+    JVMClassArtifact,
     lower_ir_to_jvm_class_file,
     write_class_file,
 )
+from ir_to_jvm_class_file.backend import JvmBackendError
 
 
 def compile_brainfuck_program(source: str) -> bytes:
@@ -77,6 +79,29 @@ def test_write_class_file_uses_classpath_layout() -> None:
         target = write_class_file(artifact, tempdir)
         assert target == Path(tempdir) / "demo" / "Example.class"
         assert target.read_bytes() == artifact.class_bytes
+
+
+def test_invalid_class_name_is_rejected() -> None:
+    with pytest.raises(JvmBackendError, match="legal Java binary name"):
+        lower_ir_to_jvm_class_file(
+            program=_simple_program(),
+            config=JvmBackendConfig(class_name=".Example"),
+        )
+
+
+def test_write_class_file_rejects_path_escaping_artifact() -> None:
+    artifact = JVMClassArtifact(
+        class_name=".Escape",
+        class_bytes=b"class-bytes",
+        callable_labels=(),
+        data_offsets={},
+    )
+
+    with (
+        tempfile.TemporaryDirectory() as tempdir,
+        pytest.raises(JvmBackendError, match="escapes the requested"),
+    ):
+        write_class_file(artifact, tempdir)
 
 
 @pytest.mark.skipif(
