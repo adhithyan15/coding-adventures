@@ -104,16 +104,18 @@ type Lz78 =
             [], 0
         else
             let originalLength = int (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)))
-            let tokenCount = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4))
+            let mutable tokenCount = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4))
+            let maxPossibleTokens = uint32 ((data.Length - 8) / 4)
+            if tokenCount > maxPossibleTokens then
+                tokenCount <- maxPossibleTokens
             let tokens = ResizeArray<Lz78Token>()
 
             if tokenCount > 0u then
                 for index in 0u .. tokenCount - 1u do
                     let start = 8 + (int index * 4)
-                    if start + 4 <= data.Length then
-                        tokens.Add(
-                            { DictIndex = int (BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(start, 2)))
-                              NextChar = data[start + 2] })
+                    tokens.Add(
+                        { DictIndex = int (BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(start, 2)))
+                          NextChar = data[start + 2] })
 
             List.ofSeq tokens, originalLength
 

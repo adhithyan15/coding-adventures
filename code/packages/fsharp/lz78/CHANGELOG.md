@@ -10,3 +10,4 @@ All notable changes to this package will be documented in this file.
 - Dictionary-growth, flush-token, and bounded-deserialisation behavior for explicit-dictionary compression
 - xUnit coverage for spec vectors, binary round trips, capped dictionary size, and serialisation symmetry
 - BUILD scripts that isolate `.NET` artifacts and first-run state for Linux and Windows CI
+- Deserialisation now caps token counts against the available payload so crafted headers cannot force oversized decode loops

@@ -136,19 +136,20 @@ type Lzss =
             let tokens = ResizeArray<LzssToken>()
             let mutable position = 8
 
-            for _ in 0u .. blockCount - 1u do
-                if position < data.Length then
-                    let flag = data[position]
-                    position <- position + 1
-                    for bit = 0 to 7 do
-                        if position < data.Length then
-                            if (flag &&& byte (1 <<< bit)) <> 0uy then
-                                if position + 3 <= data.Length then
-                                    tokens.Add(Match(((int data[position]) <<< 8) ||| int data[position + 1], int data[position + 2]))
-                                    position <- position + 3
-                            else
-                                tokens.Add(Literal data[position])
-                                position <- position + 1
+            if blockCount > 0u then
+                for _ in 0u .. blockCount - 1u do
+                    if position < data.Length then
+                        let flag = data[position]
+                        position <- position + 1
+                        for bit = 0 to 7 do
+                            if position < data.Length then
+                                if (flag &&& byte (1 <<< bit)) <> 0uy then
+                                    if position + 3 <= data.Length then
+                                        tokens.Add(Match(((int data[position]) <<< 8) ||| int data[position + 1], int data[position + 2]))
+                                        position <- position + 3
+                                else
+                                    tokens.Add(Literal data[position])
+                                    position <- position + 1
 
             List.ofSeq tokens, originalLength
 
