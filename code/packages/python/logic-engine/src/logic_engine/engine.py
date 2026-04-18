@@ -24,6 +24,7 @@ from itertools import count, islice
 from logic_core import (
     Atom,
     Compound,
+    Disequality,
     LogicVar,
     Number,
     State,
@@ -39,6 +40,12 @@ from logic_core import (
     unify,
     var,
 )
+from logic_core import (
+    eq as core_eq,
+)
+from logic_core import (
+    neq as core_neq,
+)
 from symbol_core import Symbol, sym
 
 __all__ = [
@@ -47,11 +54,13 @@ __all__ = [
     "Compound",
     "ConjExpr",
     "DisjExpr",
+    "Disequality",
     "EqExpr",
     "FailExpr",
     "FreshExpr",
     "GoalExpr",
     "LogicVar",
+    "NeqExpr",
     "Number",
     "Program",
     "Relation",
@@ -61,6 +70,7 @@ __all__ = [
     "Substitution",
     "SucceedExpr",
     "Term",
+    "all_different",
     "atom",
     "conj",
     "disj",
@@ -69,6 +79,7 @@ __all__ = [
     "fail",
     "fresh",
     "logic_list",
+    "neq",
     "num",
     "program",
     "relation",
@@ -194,6 +205,14 @@ class EqExpr:
 
 
 @dataclass(frozen=True, slots=True)
+class NeqExpr:
+    """A structured disequality goal delegated to ``logic-core`` constraints."""
+
+    left: Term
+    right: Term
+
+
+@dataclass(frozen=True, slots=True)
 class ConjExpr:
     """A conjunction of goal expressions."""
 
@@ -221,7 +240,14 @@ class FreshExpr:
 
 
 type GoalExpr = (
-    RelationCall | SucceedExpr | FailExpr | EqExpr | ConjExpr | DisjExpr | FreshExpr
+    RelationCall
+    | SucceedExpr
+    | FailExpr
+    | EqExpr
+    | NeqExpr
+    | ConjExpr
+    | DisjExpr
+    | FreshExpr
 )
 
 
@@ -235,6 +261,7 @@ def _coerce_goal(goal: object) -> GoalExpr:
             | SucceedExpr
             | FailExpr
             | EqExpr
+            | NeqExpr
             | ConjExpr
             | DisjExpr
             | FreshExpr
@@ -262,6 +289,12 @@ def eq(left: object, right: object) -> GoalExpr:
     """Construct an equality goal expression."""
 
     return EqExpr(left=_coerce_term(left), right=_coerce_term(right))
+
+
+def neq(left: object, right: object) -> GoalExpr:
+    """Construct a disequality goal expression."""
+
+    return NeqExpr(left=_coerce_term(left), right=_coerce_term(right))
 
 
 def conj(*goals: object) -> GoalExpr:
@@ -304,6 +337,20 @@ def disj(*goals: object) -> GoalExpr:
     if len(flattened) == 1:
         return flattened[0]
     return DisjExpr(goals=tuple(flattened))
+
+
+def all_different(*terms: object) -> GoalExpr:
+    """Require every supplied term to remain pairwise distinct.
+
+    This is the first convenience combinator for puzzle-style search. It lowers
+    to a conjunction of pairwise disequalities.
+    """
+
+    goals: list[GoalExpr] = []
+    for index, left in enumerate(terms):
+        for right in terms[index + 1 :]:
+            goals.append(neq(left, right))
+    return conj(*goals)
 
 
 def fresh(count: int, fn: Callable[..., object]) -> GoalExpr:
@@ -426,6 +473,11 @@ def _rename_goal(goal: GoalExpr, mapping: dict[LogicVar, LogicVar]) -> GoalExpr:
             left=_rename_term(goal.left, mapping),
             right=_rename_term(goal.right, mapping),
         )
+    if isinstance(goal, NeqExpr):
+        return NeqExpr(
+            left=_rename_term(goal.left, mapping),
+            right=_rename_term(goal.right, mapping),
+        )
     if isinstance(goal, ConjExpr):
         return ConjExpr(
             goals=tuple(_rename_goal(child, mapping) for child in goal.goals),
@@ -502,6 +554,11 @@ def _freshen_goal(
         left, running_id = _freshen_term(goal.left, mapping, next_var_id)
         right, running_id = _freshen_term(goal.right, mapping, running_id)
         return EqExpr(left=left, right=right), running_id
+
+    if isinstance(goal, NeqExpr):
+        left, running_id = _freshen_term(goal.left, mapping, next_var_id)
+        right, running_id = _freshen_term(goal.right, mapping, running_id)
+        return NeqExpr(left=left, right=right), running_id
 
     if isinstance(goal, ConjExpr):
         running_id = next_var_id
@@ -583,9 +640,11 @@ def _solve_goal(
         return
 
     if isinstance(goal, EqExpr):
-        unified = unify(goal.left, goal.right, state.substitution)
-        if unified is not None:
-            yield State(substitution=unified, next_var_id=state.next_var_id)
+        yield from core_eq(goal.left, goal.right)(state)
+        return
+
+    if isinstance(goal, NeqExpr):
+        yield from core_neq(goal.left, goal.right)(state)
         return
 
     if isinstance(goal, ConjExpr):

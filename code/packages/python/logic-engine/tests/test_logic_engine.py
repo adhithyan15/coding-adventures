@@ -11,9 +11,11 @@ import pytest
 
 from logic_engine import (
     Clause,
+    Disequality,
     Program,
     State,
     __version__,
+    all_different,
     atom,
     conj,
     disj,
@@ -22,6 +24,7 @@ from logic_engine import (
     fail,
     fresh,
     logic_list,
+    neq,
     program,
     relation,
     rule,
@@ -37,7 +40,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
 
 
 class TestRelationsAndClauses:
@@ -257,6 +260,61 @@ class TestQueryHelpers:
     def test_invalid_goal_expressions_are_rejected(self) -> None:
         with pytest.raises(TypeError):
             solve_all(program(), var("X"), object())
+
+
+class TestDisequalityConstraints:
+    """Disequality is the first real puzzle-oriented constraint."""
+
+    def test_neq_can_live_inside_engine_goals(self) -> None:
+        x = var("X")
+
+        assert solve_all(program(), x, conj(neq(x, "homer"), eq(x, "marge"))) == [
+            atom("marge"),
+        ]
+
+    def test_neq_blocks_later_equal_bindings(self) -> None:
+        x = var("X")
+
+        assert solve_all(program(), x, conj(neq(x, "homer"), eq(x, "homer"))) == []
+
+    def test_solve_exposes_pending_constraints_on_states(self) -> None:
+        x = var("X")
+        states = list(solve(program(), neq(x, "homer")))
+
+        assert len(states) == 1
+        assert states[0].constraints == (
+            Disequality(left=x, right=atom("homer")),
+        )
+
+    def test_all_different_solves_a_small_coloring_problem(self) -> None:
+        color = relation("color", 1)
+        wa = var("WA")
+        nt = var("NT")
+        sa = var("SA")
+
+        palette = program(
+            fact(color("red")),
+            fact(color("green")),
+            fact(color("blue")),
+        )
+
+        answers = solve_n(
+            palette,
+            3,
+            (wa, nt, sa),
+            conj(
+                color(wa),
+                color(nt),
+                color(sa),
+                all_different(wa, nt, sa),
+            ),
+        )
+
+        assert answers == [
+            (atom("red"), atom("green"), atom("blue")),
+            (atom("red"), atom("blue"), atom("green")),
+            (atom("green"), atom("red"), atom("blue")),
+        ]
 
 
 class TestListRelations:

@@ -11,12 +11,14 @@ from logic_engine.engine import (
     Clause,
     Compound,
     ConjExpr,
+    Disequality,
     DisjExpr,
     EqExpr,
     FailExpr,
     FreshExpr,
     GoalExpr,
     LogicVar,
+    NeqExpr,
     Number,
     Program,
     Relation,
@@ -26,6 +28,7 @@ from logic_engine.engine import (
     Substitution,
     SucceedExpr,
     Term,
+    all_different,
     atom,
     conj,
     disj,
@@ -34,6 +37,7 @@ from logic_engine.engine import (
     fail,
     fresh,
     logic_list,
+    neq,
     num,
     program,
     relation,
@@ -50,6 +54,7 @@ from logic_engine.engine import (
 __all__ = [
     "__version__",
     "Atom",
+    "Disequality",
     "Clause",
     "Compound",
     "ConjExpr",
@@ -59,6 +64,7 @@ __all__ = [
     "FreshExpr",
     "GoalExpr",
     "LogicVar",
+    "NeqExpr",
     "Number",
     "Program",
     "Relation",
@@ -68,6 +74,7 @@ __all__ = [
     "Substitution",
     "SucceedExpr",
     "Term",
+    "all_different",
     "atom",
     "conj",
     "disj",
@@ -76,6 +83,7 @@ __all__ = [
     "fail",
     "fresh",
     "logic_list",
+    "neq",
     "num",
     "program",
     "relation",
@@ -89,4 +97,4 @@ __all__ = [
     "var",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

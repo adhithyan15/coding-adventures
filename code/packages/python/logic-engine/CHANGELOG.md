@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-18
+
+### Added
+
+- `neq(...)` goal expressions delegated to `logic-core` disequality constraints
+- `all_different(...)` for pairwise-distinct puzzle variables
+- end-to-end tests for delayed disequality and a small coloring problem
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
