@@ -34,8 +34,9 @@ accepts incomplete headers or trailing attacker-controlled bytes instead of
 failing closed.
 
 **Rule:** For Dart binary formats, validate the exact expected byte length from
-the header before decoding any entries. Reject both incomplete payloads and
-extra trailing bytes with `FormatException`.
+the header before decoding any entries, and validate that the reconstructed
+payload length exactly matches any declared output length. Reject incomplete
+payloads, extra trailing bytes, underflow, and overflow with `FormatException`.
 
 ---
 

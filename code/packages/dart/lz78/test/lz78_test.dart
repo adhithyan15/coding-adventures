@@ -197,6 +197,27 @@ void main() {
         throwsA(isA<FormatException>()),
       );
     });
+
+    test('decode rejects declared lengths that are too large', () {
+      expect(
+        () => decode(<Token>[token(0, 65)], 2),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('decode rejects declared lengths that are too small', () {
+      expect(
+        () => decode(<Token>[token(0, 65)], 0),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('decode rejects overflow caused by reconstructed sequences', () {
+      expect(
+        () => decode(<Token>[token(0, 65), token(1, 0)], 1),
+        throwsA(isA<FormatException>()),
+      );
+    });
   });
 
   group('serialisation', () {
@@ -250,21 +271,7 @@ void main() {
     test('trailing bytes beyond the declared token stream are rejected', () {
       expect(
         () => deserialiseTokens(
-          Uint8List.fromList(<int>[
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            65,
-            0,
-            99,
-          ]),
+          Uint8List.fromList(<int>[0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 65, 0, 99]),
         ),
         throwsA(isA<FormatException>()),
       );

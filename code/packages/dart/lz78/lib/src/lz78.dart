@@ -132,18 +132,30 @@ Uint8List decode(List<Token> tokens, [int originalLength = -1]) {
 
     final sequence = _reconstruct(table, current.dictIndex);
     output.addAll(sequence);
+    if (originalLength >= 0 && output.length > originalLength) {
+      throw FormatException(
+        'Malformed LZ78 token stream: decoded output exceeds declared length $originalLength.',
+      );
+    }
 
     if (originalLength < 0 || output.length < originalLength) {
       output.add(current.nextChar);
+    } else if (current.nextChar != 0) {
+      throw FormatException(
+        'Malformed LZ78 token stream: token data exceeds declared length $originalLength.',
+      );
     }
 
     table.add((parentId: current.dictIndex, byte: current.nextChar));
   }
 
-  final result = originalLength >= 0
-      ? output.take(originalLength).toList(growable: false)
-      : output;
-  return Uint8List.fromList(result);
+  if (originalLength >= 0 && output.length != originalLength) {
+    throw FormatException(
+      'Malformed LZ78 token stream: decoded output length ${output.length} does not match declared length $originalLength.',
+    );
+  }
+
+  return Uint8List.fromList(output);
 }
 
 List<int> _reconstruct(List<({int parentId, int byte})> table, int index) {
@@ -253,11 +265,6 @@ void _validateDecodedToken(Token current, int dictionaryLength) {
 }
 
 void _validateDeserialisedToken(Token current, int originalLength) {
-  if (current.dictIndex > 65535) {
-    throw const FormatException(
-      'Malformed LZ78 token stream: dictIndex exceeds uint16 range.',
-    );
-  }
   if (originalLength == 0 && current.dictIndex != 0) {
     throw const FormatException(
       'Malformed LZ78 token stream: non-empty dictionary reference for empty output.',
