@@ -9,3 +9,7 @@ All notable changes to this package will be documented in this file.
 - Implemented shared `Header`, `HttpVersion`, `BodyKind`, `RequestHead`, and `ResponseHead` types
 - Added helper functions for case-insensitive header lookup plus `Content-Length` and `Content-Type`
 - Added unit tests covering version parsing, header lookup, content helpers, and semantic head helpers
+
+### Fixed
+
+- Pinned the rockspec source to an immutable HTTPS git ref for reproducible installs

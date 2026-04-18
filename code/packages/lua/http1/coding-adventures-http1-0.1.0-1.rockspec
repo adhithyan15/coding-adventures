@@ -1,7 +1,8 @@
 package = "coding-adventures-http1"
 version = "0.1.0-1"
 source = {
-    url = "git://github.com/adhithyan15/coding-adventures.git",
+    url = "https://github.com/adhithyan15/coding-adventures.git",
+    tag = "b132b780d8400fbc14b3de4cb7d8a26bf3195fd6",
 }
 description = {
     summary = "HTTP/1 request and response head parser with body framing detection",
