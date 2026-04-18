@@ -1199,3 +1199,122 @@ describe("GrammarLexer — case-insensitive keywords", () => {
     expect(tokens2[0].value).toBe("select");
   });
 });
+
+// ============================================================================
+// Rich source info tests
+// ============================================================================
+
+function makeRichSourceGrammar(): TokenGrammar {
+  return {
+    definitions: [
+      { name: "NAME", pattern: "[a-zA-Z_][a-zA-Z0-9_]*", isRegex: true, lineNumber: 1 },
+      { name: "EQ", pattern: "=", isRegex: false, lineNumber: 2 },
+    ],
+    keywords: [],
+    skipDefinitions: [
+      { name: "WHITESPACE", pattern: "[ \\t\\r\\n]+", isRegex: true, lineNumber: 3 },
+      { name: "LINE_COMMENT", pattern: "\\/\\/[^\\n]*", isRegex: true, lineNumber: 4 },
+    ],
+    version: 0,
+    caseInsensitive: false,
+  };
+}
+
+describe("GrammarLexer — rich source preservation", () => {
+  it("keeps the default path lean when preserveSourceInfo is disabled", () => {
+    const grammar = makeRichSourceGrammar();
+    const tokens = grammarTokenize("foo=bar", grammar);
+    expect(tokens[0].startOffset).toBeUndefined();
+    expect(tokens[0].leadingTrivia).toBeUndefined();
+    expect(tokens[0].tokenIndex).toBeUndefined();
+  });
+
+  it("attaches leading trivia, offsets, and token indices when enabled", () => {
+    const grammar = makeRichSourceGrammar();
+    const tokens = grammarTokenize(
+      "  // lead\nfoo=bar",
+      grammar,
+      { preserveSourceInfo: true },
+    );
+
+    expect(tokens.map((token) => token.type)).toEqual(["NAME", "EQ", "NAME", "EOF"]);
+
+    expect(tokens[0].tokenIndex).toBe(0);
+    expect(tokens[1].tokenIndex).toBe(1);
+    expect(tokens[2].tokenIndex).toBe(2);
+    expect(tokens[3].tokenIndex).toBe(3);
+
+    expect(tokens[0].startOffset).toBe(10);
+    expect(tokens[0].endOffset).toBe(13);
+    expect(tokens[0].line).toBe(2);
+    expect(tokens[0].column).toBe(1);
+    expect(tokens[0].endLine).toBe(2);
+    expect(tokens[0].endColumn).toBe(4);
+
+    expect(tokens[0].leadingTrivia).toEqual([
+      {
+        type: "WHITESPACE",
+        value: "  ",
+        line: 1,
+        column: 1,
+        endLine: 1,
+        endColumn: 3,
+        startOffset: 0,
+        endOffset: 2,
+      },
+      {
+        type: "LINE_COMMENT",
+        value: "// lead",
+        line: 1,
+        column: 3,
+        endLine: 1,
+        endColumn: 10,
+        startOffset: 2,
+        endOffset: 9,
+      },
+      {
+        type: "WHITESPACE",
+        value: "\n",
+        line: 1,
+        column: 10,
+        endLine: 2,
+        endColumn: 1,
+        startOffset: 9,
+        endOffset: 10,
+      },
+    ]);
+  });
+
+  it("attaches trailing trivia to EOF when enabled", () => {
+    const grammar = makeRichSourceGrammar();
+    const tokens = grammarTokenize(
+      "foo // tail",
+      grammar,
+      { preserveSourceInfo: true },
+    );
+    const eof = tokens[tokens.length - 1];
+    expect(eof.type).toBe("EOF");
+    expect(eof.leadingTrivia).toEqual([
+      {
+        type: "WHITESPACE",
+        value: " ",
+        line: 1,
+        column: 4,
+        endLine: 1,
+        endColumn: 5,
+        startOffset: 3,
+        endOffset: 4,
+      },
+      {
+        type: "LINE_COMMENT",
+        value: "// tail",
+        line: 1,
+        column: 5,
+        endLine: 1,
+        endColumn: 12,
+        startOffset: 4,
+        endOffset: 11,
+      },
+    ]);
+  });
+});
