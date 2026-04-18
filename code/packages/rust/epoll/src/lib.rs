@@ -14,9 +14,7 @@ use std::time::Duration;
 mod imp {
     use super::{io, BitOr, BitOrAssign, Duration};
     use std::ffi::c_int;
-    use std::mem;
     use std::os::fd::{AsRawFd, FromRawFd, OwnedFd, RawFd};
-    use std::os::unix::net::UnixStream;
 
     const EPOLL_CLOEXEC: c_int = 0x80000;
     const EPOLL_CTL_ADD: c_int = 1;
@@ -31,7 +29,9 @@ mod imp {
     const EPOLLET: u32 = 1u32 << 31;
     const EPOLLONESHOT: u32 = 1u32 << 30;
 
-    #[repr(C)]
+    // Linux declares `struct epoll_event` as packed, so our raw FFI mirror
+    // must match that layout exactly or multi-event waits can decode garbage.
+    #[repr(C, packed)]
     #[derive(Clone, Copy, Debug, Default)]
     struct RawEpollEvent {
         events: u32,
@@ -213,6 +213,7 @@ mod imp {
     mod tests {
         use super::*;
         use std::io::Write;
+        use std::os::unix::net::UnixStream;
 
         #[test]
         fn interest_flags_combine() {
@@ -255,6 +256,35 @@ mod imp {
                 .wait(4, Some(Duration::from_millis(10)))
                 .expect("wait");
             assert!(events.is_empty());
+        }
+
+        #[test]
+        fn wait_reports_multiple_ready_fds() {
+            let epoll = Epoll::new(true).expect("create epoll");
+            let (left_a, mut right_a) = UnixStream::pair().expect("socket pair a");
+            let (left_b, mut right_b) = UnixStream::pair().expect("socket pair b");
+
+            epoll
+                .add(left_a.as_raw_fd(), EpollEvent::new(21, Interest::READABLE))
+                .expect("register fd a");
+            epoll
+                .add(left_b.as_raw_fd(), EpollEvent::new(22, Interest::READABLE))
+                .expect("register fd b");
+
+            right_a.write_all(b"a").expect("write to socket a");
+            right_b.write_all(b"b").expect("write to socket b");
+
+            let events = epoll
+                .wait(8, Some(Duration::from_millis(100)))
+                .expect("wait");
+
+            assert_eq!(events.len(), 2);
+            assert!(events
+                .iter()
+                .any(|event| event.token() == 21 && event.is_readable()));
+            assert!(events
+                .iter()
+                .any(|event| event.token() == 22 && event.is_readable()));
         }
     }
 }

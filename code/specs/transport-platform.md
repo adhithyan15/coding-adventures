@@ -17,9 +17,9 @@ contract instead of being coupled directly to:
 - IOCP completion records
 - host-kernel timer and wakeup quirks
 
-The first implementation target is host-OS-backed networking on top of
-`native-event-core` plus native TCP sockets. The long-term design target is
-broader: the same `transport-platform` contract should be implementable by:
+The first implementation target is host-OS-backed networking over native TCP
+sockets and native eventing APIs. The long-term design target is broader: the
+same `transport-platform` contract should be implementable by:
 
 - Linux / BSD / macOS / Windows socket stacks
 - a future library OS networking layer
@@ -107,7 +107,7 @@ stream-reactor
     ↓
 transport-platform
     ↓
-native-event-core + native socket providers
+native socket + event providers
     or
 library-OS / unikernel provider
 ```
@@ -118,11 +118,46 @@ but above raw poller details.
 One implementation note matters for the current codebase:
 
 - the public seam is the stable goal
-- the very first provider implementation may talk directly to a raw backend like
-  `kqueue` while `native-event-core` grows fuller timer and wakeup coverage
+- the current providers talk directly to raw backends like `kqueue`, `epoll`,
+  and `WSAPoll` while lower layers continue maturing
 
 That does not change the intended layering above the seam. It only keeps the
 first implementation practical while the lower native crates continue maturing.
+
+---
+
+## Implementation Status
+
+The current crate ships three host-OS providers:
+
+- macOS / BSD: `KqueueTransportPlatform`
+- Linux: `EpollTransportPlatform`
+- Windows: `WindowsTransportPlatform`
+
+The Linux provider is the phase-one design target for high-performance host
+servers:
+
+- `epoll` for readiness delivery
+- `timerfd` for deadline events
+- `eventfd` for explicit wakeups
+
+The BSD/macOS provider uses:
+
+- `kqueue` read and write filters for sockets
+- `EVFILT_TIMER` for timers
+- `EVFILT_USER` for wakeups
+
+The Windows provider is intentionally a seam-preserving phase one rather than
+the final Windows story:
+
+- nonblocking Winsock sockets
+- `WSAPoll` for readiness
+- loopback socket pairs for wakeups
+- user-space timer bookkeeping
+
+The future Windows end-state should still be an IOCP-backed provider. The point
+of the current implementation is to let the seam, tests, and higher layers land
+now instead of blocking until the richer completion backend is ready.
 
 ---
 
