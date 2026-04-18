@@ -6,12 +6,16 @@ Mini Redis TCP server.
 
 This program composes:
 
-- `tcp-server` for the current TCP transport loop
+- `tcp-runtime` for the current TCP transport runtime
 - `resp-protocol` for Redis-compatible framing
 - `in-memory-data-store` for command execution and background expiry
 
 It speaks enough Redis-compatible RESP over TCP for local development and
 end-to-end testing with normal socket clients.
+
+Its Redis session state now lives inside `tcp-runtime` connection state, which
+makes this program the first real application consumer of the newer transport
+stack.
 
 ## Development
 

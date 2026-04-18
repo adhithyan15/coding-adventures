@@ -14,11 +14,13 @@ This crate is the reusable stream runtime that sits between:
 The reactor owns:
 
 - listener acceptance
+- per-connection application state
 - per-stream readable and writable progression
 - queued writes
 - close-after-flush handling
 - connection caps
 - queued-write budget caps
+- close callbacks with final connection state
 
 It deliberately does not parse protocols or know about RESP, IRC, HTTP, or
 WebSocket framing.
@@ -29,6 +31,7 @@ Phase one supports:
 
 - one listener
 - many concurrent streams
+- stateful or stateless handlers
 - neutral handler results in terms of bytes plus close intent
 - cooperative stop via a stop flag
 - macOS/BSD convenience binding through `transport_platform::bsd::KqueueTransportPlatform`

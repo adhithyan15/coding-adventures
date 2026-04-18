@@ -14,3 +14,13 @@ All notable changes to this package will be documented in this file.
   providers
 - macOS / BSD end-to-end tests for echo behavior, local-address metadata,
   connection caps, queued-write overflow, and stop-handle shutdown
+
+## [0.1.1] - 2026-04-18
+
+### Added
+
+- `bind_with_state` plus stateful OS convenience constructors for protocol
+  session state
+- close callbacks that observe final TCP connection state during teardown
+- tests proving stateful handlers preserve per-connection state across multiple
+  reads

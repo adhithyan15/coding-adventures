@@ -90,21 +90,24 @@ impl StopHandle {
     }
 }
 
-pub type Handler =
-    Arc<dyn Fn(StreamConnectionInfo, &[u8]) -> StreamHandlerResult + Send + Sync + 'static>;
+type StateInit<S> = Arc<dyn Fn(StreamConnectionInfo) -> S + Send + Sync + 'static>;
+type StatefulHandler<S> =
+    Arc<dyn Fn(StreamConnectionInfo, &mut S, &[u8]) -> StreamHandlerResult + Send + Sync + 'static>;
+type CloseHandler<S> = Arc<dyn Fn(StreamConnectionInfo, S) + Send + Sync + 'static>;
 
-struct ConnectionState {
+struct ConnectionState<S> {
     info: StreamConnectionInfo,
+    app_state: S,
     pending_write: Vec<u8>,
     peer_closed: bool,
     close_when_flushed: bool,
 }
 
-pub struct StreamReactor<P> {
+pub struct StreamReactor<P, S = ()> {
     platform: P,
     listener: ListenerId,
     listener_addr: SocketAddr,
-    connections: BTreeMap<StreamId, ConnectionState>,
+    connections: BTreeMap<StreamId, ConnectionState<S>>,
     next_connection_id: u64,
     stop_flag: Arc<AtomicBool>,
     read_buffer_size: usize,
@@ -112,18 +115,45 @@ pub struct StreamReactor<P> {
     max_pending_write_bytes: usize,
     poll_timeout: Duration,
     stream_options: StreamOptions,
-    handler: Handler,
+    state_init: StateInit<S>,
+    handler: StatefulHandler<S>,
+    on_close: CloseHandler<S>,
 }
 
-impl<P: TransportPlatform> StreamReactor<P> {
+impl<P: TransportPlatform> StreamReactor<P, ()> {
     pub fn bind<F>(
-        mut platform: P,
+        platform: P,
         address: BindAddress,
         options: StreamReactorOptions,
         handler: F,
     ) -> Result<Self, PlatformError>
     where
         F: Fn(StreamConnectionInfo, &[u8]) -> StreamHandlerResult + Send + Sync + 'static,
+    {
+        StreamReactor::bind_with_state(
+            platform,
+            address,
+            options,
+            |_| (),
+            move |info, _, bytes| handler(info, bytes),
+            |_, _| {},
+        )
+    }
+}
+
+impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
+    pub fn bind_with_state<I, F, C>(
+        mut platform: P,
+        address: BindAddress,
+        options: StreamReactorOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        I: Fn(StreamConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(StreamConnectionInfo, &mut S, &[u8]) -> StreamHandlerResult + Send + Sync + 'static,
+        C: Fn(StreamConnectionInfo, S) + Send + Sync + 'static,
     {
         let listener = platform.bind_listener(address, options.listener)?;
         let listener_addr = platform.local_addr(listener)?;
@@ -141,7 +171,9 @@ impl<P: TransportPlatform> StreamReactor<P> {
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
             poll_timeout: options.poll_timeout,
             stream_options: options.stream,
+            state_init: Arc::new(init),
             handler: Arc::new(handler),
+            on_close: Arc::new(on_close),
         })
     }
 
@@ -223,6 +255,10 @@ impl<P: TransportPlatform> StreamReactor<P> {
                                 id: connection_id,
                                 peer_addr: accepted.peer_addr,
                             },
+                            app_state: (self.state_init)(StreamConnectionInfo {
+                                id: connection_id,
+                                peer_addr: accepted.peer_addr,
+                            }),
                             pending_write: Vec::new(),
                             peer_closed: false,
                             close_when_flushed: false,
@@ -252,7 +288,7 @@ impl<P: TransportPlatform> StreamReactor<P> {
         loop {
             match self.platform.read(stream, &mut buffer)? {
                 ReadOutcome::Read(n) => {
-                    let result = (self.handler)(state.info, &buffer[..n]);
+                    let result = (self.handler)(state.info, &mut state.app_state, &buffer[..n]);
                     if !result.write.is_empty() {
                         if state.pending_write.len().saturating_add(result.write.len())
                             > self.max_pending_write_bytes
@@ -278,7 +314,7 @@ impl<P: TransportPlatform> StreamReactor<P> {
         }
 
         if close_now || self.should_close_after_io(&state) {
-            self.close_stream_raw(stream)
+            self.close_connection_with_state(stream, state)
         } else {
             self.platform
                 .set_stream_interest(stream, self.interest_for(&state))?;
@@ -307,7 +343,7 @@ impl<P: TransportPlatform> StreamReactor<P> {
         }
 
         if close_now || self.should_close_after_io(&state) {
-            self.close_stream_raw(stream)
+            self.close_connection_with_state(stream, state)
         } else {
             self.platform
                 .set_stream_interest(stream, self.interest_for(&state))?;
@@ -325,7 +361,7 @@ impl<P: TransportPlatform> StreamReactor<P> {
             CloseKind::ReadClosed => {
                 state.peer_closed = true;
                 if self.should_close_after_io(&state) {
-                    self.close_stream_raw(stream)
+                    self.close_connection_with_state(stream, state)
                 } else {
                     self.platform
                         .set_stream_interest(stream, self.interest_for(&state))?;
@@ -334,12 +370,12 @@ impl<P: TransportPlatform> StreamReactor<P> {
                 }
             }
             CloseKind::WriteClosed | CloseKind::FullyClosed | CloseKind::Reset => {
-                self.close_stream_raw(stream)
+                self.close_connection_with_state(stream, state)
             }
         }
     }
 
-    fn interest_for(&self, state: &ConnectionState) -> StreamInterest {
+    fn interest_for(&self, state: &ConnectionState<S>) -> StreamInterest {
         if state.pending_write.is_empty() {
             if state.peer_closed || state.close_when_flushed {
                 StreamInterest::none()
@@ -356,12 +392,24 @@ impl<P: TransportPlatform> StreamReactor<P> {
         }
     }
 
-    fn should_close_after_io(&self, state: &ConnectionState) -> bool {
+    fn should_close_after_io(&self, state: &ConnectionState<S>) -> bool {
         state.pending_write.is_empty() && (state.peer_closed || state.close_when_flushed)
     }
 
     fn close_connection(&mut self, stream: StreamId) -> Result<(), PlatformError> {
-        self.connections.remove(&stream);
+        if let Some(state) = self.connections.remove(&stream) {
+            self.close_connection_with_state(stream, state)
+        } else {
+            self.close_stream_raw(stream)
+        }
+    }
+
+    fn close_connection_with_state(
+        &mut self,
+        stream: StreamId,
+        state: ConnectionState<S>,
+    ) -> Result<(), PlatformError> {
+        (self.on_close)(state.info, state.app_state);
         self.close_stream_raw(stream)
     }
 
@@ -393,7 +441,7 @@ impl<P: TransportPlatform> StreamReactor<P> {
     target_os = "netbsd",
     target_os = "dragonfly"
 ))]
-impl StreamReactor<transport_platform::bsd::KqueueTransportPlatform> {
+impl StreamReactor<transport_platform::bsd::KqueueTransportPlatform, ()> {
     pub fn bind_kqueue<A, F>(addr: A, handler: F) -> Result<Self, PlatformError>
     where
         A: std::net::ToSocketAddrs,
@@ -414,6 +462,44 @@ impl StreamReactor<transport_platform::bsd::KqueueTransportPlatform> {
     }
 }
 
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+impl<S: Send + 'static> StreamReactor<transport_platform::bsd::KqueueTransportPlatform, S> {
+    pub fn bind_kqueue_with_state<A, I, F, C>(
+        addr: A,
+        options: StreamReactorOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        A: std::net::ToSocketAddrs,
+        I: Fn(StreamConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(StreamConnectionInfo, &mut S, &[u8]) -> StreamHandlerResult + Send + Sync + 'static,
+        C: Fn(StreamConnectionInfo, S) + Send + Sync + 'static,
+    {
+        let address = addr
+            .to_socket_addrs()
+            .map_err(PlatformError::from)?
+            .next()
+            .ok_or_else(|| PlatformError::Io("no socket addresses resolved".into()))?;
+        let platform = transport_platform::bsd::KqueueTransportPlatform::new()?;
+        Self::bind_with_state(
+            platform,
+            BindAddress::Ip(address),
+            options,
+            init,
+            handler,
+            on_close,
+        )
+    }
+}
+
 #[cfg(all(
     test,
     any(
@@ -428,7 +514,7 @@ mod tests {
     use super::*;
     use std::io::{Read, Write};
     use std::net::{Shutdown, TcpStream};
-    use std::sync::{Arc, Barrier};
+    use std::sync::{Arc, Barrier, Mutex};
     use std::thread;
 
     #[test]
@@ -547,6 +633,108 @@ mod tests {
             !reactor.connections.contains_key(&stream),
             "reactor should drop streams whose queued output exceeds the limit"
         );
+    }
+
+    #[test]
+    fn preserves_connection_state_across_multiple_reads() {
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            StreamReactorOptions::default(),
+            |_| Vec::<u8>::new(),
+            |_, state, bytes| {
+                state.extend_from_slice(bytes);
+                if state.ends_with(b"\n") {
+                    StreamHandlerResult::write(state.clone())
+                } else {
+                    StreamHandlerResult::default()
+                }
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let addr = reactor.local_addr();
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"hel").expect("write first fragment");
+        for _ in 0..8 {
+            reactor.accept_ready().expect("accept client");
+            if reactor.connections.len() == 1 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+
+        let stream = *reactor
+            .connections
+            .keys()
+            .next()
+            .expect("accepted connection stream");
+        reactor.read_ready(stream).expect("first partial read");
+
+        let mut probe = [0u8; 16];
+        client
+            .set_read_timeout(Some(Duration::from_millis(50)))
+            .expect("read timeout");
+        let err = client.read(&mut probe).expect_err("no response yet");
+        assert!(
+            matches!(
+                err.kind(),
+                std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
+            ),
+            "expected no response before newline, got {err}"
+        );
+
+        client.write_all(b"lo\n").expect("write second fragment");
+        reactor.read_ready(stream).expect("second read");
+        reactor.write_ready(stream).expect("flush response");
+
+        let mut echoed = [0u8; 6];
+        client.read_exact(&mut echoed).expect("read echoed frame");
+        assert_eq!(&echoed, b"hello\n");
+    }
+
+    #[test]
+    fn invokes_close_callback_once_with_final_state() {
+        let closed = Arc::new(Mutex::new(Vec::<(ConnectionId, Vec<u8>)>::new()));
+        let closed_observer = Arc::clone(&closed);
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            StreamReactorOptions::default(),
+            |_| Vec::<u8>::new(),
+            |_, state, bytes| {
+                state.extend_from_slice(bytes);
+                StreamHandlerResult::close()
+            },
+            move |info, state| {
+                closed_observer
+                    .lock()
+                    .expect("close observer mutex poisoned")
+                    .push((info.id, state));
+            },
+        )
+        .expect("bind");
+        let addr = reactor.local_addr();
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"bye").expect("write request");
+        for _ in 0..8 {
+            reactor.accept_ready().expect("accept client");
+            if reactor.connections.len() == 1 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+
+        let stream = *reactor
+            .connections
+            .keys()
+            .next()
+            .expect("accepted connection stream");
+        reactor.read_ready(stream).expect("read request");
+
+        let observed = closed.lock().expect("close observer mutex poisoned");
+        assert_eq!(observed.len(), 1, "close callback should run exactly once");
+        assert_eq!(observed[0].1, b"bye".to_vec());
     }
 
     #[test]

@@ -1,12 +1,12 @@
 //! # mini-redis
 //!
 //! Small Redis-compatible TCP server built on top of the in-memory data-store
-//! pipeline and the repository's current TCP server substrate.
+//! pipeline and the repository's `tcp-runtime`.
 //!
-//! This crate deliberately keeps the Redis-facing logic in one place:
+//! This crate keeps the Redis-facing logic in one place:
 //!
-//! - RESP framing enters through the TCP handler
-//! - per-connection session state lives on the mutable `tcp-server` connection
+//! - RESP framing enters through the TCP runtime read callback
+//! - per-connection Redis session state lives in `tcp-runtime`
 //! - decoded command frames execute against `DataStoreManager`
 //! - engine responses return to the client as RESP values
 
@@ -15,12 +15,31 @@ mod resp_adapter;
 use std::io;
 use std::net::SocketAddr;
 use std::path::PathBuf;
-use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 
 use in_memory_data_store::DataStoreManager;
 use resp_adapter::{command_frame_from_resp, engine_response_to_resp};
 use resp_protocol::{decode, encode, RespError, RespValue};
-use tcp_server::{Connection, TcpServer};
+use tcp_runtime::{PlatformError, StopHandle, TcpHandlerResult, TcpRuntime, TcpRuntimeOptions};
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+type RedisRuntime =
+    TcpRuntime<transport_platform::bsd::KqueueTransportPlatform, RedisConnectionState>;
+
+#[cfg(target_os = "linux")]
+type RedisRuntime =
+    TcpRuntime<transport_platform::linux::EpollTransportPlatform, RedisConnectionState>;
+
+#[cfg(target_os = "windows")]
+type RedisRuntime =
+    TcpRuntime<transport_platform::windows::WindowsTransportPlatform, RedisConnectionState>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MiniRedisOptions {
@@ -39,88 +58,197 @@ impl Default for MiniRedisOptions {
     }
 }
 
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
+struct RedisConnectionState {
+    read_buffer: Vec<u8>,
+    selected_db: usize,
+}
+
 #[derive(Clone)]
 pub struct MiniRedisServer {
-    server: TcpServer,
+    runtime: Arc<Mutex<Option<RedisRuntime>>>,
+    local_addr: SocketAddr,
+    stop_handle: StopHandle,
+    serving: Arc<AtomicBool>,
 }
 
 impl MiniRedisServer {
     pub fn new(options: MiniRedisOptions) -> io::Result<Self> {
         let manager = Arc::new(DataStoreManager::new(options.aof_path.clone())?);
         manager.start_background_workers();
-        let shared_manager = Arc::clone(&manager);
 
-        let server = TcpServer::with_handler(options.host, options.port, move |conn, data| {
-            handle_connection_data(&shared_manager, conn, data)
-        });
+        let runtime = build_runtime(&options, Arc::clone(&manager)).map_err(into_io_error)?;
+        let local_addr = runtime.local_addr();
+        let stop_handle = runtime.stop_handle();
 
-        Ok(Self { server })
+        Ok(Self {
+            runtime: Arc::new(Mutex::new(Some(runtime))),
+            local_addr,
+            stop_handle,
+            serving: Arc::new(AtomicBool::new(false)),
+        })
     }
 
+    /// `tcp-runtime` binds the listener eagerly during construction, so `start`
+    /// is now a no-op kept for compatibility with existing call sites and
+    /// tests.
     pub fn start(&self) -> io::Result<()> {
-        self.server.start()
+        Ok(())
     }
 
     pub fn serve(&self) -> io::Result<()> {
-        self.server.serve()
+        let mut runtime = self
+            .runtime
+            .lock()
+            .expect("mini-redis runtime mutex poisoned")
+            .take()
+            .ok_or_else(|| {
+                io::Error::new(
+                    io::ErrorKind::AlreadyExists,
+                    "mini-redis runtime is already serving or has already served",
+                )
+            })?;
+
+        self.serving.store(true, Ordering::SeqCst);
+        let result = runtime.serve().map_err(into_io_error);
+        self.serving.store(false, Ordering::SeqCst);
+        result
     }
 
     pub fn serve_forever(&self) -> io::Result<()> {
-        self.server.serve_forever()
+        self.serve()
     }
 
     pub fn stop(&self) {
-        self.server.stop();
+        self.stop_handle.stop();
     }
 
     pub fn address(&self) -> Option<SocketAddr> {
-        self.server.address()
+        Some(self.local_addr)
     }
 
     pub fn try_address(&self) -> io::Result<SocketAddr> {
-        self.server.try_address()
+        Ok(self.local_addr)
     }
 
     pub fn is_running(&self) -> bool {
-        self.server.is_running()
+        self.serving.load(Ordering::SeqCst)
     }
 }
 
 fn handle_connection_data(
     manager: &DataStoreManager,
-    conn: &mut Connection,
+    state: &mut RedisConnectionState,
     data: &[u8],
-) -> Vec<u8> {
-    conn.read_buffer.extend_from_slice(data);
+) -> TcpHandlerResult {
+    state.read_buffer.extend_from_slice(data);
     let mut responses = Vec::new();
 
     loop {
-        match decode(&conn.read_buffer) {
+        match decode(&state.read_buffer) {
             Ok(Some((value, consumed))) => {
-                conn.read_buffer.drain(..consumed);
+                state.read_buffer.drain(..consumed);
                 let Some(frame) = command_frame_from_resp(value) else {
-                    let response = RespValue::Error(RespError::new(
+                    responses.extend(protocol_error_response(
                         "ERR protocol error: expected array of bulk strings",
                     ));
-                    responses.extend(encode(response).expect("RESP error responses should encode"));
                     continue;
                 };
 
-                let engine_resp = manager.execute(&mut conn.selected_db, &frame);
+                let engine_resp = manager.execute(&mut state.selected_db, &frame);
                 let resp_val = engine_response_to_resp(engine_resp);
                 responses.extend(encode(resp_val).expect("engine responses should encode"));
             }
             Ok(None) => break,
             Err(err) => {
-                conn.read_buffer.clear();
-                let response = RespValue::Error(RespError::new(format!("ERR {err}")));
-                responses.extend(encode(response).expect("RESP error responses should encode"));
+                state.read_buffer.clear();
+                responses.extend(protocol_error_response(&format!("ERR {err}")));
                 break;
             }
         }
     }
 
-    responses
+    if responses.is_empty() {
+        TcpHandlerResult::default()
+    } else {
+        TcpHandlerResult::write(responses)
+    }
+}
+
+fn protocol_error_response(message: &str) -> Vec<u8> {
+    encode(RespValue::Error(RespError::new(message))).expect("RESP error responses should encode")
+}
+
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+fn build_runtime(
+    options: &MiniRedisOptions,
+    manager: Arc<DataStoreManager>,
+) -> Result<RedisRuntime, PlatformError> {
+    let host = options.host.clone();
+    TcpRuntime::bind_kqueue_with_state(
+        (host.as_str(), options.port),
+        TcpRuntimeOptions::default(),
+        |_| RedisConnectionState::default(),
+        move |_, state, bytes| handle_connection_data(&manager, state, bytes),
+        |_, _| {},
+    )
+}
+
+#[cfg(target_os = "linux")]
+fn build_runtime(
+    options: &MiniRedisOptions,
+    manager: Arc<DataStoreManager>,
+) -> Result<RedisRuntime, PlatformError> {
+    let host = options.host.clone();
+    TcpRuntime::bind_epoll_with_state(
+        (host.as_str(), options.port),
+        TcpRuntimeOptions::default(),
+        |_| RedisConnectionState::default(),
+        move |_, state, bytes| handle_connection_data(&manager, state, bytes),
+        |_, _| {},
+    )
+}
+
+#[cfg(target_os = "windows")]
+fn build_runtime(
+    options: &MiniRedisOptions,
+    manager: Arc<DataStoreManager>,
+) -> Result<RedisRuntime, PlatformError> {
+    let host = options.host.clone();
+    TcpRuntime::bind_windows_with_state(
+        (host.as_str(), options.port),
+        TcpRuntimeOptions::default(),
+        |_| RedisConnectionState::default(),
+        move |_, state, bytes| handle_connection_data(&manager, state, bytes),
+        |_, _| {},
+    )
+}
+
+fn into_io_error(error: PlatformError) -> io::Error {
+    use io::ErrorKind;
+
+    let kind = match error {
+        PlatformError::AddressInUse => ErrorKind::AddrInUse,
+        PlatformError::AddressNotAvailable => ErrorKind::AddrNotAvailable,
+        PlatformError::PermissionDenied => ErrorKind::PermissionDenied,
+        PlatformError::ConnectionRefused => ErrorKind::ConnectionRefused,
+        PlatformError::ConnectionReset => ErrorKind::ConnectionReset,
+        PlatformError::BrokenPipe => ErrorKind::BrokenPipe,
+        PlatformError::TimedOut => ErrorKind::TimedOut,
+        PlatformError::Interrupted => ErrorKind::Interrupted,
+        PlatformError::InvalidResource => ErrorKind::InvalidInput,
+        PlatformError::ResourceClosed => ErrorKind::BrokenPipe,
+        PlatformError::Unsupported(_) => ErrorKind::Unsupported,
+        PlatformError::Io(_) | PlatformError::ProviderFault(_) => ErrorKind::Other,
+    };
+
+    io::Error::new(kind, error.to_string())
 }
 
 #[cfg(test)]

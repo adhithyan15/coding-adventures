@@ -21,3 +21,16 @@ All notable changes to this package will be documented in this file.
 
 - moved the program entry point onto the reusable library server module so the
   Redis server can be exercised directly in tests
+
+## [0.1.2] - 2026-04-18
+
+### Changed
+
+- migrated `mini-redis` from `tcp-server` onto `tcp-runtime`
+- moved per-connection RESP buffering and selected-database state into
+  `tcp-runtime` connection state
+
+### Added
+
+- cross-target compile coverage for the new `tcp-runtime`-backed server on
+  Linux and Windows targets
