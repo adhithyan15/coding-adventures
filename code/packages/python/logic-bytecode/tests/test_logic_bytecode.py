@@ -155,6 +155,24 @@ class TestLogicBytecode:
         with pytest.raises(LogicBytecodeError, match="fact pool index 7"):
             decode_program(malformed)
 
+    def test_decode_rejects_negative_pool_indexes(self) -> None:
+        malformed = LogicBytecodeProgram(
+            instructions=(
+                LogicBytecodeInstruction(
+                    opcode=LogicBytecodeOp.EMIT_FACT,
+                    operand=-1,
+                ),
+                LogicBytecodeInstruction(opcode=LogicBytecodeOp.HALT),
+            ),
+            relation_pool=(),
+            fact_pool=(),
+            rule_pool=(),
+            query_pool=(),
+        )
+
+        with pytest.raises(LogicBytecodeError, match="fact pool index -1"):
+            decode_program(malformed)
+
     def test_decode_rejects_missing_halt(self) -> None:
         malformed = LogicBytecodeProgram(
             instructions=(

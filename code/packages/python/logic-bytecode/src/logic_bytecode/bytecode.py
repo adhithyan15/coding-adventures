@@ -232,6 +232,10 @@ def _require_operand(instruction: LogicBytecodeInstruction, index: int) -> int:
 def _pool_get[T](pool: tuple[T, ...], pool_name: str, index: int) -> T:
     """Return one pool entry or raise a bytecode error with context."""
 
+    if index < 0:
+        msg = f"{pool_name} index {index} is out of range"
+        raise LogicBytecodeError(msg)
+
     try:
         return pool[index]
     except IndexError as exc:
