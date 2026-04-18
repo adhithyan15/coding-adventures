@@ -1,0 +1,7 @@
+[package]
+name = "http-core"
+version = "0.1.0"
+edition = "2021"
+description = "Shared HTTP message types and helpers for request/response heads and body framing"
+
+[dependencies]

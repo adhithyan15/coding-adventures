@@ -1,0 +1,16 @@
+name: coding_adventures_huffman_compression
+description: >
+  Canonical Huffman compression and decompression for Dart.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_huffman_tree:
+    path: ../huffman-tree
+
+dev_dependencies:
+  test: ^1.25.0

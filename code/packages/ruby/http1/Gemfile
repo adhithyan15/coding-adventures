@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+gemspec
+
+# All transitive path dependencies must be listed here.
+# Bundler needs to know where to find each gem locally.
+gem "coding_adventures_http_core", path: "../http_core"
