@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/brainfuck-jvm-compiler",
+  "capabilities": [
+    "filesystem.write"
+  ],
+  "justification": "The package writes generated class files to classpath layout via the generic JVM backend helper."
+}

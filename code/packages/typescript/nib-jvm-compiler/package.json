@@ -1,0 +1,37 @@
+{
+  "name": "@coding-adventures/nib-jvm-compiler",
+  "version": "0.1.0",
+  "description": "End-to-end Nib to JVM class-file pipeline for TypeScript",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../compiler-ir",
+    "@coding-adventures/compiler-source-map": "file:../compiler-source-map",
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/ir-optimizer": "file:../ir-optimizer",
+    "@coding-adventures/ir-to-jvm-class-file": "file:../ir-to-jvm-class-file",
+    "@coding-adventures/jvm-class-file": "file:../jvm-class-file",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/nib-ir-compiler": "file:../nib-ir-compiler",
+    "@coding-adventures/nib-lexer": "file:../nib-lexer",
+    "@coding-adventures/nib-parser": "file:../nib-parser",
+    "@coding-adventures/nib-type-checker": "file:../nib-type-checker",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/type-checker-protocol": "file:../type-checker-protocol"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

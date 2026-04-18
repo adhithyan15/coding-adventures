@@ -2168,6 +2168,21 @@ drive stack growth through unbounded recursive attribute parsing.
 explicit host-capacity check, and never recursively decode nested structures unless the format
 requires it. When an attribute is only meaningful at one structural level, treat deeper copies as
 opaque bytes.
+
+---
+
+## In large Rust workspaces, avoid `cargo fmt --all` for package-scoped feature work
+
+**Date:** 2026-04-18
+
+**What happened:** A Rust JVM rollout worker ran `cargo fmt --all` from the shared workspace while
+working on a handful of new packages. That reformatted hundreds of unrelated crates and buried the
+actual feature diff under incidental workspace churn.
+
+**Rule:** In this monorepo, use package-scoped Rust formatting for feature work:
+  `cargo fmt -p package-a -p package-b`
+or format only the files inside the package write set. Do not run `cargo fmt --all` unless the PR
+is intentionally a workspace-wide formatting change.
 ## C# tests using `BinaryPrimitives` need an explicit `using System.Buffers.Binary`
 
 **Date:** 2026-04-18
