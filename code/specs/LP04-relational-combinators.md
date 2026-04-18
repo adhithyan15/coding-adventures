@@ -220,9 +220,7 @@ Required tests:
 
 Later milestones may add:
 
-- `listo`
 - `lengtho`
-- `reverseo`
 - `subsequenceo`
 - finite-domain labeling helpers
 - puzzle-specific helper packages
