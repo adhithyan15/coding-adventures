@@ -2,6 +2,19 @@
 
 All notable changes to the `@coding-adventures/parser` package will be documented in this file.
 
+## [0.3.0] - 2026-04-18
+
+### Added
+
+- Optional rich source preservation for `GrammarParser` via
+  `{ preserveSourceInfo: true }`.
+- Optional AST node metadata fields:
+  - `startOffset` / `endOffset`
+  - `firstTokenIndex` / `lastTokenIndex`
+  - `leadingTrivia`
+- Cached grammar-parser nodes now rebuild token-derived metadata instead of
+  dropping it on memoized parses.
+
 ## [0.2.0] - 2026-03-23
 
 ### Added

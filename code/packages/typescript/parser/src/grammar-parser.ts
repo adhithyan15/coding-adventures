@@ -44,7 +44,7 @@
  * - **Group** (``( A )``): Just a parenthesized sub-expression.
  */
 
-import type { Token } from "@coding-adventures/lexer";
+import type { Token, Trivia } from "@coding-adventures/lexer";
 import type {
   GrammarElement,
   GrammarRule,
@@ -65,6 +65,11 @@ export interface ASTNode {
   readonly startColumn?: number;
   readonly endLine?: number;
   readonly endColumn?: number;
+  readonly startOffset?: number;
+  readonly endOffset?: number;
+  readonly firstTokenIndex?: number;
+  readonly lastTokenIndex?: number;
+  readonly leadingTrivia?: readonly Trivia[];
 }
 
 /**
@@ -144,6 +149,7 @@ interface MemoEntry {
  */
 export interface GrammarParserOptions {
   readonly trace?: boolean;
+  readonly preserveSourceInfo?: boolean;
 }
 
 export class GrammarParser {
@@ -176,6 +182,9 @@ export class GrammarParser {
   /** Whether trace mode is enabled. */
   private readonly trace: boolean;
 
+  /** Whether AST nodes should retain token-derived source info. */
+  private readonly preserveSourceInfo: boolean;
+
   constructor(tokens: readonly Token[], grammar: ParserGrammar, options?: GrammarParserOptions) {
     this.tokens = tokens;
     this.grammar = grammar;
@@ -184,6 +193,7 @@ export class GrammarParser {
     this.furthestPos = 0;
     this.furthestExpected = [];
     this.trace = options?.trace ?? false;
+    this.preserveSourceInfo = options?.preserveSourceInfo ?? false;
 
     const ruleMap = new Map<string, GrammarRule>();
     const ruleIndex = new Map<string, number>();
@@ -378,10 +388,10 @@ export class GrammarParser {
         if (!cached.ok) {
           return null;
         }
-        return {
+        return this.buildNode(
           ruleName,
-          children: cached.children as ReadonlyArray<ASTNode | Token>,
-        };
+          cached.children as ReadonlyArray<ASTNode | Token>,
+        );
       }
     }
 
@@ -455,12 +465,7 @@ export class GrammarParser {
       return null;
     }
 
-    // Compute position info from child tokens.
-    const pos = computeNodePosition(children);
-    if (pos) {
-      return { ruleName, children, ...pos };
-    }
-    return { ruleName, children };
+    return this.buildNode(ruleName, children);
   }
 
   // =========================================================================
@@ -655,6 +660,23 @@ export class GrammarParser {
     this.recordFailure(expectedType);
     return null;
   }
+
+  private buildNode(
+    ruleName: string,
+    children: ReadonlyArray<ASTNode | Token>,
+  ): ASTNode {
+    const pos = computeNodePosition(children);
+    const sourceInfo = this.preserveSourceInfo
+      ? computeNodeSourceInfo(children)
+      : null;
+
+    return {
+      ruleName,
+      children,
+      ...(pos ?? {}),
+      ...(sourceInfo ?? {}),
+    };
+  }
 }
 
 // ===========================================================================
@@ -680,6 +702,48 @@ function computeNodePosition(
     endLine: last.line,
     endColumn: last.column,
   };
+}
+
+function computeNodeSourceInfo(
+  children: ReadonlyArray<ASTNode | Token>,
+): {
+  startOffset?: number;
+  endOffset?: number;
+  firstTokenIndex?: number;
+  lastTokenIndex?: number;
+  leadingTrivia?: readonly Trivia[];
+} | null {
+  const first = findFirstToken(children);
+  const last = findLastToken(children);
+  if (!first || !last) {
+    return null;
+  }
+
+  const info: {
+    startOffset?: number;
+    endOffset?: number;
+    firstTokenIndex?: number;
+    lastTokenIndex?: number;
+    leadingTrivia?: readonly Trivia[];
+  } = {};
+
+  if (first.startOffset !== undefined) {
+    info.startOffset = first.startOffset;
+  }
+  if (last.endOffset !== undefined) {
+    info.endOffset = last.endOffset;
+  }
+  if (first.tokenIndex !== undefined) {
+    info.firstTokenIndex = first.tokenIndex;
+  }
+  if (last.tokenIndex !== undefined) {
+    info.lastTokenIndex = last.tokenIndex;
+  }
+  if (first.leadingTrivia !== undefined) {
+    info.leadingTrivia = first.leadingTrivia;
+  }
+
+  return info;
 }
 
 function findFirstToken(children: ReadonlyArray<ASTNode | Token>): Token | null {
