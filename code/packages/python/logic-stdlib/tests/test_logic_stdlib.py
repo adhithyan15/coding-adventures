@@ -20,11 +20,13 @@ from logic_stdlib import (
     conso,
     emptyo,
     heado,
+    lasto,
     listo,
     membero,
     permuteo,
     reverseo,
     selecto,
+    subsequenceo,
     tailo,
 )
 
@@ -33,7 +35,7 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.3.0"
+        assert __version__ == "0.4.0"
         assert logic_engine_version == "0.3.0"
 
 
@@ -99,6 +101,24 @@ class TestListRelations:
             marker,
             conj(eq(marker, "ok"), listo(logic_list(["tea"], tail="cake"))),
         ) == []
+
+    def test_lasto_extracts_the_final_element(self) -> None:
+        last = var("Last")
+
+        assert solve_all(
+            program(),
+            last,
+            lasto(logic_list(["tea", "cake", "jam"]), last),
+        ) == [atom("jam")]
+
+    def test_lasto_handles_single_element_lists(self) -> None:
+        last = var("Last")
+
+        assert solve_all(
+            program(),
+            last,
+            lasto(logic_list(["tea"]), last),
+        ) == [atom("tea")]
 
     def test_membero_enumerates_members_of_a_concrete_list(self) -> None:
         item = var("Item")
@@ -210,3 +230,47 @@ class TestListRelations:
                 ),
             ),
         ) == [atom("ok")]
+
+    def test_subsequenceo_enumerates_all_subsequences_of_a_small_list(self) -> None:
+        sequence = var("Sequence")
+
+        assert solve_all(
+            program(),
+            sequence,
+            subsequenceo(logic_list(["tea", "cake"]), sequence),
+        ) == [
+            logic_list(["tea", "cake"]),
+            logic_list(["tea"]),
+            logic_list(["cake"]),
+            logic_list([]),
+        ]
+
+    def test_subsequenceo_can_validate_a_known_ordered_subsequence(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                subsequenceo(
+                    logic_list(["tea", "cake", "jam"]),
+                    logic_list(["tea", "jam"]),
+                ),
+            ),
+        ) == [atom("ok")]
+
+    def test_subsequenceo_rejects_out_of_order_candidates(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                subsequenceo(
+                    logic_list(["tea", "cake", "jam"]),
+                    logic_list(["jam", "tea"]),
+                ),
+            ),
+        ) == []

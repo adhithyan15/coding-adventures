@@ -20,11 +20,13 @@ __all__ = [
     "conso",
     "emptyo",
     "heado",
+    "lasto",
     "listo",
     "membero",
     "permuteo",
     "reverseo",
     "selecto",
+    "subsequenceo",
     "tailo",
 ]
 
@@ -51,6 +53,21 @@ def tailo(items: object, tail: object) -> GoalExpr:
     """Relate ``tail`` to everything after the first element of a list."""
 
     return fresh(1, lambda head: conso(head, tail, items))
+
+
+def lasto(items: object, last: object) -> GoalExpr:
+    """Relate ``last`` to the final element of a non-empty list."""
+
+    return disj(
+        conso(last, logic_list([]), items),
+        fresh(
+            2,
+            lambda head, tail: conj(
+                conso(head, tail, items),
+                defer(lasto, tail, last),
+            ),
+        ),
+    )
 
 
 def listo(value: object) -> GoalExpr:
@@ -142,6 +159,27 @@ def permuteo(items: object, permutation: object) -> GoalExpr:
                 selecto(head, items, remaining),
                 conso(head, perm_tail, permutation),
                 defer(permuteo, remaining, perm_tail),
+            ),
+        ),
+    )
+
+
+def subsequenceo(items: object, subsequence: object) -> GoalExpr:
+    """Relate ``subsequence`` to any order-preserving deletion of ``items``."""
+
+    return disj(
+        conj(emptyo(items), emptyo(subsequence)),
+        fresh(
+            3,
+            lambda head, tail, sub_tail: conj(
+                conso(head, tail, items),
+                disj(
+                    conj(
+                        conso(head, sub_tail, subsequence),
+                        defer(subsequenceo, tail, sub_tail),
+                    ),
+                    defer(subsequenceo, tail, subsequence),
+                ),
             ),
         ),
     )
