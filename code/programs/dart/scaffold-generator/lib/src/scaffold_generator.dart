@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:coding_adventures_cli_builder/cli_builder.dart';
@@ -104,6 +105,8 @@ String wrapDescription(String description) {
   }
   return 'description: >\n  ${lines.join('\n  ')}';
 }
+
+String dartStringLiteral(String value) => jsonEncode(value);
 
 String findRepoRoot([String? startPath]) {
   var current = Directory(startPath ?? Directory.current.path).absolute;
@@ -294,7 +297,9 @@ List<String> readDartDependencies(String packageDir) {
 }
 
 List<String> transitiveClosure(
-    List<String> directDependencies, String repoRoot) {
+  List<String> directDependencies,
+  String repoRoot,
+) {
   final visited = <String>{};
   final queue = List<String>.from(directDependencies);
 
@@ -503,7 +508,8 @@ const String packageName = 'coding_adventures_$snake';
 const String packageVersion = '0.1.0';
 
 /// Describe the scaffold in one sentence for smoke tests and REPL sessions.
-String describePackage() => '$description $layerContext';
+String describePackage() =>
+    ${dartStringLiteral('$description $layerContext')};
 ''';
 
   final testFile = '''
@@ -514,7 +520,7 @@ void main() {
   test('exposes starter metadata', () {
     expect(packageName, 'coding_adventures_$snake');
     expect(packageVersion, '0.1.0');
-    expect(describePackage(), contains('$description'));
+    expect(describePackage(), contains(${dartStringLiteral(description)}));
   });
 }
 ''';

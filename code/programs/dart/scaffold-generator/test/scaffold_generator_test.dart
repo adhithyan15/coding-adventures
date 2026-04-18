@@ -58,6 +58,13 @@ void main() {
     test('formats ISO dates', () {
       expect(todayIso(DateTime(2026, 4, 18)), '2026-04-18');
     });
+
+    test('escapes strings for generated Dart code', () {
+      expect(
+        dartStringLiteral("it's \"fine\"\nnext"),
+        '"it\'s \\"fine\\"\\nnext"',
+      );
+    });
   });
 
   group('Dart dependency parsing', () {
@@ -144,6 +151,31 @@ void main() {
       expect(
         File('${targetDir.path}/test/nib_parser_test.dart').readAsStringSync(),
         contains('describePackage()'),
+      );
+    });
+
+    test('escapes quotes inside generated descriptions', () {
+      final plan = scaffoldPlan(
+        repoRoot: repoRoot,
+        options: const CliOptions(
+          packageName: 'quoted-package',
+          packageType: PackageType.library,
+          languages: <String>['dart'],
+          directDependencies: <String>['lexer'],
+          layer: 3,
+          description: 'Parser for "quoted" input and it\'s safe.',
+          dryRun: false,
+        ),
+      );
+
+      writePlan(plan);
+
+      final source = File(
+        '$repoRoot/code/packages/dart/quoted-package/lib/src/quoted_package.dart',
+      ).readAsStringSync();
+      expect(
+        source,
+        contains("Parser for \\\"quoted\\\" input and it's safe."),
       );
     });
 
