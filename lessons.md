@@ -2430,3 +2430,18 @@ shared across parallel package builds.
 directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
 `DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
 uses temp-backed shared-memory state during first-run migrations.
+
+---
+
+## Python native package commits must exclude copied extension artifacts
+
+**Date:** 2026-04-18
+
+**What happened:** While committing the first `window-native` Python package, the local
+`src/window_native/window_native.so` artifact that `BUILD` copies into the source tree for test-time
+imports was accidentally staged along with the real source files.
+
+**Rule:** For Python native-extension packages in this repo, keep copied `.so` and `.pyd` files out
+of commits. Add a package-local `.gitignore` for the copied extension artifact path before staging,
+and sanity-check `git show --name-only HEAD` after the first commit when a package BUILD writes back
+into `src/`.
