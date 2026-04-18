@@ -301,4 +301,7 @@ members = [
     "intel-4004-packager",
     "nib-compiler",
     "bitset-c",
+  "window-core",
+  "window-appkit",
+  "window-win32",
 ]
