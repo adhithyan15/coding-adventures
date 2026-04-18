@@ -21,6 +21,22 @@ before any tests or type-checking run.
 `BUILD` file, include `cd ../pixel-container && npm install --silent` before the
 paint packages so the standalone prerequisite closure matches what CI expects.
 
+### 2026-04-18: Platform-specific Python native packages still need platform-neutral coverage
+
+When a Python package wraps native windowing or other OS APIs, one platform may
+exercise the full smoke path locally while another CI platform skips it. If the
+tests only cover the native happy path, Linux or Windows can still fail the
+repo coverage gate even though the wrapper logic itself is correct.
+
+**Symptom:** macOS passes because a native smoke test runs, but Ubuntu fails
+coverage because the same test is skipped and the wrapper methods around the
+native bindings are never exercised.
+
+**Rule:** For platform-specific Python native packages, add mocked wrapper tests
+for argument normalization, handle lifecycle, and method delegation so the
+Python facade stays above coverage thresholds even when native smoke tests are
+skipped off-platform.
+
 ### 2026-04-18: Downstream TypeScript BUILD files should not fail on unrelated upstream source errors
 
 Many TypeScript packages in this repo depend on sibling packages through
@@ -121,6 +137,12 @@ test failures.
 **Rule:** Keep BUILD scripts wrapper-safe: avoid embedded shell quotes when a
 simple escaped token works, and prefer separate commands or subshells over
 trailing `\` continuations.
+
+When a Unix `BUILD` script needs a temporary path or other computed value, do
+not put a heredoc inside command substitution like `VAR="$(python - <<'PY' ...
+PY)"`. That form can pass on macOS shells and still fail under Linux `dash`
+with `unexpected EOF` parse errors. Prefer `python -c '...'` or plain shell
+loops for simple staging logic.
 
 ---
 
@@ -1031,6 +1053,10 @@ cd ../directed-graph && npm ci --quiet && cd ../state-machine && npm ci --quiet 
 npm ci --quiet
 npx vitest run --coverage
 ```
+
+Shell variables do not persist either. If one line does `PYTHON_BIN=.venv/bin/python`,
+the next line sees an empty variable unless the assignment and its use are in the
+same line.
 
 **Or use full paths from the package dir on each line:**
 ```
@@ -2550,6 +2576,21 @@ shared across parallel package builds.
 directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
 `DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
 uses temp-backed shared-memory state during first-run migrations.
+
+---
+
+## Python native package commits must exclude copied extension artifacts
+
+**Date:** 2026-04-18
+
+**What happened:** While committing the first `window-native` Python package, the local
+`src/window_native/window_native.so` artifact that `BUILD` copies into the source tree for test-time
+imports was accidentally staged along with the real source files.
+
+**Rule:** For Python native-extension packages in this repo, keep copied `.so` and `.pyd` files out
+of commits. Add a package-local `.gitignore` for the copied extension artifact path before staging,
+and sanity-check `git show --name-only HEAD` after the first commit when a package BUILD writes back
+into `src/`.
 
 ---
 
