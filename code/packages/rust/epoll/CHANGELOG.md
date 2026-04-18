@@ -10,3 +10,8 @@ All notable changes to this package will be documented in this file.
 - `EpollEvent` token-carrying ready event type
 - `Epoll` wrapper with `new`, `add`, `modify`, `delete`, and `wait`
 - Linux-only readiness tests and non-Linux unsupported fallback
+
+### Changed
+
+- moved Linux test-only imports into the test module so cross-target
+  `transport-platform` checks stay warning-free

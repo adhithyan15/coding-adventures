@@ -14,9 +14,7 @@ use std::time::Duration;
 mod imp {
     use super::{io, BitOr, BitOrAssign, Duration};
     use std::ffi::c_int;
-    use std::mem;
     use std::os::fd::{AsRawFd, FromRawFd, OwnedFd, RawFd};
-    use std::os::unix::net::UnixStream;
 
     const EPOLL_CLOEXEC: c_int = 0x80000;
     const EPOLL_CTL_ADD: c_int = 1;
@@ -213,6 +211,7 @@ mod imp {
     mod tests {
         use super::*;
         use std::io::Write;
+        use std::os::unix::net::UnixStream;
 
         #[test]
         fn interest_flags_combine() {

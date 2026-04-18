@@ -2129,3 +2129,18 @@ a crafted large count could force a huge useless loop or combine badly with unsi
 **Rule:** In F# binary deserialisers, always derive a `maxPossible` item count from the remaining
 payload bytes and cap the header count before looping. Then guard the zero case explicitly before
 writing ranges like `0u .. count - 1u`.
+
+---
+
+## Nonblocking accept tests must try `accept()` before waiting for a fresh readiness edge
+
+**Date:** 2026-04-18
+
+**What happened:** While generalising `transport-platform` provider tests across BSD, Linux, and
+Windows, an accept helper waited for a new listener-readiness event before attempting `accept()`.
+That failed on macOS because an earlier poll had already observed readiness, yet queued
+connections were still waiting to be accepted.
+
+**Rule:** In nonblocking listener tests, always attempt `accept()` first and only fall back to
+waiting for readiness when it returns `WouldBlock`. Do not require a second readiness edge before
+draining already-queued connections.

@@ -6,6 +6,7 @@ description = "Runtime-facing transport provider seam for listeners, streams, ti
 license = "MIT"
 
 [dependencies]
+epoll = { path = "../epoll" }
 kqueue = { path = "../kqueue" }
 libc = "0.2"
 socket2 = "0.5"
