@@ -2370,3 +2370,63 @@ their resized trailing zeros still attached. Decoding still worked, but the expo
 **Rule:** When a little-endian polynomial builder grows arrays in place during iterative
 algorithms like Berlekamp-Massey, trim trailing zero coefficients before returning the public
 result. Keep at least one coefficient so the zero-error locator remains `[1]`.
+
+---
+
+## .NET package BUILD coverage should target the package under test, not every referenced assembly
+
+**Date:** 2026-04-18
+
+**What happened:** The first `paint-instructions` BUILD run failed coverage even though its own test
+surface was solid because coverlet also measured the referenced `pixel-container` assembly inside the
+same run. That dragged the total below the repo threshold and hid the real package coverage signal.
+
+**Rule:** For .NET package BUILD scripts in this repo, pass an explicit coverlet include filter such
+as `"/p:Include=[CodingAdventures.PaintInstructions]*"` or `"/p:Include=[CodingAdventures.PaintVm]*"`
+so coverage thresholds apply to the package being verified rather than all transitive project
+references.
+
+---
+
+## F# tests that populate `Metadata` should build a concrete `Dictionary` before upcasting
+
+**Date:** 2026-04-18
+
+**What happened:** Two new F# paint tests populated `Metadata` with `dict [...] :> IReadOnlyDictionary<string, obj>`.
+F# inferred the intermediate value as `IDictionary<string, objnull>`, which then failed the stricter
+`IReadOnlyDictionary<string, obj>` type expected by the package records.
+
+**Rule:** In F# tests and builders for these packages, create a concrete
+`Dictionary<string, obj>`, populate it, and only then upcast to `IReadOnlyDictionary<string, obj>`.
+Do not rely on `dict [...]` preserving the exact metadata interface type you need.
+
+---
+
+## Public recursive comparison helpers need cycle tracking before they reach shared runtime packages
+
+**Date:** 2026-04-18
+
+**What happened:** The first C# `paint-vm` pass exposed a public `DeepEqual(object?, object?)`
+helper that recursively walked dictionaries, enumerables, and reflected properties without
+tracking visited reference pairs. It worked for the intended paint records, but a caller could pass
+cyclic object graphs and trigger unbounded recursion plus process-killing stack exhaustion.
+
+**Rule:** Any public recursive comparison or traversal helper in shared runtime packages must track
+visited reference pairs before descending into reference types. Do not assume consumers will only
+pass the acyclic data structures you had in mind during implementation.
+
+---
+
+## Linux `.NET` BUILD scripts may need package-local `TMPDIR`, not just `HOME`
+
+**Date:** 2026-04-18
+
+**What happened:** The paint foundation PR still failed on Ubuntu after setting package-local
+`HOME` and `DOTNET_CLI_HOME`. The failing F# package hit `NuGet-Migrations` again, and the CI log
+showed the mutex trying to allocate shared state under `/tmp/.dotnet/shm/...`, which is still
+shared across parallel package builds.
+
+**Rule:** For Linux `.NET` BUILD scripts that can run in parallel, create a package-local temporary
+directory and set `TMPDIR="$PWD/.dotnet/tmp"` alongside `HOME="$PWD/.dotnet"` and
+`DOTNET_CLI_HOME="$PWD/.dotnet"`. Isolating only the home directory is not enough when the CLI also
+uses temp-backed shared-memory state during first-run migrations.
