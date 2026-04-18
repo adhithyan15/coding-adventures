@@ -17,3 +17,6 @@
   output is observable in end-to-end tests.
 - Fix the package `BUILD` file to install Brainfuck's transitive
   `virtual-machine` dependency during local test setup.
+- Declare the package's test-only sibling dependencies in `pyproject.toml`
+  so the build validator accepts the BUILD graph during CI, and remove the
+  now-redundant standalone `grammar-tools` editable install from `BUILD`.
