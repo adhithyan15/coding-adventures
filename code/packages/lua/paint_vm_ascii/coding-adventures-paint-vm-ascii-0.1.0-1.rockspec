@@ -2,7 +2,7 @@ package = "coding-adventures-paint-vm-ascii"
 version = "0.1.0-1"
 
 source = {
-    url = "git://github.com/adhithyan15/coding-adventures.git",
+    url = "https://github.com/adhithyan15/coding-adventures.git",
 }
 
 description = {
