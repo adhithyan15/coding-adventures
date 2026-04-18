@@ -122,6 +122,12 @@ test failures.
 simple escaped token works, and prefer separate commands or subshells over
 trailing `\` continuations.
 
+When a Unix `BUILD` script needs a temporary path or other computed value, do
+not put a heredoc inside command substitution like `VAR="$(python - <<'PY' ...
+PY)"`. That form can pass on macOS shells and still fail under Linux `dash`
+with `unexpected EOF` parse errors. Prefer `python -c '...'` or plain shell
+loops for simple staging logic.
+
 ---
 
 ### 2026-04-18: Lua packages tested with `busted` must install or expose `LUA_PATH` first

@@ -14,3 +14,6 @@ this file.
   behavior.
 - Hardened the package BUILD scripts against symlinked artifact destinations and
   validated window sizes before crossing the Python/Rust boundary.
+- Reworked the Unix `BUILD` staging steps to avoid heredocs inside command
+  substitutions so Linux `/bin/sh` runners can execute the package checks
+  portably.
