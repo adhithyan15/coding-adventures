@@ -39,6 +39,22 @@ change.
 Treat this as the default, not an exception, whenever the source checkout is
 shared or noisy.
 
+### 2026-04-18: LuaRocks CI installs may need patched GitHub archive URLs for old rockspecs
+
+Some published LuaRocks rockspecs still point at legacy GitHub archive URLs
+like `https://github.com/<owner>/<repo>/archive/<tag>.tar.gz`. Those URLs can
+be flaky or return gateway errors in CI even when the corresponding tag still
+exists.
+
+**Symptom:** shared CI setup fails before any package build runs, typically
+while installing `busted` or one of its transitive dependencies, with an error
+like `Failed downloading https://github.com/.../archive/0.08.tar.gz`.
+
+**Rule:** When a LuaRocks dependency fails because of an old GitHub archive
+URL, patch the downloaded rockspec in CI to use the stable
+`archive/refs/tags/<tag>.tar.gz` form and install from that patched rockspec
+before proceeding with the rest of the Lua test tool bootstrap.
+
 ### 2026-04-18: Dart decompressors must cap declared output size from untrusted headers
 
 Compression formats often encode the original byte length in the payload
