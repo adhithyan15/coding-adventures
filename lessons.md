@@ -2085,3 +2085,29 @@ drive stack growth through unbounded recursive attribute parsing.
 explicit host-capacity check, and never recursively decode nested structures unless the format
 requires it. When an attribute is only meaningful at one structural level, treat deeper copies as
 opaque bytes.
+## C# tests using `BinaryPrimitives` need an explicit `using System.Buffers.Binary`
+
+**Date:** 2026-04-18
+
+**What happened:** A new C# compression test used `BinaryPrimitives.WriteUInt32BigEndian(...)`
+to craft a malformed header case, but the test file omitted `using System.Buffers.Binary`. The
+package code compiled, yet the test project failed with `CS0103: The name 'BinaryPrimitives' does
+not exist in the current context`.
+
+**Rule:** When a C# test or package uses `BinaryPrimitives`, always add
+`using System.Buffers.Binary;` explicitly at the top of that file. Do not assume implicit usings
+will cover low-level buffer helpers.
+
+---
+
+## F# deserialisers must cap header counts to the available payload, not just trust the header
+
+**Date:** 2026-04-18
+
+**What happened:** In the new F# compression ports, `lz78` and `lzss` deserialisers initially let
+header-declared token/block counts drive unsigned loops directly. Even when the payload was tiny,
+a crafted large count could force a huge useless loop or combine badly with unsigned range math.
+
+**Rule:** In F# binary deserialisers, always derive a `maxPossible` item count from the remaining
+payload bytes and cap the header count before looping. Then guard the zero case explicitly before
+writing ranges like `0u .. count - 1u`.
