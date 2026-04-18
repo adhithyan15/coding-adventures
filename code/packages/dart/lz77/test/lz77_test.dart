@@ -93,8 +93,9 @@ void main() {
     });
 
     test('all 256 byte values round-trip', () {
-      final data =
-          Uint8List.fromList(List<int>.generate(256, (index) => index));
+      final data = Uint8List.fromList(
+        List<int>.generate(256, (index) => index),
+      );
       expect(decode(encode(data)), data);
     });
 
@@ -160,11 +161,7 @@ void main() {
     });
 
     test('overlapping matches are copied byte by byte', () {
-      final tokens = <Token>[
-        token(0, 0, 65),
-        token(0, 0, 66),
-        token(2, 5, 90),
-      ];
+      final tokens = <Token>[token(0, 0, 65), token(0, 0, 66), token(2, 5, 90)];
 
       expect(_dec(decode(tokens)), 'ABABABAZ');
     });
@@ -192,6 +189,41 @@ void main() {
       final result = decode(<Token>[token(2, 3, 90)], _bytes(65, 66));
       expect(_dec(result), 'ABABAZ');
     });
+
+    test('decode rejects zero-offset backreferences', () {
+      expect(
+        () => decode(<Token>[token(0, 3, 90)]),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('decode rejects offsets beyond the decoded prefix', () {
+      expect(
+        () => decode(<Token>[token(2, 1, 90)], _bytes(65)),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('decode rejects literal tokens with a non-zero offset', () {
+      expect(
+        () => decode(<Token>[token(1, 0, 90)]),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('decode rejects negative match lengths', () {
+      expect(
+        () => decode(<Token>[token(0, -1, 90)]),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('decode rejects nextChar values outside byte range', () {
+      expect(
+        () => decode(<Token>[token(0, 0, 256)]),
+        throwsA(isA<FormatException>()),
+      );
+    });
   });
 
   group('serialisation', () {
@@ -202,17 +234,29 @@ void main() {
     });
 
     test('serialise and deserialise are inverses', () {
-      final tokens = <Token>[
-        token(0, 0, 65),
-        token(1, 3, 66),
-        token(2, 5, 67),
-      ];
+      final tokens = <Token>[token(0, 0, 65), token(1, 3, 66), token(2, 5, 67)];
       final serialised = serialiseTokens(tokens);
       expect(deserialiseTokens(serialised), tokens);
     });
 
     test('empty serialised data yields no tokens', () {
       expect(deserialiseTokens(Uint8List(0)), isEmpty);
+    });
+
+    test('truncated serialised data is rejected', () {
+      expect(
+        () => deserialiseTokens(Uint8List.fromList(<int>[0, 0, 0, 1, 0, 2, 3])),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('deserialised backreferences must use a positive offset', () {
+      expect(
+        () => deserialiseTokens(
+          Uint8List.fromList(<int>[0, 0, 0, 1, 0, 0, 3, 90]),
+        ),
+        throwsA(isA<FormatException>()),
+      );
     });
 
     test('compress and decompress all spec vectors', () {
@@ -231,8 +275,9 @@ void main() {
 
   group('behaviour', () {
     test('incompressible data stays within the fixed-width overhead bound', () {
-      final data =
-          Uint8List.fromList(List<int>.generate(256, (index) => index));
+      final data = Uint8List.fromList(
+        List<int>.generate(256, (index) => index),
+      );
       final compressed = compress(data);
       expect(compressed.length, lessThanOrEqualTo(4 * data.length + 10));
     });
@@ -254,8 +299,13 @@ Uint8List _enc(String value) => Uint8List.fromList(utf8.encode(value));
 
 String _dec(Uint8List bytes) => utf8.decode(bytes);
 
-Uint8List _bytes(int first,
-    [int? second, int? third, int? fourth, int? fifth]) {
+Uint8List _bytes(
+  int first, [
+  int? second,
+  int? third,
+  int? fourth,
+  int? fifth,
+]) {
   final values = <int>[first];
   if (second != null) {
     values.add(second);

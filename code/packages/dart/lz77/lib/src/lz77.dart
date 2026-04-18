@@ -114,13 +114,12 @@ List<Token> encode(
 ///
 /// Backreferences are copied byte by byte instead of in bulk so overlapping
 /// matches like `(offset: 1, length: 5)` expand correctly.
-Uint8List decode(
-  List<Token> tokens, [
-  Uint8List? initialBuffer,
-]) {
+Uint8List decode(List<Token> tokens, [Uint8List? initialBuffer]) {
   final output = (initialBuffer ?? Uint8List(0)).toList(growable: true);
 
   for (final current in tokens) {
+    _validateDecodedToken(current, output.length);
+
     if (current.length > 0) {
       final start = output.length - current.offset;
       for (var index = 0; index < current.length; index++) {
@@ -160,24 +159,29 @@ List<Token> deserialiseTokens(Uint8List data) {
     return const <Token>[];
   }
 
-  final view =
-      ByteData.view(data.buffer, data.offsetInBytes, data.lengthInBytes);
+  final view = ByteData.view(
+    data.buffer,
+    data.offsetInBytes,
+    data.lengthInBytes,
+  );
   final count = view.getUint32(0, Endian.big);
   final tokens = <Token>[];
 
   for (var index = 0; index < count; index++) {
     final base = 4 + index * 4;
     if (base + 4 > data.length) {
-      break;
+      throw const FormatException(
+        'Malformed LZ77 token stream: truncated data.',
+      );
     }
 
-    tokens.add(
-      token(
-        view.getUint16(base, Endian.big),
-        view.getUint8(base + 2),
-        view.getUint8(base + 3),
-      ),
+    final current = token(
+      view.getUint16(base, Endian.big),
+      view.getUint8(base + 2),
+      view.getUint8(base + 3),
     );
+    _validateDeserialisedToken(current);
+    tokens.add(current);
   }
 
   return List<Token>.unmodifiable(tokens);
@@ -199,3 +203,42 @@ Uint8List decompress(Uint8List data) {
 }
 
 int _min(int left, int right) => left < right ? left : right;
+
+void _validateDecodedToken(Token current, int outputLength) {
+  if (current.length < 0) {
+    throw FormatException(
+      'Malformed LZ77 token: length must be non-negative, got ${current.length}.',
+    );
+  }
+  if (current.nextChar < 0 || current.nextChar > 255) {
+    throw FormatException(
+      'Malformed LZ77 token: nextChar must be in 0..255, got ${current.nextChar}.',
+    );
+  }
+  if (current.length == 0) {
+    if (current.offset != 0) {
+      throw FormatException(
+        'Malformed LZ77 token: literal tokens must use offset 0, got ${current.offset}.',
+      );
+    }
+    return;
+  }
+  if (current.offset <= 0) {
+    throw FormatException(
+      'Malformed LZ77 token: backreferences must use a positive offset, got ${current.offset}.',
+    );
+  }
+  if (current.offset > outputLength) {
+    throw FormatException(
+      'Malformed LZ77 token: offset ${current.offset} exceeds decoded prefix length $outputLength.',
+    );
+  }
+}
+
+void _validateDeserialisedToken(Token current) {
+  if (current.length > 0 && current.offset == 0) {
+    throw const FormatException(
+      'Malformed LZ77 token stream: backreferences must use a positive offset.',
+    );
+  }
+}
