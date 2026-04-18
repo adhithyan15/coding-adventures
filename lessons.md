@@ -2054,3 +2054,18 @@ empty-input path into a huge bogus loop range and causing an `ArgumentOutOfRange
 **Rule:** When looping over an unsigned count in F#, always guard the zero case before writing
 `count - 1u`. Prefer:
   `if count = 0u then [] else for index in 0u .. count - 1u do ...`
+
+---
+
+## C# tests using `BinaryPrimitives` need an explicit `using System.Buffers.Binary`
+
+**Date:** 2026-04-18
+
+**What happened:** A new C# compression test used `BinaryPrimitives.WriteUInt32BigEndian(...)`
+to craft a malformed header case, but the test file omitted `using System.Buffers.Binary`. The
+package code compiled, yet the test project failed with `CS0103: The name 'BinaryPrimitives' does
+not exist in the current context`.
+
+**Rule:** When a C# test or package uses `BinaryPrimitives`, always add
+`using System.Buffers.Binary;` explicitly at the top of that file. Do not assume implicit usings
+will cover low-level buffer helpers.
