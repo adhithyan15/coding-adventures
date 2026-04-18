@@ -53,6 +53,7 @@ __all__ = [
     "Clause",
     "Compound",
     "ConjExpr",
+    "DeferredExpr",
     "DisjExpr",
     "Disequality",
     "EqExpr",
@@ -73,6 +74,7 @@ __all__ = [
     "all_different",
     "atom",
     "conj",
+    "defer",
     "disj",
     "eq",
     "fact",
@@ -239,12 +241,26 @@ class FreshExpr:
     body: GoalExpr
 
 
+@dataclass(frozen=True, slots=True)
+class DeferredExpr:
+    """A goal builder call that should expand only when the solver reaches it.
+
+    This is the adapter that lets host-language helper libraries define
+    recursive relations without triggering eager Python recursion while the
+    goal tree is still being built.
+    """
+
+    builder: Callable[..., object]
+    args: tuple[Term, ...]
+
+
 type GoalExpr = (
     RelationCall
     | SucceedExpr
     | FailExpr
     | EqExpr
     | NeqExpr
+    | DeferredExpr
     | ConjExpr
     | DisjExpr
     | FreshExpr
@@ -262,6 +278,7 @@ def _coerce_goal(goal: object) -> GoalExpr:
             | FailExpr
             | EqExpr
             | NeqExpr
+            | DeferredExpr
             | ConjExpr
             | DisjExpr
             | FreshExpr
@@ -295,6 +312,20 @@ def neq(left: object, right: object) -> GoalExpr:
     """Construct a disequality goal expression."""
 
     return NeqExpr(left=_coerce_term(left), right=_coerce_term(right))
+
+
+def defer(builder: Callable[..., object], *args: object) -> GoalExpr:
+    """Delay a helper-goal expansion until solve time.
+
+    ``fresh(...)`` builds expression trees eagerly. Recursive host-language
+    helper functions therefore need a way to store recursive calls as data and
+    expand them only when the solver actually reaches them.
+    """
+
+    return DeferredExpr(
+        builder=builder,
+        args=tuple(_coerce_term(argument) for argument in args),
+    )
 
 
 def conj(*goals: object) -> GoalExpr:
@@ -478,6 +509,11 @@ def _rename_goal(goal: GoalExpr, mapping: dict[LogicVar, LogicVar]) -> GoalExpr:
             left=_rename_term(goal.left, mapping),
             right=_rename_term(goal.right, mapping),
         )
+    if isinstance(goal, DeferredExpr):
+        return DeferredExpr(
+            builder=goal.builder,
+            args=tuple(_rename_term(argument, mapping) for argument in goal.args),
+        )
     if isinstance(goal, ConjExpr):
         return ConjExpr(
             goals=tuple(_rename_goal(child, mapping) for child in goal.goals),
@@ -559,6 +595,21 @@ def _freshen_goal(
         left, running_id = _freshen_term(goal.left, mapping, next_var_id)
         right, running_id = _freshen_term(goal.right, mapping, running_id)
         return NeqExpr(left=left, right=right), running_id
+
+    if isinstance(goal, DeferredExpr):
+        renamed_args: list[Term] = []
+        running_id = next_var_id
+        for argument in goal.args:
+            renamed_argument, running_id = _freshen_term(
+                argument,
+                mapping,
+                running_id,
+            )
+            renamed_args.append(renamed_argument)
+        return (
+            DeferredExpr(builder=goal.builder, args=tuple(renamed_args)),
+            running_id,
+        )
 
     if isinstance(goal, ConjExpr):
         running_id = next_var_id
@@ -654,6 +705,11 @@ def _solve_goal(
     if isinstance(goal, DisjExpr):
         for branch in goal.goals:
             yield from _solve_goal(program_value, branch, state)
+        return
+
+    if isinstance(goal, DeferredExpr):
+        expanded_goal = _coerce_goal(goal.builder(*goal.args))
+        yield from _solve_goal(program_value, expanded_goal, state)
         return
 
     if isinstance(goal, FreshExpr):

@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-18
+
+### Added
+
+- `defer(...)` and `DeferredExpr` for solve-time expansion of recursive host-language goal builders
+- pytest coverage proving deferred recursive helper goals work over concrete lists
+
 ## [0.2.0] - 2026-04-18
 
 ### Added
