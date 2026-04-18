@@ -1,0 +1,7 @@
+[package]
+name = "job-core"
+version = "0.1.0"
+edition = "2021"
+description = "Portable job specification types for native OS schedulers"
+
+[dependencies]
