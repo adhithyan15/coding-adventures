@@ -20,8 +20,10 @@ from logic_stdlib import (
     conso,
     emptyo,
     heado,
+    listo,
     membero,
     permuteo,
+    reverseo,
     selecto,
     tailo,
 )
@@ -31,7 +33,7 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.2.0"
+        assert __version__ == "0.3.0"
         assert logic_engine_version == "0.3.0"
 
 
@@ -70,6 +72,33 @@ class TestListRelations:
             tail,
             tailo(logic_list(["tea", "cake", "jam"]), tail),
         ) == [logic_list(["cake", "jam"])]
+
+    def test_listo_recognizes_the_empty_list(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), listo(logic_list([]))),
+        ) == [atom("ok")]
+
+    def test_listo_succeeds_for_a_concrete_proper_list(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), listo(logic_list(["tea", "cake", "jam"]))),
+        ) == [atom("ok")]
+
+    def test_listo_rejects_an_improper_dotted_pair(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), listo(logic_list(["tea"], tail="cake"))),
+        ) == []
 
     def test_membero_enumerates_members_of_a_concrete_list(self) -> None:
         item = var("Item")
@@ -154,6 +183,30 @@ class TestListRelations:
                 permuteo(
                     logic_list(["tea", "jam"]),
                     logic_list(["jam", "tea"]),
+                ),
+            ),
+        ) == [atom("ok")]
+
+    def test_reverseo_reverses_a_concrete_list(self) -> None:
+        reversed_items = var("ReversedItems")
+
+        assert solve_all(
+            program(),
+            reversed_items,
+            reverseo(logic_list(["tea", "cake", "jam"]), reversed_items),
+        ) == [logic_list(["jam", "cake", "tea"])]
+
+    def test_reverseo_can_validate_a_specific_reverse_ordering(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                reverseo(
+                    logic_list(["tea", "cake", "jam"]),
+                    logic_list(["jam", "cake", "tea"]),
                 ),
             ),
         ) == [atom("ok")]
