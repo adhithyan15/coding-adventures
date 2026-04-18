@@ -1,5 +1,6 @@
 namespace CodingAdventures.CommonmarkParser.FSharp.Tests
 
+open System
 open CodingAdventures.CommonmarkParser.FSharp
 open CodingAdventures.DocumentAst.FSharp
 open Xunit
@@ -70,3 +71,8 @@ module CommonmarkParserTests =
         match doc.Children with
         | [ RawBlockNode ("html", value) ] -> Assert.Equal("<aside>hello</aside>", value)
         | _ -> Assert.Fail("Expected raw html block")
+
+    [<Fact>]
+    let ``parse rejects excessive block nesting`` () =
+        let deeplyNested = String.replicate 65 "> " + "boom"
+        Assert.Throws<InvalidOperationException>(fun () -> CommonmarkParser.Parse deeplyNested |> ignore)

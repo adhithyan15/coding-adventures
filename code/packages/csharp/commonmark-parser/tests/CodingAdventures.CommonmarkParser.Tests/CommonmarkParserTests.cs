@@ -84,4 +84,11 @@ public class CommonmarkParserTests
         var raw = Assert.IsType<RawBlockNode>(Assert.Single(doc.Children));
         Assert.Equal("html", raw.Format);
     }
+
+    [Fact]
+    public void Parse_RejectsExcessiveBlockNesting()
+    {
+        var deeplyNested = string.Concat(Enumerable.Repeat("> ", 65)) + "boom";
+        Assert.Throws<InvalidOperationException>(() => CommonmarkParser.Parse(deeplyNested));
+    }
 }

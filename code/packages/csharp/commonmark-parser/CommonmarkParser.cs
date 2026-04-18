@@ -15,10 +15,38 @@ public static class CommonmarkParser
 
 public static class MarkdownParser
 {
+    internal const int MaxInputLength = 100_000;
+    internal const int MaxParseDepth = 64;
+
     public static DocumentNode Parse(string markdown, bool enableGfm = false)
+        => Parse(markdown, enableGfm, depth: 0);
+
+    internal static DocumentNode Parse(string markdown, bool enableGfm, int depth)
     {
-        var parser = new BlockParser(markdown ?? string.Empty, enableGfm);
+        var normalized = markdown ?? string.Empty;
+        EnsureWithinLimits(normalized.Length, depth);
+        var parser = new BlockParser(normalized, enableGfm, depth);
         return parser.ParseDocument();
+    }
+
+    internal static IReadOnlyList<IInlineNode> ParseInlines(string text, bool enableGfm, int depth)
+    {
+        var normalized = text ?? string.Empty;
+        EnsureWithinLimits(normalized.Length, depth);
+        return InlineParser.Parse(normalized, enableGfm, depth);
+    }
+
+    internal static void EnsureWithinLimits(int inputLength, int depth)
+    {
+        if (inputLength > MaxInputLength)
+        {
+            throw new InvalidOperationException($"Markdown input exceeds the supported size limit of {MaxInputLength} characters.");
+        }
+
+        if (depth > MaxParseDepth)
+        {
+            throw new InvalidOperationException($"Markdown nesting exceeds the supported depth limit of {MaxParseDepth}.");
+        }
     }
 }
 
@@ -33,12 +61,14 @@ internal sealed partial class BlockParser
 
     private readonly string[] _lines;
     private readonly bool _enableGfm;
+    private readonly int _depth;
     private int _index;
 
-    public BlockParser(string markdown, bool enableGfm)
+    public BlockParser(string markdown, bool enableGfm, int depth)
     {
         _lines = Normalize(markdown).Split('\n');
         _enableGfm = enableGfm;
+        _depth = depth;
     }
 
     public DocumentNode ParseDocument() => new(ParseBlocks());
@@ -114,7 +144,7 @@ internal sealed partial class BlockParser
             {
                 var headingText = string.Join("\n", paragraphLines.Append(Current)).Trim();
                 _index += 2;
-                return new HeadingNode(headingLevel, InlineParser.Parse(headingText, _enableGfm));
+                return new HeadingNode(headingLevel, MarkdownParser.ParseInlines(headingText, _enableGfm, _depth));
             }
 
             paragraphLines.Add(Current);
@@ -122,7 +152,7 @@ internal sealed partial class BlockParser
         }
 
         var paragraphText = string.Join("\n", paragraphLines).Trim();
-        return new ParagraphNode(InlineParser.Parse(paragraphText, _enableGfm));
+        return new ParagraphNode(MarkdownParser.ParseInlines(paragraphText, _enableGfm, _depth));
     }
 
     private bool TryParseFence(out CodeBlockNode node)
@@ -170,7 +200,7 @@ internal sealed partial class BlockParser
 
         var level = match.Groups["marks"].Value.Length;
         var text = match.Groups["text"].Value.Trim();
-        node = new HeadingNode(level, InlineParser.Parse(text, _enableGfm));
+        node = new HeadingNode(level, MarkdownParser.ParseInlines(text, _enableGfm, _depth));
         _index++;
         return true;
     }
@@ -190,7 +220,7 @@ internal sealed partial class BlockParser
             _index++;
         }
 
-        var innerDocument = MarkdownParser.Parse(string.Join("\n", innerLines), _enableGfm);
+        var innerDocument = MarkdownParser.Parse(string.Join("\n", innerLines), _enableGfm, _depth + 1);
         node = new BlockquoteNode(innerDocument.Children);
         return true;
     }
@@ -255,7 +285,7 @@ internal sealed partial class BlockParser
                 lines[0] = stripped;
             }
 
-            var childDocument = MarkdownParser.Parse(string.Join("\n", lines).TrimEnd('\n'), _enableGfm);
+            var childDocument = MarkdownParser.Parse(string.Join("\n", lines).TrimEnd('\n'), _enableGfm, _depth + 1);
             children.Add(
                 isTaskItem
                     ? new TaskItemNode(isChecked, childDocument.Children)
@@ -297,7 +327,7 @@ internal sealed partial class BlockParser
 
         var rows = new List<TableRowNode>
         {
-            new(true, headerCells.Select(cell => new TableCellNode(InlineParser.Parse(cell, enableGfm: true))).ToArray())
+            new(true, headerCells.Select(cell => new TableCellNode(MarkdownParser.ParseInlines(cell, enableGfm: true, _depth))).ToArray())
         };
 
         _index += 2;
@@ -308,7 +338,7 @@ internal sealed partial class BlockParser
                 break;
             }
 
-            rows.Add(new TableRowNode(false, bodyCells.Select(cell => new TableCellNode(InlineParser.Parse(cell, enableGfm: true))).ToArray()));
+            rows.Add(new TableRowNode(false, bodyCells.Select(cell => new TableCellNode(MarkdownParser.ParseInlines(cell, enableGfm: true, _depth))).ToArray()));
             _index++;
         }
 
@@ -517,8 +547,9 @@ internal sealed partial class BlockParser
 
 internal static class InlineParser
 {
-    public static IReadOnlyList<IInlineNode> Parse(string text, bool enableGfm)
+    public static IReadOnlyList<IInlineNode> Parse(string text, bool enableGfm, int depth)
     {
+        MarkdownParser.EnsureWithinLimits(text.Length, depth);
         var nodes = new List<IInlineNode>();
         var buffer = new StringBuilder();
         var index = 0;
@@ -542,14 +573,14 @@ internal static class InlineParser
                 continue;
             }
 
-            if (TryParseImage(text, ref index, enableGfm, nodes, buffer) ||
-                TryParseLink(text, ref index, enableGfm, nodes, buffer) ||
+            if (TryParseImage(text, ref index, enableGfm, depth, nodes, buffer) ||
+                TryParseLink(text, ref index, enableGfm, depth, nodes, buffer) ||
                 TryParseCodeSpan(text, ref index, nodes, buffer) ||
-                TryParseDelimited(text, ref index, "**", content => new StrongNode(Parse(content, enableGfm)), nodes, buffer) ||
-                TryParseDelimited(text, ref index, "__", content => new StrongNode(Parse(content, enableGfm)), nodes, buffer) ||
-                TryParseDelimited(text, ref index, "*", content => new EmphasisNode(Parse(content, enableGfm)), nodes, buffer) ||
-                TryParseDelimited(text, ref index, "_", content => new EmphasisNode(Parse(content, enableGfm)), nodes, buffer) ||
-                (enableGfm && TryParseDelimited(text, ref index, "~~", content => new StrikethroughNode(Parse(content, enableGfm)), nodes, buffer)) ||
+                TryParseDelimited(text, ref index, "**", content => new StrongNode(Parse(content, enableGfm, depth + 1)), nodes, buffer) ||
+                TryParseDelimited(text, ref index, "__", content => new StrongNode(Parse(content, enableGfm, depth + 1)), nodes, buffer) ||
+                TryParseDelimited(text, ref index, "*", content => new EmphasisNode(Parse(content, enableGfm, depth + 1)), nodes, buffer) ||
+                TryParseDelimited(text, ref index, "_", content => new EmphasisNode(Parse(content, enableGfm, depth + 1)), nodes, buffer) ||
+                (enableGfm && TryParseDelimited(text, ref index, "~~", content => new StrikethroughNode(Parse(content, enableGfm, depth + 1)), nodes, buffer)) ||
                 TryParseAngle(text, ref index, nodes, buffer))
             {
                 continue;
@@ -621,7 +652,7 @@ internal static class InlineParser
         return true;
     }
 
-    private static bool TryParseLink(string text, ref int index, bool enableGfm, List<IInlineNode> nodes, StringBuilder buffer)
+    private static bool TryParseLink(string text, ref int index, bool enableGfm, int depth, List<IInlineNode> nodes, StringBuilder buffer)
     {
         if (text[index] != '[')
         {
@@ -648,12 +679,12 @@ internal static class InlineParser
         }
 
         FlushText(buffer, nodes);
-        nodes.Add(new LinkNode(destination, title, Parse(label, enableGfm)));
+        nodes.Add(new LinkNode(destination, title, Parse(label, enableGfm, depth + 1)));
         index = closingParen + 1;
         return true;
     }
 
-    private static bool TryParseImage(string text, ref int index, bool enableGfm, List<IInlineNode> nodes, StringBuilder buffer)
+    private static bool TryParseImage(string text, ref int index, bool enableGfm, int depth, List<IInlineNode> nodes, StringBuilder buffer)
     {
         if (text[index] != '!' || index + 1 >= text.Length || text[index + 1] != '[')
         {
@@ -681,7 +712,7 @@ internal static class InlineParser
         }
 
         FlushText(buffer, nodes);
-        var alt = ToPlainText(Parse(label, enableGfm));
+        var alt = ToPlainText(Parse(label, enableGfm, depth + 1));
         nodes.Add(new ImageNode(destination, title, alt));
         index = closingParen + 1;
         return true;

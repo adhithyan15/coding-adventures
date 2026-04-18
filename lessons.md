@@ -1873,3 +1873,17 @@ A 6-parent walk from Windows site-packages lands at `code\packages\python\` inst
   `uv pip install -e ../dep .[dev]`   ← WRONG: non-editable breaks __file__ paths
   `uv pip install -e ".[dev]"`        ← WRONG: cmd.exe passes literal quotes to uv
   `uv pip install -e .[dev]`          ← CORRECT: editable install, no quotes ✓
+
+---
+
+## Pure markdown parsers need explicit nesting and input-size limits
+
+**Date:** 2026-04-17
+
+**What happened:** The new pure C# and F# CommonMark parsers recursively re-parsed nested blockquotes,
+lists, emphasis, links, and images without any depth guard. A maliciously deep markdown payload could
+drive unbounded recursion and risk `StackOverflowException` or disproportionate resource use.
+
+**Rule:** For any parser that recursively descends into user-controlled structure, add hard limits at
+the parser boundary for maximum input size and maximum nesting depth. Enforce the limit in every
+recursive entry point, not just the top-level public API.

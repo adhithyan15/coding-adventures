@@ -114,6 +114,16 @@ module private Common =
                 let first = inner[0]
                 Char.IsLetter(first) || first = '/' || first = '!' || first = '?'
 
+module private ParserLimits =
+    let maxInputLength = 100_000
+    let maxParseDepth = 64
+
+    let ensureWithinLimits (inputLength: int) (depth: int) =
+        if inputLength > maxInputLength then
+            invalidOp $"Markdown input exceeds the supported size limit of {maxInputLength} characters."
+        elif depth > maxParseDepth then
+            invalidOp $"Markdown nesting exceeds the supported depth limit of {maxParseDepth}."
+
 module private InlineParsing =
     let private startsWithAt (text: string) index (value: string) =
         index + value.Length <= text.Length && text.Substring(index, value.Length).Equals(value, StringComparison.Ordinal)
@@ -212,7 +222,8 @@ module private InlineParsing =
                         if match'.Groups["title"].Success then Some match'.Groups["title"].Value else None
                     Some(destination, title)
 
-    let rec parse (text: string) (enableGfm: bool) =
+    let rec parseAtDepth (depth: int) (text: string) (enableGfm: bool) =
+        ParserLimits.ensureWithinLimits text.Length depth
         let nodes = ResizeArray<InlineNode>()
         let buffer = StringBuilder()
         let mutable index = 0
@@ -269,7 +280,7 @@ module private InlineParsing =
                         | None -> false
                         | Some(destination, title) ->
                             flushText buffer nodes
-                            nodes.Add(LinkNode(destination, title, parse label enableGfm))
+                            nodes.Add(LinkNode(destination, title, parseAtDepth (depth + 1) label enableGfm))
                             index <- closingParen + 1
                             true
 
@@ -292,7 +303,7 @@ module private InlineParsing =
                         | None -> false
                         | Some(destination, title) ->
                             flushText buffer nodes
-                            nodes.Add(ImageNode(destination, title, toPlainText (parse label enableGfm)))
+                            nodes.Add(ImageNode(destination, title, toPlainText (parseAtDepth (depth + 1) label enableGfm)))
                             index <- closingParen + 1
                             true
 
@@ -335,11 +346,11 @@ module private InlineParsing =
                 tryImage ()
                 || tryLink ()
                 || tryCodeSpan ()
-                || tryDelimited "**" (fun content -> StrongNode(parse content enableGfm))
-                || tryDelimited "__" (fun content -> StrongNode(parse content enableGfm))
-                || tryDelimited "*" (fun content -> EmphasisNode(parse content enableGfm))
-                || tryDelimited "_" (fun content -> EmphasisNode(parse content enableGfm))
-                || (enableGfm && tryDelimited "~~" (fun content -> StrikethroughNode(parse content enableGfm)))
+                || tryDelimited "**" (fun content -> StrongNode(parseAtDepth (depth + 1) content enableGfm))
+                || tryDelimited "__" (fun content -> StrongNode(parseAtDepth (depth + 1) content enableGfm))
+                || tryDelimited "*" (fun content -> EmphasisNode(parseAtDepth (depth + 1) content enableGfm))
+                || tryDelimited "_" (fun content -> EmphasisNode(parseAtDepth (depth + 1) content enableGfm))
+                || (enableGfm && tryDelimited "~~" (fun content -> StrikethroughNode(parseAtDepth (depth + 1) content enableGfm)))
                 || tryAngle ()
             then
                 ()
@@ -353,15 +364,22 @@ module private InlineParsing =
         flushText buffer nodes
         List.ofSeq nodes
 
-type private BlockParser(markdown: string, enableGfm: bool) =
+    let parse (text: string) (enableGfm: bool) = parseAtDepth 0 text enableGfm
+
+type private BlockParser(markdown: string, enableGfm: bool, depth: int) =
     let lines = Common.normalize markdown |> fun text -> text.Split('\n')
     let mutable index = 0
 
     member private _.Current = lines[index]
 
-    static member ParseMarkdown(markdown: string, enableGfm: bool) : DocumentNode =
-        let parser = BlockParser((if isNull markdown then "" else markdown), enableGfm)
+    static member ParseMarkdown(markdown: string, enableGfm: bool, depth: int) : DocumentNode =
+        let normalized = if isNull markdown then "" else markdown
+        ParserLimits.ensureWithinLimits normalized.Length depth
+        let parser = BlockParser(normalized, enableGfm, depth)
         parser.ParseDocument()
+
+    static member ParseMarkdown(markdown: string, enableGfm: bool) : DocumentNode =
+        BlockParser.ParseMarkdown(markdown, enableGfm, 0)
 
     member this.ParseDocument() : DocumentNode =
         { Children = this.ParseBlocks() }
@@ -411,7 +429,7 @@ type private BlockParser(markdown: string, enableGfm: bool) =
             | Some headingLevel ->
                 let headingText = Seq.append paragraphLines [ this.Current ] |> String.concat "\n" |> fun s -> s.Trim()
                 index <- index + 2
-                headingResult <- Some(HeadingNode(headingLevel, InlineParsing.parse headingText enableGfm))
+                headingResult <- Some(HeadingNode(headingLevel, InlineParsing.parseAtDepth depth headingText enableGfm))
             | None ->
                 paragraphLines.Add this.Current
                 index <- index + 1
@@ -419,7 +437,7 @@ type private BlockParser(markdown: string, enableGfm: bool) =
         match headingResult with
         | Some node -> node
         | None when paragraphLines.Count > 0 ->
-            ParagraphNode(paragraphLines |> Seq.toList |> String.concat "\n" |> fun s -> s.Trim() |> fun s -> InlineParsing.parse s enableGfm)
+            ParagraphNode(paragraphLines |> Seq.toList |> String.concat "\n" |> fun s -> s.Trim() |> fun s -> InlineParsing.parseAtDepth depth s enableGfm)
         | None -> ParagraphNode []
 
     member private this.TryParseFence() =
@@ -453,7 +471,7 @@ type private BlockParser(markdown: string, enableGfm: bool) =
             let level = match'.Groups["marks"].Value.Length
             let text = match'.Groups["text"].Value.Trim()
             index <- index + 1
-            Some(HeadingNode(level, InlineParsing.parse text enableGfm))
+            Some(HeadingNode(level, InlineParsing.parseAtDepth depth text enableGfm))
         else
             None
 
@@ -465,7 +483,7 @@ type private BlockParser(markdown: string, enableGfm: bool) =
             while index < lines.Length && (Common.isBlank this.Current || Common.isBlockquoteLine this.Current) do
                 innerLines.Add(if Common.isBlank this.Current then "" else Common.stripBlockquoteMarker this.Current)
                 index <- index + 1
-            let innerDocument : DocumentNode = BlockParser.ParseMarkdown(String.concat "\n" innerLines, enableGfm)
+            let innerDocument : DocumentNode = BlockParser.ParseMarkdown(String.concat "\n" innerLines, enableGfm, depth + 1)
             Some(BlockquoteNode innerDocument.Children)
 
     member private this.TryParseList() =
@@ -512,7 +530,7 @@ type private BlockParser(markdown: string, enableGfm: bool) =
                         lines'[0] <- stripped
                     | _ -> ()
 
-                    let childDocument : DocumentNode = BlockParser.ParseMarkdown(String.concat "\n" lines', enableGfm)
+                    let childDocument : DocumentNode = BlockParser.ParseMarkdown(String.concat "\n" lines', enableGfm, depth + 1)
                     children.Add(
                         match taskState with
                         | Some checkedState -> TaskItemNode(checkedState, childDocument.Children)
@@ -538,13 +556,13 @@ type private BlockParser(markdown: string, enableGfm: bool) =
             match Common.trySplitTableRow this.Current, Common.tryParseDelimiterRow lines[index + 1] with
             | Some headerCells, Some alignment when List.length headerCells = List.length alignment ->
                 let rows = ResizeArray<TableRowNode>()
-                rows.Add { IsHeader = true; Children = headerCells |> List.map (fun cell -> { Children = InlineParsing.parse cell true }) }
+                rows.Add { IsHeader = true; Children = headerCells |> List.map (fun cell -> { Children = InlineParsing.parseAtDepth depth cell true }) }
                 index <- index + 2
                 let mutable collecting = true
                 while index < lines.Length && collecting do
                     match Common.trySplitTableRow this.Current with
                     | Some bodyCells when List.length bodyCells = List.length alignment ->
-                        rows.Add { IsHeader = false; Children = bodyCells |> List.map (fun cell -> { Children = InlineParsing.parse cell true }) }
+                        rows.Add { IsHeader = false; Children = bodyCells |> List.map (fun cell -> { Children = InlineParsing.parseAtDepth depth cell true }) }
                         index <- index + 1
                     | _ -> collecting <- false
                 Some(TableNode(alignment, List.ofSeq rows))
