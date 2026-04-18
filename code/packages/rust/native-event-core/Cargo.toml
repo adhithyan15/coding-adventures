@@ -1,0 +1,11 @@
+[package]
+name = "native-event-core"
+version = "0.1.0"
+edition = "2021"
+description = "Generic native event substrate above epoll, kqueue, and IOCP"
+license = "MIT"
+
+[dependencies]
+epoll = { path = "../epoll" }
+iocp = { path = "../iocp" }
+kqueue = { path = "../kqueue" }
