@@ -4,6 +4,41 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: Dart decompressors must validate backreferences before indexing decoded output
+
+For byte-oriented compression formats like LZ77, the decoder is a trust
+boundary whenever it accepts token streams or compressed bytes from outside the
+process. A malformed token with `offset == 0` or `offset > decoded_prefix_len`
+can trigger a `RangeError` if the implementation blindly indexes into the
+already-decoded output buffer.
+
+**Symptom:** Security review flags a denial-of-service bug because `decode()`
+crashes on hostile compressed input instead of rejecting it cleanly.
+
+**Rule:** Every Dart decoder for backreference-based formats must validate
+token fields before copying. Backreferences need `offset > 0` and
+`offset <= output.length`, and malformed or truncated streams should throw
+`FormatException` rather than indexing past buffer bounds.
+
+---
+
+### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
+
+Switching a Lua rockspec from `git://` to `https://` fixes transport security,
+but it does not make installs reproducible. If the rockspec points at a moving
+branch tip with no immutable tag or commit, the published package version can
+resolve to different source code over time.
+
+**Symptom:** Security review flags a supply-chain integrity issue because a
+`0.1.0-1` rockspec can fetch whatever happens to be at the repository head at
+install time.
+
+**Rule:** Every Lua rockspec that installs from GitHub must use `https://` and
+must pin the `source` table to an immutable git ref, such as a release tag or
+commit SHA.
+
+---
+
 ### 2026-04-17: Use a fresh git worktree before editing shared manifests in a noisy repo
 
 When a worktree already contains unrelated untracked package directories or
@@ -40,6 +75,24 @@ an immediate EOF from the peer.
 
 ---
 
+### 2026-04-18: Event-loop tests must not require independent sources to co-occur in one poll batch
+
+Native event loops report what is ready now, not what was ready "as a group"
+across the whole scenario. A wakeup, a timer expiry, and two client-readable
+streams may be delivered across separate `poll()` calls or separate event
+batches even when all of them happen during the same short test window.
+
+**Symptom:** a transport test flakes or fails by asserting that two different
+resources both appear in the same returned `Vec<Event>` instead of tracking
+whether each resource was observed at least once before the deadline.
+
+**Rule:** For event-loop and reactor tests, accumulate observations across
+multiple `poll()` iterations and assert the stable outcome ("did we ever see A
+and B?") rather than requiring unrelated readiness sources to appear in the
+same poll batch.
+
+---
+
 ### 2026-04-12: Never commit build artifacts — agents running tests will generate them
 
 When agents run tests locally (e.g., `swift test`, `mix test`, `bundle exec rake test`), they generate build artifacts in directories like `.build/`, `cover/`, `vendor/`, `node_modules/`, `_build/`, `deps/`, `blib/`, `MYMETA.*`, `pm_to_blib`. If the agent then runs `git add .` or `git add <package-dir>/`, these artifacts get committed.
@@ -61,6 +114,21 @@ When unifying error messages for security (e.g., generic "Invalid PKCS#7 padding
 ---
 
 ### 2026-04-12: Build tool validator requires declared deps in metadata files, not just BUILD
+
+---
+
+### 2026-04-18: Linux `epoll_event` FFI mirrors must use the kernel's packed layout
+
+The Linux kernel declares `struct epoll_event` as packed. Modeling it as a
+plain `#[repr(C)]` Rust struct can appear to work for single events but corrupt
+or drop readiness information once `epoll_wait` returns multiple events.
+
+**Symptom:** Linux CI flakes or fails in higher-level readiness tests with
+missing readable streams, even though the logic above `epoll` looks correct.
+
+**Rule:** Any Rust FFI mirror of Linux `epoll_event` must use the kernel's
+packed layout and should be covered by a test that waits on multiple ready file
+descriptors at once.
 
 When a BUILD file references a sibling package (e.g., `cd ../json-rpc`), the build tool's validator (`-validate-build-files`) checks that the referenced package is a declared predecessor in the dependency graph. The graph edges come from **metadata files**, not BUILD files:
 
@@ -2057,6 +2125,34 @@ empty-input path into a huge bogus loop range and causing an `ArgumentOutOfRange
 
 ---
 
+## Recursive local functions in Go need a `var` declaration before assignment
+
+**Date:** 2026-04-18
+
+**What happened:** A new Go `jvm-class-file` helper used `addConstant := func(...)` and then called
+`addConstant(...)` recursively inside its own body to normalize `int` to `int32`. Go does not let a
+function literal declared with short assignment refer to that identifier recursively during its own
+initialization, so `go test`/`go vet` failed with `undefined: addConstant`.
+
+**Rule:** When a local Go helper needs recursion, declare it in two steps:
+  `var addConstant func(...) (...)`
+  `addConstant = func(...) (...) { ... addConstant(...) ... }`
+
+---
+
+## Go binary parsers must validate attacker-controlled lengths before `int` conversion
+
+**Date:** 2026-04-18
+
+**What happened:** A new Go JVM class-file parser converted `u4` payload lengths straight to
+platform `int` and let nested `Code` attributes recurse as though they were method-level code.
+On malformed input, that combination can turn bogus lengths into slice panics on 32-bit builds or
+drive stack growth through unbounded recursive attribute parsing.
+
+**Rule:** In Go binary parsers, never cast attacker-controlled lengths to `int` until they pass an
+explicit host-capacity check, and never recursively decode nested structures unless the format
+requires it. When an attribute is only meaningful at one structural level, treat deeper copies as
+opaque bytes.
 ## C# tests using `BinaryPrimitives` need an explicit `using System.Buffers.Binary`
 
 **Date:** 2026-04-18
@@ -2093,3 +2189,29 @@ writing ranges like `0u .. count - 1u`.
 **What happened:** A new TypeScript `http1` BUILD script installed `../http-core` with `cd ../http-core && npm install ...` and then immediately ran `npm install` and `vitest` on the next lines. Because the `cd` changed the shell's working directory for the rest of the script, the later commands accidentally re-ran inside `http-core` instead of `http1`.
 
 **Rule:** In BUILD scripts, when you need to temporarily run a command in a sibling package, wrap it in a subshell like `(cd ../dep && npm install ...)`. Do not rely on `cd ... && cmd` when more commands follow afterward.
+
+## Nonblocking accept tests must try `accept()` before waiting for a fresh readiness edge
+
+**Date:** 2026-04-18
+
+**What happened:** While generalising `transport-platform` provider tests across BSD, Linux, and
+Windows, an accept helper waited for a new listener-readiness event before attempting `accept()`.
+That failed on macOS because an earlier poll had already observed readiness, yet queued
+connections were still waiting to be accepted.
+
+**Rule:** In nonblocking listener tests, always attempt `accept()` first and only fall back to
+waiting for readiness when it returns `WouldBlock`. Do not require a second readiness edge before
+draining already-queued connections.
+
+## `git worktree add` inherits the current checkout unless you pin the base explicitly
+
+**Date:** 2026-04-18
+
+**What happened:** A new compression worktree was first created with `git worktree add ... -b ...`
+from a checkout that was itself on a feature branch. The new worktree silently inherited that
+feature branch's commit instead of starting from `origin/main`, which would have polluted the next
+PR with unrelated history.
+
+**Rule:** When creating a fresh implementation worktree in this repo, always pin the starting point
+explicitly: `git worktree add <path> -b <branch> origin/main`. Do not rely on the current checkout's
+HEAD being the correct base.

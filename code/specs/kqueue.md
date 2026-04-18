@@ -3,8 +3,8 @@
 ## Overview
 
 `kqueue` is a thin Rust wrapper over BSD/macOS `kqueue` and `kevent`. It
-supports the TCP-first readiness use case by exposing read and write filters,
-token-carrying user data, and blocking waits.
+supports the TCP-first readiness use case and now also exposes timer and
+user-triggered filters for higher transport layers.
 
 Because the user is on macOS, this crate must be locally testable and is part of
 the immediate implementation scope.
@@ -24,6 +24,8 @@ BSD / macOS kqueue syscalls
 - A kqueue object owns a kernel event queue.
 - Registrations are expressed as `kevent` change records.
 - Read and write readiness are separate filters.
+- Timer and user-event filters let higher layers model deadlines and wakeups
+  without inventing parallel side channels.
 - The `udata` field carries an application token back out of `kevent`.
 
 ## Public API
@@ -32,6 +34,7 @@ BSD / macOS kqueue syscalls
 - `EventFlags`
 - `KqueueChange`
 - `KqueueEvent`
+- `note_trigger()`
 - `Kqueue::new()`
 - `Kqueue::apply(change)`
 - `Kqueue::apply_all(changes)`
@@ -52,9 +55,10 @@ Output:
 ## Test Strategy
 
 - macOS/BSD readiness test using `UnixStream::pair()`
+- macOS/BSD timer and user-event tests
 - non-BSD unsupported fallback test
 
 ## Future Extensions
 
-- timer, signal, vnode, and user-event helpers
+- signal and vnode helpers
 - registration helpers for level-triggered versus edge-clearing styles

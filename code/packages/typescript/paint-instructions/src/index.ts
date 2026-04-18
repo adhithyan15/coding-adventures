@@ -35,6 +35,8 @@
  */
 export const VERSION = "0.1.0";
 
+import type { PixelContainer } from "@coding-adventures/pixel-container";
+
 // ============================================================================
 // PaintBase — shared fields on every instruction
 // ============================================================================

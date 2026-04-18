@@ -1,0 +1,4 @@
+uv venv --quiet --clear
+uv pip install --no-deps -e .[dev] --quiet
+uv pip install pytest pytest-cov ruff mypy --quiet
+.venv\Scripts\python -m pytest tests/ -v
