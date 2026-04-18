@@ -13,18 +13,20 @@ The first slice includes:
 - `conso(...)`
 - `heado(...)`
 - `tailo(...)`
+- `lasto(...)`
 - `listo(...)`
 - `membero(...)`
 - `appendo(...)`
 - `selecto(...)`
 - `permuteo(...)`
+- `subsequenceo(...)`
 - `reverseo(...)`
 
 ## Quick Start
 
 ```python
 from logic_engine import atom, conj, eq, logic_list, program, solve_all, solve_n, var
-from logic_stdlib import appendo, listo, membero, permuteo, reverseo
+from logic_stdlib import appendo, lasto, listo, membero, permuteo, reverseo, subsequenceo
 
 X = var("X")
 Prefix = var("Prefix")
@@ -70,6 +72,23 @@ assert solve_all(
     Order,
     conj(eq(Order, logic_list(["tea", "cake"])), listo(Order)),
 ) == [logic_list(["tea", "cake"])]
+
+assert solve_all(
+    program(),
+    X,
+    lasto(logic_list(["tea", "cake", "jam"]), X),
+) == [atom("jam")]
+
+assert solve_all(
+    program(),
+    Order,
+    subsequenceo(logic_list(["tea", "cake"]), Order),
+) == [
+    logic_list(["tea", "cake"]),
+    logic_list(["tea"]),
+    logic_list(["cake"]),
+    logic_list([]),
+]
 ```
 
 ## Dependencies

@@ -233,8 +233,8 @@ Required tests:
 Later milestones may add:
 
 - `lengtho`
-- `subsequenceo`
-- `lasto`
+- `prefixo`
+- `suffixo`
 - finite-domain arithmetic relations
 - puzzle-specific helper packages
 
