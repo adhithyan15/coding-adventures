@@ -685,11 +685,51 @@ mod tests {
         );
 
         client.write_all(b"lo\n").expect("write second fragment");
-        reactor.read_ready(stream).expect("second read");
-        reactor.write_ready(stream).expect("flush response");
+        for _ in 0..8 {
+            reactor.read_ready(stream).expect("second read");
+            reactor.write_ready(stream).expect("flush response");
+            if reactor
+                .connections
+                .get(&stream)
+                .map(|state| state.pending_write.is_empty())
+                .unwrap_or(true)
+            {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
 
         let mut echoed = [0u8; 6];
-        client.read_exact(&mut echoed).expect("read echoed frame");
+        let mut saw_echo = false;
+        for _ in 0..8 {
+            if reactor.connections.contains_key(&stream) {
+                reactor.read_ready(stream).expect("progress readable state");
+                if reactor.connections.contains_key(&stream) {
+                    reactor
+                        .write_ready(stream)
+                        .expect("progress writable state");
+                }
+            }
+            match client.read_exact(&mut echoed) {
+                Ok(()) => {
+                    saw_echo = true;
+                    break;
+                }
+                Err(err)
+                    if matches!(
+                        err.kind(),
+                        std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
+                    ) =>
+                {
+                    thread::sleep(Duration::from_millis(5));
+                }
+                Err(err) => panic!("read echoed frame: {err}"),
+            }
+        }
+        assert!(
+            saw_echo,
+            "client should eventually observe the echoed frame"
+        );
         assert_eq!(&echoed, b"hello\n");
     }
 
@@ -730,7 +770,13 @@ mod tests {
             .keys()
             .next()
             .expect("accepted connection stream");
-        reactor.read_ready(stream).expect("read request");
+        for _ in 0..8 {
+            if !reactor.connections.contains_key(&stream) {
+                break;
+            }
+            reactor.read_ready(stream).expect("read request");
+            thread::sleep(Duration::from_millis(5));
+        }
 
         let observed = closed.lock().expect("close observer mutex poisoned");
         assert_eq!(observed.len(), 1, "close callback should run exactly once");

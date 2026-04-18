@@ -2566,6 +2566,7 @@ string forever, causing unbounded heap growth and eventual process OOM.
 an explicit maximum buffered-input size. When a client exceeds that cap, clear the buffered state,
 return a protocol error when possible, and close the connection instead of allowing unbounded memory
 growth.
+
 ## Python bytecode or pool decoders must reject negative indexes explicitly
 
 **Date:** 2026-04-18
@@ -2593,3 +2594,18 @@ rockspec dependency.
 dependencies. If sibling rocks are installed first, the final `luarocks make` should also use
 `--deps-mode=none`, and any extra test-only source-path wiring should stay in the test file instead
 of appearing as an undeclared sibling bootstrap in `BUILD`.
+
+---
+
+## Reactor tests must tolerate deferred socket readability after a write-ready step
+
+**Date:** 2026-04-18
+
+**What happened:** The new `stream-reactor` state-persistence test passed locally but failed on
+macOS CI because it assumed one `write_ready()` call meant the client socket would immediately yield
+the echoed frame on the very next `read_exact()`. In practice, the write flush and client-side
+readability can lag by a poll turn or scheduler slice.
+
+**Rule:** In reactor/socket tests, do not assume client-visible readability immediately follows a
+single server-side write-ready step. Use bounded retries around both the reactor progression and the
+client read so the test asserts eventual delivery rather than same-tick delivery.

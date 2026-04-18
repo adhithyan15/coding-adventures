@@ -20,3 +20,8 @@ All notable changes to this package will be documented in this file.
   application state
 - close callbacks that receive the final connection state exactly once
 - tests covering state persistence across reads and close callback teardown
+
+### Fixed
+
+- stabilized the stateful read/write test to tolerate delayed client-side
+  readability on CI
