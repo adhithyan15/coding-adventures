@@ -17,3 +17,6 @@ this file.
 - Reworked the Unix `BUILD` staging steps to avoid heredocs inside command
   substitutions so Linux `/bin/sh` runners can execute the package checks
   portably.
+- Reworked the Unix `BUILD` execution again so the staged import directory is
+  created and reused without depending on shell variables surviving across
+  separate repo runner invocations.

@@ -1038,6 +1038,10 @@ npm ci --quiet
 npx vitest run --coverage
 ```
 
+Shell variables do not persist either. If one line does `PYTHON_BIN=.venv/bin/python`,
+the next line sees an empty variable unless the assignment and its use are in the
+same line.
+
 **Or use full paths from the package dir on each line:**
 ```
 cd ../../../packages/typescript/directed-graph && npm ci --quiet
