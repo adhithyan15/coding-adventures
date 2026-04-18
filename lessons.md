@@ -4,6 +4,24 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: Default to a fresh git worktree before starting substantive repo work
+
+In this repo, the main checkout often contains unrelated untracked files, active
+agent output, or in-progress specs on other branches. Trying to begin work in
+that noisy tree can block the required `git merge origin/main` step or create a
+risk of mixing unrelated changes into the feature.
+
+**Symptom:** `git merge origin/main` fails because untracked local files would be
+overwritten, or the worktree is too noisy to safely isolate a new package/spec
+change.
+
+**Rule:** Before doing substantive work, create a fresh `git worktree` from
+`origin/main` on a dedicated feature branch and do the implementation there.
+Treat this as the default, not an exception, whenever the source checkout is
+shared or noisy.
+
+---
+
 ### 2026-04-18: Lua rockspecs must pin immutable source refs, not just HTTPS URLs
 
 Switching a Lua rockspec from `git://` to `https://` fixes transport security,

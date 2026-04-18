@@ -1,0 +1,16 @@
+[project]
+name = "coding-adventures-note-frequency"
+version = "0.1.0"
+description = "Parse note names like A4 and map them to equal-tempered frequencies"
+requires-python = ">=3.9"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/note_frequency"]
+
