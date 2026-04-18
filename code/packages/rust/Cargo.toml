@@ -301,4 +301,9 @@ members = [
     "intel-4004-packager",
     "nib-compiler",
     "bitset-c",
+  "storage-core",
+  "context-store",
+  "artifact-store",
+  "skill-store",
+  "memory-store",
 ]
