@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/format-doc-to-paint",
+  "version": "0.1.0",
+  "description": "Paint bridge for @coding-adventures/format-doc",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/format-doc": "file:../format-doc",
+    "@coding-adventures/paint-instructions": "file:../paint-instructions",
+    "@coding-adventures/paint-vm-ascii": "file:../paint-vm-ascii"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -4,6 +4,25 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: New TypeScript packages should not commit local transpile outputs
+
+TypeScript package-local `tsc` and test runs can emit `.js`, `.d.ts`, and
+source-map files right beside the checked-in `.ts` sources. If those generated
+files are staged, the PR ends up carrying duplicate runtime and test artifacts
+that do not match the repo's source-first `main: "src/index.ts"` package
+convention.
+
+**Symptom:** a new package PR includes paired `src/*.ts` and generated
+`src/*.js`, `src/*.d.ts`, `tests/*.js`, or `vitest.config.js` files even though
+the package entrypoint already points at the `.ts` sources.
+
+**Rule:** For new TypeScript packages, commit the `.ts` sources, metadata, and
+lockfile only. Do not commit local transpile outputs such as `src/*.js`,
+`src/*.d.ts`, `tests/*.js`, `vitest.config.js`, or their source maps unless the
+package intentionally publishes prebuilt artifacts and the spec says so.
+
+---
+
 ### 2026-04-18: Default to a fresh git worktree before starting substantive repo work
 
 In this repo, the main checkout often contains unrelated untracked files, active
@@ -19,6 +38,7 @@ change.
 `origin/main` on a dedicated feature branch and do the implementation there.
 Treat this as the default, not an exception, whenever the source checkout is
 shared or noisy.
+
 ### 2026-04-18: Dart decompressors must validate backreferences before indexing decoded output
 
 For byte-oriented compression formats like LZ77, the decoder is a trust
