@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  defaultModifiersState,
   LogicalSize,
   MountTargets,
   PhysicalSize,
+  PointerButtons,
   RenderTarget,
   SurfacePreference,
   WindowBackend,
@@ -79,6 +81,37 @@ describe("window-core", () => {
     );
   });
 
+  it("exposes a neutral modifier-state default", () => {
+    expect(defaultModifiersState()).toEqual({
+      shift: false,
+      control: false,
+      alt: false,
+      meta: false,
+    });
+  });
+
+  it("rejects non-positive or non-finite scale factors", () => {
+    expect(() => new LogicalSize(100, 50).toPhysical(0)).toThrow(
+      "scale factors must be finite positive numbers",
+    );
+    expect(() => new PhysicalSize(200, 100).toLogical(Number.NaN)).toThrow(
+      "scale factors must be finite positive numbers",
+    );
+  });
+
+  it("rejects scaled dimensions that overflow u32", () => {
+    expect(() => new LogicalSize(0xffff_ffff, 10).toPhysical(2)).toThrow(
+      "scaled dimensions must fit into u32",
+    );
+  });
+
+  it("builds the shared pointer-button variants", () => {
+    expect(PointerButtons.primary()).toEqual({ kind: "primary" });
+    expect(PointerButtons.secondary()).toEqual({ kind: "secondary" });
+    expect(PointerButtons.middle()).toEqual({ kind: "middle" });
+    expect(PointerButtons.other(4)).toEqual({ kind: "other", value: 4 });
+  });
+
   it("rejects blank element ids", () => {
     expect(() =>
       new WindowBuilder().mountTarget(MountTargets.elementId("   ")).build(),
@@ -98,11 +131,19 @@ describe("window-core", () => {
     const attributes = new WindowBuilder()
       .title("Canvas Host")
       .initialSize(new LogicalSize(640, 480))
+      .visible(false)
+      .resizable(false)
+      .decorations(false)
+      .transparent(true)
       .mountTarget(MountTargets.browserBody())
       .preferredSurface(SurfacePreference.Canvas2D)
       .build();
 
     expect(attributes.title).toBe("Canvas Host");
+    expect(attributes.visible).toBe(false);
+    expect(attributes.resizable).toBe(false);
+    expect(attributes.decorations).toBe(false);
+    expect(attributes.transparent).toBe(true);
     expect(attributes.mountTarget.kind).toBe("browser-body");
     expect(attributes.preferredSurface).toBe(SurfacePreference.Canvas2D);
   });

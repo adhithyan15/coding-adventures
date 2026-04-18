@@ -514,6 +514,7 @@ When TypeScript packages depend on each other via `"file:../other-pkg"` referenc
 - [ ] `file:../` dependencies for internal packages
 - [ ] `"@vitest/coverage-v8": "^3.0.0"` in devDependencies (missed on 5 packages in the S-series work — display, interrupt-handler, rom-bios, bootloader, os-kernel, system-board)
 - [ ] BUILD file uses `npm install --silent` (not `npm ci`) unless package-lock.json is committed and in sync
+- [ ] Run the real coverage gate locally with `npx vitest run --coverage` (or the package `BUILD` file), not just `tsc` or plain `vitest run`
 
 ---
 

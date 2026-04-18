@@ -10,3 +10,6 @@ this file.
 - Added normalized event, render-target, and backend interfaces for browser and
   native adapters.
 - Added unit tests covering validation, size conversion, and backend handoff.
+- Expanded unit coverage for shared modifier defaults, pointer-button helpers,
+  scale-factor validation, dimension overflow guards, and builder flag toggles
+  so the package clears the repository coverage threshold in CI.
