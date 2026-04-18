@@ -2609,3 +2609,31 @@ readability can lag by a poll turn or scheduler slice.
 **Rule:** In reactor/socket tests, do not assume client-visible readability immediately follows a
 single server-side write-ready step. Use bounded retries around both the reactor progression and the
 client read so the test asserts eventual delivery rather than same-tick delivery.
+
+## Copying a `.NET` package skeleton requires renaming the project files, not just changing `PackageId`
+
+**Date:** 2026-04-18
+
+**What happened:** The first `paint-vm-ascii` pass copied the existing `paint-vm` package and only
+changed namespaces plus `PackageId`. The copied backend still used the file name
+`CodingAdventures.PaintVm.csproj`, so MSBuild treated the backend and the shared runtime as the
+same project identity inside `.artifacts`, which broke test references and ref-assembly resolution.
+
+**Rule:** When cloning a `.NET` package in this repo, rename the project files and test project
+files to the new package name immediately, and set explicit `AssemblyName`/`RootNamespace` values.
+Changing `PackageId` alone is not enough to keep build outputs distinct.
+
+---
+
+## F# interpolated strings get brittle when expressions contain quoted literals
+
+**Date:** 2026-04-18
+
+**What happened:** The first F# `paint-vm-svg` build failed with dozens of `FS3373` errors because
+interpolated SVG strings embedded expressions like `safeNum value "field"` and
+`defaultArg fill "none"` directly inside `$"..."`. The nested quoted literals inside the
+interpolation made the parser unhappy even though the logic itself was fine.
+
+**Rule:** In F#, avoid putting expressions with quoted string literals directly inside interpolated
+strings. Bind those values first with `let`, or switch to `sprintf` when composing dense XML/HTML
+attribute strings.

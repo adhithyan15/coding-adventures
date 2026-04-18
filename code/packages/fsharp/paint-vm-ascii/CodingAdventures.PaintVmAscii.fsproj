@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>CodingAdventures.PaintVmAscii</AssemblyName>
+    <RootNamespace>CodingAdventures.PaintVmAscii</RootNamespace>
+    <PackageId>CodingAdventures.PaintVmAscii.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# PaintVM ASCII backend for terminal-friendly text rendering</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.fsproj" />
+    <ProjectReference Include="../paint-vm/CodingAdventures.PaintVm.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PaintVm.fs" />
+  </ItemGroup>
+</Project>
