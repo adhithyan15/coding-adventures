@@ -214,6 +214,68 @@ describe("window-canvas", () => {
     ]);
   });
 
+  it("falls back invalid dpr values and suppresses modified or non-printable text", () => {
+    const { environment, documentLike, windowLike } = makeEnvironment();
+    windowLike.devicePixelRatio = Number.NaN;
+    const mount = new FakeHost();
+    documentLike.selectors.set("#app", mount);
+    const backend = new CanvasBackend(environment);
+    const handle = new WindowBuilder()
+      .initialSize(new LogicalSize(160, 90))
+      .mountTarget(MountTargets.querySelector("#app"))
+      .buildWith(backend);
+    backend.pumpEvents();
+
+    const canvas = mount.children[0] as FakeCanvas;
+    expect(handle.scaleFactor()).toBe(1);
+    expect(handle.physicalSize()).toEqual(new LogicalSize(160, 90).toPhysical(1));
+
+    canvas.dispatch("pointerdown", { button: 2 });
+    canvas.dispatch("pointerup", { button: 5 });
+    canvas.dispatch("keydown", { key: "c", ctrlKey: true });
+    canvas.dispatch("keydown", { key: "Meta", metaKey: true });
+    canvas.dispatch("keydown", { key: "Tab" });
+
+    expect(backend.pumpEvents()).toEqual([
+      {
+        type: "pointer-button",
+        windowId: handle.id(),
+        button: { kind: "secondary" },
+        state: "pressed",
+      },
+      {
+        type: "pointer-button",
+        windowId: handle.id(),
+        button: { kind: "other", value: 5 },
+        state: "released",
+      },
+      {
+        type: "key",
+        windowId: handle.id(),
+        key: { kind: "character", value: "c" },
+        state: "pressed",
+        modifiers: { shift: false, control: true, alt: false, meta: false },
+        text: null,
+      },
+      {
+        type: "key",
+        windowId: handle.id(),
+        key: { kind: "character", value: "Meta" },
+        state: "pressed",
+        modifiers: { shift: false, control: false, alt: false, meta: true },
+        text: null,
+      },
+      {
+        type: "key",
+        windowId: handle.id(),
+        key: { kind: "named", value: "Tab" },
+        state: "pressed",
+        modifiers: { shift: false, control: false, alt: false, meta: false },
+        text: null,
+      },
+    ]);
+  });
+
   it("rejects native mount targets for the browser backend", () => {
     const { environment } = makeEnvironment();
     const backend = new CanvasBackend(environment);
