@@ -11,3 +11,17 @@ All notable changes to this package will be documented in this file.
 - connection caps and queued-write budget caps
 - macOS/BSD `bind_kqueue` convenience constructor
 - macOS/BSD end-to-end echo and budget/cap/shutdown tests
+
+## [0.1.1] - 2026-04-18
+
+### Added
+
+- `bind_with_state` and `bind_kqueue_with_state` for connection-local
+  application state
+- close callbacks that receive the final connection state exactly once
+- tests covering state persistence across reads and close callback teardown
+
+### Fixed
+
+- stabilized the stateful read/write test to tolerate delayed client-side
+  readability on CI

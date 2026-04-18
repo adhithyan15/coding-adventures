@@ -2553,6 +2553,20 @@ uses temp-backed shared-memory state during first-run migrations.
 
 ---
 
+## Stateful TCP protocol servers must cap incomplete per-connection input buffers
+
+**Date:** 2026-04-18
+
+**What happened:** While preparing the `mini-redis` migration onto `tcp-runtime` for push, security
+review caught that the new per-connection RESP session state buffered partial frames in a `Vec<u8>`
+with no maximum size. A client could hold a socket open and stream an incomplete array or bulk
+string forever, causing unbounded heap growth and eventual process OOM.
+
+**Rule:** Any TCP server in this repo that buffers partial protocol frames per connection must enforce
+an explicit maximum buffered-input size. When a client exceeds that cap, clear the buffered state,
+return a protocol error when possible, and close the connection instead of allowing unbounded memory
+growth.
+
 ## Python bytecode or pool decoders must reject negative indexes explicitly
 
 **Date:** 2026-04-18
@@ -2580,3 +2594,18 @@ rockspec dependency.
 dependencies. If sibling rocks are installed first, the final `luarocks make` should also use
 `--deps-mode=none`, and any extra test-only source-path wiring should stay in the test file instead
 of appearing as an undeclared sibling bootstrap in `BUILD`.
+
+---
+
+## Reactor tests must tolerate deferred socket readability after a write-ready step
+
+**Date:** 2026-04-18
+
+**What happened:** The new `stream-reactor` state-persistence test passed locally but failed on
+macOS CI because it assumed one `write_ready()` call meant the client socket would immediately yield
+the echoed frame on the very next `read_exact()`. In practice, the write flush and client-side
+readability can lag by a poll turn or scheduler slice.
+
+**Rule:** In reactor/socket tests, do not assume client-visible readability immediately follows a
+single server-side write-ready step. Use bounded retries around both the reactor progression and the
+client read so the test asserts eventual delivery rather than same-tick delivery.

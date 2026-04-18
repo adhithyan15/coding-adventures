@@ -10,6 +10,7 @@ It owns:
 
 - TCP listener and stream option policy
 - TCP-flavored connection metadata for handlers
+- connection-local application state for protocol sessions
 - a runtime surface that Redis-, IRC-, and protocol-focused crates can bind to
 
 It deliberately delegates byte-stream progression to `stream-reactor` instead
@@ -22,6 +23,7 @@ Phase one supports:
 - one listener
 - many concurrent TCP connections
 - configurable backlog, `TCP_NODELAY`, keepalive, and socket buffer defaults
+- stateless and stateful handler variants
 - queued-write and connection caps inherited from `stream-reactor`
 - cooperative shutdown through a stop handle
 - host-OS convenience constructors for macOS / BSD, Linux, and Windows

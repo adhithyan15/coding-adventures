@@ -69,10 +69,12 @@ Phase one of `stream-reactor` supports:
 - one listener
 - many accepted byte streams
 - readable and writable event progression
+- per-connection application state owned by the reactor
 - per-stream queued outbound bytes
 - configurable connection caps
 - configurable queued-write budget caps
 - neutral handler output in terms of bytes and close intent
+- optional close callbacks for connection teardown
 - cooperative stop via a stop flag
 
 Phase one intentionally does not yet require:
@@ -118,6 +120,27 @@ This keeps the runtime generic for protocols that:
 
 without forcing protocol knowledge into the reactor.
 
+### Connection State
+
+Higher layers such as Redis do not just need bytes-in / bytes-out callbacks.
+They also need per-connection state that lives for the full lifetime of the
+stream, for example:
+
+- partially buffered protocol frames
+- selected logical database
+- authentication/session flags
+- protocol parser state
+
+`stream-reactor` should therefore own connection-local application state rather
+than forcing callers to keep side maps keyed by connection id.
+
+Phase one should support:
+
+- state initialization when a connection is admitted
+- mutable access to that state on each readable callback
+- a close callback that receives the final state value when the stream leaves
+  the reactor
+
 ### Backpressure
 
 `stream-reactor` owns queued-write budgets and connection caps.
@@ -138,6 +161,7 @@ Phase-one public API:
 - `StreamReactorOptions`
 - `StopHandle`
 - `StreamReactor::bind(platform, address, options, handler)`
+- `StreamReactor::bind_with_state(platform, address, options, init, handler, on_close)`
 - `StreamReactor::serve()`
 - `StreamReactor::local_addr()`
 - `StreamReactor::stop_handle()`
@@ -153,12 +177,14 @@ Listener side:
 2. enable listener readability interest
 3. on `ListenerAcceptReady`, drain accepts until `WouldBlock`
 4. configure each accepted stream through the provider
-5. register readable interest for each admitted stream
+5. initialize the application state for each admitted stream
+6. register readable interest for each admitted stream
 
 Readable side:
 
 1. read until `WouldBlock`, close, or error
-2. pass each read chunk to the handler
+2. pass each read chunk to the handler together with mutable connection-local
+   state
 3. append returned bytes to the pending-write queue
 4. if the queue is non-empty, enable writable interest
 5. if the peer closed and no bytes remain to flush, close the stream
@@ -179,6 +205,8 @@ Phase-one rules:
 - per-stream provider errors close that stream
 - `InvalidResource` or `ResourceClosed` during close teardown should be treated
   as already-closed cleanup, not as a fatal reactor error
+- when a stream leaves the reactor, the close callback should receive the final
+  connection-local state exactly once
 
 ## Current Limitation
 
@@ -202,6 +230,8 @@ Phase one should include:
 - connection-cap test
 - queued-write-budget overflow test
 - stop-handle shutdown test
+- per-connection state persistence test across multiple reads
+- close-callback test proving state teardown runs once per connection
 - Linux and Windows target compile coverage through `cargo check`
 
 ## Relationship To `tcp-reactor`
