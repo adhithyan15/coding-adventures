@@ -111,6 +111,121 @@ This is the missing user-space layer we still need to build.
 
 ---
 
+## The Platform Seam
+
+There is one more boundary that matters beyond "kernel versus runtime":
+
+- the seam between the repository's transport runtime and the provider that
+  offers eventing, timers, wakeups, listeners, sockets, and packet delivery
+
+Today that provider is the host operating system through:
+
+- `epoll`, `kqueue`, or IOCP for eventing
+- kernel TCP sockets for networking
+- kernel timers and wakeups
+
+In the future, that provider may instead be:
+
+- a library OS
+- a unikernel networking layer
+- a kernel-bypass transport substrate
+
+If we want today's user-space TCP runtime to survive that future intact, then
+our transport crates must not be welded directly to Unix or Win32 details above
+the raw backend boundary.
+
+### The seam should expose capabilities, not operating-system trivia
+
+The runtime-facing contract should describe capabilities like:
+
+- create or adopt a listener
+- accept a connection
+- read bytes
+- write bytes
+- close or half-close
+- register interest in read, write, wakeup, and timer events
+- create timers and wakeups
+- surface transport errors and readiness or completion events
+
+The runtime-facing contract should not require upper layers to understand:
+
+- raw file descriptor numbers
+- `SOCKET` versus fd distinctions
+- `OVERLAPPED` structures
+- `kevent` filter flags
+- `epoll_event` bit layout
+- host-kernel-specific timer objects
+
+That means the long-term goal is not simply:
+
+- `tcp-runtime` over `std::net`
+
+It is:
+
+- `tcp-runtime` over a repository-owned platform contract
+
+### Recommended layering for that seam
+
+The stack should evolve toward:
+
+```text
+language binding / protocol runtime
+    ↓
+tcp-runtime-c
+    ↓
+tcp-runtime
+    ↓
+stream-reactor
+    ↓
+transport-platform
+    ↓
+native-event-core + native socket providers
+    or
+library-OS / unikernel provider
+```
+
+Where:
+
+- `transport-platform` defines the runtime-facing contract
+- OS-backed adapters implement that contract on top of `native-event-core` and
+  native sockets
+- a future library-OS adapter can implement the same contract without changing
+  `stream-reactor` or `tcp-runtime`
+
+### What belongs below the seam
+
+Below the seam:
+
+- socket or transport-handle representation
+- event delivery mechanics
+- timer primitives
+- wakeup primitives
+- listener creation and transport-handle provisioning
+- platform-specific zero-copy or vectored-I/O hooks
+
+### What belongs above the seam
+
+Above the seam:
+
+- connection state machines
+- buffering policy
+- backpressure policy
+- fairness policy
+- idle and write deadlines
+- graceful shutdown and drain policy
+- metrics and tracing
+- C ABI and language bindings
+
+If we keep this split disciplined, then the future unikernel experiment becomes:
+
+- "write a new platform provider"
+
+instead of:
+
+- "rewrite the TCP runtime from scratch"
+
+---
+
 ## Missing Pieces
 
 The current stack is missing work in six major areas.
@@ -120,10 +235,16 @@ The current stack is missing work in six major areas.
 Right now `tcp-reactor` proves the event core with a concrete TCP echo-style
 loop. The next reusable layer should be:
 
+- `transport-platform`
 - `stream-reactor`
 
 Responsibilities:
 
+- `transport-platform`
+  - defines the provider contract for listeners, streams, timers, wakeups, and
+    event delivery
+  - hides OS-specific handle types from upper layers
+  - creates the seam for a future library-OS or unikernel backend
 - normalized readable / writable / closed / error events
 - per-connection read buffer management
 - per-connection write queue management
@@ -137,6 +258,7 @@ Why it matters:
   byte streams"
 - this keeps `tcp-reactor` from becoming a grab bag of every future transport
   concern
+- this preserves a clean portability boundary for a future library-OS provider
 
 ### 2. A real TCP server runtime
 
@@ -253,6 +375,7 @@ The language bindings should not link directly against `epoll`, `kqueue`, or
 | Timers | effectively absent | idle timers, operation deadlines, scheduled wakeups |
 | Observability | tests only | counters, histograms, trace hooks, benchmark suite |
 | FFI | absent | C ABI, language bindings, memory ownership rules, callback discipline |
+| Platform seam | upper layers still conceptually OS-backed | provider trait or contract for sockets, listeners, timers, wakeups, and event delivery |
 
 ---
 
@@ -274,9 +397,11 @@ tcp-runtime
     ↓
 stream-reactor
     ↓
-native-event-core
+transport-platform
     ↓
-epoll / kqueue / iocp
+native-event-core + native socket providers
+    or
+library-OS / unikernel provider
 ```
 
 ### C ABI design rules
@@ -383,6 +508,7 @@ the hot path without pretending the lock does not exist.
 
 Add or expand:
 
+- `transport-platform`
 - `eventfd`
 - `timerfd`
 - `signalfd`
@@ -391,7 +517,8 @@ Add or expand:
 
 Target outcome:
 
-- one generic byte-stream engine above native pollers
+- one generic byte-stream engine above a repository-owned provider seam rather
+  than directly above host-OS details
 
 ### Phase 2: build the real transport runtime
 
@@ -457,6 +584,8 @@ It is done when:
 - timers and shutdowns are first-class
 - multiple reactor threads can scale across cores
 - the runtime exposes stable metrics and lifecycle events
+- the runtime depends on a repository-owned platform contract rather than being
+  permanently coupled to a particular host-kernel socket API
 - a C ABI exists
 - Ruby, Python, Perl, and other languages can use it without the interpreter
   sitting in the middle of every socket event
