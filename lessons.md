@@ -2372,6 +2372,22 @@ algorithms like Berlekamp-Massey, trim trailing zero coefficients before returni
 result. Keep at least one coefficient so the zero-error locator remains `[1]`.
 
 ---
+## Lua BUILDs must stage sibling rocks and tests must prefer source lexers when grammars live in-tree
+
+**Date:** 2026-04-18
+
+**What happened:** The first Lua `nib_type_checker` / `nib_ir_compiler` / `nib_wasm_compiler`
+BUILD files called `luarocks make` on sibling packages directly, which failed because those
+packages depend on other local rocks that are not published. After installing the rocks, the
+tests still failed because the installed `nib_lexer` resolved `grammars/nib.tokens` relative to
+the LuaRocks install tree instead of the repo, so parser-driven tests could not find the grammar.
+
+**Rule:** For Lua packages in this repo, BUILD files should invoke sibling package `BUILD`s when
+those siblings already know how to install their transitive local rocks. In tests that exercise
+grammar-backed lexers/parsers, put the sibling `src/` directories for those lexers ahead of
+installed rocks on `package.path` so in-repo grammar files resolve correctly.
+
+---
 
 ## .NET package BUILD coverage should target the package under test, not every referenced assembly
 
@@ -2445,3 +2461,21 @@ imports was accidentally staged along with the real source files.
 of commits. Add a package-local `.gitignore` for the copied extension artifact path before staging,
 and sanity-check `git show --name-only HEAD` after the first commit when a package BUILD writes back
 into `src/`.
+
+---
+
+## Lua BUILD validators require declared local deps and `--deps-mode=none` consistency
+
+**Date:** 2026-04-18
+
+**What happened:** The Ruby/Elixir/Lua convergence PR passed package-local Lua tests but failed the
+monorepo BUILD validator. One new Lua package bootstrapped sibling rocks and then ran a final
+`luarocks make` without `--deps-mode=none`, another Windows BUILD disabled dependency resolution but
+forgot to bootstrap a local rockspec dependency, and a third BUILD bootstrapped `wasm_runtime` even
+though it was only used by tests through direct `package.path` entries rather than as a declared
+rockspec dependency.
+
+**Rule:** For Lua packages, keep the BUILD bootstrap set aligned with declared local rockspec
+dependencies. If sibling rocks are installed first, the final `luarocks make` should also use
+`--deps-mode=none`, and any extra test-only source-path wiring should stay in the test file instead
+of appearing as an undeclared sibling bootstrap in `BUILD`.
