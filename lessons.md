@@ -1916,3 +1916,17 @@ exceptions instead of being treated as non-list input.
 **Rule:** When parsing user-controlled numeric tokens in language tooling, use `TryParse`-style
 conversion and treat overflow as invalid syntax or plain text. Never let oversized numeric literals
 crash the parser.
+
+---
+
+## .NET CLI on Linux may need package-local HOME, not just DOTNET_CLI_HOME
+
+**Date:** 2026-04-17
+
+**What happened:** Even after isolating `.NET` build outputs with `--artifacts-path`, Ubuntu CI still
+failed intermittently in the CLI startup path with a `NuGet-Migrations` mutex/first-run error while
+parallel package builds invoked `dotnet test`. Setting only `DOTNET_CLI_HOME` was not enough.
+
+**Rule:** For Linux `dotnet` BUILD scripts that may run in parallel, set both `HOME="$PWD/.dotnet"`
+and `DOTNET_CLI_HOME="$PWD/.dotnet"` so the CLI's first-run state is fully package-local and does not
+race with sibling package invocations.
