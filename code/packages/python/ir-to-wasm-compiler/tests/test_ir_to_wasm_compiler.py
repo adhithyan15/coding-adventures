@@ -200,7 +200,7 @@ def test_compile_syscall_write_uses_wasi_fd_write() -> None:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(65)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(65)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
@@ -223,7 +223,7 @@ def test_compile_syscall_read_uses_wasi_fd_read() -> None:
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
     program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(2)], id=gen.next()))
     program.add_instruction(
-        IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(4), IrImmediate(0)], id=gen.next())
+        IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(0), IrImmediate(0)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
@@ -242,7 +242,7 @@ def test_compile_syscall_exit_uses_wasi_proc_exit() -> None:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(7)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(7)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(10)], id=gen.next()))
 
@@ -271,3 +271,272 @@ def test_unsupported_syscall_raises() -> None:
         assert "unsupported SYSCALL" in str(exc)
     else:  # pragma: no cover - defensive branch
         raise AssertionError("expected unsupported syscall error")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Dispatch-loop lowerer tests
+#
+# These tests exercise the _DispatchLoopLowerer directly via
+# IrToWasmCompiler.compile(..., strategy="dispatch_loop").  The lowerer handles
+# arbitrary JUMP/BRANCH targets that the structured lowerer would reject.
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+def _dispatch(
+    program: IrProgram,
+    function_signatures: list[FunctionSignature] | None = None,
+) -> object:
+    """Compile with the dispatch-loop strategy and return a WasmModule."""
+    sigs = function_signatures or [
+        FunctionSignature(label="_start", param_count=0, export_name="_start")
+    ]
+    return IrToWasmCompiler().compile(program, sigs, strategy="dispatch_loop")
+
+
+def _dispatch_run(
+    program: IrProgram,
+    function_signatures: list[FunctionSignature] | None = None,
+    *,
+    host: object = None,
+) -> list[int | float]:
+    module = _dispatch(program, function_signatures)
+    return _runtime_result(module, "_start", [], host=host)
+
+
+class TestDispatchLoopLowerer:
+    """Verify the dispatch-loop strategy handles arbitrary control flow."""
+
+    def test_simple_halt_exits(self) -> None:
+        """A single segment with HALT should exit cleanly."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(42)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [42]
+
+    def test_unconditional_forward_jump(self) -> None:
+        """JUMP to a forward label skips the code in between."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(IrInstruction(IrOp.JUMP, [IrLabel("_end")], id=gen.next()))
+        # This block must be skipped — if reached it would clobber r1
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_skip")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(99)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_end")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(7)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [7]
+
+    def test_unconditional_backward_jump(self) -> None:
+        """JUMP to a backward label implements a loop.
+
+        This program counts from 0 to 3, incrementing r2 each iteration:
+            _start: r2 = 0; r3 = 3
+            _loop:  if r2 >= r3, jump _done
+                    r2 += 1; jump _loop
+            _done:  r1 = r2; HALT
+        """
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(0)], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(3)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_loop")], id=-1))
+        # r4 = (r2 >= r3) implemented as r4 = (r3 > r2) = 0 means not-done
+        program.add_instruction(
+            IrInstruction(IrOp.CMP_GT, [IrRegister(4), IrRegister(3), IrRegister(2)], id=gen.next())
+        )
+        # BRANCH_Z: if r4 == 0 (r3 not > r2, so r2 >= r3), jump to _done
+        program.add_instruction(
+            IrInstruction(IrOp.BRANCH_Z, [IrRegister(4), IrLabel("_done")], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(2), IrRegister(2), IrImmediate(1)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.JUMP, [IrLabel("_loop")], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_done")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(2), IrImmediate(0)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [3]
+
+    def test_branch_nz_conditional_jump(self) -> None:
+        """BRANCH_NZ jumps when the register is nonzero."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(1)], id=gen.next())
+        )
+        # r2 is 1 (nonzero) → should jump to _taken
+        program.add_instruction(
+            IrInstruction(IrOp.BRANCH_NZ, [IrRegister(2), IrLabel("_taken")], id=gen.next())
+        )
+        # Not taken path
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(0)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_taken")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(99)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [99]
+
+    def test_branch_nz_not_taken(self) -> None:
+        """BRANCH_NZ does not jump when the register is zero."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(0)], id=gen.next())
+        )
+        # r2 is 0 → BRANCH_NZ should NOT fire; fall through to r1 = 55
+        program.add_instruction(
+            IrInstruction(IrOp.BRANCH_NZ, [IrRegister(2), IrLabel("_taken")], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(55)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_taken")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(99)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [55]
+
+    def test_branch_z_conditional_jump(self) -> None:
+        """BRANCH_Z jumps when the register is zero."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(0)], id=gen.next())
+        )
+        # r2 == 0 → BRANCH_Z should fire
+        program.add_instruction(
+            IrInstruction(IrOp.BRANCH_Z, [IrRegister(2), IrLabel("_zero_path")], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(11)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_zero_path")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(22)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [22]
+
+    def test_fall_through_between_segments(self) -> None:
+        """A segment with no explicit jump falls through to the next segment."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(10)], id=gen.next())
+        )
+        # _start falls through to _next (no explicit JUMP)
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_next")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(2), IrImmediate(5)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [15]
+
+    def test_unknown_strategy_raises(self) -> None:
+        """Passing an unrecognised strategy name raises WasmLoweringError."""
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=IDGenerator().next()))
+
+        with pytest.raises(WasmLoweringError, match="unknown lowering strategy"):
+            IrToWasmCompiler().compile(
+                program,
+                [FunctionSignature(label="_start", param_count=0, export_name="_start")],
+                strategy="bad_strategy",
+            )
+
+    def test_dispatch_loop_with_syscall_write(self) -> None:
+        """SYSCALL fd_write works correctly through the dispatch loop."""
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(72)], id=gen.next())  # 'H'
+        )
+        program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        output: list[str] = []
+        host = WasiHost(config=WasiConfig(stdout=output.append))
+        _dispatch_run(
+            program,
+            [FunctionSignature(label="_start", param_count=0, export_name="_start")],
+            host=host,
+        )
+        assert output == ["H"]
+
+    def test_mixed_jumps_and_fall_throughs(self) -> None:
+        """Program with multiple jumps and fall-throughs produces correct result.
+
+        Computes: r2 = 1 + 2 + 3 = 6
+            _start:  r2 = 0; jump _a
+            _a:      r2 += 1; (fall through to _b)
+            _b:      r2 += 2; jump _c
+            _skip:   r2 += 100   ← must never be reached
+            _c:      r2 += 3; r1 = r2; HALT
+        """
+        gen = IDGenerator()
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(0)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.JUMP, [IrLabel("_a")], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_a")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(2), IrRegister(2), IrImmediate(1)], id=gen.next())
+        )
+        # Fall through to _b
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_b")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(2), IrRegister(2), IrImmediate(2)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.JUMP, [IrLabel("_c")], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_skip")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(2), IrRegister(2), IrImmediate(100)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_c")], id=-1))
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(2), IrRegister(2), IrImmediate(3)], id=gen.next())
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(2), IrImmediate(0)], id=gen.next())
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+
+        assert _dispatch_run(program) == [6]

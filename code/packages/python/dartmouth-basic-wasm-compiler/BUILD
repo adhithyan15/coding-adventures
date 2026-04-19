@@ -1,0 +1,3 @@
+uv venv --quiet --clear
+uv pip install -e ../grammar-tools -e ../graph -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../dartmouth-basic-lexer -e ../dartmouth-basic-parser -e ../compiler-ir -e ../dartmouth-basic-ir-compiler -e ../virtual-machine -e ../wasm-leb128 -e ../wasm-types -e ../wasm-opcodes -e ../wasm-module-parser -e ../wasm-validator -e ../wasm-execution -e ../wasm-runtime -e ../wasm-module-encoder -e ../ir-to-wasm-compiler -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v

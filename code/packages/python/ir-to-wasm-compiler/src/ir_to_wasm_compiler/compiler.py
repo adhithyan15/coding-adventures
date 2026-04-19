@@ -38,7 +38,7 @@ _FUNCTION_COMMENT_RE = re.compile(r"^function:\s*([A-Za-z_][A-Za-z0-9_]*)\((.*)\
 _SYSCALL_WRITE = 1
 _SYSCALL_READ = 2
 _SYSCALL_EXIT = 10
-_SYSCALL_ARG0 = 4
+_SYSCALL_ARG0 = 0
 
 _WASI_MODULE = "wasi_snapshot_preview1"
 _WASI_IOVEC_OFFSET = 0
@@ -84,6 +84,8 @@ _OPCODE = {
         "i32.add",
         "i32.sub",
         "i32.and",
+        "i32.mul",
+        "i32.div_s",
     )
 }
 
@@ -133,6 +135,8 @@ class IrToWasmCompiler:
         self,
         program: IrProgram,
         function_signatures: list[FunctionSignature] | None = None,
+        *,
+        strategy: str = "structured",
     ) -> WasmModule:
         signatures = infer_function_signatures_from_comments(program)
         if function_signatures:
@@ -182,13 +186,19 @@ class IrToWasmCompiler:
                 for decl, offset in ((decl, data_offsets[decl.label]) for decl in program.data)
             )
 
+        if strategy not in ("structured", "dispatch_loop"):
+            raise WasmLoweringError(f"unknown lowering strategy: {strategy!r}")
+        lowerer_class: type[_FunctionLowerer] = (
+            _DispatchLoopLowerer if strategy == "dispatch_loop" else _FunctionLowerer
+        )
+
         wasi_context = _WasiContext(
             function_indices={imp.syscall_number: index for index, imp in enumerate(imports)},
             scratch_base=scratch_base,
         )
         for function in functions:
             module.code.append(
-                _FunctionLowerer(
+                lowerer_class(
                     function=function,
                     signatures=signatures,
                     function_indices=function_indices,
@@ -531,6 +541,10 @@ class _FunctionLowerer:
                 self._emit_binary_numeric("i32.sub", instruction)
             case IrOp.AND:
                 self._emit_binary_numeric("i32.and", instruction)
+            case IrOp.MUL:
+                self._emit_binary_numeric("i32.mul", instruction)
+            case IrOp.DIV:
+                self._emit_binary_numeric("i32.div_s", instruction)
             case IrOp.AND_IMM:
                 dst = _expect_register(instruction.operands[0], "AND_IMM dst")
                 src = _expect_register(instruction.operands[1], "AND_IMM src")
@@ -717,6 +731,183 @@ class _FunctionLowerer:
             if target == label:
                 return index
         raise WasmLoweringError(f"expected jump to {label} in {self.function.label}")
+
+
+class _DispatchLoopLowerer(_FunctionLowerer):
+    """Lower a function with unstructured control flow using a virtual program counter.
+
+    The resulting WASM looks like::
+
+        [copy params into IR registers]
+        i32.const 0 ; local.set $pc          ← start at segment 0
+        block $prog_end (void)
+          loop $dispatch (void)
+            block $seg_0 (void)              ← one block per label
+              local.get $pc; i32.const 0; i32.ne; br_if 0   ← skip if wrong
+              [instructions for segment 0]
+              i32.const 1; local.set $pc; br 1              ← fall-through
+            end
+            block $seg_1 (void)
+              local.get $pc; i32.const 1; i32.ne; br_if 0
+              [instructions for segment 1]
+              ...
+            end
+          end loop                           ← falls through on out-of-range $pc
+        end block
+        local.get _REG_SCRATCH              ← function return value
+        end function
+
+    br depth table (from inside block $seg_N):
+        br 0 → block $seg_N   (skip this segment)
+        br 1 → loop $dispatch (continue dispatch — loop restart)
+        br 2 → block $prog_end (exit program)
+
+    Inside a generated ``if`` block (for BRANCH_Z / BRANCH_NZ):
+        br 0 → if block
+        br 1 → block $seg_N
+        br 2 → loop $dispatch
+        br 3 → block $prog_end
+    """
+
+    def lower(self) -> FunctionBody:
+        label_to_seg, segments = self._index_segments()
+        # $pc lives at the local slot just past all IR virtual registers
+        pc_reg = self.function.max_reg + 1
+
+        self._copy_params_into_ir_registers()
+
+        # Initialise $pc = 0 (start at segment 0)
+        self._emit_i32_const(0)
+        self._emit_local_set(pc_reg)
+
+        # block $prog_end (void)
+        self._emit_opcode("block")
+        self._bytes.append(int(BlockType.EMPTY))
+        # loop $dispatch (void)
+        self._emit_opcode("loop")
+        self._bytes.append(int(BlockType.EMPTY))
+
+        for seg_idx, instrs in enumerate(segments):
+            self._emit_segment(seg_idx, instrs, pc_reg, label_to_seg)
+
+        # end loop
+        self._emit_opcode("end")
+        # end block $prog_end
+        self._emit_opcode("end")
+
+        # Function return value (0 on normal exit; HALT via br 2 lands here)
+        self._emit_local_get(_REG_SCRATCH)
+        self._emit_opcode("end")
+
+        return FunctionBody(
+            # max_reg + 1 IR virtual-register slots, plus one for $pc
+            locals=(ValueType.I32,) * (self.function.max_reg + 2),
+            code=bytes(self._bytes),
+        )
+
+    def _index_segments(
+        self,
+    ) -> tuple[dict[str, int], list[list[IrInstruction]]]:
+        """Assign each LABEL a segment index and split instructions between labels."""
+        label_to_seg: dict[str, int] = {}
+        # segment_starts[i] = instruction index *after* the i-th LABEL
+        segment_starts: list[int] = []
+
+        for i, instr in enumerate(self._instructions):
+            if (
+                instr.opcode == IrOp.LABEL
+                and instr.operands
+                and isinstance(instr.operands[0], IrLabel)
+            ):
+                label_to_seg[instr.operands[0].name] = len(segment_starts)
+                segment_starts.append(i + 1)
+
+        segments: list[list[IrInstruction]] = []
+        for i, start in enumerate(segment_starts):
+            # The next LABEL is at segment_starts[i+1]-1; exclude it from this segment.
+            end = segment_starts[i + 1] - 1 if i + 1 < len(segment_starts) else len(self._instructions)
+            segments.append(list(self._instructions[start:end]))
+
+        return label_to_seg, segments
+
+    def _emit_segment(
+        self,
+        seg_idx: int,
+        instrs: list[IrInstruction],
+        pc_reg: int,
+        label_to_seg: dict[str, int],
+    ) -> None:
+        # block $seg_N (void)
+        self._emit_opcode("block")
+        self._bytes.append(int(BlockType.EMPTY))
+
+        # Skip this segment when $pc ≠ seg_idx
+        self._emit_local_get(pc_reg)
+        self._emit_i32_const(seg_idx)
+        self._emit_opcode("i32.ne")
+        self._emit_opcode("br_if")
+        self._emit_u32(0)  # br 0 → end of block $seg_N
+
+        terminated = False
+        for instr in instrs:
+            if terminated:
+                break
+
+            if instr.opcode == IrOp.COMMENT:
+                continue
+
+            if instr.opcode == IrOp.JUMP:
+                target = _expect_label(instr.operands[0], "JUMP target").name
+                target_idx = label_to_seg.get(target)
+                if target_idx is None:
+                    raise WasmLoweringError(f"JUMP to unknown label: {target!r}")
+                self._emit_i32_const(target_idx)
+                self._emit_local_set(pc_reg)
+                self._emit_opcode("br")
+                self._emit_u32(1)  # br 1 → loop $dispatch (restart)
+                terminated = True
+
+            elif instr.opcode in (IrOp.BRANCH_Z, IrOp.BRANCH_NZ):
+                # Conditional jump: set $pc and continue dispatch *if* condition fires.
+                # Does NOT terminate the segment — falls through to next instruction.
+                cond_reg = _expect_register(instr.operands[0], "BRANCH condition").index
+                target = _expect_label(instr.operands[1], "BRANCH target").name
+                target_idx = label_to_seg.get(target)
+                if target_idx is None:
+                    raise WasmLoweringError(f"BRANCH to unknown label: {target!r}")
+                self._emit_local_get(cond_reg)
+                if instr.opcode == IrOp.BRANCH_Z:
+                    # Branch when zero: invert so WASM if fires when reg == 0
+                    self._emit_opcode("i32.eqz")
+                self._emit_opcode("if")
+                self._bytes.append(int(BlockType.EMPTY))
+                self._emit_i32_const(target_idx)
+                self._emit_local_set(pc_reg)
+                self._emit_opcode("br")
+                self._emit_u32(2)  # br 2 (inside if) → loop $dispatch
+                self._emit_opcode("end")
+                # Intentionally NOT setting terminated — execution continues
+
+            elif instr.opcode in (IrOp.HALT, IrOp.RET):
+                self._emit_opcode("br")
+                self._emit_u32(2)  # br 2 → block $prog_end (exit program)
+                terminated = True
+
+            elif instr.opcode == IrOp.SYSCALL:
+                self._emit_syscall(instr)
+
+            else:
+                self._emit_simple(instr)
+
+        if not terminated:
+            # Fall-through: advance $pc to the next segment in source order
+            self._emit_i32_const(seg_idx + 1)
+            self._emit_local_set(pc_reg)
+            self._emit_opcode("br")
+            self._emit_u32(1)  # br 1 → loop $dispatch (restart)
+
+        # end block $seg_N
+        self._emit_opcode("end")
 
 
 def infer_function_signatures_from_comments(program: IrProgram) -> dict[str, FunctionSignature]:
