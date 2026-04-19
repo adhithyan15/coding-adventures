@@ -275,10 +275,64 @@ Every package has pytest tests with ≥80% coverage:
 The integration test (in `symbolic-vm/tests/test_end_to_end.py`) runs full
 MACSYMA programs through the complete pipeline.
 
+## Integration Roadmap — Toward the Risch Algorithm
+
+`integrate(f, x)` compiles to `IRApply(Integrate, (f, x))` (the compiler
+already maps the MACSYMA name to the standard head). The handler lives
+on `SymbolicBackend` alongside `D` and is built up in phases of
+increasing mathematical depth. Each phase is a pure addition — earlier
+rules remain, later phases layer on top.
+
+### Phase 1 — Pattern-matching integrator (this spec)
+
+The "reverse derivative table" layer. Every rule is a direct consequence
+of the derivative table read backwards, combined with linearity. This is
+what every textbook calls "the integration rules".
+
+- **Constant**: `∫c dx = c·x` when `c` does not depend on `x`.
+- **Power rule**: `∫x^n dx = x^(n+1)/(n+1)` for `n ≠ -1`, with
+  `∫x^(-1) dx = ∫(1/x) dx = log(x)` as the special case.
+- **Linearity**: `∫(f ± g) dx = ∫f ± ∫g`, `∫(-f) dx = -∫f`.
+- **Constant factor**: `∫(c·f) dx = c·∫f dx` when `c` is independent
+  of `x`. Implemented on `Mul` by checking which operand is free of `x`.
+- **Elementary**: `∫sin(x) dx = -cos(x)`, `∫cos(x) dx = sin(x)`,
+  `∫exp(x) dx = exp(x)`, `∫sqrt(x) dx = (2/3)·x^(3/2)`,
+  `∫log(x) dx = x·log(x) - x` (the one integration-by-parts special
+  case we hard-code).
+- **Exponential with constant base**: `∫a^x dx = a^x / log(a)` when
+  `a` is independent of `x`.
+- **Fallback**: anything outside these patterns stays as
+  `Integrate(f, x)` unevaluated, exactly as `D` does for unknown heads.
+
+### Phase 2 — Rational function integration (Hermite reduction)
+
+First piece of real Risch. For any rational function `P(x)/Q(x)`,
+partial fractions + Hermite reduction produce a closed-form
+antiderivative mixing rationals, logs, and arctangents. This is a
+decision procedure for rational integrands — "always works, or tells
+you there's no answer". Requires polynomial GCD and squarefree
+factorization, so it depends on a `polynomial` package.
+
+### Phase 3 — Risch transcendental case
+
+Full Risch over towers of exp/log extensions (no algebraics). Decides
+whether an elementary antiderivative exists for any expression built
+from `{rationals, exp, log, trig-as-exp}` and constructs it when one
+does. Requires differential-field machinery: derivation on a tower,
+the structure theorem, the Rothstein–Trager resultant.
+
+### Phase 4 — Algebraic extensions (full Risch)
+
+Handles `sqrt` and `root-of-polynomial` through Trager's algorithm on
+function-field integral bases. Completes the decision procedure over
+the full elementary-function class. This is the terminus — no known
+CAS goes meaningfully beyond it, and most only implement a subset.
+
 ## Non-Goals (For This Spec)
 
-- No symbolic integration (Risch algorithm is its own rabbit hole).
-- No polynomial GCD or factoring.
+- **Beyond Phase 1** of the integration roadmap — Phases 2–4 get their
+  own specs as they are tackled.
+- No polynomial GCD or factoring (prerequisite for Phase 2).
 - No simplification beyond local algebraic identities.
 - No Mathematica, Maple, or REDUCE frontends yet — they reuse every
   downstream component. Adding them later means writing a new `.tokens`,
