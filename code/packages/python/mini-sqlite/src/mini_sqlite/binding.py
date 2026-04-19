@@ -30,6 +30,7 @@ matching sqlite3's behavior and PEP 249's expectations.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from typing import Any
 
@@ -113,20 +114,27 @@ def _to_sql_literal(value: Any) -> str:
 
     The output is fed back into the lexer, so it must tokenize cleanly.
     """
+    # Subclasses of ``int``/``float``/``str`` can override ``__repr__`` or
+    # ``replace`` to emit arbitrary text. Coerce to the base type before
+    # formatting so a hostile subclass can't smuggle SQL past us.
     if value is None:
         return "NULL"
-    if value is True:
-        return "1"
-    if value is False:
-        return "0"
-    if isinstance(value, int | float):
-        # ``repr`` gives a round-trippable form for both ints and floats.
-        return repr(value)
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, int):
+        return str(int(value))
+    if isinstance(value, float):
+        f = float(value)
+        if not math.isfinite(f):
+            raise ProgrammingError(f"cannot bind non-finite float: {value!r}")
+        return repr(f)
     if isinstance(value, str):
         # The vendored SQL lexer recognises backslash escapes, not ANSI
         # doubled-quote escapes. Match its rules: escape backslashes and
-        # single quotes with a preceding backslash.
-        escaped = value.replace("\\", "\\\\").replace("'", "\\'")
+        # single quotes with a preceding backslash. ``str.__str__`` forces
+        # base-str semantics so a ``str`` subclass can't override escape.
+        s = str.__str__(value)
+        escaped = s.replace("\\", "\\\\").replace("'", "\\'")
         return f"'{escaped}'"
     if isinstance(value, bytes | bytearray | memoryview):
         raise NotSupportedError("BLOB parameters are not supported in v1")

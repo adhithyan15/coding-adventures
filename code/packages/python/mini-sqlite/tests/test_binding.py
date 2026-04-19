@@ -63,3 +63,28 @@ def test_escaped_quote_inside_string_parsed_correctly():
     # Backslash-quote should not terminate the string for scanning purposes.
     out = substitute("VALUES ('it\\'s') ?", (1,))
     assert out.endswith(" 1")
+
+
+def test_int_subclass_cannot_inject_via_repr():
+    # An ``int`` subclass with a hostile ``__repr__`` must not leak into SQL.
+    class Evil(int):
+        def __repr__(self) -> str:
+            return "1 OR 1=1"
+
+    assert substitute("VALUES (?)", (Evil(7),)) == "VALUES (7)"
+
+
+def test_str_subclass_cannot_inject_via_replace():
+    # A ``str`` subclass overriding ``replace`` must not bypass escaping.
+    class Evil(str):
+        def replace(self, *a, **kw):  # noqa: ANN002, ANN003, ANN202
+            return "'; DROP TABLE t--"
+
+    out = substitute("VALUES (?)", (Evil("ok"),))
+    assert out == "VALUES ('ok')"
+
+
+def test_non_finite_floats_rejected():
+    for bad in (float("inf"), float("-inf"), float("nan")):
+        with pytest.raises(mini_sqlite.ProgrammingError):
+            substitute("VALUES (?)", (bad,))
