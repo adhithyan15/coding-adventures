@@ -884,6 +884,12 @@ Following the pattern of `.tokens` and `.grammar` files, state machines can be
 defined declaratively in `.states` files. The `grammar-tools` package will be
 extended with a `.states` parser.
 
+**Canonical format note:** `F07-state-machine-markup-language.md` now defines
+the implementation target for serialization and deserialization:
+TOML-compatible `state-machine/v1` documents written as `.states.toml` or
+`.states`. The examples below are the original educational sketch syntax and
+should be treated as conceptual examples until they are migrated to F07.
+
 ### DFA Format
 
 ```
@@ -1096,8 +1102,9 @@ class PDAInternalState:
 
 ## Future Extensions
 
-- **`.states` file parser in grammar-tools:** Parse `.states` files into
-  DFA/NFA/PDA/Modal objects, following the `token_grammar.py` pattern.
+- **`.states` file parser in grammar-tools:** Parse the canonical
+  TOML-compatible `state-machine/v1` format from
+  `F07-state-machine-markup-language.md` into DFA/NFA/PDA/Modal objects.
 - **Lexer mode integration:** Extend the lexer to use `ModalStateMachine` for
   context-sensitive tokenization. Each mode maps to a `.tokens` file.
 - **Transducer:** A state machine that produces output on transitions (Mealy
