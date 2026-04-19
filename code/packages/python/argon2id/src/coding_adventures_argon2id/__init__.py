@@ -315,7 +315,6 @@ def _fill_segment(
         if (
             data_independent
             and i % ADDRESSES_PER_BLOCK == 0
-            and not (r == 0 and sl == 0 and i == starting_c - 2)
             and not (r == 0 and sl == 0 and i == 2)
         ):
             _next_addresses()
@@ -387,6 +386,10 @@ def _validate(
         raise ValueError(
             f"memory_cost must be >= 8*parallelism ({8 * parallelism}),"
             f" got {memory_cost}"
+        )
+    if memory_cost > 0xFFFFFFFF:
+        raise ValueError(
+            f"memory_cost must fit in 32 bits, got {memory_cost}"
         )
     if time_cost < 1:
         raise ValueError(f"time_cost must be >= 1, got {time_cost}")

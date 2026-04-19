@@ -256,6 +256,10 @@ def _validate(
             f"memory_cost must be >= 8*parallelism ({8 * parallelism}),"
             f" got {memory_cost}"
         )
+    if memory_cost > 0xFFFFFFFF:
+        raise ValueError(
+            f"memory_cost must fit in 32 bits, got {memory_cost}"
+        )
     if time_cost < 1:
         raise ValueError(f"time_cost must be >= 1, got {time_cost}")
     if version != VERSION:
