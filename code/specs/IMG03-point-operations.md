@@ -15,7 +15,7 @@ parallel — the ideal GPU workload — and the cheapest operations in the IMG
 series.
 
 This spec defines the standard library of point operations built on top of
-`PixelContainer` (IC00). `PixelContainer` stores pixels as RGBA8 in sRGB
+`Image` (IC00). `Image` stores pixels as RGBA8 in sRGB
 colour space. Point operations either work directly on u8 values (when the
 mapping is perceptually uniform in sRGB, or when speed matters more than
 accuracy) or lift to a linear-light f32 working buffer, operate there, and
@@ -23,12 +23,12 @@ pack back to RGBA8.
 
 ---
 
-## 1. `PixelContainer` as the Base Type
+## 1. `Image` as the Base Type
 
-`PixelContainer` (IC00) is the concrete image type for every IMG package:
+`Image` (IC00) is the concrete image type for every IMG package:
 
 ```
-PixelContainer {
+Image {
     width:  u32
     height: u32
     data:   [u8]   // RGBA8, row-major, top-left, stride = width × 4
@@ -43,16 +43,16 @@ A = data[offset + 3]
 
 The RGBA8 format is the canonical interchange format: every IC codec produces
 and consumes it, and every paint back-end accepts it. The IMG operations in
-this spec accept `PixelContainer` as both input and output.
+this spec accept `Image` as both input and output.
 
-### The PixelContainer ↔ f32 working buffer pattern
+### The Image ↔ f32 working buffer pattern
 
 Many operations must work in **linear light** (see IMG00 §2). The standard
 pattern for all such operations:
 
 ```
 Step 1: decode sRGB u8 → linear f32
-    for each pixel (r, g, b, a) in PixelContainer:
+    for each pixel (r, g, b, a) in Image:
         R_lin = srgb_to_linear(r / 255.0)
         G_lin = srgb_to_linear(g / 255.0)
         B_lin = srgb_to_linear(b / 255.0)
@@ -230,7 +230,7 @@ correct: it models the effect of changing the camera's exposure time.
 
 ### 2.9 sRGB ↔ Linear conversion
 
-Convert between sRGB-encoded and linear-light PixelContainers:
+Convert between sRGB-encoded and linear-light Images:
 
 ```
 // sRGB → linear:
@@ -276,7 +276,7 @@ Simple average (fast, less accurate):
   Y = (R + G + B) / 3
 ```
 
-To produce a greyscale PixelContainer using Rec.709:
+To produce a greyscale Image using Rec.709:
 
 ```
 matrix = [ 0.2126  0.7152  0.0722  0.0 ]
@@ -387,7 +387,7 @@ and convert back.
 
 ### SIMD layout
 
-`PixelContainer` stores interleaved RGBA8 (R₀G₀B₀A₀ R₁G₁B₁A₁ …). For SIMD
+`Image` stores interleaved RGBA8 (R₀G₀B₀A₀ R₁G₁B₁A₁ …). For SIMD
 processing, load 16 consecutive bytes into one 128-bit vector, which holds 4
 complete RGBA8 pixels. Process 4 pixels per SIMD instruction.
 
@@ -418,32 +418,32 @@ CPU benefits from GPU offload.
 
 ```
 // u8-domain operations (no colorspace conversion):
-fn invert(src: &PixelContainer) -> PixelContainer
-fn threshold(src: &PixelContainer, t: u8) -> PixelContainer
-fn threshold_luminance(src: &PixelContainer, t: u8) -> PixelContainer
-fn posterize(src: &PixelContainer, levels: u8) -> PixelContainer
-fn swap_channels_rgb_bgr(src: &PixelContainer) -> PixelContainer
-fn extract_channel(src: &PixelContainer, channel: Channel) -> PixelContainer
-fn brightness(src: &PixelContainer, delta: i16) -> PixelContainer
+fn invert(src: &Image) -> Image
+fn threshold(src: &Image, t: u8) -> Image
+fn threshold_luminance(src: &Image, t: u8) -> Image
+fn posterize(src: &Image, levels: u8) -> Image
+fn swap_channels_rgb_bgr(src: &Image) -> Image
+fn extract_channel(src: &Image, channel: Channel) -> Image
+fn brightness(src: &Image, delta: i16) -> Image
 
 // linear-light operations (sRGB decode → f32 → process → sRGB encode):
-fn contrast(src: &PixelContainer, factor: f32) -> PixelContainer
-fn gamma(src: &PixelContainer, gamma: f32) -> PixelContainer
-fn exposure(src: &PixelContainer, ev_stops: f32) -> PixelContainer
-fn greyscale(src: &PixelContainer, weights: LuminanceWeights) -> PixelContainer
-fn sepia(src: &PixelContainer) -> PixelContainer
-fn hue_rotate(src: &PixelContainer, degrees: f32) -> PixelContainer
-fn saturate(src: &PixelContainer, factor: f32) -> PixelContainer
-fn colour_matrix(src: &PixelContainer, matrix: [[f32; 4]; 3]) -> PixelContainer
+fn contrast(src: &Image, factor: f32) -> Image
+fn gamma(src: &Image, gamma: f32) -> Image
+fn exposure(src: &Image, ev_stops: f32) -> Image
+fn greyscale(src: &Image, weights: LuminanceWeights) -> Image
+fn sepia(src: &Image) -> Image
+fn hue_rotate(src: &Image, degrees: f32) -> Image
+fn saturate(src: &Image, factor: f32) -> Image
+fn colour_matrix(src: &Image, matrix: [[f32; 4]; 3]) -> Image
 
 // colorspace conversion:
-fn srgb_to_linear(src: &PixelContainer) -> PixelContainer
-fn linear_to_srgb(src: &PixelContainer) -> PixelContainer
+fn srgb_to_linear(src: &Image) -> Image
+fn linear_to_srgb(src: &Image) -> Image
 
 // LUT application (from IMG02):
-fn apply_lut1d_u8(src: &PixelContainer, r: &[u8; 256], g: &[u8; 256], b: &[u8; 256]) -> PixelContainer
-fn apply_lut1d_f32(src: &PixelContainer, lut: &Lut1dF32) -> PixelContainer
-fn apply_lut3d(src: &PixelContainer, lut: &Lut3d) -> PixelContainer
+fn apply_lut1d_u8(src: &Image, r: &[u8; 256], g: &[u8; 256], b: &[u8; 256]) -> Image
+fn apply_lut1d_f32(src: &Image, lut: &Lut1dF32) -> Image
+fn apply_lut3d(src: &Image, lut: &Lut3d) -> Image
 
 // enum helpers:
 enum Channel { R, G, B, A }

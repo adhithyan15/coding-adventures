@@ -16,14 +16,14 @@ The answer depends on three things:
 
 This spec covers Porter-Duff compositing operators, Photoshop-style blend
 modes, masking, and the full multi-layer compositing pipeline. All operations
-take `PixelContainer` (IC00) as both input and output, and all blending
+take `Image` (IC00) as both input and output, and all blending
 is performed in **linear light** (see IMG00 §2, IMG03 §1).
 
 ---
 
 ## 1. The Alpha Channel
 
-`PixelContainer` stores four channels per pixel: R, G, B, A. The alpha
+`Image` stores four channels per pixel: R, G, B, A. The alpha
 channel A encodes **opacity**:
 
 ```
@@ -90,7 +90,7 @@ loses bits). For this reason:
 - **Storage and I/O**: straight alpha (what PNG, JPEG, and TIFF store)
 - **Processing and compositing**: premultiplied alpha
 
-`PixelContainer` stores **straight alpha** (matching IC codecs). Operations in
+`Image` stores **straight alpha** (matching IC codecs). Operations in
 this spec convert to premultiplied internally, composite, then convert back.
 
 ### Conversion formulas
@@ -365,11 +365,11 @@ where `composite` applies the blend mode and Porter-Duff operator.
 
 ```
 Layer {
-    pixels:     PixelContainer          // RGBA8 straight alpha
+    pixels:     Image          // RGBA8 straight alpha
     opacity:    f32                     // [0.0, 1.0] — global layer opacity
     blend_mode: BlendMode               // how this layer combines with below
     visible:    bool
-    clip_mask:  Option<PixelContainer>  // optional alpha mask (greyscale)
+    clip_mask:  Option<Image>  // optional alpha mask (greyscale)
 }
 ```
 
@@ -397,7 +397,7 @@ semantics; the runtime chooses the evaluation strategy.
 ## 6. Masking
 
 A **mask** restricts where a compositing operation takes effect. In this spec,
-masks are represented as greyscale `PixelContainer` images:
+masks are represented as greyscale `Image` images:
 
 ```
 Mask pixel value:  0   → operation has no effect at this position
@@ -426,12 +426,12 @@ Full compositing pipeline for a single foreground+background pair:
 
 ```
 Input:
-  fg: PixelContainer (RGBA8, straight alpha, sRGB)
-  bg: PixelContainer (RGBA8, straight alpha, sRGB)
+  fg: Image (RGBA8, straight alpha, sRGB)
+  bg: Image (RGBA8, straight alpha, sRGB)
   mode: BlendMode
   op: PorterDuff
   opacity: f32
-  mask: Option<PixelContainer>
+  mask: Option<Image>
 
 Step 1: Decode to linear f32
   fg_lin = decode_srgb_to_linear_f32(fg)    → RGBA f32, straight alpha
@@ -496,7 +496,7 @@ is 2.07 × 10⁸ pixels/second. SIMD is essential: process 4 RGBA pixels per
 The PaintVM (P2D01) composites layers via this spec's compositing pipeline.
 When the VM processes a `PaintLayer` or `PaintGroup` instruction, it:
 
-1. Renders each child into a temporary `PixelContainer`
+1. Renders each child into a temporary `Image`
 2. Composites that temporary buffer onto the running result using the layer's
    blend mode, opacity, and mask
 
@@ -510,27 +510,27 @@ stream and the final flat pixel buffer handed to the OS display layer.
 ```
 // Single composite (foreground over background):
 fn composite(
-    fg:         &PixelContainer,
-    bg:         &PixelContainer,
+    fg:         &Image,
+    bg:         &Image,
     op:         PorterDuff,
     blend_mode: BlendMode,
     opacity:    f32,
-    mask:       Option<&PixelContainer>,
-) -> PixelContainer
+    mask:       Option<&Image>,
+) -> Image
 
 // Convenience: Normal blend, over operator, full opacity, no mask:
-fn alpha_blend(fg: &PixelContainer, bg: &PixelContainer) -> PixelContainer
-fn alpha_blend_with_opacity(fg: &PixelContainer, bg: &PixelContainer, opacity: f32) -> PixelContainer
+fn alpha_blend(fg: &Image, bg: &Image) -> Image
+fn alpha_blend_with_opacity(fg: &Image, bg: &Image, opacity: f32) -> Image
 
 // Multi-layer compositing:
-fn composite_layers(layers: &[Layer], background: &PixelContainer) -> PixelContainer
+fn composite_layers(layers: &[Layer], background: &Image) -> Image
 
 // Alpha manipulation:
-fn premultiply(src: &PixelContainer) -> PixelContainer
-fn unpremultiply(src: &PixelContainer) -> PixelContainer
-fn apply_mask(src: &PixelContainer, mask: &PixelContainer) -> PixelContainer
-fn fill_alpha(src: &PixelContainer, alpha: u8) -> PixelContainer
-fn clear_colour_outside_mask(src: &PixelContainer, mask: &PixelContainer) -> PixelContainer
+fn premultiply(src: &Image) -> Image
+fn unpremultiply(src: &Image) -> Image
+fn apply_mask(src: &Image, mask: &Image) -> Image
+fn fill_alpha(src: &Image, alpha: u8) -> Image
+fn clear_colour_outside_mask(src: &Image, mask: &Image) -> Image
 
 // enums:
 enum PorterDuff {
@@ -548,10 +548,10 @@ enum BlendMode {
 }
 
 struct Layer {
-    pixels:     PixelContainer,
+    pixels:     Image,
     opacity:    f32,
     blend_mode: BlendMode,
     visible:    bool,
-    clip_mask:  Option<PixelContainer>,
+    clip_mask:  Option<Image>,
 }
 ```

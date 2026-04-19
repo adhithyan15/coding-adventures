@@ -29,9 +29,9 @@ require **interpolation** because (u, v) is generally non-integer.
 
 ---
 
-## 1. `PixelContainer` as the Base Type
+## 1. `Image` as the Base Type
 
-All operations in this spec accept and return `PixelContainer` (IC00).
+All operations in this spec accept and return `Image` (IC00).
 For **lossless transforms** the RGBA8 bytes are copied directly with no
 colorspace conversion. For **continuous transforms** that require
 interpolation, the sRGB u8 values are first decoded to linear f32, the
@@ -114,8 +114,8 @@ O(x′, y′) = I(x₀ + x′, y₀ + y′)
     for x′ in [0, w) and y′ in [0, h)
 ```
 
-Crop always allocates a new PixelContainer and copies the pixel data. (A
-zero-copy crop would require exposing stride, which the extended PixelContainer
+Crop always allocates a new Image and copies the pixel data. (A
+zero-copy crop would require exposing stride, which the extended Image
 supports — see IMG00 §10. Until that migration happens, crop copies.)
 
 ### 2.7 Pad
@@ -238,7 +238,7 @@ Blending 50% black and 50% white:
 Procedure for all continuous transforms:
 1. Decode source pixels to linear f32 as they are sampled.
 2. Perform the weighted blend in linear f32.
-3. Re-encode the result to sRGB u8 for the output PixelContainer.
+3. Re-encode the result to sRGB u8 for the output Image.
 
 For nearest-neighbour (no blending), colorspace conversion is not needed —
 the source RGBA8 pixel is copied as-is.
@@ -446,19 +446,19 @@ recommended for real-time use.
 
 ```
 // Lossless integer transforms — no interpolation, no colorspace conversion:
-fn flip_horizontal(src: &PixelContainer) -> PixelContainer
-fn flip_vertical(src: &PixelContainer) -> PixelContainer
-fn rotate_90_cw(src: &PixelContainer) -> PixelContainer
-fn rotate_90_ccw(src: &PixelContainer) -> PixelContainer
-fn rotate_180(src: &PixelContainer) -> PixelContainer
-fn crop(src: &PixelContainer, x: u32, y: u32, w: u32, h: u32) -> PixelContainer
-fn pad(src: &PixelContainer, top: u32, right: u32, bottom: u32, left: u32, fill: Rgba8) -> PixelContainer
+fn flip_horizontal(src: &Image) -> Image
+fn flip_vertical(src: &Image) -> Image
+fn rotate_90_cw(src: &Image) -> Image
+fn rotate_90_ccw(src: &Image) -> Image
+fn rotate_180(src: &Image) -> Image
+fn crop(src: &Image, x: u32, y: u32, w: u32, h: u32) -> Image
+fn pad(src: &Image, top: u32, right: u32, bottom: u32, left: u32, fill: Rgba8) -> Image
 
 // Continuous transforms — linear-light interpolation:
-fn scale(src: &PixelContainer, w: u32, h: u32, mode: Interpolation) -> PixelContainer
-fn rotate(src: &PixelContainer, radians: f32, mode: Interpolation, bounds: RotateBounds) -> PixelContainer
-fn affine(src: &PixelContainer, matrix: [[f32; 3]; 2], w: u32, h: u32, mode: Interpolation, oob: OutOfBounds) -> PixelContainer
-fn perspective(src: &PixelContainer, h: [[f32; 3]; 3], w: u32, h: u32, mode: Interpolation, oob: OutOfBounds) -> PixelContainer
+fn scale(src: &Image, w: u32, h: u32, mode: Interpolation) -> Image
+fn rotate(src: &Image, radians: f32, mode: Interpolation, bounds: RotateBounds) -> Image
+fn affine(src: &Image, matrix: [[f32; 3]; 2], w: u32, h: u32, mode: Interpolation, oob: OutOfBounds) -> Image
+fn perspective(src: &Image, h: [[f32; 3]; 3], w: u32, h: u32, mode: Interpolation, oob: OutOfBounds) -> Image
 
 // enums:
 enum Interpolation { Nearest, Bilinear, Bicubic }

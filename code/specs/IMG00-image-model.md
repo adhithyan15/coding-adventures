@@ -45,10 +45,10 @@ IMG07               Morphological operations — erosion, dilation, opening, clo
 ```
 
 Image I/O (encoding and decoding PNG, JPEG, BMP, QOI, PPM) is handled by the
-**IC series** (IC00–IC08), which predates the IMG series. `PixelContainer`
+**IC series** (IC00–IC08), which predates the IMG series. `Image`
 (IC00) is the shared pixel-buffer type: every IC codec produces or consumes it,
 and every IMG operation accepts and returns it. See §10 for how the two series
-connect and for the `PixelContainer` evolution plan.
+connect and for the `Image` evolution plan.
 
 Specs IMG01–IMG05 define CPU-only implementations in every supported language
 (Python, TypeScript, Rust, Go, Ruby, etc.). IMG06 then provides a Rust crate
@@ -543,17 +543,22 @@ spatial vs frequency tradeoff tips.
 
 ---
 
-## 6. `PixelContainer` as the Base Type
+## 6. `Image` as the Base Type
 
 ### The existing type (IC00)
 
-`PixelContainer` (defined in IC00, implemented in every language in the repo)
+`Image` (defined in IC00, implemented in every language in the repo)
 is the concrete pixel-buffer type for this entire series. It was introduced as
 the interchange format for image codecs, but its design is general enough to
 serve as the foundation for all image processing operations.
 
+> **Note on naming**: the current code calls this type `PixelContainer`. The
+> specs use `Image` throughout, reflecting the planned rename. The code rename
+> will happen in a separate wave; until then, `Image` in any spec means the
+> type currently called `PixelContainer` in the implementation.
+
 ```
-PixelContainer {
+Image {
     width:  u32       // image width in pixels
     height: u32       // image height in pixels
     data:   [u8]      // RGBA8, row-major, top-left, stride = width × 4 (tightly packed)
@@ -567,12 +572,12 @@ data[offset + 3] = A   (straight alpha u8)
 ```
 
 Every IC codec (PNG, JPEG, BMP, QOI, PPM) speaks this format. Every language
-in the repo already has a `PixelContainer` implementation. The IMG operations
-in IMG01–IMG05 accept and return `PixelContainer` directly.
+in the repo already has a `Image` implementation. The IMG operations
+in IMG01–IMG05 accept and return `Image` directly.
 
 ### The limitation: RGBA8 only
 
-The current `PixelContainer` is fixed at RGBA8 (unsigned byte, sRGB). This
+The current `Image` is fixed at RGBA8 (unsigned byte, sRGB). This
 covers the I/O and display use case well but is too restrictive for a full
 image-processing pipeline:
 
@@ -583,17 +588,17 @@ image-processing pipeline:
   data; forcing three-channel RGBA wastes memory and bandwidth.
 - Zero-copy `crop` requires an explicit **stride** field (currently absent).
 
-### The evolution: extended `PixelContainer`
+### The evolution: extended `Image`
 
-The plan is to evolve `PixelContainer` by adding three metadata fields while
+The plan is to evolve `Image` by adding three metadata fields while
 keeping the existing API fully backward-compatible. The IC codec series does
 not need to change; codecs continue to construct the existing `{width, height,
 data}` form, which is now understood as the default case:
 `format = RGBA8, colorspace = SRGB, stride = width × 4`.
 
 ```
-// Extended PixelContainer (IC00 v2 proposal)
-PixelContainer {
+// Extended Image (IC00 v2 proposal)
+Image {
     width:      u32
     height:     u32
     stride:     u32          // bytes per row; default = width × bytes_per_pixel(format)
@@ -624,19 +629,19 @@ The stride field enables **zero-copy crop**: a cropped container shares the
 parent's data buffer with `stride = parent.stride` and an offset into `data`.
 The crop operation does not need to copy bytes.
 
-**Backward compatibility**: every existing `PixelContainer` constructor
+**Backward compatibility**: every existing `Image` constructor
 continues to work unchanged. The `format` field defaults to `RGBA8`. The
 `colorspace` field defaults to `SRGB`. The `stride` field defaults to
 `width × 4`. Code that reads `container.data` directly still works because
 the byte layout is unchanged for the default case.
 
 **Migration path for IMG operations**: the IMG packages use the extended
-`PixelContainer` internally for their f32 working buffers (format `RGBA32F`,
+`Image` internally for their f32 working buffers (format `RGBA32F`,
 colorspace `LINEAR`) and accept/return the public `RGBA8/SRGB` form at the
 API boundary. The sRGB↔linear conversion is always done at the input and
 output edges, never inside an operation.
 
-The extended `PixelContainer` specification and migration guide will be
+The extended `Image` specification and migration guide will be
 formalised in IC00 v2. The IMG specs reference it now so that implementors
 can design with the full picture in mind.
 
@@ -689,7 +694,7 @@ PaintVM emits PaintScene instructions
 ```
 
 A `PaintGlyphRun` or `PaintFillPath` instruction eventually writes pixels into
-a `PixelContainer` (RGBA8). The image processing operations in this series
+a `Image` (RGBA8). The image processing operations in this series
 (blur, LUTs, transforms, compositing) can be applied to that buffer before
 final display.
 
@@ -699,20 +704,20 @@ final display.
 
 The **IC series** (IC00–IC08) owns the codec layer: encoding and decoding
 pixel data to/from file formats (PNG, JPEG, BMP, QOI, PPM, etc.). IC00 defines
-`PixelContainer` and `ImageCodec`. IC01–IC08 implement specific codecs.
+`Image` and `ImageCodec`. IC01–IC08 implement specific codecs.
 
 The **IMG series** (this spec, IMG01–IMG07) owns the processing layer:
 transforming pixel data in memory. Every IMG operation accepts and returns
-`PixelContainer`.
+`Image`.
 
 ```
 File on disk
     │
     ▼  IC codec (IC01–IC08)
-PixelContainer (RGBA8, sRGB)
+Image (RGBA8, sRGB)
     │
     ▼  IMG processing (IMG01–IMG07)
-PixelContainer (RGBA8, sRGB)   ← or RGBA32F/LINEAR internally during processing
+Image (RGBA8, sRGB)   ← or RGBA32F/LINEAR internally during processing
     │
     ▼  IC codec (IC01–IC08)
 File on disk (or display surface)
@@ -720,12 +725,12 @@ File on disk (or display surface)
 
 The two series are deliberately decoupled: IC knows nothing about blur or
 LUTs; IMG knows nothing about PNG headers or JPEG quantisation tables. The
-only shared contract is `PixelContainer`.
+only shared contract is `Image`.
 
 ### Colorspace at the boundary
 
 IC codecs produce sRGB-encoded RGBA8 (PNG, JPEG) or unspecified (BMP, PPM).
-The `colorspace` field on the extended `PixelContainer` (§6) carries this
+The `colorspace` field on the extended `Image` (§6) carries this
 information across the boundary so IMG operations can perform the correct
 sRGB→linear conversion at their input edge.
 
