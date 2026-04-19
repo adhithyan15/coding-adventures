@@ -276,6 +276,7 @@ members = [
     "aes",
     "aes-modes",
     "chacha20-poly1305",
+    "blake2b",
     "irc-proto",
     "irc-framing",
     "irc-server",
@@ -320,4 +321,5 @@ members = [
     "window-win32",
     "window-c",
     "tcp-runtime",
+    "udp-client",
 ]
