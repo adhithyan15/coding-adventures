@@ -2718,6 +2718,22 @@ or copying payloads.
 
 ---
 
+## WASI host calls must cap guest-controlled buffer sizes before provider calls
+
+**Date:** 2026-04-18
+
+**What happened:** A security review found that Perl `random_get` passed the guest-controlled
+`buf_len` directly into the random provider. The default provider allocates returned entropy bytes,
+so a hostile module could request an enormous buffer and exhaust host memory before any guest memory
+write occurred.
+
+**Rule:** For every WASI host call that accepts guest pointers and lengths, validate the length
+against package caps and guest memory bounds before invoking host providers, reading guest buffers,
+or allocating host-side arrays/strings. Keep `fd_read`, `fd_write`, `random_get`, and future
+buffer-copying calls under the same bounded-allocation discipline.
+
+---
+
 ## Reactor tests must tolerate deferred socket readability after a write-ready step
 
 **Date:** 2026-04-18

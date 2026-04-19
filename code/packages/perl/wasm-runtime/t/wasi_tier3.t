@@ -82,6 +82,10 @@ sub fill_bytes {
     return [ (0xAB) x $n ];
 }
 
+package ExplodingRandom;
+sub new { bless {}, shift }
+sub fill_bytes { die 'random source should not be called for invalid requests' }
+
 # ============================================================================
 # Test helpers
 # ============================================================================
@@ -100,7 +104,7 @@ sub _make_stub {
         args   => $opts{args}   // [],
         env    => $opts{env}    // {},
         clock  => FakeClock->new(),
-        random => FakeRandom->new(),
+        random => $opts{random} // FakeRandom->new(),
     );
 
     # Create one 64 KiB page of memory (minimum WASM page size).
@@ -378,6 +382,17 @@ subtest 'random_get: fills 4 bytes with 0xAB' => sub {
         is($mem->load_i32_8u($buf_ptr + $i), 0xAB,
             "random byte[$i] = 0xAB");
     }
+};
+
+subtest 'random_get: rejects oversized buffers before requesting entropy' => sub {
+    my ($stub, $mem) = _make_stub(random => ExplodingRandom->new());
+
+    my $result = _call($stub, 'random_get', [
+        i32(0),
+        i32(1024 * 1024 + 1),
+    ]);
+
+    is($result->[0]{value}, 28, 'oversized random_get returns EINVAL');
 };
 
 # ============================================================================

@@ -881,6 +881,11 @@ sub resolve_function {
             my $buf_ptr = $args->[0]{value} & 0xFFFFFFFF;
             my $buf_len = $args->[1]{value} & 0x7FFFFFFF;
 
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $buf_len > _WASI_MAX_RW_BYTES;
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $buf_ptr > $memory->byte_length || $buf_len > $memory->byte_length - $buf_ptr;
+
             my $bytes = $self->{random}->fill_bytes($buf_len);
             for my $i (0 .. $#$bytes) {
                 $memory->store_i32_8($buf_ptr + $i, $bytes->[$i]);

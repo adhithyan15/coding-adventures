@@ -18,6 +18,9 @@ All notable changes to this package will be documented in this file.
 - Rejected malformed raw data sections before slicing payload bytes so
   truncated or oversized Wasm modules cannot force unbounded temporary lists
   during instantiation.
+- Capped `random_get` buffer lengths and checked guest memory bounds before
+  asking the random provider for entropy, preventing unbounded host allocation
+  from guest-controlled sizes.
 
 ## [0.3.0] - 2026-04-06
 
