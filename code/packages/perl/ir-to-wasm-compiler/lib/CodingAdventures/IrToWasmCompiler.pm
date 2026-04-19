@@ -27,7 +27,7 @@ our $VERSION = '0.01';
 
 use Carp qw(croak);
 use Exporter 'import';
-use Scalar::Util qw(blessed);
+use Scalar::Util qw(blessed reftype);
 
 use CodingAdventures::CompilerIr;
 use CodingAdventures::CompilerIr::IrDataDecl;
@@ -58,6 +58,9 @@ use constant {
     _WASI_COUNT_OFFSET  => 8,
     _WASI_BYTE_OFFSET   => 12,
     _WASI_SCRATCH_SIZE  => 16,
+    _MAX_FUNCTION_PARAMS => 128,
+    _MAX_DATA_DECL_BYTES => 16 * 1024 * 1024,
+    _MAX_TOTAL_DATA_BYTES => 16 * 1024 * 1024,
 };
 
 my %_OPCODE_BY_NAME = (
@@ -90,11 +93,11 @@ my %_OPCODE_BY_NAME = (
 
 sub new_function_signature {
     my ($label, $param_count, $export_name) = @_;
-    return {
+    return _validate_function_signature({
         label       => $label,
         param_count => $param_count,
         export_name => $export_name,
-    };
+    });
 }
 
 sub compile {
@@ -102,16 +105,19 @@ sub compile {
     croak 'CodingAdventures::IrToWasmCompiler::compile: IrProgram required'
         unless blessed($program) && $program->isa('CodingAdventures::CompilerIr::IrProgram');
 
+    my $data_decls = _validate_data_decls($program->{data} || []);
     my %signatures = %{ infer_function_signatures_from_comments($program) };
     for my $signature (@{ $function_signatures || [] }) {
-        $signatures{$signature->{label}} = $signature;
+        my $validated = _validate_function_signature($signature);
+        $signatures{$validated->{label}} = $validated;
     }
 
     my $functions = _split_functions($program, \%signatures);
     my $imports = _collect_wasi_imports($program);
     my ($type_indices, $types) = _build_type_table($functions, $imports);
-    my $data_offsets = _layout_data($program->{data} || []);
-    my $scratch_base = _needs_wasi_scratch($program) ? _align_up(_data_size($program->{data}), 4) : undef;
+    my $data_offsets = _layout_data($data_decls);
+    my $data_size = _data_size($data_decls);
+    my $scratch_base = _needs_wasi_scratch($program) ? _align_up($data_size, 4) : undef;
 
     my $module = {
         types     => $types,
@@ -147,7 +153,7 @@ sub compile {
         push @{ $module->{functions} }, $type_indices->{ $functions->[$i]{label} };
     }
 
-    my $total_bytes = _data_size($program->{data});
+    my $total_bytes = $data_size;
     if (defined $scratch_base) {
         $total_bytes = _max($total_bytes, $scratch_base + _WASI_SCRATCH_SIZE);
     }
@@ -157,7 +163,7 @@ sub compile {
         push @{ $module->{memories} }, { limits => { min => $page_count, max => undef } };
         push @{ $module->{exports} }, { name => 'memory', desc => { kind => 'mem', idx => 0 } };
 
-        for my $decl (@{ $program->{data} || [] }) {
+        for my $decl (@$data_decls) {
             my $offset = $data_offsets->{ $decl->{label} };
             push @{ $module->{data} }, {
                 memory_index => 0,
@@ -279,6 +285,79 @@ sub _data_size {
         $sum += $decl->{size};
     }
     return $sum;
+}
+
+sub _validate_function_signature {
+    my ($signature) = @_;
+    croak 'CodingAdventures::IrToWasmCompiler: function signature hashref required'
+        unless _is_hash_like($signature);
+
+    my $label = $signature->{label};
+    croak 'CodingAdventures::IrToWasmCompiler: function signature requires label'
+        unless defined $label && !ref($label) && length($label);
+
+    my $param_count = $signature->{param_count};
+    croak "CodingAdventures::IrToWasmCompiler: function '$label' param_count must be a non-negative integer"
+        unless _is_bounded_nonnegative_integer($param_count, _MAX_FUNCTION_PARAMS);
+
+    return {
+        label       => $label,
+        param_count => 0 + $param_count,
+        export_name => $signature->{export_name},
+    };
+}
+
+sub _validate_data_decls {
+    my ($decls) = @_;
+    croak 'CodingAdventures::IrToWasmCompiler: data declarations arrayref required'
+        unless ref($decls || []) eq 'ARRAY';
+
+    my @validated;
+    my $total = 0;
+
+    for my $decl (@{ $decls || [] }) {
+        croak 'CodingAdventures::IrToWasmCompiler: data declaration hashref required'
+            unless _is_hash_like($decl);
+
+        my $label = $decl->{label};
+        croak 'CodingAdventures::IrToWasmCompiler: data declaration requires label'
+            unless defined $label && !ref($label) && length($label);
+
+        my $size = $decl->{size};
+        croak "CodingAdventures::IrToWasmCompiler: data declaration '$label' size must be between 0 and "
+            . _MAX_DATA_DECL_BYTES . ' bytes'
+            unless _is_bounded_nonnegative_integer($size, _MAX_DATA_DECL_BYTES);
+
+        $total += 0 + $size;
+        croak 'CodingAdventures::IrToWasmCompiler: total data size exceeds '
+            . _MAX_TOTAL_DATA_BYTES . ' bytes'
+            if $total > _MAX_TOTAL_DATA_BYTES;
+
+        my $init = defined($decl->{init}) ? $decl->{init} : 0;
+        croak "CodingAdventures::IrToWasmCompiler: data declaration '$label' init must be a byte"
+            unless _is_bounded_nonnegative_integer($init, 255);
+
+        push @validated, {
+            label => $label,
+            size  => 0 + $size,
+            init  => 0 + $init,
+        };
+    }
+
+    return \@validated;
+}
+
+sub _is_bounded_nonnegative_integer {
+    my ($value, $max) = @_;
+    return 0 unless defined $value && !ref($value);
+    return 0 unless "$value" =~ /\A(?:0|[1-9][0-9]*)\z/;
+    return 0 if $value > $max;
+    return 1;
+}
+
+sub _is_hash_like {
+    my ($value) = @_;
+    return ref($value) && (reftype($value) || '') eq 'HASH' ? 1 : 0;
 }
 
 sub _needs_memory {

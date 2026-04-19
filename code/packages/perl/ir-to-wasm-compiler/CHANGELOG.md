@@ -9,3 +9,5 @@
 - Structured loop and if lowering for the IR patterns emitted by the current
   Brainfuck and Nib frontends.
 - WASI syscall lowering for the Brainfuck source lane.
+- Bounds checks for function parameter counts and data declarations so hostile
+  IR cannot force unbounded type or data-segment allocation during lowering.

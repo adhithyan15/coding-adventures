@@ -2686,6 +2686,22 @@ streaming bounded chunks over accumulating arbitrarily large host-side buffers.
 
 ---
 
+## IR-to-Wasm backends must bound function arity and data segment sizes before allocation
+
+**Date:** 2026-04-18
+
+**What happened:** During the Perl convergence security review, `ir-to-wasm-compiler` trusted
+caller-provided `param_count` and IR data declaration sizes. A malicious IR producer could request
+huge Wasm function parameter vectors or enormous repeated data blobs, forcing the compiler to spend
+unbounded memory before rejecting anything.
+
+**Rule:** Treat IR programs as a trust boundary in backend packages. Validate function arity, each
+data declaration size, and aggregate static data size before building repeated arrays, strings, or
+Wasm sections. Fail closed with a compiler error instead of materializing attacker-controlled
+sizes.
+
+---
+
 ## Reactor tests must tolerate deferred socket readability after a write-ready step
 
 **Date:** 2026-04-18
