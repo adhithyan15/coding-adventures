@@ -252,15 +252,17 @@ pub struct DnsName {
 
 impl DnsName {
     /// Parse a dotted ASCII name such as "info.cern.ch" or ".".
-    pub fn from_str(input: &str) -> Result<Self, DnsError>;
+    pub fn from_ascii(input: &str) -> Result<Self, DnsError>;
 
-    /// Convert back to dotted form without a trailing dot, except "." for root.
-    pub fn to_string(&self) -> String;
+    /// Return true when this is the root name (`.`).
+    pub fn is_root(&self) -> bool;
 }
 ```
 
 The first version only requires ASCII labels. Internationalized names can be
-added later through punycode at a higher layer.
+added later through punycode at a higher layer. Rust implementations should
+also implement `Display`, which gives callers the standard `.to_string()` helper
+without requiring a custom inherent method.
 
 ### Header Fields
 
@@ -433,7 +435,7 @@ pub enum DnsError {
     UnexpectedEof,
 
     /// A label length exceeded 63 bytes.
-    LabelTooLong { length: u8 },
+    LabelTooLong { length: usize },
 
     /// The full encoded name exceeded 255 bytes.
     NameTooLong,
