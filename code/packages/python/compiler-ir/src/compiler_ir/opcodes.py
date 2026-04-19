@@ -21,7 +21,7 @@ The opcodes are grouped by category:
 
   Constants:    LOAD_IMM, LOAD_ADDR
   Memory:       LOAD_BYTE, STORE_BYTE, LOAD_WORD, STORE_WORD
-  Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM
+  Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM, MUL, DIV
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
@@ -103,6 +103,16 @@ class IrOp(IntEnum):
     # Register-immediate bitwise AND: dst = src & immediate.
     #   AND_IMM v2, v2, 255  →  v2 = v2 & 0xFF
     AND_IMM = 10
+
+    # Register-register multiplication: dst = lhs * rhs (signed integer).
+    # For 20-bit targets the result is the low 20 bits of the product.
+    #   MUL v3, v1, v2  →  v3 = v1 * v2
+    MUL = 25
+
+    # Register-register integer division: dst = lhs / rhs (truncates toward zero).
+    # Division by zero is a runtime error; the backend is responsible for detection.
+    #   DIV v3, v1, v2  →  v3 = v1 / v2
+    DIV = 26
 
     # ── Comparison ────────────────────────────────────────────────────────────
     # Set dst = 1 if lhs == rhs, else 0.

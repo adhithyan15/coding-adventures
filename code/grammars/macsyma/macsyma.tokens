@@ -1,0 +1,136 @@
+# MACSYMA Token Grammar
+# ============================================================
+#
+# MACSYMA (Project MAC's SYmbolic MAnipulator) was developed at MIT
+# between 1968 and 1982. It is the grandparent of every modern computer
+# algebra system — Maxima (its open-source descendant), Mathematica,
+# Maple, and REDUCE all took direct inspiration from it.
+#
+# This tokenizer targets the core MACSYMA expression language as
+# preserved in its modern descendant Maxima. It does NOT attempt to
+# tokenize the full Maxima programming surface (blocks, declarations,
+# packages) — only the expression sublanguage that matters for
+# symbolic computation.
+#
+# Lexical conventions in MACSYMA:
+#
+#   - Names are case-sensitive (unlike many 1960s languages).
+#   - Identifiers that begin with `%` are system-defined constants:
+#     %pi, %e, %i, %phi, %gamma. These are lexed as a single NAME.
+#   - Two statement terminators exist: `;` displays the result,
+#     `$` suppresses it. The parser treats them identically; the
+#     distinction is preserved in the token stream for later layers.
+#   - `:` is assignment. `:=` is function definition. `=` is equation
+#     (NOT assignment — MACSYMA uses `=` for symbolic equalities
+#     like `x^2 = 4`).
+#   - `#` is "not equal" (an idiosyncrasy — Maxima uses the same
+#     character, which would be a comment marker in most languages).
+#   - Comments use C-style `/* ... */` and do nest (handled in the
+#     skip pattern as a single non-nesting regex for simplicity; true
+#     nesting would require a more sophisticated lexer mode).
+#   - `^` and `**` both mean exponentiation. `^` is canonical.
+
+# @version 1
+
+# Escape sequences in string literals are left as raw text. Downstream
+# layers decode them.
+escapes: none
+
+# ============================================================
+# SECTION 1: Multi-character operators (must come first)
+#
+# Longest-match-wins: `:=` must be tried before `:`, `<=` before `<`,
+# `->` before `-`, and `**` before `*`. Listing them first ensures the
+# lexer attempts them in the right order.
+# ============================================================
+
+COLONEQ = ":="
+STAREQ  = "**"
+LEQ     = "<="
+GEQ     = ">="
+ARROW   = "->"
+
+# ============================================================
+# SECTION 2: Single-character operators and delimiters
+# ============================================================
+
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+SLASH     = "/"
+CARET     = "^"
+COLON     = ":"
+EQ        = "="
+HASH      = "#"
+LT        = "<"
+GT        = ">"
+BANG      = "!"
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACKET  = "["
+RBRACKET  = "]"
+LBRACE    = "{"
+RBRACE    = "}"
+
+COMMA     = ","
+SEMI      = ";"
+DOLLAR    = "$"
+
+# ============================================================
+# SECTION 3: Literal value tokens
+#
+# NUMBER matches integers and floats, including scientific notation.
+# The regex intentionally does not capture a leading sign — unary
+# minus is the parser's responsibility. This keeps `1-2` lexable as
+# three tokens (NUMBER MINUS NUMBER) rather than two.
+#
+# NAME also covers the %-prefixed system constants (%pi, %e, %i).
+# Listing the percent form as a separate alternative keeps the regex
+# readable.
+#
+# STRING matches double-quoted text with simple backslash escapes.
+# ============================================================
+
+NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
+NAME   = /%?[a-zA-Z_][a-zA-Z0-9_]*/
+STRING = /"([^"\\]|\\.)*"/
+
+# ============================================================
+# SECTION 4: Keywords
+#
+# These words are NAMEs at the lexer level but are reclassified to
+# their uppercase keyword form by the grammar-driven lexer. The
+# parser can then match them as AND, OR, NOT, etc.
+# ============================================================
+
+keywords:
+  and
+  or
+  not
+  if
+  then
+  else
+  elseif
+  true
+  false
+  do
+  for
+  while
+  in
+  step
+  thru
+  block
+  return
+
+# ============================================================
+# SECTION 5: Skip patterns
+#
+# Whitespace and comments are consumed silently. MACSYMA newlines
+# are NOT significant — statements end with `;` or `$`, so newlines
+# are just whitespace.
+# ============================================================
+
+skip:
+  WHITESPACE  = /[ \t\r\n]+/
+  LINECOMMENT = /\/\*([^*]|\*[^\/])*\*\//
