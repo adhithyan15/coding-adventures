@@ -36,6 +36,22 @@ test in `internal/gitdiff/ci_workflow_test.go` proving the hunk remains
 toolchain-scoped. Keep the allowlist narrow and tied to commands that only
 support the already-detected language setup.
 
+### 2026-04-18: Haskell cabal.project files must list transitive local packages
+
+Cabal does not discover sibling packages from another sibling's
+`cabal.project`. If a package includes `../lexer`, and `lexer.cabal` depends on
+the local `grammar-tools` package, the top-level package's own
+`cabal.project` must also list `../grammar-tools`.
+
+**Symptom:** a full Haskell build fails with `unknown package: grammar-tools`
+while trying to solve dependencies for `lexer`, even though
+`code/packages/haskell/grammar-tools` exists in the repo.
+
+**Rule:** When adding or maintaining a Haskell `cabal.project`, include every
+local package in the transitive dependency closure. Do not rely on nested
+`cabal.project` files from dependencies to make their local dependencies
+visible.
+
 ### 2026-04-18: TypeScript BUILD files that touch the paint stack must install `pixel-container` explicitly
 
 The build-plan validator checks standalone BUILD prerequisites by looking at

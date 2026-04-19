@@ -1,0 +1,7 @@
+[package]
+name = "dns-message"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-agnostic DNS wire-format message codec"
+
+[dependencies]
