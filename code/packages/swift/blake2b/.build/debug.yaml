@@ -1,0 +1,112 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "Blake2b-arm64-apple-macosx26.0-debug.module": ["<Blake2b-arm64-apple-macosx26.0-debug.module>"]
+  "Blake2bPackageTests-arm64-apple-macosx26.0-debug.module": ["<Blake2bPackageTests-arm64-apple-macosx26.0-debug.module>"]
+  "Blake2bPackageTests-arm64-apple-macosx26.0-debug.test": ["<Blake2bPackageTests-arm64-apple-macosx26.0-debug.test>"]
+  "Blake2bTests-arm64-apple-macosx26.0-debug.module": ["<Blake2bTests-arm64-apple-macosx26.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<Blake2b-arm64-apple-macosx26.0-debug.module>"]
+  "test": ["<Blake2b-arm64-apple-macosx26.0-debug.module>","<Blake2bPackageTests-arm64-apple-macosx26.0-debug.test>","<Blake2bTests-arm64-apple-macosx26.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Sources/Blake2b/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Tests/Blake2bTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Sources/Blake2b/Blake2b.swift"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/sources"]
+    description: "Write auxiliary file /Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/sources"
+
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.derived/runner.swift"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/sources"]
+    description: "Write auxiliary file /Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/sources"
+
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.derived/runner.swift":
+    tool: test-entry-point-tool
+    inputs: []
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.derived/runner.swift"]
+
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/Blake2b.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/runner.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.swift.o"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.product/Objects.LinkFileList"
+
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Tests/Blake2bTests/Blake2bTests.swift"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/sources"]
+    description: "Write auxiliary file /Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/sources"
+
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Library/Developer/CommandLineTools/usr/bin/swiftc"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+
+  "<Blake2b-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/Blake2b.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2b.swiftmodule"]
+    outputs: ["<Blake2b-arm64-apple-macosx26.0-debug.module>"]
+
+  "<Blake2bPackageTests-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/runner.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bPackageTests.swiftmodule"]
+    outputs: ["<Blake2bPackageTests-arm64-apple-macosx26.0-debug.module>"]
+
+  "<Blake2bPackageTests-arm64-apple-macosx26.0-debug.test>":
+    tool: phony
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.xctest/Contents/MacOS/Blake2bPackageTests"]
+    outputs: ["<Blake2bPackageTests-arm64-apple-macosx26.0-debug.test>"]
+
+  "<Blake2bTests-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bTests.swiftmodule"]
+    outputs: ["<Blake2bTests-arm64-apple-macosx26.0-debug.module>"]
+
+  "C.Blake2b-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Sources/Blake2b/Blake2b.swift","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/sources"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/Blake2b.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2b.swiftmodule"]
+    description: "Compiling Swift Module 'Blake2b' (1 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","Blake2b","-emit-dependencies","-emit-module","-emit-module-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2b.swiftmodule","-output-file-map","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/sources","-I","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.13","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j12","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/include/Blake2b-Swift.h","-swift-version","6","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g","-package-name","blake2b"]
+
+  "C.Blake2bPackageTests-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.derived/runner.swift","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bTests.swiftmodule","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/sources"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/runner.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bPackageTests.swiftmodule"]
+    description: "Compiling Swift Module 'Blake2bPackageTests' (1 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","Blake2bPackageTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bPackageTests.swiftmodule","-output-file-map","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/sources","-I","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.13","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j12","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/include/Blake2bPackageTests-Swift.h","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g","-package-name","blake2b"]
+
+  "C.Blake2bPackageTests-arm64-apple-macosx26.0-debug.test":
+    tool: shell
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2b.build/Blake2b.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.build/runner.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.product/Objects.LinkFileList"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.xctest/Contents/MacOS/Blake2bPackageTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/Blake2bPackageTests.xctest/Contents/MacOS/Blake2bPackageTests"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-L","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug","-o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.xctest/Contents/MacOS/Blake2bPackageTests","-module-name","Blake2bPackageTests","-Xlinker","-no_warn_duplicate_libraries","-Xlinker","-bundle","-Xlinker","-rpath","-Xlinker","@loader_path/../../../","@/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bPackageTests.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Library/Developer/CommandLineTools/usr/lib/swift-5.5/macosx","-Xlinker","-rpath","-Xlinker","/Library/Developer/CommandLineTools/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx10.13","-Xlinker","-add_ast_path","-Xlinker","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2b.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bPackageTests.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bTests.swiftmodule","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g"]
+
+  "C.Blake2bTests-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Tests/Blake2bTests/Blake2bTests.swift","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2b.swiftmodule","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/sources"]
+    outputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.swift.o","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bTests.swiftmodule"]
+    description: "Compiling Swift Module 'Blake2bTests' (1 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","Blake2bTests","-emit-dependencies","-emit-module","-emit-module-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules/Blake2bTests.swiftmodule","-output-file-map","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/output-file-map.json","-parse-as-library","-incremental","-c","@/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/sources","-I","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx10.13","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-Xfrontend","-enable-cross-import-overlays","-j12","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-swift-version","6","-I","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-L","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-plugin-path","/Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g","-package-name","blake2b"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Sources/Blake2b/","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Tests/Blake2bTests/","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Package.swift","/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

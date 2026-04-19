@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/master.swiftdeps"
+  },
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/Tests/Blake2bTests/Blake2bTests.swift": {
+    "dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.d",
+    "object": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.swift.o",
+    "swiftmodule": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.swiftdeps",
+    "diagnostics": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/cool-chaum-5c81f3/code/packages/swift/blake2b/.build/arm64-apple-macosx/debug/Blake2bTests.build/Blake2bTests.dia"
+  }
+}
