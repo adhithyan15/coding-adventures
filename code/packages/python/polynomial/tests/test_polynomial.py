@@ -1,21 +1,25 @@
 """Tests for the polynomial package."""
 
-import math
+from fractions import Fraction
+
 import pytest
 from polynomial import (
     VERSION,
-    normalize,
-    degree,
-    zero,
-    one,
     add,
-    subtract,
-    multiply,
-    divmod_poly,
+    degree,
+    deriv,
     divide,
-    mod,
+    divmod_poly,
     evaluate,
     gcd,
+    mod,
+    monic,
+    multiply,
+    normalize,
+    one,
+    squarefree,
+    subtract,
+    zero,
 )
 
 
@@ -381,3 +385,204 @@ class TestGcd:
         # g must divide both f1 and f2 exactly
         assert mod(f1, g) == ()
         assert mod(f2, g) == ()
+
+
+# =============================================================================
+# Exact arithmetic with Fraction coefficients — the CAS path
+# =============================================================================
+
+
+class TestFractionWorkflow:
+    """``Fraction`` coefficients must round-trip exactly through every
+    arithmetic op. A single ``0.0`` accumulator would silently demote to
+    ``float`` and break exactness — hence these checks.
+    """
+
+    def test_multiply_preserves_fraction(self):
+        a = (Fraction(1, 2), Fraction(1, 3))
+        b = (Fraction(1, 5),)
+        result = multiply(a, b)
+        # (1/2 + x/3) · (1/5) = 1/10 + x/15
+        assert result == (Fraction(1, 10), Fraction(1, 15))
+        assert all(isinstance(c, Fraction) for c in result)
+
+    def test_divmod_preserves_fraction(self):
+        # (1/2 + x) ÷ (1/3) = (3/2 + 3x) with remainder 0.
+        a = (Fraction(1, 2), Fraction(1))
+        b = (Fraction(1, 3),)
+        q, r = divmod_poly(a, b)
+        assert q == (Fraction(3, 2), Fraction(3))
+        assert r == ()
+
+    def test_evaluate_preserves_fraction(self):
+        p = (Fraction(1, 2), Fraction(1, 3))
+        # (1/2 + x/3) at x = 6 = 1/2 + 2 = 5/2
+        assert evaluate(p, Fraction(6)) == Fraction(5, 2)
+
+    def test_gcd_over_Q(self):
+        # (x - 1/2)·(x - 2)  and  (x - 1/2)·(x - 3)
+        common = (Fraction(-1, 2), Fraction(1))
+        f1 = multiply(common, (Fraction(-2), Fraction(1)))
+        f2 = multiply(common, (Fraction(-3), Fraction(1)))
+        g = gcd(f1, f2)
+        assert degree(g) == 1
+
+
+# =============================================================================
+# deriv
+# =============================================================================
+
+
+class TestDeriv:
+    def test_zero_polynomial(self):
+        assert deriv(()) == ()
+
+    def test_constant(self):
+        assert deriv((7,)) == ()
+
+    def test_linear(self):
+        # d/dx (3 + x) = 1
+        assert deriv((3, 1)) == (1,)
+
+    def test_quadratic(self):
+        # d/dx (3 + x + 2x²) = 1 + 4x
+        assert deriv((3, 1, 2)) == (1, 4)
+
+    def test_cubic(self):
+        # d/dx (5x³) = 15x²
+        assert deriv((0, 0, 0, 5)) == (0, 0, 15)
+
+    def test_fraction_coefficients(self):
+        # d/dx (1/2 + x/3 + x²/6) = 1/3 + x/3
+        p = (Fraction(1, 2), Fraction(1, 3), Fraction(1, 6))
+        assert deriv(p) == (Fraction(1, 3), Fraction(1, 3))
+
+    def test_derivative_is_linear(self):
+        # deriv(a + b) == deriv(a) + deriv(b)
+        a = (1, 2, 3)
+        b = (4, 5, 6, 7)
+        assert deriv(add(a, b)) == add(deriv(a), deriv(b))
+
+    def test_product_rule(self):
+        # deriv(a·b) == deriv(a)·b + a·deriv(b)
+        a = (1, 1)
+        b = (2, 3, 1)
+        lhs = deriv(multiply(a, b))
+        rhs = add(multiply(deriv(a), b), multiply(a, deriv(b)))
+        assert lhs == rhs
+
+
+# =============================================================================
+# monic
+# =============================================================================
+
+
+class TestMonic:
+    def test_zero_polynomial(self):
+        assert monic(()) == ()
+
+    def test_already_monic(self):
+        p = (Fraction(3), Fraction(2), Fraction(1))
+        assert monic(p) == p
+
+    def test_rescales_by_leading(self):
+        # 2 + 4x + 6x²  →  1/3 + 2x/3 + x²
+        p = (Fraction(2), Fraction(4), Fraction(6))
+        assert monic(p) == (
+            Fraction(1, 3),
+            Fraction(2, 3),
+            Fraction(1),
+        )
+
+    def test_leading_is_one(self):
+        p = (Fraction(5), Fraction(10), Fraction(7))
+        result = monic(p)
+        assert result[-1] == Fraction(1)
+
+    def test_constant_normalizes_to_one(self):
+        assert monic((Fraction(7),)) == (Fraction(1),)
+
+
+# =============================================================================
+# squarefree — Yun's algorithm
+# =============================================================================
+
+
+def _expand_factors(factors, leading=Fraction(1)):
+    """Reconstruct  c · s_1 · s_2^2 · … · s_k^k  from the factor list."""
+    result = (leading,)
+    for k, s in enumerate(factors, start=1):
+        power = s
+        for _ in range(k - 1):
+            power = multiply(power, s)
+        result = multiply(result, power)
+    return result
+
+
+class TestSquarefree:
+    def test_zero_polynomial(self):
+        assert squarefree(()) == []
+
+    def test_constant(self):
+        assert squarefree((Fraction(5),)) == []
+
+    def test_squarefree_input_unchanged(self):
+        # p = (x - 1)(x - 2) is squarefree; should return [p_monic].
+        p = multiply(
+            (Fraction(-1), Fraction(1)),
+            (Fraction(-2), Fraction(1)),
+        )
+        assert squarefree(p) == [p]
+
+    def test_linear_factor(self):
+        # (x - 1) — already monic and squarefree.
+        p = (Fraction(-1), Fraction(1))
+        assert squarefree(p) == [p]
+
+    def test_pure_square(self):
+        # (x - 2)² → [1, x - 2]  (multiplicity 2 means position 2)
+        x_minus_2 = (Fraction(-2), Fraction(1))
+        p = multiply(x_minus_2, x_minus_2)
+        factors = squarefree(p)
+        assert len(factors) == 2
+        assert degree(factors[0]) == 0      # no simple roots
+        assert factors[1] == x_minus_2
+
+    def test_mixed_multiplicity(self):
+        # (x - 1)·(x - 2)²·(x - 3)³ → [x-1, x-2, x-3]
+        x1 = (Fraction(-1), Fraction(1))
+        x2 = (Fraction(-2), Fraction(1))
+        x3 = (Fraction(-3), Fraction(1))
+        p = multiply(x1, multiply(multiply(x2, x2), multiply(x3, multiply(x3, x3))))
+        factors = squarefree(p)
+        assert factors == [x1, x2, x3]
+
+    def test_reconstruction(self):
+        # squarefree(p) reconstructs to p (up to monic rescale).
+        x1 = (Fraction(-1), Fraction(1))
+        x2 = (Fraction(-2), Fraction(1))
+        p = multiply(multiply(x1, x1), x2)  # (x-1)²(x-2)
+        factors = squarefree(p)
+        reconstructed = _expand_factors(factors, leading=Fraction(1))
+        assert reconstructed == p
+
+    def test_factors_are_monic(self):
+        x1 = (Fraction(-1), Fraction(1))
+        x2 = (Fraction(-2), Fraction(1))
+        p = multiply(multiply(x1, x2), x2)
+        factors = squarefree(p)
+        for s in factors:
+            if degree(s) > 0:
+                assert s[-1] == Fraction(1)
+
+    def test_factors_are_pairwise_coprime(self):
+        x1 = (Fraction(-1), Fraction(1))
+        x2 = (Fraction(-2), Fraction(1))
+        x3 = (Fraction(-3), Fraction(1))
+        p = multiply(x1, multiply(multiply(x2, x2), multiply(x3, multiply(x3, x3))))
+        factors = squarefree(p)
+        for i in range(len(factors)):
+            for j in range(i + 1, len(factors)):
+                if degree(factors[i]) > 0 and degree(factors[j]) > 0:
+                    g = gcd(factors[i], factors[j])
+                    assert degree(g) == 0
