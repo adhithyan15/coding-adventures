@@ -296,6 +296,7 @@ members = [
     "nib-parser",
     "nib-type-checker",
     "nib-ir-compiler",
+    "nib-wasm-compiler",
     "ir-optimizer",
     "ir-to-jvm-class-file",
     "ir-to-wasm-compiler",
