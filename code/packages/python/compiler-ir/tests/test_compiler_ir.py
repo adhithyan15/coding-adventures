@@ -75,10 +75,12 @@ class TestIrOp:
         assert IrOp.HALT == 22
         assert IrOp.NOP == 23
         assert IrOp.COMMENT == 24
+        assert IrOp.MUL == 25
+        assert IrOp.DIV == 26
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 25 opcodes (0–24)."""
-        assert len(IrOp) == 25
+        """There are exactly 27 opcodes (0–24, plus MUL=25 and DIV=26)."""
+        assert len(IrOp) == 27
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -754,6 +756,8 @@ class TestAllOpcodesPrintParse:
             IrOp.HALT:       [],
             IrOp.NOP:        [],
             IrOp.COMMENT:    [IrLabel("a test comment")],
+            IrOp.MUL:        [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.DIV:        [IrRegister(3), IrRegister(1), IrRegister(2)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]
