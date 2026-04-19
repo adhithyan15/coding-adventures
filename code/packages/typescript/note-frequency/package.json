@@ -1,0 +1,19 @@
+{
+  "name": "@coding-adventures/note-frequency",
+  "version": "0.1.0",
+  "description": "Parse note names like A4 and map them to equal-tempered frequencies",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
