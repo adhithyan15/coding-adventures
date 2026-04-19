@@ -545,15 +545,18 @@ class TestErrors:
         with pytest.raises(ValueError, match="expected 'program'"):
             compile_basic(bad_node)
 
-    def test_print_variable_raises(self) -> None:
-        """PRINT with a variable (not a string literal) raises CompileError."""
-        with pytest.raises(CompileError, match="non-string-literal"):
-            compile_source("10 PRINT A\n20 END\n")
+    def test_print_variable_emits_digit_sequence(self) -> None:
+        """PRINT with a variable compiles to a digit-extraction IR sequence."""
+        result = compile_source("10 LET A = 7\n20 PRINT A\n30 END\n")
+        # The digit-extraction routine uses DIV, MUL, SUB, and multiple SYSCALLs
+        assert IrOp.DIV in opcodes(result)
+        assert IrOp.SYSCALL in opcodes(result)
 
-    def test_print_numeric_expression_raises(self) -> None:
-        """PRINT with a numeric expression raises CompileError."""
-        with pytest.raises(CompileError, match="non-string-literal"):
-            compile_source("10 PRINT 42\n20 END\n")
+    def test_print_numeric_literal_emits_digit_sequence(self) -> None:
+        """PRINT with a numeric literal compiles to a digit-extraction IR sequence."""
+        result = compile_source("10 PRINT 42\n20 END\n")
+        assert IrOp.DIV in opcodes(result)
+        assert IrOp.SYSCALL in opcodes(result)
 
 
 # ---------------------------------------------------------------------------
