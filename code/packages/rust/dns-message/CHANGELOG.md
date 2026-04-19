@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   messages.
 - Added DNS response parsing with compressed-name pointer support and loop /
   bounds validation.
+- Added parser hardening for attacker-controlled section counts and excessive
+  compression-pointer chains.
 - Added typed decoding for `A`, `AAAA`, and `CNAME` records.
 - Added raw preservation for unknown record types so future DNS extensions can
   be parsed without losing bytes.

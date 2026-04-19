@@ -8,11 +8,15 @@
 //! Keeping this crate pure is what lets a future resolver send the same DNS
 //! message over UDP, TCP, a simulated network stack, or test fixtures.
 
+use std::collections::HashSet;
 use std::fmt;
 
 const DNS_HEADER_LEN: usize = 12;
 const MAX_LABEL_LEN: usize = 63;
 const MAX_ENCODED_NAME_LEN: usize = 255;
+const MIN_QUESTION_WIRE_LEN: usize = 5;
+const MIN_RECORD_WIRE_LEN: usize = 11;
+const MAX_NAME_POINTER_HOPS: usize = 128;
 
 /// A DNS domain name represented as human-readable labels.
 ///
@@ -445,7 +449,12 @@ fn parse_questions(
     cursor: &mut usize,
     count: u16,
 ) -> Result<Vec<DnsQuestion>, DnsError> {
-    let mut questions = Vec::with_capacity(count as usize);
+    let mut questions = Vec::with_capacity(section_capacity(
+        input,
+        *cursor,
+        count,
+        MIN_QUESTION_WIRE_LEN,
+    ));
     for _ in 0..count {
         let name = read_name(input, cursor)?;
         let qtype = DnsRecordType::from_u16(read_u16(input, cursor)?);
@@ -464,7 +473,8 @@ fn parse_records(
     cursor: &mut usize,
     count: u16,
 ) -> Result<Vec<DnsResourceRecord>, DnsError> {
-    let mut records = Vec::with_capacity(count as usize);
+    let mut records =
+        Vec::with_capacity(section_capacity(input, *cursor, count, MIN_RECORD_WIRE_LEN));
     for _ in 0..count {
         let name = read_name(input, cursor)?;
         let rrtype = DnsRecordType::from_u16(read_u16(input, cursor)?);
@@ -522,17 +532,17 @@ fn read_name(input: &[u8], cursor: &mut usize) -> Result<DnsName, DnsError> {
     let mut labels = Vec::new();
     let mut offset = *cursor;
     let mut consumed_cursor = None;
-    let mut visited = Vec::new();
+    let mut visited = HashSet::new();
+    let mut pointer_hops = 0usize;
     let mut encoded_len = 1usize;
 
     loop {
         if offset >= input.len() {
             return Err(DnsError::UnexpectedEof);
         }
-        if visited.contains(&offset) {
+        if !visited.insert(offset) {
             return Err(DnsError::PointerLoop);
         }
-        visited.push(offset);
 
         let len = input[offset];
         match len & 0b1100_0000 {
@@ -574,6 +584,10 @@ fn read_name(input: &[u8], cursor: &mut usize) -> Result<DnsName, DnsError> {
                 if consumed_cursor.is_none() {
                     consumed_cursor = Some(offset + 2);
                 }
+                pointer_hops += 1;
+                if pointer_hops > MAX_NAME_POINTER_HOPS {
+                    return Err(DnsError::PointerLoop);
+                }
                 let pointer = (((len as usize) & 0x3f) << 8) | input[offset + 1] as usize;
                 if pointer >= input.len() {
                     return Err(DnsError::PointerOutOfBounds { offset: pointer });
@@ -583,6 +597,14 @@ fn read_name(input: &[u8], cursor: &mut usize) -> Result<DnsName, DnsError> {
             _ => return Err(DnsError::Unsupported("reserved DNS label prefix")),
         }
     }
+}
+
+fn section_capacity(input: &[u8], cursor: usize, count: u16, minimum_entry_len: usize) -> usize {
+    // Header counts are attacker-controlled. Reserve only what the remaining
+    // bytes could possibly contain; the parser still verifies each entry as it
+    // goes so callers get precise EOF errors for malformed sections.
+    let possible_entries = input.len().saturating_sub(cursor) / minimum_entry_len;
+    usize::from(count).min(possible_entries)
 }
 
 fn write_name(output: &mut Vec<u8>, name: &DnsName) -> Result<(), DnsError> {
@@ -1060,6 +1082,20 @@ mod tests {
     }
 
     #[test]
+    fn rejects_excessive_pointer_chain() {
+        let mut bytes = vec![
+            0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ];
+        for hop in 0..=MAX_NAME_POINTER_HOPS {
+            let target = DNS_HEADER_LEN + ((hop + 1) * 2);
+            bytes.push(0xc0 | ((target >> 8) as u8 & 0x3f));
+            bytes.push((target & 0xff) as u8);
+        }
+
+        assert_eq!(parse_dns_message(&bytes), Err(DnsError::PointerLoop));
+    }
+
+    #[test]
     fn rejects_pointer_out_of_bounds() {
         let bytes = vec![
             0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff,
@@ -1211,6 +1247,15 @@ mod tests {
             serialize_dns_message(&message),
             Err(DnsError::InvalidSectionCount)
         );
+    }
+
+    #[test]
+    fn rejects_huge_question_count_without_large_preallocation() {
+        let bytes = vec![
+            0x00, 0x01, 0x01, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ];
+
+        assert_eq!(parse_dns_message(&bytes), Err(DnsError::UnexpectedEof));
     }
 
     #[test]
