@@ -129,18 +129,19 @@ H'(T, X):
     else:
         r = ⌈T / 32⌉ − 2
         V_1 = BLAKE2b-512(LE32(T) || X)          # 64 bytes
-        for i in 2..r+1:
+        for i in 2..r:
             V_i = BLAKE2b-512(V_{i-1})           # 64 bytes
         # Final partial: digest_size = T − 32·r (between 1 and 64).
-        V_{r+2} = BLAKE2b-(T − 32r)(V_{r+1})
-        # Concatenate first 32 bytes of V_1..V_{r+1}, then all of V_{r+2}.
-        return V_1[0..32] || V_2[0..32] || ... || V_{r+1}[0..32] || V_{r+2}
+        V_{r+1} = BLAKE2b-(T − 32r)(V_r)
+        # Concatenate first 32 bytes of V_1..V_r, then all of V_{r+1}.
+        return V_1[0..32] || V_2[0..32] || ... || V_r[0..32] || V_{r+1}
 ```
 
-**Off-by-one note.**  The RFC defines `r = ⌈T / 32⌉ − 2` so that
+**Length check.**  The RFC defines `r = ⌈T / 32⌉ − 2` so that
 exactly `r` 32-byte prefixes plus one final `(T − 32r)`-byte block
-sum to `T` bytes.  When `T = 64`, the `T ≤ 64` branch applies and
-`H'` is just one BLAKE2b-512 call (no 32-byte overlap).
+sum to `T` bytes (`32·r + (T − 32·r) = T`).  When `T = 64`, the `T ≤
+64` branch applies and `H'` is just one BLAKE2b-512 call with no
+32-byte overlap.
 
 ### Step 3 — First two blocks of each lane
 
@@ -436,7 +437,7 @@ To catch boundary bugs, every port MUST also verify:
 ## Edge cases
 
 - **`T = 64`.**  `H'` takes the `T ≤ 64` branch; no 32-byte overlap.
-- **`T` such that `T − 32·(⌈T / 32⌉ − 2) = 64`.**  The final `V_{r+2}`
+- **`T` such that `T − 32·(⌈T / 32⌉ − 2) = 64`.**  The final `V_{r+1}`
   reduces to a full BLAKE2b-512.  Do not special-case; the general
   formula handles it.
 - **`p = 1`.**  There is a single lane, and all cross-lane references

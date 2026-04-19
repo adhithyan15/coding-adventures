@@ -1,0 +1,4 @@
+uv venv --quiet --clear
+uv pip install --python .venv\Scripts\python.exe -e ..\blake2b --quiet
+uv pip install --python .venv\Scripts\python.exe -e .[dev] --quiet
+.venv\Scripts\python.exe -m pytest tests/ -v
