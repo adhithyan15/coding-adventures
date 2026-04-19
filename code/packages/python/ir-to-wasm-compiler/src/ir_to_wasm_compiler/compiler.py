@@ -86,6 +86,7 @@ _OPCODE = {
         "i32.and",
         "i32.mul",
         "i32.div_s",
+        "drop",
     )
 }
 
@@ -616,7 +617,7 @@ class _FunctionLowerer:
         self._emit_i32_const(1)
         self._emit_i32_const(nwritten_ptr)
         self._emit_wasi_call(_SYSCALL_WRITE)
-        self._emit_local_set(_REG_SCRATCH)
+        self._emit_opcode("drop")  # discard fd_write errno; storing in _REG_SCRATCH would clobber variable A
 
     def _emit_wasi_read(self) -> None:
         scratch_base = self._require_wasi_scratch()
@@ -637,7 +638,7 @@ class _FunctionLowerer:
         self._emit_i32_const(1)
         self._emit_i32_const(nread_ptr)
         self._emit_wasi_call(_SYSCALL_READ)
-        self._emit_local_set(_REG_SCRATCH)
+        self._emit_opcode("drop")  # discard fd_read errno
 
         self._emit_i32_const(byte_ptr)
         self._emit_opcode("i32.load8_u")
