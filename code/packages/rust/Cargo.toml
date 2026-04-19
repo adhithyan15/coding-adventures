@@ -92,6 +92,7 @@ members = [
     "logic-gates",
     "loss-functions",
     "markov-chain",
+    "note-frequency",
     "matrix",
     "ml-framework-core",
     "ml-framework-keras",
