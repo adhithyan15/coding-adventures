@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0 — 2026-04-19
+
+Phase 2b of the integration roadmap — the IR ↔ polynomial bridge.
+
+- New module `symbolic_vm.polynomial_bridge`:
+  - `to_rational(f, x)` — recognises rational functions of the named
+    variable `x` and returns `(numerator, denominator)` as `Polynomial`
+    tuples with `Fraction` coefficients. Returns `None` for anything
+    outside Q(x) (transcendentals, symbolic or fractional exponents,
+    floats, free symbols).
+  - `from_polynomial(p, x)` — emits the canonical IR tree for a
+    polynomial at `x`, matching the shape the existing differentiator
+    and Phase 1 integrator already produce.
+- No cancellation of common factors: `(x² − 1)/(x − 1)` round-trips
+  verbatim. Hermite reduction (Phase 2c) is the right place for that.
+- Adds a dependency on `coding-adventures-polynomial`.
+- 51 new tests, 100 % coverage on the bridge.
+
 ## 0.2.0 — 2026-04-19
 
 First phase of the integration roadmap toward Risch.
