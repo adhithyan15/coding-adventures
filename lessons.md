@@ -2840,3 +2840,18 @@ interpolation made the parser unhappy even though the logic itself was fine.
 **Rule:** In F#, avoid putting expressions with quoted string literals directly inside interpolated
 strings. Bind those values first with `let`, or switch to `sprintf` when composing dense XML/HTML
 attribute strings.
+
+---
+
+## Haskell package-local builds should not target `all`
+
+**Date:** 2026-04-19
+
+**What happened:** While validating an isolated Haskell package, running `cabal test all` from the
+package directory picked up the parent `code/packages/haskell/cabal.project` and attempted to build
+the whole Haskell package universe. The package-local `BUILD` command used plain `cabal test`, which
+correctly limited the build plan to the current package and its test suite.
+
+**Rule:** For single-package Haskell validation in this repo, run plain `cabal test` from the
+package directory unless you explicitly want the parent project. Do not append the `all` target for
+isolated package PRs.
