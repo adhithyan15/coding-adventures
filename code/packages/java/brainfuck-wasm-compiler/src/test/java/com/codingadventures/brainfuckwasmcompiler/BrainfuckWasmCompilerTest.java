@@ -48,6 +48,14 @@ class BrainfuckWasmCompilerTest {
     }
 
     @Test
+    void rejectsExcessiveLoopNesting() {
+        String source = "[".repeat(513) + "]".repeat(513);
+        BrainfuckWasmCompiler.PackageError error =
+                assertThrows(BrainfuckWasmCompiler.PackageError.class, () -> BrainfuckWasmCompiler.compileSource(source));
+        assertEquals("parse", error.stage());
+    }
+
+    @Test
     void runsTapeMutationThroughRuntime() {
         BrainfuckWasmCompiler.PackageResult result = BrainfuckWasmCompiler.compileSource("+");
         assertEquals(List.of(), new WasmRuntime().loadAndRun(result.wasmBytes(), "_start", List.of()));

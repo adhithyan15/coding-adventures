@@ -45,6 +45,13 @@ class BrainfuckWasmCompilerTest {
     }
 
     @Test
+    fun rejectsExcessiveLoopNesting() {
+        val source = "[".repeat(513) + "]".repeat(513)
+        val error = assertFailsWith<PackageError> { BrainfuckWasmCompiler.compileSource(source) }
+        assertEquals("parse", error.stage)
+    }
+
+    @Test
     fun runsTapeMutationThroughRuntime() {
         val result = BrainfuckWasmCompiler.compileSource("+")
         assertEquals(emptyList(), WasmRuntime().loadAndRun(result.wasmBytes, "_start", emptyList()))

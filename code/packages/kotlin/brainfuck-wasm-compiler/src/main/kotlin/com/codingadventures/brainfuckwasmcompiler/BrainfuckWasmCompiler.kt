@@ -22,12 +22,16 @@ data class PackageResult(
 
 class PackageError(val stage: String, message: String) : RuntimeException(message)
 
+private data class ParsedProgram(val operations: List<Char>, val loopEnds: Map<Int, Int>)
+
 object BrainfuckWasmCompiler {
     const val VERSION = "0.1.0"
+    private const val MAX_SOURCE_LENGTH = 1_000_000
+    private const val MAX_LOOP_NESTING = 512
 
     fun compileSource(source: String): PackageResult {
-        val operations = parse(source)
-        return PackageResult(source, operations, emitModule(operations))
+        val program = parse(source)
+        return PackageResult(source, program.operations, emitModule(program))
     }
 
     fun packSource(source: String): PackageResult = compileSource(source)
@@ -42,25 +46,36 @@ object BrainfuckWasmCompiler {
         return result.copy(wasmPath = path)
     }
 
-    private fun parse(source: String): List<Char> {
+    private fun parse(source: String): ParsedProgram {
+        if (source.length > MAX_SOURCE_LENGTH) {
+            throw PackageError("parse", "source exceeds $MAX_SOURCE_LENGTH characters")
+        }
         val ops = mutableListOf<Char>()
-        var depth = 0
+        val stack = ArrayDeque<Int>()
+        val loopEnds = mutableMapOf<Int, Int>()
         source.forEachIndexed { index, ch ->
             if (ch !in "><+-.,[]") return@forEachIndexed
+            val opIndex = ops.size
             when (ch) {
-                '[' -> depth++
+                '[' -> {
+                    stack.addLast(opIndex)
+                    if (stack.size > MAX_LOOP_NESTING) {
+                        throw PackageError("parse", "loop nesting exceeds $MAX_LOOP_NESTING")
+                    }
+                }
                 ']' -> {
-                    depth--
-                    if (depth < 0) throw PackageError("parse", "unmatched ] at byte $index")
+                    if (stack.isEmpty()) throw PackageError("parse", "unmatched ] at byte $index")
+                    loopEnds[stack.removeLast()] = opIndex
                 }
             }
             ops += ch
         }
-        if (depth != 0) throw PackageError("parse", "unmatched [")
-        return ops
+        if (stack.isNotEmpty()) throw PackageError("parse", "unmatched [")
+        return ParsedProgram(ops.toList(), loopEnds.toMap())
     }
 
-    private fun emitModule(operations: List<Char>): ByteArray {
+    private fun emitModule(program: ParsedProgram): ByteArray {
+        val operations = program.operations
         val needsWrite = '.' in operations
         val needsRead = ',' in operations
         val importCount = (if (needsWrite) 1 else 0) + (if (needsRead) 1 else 0)
@@ -105,7 +120,7 @@ object BrainfuckWasmCompiler {
         module.write(section(7, exports.bytes()))
 
         val code = Section()
-        val body = functionBody(operations, writeIndex, readIndex)
+        val body = functionBody(program, writeIndex, readIndex)
         code.u32(1)
         code.u32(body.size)
         code.write(body)
@@ -113,17 +128,17 @@ object BrainfuckWasmCompiler {
         return module.bytes()
     }
 
-    private fun functionBody(operations: List<Char>, writeIndex: Int, readIndex: Int): ByteArray {
+    private fun functionBody(program: ParsedProgram, writeIndex: Int, readIndex: Int): ByteArray {
         val body = Section()
         body.u32(1)
         body.u32(3)
         body.write(0x7f)
-        emitOps(body, operations, 0, operations.size, writeIndex, readIndex)
+        emitOps(body, program.operations, program.loopEnds, 0, program.operations.size, writeIndex, readIndex)
         body.write(0x0b)
         return body.bytes()
     }
 
-    private fun emitOps(out: Section, ops: List<Char>, start: Int, end: Int, writeIndex: Int, readIndex: Int) {
+    private fun emitOps(out: Section, ops: List<Char>, loopEnds: Map<Int, Int>, start: Int, end: Int, writeIndex: Int, readIndex: Int) {
         var index = start
         while (index < end) {
             when (ops[index]) {
@@ -134,7 +149,7 @@ object BrainfuckWasmCompiler {
                 '.' -> emitWrite(out, writeIndex)
                 ',' -> emitRead(out, readIndex)
                 '[' -> {
-                    val close = matchingClose(ops, index)
+                    val close = loopEnds[index] ?: throw PackageError("encode", "missing loop pair at operation $index")
                     out.write(0x02)
                     out.write(0x40)
                     out.write(0x03)
@@ -143,7 +158,7 @@ object BrainfuckWasmCompiler {
                     out.write(0x45)
                     out.write(0x0d)
                     out.u32(1)
-                    emitOps(out, ops, index + 1, close, writeIndex, readIndex)
+                    emitOps(out, ops, loopEnds, index + 1, close, writeIndex, readIndex)
                     out.write(0x0c)
                     out.u32(0)
                     out.write(0x0b)
@@ -153,20 +168,6 @@ object BrainfuckWasmCompiler {
             }
             index++
         }
-    }
-
-    private fun matchingClose(ops: List<Char>, open: Int): Int {
-        var depth = 0
-        for (index in open until ops.size) {
-            when (ops[index]) {
-                '[' -> depth++
-                ']' -> {
-                    depth--
-                    if (depth == 0) return index
-                }
-            }
-        }
-        throw PackageError("parse", "unmatched [")
     }
 
     private fun loadCell(out: Section) {

@@ -4,13 +4,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class BrainfuckWasmCompiler {
     public static final String VERSION = "0.1.0";
+    private static final int MAX_SOURCE_LENGTH = 1_000_000;
+    private static final int MAX_LOOP_NESTING = 512;
 
     private BrainfuckWasmCompiler() {}
+
+    private record ParsedProgram(List<Character> operations, Map<Integer, Integer> loopEnds) {
+        private ParsedProgram {
+            operations = List.copyOf(operations);
+            loopEnds = Map.copyOf(loopEnds);
+        }
+    }
 
     public record PackageResult(String source, List<Character> operations, byte[] wasmBytes, Path wasmPath) {
         public PackageResult {
@@ -33,8 +45,8 @@ public final class BrainfuckWasmCompiler {
     }
 
     public static PackageResult compileSource(String source) {
-        List<Character> operations = parse(source);
-        return new PackageResult(source, operations, emitModule(operations), null);
+        ParsedProgram program = parse(source);
+        return new PackageResult(source, program.operations(), emitModule(program), null);
     }
 
     public static PackageResult packSource(String source) {
@@ -51,31 +63,40 @@ public final class BrainfuckWasmCompiler {
         return new PackageResult(result.source(), result.operations(), result.wasmBytes(), path);
     }
 
-    private static List<Character> parse(String source) {
+    private static ParsedProgram parse(String source) {
+        if (source.length() > MAX_SOURCE_LENGTH) {
+            throw new PackageError("parse", "source exceeds " + MAX_SOURCE_LENGTH + " characters");
+        }
         List<Character> ops = new ArrayList<>();
-        int depth = 0;
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        Map<Integer, Integer> loopEnds = new HashMap<>();
         for (int index = 0; index < source.length(); index++) {
             char ch = source.charAt(index);
             if ("><+-.,[]".indexOf(ch) < 0) {
                 continue;
             }
+            int opIndex = ops.size();
             if (ch == '[') {
-                depth++;
+                stack.push(opIndex);
+                if (stack.size() > MAX_LOOP_NESTING) {
+                    throw new PackageError("parse", "loop nesting exceeds " + MAX_LOOP_NESTING);
+                }
             } else if (ch == ']') {
-                depth--;
-                if (depth < 0) {
+                if (stack.isEmpty()) {
                     throw new PackageError("parse", "unmatched ] at byte " + index);
                 }
+                loopEnds.put(stack.pop(), opIndex);
             }
             ops.add(ch);
         }
-        if (depth != 0) {
+        if (!stack.isEmpty()) {
             throw new PackageError("parse", "unmatched [");
         }
-        return ops;
+        return new ParsedProgram(ops, loopEnds);
     }
 
-    private static byte[] emitModule(List<Character> operations) {
+    private static byte[] emitModule(ParsedProgram program) {
+        List<Character> operations = program.operations();
         boolean needsWrite = operations.contains('.');
         boolean needsRead = operations.contains(',');
         int importCount = (needsWrite ? 1 : 0) + (needsRead ? 1 : 0);
@@ -128,7 +149,7 @@ public final class BrainfuckWasmCompiler {
         module.writeBytes(section(7, exports.bytes()));
 
         Section code = new Section();
-        byte[] body = functionBody(operations, writeIndex, readIndex);
+        byte[] body = functionBody(program, writeIndex, readIndex);
         code.u32(1);
         code.u32(body.length);
         code.write(body);
@@ -136,17 +157,25 @@ public final class BrainfuckWasmCompiler {
         return module.toByteArray();
     }
 
-    private static byte[] functionBody(List<Character> operations, int writeIndex, int readIndex) {
+    private static byte[] functionBody(ParsedProgram program, int writeIndex, int readIndex) {
         Section body = new Section();
         body.u32(1);
         body.u32(3);
         body.write(0x7f);
-        emitOps(body, operations, 0, operations.size(), writeIndex, readIndex);
+        emitOps(body, program.operations(), program.loopEnds(), 0, program.operations().size(), writeIndex, readIndex);
         body.write(0x0b);
         return body.bytes();
     }
 
-    private static int emitOps(Section out, List<Character> ops, int start, int end, int writeIndex, int readIndex) {
+    private static int emitOps(
+            Section out,
+            List<Character> ops,
+            Map<Integer, Integer> loopEnds,
+            int start,
+            int end,
+            int writeIndex,
+            int readIndex
+    ) {
         int index = start;
         while (index < end) {
             char op = ops.get(index);
@@ -158,7 +187,7 @@ public final class BrainfuckWasmCompiler {
                 case '.' -> emitWrite(out, writeIndex);
                 case ',' -> emitRead(out, readIndex);
                 case '[' -> {
-                    int close = matchingClose(ops, index);
+                    int close = loopEnds.get(index);
                     out.write(0x02);
                     out.write(0x40);
                     out.write(0x03);
@@ -167,7 +196,7 @@ public final class BrainfuckWasmCompiler {
                     out.write(0x45);
                     out.write(0x0d);
                     out.u32(1);
-                    emitOps(out, ops, index + 1, close, writeIndex, readIndex);
+                    emitOps(out, ops, loopEnds, index + 1, close, writeIndex, readIndex);
                     out.write(0x0c);
                     out.u32(0);
                     out.write(0x0b);
@@ -180,22 +209,6 @@ public final class BrainfuckWasmCompiler {
             index++;
         }
         return index;
-    }
-
-    private static int matchingClose(List<Character> ops, int open) {
-        int depth = 0;
-        for (int index = open; index < ops.size(); index++) {
-            char op = ops.get(index);
-            if (op == '[') {
-                depth++;
-            } else if (op == ']') {
-                depth--;
-                if (depth == 0) {
-                    return index;
-                }
-            }
-        }
-        throw new PackageError("parse", "unmatched [");
     }
 
     private static void loadCell(Section out) {
