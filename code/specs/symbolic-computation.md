@@ -313,6 +313,19 @@ decision procedure for rational integrands — "always works, or tells
 you there's no answer". Requires polynomial GCD and squarefree
 factorization, so it depends on a `polynomial` package.
 
+Phase 2 ships in three sub-phases so the pieces can land and be
+reviewed independently:
+
+- **Phase 2a** — extend the `polynomial` package with derivative,
+  monic normalisation, and Yun's squarefree factorisation; admit
+  `Fraction` coefficients end-to-end. See `polynomial.md`.
+- **Phase 2b** — IR ↔ polynomial bridge. `to_rational(f, x)` recognises
+  rational integrands and lifts them into `(num, den)` polynomials over
+  Q; `from_polynomial` round-trips back. See `polynomial-bridge.md`.
+- **Phase 2c** — Hermite reduction and Rothstein–Trager fires inside
+  the `Integrate` handler ahead of the Phase 1 rules, so rational
+  integrands get a closed-form answer instead of a pattern-match miss.
+
 ### Phase 3 — Risch transcendental case
 
 Full Risch over towers of exp/log extensions (no algebraics). Decides
