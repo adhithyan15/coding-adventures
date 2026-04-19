@@ -242,7 +242,11 @@ class CompileError(ValueError):
 # ---------------------------------------------------------------------------
 
 
-def compile_basic(ast: ASTNode) -> CompileResult:
+def compile_basic(
+    ast: ASTNode,
+    *,
+    char_encoding: str = "ge225",
+) -> CompileResult:
     """Compile a Dartmouth BASIC AST to an IrProgram.
 
     This is the main entry point. It takes the root AST node from
@@ -250,7 +254,12 @@ def compile_basic(ast: ASTNode) -> CompileResult:
     target-independent ``IrProgram``.
 
     Args:
-        ast: Root ``ASTNode`` with ``rule_name == "program"``.
+        ast:           Root ``ASTNode`` with ``rule_name == "program"``.
+        char_encoding: Character encoding used for PRINT char codes in the IR.
+                       ``"ge225"`` (default) emits GE-225 typewriter codes —
+                       compatible with the GE-225 backend.
+                       ``"ascii"`` emits standard ASCII byte values — compatible
+                       with the WASM backend's WASI ``fd_write`` syscall.
 
     Returns:
         A ``CompileResult`` containing the IR program and variable register map.
@@ -275,7 +284,9 @@ def compile_basic(ast: ASTNode) -> CompileResult:
         raise ValueError(
             f"expected 'program' AST node, got {ast.rule_name!r}"
         )
-    c = _Compiler()
+    if char_encoding not in ("ge225", "ascii"):
+        raise ValueError(f"char_encoding must be 'ge225' or 'ascii'; got {char_encoding!r}")
+    c = _Compiler(char_encoding=char_encoding)
     return c.compile(ast)
 
 
@@ -305,6 +316,7 @@ class _Compiler:
     _loop_count: int = field(default=0)
     _label_count: int = field(default=0)
     _for_stack: list[_ForRecord] = field(default_factory=list)
+    char_encoding: str = field(default="ge225")
 
     def __post_init__(self) -> None:
         """Initialize the IR program."""
@@ -490,9 +502,11 @@ class _Compiler:
                 print_list = child
                 break
 
+        cr = ord('\n') if self.char_encoding == "ascii" else CARRIAGE_RETURN_CODE
+
         if print_list is None:
             # Bare PRINT → just a carriage return
-            self._emit_print_code(CARRIAGE_RETURN_CODE)
+            self._emit_print_code(cr)
             return
 
         # Walk each print_item (print_sep nodes are ignored)
@@ -500,7 +514,7 @@ class _Compiler:
             if isinstance(item_node, ASTNode) and item_node.rule_name == "print_item":
                 self._compile_print_item(item_node)
 
-        self._emit_print_code(CARRIAGE_RETURN_CODE)
+        self._emit_print_code(cr)
 
     def _compile_print_item(self, node: ASTNode) -> None:
         """Compile one item from a PRINT argument list.
@@ -515,13 +529,14 @@ class _Compiler:
             if isinstance(child, Token) and _type_is(child.type, "STRING"):
                 text = child.value.strip('"\'')
                 for ch in text:
-                    code = ascii_to_ge225(ch)
-                    if code is None:
+                    ge225_code = ascii_to_ge225(ch)
+                    if ge225_code is None:
                         raise CompileError(
                             f"character {ch!r} has no GE-225 typewriter equivalent; "
                             f"V1 supports A-Z, 0-9, space, and basic punctuation"
                         )
-                    self._emit_print_code(code)
+                    emit_code = ord(ch) if self.char_encoding == "ascii" else ge225_code
+                    self._emit_print_code(emit_code)
                 return
             elif isinstance(child, ASTNode):
                 # Numeric expression: compile, then emit decimal digit sequence
@@ -530,10 +545,12 @@ class _Compiler:
                 return
 
     def _emit_print_code(self, code: int) -> None:
-        """Emit LOAD_IMM + SYSCALL 1 to print one character by its GE-225 code.
+        """Emit LOAD_IMM + SYSCALL 1 to print one character.
 
         Args:
-            code: The 6-bit GE-225 typewriter code to print.
+            code: Character code to print.  Interpretation depends on
+                  ``char_encoding``: a GE-225 typewriter code (6-bit) when
+                  ``"ge225"``, or an ASCII byte value when ``"ascii"``.
         """
         self._emit(
             IrOp.LOAD_IMM,
@@ -556,9 +573,10 @@ class _Compiler:
              else: print r_dig; started = 1
         4. Units digit: always print r_work (handles the value 0 correctly).
 
-        GE-225 typewriter codes for the digits 0-9 equal the digit values
-        (code 0 → '0', …, code 9 → '9'), so the digit can be loaded directly
-        into v0 and dispatched via SYSCALL 1.
+        For ``char_encoding="ge225"``: GE-225 typewriter codes for the digits
+        0-9 equal the digit values, so the digit can be loaded directly into v0.
+        For ``char_encoding="ascii"``: ASCII '0' = 48, so each digit is offset
+        by 48 (``ADD_IMM v0, r_dig, 48``) before SYSCALL 1.
 
         Leading-zero suppression trick:
           r_dig ≥ 0 and r_started ∈ {0, 1}, so r_dig + r_started == 0 iff
@@ -588,14 +606,19 @@ class _Compiler:
         self._emit(IrOp.LOAD_IMM, IrRegister(r_started), IrImmediate(0))
 
         # Sign handling: if r_work < 0, print '-' then negate
+        minus_code = ord('-') if self.char_encoding == "ascii" else _GE225_MINUS_CODE
         l_pos = f"_pnum_{label_id}_pos"
         self._emit(IrOp.CMP_LT, IrRegister(r_is_neg), IrRegister(r_work), IrRegister(r_zero))
         self._emit(IrOp.BRANCH_Z, IrRegister(r_is_neg), IrLabel(l_pos))
-        self._emit_print_code(_GE225_MINUS_CODE)                             # '-'
+        self._emit_print_code(minus_code)                                    # '-'
         r_neg = self._new_reg()
         self._emit(IrOp.SUB, IrRegister(r_neg),  IrRegister(r_zero), IrRegister(r_work))
         self._emit(IrOp.ADD_IMM, IrRegister(r_work), IrRegister(r_neg), IrImmediate(0))
         self._emit_label(l_pos)
+
+        # For ASCII encoding, digits 0-9 must be offset by 48 to reach '0'-'9'.
+        # For GE-225 encoding, typewriter codes 0-9 already map to '0'-'9'.
+        digit_offset = 48 if self.char_encoding == "ascii" else 0
 
         # Unrolled digit extraction for each power of ten above the units place
         for pos_idx, power in enumerate([100000, 10000, 1000, 100, 10]):
@@ -612,14 +635,14 @@ class _Compiler:
             self._emit(IrOp.ADD,      IrRegister(r_sum),   IrRegister(r_dig),   IrRegister(r_started))
             self._emit(IrOp.BRANCH_Z, IrRegister(r_sum),   IrLabel(l_skip))
 
-            # Print this digit (digit value == GE-225 typewriter code for 0-9)
-            self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_dig), IrImmediate(0))
+            # Print this digit (add digit_offset to convert to printable code)
+            self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_dig), IrImmediate(digit_offset))
             self._emit(IrOp.SYSCALL,  IrImmediate(_SYSCALL_PRINT_CHAR))
             self._emit(IrOp.ADD_IMM,  IrRegister(r_started), IrRegister(r_one), IrImmediate(0))
             self._emit_label(l_skip)
 
         # Units digit: always print (this correctly handles the value 0)
-        self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_work), IrImmediate(0))
+        self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_work), IrImmediate(digit_offset))
         self._emit(IrOp.SYSCALL, IrImmediate(_SYSCALL_PRINT_CHAR))
 
     # ------------------------------------------------------------------

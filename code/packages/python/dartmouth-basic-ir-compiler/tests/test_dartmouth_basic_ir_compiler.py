@@ -352,6 +352,50 @@ class TestPrint:
         result = compile_source("10 PRINT \"123\"\n20 END\n")
         assert IrOp.SYSCALL in opcodes(result)
 
+    def test_ascii_encoding_emits_ascii_codes_for_string(self) -> None:
+        ast = parse_dartmouth_basic("10 PRINT \"AB\"\n20 END\n")
+        result = compile_basic(ast, char_encoding="ascii")
+        load_imm_ops = find_all(result, IrOp.LOAD_IMM)
+        char_codes = [
+            op[1].value
+            for op in load_imm_ops
+            if isinstance(op[0], IrRegister) and op[0].index == 0
+            and isinstance(op[1], IrImmediate)
+        ]
+        assert ord("A") in char_codes
+        assert ord("B") in char_codes
+        assert GE225_CODES["A"] not in char_codes
+
+    def test_ascii_encoding_emits_newline_for_cr(self) -> None:
+        ast = parse_dartmouth_basic("10 PRINT \"X\"\n20 END\n")
+        result = compile_basic(ast, char_encoding="ascii")
+        load_imm_ops = find_all(result, IrOp.LOAD_IMM)
+        char_codes = [
+            op[1].value
+            for op in load_imm_ops
+            if isinstance(op[0], IrRegister) and op[0].index == 0
+            and isinstance(op[1], IrImmediate)
+        ]
+        assert ord("\n") in char_codes
+        assert CARRIAGE_RETURN_CODE not in char_codes
+
+    def test_ascii_encoding_digit_offset_48(self) -> None:
+        ast = parse_dartmouth_basic("10 PRINT 5\n20 END\n")
+        result = compile_basic(ast, char_encoding="ascii")
+        add_imm_ops = find_all(result, IrOp.ADD_IMM)
+        offsets = [
+            op[2].value
+            for op in add_imm_ops
+            if isinstance(op[0], IrRegister) and op[0].index == 0
+            and isinstance(op[2], IrImmediate)
+        ]
+        assert 48 in offsets
+
+    def test_invalid_char_encoding_raises(self) -> None:
+        ast = parse_dartmouth_basic("10 END\n")
+        with pytest.raises(ValueError, match="char_encoding"):
+            compile_basic(ast, char_encoding="utf8")
+
 
 # ---------------------------------------------------------------------------
 # GOTO
