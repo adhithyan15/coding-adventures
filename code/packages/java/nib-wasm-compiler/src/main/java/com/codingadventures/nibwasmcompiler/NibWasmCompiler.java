@@ -13,6 +13,8 @@ import java.util.regex.Pattern;
 
 public final class NibWasmCompiler {
     public static final String VERSION = "0.1.0";
+    private static final int MAX_SOURCE_LENGTH = 1_000_000;
+    private static final int MAX_EXPR_NESTING = 256;
     private static final Pattern FUNCTION =
             Pattern.compile("fn\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*\\(([^)]*)\\)\\s*->\\s*u4\\s*\\{\\s*return\\s+([^;]+);\\s*\\}", Pattern.DOTALL);
 
@@ -66,6 +68,9 @@ public final class NibWasmCompiler {
     }
 
     private static List<NibFunction> parse(String source) {
+        if (source.length() > MAX_SOURCE_LENGTH) {
+            throw new PackageError("parse", "source exceeds " + MAX_SOURCE_LENGTH + " characters");
+        }
         List<NibFunction> functions = new ArrayList<>();
         Matcher matcher = FUNCTION.matcher(source);
         int cursor = 0;
@@ -105,7 +110,7 @@ public final class NibWasmCompiler {
             }
         }
         for (NibFunction function : functions) {
-            emitExpr(new Section(), function.expression(), byName, paramMap(function), false);
+            emitExpr(new Section(), function.expression(), byName, paramMap(function), false, 0);
         }
     }
 
@@ -143,7 +148,7 @@ public final class NibWasmCompiler {
         for (NibFunction function : functions) {
             Section body = new Section();
             body.u32(0);
-            emitExpr(body, function.expression(), byName, paramMap(function), true);
+            emitExpr(body, function.expression(), byName, paramMap(function), true, 0);
             body.write(0x0b);
             byte[] bytes = body.bytes();
             code.u32(bytes.length);
@@ -153,12 +158,22 @@ public final class NibWasmCompiler {
         return module.bytes();
     }
 
-    private static void emitExpr(Section out, String expression, Map<String, NibFunction> functions, Map<String, Integer> params, boolean emit) {
+    private static void emitExpr(
+            Section out,
+            String expression,
+            Map<String, NibFunction> functions,
+            Map<String, Integer> params,
+            boolean emit,
+            int depth
+    ) {
+        if (depth > MAX_EXPR_NESTING) {
+            throw new PackageError("validate", "expression nesting exceeds " + MAX_EXPR_NESTING);
+        }
         List<String> addParts = splitTopLevel(expression, "+%");
         if (addParts.size() > 1) {
-            emitExpr(out, addParts.get(0), functions, params, emit);
+            emitExpr(out, addParts.get(0), functions, params, emit, depth + 1);
             for (int index = 1; index < addParts.size(); index++) {
-                emitExpr(out, addParts.get(index), functions, params, emit);
+                emitExpr(out, addParts.get(index), functions, params, emit, depth + 1);
                 if (emit) {
                     out.write(0x6a);
                     out.i32(15);
@@ -189,7 +204,7 @@ public final class NibWasmCompiler {
                 throw new PackageError("validate", "wrong arity for `" + target.name() + "`");
             }
             for (String arg : args) {
-                emitExpr(out, arg, functions, params, emit);
+                emitExpr(out, arg, functions, params, emit, depth + 1);
             }
             if (emit) {
                 out.write(0x10);

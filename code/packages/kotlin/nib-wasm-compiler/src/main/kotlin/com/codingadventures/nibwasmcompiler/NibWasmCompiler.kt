@@ -26,6 +26,8 @@ class PackageError(val stage: String, message: String) : RuntimeException(messag
 
 object NibWasmCompiler {
     const val VERSION = "0.1.0"
+    private const val MAX_SOURCE_LENGTH = 1_000_000
+    private const val MAX_EXPR_NESTING = 256
     private val functionRegex =
         Regex("""fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*->\s*u4\s*\{\s*return\s+([^;]+);\s*\}""", RegexOption.DOT_MATCHES_ALL)
 
@@ -48,6 +50,9 @@ object NibWasmCompiler {
     }
 
     private fun parse(source: String): List<NibFunction> {
+        if (source.length > MAX_SOURCE_LENGTH) {
+            throw PackageError("parse", "source exceeds $MAX_SOURCE_LENGTH characters")
+        }
         val functions = mutableListOf<NibFunction>()
         var cursor = 0
         for (match in functionRegex.findAll(source)) {
@@ -78,7 +83,7 @@ object NibWasmCompiler {
         val byName = functions.associateBy { it.name }
         if (byName.size != functions.size) throw PackageError("validate", "duplicate function")
         for (function in functions) {
-            emitExpr(Section(), function.expression, byName, function.params.withIndex().associate { it.value to it.index }, false)
+            emitExpr(Section(), function.expression, byName, function.params.withIndex().associate { it.value to it.index }, false, 0)
         }
     }
 
@@ -107,7 +112,7 @@ object NibWasmCompiler {
         for (function in functions) {
             val body = Section()
             body.u32(0)
-            emitExpr(body, function.expression, byName, function.params.withIndex().associate { it.value to it.index }, true)
+            emitExpr(body, function.expression, byName, function.params.withIndex().associate { it.value to it.index }, true, 0)
             body.write(0x0b)
             val bytes = body.bytes()
             code.u32(bytes.size)
@@ -117,12 +122,15 @@ object NibWasmCompiler {
         return module.bytes()
     }
 
-    private fun emitExpr(out: Section, expression: String, functions: Map<String, NibFunction>, params: Map<String, Int>, emit: Boolean) {
+    private fun emitExpr(out: Section, expression: String, functions: Map<String, NibFunction>, params: Map<String, Int>, emit: Boolean, depth: Int) {
+        if (depth > MAX_EXPR_NESTING) {
+            throw PackageError("validate", "expression nesting exceeds $MAX_EXPR_NESTING")
+        }
         val addParts = splitTopLevel(expression, "+%")
         if (addParts.size > 1) {
-            emitExpr(out, addParts.first(), functions, params, emit)
+            emitExpr(out, addParts.first(), functions, params, emit, depth + 1)
             addParts.drop(1).forEach {
-                emitExpr(out, it, functions, params, emit)
+                emitExpr(out, it, functions, params, emit, depth + 1)
                 if (emit) {
                     out.write(0x6a)
                     out.i32(15)
@@ -143,7 +151,7 @@ object NibWasmCompiler {
             val target = functions[call.groupValues[1]] ?: throw PackageError("validate", "unknown function `${call.groupValues[1]}`")
             val args = splitArgs(call.groupValues[2])
             if (args.size != target.params.size) throw PackageError("validate", "wrong arity for `${target.name}`")
-            args.forEach { emitExpr(out, it, functions, params, emit) }
+            args.forEach { emitExpr(out, it, functions, params, emit, depth + 1) }
             if (emit) {
                 out.write(0x10)
                 out.u32(functions.keys.indexOf(target.name))

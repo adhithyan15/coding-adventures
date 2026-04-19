@@ -49,4 +49,15 @@ class NibWasmCompilerTest {
         val error = assertFailsWith<PackageError> { NibWasmCompiler.compileSource("fn bad() -> u4 { return 99; }") }
         assertEquals("validate", error.stage)
     }
+
+    @Test
+    fun rejectsExcessiveExpressionNesting() {
+        var expression = "0"
+        repeat(258) {
+            expression = "id($expression)"
+        }
+        val source = "fn id(x: u4) -> u4 { return x; }\nfn main() -> u4 { return $expression; }"
+        val error = assertFailsWith<PackageError> { NibWasmCompiler.compileSource(source) }
+        assertEquals("validate", error.stage)
+    }
 }

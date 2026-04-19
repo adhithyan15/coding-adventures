@@ -52,4 +52,16 @@ class NibWasmCompilerTest {
                 assertThrows(NibWasmCompiler.PackageError.class, () -> NibWasmCompiler.compileSource("fn bad() -> u4 { return 99; }"));
         assertEquals("validate", error.stage());
     }
+
+    @Test
+    void rejectsExcessiveExpressionNesting() {
+        String expression = "0";
+        for (int index = 0; index < 258; index++) {
+            expression = "id(" + expression + ")";
+        }
+        String source = "fn id(x: u4) -> u4 { return x; }\nfn main() -> u4 { return " + expression + "; }";
+        NibWasmCompiler.PackageError error =
+                assertThrows(NibWasmCompiler.PackageError.class, () -> NibWasmCompiler.compileSource(source));
+        assertEquals("validate", error.stage());
+    }
 }
