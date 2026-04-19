@@ -1,0 +1,10 @@
+python -m venv .venv --clear
+.venv\Scripts\pip install pytest pytest-cov ruff --quiet
+cargo build --release
+for /f "delims=" %%i in ('.venv\Scripts\python -c "import tempfile; print(tempfile.mkdtemp(prefix=\"window-native-build-\", dir=\".\"))"') do set BUILD_IMPORT_DIR=%%i
+mkdir "%BUILD_IMPORT_DIR%\window_native"
+copy /Y "src\window_native\__init__.py" "%BUILD_IMPORT_DIR%\window_native\__init__.py" >NUL
+.venv\Scripts\python -c "from pathlib import Path; import shutil, sys; build_root = Path(sys.argv[1]) / 'window_native'; candidates = [(Path(r'target\\release\\window_native.dll'), 'window_native.pyd')]; [shutil.copyfile(source, build_root / name) or sys.exit(0) for source, name in candidates if source.is_file()]; raise SystemExit('no compiled extension artifact was found')" "%BUILD_IMPORT_DIR%"
+set "PYTHONPATH=%BUILD_IMPORT_DIR%"&& .venv\Scripts\python -m ruff check src tests
+set "PYTHONPATH=%BUILD_IMPORT_DIR%"&& .venv\Scripts\python -m pytest tests\ -v
+rmdir /s /q "%BUILD_IMPORT_DIR%"
