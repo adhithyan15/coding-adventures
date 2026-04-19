@@ -32,7 +32,7 @@ This first version compiles the subset needed to run meaningful integer programs
 
   - REM    — no-op comments
   - LET    — variable assignment (scalar only) with all arithmetic operators
-  - PRINT  — string literal output only (no numeric variables)
+  - PRINT  — string literals and numeric expressions (variables, arithmetic)
   - GOTO   — unconditional jump to a line number
   - IF … THEN — conditional jump; all six relational operators
   - FOR … TO [STEP] — pre-test counted loop with positive integer step
@@ -133,6 +133,9 @@ _TEMP_BASE = 287
 
 # Syscall number for "print char in v0"
 _SYSCALL_PRINT_CHAR = 1
+
+# GE-225 typewriter code for the minus sign '-' (octal 33 = decimal 27)
+_GE225_MINUS_CODE = 0o33
 
 
 def _scalar_reg(name: str) -> int:
@@ -288,17 +291,19 @@ class _Compiler:
     Created by ``compile_basic()`` and discarded after compilation.
 
     Attributes:
-        _program:    The IR program being built.
-        _id_gen:     Produces unique monotonic instruction IDs.
-        _next_reg:   Next expression-temporary register index.
-        _loop_count: Counter for unique FOR loop names.
-        _for_stack:  Stack of open FOR loop records (innermost last).
+        _program:     The IR program being built.
+        _id_gen:      Produces unique monotonic instruction IDs.
+        _next_reg:    Next expression-temporary register index.
+        _loop_count:  Counter for unique FOR loop names.
+        _label_count: Counter for unique synthetic label names (print routines).
+        _for_stack:   Stack of open FOR loop records (innermost last).
     """
 
     _program: IrProgram = field(init=False)
     _id_gen: IDGenerator = field(default_factory=IDGenerator)
     _next_reg: int = field(default=_TEMP_BASE)
     _loop_count: int = field(default=0)
+    _label_count: int = field(default=0)
     _for_stack: list[_ForRecord] = field(default_factory=list)
 
     def __post_init__(self) -> None:
@@ -463,46 +468,69 @@ class _Compiler:
     def _compile_print(self, node: ASTNode) -> None:
         """Compile a PRINT statement.
 
-        V1 supports PRINT with a single string literal only. Each character is
-        converted at compile time to its GE-225 typewriter code; SYSCALL 1
-        prints it. A carriage return is appended automatically.
+        Supports string literals, numeric expressions, and comma-separated
+        mixtures.  A carriage return (GE-225 code 0o37) is always appended.
+
+        Print_item dispatch:
+          - STRING token  → emit one LOAD_IMM + SYSCALL 1 per character.
+          - ASTNode (expr) → compile expression; emit decimal digit sequence
+            via ``_emit_print_number``.
 
         Args:
             node: An ``ASTNode`` with ``rule_name == "print_stmt"``.
 
         Raises:
-            CompileError: If the PRINT argument is not a string literal, or if
-                          the string contains a character with no GE-225 code.
+            CompileError: If a string literal contains a character with no
+                          GE-225 typewriter code.
         """
-        string_val: str | None = None
+        # Find the print_list child (contains the actual print items)
+        print_list: ASTNode | None = None
         for child in node.children:
-            if isinstance(child, ASTNode):
-                string_val = self._extract_string_literal(child)
-                if string_val is None:
-                    raise CompileError(
-                        "PRINT with non-string-literal arguments is not "
-                        "supported in V1 (only PRINT \"...\") is supported"
-                    )
+            if isinstance(child, ASTNode) and child.rule_name == "print_list":
+                print_list = child
                 break
 
-        if string_val is None:
-            # PRINT with no arguments → just a carriage return
+        if print_list is None:
+            # Bare PRINT → just a carriage return
             self._emit_print_code(CARRIAGE_RETURN_CODE)
             return
 
-        for ch in string_val:
-            code = ascii_to_ge225(ch)
-            if code is None:
-                raise CompileError(
-                    f"character {ch!r} has no GE-225 typewriter equivalent; "
-                    f"V1 supports: A-Z, 0-9, space, and basic punctuation"
-                )
-            self._emit_print_code(code)
+        # Walk each print_item (print_sep nodes are ignored)
+        for item_node in print_list.children:
+            if isinstance(item_node, ASTNode) and item_node.rule_name == "print_item":
+                self._compile_print_item(item_node)
 
         self._emit_print_code(CARRIAGE_RETURN_CODE)
 
+    def _compile_print_item(self, node: ASTNode) -> None:
+        """Compile one item from a PRINT argument list.
+
+        A ``print_item`` node contains either a STRING token (string literal)
+        or an ``expr`` subtree (numeric expression).
+
+        Args:
+            node: An ``ASTNode`` with ``rule_name == "print_item"``.
+        """
+        for child in node.children:
+            if isinstance(child, Token) and _type_is(child.type, "STRING"):
+                text = child.value.strip('"\'')
+                for ch in text:
+                    code = ascii_to_ge225(ch)
+                    if code is None:
+                        raise CompileError(
+                            f"character {ch!r} has no GE-225 typewriter equivalent; "
+                            f"V1 supports A-Z, 0-9, space, and basic punctuation"
+                        )
+                    self._emit_print_code(code)
+                return
+            elif isinstance(child, ASTNode):
+                # Numeric expression: compile, then emit decimal digit sequence
+                v_val = self._compile_expr(child)
+                self._emit_print_number(v_val)
+                return
+
     def _emit_print_code(self, code: int) -> None:
-        """Emit LOAD_IMM + SYSCALL 1 to print one character.
+        """Emit LOAD_IMM + SYSCALL 1 to print one character by its GE-225 code.
 
         Args:
             code: The 6-bit GE-225 typewriter code to print.
@@ -514,35 +542,85 @@ class _Compiler:
         )
         self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_PRINT_CHAR))
 
-    def _extract_string_literal(self, node: ASTNode) -> str | None:
-        """Extract the string value from a print_list or print_item node.
+    def _emit_print_number(self, v_val: int) -> None:
+        """Emit IR that prints the integer in register v_val as a decimal string.
 
-        Returns the raw string content (without quotes) if the print argument
-        is a string literal, or ``None`` if it is anything else.
+        Algorithm (all arithmetic is done in generated IR, not in Python):
+
+        1. Copy v_val to a scratch register r_work so the original is untouched.
+        2. If r_work < 0: print '-', then negate (r_work = 0 − r_work).
+        3. Unrolled digit-extraction for positions 100000, 10000, 1000, 100, 10:
+             r_dig   = r_work / power          (integer quotient)
+             r_work  = r_work − r_dig * power  (remainder = r_work mod power)
+             if r_dig + r_started == 0: skip   (leading-zero suppression)
+             else: print r_dig; started = 1
+        4. Units digit: always print r_work (handles the value 0 correctly).
+
+        GE-225 typewriter codes for the digits 0-9 equal the digit values
+        (code 0 → '0', …, code 9 → '9'), so the digit can be loaded directly
+        into v0 and dispatched via SYSCALL 1.
+
+        Leading-zero suppression trick:
+          r_dig ≥ 0 and r_started ∈ {0, 1}, so r_dig + r_started == 0 iff
+          both are zero — a single ADD replaces the costlier AND-of-booleans.
 
         Args:
-            node: A child of ``print_stmt``.
-
-        Returns:
-            The string content, or ``None`` if not a string literal.
+            v_val: Virtual register index holding the integer to print.
         """
-        # Walk through print_list / print_item wrappers to find STRING token
-        if isinstance(node, ASTNode):
-            for child in node.children:
-                if isinstance(child, Token) and _type_is(child.type, "STRING"):
-                    # Strip surrounding quotes
-                    return child.value.strip('"\'')
-                if isinstance(child, ASTNode):
-                    result = self._extract_string_literal(child)
-                    if result is not None:
-                        return result
-            # If any non-string token is present (NAME, NUMBER etc.), not V1-safe
-            for child in node.children:
-                if isinstance(child, Token) and not any(
-                    _type_is(child.type, t) for t in ("KEYWORD", "COMMA", "SEMICOLON", "STRING")
-                ):
-                    return None
-        return None
+        # Fresh unique label suffix for this particular print-number emission
+        label_id = self._label_count
+        self._label_count += 1
+
+        # Scratch registers (all freshly allocated; spill slots are cheap)
+        r_work   = self._new_reg()   # working copy of the magnitude
+        r_zero   = self._new_reg()   # constant 0
+        r_one    = self._new_reg()   # constant 1
+        r_started = self._new_reg()  # 1 once the first non-zero digit is printed
+        r_dig    = self._new_reg()   # current digit (reused each position)
+        r_mttmp  = self._new_reg()   # temp: r_dig * power  (for mod computation)
+        r_pow    = self._new_reg()   # power of 10 (reused each position)
+        r_is_neg = self._new_reg()   # 1 if the original value was negative
+
+        # Initialise
+        self._emit(IrOp.ADD_IMM, IrRegister(r_work),    IrRegister(v_val),  IrImmediate(0))
+        self._emit(IrOp.LOAD_IMM, IrRegister(r_zero),   IrImmediate(0))
+        self._emit(IrOp.LOAD_IMM, IrRegister(r_one),    IrImmediate(1))
+        self._emit(IrOp.LOAD_IMM, IrRegister(r_started), IrImmediate(0))
+
+        # Sign handling: if r_work < 0, print '-' then negate
+        l_pos = f"_pnum_{label_id}_pos"
+        self._emit(IrOp.CMP_LT, IrRegister(r_is_neg), IrRegister(r_work), IrRegister(r_zero))
+        self._emit(IrOp.BRANCH_Z, IrRegister(r_is_neg), IrLabel(l_pos))
+        self._emit_print_code(_GE225_MINUS_CODE)                             # '-'
+        r_neg = self._new_reg()
+        self._emit(IrOp.SUB, IrRegister(r_neg),  IrRegister(r_zero), IrRegister(r_work))
+        self._emit(IrOp.ADD_IMM, IrRegister(r_work), IrRegister(r_neg), IrImmediate(0))
+        self._emit_label(l_pos)
+
+        # Unrolled digit extraction for each power of ten above the units place
+        for pos_idx, power in enumerate([100000, 10000, 1000, 100, 10]):
+            l_skip = f"_pnum_{label_id}_s{pos_idx}"
+
+            # Digit and remainder
+            self._emit(IrOp.LOAD_IMM, IrRegister(r_pow),   IrImmediate(power))
+            self._emit(IrOp.DIV,      IrRegister(r_dig),   IrRegister(r_work),  IrRegister(r_pow))
+            self._emit(IrOp.MUL,      IrRegister(r_mttmp), IrRegister(r_dig),   IrRegister(r_pow))
+            self._emit(IrOp.SUB,      IrRegister(r_work),  IrRegister(r_work),  IrRegister(r_mttmp))
+
+            # Leading-zero suppression: skip if digit==0 AND not yet started
+            r_sum = self._new_reg()
+            self._emit(IrOp.ADD,      IrRegister(r_sum),   IrRegister(r_dig),   IrRegister(r_started))
+            self._emit(IrOp.BRANCH_Z, IrRegister(r_sum),   IrLabel(l_skip))
+
+            # Print this digit (digit value == GE-225 typewriter code for 0-9)
+            self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_dig), IrImmediate(0))
+            self._emit(IrOp.SYSCALL,  IrImmediate(_SYSCALL_PRINT_CHAR))
+            self._emit(IrOp.ADD_IMM,  IrRegister(r_started), IrRegister(r_one), IrImmediate(0))
+            self._emit_label(l_skip)
+
+        # Units digit: always print (this correctly handles the value 0)
+        self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_work), IrImmediate(0))
+        self._emit(IrOp.SYSCALL, IrImmediate(_SYSCALL_PRINT_CHAR))
 
     # ------------------------------------------------------------------
     # GOTO
