@@ -1,31 +1,31 @@
-# F07: Declarative Tokenizer State Machines
+# F08: Declarative Tokenizer State Machines
 
 ## Overview
 
-This spec defines a portable, text-loadable way to describe **effectful
-tokenizer state machines**. The first target is HTML tokenization, but the
-design is generic enough for XML-ish formats, browser protocols, programming
-language lexers with modes, and any stream format where the next token depends
-on the current lexical state.
+This spec defines the **tokenizer profile** for the State Machine Markup
+Language in `F07-state-machine-markup-language.md`. The first target is HTML
+tokenization, but the design is generic enough for XML-ish formats, browser
+protocols, programming language lexers with modes, and any stream format where
+the next token depends on the current lexical state.
 
-The existing `F01-state-machine.md` package gives us formal automata: DFA, NFA,
-PDA, minimization, and modal machines. That is the right mathematical base, but
-HTML tokenization needs one extra layer: transitions do not only change state.
-They also build tokens, append text, track temporary buffers, report parse
-errors, reconsume the current input character in a new state, and sometimes
-call a shared submachine such as character-reference parsing.
+The existing `F01-state-machine.md` package gives us formal automata, and `F07`
+defines how those machines serialize and deserialize. HTML tokenization needs
+one extra profile layer: transitions do not only change state. They also build
+tokens, append text, track temporary buffers, report parse errors, reconsume the
+current input character in a new state, and sometimes call a shared submachine
+such as character-reference parsing.
 
 So the answer to "can the states and transitions live purely in a text file?"
 is:
 
-- **Yes**, if the file describes a state graph plus a fixed portable action
-  vocabulary.
+- **Yes**, if the file is a `state-machine/v1` document with a tokenizer
+  profile and a fixed portable action vocabulary.
 - **No**, if "purely" means a bare DFA transition table with no registers,
   buffers, token-emission actions, EOF handling, or reconsume semantics.
 
 The goal is a declarative file that every language port can load and execute the
 same way, without embedding arbitrary Rust, Go, Ruby, Python, or TypeScript code
-inside the grammar.
+inside the machine definition.
 
 ## Why This Exists
 
@@ -51,20 +51,23 @@ language.
 
 - `F01-state-machine.md`: provides the formal automata vocabulary and modal
   machine foundation.
+- `F07-state-machine-markup-language.md`: defines the generic `.states.toml`
+  document envelope, serializer/deserializer contract, SCXML inspiration, and
+  DOT export boundary.
 - `F04-lexer-pattern-groups.md`: supports grouped pattern lexing with callbacks;
   this spec is lower level and more deterministic, for byte/code-point state
   machines like HTML.
 - `F06-haskell-layout-mode.md`: handles a layout-sensitive token transform after
   physical tokenization; this spec handles the tokenization loop itself.
 - `TE04-html1.0-lexer.md`: should eventually become a thin wrapper around an
-  `html1.tokenizer` definition.
+  `html1.tokenizer.states.toml` definition.
 - `TE05-html1.0-parser.md`: consumes tokens from this system but remains a
   separate tree-construction concern.
 
 ## Design Principles
 
-1. **Data first, code second.** The tokenizer definition is text. Runtime code
-   only implements the generic interpreter and built-in action vocabulary.
+1. **Profile, not fork.** Tokenizers extend the `state-machine/v1` document
+   model instead of inventing a separate serialization language.
 2. **Portable by construction.** A definition loaded in Rust must behave the
    same way when loaded in Go, TypeScript, Ruby, Python, or future ports.
 3. **No arbitrary host callbacks in definition files.** Escape hatches are how
@@ -91,20 +94,17 @@ This spec does not define:
 - arbitrary regex-based lexing for programming languages
 
 Those can sit above or beside this package. This layer only defines an
-effectful state-machine tokenizer runtime and file format.
+effectful state-machine tokenizer runtime and a profile for the generic `F07`
+file format.
 
 ## Core Model
 
-A tokenizer definition contains:
+A tokenizer definition is a `StateMachineDocument` with
+`profile = "tokenizer/v1"`. It contains the generic `F07` fields plus:
 
-- metadata and version requirements
 - token type declarations
 - named input classes
 - registers and buffers
-- states
-- ordered transitions inside each state
-- built-in actions attached to transitions
-- optional included definition files
 - validation expectations and fixture hooks
 
 At runtime, the tokenizer owns:
@@ -134,76 +134,140 @@ state.
 
 ## File Format
 
-The canonical source format is `.tokenizer`. It follows the same plain-text
-spirit as `.tokens`, `.grammar`, and `.states`, but it is a new format because a
-tokenizer state machine needs actions, registers, streaming semantics, and
-token declarations that do not fit cleanly into the existing `.states` examples.
+The canonical source format is `.tokenizer.states.toml`. It is a
+TOML-compatible `state-machine/v1` document with `profile = "tokenizer/v1"`.
+The shorter `.tokenizer` extension may be accepted by repo tools, but writers
+should prefer `.tokenizer.states.toml` for clarity and easy TOML tooling.
 
 Example filename:
 
 ```text
-code/tokenizers/html/html1.tokenizer
+code/tokenizers/html/html1.tokenizer.states.toml
 ```
 
-The first version is intentionally indentation based and line oriented:
+The first version uses the same document envelope as `F07`:
 
-```text
-format: tokenizer-state-machine/v1
-name: html1-tokenizer
-initial: data
-done: done
+```toml
+format = "state-machine/v1"
+profile = "tokenizer/v1"
+name = "html1-tokenizer"
+kind = "transducer"
+initial = "data"
+done = "done"
+includes = ["html-common-inputs.states.toml"]
 
-include:
-  html-common-inputs.tokenizer
+[[tokens]]
+name = "Text"
+fields = ["data"]
 
-tokens:
-  Text(data)
-  StartTag(name, attributes, self_closing)
-  EndTag(name)
-  Comment(data)
-  Doctype(name, force_quirks)
-  EOF
+[[tokens]]
+name = "StartTag"
+fields = ["name", "attributes", "self_closing"]
 
-inputs:
-  ascii_whitespace = one_of("\t\n\f\r ")
-  ascii_alpha = range("A", "Z") | range("a", "z")
-  tag_name_char = ascii_alpha | range("0", "9") | one_of("-_:")
+[[tokens]]
+name = "EndTag"
+fields = ["name"]
 
-registers:
-  text_buffer: string
-  current_token: token?
-  current_attribute: attribute?
-  temporary_buffer: string
-  return_state: state?
-  last_start_tag_name: string?
+[[tokens]]
+name = "Comment"
+fields = ["data"]
 
-state data:
-  on "<":
-    actions: flush_text
-    goto: tag_open
+[[tokens]]
+name = "Doctype"
+fields = ["name", "force_quirks"]
 
-  on "&":
-    actions:
-      - set_return_state(data)
-      - consume_character_reference(text)
-    goto: data
+[[tokens]]
+name = "EOF"
+fields = []
 
-  on "\0":
-    actions:
-      - parse_error(unexpected-null-character)
-      - append_text("\uFFFD")
-    goto: data
+[[inputs]]
+id = "ascii_whitespace"
+matcher = { one_of = "\t\n\f\r " }
 
-  on eof:
-    actions:
-      - flush_text
-      - emit(EOF)
-    goto: done
+[[inputs]]
+id = "ascii_upper"
+matcher = { range = ["A", "Z"] }
 
-  on anything:
-    actions: append_text(current)
-    goto: data
+[[inputs]]
+id = "ascii_lower"
+matcher = { range = ["a", "z"] }
+
+[[inputs]]
+id = "ascii_alpha"
+matcher = { any_of_classes = ["ascii_upper", "ascii_lower"] }
+
+[[registers]]
+id = "text_buffer"
+type = "string"
+
+[[registers]]
+id = "current_token"
+type = "token?"
+
+[[registers]]
+id = "current_attribute"
+type = "attribute?"
+
+[[registers]]
+id = "temporary_buffer"
+type = "string"
+
+[[registers]]
+id = "return_state"
+type = "state?"
+
+[[registers]]
+id = "last_start_tag_name"
+type = "string?"
+
+[[states]]
+id = "data"
+initial = true
+
+[[states]]
+id = "done"
+final = true
+
+[[transitions]]
+from = "data"
+matcher = { literal = "<" }
+to = "tag_open"
+actions = ["flush_text"]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "&" }
+to = "data"
+actions = [
+  "set_return_state(data)",
+  "consume_character_reference(text)",
+]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "\\0" }
+to = "data"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_text_replacement",
+]
+
+[[transitions]]
+from = "data"
+matcher = { eof = true }
+to = "done"
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "data"
+matcher = { anything = true }
+to = "data"
+actions = ["append_text(current)"]
 ```
+
+The compact action-call strings above are a human-friendly TOML surface. The
+canonical JSON form expands them into structured action calls with `name` and
+`args` fields.
 
 ## Matchers
 
@@ -216,6 +280,7 @@ Every implementation must support:
 - `anything_else`: alias for `anything`, intended for readability after
   specific cases
 - `class(name)`: match a named input class
+- `any_of_classes([name, ...])`: match any one of several named input classes
 - `not_class(name)`: match any non-EOF code point outside a class
 - `one_of("...")`: match one code point from a literal set
 - `range("A", "Z")`: match an inclusive code-point range
@@ -387,11 +452,11 @@ To scale from HTML 1.0 to the living standard, add definitions in layers:
 
 ```text
 code/tokenizers/html/
-  html-common-inputs.tokenizer
+  html-common-inputs.states.toml
   html-common-actions.md
-  html1.tokenizer
-  html4-compatible.tokenizer
-  whatwg-html.tokenizer
+  html1.tokenizer.states.toml
+  html4-compatible.tokenizer.states.toml
+  whatwg-html.tokenizer.states.toml
 ```
 
 The living-standard definition will need:
@@ -481,7 +546,7 @@ The validator should warn about:
 
 - parse metadata, token declarations, registers, inputs, includes, states, and
   transitions
-- reject malformed indentation and unknown top-level sections
+- reject malformed TOML and unknown top-level sections
 - preserve source locations for diagnostics
 - produce a stable canonical AST
 
@@ -524,35 +589,33 @@ web-platform-tests/html and run them through the same runtime.
    direction for this repo.
 4. Add TypeScript, Python, Ruby, and other ports only after the Rust and Go APIs
    settle.
-5. Add `code/tokenizers/html/html1.tokenizer`.
+5. Add `code/tokenizers/html/html1.tokenizer.states.toml`.
 6. Rebuild `html1.0-lexer` as a wrapper over the declarative definition.
 7. Add conformance fixtures and transition traces.
-8. Expand toward `whatwg-html.tokenizer` state by state.
+8. Expand toward `whatwg-html.tokenizer.states.toml` state by state.
 9. Create a later tree-construction spec for insertion modes, stack of open
    elements, active formatting elements, foster parenting, template insertion
    modes, and the adoption agency algorithm.
 
 ## Open Questions
 
-- Should the canonical serialized AST be JSON, TOML, or a compact binary format
-  for faster package startup?
-- Should `.tokenizer` be parsed directly by every port, or should one reference
-  parser generate a canonical JSON artifact that all ports consume?
+- Should tokenizer runtimes parse TOML directly in every port, or should one
+  reference parser generate a canonical JSON artifact that all ports consume?
 - How much of the WHATWG character-reference table should live in the tokenizer
   definition versus a shared generated data package?
 - Do we want a visualizer that renders tokenizer states as DOT graphs with
   action labels?
 
-The recommended first implementation is: parse `.tokenizer` text into a
-canonical in-memory AST in each port, then add JSON export/import once the AST
-stabilizes. That keeps the early system simple while preserving a path to fast,
-prevalidated artifacts.
+The recommended first implementation is: parse `.tokenizer.states.toml` text
+into the `F07` canonical in-memory AST in each port, then add JSON import/export
+once the AST stabilizes. That keeps the early system simple while preserving a
+path to fast, prevalidated artifacts.
 
 ## Success Criteria
 
 Phase 1 is successful when:
 
-1. a `.tokenizer` file can describe the HTML 1.0 tokenizer states
+1. a `.tokenizer.states.toml` file can describe the HTML 1.0 tokenizer states
 2. Rust and Go runtimes can load the same definition file
 3. both runtimes pass the same HTML tokenizer fixtures
 4. traces make transition behavior understandable
