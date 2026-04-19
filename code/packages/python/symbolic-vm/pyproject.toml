@@ -13,6 +13,8 @@ readme = "README.md"
 keywords = ["symbolic", "vm", "interpreter", "cas", "term-rewriting", "education"]
 dependencies = [
     "coding-adventures-symbolic-ir",
+    "coding-adventures-macsyma-parser",
+    "coding-adventures-macsyma-compiler",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
