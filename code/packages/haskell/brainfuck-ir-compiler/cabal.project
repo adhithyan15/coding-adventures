@@ -1,0 +1,4 @@
+packages:
+  .
+  ../brainfuck
+  ../compiler-ir
