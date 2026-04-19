@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-dartmouth-basic-ir-compiler"
+version = "0.1.0"
+description = "Dartmouth BASIC 1964 frontend: lowers a parsed BASIC AST to target-independent IR"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["basic", "dartmouth", "compiler", "ir", "codegen", "history", "education"]
+dependencies = [
+    "coding-adventures-compiler-ir",
+    "coding-adventures-dartmouth-basic-parser",
+]
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dartmouth_basic_ir_compiler"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=dartmouth_basic_ir_compiler --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/dartmouth_basic_ir_compiler"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
