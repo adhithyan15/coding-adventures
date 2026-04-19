@@ -50,6 +50,7 @@ Image I/O (encoding and decoding PNG, JPEG, BMP, QOI, PPM) is handled by the
 and every IMG operation accepts and returns it. See §10 for how the two series
 connect and for the `Image` evolution plan.
 
+
 Specs IMG01–IMG05 define CPU-only implementations in every supported language
 (Python, TypeScript, Rust, Go, Ruby, etc.). IMG06 then provides a Rust crate
 that runs the same operations on the GPU and exposes a C-ABI so every language
@@ -572,7 +573,7 @@ data[offset + 3] = A   (straight alpha u8)
 ```
 
 Every IC codec (PNG, JPEG, BMP, QOI, PPM) speaks this format. Every language
-in the repo already has a `Image` implementation. The IMG operations
+in the repo already has an `Image` implementation. The IMG operations
 in IMG01–IMG05 accept and return `Image` directly.
 
 ### The limitation: RGBA8 only
@@ -694,7 +695,7 @@ PaintVM emits PaintScene instructions
 ```
 
 A `PaintGlyphRun` or `PaintFillPath` instruction eventually writes pixels into
-a `Image` (RGBA8). The image processing operations in this series
+an `Image` (RGBA8). The image processing operations in this series
 (blur, LUTs, transforms, compositing) can be applied to that buffer before
 final display.
 
