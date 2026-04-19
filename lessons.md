@@ -4,6 +4,24 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-19: JVM composite Gradle BUILD files need a shared lock when they reuse included builds
+
+Java and Kotlin packages that include the same local Gradle builds can corrupt
+shared `gradle-build` class outputs when the repo build tool runs sibling
+packages in parallel.
+
+**Symptom:** CI fails with a Java compiler error like `bad class file ...
+class file truncated at offset 0` inside a shared dependency such as
+`java/wasm-types`, even though each package passes when run alone.
+
+**Rule:** When adding multiple JVM packages that point at the same local
+included Gradle builds, serialize the Unix `BUILD` commands with a shared
+repo-local lock and run Gradle with `--no-daemon --no-build-cache --max-workers=1`.
+Keep the lock in the package BUILD scripts so CI's parallel package scheduler
+cannot race the shared composite outputs.
+
+---
+
 ### 2026-04-18: LuaRocks CI installs may need patched GitHub archive URLs for old rockspecs
 
 Some published LuaRocks rockspecs still point at legacy GitHub archive URLs
