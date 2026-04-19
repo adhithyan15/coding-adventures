@@ -310,9 +310,11 @@ executeFunctionBody engine functionType body args = go 0 0 [] initialLocals
                         Right _ -> pure (Left (TrapError "memory.grow expects an i32 page count"))
                 0x41 -> doSignedConst pc stack locals blockDepth (WasmI32 . fromIntegral)
                 0x42 -> doSignedConst pc stack locals blockDepth (WasmI64 . fromIntegral)
+                0x45 -> unaryI32Op pc blockDepth stack locals (\value -> if value == 0 then 1 else 0)
                 0x6A -> binaryI32Op pc blockDepth stack locals (+)
                 0x6B -> binaryI32Op pc blockDepth stack locals (-)
                 0x6C -> binaryI32Op pc blockDepth stack locals (*)
+                0x71 -> binaryI32Op pc blockDepth stack locals (Bits..&.)
                 _ -> pure (Left (TrapError ("unsupported opcode: " ++ show (BS.index codeBytes pc))))
 
     continueWithBlock pc blockDepth stack locals =
@@ -365,6 +367,13 @@ executeFunctionBody engine functionType body args = go 0 0 [] initialLocals
                                         storeAction memory (fromIntegral baseAddress + memOffset) value
                                         go (pc + 1 + consumed) blockDepth restStack locals
                             Right _ -> pure (Left (TrapError "memory store expects an i32 address"))
+
+    unaryI32Op pc blockDepth stack locals operation =
+        case popValue stack of
+            Left err -> pure (Left err)
+            Right (WasmI32 value, restStack) ->
+                go (pc + 1) blockDepth (WasmI32 (operation value) : restStack) locals
+            Right _ -> pure (Left (TrapError "numeric instruction expects an i32 operand"))
 
     binaryI32Op pc blockDepth stack locals operation =
         case popValue stack of

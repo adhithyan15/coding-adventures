@@ -1,0 +1,26 @@
+cabal-version: 3.0
+name:          ir-to-wasm-validator
+version:       0.1.0
+synopsis:      Haskell compiler IR to Wasm validation stage
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  IRToWasmValidator
+    build-depends:    base >=4.14
+                    , compiler-ir
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    IRToWasmValidatorSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , compiler-ir
+                    , hspec == 2.*
+                    , ir-to-wasm-validator
+    default-language: Haskell2010
