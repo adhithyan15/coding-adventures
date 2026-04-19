@@ -23,9 +23,9 @@ mini_sqlite.connect("app.db")
     → sql-vm (unchanged)
     → Backend interface
     → SqliteFileBackend  (this package)
-        ├── pager    (page I/O + LRU cache + rollback journal)
-        ├── header   (100-byte database header at offset 0)
-        ├── record   (varint + serial types)      [v1 phase 2]
+        ├── pager    (page I/O + LRU cache + rollback journal) ✓ phase 1
+        ├── header   (100-byte database header at offset 0)    ✓ phase 1
+        ├── record   (varint + serial types)      ✓ phase 2
         ├── btree    (table B-trees with overflow)[v1 phase 3–4]
         ├── freelist (page reuse)                 [v1 phase 5]
         └── schema   (sqlite_schema round-trip)   [v1 phase 6]
@@ -35,9 +35,9 @@ Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works in this phase (phase 1)
+## What works today (phases 1 + 2)
 
-Phase 1 covers the bottom two boxes:
+Phase 1 covered the bottom two boxes; phase 2 adds the record codec on top.
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -46,11 +46,16 @@ Phase 1 covers the bottom two boxes:
   `commit()` flushes the journal, applies pending writes, flushes the main
   file, then deletes the journal; `rollback()` throws away pending writes and
   the journal.
+- **`varint` module** — SQLite's 1..9 byte big-endian variable-length integer
+  encoding. `encode`, `decode`, `encode_signed`, `decode_signed`, `size`.
+  Always the shortest form — required for byte-compat round-trip.
+- **`record` module** — row values ↔ bytes. Picks the smallest serial type
+  for every integer (so the integer 7 encodes as a single byte, not eight).
+  Round-trips NULL / int / float / str / bytes. Byte-compat verified against
+  the real `sqlite3` output for simple records.
 
-What's **not yet** in this package (coming in later phases): varint/record
-encoding, B-tree pages, `sqlite_schema`, the `Backend` adapter that wires
-the pipeline in. This phase is the unglamorous plumbing every later phase
-sits on top of.
+What's **not yet** in this package (coming in later phases): B-tree pages,
+`sqlite_schema`, the `Backend` adapter that wires the pipeline in.
 
 ## Installation
 
@@ -58,28 +63,32 @@ sits on top of.
 uv pip install -e .
 ```
 
-## Usage (phase 1 — primitives only)
+## Usage (phases 1 + 2 — primitives only)
 
 ```python
-from storage_sqlite.header import Header
-from storage_sqlite.pager import Pager
+from storage_sqlite import Header, Pager, record, varint
 
-# Create a fresh database file.
+# --- Pager + Header ---
 with Pager.create("app.db") as pager:
-    # Page 1 holds the 100-byte header at offset 0. The Header class
-    # handles field layout; Pager handles on-disk I/O.
     header = Header.new_database(page_size=4096)
     page1 = bytearray(pager.page_size)
     page1[:100] = header.to_bytes()
     pager.write(1, bytes(page1))
     pager.commit()
 
-# Open it again — magic + page size verified.
 with Pager.open("app.db") as pager:
     raw = pager.read(1)
     header = Header.from_bytes(raw[:100])
     assert header.magic == b"SQLite format 3\x00"
-    assert header.page_size == 4096
+
+# --- Varint ---
+assert varint.encode(300) == b"\x82\x2c"      # shortest form
+value, consumed = varint.decode(b"\x82\x2c")  # → (300, 2)
+
+# --- Record ---
+# [NULL, 7, "hi"] encodes to the same bytes the real sqlite3 writes.
+raw = record.encode([None, 7, "hi"])          # b"\x04\x00\x01\x11\x07hi"
+values, consumed = record.decode(raw)          # → ([None, 7, "hi"], 8)
 ```
 
 This intentionally looks low-level — the `Backend` adapter that makes
