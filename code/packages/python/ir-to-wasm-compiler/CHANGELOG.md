@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] — 2026-04-19
+
+### Fixed
+
+- **Brainfuck SYSCALL register mismatch**: `_SYSCALL_ARG0` was previously
+  hard-coded to 0 (BASIC convention), breaking `brainfuck-wasm-compiler` which
+  uses register 4 as the SYSCALL print argument.  The constant is restored to 4
+  (Brainfuck default) and the lowerer now accepts an explicit `syscall_arg_reg`
+  parameter so BASIC can pass `syscall_arg_reg=0` without affecting Brainfuck.
+
+- **WASI errno clobber** (`_emit_wasi_write` / `_emit_wasi_read`): the errno
+  return value from `fd_write`/`fd_read` is now discarded with `drop` instead
+  of being stored in `_REG_SCRATCH` (register 1).  Previously, every `PRINT`
+  in a Brainfuck or BASIC program silently zeroed register 1, corrupting
+  variable values mid-loop (e.g., Fibonacci producing `0,1,1,1,1...`).
+
 ## [0.2.0] — 2026-04-19
 
 ### Added
@@ -44,5 +60,14 @@
   helper.
 - `WasmLoweringError` exception.
 - Support for `i32.mul` and `i32.div_s` opcodes (`IrOp.MUL`, `IrOp.DIV`).
-- `_SYSCALL_ARG0 = 0` (corrected from 4 — register 0 is the SYSCALL argument
-  register).
+- `_SYSCALL_ARG0 = 4` default (Brainfuck IR convention: register 4 holds the
+  SYSCALL print argument).
+
+### Changed
+
+- `IrToWasmCompiler.compile()` now accepts a `syscall_arg_reg: int` keyword
+  parameter (default 4, the Brainfuck register convention).  Callers whose IR
+  uses a different register for the SYSCALL argument (e.g. Dartmouth BASIC IR
+  which uses register 0) must pass `syscall_arg_reg=0` explicitly.  This
+  makes the WASM lowerer IR-frontend-agnostic instead of hard-coding one
+  convention.

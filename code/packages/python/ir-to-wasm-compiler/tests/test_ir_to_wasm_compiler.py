@@ -200,7 +200,7 @@ def test_compile_syscall_write_uses_wasi_fd_write() -> None:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(65)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(65)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
@@ -223,7 +223,7 @@ def test_compile_syscall_read_uses_wasi_fd_read() -> None:
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
     program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(2)], id=gen.next()))
     program.add_instruction(
-        IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(0), IrImmediate(0)], id=gen.next())
+        IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(4), IrImmediate(0)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
@@ -242,7 +242,7 @@ def test_compile_syscall_exit_uses_wasi_proc_exit() -> None:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
     program.add_instruction(
-        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(7)], id=gen.next())
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(7)], id=gen.next())
     )
     program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(10)], id=gen.next()))
 
@@ -485,7 +485,7 @@ class TestDispatchLoopLowerer:
         program = IrProgram(entry_label="_start")
         program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
         program.add_instruction(
-            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(72)], id=gen.next())  # 'H'
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(72)], id=gen.next())  # 'H'
         )
         program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
         program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))

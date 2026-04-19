@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.1] — 2026-04-19
+
+### Fixed
+
+- Pass `syscall_arg_reg=0` explicitly to `IrToWasmCompiler().compile()`.  The
+  BASIC IR compiler assigns register 0 as the SYSCALL print argument, but
+  `ir-to-wasm-compiler` v0.3.0 restored its default to 4 (the Brainfuck
+  convention).  Without this fix, PRINT statements would output null bytes
+  instead of the intended character because the WASM lowerer was reading the
+  wrong local variable.
+
 ## [0.1.0] — 2026-04-19
 
 ### Added
