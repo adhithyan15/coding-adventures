@@ -37,12 +37,19 @@ It also provides a roadmap of the full operation taxonomy so that later specs
 IMG00  (this spec)   Image model — pixel types, colorspaces, memory layout, coordinates
 IMG01               Convolution and spatial filters — Gaussian blur, edge detection, kernels
 IMG02               LUTs — 1D tone curves, 3D LUT (.cube format), GPU LUT textures
-IMG03               Point operations — brightness, contrast, gamma, sRGB↔linear
+IMG03               Point operations — brightness, contrast, gamma, colour matrix
 IMG04               Geometric transforms — affine, perspective, scale, rotate, sampling
-IMG05               Image I/O — pure PNG, JPEG, and BMP codec implementations
+IMG05               Compositing — Porter-Duff operators, blend modes, alpha, layers
 IMG06               GPU acceleration bridge — Rust+wgpu core, TypeScript+WebGPU, C-ABI FFI
 IMG07               Morphological operations — erosion, dilation, opening, closing
 ```
+
+Image I/O (encoding and decoding PNG, JPEG, BMP, QOI, PPM) is handled by the
+**IC series** (IC00–IC08), which predates the IMG series. `Image`
+(IC00) is the shared pixel-buffer type: every IC codec produces or consumes it,
+and every IMG operation accepts and returns it. See §10 for how the two series
+connect and for the `Image` evolution plan.
+
 
 Specs IMG01–IMG05 define CPU-only implementations in every supported language
 (Python, TypeScript, Rust, Go, Ruby, etc.). IMG06 then provides a Rust crate
@@ -537,36 +544,107 @@ spatial vs frequency tradeoff tips.
 
 ---
 
-## 6. The `Image<P>` Type
+## 6. `Image` as the Base Type
 
-Every implementation package in this series provides an `Image<P>` container
-parameterised by pixel type P. The container must satisfy the following
-interface (pseudocode; language-specific syntax in each package):
+### The existing type (IC00)
+
+`Image` (defined in IC00, implemented in every language in the repo)
+is the concrete pixel-buffer type for this entire series. It was introduced as
+the interchange format for image codecs, but its design is general enough to
+serve as the foundation for all image processing operations.
+
+> **Note on naming**: the current code calls this type `PixelContainer`. The
+> specs use `Image` throughout, reflecting the planned rename. The code rename
+> will happen in a separate wave; until then, `Image` in any spec means the
+> type currently called `PixelContainer` in the implementation.
 
 ```
-type Image<P> {
-    width  : uint32
-    height : uint32
-    stride : uint32        // bytes per row (≥ width × sizeof(P))
-    data   : &mut [u8]     // raw byte buffer, length = stride × height
+Image {
+    width:  u32       // image width in pixels
+    height: u32       // image height in pixels
+    data:   [u8]      // RGBA8, row-major, top-left, stride = width × 4 (tightly packed)
 }
 
-impl Image<P> {
-    fn new(width, height) -> Image<P>                 // stride = width × sizeof(P) (tightly packed)
-    fn new_with_stride(width, height, stride) -> Image<P>
-    fn pixel(x, y) -> &P                              // read pixel at (x, y)
-    fn pixel_mut(x, y) -> &mut P                      // write pixel at (x, y)
-    fn row(y) -> &[P]                                 // slice of one row
-    fn row_mut(y) -> &mut [P]
-    fn as_bytes() -> &[u8]                            // raw byte view
-    fn crop(x, y, w, h) -> Image<P>                  // new image backed by same buffer (zero-copy)
+offset(x, y) = (y * width + x) * 4
+data[offset + 0] = R   (sRGB u8)
+data[offset + 1] = G
+data[offset + 2] = B
+data[offset + 3] = A   (straight alpha u8)
+```
+
+Every IC codec (PNG, JPEG, BMP, QOI, PPM) speaks this format. Every language
+in the repo already has an `Image` implementation. The IMG operations
+in IMG01–IMG05 accept and return `Image` directly.
+
+### The limitation: RGBA8 only
+
+The current `Image` is fixed at RGBA8 (unsigned byte, sRGB). This
+covers the I/O and display use case well but is too restrictive for a full
+image-processing pipeline:
+
+- Convolution and compositing require **f32 working buffers** (linear light,
+  no clamping during accumulation — see §7).
+- HDR images need **u16 or f32** channel precision.
+- Grayscale processing (edge detection, masks) works on **single-channel**
+  data; forcing three-channel RGBA wastes memory and bandwidth.
+- Zero-copy `crop` requires an explicit **stride** field (currently absent).
+
+### The evolution: extended `Image`
+
+The plan is to evolve `Image` by adding three metadata fields while
+keeping the existing API fully backward-compatible. The IC codec series does
+not need to change; codecs continue to construct the existing `{width, height,
+data}` form, which is now understood as the default case:
+`format = RGBA8, colorspace = SRGB, stride = width × 4`.
+
+```
+// Extended Image (IC00 v2 proposal)
+Image {
+    width:      u32
+    height:     u32
+    stride:     u32          // bytes per row; default = width × bytes_per_pixel(format)
+    format:     PixelFormat  // which pixel type the bytes encode
+    colorspace: Colorspace   // how to interpret colour values
+    data:       [u8]         // raw bytes; interpretation depends on format
+}
+
+enum PixelFormat {
+    Luma8,              // 1 channel, u8
+    LumaA8,             // 2 channels, u8
+    RGB8,               // 3 channels, u8
+    RGBA8,              // 4 channels, u8   ← existing default
+    RGB16,              // 3 channels, u16 little-endian
+    RGBA16,             // 4 channels, u16 little-endian
+    RGB32F,             // 3 channels, f32 native-endian
+    RGBA32F,            // 4 channels, f32 native-endian
+}
+
+enum Colorspace {
+    SRGB,               // standard sRGB with gamma transfer function ← existing default
+    LINEAR,             // linear light, same primaries as sRGB
+    UNSPECIFIED,        // unknown; treat as SRGB for display, linear for processing
 }
 ```
 
-The `crop` operation returns a **view** into the original buffer, not a copy.
-The cropped image has a stride that matches the original image's stride (the
-full row width), not the cropped width. This is standard practice and allows
-zero-copy region processing.
+The stride field enables **zero-copy crop**: a cropped container shares the
+parent's data buffer with `stride = parent.stride` and an offset into `data`.
+The crop operation does not need to copy bytes.
+
+**Backward compatibility**: every existing `Image` constructor
+continues to work unchanged. The `format` field defaults to `RGBA8`. The
+`colorspace` field defaults to `SRGB`. The `stride` field defaults to
+`width × 4`. Code that reads `container.data` directly still works because
+the byte layout is unchanged for the default case.
+
+**Migration path for IMG operations**: the IMG packages use the extended
+`Image` internally for their f32 working buffers (format `RGBA32F`,
+colorspace `LINEAR`) and accept/return the public `RGBA8/SRGB` form at the
+API boundary. The sRGB↔linear conversion is always done at the input and
+output edges, never inside an operation.
+
+The extended `Image` specification and migration guide will be
+formalised in IC00 v2. The IMG specs reference it now so that implementors
+can design with the full picture in mind.
 
 ---
 
@@ -617,8 +695,53 @@ PaintVM emits PaintScene instructions
 ```
 
 A `PaintGlyphRun` or `PaintFillPath` instruction eventually writes pixels into
-an `Image<RGBA8>`. The image processing operations in this series (blur, LUTs,
-transforms) can be applied to that buffer before final display.
+an `Image` (RGBA8). The image processing operations in this series
+(blur, LUTs, transforms, compositing) can be applied to that buffer before
+final display.
+
+---
+
+## 10. The IC / IMG Relationship
+
+The **IC series** (IC00–IC08) owns the codec layer: encoding and decoding
+pixel data to/from file formats (PNG, JPEG, BMP, QOI, PPM, etc.). IC00 defines
+`Image` and `ImageCodec`. IC01–IC08 implement specific codecs.
+
+The **IMG series** (this spec, IMG01–IMG07) owns the processing layer:
+transforming pixel data in memory. Every IMG operation accepts and returns
+`Image`.
+
+```
+File on disk
+    │
+    ▼  IC codec (IC01–IC08)
+Image (RGBA8, sRGB)
+    │
+    ▼  IMG processing (IMG01–IMG07)
+Image (RGBA8, sRGB)   ← or RGBA32F/LINEAR internally during processing
+    │
+    ▼  IC codec (IC01–IC08)
+File on disk (or display surface)
+```
+
+The two series are deliberately decoupled: IC knows nothing about blur or
+LUTs; IMG knows nothing about PNG headers or JPEG quantisation tables. The
+only shared contract is `Image`.
+
+### Colorspace at the boundary
+
+IC codecs produce sRGB-encoded RGBA8 (PNG, JPEG) or unspecified (BMP, PPM).
+The `colorspace` field on the extended `Image` (§6) carries this
+information across the boundary so IMG operations can perform the correct
+sRGB→linear conversion at their input edge.
+
+```
+// Typical round-trip with colorspace tracking:
+let mut pc = png_codec.decode(file_bytes);         // colorspace = SRGB
+pc = gaussian_blur(&pc, sigma=2.0, ...);           // internally converts to linear
+pc = apply_lut3d(&pc, &film_look_lut);             // internally converts to linear
+let output = jpeg_codec.encode(&pc);               // expects SRGB; pc still tagged SRGB
+```
 
 ---
 
