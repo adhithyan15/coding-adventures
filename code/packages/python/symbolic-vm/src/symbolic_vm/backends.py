@@ -30,6 +30,7 @@ from symbolic_ir import ASSIGN, DEFINE, IF, IRApply, IRNode, IRSymbol
 from symbolic_vm.backend import Backend, Handler
 from symbolic_vm.derivative import differentiate
 from symbolic_vm.handlers import FALSE, TRUE, build_handler_table
+from symbolic_vm.integrate import integrate
 
 # Heads whose arguments must NOT be evaluated before dispatch. Shared
 # by both backends — neither strict nor symbolic evaluation wants to
@@ -99,6 +100,7 @@ class SymbolicBackend(_BaseBackend):
         super().__init__()
         handlers = dict(build_handler_table(simplify=True))
         handlers["D"] = differentiate()
+        handlers["Integrate"] = integrate()
         self._handlers = handlers
 
     def on_unresolved(self, symbol: IRSymbol) -> IRNode:
