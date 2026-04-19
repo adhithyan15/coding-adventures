@@ -49,10 +49,33 @@ class Scan:
     ``alias`` is preserved because the planner has already resolved column
     references using it — the codegen uses the alias (or table name if none)
     to look up column values on the row the scan yields.
+
+    Optimizer-added annotations (always None from the planner):
+
+    - ``required_columns`` — if set, the column subset the query actually
+      needs. Backends may use this to avoid materializing other columns.
+    - ``scan_limit`` — if set, a hint that at most this many rows will be
+      consumed. Backends may short-circuit; the VM still applies the true
+      Limit higher in the tree.
     """
 
     table: str
     alias: str | None = None
+    required_columns: tuple[str, ...] | None = None
+    scan_limit: int | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class EmptyResult:
+    """Leaf node produced by DeadCodeElimination. Yields zero rows at runtime.
+
+    ``columns`` preserves the output schema so downstream nodes (and the
+    codegen) can still type-check. The field is a tuple of column names; the
+    optimizer populates it from the schema of the replaced subtree when
+    possible.
+    """
+
+    columns: tuple[str, ...] = ()
 
 
 # ---- Transform nodes ------------------------------------------------------
@@ -284,6 +307,7 @@ class DropTable:
 # The root union. Every plan function returns one of these.
 LogicalPlan = (
     Scan
+    | EmptyResult
     | Filter
     | Project
     | Join
@@ -317,7 +341,7 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     plan nodes.
     """
     match node:
-        case Scan() | CreateTable() | DropTable():
+        case Scan() | EmptyResult() | CreateTable() | DropTable():
             return ()
         case (
             Filter() | Project() | Aggregate() | Having()

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0] - 2026-04-19
+
+### Added
+
+- `EmptyResult` leaf node (produced by `DeadCodeElimination` downstream).
+- `Scan.required_columns` and `Scan.scan_limit` annotations — populated
+  by optimizer passes; ignored when `None`.
+
 ## [0.1.0] - 2026-04-19
 
 ### Added
