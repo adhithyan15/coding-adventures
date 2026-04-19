@@ -11,6 +11,7 @@ from polynomial import (
     divide,
     divmod_poly,
     evaluate,
+    extended_gcd,
     gcd,
     mod,
     monic,
@@ -586,3 +587,87 @@ class TestSquarefree:
                 if degree(factors[i]) > 0 and degree(factors[j]) > 0:
                     g = gcd(factors[i], factors[j])
                     assert degree(g) == 0
+
+
+# =============================================================================
+# Extended Euclidean — the Bézout cofactors Hermite reduction needs
+# =============================================================================
+
+
+class TestExtendedGcd:
+    """``extended_gcd`` returns ``(g, s, t)`` with ``s·a + t·b = g``.
+
+    The identity is the one correctness gate — every test re-checks it.
+    """
+
+    def _bezout(self, a, b):
+        g, s, t = extended_gcd(a, b)
+        return g, s, t, add(multiply(s, a), multiply(t, b))
+
+    def test_coprime_linears_return_constant_gcd(self):
+        one_ = Fraction(1)
+        a = (Fraction(-1), one_)  # x - 1
+        b = (Fraction(1), one_)   # x + 1
+        g, s, t, lhs = self._bezout(a, b)
+        assert degree(g) == 0
+        assert lhs == g
+
+    def test_common_factor_is_recovered(self):
+        one_ = Fraction(1)
+        # (x - 1)(x + 2)  and  (x - 1)(x + 3): common factor (x - 1).
+        f1 = multiply((Fraction(-1), one_), (Fraction(2), one_))
+        f2 = multiply((Fraction(-1), one_), (Fraction(3), one_))
+        g, s, t, lhs = self._bezout(f1, f2)
+        assert lhs == g
+        # g must divide both f1 and f2 exactly.
+        assert mod(f1, g) == ()
+        assert mod(f2, g) == ()
+
+    def test_b_is_zero_returns_a_with_s_one(self):
+        a = (Fraction(2), Fraction(3), Fraction(5))
+        g, s, t = extended_gcd(a, ())
+        assert g == a
+        # s·a + t·0 = a  forces s = 1, t irrelevant.
+        assert add(multiply(s, a), multiply(t, ())) == a
+
+    def test_a_is_zero_returns_b_with_t_one(self):
+        b = (Fraction(7), Fraction(0), Fraction(11))
+        g, s, t = extended_gcd((), b)
+        assert g == b
+        assert add(multiply(s, ()), multiply(t, b)) == b
+
+    def test_both_zero_returns_all_zero(self):
+        g, s, t = extended_gcd((), ())
+        assert g == ()
+
+    def test_self_gcd_returns_self(self):
+        p = (Fraction(1), Fraction(2), Fraction(3))
+        g, s, t, lhs = self._bezout(p, p)
+        assert degree(g) == degree(p)
+        assert lhs == g
+
+    def test_cofactor_identity_on_higher_degrees(self):
+        one_ = Fraction(1)
+        # (x - 1)² (x + 2) vs (x - 1) (x + 2)²: common (x - 1)(x + 2).
+        xm1 = (Fraction(-1), one_)
+        xp2 = (Fraction(2), one_)
+        f1 = multiply(multiply(xm1, xm1), xp2)
+        f2 = multiply(xm1, multiply(xp2, xp2))
+        g, s, t, lhs = self._bezout(f1, f2)
+        assert lhs == g
+        assert degree(g) == 2
+
+    def test_preserves_fraction_coefficients(self):
+        # Force the divisions inside divmod to produce non-integer
+        # rationals. The Bézout identity must still hold, and any
+        # cofactor coefficient that actually passed through polynomial
+        # division must be Fraction-typed (the integer seeds ``(1,)``
+        # and ``()`` stay as-is when ``b`` divides ``a`` directly, but
+        # any non-trivial Euclidean step introduces Fractions).
+        a = (Fraction(1, 3), Fraction(2, 5), Fraction(1))
+        b = (Fraction(1, 7), Fraction(1))
+        g, s, t, lhs = self._bezout(a, b)
+        assert lhs == g
+        # g coefficients went through ``divmod_poly`` at least once.
+        for c in g:
+            assert isinstance(c, Fraction)

@@ -1,12 +1,24 @@
-"""Symbolic integration — the ``Integrate`` handler (Phase 1).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1 and 2c).
 
-Phase 1 is the "reverse derivative table" layer. Every rule here is the
-product rule, the chain rule, or the derivative of a single elementary
-function, read backwards. None of it is numeric — we emit binary applies
-and let the VM's arithmetic handlers simplify.
+The handler tries two routes, in order:
 
-What this phase can do
-----------------------
+1. **Rational-function route (Phase 2c)** — if the integrand is a
+   rational function of ``x`` over Q, split off the polynomial part,
+   run Hermite reduction, and emit the closed-form rational part
+   plus an unevaluated ``Integrate`` for the squarefree log
+   remainder. See ``hermite-reduction.md``.
+2. **Phase 1 route** — the "reverse derivative table". Covers linear
+   combinations of elementary functions, power rule, constant factor,
+   and a few hard-coded integration-by-parts cases (log, sqrt).
+
+The rational route fires first because Hermite is a *decision
+procedure* on its input domain — when the integrand is rational, it
+gives an answer every time, and that answer has a cleaner structure
+than whatever Phase 1 would have pattern-matched. Phase 1 remains the
+fallback for everything else (trig, exp, mixed products, etc.).
+
+What Phase 1 can do
+-------------------
 
 - Constants:            ``∫ c dx = c·x``
 - Power rule:           ``∫ x^n dx = x^(n+1) / (n+1)`` (with
@@ -23,9 +35,10 @@ What this phase can't do (yet)
 
 - Integration by substitution (except trivial constant-factor / sum).
 - Integration by parts (except the hard-coded ``log`` case).
-- Rational functions that aren't already a single power of x — partial
-  fractions and Hermite reduction are Phase 2.
-- Any expression with two x-dependent factors in a product.
+- The *log part* of a rational function — Hermite leaves it as an
+  unevaluated ``Integrate`` with a squarefree denominator, awaiting
+  Rothstein–Trager (Phase 2d).
+- Any expression with two x-dependent, non-rational factors.
 
 Anything we can't integrate comes back as ``Integrate(f, x)`` unchanged,
 exactly as ``D`` does for unknown heads. The CAS stays consistent — it
@@ -38,6 +51,13 @@ strict mode ``Integrate`` falls through to
 
 from __future__ import annotations
 
+from fractions import Fraction
+
+from polynomial import (
+    Polynomial,
+    divmod_poly,
+    normalize,
+)
 from symbolic_ir import (
     ADD,
     COS,
@@ -60,6 +80,8 @@ from symbolic_ir import (
 )
 
 from symbolic_vm.backend import Handler
+from symbolic_vm.hermite import hermite_reduce
+from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
 
 ONE = IRInteger(1)
 TWO = IRInteger(2)
@@ -78,12 +100,137 @@ def integrate() -> Handler:
             # Integration with respect to something other than a plain
             # symbol is meaningless — leave the expression.
             return expr
+        # Rational-function route first (Phase 2c). ``to_rational``
+        # returns None for anything outside Q(x); only then do we fall
+        # back to the Phase 1 pattern table.
+        rational_result = _integrate_rational(f, x)
+        if rational_result is not None:
+            return vm.eval(rational_result)
         result = _integrate(f, x)
         if result is None:
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 
     return handler
+
+
+# ---------------------------------------------------------------------------
+# Phase 2c — rational-function integration via Hermite reduction
+# ---------------------------------------------------------------------------
+
+
+def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
+    """Attempt the rational-function route. ``None`` means "not rational".
+
+    When ``f`` is a rational function of ``x`` over Q, splits off the
+    polynomial part (which integrates trivially via the power rule
+    applied coefficient-wise), runs Hermite reduction on the proper
+    rational remainder, and assembles the IR output:
+
+        ∫ f dx  =  ∫ poly dx              (power rule)
+                 + rat_num / rat_den      (Hermite rational part)
+                 + Integrate(log_num / log_den, x)   (squarefree residual)
+
+    Any of the three pieces may be zero; we skip them when so.
+
+    Returns ``None`` for anything ``to_rational`` rejects — which is
+    every non-rational integrand, so Phase 1 gets those.
+    """
+    r = to_rational(f, x)
+    if r is None:
+        return None
+    num, den = r
+    # Bail for trivial denominators — pure polynomial integrands have
+    # a cleaner closed form through the Phase 1 Add / power-rule path,
+    # which emits ``IRApply`` shapes the existing differentiator and
+    # test suite are written against. Hermite has nothing to contribute
+    # to a polynomial anyway (no repeated factors in the denominator).
+    if len(normalize(den)) <= 1:
+        return None
+    # Polynomial division: f = q + r/den with deg r < deg den. ``q`` is
+    # the polynomial part we integrate with the power rule; ``r`` is
+    # the proper rational we feed to Hermite.
+    quot, rem = divmod_poly(num, den)
+    has_poly = bool(normalize(quot))
+
+    hermite_rat = None
+    hermite_log = None
+    if normalize(rem):
+        (hermite_rat, hermite_log) = hermite_reduce(rem, den)
+
+    has_rat = hermite_rat is not None and bool(normalize(hermite_rat[0]))
+    has_log = hermite_log is not None and bool(normalize(hermite_log[0]))
+
+    # "Made progress" = we extracted something Phase 1 couldn't have
+    # produced on its own. Without a polynomial part and without a
+    # rational-function reduction, the output would just be
+    # ``Integrate(<input>, x)`` — exactly the unevaluated shape we'd
+    # re-enter forever. Return None and let Phase 1 try its pattern
+    # table; if Phase 1 also gives up, the handler's fallthrough emits
+    # the unevaluated form once and we stop.
+    if not (has_poly or has_rat):
+        return None
+
+    pieces: list[IRNode] = []
+
+    # 1. Polynomial part — trivially integrated coefficient-by-coefficient.
+    if has_poly:
+        pieces.append(from_polynomial(_integrate_polynomial(quot), x))
+
+    # 2. Hermite rational part.
+    if has_rat:
+        pieces.append(_rational_to_ir(hermite_rat[0], hermite_rat[1], x))
+
+    # 3. Squarefree log residual. Emit unevaluated; RT lands in a later
+    # phase and replaces this with a log sum. The handler's re-entry on
+    # this Integrate goes through _integrate_rational again, which now
+    # returns None (no progress) and falls through to Phase 1 — which
+    # closes simple cases like ``1/(x − a)`` automatically and leaves
+    # the rest unevaluated.
+    if has_log:
+        integrand = _rational_to_ir(hermite_log[0], hermite_log[1], x)
+        pieces.append(IRApply(INTEGRATE, (integrand, x)))
+
+    if len(pieces) == 1:
+        return pieces[0]
+    # Binary left-associative Add chain — the VM's Add handler is
+    # strictly binary.
+    acc = pieces[0]
+    for piece in pieces[1:]:
+        acc = IRApply(ADD, (acc, piece))
+    return acc
+
+
+def _integrate_polynomial(p: Polynomial) -> Polynomial:
+    """Integrate a polynomial coefficient-wise: ``a_i · x^i → a_i/(i+1) · x^(i+1)``.
+
+    The constant of integration is omitted (as everywhere in this
+    handler). The result has length ``len(p) + 1`` before normalisation.
+    """
+    if not normalize(p):
+        return ()
+    # Leading zero is the new constant term (the +C we drop). Each
+    # higher coefficient is ``a_i / (i+1)`` sitting at position i+1.
+    result: list = [0]
+    for i, c in enumerate(p):
+        result.append(Fraction(c) / Fraction(i + 1))
+    return normalize(tuple(result))
+
+
+def _rational_to_ir(
+    num: Polynomial, den: Polynomial, x: IRSymbol
+) -> IRNode:
+    """Build the IR for ``num(x) / den(x)``.
+
+    If ``den`` is the constant polynomial ``1``, we emit just the
+    numerator — avoids wrapping every rational in a trivial ``Div``.
+    """
+    num_ir = from_polynomial(num, x)
+    den_n = normalize(den)
+    if den_n == (Fraction(1),) or den_n == (1,):
+        return num_ir
+    den_ir = from_polynomial(den, x)
+    return IRApply(DIV, (num_ir, den_ir))
 
 
 def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:

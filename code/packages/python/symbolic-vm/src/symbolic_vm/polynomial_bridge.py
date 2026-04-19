@@ -265,7 +265,15 @@ def from_polynomial(p: Polynomial, x: IRSymbol) -> IRNode:
         return IRInteger(0)
     if len(terms) == 1:
         return terms[0]
-    return IRApply(ADD, tuple(terms))
+    # Fold terms into a left-associative binary ``Add`` chain. The VM's
+    # Add handler — and every other arithmetic handler — is strictly
+    # binary; emitting an n-ary apply would trip the arity check on the
+    # first ``vm.eval``. Left-associative matches the shape produced by
+    # the MACSYMA compiler, so downstream code sees a uniform tree.
+    acc = terms[0]
+    for term in terms[1:]:
+        acc = IRApply(ADD, (acc, term))
+    return acc
 
 
 def _term(c, i: int, x: IRSymbol) -> IRNode:

@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.4.0 — 2026-04-19
+
+Phase 2c of the integration roadmap — Hermite reduction. Rational
+integrands now get their *rational part* in closed form; the log part
+stays as an unevaluated `Integrate` with a squarefree denominator
+(Rothstein–Trager, Phase 2d, will close it).
+
+- New module `symbolic_vm.hermite`:
+  - `hermite_reduce(num, den) → ((rat_num, rat_den), (log_num, log_den))`
+    performs the classical Hermite reduction on a proper rational
+    function over Q. The log-part denominator is guaranteed squarefree.
+  - The correctness gate (and the universal unit-test invariant) is
+    the re-differentiation identity
+    `d/dx(rat_num / rat_den) + log_num / log_den == num / den`.
+- `Integrate` handler grows a pre-check that routes rational
+  integrands with non-constant denominators through
+  `to_rational → polynomial division → hermite_reduce → from_polynomial`.
+  Pure polynomials still go through the Phase 1 linear-recursion path
+  (preserves the existing IR shape the rest of the test suite and
+  downstream consumers are written against).
+- Depends on `coding-adventures-polynomial ≥ 0.3.0` for the new
+  `extended_gcd` primitive.
+- `from_polynomial` now emits a left-associative binary `Add` chain —
+  the arithmetic handlers are strictly binary, so n-ary applies tripped
+  the arity check on the first `vm.eval`. The bridge tests were
+  updated to the new shape.
+- 21 new tests (15 unit-level Hermite, 6 end-to-end handler), bringing
+  the package to 187 tests and 90 % coverage.
+
 ## 0.3.0 — 2026-04-19
 
 Phase 2b of the integration roadmap — the IR ↔ polynomial bridge.
