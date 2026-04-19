@@ -96,6 +96,7 @@ from sql_planner.plan import Limit as PlanLimit
 from .errors import UnsupportedNode
 from .ir import (
     AdvanceCursor,
+    AdvanceGroupKey,
     BeginRow,
     Between,
     BinaryOp,
@@ -552,8 +553,11 @@ def _compile_aggregate(
     # The VM expands this pseudo-instruction into the per-group iteration.
     # We express it here as a label-bounded block containing one set of
     # per-group instructions; the VM runs the block once per group.
+    # The emit loop: advance to the next group at the top; if exhausted jump
+    # past the block. This is the same header-then-body pattern as Scan.
     post: list[Instruction] = [
         Label(name=emit_start),
+        AdvanceGroupKey(on_exhausted=emit_end),
     ]
 
     if having is not None:

@@ -27,6 +27,7 @@ from .compiler import compile, compile_expr  # noqa: A004 — shadowing builtin 
 from .errors import CodegenError, InternalError, UnsupportedNode
 from .ir import (
     AdvanceCursor,
+    AdvanceGroupKey,
     BeginRow,
     Between,
     BinaryOp,
@@ -78,6 +79,7 @@ from .ir import (
 
 __all__ = [
     "AdvanceCursor",
+    "AdvanceGroupKey",
     "BeginRow",
     "BinaryOp",
     "BinaryOpCode",

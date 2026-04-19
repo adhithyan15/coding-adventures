@@ -253,6 +253,22 @@ class LoadGroupKey:
     i: int
 
 
+@dataclass(frozen=True, slots=True)
+class AdvanceGroupKey:
+    """Advance the VM's group iterator to the next group.
+
+    Pre-execution: the aggregate accumulator holds one entry per distinct
+    group. The per-group emit block begins with this instruction; the VM
+    sets ``group_key`` to the next group in insertion order. When every
+    group has been emitted, the VM jumps to ``on_exhausted`` — the
+    label after the emit block — so the single-pass loop ends cleanly.
+
+    This mirrors ``AdvanceCursor`` for scans: the same loop-with-exit-label
+    pattern, but iterating over groups instead of rows.
+    """
+    on_exhausted: str
+
+
 # ---- Result-buffer post-processing -------------------------------------
 
 
@@ -371,7 +387,7 @@ Instruction = (
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
-    | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey
+    | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
     | InsertRow | UpdateRows | DeleteRows | CreateTable | DropTable
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
