@@ -15,6 +15,9 @@ All notable changes to this package will be documented in this file.
 - Capped guest-controlled WASI iovec counts and total read/write bytes so
   untrusted modules cannot force unbounded host-side copying through
   `fd_write` or `fd_read`.
+- Rejected malformed raw data sections before slicing payload bytes so
+  truncated or oversized Wasm modules cannot force unbounded temporary lists
+  during instantiation.
 
 ## [0.3.0] - 2026-04-06
 

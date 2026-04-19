@@ -2702,6 +2702,22 @@ sizes.
 
 ---
 
+## Wasm runtimes must validate raw data-section sizes before slicing payloads
+
+**Date:** 2026-04-18
+
+**What happened:** A Perl convergence security review found that `wasm-runtime` trusted the byte
+count encoded inside a raw data section and sliced `$pos .. $pos + $size - 1` before proving those
+bytes existed. A malformed module could advertise a large segment size with a short payload and
+force the runtime to allocate a huge temporary range/list while instantiating.
+
+**Rule:** Treat parsed-but-raw Wasm sections as untrusted until every length field is checked
+against the remaining section bytes and package caps. Validate segment count, per-segment bytes,
+aggregate data bytes, offset-expression termination, and exact section consumption before slicing
+or copying payloads.
+
+---
+
 ## Reactor tests must tolerate deferred socket readability after a write-ready step
 
 **Date:** 2026-04-18

@@ -66,6 +66,12 @@ use Encode ();
 use Exporter 'import';
 our @EXPORT_OK = qw();
 
+use constant {
+    _MAX_DATA_SEGMENTS      => 4096,
+    _MAX_DATA_SEGMENT_BYTES => 16 * 1024 * 1024,
+    _MAX_TOTAL_DATA_BYTES   => 16 * 1024 * 1024,
+};
+
 # ============================================================================
 # WasmRuntime
 # ============================================================================
@@ -278,32 +284,62 @@ sub instantiate {
 
 sub _normalize_data_segments {
     my ($segments) = @_;
+    croak 'WasmRuntime: data segments arrayref required'
+        unless ref($segments || []) eq 'ARRAY';
+
     my @normalized;
+    my $segment_count = 0;
+    my $total_data = 0;
 
     for my $segment (@{ $segments || [] }) {
         if (ref($segment) eq 'HASH') {
+            my $data_len = _data_payload_length($segment->{data});
+            ($segment_count, $total_data) = _check_data_segment_limits(
+                $segment_count,
+                $total_data,
+                $data_len,
+            );
             push @normalized, $segment;
             next;
         }
 
         my $bytes = $segment || [];
+        croak 'WasmRuntime: raw data section must be an arrayref of bytes'
+            unless ref($bytes) eq 'ARRAY';
+
         my $pos = 0;
         my ($count, $cc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
         $pos += $cc;
+        croak 'WasmRuntime: data segment count exceeds limit'
+            if $segment_count + $count > _MAX_DATA_SEGMENTS;
 
-        for (1 .. $count) {
+        for (my $i = 0; $i < $count; $i++) {
             my ($memory_index, $mc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
             $pos += $mc;
 
             my @offset_expr;
+            my $saw_end = 0;
             while ($pos <= $#$bytes) {
                 my $byte = $bytes->[$pos++];
                 push @offset_expr, $byte;
-                last if $byte == 0x0B;
+                if ($byte == 0x0B) {
+                    $saw_end = 1;
+                    last;
+                }
             }
+            croak 'WasmRuntime: unterminated data segment offset expression'
+                unless $saw_end;
 
             my ($size, $sc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
             $pos += $sc;
+            ($segment_count, $total_data) = _check_data_segment_limits(
+                $segment_count,
+                $total_data,
+                $size,
+            );
+            croak 'WasmRuntime: data segment payload shorter than declared size'
+                if $size > scalar(@$bytes) - $pos;
+
             my @data = $size > 0 ? @{$bytes}[$pos .. $pos + $size - 1] : ();
             $pos += $size;
 
@@ -313,9 +349,36 @@ sub _normalize_data_segments {
                 data         => \@data,
             };
         }
+
+        croak 'WasmRuntime: trailing bytes after data section'
+            if $pos != scalar(@$bytes);
     }
 
     return \@normalized;
+}
+
+sub _data_payload_length {
+    my ($payload) = @_;
+    return 0 unless defined $payload;
+    return scalar(@$payload) if ref($payload) eq 'ARRAY';
+    return length($payload) unless ref($payload);
+    croak 'WasmRuntime: data segment payload must be bytes or an arrayref';
+}
+
+sub _check_data_segment_limits {
+    my ($segment_count, $total_data, $size) = @_;
+    croak 'WasmRuntime: data segment size exceeds limit'
+        if $size > _MAX_DATA_SEGMENT_BYTES;
+
+    $segment_count++;
+    croak 'WasmRuntime: data segment count exceeds limit'
+        if $segment_count > _MAX_DATA_SEGMENTS;
+
+    $total_data += $size;
+    croak 'WasmRuntime: total data segment bytes exceed limit'
+        if $total_data > _MAX_TOTAL_DATA_BYTES;
+
+    return ($segment_count, $total_data);
 }
 
 # ---- Call -----------------------------------------------------------------
