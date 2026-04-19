@@ -1,5 +1,15 @@
 # Changelog — coding-adventures-polynomial
 
+## [0.3.0] — 2026-04-19
+
+### Added
+
+- `extended_gcd(a, b) → (g, s, t)` — extended Euclidean algorithm.
+  Returns the GCD along with Bézout cofactors satisfying
+  `s·a + t·b = g`. Over Q[x] this is the primitive Hermite reduction
+  needs to invert `(U·V') mod V` when peeling a repeated factor off
+  the denominator. See `hermite-reduction.md`.
+
 ## [0.2.0] — 2026-04-19
 
 ### Added

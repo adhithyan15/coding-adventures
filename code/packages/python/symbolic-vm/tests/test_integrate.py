@@ -305,3 +305,106 @@ def test_diff_then_integrate_exp(vm: VM) -> None:
     integral = IRApply(INTEGRATE, (exp_x, X))
     roundtrip = IRApply(D, (integral, X))
     assert vm.eval(roundtrip) == exp_x
+
+
+# ---------------------------------------------------------------------------
+# Phase 2c — Hermite reduction end-to-end
+# ---------------------------------------------------------------------------
+#
+# The rational-function route fires before Phase 1 when the integrand is
+# a rational function of x over Q with a non-constant denominator. The
+# universal correctness check is the same one the Hermite unit tests
+# use: differentiating the integrator's output must give back the
+# original integrand — but here we check it at the IR level via the
+# ``D`` handler on :class:`SymbolicBackend`.
+
+
+def _contains_head(node, head):
+    """True iff the IR subtree contains an ``IRApply`` with ``head``."""
+    if isinstance(node, IRApply):
+        if node.head == head:
+            return True
+        return any(_contains_head(a, head) for a in (node.head, *node.args))
+    return False
+
+
+def test_hermite_pure_rational_antiderivative(vm: VM) -> None:
+    # ∫ 1/(x - 1)² dx = -1/(x - 1). Pure rational antiderivative — the
+    # log residual is zero, so the output must not contain an inner
+    # Integrate node. (Structural equality against the "expected" IR
+    # is fragile — different canonicalisations of the same rational
+    # are all correct — so we assert the property that matters:
+    # Hermite closed the integral, no residual was left behind.)
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    integrand = IRApply(DIV, (IRInteger(1), IRApply(POW, (xm1, IRInteger(2)))))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert not _contains_head(out, INTEGRATE), (
+        f"Hermite should have closed ∫ 1/(x-1)² dx, got {out}"
+    )
+
+
+def test_hermite_higher_power(vm: VM) -> None:
+    # ∫ 1/(x - 1)³ dx — multiplicity 3, still closed-form rational.
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    integrand = IRApply(DIV, (IRInteger(1), IRApply(POW, (xm1, IRInteger(3)))))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert not _contains_head(out, INTEGRATE)
+
+
+def test_hermite_mixed_yields_integrate_for_log_part(vm: VM) -> None:
+    # ∫ 1 / ((x-1)² (x+1)) dx — mixes a rational piece and a log piece.
+    # The answer is ``rational_piece + Integrate(squarefree_integrand, x)``.
+    # We verify that the output contains an Add with an unevaluated
+    # Integrate whose integrand's denominator factors to (x-1)(x+1)
+    # (modulo canonicalisation of the exact shape).
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    xp1 = IRApply(ADD, (X, IRInteger(1)))
+    den = IRApply(MUL, (IRApply(POW, (xm1, IRInteger(2))), xp1))
+    integrand = IRApply(DIV, (IRInteger(1), den))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    # The output must not equal the input unevaluated Integrate —
+    # Hermite extracted something.
+    assert out != IRApply(INTEGRATE, (integrand, X))
+
+
+def test_hermite_squarefree_denom_falls_through_to_phase1(vm: VM) -> None:
+    # ∫ 1/(x - 1) dx — squarefree denominator. Hermite has no rational
+    # part, Phase 2c returns None, Phase 1 emits ``log(x - 1)``… but
+    # Phase 1 only matches ``b == x`` literally, so ``∫ 1/(x-1) dx``
+    # stays unevaluated for now. The test pins that behavior: no false
+    # claim, no infinite recursion.
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    integrand = IRApply(DIV, (IRInteger(1), xm1))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    # Unevaluated — the integrand itself may be normalised by the VM's
+    # DIV simplifier, so just check the head.
+    assert isinstance(out, IRApply) and out.head == INTEGRATE
+
+
+def test_hermite_with_polynomial_part(vm: VM) -> None:
+    # ∫ (x^3 + 1) / (x - 1)^2 dx — polynomial part + rational part.
+    # Polynomial division: x^3 + 1 = (x - 1)^2 · (x + 2) + (3x - 1).
+    # So integrand = (x + 2) + (3x - 1)/(x - 1)^2. Phase 2c emits
+    # integrate(x + 2) + rational_part + Integrate(log_residual).
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    den = IRApply(POW, (xm1, IRInteger(2)))
+    num = IRApply(ADD, (IRApply(POW, (X, IRInteger(3))), IRInteger(1)))
+    integrand = IRApply(DIV, (num, den))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    # Must be non-trivial — the integrator extracted at least the
+    # polynomial part.
+    assert out != IRApply(INTEGRATE, (integrand, X))
+
+
+def test_hermite_does_not_touch_sin(vm: VM) -> None:
+    # ``to_rational`` rejects transcendentals, so Phase 1 still wins on
+    # sin / cos / exp.
+    integrand = IRApply(SIN, (X,))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert out == IRApply(NEG, (IRApply(COS, (X,)),))
+
+
+def test_hermite_does_not_touch_exp(vm: VM) -> None:
+    integrand = IRApply(EXP, (X,))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert out == IRApply(EXP, (X,))

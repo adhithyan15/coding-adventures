@@ -252,10 +252,19 @@ def test_from_polynomial_with_general_coefficient():
 
 
 def test_from_polynomial_quadratic_sum():
-    # 1 + x + x²  → Add(1, x, Pow(x, 2))
+    # 1 + x + x²  → Add(Add(1, x), Pow(x, 2))
+    #
+    # Binary left-associative fold — the VM's arithmetic handlers are
+    # strictly binary, so from_polynomial must emit nested pairs rather
+    # than an n-ary apply. A previous version emitted n-ary Add, which
+    # tripped the arity check the instant the result hit vm.eval.
     result = from_polynomial((Fraction(1), Fraction(1), Fraction(1)), X)
     assert result == IRApply(
-        ADD, (IRInteger(1), X, IRApply(POW, (X, IRInteger(2))))
+        ADD,
+        (
+            IRApply(ADD, (IRInteger(1), X)),
+            IRApply(POW, (X, IRInteger(2))),
+        ),
     )
 
 

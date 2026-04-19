@@ -31,7 +31,7 @@ every supported type. Seeding with ``0.0`` would silently demote
 
 from __future__ import annotations
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 # Polynomial type alias: a tuple of numbers where index = degree.
 # The zero polynomial is the empty tuple ().
@@ -352,6 +352,65 @@ def gcd(a: Polynomial, b: Polynomial) -> Polynomial:
         u = v
         v = r
     return normalize(u)
+
+
+def extended_gcd(
+    a: Polynomial, b: Polynomial
+) -> tuple[Polynomial, Polynomial, Polynomial]:
+    """Extended Euclidean algorithm: return ``(g, s, t)`` with ``s·a + t·b = g``.
+
+    ``g`` is ``gcd(a, b)`` (up to leading-coefficient scaling; this
+    routine does not force a monic result — the caller can scale if
+    needed). ``s`` and ``t`` are the Bézout cofactors.
+
+    Hermite reduction feeds this with coprime inputs (``g`` is a
+    non-zero constant) and uses ``s`` to invert the multiplier in
+    ``U·V'`` modulo ``V``. Over Q[x] every step stays in the field, so
+    no pseudo-division tricks are needed.
+
+    The loop maintains the invariants
+
+        s·a + t·b = u
+        s'·a + t'·b = v
+
+    and performs the same ``(u, v) ← (v, u mod v)`` update on the
+    cofactors: if ``u = q·v + r`` then
+    ``s − q·s' , t − q·t'`` are the cofactors for ``r``. When ``v``
+    hits zero, ``u`` is the GCD and the current ``(s, t)`` are its
+    cofactors.
+
+    Edge cases:
+
+    - ``a = ()`` → returns ``((), zero-poly, (1,))`` (i.e. ``t = 1``
+      because ``0 + 1·b = b``; gcd of zero and b is b).
+    - ``b = ()`` → returns ``(a, (1,), ())``.
+    - ``a = b = ()`` → returns ``((), (), ())`` — the degenerate case;
+      no Bézout combination exists for the zero pair.
+
+    Examples:
+        >>> from fractions import Fraction
+        >>> # gcd(x^2 - 1, x - 1) = x - 1
+        >>> one = Fraction(1)
+        >>> a = (Fraction(-1), Fraction(0), one)   # x^2 - 1
+        >>> b = (Fraction(-1), one)                # x - 1
+        >>> g, s, t = extended_gcd(a, b)
+        >>> # Check: s*a + t*b == g
+        >>> add(multiply(s, a), multiply(t, b)) == g
+        True
+    """
+    u, v = normalize(a), normalize(b)
+    # Cofactor pairs: (s, t) for u, (s_, t_) for v. Seed with integer 0
+    # / 1 for the same Fraction-safe reason as elsewhere in the package.
+    s, t = (1,), ()
+    s_next, t_next = (), (1,)
+    while v:
+        q, r = divmod_poly(u, v)
+        u, v = v, r
+        # (s, t) ← (s_next, t_next); (s_next, t_next) ← (s - q·s_next,
+        # t - q·t_next). The subtraction stays in the coefficient ring.
+        s, s_next = s_next, subtract(s, multiply(q, s_next))
+        t, t_next = t_next, subtract(t, multiply(q, t_next))
+    return (u, s, t)
 
 
 # =============================================================================
