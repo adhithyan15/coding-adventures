@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-04-18
+
+### Fixed
+
+- Accept both `{ min, max }` and `{ limits => { min, max } }` memory shapes so
+  the validator works with the parser and the new Perl Wasm compiler pipeline.
+- Accept imported function descriptors that use `type_idx`, matching the
+  normalized module shape used elsewhere in the Perl Wasm stack.
+
 ## [0.2.0] - 2026-04-05
 
 ### Added

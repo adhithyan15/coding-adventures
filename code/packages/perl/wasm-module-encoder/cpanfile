@@ -1,0 +1,7 @@
+requires 'coding-adventures-wasm-leb128', '0.01';
+requires 'coding-adventures-wasm-types', '0.01';
+on 'test' => sub {
+    requires 'coding-adventures-wasm-module-parser', '0.01';
+    requires 'coding-adventures-wasm-validator', '0.01';
+    requires 'Test2::V0';
+};

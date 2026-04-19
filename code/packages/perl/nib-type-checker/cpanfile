@@ -1,0 +1,5 @@
+requires 'coding-adventures-nib-parser', '0.01';
+requires 'coding-adventures-type-checker-protocol', '0.01';
+on 'test' => sub {
+    requires 'Test2::V0';
+};

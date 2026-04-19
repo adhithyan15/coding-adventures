@@ -1,0 +1,21 @@
+[package]
+name = "nib-wasm-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Nib to WebAssembly compiler"
+
+[dependencies]
+coding-adventures-nib-parser = { path = "../nib-parser" }
+compiler-ir = { path = "../compiler-ir" }
+ir-optimizer = { path = "../ir-optimizer" }
+ir-to-wasm-compiler = { path = "../ir-to-wasm-compiler" }
+ir-to-wasm-validator = { path = "../ir-to-wasm-validator" }
+nib-ir-compiler = { path = "../nib-ir-compiler" }
+nib-type-checker = { path = "../nib-type-checker" }
+parser = { path = "../parser" }
+wasm-module-encoder = { path = "../wasm-module-encoder" }
+wasm-types = { path = "../wasm-types" }
+wasm-validator = { path = "../wasm-validator" }
+
+[dev-dependencies]
+wasm-runtime = { path = "../wasm-runtime" }

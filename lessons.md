@@ -4,6 +4,54 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-18: LuaRocks CI installs may need patched GitHub archive URLs for old rockspecs
+
+Some published LuaRocks rockspecs still point at legacy GitHub archive URLs
+like `https://github.com/<owner>/<repo>/archive/<tag>.tar.gz`. Those URLs can
+be flaky or return gateway errors in CI even when the corresponding tag still
+exists.
+
+**Symptom:** shared CI setup fails before any package build runs, typically
+while installing `busted` or one of its transitive dependencies, with an error
+like `Failed downloading https://github.com/.../archive/0.08.tar.gz`.
+
+**Rule:** When a LuaRocks dependency fails because of an old GitHub archive
+URL, patch the downloaded rockspec in CI to use the stable
+`archive/refs/tags/<tag>.tar.gz` form and install from that patched rockspec
+before proceeding with the rest of the Lua test tool bootstrap.
+
+### 2026-04-18: CI workflow classifier must recognize helper shell lines in toolchain-scoped hunks
+
+The build tool analyzes `.github/workflows/ci.yml` diffs to decide whether a
+workflow change is limited to one language toolchain or should force a full
+monorepo rebuild. If a toolchain-scoped hunk includes ordinary helper commands
+that the classifier does not recognize, such as `sed` or `rm`, the whole PR can
+fall back to a full build.
+
+**Symptom:** a small Lua setup fix triggers every language toolchain and builds
+thousands of packages, surfacing unrelated failures and making CI take hours.
+
+**Rule:** Whenever a CI setup hunk adds helper shell commands, add a regression
+test in `internal/gitdiff/ci_workflow_test.go` proving the hunk remains
+toolchain-scoped. Keep the allowlist narrow and tied to commands that only
+support the already-detected language setup.
+
+### 2026-04-18: Haskell cabal.project files must list transitive local packages
+
+Cabal does not discover sibling packages from another sibling's
+`cabal.project`. If a package includes `../lexer`, and `lexer.cabal` depends on
+the local `grammar-tools` package, the top-level package's own
+`cabal.project` must also list `../grammar-tools`.
+
+**Symptom:** a full Haskell build fails with `unknown package: grammar-tools`
+while trying to solve dependencies for `lexer`, even though
+`code/packages/haskell/grammar-tools` exists in the repo.
+
+**Rule:** When adding or maintaining a Haskell `cabal.project`, include every
+local package in the transitive dependency closure. Do not rely on nested
+`cabal.project` files from dependencies to make their local dependencies
+visible.
+
 ### 2026-04-18: TypeScript BUILD files that touch the paint stack must install `pixel-container` explicitly
 
 The build-plan validator checks standalone BUILD prerequisites by looking at
@@ -2650,6 +2698,87 @@ rockspec dependency.
 dependencies. If sibling rocks are installed first, the final `luarocks make` should also use
 `--deps-mode=none`, and any extra test-only source-path wiring should stay in the test file instead
 of appearing as an undeclared sibling bootstrap in `BUILD`.
+
+---
+
+## Perl context VMs must re-read the active code object after call-style handlers switch programs
+
+**Date:** 2026-04-18
+
+**What happened:** The new Perl Nib-to-Wasm pipeline compiled correctly and simple functions ran,
+but any Nib function that called another Nib function hung inside the Wasm runtime. The root cause
+was the shared Perl `virtual-machine`: `execute_with_context()` captured the original code object's
+instruction list once, then kept stepping that stale code even after a Wasm `call` handler swapped
+`$vm->{_program}` to the callee. Internal calls therefore looped inside the caller instead of
+following the switched program.
+
+**Rule:** In Perl VM loops that support context handlers capable of swapping programs, always
+re-read the active code object and instruction list on each step. Do not cache the starting code
+object across the whole execution when handlers can change `$vm->{_program}` mid-run.
+
+---
+
+## WASI host shims must cap guest-controlled iovec counts and byte totals
+
+**Date:** 2026-04-18
+
+**What happened:** During the Perl convergence security review, the new `fd_write` host shim in
+`wasm-runtime` trusted guest-controlled `iovs_len` and `buf_len` values and copied every requested
+byte into host memory before invoking stdout/stderr callbacks. A malicious guest could request a
+huge scatter/gather write and force excessive host CPU and memory usage. The same trust boundary
+exists for `fd_read`.
+
+**Rule:** In WASI host implementations, treat `iovs_len`, per-buffer lengths, and total read/write
+bytes as untrusted input. Enforce explicit upper bounds before copying guest data, and prefer
+streaming bounded chunks over accumulating arbitrarily large host-side buffers.
+
+---
+
+## IR-to-Wasm backends must bound function arity and data segment sizes before allocation
+
+**Date:** 2026-04-18
+
+**What happened:** During the Perl convergence security review, `ir-to-wasm-compiler` trusted
+caller-provided `param_count` and IR data declaration sizes. A malicious IR producer could request
+huge Wasm function parameter vectors or enormous repeated data blobs, forcing the compiler to spend
+unbounded memory before rejecting anything.
+
+**Rule:** Treat IR programs as a trust boundary in backend packages. Validate function arity, each
+data declaration size, and aggregate static data size before building repeated arrays, strings, or
+Wasm sections. Fail closed with a compiler error instead of materializing attacker-controlled
+sizes.
+
+---
+
+## Wasm runtimes must validate raw data-section sizes before slicing payloads
+
+**Date:** 2026-04-18
+
+**What happened:** A Perl convergence security review found that `wasm-runtime` trusted the byte
+count encoded inside a raw data section and sliced `$pos .. $pos + $size - 1` before proving those
+bytes existed. A malformed module could advertise a large segment size with a short payload and
+force the runtime to allocate a huge temporary range/list while instantiating.
+
+**Rule:** Treat parsed-but-raw Wasm sections as untrusted until every length field is checked
+against the remaining section bytes and package caps. Validate segment count, per-segment bytes,
+aggregate data bytes, offset-expression termination, and exact section consumption before slicing
+or copying payloads.
+
+---
+
+## WASI host calls must cap guest-controlled buffer sizes before provider calls
+
+**Date:** 2026-04-18
+
+**What happened:** A security review found that Perl `random_get` passed the guest-controlled
+`buf_len` directly into the random provider. The default provider allocates returned entropy bytes,
+so a hostile module could request an enormous buffer and exhaust host memory before any guest memory
+write occurred.
+
+**Rule:** For every WASI host call that accepts guest pointers and lengths, validate the length
+against package caps and guest memory bounds before invoking host providers, reading guest buffers,
+or allocating host-side arrays/strings. Keep `fd_read`, `fd_write`, `random_get`, and future
+buffer-copying calls under the same bounded-allocation discipline.
 
 ---
 
