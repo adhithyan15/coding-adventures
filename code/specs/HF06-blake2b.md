@@ -241,12 +241,17 @@ blake2b("abc") =
     ba80a53f981c4d0d6a2797b69f12f6e94c212f14685ac4b74b12bb6fdbffa2d1
     7d87c5392aab792dc252d5de4533cc9518d38aa8dbf1925ab92386edd4009923
 
-# RFC 7693 keyed example, 64-byte output:
-# key = 0x0102...40 (64 bytes)
-# data = 0x000102...ff (256 bytes)
+# Keyed example, 64-byte output:
+# key  = 0x01 0x02 ... 0x40 (64 bytes, values 1..64)
+# data = 0x00 0x01 ... 0xff (256 bytes, values 0..255)
 blake2b(data, key) =
-    c23a7800d98123bd10f506c61e29da5603d763b8bbad2e737f5e765a7bccd475
-    2ef829ea4c10e13bf4c2011b1ada67933b63d2f5d4e77b59fb9b8f0f1be65a95
+    402fa70e35f026c9bfc1202805e931b995647fe479e1701ad8b7203cddad5927
+    ee7950b898a5a8229443d93963e4f6f27136b2b56f6845ab18f59bc130db8bf3
+
+# The quick brown fox (default 64-byte output):
+blake2b("The quick brown fox jumps over the lazy dog") =
+    a8add4bdddfd93e4877d2746e62817b116364a1fa7bc148d95090bc7333b3673
+    f82401cf7aa2e4cb1ecd90296e3f14cb5413f8ed77be73045b13914cdcd6a918
 
 # Short digest:
 blake2b_hex("", digest_size=32) =
