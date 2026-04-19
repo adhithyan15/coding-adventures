@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 — 2026-04-19
+
+First phase of the integration roadmap toward Risch.
+
+- New `Integrate` handler on `SymbolicBackend` (parallel to `D`)
+  implementing the "reverse derivative table" integrator:
+  - Constant rule, power rule (including `x^(-1) → log(x)`),
+    linearity (`Add`, `Sub`, `Neg`), constant-factor `Mul`,
+    `∫(a/b) dx` for constant denominator, `∫(a/x) dx`,
+    `∫a^x dx = a^x / log(a)`.
+  - Elementary direct forms: `sin`, `cos`, `exp`, `sqrt`,
+    `log` (the hard-coded integration-by-parts case).
+- Anything outside the rule set stays as `Integrate(f, x)` unevaluated.
+- End-to-end tests cover `integrate(x^2, x)`, `integrate(sin(x), x)`,
+  and the `diff(integrate(f, x), x) → f` fundamental-theorem roundtrip.
+
 ## 0.1.0 — 2026-04-18
 
 Initial release.

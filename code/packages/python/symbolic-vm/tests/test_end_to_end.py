@@ -143,3 +143,36 @@ def test_symbolic_mixed_program() -> None:
     # k : 10; f(x) := k * x; f(3)  →  30
     source = "k : 10; f(x) := k * x; f(3);"
     assert run_symbolic(source) == IRInteger(30)
+
+
+def test_symbolic_integrate_polynomial() -> None:
+    # integrate(x^2, x) → (1/3)·x^3
+    from symbolic_ir import MUL, POW, IRRational
+
+    result = run_symbolic("integrate(x^2, x);")
+    expected = IRApply(
+        MUL,
+        (
+            IRRational(1, 3),
+            IRApply(POW, (IRSymbol("x"), IRInteger(3))),
+        ),
+    )
+    assert result == expected
+
+
+def test_symbolic_integrate_trig() -> None:
+    # integrate(sin(x), x) → -cos(x)
+    from symbolic_ir import NEG
+
+    result = run_symbolic("integrate(sin(x), x);")
+    assert result == IRApply(NEG, (IRApply(COS, (IRSymbol("x"),)),))
+
+
+def test_symbolic_integrate_then_diff_exp() -> None:
+    # diff(integrate(exp(x), x), x) → exp(x)  — fundamental theorem
+    # works cleanly for functions whose derivative chain doesn't leave
+    # rational-coefficient cancellation behind.
+    from symbolic_ir import EXP
+
+    result = run_symbolic("diff(integrate(exp(x), x), x);")
+    assert result == IRApply(EXP, (IRSymbol("x"),))
