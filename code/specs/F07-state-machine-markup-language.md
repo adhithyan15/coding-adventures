@@ -456,6 +456,10 @@ All documents:
 - action and guard references must exist
 - include paths must be relative to the current document unless explicitly
   marked as package imports
+- include resolution must canonicalize paths against the current document or
+  package root, reject absolute paths, reject parent-directory traversal,
+  reject symlink escapes outside the allowed root, and reject URL-like imports
+  unless a caller provides an explicit allowlisted resolver
 
 DFA documents:
 
