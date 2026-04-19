@@ -258,6 +258,11 @@ jobs:
         if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
         shell: bash
         run: |
+          tmpdir="$(mktemp -d)"
+          curl -L --fail https://luarocks.org/manifests/hoelzro/lua-term-0.8-1.rockspec -o "$tmpdir/lua-term-0.8-1.rockspec"
+          sed -i.bak 's|archive/0\.08\.tar\.gz|archive/refs/tags/0.08.tar.gz|' "$tmpdir/lua-term-0.8-1.rockspec"
+          luarocks install "$tmpdir/lua-term-0.8-1.rockspec"
+          rm -rf "$tmpdir"
           luarocks install busted
           luarocks install luacov
           luarocks install luacheck

@@ -174,6 +174,27 @@ func TestAnalyzeCIWorkflowPatchAllowsSharedJVMToolchainChanges(t *testing.T) {
 	}
 }
 
+func TestAnalyzeCIWorkflowPatchAllowsPatchedLuaRocksBootstrap(t *testing.T) {
+	patch := `
+@@ -260,0 +261,5 @@
++          tmpdir="$(mktemp -d)"
++          curl -L --fail https://luarocks.org/manifests/hoelzro/lua-term-0.8-1.rockspec -o "$tmpdir/lua-term-0.8-1.rockspec"
++          sed -i.bak 's|archive/0\.08\.tar\.gz|archive/refs/tags/0.08.tar.gz|' "$tmpdir/lua-term-0.8-1.rockspec"
++          luarocks install "$tmpdir/lua-term-0.8-1.rockspec"
++          rm -rf "$tmpdir"
+`
+
+	change := AnalyzeCIWorkflowPatch(patch)
+	if change.RequiresFullRebuild {
+		t.Fatalf("expected LuaRocks bootstrap change to stay incremental")
+	}
+
+	got := SortedToolchains(change.Toolchains)
+	if len(got) != 1 || got[0] != "lua" {
+		t.Fatalf("expected lua toolchain only, got %v", got)
+	}
+}
+
 func TestAnalyzeCIWorkflowPatchIgnoresCommentOnlyChanges(t *testing.T) {
 	patch := `
 @@ -316,2 +316,2 @@
