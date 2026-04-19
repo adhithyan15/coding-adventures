@@ -155,7 +155,9 @@ use std::time::Duration;
 
 pub struct UdpOptions {
     /// Optional local bind address. Defaults to an ephemeral port on all
-    /// interfaces for the address family implied by the first destination.
+    /// IPv4 interfaces for `UdpClient::bind`. The `send_and_receive`
+    /// convenience helper may infer IPv4 vs IPv6 from its destination when no
+    /// bind address is supplied.
     pub bind_addr: Option<SocketAddr>,
 
     /// Maximum number of bytes to allocate for one receive.
