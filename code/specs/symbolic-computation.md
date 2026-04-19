@@ -322,9 +322,14 @@ reviewed independently:
 - **Phase 2b** — IR ↔ polynomial bridge. `to_rational(f, x)` recognises
   rational integrands and lifts them into `(num, den)` polynomials over
   Q; `from_polynomial` round-trips back. See `polynomial-bridge.md`.
-- **Phase 2c** — Hermite reduction and Rothstein–Trager fires inside
-  the `Integrate` handler ahead of the Phase 1 rules, so rational
-  integrands get a closed-form answer instead of a pattern-match miss.
+- **Phase 2c** — Hermite reduction fires inside the `Integrate`
+  handler ahead of the Phase 1 rules, so the *rational part* of a
+  rational integrand is emitted in closed form. The residual
+  squarefree integrand stays as an unevaluated `Integrate`. See
+  `hermite-reduction.md`.
+- **Phase 2d** — Rothstein–Trager replaces the unevaluated log-part
+  integrand with its closed-form sum of logs. After this phase the
+  rational-function pipeline is complete for Q[x].
 
 ### Phase 3 — Risch transcendental case
 
