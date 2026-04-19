@@ -1,0 +1,11 @@
+requires 'coding-adventures-brainfuck', '0.01';
+requires 'coding-adventures-brainfuck-ir-compiler', '0.01';
+requires 'coding-adventures-ir-to-wasm-compiler', '0.01';
+requires 'coding-adventures-ir-to-wasm-validator', '0.01';
+requires 'coding-adventures-wasm-module-encoder', '0.01';
+requires 'coding-adventures-wasm-module-parser', '0.01';
+requires 'coding-adventures-wasm-validator', '0.01';
+on 'test' => sub {
+    requires 'coding-adventures-wasm-runtime', '0.03';
+    requires 'Test2::V0';
+};

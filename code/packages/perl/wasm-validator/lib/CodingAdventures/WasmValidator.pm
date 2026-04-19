@@ -111,6 +111,7 @@ sub validate {
     for my $imp (@{ $module->{imports} || [] }) {
         if ($imp->{desc}{kind} eq 'func') {
             my $type_idx = $imp->{desc}{idx};
+            $type_idx = $imp->{desc}{type_idx} unless defined $type_idx;
             _check_type_index($module, $type_idx);
             push @func_types, $module->{types}[$type_idx];
             $num_imported_funcs++;
@@ -132,8 +133,11 @@ sub validate {
         );
     }
     for my $mem (@memories) {
+        my $limits = $mem->{limits} || $mem;
         my $min = $mem->{min};
+        $min = $limits->{min} unless defined $min;
         my $max = $mem->{max};
+        $max = $limits->{max} unless defined $max;
         if ($min > MAX_MEMORY_PAGES) {
             CodingAdventures::WasmValidator::ValidationError->throw(
                 kind    => 'memory_limit_exceeded',

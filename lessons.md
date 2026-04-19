@@ -2653,6 +2653,87 @@ of appearing as an undeclared sibling bootstrap in `BUILD`.
 
 ---
 
+## Perl context VMs must re-read the active code object after call-style handlers switch programs
+
+**Date:** 2026-04-18
+
+**What happened:** The new Perl Nib-to-Wasm pipeline compiled correctly and simple functions ran,
+but any Nib function that called another Nib function hung inside the Wasm runtime. The root cause
+was the shared Perl `virtual-machine`: `execute_with_context()` captured the original code object's
+instruction list once, then kept stepping that stale code even after a Wasm `call` handler swapped
+`$vm->{_program}` to the callee. Internal calls therefore looped inside the caller instead of
+following the switched program.
+
+**Rule:** In Perl VM loops that support context handlers capable of swapping programs, always
+re-read the active code object and instruction list on each step. Do not cache the starting code
+object across the whole execution when handlers can change `$vm->{_program}` mid-run.
+
+---
+
+## WASI host shims must cap guest-controlled iovec counts and byte totals
+
+**Date:** 2026-04-18
+
+**What happened:** During the Perl convergence security review, the new `fd_write` host shim in
+`wasm-runtime` trusted guest-controlled `iovs_len` and `buf_len` values and copied every requested
+byte into host memory before invoking stdout/stderr callbacks. A malicious guest could request a
+huge scatter/gather write and force excessive host CPU and memory usage. The same trust boundary
+exists for `fd_read`.
+
+**Rule:** In WASI host implementations, treat `iovs_len`, per-buffer lengths, and total read/write
+bytes as untrusted input. Enforce explicit upper bounds before copying guest data, and prefer
+streaming bounded chunks over accumulating arbitrarily large host-side buffers.
+
+---
+
+## IR-to-Wasm backends must bound function arity and data segment sizes before allocation
+
+**Date:** 2026-04-18
+
+**What happened:** During the Perl convergence security review, `ir-to-wasm-compiler` trusted
+caller-provided `param_count` and IR data declaration sizes. A malicious IR producer could request
+huge Wasm function parameter vectors or enormous repeated data blobs, forcing the compiler to spend
+unbounded memory before rejecting anything.
+
+**Rule:** Treat IR programs as a trust boundary in backend packages. Validate function arity, each
+data declaration size, and aggregate static data size before building repeated arrays, strings, or
+Wasm sections. Fail closed with a compiler error instead of materializing attacker-controlled
+sizes.
+
+---
+
+## Wasm runtimes must validate raw data-section sizes before slicing payloads
+
+**Date:** 2026-04-18
+
+**What happened:** A Perl convergence security review found that `wasm-runtime` trusted the byte
+count encoded inside a raw data section and sliced `$pos .. $pos + $size - 1` before proving those
+bytes existed. A malformed module could advertise a large segment size with a short payload and
+force the runtime to allocate a huge temporary range/list while instantiating.
+
+**Rule:** Treat parsed-but-raw Wasm sections as untrusted until every length field is checked
+against the remaining section bytes and package caps. Validate segment count, per-segment bytes,
+aggregate data bytes, offset-expression termination, and exact section consumption before slicing
+or copying payloads.
+
+---
+
+## WASI host calls must cap guest-controlled buffer sizes before provider calls
+
+**Date:** 2026-04-18
+
+**What happened:** A security review found that Perl `random_get` passed the guest-controlled
+`buf_len` directly into the random provider. The default provider allocates returned entropy bytes,
+so a hostile module could request an enormous buffer and exhaust host memory before any guest memory
+write occurred.
+
+**Rule:** For every WASI host call that accepts guest pointers and lengths, validate the length
+against package caps and guest memory bounds before invoking host providers, reading guest buffers,
+or allocating host-side arrays/strings. Keep `fd_read`, `fd_write`, `random_get`, and future
+buffer-copying calls under the same bounded-allocation discipline.
+
+---
+
 ## Reactor tests must tolerate deferred socket readability after a write-ready step
 
 **Date:** 2026-04-18
