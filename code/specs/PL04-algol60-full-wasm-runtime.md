@@ -891,6 +891,17 @@ Acceptance:
 
 Goal: Implement nested procedures with call-by-value parameters.
 
+Scope:
+
+- support untyped procedure statements and typed `integer procedure`
+  expression calls
+- require every formal parameter in this phase to appear in a `value` part
+- require every formal parameter in this phase to have an `integer` specifier
+- continue to reject call-by-name, arrays, procedure-valued parameters, labels,
+  switches, and non-integer procedure results with explicit diagnostics
+- lower calls directly to generated `_fn_...` functions; procedure values and
+  escaping descriptors remain future work
+
 Deliverables:
 
 - procedure symbols and descriptors
@@ -899,12 +910,18 @@ Deliverables:
 - parameter slots
 - typed procedure result slot
 - direct recursion
+- explicit IR call argument registers so ALGOL argument passing does not
+  overwrite frame-pointer temporaries
+- bounded dynamic frame stack within the module's linear memory
 
 Acceptance:
 
 - simple procedure call mutates an outer variable when allowed
+- call-by-value parameter assignment does not write back to the actual argument
 - typed procedure returns a value through its procedure-name result slot
 - recursive factorial or summation program runs
+- runaway recursive calls stop at the bounded frame stack instead of allocating
+  unbounded host memory
 
 ### Phase 4: Dynamic Arrays
 

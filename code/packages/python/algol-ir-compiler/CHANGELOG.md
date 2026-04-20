@@ -12,6 +12,11 @@ All notable changes to this package will be documented in this file.
   traversal, and `LOAD_WORD`/`STORE_WORD` scalar accesses for the WASM path.
 - Bounded phase-2 frame memory to one WASM page so large or crafted semantic
   frame plans fail before downstream WASM data allocation.
+- Lowered value-only integer procedure calls to generated IR functions with
+  explicit static-link/value-argument registers, procedure frame allocation,
+  procedure-name result slots, and bounded recursive frame usage.
+- Reserved runtime state bytes in the phase-3 frame-memory cap so programs
+  that cannot fit their root frame are rejected before WASM lowering.
 
 ## [0.1.0] - 2026-04-20
 

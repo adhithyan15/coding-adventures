@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- `CALL` lowering now accepts optional explicit argument registers after the
+  target label. Calls without explicit operands keep the legacy v2, v3, ...
+  convention.
+- Function signatures can require explicit call operands for generated callers
+  that must not fall back to the legacy v2, v3, ... convention.
+
 ## [0.5.0] — 2026-04-20
 
 ### Added
