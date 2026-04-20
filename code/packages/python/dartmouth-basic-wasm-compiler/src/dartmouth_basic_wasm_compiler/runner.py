@@ -150,7 +150,6 @@ def run_basic(
                 FunctionSignature(label="_start", param_count=0, export_name="_start")
             ],
             strategy="dispatch_loop",
-            syscall_arg_reg=0,
         )
     except Exception as exc:
         raise BasicError(str(exc)) from exc

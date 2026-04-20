@@ -148,7 +148,6 @@ def run_basic(
             JvmBackendConfig(
                 class_name="BasicProgram",
                 emit_main_wrapper=False,
-                syscall_arg_reg=0,   # BASIC IR places the print arg in register 0
             ),
         )
     except Exception as exc:

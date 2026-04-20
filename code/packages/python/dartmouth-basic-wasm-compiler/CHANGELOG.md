@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0] — 2026-04-20
+
+### Changed
+
+- **Removed `syscall_arg_reg=0` from the WASM pipeline stage.**  Now that the
+  SYSCALL IR instruction carries the arg register explicitly as `operands[1]`,
+  `IrToWasmCompiler().compile()` no longer accepts a `syscall_arg_reg`
+  parameter.  The `runner.py` call passes only `ir_result.program`,
+  `function_signatures`, and `strategy`.
+
 ## [0.1.1] — 2026-04-19
 
 ### Fixed

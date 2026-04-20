@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (2026-04-20)
+
+### Changed
+
+- **SYSCALL instruction now carries the arg register as `operands[1]`.**
+  All three SYSCALL emissions in the print pipeline (string char emit,
+  loop-body digit emit, units-digit emit) now encode the virtual register
+  holding the print argument as an explicit second operand: `SYSCALL 1, v0`
+  instead of bare `SYSCALL 1`.  This makes the IR self-describing: WASM and
+  JVM backends no longer need frontend-specific `syscall_arg_reg` config to
+  know which register holds the character to print.
+
 ## 0.2.0 (2026-04-19)
 
 ### Added

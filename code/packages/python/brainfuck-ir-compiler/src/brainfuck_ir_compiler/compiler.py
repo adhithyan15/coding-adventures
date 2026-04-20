@@ -347,7 +347,7 @@ class _Compiler:
                 IrRegister(index=_REG_SYS_ARG),
                 IrImmediate(value=1),
             )
-            self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_EXIT))
+            self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_EXIT), IrRegister(index=_REG_SYS_ARG))
 
     # -----------------------------------------------------------------------
     # AST Walking
@@ -476,7 +476,7 @@ class _Compiler:
                 IrImmediate(value=0),
             )
             ir_ids.append(id2)
-            id3 = self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_WRITE))
+            id3 = self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_WRITE), IrRegister(index=_REG_SYS_ARG))
             ir_ids.append(id3)
 
         elif tok.value == ",":
@@ -484,7 +484,7 @@ class _Compiler:
             #
             # syscall 2 (read) places the result in the syscall arg register (v4).
             # We then store it to the current cell.
-            id1 = self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_READ))
+            id1 = self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_READ), IrRegister(index=_REG_SYS_ARG))
             ir_ids.append(id1)
             id2 = self._emit(
                 IrOp.STORE_BYTE,

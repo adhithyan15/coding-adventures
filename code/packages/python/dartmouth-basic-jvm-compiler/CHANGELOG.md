@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0] — 2026-04-20
+
+### Changed
+
+- **Removed `syscall_arg_reg=0` from the JVM pipeline stage.**  Now that the
+  SYSCALL IR instruction carries the arg register explicitly as `operands[1]`,
+  `JvmBackendConfig` no longer has a `syscall_arg_reg` field.  The `runner.py`
+  call to `lower_ir_to_jvm_class_file` passes only `class_name` and
+  `emit_main_wrapper`.
+
 ## [0.1.0] — 2026-04-19
 
 ### Added

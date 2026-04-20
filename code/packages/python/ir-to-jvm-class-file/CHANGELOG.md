@@ -1,5 +1,23 @@
 # ir-to-jvm-class-file
 
+## 0.3.0 — 2026-04-20
+
+### Changed
+
+- **`JvmBackendConfig.syscall_arg_reg` field removed.**  The SYSCALL IR
+  instruction now carries the arg register as `operands[1]` (an `IrRegister`),
+  so the backend reads the register index directly from the instruction rather
+  than from a config parameter.  Callers no longer need to pass
+  `syscall_arg_reg=0` for BASIC or `syscall_arg_reg=4` for Brainfuck.
+
+- **`__ca_syscall` helper descriptor changed from `(I)V` to `(II)V`.**
+  The helper method now accepts two `int` parameters: syscall number and
+  arg-register index.  The WRITE path loads `__ca_regs[arg_reg]` at runtime
+  using the passed-in register index instead of a compile-time constant.
+  The READ path stores the byte received from stdin in local 2 (shifted up from
+  local 1 to make room for the new arg-register parameter in local 1).
+  Max locals increased from 2 to 3 accordingly.
+
 ## 0.2.0 — 2026-04-19
 
 ### Added

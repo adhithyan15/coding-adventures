@@ -557,7 +557,7 @@ class _Compiler:
             IrRegister(index=_REG_SYSCALL_ARG),
             IrImmediate(value=code),
         )
-        self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_PRINT_CHAR))
+        self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_PRINT_CHAR), IrRegister(index=_REG_SYSCALL_ARG))
 
     def _emit_print_number(self, v_val: int) -> None:
         """Emit IR that prints the integer in register v_val as a decimal string.
@@ -637,13 +637,13 @@ class _Compiler:
 
             # Print this digit (add digit_offset to convert to printable code)
             self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_dig), IrImmediate(digit_offset))
-            self._emit(IrOp.SYSCALL,  IrImmediate(_SYSCALL_PRINT_CHAR))
+            self._emit(IrOp.SYSCALL,  IrImmediate(_SYSCALL_PRINT_CHAR), IrRegister(index=_REG_SYSCALL_ARG))
             self._emit(IrOp.ADD_IMM,  IrRegister(r_started), IrRegister(r_one), IrImmediate(0))
             self._emit_label(l_skip)
 
         # Units digit: always print (this correctly handles the value 0)
         self._emit(IrOp.ADD_IMM, IrRegister(_REG_SYSCALL_ARG), IrRegister(r_work), IrImmediate(digit_offset))
-        self._emit(IrOp.SYSCALL, IrImmediate(_SYSCALL_PRINT_CHAR))
+        self._emit(IrOp.SYSCALL, IrImmediate(_SYSCALL_PRINT_CHAR), IrRegister(index=_REG_SYSCALL_ARG))
 
     # ------------------------------------------------------------------
     # GOTO

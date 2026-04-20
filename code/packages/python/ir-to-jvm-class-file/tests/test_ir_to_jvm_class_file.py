@@ -56,7 +56,7 @@ def test_brainfuck_source_compiles_to_parseable_class_file() -> None:
     assert parsed.this_class_name == "BrainfuckProgram"
     assert parsed.find_method("_start", "()I") is not None
     assert parsed.find_method("main", "([Ljava/lang/String;)V") is not None
-    assert parsed.find_method("__ca_syscall", "(I)V") is not None
+    assert parsed.find_method("__ca_syscall", "(II)V") is not None
 
 
 def test_nib_source_compiles_to_parseable_class_file() -> None:

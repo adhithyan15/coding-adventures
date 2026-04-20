@@ -115,7 +115,6 @@ class JvmBackendConfig:
     class_file_major: int = 49
     class_file_minor: int = 0
     emit_main_wrapper: bool = True
-    syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
 
 
 @dataclass(frozen=True)
@@ -786,7 +785,13 @@ class _JvmClassLowerer:
                 "Ljava/io/PrintStream;",
             ),
         )
-        self._emit_reg_get(builder, self.config.syscall_arg_reg)
+        # Load __ca_regs[arg_reg] — arg_reg is local variable 1 (runtime value).
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+        )
+        self._emit_iload(builder, 1)   # arg_reg index
+        builder.emit_opcode(_OP_IALOAD)
         self._emit_push_int(builder, 0xFF)
         builder.emit_opcode(_OP_IAND)
         builder.emit_u2_instruction(
@@ -835,11 +840,13 @@ class _JvmClassLowerer:
                 _DESC_INPUTSTREAM_READ,
             ),
         )
-        self._emit_istore(builder, 1)
-        self._emit_iload(builder, 1)
+        # local 2 = byte read from stdin (local 1 is arg_reg)
+        self._emit_istore(builder, 2)
+        self._emit_iload(builder, 2)
         self._emit_push_int(builder, -1)
         builder.emit_branch(_OP_IF_ICMPNE, label_have_input)
-        self._emit_push_int(builder, self.config.syscall_arg_reg)
+        # EOF: store 0 into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
         self._emit_push_int(builder, 0)
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
@@ -848,8 +855,9 @@ class _JvmClassLowerer:
         builder.emit_opcode(_OP_RETURN)
 
         builder.mark(label_have_input)
-        self._emit_push_int(builder, self.config.syscall_arg_reg)
-        self._emit_iload(builder, 1)
+        # Store read byte into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
+        self._emit_iload(builder, 2)   # byte value
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
@@ -861,10 +869,10 @@ class _JvmClassLowerer:
         return _MethodSpec(
             access_flags=_ACC_PRIVATE | ACC_STATIC,
             name=self._helper_syscall,
-            descriptor="(I)V",
+            descriptor="(II)V",   # syscall_num, arg_reg
             code=builder.assemble(),
             max_stack=4,
-            max_locals=2,
+            max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
         )
 
     def _build_callable_method(self, region: _CallableRegion) -> _MethodSpec:
@@ -1115,11 +1123,16 @@ class _JvmClassLowerer:
                 continue
 
             if instruction.opcode == IrOp.SYSCALL:
+                # SYSCALL carries two operands: the syscall number (immediate) and
+                # the argument register (register).  The register operand makes the
+                # IR self-describing — no backend config is needed.
                 number = _as_immediate(instruction.operands[0], "SYSCALL number")
+                arg_reg = _as_register(instruction.operands[1], "SYSCALL arg register")
                 self._emit_push_int(builder, number.value)
+                self._emit_push_int(builder, arg_reg.index)
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
-                    self._method_ref(self._helper_syscall, "(I)V"),
+                    self._method_ref(self._helper_syscall, "(II)V"),
                 )
                 continue
 
