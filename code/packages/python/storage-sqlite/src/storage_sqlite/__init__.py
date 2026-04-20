@@ -14,7 +14,8 @@ Everything else (B-trees, sqlite_schema, the Backend adapter) lands in
 subsequent phases.
 """
 
-from storage_sqlite import record, varint
+from storage_sqlite import btree, record, varint
+from storage_sqlite.btree import BTree, BTreeError, DuplicateRowidError, PageFullError
 from storage_sqlite.errors import (
     CorruptDatabaseError,
     JournalError,
@@ -26,12 +27,17 @@ from storage_sqlite.record import Value
 
 __all__ = [
     "PAGE_SIZE",
+    "BTree",
+    "BTreeError",
     "CorruptDatabaseError",
+    "DuplicateRowidError",
     "Header",
     "JournalError",
+    "PageFullError",
     "Pager",
     "StorageError",
     "Value",
+    "btree",
     "record",
     "varint",
 ]

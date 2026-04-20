@@ -36,7 +36,7 @@ class TestVersion:
 
     def test_version_exists(self) -> None:
         assert __version__ == "0.4.0"
-        assert logic_engine_version == "0.3.0"
+        assert logic_engine_version == "0.4.0"
 
 
 class TestListRelations:
