@@ -1,5 +1,74 @@
 # Changelog
 
+## [0.9.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.index_tree` — phase IX-1: `IndexTree`, the index B-tree
+  implementation using SQLite index page types (`0x0A` leaf, `0x02` interior).
+
+  **`IndexTree`** stores `(key_vals, rowid)` pairs in ascending sort order
+  using SQLite's default BINARY collation: NULL < INTEGER/REAL < TEXT < BLOB.
+  Integers and floats compare numerically across types.
+
+  **API:**
+  - `IndexTree.create(pager, *, freelist=None) → IndexTree` — allocates a
+    fresh root page and returns a new index tree.
+  - `IndexTree.open(pager, rootpage, *, freelist=None) → IndexTree` — opens
+    an existing index by root page number.
+  - `insert(key, rowid)` — inserts a `(key, rowid)` pair.  Splits happen
+    transparently at all tree levels (root-leaf split, non-root leaf split,
+    interior page split, root interior split).  Raises `DuplicateIndexKeyError`
+    for duplicate `(key, rowid)` pairs.
+  - `delete(key, rowid) → bool` — removes the matching entry; returns `True`
+    if found and removed, `False` if absent.
+  - `lookup(key) → list[int]` — returns all rowids whose key equals `key`
+    (supports non-unique indexes with multiple matching rowids).
+  - `range_scan(lo, hi, *, lo_inclusive, hi_inclusive) → Iterator[...]` —
+    yields `(key_vals, rowid)` pairs in ascending order within the given key
+    range. `None` bounds mean unbounded.
+  - `free_all(freelist)` — reclaims every page in the tree (used by
+    `drop_index`).
+  - `cell_count() → int` — total number of entries across all leaf pages.
+
+  **Cell format (index leaf, type 0x0A):**
+  ```
+  [payload-size varint] [record bytes]
+  ```
+  The record encodes `[*key_cols, rowid]` as a standard SQLite record.  The
+  rowid is the last column — this gives unambiguous sort order for non-unique
+  indexes (matching SQLite's behaviour for non-UNIQUE indexes).
+
+  **Cell format (index interior, type 0x02):**
+  ```
+  [left-child u32 BE] [separator-record bytes]
+  ```
+  The separator is the full `(key_cols, rowid)` composite key of the last
+  entry in the left subtree — no ambiguity even with duplicate indexed values.
+
+  **Comparison helpers (exported for testing and future use):**
+  `_type_class`, `_cmp_values`, `_cmp_full_keys`, `_cmp_keys_partial`
+
+- **`__init__.py`** exports: `IndexTree`, `IndexTreeError`,
+  `DuplicateIndexKeyError`, `PAGE_TYPE_LEAF_INDEX`, `PAGE_TYPE_INTERIOR_INDEX`.
+
+### Tests
+
+- `tests/test_index_tree.py` — 80 tests covering:
+  - Construction (`create`, `open`, `root_page`, `cell_count`)
+  - Single-entry insert and lookup
+  - Ordered scan (ascending sort order, rowid tiebreak)
+  - Delete (present / absent, adjacent entries intact)
+  - Duplicate-key lookup (non-unique indexes)
+  - Range scan bounds (inclusive / exclusive lo / hi, empty ranges)
+  - Splits (root-leaf split, interior splits, reverse-order inserts, 5 000 entries)
+  - Deep splits with large keys (480-byte text keys trigger fast interior splits)
+  - Value types (NULL, float, text, bytes, mixed-type ordering)
+  - `free_all` with and without freelist
+  - Comparison unit tests (`_cmp_values`, `_cmp_full_keys`, etc.)
+  - Persistence (commit+reopen, rollback)
+  - Error paths (oversized keys, unsupported types, edge cases)
+
 ## [0.8.1] - 2026-04-20
 
 ### Fixed
