@@ -327,4 +327,5 @@ members = [
     "text-native-coretext",
     "udp-client",
     "state-machine-markup-serializer",
+    "state-machine-markup-deserializer",
 ]
