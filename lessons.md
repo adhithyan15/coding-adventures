@@ -3003,3 +3003,38 @@ already green, and the failed jobs never reached repository code.
 **Rule:** When CI fails in job setup while downloading third-party action archives, inspect the job
 logs before changing package code. If the failure happens before checkout or tool setup commands,
 treat it as infrastructure/transient unless repeated runs prove otherwise.
+
+---
+
+### 2026-04-20: GrammarLexer returns TokenType enum values; test helpers must normalize
+
+When writing tests for grammar-driven lexer wrappers (like `oct-lexer`, `nib-lexer`), the
+`GrammarLexer` returns `Token` objects where:
+- Keyword tokens (after promotion in `tokenize_*`) have `type` set to a **string** (e.g. `"fn"`,
+  `"carry"`)
+- All other tokens keep the `TokenType` **enum** value (e.g. `TokenType.LPAREN`, `TokenType.NAME`)
+
+If test helpers compare `t.type` directly against strings, non-keyword token tests will fail
+with diffs like:
+```
+At index 1 diff: (<TokenType.LPAREN: 11>, '(') != ('LPAREN', '(')
+```
+
+And the EOF filter `t.type != "EOF"` will never exclude EOF tokens because
+`TokenType.EOF != "EOF"` is `True`.
+
+**Fix:** Add a `_tok_type` normalizer helper that converts both forms to a plain string:
+```python
+def _tok_type(tok: Token) -> str:
+    return tok.type if isinstance(tok.type, str) else tok.type.name
+```
+
+Use it everywhere `t.type` is compared or used for filtering. This pattern is established in
+`nib-lexer` and must be replicated in every new `*-lexer` test file.
+
+**Root cause:** The design intentionally keeps non-keyword token types as enums to preserve
+the `TokenType` enum contract for downstream consumers (parsers). Only keyword tokens are
+promoted to string types so the parser's grammar rules can match them by value.
+
+**Rule:** Every grammar-driven lexer test file must use a `_tok_type` normalizer. Never compare
+`t.type` directly against string literals unless you know the token is a keyword.
