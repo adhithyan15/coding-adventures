@@ -900,6 +900,93 @@ Recommended modes:
 | PR | 50 | requested PR comparison |
 | nightly | 100+ | trend tracking |
 
+### Separate GitHub Actions Workflow
+
+Benchmarks should run in a separate workflow, not inside `.github/workflows/ci.yml`.
+
+Recommended workflow:
+
+```text
+.github/workflows/benchmarks.yml
+```
+
+Reasons:
+
+- correctness CI and performance measurement have different reliability needs
+- benchmark runs may take longer than package tests
+- benchmark failures should not block ordinary correctness fixes by default
+- benchmark artifacts are different from build artifacts
+- manual and scheduled triggers make more sense than "every push"
+- future stable runners can be attached without disturbing normal CI
+
+Initial triggers:
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Benchmark suite to run
+        required: true
+        default: mini-redis
+      baseline:
+        description: Baseline git ref
+        required: true
+        default: origin/main
+      candidate:
+        description: Candidate git ref
+        required: true
+        default: HEAD
+      mode:
+        description: smoke, local, pr, or nightly
+        required: true
+        default: smoke
+  schedule:
+    - cron: "0 8 * * *"
+```
+
+Optional later triggers:
+
+- `issue_comment` for commands like `/benchmark mini-redis`
+- `workflow_run` after CI passes on selected PRs
+- `pull_request` only when benchmark manifests or runtime packages change, and
+  only in smoke mode
+
+The first workflow should:
+
+- check out the repo with full history
+- install only the benchmark toolchain needed by the selected suite
+- build `benchmark-tool`
+- run `benchmark-tool doctor`
+- run `benchmark-tool run` with explicit baseline and candidate refs
+- upload the whole result directory as an artifact
+- publish `report.md` as a job summary
+- never mark a PR as failed for a small or inconclusive performance delta
+
+In a later phase, the workflow may comment on PRs, but the first implementation
+should prefer uploaded artifacts and job summaries. That keeps the workflow
+safe while the benchmark verdict rules mature.
+
+### Runner Choice
+
+GitHub-hosted runners are acceptable for smoke checks and rough comparisons,
+but they are not ideal for serious statistical claims because CPU model,
+machine load, thermal state, and noisy neighbors can vary between jobs.
+
+Recommended tiers:
+
+| Runner | Use |
+|---|---|
+| GitHub-hosted `ubuntu-latest` | smoke checks, harness validation |
+| GitHub-hosted `macos-latest` | kqueue smoke coverage |
+| GitHub-hosted `windows-latest` | Windows provider smoke coverage |
+| self-hosted pinned machine | statistically meaningful trend tracking |
+| self-hosted bare metal per OS | release-quality performance comparisons |
+
+The workflow should record the runner type in `environment.json`, and reports
+should label GitHub-hosted results as noisy unless a repeated schedule shows
+stable trends.
+
 ---
 
 ## Failure Semantics
