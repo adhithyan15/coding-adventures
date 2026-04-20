@@ -433,12 +433,6 @@ unsafe fn msg_send_bounds(view: Id) -> objc_bridge::CGRect {
     fn_ptr(view, sel("bounds"))
 }
 
-#[cfg(not(target_vendor = "apple"))]
-unsafe fn attach_metal_layer(_view: Id) -> Result<Id, WindowError> {
-    Err(WindowError::backend(
-        "CAMetalLayer attachment requires an Apple target",
-    ))
-}
 
 impl WindowBackend for AppKitBackend {
     type Window = AppKitWindow;
