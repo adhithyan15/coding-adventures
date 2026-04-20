@@ -162,10 +162,12 @@ class AlgolIrCompiler:
         total_frame_bytes = sum(
             block.frame_layout.frame_size for block in self.semantic_blocks
         )
-        if total_frame_bytes > _FRAME_MEMORY_BYTES:
+        total_memory_bytes = _RUNTIME_STATE_BYTES + total_frame_bytes
+        if total_memory_bytes > _FRAME_MEMORY_BYTES:
             raise CompileError(
                 "ALGOL frame memory requires "
-                f"{total_frame_bytes} bytes, exceeding the "
+                f"{total_frame_bytes} frame bytes plus "
+                f"{_RUNTIME_STATE_BYTES} runtime bytes, exceeding the "
                 f"{_FRAME_MEMORY_BYTES} byte phase-3 limit"
             )
         self.program.add_data(IrDataDecl(_FRAME_MEMORY_LABEL, _FRAME_MEMORY_BYTES, 0))

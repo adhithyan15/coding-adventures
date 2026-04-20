@@ -15,10 +15,10 @@ Calls pass an explicit static link followed by value arguments, procedure frames
 are allocated from the module frame stack, and typed procedures return through
 their procedure-name result slot.
 
-This phase keeps ALGOL frame memory bounded to one 64 KiB WASM page. Larger
-semantic frame plans raise `CompileError` before the WASM data encoder can
-materialize the memory image, and dynamic procedure recursion stops at the same
-bounded frame stack.
+This phase keeps ALGOL frame memory and its 16-byte runtime state bounded to
+one 64 KiB WASM page. Larger semantic frame plans raise `CompileError` before
+the WASM data encoder can materialize the memory image, and dynamic procedure
+recursion stops at the same bounded frame stack.
 
 ```python
 from algol_ir_compiler import compile_algol

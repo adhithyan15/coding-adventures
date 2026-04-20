@@ -157,7 +157,7 @@ class TestAlgolIrCompiler:
         assert typed.semantic.root_block is not None
 
         layout = typed.semantic.root_block.frame_layout
-        for index in range(17000):
+        for index in range(16375):
             layout.slots.append(
                 FrameSlot(
                     symbol_id=1000 + index,
@@ -168,7 +168,7 @@ class TestAlgolIrCompiler:
                 )
             )
 
-        with pytest.raises(CompileError, match="phase-3 limit"):
+        with pytest.raises(CompileError, match="frame bytes plus 16 runtime bytes"):
             compile_algol(typed)
 
     def test_compiles_integer_value_procedure_call(self) -> None:
