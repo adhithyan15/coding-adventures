@@ -756,24 +756,20 @@ mod glyph_run_overlay {
             return;
         }
 
-        // Flip the Y axis so scene coords (Y-down) align with CG's
-        // default coordinate system (Y-up). After this, drawing at
-        // scene (x, y) places the glyph where we expect.
         CGContextSaveGState(ctx);
-        CGContextTranslateCTM(ctx, 0.0, height as f64);
-        CGContextScaleCTM(ctx, 1.0, -1.0);
-
         CGContextSetShouldAntialias(ctx, true);
         CGContextSetShouldSmoothFonts(ctx, true);
 
-        // Text matrix stays identity. The CTM flip above makes
-        // glyphs render with ascenders pointing toward the top of
-        // the buffer; the CGBitmapContext byte ordering ensures
-        // those are the correct pixel rows.
+        // NO CTM manipulation — keep CG's native Y-up convention.
+        // Instead, convert each glyph's scene Y-down baseline to
+        // CG Y-up inside `draw_one_glyph_run` by doing
+        // cg_y = height - scene_y. This avoids the CTM/text-matrix
+        // interaction that made a naive Y-flip produce mirrored or
+        // missing glyphs.
         CGContextSetTextMatrix(ctx, CGAffineTransform::IDENTITY);
 
         for gr in runs {
-            draw_one_glyph_run(ctx, gr);
+            draw_one_glyph_run(ctx, gr, height as f64);
         }
 
         CGContextRestoreGState(ctx);
@@ -806,7 +802,7 @@ mod glyph_run_overlay {
         out
     }
 
-    unsafe fn draw_one_glyph_run(ctx: CGContextRef, run: &PaintGlyphRun) {
+    unsafe fn draw_one_glyph_run(ctx: CGContextRef, run: &PaintGlyphRun, image_height: f64) {
         // Parse "coretext:<ps_name>@<size>". Size falls back to
         // run.font_size if the suffix is missing or malformed.
         let (ps_name, size_from_ref) = parse_coretext_font_ref(&run.font_ref);
@@ -826,14 +822,24 @@ mod glyph_run_overlay {
         let (r, g, b, a) = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
         CGContextSetRGBFillColor(ctx, r, g, b, a);
 
-        // Assemble glyph ID + position arrays. The run's glyphs
-        // already carry absolute scene-coordinate baseline origins,
-        // so no extra offset is needed here.
+        // Convert scene Y-down to CG Y-up: cg_y = height - scene_y.
+        // The bitmap context stores row 0 at byte 0 (Metal's output
+        // convention). CG's default coord system has origin at
+        // bottom-left with Y-up, which when mapped to that byte
+        // layout means CG(x, y=H) writes to the first row (image
+        // top) and CG(x, y=0) writes to the last row (image bottom).
+        // So a glyph baseline at scene_y (Y-down from image top)
+        // corresponds to CG cg_y = H - scene_y. With text matrix
+        // identity, glyph ascenders rise toward positive CG-y =
+        // toward the top of the image. Correct right-side-up.
         let glyph_ids: Vec<u16> = run.glyphs.iter().map(|g| g.glyph_id as u16).collect();
         let positions: Vec<CGPoint> = run
             .glyphs
             .iter()
-            .map(|g| CGPoint { x: g.x, y: g.y })
+            .map(|g| CGPoint {
+                x: g.x,
+                y: image_height - g.y,
+            })
             .collect();
 
         if !glyph_ids.is_empty() {
