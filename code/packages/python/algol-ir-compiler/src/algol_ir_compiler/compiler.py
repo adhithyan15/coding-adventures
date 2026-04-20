@@ -2,11 +2,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-from algol_type_checker import TypeCheckResult, check_algol
+from algol_type_checker import (
+    ResolvedReference,
+    SemanticBlock,
+    Symbol,
+    TypeCheckResult,
+    check_algol,
+)
 from compiler_ir import (
     IDGenerator,
+    IrDataDecl,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -17,50 +24,57 @@ from compiler_ir import (
 from lang_parser import ASTNode
 from lexer import Token
 
+_FRAME_MEMORY_LABEL = "__algol_frames"
+_ZERO_REG = 0
+_RESULT_REG = 1
+_DYNAMIC_LINK_OFFSET = 0
+_STATIC_LINK_OFFSET = 4
+_RETURN_TOKEN_OFFSET = 8
+_FRAME_SIZE_OFFSET = 12
+_BLOCK_ID_OFFSET = 16
+_MAX_FRAME_MEMORY_BYTES = 64 * 1024
+
 
 @dataclass(frozen=True)
 class CompileResult:
-    """The IR compiler output and useful allocation metadata."""
+    """The IR compiler output and useful frame metadata.
+
+    ``variable_registers`` is kept as a backward-compatible metadata field for
+    callers from the register-only prototype. It now records the first planned
+    frame slot offset seen for each source name.
+    """
 
     program: IrProgram
     variable_registers: dict[str, int]
     max_register: int
+    variable_slots: dict[str, int] = field(default_factory=dict)
+    frame_offsets: dict[int, int] = field(default_factory=dict)
+    frame_memory_label: str = _FRAME_MEMORY_LABEL
 
 
 class CompileError(Exception):
     """Raised when checked ALGOL cannot be lowered to the current IR subset."""
 
 
-@dataclass
-class _RegisterScope:
-    parent: _RegisterScope | None = None
-    registers: dict[str, int] | None = None
+@dataclass(frozen=True)
+class _FrameScope:
+    """The active lexical block during frame-backed lowering."""
 
-    def __post_init__(self) -> None:
-        if self.registers is None:
-            self.registers = {}
+    semantic_block: SemanticBlock
+    frame_base_reg: int
+    parent: _FrameScope | None = None
 
-    def declare(self, name: str, reg: int) -> None:
-        if self.registers is None:
-            self.registers = {}
-        self.registers[name] = reg
-
-    def resolve(self, name: str) -> int | None:
-        scope: _RegisterScope | None = self
-        while scope is not None:
-            if scope.registers is not None and name in scope.registers:
-                return scope.registers[name]
-            scope = scope.parent
-        return None
+    @property
+    def block_id(self) -> int:
+        return self.semantic_block.block_id
 
 
 class AlgolIrCompiler:
     """Compile a typed ALGOL AST into the repository's register IR.
 
-    The compiler keeps the first milestone intentionally plain. Declarations
-    allocate stable virtual registers, expressions allocate throwaway
-    temporaries, and structured control flow emits the label shapes that the
-    existing IR-to-WASM lowerer already recognizes.
+    Scalar variables are backed by explicit ALGOL activation frames. Registers
+    remain useful as temporary expression values, frame pointers, and address
+    operands for the generic memory instructions consumed by the WASM backend.
     """
 
     def __init__(self) -> None:
@@ -69,7 +83,15 @@ class AlgolIrCompiler:
         self.next_reg = 2
         self.if_count = 0
         self.loop_count = 0
-        self.global_registers: dict[str, int] = {}
+        self.current_frame_reg = -1
+        self.stack_base_reg = -1
+        self.stack_pointer_reg = -1
+        self.semantic_blocks: list[SemanticBlock] = []
+        self.semantic_block_index = 0
+        self.references: dict[tuple[int, str], ResolvedReference] = {}
+        self.frame_offsets: dict[int, int] = {}
+        self.variable_slots: dict[str, int] = {}
+        self.legacy_variable_slots: dict[str, int] = {}
 
     def compile(self, typed: TypeCheckResult | ASTNode) -> CompileResult:
         type_result = (
@@ -81,60 +103,146 @@ class AlgolIrCompiler:
                 for diag in type_result.diagnostics
             )
             raise CompileError(details)
+        if type_result.semantic is None or type_result.semantic.root_block is None:
+            raise CompileError("ALGOL type checking did not produce semantic frames")
 
         self.ids = IDGenerator()
         self.program = IrProgram(entry_label="_start")
         self.next_reg = 2
         self.if_count = 0
         self.loop_count = 0
-        self.global_registers = {}
+        self.semantic_blocks = list(type_result.semantic.blocks)
+        self.semantic_block_index = 0
+        self.references = {
+            (reference.token_id, reference.role): reference
+            for reference in type_result.semantic.references
+        }
+        self.frame_offsets = self._layout_frames(self.semantic_blocks)
+        self.variable_slots = self._collect_variable_slots(self.semantic_blocks)
+        self.legacy_variable_slots = self._collect_legacy_variable_slots(
+            self.semantic_blocks
+        )
+
+        total_frame_bytes = sum(
+            block.frame_layout.frame_size for block in self.semantic_blocks
+        )
+        if total_frame_bytes > _MAX_FRAME_MEMORY_BYTES:
+            raise CompileError(
+                "ALGOL frame memory requires "
+                f"{total_frame_bytes} bytes, exceeding the "
+                f"{_MAX_FRAME_MEMORY_BYTES} byte phase-2 limit"
+            )
+        self.program.add_data(
+            IrDataDecl(_FRAME_MEMORY_LABEL, max(1, total_frame_bytes), 0)
+        )
 
         self._label("_start")
-        self._emit(IrOp.LOAD_IMM, IrRegister(0), IrImmediate(0))
+        self._emit(IrOp.LOAD_IMM, IrRegister(_ZERO_REG), IrImmediate(0))
+        self.stack_base_reg = self._fresh_reg()
+        self.stack_pointer_reg = self._fresh_reg()
+        self.current_frame_reg = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_ADDR,
+            IrRegister(self.stack_base_reg),
+            IrLabel(_FRAME_MEMORY_LABEL),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(self.stack_pointer_reg),
+            IrRegister(self.stack_base_reg),
+            IrImmediate(total_frame_bytes),
+        )
+        self._emit(IrOp.LOAD_IMM, IrRegister(self.current_frame_reg), IrImmediate(0))
 
         block = _first_node(type_result.ast, "block")
         if block is None:
             raise CompileError("ALGOL program must contain a block")
-        root_scope = _RegisterScope()
-        self._compile_block(block, root_scope, is_root=True)
+        root_scope = self._compile_block(block, parent=None)
 
-        result_reg = root_scope.resolve("result")
-        if result_reg is None:
+        result_symbol = root_scope.semantic_block.scope.symbols.get("result")
+        if result_symbol is None:
             raise CompileError(
                 "compiled ALGOL programs must declare integer variable 'result'"
             )
-        self._emit(IrOp.ADD_IMM, IrRegister(1), IrRegister(result_reg), IrImmediate(0))
+        self._emit_load_symbol(result_symbol, root_scope, _RESULT_REG)
         self._emit(IrOp.HALT)
 
         return CompileResult(
             program=self.program,
-            variable_registers=dict(self.global_registers),
+            variable_registers=dict(self.legacy_variable_slots),
             max_register=max(1, self.next_reg - 1),
+            variable_slots=dict(self.variable_slots),
+            frame_offsets=dict(self.frame_offsets),
+            frame_memory_label=_FRAME_MEMORY_LABEL,
         )
 
-    def _compile_block(
-        self, block: ASTNode, parent: _RegisterScope, *, is_root: bool = False
-    ) -> None:
-        scope = parent if is_root else _RegisterScope(parent=parent)
-        for declaration in _direct_nodes(block, "declaration"):
-            self._compile_declaration(declaration, scope)
+    def _compile_block(self, block: ASTNode, parent: _FrameScope | None) -> _FrameScope:
+        semantic_block = self._next_semantic_block()
+        frame_base_reg = self._emit_enter_frame(semantic_block, parent)
+        scope = _FrameScope(
+            semantic_block=semantic_block,
+            frame_base_reg=frame_base_reg,
+            parent=parent,
+        )
+
+        self._initialize_scalar_slots(scope)
         for statement in _direct_nodes(block, "statement"):
             self._compile_statement(statement, scope)
 
-    def _compile_declaration(self, declaration: ASTNode, scope: _RegisterScope) -> None:
-        type_decl = _first_node(declaration, "type_decl")
-        if type_decl is None:
-            raise CompileError("only integer scalar declarations can be compiled")
-        ident_list = _first_node(type_decl, "ident_list")
-        for token in _tokens(ident_list):
-            if token.type_name != "NAME":
-                continue
-            reg = self._fresh_reg()
-            scope.declare(token.value, reg)
-            self.global_registers.setdefault(token.value, reg)
-            self._emit(IrOp.LOAD_IMM, IrRegister(reg), IrImmediate(0))
+        self._emit_leave_frame(scope)
+        return scope
 
-    def _compile_statement(self, statement: ASTNode, scope: _RegisterScope) -> None:
+    def _emit_enter_frame(
+        self,
+        semantic_block: SemanticBlock,
+        parent: _FrameScope | None,
+    ) -> int:
+        frame_base = self._fresh_reg()
+        frame_offset = self.frame_offsets[semantic_block.block_id]
+        self._emit(IrOp.LOAD_ADDR, IrRegister(frame_base), IrLabel(_FRAME_MEMORY_LABEL))
+        if frame_offset:
+            self._emit(
+                IrOp.ADD_IMM,
+                IrRegister(frame_base),
+                IrRegister(frame_base),
+                IrImmediate(frame_offset),
+            )
+
+        self._store_word_reg(
+            value_reg=self.current_frame_reg,
+            base_reg=frame_base,
+            offset=_DYNAMIC_LINK_OFFSET,
+        )
+        static_parent_reg = parent.frame_base_reg if parent is not None else _ZERO_REG
+        self._store_word_reg(
+            value_reg=static_parent_reg,
+            base_reg=frame_base,
+            offset=_STATIC_LINK_OFFSET,
+        )
+        self._store_word_const(frame_base, _RETURN_TOKEN_OFFSET, 0)
+        self._store_word_const(
+            frame_base,
+            _FRAME_SIZE_OFFSET,
+            semantic_block.frame_layout.frame_size,
+        )
+        self._store_word_const(frame_base, _BLOCK_ID_OFFSET, semantic_block.block_id)
+        self._copy_reg(dst=self.current_frame_reg, src=frame_base)
+        return frame_base
+
+    def _emit_leave_frame(self, scope: _FrameScope) -> None:
+        offset_reg = self._const_reg(_DYNAMIC_LINK_OFFSET)
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(self.current_frame_reg),
+            IrRegister(scope.frame_base_reg),
+            IrRegister(offset_reg),
+        )
+
+    def _initialize_scalar_slots(self, scope: _FrameScope) -> None:
+        for slot in scope.semantic_block.frame_layout.slots:
+            self._store_word_const(scope.frame_base_reg, slot.offset, 0)
+
+    def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
         inner = _first_ast_child(statement)
         if inner is None:
             return
@@ -147,7 +255,7 @@ class AlgolIrCompiler:
                 f"{inner.rule_name} is not supported by algol-ir-compiler"
             )
 
-    def _compile_unlabeled(self, node: ASTNode, scope: _RegisterScope) -> None:
+    def _compile_unlabeled(self, node: ASTNode, scope: _FrameScope) -> None:
         inner = _first_ast_child(node)
         if inner is None:
             return
@@ -165,19 +273,17 @@ class AlgolIrCompiler:
                 f"{inner.rule_name} is not supported by algol-ir-compiler"
             )
 
-    def _compile_assignment(self, assign: ASTNode, scope: _RegisterScope) -> None:
+    def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
         left_part = _first_direct_node(assign, "left_part")
         expr = _first_direct_node(assign, "expression")
         name = _variable_name(left_part)
         if name is None or expr is None:
             raise CompileError("only scalar assignments are supported")
-        target = scope.resolve(name.value)
-        if target is None:
-            raise CompileError(f"{name.value!r} is not declared")
+        target = self._require_reference(name, "write")
         value = self._compile_expr(expr, scope)
-        self._emit(IrOp.ADD_IMM, IrRegister(target), IrRegister(value), IrImmediate(0))
+        self._emit_store_reference(target, scope, value)
 
-    def _compile_if(self, cond: ASTNode, scope: _RegisterScope) -> None:
+    def _compile_if(self, cond: ASTNode, scope: _FrameScope) -> None:
         index = self.if_count
         self.if_count += 1
         else_label = f"if_{index}_else"
@@ -207,15 +313,13 @@ class AlgolIrCompiler:
                 self._compile_statement(child, scope)
         self._label(end_label)
 
-    def _compile_for(self, node: ASTNode, scope: _RegisterScope) -> None:
+    def _compile_for(self, node: ASTNode, scope: _FrameScope) -> None:
         loop_token = next(
             (tok for tok in _direct_tokens(node) if tok.type_name == "NAME"), None
         )
         if loop_token is None:
             raise CompileError("for loop is missing its control variable")
-        loop_reg = scope.resolve(loop_token.value)
-        if loop_reg is None:
-            raise CompileError(f"{loop_token.value!r} is not declared")
+        loop_reference = self._require_reference(loop_token, "control")
 
         elem = _first_direct_node(_first_direct_node(node, "for_list"), "for_elem")
         pieces = _direct_nodes(elem, "arith_expr")
@@ -223,9 +327,7 @@ class AlgolIrCompiler:
             raise CompileError("only step/until for-elements are supported")
 
         start = self._compile_expr(pieces[0], scope)
-        self._emit(
-            IrOp.ADD_IMM, IrRegister(loop_reg), IrRegister(start), IrImmediate(0)
-        )
+        self._emit_store_reference(loop_reference, scope, start)
 
         index = self.loop_count
         self.loop_count += 1
@@ -233,12 +335,13 @@ class AlgolIrCompiler:
         end_label = f"loop_{index}_end"
 
         self._label(start_label)
+        loop_value = self._emit_load_reference(loop_reference, scope)
         limit = self._compile_expr(pieces[2], scope)
         should_stop = self._fresh_reg()
         self._emit(
             IrOp.CMP_GT,
             IrRegister(should_stop),
-            IrRegister(loop_reg),
+            IrRegister(loop_value),
             IrRegister(limit),
         )
         self._emit(IrOp.BRANCH_NZ, IrRegister(should_stop), IrLabel(end_label))
@@ -247,24 +350,28 @@ class AlgolIrCompiler:
         if body is not None:
             self._compile_statement(body, scope)
 
+        current_value = self._emit_load_reference(loop_reference, scope)
         step = self._compile_expr(pieces[1], scope)
+        next_value = self._fresh_reg()
         self._emit(
-            IrOp.ADD, IrRegister(loop_reg), IrRegister(loop_reg), IrRegister(step)
+            IrOp.ADD,
+            IrRegister(next_value),
+            IrRegister(current_value),
+            IrRegister(step),
         )
+        self._emit_store_reference(loop_reference, scope, next_value)
         self._emit(IrOp.JUMP, IrLabel(start_label))
         self._label(end_label)
 
-    def _compile_expr(self, expr: ASTNode | Token, scope: _RegisterScope) -> int:
+    def _compile_expr(self, expr: ASTNode | Token, scope: _FrameScope) -> int:
         if isinstance(expr, Token):
             return self._compile_token(expr, scope)
         if expr.rule_name == "variable":
             name = _variable_name(expr)
             if name is None:
                 raise CompileError("array subscripts are not supported")
-            reg = scope.resolve(name.value)
-            if reg is None:
-                raise CompileError(f"{name.value!r} is not declared")
-            return reg
+            reference = self._require_reference(name, "read")
+            return self._emit_load_reference(reference, scope)
 
         meaningful = _meaningful_children(expr)
         if not meaningful:
@@ -334,28 +441,18 @@ class AlgolIrCompiler:
 
         return self._compile_expr(meaningful[0], scope)
 
-    def _compile_token(self, token: Token, scope: _RegisterScope) -> int:
+    def _compile_token(self, token: Token, scope: _FrameScope) -> int:
         if token.type_name == "INTEGER_LIT":
-            dst = self._fresh_reg()
-            self._emit(IrOp.LOAD_IMM, IrRegister(dst), IrImmediate(int(token.value)))
-            return dst
+            return self._const_reg(int(token.value))
         if token.value in {"true", "false"}:
-            dst = self._fresh_reg()
-            self._emit(
-                IrOp.LOAD_IMM,
-                IrRegister(dst),
-                IrImmediate(1 if token.value == "true" else 0),
-            )
-            return dst
+            return self._const_reg(1 if token.value == "true" else 0)
         if token.type_name == "NAME":
-            reg = scope.resolve(token.value)
-            if reg is None:
-                raise CompileError(f"{token.value!r} is not declared")
-            return reg
+            reference = self._require_reference(token, "read")
+            return self._emit_load_reference(reference, scope)
         raise CompileError(f"unsupported expression token {token.value!r}")
 
     def _compile_numeric_chain(
-        self, children: list[ASTNode | Token], scope: _RegisterScope
+        self, children: list[ASTNode | Token], scope: _FrameScope
     ) -> int:
         current = self._compile_expr(children[0], scope)
         index = 1
@@ -372,7 +469,7 @@ class AlgolIrCompiler:
         self,
         rule_name: str,
         children: list[ASTNode | Token],
-        scope: _RegisterScope,
+        scope: _FrameScope,
     ) -> int:
         current = self._compile_expr(children[0], scope)
         index = 1
@@ -404,7 +501,7 @@ class AlgolIrCompiler:
         return current
 
     def _compile_comparison(
-        self, children: list[ASTNode | Token], scope: _RegisterScope
+        self, children: list[ASTNode | Token], scope: _FrameScope
     ) -> int:
         left = self._compile_expr(children[0], scope)
         operator = children[1]
@@ -473,6 +570,135 @@ class AlgolIrCompiler:
         self._emit(IrOp.ADD_IMM, IrRegister(dst), IrRegister(source), IrImmediate(-1))
         self._emit(IrOp.AND_IMM, IrRegister(dst), IrRegister(dst), IrImmediate(1))
         return dst
+
+    def _emit_load_reference(
+        self, reference: ResolvedReference, scope: _FrameScope
+    ) -> int:
+        dst = self._fresh_reg()
+        frame_reg = self._emit_frame_for_reference(reference, scope)
+        offset_reg = self._const_reg(reference.slot_offset)
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(dst),
+            IrRegister(frame_reg),
+            IrRegister(offset_reg),
+        )
+        return dst
+
+    def _emit_store_reference(
+        self,
+        reference: ResolvedReference,
+        scope: _FrameScope,
+        value_reg: int,
+    ) -> None:
+        frame_reg = self._emit_frame_for_reference(reference, scope)
+        self._store_word_reg(
+            value_reg=value_reg,
+            base_reg=frame_reg,
+            offset=reference.slot_offset,
+        )
+
+    def _emit_frame_for_reference(
+        self, reference: ResolvedReference, scope: _FrameScope
+    ) -> int:
+        if reference.use_block_id != scope.block_id:
+            raise CompileError(
+                f"reference {reference.name!r} was resolved for block "
+                f"{reference.use_block_id}, but codegen is in block {scope.block_id}"
+            )
+        frame_reg = scope.frame_base_reg
+        for _ in range(reference.lexical_depth_delta):
+            next_frame = self._fresh_reg()
+            offset_reg = self._const_reg(_STATIC_LINK_OFFSET)
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(next_frame),
+                IrRegister(frame_reg),
+                IrRegister(offset_reg),
+            )
+            frame_reg = next_frame
+        return frame_reg
+
+    def _emit_load_symbol(
+        self,
+        symbol: Symbol,
+        scope: _FrameScope,
+        dst_reg: int,
+    ) -> None:
+        if symbol.declaring_block_id != scope.block_id:
+            raise CompileError(f"symbol {symbol.name!r} does not belong to root block")
+        if symbol.slot_offset is None:
+            raise CompileError(f"symbol {symbol.name!r} has no planned frame slot")
+        offset_reg = self._const_reg(symbol.slot_offset)
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(dst_reg),
+            IrRegister(scope.frame_base_reg),
+            IrRegister(offset_reg),
+        )
+
+    def _store_word_reg(self, *, value_reg: int, base_reg: int, offset: int) -> None:
+        offset_reg = self._const_reg(offset)
+        self._emit(
+            IrOp.STORE_WORD,
+            IrRegister(value_reg),
+            IrRegister(base_reg),
+            IrRegister(offset_reg),
+        )
+
+    def _store_word_const(self, base_reg: int, offset: int, value: int) -> None:
+        value_reg = self._const_reg(value)
+        self._store_word_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
+
+    def _copy_reg(self, *, dst: int, src: int) -> None:
+        self._emit(IrOp.ADD_IMM, IrRegister(dst), IrRegister(src), IrImmediate(0))
+
+    def _const_reg(self, value: int) -> int:
+        reg = self._fresh_reg()
+        self._emit(IrOp.LOAD_IMM, IrRegister(reg), IrImmediate(value))
+        return reg
+
+    def _require_reference(self, token: Token, role: str) -> ResolvedReference:
+        reference = self.references.get((id(token), role))
+        if reference is None:
+            raise CompileError(
+                f"missing resolved {role} reference for {token.value!r} "
+                f"at line {token.line}, column {token.column}"
+            )
+        return reference
+
+    def _next_semantic_block(self) -> SemanticBlock:
+        if self.semantic_block_index >= len(self.semantic_blocks):
+            raise CompileError("AST contains more blocks than the semantic model")
+        block = self.semantic_blocks[self.semantic_block_index]
+        self.semantic_block_index += 1
+        return block
+
+    def _layout_frames(self, blocks: list[SemanticBlock]) -> dict[int, int]:
+        offsets: dict[int, int] = {}
+        cursor = 0
+        for block in blocks:
+            offsets[block.block_id] = cursor
+            cursor += block.frame_layout.frame_size
+        return offsets
+
+    def _collect_variable_slots(self, blocks: list[SemanticBlock]) -> dict[str, int]:
+        slots: dict[str, int] = {}
+        for block in blocks:
+            for symbol in block.scope.symbols.values():
+                if symbol.slot_offset is not None:
+                    slots[f"{symbol.name}@block{block.block_id}"] = symbol.slot_offset
+        return slots
+
+    def _collect_legacy_variable_slots(
+        self, blocks: list[SemanticBlock]
+    ) -> dict[str, int]:
+        slots: dict[str, int] = {}
+        for block in blocks:
+            for symbol in block.scope.symbols.values():
+                if symbol.slot_offset is not None:
+                    slots.setdefault(symbol.name, symbol.slot_offset)
+        return slots
 
     def _fresh_reg(self) -> int:
         reg = self.next_reg

@@ -12,6 +12,10 @@ The current subset is intentionally small and structured. A program declares an
 integer variable named `result`; `_start` returns that value after the outer
 block finishes.
 
+Scalar locals are now backed by the ALGOL frame model from PL04. Nested blocks
+use static links to reach outer frame slots, so shadowing and outer-scope writes
+exercise the same storage path later procedures will need.
+
 ```python
 from algol_wasm_compiler import compile_source
 from wasm_runtime import WasmRuntime

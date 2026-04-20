@@ -876,12 +876,16 @@ Deliverables:
 - scalar load/store helpers or generated memory ops
 - frame pointer and stack pointer initialization
 - frame teardown
+- compiler-side cap for the phase's static frame image before WASM data
+  allocation
 
 Acceptance:
 
 - existing integer programs execute through frame-backed storage
 - nested block variables can shadow outer variables
 - an inner block can read and write an outer variable
+- oversized frame plans fail with a compiler diagnostic instead of allocating
+  an oversized WASM data segment
 
 ### Phase 3: Value Procedures
 

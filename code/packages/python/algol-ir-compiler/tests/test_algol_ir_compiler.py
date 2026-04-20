@@ -2,6 +2,7 @@
 
 import pytest
 from algol_parser import parse_algol
+from algol_type_checker import FRAME_WORD_SIZE, FrameSlot, check_algol
 from compiler_ir import IrOp
 from lang_parser import ASTNode
 
@@ -23,8 +24,14 @@ class TestAlgolIrCompiler:
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert opcodes[0] == IrOp.LABEL
         assert IrOp.LOAD_IMM in opcodes
+        assert IrOp.LOAD_ADDR in opcodes
+        assert IrOp.STORE_WORD in opcodes
         assert opcodes[-1] == IrOp.HALT
-        assert result.variable_registers["result"] >= 2
+        assert result.variable_registers["result"] == 20
+        assert result.variable_slots["result@block0"] == 20
+        assert result.frame_offsets[0] == 0
+        assert result.frame_memory_label == "__algol_frames"
+        assert result.program.data[0].label == "__algol_frames"
 
     def test_compiles_arithmetic_precedence(self) -> None:
         result = compile_algol(
@@ -112,7 +119,57 @@ class TestAlgolIrCompiler:
                 "end"
             )
         )
-        assert result.variable_registers["inner"] > result.variable_registers["result"]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert IrOp.LOAD_WORD in opcodes
+        assert IrOp.STORE_WORD in opcodes
+        assert result.variable_slots["result@block0"] == 20
+        assert result.variable_slots["inner@block1"] == 20
+        assert result.frame_offsets[1] > result.frame_offsets[0]
+
+    def test_inner_block_writes_outer_slot_through_static_link(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "begin integer inner; result := 3; inner := result end "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert opcodes.count(IrOp.LOAD_WORD) >= 3
+        assert opcodes.count(IrOp.STORE_WORD) >= 8
+
+    def test_shadowed_variables_keep_separate_frame_slots(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer x, result; "
+                "x := 1; "
+                "begin integer x; x := 9; result := x end "
+                "end"
+            )
+        )
+        assert result.variable_slots["x@block0"] == 20
+        assert result.variable_slots["x@block1"] == 20
+        assert result.variable_slots["result@block0"] == 24
+
+    def test_rejects_oversized_frame_memory_before_wasm_allocation(self) -> None:
+        typed = check_algol(parse_algol("begin integer result; result := 1 end"))
+        assert typed.semantic is not None
+        assert typed.semantic.root_block is not None
+
+        layout = typed.semantic.root_block.frame_layout
+        for index in range(17000):
+            layout.slots.append(
+                FrameSlot(
+                    symbol_id=1000 + index,
+                    name=f"synthetic_{index}",
+                    type_name="integer",
+                    offset=layout.header_size + (len(layout.slots) * FRAME_WORD_SIZE),
+                    size=FRAME_WORD_SIZE,
+                )
+            )
+
+        with pytest.raises(CompileError, match="phase-2 limit"):
+            compile_algol(typed)
 
     def test_raises_for_type_error_input(self) -> None:
         with pytest.raises(CompileError):

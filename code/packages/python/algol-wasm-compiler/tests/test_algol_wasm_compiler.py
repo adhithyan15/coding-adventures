@@ -52,3 +52,21 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
+
+    def test_inner_block_writes_outer_result_through_frame(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 1; "
+            "begin integer inner; inner := 4; result := inner + result end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_shadowed_inner_variable_uses_nearest_frame(self) -> None:
+        result = compile_source(
+            "begin integer x, result; "
+            "x := 2; "
+            "begin integer x; x := 9; result := x end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
