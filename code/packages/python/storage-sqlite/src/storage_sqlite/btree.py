@@ -135,8 +135,10 @@ v1 limitations
 * No rebalancing or merging on delete — leaf pages can become sparse.
 * No compacting of freeblocks within a page (unused space from deletes is
   not reclaimed until the leaf is rewritten by a subsequent operation).
-* Overflow chains are re-encoded on split (old overflow pages become
-  unreachable until the freelist, phase 5, recycles them).
+* Overflow chains are re-encoded on split.  Overflow pages orphaned during
+  a split are returned to the freelist if a :class:`~storage_sqlite.freelist.Freelist`
+  was injected; otherwise they are zeroed and remain allocated (they will
+  be reclaimed by a future phase-6 DROP TABLE or VACUUM).
 * Page size is pinned at 4 096; *reserved_per_page* is always 0.
 * The ``header_offset`` parameter accommodates page 1 (database header
   at bytes 0–99, B-tree header at byte 100). Callers that want a plain
@@ -147,6 +149,7 @@ from __future__ import annotations
 
 import struct
 from collections.abc import Iterator
+from typing import TYPE_CHECKING
 
 from storage_sqlite.errors import CorruptDatabaseError, StorageError
 from storage_sqlite.pager import PAGE_SIZE, Pager
@@ -154,6 +157,9 @@ from storage_sqlite.varint import decode as varint_decode
 from storage_sqlite.varint import decode_signed as varint_decode_signed
 from storage_sqlite.varint import encode as varint_encode
 from storage_sqlite.varint import encode_signed as varint_encode_signed
+
+if TYPE_CHECKING:
+    from storage_sqlite.freelist import Freelist
 
 # ── Page type constants ────────────────────────────────────────────────────────
 
@@ -536,9 +542,17 @@ class BTree:
         100-byte SQLite database header in front of it). Note: only the
         root page is affected; all other pages in the tree always have
         their B-tree header at offset 0.
+    freelist:
+        Optional :class:`~storage_sqlite.freelist.Freelist` to use for
+        page allocation and reclamation.  When provided, overflow pages
+        freed by :meth:`delete` (and :meth:`update`) are returned to the
+        freelist for reuse, and new pages are taken from the freelist
+        before extending the file.  When ``None`` (default), freed overflow
+        pages are zeroed in place and new pages always extend the file —
+        the same behaviour as phases 1–4.
     """
 
-    __slots__ = ("_header_offset", "_pager", "_root_page")
+    __slots__ = ("_freelist", "_header_offset", "_pager", "_root_page")
 
     def __init__(
         self,
@@ -546,10 +560,12 @@ class BTree:
         root_page: int,
         *,
         header_offset: int = 0,
+        freelist: Freelist | None = None,
     ) -> None:
         self._pager: Pager = pager
         self._root_page: int = root_page
         self._header_offset: int = header_offset
+        self._freelist: Freelist | None = freelist
 
     # ── Construction ──────────────────────────────────────────────────────────
 
@@ -559,18 +575,22 @@ class BTree:
         pager: Pager,
         *,
         header_offset: int = 0,
+        freelist: Freelist | None = None,
     ) -> BTree:
         """Allocate a fresh leaf page and initialise it as an empty B-tree.
 
         Returns a :class:`BTree` rooted at the newly allocated page. The
         caller must :meth:`~storage_sqlite.pager.Pager.commit` the pager
         when ready to persist.
+
+        If *freelist* is supplied, the root page is taken from the freelist
+        rather than extending the file.
         """
-        pgno = pager.allocate()
+        pgno = freelist.allocate() if freelist is not None else pager.allocate()
         buf = bytearray(pager.read(pgno))
         _init_leaf_page(buf, header_offset)
         pager.write(pgno, bytes(buf))
-        return cls(pager, pgno, header_offset=header_offset)
+        return cls(pager, pgno, header_offset=header_offset, freelist=freelist)
 
     @classmethod
     def open(
@@ -579,9 +599,14 @@ class BTree:
         root_page: int,
         *,
         header_offset: int = 0,
+        freelist: Freelist | None = None,
     ) -> BTree:
-        """Open an existing B-tree rooted at *root_page*."""
-        return cls(pager, root_page, header_offset=header_offset)
+        """Open an existing B-tree rooted at *root_page*.
+
+        Pass the same *freelist* that was used when the B-tree was created
+        so that subsequent inserts and deletes reuse the same freelist.
+        """
+        return cls(pager, root_page, header_offset=header_offset, freelist=freelist)
 
     # ── Properties ────────────────────────────────────────────────────────────
 
@@ -589,6 +614,30 @@ class BTree:
     def root_page(self) -> int:
         """1-based page number of the B-tree root."""
         return self._root_page
+
+    # ── Internal page allocation / freeing helpers ────────────────────────────
+
+    def _allocate_page(self) -> int:
+        """Return a fresh page number for this B-tree.
+
+        Tries the freelist first.  Falls back to :meth:`Pager.allocate` if
+        no freelist was injected or the freelist is empty.
+        """
+        if self._freelist is not None:
+            return self._freelist.allocate()
+        return self._pager.allocate()
+
+    def _free_page(self, pgno: int) -> None:
+        """Release *pgno* back to the freelist if available.
+
+        If no freelist was injected, the page is zeroed in the pager's
+        dirty-page table so it does not contain stale data.  The page
+        remains allocated in that case (no reuse until phase 6 / VACUUM).
+        """
+        if self._freelist is not None:
+            self._freelist.free(pgno)
+        else:
+            self._pager.write(pgno, b"\x00" * PAGE_SIZE)
 
     # ── Public operations ─────────────────────────────────────────────────────
 
@@ -979,8 +1028,8 @@ class BTree:
         separator_rowid = left_cells[-1][0]  # max rowid in left subtree
 
         # Allocate two fresh leaf pages.
-        left_pgno = self._pager.allocate()
-        right_pgno = self._pager.allocate()
+        left_pgno = self._allocate_page()
+        right_pgno = self._allocate_page()
 
         # Write cell halves to the new leaf pages (hdr_off=0 for non-root).
         self._write_cells_to_leaf(left_pgno, 0, left_cells)
@@ -1043,7 +1092,7 @@ class BTree:
         right_cells = all_cells[mid:]
         separator_rowid = left_cells[-1][0]
 
-        right_pgno = self._pager.allocate()
+        right_pgno = self._allocate_page()
         # Reuse leaf_pgno for the left half; hdr_off=0 (non-root leaf).
         self._write_cells_to_leaf(leaf_pgno, 0, left_cells)
         self._write_cells_to_leaf(right_pgno, 0, right_cells)
@@ -1124,7 +1173,7 @@ class BTree:
         median_left_child, median_sep = all_cells[mid]
         right_cells = all_cells[mid + 1 :]
 
-        right_pgno = self._pager.allocate()
+        right_pgno = self._allocate_page()
         # Left half: reuse existing page.  Its rightmost_child is the left
         # child of the median cell (which is consumed by the promotion).
         self._write_interior_page(pgno, hdr_off, left_cells, median_left_child)
@@ -1156,8 +1205,8 @@ class BTree:
         median_left_child, median_sep = all_cells[mid]
         right_cells = all_cells[mid + 1 :]
 
-        left_pgno = self._pager.allocate()
-        right_pgno = self._pager.allocate()
+        left_pgno = self._allocate_page()
+        right_pgno = self._allocate_page()
 
         self._write_interior_page(left_pgno, 0, left_cells, median_left_child)
         self._write_interior_page(right_pgno, 0, right_cells, rightmost_child)
@@ -1332,7 +1381,7 @@ class BTree:
         prev_buf: bytearray | None = None
 
         while remaining:
-            pgno = self._pager.allocate()
+            pgno = self._allocate_page()
             buf = bytearray(PAGE_SIZE)
             chunk = remaining[:_OVERFLOW_USABLE]
             buf[4 : 4 + len(chunk)] = chunk
@@ -1354,13 +1403,14 @@ class BTree:
         return first_pgno
 
     def _free_overflow(self, page_data: bytes | bytearray, ptr: int) -> None:
-        """Zero out any overflow pages referenced by the cell at *ptr*.
+        """Free all overflow pages referenced by the cell at *ptr*.
 
-        Phase 5 will add proper freelist integration; for now the pages
-        are zeroed so they don't contain stale data.
+        Each overflow page in the chain is passed to :meth:`_free_page`,
+        which either returns it to the injected freelist (phase 5+) or
+        zeroes it in place (backwards-compatible behaviour from phases 1–4).
 
-        Same guards as :meth:`_read_cell`: validate page numbers and detect
-        circular chains before zeroing pages.
+        Same guards as :meth:`_read_cell`: page numbers are validated and
+        circular chains are detected before any page is freed.
         """
         offset = ptr
         total, n = varint_decode(page_data, offset)
@@ -1388,7 +1438,7 @@ class BTree:
             visited.add(overflow_pgno)
             ov_data = self._pager.read(overflow_pgno)
             (next_pgno,) = struct.unpack_from(">I", ov_data, 0)
-            self._pager.write(overflow_pgno, b"\x00" * PAGE_SIZE)
+            self._free_page(overflow_pgno)
             overflow_pgno = next_pgno
 
     def _write_cells_to_leaf(

@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.6.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.freelist` — phase 5: SQLite trunk/leaf freelist for page reuse.
+  - **`Freelist` class**: wraps a `Pager` and manages the SQLite freelist via the
+    two header fields at offsets 32 (`first_trunk`) and 36 (`total_pages`) of page 1.
+  - **`Freelist.free(pgno)`**: returns a page to the freelist.  If the current trunk
+    has room (fewer than `TRUNK_CAPACITY` = 1 022 leaf entries), *pgno* is appended
+    as a leaf entry.  If the trunk is full or absent, *pgno* is promoted to a new
+    trunk page that points to the old trunk as its successor.
+  - **`Freelist.allocate()`**: pops a page from the freelist (LIFO — last leaf in
+    the current trunk) and zero-fills it before returning.  If the current trunk has
+    no leaf entries, the trunk page itself is returned and `first_trunk` advances to
+    the next trunk.  Falls back to `Pager.allocate()` when the freelist is empty.
+  - **`Freelist.total_pages`** property: reads the total count from the page-1 header.
+  - **`TRUNK_CAPACITY`** module constant (1 022): maximum leaf entries per trunk page
+    for 4 096-byte pages — exported for testing and documentation.
+- `BTree` now accepts an optional `freelist` keyword argument in `__init__`,
+  `create`, and `open`.
+  - **`BTree._allocate_page()`**: new internal helper that calls
+    `freelist.allocate()` when a freelist is injected, otherwise falls back to
+    `pager.allocate()`.  Replaces all direct `pager.allocate()` calls inside the
+    B-tree.
+  - **`BTree._free_page(pgno)`**: new internal helper that calls `freelist.free(pgno)`
+    when a freelist is injected.  Without a freelist, the page is zeroed in the
+    pager's dirty table (backwards-compatible with phases 1–4).
+  - **`BTree._free_overflow`** updated: now calls `_free_page()` for each overflow
+    page in the chain instead of directly zeroing via `pager.write()`.  With a
+    freelist, deleted overflow pages are reclaimed for reuse; without one the
+    behaviour is unchanged.
+
+### Fixed
+
+- **`Pager.commit()` cache coherency bug**: after a successful commit the LRU page
+  cache could hold stale pre-commit values for pages that were read before being
+  dirtied in the same session.  The fix promotes every dirty page into the cache
+  before clearing the dirty table, so reads immediately after commit see the
+  committed data without going back to disk.  This bug had no effect on existing
+  phases (all tests closed and reopened the pager after commit) but was exposed by
+  the new freelist tests that commit mid-session and then re-read the header.
+- **`Pager.rollback()` cache consistency**: dirty pages are now evicted from the
+  cache before the dirty table is cleared, so reads after rollback fall through to
+  the main file (which holds the correct pre-txn state) rather than potentially
+  returning stale cached data from the aborted transaction.
+
 ## [0.5.0] - 2026-04-20
 
 ### Added
