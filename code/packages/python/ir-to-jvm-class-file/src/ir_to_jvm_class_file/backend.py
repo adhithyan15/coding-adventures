@@ -58,6 +58,8 @@ _OP_BASTORE = 0x54
 _OP_POP = 0x57
 _OP_IADD = 0x60
 _OP_ISUB = 0x64
+_OP_IMUL = 0x68
+_OP_IDIV = 0x6C
 _OP_ISHL = 0x78
 _OP_ISHR = 0x7A
 _OP_IAND = 0x7E
@@ -113,6 +115,7 @@ class JvmBackendConfig:
     class_file_major: int = 49
     class_file_minor: int = 0
     emit_main_wrapper: bool = True
+    syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
 
 
 @dataclass(frozen=True)
@@ -331,7 +334,10 @@ class _JvmClassLowerer:
         self._validate_helper_name_collisions(callable_regions)
         data_offsets = self._assign_data_offsets()
         self._data_offsets = data_offsets
-        reg_count = self._max_register_index() + 1
+        # Register 1 is read by every HALT/RET emission (_emit_reg_get(builder, 1))
+        # even when the IR program only references register 0 explicitly.  The
+        # array must therefore be at least 2 elements long so index 1 is valid.
+        reg_count = max(self._max_register_index() + 1, 2)
 
         fields = [
             _FieldSpec(
@@ -780,7 +786,7 @@ class _JvmClassLowerer:
                 "Ljava/io/PrintStream;",
             ),
         )
-        self._emit_reg_get(builder, 4)
+        self._emit_reg_get(builder, self.config.syscall_arg_reg)
         self._emit_push_int(builder, 0xFF)
         builder.emit_opcode(_OP_IAND)
         builder.emit_u2_instruction(
@@ -833,7 +839,7 @@ class _JvmClassLowerer:
         self._emit_iload(builder, 1)
         self._emit_push_int(builder, -1)
         builder.emit_branch(_OP_IF_ICMPNE, label_have_input)
-        self._emit_push_int(builder, 4)
+        self._emit_push_int(builder, self.config.syscall_arg_reg)
         self._emit_push_int(builder, 0)
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
@@ -842,7 +848,7 @@ class _JvmClassLowerer:
         builder.emit_opcode(_OP_RETURN)
 
         builder.mark(label_have_input)
-        self._emit_push_int(builder, 4)
+        self._emit_push_int(builder, self.config.syscall_arg_reg)
         self._emit_iload(builder, 1)
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
@@ -970,7 +976,7 @@ class _JvmClassLowerer:
                 )
                 continue
 
-            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND):
+            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.MUL, IrOp.DIV):
                 dst = _as_register(
                     instruction.operands[0],
                     f"{instruction.opcode.name} dst",
@@ -990,6 +996,10 @@ class _JvmClassLowerer:
                     builder.emit_opcode(_OP_IADD)
                 elif instruction.opcode == IrOp.SUB:
                     builder.emit_opcode(_OP_ISUB)
+                elif instruction.opcode == IrOp.MUL:
+                    builder.emit_opcode(_OP_IMUL)
+                elif instruction.opcode == IrOp.DIV:
+                    builder.emit_opcode(_OP_IDIV)
                 else:
                     builder.emit_opcode(_OP_IAND)
                 builder.emit_u2_instruction(

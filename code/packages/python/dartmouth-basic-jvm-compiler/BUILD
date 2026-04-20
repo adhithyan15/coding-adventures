@@ -1,0 +1,3 @@
+uv venv --quiet --clear
+uv pip install -e ../grammar-tools -e ../graph -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../dartmouth-basic-lexer -e ../dartmouth-basic-parser -e ../compiler-ir -e ../dartmouth-basic-ir-compiler -e ../virtual-machine -e ../brainfuck -e ../compiler-source-map -e ../brainfuck-ir-compiler -e ../nib-lexer -e ../nib-parser -e ../type-checker-protocol -e ../nib-type-checker -e ../nib-ir-compiler -e ../jvm-class-file -e ../ir-to-jvm-class-file -e ../simulator-protocol -e ../jvm-bytecode-disassembler -e ../jvm-simulator -e ../jvm-runtime -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v

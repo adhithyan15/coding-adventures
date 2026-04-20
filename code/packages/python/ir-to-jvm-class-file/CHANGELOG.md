@@ -1,5 +1,20 @@
 # ir-to-jvm-class-file
 
+## 0.2.0 — 2026-04-19
+
+### Added
+
+- `IrOp.MUL` support: emits `imul` (`0x68`) so Dartmouth BASIC multiplication
+  expressions (`LET A = B * C`, `PRINT 3 * I`) lower correctly to JVM bytecode.
+- `IrOp.DIV` support: emits `idiv` (`0x6C`) so Dartmouth BASIC integer division
+  expressions lower correctly.  Integer division truncates toward zero, matching
+  Dartmouth BASIC semantics.
+- `syscall_arg_reg` field on `JvmBackendConfig` (default `4`) — selects which
+  IR virtual register holds the SYSCALL print argument.  The default keeps full
+  backwards compatibility with Brainfuck IR (register 4).  Pass
+  `syscall_arg_reg=0` when lowering Dartmouth BASIC IR, which places the
+  print argument in register 0.
+
 ## 0.1.0 - 2026-04-17
 
 - Add the initial Python prototype for lowering `compiler_ir.IrProgram` to JVM
