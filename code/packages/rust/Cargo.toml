@@ -328,6 +328,7 @@ members = [
     "text-native-coretext",
     "layout-ir",
     "layout-block",
+    "layout-text-measure-native",
     "document-ast-to-layout",
     "udp-client",
     "state-machine-markup-serializer",
