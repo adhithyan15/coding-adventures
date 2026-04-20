@@ -349,7 +349,20 @@ fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Ve
 /// std::fs::write("qr.png", png).unwrap();
 /// ```
 pub fn render(scene: &PaintScene) -> PixelContainer {
-    unsafe { render_unsafe(scene) }
+    let mut pixels = unsafe { render_unsafe(scene) };
+    // After Metal finishes rasterizing rects/lines, overlay any
+    // `coretext:` PaintGlyphRun instructions via CoreText's
+    // glyph-drawing API. CoreText draws directly into a CG bitmap
+    // context wrapping the same RGBA bytes, so no extra allocation
+    // is required. The overlay pass runs once, at the end — so glyph
+    // runs render on top of whatever Metal rasterized. For typical
+    // Markdown (background rects below, text above) this produces
+    // correct painter's-algorithm output.
+    #[cfg(target_vendor = "apple")]
+    unsafe {
+        glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
+    }
+    pixels
 }
 
 unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
@@ -579,6 +592,260 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
     );
 
     PixelContainer::from_data(width, height, data)
+}
+
+// ---------------------------------------------------------------------------
+// CoreText glyph-run overlay (Apple only)
+// ---------------------------------------------------------------------------
+//
+// The Metal render pass above rasterizes rects / lines / groups / clips
+// into RGBA bytes. To render text, we resolve `PaintGlyphRun`
+// instructions with `font_ref` starting `"coretext:"` by wrapping the
+// RGBA pixel buffer in a `CGBitmapContext` and calling `CTFontDrawGlyphs`.
+//
+// The font_ref string carries everything needed to recreate the
+// CTFontRef: `"coretext:<PostScript-name>@<size>"`. We parse it and
+// call `CTFontCreateWithName` per run. Creating a CTFontRef is cheap —
+// CoreText caches internally — so this is acceptable for v1 without
+// a separate font registry.
+
+#[cfg(target_vendor = "apple")]
+mod glyph_run_overlay {
+    use objc_bridge::{
+        cfstring_checked, CFRelease, CGBitmapContextCreate, CGColorSpaceCreateDeviceRGB,
+        CGColorSpaceRelease, CGContextRelease, CGContextRestoreGState, CGContextSaveGState,
+        CGContextScaleCTM, CGContextSetRGBFillColor, CGContextSetShouldAntialias,
+        CGContextSetShouldSmoothFonts, CGContextTranslateCTM, CGPoint, CTFontCreateWithName,
+        CTFontDrawGlyphs, CGContextRef, Id, K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST,
+        K_CG_BITMAP_BYTE_ORDER_32_LITTLE, NIL,
+    };
+    use paint_instructions::{
+        PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer,
+    };
+
+    pub(super) unsafe fn overlay_coretext_glyph_runs(
+        scene: &PaintScene,
+        pixels: &mut PixelContainer,
+    ) {
+        let width = pixels.width as usize;
+        let height = pixels.height as usize;
+        if width == 0 || height == 0 {
+            return;
+        }
+
+        let runs = collect_coretext_runs(&scene.instructions);
+        if runs.is_empty() {
+            return;
+        }
+
+        // Wrap the existing pixel buffer in a CG bitmap context.
+        // MTLPixelFormatRGBA8Unorm lays bytes as R,G,B,A; CoreGraphics'
+        // closest match on Apple platforms is BGRA premultiplied with
+        // little-endian byte order. Since we're only *adding* text
+        // (most pixels are background anyway), minor byte-order
+        // mismatch would manifest as subtly wrong text color. We use
+        // PREMULTIPLIED_FIRST + BYTE_ORDER_32_LITTLE which yields an
+        // ARGB layout compatible with most Core Graphics usage. If
+        // colors look off in the end-to-end integration we can flip
+        // to alpha-last.
+        let color_space = CGColorSpaceCreateDeviceRGB();
+        if color_space.is_null() {
+            return;
+        }
+
+        // Cast the PixelContainer's immutable data pointer to mutable.
+        // CGBitmapContextCreate needs a mutable pointer; the caller
+        // holds exclusive access to `pixels` via the `&mut` in this
+        // function's signature, so this is safe per Rust's aliasing
+        // rules.
+        let data_ptr = pixels.data.as_ptr() as *mut std::ffi::c_void;
+
+        let ctx: CGContextRef = CGBitmapContextCreate(
+            data_ptr,
+            width,
+            height,
+            8,
+            width * 4,
+            color_space,
+            K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST | K_CG_BITMAP_BYTE_ORDER_32_LITTLE,
+        );
+        CGColorSpaceRelease(color_space);
+        if ctx.is_null() {
+            return;
+        }
+
+        // Flip the Y axis so scene coords (Y-down) align with CG's
+        // default coordinate system (Y-up). After this, drawing at
+        // scene (x, y) places the glyph where we expect.
+        CGContextSaveGState(ctx);
+        CGContextTranslateCTM(ctx, 0.0, height as f64);
+        CGContextScaleCTM(ctx, 1.0, -1.0);
+
+        CGContextSetShouldAntialias(ctx, true);
+        CGContextSetShouldSmoothFonts(ctx, true);
+
+        for gr in runs {
+            draw_one_glyph_run(ctx, gr);
+        }
+
+        CGContextRestoreGState(ctx);
+        CGContextRelease(ctx);
+    }
+
+    fn collect_coretext_runs(
+        instructions: &[PaintInstruction],
+    ) -> Vec<&PaintGlyphRun> {
+        let mut out: Vec<&PaintGlyphRun> = Vec::new();
+        fn walk<'a>(
+            ins: &'a [PaintInstruction],
+            out: &mut Vec<&'a PaintGlyphRun>,
+        ) {
+            for i in ins {
+                match i {
+                    PaintInstruction::GlyphRun(g) => {
+                        if g.font_ref.starts_with("coretext:") {
+                            out.push(g);
+                        }
+                    }
+                    PaintInstruction::Group(grp) => walk(&grp.children, out),
+                    PaintInstruction::Clip(c) => walk(&c.children, out),
+                    PaintInstruction::Layer(l) => walk(&l.children, out),
+                    _ => {}
+                }
+            }
+        }
+        walk(instructions, &mut out);
+        out
+    }
+
+    unsafe fn draw_one_glyph_run(ctx: CGContextRef, run: &PaintGlyphRun) {
+        // Parse "coretext:<ps_name>@<size>". Size falls back to
+        // run.font_size if the suffix is missing or malformed.
+        let (ps_name, size_from_ref) = parse_coretext_font_ref(&run.font_ref);
+        let size = size_from_ref.unwrap_or(run.font_size);
+
+        let cf_name = match cfstring_checked(&ps_name) {
+            Some(s) => s,
+            None => return,
+        };
+        let font: Id = CTFontCreateWithName(cf_name, size, std::ptr::null());
+        CFRelease(cf_name);
+        if font == NIL {
+            return;
+        }
+
+        // Set fill color from run.fill (CSS string). Default: black.
+        let (r, g, b, a) = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
+        CGContextSetRGBFillColor(ctx, r, g, b, a);
+
+        // Assemble glyph ID + position arrays. The run's glyphs
+        // already carry absolute scene-coordinate baseline origins,
+        // so no extra offset is needed here.
+        let glyph_ids: Vec<u16> = run.glyphs.iter().map(|g| g.glyph_id as u16).collect();
+        let positions: Vec<CGPoint> = run
+            .glyphs
+            .iter()
+            .map(|g| CGPoint { x: g.x, y: g.y })
+            .collect();
+
+        if !glyph_ids.is_empty() {
+            CTFontDrawGlyphs(
+                font,
+                glyph_ids.as_ptr(),
+                positions.as_ptr(),
+                glyph_ids.len(),
+                ctx,
+            );
+        }
+        CFRelease(font);
+    }
+
+    /// Parse `"coretext:PSName@Size"` into `(PSName, Some(size))`.
+    /// Malformed inputs return `(stripped, None)`.
+    fn parse_coretext_font_ref(s: &str) -> (String, Option<f64>) {
+        let rest = s.strip_prefix("coretext:").unwrap_or(s);
+        if let Some(at_idx) = rest.rfind('@') {
+            let name = &rest[..at_idx];
+            let size_str = &rest[at_idx + 1..];
+            let size = size_str.parse::<f64>().ok();
+            return (name.to_string(), size);
+        }
+        (rest.to_string(), None)
+    }
+
+    /// Parse a subset of CSS colours into (r, g, b, a) in 0..=1.
+    /// Supports `rgb(r, g, b)` and `rgba(r, g, b, a)` with decimal
+    /// r,g,b in 0..=255 and a in 0..=1. Falls back to opaque black.
+    fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
+        let s = s.trim();
+        let (inner, has_alpha) = if let Some(i) = s.strip_prefix("rgba(").and_then(|x| x.strip_suffix(")")) {
+            (i, true)
+        } else if let Some(i) = s.strip_prefix("rgb(").and_then(|x| x.strip_suffix(")")) {
+            (i, false)
+        } else {
+            return (0.0, 0.0, 0.0, 1.0);
+        };
+        let parts: Vec<&str> = inner.split(',').map(|p| p.trim()).collect();
+        if parts.len() < 3 {
+            return (0.0, 0.0, 0.0, 1.0);
+        }
+        let r = parts[0].parse::<f64>().unwrap_or(0.0) / 255.0;
+        let g = parts[1].parse::<f64>().unwrap_or(0.0) / 255.0;
+        let b = parts[2].parse::<f64>().unwrap_or(0.0) / 255.0;
+        let a = if has_alpha && parts.len() >= 4 {
+            parts[3].parse::<f64>().unwrap_or(1.0)
+        } else {
+            1.0
+        };
+        (r.clamp(0.0, 1.0), g.clamp(0.0, 1.0), b.clamp(0.0, 1.0), a.clamp(0.0, 1.0))
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn parse_coretext_font_ref_full() {
+            let (name, size) = parse_coretext_font_ref("coretext:Helvetica-Bold@16.0");
+            assert_eq!(name, "Helvetica-Bold");
+            assert_eq!(size, Some(16.0));
+        }
+
+        #[test]
+        fn parse_coretext_font_ref_malformed_no_at() {
+            let (name, size) = parse_coretext_font_ref("coretext:Helvetica-Bold");
+            assert_eq!(name, "Helvetica-Bold");
+            assert_eq!(size, None);
+        }
+
+        #[test]
+        fn parse_coretext_font_ref_non_numeric_size() {
+            let (name, size) = parse_coretext_font_ref("coretext:Helvetica@abc");
+            assert_eq!(name, "Helvetica");
+            assert_eq!(size, None);
+        }
+
+        #[test]
+        fn parse_css_color_rgb() {
+            let (r, g, b, a) = parse_css_color("rgb(255, 128, 0)");
+            assert!((r - 1.0).abs() < 1e-6);
+            assert!((g - 128.0 / 255.0).abs() < 1e-6);
+            assert!((b - 0.0).abs() < 1e-6);
+            assert_eq!(a, 1.0);
+        }
+
+        #[test]
+        fn parse_css_color_rgba() {
+            let (_r, _g, _b, a) = parse_css_color("rgba(0, 0, 0, 0.5)");
+            assert!((a - 0.5).abs() < 1e-6);
+        }
+
+        #[test]
+        fn parse_css_color_malformed_returns_black() {
+            let (r, g, b, a) = parse_css_color("not-a-color");
+            assert_eq!((r, g, b, a), (0.0, 0.0, 0.0, 1.0));
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------

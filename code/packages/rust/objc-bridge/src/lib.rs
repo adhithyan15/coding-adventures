@@ -353,7 +353,37 @@ extern "C" {
 
     #[allow(non_snake_case)]
     pub fn CGContextSetTextPosition(context: CGContextRef, x: c_double, y: c_double);
+
+    // --- CTM transforms (needed to bridge Y-down scene coordinates to
+    //     CoreGraphics' Y-up default) ----------------------------------------
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSaveGState(context: CGContextRef);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextRestoreGState(context: CGContextRef);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextTranslateCTM(context: CGContextRef, tx: c_double, ty: c_double);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextScaleCTM(context: CGContextRef, sx: c_double, sy: c_double);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSetShouldAntialias(context: CGContextRef, should: bool);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSetShouldSmoothFonts(context: CGContextRef, should: bool);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextClearRect(context: CGContextRef, rect: CGRect);
 }
+
+/// Bitmap-info flags for `CGBitmapContextCreate`. The paint-metal crate
+/// uses RGBA8 premultiplied alpha, big-endian byte order (matching the
+/// MTLPixelFormatRGBA8Unorm layout produced by the Metal render pass).
+pub const K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST: u32 = 2;
+pub const K_CG_BITMAP_BYTE_ORDER_32_LITTLE: u32 = 2 << 12;
 
 // ---------------------------------------------------------------------------
 // CoreText — C functions
