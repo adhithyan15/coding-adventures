@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.local/schemas/benchmark-manifest.schema.json",
+  "title": "Benchmark Manifest",
+  "type": "object",
+  "required": ["name", "subjects", "workloads"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "warmup_trials": { "type": "integer", "minimum": 0 },
+        "measurement_trials": { "type": "integer", "minimum": 1 },
+        "cooldown_ms": { "type": "integer", "minimum": 0 },
+        "randomize_subject_order": { "type": "boolean" },
+        "fail_fast": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "subjects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "kind", "command"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["command", "service"] },
+          "checkout": { "type": "string" },
+          "working_directory": { "type": "string" },
+          "build": { "type": "string" },
+          "command": { "type": "string", "minLength": 1 },
+          "ready_check": { "type": "string" },
+          "prebuilt": { "type": "boolean" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "workloads": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "driver"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "driver": { "type": "string", "minLength": 1 },
+          "mode": { "type": "string" },
+          "command": { "type": "string" },
+          "read_mode": { "type": "string" },
+          "protocol_closes_after_response": { "type": "boolean" },
+          "request": { "type": "string" },
+          "expect": { "type": "string" },
+          "connections": { "type": "integer", "minimum": 1 },
+          "concurrency": { "type": "integer", "minimum": 1 },
+          "requests_per_connection": { "type": "integer", "minimum": 1 },
+          "operations": { "type": "integer", "minimum": 1 },
+          "timeout_ms": { "type": "integer", "minimum": 1 }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

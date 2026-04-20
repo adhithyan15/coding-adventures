@@ -26,9 +26,11 @@ from logic_builtins import (
     add,
     argo,
     atomo,
+    bagofo,
     callo,
     compoundo,
     div,
+    findallo,
     floordiv,
     functoro,
     geqo,
@@ -46,6 +48,7 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    setofo,
     stringo,
     sub,
     varo,
@@ -56,7 +59,124 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.2.0"
+        assert __version__ == "0.3.0"
+
+
+class TestCollectionBuiltins:
+    """Collection helpers should turn streams of proofs into logic lists."""
+
+    def test_findallo_collects_answers_in_proof_order(self) -> None:
+        item = var("Item")
+        results = var("Results")
+
+        assert solve_all(
+            program(),
+            results,
+            findallo(item, disj(eq(item, "tea"), eq(item, "cake")), results),
+        ) == [logic_list(["tea", "cake"])]
+
+    def test_findallo_preserves_duplicates(self) -> None:
+        item = var("Item")
+        results = var("Results")
+
+        assert solve_all(
+            program(),
+            results,
+            findallo(item, disj(eq(item, "tea"), eq(item, "tea")), results),
+        ) == [logic_list(["tea", "tea"])]
+
+    def test_findallo_succeeds_with_empty_list_when_goal_fails(self) -> None:
+        item = var("Item")
+        results = var("Results")
+
+        assert solve_all(program(), results, findallo(item, fail(), results)) == [
+            logic_list([]),
+        ]
+
+    def test_findallo_does_not_leak_inner_bindings_outside_results(self) -> None:
+        item = var("Item")
+        results = var("Results")
+
+        assert solve_all(
+            program(),
+            (item, results),
+            findallo(item, disj(eq(item, "tea"), eq(item, "cake")), results),
+        ) == [(item, logic_list(["tea", "cake"]))]
+
+    def test_bagofo_preserves_duplicates_and_fails_when_empty(self) -> None:
+        item = var("Item")
+        results = var("Results")
+
+        assert solve_all(
+            program(),
+            results,
+            bagofo(item, disj(eq(item, "tea"), eq(item, "tea")), results),
+        ) == [logic_list(["tea", "tea"])]
+        assert solve_all(program(), results, bagofo(item, fail(), results)) == []
+
+    def test_setofo_removes_duplicates_and_sorts_terms(self) -> None:
+        item = var("Item")
+        results = var("Results")
+
+        assert solve_all(
+            program(),
+            results,
+            setofo(
+                item,
+                disj(
+                    eq(item, "pear"),
+                    eq(item, 2),
+                    eq(item, "apple"),
+                    eq(item, "pear"),
+                ),
+                results,
+            ),
+        ) == [logic_list([2, "apple", "pear"])]
+        assert solve_all(program(), results, setofo(item, fail(), results)) == []
+
+    def test_collectors_compose_with_arithmetic_predicates(self) -> None:
+        raw = var("Raw")
+        adjusted = var("Adjusted")
+        results = var("Results")
+
+        assert solve_all(
+            program(),
+            results,
+            findallo(
+                adjusted,
+                conj(
+                    disj(eq(raw, 2), eq(raw, 5)),
+                    iso(adjusted, add(raw, 10)),
+                ),
+                results,
+            ),
+        ) == [logic_list([12, 15])]
+
+    def test_collectors_compose_with_relation_search(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        results = var("Results")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+
+        assert solve_all(
+            family,
+            results,
+            findallo(child, parent("homer", child), results),
+        ) == [logic_list(["bart", "lisa"])]
+
+    def test_collectors_reject_non_goals(self) -> None:
+        results = var("Results")
+
+        with pytest.raises(TypeError):
+            findallo("x", object(), results)
+        with pytest.raises(TypeError):
+            bagofo("x", object(), results)
+        with pytest.raises(TypeError):
+            setofo("x", object(), results)
 
 
 class TestArithmeticBuiltins:
