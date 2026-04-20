@@ -952,6 +952,22 @@ Optional later triggers:
 - `pull_request` only when benchmark manifests or runtime packages change, and
   only in smoke mode
 
+If an `issue_comment` trigger is added later, it must be treated as an
+untrusted request path:
+
+- do not use `pull_request_target` to run benchmark code from a fork with a
+  write-scoped token
+- verify that the commenter has repository write permission before starting a
+  benchmark
+- check out the PR head with read-only permissions
+- avoid exposing repository secrets to benchmarked code
+- post results through a separate least-privilege step after the benchmark
+  artifacts are produced
+
+The safe default is manual `workflow_dispatch`; comment-triggered benchmarks
+are an ergonomic layer that should only be added after the permission model is
+explicitly implemented and reviewed.
+
 The first workflow should:
 
 - check out the repo with full history
