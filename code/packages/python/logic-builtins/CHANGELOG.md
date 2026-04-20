@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] - 2026-04-20
+
+### Added
+
+- term metaprogramming predicates: `univo`, `copytermo`, `same_termo`, `atomico`, and `callableo`
+- construction-mode `functoro` for atoms and compounds with fresh argument variables
+- tests covering Prolog-style term decomposition, construction, variable-refreshing copies, strict identity, and callable/atomic classification
+
 ## [0.4.0] - 2026-04-20
 
 ### Added

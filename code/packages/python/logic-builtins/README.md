@@ -18,8 +18,11 @@ ordinary logic goal expressions.
 - `groundo(term)`
 - `varo(term)` and `nonvaro(term)`
 - `atomo(term)`, `numbero(term)`, `stringo(term)`, and `compoundo(term)`
-- `functoro(term, name, arity)`
+- `atomico(term)` and `callableo(term)`
+- `functoro(term, name, arity)` for inspection and construction
 - `argo(index, term, value)`
+- `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
+- `copytermo(source, copy)` and `same_termo(left, right)`
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -40,6 +43,8 @@ from logic_builtins import (
     iso,
     noto,
     onceo,
+    same_termo,
+    univo,
 )
 from logic_engine import atom, conj, eq, fail, logic_list, num, program, solve_all, term, var
 
@@ -80,6 +85,17 @@ assert solve_all(
     X,
     forallo(conj(eq(X, 7)), geqo(X, 7)),
 ) == [X]
+assert solve_all(
+    program(),
+    Results,
+    univo(term("box", "tea", "cake"), Results),
+) == [logic_list(["box", "tea", "cake"])]
+assert solve_all(
+    program(),
+    X,
+    univo(X, logic_list(["box", "tea", "cake"])),
+) == [term("box", "tea", "cake")]
+assert solve_all(program(), X, same_termo(X, X)) == [X]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -96,6 +112,12 @@ branch to keep backtracking. `forallo` checks every generated proof without
 leaking generator bindings to the outer query. Full Prolog cut is not included
 yet because it needs solver-level choicepoint pruning rather than a simple
 library predicate.
+
+Term metaprogramming treats terms as ordinary data. `univo` decomposes
+`box(tea, cake)` into `[box, tea, cake]` and can construct the term back from
+that list. `functoro` now constructs atoms and compounds when supplied a name
+and arity. `copytermo` refreshes variables in a copied term, while
+`same_termo` checks strict identity without binding variables.
 
 ## Dependencies
 
