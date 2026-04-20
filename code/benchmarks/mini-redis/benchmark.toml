@@ -1,0 +1,57 @@
+name = "mini-redis-tcp-runtime"
+description = "Mini Redis workloads used to tune tcp-runtime."
+
+[defaults]
+warmup_trials = 3
+measurement_trials = 30
+cooldown_ms = 250
+randomize_subject_order = true
+fail_fast = false
+
+[[subjects]]
+name = "current"
+kind = "service"
+checkout = "HEAD"
+working_directory = "code/programs/rust/mini-redis"
+build = "cargo build --release"
+command = "./target/release/mini-redis --host 127.0.0.1 --port {port}"
+ready_check = "tcp-connect"
+
+[[subjects]]
+name = "baseline"
+kind = "service"
+checkout = "origin/main"
+working_directory = "code/programs/rust/mini-redis"
+build = "cargo build --release"
+command = "./target/release/mini-redis --host 127.0.0.1 --port {port}"
+ready_check = "tcp-connect"
+
+[[workloads]]
+name = "redis-ping-1000"
+driver = "tcp-resp"
+connections = 1000
+concurrency = 1000
+mode = "one-shot"
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+read_mode = "resp-frame"
+
+[[workloads]]
+name = "redis-preconnected-ping-1000"
+driver = "tcp-resp"
+connections = 1000
+concurrency = 1000
+mode = "preconnect-then-fire"
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+read_mode = "resp-frame"
+
+[[workloads]]
+name = "redis-pipelined-set-get"
+driver = "tcp-resp"
+connections = 100
+requests_per_connection = 100
+mode = "pipeline"
+request = "*3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n"
+expect = "+OK\r\n$5\r\nvalue\r\n"
+read_mode = "resp-frame"
