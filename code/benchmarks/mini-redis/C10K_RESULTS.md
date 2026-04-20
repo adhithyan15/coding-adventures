@@ -122,3 +122,64 @@ The next useful passes should be:
 If idle C10K passes but active C10K saturates one core, the likely next
 architecture investment is a multi-reactor design with connection affinity, not
 a generic per-request thread pool.
+
+## Follow-Up: Low-Rate Active C10K
+
+A second local exploratory run kept the same server binary alive and sent real
+RESP `PING` traffic while the sockets were held open. This used a temporary
+external load driver so we could learn quickly without expanding the committed
+benchmark-tool surface before deciding on the final active-workload contract.
+
+The active driver:
+
+1. opened the requested number of sockets once
+2. held the sockets open
+3. repeatedly swept across every socket
+4. sent one RESP `PING` per socket per sweep
+5. required every response to be `+PONG\r\n`
+
+### Active Run Shape
+
+| Run | Connections | Dial Concurrency | Operation Concurrency | Duration | Sweep Interval | Total Sweeps |
+|---|---:|---:|---:|---:|---:|---:|
+| `active-1k` | 1,000 | 250 | 500 | 15s | 3s | 5 |
+| `active-5k` | 5,000 | 500 | 1,000 | 20s | 4s | 5 |
+| `active-10k` | 10,000 | 500 | 1,000 | 25s | 5s | 5 |
+
+### Active Run Results
+
+| Run | Opened | Dial Failures | Total PINGs | Failed PINGs | Result |
+|---|---:|---:|---:|---:|---|
+| `active-1k` | 1,000 | 0 | 5,000 | 0 | pass |
+| `active-5k` | 5,000 | 0 | 25,000 | 0 | pass |
+| `active-10k` | 10,000 | 0 | 50,000 | 0 | pass |
+
+### Active Latency Summary
+
+Aggregate PING latency across all waves:
+
+| Run | p50 | p90 | p99 | max |
+|---|---:|---:|---:|---:|
+| `active-1k` | 9.814 ms | 15.939 ms | 18.841 ms | 22.161 ms |
+| `active-5k` | 9.387 ms | 20.350 ms | 27.322 ms | 28.359 ms |
+| `active-10k` | 10.113 ms | 18.516 ms | 27.312 ms | 32.207 ms |
+
+Dial latency for the active runs:
+
+| Run | p50 | p90 | p99 | max |
+|---|---:|---:|---:|---:|
+| `active-1k` | 4.235 ms | 55.612 ms | 56.809 ms | 85.275 ms |
+| `active-5k` | 1.805 ms | 33.732 ms | 125.586 ms | 157.764 ms |
+| `active-10k` | 1.912 ms | 7.207 ms | 345.044 ms | 595.906 ms |
+
+### Active Run Interpretation
+
+The low-rate active C10K run also passed. The server held 10,000 concurrent
+connections while processing 50,000 validated RESP `PING` operations over those
+connections with zero failures.
+
+This is stronger than the idle C10K proof because the held sockets were used
+throughout the benchmark. It still is not a maximum-throughput result: each
+connection only sent one `PING` every five seconds in the 10K run. The next
+step is to formalize this active mode in `benchmark-tool` and sweep request
+rates upward until latency or one reactor core clearly saturates.
