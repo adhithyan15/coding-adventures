@@ -70,3 +70,53 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_integer_value_procedure_returns_result_slot(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); value x; integer x; "
+            "begin inc := x + 1 end; "
+            "result := inc(4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_void_procedure_statement_writes_outer_frame(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure setresult(x); value x; integer x; "
+            "begin result := x end; "
+            "setresult(6) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
+
+    def test_value_parameter_assignment_does_not_write_back(self) -> None:
+        result = compile_source(
+            "begin integer result, y; "
+            "procedure bump(x); value x; integer x; "
+            "begin x := x + 1; result := x end; "
+            "y := 5; bump(y); result := result * 10 + y "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [65]
+
+    def test_recursive_factorial_runs_with_fresh_frames(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure fact(n); value n; integer n; "
+            "begin if n = 0 then fact := 1 else fact := n * fact(n - 1) end; "
+            "result := fact(5) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [120]
+
+    def test_runaway_recursion_hits_bounded_frame_stack(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure loop(n); value n; integer n; "
+            "begin loop := loop(n + 1) end; "
+            "result := loop(0) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]

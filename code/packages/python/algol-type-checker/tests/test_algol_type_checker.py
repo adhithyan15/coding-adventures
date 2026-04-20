@@ -194,3 +194,99 @@ class TestAlgolTypeChecker:
         assert inner_read.symbol_id == inner_x.symbol_id
         assert inner_write.symbol_id != outer_x.symbol_id
         assert inner_write.lexical_depth_delta == 0
+
+    def test_accepts_integer_value_procedure_descriptor(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); value x; integer x; "
+            "begin inc := x + 1 end; "
+            "result := inc(4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        descriptor = result.semantic.procedures[0]
+        assert descriptor.name == "inc"
+        assert descriptor.return_type == "integer"
+        assert descriptor.parameters[0].name == "x"
+        assert descriptor.parameters[0].mode == "value"
+        body_block = result.semantic.blocks[descriptor.body_block_id]
+        assert body_block.scope.symbols["inc"].kind == "procedure_result"
+        assert body_block.scope.symbols["x"].kind == "parameter"
+
+    def test_records_procedure_call_static_link_delta(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure outer(x); value x; integer x; "
+            "begin integer procedure inner(y); value y; integer y; "
+            "begin inner := x + y end; "
+            "outer := inner(3) end; "
+            "result := outer(4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        inner_call = next(
+            call for call in result.semantic.procedure_calls if call.name == "inner"
+        )
+        assert inner_call.lexical_depth_delta == 0
+        outer_param_read = next(
+            ref for ref in result.semantic.references if ref.name == "x"
+        )
+        assert outer_param_read.lexical_depth_delta == 1
+
+    def test_accepts_void_procedure_statement_call(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure setresult(x); value x; integer x; "
+            "begin result := x end; "
+            "setresult(6) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        call = result.semantic.procedure_calls[0]
+        assert call.role == "statement"
+        assert call.return_type is None
+
+    def test_rejects_call_by_name_parameter_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "result := id(1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "call-by-name parameter" in result.diagnostics[0].message
+
+    def test_rejects_procedure_argument_count_mismatch(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "result := id(1, 2) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects 1 argument" in result.diagnostics[0].message
+
+    def test_rejects_void_procedure_in_expression(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure setresult(x); value x; integer x; begin result := x end; "
+            "result := setresult(6) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "does not return a value" in result.diagnostics[0].message

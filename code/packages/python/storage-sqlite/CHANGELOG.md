@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.8.1] - 2026-04-20
+
+### Fixed
+
+- **`_encode_row` / `_decode_row` byte-compatibility bug**: INTEGER PRIMARY KEY
+  columns were previously *skipped* in the record payload.  Real SQLite instead
+  writes a **NULL slot** for IPK columns (the actual integer is the B-tree cell
+  key, not the payload), so any file written by the real `sqlite3` library would
+  have an extra NULL at the start of every payload that our decoder was not
+  consuming.  The result was a column shift: reading a sqlite3-written file with
+  this backend would yield `{id: rowid, label: None, score: 'alpha'}` instead of
+  `{id: rowid, label: 'alpha', score: 1.5}`.
+
+  Fix: `_encode_row` now always appends `None` for each IPK column (matching
+  sqlite3's output); `_decode_row` now consumes (and discards) the IPK slot from
+  the decoded value list before mapping non-IPK columns, then injects the rowid
+  for the IPK column as before.  Files written by earlier versions of this backend
+  (which omitted the IPK slot) will decode incorrectly if opened by this version —
+  they were never byte-compatible with real sqlite3, so this is a breaking change
+  from 0.8.0 (still alpha).
+
+- Updated `test_encode_skips_ipk` (renamed to `test_encode_ipk_as_null_placeholder`)
+  and `test_decode_injects_rowid_for_ipk` in `tests/test_backend.py` to reflect
+  the corrected encoding contract.
+
 ## [0.8.0] - 2026-04-20
 
 ### Added

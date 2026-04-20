@@ -353,7 +353,79 @@ extern "C" {
 
     #[allow(non_snake_case)]
     pub fn CGContextSetTextPosition(context: CGContextRef, x: c_double, y: c_double);
+
+    // --- CTM transforms (needed to bridge Y-down scene coordinates to
+    //     CoreGraphics' Y-up default) ----------------------------------------
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSaveGState(context: CGContextRef);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextRestoreGState(context: CGContextRef);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextTranslateCTM(context: CGContextRef, tx: c_double, ty: c_double);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextScaleCTM(context: CGContextRef, sx: c_double, sy: c_double);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSetShouldAntialias(context: CGContextRef, should: bool);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextSetShouldSmoothFonts(context: CGContextRef, should: bool);
+
+    #[allow(non_snake_case)]
+    pub fn CGContextClearRect(context: CGContextRef, rect: CGRect);
+
+    /// Set the text matrix used by CT / CG glyph drawing. Used to
+    /// counter-flip glyphs when the surrounding CTM is Y-flipped.
+    #[allow(non_snake_case)]
+    pub fn CGContextSetTextMatrix(context: CGContextRef, transform: CGAffineTransform);
 }
+
+/// Minimal CGAffineTransform (a, b, c, d, tx, ty). Same layout Apple
+/// uses everywhere. The `scale_flip_y()` constructor produces the
+/// matrix needed to counter-flip CoreText glyphs inside a Y-flipped
+/// CTM (so text comes out right-side up).
+#[repr(C)]
+#[derive(Clone, Copy, Debug)]
+pub struct CGAffineTransform {
+    pub a: c_double,
+    pub b: c_double,
+    pub c: c_double,
+    pub d: c_double,
+    pub tx: c_double,
+    pub ty: c_double,
+}
+
+impl CGAffineTransform {
+    pub const IDENTITY: Self = Self {
+        a: 1.0,
+        b: 0.0,
+        c: 0.0,
+        d: 1.0,
+        tx: 0.0,
+        ty: 0.0,
+    };
+
+    /// `(1, 0, 0, -1, 0, 0)` — mirrors Y. Used as a text matrix inside
+    /// a Y-flipped bitmap context so glyphs render right-side up.
+    pub const FLIP_Y: Self = Self {
+        a: 1.0,
+        b: 0.0,
+        c: 0.0,
+        d: -1.0,
+        tx: 0.0,
+        ty: 0.0,
+    };
+}
+
+/// Bitmap-info flags for `CGBitmapContextCreate`. The paint-metal crate
+/// uses RGBA8 premultiplied alpha, big-endian byte order (matching the
+/// MTLPixelFormatRGBA8Unorm layout produced by the Metal render pass).
+pub const K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST: u32 = 2;
+pub const K_CG_BITMAP_BYTE_ORDER_32_LITTLE: u32 = 2 << 12;
 
 // ---------------------------------------------------------------------------
 // CoreText — C functions

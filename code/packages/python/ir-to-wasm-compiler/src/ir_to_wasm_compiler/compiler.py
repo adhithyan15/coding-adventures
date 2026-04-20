@@ -22,8 +22,8 @@ from wasm_types import (
     DataSegment,
     Export,
     ExternalKind,
-    FuncType,
     FunctionBody,
+    FuncType,
     Import,
     Limits,
     MemoryType,
@@ -217,6 +217,7 @@ class FunctionSignature:
     label: str
     param_count: int
     export_name: str | None = None
+    require_explicit_args: bool = False
 
 
 @dataclass(frozen=True)
@@ -691,8 +692,31 @@ class _FunctionLowerer:
                     raise WasmLoweringError(f"missing function signature for {label.name}")
                 if label.name not in self.function_indices:
                     raise WasmLoweringError(f"unknown function label: {label.name}")
-                for param_index in range(signature.param_count):
-                    self._emit_local_get(_REG_VAR_BASE + param_index)
+                explicit_args = instruction.operands[1:]
+                if (
+                    signature.require_explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"explicit argument register(s), got {len(explicit_args)}"
+                    )
+                if (
+                    not signature.require_explicit_args
+                    and explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"argument register(s), got {len(explicit_args)}"
+                    )
+                if explicit_args:
+                    for operand in explicit_args:
+                        arg = _expect_register(operand, "CALL argument")
+                        self._emit_local_get(arg.index)
+                else:
+                    for param_index in range(signature.param_count):
+                        self._emit_local_get(_REG_VAR_BASE + param_index)
                 self._emit_opcode("call")
                 self._emit_u32(self.function_indices[label.name])
                 self._emit_local_set(_REG_SCRATCH)

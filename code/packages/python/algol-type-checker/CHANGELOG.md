@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 - Added the PL04 phase-one semantic model with explicit semantic blocks,
   static-parent metadata, scalar frame layouts, and resolved variable
   references carrying lexical-depth and slot-offset information.
+- Added value-only integer procedure descriptors, parameter/result frame slots,
+  and resolved procedure calls with static-link deltas for Phase 3 lowering.
 
 ## [0.1.0] - 2026-04-20
 

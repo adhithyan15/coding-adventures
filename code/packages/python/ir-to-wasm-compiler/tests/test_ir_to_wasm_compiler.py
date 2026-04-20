@@ -174,6 +174,67 @@ def test_compile_function_call_and_run_it() -> None:
     assert _runtime_result(module, "double", [8]) == [16]
 
 
+def test_compile_function_call_with_explicit_argument_registers() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(10), IrImmediate(7)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.CALL,
+            [IrLabel("_fn_double"), IrRegister(10)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_double")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD,
+            [IrRegister(1), IrRegister(2), IrRegister(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(label="_start", param_count=0, export_name="_start"),
+            FunctionSignature(label="_fn_double", param_count=1, export_name="double"),
+        ],
+    )
+
+    assert _runtime_result(module, "_start", []) == [14]
+
+
+def test_compile_function_call_requires_explicit_argument_registers() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.CALL, [IrLabel("_fn_double")], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_double")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    with pytest.raises(WasmLoweringError, match="explicit argument register"):
+        IrToWasmCompiler().compile(
+            program,
+            function_signatures=[
+                FunctionSignature(label="_start", param_count=0, export_name="_start"),
+                FunctionSignature(
+                    label="_fn_double",
+                    param_count=1,
+                    require_explicit_args=True,
+                ),
+            ],
+        )
+
+
 def test_infer_function_signatures_from_comments() -> None:
     program = IrProgram(entry_label="_fn_add")
     program.add_instruction(IrInstruction(IrOp.COMMENT, [IrLabel("function: add(a: u4, b: u4)")], id=-1))
