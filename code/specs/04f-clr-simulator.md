@@ -142,6 +142,7 @@ The public API stays exact even when the implementation shares logic.
 | `cli-signature-decoder` | Decode blob signatures for methods, fields, locals, generics | `DecodedSignature` |
 | `cil-method-body-decoder` | Decode tiny/fat method bodies and EH sections | `DecodedMethodBody` |
 | `cil-bytecode-disassembler` | Pretty-print IL instructions and resolved operands | `CilDisassembly` |
+| `cil-bytecode-builder` | Build CIL method-body bytes from operations, metadata tokens, and labels | raw IL bytes |
 | `cli-runtime-model` | Tokens, stack types, frames, heap refs, value types | `CliRuntimeState` |
 | `clr-vm-simulator` | Execute decoded IL method bodies | `ExecutionResult[ClrState]` |
 | `clr-simulator` | Backward-compatible facade package | thin composition layer |
@@ -237,6 +238,24 @@ Must support:
 - metadata-token operand labeling
 - method/field/type token pretty-printing
 
+### `cil-bytecode-builder`
+
+The builder is the first reusable emitter-side package. It should stay below
+PE/CLI assembly writing and above IR lowering:
+
+```text
+IR backend -> CIL bytecode builder -> CLI assembly writer
+```
+
+It must support:
+
+- compact integer constants: `ldc.i4.m1`, `ldc.i4.*`, `ldc.i4.s`, `ldc.i4`
+- local and argument short forms plus prefixed wide forms
+- metadata-token operands for `call`, `callvirt`, static fields, and arrays
+- `0xFE`-prefixed comparison opcodes
+- named labels with automatic short-to-long branch promotion
+- deterministic errors for duplicate or unknown labels
+
 ## Runtime model
 
 The simulator should model CLR concepts directly rather than flattening
@@ -320,9 +339,10 @@ sharing one metadata source of truth.
 6. `cli-signature-decoder`
 7. `cil-method-body-decoder`
 8. `cil-bytecode-disassembler`
-9. `cli-runtime-model`
-10. `clr-vm-simulator`
-11. Backward-compatible facade updates in `clr-simulator`
+9. `cil-bytecode-builder`
+10. `cli-runtime-model`
+11. `clr-vm-simulator`
+12. Backward-compatible facade updates in `clr-simulator`
 
 ## References
 

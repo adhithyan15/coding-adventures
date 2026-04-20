@@ -2,6 +2,26 @@
 
 from __future__ import annotations
 
-from clr_runtime.runtime import CLRRuntime, CLRRuntimeResult
+from clr_runtime.runtime import (
+    CLRDecodeStage,
+    CLRDisassemblyStage,
+    CLRExecutionStage,
+    CLRHost,
+    CLRMethodSelectionStage,
+    CLRRuntime,
+    CLRRuntimePipeline,
+    CLRRuntimeResult,
+    CLRStdlibHost,
+)
 
-__all__ = ["CLRRuntime", "CLRRuntimeResult"]
+__all__ = [
+    "CLRDecodeStage",
+    "CLRDisassemblyStage",
+    "CLRExecutionStage",
+    "CLRHost",
+    "CLRMethodSelectionStage",
+    "CLRRuntime",
+    "CLRRuntimePipeline",
+    "CLRRuntimeResult",
+    "CLRStdlibHost",
+]
