@@ -324,4 +324,5 @@ members = [
     "window-c",
     "tcp-runtime",
     "udp-client",
+    "state-machine-markup-serializer",
 ]

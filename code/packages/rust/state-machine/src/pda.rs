@@ -203,6 +203,41 @@ impl PushdownAutomaton {
         &self.current
     }
 
+    /// The finite set of states.
+    pub fn states(&self) -> &HashSet<String> {
+        &self.states
+    }
+
+    /// The input alphabet.
+    pub fn input_alphabet(&self) -> &HashSet<String> {
+        &self.input_alphabet
+    }
+
+    /// The stack alphabet.
+    pub fn stack_alphabet(&self) -> &HashSet<String> {
+        &self.stack_alphabet
+    }
+
+    /// The transition rules.
+    pub fn transitions(&self) -> &[PDATransition] {
+        &self.transitions
+    }
+
+    /// The initial state.
+    pub fn initial(&self) -> &str {
+        &self.initial
+    }
+
+    /// The initial stack symbol.
+    pub fn initial_stack_symbol(&self) -> &str {
+        &self.initial_stack_symbol
+    }
+
+    /// The accepting states.
+    pub fn accepting(&self) -> &HashSet<String> {
+        &self.accepting
+    }
+
     /// Current stack contents (bottom to top).
     pub fn stack(&self) -> &[String] {
         &self.stack

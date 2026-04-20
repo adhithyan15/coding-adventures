@@ -12,6 +12,7 @@ Formal automata from DFA to PDA, implemented in Rust. A port of the Python `stat
 | `minimize` | Hopcroft's DFA minimization algorithm                     |
 | `pda`      | Pushdown Automaton (finite automaton + stack)              |
 | `modal`    | Modal State Machine (multiple DFA sub-machines with mode switching) |
+| `definitions` | Format-agnostic typed definitions for export/compiler inputs |
 
 ## Where it fits in the stack
 
@@ -25,6 +26,12 @@ Layer D10: State Machines
 The 2-bit branch predictor (D02) is a DFA. The CPU pipeline (D04) is a linear DFA.
 Regex engines convert patterns to NFAs, then to DFAs via subset construction.
 Parsers use PDAs. HTML tokenizers use modal state machines.
+
+The `definitions` module is the bridge from hand-built machines to the
+build-time compiler pipeline. It exports deterministic snapshots of DFAs, NFAs,
+and PDAs as `StateMachineDefinition` values. File formats such as State Machine
+Markup live in sibling serializer/deserializer crates, so this runtime crate
+stays focused on executable automata and typed definitions.
 
 ## Usage
 
@@ -52,6 +59,34 @@ assert!(!turnstile.accepts(&["coin", "push"]));
 turnstile.process("coin").unwrap();
 assert_eq!(turnstile.current_state(), "unlocked");
 ```
+
+## Exporting Typed Definitions
+
+```rust
+use std::collections::{HashMap, HashSet};
+use state_machine::DFA;
+
+let turnstile = DFA::new(
+    HashSet::from(["locked".into(), "unlocked".into()]),
+    HashSet::from(["coin".into(), "push".into()]),
+    HashMap::from([
+        (("locked".into(), "coin".into()), "unlocked".into()),
+        (("locked".into(), "push".into()), "locked".into()),
+        (("unlocked".into(), "coin".into()), "unlocked".into()),
+        (("unlocked".into(), "push".into()), "locked".into()),
+    ]),
+    "locked".into(),
+    HashSet::from(["unlocked".into()]),
+).unwrap();
+
+let definition = turnstile.to_definition("turnstile");
+assert_eq!(definition.kind.as_str(), "dfa");
+assert_eq!(definition.initial.as_deref(), Some("locked"));
+```
+
+Use the sibling `state-machine-markup-serializer` crate when you want to turn a
+definition into `.states.toml` text. Future deserializers will perform the
+opposite conversion and hand this crate typed definitions, not raw files.
 
 ## Building and testing
 
