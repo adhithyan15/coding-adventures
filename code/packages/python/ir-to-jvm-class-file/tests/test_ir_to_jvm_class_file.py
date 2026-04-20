@@ -352,8 +352,8 @@ class TestValidateForJvm:
     The JVM V1 backend checks three rules before producing any bytecode:
 
     1. **Opcode support** — every opcode must appear in the supported set.
-       Currently all IrOp values are supported; the check is future-proofing
-       against new IR opcodes that the JVM backend has not yet implemented.
+       All IrOp values are supported *except* the five bitwise opcodes added in
+       compiler-ir v0.3.0 (OR, OR_IMM, XOR, XOR_IMM, NOT), which are deferred.
 
     2. **Constant range** — every IrImmediate in LOAD_IMM or ADD_IMM must
        fit in a JVM 32-bit signed integer (−2 147 483 648 to 2 147 483 647).
@@ -379,18 +379,35 @@ class TestValidateForJvm:
         assert validate_for_jvm(prog) == []
 
     # ── Rule 1: opcode support ───────────────────────────────────────────────
-    # The V1 JVM backend handles every opcode in the current IrOp enum.
-    # The check exists as future-proofing: if new opcodes are added to IrOp
-    # before the JVM backend implements them, the validator will catch them
-    # immediately rather than letting code generation silently skip them.
+    # The V1 JVM backend handles all IrOp opcodes *except* the five bitwise
+    # ops added in compiler-ir v0.3.0 (OR, OR_IMM, XOR, XOR_IMM, NOT).
+    # Those are intentionally deferred: the JVM can implement them trivially
+    # (ior / ixor / ixor-with-mask), but no frontend has needed them yet.
+    # The validator rejects them with a clear diagnostic; that behaviour is
+    # verified by test_bitwise_opcodes_are_intentionally_unsupported below.
+    #
+    # The pattern for both tests: if a new opcode is added to IrOp and the JVM
+    # backend is not updated, test_all_supported_opcodes_pass_opcode_check will
+    # fail unless the developer explicitly adds the opcode to _BITWISE_V1_UNSUPPORTED
+    # (acknowledging the deferral).  This keeps the two lists in sync.
 
-    def test_all_current_opcodes_pass_opcode_check(self) -> None:
-        """Every opcode in the current IrOp enum is supported by the JVM
-        V1 backend.  This test documents that fact and will fail as a
-        signal if a new IrOp is added without a corresponding JVM lowering."""
-        # Build one instruction per opcode with dummy operands so the
-        # validator iterates over all of them.
+    # Opcodes not yet implemented in the V1 JVM backend — deferred until a
+    # frontend (e.g. Oct) actually targets the JVM.
+    _BITWISE_V1_UNSUPPORTED = frozenset({
+        IrOp.OR,
+        IrOp.OR_IMM,
+        IrOp.XOR,
+        IrOp.XOR_IMM,
+        IrOp.NOT,
+    })
+
+    def test_all_supported_opcodes_pass_opcode_check(self) -> None:
+        """Every opcode in IrOp that the V1 JVM backend supports passes the
+        opcode-support check.  Opcodes in _BITWISE_V1_UNSUPPORTED are skipped
+        here and verified by test_bitwise_opcodes_are_intentionally_unsupported."""
         for op in IrOp:
+            if op in self._BITWISE_V1_UNSUPPORTED:
+                continue
             program = _prog(_instr(op))
             errors = validate_for_jvm(program)
             # Filter out any errors that are not about opcode support —
@@ -400,6 +417,24 @@ class TestValidateForJvm:
             assert rule1_errors == [], (
                 f"IrOp.{op.name} was unexpectedly rejected by the JVM "
                 f"opcode-support check: {rule1_errors}"
+            )
+
+    def test_bitwise_opcodes_are_intentionally_unsupported(self) -> None:
+        """OR, OR_IMM, XOR, XOR_IMM, and NOT are not yet implemented in the V1
+        JVM backend.  The validator must reject each one with an 'unsupported
+        opcode' diagnostic so that the caller gets a clear error rather than
+        silently wrong code generation."""
+        for op in self._BITWISE_V1_UNSUPPORTED:
+            program = _prog(_instr(op))
+            errors = validate_for_jvm(program)
+            rule1_errors = [e for e in errors if "unsupported opcode" in e]
+            assert rule1_errors != [], (
+                f"IrOp.{op.name} was expected to be rejected by the JVM "
+                f"opcode-support check but was accepted"
+            )
+            assert op.name in rule1_errors[0], (
+                f"Error for IrOp.{op.name} does not mention the opcode name: "
+                f"{rule1_errors[0]!r}"
             )
 
     # ── Rule 2: constant range ────────────────────────────────────────────────

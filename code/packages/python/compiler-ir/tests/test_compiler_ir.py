@@ -18,6 +18,8 @@ from __future__ import annotations
 import pytest
 
 from compiler_ir import (
+    NAME_TO_OP,
+    OP_NAMES,
     IDGenerator,
     IrDataDecl,
     IrImmediate,
@@ -27,13 +29,10 @@ from compiler_ir import (
     IrParseError,
     IrProgram,
     IrRegister,
-    NAME_TO_OP,
-    OP_NAMES,
     parse_ir,
     parse_op,
     print_ir,
 )
-
 
 # =============================================================================
 # IrOp tests
@@ -77,10 +76,15 @@ class TestIrOp:
         assert IrOp.COMMENT == 24
         assert IrOp.MUL == 25
         assert IrOp.DIV == 26
+        assert IrOp.OR == 27
+        assert IrOp.OR_IMM == 28
+        assert IrOp.XOR == 29
+        assert IrOp.XOR_IMM == 30
+        assert IrOp.NOT == 31
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 27 opcodes (0–24, plus MUL=25 and DIV=26)."""
-        assert len(IrOp) == 27
+        """There are exactly 32 opcodes (0–26, plus five bitwise ops at 27–31)."""
+        assert len(IrOp) == 32
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -720,6 +724,188 @@ class TestRoundtrip:
 
 
 # =============================================================================
+# Bitwise opcode tests (OR, OR_IMM, XOR, XOR_IMM, NOT)
+# =============================================================================
+
+
+class TestBitwiseOpcodes:
+    """Tests for the five new bitwise IR opcodes added in v0.2.0.
+
+    Each opcode is verified for:
+    - Correct IntEnum value (stability regression)
+    - parse_op() round-trip
+    - print_ir() / parse_ir() round-trip (text format)
+    """
+
+    # ── OR ────────────────────────────────────────────────────────────────────
+
+    def test_or_integer_value(self) -> None:
+        """IrOp.OR == 27 (stable integer, never changes)."""
+        assert IrOp.OR == 27
+
+    def test_or_name(self) -> None:
+        assert IrOp.OR.name == "OR"
+
+    def test_or_parse_op(self) -> None:
+        assert parse_op("OR") == IrOp.OR
+
+    def test_or_print_parse_roundtrip(self) -> None:
+        """OR instruction prints and parses correctly."""
+        prog = IrProgram(entry_label="_start")
+        prog.add_instruction(IrInstruction(
+            opcode=IrOp.OR,
+            operands=[IrRegister(3), IrRegister(1), IrRegister(2)],
+            id=0,
+        ))
+        text = print_ir(prog)
+        assert "OR" in text
+        parsed = parse_ir(text)
+        instr = parsed.instructions[0]
+        assert instr.opcode == IrOp.OR
+        assert instr.operands == [IrRegister(3), IrRegister(1), IrRegister(2)]
+
+    # ── OR_IMM ────────────────────────────────────────────────────────────────
+
+    def test_or_imm_integer_value(self) -> None:
+        assert IrOp.OR_IMM == 28
+
+    def test_or_imm_name(self) -> None:
+        assert IrOp.OR_IMM.name == "OR_IMM"
+
+    def test_or_imm_parse_op(self) -> None:
+        assert parse_op("OR_IMM") == IrOp.OR_IMM
+
+    def test_or_imm_print_parse_roundtrip(self) -> None:
+        """OR_IMM with immediate 0x80 round-trips through text."""
+        prog = IrProgram(entry_label="_start")
+        prog.add_instruction(IrInstruction(
+            opcode=IrOp.OR_IMM,
+            operands=[IrRegister(2), IrRegister(2), IrImmediate(0x80)],
+            id=0,
+        ))
+        text = print_ir(prog)
+        assert "OR_IMM" in text
+        assert "128" in text  # 0x80 = 128
+        parsed = parse_ir(text)
+        instr = parsed.instructions[0]
+        assert instr.opcode == IrOp.OR_IMM
+        assert instr.operands[2] == IrImmediate(128)
+
+    # ── XOR ───────────────────────────────────────────────────────────────────
+
+    def test_xor_integer_value(self) -> None:
+        assert IrOp.XOR == 29
+
+    def test_xor_name(self) -> None:
+        assert IrOp.XOR.name == "XOR"
+
+    def test_xor_parse_op(self) -> None:
+        assert parse_op("XOR") == IrOp.XOR
+
+    def test_xor_print_parse_roundtrip(self) -> None:
+        prog = IrProgram(entry_label="_start")
+        prog.add_instruction(IrInstruction(
+            opcode=IrOp.XOR,
+            operands=[IrRegister(3), IrRegister(1), IrRegister(2)],
+            id=0,
+        ))
+        text = print_ir(prog)
+        assert "XOR" in text
+        parsed = parse_ir(text)
+        instr = parsed.instructions[0]
+        assert instr.opcode == IrOp.XOR
+        assert instr.operands == [IrRegister(3), IrRegister(1), IrRegister(2)]
+
+    # ── XOR_IMM ───────────────────────────────────────────────────────────────
+
+    def test_xor_imm_integer_value(self) -> None:
+        assert IrOp.XOR_IMM == 30
+
+    def test_xor_imm_name(self) -> None:
+        assert IrOp.XOR_IMM.name == "XOR_IMM"
+
+    def test_xor_imm_parse_op(self) -> None:
+        assert parse_op("XOR_IMM") == IrOp.XOR_IMM
+
+    def test_xor_imm_print_parse_roundtrip(self) -> None:
+        """XOR_IMM 0xFF is the canonical NOT-a-byte idiom."""
+        prog = IrProgram(entry_label="_start")
+        prog.add_instruction(IrInstruction(
+            opcode=IrOp.XOR_IMM,
+            operands=[IrRegister(2), IrRegister(2), IrImmediate(0xFF)],
+            id=0,
+        ))
+        text = print_ir(prog)
+        assert "XOR_IMM" in text
+        assert "255" in text
+        parsed = parse_ir(text)
+        instr = parsed.instructions[0]
+        assert instr.opcode == IrOp.XOR_IMM
+        assert instr.operands[2] == IrImmediate(255)
+
+    # ── NOT ───────────────────────────────────────────────────────────────────
+
+    def test_not_integer_value(self) -> None:
+        assert IrOp.NOT == 31
+
+    def test_not_name(self) -> None:
+        assert IrOp.NOT.name == "NOT"
+
+    def test_not_parse_op(self) -> None:
+        assert parse_op("NOT") == IrOp.NOT
+
+    def test_not_print_parse_roundtrip(self) -> None:
+        """NOT is a 2-operand instruction: NOT dst, src."""
+        prog = IrProgram(entry_label="_start")
+        prog.add_instruction(IrInstruction(
+            opcode=IrOp.NOT,
+            operands=[IrRegister(2), IrRegister(1)],
+            id=0,
+        ))
+        text = print_ir(prog)
+        assert "NOT" in text
+        parsed = parse_ir(text)
+        instr = parsed.instructions[0]
+        assert instr.opcode == IrOp.NOT
+        assert instr.operands == [IrRegister(2), IrRegister(1)]
+
+    def test_not_two_operands_only(self) -> None:
+        """NOT takes exactly dst and src — no immediate."""
+        instr = IrInstruction(
+            opcode=IrOp.NOT,
+            operands=[IrRegister(0), IrRegister(1)],
+            id=0,
+        )
+        assert len(instr.operands) == 2
+        assert isinstance(instr.operands[0], IrRegister)
+        assert isinstance(instr.operands[1], IrRegister)
+
+    # ── Cross-cutting ─────────────────────────────────────────────────────────
+
+    def test_all_five_in_name_to_op(self) -> None:
+        """All five new opcodes are reachable via NAME_TO_OP."""
+        for name in ("OR", "OR_IMM", "XOR", "XOR_IMM", "NOT"):
+            assert name in NAME_TO_OP, f"{name} missing from NAME_TO_OP"
+
+    def test_all_five_in_op_names(self) -> None:
+        """All five new opcodes are reachable via OP_NAMES."""
+        for op in (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT):
+            assert op in OP_NAMES, f"{op} missing from OP_NAMES"
+            assert OP_NAMES[op] == op.name
+
+    def test_new_opcodes_are_distinct(self) -> None:
+        """No two of the five new opcodes share an integer value."""
+        new_ops = (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT)
+        assert len({int(op) for op in new_ops}) == 5
+
+    def test_new_opcodes_do_not_collide_with_existing(self) -> None:
+        """The five new integer values are not used by any pre-existing opcode."""
+        pre_existing = {int(op) for op in IrOp} - {27, 28, 29, 30, 31}
+        for v in (27, 28, 29, 30, 31):
+            assert v not in pre_existing
+
+
+# =============================================================================
 # All opcodes can be printed and parsed
 # =============================================================================
 
@@ -758,6 +944,11 @@ class TestAllOpcodesPrintParse:
             IrOp.COMMENT:    [IrLabel("a test comment")],
             IrOp.MUL:        [IrRegister(3), IrRegister(1), IrRegister(2)],
             IrOp.DIV:        [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.OR:         [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.OR_IMM:     [IrRegister(2), IrRegister(2), IrImmediate(0x80)],
+            IrOp.XOR:        [IrRegister(3), IrRegister(1), IrRegister(2)],
+            IrOp.XOR_IMM:    [IrRegister(2), IrRegister(2), IrImmediate(0xFF)],
+            IrOp.NOT:        [IrRegister(2), IrRegister(1)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]
