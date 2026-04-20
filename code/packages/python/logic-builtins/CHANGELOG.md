@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-20
+
+### Added
+
+- arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
+- `iso(result, expression)` as the library spelling of Prolog's evaluative `is/2`
+- numeric comparison predicates: `numeqo`, `numneqo`, `lto`, `leqo`, `gto`, and `geqo`
+- tests and examples showing arithmetic composition with relation search and control builtins
+
 ## [0.1.0] - 2026-04-20
 
 ### Added
