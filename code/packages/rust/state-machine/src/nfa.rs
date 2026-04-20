@@ -215,6 +215,11 @@ impl NFA {
         &self.current
     }
 
+    /// The transition function.
+    pub fn transitions(&self) -> &HashMap<(String, String), HashSet<String>> {
+        &self.transitions
+    }
+
     // === Epsilon Closure ===
 
     /// Compute the epsilon closure of a set of states.

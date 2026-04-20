@@ -2,6 +2,19 @@
 
 All notable changes to the `state-machine` crate will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added the `document` module with `StateMachineDocument`, state definitions,
+  transition definitions, machine-kind tags, and deterministic `.states.toml`
+  rendering.
+- Added export helpers for manually constructed DFAs, NFAs, and PDAs so they can
+  feed the build-time state-machine compiler pipeline without runtime text
+  loading.
+- Added tests covering DFA, NFA, PDA, epsilon, multi-target, stack-effect, and
+  TOML escaping export behavior.
+
 ## [0.1.0] - 2026-03-20
 
 ### Added

@@ -30,6 +30,7 @@
 
 pub mod types;
 pub mod dfa;
+pub mod document;
 pub mod nfa;
 pub mod minimize;
 pub mod pda;
@@ -37,7 +38,10 @@ pub mod modal;
 
 pub use types::*;
 pub use dfa::DFA;
-pub use nfa::{NFA, EPSILON};
+pub use document::{
+    MachineKind, StateDefinition, StateMachineDocument, TransitionDefinition, STATE_MACHINE_FORMAT,
+};
+pub use nfa::{EPSILON, NFA};
 pub use minimize::minimize;
-pub use pda::{PDATransition, PDATraceEntry, PushdownAutomaton};
+pub use pda::{PDATraceEntry, PDATransition, PushdownAutomaton};
 pub use modal::{ModalStateMachine, ModeTransitionRecord};
