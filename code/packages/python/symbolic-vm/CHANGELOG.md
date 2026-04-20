@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.8.0 — 2026-04-20
+
+Phase 3 of the integration roadmap — transcendental integration for the
+most common single-extension cases. Extends the integrator to handle
+polynomials multiplied by `exp`, `log`, `sin`, or `cos` of a **linear**
+argument `a·x + b`.
+
+Five new cases, two algorithms:
+
+- **Case 3a**: `∫ exp(ax+b) dx = exp(ax+b)/a` — generalises the
+  existing Phase 1 `exp(x)` rule to any linear argument.
+- **Case 3b**: `∫ sin(ax+b) dx = −cos(ax+b)/a` — generalises `sin(x)`.
+- **Case 3c**: `∫ cos(ax+b) dx = sin(ax+b)/a` — generalises `cos(x)`.
+- **Case 3d**: `∫ p(x)·exp(ax+b) dx` for `p ∈ Q[x]` — solved by the
+  **Risch differential equation** `g′ + a·g = p` via back-substitution;
+  result is `g(x)·exp(ax+b)`.
+- **Case 3e**: `∫ p(x)·log(ax+b) dx` for `p ∈ Q[x]` — solved by
+  **integration by parts** followed by polynomial long division; result
+  is `[P(x) − P(−b/a)]·log(ax+b) − S(x)`.
+
+New modules:
+- `symbolic_vm.exp_integral`: `exp_integral(poly, a, b, x_sym)` —
+  implements cases 3a and 3d.
+- `symbolic_vm.log_integral`: `log_poly_integral(poly, a, b, x_sym)` —
+  implements case 3e (and the `log(x)` case of 3e extends Phase 1's
+  hard-coded result to arbitrary linear arguments).
+
+`polynomial_bridge.py` gains a public `linear_to_ir(a, b, x)` helper
+shared by both new modules.
+
+`_integrate` in `integrate.py` gains:
+- Extended elementary-function section recognising `EXP`/`SIN`/`COS`/
+  `LOG` of linear arguments (cases 3a–3c, 3e-bare).
+- Two new helper functions `_try_exp_product` and `_try_log_product`
+  wired into the `MUL` branch to handle cases 3d and 3e.
+- `_try_linear` helper that recognises `a·x + b` in the IR.
+
+New spec `code/specs/phase3-transcendental.md` documents all five
+cases with step-by-step algorithms and worked examples.
+
+33 new tests (`tests/test_phase3.py`). Package at 280 tests, 89% coverage.
+
 ## 0.7.0 — 2026-04-20
 
 Phase 2f of the integration roadmap — mixed partial-fraction integration

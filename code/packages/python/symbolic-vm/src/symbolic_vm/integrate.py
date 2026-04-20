@@ -42,10 +42,10 @@ What this phase can't do (yet)
 ------------------------------
 
 - Integration by substitution (except trivial constant-factor / sum).
-- Integration by parts (except the hard-coded ``log`` case).
+- Rational × transcendental (e.g. ``(1/x)·eˣ``).
+- Products of two transcendentals (e.g. ``exp(x)·log(x)``).
 - Irreducible denominators of degree > 2 (e.g. ``1/(x³+x+1)``).
 - Mixed denominators with both linear and quadratic irreducible factors.
-- Any expression with two x-dependent, non-rational factors.
 
 Anything we can't integrate comes back as ``Integrate(f, x)`` unchanged,
 exactly as ``D`` does for unknown heads. The CAS stays consistent — it
@@ -88,9 +88,15 @@ from symbolic_ir import (
 
 from symbolic_vm.arctan_integral import arctan_integral
 from symbolic_vm.backend import Handler
+from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.hermite import hermite_reduce
+from symbolic_vm.log_integral import log_poly_integral
 from symbolic_vm.mixed_integral import mixed_integral
-from symbolic_vm.polynomial_bridge import from_polynomial, rt_pairs_to_ir, to_rational
+from symbolic_vm.polynomial_bridge import (
+    from_polynomial,
+    rt_pairs_to_ir,
+    to_rational,
+)
 from symbolic_vm.rothstein_trager import rothstein_trager
 
 ONE = IRInteger(1)
@@ -347,9 +353,12 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if not _depends_on(b, x):
             ia = _integrate(a, x)
             return None if ia is None else IRApply(MUL, (b, ia))
-        # Both factors depend on x — Phase 1 gives up. Integration by
-        # parts lives in a later phase.
-        return None
+        # Both factors depend on x — try Phase 3 (exp/log products).
+        result = _try_exp_product(a, b, x) or _try_exp_product(b, a, x)
+        if result is not None:
+            return result
+        result = _try_log_product(a, b, x) or _try_log_product(b, a, x)
+        return result  # None if all Phase 3 patterns failed
 
     # --- Quotient (limited: constant denominator, or 1/x) -------------
     if head == DIV:
@@ -393,10 +402,7 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             return IRApply(DIV, (f, IRApply(LOG, (base,))))
         return None
 
-    # --- Elementary functions at x ------------------------------------
-    # These only fire for the direct ``head(x)`` shape. Chain-rule
-    # composition (e.g. ``sin(2*x)``) is left for later phases; a full
-    # answer requires substitution.
+    # --- Elementary functions at x  (Phase 1: argument must be bare x)
     if len(f.args) == 1 and f.args[0] == x:
         if head == SIN:
             return IRApply(NEG, (IRApply(COS, (x,)),))
@@ -405,8 +411,7 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if head == EXP:
             return IRApply(EXP, (x,))
         if head == LOG:
-            # ∫ log(x) dx = x·log(x) - x  (integration by parts,
-            # hard-coded because it's the canonical example).
+            # ∫ log(x) dx = x·log(x) - x.
             return IRApply(
                 SUB,
                 (IRApply(MUL, (x, IRApply(LOG, (x,)))), x),
@@ -420,6 +425,35 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                     IRApply(POW, (x, IRRational(3, 2))),
                 ),
             )
+
+    # --- Phase 3a/3b/3c: elementary function of a linear argument ------
+    # Generalises the Phase 1 rules above to any a·x + b argument.
+    # Only fires when the argument is strictly linear with a ≠ 0 and
+    # (a, b) ≠ (1, 0) — otherwise the Phase 1 rules above already fired.
+    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG}:
+        lin = _try_linear(f.args[0], x)
+        if lin is not None:
+            a_frac, b_frac = lin
+            if a_frac != 0:
+                if head == EXP:
+                    # ∫ exp(ax+b) dx = exp(ax+b)/a  (case 3a).
+                    # Delegate to exp_integral with p = (1,).
+                    from fractions import Fraction as _F
+                    return exp_integral((_F(1),), a_frac, b_frac, x)
+                if head == SIN:
+                    # ∫ sin(ax+b) dx = -cos(ax+b)/a  (case 3b).
+                    cos_ir = IRApply(COS, (f.args[0],))
+                    a_ir = _frac_ir(a_frac)
+                    return IRApply(NEG, (IRApply(DIV, (cos_ir, a_ir)),))
+                if head == COS:
+                    # ∫ cos(ax+b) dx = sin(ax+b)/a  (case 3c).
+                    sin_ir = IRApply(SIN, (f.args[0],))
+                    a_ir = _frac_ir(a_frac)
+                    return IRApply(DIV, (sin_ir, a_ir))
+                if head == LOG:
+                    # ∫ log(ax+b) dx = case 3e with p = (1,).
+                    from fractions import Fraction as _F
+                    return log_poly_integral((_F(1),), a_frac, b_frac, x)
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -441,6 +475,146 @@ def _is_minus_one(node: IRNode) -> bool:
         and isinstance(node.args[0], IRInteger)
         and node.args[0].value == 1
     )
+
+
+# ---------------------------------------------------------------------------
+# Phase 3 helpers
+# ---------------------------------------------------------------------------
+
+
+def _try_linear(node: IRNode, x: IRSymbol) -> tuple[Fraction, Fraction] | None:
+    """Return ``(a, b)`` if ``node`` represents ``a·x + b`` over Q, else ``None``.
+
+    Handles the IR shapes that the MACSYMA compiler and ``from_polynomial``
+    emit for linear polynomials: bare ``x``, integer/rational constants,
+    ``Neg``, ``Mul(coef, x)``, ``Add(u, v)``, ``Sub(u, v)``.
+    Returns ``None`` for any quadratic or higher term, any float, or any
+    free symbol other than ``x``.
+    """
+    if isinstance(node, IRInteger):
+        return (Fraction(0), Fraction(node.value))
+    if isinstance(node, IRRational):
+        return (Fraction(0), Fraction(node.numer, node.denom))
+    if isinstance(node, IRFloat):
+        return None  # floats break exact arithmetic
+    if isinstance(node, IRSymbol):
+        if node == x:
+            return (Fraction(1), Fraction(0))
+        return None  # free symbol — can't treat as rational constant
+    if not isinstance(node, IRApply):
+        return None
+
+    head = node.head
+    if head == NEG:
+        inner = _try_linear(node.args[0], x)
+        if inner is None:
+            return None
+        a, b = inner
+        return (-a, -b)
+    if head == MUL:
+        left, right = node.args
+        # c·x or x·c where c is free of x.
+        if right == x and not _depends_on(left, x):
+            c = _node_to_frac(left)
+            return (c, Fraction(0)) if c is not None else None
+        if left == x and not _depends_on(right, x):
+            c = _node_to_frac(right)
+            return (c, Fraction(0)) if c is not None else None
+        # Both depend on x — quadratic or higher.
+        return None
+    if head == ADD:
+        u = _try_linear(node.args[0], x)
+        v = _try_linear(node.args[1], x)
+        if u is None or v is None:
+            return None
+        return (u[0] + v[0], u[1] + v[1])
+    if head == SUB:
+        u = _try_linear(node.args[0], x)
+        v = _try_linear(node.args[1], x)
+        if u is None or v is None:
+            return None
+        return (u[0] - v[0], u[1] - v[1])
+    return None
+
+
+def _node_to_frac(node: IRNode) -> Fraction | None:
+    """Return a ``Fraction`` if ``node`` is a numeric literal, else ``None``."""
+    if isinstance(node, IRInteger):
+        return Fraction(node.value)
+    if isinstance(node, IRRational):
+        return Fraction(node.numer, node.denom)
+    return None
+
+
+def _frac_ir(c: Fraction) -> IRNode:
+    """Lift a Fraction to its canonical IR literal."""
+    if c.denominator == 1:
+        return IRInteger(c.numerator)
+    return IRRational(c.numerator, c.denominator)
+
+
+def _try_exp_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · exp(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Exp(linear)`` and
+    ``poly_candidate`` is a polynomial (rational with denominator 1).
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != EXP:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None  # exp(b) is a constant — constant-factor rule handles it
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # denominator is not 1 — rational, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return exp_integral(poly, a_frac, b_frac, x)
+
+
+def _try_log_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · log(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Log(linear)`` and
+    ``poly_candidate`` is a polynomial (rational with denominator 1).
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != LOG:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None  # log(b) is a constant — constant-factor rule handles it
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return log_poly_integral(poly, a_frac, b_frac, x)
 
 
 def _depends_on(node: IRNode, var: IRSymbol) -> bool:
