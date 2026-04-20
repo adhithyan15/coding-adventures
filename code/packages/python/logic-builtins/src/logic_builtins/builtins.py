@@ -44,9 +44,12 @@ from logic_engine import (
 __all__ = [
     "add",
     "argo",
+    "atomico",
     "atomo",
     "callo",
+    "callableo",
     "compoundo",
+    "copytermo",
     "div",
     "failo",
     "findallo",
@@ -71,10 +74,12 @@ __all__ = [
     "numbero",
     "onceo",
     "bagofo",
+    "same_termo",
     "setofo",
     "stringo",
     "sub",
     "trueo",
+    "univo",
     "varo",
 ]
 
@@ -105,6 +110,85 @@ def _is_ground(term_value: Term) -> bool:
     if isinstance(term_value, Compound):
         return all(_is_ground(argument) for argument in term_value.args)
     return True
+
+
+def _is_empty_list(term_value: Term) -> bool:
+    """Return True when a term is the canonical empty logic list."""
+
+    return (
+        isinstance(term_value, Atom)
+        and term_value.symbol.namespace is None
+        and term_value.symbol.name == "[]"
+    )
+
+
+def _is_cons(term_value: Term) -> bool:
+    """Return True when a term is a canonical logic-list cons cell."""
+
+    return (
+        isinstance(term_value, Compound)
+        and term_value.functor.namespace is None
+        and term_value.functor.name == "."
+        and len(term_value.args) == 2
+    )
+
+
+def _proper_list_items(term_value: Term) -> list[Term] | None:
+    """Decode a reified proper logic list into host-language items."""
+
+    items: list[Term] = []
+    current = term_value
+    while not _is_empty_list(current):
+        if not _is_cons(current):
+            return None
+        head, tail = current.args
+        items.append(head)
+        current = tail
+    return items
+
+
+def _fresh_copy(
+    term_value: Term,
+    mapping: dict[LogicVar, LogicVar],
+    next_var_id: int,
+) -> tuple[Term, int]:
+    """Copy one term, replacing every source variable with a fresh variable."""
+
+    if isinstance(term_value, LogicVar):
+        existing = mapping.get(term_value)
+        if existing is not None:
+            return existing, next_var_id
+
+        copied = LogicVar(
+            id=next_var_id,
+            display_name=term_value.display_name,
+        )
+        mapping[term_value] = copied
+        return copied, next_var_id + 1
+
+    if isinstance(term_value, Compound):
+        copied_args: list[Term] = []
+        running_id = next_var_id
+        for argument in term_value.args:
+            copied_argument, running_id = _fresh_copy(
+                argument,
+                mapping,
+                running_id,
+            )
+            copied_args.append(copied_argument)
+        return Compound(functor=term_value.functor, args=tuple(copied_args)), running_id
+
+    return term_value, next_var_id
+
+
+def _state_with_next_var_id(state: State, next_var_id: int) -> State:
+    """Preserve the logical state while reserving freshly allocated variables."""
+
+    return State(
+        substitution=state.substitution,
+        constraints=state.constraints,
+        next_var_id=next_var_id,
+    )
 
 
 def _succeed_if(condition: bool, state: State) -> Iterator[State]:
@@ -588,25 +672,88 @@ def compoundo(term_value: object) -> GoalExpr:
     return _type_checko(term_value, Compound)
 
 
-def functoro(term_value: object, name: object, arity: object) -> GoalExpr:
-    """Inspect a compound term's functor name and arity.
+def atomico(term_value: object) -> GoalExpr:
+    """Succeed when the current value is an atomic term."""
 
-    This first slice supports inspection mode. Construction mode can come later
-    once the runtime has a clearer policy for using partially instantiated
-    structural builtins to allocate new compound terms.
-    """
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        reified_target = _reified(target, state)
+        yield from _succeed_if(
+            isinstance(reified_target, Atom | Number | String),
+            state,
+        )
+
+    return native_goal(run, term_value)
+
+
+def callableo(term_value: object) -> GoalExpr:
+    """Succeed when the current value can represent a callable term."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        reified_target = _reified(target, state)
+        yield from _succeed_if(
+            isinstance(reified_target, Atom | Compound),
+            state,
+        )
+
+    return native_goal(run, term_value)
+
+
+def functoro(term_value: object, name: object, arity: object) -> GoalExpr:
+    """Inspect or construct a term from a functor name and arity."""
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         target, name_target, arity_target = args
         reified_target = _reified(target, state)
-        if not isinstance(reified_target, Compound):
+
+        if isinstance(reified_target, Compound):
+            goal = conj(
+                eq(name_target, atom(reified_target.functor)),
+                eq(arity_target, num(len(reified_target.args))),
+            )
+            yield from solve_from(program_value, goal, state)
             return
 
-        goal = conj(
-            eq(name_target, atom(reified_target.functor)),
-            eq(arity_target, num(len(reified_target.args))),
+        if isinstance(reified_target, Atom | Number | String):
+            yield from solve_from(
+                program_value,
+                conj(eq(name_target, reified_target), eq(arity_target, num(0))),
+                state,
+            )
+            return
+
+        reified_name = _reified(name_target, state)
+        reified_arity = _reified(arity_target, state)
+        if not isinstance(reified_arity, Number):
+            return
+        raw_arity = reified_arity.value
+        if not isinstance(raw_arity, int) or raw_arity < 0:
+            return
+
+        if raw_arity == 0:
+            if not isinstance(reified_name, Atom | Number | String):
+                return
+            yield from solve_from(program_value, eq(target, reified_name), state)
+            return
+
+        if not isinstance(reified_name, Atom):
+            return
+
+        arguments = tuple(
+            LogicVar(id=state.next_var_id + offset)
+            for offset in range(raw_arity)
         )
-        yield from solve_from(program_value, goal, state)
+        constructed = Compound(functor=reified_name.symbol, args=arguments)
+        construction_state = _state_with_next_var_id(
+            state,
+            state.next_var_id + raw_arity,
+        )
+        yield from solve_from(
+            program_value,
+            eq(target, constructed),
+            construction_state,
+        )
 
     return native_goal(run, term_value, name, arity)
 
@@ -636,3 +783,73 @@ def argo(index: object, term_value: object, value: object) -> GoalExpr:
         )
 
     return native_goal(run, index, term_value, value)
+
+
+def univo(term_value: object, parts: object) -> GoalExpr:
+    """Decompose or construct a term using a Prolog-style functor-first list."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        target, parts_target = args
+        reified_target = _reified(target, state)
+
+        if isinstance(reified_target, Compound):
+            decomposed = logic_list(
+                [atom(reified_target.functor), *reified_target.args],
+            )
+            yield from solve_from(program_value, eq(parts_target, decomposed), state)
+            return
+
+        if isinstance(reified_target, Atom | Number | String):
+            yield from solve_from(
+                program_value,
+                eq(parts_target, logic_list([reified_target])),
+                state,
+            )
+            return
+
+        reified_parts = _reified(parts_target, state)
+        items = _proper_list_items(reified_parts)
+        if not items:
+            return
+
+        if len(items) == 1:
+            yield from solve_from(program_value, eq(target, items[0]), state)
+            return
+
+        functor_term = items[0]
+        if not isinstance(functor_term, Atom):
+            return
+
+        constructed = Compound(functor=functor_term.symbol, args=tuple(items[1:]))
+        yield from solve_from(program_value, eq(target, constructed), state)
+
+    return native_goal(run, term_value, parts)
+
+
+def copytermo(source: object, copy: object) -> GoalExpr:
+    """Copy a term while replacing source variables with fresh variables."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, copy_target = args
+        copied_source, next_var_id = _fresh_copy(
+            _reified(source_term, state),
+            {},
+            state.next_var_id,
+        )
+        copy_state = _state_with_next_var_id(state, next_var_id)
+        yield from solve_from(program_value, eq(copy_target, copied_source), copy_state)
+
+    return native_goal(run, source, copy)
+
+
+def same_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are strictly identical without binding."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            _reified(left_term, state) == _reified(right_term, state),
+            state,
+        )
+
+    return native_goal(run, left, right)
