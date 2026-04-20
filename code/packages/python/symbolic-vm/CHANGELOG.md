@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.7.0 — 2026-04-20
+
+Phase 2f of the integration roadmap — mixed partial-fraction integration
+for denominators of the form L(x)·Q(x) where L is a product of distinct
+linear factors over Q and Q is a single irreducible quadratic. Closes
+rational-function integration for all denominators of this shape,
+completing the most common class of textbook integrals (e.g.
+`1/((x−1)(x²+1))`, `x/((x+2)(x²+4))`).
+
+- New module `symbolic_vm.mixed_integral`:
+  - `mixed_integral(num, den, x_sym) → IRNode | None` applies the
+    Bézout identity to split `C/(L·Q)` into `C_L/L + C_Q/Q`, then
+    delegates to Rothstein–Trager (Phase 2d) for the log part and
+    `arctan_integral` (Phase 2e) for the arctan part. Returns `None`
+    when the denominator does not match the L·Q shape (no rational
+    roots, deg Q ≠ 2, or Q has rational roots).
+- `Integrate` handler gains a Phase 2f step between the arctan check
+  and the unevaluated fallback. The progress gate was extended to
+  treat a successful `mixed_ir` result as progress.
+- `rt_pairs_to_ir` moved from a private helper in `integrate.py` to a
+  public function in `polynomial_bridge.py`, avoiding a circular import
+  from `mixed_integral.py`. The private wrapper in `integrate.py` now
+  delegates to it.
+- New spec `code/specs/mixed-integral.md` documents the Bézout
+  algorithm, worked example for `1/((x−1)(x²+1))`, and correctness
+  derivation.
+- 18 new tests (`tests/test_mixed_integral.py`): one-linear-one-
+  quadratic (5), two-linear-one-quadratic (2), mixed numerators (2),
+  fall-through guards (3), Bézout split identity verification (1), and
+  end-to-end VM tests (5). Package at 247 tests, 90% coverage.
+
 ## 0.6.0 — 2026-04-20
 
 Phase 2e of the integration roadmap — arctan antiderivatives for

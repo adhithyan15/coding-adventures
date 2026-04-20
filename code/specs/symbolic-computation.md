@@ -337,9 +337,15 @@ reviewed independently:
   irreducible quadratic `ax² + bx + c`, the closed-form antiderivative
   `A·log(ax²+bx+c) + (2B/D)·arctan((2ax+b)/D)` is emitted directly.
   Adds `Atan` to the symbolic IR. Covers all standard textbook arctan
-  cases (`1/(x²+1)`, `1/(x²+2x+5)`, `(2x+1)/(x²+1)`, etc.). Mixed
-  denominators (linear × quadratic) remain unevaluated. See
+  cases (`1/(x²+1)`, `1/(x²+2x+5)`, `(2x+1)/(x²+1)`, etc.). See
   `arctan-integral.md`.
+- **Phase 2f** — Mixed partial-fraction integration. Handles denominators
+  that are a product of distinct linear factors and one irreducible quadratic,
+  e.g. `1/((x−1)(x²+1))`. Uses the Bézout identity to split the numerator
+  into a "linear part" and a "quadratic part", then integrates each with
+  the existing RT (Phase 2d) and arctan (Phase 2e) tools. Completes rational
+  integration for all denominators of the form L·Q with deg Q ≤ 2. See
+  `mixed-integral.md`.
 
 ### Phase 3 — Risch transcendental case
 

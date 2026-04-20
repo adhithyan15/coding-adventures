@@ -10,6 +10,9 @@ The handler tries two routes, in order:
    - Phase 2d: Rothstein–Trager log sum (when all log coefficients ∈ Q).
    - Phase 2e: Arctan formula for an irreducible quadratic log part
      (when RT returns None and deg(log_den) == 2, no rational roots).
+   - Phase 2f: Mixed partial-fraction split (L·Q denominator) when 2e
+     returns None: separates into linear-factors piece (→ RT) and single
+     irreducible-quadratic piece (→ arctan).
    - Otherwise: unevaluated ``Integrate`` for the residual log part.
 
 2. **Phase 1 route** — the "reverse derivative table". Covers linear
@@ -86,7 +89,8 @@ from symbolic_ir import (
 from symbolic_vm.arctan_integral import arctan_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.hermite import hermite_reduce
-from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
+from symbolic_vm.mixed_integral import mixed_integral
+from symbolic_vm.polynomial_bridge import from_polynomial, rt_pairs_to_ir, to_rational
 from symbolic_vm.rothstein_trager import rothstein_trager
 
 ONE = IRInteger(1)
@@ -173,17 +177,22 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
     # formula for irreducible quadratic denominators).
     rt_pairs = None
     at_ir = None
+    mixed_ir = None
     if has_log:
         rt_pairs = rothstein_trager(hermite_log[0], hermite_log[1])
         if rt_pairs is None:
             at_ir = _try_arctan_integral(hermite_log[0], hermite_log[1], x)
+        if rt_pairs is None and at_ir is None:
+            mixed_ir = mixed_integral(hermite_log[0], hermite_log[1], x)
 
     # "Made progress" = we extracted something whose closed form Phase
     # 1 couldn't produce. Without a polynomial part, a Hermite
-    # reduction, an RT log sum, or an arctan result, the output would
-    # just echo the unevaluated input — return None so the handler can
-    # fall through to Phase 1 or leave the integral unevaluated.
-    if not (has_poly or has_rat or rt_pairs is not None or at_ir is not None):
+    # reduction, an RT log sum, an arctan result, or a mixed result,
+    # the output would just echo the unevaluated input — return None
+    # so the handler can fall through to Phase 1 or leave the integral
+    # unevaluated.
+    if not (has_poly or has_rat or rt_pairs is not None
+            or at_ir is not None or mixed_ir is not None):
         return None
 
     pieces: list[IRNode] = []
@@ -196,8 +205,8 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
     if has_rat:
         pieces.append(_rational_to_ir(hermite_rat[0], hermite_rat[1], x))
 
-    # 3. Squarefree log residual — try RT (Phase 2d) then arctan (Phase 2e).
-    # When both fail, emit an unevaluated ``Integrate``. Re-entry on
+    # 3. Squarefree log residual — try RT (2d), arctan (2e), mixed (2f).
+    # When all fail, emit an unevaluated ``Integrate``. Re-entry on
     # that Integrate returns None from _integrate_rational (RT will
     # say None again; Hermite on a squarefree denom does nothing), so
     # there's no infinite loop.
@@ -206,6 +215,8 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
             pieces.append(_rt_pairs_to_ir(rt_pairs, x))
         elif at_ir is not None:
             pieces.append(at_ir)
+        elif mixed_ir is not None:
+            pieces.append(mixed_ir)
         else:
             integrand = _rational_to_ir(hermite_log[0], hermite_log[1], x)
             pieces.append(IRApply(INTEGRATE, (integrand, x)))
@@ -237,38 +248,8 @@ def _integrate_polynomial(p: Polynomial) -> Polynomial:
 
 
 def _rt_pairs_to_ir(pairs, x: IRSymbol) -> IRNode:
-    """Assemble ``Σ c_i · log(v_i)`` as IR from the Rothstein–Trager pairs.
-
-    Each pair is ``(c: Fraction, v: Polynomial)`` with ``v`` monic and
-    non-constant. The emitted IR is a left-associative binary ``Add``
-    chain of log terms; the chain collapses to a single node when
-    there's only one pair. A coefficient of ``1`` renders as bare
-    ``Log(v)`` (no redundant ``Mul(1, ·)``); ``−1`` renders as
-    ``Neg(Log(v))``.
-    """
-    terms: list[IRNode] = []
-    for c, v in pairs:
-        log_ir = IRApply(LOG, (from_polynomial(v, x),))
-        if c == 1:
-            terms.append(log_ir)
-        elif c == -1:
-            terms.append(IRApply(NEG, (log_ir,)))
-        else:
-            # Integer coefficients render as IRInteger; the general
-            # rational case uses IRRational. This keeps the IR shape
-            # aligned with what the Phase 1 rules (and the hand-rolled
-            # tests for that path) already produce.
-            if c.denominator == 1:
-                coef: IRNode = IRInteger(c.numerator)
-            else:
-                coef = IRRational(c.numerator, c.denominator)
-            terms.append(IRApply(MUL, (coef, log_ir)))
-    if len(terms) == 1:
-        return terms[0]
-    acc = terms[0]
-    for t in terms[1:]:
-        acc = IRApply(ADD, (acc, t))
-    return acc
+    """Thin wrapper — delegates to ``rt_pairs_to_ir`` in polynomial_bridge."""
+    return rt_pairs_to_ir(pairs, x)
 
 
 def _try_arctan_integral(
