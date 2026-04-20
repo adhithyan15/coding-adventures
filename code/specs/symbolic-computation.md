@@ -328,8 +328,11 @@ reviewed independently:
   squarefree integrand stays as an unevaluated `Integrate`. See
   `hermite-reduction.md`.
 - **Phase 2d** — Rothstein–Trager replaces the unevaluated log-part
-  integrand with its closed-form sum of logs. After this phase the
-  rational-function pipeline is complete for Q[x].
+  integrand with its closed-form sum of logs whenever the RT resultant
+  has only rational roots (the overwhelming majority of textbook
+  cases). Integrands whose log coefficients escape Q — canonically
+  `1/(x² + 1)` — stay unevaluated; a later phase adds
+  `RootSum`/`RootOf` for those. See `rothstein-trager.md`.
 
 ### Phase 3 — Risch transcendental case
 
