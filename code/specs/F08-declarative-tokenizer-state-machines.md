@@ -8,6 +8,11 @@ tokenization, but the design is generic enough for XML-ish formats, browser
 protocols, programming language lexers with modes, and any stream format where
 the next token depends on the current lexical state.
 
+The tokenizer profile is intended to be compiled by
+`F09-state-machine-source-compiler.md` before production use. The `.states.toml`
+file is the authoring artifact, canonical JSON is a normalized build artifact,
+and generated source code is what browser and wrapper packages should link.
+
 The existing `F01-state-machine.md` package gives us formal automata, and `F07`
 defines how those machines serialize and deserialize. HTML tokenization needs
 one extra profile layer: transitions do not only change state. They also build
@@ -590,10 +595,12 @@ web-platform-tests/html and run them through the same runtime.
 4. Add TypeScript, Python, Ruby, and other ports only after the Rust and Go APIs
    settle.
 5. Add `code/tokenizers/html/html1.tokenizer.states.toml`.
-6. Rebuild `html1.0-lexer` as a wrapper over the declarative definition.
-7. Add conformance fixtures and transition traces.
-8. Expand toward `whatwg-html.tokenizer.states.toml` state by state.
-9. Create a later tree-construction spec for insertion modes, stack of open
+6. Compile the tokenizer definition into static source code with the F09
+   compiler.
+7. Rebuild `html1.0-lexer` as a wrapper over the generated definition.
+8. Add conformance fixtures and transition traces.
+9. Expand toward `whatwg-html.tokenizer.states.toml` state by state.
+10. Create a later tree-construction spec for insertion modes, stack of open
    elements, active formatting elements, foster parenting, template insertion
    modes, and the adoption agency algorithm.
 

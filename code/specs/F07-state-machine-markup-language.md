@@ -8,6 +8,7 @@ The state-machine libraries should be able to:
 - build machines in code
 - export them to a stable text file
 - load the same file back into an equivalent machine
+- compile validated machine documents into language-specific source code
 - emit visualization formats such as DOT
 - import and export a useful subset of existing standards such as SCXML
 
@@ -21,6 +22,11 @@ text format, and `F03-toml-parser.md` already makes TOML a first-class repo
 foundation. The state-machine model and terminology are inspired by SCXML, the
 W3C statechart XML recommendation, but narrowed to the automata our library
 actually implements today.
+
+Production packages should not load arbitrary `.states.toml` or JSON files at
+runtime by default. Runtime deserialization is a tooling, test, and development
+feature. Production wrappers should link generated source emitted by the
+build-time compiler described in `F09-state-machine-source-compiler.md`.
 
 ## Existing Formats We Should Learn From
 
@@ -417,13 +423,16 @@ Minimum API:
 - `StateMachineDocument::to_toml()`
 - `StateMachineDocument::parse_json(source)`
 - `StateMachineDocument::to_json()`
+- `StateMachineDocument::to_source(target_language)`
 - `StateMachineDocument::parse_scxml(source)`
 - `StateMachineDocument::to_scxml()`
 - `Machine::to_dot()`
 - `Machine::validate_document(document)`
 
 JSON support is required because some tooling prefers generated machine-readable
-artifacts. TOML remains the hand-authored source format.
+artifacts. TOML remains the hand-authored source format. Source generation is
+the production artifact path: applications link generated code rather than
+loading TOML or JSON dynamically.
 
 ## Canonical Output Rules
 
@@ -502,7 +511,9 @@ Modal documents:
 5. Add NFA, PDA, and modal round-tripping.
 6. Add SCXML core import/export for deterministic event machines.
 7. Keep DOT export as visualization-only output.
-8. Build tokenizer profiles from `F08` on top of this document model.
+8. Add the build-time source compiler from
+   `F09-state-machine-source-compiler.md`.
+9. Build tokenizer profiles from `F08` on top of this document model.
 
 ## Test Strategy
 
@@ -523,9 +534,11 @@ Phase 1 is successful when:
 2. the Rust state-machine package can deserialize the same file into an
    equivalent DFA
 3. the same document can be exported as JSON
-4. DOT export still works for visualization
-5. the format is documented enough for Go and TypeScript ports to follow
-6. tokenizer specs can extend this format instead of inventing a separate
+4. the same document can be compiled into static source code for at least one
+   target language
+5. DOT export still works for visualization
+6. the format is documented enough for Go and TypeScript ports to follow
+7. tokenizer specs can extend this format instead of inventing a separate
    serialization language
 
 ## References
