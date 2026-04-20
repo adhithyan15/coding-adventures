@@ -354,6 +354,56 @@ mode = "pipeline"
 read_mode = "resp-frame"
 ```
 
+### C10K Hold Workloads
+
+C10K is not a short-lived connection churn benchmark. A real C10K hold
+workload proves that a server can keep 10,000 TCP sockets open at the same
+time, survive a hold period, and still respond afterward.
+
+For `driver = "tcp-resp"`, `mode = "hold"` means:
+
+1. ramp-open `connections` client sockets with at most `concurrency` dials in
+   flight
+2. keep every successfully opened socket alive until all dial attempts finish
+3. hold the full connected set open for `hold_ms`
+4. send the declared RESP `request` on every surviving socket
+5. parse and validate the declared RESP `expect` frames before closing sockets
+
+Example:
+
+```toml
+[[workloads]]
+name = "redis-c10k-hold"
+driver = "tcp-resp"
+mode = "hold"
+connections = 10000
+concurrency = 500
+hold_ms = 60000
+timeout_ms = 5000
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+read_mode = "resp-frame"
+```
+
+The result is a capacity and liveness proof, not a throughput proof. The most
+important trial metrics are:
+
+- opened connections
+- failed operations
+- connect-time distribution
+- total wall-clock time
+- post-hold response correctness
+
+If this workload fails, the report should make the failure mode clear enough to
+separate:
+
+- load-generator file descriptor limits
+- client ephemeral port exhaustion
+- server-side connection caps
+- server accept-loop limits
+- per-connection memory pressure
+- event backend registration or polling bugs
+
 ### Manifest Rules
 
 The tool must reject ambiguous manifests.
@@ -691,13 +741,16 @@ second binary yet:
   subject command, write `subjects/<name>/service.log`, and wait for
   `ready_check = "tcp-connect"`.
 - `driver = "tcp-resp"` supports `one-shot`, `preconnect-then-fire`,
-  `pipeline`, and `idle` modes.
+  `pipeline`, `idle`, and `hold` modes.
 - RESP reads are frame-aware. The client parses complete RESP values, validates
   them against the manifest's expected frames, and marks the trial failed if any
   response is malformed or wrong.
 - Per-connection samples include connect, write, first-byte, frame, total, and
   operation metrics; trial summaries include throughput and median client-side
   phase timings.
+- `hold` workloads are intended for C10K-style capacity tests: they keep all
+  connections open concurrently, wait for `hold_ms`, then validate that every
+  surviving connection still responds.
 - The standalone `benchmark-load-tcp` binary remains a future extraction point
   once the protocol and result contracts settle.
 
