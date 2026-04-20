@@ -236,12 +236,39 @@ func intFlag(result *clibuilder.ParseResult, id string, fallback int) int {
 	case int:
 		return value
 	case int64:
-		return int(value)
+		converted, ok := intFromInt64(value)
+		if !ok {
+			return fallback
+		}
+		return converted
 	case float64:
-		return int(value)
+		converted, ok := intFromFloat64(value)
+		if !ok {
+			return fallback
+		}
+		return converted
 	default:
 		return fallback
 	}
+}
+
+func intFromInt64(value int64) (int, bool) {
+	converted, err := strconv.Atoi(strconv.FormatInt(value, 10))
+	if err != nil {
+		return 0, false
+	}
+	return converted, true
+}
+
+func intFromFloat64(value float64) (int, bool) {
+	if math.IsNaN(value) || math.IsInf(value, 0) || math.Trunc(value) != value {
+		return 0, false
+	}
+	converted, err := strconv.Atoi(strconv.FormatFloat(value, 'f', 0, 64))
+	if err != nil {
+		return 0, false
+	}
+	return converted, true
 }
 
 func doctor(w io.Writer) error {

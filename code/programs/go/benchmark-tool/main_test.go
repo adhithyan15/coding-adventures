@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"math"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -10,6 +11,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
 
 func TestParseAndValidateCommandManifest(t *testing.T) {
@@ -199,6 +202,30 @@ func TestDoctorAndUsageAreAvailable(t *testing.T) {
 	}
 	if !strings.Contains(stdout.String(), "benchmark-tool") {
 		t.Fatalf("help did not describe the CLI: %q", stdout.String())
+	}
+}
+
+func TestIntFlagConversionsAreBoundsChecked(t *testing.T) {
+	result := &clibuilder.ParseResult{
+		Flags: map[string]any{
+			"int64-ok":      int64(7),
+			"float-ok":      float64(9),
+			"float-not-int": float64(9.5),
+		},
+	}
+	if got := intFlag(result, "int64-ok", -1); got != 7 {
+		t.Fatalf("int64 flag = %d", got)
+	}
+	if got := intFlag(result, "float-ok", -1); got != 9 {
+		t.Fatalf("float64 flag = %d", got)
+	}
+	if got := intFlag(result, "float-not-int", -1); got != -1 {
+		t.Fatalf("non-integer float flag = %d", got)
+	}
+
+	_, ok := intFromFloat64(math.Inf(1))
+	if ok {
+		t.Fatal("infinite float should not convert to int")
 	}
 }
 
