@@ -365,5 +365,5 @@ class Schema:
         """
         buf = bytearray(self._pager.read(1))
         (cookie,) = struct.unpack_from(">I", buf, _SCHEMA_COOKIE_OFFSET)
-        struct.pack_into(">I", buf, _SCHEMA_COOKIE_OFFSET, cookie + 1)
+        struct.pack_into(">I", buf, _SCHEMA_COOKIE_OFFSET, (cookie + 1) & 0xFFFFFFFF)
         self._pager.write(1, bytes(buf))
