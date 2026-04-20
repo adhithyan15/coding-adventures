@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.6.0 — 2026-04-20
+
+Phase 2e of the integration roadmap — arctan antiderivatives for
+irreducible quadratic denominators. Closes the gap left by
+Rothstein–Trager: `1/(x²+1)` and its kin now produce closed-form
+`arctan` output instead of staying as unevaluated `Integrate`.
+
+- New module `symbolic_vm.arctan_integral`:
+  - `arctan_integral(num, den, x_sym) → IRNode` applies the direct
+    formula `A·log(E) + (2B/D)·arctan((2ax+b)/D)` for any proper
+    rational function with an irreducible quadratic denominator
+    `ax²+bx+c`. When `D = √(4ac−b²)` is rational (perfect square),
+    the output carries only rational/integer leaves. When `D` is
+    irrational, the IR carries `Sqrt(D²)` which the symbolic backend
+    leaves unevaluated and the numeric backend folds.
+- `Integrate` handler gains a Phase 2e step between RT and the
+  unevaluated fallback: if RT returns `None` and the log-part
+  denominator is a degree-2 irreducible polynomial, `arctan_integral`
+  closes it. The progress gate was extended to treat a successful
+  arctan result as progress (prevents infinite recursion).
+- `atan` handler added to the VM handler table (evaluates `math.atan`
+  numerically; leaves symbolic arguments unevaluated in symbolic mode).
+- Depends on `coding-adventures-symbolic-ir ≥ 0.2.0` (adds `ATAN`).
+- 25 new tests (`tests/test_arctan_integral.py`): pure imaginary
+  denominators, completed-square denominators, mixed numerators
+  (log + arctan), irrational discriminant (Sqrt in output), gating
+  wrapper tests, and 6 end-to-end VM tests. The 1 existing test that
+  expected an unevaluated `Integrate` for `1/(x²+1)` was updated to
+  assert `Atan(x)`. Package at 229 tests, 90% coverage.
+
 ## 0.5.0 — 2026-04-19
 
 Phase 2d of the integration roadmap — Rothstein–Trager. The log part

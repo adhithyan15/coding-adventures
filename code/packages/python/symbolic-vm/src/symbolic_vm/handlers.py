@@ -27,6 +27,7 @@ from symbolic_ir import (
     ADD,
     AND,
     ASSIGN,
+    ATAN,
     COS,
     DEFINE,
     DIV,
@@ -289,6 +290,10 @@ def sqrt(simplify: bool) -> Handler:
     return _elementary("Sqrt", math.sqrt, {0: ZERO, 1: ONE}, simplify)
 
 
+def atan(simplify: bool) -> Handler:
+    return _elementary("Atan", math.atan, {0: ZERO}, simplify)
+
+
 # ---------------------------------------------------------------------------
 # Comparisons
 # ---------------------------------------------------------------------------
@@ -519,6 +524,7 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         EXP.name: exp(simplify),
         LOG.name: log(simplify),
         SQRT.name: sqrt(simplify),
+        ATAN.name: atan(simplify),
         EQUAL.name: equal(simplify),
         NOT_EQUAL.name: not_equal(simplify),
         LESS.name: less(simplify),

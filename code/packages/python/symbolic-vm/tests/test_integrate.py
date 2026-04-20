@@ -423,15 +423,15 @@ def test_rt_closes_partial_fractions(vm: VM) -> None:
     assert _contains_head(out, LOG)
 
 
-def test_rt_escape_q_leaves_unevaluated(vm: VM) -> None:
-    # ∫ 1/(x² + 1) dx — RT resultant has roots ±i/2, not in Q. The
-    # pipeline keeps the unevaluated Integrate exactly as Phase 2c
-    # did. No false answer, no infinite recursion.
+def test_rt_escape_q_now_closed_by_phase2e(vm: VM) -> None:
+    # ∫ 1/(x² + 1) dx — Phase 2d (RT) returns None (roots ±i/2 not in Q),
+    # but Phase 2e (arctan formula) closes it: result is Atan(x).
+    from symbolic_ir import ATAN
     x2 = IRApply(POW, (X, IRInteger(2)))
     den = IRApply(ADD, (x2, IRInteger(1)))
     integrand = IRApply(DIV, (IRInteger(1), den))
     out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
-    assert isinstance(out, IRApply) and out.head == INTEGRATE
+    assert isinstance(out, IRApply) and out.head == ATAN
 
 
 def test_rt_coefficient_minus_one(vm: VM) -> None:

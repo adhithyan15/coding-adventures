@@ -11,6 +11,7 @@ that make relational programs feel like programs:
 - immutable clause databases
 - recursive solving with depth-first backtracking
 - deferred recursive goal builders via `defer(...)`
+- state-aware native goal hooks via `native_goal(...)` for library builtins
 - disequality constraints via `neq(...)`
 - `all_different(...)` for small puzzle-style searches
 - end-to-end query helpers like `solve_all()` and `solve_n()`
