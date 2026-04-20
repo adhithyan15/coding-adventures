@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.5.0] — 2026-04-20
+
+### Added
+
+- **`validate_for_wasm(program)` pre-flight validator**: inspects an
+  `IrProgram` for WASM backend incompatibilities *before* any module bytes
+  are generated.  Returns a list of human-readable error strings (empty list
+  = valid).  Three rules are checked:
+  1. **Opcode support** — every opcode must appear in the V1 supported set.
+     Currently all `IrOp` values are handled; the check is future-proofing
+     against new IR opcodes added before the WASM backend implements them.
+  2. **Constant range** — `LOAD_IMM` and `ADD_IMM` immediates must fit in a
+     WASM `i32` (−2 147 483 648 to 2 147 483 647).
+  3. **SYSCALL number** — only SYSCALL 1 (`fd_write`), SYSCALL 2 (`fd_read`),
+     and SYSCALL 10 (`proc_exit`) are wired up in the V1 WASM backend.
+- `validate_for_wasm` exported from `ir_to_wasm_compiler.__init__`.
+- `TestValidateForWasm` test class (8 tests) covering all three rules,
+  boundary-value constants, and integration with `IrToWasmCompiler.compile`.
+
+### Changed
+
+- `IrToWasmCompiler.compile()` now calls `validate_for_wasm()` as a
+  pre-flight check before any WASM module bytes are produced.  Any violation
+  raises `WasmLoweringError` with message prefix
+  `"IR program failed WASM pre-flight validation"`.
+- Added word-size constants `_WASM_I32_MIN = -(1 << 31)` and
+  `_WASM_I32_MAX = (1 << 31) - 1` for single-source-of-truth boundary checks.
+
 ## [0.4.0] — 2026-04-20
 
 ### Changed

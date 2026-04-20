@@ -19,6 +19,7 @@ from ir_to_wasm_compiler import (
     IrToWasmCompiler,
     WasmLoweringError,
     infer_function_signatures_from_comments,
+    validate_for_wasm,
 )
 
 
@@ -540,3 +541,110 @@ class TestDispatchLoopLowerer:
         program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
         assert _dispatch_run(program) == [6]
+
+
+# ---------------------------------------------------------------------------
+# Pre-flight validator tests
+# ---------------------------------------------------------------------------
+
+def _simple_prog(*instrs: IrInstruction) -> IrProgram:
+    """Build a minimal IrProgram from a list of instructions."""
+    gen = IDGenerator()
+    prog = IrProgram(entry_label="_start")
+    prog.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=gen.next()))
+    for instr in instrs:
+        prog.add_instruction(instr)
+    return prog
+
+
+def _imm(v: int) -> IrImmediate:
+    return IrImmediate(v)
+
+
+def _reg(i: int) -> IrRegister:
+    return IrRegister(i)
+
+
+class TestValidateForWasm:
+    """Tests for validate_for_wasm() — the pre-flight IR inspector."""
+
+    def test_valid_program_passes(self) -> None:
+        """A well-formed program produces no errors."""
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(0)], id=gen.next()),
+            IrInstruction(IrOp.SYSCALL, [_imm(1), _reg(0)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    # ── Rule 1: supported opcodes (all current IrOp values are supported) ───
+    # The opcode check future-proofs against new IR opcodes that the WASM
+    # backend does not yet handle.  Since every current IrOp is supported,
+    # this is tested implicitly by the valid-program test above.
+
+    # ── Rule 2: constant overflow ────────────────────────────────────────────
+
+    def test_load_imm_overflow_rejected(self) -> None:
+        """A 64-bit constant cannot be encoded as a WASM i32."""
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(2**32)], id=gen.next()),
+        )
+        errors = validate_for_wasm(prog)
+        assert len(errors) == 1
+        assert "LOAD_IMM" in errors[0]
+
+    def test_load_imm_max_i32_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(2**31 - 1)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    def test_load_imm_min_i32_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(-(2**31))], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    # ── Rule 3: unsupported SYSCALL numbers ─────────────────────────────────
+
+    def test_syscall_1_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.SYSCALL, [_imm(1), _reg(0)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    def test_syscall_2_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.SYSCALL, [_imm(2), _reg(0)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    def test_syscall_unsupported_number_rejected(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.SYSCALL, [_imm(99), _reg(0)], id=gen.next()),
+        )
+        errors = validate_for_wasm(prog)
+        assert len(errors) == 1
+        assert "unsupported SYSCALL" in errors[0]
+        assert "99" in errors[0]
+
+    # ── Integration: compiler calls validate first ───────────────────────────
+
+    def test_compile_rejects_oversized_constant_with_preflight_message(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(2**40)], id=gen.next()),
+        )
+        with pytest.raises(WasmLoweringError, match="pre-flight"):
+            IrToWasmCompiler().compile(prog)

@@ -139,8 +139,137 @@ class CodeGenError(Exception):
     """Raised when the IR program cannot be translated to GE-225 code.
 
     Causes include unsupported IR opcodes, ``AND_IMM`` with a non-1 immediate,
-    or a branch to an undefined label.
+    a constant that does not fit in a GE-225 20-bit signed word, or a branch
+    to an undefined label.
     """
+
+
+# ---------------------------------------------------------------------------
+# GE-225 word-size constraints
+# ---------------------------------------------------------------------------
+#
+# The GE-225 uses 20-bit two's-complement words.
+# Signed range: -524 288 (−2^19) to 524 287 (2^19 − 1).
+
+_GE225_WORD_MIN: int = -(1 << 19)   # -524 288
+_GE225_WORD_MAX: int =  (1 << 19) - 1  # 524 287
+
+# The V1 GE-225 backend supports exactly this set of IR opcodes.
+# Any opcode absent from this set is rejected by validate_for_ge225().
+_GE225_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.LOAD_IMM,
+    IrOp.ADD_IMM,
+    IrOp.ADD,
+    IrOp.SUB,
+    IrOp.AND_IMM,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.JUMP,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.SYSCALL,
+})
+
+
+# ---------------------------------------------------------------------------
+# Pre-flight validator
+# ---------------------------------------------------------------------------
+
+
+def validate_for_ge225(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for GE-225 backend incompatibilities without
+    generating any code.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must be in ``_GE225_SUPPORTED_OPCODES``.
+       Opcodes absent from the V1 GE-225 backend (e.g. ``LOAD_BYTE``,
+       ``STORE_WORD``, ``CALL``) are rejected immediately so the caller gets a
+       precise diagnostic rather than a mid-compilation crash.
+
+    2. **Constant range** — every ``IrImmediate`` value in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a GE-225 20-bit signed word
+       (−524 288 to 524 287).  The GE-225 backend stores constants in a
+       data-segment constants table; a value that overflows 20 bits would be
+       silently truncated by the ``value & 0xFFFFF`` mask, producing corrupt
+       digit extraction or wrong arithmetic — exactly the bug that bit PR #941.
+
+    3. **SYSCALL number** — only ``SYSCALL 1`` (print character) is wired up
+       in the V1 GE-225 backend.  Any other syscall number is rejected.
+
+    4. **AND_IMM immediate** — only ``imm == 1`` is supported; the GE-225
+       backend uses it for the parity/odd-bit test and has no general bitwise-
+       AND instruction.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the GE-225 V1 backend.
+
+    Example::
+
+        from compiler_ir import IrImmediate, IrInstruction, IrOp, IrProgram, IrRegister
+        prog = IrProgram(entry_label="_start")
+        prog.append(IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(1_000_000_000)]))
+        errors = validate_for_ge225(prog)
+        # errors == ["LOAD_IMM: constant 1,000,000,000 does not fit in a GE-225
+        #             20-bit signed word (valid range -524,288 to 524,287)"]
+    """
+    errors: list[str] = []
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ─────────────────────
+        if op not in _GE225_SUPPORTED_OPCODES:
+            errors.append(
+                f"unsupported opcode {op.name} in V1 GE-225 backend"
+            )
+            continue  # no point checking operands of an unsupported opcode
+
+        # ── Rule 2: constant range on LOAD_IMM and ADD_IMM ──────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate):
+                    v = operand.value
+                    if not (_GE225_WORD_MIN <= v <= _GE225_WORD_MAX):
+                        errors.append(
+                            f"{op.name}: constant {v:,} overflows GE-225 20-bit "
+                            f"signed word (valid range "
+                            f"{_GE225_WORD_MIN:,} to {_GE225_WORD_MAX:,})"
+                        )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value != 1:
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL 1 (print char) is wired in the V1 GE-225 backend"
+                    )
+                    break
+
+        # ── Rule 4: AND_IMM must use immediate 1 ────────────────────────────
+        elif op == IrOp.AND_IMM:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value != 1:
+                    errors.append(
+                        f"unsupported AND_IMM immediate {operand.value}: "
+                        f"only AND_IMM 1 is supported (odd-bit test)"
+                    )
+                    break
+
+    return errors
 
 
 # ---------------------------------------------------------------------------
@@ -153,6 +282,10 @@ def compile_to_ge225(program: IrProgram) -> CompileResult:
 
     This is a three-pass process:
 
+    - **Pre-flight**: ``validate_for_ge225`` inspects every instruction for
+      opcode support, constant range, and syscall compatibility.  If any
+      violation is found a ``CodeGenError`` is raised before any code is
+      generated, giving the caller a precise diagnostic.
     - Pass 0: scan all instructions to collect virtual register indices and
       build the constants table (unique integer values for ``LOAD_IMM`` and
       ``ADD_IMM`` with non-trivial immediates).
@@ -162,17 +295,25 @@ def compile_to_ge225(program: IrProgram) -> CompileResult:
       resolved addresses from pass 1.
 
     Args:
-        program: A validated ``IrProgram`` (all branch targets must be defined).
+        program: An ``IrProgram`` to translate.
 
     Returns:
         A ``CompileResult`` containing the binary, halt address, data base, and
         the resolved label map.
 
     Raises:
-        CodeGenError: if the program uses an unsupported IR opcode, if
-            ``AND_IMM`` uses a non-1 immediate, or if a branch target label is
-            undefined.
+        CodeGenError: if the program fails pre-flight validation (unsupported
+            opcode, constant out of 20-bit range, unsupported syscall number,
+            unsupported AND_IMM immediate), or if a branch target label is
+            undefined during code generation.
     """
+    errors = validate_for_ge225(program)
+    if errors:
+        joined = "; ".join(errors)
+        raise CodeGenError(
+            f"IR program failed GE-225 pre-flight validation "
+            f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+        )
     return _CodeGen(program).compile()
 
 
@@ -406,9 +547,15 @@ class _CodeGen:
         # Data section: n_regs zero-initialised spill slots
         words.extend([0] * self._n_regs())
 
-        # Constants table (in insertion order from pass 0)
+        # Constants table (in insertion order from pass 0).
+        # Values are guaranteed to be in the 20-bit signed range by
+        # validate_for_ge225(), so the mask safely encodes negative values
+        # as 20-bit two's-complement without silent data corruption.
         for value, _ in sorted(self._const_map.items(), key=lambda kv: kv[1]):
-            words.append(value & 0xFFFFF)  # 20-bit two's-complement
+            assert _GE225_WORD_MIN <= value <= _GE225_WORD_MAX, (
+                f"constant {value} slipped past pre-flight validation"
+            )
+            words.append(value & 0xFFFFF)  # encode as 20-bit two's-complement
 
         return words
 
