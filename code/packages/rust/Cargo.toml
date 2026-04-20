@@ -332,4 +332,5 @@ members = [
     "state-machine-markup-serializer",
     "state-machine-markup-deserializer",
     "state-machine-markup-json-serializer",
+    "state-machine-markup-json-deserializer",
 ]
