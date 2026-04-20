@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/argon2d",
+  "version": "0.1.0",
+  "description": "Argon2d — data-dependent memory-hard password hashing (RFC 9106) implemented from scratch",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/blake2b": "file:../blake2b"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
