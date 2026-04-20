@@ -15,3 +15,10 @@ All notable changes to this package will be documented in this file.
 - Added deterministic mono WAV byte/file helpers as an optional sink.
 - Added tests for parity vectors, validation, clipping, DAC hold behavior, WAV
   output, and the visible `A4` rendering chain.
+
+### Changed
+
+- Split reusable PCM, virtual DAC, virtual speaker, and WAV behavior into
+  dedicated stage packages.
+- Kept `note-audio` as the thin teaching/orchestration layer that wires the
+  stages together and re-exports the familiar V1 helpers.
