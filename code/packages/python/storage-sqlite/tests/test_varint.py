@@ -4,14 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from storage_sqlite.varint import (
-    decode,
-    decode_signed,
-    encode,
-    encode_signed,
-    size,
-)
-
+from storage_sqlite.varint import decode, decode_signed, encode, encode_signed, size
 
 # ------------------------------------------------------------------
 # Known golden values (cross-checked against the SQLite spec).
@@ -172,6 +165,9 @@ def test_decode_with_offset() -> None:
 # ------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("value", [0, 127, 128, 16383, 16384, (1 << 56) - 1, (1 << 56), (1 << 64) - 1])
+@pytest.mark.parametrize(
+    "value",
+    [0, 127, 128, 16383, 16384, (1 << 56) - 1, (1 << 56), (1 << 64) - 1],
+)
 def test_size_matches_encode(value: int) -> None:
     assert size(value) == len(encode(value))

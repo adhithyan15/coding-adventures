@@ -11,7 +11,6 @@ from storage_sqlite.errors import CorruptDatabaseError
 from storage_sqlite.record import decode, encode
 from storage_sqlite.varint import encode as varint_encode
 
-
 # ------------------------------------------------------------------
 # Empty record.
 # ------------------------------------------------------------------
