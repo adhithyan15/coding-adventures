@@ -330,4 +330,5 @@ members = [
     "document-ast-to-layout",
     "udp-client",
     "state-machine-markup-serializer",
+    "state-machine-markup-deserializer",
 ]

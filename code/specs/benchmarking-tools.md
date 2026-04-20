@@ -645,6 +645,42 @@ benchmark-tool validate code/benchmarks/mini-redis/benchmark.toml
 benchmark-tool validate benchmark-results/local-mini-redis
 ```
 
+### Phase-One Implementation Note
+
+The first implementation slice intentionally lands the local command-runner
+surface before the full TCP benchmark surface:
+
+- CLI parsing is driven by the repository's declarative Go `cli-builder`
+  package, with the JSON CLI spec embedded into the `benchmark-tool` binary so
+  the tool can be run locally from any directory.
+- `validate` currently validates benchmark manifests. Result-directory schema
+  validation remains future work.
+- `run` currently executes `driver = "command"` workloads and validates, but
+  skips, TCP/RESP workloads until the load generator lands.
+- The initial implemented run flags were `--out`, `--trials`, and `--warmup`.
+  Phase two adds subject checkout overrides and focused subject/workload
+  filters. Seeds, build reuse, and CLI-level fail-fast overrides remain future
+  work.
+- Manifest `working_directory` values are resolved relative to the manifest's
+  git repository root when available, so repo-local benchmark manifests work
+  when the binary is invoked from outside the repository root.
+
+### Phase-Two Implementation Note
+
+The git-ref comparison slice now has a concrete preparation layer for command
+benchmarks:
+
+- `run` accepts repeated `--subject name=ref` flags to override a manifest
+  subject's `checkout` value at the command line.
+- `run` accepts `--subjects name,name` and `--workloads name,name` filters for
+  focused local runs and smaller CI benchmark jobs.
+- Any subject with a `checkout` value is prepared in a detached temporary git
+  worktree, pinned to an exact commit SHA, and cleaned up when the run returns.
+- Per-subject metadata is written to `subjects/<name>/subject.json`, and build
+  logs remain in `subjects/<name>/build.log`.
+- Randomized or paired trial ordering and richer in-result comparison reports
+  remain future work.
+
 ---
 
 ## Git Ref Comparison

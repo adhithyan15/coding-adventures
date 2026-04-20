@@ -519,6 +519,28 @@ Modal documents:
 - mode transitions reference known modes
 - mode transition events are declared or inferred from child machine outputs
 
+## Phase 1 Deserializer Profile
+
+The first deserializer should be deliberately stricter than the full future
+format. It accepts the deterministic TOML-compatible subset emitted by the v1
+serializer:
+
+- root string fields: `format`, `name`, `kind`, `initial`, `initial_stack`
+- root string arrays: `alphabet`, `stack_alphabet`
+- repeated `[[states]]` tables with `id`, `initial`, `accepting`, `final`, and
+  `external_entry`
+- repeated `[[transitions]]` tables with `from`, `on`, `to`, `stack_pop`, and
+  `stack_push`
+- string, boolean, and string-array values only
+
+The phase 1 deserializer must reject unsupported tables such as `[[actions]]`,
+`[[guards]]`, `[[modes]]`, includes, dotted keys, inline tables, numeric values,
+duplicate keys in the same table, duplicate states, malformed strings, and
+documents with trailing garbage. It must also apply bounded input limits before
+allocating untrusted content into the typed definition layer. These limits are
+not part of the abstract format; they are implementation guardrails for the
+runtime deserialization package.
+
 ## Implementation Plan
 
 1. Add this spec as the canonical serialization target.

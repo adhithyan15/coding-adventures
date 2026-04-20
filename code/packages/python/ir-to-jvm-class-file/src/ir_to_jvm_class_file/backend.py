@@ -115,6 +115,7 @@ class JvmBackendConfig:
     class_file_major: int = 49
     class_file_minor: int = 0
     emit_main_wrapper: bool = True
+    syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
 
 
 @dataclass(frozen=True)

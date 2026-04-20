@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-20
+
+### Added
+
+- collection predicates: `findallo`, `bagofo`, and `setofo`
+- deterministic term sorting and duplicate removal for first-pass `setofo`
+- tests and examples showing collectors with relation search, arithmetic, and control builtins
+
 ## [0.2.0] - 2026-04-20
 
 ### Added

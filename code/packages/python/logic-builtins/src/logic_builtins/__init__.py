@@ -8,9 +8,11 @@ from logic_builtins.builtins import (
     add,
     argo,
     atomo,
+    bagofo,
     callo,
     compoundo,
     div,
+    findallo,
     floordiv,
     functoro,
     geqo,
@@ -28,6 +30,7 @@ from logic_builtins.builtins import (
     numeqo,
     numneqo,
     onceo,
+    setofo,
     stringo,
     sub,
     varo,
@@ -38,9 +41,11 @@ __all__ = [
     "add",
     "argo",
     "atomo",
+    "bagofo",
     "callo",
     "compoundo",
     "div",
+    "findallo",
     "floordiv",
     "functoro",
     "geqo",
@@ -58,9 +63,10 @@ __all__ = [
     "numneqo",
     "numbero",
     "onceo",
+    "setofo",
     "stringo",
     "sub",
     "varo",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
