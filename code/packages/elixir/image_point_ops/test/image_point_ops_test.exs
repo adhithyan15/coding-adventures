@@ -11,6 +11,12 @@ defmodule CodingAdventures.ImagePointOpsTest do
 
   defp px(img), do: PC.pixel_at(img, 0, 0)
 
+  # ── version ───────────────────────────────────────────────────────────
+
+  test "version returns a string" do
+    assert is_binary(Ops.version())
+  end
+
   # ── dimensions ────────────────────────────────────────────────────────
 
   test "dimensions are preserved" do
@@ -80,6 +86,16 @@ defmodule CodingAdventures.ImagePointOpsTest do
   test "extract channel 1 zeroes R and B" do
     out = Ops.extract_channel(solid(100, 150, 200, 255), 1)
     assert px(out) == {0, 150, 0, 255}
+  end
+
+  test "extract channel 2 zeroes R and G" do
+    out = Ops.extract_channel(solid(100, 150, 200, 255), 2)
+    assert px(out) == {0, 0, 200, 255}
+  end
+
+  test "extract channel default preserves all" do
+    out = Ops.extract_channel(solid(100, 150, 200, 255), 99)
+    assert px(out) == {100, 150, 200, 255}
   end
 
   # ── brightness ────────────────────────────────────────────────────────
@@ -187,6 +203,13 @@ defmodule CodingAdventures.ImagePointOpsTest do
   end
 
   # ── hue_rotate ────────────────────────────────────────────────────────
+
+  test "hue_rotate shifts hue" do
+    # Red pixel (hue ~0°) rotated 180° should become cyan-ish
+    out = Ops.hue_rotate(solid(255, 0, 0, 255), 180.0)
+    {r, _, b, _} = px(out)
+    assert b > r
+  end
 
   test "hue_rotate 360 is identity" do
     img = solid(200, 80, 40, 255)

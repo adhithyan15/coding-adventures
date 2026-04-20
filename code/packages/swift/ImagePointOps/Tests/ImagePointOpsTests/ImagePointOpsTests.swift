@@ -39,7 +39,9 @@ final class ImagePointOpsTests: XCTestCase {
     func testDoubleInvertIdentity() {
         let img = solid(30, 80, 180, 255)
         let (r, g, b, a) = px(invert(invert(img)))
-        XCTAssertEqual((r, g, b, a), px(img))
+        let (ir, ig, ib, ia) = px(img)
+        XCTAssertEqual(r, ir); XCTAssertEqual(g, ig)
+        XCTAssertEqual(b, ib); XCTAssertEqual(a, ia)
     }
 
     func testThresholdAbove() {
