@@ -27,6 +27,7 @@ from polynomial import Polynomial, add, multiply, normalize, one, subtract
 from symbolic_ir import (
     ADD,
     DIV,
+    LOG,
     MUL,
     NEG,
     POW,
@@ -298,3 +299,39 @@ def _coef(c) -> IRNode:
         return IRRational(c.numerator, c.denominator)
     # int and other whole-number types.
     return IRInteger(int(c))
+
+
+# ---------------------------------------------------------------------------
+# Log-sum IR builder (shared by integrate.py and mixed_integral.py)
+# ---------------------------------------------------------------------------
+
+
+def rt_pairs_to_ir(pairs, x: IRSymbol) -> IRNode:
+    """Assemble ``Σ c_i · log(v_i)`` as IR from Rothstein–Trager pairs.
+
+    Each pair is ``(c: Fraction, v: Polynomial)`` with ``v`` monic and
+    non-constant. The emitted IR is a left-associative binary ``Add``
+    chain of log terms; the chain collapses to a single node when there
+    is only one pair. A coefficient of ``1`` renders as bare ``Log(v)``
+    (no redundant ``Mul(1, ·)``); ``−1`` renders as ``Neg(Log(v))``;
+    integer coefficients render as ``Mul(IRInteger, Log(v))``.
+    """
+    terms: list[IRNode] = []
+    for c, v in pairs:
+        log_ir = IRApply(LOG, (from_polynomial(v, x),))
+        if c == 1:
+            terms.append(log_ir)
+        elif c == -1:
+            terms.append(IRApply(NEG, (log_ir,)))
+        else:
+            if c.denominator == 1:
+                coef: IRNode = IRInteger(c.numerator)
+            else:
+                coef = IRRational(c.numerator, c.denominator)
+            terms.append(IRApply(MUL, (coef, log_ir)))
+    if len(terms) == 1:
+        return terms[0]
+    acc = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
