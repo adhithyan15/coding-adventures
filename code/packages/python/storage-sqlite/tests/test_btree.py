@@ -1,5 +1,5 @@
 """Tests for the B-tree layer — leaf pages, overflow chains, scan/find/CRUD,
-interior page traversal, and root-leaf splits."""
+interior page traversal, root-leaf splits, and full recursive splits."""
 
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ from storage_sqlite.btree import (
     PageFullError,
     _init_leaf_page,
     _interior_cell_encode,
+    _interior_cells_fit,
     _local_payload_size,
     _read_hdr,
     _read_interior_cell,
@@ -350,20 +351,26 @@ def test_update_inline_to_overflow(tmp_path: Path) -> None:
 
 
 # ------------------------------------------------------------------
-# Page-full detection
+# PageFullError is kept in the API but no longer raised by normal inserts
 # ------------------------------------------------------------------
 
 
-def test_page_full_raises(tmp_path: Path) -> None:
-    """Overfill a page with many cells until PageFullError is raised."""
+def test_page_full_error_is_exported() -> None:
+    """PageFullError must remain importable from storage_sqlite (public API)."""
+    assert issubclass(PageFullError, Exception)
+
+
+def test_many_rows_no_page_full_error(tmp_path: Path) -> None:
+    """Phase 4b: inserting many rows must not raise PageFullError.
+
+    Previously (phase 4a) this would raise once a non-root leaf filled up.
+    Recursive splits now handle all cases transparently.
+    """
     with make_pager(tmp_path) as p:
         b = BTree.create(p)
-        # Each cell with an empty record is ~3 bytes (2 varint + payload).
-        # Header + N*2 pointers + N*3 cell bytes must stay within 4096.
-        # Insert until the page is full.
-        with pytest.raises(PageFullError):
-            for rowid in range(1, 10_000):
-                b.insert(rowid, record_encode([rowid]))
+        for rowid in range(1, 2001):
+            b.insert(rowid, record_encode([rowid]))
+        assert b.cell_count() == 2000
 
 
 # ------------------------------------------------------------------
@@ -999,3 +1006,409 @@ def test_root_split_with_header_offset_100(tmp_path: Path) -> None:
         # All inserted rows must be findable through the split tree.
         for rid in range(1, rowid + 1):
             assert b.find(rid) is not None
+
+
+# ==================================================================
+# Phase 4b — non-root leaf splits and interior node splits
+# ==================================================================
+
+
+# ------------------------------------------------------------------
+# Helper: insert until a non-root leaf split has happened
+# (i.e. root interior page has at least 2 cells)
+# ------------------------------------------------------------------
+
+
+def _fill_until_non_root_split(b: BTree, start: int = 1) -> int:
+    """Insert small rows until the root interior page has ≥ 2 separator cells.
+
+    Returns the rowid of the last inserted row.  At that point at least
+    one non-root leaf split has propagated a separator up to the root.
+    """
+    rowid = start
+    while True:
+        b.insert(rowid, record_encode([rowid]))
+        root_data = b._pager.read(b.root_page)
+        if root_data[0] == PAGE_TYPE_INTERIOR_TABLE:
+            hdr = _read_hdr(root_data, 0)
+            if hdr["ncells"] >= 2:
+                return rowid
+        rowid += 1
+
+
+# ------------------------------------------------------------------
+# Non-root leaf split — basic correctness
+# ------------------------------------------------------------------
+
+
+def test_non_root_leaf_split_triggers(tmp_path: Path) -> None:
+    """Inserting enough rows must cause the root to accumulate multiple cells."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_non_root_split(b)
+        root_data = p.read(b.root_page)
+        hdr = _read_hdr(root_data, 0)
+        assert hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        assert hdr["ncells"] >= 2
+        assert b.cell_count() == last
+
+
+def test_non_root_leaf_split_cell_count(tmp_path: Path) -> None:
+    """cell_count() must equal the number of inserted rows after multiple splits."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 1000
+        for rowid in range(1, n + 1):
+            b.insert(rowid, record_encode([rowid]))
+        assert b.cell_count() == n
+
+
+def test_non_root_leaf_split_scan_all(tmp_path: Path) -> None:
+    """scan() must yield every row in ascending rowid order after many splits."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 1000
+        for rowid in range(1, n + 1):
+            b.insert(rowid, record_encode([rowid]))
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, n + 1))
+        for rowid, raw in rows:
+            values, _ = record_decode(raw)
+            assert values == [rowid]
+
+
+def test_non_root_leaf_split_find_all(tmp_path: Path) -> None:
+    """find() must succeed for every rowid after non-root leaf splits."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 800
+        for rowid in range(1, n + 1):
+            b.insert(rowid, record_encode([rowid]))
+        for rowid in range(1, n + 1):
+            raw = b.find(rowid)
+            assert raw is not None
+            values, _ = record_decode(raw)
+            assert values == [rowid]
+
+
+def test_non_root_leaf_split_find_missing(tmp_path: Path) -> None:
+    """find() returns None for a rowid not in a multi-split tree."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        for rowid in range(1, 601):
+            b.insert(rowid, record_encode([rowid]))
+        assert b.find(99_999) is None
+
+
+def test_non_root_leaf_split_delete(tmp_path: Path) -> None:
+    """delete() removes the correct row from a tree that has undergone multiple splits."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 800
+        for rowid in range(1, n + 1):
+            b.insert(rowid, record_encode([rowid]))
+        # Delete every even rowid.
+        for rowid in range(2, n + 1, 2):
+            assert b.delete(rowid) is True
+        assert b.cell_count() == n // 2
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, n + 1, 2))
+
+
+def test_non_root_leaf_split_update(tmp_path: Path) -> None:
+    """update() replaces payloads correctly in a multi-split tree."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 600
+        for rowid in range(1, n + 1):
+            b.insert(rowid, record_encode([rowid]))
+        # Update a handful of rows on different leaves.
+        for rowid in [1, 100, 300, n]:
+            assert b.update(rowid, record_encode([rowid * 10])) is True
+        for rowid in [1, 100, 300, n]:
+            values, _ = record_decode(b.find(rowid))  # type: ignore[arg-type]
+            assert values == [rowid * 10]
+
+
+def test_non_root_leaf_split_duplicate_rowid(tmp_path: Path) -> None:
+    """DuplicateRowidError is raised even when the tree has multiple leaves."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        for rowid in range(1, 601):
+            b.insert(rowid, record_encode([rowid]))
+        with pytest.raises(DuplicateRowidError):
+            b.insert(300, record_encode(["dup"]))
+
+
+def test_non_root_leaf_split_reverse_order(tmp_path: Path) -> None:
+    """Descending-order inserts still produce a correctly-structured tree."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 800
+        for rowid in range(n, 0, -1):
+            b.insert(rowid, record_encode([rowid]))
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, n + 1))
+
+
+def test_non_root_leaf_split_persist_reopen(tmp_path: Path) -> None:
+    """Multi-split tree committed to disk must round-trip through close/reopen."""
+    p = make_pager(tmp_path)
+    b = BTree.create(p)
+    n = 600
+    for rowid in range(1, n + 1):
+        b.insert(rowid, record_encode([f"row{rowid}"]))
+    p.commit()
+    p.close()
+
+    p2 = Pager.open(tmp_path / "db")
+    b2 = BTree.open(p2, 1)
+    assert b2.cell_count() == n
+    rows = list(b2.scan())
+    assert [r for r, _ in rows] == list(range(1, n + 1))
+    for rowid, raw in rows:
+        values, _ = record_decode(raw)
+        assert values == [f"row{rowid}"]
+    p2.close()
+
+
+# ------------------------------------------------------------------
+# _interior_cells_fit — unit tests
+# ------------------------------------------------------------------
+
+
+def test_interior_cells_fit_empty_list() -> None:
+    """An empty cell list always fits."""
+    assert _interior_cells_fit(0, []) is True
+
+
+def test_interior_cells_fit_small_list() -> None:
+    """A handful of small cells fit on a fresh interior page."""
+    cells = [(i, i * 100) for i in range(1, 11)]
+    assert _interior_cells_fit(0, cells) is True
+
+
+def test_interior_cells_fit_overfull() -> None:
+    """A cell list that exceeds PAGE_SIZE must not fit."""
+    # Each interior cell for small rowids is 4 + 1 = 5 bytes, plus 2 ptr = 7.
+    # Available space = 4096 - 12 = 4084. Forcing 600 cells = 4200 > 4084.
+    cells = [(i, i) for i in range(1, 601)]
+    assert _interior_cells_fit(0, cells) is False
+
+
+def test_interior_cells_fit_with_header_offset() -> None:
+    """header_offset=100 reduces available space by 100 bytes.
+
+    For cells = [(i, i) for i in range(1, n+1)] with small i values:
+    - hdr_off=0  : avail = 4084 bytes, max cells = 526
+    - hdr_off=100: avail = 3984 bytes, max cells = 513
+
+    Using 520 cells sits between the two thresholds: fits at 0, overflows at 100.
+    """
+    cells_520 = [(i, i) for i in range(1, 521)]
+    # Fits at hdr_off=0 (needs ~4033 bytes ≤ 4084 available).
+    assert _interior_cells_fit(0, cells_520) is True
+    # Does not fit at hdr_off=100 (needs ~4033 bytes > 3984 available).
+    assert _interior_cells_fit(100, cells_520) is False
+    # A shorter list fits at both offsets.
+    cells_short = [(i, i) for i in range(1, 200)]
+    assert _interior_cells_fit(0, cells_short) is True
+    assert _interior_cells_fit(100, cells_short) is True
+
+
+# ------------------------------------------------------------------
+# _write_interior_page — unit tests
+# ------------------------------------------------------------------
+
+
+def test_write_interior_page_round_trip(tmp_path: Path) -> None:
+    """_write_interior_page produces a page that _read_hdr + _read_interior_ptrs
+    can decode correctly."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        extra = p.allocate()
+        cells = [(2, 10), (3, 20), (4, 30)]
+        b._write_interior_page(extra, 0, cells, rightmost_child=5)
+        page_data = p.read(extra)
+        hdr = _read_hdr(page_data, 0)
+        assert hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        assert hdr["ncells"] == 3
+        assert hdr["rightmost_child"] == 5
+        ptrs = _read_interior_ptrs(page_data, 0, 3)
+        decoded = [_read_interior_cell(page_data, ptr) for ptr in ptrs]
+        assert decoded == cells
+
+
+def test_write_interior_page_empty(tmp_path: Path) -> None:
+    """_write_interior_page with no cells writes a valid header."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        extra = p.allocate()
+        b._write_interior_page(extra, 0, [], rightmost_child=7)
+        page_data = p.read(extra)
+        hdr = _read_hdr(page_data, 0)
+        assert hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        assert hdr["ncells"] == 0
+        assert hdr["rightmost_child"] == 7
+
+
+# ------------------------------------------------------------------
+# Interior node split — triggered end-to-end with large payloads
+#
+# With ~800-byte payloads each leaf holds ~5 cells.  Non-root splits
+# propagate a separator to the root interior page each time a leaf
+# fills.  After ~510 such splits the root interior page fills and
+# _split_root_interior is invoked.  Inserting ~1800 rows reliably
+# triggers that code path.
+# ------------------------------------------------------------------
+
+
+# A payload large enough to make each leaf hold only ~5 cells so that
+# the root interior page fills up within a reasonable row count.
+_LARGE_PAYLOAD = b"X" * 800
+
+
+def test_interior_split_cell_count(tmp_path: Path) -> None:
+    """cell_count() is exact after a root interior split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 1800
+        for rowid in range(1, n + 1):
+            b.insert(rowid, _LARGE_PAYLOAD)
+        assert b.cell_count() == n
+
+
+def test_interior_split_scan_all(tmp_path: Path) -> None:
+    """scan() returns all rows in ascending order after an interior split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 1800
+        for rowid in range(1, n + 1):
+            b.insert(rowid, _LARGE_PAYLOAD)
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, n + 1))
+        for _, payload in rows:
+            assert payload == _LARGE_PAYLOAD
+
+
+def test_interior_split_find_all(tmp_path: Path) -> None:
+    """find() works for every rowid after an interior split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        n = 1800
+        for rowid in range(1, n + 1):
+            b.insert(rowid, _LARGE_PAYLOAD)
+        for rowid in range(1, n + 1):
+            assert b.find(rowid) == _LARGE_PAYLOAD, f"find({rowid}) failed"
+
+
+def test_interior_split_root_has_depth_three(tmp_path: Path) -> None:
+    """After a root interior split the tree must have depth ≥ 3.
+
+    When the root interior page splits, it gains two interior children,
+    making depth = root (interior) + interior child + leaf = 3.
+    The root should have exactly one separator cell after its split.
+    """
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        for rowid in range(1, 1801):
+            b.insert(rowid, _LARGE_PAYLOAD)
+        root_data = p.read(b.root_page)
+        root_hdr = _read_hdr(root_data, 0)
+        assert root_hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        # After root interior split the root has exactly 1 cell.
+        assert root_hdr["ncells"] == 1
+        # Both children must also be interior pages.
+        ptrs = _read_interior_ptrs(root_data, 0, 1)
+        left_child, _ = _read_interior_cell(root_data, ptrs[0])
+        right_child = root_hdr["rightmost_child"]
+        left_data = p.read(left_child)
+        right_data = p.read(right_child)
+        assert _read_hdr(left_data, 0)["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        assert _read_hdr(right_data, 0)["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+
+
+def test_interior_split_persist_reopen(tmp_path: Path) -> None:
+    """Tree with interior splits round-trips through commit + reopen."""
+    p = make_pager(tmp_path)
+    b = BTree.create(p)
+    n = 1800
+    for rowid in range(1, n + 1):
+        b.insert(rowid, _LARGE_PAYLOAD)
+    p.commit()
+    p.close()
+
+    p2 = Pager.open(tmp_path / "db")
+    b2 = BTree.open(p2, 1)
+    assert b2.cell_count() == n
+    rows = list(b2.scan())
+    assert [r for r, _ in rows] == list(range(1, n + 1))
+    p2.close()
+
+
+# ------------------------------------------------------------------
+# _split_root_interior — direct unit test
+# ------------------------------------------------------------------
+
+
+def test_split_root_interior_direct(tmp_path: Path) -> None:
+    """Call _split_root_interior directly with a synthetic full-root cell list.
+
+    We allocate placeholder pages for the children and verify that the
+    resulting root has exactly 1 cell and two interior children.
+    """
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        # Allocate 512 placeholder child pages.
+        child_pages = [p.allocate() for _ in range(513)]
+        # Build 512 synthetic cells: [(child_pages[0], 0), ..., (child_pages[511], 511)]
+        cells_512 = [(child_pages[i], i * 100) for i in range(512)]
+        all_rightmost = child_pages[512]
+        # Call _split_root_interior with the synthetic cell list.
+        b._split_root_interior(cells_512, all_rightmost)
+        p.commit()
+
+    with Pager.open(tmp_path / "db") as p2:
+        root_data = p2.read(1)
+        root_hdr = _read_hdr(root_data, 0)
+        assert root_hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        # After splitting 512 cells the root should have 1 cell (the median).
+        assert root_hdr["ncells"] == 1
+        # Both children should be valid (non-zero) interior pages.
+        ptr = struct.unpack_from(">H", root_data, _INTERIOR_HDR)[0]
+        left_child, median_sep = _read_interior_cell(root_data, ptr)
+        right_child = root_hdr["rightmost_child"]
+        assert left_child != 0
+        assert right_child != 0
+        assert left_child != right_child
+        # Median sep must be between 0 and 51100 (the range of our synthetic cells).
+        assert 0 <= median_sep <= 51100
+
+
+# ------------------------------------------------------------------
+# Push-separator-up with full parent — exercises _split_interior_page
+# ------------------------------------------------------------------
+
+
+def test_push_separator_up_full_parent(tmp_path: Path) -> None:
+    """When _push_separator_up encounters a full parent, the parent is split.
+
+    We craft this scenario by:
+    1. Performing enough inserts with large payloads to trigger a non-root
+       leaf split (parent = root interior, has 1+ cells).
+    2. Then filling the root interior completely by inserting many more rows.
+    3. The next non-root leaf split must push a separator into the full root,
+       triggering _split_root_interior.
+
+    After this the tree must be fully navigable (scan all, find all).
+    """
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        # Insert enough large-payload rows to guarantee at least one root
+        # interior split (same end-to-end as the interior split tests above).
+        n = 2000
+        for rowid in range(1, n + 1):
+            b.insert(rowid, _LARGE_PAYLOAD)
+        assert b.cell_count() == n
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, n + 1))

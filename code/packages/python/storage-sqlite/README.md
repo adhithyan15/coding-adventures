@@ -26,7 +26,7 @@ mini_sqlite.connect("app.db")
         ├── pager    (page I/O + LRU cache + rollback journal) ✓ phase 1
         ├── header   (100-byte database header at offset 0)    ✓ phase 1
         ├── record   (varint + serial types)      ✓ phase 2
-        ├── btree    (leaf + overflow + traversal + root split) ✓ phases 3 + 4a  [recursive splits in phase 4b]
+        ├── btree    (leaf + overflow + full recursive splits)  ✓ phases 3 + 4a + 4b
         ├── freelist (page reuse)                 [v1 phase 5]
         └── schema   (sqlite_schema round-trip)   [v1 phase 6]
 ```
@@ -35,7 +35,7 @@ Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a)
+## What works today (phases 1 + 2 + 3 + 4a + 4b)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -53,17 +53,25 @@ backend.
   the real `sqlite3` output for simple records.
 - **`btree` module** — table B-tree pages (type `0x0D` leaf + type `0x05`
   interior). `insert`, `find`, `scan`, `delete`, `update` all work on trees
-  with depth ≤ 2. Supports overflow chains for large records. Includes a
-  **root-leaf split**: when the root leaf fills, it is automatically promoted
-  to an interior page with two leaf children, and insertion resumes seamlessly.
-  Corrupted pages (bad ncells, out-of-range pointers, overflow cycles, unknown
-  page types) all raise `CorruptDatabaseError` rather than silently
-  misinterpreting data. Non-root leaf splits (depth > 2) land in phase 4b.
+  of **arbitrary depth**. Supports overflow chains for large records. Split
+  algorithm:
+  - **Root-leaf split**: when the root leaf fills it becomes an interior page
+    with two leaf children.
+  - **Non-root leaf split**: when a non-root leaf fills, the existing page is
+    rewritten with the left half, a right sibling is allocated, and the
+    separator key propagates up to the parent.
+  - **Interior page split** (recursive): if a parent interior page is also
+    full, the median cell is removed and propagated further up the ancestor
+    chain, splitting interior pages all the way to the root if necessary.
+  - **Root interior split**: if the root interior page fills, two new interior
+    children are allocated and the root is rewritten with one separator cell.
+    The root page number never changes.
+  - Corrupted pages (bad ncells, out-of-range pointers, overflow cycles,
+    unknown page types) all raise `CorruptDatabaseError`.
 
-What's **not yet** in this package (coming in later phases): non-root leaf
-splits + 3-level trees (phase 4b), freelist (phase 5), `sqlite_schema`
-(phase 6), and the `Backend` adapter that wires the full pipeline in
-(phase 7).
+What's **not yet** in this package (coming in later phases): freelist /
+page reuse (phase 5), `sqlite_schema` (phase 6), and the `Backend` adapter
+that wires the full pipeline in (phase 7).
 
 ## Installation
 
@@ -71,7 +79,7 @@ splits + 3-level trees (phase 4b), freelist (phase 5), `sqlite_schema`
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a)
+## Usage (phases 1 + 2 + 3 + 4a + 4b)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -101,13 +109,12 @@ values, consumed = record.decode(raw)          # → ([None, 7, "hi"], 8)
 # --- BTree (single leaf, or multi-level after root split) ---
 with Pager.create("data.db") as pager:
     tree = BTree.create(pager)
-    # Insert enough rows to trigger the root-leaf split automatically.
-    # The root page is promoted to an interior page; two child leaves hold
-    # the data. Callers see no difference — insert/find/scan/delete work
-    # identically before and after the split.
-    for i in range(1, 600):
+    # Insert any number of rows — splits happen automatically at every level.
+    # Root-leaf split, non-root leaf splits, and interior splits are all
+    # transparent: insert/find/scan/delete work identically at any tree depth.
+    for i in range(1, 5001):
         tree.insert(i, record.encode([f"row{i}"]))
-    print(tree.cell_count())   # 599
+    print(tree.cell_count())   # 5000
     pager.commit()
 
 with Pager.open("data.db") as pager:
