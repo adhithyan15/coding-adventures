@@ -1,0 +1,9 @@
+[package]
+name = "document-ast-to-layout"
+version = "0.1.0"
+edition = "2021"
+description = "UI06: convert a CommonMark/GFM DocumentAST into a LayoutNode tree with a complete DocumentTheme applied."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }
+document-ast = { path = "../document-ast" }
