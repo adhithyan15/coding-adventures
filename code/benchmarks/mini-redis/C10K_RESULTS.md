@@ -183,3 +183,107 @@ throughout the benchmark. It still is not a maximum-throughput result: each
 connection only sent one `PING` every five seconds in the 10K run. The next
 step is to formalize this active mode in `benchmark-tool` and sweep request
 rates upward until latency or one reactor core clearly saturates.
+
+## Follow-Up: Mixed Supported Operations
+
+A third local exploratory run kept thousands of sockets open and made every
+connection execute randomized supported Mini Redis commands instead of only
+`PING`.
+
+The temporary driver used deterministic per-connection random streams and
+per-connection unique keys so correctness could be checked without introducing
+cross-connection key races. Each operation was sent as a RESP command and every
+response was validated.
+
+Operations in the mix:
+
+- `PING`
+- `SET`
+- `GET`
+- `EXISTS`
+- `INCRBY`
+- `HSET`
+- `HGET`
+- `HEXISTS`
+
+### Mixed Run Shape
+
+| Run | Connections | Dial Concurrency | Operation Concurrency | Duration | Sweep Interval |
+|---|---:|---:|---:|---:|---:|
+| `mixed-1k` | 1,000 | 250 | 500 | 15s | 3s |
+| `mixed-5k` | 5,000 | 500 | 1,000 | 20s | 4s |
+| `mixed-10k` | 10,000 | 500 | 1,000 | 15s | 5s |
+
+### Mixed Run Results
+
+| Run | Opened | Dial Failures | Waves | Total Operations | Failed Operations | Result |
+|---|---:|---:|---:|---:|---:|---|
+| `mixed-1k` | 1,000 | 0 | 5 | 5,000 | 0 | pass |
+| `mixed-5k` | 5,000 | 0 | 4 | 20,000 | 0 | pass |
+| `mixed-10k` | 10,000 | 0 | 2 | 20,000 | 0 | pass |
+
+Aggregate mixed-operation latency:
+
+| Run | p50 | p90 | p99 | max |
+|---|---:|---:|---:|---:|
+| `mixed-1k` | 169.317 ms | 293.159 ms | 294.362 ms | 297.912 ms |
+| `mixed-5k` | 1,393.117 ms | 2,474.768 ms | 2,594.699 ms | 2,597.052 ms |
+| `mixed-10k` | 1,474.075 ms | 2,690.686 ms | 2,899.111 ms | 2,906.966 ms |
+
+The mixed run stayed correct, but latency increased sharply as state and
+connection count grew. Per-wave latency shows the ramp clearly:
+
+| Run | Wave | Operations | p50 | p90 | p99 | Max |
+|---|---:|---:|---:|---:|---:|---:|
+| `mixed-1k` | 1 | 1,000 | 39.820 ms | 65.955 ms | 66.456 ms | 66.512 ms |
+| `mixed-1k` | 5 | 1,000 | 293.159 ms | 293.901 ms | 294.516 ms | 297.912 ms |
+| `mixed-5k` | 1 | 5,000 | 402.435 ms | 606.605 ms | 660.432 ms | 688.515 ms |
+| `mixed-5k` | 4 | 5,000 | 2,471.861 ms | 2,587.695 ms | 2,596.911 ms | 2,597.052 ms |
+| `mixed-10k` | 1 | 10,000 | 757.779 ms | 1,361.560 ms | 1,428.895 ms | 1,489.817 ms |
+| `mixed-10k` | 2 | 10,000 | 2,274.416 ms | 2,813.711 ms | 2,902.143 ms | 2,906.966 ms |
+
+The 10K mixed run's Mini Redis process was sampled while the workload ran:
+
+| Metric | Observed |
+|---|---:|
+| CPU min | 0.0% |
+| CPU median | 97.7% |
+| CPU max | 104.0% |
+| RSS min | 1.9 MiB |
+| RSS median | 22.0 MiB |
+| RSS max | 26.0 MiB |
+
+### Mixed Run Interpretation
+
+The mixed workload proves the server can still hold 10,000 connections and
+remain correct while those connections perform real supported Redis-style work.
+It also exposes the next bottleneck much more clearly than the idle and `PING`
+runs.
+
+The server appears CPU-bound on roughly one core under the mixed workload. This
+matches the current architecture:
+
+- the TCP runtime is a single-reactor path
+- Mini Redis calls into one shared `DataStoreManager`
+- `DataStoreEngine::execute_parts_with_db` clones the current store, runs the
+  command, then writes the new store back
+- the background expiration loop also periodically clones/updates store state
+
+That architecture is excellent for proving correctness and the eventing seam,
+but it is not the final high-throughput data-store execution architecture.
+
+The next optimization question is not "can we hold C10K?" anymore. We can. The
+next question is: how do we keep active mixed workloads from saturating one core
+and turning each operation wave into seconds of tail latency?
+
+Likely next investigations:
+
+1. Profile the mixed workload to quantify time in RESP parsing, command
+   execution, store cloning, and response encoding.
+2. Replace whole-store clone/writeback in the hot path with in-place mutation or
+   finer-grained copy-on-write.
+3. Add server-side benchmark telemetry to capture per-core CPU and command
+   counts directly in result artifacts.
+4. Once the datastore hot path is less clone-heavy, rerun active C10K before
+   deciding whether the next architecture step is multi-reactor networking,
+   datastore sharding, or worker execution.
