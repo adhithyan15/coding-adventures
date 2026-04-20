@@ -348,6 +348,54 @@ fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Ve
 /// let png = paint_codec_png::encode_png(&pixels);
 /// std::fs::write("qr.png", png).unwrap();
 /// ```
+/// Live-drawable rendering to a CAMetalLayer.
+///
+/// Renders the scene to a `PixelContainer` via the existing `render`
+/// path, then uploads the pixels to the `CAMetalLayer`'s current
+/// drawable and presents. Intended for the
+/// `markdown-reader` binary that drives a window's redraw loop.
+///
+/// Takes the layer as an `Id` (the raw CAMetalLayer pointer). Panics
+/// on non-Apple targets since CAMetalLayer has no equivalent
+/// elsewhere; callers should gate with `#[cfg(target_vendor =
+/// "apple")]`.
+///
+/// Returns an error if the layer has no current drawable (can happen
+/// briefly during a resize).
+#[cfg(target_vendor = "apple")]
+pub fn render_to_metal_layer(
+    scene: &PaintScene,
+    metal_layer: objc_bridge::Id,
+) -> Result<(), PaintMetalError> {
+    let pixels = render(scene);
+    unsafe { live_present::present_pixels_to_layer(metal_layer, &pixels) }
+}
+
+/// Errors from the live-drawable render path.
+#[cfg(target_vendor = "apple")]
+#[derive(Debug, Clone)]
+pub enum PaintMetalError {
+    NoDrawableAvailable,
+    LayerMissingDevice,
+    CommandBufferCreationFailed,
+}
+
+#[cfg(target_vendor = "apple")]
+impl std::fmt::Display for PaintMetalError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NoDrawableAvailable => write!(f, "CAMetalLayer had no current drawable"),
+            Self::LayerMissingDevice => write!(f, "CAMetalLayer had no MTLDevice"),
+            Self::CommandBufferCreationFailed => {
+                write!(f, "MTLCommandQueue.commandBuffer returned nil")
+            }
+        }
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+impl std::error::Error for PaintMetalError {}
+
 pub fn render(scene: &PaintScene) -> PixelContainer {
     let mut pixels = unsafe { render_unsafe(scene) };
     // After Metal finishes rasterizing rects/lines, overlay any
@@ -845,6 +893,114 @@ mod glyph_run_overlay {
             let (r, g, b, a) = parse_css_color("not-a-color");
             assert_eq!((r, g, b, a), (0.0, 0.0, 0.0, 1.0));
         }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Live-drawable present (Apple only)
+// ---------------------------------------------------------------------------
+//
+// Takes the RGBA pixel buffer produced by `render()` and uploads it
+// into a CAMetalLayer's current drawable via MTLTexture.replaceRegion,
+// then presents. This is the path the markdown-reader binary uses to
+// display a scene in a live window — no offscreen file I/O, no copy
+// back through the CPU beyond the initial render's readback.
+
+#[cfg(target_vendor = "apple")]
+mod live_present {
+    use objc_bridge::{
+        msg, MTLOrigin, MTLRegion, MTLSize,
+        Id, NIL,
+    };
+    use paint_instructions::PixelContainer;
+
+    use super::PaintMetalError;
+
+    pub(super) unsafe fn present_pixels_to_layer(
+        layer: Id,
+        pixels: &PixelContainer,
+    ) -> Result<(), PaintMetalError> {
+        if layer == NIL {
+            return Err(PaintMetalError::LayerMissingDevice);
+        }
+        let drawable: Id = msg!(layer, "nextDrawable");
+        if drawable == NIL {
+            return Err(PaintMetalError::NoDrawableAvailable);
+        }
+
+        let texture: Id = msg!(drawable, "texture");
+        if texture == NIL {
+            return Err(PaintMetalError::NoDrawableAvailable);
+        }
+
+        // Drawable pixel format is BGRA8Unorm (set on the layer by
+        // window-appkit). paint-metal's render() produces RGBA8.
+        // Byte-swap R and B in a one-shot temporary buffer before
+        // uploading so the drawable displays with correct colours.
+        let w = pixels.width as usize;
+        let h = pixels.height as usize;
+        if w == 0 || h == 0 {
+            return Ok(());
+        }
+
+        let mut bgra = pixels.data.clone();
+        let stride = w * 4;
+        for row in 0..h {
+            for col in 0..w {
+                let base = row * stride + col * 4;
+                bgra.swap(base, base + 2); // swap R and B
+            }
+        }
+
+        let region = MTLRegion {
+            origin: MTLOrigin { x: 0, y: 0, z: 0 },
+            size: MTLSize {
+                width: w as u64,
+                height: h as u64,
+                depth: 1,
+            },
+        };
+
+        // [texture replaceRegion:mipmapLevel:withBytes:bytesPerRow:]
+        // This is a 4-arg Objective-C call; construct the function
+        // pointer explicitly.
+        use objc_bridge::objc_msgSend;
+        let replace_fn: unsafe extern "C" fn(
+            Id,
+            objc_bridge::Sel,
+            MTLRegion,
+            usize,
+            *const std::ffi::c_void,
+            usize,
+        ) = std::mem::transmute(objc_msgSend as *const ());
+        replace_fn(
+            texture,
+            objc_bridge::sel("replaceRegion:mipmapLevel:withBytes:bytesPerRow:"),
+            region,
+            0,
+            bgra.as_ptr() as *const _,
+            stride,
+        );
+
+        // Present via a command buffer created from the layer's
+        // device's default queue.
+        let device: Id = msg!(layer, "device");
+        if device == NIL {
+            return Err(PaintMetalError::LayerMissingDevice);
+        }
+        let queue: Id = msg!(device, "newCommandQueue");
+        if queue == NIL {
+            return Err(PaintMetalError::CommandBufferCreationFailed);
+        }
+        let cmd_buffer: Id = msg!(queue, "commandBuffer");
+        if cmd_buffer == NIL {
+            objc_bridge::release(queue);
+            return Err(PaintMetalError::CommandBufferCreationFailed);
+        }
+        let _: Id = msg!(cmd_buffer, "presentDrawable:", drawable);
+        let _: Id = msg!(cmd_buffer, "commit");
+        objc_bridge::release(queue);
+        Ok(())
     }
 }
 
