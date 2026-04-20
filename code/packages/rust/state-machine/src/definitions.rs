@@ -12,11 +12,11 @@
 //! jobs belong to sibling serializer, deserializer, and compiler crates so the
 //! core state-machine library stays format-agnostic.
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use crate::dfa::DFA;
 use crate::nfa::{EPSILON, NFA};
-use crate::pda::PushdownAutomaton;
+use crate::pda::{PDATransition, PushdownAutomaton};
 
 /// Machine families supported by the shared definition model.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -161,6 +161,42 @@ impl DFA {
         definition.transitions = transitions;
         definition
     }
+
+    /// Import a typed DFA definition into an executable DFA.
+    ///
+    /// This is deliberately not a file-loading API.  TOML, JSON, SCXML, and
+    /// future markup readers live in sibling crates; the core crate only
+    /// accepts typed data that has already crossed those parsing boundaries.
+    /// We still validate the DFA-specific shape here because a definition can
+    /// also be built by hand or produced by another language port.
+    pub fn from_definition(definition: &StateMachineDefinition) -> Result<Self, String> {
+        expect_kind(definition, MachineKind::Dfa)?;
+        let (states, initial, accepting) = state_sets(definition)?;
+        let alphabet = unique_string_set("alphabet", &definition.alphabet)?;
+        if !definition.stack_alphabet.is_empty() || definition.initial_stack.is_some() {
+            return Err("DFA definitions must not declare stack alphabet or initial stack".into());
+        }
+
+        let mut transitions = HashMap::new();
+        for transition in &definition.transitions {
+            ensure_transition_states(&states, transition)?;
+            reject_stack_effects("DFA", transition)?;
+            let event = transition.on.clone().ok_or_else(|| {
+                "DFA definitions must not contain epsilon transitions".to_string()
+            })?;
+            ensure_known_event(&alphabet, &event)?;
+            let target = single_target("DFA", transition)?;
+            let key = (transition.from.clone(), event);
+            if transitions.insert(key.clone(), target).is_some() {
+                return Err(format!(
+                    "DFA definition has duplicate transition for ({}, {})",
+                    key.0, key.1
+                ));
+            }
+        }
+
+        DFA::new(states, alphabet, transitions, initial, accepting)
+    }
 }
 
 impl NFA {
@@ -186,6 +222,52 @@ impl NFA {
         }
         definition.transitions = transitions;
         definition
+    }
+
+    /// Import a typed NFA definition into an executable NFA.
+    ///
+    /// Repeated `(from, on)` entries are intentionally merged into one target
+    /// set.  That matches the mathematical transition function, where an NFA
+    /// maps a source/event pair to a set of possible next states.
+    pub fn from_definition(definition: &StateMachineDefinition) -> Result<Self, String> {
+        expect_kind(definition, MachineKind::Nfa)?;
+        let (states, initial, accepting) = state_sets(definition)?;
+        let alphabet = unique_string_set("alphabet", &definition.alphabet)?;
+        if !definition.stack_alphabet.is_empty() || definition.initial_stack.is_some() {
+            return Err("NFA definitions must not declare stack alphabet or initial stack".into());
+        }
+
+        let mut transitions: HashMap<(String, String), HashSet<String>> = HashMap::new();
+        for transition in &definition.transitions {
+            ensure_transition_states(&states, transition)?;
+            reject_stack_effects("NFA", transition)?;
+            if transition.to.is_empty() {
+                return Err(format!(
+                    "NFA transition from '{}' must have at least one target",
+                    transition.from
+                ));
+            }
+            let event = match &transition.on {
+                Some(event) if event.is_empty() => {
+                    return Err(
+                        "NFA transition events must use None for epsilon, not an empty string"
+                            .into(),
+                    )
+                }
+                Some(event) => {
+                    ensure_known_event(&alphabet, event)?;
+                    event.clone()
+                }
+                None => EPSILON.to_string(),
+            };
+            let key = (transition.from.clone(), event);
+            transitions
+                .entry(key)
+                .or_default()
+                .extend(transition.to.iter().cloned());
+        }
+
+        NFA::new(states, alphabet, transitions, initial, accepting)
     }
 }
 
@@ -213,6 +295,61 @@ impl PushdownAutomaton {
         definition.transitions = transitions;
         definition
     }
+
+    /// Import a typed PDA definition into an executable deterministic PDA.
+    ///
+    /// PDA imports are stricter than plain construction because this boundary
+    /// often receives data from serializer/deserializer tooling.  We validate
+    /// every event and stack symbol before building the runtime transition
+    /// index, so malformed definitions cannot hide behind unused transitions.
+    pub fn from_definition(definition: &StateMachineDefinition) -> Result<Self, String> {
+        expect_kind(definition, MachineKind::Pda)?;
+        let (states, initial, accepting) = state_sets(definition)?;
+        let alphabet = unique_string_set("alphabet", &definition.alphabet)?;
+        let stack_alphabet = unique_string_set("stack_alphabet", &definition.stack_alphabet)?;
+        let initial_stack = definition
+            .initial_stack
+            .clone()
+            .ok_or_else(|| "PDA definitions must declare initial_stack".to_string())?;
+        ensure_known_stack_symbol("initial_stack", &stack_alphabet, &initial_stack)?;
+
+        let mut transitions = Vec::new();
+        for transition in &definition.transitions {
+            ensure_transition_states(&states, transition)?;
+            let target = single_target("PDA", transition)?;
+            if let Some(event) = &transition.on {
+                ensure_known_event(&alphabet, event)?;
+            }
+            let stack_read = transition.stack_pop.clone().ok_or_else(|| {
+                format!(
+                    "PDA transition from '{}' on '{}' must declare stack_pop",
+                    transition.from,
+                    event_label(transition)
+                )
+            })?;
+            ensure_known_stack_symbol("stack_pop", &stack_alphabet, &stack_read)?;
+            for symbol in &transition.stack_push {
+                ensure_known_stack_symbol("stack_push", &stack_alphabet, symbol)?;
+            }
+            transitions.push(PDATransition {
+                source: transition.from.clone(),
+                event: transition.on.clone(),
+                stack_read,
+                target,
+                stack_push: transition.stack_push.clone(),
+            });
+        }
+
+        PushdownAutomaton::new(
+            states,
+            alphabet,
+            stack_alphabet,
+            transitions,
+            initial,
+            initial_stack,
+            accepting,
+        )
+    }
 }
 
 fn state_definitions(
@@ -234,4 +371,160 @@ fn sorted_strings(values: &HashSet<String>) -> Vec<String> {
     let mut sorted: Vec<String> = values.iter().cloned().collect();
     sorted.sort();
     sorted
+}
+
+fn expect_kind(definition: &StateMachineDefinition, expected: MachineKind) -> Result<(), String> {
+    if definition.kind == expected {
+        Ok(())
+    } else {
+        Err(format!(
+            "Definition kind mismatch: expected {}, found {}",
+            expected.as_str(),
+            definition.kind.as_str()
+        ))
+    }
+}
+
+fn state_sets(
+    definition: &StateMachineDefinition,
+) -> Result<(HashSet<String>, String, HashSet<String>), String> {
+    let mut states = HashSet::new();
+    let mut accepting = HashSet::new();
+    let mut flagged_initials = Vec::new();
+
+    for state in &definition.states {
+        if state.id.is_empty() {
+            return Err("State identifiers must not be empty".into());
+        }
+        if !states.insert(state.id.clone()) {
+            return Err(format!("Duplicate state '{}'", state.id));
+        }
+        if state.initial {
+            flagged_initials.push(state.id.clone());
+        }
+        if state.accepting {
+            accepting.insert(state.id.clone());
+        }
+    }
+
+    let initial = definition
+        .initial
+        .clone()
+        .ok_or_else(|| "Definition must declare an initial state".to_string())?;
+    if !states.contains(&initial) {
+        return Err(format!(
+            "Initial state '{}' is not in the definition states",
+            initial
+        ));
+    }
+    match flagged_initials.as_slice() {
+        [flagged] if flagged == &initial => {}
+        [] => return Err("Definition must flag exactly one initial state".into()),
+        [flagged] => {
+            return Err(format!(
+                "Initial state mismatch: root initial '{}' but state '{}' is flagged",
+                initial, flagged
+            ))
+        }
+        many => {
+            return Err(format!(
+                "Definition must flag exactly one initial state, found {:?}",
+                many
+            ))
+        }
+    }
+
+    Ok((states, initial, accepting))
+}
+
+fn unique_string_set(field: &str, values: &[String]) -> Result<HashSet<String>, String> {
+    let mut set = HashSet::new();
+    for value in values {
+        if value.is_empty() {
+            return Err(format!("{field} entries must not be empty"));
+        }
+        if !set.insert(value.clone()) {
+            return Err(format!("Duplicate {field} entry '{value}'"));
+        }
+    }
+    Ok(set)
+}
+
+fn reject_stack_effects(kind: &str, transition: &TransitionDefinition) -> Result<(), String> {
+    if transition.stack_pop.is_some() || !transition.stack_push.is_empty() {
+        Err(format!(
+            "{kind} transition from '{}' must not contain stack effects",
+            transition.from
+        ))
+    } else {
+        Ok(())
+    }
+}
+
+fn ensure_transition_states(
+    states: &HashSet<String>,
+    transition: &TransitionDefinition,
+) -> Result<(), String> {
+    if !states.contains(&transition.from) {
+        return Err(format!(
+            "Transition source '{}' is not in the definition states",
+            transition.from
+        ));
+    }
+    for target in &transition.to {
+        if !states.contains(target) {
+            return Err(format!(
+                "Transition target '{}' is not in the definition states",
+                target
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn single_target(kind: &str, transition: &TransitionDefinition) -> Result<String, String> {
+    if transition.to.len() == 1 {
+        Ok(transition.to[0].clone())
+    } else {
+        Err(format!(
+            "{kind} transition from '{}' on '{}' must have exactly one target",
+            transition.from,
+            event_label(transition)
+        ))
+    }
+}
+
+fn ensure_known_event(alphabet: &HashSet<String>, event: &str) -> Result<(), String> {
+    if alphabet.contains(event) {
+        Ok(())
+    } else {
+        Err(format!(
+            "Transition event '{}' is not in the alphabet {:?}",
+            event,
+            sorted_strings(alphabet)
+        ))
+    }
+}
+
+fn ensure_known_stack_symbol(
+    field: &str,
+    stack_alphabet: &HashSet<String>,
+    symbol: &str,
+) -> Result<(), String> {
+    if stack_alphabet.contains(symbol) {
+        Ok(())
+    } else {
+        Err(format!(
+            "{field} symbol '{}' is not in the stack alphabet {:?}",
+            symbol,
+            sorted_strings(stack_alphabet)
+        ))
+    }
+}
+
+fn event_label(transition: &TransitionDefinition) -> String {
+    transition
+        .on
+        .clone()
+        .unwrap_or_else(|| "epsilon".to_string())
 }

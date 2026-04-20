@@ -11,8 +11,13 @@ All notable changes to the `state-machine` crate will be documented in this file
 - Added export helpers for manually constructed DFAs, NFAs, and PDAs so they can
   feed the build-time state-machine compiler pipeline without runtime text
   loading.
+- Added import helpers for `DFA`, `NFA`, and `PushdownAutomaton` so validated
+  typed definitions can be reconstructed as executable machines.
 - Added tests covering DFA, NFA, PDA, epsilon, multi-target, and stack-effect
   definition export behavior.
+- Added definition import tests covering language preservation and rejection of
+  invalid machine-kind, transition-target, epsilon, empty-event, and
+  stack-effect shapes.
 
 ### Changed
 

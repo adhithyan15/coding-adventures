@@ -2940,3 +2940,19 @@ of returning a normal Rust panic.
 **Rule:** In wasm-bindgen wrapper crates that run native tests, keep JS error construction behind a
 `#[cfg(target_arch = "wasm32")]` helper. Use a simple native placeholder such as `JsValue::NULL` for
 test-only error values when the test only needs to assert that the wrapper returned `Err`.
+
+---
+
+## Typed epsilon transitions must not accept empty-string aliases at import boundaries
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of the first Rust `StateMachineDefinition` import helpers caught
+that `NFA::from_definition()` treated `Some("")` the same as `None`. The runtime NFA uses an empty
+string sentinel internally for epsilon transitions, but the typed definition contract says epsilon is
+represented by `None`. Accepting both shapes would let malformed definitions smuggle free moves past
+the import validator.
+
+**Rule:** At typed import or deserialization boundaries, reject empty-string event names explicitly.
+Only lower `None` to the runtime epsilon sentinel inside the core automaton constructor path. Add
+regression tests for this distinction whenever a runtime uses sentinel values internally.

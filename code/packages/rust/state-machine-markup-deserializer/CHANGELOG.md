@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Extended serializer/deserializer round-trip tests to reconstruct executable
+  DFA, NFA, and PDA machines from parsed `StateMachineDefinition` values.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added

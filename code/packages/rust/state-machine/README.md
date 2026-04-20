@@ -27,11 +27,12 @@ The 2-bit branch predictor (D02) is a DFA. The CPU pipeline (D04) is a linear DF
 Regex engines convert patterns to NFAs, then to DFAs via subset construction.
 Parsers use PDAs. HTML tokenizers use modal state machines.
 
-The `definitions` module is the bridge from hand-built machines to the
+The `definitions` module is the bridge between hand-built machines and the
 build-time compiler pipeline. It exports deterministic snapshots of DFAs, NFAs,
-and PDAs as `StateMachineDefinition` values. File formats such as State Machine
-Markup live in sibling serializer/deserializer crates, so this runtime crate
-stays focused on executable automata and typed definitions.
+and PDAs as `StateMachineDefinition` values, and imports validated definitions
+back into executable machines. File formats such as State Machine Markup live in
+sibling serializer/deserializer crates, so this runtime crate stays focused on
+executable automata and typed definitions.
 
 ## Usage
 
@@ -80,13 +81,18 @@ let turnstile = DFA::new(
 ).unwrap();
 
 let definition = turnstile.to_definition("turnstile");
+let imported = DFA::from_definition(&definition).unwrap();
+
 assert_eq!(definition.kind.as_str(), "dfa");
 assert_eq!(definition.initial.as_deref(), Some("locked"));
+assert!(imported.accepts(&["coin"]));
 ```
 
 Use the sibling `state-machine-markup-serializer` crate when you want to turn a
-definition into `.states.toml` text. Future deserializers will perform the
-opposite conversion and hand this crate typed definitions, not raw files.
+definition into `.states.toml` text. Use the sibling
+`state-machine-markup-deserializer` crate when tooling needs to read TOML back
+into a typed definition before calling `DFA::from_definition`,
+`NFA::from_definition`, or `PushdownAutomaton::from_definition`.
 
 ## Building and testing
 
@@ -96,13 +102,14 @@ cargo test -p state-machine -- --nocapture
 
 ## Test coverage
 
-240 tests across unit and integration test suites:
+255 tests across unit and integration test suites:
 - **types**: 6 unit tests
 - **dfa**: 22 unit + 52 integration tests
 - **nfa**: 18 unit + 41 integration tests
 - **minimize**: 5 unit + 8 integration tests
 - **pda**: 17 unit + 33 integration tests
 - **modal**: 13 unit + 23 integration tests
+- **definitions**: 18 integration tests
 
 Classic examples tested: turnstile, binary divisibility-by-3, 2-bit branch predictor,
 balanced parentheses PDA, a^n b^n PDA, HTML tokenizer modal machine.

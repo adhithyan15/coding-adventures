@@ -22,7 +22,10 @@ fn contains_ab() -> NFA {
         HashSet::from(["q0".into(), "q1".into(), "q2".into()]),
         HashSet::from(["a".into(), "b".into()]),
         HashMap::from([
-            (("q0".into(), "a".into()), HashSet::from(["q0".into(), "q1".into()])),
+            (
+                ("q0".into(), "a".into()),
+                HashSet::from(["q0".into(), "q1".into()]),
+            ),
             (("q0".into(), "b".into()), HashSet::from(["q0".into()])),
             (("q1".into(), "b".into()), HashSet::from(["q2".into()])),
             (("q2".into(), "a".into()), HashSet::from(["q2".into()])),
@@ -54,12 +57,19 @@ fn epsilon_chain() -> NFA {
 fn a_or_ab() -> NFA {
     NFA::new(
         HashSet::from([
-            "q0".into(), "q1".into(), "q2".into(),
-            "q3".into(), "q4".into(), "q5".into(),
+            "q0".into(),
+            "q1".into(),
+            "q2".into(),
+            "q3".into(),
+            "q4".into(),
+            "q5".into(),
         ]),
         HashSet::from(["a".into(), "b".into()]),
         HashMap::from([
-            (("q0".into(), EPSILON.into()), HashSet::from(["q1".into(), "q3".into()])),
+            (
+                ("q0".into(), EPSILON.into()),
+                HashSet::from(["q1".into(), "q3".into()]),
+            ),
             (("q1".into(), "a".into()), HashSet::from(["q2".into()])),
             (("q3".into(), "a".into()), HashSet::from(["q4".into()])),
             (("q4".into(), "b".into()), HashSet::from(["q5".into()])),
@@ -479,7 +489,10 @@ fn test_comprehensive_language_equivalence() {
         HashSet::from(["q0".into(), "q1".into(), "q2".into()]),
         HashSet::from(["a".into(), "b".into()]),
         HashMap::from([
-            (("q0".into(), "a".into()), HashSet::from(["q0".into(), "q1".into()])),
+            (
+                ("q0".into(), "a".into()),
+                HashSet::from(["q0".into(), "q1".into()]),
+            ),
             (("q0".into(), "b".into()), HashSet::from(["q0".into()])),
             (("q1".into(), "b".into()), HashSet::from(["q2".into()])),
         ]),

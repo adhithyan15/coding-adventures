@@ -54,8 +54,10 @@ fn dfa_serializer_output_round_trips_through_deserializer() {
     let definition = dfa.to_definition("turnstile");
     let toml = definition.to_states_toml();
     let parsed = from_states_toml(&toml).unwrap();
+    let imported = DFA::from_definition(&parsed).unwrap();
 
     assert_eq!(parsed.to_states_toml(), toml);
+    assert!(imported.accepts(&["coin"]));
 }
 
 #[test]
@@ -76,8 +78,11 @@ fn nfa_serializer_output_round_trips_with_epsilon_and_multiple_targets() {
     let definition = nfa.to_definition("contains-ab");
     let toml = definition.to_states_toml();
     let parsed = from_states_toml(&toml).unwrap();
+    let imported = NFA::from_definition(&parsed).unwrap();
 
     assert_eq!(parsed.to_states_toml(), toml);
+    assert!(imported.accepts(&["a", "b"]));
+    assert!(imported.accepts(&["a", "a", "b"]));
 }
 
 #[test]
@@ -118,8 +123,11 @@ fn pda_serializer_output_round_trips_with_stack_effects() {
     let definition = pda.to_definition("balanced-parens");
     let toml = definition.to_states_toml();
     let parsed = from_states_toml(&toml).unwrap();
+    let imported = PushdownAutomaton::from_definition(&parsed).unwrap();
 
     assert_eq!(parsed.to_states_toml(), toml);
+    assert!(imported.accepts(&["(", ")"]));
+    assert!(!imported.accepts(&["("]));
 }
 
 #[test]
