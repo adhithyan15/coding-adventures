@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from compiler_ir import IDGenerator, IrImmediate, IrInstruction, IrLabel, IrOp, IrProgram
+from compiler_ir import IDGenerator, IrImmediate, IrInstruction, IrLabel, IrOp, IrProgram, IrRegister
 from ir_to_wasm_compiler import FunctionSignature
 
 from ir_to_wasm_validator import WasmIrValidator
@@ -37,7 +37,7 @@ def test_validator_reports_lowering_error() -> None:
 def test_validator_accepts_supported_syscall_program() -> None:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=IDGenerator().next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(4)], id=IDGenerator().next()))
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=IDGenerator().next()))
 
     errors = WasmIrValidator().validate(

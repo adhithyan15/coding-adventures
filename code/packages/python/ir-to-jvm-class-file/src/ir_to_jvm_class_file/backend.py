@@ -58,6 +58,8 @@ _OP_BASTORE = 0x54
 _OP_POP = 0x57
 _OP_IADD = 0x60
 _OP_ISUB = 0x64
+_OP_IMUL = 0x68
+_OP_IDIV = 0x6C
 _OP_ISHL = 0x78
 _OP_ISHR = 0x7A
 _OP_IAND = 0x7E
@@ -331,7 +333,10 @@ class _JvmClassLowerer:
         self._validate_helper_name_collisions(callable_regions)
         data_offsets = self._assign_data_offsets()
         self._data_offsets = data_offsets
-        reg_count = self._max_register_index() + 1
+        # Register 1 is read by every HALT/RET emission (_emit_reg_get(builder, 1))
+        # even when the IR program only references register 0 explicitly.  The
+        # array must therefore be at least 2 elements long so index 1 is valid.
+        reg_count = max(self._max_register_index() + 1, 2)
 
         fields = [
             _FieldSpec(
@@ -780,7 +785,13 @@ class _JvmClassLowerer:
                 "Ljava/io/PrintStream;",
             ),
         )
-        self._emit_reg_get(builder, 4)
+        # Load __ca_regs[arg_reg] — arg_reg is local variable 1 (runtime value).
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+        )
+        self._emit_iload(builder, 1)   # arg_reg index
+        builder.emit_opcode(_OP_IALOAD)
         self._emit_push_int(builder, 0xFF)
         builder.emit_opcode(_OP_IAND)
         builder.emit_u2_instruction(
@@ -829,11 +840,13 @@ class _JvmClassLowerer:
                 _DESC_INPUTSTREAM_READ,
             ),
         )
-        self._emit_istore(builder, 1)
-        self._emit_iload(builder, 1)
+        # local 2 = byte read from stdin (local 1 is arg_reg)
+        self._emit_istore(builder, 2)
+        self._emit_iload(builder, 2)
         self._emit_push_int(builder, -1)
         builder.emit_branch(_OP_IF_ICMPNE, label_have_input)
-        self._emit_push_int(builder, 4)
+        # EOF: store 0 into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
         self._emit_push_int(builder, 0)
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
@@ -842,8 +855,9 @@ class _JvmClassLowerer:
         builder.emit_opcode(_OP_RETURN)
 
         builder.mark(label_have_input)
-        self._emit_push_int(builder, 4)
-        self._emit_iload(builder, 1)
+        # Store read byte into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
+        self._emit_iload(builder, 2)   # byte value
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
@@ -855,10 +869,10 @@ class _JvmClassLowerer:
         return _MethodSpec(
             access_flags=_ACC_PRIVATE | ACC_STATIC,
             name=self._helper_syscall,
-            descriptor="(I)V",
+            descriptor="(II)V",   # syscall_num, arg_reg
             code=builder.assemble(),
             max_stack=4,
-            max_locals=2,
+            max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
         )
 
     def _build_callable_method(self, region: _CallableRegion) -> _MethodSpec:
@@ -970,7 +984,7 @@ class _JvmClassLowerer:
                 )
                 continue
 
-            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND):
+            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.MUL, IrOp.DIV):
                 dst = _as_register(
                     instruction.operands[0],
                     f"{instruction.opcode.name} dst",
@@ -990,6 +1004,10 @@ class _JvmClassLowerer:
                     builder.emit_opcode(_OP_IADD)
                 elif instruction.opcode == IrOp.SUB:
                     builder.emit_opcode(_OP_ISUB)
+                elif instruction.opcode == IrOp.MUL:
+                    builder.emit_opcode(_OP_IMUL)
+                elif instruction.opcode == IrOp.DIV:
+                    builder.emit_opcode(_OP_IDIV)
                 else:
                     builder.emit_opcode(_OP_IAND)
                 builder.emit_u2_instruction(
@@ -1105,11 +1123,16 @@ class _JvmClassLowerer:
                 continue
 
             if instruction.opcode == IrOp.SYSCALL:
+                # SYSCALL carries two operands: the syscall number (immediate) and
+                # the argument register (register).  The register operand makes the
+                # IR self-describing — no backend config is needed.
                 number = _as_immediate(instruction.operands[0], "SYSCALL number")
+                arg_reg = _as_register(instruction.operands[1], "SYSCALL arg register")
                 self._emit_push_int(builder, number.value)
+                self._emit_push_int(builder, arg_reg.index)
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
-                    self._method_ref(self._helper_syscall, "(I)V"),
+                    self._method_ref(self._helper_syscall, "(II)V"),
                 )
                 continue
 

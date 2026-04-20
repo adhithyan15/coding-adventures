@@ -38,7 +38,6 @@ _FUNCTION_COMMENT_RE = re.compile(r"^function:\s*([A-Za-z_][A-Za-z0-9_]*)\((.*)\
 _SYSCALL_WRITE = 1
 _SYSCALL_READ = 2
 _SYSCALL_EXIT = 10
-_SYSCALL_ARG0 = 4
 
 _WASI_MODULE = "wasi_snapshot_preview1"
 _WASI_IOVEC_OFFSET = 0
@@ -138,14 +137,13 @@ class IrToWasmCompiler:
         function_signatures: list[FunctionSignature] | None = None,
         *,
         strategy: str = "structured",
-        syscall_arg_reg: int = _SYSCALL_ARG0,
     ) -> WasmModule:
         signatures = infer_function_signatures_from_comments(program)
         if function_signatures:
             for signature in function_signatures:
                 signatures[signature.label] = signature
 
-        functions = self._split_functions(program, signatures, syscall_arg_reg=syscall_arg_reg)
+        functions = self._split_functions(program, signatures)
         imports = self._collect_wasi_imports(program)
         type_indices, types = self._build_type_table(functions, imports)
         data_offsets = self._layout_data(program.data)
@@ -206,7 +204,6 @@ class IrToWasmCompiler:
                     function_indices=function_indices,
                     data_offsets=data_offsets,
                     wasi_context=wasi_context,
-                    syscall_arg_reg=syscall_arg_reg,
                 ).lower()
             )
             if function.signature.export_name is not None:
@@ -314,8 +311,6 @@ class IrToWasmCompiler:
         self,
         program: IrProgram,
         signatures: dict[str, FunctionSignature],
-        *,
-        syscall_arg_reg: int = _SYSCALL_ARG0,
     ) -> list[_FunctionIR]:
         functions: list[_FunctionIR] = []
         start_index: int | None = None
@@ -332,7 +327,6 @@ class IrToWasmCompiler:
                         label=start_label,
                         instructions=program.instructions[start_index:index],
                         signatures=signatures,
-                        syscall_arg_reg=syscall_arg_reg,
                     )
                 )
 
@@ -345,7 +339,6 @@ class IrToWasmCompiler:
                     label=start_label,
                     instructions=program.instructions[start_index:],
                     signatures=signatures,
-                    syscall_arg_reg=syscall_arg_reg,
                 )
             )
 
@@ -361,14 +354,12 @@ class _FunctionLowerer:
         function_indices: dict[str, int],
         data_offsets: dict[str, int],
         wasi_context: _WasiContext,
-        syscall_arg_reg: int = _SYSCALL_ARG0,
     ) -> None:
         self.function = function
         self.signatures = signatures
         self.function_indices = function_indices
         self.data_offsets = data_offsets
         self.wasi_context = wasi_context
-        self.syscall_arg_reg = syscall_arg_reg
         self.param_count = function.signature.param_count
         self._bytes = bytearray()
         self._instructions = function.instructions
@@ -594,26 +585,27 @@ class _FunctionLowerer:
 
     def _emit_syscall(self, instruction: IrInstruction) -> None:
         syscall = _expect_immediate(instruction.operands[0], "SYSCALL number").value
+        arg_reg = _expect_register(instruction.operands[1], "SYSCALL arg register").index
 
         if syscall == _SYSCALL_WRITE:
-            self._emit_wasi_write()
+            self._emit_wasi_write(arg_reg)
             return
         if syscall == _SYSCALL_READ:
-            self._emit_wasi_read()
+            self._emit_wasi_read(arg_reg)
             return
         if syscall == _SYSCALL_EXIT:
-            self._emit_wasi_exit()
+            self._emit_wasi_exit(arg_reg)
             return
         raise WasmLoweringError(f"unsupported SYSCALL number: {syscall}")
 
-    def _emit_wasi_write(self) -> None:
+    def _emit_wasi_write(self, arg_reg: int) -> None:
         scratch_base = self._require_wasi_scratch()
         iovec_ptr = scratch_base + _WASI_IOVEC_OFFSET
         nwritten_ptr = scratch_base + _WASI_COUNT_OFFSET
         byte_ptr = scratch_base + _WASI_BYTE_OFFSET
 
         self._emit_i32_const(byte_ptr)
-        self._emit_local_get(self.syscall_arg_reg)
+        self._emit_local_get(arg_reg)
         self._emit_opcode("i32.store8")
         self._emit_memarg(0, 0)
 
@@ -627,7 +619,7 @@ class _FunctionLowerer:
         self._emit_wasi_call(_SYSCALL_WRITE)
         self._emit_opcode("drop")  # discard fd_write errno; storing in _REG_SCRATCH would clobber variable A
 
-    def _emit_wasi_read(self) -> None:
+    def _emit_wasi_read(self, arg_reg: int) -> None:
         scratch_base = self._require_wasi_scratch()
         iovec_ptr = scratch_base + _WASI_IOVEC_OFFSET
         nread_ptr = scratch_base + _WASI_COUNT_OFFSET
@@ -651,10 +643,10 @@ class _FunctionLowerer:
         self._emit_i32_const(byte_ptr)
         self._emit_opcode("i32.load8_u")
         self._emit_memarg(0, 0)
-        self._emit_local_set(self.syscall_arg_reg)
+        self._emit_local_set(arg_reg)
 
-    def _emit_wasi_exit(self) -> None:
-        self._emit_local_get(self.syscall_arg_reg)
+    def _emit_wasi_exit(self, arg_reg: int) -> None:
+        self._emit_local_get(arg_reg)
         self._emit_wasi_call(_SYSCALL_EXIT)
         self._emit_i32_const(0)
         self._emit_opcode("return")
@@ -965,7 +957,6 @@ def _make_function_ir(
     label: str,
     instructions: list[IrInstruction],
     signatures: dict[str, FunctionSignature],
-    syscall_arg_reg: int = _SYSCALL_ARG0,
 ) -> _FunctionIR:
     if label == "_start":
         signature = signatures.get(label, FunctionSignature(label=label, param_count=0, export_name="_start"))
@@ -981,11 +972,6 @@ def _make_function_ir(
             for instruction in instructions
             for operand in instruction.operands
             if isinstance(operand, IrRegister)
-        ]
-        + [
-            syscall_arg_reg
-            for instruction in instructions
-            if instruction.opcode == IrOp.SYSCALL
         ]
     )
 

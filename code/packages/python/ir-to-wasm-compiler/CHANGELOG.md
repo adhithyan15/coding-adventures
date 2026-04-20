@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.4.0] — 2026-04-20
+
+### Changed
+
+- **`syscall_arg_reg` parameter removed from `IrToWasmCompiler.compile()`.**
+  The SYSCALL IR instruction now carries the arg register as `operands[1]`
+  (an `IrRegister`), so the backend reads the register index directly from the
+  instruction rather than from a config parameter.  Callers that previously
+  passed `syscall_arg_reg=0` or `syscall_arg_reg=4` should remove that
+  keyword argument; the correct register is now embedded in the IR.
+
+- **`_emit_wasi_write`, `_emit_wasi_read`, `_emit_wasi_exit` now accept
+  `arg_reg: int` directly.**  The private helpers previously closed over
+  `self.syscall_arg_reg`; they now receive the register index from
+  `_emit_syscall`, which extracts it from `instruction.operands[1]`.
+
+- **`_make_function_ir` no longer inflates `max_reg` for the syscall arg.**
+  The old code manually added `syscall_arg_reg` to `max_reg` so that WASM
+  would allocate a local for it.  Now that the SYSCALL instruction carries
+  `IrRegister(arg_reg)` as an operand, the normal operand scan already finds
+  the register and includes it in the local-variable allocation.
+
 ## [0.3.0] — 2026-04-19
 
 ### Fixed
