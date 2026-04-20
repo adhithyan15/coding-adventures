@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Lowered ALGOL scalar locals through planned activation-frame slots instead
+  of source-variable virtual registers.
+- Added frame-memory metadata, frame header setup/teardown, static-link
+  traversal, and `LOAD_WORD`/`STORE_WORD` scalar accesses for the WASM path.
+- Bounded phase-2 frame memory to one WASM page so large or crafted semantic
+  frame plans fail before downstream WASM data allocation.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added
