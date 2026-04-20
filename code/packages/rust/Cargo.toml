@@ -326,6 +326,7 @@ members = [
     "text-interfaces",
     "text-native",
     "text-native-coretext",
+    "layout-ir",
     "udp-client",
     "state-machine-markup-serializer",
 ]
