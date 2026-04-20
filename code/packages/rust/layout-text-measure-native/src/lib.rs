@@ -248,7 +248,10 @@ fn measure_single_line(
 
     let line_height = compute_line_height(metrics, handle, font);
     MeasureResult {
-        width: shape.x_advance_total as f64,
+        // Sum advances across all font-fallback segments: the total
+        // width of the shaped line is the sum of each segment's
+        // x_advance_total, not any single segment's.
+        width: shape.total_advance() as f64,
         height: line_height,
         line_count: 1,
     }
@@ -320,7 +323,7 @@ fn greedy_wrap(
     }
 
     let space_width = match shaper.shape(" ", handle, size, &ShapeOptions::default()) {
-        Ok(r) => r.x_advance_total as f64,
+        Ok(r) => r.total_advance() as f64,
         Err(_) => (size as f64) * 0.25,
     };
 
@@ -328,8 +331,10 @@ fn greedy_wrap(
     let mut current_width: f64 = 0.0;
 
     for word in segment.split_whitespace() {
+        // Words may themselves hit font fallback (e.g. a word containing
+        // a single-codepoint arrow); sum across segments.
         let word_width = match shaper.shape(word, handle, size, &ShapeOptions::default()) {
-            Ok(r) => r.x_advance_total as f64,
+            Ok(r) => r.total_advance() as f64,
             Err(_) => word.chars().count() as f64 * (size as f64) * 0.5,
         };
 
