@@ -351,49 +351,45 @@ def test_hermite_higher_power(vm: VM) -> None:
     assert not _contains_head(out, INTEGRATE)
 
 
-def test_hermite_mixed_yields_integrate_for_log_part(vm: VM) -> None:
-    # ∫ 1 / ((x-1)² (x+1)) dx — mixes a rational piece and a log piece.
-    # The answer is ``rational_piece + Integrate(squarefree_integrand, x)``.
-    # We verify that the output contains an Add with an unevaluated
-    # Integrate whose integrand's denominator factors to (x-1)(x+1)
-    # (modulo canonicalisation of the exact shape).
+def test_hermite_plus_rt_closes_mixed_case(vm: VM) -> None:
+    # ∫ 1 / ((x-1)² (x+1)) dx — Hermite extracts the rational piece,
+    # RT closes the log residual (roots of the RT resultant are in Q).
+    # The combined pipeline emits a closed form with *no* residual
+    # Integrate.
     xm1 = IRApply(SUB, (X, IRInteger(1)))
     xp1 = IRApply(ADD, (X, IRInteger(1)))
     den = IRApply(MUL, (IRApply(POW, (xm1, IRInteger(2))), xp1))
     integrand = IRApply(DIV, (IRInteger(1), den))
     out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
-    # The output must not equal the input unevaluated Integrate —
-    # Hermite extracted something.
-    assert out != IRApply(INTEGRATE, (integrand, X))
+    assert not _contains_head(out, INTEGRATE), (
+        f"Hermite + RT should close ∫ 1/((x-1)²(x+1)) dx, got {out}"
+    )
+    # Expect log terms in the output.
+    assert _contains_head(out, LOG)
 
 
-def test_hermite_squarefree_denom_falls_through_to_phase1(vm: VM) -> None:
-    # ∫ 1/(x - 1) dx — squarefree denominator. Hermite has no rational
-    # part, Phase 2c returns None, Phase 1 emits ``log(x - 1)``… but
-    # Phase 1 only matches ``b == x`` literally, so ``∫ 1/(x-1) dx``
-    # stays unevaluated for now. The test pins that behavior: no false
-    # claim, no infinite recursion.
+def test_rt_closes_squarefree_one_over_linear(vm: VM) -> None:
+    # ∫ 1/(x - 1) dx = log(x - 1). Hermite does nothing (squarefree
+    # denom); RT's resultant has single rational root α = 1 with
+    # v = x − 1. Output is the bare Log node.
     xm1 = IRApply(SUB, (X, IRInteger(1)))
     integrand = IRApply(DIV, (IRInteger(1), xm1))
     out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
-    # Unevaluated — the integrand itself may be normalised by the VM's
-    # DIV simplifier, so just check the head.
-    assert isinstance(out, IRApply) and out.head == INTEGRATE
+    assert not _contains_head(out, INTEGRATE)
+    assert _contains_head(out, LOG)
 
 
 def test_hermite_with_polynomial_part(vm: VM) -> None:
-    # ∫ (x^3 + 1) / (x - 1)^2 dx — polynomial part + rational part.
-    # Polynomial division: x^3 + 1 = (x - 1)^2 · (x + 2) + (3x - 1).
-    # So integrand = (x + 2) + (3x - 1)/(x - 1)^2. Phase 2c emits
-    # integrate(x + 2) + rational_part + Integrate(log_residual).
+    # ∫ (x^3 + 1) / (x - 1)^2 dx — polynomial part + rational part +
+    # log part. With RT in place every piece resolves; the output has
+    # no residual Integrate.
     xm1 = IRApply(SUB, (X, IRInteger(1)))
     den = IRApply(POW, (xm1, IRInteger(2)))
     num = IRApply(ADD, (IRApply(POW, (X, IRInteger(3))), IRInteger(1)))
     integrand = IRApply(DIV, (num, den))
     out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
-    # Must be non-trivial — the integrator extracted at least the
-    # polynomial part.
-    assert out != IRApply(INTEGRATE, (integrand, X))
+    assert not _contains_head(out, INTEGRATE)
+    assert _contains_head(out, LOG)
 
 
 def test_hermite_does_not_touch_sin(vm: VM) -> None:
@@ -408,3 +404,66 @@ def test_hermite_does_not_touch_exp(vm: VM) -> None:
     integrand = IRApply(EXP, (X,))
     out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
     assert out == IRApply(EXP, (X,))
+
+
+# ---------------------------------------------------------------------------
+# Phase 2d — Rothstein–Trager end-to-end
+# ---------------------------------------------------------------------------
+
+
+def test_rt_closes_partial_fractions(vm: VM) -> None:
+    # ∫ 1 / ((x-1)(x+1)) dx — textbook partial-fractions case. Both
+    # residues are in Q, RT emits the log sum. No Integrate residual.
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    xp1 = IRApply(ADD, (X, IRInteger(1)))
+    den = IRApply(MUL, (xm1, xp1))
+    integrand = IRApply(DIV, (IRInteger(1), den))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert not _contains_head(out, INTEGRATE)
+    assert _contains_head(out, LOG)
+
+
+def test_rt_escape_q_now_closed_by_phase2e(vm: VM) -> None:
+    # ∫ 1/(x² + 1) dx — Phase 2d (RT) returns None (roots ±i/2 not in Q),
+    # but Phase 2e (arctan formula) closes it: result is Atan(x).
+    from symbolic_ir import ATAN
+    x2 = IRApply(POW, (X, IRInteger(2)))
+    den = IRApply(ADD, (x2, IRInteger(1)))
+    integrand = IRApply(DIV, (IRInteger(1), den))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert isinstance(out, IRApply) and out.head == ATAN
+
+
+def test_rt_coefficient_minus_one(vm: VM) -> None:
+    # ∫ 1/(x² - 1) dx produces coefficients ±1/2, exercising the
+    # IRRational rendering branch (not the ±1 shortcuts). The output
+    # must contain a Log and no Integrate.
+    x2 = IRApply(POW, (X, IRInteger(2)))
+    den = IRApply(SUB, (x2, IRInteger(1)))
+    integrand = IRApply(DIV, (IRInteger(1), den))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert not _contains_head(out, INTEGRATE)
+    assert _contains_head(out, LOG)
+
+
+def test_rt_coefficient_minus_one_explicit(vm: VM) -> None:
+    # ∫ x/((x-1)(x-2)) dx = -log(x-1) + 2·log(x-2). Exercises the
+    # c = -1 → Neg(Log(·)) rendering shortcut explicitly (one of the
+    # pairs has coefficient −1).
+    xm1 = IRApply(SUB, (X, IRInteger(1)))
+    xm2 = IRApply(SUB, (X, IRInteger(2)))
+    den = IRApply(MUL, (xm1, xm2))
+    integrand = IRApply(DIV, (X, den))
+    out = vm.eval(IRApply(INTEGRATE, (integrand, X)))
+    assert not _contains_head(out, INTEGRATE)
+    assert _contains_head(out, LOG)
+    # One of the terms is a Neg(Log(·)) — verify by structural search.
+    def _has_neg_of_log(node):
+        if isinstance(node, IRApply):
+            if node.head == NEG and len(node.args) == 1:
+                inner = node.args[0]
+                if isinstance(inner, IRApply) and inner.head == LOG:
+                    return True
+            return any(_has_neg_of_log(a) for a in node.args)
+        return False
+    assert _has_neg_of_log(out), f"expected Neg(Log(·)) in {out}"

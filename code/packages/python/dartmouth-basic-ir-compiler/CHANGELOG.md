@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.5.0 (2026-04-20)
+
+### Added
+
+- **`int_bits` parameter for `compile_basic()`.**  Controls how many decimal
+  digit positions the `PRINT`-of-number unroller emits.  The rule is:
+  `max_value = 2**(int_bits-1) - 1`, `digit_positions = len(str(max_value))`.
+  Defaults to `32` (10 digits, covering the full 32-bit signed range used by
+  the JVM and WASM backends).  Pass `int_bits=20` for the GE-225 backend (6
+  digits, max value 524 287 — the GE-225's 20-bit signed word limit).
+
+  **Why this matters**: every power-of-ten constant is emitted as a
+  `LOAD_IMM`.  If the constant exceeds the target machine's signed word range,
+  it is silently truncated, producing garbled digit extraction.  The 0.4.0 fix
+  extended the power list to cover 32-bit integers but neglected the GE-225's
+  narrower range.  This parameter makes the tradeoff explicit and enforced at
+  the API boundary.
+
+## 0.4.0 (2026-04-20)
+
+### Fixed
+
+- **`PRINT` of numbers ≥ 1,000,000 printed garbled output.**  The
+  `_emit_print_number` function only extracted digits down to the
+  hundred-thousands place (`100000, 10000, 1000, 100, 10`), so any value
+  ≥ 1,000,000 had its leading digits mangled (e.g. `3628800` printed as
+  `T28800`, where `T` = ASCII 84 = the result of treating the combined
+  millions+hundred-thousands value 36 as a digit code).  The power list is
+  extended to cover the full 32-bit signed integer range (max 2,147,483,647):
+  `1_000_000_000, 100_000_000, 10_000_000, 1_000_000, 100_000, 10_000,
+  1_000, 100, 10`.
+
+## 0.3.0 (2026-04-20)
+
+### Changed
+
+- **SYSCALL instruction now carries the arg register as `operands[1]`.**
+  All three SYSCALL emissions in the print pipeline (string char emit,
+  loop-body digit emit, units-digit emit) now encode the virtual register
+  holding the print argument as an explicit second operand: `SYSCALL 1, v0`
+  instead of bare `SYSCALL 1`.  This makes the IR self-describing: WASM and
+  JVM backends no longer need frontend-specific `syscall_arg_reg` config to
+  know which register holds the character to print.
+
 ## 0.2.0 (2026-04-19)
 
 ### Added

@@ -153,7 +153,12 @@ def run_basic(
     # ── Stage 2: IR compilation ──────────────────────────────────────────────
     try:
         from dartmouth_basic_ir_compiler import CompileError, compile_basic
-        ir_result = compile_basic(ast)
+        # The GE-225 is a 20-bit machine (max positive value 2^19-1 = 524,287).
+        # Passing int_bits=20 ensures that the digit-extraction power constants
+        # emitted by _emit_print_number never exceed the 20-bit register range.
+        # Using the default int_bits=32 would emit LOAD_IMM 1_000_000_000,
+        # which overflows a 20-bit word and corrupts the digit extraction.
+        ir_result = compile_basic(ast, int_bits=20)
     except Exception as exc:
         raise BasicError(str(exc)) from exc
 

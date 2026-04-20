@@ -1,5 +1,65 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- `CALL` lowering now accepts optional explicit argument registers after the
+  target label. Calls without explicit operands keep the legacy v2, v3, ...
+  convention.
+- Function signatures can require explicit call operands for generated callers
+  that must not fall back to the legacy v2, v3, ... convention.
+
+## [0.5.0] — 2026-04-20
+
+### Added
+
+- **`validate_for_wasm(program)` pre-flight validator**: inspects an
+  `IrProgram` for WASM backend incompatibilities *before* any module bytes
+  are generated.  Returns a list of human-readable error strings (empty list
+  = valid).  Three rules are checked:
+  1. **Opcode support** — every opcode must appear in the V1 supported set.
+     Currently all `IrOp` values are handled; the check is future-proofing
+     against new IR opcodes added before the WASM backend implements them.
+  2. **Constant range** — `LOAD_IMM` and `ADD_IMM` immediates must fit in a
+     WASM `i32` (−2 147 483 648 to 2 147 483 647).
+  3. **SYSCALL number** — only SYSCALL 1 (`fd_write`), SYSCALL 2 (`fd_read`),
+     and SYSCALL 10 (`proc_exit`) are wired up in the V1 WASM backend.
+- `validate_for_wasm` exported from `ir_to_wasm_compiler.__init__`.
+- `TestValidateForWasm` test class (8 tests) covering all three rules,
+  boundary-value constants, and integration with `IrToWasmCompiler.compile`.
+
+### Changed
+
+- `IrToWasmCompiler.compile()` now calls `validate_for_wasm()` as a
+  pre-flight check before any WASM module bytes are produced.  Any violation
+  raises `WasmLoweringError` with message prefix
+  `"IR program failed WASM pre-flight validation"`.
+- Added word-size constants `_WASM_I32_MIN = -(1 << 31)` and
+  `_WASM_I32_MAX = (1 << 31) - 1` for single-source-of-truth boundary checks.
+
+## [0.4.0] — 2026-04-20
+
+### Changed
+
+- **`syscall_arg_reg` parameter removed from `IrToWasmCompiler.compile()`.**
+  The SYSCALL IR instruction now carries the arg register as `operands[1]`
+  (an `IrRegister`), so the backend reads the register index directly from the
+  instruction rather than from a config parameter.  Callers that previously
+  passed `syscall_arg_reg=0` or `syscall_arg_reg=4` should remove that
+  keyword argument; the correct register is now embedded in the IR.
+
+- **`_emit_wasi_write`, `_emit_wasi_read`, `_emit_wasi_exit` now accept
+  `arg_reg: int` directly.**  The private helpers previously closed over
+  `self.syscall_arg_reg`; they now receive the register index from
+  `_emit_syscall`, which extracts it from `instruction.operands[1]`.
+
+- **`_make_function_ir` no longer inflates `max_reg` for the syscall arg.**
+  The old code manually added `syscall_arg_reg` to `max_reg` so that WASM
+  would allocate a local for it.  Now that the SYSCALL instruction carries
+  `IrRegister(arg_reg)` as an operand, the normal operand scan already finds
+  the register and includes it in the local-variable allocation.
+
 ## [0.3.0] — 2026-04-19
 
 ### Fixed

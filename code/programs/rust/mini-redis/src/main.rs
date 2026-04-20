@@ -52,8 +52,17 @@ fn parse_args(args: Vec<String>) -> MiniRedisOptions {
                     i += 1;
                 }
             }
+            "--max-connections" => {
+                if i + 1 < args.len() {
+                    options.max_connections =
+                        args[i + 1].parse().unwrap_or(options.max_connections);
+                    i += 1;
+                }
+            }
             "-h" | "--help" => {
-                println!("Usage: mini-redis [--host <ip>] [--port <port>] [--appendonly <path>]");
+                println!(
+                    "Usage: mini-redis [--host <ip>] [--port <port>] [--appendonly <path>] [--max-connections <count>]"
+                );
                 process::exit(0);
             }
             _ => {

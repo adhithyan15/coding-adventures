@@ -35,8 +35,10 @@ def test_connect_memory_returns_connection():
     conn.close()
 
 
-def test_connect_rejects_unknown_database():
-    import pytest
-
-    with pytest.raises(mini_sqlite.InterfaceError):
-        mini_sqlite.connect("/tmp/no.db")
+def test_connect_file_path_creates_file(tmp_path):
+    """A non-:memory: path creates a real database file."""
+    import os
+    db_path = str(tmp_path / "test.db")
+    conn = mini_sqlite.connect(db_path)
+    conn.close()
+    assert os.path.exists(db_path)

@@ -1,0 +1,8 @@
+[package]
+name = "state-machine-markup-json-serializer"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical JSON serialization for typed state-machine definitions"
+
+[dependencies]
+state-machine = { path = "../state-machine" }

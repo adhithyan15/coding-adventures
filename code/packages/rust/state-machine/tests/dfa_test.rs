@@ -364,10 +364,10 @@ fn test_accepts_undefined_transition_returns_false() {
 #[test]
 fn test_div_by_3() {
     let dfa = div_by_3();
-    assert!(dfa.accepts(&[]));             // 0 is div by 3
-    assert!(!dfa.accepts(&["1"]));         // 1
-    assert!(!dfa.accepts(&["1", "0"]));    // 2
-    assert!(dfa.accepts(&["1", "1"]));     // 3
+    assert!(dfa.accepts(&[])); // 0 is div by 3
+    assert!(!dfa.accepts(&["1"])); // 1
+    assert!(!dfa.accepts(&["1", "0"])); // 2
+    assert!(dfa.accepts(&["1", "1"])); // 3
     assert!(!dfa.accepts(&["1", "0", "0"])); // 4
     assert!(dfa.accepts(&["1", "1", "0"])); // 6
     assert!(dfa.accepts(&["1", "0", "0", "1"])); // 9
@@ -384,7 +384,10 @@ fn test_div_by_3_comprehensive() {
         let bits: Vec<&str> = if n == 0 {
             vec![]
         } else {
-            binary.chars().map(|c| if c == '0' { "0" } else { "1" }).collect()
+            binary
+                .chars()
+                .map(|c| if c == '0' { "0" } else { "1" })
+                .collect()
         };
         let expected = n % 3 == 0;
         assert_eq!(
@@ -420,14 +423,16 @@ fn test_branch_predictor_warmup_to_st() {
 #[test]
 fn test_branch_predictor_saturation_st() {
     let mut dfa = branch_predictor();
-    dfa.process_sequence(&["taken", "taken", "taken", "taken"]).unwrap();
+    dfa.process_sequence(&["taken", "taken", "taken", "taken"])
+        .unwrap();
     assert_eq!(dfa.current_state(), "ST");
 }
 
 #[test]
 fn test_branch_predictor_saturation_snt() {
     let mut dfa = branch_predictor();
-    dfa.process_sequence(&["not_taken", "not_taken", "not_taken"]).unwrap();
+    dfa.process_sequence(&["not_taken", "not_taken", "not_taken"])
+        .unwrap();
     assert_eq!(dfa.current_state(), "SNT");
 }
 

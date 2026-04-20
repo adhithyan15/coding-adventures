@@ -36,7 +36,7 @@ from compiler_ir import (
     IrRegister,
 )
 from ge225_simulator import GE225Simulator
-from ir_to_ge225_compiler import CodeGenError, CompileResult, compile_to_ge225
+from ir_to_ge225_compiler import CodeGenError, CompileResult, compile_to_ge225, validate_for_ge225
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -781,3 +781,166 @@ class TestErrors:
         # data_base + n_regs + n_consts = total size
         expected = result.data_base + 2 + 1  # 2 spill slots (v0,v1), 1 const
         assert n_words == expected
+
+
+# ---------------------------------------------------------------------------
+# Pre-flight validator tests
+# ---------------------------------------------------------------------------
+
+
+class TestValidateForGe225:
+    """Tests for validate_for_ge225() — the pre-flight IR inspector.
+
+    Each test checks a specific constraint rule in isolation.  The validator
+    must return an empty list for valid IR and a non-empty list (with a
+    meaningful diagnostic) for any violation.
+    """
+
+    def test_valid_program_returns_no_errors(self) -> None:
+        """A well-formed program with only supported opcodes and in-range
+        constants should produce zero validation errors."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(42)),
+            _instr(IrOp.ADD_IMM,  _reg(2), _reg(1), _imm(1)),
+            _instr(IrOp.SYSCALL,  _imm(1), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_ge225(program) == []
+
+    # ── Rule 1: unsupported opcodes ──────────────────────────────────────────
+
+    def test_load_byte_opcode_rejected(self) -> None:
+        """LOAD_BYTE is not in the GE-225 V1 backend's opcode set."""
+        program = _prog(_instr(IrOp.LOAD_BYTE, _reg(0), _reg(1), _imm(0)))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "unsupported" in errors[0]
+        assert "LOAD_BYTE" in errors[0]
+
+    def test_call_opcode_rejected(self) -> None:
+        """CALL is not in the GE-225 V1 backend's opcode set."""
+        program = _prog(_instr(IrOp.CALL, IrLabel("f")))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "unsupported" in errors[0]
+        assert "CALL" in errors[0]
+
+    def test_and_opcode_rejected(self) -> None:
+        """Plain AND (register-register) is not supported; only AND_IMM 1 is."""
+        program = _prog(_instr(IrOp.AND, _reg(0), _reg(1), _reg(2)))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "unsupported" in errors[0]
+        assert "AND" in errors[0]
+
+    def test_bitwise_opcodes_rejected(self) -> None:
+        """OR, OR_IMM, XOR, XOR_IMM, and NOT were added in compiler-ir v0.3.0
+        for the Oct/Intel-8008 target.  The GE-225 V1 backend does not support
+        them (the GE-225 has no bitwise OR/XOR instructions).  Each must produce
+        an 'unsupported opcode' diagnostic."""
+        unsupported = (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT)
+        for op in unsupported:
+            program = _prog(_instr(op))
+            errors = validate_for_ge225(program)
+            assert any("unsupported" in e for e in errors), (
+                f"IrOp.{op.name} should be rejected by the GE-225 opcode-support "
+                f"check but was accepted"
+            )
+            assert any(op.name in e for e in errors), (
+                f"Error for IrOp.{op.name} does not mention the opcode name: "
+                f"{errors!r}"
+            )
+
+    def test_multiple_unsupported_opcodes_all_reported(self) -> None:
+        """Every unsupported opcode in the program generates its own error."""
+        program = _prog(
+            _instr(IrOp.LOAD_BYTE,  _reg(0), _reg(1), _imm(0)),
+            _instr(IrOp.STORE_BYTE, _reg(0), _reg(1), _imm(0)),
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_ge225(program)
+        assert len(errors) == 2
+
+    # ── Rule 2: constant overflow ────────────────────────────────────────────
+
+    def test_load_imm_constant_too_large_rejected(self) -> None:
+        """1 000 000 000 overflows a 20-bit signed word (max 524 287)."""
+        program = _prog(_instr(IrOp.LOAD_IMM, _reg(1), _imm(1_000_000_000)))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "1,000,000,000" in errors[0]
+
+    def test_load_imm_max_in_range_accepted(self) -> None:
+        """524 287 (= 2^19 − 1) is the largest valid GE-225 positive constant."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(524_287)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_ge225(program) == []
+
+    def test_load_imm_min_in_range_accepted(self) -> None:
+        """-524 288 (= −2^19) is the smallest valid GE-225 constant."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(-524_288)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_ge225(program) == []
+
+    def test_load_imm_one_above_max_rejected(self) -> None:
+        """524 288 is exactly one above the 20-bit maximum."""
+        program = _prog(_instr(IrOp.LOAD_IMM, _reg(1), _imm(524_288)))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "524,288" in errors[0]
+
+    def test_add_imm_overflow_rejected(self) -> None:
+        """ADD_IMM with an oversized constant is also caught."""
+        program = _prog(
+            _instr(IrOp.ADD_IMM, _reg(2), _reg(1), _imm(600_000)),
+        )
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "600,000" in errors[0]
+
+    # ── Rule 3: unsupported SYSCALL numbers ─────────────────────────────────
+
+    def test_syscall_1_accepted(self) -> None:
+        """SYSCALL 1 (print char) is the only supported syscall."""
+        program = _prog(
+            _instr(IrOp.SYSCALL, _imm(1), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_ge225(program) == []
+
+    def test_syscall_2_rejected(self) -> None:
+        """SYSCALL 2 is not wired up in the V1 GE-225 backend."""
+        program = _prog(_instr(IrOp.SYSCALL, _imm(2), _reg(0)))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "unsupported SYSCALL" in errors[0]
+        assert "2" in errors[0]
+
+    # ── Rule 4: AND_IMM immediate ────────────────────────────────────────────
+
+    def test_and_imm_2_rejected(self) -> None:
+        """AND_IMM with immediate != 1 is unsupported."""
+        program = _prog(_instr(IrOp.AND_IMM, _reg(0), _reg(1), _imm(2)))
+        errors = validate_for_ge225(program)
+        assert len(errors) == 1
+        assert "unsupported" in errors[0]
+
+    # ── Integration: compile_to_ge225 calls validate first ──────────────────
+
+    def test_compile_to_ge225_rejects_oversized_constant(self) -> None:
+        """compile_to_ge225 must raise CodeGenError (not silently corrupt data)
+        when the IR contains a constant that overflows a 20-bit word."""
+        program = _prog(_instr(IrOp.LOAD_IMM, _reg(1), _imm(1_000_000_000)))
+        with pytest.raises(CodeGenError, match="pre-flight"):
+            compile_to_ge225(program)
+
+    def test_compile_to_ge225_rejects_unsupported_opcode_before_codegen(self) -> None:
+        """The error must say 'pre-flight' (raised by the validator, not mid-
+        codegen) so callers know the binary is still clean."""
+        program = _prog(_instr(IrOp.LOAD_BYTE, _reg(0), _reg(1), _imm(0)))
+        with pytest.raises(CodeGenError, match="pre-flight"):
+            compile_to_ge225(program)

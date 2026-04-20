@@ -58,6 +58,8 @@ _OP_BASTORE = 0x54
 _OP_POP = 0x57
 _OP_IADD = 0x60
 _OP_ISUB = 0x64
+_OP_IMUL = 0x68
+_OP_IDIV = 0x6C
 _OP_ISHL = 0x78
 _OP_ISHR = 0x7A
 _OP_IAND = 0x7E
@@ -113,6 +115,7 @@ class JvmBackendConfig:
     class_file_major: int = 49
     class_file_minor: int = 0
     emit_main_wrapper: bool = True
+    syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
 
 
 @dataclass(frozen=True)
@@ -331,7 +334,10 @@ class _JvmClassLowerer:
         self._validate_helper_name_collisions(callable_regions)
         data_offsets = self._assign_data_offsets()
         self._data_offsets = data_offsets
-        reg_count = self._max_register_index() + 1
+        # Register 1 is read by every HALT/RET emission (_emit_reg_get(builder, 1))
+        # even when the IR program only references register 0 explicitly.  The
+        # array must therefore be at least 2 elements long so index 1 is valid.
+        reg_count = max(self._max_register_index() + 1, 2)
 
         fields = [
             _FieldSpec(
@@ -780,7 +786,13 @@ class _JvmClassLowerer:
                 "Ljava/io/PrintStream;",
             ),
         )
-        self._emit_reg_get(builder, 4)
+        # Load __ca_regs[arg_reg] — arg_reg is local variable 1 (runtime value).
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+        )
+        self._emit_iload(builder, 1)   # arg_reg index
+        builder.emit_opcode(_OP_IALOAD)
         self._emit_push_int(builder, 0xFF)
         builder.emit_opcode(_OP_IAND)
         builder.emit_u2_instruction(
@@ -829,11 +841,13 @@ class _JvmClassLowerer:
                 _DESC_INPUTSTREAM_READ,
             ),
         )
-        self._emit_istore(builder, 1)
-        self._emit_iload(builder, 1)
+        # local 2 = byte read from stdin (local 1 is arg_reg)
+        self._emit_istore(builder, 2)
+        self._emit_iload(builder, 2)
         self._emit_push_int(builder, -1)
         builder.emit_branch(_OP_IF_ICMPNE, label_have_input)
-        self._emit_push_int(builder, 4)
+        # EOF: store 0 into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
         self._emit_push_int(builder, 0)
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
@@ -842,8 +856,9 @@ class _JvmClassLowerer:
         builder.emit_opcode(_OP_RETURN)
 
         builder.mark(label_have_input)
-        self._emit_push_int(builder, 4)
-        self._emit_iload(builder, 1)
+        # Store read byte into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
+        self._emit_iload(builder, 2)   # byte value
         builder.emit_u2_instruction(
             _OP_INVOKESTATIC,
             self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
@@ -855,10 +870,10 @@ class _JvmClassLowerer:
         return _MethodSpec(
             access_flags=_ACC_PRIVATE | ACC_STATIC,
             name=self._helper_syscall,
-            descriptor="(I)V",
+            descriptor="(II)V",   # syscall_num, arg_reg
             code=builder.assemble(),
             max_stack=4,
-            max_locals=2,
+            max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
         )
 
     def _build_callable_method(self, region: _CallableRegion) -> _MethodSpec:
@@ -970,7 +985,7 @@ class _JvmClassLowerer:
                 )
                 continue
 
-            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND):
+            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.MUL, IrOp.DIV):
                 dst = _as_register(
                     instruction.operands[0],
                     f"{instruction.opcode.name} dst",
@@ -990,6 +1005,10 @@ class _JvmClassLowerer:
                     builder.emit_opcode(_OP_IADD)
                 elif instruction.opcode == IrOp.SUB:
                     builder.emit_opcode(_OP_ISUB)
+                elif instruction.opcode == IrOp.MUL:
+                    builder.emit_opcode(_OP_IMUL)
+                elif instruction.opcode == IrOp.DIV:
+                    builder.emit_opcode(_OP_IDIV)
                 else:
                     builder.emit_opcode(_OP_IAND)
                 builder.emit_u2_instruction(
@@ -1105,11 +1124,16 @@ class _JvmClassLowerer:
                 continue
 
             if instruction.opcode == IrOp.SYSCALL:
+                # SYSCALL carries two operands: the syscall number (immediate) and
+                # the argument register (register).  The register operand makes the
+                # IR self-describing — no backend config is needed.
                 number = _as_immediate(instruction.operands[0], "SYSCALL number")
+                arg_reg = _as_register(instruction.operands[1], "SYSCALL arg register")
                 self._emit_push_int(builder, number.value)
+                self._emit_push_int(builder, arg_reg.index)
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
-                    self._method_ref(self._helper_syscall, "(I)V"),
+                    self._method_ref(self._helper_syscall, "(II)V"),
                 )
                 continue
 
@@ -1219,12 +1243,134 @@ class _JvmClassLowerer:
         )
 
 
+# ---------------------------------------------------------------------------
+# JVM word-size constraints and supported opcode set
+# ---------------------------------------------------------------------------
+#
+# The JVM uses 32-bit two's-complement integers (Java ``int``).
+# Signed range: -2 147 483 648 (−2^31) to 2 147 483 647 (2^31 − 1).
+
+_JVM_INT_MIN: int = -(1 << 31)   # -2 147 483 648
+_JVM_INT_MAX: int =  (1 << 31) - 1  # 2 147 483 647
+
+# The V1 JVM backend handles exactly these opcodes.  Any opcode absent from
+# this set is rejected by validate_for_jvm() before code generation begins.
+_JVM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.RET,
+    IrOp.JUMP,
+    IrOp.LOAD_IMM,
+    IrOp.LOAD_ADDR,
+    IrOp.LOAD_BYTE,
+    IrOp.LOAD_WORD,
+    IrOp.STORE_BYTE,
+    IrOp.STORE_WORD,
+    IrOp.ADD,
+    IrOp.ADD_IMM,
+    IrOp.SUB,
+    IrOp.AND,
+    IrOp.AND_IMM,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.CALL,
+    IrOp.SYSCALL,
+})
+
+
+def validate_for_jvm(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for JVM backend incompatibilities without generating
+    any bytecode.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must appear in ``_JVM_SUPPORTED_OPCODES``.
+       Opcodes that the V1 JVM backend does not handle (e.g. future IR
+       extensions) are rejected with a precise diagnostic before any class-file
+       bytes are produced.
+
+    2. **Constant range** — every ``IrImmediate`` in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a JVM 32-bit signed integer
+       (−2 147 483 648 to 2 147 483 647).  The JVM stack is a 32-bit
+       operand stack; constants outside this range cannot be represented as a
+       JVM ``int`` and would require a ``long`` (64-bit) type, which the
+       backend does not support.
+
+    3. **SYSCALL number** — the V1 JVM backend wires up SYSCALL 1 (print byte)
+       and SYSCALL 4 (read byte).  Any other syscall number is rejected.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the JVM V1 backend.
+    """
+    errors: list[str] = []
+    _SUPPORTED_SYSCALLS = {1, 4}
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ─────────────────────
+        if op not in _JVM_SUPPORTED_OPCODES:
+            errors.append(
+                f"unsupported opcode {op.name} in V1 JVM backend"
+            )
+            continue
+
+        # ── Rule 2: constant range on LOAD_IMM and ADD_IMM ──────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate):
+                    v = operand.value
+                    if not (_JVM_INT_MIN <= v <= _JVM_INT_MAX):
+                        errors.append(
+                            f"{op.name}: constant {v:,} overflows JVM 32-bit "
+                            f"signed integer (valid range "
+                            f"{_JVM_INT_MIN:,} to {_JVM_INT_MAX:,})"
+                        )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value not in _SUPPORTED_SYSCALLS:
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL numbers {sorted(_SUPPORTED_SYSCALLS)} "
+                        f"are wired in the V1 JVM backend"
+                    )
+                    break
+
+    return errors
+
+
 def lower_ir_to_jvm_class_file(
     program: IrProgram,
     config: JvmBackendConfig,
 ) -> JVMClassArtifact:
-    """Lower an IR program to a JVM class artifact."""
+    """Lower an IR program to a JVM class artifact.
 
+    Runs ``validate_for_jvm`` as a pre-flight check before any bytecode is
+    generated.  If the IR contains an unsupported opcode or an out-of-range
+    constant, a ``JvmBackendError`` is raised immediately with a precise
+    per-instruction diagnostic.
+    """
+    errors = validate_for_jvm(program)
+    if errors:
+        joined = "; ".join(errors)
+        raise JvmBackendError(
+            f"IR program failed JVM pre-flight validation "
+            f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+        )
     return _JvmClassLowerer(program, config).lower()
 
 

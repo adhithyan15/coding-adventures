@@ -72,6 +72,11 @@ class Cursor:
 
         result = run(self._connection._backend, sql, parameters)  # noqa: SLF001
 
+        # For DDL (CREATE/DROP/ALTER), auto-commit the single-statement
+        # transaction that _ensure_transaction_if_needed opened.  This
+        # ensures schema changes are persisted even when no DML follows.
+        self._connection._post_execute()  # noqa: SLF001
+
         if result.columns:
             self.description = tuple(
                 (name, None, None, None, None, None, None) for name in result.columns

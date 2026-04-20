@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 — 2026-04-20
+
+- Added `ATAN = IRSymbol("Atan")` to the elementary-functions group in
+  `nodes.py` and exported it from `__init__.py`. Required by Phase 2e
+  of the symbolic integration roadmap (arctan antiderivatives for
+  irreducible quadratic denominators). See `arctan-integral.md`.
+
 ## 0.1.0 — 2026-04-19
 
 Initial release.

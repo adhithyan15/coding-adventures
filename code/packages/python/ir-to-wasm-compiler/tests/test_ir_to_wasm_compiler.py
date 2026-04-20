@@ -19,6 +19,7 @@ from ir_to_wasm_compiler import (
     IrToWasmCompiler,
     WasmLoweringError,
     infer_function_signatures_from_comments,
+    validate_for_wasm,
 )
 
 
@@ -173,6 +174,67 @@ def test_compile_function_call_and_run_it() -> None:
     assert _runtime_result(module, "double", [8]) == [16]
 
 
+def test_compile_function_call_with_explicit_argument_registers() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(10), IrImmediate(7)], id=gen.next())
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.CALL,
+            [IrLabel("_fn_double"), IrRegister(10)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_double")], id=-1))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD,
+            [IrRegister(1), IrRegister(2), IrRegister(2)],
+            id=gen.next(),
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    module = IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(label="_start", param_count=0, export_name="_start"),
+            FunctionSignature(label="_fn_double", param_count=1, export_name="double"),
+        ],
+    )
+
+    assert _runtime_result(module, "_start", []) == [14]
+
+
+def test_compile_function_call_requires_explicit_argument_registers() -> None:
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
+    program.add_instruction(
+        IrInstruction(IrOp.CALL, [IrLabel("_fn_double")], id=gen.next())
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_double")], id=-1))
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+
+    with pytest.raises(WasmLoweringError, match="explicit argument register"):
+        IrToWasmCompiler().compile(
+            program,
+            function_signatures=[
+                FunctionSignature(label="_start", param_count=0, export_name="_start"),
+                FunctionSignature(
+                    label="_fn_double",
+                    param_count=1,
+                    require_explicit_args=True,
+                ),
+            ],
+        )
+
+
 def test_infer_function_signatures_from_comments() -> None:
     program = IrProgram(entry_label="_fn_add")
     program.add_instruction(IrInstruction(IrOp.COMMENT, [IrLabel("function: add(a: u4, b: u4)")], id=-1))
@@ -202,7 +264,7 @@ def test_compile_syscall_write_uses_wasi_fd_write() -> None:
     program.add_instruction(
         IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(65)], id=gen.next())
     )
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(4)], id=gen.next()))
     program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
     module = IrToWasmCompiler().compile(
@@ -221,7 +283,7 @@ def test_compile_syscall_read_uses_wasi_fd_read() -> None:
     gen = IDGenerator()
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(2)], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(2), IrRegister(4)], id=gen.next()))
     program.add_instruction(
         IrInstruction(IrOp.ADD_IMM, [IrRegister(1), IrRegister(4), IrImmediate(0)], id=gen.next())
     )
@@ -244,7 +306,7 @@ def test_compile_syscall_exit_uses_wasi_proc_exit() -> None:
     program.add_instruction(
         IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(7)], id=gen.next())
     )
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(10)], id=gen.next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(10), IrRegister(4)], id=gen.next()))
 
     module = IrToWasmCompiler().compile(
         program,
@@ -260,7 +322,7 @@ def test_compile_syscall_exit_uses_wasi_proc_exit() -> None:
 def test_unsupported_syscall_raises() -> None:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=-1))
-    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(99)], id=IDGenerator().next()))
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(99), IrRegister(4)], id=IDGenerator().next()))
 
     try:
         IrToWasmCompiler().compile(
@@ -487,7 +549,7 @@ class TestDispatchLoopLowerer:
         program.add_instruction(
             IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(72)], id=gen.next())  # 'H'
         )
-        program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1)], id=gen.next()))
+        program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(4)], id=gen.next()))
         program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
         output: list[str] = []
@@ -540,3 +602,128 @@ class TestDispatchLoopLowerer:
         program.add_instruction(IrInstruction(IrOp.HALT, [], id=gen.next()))
 
         assert _dispatch_run(program) == [6]
+
+
+# ---------------------------------------------------------------------------
+# Pre-flight validator tests
+# ---------------------------------------------------------------------------
+
+def _simple_prog(*instrs: IrInstruction) -> IrProgram:
+    """Build a minimal IrProgram from a list of instructions."""
+    gen = IDGenerator()
+    prog = IrProgram(entry_label="_start")
+    prog.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")], id=gen.next()))
+    for instr in instrs:
+        prog.add_instruction(instr)
+    return prog
+
+
+def _imm(v: int) -> IrImmediate:
+    return IrImmediate(v)
+
+
+def _reg(i: int) -> IrRegister:
+    return IrRegister(i)
+
+
+class TestValidateForWasm:
+    """Tests for validate_for_wasm() — the pre-flight IR inspector."""
+
+    def test_valid_program_passes(self) -> None:
+        """A well-formed program produces no errors."""
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(0)], id=gen.next()),
+            IrInstruction(IrOp.SYSCALL, [_imm(1), _reg(0)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    # ── Rule 1: supported opcodes ────────────────────────────────────────────
+    # The V1 WASM backend supports all IrOp values *except* the five bitwise
+    # opcodes added in compiler-ir v0.3.0 (OR, OR_IMM, XOR, XOR_IMM, NOT).
+    # Those are deferred to V2 — WASM i32.or / i32.xor are easy to add once a
+    # frontend actually needs them.  The validator must reject them cleanly.
+
+    def test_bitwise_opcodes_are_intentionally_unsupported(self) -> None:
+        """OR, OR_IMM, XOR, XOR_IMM, and NOT are not yet implemented in the V1
+        WASM backend.  Each must produce an 'unsupported opcode' diagnostic."""
+        unsupported = (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT)
+        for op in unsupported:
+            prog = _simple_prog(IrInstruction(op, [], id=1))
+            errors = validate_for_wasm(prog)
+            rule1_errors = [e for e in errors if "unsupported opcode" in e]
+            assert rule1_errors != [], (
+                f"IrOp.{op.name} should be rejected by the WASM opcode-support "
+                f"check but was accepted"
+            )
+            assert op.name in rule1_errors[0], (
+                f"Error for IrOp.{op.name} does not mention the opcode name: "
+                f"{rule1_errors[0]!r}"
+            )
+
+    # ── Rule 2: constant overflow ────────────────────────────────────────────
+
+    def test_load_imm_overflow_rejected(self) -> None:
+        """A 64-bit constant cannot be encoded as a WASM i32."""
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(2**32)], id=gen.next()),
+        )
+        errors = validate_for_wasm(prog)
+        assert len(errors) == 1
+        assert "LOAD_IMM" in errors[0]
+
+    def test_load_imm_max_i32_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(2**31 - 1)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    def test_load_imm_min_i32_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(-(2**31))], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    # ── Rule 3: unsupported SYSCALL numbers ─────────────────────────────────
+
+    def test_syscall_1_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.SYSCALL, [_imm(1), _reg(0)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    def test_syscall_2_accepted(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.SYSCALL, [_imm(2), _reg(0)], id=gen.next()),
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
+
+    def test_syscall_unsupported_number_rejected(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.SYSCALL, [_imm(99), _reg(0)], id=gen.next()),
+        )
+        errors = validate_for_wasm(prog)
+        assert len(errors) == 1
+        assert "unsupported SYSCALL" in errors[0]
+        assert "99" in errors[0]
+
+    # ── Integration: compiler calls validate first ───────────────────────────
+
+    def test_compile_rejects_oversized_constant_with_preflight_message(self) -> None:
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.LOAD_IMM, [_reg(1), _imm(2**40)], id=gen.next()),
+        )
+        with pytest.raises(WasmLoweringError, match="pre-flight"):
+            IrToWasmCompiler().compile(prog)

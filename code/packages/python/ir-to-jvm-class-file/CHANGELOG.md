@@ -1,5 +1,60 @@
 # ir-to-jvm-class-file
 
+## 0.4.0 — 2026-04-20
+
+### Added
+
+- **`validate_for_jvm(program)` pre-flight validator**: inspects an
+  `IrProgram` for JVM backend incompatibilities *before* any bytecode is
+  generated.  Returns a list of human-readable error strings (empty list =
+  valid).  Three rules are checked:
+  1. **Opcode support** — every opcode must appear in the V1 supported set.
+     Currently all `IrOp` values are handled; the check is future-proofing
+     against new IR opcodes added before the JVM backend implements them.
+  2. **Constant range** — `LOAD_IMM` and `ADD_IMM` immediates must fit in a
+     JVM 32-bit signed integer (−2 147 483 648 to 2 147 483 647).
+  3. **SYSCALL number** — only SYSCALL 1 (write byte) and SYSCALL 4 (read
+     byte) are wired up in the V1 JVM backend.
+- `validate_for_jvm` exported from `ir_to_jvm_class_file.__init__`.
+- `TestValidateForJvm` test class (14 tests) covering all three rules,
+  boundary-value constants, multi-error accumulation, and integration with
+  `lower_ir_to_jvm_class_file`.
+
+### Changed
+
+- `lower_ir_to_jvm_class_file()` now calls `validate_for_jvm()` as a
+  pre-flight check before `_JvmClassLowerer` runs.  Any violation raises
+  `JvmBackendError` with message prefix
+  `"IR program failed JVM pre-flight validation"`.
+
+## 0.3.0 — 2026-04-20
+
+### Changed
+
+- **`JvmBackendConfig.syscall_arg_reg` field removed.**  The SYSCALL IR
+  instruction now carries the arg register as `operands[1]` (an `IrRegister`),
+  so the backend reads the register index directly from the instruction rather
+  than from a config parameter.  Callers no longer need to pass
+  `syscall_arg_reg=0` for BASIC or `syscall_arg_reg=4` for Brainfuck.
+
+- **`__ca_syscall` helper descriptor changed from `(I)V` to `(II)V`.**
+  The helper method now accepts two `int` parameters: syscall number and
+  arg-register index.  The WRITE path loads `__ca_regs[arg_reg]` at runtime
+  using the passed-in register index instead of a compile-time constant.
+  The READ path stores the byte received from stdin in local 2 (shifted up from
+  local 1 to make room for the new arg-register parameter in local 1).
+  Max locals increased from 2 to 3 accordingly.
+
+## 0.2.0 — 2026-04-19
+
+### Added
+
+- `IrOp.MUL` support: emits `imul` (`0x68`) so Dartmouth BASIC multiplication
+  expressions (`LET A = B * C`, `PRINT 3 * I`) lower correctly to JVM bytecode.
+- `IrOp.DIV` support: emits `idiv` (`0x6C`) so Dartmouth BASIC integer division
+  expressions lower correctly.  Integer division truncates toward zero, matching
+  Dartmouth BASIC semantics.
+
 ## 0.1.0 - 2026-04-17
 
 - Add the initial Python prototype for lowering `compiler_ir.IrProgram` to JVM

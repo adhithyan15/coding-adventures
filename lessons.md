@@ -4,6 +4,108 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: Compiler-generated data segments need source-stage size caps
+
+Even when a frontend only emits internal IR, any IR data declaration that a
+backend materializes as bytes can become a host-memory exhaustion path. Source
+size and type-checking success do not automatically bound semantic frame plans
+or generated runtime images.
+
+**Symptom:** A compiler sums frame sizes and emits one data declaration, while
+the WASM backend later expands it with `bytes(...) * size`.
+
+**Rule:** Put explicit byte caps at the earliest compiler stage that computes
+the generated data size, and test the rejection path with a synthetic semantic
+model rather than a huge source file.
+
+---
+
+### 2026-04-20: CI setup-job failures can be infrastructure flakiness, not code failures
+
+GitHub Actions can fail before checkout or before any repository command runs
+if the runner cannot download a pinned action archive. These failures look red
+on the PR, but there is no package, test, or build output to fix in the repo.
+
+**Symptom:** A job fails during "Set up job" with an error such as
+`Failed to download archive` for an action repository tarball, while sibling
+matrix jobs and earlier push runs pass.
+
+**Rule:** Inspect the failing job log before changing code. If the failure is
+limited to downloading an action archive during setup, rerun or retrigger CI and
+avoid inventing an application-code fix for an infrastructure failure.
+
+---
+
+### 2026-04-20: Do not leak local machine state in commits or PR descriptions
+
+CI fixes sometimes involve local environment problems, but commit messages and
+PR descriptions are permanent project history. They should explain the portable
+engineering lesson without naming private paths, host setup details, account
+state, or other machine-specific facts that do not belong in the repository.
+
+**Symptom:** A fix message or PR description mentions a developer workstation
+condition instead of the general failure mode that future contributors need to
+understand.
+
+**Rule:** Write history in terms of reproducible repository behavior. If a
+local detail helped diagnose the issue, translate it into a general rule before
+committing or opening the PR.
+
+---
+
+### 2026-04-20: Tests that need a CLI tool must verify the tool actually runs
+
+Checking `exec.LookPath("git")` only proves that a binary exists on `PATH`. A
+tool can still fail every invocation because of host configuration, permissions,
+or setup policy, which makes tests fail after they already decided the tool was
+available.
+
+**Symptom:** A test guarded by `exec.LookPath("git")` still fails at the first
+real Git command.
+
+**Rule:** Tests that depend on an external CLI should run a harmless probe such
+as `git --version` and skip when that command fails. Presence is not usability.
+
+---
+
+### 2026-04-20: CodeQL flags unchecked CLI integer downcasts from `int64` to `int`
+
+CodeQL treats parsed CLI integer values as untrusted numeric input. If a Go
+program converts a signed 64-bit parsed value to `int` without checking the
+current platform's `int` width, CodeQL raises a high-severity
+`go/incorrect-integer-conversion` alert even when tests pass on 64-bit local
+machines.
+
+**Symptom:** A PR's CodeQL workflow job succeeds, but GitHub Advanced Security
+adds a separate failing `CodeQL` check with annotations like "Incorrect
+conversion between integer types" on `return int(value)`.
+
+**Rule:** When converting parsed or decoded numeric input to `int`, add
+explicit platform-sized bounds checks first or route through `strconv.Atoi`
+after formatting/validating the value. For `float64`, reject NaN, infinity, and
+non-integral values before attempting any `int` conversion.
+
+---
+
+### 2026-04-20: Compiler runtime specs must bound execution and captured environment lifetimes
+
+When designing a compiler/runtime for a language with recursion, nested procedures,
+closures, thunks, or explicit stack frames, source-size and AST-depth limits are
+not enough. The runtime also needs execution fuel or timeout policy, dynamic call
+depth limits, frame stack byte limits, heap allocation limits, stack/heap
+collision checks, and clear captured-environment lifetime rules.
+
+**Symptom:** Security review flags a roadmap or implementation because recursive
+programs can exhaust frame memory or run forever, and descriptors that capture raw
+frame pointers could outlive the activation they point into.
+
+**Rule:** For compiler runtimes, specify and test runtime resource caps and
+captured environment handling before implementing procedures, closures, or
+call-by-name thunks. Either reject escaping descriptors, prove they cannot escape,
+or heap-lift captured environments with explicit lifetime management.
+
+---
+
 ### 2026-04-19: JVM composite Gradle BUILD files need a shared lock when they reuse included builds
 
 Java and Kotlin packages that include the same local Gradle builds can corrupt
@@ -2855,3 +2957,84 @@ correctly limited the build plan to the current package and its test suite.
 **Rule:** For single-package Haskell validation in this repo, run plain `cabal test` from the
 package directory unless you explicitly want the parent project. Do not append the `all` target for
 isolated package PRs.
+
+---
+
+## wasm-bindgen `JsValue::from_str` is not safe in native error-path tests
+
+**Date:** 2026-04-19
+
+**What happened:** A native `cargo test` for a WASM wrapper passed success-path tests but aborted
+when an error-path test tried to convert a Rust error string with `JsValue::from_str`. On
+non-wasm32 targets, that wasm-bindgen constructor can hit a "function not implemented" abort instead
+of returning a normal Rust panic.
+
+**Rule:** In wasm-bindgen wrapper crates that run native tests, keep JS error construction behind a
+`#[cfg(target_arch = "wasm32")]` helper. Use a simple native placeholder such as `JsValue::NULL` for
+test-only error values when the test only needs to assert that the wrapper returned `Err`.
+
+---
+
+## Typed epsilon transitions must not accept empty-string aliases at import boundaries
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of the first Rust `StateMachineDefinition` import helpers caught
+that `NFA::from_definition()` treated `Some("")` the same as `None`. The runtime NFA uses an empty
+string sentinel internally for epsilon transitions, but the typed definition contract says epsilon is
+represented by `None`. Accepting both shapes would let malformed definitions smuggle free moves past
+the import validator.
+
+**Rule:** At typed import or deserialization boundaries, reject empty-string event names explicitly.
+Only lower `None` to the runtime epsilon sentinel inside the core automaton constructor path. Add
+regression tests for this distinction whenever a runtime uses sentinel values internally.
+
+---
+
+## GitHub Actions archive download failures can be transient infrastructure, not package failures
+
+**Date:** 2026-04-20
+
+**What happened:** A Python-only PR failed before checkout/build execution on Ubuntu and Windows
+because the runner could not download action archives from `api.github.com` during the
+"Prepare all required actions" phase. The package-local builds and affected build-tool run were
+already green, and the failed jobs never reached repository code.
+
+**Rule:** When CI fails in job setup while downloading third-party action archives, inspect the job
+logs before changing package code. If the failure happens before checkout or tool setup commands,
+treat it as infrastructure/transient unless repeated runs prove otherwise.
+
+---
+
+### 2026-04-20: GrammarLexer returns TokenType enum values; test helpers must normalize
+
+When writing tests for grammar-driven lexer wrappers (like `oct-lexer`, `nib-lexer`), the
+`GrammarLexer` returns `Token` objects where:
+- Keyword tokens (after promotion in `tokenize_*`) have `type` set to a **string** (e.g. `"fn"`,
+  `"carry"`)
+- All other tokens keep the `TokenType` **enum** value (e.g. `TokenType.LPAREN`, `TokenType.NAME`)
+
+If test helpers compare `t.type` directly against strings, non-keyword token tests will fail
+with diffs like:
+```
+At index 1 diff: (<TokenType.LPAREN: 11>, '(') != ('LPAREN', '(')
+```
+
+And the EOF filter `t.type != "EOF"` will never exclude EOF tokens because
+`TokenType.EOF != "EOF"` is `True`.
+
+**Fix:** Add a `_tok_type` normalizer helper that converts both forms to a plain string:
+```python
+def _tok_type(tok: Token) -> str:
+    return tok.type if isinstance(tok.type, str) else tok.type.name
+```
+
+Use it everywhere `t.type` is compared or used for filtering. This pattern is established in
+`nib-lexer` and must be replicated in every new `*-lexer` test file.
+
+**Root cause:** The design intentionally keeps non-keyword token types as enums to preserve
+the `TokenType` enum contract for downstream consumers (parsers). Only keyword tokens are
+promoted to string types so the parser's grammar rules can match them by value.
+
+**Rule:** Every grammar-driven lexer test file must use a `_tok_type` normalizer. Never compare
+`t.type` directly against string literals unless you know the token is a keyword.

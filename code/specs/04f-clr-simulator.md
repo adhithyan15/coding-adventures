@@ -142,6 +142,9 @@ The public API stays exact even when the implementation shares logic.
 | `cli-signature-decoder` | Decode blob signatures for methods, fields, locals, generics | `DecodedSignature` |
 | `cil-method-body-decoder` | Decode tiny/fat method bodies and EH sections | `DecodedMethodBody` |
 | `cil-bytecode-disassembler` | Pretty-print IL instructions and resolved operands | `CilDisassembly` |
+| `cil-bytecode-builder` | Build CIL method-body bytes from operations, metadata tokens, and labels | raw IL bytes |
+| `ir-to-cil-bytecode` | Lower compiler IR into composable CIL method artifacts | `CILProgramArtifact` |
+| `cli-assembly-writer` | Wrap CIL method artifacts in PE/CLI metadata and sections | managed PE bytes |
 | `cli-runtime-model` | Tokens, stack types, frames, heap refs, value types | `CliRuntimeState` |
 | `clr-vm-simulator` | Execute decoded IL method bodies | `ExecutionResult[ClrState]` |
 | `clr-simulator` | Backward-compatible facade package | thin composition layer |
@@ -237,6 +240,62 @@ Must support:
 - metadata-token operand labeling
 - method/field/type token pretty-printing
 
+### `cil-bytecode-builder`
+
+The builder is the first reusable emitter-side package. It should stay below
+IR lowering and PE/CLI assembly writing:
+
+```text
+IR backend -> ir-to-cil-bytecode -> CIL bytecode builder -> CLI assembly writer
+```
+
+It must support:
+
+- compact integer constants: `ldc.i4.m1`, `ldc.i4.*`, `ldc.i4.s`, `ldc.i4`
+- local and argument short forms plus prefixed wide forms
+- metadata-token operands for `call`, `callvirt`, static fields, and arrays
+- `0xFE`-prefixed comparison opcodes
+- named labels with automatic short-to-long branch promotion
+- deterministic errors for duplicate or unknown labels
+
+### `ir-to-cil-bytecode`
+
+This package lowers the repo's shared `compiler_ir` into CIL method-body
+artifacts without taking ownership of CLI metadata, PE layout, or runtime helper
+implementations. It should stay fully composable:
+
+- collect callable IR regions from the entry label and `CALL` targets
+- validate that branches remain inside their callable region
+- assign static data offsets while enforcing data-size limits
+- map virtual registers to CIL locals
+- emit method bodies through `cil-bytecode-builder`
+- request helper calls for memory and syscall behavior through named helper specs
+- resolve method/helper call operands through an injectable metadata-token provider
+
+The default token provider may assign deterministic placeholder tokens for tests
+and standalone bytecode inspection. A future CLI assembly writer must be able to
+replace it with real `MethodDef` and `MemberRef` tokens.
+
+### `cli-assembly-writer`
+
+This package serializes CIL method artifacts into a managed PE/CLI container. It
+should be the first assembly-writing layer, while still keeping runtime helpers
+and high-level language frontends outside its ownership:
+
+- emit a PE32 shell with section headers and the CLI data directory
+- emit the CLI header with metadata RVA/size and entry point token
+- write metadata root stream headers and `#~`, `#Strings`, `#Blob`, and `#US`
+  streams
+- write Module, TypeRef, TypeDef, MethodDef, MemberRef, StandAloneSig, and
+  Assembly rows
+- choose tiny method headers for small no-local methods and fat headers for
+  methods with locals or larger bodies
+- preserve method and helper token conventions from `ir-to-cil-bytecode`
+
+It should not implement host runtime helpers itself. Helper references stay as
+metadata references so later packages can provide real helper bodies, native
+bridges, or simulator-host bindings.
+
 ## Runtime model
 
 The simulator should model CLR concepts directly rather than flattening
@@ -320,9 +379,12 @@ sharing one metadata source of truth.
 6. `cli-signature-decoder`
 7. `cil-method-body-decoder`
 8. `cil-bytecode-disassembler`
-9. `cli-runtime-model`
-10. `clr-vm-simulator`
-11. Backward-compatible facade updates in `clr-simulator`
+9. `cil-bytecode-builder`
+10. `ir-to-cil-bytecode`
+11. `cli-assembly-writer`
+12. `cli-runtime-model`
+13. `clr-vm-simulator`
+14. Backward-compatible facade updates in `clr-simulator`
 
 ## References
 
