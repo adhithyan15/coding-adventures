@@ -188,6 +188,22 @@ fn json_serializer_escapes_strings() {
 }
 
 #[test]
+fn json_serializer_emits_state_flags_and_control_escapes() {
+    let mut definition = StateMachineDefinition::new("flags", MachineKind::Statechart);
+    definition.states = vec![StateDefinition {
+        final_state: true,
+        external_entry: true,
+        ..StateDefinition::new("return\r\t\u{08}\u{0C}point")
+    }];
+
+    let json = definition.to_states_json();
+
+    assert!(json.contains("\"id\": \"return\\r\\t\\b\\fpoint\""));
+    assert!(json.contains("\"final\": true"));
+    assert!(json.contains("\"external_entry\": true"));
+}
+
+#[test]
 fn empty_definition_serializes_required_arrays() {
     let definition = StateMachineDefinition::new("empty", MachineKind::Modal);
 
