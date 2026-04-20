@@ -23,20 +23,21 @@ mini_sqlite.connect("app.db")
     → sql-vm (unchanged)
     → Backend interface
     → SqliteFileBackend  (this package)
-        ├── pager    (page I/O + LRU cache + rollback journal) ✓ phase 1
-        ├── header   (100-byte database header at offset 0)    ✓ phase 1
-        ├── record   (varint + serial types)      ✓ phase 2
-        ├── btree    (leaf + overflow + full recursive splits)  ✓ phases 3 + 4a + 4b
-        ├── freelist (trunk/leaf page reuse)       ✓ phase 5
-        ├── schema   (sqlite_schema round-trip)   ✓ phase 6
-        └── backend  (Backend adapter / SqliteFileBackend)     ✓ phase 7
+        ├── pager      (page I/O + LRU cache + rollback journal)    ✓ phase 1
+        ├── header     (100-byte database header at offset 0)      ✓ phase 1
+        ├── record     (varint + serial types)                     ✓ phase 2
+        ├── btree      (leaf + overflow + full recursive splits)   ✓ phases 3 + 4a + 4b
+        ├── freelist   (trunk/leaf page reuse)                     ✓ phase 5
+        ├── schema     (sqlite_schema round-trip)                  ✓ phase 6
+        ├── backend    (Backend adapter / SqliteFileBackend)       ✓ phase 7
+        └── index_tree (index B-tree 0x0A/0x02 + full CRUD)       ✓ phase IX-1
 ```
 
 Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7)
+## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -103,13 +104,21 @@ backend.
   the real SQLite convention).  Files produced by this backend are readable by
   the `sqlite3` CLI and Python's stdlib `sqlite3`, and vice-versa.
 
+- **`index_tree` module** — `IndexTree` (phase IX-1 of v2 automatic indexing).
+  Index B-tree pages using SQLite's `0x0A` (index leaf) and `0x02` (index
+  interior) page types.  Stores `(key_vals, rowid)` pairs sorted by SQLite's
+  BINARY collation (NULL < INTEGER/REAL < TEXT < BLOB).  Supports:
+  `insert`, `delete`, `lookup`, `range_scan` (with inclusive/exclusive bounds),
+  `free_all`, and recursive splits at all tree levels.  The foundation for
+  automatic index creation in v2.
+
 ## Installation
 
 ```bash
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7)
+## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -248,6 +257,57 @@ with SqliteFileBackend("app.db") as b:
 
     h = b.begin_transaction()
     b.commit(h)
+```
+
+```python
+# --- IndexTree (phase IX-1: index B-tree pages 0x0A / 0x02) ---
+from storage_sqlite import IndexTree, Pager, Freelist, Header, PAGE_SIZE, initialize_new_database
+
+# Create a database with a header page and build an index tree.
+with Pager.create("index.db") as pager:
+    schema = initialize_new_database(pager)           # sets up page 1 header
+    fl = Freelist(pager)
+    tree = IndexTree.create(pager, freelist=fl)        # root on page 3
+    root = tree.root_page
+
+    # Insert (indexed_value, rowid) pairs — rowid is the table row pointer.
+    tree.insert([42], 1)          # user_id=42, table rowid=1
+    tree.insert([42], 2)          # same user_id, different row
+    tree.insert([17], 3)          # different user_id
+    tree.insert(["alice"], 4)     # text key
+    tree.insert([None], 5)        # NULL key (smallest under SQLite ordering)
+
+    # Lookup: all rowids for a given key.
+    print(tree.lookup([42]))           # [1, 2]  (non-unique index)
+    print(tree.lookup([17]))           # [3]
+    print(tree.lookup([99]))           # []
+
+    # Range scan: yield (key_vals, rowid) in ascending order.
+    for key_vals, rowid in tree.range_scan([17], [42]):
+        print(key_vals, "→ row", rowid)
+    # [17] → row 3
+    # [42] → row 1
+    # [42] → row 2
+
+    # Mixed-type ordering: NULL < INTEGER < TEXT < BLOB
+    for key_vals, rowid in tree.range_scan(None, None):
+        print(key_vals, rowid)
+    # [None]    5   ← NULL first
+    # [17]      3
+    # [42]      1
+    # [42]      2
+    # ['alice'] 4   ← TEXT last
+
+    # Delete.
+    tree.delete([42], 1)
+    print(tree.lookup([42]))           # [2]
+
+    # Splits happen automatically — insert thousands of entries.
+    for i in range(100, 5100):
+        tree.insert([i], i)
+    print(tree.cell_count())           # 5004
+
+    pager.commit()
 ```
 
 ## Design notes
