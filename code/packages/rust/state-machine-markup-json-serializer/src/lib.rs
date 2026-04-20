@@ -137,7 +137,7 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
     for (index, transition) in transitions.iter().enumerate() {
         let mut fields = Vec::new();
         fields.push(json_property("from", json_string(&transition.from)));
-        fields.push(json_property("on", json_string(&transition.on)));
+        fields.push(json_property("on", json_event(&transition.on)));
         if transition.to.len() == 1 {
             fields.push(json_property("to", json_string(&transition.to[0])));
         } else {
@@ -165,7 +165,7 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
 
 struct JsonTransition {
     from: String,
-    on: String,
+    on: Option<String>,
     on_sort: String,
     to: Vec<String>,
     stack_pop: Option<String>,
@@ -181,15 +181,19 @@ impl JsonTransition {
 
         Self {
             from: transition.from.clone(),
-            on: transition
-                .on
-                .clone()
-                .unwrap_or_else(|| "epsilon".to_string()),
+            on: transition.on.clone(),
             on_sort: transition.on.clone().unwrap_or_default(),
             to,
             stack_pop: transition.stack_pop.clone(),
             stack_push: transition.stack_push.clone(),
         }
+    }
+}
+
+fn json_event(event: &Option<String>) -> String {
+    match event {
+        Some(event) => json_string(event),
+        None => "null".to_string(),
     }
 }
 

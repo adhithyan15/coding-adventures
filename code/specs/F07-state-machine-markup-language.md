@@ -389,10 +389,11 @@ objects as the TOML surface:
 
 JSON transition `to` follows the same compact rule as TOML: single-target DFA
 and PDA transitions write a string, while multi-target NFA transitions write a
-string array. Epsilon transitions are written as `"on": "epsilon"` at the JSON
-file boundary, matching TOML. The typed in-memory representation still uses
-`None` for epsilon, and import boundaries must continue rejecting empty-string
-event aliases.
+string array. Epsilon transitions are written as `"on": null` at the JSON file
+boundary. That differs from TOML's `"epsilon"` spelling on purpose: JSON can
+represent absence directly, so a real event named `"epsilon"` remains distinct
+from the typed in-memory `None` used for epsilon. Import boundaries must
+continue rejecting empty-string event aliases.
 
 The first JSON serializer profile covers the same phase 1 DFA, NFA, and PDA
 fields as the TOML serializer:

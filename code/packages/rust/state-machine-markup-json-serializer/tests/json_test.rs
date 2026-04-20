@@ -92,7 +92,7 @@ fn nfa_definition_serializes_multiple_targets_and_epsilon() {
   "transitions": [
     {"from": "q0", "on": "a", "to": ["q0", "q1"]},
     {"from": "q1", "on": "b", "to": "q2"},
-    {"from": "q2", "on": "epsilon", "to": "q0"}
+    {"from": "q2", "on": null, "to": "q0"}
   ]
 }
 "#
@@ -149,7 +149,7 @@ fn pda_definition_serializes_stack_effects() {
     {"id": "scan", "initial": true}
   ],
   "transitions": [
-    {"from": "scan", "on": "epsilon", "to": "accept", "stack_pop": "$", "stack_push": ["$"]},
+    {"from": "scan", "on": null, "to": "accept", "stack_pop": "$", "stack_push": ["$"]},
     {"from": "scan", "on": "(", "to": "scan", "stack_pop": "$", "stack_push": ["$", "("]},
     {"from": "scan", "on": ")", "to": "scan", "stack_pop": "(", "stack_push": []}
   ]
@@ -215,6 +215,27 @@ fn json_serializer_canonicalizes_set_like_arrays() {
     assert!(json.contains("\"stack_alphabet\": [\"base\", \"top\"]"));
     assert!(json.contains("\"to\": [\"q1\", \"q2\"]"));
     assert!(json.contains("\"stack_push\": [\"top\", \"base\"]"));
+}
+
+#[test]
+fn json_serializer_distinguishes_literal_epsilon_events_from_epsilon_moves() {
+    let mut definition = StateMachineDefinition::new("literal-epsilon", MachineKind::Dfa);
+    definition.initial = Some("q0".to_string());
+    definition.alphabet = vec!["epsilon".to_string()];
+    definition.states = vec![StateDefinition {
+        initial: true,
+        accepting: true,
+        ..StateDefinition::new("q0")
+    }];
+    definition.transitions = vec![
+        TransitionDefinition::new("q0", None, vec!["q0".to_string()]),
+        TransitionDefinition::new("q0", Some("epsilon".to_string()), vec!["q0".to_string()]),
+    ];
+
+    let json = definition.to_states_json();
+
+    assert!(json.contains("\"on\": null"));
+    assert!(json.contains("\"on\": \"epsilon\""));
 }
 
 #[test]
