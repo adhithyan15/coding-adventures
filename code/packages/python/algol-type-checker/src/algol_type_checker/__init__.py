@@ -5,9 +5,16 @@ implementation of the computing stack from transistors to operating systems.
 """
 
 from algol_type_checker.checker import (
+    FRAME_HEADER_SIZE,
+    FRAME_WORD_SIZE,
     AlgolTypeChecker,
     Diagnostic,
+    FrameLayout,
+    FrameSlot,
+    ResolvedReference,
     Scope,
+    SemanticBlock,
+    SemanticProgram,
     Symbol,
     TypeCheckError,
     TypeCheckResult,
@@ -21,7 +28,14 @@ __version__ = "0.1.0"
 __all__ = [
     "AlgolTypeChecker",
     "Diagnostic",
+    "FRAME_HEADER_SIZE",
+    "FRAME_WORD_SIZE",
+    "FrameLayout",
+    "FrameSlot",
+    "ResolvedReference",
     "Scope",
+    "SemanticBlock",
+    "SemanticProgram",
     "Symbol",
     "TypeCheckError",
     "TypeCheckResult",

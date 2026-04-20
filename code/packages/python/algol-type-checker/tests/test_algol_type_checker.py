@@ -4,6 +4,8 @@ from algol_parser import parse_algol
 from lang_parser import ASTNode
 
 from algol_type_checker import (
+    FRAME_HEADER_SIZE,
+    FRAME_WORD_SIZE,
     TypeCheckError,
     __version__,
     assert_algol_typed,
@@ -120,3 +122,75 @@ class TestAlgolTypeChecker:
             "end"
         )
         assert check_algol(ast).ok
+
+    def test_plans_root_block_scalar_frame_slots(self) -> None:
+        ast = parse_algol("begin integer result, other; result := other end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.root_block is not None
+        layout = result.semantic.root_block.frame_layout
+        assert layout.block_id == 0
+        assert layout.depth == 0
+        assert layout.static_parent_id is None
+        assert layout.frame_size == FRAME_HEADER_SIZE + (2 * FRAME_WORD_SIZE)
+        assert [(slot.name, slot.offset) for slot in layout.slots] == [
+            ("result", 20),
+            ("other", 24),
+        ]
+
+    def test_records_outer_scope_reference_static_link_delta(self) -> None:
+        ast = parse_algol(
+            "begin integer outer; "
+            "begin integer inner; inner := outer end "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        outer_read = next(
+            ref
+            for ref in result.semantic.references
+            if ref.name == "outer" and ref.role == "read"
+        )
+        assert outer_read.use_block_id == 1
+        assert outer_read.declaration_block_id == 0
+        assert outer_read.lexical_depth_delta == 1
+        assert outer_read.slot_offset == FRAME_HEADER_SIZE
+
+    def test_shadowing_resolves_to_nearest_frame_slot(self) -> None:
+        ast = parse_algol(
+            "begin integer x, sink; "
+            "begin integer x; x := 2; sink := x end "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        outer_x = next(
+            symbol
+            for symbol in result.semantic.symbols
+            if symbol.name == "x" and symbol.declaring_block_id == 0
+        )
+        inner_x = next(
+            symbol
+            for symbol in result.semantic.symbols
+            if symbol.name == "x" and symbol.declaring_block_id == 1
+        )
+        inner_write = next(
+            ref
+            for ref in result.semantic.references
+            if ref.name == "x" and ref.role == "write" and ref.use_block_id == 1
+        )
+        inner_read = next(
+            ref
+            for ref in result.semantic.references
+            if ref.name == "x" and ref.role == "read" and ref.use_block_id == 1
+        )
+        assert inner_write.symbol_id == inner_x.symbol_id
+        assert inner_read.symbol_id == inner_x.symbol_id
+        assert inner_write.symbol_id != outer_x.symbol_id
+        assert inner_write.lexical_depth_delta == 0

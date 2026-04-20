@@ -10,6 +10,8 @@ from lexer import Token
 INTEGER = "integer"
 BOOLEAN = "boolean"
 ERROR = "error"
+FRAME_HEADER_SIZE = 20
+FRAME_WORD_SIZE = 4
 
 
 @dataclass(frozen=True)
@@ -29,6 +31,58 @@ class Symbol:
     type_name: str
     line: int
     column: int
+    symbol_id: int = -1
+    kind: str = "scalar"
+    storage_class: str = "frame"
+    declaring_block_id: int = -1
+    slot_offset: int | None = None
+    slot_size: int | None = None
+
+
+@dataclass(frozen=True)
+class FrameSlot:
+    """A concrete scalar storage cell within an ALGOL activation frame."""
+
+    symbol_id: int
+    name: str
+    type_name: str
+    offset: int
+    size: int
+
+
+@dataclass
+class FrameLayout:
+    """The planned memory footprint for one lexical block activation.
+
+    ALGOL's nested scopes eventually become WASM linear-memory frames.  Phase 1
+    does not emit those loads and stores yet; it records the header and slot
+    layout so the later lowering pass can walk static links and address locals
+    without re-resolving names.
+    """
+
+    block_id: int
+    depth: int
+    static_parent_id: int | None
+    header_size: int = FRAME_HEADER_SIZE
+    word_size: int = FRAME_WORD_SIZE
+    slots: list[FrameSlot] = field(default_factory=list)
+
+    @property
+    def frame_size(self) -> int:
+        return self.header_size + sum(slot.size for slot in self.slots)
+
+    def allocate_scalar(self, symbol: Symbol) -> FrameSlot:
+        slot = FrameSlot(
+            symbol_id=symbol.symbol_id,
+            name=symbol.name,
+            type_name=symbol.type_name,
+            offset=self.header_size + (len(self.slots) * self.word_size),
+            size=self.word_size,
+        )
+        self.slots.append(slot)
+        symbol.slot_offset = slot.offset
+        symbol.slot_size = slot.size
+        return slot
 
 
 @dataclass
@@ -41,6 +95,9 @@ class Scope:
     """
 
     parent: Scope | None = None
+    block_id: int = -1
+    depth: int = -1
+    frame_layout: FrameLayout | None = None
     symbols: dict[str, Symbol] = field(default_factory=dict)
     children: list[Scope] = field(default_factory=list)
 
@@ -51,13 +108,59 @@ class Scope:
         return True
 
     def resolve(self, name: str) -> Symbol | None:
+        resolved = self.resolve_with_scope(name)
+        return resolved[0] if resolved is not None else None
+
+    def resolve_with_scope(self, name: str) -> tuple[Symbol, Scope, int] | None:
         scope: Scope | None = self
+        lexical_depth_delta = 0
         while scope is not None:
             found = scope.symbols.get(name)
             if found is not None:
-                return found
+                return found, scope, lexical_depth_delta
             scope = scope.parent
+            lexical_depth_delta += 1
         return None
+
+
+@dataclass(frozen=True)
+class SemanticBlock:
+    """A lexical ALGOL block enriched with static-parent and frame metadata."""
+
+    block_id: int
+    parent_block_id: int | None
+    depth: int
+    scope: Scope
+    frame_layout: FrameLayout
+
+
+@dataclass(frozen=True)
+class ResolvedReference:
+    """A variable occurrence after lexical lookup has selected one symbol."""
+
+    token_id: int
+    name: str
+    role: str
+    symbol_id: int
+    type_name: str
+    use_block_id: int
+    declaration_block_id: int
+    lexical_depth_delta: int
+    slot_offset: int
+    line: int
+    column: int
+
+
+@dataclass
+class SemanticProgram:
+    """Typed semantic facts produced before IR lowering."""
+
+    ast: ASTNode
+    root_block: SemanticBlock | None
+    blocks: list[SemanticBlock]
+    symbols: list[Symbol]
+    references: list[ResolvedReference]
+    diagnostics: list[Diagnostic] = field(default_factory=list)
 
 
 @dataclass
@@ -68,6 +171,7 @@ class TypeCheckResult:
     root_scope: Scope
     expression_types: dict[int, str]
     diagnostics: list[Diagnostic] = field(default_factory=list)
+    semantic: SemanticProgram | None = None
 
     @property
     def ok(self) -> bool:
@@ -84,26 +188,44 @@ class AlgolTypeChecker:
     def __init__(self) -> None:
         self.diagnostics: list[Diagnostic] = []
         self.expression_types: dict[int, str] = {}
+        self.semantic_blocks: list[SemanticBlock] = []
+        self.semantic_symbols: list[Symbol] = []
+        self.resolved_references: list[ResolvedReference] = []
+        self._next_block_id = 0
+        self._next_symbol_id = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
         self.expression_types = {}
+        self.semantic_blocks = []
+        self.semantic_symbols = []
+        self.resolved_references = []
+        self._next_block_id = 0
+        self._next_symbol_id = 0
         root_scope = Scope()
         block = _first_node(ast, "block")
         if block is None:
             self._error(ast, "ALGOL program must contain a block")
         else:
             self._check_block(block, root_scope)
+        semantic = SemanticProgram(
+            ast=ast,
+            root_block=self.semantic_blocks[0] if self.semantic_blocks else None,
+            blocks=list(self.semantic_blocks),
+            symbols=list(self.semantic_symbols),
+            references=list(self.resolved_references),
+            diagnostics=list(self.diagnostics),
+        )
         return TypeCheckResult(
             ast=ast,
             root_scope=root_scope,
             expression_types=dict(self.expression_types),
             diagnostics=list(self.diagnostics),
+            semantic=semantic,
         )
 
     def _check_block(self, block: ASTNode, parent: Scope) -> Scope:
-        scope = Scope(parent=parent)
-        parent.children.append(scope)
+        scope = self._new_block_scope(parent)
 
         for child in _node_children(block):
             if child.rule_name == "declaration":
@@ -113,6 +235,34 @@ class AlgolTypeChecker:
             if child.rule_name == "statement":
                 self._check_statement(child, scope)
 
+        return scope
+
+    def _new_block_scope(self, parent: Scope) -> Scope:
+        block_id = self._next_block_id
+        self._next_block_id += 1
+        parent_block_id = parent.block_id if parent.block_id >= 0 else None
+        depth = parent.depth + 1 if parent.depth >= 0 else 0
+        frame_layout = FrameLayout(
+            block_id=block_id,
+            depth=depth,
+            static_parent_id=parent_block_id,
+        )
+        scope = Scope(
+            parent=parent,
+            block_id=block_id,
+            depth=depth,
+            frame_layout=frame_layout,
+        )
+        parent.children.append(scope)
+        self.semantic_blocks.append(
+            SemanticBlock(
+                block_id=block_id,
+                parent_block_id=parent_block_id,
+                depth=depth,
+                scope=scope,
+                frame_layout=frame_layout,
+            )
+        )
         return scope
 
     def _check_declaration(self, declaration: ASTNode, scope: Scope) -> None:
@@ -140,12 +290,19 @@ class AlgolTypeChecker:
                 type_name=declared_type,
                 line=name_token.line,
                 column=name_token.column,
+                symbol_id=self._next_symbol_id,
+                declaring_block_id=scope.block_id,
             )
             if not scope.declare(symbol):
                 self._error(
                     name_token,
                     f"{name_token.value!r} is already declared in this scope",
                 )
+                continue
+            self._next_symbol_id += 1
+            if scope.frame_layout is not None:
+                scope.frame_layout.allocate_scalar(symbol)
+            self.semantic_symbols.append(symbol)
 
     def _check_statement(self, statement: ASTNode, scope: Scope) -> None:
         inner = _first_ast_child(statement)
@@ -185,12 +342,8 @@ class AlgolTypeChecker:
             self._error(left_parts[0], "only scalar variable assignment is supported")
             return
 
-        symbol = scope.resolve(name.value)
-        if symbol is None:
-            self._error(name, f"{name.value!r} is not declared")
-            target_type = ERROR
-        else:
-            target_type = symbol.type_name
+        symbol = self._resolve_name(name, scope, role="write")
+        target_type = ERROR if symbol is None else symbol.type_name
 
         expr = _first_direct_node(assign, "expression")
         value_type = self._infer_expr(expr, scope) if expr is not None else ERROR
@@ -228,10 +381,8 @@ class AlgolTypeChecker:
         if loop_name is None:
             self._error(node, "for loop is missing its control variable")
             return
-        symbol = scope.resolve(loop_name.value)
-        if symbol is None:
-            self._error(loop_name, f"{loop_name.value!r} is not declared")
-        elif symbol.type_name != INTEGER:
+        symbol = self._resolve_name(loop_name, scope, role="control")
+        if symbol is not None and symbol.type_name != INTEGER:
             self._error(loop_name, "for loop control variable must be integer")
 
         for elem in _direct_nodes(_first_direct_node(node, "for_list"), "for_elem"):
@@ -262,12 +413,8 @@ class AlgolTypeChecker:
                 self._error(expr, "array subscripts are not supported yet")
                 inferred = ERROR
             else:
-                symbol = scope.resolve(name.value)
-                if symbol is None:
-                    self._error(name, f"{name.value!r} is not declared")
-                    inferred = ERROR
-                else:
-                    inferred = symbol.type_name
+                symbol = self._resolve_name(name, scope, role="read")
+                inferred = ERROR if symbol is None else symbol.type_name
             self.expression_types[id(expr)] = inferred
             return inferred
 
@@ -361,13 +508,50 @@ class AlgolTypeChecker:
         if token.value in {"true", "false"}:
             return BOOLEAN
         if token.type_name == "NAME":
-            symbol = scope.resolve(token.value)
+            symbol = self._resolve_name(token, scope, role="read")
             if symbol is None:
-                self._error(token, f"{token.value!r} is not declared")
                 return ERROR
             return symbol.type_name
         self._error(token, f"unsupported expression token {token.value!r}")
         return ERROR
+
+    def _resolve_name(
+        self,
+        token: Token,
+        scope: Scope,
+        *,
+        role: str,
+    ) -> Symbol | None:
+        resolved = scope.resolve_with_scope(token.value)
+        if resolved is None:
+            self._error(
+                token,
+                f"{token.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+
+        symbol, declaring_scope, lexical_depth_delta = resolved
+        if symbol.slot_offset is None:
+            self._error(token, f"{token.value!r} has no planned frame slot")
+            return symbol
+
+        self.resolved_references.append(
+            ResolvedReference(
+                token_id=id(token),
+                name=token.value,
+                role=role,
+                symbol_id=symbol.symbol_id,
+                type_name=symbol.type_name,
+                use_block_id=scope.block_id,
+                declaration_block_id=declaring_scope.block_id,
+                lexical_depth_delta=lexical_depth_delta,
+                slot_offset=symbol.slot_offset,
+                line=token.line,
+                column=token.column,
+            )
+        )
+        return symbol
 
     def _require_unary(
         self,
