@@ -13,6 +13,8 @@ ERROR = "error"
 FRAME_HEADER_SIZE = 20
 FRAME_WORD_SIZE = 4
 VALUE = "value"
+ARRAY = "array"
+MAX_ARRAY_DIMENSIONS = 4
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,7 @@ class Symbol:
     slot_offset: int | None = None
     slot_size: int | None = None
     procedure_id: int | None = None
+    array_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -200,6 +203,46 @@ class ResolvedProcedureCall:
     column: int
 
 
+@dataclass(frozen=True)
+class ArrayDimension:
+    """A declared array dimension with bound expression AST identities."""
+
+    lower_node_id: int
+    upper_node_id: int
+
+
+@dataclass(frozen=True)
+class ArrayDescriptor:
+    """Semantic facts needed to allocate and index a direct ALGOL array."""
+
+    array_id: int
+    name: str
+    element_type: str
+    declaring_block_id: int
+    dimensions: tuple[ArrayDimension, ...]
+    symbol_id: int
+    slot_offset: int
+    line: int
+    column: int
+
+
+@dataclass(frozen=True)
+class ResolvedArrayAccess:
+    """A subscripted array occurrence after lexical lookup."""
+
+    token_id: int
+    name: str
+    role: str
+    array_id: int
+    use_block_id: int
+    declaration_block_id: int
+    lexical_depth_delta: int
+    slot_offset: int
+    subscript_count: int
+    line: int
+    column: int
+
+
 @dataclass
 class SemanticProgram:
     """Typed semantic facts produced before IR lowering."""
@@ -211,6 +254,8 @@ class SemanticProgram:
     references: list[ResolvedReference]
     procedures: list[ProcedureDescriptor] = field(default_factory=list)
     procedure_calls: list[ResolvedProcedureCall] = field(default_factory=list)
+    arrays: list[ArrayDescriptor] = field(default_factory=list)
+    array_accesses: list[ResolvedArrayAccess] = field(default_factory=list)
     diagnostics: list[Diagnostic] = field(default_factory=list)
 
 
@@ -244,9 +289,12 @@ class AlgolTypeChecker:
         self.resolved_references: list[ResolvedReference] = []
         self.semantic_procedures: list[ProcedureDescriptor] = []
         self.resolved_procedure_calls: list[ResolvedProcedureCall] = []
+        self.semantic_arrays: list[ArrayDescriptor] = []
+        self.resolved_array_accesses: list[ResolvedArrayAccess] = []
         self._next_block_id = 0
         self._next_symbol_id = 0
         self._next_procedure_id = 0
+        self._next_array_id = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -256,9 +304,12 @@ class AlgolTypeChecker:
         self.resolved_references = []
         self.semantic_procedures = []
         self.resolved_procedure_calls = []
+        self.semantic_arrays = []
+        self.resolved_array_accesses = []
         self._next_block_id = 0
         self._next_symbol_id = 0
         self._next_procedure_id = 0
+        self._next_array_id = 0
         root_scope = Scope()
         block = _first_node(ast, "block")
         if block is None:
@@ -273,6 +324,8 @@ class AlgolTypeChecker:
             references=list(self.resolved_references),
             procedures=list(self.semantic_procedures),
             procedure_calls=list(self.resolved_procedure_calls),
+            arrays=list(self.semantic_arrays),
+            array_accesses=list(self.resolved_array_accesses),
             diagnostics=list(self.diagnostics),
         )
         return TypeCheckResult(
@@ -340,6 +393,9 @@ class AlgolTypeChecker:
         if inner.rule_name == "procedure_decl":
             self._check_procedure_declaration(inner, scope)
             return
+        if inner.rule_name == "array_decl":
+            self._check_array_declaration(inner, scope)
+            return
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
             return
@@ -374,6 +430,89 @@ class AlgolTypeChecker:
             if scope.frame_layout is not None:
                 scope.frame_layout.allocate_scalar(symbol)
             self.semantic_symbols.append(symbol)
+
+    def _check_array_declaration(self, node: ASTNode, scope: Scope) -> None:
+        type_node = _first_direct_node(node, "type")
+        element_type = _first_keyword_value(type_node) if type_node is not None else ""
+        if element_type != INTEGER:
+            self._error(
+                node,
+                f"{element_type or 'real'} arrays are not supported yet; "
+                "use integer array",
+            )
+            return
+
+        for segment in _direct_nodes(node, "array_segment"):
+            bound_pairs = _direct_nodes(segment, "bound_pair")
+            if not bound_pairs:
+                self._error(segment, "array declaration is missing bounds")
+                continue
+            if len(bound_pairs) > MAX_ARRAY_DIMENSIONS:
+                self._error(
+                    segment,
+                    f"arrays support at most {MAX_ARRAY_DIMENSIONS} dimensions "
+                    "in this phase",
+                )
+                continue
+
+            dimensions: list[ArrayDimension] = []
+            for bound_pair in bound_pairs:
+                bounds = _direct_nodes(bound_pair, "arith_expr")
+                if len(bounds) != 2:
+                    self._error(bound_pair, "array bounds must be lower:upper pairs")
+                    continue
+                for bound in bounds:
+                    bound_type = self._infer_expr(bound, scope)
+                    if bound_type != ERROR and bound_type != INTEGER:
+                        self._error(bound, "array bounds must be integer")
+                dimensions.append(
+                    ArrayDimension(
+                        lower_node_id=id(bounds[0]),
+                        upper_node_id=id(bounds[1]),
+                    )
+                )
+
+            ident_list = _first_direct_node(segment, "ident_list")
+            for name_token in _tokens(ident_list):
+                if name_token.type_name != "NAME":
+                    continue
+                array_id = self._next_array_id
+                self._next_array_id += 1
+                symbol = Symbol(
+                    name=name_token.value,
+                    type_name=element_type,
+                    line=name_token.line,
+                    column=name_token.column,
+                    symbol_id=self._next_symbol_id,
+                    kind=ARRAY,
+                    declaring_block_id=scope.block_id,
+                    array_id=array_id,
+                )
+                if not scope.declare(symbol):
+                    self._error(
+                        name_token,
+                        f"{name_token.value!r} is already declared in this scope",
+                    )
+                    continue
+                self._next_symbol_id += 1
+                if scope.frame_layout is not None:
+                    scope.frame_layout.allocate_scalar(symbol)
+                self.semantic_symbols.append(symbol)
+                if symbol.slot_offset is None:
+                    continue
+                self.semantic_arrays.append(
+                    ArrayDescriptor(
+                        array_id=array_id,
+                        name=name_token.value,
+                        element_type=element_type,
+                        declaring_block_id=scope.block_id,
+                        dimensions=tuple(dimensions),
+                        symbol_id=symbol.symbol_id,
+                        slot_offset=symbol.slot_offset,
+                        line=name_token.line,
+                        column=name_token.column,
+                    )
+                )
 
     def _check_procedure_declaration(self, node: ASTNode, scope: Scope) -> None:
         name_token = _procedure_name(node)
@@ -544,13 +683,26 @@ class AlgolTypeChecker:
             self._error(assign, "chained assignment is not supported yet")
             return
 
-        name = _variable_name(left_parts[0])
-        if name is None:
-            self._error(left_parts[0], "only scalar variable assignment is supported")
+        variable = _first_node(left_parts[0], "variable")
+        if variable is None:
+            self._error(left_parts[0], "assignment target must be a variable")
             return
 
-        symbol = self._resolve_name(name, scope, role="write")
-        target_type = ERROR if symbol is None else symbol.type_name
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(left_parts[0], "assignment target is missing a name")
+            return
+
+        if _variable_subscripts(variable):
+            access = self._check_array_access(variable, scope, role="write")
+            target_type = ERROR if access is None else INTEGER
+        else:
+            symbol = self._resolve_name(name, scope, role="write")
+            if symbol is not None and symbol.kind == ARRAY:
+                self._error(name, f"array {name.value!r} requires subscripts")
+                target_type = ERROR
+            else:
+                target_type = ERROR if symbol is None else symbol.type_name
 
         expr = _first_direct_node(assign, "expression")
         value_type = self._infer_expr(expr, scope) if expr is not None else ERROR
@@ -615,13 +767,22 @@ class AlgolTypeChecker:
             return inferred
 
         if expr.rule_name == "variable":
-            name = _variable_name(expr)
-            if name is None:
-                self._error(expr, "array subscripts are not supported yet")
-                inferred = ERROR
+            if _variable_subscripts(expr):
+                access = self._check_array_access(expr, scope, role="read")
+                inferred = ERROR if access is None else INTEGER
             else:
+                name = _variable_head_name(expr)
+                if name is None:
+                    self._error(expr, "variable is missing a name")
+                    inferred = ERROR
+                    self.expression_types[id(expr)] = inferred
+                    return inferred
                 symbol = self._resolve_name(name, scope, role="read")
-                inferred = ERROR if symbol is None else symbol.type_name
+                if symbol is not None and symbol.kind == ARRAY:
+                    self._error(name, f"array {name.value!r} requires subscripts")
+                    inferred = ERROR
+                else:
+                    inferred = ERROR if symbol is None else symbol.type_name
             self.expression_types[id(expr)] = inferred
             return inferred
 
@@ -724,9 +885,87 @@ class AlgolTypeChecker:
             symbol = self._resolve_name(token, scope, role="read")
             if symbol is None:
                 return ERROR
+            if symbol.kind == ARRAY:
+                self._error(token, f"array {token.value!r} requires subscripts")
+                return ERROR
             return symbol.type_name
         self._error(token, f"unsupported expression token {token.value!r}")
         return ERROR
+
+    def _check_array_access(
+        self,
+        variable: ASTNode,
+        scope: Scope,
+        *,
+        role: str,
+    ) -> ResolvedArrayAccess | None:
+        name_token = _variable_head_name(variable)
+        if name_token is None:
+            self._error(variable, "array access is missing a name")
+            return None
+
+        resolved = scope.resolve_with_scope(name_token.value)
+        if resolved is None:
+            self._error(
+                name_token,
+                f"{name_token.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+
+        symbol, declaring_scope, lexical_depth_delta = resolved
+        if symbol.kind != ARRAY:
+            self._error(
+                name_token,
+                f"scalar variable {name_token.value!r} is not an array",
+            )
+            return None
+        if symbol.slot_offset is None or symbol.array_id is None:
+            self._error(
+                name_token,
+                f"array {name_token.value!r} has no descriptor slot",
+            )
+            return None
+
+        descriptor = next(
+            (
+                array
+                for array in self.semantic_arrays
+                if array.array_id == symbol.array_id
+            ),
+            None,
+        )
+        if descriptor is None:
+            self._error(name_token, f"array {name_token.value!r} has no descriptor")
+            return None
+
+        subscripts = _variable_subscripts(variable)
+        if len(subscripts) != len(descriptor.dimensions):
+            self._error(
+                name_token,
+                f"array {name_token.value!r} expects "
+                f"{len(descriptor.dimensions)} subscript(s), got {len(subscripts)}",
+            )
+        for subscript in subscripts:
+            subscript_type = self._infer_expr(subscript, scope)
+            if subscript_type != ERROR and subscript_type != INTEGER:
+                self._error(subscript, "array subscripts must be integer")
+
+        access = ResolvedArrayAccess(
+            token_id=id(name_token),
+            name=name_token.value,
+            role=role,
+            array_id=symbol.array_id,
+            use_block_id=scope.block_id,
+            declaration_block_id=declaring_scope.block_id,
+            lexical_depth_delta=lexical_depth_delta,
+            slot_offset=symbol.slot_offset,
+            subscript_count=len(subscripts),
+            line=name_token.line,
+            column=name_token.column,
+        )
+        self.resolved_array_accesses.append(access)
+        return access
 
     def _check_procedure_call(
         self,
@@ -1019,5 +1258,33 @@ def _variable_name(node: ASTNode) -> Token | None:
     variable = node if node.rule_name == "variable" else _first_node(node, "variable")
     if variable is None:
         return None
+    if _variable_subscripts(variable):
+        return None
     names = [token for token in _tokens(variable) if token.type_name == "NAME"]
     return names[0] if len(names) == 1 else None
+
+
+def _variable_head_name(node: ASTNode | None) -> Token | None:
+    if node is None:
+        variable = None
+    elif node.rule_name == "variable":
+        variable = node
+    else:
+        variable = _first_node(node, "variable")
+    if variable is None:
+        return None
+    return next(
+        (token for token in _direct_tokens(variable) if token.type_name == "NAME"),
+        None,
+    )
+
+
+def _variable_subscripts(node: ASTNode | None) -> list[ASTNode]:
+    if node is None:
+        variable = None
+    elif node.rule_name == "variable":
+        variable = node
+    else:
+        variable = _first_node(node, "variable")
+    subscripts = _first_direct_node(variable, "subscripts")
+    return _direct_nodes(subscripts, "arith_expr")

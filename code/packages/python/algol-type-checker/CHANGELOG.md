@@ -11,6 +11,9 @@ All notable changes to this package will be documented in this file.
   references carrying lexical-depth and slot-offset information.
 - Added value-only integer procedure descriptors, parameter/result frame slots,
   and resolved procedure calls with static-link deltas for Phase 3 lowering.
+- Added Phase 4 integer array descriptors, dimension-bound metadata,
+  descriptor frame slots, and resolved array read/write accesses with
+  lexical-depth deltas.
 
 ## [0.1.0] - 2026-04-20
 

@@ -347,13 +347,25 @@ reviewed independently:
   integration for all denominators of the form L·Q with deg Q ≤ 2. See
   `mixed-integral.md`.
 
-### Phase 3 — Risch transcendental case
+### Phase 3 — Transcendental integration (single linear extension)
 
-Full Risch over towers of exp/log extensions (no algebraics). Decides
-whether an elementary antiderivative exists for any expression built
-from `{rationals, exp, log, trig-as-exp}` and constructs it when one
-does. Requires differential-field machinery: derivation on a tower,
-the structure theorem, the Rothstein–Trager resultant.
+Extends integration to the most common transcendental integrands:
+polynomials multiplied by `exp`, `log`, `sin`, or `cos` of a **linear**
+argument `a·x + b`. Five cases, two algorithms:
+
+- **Cases 3a–3c** — Bare `exp(ax+b)`, `sin(ax+b)`, `cos(ax+b)`:
+  antiderivative by dividing by the inner-argument coefficient `a`.
+- **Case 3d** — `p(x)·exp(ax+b)` for `p ∈ Q[x]`: solve the Risch
+  differential equation `g′ + a·g = p` by back-substitution; result
+  is `g(x)·exp(ax+b)`.
+- **Case 3e** — `p(x)·log(ax+b)` for `p ∈ Q[x]`: integration by parts
+  reduces to polynomial arithmetic; result is
+  `[P(x) − P(−b/a)]·log(ax+b) − S(x)`.
+
+No new IR primitives required. See `phase3-transcendental.md`.
+
+The full Risch algorithm for rational × transcendental products and
+multi-level towers is deferred to a later Phase 3 extension.
 
 ### Phase 4 — Algebraic extensions (full Risch)
 

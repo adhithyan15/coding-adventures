@@ -255,6 +255,61 @@ class TestAlgolTypeChecker:
         assert call.role == "statement"
         assert call.return_type is None
 
+    def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
+        ast = parse_algol(
+            "begin integer result, lo, hi; "
+            "integer array a[lo:hi, 1:3]; "
+            "a[lo, 2] := 7; "
+            "result := a[hi, 3] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        descriptor = result.semantic.arrays[0]
+        assert descriptor.name == "a"
+        assert descriptor.element_type == "integer"
+        assert len(descriptor.dimensions) == 2
+        assert descriptor.slot_offset == FRAME_HEADER_SIZE + (3 * FRAME_WORD_SIZE)
+        assert [access.role for access in result.semantic.array_accesses] == [
+            "write",
+            "read",
+        ]
+
+    def test_rejects_array_without_integer_type_for_now(self) -> None:
+        ast = parse_algol("begin array a[1:3]; a[1] := 7 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "real arrays are not supported" in result.diagnostics[0].message
+
+    def test_rejects_wrong_array_subscript_count(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:3, 1:3]; result := a[1] end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects 2 subscript" in result.diagnostics[0].message
+
+    def test_rejects_non_integer_array_element_assignment(self) -> None:
+        ast = parse_algol("begin integer array a[1:3]; a[1] := false end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "cannot assign boolean to integer variable"
+            in result.diagnostics[0].message
+        )
+
+    def test_rejects_array_used_without_subscripts(self) -> None:
+        ast = parse_algol("begin integer result; integer array a[1:3]; result := a end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "requires subscripts" in result.diagnostics[0].message
+
     def test_rejects_call_by_name_parameter_for_now(self) -> None:
         ast = parse_algol(
             "begin integer result; "

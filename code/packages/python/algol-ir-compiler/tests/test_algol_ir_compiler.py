@@ -166,10 +166,43 @@ class TestAlgolIrCompiler:
                     offset=layout.header_size + (len(layout.slots) * FRAME_WORD_SIZE),
                     size=FRAME_WORD_SIZE,
                 )
-            )
+        )
 
-        with pytest.raises(CompileError, match="frame bytes plus 16 runtime bytes"):
+        with pytest.raises(CompileError, match="frame bytes plus 20 runtime bytes"):
             compile_algol(typed)
+
+    def test_compiles_integer_array_descriptor_and_element_accesses(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:3]; "
+                "a[2] := 9; result := a[2] "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        data_labels = [decl.label for decl in result.program.data]
+
+        assert result.heap_memory_label == "__algol_heap"
+        assert data_labels == ["__algol_frames", "__algol_heap"]
+        assert opcodes.count(IrOp.LOAD_WORD) >= 5
+        assert opcodes.count(IrOp.STORE_WORD) >= 12
+        assert IrOp.CMP_GT in opcodes
+
+    def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, lo, hi; "
+                "lo := 2; hi := 4; "
+                "begin integer array a[lo:hi, 1:2]; "
+                "a[3, 2] := 11; result := a[3, 2] end "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.DIV in opcodes
+        assert opcodes.count(IrOp.MUL) >= 4
+        assert opcodes.count(IrOp.CMP_GT) >= 6
 
     def test_compiles_integer_value_procedure_call(self) -> None:
         result = compile_algol(
