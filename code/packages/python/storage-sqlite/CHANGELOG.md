@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.7.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.schema` — phase 6: `sqlite_schema` catalog table (CREATE TABLE /
+  DROP TABLE / schema cookie management).
+  - **`initialize_new_database(pager)`**: sets up a brand-new SQLite-compatible
+    database file. Allocates page 1, writes the 100-byte database header (via
+    `Header.new_database()`), and initialises an empty `sqlite_schema` table-leaf
+    page at byte offset 100. Returns a `Schema` ready for DDL. The caller must call
+    `pager.commit()` to persist the result.
+  - **`Schema` class**: access layer for the `sqlite_schema` catalog B-tree that
+    lives on page 1 (with its B-tree header at offset 100).
+    - `Schema(pager, freelist=None)` — opens the schema tree on an existing
+      database. The optional `Freelist` is forwarded to the B-tree so that
+      `create_table` / `drop_table` allocate from and return pages to the freelist.
+    - **`list_tables() → list[str]`**: full scan of `sqlite_schema`, returning the
+      names of all `type = 'table'` rows in ascending rowid order (i.e. insertion
+      order).
+    - **`find_table(name) → (rowid, rootpage, sql) | None`**: looks up a table by
+      name and returns the three fields needed for DML (`rootpage`) and
+      round-tripping DDL (`sql`). Returns `None` when the table does not exist.
+    - **`rootpage_for(name) → int | None`**: convenience wrapper that returns only
+      the root page number (used when opening a table's B-tree for DML).
+    - **`get_schema_cookie() → int`**: reads the u32 schema cookie at byte offset
+      40 of the page-1 database header. The cookie is incremented on every CREATE
+      or DROP TABLE so that clients can detect schema changes without re-reading the
+      whole catalog.
+    - **`create_table(name, sql) → int`**: validates the name is not already taken,
+      allocates a fresh root page via `BTree.create`, inserts the five-column
+      `sqlite_schema` row (`type='table'`, `name`, `tbl_name=name`, `rootpage`,
+      `sql`), bumps the schema cookie, and returns the root page number.  Raises
+      `SchemaError` if a table with the same name already exists.
+    - **`drop_table(name)`**: locates the `sqlite_schema` row for *name*, calls
+      `BTree.free_all(freelist)` to reclaim every page in the table's B-tree
+      (interior pages, leaf pages, overflow chains), deletes the schema row, and
+      bumps the schema cookie.  Without a freelist the root page is zeroed to
+      prevent stale data from persisting.  Raises `SchemaError` if the table does
+      not exist.
+  - **`SchemaError(StorageError)`**: new exception class for schema-level errors
+    (duplicate table name, unknown table).  Exported from the package root.
+- **`BTree.free_all(freelist)`** — new method (added to `btree.py` for phase 6):
+  reclaims every page in a B-tree via a depth-first post-order traversal.
+  - **`BTree._free_subtree(pgno, hdr_off, visited)`**: internal helper that reads
+    the page header, frees all overflow chains on leaf pages, recursively frees
+    children of interior pages, then frees the page itself.  Page 1 is never freed
+    (it is the database header page).  A `visited` set prevents double-frees on
+    corrupt databases with pointer cycles.
+- **`Schema` and `SchemaError` and `initialize_new_database`** are now exported from
+  the package root (`storage_sqlite.__init__`).
+
 ## [0.6.0] - 2026-04-20
 
 ### Added

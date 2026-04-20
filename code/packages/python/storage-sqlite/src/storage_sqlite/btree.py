@@ -1557,3 +1557,67 @@ class BTree:
         else:
             ptr_end = _ptr_array_base(self._header_offset) + hdr["ncells"] * _CELL_PTR
         return hdr["content_start"] - ptr_end
+
+    def free_all(self, freelist: Freelist) -> None:
+        """Free every page in this B-tree, including all overflow chains.
+
+        Traverses the entire tree (all interior pages, all leaf pages, all
+        overflow chains) and returns each page to *freelist*. Page 1 is
+        **never** freed — it is the database header page and always lives
+        outside the freelist.
+
+        Called by :meth:`~storage_sqlite.schema.Schema.drop_table` to
+        reclaim all storage occupied by a dropped table.
+
+        After this call the B-tree's pages must not be read or written
+        again; the caller is responsible for removing any references to this
+        tree (e.g. by deleting the ``sqlite_schema`` row).
+
+        Algorithm:
+
+        * **Leaf page** — free all overflow chains, then free the page itself.
+        * **Interior page** — recursively free every child subtree first
+          (left children + rightmost child), then free the interior page.
+
+        A ``visited`` set prevents double-frees on corrupt databases that
+        have cycles in their child-pointer chains.
+        """
+        old_freelist = self._freelist
+        self._freelist = freelist
+        try:
+            self._free_subtree(self._root_page, self._header_offset, set())
+        finally:
+            self._freelist = old_freelist
+
+    def _free_subtree(self, pgno: int, hdr_off: int, visited: set[int]) -> None:
+        """Recursively free all pages reachable from *pgno*.
+
+        Temporarily uses ``self._freelist`` (set by :meth:`free_all`) for
+        all :meth:`_free_page` and :meth:`_free_overflow` calls.
+
+        *hdr_off* is 100 for the root page of the ``sqlite_schema`` tree
+        (page 1) and 0 for every other page.
+        """
+        if pgno == 0 or pgno in visited:
+            return
+        visited.add(pgno)
+
+        page_data = self._pager.read(pgno)
+        hdr = _read_hdr(page_data, hdr_off)
+
+        if hdr["page_type"] == PAGE_TYPE_LEAF_TABLE:
+            ptrs = _read_ptrs(page_data, hdr_off, hdr["ncells"])
+            for ptr in ptrs:
+                self._free_overflow(page_data, ptr)
+            # Page 1 is the database header — it is never freed.
+            if pgno != 1:
+                self._free_page(pgno)
+
+        elif hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE:
+            ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
+            for ptr in ptrs:
+                left_child, _ = _read_interior_cell(page_data, ptr)
+                self._free_subtree(left_child, 0, visited)
+            self._free_subtree(hdr["rightmost_child"], 0, visited)
+            if pgno != 1:
+                self._free_page(pgno)
