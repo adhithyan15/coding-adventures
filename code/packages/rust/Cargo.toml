@@ -239,6 +239,7 @@ members = [
     "paint-vm-gdi",
     "paint-vm-metal-c",
     "pixel-container",
+    "image-point-ops",
     "png",
     "point2d",
     "polynomial",
