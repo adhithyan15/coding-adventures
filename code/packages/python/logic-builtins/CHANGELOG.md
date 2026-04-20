@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-04-20
+
+### Added
+
+- advanced control predicates: `trueo`, `failo`, `iftheno`, `ifthenelseo`, and `forallo`
+- tests covering committed-condition behavior, then-branch backtracking, else-state isolation, and forall binding discipline
+- documentation explaining why real Prolog cut is deferred until the solver can prune scoped choicepoints
+
 ## [0.3.0] - 2026-04-20
 
 ### Added

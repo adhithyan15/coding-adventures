@@ -12,6 +12,9 @@ ordinary logic goal expressions.
 - `callo(goal)`
 - `onceo(goal)`
 - `noto(goal)` for negation as failure
+- `trueo()` and `failo()`
+- `iftheno(condition, then_goal)` and `ifthenelseo(condition, then_goal, else_goal)`
+- `forallo(generator, test)`
 - `groundo(term)`
 - `varo(term)` and `nonvaro(term)`
 - `atomo(term)`, `numbero(term)`, `stringo(term)`, and `compoundo(term)`
@@ -25,7 +28,19 @@ ordinary logic goal expressions.
 ## Quick Start
 
 ```python
-from logic_builtins import argo, findallo, functoro, geqo, groundo, iso, add, noto, onceo
+from logic_builtins import (
+    add,
+    argo,
+    findallo,
+    forallo,
+    functoro,
+    geqo,
+    groundo,
+    ifthenelseo,
+    iso,
+    noto,
+    onceo,
+)
 from logic_engine import atom, conj, eq, fail, logic_list, num, program, solve_all, term, var
 
 X = var("X")
@@ -55,6 +70,16 @@ assert solve_all(
     Results,
     findallo(X, conj(eq(X, 7), geqo(add(X, 1), 8)), Results),
 ) == [logic_list([7])]
+assert solve_all(
+    program(),
+    X,
+    ifthenelseo(eq(X, "tea"), eq(X, "tea"), eq(X, "coffee")),
+) == [atom("tea")]
+assert solve_all(
+    program(),
+    X,
+    forallo(conj(eq(X, 7)), geqo(X, 7)),
+) == [X]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -64,6 +89,13 @@ instantiated it.
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail
 for empty collections.
+
+Advanced control is intentionally honest about the current solver. `iftheno`
+and `ifthenelseo` commit to the first condition proof while allowing the chosen
+branch to keep backtracking. `forallo` checks every generated proof without
+leaking generator bindings to the outer query. Full Prolog cut is not included
+yet because it needs solver-level choicepoint pruning rather than a simple
+library predicate.
 
 ## Dependencies
 

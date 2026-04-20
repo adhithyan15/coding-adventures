@@ -12,12 +12,16 @@ from logic_builtins.builtins import (
     callo,
     compoundo,
     div,
+    failo,
     findallo,
     floordiv,
+    forallo,
     functoro,
     geqo,
     groundo,
     gto,
+    ifthenelseo,
+    iftheno,
     iso,
     leqo,
     lto,
@@ -33,6 +37,7 @@ from logic_builtins.builtins import (
     setofo,
     stringo,
     sub,
+    trueo,
     varo,
 )
 
@@ -45,12 +50,16 @@ __all__ = [
     "callo",
     "compoundo",
     "div",
+    "failo",
     "findallo",
     "floordiv",
+    "forallo",
     "functoro",
     "geqo",
     "gto",
     "groundo",
+    "ifthenelseo",
+    "iftheno",
     "iso",
     "leqo",
     "lto",
@@ -66,7 +75,8 @@ __all__ = [
     "setofo",
     "stringo",
     "sub",
+    "trueo",
     "varo",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"

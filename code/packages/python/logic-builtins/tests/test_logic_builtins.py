@@ -30,12 +30,16 @@ from logic_builtins import (
     callo,
     compoundo,
     div,
+    failo,
     findallo,
     floordiv,
+    forallo,
     functoro,
     geqo,
     groundo,
     gto,
+    ifthenelseo,
+    iftheno,
     iso,
     leqo,
     lto,
@@ -51,6 +55,7 @@ from logic_builtins import (
     setofo,
     stringo,
     sub,
+    trueo,
     varo,
 )
 
@@ -59,7 +64,139 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.3.0"
+        assert __version__ == "0.4.0"
+
+
+class TestAdvancedControlBuiltins:
+    """Advanced control should stay honest about committed search behavior."""
+
+    def test_trueo_succeeds_once_and_preserves_state(self) -> None:
+        item = var("Item")
+
+        assert solve_all(program(), item, conj(eq(item, "tea"), trueo())) == [
+            atom("tea"),
+        ]
+
+    def test_failo_fails_without_successor_states(self) -> None:
+        item = var("Item")
+
+        assert solve_all(program(), item, conj(eq(item, "tea"), failo())) == []
+
+    def test_iftheno_commits_to_first_condition_proof(self) -> None:
+        guard = var("Guard")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            iftheno(
+                disj(eq(guard, "first"), eq(guard, "second")),
+                eq(result, guard),
+            ),
+        ) == [atom("first")]
+
+    def test_iftheno_keeps_then_branch_backtracking(self) -> None:
+        guard = var("Guard")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            iftheno(
+                disj(eq(guard, "first"), eq(guard, "second")),
+                disj(
+                    eq(result, term("choice", guard, "a")),
+                    eq(result, term("choice", guard, "b")),
+                ),
+            ),
+        ) == [
+            term("choice", "first", "a"),
+            term("choice", "first", "b"),
+        ]
+
+    def test_iftheno_fails_when_condition_fails(self) -> None:
+        result = var("Result")
+
+        assert solve_all(program(), result, iftheno(fail(), eq(result, "then"))) == []
+
+    def test_ifthenelseo_chooses_then_branch_when_condition_succeeds(self) -> None:
+        guard = var("Guard")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            ifthenelseo(
+                disj(eq(guard, "first"), eq(guard, "second")),
+                eq(result, term("then", guard)),
+                eq(result, "else"),
+            ),
+        ) == [term("then", "first")]
+
+    def test_ifthenelseo_chooses_else_from_original_state(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            ifthenelseo(
+                conj(eq(item, "condition-binding"), fail()),
+                eq(item, "then"),
+                eq(item, "else"),
+            ),
+        ) == [atom("else")]
+
+    def test_forallo_succeeds_when_every_generated_proof_passes(self) -> None:
+        marker = var("Marker")
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                forallo(disj(eq(item, 1), eq(item, 2)), lto(item, 3)),
+            ),
+        ) == [atom("ok")]
+
+    def test_forallo_fails_when_any_generated_proof_fails_test(self) -> None:
+        marker = var("Marker")
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                forallo(disj(eq(item, 1), eq(item, 4)), lto(item, 3)),
+            ),
+        ) == []
+
+    def test_forallo_succeeds_vacuously_and_does_not_leak_bindings(self) -> None:
+        item = var("Item")
+
+        assert solve_all(program(), item, forallo(fail(), fail())) == [item]
+        assert solve_all(
+            program(),
+            item,
+            forallo(disj(eq(item, 1), eq(item, 2)), numbero(item)),
+        ) == [item]
+
+    def test_advanced_control_rejects_non_goals(self) -> None:
+        with pytest.raises(TypeError):
+            iftheno(object(), trueo())
+        with pytest.raises(TypeError):
+            iftheno(trueo(), object())
+        with pytest.raises(TypeError):
+            ifthenelseo(object(), trueo(), failo())
+        with pytest.raises(TypeError):
+            ifthenelseo(trueo(), object(), failo())
+        with pytest.raises(TypeError):
+            ifthenelseo(trueo(), failo(), object())
+        with pytest.raises(TypeError):
+            forallo(object(), trueo())
+        with pytest.raises(TypeError):
+            forallo(trueo(), object())
 
 
 class TestCollectionBuiltins:
