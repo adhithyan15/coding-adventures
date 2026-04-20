@@ -45,13 +45,13 @@ use text_interfaces::{
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::{
-    cfstring, CFArrayGetCount, CFArrayGetValueAtIndex, CFRange, CFRelease, CFStringGetCString,
-    CFStringGetLength, CGPoint, CGSize, CTFontCopyFamilyName, CTFontCopyPostScriptName,
-    CTFontCreateCopyWithAttributes, CTFontCreateWithName, CTFontGetAscent, CTFontGetCapHeight,
-    CTFontGetDescent, CTFontGetLeading, CTFontGetSize, CTFontGetUnitsPerEm, CTFontGetXHeight,
-    CTLineCreateWithAttributedString, CTLineGetGlyphRuns, CTRunGetAdvances, CTRunGetGlyphCount,
-    CTRunGetGlyphs, CTRunGetPositions, CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8,
-    NIL,
+    cfstring_checked, CFArrayGetCount, CFArrayGetValueAtIndex, CFRange, CFRelease,
+    CFStringGetCString, CFStringGetLength, CGPoint, CGSize, CTFontCopyFamilyName,
+    CTFontCopyPostScriptName, CTFontCreateCopyWithAttributes, CTFontCreateWithName,
+    CTFontGetAscent, CTFontGetCapHeight, CTFontGetDescent, CTFontGetLeading, CTFontGetSize,
+    CTFontGetUnitsPerEm, CTFontGetXHeight, CTLineCreateWithAttributedString, CTLineGetGlyphRuns,
+    CTRunGetAdvances, CTRunGetGlyphCount, CTRunGetGlyphs, CTRunGetPositions,
+    CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8, NIL,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -191,10 +191,9 @@ impl FontResolver for CoreTextResolver {
 
 #[cfg(target_vendor = "apple")]
 unsafe fn create_font(family: &str, size: f64) -> Option<CoreTextHandle> {
-    let cf_name = cfstring(family);
-    if cf_name == NIL {
-        return None;
-    }
+    // cfstring_checked rejects interior NULs by returning None rather
+    // than panicking — safe for untrusted family names.
+    let cf_name = cfstring_checked(family)?;
     let font = CTFontCreateWithName(cf_name, size, std::ptr::null());
     CFRelease(cf_name);
     if font == NIL {
@@ -347,21 +346,27 @@ unsafe fn shape_with_coretext(
     size: f32,
 ) -> Result<ShapedRun, ShapingError> {
     use objc_bridge::{
-        kCTFontAttributeName, CFAttributedStringCreate, CFDictionaryCreate,
-        kCFTypeDictionaryKeyCallBacks, kCFTypeDictionaryValueCallBacks,
+        kCFTypeDictionaryKeyCallBacks, kCFTypeDictionaryValueCallBacks, kCTFontAttributeName,
+        CFAttributedStringCreate, CFDictionaryCreate,
     };
 
-    // Ensure we have a CTFontRef at the requested size. If the handle's
-    // size matches, reuse. Otherwise derive a same-family at `size`.
-    let resized_font = if (font_handle.size - size).abs() < 1e-3 {
-        font_handle.raw()
+    // Ensure we have a CTFontRef at the requested size.
+    //
+    // `owns_resized` tracks whether we created a new retained
+    // CTFontRef via CTFontCreateCopyWithAttributes (which always
+    // returns a fresh retain, per Apple's Create/Copy naming rule —
+    // we must release it regardless of whether the pointer happens to
+    // be numerically equal to the input handle's).
+    let (resized_font, owns_resized) = if (font_handle.size - size).abs() < 1e-3 {
+        (font_handle.raw(), false)
     } else {
-        CTFontCreateCopyWithAttributes(
+        let f = CTFontCreateCopyWithAttributes(
             font_handle.raw(),
             size as f64,
             std::ptr::null(),
             NIL,
-        )
+        );
+        (f, true)
     };
     if resized_font == NIL {
         return Err(ShapingError::ShapingFailed(
@@ -370,13 +375,19 @@ unsafe fn shape_with_coretext(
     }
 
     // Build an attributed string carrying just the font attribute.
-    let cf_text = cfstring(text);
-    if cf_text == NIL {
-        if resized_font != font_handle.raw() {
-            CFRelease(resized_font);
+    // cfstring_checked rejects interior NUL bytes by returning None,
+    // avoiding a panic on untrusted input text.
+    let cf_text = match cfstring_checked(text) {
+        Some(s) => s,
+        None => {
+            if owns_resized {
+                CFRelease(resized_font);
+            }
+            return Err(ShapingError::ShapingFailed(
+                "text contained interior NUL byte".into(),
+            ));
         }
-        return Err(ShapingError::ShapingFailed("failed to create CFString".into()));
-    }
+    };
 
     // Dictionary: {kCTFontAttributeName: resized_font}
     // kCTFontAttributeName is an extern static Id (pointer value); take
@@ -395,7 +406,7 @@ unsafe fn shape_with_coretext(
     );
     if attrs == NIL {
         CFRelease(cf_text);
-        if resized_font != font_handle.raw() {
+        if owns_resized {
             CFRelease(resized_font);
         }
         return Err(ShapingError::ShapingFailed("CFDictionaryCreate failed".into()));
@@ -405,7 +416,7 @@ unsafe fn shape_with_coretext(
     CFRelease(cf_text);
     CFRelease(attrs);
     if attr_string == NIL {
-        if resized_font != font_handle.raw() {
+        if owns_resized {
             CFRelease(resized_font);
         }
         return Err(ShapingError::ShapingFailed(
@@ -416,7 +427,7 @@ unsafe fn shape_with_coretext(
     let line = CTLineCreateWithAttributedString(attr_string);
     CFRelease(attr_string);
     if line == NIL {
-        if resized_font != font_handle.raw() {
+        if owns_resized {
             CFRelease(resized_font);
         }
         return Err(ShapingError::ShapingFailed(
@@ -479,7 +490,7 @@ unsafe fn shape_with_coretext(
     }
 
     CFRelease(line);
-    if resized_font != font_handle.raw() {
+    if owns_resized {
         CFRelease(resized_font);
     }
 
@@ -675,6 +686,18 @@ mod tests {
         assert!(result.ascent > 0.0);
         assert!(result.descent >= 0.0);
         assert_eq!(result.line_count, 1);
+    }
+
+    #[test]
+    fn shape_interior_nul_returns_shaping_failed_not_panic() {
+        let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
+        let s = CoreTextShaper::new();
+        // "abc\0def" — interior NUL. Previous implementation panicked
+        // via CString::new.expect; the fix returns a ShapingError.
+        let err = s
+            .shape("abc\0def", &h, 16.0, &ShapeOptions::default())
+            .unwrap_err();
+        assert!(matches!(err, ShapingError::ShapingFailed(_)));
     }
 
     #[test]

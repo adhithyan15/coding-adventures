@@ -518,12 +518,17 @@ extern "C" {
     ) -> Id; // CFAttributedStringRef
 
     /// Create a CFDictionary.
+    ///
+    /// `num_values` is typed as `CFIndex` (== `c_long`, 64-bit on Apple
+    /// 64-bit platforms) to match the real ABI. Declaring it as `c_int`
+    /// would leave the upper 32 bits of the argument register undefined
+    /// on arm64, causing CoreFoundation to read garbage for the count.
     #[allow(non_snake_case)]
     pub fn CFDictionaryCreate(
         allocator: *const c_void,
         keys: *const *const c_void,
         values: *const *const c_void,
-        num_values: c_int,
+        num_values: c_long,
         key_callbacks: *const c_void,
         value_callbacks: *const c_void,
     ) -> Id; // CFDictionaryRef
@@ -765,6 +770,33 @@ pub fn cfstring(s: &str) -> Id {
             c_str.as_ptr(),
             K_CF_STRING_ENCODING_UTF8,
         )
+    }
+}
+
+/// NUL-safe variant of [`cfstring`].
+///
+/// Returns `None` if `s` contains an interior NUL byte (which
+/// `CString::new` rejects). Callers taking untrusted text input —
+/// especially shapers, which receive arbitrary user content — should
+/// prefer this over [`cfstring`] to turn a DoS-panic into a recoverable
+/// error.
+///
+/// The returned pointer (when `Some`) is a retained `CFStringRef`; the
+/// caller is responsible for `CFRelease`.
+#[cfg(target_vendor = "apple")]
+pub fn cfstring_checked(s: &str) -> Option<Id> {
+    let c_str = CString::new(s).ok()?;
+    let result = unsafe {
+        CFStringCreateWithCString(
+            std::ptr::null(),
+            c_str.as_ptr(),
+            K_CF_STRING_ENCODING_UTF8,
+        )
+    };
+    if result == NIL {
+        None
+    } else {
+        Some(result)
     }
 }
 
