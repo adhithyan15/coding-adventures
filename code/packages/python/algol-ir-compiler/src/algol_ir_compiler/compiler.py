@@ -5,7 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from algol_type_checker import (
+    ArrayDescriptor,
     ProcedureDescriptor,
+    ResolvedArrayAccess,
     ResolvedProcedureCall,
     ResolvedReference,
     SemanticBlock,
@@ -27,6 +29,7 @@ from lang_parser import ASTNode
 from lexer import Token
 
 _FRAME_MEMORY_LABEL = "__algol_frames"
+_HEAP_MEMORY_LABEL = "__algol_heap"
 _ZERO_REG = 0
 _RESULT_REG = 1
 _DYNAMIC_LINK_OFFSET = 0
@@ -35,13 +38,28 @@ _RETURN_TOKEN_OFFSET = 8
 _FRAME_SIZE_OFFSET = 12
 _BLOCK_ID_OFFSET = 16
 _FRAME_MEMORY_BYTES = 64 * 1024
+_HEAP_MEMORY_BYTES = 64 * 1024
 _RUNTIME_CURRENT_FRAME_OFFSET = 0
 _RUNTIME_STACK_POINTER_OFFSET = 4
 _RUNTIME_STACK_LIMIT_OFFSET = 8
-_RUNTIME_STATE_BYTES = 16
+_RUNTIME_HEAP_POINTER_OFFSET = 12
+_RUNTIME_HEAP_LIMIT_OFFSET = 16
+_RUNTIME_STATE_BYTES = 20
 _STATIC_LINK_PARAM_REG = 2
 _VALUE_PARAM_BASE_REG = 3
 _FIRST_GENERAL_REG = 32
+_ARRAY_DESCRIPTOR_SIZE = 24
+_ARRAY_ELEMENT_TYPE_INTEGER = 1
+_ARRAY_DIMENSION_ENTRY_SIZE = 12
+_ARRAY_DIM_LOWER_OFFSET = 0
+_ARRAY_DIM_UPPER_OFFSET = 4
+_ARRAY_DIM_STRIDE_OFFSET = 8
+_ARRAY_TOTAL_COUNT_OFFSET = 8
+_ARRAY_ELEMENT_WIDTH_OFFSET = 12
+_ARRAY_DATA_POINTER_OFFSET = 16
+_ARRAY_BOUNDS_POINTER_OFFSET = 20
+_ARRAY_WORD_BYTES = 4
+_ARRAY_MAX_ELEMENTS = 4096
 
 
 @dataclass(frozen=True)
@@ -59,6 +77,7 @@ class CompileResult:
     variable_slots: dict[str, int] = field(default_factory=dict)
     frame_offsets: dict[int, int] = field(default_factory=dict)
     frame_memory_label: str = _FRAME_MEMORY_LABEL
+    heap_memory_label: str = _HEAP_MEMORY_LABEL
     procedure_signatures: dict[str, int] = field(default_factory=dict)
 
 
@@ -72,6 +91,7 @@ class _FrameScope:
 
     semantic_block: SemanticBlock
     frame_base_reg: int
+    heap_mark_reg: int | None = None
     parent: _FrameScope | None = None
 
     @property
@@ -98,12 +118,18 @@ class AlgolIrCompiler:
         self.stack_base_reg = -1
         self.stack_pointer_reg = -1
         self.stack_limit_reg = -1
+        self.heap_base_reg = -1
+        self.heap_pointer_reg = -1
+        self.heap_limit_reg = -1
         self.semantic_blocks: list[SemanticBlock] = []
         self.semantic_blocks_by_ast: dict[int, SemanticBlock] = {}
         self.semantic_blocks_by_id: dict[int, SemanticBlock] = {}
         self.references: dict[tuple[int, str], ResolvedReference] = {}
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
+        self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
         self.procedures: dict[int, ProcedureDescriptor] = {}
+        self.arrays: dict[int, ArrayDescriptor] = {}
+        self.arrays_by_block: dict[int, list[ArrayDescriptor]] = {}
         self.frame_offsets: dict[int, int] = {}
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
@@ -128,6 +154,9 @@ class AlgolIrCompiler:
         self.next_reg = _FIRST_GENERAL_REG
         self.if_count = 0
         self.loop_count = 0
+        self.heap_base_reg = -1
+        self.heap_pointer_reg = -1
+        self.heap_limit_reg = -1
         self.semantic_blocks = list(type_result.semantic.blocks)
         self.semantic_blocks_by_ast = {
             block.ast_node_id: block
@@ -145,10 +174,20 @@ class AlgolIrCompiler:
             (call.token_id, call.role): call
             for call in type_result.semantic.procedure_calls
         }
+        self.array_accesses = {
+            (access.token_id, access.role): access
+            for access in type_result.semantic.array_accesses
+        }
         self.procedures = {
             procedure.procedure_id: procedure
             for procedure in type_result.semantic.procedures
         }
+        self.arrays = {
+            array.array_id: array for array in type_result.semantic.arrays
+        }
+        self.arrays_by_block = {}
+        for array in type_result.semantic.arrays:
+            self.arrays_by_block.setdefault(array.declaring_block_id, []).append(array)
         self.procedure_signatures = {
             procedure.label: 1 + len(procedure.parameters)
             for procedure in type_result.semantic.procedures
@@ -171,6 +210,7 @@ class AlgolIrCompiler:
                 f"{_FRAME_MEMORY_BYTES} byte phase-3 limit"
             )
         self.program.add_data(IrDataDecl(_FRAME_MEMORY_LABEL, _FRAME_MEMORY_BYTES, 0))
+        self.program.add_data(IrDataDecl(_HEAP_MEMORY_LABEL, _HEAP_MEMORY_BYTES, 0))
 
         self._label("_start")
         self._emit(IrOp.LOAD_IMM, IrRegister(_ZERO_REG), IrImmediate(0))
@@ -178,6 +218,9 @@ class AlgolIrCompiler:
         self.stack_pointer_reg = self._fresh_reg()
         self.stack_limit_reg = self._fresh_reg()
         self.current_frame_reg = self._fresh_reg()
+        self.heap_base_reg = self._fresh_reg()
+        self.heap_pointer_reg = self._fresh_reg()
+        self.heap_limit_reg = self._fresh_reg()
         self._emit(
             IrOp.LOAD_ADDR,
             IrRegister(self.stack_base_reg),
@@ -195,10 +238,24 @@ class AlgolIrCompiler:
             IrRegister(self.stack_base_reg),
             IrImmediate(_FRAME_MEMORY_BYTES),
         )
+        self._emit(
+            IrOp.LOAD_ADDR,
+            IrRegister(self.heap_base_reg),
+            IrLabel(_HEAP_MEMORY_LABEL),
+        )
+        self._copy_reg(dst=self.heap_pointer_reg, src=self.heap_base_reg)
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(self.heap_limit_reg),
+            IrRegister(self.heap_base_reg),
+            IrImmediate(_HEAP_MEMORY_BYTES),
+        )
         self._emit(IrOp.LOAD_IMM, IrRegister(self.current_frame_reg), IrImmediate(0))
         self._store_runtime_state(_RUNTIME_CURRENT_FRAME_OFFSET, self.current_frame_reg)
         self._store_runtime_state(_RUNTIME_STACK_POINTER_OFFSET, self.stack_pointer_reg)
         self._store_runtime_state(_RUNTIME_STACK_LIMIT_OFFSET, self.stack_limit_reg)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, self.heap_pointer_reg)
+        self._store_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, self.heap_limit_reg)
 
         block = _first_node(type_result.ast, "block")
         if block is None:
@@ -221,6 +278,7 @@ class AlgolIrCompiler:
             variable_slots=dict(self.variable_slots),
             frame_offsets=dict(self.frame_offsets),
             frame_memory_label=_FRAME_MEMORY_LABEL,
+            heap_memory_label=_HEAP_MEMORY_LABEL,
             procedure_signatures=dict(self.procedure_signatures),
         )
 
@@ -231,10 +289,12 @@ class AlgolIrCompiler:
         scope = _FrameScope(
             semantic_block=semantic_block,
             frame_base_reg=frame_base_reg,
+            heap_mark_reg=self._snapshot_heap_pointer(),
             parent=parent,
         )
 
         self._initialize_scalar_slots(scope)
+        self._allocate_arrays(scope)
         for statement in _direct_nodes(block, "statement"):
             self._compile_statement(statement, scope)
 
@@ -289,6 +349,7 @@ class AlgolIrCompiler:
         return frame_base
 
     def _emit_leave_frame(self, scope: _FrameScope) -> None:
+        self._restore_heap_pointer(scope)
         offset_reg = self._const_reg(_DYNAMIC_LINK_OFFSET)
         self._emit(
             IrOp.LOAD_WORD,
@@ -302,6 +363,200 @@ class AlgolIrCompiler:
     def _initialize_scalar_slots(self, scope: _FrameScope) -> None:
         for slot in scope.semantic_block.frame_layout.slots:
             self._store_word_const(scope.frame_base_reg, slot.offset, 0)
+
+    def _allocate_arrays(self, scope: _FrameScope) -> None:
+        for array in self.arrays_by_block.get(scope.block_id, []):
+            self._allocate_array(array, scope)
+
+    def _allocate_array(self, array: ArrayDescriptor, scope: _FrameScope) -> None:
+        lower_regs: list[int] = []
+        upper_regs: list[int] = []
+        length_regs: list[int] = []
+        total_reg = self._const_reg(1)
+        max_elements_reg = self._const_reg(_ARRAY_MAX_ELEMENTS)
+
+        for dimension in array.dimensions:
+            lower_node = self._find_ast_by_id(dimension.lower_node_id)
+            upper_node = self._find_ast_by_id(dimension.upper_node_id)
+            if lower_node is None or upper_node is None:
+                raise CompileError(f"missing bounds for array {array.name!r}")
+            lower = self._compile_expr(lower_node, scope)
+            upper = self._compile_expr(upper_node, scope)
+
+            invalid_order = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(invalid_order),
+                IrRegister(lower),
+                IrRegister(upper),
+            )
+            self._emit_runtime_failure_guard(invalid_order, scope)
+
+            raw_length = self._fresh_reg()
+            self._emit(
+                IrOp.SUB,
+                IrRegister(raw_length),
+                IrRegister(upper),
+                IrRegister(lower),
+            )
+            length = self._fresh_reg()
+            self._emit(
+                IrOp.ADD_IMM,
+                IrRegister(length),
+                IrRegister(raw_length),
+                IrImmediate(1),
+            )
+            too_large = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(too_large),
+                IrRegister(length),
+                IrRegister(max_elements_reg),
+            )
+            self._emit_runtime_failure_guard(too_large, scope)
+
+            allowed_total = self._fresh_reg()
+            self._emit(
+                IrOp.DIV,
+                IrRegister(allowed_total),
+                IrRegister(max_elements_reg),
+                IrRegister(length),
+            )
+            product_too_large = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(product_too_large),
+                IrRegister(total_reg),
+                IrRegister(allowed_total),
+            )
+            self._emit_runtime_failure_guard(product_too_large, scope)
+
+            next_total = self._fresh_reg()
+            self._emit(
+                IrOp.MUL,
+                IrRegister(next_total),
+                IrRegister(total_reg),
+                IrRegister(length),
+            )
+            total_reg = next_total
+            lower_regs.append(lower)
+            upper_regs.append(upper)
+            length_regs.append(length)
+
+        stride_regs = [0] * len(length_regs)
+        stride_reg = self._const_reg(1)
+        for index in range(len(length_regs) - 1, -1, -1):
+            stride_regs[index] = stride_reg
+            next_stride = self._fresh_reg()
+            self._emit(
+                IrOp.MUL,
+                IrRegister(next_stride),
+                IrRegister(stride_reg),
+                IrRegister(length_regs[index]),
+            )
+            stride_reg = next_stride
+
+        heap_pointer = self._fresh_reg()
+        heap_limit = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, heap_pointer)
+        self._load_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, heap_limit)
+
+        data_bytes = self._fresh_reg()
+        word_bytes = self._const_reg(_ARRAY_WORD_BYTES)
+        self._emit(
+            IrOp.MUL,
+            IrRegister(data_bytes),
+            IrRegister(total_reg),
+            IrRegister(word_bytes),
+        )
+        fixed_bytes = _ARRAY_DESCRIPTOR_SIZE + (
+            len(array.dimensions) * _ARRAY_DIMENSION_ENTRY_SIZE
+        )
+        allocation_size = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(allocation_size),
+            IrRegister(data_bytes),
+            IrImmediate(fixed_bytes),
+        )
+        new_heap_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_pointer),
+            IrRegister(allocation_size),
+        )
+        heap_exhausted = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(heap_exhausted),
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_limit),
+        )
+        self._emit_runtime_failure_guard(heap_exhausted, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, new_heap_pointer)
+
+        bounds_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(bounds_pointer),
+            IrRegister(heap_pointer),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+        data_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(data_pointer),
+            IrRegister(bounds_pointer),
+            IrImmediate(len(array.dimensions) * _ARRAY_DIMENSION_ENTRY_SIZE),
+        )
+
+        self._store_word_const(heap_pointer, 0, _ARRAY_ELEMENT_TYPE_INTEGER)
+        self._store_word_const(heap_pointer, 4, len(array.dimensions))
+        self._store_word_reg(
+            value_reg=total_reg,
+            base_reg=heap_pointer,
+            offset=_ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._store_word_const(
+            heap_pointer,
+            _ARRAY_ELEMENT_WIDTH_OFFSET,
+            _ARRAY_WORD_BYTES,
+        )
+        self._store_word_reg(
+            value_reg=data_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=bounds_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+
+        for index, lower in enumerate(lower_regs):
+            offset = index * _ARRAY_DIMENSION_ENTRY_SIZE
+            self._store_word_reg(
+                value_reg=lower,
+                base_reg=bounds_pointer,
+                offset=offset + _ARRAY_DIM_LOWER_OFFSET,
+            )
+            self._store_word_reg(
+                value_reg=upper_regs[index],
+                base_reg=bounds_pointer,
+                offset=offset + _ARRAY_DIM_UPPER_OFFSET,
+            )
+            self._store_word_reg(
+                value_reg=stride_regs[index],
+                base_reg=bounds_pointer,
+                offset=offset + _ARRAY_DIM_STRIDE_OFFSET,
+            )
+
+        self._store_word_reg(
+            value_reg=heap_pointer,
+            base_reg=scope.frame_base_reg,
+            offset=array.slot_offset,
+        )
 
     def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
         inner = _first_ast_child(statement)
@@ -339,11 +594,17 @@ class AlgolIrCompiler:
     def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
         left_part = _first_direct_node(assign, "left_part")
         expr = _first_direct_node(assign, "expression")
-        name = _variable_name(left_part)
-        if name is None or expr is None:
+        variable = _first_node(left_part, "variable") if left_part is not None else None
+        if variable is None or expr is None:
+            raise CompileError("assignment needs a variable target and expression")
+        value = self._compile_expr(expr, scope)
+        if _variable_subscripts(variable):
+            self._compile_array_store(variable, scope, value)
+            return
+        name = _variable_name(variable)
+        if name is None:
             raise CompileError("only scalar assignments are supported")
         target = self._require_reference(name, "write")
-        value = self._compile_expr(expr, scope)
         self._emit_store_reference(target, scope, value)
 
     def _compile_if(self, cond: ASTNode, scope: _FrameScope) -> None:
@@ -432,9 +693,11 @@ class AlgolIrCompiler:
         if expr.rule_name == "proc_call":
             return self._compile_procedure_call(expr, scope)
         if expr.rule_name == "variable":
+            if _variable_subscripts(expr):
+                return self._compile_array_load(expr, scope)
             name = _variable_name(expr)
             if name is None:
-                raise CompileError("array subscripts are not supported")
+                raise CompileError("variable is missing a name")
             reference = self._require_reference(name, "read")
             return self._emit_load_reference(reference, scope)
 
@@ -681,6 +944,7 @@ class AlgolIrCompiler:
         scope = _FrameScope(
             semantic_block=semantic_block,
             frame_base_reg=frame_base_reg,
+            heap_mark_reg=self._snapshot_heap_pointer(),
             parent=None,
         )
         self._initialize_scalar_slots(scope)
@@ -690,6 +954,7 @@ class AlgolIrCompiler:
                 base_reg=scope.frame_base_reg,
                 offset=parameter.slot_offset,
             )
+        self._allocate_arrays(scope)
 
         if body.rule_name == "block":
             for statement in _direct_nodes(body, "statement"):
@@ -708,6 +973,147 @@ class AlgolIrCompiler:
             self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
         self._emit_leave_frame(scope)
         self._emit(IrOp.RET)
+
+    def _compile_array_load(self, variable: ASTNode, scope: _FrameScope) -> int:
+        data_pointer, byte_offset = self._compile_array_element_address(
+            variable,
+            scope,
+            role="read",
+        )
+        dst = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(dst),
+            IrRegister(data_pointer),
+            IrRegister(byte_offset),
+        )
+        return dst
+
+    def _compile_array_store(
+        self,
+        variable: ASTNode,
+        scope: _FrameScope,
+        value_reg: int,
+    ) -> None:
+        data_pointer, byte_offset = self._compile_array_element_address(
+            variable,
+            scope,
+            role="write",
+        )
+        self._emit(
+            IrOp.STORE_WORD,
+            IrRegister(value_reg),
+            IrRegister(data_pointer),
+            IrRegister(byte_offset),
+        )
+
+    def _compile_array_element_address(
+        self,
+        variable: ASTNode,
+        scope: _FrameScope,
+        *,
+        role: str,
+    ) -> tuple[int, int]:
+        name = _variable_head_name(variable)
+        if name is None:
+            raise CompileError("array access is missing a name")
+        access = self._require_array_access(name, role)
+        if access.use_block_id != scope.block_id:
+            raise CompileError(
+                f"array access {access.name!r} was resolved for block "
+                f"{access.use_block_id}, but codegen is in block {scope.block_id}"
+            )
+        descriptor_pointer = self._emit_load_array_descriptor(access, scope)
+        data_pointer = self._fresh_reg()
+        bounds_pointer = self._fresh_reg()
+        data_offset = self._const_reg(_ARRAY_DATA_POINTER_OFFSET)
+        bounds_offset = self._const_reg(_ARRAY_BOUNDS_POINTER_OFFSET)
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(data_pointer),
+            IrRegister(descriptor_pointer),
+            IrRegister(data_offset),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(bounds_pointer),
+            IrRegister(descriptor_pointer),
+            IrRegister(bounds_offset),
+        )
+
+        element_index = self._const_reg(0)
+        subscripts = _variable_subscripts(variable)
+        for index, subscript in enumerate(subscripts):
+            subscript_reg = self._compile_expr(subscript, scope)
+            lower = self._fresh_reg()
+            upper = self._fresh_reg()
+            stride = self._fresh_reg()
+            dim_offset = index * _ARRAY_DIMENSION_ENTRY_SIZE
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(lower),
+                IrRegister(bounds_pointer),
+                IrRegister(self._const_reg(dim_offset + _ARRAY_DIM_LOWER_OFFSET)),
+            )
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(upper),
+                IrRegister(bounds_pointer),
+                IrRegister(self._const_reg(dim_offset + _ARRAY_DIM_UPPER_OFFSET)),
+            )
+            below = self._fresh_reg()
+            above = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(below),
+                IrRegister(lower),
+                IrRegister(subscript_reg),
+            )
+            self._emit_runtime_failure_guard(below, scope)
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(above),
+                IrRegister(subscript_reg),
+                IrRegister(upper),
+            )
+            self._emit_runtime_failure_guard(above, scope)
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(stride),
+                IrRegister(bounds_pointer),
+                IrRegister(self._const_reg(dim_offset + _ARRAY_DIM_STRIDE_OFFSET)),
+            )
+            adjusted = self._fresh_reg()
+            self._emit(
+                IrOp.SUB,
+                IrRegister(adjusted),
+                IrRegister(subscript_reg),
+                IrRegister(lower),
+            )
+            scaled = self._fresh_reg()
+            self._emit(
+                IrOp.MUL,
+                IrRegister(scaled),
+                IrRegister(adjusted),
+                IrRegister(stride),
+            )
+            next_index = self._fresh_reg()
+            self._emit(
+                IrOp.ADD,
+                IrRegister(next_index),
+                IrRegister(element_index),
+                IrRegister(scaled),
+            )
+            element_index = next_index
+
+        byte_offset = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(byte_offset),
+            IrRegister(element_index),
+            IrRegister(self._const_reg(_ARRAY_WORD_BYTES)),
+        )
+        return data_pointer, byte_offset
 
     def _emit_load_reference(
         self, reference: ResolvedReference, scope: _FrameScope
@@ -746,6 +1152,37 @@ class AlgolIrCompiler:
             )
         frame_reg = scope.frame_base_reg
         for _ in range(reference.lexical_depth_delta):
+            next_frame = self._fresh_reg()
+            offset_reg = self._const_reg(_STATIC_LINK_OFFSET)
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(next_frame),
+                IrRegister(frame_reg),
+                IrRegister(offset_reg),
+            )
+            frame_reg = next_frame
+        return frame_reg
+
+    def _emit_load_array_descriptor(
+        self,
+        access: ResolvedArrayAccess,
+        scope: _FrameScope,
+    ) -> int:
+        frame_reg = self._emit_frame_for_array_access(access, scope)
+        descriptor_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(descriptor_pointer),
+            IrRegister(frame_reg),
+            IrRegister(self._const_reg(access.slot_offset)),
+        )
+        return descriptor_pointer
+
+    def _emit_frame_for_array_access(
+        self, access: ResolvedArrayAccess, scope: _FrameScope
+    ) -> int:
+        frame_reg = scope.frame_base_reg
+        for _ in range(access.lexical_depth_delta):
             next_frame = self._fresh_reg()
             offset_reg = self._const_reg(_STATIC_LINK_OFFSET)
             self._emit(
@@ -843,6 +1280,15 @@ class AlgolIrCompiler:
             offset=offset,
         )
 
+    def _snapshot_heap_pointer(self) -> int:
+        heap_mark = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, heap_mark)
+        return heap_mark
+
+    def _restore_heap_pointer(self, scope: _FrameScope) -> None:
+        if scope.heap_mark_reg is not None:
+            self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, scope.heap_mark_reg)
+
     def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
         index = self.if_count
         self.if_count += 1
@@ -855,6 +1301,25 @@ class AlgolIrCompiler:
         self._label(else_label)
         self._label(end_label)
 
+    def _emit_runtime_failure_guard(self, failed_reg: int, scope: _FrameScope) -> None:
+        index = self.if_count
+        self.if_count += 1
+        else_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_unwind_for_return(scope)
+        self._emit(IrOp.RET)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(else_label)
+        self._label(end_label)
+
+    def _emit_unwind_for_return(self, scope: _FrameScope) -> None:
+        current: _FrameScope | None = scope
+        while current is not None:
+            self._emit_leave_frame(current)
+            current = current.parent
+
     def _require_reference(self, token: Token, role: str) -> ResolvedReference:
         reference = self.references.get((id(token), role))
         if reference is None:
@@ -863,6 +1328,17 @@ class AlgolIrCompiler:
                 f"at line {token.line}, column {token.column}"
             )
         return reference
+
+    def _require_array_access(
+        self, token: Token, role: str
+    ) -> ResolvedArrayAccess:
+        access = self.array_accesses.get((id(token), role))
+        if access is None:
+            raise CompileError(
+                f"missing resolved {role} array access for {token.value!r} "
+                f"at line {token.line}, column {token.column}"
+            )
+        return access
 
     def _require_procedure_call(
         self, token: Token, role: str
@@ -1000,8 +1476,36 @@ def _variable_name(node: ASTNode | None) -> Token | None:
     variable = node if node.rule_name == "variable" else _first_node(node, "variable")
     if variable is None:
         return None
+    if _variable_subscripts(variable):
+        return None
     names = [token for token in _tokens(variable) if token.type_name == "NAME"]
     return names[0] if len(names) == 1 else None
+
+
+def _variable_head_name(node: ASTNode | None) -> Token | None:
+    if node is None:
+        variable = None
+    elif node.rule_name == "variable":
+        variable = node
+    else:
+        variable = _first_node(node, "variable")
+    if variable is None:
+        return None
+    return next(
+        (token for token in _direct_tokens(variable) if token.type_name == "NAME"),
+        None,
+    )
+
+
+def _variable_subscripts(node: ASTNode | None) -> list[ASTNode]:
+    if node is None:
+        variable = None
+    elif node.rule_name == "variable":
+        variable = node
+    else:
+        variable = _first_node(node, "variable")
+    subscripts = _first_direct_node(variable, "subscripts")
+    return _direct_nodes(subscripts, "arith_expr")
 
 
 def _has_comparison(children: list[ASTNode | Token]) -> bool:
