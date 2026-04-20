@@ -185,6 +185,7 @@ LOG = IRSymbol("Log")
 SIN = IRSymbol("Sin")
 COS = IRSymbol("Cos")
 SQRT = IRSymbol("Sqrt")
+ATAN = IRSymbol("Atan")
 
 # Calculus
 D = IRSymbol("D")
