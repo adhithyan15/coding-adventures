@@ -28,14 +28,15 @@ mini_sqlite.connect("app.db")
         ├── record   (varint + serial types)      ✓ phase 2
         ├── btree    (leaf + overflow + full recursive splits)  ✓ phases 3 + 4a + 4b
         ├── freelist (trunk/leaf page reuse)       ✓ phase 5
-        └── schema   (sqlite_schema round-trip)   ✓ phase 6
+        ├── schema   (sqlite_schema round-trip)   ✓ phase 6
+        └── backend  (Backend adapter / SqliteFileBackend)     ✓ phase 7
 ```
 
 Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6)
+## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -90,8 +91,12 @@ backend.
   names in insertion order. `find_table(name)` returns `(rowid, rootpage, sql)`
   or `None`. `get_schema_cookie()` reads the u32 at page-1 offset 40.
 
-What's **not yet** in this package (coming in a later phase):
-The `Backend` adapter that wires the full SQL pipeline into phase 7.
+- **`backend` module** — `SqliteFileBackend` (phase 7).
+  Implements the full `sql_backend.Backend` interface against a real `.db`
+  file.  `tables()`, `columns()`, `scan()`, `insert()`, `update()`,
+  `delete()`, `create_table()`, `drop_table()`, `begin_transaction()`,
+  `commit()`, `rollback()`.  Opens existing files or creates new ones.
+  Passes all four tiers of `sql_backend.conformance`.
 
 ## Installation
 
@@ -99,7 +104,7 @@ The `Backend` adapter that wires the full SQL pipeline into phase 7.
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6)
+## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -198,9 +203,47 @@ with Pager.create("catalog.db") as pager:
     pager.commit()
 ```
 
-This intentionally looks low-level — the `Backend` adapter that makes
-`mini_sqlite.connect("app.db")` work will land in phase 7 once all the
-intermediate layers (records, B-trees, schema) are in place.
+```python
+# --- Backend (phase 7: full sql_backend.Backend adapter) ---
+from sql_backend import ColumnDef
+from storage_sqlite import SqliteFileBackend
+
+# Create and populate a database — fully Backend-compatible.
+with SqliteFileBackend("app.db") as b:
+    b.create_table(
+        "users",
+        [
+            ColumnDef(name="id",    type_name="INTEGER", primary_key=True),
+            ColumnDef(name="name",  type_name="TEXT",    not_null=True),
+            ColumnDef(name="email", type_name="TEXT",    unique=True),
+        ],
+        if_not_exists=True,
+    )
+    b.insert("users", {"id": 1, "name": "Alice", "email": "alice@example.com"})
+    b.insert("users", {"id": 2, "name": "Bob",   "email": "bob@example.com"})
+
+    # Explicit transaction for atomic writes.
+    h = b.begin_transaction()
+    b.insert("users", {"id": 3, "name": "Carol", "email": None})
+    b.commit(h)
+
+# Read it back in a new session — data survived on disk.
+with SqliteFileBackend("app.db") as b:
+    it = b.scan("users")
+    while (row := it.next()) is not None:
+        print(row)          # {'id': 1, 'name': 'Alice', 'email': 'alice@example.com'}
+    it.close()
+
+# Positioned update and delete via _open_cursor().
+with SqliteFileBackend("app.db") as b:
+    cursor = b._open_cursor("users")
+    row = cursor.next()           # first row
+    b.update("users", cursor, {"email": "newalice@example.com"})
+    cursor.close()
+
+    h = b.begin_transaction()
+    b.commit(h)
+```
 
 ## Design notes
 
