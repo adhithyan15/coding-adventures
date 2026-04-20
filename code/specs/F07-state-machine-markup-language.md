@@ -453,6 +453,47 @@ machine-readable artifacts. TOML remains the hand-authored source format.
 Source generation is the production artifact path: applications link generated
 code rather than loading TOML or JSON dynamically.
 
+## Definition Import Rules
+
+The core state-machine library owns conversion between typed definitions and
+executable machines. That import layer is intentionally not a file parser: it
+receives an already-built `StateMachineDefinition`, validates the shape required
+by the target machine family, and delegates to the normal eager constructors.
+
+Phase 1 imports cover DFA, NFA, and PDA definitions:
+
+- `DFA::from_definition(definition)` accepts only `kind = "dfa"`, requires one
+  initial state, requires every transition to have exactly one target, rejects
+  epsilon transitions, rejects duplicate `(from, on)` pairs, and rejects all
+  stack effects.
+- `NFA::from_definition(definition)` accepts only `kind = "nfa"`, requires one
+  initial state, allows epsilon transitions, allows one or more targets per
+  transition, and rejects all stack effects.
+- `PushdownAutomaton::from_definition(definition)` accepts only `kind = "pda"`,
+  requires one initial state and one initial stack symbol, requires every
+  transition to have exactly one target and one `stack_pop` symbol, validates
+  every stack symbol against `stack_alphabet`, and preserves epsilon
+  transitions as `None`.
+
+Importing a definition should produce the same observable behavior as the
+machine that exported it:
+
+```text
+machine -> StateMachineDefinition -> executable machine
+```
+
+When the definition came from a serializer/deserializer pair, the complete
+tooling round trip should also preserve behavior:
+
+```text
+machine -> definition -> .states.toml -> definition -> executable machine
+```
+
+Modal, statechart, transducer, action, and guard imports are later phases. Until
+their runtime semantics are implemented in the core library, executable-machine
+imports must reject those definitions with explicit diagnostics instead of
+silently dropping behavior.
+
 ## Canonical Output Rules
 
 Serializers must:
@@ -552,12 +593,15 @@ runtime deserialization package.
    `.states.toml` output.
 6. Add a Rust `state-machine-markup-deserializer` package for TOML input and
    validation.
-7. Add NFA, PDA, and modal round-tripping through definitions.
-8. Add SCXML core import/export packages for deterministic event machines.
-9. Keep DOT export as visualization-only output.
-10. Add the build-time source compiler from
+7. Add executable-machine imports for DFA, NFA, and PDA definitions so
+   serializer/deserializer round trips can return to runnable machines.
+8. Add modal round-tripping through definitions once modal definitions can
+   represent child-machine references and mode transitions.
+9. Add SCXML core import/export packages for deterministic event machines.
+10. Keep DOT export as visualization-only output.
+11. Add the build-time source compiler from
    `F09-state-machine-source-compiler.md`.
-11. Build tokenizer profiles from `F08` on top of this definition model.
+12. Build tokenizer profiles from `F08` on top of this definition model.
 
 ## Test Strategy
 
