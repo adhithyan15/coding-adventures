@@ -566,7 +566,7 @@ class _Compiler:
 
         1. Copy v_val to a scratch register r_work so the original is untouched.
         2. If r_work < 0: print '-', then negate (r_work = 0 − r_work).
-        3. Unrolled digit-extraction for positions 100000, 10000, 1000, 100, 10:
+        3. Unrolled digit-extraction for positions 1000000000 … 10:
              r_dig   = r_work / power          (integer quotient)
              r_work  = r_work − r_dig * power  (remainder = r_work mod power)
              if r_dig + r_started == 0: skip   (leading-zero suppression)
@@ -620,8 +620,20 @@ class _Compiler:
         # For GE-225 encoding, typewriter codes 0-9 already map to '0'-'9'.
         digit_offset = 48 if self.char_encoding == "ascii" else 0
 
-        # Unrolled digit extraction for each power of ten above the units place
-        for pos_idx, power in enumerate([100000, 10000, 1000, 100, 10]):
+        # Unrolled digit extraction for each power of ten above the units place.
+        # Covers the full 32-bit signed integer range: 2,147,483,647 has 10 digits,
+        # so we need every power from 1,000,000,000 down to 10.
+        for pos_idx, power in enumerate([
+            1_000_000_000,  # billions
+              100_000_000,  # hundred-millions
+               10_000_000,  # ten-millions
+                1_000_000,  # millions
+                  100_000,  # hundred-thousands
+                   10_000,  # ten-thousands
+                    1_000,  # thousands
+                      100,  # hundreds
+                       10,  # tens
+        ]):
             l_skip = f"_pnum_{label_id}_s{pos_idx}"
 
             # Digit and remainder

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 (2026-04-20)
+
+### Fixed
+
+- **`PRINT` of numbers ≥ 1,000,000 printed garbled output.**  The
+  `_emit_print_number` function only extracted digits down to the
+  hundred-thousands place (`100000, 10000, 1000, 100, 10`), so any value
+  ≥ 1,000,000 had its leading digits mangled (e.g. `3628800` printed as
+  `T28800`, where `T` = ASCII 84 = the result of treating the combined
+  millions+hundred-thousands value 36 as a digit code).  The power list is
+  extended to cover the full 32-bit signed integer range (max 2,147,483,647):
+  `1_000_000_000, 100_000_000, 10_000_000, 1_000_000, 100_000, 10_000,
+  1_000, 100, 10`.
+
 ## 0.3.0 (2026-04-20)
 
 ### Changed
