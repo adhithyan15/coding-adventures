@@ -33,26 +33,42 @@ from logic_engine import (
     num,
     reify,
     solve_from,
+    term,
 )
 
 __all__ = [
+    "add",
     "argo",
     "atomo",
     "callo",
     "compoundo",
+    "div",
+    "floordiv",
     "functoro",
+    "geqo",
+    "gto",
     "groundo",
+    "iso",
+    "leqo",
+    "lto",
+    "mod",
+    "mul",
+    "neg",
     "nonvaro",
     "noto",
+    "numeqo",
+    "numneqo",
     "numbero",
     "onceo",
     "stringo",
+    "sub",
     "varo",
 ]
 
 
 type NativeArgs = tuple[Term, ...]
 type NativeRunner = Callable[[Program, State, NativeArgs], Iterator[State]]
+type NumericValue = int | float
 
 
 def _as_goal(goal: object) -> GoalExpr:
@@ -82,6 +98,189 @@ def _succeed_if(condition: bool, state: State) -> Iterator[State]:
 
     if condition:
         yield state
+
+
+def add(left: object, right: object) -> Compound:
+    """Build a symbolic arithmetic addition expression."""
+
+    return term("+", left, right)
+
+
+def sub(left: object, right: object) -> Compound:
+    """Build a symbolic arithmetic subtraction expression."""
+
+    return term("-", left, right)
+
+
+def mul(left: object, right: object) -> Compound:
+    """Build a symbolic arithmetic multiplication expression."""
+
+    return term("*", left, right)
+
+
+def div(left: object, right: object) -> Compound:
+    """Build a symbolic arithmetic true-division expression."""
+
+    return term("/", left, right)
+
+
+def floordiv(left: object, right: object) -> Compound:
+    """Build a symbolic arithmetic floor-division expression."""
+
+    return term("//", left, right)
+
+
+def mod(left: object, right: object) -> Compound:
+    """Build a symbolic arithmetic modulo expression."""
+
+    return term("mod", left, right)
+
+
+def neg(value: object) -> Compound:
+    """Build a symbolic arithmetic unary-negation expression."""
+
+    return term("-", value)
+
+
+def _numeric_value(term_value: Term, state: State) -> NumericValue | None:
+    """Evaluate a reified arithmetic expression into a host numeric value."""
+
+    reified_value = _reified(term_value, state)
+    if isinstance(reified_value, Number):
+        return reified_value.value
+    if not isinstance(reified_value, Compound):
+        return None
+    if reified_value.functor.namespace is not None:
+        return None
+
+    operator = reified_value.functor.name
+    arguments = reified_value.args
+
+    if operator == "-" and len(arguments) == 1:
+        value = _numeric_value(arguments[0], state)
+        if value is None:
+            return None
+        return -value
+
+    if len(arguments) != 2:
+        return None
+
+    left = _numeric_value(arguments[0], state)
+    right = _numeric_value(arguments[1], state)
+    if left is None or right is None:
+        return None
+
+    if operator == "+":
+        return left + right
+    if operator == "-":
+        return left - right
+    if operator == "*":
+        return left * right
+    if operator == "/":
+        if right == 0:
+            return None
+        return left / right
+    if operator == "//":
+        if right == 0:
+            return None
+        return left // right
+    if operator == "mod":
+        if right == 0:
+            return None
+        return left % right
+
+    return None
+
+
+def iso(result: object, expression: object) -> GoalExpr:
+    """Evaluate an arithmetic expression and unify the numeric result."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        result_term, expression_term = args
+        value = _numeric_value(expression_term, state)
+        if value is None:
+            return
+        yield from solve_from(program_value, eq(result_term, num(value)), state)
+
+    return native_goal(run, result, expression)
+
+
+def _numeric_compareo(
+    left: object,
+    right: object,
+    predicate: Callable[[NumericValue, NumericValue], bool],
+) -> GoalExpr:
+    """Build an arithmetic comparison goal over two evaluated expressions."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        left_value = _numeric_value(left_term, state)
+        right_value = _numeric_value(right_term, state)
+        if left_value is None or right_value is None:
+            return
+        yield from _succeed_if(predicate(left_value, right_value), state)
+
+    return native_goal(run, left, right)
+
+
+def numeqo(left: object, right: object) -> GoalExpr:
+    """Succeed when two arithmetic expressions evaluate to equal numbers."""
+
+    return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value == right_value,
+    )
+
+
+def numneqo(left: object, right: object) -> GoalExpr:
+    """Succeed when two arithmetic expressions evaluate to different numbers."""
+
+    return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value != right_value,
+    )
+
+
+def lto(left: object, right: object) -> GoalExpr:
+    """Succeed when the left arithmetic expression is less than the right."""
+
+    return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value < right_value,
+    )
+
+
+def leqo(left: object, right: object) -> GoalExpr:
+    """Succeed when the left arithmetic expression is less than or equal to right."""
+
+    return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value <= right_value,
+    )
+
+
+def gto(left: object, right: object) -> GoalExpr:
+    """Succeed when the left arithmetic expression is greater than the right."""
+
+    return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value > right_value,
+    )
+
+
+def geqo(left: object, right: object) -> GoalExpr:
+    """Succeed when the left arithmetic expression is greater than or equal to right."""
+
+    return _numeric_compareo(
+        left,
+        right,
+        lambda left_value, right_value: left_value >= right_value,
+    )
 
 
 def callo(goal: object) -> GoalExpr:

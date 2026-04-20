@@ -23,17 +23,31 @@ from logic_engine import (
 
 from logic_builtins import (
     __version__,
+    add,
     argo,
     atomo,
     callo,
     compoundo,
+    div,
+    floordiv,
     functoro,
+    geqo,
     groundo,
+    gto,
+    iso,
+    leqo,
+    lto,
+    mod,
+    mul,
+    neg,
     nonvaro,
     noto,
     numbero,
+    numeqo,
+    numneqo,
     onceo,
     stringo,
+    sub,
     varo,
 )
 
@@ -42,7 +56,128 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
+
+
+class TestArithmeticBuiltins:
+    """Arithmetic helpers should evaluate expressions without becoming syntax."""
+
+    def test_arithmetic_constructors_return_ordinary_compound_terms(self) -> None:
+        assert add(1, 2) == term("+", 1, 2)
+        assert sub(4, 2) == term("-", 4, 2)
+        assert mul(3, 5) == term("*", 3, 5)
+        assert div(7, 2) == term("/", 7, 2)
+        assert floordiv(7, 2) == term("//", 7, 2)
+        assert mod(7, 2) == term("mod", 7, 2)
+        assert neg(4) == term("-", 4)
+
+    def test_iso_evaluates_integer_and_float_expressions(self) -> None:
+        result = var("Result")
+
+        assert solve_all(program(), result, iso(result, add(1, mul(2, 3)))) == [
+            num(7),
+        ]
+        assert solve_all(program(), result, iso(result, div(7, 2))) == [num(3.5)]
+        assert solve_all(program(), result, iso(result, floordiv(7, 2))) == [num(3)]
+        assert solve_all(program(), result, iso(result, mod(7, 2))) == [num(1)]
+        assert solve_all(program(), result, iso(result, neg(4))) == [num(-4)]
+
+    def test_iso_uses_current_logic_variable_bindings(self) -> None:
+        base = var("Base")
+        doubled = var("Doubled")
+
+        assert solve_all(
+            program(),
+            doubled,
+            conj(eq(base, 4), iso(doubled, mul(base, 2))),
+        ) == [num(8)]
+
+    def test_iso_fails_when_expression_is_not_instantiated_enough(self) -> None:
+        base = var("Base")
+        result = var("Result")
+
+        assert solve_all(program(), result, iso(result, add(base, 1))) == []
+
+    def test_iso_fails_for_non_numeric_terms_and_division_by_zero(self) -> None:
+        result = var("Result")
+
+        assert solve_all(program(), result, iso(result, add("tea", 1))) == []
+        assert solve_all(program(), result, iso(result, term("pow", 2, 3))) == []
+        assert solve_all(program(), result, iso(result, div(7, 0))) == []
+        assert solve_all(program(), result, iso(result, floordiv(7, 0))) == []
+        assert solve_all(program(), result, iso(result, mod(7, 0))) == []
+
+    def test_numeric_comparisons_evaluate_both_sides(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), numeqo(add(1, 2), 3)),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), numneqo(add(1, 2), 4)),
+        ) == [atom("ok")]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), lto(2, 3))) == [
+            atom("ok"),
+        ]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), leqo(3, 3))) == [
+            atom("ok"),
+        ]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), gto(4, 3))) == [
+            atom("ok"),
+        ]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), geqo(4, 4))) == [
+            atom("ok"),
+        ]
+
+    def test_numeric_comparisons_fail_for_false_or_open_expressions(self) -> None:
+        marker = var("Marker")
+        open_value = var("Open")
+
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), numeqo(1, 2))) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), lto(add(open_value, 1), 3)),
+        ) == []
+
+    def test_arithmetic_goals_compose_with_relation_search(self) -> None:
+        score = relation("score", 2)
+        person = var("Person")
+        raw_score = var("RawScore")
+        adjusted_score = var("AdjustedScore")
+        scores = program(
+            fact(score("alice", 7)),
+            fact(score("bob", 3)),
+        )
+
+        assert solve_all(
+            scores,
+            (person, adjusted_score),
+            conj(
+                score(person, raw_score),
+                geqo(raw_score, 5),
+                iso(adjusted_score, add(raw_score, 10)),
+            ),
+        ) == [(atom("alice"), num(17))]
+
+    def test_arithmetic_goals_compose_with_control_builtins(self) -> None:
+        value = var("Value")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            value,
+            onceo(disj(iso(value, add(1, 1)), iso(value, add(2, 2)))),
+        ) == [num(2)]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), noto(lto(add(2, 2), 3))),
+        ) == [atom("ok")]
 
 
 class TestControlBuiltins:
