@@ -1,5 +1,5 @@
 """
-Table B-tree pages — phase 4a: interior page traversal + root-leaf split.
+Table B-tree pages — phase 4b: full recursive leaf and interior splits.
 
 Architecture summary
 --------------------
@@ -8,7 +8,22 @@ SQLite organises every table as a **table B-tree**: a balanced tree of
 4 096-byte pages where each leaf holds a sorted array of (rowid, record)
 pairs and each interior node routes a search to the right child page.
 
-Phase 4a adds:
+Phase 4b adds full recursive splitting so the tree can grow to arbitrary
+depth with any number of rows:
+
+* **Non-root leaf split**: when a leaf that is not the root fills up,
+  ``BTree.insert`` splits it into two halves, rewrites the existing page
+  with the left half, allocates a right sibling, and pushes the separator
+  key up to the parent interior page.
+* **Interior page split**: if the parent interior page is also full, it
+  is split recursively. The median cell is removed and becomes the new
+  separator pushed further up the tree.
+* **Root interior split**: if the root itself is an interior page and is
+  full, two new interior child pages are allocated for the left and right
+  halves and the root is rewritten with a single separator cell, keeping
+  the root page number constant.
+
+Phase 4a added (preserved here):
 
 * Reading and traversing **interior pages** (type ``0x05``) so that
   :meth:`BTree.find`, :meth:`BTree.scan`, :meth:`BTree.delete`, and
@@ -16,18 +31,7 @@ Phase 4a adds:
 * A **root-leaf split**: when the root page is a leaf and it is full,
   :meth:`BTree.insert` allocates two new leaf pages, divides the cells
   between them, and promotes the root to an interior page containing a
-  single separator cell. The root page number never changes.
-
-After one root split the tree has depth 2: one interior root + two leaf
-children. If *either* of those leaves subsequently fills up, a
-:class:`PageFullError` is still raised — recursive non-root splits land
-in phase 4b.
-
-Phase 4b will add:
-
-* Full recursive splitting of non-root leaves.
-* Propagation of separators up through a chain of interior pages.
-* Trees of depth 3+.
+  single separator cell.
 
 Page memory layout
 ------------------
@@ -111,14 +115,28 @@ When a record is too large to fit in one page::
 The first ``L`` bytes are inline. The remainder fills overflow pages,
 chained by the u32 at their start.
 
-v1 limitations (phase 4a)
---------------------------
+Interior split algorithm
+------------------------
 
-* Non-root leaf splits still raise :class:`PageFullError`. Phase 4b adds
-  those.
+Given a full interior page with cells ``[C0, C1, ..., Cn-1]`` and
+``rightmost_child = R``::
+
+    mid = n // 2
+    left_page  : cells [C0, ..., C(mid-1)], rightmost_child = Cmid.left_child
+    median key : Cmid.sep_rowid  (pushed up to parent)
+    right_page : cells [C(mid+1), ..., C(n-1)], rightmost_child = R
+
+The median cell is consumed by the split — it disappears from both child
+pages and resurfaces as a separator in the parent.
+
+v1 limitations
+--------------
+
 * No rebalancing or merging on delete — leaf pages can become sparse.
 * No compacting of freeblocks within a page (unused space from deletes is
   not reclaimed until the leaf is rewritten by a subsequent operation).
+* Overflow chains are re-encoded on split (old overflow pages become
+  unreachable until the freelist, phase 5, recycles them).
 * Page size is pinned at 4 096; *reserved_per_page* is always 0.
 * The ``header_offset`` parameter accommodates page 1 (database header
   at bytes 0–99, B-tree header at byte 100). Callers that want a plain
@@ -187,13 +205,12 @@ class BTreeError(StorageError):
 
 
 class PageFullError(BTreeError):
-    """A non-root leaf page has no room for the new cell.
+    """Retained in the public API for external callers.
 
-    Phase 4b will resolve this with recursive splits; for now the caller
-    must either use a larger page, fewer rows, or wait for phase 4b.
-
-    After one root split the tree holds roughly twice the cells of a single
-    page. If either resulting leaf also fills up, this error is raised.
+    After phase 4b, normal :meth:`BTree.insert` calls never raise this
+    exception — recursive splits handle all leaf-overflow cases. The
+    class is kept so that custom callers who build their own backends can
+    still signal page-full conditions if needed.
     """
 
 
@@ -445,6 +462,32 @@ def _interior_cell_encode(left_child: int, sep_rowid: int) -> bytes:
     return struct.pack(">I", left_child) + varint_encode_signed(sep_rowid)
 
 
+def _interior_cells_fit(hdr_off: int, cells: list[tuple[int, int]]) -> bool:
+    """Return ``True`` if *cells* fit on an interior page with header at *hdr_off*.
+
+    The usable space on an interior page is
+    ``PAGE_SIZE - hdr_off - _INTERIOR_HDR`` bytes.  Each cell consumes
+    2 bytes in the pointer array plus its raw cell bytes.
+
+    This is called by :meth:`BTree._push_separator_up` to decide whether
+    adding one new separator cell to a parent interior page requires
+    splitting that page.
+
+    Example — check whether 510 cells fit on a fresh interior root::
+
+        cells_510 = [(i, i * 100) for i in range(1, 511)]
+        assert _interior_cells_fit(0, cells_510)   # probably True
+        cells_511 = cells_510 + [(511, 51100)]
+        assert not _interior_cells_fit(0, cells_511)  # at capacity, False
+    """
+    avail = PAGE_SIZE - hdr_off - _INTERIOR_HDR
+    needed = sum(
+        _CELL_PTR + len(_interior_cell_encode(lc, sep))
+        for lc, sep in cells
+    )
+    return needed <= avail
+
+
 def _write_ptrs(buf: bytearray, hdr_off: int, ptrs: list[int]) -> None:
     """Write the cell pointer array from *ptrs* into *buf* (leaf pages)."""
     base = _ptr_array_base(hdr_off)
@@ -461,22 +504,22 @@ def _init_leaf_page(buf: bytearray, hdr_off: int = 0) -> None:
 
 
 class BTree:
-    """Table B-tree with interior page traversal and root-leaf splits (phase 4a).
+    """Table B-tree with full recursive splits (phase 4b).
 
-    Supports arbitrarily many rows as long as the tree has depth ≤ 2 (one
-    interior root + two leaf children). The first time a leaf fills up and
-    that leaf *is* the root, a root split is performed automatically:
+    Supports an arbitrary number of rows at any depth. Inserts that fill a
+    leaf page trigger an automatic split:
 
-    1. Two new leaf pages are allocated.
-    2. The existing cells are divided at the midpoint between them.
-    3. The root page is rewritten as an interior page containing a single
-       separator cell ``[left_leaf | max_rowid_in_left]`` and a rightmost
-       child pointer to the right leaf.
+    * **Root-leaf split** (depth 1 → 2): the root leaf is promoted to an
+      interior page and two fresh leaves receive the divided cells.
+    * **Non-root leaf split** (depth ≥ 2): the leaf is split in two, and
+      the separator key is pushed up to the parent interior page.
+    * **Interior page split** (recursive): if the parent interior page is
+      also full, it is split too, propagating a new separator further up.
+    * **Root interior split**: if the root interior page is full, two new
+      interior children are allocated and the root is rewritten with one
+      cell.
 
-    After the root split subsequent inserts traverse the interior root to
-    find the correct leaf, then insert there. If that child leaf later
-    fills up, :class:`PageFullError` is raised — phase 4b adds recursive
-    non-root splits.
+    In all cases the :attr:`root_page` number is constant.
 
     All reads and writes go through the injected :class:`~storage_sqlite.pager.Pager`.
     The B-tree itself is stateless between calls.
@@ -561,21 +604,22 @@ class BTree:
         more overflow pages allocated from the pager, and only the local
         portion stays on the leaf.
 
-        If the root is currently a leaf and it is full, a **root split** is
-        performed: the root is promoted to an interior page and two fresh
-        leaf pages receive the existing plus new cells. This happens
-        transparently and the :attr:`root_page` number never changes.
+        When a leaf page is full, it is split automatically:
+
+        * Root leaf → root-leaf split (root promoted to interior, two new
+          leaf children). The root page number never changes.
+        * Non-root leaf → leaf split, separator pushed up.  If the parent
+          interior page is also full, the split propagates recursively up
+          the ancestor path, potentially splitting the root interior page.
 
         Raises
         ------
         DuplicateRowidError
             A cell with the same *rowid* already exists.
-        PageFullError
-            A *non-root* leaf page has insufficient free space. Phase 4b
-            handles this with recursive splits.
         """
-        # Find the leaf page where this rowid belongs.
-        leaf_pgno, leaf_hdr_off = self._find_leaf_page(rowid)
+        # Find the leaf page where this rowid belongs, recording the path
+        # of interior ancestors from root to the leaf's parent.
+        path, leaf_pgno, leaf_hdr_off = self._find_leaf_with_path(rowid)
 
         page_data = bytearray(self._pager.read(leaf_pgno))
         hdr = _read_hdr(page_data, leaf_hdr_off)
@@ -606,24 +650,22 @@ class BTree:
         new_content_start = content_start - cell_size
 
         if new_content_start < ptr_array_end:
-            # The leaf is full.
-            if leaf_pgno == self._root_page:
-                # Root IS a leaf and it's full → split it.
-                survivors = [self._read_cell(page_data, ptr) for ptr in ptrs]
-                # Merge the new cell at the already-computed insert position.
-                all_cells = (
-                    survivors[:insert_idx]
-                    + [(rowid, payload)]
-                    + survivors[insert_idx:]
-                )
-                self._split_root_leaf(all_cells)
-                return
-            # Non-root leaf is full → phase 4b.
-            raise PageFullError(
-                f"leaf page {leaf_pgno} is full "
-                f"(need {cell_size + _CELL_PTR} bytes, "
-                f"only {content_start - ptr_array_end} available)"
+            # The leaf is full.  Gather all existing cells plus the new one
+            # in sorted order and dispatch to the appropriate split path.
+            survivors = [self._read_cell(page_data, ptr) for ptr in ptrs]
+            all_cells = (
+                survivors[:insert_idx]
+                + [(rowid, payload)]
+                + survivors[insert_idx:]
             )
+            if not path:
+                # Leaf IS the root → root-leaf split (phase 4a).
+                self._split_root_leaf(all_cells)
+            else:
+                # Non-root leaf → split, then push separator up.
+                sep, right_pgno = self._split_leaf(leaf_pgno, all_cells)
+                self._push_separator_up(path, leaf_pgno, right_pgno, sep)
+            return
 
         # Leaf has room: now write the overflow chain (if needed).
         local = _local_payload_size(total)
@@ -704,8 +746,8 @@ class BTree:
         freed (zeroed). The containing leaf page is compacted in-place
         after deletion.
 
-        Works correctly on multi-level trees (phase 4a): traverses interior
-        pages to locate the right leaf, modifies only that leaf.
+        Works correctly on multi-level trees: traverses interior pages to
+        locate the right leaf, modifies only that leaf.
         """
         leaf_pgno, leaf_hdr_off = self._find_leaf_page(rowid)
         page_data = bytearray(self._pager.read(leaf_pgno))
@@ -752,32 +794,26 @@ class BTree:
         self.insert(rowid, payload)
         return True
 
-    # ── Internals ─────────────────────────────────────────────────────────────
+    # ── Path-tracking traversal ───────────────────────────────────────────────
 
-    def _find_leaf_page(self, rowid: int) -> tuple[int, int]:
-        """Traverse from the root to the leaf page that would contain *rowid*.
+    def _find_leaf_with_path(
+        self, rowid: int
+    ) -> tuple[list[tuple[int, int, int]], int, int]:
+        """Traverse root → leaf, recording the ancestor path for split propagation.
 
-        Returns ``(leaf_pgno, hdr_off)``. The ``hdr_off`` is
-        :attr:`_header_offset` for the root page and ``0`` for every other
-        page (only the root can have a non-zero header offset, because the
-        100-byte SQLite database header lives only on page 1).
+        Returns ``(path, leaf_pgno, leaf_hdr_off)`` where *path* is a list
+        of ``(pgno, hdr_off, chosen_idx)`` tuples for each interior page
+        visited, ordered from root to the leaf's immediate parent.
 
-        The traversal rule for an interior page cell ``(left_child, sep_rowid)``:
+        ``chosen_idx`` is the index of the interior cell whose
+        ``left_child`` pointer was followed to reach the next level, or
+        ``-1`` when the ``rightmost_child`` was followed.  This bookkeeping
+        is needed by :meth:`_push_separator_up` to locate where the split
+        child lives in the parent's cell array.
 
-        * ``rowid <= sep_rowid``  → follow *left_child*
-        * otherwise              → continue checking the next cell
-
-        If no cell matches, follow ``rightmost_child``.
-
-        Safety guards:
-
-        * Depth limit: raises :class:`~storage_sqlite.errors.CorruptDatabaseError`
-          if depth exceeds :data:`_MAX_BTREE_DEPTH` (corrupt interior chain).
-        * Child pointer validation: raises if a child pointer is 0 or
-          beyond the pager's current page count.
-        * Unknown page type: raises on any type byte other than ``0x05``
-          or ``0x0D``.
+        Safety guards are identical to :meth:`_find_leaf_page`.
         """
+        path: list[tuple[int, int, int]] = []
         pgno = self._root_page
         hdr_off = self._header_offset
         depth = 0
@@ -793,7 +829,7 @@ class BTree:
             hdr = _read_hdr(page_data, hdr_off)
 
             if hdr["page_type"] == PAGE_TYPE_LEAF_TABLE:
-                return pgno, hdr_off
+                return path, pgno, hdr_off
 
             if hdr["page_type"] != PAGE_TYPE_INTERIOR_TABLE:
                 raise CorruptDatabaseError(
@@ -801,24 +837,40 @@ class BTree:
                     f"0x{hdr['page_type']:02x} (expected 0x05 or 0x0D)"
                 )
 
-            # Binary search the interior cells to find which child to follow.
+            # Walk the interior cells to find which child to descend into,
+            # recording the index so _push_separator_up can find it later.
             ptrs = _read_interior_ptrs(page_data, hdr_off, hdr["ncells"])
-            child_pgno = hdr["rightmost_child"]
-            for ptr in ptrs:
+            chosen_child = hdr["rightmost_child"]
+            chosen_idx = -1  # -1 means rightmost_child was chosen
+            for i, ptr in enumerate(ptrs):
                 left_child, sep_rowid = _read_interior_cell(page_data, ptr)
                 if rowid <= sep_rowid:
-                    child_pgno = left_child
+                    chosen_child = left_child
+                    chosen_idx = i
                     break
 
-            if child_pgno == 0 or child_pgno > self._pager.size_pages:
+            if chosen_child == 0 or chosen_child > self._pager.size_pages:
                 raise CorruptDatabaseError(
                     f"interior page {pgno} has invalid child pointer "
-                    f"{child_pgno} (pager has {self._pager.size_pages} pages)"
+                    f"{chosen_child} (pager has {self._pager.size_pages} pages)"
                 )
 
-            pgno = child_pgno
+            path.append((pgno, hdr_off, chosen_idx))
+            pgno = chosen_child
             hdr_off = 0  # only the root page may have a non-zero header offset
             depth += 1
+
+    def _find_leaf_page(self, rowid: int) -> tuple[int, int]:
+        """Return ``(leaf_pgno, hdr_off)`` for the leaf that would contain *rowid*.
+
+        Thin wrapper around :meth:`_find_leaf_with_path` used by
+        :meth:`find`, :meth:`delete`, and :meth:`update`, which only need
+        the leaf location and not the full ancestor path.
+        """
+        _, leaf_pgno, leaf_hdr_off = self._find_leaf_with_path(rowid)
+        return leaf_pgno, leaf_hdr_off
+
+    # ── Scan ──────────────────────────────────────────────────────────────────
 
     def _scan_page(
         self,
@@ -897,6 +949,8 @@ class BTree:
         total += self._count_cells(hdr["rightmost_child"], 0)
         return total
 
+    # ── Split helpers ─────────────────────────────────────────────────────────
+
     def _split_root_leaf(self, all_cells: list[tuple[int, bytes]]) -> None:
         """Promote the root-leaf to an interior page by splitting *all_cells*.
 
@@ -958,6 +1012,264 @@ class BTree:
         struct.pack_into(">H", root_buf, hdr_off + _INTERIOR_HDR, cell_off)
 
         self._pager.write(self._root_page, bytes(root_buf))
+
+    def _split_leaf(
+        self,
+        leaf_pgno: int,
+        all_cells: list[tuple[int, bytes]],
+    ) -> tuple[int, int]:
+        """Split a non-root leaf page into two halves.
+
+        *leaf_pgno* is overwritten with the left half. A new right sibling
+        is allocated for the right half.
+
+        Non-root leaves always have ``hdr_off = 0`` — the 100-byte
+        database header only appears on the root page (page 1).
+
+        Split point: ``mid = len(all_cells) // 2``.
+
+        Returns ``(separator_rowid, right_pgno)`` where *separator_rowid*
+        is the maximum rowid in the left half — the key that propagates
+        upward into the parent interior page.
+
+        .. note::
+            If *all_cells* contains payloads that originally lived on
+            overflow pages, ``_write_cells_to_leaf`` re-encodes them into
+            new overflow chains.  The old overflow pages become unreachable
+            until phase 5 (freelist) recycles them.
+        """
+        mid = len(all_cells) // 2
+        left_cells = all_cells[:mid]
+        right_cells = all_cells[mid:]
+        separator_rowid = left_cells[-1][0]
+
+        right_pgno = self._pager.allocate()
+        # Reuse leaf_pgno for the left half; hdr_off=0 (non-root leaf).
+        self._write_cells_to_leaf(leaf_pgno, 0, left_cells)
+        self._write_cells_to_leaf(right_pgno, 0, right_cells)
+        return separator_rowid, right_pgno
+
+    def _write_interior_page(
+        self,
+        pgno: int,
+        hdr_off: int,
+        cells: list[tuple[int, int]],
+        rightmost_child: int,
+    ) -> None:
+        """Write an interior page with *cells* and *rightmost_child*.
+
+        Cells are written downward from ``PAGE_SIZE`` and pointers upward
+        from ``hdr_off + _INTERIOR_HDR``. Any prefix bytes before *hdr_off*
+        (the 100-byte SQLite database header on page 1) are preserved.
+
+        Parameters
+        ----------
+        pgno:
+            Target page number.
+        hdr_off:
+            Byte offset of the B-tree header within the page (0 or 100).
+        cells:
+            Sorted list of ``(left_child, sep_rowid)`` pairs.
+        rightmost_child:
+            Page number of the rightmost (largest-key) child.
+        """
+        buf = bytearray(PAGE_SIZE)
+        if hdr_off > 0:
+            orig = self._pager.read(pgno)
+            buf[:hdr_off] = orig[:hdr_off]
+
+        content_offset = PAGE_SIZE
+        ptrs: list[int] = []
+        for left_child, sep_rowid in cells:
+            cell = _interior_cell_encode(left_child, sep_rowid)
+            content_offset -= len(cell)
+            buf[content_offset : content_offset + len(cell)] = cell
+            ptrs.append(content_offset)
+
+        _write_interior_hdr(
+            buf,
+            hdr_off,
+            ncells=len(cells),
+            content_start=content_offset,
+            rightmost_child=rightmost_child,
+        )
+        for i, ptr in enumerate(ptrs):
+            struct.pack_into(">H", buf, hdr_off + _INTERIOR_HDR + i * _CELL_PTR, ptr)
+
+        self._pager.write(pgno, bytes(buf))
+
+    def _split_interior_page(
+        self,
+        pgno: int,
+        hdr_off: int,
+        all_cells: list[tuple[int, int]],
+        rightmost_child: int,
+    ) -> tuple[int, int]:
+        """Split a non-root interior page.
+
+        The median cell is promoted out of the page (it is not kept in
+        either half). *pgno* is rewritten with the left half; a new right
+        sibling is allocated for the right half.
+
+        Split convention (n = len(all_cells), mid = n // 2)::
+
+            left_page  : cells [0, mid),   rightmost_child = all_cells[mid].left_child
+            median     : all_cells[mid]    → sep_rowid pushed up to parent
+            right_page : cells [mid+1, n), rightmost_child = rightmost_child
+
+        Returns ``(median_sep_rowid, right_pgno)``.
+        """
+        mid = len(all_cells) // 2
+        left_cells = all_cells[:mid]
+        median_left_child, median_sep = all_cells[mid]
+        right_cells = all_cells[mid + 1 :]
+
+        right_pgno = self._pager.allocate()
+        # Left half: reuse existing page.  Its rightmost_child is the left
+        # child of the median cell (which is consumed by the promotion).
+        self._write_interior_page(pgno, hdr_off, left_cells, median_left_child)
+        # Right half: new page.  Its rightmost_child is the original.
+        self._write_interior_page(right_pgno, 0, right_cells, rightmost_child)
+        return median_sep, right_pgno
+
+    def _split_root_interior(
+        self,
+        all_cells: list[tuple[int, int]],
+        rightmost_child: int,
+    ) -> None:
+        """Split the root interior page into two interior children.
+
+        When the root is an interior page and full, there is no parent to
+        push a separator into. Instead:
+
+        1. Pick the median cell ``all_cells[mid]``.
+        2. Allocate ``left_pgno`` and ``right_pgno``.
+        3. Write left half → ``left_pgno``,  rightmost = median.left_child.
+        4. Write right half → ``right_pgno``, rightmost = *rightmost_child*.
+        5. Rewrite the root with a single cell ``(left_pgno, median_sep)``
+           and ``rightmost_child = right_pgno``.
+
+        The root page number never changes.
+        """
+        mid = len(all_cells) // 2
+        left_cells = all_cells[:mid]
+        median_left_child, median_sep = all_cells[mid]
+        right_cells = all_cells[mid + 1 :]
+
+        left_pgno = self._pager.allocate()
+        right_pgno = self._pager.allocate()
+
+        self._write_interior_page(left_pgno, 0, left_cells, median_left_child)
+        self._write_interior_page(right_pgno, 0, right_cells, rightmost_child)
+
+        # Rewrite the root with a single separator cell.
+        hdr_off = self._header_offset
+        root_buf = bytearray(PAGE_SIZE)
+        if hdr_off > 0:
+            orig = self._pager.read(self._root_page)
+            root_buf[:hdr_off] = orig[:hdr_off]
+
+        cell = _interior_cell_encode(left_pgno, median_sep)
+        cell_off = PAGE_SIZE - len(cell)
+        _write_interior_hdr(
+            root_buf,
+            hdr_off,
+            ncells=1,
+            content_start=cell_off,
+            rightmost_child=right_pgno,
+        )
+        root_buf[cell_off : cell_off + len(cell)] = cell
+        struct.pack_into(">H", root_buf, hdr_off + _INTERIOR_HDR, cell_off)
+
+        self._pager.write(self._root_page, bytes(root_buf))
+
+    def _push_separator_up(
+        self,
+        ancestors: list[tuple[int, int, int]],
+        left_pgno: int,
+        right_pgno: int,
+        sep_rowid: int,
+    ) -> None:
+        """Insert a new separator into the nearest parent interior page.
+
+        Called after any leaf or interior split.  *ancestors* is the path
+        from the root down to the parent of the just-split page, with the
+        direct parent at ``ancestors[-1]``.
+
+        The parent currently holds a reference to *left_pgno* as one of
+        its child pointers.  After the split, *left_pgno* now holds the
+        smaller half and *right_pgno* holds the larger half.  We insert a
+        new interior cell ``(left_pgno, sep_rowid)`` into the parent so
+        that the tree routing is correct.
+
+        Two placement cases arise depending on how the parent was reached:
+
+        **Case A — chosen_idx ≥ 0** (parent cell ``i`` had ``left_child =
+        left_pgno``):  insert new cell ``(left_pgno, sep_rowid)`` at index
+        ``i``; replace cell ``i``'s left_child with ``right_pgno``::
+
+            Before: ..., (left_pgno, old_sep), ...
+            After:  ..., (left_pgno, sep_rowid), (right_pgno, old_sep), ...
+
+        **Case B — chosen_idx = -1** (parent's ``rightmost_child =
+        left_pgno``): append new cell ``(left_pgno, sep_rowid)`` and set
+        ``rightmost_child = right_pgno``::
+
+            Before: ..., (last_lc, last_sep),  rightmost = left_pgno
+            After:  ..., (last_lc, last_sep), (left_pgno, sep_rowid),
+                         rightmost = right_pgno
+
+        If the resulting cell list fits in the parent, it is written
+        directly.  If the parent is also full, it is split via
+        :meth:`_split_interior_page` (or :meth:`_split_root_interior` if
+        it is the root) and the process recurses with the grandparent.
+        """
+        parent_pgno, parent_hdr_off, chosen_idx = ancestors[-1]
+        remaining = ancestors[:-1]
+
+        parent_data = self._pager.read(parent_pgno)
+        parent_hdr = _read_hdr(parent_data, parent_hdr_off)
+        ncells = parent_hdr["ncells"]
+        old_ptrs = _read_interior_ptrs(parent_data, parent_hdr_off, ncells)
+        old_cells = [_read_interior_cell(parent_data, ptr) for ptr in old_ptrs]
+        old_rightmost = parent_hdr["rightmost_child"]
+
+        # Build the updated cell list.
+        if chosen_idx >= 0:
+            # Case A: descended into old_cells[chosen_idx].left_child.
+            # Replace that cell's left_child with right_pgno, and insert
+            # (left_pgno, sep_rowid) before it.
+            new_cells: list[tuple[int, int]] = []
+            for i, (lc, sep) in enumerate(old_cells):
+                if i == chosen_idx:
+                    new_cells.append((left_pgno, sep_rowid))
+                    new_cells.append((right_pgno, sep))
+                else:
+                    new_cells.append((lc, sep))
+            new_rightmost = old_rightmost
+        else:
+            # Case B: descended into rightmost_child = left_pgno.
+            # Append (left_pgno, sep_rowid) and update rightmost_child.
+            new_cells = list(old_cells) + [(left_pgno, sep_rowid)]
+            new_rightmost = right_pgno
+
+        # Write the parent if the new cell list fits.
+        if _interior_cells_fit(parent_hdr_off, new_cells):
+            self._write_interior_page(parent_pgno, parent_hdr_off, new_cells, new_rightmost)
+            return
+
+        # Parent is full — split it and recurse upward.
+        if not remaining:
+            # Parent IS the root interior page.
+            self._split_root_interior(new_cells, new_rightmost)
+        else:
+            # Non-root interior page: split and push the median up.
+            up_sep, new_right_pgno = self._split_interior_page(
+                parent_pgno, parent_hdr_off, new_cells, new_rightmost
+            )
+            self._push_separator_up(remaining, parent_pgno, new_right_pgno, up_sep)
+
+    # ── Cell I/O ──────────────────────────────────────────────────────────────
 
     def _read_cell(self, page_data: bytes | bytearray, ptr: int) -> tuple[int, bytes]:
         """Decode a full (rowid, payload) pair from *ptr*, following any
@@ -1088,7 +1400,8 @@ class BTree:
         """Write a sorted list of (rowid, payload) cells to a leaf page.
 
         Used by :meth:`delete` (page compaction after removing a cell) and
-        by :meth:`_split_root_leaf` (writing the two new child pages).
+        by :meth:`_split_root_leaf` and :meth:`_split_leaf` (writing
+        split child pages).
 
         The byte layout is built from scratch: cells are written downward
         from ``PAGE_SIZE`` and pointers are written upward from

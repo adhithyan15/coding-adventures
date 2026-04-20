@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.5.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.btree` — phase 4b: full recursive leaf and interior splits.
+  - **Non-root leaf split**: `BTree.insert` now splits any full non-root leaf
+    page into two halves, rewrites the existing page with the left half,
+    allocates a right sibling, and calls `_push_separator_up` to propagate
+    the separator key up the ancestor path. Trees can grow to arbitrary depth.
+  - **`_push_separator_up`**: recursively inserts a new separator cell into a
+    parent interior page.  If the parent is also full it is split via
+    `_split_interior_page` (non-root) or `_split_root_interior` (root), and
+    the process repeats with the grandparent.
+  - **`_split_interior_page`**: splits a non-root interior page by removing
+    the median cell, rewriting the existing page with the left half (rightmost
+    child = median.left_child), and allocating a right sibling for the right
+    half (rightmost child = original rightmost_child).  Returns
+    `(median_sep_rowid, right_pgno)` for the caller to push further up.
+  - **`_split_root_interior`**: splits the root interior page when it is full.
+    Allocates two new interior children for the left and right halves and
+    rewrites the root with a single separator cell.  The root page number never
+    changes.
+  - **`_find_leaf_with_path`**: extended traversal that records the full
+    ancestor path `(pgno, hdr_off, chosen_idx)` from root to leaf's parent.
+    `_find_leaf_page` is now a thin wrapper that discards the path.
+  - **`_write_interior_page`**: helper that builds an interior page from scratch
+    given a sorted cell list and a rightmost-child pointer.
+  - **`_interior_cells_fit`** (module-level): checks whether a list of interior
+    cells fits within the usable space of an interior page at a given
+    `header_offset`, used by `_push_separator_up` to decide whether to split.
+  - **`_split_leaf`**: splits a non-root leaf page in-place (rewrites existing
+    page with left half, allocates right sibling with right half).
+  - `PageFullError` is retained in the public API but is no longer raised by
+    `BTree.insert` during normal operation.  Recursive splits handle all
+    leaf-overflow cases transparently.
+
+### Changed
+
+- `insert` now uses `_find_leaf_with_path` instead of `_find_leaf_page` so
+  that the ancestor path is available when a non-root leaf is full.
+- Module docstring updated to document the interior split algorithm, the new
+  helper methods, and the v1 limitation that orphaned overflow pages from
+  splits are not reclaimed until phase 5 (freelist).
+
 ## [0.4.0] - 2026-04-20
 
 ### Added
