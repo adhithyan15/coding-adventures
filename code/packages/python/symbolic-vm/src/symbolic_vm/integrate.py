@@ -82,6 +82,7 @@ from symbolic_ir import (
 from symbolic_vm.backend import Handler
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
+from symbolic_vm.rothstein_trager import rothstein_trager
 
 ONE = IRInteger(1)
 TWO = IRInteger(2)
@@ -161,14 +162,22 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
     has_rat = hermite_rat is not None and bool(normalize(hermite_rat[0]))
     has_log = hermite_log is not None and bool(normalize(hermite_log[0]))
 
-    # "Made progress" = we extracted something Phase 1 couldn't have
-    # produced on its own. Without a polynomial part and without a
-    # rational-function reduction, the output would just be
-    # ``Integrate(<input>, x)`` — exactly the unevaluated shape we'd
-    # re-enter forever. Return None and let Phase 1 try its pattern
-    # table; if Phase 1 also gives up, the handler's fallthrough emits
-    # the unevaluated form once and we stop.
-    if not (has_poly or has_rat):
+    # Try Rothstein–Trager up-front — a successful closed-form log sum
+    # counts as "progress" just like a polynomial or Hermite rational
+    # part. When RT returns ``None`` (irrational/complex coefficients),
+    # we'll emit an unevaluated ``Integrate`` further down, but that
+    # alone does not count as progress (re-entering it would loop).
+    rt_pairs = None
+    if has_log:
+        rt_pairs = rothstein_trager(hermite_log[0], hermite_log[1])
+
+    # "Made progress" = we extracted something whose closed form Phase
+    # 1 couldn't produce. Without a polynomial part, a Hermite
+    # reduction, or an RT log sum, the output would just echo the
+    # unevaluated input — return None so the handler can fall through
+    # to Phase 1 (which knows a few more shapes) or, failing that,
+    # leave the integral unevaluated exactly once.
+    if not (has_poly or has_rat or rt_pairs is not None):
         return None
 
     pieces: list[IRNode] = []
@@ -181,15 +190,18 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
     if has_rat:
         pieces.append(_rational_to_ir(hermite_rat[0], hermite_rat[1], x))
 
-    # 3. Squarefree log residual. Emit unevaluated; RT lands in a later
-    # phase and replaces this with a log sum. The handler's re-entry on
-    # this Integrate goes through _integrate_rational again, which now
-    # returns None (no progress) and falls through to Phase 1 — which
-    # closes simple cases like ``1/(x − a)`` automatically and leaves
-    # the rest unevaluated.
+    # 3. Squarefree log residual — closed-form via Rothstein–Trager
+    # (Phase 2d) when the log coefficients land in Q. When RT gives
+    # up, preserve the Phase 2c behavior and emit an unevaluated
+    # ``Integrate``. Re-entry on that Integrate returns None from
+    # _integrate_rational (RT will say None again; Hermite on a
+    # squarefree denom does nothing), so there's no infinite loop.
     if has_log:
-        integrand = _rational_to_ir(hermite_log[0], hermite_log[1], x)
-        pieces.append(IRApply(INTEGRATE, (integrand, x)))
+        if rt_pairs is not None:
+            pieces.append(_rt_pairs_to_ir(rt_pairs, x))
+        else:
+            integrand = _rational_to_ir(hermite_log[0], hermite_log[1], x)
+            pieces.append(IRApply(INTEGRATE, (integrand, x)))
 
     if len(pieces) == 1:
         return pieces[0]
@@ -215,6 +227,41 @@ def _integrate_polynomial(p: Polynomial) -> Polynomial:
     for i, c in enumerate(p):
         result.append(Fraction(c) / Fraction(i + 1))
     return normalize(tuple(result))
+
+
+def _rt_pairs_to_ir(pairs, x: IRSymbol) -> IRNode:
+    """Assemble ``Σ c_i · log(v_i)`` as IR from the Rothstein–Trager pairs.
+
+    Each pair is ``(c: Fraction, v: Polynomial)`` with ``v`` monic and
+    non-constant. The emitted IR is a left-associative binary ``Add``
+    chain of log terms; the chain collapses to a single node when
+    there's only one pair. A coefficient of ``1`` renders as bare
+    ``Log(v)`` (no redundant ``Mul(1, ·)``); ``−1`` renders as
+    ``Neg(Log(v))``.
+    """
+    terms: list[IRNode] = []
+    for c, v in pairs:
+        log_ir = IRApply(LOG, (from_polynomial(v, x),))
+        if c == 1:
+            terms.append(log_ir)
+        elif c == -1:
+            terms.append(IRApply(NEG, (log_ir,)))
+        else:
+            # Integer coefficients render as IRInteger; the general
+            # rational case uses IRRational. This keeps the IR shape
+            # aligned with what the Phase 1 rules (and the hand-rolled
+            # tests for that path) already produce.
+            if c.denominator == 1:
+                coef: IRNode = IRInteger(c.numerator)
+            else:
+                coef = IRRational(c.numerator, c.denominator)
+            terms.append(IRApply(MUL, (coef, log_ir)))
+    if len(terms) == 1:
+        return terms[0]
+    acc = terms[0]
+    for t in terms[1:]:
+        acc = IRApply(ADD, (acc, t))
+    return acc
 
 
 def _rational_to_ir(
