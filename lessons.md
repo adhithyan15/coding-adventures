@@ -2855,3 +2855,18 @@ correctly limited the build plan to the current package and its test suite.
 **Rule:** For single-package Haskell validation in this repo, run plain `cabal test` from the
 package directory unless you explicitly want the parent project. Do not append the `all` target for
 isolated package PRs.
+
+---
+
+## wasm-bindgen `JsValue::from_str` is not safe in native error-path tests
+
+**Date:** 2026-04-19
+
+**What happened:** A native `cargo test` for a WASM wrapper passed success-path tests but aborted
+when an error-path test tried to convert a Rust error string with `JsValue::from_str`. On
+non-wasm32 targets, that wasm-bindgen constructor can hit a "function not implemented" abort instead
+of returning a normal Rust panic.
+
+**Rule:** In wasm-bindgen wrapper crates that run native tests, keep JS error construction behind a
+`#[cfg(target_arch = "wasm32")]` helper. Use a simple native placeholder such as `JsValue::NULL` for
+test-only error values when the test only needs to assert that the wrapper returned `Err`.
