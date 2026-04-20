@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/master.swiftdeps"
+  },
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/PixelContainer/Sources/PixelContainer/PixelContainer.swift": {
+    "dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.d",
+    "object": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swift.o",
+    "swiftmodule": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.swiftdeps",
+    "diagnostics": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/PixelContainer.build/PixelContainer.dia"
+  }
+}
