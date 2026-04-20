@@ -70,7 +70,11 @@ class AlgolWasmCompiler:
             FunctionSignature(label="_start", param_count=0, export_name="_start")
         ]
         signatures.extend(
-            FunctionSignature(label=label, param_count=param_count)
+            FunctionSignature(
+                label=label,
+                param_count=param_count,
+                require_explicit_args=True,
+            )
             for label, param_count in sorted(ir.procedure_signatures.items())
         )
         lowering_errors = validate_ir_to_wasm(ir.program, signatures)

@@ -217,6 +217,7 @@ class FunctionSignature:
     label: str
     param_count: int
     export_name: str | None = None
+    require_explicit_args: bool = False
 
 
 @dataclass(frozen=True)
@@ -692,7 +693,19 @@ class _FunctionLowerer:
                 if label.name not in self.function_indices:
                     raise WasmLoweringError(f"unknown function label: {label.name}")
                 explicit_args = instruction.operands[1:]
-                if explicit_args and len(explicit_args) != signature.param_count:
+                if (
+                    signature.require_explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"explicit argument register(s), got {len(explicit_args)}"
+                    )
+                if (
+                    not signature.require_explicit_args
+                    and explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
                     raise WasmLoweringError(
                         f"CALL {label.name} expects {signature.param_count} "
                         f"argument register(s), got {len(explicit_args)}"
