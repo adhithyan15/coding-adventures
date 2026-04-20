@@ -743,28 +743,35 @@ def test_encode_decode_round_trip() -> None:
     assert decoded == row
 
 
-def test_encode_skips_ipk() -> None:
-    """IPK column is NOT present in the encoded payload."""
+def test_encode_ipk_as_null_placeholder() -> None:
+    """IPK column is stored as NULL in the payload (matching real sqlite3).
+
+    Real SQLite writes NULL for the INTEGER PRIMARY KEY column in the record
+    payload; the actual value lives in the B-tree cell key (the rowid).  We
+    replicate that convention so files produced by this backend are readable
+    by the stdlib ``sqlite3`` module, and vice versa.
+    """
     cols = [
         ColumnDef(name="id", type_name="INTEGER", primary_key=True),
         ColumnDef(name="x", type_name="TEXT"),
     ]
     row = {"id": 5, "x": "hi"}
     payload = _encode_row(5, row, cols)
-    # Payload should only contain the 'x' column — one value.
+    # Payload contains two values: NULL for the IPK slot and 'hi' for x.
     values, _ = record.decode(payload)
-    assert len(values) == 1
-    assert values[0] == "hi"
+    assert len(values) == 2
+    assert values[0] is None  # IPK slot → NULL
+    assert values[1] == "hi"
 
 
 def test_decode_injects_rowid_for_ipk() -> None:
-    """IPK column's value comes from rowid, not the record payload."""
+    """IPK column's value comes from rowid; the NULL slot in payload is consumed."""
     cols = [
         ColumnDef(name="id", type_name="INTEGER", primary_key=True),
         ColumnDef(name="x", type_name="TEXT"),
     ]
-    # Payload has only 'x'.
-    payload = record.encode(["world"])
+    # Payload has NULL for IPK and 'world' for x — same layout as real sqlite3.
+    payload = record.encode([None, "world"])
     decoded = _decode_row(99, payload, cols)
     assert decoded["id"] == 99
     assert decoded["x"] == "world"

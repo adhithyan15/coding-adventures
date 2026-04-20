@@ -91,12 +91,17 @@ backend.
   names in insertion order. `find_table(name)` returns `(rowid, rootpage, sql)`
   or `None`. `get_schema_cookie()` reads the u32 at page-1 offset 40.
 
-- **`backend` module** — `SqliteFileBackend` (phase 7).
+- **`backend` module** — `SqliteFileBackend` (phases 7 + 8).
   Implements the full `sql_backend.Backend` interface against a real `.db`
   file.  `tables()`, `columns()`, `scan()`, `insert()`, `update()`,
   `delete()`, `create_table()`, `drop_table()`, `begin_transaction()`,
   `commit()`, `rollback()`.  Opens existing files or creates new ones.
   Passes all four tiers of `sql_backend.conformance`.
+
+  **Byte-compatible with the real `sqlite3` library** (v0.8.1+): INTEGER
+  PRIMARY KEY columns are stored as a NULL slot in the record payload (matching
+  the real SQLite convention).  Files produced by this backend are readable by
+  the `sqlite3` CLI and Python's stdlib `sqlite3`, and vice-versa.
 
 ## Installation
 
