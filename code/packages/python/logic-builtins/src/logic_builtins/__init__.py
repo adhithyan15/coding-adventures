@@ -7,10 +7,13 @@ the first state-aware builtins layer for the library-first Prolog path.
 from logic_builtins.builtins import (
     add,
     argo,
+    atomico,
     atomo,
     bagofo,
+    callableo,
     callo,
     compoundo,
+    copytermo,
     div,
     failo,
     findallo,
@@ -34,10 +37,12 @@ from logic_builtins.builtins import (
     numeqo,
     numneqo,
     onceo,
+    same_termo,
     setofo,
     stringo,
     sub,
     trueo,
+    univo,
     varo,
 )
 
@@ -45,10 +50,13 @@ __all__ = [
     "__version__",
     "add",
     "argo",
+    "atomico",
     "atomo",
     "bagofo",
     "callo",
+    "callableo",
     "compoundo",
+    "copytermo",
     "div",
     "failo",
     "findallo",
@@ -72,11 +80,13 @@ __all__ = [
     "numneqo",
     "numbero",
     "onceo",
+    "same_termo",
     "setofo",
     "stringo",
     "sub",
     "trueo",
+    "univo",
     "varo",
 ]
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pytest
 from logic_engine import (
+    Compound,
+    LogicVar,
     atom,
     conj,
     disj,
@@ -25,10 +27,13 @@ from logic_builtins import (
     __version__,
     add,
     argo,
+    atomico,
     atomo,
     bagofo,
+    callableo,
     callo,
     compoundo,
+    copytermo,
     div,
     failo,
     findallo,
@@ -52,10 +57,12 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    same_termo,
     setofo,
     stringo,
     sub,
     trueo,
+    univo,
     varo,
 )
 
@@ -64,7 +71,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.4.0"
+        assert __version__ == "0.5.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -485,6 +492,156 @@ class TestControlBuiltins:
             noto(object())
 
 
+class TestTermMetaprogrammingBuiltins:
+    """Term metaprogramming should expose Prolog-style term-as-data tools."""
+
+    def test_univo_decomposes_compounds_in_functor_first_order(self) -> None:
+        parts = var("Parts")
+
+        assert solve_all(
+            program(),
+            parts,
+            univo(term("box", "tea", "cake"), parts),
+        ) == [logic_list(["box", "tea", "cake"])]
+
+    def test_univo_decomposes_atomic_terms_to_singleton_lists(self) -> None:
+        parts = var("Parts")
+
+        assert solve_all(program(), parts, univo("tea", parts)) == [
+            logic_list(["tea"]),
+        ]
+        assert solve_all(program(), parts, univo(3, parts)) == [logic_list([3])]
+        assert solve_all(program(), parts, univo(string("tea"), parts)) == [
+            logic_list([string("tea")]),
+        ]
+
+    def test_univo_constructs_compounds_and_atomic_terms(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            univo(value, logic_list(["box", "tea", "cake"])),
+        ) == [term("box", "tea", "cake")]
+        assert solve_all(program(), value, univo(value, logic_list([3]))) == [num(3)]
+
+    def test_univo_fails_for_invalid_construction_parts(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, univo(value, logic_list([]))) == []
+        assert solve_all(program(), value, univo(value, logic_list([1, "tea"]))) == []
+        assert solve_all(program(), value, univo(value, term(".", "box", "open"))) == []
+
+    def test_functoro_inspects_compound_and_atomic_terms(self) -> None:
+        name = var("Name")
+        arity = var("Arity")
+
+        assert solve_all(
+            program(),
+            (name, arity),
+            functoro(term("box", "tea", "cake"), name, arity),
+        ) == [(atom("box"), num(2))]
+        assert solve_all(program(), (name, arity), functoro("tea", name, arity)) == [
+            (atom("tea"), num(0)),
+        ]
+        assert solve_all(program(), (name, arity), functoro(3, name, arity)) == [
+            (num(3), num(0)),
+        ]
+
+    def test_functoro_constructs_atoms_and_compounds(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, functoro(value, "tea", 0)) == [atom("tea")]
+
+        constructed = solve_all(program(), value, functoro(value, "box", 2))
+        assert len(constructed) == 1
+        [box] = constructed
+        assert isinstance(box, Compound)
+        assert box.functor == atom("box").symbol
+        assert len(box.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in box.args)
+        assert box.args[0] != box.args[1]
+
+    def test_functoro_fails_for_invalid_construction_inputs(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert solve_all(program(), value, functoro(value, name, 1)) == []
+        assert solve_all(program(), value, functoro(value, "box", -1)) == []
+        assert solve_all(program(), value, functoro(value, "box", 1.5)) == []
+        assert solve_all(program(), value, functoro(value, 3, 1)) == []
+
+    def test_copytermo_copies_ground_terms_and_refreshes_variables(self) -> None:
+        copy = var("Copy")
+        original = var("Original")
+
+        assert solve_all(program(), copy, copytermo(term("box", "tea"), copy)) == [
+            term("box", "tea"),
+        ]
+
+        [copied] = solve_all(
+            program(),
+            copy,
+            copytermo(term("pair", original, original), copy),
+        )
+        assert isinstance(copied, Compound)
+        assert copied.functor == atom("pair").symbol
+        assert copied.args[0] == copied.args[1]
+        assert copied.args[0] != original
+
+    def test_copytermo_respects_existing_bindings_before_copying(self) -> None:
+        source = var("Source")
+        inner = var("Inner")
+        copy = var("Copy")
+
+        assert solve_all(
+            program(),
+            copy,
+            conj(
+                eq(source, term("box", inner)),
+                eq(inner, "tea"),
+                copytermo(source, copy),
+            ),
+        ) == [term("box", "tea")]
+
+    def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(program(), left, same_termo(left, left)) == [left]
+        assert solve_all(program(), (left, right), same_termo(left, right)) == []
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(eq(left, right), same_termo(left, right)),
+        ) == [(right, right)]
+
+    def test_atomico_and_callableo_classify_reified_terms(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, conj(eq(value, "tea"), atomico(value))) == [
+            atom("tea"),
+        ]
+        assert solve_all(program(), value, conj(eq(value, 3), atomico(value))) == [
+            num(3),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            conj(eq(value, term("box", "tea")), atomico(value)),
+        ) == []
+        assert solve_all(
+            program(),
+            value,
+            conj(eq(value, term("box", "tea")), callableo(value)),
+        ) == [term("box", "tea")]
+        assert solve_all(
+            program(),
+            value,
+            conj(eq(value, string("tea")), callableo(value)),
+        ) == []
+
+
 class TestTermStateBuiltins:
     """Term predicates should observe the current substitution."""
 
@@ -539,11 +696,14 @@ class TestTermStateBuiltins:
             functoro(term("box", "tea", "cake"), name, arity),
         ) == [(atom("box"), num(2))]
 
-    def test_functoro_fails_for_non_compound_terms(self) -> None:
+    def test_functoro_fails_for_unbound_terms_without_construction_inputs(
+        self,
+    ) -> None:
+        target = var("Target")
         name = var("Name")
         arity = var("Arity")
 
-        assert solve_all(program(), (name, arity), functoro("tea", name, arity)) == []
+        assert solve_all(program(), (name, arity), functoro(target, name, arity)) == []
 
     def test_argo_extracts_one_based_compound_arguments(self) -> None:
         value = var("Value")
