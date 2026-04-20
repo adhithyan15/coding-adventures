@@ -4,6 +4,22 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: CI setup-job failures can be infrastructure flakiness, not code failures
+
+GitHub Actions can fail before checkout or before any repository command runs
+if the runner cannot download a pinned action archive. These failures look red
+on the PR, but there is no package, test, or build output to fix in the repo.
+
+**Symptom:** A job fails during "Set up job" with an error such as
+`Failed to download archive` for an action repository tarball, while sibling
+matrix jobs and earlier push runs pass.
+
+**Rule:** Inspect the failing job log before changing code. If the failure is
+limited to downloading an action archive during setup, rerun or retrigger CI and
+avoid inventing an application-code fix for an infrastructure failure.
+
+---
+
 ### 2026-04-20: Do not leak local machine state in commits or PR descriptions
 
 CI fixes sometimes involve local environment problems, but commit messages and

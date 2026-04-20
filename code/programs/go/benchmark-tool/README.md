@@ -25,11 +25,16 @@ The current implementation supports:
 - writing `samples.jsonl`, `trials.jsonl`, `summary.json`, `environment.json`,
   and `report.md`
 - regenerating reports from an existing result directory
-- comparing two result directories at a high level
+- comparing two result directories from per-trial aggregates and writing
+  `comparison.json` plus `comparison.md`
+- reporting comparison verdicts with relative-difference confidence intervals,
+  Cliff's delta, practical thresholds, and correctness guardrails
 
 The TCP / RESP driver is intentionally correctness-first: every expected
 response must parse as complete RESP frames and match the manifest before a
 trial is considered successful.
+The comparison path follows the same rule: performance verdicts are suppressed
+when either side has failed measurement trials.
 
 ## Usage
 
@@ -54,7 +59,7 @@ go build -o benchmark-tool .
   --subjects current,baseline \
   --workloads print-once
 ./benchmark-tool report /tmp/bench-result
-./benchmark-tool compare /tmp/baseline /tmp/candidate
+./benchmark-tool compare /tmp/baseline /tmp/candidate --metric ops_per_second
 ```
 
 Flags use GNU-style parsing through `cli-builder`, so both of these are valid:

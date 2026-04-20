@@ -701,6 +701,26 @@ second binary yet:
 - The standalone `benchmark-load-tcp` binary remains a future extraction point
   once the protocol and result contracts settle.
 
+### Phase-Four Implementation Note
+
+The first statistical-analysis slice upgrades `benchmark-tool compare` from a
+summary-median printer into a verdict-producing comparison step:
+
+- Comparisons read successful measurement trials from `trials.jsonl`, keeping
+  the per-trial aggregate as the unit of comparison.
+- The candidate result directory receives `comparison.json` and `comparison.md`
+  so later automation and PR comments can consume the same verdict data.
+- Each common subject/workload/metric row reports absolute difference, relative
+  difference, a bootstrap confidence interval for the relative median
+  difference, Cliff's delta, metric direction, and the practical threshold used.
+- The default threshold is 5 percent for latency and throughput metrics, with
+  startup metrics using 10 percent.
+- Correctness failures suppress performance claims and produce a
+  `correctness_failed` verdict before any speed/latency interpretation.
+- The current implementation compares independent result directories. Paired
+  trial ordering, outlier marking, and configurable thresholds remain future
+  refinements.
+
 ---
 
 ## Git Ref Comparison

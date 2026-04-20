@@ -3,7 +3,7 @@
   "name": "benchmark-tool",
   "display_name": "benchmark-tool",
   "description": "Run and compare reproducible coding-adventures benchmark manifests",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "parsing_mode": "gnu",
   "builtin_flags": { "help": true, "version": true },
   "commands": [
@@ -113,7 +113,7 @@
     {
       "id": "compare",
       "name": "compare",
-      "description": "Compare two benchmark result directories",
+      "description": "Compare two benchmark result directories and write comparison artifacts",
       "flags": [
         {
           "id": "metric",

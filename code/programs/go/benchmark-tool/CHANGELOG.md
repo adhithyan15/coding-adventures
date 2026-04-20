@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 - 2026-04-20
+
+- Add phase-four comparison verdict artifacts for benchmark result directories.
+- Make `benchmark-tool compare` read per-trial measurement aggregates from
+  `trials.jsonl` instead of comparing summary medians alone.
+- Write `comparison.json` and `comparison.md` into the candidate result
+  directory with relative difference confidence intervals, Cliff's delta,
+  practical threshold verdicts, and metric direction metadata.
+- Suppress performance verdicts when either side has correctness failures.
+
 ## 0.3.0 - 2026-04-20
 
 - Add the phase-three TCP/RESP load generator inside `benchmark-tool`.
