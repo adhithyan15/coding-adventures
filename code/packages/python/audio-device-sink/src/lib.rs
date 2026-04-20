@@ -1,6 +1,6 @@
 //! Python bridge for the Rust audio device sink stack.
 
-use std::ffi::{c_char, c_longlong};
+use std::ffi::{c_char, c_int, c_longlong, CString};
 use std::ptr;
 
 use audio_device_coreaudio::CoreAudioSink;
@@ -11,9 +11,11 @@ use python_bridge::*;
 extern "C" {
     fn PyLong_AsLongLong(obj: PyObjectPtr) -> c_longlong;
     fn PyErr_Occurred() -> PyObjectPtr;
+    fn PyObject_IsInstance(inst: PyObjectPtr, cls: PyObjectPtr) -> c_int;
 }
 
 static AUDIO_DEVICE_ERROR_CLASS: std::sync::OnceLock<usize> = std::sync::OnceLock::new();
+static BOOL_CLASS: std::sync::OnceLock<usize> = std::sync::OnceLock::new();
 
 unsafe fn audio_device_error_class() -> PyObjectPtr {
     AUDIO_DEVICE_ERROR_CLASS
@@ -37,12 +39,46 @@ unsafe fn parse_arg_i64(args: PyObjectPtr, index: isize) -> Option<i64> {
 }
 
 unsafe fn py_i64(obj: PyObjectPtr) -> Option<i64> {
+    if py_is_bool(obj) {
+        return None;
+    }
     let value = PyLong_AsLongLong(obj);
     if !PyErr_Occurred().is_null() {
         PyErr_Clear();
         return None;
     }
     Some(value as i64)
+}
+
+unsafe fn py_is_bool(obj: PyObjectPtr) -> bool {
+    let cls = BOOL_CLASS.get().copied().unwrap_or_else(|| {
+        let builtins_name = CString::new("builtins").expect("literal has no NUL");
+        let builtins = PyImport_ImportModule(builtins_name.as_ptr());
+        if builtins.is_null() {
+            PyErr_Clear();
+            return 0;
+        }
+        let bool_name = CString::new("bool").expect("literal has no NUL");
+        let bool_cls = PyObject_GetAttrString(builtins, bool_name.as_ptr());
+        Py_DecRef(builtins);
+        if bool_cls.is_null() {
+            PyErr_Clear();
+            return 0;
+        }
+        let _ = BOOL_CLASS.set(bool_cls as usize);
+        bool_cls as usize
+    }) as PyObjectPtr;
+
+    if cls.is_null() {
+        return false;
+    }
+    let result = PyObject_IsInstance(obj, cls);
+    if result < 0 {
+        PyErr_Clear();
+        false
+    } else {
+        result == 1
+    }
 }
 
 unsafe fn parse_samples(obj: PyObjectPtr, max_samples: usize) -> Option<Vec<i16>> {
@@ -56,6 +92,11 @@ unsafe fn parse_samples(obj: PyObjectPtr, max_samples: usize) -> Option<Vec<i16>
     loop {
         let item = PyIter_Next(iter);
         if item.is_null() {
+            if !PyErr_Occurred().is_null() {
+                PyErr_Clear();
+                Py_DecRef(iter);
+                return None;
+            }
             break;
         }
 

@@ -108,6 +108,11 @@ def test_empty_native_playback_returns_report_without_opening_device() -> None:
     )
 
 
+def test_private_native_boundary_rejects_bool_samples() -> None:
+    with pytest.raises(ValueError, match="signed 16-bit PCM"):
+        audio_device_sink_module._play_samples([True], 44_100, 1)
+
+
 @pytest.mark.skipif(sys.platform == "darwin", reason="macOS has the Core Audio backend")
 def test_non_macos_non_empty_playback_raises_readable_error() -> None:
     with pytest.raises(AudioDeviceError, match="Core Audio"):
