@@ -11,8 +11,10 @@ Phases shipped so far:
 - :mod:`storage_sqlite.record` — record codec (serial types + row values).
 - :mod:`storage_sqlite.btree` — table B-tree with full recursive splits.
 - :mod:`storage_sqlite.freelist` — SQLite trunk/leaf freelist for page reuse.
+- :mod:`storage_sqlite.schema` — sqlite_schema catalog table (CREATE / DROP
+  TABLE, schema cookie management).
 
-Everything else (sqlite_schema, the Backend adapter) lands in subsequent phases.
+Everything else (the Backend adapter) lands in a subsequent phase.
 """
 
 from storage_sqlite import btree, record, varint
@@ -26,6 +28,7 @@ from storage_sqlite.freelist import TRUNK_CAPACITY, Freelist
 from storage_sqlite.header import Header
 from storage_sqlite.pager import PAGE_SIZE, Pager
 from storage_sqlite.record import Value
+from storage_sqlite.schema import Schema, SchemaError, initialize_new_database
 
 __all__ = [
     "PAGE_SIZE",
@@ -38,10 +41,13 @@ __all__ = [
     "JournalError",
     "PageFullError",
     "Pager",
+    "Schema",
+    "SchemaError",
     "StorageError",
     "TRUNK_CAPACITY",
     "Value",
     "btree",
+    "initialize_new_database",
     "record",
     "varint",
 ]
