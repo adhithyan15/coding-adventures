@@ -655,8 +655,8 @@ surface before the full TCP benchmark surface:
   the tool can be run locally from any directory.
 - `validate` currently validates benchmark manifests. Result-directory schema
   validation remains future work.
-- `run` currently executes `driver = "command"` workloads and validates, but
-  skips, TCP/RESP workloads until the load generator lands.
+- `run` initially executed only `driver = "command"` workloads. Phase three
+  adds service startup and the first TCP/RESP workload driver.
 - The initial implemented run flags were `--out`, `--trials`, and `--warmup`.
   Phase two adds subject checkout overrides and focused subject/workload
   filters. Seeds, build reuse, and CLI-level fail-fast overrides remain future
@@ -680,6 +680,26 @@ benchmarks:
   logs remain in `subjects/<name>/build.log`.
 - Randomized or paired trial ordering and richer in-result comparison reports
   remain future work.
+
+### Phase-Three Implementation Note
+
+The first TCP load-generation slice is implemented directly inside
+`benchmark-tool` so the Mini Redis manifest can run locally and in CI without a
+second binary yet:
+
+- Service subjects allocate a loopback TCP port, replace `{port}` in the
+  subject command, write `subjects/<name>/service.log`, and wait for
+  `ready_check = "tcp-connect"`.
+- `driver = "tcp-resp"` supports `one-shot`, `preconnect-then-fire`,
+  `pipeline`, and `idle` modes.
+- RESP reads are frame-aware. The client parses complete RESP values, validates
+  them against the manifest's expected frames, and marks the trial failed if any
+  response is malformed or wrong.
+- Per-connection samples include connect, write, first-byte, frame, total, and
+  operation metrics; trial summaries include throughput and median client-side
+  phase timings.
+- The standalone `benchmark-load-tcp` binary remains a future extraction point
+  once the protocol and result contracts settle.
 
 ---
 

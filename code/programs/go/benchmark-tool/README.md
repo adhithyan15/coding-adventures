@@ -19,14 +19,17 @@ The current implementation supports:
 - overriding subject checkouts with repeated `--subject name=ref` flags
 - preparing checkout-backed subjects in clean temporary git worktrees
 - pinning per-subject commit metadata in `subjects/<name>/subject.json`
+- starting local TCP service subjects with `ready_check = "tcp-connect"`
+- executing `driver = "tcp-resp"` workloads with RESP frame-aware reads
+- running one-shot, preconnect-then-fire, pipelined, and idle TCP modes
 - writing `samples.jsonl`, `trials.jsonl`, `summary.json`, `environment.json`,
   and `report.md`
 - regenerating reports from an existing result directory
 - comparing two result directories at a high level
 
-The TCP / RESP load generator described by `code/specs/benchmarking-tools.md`
-is the next layer. This tool already validates those manifests, but it only
-executes workloads whose driver is `command`.
+The TCP / RESP driver is intentionally correctness-first: every expected
+response must parse as complete RESP frames and match the manifest before a
+trial is considered successful.
 
 ## Usage
 
@@ -44,6 +47,7 @@ go build -o benchmark-tool .
 ./benchmark-tool doctor
 ./benchmark-tool validate ../../../benchmarks/examples/command/benchmark.toml
 ./benchmark-tool run ../../../benchmarks/examples/command/benchmark.toml --out /tmp/bench-result
+./benchmark-tool run ../../../benchmarks/mini-redis/benchmark.toml --out /tmp/mini-redis-bench
 ./benchmark-tool run ../../../benchmarks/examples/command/benchmark.toml \
   --subject current=HEAD \
   --subject baseline=origin/main \
