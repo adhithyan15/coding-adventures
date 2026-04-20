@@ -4,6 +4,25 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: CodeQL flags unchecked CLI integer downcasts from `int64` to `int`
+
+CodeQL treats parsed CLI integer values as untrusted numeric input. If a Go
+program converts a signed 64-bit parsed value to `int` without checking the
+current platform's `int` width, CodeQL raises a high-severity
+`go/incorrect-integer-conversion` alert even when tests pass on 64-bit local
+machines.
+
+**Symptom:** A PR's CodeQL workflow job succeeds, but GitHub Advanced Security
+adds a separate failing `CodeQL` check with annotations like "Incorrect
+conversion between integer types" on `return int(value)`.
+
+**Rule:** When converting parsed or decoded numeric input to `int`, add
+explicit platform-sized bounds checks first or route through `strconv.Atoi`
+after formatting/validating the value. For `float64`, reject NaN, infinity, and
+non-integral values before attempting any `int` conversion.
+
+---
+
 ### 2026-04-19: JVM composite Gradle BUILD files need a shared lock when they reuse included builds
 
 Java and Kotlin packages that include the same local Gradle builds can corrupt

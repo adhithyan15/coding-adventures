@@ -645,6 +645,25 @@ benchmark-tool validate code/benchmarks/mini-redis/benchmark.toml
 benchmark-tool validate benchmark-results/local-mini-redis
 ```
 
+### Phase-One Implementation Note
+
+The first implementation slice intentionally lands the local command-runner
+surface before the full TCP benchmark surface:
+
+- CLI parsing is driven by the repository's declarative Go `cli-builder`
+  package, with the JSON CLI spec embedded into the `benchmark-tool` binary so
+  the tool can be run locally from any directory.
+- `validate` currently validates benchmark manifests. Result-directory schema
+  validation remains future work.
+- `run` currently executes `driver = "command"` workloads and validates, but
+  skips, TCP/RESP workloads until the load generator lands.
+- The implemented run flags are `--out`, `--trials`, and `--warmup`; subject
+  filtering, workload filtering, seeds, build reuse, and CLI-level fail-fast
+  overrides remain future work.
+- Manifest `working_directory` values are resolved relative to the manifest's
+  git repository root when available, so repo-local benchmark manifests work
+  when the binary is invoked from outside the repository root.
+
 ---
 
 ## Git Ref Comparison
