@@ -2972,3 +2972,18 @@ the import validator.
 **Rule:** At typed import or deserialization boundaries, reject empty-string event names explicitly.
 Only lower `None` to the runtime epsilon sentinel inside the core automaton constructor path. Add
 regression tests for this distinction whenever a runtime uses sentinel values internally.
+
+---
+
+## GitHub Actions archive download failures can be transient infrastructure, not package failures
+
+**Date:** 2026-04-20
+
+**What happened:** A Python-only PR failed before checkout/build execution on Ubuntu and Windows
+because the runner could not download action archives from `api.github.com` during the
+"Prepare all required actions" phase. The package-local builds and affected build-tool run were
+already green, and the failed jobs never reached repository code.
+
+**Rule:** When CI fails in job setup while downloading third-party action archives, inspect the job
+logs before changing package code. If the failure happens before checkout or tool setup commands,
+treat it as infrastructure/transient unless repeated runs prove otherwise.
