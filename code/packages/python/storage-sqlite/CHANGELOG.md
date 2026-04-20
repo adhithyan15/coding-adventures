@@ -1,5 +1,93 @@
 # Changelog
 
+## [0.8.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.backend` — phase 7: `SqliteFileBackend`, the
+  `sql_backend.Backend` adapter that wires all lower-level layers (pager,
+  freelist, schema, B-trees) behind the public Backend interface.
+
+  **`SqliteFileBackend(path)`**
+
+  Opens an existing SQLite database file or creates a new one (writing the
+  100-byte database header and an empty `sqlite_schema` leaf on first open).
+  Implements the full `sql_backend.Backend` ABC:
+
+  - **`tables() → list[str]`** — returns table names in insertion order via
+    `Schema.list_tables()`.
+  - **`columns(table) → list[ColumnDef]`** — parses the `CREATE TABLE` SQL
+    stored in `sqlite_schema` and returns column definitions.  Raises
+    `TableNotFound` if the table does not exist.
+  - **`scan(table) → RowIterator`** — opens a `_BTreeCursor` over the
+    table's B-tree.  Rows are yielded in ascending rowid order (insertion
+    order for tables without explicit rowid reuse).  Raises `TableNotFound`.
+  - **`insert(table, row)`** — applies column defaults, enforces `NOT NULL`
+    and `UNIQUE` / `PRIMARY KEY` constraints, chooses the rowid (using the
+    `INTEGER PRIMARY KEY` value when present, otherwise `max + 1`), encodes
+    the row as a SQLite record, and calls `BTree.insert`.  Raises
+    `TableNotFound`, `ColumnNotFound`, `ConstraintViolation`.
+  - **`update(table, cursor, assignments)`** — merges assignments into the
+    current row, re-encodes, and calls `BTree.update` at the cursor's rowid.
+    Enforces `NOT NULL` on the new values.  Raises `ConstraintViolation`,
+    `ColumnNotFound`, `Unsupported` (non-native cursor or no current row).
+  - **`delete(table, cursor)`** — calls `BTree.delete` at the cursor's
+    rowid and clears the cursor's current-row state.  Raises `Unsupported`
+    (non-native cursor or no current row).
+  - **`create_table(table, columns, if_not_exists)`** — serialises the
+    column list to `CREATE TABLE` SQL, inserts the schema row, and allocates
+    a root page.  Raises `TableAlreadyExists` when `if_not_exists=False` and
+    the table already exists; silently returns when `if_not_exists=True`.
+  - **`drop_table(table, if_exists)`** — frees all pages in the table's
+    B-tree, removes the schema row.  Raises `TableNotFound` when
+    `if_exists=False` and the table is missing.
+  - **`begin_transaction() → TransactionHandle`** — records an opaque
+    handle; writes continue to accumulate in the pager's dirty-page table.
+    Raises `Unsupported` if a transaction is already open.
+  - **`commit(handle)`** — fsyncs dirty pages to disk via `pager.commit()`.
+  - **`rollback(handle)`** — discards dirty pages via `pager.rollback()` and
+    reattaches the `Schema` so post-rollback reads see the committed state.
+  - **`close()`** — rolls back any open transaction, then closes the pager.
+  - **Context-manager protocol** (`with SqliteFileBackend(path) as b:`):
+    `__exit__` calls `close()`, so uncommitted writes are rolled back
+    automatically on normal or exceptional exit.
+
+  **`_BTreeCursor`** — internal class implementing both `RowIterator` and
+  `Cursor` protocols.  Wraps a `BTree.scan()` generator; `next()` decodes
+  each record; `current_row()` returns the last decoded row; `close()`
+  stops iteration.  The backend uses the stored `_current_rowid` for
+  positioned `update` and `delete`.
+
+  **SQL helper functions** (module-level, used internally):
+
+  - `_format_literal(value)` — Python value → SQL literal string.
+  - `_columns_to_sql(table, columns)` — `list[ColumnDef]` → `CREATE TABLE`
+    SQL string (parseable by both this module and the real `sqlite3` CLI).
+  - `_tokenize(sql)` — lightweight regex tokeniser (strips comments).
+  - `_parse_literal(tok)` — SQL literal token → Python value.
+  - `_split_column_defs(body)` — comma-split respecting parenthesis depth.
+  - `_parse_one_column(col_sql)` → `ColumnDef | None`.
+  - `_sql_to_columns(sql)` — `CREATE TABLE` SQL → `list[ColumnDef]`.
+  - `_is_ipk(col)` — returns `True` for `INTEGER PRIMARY KEY` columns.
+  - `_encode_row(rowid, row, columns)` — encodes a row as a SQLite record
+    payload, skipping IPK columns.
+  - `_decode_row(rowid, payload, columns)` — decodes a record payload,
+    injecting `rowid` for IPK columns.
+  - `_find_max_rowid(tree)` — full scan to find the current max rowid.
+  - `_choose_rowid(row, columns, tree)` — picks the rowid for a new row.
+  - `_apply_defaults(row, columns)` — fills absent columns from defaults.
+  - `_check_not_null(table, row, columns)` — raises `ConstraintViolation`.
+  - `_check_unique(table, row, columns, tree, ...)` — full-scan uniqueness
+    check; `NULL` values never conflict.
+
+  **`SqliteFileBackend`** and the `_BTreeCursor` class (via `SqliteFileBackend`)
+  are now exported from the package root.
+
+- `pyproject.toml` updated: `dependencies = ["coding-adventures-sql-backend"]`.
+- `BUILD` updated: installs `../sql-backend` before the package itself.
+- Pass all four tiers of `sql_backend.conformance` (required, read-write,
+  DDL, transactions) — 67 new backend tests, 431 total, 96% coverage.
+
 ## [0.7.0] - 2026-04-20
 
 ### Added

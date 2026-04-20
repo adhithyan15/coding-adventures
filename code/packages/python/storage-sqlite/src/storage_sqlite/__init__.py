@@ -13,11 +13,12 @@ Phases shipped so far:
 - :mod:`storage_sqlite.freelist` — SQLite trunk/leaf freelist for page reuse.
 - :mod:`storage_sqlite.schema` — sqlite_schema catalog table (CREATE / DROP
   TABLE, schema cookie management).
-
-Everything else (the Backend adapter) lands in a subsequent phase.
+- :mod:`storage_sqlite.backend` — :class:`SqliteFileBackend`, the
+  ``sql_backend.Backend`` adapter that wires all layers together (phase 7).
 """
 
 from storage_sqlite import btree, record, varint
+from storage_sqlite.backend import SqliteFileBackend
 from storage_sqlite.btree import BTree, BTreeError, DuplicateRowidError, PageFullError
 from storage_sqlite.errors import (
     CorruptDatabaseError,
@@ -43,6 +44,7 @@ __all__ = [
     "Pager",
     "Schema",
     "SchemaError",
+    "SqliteFileBackend",
     "StorageError",
     "TRUNK_CAPACITY",
     "Value",
