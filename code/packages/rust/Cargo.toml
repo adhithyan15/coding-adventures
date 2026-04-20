@@ -324,6 +324,7 @@ members = [
     "window-c",
     "tcp-runtime",
     "text-interfaces",
+    "text-native-coretext",
     "udp-client",
     "state-machine-markup-serializer",
 ]
