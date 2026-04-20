@@ -19,10 +19,7 @@
   four-stage pipeline and returns its standard output:
   1. Lex & parse via `dartmouth_basic_parser`
   2. IR compilation via `dartmouth_basic_ir_compiler` with `char_encoding="ascii"`
-  3. JVM lowering via `ir_to_jvm_class_file` with `syscall_arg_reg=0` —
-     the BASIC IR compiler places the PRINT argument in register 0 (unlike the
-     Brainfuck convention of register 4), so the JVM lowerer must be configured
-     to read the print character from register 0
+  3. JVM lowering via `ir_to_jvm_class_file`
   4. JVM simulation via `jvm_runtime.JVMRuntime.run_method` — invokes the
      `_start()` method compiled into the `.class` file and captures stdout
 - `RunResult` dataclass with `output`, `var_values` (always `{}`), `steps`
