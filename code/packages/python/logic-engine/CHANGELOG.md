@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-04-20
+
+### Added
+
+- `NativeGoalExpr` and `native_goal(...)` for state-aware library predicates
+- `solve_from(...)` so native goals can evaluate nested goals from the active search state
+- public `reify` re-export for builtins that need to inspect current term values
+
 ## [0.3.0] - 2026-04-18
 
 ### Added

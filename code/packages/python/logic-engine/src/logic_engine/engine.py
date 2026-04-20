@@ -61,6 +61,8 @@ __all__ = [
     "FreshExpr",
     "GoalExpr",
     "LogicVar",
+    "NativeGoalExpr",
+    "NativeGoalRunner",
     "NeqExpr",
     "Number",
     "Program",
@@ -81,13 +83,16 @@ __all__ = [
     "fail",
     "fresh",
     "logic_list",
+    "native_goal",
     "neq",
     "num",
     "program",
     "relation",
+    "reify",
     "rule",
     "solve",
     "solve_all",
+    "solve_from",
     "solve_n",
     "string",
     "succeed",
@@ -254,12 +259,30 @@ class DeferredExpr:
     args: tuple[Term, ...]
 
 
+type NativeGoalRunner = Callable[[Program, State, tuple[Term, ...]], Iterator[State]]
+
+
+@dataclass(frozen=True, slots=True)
+class NativeGoalExpr:
+    """A state-aware host-language goal implemented by a Python callable.
+
+    Most logic goals can be represented as pure expression trees. A few
+    Prolog-style builtins need to inspect the current substitution or run a
+    nested goal from the current state. ``NativeGoalExpr`` is the small escape
+    hatch for those predicates.
+    """
+
+    runner: NativeGoalRunner
+    args: tuple[Term, ...]
+
+
 type GoalExpr = (
     RelationCall
     | SucceedExpr
     | FailExpr
     | EqExpr
     | NeqExpr
+    | NativeGoalExpr
     | DeferredExpr
     | ConjExpr
     | DisjExpr
@@ -278,6 +301,7 @@ def _coerce_goal(goal: object) -> GoalExpr:
             | FailExpr
             | EqExpr
             | NeqExpr
+            | NativeGoalExpr
             | DeferredExpr
             | ConjExpr
             | DisjExpr
@@ -324,6 +348,21 @@ def defer(builder: Callable[..., object], *args: object) -> GoalExpr:
 
     return DeferredExpr(
         builder=builder,
+        args=tuple(_coerce_term(argument) for argument in args),
+    )
+
+
+def native_goal(runner: NativeGoalRunner, *args: object) -> GoalExpr:
+    """Construct a state-aware native goal expression.
+
+    Native goals are intentionally rare. They are for builtins such as
+    ``ground`` and ``once`` that need access to the active search state, while
+    ordinary relational helpers should keep using ``eq``, ``conj``, ``disj``,
+    ``fresh``, and relation calls.
+    """
+
+    return NativeGoalExpr(
+        runner=runner,
         args=tuple(_coerce_term(argument) for argument in args),
     )
 
@@ -514,6 +553,11 @@ def _rename_goal(goal: GoalExpr, mapping: dict[LogicVar, LogicVar]) -> GoalExpr:
             builder=goal.builder,
             args=tuple(_rename_term(argument, mapping) for argument in goal.args),
         )
+    if isinstance(goal, NativeGoalExpr):
+        return NativeGoalExpr(
+            runner=goal.runner,
+            args=tuple(_rename_term(argument, mapping) for argument in goal.args),
+        )
     if isinstance(goal, ConjExpr):
         return ConjExpr(
             goals=tuple(_rename_goal(child, mapping) for child in goal.goals),
@@ -611,6 +655,21 @@ def _freshen_goal(
             running_id,
         )
 
+    if isinstance(goal, NativeGoalExpr):
+        renamed_args: list[Term] = []
+        running_id = next_var_id
+        for argument in goal.args:
+            renamed_argument, running_id = _freshen_term(
+                argument,
+                mapping,
+                running_id,
+            )
+            renamed_args.append(renamed_argument)
+        return (
+            NativeGoalExpr(runner=goal.runner, args=tuple(renamed_args)),
+            running_id,
+        )
+
     if isinstance(goal, ConjExpr):
         running_id = next_var_id
         renamed_goals: list[GoalExpr] = []
@@ -698,6 +757,10 @@ def _solve_goal(
         yield from core_neq(goal.left, goal.right)(state)
         return
 
+    if isinstance(goal, NativeGoalExpr):
+        yield from goal.runner(program_value, state, goal.args)
+        return
+
     if isinstance(goal, ConjExpr):
         yield from _solve_conjunction(program_value, goal.goals, state)
         return
@@ -754,6 +817,12 @@ def solve(program_value: Program, goal: object) -> Iterator[State]:
     """Solve ``goal`` against ``program_value`` from the empty state."""
 
     yield from _solve_goal(program_value, _coerce_goal(goal), State())
+
+
+def solve_from(program_value: Program, goal: object, state: State) -> Iterator[State]:
+    """Solve ``goal`` against ``program_value`` starting from ``state``."""
+
+    yield from _solve_goal(program_value, _coerce_goal(goal), state)
 
 
 def solve_all(
