@@ -72,19 +72,39 @@
 //! ndc.y = 1.0 - (pixel_y / height) * 2.0
 //! ```
 
-// This crate requires arm64 (Apple Silicon).  The objc_msgSend ABI for
-// struct arguments differs between arm64 and x86_64.
-#[cfg(not(target_arch = "aarch64"))]
-compile_error!("paint-metal requires arm64 (Apple Silicon). x86_64 is not supported.");
+// This crate's real implementation requires arm64 Apple Silicon — the
+// objc_msgSend ABI for struct arguments differs between arm64 and
+// x86_64, and the Metal / CoreGraphics frameworks are Apple-only.
+//
+// On non-Apple targets we expose a `render` stub that panics at
+// runtime. This lets downstream workspace members (notably
+// markdown-reader) continue to link against paint-metal on Linux CI
+// without pulling in the Apple-only FFI surface. At runtime on
+// non-Apple the panic makes the unsupported path loud.
 
 pub const VERSION: &str = "0.1.0";
 
+pub use paint_instructions::PixelContainer;
+
+#[cfg(not(target_vendor = "apple"))]
+pub fn render(_scene: &paint_instructions::PaintScene) -> PixelContainer {
+    panic!(
+        "paint-metal::render is only implemented on target_vendor = \"apple\"; \
+         use a different paint backend on this platform."
+    );
+}
+
+#[cfg(all(target_vendor = "apple", not(target_arch = "aarch64")))]
+compile_error!("paint-metal requires arm64 Apple Silicon. Intel macOS is not supported.");
+
+#[cfg(target_vendor = "apple")]
 use objc_bridge::*;
 use paint_instructions::{
-    PaintInstruction, PaintLine, PaintRect, PaintScene, PixelContainer,
+    PaintInstruction, PaintLine, PaintRect, PaintScene,
 };
 #[allow(unused_imports)]
 use std::ffi::{c_int, c_ulong};
+#[allow(unused_imports)]
 use std::ptr;
 
 // ---------------------------------------------------------------------------
@@ -429,6 +449,7 @@ impl std::fmt::Display for PaintMetalError {
 #[cfg(target_vendor = "apple")]
 impl std::error::Error for PaintMetalError {}
 
+#[cfg(target_vendor = "apple")]
 pub fn render(scene: &PaintScene) -> PixelContainer {
     let mut pixels = unsafe { render_unsafe(scene) };
     // After Metal finishes rasterizing rects/lines, overlay any
@@ -439,13 +460,13 @@ pub fn render(scene: &PaintScene) -> PixelContainer {
     // runs render on top of whatever Metal rasterized. For typical
     // Markdown (background rects below, text above) this produces
     // correct painter's-algorithm output.
-    #[cfg(target_vendor = "apple")]
     unsafe {
         glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
     }
     pixels
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     let width = scene.width as u32;
     let height = scene.height as u32;
@@ -546,6 +567,7 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
 // Metal helper functions
 // ---------------------------------------------------------------------------
 
+#[cfg(target_vendor = "apple")]
 unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
     // Build the texture descriptor manually instead of using the class method —
     // objc_msgSend with mixed integer types can cause alignment issues on arm64.
@@ -567,6 +589,7 @@ unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
     texture
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
     let source_ns = nsstring(source);
     let options: Id = ptr::null_mut();
@@ -583,6 +606,7 @@ unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
     library
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn create_rect_pipeline(device: Id) -> Id {
     let library = compile_shader_library(device, RECT_SHADER_SOURCE);
 
@@ -617,6 +641,7 @@ unsafe fn create_rect_pipeline(device: Id) -> Id {
     pipeline
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn setup_pipeline_color_attachment(desc: Id) {
     let attachments = msg_send_id(desc, "colorAttachments");
     let att0: Id = msg!(attachments, "objectAtIndexedSubscript:", 0usize);
@@ -631,6 +656,7 @@ unsafe fn setup_pipeline_color_attachment(desc: Id) {
     msg!(att0, "setDestinationAlphaBlendFactor:", 5usize); // oneMinusSourceAlpha
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
     let byte_len = data.len() * std::mem::size_of::<f32>();
     // MTLResourceStorageModeShared = 0
@@ -642,6 +668,7 @@ unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
     buffer
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContainer {
     let bytes_per_row = (width as usize) * 4;
     let total_bytes = bytes_per_row * (height as usize);
@@ -695,11 +722,10 @@ mod glyph_run_overlay {
     use objc_bridge::{
         cfstring_checked, CFRelease, CGAffineTransform, CGBitmapContextCreate,
         CGColorSpaceCreateDeviceRGB, CGColorSpaceRelease, CGContextRelease,
-        CGContextRestoreGState, CGContextSaveGState, CGContextScaleCTM,
-        CGContextSetRGBFillColor, CGContextSetShouldAntialias, CGContextSetShouldSmoothFonts,
-        CGContextSetTextMatrix, CGContextTranslateCTM, CGPoint, CTFontCreateWithName,
-        CTFontDrawGlyphs, CGContextRef, Id, K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST,
-        K_CG_BITMAP_BYTE_ORDER_32_LITTLE, NIL,
+        CGContextRestoreGState, CGContextSaveGState, CGContextSetRGBFillColor,
+        CGContextSetShouldAntialias, CGContextSetShouldSmoothFonts, CGContextSetTextMatrix,
+        CGPoint, CTFontCreateWithName, CTFontDrawGlyphs, CGContextRef, Id,
+        K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST, K_CG_BITMAP_BYTE_ORDER_32_LITTLE, NIL,
     };
     use paint_instructions::{
         PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer,
@@ -1054,7 +1080,7 @@ mod live_present {
 // Tests
 // ---------------------------------------------------------------------------
 
-#[cfg(test)]
+#[cfg(all(test, target_vendor = "apple"))]
 mod tests {
     use super::*;
     use paint_instructions::{PaintBase, PaintInstruction, PaintRect, PaintScene};
