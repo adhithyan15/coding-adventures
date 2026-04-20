@@ -927,6 +927,39 @@ Acceptance:
 
 Goal: Implement runtime-bounded arrays and array element access.
 
+Initial scope:
+
+- support `integer array` declarations only
+- support one or more dimensions with integer lower/upper bound expressions
+- evaluate bounds exactly once when the declaring block is entered
+- store an array descriptor pointer in the declaring frame
+- support direct reads and writes through `A[i]` and `A[i, j]`
+- support dynamic bounds that reference visible scalar variables
+- continue to reject real/boolean/string arrays, array parameters,
+  procedure-valued arrays, by-name array element thunks, and array values used
+  without subscripts
+
+Runtime representation:
+
+- array descriptors and element storage live in a bounded ALGOL heap region in
+  WASM linear memory
+- descriptor slots in activation frames hold `i32` descriptor pointers
+- each descriptor records element type, dimension count, element count, element
+  byte width, data pointer, and bounds pointer
+- the bounds table stores lower, upper, and stride for each dimension
+- the first Phase 4 implementation returns `0` through the existing runtime
+  failure convention for invalid bounds, out-of-bounds subscripts, heap
+  exhaustion, or configured array-cap violations
+
+Required caps:
+
+- maximum dimension count
+- maximum element count per array
+- maximum allocation bytes per array
+- maximum aggregate ALGOL heap bytes
+- stack/heap regions must remain separate and every allocation must check the
+  configured heap limit before advancing the heap pointer
+
 Deliverables:
 
 - array type checking
