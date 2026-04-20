@@ -1,5 +1,32 @@
 # ir-to-jvm-class-file
 
+## 0.4.0 — 2026-04-20
+
+### Added
+
+- **`validate_for_jvm(program)` pre-flight validator**: inspects an
+  `IrProgram` for JVM backend incompatibilities *before* any bytecode is
+  generated.  Returns a list of human-readable error strings (empty list =
+  valid).  Three rules are checked:
+  1. **Opcode support** — every opcode must appear in the V1 supported set.
+     Currently all `IrOp` values are handled; the check is future-proofing
+     against new IR opcodes added before the JVM backend implements them.
+  2. **Constant range** — `LOAD_IMM` and `ADD_IMM` immediates must fit in a
+     JVM 32-bit signed integer (−2 147 483 648 to 2 147 483 647).
+  3. **SYSCALL number** — only SYSCALL 1 (write byte) and SYSCALL 4 (read
+     byte) are wired up in the V1 JVM backend.
+- `validate_for_jvm` exported from `ir_to_jvm_class_file.__init__`.
+- `TestValidateForJvm` test class (14 tests) covering all three rules,
+  boundary-value constants, multi-error accumulation, and integration with
+  `lower_ir_to_jvm_class_file`.
+
+### Changed
+
+- `lower_ir_to_jvm_class_file()` now calls `validate_for_jvm()` as a
+  pre-flight check before `_JvmClassLowerer` runs.  Any violation raises
+  `JvmBackendError` with message prefix
+  `"IR program failed JVM pre-flight validation"`.
+
 ## 0.3.0 — 2026-04-20
 
 ### Changed

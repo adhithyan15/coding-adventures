@@ -28,18 +28,18 @@
 //! linear DFA. Regex engines convert patterns to NFAs, then to DFAs via subset
 //! construction. Parsers use PDAs. HTML tokenizers use modal state machines.
 
-pub mod types;
 pub mod definitions;
 pub mod dfa;
-pub mod nfa;
 pub mod minimize;
-pub mod pda;
 pub mod modal;
+pub mod nfa;
+pub mod pda;
+pub mod types;
 
-pub use types::*;
 pub use definitions::{MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition};
 pub use dfa::DFA;
-pub use nfa::{EPSILON, NFA};
 pub use minimize::minimize;
-pub use pda::{PDATraceEntry, PDATransition, PushdownAutomaton};
 pub use modal::{ModalStateMachine, ModeTransitionRecord};
+pub use nfa::{EPSILON, NFA};
+pub use pda::{PDATraceEntry, PDATransition, PushdownAutomaton};
+pub use types::*;

@@ -1243,12 +1243,134 @@ class _JvmClassLowerer:
         )
 
 
+# ---------------------------------------------------------------------------
+# JVM word-size constraints and supported opcode set
+# ---------------------------------------------------------------------------
+#
+# The JVM uses 32-bit two's-complement integers (Java ``int``).
+# Signed range: -2 147 483 648 (−2^31) to 2 147 483 647 (2^31 − 1).
+
+_JVM_INT_MIN: int = -(1 << 31)   # -2 147 483 648
+_JVM_INT_MAX: int =  (1 << 31) - 1  # 2 147 483 647
+
+# The V1 JVM backend handles exactly these opcodes.  Any opcode absent from
+# this set is rejected by validate_for_jvm() before code generation begins.
+_JVM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.RET,
+    IrOp.JUMP,
+    IrOp.LOAD_IMM,
+    IrOp.LOAD_ADDR,
+    IrOp.LOAD_BYTE,
+    IrOp.LOAD_WORD,
+    IrOp.STORE_BYTE,
+    IrOp.STORE_WORD,
+    IrOp.ADD,
+    IrOp.ADD_IMM,
+    IrOp.SUB,
+    IrOp.AND,
+    IrOp.AND_IMM,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.CALL,
+    IrOp.SYSCALL,
+})
+
+
+def validate_for_jvm(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for JVM backend incompatibilities without generating
+    any bytecode.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must appear in ``_JVM_SUPPORTED_OPCODES``.
+       Opcodes that the V1 JVM backend does not handle (e.g. future IR
+       extensions) are rejected with a precise diagnostic before any class-file
+       bytes are produced.
+
+    2. **Constant range** — every ``IrImmediate`` in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a JVM 32-bit signed integer
+       (−2 147 483 648 to 2 147 483 647).  The JVM stack is a 32-bit
+       operand stack; constants outside this range cannot be represented as a
+       JVM ``int`` and would require a ``long`` (64-bit) type, which the
+       backend does not support.
+
+    3. **SYSCALL number** — the V1 JVM backend wires up SYSCALL 1 (print byte)
+       and SYSCALL 4 (read byte).  Any other syscall number is rejected.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the JVM V1 backend.
+    """
+    errors: list[str] = []
+    _SUPPORTED_SYSCALLS = {1, 4}
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ─────────────────────
+        if op not in _JVM_SUPPORTED_OPCODES:
+            errors.append(
+                f"unsupported opcode {op.name} in V1 JVM backend"
+            )
+            continue
+
+        # ── Rule 2: constant range on LOAD_IMM and ADD_IMM ──────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate):
+                    v = operand.value
+                    if not (_JVM_INT_MIN <= v <= _JVM_INT_MAX):
+                        errors.append(
+                            f"{op.name}: constant {v:,} overflows JVM 32-bit "
+                            f"signed integer (valid range "
+                            f"{_JVM_INT_MIN:,} to {_JVM_INT_MAX:,})"
+                        )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value not in _SUPPORTED_SYSCALLS:
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL numbers {sorted(_SUPPORTED_SYSCALLS)} "
+                        f"are wired in the V1 JVM backend"
+                    )
+                    break
+
+    return errors
+
+
 def lower_ir_to_jvm_class_file(
     program: IrProgram,
     config: JvmBackendConfig,
 ) -> JVMClassArtifact:
-    """Lower an IR program to a JVM class artifact."""
+    """Lower an IR program to a JVM class artifact.
 
+    Runs ``validate_for_jvm`` as a pre-flight check before any bytecode is
+    generated.  If the IR contains an unsupported opcode or an out-of-range
+    constant, a ``JvmBackendError`` is raised immediately with a precise
+    per-instruction diagnostic.
+    """
+    errors = validate_for_jvm(program)
+    if errors:
+        joined = "; ".join(errors)
+        raise JvmBackendError(
+            f"IR program failed JVM pre-flight validation "
+            f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+        )
     return _JvmClassLowerer(program, config).lower()
 
 

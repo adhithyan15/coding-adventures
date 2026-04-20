@@ -6,13 +6,14 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from compiler_ir import IrDataDecl
+from compiler_ir import IrDataDecl, IrImmediate, IrInstruction, IrLabel, IrOp, IrProgram, IrRegister
 from jvm_class_file import parse_class_file
 
 from ir_to_jvm_class_file import (
     JvmBackendConfig,
     JVMClassArtifact,
     lower_ir_to_jvm_class_file,
+    validate_for_jvm,
     write_class_file,
 )
 from ir_to_jvm_class_file.backend import JvmBackendError
@@ -311,3 +312,211 @@ def _write_driver_source(tempdir: Path, class_name: str) -> Path:
     driver_path = tempdir / "InvokeNib.java"
     driver_path.write_text(driver_source, encoding="utf-8")
     return driver_path
+
+
+# ---------------------------------------------------------------------------
+# Shared helpers for validator tests
+# ---------------------------------------------------------------------------
+
+def _instr(op: IrOp, *operands) -> IrInstruction:
+    return IrInstruction(opcode=op, operands=list(operands), id=-1)
+
+
+def _reg(n: int) -> IrRegister:
+    return IrRegister(index=n)
+
+
+def _imm(v: int) -> IrImmediate:
+    return IrImmediate(value=v)
+
+
+def _lbl(name: str) -> IrLabel:
+    return IrLabel(name=name)
+
+
+def _prog(*instrs: IrInstruction) -> IrProgram:
+    prog = IrProgram(entry_label="_start")
+    for instr in instrs:
+        prog.add_instruction(instr)
+    return prog
+
+
+# ---------------------------------------------------------------------------
+# Validator tests
+# ---------------------------------------------------------------------------
+
+
+class TestValidateForJvm:
+    """Tests for validate_for_jvm() — the pre-flight IR inspector.
+
+    The JVM V1 backend checks three rules before producing any bytecode:
+
+    1. **Opcode support** — every opcode must appear in the supported set.
+       Currently all IrOp values are supported; the check is future-proofing
+       against new IR opcodes that the JVM backend has not yet implemented.
+
+    2. **Constant range** — every IrImmediate in LOAD_IMM or ADD_IMM must
+       fit in a JVM 32-bit signed integer (−2 147 483 648 to 2 147 483 647).
+
+    3. **SYSCALL number** — only SYSCALL 1 (write byte) and SYSCALL 4
+       (read byte) are wired up in the V1 JVM backend.
+    """
+
+    def test_valid_program_returns_no_errors(self) -> None:
+        """A well-formed program with supported opcodes and in-range
+        constants produces zero validation errors."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(65)),
+            _instr(IrOp.ADD_IMM,  _reg(2), _reg(1), _imm(1)),
+            _instr(IrOp.SYSCALL,  _imm(1), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_jvm(program) == []
+
+    def test_empty_program_returns_no_errors(self) -> None:
+        """An empty IR program (no instructions) is trivially valid."""
+        prog = IrProgram(entry_label="_start")
+        assert validate_for_jvm(prog) == []
+
+    # ── Rule 1: opcode support ───────────────────────────────────────────────
+    # The V1 JVM backend handles every opcode in the current IrOp enum.
+    # The check exists as future-proofing: if new opcodes are added to IrOp
+    # before the JVM backend implements them, the validator will catch them
+    # immediately rather than letting code generation silently skip them.
+
+    def test_all_current_opcodes_pass_opcode_check(self) -> None:
+        """Every opcode in the current IrOp enum is supported by the JVM
+        V1 backend.  This test documents that fact and will fail as a
+        signal if a new IrOp is added without a corresponding JVM lowering."""
+        # Build one instruction per opcode with dummy operands so the
+        # validator iterates over all of them.
+        for op in IrOp:
+            program = _prog(_instr(op))
+            errors = validate_for_jvm(program)
+            # Filter out any errors that are not about opcode support —
+            # some opcodes may trigger rule 2 or 3 errors with dummy
+            # operands, which is fine.  We only care that rule 1 never fires.
+            rule1_errors = [e for e in errors if "unsupported opcode" in e]
+            assert rule1_errors == [], (
+                f"IrOp.{op.name} was unexpectedly rejected by the JVM "
+                f"opcode-support check: {rule1_errors}"
+            )
+
+    # ── Rule 2: constant range ────────────────────────────────────────────────
+
+    def test_load_imm_max_valid_constant_accepted(self) -> None:
+        """2 147 483 647 (= 2^31 − 1) is the largest valid JVM int constant."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(2_147_483_647)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_jvm(program) == []
+
+    def test_load_imm_min_valid_constant_accepted(self) -> None:
+        """−2 147 483 648 (= −2^31) is the smallest valid JVM int constant."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(-2_147_483_648)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_jvm(program) == []
+
+    def test_load_imm_one_above_max_rejected(self) -> None:
+        """2 147 483 648 is exactly one above the 32-bit maximum."""
+        program = _prog(_instr(IrOp.LOAD_IMM, _reg(1), _imm(2_147_483_648)))
+        errors = validate_for_jvm(program)
+        assert len(errors) == 1
+        assert "2,147,483,648" in errors[0]
+        assert "LOAD_IMM" in errors[0]
+
+    def test_load_imm_one_below_min_rejected(self) -> None:
+        """−2 147 483 649 is exactly one below the 32-bit minimum."""
+        program = _prog(_instr(IrOp.LOAD_IMM, _reg(1), _imm(-2_147_483_649)))
+        errors = validate_for_jvm(program)
+        assert len(errors) == 1
+        assert "-2,147,483,649" in errors[0]
+        assert "LOAD_IMM" in errors[0]
+
+    def test_add_imm_overflow_rejected(self) -> None:
+        """ADD_IMM with an immediate that overflows 32 bits is also caught."""
+        program = _prog(
+            _instr(IrOp.ADD_IMM, _reg(2), _reg(1), _imm(3_000_000_000)),
+        )
+        errors = validate_for_jvm(program)
+        assert len(errors) == 1
+        assert "3,000,000,000" in errors[0]
+        assert "ADD_IMM" in errors[0]
+
+    def test_large_negative_add_imm_rejected(self) -> None:
+        """ADD_IMM with a very large negative immediate that underflows 32 bits."""
+        program = _prog(
+            _instr(IrOp.ADD_IMM, _reg(2), _reg(1), _imm(-2_147_483_649)),
+        )
+        errors = validate_for_jvm(program)
+        assert len(errors) == 1
+        assert "ADD_IMM" in errors[0]
+
+    # ── Rule 3: SYSCALL number ────────────────────────────────────────────────
+
+    def test_syscall_1_accepted(self) -> None:
+        """SYSCALL 1 (write byte / print char) is supported in V1 JVM backend."""
+        program = _prog(
+            _instr(IrOp.SYSCALL, _imm(1), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_jvm(program) == []
+
+    def test_syscall_4_accepted(self) -> None:
+        """SYSCALL 4 (read byte from stdin) is supported in V1 JVM backend."""
+        program = _prog(
+            _instr(IrOp.SYSCALL, _imm(4), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_jvm(program) == []
+
+    def test_syscall_unknown_rejected(self) -> None:
+        """A SYSCALL number other than 1 or 4 is not wired up in the JVM backend."""
+        program = _prog(_instr(IrOp.SYSCALL, _imm(99), _reg(0)))
+        errors = validate_for_jvm(program)
+        assert len(errors) == 1
+        assert "unsupported SYSCALL" in errors[0]
+        assert "99" in errors[0]
+
+    def test_syscall_10_rejected(self) -> None:
+        """SYSCALL 10 (WASM exit convention) is not wired in the JVM backend;
+        HALT is the correct way to terminate a JVM-targeted program."""
+        program = _prog(_instr(IrOp.SYSCALL, _imm(10), _reg(0)))
+        errors = validate_for_jvm(program)
+        assert len(errors) == 1
+        assert "unsupported SYSCALL" in errors[0]
+
+    # ── Multiple errors ───────────────────────────────────────────────────────
+
+    def test_multiple_violations_all_reported(self) -> None:
+        """The validator accumulates every violation rather than stopping at
+        the first, so callers get a complete picture of what must change."""
+        program = _prog(
+            _instr(IrOp.LOAD_IMM, _reg(1), _imm(5_000_000_000)),   # overflows
+            _instr(IrOp.SYSCALL,  _imm(99), _reg(0)),               # bad syscall
+            _instr(IrOp.HALT),
+        )
+        errors = validate_for_jvm(program)
+        assert len(errors) == 2
+
+    # ── Integration: lower_ir_to_jvm_class_file calls validate first ─────────
+
+    def test_compile_raises_on_oversized_constant(self) -> None:
+        """lower_ir_to_jvm_class_file must raise JvmBackendError (not silently
+        corrupt data) when the IR contains a constant that overflows 32 bits."""
+        program = _prog(_instr(IrOp.LOAD_IMM, _reg(1), _imm(5_000_000_000)))
+        with pytest.raises(JvmBackendError, match="pre-flight"):
+            lower_ir_to_jvm_class_file(program, JvmBackendConfig(class_name="Bad"))
+
+    def test_compile_raises_on_unsupported_syscall(self) -> None:
+        """lower_ir_to_jvm_class_file raises JvmBackendError for an unknown
+        SYSCALL number before generating any bytecode."""
+        program = _prog(
+            _instr(IrOp.SYSCALL, _imm(42), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        with pytest.raises(JvmBackendError, match="pre-flight"):
+            lower_ir_to_jvm_class_file(program, JvmBackendConfig(class_name="Bad"))

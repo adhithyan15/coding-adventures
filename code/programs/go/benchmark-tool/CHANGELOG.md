@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 - 2026-04-20
+
+- Add the phase-three TCP/RESP load generator inside `benchmark-tool`.
+- Start service subjects on allocated local TCP ports and wait for
+  `ready_check = "tcp-connect"` before loading them.
+- Execute `driver = "tcp-resp"` workloads with RESP frame-aware reads,
+  correctness validation, per-connection samples, and trial-level throughput
+  metrics.
+- Support one-shot, preconnect-then-fire, pipelined, and idle TCP workload
+  modes.
+- Add tests for RESP parsing, concurrent TCP load generation, pipelined
+  request validation, and service lifecycle startup.
+
 ## 0.2.0 - 2026-04-20
 
 - Add phase-two git-ref comparison groundwork for command benchmarks.

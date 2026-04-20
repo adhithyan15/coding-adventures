@@ -1,15 +1,12 @@
 // benchmark-tool is the repository's language-neutral benchmark runner.
 //
-// The first slice deliberately keeps the hot path simple:
+// The first slices deliberately keep the hot path simple:
 //   - read the benchmark manifest format from code/specs/benchmarking-tools.md
 //   - validate ambiguous benchmark definitions before they become folklore
 //   - run command-style subjects with warmup and measured trials
+//   - start local TCP service subjects and drive RESP-framed workloads
 //   - write raw samples, trial rows, environment metadata, summaries, and a
 //     Markdown report into one self-contained result directory
-//
-// TCP/RESP load generation is intentionally left for the next program slice.
-// This tool already validates those manifests so the contract can stabilize
-// before we teach a load generator to execute them.
 package main
 
 import (
@@ -23,6 +20,7 @@ import (
 	"io"
 	"math"
 	"math/rand"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -30,6 +28,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	_ "embed"
@@ -37,7 +36,24 @@ import (
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
 
-const version = "0.2.0"
+const version = "0.3.0"
+
+const (
+	defaultTCPTimeout          = 10 * time.Second
+	serviceReadyTimeout        = 10 * time.Second
+	serviceReadyProbeTimeout   = 100 * time.Millisecond
+	maxTCPConnections          = 10000
+	maxTCPConcurrency          = 10000
+	maxTCPRequestsPerConn      = 10000
+	maxTCPFrameBytes           = 16 * 1024 * 1024
+	maxTCPPayloadBytes         = 16 * 1024 * 1024
+	respDriver                 = "tcp-resp"
+	respReadMode               = "resp-frame"
+	respModeOneShot            = "one-shot"
+	respModePreconnectThenFire = "preconnect-then-fire"
+	respModePipeline           = "pipeline"
+	respModeIdle               = "idle"
+)
 
 //go:embed benchmark-tool.json
 var cliSpec []byte
@@ -872,11 +888,47 @@ func ValidateManifest(m Manifest) error {
 		if w.Driver == "command" && w.ReadMode == "eof" && !w.ProtocolClosesAfterResponse {
 			problems = append(problems, where+" uses EOF reads without protocol_closes_after_response = true")
 		}
-		if strings.Contains(w.Driver, "resp") && w.ReadMode != "resp-frame" {
+		if w.Driver == respDriver {
+			mode := tcpWorkloadMode(w)
+			if w.ReadMode != respReadMode {
+				problems = append(problems, where+" must use read_mode = \"resp-frame\" for RESP workloads")
+			}
+			if mode != respModeIdle && w.Expect == "" {
+				problems = append(problems, where+".expect is required for RESP workloads")
+			}
+			if !isSupportedTCPRESPMode(mode) {
+				problems = append(problems, where+".mode must be one-shot, preconnect-then-fire, pipeline, or idle")
+			}
+			if w.Connections < 0 {
+				problems = append(problems, where+".connections must be non-negative")
+			}
+			if w.Connections > maxTCPConnections {
+				problems = append(problems, fmt.Sprintf("%s.connections must be <= %d", where, maxTCPConnections))
+			}
+			if w.Concurrency < 0 {
+				problems = append(problems, where+".concurrency must be non-negative")
+			}
+			if w.Concurrency > maxTCPConcurrency {
+				problems = append(problems, fmt.Sprintf("%s.concurrency must be <= %d", where, maxTCPConcurrency))
+			}
+			if w.RequestsPerConnection < 0 {
+				problems = append(problems, where+".requests_per_connection must be non-negative")
+			}
+			if w.RequestsPerConnection > maxTCPRequestsPerConn {
+				problems = append(problems, fmt.Sprintf("%s.requests_per_connection must be <= %d", where, maxTCPRequestsPerConn))
+			}
+			if len(w.Request) > maxTCPPayloadBytes {
+				problems = append(problems, fmt.Sprintf("%s.request must be <= %d bytes", where, maxTCPPayloadBytes))
+			}
+			if len(w.Expect) > maxTCPPayloadBytes {
+				problems = append(problems, fmt.Sprintf("%s.expect must be <= %d bytes", where, maxTCPPayloadBytes))
+			}
+			requestRepeats := tcpRequestsPerConnection(w)
+			if len(w.Request) > 0 && requestRepeats > maxTCPPayloadBytes/len(w.Request) {
+				problems = append(problems, fmt.Sprintf("%s repeated request payload must be <= %d bytes", where, maxTCPPayloadBytes))
+			}
+		} else if strings.Contains(w.Driver, "resp") && w.ReadMode != respReadMode {
 			problems = append(problems, where+" must use read_mode = \"resp-frame\" for RESP workloads")
-		}
-		if strings.Contains(w.Driver, "resp") && w.Expect == "" {
-			problems = append(problems, where+".expect is required for RESP workloads")
 		}
 		if w.TimeoutMS < 0 {
 			problems = append(problems, where+".timeout_ms must be non-negative")
@@ -948,14 +1000,39 @@ func RunManifest(manifestPath string, manifest Manifest, outDir string) error {
 				fmt.Fprintln(os.Stderr, "Build error:", err)
 			}
 		}
-		for _, workload := range manifest.Workloads {
-			if workload.Driver != "command" {
-				fmt.Fprintf(os.Stderr, "Skipping workload %s: driver %s is not implemented in phase one\n", workload.Name, workload.Driver)
-				continue
-			}
-			allTrials, err := runCommandWorkload(prepared, workload, manifest.Defaults, samplesFile, trialsFile)
+		var service *RunningService
+		if subjectNeedsTCPService(prepared.Subject, manifest.Workloads) {
+			var err error
+			service, err = startServiceSubject(prepared, subjectDir)
 			if err != nil {
 				if manifest.Defaults.FailFast {
+					return err
+				}
+				fmt.Fprintln(os.Stderr, "Service error:", err)
+				continue
+			}
+		}
+		for _, workload := range manifest.Workloads {
+			var allTrials []Trial
+			var err error
+			switch workload.Driver {
+			case "command":
+				allTrials, err = runCommandWorkload(prepared, workload, manifest.Defaults, samplesFile, trialsFile)
+			case respDriver:
+				if service == nil {
+					err = fmt.Errorf("workload %s requires a running service subject", workload.Name)
+				} else {
+					allTrials, err = runTCPRESPWorkload(prepared, workload, manifest.Defaults, service.Address, samplesFile, trialsFile)
+				}
+			default:
+				fmt.Fprintf(os.Stderr, "Skipping workload %s: driver %s is not implemented\n", workload.Name, workload.Driver)
+				continue
+			}
+			if err != nil {
+				if manifest.Defaults.FailFast {
+					if service != nil {
+						_ = service.Stop()
+					}
 					return err
 				}
 				fmt.Fprintln(os.Stderr, "Workload error:", err)
@@ -964,6 +1041,13 @@ func RunManifest(manifestPath string, manifest Manifest, outDir string) error {
 				if trial.Phase == "measurement" && trial.OK {
 					measured = append(measured, trial)
 				}
+			}
+		}
+		if service != nil {
+			if err := service.Stop(); err != nil && manifest.Defaults.FailFast {
+				return err
+			} else if err != nil {
+				fmt.Fprintln(os.Stderr, "Service cleanup error:", err)
 			}
 		}
 	}
@@ -1076,6 +1160,133 @@ func runBuild(subject PreparedSubject, subjectDir string) error {
 	return nil
 }
 
+type RunningService struct {
+	Command string
+	Address string
+	Port    int
+	cmd     *exec.Cmd
+	done    chan error
+	log     *os.File
+}
+
+func subjectNeedsTCPService(subject Subject, workloads []Workload) bool {
+	for _, workload := range workloads {
+		if workload.Driver == respDriver {
+			return subject.Kind == "service"
+		}
+	}
+	return false
+}
+
+func startServiceSubject(subject PreparedSubject, subjectDir string) (*RunningService, error) {
+	if subject.Subject.Kind != "service" {
+		return nil, fmt.Errorf("subject %s must be kind = service for TCP workloads", subject.Subject.Name)
+	}
+	if subject.Subject.ReadyCheck != "tcp-connect" {
+		return nil, fmt.Errorf("subject %s uses unsupported ready_check %q", subject.Subject.Name, subject.Subject.ReadyCheck)
+	}
+	port, err := allocateTCPPort()
+	if err != nil {
+		return nil, err
+	}
+	address := net.JoinHostPort("127.0.0.1", strconv.Itoa(port))
+	command := strings.ReplaceAll(subject.Subject.Command, "{port}", strconv.Itoa(port))
+	workingDir := resolveSubjectWorkingDirectory(subject.Subject, subject.BenchmarkRoot)
+	logPath := filepath.Join(subjectDir, "service.log")
+	logFile, err := os.Create(logPath)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Fprintf(logFile, "command: %s\nworking_directory: %s\naddress: %s\n\n", command, workingDir, address)
+	cmd := shellCommand(command)
+	cmd.Dir = workingDir
+	cmd.Stdout = logFile
+	cmd.Stderr = logFile
+	if err := cmd.Start(); err != nil {
+		_ = logFile.Close()
+		return nil, err
+	}
+	service := &RunningService{
+		Command: command,
+		Address: address,
+		Port:    port,
+		cmd:     cmd,
+		done:    make(chan error, 1),
+		log:     logFile,
+	}
+	go func() {
+		service.done <- cmd.Wait()
+	}()
+	if err := waitForTCPReady(address, serviceReadyTimeout); err != nil {
+		_ = service.Stop()
+		return nil, fmt.Errorf("service %s did not become ready: %w", subject.Subject.Name, err)
+	}
+	return service, nil
+}
+
+func (s *RunningService) Stop() error {
+	if s == nil || s.cmd == nil {
+		return nil
+	}
+	var waitErr error
+	select {
+	case waitErr = <-s.done:
+	default:
+		if s.cmd.Process != nil {
+			if err := s.cmd.Process.Kill(); err != nil && !errors.Is(err, os.ErrProcessDone) {
+				_ = s.log.Close()
+				return err
+			}
+		}
+		waitErr = <-s.done
+	}
+	if s.log != nil {
+		_, _ = fmt.Fprintf(s.log, "\nservice_exit: %v\n", waitErr)
+		if err := s.log.Close(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func allocateTCPPort() (int, error) {
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return 0, err
+	}
+	defer listener.Close()
+	addr, ok := listener.Addr().(*net.TCPAddr)
+	if !ok {
+		return 0, fmt.Errorf("unexpected TCP listener address %T", listener.Addr())
+	}
+	return addr.Port, nil
+}
+
+func waitForTCPReady(address string, timeout time.Duration) error {
+	deadline := time.Now().Add(timeout)
+	var lastErr error
+	for time.Now().Before(deadline) {
+		conn, err := net.DialTimeout("tcp", address, serviceReadyProbeTimeout)
+		if err == nil {
+			_ = conn.Close()
+			return nil
+		}
+		lastErr = err
+		time.Sleep(25 * time.Millisecond)
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return errors.New("readiness timeout")
+}
+
+func shellCommand(command string) *exec.Cmd {
+	if runtime.GOOS == "windows" {
+		return exec.Command("cmd", "/C", command)
+	}
+	return exec.Command("sh", "-c", command)
+}
+
 func runCommandWorkload(subject PreparedSubject, workload Workload, defaults Defaults, samplesFile, trialsFile *os.File) ([]Trial, error) {
 	var trials []Trial
 	total := defaults.WarmupTrials + defaults.MeasurementTrials
@@ -1128,6 +1339,523 @@ func runCommandWorkload(subject PreparedSubject, workload Workload, defaults Def
 		}
 	}
 	return trials, nil
+}
+
+type tcpRequestResult struct {
+	OK      bool
+	Metrics map[string]float64
+	Error   string
+}
+
+func runTCPRESPWorkload(subject PreparedSubject, workload Workload, defaults Defaults, address string, samplesFile, trialsFile *os.File) ([]Trial, error) {
+	expectedFrames, err := splitRESPFrames([]byte(workload.Expect))
+	if err != nil && tcpWorkloadMode(workload) != respModeIdle {
+		return nil, fmt.Errorf("parse expected RESP frames for workload %s: %w", workload.Name, err)
+	}
+	total := defaults.WarmupTrials + defaults.MeasurementTrials
+	trials := make([]Trial, 0, total)
+	for i := 0; i < total; i++ {
+		phase := "measurement"
+		trialNumber := i - defaults.WarmupTrials + 1
+		if i < defaults.WarmupTrials {
+			phase = "warmup"
+			trialNumber = i + 1
+		}
+		start := time.Now()
+		results := executeTCPRESPTrial(address, workload, expectedFrames)
+		elapsedMS := float64(time.Since(start).Microseconds()) / 1000.0
+		samples := tcpSamplesFromResults(subject.Subject.Name, workload.Name, trialNumber, phase, results)
+		trial := tcpTrialFromSamples(subject.Subject.Name, workload, trialNumber, phase, samples, elapsedMS)
+		for _, sample := range samples {
+			if err := writeJSONLine(samplesFile, sample); err != nil {
+				return trials, err
+			}
+		}
+		if err := writeJSONLine(trialsFile, trial); err != nil {
+			return trials, err
+		}
+		trials = append(trials, trial)
+		if defaults.CooldownMS > 0 {
+			time.Sleep(time.Duration(defaults.CooldownMS) * time.Millisecond)
+		}
+	}
+	return trials, nil
+}
+
+func executeTCPRESPTrial(address string, workload Workload, expectedFrames [][]byte) []tcpRequestResult {
+	mode := tcpWorkloadMode(workload)
+	timeout := tcpTimeout(workload)
+	connections := tcpConnections(workload)
+	concurrency := tcpConcurrency(workload, connections)
+	request := []byte(workload.Request)
+	switch mode {
+	case respModeOneShot:
+		return runTCPRESPParallel(connections, concurrency, func(_ int) tcpRequestResult {
+			return executeRESPDialExchange(address, request, expectedFrames, 1, timeout)
+		})
+	case respModePreconnectThenFire:
+		return executeRESPPreconnectThenFire(address, request, expectedFrames, connections, concurrency, timeout)
+	case respModePipeline:
+		repeats := tcpRequestsPerConnection(workload)
+		return runTCPRESPParallel(connections, concurrency, func(_ int) tcpRequestResult {
+			return executeRESPDialExchange(address, request, expectedFrames, repeats, timeout)
+		})
+	case respModeIdle:
+		return runTCPRESPParallel(connections, concurrency, func(_ int) tcpRequestResult {
+			return executeTCPIdle(address, timeout)
+		})
+	default:
+		return []tcpRequestResult{{
+			OK:      false,
+			Metrics: map[string]float64{},
+			Error:   "unsupported tcp-resp mode " + mode,
+		}}
+	}
+}
+
+func runTCPRESPParallel(total int, concurrency int, fn func(int) tcpRequestResult) []tcpRequestResult {
+	if total <= 0 {
+		return nil
+	}
+	if concurrency <= 0 || concurrency > total {
+		concurrency = total
+	}
+	results := make([]tcpRequestResult, total)
+	sem := make(chan struct{}, concurrency)
+	var wg sync.WaitGroup
+	for i := 0; i < total; i++ {
+		sem <- struct{}{}
+		wg.Add(1)
+		go func(index int) {
+			defer wg.Done()
+			defer func() { <-sem }()
+			results[index] = fn(index)
+		}(i)
+	}
+	wg.Wait()
+	return results
+}
+
+type preconnectedRESPConn struct {
+	conn      net.Conn
+	connectMS float64
+	err       error
+}
+
+func executeRESPPreconnectThenFire(address string, request []byte, expectedFrames [][]byte, connections int, concurrency int, timeout time.Duration) []tcpRequestResult {
+	preconnected := make([]preconnectedRESPConn, connections)
+	connectResults := runTCPRESPParallel(connections, concurrency, func(index int) tcpRequestResult {
+		conn, connectMS, err := dialTCP(address, timeout)
+		if err != nil {
+			return tcpRequestResult{
+				OK:      false,
+				Metrics: map[string]float64{"connect_ms": connectMS},
+				Error:   err.Error(),
+			}
+		}
+		preconnected[index] = preconnectedRESPConn{conn: conn, connectMS: connectMS}
+		return tcpRequestResult{OK: true, Metrics: map[string]float64{"connect_ms": connectMS}}
+	})
+	results := runTCPRESPParallel(connections, concurrency, func(index int) tcpRequestResult {
+		entry := preconnected[index]
+		if entry.conn == nil {
+			return connectResults[index]
+		}
+		defer entry.conn.Close()
+		return executeRESPOnConn(entry.conn, request, expectedFrames, 1, timeout, entry.connectMS, time.Now())
+	})
+	return results
+}
+
+func executeRESPDialExchange(address string, request []byte, expectedFrames [][]byte, repeats int, timeout time.Duration) tcpRequestResult {
+	start := time.Now()
+	conn, connectMS, err := dialTCP(address, timeout)
+	if err != nil {
+		return tcpRequestResult{
+			OK:      false,
+			Metrics: map[string]float64{"connect_ms": connectMS, "total_ms": elapsedMillis(start)},
+			Error:   err.Error(),
+		}
+	}
+	defer conn.Close()
+	return executeRESPOnConn(conn, request, expectedFrames, repeats, timeout, connectMS, start)
+}
+
+func executeRESPOnConn(conn net.Conn, request []byte, expectedFrames [][]byte, repeats int, timeout time.Duration, connectMS float64, start time.Time) tcpRequestResult {
+	if repeats <= 0 {
+		repeats = 1
+	}
+	if err := conn.SetDeadline(time.Now().Add(timeout)); err != nil {
+		return tcpRequestResult{
+			OK:      false,
+			Metrics: map[string]float64{"connect_ms": connectMS, "total_ms": elapsedMillis(start)},
+			Error:   err.Error(),
+		}
+	}
+	payload := bytes.Repeat(request, repeats)
+	writeStart := time.Now()
+	if err := writeFull(conn, payload); err != nil {
+		return tcpRequestResult{
+			OK:      false,
+			Metrics: map[string]float64{"connect_ms": connectMS, "write_ms": elapsedMillis(writeStart), "total_ms": elapsedMillis(start)},
+			Error:   err.Error(),
+		}
+	}
+	writeMS := elapsedMillis(writeStart)
+	reader := bufio.NewReader(conn)
+	expectedCount := len(expectedFrames) * repeats
+	readStart := time.Now()
+	var firstByteMS float64
+	var frameMS float64
+	for i := 0; i < expectedCount; i++ {
+		if _, err := reader.Peek(1); err != nil {
+			return tcpRequestResult{
+				OK:      false,
+				Metrics: tcpMetrics(connectMS, writeMS, firstByteMS, frameMS, elapsedMillis(start), i),
+				Error:   err.Error(),
+			}
+		}
+		if i == 0 {
+			firstByteMS = elapsedMillis(readStart)
+		}
+		frameStart := time.Now()
+		frame, err := readRESPFrame(reader, maxTCPFrameBytes)
+		frameMS += elapsedMillis(frameStart)
+		if err != nil {
+			return tcpRequestResult{
+				OK:      false,
+				Metrics: tcpMetrics(connectMS, writeMS, firstByteMS, frameMS, elapsedMillis(start), i),
+				Error:   err.Error(),
+			}
+		}
+		expected := expectedFrames[i%len(expectedFrames)]
+		if !bytes.Equal(frame, expected) {
+			return tcpRequestResult{
+				OK:      false,
+				Metrics: tcpMetrics(connectMS, writeMS, firstByteMS, frameMS, elapsedMillis(start), i),
+				Error:   fmt.Sprintf("unexpected RESP frame %d: got %q want %q", i, string(frame), string(expected)),
+			}
+		}
+	}
+	operations := expectedCount
+	if operations == 0 {
+		operations = repeats
+	}
+	return tcpRequestResult{
+		OK:      true,
+		Metrics: tcpMetrics(connectMS, writeMS, firstByteMS, frameMS, elapsedMillis(start), operations),
+	}
+}
+
+func executeTCPIdle(address string, timeout time.Duration) tcpRequestResult {
+	start := time.Now()
+	conn, connectMS, err := dialTCP(address, timeout)
+	if err != nil {
+		return tcpRequestResult{
+			OK:      false,
+			Metrics: map[string]float64{"connect_ms": connectMS, "total_ms": elapsedMillis(start)},
+			Error:   err.Error(),
+		}
+	}
+	defer conn.Close()
+	hold := timeout
+	if hold > 100*time.Millisecond {
+		hold = 100 * time.Millisecond
+	}
+	time.Sleep(hold)
+	return tcpRequestResult{
+		OK:      true,
+		Metrics: map[string]float64{"connect_ms": connectMS, "total_ms": elapsedMillis(start), "operations": 1},
+	}
+}
+
+func dialTCP(address string, timeout time.Duration) (net.Conn, float64, error) {
+	start := time.Now()
+	conn, err := net.DialTimeout("tcp", address, timeout)
+	return conn, elapsedMillis(start), err
+}
+
+func writeFull(w io.Writer, data []byte) error {
+	for len(data) > 0 {
+		n, err := w.Write(data)
+		if err != nil {
+			return err
+		}
+		if n == 0 {
+			return io.ErrShortWrite
+		}
+		data = data[n:]
+	}
+	return nil
+}
+
+func tcpSamplesFromResults(subject string, workload string, trialNumber int, phase string, results []tcpRequestResult) []Sample {
+	samples := make([]Sample, 0, len(results))
+	for _, result := range results {
+		samples = append(samples, Sample{
+			SampleKind: "tcp_request",
+			Subject:    subject,
+			Workload:   workload,
+			Trial:      trialNumber,
+			Phase:      phase,
+			OK:         result.OK,
+			Metrics:    result.Metrics,
+			Error:      result.Error,
+		})
+	}
+	return samples
+}
+
+func tcpTrialFromSamples(subject string, workload Workload, trialNumber int, phase string, samples []Sample, elapsedMS float64) Trial {
+	metrics := map[string]float64{
+		"elapsed_ms":  elapsedMS,
+		"connections": float64(tcpConnections(workload)),
+		"concurrency": float64(tcpConcurrency(workload, tcpConnections(workload))),
+	}
+	ok := true
+	var firstError string
+	var operations float64
+	var failed float64
+	values := map[string][]float64{}
+	for _, sample := range samples {
+		if !sample.OK {
+			ok = false
+			failed++
+			if firstError == "" {
+				firstError = sample.Error
+			}
+		}
+		if sample.Metrics != nil {
+			operations += sample.Metrics["operations"]
+			for metric, value := range sample.Metrics {
+				if metric == "operations" {
+					continue
+				}
+				values[metric] = append(values[metric], value)
+			}
+		}
+	}
+	metrics["operations"] = operations
+	metrics["failed_operations"] = failed
+	if elapsedMS > 0 {
+		metrics["ops_per_second"] = operations / (elapsedMS / 1000.0)
+	}
+	for metric, metricValues := range values {
+		sort.Float64s(metricValues)
+		metrics[metric] = percentile(metricValues, 50)
+	}
+	return Trial{
+		Subject:  subject,
+		Workload: workload.Name,
+		Trial:    trialNumber,
+		Phase:    phase,
+		OK:       ok,
+		Metrics:  metrics,
+		Error:    firstError,
+	}
+}
+
+func tcpMetrics(connectMS, writeMS, firstByteMS, frameMS, totalMS float64, operations int) map[string]float64 {
+	return map[string]float64{
+		"connect_ms":    connectMS,
+		"write_ms":      writeMS,
+		"first_byte_ms": firstByteMS,
+		"frame_ms":      frameMS,
+		"total_ms":      totalMS,
+		"operations":    float64(operations),
+	}
+}
+
+func tcpWorkloadMode(workload Workload) string {
+	if workload.Mode == "" {
+		return respModeOneShot
+	}
+	return workload.Mode
+}
+
+func isSupportedTCPRESPMode(mode string) bool {
+	switch mode {
+	case respModeOneShot, respModePreconnectThenFire, respModePipeline, respModeIdle:
+		return true
+	default:
+		return false
+	}
+}
+
+func tcpConnections(workload Workload) int {
+	if workload.Connections > 0 {
+		return workload.Connections
+	}
+	if workload.Operations > 0 {
+		return workload.Operations
+	}
+	return 1
+}
+
+func tcpConcurrency(workload Workload, connections int) int {
+	if workload.Concurrency > 0 {
+		if workload.Concurrency > connections {
+			return connections
+		}
+		return workload.Concurrency
+	}
+	return connections
+}
+
+func tcpRequestsPerConnection(workload Workload) int {
+	if workload.RequestsPerConnection > 0 {
+		return workload.RequestsPerConnection
+	}
+	return 1
+}
+
+func tcpTimeout(workload Workload) time.Duration {
+	if workload.TimeoutMS > 0 {
+		return time.Duration(workload.TimeoutMS) * time.Millisecond
+	}
+	return defaultTCPTimeout
+}
+
+func elapsedMillis(start time.Time) float64 {
+	return float64(time.Since(start).Microseconds()) / 1000.0
+}
+
+type respAccumulator struct {
+	bytes.Buffer
+	max int
+}
+
+func (a *respAccumulator) addByte(b byte) error {
+	if a.Len()+1 > a.max {
+		return errors.New("RESP frame exceeds maximum size")
+	}
+	return a.WriteByte(b)
+}
+
+func (a *respAccumulator) addBytes(data []byte) error {
+	if a.Len()+len(data) > a.max {
+		return errors.New("RESP frame exceeds maximum size")
+	}
+	_, err := a.Write(data)
+	return err
+}
+
+func readRESPFrame(reader *bufio.Reader, maxBytes int) ([]byte, error) {
+	acc := &respAccumulator{max: maxBytes}
+	if err := readRESPValue(reader, acc); err != nil {
+		return nil, err
+	}
+	return acc.Bytes(), nil
+}
+
+func readRESPValue(reader *bufio.Reader, acc *respAccumulator) error {
+	prefix, err := reader.ReadByte()
+	if err != nil {
+		return err
+	}
+	if err := acc.addByte(prefix); err != nil {
+		return err
+	}
+	switch prefix {
+	case '+', '-', ':':
+		_, err := readRESPLine(reader, acc)
+		return err
+	case '$':
+		line, err := readRESPLine(reader, acc)
+		if err != nil {
+			return err
+		}
+		length, err := strconv.Atoi(line)
+		if err != nil {
+			return fmt.Errorf("invalid RESP bulk string length %q", line)
+		}
+		if length < -1 {
+			return fmt.Errorf("invalid RESP bulk string length %d", length)
+		}
+		if length == -1 {
+			return nil
+		}
+		if length > acc.max-acc.Len()-2 {
+			return errors.New("RESP frame exceeds maximum size")
+		}
+		body := make([]byte, length+2)
+		if _, err := io.ReadFull(reader, body); err != nil {
+			return err
+		}
+		if len(body) < 2 || body[len(body)-2] != '\r' || body[len(body)-1] != '\n' {
+			return errors.New("RESP bulk string missing CRLF terminator")
+		}
+		return acc.addBytes(body)
+	case '*':
+		line, err := readRESPLine(reader, acc)
+		if err != nil {
+			return err
+		}
+		count, err := strconv.Atoi(line)
+		if err != nil {
+			return fmt.Errorf("invalid RESP array length %q", line)
+		}
+		if count < -1 {
+			return fmt.Errorf("invalid RESP array length %d", count)
+		}
+		if count > acc.max/3 {
+			return errors.New("RESP array exceeds maximum size")
+		}
+		for i := 0; i < count; i++ {
+			if err := readRESPValue(reader, acc); err != nil {
+				return err
+			}
+		}
+		return nil
+	default:
+		return fmt.Errorf("unknown RESP prefix %q", prefix)
+	}
+}
+
+func readRESPLine(reader *bufio.Reader, acc *respAccumulator) (string, error) {
+	var line []byte
+	for {
+		fragment, err := reader.ReadSlice('\n')
+		line = append(line, fragment...)
+		if acc.Len()+len(line) > acc.max {
+			return "", errors.New("RESP frame exceeds maximum size")
+		}
+		if err == nil {
+			break
+		}
+		if !errors.Is(err, bufio.ErrBufferFull) {
+			return "", err
+		}
+	}
+	if len(line) < 2 || line[len(line)-2] != '\r' || line[len(line)-1] != '\n' {
+		return "", errors.New("RESP line missing CRLF terminator")
+	}
+	if err := acc.addBytes(line); err != nil {
+		return "", err
+	}
+	return string(line[:len(line)-2]), nil
+}
+
+func splitRESPFrames(data []byte) ([][]byte, error) {
+	if len(data) == 0 {
+		return nil, nil
+	}
+	reader := bufio.NewReader(bytes.NewReader(data))
+	var frames [][]byte
+	for {
+		_, err := reader.Peek(1)
+		if errors.Is(err, io.EOF) {
+			return frames, nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		frame, err := readRESPFrame(reader, maxTCPFrameBytes)
+		if err != nil {
+			return nil, err
+		}
+		frames = append(frames, frame)
+	}
 }
 
 type commandResult struct {

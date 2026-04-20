@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added the PL04 phase-one semantic model with explicit semantic blocks,
+  static-parent metadata, scalar frame layouts, and resolved variable
+  references carrying lexical-depth and slot-offset information.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added

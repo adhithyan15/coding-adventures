@@ -4,15 +4,32 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: Do not leak local machine state in commits or PR descriptions
+
+CI fixes sometimes involve local environment problems, but commit messages and
+PR descriptions are permanent project history. They should explain the portable
+engineering lesson without naming private paths, host setup details, account
+state, or other machine-specific facts that do not belong in the repository.
+
+**Symptom:** A fix message or PR description mentions a developer workstation
+condition instead of the general failure mode that future contributors need to
+understand.
+
+**Rule:** Write history in terms of reproducible repository behavior. If a
+local detail helped diagnose the issue, translate it into a general rule before
+committing or opening the PR.
+
+---
+
 ### 2026-04-20: Tests that need a CLI tool must verify the tool actually runs
 
-Checking `exec.LookPath("git")` only proves that a binary exists on `PATH`. On
-macOS, `/usr/bin/git` can exist but fail every invocation behind the Xcode
-license gate, which makes tests fail after they already decided Git was
+Checking `exec.LookPath("git")` only proves that a binary exists on `PATH`. A
+tool can still fail every invocation because of host configuration, permissions,
+or setup policy, which makes tests fail after they already decided the tool was
 available.
 
-**Symptom:** A test guarded by `exec.LookPath("git")` still fails at `git init`
-with an Xcode license error.
+**Symptom:** A test guarded by `exec.LookPath("git")` still fails at the first
+real Git command.
 
 **Rule:** Tests that depend on an external CLI should run a harmless probe such
 as `git --version` and skip when that command fails. Presence is not usability.
@@ -2923,3 +2940,19 @@ of returning a normal Rust panic.
 **Rule:** In wasm-bindgen wrapper crates that run native tests, keep JS error construction behind a
 `#[cfg(target_arch = "wasm32")]` helper. Use a simple native placeholder such as `JsValue::NULL` for
 test-only error values when the test only needs to assert that the wrapper returned `Err`.
+
+---
+
+## Typed epsilon transitions must not accept empty-string aliases at import boundaries
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of the first Rust `StateMachineDefinition` import helpers caught
+that `NFA::from_definition()` treated `Some("")` the same as `None`. The runtime NFA uses an empty
+string sentinel internally for epsilon transitions, but the typed definition contract says epsilon is
+represented by `None`. Accepting both shapes would let malformed definitions smuggle free moves past
+the import validator.
+
+**Rule:** At typed import or deserialization boundaries, reject empty-string event names explicitly.
+Only lower `None` to the runtime epsilon sentinel inside the core automaton constructor path. Add
+regression tests for this distinction whenever a runtime uses sentinel values internally.

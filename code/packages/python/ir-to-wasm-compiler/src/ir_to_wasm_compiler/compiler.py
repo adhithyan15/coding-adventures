@@ -90,6 +90,122 @@ _OPCODE = {
 }
 
 
+# ---------------------------------------------------------------------------
+# WASM i32 range and supported opcode set
+# ---------------------------------------------------------------------------
+#
+# WASM uses 32-bit two's-complement integers (``i32``).
+# Signed range: -2 147 483 648 (−2^31) to 2 147 483 647 (2^31 − 1).
+
+_WASM_I32_MIN: int = -(1 << 31)   # -2 147 483 648
+_WASM_I32_MAX: int =  (1 << 31) - 1  # 2 147 483 647
+
+# The V1 WASM backend handles exactly these opcodes.
+_WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.JUMP,
+    IrOp.LOAD_IMM,
+    IrOp.LOAD_ADDR,
+    IrOp.LOAD_BYTE,
+    IrOp.LOAD_WORD,
+    IrOp.STORE_BYTE,
+    IrOp.STORE_WORD,
+    IrOp.ADD,
+    IrOp.ADD_IMM,
+    IrOp.SUB,
+    IrOp.AND,
+    IrOp.AND_IMM,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.CALL,
+    IrOp.RET,
+    IrOp.SYSCALL,
+})
+
+# WASM WASI syscalls supported by the V1 backend (must mirror _SYSCALL_* constants):
+#   SYSCALL 1  → _SYSCALL_WRITE / fd_write (print one byte to stdout)
+#   SYSCALL 2  → _SYSCALL_READ  / fd_read  (read one byte from stdin)
+#   SYSCALL 10 → _SYSCALL_EXIT  / proc_exit
+_WASM_SUPPORTED_SYSCALLS: frozenset[int] = frozenset({
+    _SYSCALL_WRITE,   # 1
+    _SYSCALL_READ,    # 2
+    _SYSCALL_EXIT,    # 10
+})
+
+
+def validate_for_wasm(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for WASM backend incompatibilities without
+    generating any WASM bytes.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must appear in
+       ``_WASM_SUPPORTED_OPCODES``.  Unknown opcodes are rejected before any
+       module bytes are produced.
+
+    2. **Constant range** — every ``IrImmediate`` in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a WASM 32-bit signed integer
+       (−2 147 483 648 to 2 147 483 647).  WASM's ``i32.const`` encodes
+       its operand as a 32-bit LEB128 value; constants outside this range
+       cannot be represented.
+
+    3. **SYSCALL number** — only the WASI syscall numbers in
+       ``_WASM_SUPPORTED_SYSCALLS`` (1=fd_write, 4=fd_read, 10=proc_exit)
+       are wired up in the V1 WASM backend.  Any other number is rejected.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the WASM V1 backend.
+    """
+    errors: list[str] = []
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ─────────────────────
+        if op not in _WASM_SUPPORTED_OPCODES:
+            errors.append(
+                f"unsupported opcode {op.name} in V1 WASM backend"
+            )
+            continue
+
+        # ── Rule 2: constant range on LOAD_IMM and ADD_IMM ──────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate):
+                    v = operand.value
+                    if not (_WASM_I32_MIN <= v <= _WASM_I32_MAX):
+                        errors.append(
+                            f"{op.name}: constant {v:,} overflows WASM i32 "
+                            f"(valid range {_WASM_I32_MIN:,} to {_WASM_I32_MAX:,})"
+                        )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value not in _WASM_SUPPORTED_SYSCALLS:
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL numbers {sorted(_WASM_SUPPORTED_SYSCALLS)} "
+                        f"are wired in the V1 WASM backend"
+                    )
+                    break
+
+    return errors
+
+
 class WasmLoweringError(Exception):
     """Raised when an IrProgram cannot be lowered to WASM."""
 
@@ -138,6 +254,13 @@ class IrToWasmCompiler:
         *,
         strategy: str = "structured",
     ) -> WasmModule:
+        errors = validate_for_wasm(program)
+        if errors:
+            joined = "; ".join(errors)
+            raise WasmLoweringError(
+                f"IR program failed WASM pre-flight validation "
+                f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+            )
         signatures = infer_function_signatures_from_comments(program)
         if function_signatures:
             for signature in function_signatures:
