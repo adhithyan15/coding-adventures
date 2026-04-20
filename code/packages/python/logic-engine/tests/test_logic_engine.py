@@ -7,6 +7,8 @@ recursive resolution.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+
 import pytest
 
 from logic_engine import (
@@ -15,6 +17,7 @@ from logic_engine import (
     Disequality,
     Program,
     State,
+    Term,
     __version__,
     all_different,
     atom,
@@ -26,12 +29,14 @@ from logic_engine import (
     fail,
     fresh,
     logic_list,
+    native_goal,
     neq,
     program,
     relation,
     rule,
     solve,
     solve_all,
+    solve_from,
     solve_n,
     term,
     var,
@@ -42,7 +47,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.3.0"
+        assert __version__ == "0.4.0"
 
 
 class TestRelationsAndClauses:
@@ -258,6 +263,37 @@ class TestQueryHelpers:
     def test_fresh_requires_at_least_one_variable(self) -> None:
         with pytest.raises(ValueError):
             fresh(0, lambda: conj())
+
+    def test_native_goal_can_inspect_and_extend_current_state(self) -> None:
+        x = var("X")
+        trivial = program()
+
+        def bind_bart(
+            _program: Program,
+            state: State,
+            args: tuple[Term, ...],
+        ) -> Iterator[State]:
+            (target,) = args
+            yield from solve_from(_program, eq(target, "bart"), state)
+
+        assert solve_all(trivial, x, native_goal(bind_bart, x)) == [atom("bart")]
+
+    def test_native_goal_arguments_are_renamed_inside_fresh_scopes(self) -> None:
+        trivial = program()
+
+        def bind_bart(
+            _program: Program,
+            state: State,
+            args: tuple[Term, ...],
+        ) -> Iterator[State]:
+            (target,) = args
+            yield from solve_from(_program, eq(target, "bart"), state)
+
+        assert solve_all(
+            trivial,
+            logic_list([]),
+            fresh(1, lambda x: native_goal(bind_bart, x)),
+        ) == [logic_list([])]
 
     def test_invalid_goal_expressions_are_rejected(self) -> None:
         with pytest.raises(TypeError):
