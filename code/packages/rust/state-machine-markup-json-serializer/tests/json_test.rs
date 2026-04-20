@@ -183,8 +183,38 @@ fn json_serializer_escapes_strings() {
 
     assert!(json.contains("\"name\": \"escape\\nmachine\""));
     assert!(json.contains("\"initial\": \"needs\\\"quote\""));
-    assert!(json.contains("\"alphabet\": [\"slash\\\\event\", \"control\\u001F\"]"));
+    assert!(json.contains("\"alphabet\": [\"control\\u001F\", \"slash\\\\event\"]"));
     assert!(json.contains("\"id\": \"line\\nbreak\""));
+}
+
+#[test]
+fn json_serializer_canonicalizes_set_like_arrays() {
+    let mut definition = StateMachineDefinition::new("canonical", MachineKind::Nfa);
+    definition.initial = Some("q0".to_string());
+    definition.alphabet = vec!["z".to_string(), "a".to_string()];
+    definition.stack_alphabet = vec!["top".to_string(), "base".to_string()];
+    definition.states = vec![
+        StateDefinition {
+            initial: true,
+            ..StateDefinition::new("q0")
+        },
+        StateDefinition::new("q1"),
+        StateDefinition::new("q2"),
+    ];
+    definition.transitions = vec![TransitionDefinition {
+        from: "q0".to_string(),
+        on: Some("a".to_string()),
+        to: vec!["q2".to_string(), "q1".to_string()],
+        stack_pop: Some("base".to_string()),
+        stack_push: vec!["top".to_string(), "base".to_string()],
+    }];
+
+    let json = definition.to_states_json();
+
+    assert!(json.contains("\"alphabet\": [\"a\", \"z\"]"));
+    assert!(json.contains("\"stack_alphabet\": [\"base\", \"top\"]"));
+    assert!(json.contains("\"to\": [\"q1\", \"q2\"]"));
+    assert!(json.contains("\"stack_push\": [\"top\", \"base\"]"));
 }
 
 #[test]

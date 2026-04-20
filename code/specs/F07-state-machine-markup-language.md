@@ -568,10 +568,14 @@ Serializers must:
 
 For the phase 1 Rust TOML and JSON serializers, the executable machine export
 helpers already sort states, alphabets, and transition sets before constructing
-the typed definition. The serializer packages may defensively sort states and
-transitions by their stable identifiers when no explicit `priority` field
-exists. Once prioritized statecharts and tokenizers land, serializers must
-prefer the explicit priority/order field over lexical sorting.
+the typed definition. The JSON serializer must also defensively sort set-like
+arrays that can be constructed by hand, including `alphabet`, `stack_alphabet`,
+and multi-target NFA `to` arrays. Order-sensitive arrays such as PDA
+`stack_push` must stay in declaration order. Serializer packages may
+defensively sort states and transitions by their stable identifiers when no
+explicit `priority` field exists. Once prioritized statecharts and tokenizers
+land, serializers must prefer the explicit priority/order field over lexical
+sorting.
 
 Serializers must not:
 

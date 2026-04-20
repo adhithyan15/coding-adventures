@@ -42,12 +42,15 @@ pub fn to_states_json(definition: &StateMachineDefinition) -> String {
         fields.push(json_property("initial", json_string(initial)));
     }
     if !definition.alphabet.is_empty() {
-        fields.push(json_property("alphabet", json_array(&definition.alphabet)));
+        fields.push(json_property(
+            "alphabet",
+            json_array(&sorted_strings(&definition.alphabet)),
+        ));
     }
     if !definition.stack_alphabet.is_empty() {
         fields.push(json_property(
             "stack_alphabet",
-            json_array(&definition.stack_alphabet),
+            json_array(&sorted_strings(&definition.stack_alphabet)),
         ));
     }
     if let Some(initial_stack) = &definition.initial_stack {
@@ -122,7 +125,10 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
         if transition.to.len() == 1 {
             fields.push(json_property("to", json_string(&transition.to[0])));
         } else {
-            fields.push(json_property("to", json_array(&transition.to)));
+            fields.push(json_property(
+                "to",
+                json_array(&sorted_strings(&transition.to)),
+            ));
         }
         if let Some(stack_pop) = &transition.stack_pop {
             fields.push(json_property("stack_pop", json_string(stack_pop)));
@@ -151,17 +157,23 @@ fn compare_transitions(
     (
         &left.from,
         left.on.as_deref().unwrap_or(""),
-        &left.to,
+        sorted_strings(&left.to),
         &left.stack_pop,
         &left.stack_push,
     )
         .cmp(&(
             &right.from,
             right.on.as_deref().unwrap_or(""),
-            &right.to,
+            sorted_strings(&right.to),
             &right.stack_pop,
             &right.stack_push,
         ))
+}
+
+fn sorted_strings(values: &[String]) -> Vec<String> {
+    let mut sorted = values.to_vec();
+    sorted.sort();
+    sorted
 }
 
 fn json_property(name: &str, value: String) -> String {
