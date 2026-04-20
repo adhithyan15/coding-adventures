@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.5.0 (2026-04-20)
+
+### Added
+
+- **`int_bits` parameter for `compile_basic()`.**  Controls how many decimal
+  digit positions the `PRINT`-of-number unroller emits.  The rule is:
+  `max_value = 2**(int_bits-1) - 1`, `digit_positions = len(str(max_value))`.
+  Defaults to `32` (10 digits, covering the full 32-bit signed range used by
+  the JVM and WASM backends).  Pass `int_bits=20` for the GE-225 backend (6
+  digits, max value 524 287 — the GE-225's 20-bit signed word limit).
+
+  **Why this matters**: every power-of-ten constant is emitted as a
+  `LOAD_IMM`.  If the constant exceeds the target machine's signed word range,
+  it is silently truncated, producing garbled digit extraction.  The 0.4.0 fix
+  extended the power list to cover 32-bit integers but neglected the GE-225's
+  narrower range.  This parameter makes the tradeoff explicit and enforced at
+  the API boundary.
+
 ## 0.4.0 (2026-04-20)
 
 ### Fixed

@@ -246,6 +246,7 @@ def compile_basic(
     ast: ASTNode,
     *,
     char_encoding: str = "ge225",
+    int_bits: int = 32,
 ) -> CompileResult:
     """Compile a Dartmouth BASIC AST to an IrProgram.
 
@@ -260,6 +261,23 @@ def compile_basic(
                        compatible with the GE-225 backend.
                        ``"ascii"`` emits standard ASCII byte values — compatible
                        with the WASM backend's WASI ``fd_write`` syscall.
+        int_bits:      Signed integer width of the target machine in bits
+                       (default 32).  Controls how many decimal digit positions
+                       ``PRINT`` of a number unrolls.  The rule is:
+
+                         max_value = 2**(int_bits-1) - 1
+                         digit_positions = len(str(max_value))
+
+                       Examples:
+                         - ``int_bits=32`` → max 2,147,483,647 → 10 digits
+                         - ``int_bits=20`` → max     524,287   →  6 digits
+                                            (GE-225 20-bit signed words)
+
+                       **Critical**: every power-of-ten constant emitted as a
+                       ``LOAD_IMM`` must fit in the target machine's signed word.
+                       Passing ``int_bits=32`` for a GE-225 backend would cause
+                       1,000,000,000 to overflow a 20-bit register, producing
+                       garbled digit extraction.
 
     Returns:
         A ``CompileResult`` containing the IR program and variable register map.
@@ -268,7 +286,7 @@ def compile_basic(
         CompileError: If the program uses a V1-excluded feature (GOSUB, DIM,
                       INPUT, DEF FN, PRINT with variables, exponentiation,
                       NEXT without FOR, or unsupported string characters).
-        ValueError:   If ``ast.rule_name != "program"``.
+        ValueError:   If ``ast.rule_name != "program"`` or ``int_bits < 2``.
 
     Example::
 
@@ -279,6 +297,9 @@ def compile_basic(
         result = compile_basic(ast)
         # result.program contains the IrProgram
         # result.var_regs["A"] == 1 (virtual register for variable A)
+
+        # For a 20-bit target (e.g. the GE-225):
+        result = compile_basic(ast, int_bits=20)
     """
     if ast.rule_name != "program":
         raise ValueError(
@@ -286,7 +307,9 @@ def compile_basic(
         )
     if char_encoding not in ("ge225", "ascii"):
         raise ValueError(f"char_encoding must be 'ge225' or 'ascii'; got {char_encoding!r}")
-    c = _Compiler(char_encoding=char_encoding)
+    if int_bits < 2:
+        raise ValueError(f"int_bits must be >= 2; got {int_bits!r}")
+    c = _Compiler(char_encoding=char_encoding, int_bits=int_bits)
     return c.compile(ast)
 
 
@@ -317,6 +340,7 @@ class _Compiler:
     _label_count: int = field(default=0)
     _for_stack: list[_ForRecord] = field(default_factory=list)
     char_encoding: str = field(default="ge225")
+    int_bits: int = field(default=32)
 
     def __post_init__(self) -> None:
         """Initialize the IR program."""
@@ -621,19 +645,26 @@ class _Compiler:
         digit_offset = 48 if self.char_encoding == "ascii" else 0
 
         # Unrolled digit extraction for each power of ten above the units place.
-        # Covers the full 32-bit signed integer range: 2,147,483,647 has 10 digits,
-        # so we need every power from 1,000,000,000 down to 10.
-        for pos_idx, power in enumerate([
-            1_000_000_000,  # billions
-              100_000_000,  # hundred-millions
-               10_000_000,  # ten-millions
-                1_000_000,  # millions
-                  100_000,  # hundred-thousands
-                   10_000,  # ten-thousands
-                    1_000,  # thousands
-                      100,  # hundreds
-                       10,  # tens
-        ]):
+        #
+        # The number of digit positions is derived from ``self.int_bits``:
+        #
+        #   max_value    = 2**(int_bits-1) - 1   (largest positive signed integer)
+        #   digit_count  = len(str(max_value))    (decimal digits in that number)
+        #   powers       = [10**(digit_count-1), …, 10]   (digit_count-1 entries)
+        #
+        # Examples:
+        #   int_bits=32 → max 2,147,483,647 → 10 digits → powers [10^9 … 10]
+        #   int_bits=20 → max     524,287   →  6 digits → powers [10^5 … 10]
+        #
+        # It is critical that every power constant fits in the target's signed
+        # word.  For the GE-225 (20-bit), 10^5 = 100,000 < 524,287 ✓; but
+        # 10^9 = 1,000,000,000 far exceeds the 20-bit range and would be
+        # truncated on LOAD_IMM, producing garbled digit extraction.
+        _max_val     = (1 << (self.int_bits - 1)) - 1
+        _digit_count = len(str(_max_val))          # e.g. 10 for 32-bit, 6 for 20-bit
+        _powers      = [10 ** (_digit_count - 1 - i) for i in range(_digit_count - 1)]
+
+        for pos_idx, power in enumerate(_powers):
             l_skip = f"_pnum_{label_id}_s{pos_idx}"
 
             # Digit and remainder
