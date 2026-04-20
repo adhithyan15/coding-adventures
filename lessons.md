@@ -23,6 +23,25 @@ non-integral values before attempting any `int` conversion.
 
 ---
 
+### 2026-04-20: Compiler runtime specs must bound execution and captured environment lifetimes
+
+When designing a compiler/runtime for a language with recursion, nested procedures,
+closures, thunks, or explicit stack frames, source-size and AST-depth limits are
+not enough. The runtime also needs execution fuel or timeout policy, dynamic call
+depth limits, frame stack byte limits, heap allocation limits, stack/heap
+collision checks, and clear captured-environment lifetime rules.
+
+**Symptom:** Security review flags a roadmap or implementation because recursive
+programs can exhaust frame memory or run forever, and descriptors that capture raw
+frame pointers could outlive the activation they point into.
+
+**Rule:** For compiler runtimes, specify and test runtime resource caps and
+captured environment handling before implementing procedures, closures, or
+call-by-name thunks. Either reject escaping descriptors, prove they cannot escape,
+or heap-lift captured environments with explicit lifetime management.
+
+---
+
 ### 2026-04-19: JVM composite Gradle BUILD files need a shared lock when they reuse included builds
 
 Java and Kotlin packages that include the same local Gradle builds can corrupt
