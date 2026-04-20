@@ -48,6 +48,7 @@ pub struct MiniRedisOptions {
     pub host: String,
     pub port: u16,
     pub aof_path: Option<PathBuf>,
+    pub max_connections: usize,
 }
 
 impl Default for MiniRedisOptions {
@@ -56,6 +57,7 @@ impl Default for MiniRedisOptions {
             host: "127.0.0.1".to_string(),
             port: 6379,
             aof_path: None,
+            max_connections: TcpRuntimeOptions::default().max_connections,
         }
     }
 }
@@ -188,6 +190,12 @@ fn protocol_error_response(message: &str) -> Vec<u8> {
     encode(RespValue::Error(RespError::new(message))).expect("RESP error responses should encode")
 }
 
+fn runtime_options(options: &MiniRedisOptions) -> TcpRuntimeOptions {
+    let mut runtime_options = TcpRuntimeOptions::default();
+    runtime_options.max_connections = options.max_connections.max(1);
+    runtime_options
+}
+
 #[cfg(any(
     target_os = "macos",
     target_os = "freebsd",
@@ -202,7 +210,7 @@ fn build_runtime(
     let host = options.host.clone();
     TcpRuntime::bind_kqueue_with_state(
         (host.as_str(), options.port),
-        TcpRuntimeOptions::default(),
+        runtime_options(options),
         |_| RedisConnectionState::default(),
         move |_, state, bytes| handle_connection_data(&manager, state, bytes),
         |_, _| {},
@@ -217,7 +225,7 @@ fn build_runtime(
     let host = options.host.clone();
     TcpRuntime::bind_epoll_with_state(
         (host.as_str(), options.port),
-        TcpRuntimeOptions::default(),
+        runtime_options(options),
         |_| RedisConnectionState::default(),
         move |_, state, bytes| handle_connection_data(&manager, state, bytes),
         |_, _| {},
@@ -232,7 +240,7 @@ fn build_runtime(
     let host = options.host.clone();
     TcpRuntime::bind_windows_with_state(
         (host.as_str(), options.port),
-        TcpRuntimeOptions::default(),
+        runtime_options(options),
         |_| RedisConnectionState::default(),
         move |_, state, bytes| handle_connection_data(&manager, state, bytes),
         |_, _| {},
@@ -353,6 +361,23 @@ mod tests {
         let background = server.clone();
         let handle = thread::spawn(move || background.serve());
         (server, handle, addr)
+    }
+
+    #[test]
+    fn runtime_options_honor_configured_connection_cap() {
+        let options = MiniRedisOptions {
+            max_connections: 10_000,
+            ..MiniRedisOptions::default()
+        };
+
+        assert_eq!(runtime_options(&options).max_connections, 10_000);
+
+        let options = MiniRedisOptions {
+            max_connections: 0,
+            ..MiniRedisOptions::default()
+        };
+
+        assert_eq!(runtime_options(&options).max_connections, 1);
     }
 
     #[test]

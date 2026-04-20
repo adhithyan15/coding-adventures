@@ -21,7 +21,8 @@ The current implementation supports:
 - pinning per-subject commit metadata in `subjects/<name>/subject.json`
 - starting local TCP service subjects with `ready_check = "tcp-connect"`
 - executing `driver = "tcp-resp"` workloads with RESP frame-aware reads
-- running one-shot, preconnect-then-fire, pipelined, and idle TCP modes
+- running one-shot, preconnect-then-fire, pipelined, idle, and C10K-style hold
+  TCP modes
 - writing `samples.jsonl`, `trials.jsonl`, `summary.json`, `environment.json`,
   and `report.md`
 - regenerating reports from an existing result directory
@@ -53,6 +54,7 @@ go build -o benchmark-tool .
 ./benchmark-tool validate ../../../benchmarks/examples/command/benchmark.toml
 ./benchmark-tool run ../../../benchmarks/examples/command/benchmark.toml --out /tmp/bench-result
 ./benchmark-tool run ../../../benchmarks/mini-redis/benchmark.toml --out /tmp/mini-redis-bench
+./benchmark-tool run ../../../benchmarks/mini-redis/c10k-hold.toml --out /tmp/mini-redis-c10k
 ./benchmark-tool run ../../../benchmarks/examples/command/benchmark.toml \
   --subject current=HEAD \
   --subject baseline=origin/main \

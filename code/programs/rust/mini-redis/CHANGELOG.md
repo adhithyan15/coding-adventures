@@ -36,3 +36,10 @@ All notable changes to this package will be documented in this file.
   Linux and Windows targets
 - a bounded per-connection buffered-input cap so incomplete RESP frames cannot
   grow memory without limit
+
+## [0.1.3] - 2026-04-20
+
+### Added
+
+- `--max-connections` CLI option for capacity experiments such as C10K hold
+  benchmarks
