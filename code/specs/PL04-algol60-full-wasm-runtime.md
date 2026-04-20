@@ -468,6 +468,24 @@ read.
 If the actual argument is assignable, assigning to the formal parameter writes
 back to the actual location.
 
+ALGOL's default parameter mode is by-name. A formal parameter appears in a
+`value` part only when it should be evaluated once at call entry. Therefore the
+semantic model must record each formal parameter's mode explicitly:
+
+- `value`: current Phase 3 behavior
+- `name`: delayed by-name behavior
+
+The first implementation should support `integer` by-name parameters only. It
+should continue to reject real, Boolean, string, array, procedure-valued, label,
+and switch formals until their value representation and runtime helpers exist.
+Array elements such as `A[i]` are valid integer by-name actuals because the
+element designator computes an integer location on every read or write.
+
+By-name parameters are not by-reference parameters. The actual expression is
+re-evaluated for every formal read, and an assignable actual is re-located for
+every formal write. If a variable used by the actual expression changes inside
+the callee, later reads/writes see the new computation.
+
 Examples:
 
 ```algol
@@ -483,6 +501,62 @@ Calling `twice(a[i])` must update the current element selected by the expression
 each time the thunk is used. If `i` changes between uses, the referenced element
 can change.
 
+Calling `twice(1 + y)` is syntactically valid when `twice` only reads `x`, but
+it must fail with a targeted diagnostic if the procedure body assigns to `x`.
+
+### Semantic Model
+
+Each procedure descriptor should carry `ProcedureParameter.mode`:
+
+```text
+procedure_parameter:
+  name
+  type id
+  mode: value | name
+  symbol id
+  frame slot offset
+```
+
+The type checker must also compute whether a by-name formal may be assigned
+during the procedure call. This is an interprocedural property, not just a scan
+of the immediate procedure body:
+
+```text
+by_name_parameter_use:
+  formal symbol id
+  read count
+  written: true | false
+  write reason: local assignment | transitive call | unknown callee
+```
+
+The analysis may be conservative. A by-name formal is considered written when:
+
+- the procedure body assigns directly to the formal
+- the formal is passed as an actual to another by-name formal that may be
+  written
+- the formal is passed to a procedure whose body or descriptor is not available
+  for analysis
+- a recursive cycle contains any path that writes the corresponding formal
+
+This prevents a caller from passing a read-only expression such as `1 + y` to
+`outer(x)` when `outer` itself only reads `x` but passes `x` to `inner(z)`, and
+`inner` assigns to `z`.
+
+At each call site, the checker validates every by-name actual against the
+callee's formal use:
+
+- read-only formals accept any integer expression
+- written formals require an assignable integer designator
+- scalar variables and array elements are assignable designators
+- literals, arithmetic expressions, comparisons, function calls, and conditional
+  expressions are not assignable in the first implementation
+
+When validation fails, use diagnostics like:
+
+- `by-name parameter 'x' is assigned, but actual expression is not assignable`
+- `by-name parameter 'x' expects integer, got boolean`
+- `by-name parameter 'x' requires thunk lowering, not implemented for procedure values`
+
 ### Thunk Descriptor
 
 A by-name thunk descriptor should contain:
@@ -494,10 +568,49 @@ thunk_descriptor:
   static link for the caller expression
   caller frame pointer
   type id
+  flags
 ```
 
 The compiler generates one eval helper per argument expression shape as needed.
 For assignable arguments, it also generates a store helper.
+
+Recommended flags:
+
+| Flag | Meaning |
+|------|---------|
+| `1` | actual is assignable |
+| `2` | actual reads caller frame slots |
+| `4` | actual reads array descriptors |
+
+The first implementation may store thunk descriptors in the caller's active
+frame or in a bounded call-scoped heap region. In either case, a descriptor must
+not escape the dynamic extent of the call that receives it. Until procedure
+values and heap-lifted environments exist, reject any construct that would store
+a by-name thunk in a longer-lived location.
+
+The descriptor's environment pointers are valid only while the caller
+activation is active. This is acceptable for direct procedure calls because
+the callee returns before the caller frame is torn down. It is not acceptable
+for procedure values, stored thunk descriptors, or returning thunks from a
+procedure.
+
+### Calling Convention
+
+By-name parameters are passed as descriptor pointers. A generated procedure with
+mixed value and by-name parameters should still receive:
+
+```text
+call procedure_code(static_link, caller_frame, arg0, arg1, ...)
+```
+
+but each `argN` is interpreted according to the formal mode:
+
+- `value integer`: immediate `i32` value
+- `name integer`: `i32` pointer to a `thunk_descriptor`
+
+The callee stores the descriptor pointer in the formal parameter's frame slot.
+Reading a by-name formal invokes the descriptor's eval helper. Assigning to a
+by-name formal invokes the descriptor's store helper with the new value.
 
 ### Eval Helper
 
@@ -506,6 +619,20 @@ An eval helper:
 1. restores or receives the caller lexical environment
 2. evaluates the original expression
 3. returns the value
+
+Conceptual helper signature:
+
+```text
+eval(thunk_descriptor_ptr) -> i32
+```
+
+The helper loads the captured static link and caller frame pointer from the
+descriptor, then evaluates the actual expression using the same reference and
+array-access lowering rules as ordinary caller code.
+
+For `sum(i, 1, 3, A[i])`, the `term` eval helper must load the current `i`
+through the caller frame and then compute `A[i]` through the current array
+descriptor bounds on every call.
 
 ### Store Helper
 
@@ -517,6 +644,151 @@ A store helper:
 
 Non-assignable actuals, such as `x + 1`, should be valid for read-only by-name
 parameters but must fail if the callee assigns to the formal.
+
+Conceptual helper signature:
+
+```text
+store(thunk_descriptor_ptr, value: i32) -> void
+```
+
+If the descriptor has no store helper and the callee assigns to the formal,
+code generation should not proceed. The type checker should normally catch this
+before IR lowering. The IR compiler may keep a defensive check and raise
+`CompileError` if a written by-name formal has no store helper.
+
+Store helpers for scalar variables write the resolved frame slot. Store helpers
+for array elements re-evaluate the current subscripts, run the normal runtime
+bounds checks, compute the current element address, and store to that address.
+
+### Lowering Rules
+
+When lowering a procedure body:
+
+- reads of value parameters keep the current frame-slot load path
+- writes to value parameters keep the current frame-slot store path
+- reads of by-name parameters lower to eval-helper calls
+- writes to by-name parameters lower to store-helper calls
+- by-name formals can be used in integer expressions wherever scalar integers
+  are currently allowed
+
+When lowering a call site:
+
+1. value actuals lower exactly as they do today
+2. by-name actuals emit a thunk descriptor before the call
+3. each thunk descriptor captures the caller static link and caller frame pointer
+4. read-only actuals emit only an eval helper
+5. assignable actuals emit both eval and store helpers
+6. the descriptor pointer is passed in the normal argument position
+
+The descriptor allocation must be bounded. The compiler should enforce:
+
+- maximum by-name parameter count per procedure
+- maximum generated thunk helpers per program
+- maximum call-site thunk descriptor bytes
+- no thunk descriptor escapes the receiving call
+
+### Phase 5 Subset
+
+The first Phase 5 implementation should support:
+
+- `integer` by-name scalar formals
+- by-name integer expression actuals for read-only formals
+- assignable scalar variable actuals for written formals
+- assignable integer array element actuals for written formals
+- by-name actual expressions that reference variables in the caller's lexical
+  ancestors
+- by-name actual expressions that reference Phase 4 integer arrays
+
+The first implementation should continue to reject:
+
+- non-integer by-name formals
+- by-name array descriptors as whole-array values
+- procedure-valued by-name actuals
+- label, switch, real, Boolean, and string by-name formals
+- escaping thunk descriptors
+- by-name actuals that require nonlocal `goto`, switches, or procedure values
+
+### Required Diagnostics
+
+The phase is not complete unless unsupported forms fail before WASM lowering
+with diagnostics targeted to the offending source construct.
+
+Required cases:
+
+- value part omitted means by-name, not value
+- assigned by-name formal with literal actual
+- assigned by-name formal with arithmetic expression actual
+- assigned by-name formal with procedure-call actual
+- wrong actual type for by-name formal
+- unsupported by-name formal type
+- thunk helper count or descriptor byte cap exceeded
+
+### Acceptance Programs
+
+Repeated reads must re-evaluate the actual expression:
+
+```algol
+begin
+  integer result, i, y;
+
+  integer procedure pick(x);
+    integer x;
+  begin
+    i := 2;
+    pick := x
+  end;
+
+  i := 1;
+  y := 10;
+  result := pick(i + y)
+end
+```
+
+Expected result: `12`.
+
+Assigning to a by-name scalar writes through to the actual variable:
+
+```algol
+begin
+  integer result, a;
+
+  procedure twice(x);
+    integer x;
+  begin
+    x := x + 1;
+    x := x + 1
+  end;
+
+  a := 3;
+  twice(a);
+  result := a
+end
+```
+
+Expected result: `5`.
+
+Assigning to a by-name array element re-evaluates the designator:
+
+```algol
+begin
+  integer result, i;
+  integer array A[1:2];
+
+  procedure put(x);
+    integer x;
+  begin
+    x := 7;
+    i := 2;
+    x := 9
+  end;
+
+  i := 1;
+  put(A[i]);
+  result := A[1] * 10 + A[2]
+end
+```
+
+Expected result: `79`.
 
 ### Jensen's Device Acceptance Test
 
@@ -981,15 +1253,23 @@ Goal: Implement ALGOL's default parameter mode.
 
 Deliverables:
 
+- explicit value-vs-name parameter mode in the semantic model
+- conservative interprocedural analysis of which by-name formals may be assigned
 - thunk descriptor layout
 - eval and store helper generation
 - by-name read and write lowering
+- bounded descriptor/helper generation
+- non-escaping thunk lifetime checks
 - diagnostics for non-assignable by-name stores
 
 Acceptance:
 
 - repeated formal reads re-evaluate the actual expression
 - assigning to a by-name formal writes through assignable actuals
+- scalar variable actuals work for assigned by-name formals
+- array element actuals re-compute their element address on each use
+- read-only expression actuals work without store helpers
+- assigned read-only expression actuals are rejected before IR lowering
 - Jensen's device works
 
 ### Phase 6: Labels and Local Goto
