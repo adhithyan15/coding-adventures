@@ -328,13 +328,13 @@ our virtual audio world into an operating-system audio device.
 Conceptually, a caller should be able to write:
 
 ```python
-from note_audio import render_note
+from note_audio import render_note_to_sound_chain
 from audio_device_sink import play_pcm_buffer
 
-rendered = render_note("A4", duration_seconds=0.25, amplitude=0.2)
-report = play_pcm_buffer(rendered.pcm_samples)
+rendered = render_note_to_sound_chain("A4", duration_seconds=0.25, amplitude=0.2)
+report = play_pcm_buffer(rendered.pcm_buffer)
 
-assert report.frames_played == rendered.pcm_samples.sample_count()
+assert report.frames_played == rendered.pcm_buffer.sample_count()
 ```
 
 This example still passes through every abstraction:
