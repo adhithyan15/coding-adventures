@@ -72,19 +72,39 @@
 //! ndc.y = 1.0 - (pixel_y / height) * 2.0
 //! ```
 
-// This crate requires arm64 (Apple Silicon).  The objc_msgSend ABI for
-// struct arguments differs between arm64 and x86_64.
-#[cfg(not(target_arch = "aarch64"))]
-compile_error!("paint-metal requires arm64 (Apple Silicon). x86_64 is not supported.");
+// This crate's real implementation requires arm64 Apple Silicon — the
+// objc_msgSend ABI for struct arguments differs between arm64 and
+// x86_64, and the Metal / CoreGraphics frameworks are Apple-only.
+//
+// On non-Apple targets we expose a `render` stub that panics at
+// runtime. This lets downstream workspace members (notably
+// markdown-reader) continue to link against paint-metal on Linux CI
+// without pulling in the Apple-only FFI surface. At runtime on
+// non-Apple the panic makes the unsupported path loud.
 
 pub const VERSION: &str = "0.1.0";
 
+pub use paint_instructions::PixelContainer;
+
+#[cfg(not(target_vendor = "apple"))]
+pub fn render(_scene: &paint_instructions::PaintScene) -> PixelContainer {
+    panic!(
+        "paint-metal::render is only implemented on target_vendor = \"apple\"; \
+         use a different paint backend on this platform."
+    );
+}
+
+#[cfg(all(target_vendor = "apple", not(target_arch = "aarch64")))]
+compile_error!("paint-metal requires arm64 Apple Silicon. Intel macOS is not supported.");
+
+#[cfg(target_vendor = "apple")]
 use objc_bridge::*;
 use paint_instructions::{
-    PaintInstruction, PaintLine, PaintRect, PaintScene, PixelContainer,
+    PaintInstruction, PaintLine, PaintRect, PaintScene,
 };
 #[allow(unused_imports)]
 use std::ffi::{c_int, c_ulong};
+#[allow(unused_imports)]
 use std::ptr;
 
 // ---------------------------------------------------------------------------
@@ -157,8 +177,16 @@ fragment float4 rect_fragment(RectVertexOut in [[stage_in]]) {
 ///
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
 fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+    let s = s.trim();
     if s == "transparent" {
         return (0.0, 0.0, 0.0, 0.0);
+    }
+    // CSS rgb()/rgba() support — layout-to-paint emits these.
+    if let Some(inner) = s.strip_prefix("rgba(").and_then(|t| t.strip_suffix(')')) {
+        return parse_rgb_components(inner, true);
+    }
+    if let Some(inner) = s.strip_prefix("rgb(").and_then(|t| t.strip_suffix(')')) {
+        return parse_rgb_components(inner, false);
     }
     let hex = s.trim_start_matches('#');
     let hex = if hex.len() == 3 {
@@ -183,6 +211,31 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
         1.0
     };
     (r, g, b, a)
+}
+
+/// Parse the comma-separated r,g,b(,a) components from inside an
+/// `rgb(...)` / `rgba(...)` CSS string. r/g/b are 0..=255 decimal, a
+/// is 0..=1 decimal. Missing / malformed components clamp gracefully
+/// toward opaque black.
+fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
+    let parts: Vec<&str> = inner.split(',').map(|s| s.trim()).collect();
+    if parts.len() < 3 {
+        return (0.0, 0.0, 0.0, 1.0);
+    }
+    let r = parts[0].parse::<f64>().unwrap_or(0.0) / 255.0;
+    let g = parts[1].parse::<f64>().unwrap_or(0.0) / 255.0;
+    let b = parts[2].parse::<f64>().unwrap_or(0.0) / 255.0;
+    let a = if has_alpha && parts.len() >= 4 {
+        parts[3].parse::<f64>().unwrap_or(1.0)
+    } else {
+        1.0
+    };
+    (
+        r.clamp(0.0, 1.0),
+        g.clamp(0.0, 1.0),
+        b.clamp(0.0, 1.0),
+        a.clamp(0.0, 1.0),
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -348,10 +401,72 @@ fn add_line_vertices(line: &PaintLine, positions: &mut Vec<f32>, colors: &mut Ve
 /// let png = paint_codec_png::encode_png(&pixels);
 /// std::fs::write("qr.png", png).unwrap();
 /// ```
-pub fn render(scene: &PaintScene) -> PixelContainer {
-    unsafe { render_unsafe(scene) }
+/// Live-drawable rendering to a CAMetalLayer.
+///
+/// Renders the scene to a `PixelContainer` via the existing `render`
+/// path, then uploads the pixels to the `CAMetalLayer`'s current
+/// drawable and presents. Intended for the
+/// `markdown-reader` binary that drives a window's redraw loop.
+///
+/// Takes the layer as an `Id` (the raw CAMetalLayer pointer). Panics
+/// on non-Apple targets since CAMetalLayer has no equivalent
+/// elsewhere; callers should gate with `#[cfg(target_vendor =
+/// "apple")]`.
+///
+/// Returns an error if the layer has no current drawable (can happen
+/// briefly during a resize).
+#[cfg(target_vendor = "apple")]
+pub fn render_to_metal_layer(
+    scene: &PaintScene,
+    metal_layer: objc_bridge::Id,
+) -> Result<(), PaintMetalError> {
+    let pixels = render(scene);
+    unsafe { live_present::present_pixels_to_layer(metal_layer, &pixels) }
 }
 
+/// Errors from the live-drawable render path.
+#[cfg(target_vendor = "apple")]
+#[derive(Debug, Clone)]
+pub enum PaintMetalError {
+    NoDrawableAvailable,
+    LayerMissingDevice,
+    CommandBufferCreationFailed,
+}
+
+#[cfg(target_vendor = "apple")]
+impl std::fmt::Display for PaintMetalError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NoDrawableAvailable => write!(f, "CAMetalLayer had no current drawable"),
+            Self::LayerMissingDevice => write!(f, "CAMetalLayer had no MTLDevice"),
+            Self::CommandBufferCreationFailed => {
+                write!(f, "MTLCommandQueue.commandBuffer returned nil")
+            }
+        }
+    }
+}
+
+#[cfg(target_vendor = "apple")]
+impl std::error::Error for PaintMetalError {}
+
+#[cfg(target_vendor = "apple")]
+pub fn render(scene: &PaintScene) -> PixelContainer {
+    let mut pixels = unsafe { render_unsafe(scene) };
+    // After Metal finishes rasterizing rects/lines, overlay any
+    // `coretext:` PaintGlyphRun instructions via CoreText's
+    // glyph-drawing API. CoreText draws directly into a CG bitmap
+    // context wrapping the same RGBA bytes, so no extra allocation
+    // is required. The overlay pass runs once, at the end — so glyph
+    // runs render on top of whatever Metal rasterized. For typical
+    // Markdown (background rects below, text above) this produces
+    // correct painter's-algorithm output.
+    unsafe {
+        glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
+    }
+    pixels
+}
+
+#[cfg(target_vendor = "apple")]
 unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     let width = scene.width as u32;
     let height = scene.height as u32;
@@ -452,6 +567,7 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
 // Metal helper functions
 // ---------------------------------------------------------------------------
 
+#[cfg(target_vendor = "apple")]
 unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
     // Build the texture descriptor manually instead of using the class method —
     // objc_msgSend with mixed integer types can cause alignment issues on arm64.
@@ -473,6 +589,7 @@ unsafe fn create_offscreen_texture(device: Id, width: u32, height: u32) -> Id {
     texture
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
     let source_ns = nsstring(source);
     let options: Id = ptr::null_mut();
@@ -489,6 +606,7 @@ unsafe fn compile_shader_library(device: Id, source: &str) -> Id {
     library
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn create_rect_pipeline(device: Id) -> Id {
     let library = compile_shader_library(device, RECT_SHADER_SOURCE);
 
@@ -523,6 +641,7 @@ unsafe fn create_rect_pipeline(device: Id) -> Id {
     pipeline
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn setup_pipeline_color_attachment(desc: Id) {
     let attachments = msg_send_id(desc, "colorAttachments");
     let att0: Id = msg!(attachments, "objectAtIndexedSubscript:", 0usize);
@@ -537,6 +656,7 @@ unsafe fn setup_pipeline_color_attachment(desc: Id) {
     msg!(att0, "setDestinationAlphaBlendFactor:", 5usize); // oneMinusSourceAlpha
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
     let byte_len = data.len() * std::mem::size_of::<f32>();
     // MTLResourceStorageModeShared = 0
@@ -548,6 +668,7 @@ unsafe fn create_buffer(device: Id, data: &[f32]) -> Id {
     buffer
 }
 
+#[cfg(target_vendor = "apple")]
 unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContainer {
     let bytes_per_row = (width as usize) * 4;
     let total_bytes = bytes_per_row * (height as usize);
@@ -582,10 +703,384 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
 }
 
 // ---------------------------------------------------------------------------
+// CoreText glyph-run overlay (Apple only)
+// ---------------------------------------------------------------------------
+//
+// The Metal render pass above rasterizes rects / lines / groups / clips
+// into RGBA bytes. To render text, we resolve `PaintGlyphRun`
+// instructions with `font_ref` starting `"coretext:"` by wrapping the
+// RGBA pixel buffer in a `CGBitmapContext` and calling `CTFontDrawGlyphs`.
+//
+// The font_ref string carries everything needed to recreate the
+// CTFontRef: `"coretext:<PostScript-name>@<size>"`. We parse it and
+// call `CTFontCreateWithName` per run. Creating a CTFontRef is cheap —
+// CoreText caches internally — so this is acceptable for v1 without
+// a separate font registry.
+
+#[cfg(target_vendor = "apple")]
+mod glyph_run_overlay {
+    use objc_bridge::{
+        cfstring_checked, CFRelease, CGAffineTransform, CGBitmapContextCreate,
+        CGColorSpaceCreateDeviceRGB, CGColorSpaceRelease, CGContextRelease,
+        CGContextRestoreGState, CGContextSaveGState, CGContextSetRGBFillColor,
+        CGContextSetShouldAntialias, CGContextSetShouldSmoothFonts, CGContextSetTextMatrix,
+        CGPoint, CTFontCreateWithName, CTFontDrawGlyphs, CGContextRef, Id,
+        K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST, K_CG_BITMAP_BYTE_ORDER_32_LITTLE, NIL,
+    };
+    use paint_instructions::{
+        PaintGlyphRun, PaintInstruction, PaintScene, PixelContainer,
+    };
+
+    pub(super) unsafe fn overlay_coretext_glyph_runs(
+        scene: &PaintScene,
+        pixels: &mut PixelContainer,
+    ) {
+        let width = pixels.width as usize;
+        let height = pixels.height as usize;
+        if width == 0 || height == 0 {
+            return;
+        }
+
+        let runs = collect_coretext_runs(&scene.instructions);
+        if runs.is_empty() {
+            return;
+        }
+
+        // Wrap the existing pixel buffer in a CG bitmap context.
+        // MTLPixelFormatRGBA8Unorm lays bytes as R,G,B,A; CoreGraphics'
+        // closest match on Apple platforms is BGRA premultiplied with
+        // little-endian byte order. Since we're only *adding* text
+        // (most pixels are background anyway), minor byte-order
+        // mismatch would manifest as subtly wrong text color. We use
+        // PREMULTIPLIED_FIRST + BYTE_ORDER_32_LITTLE which yields an
+        // ARGB layout compatible with most Core Graphics usage. If
+        // colors look off in the end-to-end integration we can flip
+        // to alpha-last.
+        let color_space = CGColorSpaceCreateDeviceRGB();
+        if color_space.is_null() {
+            return;
+        }
+
+        // Cast the PixelContainer's immutable data pointer to mutable.
+        // CGBitmapContextCreate needs a mutable pointer; the caller
+        // holds exclusive access to `pixels` via the `&mut` in this
+        // function's signature, so this is safe per Rust's aliasing
+        // rules.
+        let data_ptr = pixels.data.as_ptr() as *mut std::ffi::c_void;
+
+        let ctx: CGContextRef = CGBitmapContextCreate(
+            data_ptr,
+            width,
+            height,
+            8,
+            width * 4,
+            color_space,
+            K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST | K_CG_BITMAP_BYTE_ORDER_32_LITTLE,
+        );
+        CGColorSpaceRelease(color_space);
+        if ctx.is_null() {
+            return;
+        }
+
+        CGContextSaveGState(ctx);
+        CGContextSetShouldAntialias(ctx, true);
+        CGContextSetShouldSmoothFonts(ctx, true);
+
+        // NO CTM manipulation — keep CG's native Y-up convention.
+        // Instead, convert each glyph's scene Y-down baseline to
+        // CG Y-up inside `draw_one_glyph_run` by doing
+        // cg_y = height - scene_y. This avoids the CTM/text-matrix
+        // interaction that made a naive Y-flip produce mirrored or
+        // missing glyphs.
+        CGContextSetTextMatrix(ctx, CGAffineTransform::IDENTITY);
+
+        for gr in runs {
+            draw_one_glyph_run(ctx, gr, height as f64);
+        }
+
+        CGContextRestoreGState(ctx);
+        CGContextRelease(ctx);
+    }
+
+    fn collect_coretext_runs(
+        instructions: &[PaintInstruction],
+    ) -> Vec<&PaintGlyphRun> {
+        let mut out: Vec<&PaintGlyphRun> = Vec::new();
+        fn walk<'a>(
+            ins: &'a [PaintInstruction],
+            out: &mut Vec<&'a PaintGlyphRun>,
+        ) {
+            for i in ins {
+                match i {
+                    PaintInstruction::GlyphRun(g) => {
+                        if g.font_ref.starts_with("coretext:") {
+                            out.push(g);
+                        }
+                    }
+                    PaintInstruction::Group(grp) => walk(&grp.children, out),
+                    PaintInstruction::Clip(c) => walk(&c.children, out),
+                    PaintInstruction::Layer(l) => walk(&l.children, out),
+                    _ => {}
+                }
+            }
+        }
+        walk(instructions, &mut out);
+        out
+    }
+
+    unsafe fn draw_one_glyph_run(ctx: CGContextRef, run: &PaintGlyphRun, image_height: f64) {
+        // Parse "coretext:<ps_name>@<size>". Size falls back to
+        // run.font_size if the suffix is missing or malformed.
+        let (ps_name, size_from_ref) = parse_coretext_font_ref(&run.font_ref);
+        let size = size_from_ref.unwrap_or(run.font_size);
+
+        let cf_name = match cfstring_checked(&ps_name) {
+            Some(s) => s,
+            None => return,
+        };
+        let font: Id = CTFontCreateWithName(cf_name, size, std::ptr::null());
+        CFRelease(cf_name);
+        if font == NIL {
+            return;
+        }
+
+        // Set fill color from run.fill (CSS string). Default: black.
+        let (r, g, b, a) = parse_css_color(run.fill.as_deref().unwrap_or("rgb(0, 0, 0)"));
+        CGContextSetRGBFillColor(ctx, r, g, b, a);
+
+        // Convert scene Y-down to CG Y-up: cg_y = height - scene_y.
+        // The bitmap context stores row 0 at byte 0 (Metal's output
+        // convention). CG's default coord system has origin at
+        // bottom-left with Y-up, which when mapped to that byte
+        // layout means CG(x, y=H) writes to the first row (image
+        // top) and CG(x, y=0) writes to the last row (image bottom).
+        // So a glyph baseline at scene_y (Y-down from image top)
+        // corresponds to CG cg_y = H - scene_y. With text matrix
+        // identity, glyph ascenders rise toward positive CG-y =
+        // toward the top of the image. Correct right-side-up.
+        let glyph_ids: Vec<u16> = run.glyphs.iter().map(|g| g.glyph_id as u16).collect();
+        let positions: Vec<CGPoint> = run
+            .glyphs
+            .iter()
+            .map(|g| CGPoint {
+                x: g.x,
+                y: image_height - g.y,
+            })
+            .collect();
+
+        if !glyph_ids.is_empty() {
+            CTFontDrawGlyphs(
+                font,
+                glyph_ids.as_ptr(),
+                positions.as_ptr(),
+                glyph_ids.len(),
+                ctx,
+            );
+        }
+        CFRelease(font);
+    }
+
+    /// Parse `"coretext:PSName@Size"` into `(PSName, Some(size))`.
+    /// Malformed inputs return `(stripped, None)`.
+    fn parse_coretext_font_ref(s: &str) -> (String, Option<f64>) {
+        let rest = s.strip_prefix("coretext:").unwrap_or(s);
+        if let Some(at_idx) = rest.rfind('@') {
+            let name = &rest[..at_idx];
+            let size_str = &rest[at_idx + 1..];
+            let size = size_str.parse::<f64>().ok();
+            return (name.to_string(), size);
+        }
+        (rest.to_string(), None)
+    }
+
+    /// Parse a subset of CSS colours into (r, g, b, a) in 0..=1.
+    /// Supports `rgb(r, g, b)` and `rgba(r, g, b, a)` with decimal
+    /// r,g,b in 0..=255 and a in 0..=1. Falls back to opaque black.
+    fn parse_css_color(s: &str) -> (f64, f64, f64, f64) {
+        let s = s.trim();
+        let (inner, has_alpha) = if let Some(i) = s.strip_prefix("rgba(").and_then(|x| x.strip_suffix(")")) {
+            (i, true)
+        } else if let Some(i) = s.strip_prefix("rgb(").and_then(|x| x.strip_suffix(")")) {
+            (i, false)
+        } else {
+            return (0.0, 0.0, 0.0, 1.0);
+        };
+        let parts: Vec<&str> = inner.split(',').map(|p| p.trim()).collect();
+        if parts.len() < 3 {
+            return (0.0, 0.0, 0.0, 1.0);
+        }
+        let r = parts[0].parse::<f64>().unwrap_or(0.0) / 255.0;
+        let g = parts[1].parse::<f64>().unwrap_or(0.0) / 255.0;
+        let b = parts[2].parse::<f64>().unwrap_or(0.0) / 255.0;
+        let a = if has_alpha && parts.len() >= 4 {
+            parts[3].parse::<f64>().unwrap_or(1.0)
+        } else {
+            1.0
+        };
+        (r.clamp(0.0, 1.0), g.clamp(0.0, 1.0), b.clamp(0.0, 1.0), a.clamp(0.0, 1.0))
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn parse_coretext_font_ref_full() {
+            let (name, size) = parse_coretext_font_ref("coretext:Helvetica-Bold@16.0");
+            assert_eq!(name, "Helvetica-Bold");
+            assert_eq!(size, Some(16.0));
+        }
+
+        #[test]
+        fn parse_coretext_font_ref_malformed_no_at() {
+            let (name, size) = parse_coretext_font_ref("coretext:Helvetica-Bold");
+            assert_eq!(name, "Helvetica-Bold");
+            assert_eq!(size, None);
+        }
+
+        #[test]
+        fn parse_coretext_font_ref_non_numeric_size() {
+            let (name, size) = parse_coretext_font_ref("coretext:Helvetica@abc");
+            assert_eq!(name, "Helvetica");
+            assert_eq!(size, None);
+        }
+
+        #[test]
+        fn parse_css_color_rgb() {
+            let (r, g, b, a) = parse_css_color("rgb(255, 128, 0)");
+            assert!((r - 1.0).abs() < 1e-6);
+            assert!((g - 128.0 / 255.0).abs() < 1e-6);
+            assert!((b - 0.0).abs() < 1e-6);
+            assert_eq!(a, 1.0);
+        }
+
+        #[test]
+        fn parse_css_color_rgba() {
+            let (_r, _g, _b, a) = parse_css_color("rgba(0, 0, 0, 0.5)");
+            assert!((a - 0.5).abs() < 1e-6);
+        }
+
+        #[test]
+        fn parse_css_color_malformed_returns_black() {
+            let (r, g, b, a) = parse_css_color("not-a-color");
+            assert_eq!((r, g, b, a), (0.0, 0.0, 0.0, 1.0));
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Live-drawable present (Apple only)
+// ---------------------------------------------------------------------------
+//
+// Takes the RGBA pixel buffer produced by `render()` and uploads it
+// into a CAMetalLayer's current drawable via MTLTexture.replaceRegion,
+// then presents. This is the path the markdown-reader binary uses to
+// display a scene in a live window — no offscreen file I/O, no copy
+// back through the CPU beyond the initial render's readback.
+
+#[cfg(target_vendor = "apple")]
+mod live_present {
+    use objc_bridge::{
+        msg, MTLOrigin, MTLRegion, MTLSize,
+        Id, NIL,
+    };
+    use paint_instructions::PixelContainer;
+
+    use super::PaintMetalError;
+
+    pub(super) unsafe fn present_pixels_to_layer(
+        layer: Id,
+        pixels: &PixelContainer,
+    ) -> Result<(), PaintMetalError> {
+        if layer == NIL {
+            return Err(PaintMetalError::LayerMissingDevice);
+        }
+        let drawable: Id = msg!(layer, "nextDrawable");
+        if drawable == NIL {
+            return Err(PaintMetalError::NoDrawableAvailable);
+        }
+
+        let texture: Id = msg!(drawable, "texture");
+        if texture == NIL {
+            return Err(PaintMetalError::NoDrawableAvailable);
+        }
+
+        // Drawable pixel format is BGRA8Unorm (set on the layer by
+        // window-appkit). paint-metal's render() produces RGBA8.
+        // Byte-swap R and B in a one-shot temporary buffer before
+        // uploading so the drawable displays with correct colours.
+        let w = pixels.width as usize;
+        let h = pixels.height as usize;
+        if w == 0 || h == 0 {
+            return Ok(());
+        }
+
+        let mut bgra = pixels.data.clone();
+        let stride = w * 4;
+        for row in 0..h {
+            for col in 0..w {
+                let base = row * stride + col * 4;
+                bgra.swap(base, base + 2); // swap R and B
+            }
+        }
+
+        let region = MTLRegion {
+            origin: MTLOrigin { x: 0, y: 0, z: 0 },
+            size: MTLSize {
+                width: w as u64,
+                height: h as u64,
+                depth: 1,
+            },
+        };
+
+        // [texture replaceRegion:mipmapLevel:withBytes:bytesPerRow:]
+        // This is a 4-arg Objective-C call; construct the function
+        // pointer explicitly.
+        use objc_bridge::objc_msgSend;
+        let replace_fn: unsafe extern "C" fn(
+            Id,
+            objc_bridge::Sel,
+            MTLRegion,
+            usize,
+            *const std::ffi::c_void,
+            usize,
+        ) = std::mem::transmute(objc_msgSend as *const ());
+        replace_fn(
+            texture,
+            objc_bridge::sel("replaceRegion:mipmapLevel:withBytes:bytesPerRow:"),
+            region,
+            0,
+            bgra.as_ptr() as *const _,
+            stride,
+        );
+
+        // Present via a command buffer created from the layer's
+        // device's default queue.
+        let device: Id = msg!(layer, "device");
+        if device == NIL {
+            return Err(PaintMetalError::LayerMissingDevice);
+        }
+        let queue: Id = msg!(device, "newCommandQueue");
+        if queue == NIL {
+            return Err(PaintMetalError::CommandBufferCreationFailed);
+        }
+        let cmd_buffer: Id = msg!(queue, "commandBuffer");
+        if cmd_buffer == NIL {
+            objc_bridge::release(queue);
+            return Err(PaintMetalError::CommandBufferCreationFailed);
+        }
+        let _: Id = msg!(cmd_buffer, "presentDrawable:", drawable);
+        let _: Id = msg!(cmd_buffer, "commit");
+        objc_bridge::release(queue);
+        Ok(())
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
 
-#[cfg(test)]
+#[cfg(all(test, target_vendor = "apple"))]
 mod tests {
     use super::*;
     use paint_instructions::{PaintBase, PaintInstruction, PaintRect, PaintScene};

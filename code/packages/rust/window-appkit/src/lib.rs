@@ -332,6 +332,32 @@ impl AppKitBackend {
         let scale_factor = 1.0;
         let physical_size = attributes.initial_size.to_physical(scale_factor)?;
 
+        // Build the Metal-layer host when the caller asked for one.
+        // The attachment sequence here matches Apple's recommended
+        // setup for hosting a CAMetalLayer inside an NSView:
+        //
+        //   1. Create a CAMetalLayer instance.
+        //   2. Assign the system default MTLDevice.
+        //   3. Configure pixelFormat (BGRA8 is the Metal-friendly
+        //      default that maps 1:1 with the drawable format our
+        //      paint-metal renderer already uses for its offscreen
+        //      textures).
+        //   4. Size the layer's frame to match the view's bounds.
+        //   5. Turn on the view's layer hosting and install our
+        //      CAMetalLayer as the view's backing layer.
+        let metal_layer = match surface {
+            AppKitSurfaceChoice::View => None,
+            AppKitSurfaceChoice::MetalLayer => {
+                match attach_metal_layer(view) {
+                    Ok(layer) => Some(layer as usize),
+                    Err(e) => {
+                        release(window);
+                        return Err(e);
+                    }
+                }
+            }
+        };
+
         Ok(AppKitWindow {
             id: WindowId(self.next_id),
             logical_size: attributes.initial_size,
@@ -339,13 +365,74 @@ impl AppKitBackend {
             scale_factor,
             ns_window: window as usize,
             ns_view: view as usize,
-            metal_layer: match surface {
-                AppKitSurfaceChoice::View => None,
-                AppKitSurfaceChoice::MetalLayer => None,
-            },
+            metal_layer,
         })
     }
 }
+
+/// Attach a freshly-created `CAMetalLayer` to the given `NSView`.
+///
+/// Returns the layer's `Id` pointer on success. The layer is retained
+/// internally by the view; the window's `Drop` implementation releases
+/// the view (and, transitively, the layer).
+#[cfg(target_vendor = "apple")]
+unsafe fn attach_metal_layer(view: Id) -> Result<Id, WindowError> {
+    use objc_bridge::{
+        msg, MTLCreateSystemDefaultDevice, MTL_PIXEL_FORMAT_BGRA8_UNORM,
+    };
+
+    let layer_class = class("CAMetalLayer");
+    if layer_class.is_null() {
+        return Err(WindowError::backend(
+            "CAMetalLayer class not available — QuartzCore framework not linked?",
+        ));
+    }
+
+    // [[CAMetalLayer alloc] init]
+    let layer: Id = msg!(msg_send_class(layer_class, "alloc"), "init");
+    if layer.is_null() {
+        return Err(WindowError::backend("CAMetalLayer allocation failed"));
+    }
+
+    let device = MTLCreateSystemDefaultDevice();
+    if device.is_null() {
+        release(layer);
+        return Err(WindowError::backend(
+            "MTLCreateSystemDefaultDevice returned nil",
+        ));
+    }
+    let _: Id = msg!(layer, "setDevice:", device);
+    let _: Id = msg!(layer, "setPixelFormat:", MTL_PIXEL_FORMAT_BGRA8_UNORM);
+    // framebufferOnly = NO so paint-metal can read the drawable's
+    // texture back when diagnostics or snapshot tests want to.
+    let _: Id = msg!(layer, "setFramebufferOnly:", false as c_int);
+
+    // Mirror the view's current bounds into the layer's frame.
+    let bounds: objc_bridge::CGRect = {
+        // We can't use msg! for a struct-returning selector generically —
+        // use a typed function pointer via msg_send_bounds.
+        msg_send_bounds(view)
+    };
+    let _: Id = msg!(layer, "setFrame:", bounds);
+
+    // [view setWantsLayer:YES]; [view setLayer:layer];
+    let _: Id = msg!(view, "setWantsLayer:", true as c_int);
+    let _: Id = msg!(view, "setLayer:", layer);
+
+    Ok(layer)
+}
+
+/// Call `[view bounds]` — a CGRect-returning selector. Rust's msg!
+/// macro is Id-returning only; for struct returns on arm64 we use
+/// `objc_msgSend_stret` pattern via a typed function cast.
+#[cfg(target_vendor = "apple")]
+unsafe fn msg_send_bounds(view: Id) -> objc_bridge::CGRect {
+    use objc_bridge::{objc_msgSend, sel};
+    let fn_ptr: unsafe extern "C" fn(Id, objc_bridge::Sel) -> objc_bridge::CGRect =
+        std::mem::transmute(objc_msgSend as *const ());
+    fn_ptr(view, sel("bounds"))
+}
+
 
 impl WindowBackend for AppKitBackend {
     type Window = AppKitWindow;

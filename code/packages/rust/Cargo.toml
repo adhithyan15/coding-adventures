@@ -329,6 +329,7 @@ members = [
     "layout-ir",
     "layout-block",
     "layout-text-measure-native",
+    "layout-to-paint",
     "document-ast-to-layout",
     "udp-client",
     "state-machine-markup-serializer",
