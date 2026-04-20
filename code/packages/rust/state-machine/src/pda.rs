@@ -309,17 +309,14 @@ impl PushdownAutomaton {
     ///
     /// Returns `Err` if no transition matches.
     pub fn process(&mut self, event: &str) -> Result<String, String> {
-        let t = self
-            .find_transition(Some(event))
-            .cloned()
-            .ok_or_else(|| {
-                format!(
-                    "No transition for (state='{}', event={:?}, stack_top={:?})",
-                    self.current,
-                    event,
-                    self.stack_top()
-                )
-            })?;
+        let t = self.find_transition(Some(event)).cloned().ok_or_else(|| {
+            format!(
+                "No transition for (state='{}', event={:?}, stack_top={:?})",
+                self.current,
+                event,
+                self.stack_top()
+            )
+        })?;
         self.apply_transition(&t);
         Ok(self.current.clone())
     }
