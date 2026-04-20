@@ -69,8 +69,12 @@ uses software RAM to emulate the stack, giving 4 total levels.
 
 ## Feedback Vector
 
-Each `CallFrame` allocates a feedback vector of `code.feedback_slot_count` slots,
-initialized to `:uninitialized`.
+For **FULLY_TYPED** functions (`code.feedback_slot_count == 0`), no feedback vector is
+allocated. The call frame's `feedback_vector` field is set to an empty list `[]` and
+the VM never writes to it. This saves both RAM and one Python list allocation per call.
+
+For all other functions, each `CallFrame` allocates a feedback vector of
+`code.feedback_slot_count` slots, initialized to `:uninitialized`.
 
 ```python
 class SlotKind(enum.Enum):
@@ -108,6 +112,26 @@ megamorphic   → megamorphic    (stays megamorphic forever)
 Once megamorphic, the slot is never downgraded. This matches V8's behavior.
 
 ---
+
+## Pre-execution: Immediate JIT Queue Population
+
+Before the dispatch loop begins, the VM walks all top-level function `CodeObject`s and
+populates the `immediate_jit_queue` with any that have `immediate_jit_eligible = True`:
+
+```python
+def execute(self, code: CodeObject) -> int:
+    # Populate the immediate JIT queue before first instruction
+    for fn in code.functions:
+        if fn.immediate_jit_eligible:
+            self.metrics.immediate_jit_queue.append(fn.name)
+    # The JIT (if attached) drains this queue and compiles before the loop starts.
+    # The interpreter proceeds regardless — compiled code is used on first call.
+    ...
+```
+
+When the JIT is attached (via `TetradJIT.execute_with_jit`), it drains this queue and
+compiles each FULLY_TYPED function **before the first instruction of main executes**.
+This guarantees zero-warmup for typed functions: the very first call goes to native code.
 
 ## Dispatch Loop
 
@@ -223,6 +247,11 @@ class VMMetrics:
 
     # Total instructions executed
     total_instructions: int
+
+    # Functions queued for immediate JIT compilation (FULLY_TYPED functions).
+    # The JIT reads this queue and compiles these before they are first called.
+    # This is the mechanism by which typed functions skip warmup entirely.
+    immediate_jit_queue: list[str]   # function names, in declaration order
 
 @dataclass
 class BranchStats:

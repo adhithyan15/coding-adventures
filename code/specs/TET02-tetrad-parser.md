@@ -47,6 +47,8 @@ The root of every AST.
 class FnDecl:
     name: str
     params: list[str]
+    param_types: list[str | None]   # parallel to params; None = no annotation
+    return_type: str | None         # None = no return type annotation
     body: Block
     line: int
     column: int
@@ -54,6 +56,7 @@ class FnDecl:
 @dataclass
 class GlobalDecl:
     name: str
+    declared_type: str | None       # None = no annotation
     value: Expr
     line: int
     column: int
@@ -74,6 +77,7 @@ class Block:
 @dataclass
 class LetStmt:
     name: str
+    declared_type: str | None       # None = no annotation
     value: Expr
     line: int
     column: int
@@ -288,10 +292,14 @@ def parse_stmt() -> Stmt:
 def parse_let_stmt() -> LetStmt:
     expect(KW_LET)
     name = expect(IDENT).value
+    declared_type = None
+    if peek().type == COLON:
+        advance()
+        declared_type = parse_type()   # currently: expect KW_U8, return "u8"
     expect(EQ)
     value = parse_expr()
     expect(SEMI)
-    return LetStmt(name=name, value=value)
+    return LetStmt(name=name, declared_type=declared_type, value=value)
 ```
 
 ### Assign Statement
@@ -419,14 +427,37 @@ def parse_fn_decl() -> FnDecl:
     name = expect(IDENT).value
     expect(LPAREN)
     params = []
+    param_types = []
     if peek().type != RPAREN:
-        params.append(expect(IDENT).value)
+        pname, ptype = parse_param()
+        params.append(pname)
+        param_types.append(ptype)
         while peek().type == COMMA:
             advance()
-            params.append(expect(IDENT).value)
+            pname, ptype = parse_param()
+            params.append(pname)
+            param_types.append(ptype)
     expect(RPAREN)
+    return_type = None
+    if peek().type == ARROW:
+        advance()
+        return_type = parse_type()
     body = parse_block()
-    return FnDecl(name=name, params=params, body=body)
+    return FnDecl(name=name, params=params, param_types=param_types,
+                  return_type=return_type, body=body)
+
+def parse_param() -> tuple[str, str | None]:
+    """Parse 'NAME' or 'NAME : type'."""
+    name = expect(IDENT).value
+    if peek().type == COLON:
+        advance()
+        return name, parse_type()
+    return name, None
+
+def parse_type() -> str:
+    """Parse a type annotation. Currently only 'u8' is valid."""
+    tok = expect(KW_U8)
+    return "u8"
 ```
 
 ### Global Declaration
@@ -441,10 +472,14 @@ Same syntax as a let-statement, but at the top level it becomes a `GlobalDecl`.
 def parse_global_decl() -> GlobalDecl:
     expect(KW_LET)
     name = expect(IDENT).value
+    declared_type = None
+    if peek().type == COLON:
+        advance()
+        declared_type = parse_type()
     expect(EQ)
     value = parse_expr()
     expect(SEMI)
-    return GlobalDecl(name=name, value=value)
+    return GlobalDecl(name=name, declared_type=declared_type, value=value)
 ```
 
 ---
@@ -460,6 +495,8 @@ The parser raises `ParseError` for:
 | Unexpected token at top level | `expected fn or let at top level, got Y at line N col C` |
 | Call with no closing paren | `unclosed argument list for call to 'name'` |
 | `in` used without `()` | `in must be called as in(), not as a bare name` |
+| `:` followed by unknown type name | `unknown type 'foo'; only 'u8' is valid` |
+| `->` with no following type | `expected type after '->', got EOF` |
 
 The parser does not attempt error recovery in v1. The first `ParseError` aborts parsing.
 

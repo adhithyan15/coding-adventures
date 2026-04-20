@@ -172,6 +172,8 @@ The Python VM mocks these with stdin/stdout.
 A `CodeObject` is the compiled form of one function or the top-level program.
 
 ```python
+from tetrad_type_checker.types import FunctionTypeStatus
+
 @dataclass
 class CodeObject:
     name: str                       # function name or "<main>"
@@ -182,10 +184,16 @@ class CodeObject:
     functions: list[CodeObject]     # nested function pool (callee CodeObjects)
     register_count: int             # how many registers this function needs (0–8)
     feedback_slot_count: int        # size of feedback vector to allocate at call time
+                                    # 0 for FULLY_TYPED functions (no slots emitted)
+    type_status: FunctionTypeStatus # FULLY_TYPED | PARTIALLY_TYPED | UNTYPED
+    immediate_jit_eligible: bool    # True iff type_status == FULLY_TYPED
     source_map: list[tuple[int,int,int]]
     # source_map[i] = (instruction_offset, line, column)
     # maps bytecode offsets back to source positions for error messages
 ```
+
+`immediate_jit_eligible` is a convenience flag derived from `type_status`. The VM and
+JIT read this flag rather than re-checking the type status on every call.
 
 ### Instruction Format
 
@@ -210,6 +218,48 @@ uses the index. The names are kept in the CodeObject for debuggers and error mes
 Top-level functions go into the main program's `functions` list.
 
 ---
+
+## Two-Path Compilation (Typed vs Untyped)
+
+The compiler receives a `TypeCheckResult` alongside the AST. For each binary operation,
+it consults the type map to decide which instruction format to emit:
+
+```
+Op with both operands known u8 (from type map):
+  → emit 2-byte instruction (opcode + register, NO slot)
+  → feedback_slot_count unchanged
+
+Op with at least one Unknown operand:
+  → emit 3-byte instruction (opcode + register + slot index)
+  → feedback_slot_count++
+```
+
+This is the **core payoff of the type checker**. A fully-typed function emits no slot
+bytes anywhere in its body. On the 4004, this saves ROM and eliminates the feedback
+vector RAM allocation entirely.
+
+A FULLY_TYPED function also has `immediate_jit_eligible = True`, which the VM uses to
+queue it for JIT compilation before it even runs once.
+
+```python
+def emit_binary_op(op: int, r: int, left_node: Expr, right_node: Expr,
+                   type_map: dict, state: CompilerState):
+    left_ty  = type_map.get(id(left_node), TypeInfo("Unknown")).ty
+    right_ty = type_map.get(id(right_node), TypeInfo("Unknown")).ty
+    if left_ty == "u8" and right_ty == "u8":
+        # Statically typed — no feedback slot
+        state.code.instructions.append(Instruction(op, [r]))
+    else:
+        # Dynamic — allocate and emit slot
+        slot = state.next_slot
+        state.next_slot += 1
+        state.code.instructions.append(Instruction(op | 0x80, [r, slot]))
+        # (The high bit convention differentiates slotted from non-slotted variants;
+        #  the VM dispatch loop checks this bit to decide whether to record feedback)
+```
+
+Note: the instruction set (section above) lists both variants explicitly. The compiler
+always emits the correct variant; no runtime switch is needed.
 
 ## Compiler Algorithm
 
@@ -524,15 +574,16 @@ Depends on `coding-adventures-tetrad-lexer` and `coding-adventures-tetrad-parser
 ### Public API
 
 ```python
-from tetrad_compiler import compile_program, CompilerError
+from tetrad_compiler import compile_program, compile_checked, CompilerError
 from tetrad_compiler.bytecode import CodeObject, Instruction
 
-# Compile a Tetrad source string to a CodeObject.
-# Raises LexError, ParseError, or CompilerError on failure.
+# Lex + parse + type-check + compile in one call.
+# Raises LexError, ParseError, TypeError, or CompilerError on failure.
 def compile_program(source: str) -> CodeObject: ...
 
-# Compile an already-parsed AST.
-def compile_ast(program: Program) -> CodeObject: ...
+# Compile from a pre-built TypeCheckResult (preferred — avoids re-running the checker).
+# Raises CompilerError if TypeCheckResult.errors is non-empty.
+def compile_checked(result: TypeCheckResult) -> CodeObject: ...
 
 class CompilerError(Exception):
     def __init__(self, message: str, line: int, column: int): ...

@@ -45,6 +45,7 @@ token rather than an `IDENT` token. The reserved words and their token types are
 | `return` | `KW_RETURN` |
 | `in` | `KW_IN` |
 | `out` | `KW_OUT` |
+| `u8` | `KW_U8` |
 
 Any identifier that is not a reserved word produces an `IDENT` token carrying the name
 as a string.
@@ -72,8 +73,10 @@ as a string.
 | `>=` | `GT_EQ` | Greedy: `>=` before `>` |
 | `&&` | `AMP_AMP` | |
 | `\|\|` | `PIPE_PIPE` | |
+| `->` | `ARROW` | Return type annotation; greedy: scanned before `-` |
 | `!` | `BANG` | |
 | `=` | `EQ` | Assignment; not equality |
+| `:` | `COLON` | Type annotation separator |
 | `(` | `LPAREN` | |
 | `)` | `RPAREN` | |
 | `{` | `LBRACE` | |
@@ -172,8 +175,8 @@ procedure scan_ident_or_keyword() → Token:
 ### Scanning Punctuation (multi-character operators)
 
 The lexer uses a greedy (maximal munch) strategy: always consume the longest valid token.
-The two-character operators (`<<`, `>>`, `==`, `!=`, `<=`, `>=`, `&&`, `||`) must be
-checked before their one-character prefixes:
+The two-character operators (`<<`, `>>`, `==`, `!=`, `<=`, `>=`, `&&`, `||`, `->`) must
+be checked before their one-character prefixes (`<`, `>`, `=`, `!`, `&`, `|`, `-`):
 
 ```
 procedure scan_punctuation() → Token:
@@ -307,6 +310,7 @@ class TokenType(enum.Enum):
     KW_RETURN = "KW_RETURN"
     KW_IN = "KW_IN"
     KW_OUT = "KW_OUT"
+    KW_U8 = "KW_U8"
     PLUS = "PLUS"
     MINUS = "MINUS"
     STAR = "STAR"
@@ -328,6 +332,8 @@ class TokenType(enum.Enum):
     PIPE_PIPE = "PIPE_PIPE"
     BANG = "BANG"
     EQ = "EQ"
+    ARROW = "ARROW"
+    COLON = "COLON"
     LPAREN = "LPAREN"
     RPAREN = "RPAREN"
     LBRACE = "LBRACE"

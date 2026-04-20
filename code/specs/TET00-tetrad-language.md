@@ -111,24 +111,44 @@ fewer than 20.
 
 ## Type System
 
-Tetrad v1 has a single type: **u8** — an unsigned 8-bit integer (0–255).
+Tetrad uses **gradual typing**: type annotations on function parameters and return values
+are optional. A program with no annotations behaves exactly as Tetrad v1. A fully-typed
+program unlocks a faster compilation path.
 
-This is the only type that makes practical sense given the 4004's architecture:
+### Concrete Type
+
+In v1 there is exactly one concrete type: **u8** — an unsigned 8-bit integer (0–255).
 - Stored in one 4004 register pair (two 4-bit nibbles = one 8-bit byte)
 - Wraps on overflow (modular arithmetic)
 - No sign bit, no fractions, no pointers
 
-Arithmetic wraps at 256. There are no overflow errors — this matches the 4004's hardware
-behavior for 8-bit register pairs.
+When a Lisp front-end is added, the type vocabulary expands: `u8`, `pair`, `symbol`,
+`closure`, `bool`, `nil`. The type checker infrastructure (spec TET02b) accommodates
+this without structural change.
 
-### Why Only u8?
+### The Three-Tier Acceleration Model
 
-The feedback vector machinery (spec TET03) is present in v1 even though all values are
-u8 and feedback is always monomorphic. This is intentional: when a Lisp front-end later
-compiles to the same bytecode, it will introduce dynamically-typed values (integers,
-pairs, symbols, closures). The JIT will read those feedback slots and specialize. By
-wiring the slots in from the start, the interpreter does not need to change when the
-Lisp compiler arrives.
+Type annotations determine how aggressively the pipeline optimises a function:
+
+| Tier | Annotations present | Feedback slots emitted | JIT compilation trigger |
+|---|---|---|---|
+| **FULLY_TYPED** | All params + return typed; all ops infer `u8` | None — no slots needed | First call — no warmup |
+| **PARTIALLY_TYPED** | Some annotations present | Only for ops with unknown operands | After 10 calls |
+| **UNTYPED** | No annotations | All binary ops and calls | After 100 calls |
+
+Concretely for the Intel 4004:
+- Each untyped binary op costs **3 ROM bytes** (opcode + register + slot index)
+- Each typed binary op costs **2 ROM bytes** (opcode + register only)
+- A fully-typed function with 5 ops saves 5 bytes of ROM and eliminates feedback-vector
+  RAM allocation entirely
+
+### Feedback Slots Still Present for Untyped Code
+
+The feedback vector machinery (spec TET03) is present for untyped ops. This is
+intentional: when a Lisp front-end compiles to the same bytecode, it will produce
+dynamically-typed code for unannoted procedures. The JIT reads those feedback slots
+and specializes. Annotated Lisp procedures (via `declare`) compile as FULLY_TYPED and
+get immediate JIT compilation.
 
 ---
 
@@ -204,10 +224,13 @@ program       = { top_decl } EOF ;
 
 top_decl      = fn_decl | global_decl ;
 
-global_decl   = "let" NAME "=" expr ";" ;
+global_decl   = "let" NAME [ ":" type ] "=" expr ";" ;
 
-fn_decl       = "fn" NAME "(" [ param_list ] ")" block ;
-param_list    = NAME { "," NAME } ;
+fn_decl       = "fn" NAME "(" [ param_list ] ")" [ "->" type ] block ;
+param_list    = param { "," param } ;
+param         = NAME [ ":" type ] ;
+
+type          = "u8" ;
 
 block         = "{" { stmt } "}" ;
 
@@ -219,7 +242,7 @@ stmt          = let_stmt
               | expr_stmt
               ;
 
-let_stmt      = "let" NAME "=" expr ";" ;
+let_stmt      = "let" NAME [ ":" type ] "=" expr ";" ;
 assign_stmt   = NAME "=" expr ";" ;
 if_stmt       = "if" expr block [ "else" block ] ;
 while_stmt    = "while" expr block ;
@@ -257,7 +280,12 @@ arg_list      = expr { "," expr } ;
 - There is no `for` statement in v1. Use `while` with a manual counter.
 - `in()` is a keyword-expression that reads one byte from the I/O port.
 - `out(expr)` is a statement-level call to the I/O output port.
-- All variables are `u8`. There are no type annotations.
+- Type annotations on parameters and return values are optional (gradual typing).
+- The only available type in v1 is `u8`. Using `u8` on everything is equivalent to
+  explicit static typing.
+- `->` is a two-character token (scanned greedily before `-`).
+- A `let` binding may carry an optional `: u8` annotation; the type checker verifies
+  the inferred type matches.
 - `let` in a block creates a local variable scoped to that block.
 - `let` at the top level creates a global variable.
 
@@ -266,8 +294,10 @@ arg_list      = expr { "," expr } ;
 ## Reserved Words
 
 ```
-fn  let  if  else  while  return  in  out
+fn  let  if  else  while  return  in  out  u8
 ```
+
+`u8` is reserved as a type keyword. It may not be used as a variable or function name.
 
 ---
 
@@ -343,7 +373,28 @@ fn main() {
 }
 ```
 
-### Example 5: Reading from I/O
+### Example 5b: Fully Typed BCD Addition (no JIT warmup)
+
+```tetrad
+// All params and return annotated → FULLY_TYPED → compiled on first call.
+// The compiler emits 2-byte ADD instructions (no feedback slot bytes).
+fn bcd_add(a: u8, b: u8) -> u8 {
+    let sum: u8 = a + b;
+    if sum >= 10 {
+        sum = sum - 10;
+        out(1);
+    } else {
+        out(0);
+    }
+    return sum;
+}
+
+fn main() {
+    out(bcd_add(7, 5));   // compiles to native code on the very first call
+}
+```
+
+### Example 6: Reading from I/O
 
 ```tetrad
 fn echo_loop() {
@@ -422,25 +473,31 @@ intentionally designed around the more severe 4004 constraints.
 
 ## Implementation Pipeline
 
-The full Tetrad pipeline across five packages:
+The full Tetrad pipeline across six packages:
 
 ```
 Tetrad Source Text
     │
     ▼
-tetrad-lexer      TET01   Produces token stream
+tetrad-lexer         TET01   Token stream
     │
     ▼
-tetrad-parser     TET02   Produces AST (Pratt parser)
+tetrad-parser        TET02   AST (Pratt parser)
     │
     ▼
-tetrad-compiler   TET03   Produces bytecode (CodeObject with feedback slots)
+tetrad-type-checker  TET02b  TypeCheckResult (TypeMap + FunctionTypeStatus per function)
+    │                        ↳ FULLY_TYPED → no feedback slots, immediate JIT
+    │                        ↳ PARTIALLY_TYPED → slots only for unknown-type ops
+    │                        ↳ UNTYPED → all ops get slots (Tetrad v1 behavior)
+    ▼
+tetrad-compiler      TET03   CodeObject (two-path: typed ops skip slot bytes)
     │
     ▼
-tetrad-vm         TET04   Executes bytecode, populates feedback vectors, exposes metrics API
-    │
+tetrad-vm            TET04   Executes bytecode; skips feedback vector for typed fns;
+    │                        exposes metrics API; queues typed fns for immediate JIT
     ▼
-tetrad-jit        TET05   Reads feedback vectors, emits x86-64 native code for hot functions
+tetrad-jit           TET05   Three-tier: typed→compile on call 1, partial→call 10,
+                             untyped→call 100; reads feedback for untyped paths
 ```
 
 Each stage is a standalone Python package with its own `pyproject.toml`, tests,
@@ -455,9 +512,10 @@ README, and CHANGELOG. The implementation language is Python 3.12 throughout.
 | 1 | Language spec | TET00 | This document |
 | 2 | Lexer | tetrad-lexer | TET01 — Planned |
 | 3 | Parser | tetrad-parser | TET02 — Planned |
-| 4 | Bytecode compiler | tetrad-compiler | TET03 — Planned |
-| 5 | Register VM | tetrad-vm | TET04 — Planned |
-| 6 | JIT compiler | tetrad-jit | TET05 — Planned |
+| 4 | Type checker | tetrad-type-checker | TET02b — Planned |
+| 5 | Bytecode compiler | tetrad-compiler | TET03 — Planned |
+| 6 | Register VM | tetrad-vm | TET04 — Planned |
+| 7 | JIT compiler | tetrad-jit | TET05 — Planned |
 
 ---
 

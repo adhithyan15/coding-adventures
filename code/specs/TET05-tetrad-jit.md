@@ -75,18 +75,32 @@ trigger), it falls back to the interpreter for that activation.
 
 ---
 
-## Hot-Function Detection
+## Three-Tier Compilation Strategy
 
-The hot-function detector checks after each VM instruction (or periodically, to reduce
-overhead):
+Optional type annotations create three distinct compilation tiers. Each tier has a
+different trigger for when JIT compilation occurs:
+
+| Tier | `CodeObject.type_status` | JIT trigger | Warmup cost |
+|---|---|---|---|
+| **FULLY_TYPED** | `FULLY_TYPED` | Compiled **before first call** (from `immediate_jit_queue`) | None |
+| **PARTIALLY_TYPED** | `PARTIALLY_TYPED` | Compiled after **10 calls** | 10 interpreted runs |
+| **UNTYPED** | `UNTYPED` | Compiled after **100 calls** or 500 loop iterations | 100 interpreted runs |
 
 ```python
-CALL_COUNT_THRESHOLD = 100      # calls before function is JIT-compiled
-LOOP_ITERATION_THRESHOLD = 500  # loop iterations before OSR is attempted
+THRESHOLDS = {
+    FunctionTypeStatus.FULLY_TYPED:     0,    # immediate — drain from queue before main
+    FunctionTypeStatus.PARTIALLY_TYPED: 10,   # quick warmup for partially annotated code
+    FunctionTypeStatus.UNTYPED:         100,  # conservative — avoid compiling cold code
+}
 
-def should_jit(vm: TetradVM, fn_name: str) -> bool:
+LOOP_ITERATION_THRESHOLD = 500   # OSR trigger (all tiers)
+
+def should_jit(vm: TetradVM, fn_name: str, code: CodeObject) -> bool:
+    if code.immediate_jit_eligible:
+        return True   # already queued before main; this path should not be reached
+    threshold = THRESHOLDS[code.type_status]
     call_count = vm.metrics().function_call_counts.get(fn_name, 0)
-    if call_count >= CALL_COUNT_THRESHOLD:
+    if call_count >= threshold:
         return True
     loop_iters = vm.loop_iterations(fn_name)
     if any(count >= LOOP_ITERATION_THRESHOLD for count in loop_iters.values()):
@@ -94,9 +108,46 @@ def should_jit(vm: TetradVM, fn_name: str) -> bool:
     return False
 ```
 
-Once a function is compiled, it is placed in the **JIT code cache** and all future
-calls use the compiled version. The call count threshold can be tuned; 100 is a
-conservative default that avoids compiling cold functions.
+### Immediate Compilation (FULLY_TYPED)
+
+`execute_with_jit` drains the `immediate_jit_queue` before running any bytecode:
+
+```python
+def execute_with_jit(self, code: CodeObject) -> int:
+    # Phase 1: compile all FULLY_TYPED functions before the interpreter starts
+    for fn_name in self.vm.metrics.immediate_jit_queue:
+        fn_code = find_function(code, fn_name)
+        self.compile(fn_code)   # emits x86-64; puts in cache
+
+    # Phase 2: run the interpreter; hot PARTIALLY_TYPED/UNTYPED fns compile as they warm up
+    return self.vm.execute(code)
+```
+
+The JIT can compile typed functions immediately because it does not need feedback data
+for them: the type annotations guarantee `u8 × u8 → u8` for every op. The generated
+code has no type guards and no deopt paths.
+
+### Optimized Code for Typed Functions
+
+For a FULLY_TYPED function, the JIT skips the type-specialization pass (Pass 3) because
+the type checker already guaranteed all operands are `u8`. The emitted x86-64 is clean
+integer arithmetic with no type guards:
+
+```
+# Typed fn add(a: u8, b: u8) -> u8 { return a + b; }
+push rbp
+mov  rbp, rsp
+mov  rax, rdi      # load a
+add  rax, rsi      # a + b
+and  rax, 0xFF     # u8 wrap
+pop  rbp
+ret
+
+# No type checks. No deopt calls. No guards. Pure arithmetic.
+```
+
+For PARTIALLY_TYPED and UNTYPED functions, the type-specialization pass (Pass 3) runs
+as before, reading feedback slots to determine which ops can be specialized.
 
 ---
 
