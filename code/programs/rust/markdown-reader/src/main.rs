@@ -81,13 +81,63 @@ went through the coding-adventures stack end to end: parse → AST → layout
 "#;
 
 fn main() {
-    let markdown = read_input();
+    let args: Vec<String> = env::args().collect();
 
-    // Build the PaintScene through the full pipeline.
+    // Parse args: `--png <path>` → render to PNG instead of window.
+    // All other positionals are treated as an input Markdown file.
+    let mut png_out: Option<String> = None;
+    let mut markdown_path: Option<String> = None;
+    let mut i = 1;
+    while i < args.len() {
+        match args[i].as_str() {
+            "--png" => {
+                if i + 1 >= args.len() {
+                    eprintln!("markdown-reader: --png requires a path argument");
+                    std::process::exit(2);
+                }
+                png_out = Some(args[i + 1].clone());
+                i += 2;
+            }
+            other => {
+                markdown_path = Some(other.to_string());
+                i += 1;
+            }
+        }
+    }
+
+    let markdown = match markdown_path {
+        Some(path) => match fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("markdown-reader: failed to read {}: {}", path, e);
+                SAMPLE_MARKDOWN.to_string()
+            }
+        },
+        None => SAMPLE_MARKDOWN.to_string(),
+    };
+
+    // Full pipeline: parse → layout → paint → pixels.
     let scene = render_markdown_to_scene(&markdown);
-
-    // Rasterize to pixels and pop up a window.
     let pixels = paint_metal::render(&scene);
+    eprintln!(
+        "markdown-reader: rendered {}×{} pixels ({} paint instructions)",
+        pixels.width,
+        pixels.height,
+        scene.instructions.len()
+    );
+
+    if let Some(path) = png_out {
+        match paint_codec_png::write_png(&pixels, &path) {
+            Ok(()) => {
+                eprintln!("markdown-reader: wrote {}", path);
+                return;
+            }
+            Err(e) => {
+                eprintln!("markdown-reader: failed to write {}: {}", path, e);
+                std::process::exit(1);
+            }
+        }
+    }
 
     #[cfg(target_vendor = "apple")]
     unsafe {
@@ -96,27 +146,7 @@ fn main() {
 
     #[cfg(not(target_vendor = "apple"))]
     {
-        eprintln!(
-            "markdown-reader: native window display is only available on Apple targets. \
-             Rendered {}×{} pixels.",
-            pixels.width, pixels.height
-        );
-    }
-}
-
-fn read_input() -> String {
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        return SAMPLE_MARKDOWN.to_string();
-    }
-    let path = &args[1];
-    match fs::read_to_string(path) {
-        Ok(s) => s,
-        Err(e) => {
-            eprintln!("markdown-reader: failed to read {}: {}", path, e);
-            eprintln!("markdown-reader: falling back to the built-in sample.");
-            SAMPLE_MARKDOWN.to_string()
-        }
+        eprintln!("markdown-reader: use --png <path> on non-Apple targets.");
     }
 }
 

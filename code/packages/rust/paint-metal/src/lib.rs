@@ -157,8 +157,16 @@ fragment float4 rect_fragment(RectVertexOut in [[stage_in]]) {
 ///
 /// Returns `(0.0, 0.0, 0.0, 1.0)` for unrecognised non-transparent input.
 fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
+    let s = s.trim();
     if s == "transparent" {
         return (0.0, 0.0, 0.0, 0.0);
+    }
+    // CSS rgb()/rgba() support — layout-to-paint emits these.
+    if let Some(inner) = s.strip_prefix("rgba(").and_then(|t| t.strip_suffix(')')) {
+        return parse_rgb_components(inner, true);
+    }
+    if let Some(inner) = s.strip_prefix("rgb(").and_then(|t| t.strip_suffix(')')) {
+        return parse_rgb_components(inner, false);
     }
     let hex = s.trim_start_matches('#');
     let hex = if hex.len() == 3 {
@@ -183,6 +191,31 @@ fn parse_hex_color(s: &str) -> (f64, f64, f64, f64) {
         1.0
     };
     (r, g, b, a)
+}
+
+/// Parse the comma-separated r,g,b(,a) components from inside an
+/// `rgb(...)` / `rgba(...)` CSS string. r/g/b are 0..=255 decimal, a
+/// is 0..=1 decimal. Missing / malformed components clamp gracefully
+/// toward opaque black.
+fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
+    let parts: Vec<&str> = inner.split(',').map(|s| s.trim()).collect();
+    if parts.len() < 3 {
+        return (0.0, 0.0, 0.0, 1.0);
+    }
+    let r = parts[0].parse::<f64>().unwrap_or(0.0) / 255.0;
+    let g = parts[1].parse::<f64>().unwrap_or(0.0) / 255.0;
+    let b = parts[2].parse::<f64>().unwrap_or(0.0) / 255.0;
+    let a = if has_alpha && parts.len() >= 4 {
+        parts[3].parse::<f64>().unwrap_or(1.0)
+    } else {
+        1.0
+    };
+    (
+        r.clamp(0.0, 1.0),
+        g.clamp(0.0, 1.0),
+        b.clamp(0.0, 1.0),
+        a.clamp(0.0, 1.0),
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -660,10 +693,11 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
 #[cfg(target_vendor = "apple")]
 mod glyph_run_overlay {
     use objc_bridge::{
-        cfstring_checked, CFRelease, CGBitmapContextCreate, CGColorSpaceCreateDeviceRGB,
-        CGColorSpaceRelease, CGContextRelease, CGContextRestoreGState, CGContextSaveGState,
-        CGContextScaleCTM, CGContextSetRGBFillColor, CGContextSetShouldAntialias,
-        CGContextSetShouldSmoothFonts, CGContextTranslateCTM, CGPoint, CTFontCreateWithName,
+        cfstring_checked, CFRelease, CGAffineTransform, CGBitmapContextCreate,
+        CGColorSpaceCreateDeviceRGB, CGColorSpaceRelease, CGContextRelease,
+        CGContextRestoreGState, CGContextSaveGState, CGContextScaleCTM,
+        CGContextSetRGBFillColor, CGContextSetShouldAntialias, CGContextSetShouldSmoothFonts,
+        CGContextSetTextMatrix, CGContextTranslateCTM, CGPoint, CTFontCreateWithName,
         CTFontDrawGlyphs, CGContextRef, Id, K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST,
         K_CG_BITMAP_BYTE_ORDER_32_LITTLE, NIL,
     };
@@ -731,6 +765,12 @@ mod glyph_run_overlay {
 
         CGContextSetShouldAntialias(ctx, true);
         CGContextSetShouldSmoothFonts(ctx, true);
+
+        // Text matrix stays identity. The CTM flip above makes
+        // glyphs render with ascenders pointing toward the top of
+        // the buffer; the CGBitmapContext byte ordering ensures
+        // those are the correct pixel rows.
+        CGContextSetTextMatrix(ctx, CGAffineTransform::IDENTITY);
 
         for gr in runs {
             draw_one_glyph_run(ctx, gr);
