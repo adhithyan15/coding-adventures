@@ -34,7 +34,11 @@ from logic_engine import (
     num,
     reify,
     solve_from,
+    succeed,
     term,
+)
+from logic_engine import (
+    fail as engine_fail,
 )
 
 __all__ = [
@@ -44,12 +48,16 @@ __all__ = [
     "callo",
     "compoundo",
     "div",
+    "failo",
     "findallo",
     "floordiv",
+    "forallo",
     "functoro",
     "geqo",
     "gto",
     "groundo",
+    "ifthenelseo",
+    "iftheno",
     "iso",
     "leqo",
     "lto",
@@ -66,6 +74,7 @@ __all__ = [
     "setofo",
     "stringo",
     "sub",
+    "trueo",
     "varo",
 ]
 
@@ -220,6 +229,68 @@ def setofo(template: object, goal: object, results: object) -> GoalExpr:
         )
 
     return native_goal(run, template, results)
+
+
+def trueo() -> GoalExpr:
+    """Succeed once without changing the current logic state."""
+
+    return succeed()
+
+
+def failo() -> GoalExpr:
+    """Fail without yielding any successor states."""
+
+    return engine_fail()
+
+
+def iftheno(condition: object, then_goal: object) -> GoalExpr:
+    """Run `then_goal` from the first proof of `condition`, or fail."""
+
+    condition_goal = _as_goal(condition)
+    called_then = _as_goal(then_goal)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        condition_proofs = solve_from(program_value, condition_goal, state)
+        first_condition_state = next(condition_proofs, None)
+        if first_condition_state is None:
+            return
+        yield from solve_from(program_value, called_then, first_condition_state)
+
+    return native_goal(run)
+
+
+def ifthenelseo(condition: object, then_goal: object, else_goal: object) -> GoalExpr:
+    """Choose a committed then branch or an else branch from the original state."""
+
+    condition_goal = _as_goal(condition)
+    called_then = _as_goal(then_goal)
+    called_else = _as_goal(else_goal)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        condition_proofs = solve_from(program_value, condition_goal, state)
+        first_condition_state = next(condition_proofs, None)
+        if first_condition_state is None:
+            yield from solve_from(program_value, called_else, state)
+            return
+        yield from solve_from(program_value, called_then, first_condition_state)
+
+    return native_goal(run)
+
+
+def forallo(generator: object, test: object) -> GoalExpr:
+    """Succeed once when every generated proof satisfies `test` at least once."""
+
+    generator_goal = _as_goal(generator)
+    test_goal = _as_goal(test)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        for generated_state in solve_from(program_value, generator_goal, state):
+            test_proofs = solve_from(program_value, test_goal, generated_state)
+            if next(test_proofs, None) is None:
+                return
+        yield state
+
+    return native_goal(run)
 
 
 def add(left: object, right: object) -> Compound:
