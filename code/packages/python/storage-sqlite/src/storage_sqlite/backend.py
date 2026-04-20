@@ -79,6 +79,7 @@ from __future__ import annotations
 
 import os
 import re
+import struct
 from typing import TYPE_CHECKING
 
 from sql_backend import (
@@ -354,14 +355,15 @@ def _is_ipk(col: ColumnDef) -> bool:
 def _encode_row(rowid: int, row: Row, columns: list[ColumnDef]) -> bytes:
     """Encode *row* as a SQLite record payload.
 
-    Columns are encoded in declaration order. INTEGER PRIMARY KEY columns are
-    skipped because their value IS the rowid (already stored as the cell key).
-    Absent columns are treated as SQL NULL.
+    Columns are encoded in declaration order. For an INTEGER PRIMARY KEY
+    column (a rowid alias), we write a NULL value into the payload — this is
+    exactly what the real ``sqlite3`` library does.  The B-tree cell key
+    carries the actual integer; the NULL in the payload is a well-known
+    convention that lets both the official library and this backend decode
+    the row consistently.  Absent non-IPK columns are treated as SQL NULL.
 
     Args:
-        rowid: The B-tree row key for this row (used to inject NULL for an IPK
-               column whose value is somehow absent — should not happen in
-               normal usage).
+        rowid: The B-tree row key for this row.
         row:   Mapping of column name → value.
         columns: Column definitions in declaration order.
 
@@ -371,16 +373,22 @@ def _encode_row(rowid: int, row: Row, columns: list[ColumnDef]) -> bytes:
     values: list[object] = []
     for col in columns:
         if _is_ipk(col):
-            continue  # rowid alias — stored as the cell key, not in payload
-        values.append(row.get(col.name))  # absent → None (SQL NULL)
+            # Store NULL as a placeholder, exactly as the real sqlite3 does.
+            # The true value is the B-tree rowid (cell key), not this slot.
+            values.append(None)
+        else:
+            values.append(row.get(col.name))  # absent → None (SQL NULL)
     return _record.encode(values)
 
 
 def _decode_row(rowid: int, payload: bytes, columns: list[ColumnDef]) -> Row:
     """Decode a raw record payload back into a :data:`~sql_backend.Row` dict.
 
-    The inverse of :func:`_encode_row`. INTEGER PRIMARY KEY columns have
-    their value injected from *rowid* rather than from the payload.
+    The inverse of :func:`_encode_row`. For INTEGER PRIMARY KEY columns the
+    payload contains a NULL slot (a placeholder written there both by this
+    backend and by the real ``sqlite3`` library).  We consume that NULL slot
+    but discard it, injecting *rowid* as the actual column value instead.
+    This gives us byte-compatibility with files produced by both backends.
 
     Args:
         rowid:   The B-tree cell key for this row.
@@ -395,7 +403,8 @@ def _decode_row(rowid: int, payload: bytes, columns: list[ColumnDef]) -> Row:
     payload_idx = 0
     for col in columns:
         if _is_ipk(col):
-            result[col.name] = rowid  # inject rowid as the IPK value
+            result[col.name] = rowid  # inject rowid; consume (and discard) the NULL slot
+            payload_idx += 1
         else:
             val = decoded_values[payload_idx] if payload_idx < len(decoded_values) else None
             result[col.name] = val
@@ -897,11 +906,42 @@ class SqliteFileBackend(Backend):
     def commit(self, handle: TransactionHandle) -> None:
         """Commit the transaction identified by *handle*.
 
-        Flushes all dirty pages to disk via ``pager.commit()``.
+        Before flushing, updates the three header fields that the real
+        SQLite uses to validate the on-disk database size:
+
+        * **file_change_counter** (offset 24): incremented by 1 on every
+          commit so other readers can detect schema/data changes.
+        * **database_size_pages** (offset 28): set to the actual number of
+          pages currently allocated (``pager.size_pages``).  If this field
+          disagrees with the file size, the real sqlite3 reports
+          ``malformed database schema`` because page references stored in
+          ``sqlite_schema`` appear to be out of range.
+        * **version_valid_for** (offset 92): set to the new
+          ``file_change_counter`` value so that sqlite3 knows the
+          ``database_size_pages`` field is fresh.
+
+        Then flushes all dirty pages to disk via ``pager.commit()``.
         """
         self._require_active(handle)
+        self._update_commit_header()
         self._pager.commit()
         self._active_handle = None
+
+    def _update_commit_header(self) -> None:
+        """Stamp the page-1 database header with current commit metadata.
+
+        Called from :meth:`commit` before ``pager.commit()``.  Only the
+        three fields at offsets 24, 28, and 92 are modified; all other
+        bytes (B-tree data at offset 100+, schema cookie at offset 40,
+        etc.) are preserved.
+        """
+        buf = bytearray(self._pager.read(1))
+        (counter,) = struct.unpack_from(">I", buf, 24)  # file_change_counter
+        new_counter = (counter + 1) & 0xFFFFFFFF
+        struct.pack_into(">I", buf, 24, new_counter)               # file_change_counter
+        struct.pack_into(">I", buf, 28, self._pager.size_pages)    # database_size_pages
+        struct.pack_into(">I", buf, 92, new_counter)               # version_valid_for
+        self._pager.write(1, bytes(buf))
 
     def rollback(self, handle: TransactionHandle) -> None:
         """Roll back the transaction identified by *handle*.

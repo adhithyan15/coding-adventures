@@ -31,9 +31,10 @@ from types import TracebackType
 from typing import Any
 
 from sql_backend import Backend, InMemoryBackend, TransactionHandle
+from storage_sqlite import SqliteFileBackend
 
 from .cursor import Cursor
-from .errors import InterfaceError, ProgrammingError, translate
+from .errors import ProgrammingError, translate
 
 # Statements which, under sqlite3 semantics, implicitly commit the
 # current transaction and run outside of any transaction. Keeping the
@@ -86,6 +87,9 @@ class Connection:
         self._autocommit = autocommit
         self._txn: TransactionHandle | None = None
         self._closed = False
+        # True when _txn was opened for a DDL statement and should be
+        # committed immediately after the statement runs.
+        self._ddl_txn: bool = False
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.
@@ -172,6 +176,13 @@ class Connection:
         """Begin an implicit transaction if this DML needs one.
 
         Called from :meth:`Cursor.execute` before each statement.
+
+        DDL semantics (matching sqlite3): any open DML transaction is
+        committed first, then the DDL runs inside its own single-statement
+        transaction.  That transaction is committed immediately after the
+        statement completes by :meth:`_post_execute`.  This guarantees that
+        DDL changes are persisted to disk regardless of whether any DML
+        follows in the same session.
         """
         if self._autocommit:
             return
@@ -185,12 +196,38 @@ class Connection:
                     raise translate(e) from e
                 finally:
                     self._txn = None
+            # Open a fresh transaction to wrap the DDL itself.  It will be
+            # committed immediately after the statement runs (_post_execute).
+            try:
+                self._txn = self._backend.begin_transaction()
+                self._ddl_txn = True
+            except Exception as e:  # noqa: BLE001
+                raise translate(e) from e
             return
+        self._ddl_txn = False
         if self._txn is None:
             try:
                 self._txn = self._backend.begin_transaction()
             except Exception as e:  # noqa: BLE001
                 raise translate(e) from e
+
+    def _post_execute(self) -> None:
+        """Auto-commit a DDL transaction immediately after the statement runs.
+
+        Called by :meth:`Cursor.execute` after every statement.  For non-DDL
+        statements this is a no-op.  For DDL statements it commits the
+        single-statement transaction that :meth:`_ensure_transaction_if_needed`
+        opened, so the schema change is persisted to disk right away.
+        """
+        if not self._ddl_txn or self._txn is None:
+            return
+        try:
+            self._backend.commit(self._txn)
+        except Exception as e:  # noqa: BLE001
+            raise translate(e) from e
+        finally:
+            self._txn = None
+            self._ddl_txn = False
 
     # ------------------------------------------------------------------
     # Internals.
@@ -206,12 +243,16 @@ def connect(database: str, *, autocommit: bool = False) -> Connection:
 
     ``database``:
 
-    - ``":memory:"`` — the in-memory backend (no persistence).
-    - anything else — reserved for a future file-backed backend;
-      raises :class:`InterfaceError` today.
+    - ``":memory:"`` — the in-memory backend (no persistence). Every
+      connection gets its own fresh database; nothing is written to disk.
+    - any other string — interpreted as a filesystem path to a SQLite
+      ``.db`` file. The file is created if it does not exist. Files
+      written here are byte-compatible with the real ``sqlite3`` CLI
+      and Python's built-in ``sqlite3`` module.
+
+    Both modes return a :class:`Connection` that implements the same
+    PEP 249 DB-API 2.0 interface; only the persistence semantics differ.
     """
     if database == ":memory:":
         return Connection(InMemoryBackend(), autocommit=autocommit)
-    raise InterfaceError(
-        f"unsupported database {database!r}: only ':memory:' is supported in v1"
-    )
+    return Connection(SqliteFileBackend(database), autocommit=autocommit)

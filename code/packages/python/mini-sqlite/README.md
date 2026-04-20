@@ -11,6 +11,8 @@ work is delegated to the packages below it.
 
 ## Quick start
 
+### In-memory
+
 ```python
 import mini_sqlite
 
@@ -40,6 +42,24 @@ for row in cur:
     print(row)
 ```
 
+### File-backed (byte-compatible with sqlite3)
+
+```python
+import mini_sqlite
+
+# Context manager commits on clean exit, rolls back on exception.
+with mini_sqlite.connect("app.db") as conn:
+    conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT NOT NULL)")
+    conn.execute("INSERT INTO users VALUES (1, 'Alice')")
+
+# The file can be opened directly by Python's stdlib sqlite3 —
+# both backends share the same on-disk format.
+import sqlite3
+with sqlite3.connect("app.db") as db:
+    print(db.execute("SELECT * FROM users").fetchall())
+# [(1, 'Alice')]
+```
+
 ## Module surface
 
 ```python
@@ -53,7 +73,9 @@ mini_sqlite.connect(database: str, *, autocommit: bool = False) -> Connection
 `database`:
 
 - `":memory:"` — uses the in-memory backend (no persistence).
-- any other string — a filesystem path (future FileBackend).
+- any other string — a filesystem path to a SQLite `.db` file. The file is
+  created if it does not exist. Files produced here are byte-compatible with
+  the real `sqlite3` CLI and Python's built-in `sqlite3` module.
 
 ## Exception hierarchy
 
@@ -75,4 +97,5 @@ From `code/specs/mini-sqlite-python.md`:
 
 Not yet implemented in v1: LEFT/RIGHT/FULL joins, subqueries,
 `UNION`, CTEs, `CASE`, window functions, indexes, triggers, views,
-`PRAGMA`, foreign keys, BLOB, and the file-backed persistence.
+`PRAGMA`, foreign keys, BLOB. File-backed persistence is fully
+implemented as of v0.2.0 (byte-compatible with real SQLite).
