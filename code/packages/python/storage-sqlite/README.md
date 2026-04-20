@@ -26,7 +26,7 @@ mini_sqlite.connect("app.db")
         ├── pager    (page I/O + LRU cache + rollback journal) ✓ phase 1
         ├── header   (100-byte database header at offset 0)    ✓ phase 1
         ├── record   (varint + serial types)      ✓ phase 2
-        ├── btree    (table B-trees with overflow)[v1 phase 3–4]
+        ├── btree    (leaf + overflow)             ✓ phase 3  [splits in phase 4]
         ├── freelist (page reuse)                 [v1 phase 5]
         └── schema   (sqlite_schema round-trip)   [v1 phase 6]
 ```
@@ -54,8 +54,9 @@ Phase 1 covered the bottom two boxes; phase 2 adds the record codec on top.
   Round-trips NULL / int / float / str / bytes. Byte-compat verified against
   the real `sqlite3` output for simple records.
 
-What's **not yet** in this package (coming in later phases): B-tree pages,
-`sqlite_schema`, the `Backend` adapter that wires the pipeline in.
+What's **not yet** in this package (coming in later phases): B-tree splits +
+interior pages (phase 4), freelist (phase 5), `sqlite_schema` (phase 6), and
+the `Backend` adapter that wires the full pipeline in (phase 7).
 
 ## Installation
 
@@ -63,7 +64,7 @@ What's **not yet** in this package (coming in later phases): B-tree pages,
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 — primitives only)
+## Usage (phases 1 + 2 + 3)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -89,6 +90,19 @@ value, consumed = varint.decode(b"\x82\x2c")  # → (300, 2)
 # [NULL, 7, "hi"] encodes to the same bytes the real sqlite3 writes.
 raw = record.encode([None, 7, "hi"])          # b"\x04\x00\x01\x11\x07hi"
 values, consumed = record.decode(raw)          # → ([None, 7, "hi"], 8)
+
+# --- BTree ---
+with Pager.create("data.db") as pager:
+    tree = BTree.create(pager)
+    tree.insert(1, record.encode(["Ada", "Lovelace"]))
+    tree.insert(2, record.encode(["Grace", "Hopper"]))
+    pager.commit()
+
+with Pager.open("data.db") as pager:
+    tree = BTree.open(pager, root_page=1)
+    for rowid, payload in tree.scan():
+        cols, _ = record.decode(payload)
+        print(rowid, cols)   # 1 ['Ada', 'Lovelace'] / 2 ['Grace', 'Hopper']
 ```
 
 This intentionally looks low-level — the `Backend` adapter that makes

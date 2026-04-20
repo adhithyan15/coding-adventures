@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.3.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.btree` — table B-tree leaf pages (phase 3).
+  - `BTree.create(pager)` allocates and initialises a fresh empty leaf page.
+  - `BTree.open(pager, root_page)` attaches to an existing page.
+  - `insert(rowid, payload)` — sorted insert; raises `DuplicateRowidError` on
+    collision, `PageFullError` when the leaf is full (splits land in phase 4).
+  - `find(rowid)` — binary search over the sorted cell-pointer array; returns
+    raw record bytes or `None`.
+  - `scan()` — iterator over `(rowid, payload)` in ascending rowid order.
+  - `delete(rowid)` — removes the cell and compacts the page in-place.
+  - `update(rowid, payload)` — delete + re-insert; handles payload size changes.
+  - Overflow chains: records larger than `max_local` (4 061 bytes for 4 096-byte
+    pages) spill to linked overflow pages per the SQLite formula; reads and
+    writes follow the chain transparently.
+  - `header_offset=100` support for page 1 (database header occupies bytes 0–99).
+  - `BTreeError`, `PageFullError`, `DuplicateRowidError` exported from package root.
+
 ## [0.2.0] - 2026-04-19
 
 ### Added
