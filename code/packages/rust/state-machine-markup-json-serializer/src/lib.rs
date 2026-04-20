@@ -9,7 +9,7 @@
 //! format-agnostic runtime boundary and leaves JSON parsing to a separate,
 //! defensive deserializer package.
 
-use state_machine::{StateMachineDefinition, TransitionDefinition};
+use state_machine::StateMachineDefinition;
 
 /// The current State Machine Markup document version.
 pub const STATE_MACHINE_MARKUP_FORMAT: &str = "state-machine/v1";
@@ -106,8 +106,27 @@ fn json_state_array(definition: &StateMachineDefinition) -> String {
 }
 
 fn json_transition_array(definition: &StateMachineDefinition) -> String {
-    let mut transitions = definition.transitions.clone();
-    transitions.sort_by(compare_transitions);
+    let mut transitions: Vec<JsonTransition> = definition
+        .transitions
+        .iter()
+        .map(JsonTransition::from_definition)
+        .collect();
+    transitions.sort_by(|left, right| {
+        (
+            &left.from,
+            &left.on_sort,
+            &left.to,
+            &left.stack_pop,
+            &left.stack_push,
+        )
+            .cmp(&(
+                &right.from,
+                &right.on_sort,
+                &right.to,
+                &right.stack_pop,
+                &right.stack_push,
+            ))
+    });
 
     if transitions.is_empty() {
         return "[]".to_string();
@@ -118,17 +137,11 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
     for (index, transition) in transitions.iter().enumerate() {
         let mut fields = Vec::new();
         fields.push(json_property("from", json_string(&transition.from)));
-        fields.push(json_property(
-            "on",
-            json_string(transition.on.as_deref().unwrap_or("epsilon")),
-        ));
+        fields.push(json_property("on", json_string(&transition.on)));
         if transition.to.len() == 1 {
             fields.push(json_property("to", json_string(&transition.to[0])));
         } else {
-            fields.push(json_property(
-                "to",
-                json_array(&sorted_strings(&transition.to)),
-            ));
+            fields.push(json_property("to", json_array(&transition.to)));
         }
         if let Some(stack_pop) = &transition.stack_pop {
             fields.push(json_property("stack_pop", json_string(stack_pop)));
@@ -150,24 +163,34 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
     lines.join("\n")
 }
 
-fn compare_transitions(
-    left: &TransitionDefinition,
-    right: &TransitionDefinition,
-) -> std::cmp::Ordering {
-    (
-        &left.from,
-        left.on.as_deref().unwrap_or(""),
-        sorted_strings(&left.to),
-        &left.stack_pop,
-        &left.stack_push,
-    )
-        .cmp(&(
-            &right.from,
-            right.on.as_deref().unwrap_or(""),
-            sorted_strings(&right.to),
-            &right.stack_pop,
-            &right.stack_push,
-        ))
+struct JsonTransition {
+    from: String,
+    on: String,
+    on_sort: String,
+    to: Vec<String>,
+    stack_pop: Option<String>,
+    stack_push: Vec<String>,
+}
+
+impl JsonTransition {
+    fn from_definition(transition: &state_machine::TransitionDefinition) -> Self {
+        let mut to = transition.to.clone();
+        if to.len() > 1 {
+            to.sort();
+        }
+
+        Self {
+            from: transition.from.clone(),
+            on: transition
+                .on
+                .clone()
+                .unwrap_or_else(|| "epsilon".to_string()),
+            on_sort: transition.on.clone().unwrap_or_default(),
+            to,
+            stack_pop: transition.stack_pop.clone(),
+            stack_push: transition.stack_push.clone(),
+        }
+    }
 }
 
 fn sorted_strings(values: &[String]) -> Vec<String> {
