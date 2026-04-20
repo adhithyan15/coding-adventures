@@ -14,8 +14,9 @@ file is the authoring artifact, canonical JSON is a normalized build artifact,
 and generated source code is what browser and wrapper packages should link.
 
 The existing `F01-state-machine.md` package gives us formal automata, and `F07`
-defines how those machines serialize and deserialize. HTML tokenization needs
-one extra profile layer: transitions do not only change state. They also build
+defines the typed definition layer plus separate serializer/deserializer
+packages. HTML tokenization needs one extra profile layer: transitions do not
+only change state. They also build
 tokens, append text, track temporary buffers, report parse errors, reconsume the
 current input character in a new state, and sometimes call a shared submachine
 such as character-reference parsing.
@@ -23,14 +24,15 @@ such as character-reference parsing.
 So the answer to "can the states and transitions live purely in a text file?"
 is:
 
-- **Yes**, if the file is a `state-machine/v1` document with a tokenizer
-  profile and a fixed portable action vocabulary.
+- **Yes**, if the file serializes a `state-machine/v1` tokenizer definition
+  with a fixed portable action vocabulary.
 - **No**, if "purely" means a bare DFA transition table with no registers,
   buffers, token-emission actions, EOF handling, or reconsume semantics.
 
-The goal is a declarative file that every language port can load and execute the
-same way, without embedding arbitrary Rust, Go, Ruby, Python, or TypeScript code
-inside the machine definition.
+The goal is a declarative source file that every language port can deserialize
+at build time, compile into static tables, and execute the same way, without
+embedding arbitrary Rust, Go, Ruby, Python, or TypeScript code inside the
+machine definition.
 
 ## Why This Exists
 
@@ -57,7 +59,7 @@ language.
 - `F01-state-machine.md`: provides the formal automata vocabulary and modal
   machine foundation.
 - `F07-state-machine-markup-language.md`: defines the generic `.states.toml`
-  document envelope, serializer/deserializer contract, SCXML inspiration, and
+  definition model, serializer/deserializer boundaries, SCXML inspiration, and
   DOT export boundary.
 - `F04-lexer-pattern-groups.md`: supports grouped pattern lexing with callbacks;
   this spec is lower level and more deterministic, for byte/code-point state
@@ -71,14 +73,14 @@ language.
 
 ## Design Principles
 
-1. **Profile, not fork.** Tokenizers extend the `state-machine/v1` document
+1. **Profile, not fork.** Tokenizers extend the `state-machine/v1` definition
    model instead of inventing a separate serialization language.
-2. **Portable by construction.** A definition loaded in Rust must behave the
-   same way when loaded in Go, TypeScript, Ruby, Python, or future ports.
+2. **Portable by construction.** A definition compiled for Rust must behave the
+   same way when compiled for Go, TypeScript, Ruby, Python, or future ports.
 3. **No arbitrary host callbacks in definition files.** Escape hatches are how
    specs become unportable. Add new built-in actions instead.
-4. **Streaming by default.** Tokenizers must accept network-fed chunks without
-   requiring the full document in memory.
+4. **Streaming by default.** Generated tokenizers must accept network-fed
+   chunks without requiring the full HTML document in memory.
 5. **Error recovery is normal behavior.** HTML tokenization must produce tokens
    and diagnostics for invalid input instead of failing fast.
 6. **Traceability matters.** A developer should be able to ask, "which state
@@ -104,7 +106,7 @@ file format.
 
 ## Core Model
 
-A tokenizer definition is a `StateMachineDocument` with
+A tokenizer definition is a `StateMachineDefinition` with
 `profile = "tokenizer/v1"`. It contains the generic `F07` fields plus:
 
 - token type declarations
@@ -150,7 +152,7 @@ Example filename:
 code/tokenizers/html/html1.tokenizer.states.toml
 ```
 
-The first version uses the same document envelope as `F07`:
+The first version uses the same serialized envelope as `F07`:
 
 ```toml
 format = "state-machine/v1"
@@ -606,25 +608,27 @@ web-platform-tests/html and run them through the same runtime.
 
 ## Open Questions
 
-- Should tokenizer runtimes parse TOML directly in every port, or should one
-  reference parser generate a canonical JSON artifact that all ports consume?
+- Should every language have its own build-time TOML deserializer, or should one
+  reference deserializer generate a canonical JSON artifact that all source
+  compilers consume?
 - How much of the WHATWG character-reference table should live in the tokenizer
   definition versus a shared generated data package?
 - Do we want a visualizer that renders tokenizer states as DOT graphs with
   action labels?
 
-The recommended first implementation is: parse `.tokenizer.states.toml` text
-into the `F07` canonical in-memory AST in each port, then add JSON import/export
-once the AST stabilizes. That keeps the early system simple while preserving a
-path to fast, prevalidated artifacts.
+The recommended first implementation is: deserialize `.tokenizer.states.toml`
+text into the `F07` canonical `StateMachineDefinition` during the build, then
+compile that definition into static source tables. Runtime tokenizer packages
+should link generated code rather than parse definition files from disk.
 
 ## Success Criteria
 
 Phase 1 is successful when:
 
 1. a `.tokenizer.states.toml` file can describe the HTML 1.0 tokenizer states
-2. Rust and Go runtimes can load the same definition file
-3. both runtimes pass the same HTML tokenizer fixtures
+2. Rust and Go source generators can compile the same definition file into
+   static tokenizer tables
+3. both generated runtimes pass the same HTML tokenizer fixtures
 4. traces make transition behavior understandable
 5. the old hand-written HTML 1.0 lexer can be replaced by a wrapper without
    changing its public token output

@@ -6,14 +6,18 @@ All notable changes to the `state-machine` crate will be documented in this file
 
 ### Added
 
-- Added the `document` module with `StateMachineDocument`, state definitions,
-  transition definitions, machine-kind tags, and deterministic `.states.toml`
-  rendering.
+- Added the `definitions` module with `StateMachineDefinition`, state
+  definitions, transition definitions, and machine-kind tags.
 - Added export helpers for manually constructed DFAs, NFAs, and PDAs so they can
   feed the build-time state-machine compiler pipeline without runtime text
   loading.
-- Added tests covering DFA, NFA, PDA, epsilon, multi-target, stack-effect, and
-  TOML escaping export behavior.
+- Added tests covering DFA, NFA, PDA, epsilon, multi-target, and stack-effect
+  definition export behavior.
+
+### Changed
+
+- Moved State Machine Markup serialization out of this crate. Format-specific
+  writers now belong in sibling serializer libraries.
 
 ## [0.1.0] - 2026-03-20
 

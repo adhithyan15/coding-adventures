@@ -12,7 +12,7 @@ Formal automata from DFA to PDA, implemented in Rust. A port of the Python `stat
 | `minimize` | Hopcroft's DFA minimization algorithm                     |
 | `pda`      | Pushdown Automaton (finite automaton + stack)              |
 | `modal`    | Modal State Machine (multiple DFA sub-machines with mode switching) |
-| `document` | Shared export model for `.states.toml` and future source generation |
+| `definitions` | Format-agnostic typed definitions for export/compiler inputs |
 
 ## Where it fits in the stack
 
@@ -27,11 +27,11 @@ The 2-bit branch predictor (D02) is a DFA. The CPU pipeline (D04) is a linear DF
 Regex engines convert patterns to NFAs, then to DFAs via subset construction.
 Parsers use PDAs. HTML tokenizers use modal state machines.
 
-The `document` module is the bridge from hand-built machines to the build-time
-compiler pipeline. It exports deterministic snapshots of DFAs, NFAs, and PDAs as
-`StateMachineDocument` values or `.states.toml` text. Production packages can
-compile those documents into static source code later, instead of loading
-machine definitions from text at runtime.
+The `definitions` module is the bridge from hand-built machines to the
+build-time compiler pipeline. It exports deterministic snapshots of DFAs, NFAs,
+and PDAs as `StateMachineDefinition` values. File formats such as State Machine
+Markup live in sibling serializer/deserializer crates, so this runtime crate
+stays focused on executable automata and typed definitions.
 
 ## Usage
 
@@ -60,7 +60,7 @@ turnstile.process("coin").unwrap();
 assert_eq!(turnstile.current_state(), "unlocked");
 ```
 
-## Exporting State Machine Markup
+## Exporting Typed Definitions
 
 ```rust
 use std::collections::{HashMap, HashSet};
@@ -79,12 +79,14 @@ let turnstile = DFA::new(
     HashSet::from(["unlocked".into()]),
 ).unwrap();
 
-let markup = turnstile.to_states_toml("turnstile");
-assert!(markup.contains("kind = \"dfa\""));
+let definition = turnstile.to_definition("turnstile");
+assert_eq!(definition.kind.as_str(), "dfa");
+assert_eq!(definition.initial.as_deref(), Some("locked"));
 ```
 
-The exported text is deterministic: states, alphabets, and transitions are
-sorted so generated files remain reviewable and reproducible.
+Use the sibling `state-machine-markup-serializer` crate when you want to turn a
+definition into `.states.toml` text. Future deserializers will perform the
+opposite conversion and hand this crate typed definitions, not raw files.
 
 ## Building and testing
 

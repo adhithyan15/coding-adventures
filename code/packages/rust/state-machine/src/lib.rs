@@ -29,18 +29,16 @@
 //! construction. Parsers use PDAs. HTML tokenizers use modal state machines.
 
 pub mod types;
+pub mod definitions;
 pub mod dfa;
-pub mod document;
 pub mod nfa;
 pub mod minimize;
 pub mod pda;
 pub mod modal;
 
 pub use types::*;
+pub use definitions::{MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition};
 pub use dfa::DFA;
-pub use document::{
-    MachineKind, StateDefinition, StateMachineDocument, TransitionDefinition, STATE_MACHINE_FORMAT,
-};
 pub use nfa::{EPSILON, NFA};
 pub use minimize::minimize;
 pub use pda::{PDATraceEntry, PDATransition, PushdownAutomaton};

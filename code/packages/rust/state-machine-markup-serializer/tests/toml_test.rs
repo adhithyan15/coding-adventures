@@ -1,13 +1,14 @@
 use std::collections::{HashMap, HashSet};
 
 use state_machine::{PDATransition, PushdownAutomaton, DFA, EPSILON, NFA};
+use state_machine_markup_serializer::StateMachineMarkupSerializer;
 
 fn set(values: &[&str]) -> HashSet<String> {
     values.iter().map(|value| value.to_string()).collect()
 }
 
 #[test]
-fn dfa_exports_turnstile_document_and_toml() {
+fn dfa_definition_serializes_to_state_machine_markup() {
     let dfa = DFA::new(
         set(&["locked", "unlocked"]),
         set(&["coin", "push"]),
@@ -34,15 +35,8 @@ fn dfa_exports_turnstile_document_and_toml() {
     )
     .unwrap();
 
-    let document = dfa.to_document("turnstile");
-    assert_eq!(document.name, "turnstile");
-    assert_eq!(document.kind.as_str(), "dfa");
-    assert_eq!(document.alphabet, vec!["coin", "push"]);
-    assert_eq!(document.states.len(), 2);
-    assert_eq!(document.transitions.len(), 4);
-
     assert_eq!(
-        dfa.to_states_toml("turnstile"),
+        dfa.to_definition("turnstile").to_states_toml(),
         r#"format = "state-machine/v1"
 name = "turnstile"
 kind = "dfa"
@@ -81,7 +75,7 @@ to = "locked"
 }
 
 #[test]
-fn nfa_exports_multiple_targets_and_epsilon_transitions() {
+fn nfa_definition_serializes_multiple_targets_and_epsilon() {
     let nfa = NFA::new(
         set(&["q0", "q1", "q2"]),
         set(&["a", "b"]),
@@ -96,7 +90,7 @@ fn nfa_exports_multiple_targets_and_epsilon_transitions() {
     .unwrap();
 
     assert_eq!(
-        nfa.to_states_toml("contains-ab"),
+        nfa.to_definition("contains-ab").to_states_toml(),
         r#"format = "state-machine/v1"
 name = "contains-ab"
 kind = "nfa"
@@ -133,7 +127,7 @@ to = "q0"
 }
 
 #[test]
-fn pda_exports_stack_alphabet_and_stack_effects() {
+fn pda_definition_serializes_stack_effects() {
     let pda = PushdownAutomaton::new(
         set(&["scan", "accept"]),
         set(&["(", ")"]),
@@ -168,7 +162,7 @@ fn pda_exports_stack_alphabet_and_stack_effects() {
     .unwrap();
 
     assert_eq!(
-        pda.to_states_toml("balanced-parens"),
+        pda.to_definition("balanced-parens").to_states_toml(),
         r#"format = "state-machine/v1"
 name = "balanced-parens"
 kind = "pda"
@@ -210,7 +204,7 @@ stack_push = []
 }
 
 #[test]
-fn toml_writer_escapes_strings() {
+fn serializer_escapes_toml_strings() {
     let dfa = DFA::new(
         set(&["needs\"quote", "line\nbreak"]),
         set(&["slash\\event"]),
@@ -223,7 +217,7 @@ fn toml_writer_escapes_strings() {
     )
     .unwrap();
 
-    let toml = dfa.to_states_toml("escape-test");
+    let toml = dfa.to_definition("escape-test").to_states_toml();
     assert!(toml.contains("id = \"needs\\\"quote\""));
     assert!(toml.contains("id = \"line\\nbreak\""));
     assert!(toml.contains("on = \"slash\\\\event\""));

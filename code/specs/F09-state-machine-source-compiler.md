@@ -11,9 +11,10 @@ The production path is:
 
 ```text
 hand-written machine in code
-        -> StateMachineDocument
-        -> canonical .states.toml / .states.json
-        -> state-machine compiler
+        -> StateMachineDefinition
+        -> optional serializer output: canonical .states.toml / .states.json
+        -> deserializer or direct definition input
+        -> state-machine source compiler
         -> generated Rust / Go / TypeScript / Python / Ruby / ...
         -> normal package compiler or interpreter
         -> statically linked machine tables
@@ -41,12 +42,12 @@ code that is reviewed, tested, and linked like any other package code.
 ## Relationship To Existing Specs
 
 - `F01-state-machine.md`: defines the core automata library.
-- `F07-state-machine-markup-language.md`: defines the canonical document model
-  and TOML/JSON file formats.
+- `F07-state-machine-markup-language.md`: defines the canonical typed
+  definition model and TOML/JSON file formats.
 - `F08-declarative-tokenizer-state-machines.md`: defines tokenizer-specific
   actions and registers, including the future HTML tokenizer profile.
 
-This spec adds the missing build layer between `F07` documents and production
+This spec adds the missing build layer between `F07` definitions and production
 runtime packages.
 
 ## Design Principles
@@ -55,8 +56,9 @@ runtime packages.
    tooling, tests, and build steps.
 2. **Static linking wins.** Generated packages expose ordinary constants,
    enums, transition tables, and action identifiers.
-3. **One canonical IR.** TOML and JSON both lower to `StateMachineDocument`;
-   code generators consume that typed IR, not raw text.
+3. **One canonical IR.** TOML and JSON both lower to
+   `StateMachineDefinition`; code generators consume that typed IR, not raw
+   text.
 4. **Generated code is boring.** The output should be predictable tables and
    simple constructors, not clever metaprogramming.
 5. **Validation before generation.** Codegen never tries to repair malformed
@@ -114,7 +116,7 @@ Generated source is what application and wrapper packages link.
 parse authoring file
   -> resolve includes with safe root checks
   -> validate document shape
-  -> lower to canonical StateMachineDocument
+  -> lower to canonical StateMachineDefinition
   -> expand profiles, actions, guards, and input classes
   -> emit canonical JSON
   -> emit language-specific source code
@@ -167,12 +169,13 @@ execution, or network access.
 ## Manual Machine Export Layer
 
 The state-machine libraries also need to export manually constructed machines
-into the same document model:
+into the same definition model:
 
 ```text
 DFA::new(...)
-  -> dfa.to_document("turnstile")
-  -> document.to_states_toml()
+  -> dfa.to_definition("turnstile")
+  -> state-machine-markup-serializer emits .states.toml
+  -> state-machine-markup-deserializer reads .states.toml back into a definition
   -> state-machine compiler
   -> generated source
 ```
@@ -182,17 +185,17 @@ hand-written code to reusable generated definitions.
 
 Phase 1 export support:
 
-- DFA to `StateMachineDocument`
-- NFA to `StateMachineDocument`
-- deterministic PDA to `StateMachineDocument`
-- deterministic TOML writer for those documents
+- DFA to `StateMachineDefinition`
+- NFA to `StateMachineDefinition`
+- deterministic PDA to `StateMachineDefinition`
+- deterministic TOML writer in a separate serializer package
 
 Phase 2 export support:
 
 - modal machines with external child-machine references
 - modal machines with inline child-machine documents
-- JSON writer
-- TOML/JSON parser for tooling only
+- JSON writer in a separate serializer package
+- TOML/JSON parser in separate deserializer packages for tooling only
 
 Phase 3 export support:
 
@@ -207,7 +210,7 @@ Phase 3 export support:
 Purpose: prove the smallest possible round trip.
 
 ```text
-manual DFA -> document -> TOML -> generated Rust -> executable DFA
+manual DFA -> definition -> TOML -> generated Rust -> executable DFA
 ```
 
 ### Example 2: Contains-ABC NFA
@@ -215,7 +218,7 @@ manual DFA -> document -> TOML -> generated Rust -> executable DFA
 Purpose: prove nondeterministic transitions and epsilon-free NFA export.
 
 ```text
-manual NFA -> document -> TOML -> generated Rust -> NFA runtime
+manual NFA -> definition -> TOML -> generated Rust -> NFA runtime
 ```
 
 ### Example 3: Balanced Parentheses PDA
@@ -223,7 +226,7 @@ manual NFA -> document -> TOML -> generated Rust -> NFA runtime
 Purpose: prove stack alphabets, stack reads, and stack writes.
 
 ```text
-manual PDA -> document -> TOML -> generated Rust -> PDA runtime
+manual PDA -> definition -> TOML -> generated Rust -> PDA runtime
 ```
 
 ### Example 4: HTML Mode Skeleton
@@ -231,7 +234,7 @@ manual PDA -> document -> TOML -> generated Rust -> PDA runtime
 Purpose: prove mode switching without the full tokenizer action vocabulary.
 
 ```text
-data mode DFA + tag mode DFA -> modal document -> generated source
+data mode DFA + tag mode DFA -> modal definition -> generated source
 ```
 
 ### Example 5: Effectful Tokenizer Transducer
@@ -299,7 +302,7 @@ The compiler should warn about:
 
 ## Test Strategy
 
-- document export tests for manually constructed DFA, NFA, and PDA examples
+- definition export tests for manually constructed DFA, NFA, and PDA examples
 - canonical TOML snapshot tests
 - canonical JSON snapshot tests once JSON export exists
 - generated Rust source snapshot tests
@@ -311,8 +314,10 @@ The compiler should warn about:
 ## Implementation Plan
 
 1. Update `F07` so runtime loading is described as tooling-only by default.
-2. Add `StateMachineDocument` export support to the Rust state-machine package.
-3. Add deterministic TOML output for DFA/NFA/PDA documents.
+2. Add `StateMachineDefinition` export support to the Rust state-machine
+   package.
+3. Add deterministic TOML output for DFA/NFA/PDA definitions in a separate
+   serializer package.
 4. Add tests covering turnstile DFA, contains-abc NFA, and balanced-parens PDA.
 5. Add a small compiler program that reads canonical JSON and emits Rust source.
 6. Add Go source generation.
@@ -325,8 +330,9 @@ The compiler should warn about:
 Phase 1 succeeds when:
 
 1. manually constructed Rust DFA/NFA/PDA machines export to
-   `StateMachineDocument`
-2. those documents write deterministic `.states.toml`
+   `StateMachineDefinition`
+2. those definitions write deterministic `.states.toml` through a separate
+   serializer package
 3. tests prove simple, nondeterministic, and stack-machine examples
 4. the specs clearly separate authoring/build inputs from production linked
    source code
