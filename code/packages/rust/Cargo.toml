@@ -2,6 +2,8 @@
 resolver = "2"
 members = [
     "activation-functions",
+    "audio-device-coreaudio",
+    "audio-device-sink",
     "actor",
     "arithmetic",
     "arm-simulator",
