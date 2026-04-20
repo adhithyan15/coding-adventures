@@ -4,6 +4,27 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: Commit or otherwise expose intended diffs before relying on build-tool diff mode
+
+The Go build tool's default changed-package path depends on `git diff` against
+the configured base. If the intended package changes are only uncommitted in a
+fresh worktree, the tool may be unable to compute the intended diff and fall
+back to hash/cache mode. In a large checkout, that can begin a monorepo-scale
+build and create unrelated coverage or build artifacts before the mistake is
+noticed.
+
+**Symptom:** `./build-tool --diff-base origin/main` prints `Git diff
+unavailable — falling back to hash-based cache` and starts building thousands of
+packages instead of the small affected set.
+
+**Rule:** Before using the build tool for PR verification, either commit the
+intended diff or first verify `git diff --name-only origin/main...HEAD` returns
+the changed files the tool should see. If the tool announces a hash/cache
+fallback unexpectedly, stop it immediately and clean generated artifacts before
+continuing.
+
+---
+
 ### 2026-04-20: CI setup-job failures can be infrastructure flakiness, not code failures
 
 GitHub Actions can fail before checkout or before any repository command runs
