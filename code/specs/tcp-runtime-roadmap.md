@@ -342,6 +342,12 @@ Missing pieces:
 This is how we stop calling it "high-performance" aspirationally and start
 measuring it.
 
+The shared benchmarking design now lives in
+[`benchmarking-tools.md`](benchmarking-tools.md). TCP runtime benchmarks should
+use that repo-wide harness instead of ad hoc scripts so results can separate
+connect latency, frame latency, throughput, correctness, and statistical
+confidence.
+
 ### 6. A stable FFI and binding model
 
 This is the piece that makes the whole effort useful to Ruby, Python, Perl, and
