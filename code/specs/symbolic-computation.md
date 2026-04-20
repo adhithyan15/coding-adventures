@@ -331,8 +331,15 @@ reviewed independently:
   integrand with its closed-form sum of logs whenever the RT resultant
   has only rational roots (the overwhelming majority of textbook
   cases). Integrands whose log coefficients escape Q — canonically
-  `1/(x² + 1)` — stay unevaluated; a later phase adds
-  `RootSum`/`RootOf` for those. See `rothstein-trager.md`.
+  `1/(x² + 1)` — stay unevaluated. See `rothstein-trager.md`.
+- **Phase 2e** — Arctan integration for irreducible quadratic denominators.
+  When RT returns `None` and the entire log-part denominator is an
+  irreducible quadratic `ax² + bx + c`, the closed-form antiderivative
+  `A·log(ax²+bx+c) + (2B/D)·arctan((2ax+b)/D)` is emitted directly.
+  Adds `Atan` to the symbolic IR. Covers all standard textbook arctan
+  cases (`1/(x²+1)`, `1/(x²+2x+5)`, `(2x+1)/(x²+1)`, etc.). Mixed
+  denominators (linear × quadratic) remain unevaluated. See
+  `arctan-integral.md`.
 
 ### Phase 3 — Risch transcendental case
 

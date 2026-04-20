@@ -1,12 +1,17 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1 and 2c).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–2e).
 
 The handler tries two routes, in order:
 
-1. **Rational-function route (Phase 2c)** — if the integrand is a
+1. **Rational-function route (Phases 2c–2e)** — if the integrand is a
    rational function of ``x`` over Q, split off the polynomial part,
-   run Hermite reduction, and emit the closed-form rational part
-   plus an unevaluated ``Integrate`` for the squarefree log
-   remainder. See ``hermite-reduction.md``.
+   run Hermite reduction, and produce the closed-form output:
+
+   - Phase 2c: Hermite rational part (always closed-form).
+   - Phase 2d: Rothstein–Trager log sum (when all log coefficients ∈ Q).
+   - Phase 2e: Arctan formula for an irreducible quadratic log part
+     (when RT returns None and deg(log_den) == 2, no rational roots).
+   - Otherwise: unevaluated ``Integrate`` for the residual log part.
+
 2. **Phase 1 route** — the "reverse derivative table". Covers linear
    combinations of elementary functions, power rule, constant factor,
    and a few hard-coded integration-by-parts cases (log, sqrt).
@@ -35,9 +40,8 @@ What this phase can't do (yet)
 
 - Integration by substitution (except trivial constant-factor / sum).
 - Integration by parts (except the hard-coded ``log`` case).
-- The *log part* of a rational function — Hermite leaves it as an
-  unevaluated ``Integrate`` with a squarefree denominator, awaiting
-  Rothstein–Trager (Phase 2d).
+- Irreducible denominators of degree > 2 (e.g. ``1/(x³+x+1)``).
+- Mixed denominators with both linear and quadratic irreducible factors.
 - Any expression with two x-dependent, non-rational factors.
 
 Anything we can't integrate comes back as ``Integrate(f, x)`` unchanged,
@@ -79,6 +83,7 @@ from symbolic_ir import (
     IRSymbol,
 )
 
+from symbolic_vm.arctan_integral import arctan_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
@@ -164,20 +169,21 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
 
     # Try Rothstein–Trager up-front — a successful closed-form log sum
     # counts as "progress" just like a polynomial or Hermite rational
-    # part. When RT returns ``None`` (irrational/complex coefficients),
-    # we'll emit an unevaluated ``Integrate`` further down, but that
-    # alone does not count as progress (re-entering it would loop).
+    # part. When RT returns ``None``, fall through to Phase 2e (arctan
+    # formula for irreducible quadratic denominators).
     rt_pairs = None
+    at_ir = None
     if has_log:
         rt_pairs = rothstein_trager(hermite_log[0], hermite_log[1])
+        if rt_pairs is None:
+            at_ir = _try_arctan_integral(hermite_log[0], hermite_log[1], x)
 
     # "Made progress" = we extracted something whose closed form Phase
     # 1 couldn't produce. Without a polynomial part, a Hermite
-    # reduction, or an RT log sum, the output would just echo the
-    # unevaluated input — return None so the handler can fall through
-    # to Phase 1 (which knows a few more shapes) or, failing that,
-    # leave the integral unevaluated exactly once.
-    if not (has_poly or has_rat or rt_pairs is not None):
+    # reduction, an RT log sum, or an arctan result, the output would
+    # just echo the unevaluated input — return None so the handler can
+    # fall through to Phase 1 or leave the integral unevaluated.
+    if not (has_poly or has_rat or rt_pairs is not None or at_ir is not None):
         return None
 
     pieces: list[IRNode] = []
@@ -190,15 +196,16 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
     if has_rat:
         pieces.append(_rational_to_ir(hermite_rat[0], hermite_rat[1], x))
 
-    # 3. Squarefree log residual — closed-form via Rothstein–Trager
-    # (Phase 2d) when the log coefficients land in Q. When RT gives
-    # up, preserve the Phase 2c behavior and emit an unevaluated
-    # ``Integrate``. Re-entry on that Integrate returns None from
-    # _integrate_rational (RT will say None again; Hermite on a
-    # squarefree denom does nothing), so there's no infinite loop.
+    # 3. Squarefree log residual — try RT (Phase 2d) then arctan (Phase 2e).
+    # When both fail, emit an unevaluated ``Integrate``. Re-entry on
+    # that Integrate returns None from _integrate_rational (RT will
+    # say None again; Hermite on a squarefree denom does nothing), so
+    # there's no infinite loop.
     if has_log:
         if rt_pairs is not None:
             pieces.append(_rt_pairs_to_ir(rt_pairs, x))
+        elif at_ir is not None:
+            pieces.append(at_ir)
         else:
             integrand = _rational_to_ir(hermite_log[0], hermite_log[1], x)
             pieces.append(IRApply(INTEGRATE, (integrand, x)))
@@ -262,6 +269,23 @@ def _rt_pairs_to_ir(pairs, x: IRSymbol) -> IRNode:
     for t in terms[1:]:
         acc = IRApply(ADD, (acc, t))
     return acc
+
+
+def _try_arctan_integral(
+    num: Polynomial, den: Polynomial, x: IRSymbol
+) -> IRNode | None:
+    """Phase 2e: arctan antiderivative for an irreducible quadratic denominator.
+
+    Returns the closed-form IR when ``den`` is degree 2 with no rational
+    roots, or ``None`` if the denominator doesn't fit that shape.
+    """
+    from polynomial import rational_roots
+    den_n = normalize(den)
+    if len(den_n) - 1 != 2:
+        return None
+    if rational_roots(den_n):
+        return None
+    return arctan_integral(num, den, x)
 
 
 def _rational_to_ir(
