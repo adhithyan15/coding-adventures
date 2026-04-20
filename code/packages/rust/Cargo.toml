@@ -329,4 +329,5 @@ members = [
     "layout-ir",
     "udp-client",
     "state-machine-markup-serializer",
+    "state-machine-markup-deserializer",
 ]
