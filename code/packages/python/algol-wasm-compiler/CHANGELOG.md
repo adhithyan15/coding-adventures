@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Compiled ALGOL programs now execute scalar variables through frame-backed
+  WASM memory operations, including nested-block outer writes and shadowing.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added

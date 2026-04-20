@@ -4,6 +4,22 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: Compiler-generated data segments need source-stage size caps
+
+Even when a frontend only emits internal IR, any IR data declaration that a
+backend materializes as bytes can become a host-memory exhaustion path. Source
+size and type-checking success do not automatically bound semantic frame plans
+or generated runtime images.
+
+**Symptom:** A compiler sums frame sizes and emits one data declaration, while
+the WASM backend later expands it with `bytes(...) * size`.
+
+**Rule:** Put explicit byte caps at the earliest compiler stage that computes
+the generated data size, and test the rejection path with a synthetic semantic
+model rather than a huge source file.
+
+---
+
 ### 2026-04-20: CI setup-job failures can be infrastructure flakiness, not code failures
 
 GitHub Actions can fail before checkout or before any repository command runs
