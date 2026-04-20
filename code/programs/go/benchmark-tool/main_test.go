@@ -411,6 +411,69 @@ func TestCLICommandFunctionsRejectBadArguments(t *testing.T) {
 	}
 }
 
+func TestCompareResultDirsWritesVerdictArtifacts(t *testing.T) {
+	dir := t.TempDir()
+	baseDir := filepath.Join(dir, "base")
+	candidateDir := filepath.Join(dir, "candidate")
+	writeTrialResultDirForTest(t, baseDir, []float64{100, 101, 99}, nil, "elapsed_ms", "svc", "ping")
+	writeTrialResultDirForTest(t, candidateDir, []float64{90, 91, 89}, nil, "elapsed_ms", "svc", "ping")
+	var stdout bytes.Buffer
+
+	if err := compareResultDirs(baseDir, candidateDir, "elapsed_ms", &stdout); err != nil {
+		t.Fatalf("compare result dirs: %v", err)
+	}
+	if !strings.Contains(stdout.String(), "improvement") {
+		t.Fatalf("stdout should include verdict: %s", stdout.String())
+	}
+	comparison := readComparisonForTest(t, filepath.Join(candidateDir, "comparison.json"))
+	if len(comparison.Comparisons) != 1 {
+		t.Fatalf("comparison count = %d", len(comparison.Comparisons))
+	}
+	row := comparison.Comparisons[0]
+	if row.Verdict != "improvement" {
+		t.Fatalf("verdict = %q row=%#v", row.Verdict, row)
+	}
+	if row.Direction != "lower_is_better" {
+		t.Fatalf("latency direction = %q", row.Direction)
+	}
+	if row.RelativeDifferencePercent >= 0 {
+		t.Fatalf("expected candidate latency to be lower: %#v", row)
+	}
+	if _, err := os.Stat(filepath.Join(candidateDir, "comparison.md")); err != nil {
+		t.Fatalf("expected comparison markdown: %v", err)
+	}
+}
+
+func TestCompareVerdictsRespectThroughputDirectionAndCorrectness(t *testing.T) {
+	throughput := compareTrialSets(
+		"base",
+		"candidate",
+		"ops_per_second",
+		trialsForTest([]float64{1000, 1010, 990}, nil, "ops_per_second", "svc", "ping"),
+		trialsForTest([]float64{900, 910, 890}, nil, "ops_per_second", "svc", "ping"),
+	)
+	if got := throughput.Comparisons[0].Verdict; got != "regression" {
+		t.Fatalf("throughput verdict = %q row=%#v", got, throughput.Comparisons[0])
+	}
+	if got := throughput.Comparisons[0].Direction; got != "higher_is_better" {
+		t.Fatalf("throughput direction = %q", got)
+	}
+
+	correctness := compareTrialSets(
+		"base",
+		"candidate",
+		"elapsed_ms",
+		trialsForTest([]float64{100, 101, 99}, nil, "elapsed_ms", "svc", "ping"),
+		trialsForTest([]float64{50, 51, 49}, map[int]string{1: "wrong response"}, "elapsed_ms", "svc", "ping"),
+	)
+	if got := correctness.Comparisons[0].Verdict; got != "correctness_failed" {
+		t.Fatalf("correctness verdict = %q row=%#v", got, correctness.Comparisons[0])
+	}
+	if got := relativeDifferencePercent(0, 3); got != 300 {
+		t.Fatalf("zero-baseline relative difference should stay JSON-safe, got %f", got)
+	}
+}
+
 func TestDoctorAndUsageAreAvailable(t *testing.T) {
 	var b bytes.Buffer
 	if err := doctor(&b); err != nil {
@@ -985,6 +1048,54 @@ func readSummaryForTest(t *testing.T, path string) SummaryFile {
 		t.Fatalf("decode summary: %v", err)
 	}
 	return summary
+}
+
+func readComparisonForTest(t *testing.T, path string) ComparisonFile {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read comparison: %v", err)
+	}
+	var comparison ComparisonFile
+	if err := json.Unmarshal(data, &comparison); err != nil {
+		t.Fatalf("decode comparison: %v", err)
+	}
+	return comparison
+}
+
+func writeTrialResultDirForTest(t *testing.T, dir string, values []float64, failures map[int]string, metric string, subject string, workload string) {
+	t.Helper()
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatalf("mkdir result dir: %v", err)
+	}
+	file, err := os.Create(filepath.Join(dir, "trials.jsonl"))
+	if err != nil {
+		t.Fatalf("create trials: %v", err)
+	}
+	defer file.Close()
+	for _, trial := range trialsForTest(values, failures, metric, subject, workload) {
+		if err := writeJSONLine(file, trial); err != nil {
+			t.Fatalf("write trial: %v", err)
+		}
+	}
+}
+
+func trialsForTest(values []float64, failures map[int]string, metric string, subject string, workload string) []Trial {
+	trials := make([]Trial, 0, len(values))
+	for i, value := range values {
+		trialNumber := i + 1
+		errText := failures[trialNumber]
+		trials = append(trials, Trial{
+			Subject:  subject,
+			Workload: workload,
+			Trial:    trialNumber,
+			Phase:    "measurement",
+			OK:       errText == "",
+			Metrics:  map[string]float64{metric: value},
+			Error:    errText,
+		})
+	}
+	return trials
 }
 
 func hasSummaryMetric(summary SummaryFile, metric string) bool {

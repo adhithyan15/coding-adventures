@@ -36,7 +36,7 @@ import (
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
 
-const version = "0.3.0"
+const version = "0.4.0"
 
 const (
 	defaultTCPTimeout          = 10 * time.Second
@@ -164,6 +164,35 @@ type SummaryFile struct {
 	ManifestName string    `json:"manifest_name"`
 	GeneratedAt  string    `json:"generated_at"`
 	Summaries    []Summary `json:"summaries"`
+}
+
+type ComparisonFile struct {
+	GeneratedAt  string       `json:"generated_at"`
+	BaseDir      string       `json:"base_dir"`
+	CandidateDir string       `json:"candidate_dir"`
+	Metric       string       `json:"metric"`
+	Comparisons  []Comparison `json:"comparisons"`
+}
+
+type Comparison struct {
+	Subject                   string  `json:"subject"`
+	Workload                  string  `json:"workload"`
+	Metric                    string  `json:"metric"`
+	Direction                 string  `json:"direction"`
+	BaseCount                 int     `json:"base_count"`
+	CandidateCount            int     `json:"candidate_count"`
+	BaseMedian                float64 `json:"base_median"`
+	CandidateMedian           float64 `json:"candidate_median"`
+	AbsoluteDifference        float64 `json:"absolute_difference"`
+	RelativeDifferencePercent float64 `json:"relative_difference_percent"`
+	RelativeCILowPercent      float64 `json:"relative_ci_low_percent"`
+	RelativeCIHighPercent     float64 `json:"relative_ci_high_percent"`
+	CliffsDelta               float64 `json:"cliffs_delta"`
+	PracticalThresholdPercent float64 `json:"practical_threshold_percent"`
+	BaseCorrect               bool    `json:"base_correct"`
+	CandidateCorrect          bool    `json:"candidate_correct"`
+	Verdict                   string  `json:"verdict"`
+	Reason                    string  `json:"reason"`
 }
 
 type RunOptions struct {
@@ -533,31 +562,301 @@ func reportResultDir(dir string, stdout io.Writer) error {
 }
 
 func compareResultDirs(leftDir string, rightDir string, metric string, stdout io.Writer) error {
-	left, err := readSummary(filepath.Join(leftDir, "summary.json"))
+	leftTrials, err := readTrials(filepath.Join(leftDir, "trials.jsonl"))
 	if err != nil {
 		return err
 	}
-	right, err := readSummary(filepath.Join(rightDir, "summary.json"))
+	rightTrials, err := readTrials(filepath.Join(rightDir, "trials.jsonl"))
 	if err != nil {
 		return err
 	}
-	leftMap := summaryByKey(left.Summaries, metric)
-	rightMap := summaryByKey(right.Summaries, metric)
-	keys := sortedCommonKeys(leftMap, rightMap)
-	if len(keys) == 0 {
-		return fmt.Errorf("no common %q summaries found", metric)
+	comparison := compareTrialSets(leftDir, rightDir, metric, leftTrials, rightTrials)
+	if len(comparison.Comparisons) == 0 {
+		return fmt.Errorf("no common %q trial metrics found", metric)
 	}
-	for _, key := range keys {
-		a := leftMap[key]
-		b := rightMap[key]
-		diff := b.Median - a.Median
-		rel := 0.0
-		if a.Median != 0 {
-			rel = diff / a.Median * 100
-		}
-		fmt.Fprintf(stdout, "%s %s median: %.3f -> %.3f (%+.2f%%)\n", key, metric, a.Median, b.Median, rel)
+	if err := writeJSON(filepath.Join(rightDir, "comparison.json"), comparison); err != nil {
+		return err
 	}
+	report := renderComparisonReport(comparison)
+	if err := os.WriteFile(filepath.Join(rightDir, "comparison.md"), []byte(report), 0o644); err != nil {
+		return err
+	}
+	for _, row := range comparison.Comparisons {
+		fmt.Fprintf(
+			stdout,
+			"%s/%s %s: %s (%+.2f%%, CI %.2f..%.2f, Cliff's delta %.3f)\n",
+			row.Subject,
+			row.Workload,
+			row.Metric,
+			row.Verdict,
+			row.RelativeDifferencePercent,
+			row.RelativeCILowPercent,
+			row.RelativeCIHighPercent,
+			row.CliffsDelta,
+		)
+	}
+	fmt.Fprintf(stdout, "wrote %s\n", filepath.Join(rightDir, "comparison.json"))
+	fmt.Fprintf(stdout, "wrote %s\n", filepath.Join(rightDir, "comparison.md"))
 	return nil
+}
+
+func compareTrialSets(baseDir string, candidateDir string, metric string, baseTrials []Trial, candidateTrials []Trial) ComparisonFile {
+	base := trialValuesByKey(baseTrials, metric)
+	candidate := trialValuesByKey(candidateTrials, metric)
+	keys := sortedCommonValueKeys(base, candidate)
+	rows := make([]Comparison, 0, len(keys))
+	for _, key := range keys {
+		baseSet := base[key]
+		candidateSet := candidate[key]
+		baseValues := append([]float64(nil), baseSet.Values...)
+		candidateValues := append([]float64(nil), candidateSet.Values...)
+		sort.Float64s(baseValues)
+		sort.Float64s(candidateValues)
+		row := compareMetricValues(key, metric, baseValues, candidateValues, baseSet.Correct, candidateSet.Correct)
+		rows = append(rows, row)
+	}
+	return ComparisonFile{
+		GeneratedAt:  time.Now().UTC().Format(time.RFC3339),
+		BaseDir:      baseDir,
+		CandidateDir: candidateDir,
+		Metric:       metric,
+		Comparisons:  rows,
+	}
+}
+
+type trialMetricSet struct {
+	Values  []float64
+	Correct bool
+	Seen    bool
+}
+
+func trialValuesByKey(trials []Trial, metric string) map[string]trialMetricSet {
+	out := map[string]trialMetricSet{}
+	for _, trial := range trials {
+		if trial.Phase != "measurement" {
+			continue
+		}
+		key := trial.Subject + "/" + trial.Workload
+		entry := out[key]
+		if !entry.Seen {
+			entry.Correct = true
+			entry.Seen = true
+		}
+		if !trial.OK {
+			entry.Correct = false
+		}
+		if value, ok := trial.Metrics[metric]; ok && trial.OK {
+			entry.Values = append(entry.Values, value)
+		}
+		out[key] = entry
+	}
+	return out
+}
+
+func compareMetricValues(key string, metric string, baseValues []float64, candidateValues []float64, baseCorrect bool, candidateCorrect bool) Comparison {
+	subject, workload, _ := strings.Cut(key, "/")
+	baseMedian := percentile(baseValues, 50)
+	candidateMedian := percentile(candidateValues, 50)
+	absoluteDiff := candidateMedian - baseMedian
+	relativeDiff := relativeDifferencePercent(baseMedian, candidateMedian)
+	ciLow, ciHigh := bootstrapRelativeDifferenceCI(baseValues, candidateValues)
+	direction := metricDirection(metric)
+	threshold := practicalThresholdPercent(metric)
+	row := Comparison{
+		Subject:                   subject,
+		Workload:                  workload,
+		Metric:                    metric,
+		Direction:                 direction,
+		BaseCount:                 len(baseValues),
+		CandidateCount:            len(candidateValues),
+		BaseMedian:                baseMedian,
+		CandidateMedian:           candidateMedian,
+		AbsoluteDifference:        absoluteDiff,
+		RelativeDifferencePercent: relativeDiff,
+		RelativeCILowPercent:      ciLow,
+		RelativeCIHighPercent:     ciHigh,
+		CliffsDelta:               cliffsDelta(baseValues, candidateValues),
+		PracticalThresholdPercent: threshold,
+		BaseCorrect:               baseCorrect,
+		CandidateCorrect:          candidateCorrect,
+	}
+	row.Verdict, row.Reason = comparisonVerdict(row)
+	return row
+}
+
+func sortedCommonValueKeys(left, right map[string]trialMetricSet) []string {
+	var keys []string
+	for key := range left {
+		if _, ok := right[key]; ok {
+			keys = append(keys, key)
+		}
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func comparisonVerdict(row Comparison) (string, string) {
+	if !row.BaseCorrect || !row.CandidateCorrect {
+		return "correctness_failed", "performance verdict suppressed because at least one side had failed measurement trials"
+	}
+	if row.BaseCount < 2 || row.CandidateCount < 2 {
+		return "inconclusive", "at least two successful measurement trials per side are required for a confidence interval verdict"
+	}
+	if row.RelativeCILowPercent <= 0 && row.RelativeCIHighPercent >= 0 {
+		return "inconclusive", "relative-difference confidence interval crosses zero"
+	}
+	if math.Abs(row.RelativeDifferencePercent) < row.PracticalThresholdPercent {
+		return "no_clear_change", "observed median change is below the practical threshold"
+	}
+	if row.Direction == "higher_is_better" {
+		if row.RelativeDifferencePercent > 0 && row.RelativeCILowPercent > 0 {
+			return "improvement", "candidate is statistically and practically higher"
+		}
+		if row.RelativeDifferencePercent < 0 && row.RelativeCIHighPercent < 0 {
+			return "regression", "candidate is statistically and practically lower"
+		}
+	} else {
+		if row.RelativeDifferencePercent < 0 && row.RelativeCIHighPercent < 0 {
+			return "improvement", "candidate is statistically and practically lower"
+		}
+		if row.RelativeDifferencePercent > 0 && row.RelativeCILowPercent > 0 {
+			return "regression", "candidate is statistically and practically higher"
+		}
+	}
+	return "inconclusive", "statistical and practical signals disagree"
+}
+
+func relativeDifferencePercent(baseMedian float64, candidateMedian float64) float64 {
+	if baseMedian == 0 {
+		if candidateMedian == 0 {
+			return 0
+		}
+		return candidateMedian * 100.0
+	}
+	return (candidateMedian - baseMedian) / math.Abs(baseMedian) * 100.0
+}
+
+func bootstrapRelativeDifferenceCI(baseValues []float64, candidateValues []float64) (float64, float64) {
+	if len(baseValues) == 0 || len(candidateValues) == 0 {
+		return 0, 0
+	}
+	if len(baseValues) == 1 && len(candidateValues) == 1 {
+		value := relativeDifferencePercent(baseValues[0], candidateValues[0])
+		return value, value
+	}
+	seedBytes := sha256.Sum256([]byte(fmt.Sprintf("%v/%v", baseValues, candidateValues)))
+	seed := int64(0)
+	for i := 0; i < 8; i++ {
+		seed = seed<<8 + int64(seedBytes[i])
+	}
+	rng := rand.New(rand.NewSource(seed))
+	const rounds = 1000
+	estimates := make([]float64, rounds)
+	baseSample := make([]float64, len(baseValues))
+	candidateSample := make([]float64, len(candidateValues))
+	for i := 0; i < rounds; i++ {
+		for j := range baseSample {
+			baseSample[j] = baseValues[rng.Intn(len(baseValues))]
+		}
+		for j := range candidateSample {
+			candidateSample[j] = candidateValues[rng.Intn(len(candidateValues))]
+		}
+		sort.Float64s(baseSample)
+		sort.Float64s(candidateSample)
+		estimates[i] = relativeDifferencePercent(percentile(baseSample, 50), percentile(candidateSample, 50))
+	}
+	sort.Float64s(estimates)
+	return percentile(estimates, 2.5), percentile(estimates, 97.5)
+}
+
+func cliffsDelta(baseValues []float64, candidateValues []float64) float64 {
+	if len(baseValues) == 0 || len(candidateValues) == 0 {
+		return 0
+	}
+	var greater float64
+	var lesser float64
+	for _, candidate := range candidateValues {
+		for _, base := range baseValues {
+			switch {
+			case candidate > base:
+				greater++
+			case candidate < base:
+				lesser++
+			}
+		}
+	}
+	return (greater - lesser) / float64(len(baseValues)*len(candidateValues))
+}
+
+func metricDirection(metric string) string {
+	lower := strings.ToLower(metric)
+	if strings.Contains(lower, "ops_per_second") || strings.Contains(lower, "bytes_per_second") || strings.Contains(lower, "throughput") {
+		return "higher_is_better"
+	}
+	return "lower_is_better"
+}
+
+func practicalThresholdPercent(metric string) float64 {
+	lower := strings.ToLower(metric)
+	if strings.Contains(lower, "startup") {
+		return 10
+	}
+	return 5
+}
+
+func renderComparisonReport(comparison ComparisonFile) string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "# Benchmark Comparison\n\n")
+	fmt.Fprintf(&b, "Generated: %s\n\n", comparison.GeneratedAt)
+	fmt.Fprintf(&b, "Metric: `%s`\n\n", comparison.Metric)
+	if len(comparison.Comparisons) == 0 {
+		b.WriteString("No comparable measurement trials were found.\n")
+		return b.String()
+	}
+	b.WriteString("| Subject | Workload | Verdict | Base Median | Candidate Median | Relative Diff | 95% CI | Cliff's Delta | Reason |\n")
+	b.WriteString("|---|---|---|---:|---:|---:|---:|---:|---|\n")
+	for _, row := range comparison.Comparisons {
+		fmt.Fprintf(
+			&b,
+			"| %s | %s | %s | %.3f | %.3f | %+.2f%% | %.2f..%.2f%% | %.3f | %s |\n",
+			row.Subject,
+			row.Workload,
+			row.Verdict,
+			row.BaseMedian,
+			row.CandidateMedian,
+			row.RelativeDifferencePercent,
+			row.RelativeCILowPercent,
+			row.RelativeCIHighPercent,
+			row.CliffsDelta,
+			row.Reason,
+		)
+	}
+	return b.String()
+}
+
+func readTrials(path string) ([]Trial, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	var trials []Trial
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+		var trial Trial
+		if err := json.Unmarshal([]byte(line), &trial); err != nil {
+			return nil, err
+		}
+		trials = append(trials, trial)
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return trials, nil
 }
 
 func LoadManifest(path string) (Manifest, error) {
