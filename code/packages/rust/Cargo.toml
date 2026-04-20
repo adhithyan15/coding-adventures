@@ -323,6 +323,7 @@ members = [
     "window-win32",
     "window-c",
     "tcp-runtime",
+    "text-interfaces",
     "udp-client",
     "state-machine-markup-serializer",
 ]
