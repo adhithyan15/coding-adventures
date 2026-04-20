@@ -295,6 +295,16 @@ fn nfa_import_rejects_stack_effects_and_empty_targets() {
 }
 
 #[test]
+fn nfa_import_rejects_empty_string_event_as_epsilon() {
+    let mut definition = minimal_definition(MachineKind::Nfa);
+    definition.transitions[0].on = Some(String::new());
+
+    assert!(NFA::from_definition(&definition)
+        .unwrap_err()
+        .contains("None for epsilon"));
+}
+
+#[test]
 fn pda_import_rejects_missing_stack_fields_and_unknown_symbols() {
     let mut definition = minimal_definition(MachineKind::Pda);
     definition.stack_alphabet = vec!["$".to_string()];

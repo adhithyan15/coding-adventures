@@ -247,10 +247,19 @@ impl NFA {
                     transition.from
                 ));
             }
-            let event = transition.on.clone().unwrap_or_else(|| EPSILON.to_string());
-            if event != EPSILON {
-                ensure_known_event(&alphabet, &event)?;
-            }
+            let event = match &transition.on {
+                Some(event) if event.is_empty() => {
+                    return Err(
+                        "NFA transition events must use None for epsilon, not an empty string"
+                            .into(),
+                    )
+                }
+                Some(event) => {
+                    ensure_known_event(&alphabet, event)?;
+                    event.clone()
+                }
+                None => EPSILON.to_string(),
+            };
             let key = (transition.from.clone(), event);
             transitions
                 .entry(key)

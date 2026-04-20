@@ -102,14 +102,14 @@ cargo test -p state-machine -- --nocapture
 
 ## Test coverage
 
-254 tests across unit and integration test suites:
+255 tests across unit and integration test suites:
 - **types**: 6 unit tests
 - **dfa**: 22 unit + 52 integration tests
 - **nfa**: 18 unit + 41 integration tests
 - **minimize**: 5 unit + 8 integration tests
 - **pda**: 17 unit + 33 integration tests
 - **modal**: 13 unit + 23 integration tests
-- **definitions**: 17 integration tests
+- **definitions**: 18 integration tests
 
 Classic examples tested: turnstile, binary divisibility-by-3, 2-bit branch predictor,
 balanced parentheses PDA, a^n b^n PDA, HTML tokenizer modal machine.

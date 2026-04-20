@@ -468,7 +468,8 @@ Phase 1 imports cover DFA, NFA, and PDA definitions:
   stack effects.
 - `NFA::from_definition(definition)` accepts only `kind = "nfa"`, requires one
   initial state, allows epsilon transitions, allows one or more targets per
-  transition, and rejects all stack effects.
+  transition, rejects empty-string events because epsilon is represented by
+  `None`, and rejects all stack effects.
 - `PushdownAutomaton::from_definition(definition)` accepts only `kind = "pda"`,
   requires one initial state and one initial stack symbol, requires every
   transition to have exactly one target and one `stack_pop` symbol, validates

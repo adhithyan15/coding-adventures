@@ -16,7 +16,8 @@ All notable changes to the `state-machine` crate will be documented in this file
 - Added tests covering DFA, NFA, PDA, epsilon, multi-target, and stack-effect
   definition export behavior.
 - Added definition import tests covering language preservation and rejection of
-  invalid machine-kind, transition-target, epsilon, and stack-effect shapes.
+  invalid machine-kind, transition-target, epsilon, empty-event, and
+  stack-effect shapes.
 
 ### Changed
 
