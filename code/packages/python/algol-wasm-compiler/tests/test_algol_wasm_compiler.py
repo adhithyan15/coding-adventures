@@ -120,3 +120,42 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_integer_array_element_store_and_load(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:3]; "
+            "a[1] := 2; a[2] := 3; result := a[1] + a[2] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_multidimensional_integer_array_uses_row_major_offsets(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2, 1:3]; "
+            "a[2, 3] := 11; result := a[2, 3] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_dynamic_array_bounds_are_evaluated_at_block_entry(self) -> None:
+        result = compile_source(
+            "begin integer result, lo, hi; "
+            "lo := 2; hi := 4; "
+            "begin integer array a[lo:hi]; a[3] := 8; result := a[3] end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_out_of_bounds_array_access_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "a[3] := 9; result := 1 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_invalid_array_bounds_return_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[3:1]; result := 1 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]

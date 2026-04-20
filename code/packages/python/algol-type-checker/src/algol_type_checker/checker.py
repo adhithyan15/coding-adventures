@@ -688,14 +688,15 @@ class AlgolTypeChecker:
             self._error(left_parts[0], "assignment target must be a variable")
             return
 
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(left_parts[0], "assignment target is missing a name")
+            return
+
         if _variable_subscripts(variable):
             access = self._check_array_access(variable, scope, role="write")
             target_type = ERROR if access is None else INTEGER
         else:
-            name = _variable_head_name(variable)
-            if name is None:
-                self._error(left_parts[0], "assignment target is missing a name")
-                return
             symbol = self._resolve_name(name, scope, role="write")
             if symbol is not None and symbol.kind == ARRAY:
                 self._error(name, f"array {name.value!r} requires subscripts")

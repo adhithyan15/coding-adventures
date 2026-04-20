@@ -293,6 +293,16 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "expects 2 subscript" in result.diagnostics[0].message
 
+    def test_rejects_non_integer_array_element_assignment(self) -> None:
+        ast = parse_algol("begin integer array a[1:3]; a[1] := false end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "cannot assign boolean to integer variable"
+            in result.diagnostics[0].message
+        )
+
     def test_rejects_array_used_without_subscripts(self) -> None:
         ast = parse_algol("begin integer result; integer array a[1:3]; result := a end")
         result = check_algol(ast)

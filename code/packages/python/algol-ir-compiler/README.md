@@ -15,10 +15,19 @@ Calls pass an explicit static link followed by value arguments, procedure frames
 are allocated from the module frame stack, and typed procedures return through
 their procedure-name result slot.
 
-This phase keeps ALGOL frame memory and its 16-byte runtime state bounded to
-one 64 KiB WASM page. Larger semantic frame plans raise `CompileError` before
-the WASM data encoder can materialize the memory image, and dynamic procedure
-recursion stops at the same bounded frame stack.
+Integer arrays lower to frame-stored descriptors backed by a separate bounded
+ALGOL heap segment. The compiler evaluates integer lower/upper bounds once at
+block entry, stores row-major stride metadata beside the descriptor, and emits
+checked element loads/stores through the descriptor. Block and procedure exits
+restore the heap pointer to the activation's entry mark, so dynamic arrays keep
+ALGOL block lifetime instead of leaking through loops or recursive calls.
+
+This phase keeps ALGOL frame memory and its 20-byte runtime state bounded to
+one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
+separate 64 KiB heap segment. Larger semantic frame plans raise `CompileError`
+before the WASM data encoder can materialize the memory image, dynamic
+procedure recursion stops at the bounded frame stack, and invalid array bounds,
+out-of-bounds subscripts, oversized arrays, or heap exhaustion return `0`.
 
 ```python
 from algol_ir_compiler import compile_algol
