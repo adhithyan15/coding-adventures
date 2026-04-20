@@ -497,3 +497,193 @@ is required. The rest can be stubs that log a warning and skip the instruction:
 | path      | Deferred    | Not used in HTML 1.0                         |
 | gradient  | Deferred    | CSS gradients are post-HTML 1.0              |
 | layer     | Deferred    | Opacity compositing is post-HTML 1.0         |
+
+---
+
+## glyph_run Routing by font_ref Scheme
+
+**This section supersedes the brief `glyph_run` handler descriptions
+in the per-backend handler mapping tables above. It was added after
+the TXT-series (TXT00–TXT05) and FNT02/FNT03 were specified; those
+specs establish the font-binding invariant that paint backends MUST
+honor when dispatching glyph runs.**
+
+Every `PaintGlyphRun` instruction carries a `font_ref: string`
+field. The string's prefix before the first colon is the **font
+binding scheme**, and it tells the paint backend which glyph-
+rasterization pipeline to use. Crossing bindings is undefined
+behaviour and MUST throw `UnsupportedFontBindingError`.
+
+### The four scheme prefixes in v0.1
+
+| Prefix            | Glyph IDs produced by         | Paint backend MUST use                                         |
+|-------------------|-------------------------------|----------------------------------------------------------------|
+| `font-parser:`    | TXT02 (naive) / TXT04 (full)  | FNT02 glyph-parser → FNT03 rasterizer → native image blit      |
+| `coretext:`       | TXT03a CoreText shaper        | CoreText's `CTFontDrawGlyphs` (or `CGContextShowGlyphsAtPositions`) |
+| `directwrite:`    | TXT03b DirectWrite shaper     | Direct2D's `ID2D1RenderTarget::DrawGlyphRun` with matching `IDWriteFontFace` |
+| `pango:`          | TXT03c Pango shaper           | Cairo's `pango_cairo_show_glyph_string` with matching `PangoFont` |
+
+Each paint backend registers a set of recognized prefixes at
+creation time and rejects any other prefix with
+`UnsupportedFontBindingError`. This is the same failure discipline
+as PaintVM's `UnknownInstructionError` (P2D01): loud failure
+beats silent wrong output.
+
+### Dispatch algorithm for glyph_run
+
+```
+fn handle_glyph_run(run: &PaintGlyphRun, ctx: &mut PlatformContext):
+    scheme, key = split_once(run.font_ref, ':')
+    match scheme:
+        "font-parser":
+            // Device-independent path.
+            // The backend must have the font bytes registered under
+            // this key (caller's responsibility; typically done once
+            // at startup via a shared FontRegistry).
+            font = ctx.font_registry.lookup(key) or throw
+            for glyph in run.glyphs:
+                outline = fnt02::glyph_outline(&font, glyph.glyph_id)
+                bitmap  = fnt03::rasterize(
+                    &outline, font.units_per_em, run.font_size,
+                    subpixel_origin = (
+                      (run.x + glyph.x_offset) - floor(run.x + glyph.x_offset),
+                      (run.y + glyph.y_offset) - floor(run.y + glyph.y_offset),
+                    ))
+                platform_blit_grayscale(
+                    ctx,
+                    bitmap,
+                    run.x + glyph.x_offset,
+                    run.y + glyph.y_offset,
+                    tint = run.fill,
+                )
+
+        "coretext":
+            // macOS / iOS native path.
+            // key identifies a CTFontRef the backend holds.
+            ct_font = ctx.coretext_registry.lookup(key) or throw
+            let cgglyphs: Vec<CGGlyph> = run.glyphs.iter().map(|g| g.glyph_id as CGGlyph)
+            let positions: Vec<CGPoint> = run.glyphs.iter().map(|g| CGPoint {
+                x: run.x + g.x_offset,
+                y: run.y + g.y_offset,
+            })
+            CGContextSetFillColor(ctx.cg, run.fill)
+            CTFontDrawGlyphs(ct_font, cgglyphs.as_ptr(), positions.as_ptr(),
+                             run.glyphs.len(), ctx.cg)
+
+        "directwrite":
+            // Windows native path. (P2D06-direct2d only.)
+            dw_face = ctx.directwrite_registry.lookup(key) or throw
+            let d2d_glyph_run = DWRITE_GLYPH_RUN {
+                fontFace:      dw_face,
+                fontEmSize:    run.font_size,
+                glyphCount:    run.glyphs.len(),
+                glyphIndices:  run.glyphs.map(|g| g.glyph_id as u16).as_ptr(),
+                glyphAdvances: ...,  // compute from x_offset deltas
+                glyphOffsets:  ...,  // per-glyph (x,y) offsets
+                isSideways:    false,
+                bidiLevel:     0,
+            }
+            ctx.d2d_render_target.DrawGlyphRun(
+                D2D_POINT_2F { x: run.x, y: run.y },
+                &d2d_glyph_run,
+                ctx.brush_for(run.fill),
+                DWRITE_MEASURING_MODE_NATURAL,
+            )
+
+        "pango":
+            // Linux native path. (P2D08-cairo only.)
+            pango_font = ctx.pango_registry.lookup(key) or throw
+            // Build a PangoGlyphString from run.glyphs
+            // and call pango_cairo_show_glyph_string().
+
+        _:
+            throw UnsupportedFontBindingError { scheme }
+```
+
+### Why the registry lookup
+
+Each backend maintains a runtime registry mapping font_ref keys
+to the live font handle it needs (a parsed FontFile for
+font-parser; a CTFontRef for coretext; an IDWriteFontFace for
+directwrite; a PangoFont for pango). The registry is populated
+at application startup, typically by the same code that built
+the FontResolver (TXT05) — both use the same underlying font
+source.
+
+The paint backend does NOT perform font resolution. It only
+looks up the already-resolved handle by its ref. This keeps the
+paint layer stateless with respect to font discovery — every
+font a scene references must be pre-registered. A scene that
+names an unregistered font fails the lookup, which raises
+`UnsupportedFontBindingError` with a message identifying the
+missing key. (Strictly, this is a separate error variant
+`FontRefNotRegistered`, but sharing the same exception simplifies
+callers.)
+
+### Per-backend support matrix for v0.1
+
+| Backend         | font-parser | coretext  | directwrite | pango     |
+|-----------------|-------------|-----------|-------------|-----------|
+| paint-metal     | Supported   | Supported | —           | —         |
+| paint-vm-direct2d | Supported | —         | Supported   | —         |
+| paint-vm-gdi    | Supported   | —         | —           | —         |
+| paint-vm-cairo  | Supported   | —         | —           | Supported |
+| paint-vm-canvas | Supported   | —         | —           | —         |
+| paint-vm-svg    | Supported   | —         | —           | —         |
+| paint-vm-terminal | —         | —         | —           | —         |
+
+Every backend supports `font-parser:` (the device-independent
+path) since FNT02 + FNT03 compile everywhere. Native schemes are
+available only on their platforms. The terminal backend does not
+render glyphs via any shaper — it uses its own codepoint-to-cell
+logic and does not accept PaintGlyphRun at the pixel level. (A
+future variant may support it for rendering Unicode characters in
+monospace cells; outside the scope of v0.1.)
+
+### Composition: the font-parser path in detail
+
+The `font-parser:` dispatch deserves extra explanation because
+it's the cross-platform, reproducible path — the one LaTeX-style
+rendering depends on.
+
+For each glyph in the run:
+
+1. **Resolve the outline.** Call `fnt02::glyph_outline(&font,
+   glyph.glyph_id)`. Returns a `GlyphOutline` with `MoveTo` /
+   `LineTo` / `QuadTo` commands in design units.
+
+2. **Rasterize to coverage.** Call `fnt03::rasterize(...)` with
+   the font's `units_per_em`, the run's `font_size`, and a
+   subpixel origin computed from the fractional part of the
+   glyph's absolute position. Returns a single-channel 8-bit
+   `GlyphBitmap`.
+
+3. **Tint and composite.** The bitmap is grayscale coverage;
+   multiply by `run.fill` (with alpha premultiplication) and
+   alpha-blend over the target surface at the glyph's integer-
+   rounded position. The platform-specific blit is:
+   - Metal: upload the grayscale bitmap as an R8Unorm texture,
+     draw a textured quad with `fill` as the tint color.
+   - Direct2D: `CreateBitmap` with R8, `DrawBitmap` (not ideal;
+     D2D prefers BGRA — a convert-and-blit path works).
+   - GDI: `CreateDIBSection` with 8bpp palette, `AlphaBlend`.
+   - Cairo: `cairo_mask_surface` with the coverage as the mask
+     and `fill` as the source color.
+   - Canvas: `createImageData` populated with tinted RGBA derived
+     from the coverage, then `putImageData`.
+
+4. **Subpixel snapping and caching.** Rasterizing the same glyph
+   at the same size and same subpixel origin repeatedly is
+   wasteful; backends SHOULD maintain a glyph bitmap cache keyed
+   on `(font_ref, glyph_id, font_size, rounded_subpixel_origin)`.
+   FNT03's open question on snapping granularity applies here —
+   1/4-pixel is the recommended default.
+
+The device-dependent paths (`coretext:`, `directwrite:`, `pango:`)
+bypass FNT02 and FNT03 entirely; the OS does the outline lookup
+and rasterization internally. This is why **the paint backend
+must not mix bindings** — a CoreText glyph ID is not a valid
+input to FNT02's `glyph_outline`, and a font-parser glyph ID is
+not a valid input to `CTFontDrawGlyphs`.
+
+---
