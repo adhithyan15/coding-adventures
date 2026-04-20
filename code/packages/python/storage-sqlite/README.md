@@ -28,14 +28,14 @@ mini_sqlite.connect("app.db")
         ├── record   (varint + serial types)      ✓ phase 2
         ├── btree    (leaf + overflow + full recursive splits)  ✓ phases 3 + 4a + 4b
         ├── freelist (trunk/leaf page reuse)       ✓ phase 5
-        └── schema   (sqlite_schema round-trip)   [v1 phase 6]
+        └── schema   (sqlite_schema round-trip)   ✓ phase 6
 ```
 
 Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a + 4b + 5)
+## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -68,6 +68,8 @@ backend.
     The root page number never changes.
   - Corrupted pages (bad ncells, out-of-range pointers, overflow cycles,
     unknown page types) all raise `CorruptDatabaseError`.
+  - **`BTree.free_all(freelist)`** (phase 6): reclaims every page in a B-tree
+    (interior, leaf, overflow chains) via a post-order DFS traversal.
 - **`freelist` module** — SQLite trunk/leaf freelist (phase 5).
   `Freelist(pager)` manages the linked list of reusable pages rooted in the
   page-1 header (offsets 32–39). `free(pgno)` adds a page as a leaf entry
@@ -78,10 +80,18 @@ backend.
   falls through to `Pager.allocate()`. Pass `freelist=Freelist(pager)` to
   `BTree.create()` / `BTree.open()` to enable automatic overflow-page reuse
   on delete and update.
+- **`schema` module** — `sqlite_schema` catalog table (phase 6).
+  `initialize_new_database(pager)` writes the 100-byte file header and an
+  empty `sqlite_schema` leaf page into a fresh pager and returns a `Schema`.
+  `Schema(pager)` attaches to an existing database. `create_table(name, sql)`
+  allocates a root page, inserts the five-column schema row, and bumps the
+  schema cookie. `drop_table(name)` frees every page in the table's B-tree,
+  removes the schema row, and bumps the cookie. `list_tables()` returns table
+  names in insertion order. `find_table(name)` returns `(rowid, rootpage, sql)`
+  or `None`. `get_schema_cookie()` reads the u32 at page-1 offset 40.
 
-What's **not yet** in this package (coming in later phases):
-`sqlite_schema` (phase 6) and the `Backend` adapter that wires the full
-pipeline in (phase 7).
+What's **not yet** in this package (coming in a later phase):
+The `Backend` adapter that wires the full SQL pipeline into phase 7.
 
 ## Installation
 
@@ -89,7 +99,7 @@ pipeline in (phase 7).
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a + 4b + 5)
+## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -154,6 +164,37 @@ with Pager.open("app.db") as pager:
     tree.delete(1)          # overflow pages returned to freelist
     tree.insert(2, record.encode([b"Y" * 5000]))  # reuses those pages
     print(fl.total_pages)   # 0 — all freed pages were reused
+    pager.commit()
+```
+
+```python
+# --- Schema (phase 6: sqlite_schema catalog) ---
+from storage_sqlite import initialize_new_database, Schema, Freelist
+
+with Pager.create("catalog.db") as pager:
+    fl = Freelist(pager)
+    schema = initialize_new_database(pager)  # sets up page 1 + empty schema tree
+    # Schema uses the freelist so dropped tables' pages are reused.
+    schema2 = Schema(pager, freelist=fl)
+
+    # CREATE TABLE — allocates a root page, inserts the schema row.
+    root = schema2.create_table(
+        "users", "CREATE TABLE users (id INTEGER, name TEXT)"
+    )
+    print(root)                        # e.g. 2
+    print(schema2.list_tables())       # ['users']
+    print(schema2.get_schema_cookie()) # 1
+
+    # Use the root page directly for DML.
+    tree = BTree.open(pager, root, freelist=fl)
+    tree.insert(1, record.encode([1, "Alice"]))
+    tree.insert(2, record.encode([2, "Bob"]))
+
+    # DROP TABLE — frees every page in the table's B-tree.
+    schema2.drop_table("users")
+    print(schema2.list_tables())       # []
+    print(schema2.get_schema_cookie()) # 2
+
     pager.commit()
 ```
 
