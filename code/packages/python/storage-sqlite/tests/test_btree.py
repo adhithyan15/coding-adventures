@@ -1,4 +1,5 @@
-"""Tests for the B-tree layer — leaf pages, overflow chains, scan/find/CRUD."""
+"""Tests for the B-tree layer — leaf pages, overflow chains, scan/find/CRUD,
+interior page traversal, and root-leaf splits."""
 
 from __future__ import annotations
 
@@ -10,6 +11,7 @@ import pytest
 
 from storage_sqlite.btree import (
     _CELL_PTR,
+    _INTERIOR_HDR,
     _LEAF_HDR,
     _MAX_LOCAL,
     _MIN_LOCAL,
@@ -17,13 +19,16 @@ from storage_sqlite.btree import (
     PAGE_TYPE_INTERIOR_TABLE,
     PAGE_TYPE_LEAF_TABLE,
     BTree,
-    BTreeError,
     DuplicateRowidError,
     PageFullError,
     _init_leaf_page,
+    _interior_cell_encode,
     _local_payload_size,
     _read_hdr,
+    _read_interior_cell,
+    _read_interior_ptrs,
     _read_ptrs,
+    _write_interior_hdr,
 )
 from storage_sqlite.errors import CorruptDatabaseError
 from storage_sqlite.pager import PAGE_SIZE, Pager
@@ -382,41 +387,66 @@ def test_header_offset_100(tmp_path: Path) -> None:
 
 
 # ------------------------------------------------------------------
-# Interior page guard
+# Interior page helpers — unit tests
 # ------------------------------------------------------------------
 
 
-def test_insert_on_interior_page_raises(tmp_path: Path) -> None:
+def test_write_read_interior_hdr() -> None:
+    """_write_interior_hdr / _read_hdr round-trip for interior pages."""
+    buf = bytearray(PAGE_SIZE)
+    _write_interior_hdr(buf, 0, ncells=3, content_start=3800, rightmost_child=7)
+    hdr = _read_hdr(buf, 0)
+    assert hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+    assert hdr["ncells"] == 3
+    assert hdr["content_start"] == 3800
+    assert hdr["rightmost_child"] == 7
+
+
+def test_interior_cell_encode_decode() -> None:
+    """_interior_cell_encode / _read_interior_cell round-trip."""
+    cell = _interior_cell_encode(42, 999)
+    # 4 bytes for left_child + varint(999) = 2 bytes → 6 bytes total
+    left, sep = _read_interior_cell(cell + b"\x00" * 10, 0)
+    assert left == 42
+    assert sep == 999
+
+
+def test_read_interior_ptrs_rejects_oversized_ncells() -> None:
+    """ncells too large for an interior page must raise CorruptDatabaseError."""
+    buf = bytearray(PAGE_SIZE)
+    _write_interior_hdr(buf, 0, ncells=0, content_start=PAGE_SIZE, rightmost_child=1)
+    max_possible = (PAGE_SIZE - _INTERIOR_HDR) // _CELL_PTR
+    with pytest.raises(CorruptDatabaseError, match="ncells"):
+        _read_interior_ptrs(bytes(buf), 0, max_possible + 1)
+
+
+# ------------------------------------------------------------------
+# Interior corrupt-child guard
+# ------------------------------------------------------------------
+
+
+def test_find_corrupt_zero_child_raises(tmp_path: Path) -> None:
+    """Interior page with rightmost_child=0 (invalid) must raise CorruptDatabaseError."""
     with make_pager(tmp_path) as p:
         pgno = p.allocate()
         buf = bytearray(p.read(pgno))
-        buf[0] = PAGE_TYPE_INTERIOR_TABLE
+        _write_interior_hdr(buf, 0, ncells=0, content_start=PAGE_SIZE, rightmost_child=0)
         p.write(pgno, bytes(buf))
         b = BTree.open(p, pgno)
-        with pytest.raises(BTreeError, match="leaf"):
-            b.insert(1, b"x")
-
-
-def test_scan_on_interior_page_raises(tmp_path: Path) -> None:
-    with make_pager(tmp_path) as p:
-        pgno = p.allocate()
-        buf = bytearray(p.read(pgno))
-        buf[0] = PAGE_TYPE_INTERIOR_TABLE
-        p.write(pgno, bytes(buf))
-        b = BTree.open(p, pgno)
-        with pytest.raises(BTreeError, match="leaf"):
-            list(b.scan())
-
-
-def test_find_on_interior_page_raises(tmp_path: Path) -> None:
-    with make_pager(tmp_path) as p:
-        pgno = p.allocate()
-        buf = bytearray(p.read(pgno))
-        buf[0] = PAGE_TYPE_INTERIOR_TABLE
-        p.write(pgno, bytes(buf))
-        b = BTree.open(p, pgno)
-        with pytest.raises(BTreeError, match="leaf"):
+        with pytest.raises(CorruptDatabaseError, match="invalid child pointer"):
             b.find(1)
+
+
+def test_scan_corrupt_zero_child_raises(tmp_path: Path) -> None:
+    """Interior page with rightmost_child=0 must raise CorruptDatabaseError during scan."""
+    with make_pager(tmp_path) as p:
+        pgno = p.allocate()
+        buf = bytearray(p.read(pgno))
+        _write_interior_hdr(buf, 0, ncells=0, content_start=PAGE_SIZE, rightmost_child=0)
+        p.write(pgno, bytes(buf))
+        b = BTree.open(p, pgno)
+        with pytest.raises(CorruptDatabaseError):
+            list(b.scan())
 
 
 # ------------------------------------------------------------------
@@ -507,19 +537,153 @@ def test_cell_size_on_page_with_overflow() -> None:
 
 
 # ------------------------------------------------------------------
-# Delete on interior page raises
+# Phase 4a — root-leaf split + multi-level traversal
 # ------------------------------------------------------------------
 
 
-def test_delete_on_interior_page_raises(tmp_path: Path) -> None:
+def _fill_until_split(b: BTree, start: int = 1) -> int:
+    """Insert rows with sequential rowids until the root becomes interior.
+
+    Returns the rowid of the last successfully inserted row.  At that
+    point the root page type is PAGE_TYPE_INTERIOR_TABLE.
+    """
+    rowid = start
+    while True:
+        b.insert(rowid, record_encode([rowid]))
+        root_data = b._pager.read(b.root_page)
+        if root_data[0] == PAGE_TYPE_INTERIOR_TABLE:
+            return rowid
+        rowid += 1
+
+
+def test_root_split_promotes_root_to_interior(tmp_path: Path) -> None:
+    """After filling a leaf-root, the root must become an interior page."""
     with make_pager(tmp_path) as p:
-        pgno = p.allocate()
-        buf = bytearray(p.read(pgno))
-        buf[0] = PAGE_TYPE_INTERIOR_TABLE
-        p.write(pgno, bytes(buf))
-        b = BTree.open(p, pgno)
-        with pytest.raises(BTreeError, match="leaf"):
-            b.delete(1)
+        b = BTree.create(p)
+        _fill_until_split(b)
+        root_data = p.read(b.root_page)
+        assert root_data[0] == PAGE_TYPE_INTERIOR_TABLE
+
+
+def test_root_split_cell_count(tmp_path: Path) -> None:
+    """cell_count() must sum cells across both child leaves after a split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        for extra in range(last + 1, last + 11):
+            b.insert(extra, record_encode([extra]))
+        assert b.cell_count() == last + 10
+
+
+def test_root_split_find_all_rows(tmp_path: Path) -> None:
+    """find() must locate every row regardless of which child leaf it lives in."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        for rowid in range(1, last + 1):
+            raw = b.find(rowid)
+            assert raw is not None, f"find({rowid}) returned None after split"
+            values, _ = record_decode(raw)
+            assert values == [rowid]
+
+
+def test_root_split_scan_order(tmp_path: Path) -> None:
+    """scan() must return all rows in ascending rowid order after a split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, last + 1))
+        for rowid, raw in rows:
+            values, _ = record_decode(raw)
+            assert values == [rowid]
+
+
+def test_root_split_delete_from_left_leaf(tmp_path: Path) -> None:
+    """delete() works on a row in the left child leaf after a split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        # Rowid 1 is the smallest — guaranteed in the left leaf.
+        assert b.delete(1) is True
+        assert b.find(1) is None
+        assert b.cell_count() == last - 1
+
+
+def test_root_split_delete_from_right_leaf(tmp_path: Path) -> None:
+    """delete() works on a row in the right child leaf after a split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        # Largest rowid is guaranteed in the right leaf.
+        assert b.delete(last) is True
+        assert b.find(last) is None
+        assert b.cell_count() == last - 1
+
+
+def test_root_split_update(tmp_path: Path) -> None:
+    """update() replaces records correctly on both sides of the split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        assert b.update(1, record_encode(["left-updated"])) is True
+        assert b.update(last, record_encode(["right-updated"])) is True
+        vals_l, _ = record_decode(b.find(1))  # type: ignore[arg-type]
+        vals_r, _ = record_decode(b.find(last))  # type: ignore[arg-type]
+        assert vals_l == ["left-updated"]
+        assert vals_r == ["right-updated"]
+
+
+def test_root_split_find_missing_returns_none(tmp_path: Path) -> None:
+    """find() returns None for a non-existent rowid after a split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        _fill_until_split(b)
+        assert b.find(999_999) is None
+
+
+def test_root_split_duplicate_rowid_raises(tmp_path: Path) -> None:
+    """DuplicateRowidError is still raised on the correct child leaf."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        with pytest.raises(DuplicateRowidError):
+            b.insert(last, record_encode(["dup"]))
+
+
+def test_root_split_delete_missing_returns_false(tmp_path: Path) -> None:
+    """delete() returns False for a rowid not in the split tree."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        _fill_until_split(b)
+        assert b.delete(999_999) is False
+
+
+def test_root_split_persist_and_reopen(tmp_path: Path) -> None:
+    """Split tree written and committed must round-trip through close/reopen."""
+    p = make_pager(tmp_path)
+    b = BTree.create(p)
+    last = _fill_until_split(b)
+    p.commit()
+    p.close()
+
+    p2 = Pager.open(tmp_path / "db")
+    b2 = BTree.open(p2, 1)
+    assert b2.cell_count() == last
+    rows = list(b2.scan())
+    assert [r for r, _ in rows] == list(range(1, last + 1))
+    p2.close()
+
+
+def test_root_split_reverse_insert_order(tmp_path: Path) -> None:
+    """Descending-order inserts produce a correctly-split tree."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        count = 500
+        for rowid in range(count, 0, -1):
+            b.insert(rowid, record_encode([rowid]))
+        rows = list(b.scan())
+        assert [r for r, _ in rows] == list(range(1, count + 1))
 
 
 # ------------------------------------------------------------------
@@ -712,3 +876,126 @@ def test_free_overflow_rejects_circular_chain(tmp_path: Path) -> None:
         p.write(ov_pgno, bytes(ov_buf))
         with pytest.raises(CorruptDatabaseError, match="circular"):
             b.delete(1)
+
+
+# ------------------------------------------------------------------
+# Phase 4a — extra coverage for new interior-page code paths
+# ------------------------------------------------------------------
+
+
+def test_interior_cell_ptr_range_error() -> None:
+    """_read_interior_ptrs rejects a cell pointer that lands in the header area."""
+    buf = bytearray(PAGE_SIZE)
+    # Write an interior header with ncells=1.
+    _write_interior_hdr(buf, 0, ncells=1, content_start=PAGE_SIZE, rightmost_child=2)
+    # The pointer array base for an interior page is offset 12.
+    # Write a pointer value of 5, which is inside the 12-byte header.
+    struct.pack_into(">H", buf, _INTERIOR_HDR, 5)
+    with pytest.raises(CorruptDatabaseError, match="interior cell pointer"):
+        _read_interior_ptrs(bytes(buf), 0, 1)
+
+
+def test_find_unexpected_page_type_raises(tmp_path: Path) -> None:
+    """_find_leaf_page raises CorruptDatabaseError on an unknown page type byte."""
+    with make_pager(tmp_path) as p:
+        pgno = p.allocate()
+        buf = bytearray(p.read(pgno))
+        buf[0] = 0xFF  # unknown type
+        p.write(pgno, bytes(buf))
+        b = BTree.open(p, pgno)
+        with pytest.raises(CorruptDatabaseError, match="unexpected type"):
+            b.find(1)
+
+
+def test_scan_unexpected_page_type_raises(tmp_path: Path) -> None:
+    """_scan_page raises CorruptDatabaseError on an unknown page type byte."""
+    with make_pager(tmp_path) as p:
+        pgno = p.allocate()
+        buf = bytearray(p.read(pgno))
+        buf[0] = 0xFF  # unknown type
+        p.write(pgno, bytes(buf))
+        b = BTree.open(p, pgno)
+        with pytest.raises(CorruptDatabaseError, match="unexpected type"):
+            list(b.scan())
+
+
+def test_scan_cycle_in_tree_structure_raises(tmp_path: Path) -> None:
+    """_scan_page detects a cycle when an interior page is visited twice."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        last = _fill_until_split(b)
+        # Read the interior root to find the left-child page number.
+        root_data = bytearray(p.read(b.root_page))
+        hdr = _read_hdr(root_data, 0)
+        assert hdr["page_type"] == PAGE_TYPE_INTERIOR_TABLE
+        ptr = struct.unpack_from(">H", root_data, _INTERIOR_HDR)[0]
+        left_child, _ = _read_interior_cell(root_data, ptr)
+        # Corrupt the left child: make it point back to the root as its
+        # rightmost child, creating a cycle root → left_child → root.
+        child_buf = bytearray(p.read(left_child))
+        child_buf[0] = PAGE_TYPE_INTERIOR_TABLE
+        # Write a zero-cell interior header with rightmost_child = root page.
+        _write_interior_hdr(
+            child_buf, 0, ncells=0, content_start=PAGE_SIZE,
+            rightmost_child=b.root_page
+        )
+        p.write(left_child, bytes(child_buf))
+        with pytest.raises(CorruptDatabaseError, match="cycle"):
+            list(b.scan())
+        _ = last  # used to determine tree shape
+
+
+def test_cell_count_unexpected_page_type_raises(tmp_path: Path) -> None:
+    """cell_count raises CorruptDatabaseError on an unknown page type byte."""
+    with make_pager(tmp_path) as p:
+        pgno = p.allocate()
+        buf = bytearray(p.read(pgno))
+        buf[0] = 0xFF  # unknown type
+        p.write(pgno, bytes(buf))
+        b = BTree.open(p, pgno)
+        with pytest.raises(CorruptDatabaseError, match="unexpected type"):
+            b.cell_count()
+
+
+def test_free_space_on_interior_root(tmp_path: Path) -> None:
+    """free_space() returns a sensible non-negative value after a root split."""
+    with make_pager(tmp_path) as p:
+        b = BTree.create(p)
+        _fill_until_split(b)
+        # After split, root is interior. free_space should be positive.
+        fs = b.free_space()
+        assert fs >= 0
+
+
+def test_root_split_with_header_offset_100(tmp_path: Path) -> None:
+    """Root split on page 1 (header_offset=100) preserves the database header prefix.
+
+    With header_offset=100 the B-tree page-type byte lives at page byte 100,
+    not byte 0.  This test exercises the ``hdr_off > 0`` branches of both
+    :meth:`_split_root_leaf` and :meth:`_write_cells_to_leaf`.
+    """
+    with make_pager(tmp_path) as p:
+        # Simulate page-1 layout: first 100 bytes are a "database header".
+        pgno = p.allocate()
+        buf = bytearray(p.read(pgno))
+        # Write a distinctive sentinel at bytes 0-99 so we can verify it
+        # survives the root-split rewrite.
+        buf[:100] = bytes([0xAB] * 100)
+        _init_leaf_page(buf, 100)
+        p.write(pgno, bytes(buf))
+        b = BTree.open(p, pgno, header_offset=100)
+        # Fill until root splits.  NOTE: with header_offset=100 the page-type
+        # byte is at offset 100 in the raw page, not offset 0.
+        rowid = 1
+        while True:
+            b.insert(rowid, record_encode([rowid]))
+            root_data = p.read(b.root_page)
+            if root_data[100] == PAGE_TYPE_INTERIOR_TABLE:
+                break
+            rowid += 1
+        # The database-header prefix must still be intact after the rewrite.
+        root_data = bytearray(p.read(b.root_page))
+        assert root_data[:100] == bytes([0xAB] * 100)
+        # All inserted rows must be findable through the split tree.
+        for rid in range(1, rowid + 1):
+            assert b.find(rid) is not None

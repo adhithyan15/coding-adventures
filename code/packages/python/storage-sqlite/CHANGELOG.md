@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.4.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.btree` — phase 4a: interior page traversal + root-leaf split.
+  - **Interior page support**: `_read_hdr` now returns `"rightmost_child"` for
+    interior pages (type `0x05`). New helpers `_write_interior_hdr`,
+    `_read_interior_ptrs`, `_read_interior_cell`, `_interior_cell_encode` expose
+    the full interior-page format for callers and tests.
+  - **Root-leaf split**: `BTree.insert` automatically promotes the root page from
+    a leaf to an interior page when the leaf fills up, distributing cells across
+    two freshly allocated child pages. The root page number never changes.
+  - **Multi-level traversal**: `find`, `scan`, `delete`, `update`, and
+    `cell_count` all traverse interior pages to reach the correct leaf. `scan`
+    performs a full left-to-right DFS over all leaves, yielding rows in ascending
+    rowid order.
+  - **Cycle and depth guards** in all traversal paths: `_find_leaf_page` uses a
+    depth counter (limit `_MAX_BTREE_DEPTH = 20`); `_scan_page` uses a visited
+    set; both raise `CorruptDatabaseError` on corrupt trees.
+  - **Child-pointer validation** in `_find_leaf_page` and `_scan_page`: any
+    child pointer of 0 or beyond the pager's current page count raises
+    `CorruptDatabaseError` before dereferencing.
+  - `PageFullError` is now only raised for *non-root* leaf overflows; root-leaf
+    overflow is resolved silently by the split. Phase 4b will extend splitting to
+    non-root leaves.
+  - `free_space()` updated to account for the wider 12-byte interior header when
+    the root is an interior page.
+  - `header_offset=100` (page-1 support) correctly preserved through the
+    root-split rewrite (the 100-byte SQLite database header prefix is not zeroed).
+
 ## [0.3.0] - 2026-04-20
 
 ### Added
