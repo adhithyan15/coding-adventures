@@ -3038,3 +3038,20 @@ promoted to string types so the parser's grammar rules can match them by value.
 
 **Rule:** Every grammar-driven lexer test file must use a `_tok_type` normalizer. Never compare
 `t.type` directly against string literals unless you know the token is a keyword.
+
+---
+
+## Runtime failure guards in callable lowerings must unwind activation state
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of ALGOL 60 dynamic array lowering caught that array bounds and
+heap-exhaustion guards returned immediately from the current WASM function. That was fine for
+`_start`, but inside a procedure it skipped normal frame and heap restoration before handing control
+back to the caller.
+
+**Rule:** Any generated runtime-failure path that returns from a callable lowering must emit the
+same activation cleanup as the normal return path first. For frame-backed languages, unwind the
+active lexical scope chain and restore block-lifetime heap marks before `RET`. Add a regression that
+repeatedly triggers the failure inside a procedure and then proves the caller can still allocate a
+new frame.

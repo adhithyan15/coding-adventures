@@ -17,6 +17,9 @@ All notable changes to this package will be documented in this file.
   procedure-name result slots, and bounded recursive frame usage.
 - Reserved runtime state bytes in the phase-3 frame-memory cap so programs
   that cannot fit their root frame are rejected before WASM lowering.
+- Lowered Phase 4 integer arrays to heap-backed descriptors with dynamic
+  bound evaluation, row-major strides, checked element loads/stores, bounded
+  aggregate element counts, and block-lifetime heap restoration.
 
 ## [0.1.0] - 2026-04-20
 
