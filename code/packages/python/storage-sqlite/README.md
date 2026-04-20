@@ -27,7 +27,7 @@ mini_sqlite.connect("app.db")
         ├── header   (100-byte database header at offset 0)    ✓ phase 1
         ├── record   (varint + serial types)      ✓ phase 2
         ├── btree    (leaf + overflow + full recursive splits)  ✓ phases 3 + 4a + 4b
-        ├── freelist (page reuse)                 [v1 phase 5]
+        ├── freelist (trunk/leaf page reuse)       ✓ phase 5
         └── schema   (sqlite_schema round-trip)   [v1 phase 6]
 ```
 
@@ -35,7 +35,7 @@ Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a + 4b)
+## What works today (phases 1 + 2 + 3 + 4a + 4b + 5)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -68,10 +68,20 @@ backend.
     The root page number never changes.
   - Corrupted pages (bad ncells, out-of-range pointers, overflow cycles,
     unknown page types) all raise `CorruptDatabaseError`.
+- **`freelist` module** — SQLite trunk/leaf freelist (phase 5).
+  `Freelist(pager)` manages the linked list of reusable pages rooted in the
+  page-1 header (offsets 32–39). `free(pgno)` adds a page as a leaf entry
+  in the current trunk, or promotes it to a new trunk when the current one
+  is full (capacity: 1 022 leaves per 4 096-byte trunk page). `allocate()`
+  pops the last leaf LIFO — matching SQLite's allocation order — and
+  zero-fills the page before returning it; when the freelist is empty it
+  falls through to `Pager.allocate()`. Pass `freelist=Freelist(pager)` to
+  `BTree.create()` / `BTree.open()` to enable automatic overflow-page reuse
+  on delete and update.
 
-What's **not yet** in this package (coming in later phases): freelist /
-page reuse (phase 5), `sqlite_schema` (phase 6), and the `Backend` adapter
-that wires the full pipeline in (phase 7).
+What's **not yet** in this package (coming in later phases):
+`sqlite_schema` (phase 6) and the `Backend` adapter that wires the full
+pipeline in (phase 7).
 
 ## Installation
 
@@ -79,7 +89,7 @@ that wires the full pipeline in (phase 7).
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a + 4b)
+## Usage (phases 1 + 2 + 3 + 4a + 4b + 5)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -122,6 +132,29 @@ with Pager.open("data.db") as pager:
     for rowid, payload in tree.scan():   # ascending order across all leaves
         cols, _ = record.decode(payload)
         print(rowid, cols[0])   # 1 row1 / 2 row2 / …
+
+# --- Freelist ---
+# Enable overflow-page reuse by injecting a Freelist into BTree.
+# Page 1 must already hold the database header (offsets 32–39 are the
+# freelist fields).
+from storage_sqlite import Freelist
+
+with Pager.create("app.db") as pager:
+    page1 = bytearray(pager.page_size)
+    page1[:100] = Header.new_database(page_size=4096).to_bytes()
+    pager.write(1, bytes(page1))
+    fl = Freelist(pager)
+    tree = BTree.create(pager, freelist=fl)   # root reuses freelist pages
+    tree.insert(1, record.encode([b"X" * 5000]))  # spills to overflow pages
+    pager.commit()
+
+with Pager.open("app.db") as pager:
+    fl = Freelist(pager)
+    tree = BTree.open(pager, root_page=2, freelist=fl)
+    tree.delete(1)          # overflow pages returned to freelist
+    tree.insert(2, record.encode([b"Y" * 5000]))  # reuses those pages
+    print(fl.total_pages)   # 0 — all freed pages were reused
+    pager.commit()
 ```
 
 This intentionally looks low-level — the `Backend` adapter that makes

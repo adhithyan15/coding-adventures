@@ -296,8 +296,18 @@ class Pager:
             # "fully applied" and guessing wrong would corrupt the file.
             raise
 
-        # Success: the txn boundary moves forward. Clear in-memory
-        # bookkeeping.
+        # Success: the txn boundary moves forward.
+        #
+        # Promote every committed page into the LRU cache so that reads
+        # *within the same Pager session* immediately after commit see the
+        # newly-written data without going back to disk.  Without this
+        # promotion the cache can hold stale pre-txn values for pages that
+        # were written during the transaction (the cache is populated on
+        # first *read*, not on write, so a page that was only written in
+        # this txn would not be in the cache yet, but a page that was read
+        # before being modified *would* be in the cache with its old value).
+        for page_no, data in self._dirty.items():
+            self._cache_put(page_no, data)
         self._initial_size_pages = self._size_pages
         self._dirty.clear()
         self._originals.clear()
@@ -306,6 +316,15 @@ class Pager:
     def rollback(self) -> None:
         """Discard every pending write. No disk I/O."""
         self._assert_open()
+        # Evict any dirty pages from the cache before clearing dirty, so
+        # subsequent reads see the *committed* state (from the last commit
+        # or the initial file contents) rather than the discarded dirty
+        # values.  For pages that existed before this transaction the cache
+        # will be repopulated from the main file on the next read; for
+        # freshly-allocated pages the cache entry is simply gone (which is
+        # correct — those page numbers cease to exist after rollback).
+        for page_no in self._dirty:
+            self._cache.pop(page_no, None)
         self._dirty.clear()
         self._originals.clear()
         self._journaled.clear()
