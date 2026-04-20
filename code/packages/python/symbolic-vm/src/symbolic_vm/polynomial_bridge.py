@@ -302,6 +302,37 @@ def _coef(c) -> IRNode:
 
 
 # ---------------------------------------------------------------------------
+# Linear-argument IR builder (shared by exp_integral.py and log_integral.py)
+# ---------------------------------------------------------------------------
+
+
+def linear_to_ir(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Build IR for ``a·x + b``.
+
+    Produces the simplest canonical form:
+    - ``a == 0``         → constant ``b``
+    - ``a == 1, b == 0`` → bare ``x``
+    - ``b == 0``         → ``a·x``  (or ``Neg(x)`` for ``a == −1``)
+    - general            → ``Add(a·x, b)``
+    """
+    if a == 0:
+        return _coef(Fraction(b))
+
+    # Build the a·x term.
+    if a == 1:
+        ax: IRNode = x
+    elif a == -1:
+        ax = IRApply(NEG, (x,))
+    else:
+        ax = IRApply(MUL, (_coef(Fraction(a)), x))
+
+    if b == 0:
+        return ax
+
+    return IRApply(ADD, (ax, _coef(Fraction(b))))
+
+
+# ---------------------------------------------------------------------------
 # Log-sum IR builder (shared by integrate.py and mixed_integral.py)
 # ---------------------------------------------------------------------------
 
