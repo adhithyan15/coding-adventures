@@ -168,8 +168,51 @@ class TestAlgolIrCompiler:
                 )
             )
 
-        with pytest.raises(CompileError, match="phase-2 limit"):
+        with pytest.raises(CompileError, match="phase-3 limit"):
             compile_algol(typed)
+
+    def test_compiles_integer_value_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure inc(x); value x; integer x; "
+                "begin inc := x + 1 end; "
+                "result := inc(4) "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert len(calls[0].operands) == 3
+        assert any(label.startswith("_fn_algol_") for label in labels)
+        assert result.procedure_signatures[calls[0].operands[0].name] == 2
+
+    def test_compiles_recursive_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure fact(n); value n; integer n; "
+                "begin if n = 0 then fact := 1 else fact := n * fact(n - 1) end; "
+                "result := fact(4) "
+                "end"
+            )
+        )
+        call_labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        assert len(call_labels) == 2
+        assert call_labels[0] == call_labels[1]
 
     def test_raises_for_type_error_input(self) -> None:
         with pytest.raises(CompileError):

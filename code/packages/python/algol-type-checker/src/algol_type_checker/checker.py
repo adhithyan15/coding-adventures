@@ -12,6 +12,7 @@ BOOLEAN = "boolean"
 ERROR = "error"
 FRAME_HEADER_SIZE = 20
 FRAME_WORD_SIZE = 4
+VALUE = "value"
 
 
 @dataclass(frozen=True)
@@ -37,6 +38,7 @@ class Symbol:
     declaring_block_id: int = -1
     slot_offset: int | None = None
     slot_size: int | None = None
+    procedure_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -132,6 +134,8 @@ class SemanticBlock:
     depth: int
     scope: Scope
     frame_layout: FrameLayout
+    ast_node_id: int | None = None
+    owner_procedure_id: int | None = None
 
 
 @dataclass(frozen=True)
@@ -151,6 +155,51 @@ class ResolvedReference:
     column: int
 
 
+@dataclass(frozen=True)
+class ProcedureParameter:
+    """A value parameter planned as a frame slot in a procedure activation."""
+
+    name: str
+    type_name: str
+    mode: str
+    symbol_id: int
+    slot_offset: int
+
+
+@dataclass(frozen=True)
+class ProcedureDescriptor:
+    """Semantic facts needed to lower a direct ALGOL procedure call."""
+
+    procedure_id: int
+    name: str
+    label: str
+    declaring_block_id: int
+    body_block_id: int
+    body_node_id: int
+    return_type: str | None
+    parameters: tuple[ProcedureParameter, ...]
+    line: int
+    column: int
+
+
+@dataclass(frozen=True)
+class ResolvedProcedureCall:
+    """A procedure occurrence after lexical lookup has selected a descriptor."""
+
+    token_id: int
+    name: str
+    role: str
+    procedure_id: int
+    label: str
+    use_block_id: int
+    declaration_block_id: int
+    lexical_depth_delta: int
+    argument_count: int
+    return_type: str | None
+    line: int
+    column: int
+
+
 @dataclass
 class SemanticProgram:
     """Typed semantic facts produced before IR lowering."""
@@ -160,6 +209,8 @@ class SemanticProgram:
     blocks: list[SemanticBlock]
     symbols: list[Symbol]
     references: list[ResolvedReference]
+    procedures: list[ProcedureDescriptor] = field(default_factory=list)
+    procedure_calls: list[ResolvedProcedureCall] = field(default_factory=list)
     diagnostics: list[Diagnostic] = field(default_factory=list)
 
 
@@ -191,8 +242,11 @@ class AlgolTypeChecker:
         self.semantic_blocks: list[SemanticBlock] = []
         self.semantic_symbols: list[Symbol] = []
         self.resolved_references: list[ResolvedReference] = []
+        self.semantic_procedures: list[ProcedureDescriptor] = []
+        self.resolved_procedure_calls: list[ResolvedProcedureCall] = []
         self._next_block_id = 0
         self._next_symbol_id = 0
+        self._next_procedure_id = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -200,8 +254,11 @@ class AlgolTypeChecker:
         self.semantic_blocks = []
         self.semantic_symbols = []
         self.resolved_references = []
+        self.semantic_procedures = []
+        self.resolved_procedure_calls = []
         self._next_block_id = 0
         self._next_symbol_id = 0
+        self._next_procedure_id = 0
         root_scope = Scope()
         block = _first_node(ast, "block")
         if block is None:
@@ -214,6 +271,8 @@ class AlgolTypeChecker:
             blocks=list(self.semantic_blocks),
             symbols=list(self.semantic_symbols),
             references=list(self.resolved_references),
+            procedures=list(self.semantic_procedures),
+            procedure_calls=list(self.resolved_procedure_calls),
             diagnostics=list(self.diagnostics),
         )
         return TypeCheckResult(
@@ -225,8 +284,11 @@ class AlgolTypeChecker:
         )
 
     def _check_block(self, block: ASTNode, parent: Scope) -> Scope:
-        scope = self._new_block_scope(parent)
+        scope = self._new_block_scope(parent, ast_node=block)
+        self._check_block_contents(block, scope)
+        return scope
 
+    def _check_block_contents(self, block: ASTNode, scope: Scope) -> None:
         for child in _node_children(block):
             if child.rule_name == "declaration":
                 self._check_declaration(child, scope)
@@ -235,9 +297,13 @@ class AlgolTypeChecker:
             if child.rule_name == "statement":
                 self._check_statement(child, scope)
 
-        return scope
-
-    def _new_block_scope(self, parent: Scope) -> Scope:
+    def _new_block_scope(
+        self,
+        parent: Scope,
+        *,
+        ast_node: ASTNode | None = None,
+        owner_procedure_id: int | None = None,
+    ) -> Scope:
         block_id = self._next_block_id
         self._next_block_id += 1
         parent_block_id = parent.block_id if parent.block_id >= 0 else None
@@ -261,6 +327,8 @@ class AlgolTypeChecker:
                 depth=depth,
                 scope=scope,
                 frame_layout=frame_layout,
+                ast_node_id=id(ast_node) if ast_node is not None else None,
+                owner_procedure_id=owner_procedure_id,
             )
         )
         return scope
@@ -268,6 +336,9 @@ class AlgolTypeChecker:
     def _check_declaration(self, declaration: ASTNode, scope: Scope) -> None:
         inner = _first_ast_child(declaration)
         if inner is None:
+            return
+        if inner.rule_name == "procedure_decl":
+            self._check_procedure_declaration(inner, scope)
             return
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
@@ -304,6 +375,140 @@ class AlgolTypeChecker:
                 scope.frame_layout.allocate_scalar(symbol)
             self.semantic_symbols.append(symbol)
 
+    def _check_procedure_declaration(self, node: ASTNode, scope: Scope) -> None:
+        name_token = _procedure_name(node)
+        if name_token is None:
+            self._error(node, "procedure declaration is missing a name")
+            return
+
+        return_type = _procedure_return_type(node)
+        if return_type is not None and return_type != INTEGER:
+            self._error(
+                name_token,
+                f"{return_type} procedure results are not supported yet",
+            )
+            return
+
+        formal_names = _formal_parameter_names(node)
+        value_names = _value_parameter_names(node)
+        spec_types = _parameter_spec_types(node)
+        for formal in formal_names:
+            if formal.value not in value_names:
+                self._error(
+                    formal,
+                    f"call-by-name parameter {formal.value!r} requires thunk lowering, "
+                    "not implemented",
+                )
+            if spec_types.get(formal.value) != INTEGER:
+                self._error(
+                    formal,
+                    f"value parameter {formal.value!r} must have an integer specifier",
+                )
+
+        procedure_id = self._next_procedure_id
+        self._next_procedure_id += 1
+        label = f"_fn_algol_{procedure_id}_{name_token.value}"
+        procedure_symbol = Symbol(
+            name=name_token.value,
+            type_name=return_type or "procedure",
+            line=name_token.line,
+            column=name_token.column,
+            symbol_id=self._next_symbol_id,
+            kind="procedure",
+            storage_class="code",
+            declaring_block_id=scope.block_id,
+            procedure_id=procedure_id,
+        )
+        if not scope.declare(procedure_symbol):
+            self._error(
+                name_token,
+                f"{name_token.value!r} is already declared in this scope",
+            )
+            return
+        self._next_symbol_id += 1
+        self.semantic_symbols.append(procedure_symbol)
+
+        body = _first_direct_node(node, "proc_body")
+        body_inner = _first_ast_child(body) if body is not None else None
+        if body_inner is None:
+            self._error(node, "procedure declaration is missing a body")
+            return
+
+        proc_scope = self._new_block_scope(
+            scope,
+            ast_node=body_inner,
+            owner_procedure_id=procedure_id,
+        )
+        parameters: list[ProcedureParameter] = []
+
+        if return_type is not None:
+            result_symbol = Symbol(
+                name=name_token.value,
+                type_name=return_type,
+                line=name_token.line,
+                column=name_token.column,
+                symbol_id=self._next_symbol_id,
+                kind="procedure_result",
+                declaring_block_id=proc_scope.block_id,
+                procedure_id=procedure_id,
+            )
+            proc_scope.declare(result_symbol)
+            self._next_symbol_id += 1
+            if proc_scope.frame_layout is not None:
+                proc_scope.frame_layout.allocate_scalar(result_symbol)
+            self.semantic_symbols.append(result_symbol)
+
+        for formal in formal_names:
+            param_symbol = Symbol(
+                name=formal.value,
+                type_name=INTEGER,
+                line=formal.line,
+                column=formal.column,
+                symbol_id=self._next_symbol_id,
+                kind="parameter",
+                declaring_block_id=proc_scope.block_id,
+                procedure_id=procedure_id,
+            )
+            if not proc_scope.declare(param_symbol):
+                self._error(
+                    formal,
+                    f"{formal.value!r} is already declared in this procedure",
+                )
+                continue
+            self._next_symbol_id += 1
+            if proc_scope.frame_layout is not None:
+                proc_scope.frame_layout.allocate_scalar(param_symbol)
+            self.semantic_symbols.append(param_symbol)
+            if param_symbol.slot_offset is not None:
+                parameters.append(
+                    ProcedureParameter(
+                        name=formal.value,
+                        type_name=INTEGER,
+                        mode=VALUE,
+                        symbol_id=param_symbol.symbol_id,
+                        slot_offset=param_symbol.slot_offset,
+                    )
+                )
+
+        descriptor = ProcedureDescriptor(
+            procedure_id=procedure_id,
+            name=name_token.value,
+            label=label,
+            declaring_block_id=scope.block_id,
+            body_block_id=proc_scope.block_id,
+            body_node_id=id(body_inner),
+            return_type=return_type,
+            parameters=tuple(parameters),
+            line=name_token.line,
+            column=name_token.column,
+        )
+        self.semantic_procedures.append(descriptor)
+
+        if body_inner.rule_name == "block":
+            self._check_block_contents(body_inner, proc_scope)
+        else:
+            self._check_statement(body_inner, proc_scope)
+
     def _check_statement(self, statement: ASTNode, scope: Scope) -> None:
         inner = _first_ast_child(statement)
         if inner is None:
@@ -328,6 +533,8 @@ class AlgolTypeChecker:
                 self._check_statement(statement, scope)
         elif inner.rule_name == "block":
             self._check_block(inner, scope)
+        elif inner.rule_name == "proc_stmt":
+            self._check_procedure_call(inner, scope, role="statement")
         else:
             self._error(inner, f"{inner.rule_name} is not supported yet")
 
@@ -415,6 +622,12 @@ class AlgolTypeChecker:
             else:
                 symbol = self._resolve_name(name, scope, role="read")
                 inferred = ERROR if symbol is None else symbol.type_name
+            self.expression_types[id(expr)] = inferred
+            return inferred
+
+        if expr.rule_name == "proc_call":
+            call = self._check_procedure_call(expr, scope, role="expression")
+            inferred = ERROR if call is None else call.return_type or ERROR
             self.expression_types[id(expr)] = inferred
             return inferred
 
@@ -514,6 +727,95 @@ class AlgolTypeChecker:
             return symbol.type_name
         self._error(token, f"unsupported expression token {token.value!r}")
         return ERROR
+
+    def _check_procedure_call(
+        self,
+        node: ASTNode,
+        scope: Scope,
+        *,
+        role: str,
+    ) -> ResolvedProcedureCall | None:
+        name_token = next(
+            (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+            None,
+        )
+        if name_token is None:
+            self._error(node, "procedure call is missing a name")
+            return None
+
+        resolved = self._resolve_procedure(name_token, scope)
+        if resolved is None:
+            self._error(
+                name_token,
+                f"{name_token.value!r} is not a procedure visible from block "
+                f"{scope.block_id}",
+            )
+            return None
+
+        descriptor, declaring_scope, lexical_depth_delta = resolved
+        arguments = _direct_nodes(
+            _first_direct_node(node, "actual_params"),
+            "expression",
+        )
+        if len(arguments) != len(descriptor.parameters):
+            self._error(
+                name_token,
+                f"procedure {name_token.value!r} expects "
+                f"{len(descriptor.parameters)} argument(s), got {len(arguments)}",
+            )
+        for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
+            actual_type = self._infer_expr(argument, scope)
+            if actual_type != ERROR and actual_type != parameter.type_name:
+                self._error(
+                    argument,
+                    f"parameter {parameter.name!r} expects {parameter.type_name}, "
+                    f"got {actual_type}",
+                )
+
+        if role == "expression" and descriptor.return_type is None:
+            self._error(
+                name_token,
+                f"procedure {name_token.value!r} does not return a value",
+            )
+        call = ResolvedProcedureCall(
+            token_id=id(name_token),
+            name=name_token.value,
+            role=role,
+            procedure_id=descriptor.procedure_id,
+            label=descriptor.label,
+            use_block_id=scope.block_id,
+            declaration_block_id=declaring_scope.block_id,
+            lexical_depth_delta=lexical_depth_delta,
+            argument_count=len(arguments),
+            return_type=descriptor.return_type,
+            line=name_token.line,
+            column=name_token.column,
+        )
+        self.resolved_procedure_calls.append(call)
+        return call
+
+    def _resolve_procedure(
+        self, token: Token, scope: Scope
+    ) -> tuple[ProcedureDescriptor, Scope, int] | None:
+        current: Scope | None = scope
+        lexical_depth_delta = 0
+        while current is not None:
+            symbol = current.symbols.get(token.value)
+            if symbol is not None and symbol.kind == "procedure":
+                descriptor = next(
+                    (
+                        procedure
+                        for procedure in self.semantic_procedures
+                        if procedure.procedure_id == symbol.procedure_id
+                    ),
+                    None,
+                )
+                if descriptor is None:
+                    return None
+                return descriptor, current, lexical_depth_delta
+            current = current.parent
+            lexical_depth_delta += 1
+        return None
 
     def _resolve_name(
         self,
@@ -673,6 +975,44 @@ def _first_keyword_value(node: ASTNode | None) -> str | None:
     return next(
         (token.value for token in _tokens(node) if token.type_name == "KEYWORD"), None
     )
+
+
+def _procedure_name(node: ASTNode) -> Token | None:
+    return next(
+        (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+        None,
+    )
+
+
+def _procedure_return_type(node: ASTNode) -> str | None:
+    type_node = _first_direct_node(node, "type")
+    return _first_keyword_value(type_node) if type_node is not None else None
+
+
+def _formal_parameter_names(node: ASTNode) -> list[Token]:
+    formal_params = _first_direct_node(node, "formal_params")
+    ident_list = _first_direct_node(formal_params, "ident_list")
+    return [token for token in _tokens(ident_list) if token.type_name == "NAME"]
+
+
+def _value_parameter_names(node: ASTNode) -> set[str]:
+    value_part = _first_direct_node(node, "value_part")
+    ident_list = _first_direct_node(value_part, "ident_list")
+    return {
+        token.value for token in _tokens(ident_list) if token.type_name == "NAME"
+    }
+
+
+def _parameter_spec_types(node: ASTNode) -> dict[str, str]:
+    spec_types: dict[str, str] = {}
+    for spec_part in _direct_nodes(node, "spec_part"):
+        specifier = _first_direct_node(spec_part, "specifier")
+        type_name = _first_keyword_value(specifier) or ""
+        ident_list = _first_direct_node(spec_part, "ident_list")
+        for token in _tokens(ident_list):
+            if token.type_name == "NAME":
+                spec_types[token.value] = type_name
+    return spec_types
 
 
 def _variable_name(node: ASTNode) -> Token | None:

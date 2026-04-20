@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from algol_type_checker import (
+    ProcedureDescriptor,
+    ResolvedProcedureCall,
     ResolvedReference,
     SemanticBlock,
     Symbol,
@@ -32,7 +34,14 @@ _STATIC_LINK_OFFSET = 4
 _RETURN_TOKEN_OFFSET = 8
 _FRAME_SIZE_OFFSET = 12
 _BLOCK_ID_OFFSET = 16
-_MAX_FRAME_MEMORY_BYTES = 64 * 1024
+_FRAME_MEMORY_BYTES = 64 * 1024
+_RUNTIME_CURRENT_FRAME_OFFSET = 0
+_RUNTIME_STACK_POINTER_OFFSET = 4
+_RUNTIME_STACK_LIMIT_OFFSET = 8
+_RUNTIME_STATE_BYTES = 16
+_STATIC_LINK_PARAM_REG = 2
+_VALUE_PARAM_BASE_REG = 3
+_FIRST_GENERAL_REG = 32
 
 
 @dataclass(frozen=True)
@@ -50,6 +59,7 @@ class CompileResult:
     variable_slots: dict[str, int] = field(default_factory=dict)
     frame_offsets: dict[int, int] = field(default_factory=dict)
     frame_memory_label: str = _FRAME_MEMORY_LABEL
+    procedure_signatures: dict[str, int] = field(default_factory=dict)
 
 
 class CompileError(Exception):
@@ -80,18 +90,24 @@ class AlgolIrCompiler:
     def __init__(self) -> None:
         self.ids = IDGenerator()
         self.program = IrProgram(entry_label="_start")
-        self.next_reg = 2
+        self.source_ast: ASTNode | None = None
+        self.next_reg = _FIRST_GENERAL_REG
         self.if_count = 0
         self.loop_count = 0
         self.current_frame_reg = -1
         self.stack_base_reg = -1
         self.stack_pointer_reg = -1
+        self.stack_limit_reg = -1
         self.semantic_blocks: list[SemanticBlock] = []
-        self.semantic_block_index = 0
+        self.semantic_blocks_by_ast: dict[int, SemanticBlock] = {}
+        self.semantic_blocks_by_id: dict[int, SemanticBlock] = {}
         self.references: dict[tuple[int, str], ResolvedReference] = {}
+        self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
+        self.procedures: dict[int, ProcedureDescriptor] = {}
         self.frame_offsets: dict[int, int] = {}
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
+        self.procedure_signatures: dict[str, int] = {}
 
     def compile(self, typed: TypeCheckResult | ASTNode) -> CompileResult:
         type_result = (
@@ -108,14 +124,34 @@ class AlgolIrCompiler:
 
         self.ids = IDGenerator()
         self.program = IrProgram(entry_label="_start")
-        self.next_reg = 2
+        self.source_ast = type_result.ast
+        self.next_reg = _FIRST_GENERAL_REG
         self.if_count = 0
         self.loop_count = 0
         self.semantic_blocks = list(type_result.semantic.blocks)
-        self.semantic_block_index = 0
+        self.semantic_blocks_by_ast = {
+            block.ast_node_id: block
+            for block in self.semantic_blocks
+            if block.ast_node_id is not None
+        }
+        self.semantic_blocks_by_id = {
+            block.block_id: block for block in self.semantic_blocks
+        }
         self.references = {
             (reference.token_id, reference.role): reference
             for reference in type_result.semantic.references
+        }
+        self.procedure_calls = {
+            (call.token_id, call.role): call
+            for call in type_result.semantic.procedure_calls
+        }
+        self.procedures = {
+            procedure.procedure_id: procedure
+            for procedure in type_result.semantic.procedures
+        }
+        self.procedure_signatures = {
+            procedure.label: 1 + len(procedure.parameters)
+            for procedure in type_result.semantic.procedures
         }
         self.frame_offsets = self._layout_frames(self.semantic_blocks)
         self.variable_slots = self._collect_variable_slots(self.semantic_blocks)
@@ -126,20 +162,19 @@ class AlgolIrCompiler:
         total_frame_bytes = sum(
             block.frame_layout.frame_size for block in self.semantic_blocks
         )
-        if total_frame_bytes > _MAX_FRAME_MEMORY_BYTES:
+        if total_frame_bytes > _FRAME_MEMORY_BYTES:
             raise CompileError(
                 "ALGOL frame memory requires "
                 f"{total_frame_bytes} bytes, exceeding the "
-                f"{_MAX_FRAME_MEMORY_BYTES} byte phase-2 limit"
+                f"{_FRAME_MEMORY_BYTES} byte phase-3 limit"
             )
-        self.program.add_data(
-            IrDataDecl(_FRAME_MEMORY_LABEL, max(1, total_frame_bytes), 0)
-        )
+        self.program.add_data(IrDataDecl(_FRAME_MEMORY_LABEL, _FRAME_MEMORY_BYTES, 0))
 
         self._label("_start")
         self._emit(IrOp.LOAD_IMM, IrRegister(_ZERO_REG), IrImmediate(0))
         self.stack_base_reg = self._fresh_reg()
         self.stack_pointer_reg = self._fresh_reg()
+        self.stack_limit_reg = self._fresh_reg()
         self.current_frame_reg = self._fresh_reg()
         self._emit(
             IrOp.LOAD_ADDR,
@@ -150,9 +185,18 @@ class AlgolIrCompiler:
             IrOp.ADD_IMM,
             IrRegister(self.stack_pointer_reg),
             IrRegister(self.stack_base_reg),
-            IrImmediate(total_frame_bytes),
+            IrImmediate(_RUNTIME_STATE_BYTES),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(self.stack_limit_reg),
+            IrRegister(self.stack_base_reg),
+            IrImmediate(_FRAME_MEMORY_BYTES),
         )
         self._emit(IrOp.LOAD_IMM, IrRegister(self.current_frame_reg), IrImmediate(0))
+        self._store_runtime_state(_RUNTIME_CURRENT_FRAME_OFFSET, self.current_frame_reg)
+        self._store_runtime_state(_RUNTIME_STACK_POINTER_OFFSET, self.stack_pointer_reg)
+        self._store_runtime_state(_RUNTIME_STACK_LIMIT_OFFSET, self.stack_limit_reg)
 
         block = _first_node(type_result.ast, "block")
         if block is None:
@@ -166,6 +210,7 @@ class AlgolIrCompiler:
             )
         self._emit_load_symbol(result_symbol, root_scope, _RESULT_REG)
         self._emit(IrOp.HALT)
+        self._compile_procedures(type_result.semantic.procedures)
 
         return CompileResult(
             program=self.program,
@@ -174,11 +219,13 @@ class AlgolIrCompiler:
             variable_slots=dict(self.variable_slots),
             frame_offsets=dict(self.frame_offsets),
             frame_memory_label=_FRAME_MEMORY_LABEL,
+            procedure_signatures=dict(self.procedure_signatures),
         )
 
     def _compile_block(self, block: ASTNode, parent: _FrameScope | None) -> _FrameScope:
-        semantic_block = self._next_semantic_block()
-        frame_base_reg = self._emit_enter_frame(semantic_block, parent)
+        semantic_block = self._semantic_block_for_ast(block)
+        static_parent_reg = parent.frame_base_reg if parent is not None else _ZERO_REG
+        frame_base_reg = self._emit_enter_frame(semantic_block, static_parent_reg)
         scope = _FrameScope(
             semantic_block=semantic_block,
             frame_base_reg=frame_base_reg,
@@ -195,25 +242,34 @@ class AlgolIrCompiler:
     def _emit_enter_frame(
         self,
         semantic_block: SemanticBlock,
-        parent: _FrameScope | None,
+        static_parent_reg: int,
     ) -> int:
         frame_base = self._fresh_reg()
-        frame_offset = self.frame_offsets[semantic_block.block_id]
-        self._emit(IrOp.LOAD_ADDR, IrRegister(frame_base), IrLabel(_FRAME_MEMORY_LABEL))
-        if frame_offset:
-            self._emit(
-                IrOp.ADD_IMM,
-                IrRegister(frame_base),
-                IrRegister(frame_base),
-                IrImmediate(frame_offset),
-            )
+        new_stack_pointer = self._fresh_reg()
+        overflow = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_STACK_POINTER_OFFSET, frame_base)
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(new_stack_pointer),
+            IrRegister(frame_base),
+            IrImmediate(semantic_block.frame_layout.frame_size),
+        )
+        self._load_runtime_state(_RUNTIME_STACK_LIMIT_OFFSET, self.stack_limit_reg)
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(overflow),
+            IrRegister(new_stack_pointer),
+            IrRegister(self.stack_limit_reg),
+        )
+        self._emit_stack_overflow_guard(overflow)
+        self._load_runtime_state(_RUNTIME_CURRENT_FRAME_OFFSET, self.current_frame_reg)
+        self._store_runtime_state(_RUNTIME_STACK_POINTER_OFFSET, new_stack_pointer)
 
         self._store_word_reg(
             value_reg=self.current_frame_reg,
             base_reg=frame_base,
             offset=_DYNAMIC_LINK_OFFSET,
         )
-        static_parent_reg = parent.frame_base_reg if parent is not None else _ZERO_REG
         self._store_word_reg(
             value_reg=static_parent_reg,
             base_reg=frame_base,
@@ -227,6 +283,7 @@ class AlgolIrCompiler:
         )
         self._store_word_const(frame_base, _BLOCK_ID_OFFSET, semantic_block.block_id)
         self._copy_reg(dst=self.current_frame_reg, src=frame_base)
+        self._store_runtime_state(_RUNTIME_CURRENT_FRAME_OFFSET, self.current_frame_reg)
         return frame_base
 
     def _emit_leave_frame(self, scope: _FrameScope) -> None:
@@ -237,6 +294,8 @@ class AlgolIrCompiler:
             IrRegister(scope.frame_base_reg),
             IrRegister(offset_reg),
         )
+        self._store_runtime_state(_RUNTIME_CURRENT_FRAME_OFFSET, self.current_frame_reg)
+        self._store_runtime_state(_RUNTIME_STACK_POINTER_OFFSET, scope.frame_base_reg)
 
     def _initialize_scalar_slots(self, scope: _FrameScope) -> None:
         for slot in scope.semantic_block.frame_layout.slots:
@@ -268,6 +327,8 @@ class AlgolIrCompiler:
                 self._compile_statement(statement, scope)
         elif inner.rule_name == "block":
             self._compile_block(inner, scope)
+        elif inner.rule_name == "proc_stmt":
+            self._compile_procedure_call(inner, scope)
         else:
             raise CompileError(
                 f"{inner.rule_name} is not supported by algol-ir-compiler"
@@ -366,6 +427,8 @@ class AlgolIrCompiler:
     def _compile_expr(self, expr: ASTNode | Token, scope: _FrameScope) -> int:
         if isinstance(expr, Token):
             return self._compile_token(expr, scope)
+        if expr.rule_name == "proc_call":
+            return self._compile_procedure_call(expr, scope)
         if expr.rule_name == "variable":
             name = _variable_name(expr)
             if name is None:
@@ -571,6 +634,79 @@ class AlgolIrCompiler:
         self._emit(IrOp.AND_IMM, IrRegister(dst), IrRegister(dst), IrImmediate(1))
         return dst
 
+    def _compile_procedure_call(self, node: ASTNode, scope: _FrameScope) -> int:
+        name = next(
+            (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+            None,
+        )
+        if name is None:
+            raise CompileError("procedure call is missing a name")
+        role = "statement" if node.rule_name == "proc_stmt" else "expression"
+        call = self._require_procedure_call(name, role)
+        static_link = self._emit_static_link_for_call(call, scope)
+        arguments = [
+            self._compile_expr(argument, scope)
+            for argument in _direct_nodes(
+                _first_direct_node(node, "actual_params"), "expression"
+            )
+        ]
+        self._emit(
+            IrOp.CALL,
+            IrLabel(call.label),
+            IrRegister(static_link),
+            *(IrRegister(argument) for argument in arguments),
+        )
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
+
+    def _compile_procedures(
+        self, procedures: list[ProcedureDescriptor]
+    ) -> None:
+        for procedure in procedures:
+            self._compile_procedure(procedure)
+
+    def _compile_procedure(self, procedure: ProcedureDescriptor) -> None:
+        body = self._find_ast_by_id(procedure.body_node_id)
+        if body is None:
+            raise CompileError(f"missing body AST for procedure {procedure.name!r}")
+        semantic_block = self.semantic_blocks_by_id[procedure.body_block_id]
+        self._label(procedure.label)
+        frame_base_reg = self._emit_enter_frame(
+            semantic_block,
+            _STATIC_LINK_PARAM_REG,
+        )
+        scope = _FrameScope(
+            semantic_block=semantic_block,
+            frame_base_reg=frame_base_reg,
+            parent=None,
+        )
+        self._initialize_scalar_slots(scope)
+        for index, parameter in enumerate(procedure.parameters):
+            self._store_word_reg(
+                value_reg=_VALUE_PARAM_BASE_REG + index,
+                base_reg=scope.frame_base_reg,
+                offset=parameter.slot_offset,
+            )
+
+        if body.rule_name == "block":
+            for statement in _direct_nodes(body, "statement"):
+                self._compile_statement(statement, scope)
+        else:
+            self._compile_statement(body, scope)
+
+        if procedure.return_type is not None:
+            result_symbol = semantic_block.scope.symbols.get(procedure.name)
+            if result_symbol is None:
+                raise CompileError(
+                    f"procedure {procedure.name!r} has no result slot"
+                )
+            self._emit_load_symbol(result_symbol, scope, _RESULT_REG)
+        else:
+            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_leave_frame(scope)
+        self._emit(IrOp.RET)
+
     def _emit_load_reference(
         self, reference: ResolvedReference, scope: _FrameScope
     ) -> int:
@@ -608,6 +744,27 @@ class AlgolIrCompiler:
             )
         frame_reg = scope.frame_base_reg
         for _ in range(reference.lexical_depth_delta):
+            next_frame = self._fresh_reg()
+            offset_reg = self._const_reg(_STATIC_LINK_OFFSET)
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(next_frame),
+                IrRegister(frame_reg),
+                IrRegister(offset_reg),
+            )
+            frame_reg = next_frame
+        return frame_reg
+
+    def _emit_static_link_for_call(
+        self, call: ResolvedProcedureCall, scope: _FrameScope
+    ) -> int:
+        if call.use_block_id != scope.block_id:
+            raise CompileError(
+                f"procedure call {call.name!r} was resolved for block "
+                f"{call.use_block_id}, but codegen is in block {scope.block_id}"
+            )
+        frame_reg = scope.frame_base_reg
+        for _ in range(call.lexical_depth_delta):
             next_frame = self._fresh_reg()
             offset_reg = self._const_reg(_STATIC_LINK_OFFSET)
             self._emit(
@@ -658,6 +815,44 @@ class AlgolIrCompiler:
         self._emit(IrOp.LOAD_IMM, IrRegister(reg), IrImmediate(value))
         return reg
 
+    def _load_runtime_state(self, offset: int, dst_reg: int) -> None:
+        self._emit(
+            IrOp.LOAD_ADDR,
+            IrRegister(self.stack_base_reg),
+            IrLabel(_FRAME_MEMORY_LABEL),
+        )
+        offset_reg = self._const_reg(offset)
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(dst_reg),
+            IrRegister(self.stack_base_reg),
+            IrRegister(offset_reg),
+        )
+
+    def _store_runtime_state(self, offset: int, value_reg: int) -> None:
+        self._emit(
+            IrOp.LOAD_ADDR,
+            IrRegister(self.stack_base_reg),
+            IrLabel(_FRAME_MEMORY_LABEL),
+        )
+        self._store_word_reg(
+            value_reg=value_reg,
+            base_reg=self.stack_base_reg,
+            offset=offset,
+        )
+
+    def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
+        index = self.if_count
+        self.if_count += 1
+        else_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        self._emit(IrOp.BRANCH_Z, IrRegister(overflow_reg), IrLabel(else_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit(IrOp.RET)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(else_label)
+        self._label(end_label)
+
     def _require_reference(self, token: Token, role: str) -> ResolvedReference:
         reference = self.references.get((id(token), role))
         if reference is None:
@@ -667,12 +862,35 @@ class AlgolIrCompiler:
             )
         return reference
 
-    def _next_semantic_block(self) -> SemanticBlock:
-        if self.semantic_block_index >= len(self.semantic_blocks):
-            raise CompileError("AST contains more blocks than the semantic model")
-        block = self.semantic_blocks[self.semantic_block_index]
-        self.semantic_block_index += 1
-        return block
+    def _require_procedure_call(
+        self, token: Token, role: str
+    ) -> ResolvedProcedureCall:
+        call = self.procedure_calls.get((id(token), role))
+        if call is None:
+            raise CompileError(
+                f"missing resolved {role} procedure call for {token.value!r} "
+                f"at line {token.line}, column {token.column}"
+            )
+        return call
+
+    def _semantic_block_for_ast(self, block: ASTNode) -> SemanticBlock:
+        semantic_block = self.semantic_blocks_by_ast.get(id(block))
+        if semantic_block is None:
+            raise CompileError(f"missing semantic block for AST node {block.rule_name}")
+        return semantic_block
+
+    def _find_ast_by_id(self, node_id: int) -> ASTNode | None:
+        if self.source_ast is None:
+            return None
+        pending = [self.source_ast]
+        while pending:
+            node = pending.pop()
+            if id(node) == node_id:
+                return node
+            pending.extend(
+                child for child in node.children if isinstance(child, ASTNode)
+            )
+        return None
 
     def _layout_frames(self, blocks: list[SemanticBlock]) -> dict[int, int]:
         offsets: dict[int, int] = {}

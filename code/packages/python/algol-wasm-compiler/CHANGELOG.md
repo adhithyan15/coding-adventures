@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Compiled ALGOL programs now execute scalar variables through frame-backed
   WASM memory operations, including nested-block outer writes and shadowing.
+- Compiled value-only integer procedures now run through generated WASM
+  functions with static links, fresh recursive frames, and typed result slots.
 
 ## [0.1.0] - 2026-04-20
 

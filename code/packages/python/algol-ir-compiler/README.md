@@ -10,9 +10,15 @@ activation-frame slots, and scalar reads/writes lower to `LOAD_WORD` and
 named `result` is loaded into `v1` before `HALT` so the generated WASM function
 returns it.
 
-This phase keeps the static frame image bounded to one 64 KiB WASM page. Larger
+Value-only integer procedures lower to generated `_fn_algol_...` functions.
+Calls pass an explicit static link followed by value arguments, procedure frames
+are allocated from the module frame stack, and typed procedures return through
+their procedure-name result slot.
+
+This phase keeps ALGOL frame memory bounded to one 64 KiB WASM page. Larger
 semantic frame plans raise `CompileError` before the WASM data encoder can
-materialize the memory image.
+materialize the memory image, and dynamic procedure recursion stops at the same
+bounded frame stack.
 
 ```python
 from algol_ir_compiler import compile_algol

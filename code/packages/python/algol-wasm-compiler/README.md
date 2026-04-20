@@ -15,6 +15,9 @@ block finishes.
 Scalar locals are now backed by the ALGOL frame model from PL04. Nested blocks
 use static links to reach outer frame slots, so shadowing and outer-scope writes
 exercise the same storage path later procedures will need.
+Value-only integer procedures are compiled as WASM functions with explicit
+static-link arguments, fresh frame allocation per call, and procedure-name
+result slots for typed procedure returns.
 
 ```python
 from algol_wasm_compiler import compile_source
