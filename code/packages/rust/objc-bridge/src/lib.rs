@@ -508,6 +508,13 @@ extern "C" {
     #[allow(non_snake_case)]
     pub fn CTRunGetStringIndices(run: Id, range: CFRange, buffer: *mut c_long);
 
+    /// Get the attribute dictionary attached to a CTRun. The dictionary
+    /// includes the actual font CoreText used for this run (which may
+    /// differ from the originally-requested font when fallback occurs).
+    /// Borrowed; do not CFRelease.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetAttributes(run: Id) -> Id; // CFDictionaryRef
+
     // --------------------------- CTFont metric accessors ----------------------
 
     #[allow(non_snake_case)]
@@ -623,6 +630,12 @@ extern "C" {
 
     #[allow(non_snake_case)]
     pub fn CFStringGetLength(s: Id) -> c_long;
+
+    /// Look up a value in a CFDictionary. Returns a borrowed
+    /// reference — do not CFRelease. Returns NIL if the key is not
+    /// present.
+    #[allow(non_snake_case)]
+    pub fn CFDictionaryGetValue(dict: Id, key: *const c_void) -> Id;
 
     /// Copy into a C buffer. Returns true on success. `max_buf_len`
     /// includes the null terminator.

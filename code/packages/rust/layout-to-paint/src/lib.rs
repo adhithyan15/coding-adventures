@@ -326,27 +326,28 @@ fn emit_text_content<S, M, R>(
     for segment in tc.value.split('\n') {
         let wrapped = wrap_line(options.shaper, handle, segment, size_dpr, max_width_dpr);
         for line in wrapped {
-            let glyphs =
-                shape_line(options.shaper, handle, &line, size_dpr, &shape_opts, box_x_dpr, baseline_y);
-            if let Some((glyph_positions, font_ref)) = glyphs {
-                out.push(PaintInstruction::GlyphRun(PaintGlyphRun {
-                    base: PaintBase::default(),
-                    glyphs: glyph_positions,
-                    font_ref,
-                    font_size: size_dpr as f64,
-                    fill: Some(fill_css.clone()),
-                }));
-            }
+            emit_paint_glyph_runs_for_line(
+                options.shaper,
+                handle,
+                &line,
+                size_dpr,
+                &shape_opts,
+                box_x_dpr,
+                baseline_y,
+                &fill_css,
+                out,
+            );
             baseline_y += line_height_dpr;
         }
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Shape a single already-wrapped line into GlyphPosition values
+// Shape a single wrapped line → one PaintGlyphRun per font-fallback segment
 // ═══════════════════════════════════════════════════════════════════════════
 
-fn shape_line<S: TextShaper>(
+#[allow(clippy::too_many_arguments)]
+fn emit_paint_glyph_runs_for_line<S: TextShaper>(
     shaper: &S,
     handle: &S::Handle,
     text: &str,
@@ -354,31 +355,65 @@ fn shape_line<S: TextShaper>(
     opts: &ShapeOptions,
     baseline_x: f64,
     baseline_y: f64,
-) -> Option<(Vec<GlyphPosition>, String)> {
+    fill_css: &str,
+    out: &mut Vec<PaintInstruction>,
+) {
     if text.is_empty() {
-        return None;
+        return;
     }
-    let run = shaper.shape(text, handle, size, opts).ok()?;
+    let shaped = match shaper.shape(text, handle, size, opts) {
+        Ok(s) => s,
+        Err(_) => return,
+    };
 
-    // Convert shaper's pen-relative output into absolute
-    // (scene-coordinate) glyph positions. Walk the glyphs
-    // accumulating x_advance; each glyph's on-screen position is
-    // (running_pen + glyph.x_offset, baseline + glyph.y_offset).
-    let mut positions: Vec<GlyphPosition> = Vec::with_capacity(run.glyphs.len());
-    let mut pen_x: f64 = 0.0;
-    let mut pen_y: f64 = 0.0;
-    for g in &run.glyphs {
-        let gx = baseline_x + pen_x + g.x_offset as f64;
-        let gy = baseline_y + pen_y + g.y_offset as f64;
-        positions.push(GlyphPosition {
-            glyph_id: g.glyph_id,
-            x: gx,
-            y: gy,
-        });
-        pen_x += g.x_advance as f64;
-        pen_y += g.y_advance as f64;
+    // The shaper returns potentially MULTIPLE ShapedRuns, one per
+    // font-fallback segment. Each must become its own PaintGlyphRun
+    // so the paint backend can route on the segment's actual font_ref
+    // and pick up the correct fallback font. The line's pen
+    // accumulates across segments.
+    let mut line_pen_x: f64 = 0.0;
+    let mut line_pen_y: f64 = 0.0;
+
+    for run in &shaped.runs {
+        if run.glyphs.is_empty() {
+            continue;
+        }
+
+        // Glyph positions are absolute scene coordinates. Each
+        // segment's glyphs carry x_offset / y_offset relative to the
+        // segment's start, so we add the line-level pen on top.
+        let mut positions: Vec<GlyphPosition> = Vec::with_capacity(run.glyphs.len());
+        let mut seg_pen_x: f64 = 0.0;
+        let mut seg_pen_y: f64 = 0.0;
+        for g in &run.glyphs {
+            let gx = baseline_x + line_pen_x + seg_pen_x + g.x_offset as f64;
+            let gy = baseline_y + line_pen_y + seg_pen_y + g.y_offset as f64;
+            positions.push(GlyphPosition {
+                glyph_id: g.glyph_id,
+                x: gx,
+                y: gy,
+            });
+            seg_pen_x += g.x_advance as f64;
+            seg_pen_y += g.y_advance as f64;
+        }
+
+        out.push(PaintInstruction::GlyphRun(PaintGlyphRun {
+            base: PaintBase::default(),
+            glyphs: positions,
+            font_ref: run.font_ref.clone(),
+            font_size: size as f64,
+            fill: Some(fill_css.to_string()),
+        }));
+
+        // Advance the line-level pen by this segment's total advance
+        // so the next segment starts where this one ended.
+        line_pen_x += run.x_advance_total as f64;
+        line_pen_y += run
+            .glyphs
+            .iter()
+            .map(|g| g.y_advance as f64)
+            .sum::<f64>();
     }
-    Some((positions, run.font_ref))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -401,7 +436,7 @@ fn wrap_line<S: TextShaper>(
 
     let space_width = shaper
         .shape(" ", handle, size, &ShapeOptions::default())
-        .map(|r| r.x_advance_total as f64)
+        .map(|r| r.total_advance() as f64)
         .unwrap_or((size as f64) * 0.25);
 
     let mut lines: Vec<String> = Vec::new();
@@ -411,7 +446,7 @@ fn wrap_line<S: TextShaper>(
     for word in segment.split_whitespace() {
         let word_width = shaper
             .shape(word, handle, size, &ShapeOptions::default())
-            .map(|r| r.x_advance_total as f64)
+            .map(|r| r.total_advance() as f64)
             .unwrap_or(word.chars().count() as f64 * (size as f64) * 0.5);
 
         if current.is_empty() {
@@ -545,7 +580,7 @@ mod tests {
         color_black, color_white, font_spec, rgb, FontSpec, MeasureResult, TextAlign, TextContent,
     };
     use text_interfaces::{
-        Direction, FontResolutionError, Glyph, ShapedRun, ShapingError,
+        Direction, FontResolutionError, Glyph, ShapedRun, ShapedText, ShapingError,
     };
 
     // ─── Minimal in-memory backend for the tests ────────────────
@@ -602,6 +637,8 @@ mod tests {
     }
 
     /// Shaper: every character is (size / 2) wide at 0 y-offset.
+    /// For the simple tests below, the whole input is one font
+    /// binding ("fake:test") → one ShapedRun.
     struct FakeShaper;
     impl TextShaper for FakeShaper {
         type Handle = FakeHandle;
@@ -611,7 +648,7 @@ mod tests {
             _font: &FakeHandle,
             size: f32,
             opts: &ShapeOptions,
-        ) -> Result<ShapedRun, ShapingError> {
+        ) -> Result<ShapedText, ShapingError> {
             if opts.direction != Direction::Ltr {
                 return Err(ShapingError::UnsupportedDirection(opts.direction));
             }
@@ -629,14 +666,80 @@ mod tests {
                 })
                 .collect();
             let total = glyphs.len() as f32 * advance;
-            Ok(ShapedRun {
+            Ok(ShapedText::single(ShapedRun {
                 glyphs,
                 x_advance_total: total,
                 font_ref: "fake:test".into(),
-            })
+            }))
         }
         fn font_ref(&self, _h: &FakeHandle) -> String {
             "fake:test".into()
+        }
+    }
+
+    /// Shaper that simulates font fallback: splits the input on `→`
+    /// (U+2192) and emits a separate ShapedRun for each side, tagged
+    /// with a different font_ref. Used to verify layout-to-paint
+    /// emits one PaintGlyphRun per segment with the correct font_ref.
+    struct FallbackSplittingShaper;
+    impl TextShaper for FallbackSplittingShaper {
+        type Handle = FakeHandle;
+        fn shape(
+            &self,
+            text: &str,
+            _font: &FakeHandle,
+            size: f32,
+            _opts: &ShapeOptions,
+        ) -> Result<ShapedText, ShapingError> {
+            let advance = size / 2.0;
+            let mut runs: Vec<ShapedRun> = Vec::new();
+            let mut current = String::new();
+            let mut current_font = "fake:primary";
+            let mut cluster: u32 = 0;
+
+            let push = |runs: &mut Vec<ShapedRun>, s: &str, font: &str, start_cluster: u32| {
+                if s.is_empty() {
+                    return;
+                }
+                let glyphs: Vec<Glyph> = s
+                    .chars()
+                    .enumerate()
+                    .map(|(i, c)| Glyph {
+                        glyph_id: c as u32,
+                        cluster: start_cluster + i as u32,
+                        x_advance: advance,
+                        y_advance: 0.0,
+                        x_offset: 0.0,
+                        y_offset: 0.0,
+                    })
+                    .collect();
+                let total = glyphs.len() as f32 * advance;
+                runs.push(ShapedRun {
+                    glyphs,
+                    x_advance_total: total,
+                    font_ref: font.into(),
+                });
+            };
+
+            for ch in text.chars() {
+                let needs_fallback = ch == '\u{2192}';
+                let want_font = if needs_fallback { "fake:fallback" } else { "fake:primary" };
+                if want_font != current_font && !current.is_empty() {
+                    let start = cluster - current.chars().count() as u32;
+                    push(&mut runs, &current, current_font, start);
+                    current.clear();
+                }
+                current_font = want_font;
+                current.push(ch);
+                cluster += 1;
+            }
+            let start = cluster - current.chars().count() as u32;
+            push(&mut runs, &current, current_font, start);
+            Ok(ShapedText { runs })
+        }
+
+        fn font_ref(&self, _h: &FakeHandle) -> String {
+            "fake:primary".into()
         }
     }
 
@@ -1068,5 +1171,79 @@ mod tests {
         // Sanity: the `rgb()` helper from layout-ir is used in the
         // document-default-theme, so its behavior matters for downstream.
         assert_eq!(rgb(1, 2, 3), Color { r: 1, g: 2, b: 3, a: 255 });
+    }
+
+    #[test]
+    fn font_fallback_emits_one_paint_glyph_run_per_segment() {
+        // Regression test for the ẁ-for-arrow bug: a shaper that
+        // splits on U+2192 into two font-bound segments (primary
+        // for ASCII, fallback for the arrow) must produce two
+        // PaintGlyphRuns, each carrying its own font_ref and
+        // correctly-positioned glyphs.
+        let tc = TextContent {
+            value: "a → b".into(),
+            font: font_spec("Test", 10.0),
+            color: color_black(),
+            max_lines: None,
+            text_align: TextAlign::Start,
+        };
+        let leaf = positioned_leaf(tc, 0.0, 0.0, 500.0, 20.0);
+
+        let shaper = FallbackSplittingShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts: LayoutToPaintOptions<'_, _, _, _> = LayoutToPaintOptions {
+            width: 500.0,
+            height: 20.0,
+            background: color_white(),
+            device_pixel_ratio: 1.0,
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        };
+        let scene = layout_to_paint(&leaf, &opts);
+
+        let runs: Vec<&PaintGlyphRun> = scene
+            .instructions
+            .iter()
+            .filter_map(|i| match i {
+                PaintInstruction::GlyphRun(g) => Some(g),
+                _ => None,
+            })
+            .collect();
+
+        // "a → b" = "a " (primary) + "→" (fallback) + " b" (primary).
+        // The fallback-splitting shaper emits 3 ShapedRuns; layout-to-paint
+        // must emit 3 PaintGlyphRuns.
+        assert_eq!(runs.len(), 3, "expected 3 PaintGlyphRuns (a / → / b), got {}", runs.len());
+
+        // At least two distinct font_refs among the runs — the core
+        // invariant that the bug violated.
+        let unique_refs: std::collections::HashSet<&str> =
+            runs.iter().map(|r| r.font_ref.as_str()).collect();
+        assert!(
+            unique_refs.len() >= 2,
+            "expected >= 2 distinct font_refs, got {:?}",
+            unique_refs
+        );
+
+        // The middle run is the fallback one.
+        assert_eq!(runs[1].font_ref, "fake:fallback");
+        assert_eq!(runs[0].font_ref, "fake:primary");
+        assert_eq!(runs[2].font_ref, "fake:primary");
+
+        // Glyphs positions increase monotonically across the whole
+        // line (no segment overlap).
+        let glyph_xs: Vec<f64> = runs
+            .iter()
+            .flat_map(|r| r.glyphs.iter().map(|g| g.x))
+            .collect();
+        for pair in glyph_xs.windows(2) {
+            assert!(
+                pair[1] >= pair[0],
+                "glyph x should be monotonically non-decreasing across segments: {:?}",
+                glyph_xs
+            );
+        }
     }
 }
