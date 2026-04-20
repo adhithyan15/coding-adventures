@@ -331,4 +331,5 @@ members = [
     "udp-client",
     "state-machine-markup-serializer",
     "state-machine-markup-deserializer",
+    "state-machine-markup-json-serializer",
 ]
