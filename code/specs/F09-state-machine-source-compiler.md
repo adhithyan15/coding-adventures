@@ -13,7 +13,7 @@ The production path is:
 hand-written machine in code
         -> StateMachineDefinition
         -> optional serializer output: canonical .states.toml / .states.json
-        -> deserializer or direct definition input
+        -> deserializer or direct typed definition input
         -> state-machine source compiler
         -> generated Rust / Go / TypeScript / Python / Ruby / ...
         -> normal package compiler or interpreter
@@ -95,7 +95,10 @@ html-living.tokenizer.expanded.states.json
 ```
 
 They contain no unresolved includes, have deterministic ordering, and are ideal
-for snapshot tests. They are not meant to be loaded by production packages.
+for snapshot tests. They are not meant to be loaded by production packages. The
+canonical JSON writer is its own serializer package so source compiler crates can
+consume typed definitions without depending on TOML writing, TOML parsing, or
+runtime file loading.
 
 ### Generated Source Artifacts
 
@@ -194,7 +197,8 @@ Phase 2 export support:
 
 - modal machines with external child-machine references
 - modal machines with inline child-machine documents
-- JSON writer in a separate serializer package
+- JSON writer in a separate serializer package, exposed as
+  `to_states_json(definition) -> string`
 - TOML/JSON parser in separate deserializer packages for tooling only
 
 Phase 3 export support:

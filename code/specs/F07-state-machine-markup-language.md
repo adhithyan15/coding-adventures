@@ -14,10 +14,12 @@ state-machine definitions. The state-machine ecosystem should be able to:
 - emit visualization formats such as DOT
 - import and export a useful subset of existing standards such as SCXML
 
-The format is called **State Machine Markup v1**. Source files use
+The format is called **State Machine Markup v1**. Hand-authored source files use
 `.states.toml` when the file is meant to be parsed by general TOML tooling, and
 `.states` when we want the shorter educational extension. Both extensions carry
-the same TOML-compatible content.
+the same TOML-compatible content. Build tooling may also emit canonical
+`.states.json` artifacts as normalized machine-readable snapshots of the same
+typed definition model.
 
 This is intentionally not a brand-new syntax. TOML gives us a readable existing
 text format, and `F03-toml-parser.md` already makes TOML a first-class repo
@@ -39,6 +41,7 @@ definition layer:
 state-machine                  -> executable automata + StateMachineDefinition
 state-machine-markup-serializer -> StateMachineDefinition -> .states.toml
 state-machine-markup-deserializer -> .states.toml -> StateMachineDefinition
+state-machine-markup-json-serializer -> StateMachineDefinition -> .states.json
 state-machine-source-compiler  -> StateMachineDefinition -> static source
 ```
 
@@ -354,6 +357,60 @@ on = "close_angle"
 to = "data"
 ```
 
+## JSON Surface Format
+
+JSON is a canonical build artifact, not the preferred human authoring format.
+It exists so tools can snapshot expanded definitions, compare generated
+intermediates, and hand the same typed model to source compilers without keeping
+TOML syntax around.
+
+The JSON surface uses the same root fields, state objects, and transition
+objects as the TOML surface:
+
+```json
+{
+  "format": "state-machine/v1",
+  "name": "turnstile",
+  "kind": "dfa",
+  "initial": "locked",
+  "alphabet": ["coin", "push"],
+  "states": [
+    {"id": "locked", "initial": true},
+    {"id": "unlocked", "accepting": true}
+  ],
+  "transitions": [
+    {"from": "locked", "on": "coin", "to": "unlocked"},
+    {"from": "locked", "on": "push", "to": "locked"},
+    {"from": "unlocked", "on": "coin", "to": "unlocked"},
+    {"from": "unlocked", "on": "push", "to": "locked"}
+  ]
+}
+```
+
+JSON transition `to` follows the same compact rule as TOML: single-target DFA
+and PDA transitions write a string, while multi-target NFA transitions write a
+string array. Epsilon transitions are written as `"on": "epsilon"` at the JSON
+file boundary, matching TOML. The typed in-memory representation still uses
+`None` for epsilon, and import boundaries must continue rejecting empty-string
+event aliases.
+
+The first JSON serializer profile covers the same phase 1 DFA, NFA, and PDA
+fields as the TOML serializer:
+
+- root string fields: `format`, `name`, `kind`, `initial`, `initial_stack`
+- root string arrays: `alphabet`, `stack_alphabet`
+- `states` array entries with `id`, `initial`, `accepting`, `final`, and
+  `external_entry`
+- `transitions` array entries with `from`, `on`, `to`, `stack_pop`, and
+  `stack_push`
+
+The JSON serializer must be deterministic and dependency-light. A hand-written
+writer is acceptable for the phase 1 subset because it only emits strings,
+booleans, arrays, and objects from trusted typed definitions. A future JSON
+deserializer is a separate trust boundary and must apply its own source-size,
+nesting, array-length, and validation limits before constructing a
+`StateMachineDefinition`.
+
 ## Actions And Guards
 
 Actions and guards use a portable call representation:
@@ -440,8 +497,8 @@ Minimum API:
 - core state-machine: `from_definition(definition) -> Machine`
 - TOML serializer: `to_states_toml(definition) -> string`
 - TOML deserializer: `from_states_toml(source) -> StateMachineDefinition`
-- JSON serializer: `to_json(definition) -> string`
-- JSON deserializer: `from_json(source) -> StateMachineDefinition`
+- JSON serializer: `to_states_json(definition) -> string`
+- JSON deserializer: `from_states_json(source) -> StateMachineDefinition`
 - source compiler: `to_source(definition, target_language)`
 - SCXML serializer: `to_scxml(definition) -> string`
 - SCXML deserializer: `from_scxml(source) -> StateMachineDefinition`
@@ -508,6 +565,13 @@ Serializers must:
 - write one `[[transitions]]` table per transition
 - preserve unknown `metadata` keys under a namespaced table such as
   `[metadata.visual]`
+
+For the phase 1 Rust TOML and JSON serializers, the executable machine export
+helpers already sort states, alphabets, and transition sets before constructing
+the typed definition. The serializer packages may defensively sort states and
+transitions by their stable identifiers when no explicit `priority` field
+exists. Once prioritized statecharts and tokenizers land, serializers must
+prefer the explicit priority/order field over lexical sorting.
 
 Serializers must not:
 
@@ -596,13 +660,15 @@ runtime deserialization package.
    validation.
 7. Add executable-machine imports for DFA, NFA, and PDA definitions so
    serializer/deserializer round trips can return to runnable machines.
-8. Add modal round-tripping through definitions once modal definitions can
+8. Add a Rust `state-machine-markup-json-serializer` package for deterministic
+   `.states.json` output.
+9. Add modal round-tripping through definitions once modal definitions can
    represent child-machine references and mode transitions.
-9. Add SCXML core import/export packages for deterministic event machines.
-10. Keep DOT export as visualization-only output.
-11. Add the build-time source compiler from
+10. Add SCXML core import/export packages for deterministic event machines.
+11. Keep DOT export as visualization-only output.
+12. Add the build-time source compiler from
    `F09-state-machine-source-compiler.md`.
-12. Build tokenizer profiles from `F08` on top of this definition model.
+13. Build tokenizer profiles from `F08` on top of this definition model.
 
 ## Test Strategy
 
