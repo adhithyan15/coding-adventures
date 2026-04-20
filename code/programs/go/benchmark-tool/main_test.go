@@ -3,8 +3,10 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"math"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -150,7 +152,7 @@ func TestCLICommandFunctionsExerciseHappyPaths(t *testing.T) {
 	if code := runCLI(cliSpec, []string{"benchmark-tool", "validate", manifestPath}, &stdout, &stderr); code != 0 {
 		t.Fatalf("validate command exit=%d stderr=%s", code, stderr.String())
 	}
-	if code := runCLI(cliSpec, []string{"benchmark-tool", "run", manifestPath, "--out", leftDir, "--warmup", "0", "--trials", "1"}, &stdout, &stderr); code != 0 {
+	if code := runCLI(cliSpec, []string{"benchmark-tool", "run", manifestPath, "--out", leftDir, "--warmup", "0", "--trials", "1", "--subjects", "print", "--workloads", "print-once"}, &stdout, &stderr); code != 0 {
 		t.Fatalf("run command left exit=%d stderr=%s", code, stderr.String())
 	}
 	if code := runCLI(cliSpec, []string{"benchmark-tool", "run", "--out", rightDir, "--warmup=0", "--trials=1", manifestPath}, &stdout, &stderr); code != 0 {
@@ -229,14 +231,126 @@ func TestIntFlagConversionsAreBoundsChecked(t *testing.T) {
 	}
 }
 
+func TestRunOptionsApplySubjectOverridesAndFilters(t *testing.T) {
+	manifest := validTinyManifest()
+	manifest.Subjects = append(manifest.Subjects, Subject{
+		Name:     "baseline",
+		Kind:     "command",
+		Prebuilt: true,
+		Command:  "printf baseline",
+	})
+	manifest.Workloads = append(manifest.Workloads, Workload{
+		Name:      "other",
+		Driver:    "command",
+		TimeoutMS: 1000,
+	})
+
+	updated, err := applyRunOptions(manifest, RunOptions{
+		MeasurementTrials: 7,
+		WarmupTrials:      2,
+		SubjectOverrides:  map[string]string{"baseline": "origin/main"},
+		SubjectFilter:     []string{"baseline"},
+		WorkloadFilter:    []string{"other"},
+	})
+	if err != nil {
+		t.Fatalf("apply run options: %v", err)
+	}
+	if updated.Defaults.MeasurementTrials != 7 || updated.Defaults.WarmupTrials != 2 {
+		t.Fatalf("trial overrides were not applied: %#v", updated.Defaults)
+	}
+	if len(updated.Subjects) != 1 || updated.Subjects[0].Name != "baseline" || updated.Subjects[0].Checkout != "origin/main" {
+		t.Fatalf("subject filter/override mismatch: %#v", updated.Subjects)
+	}
+	if len(updated.Workloads) != 1 || updated.Workloads[0].Name != "other" {
+		t.Fatalf("workload filter mismatch: %#v", updated.Workloads)
+	}
+}
+
+func TestParseSubjectOverridesRejectsMalformedValues(t *testing.T) {
+	if _, err := parseSubjectOverrides([]string{"current=HEAD", "baseline=origin/main"}); err != nil {
+		t.Fatalf("valid overrides should parse: %v", err)
+	}
+	if _, err := parseSubjectOverrides([]string{"missing-equals"}); err == nil {
+		t.Fatal("expected malformed subject override to fail")
+	}
+}
+
+func TestRunManifestPreparesGitWorktreeForCheckoutSubjects(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git is required for worktree tests")
+	}
+	if err := gitUsableForTest(); err != nil {
+		t.Skipf("git is not usable in this environment: %v", err)
+	}
+	dir := t.TempDir()
+	repo := filepath.Join(dir, "repo")
+	resultDir := filepath.Join(dir, "results")
+	if err := os.MkdirAll(repo, 0o755); err != nil {
+		t.Fatalf("mkdir repo: %v", err)
+	}
+	runGitForTest(t, repo, "init")
+	runGitForTest(t, repo, "config", "user.email", "bench@example.com")
+	runGitForTest(t, repo, "config", "user.name", "Benchmark Test")
+	writeFileForTest(t, filepath.Join(repo, "print_marker.go"), `package main
+
+import (
+	"fmt"
+	"os"
+	"strings"
+)
+
+func main() {
+	data, err := os.ReadFile("marker.txt")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Print(strings.TrimSpace(string(data)))
+}
+`)
+	writeFileForTest(t, filepath.Join(repo, "benchmark.toml"), gitWorktreeManifestText())
+	writeFileForTest(t, filepath.Join(repo, "marker.txt"), "baseline\n")
+	runGitForTest(t, repo, "add", ".")
+	runGitForTest(t, repo, "commit", "-m", "baseline")
+	runGitForTest(t, repo, "branch", "baseline-ref")
+	writeFileForTest(t, filepath.Join(repo, "marker.txt"), "current\n")
+	runGitForTest(t, repo, "add", "marker.txt")
+	runGitForTest(t, repo, "commit", "-m", "current")
+	runGitForTest(t, repo, "branch", "current-ref")
+
+	manifestPath := filepath.Join(repo, "benchmark.toml")
+	manifest, err := LoadManifest(manifestPath)
+	if err != nil {
+		t.Fatalf("load manifest: %v", err)
+	}
+	if err := RunManifest(manifestPath, manifest, resultDir); err != nil {
+		t.Fatalf("run manifest: %v", err)
+	}
+
+	assertBuildLogContainsForTest(t, resultDir, "baseline", "baseline")
+	assertBuildLogContainsForTest(t, resultDir, "current", "current")
+	metadata := readSubjectMetadataForTest(t, filepath.Join(resultDir, "subjects", "baseline", "subject.json"))
+	if metadata.Commit == "" {
+		t.Fatalf("expected pinned commit metadata: %#v", metadata)
+	}
+	if metadata.WorktreePath == "" {
+		t.Fatalf("expected worktree metadata: %#v", metadata)
+	}
+	if _, err := os.Stat(metadata.WorktreePath); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("worktree should be cleaned up after the run, stat err=%v", err)
+	}
+}
+
 func TestRunBuildWritesLogsAndPropagatesFailures(t *testing.T) {
 	dir := t.TempDir()
-	okSubject := Subject{
-		Name:             "builder",
-		WorkingDirectory: dir,
-		Build:            "printf build-ok",
+	okSubject := PreparedSubject{
+		Subject: Subject{
+			Name:             "builder",
+			WorkingDirectory: dir,
+			Build:            "printf build-ok",
+		},
+		BenchmarkRoot: dir,
 	}
-	if err := runBuild(okSubject, dir, dir); err != nil {
+	if err := runBuild(okSubject, dir); err != nil {
 		t.Fatalf("run build: %v", err)
 	}
 	logData, err := os.ReadFile(filepath.Join(dir, "build.log"))
@@ -248,8 +362,8 @@ func TestRunBuildWritesLogsAndPropagatesFailures(t *testing.T) {
 	}
 
 	badSubject := okSubject
-	badSubject.Build = shellExitCommand(7)
-	if err := runBuild(badSubject, dir, dir); err == nil {
+	badSubject.Subject.Build = shellExitCommand(7)
+	if err := runBuild(badSubject, dir); err == nil {
 		t.Fatal("expected failing build to return an error")
 	}
 }
@@ -395,6 +509,39 @@ timeout_ms = 10000
 `
 }
 
+func gitWorktreeManifestText() string {
+	return `name = "git-worktree-benchmark"
+
+[defaults]
+warmup_trials = 0
+measurement_trials = 1
+cooldown_ms = 0
+fail_fast = true
+
+[[subjects]]
+name = "baseline"
+kind = "command"
+checkout = "baseline-ref"
+working_directory = "."
+build = "go run print_marker.go"
+command = "go version"
+
+[[subjects]]
+name = "current"
+kind = "command"
+checkout = "current-ref"
+working_directory = "."
+build = "go run print_marker.go"
+command = "go version"
+
+[[workloads]]
+name = "go-version"
+driver = "command"
+operations = 1
+timeout_ms = 10000
+`
+}
+
 func shellExitCommand(code int) string {
 	if runtime.GOOS == "windows" {
 		return "exit " + strconv.Itoa(code)
@@ -463,4 +610,50 @@ func readLinesForTest(t *testing.T, path string) []string {
 		return nil
 	}
 	return strings.Split(text, "\n")
+}
+
+func runGitForTest(t *testing.T, dir string, args ...string) {
+	t.Helper()
+	cmd := exec.Command("git", args...)
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("git %s failed: %v\n%s", strings.Join(args, " "), err, string(out))
+	}
+}
+
+func gitUsableForTest() error {
+	cmd := exec.Command("git", "--version")
+	return cmd.Run()
+}
+
+func writeFileForTest(t *testing.T, path string, content string) {
+	t.Helper()
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatalf("write %s: %v", path, err)
+	}
+}
+
+func assertBuildLogContainsForTest(t *testing.T, resultDir string, subject string, want string) {
+	t.Helper()
+	data, err := os.ReadFile(filepath.Join(resultDir, "subjects", subject, "build.log"))
+	if err != nil {
+		t.Fatalf("read build log for %s: %v", subject, err)
+	}
+	if !strings.Contains(string(data), want) {
+		t.Fatalf("build log for %s should contain %q:\n%s", subject, want, string(data))
+	}
+}
+
+func readSubjectMetadataForTest(t *testing.T, path string) SubjectMetadata {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read subject metadata: %v", err)
+	}
+	var metadata SubjectMetadata
+	if err := json.Unmarshal(data, &metadata); err != nil {
+		t.Fatalf("decode subject metadata: %v", err)
+	}
+	return metadata
 }

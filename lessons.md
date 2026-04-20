@@ -4,6 +4,21 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: Tests that need a CLI tool must verify the tool actually runs
+
+Checking `exec.LookPath("git")` only proves that a binary exists on `PATH`. On
+macOS, `/usr/bin/git` can exist but fail every invocation behind the Xcode
+license gate, which makes tests fail after they already decided Git was
+available.
+
+**Symptom:** A test guarded by `exec.LookPath("git")` still fails at `git init`
+with an Xcode license error.
+
+**Rule:** Tests that depend on an external CLI should run a harmless probe such
+as `git --version` and skip when that command fails. Presence is not usability.
+
+---
+
 ### 2026-04-20: CodeQL flags unchecked CLI integer downcasts from `int64` to `int`
 
 CodeQL treats parsed CLI integer values as untrusted numeric input. If a Go

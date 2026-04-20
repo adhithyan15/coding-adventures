@@ -14,6 +14,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/json"
@@ -36,7 +37,7 @@ import (
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
 
-const version = "0.1.0"
+const version = "0.2.0"
 
 //go:embed benchmark-tool.json
 var cliSpec []byte
@@ -149,6 +150,33 @@ type SummaryFile struct {
 	Summaries    []Summary `json:"summaries"`
 }
 
+type RunOptions struct {
+	MeasurementTrials int
+	WarmupTrials      int
+	SubjectOverrides  map[string]string
+	SubjectFilter     []string
+	WorkloadFilter    []string
+}
+
+type PreparedSubject struct {
+	Subject       Subject         `json:"subject"`
+	BenchmarkRoot string          `json:"benchmark_root"`
+	Metadata      SubjectMetadata `json:"metadata"`
+	Cleanup       func() error    `json:"-"`
+}
+
+type SubjectMetadata struct {
+	Name             string `json:"name"`
+	Checkout         string `json:"checkout,omitempty"`
+	Commit           string `json:"commit,omitempty"`
+	Branch           string `json:"branch,omitempty"`
+	Dirty            bool   `json:"dirty"`
+	Prebuilt         bool   `json:"prebuilt"`
+	BenchmarkRoot    string `json:"benchmark_root"`
+	WorkingDirectory string `json:"working_directory"`
+	WorktreePath     string `json:"worktree_path,omitempty"`
+}
+
 func main() {
 	os.Exit(runCLI(cliSpec, os.Args, os.Stdout, os.Stderr))
 }
@@ -194,11 +222,14 @@ func dispatchCLI(result *clibuilder.ParseResult, stdout io.Writer) error {
 	case "validate":
 		return validateManifestFile(stringArgument(result, "manifest"), stdout)
 	case "run":
+		options, err := runOptionsFromCLI(result)
+		if err != nil {
+			return err
+		}
 		return runManifestFile(
 			stringArgument(result, "manifest"),
 			stringFlag(result, "out"),
-			intFlag(result, "trials", -1),
-			intFlag(result, "warmup", -1),
+			options,
 		)
 	case "report":
 		return reportResultDir(stringArgument(result, "result-dir"), stdout)
@@ -214,6 +245,20 @@ func dispatchCLI(result *clibuilder.ParseResult, stdout io.Writer) error {
 	}
 }
 
+func runOptionsFromCLI(result *clibuilder.ParseResult) (RunOptions, error) {
+	overrides, err := parseSubjectOverrides(stringSliceFlag(result, "subject"))
+	if err != nil {
+		return RunOptions{}, err
+	}
+	return RunOptions{
+		MeasurementTrials: intFlag(result, "trials", -1),
+		WarmupTrials:      intFlag(result, "warmup", -1),
+		SubjectOverrides:  overrides,
+		SubjectFilter:     splitCSVFlag(stringFlag(result, "subjects")),
+		WorkloadFilter:    splitCSVFlag(stringFlag(result, "workloads")),
+	}, nil
+}
+
 func stringArgument(result *clibuilder.ParseResult, id string) string {
 	value, _ := result.Arguments[id].(string)
 	return value
@@ -222,6 +267,30 @@ func stringArgument(result *clibuilder.ParseResult, id string) string {
 func stringFlag(result *clibuilder.ParseResult, id string) string {
 	value, _ := result.Flags[id].(string)
 	return value
+}
+
+func stringSliceFlag(result *clibuilder.ParseResult, id string) []string {
+	switch value := result.Flags[id].(type) {
+	case nil:
+		return nil
+	case string:
+		if value == "" {
+			return nil
+		}
+		return []string{value}
+	case []string:
+		return append([]string(nil), value...)
+	case []any:
+		values := make([]string, 0, len(value))
+		for _, item := range value {
+			if text, ok := item.(string); ok && text != "" {
+				values = append(values, text)
+			}
+		}
+		return values
+	default:
+		return nil
+	}
 }
 
 func stringFlagDefault(result *clibuilder.ParseResult, id string, fallback string) string {
@@ -298,16 +367,14 @@ func validateManifestFile(path string, stdout io.Writer) error {
 	return nil
 }
 
-func runManifestFile(manifestPath string, outDir string, trials int, warmup int) error {
+func runManifestFile(manifestPath string, outDir string, options RunOptions) error {
 	manifest, err := LoadManifest(manifestPath)
 	if err != nil {
 		return err
 	}
-	if trials >= 0 {
-		manifest.Defaults.MeasurementTrials = trials
-	}
-	if warmup >= 0 {
-		manifest.Defaults.WarmupTrials = warmup
+	manifest, err = applyRunOptions(manifest, options)
+	if err != nil {
+		return err
 	}
 	if err := ValidateManifest(manifest); err != nil {
 		return err
@@ -316,6 +383,124 @@ func runManifestFile(manifestPath string, outDir string, trials int, warmup int)
 		outDir = defaultResultDir(manifest.Name)
 	}
 	return RunManifest(manifestPath, manifest, outDir)
+}
+
+func applyRunOptions(manifest Manifest, options RunOptions) (Manifest, error) {
+	if options.MeasurementTrials >= 0 {
+		manifest.Defaults.MeasurementTrials = options.MeasurementTrials
+	}
+	if options.WarmupTrials >= 0 {
+		manifest.Defaults.WarmupTrials = options.WarmupTrials
+	}
+	for name, checkout := range options.SubjectOverrides {
+		found := false
+		for i := range manifest.Subjects {
+			if manifest.Subjects[i].Name == name {
+				manifest.Subjects[i].Checkout = checkout
+				found = true
+			}
+		}
+		if !found {
+			return Manifest{}, fmt.Errorf("subject override references unknown subject %q", name)
+		}
+	}
+	if len(options.SubjectFilter) > 0 {
+		filtered, err := filterSubjects(manifest.Subjects, options.SubjectFilter)
+		if err != nil {
+			return Manifest{}, err
+		}
+		manifest.Subjects = filtered
+	}
+	if len(options.WorkloadFilter) > 0 {
+		filtered, err := filterWorkloads(manifest.Workloads, options.WorkloadFilter)
+		if err != nil {
+			return Manifest{}, err
+		}
+		manifest.Workloads = filtered
+	}
+	return manifest, nil
+}
+
+func parseSubjectOverrides(raw []string) (map[string]string, error) {
+	overrides := map[string]string{}
+	for _, item := range raw {
+		name, ref, ok := strings.Cut(item, "=")
+		name = strings.TrimSpace(name)
+		ref = strings.TrimSpace(ref)
+		if !ok || name == "" || ref == "" {
+			return nil, fmt.Errorf("subject override %q must use name=ref", item)
+		}
+		overrides[name] = ref
+	}
+	if len(overrides) == 0 {
+		return nil, nil
+	}
+	return overrides, nil
+}
+
+func splitCSVFlag(raw string) []string {
+	if strings.TrimSpace(raw) == "" {
+		return nil
+	}
+	parts := strings.Split(raw, ",")
+	values := make([]string, 0, len(parts))
+	for _, part := range parts {
+		value := strings.TrimSpace(part)
+		if value != "" {
+			values = append(values, value)
+		}
+	}
+	return values
+}
+
+func filterSubjects(subjects []Subject, names []string) ([]Subject, error) {
+	wanted := nameSet(names)
+	filtered := make([]Subject, 0, len(subjects))
+	seen := map[string]bool{}
+	for _, subject := range subjects {
+		if wanted[subject.Name] {
+			filtered = append(filtered, subject)
+			seen[subject.Name] = true
+		}
+	}
+	if missing := missingNames(names, seen); len(missing) > 0 {
+		return nil, fmt.Errorf("unknown subject filter(s): %s", strings.Join(missing, ", "))
+	}
+	return filtered, nil
+}
+
+func filterWorkloads(workloads []Workload, names []string) ([]Workload, error) {
+	wanted := nameSet(names)
+	filtered := make([]Workload, 0, len(workloads))
+	seen := map[string]bool{}
+	for _, workload := range workloads {
+		if wanted[workload.Name] {
+			filtered = append(filtered, workload)
+			seen[workload.Name] = true
+		}
+	}
+	if missing := missingNames(names, seen); len(missing) > 0 {
+		return nil, fmt.Errorf("unknown workload filter(s): %s", strings.Join(missing, ", "))
+	}
+	return filtered, nil
+}
+
+func nameSet(names []string) map[string]bool {
+	set := map[string]bool{}
+	for _, name := range names {
+		set[name] = true
+	}
+	return set
+}
+
+func missingNames(names []string, seen map[string]bool) []string {
+	var missing []string
+	for _, name := range names {
+		if !seen[name] {
+			missing = append(missing, name)
+		}
+	}
+	return missing
 }
 
 func reportResultDir(dir string, stdout io.Writer) error {
@@ -737,11 +922,30 @@ func RunManifest(manifestPath string, manifest Manifest, outDir string) error {
 		if err := os.MkdirAll(subjectDir, 0o755); err != nil {
 			return err
 		}
-		if subject.Build != "" {
-			if err := runBuild(subject, subjectDir, benchmarkRoot); err != nil {
+		prepared, err := prepareSubject(subject, subjectDir, benchmarkRoot)
+		if err != nil {
+			if manifest.Defaults.FailFast {
+				return err
+			}
+			fmt.Fprintln(os.Stderr, "Subject preparation error:", err)
+			continue
+		}
+		if prepared.Cleanup != nil {
+			defer func(cleanup func() error) {
+				if err := cleanup(); err != nil {
+					fmt.Fprintln(os.Stderr, "Subject cleanup error:", err)
+				}
+			}(prepared.Cleanup)
+		}
+		if err := writeJSON(filepath.Join(subjectDir, "subject.json"), prepared.Metadata); err != nil {
+			return err
+		}
+		if prepared.Subject.Build != "" {
+			if err := runBuild(prepared, subjectDir); err != nil {
 				if manifest.Defaults.FailFast {
 					return err
 				}
+				fmt.Fprintln(os.Stderr, "Build error:", err)
 			}
 		}
 		for _, workload := range manifest.Workloads {
@@ -749,7 +953,7 @@ func RunManifest(manifestPath string, manifest Manifest, outDir string) error {
 				fmt.Fprintf(os.Stderr, "Skipping workload %s: driver %s is not implemented in phase one\n", workload.Name, workload.Driver)
 				continue
 			}
-			allTrials, err := runCommandWorkload(subject, workload, manifest.Defaults, benchmarkRoot, samplesFile, trialsFile)
+			allTrials, err := runCommandWorkload(prepared, workload, manifest.Defaults, samplesFile, trialsFile)
 			if err != nil {
 				if manifest.Defaults.FailFast {
 					return err
@@ -800,20 +1004,79 @@ func resolveSubjectWorkingDirectory(subject Subject, benchmarkRoot string) strin
 	return filepath.Join(benchmarkRoot, subject.WorkingDirectory)
 }
 
-func runBuild(subject Subject, subjectDir string, benchmarkRoot string) error {
-	workingDir := resolveSubjectWorkingDirectory(subject, benchmarkRoot)
-	result := runShell(subject.Build, workingDir, 0)
-	log := fmt.Sprintf("command: %s\nok: %t\nelapsed_ms: %.3f\n\nstdout:\n%s\n\nstderr:\n%s\n", subject.Build, result.OK, result.ElapsedMS, result.Stdout, result.Stderr)
+func prepareSubject(subject Subject, subjectDir string, benchmarkRoot string) (PreparedSubject, error) {
+	prepared := PreparedSubject{
+		Subject:       subject,
+		BenchmarkRoot: benchmarkRoot,
+		Metadata: SubjectMetadata{
+			Name:             subject.Name,
+			Checkout:         subject.Checkout,
+			Prebuilt:         subject.Prebuilt,
+			BenchmarkRoot:    benchmarkRoot,
+			WorkingDirectory: resolveSubjectWorkingDirectory(subject, benchmarkRoot),
+			Branch:           commandOutput(benchmarkRoot, "git", "rev-parse", "--abbrev-ref", "HEAD"),
+			Commit:           commandOutput(benchmarkRoot, "git", "rev-parse", "HEAD"),
+			Dirty:            commandOutput(benchmarkRoot, "git", "status", "--short") != "",
+		},
+	}
+	if subject.Checkout == "" {
+		return prepared, nil
+	}
+	tempParent, err := os.MkdirTemp("", "benchmark-tool-worktrees-")
+	if err != nil {
+		return PreparedSubject{}, err
+	}
+	worktreePath := filepath.Join(tempParent, safeName(subject.Name))
+	result := runProcess(benchmarkRoot, 30*time.Second, "git", "worktree", "add", "--detach", worktreePath, subject.Checkout)
+	log := fmt.Sprintf("command: git worktree add --detach %s %s\nok: %t\nelapsed_ms: %.3f\n\nstdout:\n%s\n\nstderr:\n%s\n", worktreePath, subject.Checkout, result.OK, result.ElapsedMS, result.Stdout, result.Stderr)
+	if err := os.WriteFile(filepath.Join(subjectDir, "prepare.log"), []byte(log), 0o644); err != nil {
+		_ = os.RemoveAll(tempParent)
+		return PreparedSubject{}, err
+	}
+	if !result.OK {
+		_ = os.RemoveAll(tempParent)
+		return PreparedSubject{}, fmt.Errorf("prepare failed for subject %s: %s", subject.Name, result.Error)
+	}
+	prepared.BenchmarkRoot = worktreePath
+	prepared.Metadata.BenchmarkRoot = worktreePath
+	prepared.Metadata.WorktreePath = worktreePath
+	prepared.Metadata.WorkingDirectory = resolveSubjectWorkingDirectory(subject, worktreePath)
+	prepared.Metadata.Branch = commandOutput(worktreePath, "git", "rev-parse", "--abbrev-ref", "HEAD")
+	prepared.Metadata.Commit = commandOutput(worktreePath, "git", "rev-parse", "HEAD")
+	prepared.Metadata.Dirty = commandOutput(worktreePath, "git", "status", "--short") != ""
+	prepared.Cleanup = func() error {
+		remove := runProcess(benchmarkRoot, 30*time.Second, "git", "worktree", "remove", "--force", worktreePath)
+		if !remove.OK {
+			return fmt.Errorf("remove git worktree %s: %s", worktreePath, remove.Error)
+		}
+		if err := os.RemoveAll(tempParent); err != nil {
+			return err
+		}
+		return nil
+	}
+	if prepared.Metadata.Dirty {
+		if prepared.Cleanup != nil {
+			_ = prepared.Cleanup()
+		}
+		return PreparedSubject{}, fmt.Errorf("subject %s checkout %s is dirty after preparation", subject.Name, subject.Checkout)
+	}
+	return prepared, nil
+}
+
+func runBuild(subject PreparedSubject, subjectDir string) error {
+	workingDir := resolveSubjectWorkingDirectory(subject.Subject, subject.BenchmarkRoot)
+	result := runShell(subject.Subject.Build, workingDir, 0)
+	log := fmt.Sprintf("command: %s\nok: %t\nelapsed_ms: %.3f\nworking_directory: %s\ncommit: %s\n\nstdout:\n%s\n\nstderr:\n%s\n", subject.Subject.Build, result.OK, result.ElapsedMS, workingDir, subject.Metadata.Commit, result.Stdout, result.Stderr)
 	if err := os.WriteFile(filepath.Join(subjectDir, "build.log"), []byte(log), 0o644); err != nil {
 		return err
 	}
 	if !result.OK {
-		return fmt.Errorf("build failed for subject %s: %s", subject.Name, result.Error)
+		return fmt.Errorf("build failed for subject %s: %s", subject.Subject.Name, result.Error)
 	}
 	return nil
 }
 
-func runCommandWorkload(subject Subject, workload Workload, defaults Defaults, benchmarkRoot string, samplesFile, trialsFile *os.File) ([]Trial, error) {
+func runCommandWorkload(subject PreparedSubject, workload Workload, defaults Defaults, samplesFile, trialsFile *os.File) ([]Trial, error) {
 	var trials []Trial
 	total := defaults.WarmupTrials + defaults.MeasurementTrials
 	for i := 0; i < total; i++ {
@@ -823,11 +1086,11 @@ func runCommandWorkload(subject Subject, workload Workload, defaults Defaults, b
 			phase = "warmup"
 			trialNumber = i + 1
 		}
-		command := subject.Command
+		command := subject.Subject.Command
 		if workload.Command != "" {
 			command = workload.Command
 		}
-		workingDir := resolveSubjectWorkingDirectory(subject, benchmarkRoot)
+		workingDir := resolveSubjectWorkingDirectory(subject.Subject, subject.BenchmarkRoot)
 		result := runShell(command, workingDir, time.Duration(workload.TimeoutMS)*time.Millisecond)
 		metrics := map[string]float64{"elapsed_ms": result.ElapsedMS}
 		if workload.Operations > 0 && result.ElapsedMS > 0 {
@@ -836,7 +1099,7 @@ func runCommandWorkload(subject Subject, workload Workload, defaults Defaults, b
 		}
 		sample := Sample{
 			SampleKind: "operation_batch",
-			Subject:    subject.Name,
+			Subject:    subject.Subject.Name,
 			Workload:   workload.Name,
 			Trial:      trialNumber,
 			Phase:      phase,
@@ -845,7 +1108,7 @@ func runCommandWorkload(subject Subject, workload Workload, defaults Defaults, b
 			Error:      result.Error,
 		}
 		trial := Trial{
-			Subject:  subject.Name,
+			Subject:  subject.Subject.Name,
 			Workload: workload.Name,
 			Trial:    trialNumber,
 			Phase:    phase,
@@ -895,6 +1158,36 @@ func runShell(command, dir string, timeout time.Duration) commandResult {
 		OK:        err == nil,
 		ElapsedMS: elapsed,
 		Stdout:    string(out),
+	}
+	if ctx.Err() == context.DeadlineExceeded {
+		result.Error = "timeout"
+		result.OK = false
+	} else if err != nil {
+		result.Error = err.Error()
+	}
+	return result
+}
+
+func runProcess(dir string, timeout time.Duration, name string, args ...string) commandResult {
+	if timeout <= 0 {
+		timeout = 60 * time.Second
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	start := time.Now()
+	cmd := exec.CommandContext(ctx, name, args...)
+	cmd.Dir = dir
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	elapsed := float64(time.Since(start).Microseconds()) / 1000.0
+	result := commandResult{
+		OK:        err == nil,
+		ElapsedMS: elapsed,
+		Stdout:    stdout.String(),
+		Stderr:    stderr.String(),
 	}
 	if ctx.Err() == context.DeadlineExceeded {
 		result.Error = "timeout"
