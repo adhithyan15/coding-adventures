@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-builtins"
-version = "0.2.0"
-description = "Prolog-inspired control, term, and arithmetic builtins for the Python logic stack"
+version = "0.3.0"
+description = "Prolog-inspired control, term, arithmetic, and collection builtins for the Python logic stack"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -17,7 +17,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP12-logic-arithmetic-builtins.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP13-logic-collection-builtins.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

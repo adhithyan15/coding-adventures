@@ -29,6 +29,7 @@ from logic_engine import (
     atom,
     conj,
     eq,
+    logic_list,
     native_goal,
     num,
     reify,
@@ -43,6 +44,7 @@ __all__ = [
     "callo",
     "compoundo",
     "div",
+    "findallo",
     "floordiv",
     "functoro",
     "geqo",
@@ -60,6 +62,8 @@ __all__ = [
     "numneqo",
     "numbero",
     "onceo",
+    "bagofo",
+    "setofo",
     "stringo",
     "sub",
     "varo",
@@ -69,6 +73,7 @@ __all__ = [
 type NativeArgs = tuple[Term, ...]
 type NativeRunner = Callable[[Program, State, NativeArgs], Iterator[State]]
 type NumericValue = int | float
+type TermSortKey = tuple[object, ...]
 
 
 def _as_goal(goal: object) -> GoalExpr:
@@ -98,6 +103,123 @@ def _succeed_if(condition: bool, state: State) -> Iterator[State]:
 
     if condition:
         yield state
+
+
+def _term_sort_key(term_value: Term) -> TermSortKey:
+    """Return a deterministic first-pass ordering key for collected terms."""
+
+    if isinstance(term_value, LogicVar):
+        return (0, term_value.id, str(term_value.display_name or ""))
+    if isinstance(term_value, Number):
+        return (1, term_value.value)
+    if isinstance(term_value, Atom):
+        return (2, term_value.symbol.namespace or "", term_value.symbol.name)
+    if isinstance(term_value, String):
+        return (3, term_value.value)
+    return (
+        4,
+        term_value.functor.namespace or "",
+        term_value.functor.name,
+        len(term_value.args),
+        tuple(_term_sort_key(argument) for argument in term_value.args),
+    )
+
+
+def _unique_sorted_terms(values: list[Term]) -> list[Term]:
+    """Remove duplicate terms and return them in deterministic set order."""
+
+    unique: dict[Term, Term] = {}
+    for value in values:
+        unique.setdefault(value, value)
+    return sorted(unique.values(), key=_term_sort_key)
+
+
+def _collect_template_values(
+    program_value: Program,
+    state: State,
+    template: Term,
+    goal: GoalExpr,
+) -> list[Term]:
+    """Collect reified template values for every proof of a nested goal."""
+
+    return [
+        reify(template, inner_state.substitution)
+        for inner_state in solve_from(program_value, goal, state)
+    ]
+
+
+def _unify_collection(
+    program_value: Program,
+    state: State,
+    results: Term,
+    values: list[Term],
+) -> Iterator[State]:
+    """Unify a result term with a canonical logic list from the outer state."""
+
+    yield from solve_from(program_value, eq(results, logic_list(values)), state)
+
+
+def findallo(template: object, goal: object, results: object) -> GoalExpr:
+    """Collect every solution of `goal` into `results`, preserving proof order."""
+
+    called_goal = _as_goal(goal)
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        template_term, results_term = args
+        values = _collect_template_values(
+            program_value,
+            state,
+            template_term,
+            called_goal,
+        )
+        yield from _unify_collection(program_value, state, results_term, values)
+
+    return native_goal(run, template, results)
+
+
+def bagofo(template: object, goal: object, results: object) -> GoalExpr:
+    """Collect a non-empty proof-order bag of solutions."""
+
+    called_goal = _as_goal(goal)
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        template_term, results_term = args
+        values = _collect_template_values(
+            program_value,
+            state,
+            template_term,
+            called_goal,
+        )
+        if not values:
+            return
+        yield from _unify_collection(program_value, state, results_term, values)
+
+    return native_goal(run, template, results)
+
+
+def setofo(template: object, goal: object, results: object) -> GoalExpr:
+    """Collect a non-empty sorted set of solutions."""
+
+    called_goal = _as_goal(goal)
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        template_term, results_term = args
+        values = _collect_template_values(
+            program_value,
+            state,
+            template_term,
+            called_goal,
+        )
+        if not values:
+            return
+        yield from _unify_collection(
+            program_value,
+            state,
+            results_term,
+            _unique_sorted_terms(values),
+        )
+
+    return native_goal(run, template, results)
 
 
 def add(left: object, right: object) -> Compound:
