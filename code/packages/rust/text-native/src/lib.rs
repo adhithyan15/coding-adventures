@@ -122,6 +122,63 @@ impl text_interfaces::FontResolver for UnimplementedNativeBackend {
     }
 }
 
+// Stub FontMetrics + TextShaper so downstream bridge crates like
+// layout-text-measure-native compile on non-Apple platforms. All
+// getters return zero-ish values; shape() returns an error. Every
+// call reports a consistent failure — callers should gate their use
+// on cfg(target_vendor = "apple") or prefer the device-independent
+// (font-parser) stack on non-Apple.
+
+#[cfg(not(target_vendor = "apple"))]
+impl text_interfaces::FontMetrics for UnimplementedNativeBackend {
+    type Handle = ();
+
+    fn units_per_em(&self, _font: &Self::Handle) -> u32 {
+        0
+    }
+    fn ascent(&self, _font: &Self::Handle) -> i32 {
+        0
+    }
+    fn descent(&self, _font: &Self::Handle) -> i32 {
+        0
+    }
+    fn line_gap(&self, _font: &Self::Handle) -> i32 {
+        0
+    }
+    fn x_height(&self, _font: &Self::Handle) -> Option<i32> {
+        None
+    }
+    fn cap_height(&self, _font: &Self::Handle) -> Option<i32> {
+        None
+    }
+    fn family_name(&self, _font: &Self::Handle) -> String {
+        String::from("unimplemented")
+    }
+}
+
+#[cfg(not(target_vendor = "apple"))]
+impl text_interfaces::TextShaper for UnimplementedNativeBackend {
+    type Handle = ();
+
+    fn shape(
+        &self,
+        _text: &str,
+        _font: &Self::Handle,
+        _size: f32,
+        _options: &text_interfaces::ShapeOptions,
+    ) -> Result<text_interfaces::ShapedRun, text_interfaces::ShapingError> {
+        Err(text_interfaces::ShapingError::ShapingFailed(
+            "text-native has no backend implemented for this target OS; \
+             use the device-independent path or a TXT03 backend."
+                .into(),
+        ))
+    }
+
+    fn font_ref(&self, _font: &Self::Handle) -> String {
+        String::from("unimplemented:")
+    }
+}
+
 // ---------------------------------------------------------------------------
 
 pub const VERSION: &str = "0.1.0";
