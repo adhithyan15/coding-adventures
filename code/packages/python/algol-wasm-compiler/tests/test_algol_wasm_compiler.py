@@ -154,6 +154,18 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
+    def test_array_failure_in_procedure_unwinds_before_caller_continues(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "integer procedure bad(n); value n; integer n; "
+            "begin integer array a[1:2]; a[3] := n; bad := n end; "
+            "result := 0; "
+            "for i := 1 step 1 until 2500 do result := result + bad(i); "
+            "begin integer x; x := 5; result := result + x end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_invalid_array_bounds_return_zero(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[3:1]; result := 1 end"

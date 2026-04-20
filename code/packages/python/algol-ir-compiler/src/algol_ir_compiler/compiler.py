@@ -390,7 +390,7 @@ class AlgolIrCompiler:
                 IrRegister(lower),
                 IrRegister(upper),
             )
-            self._emit_runtime_failure_guard(invalid_order)
+            self._emit_runtime_failure_guard(invalid_order, scope)
 
             raw_length = self._fresh_reg()
             self._emit(
@@ -413,7 +413,7 @@ class AlgolIrCompiler:
                 IrRegister(length),
                 IrRegister(max_elements_reg),
             )
-            self._emit_runtime_failure_guard(too_large)
+            self._emit_runtime_failure_guard(too_large, scope)
 
             allowed_total = self._fresh_reg()
             self._emit(
@@ -429,7 +429,7 @@ class AlgolIrCompiler:
                 IrRegister(total_reg),
                 IrRegister(allowed_total),
             )
-            self._emit_runtime_failure_guard(product_too_large)
+            self._emit_runtime_failure_guard(product_too_large, scope)
 
             next_total = self._fresh_reg()
             self._emit(
@@ -493,7 +493,7 @@ class AlgolIrCompiler:
             IrRegister(new_heap_pointer),
             IrRegister(heap_limit),
         )
-        self._emit_runtime_failure_guard(heap_exhausted)
+        self._emit_runtime_failure_guard(heap_exhausted, scope)
         self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, new_heap_pointer)
 
         bounds_pointer = self._fresh_reg()
@@ -1069,14 +1069,14 @@ class AlgolIrCompiler:
                 IrRegister(lower),
                 IrRegister(subscript_reg),
             )
-            self._emit_runtime_failure_guard(below)
+            self._emit_runtime_failure_guard(below, scope)
             self._emit(
                 IrOp.CMP_GT,
                 IrRegister(above),
                 IrRegister(subscript_reg),
                 IrRegister(upper),
             )
-            self._emit_runtime_failure_guard(above)
+            self._emit_runtime_failure_guard(above, scope)
             self._emit(
                 IrOp.LOAD_WORD,
                 IrRegister(stride),
@@ -1301,17 +1301,24 @@ class AlgolIrCompiler:
         self._label(else_label)
         self._label(end_label)
 
-    def _emit_runtime_failure_guard(self, failed_reg: int) -> None:
+    def _emit_runtime_failure_guard(self, failed_reg: int, scope: _FrameScope) -> None:
         index = self.if_count
         self.if_count += 1
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
         self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_unwind_for_return(scope)
         self._emit(IrOp.RET)
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(else_label)
         self._label(end_label)
+
+    def _emit_unwind_for_return(self, scope: _FrameScope) -> None:
+        current: _FrameScope | None = scope
+        while current is not None:
+            self._emit_leave_frame(current)
+            current = current.parent
 
     def _require_reference(self, token: Token, role: str) -> ResolvedReference:
         reference = self.references.get((id(token), role))
