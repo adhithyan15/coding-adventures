@@ -57,7 +57,7 @@ pub const VERSION: &str = "0.1.0";
 // but all content is hidden behind #[cfg(target_vendor = "apple")].
 // The BUILD files use platform detection to skip tests on non-Apple CI.
 
-use std::ffi::{c_double, c_ulong, c_void};
+use std::ffi::{c_double, c_long, c_ulong, c_void};
 
 #[cfg(target_vendor = "apple")]
 use std::ffi::{c_char, c_int, CString};
@@ -374,6 +374,16 @@ extern "C" {
         matrix: *const c_void, // const CGAffineTransform*, NULL for identity
     ) -> Id; // CTFontRef
 
+    /// Create a copy of an existing font at a different size. Cheap —
+    /// CoreText shares the underlying glyph data internally.
+    #[allow(non_snake_case)]
+    pub fn CTFontCreateCopyWithAttributes(
+        font: Id,            // CTFontRef
+        size: c_double,      // 0.0 to preserve
+        matrix: *const c_void,
+        attributes: Id,      // CTFontDescriptorRef, can be null
+    ) -> Id; // CTFontRef
+
     /// Create a line of text from an attributed string.
     #[allow(non_snake_case)]
     pub fn CTLineCreateWithAttributedString(
@@ -392,6 +402,89 @@ extern "C" {
     /// Draw a line into a CoreGraphics context.
     #[allow(non_snake_case)]
     pub fn CTLineDraw(line: Id, context: CGContextRef);
+
+    /// Get the array of glyph runs that make up a line.
+    /// Returns a CFArrayRef of CTRunRef values (borrowed — do not release).
+    #[allow(non_snake_case)]
+    pub fn CTLineGetGlyphRuns(line: Id) -> Id; // CFArrayRef
+
+    // ----------------------------- CTRun accessors -----------------------------
+
+    #[allow(non_snake_case)]
+    pub fn CTRunGetGlyphCount(run: Id) -> c_long;
+
+    /// Copy glyph IDs (CGGlyph, u16) into caller's buffer.
+    /// The range is a CFRange {location, length}; pass {0, 0} to get all.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetGlyphs(
+        run: Id,
+        range: CFRange,
+        buffer: *mut u16, // CGGlyph is u16
+    );
+
+    /// Copy per-glyph positions (CGPoint) into caller's buffer, in line-
+    /// local coordinates (relative to the line's baseline origin).
+    #[allow(non_snake_case)]
+    pub fn CTRunGetPositions(run: Id, range: CFRange, buffer: *mut CGPoint);
+
+    /// Copy per-glyph advances (CGSize) into caller's buffer.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetAdvances(run: Id, range: CFRange, buffer: *mut CGSize);
+
+    /// Copy per-glyph source-string indices (CFIndex, i64 on 64-bit).
+    /// Indices are UTF-16 code-unit offsets into the input string.
+    #[allow(non_snake_case)]
+    pub fn CTRunGetStringIndices(run: Id, range: CFRange, buffer: *mut c_long);
+
+    // --------------------------- CTFont metric accessors ----------------------
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetUnitsPerEm(font: Id) -> u32;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetAscent(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetDescent(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetLeading(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetXHeight(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetCapHeight(font: Id) -> c_double;
+
+    #[allow(non_snake_case)]
+    pub fn CTFontGetSize(font: Id) -> c_double;
+
+    /// Returns a retained CFStringRef; caller must CFRelease.
+    #[allow(non_snake_case)]
+    pub fn CTFontCopyFamilyName(font: Id) -> Id;
+
+    /// Returns a retained CFStringRef; caller must CFRelease.
+    #[allow(non_snake_case)]
+    pub fn CTFontCopyPostScriptName(font: Id) -> Id;
+
+    /// Draw a span of pre-positioned glyphs. Called by paint backends
+    /// that route a PaintGlyphRun with font_ref prefix "coretext:".
+    #[allow(non_snake_case)]
+    pub fn CTFontDrawGlyphs(
+        font: Id,
+        glyphs: *const u16,     // CGGlyph[]
+        positions: *const CGPoint,
+        count: usize,
+        context: CGContextRef,
+    );
+}
+
+/// CFRange — the start + length pair used by CoreText's range-taking accessors.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default)]
+pub struct CFRange {
+    pub location: c_long,
+    pub length: c_long,
 }
 
 // ---------------------------------------------------------------------------
@@ -438,6 +531,32 @@ extern "C" {
 
 // CoreFoundation string encoding constants
 pub const K_CF_STRING_ENCODING_UTF8: u32 = 0x08000100;
+
+// Additional CoreFoundation helpers — CFArray and CFString readback —
+// used by the CoreText shaper in text-native-coretext.
+#[cfg(target_vendor = "apple")]
+#[link(name = "CoreFoundation", kind = "framework")]
+extern "C" {
+    #[allow(non_snake_case)]
+    pub fn CFArrayGetCount(array: Id) -> c_long;
+
+    /// Returns a borrowed pointer (same `Id` type — do not CFRelease).
+    #[allow(non_snake_case)]
+    pub fn CFArrayGetValueAtIndex(array: Id, idx: c_long) -> Id;
+
+    #[allow(non_snake_case)]
+    pub fn CFStringGetLength(s: Id) -> c_long;
+
+    /// Copy into a C buffer. Returns true on success. `max_buf_len`
+    /// includes the null terminator.
+    #[allow(non_snake_case)]
+    pub fn CFStringGetCString(
+        s: Id,
+        buffer: *mut c_char,
+        max_buf_len: c_long,
+        encoding: u32,
+    ) -> bool;
+}
 
 // CoreText attribute key names (these are global CFString constants)
 #[cfg(target_vendor = "apple")]
