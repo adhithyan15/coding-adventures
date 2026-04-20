@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.2.0 — 2026-04-20
+
+### Added
+
+- **`validate_for_ge225(program)` pre-flight validator**: inspects an
+  `IrProgram` for GE-225 incompatibilities *before* any code is generated.
+  Returns a list of human-readable error strings (empty list = valid).
+  Four rules are checked:
+  1. **Opcode support** — rejects opcodes absent from the GE-225 V1 set
+     (e.g. `LOAD_BYTE`, `STORE_BYTE`, `LOAD_WORD`, `STORE_WORD`, `AND`,
+     `CALL`, `RET`, `LOAD_ADDR`).
+  2. **Constant range** — `LOAD_IMM` and `ADD_IMM` immediates must fit in a
+     20-bit signed word (−524 288 to 524 287).
+  3. **SYSCALL number** — only SYSCALL 1 (typewriter print) is wired up in V1.
+  4. **AND_IMM immediate** — `AND_IMM` only supports immediate value 1 (parity
+     extraction via the GE-225 mask instruction).
+- `validate_for_ge225` exported from `ir_to_ge225_compiler.__init__`.
+- `TestValidateForGe225` test class (14 tests) covering all four rules,
+  boundary-value constants, and integration with `compile_to_ge225`.
+
+### Changed
+
+- `compile_to_ge225()` now calls `validate_for_ge225()` as a pre-flight check
+  before the two-pass assembler runs.  Any violation raises `CodeGenError` with
+  message prefix `"IR program failed GE-225 pre-flight validation"`.
+- The 20-bit encoding step in `_CodeGen` now asserts that values have already
+  passed validation, making the `& 0xFFFFF` mask safe (only needed for
+  two's-complement negative numbers, never for silent overflow).
+- Added word-size constants `_GE225_WORD_MIN = -(1 << 19)` and
+  `_GE225_WORD_MAX = (1 << 19) - 1` for single-source-of-truth boundary checks.
+
 ## 0.1.0 (2026-04-19)
 
 Initial release of the IR-to-GE-225 compiler backend.
