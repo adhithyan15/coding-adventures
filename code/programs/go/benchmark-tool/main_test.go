@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"math"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -84,6 +86,44 @@ func TestValidateRejectsRespWithoutFrameReads(t *testing.T) {
 	}
 }
 
+func TestValidateRejectsUnsafeTCPRESPShapes(t *testing.T) {
+	manifest := validTinyManifest()
+	manifest.Subjects[0].Kind = "service"
+	manifest.Subjects[0].ReadyCheck = "tcp-connect"
+	manifest.Workloads[0] = Workload{
+		Name:                  "bad-resp",
+		Driver:                respDriver,
+		Mode:                  "warp-speed",
+		ReadMode:              respReadMode,
+		Request:               strings.Repeat("x", maxTCPPayloadBytes+1),
+		Expect:                "+PONG\r\n",
+		Connections:           maxTCPConnections + 1,
+		Concurrency:           maxTCPConcurrency + 1,
+		RequestsPerConnection: maxTCPRequestsPerConn + 1,
+	}
+
+	err := ValidateManifest(manifest)
+	if err == nil {
+		t.Fatal("expected validation error")
+	}
+	for _, want := range []string{"mode", "connections", "concurrency", "requests_per_connection", "request"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Fatalf("validation error should mention %s: %v", want, err)
+		}
+	}
+
+	manifest.Workloads[0] = Workload{
+		Name:      "idle",
+		Driver:    respDriver,
+		Mode:      respModeIdle,
+		ReadMode:  respReadMode,
+		TimeoutMS: 10,
+	}
+	if err := ValidateManifest(manifest); err != nil {
+		t.Fatalf("idle RESP workload should not require expect: %v", err)
+	}
+}
+
 func TestValidateRejectsEOFReadsWithoutProtocolClose(t *testing.T) {
 	manifest := validTinyManifest()
 	manifest.Workloads[0].ReadMode = "eof"
@@ -135,6 +175,188 @@ func TestRunCommandManifestWritesBenchmarkArtifacts(t *testing.T) {
 	trials := readLinesForTest(t, filepath.Join(resultDir, "trials.jsonl"))
 	if len(trials) != 3 {
 		t.Fatalf("expected 3 trials including warmup, got %d", len(trials))
+	}
+}
+
+func TestRunTCPRESPWorkloadsAgainstLocalServer(t *testing.T) {
+	address := startRESPTestServer(t)
+	dir := t.TempDir()
+	samplesPath := filepath.Join(dir, "samples.jsonl")
+	trialsPath := filepath.Join(dir, "trials.jsonl")
+	samplesFile, err := os.Create(samplesPath)
+	if err != nil {
+		t.Fatalf("create samples: %v", err)
+	}
+	defer samplesFile.Close()
+	trialsFile, err := os.Create(trialsPath)
+	if err != nil {
+		t.Fatalf("create trials: %v", err)
+	}
+	defer trialsFile.Close()
+	subject := PreparedSubject{Subject: Subject{Name: "resp-server"}}
+	defaults := Defaults{WarmupTrials: 0, MeasurementTrials: 1, CooldownMS: 0, FailFast: true}
+
+	workloads := []Workload{
+		{
+			Name:        "one-shot",
+			Driver:      respDriver,
+			Mode:        respModeOneShot,
+			ReadMode:    respReadMode,
+			Request:     "*1\r\n$4\r\nPING\r\n",
+			Expect:      "+PONG\r\n",
+			Connections: 16,
+			Concurrency: 8,
+			TimeoutMS:   2000,
+		},
+		{
+			Name:        "preconnect",
+			Driver:      respDriver,
+			Mode:        respModePreconnectThenFire,
+			ReadMode:    respReadMode,
+			Request:     "*1\r\n$4\r\nPING\r\n",
+			Expect:      "+PONG\r\n",
+			Connections: 16,
+			Concurrency: 8,
+			TimeoutMS:   2000,
+		},
+		{
+			Name:                  "pipeline",
+			Driver:                respDriver,
+			Mode:                  respModePipeline,
+			ReadMode:              respReadMode,
+			Request:               "*3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n",
+			Expect:                "+OK\r\n$5\r\nvalue\r\n",
+			Connections:           4,
+			Concurrency:           2,
+			RequestsPerConnection: 5,
+			TimeoutMS:             2000,
+		},
+	}
+	for _, workload := range workloads {
+		trials, err := runTCPRESPWorkload(subject, workload, defaults, address, samplesFile, trialsFile)
+		if err != nil {
+			t.Fatalf("run %s: %v", workload.Name, err)
+		}
+		if len(trials) != 1 {
+			t.Fatalf("%s trial count = %d", workload.Name, len(trials))
+		}
+		if !trials[0].OK {
+			t.Fatalf("%s trial failed: %#v", workload.Name, trials[0])
+		}
+		if trials[0].Metrics["ops_per_second"] <= 0 {
+			t.Fatalf("%s should report throughput: %#v", workload.Name, trials[0].Metrics)
+		}
+	}
+	if lines := readLinesForTest(t, samplesPath); len(lines) < 36 {
+		t.Fatalf("expected per-connection samples, got %d", len(lines))
+	}
+}
+
+func TestTCPRESPWorkloadFailsWrongResponsesAndSupportsIdle(t *testing.T) {
+	address := startRESPTestServer(t)
+	dir := t.TempDir()
+	samplesFile, err := os.Create(filepath.Join(dir, "samples.jsonl"))
+	if err != nil {
+		t.Fatalf("create samples: %v", err)
+	}
+	defer samplesFile.Close()
+	trialsFile, err := os.Create(filepath.Join(dir, "trials.jsonl"))
+	if err != nil {
+		t.Fatalf("create trials: %v", err)
+	}
+	defer trialsFile.Close()
+	subject := PreparedSubject{Subject: Subject{Name: "resp-server"}}
+	defaults := Defaults{WarmupTrials: 0, MeasurementTrials: 1, CooldownMS: 0, FailFast: true}
+
+	wrong := Workload{
+		Name:        "wrong",
+		Driver:      respDriver,
+		Mode:        respModeOneShot,
+		ReadMode:    respReadMode,
+		Request:     "*1\r\n$4\r\nPING\r\n",
+		Expect:      "+NOPE\r\n",
+		Connections: 2,
+		Concurrency: 2,
+		TimeoutMS:   2000,
+	}
+	trials, err := runTCPRESPWorkload(subject, wrong, defaults, address, samplesFile, trialsFile)
+	if err != nil {
+		t.Fatalf("wrong response run should produce failed trial, not harness error: %v", err)
+	}
+	if len(trials) != 1 || trials[0].OK {
+		t.Fatalf("expected failed correctness trial: %#v", trials)
+	}
+	if trials[0].Metrics["failed_operations"] == 0 {
+		t.Fatalf("expected failed operation metric: %#v", trials[0].Metrics)
+	}
+
+	idle := Workload{
+		Name:        "idle",
+		Driver:      respDriver,
+		Mode:        respModeIdle,
+		ReadMode:    respReadMode,
+		Connections: 2,
+		Concurrency: 2,
+		TimeoutMS:   20,
+	}
+	trials, err = runTCPRESPWorkload(subject, idle, defaults, address, samplesFile, trialsFile)
+	if err != nil {
+		t.Fatalf("idle run: %v", err)
+	}
+	if len(trials) != 1 || !trials[0].OK {
+		t.Fatalf("expected successful idle trial: %#v", trials)
+	}
+}
+
+func TestRunManifestStartsTCPServiceSubject(t *testing.T) {
+	if _, err := exec.LookPath("go"); err != nil {
+		t.Skip("go is required for service lifecycle tests")
+	}
+	dir := t.TempDir()
+	resultDir := filepath.Join(dir, "results")
+	writeFileForTest(t, filepath.Join(dir, "resp_server.go"), respServerProgramForTest())
+	writeFileForTest(t, filepath.Join(dir, "benchmark.toml"), tcpServiceManifestText(dir))
+	manifestPath := filepath.Join(dir, "benchmark.toml")
+	manifest, err := LoadManifest(manifestPath)
+	if err != nil {
+		t.Fatalf("load manifest: %v", err)
+	}
+	if err := ValidateManifest(manifest); err != nil {
+		t.Fatalf("manifest should validate: %v", err)
+	}
+	if err := RunManifest(manifestPath, manifest, resultDir); err != nil {
+		t.Fatalf("run manifest: %v", err)
+	}
+	summary := readSummaryForTest(t, filepath.Join(resultDir, "summary.json"))
+	if !hasSummaryMetric(summary, "ops_per_second") {
+		t.Fatalf("expected TCP throughput summary, got %#v", summary.Summaries)
+	}
+	if !hasSummaryMetric(summary, "first_byte_ms") {
+		t.Fatalf("expected TCP latency summary, got %#v", summary.Summaries)
+	}
+	if _, err := os.Stat(filepath.Join(resultDir, "subjects", "resp-service", "service.log")); err != nil {
+		t.Fatalf("expected service log: %v", err)
+	}
+}
+
+func TestRESPFrameParsingHandlesNestedFramesAndLimits(t *testing.T) {
+	frames, err := splitRESPFrames([]byte("+OK\r\n$5\r\nvalue\r\n*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n"))
+	if err != nil {
+		t.Fatalf("split RESP frames: %v", err)
+	}
+	if len(frames) != 3 {
+		t.Fatalf("frame count = %d", len(frames))
+	}
+	if string(frames[2]) != "*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n" {
+		t.Fatalf("nested frame = %q", string(frames[2]))
+	}
+	_, err = readRESPFrame(bufioReaderForTest("$20\r\nshort\r\n"), 8)
+	if err == nil {
+		t.Fatal("expected max frame size error")
+	}
+	_, err = readRESPFrame(bufioReaderForTest("+missing-lf"), maxTCPFrameBytes)
+	if err == nil {
+		t.Fatal("expected malformed frame error")
 	}
 }
 
@@ -539,6 +761,181 @@ name = "go-version"
 driver = "command"
 operations = 1
 timeout_ms = 10000
+`
+}
+
+func tcpServiceManifestText(dir string) string {
+	return `name = "tcp-service-benchmark"
+
+[defaults]
+warmup_trials = 0
+measurement_trials = 1
+cooldown_ms = 0
+fail_fast = true
+
+[[subjects]]
+name = "resp-service"
+kind = "service"
+prebuilt = true
+working_directory = "` + escapeManifestStringForTest(dir) + `"
+command = "go run resp_server.go --port {port}"
+ready_check = "tcp-connect"
+
+[[workloads]]
+name = "ping"
+driver = "tcp-resp"
+mode = "one-shot"
+read_mode = "resp-frame"
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+connections = 8
+concurrency = 4
+timeout_ms = 5000
+`
+}
+
+func escapeManifestStringForTest(value string) string {
+	value = strings.ReplaceAll(value, `\`, `\\`)
+	return strings.ReplaceAll(value, `"`, `\"`)
+}
+
+func startRESPTestServer(t *testing.T) string {
+	t.Helper()
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen: %v", err)
+	}
+	t.Cleanup(func() { _ = listener.Close() })
+	go func() {
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				return
+			}
+			go handleRESPTestConn(conn)
+		}
+	}()
+	return listener.Addr().String()
+}
+
+func handleRESPTestConn(conn net.Conn) {
+	defer conn.Close()
+	reader := bufio.NewReader(conn)
+	for {
+		frame, err := readRESPFrame(reader, maxTCPFrameBytes)
+		if err != nil {
+			return
+		}
+		text := string(frame)
+		switch {
+		case strings.Contains(text, "$4\r\nPING\r\n"):
+			_, _ = conn.Write([]byte("+PONG\r\n"))
+		case strings.Contains(text, "$3\r\nSET\r\n"):
+			_, _ = conn.Write([]byte("+OK\r\n"))
+		case strings.Contains(text, "$3\r\nGET\r\n"):
+			_, _ = conn.Write([]byte("$5\r\nvalue\r\n"))
+		default:
+			_, _ = conn.Write([]byte("-ERR unknown command\r\n"))
+		}
+	}
+}
+
+func bufioReaderForTest(input string) *bufio.Reader {
+	return bufio.NewReader(strings.NewReader(input))
+}
+
+func respServerProgramForTest() string {
+	return `package main
+
+import (
+	"bufio"
+	"flag"
+	"io"
+	"net"
+	"strconv"
+	"strings"
+)
+
+func main() {
+	port := flag.String("port", "0", "port")
+	flag.Parse()
+	listener, err := net.Listen("tcp", "127.0.0.1:"+*port)
+	if err != nil {
+		panic(err)
+	}
+	for {
+		conn, err := listener.Accept()
+		if err != nil {
+			return
+		}
+		go handle(conn)
+	}
+}
+
+func handle(conn net.Conn) {
+	defer conn.Close()
+	reader := bufio.NewReader(conn)
+	for {
+		frame, err := readFrame(reader)
+		if err != nil {
+			return
+		}
+		if strings.Contains(string(frame), "$4\r\nPING\r\n") {
+			_, _ = conn.Write([]byte("+PONG\r\n"))
+		} else {
+			_, _ = conn.Write([]byte("-ERR unknown command\r\n"))
+		}
+	}
+}
+
+func readFrame(reader *bufio.Reader) ([]byte, error) {
+	var b strings.Builder
+	prefix, err := reader.ReadByte()
+	if err != nil {
+		return nil, err
+	}
+	b.WriteByte(prefix)
+	switch prefix {
+	case '+', '-', ':':
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			return nil, err
+		}
+		b.WriteString(line)
+	case '$':
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			return nil, err
+		}
+		b.WriteString(line)
+		length, err := strconv.Atoi(strings.TrimSuffix(line, "\r\n"))
+		if err != nil || length < 0 {
+			return []byte(b.String()), err
+		}
+		body := make([]byte, length+2)
+		_, err = io.ReadFull(reader, body)
+		b.WriteString(string(body))
+		return []byte(b.String()), err
+	case '*':
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			return nil, err
+		}
+		b.WriteString(line)
+		count, err := strconv.Atoi(strings.TrimSuffix(line, "\r\n"))
+		if err != nil {
+			return nil, err
+		}
+		for i := 0; i < count; i++ {
+			nested, err := readFrame(reader)
+			if err != nil {
+				return nil, err
+			}
+			b.WriteString(string(nested))
+		}
+	}
+	return []byte(b.String()), nil
+}
 `
 }
 
