@@ -31,7 +31,7 @@ every supported type. Seeding with ``0.0`` would silently demote
 
 from __future__ import annotations
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 
 # Polynomial type alias: a tuple of numbers where index = degree.
 # The zero polynomial is the empty tuple ().
@@ -557,3 +557,216 @@ def squarefree(p: Polynomial) -> list[Polynomial]:
         d = divide(v, s)
 
     return factors
+
+
+# =============================================================================
+# Resultant
+# =============================================================================
+
+
+def resultant(a: Polynomial, b: Polynomial):
+    """Scalar resultant ``res(a, b)`` over the coefficient field.
+
+    The resultant of two polynomials is a scalar that vanishes exactly
+    when ``a`` and ``b`` share a root in the algebraic closure — i.e.
+    ``res(a, b) == 0  iff  gcd(a, b)`` has positive degree. Two useful
+    identities follow from the definition:
+
+        res(a, b)  =  lc(a)^deg(b) · ∏ b(α_i)  where α_i are roots of a
+                   =  lc(b)^deg(a) · ∏ a(β_j)  where β_j are roots of b
+
+    Rothstein–Trager uses this as the core of a log-coefficient finder:
+    the polynomial ``resₓ(C(x) − z·E'(x), E(x)) ∈ Q[z]`` has roots
+    exactly the constants that appear as coefficients in the log part
+    of ``∫ C/E dx``. See ``rothstein-trager.md``.
+
+    This implementation uses the **Euclidean-PRS** recurrence. For
+    ``deg a ≥ deg b > 0`` and ``r = a mod b``:
+
+        res(a, b) = (−1)^(deg a · deg b) · lc(b)^(deg a − deg r) · res(b, r)
+
+    with base case ``res(a, constant c) = c^deg(a)``. Every step stays
+    in the coefficient field (we never need pseudo-division over Z),
+    which is exactly what the Q-coefficient CAS path wants.
+
+    Edge cases:
+
+    - ``a = ()`` or ``b = ()`` → returns ``0`` (the zero polynomial
+      shares every root with everything).
+    - ``res(a, c)`` for a non-zero constant ``c`` → ``c^deg(a)``; in
+      particular ``res(a, (1,)) = 1``.
+    - When ``deg a < deg b`` we swap, which flips the sign by
+      ``(−1)^(deg a · deg b)``; the recurrence is stated with
+      ``deg a ≥ deg b`` for bookkeeping, not because it cares which is
+      larger.
+
+    Examples:
+        >>> from fractions import Fraction
+        >>> # res(x - 1, x - 2) = (1)(−1) = -1 when we evaluate
+        >>> #   a(β) at the root β = 2 of b.
+        >>> resultant((Fraction(-1), Fraction(1)), (Fraction(-2), Fraction(1)))
+        Fraction(-1, 1)
+        >>> # Shared root ⇒ resultant vanishes.
+        >>> xm1 = (Fraction(-1), Fraction(1))
+        >>> xp2 = (Fraction(2), Fraction(1))
+        >>> xp3 = (Fraction(3), Fraction(1))
+        >>> resultant(multiply(xm1, xp2), multiply(xm1, xp3))
+        Fraction(0, 1)
+    """
+    u = normalize(a)
+    v = normalize(b)
+
+    # The zero polynomial shares a (formal) root with anything.
+    if not u or not v:
+        return 0
+
+    # Ensure ``u`` has no-smaller degree; remember the sign flip from
+    # swapping so the recurrence returns the right value.
+    sign = 1
+    if degree(u) < degree(v):
+        parity = (degree(u) * degree(v)) % 2
+        if parity:
+            sign = -sign
+        u, v = v, u
+
+    # Now iterate the Euclidean-PRS recurrence in-place.
+    result = 1
+    while degree(v) > 0:
+        r = mod(u, v)
+        if not r:
+            # Shared root — ``v`` divides ``u``. Resultant is zero.
+            return 0
+        m = degree(u)
+        n = degree(v)
+        d = degree(r)
+        parity = (m * n) % 2
+        if parity:
+            sign = -sign
+        # lc(v)^(m − d) — the coefficient ring must support
+        # exponentiation by a non-negative integer, which it always
+        # does via repeated multiplication.
+        result = result * (v[-1] ** (m - d))
+        u, v = v, r
+
+    # Base case: ``v`` is a non-zero constant. res(u, c) = c^deg(u).
+    m = degree(u)
+    result = result * (v[0] ** m)
+    return sign * result
+
+
+# =============================================================================
+# Rational-root finding
+# =============================================================================
+
+
+def _as_fraction(x):
+    """Coerce ``x`` to ``fractions.Fraction``. Local import to keep
+    the module's import graph tidy — callers that don't touch rational
+    roots don't pay for ``fractions``."""
+    from fractions import Fraction
+    return Fraction(x)
+
+
+def rational_roots(p: Polynomial) -> list:
+    """Return the distinct rational roots of ``p ∈ Q[z]`` in ascending order.
+
+    Uses the **Rational Roots Theorem**: if ``p(z) = a_n·z^n + … + a_0``
+    has integer coefficients and admits a rational root ``r = u/v`` in
+    lowest terms, then ``u ∣ a_0`` and ``v ∣ a_n``. So every candidate
+    rational root comes from a finite enumeration of ``divisors(a_0) ×
+    divisors(a_n)``.
+
+    Handles input with ``Fraction`` or mixed numeric coefficients by
+    first rescaling to an integer polynomial (multiply through by the
+    LCM of denominators and then by the sign of the leading
+    coefficient, so ``a_n > 0``). The roots themselves are returned as
+    `Fraction` values regardless.
+
+    Roots of multiplicity ``> 1`` are returned only once — the list is
+    *distinct*. This matches the Rothstein–Trager use case, where the
+    resultant has distinct roots in the generic (squarefree) case, and
+    any degenerate multiplicity is a symptom we treat as a non-answer.
+
+    Edge cases:
+
+    - Zero polynomial → ``[]`` (every value is formally a root; there's
+      no meaningful finite answer).
+    - Non-zero constant → ``[]`` (no roots).
+    - Polynomial with no rational root (e.g. ``z² − 2``) → ``[]``.
+
+    Examples:
+        >>> from fractions import Fraction
+        >>> # (z - 1)(z - 2)(z - 3)
+        >>> zm1 = (Fraction(-1), Fraction(1))
+        >>> zm2 = (Fraction(-2), Fraction(1))
+        >>> zm3 = (Fraction(-3), Fraction(1))
+        >>> rational_roots(multiply(zm1, multiply(zm2, zm3)))
+        [Fraction(1, 1), Fraction(2, 1), Fraction(3, 1)]
+        >>> # z^2 - 2 has no rational roots
+        >>> rational_roots((Fraction(-2), Fraction(0), Fraction(1)))
+        []
+    """
+    n = normalize(p)
+    if len(n) <= 1:
+        return []
+
+    # Promote every coefficient to Fraction so the LCM step is
+    # well-defined even when the caller passed int or mixed types.
+    frac_coeffs = [_as_fraction(c) for c in n]
+
+    # Clear denominators: multiply through by the LCM of all
+    # denominators to get an integer-coefficient polynomial with the
+    # same roots.
+    import math as _math
+    lcm_den = 1
+    for c in frac_coeffs:
+        lcm_den = lcm_den * c.denominator // _math.gcd(lcm_den, c.denominator)
+    int_coeffs = [int(c * lcm_den) for c in frac_coeffs]
+
+    # Make the leading coefficient positive — the candidate enumeration
+    # is symmetric in sign, so this is just cosmetic for the divisor
+    # loop.
+    if int_coeffs[-1] < 0:
+        int_coeffs = [-c for c in int_coeffs]
+
+    # Enumerate divisors of |a_0| and |a_n|. Divisors of 0 is a special
+    # case: z = 0 is a root iff a_0 = 0, handled separately below.
+    a0, an = int_coeffs[0], int_coeffs[-1]
+
+    def _divisors(m: int) -> list[int]:
+        # ``a0`` is zero-checked at the call site (a root at z = 0
+        # handled separately), and ``an`` is the leading coefficient of
+        # a normalised polynomial — non-zero by construction. So ``m``
+        # is always non-zero here.
+        m = abs(m)
+        return [d for d in range(1, m + 1) if m % d == 0]
+
+    roots: set = set()
+
+    if a0 == 0:
+        # z = 0 is a root (constant term vanishes). Record it and
+        # peel ``z`` off for the remaining search.
+        roots.add(_as_fraction(0))
+        # Drop the zero coefficient and re-search — the non-zero tail
+        # still captures every other rational root.
+        tail = normalize(tuple(int_coeffs[1:]))
+        return sorted(set(rational_roots(tail)) | roots)
+
+    p_divs = _divisors(a0)
+    q_divs = _divisors(an)
+
+    # Candidate rationals ±u/v in lowest terms. Python's Fraction
+    # normalises, so the set dedupes 2/4 vs 1/2 automatically.
+    candidates: set = set()
+    for u in p_divs:
+        for v in q_divs:
+            candidates.add(_as_fraction(u) / _as_fraction(v))
+            candidates.add(_as_fraction(-u) / _as_fraction(v))
+
+    for r in candidates:
+        # Evaluate with the integer-coefficient polynomial; r ·
+        # Fraction stays exact.
+        if evaluate(tuple(int_coeffs), r) == 0:
+            roots.add(r)
+
+    return sorted(roots)

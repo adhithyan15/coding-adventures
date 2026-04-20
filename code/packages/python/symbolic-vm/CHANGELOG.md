@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.5.0 — 2026-04-19
+
+Phase 2d of the integration roadmap — Rothstein–Trager. The log part
+that Hermite reduction left as an unevaluated `Integrate` is now
+emitted in closed form whenever every log coefficient happens to lie
+in Q (the overwhelming majority of textbook cases). Integrands whose
+coefficients escape Q — canonically `1/(x² + 1)` — still stay
+unevaluated, awaiting a future `RootSum`/`RootOf` phase.
+
+- New module `symbolic_vm.rothstein_trager`:
+  - `rothstein_trager(num, den) → [(c_i, v_i), …] | None` produces
+    the log-part pairs for ``∫ num/den dx = Σ c_i · log(v_i(x))`` or
+    returns `None` when any coefficient escapes Q.
+  - Builds the resultant ``R(z) = res_x(C − z·E', E) ∈ Q[z]`` by
+    evaluation at ``deg E + 1`` nodes plus Lagrange interpolation —
+    every internal arithmetic stays scalar over Q.
+  - For each rational root ``α`` of ``R`` the log factor is
+    ``v_α = monic(gcd(C − α·E', E))``; Rothstein's theorem guarantees
+    the ``v_α`` are pairwise coprime and multiply back to monic(den).
+- `Integrate` handler now routes the Hermite log-part through RT
+  before falling back to unevaluated `Integrate`. The progress gate
+  in `_integrate_rational` was generalised to treat a successful RT
+  result as progress, so squarefree integrands like ``1/(x-1)`` now
+  close in one step instead of bouncing into Phase 1.
+- `_rt_pairs_to_ir` emits a left-associative binary `Add` chain of
+  log terms; coefficients of ±1 collapse to bare `Log` / `Neg(Log)`,
+  integer coefficients render as `IRInteger`, and non-integer
+  rationals render as `IRRational`.
+- Depends on `coding-adventures-polynomial ≥ 0.4.0` for the new
+  `resultant` and `rational_roots` primitives.
+- 12 new unit tests (`tests/test_rothstein_trager.py`) plus four
+  end-to-end handler tests, bringing the package to 204 tests at
+  90 % coverage. The RT module itself is at 100 %.
+
 ## 0.4.0 — 2026-04-19
 
 Phase 2c of the integration roadmap — Hermite reduction. Rational

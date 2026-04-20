@@ -1,5 +1,23 @@
 # Changelog — coding-adventures-polynomial
 
+## [0.4.0] — 2026-04-19
+
+### Added
+
+- `resultant(a, b)` — scalar resultant of two polynomials via the
+  Euclidean-PRS recurrence. Stays in the coefficient field throughout,
+  which is exactly what the Q-coefficient CAS path wants. Vanishes iff
+  `a` and `b` share a root. This is the primitive Rothstein–Trager
+  builds on to find the log coefficients `c_i` of
+  `∫ num/den dx = Σ c_i · log(v_i(x))`.
+- `rational_roots(p)` — distinct rational roots of a polynomial in
+  Q[z] via the Rational Roots Theorem. Returns a sorted list of
+  `Fraction` values; empty when `p` is constant/zero or has no rational
+  root. Used by RT to decide whether the log-part resultant has a
+  closed form in Q.
+
+See `rothstein-trager.md`.
+
 ## [0.3.0] — 2026-04-19
 
 ### Added

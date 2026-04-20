@@ -18,6 +18,8 @@ from polynomial import (
     multiply,
     normalize,
     one,
+    rational_roots,
+    resultant,
     squarefree,
     subtract,
     zero,
@@ -671,3 +673,148 @@ class TestExtendedGcd:
         # g coefficients went through ``divmod_poly`` at least once.
         for c in g:
             assert isinstance(c, Fraction)
+
+
+# =============================================================================
+# Resultant
+# =============================================================================
+
+
+class TestResultant:
+    """The resultant vanishes iff the two polynomials share a root."""
+
+    def test_constant_second_arg(self):
+        # res(p, c) = c^deg(p).
+        p = (Fraction(1), Fraction(2), Fraction(3))  # degree 2
+        c = (Fraction(5),)
+        assert resultant(p, c) == Fraction(25)
+
+    def test_constant_first_arg(self):
+        # res(c, q) = c^deg(q) (up to the usual sign from the swap).
+        c = (Fraction(7),)
+        q = (Fraction(1), Fraction(2), Fraction(1))  # degree 2
+        # The swap flips sign by (-1)^(0*2) = 1, so still 7^2 = 49.
+        assert resultant(c, q) == Fraction(49)
+
+    def test_coprime_linears(self):
+        # res(x - 1, x - 2). Evaluating a at the root 2 of b gives 1,
+        # times lc(b)^deg(a) = 1: magnitude 1. Sign depends on the
+        # implementation; either way |res| = 1.
+        xm1 = (Fraction(-1), Fraction(1))
+        xm2 = (Fraction(-2), Fraction(1))
+        r = resultant(xm1, xm2)
+        assert abs(r) == 1
+
+    def test_shared_root_vanishes(self):
+        # (x - 1)(x + 2) and (x - 1)(x + 3) share root 1 ⇒ res = 0.
+        xm1 = (Fraction(-1), Fraction(1))
+        xp2 = (Fraction(2), Fraction(1))
+        xp3 = (Fraction(3), Fraction(1))
+        a = multiply(xm1, xp2)
+        b = multiply(xm1, xp3)
+        assert resultant(a, b) == 0
+
+    def test_zero_polynomial_is_zero(self):
+        assert resultant((), (Fraction(1), Fraction(1))) == 0
+        assert resultant((Fraction(1), Fraction(1)), ()) == 0
+
+    def test_product_identity(self):
+        # res(a, b·c) == res(a, b) · res(a, c). Verifies multiplicativity
+        # without depending on any particular sign convention.
+        a = (Fraction(-2), Fraction(0), Fraction(1))  # x^2 - 2
+        b = (Fraction(-3), Fraction(1))               # x - 3
+        c = (Fraction(1), Fraction(1))                # x + 1
+        r_bc = resultant(a, multiply(b, c))
+        r_b = resultant(a, b)
+        r_c = resultant(a, c)
+        assert r_bc == r_b * r_c
+
+    def test_swap_sign_flip_odd_degrees(self):
+        # deg a < deg b ⇒ the implementation swaps inputs to keep the
+        # Euclidean recurrence well-founded, and picks up the standard
+        # (−1)^(deg a · deg b) sign. Exercise the odd·odd case with
+        # deg a = 1, deg b = 3 so the swap actually fires (unlike
+        # equal-degree calls, which don't trigger the swap).
+        a = (Fraction(-1), Fraction(1))                           # x - 1
+        b = (Fraction(-6), Fraction(11), Fraction(-6), Fraction(1))  # (x-1)(x-2)(x-3)
+        # a shares root 1 with b ⇒ both directions give 0.
+        assert resultant(a, b) == 0
+        # Use coprime pair: a = x - 5, b = (x-1)(x-2)(x-3). Both
+        # directions should be equal up to sign flip (-1)^(1·3) = -1.
+        a = (Fraction(-5), Fraction(1))
+        assert resultant(a, b) == -resultant(b, a)
+
+    def test_evaluation_identity(self):
+        # res(a, b) == lc(b)^deg(a) · ∏ a(β_j) where β_j are roots of b.
+        # Pick b = (x - 1)(x - 2) with known roots.
+        xm1 = (Fraction(-1), Fraction(1))
+        xm2 = (Fraction(-2), Fraction(1))
+        b = multiply(xm1, xm2)
+        a = (Fraction(3), Fraction(0), Fraction(1))  # x^2 + 3
+        # a(1) = 4, a(2) = 7. lc(b) = 1, deg(a) = 2.
+        expected = Fraction(1) ** 2 * evaluate(a, Fraction(1)) * evaluate(a, Fraction(2))
+        assert resultant(a, b) == expected
+
+
+# =============================================================================
+# Rational root finding
+# =============================================================================
+
+
+class TestRationalRoots:
+    """Rational Roots Theorem on Q[z]."""
+
+    def test_product_of_linears_integer_roots(self):
+        # (z - 1)(z - 2)(z - 3).
+        zm1 = (Fraction(-1), Fraction(1))
+        zm2 = (Fraction(-2), Fraction(1))
+        zm3 = (Fraction(-3), Fraction(1))
+        p = multiply(multiply(zm1, zm2), zm3)
+        assert rational_roots(p) == [Fraction(1), Fraction(2), Fraction(3)]
+
+    def test_no_rational_roots(self):
+        # z^2 - 2.
+        p = (Fraction(-2), Fraction(0), Fraction(1))
+        assert rational_roots(p) == []
+
+    def test_fractional_roots_via_denominator(self):
+        # (2z - 1)(3z + 2) = 6z^2 + z - 2.
+        p = (Fraction(-2), Fraction(1), Fraction(6))
+        assert rational_roots(p) == [Fraction(-2, 3), Fraction(1, 2)]
+
+    def test_multiplicity_collapsed(self):
+        # (z - 1)^3 has only one distinct root.
+        zm1 = (Fraction(-1), Fraction(1))
+        p = multiply(multiply(zm1, zm1), zm1)
+        assert rational_roots(p) == [Fraction(1)]
+
+    def test_zero_is_a_root(self):
+        # z(z - 1) = z^2 - z. Constant term vanishes ⇒ 0 is a root.
+        p = (Fraction(0), Fraction(-1), Fraction(1))
+        assert rational_roots(p) == [Fraction(0), Fraction(1)]
+
+    def test_constant_polynomial(self):
+        assert rational_roots((Fraction(7),)) == []
+
+    def test_zero_polynomial(self):
+        assert rational_roots(()) == []
+
+    def test_integer_coefficients(self):
+        # Mixed types should still work via coercion.
+        # z^2 - 1 with plain ints.
+        assert rational_roots((-1, 0, 1)) == [Fraction(-1), Fraction(1)]
+
+    def test_fraction_coefficients_in_input(self):
+        # (1/2)z - 1 — root is z = 2.
+        p = (Fraction(-1), Fraction(1, 2))
+        assert rational_roots(p) == [Fraction(2)]
+
+    def test_linear_polynomial(self):
+        # A single linear factor.
+        p = (Fraction(-5), Fraction(2))  # 2z - 5 ⇒ z = 5/2
+        assert rational_roots(p) == [Fraction(5, 2)]
+
+    def test_negative_leading_coefficient(self):
+        # -z + 1 = 0 ⇒ z = 1. Exercises the sign-normalise path.
+        p = (Fraction(1), Fraction(-1))
+        assert rational_roots(p) == [Fraction(1)]
