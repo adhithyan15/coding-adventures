@@ -578,10 +578,28 @@ class TestValidateForWasm:
         )
         assert validate_for_wasm(prog) == []
 
-    # ── Rule 1: supported opcodes (all current IrOp values are supported) ───
-    # The opcode check future-proofs against new IR opcodes that the WASM
-    # backend does not yet handle.  Since every current IrOp is supported,
-    # this is tested implicitly by the valid-program test above.
+    # ── Rule 1: supported opcodes ────────────────────────────────────────────
+    # The V1 WASM backend supports all IrOp values *except* the five bitwise
+    # opcodes added in compiler-ir v0.3.0 (OR, OR_IMM, XOR, XOR_IMM, NOT).
+    # Those are deferred to V2 — WASM i32.or / i32.xor are easy to add once a
+    # frontend actually needs them.  The validator must reject them cleanly.
+
+    def test_bitwise_opcodes_are_intentionally_unsupported(self) -> None:
+        """OR, OR_IMM, XOR, XOR_IMM, and NOT are not yet implemented in the V1
+        WASM backend.  Each must produce an 'unsupported opcode' diagnostic."""
+        unsupported = (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT)
+        for op in unsupported:
+            prog = _simple_prog(IrInstruction(op, [], id=1))
+            errors = validate_for_wasm(prog)
+            rule1_errors = [e for e in errors if "unsupported opcode" in e]
+            assert rule1_errors != [], (
+                f"IrOp.{op.name} should be rejected by the WASM opcode-support "
+                f"check but was accepted"
+            )
+            assert op.name in rule1_errors[0], (
+                f"Error for IrOp.{op.name} does not mention the opcode name: "
+                f"{rule1_errors[0]!r}"
+            )
 
     # ── Rule 2: constant overflow ────────────────────────────────────────────
 

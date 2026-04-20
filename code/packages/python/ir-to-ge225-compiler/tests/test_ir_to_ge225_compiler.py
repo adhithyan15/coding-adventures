@@ -833,6 +833,24 @@ class TestValidateForGe225:
         assert "unsupported" in errors[0]
         assert "AND" in errors[0]
 
+    def test_bitwise_opcodes_rejected(self) -> None:
+        """OR, OR_IMM, XOR, XOR_IMM, and NOT were added in compiler-ir v0.3.0
+        for the Oct/Intel-8008 target.  The GE-225 V1 backend does not support
+        them (the GE-225 has no bitwise OR/XOR instructions).  Each must produce
+        an 'unsupported opcode' diagnostic."""
+        unsupported = (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT)
+        for op in unsupported:
+            program = _prog(_instr(op))
+            errors = validate_for_ge225(program)
+            assert any("unsupported" in e for e in errors), (
+                f"IrOp.{op.name} should be rejected by the GE-225 opcode-support "
+                f"check but was accepted"
+            )
+            assert any(op.name in e for e in errors), (
+                f"Error for IrOp.{op.name} does not mention the opcode name: "
+                f"{errors!r}"
+            )
+
     def test_multiple_unsupported_opcodes_all_reported(self) -> None:
         """Every unsupported opcode in the program generates its own error."""
         program = _prog(
