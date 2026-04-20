@@ -36,7 +36,7 @@ import (
 	clibuilder "github.com/adhithyan15/coding-adventures/code/packages/go/cli-builder"
 )
 
-const version = "0.4.0"
+const version = "0.5.0"
 
 const (
 	defaultTCPTimeout          = 10 * time.Second
@@ -53,6 +53,8 @@ const (
 	respModePreconnectThenFire = "preconnect-then-fire"
 	respModePipeline           = "pipeline"
 	respModeIdle               = "idle"
+	respModeHold               = "hold"
+	maxTCPHoldMS               = 10 * 60 * 1000
 )
 
 //go:embed benchmark-tool.json
@@ -99,6 +101,7 @@ type Workload struct {
 	RequestsPerConnection       int    `json:"requests_per_connection,omitempty"`
 	Operations                  int    `json:"operations,omitempty"`
 	TimeoutMS                   int    `json:"timeout_ms,omitempty"`
+	HoldMS                      int    `json:"hold_ms,omitempty"`
 }
 
 type Environment struct {
@@ -1100,6 +1103,8 @@ func assignManifestValue(m *Manifest, section string, subjectIndex, workloadInde
 			w.Operations = asInt(value)
 		case "timeout_ms":
 			w.TimeoutMS = asInt(value)
+		case "hold_ms":
+			w.HoldMS = asInt(value)
 		default:
 			return fmt.Errorf("unknown workload key %q", key)
 		}
@@ -1196,7 +1201,7 @@ func ValidateManifest(m Manifest) error {
 				problems = append(problems, where+".expect is required for RESP workloads")
 			}
 			if !isSupportedTCPRESPMode(mode) {
-				problems = append(problems, where+".mode must be one-shot, preconnect-then-fire, pipeline, or idle")
+				problems = append(problems, where+".mode must be one-shot, preconnect-then-fire, pipeline, idle, or hold")
 			}
 			if w.Connections < 0 {
 				problems = append(problems, where+".connections must be non-negative")
@@ -1231,6 +1236,12 @@ func ValidateManifest(m Manifest) error {
 		}
 		if w.TimeoutMS < 0 {
 			problems = append(problems, where+".timeout_ms must be non-negative")
+		}
+		if w.HoldMS < 0 {
+			problems = append(problems, where+".hold_ms must be non-negative")
+		}
+		if w.HoldMS > maxTCPHoldMS {
+			problems = append(problems, fmt.Sprintf("%s.hold_ms must be <= %d", where, maxTCPHoldMS))
 		}
 	}
 	if len(problems) > 0 {
@@ -1703,6 +1714,8 @@ func executeTCPRESPTrial(address string, workload Workload, expectedFrames [][]b
 		return runTCPRESPParallel(connections, concurrency, func(_ int) tcpRequestResult {
 			return executeTCPIdle(address, timeout)
 		})
+	case respModeHold:
+		return executeRESPHold(address, request, expectedFrames, connections, concurrency, timeout, tcpHoldDuration(workload))
 	default:
 		return []tcpRequestResult{{
 			OK:      false,
@@ -1741,6 +1754,11 @@ type preconnectedRESPConn struct {
 	err       error
 }
 
+type heldRESPConn struct {
+	conn      net.Conn
+	connectMS float64
+}
+
 func executeRESPPreconnectThenFire(address string, request []byte, expectedFrames [][]byte, connections int, concurrency int, timeout time.Duration) []tcpRequestResult {
 	preconnected := make([]preconnectedRESPConn, connections)
 	connectResults := runTCPRESPParallel(connections, concurrency, func(index int) tcpRequestResult {
@@ -1762,6 +1780,53 @@ func executeRESPPreconnectThenFire(address string, request []byte, expectedFrame
 		}
 		defer entry.conn.Close()
 		return executeRESPOnConn(entry.conn, request, expectedFrames, 1, timeout, entry.connectMS, time.Now())
+	})
+	return results
+}
+
+func executeRESPHold(address string, request []byte, expectedFrames [][]byte, connections int, concurrency int, timeout time.Duration, hold time.Duration) []tcpRequestResult {
+	trialStart := time.Now()
+	held := make([]heldRESPConn, connections)
+	connectResults := runTCPRESPParallel(connections, concurrency, func(index int) tcpRequestResult {
+		conn, connectMS, err := dialTCP(address, timeout)
+		if err != nil {
+			return tcpRequestResult{
+				OK:      false,
+				Metrics: map[string]float64{"connect_ms": connectMS, "total_ms": elapsedMillis(trialStart), "hold_ms": 0},
+				Error:   err.Error(),
+			}
+		}
+		held[index] = heldRESPConn{conn: conn, connectMS: connectMS}
+		return tcpRequestResult{
+			OK:      true,
+			Metrics: map[string]float64{"connect_ms": connectMS, "total_ms": elapsedMillis(trialStart), "hold_ms": 0, "operations": 0},
+		}
+	})
+
+	connected := 0
+	for _, entry := range held {
+		if entry.conn != nil {
+			connected++
+		}
+	}
+	if connected > 0 && hold > 0 {
+		time.Sleep(hold)
+	}
+
+	results := runTCPRESPParallel(connections, concurrency, func(index int) tcpRequestResult {
+		entry := held[index]
+		if entry.conn == nil {
+			return connectResults[index]
+		}
+		defer entry.conn.Close()
+
+		result := executeRESPOnConn(entry.conn, request, expectedFrames, 1, timeout, entry.connectMS, trialStart)
+		if result.Metrics == nil {
+			result.Metrics = map[string]float64{}
+		}
+		result.Metrics["hold_ms"] = float64(hold.Milliseconds())
+		result.Metrics["connected_before_hold"] = 1
+		return result
 	})
 	return results
 }
@@ -1915,6 +1980,7 @@ func tcpTrialFromSamples(subject string, workload Workload, trialNumber int, pha
 	var firstError string
 	var operations float64
 	var failed float64
+	var connectedBeforeHold float64
 	values := map[string][]float64{}
 	for _, sample := range samples {
 		if !sample.OK {
@@ -1930,12 +1996,19 @@ func tcpTrialFromSamples(subject string, workload Workload, trialNumber int, pha
 				if metric == "operations" {
 					continue
 				}
+				if metric == "connected_before_hold" {
+					connectedBeforeHold += value
+					continue
+				}
 				values[metric] = append(values[metric], value)
 			}
 		}
 	}
 	metrics["operations"] = operations
 	metrics["failed_operations"] = failed
+	if connectedBeforeHold > 0 {
+		metrics["connected_before_hold"] = connectedBeforeHold
+	}
 	if elapsedMS > 0 {
 		metrics["ops_per_second"] = operations / (elapsedMS / 1000.0)
 	}
@@ -1974,7 +2047,7 @@ func tcpWorkloadMode(workload Workload) string {
 
 func isSupportedTCPRESPMode(mode string) bool {
 	switch mode {
-	case respModeOneShot, respModePreconnectThenFire, respModePipeline, respModeIdle:
+	case respModeOneShot, respModePreconnectThenFire, respModePipeline, respModeIdle, respModeHold:
 		return true
 	default:
 		return false
@@ -2013,6 +2086,13 @@ func tcpTimeout(workload Workload) time.Duration {
 		return time.Duration(workload.TimeoutMS) * time.Millisecond
 	}
 	return defaultTCPTimeout
+}
+
+func tcpHoldDuration(workload Workload) time.Duration {
+	if workload.HoldMS > 0 {
+		return time.Duration(workload.HoldMS) * time.Millisecond
+	}
+	return tcpTimeout(workload)
 }
 
 func elapsedMillis(start time.Time) float64 {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 - 2026-04-20
+
+- Add `tcp-resp` `hold` mode for C10K-style capacity benchmarks.
+- Add `hold_ms` workload support so the load generator can open all sockets,
+  keep them alive simultaneously, and validate RESP responses after the hold.
+- Report `connected_before_hold` on hold workload trials.
+
 ## 0.4.0 - 2026-04-20
 
 - Add phase-four comparison verdict artifacts for benchmark result directories.

@@ -26,3 +26,13 @@ of being allowed to grow memory usage without limit.
 ```bash
 cargo test -p mini-redis -- --nocapture
 ```
+
+## Capacity Experiments
+
+The server defaults to the TCP runtime's conservative connection cap. For C10K
+hold benchmarks, raise the cap explicitly so the benchmark tests the transport
+stack instead of the safety limit:
+
+```bash
+cargo run --release -p mini-redis -- --host 127.0.0.1 --port 6379 --max-connections 10000
+```
