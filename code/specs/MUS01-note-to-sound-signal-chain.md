@@ -772,13 +772,34 @@ The first implementation target should be Python because:
   dependency
 - tests can inspect objects and bytes easily
 
-Suggested package:
+The first proof was allowed to start as one visible teaching package:
 
 ```text
 code/packages/python/note-audio/
 ```
 
-Suggested package responsibility:
+That package should not remain the permanent owner of every stage. Once the
+chain is proven, each reusable stage should live in its own package so later
+audio, radio, hardware, and visualization packages can reuse the same boxes.
+
+Python V1 stage packages:
+
+| Stage | Package | Responsibility |
+|-------|---------|----------------|
+| note to frequency | `note-frequency` | parse notes and compute Hertz |
+| frequency to oscillator | `oscillator` | expose virtual continuous signals |
+| oscillator to samples | `oscillator` | expose uniform sampling and sample buffers |
+| floating samples to PCM | `pcm-audio` | encode normalized floats into signed PCM buffers |
+| PCM to analog voltage | `virtual-dac` | expose zero-order-hold DAC voltage signals |
+| voltage to pressure proxy | `virtual-speaker` | expose simple speaker response models |
+| PCM to file container | `wav-sink` | write PCM buffers as deterministic WAV bytes/files |
+| teaching composition | `note-audio` | wire the stages together and keep all intermediates visible |
+
+The orchestration package may expose convenience types such as `NoteEvent` and
+`RenderedNote`, but it should delegate the stage-specific work to the stage
+packages above.
+
+Reusable package responsibility:
 
 - compose `note-frequency` and `oscillator`
 - encode signed 16-bit PCM
@@ -786,7 +807,10 @@ Suggested package responsibility:
 - expose a linear virtual speaker model
 - optionally write WAV bytes/files
 
-The package should not:
+After decomposition, those bullets describe the complete system, not one
+monolithic package.
+
+No package in this first rollout should:
 
 - access speakers directly
 - require PortAudio, CoreAudio, ALSA, PulseAudio, WASAPI, or JACK
@@ -814,4 +838,3 @@ The important design rule remains:
 
 > Convenience APIs may be added, but the layers must stay visible for learners
 > who want to peek behind the abstraction.
-
