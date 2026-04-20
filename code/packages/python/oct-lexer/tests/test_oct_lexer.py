@@ -28,28 +28,42 @@ Coverage plan:
 
 from __future__ import annotations
 
+from lexer import Token
+
 from oct_lexer import tokenize_oct
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+def _tok_type(tok: Token) -> str:
+    """Normalize a token's type to a plain string.
+
+    ``tokenize_oct`` promotes keyword tokens so their ``type`` field is
+    already a string (e.g. ``"fn"``, ``"carry"``).  All other tokens keep
+    the ``TokenType`` enum value returned by the ``GrammarLexer`` (e.g.
+    ``TokenType.LPAREN``).  This helper normalises both cases so tests can
+    compare uniformly against string names like ``"LPAREN"`` or ``"NAME"``.
+    """
+    return tok.type if isinstance(tok.type, str) else tok.type.name
+
+
 def _types(source: str) -> list[str]:
     """Return the token type list for source, excluding the trailing EOF."""
     tokens = tokenize_oct(source)
-    return [t.type for t in tokens if t.type != "EOF"]
+    return [_tok_type(t) for t in tokens if _tok_type(t) != "EOF"]
 
 
 def _values(source: str) -> list[str]:
     """Return the token value list for source, excluding the trailing EOF."""
     tokens = tokenize_oct(source)
-    return [t.value for t in tokens if t.type != "EOF"]
+    return [t.value for t in tokens if _tok_type(t) != "EOF"]
 
 
 def _pairs(source: str) -> list[tuple[str, str]]:
     """Return (type, value) pairs for source, excluding EOF."""
     tokens = tokenize_oct(source)
-    return [(t.type, t.value) for t in tokens if t.type != "EOF"]
+    return [(_tok_type(t), t.value) for t in tokens if _tok_type(t) != "EOF"]
 
 
 # ---------------------------------------------------------------------------
@@ -63,19 +77,19 @@ class TestEmptySource:
         """An empty string tokenizes to a single EOF token."""
         tokens = tokenize_oct("")
         assert len(tokens) == 1
-        assert tokens[0].type == "EOF"
+        assert _tok_type(tokens[0]) == "EOF"
 
     def test_whitespace_only_produces_only_eof(self) -> None:
         """Whitespace is silently skipped; only EOF remains."""
         tokens = tokenize_oct("   \t\n\r\n   ")
         assert len(tokens) == 1
-        assert tokens[0].type == "EOF"
+        assert _tok_type(tokens[0]) == "EOF"
 
     def test_comment_only_produces_only_eof(self) -> None:
         """A lone line comment is silently skipped; only EOF remains."""
         tokens = tokenize_oct("// This is a comment\n")
         assert len(tokens) == 1
-        assert tokens[0].type == "EOF"
+        assert _tok_type(tokens[0]) == "EOF"
 
 
 # ---------------------------------------------------------------------------
@@ -217,9 +231,9 @@ class TestLiterals:
     def test_hex_not_split(self) -> None:
         """0xFF must lex as one HEX_LIT token, not INT_LIT('0') + NAME('xFF')."""
         tokens = tokenize_oct("0xFF")
-        non_eof = [t for t in tokens if t.type != "EOF"]
+        non_eof = [t for t in tokens if _tok_type(t) != "EOF"]
         assert len(non_eof) == 1
-        assert non_eof[0].type == "HEX_LIT"
+        assert _tok_type(non_eof[0]) == "HEX_LIT"
 
     def test_binary_zero(self) -> None:
         assert _pairs("0b00000000") == [("BIN_LIT", "0b00000000")]
@@ -233,9 +247,9 @@ class TestLiterals:
     def test_binary_not_split(self) -> None:
         """0b101 must lex as one BIN_LIT token, not INT_LIT('0') + NAME('b101')."""
         tokens = tokenize_oct("0b101")
-        non_eof = [t for t in tokens if t.type != "EOF"]
+        non_eof = [t for t in tokens if _tok_type(t) != "EOF"]
         assert len(non_eof) == 1
-        assert non_eof[0].type == "BIN_LIT"
+        assert _tok_type(non_eof[0]) == "BIN_LIT"
 
 
 # ---------------------------------------------------------------------------
@@ -296,23 +310,23 @@ class TestOperatorTokens:
     def test_eq_eq_not_two_eq(self) -> None:
         """'==' is one EQ_EQ token, not two EQ tokens."""
         tokens = tokenize_oct("==")
-        non_eof = [t for t in tokens if t.type != "EOF"]
+        non_eof = [t for t in tokens if _tok_type(t) != "EOF"]
         assert len(non_eof) == 1
-        assert non_eof[0].type == "EQ_EQ"
+        assert _tok_type(non_eof[0]) == "EQ_EQ"
 
     def test_land_not_two_amp(self) -> None:
         """'&&' is one LAND token, not two AMP tokens."""
         tokens = tokenize_oct("&&")
-        non_eof = [t for t in tokens if t.type != "EOF"]
+        non_eof = [t for t in tokens if _tok_type(t) != "EOF"]
         assert len(non_eof) == 1
-        assert non_eof[0].type == "LAND"
+        assert _tok_type(non_eof[0]) == "LAND"
 
     def test_arrow_not_minus_gt(self) -> None:
         """'->' is one ARROW token, not MINUS + GT."""
         tokens = tokenize_oct("->")
-        non_eof = [t for t in tokens if t.type != "EOF"]
+        non_eof = [t for t in tokens if _tok_type(t) != "EOF"]
         assert len(non_eof) == 1
-        assert non_eof[0].type == "ARROW"
+        assert _tok_type(non_eof[0]) == "ARROW"
 
     # Single-character operators
     def test_plus(self) -> None:
@@ -385,9 +399,9 @@ class TestSkipping:
     def test_inline_comment_skipped(self) -> None:
         """A comment at the end of a line does not produce a token."""
         tokens = tokenize_oct("let // comment\n")
-        non_eof = [t for t in tokens if t.type != "EOF"]
+        non_eof = [t for t in tokens if _tok_type(t) != "EOF"]
         assert len(non_eof) == 1
-        assert non_eof[0].type == "let"
+        assert _tok_type(non_eof[0]) == "let"
 
     def test_leading_whitespace_ignored(self) -> None:
         assert _types("   fn") == ["fn"]
