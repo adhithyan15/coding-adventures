@@ -3,7 +3,7 @@
   "name": "benchmark-tool",
   "display_name": "benchmark-tool",
   "description": "Run and compare reproducible coding-adventures benchmark manifests",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "parsing_mode": "gnu",
   "builtin_flags": { "help": true, "version": true },
   "commands": [
@@ -57,6 +57,30 @@
           "description": "Override warmup trial count",
           "type": "integer",
           "default": -1
+        },
+        {
+          "id": "subject",
+          "long": "subject",
+          "description": "Override a manifest subject checkout using NAME=REF; may be repeated",
+          "type": "string",
+          "value_name": "NAME=REF",
+          "repeatable": true
+        },
+        {
+          "id": "subjects",
+          "long": "subjects",
+          "description": "Comma-separated subject names to run",
+          "type": "string",
+          "value_name": "NAMES",
+          "default": ""
+        },
+        {
+          "id": "workloads",
+          "long": "workloads",
+          "description": "Comma-separated workload names to run",
+          "type": "string",
+          "value_name": "NAMES",
+          "default": ""
         }
       ],
       "arguments": [
