@@ -144,6 +144,7 @@ The public API stays exact even when the implementation shares logic.
 | `cil-bytecode-disassembler` | Pretty-print IL instructions and resolved operands | `CilDisassembly` |
 | `cil-bytecode-builder` | Build CIL method-body bytes from operations, metadata tokens, and labels | raw IL bytes |
 | `ir-to-cil-bytecode` | Lower compiler IR into composable CIL method artifacts | `CILProgramArtifact` |
+| `cli-assembly-writer` | Wrap CIL method artifacts in PE/CLI metadata and sections | managed PE bytes |
 | `cli-runtime-model` | Tokens, stack types, frames, heap refs, value types | `CliRuntimeState` |
 | `clr-vm-simulator` | Execute decoded IL method bodies | `ExecutionResult[ClrState]` |
 | `clr-simulator` | Backward-compatible facade package | thin composition layer |
@@ -275,6 +276,26 @@ The default token provider may assign deterministic placeholder tokens for tests
 and standalone bytecode inspection. A future CLI assembly writer must be able to
 replace it with real `MethodDef` and `MemberRef` tokens.
 
+### `cli-assembly-writer`
+
+This package serializes CIL method artifacts into a managed PE/CLI container. It
+should be the first assembly-writing layer, while still keeping runtime helpers
+and high-level language frontends outside its ownership:
+
+- emit a PE32 shell with section headers and the CLI data directory
+- emit the CLI header with metadata RVA/size and entry point token
+- write metadata root stream headers and `#~`, `#Strings`, `#Blob`, and `#US`
+  streams
+- write Module, TypeRef, TypeDef, MethodDef, MemberRef, StandAloneSig, and
+  Assembly rows
+- choose tiny method headers for small no-local methods and fat headers for
+  methods with locals or larger bodies
+- preserve method and helper token conventions from `ir-to-cil-bytecode`
+
+It should not implement host runtime helpers itself. Helper references stay as
+metadata references so later packages can provide real helper bodies, native
+bridges, or simulator-host bindings.
+
 ## Runtime model
 
 The simulator should model CLR concepts directly rather than flattening
@@ -360,7 +381,7 @@ sharing one metadata source of truth.
 8. `cil-bytecode-disassembler`
 9. `cil-bytecode-builder`
 10. `ir-to-cil-bytecode`
-11. CLI assembly writer for emitted metadata, helpers, and PE layout
+11. `cli-assembly-writer`
 12. `cli-runtime-model`
 13. `clr-vm-simulator`
 14. Backward-compatible facade updates in `clr-simulator`
