@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.3.0] - 2026-04-21
+
+### Added — Phase 9: Tier-2 SQL features (CASE, derived tables, chained set ops, TCL)
+
+- **CASE expression** (`CASE WHEN … THEN … [ELSE …] END`) — both searched and
+  simple CASE forms now parse and execute end-to-end.  The adapter converts
+  simple CASE into equality comparisons; the codegen emits a
+  `JumpIfFalse`-based chain; the VM evaluates branches lazily.  CASE can appear
+  in SELECT items, WHERE predicates, ORDER BY keys, and HAVING clauses.
+
+- **Derived tables** (`(SELECT …) AS alias` in FROM) — subqueries used as
+  table sources now work end-to-end.  The adapter translates to
+  `DerivedTableRef`; the planner emits a `DerivedTable` plan node with resolved
+  output columns; the codegen emits `RunSubquery`; the VM executes the inner
+  program against the same backend and exposes the rows via `_SubqueryCursor`.
+
+- **Chained set operations** — `A UNION B UNION C`, `A INTERSECT B EXCEPT C`,
+  etc.  The adapter builds a left-associative tree of
+  `UnionStmt`/`IntersectStmt`/`ExceptStmt` nodes; the planner dispatches
+  through `plan()` for each left operand so nesting resolves correctly.
+
+- **Explicit TCL interception** — `BEGIN`, `COMMIT`, and `ROLLBACK` SQL
+  statements are now intercepted in `Cursor.execute()` *before*
+  `_ensure_transaction_if_needed` runs, delegating to three new
+  `Connection`-level methods:
+  - `_tcl_begin()` — opens a transaction; raises `OperationalError` if one is
+    already active.
+  - `_tcl_commit()` — commits the active transaction; raises `OperationalError`
+    if none exists.
+  - `_tcl_rollback()` — rolls back the active transaction; raises
+    `OperationalError` if none exists.
+  This prevents a double-transaction collision (the connection's implicit
+  transaction opening racing with the VM's `BeginTransaction` instruction).
+
+- **`_flatten_children()` recursion in `engine.py`** — the
+  `_flatten_project_over_aggregate` helper now recurses into child plans
+  (including `DerivedTable`, `Filter`, `Join`, `Union`, etc.) before processing
+  the outer plan, so `Project(Aggregate(...))` patterns inside derived tables
+  are correctly rewritten before codegen sees them.
+
+### Fixed
+
+- **INSERT with explicit column list** — `_insert()` in the adapter now
+  correctly parses the column name list when an `insert_body` grammar node
+  separates the column list from the values.
+
+- **`_stmt_dispatch` routing** — statements that arrive as `query_stmt` nodes
+  (the grammar's outer wrapper for SELECT + set-op tails) are now handled
+  explicitly; previously only bare `select_stmt` nodes were routed, causing
+  parse errors for UNION queries at the top level.
+
+### Tests
+
+- `tests/test_tier2_features.py` — 34 new integration tests across six classes:
+  `TestCaseExpression` (11), `TestDerivedTables` (5), `TestChainedSetOps` (5),
+  `TestExplicitTransactions` (4), `TestSubqueriesInWhere` (5),
+  `TestCrossJoin` (4).
+- Mini-sqlite total: **165 tests, 89.79% coverage**.
+
 ## [0.2.0] - 2026-04-20
 
 ### Added — Phase 8: file-backed `connect()` and byte-compatibility oracle tests

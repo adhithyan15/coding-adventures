@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.4.0 — 2026-04-21
+
+### Added
+
+- **`RunSubquery` instruction dispatch** — new `_do_run_subquery` handler
+  executes a derived-table sub-program against the same backend as the outer
+  query and materialises its result rows.
+
+- **`_SubqueryCursor` class** — an in-memory `RowIterator` backed by pre-
+  materialised rows from a `RunSubquery` execution.  Stored under the derived
+  table's `cursor_id` in `_VmState.cursors` so the outer scan loop's
+  `AdvanceCursor` / `LoadColumn` / `CloseScan` instructions work transparently
+  without any special-casing in those paths.
+
+### Fixed
+
+- **`row_buffer` changed from `dict[str, SqlValue]` to `list[SqlValue]`** —
+  the previous dict-based buffer assigned each emitted column by name, causing
+  duplicate column names (e.g. two columns both called `v` in a CROSS JOIN of
+  two subqueries) to silently overwrite each other.  The new list-based buffer
+  appends values positionally; `EmitRow` converts it directly to a tuple so
+  column positions always match the declared result schema.  `_do_scan_all_columns`
+  similarly appends values rather than keying by name.
+
+- **`cursors` field type widened** to `dict[int, RowIterator]` (was `dict[int,
+  Cursor]`) to accommodate `_SubqueryCursor` alongside normal backend cursors.
+
+### Tests
+
+- `tests/test_tier2_features.py` — 34 new end-to-end integration tests covering
+  derived tables (`RunSubquery`), CROSS JOINs, CASE expressions (searched and
+  simple), chained UNION/INTERSECT/EXCEPT, explicit transaction control, and
+  subqueries in WHERE (scalar subqueries and IN subqueries).
+
 ## 0.3.0 — 2026-04-21
 
 ### Added

@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.5.0] - 2026-04-21
+
+### Added
+
+- **`RunSubquery` IR instruction** — new instruction type for derived-table
+  (subquery in FROM) execution.  Carries a `cursor_id` and a fully-resolved
+  inner `sub_program`.  The VM executes the sub-program in a child state,
+  materialises the result rows, and stores them under `cursor_id` so the outer
+  scan loop's `AdvanceCursor` / `LoadColumn` / `CloseScan` instructions work
+  transparently on the subquery rows.
+
+- **`DerivedTable` plan-node compilation** — `_compile_source` now handles
+  `DerivedTable` nodes.  The inner plan is compiled independently with its own
+  cursor/label namespace (preventing ID collisions with the outer program), then
+  wrapped in a `RunSubquery` instruction followed by the standard cursor loop
+  (`AdvanceCursor` → body → `CloseScan`).
+
+- **`CaseExpr` expression compilation** — `_compile_expr` now handles
+  `CaseExpr` nodes by emitting a conditional-jump chain:
+  ```
+  compile(condition_1)
+  JumpIfFalse(next_1)
+  compile(result_1)
+  Jump(end)
+  Label(next_1)
+  … (one block per WHEN branch) …
+  compile(else) or LoadConst(None)
+  Label(end)
+  ```
+  After the END label exactly one value sits on the stack — the matched
+  branch result or NULL if no branch matched and there is no ELSE.
+
+- **`RunSubquery` exported** from `sql_codegen.__init__`.
+
 ## [0.4.0] - 2026-04-21
 
 ### Added

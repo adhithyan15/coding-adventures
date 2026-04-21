@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 
 import sql_backend.errors as be
 from sql_backend.backend import Backend, TransactionHandle
-from sql_backend.row import Cursor
+from sql_backend.row import RowIterator
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
     AdvanceCursor,
@@ -78,6 +78,7 @@ from sql_codegen import (
     Pop,
     Program,
     RollbackTransaction,
+    RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
     SetResultSchema,
@@ -126,6 +127,42 @@ class _AggState:
 
 
 # --------------------------------------------------------------------------
+# Subquery cursor — an in-memory RowIterator backed by materialised rows.
+# --------------------------------------------------------------------------
+
+
+class _SubqueryCursor:
+    """RowIterator over pre-materialised rows from a derived-table sub-query.
+
+    After ``RunSubquery`` executes the inner program and collects result rows,
+    it wraps them in one of these so that the outer scan's ``AdvanceCursor`` /
+    ``LoadColumn`` / ``CloseScan`` instructions work transparently — they go
+    through ``st.cursors`` just like a normal backend scan.
+
+    ``current_row()`` is a no-op stub because subquery rows are read-only:
+    the VM never issues UPDATE / DELETE against a derived-table source.
+    """
+
+    __slots__ = ("_rows", "_pos", "_closed")
+
+    def __init__(self, rows: list[dict[str, SqlValue]]) -> None:
+        self._rows = rows
+        self._pos = -1
+        self._closed = False
+
+    def next(self) -> dict[str, SqlValue] | None:
+        if self._closed:
+            return None
+        self._pos += 1
+        if self._pos >= len(self._rows):
+            return None
+        return dict(self._rows[self._pos])  # shallow copy — consistent with ListRowIterator
+
+    def close(self) -> None:
+        self._closed = True
+
+
+# --------------------------------------------------------------------------
 # VM state. Public API is only the ``execute`` entry point below.
 # --------------------------------------------------------------------------
 
@@ -136,9 +173,9 @@ class _VmState:
     backend: Backend
     pc: int = 0
     stack: list[SqlValue] = field(default_factory=list)
-    cursors: dict[int, Cursor] = field(default_factory=dict)
+    cursors: dict[int, RowIterator] = field(default_factory=dict)
     current_row: dict[int, dict[str, SqlValue]] = field(default_factory=dict)
-    row_buffer: dict[str, SqlValue] = field(default_factory=dict)
+    row_buffer: list[SqlValue] = field(default_factory=list)
     result: _MutableResult = field(default_factory=_MutableResult)
     # Aggregate state, keyed by the tuple of group key values.
     agg_table: dict[tuple[SqlValue, ...], list[_AggState]] = field(default_factory=dict)
@@ -265,10 +302,16 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         st.row_buffer.clear()
         return
     if isinstance(ins, EmitColumn):
-        st.row_buffer[ins.name] = st.pop()
+        # Positional append — the column name is used only for schema
+        # bookkeeping (result_schema / SetResultSchema), not for row assembly.
+        # Using a list instead of a dict correctly handles SELECT lists with
+        # duplicate column names (e.g. SELECT da.v, db.v in a CROSS JOIN where
+        # both sub-queries expose a column called "v").
+        st.row_buffer.append(st.pop())
         return
     if isinstance(ins, EmitRow):
-        row = tuple(st.row_buffer.get(c) for c in st.result.columns)
+        # The row buffer is positional; just convert to a tuple.
+        row = tuple(st.row_buffer)
         st.result.rows.append(row)
         st.row_buffer.clear()
         return
@@ -341,6 +384,11 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, ExceptResult):
         _do_except(ins, st)
+        return
+
+    # Derived-table sub-queries -------------------------------------------
+    if isinstance(ins, RunSubquery):
+        _do_run_subquery(ins, st)
         return
 
     # Transactions --------------------------------------------------------
@@ -494,6 +542,35 @@ def _do_call_scalar(ins: CallScalar, st: _VmState) -> None:
     st.push(result)
 
 
+def _do_run_subquery(ins: RunSubquery, st: _VmState) -> None:
+    """Execute the derived-table sub-program and materialise its rows.
+
+    Runs the inner program against the *same backend* as the outer query (so
+    the sub-query sees the same data, transactions, and schema).  The result
+    rows are wrapped in a :class:`_SubqueryCursor` and stored under
+    ``cursor_id`` in the outer state's cursor table.
+
+    After this instruction, the outer scan loop's ``AdvanceCursor`` /
+    ``LoadColumn`` / ``CloseScan`` on the same ``cursor_id`` iterate over
+    the materialised rows exactly like a normal backend scan — no special
+    casing needed in those paths.
+
+    The inner execution gets a fresh ``_VmState`` so the sub-query's stack,
+    agg_table, and result buffer are fully isolated from the outer query's
+    state.  The backend is shared (read-only access from the sub-query side
+    is safe; the sub-query should not issue DML, but we don't enforce that
+    here).
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    cols = sub_result.columns
+    # Convert the result rows (tuples keyed by position) back to dicts so
+    # LoadColumn can look up by column name exactly as it does for a normal scan.
+    rows: list[dict[str, SqlValue]] = [
+        dict(zip(cols, row, strict=False)) for row in sub_result.rows
+    ]
+    st.cursors[ins.cursor_id] = _SubqueryCursor(rows=rows)
+
+
 def _do_open(ins: OpenScan, st: _VmState) -> None:
     # Prefer a positioned cursor when the backend offers one — UPDATE and
     # DELETE paths need ``current_row`` semantics. Falling back to ``scan``
@@ -529,12 +606,18 @@ def _do_close(ins: CloseScan, st: _VmState) -> None:
 
 
 def _do_scan_all_columns(ins: ScanAllColumns, st: _VmState) -> None:
-    # Copy every column from the cursor's current row into the row buffer.
+    """Copy every column from the cursor's current row into the row buffer.
+
+    The row buffer is positional (a list), so we append values in the
+    same order as ``row.items()`` — which is insertion order (Python ≥ 3.7).
+    The schema (``result.columns``) is derived from ``row.keys()`` in the
+    same iteration order, so column positions are guaranteed to match.
+    """
     row = st.current_row.get(ins.cursor_id)
     if row is None:
         return
-    for name, value in row.items():
-        st.row_buffer[name] = value
+    for value in row.values():
+        st.row_buffer.append(value)
     # Ensure the schema covers every column we just dumped — if the outer
     # query had no explicit schema, derive one from the row's keys in order.
     if not st.result.columns:

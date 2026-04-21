@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0] - 2026-04-21
+
+### Added
+
+- **`DerivedTable` plan node** now handled by all five optimizer passes — each
+  pass recurses into `DerivedTable.query` so the inner plan is fully optimised:
+  - `ConstantFolding` — folds constants inside the inner query.
+  - `PredicatePushdown` — passes through unchanged (predicates cannot cross the
+    derived-table boundary without aliasing analysis).
+  - `ProjectionPruning` — passes through unchanged (inner columns are named by
+    the derived-table alias; pruning would require alias mapping).
+  - `DeadCodeElimination` — eliminates dead nodes inside the inner query.
+  - `LimitPushdown` — recurses into the inner query but does NOT push the outer
+    `LIMIT` inside (the inner query has its own shape).
+
+- **`CaseExpr` expression node** now handled by expression-level passes:
+  - `ConstantFolding` — folds each WHEN condition and result branch.  Short-
+    circuit evaluation is intentionally deferred to the VM; the optimizer only
+    constant-folds expressions that are already literals.
+  - `PredicatePushdown` — traverses CASE branches during column-set extraction
+    so predicates referencing columns inside CASE branches are handled correctly.
+
 ## [0.2.0] - 2026-04-21
 
 ### Added
