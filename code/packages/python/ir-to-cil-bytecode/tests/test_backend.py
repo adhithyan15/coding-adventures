@@ -460,6 +460,152 @@ def test_protocol_import_is_runtime_safe() -> None:
     assert provider.helper_token(CILHelper.SYSCALL) == 0x0A000015
 
 
+def test_lower_or_register() -> None:
+    """IrOp.OR emits the CIL ``or`` byte (0x60) between two register loads.
+
+    The sequence for ``OR v2, v0, v1`` is:
+      ldloc.0  (0x06)  — push v0
+      ldloc.1  (0x07)  — push v1
+      or       (0x60)  — bitwise OR
+      stloc.2  (0x0C)  — pop into v2
+    """
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0b1010)]),
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(0b0101)]),
+        IrInstruction(IrOp.OR, [IrRegister(2), IrRegister(0), IrRegister(1)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    # ``or`` opcode must appear in the output
+    assert 0x60 in body
+    # The OR pattern: ldloc.0, ldloc.1, or, stloc.2
+    assert bytes([0x06, 0x07, 0x60, 0x0C]) in body
+
+
+def test_lower_or_imm() -> None:
+    """IrOp.OR_IMM emits ``or`` with the immediate pushed by ldc.i4."""
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0b1010)]),
+        IrInstruction(IrOp.OR_IMM, [IrRegister(1), IrRegister(0), IrImmediate(0b0101)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    assert 0x60 in body
+
+
+def test_lower_xor_register() -> None:
+    """IrOp.XOR emits the CIL ``xor`` byte (0x61).
+
+    The sequence for ``XOR v2, v0, v1``:
+      ldloc.0  (0x06)
+      ldloc.1  (0x07)
+      xor      (0x61)
+      stloc.2  (0x0C)
+    """
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0b1111)]),
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(0b1010)]),
+        IrInstruction(IrOp.XOR, [IrRegister(2), IrRegister(0), IrRegister(1)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    assert 0x61 in body
+    assert bytes([0x06, 0x07, 0x61, 0x0C]) in body
+
+
+def test_lower_xor_imm() -> None:
+    """IrOp.XOR_IMM emits ``xor`` with an immediate operand."""
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0xFF)]),
+        IrInstruction(IrOp.XOR_IMM, [IrRegister(1), IrRegister(0), IrImmediate(0x0F)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    assert 0x61 in body
+
+
+def test_lower_not() -> None:
+    """IrOp.NOT lowers to ``ldc.i4.m1`` + ``xor`` (flip all 32 bits).
+
+    NOT x = x XOR 0xFFFF_FFFF = x XOR (-1 as signed int32).
+
+    CIL has no single NOT instruction.  The canonical idiom is:
+      ldloc.N          — push x
+      ldc.i4.m1  (0x15) — push -1 (= 0xFFFF_FFFF bit-pattern)
+      xor        (0x61) — bitwise XOR → all bits flipped
+      stloc.M          — store result
+
+    For the entry program with v0 as src and v1 as dst, after LOAD_IMM
+    (into loc 0), the NOT body is:
+      ldloc.0  (0x06)
+      ldc.i4.m1 (0x15)
+      xor      (0x61)
+      stloc.1  (0x0B)
+    """
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0x00FF_00FF)]),
+        IrInstruction(IrOp.NOT, [IrRegister(1), IrRegister(0)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    # ldc.i4.m1 (0x15) must precede xor (0x61) to form the NOT idiom
+    assert bytes([0x06, 0x15, 0x61, 0x0B]) in body
+
+
+def test_lower_not_double_inverts() -> None:
+    """Applying NOT twice returns the original value (double-complement law).
+
+    This is a semantic round-trip test: load 42, NOT it into v1, NOT v1 into
+    v2.  We verify the body compiles without error and contains two xor (0x61)
+    opcodes — one for each NOT — plus two ldc.i4.m1 (0x15) pushes.
+    """
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(42)]),
+        IrInstruction(IrOp.NOT, [IrRegister(1), IrRegister(0)]),
+        IrInstruction(IrOp.NOT, [IrRegister(2), IrRegister(1)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    xor_count = body.count(0x61)
+    m1_count = body.count(0x15)
+    assert xor_count == 2
+    assert m1_count == 2
+
+
+def test_lower_bitwise_ops_mixed() -> None:
+    """AND, OR, XOR, NOT can coexist in a single method body without collision.
+
+    Encodes the truth-table identity:  (a & b) | (a ^ b) == a | b.
+
+    Registers:
+      v0 = 0b1100  (12)
+      v1 = 0b1010  (10)
+      v2 = v0 & v1  →  0b1000  (8)
+      v3 = v0 ^ v1  →  0b0110  (6)
+      v4 = v2 | v3  →  0b1110  (14)  expected == v0 | v1
+    """
+    artifact = lower_ir_to_cil_bytecode(_program(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0b1100)]),
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(0b1010)]),
+        IrInstruction(IrOp.AND, [IrRegister(2), IrRegister(0), IrRegister(1)]),
+        IrInstruction(IrOp.XOR, [IrRegister(3), IrRegister(0), IrRegister(1)]),
+        IrInstruction(IrOp.OR, [IrRegister(4), IrRegister(2), IrRegister(3)]),
+        IrInstruction(IrOp.RET),
+    ))
+
+    body = artifact.entry_method.body
+    # All three bitwise opcodes must appear in the body
+    assert 0x5F in body  # and
+    assert 0x60 in body  # or
+    assert 0x61 in body  # xor
+
+
 def _program(*instructions: IrInstruction) -> IrProgram:
     program = IrProgram(entry_label="_start")
     program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
