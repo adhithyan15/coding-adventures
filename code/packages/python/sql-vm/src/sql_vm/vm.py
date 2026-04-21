@@ -40,6 +40,7 @@ from sql_codegen import (
     BeginRow,
     Between,
     BinaryOp,
+    CallScalar,
     CloseScan,
     Coalesce,
     CreateTable,
@@ -92,6 +93,7 @@ from .errors import (
 )
 from .operators import apply_binary, apply_unary, like_match
 from .result import QueryResult, _MutableResult
+from .scalar_functions import call as _call_scalar
 
 # --------------------------------------------------------------------------
 # Aggregate state — one of these lives in each slot of ``agg_table[key]``.
@@ -225,6 +227,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, Coalesce):
         _do_coalesce(ins, st)
+        return
+    if isinstance(ins, CallScalar):
+        _do_call_scalar(ins, st)
         return
 
     # Scans ----------------------------------------------------------------
@@ -417,6 +422,37 @@ def _do_coalesce(ins: Coalesce, st: _VmState) -> None:
             st.push(v)
             return
     st.push(None)
+
+
+def _do_call_scalar(ins: CallScalar, st: _VmState) -> None:
+    """Dispatch a scalar function call.
+
+    Arguments are on the stack in push order (leftmost argument was pushed
+    first).  ``pop_n`` retrieves them in that same order so the function
+    receives its arguments left-to-right.
+
+    ``UnsupportedFunction`` and ``WrongNumberOfArguments`` propagate directly
+    to the caller — they are both :class:`VmError` subclasses.
+
+    ``TypeMismatch`` may also propagate when a function validates argument
+    types internally (e.g. ``SQRT`` on a non-numeric string).
+
+    Examples (SQL → stack trace):
+
+    ::
+
+        -- ABS(-5)
+        LoadConst -5
+        CallScalar("abs", 1)    → pushes 5
+
+        -- COALESCE(NULL, 42)
+        LoadConst NULL
+        LoadConst 42
+        CallScalar("coalesce", 2)  → pushes 42
+    """
+    args = st.pop_n(ins.n_args)
+    result = _call_scalar(ins.func, args)
+    st.push(result)
 
 
 def _do_open(ins: OpenScan, st: _VmState) -> None:
