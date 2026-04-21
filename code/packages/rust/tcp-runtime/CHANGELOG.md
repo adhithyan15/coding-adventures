@@ -24,3 +24,12 @@ All notable changes to this package will be documented in this file.
 - close callbacks that observe final TCP connection state during teardown
 - tests proving stateful handlers preserve per-connection state across multiple
   reads
+
+## [0.1.2] - 2026-04-21
+
+### Added
+
+- Added a TCP outbound mailbox wrapper so worker threads can send delayed bytes
+  or close requests by `ConnectionId`.
+- Added tests proving TCP reads can return immediately while another thread
+  posts the eventual response.

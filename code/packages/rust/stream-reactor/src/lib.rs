@@ -5,10 +5,10 @@
 //! This crate owns listener acceptance, per-stream state, queued writes, and
 //! neutral byte-stream handler progression without committing to one protocol.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, VecDeque};
 use std::net::SocketAddr;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use transport_platform::{
     BindAddress, CloseKind, ListenerId, ListenerOptions, PlatformError, PlatformEvent, ReadOutcome,
@@ -90,6 +90,60 @@ impl StopHandle {
     }
 }
 
+#[derive(Clone, Default)]
+pub struct StreamMailbox {
+    commands: Arc<Mutex<VecDeque<StreamMailboxCommand>>>,
+}
+
+impl StreamMailbox {
+    pub fn send(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
+        self.push(StreamMailboxCommand::Write {
+            connection_id,
+            bytes: bytes.into(),
+            close: false,
+        });
+    }
+
+    pub fn send_and_close(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
+        self.push(StreamMailboxCommand::Write {
+            connection_id,
+            bytes: bytes.into(),
+            close: true,
+        });
+    }
+
+    pub fn close(&self, connection_id: ConnectionId) {
+        self.push(StreamMailboxCommand::Close { connection_id });
+    }
+
+    fn push(&self, command: StreamMailboxCommand) {
+        self.commands
+            .lock()
+            .expect("stream mailbox mutex poisoned")
+            .push_back(command);
+    }
+
+    fn drain(&self) -> Vec<StreamMailboxCommand> {
+        self.commands
+            .lock()
+            .expect("stream mailbox mutex poisoned")
+            .drain(..)
+            .collect()
+    }
+}
+
+#[derive(Debug)]
+enum StreamMailboxCommand {
+    Write {
+        connection_id: ConnectionId,
+        bytes: Vec<u8>,
+        close: bool,
+    },
+    Close {
+        connection_id: ConnectionId,
+    },
+}
+
 type StateInit<S> = Arc<dyn Fn(StreamConnectionInfo) -> S + Send + Sync + 'static>;
 type StatefulHandler<S> =
     Arc<dyn Fn(StreamConnectionInfo, &mut S, &[u8]) -> StreamHandlerResult + Send + Sync + 'static>;
@@ -108,8 +162,10 @@ pub struct StreamReactor<P, S = ()> {
     listener: ListenerId,
     listener_addr: SocketAddr,
     connections: BTreeMap<StreamId, ConnectionState<S>>,
+    connection_index: BTreeMap<ConnectionId, StreamId>,
     next_connection_id: u64,
     stop_flag: Arc<AtomicBool>,
+    mailbox: StreamMailbox,
     read_buffer_size: usize,
     max_connections: usize,
     max_pending_write_bytes: usize,
@@ -164,8 +220,10 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             listener,
             listener_addr,
             connections: BTreeMap::new(),
+            connection_index: BTreeMap::new(),
             next_connection_id: 1,
             stop_flag: Arc::new(AtomicBool::new(false)),
+            mailbox: StreamMailbox::default(),
             read_buffer_size: options.read_buffer_size.max(1),
             max_connections: options.max_connections.max(1),
             max_pending_write_bytes: options.max_pending_write_bytes.max(1),
@@ -193,10 +251,15 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         StopHandle(Arc::clone(&self.stop_flag))
     }
 
+    pub fn mailbox(&self) -> StreamMailbox {
+        self.mailbox.clone()
+    }
+
     pub fn serve(&mut self) -> Result<(), PlatformError> {
         self.stop_flag.store(false, Ordering::SeqCst);
         let mut events = Vec::new();
         while !self.stop_flag.load(Ordering::SeqCst) {
+            self.drain_mailbox()?;
             self.platform.poll(Some(self.poll_timeout), &mut events)?;
             for event in &events {
                 match event {
@@ -228,6 +291,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                     _ => {}
                 }
             }
+            self.drain_mailbox()?;
         }
         self.shutdown_all()
     }
@@ -248,6 +312,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
                     let connection_id = ConnectionId(self.next_connection_id);
                     self.next_connection_id += 1;
+                    self.connection_index.insert(connection_id, accepted.stream);
                     self.connections.insert(
                         accepted.stream,
                         ConnectionState {
@@ -267,6 +332,61 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                 }
                 None => return Ok(()),
             }
+        }
+    }
+
+    fn drain_mailbox(&mut self) -> Result<(), PlatformError> {
+        for command in self.mailbox.drain() {
+            self.apply_mailbox_command(command)?;
+        }
+        Ok(())
+    }
+
+    fn apply_mailbox_command(
+        &mut self,
+        command: StreamMailboxCommand,
+    ) -> Result<(), PlatformError> {
+        let connection_id = match &command {
+            StreamMailboxCommand::Write { connection_id, .. } => *connection_id,
+            StreamMailboxCommand::Close { connection_id } => *connection_id,
+        };
+
+        let Some(stream) = self.connection_index.get(&connection_id).copied() else {
+            return Ok(());
+        };
+        let Some(mut state) = self.connections.remove(&stream) else {
+            self.connection_index.remove(&connection_id);
+            return Ok(());
+        };
+
+        let mut close_now = false;
+        match command {
+            StreamMailboxCommand::Write { bytes, close, .. } => {
+                if !bytes.is_empty() {
+                    if state.pending_write.len().saturating_add(bytes.len())
+                        > self.max_pending_write_bytes
+                    {
+                        close_now = true;
+                    } else {
+                        state.pending_write.extend_from_slice(&bytes);
+                    }
+                }
+                if close {
+                    state.close_when_flushed = true;
+                }
+            }
+            StreamMailboxCommand::Close { .. } => {
+                state.close_when_flushed = true;
+            }
+        }
+
+        if close_now || self.should_close_after_io(&state) {
+            self.close_connection_with_state(stream, state)
+        } else {
+            self.platform
+                .set_stream_interest(stream, self.interest_for(&state))?;
+            self.connections.insert(stream, state);
+            Ok(())
         }
     }
 
@@ -409,6 +529,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         stream: StreamId,
         state: ConnectionState<S>,
     ) -> Result<(), PlatformError> {
+        self.connection_index.remove(&state.info.id);
         (self.on_close)(state.info, state.app_state);
         self.close_stream_raw(stream)
     }
@@ -426,6 +547,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         for stream in streams {
             self.close_connection(stream)?;
         }
+        self.connection_index.clear();
         match self.platform.close_listener(self.listener) {
             Ok(()) => Ok(()),
             Err(PlatformError::InvalidResource | PlatformError::ResourceClosed) => Ok(()),
@@ -781,6 +903,147 @@ mod tests {
         let observed = closed.lock().expect("close observer mutex poisoned");
         assert_eq!(observed.len(), 1, "close callback should run exactly once");
         assert_eq!(observed[0].1, b"bye".to_vec());
+    }
+
+    #[test]
+    fn mailbox_can_queue_delayed_writes_after_read_handler_returns() {
+        let seen = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            StreamReactorOptions::default(),
+            |_| (),
+            move |info, _, _| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id);
+                StreamHandlerResult::default()
+            },
+            |_, _| {},
+        )
+        .expect("bind");
+        let mailbox = reactor.mailbox();
+        let addr = reactor.local_addr();
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"request").expect("write request");
+        for _ in 0..8 {
+            reactor.accept_ready().expect("accept client");
+            if reactor.connections.len() == 1 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+
+        let stream = *reactor
+            .connections
+            .keys()
+            .next()
+            .expect("accepted connection stream");
+        let mut connection_id = None;
+        for _ in 0..20 {
+            reactor.read_ready(stream).expect("read request");
+            if let Some(id) = seen.lock().expect("seen mutex poisoned").first().copied() {
+                connection_id = Some(id);
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+        let connection_id = connection_id.expect("handler should observe the request");
+
+        mailbox.send(connection_id, b"delayed-response".to_vec());
+        reactor.drain_mailbox().expect("drain mailbox");
+        reactor.write_ready(stream).expect("flush delayed response");
+
+        let mut response = [0u8; 16];
+        client
+            .read_exact(&mut response)
+            .expect("read delayed response");
+        assert_eq!(&response, b"delayed-response");
+    }
+
+    #[test]
+    fn mailbox_can_write_and_close_after_flush() {
+        let seen = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let closed = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let closed_observer = Arc::clone(&closed);
+        let mut reactor = StreamReactor::bind_kqueue_with_state(
+            ("127.0.0.1", 0),
+            StreamReactorOptions::default(),
+            |_| (),
+            move |info, _, _| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id);
+                StreamHandlerResult::default()
+            },
+            move |info, _| {
+                closed_observer
+                    .lock()
+                    .expect("closed mutex poisoned")
+                    .push(info.id);
+            },
+        )
+        .expect("bind");
+        let mailbox = reactor.mailbox();
+        let addr = reactor.local_addr();
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client.write_all(b"request").expect("write request");
+        for _ in 0..8 {
+            reactor.accept_ready().expect("accept client");
+            if reactor.connections.len() == 1 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+
+        let stream = *reactor
+            .connections
+            .keys()
+            .next()
+            .expect("accepted connection stream");
+        let mut connection_id = None;
+        for _ in 0..20 {
+            reactor.read_ready(stream).expect("read request");
+            if let Some(id) = seen.lock().expect("seen mutex poisoned").first().copied() {
+                connection_id = Some(id);
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+        let connection_id = connection_id.expect("handler should observe the request");
+
+        mailbox.send_and_close(connection_id, b"last".to_vec());
+        reactor.drain_mailbox().expect("drain mailbox");
+        reactor.write_ready(stream).expect("flush and close");
+
+        let mut response = Vec::new();
+        client.read_to_end(&mut response).expect("read to eof");
+        assert_eq!(response, b"last");
+        assert_eq!(
+            closed.lock().expect("closed mutex poisoned").as_slice(),
+            &[connection_id]
+        );
+    }
+
+    #[test]
+    fn mailbox_ignores_unknown_or_stale_connection_ids() {
+        let mut reactor = StreamReactor::bind_kqueue(("127.0.0.1", 0), |_, bytes| {
+            StreamHandlerResult::write(bytes.to_vec())
+        })
+        .expect("bind");
+        let mailbox = reactor.mailbox();
+
+        mailbox.send(ConnectionId(999_999), b"nobody".to_vec());
+        mailbox.close(ConnectionId(999_999));
+        reactor
+            .drain_mailbox()
+            .expect("stale mailbox commands should be harmless");
+        assert!(reactor.connections.is_empty());
     }
 
     #[test]

@@ -24,9 +24,9 @@ generic JobRequest<TcpBytesPayload> JSON line
     |
 embedded language/application worker
     |
-generic JobResponse<TcpWriteFrame> JSON line
+generic JobResponse<TcpWriteFrame> JSON line, read by worker response task
     |
-Rust TCP server writes response bytes
+TCP return mailbox writes response bytes
 ```
 
 Rust is responsible for:
@@ -35,8 +35,9 @@ Rust is responsible for:
 - Using the native platform transport selected by the workspace.
 - Owning connection lifecycle, routing metadata, and socket writes.
 - Sending opaque TCP byte jobs to the configured worker command.
-- Writing opaque byte frames returned by the worker.
-- Validating response id before routing worker results back to sockets.
+- Returning to the TCP event loop immediately after sending a job.
+- Providing a per-connection return mailbox for worker responses.
+- Routing opaque byte frames from the worker response task into that mailbox.
 
 The embedded worker is responsible for:
 
@@ -78,26 +79,28 @@ The current integration test uses Python Mini Redis as the first consumer:
 - RESP bytes enter over a real TCP socket.
 - `embeddable-tcp-server` sends raw TCP bytes to the Python worker as
   `JobRequest<TcpBytesPayload>`.
+- The TCP callback returns immediately after putting that job in the worker's
+  inbox.
 - Python queues the job, buffers bytes by stream id, parses RESP frames,
   executes commands, assembles RESP responses, and returns write frames inside
   `JobResponse<TcpWriteFrame>`.
-- Rust writes the returned opaque bytes to the original socket.
+- A Rust response task reads those frames and posts them to the TCP mailbox for
+  the original stream.
 
 This proves the cross-language seam without making Python or Redis part of the
 transport package identity.
 
 ## Current Limitations
 
-- The TCP callback waits synchronously for the worker response.
 - The prototype uses one worker process.
 - Worker communication uses the JSON-line `generic-job-protocol` codec over
   standard streams, not a binary protocol.
-- The worker can queue jobs internally, but this prototype still waits for one
-  response frame before the TCP callback returns.
+- Mailbox delivery is bounded by the stream reactor's cooperative poll timeout
+  until the transport layer exposes a thread-safe wake handle.
 
 These limits are intentional for the first prototype. The next production seam
-should route byte jobs through the generic job runtime so language workers can
-run in a thread pool or process pool without blocking the reactor.
+should replace the single stdio worker process with the generic job runtime so
+language workers can run in a thread pool or process pool.
 
 ## Acceptance Criteria
 
@@ -112,5 +115,7 @@ run in a thread pool or process pool without blocking the reactor.
 - Rust tests launch the Python worker process as one consumer example.
 - Rust tests launch a real TCP listener, send RESP commands, and receive Redis
   replies generated entirely by the Python worker.
+- Rust tests prove the TCP callback can accept later reads while an earlier
+  worker response is still pending.
 - Documentation states that this is a prototype and not the final async worker
   architecture.

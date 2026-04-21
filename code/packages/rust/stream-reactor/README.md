@@ -17,6 +17,7 @@ The reactor owns:
 - per-connection application state
 - per-stream readable and writable progression
 - queued writes
+- a thread-safe outbound mailbox for delayed writes
 - close-after-flush handling
 - connection caps
 - queued-write budget caps
@@ -33,6 +34,7 @@ Phase one supports:
 - many concurrent streams
 - stateful or stateless handlers
 - neutral handler results in terms of bytes plus close intent
+- delayed write and close submissions through `StreamMailbox`
 - cooperative stop via a stop flag
 - macOS/BSD convenience binding through `transport_platform::bsd::KqueueTransportPlatform`
 

@@ -17,3 +17,6 @@ All notable changes to this package will be documented in this file.
 - Updated the Mini Redis integration so Rust sends only opaque TCP byte jobs
   and writes opaque byte frames. The Python worker owns RESP framing,
   per-stream selected database state, and RESP response assembly.
+- Added a mailbox-style asynchronous worker path where TCP callbacks send
+  request jobs and return immediately while a response task posts worker output
+  back to the TCP runtime.
