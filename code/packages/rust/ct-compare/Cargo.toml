@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_ct_compare"
+version = "0.1.0"
+edition = "2021"
+description = "Constant-time byte-slice equality — no early exit on first differing byte, no data-dependent branches"
+
+[dependencies]
