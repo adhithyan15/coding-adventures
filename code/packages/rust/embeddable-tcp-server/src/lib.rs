@@ -11,11 +11,9 @@
 //! is used only in tests as one concrete consumer of the same raw-byte seam
 //! other language bridges can implement.
 //!
-//! The current implementation is still synchronous: the TCP read callback waits
-//! for a worker response before returning bytes to write. That is enough to
-//! prove the portable embedding boundary. The next layer should route requests
-//! through the generic job runtime so worker completion can happen
-//! asynchronously without blocking the reactor.
+//! Mailbox mode routes requests through `generic-job-runtime` so TCP callbacks
+//! can submit jobs and return immediately. Worker responses are delivered later
+//! through the TCP mailbox owned by the Rust runtime.
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -26,10 +24,14 @@ use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::time::Duration;
 
 use generic_job_protocol::{
     decode_response_json_line, encode_request_json_line, JobCodecError, JobMetadata, JobRequest,
     JobResponse, JobResult,
+};
+use generic_job_runtime::{
+    ExecutorLimits, StdioProcessPool, StdioProcessPoolOptions, StdioWorkerCommand, SubmitError,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -73,6 +75,7 @@ pub struct EmbeddableTcpServerOptions {
     pub host: String,
     pub port: u16,
     pub max_connections: usize,
+    pub worker_processes: usize,
     pub worker: WorkerCommand,
 }
 
@@ -91,6 +94,7 @@ impl Default for EmbeddableTcpServerOptions {
             host: "127.0.0.1".to_string(),
             port: 0,
             max_connections: TcpRuntimeOptions::default().max_connections,
+            worker_processes: 1,
             worker: WorkerCommand::new("worker", Vec::<String>::new()),
         }
     }
@@ -107,27 +111,28 @@ pub struct StdioJobWorker<Request, Response> {
     _response: PhantomData<Response>,
 }
 
-pub struct StdioJobSubmitter<Request> {
-    stdin: Arc<Mutex<ChildStdin>>,
+pub struct StdioJobSubmitter<Request, Response> {
+    pool: StdioProcessPool<Request, Response>,
     routes: Arc<Mutex<BTreeMap<String, ConnectionId>>>,
     next_job_id: Arc<AtomicU64>,
-    _request: PhantomData<Request>,
+    _types: PhantomData<fn() -> (Request, Response)>,
 }
 
-impl<Request> Clone for StdioJobSubmitter<Request> {
+impl<Request, Response> Clone for StdioJobSubmitter<Request, Response> {
     fn clone(&self) -> Self {
         Self {
-            stdin: Arc::clone(&self.stdin),
+            pool: self.pool.clone(),
             routes: Arc::clone(&self.routes),
             next_job_id: Arc::clone(&self.next_job_id),
-            _request: PhantomData,
+            _types: PhantomData,
         }
     }
 }
 
-impl<Request> StdioJobSubmitter<Request>
+impl<Request, Response> StdioJobSubmitter<Request, Response>
 where
-    Request: Serialize,
+    Request: Serialize + Send + 'static,
+    Response: DeserializeOwned + Send + 'static,
 {
     pub fn submit(
         &self,
@@ -144,25 +149,15 @@ where
         payload: Request,
     ) -> Result<String, WorkerError> {
         let id = format!("job-{}", self.next_job_id.fetch_add(1, Ordering::SeqCst));
-        let request = JobRequest::new(id.clone(), payload).with_metadata(metadata);
-        let encoded = encode_request_json_line(&request)?;
+        let request = JobRequest::new(id.clone(), payload)
+            .with_metadata(metadata.with_affinity_key(connection_id.0.to_string()));
 
         self.routes
             .lock()
             .expect("stdio worker route table mutex poisoned")
             .insert(id.clone(), connection_id);
 
-        let write_result = {
-            let mut stdin = self
-                .stdin
-                .lock()
-                .expect("stdio worker stdin mutex poisoned");
-            stdin
-                .write_all(encoded.as_bytes())
-                .and_then(|_| stdin.flush())
-        };
-
-        if let Err(error) = write_result {
+        if let Err(error) = self.pool.submit(request) {
             self.routes
                 .lock()
                 .expect("stdio worker route table mutex poisoned")
@@ -218,17 +213,14 @@ impl TcpMailboxFrame {
     }
 }
 
-struct WorkerProcessGuard {
-    child: Arc<Mutex<Child>>,
+struct WorkerPoolGuard {
+    stop: Arc<AtomicBool>,
     response_thread: Option<thread::JoinHandle<()>>,
 }
 
-impl Drop for WorkerProcessGuard {
+impl Drop for WorkerPoolGuard {
     fn drop(&mut self) {
-        if let Ok(mut child) = self.child.lock() {
-            let _ = child.kill();
-            let _ = child.wait();
-        }
+        self.stop.store(true, Ordering::SeqCst);
         if let Some(thread) = self.response_thread.take() {
             let _ = thread.join();
         }
@@ -363,11 +355,17 @@ impl From<JobCodecError> for WorkerError {
     }
 }
 
+impl From<SubmitError> for WorkerError {
+    fn from(value: SubmitError) -> Self {
+        Self::Protocol(value.to_string())
+    }
+}
+
 /// TCP server that embeds a generic job worker behind the Rust TCP runtime.
 #[derive(Clone)]
 pub struct EmbeddableTcpServer<State> {
     runtime: Arc<Mutex<Option<PlatformTcpRuntime<State>>>>,
-    _worker_process: Arc<Mutex<Option<WorkerProcessGuard>>>,
+    _worker_pool: Arc<Mutex<Option<WorkerPoolGuard>>>,
     local_addr: SocketAddr,
     stop_handle: StopHandle,
     serving: Arc<AtomicBool>,
@@ -408,7 +406,7 @@ where
 
         Ok(Self {
             runtime: Arc::new(Mutex::new(Some(runtime))),
-            _worker_process: Arc::new(Mutex::new(None)),
+            _worker_pool: Arc::new(Mutex::new(None)),
             local_addr,
             stop_handle,
             serving: Arc::new(AtomicBool::new(false)),
@@ -423,14 +421,14 @@ where
         map_response: MapResponse,
     ) -> io::Result<Self>
     where
-        Request: Serialize + Send + Sync + 'static,
+        Request: Serialize + Send + 'static,
         Response: DeserializeOwned + Send + 'static,
         Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
         Handler: Fn(
                 TcpConnectionInfo,
                 &mut State,
                 &[u8],
-                &StdioJobSubmitter<Request>,
+                &StdioJobSubmitter<Request, Response>,
             ) -> TcpHandlerResult
             + Send
             + Sync
@@ -438,26 +436,38 @@ where
         Close: Fn(TcpConnectionInfo, State) + Send + Sync + 'static,
         MapResponse: Fn(Response) -> Result<TcpMailboxFrame, WorkerError> + Send + Sync + 'static,
     {
-        let (child, stdin, stdout) = spawn_worker_process(&options.worker)?;
+        let pool = StdioProcessPool::<Request, Response>::spawn(
+            StdioWorkerCommand::new(options.worker.program.clone(), options.worker.args.clone()),
+            StdioProcessPoolOptions {
+                worker_count: options.worker_processes.max(1),
+                limits: ExecutorLimits::default(),
+            },
+        )?;
         let routes = Arc::new(Mutex::new(BTreeMap::new()));
         let submitter = StdioJobSubmitter {
-            stdin,
+            pool: pool.clone(),
             routes: Arc::clone(&routes),
             next_job_id: Arc::new(AtomicU64::new(1)),
-            _request: PhantomData,
+            _types: PhantomData,
         };
         let runtime = build_runtime_mailbox(&options, submitter, init, handler, on_close)
             .map_err(into_io_error)?;
         let local_addr = runtime.local_addr();
         let stop_handle = runtime.stop_handle();
         let mailbox = runtime.mailbox();
-        let response_thread =
-            spawn_response_router(stdout, routes, mailbox, Arc::new(map_response));
+        let response_stop = Arc::new(AtomicBool::new(false));
+        let response_thread = spawn_response_router(
+            pool.clone(),
+            routes,
+            mailbox,
+            Arc::new(map_response),
+            Arc::clone(&response_stop),
+        );
 
         Ok(Self {
             runtime: Arc::new(Mutex::new(Some(runtime))),
-            _worker_process: Arc::new(Mutex::new(Some(WorkerProcessGuard {
-                child,
+            _worker_pool: Arc::new(Mutex::new(Some(WorkerPoolGuard {
+                stop: response_stop,
                 response_thread: Some(response_thread),
             }))),
             local_addr,
@@ -498,57 +508,27 @@ where
     }
 }
 
-fn spawn_worker_process(
-    command: &WorkerCommand,
-) -> io::Result<(
-    Arc<Mutex<Child>>,
-    Arc<Mutex<ChildStdin>>,
-    BufReader<ChildStdout>,
-)> {
-    let mut child = Command::new(&command.program)
-        .args(&command.args)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::inherit())
-        .spawn()?;
-
-    let stdin = child
-        .stdin
-        .take()
-        .ok_or_else(|| io::Error::new(io::ErrorKind::BrokenPipe, "worker did not expose stdin"))?;
-    let stdout = child
-        .stdout
-        .take()
-        .ok_or_else(|| io::Error::new(io::ErrorKind::BrokenPipe, "worker did not expose stdout"))?;
-
-    Ok((
-        Arc::new(Mutex::new(child)),
-        Arc::new(Mutex::new(stdin)),
-        BufReader::new(stdout),
-    ))
-}
-
-fn spawn_response_router<Response, MapResponse>(
-    mut stdout: BufReader<ChildStdout>,
+fn spawn_response_router<Request, Response, MapResponse>(
+    pool: StdioProcessPool<Request, Response>,
     routes: Arc<Mutex<BTreeMap<String, ConnectionId>>>,
     mailbox: TcpMailbox,
     map_response: Arc<MapResponse>,
+    stop: Arc<AtomicBool>,
 ) -> thread::JoinHandle<()>
 where
+    Request: Serialize + Send + 'static,
     Response: DeserializeOwned + Send + 'static,
     MapResponse: Fn(Response) -> Result<TcpMailboxFrame, WorkerError> + Send + Sync + 'static,
 {
     thread::spawn(move || loop {
-        let mut line = String::new();
-        match stdout.read_line(&mut line) {
-            Ok(0) => break,
-            Ok(_) => {}
-            Err(_) => break,
+        if stop.load(Ordering::SeqCst) {
+            break;
         }
-
-        let response: JobResponse<Response> = match decode_response_json_line(line.trim_end()) {
-            Ok(response) => response,
-            Err(_) => continue,
+        let Some(response) = pool
+            .recv_response_timeout(Duration::from_millis(10))
+            .unwrap_or(None)
+        else {
+            continue;
         };
         let Some(connection_id) = routes
             .lock()
@@ -647,18 +627,24 @@ where
     target_os = "netbsd",
     target_os = "dragonfly"
 ))]
-fn build_runtime_mailbox<State, Request, Init, Handler, Close>(
+fn build_runtime_mailbox<State, Request, Response, Init, Handler, Close>(
     options: &EmbeddableTcpServerOptions,
-    submitter: StdioJobSubmitter<Request>,
+    submitter: StdioJobSubmitter<Request, Response>,
     init: Init,
     handler: Handler,
     on_close: Close,
 ) -> Result<PlatformTcpRuntime<State>, PlatformError>
 where
     State: Send + 'static,
-    Request: Serialize + Send + Sync + 'static,
+    Request: Serialize + Send + 'static,
+    Response: DeserializeOwned + Send + 'static,
     Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
-    Handler: Fn(TcpConnectionInfo, &mut State, &[u8], &StdioJobSubmitter<Request>) -> TcpHandlerResult
+    Handler: Fn(
+            TcpConnectionInfo,
+            &mut State,
+            &[u8],
+            &StdioJobSubmitter<Request, Response>,
+        ) -> TcpHandlerResult
         + Send
         + Sync
         + 'static,
@@ -712,18 +698,24 @@ where
 }
 
 #[cfg(target_os = "linux")]
-fn build_runtime_mailbox<State, Request, Init, Handler, Close>(
+fn build_runtime_mailbox<State, Request, Response, Init, Handler, Close>(
     options: &EmbeddableTcpServerOptions,
-    submitter: StdioJobSubmitter<Request>,
+    submitter: StdioJobSubmitter<Request, Response>,
     init: Init,
     handler: Handler,
     on_close: Close,
 ) -> Result<PlatformTcpRuntime<State>, PlatformError>
 where
     State: Send + 'static,
-    Request: Serialize + Send + Sync + 'static,
+    Request: Serialize + Send + 'static,
+    Response: DeserializeOwned + Send + 'static,
     Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
-    Handler: Fn(TcpConnectionInfo, &mut State, &[u8], &StdioJobSubmitter<Request>) -> TcpHandlerResult
+    Handler: Fn(
+            TcpConnectionInfo,
+            &mut State,
+            &[u8],
+            &StdioJobSubmitter<Request, Response>,
+        ) -> TcpHandlerResult
         + Send
         + Sync
         + 'static,
@@ -777,18 +769,24 @@ where
 }
 
 #[cfg(target_os = "windows")]
-fn build_runtime_mailbox<State, Request, Init, Handler, Close>(
+fn build_runtime_mailbox<State, Request, Response, Init, Handler, Close>(
     options: &EmbeddableTcpServerOptions,
-    submitter: StdioJobSubmitter<Request>,
+    submitter: StdioJobSubmitter<Request, Response>,
     init: Init,
     handler: Handler,
     on_close: Close,
 ) -> Result<PlatformTcpRuntime<State>, PlatformError>
 where
     State: Send + 'static,
-    Request: Serialize + Send + Sync + 'static,
+    Request: Serialize + Send + 'static,
+    Response: DeserializeOwned + Send + 'static,
     Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
-    Handler: Fn(TcpConnectionInfo, &mut State, &[u8], &StdioJobSubmitter<Request>) -> TcpHandlerResult
+    Handler: Fn(
+            TcpConnectionInfo,
+            &mut State,
+            &[u8],
+            &StdioJobSubmitter<Request, Response>,
+        ) -> TcpHandlerResult
         + Send
         + Sync
         + 'static,
@@ -976,7 +974,7 @@ mod tests {
         info: TcpConnectionInfo,
         _state: &mut (),
         data: &[u8],
-        submitter: &StdioJobSubmitter<TcpInputJob>,
+        submitter: &StdioJobSubmitter<TcpInputJob, TcpOutputFrame>,
     ) -> TcpHandlerResult {
         if data.len() > MAX_TCP_CHUNK_BYTES {
             return TcpHandlerResult::close();
@@ -1105,6 +1103,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 host: "127.0.0.1".to_string(),
                 port: 0,
                 max_connections: 64,
+                worker_processes: 1,
                 worker,
             },
             |_| (),
@@ -1353,6 +1352,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 host: "127.0.0.1".to_string(),
                 port: 0,
                 max_connections: 64,
+                worker_processes: 1,
                 worker,
             },
             |_| (),
@@ -1450,6 +1450,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         assert_eq!(options.host, "127.0.0.1");
         assert_eq!(options.port, 0);
         assert_eq!(options.worker, worker);
+        assert_eq!(options.worker_processes, 1);
 
         let mut zero_connections = options.clone();
         zero_connections.max_connections = 0;
