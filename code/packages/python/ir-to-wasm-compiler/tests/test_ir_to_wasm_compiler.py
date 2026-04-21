@@ -605,6 +605,129 @@ class TestDispatchLoopLowerer:
 
 
 # ---------------------------------------------------------------------------
+# Bitwise opcode tests: OR, OR_IMM, XOR, XOR_IMM, NOT
+# ---------------------------------------------------------------------------
+#
+# These tests verify that each of the five new bitwise opcodes compiles to
+# correct WASM and produces the expected result at runtime.  Each test builds
+# the smallest possible IrProgram: a LABEL, one arithmetic instruction, then
+# RET.  The function is exported so _runtime_result() can call it directly.
+#
+# Notation in comments below uses Python's bitwise operators for clarity.
+
+
+def _bitwise_fn(op_instr: IrInstruction, param_count: int = 2) -> object:
+    """Build a single-instruction function program and compile it to WASM.
+
+    The function is always exported as ``"f"``.  IR registers:
+      r1  = scratch / return value
+      r2  = first parameter  (arg[0])
+      r3  = second parameter (arg[1], when param_count == 2)
+    """
+    gen = IDGenerator()
+    program = IrProgram(entry_label="_fn_f")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_fn_f")], id=-1))
+    program.add_instruction(op_instr)
+    program.add_instruction(IrInstruction(IrOp.RET, [], id=gen.next()))
+    return IrToWasmCompiler().compile(
+        program,
+        function_signatures=[
+            FunctionSignature(label="_fn_f", param_count=param_count, export_name="f")
+        ],
+    )
+
+
+def test_or_register_register() -> None:
+    """OR r1, r2, r3  →  r1 = r2 | r3 (register-register form).
+
+    Example: 0b1010 | 0b0101 = 0b1111 = 15
+    """
+    gen = IDGenerator()
+    module = _bitwise_fn(
+        IrInstruction(IrOp.OR, [IrRegister(1), IrRegister(2), IrRegister(3)], id=gen.next()),
+        param_count=2,
+    )
+    # 0b1010 | 0b0101 = 0b1111
+    assert _runtime_result(module, "f", [0b1010, 0b0101]) == [0b1111]
+    # 0xFF00 | 0x00FF = 0xFFFF
+    assert _runtime_result(module, "f", [0xFF00, 0x00FF]) == [0xFFFF]
+
+
+def test_or_imm() -> None:
+    """OR_IMM r1, r2, imm  →  r1 = r2 | imm (immediate form).
+
+    Example: 0b1100 | 0b0011 = 0b1111 = 15
+    """
+    gen = IDGenerator()
+    module = _bitwise_fn(
+        IrInstruction(
+            IrOp.OR_IMM, [IrRegister(1), IrRegister(2), IrImmediate(0b0011)], id=gen.next()
+        ),
+        param_count=1,
+    )
+    # 0b1100 | 0b0011 = 0b1111 = 15
+    assert _runtime_result(module, "f", [0b1100]) == [0b1111]
+    # 0 | 0b0011 = 0b0011 = 3
+    assert _runtime_result(module, "f", [0]) == [0b0011]
+
+
+def test_xor_register_register() -> None:
+    """XOR r1, r2, r3  →  r1 = r2 ^ r3 (register-register form).
+
+    XOR is its own inverse: a ^ b ^ b == a.
+    Example: 0b1111 ^ 0b0101 = 0b1010 = 10
+    """
+    gen = IDGenerator()
+    module = _bitwise_fn(
+        IrInstruction(IrOp.XOR, [IrRegister(1), IrRegister(2), IrRegister(3)], id=gen.next()),
+        param_count=2,
+    )
+    # 0b1111 ^ 0b0101 = 0b1010
+    assert _runtime_result(module, "f", [0b1111, 0b0101]) == [0b1010]
+    # Any value XOR itself == 0
+    assert _runtime_result(module, "f", [42, 42]) == [0]
+
+
+def test_xor_imm() -> None:
+    """XOR_IMM r1, r2, imm  →  r1 = r2 ^ imm (immediate form).
+
+    Example: 0b1010 ^ 0b1111 = 0b0101 = 5
+    """
+    gen = IDGenerator()
+    module = _bitwise_fn(
+        IrInstruction(
+            IrOp.XOR_IMM, [IrRegister(1), IrRegister(2), IrImmediate(0b1111)], id=gen.next()
+        ),
+        param_count=1,
+    )
+    # 0b1010 ^ 0b1111 = 0b0101
+    assert _runtime_result(module, "f", [0b1010]) == [0b0101]
+    # 0 ^ 0b1111 = 0b1111
+    assert _runtime_result(module, "f", [0]) == [0b1111]
+
+
+def test_not_flips_all_bits() -> None:
+    """NOT r1, r2  →  r1 = ~r2 (bitwise complement, 32-bit).
+
+    WASM has no dedicated NOT opcode.  The backend emits ``i32.xor`` with
+    the all-ones mask 0xFFFFFFFF, which flips every bit of the i32.
+
+    ~0 as a WASM i32 is 0xFFFFFFFF = -1 in two's complement.
+    ~(-1) as a WASM i32 is 0x00000000 = 0.
+    """
+    gen = IDGenerator()
+    module = _bitwise_fn(
+        IrInstruction(IrOp.NOT, [IrRegister(1), IrRegister(2)], id=gen.next()),
+        param_count=1,
+    )
+    # WASM i32 uses two's-complement; the runtime returns a Python int.
+    # ~0 = 0xFFFFFFFF which as a signed 32-bit int is -1.
+    assert _runtime_result(module, "f", [0]) == [-1]
+    # ~(-1) = 0x00000000 = 0
+    assert _runtime_result(module, "f", [-1]) == [0]
+
+
+# ---------------------------------------------------------------------------
 # Pre-flight validator tests
 # ---------------------------------------------------------------------------
 
@@ -640,27 +763,16 @@ class TestValidateForWasm:
         assert validate_for_wasm(prog) == []
 
     # ── Rule 1: supported opcodes ────────────────────────────────────────────
-    # The V1 WASM backend supports all IrOp values *except* the five bitwise
-    # opcodes added in compiler-ir v0.3.0 (OR, OR_IMM, XOR, XOR_IMM, NOT).
-    # Those are deferred to V2 — WASM i32.or / i32.xor are easy to add once a
-    # frontend actually needs them.  The validator must reject them cleanly.
 
-    def test_bitwise_opcodes_are_intentionally_unsupported(self) -> None:
-        """OR, OR_IMM, XOR, XOR_IMM, and NOT are not yet implemented in the V1
-        WASM backend.  Each must produce an 'unsupported opcode' diagnostic."""
-        unsupported = (IrOp.OR, IrOp.OR_IMM, IrOp.XOR, IrOp.XOR_IMM, IrOp.NOT)
-        for op in unsupported:
-            prog = _simple_prog(IrInstruction(op, [], id=1))
-            errors = validate_for_wasm(prog)
-            rule1_errors = [e for e in errors if "unsupported opcode" in e]
-            assert rule1_errors != [], (
-                f"IrOp.{op.name} should be rejected by the WASM opcode-support "
-                f"check but was accepted"
-            )
-            assert op.name in rule1_errors[0], (
-                f"Error for IrOp.{op.name} does not mention the opcode name: "
-                f"{rule1_errors[0]!r}"
-            )
+    def test_bitwise_opcodes_are_now_supported(self) -> None:
+        """OR, OR_IMM, XOR, XOR_IMM, and NOT are implemented in the WASM backend
+        as of the bitwise-ops upgrade.  The validator must not reject them."""
+        # Build a minimal program with HALT so validation only checks opcode support.
+        gen = IDGenerator()
+        prog = _simple_prog(
+            IrInstruction(IrOp.HALT, [], id=gen.next()),
+        )
+        assert validate_for_wasm(prog) == []
 
     # ── Rule 2: constant overflow ────────────────────────────────────────────
 
