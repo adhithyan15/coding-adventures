@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import pytest
 from tetrad_compiler import compile_program
+from tetrad_type_checker.types import FunctionTypeStatus
 from tetrad_compiler.bytecode import CodeObject, Instruction, Op
 from tetrad_vm import TetradVM
 
@@ -1040,3 +1041,63 @@ fn compare(a: u8, b: u8) -> u8 {
         assert jit.execute("add", [255, 1])   == 0     # wrap to 0
         assert jit.execute("add", [127, 128]) == 255
         assert jit.execute("add", [128, 128]) == 0     # wrap
+
+    def test_partially_typed_promotes_after_10_calls(self) -> None:
+        source = "fn add(a: u8, b: u8) -> u8 { return a + b; }"
+        code = compile_program(source)
+        fn = next(f for f in code.functions if f.name == "add")
+        fn.type_status = FunctionTypeStatus.PARTIALLY_TYPED
+
+        jit = TetradJIT(TetradVM())
+        jit._main_code = code
+
+        # First 9 calls: still interpreted.
+        for i in range(9):
+            jit.execute("add", [1, 2])
+            assert not jit.is_compiled("add"), f"should not compile after call {i+1}"
+
+        # Call 10: crosses threshold → promoted immediately after return.
+        result = jit.execute("add", [10, 20])
+        assert result == 30
+        assert jit.is_compiled("add"), "should be compiled after 10th call"
+
+        # Call 11+: runs on 4004.
+        assert jit.execute("add", [100, 55]) == 155
+
+    def test_untyped_promotes_after_100_calls(self) -> None:
+        source = "fn add(a: u8, b: u8) -> u8 { return a + b; }"
+        code = compile_program(source)
+        fn = next(f for f in code.functions if f.name == "add")
+        fn.type_status = FunctionTypeStatus.UNTYPED
+
+        jit = TetradJIT(TetradVM())
+        jit._main_code = code
+
+        for i in range(99):
+            jit.execute("add", [1, 1])
+            assert not jit.is_compiled("add"), f"promoted too early at call {i+1}"
+
+        # 100th call → promoted.
+        jit.execute("add", [1, 1])
+        assert jit.is_compiled("add"), "should compile after 100 calls"
+
+    def test_execute_with_jit_promotes_hot_after_main(self) -> None:
+        # main() calls sub() 12 times; sub is PARTIALLY_TYPED (threshold=10).
+        # After execute_with_jit, sub should be compiled.
+        source = """
+fn sub(a: u8, b: u8) -> u8 { return a - b; }
+fn main() -> u8 {
+  sub(20, 1); sub(20, 2); sub(20, 3); sub(20, 4); sub(20, 5);
+  sub(20, 6); sub(20, 7); sub(20, 8); sub(20, 9); sub(20, 10);
+  sub(20, 11); return sub(20, 12);
+}
+"""
+        code = compile_program(source)
+        fn_sub = next(f for f in code.functions if f.name == "sub")
+        fn_sub.type_status = FunctionTypeStatus.PARTIALLY_TYPED
+
+        jit = TetradJIT(TetradVM())
+        result = jit.execute_with_jit(code)
+
+        assert result == 8           # 20 - 12
+        assert jit.is_compiled("sub"), "sub should be promoted after 12 calls in main"

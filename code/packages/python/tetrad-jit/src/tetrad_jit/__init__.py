@@ -156,11 +156,32 @@ class TetradJIT:
         """Return ``True`` if *fn_name* has a cached 4004 binary."""
         return fn_name in self._cache
 
+    def _promote_hot_functions(self) -> None:
+        """Compile any uncompiled function whose interpreter call count has
+        reached the tier threshold (PARTIALLY_TYPED=10, UNTYPED=100).
+
+        Called after each interpreter run so that the *next* call to a newly
+        hot function routes to the 4004 binary instead of the interpreter.
+        """
+        if self._main_code is None:
+            return
+        counts = self._vm.metrics().function_call_counts
+        for fn in self._main_code.functions:
+            if self.is_compiled(fn.name):
+                continue
+            threshold = _THRESHOLDS.get(fn.type_status)
+            if threshold is None or threshold == 0:
+                continue
+            if counts.get(fn.name, 0) >= threshold:
+                self._compile_fn(fn)
+
     def execute(self, fn_name: str, args: list[int]) -> int:
         """Execute *fn_name* with the given u8 arguments.
 
         If *fn_name* is compiled, the binary runs on ``Intel4004Simulator``.
-        Otherwise, the function is looked up and executed via the TetradVM.
+        Otherwise the function is interpreted, call counts are updated, and any
+        function that crosses its tier threshold is compiled immediately so that
+        the *next* call uses the 4004 binary.
 
         Parameters
         ----------
@@ -203,7 +224,10 @@ class TetradJIT:
             functions=self._main_code.functions,
             register_count=max(len(fn.params), 1),
         )
-        return self._vm.execute(synthetic)
+        result = self._vm.execute(synthetic)
+        # After interpreting, promote any function that crossed its threshold.
+        self._promote_hot_functions()
+        return result
 
     def execute_with_jit(self, code: CodeObject) -> int:
         """Run *code* under the interpreter, auto-compiling hot functions.
@@ -238,7 +262,10 @@ class TetradJIT:
             functions=code.functions,
             register_count=main_fn.register_count,
         )
-        return self._vm.execute(synthetic)
+        result = self._vm.execute(synthetic)
+        # Phase 3: promote any function that turned hot during main's run.
+        self._promote_hot_functions()
+        return result
 
     def cache_stats(self) -> dict[str, dict]:
         """Return per-function cache statistics."""
