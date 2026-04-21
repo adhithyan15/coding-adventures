@@ -7,12 +7,13 @@ only part that actually touches data. Every other stage (planner, optimizer,
 codegen, VM) is data-agnostic; they all call into a `Backend` instance when
 they need to read or write rows.
 
-This package ships four things:
+This package ships five things:
 
 1. The `Backend` abstract base class — the interface every data source implements.
 2. The supporting types — `Row`, `Cursor`, `RowIterator`, `ColumnDef`, `SqlValue`.
-3. The error hierarchy — `BackendError` and its six subclasses.
+3. The error hierarchy — `BackendError` and its eight subclasses.
 4. `InMemoryBackend` — the reference implementation, used for `:memory:` connections in `mini-sqlite` and as the yardstick for every other backend.
+5. `IndexDef` — descriptor for named indexes, used by `create_index` / `list_indexes`.
 
 ## Where it fits
 
@@ -99,6 +100,42 @@ run_transaction(my_factory)   # if your backend implements BEGIN/COMMIT/ROLLBACK
 A backend that passes the relevant tiers is a drop-in replacement for
 `InMemoryBackend`.
 
+## Indexes
+
+`Backend` exposes four index methods. `InMemoryBackend` implements them via a
+linear scan (no physical B-tree); `SqliteFileBackend` maintains a real on-disk
+index B-tree in `IndexTree`.
+
+```python
+from sql_backend import InMemoryBackend, ColumnDef, IndexDef
+
+backend = InMemoryBackend()
+backend.create_table(
+    "users",
+    [
+        ColumnDef(name="id",  type_name="INTEGER", primary_key=True),
+        ColumnDef(name="age", type_name="INTEGER"),
+    ],
+)
+backend.insert("users", {"id": 1, "age": 30})
+backend.insert("users", {"id": 2, "age": 25})
+backend.insert("users", {"id": 3, "age": 30})
+
+# Register an index.
+backend.create_index(IndexDef(name="idx_age", table="users", columns=["age"]))
+
+# Equality lookup — yields rowids in ascending key order.
+rowids = list(backend.scan_index("idx_age", [30], [30]))  # age = 30
+
+# Range scan with exclusive bounds.
+rowids = list(backend.scan_index("idx_age", [25], None, lo_inclusive=False))
+
+# List and drop.
+print(backend.list_indexes("users"))   # [IndexDef(name='idx_age', ...)]
+backend.drop_index("idx_age")
+backend.drop_index("idx_age", if_exists=True)   # no error
+```
+
 ## Error hierarchy
 
 ```
@@ -108,7 +145,9 @@ BackendError
 ├── ColumnNotFound
 ├── ConstraintViolation       (NOT NULL / UNIQUE / PRIMARY KEY)
 ├── Unsupported                (e.g. "transactions")
-└── Internal                   (escape hatch — use sparingly)
+├── Internal                   (escape hatch — use sparingly)
+├── IndexAlreadyExists         (create_index on a duplicate name)
+└── IndexNotFound              (drop_index / scan_index on unknown name)
 ```
 
 ## Development

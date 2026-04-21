@@ -80,15 +80,19 @@ from __future__ import annotations
 import os
 import re
 import struct
-from typing import TYPE_CHECKING
+from collections.abc import Iterator
 
 from sql_backend import (
     Backend,
     ColumnDef,
     ColumnNotFound,
     ConstraintViolation,
+    IndexAlreadyExists,
+    IndexDef,
+    IndexNotFound,
     Row,
     RowIterator,
+    SqlValue,
     TableAlreadyExists,
     TableNotFound,
     TransactionHandle,
@@ -99,12 +103,9 @@ from sql_backend.schema import NO_DEFAULT
 from storage_sqlite import record as _record
 from storage_sqlite.btree import BTree, DuplicateRowidError
 from storage_sqlite.freelist import Freelist
+from storage_sqlite.index_tree import IndexTree
 from storage_sqlite.pager import Pager
 from storage_sqlite.schema import Schema, SchemaError, initialize_new_database
-
-if TYPE_CHECKING:
-    pass
-
 
 # ---------------------------------------------------------------------------
 # SQL column-definition helpers
@@ -335,6 +336,86 @@ def _sql_to_columns(sql: str) -> list[ColumnDef]:
         if col is not None:
             columns.append(col)
     return columns
+
+
+# ---------------------------------------------------------------------------
+# Index SQL helpers
+# ---------------------------------------------------------------------------
+
+
+def _quote_identifier(name: str) -> str:
+    """Double-quote a SQL identifier, escaping any embedded double-quotes.
+
+    SQLite (and the SQL standard) allows arbitrary characters in identifiers
+    when they are wrapped in double-quotes, with embedded double-quotes
+    represented as two consecutive double-quotes.  This prevents DDL
+    injection when user-supplied names (table names, column names, index
+    names) are interpolated into SQL strings.
+
+    Examples::
+
+        _quote_identifier("users")        # → '"users"'
+        _quote_identifier('a"b')          # → '"a""b"'
+        _quote_identifier("idx; DROP TABLE users; --")
+        # → '"idx; DROP TABLE users; --"'  (safe — treated as a literal name)
+    """
+    return '"' + name.replace('"', '""') + '"'
+
+
+def _parse_index_columns(sql: str) -> list[str]:
+    """Extract column names from a ``CREATE INDEX`` statement.
+
+    Locates the parenthesised column list and splits on commas.  Strips
+    surrounding double-quote characters from each name so that names
+    written by :func:`_columns_to_index_sql` (which quotes all identifiers)
+    are returned as bare strings.
+
+    Examples::
+
+        _parse_index_columns(
+            'CREATE INDEX "idx" ON "orders" ("user_id")'
+        )
+        # → ["user_id"]
+
+        _parse_index_columns(
+            'CREATE INDEX "idx" ON "orders" ("last_name", "first_name")'
+        )
+        # → ["last_name", "first_name"]
+
+    Returns an empty list if the SQL contains no parentheses (defensive
+    fallback for schema rows written by external tools with non-standard
+    syntax).
+    """
+    try:
+        start = sql.index("(") + 1
+        end = sql.rindex(")")
+    except ValueError:
+        return []
+    cols = []
+    for tok in sql[start:end].split(","):
+        tok = tok.strip()
+        if not tok:
+            continue
+        # Strip surrounding double-quotes (SQLite identifier quoting).
+        if tok.startswith('"') and tok.endswith('"') and len(tok) >= 2:
+            tok = tok[1:-1].replace('""', '"')
+        cols.append(tok)
+    return cols
+
+
+def _columns_to_index_sql(name: str, table: str, columns: list[str]) -> str:
+    """Serialise an index definition as a quoted ``CREATE INDEX`` statement.
+
+    All identifiers are double-quoted via :func:`_quote_identifier` to
+    prevent DDL injection when user-supplied names contain SQL metacharacters.
+    The output is stored verbatim in ``sqlite_schema`` and is parseable by
+    both :func:`_parse_index_columns` and by the real ``sqlite3`` CLI::
+
+        _columns_to_index_sql("idx_orders_user_id", "orders", ["user_id"])
+        # → 'CREATE INDEX "idx_orders_user_id" ON "orders" ("user_id")'
+    """
+    col_list = ", ".join(_quote_identifier(c) for c in columns)
+    return f"CREATE INDEX {_quote_identifier(name)} ON {_quote_identifier(table)} ({col_list})"
 
 
 # ---------------------------------------------------------------------------
@@ -954,6 +1035,165 @@ class SqliteFileBackend(Backend):
         self._active_handle = None
         # Reattach the schema object so it reads fresh pages after rollback.
         self._schema = Schema(self._pager, freelist=self._freelist)
+
+    # ── Backend interface: Indexes ────────────────────────────────────────────
+
+    def create_index(self, index: IndexDef) -> None:
+        """Create a B-tree index and backfill it from the existing table rows.
+
+        Steps:
+
+        1. Reject with :class:`~sql_backend.IndexAlreadyExists` if an index
+           with ``index.name`` already exists.
+        2. Reject with :class:`~sql_backend.TableNotFound` if ``index.table``
+           does not exist.
+        3. Reject with :class:`~sql_backend.ColumnNotFound` if any column in
+           ``index.columns`` is not in ``index.table``.
+        4. Generate the ``CREATE INDEX`` SQL and call
+           :meth:`~storage_sqlite.schema.Schema.create_index` to allocate an
+           empty index B-tree root page and insert the ``sqlite_schema`` row.
+        5. Backfill: scan every existing row in the table and insert its key
+           columns + rowid into the new index tree.
+
+        The backfill is committed immediately (auto-commit) so that the index
+        is durably written before the method returns.
+
+        Raises
+        ------
+        IndexAlreadyExists
+            When ``index.name`` is already in ``sqlite_schema``.
+        TableNotFound
+            When ``index.table`` is not a known table.
+        ColumnNotFound
+            When any element of ``index.columns`` is not a column of
+            ``index.table``.
+        """
+        # 1. Duplicate-name check.
+        if self._schema.find_index(index.name) is not None:
+            raise IndexAlreadyExists(index=index.name)
+
+        # 2. Table existence + column schema.
+        rootpage, columns = self._require_table(index.table)
+        col_names = {c.name for c in columns}
+
+        # 3. Column validation.
+        for col in index.columns:
+            if col not in col_names:
+                raise ColumnNotFound(table=index.table, column=col)
+
+        # 4. Allocate index storage and write the schema row.
+        sql = _columns_to_index_sql(index.name, index.table, index.columns)
+        idx_rootpage = self._schema.create_index(index.name, index.table, sql)
+
+        # 5. Backfill existing rows.
+        table_tree = self._open_tree(rootpage)
+        idx_tree = IndexTree.open(self._pager, idx_rootpage, freelist=self._freelist)
+        for rowid, payload in table_tree.scan():
+            row = _decode_row(rowid, payload, columns)
+            key_vals: list[SqlValue] = [row.get(col) for col in index.columns]  # type: ignore[misc]
+            idx_tree.insert(key_vals, rowid)
+
+        # Commit the backfill so it is durable.
+        self._update_commit_header()
+        self._pager.commit()
+
+    def drop_index(self, name: str, *, if_exists: bool = False) -> None:
+        """Drop an index by name.
+
+        Frees all pages used by the index B-tree and removes the
+        ``sqlite_schema`` row.  Bumps the schema cookie.
+
+        Parameters
+        ----------
+        name:
+            The index name to drop.
+        if_exists:
+            When ``True``, silently succeed if the index does not exist.
+            When ``False`` (default), raise :class:`~sql_backend.IndexNotFound`.
+        """
+        try:
+            self._schema.drop_index(name)
+        except SchemaError:
+            if if_exists:
+                return
+            raise IndexNotFound(index=name) from None
+
+        # Commit the structural change.
+        self._update_commit_header()
+        self._pager.commit()
+
+    def list_indexes(self, table: str | None = None) -> list[IndexDef]:
+        """Return all indexes, optionally filtered to one table.
+
+        Reads ``sqlite_schema`` for ``type = 'index'`` rows, parses the
+        ``CREATE INDEX`` SQL to recover column names, and returns a list
+        of :class:`~sql_backend.IndexDef` descriptors in creation order.
+
+        The ``auto`` flag is set when the index name starts with the
+        ``auto_`` prefix (the convention used by the IndexAdvisor).
+
+        Parameters
+        ----------
+        table:
+            When provided, only indexes on this table are returned.
+        """
+        rows = self._schema.list_indexes(table)
+        result: list[IndexDef] = []
+        for name, tbl_name, _, sql in rows:
+            columns = _parse_index_columns(sql) if sql else []
+            auto = name.startswith("auto_")
+            result.append(
+                IndexDef(name=name, table=tbl_name, columns=columns, unique=False, auto=auto)
+            )
+        return result
+
+    def scan_index(
+        self,
+        index_name: str,
+        lo: list[SqlValue] | None,
+        hi: list[SqlValue] | None,
+        *,
+        lo_inclusive: bool = True,
+        hi_inclusive: bool = True,
+    ) -> Iterator[int]:
+        """Yield rowids from the named index within the given key range.
+
+        Opens the index B-tree and delegates to
+        :meth:`~storage_sqlite.index_tree.IndexTree.range_scan`.  Yields
+        the rowid of each matching index entry in ascending key order.
+
+        Parameters
+        ----------
+        index_name:
+            Name of the index to scan.
+        lo:
+            Lower bound key values (``None`` = unbounded).
+        hi:
+            Upper bound key values (``None`` = unbounded).
+        lo_inclusive:
+            Include entries whose key equals *lo* (default ``True``).
+        hi_inclusive:
+            Include entries whose key equals *hi* (default ``True``).
+
+        Yields
+        ------
+        int
+            Table rowids in ascending key order.
+
+        Raises
+        ------
+        IndexNotFound
+            When *index_name* is not in ``sqlite_schema``.
+        """
+        result = self._schema.find_index(index_name)
+        if result is None:
+            raise IndexNotFound(index=index_name)
+        _, idx_rootpage, _ = result
+        idx_tree = IndexTree.open(self._pager, idx_rootpage, freelist=self._freelist)
+        for _, rowid in idx_tree.range_scan(
+            lo, hi, lo_inclusive=lo_inclusive, hi_inclusive=hi_inclusive
+        ):
+            yield rowid
 
     # ── Internal helpers ─────────────────────────────────────────────────────
 

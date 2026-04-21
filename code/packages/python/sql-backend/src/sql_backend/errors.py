@@ -130,3 +130,42 @@ class Internal(BackendError):
 
     def __str__(self) -> str:
         return self.message
+
+
+@dataclass(eq=True)
+class IndexAlreadyExists(BackendError):
+    """Raised by ``create_index`` when an index with the same name already exists.
+
+    Like :class:`TableAlreadyExists`, this is a *schema conflict* error — the
+    caller asked for something the backend already has.  The ``index`` field
+    holds the duplicate name so the error message and test assertions are
+    self-explanatory::
+
+        with pytest.raises(IndexAlreadyExists) as exc_info:
+            backend.create_index(IndexDef(name="idx_users_email", ...))
+        assert exc_info.value == IndexAlreadyExists(index="idx_users_email")
+    """
+
+    index: str
+
+    def __str__(self) -> str:
+        return f"index already exists: {self.index!r}"
+
+
+@dataclass(eq=True)
+class IndexNotFound(BackendError):
+    """Raised when an operation references an index that does not exist.
+
+    Symmetric to :class:`TableNotFound`.  Raised by ``drop_index`` (when
+    ``if_exists=False``) and by ``scan_index`` when the named index is
+    absent::
+
+        with pytest.raises(IndexNotFound) as exc_info:
+            backend.drop_index("nonexistent")
+        assert exc_info.value == IndexNotFound(index="nonexistent")
+    """
+
+    index: str
+
+    def __str__(self) -> str:
+        return f"index not found: {self.index!r}"
