@@ -411,13 +411,29 @@ export interface PaintGlyphRun extends PaintBase {
  */
 export interface PaintText extends PaintBase {
   kind: "text";
-  x: number;         // baseline origin x — the left edge of the first character's advance
+  x: number;         // alignment anchor x. By default this is the baseline origin (left edge
+                     // of the first character). When `text_align` is set, it is the reference
+                     // point relative to which alignment is computed: "start" aligns left,
+                     // "center" aligns the midpoint, "end" aligns right.
   y: number;         // baseline origin y — NOT the top of the text, but the baseline
   text: string;      // the literal text to render (UTF-16 in TypeScript)
   font_ref: string;  // opaque font reference; e.g. "canvas:Helvetica@16:700"
                      // the scheme prefix (canvas:, css:, svg:) routes dispatch
   font_size: number; // in user-space units (same units as x, y)
   fill: string;      // color of the text — required (no default)
+
+  /**
+   * Horizontal alignment of the text relative to `x`. Default: "start".
+   *
+   * - `"start"` — left edge of text at `x` (LTR). Matches Canvas `textAlign = "start"`.
+   * - `"center"` — midpoint of text at `x`. Matches Canvas `textAlign = "center"`.
+   * - `"end"` — right edge of text at `x` (LTR). Matches Canvas `textAlign = "end"`.
+   *
+   * Canvas backends translate this to `ctx.textAlign`. Backends that pre-measure
+   * (SVG) or that always left-align internally will adjust `x` by
+   * `+textWidth*0` / `-textWidth/2` / `-textWidth` at dispatch time.
+   */
+  text_align?: "start" | "center" | "end";
 
   // Optional: map from cluster (string index) to pen x-offset, computed by the
   // layout engine via its TextMeasurer. Enables hit-testing and selection
