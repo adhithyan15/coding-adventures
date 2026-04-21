@@ -54,8 +54,10 @@ belongs to the Redis session rather than to the global worker.
 python -m mini_redis_python_worker.stdio_worker
 ```
 
-The companion Rust crate `python-mini-redis-tcp` starts this worker as a child
-process and delegates parsed RESP commands to it.
+The companion Rust crate `embeddable-tcp-server` can start this worker as a
+child process and delegate parsed RESP commands to it. Python Mini Redis is one
+consumer example of the generic embeddable TCP server seam rather than the
+identity of the Rust transport crate.
 
 ## Development
 

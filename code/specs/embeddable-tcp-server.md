@@ -1,24 +1,24 @@
-# TCP Embedder
+# Embeddable TCP Server
 
 ## Status
 
-Prototype specification for the reusable Rust TCP runtime layer that can embed
+Prototype specification for the reusable Rust TCP server layer that can embed
 application workers written in Python, Ruby, Lua, Objective-C, Perl, or any
 other language with a bridge/FFI/process boundary.
 
 ## Goal
 
-`tcp-embedder` should keep transport ownership in Rust while allowing an
-application worker in another language to own business logic. The crate must not
-name one consumer, such as Python Mini Redis, in its public API. TCP is only one
-consumer of the reusable `generic-job-protocol` contract.
+`embeddable-tcp-server` should keep transport ownership in Rust while allowing
+an application worker in another language to own business logic. The crate must
+not name one consumer, such as Python Mini Redis, in its public API. TCP is only
+one consumer of the reusable `generic-job-protocol` contract.
 
 ## Architecture
 
 ```text
 client socket
     |
-Rust tcp-runtime
+embeddable Rust TCP server
     |
 application framing adapter
     |
@@ -28,7 +28,7 @@ embedded language/application worker
     |
 generic JobResponse<ApplicationResponsePayload> JSON line
     |
-Rust tcp-runtime writes response bytes
+Rust TCP server writes response bytes
 ```
 
 Rust is responsible for:
@@ -65,9 +65,9 @@ Each successful response is one JSON object followed by a newline:
 ```
 
 The example payloads above are from the Python Mini Redis integration test.
-They are not part of the `tcp-embedder` API. Other consumers can define payloads
-for HTTP, IRC, WebSocket frames, custom binary protocols, UI event dispatch, or
-CPU-bound jobs.
+They are not part of the `embeddable-tcp-server` API. Other consumers can
+define payloads for HTTP, IRC, WebSocket frames, custom binary protocols, UI
+event dispatch, or CPU-bound jobs.
 
 ## Python Mini Redis Example
 
@@ -75,7 +75,8 @@ The current integration test uses Python Mini Redis as the first consumer:
 
 - RESP bytes enter over a real TCP socket.
 - The Rust test adapter parses complete RESP arrays into Redis command payloads.
-- `tcp-embedder` sends those payloads to the Python worker as `JobRequest<T>`.
+- `embeddable-tcp-server` sends those payloads to the Python worker as
+  `JobRequest<T>`.
 - Python executes the command and returns RESP bytes inside `JobResponse<U>`.
 - Rust writes the returned bytes to the original socket.
 
@@ -99,8 +100,8 @@ run in a thread pool or process pool without blocking the reactor.
 
 - Rust `generic-job-protocol` tests cover the reusable request/response envelope
   independently from TCP.
-- `tcp-embedder` exposes generic `WorkerCommand`, `StdioJobWorker`, and
-  `TcpEmbedderServer` types.
+- `embeddable-tcp-server` exposes generic `WorkerCommand`, `StdioJobWorker`, and
+  `EmbeddableTcpServer` types.
 - No public Rust package or type is named after Python Mini Redis.
 - Python worker unit tests cover command correctness, error responses, and the
   generic job-protocol JSON-line shape.
