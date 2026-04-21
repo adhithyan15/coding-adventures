@@ -45,9 +45,11 @@ _RUNTIME_STACK_POINTER_OFFSET = 4
 _RUNTIME_STACK_LIMIT_OFFSET = 8
 _RUNTIME_HEAP_POINTER_OFFSET = 12
 _RUNTIME_HEAP_LIMIT_OFFSET = 16
-_RUNTIME_STATE_BYTES = 20
+_RUNTIME_THUNK_HEAP_MARK_OFFSET = 20
+_RUNTIME_STATE_BYTES = 24
 _STATIC_LINK_PARAM_REG = 2
-_VALUE_PARAM_BASE_REG = 3
+_THUNK_HEAP_MARK_PARAM_REG = 3
+_VALUE_PARAM_BASE_REG = 4
 _FIRST_GENERAL_REG = 32
 _ARRAY_DESCRIPTOR_SIZE = 24
 _ARRAY_ELEMENT_TYPE_INTEGER = 1
@@ -63,6 +65,12 @@ _ARRAY_WORD_BYTES = 4
 _ARRAY_MAX_ELEMENTS = 4096
 _VALUE_MODE = "value"
 _NAME_MODE = "name"
+_THUNK_EVAL_LABEL = "_fn_algol_eval_thunk"
+_THUNK_DESCRIPTOR_SIZE = 8
+_THUNK_CODE_ID_OFFSET = 0
+_THUNK_CALLER_FRAME_OFFSET = 4
+_THUNK_DESCRIPTOR_TAG = 1
+_MAX_EVAL_THUNKS = 256
 
 
 @dataclass(frozen=True)
@@ -96,10 +104,20 @@ class _FrameScope:
     frame_base_reg: int
     heap_mark_reg: int | None = None
     parent: _FrameScope | None = None
+    active_thunk_heap_mark_reg: int | None = None
 
     @property
     def block_id(self) -> int:
         return self.semantic_block.block_id
+
+
+@dataclass(frozen=True)
+class _EvalThunk:
+    """A read-only by-name expression captured for helper dispatch."""
+
+    thunk_id: int
+    expression: ASTNode
+    block_id: int
 
 
 class AlgolIrCompiler:
@@ -138,6 +156,8 @@ class AlgolIrCompiler:
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
         self.procedure_signatures: dict[str, int] = {}
+        self.eval_thunks: list[_EvalThunk] = []
+        self.has_by_name_parameters = False
 
     def compile(self, typed: TypeCheckResult | ASTNode) -> CompileResult:
         type_result = (
@@ -161,6 +181,8 @@ class AlgolIrCompiler:
         self.heap_base_reg = -1
         self.heap_pointer_reg = -1
         self.heap_limit_reg = -1
+        self.eval_thunks = []
+        self.has_by_name_parameters = False
         self.semantic_blocks = list(type_result.semantic.blocks)
         self.semantic_blocks_by_ast = {
             block.ast_node_id: block
@@ -191,6 +213,11 @@ class AlgolIrCompiler:
             for procedure in type_result.semantic.procedures
             for parameter in procedure.parameters
         }
+        self.has_by_name_parameters = any(
+            parameter.mode == _NAME_MODE
+            for procedure in type_result.semantic.procedures
+            for parameter in procedure.parameters
+        )
         self.arrays = {
             array.array_id: array for array in type_result.semantic.arrays
         }
@@ -198,9 +225,11 @@ class AlgolIrCompiler:
         for array in type_result.semantic.arrays:
             self.arrays_by_block.setdefault(array.declaring_block_id, []).append(array)
         self.procedure_signatures = {
-            procedure.label: 1 + len(procedure.parameters)
+            procedure.label: 2 + len(procedure.parameters)
             for procedure in type_result.semantic.procedures
         }
+        if self.has_by_name_parameters:
+            self.procedure_signatures[_THUNK_EVAL_LABEL] = 2
         self.frame_offsets = self._layout_frames(self.semantic_blocks)
         self.variable_slots = self._collect_variable_slots(self.semantic_blocks)
         self.legacy_variable_slots = self._collect_legacy_variable_slots(
@@ -265,6 +294,7 @@ class AlgolIrCompiler:
         self._store_runtime_state(_RUNTIME_STACK_LIMIT_OFFSET, self.stack_limit_reg)
         self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, self.heap_pointer_reg)
         self._store_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, self.heap_limit_reg)
+        self._store_runtime_state(_RUNTIME_THUNK_HEAP_MARK_OFFSET, _ZERO_REG)
 
         block = _first_node(type_result.ast, "block")
         if block is None:
@@ -279,6 +309,8 @@ class AlgolIrCompiler:
         self._emit_load_symbol(result_symbol, root_scope, _RESULT_REG)
         self._emit(IrOp.HALT)
         self._compile_procedures(type_result.semantic.procedures)
+        if self.has_by_name_parameters:
+            self._compile_eval_thunk_dispatcher()
 
         return CompileResult(
             program=self.program,
@@ -300,6 +332,9 @@ class AlgolIrCompiler:
             frame_base_reg=frame_base_reg,
             heap_mark_reg=self._snapshot_heap_pointer(),
             parent=parent,
+            active_thunk_heap_mark_reg=(
+                parent.active_thunk_heap_mark_reg if parent is not None else None
+            ),
         )
 
         self._initialize_scalar_slots(scope)
@@ -925,22 +960,85 @@ class AlgolIrCompiler:
                 f"procedure {procedure.name!r} expects "
                 f"{len(procedure.parameters)} argument(s), got {len(actuals)}"
             )
-        arguments = []
-        for argument, parameter in zip(actuals, procedure.parameters, strict=True):
-            if parameter.mode == _VALUE_MODE:
-                arguments.append(self._compile_expr(argument, scope))
-            else:
-                arguments.append(
-                    self._compile_by_name_actual_pointer(argument, parameter, scope)
+        expression_actuals = [
+            (index, argument, parameter)
+            for index, (argument, parameter) in enumerate(
+                zip(actuals, procedure.parameters, strict=True)
+            )
+            if parameter.mode == _NAME_MODE
+            and _single_variable_expr(argument) is None
+        ]
+        for _, argument, parameter in expression_actuals:
+            if parameter.may_write:
+                raise CompileError(
+                    f"by-name parameter {parameter.name!r} is assigned, but "
+                    "expression actual has no store thunk lowering yet"
                 )
+            self._require_eval_thunk_expression(argument, parameter)
+
+        arguments: list[int | None] = [None] * len(actuals)
+        for index, (argument, parameter) in enumerate(
+            zip(actuals, procedure.parameters, strict=True)
+        ):
+            if parameter.mode == _VALUE_MODE:
+                arguments[index] = self._compile_expr(argument, scope)
+
+        descriptor_heap_mark = (
+            self._emit_reserve_eval_thunk_descriptors(len(expression_actuals), scope)
+            if expression_actuals
+            else None
+        )
+        active_thunk_heap_mark = (
+            descriptor_heap_mark
+            if descriptor_heap_mark is not None
+            else (
+                scope.active_thunk_heap_mark_reg
+                if scope.active_thunk_heap_mark_reg is not None
+                else self._const_reg(0)
+            )
+        )
+        descriptor_offsets = {
+            argument_index: descriptor_index * _THUNK_DESCRIPTOR_SIZE
+            for descriptor_index, (argument_index, _, _) in enumerate(
+                expression_actuals
+            )
+        }
+        for index, (argument, parameter) in enumerate(
+            zip(actuals, procedure.parameters, strict=True)
+        ):
+            if parameter.mode != _NAME_MODE:
+                continue
+            descriptor = None
+            if descriptor_heap_mark is not None and index in descriptor_offsets:
+                descriptor = self._emit_descriptor_at(
+                    descriptor_heap_mark,
+                    descriptor_offsets[index],
+                )
+            arguments[index] = self._compile_by_name_actual_pointer(
+                argument,
+                parameter,
+                scope,
+                descriptor,
+            )
+        call_arguments = [
+            argument
+            for argument in arguments
+            if argument is not None
+        ]
         self._emit(
             IrOp.CALL,
             IrLabel(call.label),
             IrRegister(static_link),
-            *(IrRegister(argument) for argument in arguments),
+            IrRegister(active_thunk_heap_mark),
+            *(IrRegister(argument) for argument in call_arguments),
         )
         result = self._fresh_reg()
         self._copy_reg(dst=result, src=_RESULT_REG)
+        if descriptor_heap_mark is not None:
+            self._store_runtime_state(
+                _RUNTIME_HEAP_POINTER_OFFSET,
+                descriptor_heap_mark,
+            )
         return result
 
     def _compile_by_name_actual_pointer(
@@ -948,12 +1046,19 @@ class AlgolIrCompiler:
         argument: ASTNode,
         parameter: ProcedureParameter,
         scope: _FrameScope,
+        descriptor: int | None,
     ) -> int:
         variable = _single_variable_expr(argument)
         if variable is None:
-            raise CompileError(
-                f"by-name parameter {parameter.name!r} received a read-only "
-                "expression actual; eval thunk lowering is not implemented yet"
+            if descriptor is None:
+                raise CompileError(
+                    "missing reserved eval thunk descriptor for by-name expression"
+                )
+            return self._compile_eval_thunk_actual(
+                argument,
+                parameter,
+                scope,
+                descriptor,
             )
         if _variable_subscripts(variable):
             raise CompileError(
@@ -966,11 +1071,172 @@ class AlgolIrCompiler:
         reference = self._require_reference(name, "read")
         return self._emit_reference_pointer(reference, scope)
 
+    def _compile_eval_thunk_actual(
+        self,
+        argument: ASTNode,
+        parameter: ProcedureParameter,
+        scope: _FrameScope,
+        descriptor: int,
+    ) -> int:
+        thunk = self._register_eval_thunk(argument, scope.block_id)
+        self._emit_write_eval_thunk_descriptor(thunk, scope, descriptor)
+        tagged_descriptor = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(tagged_descriptor),
+            IrRegister(descriptor),
+            IrImmediate(_THUNK_DESCRIPTOR_TAG),
+        )
+        return tagged_descriptor
+
+    def _require_eval_thunk_expression(
+        self,
+        argument: ASTNode,
+        parameter: ProcedureParameter,
+    ) -> None:
+        if _first_node(argument, "proc_call") is not None:
+            raise CompileError(
+                f"by-name parameter {parameter.name!r} received a procedure-call "
+                "expression actual; eval thunk procedure-call lowering is not "
+                "implemented yet"
+            )
+        array_variable = next(
+            (
+                variable
+                for variable in _nodes(argument, "variable")
+                if _variable_subscripts(variable)
+            ),
+            None,
+        )
+        if array_variable is not None:
+            raise CompileError(
+                f"by-name parameter {parameter.name!r} received an expression "
+                "actual that reads an array element; array eval thunk lowering "
+                "is not implemented yet"
+            )
+
+    def _register_eval_thunk(self, argument: ASTNode, block_id: int) -> _EvalThunk:
+        if len(self.eval_thunks) >= _MAX_EVAL_THUNKS:
+            raise CompileError(
+                "ALGOL program requires more than "
+                f"{_MAX_EVAL_THUNKS} by-name eval thunks"
+            )
+        thunk = _EvalThunk(
+            thunk_id=len(self.eval_thunks) + 1,
+            expression=argument,
+            block_id=block_id,
+        )
+        self.eval_thunks.append(thunk)
+        return thunk
+
+    def _emit_reserve_eval_thunk_descriptors(
+        self,
+        count: int,
+        scope: _FrameScope,
+    ) -> int:
+        descriptor_base = self._fresh_reg()
+        heap_limit = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, descriptor_base)
+        self._load_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, heap_limit)
+        next_heap_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_heap_pointer),
+            IrRegister(descriptor_base),
+            IrImmediate(count * _THUNK_DESCRIPTOR_SIZE),
+        )
+        exhausted = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(exhausted),
+            IrRegister(next_heap_pointer),
+            IrRegister(heap_limit),
+        )
+        self._emit_runtime_failure_guard(exhausted, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, next_heap_pointer)
+        return descriptor_base
+
+    def _emit_descriptor_at(self, descriptor_base: int, offset: int) -> int:
+        if offset == 0:
+            return descriptor_base
+        descriptor = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(descriptor),
+            IrRegister(descriptor_base),
+            IrImmediate(offset),
+        )
+        return descriptor
+
+    def _emit_write_eval_thunk_descriptor(
+        self,
+        thunk: _EvalThunk,
+        scope: _FrameScope,
+        descriptor: int,
+    ) -> None:
+        self._store_word_const(
+            descriptor,
+            _THUNK_CODE_ID_OFFSET,
+            thunk.thunk_id,
+        )
+        self._store_word_reg(
+            value_reg=scope.frame_base_reg,
+            base_reg=descriptor,
+            offset=_THUNK_CALLER_FRAME_OFFSET,
+        )
+
     def _compile_procedures(
         self, procedures: list[ProcedureDescriptor]
     ) -> None:
         for procedure in procedures:
             self._compile_procedure(procedure)
+
+    def _compile_eval_thunk_dispatcher(self) -> None:
+        self._label(_THUNK_EVAL_LABEL)
+        descriptor = _STATIC_LINK_PARAM_REG
+        active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
+        code_id = self._fresh_reg()
+        caller_frame = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(code_id),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_THUNK_CODE_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(caller_frame),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_THUNK_CALLER_FRAME_OFFSET)),
+        )
+        for thunk in self.eval_thunks:
+            index = self.if_count
+            self.if_count += 1
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(code_id),
+                IrRegister(self._const_reg(thunk.thunk_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            thunk_scope = _FrameScope(
+                semantic_block=self.semantic_blocks_by_id[thunk.block_id],
+                frame_base_reg=caller_frame,
+                heap_mark_reg=None,
+                parent=None,
+                active_thunk_heap_mark_reg=active_thunk_heap_mark,
+            )
+            value = self._compile_expr(thunk.expression, thunk_scope)
+            self._copy_reg(dst=_RESULT_REG, src=value)
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit(IrOp.RET)
 
     def _compile_procedure(self, procedure: ProcedureDescriptor) -> None:
         body = self._find_ast_by_id(procedure.body_node_id)
@@ -987,6 +1253,7 @@ class AlgolIrCompiler:
             frame_base_reg=frame_base_reg,
             heap_mark_reg=self._snapshot_heap_pointer(),
             parent=None,
+            active_thunk_heap_mark_reg=_THUNK_HEAP_MARK_PARAM_REG,
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
@@ -1159,6 +1426,8 @@ class AlgolIrCompiler:
     def _emit_load_reference(
         self, reference: ResolvedReference, scope: _FrameScope
     ) -> int:
+        if self._is_by_name_reference(reference):
+            return self._emit_load_by_name_reference(reference, scope)
         pointer = self._emit_reference_pointer(reference, scope)
         dst = self._fresh_reg()
         self._emit(
@@ -1167,6 +1436,55 @@ class AlgolIrCompiler:
             IrRegister(pointer),
             IrRegister(self._const_reg(0)),
         )
+        return dst
+
+    def _emit_load_by_name_reference(
+        self,
+        reference: ResolvedReference,
+        scope: _FrameScope,
+    ) -> int:
+        pointer = self._emit_reference_pointer(reference, scope)
+        tag = self._fresh_reg()
+        index = self.if_count
+        self.if_count += 1
+        storage_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        dst = self._fresh_reg()
+        self._emit(
+            IrOp.AND_IMM,
+            IrRegister(tag),
+            IrRegister(pointer),
+            IrImmediate(_THUNK_DESCRIPTOR_TAG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(tag), IrLabel(storage_label))
+        descriptor = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(descriptor),
+            IrRegister(pointer),
+            IrImmediate(-_THUNK_DESCRIPTOR_TAG),
+        )
+        active_thunk_heap_mark = (
+            scope.active_thunk_heap_mark_reg
+            if scope.active_thunk_heap_mark_reg is not None
+            else self._const_reg(0)
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_THUNK_EVAL_LABEL),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+        )
+        self._copy_reg(dst=dst, src=_RESULT_REG)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(storage_label)
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(dst),
+            IrRegister(pointer),
+            IrRegister(self._const_reg(0)),
+        )
+        self._label(end_label)
         return dst
 
     def _emit_reference_pointer(
@@ -1202,6 +1520,15 @@ class AlgolIrCompiler:
         value_reg: int,
     ) -> None:
         pointer = self._emit_reference_pointer(reference, scope)
+        if self._is_by_name_reference(reference):
+            tag = self._fresh_reg()
+            self._emit(
+                IrOp.AND_IMM,
+                IrRegister(tag),
+                IrRegister(pointer),
+                IrImmediate(_THUNK_DESCRIPTOR_TAG),
+            )
+            self._emit_runtime_failure_guard(tag, scope)
         self._emit(
             IrOp.STORE_WORD,
             IrRegister(value_reg),
@@ -1376,7 +1703,30 @@ class AlgolIrCompiler:
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
         self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
         self._emit_unwind_for_return(scope)
+        self._emit_restore_active_thunk_heap_mark(scope)
         self._emit(IrOp.RET)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(else_label)
+        self._label(end_label)
+
+    def _emit_restore_active_thunk_heap_mark(self, scope: _FrameScope) -> None:
+        mark_reg = scope.active_thunk_heap_mark_reg
+        if mark_reg is None:
+            return
+        index = self.if_count
+        self.if_count += 1
+        else_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        has_mark = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_NE,
+            IrRegister(has_mark),
+            IrRegister(mark_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(has_mark), IrLabel(else_label))
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, mark_reg)
+        self._store_runtime_state(_RUNTIME_THUNK_HEAP_MARK_OFFSET, _ZERO_REG)
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(else_label)
         self._label(end_label)
@@ -1535,6 +1885,15 @@ def _first_node(node: ASTNode, rule_name: str) -> ASTNode | None:
         if found is not None:
             return found
     return None
+
+
+def _nodes(node: ASTNode | None, rule_name: str) -> list[ASTNode]:
+    if node is None:
+        return []
+    found = [node] if node.rule_name == rule_name else []
+    for child in _node_children(node):
+        found.extend(_nodes(child, rule_name))
+    return found
 
 
 def _variable_name(node: ASTNode | None) -> Token | None:

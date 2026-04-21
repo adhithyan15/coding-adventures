@@ -168,7 +168,7 @@ class TestAlgolIrCompiler:
                 )
         )
 
-        with pytest.raises(CompileError, match="frame bytes plus 20 runtime bytes"):
+        with pytest.raises(CompileError, match="frame bytes plus 24 runtime bytes"):
             compile_algol(typed)
 
     def test_compiles_integer_array_descriptor_and_element_accesses(self) -> None:
@@ -225,9 +225,9 @@ class TestAlgolIrCompiler:
             if instruction.opcode == IrOp.LABEL
         ]
         assert calls[0].operands[0].name.startswith("_fn_algol_")
-        assert len(calls[0].operands) == 3
+        assert len(calls[0].operands) == 4
         assert any(label.startswith("_fn_algol_") for label in labels)
-        assert result.procedure_signatures[calls[0].operands[0].name] == 2
+        assert result.procedure_signatures[calls[0].operands[0].name] == 3
 
     def test_compiles_recursive_procedure_call(self) -> None:
         result = compile_algol(
@@ -279,24 +279,35 @@ class TestAlgolIrCompiler:
         ]
         opcodes = [instruction.opcode for instruction in result.program.instructions]
 
-        assert len(calls[0].operands) == 3
-        assert result.procedure_signatures[calls[0].operands[0].name] == 2
+        assert len(calls[0].operands) == 4
+        assert result.procedure_signatures[calls[0].operands[0].name] == 3
         assert IrOp.ADD_IMM in opcodes
         assert opcodes.count(IrOp.LOAD_WORD) >= 4
         assert opcodes.count(IrOp.STORE_WORD) >= 8
 
-    def test_rejects_read_only_by_name_expression_until_eval_thunks_exist(
-        self,
-    ) -> None:
-        with pytest.raises(CompileError, match="eval thunk lowering"):
-            compile_algol(
-                parse_algol(
-                    "begin integer result; "
-                    "integer procedure id(x); integer x; begin id := x end; "
-                    "result := id(1) "
-                    "end"
-                )
+    def test_compiles_read_only_by_name_expression_eval_thunk(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure id(x); integer x; begin id := x end; "
+                "result := id(1 + result) "
+                "end"
             )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+
+        assert "_fn_algol_eval_thunk" in labels
+        assert result.procedure_signatures["_fn_algol_eval_thunk"] == 2
+        assert any(call.operands[0].name == "_fn_algol_eval_thunk" for call in calls)
 
     def test_rejects_array_element_by_name_until_relocating_thunks_exist(
         self,
@@ -307,6 +318,30 @@ class TestAlgolIrCompiler:
                     "begin integer result; integer array a[1:2]; "
                     "procedure put(x); integer x; begin x := 7 end; "
                     "put(a[1]); result := a[1] "
+                    "end"
+                )
+            )
+
+    def test_rejects_array_read_inside_expression_eval_thunk(self) -> None:
+        with pytest.raises(CompileError, match="array eval thunk"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; integer array a[1:2]; "
+                    "integer procedure id(x); integer x; begin id := x end; "
+                    "result := id(a[1] + 1) "
+                    "end"
+                )
+            )
+
+    def test_rejects_procedure_call_inside_expression_eval_thunk(self) -> None:
+        with pytest.raises(CompileError, match="procedure-call expression"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "integer procedure inc(n); value n; integer n; "
+                    "begin inc := n + 1 end; "
+                    "integer procedure id(x); integer x; begin id := x end; "
+                    "result := id(inc(4)) "
                     "end"
                 )
             )

@@ -22,13 +22,16 @@ checked element loads/stores through the descriptor. Block and procedure exits
 restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
 
-Scalar by-name parameters lower through a one-word storage pointer in the
-callee frame. Passing a scalar variable as a by-name actual gives the callee a
-delayed load/store cell, so assignments to the formal write back to the caller
-slot while value parameters still remain isolated copies. General expression
-actuals and array-element actuals still raise targeted `CompileError`
-diagnostics until Phase 5 grows full eval/store thunk descriptors that
-re-evaluate the actual expression on each access.
+Scalar by-name parameters lower through a one-word cell in the callee frame.
+Passing a scalar variable as a by-name actual gives the callee a storage pointer,
+so assignments to the formal write back to the caller slot while value
+parameters still remain isolated copies. Read-only integer expression actuals
+lower to tagged, bounded eval thunk descriptors. Formal reads dispatch through a
+generated helper that re-evaluates the expression against the caller frame each
+time. Array-element actuals, expression thunks that read arrays, expression
+thunks that call procedures, and stores through expression thunks still raise
+targeted `CompileError` diagnostics until Phase 5 grows full eval/store helper
+coverage.
 
 This phase keeps ALGOL frame memory and its 20-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a

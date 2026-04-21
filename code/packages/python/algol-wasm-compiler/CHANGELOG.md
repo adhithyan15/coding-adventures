@@ -16,6 +16,9 @@ All notable changes to this package will be documented in this file.
 - Executed scalar by-name actuals through caller-slot storage pointers, while
   preserving IR compile-stage diagnostics for expression and array-element
   actuals that still need full eval/store thunk descriptors.
+- Executed read-only integer expression actuals through tagged eval thunk
+  descriptors, including repeated formal reads that observe caller-frame
+  mutations between evaluations.
 
 ## [0.1.0] - 2026-04-20
 
