@@ -5,6 +5,11 @@
 `generic-job-runtime` is a language-neutral contract for distributing units of
 work across an execution backend.
 
+The first implementation slice is `generic-job-protocol`, a Rust crate that
+defines the portable `JobRequest<T>` / `JobResponse<U>` envelope and JSON-line
+wire codec. It is deliberately separate from any TCP runtime, worker pool, FFI
+bridge, or scheduler implementation. Those layers consume the protocol crate.
+
 The core idea is simple:
 
 ```text
