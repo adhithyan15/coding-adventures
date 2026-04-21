@@ -184,6 +184,16 @@ Rules:
 - rest tokens are `R` or `rest`, case-insensitive
 - scores must contain at least one event
 
+Parser resource limits:
+
+- parsers must reject score text above an implementation-defined maximum size
+- parsers must reject lines above an implementation-defined maximum length
+- parsers must reject event counts above an implementation-defined maximum count
+
+These limits exist because rendering has a sample-budget guard, but parsing
+happens first. A score with millions of tiny events should fail while it is
+still text, before it can allocate a giant event list.
+
 ## 7. Rendering
 
 Rendering a score to PCM is a sequential process.
@@ -266,6 +276,7 @@ The first package must test:
 - duration math at a known tempo
 - dotted duration math
 - useful errors for malformed tokens
+- parser resource limits
 - rendering produces the expected sample count
 - rests produce zero PCM samples
 - Happy Birthday parses and renders

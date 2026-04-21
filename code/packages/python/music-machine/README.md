@@ -58,6 +58,13 @@ from music_machine import play_score_text
 play_score_text(HAPPY_BIRTHDAY_TEXT)
 ```
 
+## Safety Limits
+
+The parser has explicit limits for score size, line length, and event count.
+Those checks happen before rendering so a huge text file cannot allocate an
+unbounded number of note/rest events before the sample-budget guard has a chance
+to run.
+
 ## How It Fits
 
 `music-machine` does not synthesize notes itself. It parses a score, then sends

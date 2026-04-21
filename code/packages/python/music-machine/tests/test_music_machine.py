@@ -130,6 +130,28 @@ def test_parse_score_requires_string_input() -> None:
         parse_score(123)  # type: ignore[arg-type]
 
 
+def test_parse_score_enforces_resource_limits() -> None:
+    with pytest.raises(ValueError, match="max_score_length=4"):
+        parse_score("A4/q R/q", max_score_length=4)
+
+    with pytest.raises(ValueError, match="max_line_length=3"):
+        parse_score("A4/q", max_line_length=3)
+
+    with pytest.raises(ValueError, match="max_event_count=1"):
+        parse_score("A4/q R/q", max_event_count=1)
+
+
+def test_parse_score_validates_resource_limit_values() -> None:
+    with pytest.raises(ValueError, match="max_score_length must be an integer"):
+        parse_score("A4/q", max_score_length=True)  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="max_line_length must be >= 0"):
+        parse_score("A4/q", max_line_length=-1)
+
+    with pytest.raises(ValueError, match="max_event_count must be an integer"):
+        parse_score("A4/q", max_event_count=1.5)  # type: ignore[arg-type]
+
+
 def test_score_event_validates_shape() -> None:
     with pytest.raises(ValueError, match="rest events cannot include"):
         ScoreEvent(

@@ -34,6 +34,9 @@ from pcm_audio import DEFAULT_SAMPLE_RATE_HZ, PCMBuffer, PCMFormat
 DEFAULT_TEMPO_BPM = 120.0
 DEFAULT_METER = "4/4"
 DEFAULT_AMPLITUDE = 0.18
+DEFAULT_MAX_SCORE_LENGTH = 1_000_000
+DEFAULT_MAX_LINE_LENGTH = 10_000
+DEFAULT_MAX_EVENT_COUNT = 10_000
 
 DURATION_BEATS = {
     "w": 4.0,
@@ -103,6 +106,15 @@ def _positive_integer(name: str, value: int) -> int:
     converted = int(value)
     if converted <= 0:
         raise ValueError(f"{name} must be > 0, got {converted}")
+    return converted
+
+
+def _non_negative_integer(name: str, value: int) -> int:
+    if isinstance(value, bool) or not isinstance(value, Integral):
+        raise ValueError(f"{name} must be an integer >= 0, got {value!r}")
+    converted = int(value)
+    if converted < 0:
+        raise ValueError(f"{name} must be >= 0, got {converted}")
     return converted
 
 
@@ -285,7 +297,13 @@ def _score_event_from_token(token: str, tempo_bpm: float) -> ScoreEvent:
     )
 
 
-def parse_score(text: str) -> TextScore:
+def parse_score(
+    text: str,
+    *,
+    max_score_length: int = DEFAULT_MAX_SCORE_LENGTH,
+    max_line_length: int = DEFAULT_MAX_LINE_LENGTH,
+    max_event_count: int = DEFAULT_MAX_EVENT_COUNT,
+) -> TextScore:
     """Parse beginner-friendly text sheet music into a ``TextScore``.
 
     Directives apply from the top of the file to the whole score. Because event
@@ -296,6 +314,14 @@ def parse_score(text: str) -> TextScore:
     if not isinstance(text, str):
         raise ValueError("score text must be a string")
 
+    score_limit = _non_negative_integer("max_score_length", max_score_length)
+    line_limit = _non_negative_integer("max_line_length", max_line_length)
+    event_limit = _non_negative_integer("max_event_count", max_event_count)
+    if len(text) > score_limit:
+        raise ValueError(
+            f"score text length {len(text)} exceeds max_score_length={score_limit}"
+        )
+
     title = "Untitled"
     tempo_bpm = DEFAULT_TEMPO_BPM
     meter = DEFAULT_METER
@@ -304,6 +330,12 @@ def parse_score(text: str) -> TextScore:
     events: list[ScoreEvent] = []
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
+        if len(raw_line) > line_limit:
+            raise ValueError(
+                f"line {line_number}: line length {len(raw_line)} exceeds "
+                f"max_line_length={line_limit}"
+            )
+
         line = raw_line.strip()
         if line == "" or line.startswith("#"):
             continue
@@ -341,6 +373,11 @@ def parse_score(text: str) -> TextScore:
         for token in line.split():
             if token == "|":
                 continue
+            if len(events) >= event_limit:
+                raise ValueError(
+                    f"line {line_number}: event count exceeds "
+                    f"max_event_count={event_limit}"
+                )
             try:
                 events.append(_score_event_from_token(token, tempo_bpm))
             except ValueError as exc:

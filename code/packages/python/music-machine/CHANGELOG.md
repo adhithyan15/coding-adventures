@@ -9,3 +9,4 @@
   score.
 - Added lazy playback helpers that delegate to `audio-device-sink` only when
   playback is requested.
+- Added parser resource limits for score size, line length, and event count.
