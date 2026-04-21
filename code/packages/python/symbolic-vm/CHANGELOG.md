@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.9.0 — 2026-04-20
+
+Phase 4 of the integration roadmap — trigonometric integration. Three
+sub-phases, each a clean layer on top of the existing integrator.
+
+**Phase 4a — Polynomial × sin/cos** (`∫ p(x)·sin(ax+b) dx`,
+`∫ p(x)·cos(ax+b) dx`):
+- New module `symbolic_vm.trig_poly_integral`: `trig_sin_integral` and
+  `trig_cos_integral` implement the **tabular IBP** formula. IBP applied
+  `deg(p)+1` times yields two coefficient polynomials C and S:
+  `∫ p·sin = sin·S − cos·C`, `∫ p·cos = sin·C + cos·S`.
+- `_cs_coeffs` builds C and S from the derivative sequence of `p`, using
+  `sign = (−1)^(k//2)` and divisor `a^(k+1)` for each index `k`.
+- Wired into the `MUL` branch of `_integrate` as `_try_trig_product`.
+
+**Phase 4b — Trig products and squares**:
+- No new module; logic in `integrate.py` as `_try_trig_trig`.
+- Applies the product-to-sum identities at the IR level:
+  `sin·sin = [cos(u−v)−cos(u+v)]/2`, `cos·cos = [cos(u−v)+cos(u+v)]/2`,
+  `sin·cos = [sin(u+v)+sin(u−v)]/2`. The resulting linear combination of
+  bare sin/cos is recursively integrated by Phase 3 (cases 3b/3c).
+- Handles all three orderings (sin·sin, cos·cos, sin·cos) by skipping the
+  cos·sin ordering and relying on the swapped-argument retry in the caller.
+
+**Phase 4c — Exp × sin/cos** (`∫ exp(ax+b)·sin(cx+d) dx`,
+`∫ exp(ax+b)·cos(cx+d) dx`):
+- New module `symbolic_vm.exp_trig_integral`: `exp_sin_integral` and
+  `exp_cos_integral` implement the **double-IBP closed form**:
+  `∫ exp·sin = exp·[a·sin − c·cos]/(a²+c²)`,
+  `∫ exp·cos = exp·[a·cos + c·sin]/(a²+c²)`.
+- Wired into the `MUL` branch as `_try_exp_trig`, before `_try_trig_product`.
+
+Updated regression: `test_integrate_two_x_factors_unevaluated` renamed to
+`test_integrate_poly_times_sin_now_closed_by_phase4` — Phase 4a now closes
+`∫ x·sin(x) dx`.
+
+Also updated `symbolic-computation.md` (Phase 4 description updated from
+"Algebraic extensions" to the practical trig-integration scope).
+
+39 new tests (`tests/test_phase4.py`). Package at 319 tests, 90% coverage.
+
 ## 0.8.0 — 2026-04-20
 
 Phase 3 of the integration roadmap — transcendental integration for the
