@@ -285,6 +285,7 @@ members = [
     "aes-modes",
     "chacha20-poly1305",
     "blake2b",
+    "csprng",
     "irc-proto",
     "irc-framing",
     "irc-server",
