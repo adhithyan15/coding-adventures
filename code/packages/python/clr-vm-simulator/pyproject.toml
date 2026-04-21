@@ -24,6 +24,7 @@ dependencies = [
     "coding-adventures-cli-runtime-model",
     "coding-adventures-clr-bytecode-disassembler",
     "coding-adventures-clr-pe-file",
+    "coding-adventures-grammar-tools",
 ]
 
 [tool.uv.sources]
@@ -33,10 +34,16 @@ coding-adventures-cli-runtime-model = { path = "../cli-runtime-model", editable 
 coding-adventures-clr-bytecode-disassembler = { path = "../clr-bytecode-disassembler", editable = true }
 coding-adventures-clr-pe-file = { path = "../clr-pe-file", editable = true }
 coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
+coding-adventures-directed-graph = { path = "../directed-graph", editable = true }
 coding-adventures-dartmouth-basic-ir-compiler = { path = "../dartmouth-basic-ir-compiler", editable = true }
 coding-adventures-dartmouth-basic-lexer = { path = "../dartmouth-basic-lexer", editable = true }
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser", editable = true }
+coding-adventures-grammar-tools = { path = "../grammar-tools", editable = true }
+coding-adventures-graph = { path = "../graph", editable = true }
 coding-adventures-ir-to-cil-bytecode = { path = "../ir-to-cil-bytecode", editable = true }
+coding-adventures-lexer = { path = "../lexer", editable = true }
+coding-adventures-parser = { path = "../parser", editable = true }
+coding-adventures-state-machine = { path = "../state-machine", editable = true }
 
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
@@ -48,10 +55,16 @@ dev = [
     "coding-adventures-cil-bytecode-builder",
     "coding-adventures-cli-assembly-writer",
     "coding-adventures-compiler-ir",
+    "coding-adventures-directed-graph",
     "coding-adventures-dartmouth-basic-ir-compiler",
     "coding-adventures-dartmouth-basic-lexer",
     "coding-adventures-dartmouth-basic-parser",
+    "coding-adventures-grammar-tools",
+    "coding-adventures-graph",
     "coding-adventures-ir-to-cil-bytecode",
+    "coding-adventures-lexer",
+    "coding-adventures-parser",
+    "coding-adventures-state-machine",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.4",
