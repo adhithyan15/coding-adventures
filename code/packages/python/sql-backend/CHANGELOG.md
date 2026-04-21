@@ -5,6 +5,21 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-04-21
+
+### Added
+
+- **`current_transaction()` method on `Backend` ABC** — non-abstract default
+  method that returns `None` for stateless backends.  Added so the VM can
+  discover an already-open transaction handle when a fresh `_VmState` is
+  created for a `COMMIT` or `ROLLBACK` that follows a `BEGIN` issued in an
+  earlier `execute()` call.
+
+- **`InMemoryBackend.current_transaction()`** — overrides the default to return
+  `TransactionHandle(self._active_handle)` whenever a transaction is currently
+  open, or `None` otherwise.  Makes multi-call transaction sequences (separate
+  `execute()` calls for BEGIN, DML, COMMIT) transparent to the VM.
+
 ## [0.2.0] - 2026-04-20
 
 ### Added

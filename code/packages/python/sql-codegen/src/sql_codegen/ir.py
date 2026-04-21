@@ -353,6 +353,23 @@ class InsertRow:
 
 
 @dataclass(frozen=True, slots=True)
+class InsertFromResult:
+    """Drain the current result buffer, inserting every row into ``table``.
+
+    Used for INSERT INTO … SELECT. After this instruction the result buffer
+    is empty; ``rows_affected`` is set to the number of rows inserted.
+
+    ``columns`` is the explicit target column list. If empty the VM uses
+    the result schema's column order as the target column names. This
+    mirrors the INSERT VALUES semantics: explicit column list wins, falling
+    back to the table's natural order.
+    """
+
+    table: str
+    columns: tuple[str, ...]  # empty = use result schema
+
+
+@dataclass(frozen=True, slots=True)
 class UpdateRows:
     """For the row under the current cursor, update the named assignments."""
     table: str
@@ -365,6 +382,81 @@ class DeleteRows:
     """Delete the row under the current cursor."""
     table: str
     cursor_id: int
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureLeftResult:
+    """Save the current result buffer as the "left side" of a set operation.
+
+    After this instruction the result buffer is cleared and the saved rows
+    live in VM state as ``left_result``. The right side's scan then fills
+    the result buffer normally; the subsequent Intersect/ExceptResult
+    instruction performs the final set arithmetic.
+
+    Used by INTERSECT and EXCEPT compilation, which follows the pattern::
+
+        <compile left side>
+        CaptureLeftResult
+        <compile right side>
+        IntersectResult / ExceptResult
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class IntersectResult:
+    """Compute the intersection of ``left_result`` and the current result buffer.
+
+    ``all=False`` (INTERSECT): each distinct row appears once iff it is
+    present in both sides.
+
+    ``all=True`` (INTERSECT ALL): a row appears min(left_count, right_count)
+    times, where the counts are the number of occurrences in each side.
+
+    After this instruction ``left_result`` is cleared and the result buffer
+    holds the intersection.
+    """
+
+    all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class ExceptResult:
+    """Compute the difference of ``left_result`` minus the current result buffer.
+
+    ``all=False`` (EXCEPT): a row from the left side is excluded if it
+    appears anywhere in the right side.
+
+    ``all=True`` (EXCEPT ALL): each occurrence in the right side cancels one
+    occurrence in the left side.
+
+    After this instruction ``left_result`` is cleared and the result buffer
+    holds the difference.
+    """
+
+    all: bool = False
+
+
+# ---- Transaction control ------------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class BeginTransaction:
+    """Call ``backend.begin_transaction()`` and store the handle.
+
+    The handle is saved in VM state so subsequent Commit/Rollback can
+    reference it. Nested BEGIN calls are not supported in v1 — a second
+    BEGIN while a transaction is active raises ``TransactionError``.
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class CommitTransaction:
+    """Call ``backend.commit(handle)`` and clear the stored handle."""
+
+
+@dataclass(frozen=True, slots=True)
+class RollbackTransaction:
+    """Call ``backend.rollback(handle)`` and clear the stored handle."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -433,7 +525,9 @@ Instruction = (
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
-    | InsertRow | UpdateRows | DeleteRows | CreateTable | DropTable
+    | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
+    | CaptureLeftResult | IntersectResult | ExceptResult
+    | BeginTransaction | CommitTransaction | RollbackTransaction
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

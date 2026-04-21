@@ -294,6 +294,25 @@ class Backend(ABC):
     def rollback(self, handle: TransactionHandle) -> None:
         """Roll back the transaction identified by ``handle``."""
 
+    def current_transaction(self) -> TransactionHandle | None:
+        """Return the active transaction handle, or ``None`` if no transaction
+        is currently open.
+
+        The default implementation returns ``None`` — suitable for read-only
+        or stateless backends that do not track transaction state externally.
+        Backends that support transactions should override this to return the
+        handle they issued in ``begin_transaction``.
+
+        This method exists so that multi-statement transaction sequences can
+        be executed as separate :func:`~sql_vm.vm.execute` calls (each of
+        which creates a fresh VM state) while still being able to carry the
+        handle through to ``commit`` / ``rollback`` by consulting the backend
+        directly. The VM's ``BeginTransaction`` instruction stores the handle
+        on the backend; ``CommitTransaction`` / ``RollbackTransaction``
+        retrieve it here.
+        """
+        return None
+
 
 class SchemaProvider(ABC):
     """Minimal schema interface consumed by the planner.
