@@ -1,0 +1,4 @@
+{
+  "capabilities": [],
+  "justification": "Pure computation over in-memory byte arrays; no filesystem, network, or process access."
+}
