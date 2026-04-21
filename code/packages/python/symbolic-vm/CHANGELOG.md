@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.11.0 — 2026-04-21
+
+Phase 6 of the integration roadmap — mixed trig powers `sinⁿ·cosᵐ`.
+
+Three cases, each with a distinct algorithm:
+
+**Phase 6a — n odd (cosine substitution)**:
+- Substitute `u = cos(ax+b)`, `du = -a sin(ax+b) dx`.
+- Write `sinⁿ⁻¹ = (1-cos²)^k` (k=(n-1)/2) and expand via the binomial theorem.
+- Closed-form result: `-(1/a) · Σ C(k,j)(-1)^j / (m+2j+1) · cos^{m+2j+1}(ax+b)`
+- No recursion — direct polynomial anti-differentiation.
+
+**Phase 6b — m odd, n even (sine substitution)**:
+- Substitute `u = sin(ax+b)`, `du = a cos(ax+b) dx`.
+- Write `cosᵐ⁻¹ = (1-sin²)^k` (k=(m-1)/2) and expand.
+- Closed-form result: `(1/a) · Σ C(k,j)(-1)^j / (n+2j+1) · sin^{n+2j+1}(ax+b)`
+
+**Phase 6c — both even (IBP reduction on n)**:
+- Reduction: `∫ sinⁿ cosᵐ dx = -sinⁿ⁻¹cosᵐ⁺¹/((n+m)a) + (n-1)/(n+m) · ∫ sinⁿ⁻² cosᵐ dx`
+- Derived via IBP with Pythagorean substitution `cosᵐ⁺² = cosᵐ(1-sin²)`.
+- Recurses on n: at n=0 delegates to `∫ cosᵐ dx` → Phase 5b.
+
+New helpers in `integrate.py`: `_extract_trig_power`, `_try_sin_cos_power`,
+`_sin_cos_odd_sin`, `_sin_cos_odd_cos`, `_sin_cos_even`.
+
+New spec: `code/specs/phase6-sin-cos-powers.md`.
+
+44 new tests (`tests/test_phase6.py`). Package at 407 tests, 90% coverage.
+
 ## 0.10.0 — 2026-04-20
 
 Phase 5 of the integration roadmap — trig-power integration. Three sub-phases
