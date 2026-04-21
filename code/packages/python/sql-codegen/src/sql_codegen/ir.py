@@ -161,8 +161,52 @@ class Like:
 
 @dataclass(frozen=True, slots=True)
 class Coalesce:
-    """Pop n values; push the first non-NULL, else NULL."""
+    """Pop n values; push the first non-NULL, else NULL.
+
+    .. deprecated::
+        New code should use ``CallScalar(func="coalesce", n_args=n)`` instead.
+        This instruction is kept for backwards compatibility and is still
+        dispatched by the VM.
+    """
     n: int
+
+
+@dataclass(frozen=True, slots=True)
+class CallScalar:
+    """Pop ``n_args`` values, call the named scalar function, push the result.
+
+    ``func`` is the lower-cased SQL function name (e.g. ``"upper"``, ``"abs"``).
+    The VM holds a registry of built-in implementations keyed by this name.
+    Unrecognised names raise ``UnsupportedFunction`` at runtime.
+
+    The call convention is **positional**: the last argument pushed is the
+    first element popped, so :meth:`_VmState.pop_n` returns args in
+    left-to-right (push) order.
+
+    Built-in functions implemented in the VM:
+
+    *NULL-handling*: ``coalesce``, ``nullif``, ``ifnull``, ``iif``
+
+    *Type inspection*: ``typeof``
+
+    *Numeric*: ``abs``, ``round``, ``ceil``, ``floor``, ``sign``, ``mod``,
+    ``max`` (scalar 2-arg variant), ``min`` (scalar 2-arg variant)
+
+    *String*: ``upper``, ``lower``, ``length``, ``trim``, ``ltrim``,
+    ``rtrim``, ``substr`` / ``substring``, ``replace``, ``instr``,
+    ``hex``, ``unhex``, ``quote``, ``printf`` / ``format``,
+    ``char``, ``unicode``, ``zeroblob``, ``soundex``
+
+    *Math*: ``sqrt``, ``pow`` / ``power``, ``log``, ``log2``, ``log10``,
+    ``exp``, ``pi``, ``sin``, ``cos``, ``tan``, ``asin``, ``acos``, ``atan``,
+    ``atan2``, ``degrees``, ``radians``
+
+    *Utility*: ``random``, ``randomblob``, ``last_insert_rowid``
+    (``last_insert_rowid`` always returns NULL in this implementation)
+    """
+
+    func: str      # lower-cased function name
+    n_args: int    # number of arguments already on the stack
 
 
 # ---- Scan instructions --------------------------------------------------
@@ -384,7 +428,7 @@ class Halt:
 
 Instruction = (
     LoadConst | LoadColumn | Pop
-    | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce
+    | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey

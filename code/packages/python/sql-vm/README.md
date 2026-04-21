@@ -47,6 +47,33 @@ spec. `NULL AND FALSE = FALSE`; `NULL OR TRUE = TRUE`; everything else
 involving NULL yields NULL. `JumpIfFalse` treats NULL as false (so
 WHERE clauses correctly skip NULL predicates).
 
+## Scalar functions
+
+The `CallScalar(func, n_args)` instruction dispatches to a built-in registry
+of ~40 SQLite-compatible functions.  Arguments are popped left-to-right from
+the stack; the result is pushed back.
+
+| Category | Functions |
+|----------|-----------|
+| NULL-handling | `COALESCE`, `IFNULL`, `NULLIF`, `IIF` |
+| Type | `TYPEOF`, `CAST` |
+| Numeric | `ABS`, `ROUND`, `CEIL`/`CEILING`, `FLOOR`, `SIGN`, `MOD` |
+| Math | `SQRT`, `POW`/`POWER`, `LOG`/`LN`, `LOG2`, `LOG10`, `EXP`, `PI`, `SIN`, `COS`, `TAN`, `ASIN`, `ACOS`, `ATAN`, `ATAN2`, `DEGREES`, `RADIANS` |
+| String | `UPPER`, `LOWER`, `LENGTH`/`LEN`, `TRIM`, `LTRIM`, `RTRIM`, `SUBSTR`/`SUBSTRING`, `REPLACE`, `INSTR` |
+| Blob/hex | `HEX`, `UNHEX`, `ZEROBLOB`, `RANDOMBLOB` |
+| Misc | `QUOTE`, `CHAR`, `UNICODE`, `SOUNDEX`, `PRINTF`/`FORMAT`, `RANDOM`, `LAST_INSERT_ROWID` |
+
+All math functions return `NULL` for out-of-domain inputs rather than raising.
+Null-propagating functions short-circuit to `NULL` when any argument is `NULL`.
+
+You can call any registered function directly:
+
+```python
+from sql_vm import call_scalar
+call_scalar("upper", ["hello"])  # → "HELLO"
+call_scalar("coalesce", [None, 42])  # → 42
+```
+
 ## Errors
 
 All failures surface as `VmError` subclasses:
@@ -56,6 +83,8 @@ All failures surface as `VmError` subclasses:
 - `ConstraintViolation`, `TableAlreadyExists`
 - `StackUnderflow`, `InvalidLabel` (codegen-bug signals)
 - `BackendError`, `InternalError`
+- `UnsupportedFunction(name)` — function name not in registry
+- `WrongNumberOfArguments(name, expected, got)` — arity mismatch
 
 ## Relationship to other packages
 

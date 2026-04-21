@@ -101,6 +101,7 @@ from .ir import (
     Between,
     BinaryOp,
     BinaryOpCode,
+    CallScalar,
     CloseScan,
     CreateTable,
     DeleteRows,
@@ -675,15 +676,19 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
         case AstNotLike(operand=op_, pattern=pat):
             return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=True)]
         case FunctionCall(name=name, args=args):
-            if name.lower() == "coalesce":
-                out = []
-                for a in args:
-                    if a.value is not None:
-                        out.extend(_compile_expr(a.value, ctx))
-                from .ir import Coalesce as CoalesceIr
-                out.append(CoalesceIr(n=len(args)))
-                return out
-            raise UnsupportedNode(f"FunctionCall({name})")
+            # Compile all positional arguments onto the stack left-to-right,
+            # then emit CallScalar(func, n_args). The VM's built-in function
+            # registry does the rest. Unknown names raise UnsupportedFunction
+            # at runtime rather than compile time so user-defined functions
+            # (a future feature) can be registered without recompiling.
+            out = []
+            n = 0
+            for a in args:
+                if a.value is not None:
+                    out.extend(_compile_expr(a.value, ctx))
+                    n += 1
+            out.append(CallScalar(func=name.lower(), n_args=n))
+            return out
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
