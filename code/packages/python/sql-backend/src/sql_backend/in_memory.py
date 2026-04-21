@@ -107,8 +107,13 @@ def _sql_sort_key(v: SqlValue) -> tuple[int, object]:
         return (2, v.encode("utf-8"))
     if isinstance(v, (bytes, bytearray)):
         return (3, bytes(v))
-    # Fallback — should not happen with valid SqlValues.
-    return (4, repr(v).encode())
+    # SqlValue is a closed union — if we reach here the caller passed a
+    # value that is not part of the type contract.  Raise immediately rather
+    # than silently leaking the repr() of an arbitrary object (which could
+    # contain secrets or cause non-deterministic sort behaviour).
+    raise TypeError(  # noqa: TRY301
+        f"_sql_sort_key: unsupported value type {type(v).__name__!r}"
+    )
 
 
 class _Table:
