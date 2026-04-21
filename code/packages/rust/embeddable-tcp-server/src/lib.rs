@@ -30,7 +30,7 @@ use generic_job_protocol::{
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use tcp_runtime::{ConnectionId, PlatformError, StopHandle, TcpHandlerResult};
+use tcp_runtime::{PlatformError, StopHandle, TcpHandlerResult};
 use tcp_runtime::{TcpConnectionInfo, TcpRuntime, TcpRuntimeOptions};
 
 #[cfg(any(
@@ -134,13 +134,8 @@ where
         })
     }
 
-    pub fn execute(
-        &mut self,
-        connection_id: ConnectionId,
-        sequence: u64,
-        payload: Request,
-    ) -> Result<Response, WorkerError> {
-        self.execute_with_affinity(connection_id.0.to_string(), sequence, payload)
+    pub fn execute(&mut self, payload: Request) -> Result<Response, WorkerError> {
+        self.execute_with_metadata(JobMetadata::default(), payload)
     }
 
     pub fn execute_with_affinity(
@@ -149,12 +144,20 @@ where
         sequence: u64,
         payload: Request,
     ) -> Result<Response, WorkerError> {
+        let metadata = JobMetadata::default()
+            .with_affinity_key(affinity_key)
+            .with_sequence(sequence);
+        self.execute_with_metadata(metadata, payload)
+    }
+
+    pub fn execute_with_metadata(
+        &mut self,
+        metadata: JobMetadata,
+        payload: Request,
+    ) -> Result<Response, WorkerError> {
         let id = format!("job-{}", self.next_job_id);
         self.next_job_id += 1;
 
-        let metadata = JobMetadata::default()
-            .with_affinity_key(affinity_key.clone())
-            .with_sequence(sequence);
         let request = JobRequest::new(id.clone(), payload).with_metadata(metadata);
 
         let encoded = encode_request_json_line(&request)?;
@@ -170,7 +173,7 @@ where
         }
 
         let response: JobResponse<Response> = decode_response_json_line(line.trim_end())?;
-        validate_response_routing(&response, &id, &affinity_key, sequence)?;
+        validate_response_id(&response, &id)?;
 
         match response.result {
             JobResult::Ok { payload } => Ok(payload),
@@ -311,29 +314,14 @@ where
     }
 }
 
-fn validate_response_routing<Response>(
+fn validate_response_id<Response>(
     response: &JobResponse<Response>,
     expected_id: &str,
-    expected_affinity_key: &str,
-    expected_sequence: u64,
 ) -> Result<(), WorkerError> {
     if response.id != expected_id {
         return Err(WorkerError::Protocol(format!(
             "worker response id mismatch: expected {}, got {}",
             expected_id, response.id
-        )));
-    }
-    let actual_affinity = response.metadata.affinity_key.as_deref();
-    if actual_affinity != Some(expected_affinity_key) {
-        return Err(WorkerError::Protocol(format!(
-            "worker affinity mismatch: expected {}, got {:?}",
-            expected_affinity_key, actual_affinity
-        )));
-    }
-    if response.metadata.sequence != Some(expected_sequence) {
-        return Err(WorkerError::Protocol(format!(
-            "worker sequence mismatch: expected {}, got {:?}",
-            expected_sequence, response.metadata.sequence
         )));
     }
     Ok(())
@@ -497,17 +485,30 @@ mod tests {
     #[derive(Debug, Default, Clone, PartialEq, Eq)]
     struct RedisConnectionState {
         read_buffer: Vec<u8>,
-        sequence: u64,
+        selected_db: usize,
     }
 
     #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     struct RedisCommandJob {
-        argv_hex: Vec<String>,
+        selected_db: usize,
+        command: String,
+        args_hex: Vec<String>,
     }
 
     #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
     struct RedisResponseJob {
-        resp_hex: String,
+        selected_db: usize,
+        response: RedisEngineResponseJob,
+    }
+
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    #[serde(tag = "kind", rename_all = "snake_case")]
+    enum RedisEngineResponseJob {
+        SimpleString { value: String },
+        Error { message: String },
+        Integer { value: i64 },
+        BulkString { value_hex: Option<String> },
+        Array { values: Option<Vec<RedisEngineResponseJob>> },
     }
 
     fn bulk(value: &[u8]) -> RespValue {
@@ -605,16 +606,16 @@ mod tests {
         let mut worker = StdioJobWorker::<RedisCommandJob, RedisResponseJob>::spawn(&command)
             .expect("spawn scripted worker");
         worker.execute(
-            ConnectionId(7),
-            11,
             RedisCommandJob {
-                argv_hex: vec![hex_encode(b"PING".to_vec())],
+                selected_db: 0,
+                command: "PING".to_string(),
+                args_hex: Vec::new(),
             },
         )
     }
 
     fn handle_redis_connection_data(
-        info: TcpConnectionInfo,
+        _info: TcpConnectionInfo,
         state: &mut RedisConnectionState,
         data: &[u8],
         worker: &mut StdioJobWorker<RedisCommandJob, RedisResponseJob>,
@@ -633,28 +634,26 @@ mod tests {
             match decode(&state.read_buffer) {
                 Ok(Some((value, consumed))) => {
                     state.read_buffer.drain(..consumed);
-                    let Some(argv) = argv_from_resp(value) else {
+                    let Some(job) = command_job_from_resp(value, state.selected_db) else {
                         responses.extend(protocol_error_response(
-                            "ERR protocol error: expected array of bulk strings",
+                            "ERR protocol error: expected array command frame",
                         ));
                         continue;
                     };
 
-                    state.sequence += 1;
-                    let worker_response = worker.execute(
-                        info.id,
-                        state.sequence,
-                        RedisCommandJob {
-                            argv_hex: argv.into_iter().map(hex_encode).collect(),
-                        },
-                    );
+                    let worker_response = worker.execute(job);
 
                     match worker_response {
-                        Ok(payload) => match hex_decode(&payload.resp_hex) {
-                            Ok(bytes) => responses.extend(bytes),
-                            Err(error) => responses.extend(protocol_error_response(&format!(
-                                "ERR worker returned invalid response payload: {error}"
-                            ))),
+                        Ok(payload) => {
+                            state.selected_db = payload.selected_db;
+                            match engine_response_to_resp(payload.response) {
+                                Ok(value) => responses.extend(
+                                    encode(value).expect("engine responses should encode"),
+                                ),
+                                Err(error) => responses.extend(protocol_error_response(&format!(
+                                    "ERR worker returned invalid response payload: {error}"
+                                ))),
+                            }
                         },
                         Err(error) => responses.extend(protocol_error_response(&format!(
                             "ERR worker failed: {error}"
@@ -677,19 +676,57 @@ mod tests {
         }
     }
 
-    fn argv_from_resp(value: RespValue) -> Option<Vec<Vec<u8>>> {
+    fn command_job_from_resp(value: RespValue, selected_db: usize) -> Option<RedisCommandJob> {
         let RespValue::Array(Some(values)) = value else {
             return None;
         };
-        let mut argv = Vec::with_capacity(values.len());
+        let mut parts = Vec::with_capacity(values.len());
         for value in values {
             match value {
-                RespValue::BulkString(Some(bytes)) => argv.push(bytes),
-                RespValue::SimpleString(text) => argv.push(text.into_bytes()),
+                RespValue::BulkString(Some(bytes)) => parts.push(bytes),
+                RespValue::SimpleString(text) => parts.push(text.into_bytes()),
+                RespValue::Integer(value) => parts.push(value.to_string().into_bytes()),
                 _ => return None,
             }
         }
-        Some(argv)
+        let (command, args) = parts.split_first()?;
+        Some(RedisCommandJob {
+            selected_db,
+            command: ascii_upper(command),
+            args_hex: args.iter().cloned().map(hex_encode).collect(),
+        })
+    }
+
+    fn engine_response_to_resp(response: RedisEngineResponseJob) -> Result<RespValue, String> {
+        match response {
+            RedisEngineResponseJob::SimpleString { value } => Ok(RespValue::SimpleString(value)),
+            RedisEngineResponseJob::Error { message } => {
+                Ok(RespValue::Error(RespError::new(message)))
+            }
+            RedisEngineResponseJob::Integer { value } => Ok(RespValue::Integer(value)),
+            RedisEngineResponseJob::BulkString { value_hex } => {
+                let value = value_hex.map(|encoded| hex_decode(&encoded)).transpose()?;
+                Ok(RespValue::BulkString(value))
+            }
+            RedisEngineResponseJob::Array { values } => {
+                let values = values
+                    .map(|items| {
+                        items
+                            .into_iter()
+                            .map(engine_response_to_resp)
+                            .collect::<Result<Vec<_>, _>>()
+                    })
+                    .transpose()?;
+                Ok(RespValue::Array(values))
+            }
+        }
+    }
+
+    fn ascii_upper(bytes: &[u8]) -> String {
+        bytes
+            .iter()
+            .map(|byte| byte.to_ascii_uppercase() as char)
+            .collect()
     }
 
     fn protocol_error_response(message: &str) -> Vec<u8> {
@@ -759,21 +796,29 @@ mod tests {
     }
 
     #[test]
-    fn argv_from_resp_accepts_resp_arrays() {
+    fn command_job_from_resp_accepts_resp_arrays() {
         let value = RespValue::Array(Some(vec![bulk(b"PING"), bulk(b"hello")]));
         assert_eq!(
-            argv_from_resp(value),
-            Some(vec![b"PING".to_vec(), b"hello".to_vec()])
+            command_job_from_resp(value, 3),
+            Some(RedisCommandJob {
+                selected_db: 3,
+                command: "PING".to_string(),
+                args_hex: vec![hex_encode(b"hello".to_vec())],
+            })
         );
     }
 
     #[test]
-    fn argv_from_resp_rejects_non_command_values() {
-        assert_eq!(argv_from_resp(RespValue::Integer(1)), None);
-        assert_eq!(argv_from_resp(RespValue::Array(None)), None);
+    fn command_job_from_resp_rejects_non_array_commands() {
+        assert_eq!(command_job_from_resp(RespValue::Integer(1), 0), None);
+        assert_eq!(command_job_from_resp(RespValue::Array(None), 0), None);
         assert_eq!(
-            argv_from_resp(RespValue::Array(Some(vec![RespValue::Integer(1)]))),
-            None
+            command_job_from_resp(RespValue::Array(Some(vec![RespValue::Integer(1)])), 0),
+            Some(RedisCommandJob {
+                selected_db: 0,
+                command: "1".to_string(),
+                args_hex: Vec::new(),
+            })
         );
     }
 
@@ -821,29 +866,33 @@ mod tests {
             .expect("spawn worker");
         let response = worker
             .execute(
-                ConnectionId(7),
-                1,
                 RedisCommandJob {
-                    argv_hex: vec![hex_encode(b"PING".to_vec())],
+                    selected_db: 0,
+                    command: "PING".to_string(),
+                    args_hex: Vec::new(),
                 },
             )
             .expect("worker response");
-        assert_eq!(hex_decode(&response.resp_hex).unwrap(), b"+PONG\r\n");
+        assert_eq!(response.selected_db, 0);
+        assert_eq!(
+            response.response,
+            RedisEngineResponseJob::SimpleString {
+                value: "PONG".to_string()
+            }
+        );
     }
 
     #[test]
-    fn stdio_worker_rejects_misrouted_responses() {
+    fn stdio_worker_rejects_mismatched_response_ids() {
         let script = r#"
 import json, sys
 frame = json.loads(sys.stdin.readline())
 body = frame["body"]
-metadata = dict(body["metadata"])
-metadata["affinity_key"] = "not-the-connection"
-print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"resp_hex":"2b504f4e470d0a"}},"metadata":metadata}}), flush=True)
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"] + "-wrong","result":{"status":"ok","payload":{"selected_db":0,"response":{"kind":"simple_string","value":"PONG"}}},"metadata":body["metadata"]}}), flush=True)
 "#;
 
-        let error = execute_scripted_worker(script).expect_err("misrouted response should fail");
-        assert!(error.to_string().contains("affinity mismatch"));
+        let error = execute_scripted_worker(script).expect_err("mismatched response should fail");
+        assert!(error.to_string().contains("response id mismatch"));
     }
 
     #[test]
