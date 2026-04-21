@@ -58,16 +58,23 @@ from .ast import (
     Assignment as AstAssignment,
 )
 from .ast import (
+    BeginStmt,
+    CommitStmt,
     CreateTableStmt,
     DeleteStmt,
     DropTableStmt,
+    ExceptStmt,
+    InsertSelectStmt,
     InsertValuesStmt,
+    IntersectStmt,
     JoinClause,
     JoinKind,
+    RollbackStmt,
     SelectItem,
     SelectStmt,
     Statement,
     TableRef,
+    UnionStmt,
     UpdateStmt,
 )
 from .ast import (
@@ -114,8 +121,16 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
     match ast:
         case SelectStmt():
             return _plan_select(ast, schema)
+        case UnionStmt():
+            return _plan_union(ast, schema)
+        case IntersectStmt():
+            return _plan_intersect(ast, schema)
+        case ExceptStmt():
+            return _plan_except(ast, schema)
         case InsertValuesStmt():
             return _plan_insert(ast, schema)
+        case InsertSelectStmt():
+            return _plan_insert_select(ast, schema)
         case UpdateStmt():
             return _plan_update(ast, schema)
         case DeleteStmt():
@@ -124,6 +139,12 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_table(ast)
         case DropTableStmt():
             return _plan_drop_table(ast)
+        case BeginStmt():
+            return P.Begin()
+        case CommitStmt():
+            return P.Commit()
+        case RollbackStmt():
+            return P.Rollback()
     # Exhaustiveness — every Statement variant is matched above.
     raise UnsupportedStatement(kind=type(ast).__name__)
 
@@ -472,6 +493,57 @@ def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
 
 def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
     return P.DropTable(table=stmt.table, if_exists=stmt.if_exists)
+
+
+# --------------------------------------------------------------------------
+# Set-operation planning (UNION / INTERSECT / EXCEPT)
+# --------------------------------------------------------------------------
+
+
+def _plan_union(stmt: UnionStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan UNION [ALL]: recurse into both sub-queries, wrap in Union."""
+    left = _plan_select(stmt.left, schema)
+    right = _plan_select(stmt.right, schema)
+    return P.Union(left=left, right=right, all=stmt.all)
+
+
+def _plan_intersect(stmt: IntersectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan INTERSECT [ALL]: recurse into both sub-queries, wrap in Intersect."""
+    left = _plan_select(stmt.left, schema)
+    right = _plan_select(stmt.right, schema)
+    return P.Intersect(left=left, right=right, all=stmt.all)
+
+
+def _plan_except(stmt: ExceptStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan EXCEPT [ALL]: recurse into both sub-queries, wrap in Except."""
+    left = _plan_select(stmt.left, schema)
+    right = _plan_select(stmt.right, schema)
+    return P.Except(left=left, right=right, all=stmt.all)
+
+
+# --------------------------------------------------------------------------
+# INSERT … SELECT planning
+# --------------------------------------------------------------------------
+
+
+def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan INSERT INTO t (cols) SELECT …
+
+    The target table and columns are validated the same way as INSERT VALUES.
+    The sub-query is planned as a regular SELECT — column resolution runs
+    against the *source* table(s), not the target table.
+    """
+    table_cols = schema.columns(stmt.table)
+    if stmt.columns is not None:
+        for c in stmt.columns:
+            if c not in table_cols:
+                raise UnknownColumn(table=stmt.table, column=c)
+    sub_plan = _plan_select(stmt.select, schema)
+    return P.Insert(
+        table=stmt.table,
+        columns=stmt.columns,
+        source=P.InsertSource(query=sub_plan),
+    )
 
 
 # Keep imports from being marked unused — these are re-exported for callers.

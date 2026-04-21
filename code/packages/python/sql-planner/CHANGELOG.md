@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.0] - 2026-04-21
+
+### Added
+
+- **New AST statement types** (`sql_planner.ast`):
+  - `UnionStmt(left, right, all)` — `SELECT … UNION [ALL] SELECT …`
+  - `IntersectStmt(left, right, all)` — `SELECT … INTERSECT [ALL] SELECT …`
+  - `ExceptStmt(left, right, all)` — `SELECT … EXCEPT [ALL] SELECT …`
+  - `InsertSelectStmt(table, columns, select)` — `INSERT INTO … SELECT …`
+  - `BeginStmt`, `CommitStmt`, `RollbackStmt` — transaction control
+
+- **New LogicalPlan nodes** (`sql_planner.plan`):
+  - `Intersect(left, right, all)` — set intersection
+  - `Except(left, right, all)` — set difference
+  - `Begin`, `Commit`, `Rollback` — transaction control leaf nodes
+
+- **Planner dispatch** updated to handle all new statement types:
+  - `UnionStmt` → `Union`, `IntersectStmt` → `Intersect`, `ExceptStmt` → `Except`
+  - `InsertSelectStmt` → `Insert(source=InsertSource(query=…))`
+  - `BeginStmt` → `Begin`, `CommitStmt` → `Commit`, `RollbackStmt` → `Rollback`
+
+- **`children()` helper** extended for `Intersect`, `Except`, `Begin`, `Commit`, `Rollback`.
+
+- **`Statement` and `LogicalPlan` type unions** updated with all new variants.
+
+- All new types re-exported from `sql_planner.__init__`.
+
 ## [0.2.0] - 2026-04-19
 
 ### Added

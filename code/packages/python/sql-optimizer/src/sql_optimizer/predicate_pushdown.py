@@ -55,17 +55,21 @@ from __future__ import annotations
 
 from sql_planner import (
     Aggregate,
+    Begin,
     Between,
     BinaryExpr,
     BinaryOp,
     Column,
+    Commit,
     Distinct,
     EmptyResult,
+    Except,
     Expr,
     Filter,
     FunctionCall,
     Having,
     In,
+    Intersect,
     IsNotNull,
     IsNull,
     Join,
@@ -75,6 +79,7 @@ from sql_planner import (
     NotIn,
     NotLike,
     Project,
+    Rollback,
     Scan,
     Sort,
     UnaryExpr,
@@ -112,6 +117,12 @@ def _push(p: LogicalPlan) -> LogicalPlan:
             return Distinct(input=_push(inner))
         case Union(left=l, right=r, all=a):
             return Union(left=_push(l), right=_push(r), all=a)
+        case Intersect(left=l, right=r, all=a):
+            return Intersect(left=_push(l), right=_push(r), all=a)
+        case Except(left=l, right=r, all=a):
+            return Except(left=_push(l), right=_push(r), all=a)
+        case Begin() | Commit() | Rollback():
+            return p
         case _:
             return p
 

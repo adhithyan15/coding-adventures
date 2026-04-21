@@ -229,6 +229,60 @@ class Union:
     all: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class Intersect:
+    """Return rows present in *both* result sets.
+
+    ``all=False`` (INTERSECT) deduplicates: a row appears once if it is in
+    both sides. ``all=True`` (INTERSECT ALL) keeps duplicates up to the
+    minimum multiplicity of each row across the two sides.
+
+    Like Union, the output schema follows the *left* side's column names.
+    """
+
+    left: LogicalPlan
+    right: LogicalPlan
+    all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class Except:
+    """Return rows in the left set that are *not* in the right set.
+
+    ``all=False`` (EXCEPT) uses set difference: if a row appears any number
+    of times in the right side, all occurrences are removed from the left
+    side's result. ``all=True`` (EXCEPT ALL) subtracts multiplicities:
+    each occurrence in the right reduces the left count by one.
+
+    Output schema follows the *left* side's column names.
+    """
+
+    left: LogicalPlan
+    right: LogicalPlan
+    all: bool = False
+
+
+# ---- Transaction-control nodes --------------------------------------------
+#
+# These are leaf nodes — they carry no child plan and produce no rows.
+# The VM calls the backend's transaction methods directly when it sees them.
+
+
+@dataclass(frozen=True, slots=True)
+class Begin:
+    """BEGIN TRANSACTION — open an explicit transaction on the backend."""
+
+
+@dataclass(frozen=True, slots=True)
+class Commit:
+    """COMMIT TRANSACTION — commit the active transaction."""
+
+
+@dataclass(frozen=True, slots=True)
+class Rollback:
+    """ROLLBACK TRANSACTION — roll back the active transaction."""
+
+
 # ---- DML nodes ------------------------------------------------------------
 
 
@@ -317,6 +371,11 @@ LogicalPlan = (
     | Limit
     | Distinct
     | Union
+    | Intersect
+    | Except
+    | Begin
+    | Commit
+    | Rollback
     | Insert
     | Update
     | Delete
@@ -343,12 +402,14 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     match node:
         case Scan() | EmptyResult() | CreateTable() | DropTable():
             return ()
+        case Begin() | Commit() | Rollback():
+            return ()
         case (
             Filter() | Project() | Aggregate() | Having()
             | Sort() | Limit() | Distinct()
         ):
             return (node.input,)
-        case Join() | Union():
+        case Join() | Union() | Intersect() | Except():
             return (node.left, node.right)
         case Insert(_, _, source):
             return (source.query,) if source.query is not None else ()

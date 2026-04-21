@@ -326,6 +326,20 @@ class InMemoryBackend(Backend):
         self._index_snapshot = None
         self._active_handle = None
 
+    def current_transaction(self) -> TransactionHandle | None:
+        """Return the active transaction handle, or ``None`` if no transaction
+        is currently open.
+
+        Because the InMemoryBackend stores the handle internally, this method
+        can bridge the gap between separate :func:`~sql_vm.vm.execute` calls:
+        ``BeginTransaction`` stores the handle; subsequent ``CommitTransaction``
+        / ``RollbackTransaction`` calls retrieve it here rather than relying on
+        the (by then discarded) VM state object.
+        """
+        if self._active_handle is None:
+            return None
+        return TransactionHandle(self._active_handle)
+
     # --- Indexes ----------------------------------------------------------
 
     def create_index(self, index: IndexDef) -> None:

@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.4.0] - 2026-04-21
+
+### Added
+
+- **`UNION` / `INTERSECT` / `EXCEPT` compilation** — set-operation plan nodes
+  are now compiled end-to-end:
+  - `Union(all=False)` — compiles both sides with `_compile_read`, then appends
+    `DistinctResult` to deduplicate.
+  - `Union(all=True)` — same but no `DistinctResult` (bag union).
+  - `Intersect` — left side fills result buffer → `CaptureLeftResult` saves rows
+    to `left_result` and clears the buffer → right side fills buffer →
+    `IntersectResult(all)` computes the set/bag intersection.
+  - `Except` — same pattern as `Intersect` but ends with `ExceptResult(all)`.
+
+- **`INSERT … SELECT` compilation** — `Insert` nodes whose `InsertSource`
+  carries a `query` sub-plan now compile to a SELECT result-capture loop
+  followed by a single `InsertFromResult` instruction.  Previously this path
+  raised `UnsupportedNode`.
+
+- **Transaction IR instructions** — three new zero-field instruction types:
+  - `BeginTransaction` — emitted for the `Begin` plan node.
+  - `CommitTransaction` — emitted for the `Commit` plan node.
+  - `RollbackTransaction` — emitted for the `Rollback` plan node.
+
+- **New IR instructions exported from `sql_codegen`**:
+  `InsertFromResult`, `CaptureLeftResult`, `IntersectResult`, `ExceptResult`,
+  `BeginTransaction`, `CommitTransaction`, `RollbackTransaction`.
+
+### Fixed
+
+- `_compile_core` previously had no `Union` case and fell through to
+  `_compile_select` → `_compile_source` → `UnsupportedNode`.  The new case
+  handles `Union` directly so UNION queries compile correctly.
+
 ## [0.3.0] - 2026-04-20
 
 ### Added
