@@ -23,6 +23,9 @@ All notable changes to this package will be documented in this file.
 - Lowered scalar by-name actuals as storage pointers so by-name formal reads
   and writes execute through the caller's scalar slot, while expression and
   array-element actuals continue to report explicit future-thunk diagnostics.
+- Lowered read-only integer expression actuals to tagged eval thunk descriptors
+  with bounded call-scoped heap allocation and generated eval dispatch that
+  re-evaluates against the caller frame on every formal read.
 
 ## [0.1.0] - 2026-04-20
 

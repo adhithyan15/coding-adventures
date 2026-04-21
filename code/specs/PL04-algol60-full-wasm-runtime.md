@@ -717,6 +717,18 @@ continue to reject read-only expression actuals and array-element actuals until
 the full eval/store descriptor helpers can re-evaluate or re-locate the actual
 on every formal access.
 
+Current Phase 5b lowering may add read-only integer expression eval descriptors
+without store helpers. Descriptor pointers should be distinguishable from the
+Phase 5a scalar storage pointers, for example by tagging aligned descriptor
+addresses before passing them through the by-name formal slot. A by-name formal
+read checks the tag: untagged values are scalar storage pointers, while tagged
+values dispatch to a bounded eval helper that receives the descriptor, restores
+the caller frame for the captured expression, and returns the freshly evaluated
+integer. Assigning to a tagged descriptor must fail until store helpers exist.
+This slice should still reject expression thunks that read array elements or
+invoke procedure calls unless their helper can perform the correct runtime
+unwind and lifetime handling.
+
 ### Required Diagnostics
 
 The phase is not complete unless unsupported forms fail before WASM lowering
