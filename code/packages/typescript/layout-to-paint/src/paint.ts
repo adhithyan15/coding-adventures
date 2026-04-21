@@ -438,11 +438,12 @@ function emitTextAsPaintText(
   if (content.value.length === 0) return;
 
   const font = content.font;
-  // Approximate the baseline from the top of the node. Canvas's default
-  // textBaseline is "alphabetic"; 0.8 × font.size places the baseline at a
-  // realistic offset for most Latin fonts. A proper layout measurer would
-  // compute this from font metrics (ascent).
-  const baselineY = absY + font.size * 0.8;
+  // Baseline offset from the top of the node box. The measurer reports height
+  // using fontBoundingBoxAscent + fontBoundingBoxDescent, which for typical
+  // Latin fonts matches font.size × 1.15 — with ascent ≈ font.size × 0.93
+  // and descent ≈ font.size × 0.22. Using 0.93 here places the baseline
+  // inside the reported box consistently across same-font tokens on a line.
+  const baselineY = absY + font.size * 0.93;
 
   const family = font.family || "sans-serif";
   // Build "canvas:<family>@<size>:<weight>[:italic]" per TXT03d grammar.

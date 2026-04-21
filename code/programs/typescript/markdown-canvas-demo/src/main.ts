@@ -28,20 +28,62 @@ import { createCanvasVM } from "@coding-adventures/paint-vm-canvas";
 /**
  * Document-ast-to-layout may emit nodes with `width: null` / `height: null`
  * (meaning "no hint from this property"). Layout-block's core loop always
- * dereferences `.kind`, which crashes on null. We normalize to `size_wrap()`
- * for height and `size_fill()` for width, matching the "wrap to content" /
- * "fill parent" defaults that match CSS block-flow. This is a compatibility
- * shim until layout-block is patched upstream.
+ * dereferences `.kind`, which crashes on null. We normalize to sensible
+ * defaults matching CSS block/inline flow:
+ *
+ *   - block nodes:  width → size_fill(), height → size_wrap()
+ *   - inline nodes: width → size_wrap(), height → size_wrap()
+ *
+ * Inline nodes MUST NOT take size_fill() — that would make each word claim
+ * the full container width and stack vertically, destroying the inline
+ * formatting context. This is a compatibility shim until layout-block is
+ * patched upstream.
  */
 function normalizeNulls(node: LayoutNode): LayoutNode {
-  const width: SizeValue = node.width ?? size_fill();
+  const ext = node.ext as {
+    block?: { display?: string };
+    flex?: { direction?: string };
+  } | undefined;
+  const blockExt = ext?.block;
+  const isInline = blockExt?.display === "inline";
+  const width: SizeValue = node.width ?? (isInline ? size_wrap() : size_fill());
   const height: SizeValue = node.height ?? size_wrap();
+
+  // Flex-row containers (list item "bullet + body" rows from document-ast-to-
+  // layout) don't have a layout-block implementation — layout-block would
+  // stack their children vertically. For the demo we coerce the row into an
+  // inline formatting context by flattening the subtree: every text leaf
+  // (from any depth) becomes a direct inline child of the row. The bullet
+  // and body then flow side-by-side on one line exactly as CSS flex-row
+  // would, because layout-block tokenizes inline text leaves word-by-word.
+  const isFlexRow = ext?.flex?.direction === "row";
+  if (isFlexRow) {
+    const leaves: LayoutNode[] = [];
+    for (const child of node.children) collectTextLeaves(child, leaves);
+    return { ...node, width, height, children: leaves };
+  }
+
   return {
     ...node,
     width,
     height,
     children: node.children.map(normalizeNulls),
   };
+}
+
+function collectTextLeaves(node: LayoutNode, out: LayoutNode[]): void {
+  if (node.content !== null && node.content.kind === "text") {
+    // Make sure this leaf is explicitly inline — layout-block's wrapInlineRuns
+    // keys off ext.block.display.
+    const existingExt = (node.ext ?? {}) as Record<string, unknown>;
+    const nextExt = {
+      ...existingExt,
+      block: { ...(existingExt["block"] as object | undefined), display: "inline" },
+    };
+    out.push({ ...node, width: node.width ?? size_wrap(), height: node.height ?? size_wrap(), ext: nextExt });
+    return;
+  }
+  for (const child of node.children) collectTextLeaves(child, out);
 }
 
 const SAMPLE_MARKDOWN = `# Markdown on Canvas
