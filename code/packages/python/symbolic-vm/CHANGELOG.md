@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.12.0 — 2026-04-20
+
+Phase 7 of the integration roadmap — u-substitution (chain-rule reversal).
+
+Handles integrands of the form `f(g(x)) · c·g'(x)` where `f` is a single-argument
+function (SIN, COS, EXP, LOG, TAN, SQRT) and `c` is a rational constant.
+
+**Algorithm**: for each factor pair (outer, gp_candidate):
+1. Extract `g(x)` = argument of the outer function.
+2. Skip if `g = x` (Phase 1) or `g` is linear (Phases 3–5).
+3. Compute `g'(x)` symbolically via `_diff_ir`.
+4. Check `gp_candidate = c · g'(x)` via `_ratio_const`.
+5. Introduce dummy symbol `u`, compute `∫ F(u) du`, substitute `g(x)` back.
+
+New helpers in `integrate.py`: `_poly_deriv`, `_poly_mul`, `_diff_ir`,
+`_ratio_const`, `_subst`, `_try_u_sub_one`, `_try_u_sub`.
+
+Hook placed in the MUL branch after Phase 6, before Phase 4c/4a — linear-arg
+integrands are guarded away so earlier phases retain their cases.
+
+New spec: `code/specs/phase7-u-substitution.md`.
+
+44 new tests (`tests/test_phase7.py`). Package at 451 tests.
+
 ## 0.11.0 — 2026-04-21
 
 Phase 6 of the integration roadmap — mixed trig powers `sinⁿ·cosᵐ`.
