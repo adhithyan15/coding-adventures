@@ -8,6 +8,7 @@ the future VM backend we want to build next. The first version does not expose
 low-level bytecode yet. Instead, it turns:
 
 - relation declarations
+- dynamic relation declarations
 - facts
 - rules
 - queries
@@ -18,6 +19,7 @@ current engine backend.
 ## Instruction Set
 
 - `DEF_REL`
+- `DYNAMIC_REL`
 - `FACT`
 - `RULE`
 - `QUERY`
@@ -26,7 +28,7 @@ current engine backend.
 
 ```python
 from logic_engine import atom, conj, relation, var
-from logic_instructions import defrel, fact, instruction_program, query, rule, run_query
+from logic_instructions import defdynamic, defrel, fact, instruction_program, query, rule, run_query
 
 parent = relation("parent", 2)
 ancestor = relation("ancestor", 2)
@@ -38,7 +40,7 @@ Who = var("Who")
 
 program_ops = instruction_program(
     defrel(parent),
-    defrel(ancestor),
+    defdynamic(ancestor),
     fact(parent("homer", "bart")),
     fact(parent("homer", "lisa")),
     rule(ancestor(X, Y), parent(X, Y)),

@@ -14,6 +14,7 @@ That instruction stream becomes the shared contract between:
 
 from logic_instructions.instructions import (
     AssembledInstructionProgram,
+    DynamicRelationDefInstruction,
     FactInstruction,
     InstructionOpcode,
     InstructionProgram,
@@ -22,6 +23,7 @@ from logic_instructions.instructions import (
     RelationDefInstruction,
     RuleInstruction,
     assemble,
+    defdynamic,
     defrel,
     fact,
     instruction_program,
@@ -35,6 +37,7 @@ from logic_instructions.instructions import (
 __all__ = [
     "__version__",
     "AssembledInstructionProgram",
+    "DynamicRelationDefInstruction",
     "FactInstruction",
     "InstructionOpcode",
     "InstructionProgram",
@@ -43,6 +46,7 @@ __all__ = [
     "RelationDefInstruction",
     "RuleInstruction",
     "assemble",
+    "defdynamic",
     "defrel",
     "fact",
     "instruction_program",
@@ -53,4 +57,4 @@ __all__ = [
     "validate",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

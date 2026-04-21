@@ -30,6 +30,7 @@ from logic_engine import (
     FreshExpr,
     GoalExpr,
     LogicVar,
+    NativeGoalExpr,
     NeqExpr,
     Number,
     Program,
@@ -59,6 +60,7 @@ from symbol_core import Symbol
 
 __all__ = [
     "AssembledInstructionProgram",
+    "DynamicRelationDefInstruction",
     "FactInstruction",
     "InstructionOpcode",
     "InstructionProgram",
@@ -67,6 +69,7 @@ __all__ = [
     "RelationDefInstruction",
     "RuleInstruction",
     "assemble",
+    "defdynamic",
     "defrel",
     "fact",
     "instruction_program",
@@ -82,6 +85,7 @@ class InstructionOpcode(StrEnum):
     """Top-level instruction mnemonics for logic programs."""
 
     DEF_REL = "DEF_REL"
+    DYNAMIC_REL = "DYNAMIC_REL"
     FACT = "FACT"
     RULE = "RULE"
     QUERY = "QUERY"
@@ -95,6 +99,17 @@ class RelationDefInstruction:
     opcode: InstructionOpcode = field(
         init=False,
         default=InstructionOpcode.DEF_REL,
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class DynamicRelationDefInstruction:
+    """Declare a relation whose clauses may be mutated at runtime."""
+
+    relation: Relation
+    opcode: InstructionOpcode = field(
+        init=False,
+        default=InstructionOpcode.DYNAMIC_REL,
     )
 
 
@@ -136,6 +151,7 @@ class QueryInstruction:
 
 type LogicInstruction = (
     RelationDefInstruction
+    | DynamicRelationDefInstruction
     | FactInstruction
     | RuleInstruction
     | QueryInstruction
@@ -154,6 +170,7 @@ class InstructionProgram:
                 instruction,
                 (
                     RelationDefInstruction,
+                    DynamicRelationDefInstruction,
                     FactInstruction,
                     RuleInstruction,
                     QueryInstruction,
@@ -208,6 +225,7 @@ def _coerce_goal(goal: object) -> GoalExpr:
             | FailExpr
             | EqExpr
             | NeqExpr
+            | NativeGoalExpr
             | DeferredExpr
             | ConjExpr
             | DisjExpr
@@ -240,6 +258,25 @@ def defrel(
         raise ValueError(msg)
 
     return RelationDefInstruction(relation=make_relation(name, arity))
+
+
+def defdynamic(
+    name: str | Symbol | Relation,
+    arity: int | None = None,
+) -> DynamicRelationDefInstruction:
+    """Construct a dynamic relation declaration instruction."""
+
+    if isinstance(name, Relation):
+        if arity is not None:
+            msg = "defdynamic() does not accept arity when given a Relation object"
+            raise ValueError(msg)
+        return DynamicRelationDefInstruction(relation=name)
+
+    if arity is None:
+        msg = "defdynamic() requires arity when given a relation name or symbol"
+        raise ValueError(msg)
+
+    return DynamicRelationDefInstruction(relation=make_relation(name, arity))
 
 
 def fact(head: RelationCall) -> FactInstruction:
@@ -381,7 +418,10 @@ def validate(program_value: InstructionProgram) -> None:
     declared: dict[tuple[Symbol, int], Relation] = {}
 
     for instruction in program_value.instructions:
-        if isinstance(instruction, RelationDefInstruction):
+        if isinstance(
+            instruction,
+            RelationDefInstruction | DynamicRelationDefInstruction,
+        ):
             key = _relation_key(instruction.relation)
             if key in declared:
                 msg = f"relation {instruction.relation} was declared more than once"
@@ -437,10 +477,14 @@ def assemble(program_value: InstructionProgram) -> AssembledInstructionProgram:
     clauses: list[Clause] = []
     queries: list[QueryInstruction] = []
     declared: list[Relation] = []
+    dynamic_relations: list[Relation] = []
 
     for instruction in program_value.instructions:
         if isinstance(instruction, RelationDefInstruction):
             declared.append(instruction.relation)
+        elif isinstance(instruction, DynamicRelationDefInstruction):
+            declared.append(instruction.relation)
+            dynamic_relations.append(instruction.relation)
         elif isinstance(instruction, FactInstruction):
             clauses.append(engine_fact(instruction.head))
         elif isinstance(instruction, RuleInstruction):
@@ -449,7 +493,7 @@ def assemble(program_value: InstructionProgram) -> AssembledInstructionProgram:
             queries.append(instruction)
 
     return AssembledInstructionProgram(
-        program=engine_program(*clauses),
+        program=engine_program(*clauses, dynamic_relations=tuple(dynamic_relations)),
         queries=tuple(queries),
         relations=tuple(declared),
     )
