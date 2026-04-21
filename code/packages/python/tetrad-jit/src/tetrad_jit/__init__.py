@@ -184,7 +184,26 @@ class TetradJIT:
         if fn is None:
             raise ValueError(f"function '{fn_name}' not found in loaded program")
 
-        return self._vm.call_function(fn, args)
+        # Build a tiny synthetic CodeObject that pre-loads args into registers
+        # and calls the function, so vm.execute() returns the function result.
+        from tetrad_compiler.bytecode import Instruction, Op  # noqa: PLC0415
+        fn_idx = next(
+            i for i, f in enumerate(self._main_code.functions) if f.name == fn_name
+        )
+        instrs: list[Instruction] = []
+        for i, arg in enumerate(args[: len(fn.params)]):
+            instrs.append(Instruction(Op.LDA_IMM, [arg & 0xFF]))
+            instrs.append(Instruction(Op.STA_REG, [i]))
+        instrs.append(Instruction(Op.CALL, [fn_idx, len(fn.params), 0]))
+        instrs.append(Instruction(Op.RET, []))
+        synthetic = CodeObject(
+            name="__call__",
+            params=[],
+            instructions=instrs,
+            functions=self._main_code.functions,
+            register_count=max(len(fn.params), 1),
+        )
+        return self._vm.execute(synthetic)
 
     def execute_with_jit(self, code: CodeObject) -> int:
         """Run *code* under the interpreter, auto-compiling hot functions.

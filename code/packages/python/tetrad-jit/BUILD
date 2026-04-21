@@ -1,4 +1,3 @@
-set -euo pipefail
 uv venv --quiet --clear
 uv pip install \
     -e ../register-vm \
