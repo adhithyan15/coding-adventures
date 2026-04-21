@@ -2,39 +2,55 @@
 
 ## Overview
 
-The Tetrad JIT compiler is a **profile-guided native code generator**. It reads the
-feedback vectors and metrics collected by the VM (spec TET04), identifies hot functions
-and loops, and emits x86-64 machine code that runs those functions at hardware speed
-rather than interpreted speed.
+The Tetrad JIT compiler is a **profile-guided Intel 4004 native code generator**.
+It reads the feedback vectors and metrics collected by the VM (spec TET04),
+identifies hot functions, and emits real Intel 4004 machine code that runs
+those functions on the `intel4004-simulator` hardware model.
 
-The JIT is the payoff for the careful design of the feedback vector and metrics API.
-Every design decision in TET03 (feedback slots) and TET04 (metrics layer) was made with
-this consumer in mind.
+The JIT is the conceptual payoff of the entire Tetrad pipeline:
+
+```
+Tetrad source
+  → lexer / parser / type-checker (TET00-TET02)
+  → bytecode compiler (TET03)
+  → TetradVM interpreter (TET04)
+  → JIT: bytecode → JIT IR → Intel 4004 binary → simulator (TET05)
+```
+
+Targeting the Intel 4004 is architecturally intentional.  Tetrad's VM
+constraints (u8 arithmetic, 4-frame call stack, 8 registers) were modelled
+after the 4004.  The JIT closes the loop by producing code the 4004's
+hardware model can actually execute.
 
 This spec covers:
+
 1. Hot-function detection and triggering
-2. The JIT compilation pipeline (bytecode → IR → x86-64)
-3. Optimization passes (constant folding, dead code, type specialization)
-4. x86-64 code generation using Python `ctypes`
-5. On-stack replacement (OSR) for hot loops
-6. The deoptimization path (when speculation fails)
+2. The JIT compilation pipeline (bytecode → IR → Intel 4004)
+3. Optimization passes (constant folding, dead code, type specialisation)
+4. Intel 4004 code generation using the `intel4004-simulator` package
+5. The deoptimisation path (unsupported operations fall back to the interpreter)
+6. The JIT code cache
 
 ---
 
-## Why a JIT? The Lisp Context
+## Why the Intel 4004?
 
-Most Lisp implementations today (SBCL, Racket, Guile, Chez) have AOT compilers or
-simple interpreters. SBCL has a native compiler but it is not a tracing/profiling JIT —
-it compiles whole functions with type declarations, not hot paths with type feedback.
+The Intel 4004 (1971) is a 4-bit accumulator-based CPU with:
 
-The gap: **no major Lisp VM exposes a clean metrics API** that an external JIT can
-consume to make type-specialization decisions. Tetrad fills this gap by design.
+- 16 × 4-bit registers (R0–R15), grouped as 8 register pairs (P0–P7)
+- A 4-bit accumulator (A) and carry flag (CY)
+- A 3-level hardware call stack
+- 4096 bytes of ROM program storage
+- 640 nibbles of RAM
 
-A future Lisp front-end that compiles to Tetrad bytecode will get the JIT almost for
-free: the feedback vectors it generates will tell the JIT which slots are
-monomorphic integer operations (compile to a single `add` instruction), which are
-polymorphic (compile a type dispatch), and which are megamorphic (bail to the
-interpreter). This is exactly how V8 makes JavaScript fast.
+Tetrad values are u8 (8-bit).  The code generator stores each u8 in a
+**register pair**: the high nibble in the even register, the low nibble in
+the odd register.  For example, the value `0x2A` (42) in pair P2 means
+`R4=2, R5=10` (0x2 and 0xA).
+
+This is the same nibble-pair representation used by the Nib language backend
+(spec NIB01).  Tetrad's JIT leverages the same `intel4004-simulator` package
+to actually execute the compiled binary.
 
 ---
 
@@ -43,178 +59,90 @@ interpreter). This is exactly how V8 makes JavaScript fast.
 ```
 VM executes program (interpreted)
     │
-    │  metrics accumulate per instruction
+    │  metrics accumulate per function call / loop iteration
     ▼
-Hot-function detector (threshold: 100 calls or 500 loop iterations)
+Hot-function detector (threshold: 100 calls for UNTYPED)
     │
     │  hot function identified
     ▼
 JIT Compiler
-    ├── Step 1: Bytecode → JIT IR (SSA form)
+    ├── Step 1: Tetrad bytecode → JIT IR (SSA form)
     ├── Step 2: Optimization passes
     │     ├── Constant folding
-    │     ├── Dead code elimination
-    │     ├── Type specialization (using feedback vectors)
-    │     └── Branch layout (hot path first)
-    ├── Step 3: Register allocation (linear scan)
-    └── Step 4: x86-64 code generation → bytes
+    │     └── Dead code elimination
+    ├── Step 3: Intel 4004 code generation
+    │     ├── Register pair allocation (virtual var → P0–P5)
+    │     ├── 8-bit arithmetic via nibble-pair sequences
+    │     └── Two-pass assembler (labels → ROM addresses)
+    └── Step 4: Cache compiled binary
     │
     ▼
-Compiled function (Python bytes object)
+Compiled function (Python bytes, Intel 4004 binary)
     │
-    │  ctypes maps bytes to callable
+    │  per call: load into Intel4004Simulator, set arg registers, run
     ▼
-JIT Code Cache (fn_name → callable)
+JIT Code Cache (fn_name → compiled bytes)
     │
     ▼
 VM calls compiled version on next invocation
 ```
 
-When a compiled function needs a feature the JIT doesn't support (deoptimization
-trigger), it falls back to the interpreter for that activation.
-
 ---
 
 ## Three-Tier Compilation Strategy
 
-Optional type annotations create three distinct compilation tiers. Each tier has a
-different trigger for when JIT compilation occurs:
-
-| Tier | `CodeObject.type_status` | JIT trigger | Warmup cost |
-|---|---|---|---|
-| **FULLY_TYPED** | `FULLY_TYPED` | Compiled **before first call** (from `immediate_jit_queue`) | None |
-| **PARTIALLY_TYPED** | `PARTIALLY_TYPED` | Compiled after **10 calls** | 10 interpreted runs |
-| **UNTYPED** | `UNTYPED` | Compiled after **100 calls** or 500 loop iterations | 100 interpreted runs |
+| Tier              | `type_status`      | JIT trigger      | Warmup cost     |
+|-------------------|--------------------|------------------|-----------------|
+| **FULLY_TYPED**   | `FULLY_TYPED`      | Before first call | None           |
+| **PARTIALLY_TYPED** | `PARTIALLY_TYPED` | After 10 calls  | 10 interpreted  |
+| **UNTYPED**       | `UNTYPED`          | After 100 calls  | 100 interpreted |
 
 ```python
 THRESHOLDS = {
-    FunctionTypeStatus.FULLY_TYPED:     0,    # immediate — drain from queue before main
-    FunctionTypeStatus.PARTIALLY_TYPED: 10,   # quick warmup for partially annotated code
-    FunctionTypeStatus.UNTYPED:         100,  # conservative — avoid compiling cold code
+    FunctionTypeStatus.FULLY_TYPED:     0,   # compile immediately
+    FunctionTypeStatus.PARTIALLY_TYPED: 10,
+    FunctionTypeStatus.UNTYPED:         100,
 }
-
-LOOP_ITERATION_THRESHOLD = 500   # OSR trigger (all tiers)
-
-def should_jit(vm: TetradVM, fn_name: str, code: CodeObject) -> bool:
-    if code.immediate_jit_eligible:
-        return True   # already queued before main; this path should not be reached
-    threshold = THRESHOLDS[code.type_status]
-    call_count = vm.metrics().function_call_counts.get(fn_name, 0)
-    if call_count >= threshold:
-        return True
-    loop_iters = vm.loop_iterations(fn_name)
-    if any(count >= LOOP_ITERATION_THRESHOLD for count in loop_iters.values()):
-        return True
-    return False
 ```
-
-### Immediate Compilation (FULLY_TYPED)
-
-`execute_with_jit` drains the `immediate_jit_queue` before running any bytecode:
-
-```python
-def execute_with_jit(self, code: CodeObject) -> int:
-    # Phase 1: compile all FULLY_TYPED functions before the interpreter starts
-    for fn_name in self.vm.metrics.immediate_jit_queue:
-        fn_code = find_function(code, fn_name)
-        self.compile(fn_code)   # emits x86-64; puts in cache
-
-    # Phase 2: run the interpreter; hot PARTIALLY_TYPED/UNTYPED fns compile as they warm up
-    return self.vm.execute(code)
-```
-
-The JIT can compile typed functions immediately because it does not need feedback data
-for them: the type annotations guarantee `u8 × u8 → u8` for every op. The generated
-code has no type guards and no deopt paths.
-
-### Optimized Code for Typed Functions
-
-For a FULLY_TYPED function, the JIT skips the type-specialization pass (Pass 3) because
-the type checker already guaranteed all operands are `u8`. The emitted x86-64 is clean
-integer arithmetic with no type guards:
-
-```
-# Typed fn add(a: u8, b: u8) -> u8 { return a + b; }
-push rbp
-mov  rbp, rsp
-mov  rax, rdi      # load a
-add  rax, rsi      # a + b
-and  rax, 0xFF     # u8 wrap
-pop  rbp
-ret
-
-# No type checks. No deopt calls. No guards. Pure arithmetic.
-```
-
-For PARTIALLY_TYPED and UNTYPED functions, the type-specialization pass (Pass 3) runs
-as before, reading feedback slots to determine which ops can be specialized.
 
 ---
 
 ## JIT IR (Intermediate Representation)
 
-Between bytecode and x86-64, the JIT uses a simple SSA-based IR. Each IR instruction
-operates on **virtual variables** (vN) rather than the accumulator and registers. This
-makes the optimization passes easier to implement.
+Between bytecode and 4004, the JIT uses a simple SSA-based IR.  Each IR
+instruction operates on **virtual variables** (vN) rather than the accumulator
+and registers.  This makes optimization passes simple: constant folding only
+needs a values dict; DCE only needs a liveness set.
 
-### IR Instructions
-
-```python
-@dataclass
-class IRInstr:
-    op: str              # operation name
-    dst: str | None      # destination virtual variable (e.g. "v3"), or None for effects
-    srcs: list[str|int]  # source virtual variables or integer constants
-    ty: str              # type annotation: "u8" | "unknown" (from feedback)
-    comment: str = ""    # optional debug comment
-```
-
-### IR Instruction Set
-
-| Op | Effect |
-|---|---|
-| `const` | `dst = srcs[0]` (integer constant) |
-| `load_var` | `dst = vars[srcs[0]]` |
-| `store_var` | `vars[srcs[0]] = srcs[1]` |
-| `add` | `dst = (srcs[0] + srcs[1]) % 256` |
-| `sub` | `dst = (srcs[0] - srcs[1]) % 256` |
-| `mul` | `dst = (srcs[0] * srcs[1]) % 256` |
-| `div` | `dst = srcs[0] / srcs[1]` |
-| `mod` | `dst = srcs[0] % srcs[1]` |
-| `and` | `dst = srcs[0] & srcs[1]` |
-| `or` | `dst = srcs[0] \| srcs[1]` |
-| `xor` | `dst = srcs[0] ^ srcs[1]` |
-| `not` | `dst = ~srcs[0] & 0xFF` |
-| `shl` | `dst = (srcs[0] << srcs[1]) & 0xFF` |
-| `shr` | `dst = srcs[0] >> srcs[1]` |
-| `cmp_eq` | `dst = 1 if srcs[0] == srcs[1] else 0` |
-| `cmp_lt` | `dst = 1 if srcs[0] < srcs[1] else 0` |
-| (other cmps) | similar |
-| `jmp` | unconditional jump to `srcs[0]` (label name) |
-| `jz` | jump to `srcs[1]` if `srcs[0] == 0` |
-| `jnz` | jump to `srcs[1]` if `srcs[0] != 0` |
-| `label` | marks a branch target |
-| `call` | `dst = call srcs[0](srcs[1..])` |
-| `ret` | return `srcs[0]` |
-| `io_in` | `dst = read_io()` |
-| `io_out` | write `srcs[0]` to io |
-| `deopt` | bail to interpreter |
+See `ir.py` for the `IRInstr` dataclass and `evaluate_op`.
 
 ### Bytecode → IR Translation
 
-The translation is a straight-line pass that creates a new virtual variable for each
-`LDA_*` result and each arithmetic result:
+The translator (`translate.py`) maintains:
+
+- `acc` — the SSA variable currently in the accumulator
+- `regs[r]` — the SSA variable currently in Tetrad register R[r]
+
+Key mappings:
 
 ```
-LDA_IMM 42        →  v0 = const 42          type=u8
-STA_REG r0        →  (r0 slot = v0)
-LDA_VAR x         →  v1 = load_var "x"      type=u8
-ADD r0, slot=0    →  v2 = add v1, v0        type=u8 (from feedback: monomorphic u8)
-STA_VAR x         →  store_var "x", v2
+LDA_IMM 42        →  v0 = const 42          ty=u8
+LDA_ZERO          →  v1 = const 0           ty=u8
+LDA_REG r         →  acc = regs[r]          (no IR instruction)
+LDA_VAR i         →  v2 = load_var i        ty=u8
+STA_REG r         →  regs[r] = acc          (no IR instruction)
+STA_VAR i         →  store_var i, acc       ty=u8
+ADD r, [slot]     →  v3 = add acc, regs[r]  ty=u8 or unknown
+ADD_IMM n         →  v4 = add acc, n        ty=u8
+EQ r              →  v5 = cmp_eq acc, regs[r]
+JMP offset        →  jmp lbl_N
+JZ offset         →  jz acc, lbl_N
+RET               →  ret acc
 ```
 
-The accumulator is modelled as an implicit "current value" tracked by the translator,
-not as an IR variable. This keeps the IR clean.
+Function parameters are pre-loaded into `regs[0..N-1]` via `param` IR
+instructions at function entry.  Tetrad's compiled prologue
+(`LDA_REG 0; STA_VAR 0`) is then correctly translated using those SSA vars.
 
 ---
 
@@ -222,306 +150,171 @@ not as an IR variable. This keeps the IR clean.
 
 ### Pass 1: Constant Folding
 
-Evaluates operations on known constants at compile time:
+Evaluates operations on known-constant virtual variables at compile time.
 
 ```
 v0 = const 10
 v1 = const 5
-v2 = add v0, v1    →    v2 = const 15   (folded)
+v2 = add v0, v1    →    v2 = const 15   (folded via evaluate_op)
+v3 = cmp_lt v0, v1 →    v3 = const 0    (10 < 5 = false)
 ```
 
-Implementation: forward pass that maintains a `values: dict[str, int | None]` map.
-If both sources are known constants, evaluate and replace with `const`.
-
-```python
-def constant_fold(ir: list[IRInstr]) -> list[IRInstr]:
-    values: dict[str, int | None] = {}
-    result = []
-    for instr in ir:
-        if instr.op == "const":
-            values[instr.dst] = instr.srcs[0]
-            result.append(instr)
-        elif instr.op in ARITHMETIC_OPS:
-            a = values.get(instr.srcs[0]) if isinstance(instr.srcs[0], str) else instr.srcs[0]
-            b = values.get(instr.srcs[1]) if isinstance(instr.srcs[1], str) else instr.srcs[1]
-            if a is not None and b is not None:
-                folded = evaluate_op(instr.op, a, b)
-                values[instr.dst] = folded
-                result.append(IRInstr(op="const", dst=instr.dst, srcs=[folded], ty="u8"))
-            else:
-                values[instr.dst] = None
-                result.append(instr)
-        else:
-            result.append(instr)
-    return result
-```
+Implementation: single forward pass with `values: dict[str, int | None]`.
+`evaluate_op(op, a, b)` (from `ir.py`) computes the result.
 
 ### Pass 2: Dead Code Elimination
 
-Removes IR instructions whose destination is never read:
+Removes IR instructions whose destination is never used.
 
 ```
-v3 = add v1, v2    (v3 never used)   →   (removed)
+v3 = add v1, v2    (v3 never appears in any srcs)  →   (removed)
 ```
 
-Implementation: backward liveness pass. Build a set of "live" virtual variables by
-scanning uses in reverse. Any `dst` not in the live set is dead.
-
-```python
-def dead_code_eliminate(ir: list[IRInstr]) -> list[IRInstr]:
-    live: set[str] = set()
-    # Collect all uses (backwards)
-    for instr in reversed(ir):
-        for src in instr.srcs:
-            if isinstance(src, str):
-                live.add(src)
-    # Keep instructions whose dst is live (or has side effects)
-    SIDE_EFFECT_OPS = {"store_var", "io_out", "jmp", "jz", "jnz", "call", "ret", "deopt"}
-    return [i for i in ir if i.dst in live or i.op in SIDE_EFFECT_OPS or i.op == "label"]
-```
-
-### Pass 3: Type Specialization
-
-The most important pass. For each arithmetic op, read the feedback vector to determine
-the observed operand types:
-
-```python
-def type_specialize(ir: list[IRInstr], feedback: list[SlotState]) -> list[IRInstr]:
-    result = []
-    slot_idx = 0
-    for instr in ir:
-        if instr.op in BINARY_OPS_WITH_SLOTS:
-            state = feedback[slot_idx]
-            slot_idx += 1
-            if state.kind == SlotKind.MEGAMORPHIC:
-                # Cannot specialize — emit deopt
-                result.append(IRInstr(op="deopt", dst=None, srcs=[], ty="unknown",
-                                      comment=f"megamorphic at slot {slot_idx-1}"))
-            elif state.kind in (SlotKind.MONOMORPHIC, SlotKind.POLYMORPHIC):
-                if state.observations == ["u8"]:
-                    # Fully monomorphic u8: emit direct integer op, no type check
-                    result.append(dataclasses.replace(instr, ty="u8"))
-                else:
-                    # Polymorphic: emit type guard + fast path
-                    result.extend(emit_type_guard(instr, state))
-            else:
-                # Uninitialized — never reached. Emit deopt.
-                result.append(IRInstr(op="deopt", dst=None, srcs=[], ty="unknown"))
-        else:
-            result.append(instr)
-    return result
-```
-
-For Tetrad v1, every slot will be monomorphic u8, so this pass simply annotates
-every arithmetic op with `ty="u8"` and emits the direct path. The deopt paths are
-present but never triggered.
-
-### Pass 4: Branch Layout
-
-Reorders basic blocks so that the hot branch (high `taken_ratio`) comes first in the
-generated code. This improves instruction cache locality and branch predictor accuracy.
-
-```python
-def branch_layout(ir: list[IRInstr], branch_stats: dict[int, BranchStats]) -> list[IRInstr]:
-    # For each JZ/JNZ, if the NOT-taken path is hotter, invert the condition
-    # and swap the branch targets.
-    result = []
-    for instr in ir:
-        if instr.op == "jz" and instr in branch_stats:
-            stats = branch_stats[instr]
-            if stats.taken_ratio < 0.2:   # rarely taken → invert
-                result.append(IRInstr(op="jnz", dst=instr.dst, srcs=instr.srcs, ty=instr.ty))
-            else:
-                result.append(instr)
-        else:
-            result.append(instr)
-    return result
-```
+Implementation: backward liveness pass.  Collect all `src` variable names;
+any instruction whose `dst` is not in the live set (and has no side effects)
+is dropped.
 
 ---
 
-## Register Allocation
+## Intel 4004 Code Generation
 
-The JIT uses a **linear scan** register allocator over x86-64 registers. For Tetrad's
-small functions (typically ≤ 8 virtual variables), linear scan is optimal.
+### Register Pair Convention
 
-Available x86-64 registers (caller-saved, safe to clobber):
-- `rax`, `rcx`, `rdx`, `rsi`, `rdi`, `r8`, `r9`, `r10`, `r11`
+Each Tetrad u8 virtual variable maps to one 4004 register pair:
 
-The allocator assigns each live range (virtual variable + its uses) to a physical
-register. Spills go to the stack frame.
+| Pair | Registers | Role |
+|------|-----------|------|
+| P0 (R0:R1) | R0=hi, R1=lo | Argument 0 / return value |
+| P1 (R2:R3) | R2=hi, R3=lo | Argument 1 |
+| P2 (R4:R5) | — | Local virtual var 0 |
+| P3 (R6:R7) | — | Local virtual var 1 |
+| P4 (R8:R9) | — | Local virtual var 2 |
+| P5 (R10:R11) | — | Local virtual var 3 |
+| P6 (R12:R13) | — | RAM address register (reserved) |
+| P7 (R14:R15) | — | Scratch / immediate temp (reserved) |
+
+If a function uses more than 2 params or more than 6 distinct virtual
+variables, compilation fails and execution falls back to the interpreter.
+
+### Supported and Unsupported Operations
+
+**Supported in v1** (compiled to 4004 binary):
+
+| IR op | 4004 sequence |
+|-------|---------------|
+| `const v, [imm]` | `FIM Pv, imm` (2 bytes) |
+| `param v, [n]` | P0/P1 already set by caller; just records the mapping |
+| `load_var v, [i]` | `FIM P6, 2i; SRC P6; RDM; XCH Rhi` × 2 nibbles |
+| `store_var _, [i, v]` | `FIM P6, 2i; SRC P6; LD Rhi; WRM` × 2 nibbles |
+| `add v, [a, b]` | `CLC; LD Rb_lo; ADD_R Ra_lo; XCH Rv_lo; LD Rb_hi; ADD_R Ra_hi; XCH Rv_hi` |
+| `sub v, [a, b]` | `STC; LD Ra_lo; SUB_R Rb_lo; XCH Rv_lo; LD Ra_hi; SUB_R Rb_hi; XCH Rv_hi` |
+| `cmp_lt v, [a, b]` | Subtract a−b, CMC, TCC → result in Rv |
+| `cmp_le v, [a, b]` | Subtract b−a (no borrow ⟹ a≤b), TCC |
+| `cmp_gt v, [a, b]` | Subtract b−a, CMC, TCC |
+| `cmp_ge v, [a, b]` | Subtract a−b (no borrow ⟹ a≥b), TCC |
+| `cmp_eq v, [a, b]` | Sub hi + JCN; sub lo + JCN; set 1 or 0 |
+| `cmp_ne v, [a, b]` | Inverse of cmp_eq |
+| `jmp _, [lbl]` | `JUN lbl` |
+| `jz _, [v, lbl]` | Check hi nibble + lo nibble nonzero; `JUN lbl` if both zero |
+| `jnz _, [v, lbl]` | `JCN 0xC, lbl` on hi; `JCN 0xC, lbl` on lo |
+| `label _, [lbl]` | Label marker (zero bytes) |
+| `ret _, [v]` | Copy Pv to P0 if needed; `HLT` |
+
+**Unsupported in v1** (trigger deopt — fall back to interpreter):
+
+`mul`, `div`, `mod`, `and`, `or`, `xor`, `not`, `shl`, `shr`,
+`logical_not`, `io_in`, `io_out`, `call`, `deopt`.
+
+Operations without direct 4004 equivalents (bitwise register-to-register ops,
+division) are left to v2.
+
+### 8-bit Add on the 4004
+
+The 4004 ADD instruction is 4-bit: `A = A + Rr + CY`.  For u8 addition, we
+add the low nibbles (carry-free) then the high nibbles (consuming the carry):
+
+```
+; u8 add: Pa + Pb → Pv   (Pa = R(2a):R(2a+1), etc.)
+CLC                      ; clear carry for low nibble add
+LD   R(2a+1)             ; A = lo(a)
+ADD  R(2b+1)             ; A = lo(a) + lo(b) + 0;  carry ← lo overflow
+XCH  R(2v+1)             ; R(2v+1) = result_lo;  carry preserved
+
+LD   R(2a)               ; A = hi(a)
+ADD  R(2b)               ; A = hi(a) + hi(b) + carry; high overflow discarded
+XCH  R(2v)               ; R(2v) = result_hi  (u8 wrap automatic)
+```
+
+### 8-bit Subtract on the 4004
+
+`SUB Rr: A = A + ~Rr + (1 if CY=0 else 0)`.  With `STC` (CY=1) the
+first sub has no borrow-in; carry propagates naturally to the hi nibble:
+
+```
+; u8 sub: Pa - Pb → Pv
+STC                      ; CY=1 (no borrow-in for lo)
+LD   R(2a+1)             ; A = lo(a)
+SUB  R(2b+1)             ; A = lo(a) − lo(b);  CY=1 if no borrow
+XCH  R(2v+1)             ; save lo result;  carry preserved
+
+LD   R(2a)               ; A = hi(a)
+SUB  R(2b)               ; A = hi(a) − hi(b) − borrow; high overflow discarded
+XCH  R(2v)               ; R(2v) = result_hi
+```
+
+### 8-bit Comparison on the 4004
+
+`cmp_lt Pa, Pb → Pv` (result = 1 if Pa < Pb, else 0):
+
+```
+; Compute Pa − Pb; if final borrow (CY=0), Pa < Pb
+STC
+LD   R(2a+1)
+SUB  R(2b+1)             ; lo subtract (lo result discarded)
+LD   R(2a)
+SUB  R(2b)               ; hi subtract;  CY=1 ⟹ no borrow ⟹ Pa ≥ Pb
+CMC                      ; invert: CY=1 ⟹ Pa < Pb
+TCC                      ; A = 1 if Pa<Pb, 0 otherwise;  clears carry
+XCH  R(2v+1)             ; lo nibble = 0 or 1
+LDM  0
+XCH  R(2v)               ; hi nibble = 0
+```
+
+### Two-pass Assembler
+
+The code generator produces a list of **abstract instructions** (tuples) and
+then resolves them to binary bytes in two passes:
+
+**Pass 1**: scan abstract instructions, compute byte offset of each one and
+each label, build `label → byte_address` dict.
+
+**Pass 2**: encode each instruction using the resolved label addresses.
+
+Since all compiled functions are small (< 256 bytes), all code fits on
+4004 ROM page 0 (addresses 0x000–0x0FF).  `JCN` page-relative addresses are
+therefore just the low 8 bits of the absolute ROM address.
+
+### Executing a Compiled Function
 
 ```python
-@dataclass
-class LiveRange:
-    var: str             # virtual variable name
-    start: int           # IR instruction index where defined
-    end: int             # IR instruction index of last use
-
-def linear_scan_alloc(ir: list[IRInstr]) -> dict[str, str | int]:
-    """Returns mapping: virtual var → x86 reg name or stack offset."""
-    ranges = compute_live_ranges(ir)
-    active: list[LiveRange] = []
-    free_regs = ["rax", "rcx", "rdx", "rsi", "rdi", "r8", "r9", "r10"]
-    allocation: dict[str, str | int] = {}
-    stack_offset = 0
-
-    for lr in sorted(ranges, key=lambda r: r.start):
-        # Expire old intervals
-        active = [a for a in active if a.end >= lr.start]
-
-        if free_regs:
-            reg = free_regs.pop(0)
-            allocation[lr.var] = reg
-            active.append(lr)
-        else:
-            # Spill: evict the interval with the furthest end
-            spill = max(active, key=lambda a: a.end)
-            if spill.end > lr.end:
-                allocation[lr.var] = allocation.pop(spill.var)
-                stack_offset -= 8
-                allocation[spill.var] = stack_offset
-                active.remove(spill)
-                active.append(lr)
-            else:
-                stack_offset -= 8
-                allocation[lr.var] = stack_offset
-
-    return allocation
+def _run_on_4004(binary: bytes, args: list[int]) -> int:
+    sim = Intel4004Simulator()
+    sim.reset()
+    sim.load_program(binary)
+    sim._prepare_execution()
+    # Load arguments into register pairs
+    if len(args) >= 1:
+        sim._write_pair(0, args[0] & 0xFF)  # P0 = arg0
+    if len(args) >= 2:
+        sim._write_pair(1, args[1] & 0xFF)  # P1 = arg1
+    # Execute until HLT
+    for _ in range(100_000):
+        if sim.halted or sim._vm.pc >= len(sim._code.instructions):
+            break
+        sim.step()
+    # Return value is in P0
+    return sim._read_pair(0) & 0xFF
 ```
-
----
-
-## x86-64 Code Generation
-
-The code generator emits raw x86-64 machine code bytes. The Python `ctypes` module
-maps those bytes to a callable function pointer.
-
-### x86-64 Calling Convention (System V AMD64 ABI)
-
-The JIT-compiled function follows the System V AMD64 ABI:
-- Arguments: `rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`
-- Return value: `rax`
-- Caller-saved: `rax`, `rcx`, `rdx`, `rsi`, `rdi`, `r8`–`r11`
-- Callee-saved: `rbx`, `rbp`, `r12`–`r15`
-
-Each Tetrad function receives its arguments as u8 values in the argument registers.
-It returns its result in `rax` (u8, zero-extended to 64 bits).
-
-### Prologue and Epilogue
-
-```
-; Prologue
-push rbp
-mov  rbp, rsp
-sub  rsp, N      ; stack space for spilled variables
-
-; ... body ...
-
-; Epilogue
-mov  rsp, rbp
-pop  rbp
-ret
-```
-
-### Instruction Encoding Examples
-
-These are the core x86-64 encodings the code generator needs:
-
-```python
-def emit_mov_reg_imm(buf: bytearray, dst_reg: str, imm: int):
-    """mov dst, imm8   (zero-extends to 64-bit)"""
-    rex = 0x48 if dst_reg in 64BIT_REGS else 0x00
-    # e.g. mov rax, 42 → 48 C7 C0 2A 00 00 00
-    ...
-
-def emit_mov_reg_reg(buf: bytearray, dst: str, src: str):
-    """mov dst, src"""
-    ...
-
-def emit_add_reg_reg(buf: bytearray, dst: str, src: str):
-    """add dst, src; then: and dst, 0xFF (ensure u8 wrap)"""
-    ...
-
-def emit_sub_reg_reg(buf: bytearray, dst: str, src: str):
-    """sub dst, src; then: and dst, 0xFF"""
-    ...
-
-def emit_imul_reg_reg(buf: bytearray, dst: str, src: str):
-    """imul dst, src; then: and dst, 0xFF"""
-    ...
-
-def emit_jmp_rel32(buf: bytearray, offset: int):
-    """jmp rel32"""
-    buf += b'\xe9' + struct.pack('<i', offset)
-
-def emit_jz_rel32(buf: bytearray, offset: int):
-    """test rax, rax; jz rel32"""
-    buf += b'\x48\x85\xc0'   # test rax, rax
-    buf += b'\x0f\x84' + struct.pack('<i', offset)
-
-def emit_ret(buf: bytearray):
-    buf += b'\xc3'
-```
-
-### Full Compilation Example
-
-Compiling `fn add(a, b) { return a + b; }`:
-
-```
-IR after translation:
-  v0 = load_var "a"    (from register R0 / rdi)
-  v1 = load_var "b"    (from register R1 / rsi)
-  v2 = add v0, v1      type=u8
-  ret v2
-
-After optimization:
-  No constants to fold. No dead code. Type is monomorphic u8.
-
-After register allocation:
-  v0 → rdi (already there, argument 0)
-  v1 → rsi (already there, argument 1)
-  v2 → rax
-
-Generated x86-64:
-  push rbp
-  mov  rbp, rsp
-  ; v2 = add v0(rdi), v1(rsi)
-  mov  rax, rdi
-  add  rax, rsi
-  and  rax, 0xFF       ; u8 wrap
-  ; ret v2 (rax)
-  pop  rbp
-  ret
-```
-
-Machine code bytes: approximately 14 bytes for this function.
-
----
-
-## Invoking JIT Code with ctypes
-
-```python
-import ctypes
-import mmap
-
-def make_executable(buf: bytes) -> ctypes.CFUNCTYPE:
-    """Map bytes into executable memory and return a callable."""
-    size = len(buf)
-    # Allocate page-aligned executable memory
-    mem = mmap.mmap(-1, size,
-                    prot=mmap.PROT_READ | mmap.PROT_WRITE | mmap.PROT_EXEC)
-    mem.write(buf)
-    mem.seek(0)
-    addr = ctypes.addressof(ctypes.c_char.from_buffer(mem))
-    # Create a ctypes function pointer with correct signature
-    # All Tetrad functions take and return c_uint8 (u8)
-    fn_type = ctypes.CFUNCTYPE(ctypes.c_uint8, *[ctypes.c_uint8] * param_count)
-    return fn_type(addr), mem   # keep mem alive
-```
-
-The `mem` object must be kept alive as long as the function pointer is in use.
-The JIT code cache holds both the callable and the `mmap` object.
 
 ---
 
@@ -531,54 +324,16 @@ The JIT code cache holds both the callable and the `mmap` object.
 @dataclass
 class JITCacheEntry:
     fn_name: str
-    compiled_at_call_count: int   # for cache invalidation
-    native_fn: ctypes.CFUNCTYPE   # callable
-    mmap_ref: mmap.mmap           # keep-alive reference
-    compilation_time_ns: int       # for benchmarking
+    binary: bytes               # Intel 4004 machine code
+    param_count: int            # number of u8 arguments
+    ir: list[IRInstr]           # post-optimization IR (for dump_ir)
+    compilation_time_ns: int    # for benchmarking
 
 class JITCache:
-    def __init__(self):
-        self._cache: dict[str, JITCacheEntry] = {}
-
-    def get(self, fn_name: str) -> ctypes.CFUNCTYPE | None: ...
+    def get(self, fn_name: str) -> JITCacheEntry | None: ...
     def put(self, entry: JITCacheEntry) -> None: ...
-    def invalidate(self, fn_name: str) -> None: ...
-    def stats(self) -> dict[str, dict]: ...   # for benchmarking
+    def stats(self) -> dict[str, dict]: ...
 ```
-
----
-
-## On-Stack Replacement (OSR)
-
-OSR allows the VM to switch a **currently-executing** function from interpreted to
-compiled mode mid-execution, typically at a loop back-edge.
-
-In v1, OSR is implemented in a simplified form:
-1. The VM checks loop iteration counts on every `JMP_LOOP`.
-2. If a loop exceeds `LOOP_ITERATION_THRESHOLD`, the JIT compiles the entire function.
-3. The **current** activation finishes in the interpreter. New calls use the compiled
-   version.
-
-Full OSR (patching the live stack frame) is deferred to v2. The simplified form still
-achieves the goal for functions called many times with long loops.
-
----
-
-## Deoptimization
-
-When a JIT-compiled function encounters a condition it was not compiled to handle
-(e.g., a type assumption that turns out to be wrong, or a division by zero), it
-**deoptimizes** back to the interpreter.
-
-In v1, the deoptimization mechanism is:
-
-1. The JIT inserts a `deopt` IR instruction wherever a type assumption might fail.
-2. The code generator emits a call to a `deopt_handler` C function for each `deopt`.
-3. The `deopt_handler` restores the interpreter state (registers, IP, call stack) and
-   resumes execution in the interpreted path.
-
-For Tetrad v1, deoptimization never fires in practice (all values are u8, no assumptions
-fail). The mechanism is present so the Lisp front-end can rely on it.
 
 ---
 
@@ -589,29 +344,28 @@ class TetradJIT:
 
     def __init__(self, vm: TetradVM): ...
 
-    # Compile a function by name, using the VM's current feedback vectors.
-    # Returns True if compilation succeeded.
+    # Compile a function by name (looks up in main code loaded via execute_with_jit).
+    # Returns True if compilation to 4004 binary succeeded; False if deopted.
     def compile(self, fn_name: str) -> bool: ...
 
-    # Check if a function is already in the cache.
+    # Check if a function is compiled and cached.
     def is_compiled(self, fn_name: str) -> bool: ...
 
-    # Execute a function: use compiled version if available, else interpret.
+    # Execute a function:
+    #   - If cached: run on Intel4004Simulator
+    #   - If not cached: run via TetradVM interpreter
     def execute(self, fn_name: str, args: list[int]) -> int: ...
 
-    # Run the VM, auto-compiling functions as they get hot.
-    # This is the main entry point for production use.
+    # Run the whole program.  FULLY_TYPED functions are compiled before the
+    # first interpreted instruction.  UNTYPED/PARTIALLY_TYPED functions are
+    # compiled once they cross the call-count threshold.
     def execute_with_jit(self, code: CodeObject) -> int: ...
 
     # Return JIT cache statistics.
     def cache_stats(self) -> dict[str, dict]: ...
 
-    # Dump the IR for a compiled function (for debugging).
+    # Return the post-optimization IR for a compiled function.
     def dump_ir(self, fn_name: str) -> str: ...
-
-    # Dump the x86-64 disassembly for a compiled function.
-    # Requires the `capstone` Python library for disassembly.
-    def dump_asm(self, fn_name: str) -> str: ...
 ```
 
 ---
@@ -620,63 +374,93 @@ class TetradJIT:
 
 The JIT lives in `code/packages/python/tetrad-jit/`.
 
-Depends on `coding-adventures-tetrad-vm`.
+Dependencies:
 
-Optional dependency: `capstone` (for `dump_asm`). The package works without it; only
-the disassembly feature is unavailable.
+- `coding-adventures-tetrad-vm` — the Tetrad VM to wrap
+- `coding-adventures-intel4004-simulator` — to execute compiled binaries
+
+Module layout:
+
+```
+tetrad_jit/
+  ir.py          — IRInstr dataclass + ARITHMETIC_OPS + evaluate_op
+  translate.py   — Tetrad bytecode → JIT IR
+  passes.py      — constant folding + dead code elimination
+  codegen_4004.py — IR → Intel 4004 binary (code gen + two-pass assembler)
+  cache.py       — JITCache + JITCacheEntry
+  __init__.py    — TetradJIT public class
+```
 
 ---
 
 ## Test Strategy
 
-### IR generation tests
+### IR translation tests
 
-- Verify bytecode → IR translation for each opcode family
-- `LDA_IMM 42; STA_REG 0; LDA_VAR x; ADD r0, slot=0` → correct IR with virtual vars
+- `LDA_IMM 42; RET` → `[const v0 42, ret v0]`
+- Param pre-load: function with 2 params → `[param v0 0, param v1 1, ...]`
+- Jump target labels: `JZ +2` at instruction 5 → `lbl_0` on instruction 8
 
 ### Optimization pass tests
 
 - Constant folding: `const 10 + const 5` → `const 15`
-- Dead code: variable computed but never read → instruction removed
-- Type specialization: monomorphic slot → `ty="u8"` annotation; no deopt inserted
-- Branch layout: 99% taken branch stays in-line; rarely taken branch inverted
-
-### Register allocation tests
-
-- 2-variable function: both allocated to registers, no spills
-- 9-variable function: one variable spills to stack
+- Constant fold cmp: `const 3 < const 5` → `const 1`
+- DCE: unused `v3 = add v1, v2` → removed
+- DCE: used result → kept
 
 ### Code generation tests
 
-- `add(a, b) { return a + b; }` → x86-64 bytes, callable, produces correct result
-- u8 wraparound: `add(200, 100)` → result is 44 (wraps at 256)
-- Zero division via `deopt`: `div(10, 0)` invokes deopt handler without crashing
-
-### Hot-function detection tests
-
-- Execute a function 99 times → not compiled
-- Execute 101 times → compiled (appears in cache)
-- Loop with >500 iterations → triggers OSR threshold
+- `const 42` → 2-byte FIM; simulator reads P0 = 42
+- `add P0, P1 → P0`: 3 + 4 = 7
+- `sub P0, P1 → P0`: 10 − 3 = 7
+- `sub P0, P1 → P0` with borrow: 3 − 10 = 249 (u8 wrap)
+- `cmp_lt P0, P1`: 3 < 10 = 1; 10 < 3 = 0
+- `cmp_eq P0, P1`: same value = 1; different = 0
 
 ### End-to-end JIT tests
 
-- Execute all five TET00 example programs under `execute_with_jit`
-- Verify output matches interpreter output
-- Verify JIT-compiled functions appear in cache after enough iterations
+Compile Tetrad source, JIT the function, verify results match interpreter:
 
-### Performance smoke test
+- `fn add(a: u8, b: u8) -> u8 { return a + b; }` → add(200, 100) = 44
+- `fn const42() -> u8 { return 42; }` → 42
+- `fn double(n: u8) -> u8 { return n + n; }` → double(5) = 10
+- Deopt case: `fn mul(a, b) { return a * b; }` → compile returns False; falls
+  back to interpreter
 
-- `multiply(255, 200)` under JIT vs. interpreter: verify JIT is faster
-  (quantitative threshold: JIT ≥ 5× faster for tight loops)
+### Hot-function detection tests
+
+- FULLY_TYPED function compiled before first call in `execute_with_jit`
+- UNTYPED function not compiled after 99 calls; compiled after 100th
 
 ### Coverage target
 
-90%+ line coverage (lower than 95% due to platform-specific mmap/ctypes paths).
+90%+ line coverage.  Platform-specific paths (simulator step loop) may be
+excluded from the coverage denominator.
+
+---
+
+## Divergences from Previous Draft
+
+The original TET05 draft specified x86-64 native code generation using Python
+`ctypes` and `mmap`.  This approach was replaced because:
+
+1. Tetrad's design inspiration is the Intel 4004 — the JIT should target the
+   same hardware model.
+2. x86-64 code generation is not portable (ARM64 host would need separate
+   codegen or emulation).
+3. The `intel4004-simulator` package already exists in this repo and provides
+   a complete execution target.
+4. Educational value: seeing Tetrad bytecode become real 4004 instructions
+   demonstrates what a JIT actually does at the instruction level.
+
+The JIT IR, optimization passes, hot-function detection thresholds, and
+three-tier compilation strategy are unchanged from the draft.
 
 ---
 
 ## Version History
 
-| Version | Date | Description |
-|---|---|---|
-| 0.1.0 | 2026-04-20 | Initial specification |
+| Version | Date       | Description |
+|---------|------------|-------------|
+| 0.2.0   | 2026-04-21 | Retarget codegen from x86-64 to Intel 4004 |
+| 0.1.0   | 2026-04-20 | Initial specification (x86-64) |
