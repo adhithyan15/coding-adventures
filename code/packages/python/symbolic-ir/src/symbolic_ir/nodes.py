@@ -184,6 +184,7 @@ EXP = IRSymbol("Exp")
 LOG = IRSymbol("Log")
 SIN = IRSymbol("Sin")
 COS = IRSymbol("Cos")
+TAN = IRSymbol("Tan")
 SQRT = IRSymbol("Sqrt")
 ATAN = IRSymbol("Atan")
 

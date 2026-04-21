@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.10.0 — 2026-04-20
+
+Phase 5 of the integration roadmap — trig-power integration. Three sub-phases
+covering `tan`, `sinⁿ`, `cosⁿ`, and `tanⁿ` for any integer `n ≥ 2`.
+
+**Phase 5a — tan(ax+b)**:
+- `∫ tan(ax+b) dx = −log(cos(ax+b)) / a` derived via substitution `u = cos(ax+b)`.
+- Bare `∫ tan(x) dx = −log(cos(x))` handled in the Phase 1 elementary section.
+- Extended linear-arg dispatch table from `{EXP, SIN, COS, LOG}` to include `TAN`.
+- New helper `_tan_integral(a, b, x)` in `integrate.py`.
+
+**Phase 5b — sinⁿ(ax+b) and cosⁿ(ax+b) reduction formulas** (`n ≥ 2`):
+- `∫ sinⁿ(ax+b) dx = −sinⁿ⁻¹(ax+b)·cos(ax+b)/(n·a) + (n−1)/n · ∫ sinⁿ⁻²(ax+b) dx`
+- `∫ cosⁿ(ax+b) dx =  cosⁿ⁻¹(ax+b)·sin(ax+b)/(n·a) + (n−1)/n · ∫ cosⁿ⁻²(ax+b) dx`
+- Derived by integration by parts + the Pythagorean identity.
+- Recursion terminates at `n=0` (→ `x`) and `n=1` (→ Phase 3 sin/cos result).
+
+**Phase 5c — tanⁿ(ax+b) reduction formula** (`n ≥ 2`):
+- `∫ tanⁿ(ax+b) dx = tanⁿ⁻¹(ax+b)/((n−1)·a) − ∫ tanⁿ⁻²(ax+b) dx`
+- Derived using `tan² = sec² − 1`, making `∫ tanⁿ⁻² · sec² dx` exact.
+- Recursion terminates at `n=0` (→ `x`) and `n=1` (→ Phase 5a tan result).
+
+**POW base-case fixes** (needed for recursion correctness):
+- `f^0 = 1` in the `POW` branch of `_integrate` now returns `x` directly.
+- `f^1 = f` in the `POW` branch delegates to `_integrate(base, x)`.
+- Both cases are also correct in isolation (not purely reduction plumbing).
+
+New helpers in `integrate.py`: `_tan_integral`, `_try_trig_power`,
+`_sin_power`, `_cos_power`, `_tan_power`.
+
+Requires `coding-adventures-symbolic-ir >= 0.3.0` (adds `TAN` head) and
+`coding-adventures-macsyma-compiler >= 0.2.0` (maps MACSYMA `tan` to `TAN`).
+Requires `coding-adventures-symbolic-vm >= 0.10.0` for the `Tan` evaluation handler.
+
+44 new tests (`tests/test_phase5.py`). Package at 363 tests, 90% coverage.
+
 ## 0.9.0 — 2026-04-20
 
 Phase 4 of the integration roadmap — trigonometric integration. Three
