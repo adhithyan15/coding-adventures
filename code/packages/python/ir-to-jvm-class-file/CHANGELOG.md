@@ -1,5 +1,35 @@
 # ir-to-jvm-class-file
 
+## 0.5.0 — 2026-04-20
+
+### Added
+
+- **`IrOp.OR` support**: emits `ior` (`0x80`) for register-register bitwise OR.
+- **`IrOp.OR_IMM` support**: emits `ior` (`0x80`) for register-immediate bitwise OR.
+- **`IrOp.XOR` support**: emits `ixor` (`0x82`) for register-register bitwise XOR.
+  New opcode constant `_OP_IXOR = 0x82` added alongside the existing `_OP_IOR`.
+- **`IrOp.XOR_IMM` support**: emits `ixor` (`0x82`) for register-immediate bitwise XOR.
+- **`IrOp.NOT` support**: emits the source register value, then `iconst_m1` (`0x02`)
+  to push -1 (all 32 bits set), then `ixor` (`0x82`) to flip every bit.  This
+  correctly implements two's-complement bitwise NOT: `NOT(x) = x XOR 0xFFFFFFFF`.
+- All five new opcodes added to `_JVM_SUPPORTED_OPCODES` so the pre-flight
+  validator accepts them without error.
+- 15 new tests in `TestValidateForJvm` covering:
+  - Validator acceptance of OR, XOR, NOT, OR_IMM, XOR_IMM.
+  - Successful lowering to structurally-valid class files for all five ops.
+  - Bytecode-presence checks confirming `ior` (0x80) and `ixor` (0x82) appear
+    in generated output, and that NOT specifically emits `iconst_m1` + `ixor`.
+- Removed the `_BITWISE_V1_UNSUPPORTED` frozenset and the
+  `test_bitwise_opcodes_are_intentionally_unsupported` test now that all five
+  ops are implemented.  `test_all_supported_opcodes_pass_opcode_check` now
+  iterates every `IrOp` without exclusions.
+
+### Motivation
+
+These opcodes were blocking end-to-end Oct → JVM compilation: Oct programs use
+the `|`, `^`, and `~` operators which lower to `OR`, `XOR`, and `NOT` in
+`compiler_ir`.  All three map directly to single JVM instructions.
+
 ## 0.4.0 — 2026-04-20
 
 ### Added
