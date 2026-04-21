@@ -23,6 +23,7 @@ client
   -> generic JobRequest<TcpBytesPayload>
   -> embedded language/application worker
   -> generic JobResponse<TcpWriteFrame>
+  -> TCP return mailbox
   -> Rust socket write
 ```
 
@@ -32,17 +33,20 @@ line. The important part is that the envelope comes from
 Application-specific data stays inside payload structs.
 
 The package tests use a Python Mini Redis worker as one example application:
-RESP bytes enter over TCP, Rust forwards opaque byte jobs, Python queues and
-parses RESP, Python assembles RESP replies, and Rust writes the returned opaque
-bytes. That proves the embeddable server with a real language worker without
-making Python, Redis, or RESP part of the crate's public identity.
+RESP bytes enter over TCP, Rust forwards opaque byte jobs, and the TCP callback
+immediately returns to the reactor. Python queues and parses RESP, Python
+assembles RESP replies, a Rust response task posts those replies to the TCP
+return mailbox, and the reactor writes the returned opaque bytes. That proves
+the embeddable server with a real language worker without making Python, Redis,
+or RESP part of the crate's public identity.
 
 ## Current Limitations
 
-- The worker call is synchronous inside the TCP read callback.
 - One worker process handles all delegated jobs.
 - The worker protocol uses the JSON-line `generic-job-protocol` codec over
   stdio for debuggability, not throughput.
+- Worker responses are asynchronous with respect to TCP reads, but still flow
+  through one stdio response reader.
 - The current payload structs are the first raw-byte transport shape; a later
   crate should make those stable for all language bridges.
 - This validates the runtime seam; it is not the final high-performance

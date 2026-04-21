@@ -25,3 +25,12 @@ All notable changes to this package will be documented in this file.
 
 - stabilized the stateful read/write test to tolerate delayed client-side
   readability on CI
+
+## [0.1.2] - 2026-04-21
+
+### Added
+
+- Added a thread-safe outbound mailbox so off-reactor worker threads can queue
+  writes or close requests by `ConnectionId`.
+- Added tests for delayed mailbox writes, write-and-close delivery, and stale
+  mailbox commands for already closed streams.
