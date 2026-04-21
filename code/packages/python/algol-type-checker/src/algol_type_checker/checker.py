@@ -537,12 +537,11 @@ class AlgolTypeChecker:
         spec_types = _parameter_spec_types(node)
         body = _first_direct_node(node, "proc_body")
         body_inner = _first_ast_child(body) if body is not None else None
-        known_procedures = {
-            procedure.name: procedure for procedure in self.semantic_procedures
-        }
+        known_procedures = _unique_procedure_names(self.semantic_procedures)
         write_reasons = _by_name_formal_write_reasons(
             body_inner,
             formal_names,
+            value_names,
             known_procedures,
             name_token.value,
         )
@@ -1307,11 +1306,17 @@ def _parameter_spec_types(node: ASTNode) -> dict[str, str]:
 def _by_name_formal_write_reasons(
     body: ASTNode | None,
     formal_names: list[Token],
-    known_procedures: dict[str, ProcedureDescriptor],
+    value_names: set[str],
+    known_procedures: dict[str, ProcedureDescriptor | None],
     current_procedure_name: str,
 ) -> dict[str, str]:
     ordered_names = [formal.value for formal in formal_names]
-    names = set(ordered_names)
+    ordered_modes = [
+        VALUE if formal.value in value_names else NAME for formal in formal_names
+    ]
+    names = {
+        formal.value for formal in formal_names if formal.value not in value_names
+    }
     reasons: dict[str, str] = {}
     call_edges: list[tuple[str, str | None, int]] = []
 
@@ -1382,11 +1387,25 @@ def _by_name_formal_write_reasons(
             if argument_index >= len(ordered_names):
                 reasons.setdefault(actual_name, "transitive call")
                 continue
+            if ordered_modes[argument_index] != NAME:
+                continue
             target_name = ordered_names[argument_index]
             if target_name in reasons and actual_name not in reasons:
                 reasons[actual_name] = "transitive call"
                 changed = True
     return reasons
+
+
+def _unique_procedure_names(
+    procedures: list[ProcedureDescriptor],
+) -> dict[str, ProcedureDescriptor | None]:
+    by_name: dict[str, ProcedureDescriptor | None] = {}
+    for procedure in procedures:
+        if procedure.name in by_name:
+            by_name[procedure.name] = None
+        else:
+            by_name[procedure.name] = procedure
+    return by_name
 
 
 def _procedure_call_name(node: ASTNode) -> str | None:
@@ -1400,7 +1419,7 @@ def _procedure_call_name(node: ASTNode) -> str | None:
 def _callee_may_write_argument(
     callee_name: str | None,
     argument_index: int,
-    known_procedures: dict[str, ProcedureDescriptor],
+    known_procedures: dict[str, ProcedureDescriptor | None],
 ) -> bool:
     if callee_name is None:
         return True

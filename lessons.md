@@ -3088,3 +3088,7 @@ through a by-name formal while the outer formal stayed marked read-only.
 track procedure declarations lexically. If a call resolves to a locally declared procedure whose
 descriptor is not available to the scan, treat the matching by-name actual as writable rather than
 falling back to an outer read-only descriptor or to self-recursion handling.
+
+If the pre-pass keeps a bare-name procedure lookup, duplicate procedure names are ambiguous and must
+also be treated as writable. Recursive propagation must flow only through target parameters whose
+mode is by-name; a value parameter assigned locally does not write back to the caller's actual.

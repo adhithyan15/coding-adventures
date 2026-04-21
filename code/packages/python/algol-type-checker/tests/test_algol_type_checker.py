@@ -449,6 +449,28 @@ class TestAlgolTypeChecker:
         )
         assert outer.parameters[0].write_reason == "transitive call"
 
+    def test_duplicate_procedure_names_do_not_hide_visible_writer(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure p(z); integer z; begin z := z + 1 end; "
+            "procedure box(dummy); value dummy; integer dummy; "
+            "begin integer procedure p(y); integer y; begin p := y end; "
+            "result := p(dummy) end; "
+            "procedure outer(x); integer x; begin p(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
     def test_read_only_recursive_by_name_formal_stays_read_only(self) -> None:
         ast = parse_algol(
             "begin integer result; "
@@ -477,6 +499,25 @@ class TestAlgolTypeChecker:
 
         assert not result.ok
         assert "actual expression is not assignable" in result.diagnostics[0].message
+
+    def test_recursive_self_call_does_not_write_through_value_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure read(x, y, n); value y, n; integer x, y, n; "
+            "begin if n = 0 then read := x "
+            "else begin y := y + 1; read := read(x, x, n - 1) end end; "
+            "result := read(1 + result, 0, 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        procedure = result.semantic.procedures[0]
+        assert procedure.parameters[0].mode == "name"
+        assert not procedure.parameters[0].may_write
+        assert procedure.parameters[1].mode == "value"
+        assert not procedure.parameters[1].may_write
 
     def test_shadowed_local_does_not_make_by_name_formal_writable(self) -> None:
         ast = parse_algol(
