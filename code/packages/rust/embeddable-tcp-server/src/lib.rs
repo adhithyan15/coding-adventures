@@ -17,13 +17,15 @@
 //! through the generic job runtime so worker completion can happen
 //! asynchronously without blocking the reactor.
 
+use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{self, BufRead, BufReader, Write};
 use std::marker::PhantomData;
 use std::net::SocketAddr;
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
+use std::thread;
 
 use generic_job_protocol::{
     decode_response_json_line, encode_request_json_line, JobCodecError, JobMetadata, JobRequest,
@@ -31,7 +33,7 @@ use generic_job_protocol::{
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use tcp_runtime::{PlatformError, StopHandle, TcpHandlerResult};
+use tcp_runtime::{ConnectionId, PlatformError, StopHandle, TcpHandlerResult, TcpMailbox};
 use tcp_runtime::{TcpConnectionInfo, TcpRuntime, TcpRuntimeOptions};
 
 #[cfg(any(
@@ -103,6 +105,134 @@ pub struct StdioJobWorker<Request, Response> {
     next_job_id: u64,
     _request: PhantomData<Request>,
     _response: PhantomData<Response>,
+}
+
+pub struct StdioJobSubmitter<Request> {
+    stdin: Arc<Mutex<ChildStdin>>,
+    routes: Arc<Mutex<BTreeMap<String, ConnectionId>>>,
+    next_job_id: Arc<AtomicU64>,
+    _request: PhantomData<Request>,
+}
+
+impl<Request> Clone for StdioJobSubmitter<Request> {
+    fn clone(&self) -> Self {
+        Self {
+            stdin: Arc::clone(&self.stdin),
+            routes: Arc::clone(&self.routes),
+            next_job_id: Arc::clone(&self.next_job_id),
+            _request: PhantomData,
+        }
+    }
+}
+
+impl<Request> StdioJobSubmitter<Request>
+where
+    Request: Serialize,
+{
+    pub fn submit(
+        &self,
+        connection_id: ConnectionId,
+        payload: Request,
+    ) -> Result<String, WorkerError> {
+        self.submit_with_metadata(connection_id, JobMetadata::default(), payload)
+    }
+
+    pub fn submit_with_metadata(
+        &self,
+        connection_id: ConnectionId,
+        metadata: JobMetadata,
+        payload: Request,
+    ) -> Result<String, WorkerError> {
+        let id = format!("job-{}", self.next_job_id.fetch_add(1, Ordering::SeqCst));
+        let request = JobRequest::new(id.clone(), payload).with_metadata(metadata);
+        let encoded = encode_request_json_line(&request)?;
+
+        self.routes
+            .lock()
+            .expect("stdio worker route table mutex poisoned")
+            .insert(id.clone(), connection_id);
+
+        let write_result = {
+            let mut stdin = self
+                .stdin
+                .lock()
+                .expect("stdio worker stdin mutex poisoned");
+            stdin
+                .write_all(encoded.as_bytes())
+                .and_then(|_| stdin.flush())
+        };
+
+        if let Err(error) = write_result {
+            self.routes
+                .lock()
+                .expect("stdio worker route table mutex poisoned")
+                .remove(&id);
+            return Err(error.into());
+        }
+
+        Ok(id)
+    }
+}
+
+pub struct TcpMailboxFrame {
+    pub writes: Vec<Vec<u8>>,
+    pub close: bool,
+}
+
+impl TcpMailboxFrame {
+    pub fn write(bytes: impl Into<Vec<u8>>) -> Self {
+        Self {
+            writes: vec![bytes.into()],
+            close: false,
+        }
+    }
+
+    pub fn write_many(writes: impl Into<Vec<Vec<u8>>>) -> Self {
+        Self {
+            writes: writes.into(),
+            close: false,
+        }
+    }
+
+    pub fn close() -> Self {
+        Self {
+            writes: Vec::new(),
+            close: true,
+        }
+    }
+
+    pub fn write_and_close(bytes: impl Into<Vec<u8>>) -> Self {
+        Self {
+            writes: vec![bytes.into()],
+            close: true,
+        }
+    }
+
+    fn flatten_writes(self) -> Vec<u8> {
+        let total = self.writes.iter().map(Vec::len).sum();
+        let mut output = Vec::with_capacity(total);
+        for write in self.writes {
+            output.extend(write);
+        }
+        output
+    }
+}
+
+struct WorkerProcessGuard {
+    child: Arc<Mutex<Child>>,
+    response_thread: Option<thread::JoinHandle<()>>,
+}
+
+impl Drop for WorkerProcessGuard {
+    fn drop(&mut self) {
+        if let Ok(mut child) = self.child.lock() {
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+        if let Some(thread) = self.response_thread.take() {
+            let _ = thread.join();
+        }
+    }
 }
 
 impl<Request, Response> StdioJobWorker<Request, Response>
@@ -237,6 +367,7 @@ impl From<JobCodecError> for WorkerError {
 #[derive(Clone)]
 pub struct EmbeddableTcpServer<State> {
     runtime: Arc<Mutex<Option<PlatformTcpRuntime<State>>>>,
+    _worker_process: Arc<Mutex<Option<WorkerProcessGuard>>>,
     local_addr: SocketAddr,
     stop_handle: StopHandle,
     serving: Arc<AtomicBool>,
@@ -277,6 +408,58 @@ where
 
         Ok(Self {
             runtime: Arc::new(Mutex::new(Some(runtime))),
+            _worker_process: Arc::new(Mutex::new(None)),
+            local_addr,
+            stop_handle,
+            serving: Arc::new(AtomicBool::new(false)),
+        })
+    }
+
+    pub fn new_mailbox<Request, Response, Init, Handler, Close, MapResponse>(
+        options: EmbeddableTcpServerOptions,
+        init: Init,
+        handler: Handler,
+        on_close: Close,
+        map_response: MapResponse,
+    ) -> io::Result<Self>
+    where
+        Request: Serialize + Send + Sync + 'static,
+        Response: DeserializeOwned + Send + 'static,
+        Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
+        Handler: Fn(
+                TcpConnectionInfo,
+                &mut State,
+                &[u8],
+                &StdioJobSubmitter<Request>,
+            ) -> TcpHandlerResult
+            + Send
+            + Sync
+            + 'static,
+        Close: Fn(TcpConnectionInfo, State) + Send + Sync + 'static,
+        MapResponse: Fn(Response) -> Result<TcpMailboxFrame, WorkerError> + Send + Sync + 'static,
+    {
+        let (child, stdin, stdout) = spawn_worker_process(&options.worker)?;
+        let routes = Arc::new(Mutex::new(BTreeMap::new()));
+        let submitter = StdioJobSubmitter {
+            stdin,
+            routes: Arc::clone(&routes),
+            next_job_id: Arc::new(AtomicU64::new(1)),
+            _request: PhantomData,
+        };
+        let runtime = build_runtime_mailbox(&options, submitter, init, handler, on_close)
+            .map_err(into_io_error)?;
+        let local_addr = runtime.local_addr();
+        let stop_handle = runtime.stop_handle();
+        let mailbox = runtime.mailbox();
+        let response_thread =
+            spawn_response_router(stdout, routes, mailbox, Arc::new(map_response));
+
+        Ok(Self {
+            runtime: Arc::new(Mutex::new(Some(runtime))),
+            _worker_process: Arc::new(Mutex::new(Some(WorkerProcessGuard {
+                child,
+                response_thread: Some(response_thread),
+            }))),
             local_addr,
             stop_handle,
             serving: Arc::new(AtomicBool::new(false)),
@@ -313,6 +496,86 @@ where
     pub fn is_running(&self) -> bool {
         self.serving.load(Ordering::SeqCst)
     }
+}
+
+fn spawn_worker_process(
+    command: &WorkerCommand,
+) -> io::Result<(
+    Arc<Mutex<Child>>,
+    Arc<Mutex<ChildStdin>>,
+    BufReader<ChildStdout>,
+)> {
+    let mut child = Command::new(&command.program)
+        .args(&command.args)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::inherit())
+        .spawn()?;
+
+    let stdin = child
+        .stdin
+        .take()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::BrokenPipe, "worker did not expose stdin"))?;
+    let stdout = child
+        .stdout
+        .take()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::BrokenPipe, "worker did not expose stdout"))?;
+
+    Ok((
+        Arc::new(Mutex::new(child)),
+        Arc::new(Mutex::new(stdin)),
+        BufReader::new(stdout),
+    ))
+}
+
+fn spawn_response_router<Response, MapResponse>(
+    mut stdout: BufReader<ChildStdout>,
+    routes: Arc<Mutex<BTreeMap<String, ConnectionId>>>,
+    mailbox: TcpMailbox,
+    map_response: Arc<MapResponse>,
+) -> thread::JoinHandle<()>
+where
+    Response: DeserializeOwned + Send + 'static,
+    MapResponse: Fn(Response) -> Result<TcpMailboxFrame, WorkerError> + Send + Sync + 'static,
+{
+    thread::spawn(move || loop {
+        let mut line = String::new();
+        match stdout.read_line(&mut line) {
+            Ok(0) => break,
+            Ok(_) => {}
+            Err(_) => break,
+        }
+
+        let response: JobResponse<Response> = match decode_response_json_line(line.trim_end()) {
+            Ok(response) => response,
+            Err(_) => continue,
+        };
+        let Some(connection_id) = routes
+            .lock()
+            .expect("stdio worker route table mutex poisoned")
+            .remove(&response.id)
+        else {
+            continue;
+        };
+
+        match response.result {
+            JobResult::Ok { payload } => match map_response(payload) {
+                Ok(frame) => {
+                    let close = frame.close;
+                    let bytes = frame.flatten_writes();
+                    if close {
+                        mailbox.send_and_close(connection_id, bytes);
+                    } else if !bytes.is_empty() {
+                        mailbox.send(connection_id, bytes);
+                    }
+                }
+                Err(_) => mailbox.close(connection_id),
+            },
+            JobResult::Error { .. } | JobResult::Cancelled { .. } | JobResult::TimedOut { .. } => {
+                mailbox.close(connection_id)
+            }
+        }
+    })
 }
 
 fn validate_response_id<Response>(
@@ -377,6 +640,40 @@ where
     )
 }
 
+#[cfg(any(
+    target_os = "macos",
+    target_os = "freebsd",
+    target_os = "openbsd",
+    target_os = "netbsd",
+    target_os = "dragonfly"
+))]
+fn build_runtime_mailbox<State, Request, Init, Handler, Close>(
+    options: &EmbeddableTcpServerOptions,
+    submitter: StdioJobSubmitter<Request>,
+    init: Init,
+    handler: Handler,
+    on_close: Close,
+) -> Result<PlatformTcpRuntime<State>, PlatformError>
+where
+    State: Send + 'static,
+    Request: Serialize + Send + Sync + 'static,
+    Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
+    Handler: Fn(TcpConnectionInfo, &mut State, &[u8], &StdioJobSubmitter<Request>) -> TcpHandlerResult
+        + Send
+        + Sync
+        + 'static,
+    Close: Fn(TcpConnectionInfo, State) + Send + Sync + 'static,
+{
+    let host = options.host.clone();
+    TcpRuntime::bind_kqueue_with_state(
+        (host.as_str(), options.port),
+        runtime_options(options),
+        init,
+        move |info, state, bytes| handler(info, state, bytes, &submitter),
+        on_close,
+    )
+}
+
 #[cfg(target_os = "linux")]
 fn build_runtime<State, Request, Response, Init, Handler, Close>(
     options: &EmbeddableTcpServerOptions,
@@ -414,6 +711,34 @@ where
     )
 }
 
+#[cfg(target_os = "linux")]
+fn build_runtime_mailbox<State, Request, Init, Handler, Close>(
+    options: &EmbeddableTcpServerOptions,
+    submitter: StdioJobSubmitter<Request>,
+    init: Init,
+    handler: Handler,
+    on_close: Close,
+) -> Result<PlatformTcpRuntime<State>, PlatformError>
+where
+    State: Send + 'static,
+    Request: Serialize + Send + Sync + 'static,
+    Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
+    Handler: Fn(TcpConnectionInfo, &mut State, &[u8], &StdioJobSubmitter<Request>) -> TcpHandlerResult
+        + Send
+        + Sync
+        + 'static,
+    Close: Fn(TcpConnectionInfo, State) + Send + Sync + 'static,
+{
+    let host = options.host.clone();
+    TcpRuntime::bind_epoll_with_state(
+        (host.as_str(), options.port),
+        runtime_options(options),
+        init,
+        move |info, state, bytes| handler(info, state, bytes, &submitter),
+        on_close,
+    )
+}
+
 #[cfg(target_os = "windows")]
 fn build_runtime<State, Request, Response, Init, Handler, Close>(
     options: &EmbeddableTcpServerOptions,
@@ -447,6 +772,34 @@ where
             let mut worker = worker.lock().expect("embedded worker mutex poisoned");
             handler(info, state, bytes, &mut worker)
         },
+        on_close,
+    )
+}
+
+#[cfg(target_os = "windows")]
+fn build_runtime_mailbox<State, Request, Init, Handler, Close>(
+    options: &EmbeddableTcpServerOptions,
+    submitter: StdioJobSubmitter<Request>,
+    init: Init,
+    handler: Handler,
+    on_close: Close,
+) -> Result<PlatformTcpRuntime<State>, PlatformError>
+where
+    State: Send + 'static,
+    Request: Serialize + Send + Sync + 'static,
+    Init: Fn(TcpConnectionInfo) -> State + Send + Sync + 'static,
+    Handler: Fn(TcpConnectionInfo, &mut State, &[u8], &StdioJobSubmitter<Request>) -> TcpHandlerResult
+        + Send
+        + Sync
+        + 'static,
+    Close: Fn(TcpConnectionInfo, State) + Send + Sync + 'static,
+{
+    let host = options.host.clone();
+    TcpRuntime::bind_windows_with_state(
+        (host.as_str(), options.port),
+        runtime_options(options),
+        init,
+        move |info, state, bytes| handler(info, state, bytes, &submitter),
         on_close,
     )
 }
@@ -617,6 +970,39 @@ mod tests {
             },
             Err(_) => TcpHandlerResult::close(),
         }
+    }
+
+    fn handle_tcp_bytes_mailbox(
+        info: TcpConnectionInfo,
+        _state: &mut (),
+        data: &[u8],
+        submitter: &StdioJobSubmitter<TcpInputJob>,
+    ) -> TcpHandlerResult {
+        if data.len() > MAX_TCP_CHUNK_BYTES {
+            return TcpHandlerResult::close();
+        }
+
+        match submitter.submit(
+            info.id,
+            TcpInputJob {
+                stream_id: info.id.0.to_string(),
+                bytes_hex: hex_encode(data.to_vec()),
+            },
+        ) {
+            Ok(_) => TcpHandlerResult::default(),
+            Err(_) => TcpHandlerResult::close(),
+        }
+    }
+
+    fn map_tcp_output_frame(frame: TcpOutputFrame) -> Result<TcpMailboxFrame, WorkerError> {
+        let mut writes = Vec::with_capacity(frame.writes_hex.len());
+        for item in frame.writes_hex {
+            writes.push(hex_decode(&item).map_err(WorkerError::Protocol)?);
+        }
+        Ok(TcpMailboxFrame {
+            writes,
+            close: frame.close,
+        })
     }
 
     fn decode_writes(writes_hex: &[String]) -> Result<Vec<u8>, String> {
@@ -959,6 +1345,27 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         stop_server(server, handle);
     }
 
+    fn start_async_test_server(
+        worker: WorkerCommand,
+    ) -> (EmbeddableTcpServer<()>, thread::JoinHandle<io::Result<()>>) {
+        let server = EmbeddableTcpServer::new_mailbox(
+            EmbeddableTcpServerOptions {
+                host: "127.0.0.1".to_string(),
+                port: 0,
+                max_connections: 64,
+                worker,
+            },
+            |_| (),
+            handle_tcp_bytes_mailbox,
+            |_, _| {},
+            map_tcp_output_frame,
+        )
+        .expect("create async mailbox server");
+        let background = server.clone();
+        let handle = thread::spawn(move || background.serve());
+        (server, handle)
+    }
+
     fn assert_scripted_worker_maps_control_results() {
         let error_script = r#"
 import json, sys
@@ -1145,5 +1552,49 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
             return;
         };
         run_python_worker_integration(worker);
+    }
+
+    #[test]
+    fn mailbox_server_does_not_block_tcp_reads_waiting_for_worker_responses() {
+        let Some(worker) = scripted_worker(
+            r#"
+import json, sys
+
+first = json.loads(sys.stdin.readline())
+second = json.loads(sys.stdin.readline())
+
+def emit(frame, text):
+    body = frame["body"]
+    payload = {"writes_hex": [text.encode("utf-8").hex()], "close": False}
+    print(json.dumps({"version": 1, "kind": "response", "body": {"id": body["id"], "result": {"status": "ok", "payload": payload}, "metadata": body["metadata"]}}), flush=True)
+
+emit(second, "second")
+emit(first, "first")
+"#,
+        ) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+
+        let (server, handle) = start_async_test_server(worker);
+        let mut first = connect_client(&server);
+        let mut second = connect_client(&server);
+
+        first.write_all(b"one").expect("write first request");
+        second.write_all(b"two").expect("write second request");
+
+        let mut second_response = [0u8; 6];
+        second
+            .read_exact(&mut second_response)
+            .expect("read second response");
+        assert_eq!(&second_response, b"second");
+
+        let mut first_response = [0u8; 5];
+        first
+            .read_exact(&mut first_response)
+            .expect("read first response");
+        assert_eq!(&first_response, b"first");
+
+        stop_server(server, handle);
     }
 }
