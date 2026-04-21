@@ -17,7 +17,8 @@ Prolog, …) only needs to supply:
 4. A backend selection (Intel 4004, WASM, JVM, RISC-V, …)
 
 Everything else — the VM, the JIT, the optimization passes, the register
-allocator, the code-cache — is reused without modification.
+allocator, the code-cache, the debugger, the language server, the REPL,
+and the notebook kernel — is reused without modification.
 
 ---
 
@@ -91,19 +92,31 @@ is handed to the backend.
 ## Layer Map
 
 ```
-LANG00  (this spec)     Generic language pipeline architecture
-LANG01  interpreter-ir  Dynamic bytecode IR with feedback slots
-LANG02  vm-core         Generic interpreter: dispatch loop + profiler
-LANG03  jit-core        Specialization pass: InterpreterIR → CompilerIR
-LANG04  aot-core        AOT path: vm-core extracted as linkable library
-LANG05  backend-protocol  Contract every code-gen backend must satisfy
+Runtime core
+  LANG00  (this spec)     Generic language pipeline architecture
+  LANG01  interpreter-ir  Dynamic bytecode IR with feedback slots
+  LANG02  vm-core         Generic interpreter: dispatch loop + profiler
+  LANG03  jit-core        Specialization pass: InterpreterIR → CompilerIR
+  LANG04  aot-core        AOT path: vm-core extracted as linkable library
+  LANG05  backend-protocol  Contract every code-gen backend must satisfy
 
-Existing specs, unchanged:
-  05b-jit-compiler.md   JIT compilation concepts
+Tooling (built on top of LANG01–LANG05)
+  LANG06  debug-integration   VSCode debugger via DAP; breakpoints, stepping, inspect
+  LANG07  lsp-integration     Language Server Protocol; completions, hover, diagnostics
+  LANG08  repl-integration    Interactive REPL via PL00 framework
+  LANG09  notebook-kernel     Jupyter-compatible kernel; rich cell output
+
+Existing specs, referenced:
+  05d-debug-sidecar-format.md  offset → source location mapping (used by LANG06)
+  05e-debug-adapter.md         DAP bridge to VSCode (used by LANG06)
+  LS00-language-server-framework.md  generic LSP server (used by LANG07)
+  LS01-lsp-language-bridge.md  language plug-in for LSP (used by LANG07)
+  PL00-repl.md                 generic REPL framework (used by LANG08)
+  05b-jit-compiler.md          JIT compilation concepts
   05c-jit-compilation-pipeline.md  end-to-end pipeline design
-  IR00-semantic-ir.md   SemanticIR (higher-level; above CompilerIR)
-  compiler-ir package   CompilerIR definition
-  ir-optimizer package  SSA optimization passes
+  IR00-semantic-ir.md          SemanticIR (higher-level; above CompilerIR)
+  compiler-ir package          CompilerIR definition
+  ir-optimizer package         SSA optimization passes
 ```
 
 ---
@@ -140,10 +153,16 @@ Language frontend (per language)
 | Parser | Yes | — |
 | Type checker | Yes (optional) | `type-checker-protocol` |
 | Bytecode compiler | Yes | emits to `interpreter-ir` |
+| Debug sidecar emitter | Yes (3 lines) | `debug-sidecar` (05d) |
+| LSP bridge | Yes (10–50 lines) | `ls01` + `ls00` |
+| REPL plugin | Yes (20–30 lines) | `pl00` |
+| Notebook kernel | Yes (5 lines) | `lang09-kernel` |
 | Interpreter / VM | **No** | `vm-core` |
 | JIT | **No** | `jit-core` |
 | Optimization | **No** | `ir-optimizer` |
 | Backend | **No** | `backend-protocol` + existing backends |
+| Debugger (VSCode DAP) | **No** | `debug-adapter` (05e) |
+| Language server | **No** | `ls00` (generic LSP server) |
 
 ---
 
@@ -212,25 +231,40 @@ The LANG spec series is the specification layer.  Implementation proceeds in
 dependency order:
 
 ```
-LANG01 interpreter-ir   → defines the shared bytecode format
-LANG02 vm-core          → consumes interpreter-ir; hosts the profiler
-LANG03 jit-core         → consumes vm-core feedback; emits compiler-ir
-LANG04 aot-core         → headless vm-core path (no interpreter overhead)
-LANG05 backend-protocol → codifies what intel4004-backend etc. must implement
+Runtime core (implement first):
+  LANG01 interpreter-ir   → defines the shared bytecode format
+  LANG02 vm-core          → consumes interpreter-ir; hosts the profiler
+  LANG03 jit-core         → consumes vm-core feedback; emits compiler-ir
+  LANG04 aot-core         → headless vm-core path (no interpreter overhead)
+  LANG05 backend-protocol → codifies what intel4004-backend etc. must implement
+
+Tooling layer (implement after LANG01–LANG05):
+  LANG06 debug-integration  → vm-core debug hooks; DAP bridge via 05d/05e
+  LANG07 lsp-integration    → LS01 bridge; incremental re-parse; background infer
+  LANG08 repl-integration   → PL00 LanguagePlugin; incremental IIRModule state
+  LANG09 notebook-kernel    → JMP over ZeroMQ; cell execution; rich output
 ```
 
-After LANG01–LANG05 are implemented, each new language is a four-package
-addition (lexer, parser, type-checker, compiler) instead of a ten-package one.
+After LANG01–LANG09 are implemented, each new language is:
+- **4 packages** for the runtime (lexer, parser, type-checker, compiler)
+- **~100 lines** of glue code for the full tooling suite (debugger, LSP, REPL, notebook)
+
+A language author who has never written a compiler gets, for free:
+VSCode syntax highlighting, red squiggles, Go to Definition, rename, an
+interactive REPL, Jupyter notebook support, and a VSCode debugger with
+breakpoints and variable inspection.
 
 ---
 
 ## Non-goals
 
-- **Garbage collection** — out of scope for LANG00–LANG05.  The Intel 4004
-  has 160 bytes of RAM; a GC cannot fit.  Languages that need GC will be
-  addressed in a future spec series (GC00+).
+- **Garbage collection** — out of scope for LANG00–LANG09.  Languages that
+  need GC will be addressed in a future spec series (GC00+).
 - **Concurrency** — single-threaded execution only.
-- **Source maps / debugger integration** — see specs 05d and 05e for the
-  debug sidecar format and debug adapter protocol.
 - **AOT compilation of the VM itself** — `vm-core` runs interpreted on the
   host.  Compiling the VM to native is a future `aot-core` concern (LANG04).
+- **Custom notebook frontends** — LANG09 targets standard Jupyter/VS Code
+  frontends.  A custom notebook UI is out of scope.
+- **Multi-file project compilation** — the REPL and notebook kernel operate
+  on single-session state.  Multi-file project management (imports, modules)
+  is a language-specific concern outside this spec series.
