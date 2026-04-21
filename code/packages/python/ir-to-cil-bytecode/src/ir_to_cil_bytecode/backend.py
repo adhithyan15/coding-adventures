@@ -52,6 +52,7 @@ class CILBackendConfig:
     syscall_arg_reg: int = 4
     max_static_data_bytes: int = _MAX_STATIC_DATA_BYTES
     method_max_stack: int = 16
+    call_register_count: int | None = 0
 
 
 @dataclass(frozen=True)
@@ -268,6 +269,9 @@ def _validate_config(config: CILBackendConfig) -> None:
     if config.method_max_stack <= 0:
         msg = "method_max_stack must be positive"
         raise CILBackendError(msg)
+    if config.call_register_count is not None and config.call_register_count < 0:
+        msg = "call_register_count must be non-negative or None"
+        raise CILBackendError(msg)
 
 
 def _collect_labels(program: IrProgram) -> dict[str, int]:
@@ -389,6 +393,12 @@ def _lower_region(
     region: _CallableRegion,
 ) -> CILMethodArtifact:
     builder = CILBytecodeBuilder()
+    call_register_count = _call_register_count(config, plan)
+
+    if region.name != _program.entry_label:
+        for index in range(call_register_count):
+            builder.emit_ldarg(index)
+            builder.emit_stloc(index)
 
     for instruction in region.instructions:
         _emit_instruction(builder, instruction, config, plan)
@@ -396,8 +406,14 @@ def _lower_region(
     return CILMethodArtifact(
         name=region.name,
         body=builder.assemble(),
-        max_stack=config.method_max_stack,
+        max_stack=max(config.method_max_stack, call_register_count),
         local_types=tuple("int32" for _ in range(plan.local_count)),
+        parameter_types=tuple(
+            "int32"
+            for _ in range(
+                call_register_count if region.name != _program.entry_label else 0
+            )
+        ),
     )
 
 
@@ -529,6 +545,8 @@ def _emit_instruction(
 
     if instruction.opcode == IrOp.CALL:
         label = _as_label(instruction.operands[0], "CALL target")
+        for index in range(_call_register_count(config, plan)):
+            builder.emit_ldloc(index)
         builder.emit_call(plan.token_provider.method_token(label.name))
         builder.emit_stloc(1)
         return
@@ -558,6 +576,15 @@ def _emit_store_immediate(
     _require_int32(value, "integer immediate")
     builder.emit_ldc_i4(value)
     builder.emit_stloc(local_index)
+
+
+def _call_register_count(
+    config: CILBackendConfig,
+    plan: CILLoweringPlan,
+) -> int:
+    if config.call_register_count is None:
+        return plan.local_count
+    return min(config.call_register_count, plan.local_count)
 
 
 def _emit_binary_op(builder: CILBytecodeBuilder, opcode: IrOp) -> None:
