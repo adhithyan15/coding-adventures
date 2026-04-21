@@ -9,6 +9,7 @@ that make relational programs feel like programs:
 - named relations such as `parent/2`
 - facts and rules
 - immutable clause databases
+- first-order clause and goal term encoders
 - persistent database updates via `asserta(...)`, `assertz(...)`, `retract_*`,
   and `abolish(...)`
 - recursive solving with depth-first backtracking
@@ -72,6 +73,31 @@ assert solve_all(expanded, X, parent("homer", X)) == [atom("bart"), atom("lisa")
 without_first = retract_first(expanded, parent("homer", X))
 assert without_first is not None
 assert solve_all(without_first, X, parent("homer", X)) == [atom("lisa")]
+```
+
+## Clause Introspection
+
+Clauses can also be viewed as ordinary term data. Facts use body `true`, while
+rules expose their goal body.
+
+```python
+from logic_engine import clause_as_term, fact, relation, rule, term, var
+
+parent = relation("parent", 2)
+child = relation("child", 2)
+X = var("X")
+Y = var("Y")
+
+assert clause_as_term(fact(parent("homer", "bart"))) == term(
+    ":-",
+    term("parent", "homer", "bart"),
+    "true",
+)
+assert clause_as_term(rule(child(X, Y), parent(Y, X))) == term(
+    ":-",
+    term("child", X, Y),
+    term("parent", Y, X),
+)
 ```
 
 ## Dependencies

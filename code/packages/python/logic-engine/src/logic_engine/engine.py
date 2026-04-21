@@ -78,6 +78,8 @@ __all__ = [
     "asserta",
     "assertz",
     "atom",
+    "clause_as_term",
+    "clause_body",
     "clauses_matching",
     "conj",
     "defer",
@@ -86,6 +88,8 @@ __all__ = [
     "fact",
     "fail",
     "fresh",
+    "freshen_clause",
+    "goal_as_term",
     "logic_list",
     "native_goal",
     "neq",
@@ -643,6 +647,63 @@ def abolish(program_value: Program, relation_value: Relation) -> Program:
     )
 
 
+def clause_body(clause_value: object) -> GoalExpr:
+    """Return a clause body goal, using logical truth for facts."""
+
+    checked_clause = _require_clause(clause_value)
+    if checked_clause.body is None:
+        return succeed()
+    return checked_clause.body
+
+
+def _nested_goal_term(functor: str, goals: tuple[GoalExpr, ...]) -> Term:
+    """Encode n-ary engine nodes as right-nested binary Prolog terms."""
+
+    if len(goals) == 1:
+        return goal_as_term(goals[0])
+    return term(functor, goal_as_term(goals[0]), _nested_goal_term(functor, goals[1:]))
+
+
+def goal_as_term(goal_value: object) -> Term:
+    """Encode a representable goal expression as first-order term data."""
+
+    goal = _coerce_goal(goal_value)
+    if isinstance(goal, RelationCall):
+        return goal.as_term()
+    if isinstance(goal, SucceedExpr):
+        return atom("true")
+    if isinstance(goal, FailExpr):
+        return atom("fail")
+    if isinstance(goal, EqExpr):
+        return term("=", goal.left, goal.right)
+    if isinstance(goal, NeqExpr):
+        return term("\\=", goal.left, goal.right)
+    if isinstance(goal, ConjExpr):
+        if not goal.goals:
+            return atom("true")
+        return _nested_goal_term(",", goal.goals)
+    if isinstance(goal, DisjExpr):
+        if not goal.goals:
+            return atom("fail")
+        return _nested_goal_term(";", goal.goals)
+
+    msg = (
+        f"cannot encode {type(goal).__name__} as a first-order goal term"
+    )
+    raise TypeError(msg)
+
+
+def clause_as_term(clause_value: object) -> Compound:
+    """Encode a clause as the Prolog-shaped term ``:-(Head, Body)``."""
+
+    checked_clause = _require_clause(clause_value)
+    return term(
+        ":-",
+        checked_clause.head.as_term(),
+        goal_as_term(clause_body(checked_clause)),
+    )
+
+
 def _rename_term(term_value: Term, mapping: dict[LogicVar, LogicVar]) -> Term:
     """Rename logic variables inside a term according to ``mapping``."""
 
@@ -843,6 +904,19 @@ def _freshen_clause(clause: Clause, next_var_id: int) -> tuple[Clause, int]:
 
     renamed_body, running_id = _freshen_goal(clause.body, mapping, running_id)
     return Clause(head=renamed_head, body=renamed_body), running_id
+
+
+def freshen_clause(clause_value: object, next_var_id: int) -> tuple[Clause, int]:
+    """Return a clause standardized apart from an active search state."""
+
+    checked_clause = _require_clause(clause_value)
+    if isinstance(next_var_id, bool) or not isinstance(next_var_id, int):
+        msg = "freshen_clause() requires an integer next_var_id"
+        raise TypeError(msg)
+    if next_var_id < 0:
+        msg = "freshen_clause() requires a non-negative next_var_id"
+        raise ValueError(msg)
+    return _freshen_clause(checked_clause, next_var_id)
 
 
 def _instantiate_fresh(goal: FreshExpr, state: State) -> tuple[GoalExpr, State]:

@@ -23,6 +23,7 @@ ordinary logic goal expressions.
 - `argo(index, term, value)`
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
 - `copytermo(source, copy)` and `same_termo(left, right)`
+- `clauseo(head, body)` for Prolog-style clause introspection
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -34,6 +35,7 @@ ordinary logic goal expressions.
 from logic_builtins import (
     add,
     argo,
+    clauseo,
     findallo,
     forallo,
     functoro,
@@ -46,7 +48,20 @@ from logic_builtins import (
     same_termo,
     univo,
 )
-from logic_engine import atom, conj, eq, fail, logic_list, num, program, solve_all, term, var
+from logic_engine import (
+    atom,
+    conj,
+    eq,
+    fail,
+    logic_list,
+    num,
+    program,
+    relation,
+    rule,
+    solve_all,
+    term,
+    var,
+)
 
 X = var("X")
 Name = var("Name")
@@ -54,6 +69,11 @@ Arity = var("Arity")
 Arg = var("Arg")
 Score = var("Score")
 Results = var("Results")
+Body = var("Body")
+
+parent = relation("parent", 2)
+child = relation("child", 2)
+family = program(rule(child(X, Name), parent(Name, X)))
 
 assert solve_all(program(), X, onceo(eq(X, "first"))) == [atom("first")]
 assert solve_all(program(), X, noto(fail())) == [X]
@@ -96,6 +116,9 @@ assert solve_all(
     univo(X, logic_list(["box", "tea", "cake"])),
 ) == [term("box", "tea", "cake")]
 assert solve_all(program(), X, same_termo(X, X)) == [X]
+assert solve_all(family, Body, clauseo(child("bart", "homer"), Body)) == [
+    term("parent", "homer", "bart"),
+]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -118,6 +141,10 @@ Term metaprogramming treats terms as ordinary data. `univo` decomposes
 that list. `functoro` now constructs atoms and compounds when supplied a name
 and arity. `copytermo` refreshes variables in a copied term, while
 `same_termo` checks strict identity without binding variables.
+
+Clause introspection treats source clauses as ordinary data. `clauseo(Head,
+Body)` enumerates facts with body `true` and rules with a term-encoded body,
+standardizing variables apart before unifying with the query.
 
 ## Dependencies
 

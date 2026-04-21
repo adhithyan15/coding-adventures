@@ -23,12 +23,16 @@ from logic_engine import (
     LogicVar,
     Number,
     Program,
+    RelationCall,
     State,
     String,
     Term,
     atom,
+    clause_body,
     conj,
     eq,
+    freshen_clause,
+    goal_as_term,
     logic_list,
     native_goal,
     num,
@@ -76,6 +80,7 @@ __all__ = [
     "bagofo",
     "same_termo",
     "setofo",
+    "clauseo",
     "stringo",
     "sub",
     "trueo",
@@ -94,6 +99,14 @@ def _as_goal(goal: object) -> GoalExpr:
     """Validate and normalize one goal-like object using the engine API."""
 
     return conj(goal)
+
+
+def _as_callable_term(term_value: object) -> object:
+    """Allow relation calls where a Prolog callable term is expected."""
+
+    if isinstance(term_value, RelationCall):
+        return term_value.as_term()
+    return term_value
 
 
 def _reified(term_value: Term, state: State) -> Term:
@@ -853,3 +866,31 @@ def same_termo(left: object, right: object) -> GoalExpr:
         )
 
     return native_goal(run, left, right)
+
+
+def clauseo(head: object, body: object) -> GoalExpr:
+    """Inspect source clauses as Prolog-style `Head :- Body` data."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        head_target, body_target = args
+        for source_clause in program_value.clauses:
+            fresh_clause, next_var_id = freshen_clause(
+                source_clause,
+                state.next_var_id,
+            )
+            try:
+                body_term = goal_as_term(clause_body(fresh_clause))
+            except TypeError:
+                continue
+
+            inspection_state = _state_with_next_var_id(state, next_var_id)
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(head_target, fresh_clause.head.as_term()),
+                    eq(body_target, body_term),
+                ),
+                inspection_state,
+            )
+
+    return native_goal(run, _as_callable_term(head), body)

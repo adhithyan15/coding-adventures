@@ -3092,6 +3092,32 @@ falling back to an outer read-only descriptor or to self-recursion handling.
 If the pre-pass keeps a bare-name procedure lookup, duplicate procedure names are ambiguous and must
 also be treated as writable. Recursive propagation must flow only through target parameters whose
 mode is by-name; a value parameter assigned locally does not write back to the caller's actual.
+## Python tests need imports for helper types used only in assertions
+
+**Date:** 2026-04-21
+
+**What happened:** A logic-engine test added an `isinstance(..., LogicVar)` assertion for
+standardize-apart behavior but forgot to import `LogicVar`. The implementation and behavior were
+fine, but the package `BUILD` failed during the test body with `NameError` after most tests had
+already passed.
+
+**Rule:** When adding Python tests that assert on concrete helper classes, update the test imports in
+the same patch as the assertion. Do not rely on related packages or nearby tests importing the type;
+pytest modules need every assertion-only type imported explicitly.
+
+---
+
+## Ruff import sorting is strict about similarly named Python builtins
+
+**Date:** 2026-04-21
+
+**What happened:** Adding the new `clauseo` builtin near existing `callo` and `callableo` imports
+looked visually reasonable, but Ruff's import sorter rejected the order in both the package export
+module and tests.
+
+**Rule:** After adding similarly named Python symbols to grouped imports, run Ruff before assuming the
+manual order is acceptable. Prefer letting `ruff check --fix` apply pure import-order fixes instead
+of hand-sorting by eye.
 ## Music fixture tests must derive timing expectations from the score tokens
 
 **Date:** 2026-04-20
