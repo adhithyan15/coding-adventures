@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–6).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–7).
 
 The handler tries two routes, in order:
 
@@ -41,7 +41,7 @@ What Phase 1 can do
 What this phase can't do (yet)
 ------------------------------
 
-- Integration by substitution (except trivial constant-factor / sum).
+- Integration by substitution beyond Phase 7 (two-arg outer functions).
 - Rational × transcendental (e.g. ``(1/x)·eˣ``).
 - Products of two transcendentals (e.g. ``exp(x)·log(x)``).
 - Irreducible denominators of degree > 2 (e.g. ``1/(x³+x+1)``).
@@ -371,6 +371,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             return result
         # Phase 6: sinⁿ × cosᵐ with the same linear argument.
         result = _try_sin_cos_power(a, b, x)
+        if result is not None:
+            return result
+        # Phase 7: u-substitution — f(g(x)) · c·g'(x).
+        result = _try_u_sub(a, b, x)
         if result is not None:
             return result
         # Phase 4c: exp × trig via double-IBP closed form.
@@ -1074,6 +1078,285 @@ def _sin_cos_even(
         return None
     tail = IRApply(MUL, (coef, inner_int))
     return IRApply(ADD, (term, tail))
+
+
+# ---------------------------------------------------------------------------
+# Phase 7 helpers — u-substitution (chain-rule reversal)
+# ---------------------------------------------------------------------------
+
+
+def _poly_deriv(p: tuple) -> tuple:
+    """Return the derivative of polynomial coefficient tuple ``p``.
+
+    Ascending-coefficient convention: index ``i`` = coeff of ``x^i``.
+    A constant polynomial (degree 0) differentiates to zero → ``(Fraction(0),)``.
+    """
+    if len(p) <= 1:
+        return (Fraction(0),)
+    return tuple(Fraction(i) * Fraction(p[i]) for i in range(1, len(p)))
+
+
+def _poly_mul(p: tuple, q: tuple) -> tuple:
+    """Multiply two polynomial coefficient tuples."""
+    if not p or not q:
+        return (Fraction(0),)
+    result = [Fraction(0)] * (len(p) + len(q) - 1)
+    for i, a in enumerate(p):
+        for j, b in enumerate(q):
+            result[i + j] += Fraction(a) * Fraction(b)
+    return tuple(result)
+
+
+def _diff_ir(g: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``dg/dx`` as an IR node, or ``None`` if the form is unknown.
+
+    Handles: constants, bare ``x``, polynomials in ``x`` (via ``to_rational``),
+    and single-argument functions (SIN, COS, EXP, LOG, SQRT) of recursively
+    differentiable arguments via the chain rule.  Also handles integer-exponent
+    ``POW`` via the power rule + chain rule.
+    """
+    # Constant free of x → 0.
+    if not _depends_on(g, x):
+        return IRInteger(0)
+    # Bare variable → 1.
+    if g == x:
+        return IRInteger(1)
+    if not isinstance(g, IRApply):
+        return None
+
+    head = g.head
+
+    # Polynomial (and rational) functions of x.
+    r = to_rational(g, x)
+    if r is not None:
+        num, den = r
+        from polynomial import normalize as _pnorm
+        den_n = _pnorm(den)
+        # Only handle pure-polynomial g here (denominator = 1).
+        if len(den_n) <= 1:
+            dnum = _poly_deriv(num)
+            result_coeffs = _pnorm(dnum)
+            if not result_coeffs:
+                return IRInteger(0)
+            return from_polynomial(result_coeffs, x)
+        # Rational function derivatives deferred (quotient rule not needed yet).
+        return None
+
+    # Single-argument functions — apply chain rule.
+    if len(g.args) == 1:
+        arg = g.args[0]
+        darg = _diff_ir(arg, x)
+        if darg is None:
+            return None
+        darg_is_one = isinstance(darg, IRInteger) and darg.value == 1
+
+        if head == SIN:
+            # d/dx sin(u) = cos(u)·u'
+            cos_u = IRApply(COS, (arg,))
+            return cos_u if darg_is_one else IRApply(MUL, (cos_u, darg))
+
+        if head == COS:
+            # d/dx cos(u) = −sin(u)·u'
+            neg_sin = IRApply(NEG, (IRApply(SIN, (arg,)),))
+            return neg_sin if darg_is_one else IRApply(MUL, (neg_sin, darg))
+
+        if head == EXP:
+            # d/dx exp(u) = exp(u)·u'
+            return g if darg_is_one else IRApply(MUL, (g, darg))
+
+        if head == LOG:
+            # d/dx log(u) = u'/u
+            if darg_is_one:
+                return IRApply(DIV, (IRInteger(1), arg))
+            return IRApply(DIV, (darg, arg))
+
+        if head == SQRT:
+            # d/dx sqrt(u) = u'/(2·sqrt(u))
+            denom = IRApply(MUL, (TWO, g))
+            if darg_is_one:
+                return IRApply(DIV, (IRInteger(1), denom))
+            return IRApply(DIV, (darg, denom))
+
+    # Integer-exponent POW — power rule + chain rule.
+    if head == POW and len(g.args) == 2:
+        base, exp_node = g.args
+        if isinstance(exp_node, IRInteger):
+            n = exp_node.value
+            dbase = _diff_ir(base, x)
+            if dbase is None:
+                return None
+            dbase_is_one = isinstance(dbase, IRInteger) and dbase.value == 1
+            if n == 1:
+                return dbase
+            # n·base^(n−1)·base'
+            coef = IRInteger(n)
+            pow_nm1 = (
+                base if n == 2 else IRApply(POW, (base, IRInteger(n - 1)))
+            )
+            inner = (
+                pow_nm1 if dbase_is_one else IRApply(MUL, (pow_nm1, dbase))
+            )
+            return IRApply(MUL, (coef, inner))
+
+    return None
+
+
+def _scalar_split(node: IRNode) -> tuple[Fraction, IRNode]:
+    """Return ``(c, expr)`` such that ``node = c · expr`` with ``c`` rational.
+
+    For nodes of the form ``MUL(rational, expr)`` or ``MUL(expr, rational)``
+    this extracts the rational factor.  For a bare rational literal it returns
+    ``(literal, IRInteger(1))``.  Anything else returns ``(Fraction(1), node)``.
+    """
+    if isinstance(node, IRApply) and node.head == MUL:
+        a, b = node.args
+        ca = _node_to_frac(a)
+        if ca is not None:
+            return (ca, b)
+        cb = _node_to_frac(b)
+        if cb is not None:
+            return (cb, a)
+    cn = _node_to_frac(node)
+    if cn is not None:
+        return (cn, ONE)
+    return (Fraction(1), node)
+
+
+def _ratio_const(
+    f: IRNode, g: IRNode, x: IRSymbol
+) -> Fraction | None:
+    """Return ``c`` if ``f = c · g`` for some rational ``c``, else ``None``.
+
+    Checks structural equality, scalar-split (handles MUL commutativity),
+    NEG-matching, and a polynomial ratio check for rational functions of ``x``.
+    """
+    # Exact structural equality.
+    if f == g:
+        return Fraction(1)
+
+    # Scalar-split: normalise both to (c, expr) and compare the expr parts.
+    # This handles MUL commutativity and all scalar-multiple forms in one step.
+    f_sc, f_ex = _scalar_split(f)
+    g_sc, g_ex = _scalar_split(g)
+    if f_ex == g_ex and g_sc != 0:
+        return f_sc / g_sc
+
+    # NEG(expr) = −1·expr — scalar_split doesn't unpack NEG.
+    if isinstance(g, IRApply) and g.head == NEG and g.args[0] == f:
+        return Fraction(-1)
+    if isinstance(f, IRApply) and f.head == NEG and f.args[0] == g:
+        return Fraction(-1)
+    # f = c · NEG(expr) vs g = NEG(expr).
+    if (
+        f_sc != 1
+        and isinstance(f_ex, IRApply)
+        and f_ex.head == NEG
+        and f_ex.args[0] == g
+    ):
+        return -f_sc
+    # g = c · NEG(expr) vs f = NEG(expr).
+    if (
+        g_sc != 1
+        and isinstance(g_ex, IRApply)
+        and g_ex.head == NEG
+        and g_ex.args[0] == f
+        and g_sc != 0
+    ):
+        return Fraction(-1) / g_sc
+
+    # Polynomial ratio — both must be rational functions of x.
+    r_f = to_rational(f, x)
+    r_g = to_rational(g, x)
+    if r_f is not None and r_g is not None:
+        from polynomial import normalize as _pnorm
+        f_num, f_den = r_f
+        g_num, g_den = r_g
+        numer_n = _pnorm(_poly_mul(f_num, g_den))
+        denom_n = _pnorm(_poly_mul(f_den, g_num))
+        if not numer_n or not denom_n:
+            return None
+        if len(numer_n) != len(denom_n):
+            return None
+        ratio: Fraction | None = None
+        for nc, dc in zip(numer_n, denom_n, strict=True):
+            nc, dc = Fraction(nc), Fraction(dc)
+            if dc == 0:
+                if nc != 0:
+                    return None
+            else:
+                r = nc / dc
+                if ratio is None:
+                    ratio = r
+                elif ratio != r:
+                    return None
+        return ratio
+
+    return None
+
+
+def _subst(node: IRNode, old: IRNode, new: IRNode) -> IRNode:
+    """Replace every occurrence of ``old`` with ``new`` in ``node``."""
+    if node == old:
+        return new
+    if isinstance(node, IRApply):
+        new_args = tuple(_subst(a, old, new) for a in node.args)
+        if new_args == node.args:
+            return node
+        return IRApply(node.head, new_args)
+    return node
+
+
+def _try_u_sub_one(
+    outer: IRNode, gp_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Try u-sub treating ``outer`` as ``f(g(x))`` and ``gp_candidate`` as ``c·g'(x)``.
+
+    Returns an antiderivative IR node or ``None``.
+    """
+    if not isinstance(outer, IRApply):
+        return None
+    # Only handle single-argument outer functions (SIN, COS, EXP, LOG, TAN, SQRT).
+    if len(outer.args) != 1:
+        return None
+    g = outer.args[0]
+    # Skip g = x (handled by Phase 1 rules directly).
+    if g == x:
+        return None
+    # Skip linear g — Phases 3–5 already cover f(ax+b) for all supported f.
+    lin = _try_linear(g, x)
+    if lin is not None and lin[0] != Fraction(0):
+        return None
+
+    gprime = _diff_ir(g, x)
+    if gprime is None:
+        return None
+
+    c = _ratio_const(gp_candidate, gprime, x)
+    if c is None or c == Fraction(0):
+        return None
+
+    # Substitute g(x) → u, integrate, substitute u → g(x).
+    u = IRSymbol("__u__")
+    F_u = _subst(outer, g, u)
+    G_u = _integrate(F_u, u)
+    if G_u is None:
+        return None
+    G_gx = _subst(G_u, u, g)
+
+    if c == Fraction(1):
+        return G_gx
+    return IRApply(MUL, (_frac_ir(c), G_gx))
+
+
+def _try_u_sub(fa: IRNode, fb: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ fa·fb dx`` via u-substitution, or ``None``.
+
+    Tries both orderings: (fa as outer, fb as g') and (fb as outer, fa as g').
+    """
+    result = _try_u_sub_one(fa, fb, x)
+    if result is not None:
+        return result
+    return _try_u_sub_one(fb, fa, x)
 
 
 def _depends_on(node: IRNode, var: IRSymbol) -> bool:
