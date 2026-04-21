@@ -2,8 +2,24 @@
 
 ## [Unreleased]
 
+### Added
+
+- **`IrOp.OR` / `IrOp.OR_IMM`**: bitwise OR in register-register and
+  register-immediate forms.  Lowers to WASM `i32.or`.
+- **`IrOp.XOR` / `IrOp.XOR_IMM`**: bitwise XOR in register-register and
+  register-immediate forms.  Lowers to WASM `i32.xor`.
+- **`IrOp.NOT`**: bitwise complement (one-operand form).  WASM has no dedicated
+  NOT opcode; the backend emits `i32.xor` with the all-ones mask `0xFFFFFFFF`
+  which flips every bit of the 32-bit value.
+- `i32.or` and `i32.xor` added to the `_OPCODE` lookup table.
+- 9 new runtime tests covering OR, OR_IMM, XOR, XOR_IMM, and NOT with
+  multiple input cases each.
+
 ### Changed
 
+- `_WASM_SUPPORTED_OPCODES` frozenset extended to include `OR`, `OR_IMM`,
+  `XOR`, `XOR_IMM`, and `NOT`.  The V1 validator no longer rejects programs
+  that use these opcodes.
 - `CALL` lowering now accepts optional explicit argument registers after the
   target label. Calls without explicit operands keep the legacy v2, v3, ...
   convention.

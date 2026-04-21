@@ -487,7 +487,9 @@ def _emit_instruction(
         builder.emit_call(plan.token_provider.helper_token(helper))
         return
 
-    if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.MUL, IrOp.DIV):
+    if instruction.opcode in (
+        IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.OR, IrOp.XOR, IrOp.MUL, IrOp.DIV
+    ):
         dst = _as_register(instruction.operands[0], f"{instruction.opcode.name} dst")
         lhs = _as_register(instruction.operands[1], f"{instruction.opcode.name} lhs")
         rhs = _as_register(instruction.operands[2], f"{instruction.opcode.name} rhs")
@@ -497,13 +499,29 @@ def _emit_instruction(
         builder.emit_stloc(dst.index)
         return
 
-    if instruction.opcode in (IrOp.ADD_IMM, IrOp.AND_IMM):
+    if instruction.opcode in (IrOp.ADD_IMM, IrOp.AND_IMM, IrOp.OR_IMM, IrOp.XOR_IMM):
         dst = _as_register(instruction.operands[0], f"{instruction.opcode.name} dst")
         src = _as_register(instruction.operands[1], f"{instruction.opcode.name} src")
         imm = _as_immediate(instruction.operands[2], f"{instruction.opcode.name} imm")
         builder.emit_ldloc(src.index)
         builder.emit_ldc_i4(imm.value)
         _emit_binary_op(builder, instruction.opcode)
+        builder.emit_stloc(dst.index)
+        return
+
+    if instruction.opcode == IrOp.NOT:
+        # NOT x = x XOR 0xFFFF_FFFF = x XOR -1
+        # CIL does not have a dedicated bitwise-NOT opcode.  The canonical
+        # CLR pattern is to push the operand, push the all-ones mask (-1 as a
+        # signed int32, which is 0xFFFF_FFFF in two's-complement), and then
+        # emit ``xor``.  ``ldc.i4.m1`` (0x15) is the one-byte short form for
+        # pushing -1, so the sequence is compact: 1 + 1 + 1 = 3 bytes of
+        # operand code (plus whatever ldloc/stloc need).
+        dst = _as_register(instruction.operands[0], "NOT dst")
+        src = _as_register(instruction.operands[1], "NOT src")
+        builder.emit_ldloc(src.index)
+        builder.emit_ldc_i4(-1)   # ldc.i4.m1 — push 0xFFFF_FFFF
+        builder.emit_xor()        # xor — flips all 32 bits
         builder.emit_stloc(dst.index)
         return
 
@@ -588,6 +606,26 @@ def _call_register_count(
 
 
 def _emit_binary_op(builder: CILBytecodeBuilder, opcode: IrOp) -> None:
+    """Emit the single-byte CIL arithmetic or bitwise opcode for a binary IR op.
+
+    The caller has already pushed lhs and rhs (or src and immediate) onto the
+    evaluation stack.  This function emits exactly the operation byte; the
+    caller emits the surrounding ``ldloc``/``stloc`` pair.
+
+    Supported ops and their CIL bytecodes:
+
+    +-----------+-----------+--------+
+    | IR op(s)  | CIL op    | byte   |
+    +===========+===========+========+
+    | ADD(_IMM) | add       | 0x58   |
+    | SUB       | sub       | 0x59   |
+    | MUL       | mul       | 0x5A   |
+    | DIV       | div       | 0x5B   |
+    | AND(_IMM) | and       | 0x5F   |
+    | OR(_IMM)  | or        | 0x60   |
+    | XOR(_IMM) | xor       | 0x61   |
+    +-----------+-----------+--------+
+    """
     if opcode in (IrOp.ADD, IrOp.ADD_IMM):
         builder.emit_add()
     elif opcode == IrOp.SUB:
@@ -597,7 +635,11 @@ def _emit_binary_op(builder: CILBytecodeBuilder, opcode: IrOp) -> None:
     elif opcode == IrOp.DIV:
         builder.emit_div()
     elif opcode in (IrOp.AND, IrOp.AND_IMM):
-        builder.emit_opcode(CILOpcode.AND)
+        builder.emit_and()
+    elif opcode in (IrOp.OR, IrOp.OR_IMM):
+        builder.emit_or()
+    elif opcode in (IrOp.XOR, IrOp.XOR_IMM):
+        builder.emit_xor()
     else:
         msg = f"Unsupported binary opcode: {opcode}"
         raise CILBackendError(msg)
