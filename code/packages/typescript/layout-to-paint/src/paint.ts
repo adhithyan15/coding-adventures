@@ -77,6 +77,7 @@ import type {
   PaintScene,
   PaintInstruction,
   PaintGlyphRun,
+  PaintText,
   PaintImage,
   PaintRect,
   PaintLayer,
@@ -115,6 +116,27 @@ export interface LayoutToPaintOptions {
    * Example: a node at x=10, y=20 with dpr=2.0 → PaintInstruction x=20, y=40.
    */
   devicePixelRatio?: number;
+
+  /**
+   * How TextContent nodes are emitted. Default: `"glyph_run"`.
+   *
+   * - `"glyph_run"` — emit PaintGlyphRun, one glyph per character, using a
+   *   `font.size × 0.6` advance approximation. Works with every paint
+   *   backend, including those that consume glyph IDs (Metal, Direct2D).
+   *   This is the historical behaviour.
+   *
+   * - `"text"` — emit a single PaintText instruction per TextContent,
+   *   carrying the literal string and a `canvas:<family>@<size>...`
+   *   font_ref. The paint backend (paint-vm-canvas) sets `ctx.font` and
+   *   calls `ctx.fillText(str, x, y_baseline)` at dispatch time, letting
+   *   the browser handle shaping + fallback. See spec TXT03d and the
+   *   P2D00 "GlyphRun vs Text" section.
+   *
+   * Pipelines driven by a canvas-backed TextMeasurer (TXT03d) should use
+   * `"text"`; pipelines driven by a font-parser or OS-native measurer
+   * (TXT01/02/04, TXT03a/b/c) should use `"glyph_run"`.
+   */
+  textEmitMode?: "glyph_run" | "text";
 }
 
 // ============================================================================
@@ -182,11 +204,12 @@ export function layout_to_paint(
 ): PaintScene {
   const dpr = options.devicePixelRatio ?? 1.0;
   const bg = options.background ? colorToCss(options.background) : "transparent";
+  const textMode = options.textEmitMode ?? "glyph_run";
 
   const instructions: PaintInstruction[] = [];
 
   for (const node of nodes) {
-    emitNode(node, 0, 0, dpr, instructions);
+    emitNode(node, 0, 0, dpr, textMode, instructions);
   }
 
   return {
@@ -206,6 +229,7 @@ function emitNode(
   parentAbsX: number,
   parentAbsY: number,
   dpr: number,
+  textMode: "glyph_run" | "text",
   out: PaintInstruction[]
 ): void {
   const absX = parentAbsX + node.x;
@@ -218,7 +242,7 @@ function emitNode(
   // If opacity < 1, wrap everything in a PaintLayer for correct compositing.
   if (hasOpacity) {
     const layerChildren: PaintInstruction[] = [];
-    emitNodeInstructions(node, absX, absY, dpr, layerChildren);
+    emitNodeInstructions(node, absX, absY, dpr, textMode, layerChildren);
     const layer: PaintLayer = {
       kind: "layer",
       opacity,
@@ -228,7 +252,7 @@ function emitNode(
     return;
   }
 
-  emitNodeInstructions(node, absX, absY, dpr, out);
+  emitNodeInstructions(node, absX, absY, dpr, textMode, out);
 }
 
 function emitNodeInstructions(
@@ -236,6 +260,7 @@ function emitNodeInstructions(
   absX: number,
   absY: number,
   dpr: number,
+  textMode: "glyph_run" | "text",
   out: PaintInstruction[]
 ): void {
   const paintExt = (node.ext["paint"] ?? {}) as PaintExt;
@@ -285,8 +310,8 @@ function emitNodeInstructions(
   if (paintExt.cornerRadius && (node.content !== null || node.children.length > 0)) {
     // Clip content and children to rounded rect bounds.
     const clipped: PaintInstruction[] = [];
-    emitContent(node, absX, absY, dpr, clipped);
-    emitChildren(node, absX, absY, dpr, clipped);
+    emitContent(node, absX, absY, dpr, textMode, clipped);
+    emitChildren(node, absX, absY, dpr, textMode, clipped);
 
     const clip: PaintClip = {
       kind: "clip",
@@ -298,8 +323,8 @@ function emitNodeInstructions(
     };
     out.push(clip);
   } else {
-    emitContent(node, absX, absY, dpr, out);
-    emitChildren(node, absX, absY, dpr, out);
+    emitContent(node, absX, absY, dpr, textMode, out);
+    emitChildren(node, absX, absY, dpr, textMode, out);
   }
 }
 
@@ -312,12 +337,17 @@ function emitContent(
   absX: number,
   absY: number,
   dpr: number,
+  textMode: "glyph_run" | "text",
   out: PaintInstruction[]
 ): void {
   if (node.content === null) return;
 
   if (node.content.kind === "text") {
-    emitText(node.content, absX, absY, node.width, dpr, out);
+    if (textMode === "text") {
+      emitTextAsPaintText(node.content, absX, absY, node.width, dpr, out);
+    } else {
+      emitText(node.content, absX, absY, node.width, dpr, out);
+    }
   } else if (node.content.kind === "image") {
     emitImage(node.content, absX, absY, node.width, node.height, dpr, out);
   }
@@ -381,6 +411,65 @@ function emitText(
 }
 
 /**
+ * Convert `TextContent` to a single `PaintText` instruction (canvas-native path).
+ *
+ * This emits one PaintText per TextContent node, carrying the literal string
+ * and a `canvas:` font_ref that encodes family, size, weight, and style per
+ * spec TXT03d. Line wrapping is expected to have happened in the layout phase
+ * (via CanvasTextMeasurer in UI09). At paint time, the browser re-shapes and
+ * rasterizes via `ctx.fillText`.
+ *
+ * This does NOT split per-glyph — Canvas has no addressable glyph IDs. Font
+ * fallback (e.g. Apple Color Emoji for a single emoji inside a Latin run) is
+ * delegated to the browser and is invisible at the paint IR level.
+ *
+ * Trade-off: we lose per-character hit-testing information. A future
+ * enhancement can populate `cluster_positions` by walking each character and
+ * calling `ctx.measureText` to build a cluster→x offset map.
+ */
+function emitTextAsPaintText(
+  content: TextContent,
+  absX: number,
+  absY: number,
+  nodeWidth: number,
+  dpr: number,
+  out: PaintInstruction[]
+): void {
+  if (content.value.length === 0) return;
+
+  const font = content.font;
+  // Baseline offset from the top of the node box. The measurer reports height
+  // using fontBoundingBoxAscent + fontBoundingBoxDescent, which for typical
+  // Latin fonts matches font.size × 1.15 — with ascent ≈ font.size × 0.93
+  // and descent ≈ font.size × 0.22. Using 0.93 here places the baseline
+  // inside the reported box consistently across same-font tokens on a line.
+  const baselineY = absY + font.size * 0.93;
+
+  const family = font.family || "sans-serif";
+  // Build "canvas:<family>@<size>:<weight>[:italic]" per TXT03d grammar.
+  // The family string is encoded as-is; paint-vm-canvas sanitizes it before
+  // interpolating into ctx.font.
+  let fontRef = `canvas:${family}@${font.size}:${font.weight}`;
+  if (font.italic) fontRef += ":italic";
+
+  const paintText: PaintText = {
+    kind: "text",
+    x: absX * dpr,
+    y: baselineY * dpr,
+    text: content.value,
+    font_ref: fontRef,
+    font_size: font.size * dpr,
+    fill: colorToCss(content.color),
+    metadata: {
+      "layout:maxWidth": nodeWidth * dpr,
+      "layout:textAlign": content.textAlign,
+    },
+  };
+
+  out.push(paintText);
+}
+
+/**
  * Convert `ImageContent` to a `PaintImage`.
  */
 function emitImage(
@@ -411,9 +500,10 @@ function emitChildren(
   absX: number,
   absY: number,
   dpr: number,
+  textMode: "glyph_run" | "text",
   out: PaintInstruction[]
 ): void {
   for (const child of node.children) {
-    emitNode(child, absX, absY, dpr, out);
+    emitNode(child, absX, absY, dpr, textMode, out);
   }
 }

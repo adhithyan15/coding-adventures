@@ -26,9 +26,12 @@ from .errors import (
     TableAlreadyExists,
     TableNotFound,
     TypeMismatch,
+    UnsupportedFunction,
     VmError,
+    WrongNumberOfArguments,
 )
 from .result import QueryResult
+from .scalar_functions import call as call_scalar
 from .vm import execute
 
 __all__ = [
@@ -43,6 +46,9 @@ __all__ = [
     "TableAlreadyExists",
     "TableNotFound",
     "TypeMismatch",
+    "UnsupportedFunction",
     "VmError",
+    "WrongNumberOfArguments",
+    "call_scalar",
     "execute",
 ]

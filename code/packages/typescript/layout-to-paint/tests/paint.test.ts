@@ -9,7 +9,7 @@ import { describe, it, expect } from "vitest";
 import { layout_to_paint, colorToCss } from "../src/index.js";
 import type { PositionedNode } from "@coding-adventures/layout-ir";
 import { rgb, rgba, font_spec } from "@coding-adventures/layout-ir";
-import type { PaintRect, PaintGlyphRun, PaintImage, PaintLayer, PaintClip } from "@coding-adventures/paint-instructions";
+import type { PaintRect, PaintGlyphRun, PaintText, PaintImage, PaintLayer, PaintClip } from "@coding-adventures/paint-instructions";
 
 // ============================================================================
 // Helpers
@@ -195,6 +195,91 @@ describe("text nodes", () => {
     });
     const run = scene.instructions[0] as PaintGlyphRun;
     expect(run.font_size).toBe(32); // 16 × 2
+  });
+});
+
+// ============================================================================
+// TXT03d — textEmitMode: "text" emits PaintText instead of PaintGlyphRun
+// ============================================================================
+
+describe("textEmitMode \"text\" (canvas-native path)", () => {
+  it("emits a PaintText, not a PaintGlyphRun, for text content", () => {
+    const scene = layout_to_paint(
+      [textNode(10, 5, 100, 20, "Hello")],
+      { width: 100, height: 20, textEmitMode: "text" },
+    );
+    expect(scene.instructions).toHaveLength(1);
+    const t = scene.instructions[0] as PaintText;
+    expect(t.kind).toBe("text");
+    expect(t.text).toBe("Hello");
+  });
+
+  it("emits exactly one PaintText per TextContent node (no per-glyph splitting)", () => {
+    const scene = layout_to_paint(
+      [textNode(0, 0, 200, 20, "Hello world")],
+      { width: 200, height: 20, textEmitMode: "text" },
+    );
+    const texts = scene.instructions.filter((i) => i.kind === "text");
+    expect(texts).toHaveLength(1);
+  });
+
+  it("font_ref uses canvas: scheme with family@size:weight", () => {
+    const scene = layout_to_paint(
+      [textNode(0, 0, 100, 20, "X")],
+      { width: 100, height: 20, textEmitMode: "text" },
+    );
+    const t = scene.instructions[0] as PaintText;
+    expect(t.font_ref).toMatch(/^canvas:[A-Za-z][A-Za-z0-9 ]*@\d+:\d+$/);
+    expect(t.font_ref).toContain("Arial");
+    expect(t.font_ref).toContain("@16");
+    expect(t.font_ref).toContain(":400");
+  });
+
+  it("italic font appends :italic to font_ref", () => {
+    const italicFont = { ...font, italic: true };
+    const node: PositionedNode = {
+      ...textNode(0, 0, 100, 20, "X"),
+      content: { kind: "text", value: "X", font: italicFont, color: black, maxLines: null, textAlign: "start" },
+    };
+    const scene = layout_to_paint([node], { width: 100, height: 20, textEmitMode: "text" });
+    const t = scene.instructions[0] as PaintText;
+    expect(t.font_ref).toMatch(/:italic$/);
+  });
+
+  it("fill color comes from text content color", () => {
+    const node: PositionedNode = {
+      ...textNode(0, 0, 100, 20, "X"),
+      content: { kind: "text", value: "X", font, color: red, maxLines: null, textAlign: "start" },
+    };
+    const scene = layout_to_paint([node], { width: 100, height: 20, textEmitMode: "text" });
+    const t = scene.instructions[0] as PaintText;
+    expect(t.fill).toBe("rgba(255,0,0,1)");
+  });
+
+  it("position and font_size scale with dpr", () => {
+    const scene = layout_to_paint(
+      [textNode(10, 5, 100, 20, "X")],
+      { width: 100, height: 20, devicePixelRatio: 2.0, textEmitMode: "text" },
+    );
+    const t = scene.instructions[0] as PaintText;
+    expect(t.x).toBe(20); // 10 × 2
+    expect(t.font_size).toBe(32); // 16 × 2
+  });
+
+  it("empty text does not emit a PaintText", () => {
+    const scene = layout_to_paint(
+      [textNode(0, 0, 100, 20, "")],
+      { width: 100, height: 20, textEmitMode: "text" },
+    );
+    expect(scene.instructions).toHaveLength(0);
+  });
+
+  it("default textEmitMode is glyph_run (backward compat)", () => {
+    const scene = layout_to_paint(
+      [textNode(0, 0, 100, 20, "X")],
+      { width: 100, height: 20 },
+    );
+    expect(scene.instructions[0].kind).toBe("glyph_run");
   });
 });
 

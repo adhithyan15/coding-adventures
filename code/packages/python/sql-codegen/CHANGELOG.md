@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.0] - 2026-04-20
+
+### Added
+
+- **`CallScalar(func, n_args)` instruction** — new IR instruction for scalar function
+  calls.  The VM pops `n_args` arguments in push order, calls the named function from its
+  scalar registry, and pushes the result.  Dispatches to `sql_vm.scalar_functions`.
+
+- **Generic `FunctionCall` compilation** — the compiler now routes every `FunctionCall`
+  AST node (including `COALESCE`) through `CallScalar` instead of special-casing it.  The
+  legacy `Coalesce(n)` IR instruction is preserved for backwards compatibility.
+
+### Changed
+
+- `compile_expr` no longer raises `UnsupportedNode` for unknown function names.  Function
+  resolution is deferred to the VM; the VM raises `UnsupportedFunction` at runtime if the
+  function is not in its registry.  This makes the compilation pipeline strictly
+  forward-compatible with user-defined functions registered at the VM level.
+
 ## [0.2.0] - 2026-04-19
 
 ### Added

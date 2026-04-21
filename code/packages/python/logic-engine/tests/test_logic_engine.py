@@ -15,6 +15,7 @@ from logic_engine import (
     Clause,
     DeferredExpr,
     Disequality,
+    LogicVar,
     Program,
     State,
     Term,
@@ -24,6 +25,8 @@ from logic_engine import (
     asserta,
     assertz,
     atom,
+    clause_as_term,
+    clause_body,
     clauses_matching,
     conj,
     defer,
@@ -32,6 +35,8 @@ from logic_engine import (
     fact,
     fail,
     fresh,
+    freshen_clause,
+    goal_as_term,
     logic_list,
     native_goal,
     neq,
@@ -44,6 +49,7 @@ from logic_engine import (
     solve_all,
     solve_from,
     solve_n,
+    succeed,
     term,
     var,
 )
@@ -53,7 +59,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.5.0"
+        assert __version__ == "0.6.0"
 
 
 class TestRelationsAndClauses:
@@ -297,6 +303,110 @@ class TestPersistentClauseDatabase:
 
         with pytest.raises(TypeError):
             abolish(program(), object())
+
+
+class TestClauseTermIntrospection:
+    """Clauses and goals should be inspectable as first-order term data."""
+
+    def test_clause_body_uses_truth_for_facts(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        y = var("Y")
+
+        assert clause_body(fact(parent("homer", "bart"))) == succeed()
+        assert clause_body(rule(parent(x, y), parent(y, x))) == parent(y, x)
+
+    def test_goal_as_term_encodes_representable_goals(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        y = var("Y")
+
+        assert goal_as_term(parent(x, y)) == term("parent", x, y)
+        assert goal_as_term(succeed()) == atom("true")
+        assert goal_as_term(fail()) == atom("fail")
+        assert goal_as_term(eq(x, "homer")) == term("=", x, "homer")
+        assert goal_as_term(neq(x, "homer")) == term("\\=", x, "homer")
+        encoded_conjunction = goal_as_term(
+            conj(parent(x, y), eq(x, "homer"), neq(y, "bart")),
+        )
+
+        assert encoded_conjunction == term(
+            ",",
+            term("parent", x, y),
+            term(",", term("=", x, "homer"), term("\\=", y, "bart")),
+        )
+        assert goal_as_term(disj(eq(x, "homer"), fail())) == term(
+            ";",
+            term("=", x, "homer"),
+            atom("fail"),
+        )
+
+    def test_goal_as_term_rejects_host_only_goals(self) -> None:
+        x = var("X")
+
+        def passthrough(
+            _program: Program,
+            state: State,
+            _args: tuple[Term, ...],
+        ) -> Iterator[State]:
+            yield state
+
+        with pytest.raises(TypeError):
+            goal_as_term(fresh(1, lambda inner: eq(inner, "tea")))
+
+        with pytest.raises(TypeError):
+            goal_as_term(defer(eq, "tea", "tea"))
+
+        with pytest.raises(TypeError):
+            goal_as_term(native_goal(passthrough, x))
+
+    def test_clause_as_term_encodes_facts_and_rules(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+
+        assert clause_as_term(fact(parent("homer", "bart"))) == term(
+            ":-",
+            term("parent", "homer", "bart"),
+            atom("true"),
+        )
+        assert clause_as_term(rule(child(x, y), parent(y, x))) == term(
+            ":-",
+            term("child", x, y),
+            term("parent", y, x),
+        )
+
+    def test_freshen_clause_standardizes_apart_and_preserves_aliasing(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        source = rule(parent(x, x), parent(x, "bart"))
+
+        freshened, next_var_id = freshen_clause(source, 3)
+
+        assert next_var_id == 4
+        first, second = freshened.head.args
+        assert isinstance(first, LogicVar)
+        assert first == second
+        assert first != x
+        assert first.id == 3
+        assert freshened.body == parent(first, "bart")
+
+    def test_freshen_clause_validates_next_var_id(self) -> None:
+        parent = relation("parent", 2)
+        source = fact(parent("homer", "bart"))
+
+        with pytest.raises(TypeError):
+            freshen_clause(source, 1.5)  # type: ignore[arg-type]
+
+        with pytest.raises(TypeError):
+            freshen_clause(source, True)  # type: ignore[arg-type]
+
+        with pytest.raises(ValueError):
+            freshen_clause(source, -1)
+
+        with pytest.raises(TypeError):
+            freshen_clause(object(), 0)
 
 
 class TestRecursivePrograms:
