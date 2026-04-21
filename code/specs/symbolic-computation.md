@@ -367,12 +367,22 @@ No new IR primitives required. See `phase3-transcendental.md`.
 The full Risch algorithm for rational × transcendental products and
 multi-level towers is deferred to a later Phase 3 extension.
 
-### Phase 4 — Algebraic extensions (full Risch)
+### Phase 4 — Trigonometric integration
 
-Handles `sqrt` and `root-of-polynomial` through Trager's algorithm on
-function-field integral bases. Completes the decision procedure over
-the full elementary-function class. This is the terminus — no known
-CAS goes meaningfully beyond it, and most only implement a subset.
+Extends integration to the most common trigonometric integrands:
+
+- **Phase 4a** — `p(x)·sin(ax+b)` and `p(x)·cos(ax+b)` for `p ∈ Q[x]`:
+  tabular IBP formula yields `∫ p·sin = sin·S − cos·C` and
+  `∫ p·cos = sin·C + cos·S` where C and S are finite derivative sums.
+- **Phase 4b** — Trig squares and products via product-to-sum identities:
+  `sin²`, `cos²`, `sin·sin`, `cos·cos`, `sin·cos` all reduce to Phase 3.
+- **Phase 4c** — `exp(ax+b)·sin(cx+d)` and `exp(ax+b)·cos(cx+d)` via
+  the double-IBP closed form: `exp·[a·sin−c·cos]/(a²+c²)`.
+
+See `phase4-trig-integration.md` for algorithms and derivations.
+
+Deferred: `tan(x)`, `sinⁿ(x)` for n ≥ 3, u-substitution, algebraic
+extensions (Trager's algorithm for `sqrt` integrands).
 
 ## Non-Goals (For This Spec)
 

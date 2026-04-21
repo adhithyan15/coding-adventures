@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–2e).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–4).
 
 The handler tries two routes, in order:
 
@@ -89,15 +89,18 @@ from symbolic_ir import (
 from symbolic_vm.arctan_integral import arctan_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.exp_integral import exp_integral
+from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
 from symbolic_vm.hermite import hermite_reduce
 from symbolic_vm.log_integral import log_poly_integral
 from symbolic_vm.mixed_integral import mixed_integral
 from symbolic_vm.polynomial_bridge import (
     from_polynomial,
+    linear_to_ir,
     rt_pairs_to_ir,
     to_rational,
 )
 from symbolic_vm.rothstein_trager import rothstein_trager
+from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
 ONE = IRInteger(1)
 TWO = IRInteger(2)
@@ -353,12 +356,25 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if not _depends_on(b, x):
             ia = _integrate(a, x)
             return None if ia is None else IRApply(MUL, (b, ia))
-        # Both factors depend on x — try Phase 3 (exp/log products).
+        # Both factors depend on x — try Phase 3 then Phase 4 patterns.
+        # Phase 3: exp(linear) and log(linear) products.
         result = _try_exp_product(a, b, x) or _try_exp_product(b, a, x)
         if result is not None:
             return result
         result = _try_log_product(a, b, x) or _try_log_product(b, a, x)
-        return result  # None if all Phase 3 patterns failed
+        if result is not None:
+            return result
+        # Phase 4b: trig × trig via product-to-sum identities.
+        result = _try_trig_trig(a, b, x) or _try_trig_trig(b, a, x)
+        if result is not None:
+            return result
+        # Phase 4c: exp × trig via double-IBP closed form.
+        result = _try_exp_trig(a, b, x) or _try_exp_trig(b, a, x)
+        if result is not None:
+            return result
+        # Phase 4a: polynomial × trig via tabular IBP.
+        result = _try_trig_product(a, b, x) or _try_trig_product(b, a, x)
+        return result  # None if all patterns failed
 
     # --- Quotient (limited: constant denominator, or 1/x) -------------
     if head == DIV:
@@ -615,6 +631,130 @@ def _try_log_product(
     if not poly:
         return None
     return log_poly_integral(poly, a_frac, b_frac, x)
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 helpers
+# ---------------------------------------------------------------------------
+
+
+def _try_trig_product(
+    trig: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · sin/cos(linear) dx`` or ``None``.
+
+    Checks whether ``trig`` is ``Sin`` or ``Cos`` of a linear argument and
+    ``poly_candidate`` is a polynomial (rational with denominator 1).
+    """
+    if not isinstance(trig, IRApply):
+        return None
+    if trig.head not in {SIN, COS}:
+        return None
+    lin = _try_linear(trig.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None  # constant trig factor — constant-factor rule handles it
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+
+    if trig.head == SIN:
+        return trig_sin_integral(poly, a_frac, b_frac, x)
+    return trig_cos_integral(poly, a_frac, b_frac, x)
+
+
+def _try_trig_trig(f1: IRNode, f2: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ f1 · f2 dx`` via product-to-sum for trig × trig, or ``None``.
+
+    Handles the three ordered cases:
+    - sin(u)·sin(v) → [cos(u−v) − cos(u+v)] / 2
+    - cos(u)·cos(v) → [cos(u−v) + cos(u+v)] / 2
+    - sin(u)·cos(v) → [sin(u+v) + sin(u−v)] / 2
+
+    The cos(u)·sin(v) case is handled by the swapped-order call
+    ``_try_trig_trig(f2, f1, x)`` in the caller, which becomes sin·cos.
+    """
+    if not isinstance(f1, IRApply) or not isinstance(f2, IRApply):
+        return None
+    h1, h2 = f1.head, f2.head
+    if h1 not in {SIN, COS} or h2 not in {SIN, COS}:
+        return None
+    # Skip cos·sin — the caller will retry as sin·cos.
+    if h1 == COS and h2 == SIN:
+        return None
+
+    lin1 = _try_linear(f1.args[0], x)
+    lin2 = _try_linear(f2.args[0], x)
+    if lin1 is None or lin2 is None:
+        return None
+    a1, b1 = lin1
+    a2, b2 = lin2
+    if a1 == 0 or a2 == 0:
+        return None  # constant — constant-factor rule handles it
+
+    a_sum, b_sum = a1 + a2, b1 + b2
+    a_diff, b_diff = a1 - a2, b1 - b2
+    half = IRRational(1, 2)
+
+    sum_arg = linear_to_ir(a_sum, b_sum, x)
+    diff_arg = linear_to_ir(a_diff, b_diff, x)
+
+    if h1 == SIN and h2 == SIN:
+        # sin(u)·sin(v) = [cos(u−v) − cos(u+v)] / 2
+        cos_diff = IRApply(COS, (diff_arg,))
+        cos_sum = IRApply(COS, (sum_arg,))
+        reduced = IRApply(MUL, (half, IRApply(SUB, (cos_diff, cos_sum))))
+    elif h1 == COS and h2 == COS:
+        # cos(u)·cos(v) = [cos(u−v) + cos(u+v)] / 2
+        cos_diff = IRApply(COS, (diff_arg,))
+        cos_sum = IRApply(COS, (sum_arg,))
+        reduced = IRApply(MUL, (half, IRApply(ADD, (cos_diff, cos_sum))))
+    else:
+        # sin(u)·cos(v) = [sin(u+v) + sin(u−v)] / 2
+        sin_sum = IRApply(SIN, (sum_arg,))
+        sin_diff = IRApply(SIN, (diff_arg,))
+        reduced = IRApply(MUL, (half, IRApply(ADD, (sin_sum, sin_diff))))
+
+    return _integrate(reduced, x)
+
+
+def _try_exp_trig(exp_node: IRNode, trig_node: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ exp(linear) · sin/cos(linear) dx`` or ``None``.
+
+    Uses the double-IBP closed form:
+
+        ∫ exp(ax+b)·sin(cx+d) dx = exp(ax+b)·[a·sin−c·cos] / (a²+c²)
+        ∫ exp(ax+b)·cos(cx+d) dx = exp(ax+b)·[a·cos+c·sin] / (a²+c²)
+    """
+    if not isinstance(exp_node, IRApply) or not isinstance(trig_node, IRApply):
+        return None
+    if exp_node.head != EXP:
+        return None
+    if trig_node.head not in {SIN, COS}:
+        return None
+
+    lin_exp = _try_linear(exp_node.args[0], x)
+    lin_trig = _try_linear(trig_node.args[0], x)
+    if lin_exp is None or lin_trig is None:
+        return None
+    a_frac, b_frac = lin_exp
+    c_frac, d_frac = lin_trig
+    if a_frac == 0 or c_frac == 0:
+        return None  # constant exp or trig — other rules handle those
+
+    if trig_node.head == SIN:
+        return exp_sin_integral(a_frac, b_frac, c_frac, d_frac, x)
+    return exp_cos_integral(a_frac, b_frac, c_frac, d_frac, x)
 
 
 def _depends_on(node: IRNode, var: IRSymbol) -> bool:
