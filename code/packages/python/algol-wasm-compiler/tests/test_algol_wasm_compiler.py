@@ -44,6 +44,16 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
+    def test_by_name_waits_for_thunk_lowering_stage(self) -> None:
+        with pytest.raises(AlgolWasmError) as raised:
+            compile_source(
+                "begin integer result; "
+                "integer procedure id(x); integer x; begin id := x end; "
+                "result := id(1) "
+                "end"
+            )
+        assert raised.value.stage == "ir-compile"
+
     def test_runtime_smoke_returns_result(self) -> None:
         result = compile_source(
             "begin integer result, i; "

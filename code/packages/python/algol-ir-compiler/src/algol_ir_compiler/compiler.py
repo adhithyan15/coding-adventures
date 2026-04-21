@@ -182,6 +182,7 @@ class AlgolIrCompiler:
             procedure.procedure_id: procedure
             for procedure in type_result.semantic.procedures
         }
+        self._reject_by_name_procedures(type_result.semantic.procedures)
         self.arrays = {
             array.array_id: array for array in type_result.semantic.arrays
         }
@@ -300,6 +301,17 @@ class AlgolIrCompiler:
 
         self._emit_leave_frame(scope)
         return scope
+
+    def _reject_by_name_procedures(
+        self, procedures: list[ProcedureDescriptor]
+    ) -> None:
+        for procedure in procedures:
+            for parameter in procedure.parameters:
+                if parameter.mode != "value":
+                    raise CompileError(
+                        f"call-by-name parameter {parameter.name!r} requires "
+                        "thunk lowering, not implemented by algol-ir-compiler"
+                    )
 
     def _emit_enter_frame(
         self,

@@ -22,6 +22,11 @@ checked element loads/stores through the descriptor. Block and procedure exits
 restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
 
+By-name parameters are recognized by the type checker but are not lowered here
+yet. Until Phase 5 thunk descriptors and eval/store helpers are implemented,
+programs containing by-name parameters raise `CompileError` instead of being
+silently compiled as value-parameter calls.
+
 This phase keeps ALGOL frame memory and its 20-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
 separate 64 KiB heap segment. Larger semantic frame plans raise `CompileError`

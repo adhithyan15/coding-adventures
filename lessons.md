@@ -3075,6 +3075,23 @@ new frame.
 
 ---
 
+## Conservative call-by-name scans must track lexical procedure shadowing
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of the first ALGOL 60 call-by-name metadata pass caught that the
+pre-lowering write scan classified transitive calls by bare procedure name. A nested procedure that
+shadowed a known read-only procedure, or shadowed the procedure currently being analyzed, could write
+through a by-name formal while the outer formal stayed marked read-only.
+
+**Rule:** Any conservative by-name write analysis that runs before full procedure resolution must
+track procedure declarations lexically. If a call resolves to a locally declared procedure whose
+descriptor is not available to the scan, treat the matching by-name actual as writable rather than
+falling back to an outer read-only descriptor or to self-recursion handling.
+
+If the pre-pass keeps a bare-name procedure lookup, duplicate procedure names are ambiguous and must
+also be treated as writable. Recursive propagation must flow only through target parameters whose
+mode is by-name; a value parameter assigned locally does not write back to the caller's actual.
 ## Python tests need imports for helper types used only in assertions
 
 **Date:** 2026-04-21

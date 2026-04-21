@@ -13,6 +13,8 @@ All notable changes to this package will be documented in this file.
 - Compiled Phase 4 integer arrays through heap-backed descriptors with dynamic
   bounds, multidimensional row-major indexing, runtime bounds checks, and
   zero-result failure for invalid bounds or out-of-bounds accesses.
+- Reported by-name procedures as an IR compile-stage gap until Phase 5 thunk
+  lowering is implemented, avoiding silent value-parameter behavior.
 
 ## [0.1.0] - 2026-04-20
 
