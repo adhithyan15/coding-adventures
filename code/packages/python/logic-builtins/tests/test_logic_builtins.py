@@ -34,9 +34,12 @@ from logic_builtins import (
     bagofo,
     callableo,
     callo,
+    calltermo,
     clauseo,
+    compare_termo,
     compoundo,
     copytermo,
+    current_predicateo,
     div,
     failo,
     findallo,
@@ -60,10 +63,15 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    predicate_propertyo,
     same_termo,
     setofo,
     stringo,
     sub,
+    termo_geqo,
+    termo_gto,
+    termo_leqo,
+    termo_lto,
     trueo,
     univo,
     varo,
@@ -74,7 +82,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.6.0"
+        assert __version__ == "0.7.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -495,6 +503,67 @@ class TestControlBuiltins:
             noto(object())
 
 
+class TestCallableTermBuiltins:
+    """Callable term helpers should execute Prolog-shaped goal data."""
+
+    def test_calltermo_executes_reified_relation_and_control_terms(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            calltermo(term("parent", "homer", child)),
+        ) == [atom("bart"), atom("lisa")]
+        assert solve_all(
+            family,
+            child,
+            calltermo(
+                term(
+                    ",",
+                    term("parent", "homer", child),
+                    term("\\=", child, "lisa"),
+                ),
+            ),
+        ) == [atom("bart")]
+
+    def test_calltermo_executes_clauseo_body_round_trips(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+        body = var("Body")
+        family = program(
+            fact(parent("homer", "bart")),
+            rule(child(x, y), parent(y, x)),
+        )
+
+        assert solve_all(
+            family,
+            body,
+            conj(clauseo(child("bart", "homer"), body), calltermo(body)),
+        ) == [term("parent", "homer", "bart")]
+
+    def test_calltermo_fails_for_open_or_non_callable_terms(self) -> None:
+        goal = var("Goal")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), calltermo(goal)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), calltermo(string("nope"))),
+        ) == []
+
+
 class TestTermMetaprogrammingBuiltins:
     """Term metaprogramming should expose Prolog-style term-as-data tools."""
 
@@ -644,6 +713,49 @@ class TestTermMetaprogrammingBuiltins:
             conj(eq(value, string("tea")), callableo(value)),
         ) == []
 
+    def test_standard_term_order_predicates_compare_without_binding(self) -> None:
+        order = var("Order")
+        open_var = var("Open")
+        marker = var("Marker")
+
+        assert solve_all(program(), order, compare_termo(order, open_var, 7)) == [
+            atom("<"),
+        ]
+        assert solve_all(
+            program(),
+            order,
+            compare_termo(order, term("pair", "a"), term("pair", "a")),
+        ) == [atom("=")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_lto(open_var, 7)),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_gto(term("box", "tea"), "z")),
+        ) == [atom("ok")]
+
+    def test_standard_term_order_respects_compound_arity_before_functor(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_lto(term("z"), term("a", "value"))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_leqo(term("same"), term("same"))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_geqo("atom", 42)),
+        ) == [atom("ok")]
+
 
 class TestClauseIntrospectionBuiltins:
     """Program clauses should be queryable as Prolog-style data."""
@@ -750,6 +862,63 @@ class TestClauseIntrospectionBuiltins:
         assert solve_all(facts_and_rules, body, clauseo(predicate("y"), body)) == [
             atom("true"),
         ]
+
+
+class TestPredicateMetadataBuiltins:
+    """Predicate metadata should expose source and builtin predicates."""
+
+    def test_current_predicateo_enumerates_source_predicates(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        arity = var("Arity")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            rule(child("bart", "homer"), parent("homer", "bart")),
+        )
+
+        assert solve_all(family, arity, current_predicateo("parent", arity)) == [
+            num(2),
+        ]
+        assert solve_all(family, arity, current_predicateo("child", arity)) == [
+            num(2),
+        ]
+
+    def test_current_predicateo_enumerates_builtin_predicates(self) -> None:
+        arity = var("Arity")
+
+        assert solve_all(program(), arity, current_predicateo("calltermo", arity)) == [
+            num(1),
+        ]
+
+    def test_predicate_propertyo_reports_source_properties(self) -> None:
+        parent = relation("parent", 2)
+        prop = var("Property")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        properties = set(
+            solve_all(family, prop, predicate_propertyo("parent", 2, prop)),
+        )
+
+        assert atom("defined") in properties
+        assert atom("static") in properties
+        assert atom("built_in") not in properties
+        assert term("number_of_clauses", 2) in properties
+
+    def test_predicate_propertyo_reports_builtin_properties(self) -> None:
+        prop = var("Property")
+
+        properties = set(
+            solve_all(program(), prop, predicate_propertyo("calltermo", 1, prop)),
+        )
+
+        assert atom("defined") in properties
+        assert atom("built_in") in properties
+        assert atom("static") not in properties
+        assert term("number_of_clauses", 0) in properties
 
 
 class TestTermStateBuiltins:

@@ -10,6 +10,7 @@ ordinary logic goal expressions.
 ## What It Adds
 
 - `callo(goal)`
+- `calltermo(term_goal)` for executing reified callable goal terms
 - `onceo(goal)`
 - `noto(goal)` for negation as failure
 - `trueo()` and `failo()`
@@ -24,6 +25,11 @@ ordinary logic goal expressions.
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
 - `copytermo(source, copy)` and `same_termo(left, right)`
 - `clauseo(head, body)` for Prolog-style clause introspection
+- `compare_termo(order, left, right)`, `termo_lto(left, right)`,
+  `termo_leqo(left, right)`, `termo_gto(left, right)`, and
+  `termo_geqo(left, right)` for standard term ordering
+- `current_predicateo(name, arity)` and
+  `predicate_propertyo(name, arity, property)` for predicate metadata
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -35,7 +41,10 @@ ordinary logic goal expressions.
 from logic_builtins import (
     add,
     argo,
+    calltermo,
     clauseo,
+    compare_termo,
+    current_predicateo,
     findallo,
     forallo,
     functoro,
@@ -45,7 +54,9 @@ from logic_builtins import (
     iso,
     noto,
     onceo,
+    predicate_propertyo,
     same_termo,
+    termo_lto,
     univo,
 )
 from logic_engine import (
@@ -70,6 +81,8 @@ Arg = var("Arg")
 Score = var("Score")
 Results = var("Results")
 Body = var("Body")
+Order = var("Order")
+Property = var("Property")
 
 parent = relation("parent", 2)
 child = relation("child", 2)
@@ -119,6 +132,21 @@ assert solve_all(program(), X, same_termo(X, X)) == [X]
 assert solve_all(family, Body, clauseo(child("bart", "homer"), Body)) == [
     term("parent", "homer", "bart"),
 ]
+assert solve_all(
+    family,
+    Body,
+    conj(clauseo(child("bart", "homer"), Body), calltermo(Body)),
+) == [term("parent", "homer", "bart")]
+assert solve_all(program(), Order, compare_termo(Order, X, 7)) == [atom("<")]
+assert solve_all(program(), X, conj(eq(X, "ok"), termo_lto(X, term("box", "tea")))) == [
+    atom("ok"),
+]
+assert solve_all(family, Arity, current_predicateo("parent", Arity)) == [num(2)]
+assert term("number_of_clauses", 1) in solve_all(
+    family,
+    Property,
+    predicate_propertyo("child", 2, Property),
+)
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -145,6 +173,12 @@ and arity. `copytermo` refreshes variables in a copied term, while
 Clause introspection treats source clauses as ordinary data. `clauseo(Head,
 Body)` enumerates facts with body `true` and rules with a term-encoded body,
 standardizing variables apart before unifying with the query.
+
+Callable term execution closes that loop. `calltermo(Body)` can execute a body
+returned by `clauseo`, so metaprograms can inspect source clauses and then run
+the represented goals. Standard term-order predicates compare reified terms
+without binding them, while predicate metadata exposes source predicates and
+the builtin predicate surface as ordinary logic-queryable facts.
 
 ## Dependencies
 

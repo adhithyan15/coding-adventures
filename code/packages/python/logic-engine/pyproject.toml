@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-engine"
-version = "0.6.0"
-description = "Logic programming engine: relations, clauses, clause introspection, persistent programs, resolution, and disequality"
+version = "0.7.0"
+description = "Logic programming engine: relations, clauses, callable goal terms, persistent programs, resolution, and disequality"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -25,7 +25,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP17-logic-clause-introspection-builtins.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP18-logic-prolog-functionality-batches.md"
 
 [project.optional-dependencies]
 dev = [

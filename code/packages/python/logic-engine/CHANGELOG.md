@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.7.0] - 2026-04-21
+
+### Added
+
+- `goal_from_term(...)` for lowering Prolog-shaped callable terms back into
+  executable engine goals
+- support for lowering truth, failure, equality, disequality, conjunction,
+  disjunction, relation-call compounds, and zero-arity callable atoms
+- tests covering executable round trips and malformed callable-term rejection
+
 ## [0.6.0] - 2026-04-21
 
 ### Added

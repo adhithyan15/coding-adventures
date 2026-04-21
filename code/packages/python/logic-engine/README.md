@@ -10,6 +10,7 @@ that make relational programs feel like programs:
 - facts and rules
 - immutable clause databases
 - first-order clause and goal term encoders
+- callable goal-term lowering via `goal_from_term(...)`
 - persistent database updates via `asserta(...)`, `assertz(...)`, `retract_*`,
   and `abolish(...)`
 - recursive solving with depth-first backtracking
@@ -98,6 +99,29 @@ assert clause_as_term(rule(child(X, Y), parent(Y, X))) == term(
     term("child", X, Y),
     term("parent", Y, X),
 )
+```
+
+## Callable Goal Terms
+
+`goal_from_term(...)` turns Prolog-shaped goal data back into an executable
+engine goal. This is the core bridge that lets higher layers inspect a clause
+body as data and then run that body again.
+
+```python
+from logic_engine import atom, fact, goal_from_term, program, relation, solve_all, term, var
+
+parent = relation("parent", 2)
+Child = var("Child")
+
+family = program(
+    fact(parent("homer", "bart")),
+    fact(parent("homer", "lisa")),
+)
+
+assert solve_all(family, Child, goal_from_term(term("parent", "homer", Child))) == [
+    atom("bart"),
+    atom("lisa"),
+]
 ```
 
 ## Dependencies

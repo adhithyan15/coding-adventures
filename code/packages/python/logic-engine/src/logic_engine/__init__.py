@@ -48,6 +48,7 @@ from logic_engine.engine import (
     fresh,
     freshen_clause,
     goal_as_term,
+    goal_from_term,
     logic_list,
     native_goal,
     neq,
@@ -111,6 +112,7 @@ __all__ = [
     "fresh",
     "freshen_clause",
     "goal_as_term",
+    "goal_from_term",
     "logic_list",
     "native_goal",
     "neq",
@@ -131,4 +133,4 @@ __all__ = [
     "var",
 ]
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
