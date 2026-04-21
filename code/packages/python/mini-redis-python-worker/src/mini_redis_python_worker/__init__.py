@@ -1,18 +1,22 @@
 """Python Mini Redis worker for the Rust TCP runtime prototype.
 
-The Rust side owns the TCP listener, native event loop, socket buffers, RESP
-framing, and response writes. This package owns the application command logic.
+The Rust side owns the TCP listener, native event loop, socket lifecycle, and
+socket writes. This package owns the Mini Redis application protocol:
+per-stream buffering, RESP frame parsing, command execution, and RESP frame
+assembly.
 
-The bridge between the two uses the same generic job protocol envelope that
-other language workers should eventually implement. JSON lines are still the
-prototype wire encoding, but the shape is no longer Redis-specific:
-`JobRequest[payload]` in, `JobResponse[payload]` out.
+The stdio bridge still uses ``generic-job-protocol`` JSON lines for the
+prototype process boundary. The payload is intentionally transport-shaped:
+``stream_id`` plus raw TCP bytes in, raw TCP write frames out. That keeps the
+Rust TCP layer pure enough for Redis, IRC, WebSocket, or any other protocol to
+sit on top without changing the transport crate.
 """
 
 from __future__ import annotations
 
 import json
 import sys
+from collections import deque
 from dataclasses import dataclass, field
 from io import TextIOBase
 from typing import Literal
@@ -26,11 +30,16 @@ type RespKind = Literal["simple", "error", "integer", "bulk"]
 
 DEFAULT_DATABASES = 16
 JOB_PROTOCOL_VERSION = 1
+MAX_BUFFERED_STREAM_BYTES = 1024 * 1024
+
+
+class RespProtocolError(ValueError):
+    """Raised when a stream contains malformed RESP."""
 
 
 @dataclass(frozen=True)
 class RespReply:
-    """A tiny RESP2 reply builder used by the worker command layer."""
+    """A tiny RESP2 reply builder owned by the Python protocol layer."""
 
     kind: RespKind
     value: bytes | str | int | None = None
@@ -52,79 +61,161 @@ class RespReply:
         raise ValueError(f"unknown RESP reply kind: {self.kind}")
 
 
+@dataclass(frozen=True)
+class TcpInputJob:
+    """Opaque TCP bytes delivered from Rust for one logical stream."""
+
+    stream_id: str
+    data: bytes
+
+
+@dataclass(frozen=True)
+class TcpOutputFrame:
+    """Opaque TCP bytes that Rust should write back to the same stream."""
+
+    writes: list[bytes] = field(default_factory=list)
+    close: bool = False
+
+    def to_wire_payload(self) -> dict[str, object]:
+        """Serialize the frame returned to Rust."""
+
+        return {
+            "writes_hex": [chunk.hex() for chunk in self.writes],
+            "close": self.close,
+        }
+
+
+@dataclass
+class RedisStreamSession:
+    """Application-protocol state for one TCP stream."""
+
+    selected_db: int = 0
+    buffer: bytearray = field(default_factory=bytearray)
+
+
 @dataclass
 class MiniRedisWorker:
-    """Stateful Mini Redis command engine.
+    """Stateful Mini Redis command engine and RESP protocol adapter.
 
-    The worker stores connection-local selected database state because `SELECT`
-    is part of the Redis session, not part of the TCP connection itself. Rust
-    still owns the socket; Python owns the command semantics.
+    The worker queues raw TCP byte jobs from Rust, pops them for processing, and
+    returns raw write frames. It never opens sockets, but it does own the
+    application protocol state keyed by an opaque stream id.
     """
 
     database_count: int = DEFAULT_DATABASES
     databases: list[dict[bytes, RedisValue]] = field(init=False)
-    selected_db_by_connection: dict[str, int] = field(default_factory=dict)
+    sessions: dict[str, RedisStreamSession] = field(default_factory=dict)
+    pending_jobs: deque[TcpInputJob] = field(default_factory=deque)
 
     def __post_init__(self) -> None:
         self.databases = [dict() for _ in range(self.database_count)]
 
-    def execute(self, connection_id: str, argv: list[bytes]) -> bytes:
-        """Execute one Redis-style command and return a RESP2 response."""
+    def enqueue_tcp_job(self, stream_id: str, data: bytes) -> None:
+        """Queue an inbound TCP byte job for later application processing."""
 
-        if not argv:
-            return _error("ERR empty command").encode()
+        self.pending_jobs.append(TcpInputJob(stream_id, data))
 
-        command = argv[0].decode("ascii", errors="replace").upper()
-        args = argv[1:]
-        db = self._database(connection_id)
+    def process_next_job(self) -> TcpOutputFrame:
+        """Pop one queued TCP job and return bytes Rust should write."""
 
-        try:
-            reply = self._execute_command(connection_id, db, command, args)
-        except Exception as exc:  # noqa: BLE001 - convert worker bugs to RESP.
-            reply = _error(f"ERR worker error: {exc}")
-        return reply.encode()
+        if not self.pending_jobs:
+            return TcpOutputFrame()
+        job = self.pending_jobs.popleft()
+        return self.receive_tcp_bytes(job.stream_id, job.data)
+
+    def receive_tcp_bytes(self, stream_id: str, data: bytes) -> TcpOutputFrame:
+        """Buffer bytes for one stream, parse complete RESP commands, and reply."""
+
+        session = self.sessions.setdefault(stream_id, RedisStreamSession())
+        if len(session.buffer) + len(data) > MAX_BUFFERED_STREAM_BYTES:
+            session.buffer.clear()
+            error = "ERR protocol error: request exceeds maximum buffered size"
+            return TcpOutputFrame(
+                [_error(error).encode()],
+                close=True,
+            )
+
+        session.buffer.extend(data)
+        writes: list[bytes] = []
+
+        while session.buffer:
+            try:
+                parsed = _parse_resp_command(session.buffer)
+            except RespProtocolError as exc:
+                session.buffer.clear()
+                writes.append(_error(f"ERR {exc}").encode())
+                break
+
+            if parsed is None:
+                break
+
+            argv, consumed = parsed
+            del session.buffer[:consumed]
+            writes.append(self._execute_argv(session, argv).encode())
+
+        return TcpOutputFrame(writes)
 
     def handle_wire_request(self, line: str) -> str:
         """Handle one generic job-protocol request and return one response."""
 
         job_id, metadata, payload = _decode_job_request(line)
-        connection_id = str(metadata.get("affinity_key", ""))
-        argv = [bytes.fromhex(part) for part in payload["argv_hex"]]
-        response = self.execute(connection_id, argv)
-        return _encode_job_response(job_id, metadata, {"resp_hex": response.hex()})
+        stream_id, data = _decode_tcp_payload(payload)
+        self.enqueue_tcp_job(stream_id, data)
+        frame = self.process_next_job()
+        return _encode_job_response(job_id, metadata, frame.to_wire_payload())
 
-    def _database(self, connection_id: str) -> dict[bytes, RedisValue]:
-        selected = self.selected_db_by_connection.get(connection_id, 0)
-        return self.databases[selected]
+    def _execute_argv(
+        self,
+        session: RedisStreamSession,
+        argv: list[bytes],
+    ) -> RespReply:
+        if not argv:
+            return _error("ERR empty command")
+
+        command = argv[0].decode("ascii", errors="replace").upper()
+        args = argv[1:]
+        db = self.databases[session.selected_db]
+
+        try:
+            next_selected_db, reply = self._execute_command(
+                session.selected_db,
+                db,
+                command,
+                args,
+            )
+            session.selected_db = next_selected_db
+        except Exception as exc:  # noqa: BLE001 - convert worker bugs to RESP.
+            reply = _error(f"ERR worker error: {exc}")
+        return reply
 
     def _execute_command(
         self,
-        connection_id: str,
+        selected_db: int,
         db: dict[bytes, RedisValue],
         command: str,
         args: list[bytes],
-    ) -> RespReply:
+    ) -> tuple[int, RespReply]:
         if command == "PING":
-            return self._ping(args)
+            return selected_db, self._ping(args)
         if command == "SET":
-            return self._set(db, args)
+            return selected_db, self._set(db, args)
         if command == "GET":
-            return self._get(db, args)
+            return selected_db, self._get(db, args)
         if command == "EXISTS":
-            return self._exists(db, args)
+            return selected_db, self._exists(db, args)
         if command == "DEL":
-            return self._delete(db, args)
+            return selected_db, self._delete(db, args)
         if command == "INCRBY":
-            return self._incrby(db, args)
+            return selected_db, self._incrby(db, args)
         if command == "HSET":
-            return self._hset(db, args)
+            return selected_db, self._hset(db, args)
         if command == "HGET":
-            return self._hget(db, args)
+            return selected_db, self._hget(db, args)
         if command == "HEXISTS":
-            return self._hexists(db, args)
+            return selected_db, self._hexists(db, args)
         if command == "SELECT":
-            return self._select(connection_id, args)
-        return _error(f"ERR unknown command '{command}'")
+            return self._select(selected_db, args)
+        return selected_db, _error(f"ERR unknown command '{command}'")
 
     def _ping(self, args: list[bytes]) -> RespReply:
         if not args:
@@ -224,17 +315,16 @@ class MiniRedisWorker:
             return _wrong_type()
         return RespReply("integer", int(args[1] in value))
 
-    def _select(self, connection_id: str, args: list[bytes]) -> RespReply:
+    def _select(self, selected_db: int, args: list[bytes]) -> tuple[int, RespReply]:
         if len(args) != 1:
-            return _wrong_arity("SELECT")
+            return selected_db, _wrong_arity("SELECT")
         try:
             index = int(args[0].decode("ascii"))
         except ValueError:
-            return _error("ERR invalid DB index")
+            return selected_db, _error("ERR invalid DB index")
         if index < 0 or index >= self.database_count:
-            return _error("ERR invalid DB index")
-        self.selected_db_by_connection[connection_id] = index
-        return RespReply("simple", b"OK")
+            return selected_db, _error("ERR invalid DB index")
+        return index, RespReply("simple", b"OK")
 
 
 def run_stdio_worker(
@@ -264,6 +354,74 @@ def run_stdio_worker(
         output_stream.flush()
 
 
+def _parse_resp_command(buffer: bytearray) -> tuple[list[bytes], int] | None:
+    if not buffer:
+        return None
+    if buffer[0] != ord("*"):
+        raise RespProtocolError("protocol error: expected array command frame")
+
+    line = _read_line(buffer, 0)
+    if line is None:
+        return None
+    header, position = line
+    try:
+        count = int(header[1:].decode("ascii"))
+    except ValueError as exc:
+        raise RespProtocolError("protocol error: invalid array length") from exc
+    if count < 0:
+        raise RespProtocolError("protocol error: null command arrays are not supported")
+
+    parts: list[bytes] = []
+    for _ in range(count):
+        if position >= len(buffer):
+            return None
+        prefix = buffer[position]
+        if prefix == ord("$"):
+            parsed_bulk = _parse_bulk_string(buffer, position)
+            if parsed_bulk is None:
+                return None
+            part, position = parsed_bulk
+            parts.append(part)
+        elif prefix == ord("+") or prefix == ord(":"):
+            parsed_line = _read_line(buffer, position)
+            if parsed_line is None:
+                return None
+            part, position = parsed_line
+            parts.append(bytes(part[1:]))
+        else:
+            raise RespProtocolError("protocol error: expected bulk string command part")
+
+    return parts, position
+
+
+def _parse_bulk_string(buffer: bytearray, position: int) -> tuple[bytes, int] | None:
+    parsed_line = _read_line(buffer, position)
+    if parsed_line is None:
+        return None
+    line, position = parsed_line
+    try:
+        length = int(line[1:].decode("ascii"))
+    except ValueError as exc:
+        raise RespProtocolError("protocol error: invalid bulk string length") from exc
+    if length < 0:
+        message = "protocol error: null bulk command parts are not supported"
+        raise RespProtocolError(message)
+
+    end = position + length
+    if len(buffer) < end + 2:
+        return None
+    if buffer[end : end + 2] != b"\r\n":
+        raise RespProtocolError("protocol error: malformed bulk string terminator")
+    return bytes(buffer[position:end]), end + 2
+
+
+def _read_line(buffer: bytearray, position: int) -> tuple[bytes, int] | None:
+    end = buffer.find(b"\r\n", position)
+    if end == -1:
+        return None
+    return bytes(buffer[position:end]), end + 2
+
+
 def _decode_job_request(line: str) -> tuple[str, dict[str, object], dict[str, object]]:
     frame = json.loads(line)
     if frame.get("version") != JOB_PROTOCOL_VERSION:
@@ -279,6 +437,16 @@ def _decode_job_request(line: str) -> tuple[str, dict[str, object], dict[str, ob
     if not isinstance(payload, dict):
         raise ValueError("job payload must be an object")
     return str(body["id"]), metadata, payload
+
+
+def _decode_tcp_payload(payload: dict[str, object]) -> tuple[str, bytes]:
+    stream_id = payload["stream_id"]
+    bytes_hex = payload["bytes_hex"]
+    if not isinstance(stream_id, str):
+        raise ValueError("stream_id must be a string")
+    if not isinstance(bytes_hex, str):
+        raise ValueError("bytes_hex must be a string")
+    return stream_id, bytes.fromhex(bytes_hex)
 
 
 def _encode_job_response(

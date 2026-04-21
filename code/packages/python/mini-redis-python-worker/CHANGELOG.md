@@ -6,9 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
-- Added a stateful Mini Redis worker with string, hash, counter, and
-  connection-local `SELECT` support.
+- Added a stateful Mini Redis worker with string, hash, counter, and `SELECT`
+  support.
 - Added support for the shared generic job-protocol JSON-line envelope, with
-  Redis command arguments and RESP replies carried as payload fields.
+  opaque TCP byte jobs and opaque write frames carried as payload fields.
+- Added Python-owned RESP framing, per-stream buffering, pipelined command
+  handling, and stream-local `SELECT` session state.
 - Added unit tests for command correctness, protocol round trips, malformed
-  input handling, wrong-type errors, and CLI startup.
+  RESP input handling, wrong-type errors, job queueing, and CLI startup.

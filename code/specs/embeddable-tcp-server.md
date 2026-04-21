@@ -20,13 +20,11 @@ client socket
     |
 embeddable Rust TCP server
     |
-application framing adapter
-    |
-generic JobRequest<ApplicationRequestPayload> JSON line
+generic JobRequest<TcpBytesPayload> JSON line
     |
 embedded language/application worker
     |
-generic JobResponse<ApplicationResponsePayload> JSON line
+generic JobResponse<TcpWriteFrame> JSON line
     |
 Rust TCP server writes response bytes
 ```
@@ -36,32 +34,36 @@ Rust is responsible for:
 - Accepting TCP connections through `tcp-runtime`.
 - Using the native platform transport selected by the workspace.
 - Owning connection lifecycle, routing metadata, and socket writes.
-- Providing per-connection state to application framing adapters.
-- Sending typed `JobRequest<T>` frames to the configured worker command.
-- Validating response id, affinity key, and sequence before writing to sockets.
+- Sending opaque TCP byte jobs to the configured worker command.
+- Writing opaque byte frames returned by the worker.
+- Validating response id before routing worker results back to sockets.
 
 The embedded worker is responsible for:
 
+- Queueing inbound TCP byte jobs for application processing.
+- Owning application protocol framing and frame assembly.
 - Executing application semantics.
-- Owning application state.
+- Owning application and protocol session state keyed by an opaque stream id.
 - Returning typed `JobResponse<U>` frames.
-- Preserving any connection-local state keyed by `metadata.affinity_key`.
+- Avoiding socket ownership and native event-loop concerns.
 
 ## Worker Protocol
 
-The worker protocol is a generic job-protocol frame. Application-specific fields
-live inside the payload, while connection routing uses generic metadata.
+The worker protocol is a generic job-protocol frame. The TCP payload is
+deliberately generic: an opaque stream id and hex-encoded bytes. Rust
+correlates responses by job id; the application worker uses `stream_id` for
+protocol buffers and session state.
 
 Each request is one JSON object followed by a newline:
 
 ```json
-{"version":1,"kind":"request","body":{"id":"job-1","payload":{"argv_hex":["50494e47"]},"metadata":{"affinity_key":"7","sequence":1}}}
+{"version":1,"kind":"request","body":{"id":"job-1","payload":{"stream_id":"7","bytes_hex":"2a310d0a24340d0a50494e470d0a"},"metadata":{}}}
 ```
 
 Each successful response is one JSON object followed by a newline:
 
 ```json
-{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"resp_hex":"2b504f4e470d0a"}},"metadata":{"affinity_key":"7","sequence":1}}}
+{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"writes_hex":["2b504f4e470d0a"],"close":false}},"metadata":{}}}
 ```
 
 The example payloads above are from the Python Mini Redis integration test.
@@ -74,11 +76,12 @@ event dispatch, or CPU-bound jobs.
 The current integration test uses Python Mini Redis as the first consumer:
 
 - RESP bytes enter over a real TCP socket.
-- The Rust test adapter parses complete RESP arrays into Redis command payloads.
-- `embeddable-tcp-server` sends those payloads to the Python worker as
-  `JobRequest<T>`.
-- Python executes the command and returns RESP bytes inside `JobResponse<U>`.
-- Rust writes the returned bytes to the original socket.
+- `embeddable-tcp-server` sends raw TCP bytes to the Python worker as
+  `JobRequest<TcpBytesPayload>`.
+- Python queues the job, buffers bytes by stream id, parses RESP frames,
+  executes commands, assembles RESP responses, and returns write frames inside
+  `JobResponse<TcpWriteFrame>`.
+- Rust writes the returned opaque bytes to the original socket.
 
 This proves the cross-language seam without making Python or Redis part of the
 transport package identity.
@@ -89,11 +92,11 @@ transport package identity.
 - The prototype uses one worker process.
 - Worker communication uses the JSON-line `generic-job-protocol` codec over
   standard streams, not a binary protocol.
-- Application framing is supplied by the embedding caller; the crate does not
-  yet ship reusable RESP/HTTP/WebSocket adapters.
+- The worker can queue jobs internally, but this prototype still waits for one
+  response frame before the TCP callback returns.
 
 These limits are intentional for the first prototype. The next production seam
-should route parsed jobs through the generic job runtime so language workers can
+should route byte jobs through the generic job runtime so language workers can
 run in a thread pool or process pool without blocking the reactor.
 
 ## Acceptance Criteria
@@ -103,10 +106,11 @@ run in a thread pool or process pool without blocking the reactor.
 - `embeddable-tcp-server` exposes generic `WorkerCommand`, `StdioJobWorker`, and
   `EmbeddableTcpServer` types.
 - No public Rust package or type is named after Python Mini Redis.
-- Python worker unit tests cover command correctness, error responses, and the
-  generic job-protocol JSON-line shape.
+- Python worker unit tests cover RESP framing, command correctness, error
+  responses, per-stream session state, job queueing, and the generic
+  job-protocol JSON-line shape.
 - Rust tests launch the Python worker process as one consumer example.
-- Rust tests launch a real TCP listener, send RESP commands, and receive
-  Python-generated Redis replies.
+- Rust tests launch a real TCP listener, send RESP commands, and receive Redis
+  replies generated entirely by the Python worker.
 - Documentation states that this is a prototype and not the final async worker
   architecture.

@@ -6,9 +6,10 @@
 //! The crate deliberately avoids naming Python, Ruby, Lua, Objective-C, or any
 //! one application protocol in its public API. Rust owns TCP sockets, native
 //! event-loop integration, connection lifecycle, and socket writes. The embedded
-//! worker owns application semantics and responds through `generic-job-protocol`
-//! frames. A Python Mini Redis worker is used only in tests as one concrete
-//! consumer of the same seam other language bridges can implement.
+//! worker owns application protocol framing, application semantics, and
+//! responses through `generic-job-protocol` frames. A Python Mini Redis worker
+//! is used only in tests as one concrete consumer of the same raw-byte seam
+//! other language bridges can implement.
 //!
 //! The current implementation is still synchronous: the TCP read callback waits
 //! for a worker response before returning bytes to write. That is enough to
@@ -30,7 +31,7 @@ use generic_job_protocol::{
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-use tcp_runtime::{ConnectionId, PlatformError, StopHandle, TcpHandlerResult};
+use tcp_runtime::{PlatformError, StopHandle, TcpHandlerResult};
 use tcp_runtime::{TcpConnectionInfo, TcpRuntime, TcpRuntimeOptions};
 
 #[cfg(any(
@@ -134,13 +135,8 @@ where
         })
     }
 
-    pub fn execute(
-        &mut self,
-        connection_id: ConnectionId,
-        sequence: u64,
-        payload: Request,
-    ) -> Result<Response, WorkerError> {
-        self.execute_with_affinity(connection_id.0.to_string(), sequence, payload)
+    pub fn execute(&mut self, payload: Request) -> Result<Response, WorkerError> {
+        self.execute_with_metadata(JobMetadata::default(), payload)
     }
 
     pub fn execute_with_affinity(
@@ -149,12 +145,20 @@ where
         sequence: u64,
         payload: Request,
     ) -> Result<Response, WorkerError> {
+        let metadata = JobMetadata::default()
+            .with_affinity_key(affinity_key)
+            .with_sequence(sequence);
+        self.execute_with_metadata(metadata, payload)
+    }
+
+    pub fn execute_with_metadata(
+        &mut self,
+        metadata: JobMetadata,
+        payload: Request,
+    ) -> Result<Response, WorkerError> {
         let id = format!("job-{}", self.next_job_id);
         self.next_job_id += 1;
 
-        let metadata = JobMetadata::default()
-            .with_affinity_key(affinity_key.clone())
-            .with_sequence(sequence);
         let request = JobRequest::new(id.clone(), payload).with_metadata(metadata);
 
         let encoded = encode_request_json_line(&request)?;
@@ -170,7 +174,7 @@ where
         }
 
         let response: JobResponse<Response> = decode_response_json_line(line.trim_end())?;
-        validate_response_routing(&response, &id, &affinity_key, sequence)?;
+        validate_response_id(&response, &id)?;
 
         match response.result {
             JobResult::Ok { payload } => Ok(payload),
@@ -311,29 +315,14 @@ where
     }
 }
 
-fn validate_response_routing<Response>(
+fn validate_response_id<Response>(
     response: &JobResponse<Response>,
     expected_id: &str,
-    expected_affinity_key: &str,
-    expected_sequence: u64,
 ) -> Result<(), WorkerError> {
     if response.id != expected_id {
         return Err(WorkerError::Protocol(format!(
             "worker response id mismatch: expected {}, got {}",
             expected_id, response.id
-        )));
-    }
-    let actual_affinity = response.metadata.affinity_key.as_deref();
-    if actual_affinity != Some(expected_affinity_key) {
-        return Err(WorkerError::Protocol(format!(
-            "worker affinity mismatch: expected {}, got {:?}",
-            expected_affinity_key, actual_affinity
-        )));
-    }
-    if response.metadata.sequence != Some(expected_sequence) {
-        return Err(WorkerError::Protocol(format!(
-            "worker sequence mismatch: expected {}, got {:?}",
-            expected_sequence, response.metadata.sequence
         )));
     }
     Ok(())
@@ -484,7 +473,7 @@ fn into_io_error(error: PlatformError) -> io::Error {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use resp_protocol::{decode, encode, RespError, RespValue};
+    use resp_protocol::{decode, encode, RespValue};
     use serde::{Deserialize, Serialize};
     use std::io::{Read, Write};
     use std::net::TcpStream;
@@ -492,22 +481,18 @@ mod tests {
     use std::thread;
     use std::time::Duration;
 
-    const MAX_BUFFERED_REQUEST_BYTES: usize = 1024 * 1024;
+    const MAX_TCP_CHUNK_BYTES: usize = 1024 * 1024;
 
-    #[derive(Debug, Default, Clone, PartialEq, Eq)]
-    struct RedisConnectionState {
-        read_buffer: Vec<u8>,
-        sequence: u64,
+    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+    struct TcpInputJob {
+        stream_id: String,
+        bytes_hex: String,
     }
 
     #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-    struct RedisCommandJob {
-        argv_hex: Vec<String>,
-    }
-
-    #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-    struct RedisResponseJob {
-        resp_hex: String,
+    struct TcpOutputFrame {
+        writes_hex: Vec<String>,
+        close: bool,
     }
 
     fn bulk(value: &[u8]) -> RespValue {
@@ -600,101 +585,407 @@ mod tests {
             .map(|program| WorkerCommand::new(program, vec!["-c".to_string(), script.to_string()]))
     }
 
-    fn execute_scripted_worker(script: &str) -> Result<RedisResponseJob, WorkerError> {
-        let command = scripted_worker(script).expect("python interpreter");
-        let mut worker = StdioJobWorker::<RedisCommandJob, RedisResponseJob>::spawn(&command)
+    fn execute_scripted_worker(script: &str) -> Result<TcpOutputFrame, WorkerError> {
+        let worker_command = scripted_worker(script).expect("python interpreter");
+        let mut worker = StdioJobWorker::<TcpInputJob, TcpOutputFrame>::spawn(&worker_command)
             .expect("spawn scripted worker");
-        worker.execute(
-            ConnectionId(7),
-            11,
-            RedisCommandJob {
-                argv_hex: vec![hex_encode(b"PING".to_vec())],
+        worker.execute(TcpInputJob {
+            stream_id: "test-stream".to_string(),
+            bytes_hex: hex_encode(command(&[b"PING"])),
+        })
+    }
+
+    fn handle_tcp_bytes(
+        info: TcpConnectionInfo,
+        _state: &mut (),
+        data: &[u8],
+        worker: &mut StdioJobWorker<TcpInputJob, TcpOutputFrame>,
+    ) -> TcpHandlerResult {
+        if data.len() > MAX_TCP_CHUNK_BYTES {
+            return TcpHandlerResult::close();
+        }
+
+        match worker.execute(TcpInputJob {
+            stream_id: info.id.0.to_string(),
+            bytes_hex: hex_encode(data.to_vec()),
+        }) {
+            Ok(frame) => match decode_writes(&frame.writes_hex) {
+                Ok(bytes) if frame.close => TcpHandlerResult::write_and_close(bytes),
+                Ok(bytes) if bytes.is_empty() => TcpHandlerResult::default(),
+                Ok(bytes) => TcpHandlerResult::write(bytes),
+                Err(_) => TcpHandlerResult::close(),
             },
+            Err(_) => TcpHandlerResult::close(),
+        }
+    }
+
+    fn decode_writes(writes_hex: &[String]) -> Result<Vec<u8>, String> {
+        let mut output = Vec::new();
+        for item in writes_hex {
+            output.extend(hex_decode(item)?);
+        }
+        Ok(output)
+    }
+
+    fn read_responses(stream: &mut TcpStream, count: usize) -> io::Result<Vec<RespValue>> {
+        let mut values = Vec::with_capacity(count);
+        let mut buffer = Vec::new();
+        let mut chunk = [0u8; 1024];
+        while values.len() < count {
+            match decode(&buffer) {
+                Ok(Some((value, consumed))) => {
+                    buffer.drain(..consumed);
+                    values.push(value);
+                }
+                Ok(None) => {
+                    let n = stream.read(&mut chunk)?;
+                    if n == 0 {
+                        return Err(io::Error::new(
+                            io::ErrorKind::UnexpectedEof,
+                            "server closed before all responses",
+                        ));
+                    }
+                    buffer.extend_from_slice(&chunk[..n]);
+                }
+                Err(error) => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        format!("invalid RESP response: {error}"),
+                    ));
+                }
+            }
+        }
+        Ok(values)
+    }
+
+    fn write_command(stream: &mut TcpStream, parts: &[&[u8]]) {
+        stream
+            .write_all(&command(parts))
+            .expect("write RESP command to TCP stream");
+    }
+
+    fn write_fragmented_command(stream: &mut TcpStream, parts: &[&[u8]]) {
+        let bytes = command(parts);
+        let split_at = bytes.len() / 2;
+        stream
+            .write_all(&bytes[..split_at])
+            .expect("write first fragment");
+        stream
+            .write_all(&bytes[split_at..])
+            .expect("write second fragment");
+    }
+
+    fn scripted_success_response(id_expression: &str) -> String {
+        format!(
+            r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+payload = {{"writes_hex":["{}"],"close":False}}
+print(json.dumps({{"version":1,"kind":"response","body":{{"id":{},"result":{{"status":"ok","payload":payload}},"metadata":body["metadata"]}}}}), flush=True)
+"#,
+            hex_encode(b"+PONG\r\n".to_vec()),
+            id_expression
         )
     }
 
-    fn handle_redis_connection_data(
-        info: TcpConnectionInfo,
-        state: &mut RedisConnectionState,
-        data: &[u8],
-        worker: &mut StdioJobWorker<RedisCommandJob, RedisResponseJob>,
-    ) -> TcpHandlerResult {
-        if state.read_buffer.len().saturating_add(data.len()) > MAX_BUFFERED_REQUEST_BYTES {
-            state.read_buffer.clear();
-            return TcpHandlerResult::write_and_close(protocol_error_response(
-                "ERR protocol error: request exceeds maximum buffered size",
-            ));
-        }
-
-        state.read_buffer.extend_from_slice(data);
-        let mut responses = Vec::new();
-
-        loop {
-            match decode(&state.read_buffer) {
-                Ok(Some((value, consumed))) => {
-                    state.read_buffer.drain(..consumed);
-                    let Some(argv) = argv_from_resp(value) else {
-                        responses.extend(protocol_error_response(
-                            "ERR protocol error: expected array of bulk strings",
-                        ));
-                        continue;
-                    };
-
-                    state.sequence += 1;
-                    let worker_response = worker.execute(
-                        info.id,
-                        state.sequence,
-                        RedisCommandJob {
-                            argv_hex: argv.into_iter().map(hex_encode).collect(),
-                        },
-                    );
-
-                    match worker_response {
-                        Ok(payload) => match hex_decode(&payload.resp_hex) {
-                            Ok(bytes) => responses.extend(bytes),
-                            Err(error) => responses.extend(protocol_error_response(&format!(
-                                "ERR worker returned invalid response payload: {error}"
-                            ))),
-                        },
-                        Err(error) => responses.extend(protocol_error_response(&format!(
-                            "ERR worker failed: {error}"
-                        ))),
-                    }
-                }
-                Ok(None) => break,
-                Err(err) => {
-                    state.read_buffer.clear();
-                    responses.extend(protocol_error_response(&format!("ERR {err}")));
-                    break;
-                }
-            }
-        }
-
-        if responses.is_empty() {
-            TcpHandlerResult::default()
-        } else {
-            TcpHandlerResult::write(responses)
-        }
+    fn assert_pong_output(frame: TcpOutputFrame) {
+        assert!(!frame.close);
+        assert_eq!(
+            decode_writes(&frame.writes_hex).expect("decode worker writes"),
+            b"+PONG\r\n"
+        );
     }
 
-    fn argv_from_resp(value: RespValue) -> Option<Vec<Vec<u8>>> {
-        let RespValue::Array(Some(values)) = value else {
-            return None;
+    fn assert_worker_receives_opaque_tcp_bytes() {
+        let script = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+payload = body["payload"]
+assert set(payload.keys()) == {"stream_id", "bytes_hex"}
+assert payload["stream_id"] == "test-stream"
+assert payload["bytes_hex"].startswith("2a")
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"writes_hex":[],"close":False}},"metadata":body["metadata"]}}), flush=True)
+"#;
+        execute_scripted_worker(script).expect("opaque TCP bytes response");
+    }
+
+    fn start_test_server(
+        worker: WorkerCommand,
+    ) -> (EmbeddableTcpServer<()>, thread::JoinHandle<io::Result<()>>) {
+        let server = EmbeddableTcpServer::new(
+            EmbeddableTcpServerOptions {
+                host: "127.0.0.1".to_string(),
+                port: 0,
+                max_connections: 64,
+                worker,
+            },
+            |_| (),
+            handle_tcp_bytes,
+            |_, _| {},
+        )
+        .expect("create server");
+        assert!(!server.is_running());
+        let background = server.clone();
+        let handle = thread::spawn(move || background.serve());
+        (server, handle)
+    }
+
+    fn connect_client(server: &EmbeddableTcpServer<()>) -> TcpStream {
+        let stream = TcpStream::connect(server.local_addr()).expect("connect client");
+        stream
+            .set_read_timeout(Some(Duration::from_secs(3)))
+            .expect("set read timeout");
+        stream
+    }
+
+    fn stop_server(server: EmbeddableTcpServer<()>, handle: thread::JoinHandle<io::Result<()>>) {
+        server.stop();
+        handle
+            .join()
+            .expect("server thread")
+            .expect("server result");
+    }
+
+    fn assert_two_streams_keep_distinct_redis_sessions(
+        first: &mut TcpStream,
+        second: &mut TcpStream,
+    ) {
+        write_command(first, &[b"SET", b"k", b"db0"]);
+        assert_eq!(
+            read_response(first).expect("read first set"),
+            RespValue::SimpleString("OK".to_string())
+        );
+
+        write_command(second, &[b"SELECT", b"1"]);
+        assert_eq!(
+            read_response(second).expect("read second select"),
+            RespValue::SimpleString("OK".to_string())
+        );
+
+        write_command(second, &[b"GET", b"k"]);
+        assert_eq!(
+            read_response(second).expect("read second missing"),
+            RespValue::BulkString(None)
+        );
+
+        write_command(second, &[b"SET", b"k", b"db1"]);
+        assert_eq!(
+            read_response(second).expect("read second set"),
+            RespValue::SimpleString("OK".to_string())
+        );
+
+        write_command(first, &[b"GET", b"k"]);
+        write_command(second, &[b"GET", b"k"]);
+        assert_eq!(
+            read_response(first).expect("read first db0"),
+            RespValue::BulkString(Some(b"db0".to_vec()))
+        );
+        assert_eq!(
+            read_response(second).expect("read second db1"),
+            RespValue::BulkString(Some(b"db1".to_vec()))
+        );
+    }
+
+    fn assert_pipelined_commands(stream: &mut TcpStream) {
+        let mut pipelined = Vec::new();
+        pipelined.extend(command(&[b"PING"]));
+        pipelined.extend(command(&[b"PING", b"hello"]));
+        stream.write_all(&pipelined).expect("write pipeline");
+        assert_eq!(
+            read_responses(stream, 2).expect("read pipeline"),
+            vec![
+                RespValue::SimpleString("PONG".to_string()),
+                RespValue::BulkString(Some(b"hello".to_vec())),
+            ]
+        );
+    }
+
+    fn assert_fragmented_command(stream: &mut TcpStream) {
+        write_fragmented_command(stream, &[b"PING"]);
+        assert_eq!(
+            read_response(stream).expect("read fragmented ping"),
+            RespValue::SimpleString("PONG".to_string())
+        );
+    }
+
+    fn assert_hash_round_trip(stream: &mut TcpStream) {
+        write_command(stream, &[b"HSET", b"user", b"name", b"grace"]);
+        assert_eq!(
+            read_response(stream).expect("read hset"),
+            RespValue::Integer(1)
+        );
+
+        write_command(stream, &[b"HGET", b"user", b"name"]);
+        assert_eq!(
+            read_response(stream).expect("read hget"),
+            RespValue::BulkString(Some(b"grace".to_vec()))
+        );
+    }
+
+    fn assert_string_round_trip(stream: &mut TcpStream) {
+        write_command(stream, &[b"SET", b"name", b"ada"]);
+        assert_eq!(
+            read_response(stream).expect("read set"),
+            RespValue::SimpleString("OK".to_string())
+        );
+
+        write_command(stream, &[b"GET", b"name"]);
+        assert_eq!(
+            read_response(stream).expect("read get"),
+            RespValue::BulkString(Some(b"ada".to_vec()))
+        );
+    }
+
+    fn assert_ping(stream: &mut TcpStream) {
+        write_command(stream, &[b"PING"]);
+        assert_eq!(
+            read_response(stream).expect("read ping"),
+            RespValue::SimpleString("PONG".to_string())
+        );
+    }
+
+    fn assert_invalid_worker_write_closes_connection() {
+        let Some(command) = scripted_worker(
+            r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"writes_hex":["zz"],"close":False}},"metadata":body["metadata"]}}), flush=True)
+"#,
+        ) else {
+            return;
         };
-        let mut argv = Vec::with_capacity(values.len());
-        for value in values {
-            match value {
-                RespValue::BulkString(Some(bytes)) => argv.push(bytes),
-                RespValue::SimpleString(text) => argv.push(text.into_bytes()),
-                _ => return None,
-            }
-        }
-        Some(argv)
+        let (server, handle) = start_test_server(command);
+        let mut stream = connect_client(&server);
+        write_command(&mut stream, &[b"PING"]);
+        let mut one = [0u8; 1];
+        assert_eq!(stream.read(&mut one).expect("read close"), 0);
+        stop_server(server, handle);
     }
 
-    fn protocol_error_response(message: &str) -> Vec<u8> {
-        encode(RespValue::Error(RespError::new(message)))
-            .expect("RESP error responses should encode")
+    fn assert_worker_close_frame_closes_connection() {
+        let Some(command) = scripted_worker(
+            r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"writes_hex":[],"close":True}},"metadata":body["metadata"]}}), flush=True)
+"#,
+        ) else {
+            return;
+        };
+        let (server, handle) = start_test_server(command);
+        let mut stream = connect_client(&server);
+        write_command(&mut stream, &[b"PING"]);
+        let mut one = [0u8; 1];
+        assert_eq!(stream.read(&mut one).expect("read close"), 0);
+        stop_server(server, handle);
+    }
+
+    fn assert_worker_response_can_be_empty() {
+        let Some(command) = scripted_worker(
+            r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"writes_hex":[],"close":False}},"metadata":body["metadata"]}}), flush=True)
+"#,
+        ) else {
+            return;
+        };
+        let (server, handle) = start_test_server(command);
+        let mut stream = connect_client(&server);
+        stream
+            .set_read_timeout(Some(Duration::from_millis(100)))
+            .expect("set short read timeout");
+        write_command(&mut stream, &[b"PING"]);
+        let mut one = [0u8; 1];
+        assert!(matches!(
+            stream.read(&mut one),
+            Err(error)
+                if error.kind() == io::ErrorKind::WouldBlock
+                    || error.kind() == io::ErrorKind::TimedOut
+        ));
+        stop_server(server, handle);
+    }
+
+    fn assert_worker_error_closes_connection() {
+        let Some(command) = scripted_worker(
+            r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"error","error":{"code":"worker_failed","message":"boom","retryable":False,"origin":"worker","detail":None}},"metadata":body["metadata"]}}), flush=True)
+"#,
+        ) else {
+            return;
+        };
+        let (server, handle) = start_test_server(command);
+        let mut stream = connect_client(&server);
+        write_command(&mut stream, &[b"PING"]);
+        let mut one = [0u8; 1];
+        assert_eq!(stream.read(&mut one).expect("read close"), 0);
+        stop_server(server, handle);
+    }
+
+    fn assert_scripted_transport_edges() {
+        assert_invalid_worker_write_closes_connection();
+        assert_worker_close_frame_closes_connection();
+        assert_worker_response_can_be_empty();
+        assert_worker_error_closes_connection();
+    }
+
+    fn assert_python_worker_round_trip(mut stream: TcpStream) {
+        assert_ping(&mut stream);
+        assert_string_round_trip(&mut stream);
+        assert_hash_round_trip(&mut stream);
+        assert_pipelined_commands(&mut stream);
+        assert_fragmented_command(&mut stream);
+    }
+
+    fn assert_python_worker_multi_stream_sessions(server: &EmbeddableTcpServer<()>) {
+        let mut first = connect_client(server);
+        let mut second = connect_client(server);
+        assert_two_streams_keep_distinct_redis_sessions(&mut first, &mut second);
+    }
+
+    fn run_python_worker_integration(worker: WorkerCommand) {
+        let (server, handle) = start_test_server(worker);
+        let stream = connect_client(&server);
+        assert_python_worker_round_trip(stream);
+        assert_python_worker_multi_stream_sessions(&server);
+        stop_server(server, handle);
+    }
+
+    fn assert_scripted_worker_maps_control_results() {
+        let error_script = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"error","error":{"code":"worker_failed","message":"boom","retryable":False,"origin":"worker","detail":None}},"metadata":body["metadata"]}}), flush=True)
+"#;
+        let error = execute_scripted_worker(error_script).expect_err("worker error should fail");
+        assert!(error.to_string().contains("worker_failed: boom"));
+
+        let cancelled = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"cancelled","cancellation":{"message":"stopped"}},"metadata":body["metadata"]}}), flush=True)
+"#;
+        let error = execute_scripted_worker(cancelled).expect_err("cancelled job should fail");
+        assert!(error.to_string().contains("cancelled job: stopped"));
+
+        let timed_out = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"timed_out","timeout":{"message":"too slow"}},"metadata":body["metadata"]}}), flush=True)
+"#;
+        let error = execute_scripted_worker(timed_out).expect_err("timed out job should fail");
+        assert!(error.to_string().contains("timed out job: too slow"));
     }
 
     fn hex_encode(bytes: Vec<u8>) -> String {
@@ -759,21 +1050,18 @@ mod tests {
     }
 
     #[test]
-    fn argv_from_resp_accepts_resp_arrays() {
-        let value = RespValue::Array(Some(vec![bulk(b"PING"), bulk(b"hello")]));
+    fn decode_writes_concatenates_worker_frames() {
         assert_eq!(
-            argv_from_resp(value),
-            Some(vec![b"PING".to_vec(), b"hello".to_vec()])
+            decode_writes(&[
+                hex_encode(b"hello ".to_vec()),
+                hex_encode(b"world".to_vec())
+            ])
+            .expect("decode writes"),
+            b"hello world"
         );
-    }
-
-    #[test]
-    fn argv_from_resp_rejects_non_command_values() {
-        assert_eq!(argv_from_resp(RespValue::Integer(1)), None);
-        assert_eq!(argv_from_resp(RespValue::Array(None)), None);
         assert_eq!(
-            argv_from_resp(RespValue::Array(Some(vec![RespValue::Integer(1)]))),
-            None
+            decode_writes(&["zz".to_string()]),
+            Err("invalid hex byte: 122".to_string())
         );
     }
 
@@ -802,9 +1090,8 @@ mod tests {
         let io_error = WorkerError::from(io::Error::new(io::ErrorKind::BrokenPipe, "closed"));
         assert_eq!(io_error.to_string(), "worker I/O error: closed");
 
-        let codec_error =
-            generic_job_protocol::decode_request_json_line::<RedisCommandJob>("not-json")
-                .expect_err("invalid JSON should fail");
+        let codec_error = generic_job_protocol::decode_request_json_line::<TcpInputJob>("not-json")
+            .expect_err("invalid JSON should fail");
         let worker_error = WorkerError::from(codec_error);
         assert!(worker_error
             .to_string()
@@ -812,144 +1099,51 @@ mod tests {
     }
 
     #[test]
-    fn stdio_worker_executes_generic_command_jobs() {
-        let Some(command) = worker_command() else {
+    fn stdio_worker_executes_opaque_tcp_byte_jobs() {
+        let Some(worker_command) = worker_command() else {
             eprintln!("skipping test because no Python interpreter was found");
             return;
         };
-        let mut worker = StdioJobWorker::<RedisCommandJob, RedisResponseJob>::spawn(&command)
+        let mut worker = StdioJobWorker::<TcpInputJob, TcpOutputFrame>::spawn(&worker_command)
             .expect("spawn worker");
         let response = worker
-            .execute(
-                ConnectionId(7),
-                1,
-                RedisCommandJob {
-                    argv_hex: vec![hex_encode(b"PING".to_vec())],
-                },
-            )
+            .execute(TcpInputJob {
+                stream_id: "stream-1".to_string(),
+                bytes_hex: hex_encode(command(&[b"PING"])),
+            })
             .expect("worker response");
-        assert_eq!(hex_decode(&response.resp_hex).unwrap(), b"+PONG\r\n");
+        assert_pong_output(response);
     }
 
     #[test]
-    fn stdio_worker_rejects_misrouted_responses() {
-        let script = r#"
-import json, sys
-frame = json.loads(sys.stdin.readline())
-body = frame["body"]
-metadata = dict(body["metadata"])
-metadata["affinity_key"] = "not-the-connection"
-print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"resp_hex":"2b504f4e470d0a"}},"metadata":metadata}}), flush=True)
-"#;
+    fn stdio_worker_rejects_mismatched_response_ids() {
+        let script = scripted_success_response(r#"body["id"] + "-wrong""#);
 
-        let error = execute_scripted_worker(script).expect_err("misrouted response should fail");
-        assert!(error.to_string().contains("affinity mismatch"));
+        let error = execute_scripted_worker(&script).expect_err("mismatched response should fail");
+        assert!(error.to_string().contains("response id mismatch"));
     }
 
     #[test]
-    fn stdio_worker_maps_portable_error_results() {
-        let script = r#"
-import json, sys
-frame = json.loads(sys.stdin.readline())
-body = frame["body"]
-print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"error","error":{"code":"worker_failed","message":"boom","retryable":False,"origin":"worker","detail":None}},"metadata":body["metadata"]}}), flush=True)
-"#;
-
-        let error = execute_scripted_worker(script).expect_err("worker error should fail");
-        assert!(error.to_string().contains("worker_failed: boom"));
+    fn stdio_worker_sends_only_opaque_tcp_bytes_to_worker() {
+        assert_worker_receives_opaque_tcp_bytes();
     }
 
     #[test]
-    fn stdio_worker_maps_cancelled_and_timed_out_results() {
-        let cancelled = r#"
-import json, sys
-frame = json.loads(sys.stdin.readline())
-body = frame["body"]
-print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"cancelled","cancellation":{"message":"stopped"}},"metadata":body["metadata"]}}), flush=True)
-"#;
-        let error = execute_scripted_worker(cancelled).expect_err("cancelled job should fail");
-        assert!(error.to_string().contains("cancelled job: stopped"));
-
-        let timed_out = r#"
-import json, sys
-frame = json.loads(sys.stdin.readline())
-body = frame["body"]
-print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"timed_out","timeout":{"message":"too slow"}},"metadata":body["metadata"]}}), flush=True)
-"#;
-        let error = execute_scripted_worker(timed_out).expect_err("timed out job should fail");
-        assert!(error.to_string().contains("timed out job: too slow"));
+    fn stdio_worker_maps_portable_control_results() {
+        assert_scripted_worker_maps_control_results();
     }
 
     #[test]
-    fn embeddable_tcp_server_delegates_redis_commands_to_python_worker() {
+    fn tcp_server_handles_transport_edge_frames() {
+        assert_scripted_transport_edges();
+    }
+
+    #[test]
+    fn embeddable_tcp_server_delegates_opaque_bytes_to_python_worker() {
         let Some(worker) = worker_command() else {
             eprintln!("skipping test because no Python interpreter was found");
             return;
         };
-        let server = EmbeddableTcpServer::new(
-            EmbeddableTcpServerOptions {
-                host: "127.0.0.1".to_string(),
-                port: 0,
-                max_connections: 64,
-                worker,
-            },
-            |_| RedisConnectionState::default(),
-            handle_redis_connection_data,
-            |_, _| {},
-        )
-        .expect("create server");
-        let addr = server.local_addr();
-        assert!(!server.is_running());
-        let background = server.clone();
-        let handle = thread::spawn(move || background.serve());
-
-        let mut stream = TcpStream::connect(addr).expect("connect client");
-        stream
-            .set_read_timeout(Some(Duration::from_secs(3)))
-            .expect("set read timeout");
-
-        stream.write_all(&command(&[b"PING"])).expect("write ping");
-        assert_eq!(
-            read_response(&mut stream).expect("read ping"),
-            RespValue::SimpleString("PONG".to_string())
-        );
-
-        stream
-            .write_all(&command(&[b"SET", b"name", b"ada"]))
-            .expect("write set");
-        assert_eq!(
-            read_response(&mut stream).expect("read set"),
-            RespValue::SimpleString("OK".to_string())
-        );
-
-        stream
-            .write_all(&command(&[b"GET", b"name"]))
-            .expect("write get");
-        assert_eq!(
-            read_response(&mut stream).expect("read get"),
-            RespValue::BulkString(Some(b"ada".to_vec()))
-        );
-
-        stream
-            .write_all(&command(&[b"HSET", b"user", b"name", b"grace"]))
-            .expect("write hset");
-        assert_eq!(
-            read_response(&mut stream).expect("read hset"),
-            RespValue::Integer(1)
-        );
-
-        stream
-            .write_all(&command(&[b"HGET", b"user", b"name"]))
-            .expect("write hget");
-        assert_eq!(
-            read_response(&mut stream).expect("read hget"),
-            RespValue::BulkString(Some(b"grace".to_vec()))
-        );
-
-        server.stop();
-        handle
-            .join()
-            .expect("server thread")
-            .expect("server result");
+        run_python_worker_integration(worker);
     }
 }
