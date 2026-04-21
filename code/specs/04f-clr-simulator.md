@@ -298,6 +298,27 @@ bridges, or simulator-host bindings.
 
 ## Runtime model
 
+### `cli-runtime-model`
+
+This package owns the shared execution-state vocabulary for later CLR VM
+packages. It should stay independent of PE decoding and instruction execution
+so decoders, assembly writers, VM interpreters, and host bridges can compose
+against the same types:
+
+- represent CLI type identities, method signatures, method descriptors, field
+  descriptors, and decoded metadata tokens
+- carry typed `CliValue` instances through argument slots, local slots, and the
+  evaluation stack
+- model managed heap references, object fields, boxed values, and unboxing
+  checks
+- preserve mutable frame/thread state while exposing immutable snapshots for
+  traces and tests
+- provide a token resolver protocol plus a map-backed resolver for tests and
+  small execution adapters
+- centralize `call` / `callvirt` argument popping, receiver checks, and
+  `callvirt` null checks
+- locate exception handlers over protected IL ranges
+
 The simulator should model CLR concepts directly rather than flattening
 everything into a generic stack machine:
 
