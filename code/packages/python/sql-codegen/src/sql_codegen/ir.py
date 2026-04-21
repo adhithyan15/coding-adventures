@@ -502,7 +502,7 @@ class RunSubquery:
     """
 
     cursor_id: int
-    sub_program: "Program"   # forward-ref resolved lazily; Program defined below
+    sub_program: Program   # Program is defined below; forward-ref resolved by PEP 563
 
 
 # ---- Control flow -------------------------------------------------------

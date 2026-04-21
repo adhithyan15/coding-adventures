@@ -265,8 +265,13 @@ def _eval_comparison(node: ASTNode, row_ctx: dict[str, Any]) -> Any:
 
     # --- IN (value_list) ---
     if second_kw == "IN":
-        # children[2] is "(" token, children[3] is value_list, children[4] is ")"
+        # children[2] is "(" token, children[3] is in_expr or value_list, children[4] is ")"
+        # The grammar wraps the list in an intermediate ``in_expr`` node:
+        #   in_expr = query_stmt | value_list
+        # We only handle the value_list branch here; unwrap if necessary.
         value_list_node = children[3]
+        if isinstance(value_list_node, ASTNode) and value_list_node.rule_name == "in_expr":
+            value_list_node = value_list_node.children[0]
         values = _eval_value_list(value_list_node, row_ctx)
         if left is None:
             return None
@@ -290,7 +295,10 @@ def _eval_comparison(node: ASTNode, row_ctx: dict[str, Any]) -> Any:
                 return None
             return not (low <= left <= high)
         if third_kw == "IN":
+            # children[4] is in_expr or value_list; unwrap if necessary.
             value_list_node = children[4]
+            if isinstance(value_list_node, ASTNode) and value_list_node.rule_name == "in_expr":
+                value_list_node = value_list_node.children[0]
             values = _eval_value_list(value_list_node, row_ctx)
             if left is None:
                 return None
