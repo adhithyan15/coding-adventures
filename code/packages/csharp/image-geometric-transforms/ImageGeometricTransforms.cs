@@ -121,7 +121,7 @@ public static class ImageGeometricTransforms
     private static int ReflectCoord(int x, int maxVal)
     {
         if (maxVal <= 0) return 0;
-        int period = 2 * maxVal;
+        int period = checked(2 * maxVal);
         int xm = x % period;
         if (xm < 0) xm += period;
         return xm >= maxVal ? period - xm - 1 : xm;

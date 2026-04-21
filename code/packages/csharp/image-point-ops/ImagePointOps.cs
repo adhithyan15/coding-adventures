@@ -181,7 +181,11 @@ public static class ImagePointOps
     /// </summary>
     public static PxContainer Contrast(PxContainer src, double factor)
     {
-        double f = 259.0 * (factor * 255.0 + 255.0) / (255.0 * (259.0 - factor * 255.0));
+        double denom = 259.0 - factor * 255.0;
+        if (Math.Abs(denom) < 1e-9)
+            throw new ArgumentOutOfRangeException(nameof(factor),
+                "factor causes a singular (divide-by-zero) contrast formula");
+        double f = 259.0 * (factor * 255.0 + 255.0) / (255.0 * denom);
         byte Adj(byte c) => (byte)Math.Clamp(Math.Round(f * (c - 128) + 128), 0, 255);
         return MapPixels(src, p => new Rgba(Adj(p.R), Adj(p.G), Adj(p.B), p.A));
     }
@@ -197,14 +201,18 @@ public static class ImagePointOps
     /// g &lt; 1 brightens midtones; g &gt; 1 darkens them. This is NOT the
     /// sRGB encode curve — it's an additional creative gamma layered on top.
     /// </summary>
-    public static PxContainer Gamma(PxContainer src, double g) =>
-        MapPixels(src, p =>
+    public static PxContainer Gamma(PxContainer src, double g)
+    {
+        if (g <= 0)
+            throw new ArgumentOutOfRangeException(nameof(g), "gamma must be positive (> 0)");
+        return MapPixels(src, p =>
         {
             double r = Math.Pow(Decode(p.R), g);
             double gc = Math.Pow(Decode(p.G), g);
             double b = Math.Pow(Decode(p.B), g);
             return new Rgba(Encode(r), Encode(gc), Encode(b), p.A);
         });
+    }
 
     /// <summary>
     /// Exposure in stops: linear *= 2^stops. +1 stop doubles the light;
