@@ -262,3 +262,14 @@ class TestAlgolIrCompiler:
     def test_raises_for_unsupported_exponentiation(self) -> None:
         with pytest.raises(CompileError):
             compile_algol(parse_algol("begin integer result; result := 2 ** 3 end"))
+
+    def test_rejects_by_name_parameters_until_thunk_lowering_exists(self) -> None:
+        with pytest.raises(CompileError, match="call-by-name parameter"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "integer procedure id(x); integer x; begin id := x end; "
+                    "result := id(1) "
+                    "end"
+                )
+            )

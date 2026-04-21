@@ -22,6 +22,9 @@ Integer arrays compile through the Phase 4 descriptor path: bounds are
 evaluated at block entry, descriptors live in frame slots, element storage lives
 in a bounded ALGOL heap segment, and every element access performs runtime
 bounds checks before touching WASM memory.
+By-name parameters are parsed and typed by the frontend, but this package still
+reports an IR compile error for them until the Phase 5 thunk-lowering pass is
+implemented.
 
 ```python
 from algol_wasm_compiler import compile_source

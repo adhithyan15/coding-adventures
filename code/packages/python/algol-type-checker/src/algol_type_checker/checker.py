@@ -13,6 +13,7 @@ ERROR = "error"
 FRAME_HEADER_SIZE = 20
 FRAME_WORD_SIZE = 4
 VALUE = "value"
+NAME = "name"
 ARRAY = "array"
 MAX_ARRAY_DIMENSIONS = 4
 
@@ -42,6 +43,7 @@ class Symbol:
     slot_size: int | None = None
     procedure_id: int | None = None
     array_id: int | None = None
+    parameter_mode: str | None = None
 
 
 @dataclass(frozen=True)
@@ -160,13 +162,15 @@ class ResolvedReference:
 
 @dataclass(frozen=True)
 class ProcedureParameter:
-    """A value parameter planned as a frame slot in a procedure activation."""
+    """A procedure parameter planned as a frame slot in an activation."""
 
     name: str
     type_name: str
     mode: str
     symbol_id: int
     slot_offset: int
+    may_write: bool = False
+    write_reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -531,14 +535,26 @@ class AlgolTypeChecker:
         formal_names = _formal_parameter_names(node)
         value_names = _value_parameter_names(node)
         spec_types = _parameter_spec_types(node)
+        body = _first_direct_node(node, "proc_body")
+        body_inner = _first_ast_child(body) if body is not None else None
+        known_procedures = {
+            procedure.name: procedure for procedure in self.semantic_procedures
+        }
+        write_reasons = _by_name_formal_write_reasons(
+            body_inner,
+            formal_names,
+            known_procedures,
+            name_token.value,
+        )
         for formal in formal_names:
-            if formal.value not in value_names:
+            mode = VALUE if formal.value in value_names else NAME
+            if mode == NAME and spec_types.get(formal.value) != INTEGER:
                 self._error(
                     formal,
-                    f"call-by-name parameter {formal.value!r} requires thunk lowering, "
-                    "not implemented",
+                    f"by-name parameter {formal.value!r} must have an integer "
+                    "specifier",
                 )
-            if spec_types.get(formal.value) != INTEGER:
+            elif mode == VALUE and spec_types.get(formal.value) != INTEGER:
                 self._error(
                     formal,
                     f"value parameter {formal.value!r} must have an integer specifier",
@@ -567,8 +583,6 @@ class AlgolTypeChecker:
         self._next_symbol_id += 1
         self.semantic_symbols.append(procedure_symbol)
 
-        body = _first_direct_node(node, "proc_body")
-        body_inner = _first_ast_child(body) if body is not None else None
         if body_inner is None:
             self._error(node, "procedure declaration is missing a body")
             return
@@ -598,6 +612,7 @@ class AlgolTypeChecker:
             self.semantic_symbols.append(result_symbol)
 
         for formal in formal_names:
+            mode = VALUE if formal.value in value_names else NAME
             param_symbol = Symbol(
                 name=formal.value,
                 type_name=INTEGER,
@@ -607,6 +622,7 @@ class AlgolTypeChecker:
                 kind="parameter",
                 declaring_block_id=proc_scope.block_id,
                 procedure_id=procedure_id,
+                parameter_mode=mode,
             )
             if not proc_scope.declare(param_symbol):
                 self._error(
@@ -623,9 +639,11 @@ class AlgolTypeChecker:
                     ProcedureParameter(
                         name=formal.value,
                         type_name=INTEGER,
-                        mode=VALUE,
+                        mode=mode,
                         symbol_id=param_symbol.symbol_id,
                         slot_offset=param_symbol.slot_offset,
+                        may_write=formal.value in write_reasons,
+                        write_reason=write_reasons.get(formal.value),
                     )
                 )
 
@@ -1005,11 +1023,32 @@ class AlgolTypeChecker:
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
             actual_type = self._infer_expr(argument, scope)
             if actual_type != ERROR and actual_type != parameter.type_name:
+                if parameter.mode == NAME:
+                    self._error(
+                        argument,
+                        f"by-name parameter {parameter.name!r} expects "
+                        f"{parameter.type_name}, got {actual_type}",
+                    )
+                    continue
                 self._error(
                     argument,
                     f"parameter {parameter.name!r} expects {parameter.type_name}, "
                     f"got {actual_type}",
                 )
+                continue
+            if (
+                parameter.mode == NAME
+                and parameter.may_write
+                and not _is_assignable_actual(argument)
+            ):
+                self._error(
+                    argument,
+                    f"by-name parameter {parameter.name!r} is assigned, but actual "
+                    "expression is not assignable",
+                )
+                continue
+            if parameter.mode == NAME and parameter.may_write:
+                self._record_assignable_actual_write(argument, scope)
 
         if role == "expression" and descriptor.return_type is None:
             self._error(
@@ -1032,6 +1071,17 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _record_assignable_actual_write(self, argument: ASTNode, scope: Scope) -> None:
+        variable = _single_variable_expr(argument)
+        if variable is None:
+            return
+        if _variable_subscripts(variable):
+            self._check_array_access(variable, scope, role="write")
+            return
+        name = _variable_head_name(variable)
+        if name is not None:
+            self._resolve_name(name, scope, role="write")
 
     def _resolve_procedure(
         self, token: Token, scope: Scope
@@ -1252,6 +1302,156 @@ def _parameter_spec_types(node: ASTNode) -> dict[str, str]:
             if token.type_name == "NAME":
                 spec_types[token.value] = type_name
     return spec_types
+
+
+def _by_name_formal_write_reasons(
+    body: ASTNode | None,
+    formal_names: list[Token],
+    known_procedures: dict[str, ProcedureDescriptor],
+    current_procedure_name: str,
+) -> dict[str, str]:
+    ordered_names = [formal.value for formal in formal_names]
+    names = set(ordered_names)
+    reasons: dict[str, str] = {}
+    call_edges: list[tuple[str, str | None, int]] = []
+
+    def record(name: str | None, reason: str, active_names: set[str]) -> None:
+        if name in active_names:
+            reasons.setdefault(name, reason)
+
+    def visit(node: ASTNode | None, active_names: set[str]) -> None:
+        if node is None or not active_names:
+            return
+        if node.rule_name == "block":
+            active_names = active_names - _direct_block_declared_names(node)
+        elif node.rule_name == "procedure_decl":
+            hidden = {formal.value for formal in _formal_parameter_names(node)}
+            procedure_name = _procedure_name(node)
+            if procedure_name is not None:
+                hidden.add(procedure_name.value)
+            active_names = active_names - hidden
+
+        if node.rule_name == "assign_stmt":
+            left_part = _first_direct_node(node, "left_part")
+            variable = _first_node(left_part, "variable") if left_part else None
+            record(
+                _variable_head_name_value(variable),
+                "local assignment",
+                active_names,
+            )
+        elif node.rule_name == "for_stmt":
+            loop_token = next(
+                (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+                None,
+            )
+            loop_name = loop_token.value if loop_token is not None else None
+            record(loop_name, "local assignment", active_names)
+        elif node.rule_name in {"proc_call", "proc_stmt"}:
+            callee_name = _procedure_call_name(node)
+            actual_params = _first_direct_node(node, "actual_params")
+            for index, actual in enumerate(_direct_nodes(actual_params, "expression")):
+                actual_name = _single_variable_expr_name(actual)
+                if actual_name in active_names:
+                    call_edges.append((actual_name, callee_name, index))
+
+        for child in _node_children(node):
+            visit(child, active_names)
+
+    visit(body, names)
+    self_edges: list[tuple[str, int]] = []
+    for actual_name, callee_name, argument_index in call_edges:
+        if callee_name == current_procedure_name:
+            self_edges.append((actual_name, argument_index))
+        elif _callee_may_write_argument(callee_name, argument_index, known_procedures):
+            reasons.setdefault(actual_name, "transitive call")
+
+    changed = True
+    while changed:
+        changed = False
+        for actual_name, argument_index in self_edges:
+            if argument_index >= len(ordered_names):
+                reasons.setdefault(actual_name, "transitive call")
+                continue
+            target_name = ordered_names[argument_index]
+            if target_name in reasons and actual_name not in reasons:
+                reasons[actual_name] = "transitive call"
+                changed = True
+    return reasons
+
+
+def _procedure_call_name(node: ASTNode) -> str | None:
+    token = next(
+        (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+        None,
+    )
+    return token.value if token is not None else None
+
+
+def _callee_may_write_argument(
+    callee_name: str | None,
+    argument_index: int,
+    known_procedures: dict[str, ProcedureDescriptor],
+) -> bool:
+    if callee_name is None:
+        return True
+    procedure = known_procedures.get(callee_name)
+    if procedure is None or argument_index >= len(procedure.parameters):
+        return True
+    parameter = procedure.parameters[argument_index]
+    return parameter.mode == NAME and parameter.may_write
+
+
+def _direct_block_declared_names(node: ASTNode) -> set[str]:
+    declared: set[str] = set()
+    for declaration in _direct_nodes(node, "declaration"):
+        inner = _first_ast_child(declaration)
+        if inner is None:
+            continue
+        if inner.rule_name == "type_decl":
+            ident_list = _first_node(inner, "ident_list")
+            declared.update(
+                token.value
+                for token in _tokens(ident_list)
+                if token.type_name == "NAME"
+            )
+        elif inner.rule_name == "array_decl":
+            for segment in _direct_nodes(inner, "array_segment"):
+                ident_list = _first_direct_node(segment, "ident_list")
+                declared.update(
+                    token.value
+                    for token in _tokens(ident_list)
+                    if token.type_name == "NAME"
+                )
+        elif inner.rule_name == "procedure_decl":
+            procedure_name = _procedure_name(inner)
+            if procedure_name is not None:
+                declared.add(procedure_name.value)
+    return declared
+
+
+def _is_assignable_actual(node: ASTNode) -> bool:
+    return _single_variable_expr(node) is not None
+
+
+def _single_variable_expr_name(node: ASTNode | None) -> str | None:
+    variable = _single_variable_expr(node)
+    return _variable_head_name_value(variable)
+
+
+def _single_variable_expr(node: ASTNode | None) -> ASTNode | None:
+    if node is None:
+        return None
+    if node.rule_name == "variable":
+        return node
+    meaningful = _meaningful_children(node)
+    if len(meaningful) != 1 or not isinstance(meaningful[0], ASTNode):
+        return None
+    return _single_variable_expr(meaningful[0])
+
+
+def _variable_head_name_value(node: ASTNode | None) -> str | None:
+    token = _variable_head_name(node)
+    return token.value if token is not None else None
 
 
 def _variable_name(node: ASTNode) -> Token | None:
