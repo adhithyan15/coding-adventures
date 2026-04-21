@@ -166,7 +166,7 @@ impl text_interfaces::TextShaper for UnimplementedNativeBackend {
         _font: &Self::Handle,
         _size: f32,
         _options: &text_interfaces::ShapeOptions,
-    ) -> Result<text_interfaces::ShapedRun, text_interfaces::ShapingError> {
+    ) -> Result<text_interfaces::ShapedText, text_interfaces::ShapingError> {
         Err(text_interfaces::ShapingError::ShapingFailed(
             "text-native has no backend implemented for this target OS; \
              use the device-independent path or a TXT03 backend."

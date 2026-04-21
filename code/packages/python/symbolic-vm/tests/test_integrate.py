@@ -253,11 +253,12 @@ def test_integrate_two_x_factors_unevaluated(vm: VM) -> None:
     assert vm.eval(expr) == IRApply(INTEGRATE, (inner, X))
 
 
-def test_integrate_composed_trig_unevaluated(vm: VM) -> None:
-    # ∫ sin(2·x) dx needs substitution — Phase 1 leaves it.
+def test_integrate_composed_trig_now_closed_by_phase3(vm: VM) -> None:
+    # ∫ sin(2·x) dx = −cos(2x)/2  (Phase 3b closes this).
     inner = IRApply(SIN, (IRApply(MUL, (IRInteger(2), X)),))
-    expr = _integrate(inner)
-    assert vm.eval(expr) == IRApply(INTEGRATE, (inner, X))
+    result = vm.eval(_integrate(inner))
+    # Must NOT be unevaluated.
+    assert not (isinstance(result, IRApply) and result.head.name == "Integrate")
 
 
 def test_integrate_unknown_function_unevaluated(vm: VM) -> None:

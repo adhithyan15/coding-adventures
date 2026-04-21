@@ -27,6 +27,13 @@ from storage_sqlite.errors import (
 )
 from storage_sqlite.freelist import TRUNK_CAPACITY, Freelist
 from storage_sqlite.header import Header
+from storage_sqlite.index_tree import (
+    PAGE_TYPE_INTERIOR_INDEX,
+    PAGE_TYPE_LEAF_INDEX,
+    DuplicateIndexKeyError,
+    IndexTree,
+    IndexTreeError,
+)
 from storage_sqlite.pager import PAGE_SIZE, Pager
 from storage_sqlite.record import Value
 from storage_sqlite.schema import Schema, SchemaError, initialize_new_database
@@ -36,10 +43,15 @@ __all__ = [
     "BTree",
     "BTreeError",
     "CorruptDatabaseError",
+    "DuplicateIndexKeyError",
     "DuplicateRowidError",
     "Freelist",
     "Header",
+    "IndexTree",
+    "IndexTreeError",
     "JournalError",
+    "PAGE_TYPE_INTERIOR_INDEX",
+    "PAGE_TYPE_LEAF_INDEX",
     "PageFullError",
     "Pager",
     "Schema",

@@ -40,18 +40,18 @@
 
 use text_interfaces::{
     Direction, FontMetrics, FontQuery, FontResolutionError, FontResolver, Glyph, ShapeOptions,
-    ShapedRun, ShapingError, TextShaper,
+    ShapedRun, ShapedText, ShapingError, TextShaper,
 };
 
 #[cfg(target_vendor = "apple")]
 use objc_bridge::{
-    cfstring_checked, CFArrayGetCount, CFArrayGetValueAtIndex, CFRange, CFRelease,
-    CFStringGetCString, CFStringGetLength, CGPoint, CGSize, CTFontCopyFamilyName,
-    CTFontCopyPostScriptName, CTFontCreateCopyWithAttributes, CTFontCreateWithName,
-    CTFontGetAscent, CTFontGetCapHeight, CTFontGetDescent, CTFontGetLeading, CTFontGetSize,
-    CTFontGetUnitsPerEm, CTFontGetXHeight, CTLineCreateWithAttributedString, CTLineGetGlyphRuns,
-    CTRunGetAdvances, CTRunGetGlyphCount, CTRunGetGlyphs, CTRunGetPositions,
-    CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8, NIL,
+    cfstring_checked, kCTFontAttributeName, CFArrayGetCount, CFArrayGetValueAtIndex,
+    CFDictionaryGetValue, CFRange, CFRelease, CFStringGetCString, CFStringGetLength, CGPoint,
+    CGSize, CTFontCopyFamilyName, CTFontCopyPostScriptName, CTFontCreateCopyWithAttributes,
+    CTFontCreateWithName, CTFontGetAscent, CTFontGetCapHeight, CTFontGetDescent, CTFontGetLeading,
+    CTFontGetSize, CTFontGetUnitsPerEm, CTFontGetXHeight, CTLineCreateWithAttributedString,
+    CTLineGetGlyphRuns, CTRunGetAdvances, CTRunGetAttributes, CTRunGetGlyphCount, CTRunGetGlyphs,
+    CTRunGetPositions, CTRunGetStringIndices, Id, K_CF_STRING_ENCODING_UTF8, NIL,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -317,18 +317,14 @@ impl TextShaper for CoreTextShaper {
         font: &Self::Handle,
         size: f32,
         options: &ShapeOptions,
-    ) -> Result<ShapedRun, ShapingError> {
+    ) -> Result<ShapedText, ShapingError> {
         if !matches!(options.direction, Direction::Ltr) {
             return Err(ShapingError::UnsupportedDirection(options.direction));
         }
 
-        // Empty input → empty run. Skip CoreText calls.
+        // Empty input → empty ShapedText. Skip CoreText calls.
         if text.is_empty() {
-            return Ok(ShapedRun {
-                glyphs: Vec::new(),
-                x_advance_total: 0.0,
-                font_ref: format!("coretext:{}@{}", font.ps_name, size),
-            });
+            return Ok(ShapedText::empty());
         }
 
         unsafe { shape_with_coretext(text, font, size) }
@@ -344,9 +340,9 @@ unsafe fn shape_with_coretext(
     text: &str,
     font_handle: &CoreTextHandle,
     size: f32,
-) -> Result<ShapedRun, ShapingError> {
+) -> Result<ShapedText, ShapingError> {
     use objc_bridge::{
-        kCFTypeDictionaryKeyCallBacks, kCFTypeDictionaryValueCallBacks, kCTFontAttributeName,
+        kCFTypeDictionaryKeyCallBacks, kCFTypeDictionaryValueCallBacks,
         CFAttributedStringCreate, CFDictionaryCreate,
     };
 
@@ -435,15 +431,26 @@ unsafe fn shape_with_coretext(
         ));
     }
 
-    // Walk each CTRun inside the CTLine and accumulate glyphs.
+    // Walk each CTRun inside the CTLine. IMPORTANT: CoreText may
+    // split the line across multiple runs when it performs font
+    // fallback (a codepoint absent from the primary font → a
+    // fallback font is used for that span). Each CTRun carries its
+    // own font via CTRunGetAttributes; we tag the emitted ShapedRun
+    // with the fallback font's PostScript name so the font-binding
+    // invariant stays intact when the paint backend looks up which
+    // font to render with.
     let runs = CTLineGetGlyphRuns(line);
     let run_count = CFArrayGetCount(runs);
-    let mut all_glyphs: Vec<Glyph> = Vec::new();
-    // Running pen position across the whole line — CoreText returns
-    // per-glyph positions in the line's local coordinate system, so we
-    // can subtract from the running pen to get pen-relative offsets.
-    let mut pen_x: f32 = 0.0;
-    let mut pen_y: f32 = 0.0;
+    let mut out_runs: Vec<ShapedRun> = Vec::with_capacity(run_count as usize);
+
+    // Running pen position across the whole line. Used to convert
+    // CoreText's absolute line-local positions into pen-relative
+    // offsets per glyph. Resets to zero at the start of each segment
+    // because the layout engine treats each segment's glyphs as
+    // pen-relative-from-segment-start and adds the cumulative run
+    // advance itself.
+    let mut line_pen_x: f32 = 0.0;
+    let mut line_pen_y: f32 = 0.0;
 
     for i in 0..run_count {
         let run = CFArrayGetValueAtIndex(runs, i);
@@ -463,17 +470,45 @@ unsafe fn shape_with_coretext(
         CTRunGetAdvances(run, range, advances.as_mut_ptr());
         CTRunGetStringIndices(run, range, clusters.as_mut_ptr());
 
+        // Resolve the run's actual font via its attribute dictionary.
+        // This is where fallback surfaces — the font here may be a
+        // different face than the one we requested. Fall back to the
+        // originally-requested font if for any reason the attribute
+        // is missing (shouldn't happen for CTLine-produced runs).
+        let run_font = resolve_run_font(run, resized_font);
+        let run_ps_name = copy_ps_name(run_font);
+        let run_font_ref = if run_ps_name.is_empty() {
+            format!("coretext:{}@{}", font_handle.ps_name, size)
+        } else {
+            format!("coretext:{}@{}", run_ps_name, size)
+        };
+
+        // Segment origin in line-local coords: where the first glyph
+        // of this run lands. Used to shift per-glyph positions to
+        // segment-local (pen-relative-from-segment-start).
+        let segment_origin_x = positions[0].x as f32;
+        let segment_origin_y = positions[0].y as f32;
+
+        // Reset per-segment pen tracking.
+        let mut seg_pen_x: f32 = 0.0;
+        let mut seg_pen_y: f32 = 0.0;
+        let mut seg_glyphs: Vec<Glyph> = Vec::with_capacity(count);
+
         for j in 0..count {
+            // Absolute line-local position.
             let px = positions[j].x as f32;
             let py = positions[j].y as f32;
-            // Pen-relative offset: the distance between where CoreText
-            // placed the glyph and where our running pen currently sits.
-            let x_offset = px - pen_x;
-            let y_offset = py - pen_y;
+            // Segment-local position (subtract the segment origin
+            // so each ShapedRun's glyphs reset from 0).
+            let seg_px = px - segment_origin_x;
+            let seg_py = py - segment_origin_y;
+            // Pen-relative offset within the segment.
+            let x_offset = seg_px - seg_pen_x;
+            let y_offset = seg_py - seg_pen_y;
             let x_adv = advances[j].width as f32;
             let y_adv = advances[j].height as f32;
 
-            all_glyphs.push(Glyph {
+            seg_glyphs.push(Glyph {
                 glyph_id: glyph_ids[j] as u32,
                 cluster: clusters[j] as u32,
                 x_advance: x_adv,
@@ -482,24 +517,50 @@ unsafe fn shape_with_coretext(
                 y_offset,
             });
 
-            // Advance the pen by the reported advance to stay in sync
-            // with CoreText's own layout math.
-            pen_x += x_adv;
-            pen_y += y_adv;
+            seg_pen_x += x_adv;
+            seg_pen_y += y_adv;
+            line_pen_x += x_adv;
+            line_pen_y += y_adv;
         }
+
+        let seg_advance_total: f32 = seg_glyphs.iter().map(|g| g.x_advance).sum();
+        out_runs.push(ShapedRun {
+            glyphs: seg_glyphs,
+            x_advance_total: seg_advance_total,
+            font_ref: run_font_ref,
+        });
     }
+
+    // Silence the unused variable warning — line_pen tracking is
+    // retained for future diagnostic use (e.g. asserting that the
+    // segment advances sum back to the line's typographic width).
+    let _ = (line_pen_x, line_pen_y);
 
     CFRelease(line);
     if owns_resized {
         CFRelease(resized_font);
     }
 
-    let total = all_glyphs.iter().map(|g| g.x_advance).sum::<f32>();
-    Ok(ShapedRun {
-        glyphs: all_glyphs,
-        x_advance_total: total,
-        font_ref: format!("coretext:{}@{}", font_handle.ps_name, size),
-    })
+    Ok(ShapedText { runs: out_runs })
+}
+
+/// Extract the actual font used by a CTRun via its attribute dictionary.
+/// Falls back to the supplied `default_font` if the lookup fails.
+#[cfg(target_vendor = "apple")]
+unsafe fn resolve_run_font(run: Id, default_font: Id) -> Id {
+    let attrs = CTRunGetAttributes(run);
+    if attrs == NIL {
+        return default_font;
+    }
+    // kCTFontAttributeName is an extern static Id (pointer value);
+    // pass it by value as the lookup key.
+    let key: Id = kCTFontAttributeName;
+    let found = CFDictionaryGetValue(attrs, key as *const _);
+    if found == NIL {
+        default_font
+    } else {
+        found
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -646,11 +707,14 @@ mod tests {
     fn shape_hello_produces_5_glyphs() {
         let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
         let s = CoreTextShaper::new();
-        let run = s.shape("Hello", &h, 16.0, &ShapeOptions::default()).unwrap();
+        let shaped = s.shape("Hello", &h, 16.0, &ShapeOptions::default()).unwrap();
+        // Latin-only input in Helvetica: exactly one segment, 5 glyphs.
+        assert_eq!(shaped.runs.len(), 1);
+        let run = &shaped.runs[0];
         assert_eq!(run.glyphs.len(), 5);
         assert!(run.x_advance_total > 0.0);
         assert!(run.font_ref.starts_with("coretext:"));
-        // Clusters should be UTF-16 code-unit offsets 0..=4
+        assert_eq!(shaped.total_advance(), run.x_advance_total);
         for (i, g) in run.glyphs.iter().enumerate() {
             assert_eq!(g.cluster, i as u32);
         }
@@ -660,9 +724,58 @@ mod tests {
     fn shape_empty_string_is_empty_run() {
         let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
         let s = CoreTextShaper::new();
-        let run = s.shape("", &h, 16.0, &ShapeOptions::default()).unwrap();
-        assert!(run.glyphs.is_empty());
-        assert_eq!(run.x_advance_total, 0.0);
+        let shaped = s.shape("", &h, 16.0, &ShapeOptions::default()).unwrap();
+        assert!(shaped.is_empty());
+        assert_eq!(shaped.runs.len(), 0);
+        assert_eq!(shaped.total_advance(), 0.0);
+    }
+
+    #[test]
+    fn shape_mixed_ascii_and_arrow_splits_into_multiple_font_runs() {
+        // Regression test for the original bug: "parse → AST" shaped
+        // through Helvetica. U+2192 (RIGHTWARDS ARROW) is not in
+        // Helvetica's repertoire, so CoreText does font fallback.
+        // The emitted ShapedText MUST contain at least two ShapedRuns
+        // — one for the ASCII text (Helvetica) and one for the arrow
+        // (some fallback font like Apple Symbols) — each tagged with
+        // the actual font that produced its glyphs. This is what
+        // makes paint-metal render correctly instead of interpreting
+        // the fallback font's glyph IDs against Helvetica.
+        let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
+        let s = CoreTextShaper::new();
+        let shaped = s
+            .shape("parse → AST", &h, 16.0, &ShapeOptions::default())
+            .unwrap();
+
+        // Expect multiple font segments.
+        assert!(
+            shaped.runs.len() >= 2,
+            "expected at least 2 ShapedRuns for 'parse → AST' (ASCII + arrow-fallback), got {}",
+            shaped.runs.len()
+        );
+
+        // All segments carry coretext: font_refs.
+        for run in &shaped.runs {
+            assert!(
+                run.font_ref.starts_with("coretext:"),
+                "every segment must be coretext-bound; got {:?}",
+                run.font_ref
+            );
+        }
+
+        // At least two distinct font_refs — proving that the
+        // fallback font is genuinely different from Helvetica.
+        let unique_fonts: std::collections::HashSet<&str> =
+            shaped.runs.iter().map(|r| r.font_ref.as_str()).collect();
+        assert!(
+            unique_fonts.len() >= 2,
+            "expected >= 2 distinct font bindings, got {:?}",
+            unique_fonts
+        );
+
+        // Total glyph count equals visible characters ("parse " + "→" +
+        // " AST" = 11 codepoints, one glyph each).
+        assert_eq!(shaped.total_glyph_count(), 11);
     }
 
     #[test]
@@ -704,9 +817,12 @@ mod tests {
     fn font_ref_matches_between_shaper_and_handle_key() {
         let h = resolver().resolve(&FontQuery::named("Helvetica")).unwrap();
         let s = CoreTextShaper::new();
-        let run = s.shape("A", &h, 16.0, &ShapeOptions::default()).unwrap();
+        let shaped = s.shape("A", &h, 16.0, &ShapeOptions::default()).unwrap();
+        assert_eq!(shaped.runs.len(), 1);
+        let run = &shaped.runs[0];
         assert!(run.font_ref.starts_with("coretext:"));
-        // Size-matched cases: font_ref == "coretext:" + handle.ref_key()
+        // Size-matched, no-fallback case: font_ref == "coretext:" +
+        // handle.ref_key() because the shaped font IS the primary.
         assert_eq!(run.font_ref, format!("coretext:{}", h.ref_key()));
     }
 }

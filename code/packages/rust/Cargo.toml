@@ -2,6 +2,8 @@
 resolver = "2"
 members = [
     "activation-functions",
+    "audio-device-coreaudio",
+    "audio-device-sink",
     "actor",
     "arithmetic",
     "arm-simulator",
@@ -239,6 +241,7 @@ members = [
     "paint-vm-gdi",
     "paint-vm-metal-c",
     "pixel-container",
+    "image-geometric-transforms",
     "image-point-ops",
     "png",
     "point2d",
