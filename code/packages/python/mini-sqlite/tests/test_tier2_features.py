@@ -12,8 +12,8 @@ codegen, and VM layers:
 """
 
 import pytest
-import mini_sqlite
 
+import mini_sqlite
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -292,19 +292,19 @@ class TestTransactions:
     def test_double_begin_raises(self):
         conn = mini_sqlite.connect(":memory:")
         conn.execute("BEGIN")
-        with pytest.raises(Exception):  # TransactionError
+        with pytest.raises(mini_sqlite.OperationalError):
             conn.execute("BEGIN")
         # Clean up so the fixture doesn't leak.
         conn.execute("ROLLBACK")
 
     def test_commit_without_begin_raises(self):
         conn = mini_sqlite.connect(":memory:")
-        with pytest.raises(Exception):  # TransactionError
+        with pytest.raises(mini_sqlite.OperationalError):
             conn.execute("COMMIT")
 
     def test_rollback_without_begin_raises(self):
         conn = mini_sqlite.connect(":memory:")
-        with pytest.raises(Exception):  # TransactionError
+        with pytest.raises(mini_sqlite.OperationalError):
             conn.execute("ROLLBACK")
 
     def test_multiple_statements_in_transaction(self):
