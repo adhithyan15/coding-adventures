@@ -90,6 +90,7 @@ __all__ = [
     "fresh",
     "freshen_clause",
     "goal_as_term",
+    "goal_from_term",
     "logic_list",
     "native_goal",
     "neq",
@@ -690,6 +691,75 @@ def goal_as_term(goal_value: object) -> Term:
     msg = (
         f"cannot encode {type(goal).__name__} as a first-order goal term"
     )
+    raise TypeError(msg)
+
+
+def _is_plain_atom(term_value: Atom, name: str) -> bool:
+    """Return True when an atom is the unqualified symbolic name."""
+
+    return term_value.symbol.namespace is None and term_value.symbol.name == name
+
+
+def _term_functor_name(term_value: Compound) -> str | None:
+    """Return an unqualified compound functor name, or None for namespaced ones."""
+
+    if term_value.functor.namespace is not None:
+        return None
+    return term_value.functor.name
+
+
+def _binary_goal_arguments(term_value: Compound, operator: str) -> tuple[Term, Term]:
+    """Read a binary Prolog control/equality term or raise a clear error."""
+
+    if len(term_value.args) != 2:
+        msg = f"{operator}/2 goal terms require exactly two arguments"
+        raise TypeError(msg)
+    return term_value.args
+
+
+def goal_from_term(term_value: object) -> GoalExpr:
+    """Lower first-order goal data back into an executable goal expression.
+
+    LP17 taught the engine how to reify goals as terms. This helper is the
+    inverse for the representable Prolog-shaped subset: truth, failure,
+    equality, disequality, conjunction, disjunction, and relation calls.
+    """
+
+    callable_term = _coerce_term(term_value)
+
+    if isinstance(callable_term, Atom):
+        if _is_plain_atom(callable_term, "true"):
+            return succeed()
+        if _is_plain_atom(callable_term, "fail"):
+            return fail()
+        return RelationCall(
+            relation=Relation(symbol=callable_term.symbol, arity=0),
+            args=(),
+        )
+
+    if isinstance(callable_term, Compound):
+        functor_name = _term_functor_name(callable_term)
+        if functor_name == "=":
+            left, right = _binary_goal_arguments(callable_term, "=")
+            return eq(left, right)
+        if functor_name == "\\=":
+            left, right = _binary_goal_arguments(callable_term, "\\=")
+            return neq(left, right)
+        if functor_name == ",":
+            left, right = _binary_goal_arguments(callable_term, ",")
+            return conj(goal_from_term(left), goal_from_term(right))
+        if functor_name == ";":
+            left, right = _binary_goal_arguments(callable_term, ";")
+            return disj(goal_from_term(left), goal_from_term(right))
+        return RelationCall(
+            relation=Relation(
+                symbol=callable_term.functor,
+                arity=len(callable_term.args),
+            ),
+            args=callable_term.args,
+        )
+
+    msg = f"cannot lower {type(callable_term).__name__} into a callable goal"
     raise TypeError(msg)
 
 

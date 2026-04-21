@@ -33,6 +33,7 @@ from logic_engine import (
     eq,
     freshen_clause,
     goal_as_term,
+    goal_from_term,
     logic_list,
     native_goal,
     num,
@@ -52,8 +53,11 @@ __all__ = [
     "atomo",
     "callo",
     "callableo",
+    "calltermo",
     "compoundo",
+    "compare_termo",
     "copytermo",
+    "current_predicateo",
     "div",
     "failo",
     "findallo",
@@ -78,11 +82,16 @@ __all__ = [
     "numbero",
     "onceo",
     "bagofo",
+    "predicate_propertyo",
     "same_termo",
     "setofo",
     "clauseo",
     "stringo",
     "sub",
+    "termo_geqo",
+    "termo_gto",
+    "termo_leqo",
+    "termo_lto",
     "trueo",
     "univo",
     "varo",
@@ -93,6 +102,51 @@ type NativeArgs = tuple[Term, ...]
 type NativeRunner = Callable[[Program, State, NativeArgs], Iterator[State]]
 type NumericValue = int | float
 type TermSortKey = tuple[object, ...]
+
+
+_BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
+    ("argo", 3),
+    ("atomico", 1),
+    ("atomo", 1),
+    ("bagofo", 3),
+    ("callableo", 1),
+    ("callo", 1),
+    ("calltermo", 1),
+    ("clauseo", 2),
+    ("compare_termo", 3),
+    ("compoundo", 1),
+    ("copytermo", 2),
+    ("current_predicateo", 2),
+    ("failo", 0),
+    ("findallo", 3),
+    ("forallo", 2),
+    ("functoro", 3),
+    ("geqo", 2),
+    ("groundo", 1),
+    ("gto", 2),
+    ("ifthenelseo", 3),
+    ("iftheno", 2),
+    ("iso", 2),
+    ("leqo", 2),
+    ("lto", 2),
+    ("nonvaro", 1),
+    ("noto", 1),
+    ("numeqo", 2),
+    ("numneqo", 2),
+    ("numbero", 1),
+    ("onceo", 1),
+    ("predicate_propertyo", 3),
+    ("same_termo", 2),
+    ("setofo", 3),
+    ("stringo", 1),
+    ("termo_geqo", 2),
+    ("termo_gto", 2),
+    ("termo_leqo", 2),
+    ("termo_lto", 2),
+    ("trueo", 0),
+    ("univo", 2),
+    ("varo", 1),
+)
 
 
 def _as_goal(goal: object) -> GoalExpr:
@@ -212,7 +266,7 @@ def _succeed_if(condition: bool, state: State) -> Iterator[State]:
 
 
 def _term_sort_key(term_value: Term) -> TermSortKey:
-    """Return a deterministic first-pass ordering key for collected terms."""
+    """Return the documented Prolog-inspired standard term ordering key."""
 
     if isinstance(term_value, LogicVar):
         return (0, term_value.id, str(term_value.display_name or ""))
@@ -224,11 +278,23 @@ def _term_sort_key(term_value: Term) -> TermSortKey:
         return (3, term_value.value)
     return (
         4,
+        len(term_value.args),
         term_value.functor.namespace or "",
         term_value.functor.name,
-        len(term_value.args),
         tuple(_term_sort_key(argument) for argument in term_value.args),
     )
+
+
+def _compare_terms(left: Term, right: Term) -> int:
+    """Compare two already reified terms using the standard term order."""
+
+    left_key = _term_sort_key(left)
+    right_key = _term_sort_key(right)
+    if left_key < right_key:
+        return -1
+    if left_key > right_key:
+        return 1
+    return 0
 
 
 def _unique_sorted_terms(values: list[Term]) -> list[Term]:
@@ -588,6 +654,20 @@ def callo(goal: object) -> GoalExpr:
     return native_goal(run)
 
 
+def calltermo(term_goal: object) -> GoalExpr:
+    """Execute a reified callable goal term in the current proof state."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (goal_term,) = args
+        try:
+            called_goal = goal_from_term(_reified(goal_term, state))
+        except TypeError:
+            return
+        yield from solve_from(program_value, called_goal, state)
+
+    return native_goal(run, _as_callable_term(term_goal))
+
+
 def onceo(goal: object) -> GoalExpr:
     """Run `goal` and keep at most its first solution."""
 
@@ -866,6 +946,153 @@ def same_termo(left: object, right: object) -> GoalExpr:
         )
 
     return native_goal(run, left, right)
+
+
+def compare_termo(order: object, left: object, right: object) -> GoalExpr:
+    """Unify `order` with `<`, `=`, or `>` using standard term ordering."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        order_target, left_term, right_term = args
+        comparison = _compare_terms(
+            _reified(left_term, state),
+            _reified(right_term, state),
+        )
+        order_atom = atom("<" if comparison < 0 else ">" if comparison > 0 else "=")
+        yield from solve_from(program_value, eq(order_target, order_atom), state)
+
+    return native_goal(run, order, left, right)
+
+
+def _term_compareo(
+    left: object,
+    right: object,
+    predicate: Callable[[int], bool],
+) -> GoalExpr:
+    """Build a non-binding standard-term-order comparison predicate."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        comparison = _compare_terms(
+            _reified(left_term, state),
+            _reified(right_term, state),
+        )
+        yield from _succeed_if(predicate(comparison), state)
+
+    return native_goal(run, left, right)
+
+
+def termo_lto(left: object, right: object) -> GoalExpr:
+    """Succeed when `left` is before `right` in standard term order."""
+
+    return _term_compareo(left, right, lambda comparison: comparison < 0)
+
+
+def termo_leqo(left: object, right: object) -> GoalExpr:
+    """Succeed when `left` is not after `right` in standard term order."""
+
+    return _term_compareo(left, right, lambda comparison: comparison <= 0)
+
+
+def termo_gto(left: object, right: object) -> GoalExpr:
+    """Succeed when `left` is after `right` in standard term order."""
+
+    return _term_compareo(left, right, lambda comparison: comparison > 0)
+
+
+def termo_geqo(left: object, right: object) -> GoalExpr:
+    """Succeed when `left` is not before `right` in standard term order."""
+
+    return _term_compareo(left, right, lambda comparison: comparison >= 0)
+
+
+def _predicate_clause_counts(program_value: Program) -> dict[tuple[Atom, int], int]:
+    """Count source clauses by predicate indicator in source-discovery order."""
+
+    counts: dict[tuple[Atom, int], int] = {}
+    for source_clause in program_value.clauses:
+        indicator = (
+            atom(source_clause.head.relation.symbol),
+            source_clause.head.relation.arity,
+        )
+        counts[indicator] = counts.get(indicator, 0) + 1
+    return counts
+
+
+def _builtin_indicators() -> tuple[tuple[Atom, int], ...]:
+    """Return builtin predicate indicators in stable documentation order."""
+
+    return tuple((atom(name), arity) for name, arity in _BUILTIN_PREDICATES)
+
+
+def _predicate_indicators(program_value: Program) -> tuple[tuple[Atom, int], ...]:
+    """Enumerate source and builtin predicate indicators without duplicates."""
+
+    ordered: dict[tuple[Atom, int], None] = {}
+    for indicator in _predicate_clause_counts(program_value):
+        ordered[indicator] = None
+    for indicator in _builtin_indicators():
+        ordered.setdefault(indicator, None)
+    return tuple(ordered)
+
+
+def _predicate_properties(
+    program_value: Program,
+    name_atom: Atom,
+    arity: int,
+) -> tuple[Term, ...]:
+    """Return observable properties for one predicate indicator."""
+
+    clause_count = _predicate_clause_counts(program_value).get((name_atom, arity), 0)
+    is_builtin = (name_atom, arity) in set(_builtin_indicators())
+    if clause_count == 0 and not is_builtin:
+        return ()
+
+    properties: list[Term] = [atom("defined")]
+    if clause_count > 0:
+        properties.append(atom("static"))
+    if is_builtin:
+        properties.append(atom("built_in"))
+    properties.append(term("number_of_clauses", num(clause_count)))
+    return tuple(properties)
+
+
+def current_predicateo(name: object, arity: object) -> GoalExpr:
+    """Enumerate predicates visible in the current program and builtin layer."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_target, arity_target = args
+        for name_atom, raw_arity in _predicate_indicators(program_value):
+            yield from solve_from(
+                program_value,
+                conj(eq(name_target, name_atom), eq(arity_target, num(raw_arity))),
+                state,
+            )
+
+    return native_goal(run, name, arity)
+
+
+def predicate_propertyo(name: object, arity: object, property_term: object) -> GoalExpr:
+    """Enumerate properties for visible source and builtin predicates."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_target, arity_target, property_target = args
+        for name_atom, raw_arity in _predicate_indicators(program_value):
+            for property_value in _predicate_properties(
+                program_value,
+                name_atom,
+                raw_arity,
+            ):
+                yield from solve_from(
+                    program_value,
+                    conj(
+                        eq(name_target, name_atom),
+                        eq(arity_target, num(raw_arity)),
+                        eq(property_target, property_value),
+                    ),
+                    state,
+                )
+
+    return native_goal(run, name, arity, property_term)
 
 
 def clauseo(head: object, body: object) -> GoalExpr:

@@ -284,6 +284,10 @@ standard order:
 variables < numbers < atoms < compounds
 ```
 
+The Python library also has `String` terms. Batch A should treat strings as
+atomic values ordered after atoms and before compounds, while keeping atoms as
+the symbolic constants used by predicate names and Prolog-style functors.
+
 For compounds:
 
 1. compare arity

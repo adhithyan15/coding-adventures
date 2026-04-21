@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.7.0] - 2026-04-21
+
+### Added
+
+- `calltermo(term_goal)` for executing reified Prolog-shaped goal terms
+- standard term-order predicates: `compare_termo`, `termo_lto`,
+  `termo_leqo`, `termo_gto`, and `termo_geqo`
+- predicate metadata predicates: `current_predicateo` and
+  `predicate_propertyo`
+- tests proving clause-body round trips, non-binding term comparisons, and
+  source/builtin predicate metadata
+
 ## [0.6.0] - 2026-04-21
 
 ### Added

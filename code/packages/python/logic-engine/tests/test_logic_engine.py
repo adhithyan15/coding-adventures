@@ -37,9 +37,11 @@ from logic_engine import (
     fresh,
     freshen_clause,
     goal_as_term,
+    goal_from_term,
     logic_list,
     native_goal,
     neq,
+    num,
     program,
     relation,
     retract_all,
@@ -49,6 +51,7 @@ from logic_engine import (
     solve_all,
     solve_from,
     solve_n,
+    string,
     succeed,
     term,
     var,
@@ -59,7 +62,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.6.0"
+        assert __version__ == "0.7.0"
 
 
 class TestRelationsAndClauses:
@@ -359,6 +362,56 @@ class TestClauseTermIntrospection:
 
         with pytest.raises(TypeError):
             goal_as_term(native_goal(passthrough, x))
+
+    def test_goal_from_term_lowers_representable_goal_terms(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            goal_from_term(term("parent", "homer", child)),
+        ) == [atom("bart"), atom("lisa")]
+        assert solve_all(
+            program(),
+            child,
+            goal_from_term(term("=", child, "tea")),
+        ) == [atom("tea")]
+        assert solve_all(
+            program(),
+            child,
+            goal_from_term(
+                term(",", term("=", child, "tea"), term("\\=", child, "cake")),
+            ),
+        ) == [atom("tea")]
+        assert solve_all(
+            program(),
+            child,
+            goal_from_term(
+                term(";", term("=", child, "tea"), term("=", child, "cake")),
+            ),
+        ) == [atom("tea"), atom("cake")]
+
+    def test_goal_from_term_lowers_callable_atoms_to_zero_arity_relations(self) -> None:
+        ready = relation("ready", 0)
+
+        assert list(solve(program(fact(ready())), goal_from_term(atom("ready"))))
+        assert list(solve(program(), goal_from_term(atom("true"))))
+        assert not list(solve(program(), goal_from_term(atom("fail"))))
+
+    def test_goal_from_term_rejects_non_callable_or_malformed_terms(self) -> None:
+        with pytest.raises(TypeError):
+            goal_from_term(num(1))
+        with pytest.raises(TypeError):
+            goal_from_term(string("not-callable"))
+        with pytest.raises(TypeError):
+            goal_from_term(var("Goal"))
+        with pytest.raises(TypeError):
+            goal_from_term(term(",", "true"))
 
     def test_clause_as_term_encodes_facts_and_rules(self) -> None:
         parent = relation("parent", 2)
