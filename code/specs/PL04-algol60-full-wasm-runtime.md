@@ -729,6 +729,14 @@ This slice should still reject expression thunks that read array elements or
 invoke procedure calls unless their helper can perform the correct runtime
 unwind and lifetime handling.
 
+Current Phase 5c lowering may add integer array-element descriptors for by-name
+actuals. Array-element descriptors reuse the tagged descriptor path, carry a
+store-capable flag only when the formal may be assigned, and dispatch reads
+through the eval helper. Writable formals dispatch assignments through a store
+helper that re-evaluates the original designator, including current subscript
+values, before storing. Helper-side bounds failures must be reported back to the
+calling procedure so the normal frame and thunk-region unwinding still runs.
+
 ### Required Diagnostics
 
 The phase is not complete unless unsupported forms fail before WASM lowering

@@ -168,7 +168,7 @@ class TestAlgolIrCompiler:
                 )
         )
 
-        with pytest.raises(CompileError, match="frame bytes plus 24 runtime bytes"):
+        with pytest.raises(CompileError, match="frame bytes plus 28 runtime bytes"):
             compile_algol(typed)
 
     def test_compiles_integer_array_descriptor_and_element_accesses(self) -> None:
@@ -309,18 +309,35 @@ class TestAlgolIrCompiler:
         assert result.procedure_signatures["_fn_algol_eval_thunk"] == 2
         assert any(call.operands[0].name == "_fn_algol_eval_thunk" for call in calls)
 
-    def test_rejects_array_element_by_name_until_relocating_thunks_exist(
+    def test_compiles_array_element_by_name_eval_and_store_thunks(
         self,
     ) -> None:
-        with pytest.raises(CompileError, match="array element"):
-            compile_algol(
-                parse_algol(
-                    "begin integer result; integer array a[1:2]; "
-                    "procedure put(x); integer x; begin x := 7 end; "
-                    "put(a[1]); result := a[1] "
-                    "end"
-                )
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure put(x); integer x; begin x := x + 1 end; "
+                "a[1] := 6; "
+                "put(a[1]); result := a[1] "
+                "end"
             )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_thunk" in labels
+        assert "_fn_algol_store_thunk" in labels
+        assert "_fn_algol_eval_thunk" in calls
+        assert "_fn_algol_store_thunk" in calls
+        assert result.procedure_signatures["_fn_algol_eval_thunk"] == 2
+        assert result.procedure_signatures["_fn_algol_store_thunk"] == 3
 
     def test_rejects_array_read_inside_expression_eval_thunk(self) -> None:
         with pytest.raises(CompileError, match="array eval thunk"):

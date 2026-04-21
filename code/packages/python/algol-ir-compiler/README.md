@@ -28,12 +28,14 @@ so assignments to the formal write back to the caller slot while value
 parameters still remain isolated copies. Read-only integer expression actuals
 lower to tagged, bounded eval thunk descriptors. Formal reads dispatch through a
 generated helper that re-evaluates the expression against the caller frame each
-time. Array-element actuals, expression thunks that read arrays, expression
-thunks that call procedures, and stores through expression thunks still raise
-targeted `CompileError` diagnostics until Phase 5 grows full eval/store helper
-coverage.
+time. Integer array-element actuals lower to tagged descriptors as well; formal
+reads re-compute the element address through the eval helper, and writable
+formals call a generated store helper that re-locates the element before storing
+the new value. Expression thunks that read arrays, expression thunks that call
+procedures, and stores through read-only expression thunks still raise targeted
+`CompileError` diagnostics until Phase 5 grows full expression-helper coverage.
 
-This phase keeps ALGOL frame memory and its 20-byte runtime state bounded to
+This phase keeps ALGOL frame memory and its 28-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
 separate 64 KiB heap segment. Larger semantic frame plans raise `CompileError`
 before the WASM data encoder can materialize the memory image, dynamic

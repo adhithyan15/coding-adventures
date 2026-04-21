@@ -26,6 +26,9 @@ All notable changes to this package will be documented in this file.
 - Lowered read-only integer expression actuals to tagged eval thunk descriptors
   with bounded call-scoped heap allocation and generated eval dispatch that
   re-evaluates against the caller frame on every formal read.
+- Lowered integer array-element by-name actuals to tagged descriptors with
+  generated eval/store helpers that re-compute the element address on every
+  formal read or assignment.
 
 ## [0.1.0] - 2026-04-20
 
