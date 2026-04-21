@@ -4,6 +4,22 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-21: Full Rust workspace builds can include platform-only crates
+
+`cargo build --workspace` is useful for catching missing Rust exports, but this
+workspace currently includes crates that intentionally compile only on specific
+operating systems.
+
+**Symptom:** On macOS, a full workspace build reaches `paint-vm-direct2d` or
+`paint-vm-gdi` and fails with a compile-time message that the crate requires
+Windows.
+
+**Rule:** Treat platform-only compile errors as workspace configuration scope,
+not as regressions in the package under test. Still run the focused package
+`BUILD` scripts and any directly affected dependency builds before pushing.
+
+---
+
 ### 2026-04-20: Downstream package tests should not pin exact dependency patch versions
 
 When a foundational package intentionally bumps its version, dependent packages
@@ -3075,6 +3091,49 @@ new frame.
 
 ---
 
+## Conservative call-by-name scans must track lexical procedure shadowing
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of the first ALGOL 60 call-by-name metadata pass caught that the
+pre-lowering write scan classified transitive calls by bare procedure name. A nested procedure that
+shadowed a known read-only procedure, or shadowed the procedure currently being analyzed, could write
+through a by-name formal while the outer formal stayed marked read-only.
+
+**Rule:** Any conservative by-name write analysis that runs before full procedure resolution must
+track procedure declarations lexically. If a call resolves to a locally declared procedure whose
+descriptor is not available to the scan, treat the matching by-name actual as writable rather than
+falling back to an outer read-only descriptor or to self-recursion handling.
+
+If the pre-pass keeps a bare-name procedure lookup, duplicate procedure names are ambiguous and must
+also be treated as writable. Recursive propagation must flow only through target parameters whose
+mode is by-name; a value parameter assigned locally does not write back to the caller's actual.
+## Python tests need imports for helper types used only in assertions
+
+**Date:** 2026-04-21
+
+**What happened:** A logic-engine test added an `isinstance(..., LogicVar)` assertion for
+standardize-apart behavior but forgot to import `LogicVar`. The implementation and behavior were
+fine, but the package `BUILD` failed during the test body with `NameError` after most tests had
+already passed.
+
+**Rule:** When adding Python tests that assert on concrete helper classes, update the test imports in
+the same patch as the assertion. Do not rely on related packages or nearby tests importing the type;
+pytest modules need every assertion-only type imported explicitly.
+
+---
+
+## Ruff import sorting is strict about similarly named Python builtins
+
+**Date:** 2026-04-21
+
+**What happened:** Adding the new `clauseo` builtin near existing `callo` and `callableo` imports
+looked visually reasonable, but Ruff's import sorter rejected the order in both the package export
+module and tests.
+
+**Rule:** After adding similarly named Python symbols to grouped imports, run Ruff before assuming the
+manual order is acceptable. Prefer letting `ruff check --fix` apply pure import-order fixes instead
+of hand-sorting by eye.
 ## Music fixture tests must derive timing expectations from the score tokens
 
 **Date:** 2026-04-20

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 — 2026-04-20
+
+- Added `"tan": TAN` to `_STANDARD_FUNCTIONS` in `compiler.py`, mapping
+  the MACSYMA name `tan` to `IRSymbol("Tan")`. Depends on
+  `coding-adventures-symbolic-ir >= 0.3.0` which introduces the `TAN`
+  head.
+
 ## 0.1.0 — 2026-04-19
 
 Initial release.

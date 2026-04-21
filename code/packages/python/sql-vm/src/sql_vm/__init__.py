@@ -25,10 +25,14 @@ from .errors import (
     StackUnderflow,
     TableAlreadyExists,
     TableNotFound,
+    TransactionError,
     TypeMismatch,
+    UnsupportedFunction,
     VmError,
+    WrongNumberOfArguments,
 )
 from .result import QueryResult
+from .scalar_functions import call as call_scalar
 from .vm import execute
 
 __all__ = [
@@ -42,7 +46,11 @@ __all__ = [
     "StackUnderflow",
     "TableAlreadyExists",
     "TableNotFound",
+    "TransactionError",
     "TypeMismatch",
+    "UnsupportedFunction",
     "VmError",
+    "WrongNumberOfArguments",
+    "call_scalar",
     "execute",
 ]

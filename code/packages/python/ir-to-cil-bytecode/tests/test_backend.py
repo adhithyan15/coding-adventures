@@ -128,6 +128,48 @@ def test_lower_calls_use_injected_method_tokens() -> None:
     )
 
 
+def test_lower_calls_can_pass_virtual_register_window() -> None:
+    artifact = lower_ir_to_cil_bytecode(
+        _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(5)]),
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(7)]),
+            IrInstruction(IrOp.CALL, [IrLabel("callee")]),
+            IrInstruction(IrOp.RET),
+            IrInstruction(IrOp.LABEL, [IrLabel("callee")]),
+            IrInstruction(IrOp.ADD, [IrRegister(1), IrRegister(2), IrRegister(3)]),
+            IrInstruction(IrOp.RET),
+        ),
+        CILBackendConfig(call_register_count=4),
+        token_provider=FixedTokenProvider(),
+    )
+
+    entry, callee = artifact.methods
+
+    assert entry.parameter_types == ()
+    assert callee.parameter_types == ("int32", "int32", "int32", "int32")
+    assert entry.body == bytes(
+        [
+            0x1B,
+            0x0C,
+            0x1D,
+            0x0D,
+            0x06,
+            0x07,
+            0x08,
+            0x09,
+            0x28,
+            0x02,
+            0x00,
+            0x00,
+            0x06,
+            0x0B,
+            0x07,
+            0x2A,
+        ]
+    )
+    assert callee.body[:8] == bytes([0x02, 0x0A, 0x03, 0x0B, 0x04, 0x0C, 0x05, 0x0D])
+
+
 def test_lower_memory_and_syscall_helpers_use_injected_tokens() -> None:
     program = _program(
         IrInstruction(IrOp.LOAD_ADDR, [IrRegister(0), IrLabel("tape")]),

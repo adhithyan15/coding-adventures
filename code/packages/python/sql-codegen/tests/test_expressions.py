@@ -30,7 +30,7 @@ from sql_codegen import (
 from sql_codegen import (
     BinaryOp,
     BinaryOpCode,
-    Coalesce,
+    CallScalar,
     InList,
     LoadColumn,
     LoadConst,
@@ -47,7 +47,6 @@ from sql_codegen import (
 from sql_codegen import (
     Like as IrLike,
 )
-from sql_codegen.errors import UnsupportedNode
 
 
 def test_literal_compiles_to_load_const() -> None:
@@ -124,19 +123,20 @@ def test_not_like() -> None:
 
 
 def test_coalesce() -> None:
+    # COALESCE now routes through CallScalar — the Coalesce IR instruction is
+    # kept for backwards compatibility but new codegen always emits CallScalar.
     instrs = compile_expr(
         FunctionCall(
             name="coalesce",
             args=(FuncArg(value=Column("t", "a")), FuncArg(value=Literal(0))),
         )
     )
-    assert instrs[-1] == Coalesce(n=2)
+    assert instrs[-1] == CallScalar(func="coalesce", n_args=2)
 
 
-def test_unknown_function_raises() -> None:
-    try:
-        compile_expr(FunctionCall(name="unknown_fn", args=()))
-    except UnsupportedNode as e:
-        assert "unknown_fn" in str(e)
-    else:
-        raise AssertionError("expected UnsupportedNode")
+def test_unknown_function_compiles_to_call_scalar() -> None:
+    # Unknown function names are deferred to the VM — codegen always emits
+    # CallScalar and never raises UnsupportedNode for function calls.
+    # The VM raises UnsupportedFunction at runtime if the function is missing.
+    instrs = compile_expr(FunctionCall(name="unknown_fn", args=()))
+    assert instrs[-1] == CallScalar(func="unknown_fn", n_args=0)

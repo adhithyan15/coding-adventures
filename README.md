@@ -18,54 +18,20 @@ This repo is part computing-stack curriculum, part polyglot package lab, part to
 
 ## Current Shape
 
-As of this refresh, the repo contains:
+The repo changes quickly, so this README describes the shape of the project
+rather than trying to keep a live inventory in sync.
 
-- 2289 package directories across 17 package language roots
-- 135 program directories across 14 program language roots
-- 310 Markdown specs in `code/specs/`
-- 12 learning files in `code/learning/`
-- 185 shared grammar source files in `code/grammars/`
-
-### Package Languages
-
-| Language | Package dirs |
-| --- | ---: |
-| csharp | 13 |
-| dart | 16 |
-| elixir | 221 |
-| fsharp | 13 |
-| go | 227 |
-| haskell | 79 |
-| java | 43 |
-| kotlin | 43 |
-| lua | 189 |
-| perl | 193 |
-| python | 266 |
-| ruby | 247 |
-| rust | 284 |
-| starlark | 3 |
-| swift | 123 |
-| typescript | 260 |
-| wasm | 69 |
-
-### Program Languages
-
-| Language | Program dirs |
-| --- | ---: |
-| dart | 1 |
-| dotnet | 2 |
-| elixir | 13 |
-| go | 14 |
-| haskell | 2 |
-| kotlin | 5 |
-| lua | 6 |
-| perl | 4 |
-| python | 15 |
-| ruby | 13 |
-| rust | 14 |
-| static | 1 |
-| swift | 9 |
-| typescript | 36 |
+- `code/packages/` contains publishable libraries across ecosystems such as
+  C#, Dart, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby,
+  Rust, Swift, TypeScript, and WebAssembly.
+- `code/programs/` contains standalone tools, demos, visualizers, apps, and
+  experiments across the same general language families.
+- `code/specs/` contains the package and system design documents.
+- `code/learning/` contains teaching material that explains the concepts behind
+  the packages.
+- `code/grammars/` contains shared grammar and token sources.
+- Starlark is used as a build-time rule/configuration language, not as a
+  package implementation ecosystem.
 
 ## Main Themes
 

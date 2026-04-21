@@ -27,15 +27,19 @@ from __future__ import annotations
 
 from sql_planner import (
     Aggregate,
+    Begin,
     Between,
     BinaryExpr,
+    Commit,
     Distinct,
     EmptyResult,
+    Except,
     Expr,
     Filter,
     FunctionCall,
     Having,
     In,
+    Intersect,
     IsNotNull,
     IsNull,
     Join,
@@ -44,6 +48,7 @@ from sql_planner import (
     NotIn,
     NotLike,
     Project,
+    Rollback,
     Scan,
     Sort,
     UnaryExpr,
@@ -146,6 +151,15 @@ def _prune(p: LogicalPlan, required: Req | None) -> LogicalPlan:
 
         case Union(left=l, right=r, all=a):
             return Union(left=_prune(l, required), right=_prune(r, required), all=a)
+
+        case Intersect(left=l, right=r, all=a):
+            return Intersect(left=_prune(l, required), right=_prune(r, required), all=a)
+
+        case Except(left=l, right=r, all=a):
+            return Except(left=_prune(l, required), right=_prune(r, required), all=a)
+
+        case Begin() | Commit() | Rollback():
+            return p
 
         case _:
             # DML / DDL — no pruning, recurse only where there is an input

@@ -147,6 +147,8 @@ The public API stays exact even when the implementation shares logic.
 | `cli-assembly-writer` | Wrap CIL method artifacts in PE/CLI metadata and sections | managed PE bytes |
 | `cli-runtime-model` | Tokens, stack types, frames, heap refs, value types | `CliRuntimeState` |
 | `clr-vm-simulator` | Execute decoded IL method bodies | `ExecutionResult[ClrState]` |
+| `brainfuck-clr-compiler` | Brainfuck frontend facade over the CLR pipeline | PE/CLI bytes + VM result |
+| `nib-clr-compiler` | Nib frontend facade over the CLR pipeline | PE/CLI bytes + VM result |
 | `clr-simulator` | Backward-compatible facade package | thin composition layer |
 
 ### Naming note
@@ -268,6 +270,8 @@ implementations. It should stay fully composable:
 - validate that branches remain inside their callable region
 - assign static data offsets while enforcing data-size limits
 - map virtual registers to CIL locals
+- optionally pass a virtual-register window into internal calls for frontends
+  such as Nib whose IR calling convention uses `v2+` argument registers
 - emit method bodies through `cil-bytecode-builder`
 - request helper calls for memory and syscall behavior through named helper specs
 - resolve method/helper call operands through an injectable metadata-token provider
@@ -340,6 +344,44 @@ Suggested state split:
 - `ClrThreadState`
 - `CliTokenResolver`
 - `ClrHeapRef`
+
+### `clr-vm-simulator`
+
+This package executes decoded and disassembled IL against `cli-runtime-model`.
+It is the first real VM package in the CLR pipeline and should stay focused on
+execution, not PE parsing or assembly writing:
+
+- build runtime frames from decoded `MethodDef` signatures and local-slot
+  counts
+- execute the compiler-backend opcode slice: int32 constants, arguments,
+  locals, arithmetic, bitwise operations, comparisons, branches, `call`,
+  `callvirt`, and `ret`
+- invoke internal `MethodDef` targets and external `MemberRef` host bindings
+- route `System.Console.WriteLine` and compiler helper calls through an
+  injectable host bridge
+- support the shared compiler-helper syscall slice used by the current
+  frontends: write byte, read byte, and exit
+- preserve per-instruction traces with runtime-model frame snapshots
+- prove the end-to-end compiler path by running at least one frontend program
+  through IR, CIL, PE/CLI writing, decoding, disassembly, and VM execution
+
+### Frontend CLR facades
+
+`brainfuck-clr-compiler` and `nib-clr-compiler` are thin orchestration
+packages. They should not duplicate parser, type-checker, IR compiler,
+optimizer, CIL, assembly writer, or simulator logic. Their job is to make the
+frontend-to-CLR path explicit and testable:
+
+- `compile_source` returns all intermediate artifacts plus managed PE bytes
+- `pack_source` aliases compilation for parity with existing JVM/WASM facades
+- `write_assembly_file` persists the generated `.dll`
+- `run_source` executes the generated assembly through `clr-vm-simulator`
+
+Coverage proof:
+
+- Brainfuck: compile and execute output (`.`) and input/output (`,.`) programs
+- Nib: compile and execute direct `main` returns and function calls with
+  arguments, exercising the CIL register-window call mode
 
 ## CLR MVP execution slice
 

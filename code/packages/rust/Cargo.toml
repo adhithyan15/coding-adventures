@@ -60,6 +60,9 @@ members = [
     "fsharp-parser",
     "garbage-collector",
     "ge225-simulator",
+    "argon2d",
+    "argon2i",
+    "argon2id",
     "hkdf",
     "hmac",
     "pbkdf2",
@@ -338,4 +341,6 @@ members = [
     "state-machine-markup-serializer",
     "state-machine-markup-deserializer",
     "state-machine-markup-json-serializer",
+    "embeddable-tcp-server",
+    "generic-job-protocol",
 ]

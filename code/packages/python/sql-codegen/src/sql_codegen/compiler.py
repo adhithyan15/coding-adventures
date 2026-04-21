@@ -38,26 +38,32 @@ from dataclasses import dataclass, field
 
 from sql_planner import (
     Aggregate,
+    Begin,
     BinaryExpr,
     Column,
+    Commit,
     Delete,
     Distinct,
     EmptyResult,
+    Except,
     Expr,
     Filter,
     FunctionCall,
     Having,
     In,
     Insert,
+    Intersect,
     Join,
     JoinKind,
     Literal,
     LogicalPlan,
     NotIn,
     Project,
+    Rollback,
     Scan,
     Sort,
     UnaryExpr,
+    Union,
     Update,
     Wildcard,
 )
@@ -98,10 +104,14 @@ from .ir import (
     AdvanceCursor,
     AdvanceGroupKey,
     BeginRow,
+    BeginTransaction,
     Between,
     BinaryOp,
     BinaryOpCode,
+    CallScalar,
+    CaptureLeftResult,
     CloseScan,
+    CommitTransaction,
     CreateTable,
     DeleteRows,
     Direction,
@@ -109,12 +119,15 @@ from .ir import (
     DropTable,
     EmitColumn,
     EmitRow,
+    ExceptResult,
     FinalizeAgg,
     Halt,
     InitAgg,
     InList,
+    InsertFromResult,
     InsertRow,
     Instruction,
+    IntersectResult,
     IsNotNull,
     IsNull,
     Jump,
@@ -128,6 +141,7 @@ from .ir import (
     NullsOrder,
     OpenScan,
     Program,
+    RollbackTransaction,
     SaveGroupKey,
     ScanAllColumns,
     SetResultSchema,
@@ -251,6 +265,16 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case Delete():
             return _compile_delete(p, ctx), ()
 
+        # Transaction-control statements — leaf nodes, no result schema.
+        case Begin():
+            return [BeginTransaction()], ()
+
+        case Commit():
+            return [CommitTransaction()], ()
+
+        case Rollback():
+            return [RollbackTransaction()], ()
+
         case _:
             # Read-only query path: emit SetResultSchema, then build the
             # scan/join/filter/aggregate/project stack. The outermost
@@ -287,6 +311,9 @@ def _schema_of(p: LogicalPlan) -> tuple[str, ...]:
             return tuple(names)
         case Having(input=inner):
             return _schema_of(inner)
+        # Set operations: output schema follows the left side's columns.
+        case Union(left=left_plan) | Intersect(left=left_plan) | Except(left=left_plan):
+            return _schema_of(left_plan)
         case _:
             return ()
 
@@ -355,6 +382,39 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
             return _compile_aggregate(p, ctx)
         case Having(input=Aggregate() as agg, predicate=pred):
             return _compile_aggregate(agg, ctx, having=pred)
+
+        # Set operations — compile left side, then right side, then post-process.
+        #
+        # UNION [ALL]:  left rows + right rows → optional DistinctResult
+        # INTERSECT:    left rows → CaptureLeftResult → right rows → IntersectResult
+        # EXCEPT:       left rows → CaptureLeftResult → right rows → ExceptResult
+        #
+        # Both sides are compiled via _compile_read so that each side's own
+        # Distinct/Sort/Limit wrappers are handled correctly before the set
+        # operation takes place. The ctx (cursor + label counters) is shared
+        # so IDs stay globally unique across both sides.
+
+        case Union(left=left_plan, right=right_plan, all=all_flag):
+            out = _compile_read(left_plan, ctx)
+            out.extend(_compile_read(right_plan, ctx))
+            if not all_flag:
+                out.append(DistinctResult())
+            return out
+
+        case Intersect(left=left_plan, right=right_plan, all=all_flag):
+            out = _compile_read(left_plan, ctx)
+            out.append(CaptureLeftResult())
+            out.extend(_compile_read(right_plan, ctx))
+            out.append(IntersectResult(all=all_flag))
+            return out
+
+        case Except(left=left_plan, right=right_plan, all=all_flag):
+            out = _compile_read(left_plan, ctx)
+            out.append(CaptureLeftResult())
+            out.extend(_compile_read(right_plan, ctx))
+            out.append(ExceptResult(all=all_flag))
+            return out
+
         case _:
             # Project(Filter(Join/Scan)) — the ordinary SELECT shape.
             return _compile_select(p, ctx)
@@ -675,15 +735,19 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
         case AstNotLike(operand=op_, pattern=pat):
             return _compile_expr(op_, ctx) + [LoadConst(value=pat), Like(negated=True)]
         case FunctionCall(name=name, args=args):
-            if name.lower() == "coalesce":
-                out = []
-                for a in args:
-                    if a.value is not None:
-                        out.extend(_compile_expr(a.value, ctx))
-                from .ir import Coalesce as CoalesceIr
-                out.append(CoalesceIr(n=len(args)))
-                return out
-            raise UnsupportedNode(f"FunctionCall({name})")
+            # Compile all positional arguments onto the stack left-to-right,
+            # then emit CallScalar(func, n_args). The VM's built-in function
+            # registry does the rest. Unknown names raise UnsupportedFunction
+            # at runtime rather than compile time so user-defined functions
+            # (a future feature) can be registered without recompiling.
+            out = []
+            n = 0
+            for a in args:
+                if a.value is not None:
+                    out.extend(_compile_expr(a.value, ctx))
+                    n += 1
+            out.append(CallScalar(func=name.lower(), n_args=n))
+            return out
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
@@ -710,9 +774,14 @@ def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
                 out.extend(_compile_expr(v, ctx))
             out.append(InsertRow(table=ins.table, columns=tuple(cols)))
         return out
-    # INSERT ... SELECT: compile the source and redirect each EmitRow to
-    # InsertRow. In v1 we raise — the VM path is not yet implemented.
-    raise UnsupportedNode("INSERT ... SELECT")
+    # INSERT … SELECT: compile the sub-SELECT into the result buffer, then
+    # drain it with InsertFromResult. _compile_plan is safe to call
+    # recursively here — it shares the same _Ctx (cursor/label counters stay
+    # globally unique) and it does NOT emit a Halt.
+    assert src.query is not None
+    select_instrs, _ = _compile_plan(src.query, ctx)
+    select_instrs.append(InsertFromResult(table=ins.table, columns=tuple(cols)))
+    return select_instrs
 
 
 def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
