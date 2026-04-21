@@ -19,6 +19,13 @@ use strict;
 use warnings;
 no warnings 'portable';
 
+use Config;
+BEGIN {
+    die "CodingAdventures::Argon2id requires 64-bit Perl (ivsize >= 8); "
+      . "this build has ivsize=$Config{ivsize}\n"
+        if $Config{ivsize} < 8;
+}
+
 use CodingAdventures::Blake2b ();
 
 our $VERSION = '0.01';
@@ -230,7 +237,18 @@ sub argon2id {
     my $ad      = $opts{associated_data} // '';
     my $version = $opts{version}         // ARGON2_VERSION;
 
-    for ($password, $salt, $key, $ad) { utf8::downgrade($_, 1) or 1; }
+    # Refuse wide-character input rather than silently UTF-8-encoding it
+    # into a tag that no reference Argon2 implementation can reproduce.
+    for my $name_and_val (
+        [ password        => \$password ],
+        [ salt            => \$salt     ],
+        [ key             => \$key      ],
+        [ associated_data => \$ad       ],
+    ) {
+        my ($name, $ref) = @$name_and_val;
+        utf8::downgrade($$ref, 1)
+            or die "$name must be a byte string; refusing wide characters\n";
+    }
 
     _validate($password, $salt, $time_cost, $memory_cost, $parallelism,
               $tag_length, $key, $ad, $version);

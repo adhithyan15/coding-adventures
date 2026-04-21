@@ -27,6 +27,13 @@ use strict;
 use warnings;
 no warnings 'portable';   # Allow 64-bit hex literals (> 0xFFFFFFFF).
 
+use Config;
+BEGIN {
+    die "CodingAdventures::Argon2d requires 64-bit Perl (ivsize >= 8); "
+      . "this build has ivsize=$Config{ivsize}\n"
+        if $Config{ivsize} < 8;
+}
+
 use CodingAdventures::Blake2b ();
 
 our $VERSION = '0.01';
@@ -292,8 +299,20 @@ sub argon2d {
     my $ad      = $opts{associated_data} // '';
     my $version = $opts{version}         // ARGON2_VERSION;
 
-    # Treat every input as a raw byte string.
-    for ($password, $salt, $key, $ad) { utf8::downgrade($_, 1) or 1; }
+    # Treat every input as a raw byte string.  A caller that hands us a
+    # scalar with wide (> 0xFF) codepoints is almost always a bug -- the
+    # alternative is to silently byte-encode it as UTF-8 and produce a
+    # tag that no reference Argon2 implementation can reproduce.  Refuse.
+    for my $name_and_val (
+        [ password        => \$password ],
+        [ salt            => \$salt     ],
+        [ key             => \$key      ],
+        [ associated_data => \$ad       ],
+    ) {
+        my ($name, $ref) = @$name_and_val;
+        utf8::downgrade($$ref, 1)
+            or die "$name must be a byte string; refusing wide characters\n";
+    }
 
     _validate($password, $salt, $time_cost, $memory_cost, $parallelism,
               $tag_length, $key, $ad, $version);
