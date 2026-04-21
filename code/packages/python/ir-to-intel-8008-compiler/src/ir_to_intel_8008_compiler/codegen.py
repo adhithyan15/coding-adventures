@@ -90,7 +90,7 @@ The code generator:
   1. For LOAD_ADDR  → emits  MVI H, hi(symbol); MVI L, lo(symbol)
      (H and L are updated; the "destination register" operand is ignored
       because H:L is the implicit address register on the 8008.)
-  2. For LOAD_BYTE  → emits  MOV A, M; MOV Rdst, A
+  2. For LOAD_BYTE  → emits  MVI A, 0; ADD M; MOV Rdst, A   (safe group-10 path; MOV A, M = 0x7E = CAL!)
   3. For STORE_BYTE → emits  MOV A, Rsrc; MOV M, A
 
 hi(addr) = (addr >> 8) & 0x3F   (high 6 bits of 14-bit address)
@@ -192,6 +192,55 @@ def _preg(vreg_index: int) -> str:
         Falls back to ``"B"`` for unmapped indices (should not happen on valid IR).
     """
     return _VREG_TO_PREG.get(vreg_index, "B")
+
+
+def _load_a(reg: str) -> list[str]:
+    """Emit the shortest safe sequence that loads physical register ``reg`` into A.
+
+    Why not ``MOV A, {reg}`` for all registers?
+    --------------------------------------------
+    The Intel 8008 opcode space has three ``MOV A, *`` slots that are NOT
+    register copies — they are occupied by other instructions:
+
+        MOV A, C = 0x79 = 01_111_001
+            → ``IN 7`` (read input port 7).  SSS=001 in group-01 is always IN.
+
+        MOV A, H = 0x7C = 01_111_100
+            → ``JMP`` (unconditional jump, 3-byte!).  Fetches the next 2 bytes
+              as an address and jumps there — catastrophic.
+
+        MOV A, M = 0x7E = 01_111_110
+            → ``CAL`` (subroutine call, 3-byte!).  Pushes the PC and jumps to
+              the address in the next 2 bytes — equally catastrophic.
+
+    Safe workaround for all three — use the group-10 ALU path:
+
+        MVI  A, 0      ; A ← 0   (does not modify flags)
+        ADD  {reg}     ; A ← 0 + {reg} = {reg}   (CY = 0 since result ≤ 255)
+
+    In group-10, SSS field 001=C, 100=H, 110=M are correctly decoded as
+    register/memory reads without any hardware conflicts.
+
+    All other registers (B=0, D=2, E=3, L=5, A=7) are safe via ``MOV A, {reg}``.
+
+    Args:
+        reg: Physical 8008 register name (``"B"``, ``"C"``, ``"D"``, ``"E"``,
+             ``"H"``, ``"L"``, ``"M"``, or ``"A"``).
+
+    Returns:
+        A list of assembly strings (possibly empty for A, or 1–2 items otherwise).
+    """
+    if reg == "A":
+        return []  # already in accumulator, no instruction needed
+    if reg in ("C", "H", "M"):
+        # Dangerous: MOV A, C → IN 7 / MOV A, H → JMP / MOV A, M → CAL
+        # All three conflict with other instructions in group-01.
+        # Fix: use group-10 ALU where SSS is always interpreted as a register.
+        return [
+            f"{_INDENT}MVI  A, 0",    # clear A without touching flags
+            f"{_INDENT}ADD  {reg}",   # A = 0 + {reg} = {reg}  (CY = 0)
+        ]
+    return [f"{_INDENT}MOV  A, {reg}"]
 
 
 # ---------------------------------------------------------------------------
@@ -386,7 +435,7 @@ class CodeGenerator:
         ]
 
     # ------------------------------------------------------------------
-    # LOAD_BYTE Rdst, Rbase, Rzero  →  MOV A, M  /  MOV Rdst, A
+    # LOAD_BYTE Rdst, Rbase, Rzero  →  MVI A, 0 / ADD M / MOV Rdst, A
     # ------------------------------------------------------------------
     #
     # The 8008 reads RAM through the M pseudo-register.  H:L must be
@@ -397,18 +446,39 @@ class CodeGenerator:
     #   - The offset v0 is always 0 (no address arithmetic needed)
     #   - H:L is the only address register on the 8008
     #
-    # Steps:
-    #   1. MOV A, M   — read the byte at H:L into the accumulator
-    #   2. MOV Rdst, A — copy accumulator to the destination register
+    # ⚠️  IMPORTANT: We CANNOT emit ``MOV A, M`` here!
+    # M has code 110.  In Group 01 (MOV), SSS=110 is decoded as the CAL
+    # (subroutine Call) instruction — a 3-byte instruction that pushes the
+    # PC and jumps to the address in the next 2 bytes:
     #
-    # Example: LOAD_BYTE v1, v1, v0  →  MOV A, M; MOV C, A
+    #     MOV A, M = 0x7E = 01_111_110
+    #     group=01, ddd=A(7), sss=110 → CAL unconditional!
+    #
+    # This is catastrophic — instead of reading memory, the CPU calls an
+    # arbitrary subroutine address built from the next 2 bytes (whatever
+    # follows in the instruction stream).
+    #
+    # Fix: use the group-10 ALU path via _load_a("M"):
+    #   MVI  A, 0   ; prime accumulator (A = 0)
+    #   ADD  M      ; A = 0 + M = M  (group-10, sss=M=110 is safe here)
+    #   MOV  Rdst, A ; copy accumulator to destination
+    #
+    # In Group 10 (ALU), SSS=110 correctly reads the memory byte at H:L
+    # (the M pseudo-register) without triggering CAL.
+    #
+    # Example: LOAD_BYTE v1, v1, v0  →  MVI A, 0; ADD M; MOV C, A
 
     def _emit_load_byte(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit LOAD_BYTE: MOV A, M; MOV Rdst, A."""
+        """Emit LOAD_BYTE: load M into A safely via group-10 ALU; MOV Rdst, A.
+
+        Uses ``_load_a("M")`` (= ``MVI A, 0; ADD M``) instead of the naive
+        ``MOV A, M`` which encodes as 0x7E = CAL (unconditional subroutine call)
+        in group-01 — a catastrophic hardware conflict.  See class docstring.
+        """
         if not ops or not isinstance(ops[0], IrRegister):
             return [f"{_INDENT}; LOAD_BYTE: missing destination register"]
         rdst = _preg(ops[0].index)
-        lines = [f"{_INDENT}MOV  A, M"]
+        lines = [*_load_a("M")]   # MVI A, 0; ADD M  (safe group-10 path)
         if rdst != "A":
             lines.append(f"{_INDENT}MOV  {rdst}, A")
         return lines
@@ -427,14 +497,11 @@ class CodeGenerator:
     # Example: STORE_BYTE v1, v1, v0  →  MOV A, C; MOV M, A
 
     def _emit_store_byte(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit STORE_BYTE: MOV A, Rsrc; MOV M, A."""
+        """Emit STORE_BYTE: load Rsrc into A safely; MOV M, A."""
         if not ops or not isinstance(ops[0], IrRegister):
             return [f"{_INDENT}; STORE_BYTE: missing source register"]
         rsrc = _preg(ops[0].index)
-        return [
-            f"{_INDENT}MOV  A, {rsrc}",
-            f"{_INDENT}MOV  M, A",
-        ]
+        return [*_load_a(rsrc), f"{_INDENT}MOV  M, A"]
 
     # ------------------------------------------------------------------
     # ADD Rdst, Ra, Rb  →  MOV A, Ra  /  ADD Rb  /  MOV Rdst, A
@@ -448,7 +515,7 @@ class CodeGenerator:
     # of our virtual registers map to A, we always emit the MOV.
 
     def _emit_add(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit ADD: MOV A, Ra; ADD Rb; MOV Rdst, A."""
+        """Emit ADD: load Ra into A safely; ADD Rb; MOV Rdst, A."""
         if len(ops) < 3:
             return [f"{_INDENT}; ADD: missing operands"]
         dst, ra, rb = ops[0], ops[1], ops[2]
@@ -457,11 +524,7 @@ class CodeGenerator:
         rdst = _preg(dst.index)
         rra = _preg(ra.index)
         rrb = _preg(rb.index)
-        return [
-            f"{_INDENT}MOV  A, {rra}",
-            f"{_INDENT}ADD  {rrb}",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rra), f"{_INDENT}ADD  {rrb}", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # ADD_IMM Rdst, Ra, imm  →  MOV A, Ra  /  ADI imm  /  MOV Rdst, A
@@ -479,7 +542,7 @@ class CodeGenerator:
     # Example: ADD_IMM v1, v2, 5  →  MOV A, D; ADI 5; MOV C, A
 
     def _emit_add_imm(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit ADD_IMM: MOV A, Ra; [ADI imm;] MOV Rdst, A."""
+        """Emit ADD_IMM: load Ra into A safely; [ADI imm;] MOV Rdst, A."""
         if len(ops) < 3:
             return [f"{_INDENT}; ADD_IMM: missing operands"]
         dst, src, imm = ops[0], ops[1], ops[2]
@@ -493,17 +556,11 @@ class CodeGenerator:
 
         if imm.value == 0:
             # Pure register copy — no arithmetic, no immediate.
-            # MOV A, Rsrc loads Rsrc into A; MOV Rdst, A stores it.
-            return [
-                f"{_INDENT}MOV  A, {rsrc}",
-                f"{_INDENT}MOV  {rdst}, A",
-            ]
+            # Load Rsrc safely into A (using _load_a to avoid MOV A, C = IN 7),
+            # then store A into Rdst.
+            return [*_load_a(rsrc), f"{_INDENT}MOV  {rdst}, A"]
 
-        return [
-            f"{_INDENT}MOV  A, {rsrc}",
-            f"{_INDENT}ADI  {imm.value}",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rsrc), f"{_INDENT}ADI  {imm.value}", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # SUB Rdst, Ra, Rb  →  MOV A, Ra  /  SUB Rb  /  MOV Rdst, A
@@ -513,7 +570,7 @@ class CodeGenerator:
     # The borrow semantics are used by CMP_LT and CMP_GT.
 
     def _emit_sub(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit SUB: MOV A, Ra; SUB Rb; MOV Rdst, A."""
+        """Emit SUB: load Ra into A safely; SUB Rb; MOV Rdst, A."""
         if len(ops) < 3:
             return [f"{_INDENT}; SUB: missing operands"]
         dst, ra, rb = ops[0], ops[1], ops[2]
@@ -522,11 +579,7 @@ class CodeGenerator:
         rdst = _preg(dst.index)
         rra = _preg(ra.index)
         rrb = _preg(rb.index)
-        return [
-            f"{_INDENT}MOV  A, {rra}",
-            f"{_INDENT}SUB  {rrb}",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rra), f"{_INDENT}SUB  {rrb}", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # AND Rdst, Ra, Rb  →  MOV A, Ra  /  ANA Rb  /  MOV Rdst, A
@@ -536,7 +589,7 @@ class CodeGenerator:
     # Used for Oct's `&` bitwise AND operator.
 
     def _emit_and(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit AND: MOV A, Ra; ANA Rb; MOV Rdst, A."""
+        """Emit AND: load Ra into A safely; ANA Rb; MOV Rdst, A."""
         if len(ops) < 3:
             return [f"{_INDENT}; AND: missing operands"]
         dst, ra, rb = ops[0], ops[1], ops[2]
@@ -545,11 +598,7 @@ class CodeGenerator:
         rdst = _preg(dst.index)
         rra = _preg(ra.index)
         rrb = _preg(rb.index)
-        return [
-            f"{_INDENT}MOV  A, {rra}",
-            f"{_INDENT}ANA  {rrb}",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rra), f"{_INDENT}ANA  {rrb}", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # OR Rdst, Ra, Rb  →  MOV A, Ra  /  ORA Rb  /  MOV Rdst, A
@@ -559,7 +608,7 @@ class CodeGenerator:
     # Used for Oct's `|` bitwise OR operator.
 
     def _emit_or(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit OR: MOV A, Ra; ORA Rb; MOV Rdst, A."""
+        """Emit OR: load Ra into A safely; ORA Rb; MOV Rdst, A."""
         if len(ops) < 3:
             return [f"{_INDENT}; OR: missing operands"]
         dst, ra, rb = ops[0], ops[1], ops[2]
@@ -568,11 +617,7 @@ class CodeGenerator:
         rdst = _preg(dst.index)
         rra = _preg(ra.index)
         rrb = _preg(rb.index)
-        return [
-            f"{_INDENT}MOV  A, {rra}",
-            f"{_INDENT}ORA  {rrb}",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rra), f"{_INDENT}ORA  {rrb}", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # XOR Rdst, Ra, Rb  →  MOV A, Ra  /  XRA Rb  /  MOV Rdst, A
@@ -586,7 +631,7 @@ class CodeGenerator:
     # sequence — no emulation needed.
 
     def _emit_xor(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit XOR: MOV A, Ra; XRA Rb; MOV Rdst, A."""
+        """Emit XOR: load Ra into A safely; XRA Rb; MOV Rdst, A."""
         if len(ops) < 3:
             return [f"{_INDENT}; XOR: missing operands"]
         dst, ra, rb = ops[0], ops[1], ops[2]
@@ -595,11 +640,7 @@ class CodeGenerator:
         rdst = _preg(dst.index)
         rra = _preg(ra.index)
         rrb = _preg(rb.index)
-        return [
-            f"{_INDENT}MOV  A, {rra}",
-            f"{_INDENT}XRA  {rrb}",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rra), f"{_INDENT}XRA  {rrb}", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # NOT Rdst, Ra  →  MOV A, Ra  /  XRI 0xFF  /  MOV Rdst, A
@@ -613,7 +654,7 @@ class CodeGenerator:
     # This maps directly to Oct's `~` bitwise NOT operator.
 
     def _emit_not(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit NOT: MOV A, Ra; XRI 0xFF; MOV Rdst, A."""
+        """Emit NOT: load Ra into A safely; XRI 0xFF; MOV Rdst, A."""
         if len(ops) < 2:
             return [f"{_INDENT}; NOT: missing operands"]
         dst, ra = ops[0], ops[1]
@@ -621,11 +662,7 @@ class CodeGenerator:
             return [f"{_INDENT}; NOT: unexpected operand types"]
         rdst = _preg(dst.index)
         rra = _preg(ra.index)
-        return [
-            f"{_INDENT}MOV  A, {rra}",
-            f"{_INDENT}XRI  0xFF",
-            f"{_INDENT}MOV  {rdst}, A",
-        ]
+        return [*_load_a(rra), f"{_INDENT}XRI  0xFF", f"{_INDENT}MOV  {rdst}, A"]
 
     # ------------------------------------------------------------------
     # CMP_EQ Rdst, Ra, Rb
@@ -661,7 +698,7 @@ class CodeGenerator:
         rrb = _preg(rb.index)
         done = self._next_label()
         return [
-            f"{_INDENT}MOV  A, {rra}",
+            *_load_a(rra),
             f"{_INDENT}CMP  {rrb}",
             f"{_INDENT}MVI  {rdst}, 1",
             f"{_INDENT}JTZ  {done}",
@@ -696,7 +733,7 @@ class CodeGenerator:
         rrb = _preg(rb.index)
         done = self._next_label()
         return [
-            f"{_INDENT}MOV  A, {rra}",
+            *_load_a(rra),
             f"{_INDENT}CMP  {rrb}",
             f"{_INDENT}MVI  {rdst}, 0",
             f"{_INDENT}JTZ  {done}",
@@ -732,7 +769,7 @@ class CodeGenerator:
         rrb = _preg(rb.index)
         done = self._next_label()
         return [
-            f"{_INDENT}MOV  A, {rra}",
+            *_load_a(rra),
             f"{_INDENT}CMP  {rrb}",
             f"{_INDENT}MVI  {rdst}, 1",
             f"{_INDENT}JTC  {done}",
@@ -768,7 +805,7 @@ class CodeGenerator:
         rrb = _preg(rb.index)
         done = self._next_label()
         return [
-            f"{_INDENT}MOV  A, {rrb}",   # note: Rb goes into A (swap!)
+            *_load_a(rrb),               # note: Rb goes into A (swap!)
             f"{_INDENT}CMP  {rra}",       # CY=1 iff Rb < Ra i.e. Ra > Rb
             f"{_INDENT}MVI  {rdst}, 1",
             f"{_INDENT}JTC  {done}",
@@ -788,18 +825,14 @@ class CodeGenerator:
     # Used for: if(!cond), while(!cond), the false branch of if/else.
 
     def _emit_branch_z(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit BRANCH_Z: MOV A, Rcond; CPI 0; JTZ lbl."""
+        """Emit BRANCH_Z: load Rcond into A safely; CPI 0; JTZ lbl."""
         if len(ops) < 2:
             return [f"{_INDENT}; BRANCH_Z: missing operands"]
         reg, lbl = ops[0], ops[1]
         if not isinstance(reg, IrRegister) or not isinstance(lbl, IrLabel):
             return [f"{_INDENT}; BRANCH_Z: unexpected operand types"]
         rn = _preg(reg.index)
-        return [
-            f"{_INDENT}MOV  A, {rn}",
-            f"{_INDENT}CPI  0",
-            f"{_INDENT}JTZ  {lbl.name}",
-        ]
+        return [*_load_a(rn), f"{_INDENT}CPI  0", f"{_INDENT}JTZ  {lbl.name}"]
 
     # ------------------------------------------------------------------
     # BRANCH_NZ Rcond, lbl  →  MOV A, Rcond  /  CPI 0  /  JFZ lbl
@@ -812,18 +845,14 @@ class CodeGenerator:
     # Used for: loop-back jumps in while, logical OR short-circuit.
 
     def _emit_branch_nz(self, ops: list) -> list[str]:  # noqa: ANN001
-        """Emit BRANCH_NZ: MOV A, Rcond; CPI 0; JFZ lbl."""
+        """Emit BRANCH_NZ: load Rcond into A safely; CPI 0; JFZ lbl."""
         if len(ops) < 2:
             return [f"{_INDENT}; BRANCH_NZ: missing operands"]
         reg, lbl = ops[0], ops[1]
         if not isinstance(reg, IrRegister) or not isinstance(lbl, IrLabel):
             return [f"{_INDENT}; BRANCH_NZ: unexpected operand types"]
         rn = _preg(reg.index)
-        return [
-            f"{_INDENT}MOV  A, {rn}",
-            f"{_INDENT}CPI  0",
-            f"{_INDENT}JFZ  {lbl.name}",
-        ]
+        return [*_load_a(rn), f"{_INDENT}CPI  0", f"{_INDENT}JFZ  {lbl.name}"]
 
     # ------------------------------------------------------------------
     # JUMP lbl  →  JMP lbl
@@ -854,24 +883,47 @@ class CodeGenerator:
         return [f"{_INDENT}; CALL: missing label operand"]
 
     # ------------------------------------------------------------------
-    # RET  →  MOV A, C  /  RFC
+    # RET  →  MVI A, 0  /  ADD C  /  RFC
     # ------------------------------------------------------------------
     #
     # The Oct calling convention places the return value in v1=C.
     # Before returning, we copy C to A (the 8008 return-value register).
-    # RFC (Return if Carry False) is the standard unconditional return —
-    # by convention the code generator never leaves CY=1 at a RET site.
+    # RFC (Return if Carry False) is the standard unconditional return.
     #
-    # The assembler accepts both ``RET`` and ``RFC`` as synonyms; we emit
-    # ``RFC`` to be explicit about the opcode.
+    # ⚠️  IMPORTANT: We CANNOT emit ``MOV A, C`` here!
+    # The C register has code 001.  In Group 01 (MOV), the SSS=001 field
+    # is ALWAYS decoded as the IN instruction (read input port), not as
+    # a register source:
     #
-    # For void functions, A will hold garbage — callers must ignore it.
-    # This is safe because callers only read A for non-void return types.
+    #     MOV A, C = 0x79 = 01_111_001
+    #     group=01, ddd=A(7), sss=001 → simulator decodes as IN 7!
+    #
+    # So ``MOV A, C`` reads input port 7 into A, not register C.
+    # This silently corrupts the return value and is very hard to debug.
+    #
+    # Fix: use the ALU path to copy C → A without touching MOV:
+    #   MVI A, 0   ; prime accumulator (A = 0)
+    #   ADD C      ; A = 0 + C = C  (Group 10, sss=C=001 is safe here)
+    #   RFC        ; return (CY=0 because 0+C never overflows for C≤255)
+    #
+    # In Group 10, SSS=001 means "register C" (not IN) because the group=10
+    # ALU handler always reads a register, never triggers IN.  So ADD C
+    # correctly reads the C register and produces A = C with CY=0.
+    #
+    # For void functions, A will hold garbage (C = scratch); callers must
+    # ignore it.  This is safe because callers only read A for non-void
+    # return types.
 
     def _emit_ret(self) -> list[str]:
-        """Emit RET: MOV A, C; RFC."""
+        """Emit RET: MVI A, 0; ADD C; RFC.
+
+        Uses the ALU path (MVI+ADD) instead of ``MOV A, C`` to avoid the
+        ``C register SSS=001 → IN 7`` decoding trap in the Group 01 MOV handler.
+        See class docstring for the full explanation.
+        """
         return [
-            f"{_INDENT}MOV  A, {_REG_RESULT}",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  {_REG_RESULT}",
             f"{_INDENT}RFC",
         ]
 

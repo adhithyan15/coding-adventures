@@ -9,7 +9,7 @@ Test organisation:
   2. TestEmitLabel                 — LABEL opcode
   3. TestEmitLoadImm               — LOAD_IMM opcode → MVI
   4. TestEmitLoadAddr              — LOAD_ADDR opcode → MVI H / MVI L
-  5. TestEmitLoadByte              — LOAD_BYTE opcode → MOV A, M
+  5. TestEmitLoadByte              — LOAD_BYTE opcode → MVI A, 0; ADD M (safe group-10 path)
   6. TestEmitStoreByte             — STORE_BYTE opcode → MOV M, A
   7. TestEmitAdd                   — ADD opcode → MOV/ADD/MOV
   8. TestEmitAddImm                — ADD_IMM opcode (including imm=0 copy)
@@ -26,7 +26,7 @@ Test organisation:
   19. TestEmitBranchNz             — BRANCH_NZ → JFZ
   20. TestEmitJump                 — JUMP → JMP
   21. TestEmitCall                 — CALL → CAL
-  22. TestEmitRet                  — RET → MOV A, C; RFC
+  22. TestEmitRet                  — RET → MVI A, 0; ADD C; RFC
   23. TestEmitHalt                 — HALT → HLT
   24. TestEmitNop                  — NOP → comment
   25. TestEmitComment              — COMMENT → ; text
@@ -264,27 +264,47 @@ class TestEmitLoadAddr:
 
 
 class TestEmitLoadByte:
-    """LOAD_BYTE emits MOV A, M; MOV Rdst, A."""
+    """LOAD_BYTE emits MVI A, 0; ADD M; MOV Rdst, A (safe group-10 path).
+
+    ``MOV A, M`` encodes as 0x7E = 01_111_110 — group=01, sss=110.  On the
+    Intel 8008, group=01 with sss=110 is decoded as ``CAL`` (unconditional
+    subroutine call), not a memory read.  This is catastrophic: the CPU pushes
+    the PC and jumps to an arbitrary address read from the next 2 bytes.
+
+    The safe workaround uses the group-10 ALU path via ``_load_a("M")``:
+        MVI  A, 0     — prime accumulator
+        ADD  M        — A = 0 + RAM[H:L]  (group-10 sss=110 = M, not CAL)
+        MOV  Rdst, A  — store in destination register
+    This always produces exactly 3 lines.
+    """
 
     @pytest.mark.parametrize("vreg,preg", _PREG.items())
     def test_all_destination_registers(self, vreg: int, preg: str) -> None:
-        """Each destination virtual register receives the byte via A."""
+        """Each destination virtual register receives the byte via safe load."""
         lines = _gen_lines(
             _instr(IrOp.LOAD_BYTE, _reg(vreg), _reg(0), _reg(0))
         )
-        assert lines[0] == f"{_INDENT}MOV  A, M"
-        assert lines[1] == f"{_INDENT}MOV  {preg}, A"
+        assert lines[0] == f"{_INDENT}MVI  A, 0"
+        assert lines[1] == f"{_INDENT}ADD  M"
+        assert lines[2] == f"{_INDENT}MOV  {preg}, A"
 
-    def test_two_line_sequence(self) -> None:
-        """LOAD_BYTE always emits exactly two lines."""
+    def test_three_line_sequence(self) -> None:
+        """LOAD_BYTE always emits exactly three lines (safe load + MOV)."""
         lines = _gen_lines(_instr(IrOp.LOAD_BYTE, _reg(1), _reg(1), _reg(0)))
-        assert len(lines) == 2
+        assert len(lines) == 3
 
     def test_base_and_offset_operands_ignored(self) -> None:
         """The base and offset operands are ignored (H:L is implicit)."""
         lines_a = _gen_lines(_instr(IrOp.LOAD_BYTE, _reg(1), _reg(2), _reg(3)))
         lines_b = _gen_lines(_instr(IrOp.LOAD_BYTE, _reg(1), _reg(4), _reg(5)))
         assert lines_a == lines_b
+
+    def test_uses_add_m_not_mov_a_m(self) -> None:
+        """LOAD_BYTE must NOT emit MOV A, M (encodes as CAL on 8008)."""
+        lines = _gen_lines(_instr(IrOp.LOAD_BYTE, _reg(2), _reg(0), _reg(0)))
+        assert f"{_INDENT}MOV  A, M" not in lines, (
+            "MOV A, M = 0x7E = CAL — must use MVI A, 0; ADD M instead"
+        )
 
     def test_missing_operands(self) -> None:
         """LOAD_BYTE with no operands emits a comment."""
@@ -299,11 +319,21 @@ class TestEmitLoadByte:
 
 
 class TestEmitStoreByte:
-    """STORE_BYTE emits MOV A, Rsrc; MOV M, A."""
+    """STORE_BYTE emits load-Rsrc-safely; MOV M, A.
 
-    @pytest.mark.parametrize("vreg,preg", _PREG.items())
-    def test_all_source_registers(self, vreg: int, preg: str) -> None:
-        """Each source virtual register is loaded into A before storing."""
+    Dangerous source registers (C=v1, H=v4) use ``_load_a`` which emits
+    ``MVI A, 0; ADD {reg}`` (3 lines total including MOV M, A) to avoid
+    hardware conflicts in Group-01:
+      - ``MOV A, C`` = 0x79 → IN 7 (reads input port 7)
+      - ``MOV A, H`` = 0x7C → JMP (unconditional jump — catastrophic!)
+
+    Safe source registers (B=v0, D=v2, E=v3, L=v5) use the standard 2-line
+    ``MOV A, {reg}; MOV M, A`` sequence.
+    """
+
+    @pytest.mark.parametrize("vreg,preg", {k: v for k, v in _PREG.items() if v not in ("C", "H")}.items())
+    def test_all_safe_source_registers(self, vreg: int, preg: str) -> None:
+        """Safe source registers (B, D, E, L) use standard MOV A, {reg}."""
         lines = _gen_lines(
             _instr(IrOp.STORE_BYTE, _reg(vreg), _reg(0), _reg(0))
         )
@@ -312,8 +342,32 @@ class TestEmitStoreByte:
             f"{_INDENT}MOV  M, A",
         ]
 
-    def test_two_line_sequence(self) -> None:
-        """STORE_BYTE always emits exactly two lines."""
+    def test_c_source_uses_safe_load(self) -> None:
+        """STORE_BYTE with C (v1) as source: MVI A, 0; ADD C; MOV M, A.
+
+        MOV A, C = 0x79 = IN 7 — hardware conflict in Group-01.
+        """
+        lines = _gen_lines(_instr(IrOp.STORE_BYTE, _reg(1), _reg(0), _reg(0)))
+        assert lines == [
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
+            f"{_INDENT}MOV  M, A",
+        ]
+
+    def test_h_source_uses_safe_load(self) -> None:
+        """STORE_BYTE with H (v4) as source: MVI A, 0; ADD H; MOV M, A.
+
+        MOV A, H = 0x7C = JMP (unconditional jump) — hardware conflict in Group-01.
+        """
+        lines = _gen_lines(_instr(IrOp.STORE_BYTE, _reg(4), _reg(0), _reg(0)))
+        assert lines == [
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  H",
+            f"{_INDENT}MOV  M, A",
+        ]
+
+    def test_two_line_sequence_for_safe_reg(self) -> None:
+        """STORE_BYTE emits 2 lines when source is a safe register (v2=D)."""
         lines = _gen_lines(_instr(IrOp.STORE_BYTE, _reg(2), _reg(0), _reg(0)))
         assert len(lines) == 2
 
@@ -330,27 +384,39 @@ class TestEmitStoreByte:
 
 
 class TestEmitAdd:
-    """ADD emits MOV A, Ra; ADD Rb; MOV Rdst, A."""
+    """ADD emits load-Ra-safely; ADD Rb; MOV Rdst, A.
+
+    When Ra is the C register (v1), the standard ``MOV A, C`` instruction
+    encodes as 0x79 = IN 7 on the Intel 8008 hardware.  ``_load_a("C")``
+    substitutes ``MVI A, 0; ADD C`` (group-10 ALU path) which safely reads C.
+    This adds one instruction but is always correct.
+    """
 
     def test_basic_add(self) -> None:
-        """ADD v2, v1, v0 → MOV A, C; ADD B; MOV D, A."""
+        """ADD v2, v1, v0 — Ra=C uses safe 2-instruction load."""
         lines = _gen_lines(_instr(IrOp.ADD, _reg(2), _reg(1), _reg(0)))
+        # MVI A, 0 + ADD C loads C into A (avoids IN-7 trap)
+        # then ADD B = A + B = C + B; result stored in D
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}ADD  B",
             f"{_INDENT}MOV  D, A",
         ]
 
-    def test_three_lines(self) -> None:
-        """ADD always emits exactly 3 lines."""
+    def test_three_lines_when_ra_not_c(self) -> None:
+        """ADD v1, v2, v3 — Ra=D (not C): standard 3-line sequence."""
         lines = _gen_lines(_instr(IrOp.ADD, _reg(1), _reg(2), _reg(3)))
         assert len(lines) == 3
 
     def test_add_same_registers(self) -> None:
-        """ADD v1, v1, v1 (self-add) emits valid assembly."""
+        """ADD v1, v1, v1 (self-add) — Ra=C: uses safe 4-line load."""
         lines = _gen_lines(_instr(IrOp.ADD, _reg(1), _reg(1), _reg(1)))
+        # _load_a("C") = [MVI A, 0; ADD C] → A = C
+        # then ADD C → A = C + C = 2C; stored back in C
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}ADD  C",
             f"{_INDENT}MOV  C, A",
         ]
@@ -389,10 +455,16 @@ class TestEmitAddImm:
         ]
 
     def test_immediate_zero_is_copy(self) -> None:
-        """ADD_IMM with imm == 0 emits 2 lines (register copy, no ADI)."""
+        """ADD_IMM with imm==0 copies Ra to Rdst via safe _load_a sequence.
+
+        When Ra is C (v1), _load_a emits ``MVI A, 0; ADD C`` (2 lines) then
+        ``MOV D, A`` — 3 lines total instead of the usual 2.  This avoids the
+        ``MOV A, C = IN 7`` hardware trap.
+        """
         lines = _gen_lines(_instr(IrOp.ADD_IMM, _reg(2), _reg(1), _imm(0)))
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}MOV  D, A",
         ]
 
@@ -401,8 +473,8 @@ class TestEmitAddImm:
         lines = _gen_lines(_instr(IrOp.ADD_IMM, _reg(1), _reg(1), _imm(255)))
         assert f"{_INDENT}ADI  255" in lines
 
-    def test_copy_two_lines(self) -> None:
-        """Register copy (imm=0) always emits exactly 2 lines."""
+    def test_copy_two_lines_when_src_not_c(self) -> None:
+        """Register copy (imm=0) emits 2 lines when source is not C (v2=D here)."""
         lines = _gen_lines(_instr(IrOp.ADD_IMM, _reg(3), _reg(2), _imm(0)))
         assert len(lines) == 2
 
@@ -435,9 +507,9 @@ class TestEmitSub:
             f"{_INDENT}MOV  C, A",
         ]
 
-    def test_three_lines(self) -> None:
-        """SUB always emits exactly 3 lines."""
-        lines = _gen_lines(_instr(IrOp.SUB, _reg(0), _reg(1), _reg(2)))
+    def test_three_lines_when_ra_not_c(self) -> None:
+        """SUB emits 3 lines when Ra is not C (v2=D here)."""
+        lines = _gen_lines(_instr(IrOp.SUB, _reg(0), _reg(2), _reg(3)))
         assert len(lines) == 3
 
     def test_missing_operands(self) -> None:
@@ -453,13 +525,14 @@ class TestEmitSub:
 
 
 class TestEmitAnd:
-    """AND emits MOV A, Ra; ANA Rb; MOV Rdst, A."""
+    """AND emits load-Ra-safely; ANA Rb; MOV Rdst, A."""
 
     def test_basic_and(self) -> None:
-        """AND v3, v1, v2 → MOV A, C; ANA D; MOV E, A."""
+        """AND v3, v1, v2 — Ra=C uses safe 2-instruction load (4 lines total)."""
         lines = _gen_lines(_instr(IrOp.AND, _reg(3), _reg(1), _reg(2)))
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}ANA  D",
             f"{_INDENT}MOV  E, A",
         ]
@@ -540,16 +613,19 @@ class TestEmitXor:
 
 
 class TestEmitNot:
-    """NOT emits MOV A, Ra; XRI 0xFF; MOV Rdst, A.
+    """NOT emits load-Ra-safely; XRI 0xFF; MOV Rdst, A.
 
     The 8008 has no bitwise NOT — XOR with 0xFF flips all bits.
+    When Ra is C (v1), _load_a substitutes ``MVI A, 0; ADD C`` to avoid
+    the ``MOV A, C = IN 7`` hardware trap, adding one extra line.
     """
 
     def test_basic_not(self) -> None:
-        """NOT v2, v1 → MOV A, C; XRI 0xFF; MOV D, A."""
+        """NOT v2, v1 — Ra=C uses safe 2-instruction load (4 lines total)."""
         lines = _gen_lines(_instr(IrOp.NOT, _reg(2), _reg(1)))
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}XRI  0xFF",
             f"{_INDENT}MOV  D, A",
         ]
@@ -559,13 +635,17 @@ class TestEmitNot:
         lines = _gen_lines(_instr(IrOp.NOT, _reg(1), _reg(2)))
         assert any("XRI  0xFF" in line for line in lines)
 
-    def test_three_lines(self) -> None:
-        """NOT always emits exactly 3 lines."""
+    def test_three_lines_when_ra_not_c(self) -> None:
+        """NOT v1, v0 — Ra=B (not C): standard 3-line sequence."""
         lines = _gen_lines(_instr(IrOp.NOT, _reg(1), _reg(0)))
         assert len(lines) == 3
 
     def test_all_destination_registers(self) -> None:
-        """NOT writes to the correct destination for each virtual register."""
+        """NOT writes to the correct destination for each virtual register.
+
+        Source is always v0=B here (not C), so each emits exactly 3 lines
+        and the MOV dst instruction is always at index 2.
+        """
         for vreg, preg in _PREG.items():
             lines = _gen_lines(_instr(IrOp.NOT, _reg(vreg), _reg(0)))
             assert lines[2] == f"{_INDENT}MOV  {preg}, A"
@@ -583,22 +663,27 @@ class TestEmitNot:
 
 
 class TestEmitCmpEq:
-    """CMP_EQ materialises Ra==Rb into Rdst using a 6-line sequence."""
+    """CMP_EQ materialises Ra==Rb into Rdst using a 6-or-7-line sequence.
+
+    When Ra is C (v1), the safe _load_a expansion adds one line, giving 7 total.
+    """
 
     def test_exact_sequence(self) -> None:
-        """CMP_EQ v2, v1, v0 → exact 6-line optimistic-load pattern."""
+        """CMP_EQ v2, v1, v0 — Ra=C: 7-line sequence with safe load."""
         gen = CodeGenerator()
         prog = _prog(_instr(IrOp.CMP_EQ, _reg(2), _reg(1), _reg(0)))
         lines = gen.generate(prog).strip().splitlines()[1:]  # skip ORG
-        assert len(lines) == 6
-        assert lines[0] == f"{_INDENT}MOV  A, C"
-        assert lines[1] == f"{_INDENT}CMP  B"
-        assert lines[2] == f"{_INDENT}MVI  D, 1"
-        assert lines[3].startswith(f"{_INDENT}JTZ  ")
-        assert lines[4] == f"{_INDENT}MVI  D, 0"
+        # _load_a("C") = [MVI A, 0; ADD C] → 2 lines; rest is the 5-line pattern
+        assert len(lines) == 7
+        assert lines[0] == f"{_INDENT}MVI  A, 0"
+        assert lines[1] == f"{_INDENT}ADD  C"
+        assert lines[2] == f"{_INDENT}CMP  B"
+        assert lines[3] == f"{_INDENT}MVI  D, 1"
+        assert lines[4].startswith(f"{_INDENT}JTZ  ")
+        assert lines[5] == f"{_INDENT}MVI  D, 0"
         # Label definition at column 0
-        assert not lines[5].startswith(" ")
-        assert lines[5].endswith(":")
+        assert not lines[6].startswith(" ")
+        assert lines[6].endswith(":")
 
     def test_label_on_jtz_matches_definition(self) -> None:
         """The JTZ target label matches the label definition that follows."""
@@ -624,17 +709,18 @@ class TestEmitCmpNe:
     """CMP_NE materialises Ra!=Rb into Rdst (inverted logic from CMP_EQ)."""
 
     def test_exact_sequence(self) -> None:
-        """CMP_NE v2, v1, v0 → loads 0 first, then overwrite with 1 if NE."""
+        """CMP_NE v2, v1, v0 — Ra=C: 7-line sequence with safe load."""
         lines = _gen_lines(_instr(IrOp.CMP_NE, _reg(2), _reg(1), _reg(0)))
-        # Sequence: MOV A, Ra; CMP Rb; MVI Rdst, 0; JTZ done; MVI Rdst, 1; done:
-        assert lines[0] == f"{_INDENT}MOV  A, C"
-        assert lines[1] == f"{_INDENT}CMP  B"
-        assert lines[2] == f"{_INDENT}MVI  D, 0"
-        assert "JTZ" in lines[3]
-        assert lines[4] == f"{_INDENT}MVI  D, 1"
+        # _load_a("C") = [MVI A, 0; ADD C] inserts before CMP B
+        assert lines[0] == f"{_INDENT}MVI  A, 0"
+        assert lines[1] == f"{_INDENT}ADD  C"
+        assert lines[2] == f"{_INDENT}CMP  B"
+        assert lines[3] == f"{_INDENT}MVI  D, 0"
+        assert "JTZ" in lines[4]
+        assert lines[5] == f"{_INDENT}MVI  D, 1"
 
-    def test_six_lines(self) -> None:
-        """CMP_NE emits exactly 6 lines."""
+    def test_six_lines_when_ra_not_c(self) -> None:
+        """CMP_NE emits 6 lines when Ra is not C (v2=D here)."""
         lines = _gen_lines(_instr(IrOp.CMP_NE, _reg(1), _reg(2), _reg(3)))
         assert len(lines) == 6
 
@@ -661,16 +747,18 @@ class TestEmitCmpLt:
     """CMP_LT materialises Ra<Rb (unsigned) using the CY flag."""
 
     def test_exact_sequence(self) -> None:
-        """CMP_LT uses JTC (Jump if Carry True) to test unsigned less-than."""
+        """CMP_LT v2, v1, v0 — Ra=C: 7-line sequence with safe load."""
         lines = _gen_lines(_instr(IrOp.CMP_LT, _reg(2), _reg(1), _reg(0)))
-        assert lines[0] == f"{_INDENT}MOV  A, C"
-        assert lines[1] == f"{_INDENT}CMP  B"
-        assert lines[2] == f"{_INDENT}MVI  D, 1"
-        assert "JTC" in lines[3]  # JTC = Jump if Carry True (CY=1 = borrow)
-        assert lines[4] == f"{_INDENT}MVI  D, 0"
+        # _load_a("C") = [MVI A, 0; ADD C] inserts before CMP B
+        assert lines[0] == f"{_INDENT}MVI  A, 0"
+        assert lines[1] == f"{_INDENT}ADD  C"
+        assert lines[2] == f"{_INDENT}CMP  B"
+        assert lines[3] == f"{_INDENT}MVI  D, 1"
+        assert "JTC" in lines[4]  # JTC = Jump if Carry True (CY=1 = borrow)
+        assert lines[5] == f"{_INDENT}MVI  D, 0"
 
-    def test_six_lines(self) -> None:
-        """CMP_LT emits exactly 6 lines."""
+    def test_six_lines_when_ra_not_c(self) -> None:
+        """CMP_LT emits 6 lines when Ra is not C (v2=D here)."""
         lines = _gen_lines(_instr(IrOp.CMP_LT, _reg(1), _reg(2), _reg(3)))
         assert len(lines) == 6
 
@@ -733,19 +821,21 @@ class TestEmitCmpGt:
 
 
 class TestEmitBranchZ:
-    """BRANCH_Z emits MOV A, Rcond; CPI 0; JTZ lbl."""
+    """BRANCH_Z emits load-Rcond-safely; CPI 0; JTZ lbl."""
 
     def test_exact_sequence(self) -> None:
-        """BRANCH_Z v1, loop_end → 3-instruction sequence."""
+        """BRANCH_Z v1, loop_end — Rcond=C: 4-line sequence with safe load."""
         lines = _gen_lines(_instr(IrOp.BRANCH_Z, _reg(1), _lbl("loop_end")))
+        # _load_a("C") = [MVI A, 0; ADD C] then CPI 0; JTZ loop_end
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}CPI  0",
             f"{_INDENT}JTZ  loop_end",
         ]
 
-    def test_three_lines(self) -> None:
-        """BRANCH_Z always emits exactly 3 lines."""
+    def test_three_lines_when_rcond_not_c(self) -> None:
+        """BRANCH_Z emits 3 lines when Rcond is not C (v2=D here)."""
         lines = _gen_lines(_instr(IrOp.BRANCH_Z, _reg(2), _lbl("done")))
         assert len(lines) == 3
 
@@ -863,30 +953,49 @@ class TestEmitCall:
 
 
 class TestEmitRet:
-    """RET emits MOV A, C; RFC (copy return value, then return)."""
+    """RET emits MVI A, 0; ADD C; RFC (copy return value via ALU, then return).
+
+    Why not MOV A, C?
+    -----------------
+    ``MOV A, C`` encodes as 0x79 = ``01_111_001`` — group=01, sss=001.  On the
+    Intel 8008, group=01 with sss=001 is *always* decoded as ``IN 7`` (read
+    from input port 7), NOT a register-to-register move.  The C register
+    cannot be read in group=01 because its code (001) collides with the IN
+    instruction marker.
+
+    The safe workaround uses the group=10 ALU path where sss=001 correctly
+    reads the C register:
+
+        MVI  A, 0       ; A ← 0 (clears CY)
+        ADD  C          ; A ← 0 + C = C  (CY=0 since C ≤ 127 in practice)
+        RFC             ; Return if Carry False — always fires because CY=0
+    """
 
     def test_exact_sequence(self) -> None:
-        """RET → MOV A, C; RFC."""
+        """RET → MVI A, 0; ADD C; RFC."""
         lines = _gen_lines(_instr(IrOp.RET))
         assert lines == [
-            f"{_INDENT}MOV  A, C",
+            f"{_INDENT}MVI  A, 0",
+            f"{_INDENT}ADD  C",
             f"{_INDENT}RFC",
         ]
 
-    def test_two_lines(self) -> None:
-        """RET always emits exactly 2 lines."""
+    def test_three_lines(self) -> None:
+        """RET always emits exactly 3 lines (MVI, ADD, RFC)."""
         lines = _gen_lines(_instr(IrOp.RET))
-        assert len(lines) == 2
+        assert len(lines) == 3
 
-    def test_return_value_register_is_c(self) -> None:
-        """The return value register is C (v1), per the Oct calling convention."""
+    def test_return_value_moved_via_add(self) -> None:
+        """C register (v1) is copied to A via ADD C in group-10 ALU path."""
         lines = _gen_lines(_instr(IrOp.RET))
-        assert lines[0] == f"{_INDENT}MOV  A, C"
+        # MVI A, 0 clears A so ADD C gives A = C exactly
+        assert lines[0] == f"{_INDENT}MVI  A, 0"
+        assert lines[1] == f"{_INDENT}ADD  C"
 
     def test_rfc_is_unconditional_return(self) -> None:
-        """RFC (Return if Carry False) is the standard unconditional return."""
+        """RFC (Return if Carry False) fires unconditionally: CY=0 after MVI A,0+ADD C."""
         lines = _gen_lines(_instr(IrOp.RET))
-        assert lines[1] == f"{_INDENT}RFC"
+        assert lines[2] == f"{_INDENT}RFC"
 
 
 # ===========================================================================
@@ -1184,13 +1293,19 @@ class TestFullProgram:
         assert f"{_INDENT}HLT" in asm
 
     def test_load_and_return(self) -> None:
-        """Program that loads a constant and returns it."""
+        """Program that loads a constant and returns it.
+
+        RET emits MVI A, 0; ADD C; RFC (NOT MOV A, C, which encodes as IN 7).
+        """
         asm = _gen(
             _instr(IrOp.LOAD_IMM, _reg(1), _imm(42)),
             _instr(IrOp.RET),
         )
         assert f"{_INDENT}MVI  C, 42" in asm
-        assert f"{_INDENT}MOV  A, C" in asm
+        # MOV A, C is forbidden: encodes as 0x79 → IN 7 (not register copy)
+        assert f"{_INDENT}MOV  A, C" not in asm
+        assert f"{_INDENT}MVI  A, 0" in asm
+        assert f"{_INDENT}ADD  C" in asm
         assert f"{_INDENT}RFC" in asm
 
     def test_function_call_sequence(self) -> None:
@@ -1210,14 +1325,21 @@ class TestFullProgram:
         assert f"{_INDENT}RFC" in asm
 
     def test_memory_access_sequence(self) -> None:
-        """LOAD_ADDR + LOAD_BYTE sequence for reading a static."""
+        """LOAD_ADDR + LOAD_BYTE sequence for reading a static.
+
+        LOAD_BYTE must NOT emit ``MOV A, M`` (= 0x7E = CAL on the 8008).
+        Instead it emits ``MVI A, 0; ADD M`` (safe group-10 path).
+        """
         asm = _gen(
             _instr(IrOp.LOAD_ADDR, _reg(1), _lbl("tape")),
             _instr(IrOp.LOAD_BYTE, _reg(1), _reg(1), _reg(0)),
         )
         assert f"{_INDENT}MVI  H, hi(tape)" in asm
         assert f"{_INDENT}MVI  L, lo(tape)" in asm
-        assert f"{_INDENT}MOV  A, M" in asm
+        # Safe load: MVI A, 0 + ADD M (not MOV A, M which encodes as CAL!)
+        assert f"{_INDENT}MVI  A, 0" in asm
+        assert f"{_INDENT}ADD  M" in asm
+        assert f"{_INDENT}MOV  A, M" not in asm   # this would be CAL
         assert f"{_INDENT}MOV  C, A" in asm
 
     def test_store_sequence(self) -> None:
