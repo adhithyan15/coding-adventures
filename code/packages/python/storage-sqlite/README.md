@@ -30,14 +30,15 @@ mini_sqlite.connect("app.db")
         ├── freelist   (trunk/leaf page reuse)                     ✓ phase 5
         ├── schema     (sqlite_schema round-trip)                  ✓ phase 6
         ├── backend    (Backend adapter / SqliteFileBackend)       ✓ phase 7
-        └── index_tree (index B-tree 0x0A/0x02 + full CRUD)       ✓ phase IX-1
+        ├── index_tree (index B-tree 0x0A/0x02 + full CRUD)       ✓ phase IX-1
+        └── backend    (index interface: create/drop/list/scan)   ✓ phase IX-2
 ```
 
 Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1)
+## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1 + IX-2)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -118,7 +119,7 @@ backend.
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1)
+## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1 + IX-2)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -308,6 +309,55 @@ with Pager.create("index.db") as pager:
     print(tree.cell_count())           # 5004
 
     pager.commit()
+```
+
+```python
+# --- Index interface (phase IX-2: create/drop/list/scan_index) ---
+from sql_backend import ColumnDef, IndexDef
+from storage_sqlite import SqliteFileBackend
+
+with SqliteFileBackend("app.db") as b:
+    b.create_table(
+        "users",
+        [
+            ColumnDef(name="id",  type_name="INTEGER", primary_key=True),
+            ColumnDef(name="name", type_name="TEXT",   not_null=True),
+            ColumnDef(name="age", type_name="INTEGER"),
+        ],
+    )
+    b.insert("users", {"id": 1, "name": "Alice", "age": 30})
+    b.insert("users", {"id": 2, "name": "Bob",   "age": 25})
+    b.insert("users", {"id": 3, "name": "Carol", "age": 30})
+
+    # Create an index — backfills all existing rows automatically.
+    b.create_index(IndexDef(name="idx_users_age", table="users", columns=["age"]))
+
+    # List all indexes for a table.
+    print(b.list_indexes("users"))
+    # [IndexDef(name='idx_users_age', table='users', columns=['age'], unique=False, auto=False)]
+
+    # Equality lookup: all rowids with age = 30.
+    rowids = list(b.scan_index("idx_users_age", [30], [30]))
+    print(rowids)   # [0, 2] (0-based rowids for rows with age=30)
+
+    # Range scan: age between 25 and 30.
+    rowids = list(b.scan_index("idx_users_age", [25], [30]))
+    print(len(rowids))  # 3
+
+    # Exclusive range: age > 25 (lo bound excluded).
+    rowids = list(b.scan_index("idx_users_age", [25], None, lo_inclusive=False))
+    print(len(rowids))  # 2 (only the two age=30 rows)
+
+    # Drop the index.
+    b.drop_index("idx_users_age")
+    print(b.list_indexes("users"))   # []
+
+    # if_exists=True suppresses IndexNotFound for already-dropped indexes.
+    b.drop_index("idx_users_age", if_exists=True)   # no error
+
+# The index is stored in sqlite_schema and visible to the real sqlite3 CLI:
+#   sqlite3 app.db ".schema"
+#   CREATE INDEX idx_users_age ON users (age);
 ```
 
 ## Design notes
