@@ -14,6 +14,6 @@ All notable changes to this package will be documented in this file.
 - Added Rust integration tests that start a TCP listener, call a Python Mini
   Redis worker as one concrete consumer, and validate Redis replies over a real
   socket.
-- Updated the Mini Redis integration adapter so Rust owns RESP framing and
-  connection-local selected database state while the Python worker returns a
-  socket-blind engine response.
+- Updated the Mini Redis integration so Rust sends only opaque TCP byte jobs
+  and writes opaque byte frames. The Python worker owns RESP framing,
+  per-stream selected database state, and RESP response assembly.

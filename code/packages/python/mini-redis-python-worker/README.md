@@ -2,34 +2,34 @@
 
 Python Mini Redis command worker for the Rust TCP runtime prototype.
 
-The Rust side owns TCP sockets, native event-loop integration, RESP request
-framing, and response writes. This package owns the Redis-like application
-logic. That split lets us prove the shape we eventually want for Ruby, Python,
-Perl, and other C-FFI/native-extension consumers: the language runtime can focus
-on application jobs while Rust keeps the transport plane safe and fast.
+The Rust side owns TCP sockets, native event-loop integration, and socket
+writes. This package owns the Redis-like application protocol: job queueing,
+per-stream buffering, RESP request parsing, Redis command execution, and RESP
+response assembly. That split lets us prove the shape we eventually want for
+Ruby, Python, Perl, and other C-FFI/native-extension consumers: the language
+runtime can focus on application protocol jobs while Rust keeps the transport
+plane safe and fast.
 
 ## Protocol
 
-The worker reads one generic job-protocol frame per line from stdin. Rust has
-already parsed RESP into a command frame, so the worker receives only the
-currently selected database, command name, and hex-encoded binary arguments:
+The worker reads one generic job-protocol frame per line from stdin. Rust sends
+an opaque stream id and the TCP bytes read from that stream:
 
 ```json
-{"version":1,"kind":"request","body":{"id":"job-1","payload":{"selected_db":0,"command":"PING","args_hex":[]},"metadata":{}}}
+{"version":1,"kind":"request","body":{"id":"job-1","payload":{"stream_id":"7","bytes_hex":"2a310d0a24340d0a50494e470d0a"},"metadata":{}}}
 ```
 
 The worker writes one generic response frame per line to stdout. Successful
-responses carry the updated selected database plus an engine response. Rust
-turns that engine response back into RESP bytes and writes them to the socket:
+responses carry zero or more opaque byte chunks for Rust to write back to the
+same stream, plus an optional close flag:
 
 ```json
-{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"selected_db":0,"response":{"kind":"simple_string","value":"PONG"}}},"metadata":{}}}
+{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"writes_hex":["2b504f4e470d0a"],"close":false}},"metadata":{}}}
 ```
 
 This mirrors the Rust `generic-job-protocol` crate. The Python package does not
 own the protocol; it is one language worker implementation that responds to the
-shared `JobRequest` / `JobResponse` shape. It also mirrors the WASM Mini Redis
-adapter in this repository: protocol framing stays outside the command engine.
+shared `JobRequest` / `JobResponse` shape.
 
 ## Commands
 
@@ -47,9 +47,9 @@ tests:
 - `HEXISTS`
 - `SELECT`
 
-`SELECT` state is passed in and returned as `selected_db`. The Rust TCP layer
-stores that value per connection, which keeps the Python worker unaware of
-sockets, connection ids, or RESP encoding.
+`SELECT` state is stored per `stream_id` inside the Python worker. The worker
+knows only an opaque stream id, not a socket handle or native event-loop
+resource.
 
 ## Usage
 
@@ -58,7 +58,7 @@ python -m mini_redis_python_worker.stdio_worker
 ```
 
 The companion Rust crate `embeddable-tcp-server` can start this worker as a
-child process and delegate parsed RESP commands to it. Python Mini Redis is one
+child process and delegate raw TCP byte jobs to it. Python Mini Redis is one
 consumer example of the generic embeddable TCP server seam rather than the
 identity of the Rust transport crate.
 

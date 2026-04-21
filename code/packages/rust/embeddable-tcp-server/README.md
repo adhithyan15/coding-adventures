@@ -20,10 +20,9 @@ or polling sockets itself.
 ```text
 client
   -> embeddable Rust TCP server
-  -> application-specific request framing adapter
-  -> generic JobRequest<ApplicationRequestPayload>
+  -> generic JobRequest<TcpBytesPayload>
   -> embedded language/application worker
-  -> generic JobResponse<ApplicationResponsePayload>
+  -> generic JobResponse<TcpWriteFrame>
   -> Rust socket write
 ```
 
@@ -32,13 +31,11 @@ line. The important part is that the envelope comes from
 `generic-job-protocol`, so TCP is only a consumer of the reusable job contract.
 Application-specific data stays inside payload structs.
 
-The package tests use a Python Mini Redis worker as one example adapter:
-RESP bytes enter over TCP, Rust parses them into a Redis command payload, Python
-executes the command, returns an engine-response payload, and Rust encodes the
-RESP response bytes. Rust also owns per-connection selected database state, so
-the language worker does not need socket ids. That proves the embeddable server
-with a real language worker without making Python or Redis part of the crate's
-public identity.
+The package tests use a Python Mini Redis worker as one example application:
+RESP bytes enter over TCP, Rust forwards opaque byte jobs, Python queues and
+parses RESP, Python assembles RESP replies, and Rust writes the returned opaque
+bytes. That proves the embeddable server with a real language worker without
+making Python, Redis, or RESP part of the crate's public identity.
 
 ## Current Limitations
 
@@ -46,9 +43,8 @@ public identity.
 - One worker process handles all delegated jobs.
 - The worker protocol uses the JSON-line `generic-job-protocol` codec over
   stdio for debuggability, not throughput.
-- Application adapters currently supply their own command/response payload
-  structs; shared protocol payload crates can come later as stable consumers
-  emerge.
+- The current payload structs are the first raw-byte transport shape; a later
+  crate should make those stable for all language bridges.
 - This validates the runtime seam; it is not the final high-performance
   process-pool architecture.
 
@@ -62,8 +58,8 @@ be backed by threads, processes, or another host-specific scheduler.
 - tcp-runtime
 - transport-platform
 
-`resp-protocol` is used by the test adapter only, because Mini Redis is the
-first integration consumer.
+`resp-protocol` is used only by Rust tests to generate and decode client-side
+assertions. The embeddable TCP server does not parse or assemble RESP.
 
 ## Development
 
@@ -74,4 +70,5 @@ bash BUILD
 
 The integration tests launch a real Rust TCP listener, start the Python Mini
 Redis worker process, send RESP commands through a socket, and assert that the
-replies come back through the generic embeddable server seam.
+Python-produced RESP replies come back through the generic embeddable server
+seam.
