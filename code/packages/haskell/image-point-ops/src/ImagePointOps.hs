@@ -289,7 +289,10 @@ sepia pc = mapPixels pc $ \r g b a ->
 -- This subsumes sepia, hue-rotation via known matrices, and custom
 -- channel mixing.
 colourMatrix :: PixelContainer -> [[Double]] -> PixelContainer
-colourMatrix pc m = mapPixels pc $ \r g b a ->
+colourMatrix pc m
+    | length m /= 3 || any ((/= 3) . length) m =
+        error "colourMatrix: matrix must be exactly 3×3"
+    | otherwise = mapPixels pc $ \r g b a ->
     let rl = decodeSrgb r
         gl = decodeSrgb g
         bl = decodeSrgb b
@@ -399,12 +402,15 @@ linearToSrgbImage pc = mapPixels pc $ \r g b a ->
 -- table is a pure value, LUT-based grading is embarrassingly simple
 -- to compose: chain two LUTs off-line and you get a single LUT.
 applyLut1dU8 :: PixelContainer -> [Word8] -> [Word8] -> [Word8] -> PixelContainer
-applyLut1dU8 pc lutR lutG lutB = mapPixels pc $ \r g b a ->
-    ( lutR !! fromIntegral r
-    , lutG !! fromIntegral g
-    , lutB !! fromIntegral b
-    , a
-    )
+applyLut1dU8 pc lutR lutG lutB
+    | length lutR /= 256 || length lutG /= 256 || length lutB /= 256 =
+        error "applyLut1dU8: each LUT must have exactly 256 entries"
+    | otherwise = mapPixels pc $ \r g b a ->
+        ( lutR !! fromIntegral r
+        , lutG !! fromIntegral g
+        , lutB !! fromIntegral b
+        , a
+        )
 
 -- | Build a 256-entry LUT from a linear-light function
 -- @f :: Double -> Double@ by decoding each byte to linear, applying

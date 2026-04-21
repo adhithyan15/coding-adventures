@@ -325,6 +325,8 @@ public final class ImageGeometricTransforms {
         } else {
             outW = inW; outH = inH;
         }
+        if ((long) outW * outH > Integer.MAX_VALUE / 4)
+            throw new IllegalArgumentException("Rotated canvas too large: " + outW + "×" + outH);
         double cxIn = inW / 2.0, cyIn = inH / 2.0;
         double cxOut = outW / 2.0, cyOut = outH / 2.0;
         PixelContainer out = new PixelContainer(outW, outH);

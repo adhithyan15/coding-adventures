@@ -53,5 +53,12 @@ package com.codingadventures.pixelcontainer
 class PixelContainer(
     val width: Int,
     val height: Int,
-    val data: ByteArray = ByteArray(width * height * 4)
+    val data: ByteArray = run {
+        require(width >= 0 && height >= 0) { "Dimensions must be non-negative" }
+        val size = width.toLong() * height.toLong() * 4L
+        require(size <= Int.MAX_VALUE) {
+            "Image too large: ${width}×${height} exceeds 32-bit index range"
+        }
+        ByteArray(size.toInt())
+    }
 )

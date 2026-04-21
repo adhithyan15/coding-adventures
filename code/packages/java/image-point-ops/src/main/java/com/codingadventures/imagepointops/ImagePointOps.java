@@ -413,6 +413,8 @@ public final class ImagePointOps {
      * <p>LUTs must be 256 bytes each.</p>
      */
     public static PixelContainer applyLut1dU8(PixelContainer src, byte[] lutR, byte[] lutG, byte[] lutB) {
+        if (lutR.length < 256 || lutG.length < 256 || lutB.length < 256)
+            throw new IllegalArgumentException("Each LUT must have at least 256 entries");
         return mapPixels(src, (r, g, b, a) -> new int[]{
             lutR[r] & 0xFF,
             lutG[g] & 0xFF,

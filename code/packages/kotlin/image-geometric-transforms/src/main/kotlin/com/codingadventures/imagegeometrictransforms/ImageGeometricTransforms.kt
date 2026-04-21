@@ -367,6 +367,9 @@ object ImageGeometricTransforms {
         } else {
             outW = W; outH = H
         }
+        require(outW.toLong() * outH.toLong() <= Int.MAX_VALUE / 4) {
+            "Rotated canvas too large: ${outW}×${outH}"
+        }
 
         val cxIn = W / 2.0; val cyIn = H / 2.0
         val cxOut = outW / 2.0; val cyOut = outH / 2.0

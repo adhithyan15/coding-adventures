@@ -65,9 +65,15 @@ public final class PixelContainer {
      * @param height image height in pixels
      */
     public PixelContainer(int width, int height) {
+        if (width < 0 || height < 0)
+            throw new IllegalArgumentException("Dimensions must be non-negative");
+        long size = (long) width * height * 4;
+        if (size > Integer.MAX_VALUE)
+            throw new IllegalArgumentException(
+                "Image too large: " + width + "×" + height + " exceeds 32-bit index range");
         this.width = width;
         this.height = height;
-        this.data = new byte[width * height * 4];
+        this.data = new byte[(int) size];
     }
 
     /**
