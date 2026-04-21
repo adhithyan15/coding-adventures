@@ -12,10 +12,12 @@ from logic_engine import (
     eq,
     fact,
     fail,
+    fresh,
     logic_list,
     num,
     program,
     relation,
+    rule,
     solve_all,
     solve_n,
     string,
@@ -32,6 +34,7 @@ from logic_builtins import (
     bagofo,
     callableo,
     callo,
+    clauseo,
     compoundo,
     copytermo,
     div,
@@ -71,7 +74,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.5.0"
+        assert __version__ == "0.6.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -640,6 +643,113 @@ class TestTermMetaprogrammingBuiltins:
             value,
             conj(eq(value, string("tea")), callableo(value)),
         ) == []
+
+
+class TestClauseIntrospectionBuiltins:
+    """Program clauses should be queryable as Prolog-style data."""
+
+    def test_clauseo_enumerates_facts_in_source_order(self) -> None:
+        parent = relation("parent", 2)
+        head = var("Head")
+        body = var("Body")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(family, (head, body), clauseo(head, body)) == [
+            (term("parent", "homer", "bart"), atom("true")),
+            (term("parent", "homer", "lisa"), atom("true")),
+        ]
+
+    def test_clauseo_returns_instantiated_rule_body_after_head_matching(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+        body = var("Body")
+        family = program(rule(child(x, y), parent(y, x)))
+
+        assert solve_all(family, body, clauseo(child("bart", "homer"), body)) == [
+            term("parent", "homer", "bart"),
+        ]
+
+    def test_clauseo_filters_by_head_pattern(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            clauseo(term("parent", "homer", child), atom("true")),
+        ) == [atom("bart"), atom("lisa")]
+
+    def test_clauseo_filters_by_body_pattern(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+        marker = var("Marker")
+        family = program(rule(child(x, y), parent(y, x)))
+
+        assert solve_all(
+            family,
+            marker,
+            conj(
+                eq(marker, "ok"),
+                clauseo(child("bart", "homer"), term("parent", "homer", "bart")),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            family,
+            marker,
+            conj(
+                eq(marker, "ok"),
+                clauseo(child("bart", "homer"), term("parent", "marge", "bart")),
+            ),
+        ) == []
+
+    def test_clauseo_standardizes_returned_variables_apart(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        source_x = var("X")
+        source_y = var("Y")
+        head = var("Head")
+        body = var("Body")
+        family = program(rule(child(source_x, source_y), parent(source_y, source_x)))
+
+        [(observed_head, observed_body)] = solve_all(
+            family,
+            (head, body),
+            clauseo(head, body),
+        )
+
+        assert isinstance(observed_head, Compound)
+        assert isinstance(observed_body, Compound)
+        observed_x, observed_y = observed_head.args
+        assert isinstance(observed_x, LogicVar)
+        assert isinstance(observed_y, LogicVar)
+        assert observed_x != source_x
+        assert observed_y != source_y
+        assert observed_body.args == (observed_y, observed_x)
+
+    def test_clauseo_skips_host_only_bodies(self) -> None:
+        predicate = relation("p", 1)
+        body = var("Body")
+        facts_and_rules = program(
+            rule(predicate("x"), fresh(1, lambda inner: eq(inner, "x"))),
+            fact(predicate("y")),
+        )
+
+        assert solve_all(facts_and_rules, body, clauseo(predicate("x"), body)) == []
+        assert solve_all(facts_and_rules, body, clauseo(predicate("y"), body)) == [
+            atom("true"),
+        ]
 
 
 class TestTermStateBuiltins:

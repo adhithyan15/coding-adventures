@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] - 2026-04-21
+
+### Added
+
+- `clauseo(head, body)` for Prolog-style clause introspection from inside logic queries
+- support for relation-call head arguments, source-order clause enumeration, fact bodies as `true`, rule body term encoding, and standardize-apart behavior
+- tests covering head/body filtering, instantiated rule bodies, returned variable freshness, and host-only body skipping
+
 ## [0.5.0] - 2026-04-20
 
 ### Added
