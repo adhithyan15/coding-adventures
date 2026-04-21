@@ -220,6 +220,8 @@ class _Codegen:
         self._var_pair: dict[str, int] = {}
         self._next_pair = 0           # next allocatable pair (0=P0, 1=P1, …, 5=P5)
         self._ft_ctr = 0             # fall-through label counter (for comparisons)
+        self._last_use: dict[str, int] = {}   # var → last IR index where it appears as src
+        self._instr_idx: int = 0              # current IR instruction index
 
     # ------------------------------------------------------------------
     # Pair allocation
@@ -237,14 +239,33 @@ class _Codegen:
             self._next_pair = param_idx + 1
 
     def _pair_of(self, var: str) -> int:
-        """Return the pair index allocated for *var*, or allocate one."""
-        if var not in self._var_pair:
-            if self._next_pair >= _MAX_VARS:
-                raise DeoptimizerError(
-                    f"too many virtual variables: limit is {_MAX_VARS}"
-                )
-            self._var_pair[var] = self._next_pair
-            self._next_pair += 1
+        """Return the pair index for *var*, allocating or recycling as needed.
+
+        Liveness-based recycling: before allocating a fresh pair, scan for an
+        existing variable whose last use is strictly before the current IR
+        index (i.e., it is dead). P0 and P1 are param slots and never recycled.
+        Lowest-numbered dead pair is chosen to keep allocation deterministic.
+        """
+        if var in self._var_pair:
+            return self._var_pair[var]
+        # Try to recycle the lowest-indexed dead pair (skip P0/P1 param slots).
+        dead_candidate: tuple[int, str] | None = None  # (pair, dead_var)
+        for dead_var, pair in self._var_pair.items():
+            if pair >= 2 and self._last_use.get(dead_var, -1) < self._instr_idx:
+                if dead_candidate is None or pair < dead_candidate[0]:
+                    dead_candidate = (pair, dead_var)
+        if dead_candidate is not None:
+            recycled_pair, dead_var = dead_candidate
+            del self._var_pair[dead_var]
+            self._var_pair[var] = recycled_pair
+            return recycled_pair
+        # No recyclable pair; allocate fresh.
+        if self._next_pair >= _MAX_VARS:
+            raise DeoptimizerError(
+                f"too many virtual variables: limit is {_MAX_VARS}"
+            )
+        self._var_pair[var] = self._next_pair
+        self._next_pair += 1
         return self._var_pair[var]
 
     def _pair_src(self, src: str | int) -> int:
@@ -497,12 +518,29 @@ class _Codegen:
         # Both zero: don't jump (fall through).
 
     # ------------------------------------------------------------------
+    # Liveness pre-scan
+    # ------------------------------------------------------------------
+
+    def _compute_last_use(self, ir: list[IRInstr]) -> None:
+        """Record the last IR index at which each variable appears as a source.
+
+        This enables _pair_of() to recycle register pairs whose variable is
+        dead at the current instruction, keeping peak pair usage low.
+        """
+        for idx, instr in enumerate(ir):
+            for src in instr.srcs:
+                if isinstance(src, str):
+                    self._last_use[src] = idx
+
+    # ------------------------------------------------------------------
     # Main IR → abstract-assembly translation
     # ------------------------------------------------------------------
 
     def generate(self, ir: list[IRInstr]) -> None:
         """Translate IR to abstract 4004 instructions stored in self._asm."""
-        for instr in ir:
+        self._compute_last_use(ir)
+        for idx, instr in enumerate(ir):
+            self._instr_idx = idx
             op = instr.op
 
             if op in _DEOPT_OPS:

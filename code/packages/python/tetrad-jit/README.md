@@ -83,6 +83,17 @@ Operations without a direct 4004 encoding are not supported in v1:
 When the JIT encounters any of these, `compile()` returns `False` and the
 function continues to run under the interpreter.
 
+### Register pressure
+
+The 4004 has 8 register pairs (P0–P7); P6 and P7 are reserved for RAM
+addressing and scratch temporaries, leaving P0–P5 (6 pairs) for virtual
+variables.  The code generator uses **liveness-based register recycling**:
+a pre-scan finds each variable's last use, and dead pairs are reused before
+allocating fresh ones.  Functions with ≤6 simultaneously-live variables compile
+successfully even when the total SSA variable count exceeds 6 — for example,
+`if`-branching functions whose two branches each need a small number of
+variables (the live sets never overlap).
+
 ## Compilation tiers
 
 | Tier | trigger |

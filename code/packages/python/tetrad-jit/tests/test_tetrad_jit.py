@@ -823,10 +823,23 @@ class TestDeopt:
         assert codegen(ir) is None
 
     def test_too_many_vars_returns_none(self) -> None:
-        # P0-P5 = 6 pairs max.  7 distinct vars → deopt.
+        # P0-P5 = 6 pairs max.  7 vars that are ALL simultaneously live when
+        # the 7th is allocated → no pair can be recycled → deopt.
+        # If the vars were used before all 7 are defined, liveness recycling
+        # would allow reuse and the limit would not be hit.
         ir = [
             IRInstr("const", f"v{i}", [i], "u8") for i in range(7)
-        ] + [IRInstr("ret", None, ["v0"], "u8")]
+        ] + [
+            # Each vN is first used here, so all 7 must be live while v6 is
+            # being allocated (at IR index 6).
+            IRInstr("add", "s0", ["v0", "v1"], "u8"),
+            IRInstr("add", "s1", ["v2", "v3"], "u8"),
+            IRInstr("add", "s2", ["v4", "v5"], "u8"),
+            IRInstr("add", "s3", ["v6", "s0"], "u8"),
+            IRInstr("add", "s4", ["s1", "s2"], "u8"),
+            IRInstr("add", "s5", ["s3", "s4"], "u8"),
+            IRInstr("ret", None, ["s5"], "u8"),
+        ]
         assert codegen(ir) is None
 
 
@@ -1000,6 +1013,24 @@ fn main() -> u8 { return add(10, 20); }
         assert jit.execute("lt", [3, 10]) == 1
         assert jit.execute("lt", [10, 3]) == 0
         assert jit.execute("lt", [5, 5])  == 0
+
+    def test_compare_with_branch_compiles_via_liveness_recycling(self) -> None:
+        # compare() generates 7 SSA variables (v0..v6).  With liveness-based
+        # register recycling, variables dead on each branch share pairs, so
+        # the total live simultaneously stays ≤ 6 and compilation succeeds.
+        source = """
+fn compare(a: u8, b: u8) -> u8 {
+  if a < b { return 1; }
+  return 0;
+}
+"""
+        jit = self._jit(source)
+        assert jit.compile("compare"), "expected liveness recycling to allow compile"
+        assert jit.execute("compare", [3, 10]) == 1
+        assert jit.execute("compare", [10, 3]) == 0
+        assert jit.execute("compare", [5, 5])  == 0
+        assert jit.execute("compare", [0, 255]) == 1
+        assert jit.execute("compare", [255, 0]) == 0
 
     def test_add_boundary_values(self) -> None:
         source = "fn add(a: u8, b: u8) -> u8 { return a + b; }"

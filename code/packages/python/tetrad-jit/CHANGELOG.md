@@ -20,6 +20,25 @@
 - `__init__.py` — `TetradJIT` public class with `compile`, `is_compiled`,
   `execute`, `execute_with_jit`, `cache_stats`, `dump_ir`.
 
+### Fixed
+
+- **BUILD**: removed `set -euo pipefail` (bash-only; BUILD files run under `sh`).
+- **`execute()`**: interpreter fallback now builds a synthetic caller CodeObject
+  (LDA_IMM + STA_REG + CALL + RET) instead of calling the non-existent
+  `TetradVM.call_function()` method.
+- **`execute_with_jit()`**: runs `main()` by building a synthetic CodeObject
+  with `main.instructions` and the full `code.functions` list so CALL
+  instructions can resolve function indices correctly.
+- **SUB semantics**: `Intel4004Simulator.SUB` computes `A = A + ~Rn + (1−CY)`,
+  not `+CY`.  Fixed `_emit_sub` to use `CLC` + `CMC` between nibbles.
+- **CMP semantics**: all comparison emitters updated from `STC` to `CLC`
+  (equality check: CLC gives A=0 for equal nibbles; STC gave A=15).
+- **Liveness-based register recycling**: `_pair_of()` now pre-scans IR to find
+  each variable's last use and recycles dead pairs before allocating fresh ones.
+  Functions with ≤6 simultaneously-live variables now compile even when the
+  total SSA variable count exceeds 6 (e.g. `if`-branching functions that
+  previously deopted due to the 6-pair limit now compile cleanly).
+
 ### Design decisions
 
 - **Target: Intel 4004, not x86-64.** The original TET05 draft specified
