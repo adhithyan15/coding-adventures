@@ -112,6 +112,7 @@ function makeCtx(): CanvasRenderingContext2D {
     filter: "none",
     font: "",
     textBaseline: "alphabetic" as CanvasTextBaseline,
+    textAlign: "start" as CanvasTextAlign,
 
     // --- methods (tracked by spies) ---
     clearRect: vi.fn(),
@@ -1250,5 +1251,30 @@ describe("PaintText dispatch", () => {
       ctx,
     );
     expect(ctx.font).toBe("400 16px 'sans-serif'");
+  });
+
+  it("honors text_align by setting ctx.textAlign before fillText", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(50, 20, "Centered", "canvas:Helvetica@16", 16, "#000", { text_align: "center" }),
+      ]),
+      ctx,
+    );
+    expect(ctx.textAlign).toBe("center");
+    expect(ctx.fillText).toHaveBeenCalledWith("Centered", 50, 20);
+  });
+
+  it("supports text_align = \"end\" for right-aligned cells", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(100, 20, "Right", "canvas:Helvetica@16", 16, "#000", { text_align: "end" }),
+      ]),
+      ctx,
+    );
+    expect(ctx.textAlign).toBe("end");
   });
 });
