@@ -285,6 +285,7 @@ members = [
     "aes-modes",
     "chacha20-poly1305",
     "blake2b",
+    "ct-compare",
     "zeroize",
     "irc-proto",
     "irc-framing",
