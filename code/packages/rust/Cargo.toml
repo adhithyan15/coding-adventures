@@ -343,4 +343,5 @@ members = [
     "state-machine-markup-json-serializer",
     "embeddable-tcp-server",
     "generic-job-protocol",
+    "generic-job-runtime",
 ]
