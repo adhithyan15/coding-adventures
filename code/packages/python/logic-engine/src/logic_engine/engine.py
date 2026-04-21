@@ -73,8 +73,12 @@ __all__ = [
     "Substitution",
     "SucceedExpr",
     "Term",
+    "abolish",
     "all_different",
+    "asserta",
+    "assertz",
     "atom",
+    "clauses_matching",
     "conj",
     "defer",
     "disj",
@@ -89,6 +93,8 @@ __all__ = [
     "program",
     "relation",
     "reify",
+    "retract_all",
+    "retract_first",
     "rule",
     "solve",
     "solve_all",
@@ -511,6 +517,130 @@ def program(*clauses: Clause) -> Program:
     """Construct an immutable logic program."""
 
     return Program(clauses=tuple(clauses))
+
+
+def _require_program(program_value: object) -> Program:
+    """Validate that a database helper received a program."""
+
+    if not isinstance(program_value, Program):
+        msg = "database helpers require a Program"
+        raise TypeError(msg)
+    return program_value
+
+
+def _require_clause(clause_value: object) -> Clause:
+    """Validate that a database assertion received a clause."""
+
+    if not isinstance(clause_value, Clause):
+        msg = "assertion helpers require a Clause"
+        raise TypeError(msg)
+    return clause_value
+
+
+def _require_relation(relation_value: object) -> Relation:
+    """Validate that relation-key database helpers received a relation."""
+
+    if not isinstance(relation_value, Relation):
+        msg = "abolish() requires a Relation"
+        raise TypeError(msg)
+    return relation_value
+
+
+def _require_relation_call(head_pattern: object) -> RelationCall:
+    """Validate that pattern-based helpers received a relation call."""
+
+    if not isinstance(head_pattern, RelationCall):
+        msg = "database pattern helpers require a RelationCall"
+        raise TypeError(msg)
+    return head_pattern
+
+
+def _clause_head_matches(head_pattern: RelationCall, candidate: Clause) -> bool:
+    """Return True when a clause head unifies with a relation-call pattern."""
+
+    if head_pattern.relation.key() != candidate.head.relation.key():
+        return False
+    return unify(head_pattern.as_term(), candidate.head.as_term()) is not None
+
+
+def asserta(program_value: Program, clause_value: Clause) -> Program:
+    """Return a new program with ``clause_value`` inserted at the front."""
+
+    checked_program = _require_program(program_value)
+    checked_clause = _require_clause(clause_value)
+    return Program(clauses=(checked_clause, *checked_program.clauses))
+
+
+def assertz(program_value: Program, clause_value: Clause) -> Program:
+    """Return a new program with ``clause_value`` appended at the end."""
+
+    checked_program = _require_program(program_value)
+    checked_clause = _require_clause(clause_value)
+    return Program(clauses=(*checked_program.clauses, checked_clause))
+
+
+def clauses_matching(
+    program_value: Program,
+    head_pattern: RelationCall,
+) -> tuple[Clause, ...]:
+    """Return clauses whose heads unify with ``head_pattern`` in source order."""
+
+    checked_program = _require_program(program_value)
+    checked_pattern = _require_relation_call(head_pattern)
+    return tuple(
+        clause
+        for clause in checked_program.clauses
+        if _clause_head_matches(checked_pattern, clause)
+    )
+
+
+def retract_first(
+    program_value: Program,
+    head_pattern: RelationCall,
+) -> Program | None:
+    """Return a new program with the first matching clause removed."""
+
+    checked_program = _require_program(program_value)
+    checked_pattern = _require_relation_call(head_pattern)
+    retained: list[Clause] = []
+    removed = False
+    for clause in checked_program.clauses:
+        if not removed and _clause_head_matches(checked_pattern, clause):
+            removed = True
+            continue
+        retained.append(clause)
+
+    if not removed:
+        return None
+    return Program(clauses=tuple(retained))
+
+
+def retract_all(program_value: Program, head_pattern: RelationCall) -> Program:
+    """Return a new program with every matching clause removed."""
+
+    checked_program = _require_program(program_value)
+    checked_pattern = _require_relation_call(head_pattern)
+    return Program(
+        clauses=tuple(
+            clause
+            for clause in checked_program.clauses
+            if not _clause_head_matches(checked_pattern, clause)
+        ),
+    )
+
+
+def abolish(program_value: Program, relation_value: Relation) -> Program:
+    """Return a new program without any clauses for ``relation_value``."""
+
+    checked_program = _require_program(program_value)
+    checked_relation = _require_relation(relation_value)
+    return Program(
+        clauses=tuple(
+            clause
+            for clause in checked_program.clauses
+            if clause.head.relation.key() != checked_relation.key()
+        ),
+    )
 
 
 def _rename_term(term_value: Term, mapping: dict[LogicVar, LogicVar]) -> Term:
