@@ -708,6 +708,15 @@ The first implementation should continue to reject:
 - escaping thunk descriptors
 - by-name actuals that require nonlocal `goto`, switches, or procedure values
 
+Current Phase 5a lowering may use a storage-pointer fast path for scalar
+variable actuals before general descriptor helpers exist. In that slice, the
+callee frame stores the caller scalar slot address in the by-name formal slot,
+and formal reads/writes dereference that address. This is executable for scalar
+variable actuals and useful for validating the WASM calling path, but it must
+continue to reject read-only expression actuals and array-element actuals until
+the full eval/store descriptor helpers can re-evaluate or re-locate the actual
+on every formal access.
+
 ### Required Diagnostics
 
 The phase is not complete unless unsupported forms fail before WASM lowering

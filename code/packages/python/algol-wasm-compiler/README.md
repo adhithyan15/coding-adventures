@@ -22,9 +22,11 @@ Integer arrays compile through the Phase 4 descriptor path: bounds are
 evaluated at block entry, descriptors live in frame slots, element storage lives
 in a bounded ALGOL heap segment, and every element access performs runtime
 bounds checks before touching WASM memory.
-By-name parameters are parsed and typed by the frontend, but this package still
-reports an IR compile error for them until the Phase 5 thunk-lowering pass is
-implemented.
+Scalar by-name parameters now execute through the same WASM memory path by
+passing a storage pointer into the callee frame. A by-name formal assignment
+therefore writes back to the caller's scalar slot. Expression actuals and array
+element actuals remain guarded by IR compile-stage diagnostics until the full
+Phase 5 eval/store thunk descriptors are available.
 
 ```python
 from algol_wasm_compiler import compile_source
