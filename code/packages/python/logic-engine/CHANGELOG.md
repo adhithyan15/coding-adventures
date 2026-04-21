@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] - 2026-04-20
+
+### Added
+
+- persistent clause database helpers: `asserta`, `assertz`, `clauses_matching`,
+  `retract_first`, `retract_all`, and `abolish`
+- tests proving database updates preserve source order, return new `Program`
+  values, match heads through unification, and leave original programs unchanged
+
 ## [0.4.0] - 2026-04-20
 
 ### Added

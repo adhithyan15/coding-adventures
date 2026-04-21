@@ -19,8 +19,12 @@ from logic_engine import (
     State,
     Term,
     __version__,
+    abolish,
     all_different,
+    asserta,
+    assertz,
     atom,
+    clauses_matching,
     conj,
     defer,
     disj,
@@ -33,6 +37,8 @@ from logic_engine import (
     neq,
     program,
     relation,
+    retract_all,
+    retract_first,
     rule,
     solve,
     solve_all,
@@ -47,7 +53,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.4.0"
+        assert __version__ == "0.5.0"
 
 
 class TestRelationsAndClauses:
@@ -146,6 +152,151 @@ class TestSolvingFactsAndRules:
         family = program(fact(parent("homer", "bart")))
 
         assert solve_all(family, x, ancestor("homer", x)) == []
+
+
+class TestPersistentClauseDatabase:
+    """Database helpers should update immutable programs in Prolog-like ways."""
+
+    def test_assertz_appends_clauses_in_source_order(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        family = program(fact(parent("homer", "bart")))
+
+        updated = assertz(family, fact(parent("homer", "lisa")))
+
+        assert solve_all(updated, x, parent("homer", x)) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_asserta_prepends_clauses_and_affects_answer_order(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        updated = asserta(family, fact(parent("homer", "maggie")))
+
+        assert solve_all(updated, x, parent("homer", x)) == [
+            atom("maggie"),
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_assertion_helpers_reject_invalid_inputs(self) -> None:
+        parent = relation("parent", 2)
+
+        with pytest.raises(TypeError):
+            asserta(program(), object())
+
+        with pytest.raises(TypeError):
+            assertz(object(), fact(parent("homer", "bart")))
+
+    def test_clauses_matching_uses_head_unification_in_source_order(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        homer_bart = fact(parent("homer", "bart"))
+        homer_lisa = fact(parent("homer", "lisa"))
+        marge_bart = fact(parent("marge", "bart"))
+        inverse = rule(child(x, "homer"), parent("homer", x))
+        family = program(homer_bart, homer_lisa, marge_bart, inverse)
+
+        assert clauses_matching(family, parent("homer", x)) == (
+            homer_bart,
+            homer_lisa,
+        )
+
+    def test_matching_ignores_unrelated_relation_symbols_and_arities(self) -> None:
+        parent2 = relation("parent", 2)
+        parent1 = relation("parent", 1)
+        x = var("X")
+        expected = fact(parent2("homer", "bart"))
+        family = program(expected, fact(parent1("homer")))
+
+        assert clauses_matching(family, parent2("homer", x)) == (expected,)
+
+    def test_retract_first_removes_only_the_first_matching_clause(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "bart")),
+        )
+
+        updated = retract_first(family, parent("homer", x))
+
+        assert updated is not None
+        assert solve_all(updated, x, parent("homer", x)) == [atom("lisa")]
+        assert solve_all(updated, x, parent("marge", x)) == [atom("bart")]
+
+    def test_retract_first_returns_none_when_no_clause_matches(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        family = program(fact(parent("homer", "bart")))
+
+        assert retract_first(family, parent("marge", x)) is None
+
+    def test_retract_all_removes_every_matching_clause(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "bart")),
+        )
+
+        updated = retract_all(family, parent("homer", x))
+
+        assert solve_all(updated, x, parent("homer", x)) == []
+        assert solve_all(updated, x, parent("marge", x)) == [atom("bart")]
+
+    def test_abolish_removes_a_relation_and_keeps_other_relations(self) -> None:
+        parent = relation("parent", 2)
+        sibling = relation("sibling", 2)
+        x = var("X")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(sibling("bart", "lisa")),
+        )
+
+        updated = abolish(family, parent)
+
+        assert solve_all(updated, x, parent("homer", x)) == []
+        assert solve_all(updated, x, sibling("bart", x)) == [atom("lisa")]
+
+    def test_database_updates_do_not_mutate_the_original_program(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        original = program(fact(parent("homer", "bart")))
+        asserted = assertz(original, fact(parent("homer", "lisa")))
+        retracted = retract_all(asserted, parent("homer", x))
+
+        assert solve_all(original, x, parent("homer", x)) == [atom("bart")]
+        assert solve_all(asserted, x, parent("homer", x)) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+        assert solve_all(retracted, x, parent("homer", x)) == []
+
+    def test_database_helpers_validate_programs_and_patterns(self) -> None:
+        parent = relation("parent", 2)
+
+        with pytest.raises(TypeError):
+            clauses_matching(object(), parent("homer", "bart"))
+
+        with pytest.raises(TypeError):
+            clauses_matching(program(), object())
+
+        with pytest.raises(TypeError):
+            retract_all(program(), object())
+
+        with pytest.raises(TypeError):
+            abolish(program(), object())
 
 
 class TestRecursivePrograms:

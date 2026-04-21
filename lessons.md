@@ -4,6 +4,23 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-20: Downstream package tests should not pin exact dependency patch versions
+
+When a foundational package intentionally bumps its version, dependent packages
+may rebuild in the same affected set. If a downstream test asserts the exact
+dependency version string, the downstream package fails even when its declared
+dependency range and runtime behavior are still valid.
+
+**Symptom:** A package depending on `logic-engine>=0.3.0` failed only because a
+test asserted `logic_engine.__version__ == "0.4.0"` after `logic-engine` moved
+to `0.5.0`.
+
+**Rule:** Downstream smoke tests should assert a minimum compatible dependency
+version or a capability, not an exact dependency version, unless the package
+truly requires that exact release.
+
+---
+
 ### 2026-04-20: Compiler-generated data segments need source-stage size caps
 
 Even when a frontend only emits internal IR, any IR data declaration that a

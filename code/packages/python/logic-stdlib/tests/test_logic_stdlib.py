@@ -36,7 +36,8 @@ class TestVersion:
 
     def test_version_exists(self) -> None:
         assert __version__ == "0.4.0"
-        assert logic_engine_version == "0.4.0"
+        engine_major, engine_minor, _engine_patch = logic_engine_version.split(".")
+        assert (int(engine_major), int(engine_minor)) >= (0, 4)
 
 
 class TestListRelations:

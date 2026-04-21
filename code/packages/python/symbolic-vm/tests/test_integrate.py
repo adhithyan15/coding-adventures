@@ -246,11 +246,13 @@ def test_integrate_sqrt(vm: VM) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_integrate_two_x_factors_unevaluated(vm: VM) -> None:
-    # ∫ x·sin(x) dx needs integration by parts — Phase 1 leaves it.
+def test_integrate_poly_times_sin_now_closed_by_phase4(vm: VM) -> None:
+    # ∫ x·sin(x) dx = sin(x) − x·cos(x)  (Phase 4a closes this).
     inner = IRApply(MUL, (X, IRApply(SIN, (X,))))
-    expr = _integrate(inner)
-    assert vm.eval(expr) == IRApply(INTEGRATE, (inner, X))
+    result = vm.eval(_integrate(inner))
+    assert result != IRApply(INTEGRATE, (inner, X)), (
+        "Phase 4a should close x·sin(x) — got unevaluated result"
+    )
 
 
 def test_integrate_composed_trig_now_closed_by_phase3(vm: VM) -> None:
