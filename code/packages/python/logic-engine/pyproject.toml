@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-engine"
-version = "0.4.0"
-description = "Logic programming engine: relations, clauses, programs, resolution, and disequality"
+version = "0.5.0"
+description = "Logic programming engine: relations, clauses, persistent programs, resolution, and disequality"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -25,7 +25,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP02-disequality-constraints.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP16-logic-persistent-clause-database.md"
 
 [project.optional-dependencies]
 dev = [

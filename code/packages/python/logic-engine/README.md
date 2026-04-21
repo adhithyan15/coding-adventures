@@ -9,6 +9,8 @@ that make relational programs feel like programs:
 - named relations such as `parent/2`
 - facts and rules
 - immutable clause databases
+- persistent database updates via `asserta(...)`, `assertz(...)`, `retract_*`,
+  and `abolish(...)`
 - recursive solving with depth-first backtracking
 - deferred recursive goal builders via `defer(...)`
 - state-aware native goal hooks via `native_goal(...)` for library builtins
@@ -47,6 +49,29 @@ answers = solve_n(
 )
 
 assert answers
+```
+
+## Persistent Clause Databases
+
+Database helpers return new programs instead of mutating the existing program.
+That gives Python callers Prolog-style database operations while keeping
+backtracking deterministic.
+
+```python
+from logic_engine import atom, assertz, fact, program, relation, retract_first, solve_all, var
+
+parent = relation("parent", 2)
+X = var("X")
+
+family = program(fact(parent("homer", "bart")))
+expanded = assertz(family, fact(parent("homer", "lisa")))
+
+assert solve_all(family, X, parent("homer", X)) == [atom("bart")]
+assert solve_all(expanded, X, parent("homer", X)) == [atom("bart"), atom("lisa")]
+
+without_first = retract_first(expanded, parent("homer", X))
+assert without_first is not None
+assert solve_all(without_first, X, parent("homer", X)) == [atom("lisa")]
 ```
 
 ## Dependencies
