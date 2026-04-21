@@ -29,16 +29,15 @@ from sql_planner.plan import (
     Aggregate,
     DerivedTable,
     Distinct,
+    Except,
     Filter,
+    Having,
+    Intersect,
     Join,
     LogicalPlan,
     Project,
-    Scan,
     Sort,
     Union,
-    Intersect,
-    Except,
-    Having,
 )
 from sql_planner.plan import (
     Limit as PlanLimit,
@@ -159,31 +158,31 @@ def _flatten_children(p: LogicalPlan) -> LogicalPlan:
     would fail because the inner ``Project(Aggregate(...))`` is never rewritten.
     """
     match p:
-        case DerivedTable(query=inner, alias=alias, columns=cols):
+        case DerivedTable(query=inner):
             return replace(p, query=_flatten_project_over_aggregate(inner))
-        case Filter(input=inner, predicate=pred):
+        case Filter(input=inner):
             return replace(p, input=_flatten_children(inner))
-        case Project(input=inner, items=items):
+        case Project(input=inner):
             return replace(p, input=_flatten_children(inner))
-        case Sort(input=inner, keys=keys):
+        case Sort(input=inner):
             return replace(p, input=_flatten_children(inner))
         case Distinct(input=inner):
             return replace(p, input=_flatten_children(inner))
         case PlanLimit(input=inner):
             return replace(p, input=_flatten_children(inner))
-        case Having(input=inner, predicate=pred):
+        case Having(input=inner):
             return replace(p, input=_flatten_children(inner))
-        case Aggregate(input=inner, group_by=gb, aggregates=aggs):
+        case Aggregate(input=inner):
             return replace(p, input=_flatten_children(inner))
-        case Join(left=l, right=r, condition=c, kind=k):
+        case Join(left=l, right=r):
             return replace(p, left=_flatten_children(l), right=_flatten_children(r))
-        case Union(left=l, right=r, all=all_):
+        case Union(left=l, right=r):
             return replace(p, left=_flatten_project_over_aggregate(l),
                            right=_flatten_project_over_aggregate(r))
-        case Intersect(left=l, right=r, all=all_):
+        case Intersect(left=l, right=r):
             return replace(p, left=_flatten_project_over_aggregate(l),
                            right=_flatten_project_over_aggregate(r))
-        case Except(left=l, right=r, all=all_):
+        case Except(left=l, right=r):
             return replace(p, left=_flatten_project_over_aggregate(l),
                            right=_flatten_project_over_aggregate(r))
         case _:

@@ -436,7 +436,9 @@ def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
         if q is not None:
             inner_stmt = _query_stmt(q)
             if not isinstance(inner_stmt, SelectStmt):
-                raise ProgrammingError("INSERT … SELECT requires a plain SELECT, not a set operation")
+                raise ProgrammingError(
+                    "INSERT \u2026 SELECT requires a plain SELECT, not a set operation"
+                )
             return InsertSelectStmt(table=table, columns=columns, select=inner_stmt)
         rows = tuple(_row_value(rv, state) for rv in _child_nodes(insert_body_node, "row_value"))
         return InsertValuesStmt(table=table, columns=columns, rows=rows)
