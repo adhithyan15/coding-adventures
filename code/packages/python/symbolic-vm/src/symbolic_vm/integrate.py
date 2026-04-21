@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–5).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–6).
 
 The handler tries two routes, in order:
 
@@ -367,6 +367,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             return result
         # Phase 4b: trig × trig via product-to-sum identities.
         result = _try_trig_trig(a, b, x) or _try_trig_trig(b, a, x)
+        if result is not None:
+            return result
+        # Phase 6: sinⁿ × cosᵐ with the same linear argument.
+        result = _try_sin_cos_power(a, b, x)
         if result is not None:
             return result
         # Phase 4c: exp × trig via double-IBP closed form.
@@ -893,6 +897,183 @@ def _tan_power(n: int, a: Fraction, b: Fraction, x: IRSymbol) -> IRNode | None:
     if inner_int is None:
         return None
     return IRApply(SUB, (term, inner_int))
+
+
+# ---------------------------------------------------------------------------
+# Phase 6 helpers — sinⁿ·cosᵐ mixed trig powers
+# ---------------------------------------------------------------------------
+
+
+def _extract_trig_power(
+    node: IRNode, x: IRSymbol
+) -> tuple[IRSymbol, int, Fraction, Fraction] | None:
+    """Return ``(head, exponent, a, b)`` if ``node`` is ``SIN/COS(linear)^n``.
+
+    Accepts bare ``SIN/COS(linear)`` (treated as exponent 1) and
+    ``POW(SIN/COS(linear), n)`` for integer n ≥ 1.  Returns ``None``
+    for anything else.
+    """
+    if not isinstance(node, IRApply):
+        return None
+    if node.head in {SIN, COS} and len(node.args) == 1:
+        lin = _try_linear(node.args[0], x)
+        if lin is not None:
+            return (node.head, 1, lin[0], lin[1])
+    if node.head == POW and len(node.args) == 2:
+        base, exp = node.args
+        if (
+            isinstance(base, IRApply)
+            and base.head in {SIN, COS}
+            and len(base.args) == 1
+            and isinstance(exp, IRInteger)
+            and exp.value >= 1
+        ):
+            lin = _try_linear(base.args[0], x)
+            if lin is not None:
+                return (base.head, exp.value, lin[0], lin[1])
+    return None
+
+
+def _try_sin_cos_power(
+    fa: IRNode, fb: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ sinⁿ cosᵐ dx`` for matched trig-power pairs, or ``None``.
+
+    Guards:
+    - One factor is SIN-based, the other is COS-based.
+    - Both use the same linear argument ``ax + b`` (a ≠ 0, coefficients ∈ Q).
+    - Both exponents ≥ 1, and at least one ≥ 2 (the n=m=1 same-arg case is
+      already handled by ``_try_trig_trig`` via the product-to-sum identity).
+
+    Dispatches to:
+    - Case A (n odd): closed-form binomial sum over cos powers.
+    - Case B (m odd, n even): closed-form binomial sum over sin powers.
+    - Case C (both even): IBP reduction formula reducing n by 2 each step.
+    """
+    ta = _extract_trig_power(fa, x)
+    tb = _extract_trig_power(fb, x)
+    if ta is None or tb is None:
+        return None
+    head_a, na, aa, ba = ta
+    head_b, nb, ab, bb = tb
+    # Must have one SIN factor and one COS factor.
+    if head_a == head_b:
+        return None
+    # Same linear argument required.
+    if aa != ab or ba != bb:
+        return None
+    # Linear coefficient must be non-zero.
+    if aa == Fraction(0):
+        return None
+    # Normalise: n = sin exponent, m = cos exponent.
+    if head_a == SIN:
+        n, m = na, nb
+    else:
+        n, m = nb, na
+    a_frac, b_frac = aa, ba
+    # Require at least one exponent ≥ 2 (n=m=1 same-arg case → _try_trig_trig).
+    if max(n, m) < 2:
+        return None
+
+    if n % 2 == 1:
+        return _sin_cos_odd_sin(n, m, a_frac, b_frac, x)
+    if m % 2 == 1:
+        return _sin_cos_odd_cos(n, m, a_frac, b_frac, x)
+    return _sin_cos_even(n, m, a_frac, b_frac, x)
+
+
+def _sin_cos_odd_sin(
+    n: int, m: int, a: Fraction, b: Fraction, x: IRSymbol
+) -> IRNode:
+    """Return ``∫ sinⁿ cosᵐ (ax+b) dx`` for odd n via cosine substitution.
+
+    u = cos(ax+b), du = -a·sin(ax+b)dx.  sinⁿ⁻¹ = (1−u²)^k (k=(n−1)/2).
+    Binomial expansion gives a closed-form sum over cos powers:
+
+      -(1/a) · Σ_{j=0}^{k} C(k,j)·(−1)^j / (m+2j+1) · cos^{m+2j+1}(ax+b)
+    """
+    import math
+
+    k = (n - 1) // 2
+    arg = linear_to_ir(a, b, x)
+    cos_ir = IRApply(COS, (arg,))
+    # Build left-associative ADD chain of terms.
+    terms: list[IRNode] = []
+    for j in range(k + 1):
+        coef = Fraction(math.comb(k, j) * ((-1) ** j), m + 2 * j + 1)
+        pow_ir = IRApply(POW, (cos_ir, IRInteger(m + 2 * j + 1)))
+        term = IRApply(MUL, (_frac_ir(coef), pow_ir))
+        terms.append(term)
+    # Sum all terms.
+    total: IRNode = terms[0]
+    for t in terms[1:]:
+        total = IRApply(ADD, (total, t))
+    # Multiply by -(1/a).
+    scaled = IRApply(NEG, (IRApply(DIV, (total, _frac_ir(a))),))
+    return scaled
+
+
+def _sin_cos_odd_cos(
+    n: int, m: int, a: Fraction, b: Fraction, x: IRSymbol
+) -> IRNode:
+    """Return ``∫ sinⁿ cosᵐ (ax+b) dx`` for even n, odd m via sine substitution.
+
+    u = sin(ax+b), du = a·cos(ax+b)dx.  cosᵐ⁻¹ = (1−u²)^k (k=(m−1)/2).
+    Binomial expansion gives a closed-form sum over sin powers:
+
+      (1/a) · Σ_{j=0}^{k} C(k,j)·(−1)^j / (n+2j+1) · sin^{n+2j+1}(ax+b)
+    """
+    import math
+
+    k = (m - 1) // 2
+    arg = linear_to_ir(a, b, x)
+    sin_ir = IRApply(SIN, (arg,))
+    terms: list[IRNode] = []
+    for j in range(k + 1):
+        coef = Fraction(math.comb(k, j) * ((-1) ** j), n + 2 * j + 1)
+        pow_ir = IRApply(POW, (sin_ir, IRInteger(n + 2 * j + 1)))
+        term = IRApply(MUL, (_frac_ir(coef), pow_ir))
+        terms.append(term)
+    total: IRNode = terms[0]
+    for t in terms[1:]:
+        total = IRApply(ADD, (total, t))
+    return IRApply(DIV, (total, _frac_ir(a)))
+
+
+def _sin_cos_even(
+    n: int, m: int, a: Fraction, b: Fraction, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ sinⁿ cosᵐ (ax+b) dx`` for even n, m via IBP reduction.
+
+    Reduction formula (reduces n by 2):
+
+      ∫ sinⁿ cosᵐ dx = -sinⁿ⁻¹ cosᵐ⁺¹ / ((n+m)·a) + (n−1)/(n+m) · ∫ sinⁿ⁻² cosᵐ dx
+
+    Terminates at n=0: delegates to Phase 5b (``∫ cosᵐ dx``).
+    """
+    arg = linear_to_ir(a, b, x)
+    sin_ir = IRApply(SIN, (arg,))
+    cos_ir = IRApply(COS, (arg,))
+    nm = n + m
+    nma = _frac_ir(Fraction(nm) * a)
+    # -sinⁿ⁻¹ cosᵐ⁺¹ / ((n+m)·a)
+    sin_nm1 = IRApply(POW, (sin_ir, IRInteger(n - 1)))
+    cos_mp1 = IRApply(POW, (cos_ir, IRInteger(m + 1)))
+    term = IRApply(NEG, (IRApply(DIV, (IRApply(MUL, (sin_nm1, cos_mp1)), nma)),))
+    # (n-1)/(n+m) · ∫ sinⁿ⁻² cosᵐ dx
+    coef = _frac_ir(Fraction(n - 1, nm))
+    n2 = n - 2
+    if n2 == 0:
+        inner_f: IRNode = IRApply(POW, (cos_ir, IRInteger(m)))
+    else:
+        sin_n2 = IRApply(POW, (sin_ir, IRInteger(n2)))
+        cos_m = IRApply(POW, (cos_ir, IRInteger(m)))
+        inner_f = IRApply(MUL, (sin_n2, cos_m))
+    inner_int = _integrate(inner_f, x)
+    if inner_int is None:
+        return None
+    tail = IRApply(MUL, (coef, inner_int))
+    return IRApply(ADD, (term, tail))
 
 
 def _depends_on(node: IRNode, var: IRSymbol) -> bool:
