@@ -9,11 +9,40 @@ import pytest
 
 import mini_redis_python_worker.stdio_worker as stdio_worker
 from mini_redis_python_worker import (
+    JOB_PROTOCOL_VERSION,
     MiniRedisWorker,
     RespReply,
     __version__,
     run_stdio_worker,
 )
+
+
+def job_request(
+    job_id: str,
+    connection_id: str,
+    sequence: int,
+    argv: list[bytes],
+) -> dict[str, object]:
+    """Build the generic job-protocol request used by Rust language bridges."""
+
+    return {
+        "version": JOB_PROTOCOL_VERSION,
+        "kind": "request",
+        "body": {
+            "id": job_id,
+            "payload": {"argv_hex": [part.hex() for part in argv]},
+            "metadata": {
+                "created_at_ms": 0,
+                "deadline_at_ms": None,
+                "priority": 0,
+                "affinity_key": connection_id,
+                "sequence": sequence,
+                "attempt": 0,
+                "trace_id": None,
+                "tags": {},
+            },
+        },
+    }
 
 
 def test_version_exists() -> None:
@@ -129,22 +158,22 @@ def test_select_is_connection_local() -> None:
 
 
 def test_wire_request_round_trips_hex_encoded_arguments() -> None:
-    """JSON-line requests avoid raw binary at the process boundary."""
+    """Generic job-protocol requests avoid raw binary at the process boundary."""
 
     worker = MiniRedisWorker()
-    request = {
-        "id": "job-1",
-        "connection_id": "7",
-        "sequence": 4,
-        "argv_hex": [b"PING".hex()],
-    }
+    request = job_request("job-1", "7", 4, [b"PING"])
     response = json.loads(worker.handle_wire_request(json.dumps(request)))
     assert response == {
-        "id": "job-1",
-        "connection_id": "7",
-        "sequence": 4,
-        "ok": True,
-        "resp_hex": b"+PONG\r\n".hex(),
+        "version": JOB_PROTOCOL_VERSION,
+        "kind": "response",
+        "body": {
+            "id": "job-1",
+            "result": {
+                "status": "ok",
+                "payload": {"resp_hex": b"+PONG\r\n".hex()},
+            },
+            "metadata": request["body"]["metadata"],  # type: ignore[index]
+        },
     }
 
 
@@ -155,20 +184,10 @@ def test_stdio_worker_processes_multiple_lines() -> None:
         "\n".join(
             [
                 json.dumps(
-                    {
-                        "id": "a",
-                        "connection_id": "1",
-                        "sequence": 1,
-                        "argv_hex": [b"SET".hex(), b"k".hex(), b"v".hex()],
-                    }
+                    job_request("a", "1", 1, [b"SET", b"k", b"v"])
                 ),
                 json.dumps(
-                    {
-                        "id": "b",
-                        "connection_id": "1",
-                        "sequence": 2,
-                        "argv_hex": [b"GET".hex(), b"k".hex()],
-                    }
+                    job_request("b", "1", 2, [b"GET", b"k"])
                 ),
             ]
         )
@@ -177,8 +196,8 @@ def test_stdio_worker_processes_multiple_lines() -> None:
     stdout = StringIO()
     run_stdio_worker(stdin, stdout)
     lines = [json.loads(line) for line in stdout.getvalue().splitlines()]
-    assert lines[0]["resp_hex"] == b"+OK\r\n".hex()
-    assert lines[1]["resp_hex"] == b"$1\r\nv\r\n".hex()
+    assert lines[0]["body"]["result"]["payload"]["resp_hex"] == b"+OK\r\n".hex()
+    assert lines[1]["body"]["result"]["payload"]["resp_hex"] == b"$1\r\nv\r\n".hex()
 
 
 def test_stdio_worker_reports_protocol_errors_and_skips_blank_lines() -> None:
@@ -188,9 +207,13 @@ def test_stdio_worker_reports_protocol_errors_and_skips_blank_lines() -> None:
     run_stdio_worker(StringIO("\nnot-json\n"), stdout)
     lines = [json.loads(line) for line in stdout.getvalue().splitlines()]
     assert len(lines) == 1
-    assert lines[0]["ok"] is False
-    assert lines[0]["id"] == "unknown"
-    assert lines[0]["error"].startswith("worker protocol error:")
+    assert lines[0]["version"] == JOB_PROTOCOL_VERSION
+    assert lines[0]["kind"] == "response"
+    assert lines[0]["body"]["id"] == "unknown"
+    assert lines[0]["body"]["result"]["status"] == "error"
+    assert lines[0]["body"]["result"]["error"]["message"].startswith(
+        "worker protocol error:"
+    )
 
 
 def test_stdio_worker_main_delegates_to_worker_loop(

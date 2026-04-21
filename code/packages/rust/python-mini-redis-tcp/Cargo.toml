@@ -5,8 +5,8 @@ edition = "2021"
 description = "Rust TCP runtime bridge that delegates Mini Redis commands to Python workers"
 
 [dependencies]
+generic-job-protocol = { path = "../generic-job-protocol" }
 resp-protocol = { path = "../resp-protocol" }
 serde = { version = "1", features = ["derive"] }
-serde_json = "1"
 tcp-runtime = { path = "../tcp-runtime" }
 transport-platform = { path = "../transport-platform" }

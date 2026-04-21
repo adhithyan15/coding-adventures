@@ -3,11 +3,10 @@
 The Rust side owns the TCP listener, native event loop, socket buffers, RESP
 framing, and response writes. This package owns the application command logic.
 
-The bridge between the two is intentionally plain: one JSON object per line.
-Requests contain command arguments as hex-encoded bytes, and responses contain a
-hex-encoded RESP frame. That format is not the final high-performance worker
-protocol; it is the smallest debuggable seam that proves Python can be a Mini
-Redis consumer behind the Rust TCP runtime.
+The bridge between the two uses the same generic job protocol envelope that
+other language workers should eventually implement. JSON lines are still the
+prototype wire encoding, but the shape is no longer Redis-specific:
+`JobRequest[payload]` in, `JobResponse[payload]` out.
 """
 
 from __future__ import annotations
@@ -26,6 +25,7 @@ type RedisValue = RedisString | RedisHash
 type RespKind = Literal["simple", "error", "integer", "bulk"]
 
 DEFAULT_DATABASES = 16
+JOB_PROTOCOL_VERSION = 1
 
 
 @dataclass(frozen=True)
@@ -85,24 +85,13 @@ class MiniRedisWorker:
         return reply.encode()
 
     def handle_wire_request(self, line: str) -> str:
-        """Handle one JSON-line worker request and return one JSON line."""
+        """Handle one generic job-protocol request and return one response."""
 
-        request = json.loads(line)
-        job_id = str(request["id"])
-        connection_id = str(request["connection_id"])
-        sequence = int(request.get("sequence", 0))
-        argv = [bytes.fromhex(part) for part in request["argv_hex"]]
+        job_id, metadata, payload = _decode_job_request(line)
+        connection_id = str(metadata.get("affinity_key", ""))
+        argv = [bytes.fromhex(part) for part in payload["argv_hex"]]
         response = self.execute(connection_id, argv)
-        return json.dumps(
-            {
-                "id": job_id,
-                "connection_id": connection_id,
-                "sequence": sequence,
-                "ok": True,
-                "resp_hex": response.hex(),
-            },
-            separators=(",", ":"),
-        )
+        return _encode_job_response(job_id, metadata, {"resp_hex": response.hex()})
 
     def _database(self, connection_id: str) -> dict[bytes, RedisValue]:
         selected = self.selected_db_by_connection.get(connection_id, 0)
@@ -252,7 +241,7 @@ def run_stdio_worker(
     stdin: TextIOBase | None = None,
     stdout: TextIOBase | None = None,
 ) -> None:
-    """Run the JSON-line worker protocol on standard input and output."""
+    """Run the generic job-protocol JSON-line worker loop."""
 
     input_stream = stdin or sys.stdin
     output_stream = stdout or sys.stdout
@@ -265,18 +254,82 @@ def run_stdio_worker(
         try:
             response = worker.handle_wire_request(line)
         except Exception as exc:  # noqa: BLE001 - worker protocol must survive.
-            response = json.dumps(
-                {
-                    "id": "unknown",
-                    "connection_id": "unknown",
-                    "sequence": 0,
-                    "ok": False,
-                    "error": f"worker protocol error: {exc}",
-                },
-                separators=(",", ":"),
+            response = _encode_job_error_response(
+                "unknown",
+                {},
+                "worker_protocol_error",
+                f"worker protocol error: {exc}",
             )
         output_stream.write(response + "\n")
         output_stream.flush()
+
+
+def _decode_job_request(line: str) -> tuple[str, dict[str, object], dict[str, object]]:
+    frame = json.loads(line)
+    if frame.get("version") != JOB_PROTOCOL_VERSION:
+        raise ValueError(f"unsupported job protocol version: {frame.get('version')}")
+    if frame.get("kind") != "request":
+        raise ValueError(f"expected request frame, got {frame.get('kind')!r}")
+
+    body = frame["body"]
+    metadata = body.get("metadata", {})
+    payload = body["payload"]
+    if not isinstance(metadata, dict):
+        raise ValueError("job metadata must be an object")
+    if not isinstance(payload, dict):
+        raise ValueError("job payload must be an object")
+    return str(body["id"]), metadata, payload
+
+
+def _encode_job_response(
+    job_id: str,
+    metadata: dict[str, object],
+    payload: dict[str, object],
+) -> str:
+    return json.dumps(
+        {
+            "version": JOB_PROTOCOL_VERSION,
+            "kind": "response",
+            "body": {
+                "id": job_id,
+                "result": {
+                    "status": "ok",
+                    "payload": payload,
+                },
+                "metadata": metadata,
+            },
+        },
+        separators=(",", ":"),
+    )
+
+
+def _encode_job_error_response(
+    job_id: str,
+    metadata: dict[str, object],
+    code: str,
+    message: str,
+) -> str:
+    return json.dumps(
+        {
+            "version": JOB_PROTOCOL_VERSION,
+            "kind": "response",
+            "body": {
+                "id": job_id,
+                "result": {
+                    "status": "error",
+                    "error": {
+                        "code": code,
+                        "message": message,
+                        "retryable": False,
+                        "origin": "worker",
+                        "detail": None,
+                    },
+                },
+                "metadata": metadata,
+            },
+        },
+        separators=(",", ":"),
+    )
 
 
 def _as_bytes(value: bytes | str | int | None) -> bytes:

@@ -10,19 +10,24 @@ on application jobs while Rust keeps the transport plane safe and fast.
 
 ## Protocol
 
-The worker reads one JSON object per line from stdin. Request arguments are
-hex-encoded bytes so binary RESP payloads do not depend on text encodings:
+The worker reads one generic job-protocol frame per line from stdin. Request
+arguments are hex-encoded inside the payload so binary RESP data does not depend
+on text encodings:
 
 ```json
-{"id":"job-1","connection_id":"7","sequence":1,"argv_hex":["50494e47"]}
+{"version":1,"kind":"request","body":{"id":"job-1","payload":{"argv_hex":["50494e47"]},"metadata":{"affinity_key":"7","sequence":1}}}
 ```
 
-The worker writes one JSON object per line to stdout. Successful responses carry
-a hex-encoded RESP frame:
+The worker writes one generic response frame per line to stdout. Successful
+responses carry a hex-encoded RESP frame inside the response payload:
 
 ```json
-{"id":"job-1","connection_id":"7","sequence":1,"ok":true,"resp_hex":"2b504f4e470d0a"}
+{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"resp_hex":"2b504f4e470d0a"}},"metadata":{"affinity_key":"7","sequence":1}}}
 ```
+
+This mirrors the Rust `generic-job-protocol` crate. The Python package does not
+own the protocol; it is one language worker implementation that responds to the
+shared `JobRequest` / `JobResponse` shape.
 
 ## Commands
 
@@ -40,8 +45,8 @@ tests:
 - `HEXISTS`
 - `SELECT`
 
-`SELECT` state is tracked by `connection_id`, because database selection belongs
-to the Redis session rather than to the global worker.
+`SELECT` state is tracked by `metadata.affinity_key`, because database selection
+belongs to the Redis session rather than to the global worker.
 
 ## Usage
 

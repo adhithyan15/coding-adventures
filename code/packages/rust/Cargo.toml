@@ -342,4 +342,5 @@ members = [
     "state-machine-markup-deserializer",
     "state-machine-markup-json-serializer",
     "python-mini-redis-tcp",
+    "generic-job-protocol",
 ]

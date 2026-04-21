@@ -8,13 +8,14 @@
 //! - Rust owns TCP sockets, native event-loop integration, connection state,
 //!   RESP request framing, and response writes.
 //! - Python owns Redis command execution and key/value state.
-//! - The process boundary uses one JSON object per line with hex-encoded byte
-//!   arrays so the contract is inspectable before we optimize it.
+//! - The process boundary uses `generic-job-protocol` frames so this prototype
+//!   exercises the same `JobRequest<T>` / `JobResponse<U>` seam other language
+//!   bridges can wrap.
 //!
 //! The current prototype calls the Python worker synchronously from the TCP
 //! read callback. That proves the language boundary and the TCP-runtime
 //! consumer shape, but it is not the final job-runtime design. The next layer
-//! should route requests through `generic-job-runtime` so worker completions can
+//! should route requests through an executor runtime so worker completions can
 //! be applied asynchronously without blocking the reactor.
 
 use std::fmt;
@@ -24,6 +25,10 @@ use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 
+use generic_job_protocol::{
+    decode_response_json_line, encode_request_json_line, JobCodecError, JobMetadata, JobRequest,
+    JobResponse, JobResult,
+};
 use resp_protocol::{decode, encode, RespError, RespValue};
 use serde::{Deserialize, Serialize};
 use tcp_runtime::{ConnectionId, PlatformError, StopHandle, TcpHandlerResult, TcpRuntime};
@@ -204,16 +209,19 @@ impl PythonWorkerProcess {
         self.next_job_id += 1;
         let expected_connection_id = connection_id.0.to_string();
 
-        let request = WorkerRequest {
-            id: id.clone(),
-            connection_id: expected_connection_id.clone(),
-            sequence,
-            argv_hex: argv.into_iter().map(hex_encode).collect(),
-        };
+        let metadata = JobMetadata::default()
+            .with_affinity_key(expected_connection_id.clone())
+            .with_sequence(sequence);
+        let request = JobRequest::new(
+            id.clone(),
+            RedisCommandJob {
+                argv_hex: argv.into_iter().map(hex_encode).collect(),
+            },
+        )
+        .with_metadata(metadata);
 
-        let encoded = serde_json::to_string(&request)?;
+        let encoded = encode_request_json_line(&request)?;
         self.stdin.write_all(encoded.as_bytes())?;
-        self.stdin.write_all(b"\n")?;
         self.stdin.flush()?;
 
         let mut line = String::new();
@@ -224,38 +232,43 @@ impl PythonWorkerProcess {
             ));
         }
 
-        let response: WorkerResponse = serde_json::from_str(line.trim_end())?;
+        let response: JobResponse<RedisResponseJob> = decode_response_json_line(line.trim_end())?;
         if response.id != id {
             return Err(WorkerError::Protocol(format!(
                 "python worker response id mismatch: expected {}, got {}",
                 id, response.id
             )));
         }
-        if response.connection_id != expected_connection_id {
+        let actual_connection_id = response.metadata.affinity_key.as_deref();
+        if actual_connection_id != Some(expected_connection_id.as_str()) {
             return Err(WorkerError::Protocol(format!(
-                "python worker connection id mismatch: expected {}, got {}",
-                expected_connection_id, response.connection_id
+                "python worker affinity mismatch: expected {}, got {:?}",
+                expected_connection_id, actual_connection_id
             )));
         }
-        if response.sequence != sequence {
+        if response.metadata.sequence != Some(sequence) {
             return Err(WorkerError::Protocol(format!(
-                "python worker sequence mismatch: expected {}, got {}",
-                sequence, response.sequence
+                "python worker sequence mismatch: expected {}, got {:?}",
+                sequence, response.metadata.sequence
             )));
         }
-        if !response.ok {
-            return Err(WorkerError::Protocol(
-                response
-                    .error
-                    .unwrap_or_else(|| "python worker returned an error".to_string()),
-            ));
+        match response.result {
+            JobResult::Ok { payload } => {
+                hex_decode(&payload.resp_hex).map_err(WorkerError::Protocol)
+            }
+            JobResult::Error { error } => Err(WorkerError::Protocol(format!(
+                "{}: {}",
+                error.code, error.message
+            ))),
+            JobResult::Cancelled { cancellation } => Err(WorkerError::Protocol(format!(
+                "python worker cancelled job: {}",
+                cancellation.message
+            ))),
+            JobResult::TimedOut { timeout } => Err(WorkerError::Protocol(format!(
+                "python worker timed out job: {}",
+                timeout.message
+            ))),
         }
-        let Some(resp_hex) = response.resp_hex else {
-            return Err(WorkerError::Protocol(
-                "python worker omitted resp_hex".to_string(),
-            ));
-        };
-        hex_decode(&resp_hex).map_err(WorkerError::Protocol)
     }
 }
 
@@ -266,28 +279,20 @@ impl Drop for PythonWorkerProcess {
     }
 }
 
-#[derive(Debug, Serialize)]
-struct WorkerRequest {
-    id: String,
-    connection_id: String,
-    sequence: u64,
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+struct RedisCommandJob {
     argv_hex: Vec<String>,
 }
 
-#[derive(Debug, Deserialize)]
-struct WorkerResponse {
-    id: String,
-    connection_id: String,
-    sequence: u64,
-    ok: bool,
-    resp_hex: Option<String>,
-    error: Option<String>,
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+struct RedisResponseJob {
+    resp_hex: String,
 }
 
 #[derive(Debug)]
 enum WorkerError {
     Io(io::Error),
-    Json(serde_json::Error),
+    Codec(JobCodecError),
     Protocol(String),
 }
 
@@ -295,7 +300,7 @@ impl fmt::Display for WorkerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Io(error) => write!(f, "worker I/O error: {error}"),
-            Self::Json(error) => write!(f, "worker JSON error: {error}"),
+            Self::Codec(error) => write!(f, "worker protocol error: {error}"),
             Self::Protocol(message) => f.write_str(message),
         }
     }
@@ -307,9 +312,9 @@ impl From<io::Error> for WorkerError {
     }
 }
 
-impl From<serde_json::Error> for WorkerError {
-    fn from(value: serde_json::Error) -> Self {
-        Self::Json(value)
+impl From<JobCodecError> for WorkerError {
+    fn from(value: JobCodecError) -> Self {
+        Self::Codec(value)
     }
 }
 
@@ -585,10 +590,50 @@ mod tests {
         )
     }
 
+    fn python_interpreter() -> Option<String> {
+        python_candidates()
+            .into_iter()
+            .find(|candidate| python_can_run_worker(candidate))
+    }
+
+    fn scripted_worker(script: &str) -> Option<PythonWorkerCommand> {
+        python_interpreter().map(|program| {
+            PythonWorkerCommand::new(program, vec!["-c".to_string(), script.to_string()])
+        })
+    }
+
+    fn execute_scripted_worker(script: &str) -> Result<Vec<u8>, WorkerError> {
+        let command = scripted_worker(script).expect("python interpreter");
+        let mut worker = PythonWorkerProcess::spawn(&command).expect("spawn scripted worker");
+        worker.execute(ConnectionId(7), 11, vec![b"PING".to_vec()])
+    }
+
     #[test]
     fn hex_round_trips_binary_bytes() {
         let bytes = vec![0, 1, 2, 15, 16, 255];
         assert_eq!(hex_decode(&hex_encode(bytes.clone())).unwrap(), bytes);
+    }
+
+    #[test]
+    fn hex_decode_rejects_malformed_input() {
+        assert_eq!(
+            hex_decode("abc"),
+            Err("hex input has odd length".to_string())
+        );
+        assert_eq!(hex_decode("zz"), Err("invalid hex byte: 122".to_string()));
+    }
+
+    #[test]
+    fn options_default_and_runtime_options_are_stable() {
+        let worker = PythonWorkerCommand::new("python3.12", vec!["worker.py".to_string()]);
+        let options = PythonMiniRedisOptions::new(worker.clone());
+        assert_eq!(options.host, "127.0.0.1");
+        assert_eq!(options.port, 6379);
+        assert_eq!(options.worker, worker);
+
+        let mut zero_connections = options.clone();
+        zero_connections.max_connections = 0;
+        assert_eq!(runtime_options(&zero_connections).max_connections, 1);
     }
 
     #[test]
@@ -598,6 +643,50 @@ mod tests {
             argv_from_resp(value),
             Some(vec![b"PING".to_vec(), b"hello".to_vec()])
         );
+    }
+
+    #[test]
+    fn argv_from_resp_rejects_non_command_values() {
+        assert_eq!(argv_from_resp(RespValue::Integer(1)), None);
+        assert_eq!(argv_from_resp(RespValue::Array(None)), None);
+        assert_eq!(
+            argv_from_resp(RespValue::Array(Some(vec![RespValue::Integer(1)]))),
+            None
+        );
+    }
+
+    #[test]
+    fn platform_errors_map_to_io_kinds() {
+        assert_eq!(
+            into_io_error(PlatformError::AddressInUse).kind(),
+            io::ErrorKind::AddrInUse
+        );
+        assert_eq!(
+            into_io_error(PlatformError::InvalidResource).kind(),
+            io::ErrorKind::InvalidInput
+        );
+        assert_eq!(
+            into_io_error(PlatformError::Unsupported("nope")).kind(),
+            io::ErrorKind::Unsupported
+        );
+        assert_eq!(
+            into_io_error(PlatformError::ProviderFault("boom".to_string())).kind(),
+            io::ErrorKind::Other
+        );
+    }
+
+    #[test]
+    fn worker_error_display_includes_error_origin() {
+        let io_error = WorkerError::from(io::Error::new(io::ErrorKind::BrokenPipe, "closed"));
+        assert_eq!(io_error.to_string(), "worker I/O error: closed");
+
+        let codec_error =
+            generic_job_protocol::decode_request_json_line::<RedisCommandJob>("not-json")
+                .expect_err("invalid JSON should fail");
+        let worker_error = WorkerError::from(codec_error);
+        assert!(worker_error
+            .to_string()
+            .starts_with("worker protocol error: job frame JSON error:"));
     }
 
     #[test]
@@ -614,6 +703,55 @@ mod tests {
     }
 
     #[test]
+    fn python_worker_process_rejects_misrouted_responses() {
+        let script = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+metadata = dict(body["metadata"])
+metadata["affinity_key"] = "not-the-connection"
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"ok","payload":{"resp_hex":"2b504f4e470d0a"}},"metadata":metadata}}), flush=True)
+"#;
+
+        let error = execute_scripted_worker(script).expect_err("misrouted response should fail");
+        assert!(error.to_string().contains("affinity mismatch"));
+    }
+
+    #[test]
+    fn python_worker_process_maps_portable_error_results() {
+        let script = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"error","error":{"code":"worker_failed","message":"boom","retryable":False,"origin":"worker","detail":None}},"metadata":body["metadata"]}}), flush=True)
+"#;
+
+        let error = execute_scripted_worker(script).expect_err("worker error should fail");
+        assert!(error.to_string().contains("worker_failed: boom"));
+    }
+
+    #[test]
+    fn python_worker_process_maps_cancelled_and_timed_out_results() {
+        let cancelled = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"cancelled","cancellation":{"message":"stopped"}},"metadata":body["metadata"]}}), flush=True)
+"#;
+        let error = execute_scripted_worker(cancelled).expect_err("cancelled job should fail");
+        assert!(error.to_string().contains("cancelled job: stopped"));
+
+        let timed_out = r#"
+import json, sys
+frame = json.loads(sys.stdin.readline())
+body = frame["body"]
+print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result":{"status":"timed_out","timeout":{"message":"too slow"}},"metadata":body["metadata"]}}), flush=True)
+"#;
+        let error = execute_scripted_worker(timed_out).expect_err("timed out job should fail");
+        assert!(error.to_string().contains("timed out job: too slow"));
+    }
+
+    #[test]
     fn tcp_runtime_delegates_redis_commands_to_python_worker() {
         let Some(worker) = python_command() else {
             eprintln!("skipping test because no Python interpreter was found");
@@ -627,6 +765,7 @@ mod tests {
         })
         .expect("create server");
         let addr = server.local_addr();
+        assert!(!server.is_running());
         let background = server.clone();
         let handle = thread::spawn(move || background.serve());
 

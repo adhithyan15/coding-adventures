@@ -21,30 +21,33 @@ opening or polling sockets itself.
 client
   -> Rust tcp-runtime listener
   -> RESP parser
-  -> JSON-line worker request
+  -> generic JobRequest<RedisCommandPayload>
   -> Python Mini Redis worker
-  -> JSON-line worker response with RESP bytes
+  -> generic JobResponse<RedisResponsePayload>
   -> Rust socket write
 ```
 
-The current protocol is deliberately boring: one JSON object per line with
-hex-encoded byte arrays. That makes failures easy to inspect before we replace
-it with the generic job runtime or a binary worker protocol.
+The current wire codec is deliberately boring: one versioned JSON object per
+line. The important part is that the envelope comes from
+`generic-job-protocol`, so TCP is only a consumer of the reusable job contract.
+Redis-specific data stays inside payload structs.
 
 ## Current Limitations
 
 - The Python worker call is synchronous inside the TCP read callback.
 - One Python worker process handles all delegated commands.
-- The worker protocol uses JSON over stdio for debuggability, not throughput.
+- The worker protocol uses the JSON-line `generic-job-protocol` codec over
+  stdio for debuggability, not throughput.
 - This validates the runtime seam; it is not the final high-performance
   process-pool architecture.
 
-The next production step is to route requests through `generic-job-runtime` so
-worker completion can happen asynchronously and language workers can be backed
-by threads, processes, or another host-specific scheduler.
+The next production step is to route these protocol frames through a real job
+runtime so worker completion can happen asynchronously and language workers can
+be backed by threads, processes, or another host-specific scheduler.
 
 ## Dependencies
 
+- generic-job-protocol
 - resp-protocol
 - tcp-runtime
 - transport-platform
