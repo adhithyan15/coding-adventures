@@ -3055,3 +3055,18 @@ same activation cleanup as the normal return path first. For frame-backed langua
 active lexical scope chain and restore block-lifetime heap marks before `RET`. Add a regression that
 repeatedly triggers the failure inside a procedure and then proves the caller can still allocate a
 new frame.
+
+---
+
+## Music fixture tests must derive timing expectations from the score tokens
+
+**Date:** 2026-04-20
+
+**What happened:** While adding the first text-score music machine, an initial Happy Birthday test
+guessed the event and sample counts instead of deriving them from the score's duration table. The
+fixture had 28 note/rest events, 27 quarter-note beats, and therefore 13.5 seconds at 120 BPM, not
+the shorter duration assumed by the first test.
+
+**Rule:** For text-score fixtures, count tokens and beats from the same duration rules used by the
+parser before asserting rendered sample counts. Prefer assertions that make the musical math visible:
+event count, note count, total beats, tempo-derived seconds, and sample-rate-derived sample count.
