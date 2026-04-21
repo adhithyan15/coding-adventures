@@ -44,16 +44,6 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
-    def test_array_element_by_name_waits_for_relocating_thunk_stage(self) -> None:
-        with pytest.raises(AlgolWasmError) as raised:
-            compile_source(
-                "begin integer result; integer array a[1:2]; "
-                "procedure put(x); integer x; begin x := 7 end; "
-                "put(a[1]); result := a[1] "
-                "end"
-            )
-        assert raised.value.stage == "ir-compile"
-
     def test_array_read_expression_by_name_waits_for_eval_thunk_stage(self) -> None:
         with pytest.raises(AlgolWasmError) as raised:
             compile_source(
@@ -152,6 +142,46 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
+
+    def test_array_element_by_name_parameter_assignment_writes_back(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "procedure put(x); integer x; begin x := 7 end; "
+            "put(a[1]); result := a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_array_element_by_name_relocates_on_each_access(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:2]; "
+            "procedure bump(x); integer x; "
+            "begin x := x + 1; i := 2; x := x + 1 end; "
+            "a[1] := 10; a[2] := 20; i := 1; "
+            "bump(a[i]); result := a[1] * 100 + a[2] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1121]
+
+    def test_read_only_array_element_by_name_relocates_on_each_read(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:2]; "
+            "integer procedure probe(x); integer x; "
+            "begin probe := x; i := 2; probe := probe * 100 + x end; "
+            "a[1] := 3; a[2] := 8; i := 1; "
+            "result := probe(a[i]) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [308]
+
+    def test_array_element_by_name_bounds_failure_propagates_from_eval(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:2]; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "i := 3; result := id(a[i]) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
     def test_read_only_by_name_expression_re_evaluates_on_each_read(self) -> None:
         result = compile_source(
