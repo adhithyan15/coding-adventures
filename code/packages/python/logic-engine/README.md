@@ -13,6 +13,7 @@ that make relational programs feel like programs:
 - callable goal-term lowering via `goal_from_term(...)`
 - persistent database updates via `asserta(...)`, `assertz(...)`, `retract_*`,
   and `abolish(...)`
+- dynamic predicate declarations and branch-local runtime database overlays
 - recursive solving with depth-first backtracking
 - deferred recursive goal builders via `defer(...)`
 - state-aware native goal hooks via `native_goal(...)` for library builtins
@@ -74,6 +75,41 @@ assert solve_all(expanded, X, parent("homer", X)) == [atom("bart"), atom("lisa")
 without_first = retract_first(expanded, parent("homer", X))
 assert without_first is not None
 assert solve_all(without_first, X, parent("homer", X)) == [atom("lisa")]
+```
+
+## Dynamic Runtime Databases
+
+Dynamic predicates opt into branch-local mutation during solving. The runtime
+database lives on `State`, so asserted clauses are visible to later goals in
+the same proof branch and disappear automatically when search backtracks to an
+older state.
+
+```python
+from logic_engine import (
+    State,
+    atom,
+    fact,
+    program,
+    relation,
+    runtime_assertz,
+    runtime_declare_dynamic,
+    solve_from,
+    var,
+)
+
+edge = relation("edge", 2)
+X = var("X")
+
+state = runtime_declare_dynamic(program(), State(), edge)
+assert state is not None
+state = runtime_assertz(program(), state, fact(edge("a", "b")))
+assert state is not None
+
+answers = [
+    answer.substitution.reify(X)
+    for answer in solve_from(program(), edge("a", X), state)
+]
+assert answers == [atom("b")]
 ```
 
 ## Clause Introspection

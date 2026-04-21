@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] - 2026-04-21
+
+### Added
+
+- dynamic database predicates: `dynamico`, `assertao`, `assertzo`,
+  `retracto`, `retractallo`, and `abolisho`
+- predicate metadata now observes branch-local dynamic declarations and
+  reports `dynamic` properties
+- `clauseo` now sees runtime dynamic clauses from the active search state
+- tests covering assertion order, rollback across branches, retraction
+  bindings, retract-all, abolish, static-predicate protection, dynamic source
+  clauses, metadata, and clause introspection
+
 ## [0.7.0] - 2026-04-21
 
 ### Added

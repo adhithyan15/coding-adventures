@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-instructions"
-version = "0.1.0"
-description = "Standardized instruction stream for logic programs and future VM backends"
+version = "0.2.0"
+description = "Standardized instruction stream for static and dynamic logic programs and future VM backends"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 dependencies = [
-    "coding-adventures-logic-engine>=0.3.0",
+    "coding-adventures-logic-engine>=0.8.0",
     "coding-adventures-symbol-core>=0.1.0",
 ]
 

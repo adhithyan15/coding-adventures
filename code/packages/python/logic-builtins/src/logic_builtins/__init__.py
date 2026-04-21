@@ -5,8 +5,11 @@ the first state-aware builtins layer for the library-first Prolog path.
 """
 
 from logic_builtins.builtins import (
+    abolisho,
     add,
     argo,
+    assertao,
+    assertzo,
     atomico,
     atomo,
     bagofo,
@@ -19,6 +22,7 @@ from logic_builtins.builtins import (
     copytermo,
     current_predicateo,
     div,
+    dynamico,
     failo,
     findallo,
     floordiv,
@@ -42,6 +46,8 @@ from logic_builtins.builtins import (
     numneqo,
     onceo,
     predicate_propertyo,
+    retractallo,
+    retracto,
     same_termo,
     setofo,
     stringo,
@@ -58,7 +64,10 @@ from logic_builtins.builtins import (
 __all__ = [
     "__version__",
     "add",
+    "abolisho",
     "argo",
+    "assertao",
+    "assertzo",
     "atomico",
     "atomo",
     "bagofo",
@@ -71,6 +80,7 @@ __all__ = [
     "copytermo",
     "current_predicateo",
     "div",
+    "dynamico",
     "failo",
     "findallo",
     "floordiv",
@@ -94,6 +104,8 @@ __all__ = [
     "numbero",
     "onceo",
     "predicate_propertyo",
+    "retractallo",
+    "retracto",
     "same_termo",
     "setofo",
     "stringo",
@@ -107,4 +119,4 @@ __all__ = [
     "varo",
 ]
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"

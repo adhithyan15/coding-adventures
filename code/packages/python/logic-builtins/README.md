@@ -30,6 +30,9 @@ ordinary logic goal expressions.
   `termo_geqo(left, right)` for standard term ordering
 - `current_predicateo(name, arity)` and
   `predicate_propertyo(name, arity, property)` for predicate metadata
+- `dynamico(name, arity)`, `assertao(clause)`, `assertzo(clause)`,
+  `retracto(clause)`, `retractallo(head)`, and `abolisho(name, arity)` for
+  branch-local dynamic database mutation
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -40,7 +43,9 @@ ordinary logic goal expressions.
 ```python
 from logic_builtins import (
     add,
+    assertzo,
     argo,
+    dynamico,
     calltermo,
     clauseo,
     compare_termo,
@@ -86,6 +91,7 @@ Property = var("Property")
 
 parent = relation("parent", 2)
 child = relation("child", 2)
+memo = relation("memo", 1)
 family = program(rule(child(X, Name), parent(Name, X)))
 
 assert solve_all(program(), X, onceo(eq(X, "first"))) == [atom("first")]
@@ -147,6 +153,11 @@ assert term("number_of_clauses", 1) in solve_all(
     Property,
     predicate_propertyo("child", 2, Property),
 )
+assert solve_all(
+    program(),
+    X,
+    conj(dynamico("memo", 1), assertzo(memo("cached")), memo(X)),
+) == [atom("cached")]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -179,6 +190,12 @@ returned by `clauseo`, so metaprograms can inspect source clauses and then run
 the represented goals. Standard term-order predicates compare reified terms
 without binding them, while predicate metadata exposes source predicates and
 the builtin predicate surface as ordinary logic-queryable facts.
+
+Dynamic database builtins are branch-local. A clause asserted by `assertao` or
+`assertzo` is visible to later goals reached from that state, while normal
+backtracking restores the previous database snapshot. Static source predicates
+must be declared dynamic at the program level before runtime retraction or
+abolition can affect their clauses.
 
 ## Dependencies
 

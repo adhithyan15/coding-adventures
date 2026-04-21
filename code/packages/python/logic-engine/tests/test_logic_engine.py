@@ -27,8 +27,10 @@ from logic_engine import (
     atom,
     clause_as_term,
     clause_body,
+    clause_from_term,
     clauses_matching,
     conj,
+    declare_dynamic,
     defer,
     disj,
     eq,
@@ -47,6 +49,9 @@ from logic_engine import (
     retract_all,
     retract_first,
     rule,
+    runtime_assertz,
+    runtime_declare_dynamic,
+    runtime_retract_first,
     solve,
     solve_all,
     solve_from,
@@ -55,6 +60,7 @@ from logic_engine import (
     succeed,
     term,
     var,
+    visible_clauses_for,
 )
 
 
@@ -62,7 +68,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.7.0"
+        assert __version__ == "0.8.0"
 
 
 class TestRelationsAndClauses:
@@ -277,6 +283,85 @@ class TestPersistentClauseDatabase:
 
         assert solve_all(updated, x, parent("homer", x)) == []
         assert solve_all(updated, x, sibling("bart", x)) == [atom("lisa")]
+
+
+class TestRuntimeDynamicDatabase:
+    """Runtime database overlays should be branch-local and Prolog-shaped."""
+
+    def test_program_can_declare_dynamic_relations(self) -> None:
+        parent = relation("parent", 2)
+        family = declare_dynamic(program(fact(parent("homer", "bart"))), parent)
+
+        assert family.dynamic_relations == frozenset({parent.key()})
+
+    def test_clause_terms_round_trip_back_into_clauses(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 1)
+        x = var("X")
+
+        fact_clause = clause_from_term(term("parent", "homer", "bart"))
+        rule_clause = clause_from_term(
+            term(":-", term("child", x), term("parent", x, "homer")),
+        )
+
+        assert fact_clause == fact(parent("homer", "bart"))
+        assert rule_clause == rule(child(x), parent(x, "homer"))
+
+    def test_runtime_assertion_is_visible_from_later_goals(self) -> None:
+        edge = relation("edge", 2)
+        x = var("X")
+        initial = State()
+
+        dynamic_state = runtime_declare_dynamic(program(), initial, edge)
+        assert dynamic_state is not None
+        asserted_state = runtime_assertz(program(), dynamic_state, fact(edge("a", "b")))
+        assert asserted_state is not None
+
+        assert solve_all(program(), x, edge("a", x)) == []
+        assert [
+            state.substitution.reify(x)
+            for state in solve_from(program(), edge("a", x), asserted_state)
+        ] == [atom("b")]
+
+    def test_runtime_retract_can_remove_program_dynamic_clauses(self) -> None:
+        parent = relation("parent", 2)
+        x = var("X")
+        y = var("Y")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            dynamic_relations=(parent,),
+        )
+
+        states = list(
+            runtime_retract_first(family, State(), fact(parent("homer", x))),
+        )
+
+        assert len(states) == 1
+        assert states[0].substitution.reify(x) == atom("bart")
+        assert [
+            state.substitution.reify(y)
+            for state in solve_from(family, parent("homer", y), states[0])
+        ] == [atom("lisa")]
+
+    def test_visible_clauses_include_dynamic_overlay_order(self) -> None:
+        item = relation("item", 1)
+        base = program(fact(item("base")), dynamic_relations=(item,))
+        state = State()
+        first = runtime_assertz(base, state, fact(item("last")))
+        assert first is not None
+        second = runtime_assertz(base, first, fact(item("tail")))
+        assert second is not None
+
+        observed = [
+            clause.head.args[0]
+            for clause in visible_clauses_for(base, item, second)
+        ]
+        assert observed == [
+            atom("base"),
+            atom("last"),
+            atom("tail"),
+        ]
 
     def test_database_updates_do_not_mutate_the_original_program(self) -> None:
         parent = relation("parent", 2)
