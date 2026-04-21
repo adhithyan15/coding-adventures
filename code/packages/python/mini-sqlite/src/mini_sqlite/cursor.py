@@ -21,6 +21,49 @@ from typing import TYPE_CHECKING, Any
 from .engine import run
 from .errors import ProgrammingError
 
+# Transaction-control keywords — these must be handled at the connection
+# level (not by the VM) so the connection's transaction handle stays in
+# sync.  Keep this set consistent with connection._TCL_KEYWORDS.
+_TCL_KEYWORDS = frozenset(["BEGIN", "COMMIT", "ROLLBACK"])
+
+
+def _tcl_keyword(sql: str) -> str | None:
+    """Return the first keyword of a TCL statement, or None.
+
+    Parses the first non-whitespace, non-comment token from *sql* and
+    returns it (uppercase) if it is a transaction-control keyword
+    (BEGIN/COMMIT/ROLLBACK), otherwise returns ``None``.
+
+    This mirrors the comment-skipping logic in
+    :func:`~mini_sqlite.connection._first_keyword` so the two always
+    agree — keep them in sync if the logic changes.
+    """
+    i = 0
+    n = len(sql)
+    # Skip whitespace and comments.
+    while i < n:
+        ch = sql[i]
+        if ch.isspace():
+            i += 1
+            continue
+        if ch == "-" and i + 1 < n and sql[i + 1] == "-":
+            while i < n and sql[i] != "\n":
+                i += 1
+            continue
+        if ch == "/" and i + 1 < n and sql[i + 1] == "*":
+            i += 2
+            while i + 1 < n and not (sql[i] == "*" and sql[i + 1] == "/"):
+                i += 1
+            i = min(i + 2, n)
+            continue
+        break
+    word: list[str] = []
+    while i < n and sql[i].isalpha():
+        word.append(sql[i])
+        i += 1
+    kw = "".join(word).upper()
+    return kw if kw in _TCL_KEYWORDS else None
+
 if TYPE_CHECKING:
     from .connection import Connection
 
@@ -66,8 +109,36 @@ class Cursor:
     # ------------------------------------------------------------------
 
     def execute(self, sql: str, parameters: Sequence[Any] = ()) -> Cursor:
-        """Execute a single SQL statement. Returns ``self`` for chaining."""
+        """Execute a single SQL statement. Returns ``self`` for chaining.
+
+        TCL fast-path
+        ~~~~~~~~~~~~~
+        ``BEGIN``, ``COMMIT``, and ``ROLLBACK`` (with optional ``TRANSACTION``
+        suffix) are intercepted *before* the engine is invoked.  They are
+        delegated to the connection's ``_tcl_*`` methods so the connection's
+        ``_txn`` handle stays in sync with the backend.
+
+        Without this fast-path the connection would open an implicit DML
+        transaction just before the VM tries to open an explicit one, causing
+        a "transaction already active" error on the very first ``BEGIN``.
+        """
         self._assert_open()
+        tcl = _tcl_keyword(sql)
+        if tcl is not None:
+            # Dispatch to the connection's TCL methods — no engine involved.
+            if tcl == "BEGIN":
+                self._connection._tcl_begin()  # noqa: SLF001
+            elif tcl == "COMMIT":
+                self._connection._tcl_commit()  # noqa: SLF001
+            else:  # ROLLBACK
+                self._connection._tcl_rollback()  # noqa: SLF001
+            # TCL statements produce no result set.
+            self.description = None
+            self._rows = []
+            self._row_iter = iter(())
+            self.rowcount = -1
+            return self
+
         self._connection._ensure_transaction_if_needed(sql)  # noqa: SLF001
 
         result = run(self._connection._backend, sql, parameters)  # noqa: SLF001

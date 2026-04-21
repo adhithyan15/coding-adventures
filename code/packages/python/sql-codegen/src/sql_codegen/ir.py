@@ -482,6 +482,29 @@ class DropTable:
     if_exists: bool = False
 
 
+# ---- Derived-table (subquery in FROM) -----------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class RunSubquery:
+    """Execute the inner sub-program and materialise its result rows under ``cursor_id``.
+
+    Used for derived tables — ``(SELECT …) AS alias`` in a FROM clause.  The
+    outer query then iterates over the materialised rows using the normal
+    ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan`` instructions on the
+    same ``cursor_id``.  The VM checks a per-state subquery-cursor dict before
+    delegating to the backend so the outer loop is transparent to changes here.
+
+    ``sub_program`` is a fully resolved inner :class:`Program` compiled
+    independently with its own cursor/label namespace.  The VM runs it in a
+    temporary child state, collects the result rows, and stores them indexed
+    by ``cursor_id``.
+    """
+
+    cursor_id: int
+    sub_program: "Program"   # forward-ref resolved lazily; Program defined below
+
+
 # ---- Control flow -------------------------------------------------------
 
 
@@ -528,6 +551,7 @@ Instruction = (
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
+    | RunSubquery
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

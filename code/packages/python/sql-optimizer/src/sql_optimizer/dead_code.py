@@ -35,6 +35,7 @@ from sql_planner import (
     Aggregate,
     Begin,
     Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
@@ -152,6 +153,9 @@ def _eliminate(p: LogicalPlan) -> LogicalPlan:
             if isinstance(rgt, EmptyResult):
                 return lft
             return Except(left=lft, right=rgt, all=a)
+
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            return DerivedTable(query=_eliminate(q), alias=alias, columns=cols)
 
         case Begin() | Commit() | Rollback():
             return p

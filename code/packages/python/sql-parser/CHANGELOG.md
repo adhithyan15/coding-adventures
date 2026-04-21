@@ -2,6 +2,26 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.2.0] - 2026-04-21
+
+### Changed
+
+- **Grammar: `join_clause` ON clause is now optional** — changed from
+  `join_type "JOIN" table_ref "ON" expr` to
+  `join_type "JOIN" table_ref [ "ON" expr ]`.  This is required for
+  `CROSS JOIN` which has no ON predicate.  The change is backwards-compatible:
+  all existing `INNER JOIN … ON …` queries continue to work.
+
+- **Grammar: `table_ref` now supports derived tables** — extended to accept
+  `"(" query_stmt ")" "AS" NAME` (a parenthesised subquery with mandatory
+  alias) in addition to the existing plain `table_name [ "AS" NAME ]` form.
+  Derived tables can appear in the primary FROM position and in JOIN targets.
+
+- `_grammar.py` (auto-generated compiled grammar cache) updated to reflect both
+  of the above grammar changes.  Note: `_grammar.py` is generated from
+  `code/grammars/sql.grammar`; the canonical source of truth is the `.grammar`
+  file.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

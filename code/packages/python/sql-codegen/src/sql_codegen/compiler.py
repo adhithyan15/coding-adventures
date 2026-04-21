@@ -40,9 +40,11 @@ from sql_planner import (
     Aggregate,
     Begin,
     BinaryExpr,
+    CaseExpr,
     Column,
     Commit,
     Delete,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
@@ -142,6 +144,7 @@ from .ir import (
     OpenScan,
     Program,
     RollbackTransaction,
+    RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
     SetResultSchema,
@@ -515,6 +518,32 @@ def _compile_source(
             out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
             return out
 
+        case DerivedTable(query=inner_query, alias=alias, columns=_):
+            # Compile the inner query independently with its own cursor/label
+            # namespace so IDs don't collide with the outer program.
+            inner_ctx = _Ctx()
+            inner_instrs, inner_schema = _compile_plan(inner_query, inner_ctx)
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub_program = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=inner_schema,
+            )
+            # In the outer program: emit RunSubquery to materialise rows, then
+            # loop over them with the normal AdvanceCursor / CloseScan pattern.
+            cid = ctx.new_cursor(alias)
+            loop = ctx.new_label("subq_loop")
+            end = ctx.new_label("subq_end")
+            out = [
+                RunSubquery(cursor_id=cid, sub_program=sub_program),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
         case Join(left=lft, right=rgt, kind=kind, condition=cond):
             return _compile_join(lft, rgt, kind, cond, body, ctx)
 
@@ -747,6 +776,34 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                     out.extend(_compile_expr(a.value, ctx))
                     n += 1
             out.append(CallScalar(func=name.lower(), n_args=n))
+            return out
+        case CaseExpr(whens=whens, else_=else_):
+            # Compile CASE to a conditional-jump chain using JumpIfFalse /
+            # Jump. After the END label exactly one value sits on the stack.
+            #
+            # Pattern for each WHEN branch:
+            #   compile(condition)
+            #   JumpIfFalse(next_lbl)
+            #   compile(result)
+            #   Jump(end_lbl)
+            #   Label(next_lbl)
+            # After all WHENs: compile(else) or LoadConst(None)
+            #   Label(end_lbl)
+            end_lbl = ctx.new_label("case_end")
+            out: list[Instruction] = []
+            for cond, result in whens:
+                next_lbl = ctx.new_label("case_next")
+                out.extend(_compile_expr(cond, ctx))
+                out.append(JumpIfFalse(label=next_lbl))
+                out.extend(_compile_expr(result, ctx))
+                out.append(Jump(label=end_lbl))
+                out.append(Label(name=next_lbl))
+            # ELSE branch (or NULL if absent)
+            if else_ is not None:
+                out.extend(_compile_expr(else_, ctx))
+            else:
+                out.append(LoadConst(value=None))
+            out.append(Label(name=end_lbl))
             return out
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's

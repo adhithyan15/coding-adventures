@@ -45,9 +45,11 @@ from sql_planner import (
     Between,
     BinaryExpr,
     BinaryOp,
+    CaseExpr,
     Column,
     Commit,
     Delete,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
@@ -135,6 +137,8 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             return Intersect(left=_fold_plan(l), right=_fold_plan(r), all=a)
         case Except(left=l, right=r, all=a):
             return Except(left=_fold_plan(l), right=_fold_plan(r), all=a)
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            return DerivedTable(query=_fold_plan(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p  # transaction control — nothing to fold
         case Insert(table=t, columns=cols, source=src):
@@ -209,6 +213,13 @@ def _fold_expr(e: Expr) -> Expr:
             return Like(operand=_fold_expr(op), pattern=p)
         case NotLike(operand=op, pattern=p):
             return NotLike(operand=_fold_expr(op), pattern=p)
+        case CaseExpr(whens=whens, else_=else_):
+            # Fold each branch, but don't try to short-circuit at plan time
+            # — short-circuit evaluation of CASE is the VM's responsibility.
+            return CaseExpr(
+                whens=tuple((_fold_expr(cond), _fold_expr(result)) for cond, result in whens),
+                else_=_fold_expr(else_) if else_ is not None else None,
+            )
         case _:
             # Wildcard, FunctionCall, AggregateExpr — not folded.
             return e

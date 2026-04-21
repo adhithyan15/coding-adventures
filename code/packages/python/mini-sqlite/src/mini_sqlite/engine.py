@@ -27,10 +27,18 @@ from sql_planner import (
 )
 from sql_planner.plan import (
     Aggregate,
+    DerivedTable,
     Distinct,
+    Filter,
+    Join,
     LogicalPlan,
     Project,
+    Scan,
     Sort,
+    Union,
+    Intersect,
+    Except,
+    Having,
 )
 from sql_planner.plan import (
     Limit as PlanLimit,
@@ -85,8 +93,23 @@ def _flatten_project_over_aggregate(p: LogicalPlan) -> LogicalPlan:
 
     Wrappers (Sort, Distinct, Limit) pass through — we only rewrite the
     Project/Aggregate pair.
+
+    The function also recurses into child plans such as
+    :class:`~sql_planner.plan.DerivedTable`, :class:`~sql_planner.plan.Filter`,
+    :class:`~sql_planner.plan.Join`, :class:`~sql_planner.plan.Union`, etc.
+    so that nested queries inside derived tables are also normalised before
+    codegen sees them.
     """
+    # ------------------------------------------------------------------
+    # First, recursively normalise all child plans so that any
+    # Project(Aggregate) pattern inside a derived table or set operation
+    # is fixed before we process the outer plan.
+    # ------------------------------------------------------------------
+    p = _flatten_children(p)
+
+    # ------------------------------------------------------------------
     # Walk down through ordering/limit wrappers looking for Project.
+    # ------------------------------------------------------------------
     stack: list[LogicalPlan] = []
     cur: LogicalPlan = p
     while isinstance(cur, (Sort, Distinct, PlanLimit)):
@@ -125,3 +148,45 @@ def _flatten_project_over_aggregate(p: LogicalPlan) -> LogicalPlan:
     for wrap in reversed(stack):
         out = replace(wrap, input=out)
     return out
+
+
+def _flatten_children(p: LogicalPlan) -> LogicalPlan:
+    """Recursively apply :func:`_flatten_project_over_aggregate` to child plans.
+
+    This ensures that plans embedded inside :class:`~sql_planner.plan.DerivedTable`
+    (and set-operation siblings) are normalised before the parent plan is
+    processed.  Without this, ``SELECT … FROM (SELECT agg … GROUP BY …) AS dt``
+    would fail because the inner ``Project(Aggregate(...))`` is never rewritten.
+    """
+    match p:
+        case DerivedTable(query=inner, alias=alias, columns=cols):
+            return replace(p, query=_flatten_project_over_aggregate(inner))
+        case Filter(input=inner, predicate=pred):
+            return replace(p, input=_flatten_children(inner))
+        case Project(input=inner, items=items):
+            return replace(p, input=_flatten_children(inner))
+        case Sort(input=inner, keys=keys):
+            return replace(p, input=_flatten_children(inner))
+        case Distinct(input=inner):
+            return replace(p, input=_flatten_children(inner))
+        case PlanLimit(input=inner):
+            return replace(p, input=_flatten_children(inner))
+        case Having(input=inner, predicate=pred):
+            return replace(p, input=_flatten_children(inner))
+        case Aggregate(input=inner, group_by=gb, aggregates=aggs):
+            return replace(p, input=_flatten_children(inner))
+        case Join(left=l, right=r, condition=c, kind=k):
+            return replace(p, left=_flatten_children(l), right=_flatten_children(r))
+        case Union(left=l, right=r, all=all_):
+            return replace(p, left=_flatten_project_over_aggregate(l),
+                           right=_flatten_project_over_aggregate(r))
+        case Intersect(left=l, right=r, all=all_):
+            return replace(p, left=_flatten_project_over_aggregate(l),
+                           right=_flatten_project_over_aggregate(r))
+        case Except(left=l, right=r, all=all_):
+            return replace(p, left=_flatten_project_over_aggregate(l),
+                           right=_flatten_project_over_aggregate(r))
+        case _:
+            # Leaf nodes (Scan, Insert, Delete, Update, Create, Drop, Begin,
+            # Commit, Rollback) have no child plans to recurse into.
+            return p

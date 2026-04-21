@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.4.0] - 2026-04-21
+
+### Added
+
+- **`DerivedTableRef` AST type** (`sql_planner.ast`) — represents a subquery
+  used as a table source in the FROM clause: ``(SELECT …) AS alias``.
+  Contains the inner `SelectStmt` and a mandatory `alias`.
+
+- **`DerivedTable` plan node** (`sql_planner.plan`) — a leaf in the LogicalPlan
+  tree that carries the inner plan, alias, and resolved output column names.
+  Produced by the planner when it encounters a `DerivedTableRef`.
+
+- **`CaseExpr` expression node** (`sql_planner.expr`) — searched CASE expression
+  with a list of (condition, result) `whens` pairs and an optional `else_` branch.
+  The planner's adapter converts simple CASE (with an operand) into equality
+  comparisons so the rest of the pipeline only ever sees searched CASE.
+
+- **`_output_columns()` helper** (`sql_planner.planner`) — computes the ordered
+  output column names of a finished plan tree by walking transparent wrapper
+  nodes (Sort, Limit, Distinct, Having) to reach the innermost Project.  Used
+  to derive the schema of a derived table at planning time.
+
+- **`SelectStmt.from_`** and **`JoinClause.right`** type-widened to accept
+  `TableRef | DerivedTableRef`, enabling subqueries in both the primary FROM
+  position and in JOIN targets.
+
+- **Chained set operations** — `UnionStmt`, `IntersectStmt`, and `ExceptStmt`
+  now accept any set-op statement on their `left` field (was restricted to
+  `SelectStmt`).  Left-associative chaining ``A UNION B UNION C`` is modelled
+  as ``UnionStmt(UnionStmt(A, B), C)``.  The planner dispatches through the
+  top-level `plan()` for the left operand, so chaining resolves correctly.
+
+- All new types re-exported from `sql_planner.__init__`.
+
 ## [0.3.0] - 2026-04-21
 
 ### Added
