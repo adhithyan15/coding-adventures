@@ -19,6 +19,15 @@ This spec defines **three parallel implementations** of the TXT00
 | TXT03b   | Windows           | DirectWrite   | `directwrite:<id>`      |
 | TXT03c   | Linux / BSD       | Pango + HarfBuzz + FreeType | `pango:<id>` |
 
+A fourth sibling, **TXT03d — Canvas Text Backend**, lives in its own
+spec file (`TXT03d-canvas-text-backend.md`) because the browser runtime
+is materially different: Canvas 2D does not expose glyph IDs to JavaScript,
+so TXT03d implements `FontMetrics` but deliberately does not implement
+`TextShaper` — it emits `PaintText` (see P2D00 amendment) instead of
+`PaintGlyphRun`. It is still a device-dependent backend in the same spirit
+as a/b/c: the host runtime owns shaping and rasterization; we never parse
+fonts ourselves.
+
 Each sub-spec specifies:
 - How to map a `FontQuery` (TXT05) into a native font handle
 - How the `FontMetrics` methods read from that handle
