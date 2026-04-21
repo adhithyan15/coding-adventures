@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 
 import sql_backend.errors as be
 from sql_backend.backend import Backend, TransactionHandle
-from sql_backend.row import Cursor, RowIterator
+from sql_backend.row import RowIterator
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
     AdvanceCursor,
