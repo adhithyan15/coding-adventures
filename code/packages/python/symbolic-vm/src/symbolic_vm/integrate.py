@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–4).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–5).
 
 The handler tries two routes, in order:
 
@@ -78,6 +78,7 @@ from symbolic_ir import (
     SIN,
     SQRT,
     SUB,
+    TAN,
     IRApply,
     IRFloat,
     IRInteger,
@@ -416,6 +417,16 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         # ∫ a^x dx = a^x / log(a) for base independent of x.
         if exponent == x and not _depends_on(base, x):
             return IRApply(DIV, (f, IRApply(LOG, (base,))))
+        # f^0 = 1 — integrates as a constant.
+        if isinstance(exponent, IRInteger) and exponent.value == 0:
+            return x
+        # f^1 = f — unwrap and delegate.
+        if isinstance(exponent, IRInteger) and exponent.value == 1:
+            return _integrate(base, x)
+        # Phase 5b/5c: sinⁿ, cosⁿ, tanⁿ reduction formulas.
+        result = _try_trig_power(base, exponent, x)
+        if result is not None:
+            return result
         return None
 
     # --- Elementary functions at x  (Phase 1: argument must be bare x)
@@ -424,6 +435,9 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
             return IRApply(NEG, (IRApply(COS, (x,)),))
         if head == COS:
             return IRApply(SIN, (x,))
+        if head == TAN:
+            # ∫ tan(x) dx = −log(cos(x))  (Phase 5a, a=1 b=0 case).
+            return IRApply(NEG, (IRApply(LOG, (IRApply(COS, (x,)),)),))
         if head == EXP:
             return IRApply(EXP, (x,))
         if head == LOG:
@@ -442,11 +456,11 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 ),
             )
 
-    # --- Phase 3a/3b/3c: elementary function of a linear argument ------
+    # --- Phase 3a/3b/3c + Phase 5a: elementary function of linear arg --
     # Generalises the Phase 1 rules above to any a·x + b argument.
     # Only fires when the argument is strictly linear with a ≠ 0 and
     # (a, b) ≠ (1, 0) — otherwise the Phase 1 rules above already fired.
-    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG}:
+    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG, TAN}:
         lin = _try_linear(f.args[0], x)
         if lin is not None:
             a_frac, b_frac = lin
@@ -470,6 +484,9 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                     # ∫ log(ax+b) dx = case 3e with p = (1,).
                     from fractions import Fraction as _F
                     return log_poly_integral((_F(1),), a_frac, b_frac, x)
+                if head == TAN:
+                    # ∫ tan(ax+b) dx = −log(cos(ax+b))/a  (case 5a).
+                    return _tan_integral(a_frac, b_frac, x)
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -755,6 +772,127 @@ def _try_exp_trig(exp_node: IRNode, trig_node: IRNode, x: IRSymbol) -> IRNode | 
     if trig_node.head == SIN:
         return exp_sin_integral(a_frac, b_frac, c_frac, d_frac, x)
     return exp_cos_integral(a_frac, b_frac, c_frac, d_frac, x)
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 helpers
+# ---------------------------------------------------------------------------
+
+
+def _tan_integral(a: Fraction, b: Fraction, x: IRSymbol) -> IRNode:
+    """Return the IR for ``∫ tan(ax+b) dx = −log(cos(ax+b)) / a``.
+
+    Precondition: ``a ≠ 0``.
+    """
+    cos_ir = IRApply(COS, (linear_to_ir(a, b, x),))
+    log_cos = IRApply(LOG, (cos_ir,))
+    if a == Fraction(1):
+        return IRApply(NEG, (log_cos,))
+    return IRApply(NEG, (IRApply(DIV, (log_cos, _frac_ir(a))),))
+
+
+def _try_trig_power(
+    base: IRNode, exponent: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ base^exponent dx`` for integer trig powers, or ``None``.
+
+    Handles:
+    - ``POW(SIN(linear), n)`` for integer n ≥ 2 (Phase 5b, sin reduction)
+    - ``POW(COS(linear), n)`` for integer n ≥ 2 (Phase 5b, cos reduction)
+    - ``POW(TAN(linear), n)`` for integer n ≥ 2 (Phase 5c, tan reduction)
+
+    Returns ``None`` for non-integer, negative, or zero exponents.
+    """
+    if not isinstance(exponent, IRInteger):
+        return None
+    n = exponent.value
+    if n < 2:
+        return None
+    if not isinstance(base, IRApply):
+        return None
+    head = base.head
+    if head not in {SIN, COS, TAN}:
+        return None
+    if len(base.args) != 1:
+        return None
+    lin = _try_linear(base.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == Fraction(0):
+        return None  # constant trig — constant-factor rule handles it
+
+    if head == SIN:
+        return _sin_power(n, a_frac, b_frac, x)
+    if head == COS:
+        return _cos_power(n, a_frac, b_frac, x)
+    return _tan_power(n, a_frac, b_frac, x)
+
+
+def _sin_power(n: int, a: Fraction, b: Fraction, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ sinⁿ(ax+b) dx`` via the reduction formula.
+
+    Reduction: ``−sinⁿ⁻¹(ax+b)·cos(ax+b)/(n·a) + (n−1)/n · ∫sinⁿ⁻²(ax+b) dx``.
+    Terminates when the recursive ``_integrate`` handles the n−2 case
+    (n=1 → Phase 3b, n=0 → constant).
+    """
+    arg = linear_to_ir(a, b, x)
+    sin_ir = IRApply(SIN, (arg,))
+    cos_ir = IRApply(COS, (arg,))
+    na = _frac_ir(Fraction(n) * a)
+    # −sinⁿ⁻¹(ax+b)·cos(ax+b) / (n·a)
+    sin_nm1 = IRApply(POW, (sin_ir, IRInteger(n - 1)))
+    term = IRApply(NEG, (IRApply(DIV, (IRApply(MUL, (sin_nm1, cos_ir)), na)),))
+    # (n−1)/n · ∫sinⁿ⁻²(ax+b) dx
+    inner_f = IRApply(POW, (sin_ir, IRInteger(n - 2)))
+    inner_int = _integrate(inner_f, x)
+    if inner_int is None:
+        return None
+    coef = _frac_ir(Fraction(n - 1, n))
+    tail = IRApply(MUL, (coef, inner_int))
+    return IRApply(ADD, (term, tail))
+
+
+def _cos_power(n: int, a: Fraction, b: Fraction, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ cosⁿ(ax+b) dx`` via the reduction formula.
+
+    Reduction: ``cosⁿ⁻¹(ax+b)·sin(ax+b)/(n·a) + (n−1)/n · ∫cosⁿ⁻²(ax+b) dx``.
+    """
+    arg = linear_to_ir(a, b, x)
+    cos_ir = IRApply(COS, (arg,))
+    sin_ir = IRApply(SIN, (arg,))
+    na = _frac_ir(Fraction(n) * a)
+    # cosⁿ⁻¹(ax+b)·sin(ax+b) / (n·a)
+    cos_nm1 = IRApply(POW, (cos_ir, IRInteger(n - 1)))
+    term = IRApply(DIV, (IRApply(MUL, (cos_nm1, sin_ir)), na))
+    # (n−1)/n · ∫cosⁿ⁻²(ax+b) dx
+    inner_f = IRApply(POW, (cos_ir, IRInteger(n - 2)))
+    inner_int = _integrate(inner_f, x)
+    if inner_int is None:
+        return None
+    coef = _frac_ir(Fraction(n - 1, n))
+    tail = IRApply(MUL, (coef, inner_int))
+    return IRApply(ADD, (term, tail))
+
+
+def _tan_power(n: int, a: Fraction, b: Fraction, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ tanⁿ(ax+b) dx`` via the Pythagorean reduction formula.
+
+    Reduction: ``tanⁿ⁻¹(ax+b) / ((n−1)·a) − ∫tanⁿ⁻²(ax+b) dx``.
+    Terminates at n=1 (Phase 5a) or n=0 (constant).
+    """
+    arg = linear_to_ir(a, b, x)
+    tan_ir = IRApply(TAN, (arg,))
+    n1a = _frac_ir(Fraction(n - 1) * a)
+    # tanⁿ⁻¹(ax+b) / ((n−1)·a)
+    tan_nm1 = IRApply(POW, (tan_ir, IRInteger(n - 1)))
+    term = IRApply(DIV, (tan_nm1, n1a))
+    # ∫tanⁿ⁻²(ax+b) dx  (recursive)
+    inner_f = IRApply(POW, (tan_ir, IRInteger(n - 2)))
+    inner_int = _integrate(inner_f, x)
+    if inner_int is None:
+        return None
+    return IRApply(SUB, (term, inner_int))
 
 
 def _depends_on(node: IRNode, var: IRSymbol) -> bool:
