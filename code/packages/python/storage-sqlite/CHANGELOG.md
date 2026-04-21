@@ -1,5 +1,81 @@
 # Changelog
 
+## [0.10.0] - 2026-04-20
+
+### Added
+
+- **Phase IX-2: index interface on `SqliteFileBackend`** — implements the four
+  index methods introduced by `sql-backend` 0.2.0 (`create_index`, `drop_index`,
+  `list_indexes`, `scan_index`) for the file-backed SQLite engine.
+
+  **`create_index(index: IndexDef) → None`**
+  - Validates that the table and all listed columns exist; raises `TableNotFound`
+    or `ColumnNotFound` on unknown names.
+  - Raises `IndexAlreadyExists` if an index with the same name is already in
+    `sqlite_schema`.
+  - Generates a canonical `CREATE INDEX <name> ON <table> (<col>, ...)` SQL
+    string and writes a new `type='index'` row to `sqlite_schema`.
+  - Allocates a fresh `IndexTree` root page, then backfills all existing rows
+    from the table's B-tree.
+  - Commits pages to disk (`pager.commit()`).
+
+  **`drop_index(name, *, if_exists=False) → None`**
+  - Calls `Schema.drop_index(name)`, which frees the index B-tree pages via
+    `IndexTree.free_all`, deletes the `sqlite_schema` row, and bumps the schema
+    cookie.  Raises `IndexNotFound` unless `if_exists=True`.
+
+  **`list_indexes(table=None) → list[IndexDef]`**
+  - Scans `sqlite_schema` for `type='index'` rows, parses column names from
+    the stored `CREATE INDEX` SQL via `_parse_index_columns`, and synthesises
+    `IndexDef` objects.  Indexes whose names start with `auto_` have
+    `IndexDef.auto=True`.
+
+  **`scan_index(index_name, lo, hi, *, lo_inclusive, hi_inclusive) → Iterator[int]`**
+  - Resolves the index root page from `sqlite_schema`, opens the `IndexTree`,
+    and delegates to `IndexTree.range_scan`, yielding rowids.
+  - Raises `IndexNotFound` for an unknown index name.
+
+- **`Schema` index methods** (`schema.py`):
+  - `Schema.create_index(name, table, sql) → int` — inserts a `type='index'`
+    row, allocates a fresh `IndexTree` root, bumps the schema cookie, returns
+    the root page number.
+  - `Schema.drop_index(name)` — frees the index B-tree via `IndexTree.free_all`,
+    deletes the schema row, bumps the cookie.  Raises `SchemaError` if the index
+    does not exist.
+  - `Schema.find_index(name) → (rowid, rootpage, sql) | None` — looks up an
+    index by name in `sqlite_schema`.
+  - `Schema.list_indexes(table=None) → list[tuple[str, str, int, str | None]]`
+    — returns `(name, tbl_name, rootpage, sql)` tuples for all indexes,
+    optionally filtered by `tbl_name`.
+
+- **Helper functions** (`backend.py`):
+  - `_parse_index_columns(sql)` — extracts the column name list from a
+    `CREATE INDEX ... (<cols>)` SQL string; returns `[]` when `sql` is empty
+    or unparseable.
+  - `_columns_to_index_sql(name, table, columns)` — produces canonical
+    `CREATE INDEX <name> ON <table> (<col>, ...)` SQL stored in `sqlite_schema`.
+
+- **`pyproject.toml`**: added `[tool.uv.sources]` so that the local
+  `../sql-backend` editable install is resolved instead of the PyPI registry.
+
+### Tests
+
+- `tests/test_backend_index.py` — 44 new tests covering:
+  - `TestSchemaIndex`: `create_index` / `find_index` / `list_indexes` /
+    `drop_index` at the `Schema` level
+  - `TestBackendCreateIndex`: success, duplicate, bad table, bad column,
+    `auto`/`unique` flag preservation, backfill of existing rows
+  - `TestBackendScanIndex`: full scan, equality lookup, range scan with
+    exclusive bounds, text ordering, orders by a non-PK column
+  - `TestBackendDropIndex`: basic drop, `if_exists`, double-drop
+  - `TestBackendListIndexes`: empty, all, filtered, after drop
+  - `TestIndexPersistence`: index survives close + reopen; inserted rows
+    after reopen are visible via `scan_index`
+  - `TestOracleIndexVisible`: index created by `SqliteFileBackend` is
+    visible to `sqlite3`; index created by `sqlite3` is readable by
+    `scan_index`
+- Overall package coverage: **95.62%** (555 tests total).
+
 ## [0.9.0] - 2026-04-20
 
 ### Added

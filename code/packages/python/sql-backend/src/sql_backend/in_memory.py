@@ -50,19 +50,70 @@ Each case has its own error path. The helper methods ``_apply_defaults`` /
 from __future__ import annotations
 
 import copy
+from collections.abc import Iterator
 from typing import Final
 
 from .backend import Backend, TransactionHandle
 from .errors import (
     ColumnNotFound,
     ConstraintViolation,
+    IndexAlreadyExists,
+    IndexNotFound,
     TableAlreadyExists,
     TableNotFound,
     Unsupported,
 )
+from .index import IndexDef
 from .row import Cursor, ListCursor, ListRowIterator, Row, RowIterator
 from .schema import ColumnDef
 from .values import SqlValue
+
+# ---------------------------------------------------------------------------
+# SQLite-compatible sort key for in-memory index scans
+# ---------------------------------------------------------------------------
+
+
+def _sql_sort_key(v: SqlValue) -> tuple[int, object]:
+    """Map a SQL value to a comparable Python key using SQLite ordering.
+
+    SQLite BINARY collation orders values as::
+
+        NULL (0) < INTEGER / REAL (1) < TEXT (2) < BLOB (3)
+
+    Integers and floats are compared numerically across types (``2.0 == 2``).
+    Text is compared by UTF-8 byte values (case-sensitive).  Blobs compare
+    by raw byte value.
+
+    Returns a ``(class, value)`` tuple that Python's ``<`` operator sorts
+    correctly for each class.  Within class 1 (numeric) the raw Python value
+    is used — Python handles mixed int/float comparisons natively.
+
+    Examples::
+
+        _sql_sort_key(None)    # (0, None)   — smallest
+        _sql_sort_key(42)      # (1, 42)
+        _sql_sort_key(3.14)    # (1, 3.14)
+        _sql_sort_key("hi")    # (2, b"hi")  — text sorted as UTF-8 bytes
+        _sql_sort_key(b"\\x00") # (3, b"\\x00") — blob last
+    """
+    if v is None:
+        return (0, b"")  # sentinel: None < everything; b"" avoids cross-type compare
+    if isinstance(v, bool):
+        # bool is a subclass of int in Python; treat as integer.
+        return (1, int(v))
+    if isinstance(v, (int, float)):
+        return (1, v)
+    if isinstance(v, str):
+        return (2, v.encode("utf-8"))
+    if isinstance(v, (bytes, bytearray)):
+        return (3, bytes(v))
+    # SqlValue is a closed union — if we reach here the caller passed a
+    # value that is not part of the type contract.  Raise immediately rather
+    # than silently leaking the repr() of an arbitrary object (which could
+    # contain secrets or cause non-deterministic sort behaviour).
+    raise TypeError(  # noqa: TRY301
+        f"_sql_sort_key: unsupported value type {type(v).__name__!r}"
+    )
 
 
 class _Table:
@@ -90,11 +141,17 @@ class InMemoryBackend(Backend):
 
     def __init__(self) -> None:
         self._tables: dict[str, _Table] = {}
+        # Index store: name → IndexDef.  The actual index data is not
+        # maintained incrementally (inserts/updates/deletes don't update
+        # in-memory index structures); scan_index does a linear scan at
+        # call time.  This is fine for a pedagogical reference backend.
+        self._indexes: dict[str, IndexDef] = {}
         # Snapshot for the currently-active transaction, if any. ``None``
         # means no transaction is open. We store a full deep copy rather
         # than a diff log because it is dramatically simpler and the data
         # volumes targeted by this backend are small.
         self._snapshot: dict[str, _Table] | None = None
+        self._index_snapshot: dict[str, IndexDef] | None = None
         # We hand out handles as monotonically increasing integers. Reusing
         # handles across transactions would make stale-handle bugs silent;
         # this way an old handle will never match a new transaction.
@@ -241,6 +298,9 @@ class InMemoryBackend(Backend):
         # inside is immutable (SqlValue is scalar) so we don't need to
         # recurse deeper.
         self._snapshot = copy.deepcopy(self._tables)
+        # Also snapshot the index definitions so that create_index /
+        # drop_index inside a rolled-back transaction leave no trace.
+        self._index_snapshot = copy.deepcopy(self._indexes)
         handle = self._next_handle
         self._next_handle += 1
         self._active_handle = handle
@@ -251,6 +311,7 @@ class InMemoryBackend(Backend):
         # Changes are already applied to self._tables — we just discard the
         # rollback snapshot.
         self._snapshot = None
+        self._index_snapshot = None
         self._active_handle = None
 
     def rollback(self, handle: TransactionHandle) -> None:
@@ -258,8 +319,120 @@ class InMemoryBackend(Backend):
         # _require_active guarantees _snapshot is set whenever _active_handle is.
         assert self._snapshot is not None
         self._tables = self._snapshot
+        # Restore index definitions from the snapshot.
+        assert self._index_snapshot is not None
+        self._indexes = self._index_snapshot
         self._snapshot = None
+        self._index_snapshot = None
         self._active_handle = None
+
+    # --- Indexes ----------------------------------------------------------
+
+    def create_index(self, index: IndexDef) -> None:
+        """Store an index definition and validate it against the schema.
+
+        The in-memory backend does not build a sorted data structure for
+        the index at creation time — :meth:`scan_index` performs a linear
+        scan of the table rows instead.  This is correct (though O(n)) and
+        appropriate for a pedagogical reference backend.
+
+        Raises
+        ------
+        IndexAlreadyExists
+            If an index named ``index.name`` already exists.
+        TableNotFound
+            If ``index.table`` is not a known table.
+        ColumnNotFound
+            If any column in ``index.columns`` is not a column of
+            ``index.table``.
+        """
+        if index.name in self._indexes:
+            raise IndexAlreadyExists(index=index.name)
+        t = self._require_table(index.table)
+        col_names = {col.name for col in t.columns}
+        for col in index.columns:
+            if col not in col_names:
+                raise ColumnNotFound(table=index.table, column=col)
+        self._indexes[index.name] = index
+
+    def drop_index(self, name: str, *, if_exists: bool = False) -> None:
+        """Remove an index definition.
+
+        Raises :class:`IndexNotFound` when *name* is absent and
+        ``if_exists=False``.
+        """
+        if name not in self._indexes:
+            if if_exists:
+                return
+            raise IndexNotFound(index=name)
+        del self._indexes[name]
+
+    def list_indexes(self, table: str | None = None) -> list[IndexDef]:
+        """Return all stored index definitions, optionally filtered by table.
+
+        Returns indexes in creation order.
+        """
+        if table is None:
+            return list(self._indexes.values())
+        return [idx for idx in self._indexes.values() if idx.table == table]
+
+    def scan_index(
+        self,
+        index_name: str,
+        lo: list[SqlValue] | None,
+        hi: list[SqlValue] | None,
+        *,
+        lo_inclusive: bool = True,
+        hi_inclusive: bool = True,
+    ) -> Iterator[int]:
+        """Yield list-indices of matching rows from the indexed table.
+
+        For the in-memory backend the "rowid" exposed by ``scan_index`` is
+        the 0-based position of the row in the table's row list — the same
+        value used internally by :class:`ListCursor`.  This is consistent
+        within the backend but is not comparable to the integer rowids used
+        by file-backed backends.
+
+        The scan is O(n): all rows are examined, key values are extracted
+        and compared, then matching rows are yielded in ascending key order.
+        This is correct for a pedagogical backend; file-backed backends do
+        this in O(log n + k) via the B-tree index.
+
+        Raises :class:`IndexNotFound` if *index_name* does not exist.
+        """
+        idx_def = self._indexes.get(index_name)
+        if idx_def is None:
+            raise IndexNotFound(index=index_name)
+
+        t = self._require_table(idx_def.table)
+        col_names = idx_def.columns
+
+        # Build (sort_key, original_row_idx) pairs for all rows.
+        # sort_key is a tuple of _sql_sort_key(v) values — one per index column.
+        keyed: list[tuple[tuple[tuple[int, object], ...], int]] = []
+        for i, row in enumerate(t.rows):
+            key_vals = [row.get(col) for col in col_names]
+            sort_key = tuple(_sql_sort_key(v) for v in key_vals)
+            keyed.append((sort_key, i))
+
+        # Sort by key — Python's tuple comparison does the right thing since
+        # all elements are (int, comparable) pairs.
+        keyed.sort(key=lambda kv: kv[0])
+
+        lo_sort = tuple(_sql_sort_key(v) for v in lo) if lo is not None else None
+        hi_sort = tuple(_sql_sort_key(v) for v in hi) if hi is not None else None
+
+        for sort_key, row_idx in keyed:
+            # Trim to the minimum length for partial-key comparison.
+            if lo_sort is not None:
+                cmp_lo = sort_key[: len(lo_sort)]
+                if cmp_lo < lo_sort or (cmp_lo == lo_sort and not lo_inclusive):
+                    continue
+            if hi_sort is not None:
+                cmp_hi = sort_key[: len(hi_sort)]
+                if cmp_hi > hi_sort or (cmp_hi == hi_sort and not hi_inclusive):
+                    return
+            yield row_idx
 
     # --- Private helpers --------------------------------------------------
 

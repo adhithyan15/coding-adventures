@@ -64,11 +64,19 @@ set up this structure, then create a :class:`Schema` to operate on it::
         root = schema.create_table("users", "CREATE TABLE users (id INTEGER, name TEXT)")
         pager.commit()
 
-v1 limitations
---------------
+v2 additions
+-------------
 
-* Only ``type = 'table'`` rows can be created or dropped. Other types are
-  preserved on read but not actionable.
+* ``create_index(name, table, sql)`` — allocates a fresh index B-tree root
+  page and inserts a ``type = 'index'`` row into ``sqlite_schema``.
+* ``drop_index(name)`` — frees the index B-tree pages and deletes the schema row.
+* ``find_index(name)`` — lookup by index name.
+* ``list_indexes(table=None)`` — list all index rows, optionally filtered to
+  a single table.
+
+v1 limitations still apply
+---------------------------
+
 * ``AUTOINCREMENT`` (``sqlite_sequence``) is not maintained.
 * The database header fields ``file_change_counter``, ``database_size_pages``,
   and ``version_valid_for`` are NOT updated here — those belong to the Backend
@@ -333,6 +341,147 @@ class Schema:
         self._btree.delete(row_rowid)
 
         # Schema changed — bump the cookie.
+        self._bump_schema_cookie()
+
+    # ── Index read operations ─────────────────────────────────────────────────
+
+    def find_index(self, name: str) -> tuple[int, int, str | None] | None:
+        """Return ``(rowid, rootpage, sql)`` for the index named *name*, or ``None``.
+
+        Performs a full scan of ``sqlite_schema`` looking for entries with
+        ``type = 'index'`` and ``name = name``.  Returns ``None`` when no
+        such index exists.
+
+        The ``sql`` element is the ``CREATE INDEX`` statement (or ``None``
+        for auto-created indexes stored with a NULL sql field).
+
+        Example::
+
+            result = schema.find_index("auto_orders_user_id")
+            if result is not None:
+                row_rowid, root_pgno, sql = result
+        """
+        for rowid, payload in self._btree.scan():
+            cols, _ = record.decode(payload)
+            if cols[0] == "index" and cols[1] == name:
+                sql_val = cols[4]
+                return rowid, int(cols[3]), (str(sql_val) if sql_val is not None else None)
+        return None
+
+    def list_indexes(
+        self, table: str | None = None
+    ) -> list[tuple[str, str, int, str | None]]:
+        """Return ``[(name, tbl_name, rootpage, sql)]`` for all indexes.
+
+        Each tuple describes one ``type = 'index'`` row in ``sqlite_schema``.
+        If *table* is provided, only indexes whose ``tbl_name`` matches are
+        returned.  Results are in insertion (ascending rowid) order.
+
+        The ``sql`` element is the ``CREATE INDEX`` statement or ``None`` for
+        auto-created indexes stored with a NULL sql field.
+
+        Example::
+
+            rows = schema.list_indexes("orders")
+            # [("auto_orders_user_id", "orders", 5, "CREATE INDEX ...")]
+        """
+        result: list[tuple[str, str, int, str | None]] = []
+        for _, payload in self._btree.scan():
+            cols, _ = record.decode(payload)
+            if cols[0] != "index":
+                continue
+            tbl_name = str(cols[2])
+            if table is not None and tbl_name != table:
+                continue
+            sql_val = cols[4]
+            sql_str = str(sql_val) if sql_val is not None else None
+            result.append((str(cols[1]), tbl_name, int(cols[3]), sql_str))
+        return result
+
+    # ── Index write operations ────────────────────────────────────────────────
+
+    def create_index(self, name: str, table: str, sql: str | None) -> int:
+        """Create a new index and return its root page number.
+
+        Allocates a fresh empty index B-tree root page (type ``0x0A``
+        leaf page) and inserts a ``type = 'index'`` row into
+        ``sqlite_schema``.
+
+        The stored row columns are::
+
+            ('index', name, table, rootpage, sql)
+
+        where *sql* is either the ``CREATE INDEX`` statement (for
+        user-created indexes) or ``None`` (for auto-created indexes that
+        follow the ``auto_{table}_{col}`` naming convention).
+
+        Raises :class:`SchemaError` if a schema object with *name* already
+        exists (either a table or an index).
+
+        Returns the allocated root page number.
+
+        Example::
+
+            root = schema.create_index(
+                "auto_orders_user_id", "orders",
+                "CREATE INDEX auto_orders_user_id ON orders (user_id)"
+            )
+            # root is now the page number of the empty index B-tree leaf
+        """
+        # Guard against collisions with both tables and other indexes.
+        if self.find_table(name) is not None or self.find_index(name) is not None:
+            raise SchemaError(f"schema object {name!r} already exists")
+
+        # Import here to avoid a circular-import at module load time —
+        # schema.py and index_tree.py are siblings in the same package.
+        from storage_sqlite.index_tree import IndexTree  # noqa: PLC0415
+
+        new_tree = IndexTree.create(self._pager, freelist=self._freelist)
+        root_pgno = new_tree.root_page
+
+        rowid = self._next_rowid()
+        payload = record.encode(["index", name, table, root_pgno, sql])
+        self._btree.insert(rowid, payload)
+        self._bump_schema_cookie()
+
+        return root_pgno
+
+    def drop_index(self, name: str) -> None:
+        """Drop an index: free its B-tree pages, delete schema row, bump cookie.
+
+        Steps:
+
+        1. Locate the ``sqlite_schema`` row for *name* (must be ``type =
+           'index'``).
+        2. Free every page in the index's B-tree via
+           :meth:`~storage_sqlite.index_tree.IndexTree.free_all`.
+        3. Delete the schema row.
+        4. Bump the schema cookie.
+
+        Raises :class:`SchemaError` if no index named *name* exists.
+
+        Example::
+
+            schema.drop_index("auto_orders_user_id")
+            assert schema.find_index("auto_orders_user_id") is None
+        """
+        result = self.find_index(name)
+        if result is None:
+            raise SchemaError(f"index {name!r} does not exist")
+
+        row_rowid, root_pgno, _ = result
+
+        # Free all pages in the index B-tree.
+        from storage_sqlite.index_tree import IndexTree  # noqa: PLC0415
+
+        if self._freelist is not None:
+            idx_tree = IndexTree.open(self._pager, root_pgno, freelist=self._freelist)
+            idx_tree.free_all(self._freelist)
+        else:
+            # No freelist: zero the root page so it does not hold stale data.
+            self._pager.write(root_pgno, b"\x00" * PAGE_SIZE)
+
+        self._btree.delete(row_rowid)
         self._bump_schema_cookie()
 
     # ── Internal helpers ──────────────────────────────────────────────────────
