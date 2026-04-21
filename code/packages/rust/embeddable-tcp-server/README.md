@@ -34,9 +34,11 @@ Application-specific data stays inside payload structs.
 
 The package tests use a Python Mini Redis worker as one example adapter:
 RESP bytes enter over TCP, Rust parses them into a Redis command payload, Python
-executes the command, and Rust writes the returned RESP bytes. That proves the
-embeddable server with a real language worker without making Python or Redis
-part of the crate's public identity.
+executes the command, returns an engine-response payload, and Rust encodes the
+RESP response bytes. Rust also owns per-connection selected database state, so
+the language worker does not need socket ids. That proves the embeddable server
+with a real language worker without making Python or Redis part of the crate's
+public identity.
 
 ## Current Limitations
 
@@ -44,6 +46,9 @@ part of the crate's public identity.
 - One worker process handles all delegated jobs.
 - The worker protocol uses the JSON-line `generic-job-protocol` codec over
   stdio for debuggability, not throughput.
+- Application adapters currently supply their own command/response payload
+  structs; shared protocol payload crates can come later as stable consumers
+  emerge.
 - This validates the runtime seam; it is not the final high-performance
   process-pool architecture.
 

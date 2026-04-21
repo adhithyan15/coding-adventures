@@ -10,24 +10,26 @@ on application jobs while Rust keeps the transport plane safe and fast.
 
 ## Protocol
 
-The worker reads one generic job-protocol frame per line from stdin. Request
-arguments are hex-encoded inside the payload so binary RESP data does not depend
-on text encodings:
+The worker reads one generic job-protocol frame per line from stdin. Rust has
+already parsed RESP into a command frame, so the worker receives only the
+currently selected database, command name, and hex-encoded binary arguments:
 
 ```json
-{"version":1,"kind":"request","body":{"id":"job-1","payload":{"argv_hex":["50494e47"]},"metadata":{"affinity_key":"7","sequence":1}}}
+{"version":1,"kind":"request","body":{"id":"job-1","payload":{"selected_db":0,"command":"PING","args_hex":[]},"metadata":{}}}
 ```
 
 The worker writes one generic response frame per line to stdout. Successful
-responses carry a hex-encoded RESP frame inside the response payload:
+responses carry the updated selected database plus an engine response. Rust
+turns that engine response back into RESP bytes and writes them to the socket:
 
 ```json
-{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"resp_hex":"2b504f4e470d0a"}},"metadata":{"affinity_key":"7","sequence":1}}}
+{"version":1,"kind":"response","body":{"id":"job-1","result":{"status":"ok","payload":{"selected_db":0,"response":{"kind":"simple_string","value":"PONG"}}},"metadata":{}}}
 ```
 
 This mirrors the Rust `generic-job-protocol` crate. The Python package does not
 own the protocol; it is one language worker implementation that responds to the
-shared `JobRequest` / `JobResponse` shape.
+shared `JobRequest` / `JobResponse` shape. It also mirrors the WASM Mini Redis
+adapter in this repository: protocol framing stays outside the command engine.
 
 ## Commands
 
@@ -45,8 +47,9 @@ tests:
 - `HEXISTS`
 - `SELECT`
 
-`SELECT` state is tracked by `metadata.affinity_key`, because database selection
-belongs to the Redis session rather than to the global worker.
+`SELECT` state is passed in and returned as `selected_db`. The Rust TCP layer
+stores that value per connection, which keeps the Python worker unaware of
+sockets, connection ids, or RESP encoding.
 
 ## Usage
 

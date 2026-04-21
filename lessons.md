@@ -4,6 +4,22 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-21: Full Rust workspace builds can include platform-only crates
+
+`cargo build --workspace` is useful for catching missing Rust exports, but this
+workspace currently includes crates that intentionally compile only on specific
+operating systems.
+
+**Symptom:** On macOS, a full workspace build reaches `paint-vm-direct2d` or
+`paint-vm-gdi` and fails with a compile-time message that the crate requires
+Windows.
+
+**Rule:** Treat platform-only compile errors as workspace configuration scope,
+not as regressions in the package under test. Still run the focused package
+`BUILD` scripts and any directly affected dependency builds before pushing.
+
+---
+
 ### 2026-04-20: Downstream package tests should not pin exact dependency patch versions
 
 When a foundational package intentionally bumps its version, dependent packages
