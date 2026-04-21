@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.3.0 — 2026-04-21
+
+### Added
+
+- **`UNION` / `INTERSECT` / `EXCEPT` execution** — full support for all six
+  set-operation variants:
+  - `Union ALL` — both sides are appended directly to `result_buffer`.
+  - `Union DISTINCT` — `DistinctResult` deduplicates the merged buffer.
+  - `CaptureLeftResult` instruction — saves `result_buffer.rows` to a new
+    `left_result` field on `_VmState` and clears the buffer, allowing the right
+    side to fill the buffer independently.
+  - `IntersectResult(all)` — set semantics (distinct rows in both sides) when
+    `all=False`; bag semantics with `min(left_count, right_count)` copies when
+    `all=True`.
+  - `ExceptResult(all)` — set semantics (rows in left but not right) when
+    `all=False`; bag semantics with `max(0, left_count − right_count)` copies
+    when `all=True`.
+
+- **`INSERT … SELECT` execution** — `InsertFromResult` instruction drains every
+  row from `result_buffer` into `backend.insert()`, clears the buffer, and
+  records the count in `rows_affected`.
+
+- **Explicit transaction support** via three new VM instructions:
+  - `BeginTransaction` — calls `backend.begin_transaction()`, stores the handle
+    in `_VmState.transaction_handle`.  Raises `TransactionError` if a
+    transaction is already active (detected via both `_VmState.transaction_handle`
+    and `backend.current_transaction()`).
+  - `CommitTransaction` — resolves the handle from `_VmState.transaction_handle`
+    or `backend.current_transaction()`, calls `backend.commit_transaction()`.
+    Raises `TransactionError` if no active transaction exists.
+  - `RollbackTransaction` — same handle-resolution strategy as commit, calls
+    `backend.rollback_transaction()`.
+
+- **`TransactionError(message)`** — new `VmError` subclass raised for nested
+  `BEGIN`, `COMMIT`/`ROLLBACK` without `BEGIN`, etc.
+
+- **`TransactionError` exported** from `sql_vm.__init__`.
+
+### Tests
+
+- `tests/test_tier1_features.py` — 41 new integration tests in seven classes:
+  `TestUnion` (7), `TestIntersect` (7), `TestExcept` (9),
+  `TestInsertSelect` (5), `TestTransactions` (5),
+  `TestTransactionErrors` (4), `TestSetOpEdgeCases` (3).
+- VM total: **305 tests, 83.38% coverage**.
+
 ## 0.2.0 — 2026-04-20
 
 ### Added

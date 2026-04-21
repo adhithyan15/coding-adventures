@@ -183,6 +183,26 @@ class UnsupportedFunction(VmError):
 
 
 @dataclass(eq=True)
+class TransactionError(VmError):
+    """Raised when a transaction-control instruction is used incorrectly.
+
+    Common causes:
+
+    - ``BEGIN`` while a transaction is already active (nested transactions
+      are not supported in v1).
+    - ``COMMIT`` or ``ROLLBACK`` when no transaction is active.
+
+    ``message`` describes the specific problem; callers should treat this as
+    a programming error rather than a transient failure.
+    """
+
+    message: str
+
+    def __str__(self) -> str:
+        return self.message
+
+
+@dataclass(eq=True)
 class WrongNumberOfArguments(VmError):
     """Raised when a scalar function is called with the wrong argument count.
 

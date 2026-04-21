@@ -44,6 +44,26 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
+    def test_by_name_expression_waits_for_eval_thunk_stage(self) -> None:
+        with pytest.raises(AlgolWasmError) as raised:
+            compile_source(
+                "begin integer result; "
+                "integer procedure id(x); integer x; begin id := x end; "
+                "result := id(1) "
+                "end"
+            )
+        assert raised.value.stage == "ir-compile"
+
+    def test_array_element_by_name_waits_for_relocating_thunk_stage(self) -> None:
+        with pytest.raises(AlgolWasmError) as raised:
+            compile_source(
+                "begin integer result; integer array a[1:2]; "
+                "procedure put(x); integer x; begin x := 7 end; "
+                "put(a[1]); result := a[1] "
+                "end"
+            )
+        assert raised.value.stage == "ir-compile"
+
     def test_runtime_smoke_returns_result(self) -> None:
         result = compile_source(
             "begin integer result, i; "
@@ -100,6 +120,37 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [65]
+
+    def test_scalar_by_name_parameter_assignment_writes_back(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure bump(x); integer x; begin x := x + 1 end; "
+            "result := 4; bump(result) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "result := 12; result := id(result) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
+
+    def test_nested_by_name_parameter_forwards_original_storage_pointer(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure outer(x); integer x; "
+            "begin "
+            "procedure inner(y); integer y; begin y := y + 1 end; "
+            "inner(x) "
+            "end; "
+            "result := 4; outer(result) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
 
     def test_recursive_factorial_runs_with_fresh_frames(self) -> None:
         result = compile_source(

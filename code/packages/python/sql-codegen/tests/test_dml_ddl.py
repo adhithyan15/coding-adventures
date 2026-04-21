@@ -37,7 +37,6 @@ from sql_codegen import (
 from sql_codegen import (
     DropTable as IrDropTable,
 )
-from sql_codegen.errors import UnsupportedNode
 
 
 def test_insert_values_emits_insert_row() -> None:
@@ -64,20 +63,25 @@ def test_insert_multiple_rows() -> None:
     assert len(inserts) == 3
 
 
-def test_insert_select_raises() -> None:
+def test_insert_select_compiles() -> None:
+    """INSERT … SELECT now compiles to a SetResultSchema + scan body + InsertFromResult."""
     from sql_planner import Scan
+
+    from sql_codegen.ir import InsertFromResult
 
     plan = Insert(
         table="t",
         columns=None,
         source=InsertSource(query=Scan(table="src")),
     )
-    try:
-        compile(plan)
-    except UnsupportedNode:
-        pass
-    else:
-        raise AssertionError("expected UnsupportedNode for INSERT ... SELECT")
+    prog = compile(plan)
+    # The program must contain an InsertFromResult targeting 't'.
+    inserts = [i for i in prog.instructions if isinstance(i, InsertFromResult)]
+    assert len(inserts) == 1
+    assert inserts[0].table == "t"
+    # Should NOT have a plain InsertRow (that's for VALUES inserts).
+    from sql_codegen.ir import InsertRow
+    assert not any(isinstance(i, InsertRow) for i in prog.instructions)
 
 
 def test_update_without_predicate() -> None:

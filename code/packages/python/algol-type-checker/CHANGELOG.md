@@ -14,6 +14,9 @@ All notable changes to this package will be documented in this file.
 - Added Phase 4 integer array descriptors, dimension-bound metadata,
   descriptor frame slots, and resolved array read/write accesses with
   lexical-depth deltas.
+- Added Phase 5 by-name parameter semantic metadata, conservative write
+  analysis for assigned or transitively passed by-name formals, and call-site
+  diagnostics for non-assignable by-name actual expressions.
 
 ## [0.1.0] - 2026-04-20
 

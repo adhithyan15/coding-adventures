@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PackageId>CodingAdventures.ImageGeometricTransforms</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>IMG04: Geometric transforms (flip, rotate, scale, affine, perspective) on PixelContainer</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\**\*.cs" />
+    <EmbeddedResource Remove="tests\**" />
+    <None Remove="tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../pixel-container/CodingAdventures.PixelContainer.csproj" />
+  </ItemGroup>
+</Project>

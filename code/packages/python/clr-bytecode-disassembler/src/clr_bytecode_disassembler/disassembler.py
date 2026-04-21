@@ -47,9 +47,26 @@ def disassemble_clr_method(assembly: CLRPEFile, method: CLRMethodDef) -> CLRMeth
         if opcode == 0x01:
             instructions.append(CLRInstruction(start, "ldnull"))
             continue
+        if 0x02 <= opcode <= 0x05:
+            slot = opcode - 0x02
+            instructions.append(CLRInstruction(start, f"ldarg.{slot}", slot))
+            continue
+        if opcode == 0x15:
+            instructions.append(CLRInstruction(start, "ldc.i4.m1", -1))
+            continue
         if 0x16 <= opcode <= 0x1E:
             value = opcode - 0x16
             instructions.append(CLRInstruction(start, f"ldc.i4.{value}", value))
+            continue
+        if opcode == 0x0E:
+            slot = il[offset]
+            offset += 1
+            instructions.append(CLRInstruction(start, "ldarg.s", slot, 2))
+            continue
+        if opcode == 0x10:
+            slot = il[offset]
+            offset += 1
+            instructions.append(CLRInstruction(start, "starg.s", slot, 2))
             continue
         if opcode == 0x1F:
             value = struct.unpack_from("b", il, offset)[0]
@@ -107,10 +124,38 @@ def disassemble_clr_method(assembly: CLRPEFile, method: CLRMethodDef) -> CLRMeth
             offset += 1
             instructions.append(CLRInstruction(start, "brtrue.s", offset + delta, 2))
             continue
+        if 0x2E <= opcode <= 0x33:
+            delta = struct.unpack_from("b", il, offset)[0]
+            offset += 1
+            names = {
+                0x2E: "beq.s",
+                0x2F: "bge.s",
+                0x30: "bgt.s",
+                0x31: "ble.s",
+                0x32: "blt.s",
+                0x33: "bne.un.s",
+            }
+            instructions.append(CLRInstruction(start, names[opcode], offset + delta, 2))
+            continue
         if opcode == 0x38:
             delta = struct.unpack_from("<i", il, offset)[0]
             offset += 4
             instructions.append(CLRInstruction(start, "br", offset + delta, 5))
+            continue
+        if 0x39 <= opcode <= 0x40:
+            delta = struct.unpack_from("<i", il, offset)[0]
+            offset += 4
+            names = {
+                0x39: "brfalse",
+                0x3A: "brtrue",
+                0x3B: "beq",
+                0x3C: "bge",
+                0x3D: "bgt",
+                0x3E: "ble",
+                0x3F: "blt",
+                0x40: "bne.un",
+            }
+            instructions.append(CLRInstruction(start, names[opcode], offset + delta, 5))
             continue
         if opcode == 0x58:
             instructions.append(CLRInstruction(start, "add"))
@@ -124,12 +169,45 @@ def disassemble_clr_method(assembly: CLRPEFile, method: CLRMethodDef) -> CLRMeth
         if opcode == 0x5B:
             instructions.append(CLRInstruction(start, "div"))
             continue
+        if opcode == 0x5F:
+            instructions.append(CLRInstruction(start, "and"))
+            continue
+        if opcode == 0x60:
+            instructions.append(CLRInstruction(start, "or"))
+            continue
+        if opcode == 0x62:
+            instructions.append(CLRInstruction(start, "shl"))
+            continue
+        if opcode == 0x63:
+            instructions.append(CLRInstruction(start, "shr"))
+            continue
+        if opcode == 0x6F:
+            token = struct.unpack_from("<I", il, offset)[0]
+            offset += 4
+            operand = assembly.resolve_member_reference(token)
+            instructions.append(CLRInstruction(start, "callvirt", operand, 5))
+            continue
         if opcode == 0x72:
             token = struct.unpack_from("<I", il, offset)[0]
             offset += 4
             instructions.append(
                 CLRInstruction(start, "ldstr", assembly.resolve_user_string(token), 5)
             )
+            continue
+        if opcode in {0x7E, 0x80, 0x8D}:
+            token = struct.unpack_from("<I", il, offset)[0]
+            offset += 4
+            names = {0x7E: "ldsfld", 0x80: "stsfld", 0x8D: "newarr"}
+            instructions.append(CLRInstruction(start, names[opcode], token, 5))
+            continue
+        if opcode in {0x91, 0x94, 0x9C, 0x9E}:
+            names = {
+                0x91: "ldelem.u1",
+                0x94: "ldelem.i4",
+                0x9C: "stelem.i1",
+                0x9E: "stelem.i4",
+            }
+            instructions.append(CLRInstruction(start, names[opcode]))
             continue
         if opcode == 0xFE:
             extended = il[offset]

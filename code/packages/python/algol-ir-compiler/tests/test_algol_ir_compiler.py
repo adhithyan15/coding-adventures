@@ -262,3 +262,51 @@ class TestAlgolIrCompiler:
     def test_raises_for_unsupported_exponentiation(self) -> None:
         with pytest.raises(CompileError):
             compile_algol(parse_algol("begin integer result; result := 2 ** 3 end"))
+
+    def test_compiles_scalar_by_name_parameter_as_storage_pointer(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure bump(x); integer x; begin x := x + 1 end; "
+                "result := 4; bump(result) "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert len(calls[0].operands) == 3
+        assert result.procedure_signatures[calls[0].operands[0].name] == 2
+        assert IrOp.ADD_IMM in opcodes
+        assert opcodes.count(IrOp.LOAD_WORD) >= 4
+        assert opcodes.count(IrOp.STORE_WORD) >= 8
+
+    def test_rejects_read_only_by_name_expression_until_eval_thunks_exist(
+        self,
+    ) -> None:
+        with pytest.raises(CompileError, match="eval thunk lowering"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "integer procedure id(x); integer x; begin id := x end; "
+                    "result := id(1) "
+                    "end"
+                )
+            )
+
+    def test_rejects_array_element_by_name_until_relocating_thunks_exist(
+        self,
+    ) -> None:
+        with pytest.raises(CompileError, match="array element"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; integer array a[1:2]; "
+                    "procedure put(x); integer x; begin x := 7 end; "
+                    "put(a[1]); result := a[1] "
+                    "end"
+                )
+            )

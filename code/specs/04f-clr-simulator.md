@@ -341,6 +341,24 @@ Suggested state split:
 - `CliTokenResolver`
 - `ClrHeapRef`
 
+### `clr-vm-simulator`
+
+This package executes decoded and disassembled IL against `cli-runtime-model`.
+It is the first real VM package in the CLR pipeline and should stay focused on
+execution, not PE parsing or assembly writing:
+
+- build runtime frames from decoded `MethodDef` signatures and local-slot
+  counts
+- execute the compiler-backend opcode slice: int32 constants, arguments,
+  locals, arithmetic, bitwise operations, comparisons, branches, `call`,
+  `callvirt`, and `ret`
+- invoke internal `MethodDef` targets and external `MemberRef` host bindings
+- route `System.Console.WriteLine` and compiler helper calls through an
+  injectable host bridge
+- preserve per-instruction traces with runtime-model frame snapshots
+- prove the end-to-end compiler path by running at least one frontend program
+  through IR, CIL, PE/CLI writing, decoding, disassembly, and VM execution
+
 ## CLR MVP execution slice
 
 The first useful executable slice should start at:
