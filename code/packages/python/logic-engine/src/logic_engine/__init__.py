@@ -36,6 +36,8 @@ from logic_engine.engine import (
     asserta,
     assertz,
     atom,
+    clause_as_term,
+    clause_body,
     clauses_matching,
     conj,
     defer,
@@ -44,6 +46,8 @@ from logic_engine.engine import (
     fact,
     fail,
     fresh,
+    freshen_clause,
+    goal_as_term,
     logic_list,
     native_goal,
     neq,
@@ -95,6 +99,8 @@ __all__ = [
     "asserta",
     "assertz",
     "atom",
+    "clause_as_term",
+    "clause_body",
     "clauses_matching",
     "conj",
     "defer",
@@ -103,6 +109,8 @@ __all__ = [
     "fact",
     "fail",
     "fresh",
+    "freshen_clause",
+    "goal_as_term",
     "logic_list",
     "native_goal",
     "neq",
@@ -123,4 +131,4 @@ __all__ = [
     "var",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"

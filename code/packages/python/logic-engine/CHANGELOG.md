@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.0] - 2026-04-21
+
+### Added
+
+- clause and goal term encoders: `clause_body`, `goal_as_term`, and `clause_as_term`
+- public `freshen_clause` helper for standardizing clauses apart outside the solver
+- tests covering truth bodies for facts, Prolog-shaped goal encoding, unsupported host-only goals, clause term encoding, and freshened variable aliasing
+
 ## [0.5.0] - 2026-04-20
 
 ### Added
