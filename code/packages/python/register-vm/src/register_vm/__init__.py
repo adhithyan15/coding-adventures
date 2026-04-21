@@ -63,6 +63,12 @@ A JIT optimizer would use this data to specialize the hot path; here it
 is recorded for educational purposes.
 """
 
+from register_vm.generic_vm import (
+    GenericRegisterVM,
+    GenericTrace,
+    GenericVMError,
+    RegisterFrame,
+)
 from register_vm.opcodes import Opcode
 from register_vm.types import (
     UNDEFINED,
@@ -107,6 +113,11 @@ __all__ = [
     "Opcode",
     # VM
     "RegisterVM",
+    # Generic pluggable VM
+    "GenericRegisterVM",
+    "GenericTrace",
+    "GenericVMError",
+    "RegisterFrame",
     # Convenience functions
     "execute",
     "execute_with_trace",
