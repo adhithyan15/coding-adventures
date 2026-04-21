@@ -20,8 +20,9 @@ All notable changes to this package will be documented in this file.
 - Lowered Phase 4 integer arrays to heap-backed descriptors with dynamic
   bound evaluation, row-major strides, checked element loads/stores, bounded
   aggregate element counts, and block-lifetime heap restoration.
-- Added an explicit Phase 5 guard so by-name parameters are rejected at IR
-  lowering until thunk descriptor eval/store code generation is implemented.
+- Lowered scalar by-name actuals as storage pointers so by-name formal reads
+  and writes execute through the caller's scalar slot, while expression and
+  array-element actuals continue to report explicit future-thunk diagnostics.
 
 ## [0.1.0] - 2026-04-20
 

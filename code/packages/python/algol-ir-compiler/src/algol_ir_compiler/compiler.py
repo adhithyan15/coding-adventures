@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from algol_type_checker import (
     ArrayDescriptor,
     ProcedureDescriptor,
+    ProcedureParameter,
     ResolvedArrayAccess,
     ResolvedProcedureCall,
     ResolvedReference,
@@ -60,6 +61,8 @@ _ARRAY_DATA_POINTER_OFFSET = 16
 _ARRAY_BOUNDS_POINTER_OFFSET = 20
 _ARRAY_WORD_BYTES = 4
 _ARRAY_MAX_ELEMENTS = 4096
+_VALUE_MODE = "value"
+_NAME_MODE = "name"
 
 
 @dataclass(frozen=True)
@@ -128,6 +131,7 @@ class AlgolIrCompiler:
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
         self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
         self.procedures: dict[int, ProcedureDescriptor] = {}
+        self.parameters_by_symbol: dict[int, ProcedureParameter] = {}
         self.arrays: dict[int, ArrayDescriptor] = {}
         self.arrays_by_block: dict[int, list[ArrayDescriptor]] = {}
         self.frame_offsets: dict[int, int] = {}
@@ -182,7 +186,11 @@ class AlgolIrCompiler:
             procedure.procedure_id: procedure
             for procedure in type_result.semantic.procedures
         }
-        self._reject_by_name_procedures(type_result.semantic.procedures)
+        self.parameters_by_symbol = {
+            parameter.symbol_id: parameter
+            for procedure in type_result.semantic.procedures
+            for parameter in procedure.parameters
+        }
         self.arrays = {
             array.array_id: array for array in type_result.semantic.arrays
         }
@@ -301,17 +309,6 @@ class AlgolIrCompiler:
 
         self._emit_leave_frame(scope)
         return scope
-
-    def _reject_by_name_procedures(
-        self, procedures: list[ProcedureDescriptor]
-    ) -> None:
-        for procedure in procedures:
-            for parameter in procedure.parameters:
-                if parameter.mode != "value":
-                    raise CompileError(
-                        f"call-by-name parameter {parameter.name!r} requires "
-                        "thunk lowering, not implemented by algol-ir-compiler"
-                    )
 
     def _emit_enter_frame(
         self,
@@ -920,13 +917,22 @@ class AlgolIrCompiler:
             raise CompileError("procedure call is missing a name")
         role = "statement" if node.rule_name == "proc_stmt" else "expression"
         call = self._require_procedure_call(name, role)
+        procedure = self.procedures[call.procedure_id]
         static_link = self._emit_static_link_for_call(call, scope)
-        arguments = [
-            self._compile_expr(argument, scope)
-            for argument in _direct_nodes(
-                _first_direct_node(node, "actual_params"), "expression"
+        actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
+        if len(actuals) != len(procedure.parameters):
+            raise CompileError(
+                f"procedure {procedure.name!r} expects "
+                f"{len(procedure.parameters)} argument(s), got {len(actuals)}"
             )
-        ]
+        arguments = []
+        for argument, parameter in zip(actuals, procedure.parameters, strict=True):
+            if parameter.mode == _VALUE_MODE:
+                arguments.append(self._compile_expr(argument, scope))
+            else:
+                arguments.append(
+                    self._compile_by_name_actual_pointer(argument, parameter, scope)
+                )
         self._emit(
             IrOp.CALL,
             IrLabel(call.label),
@@ -936,6 +942,29 @@ class AlgolIrCompiler:
         result = self._fresh_reg()
         self._copy_reg(dst=result, src=_RESULT_REG)
         return result
+
+    def _compile_by_name_actual_pointer(
+        self,
+        argument: ASTNode,
+        parameter: ProcedureParameter,
+        scope: _FrameScope,
+    ) -> int:
+        variable = _single_variable_expr(argument)
+        if variable is None:
+            raise CompileError(
+                f"by-name parameter {parameter.name!r} received a read-only "
+                "expression actual; eval thunk lowering is not implemented yet"
+            )
+        if _variable_subscripts(variable):
+            raise CompileError(
+                f"by-name parameter {parameter.name!r} received an array element "
+                "actual; re-evaluating element thunk lowering is not implemented yet"
+            )
+        name = _variable_name(variable)
+        if name is None:
+            raise CompileError("by-name scalar actual is missing a name")
+        reference = self._require_reference(name, "read")
+        return self._emit_reference_pointer(reference, scope)
 
     def _compile_procedures(
         self, procedures: list[ProcedureDescriptor]
@@ -1130,16 +1159,41 @@ class AlgolIrCompiler:
     def _emit_load_reference(
         self, reference: ResolvedReference, scope: _FrameScope
     ) -> int:
+        pointer = self._emit_reference_pointer(reference, scope)
         dst = self._fresh_reg()
-        frame_reg = self._emit_frame_for_reference(reference, scope)
-        offset_reg = self._const_reg(reference.slot_offset)
         self._emit(
             IrOp.LOAD_WORD,
             IrRegister(dst),
-            IrRegister(frame_reg),
-            IrRegister(offset_reg),
+            IrRegister(pointer),
+            IrRegister(self._const_reg(0)),
         )
         return dst
+
+    def _emit_reference_pointer(
+        self, reference: ResolvedReference, scope: _FrameScope
+    ) -> int:
+        frame_reg = self._emit_frame_for_reference(reference, scope)
+        if self._is_by_name_reference(reference):
+            pointer = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(pointer),
+                IrRegister(frame_reg),
+                IrRegister(self._const_reg(reference.slot_offset)),
+            )
+            return pointer
+        pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(pointer),
+            IrRegister(frame_reg),
+            IrImmediate(reference.slot_offset),
+        )
+        return pointer
+
+    def _is_by_name_reference(self, reference: ResolvedReference) -> bool:
+        parameter = self.parameters_by_symbol.get(reference.symbol_id)
+        return parameter is not None and parameter.mode == _NAME_MODE
 
     def _emit_store_reference(
         self,
@@ -1147,11 +1201,12 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         value_reg: int,
     ) -> None:
-        frame_reg = self._emit_frame_for_reference(reference, scope)
-        self._store_word_reg(
-            value_reg=value_reg,
-            base_reg=frame_reg,
-            offset=reference.slot_offset,
+        pointer = self._emit_reference_pointer(reference, scope)
+        self._emit(
+            IrOp.STORE_WORD,
+            IrRegister(value_reg),
+            IrRegister(pointer),
+            IrRegister(self._const_reg(0)),
         )
 
     def _emit_frame_for_reference(
@@ -1492,6 +1547,17 @@ def _variable_name(node: ASTNode | None) -> Token | None:
         return None
     names = [token for token in _tokens(variable) if token.type_name == "NAME"]
     return names[0] if len(names) == 1 else None
+
+
+def _single_variable_expr(node: ASTNode | None) -> ASTNode | None:
+    if node is None:
+        return None
+    if node.rule_name == "variable":
+        return node
+    meaningful = _meaningful_children(node)
+    if len(meaningful) != 1 or not isinstance(meaningful[0], ASTNode):
+        return None
+    return _single_variable_expr(meaningful[0])
 
 
 def _variable_head_name(node: ASTNode | None) -> Token | None:
