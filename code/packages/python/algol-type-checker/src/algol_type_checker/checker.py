@@ -1319,16 +1319,24 @@ def _by_name_formal_write_reasons(
         if name in active_names:
             reasons.setdefault(name, reason)
 
-    def visit(node: ASTNode | None, active_names: set[str]) -> None:
+    def visit(
+        node: ASTNode | None,
+        active_names: set[str],
+        local_procedure_names: set[str],
+    ) -> None:
         if node is None or not active_names:
             return
         if node.rule_name == "block":
             active_names = active_names - _direct_block_declared_names(node)
+            local_procedure_names = (
+                local_procedure_names | _direct_block_procedure_names(node)
+            )
         elif node.rule_name == "procedure_decl":
             hidden = {formal.value for formal in _formal_parameter_names(node)}
             procedure_name = _procedure_name(node)
             if procedure_name is not None:
                 hidden.add(procedure_name.value)
+                local_procedure_names = local_procedure_names | {procedure_name.value}
             active_names = active_names - hidden
 
         if node.rule_name == "assign_stmt":
@@ -1348,6 +1356,8 @@ def _by_name_formal_write_reasons(
             record(loop_name, "local assignment", active_names)
         elif node.rule_name in {"proc_call", "proc_stmt"}:
             callee_name = _procedure_call_name(node)
+            if callee_name in local_procedure_names:
+                callee_name = None
             actual_params = _first_direct_node(node, "actual_params")
             for index, actual in enumerate(_direct_nodes(actual_params, "expression")):
                 actual_name = _single_variable_expr_name(actual)
@@ -1355,9 +1365,9 @@ def _by_name_formal_write_reasons(
                     call_edges.append((actual_name, callee_name, index))
 
         for child in _node_children(node):
-            visit(child, active_names)
+            visit(child, active_names, local_procedure_names)
 
-    visit(body, names)
+    visit(body, names, set())
     self_edges: list[tuple[str, int]] = []
     for actual_name, callee_name, argument_index in call_edges:
         if callee_name == current_procedure_name:
@@ -1427,6 +1437,18 @@ def _direct_block_declared_names(node: ASTNode) -> set[str]:
             if procedure_name is not None:
                 declared.add(procedure_name.value)
     return declared
+
+
+def _direct_block_procedure_names(node: ASTNode) -> set[str]:
+    names: set[str] = set()
+    for declaration in _direct_nodes(node, "declaration"):
+        inner = _first_ast_child(declaration)
+        if inner is None or inner.rule_name != "procedure_decl":
+            continue
+        procedure_name = _procedure_name(inner)
+        if procedure_name is not None:
+            names.add(procedure_name.value)
+    return names
 
 
 def _is_assignable_actual(node: ASTNode) -> bool:

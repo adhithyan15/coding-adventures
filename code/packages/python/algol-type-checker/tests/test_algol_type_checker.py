@@ -410,6 +410,45 @@ class TestAlgolTypeChecker:
         )
         assert not outer.parameters[0].may_write
 
+    def test_shadowed_read_only_procedure_call_is_conservative_write(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure read(z); integer z; begin read := z end; "
+            "procedure outer(x); integer x; "
+            "begin procedure read(y); integer y; begin y := y + 1 end; read(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
+    def test_shadowed_current_procedure_call_is_conservative_write(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure outer(x); integer x; "
+            "begin procedure outer(y); integer y; begin y := y + 1 end; outer(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
     def test_read_only_recursive_by_name_formal_stays_read_only(self) -> None:
         ast = parse_algol(
             "begin integer result; "
