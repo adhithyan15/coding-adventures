@@ -120,6 +120,21 @@ non-integral values before attempting any `int` conversion.
 
 ---
 
+### 2026-04-21: Use body files for GitHub PR text containing Markdown backticks
+
+When passing a Markdown PR body directly to `gh pr create --body "..."` or
+`gh pr edit --body "..."`, shell command substitution still applies inside the
+double-quoted string. Inline code spans such as `` `goal_from_term(...)` `` can
+therefore be executed by `zsh` before `gh` receives the body, producing noisy
+shell errors and a mangled pull request description.
+
+**Rule:** For PR descriptions or comments that contain Markdown backticks, write
+the body to a temporary file with a single-quoted heredoc and pass it via
+`--body-file`. Do not put Markdown-heavy PR bodies directly in a double-quoted
+shell argument.
+
+---
+
 ### 2026-04-20: Compiler runtime specs must bound execution and captured environment lifetimes
 
 When designing a compiler/runtime for a language with recursion, nested procedures,
