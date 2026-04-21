@@ -130,6 +130,7 @@ the engine's backtracking guarantees.
 Packages:
 
 ```text
+code/packages/python/logic-core
 code/packages/python/logic-engine
 code/packages/python/logic-builtins
 code/packages/python/logic-instructions
@@ -138,6 +139,7 @@ code/packages/python/logic-vm
 
 Features:
 
+- a `State.database` extension slot for branch-local runtime overlays
 - dynamic predicate declarations
 - scoped database state inside an active search
 - `assertao(clause_term)`
@@ -159,6 +161,19 @@ Why this is one batch:
 The core rule for this batch is that database mutations are visible to later
 goals in the same proof branch and are undone when the solver backtracks past
 the mutation point.
+
+Implementation shape:
+
+- immutable source `Program` values remain the persistent database layer
+- dynamic predicates opt in through program declarations or a branch-local
+  `dynamico(name, arity)` goal
+- active runtime mutations live in an immutable `DynamicDatabase` attached to
+  `State.database`, so ordinary generator backtracking restores previous
+  database snapshots naturally
+- static source predicates cannot be modified by runtime assert/retract/abolish
+  unless they were declared dynamic at the program/instruction level
+- `DYNAMIC_REL` instructions declare dynamic predicates for future parser and
+  VM frontends without requiring parser-specific runtime behavior
 
 ### Batch C - Search Control and Real Cut
 

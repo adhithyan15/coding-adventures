@@ -4,6 +4,33 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-21: BUILD files must be updated whenever package.json dependencies change
+
+The build-tool validates that every `BUILD` / `BUILD_windows` shell script lists
+all transitive local packages as `npm install` preludes, in leaf-to-root order.
+Changing a package's `package.json` dependencies without updating its `BUILD`
+(and the `BUILD` of every program/package that transitively depends on it) is
+a CI failure.
+
+**Symptom:** `detect` job fails with:
+
+```
+undeclared local package refs: typescript/<removed>;
+missing prerequisite refs for standalone builds: typescript/<added>
+```
+
+**Rule:** When editing `dependencies` in a `package.json`, immediately:
+
+1. Update that package's `BUILD` and `BUILD_windows` to reflect the new deps.
+2. Grep all `BUILD*` files for the OLD dep name across the repo.
+3. For every hit, replace the old dep line(s) with the new deps in correct
+   leaf-to-root order.
+
+Applies to Python/Ruby/Go/Rust/Elixir/Perl BUILD files too — same rule, same
+format.
+
+---
+
 ### 2026-04-21: Full Rust workspace builds can include platform-only crates
 
 `cargo build --workspace` is useful for catching missing Rust exports, but this

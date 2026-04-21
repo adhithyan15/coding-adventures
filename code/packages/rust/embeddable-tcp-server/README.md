@@ -42,23 +42,26 @@ or RESP part of the crate's public identity.
 
 ## Current Limitations
 
-- One worker process handles all delegated jobs.
+- Mailbox mode can use a configurable stdio worker process pool through
+  `generic-job-runtime`; the default remains one worker for deterministic local
+  behavior.
 - The worker protocol uses the JSON-line `generic-job-protocol` codec over
   stdio for debuggability, not throughput.
 - Worker responses are asynchronous with respect to TCP reads, but still flow
-  through one stdio response reader.
+  through one response reader per worker process.
 - The current payload structs are the first raw-byte transport shape; a later
   crate should make those stable for all language bridges.
-- This validates the runtime seam; it is not the final high-performance
-  process-pool architecture.
+- This validates the runtime seam; it still needs production timeout,
+  cancellation, worker restart, and backpressure-to-read-pausing policies.
 
-The next production step is to route these protocol frames through a real job
-runtime so worker completion can happen asynchronously and language workers can
-be backed by threads, processes, or another host-specific scheduler.
+The next production step is to harden the process-pool path with timeouts,
+worker restart policy, response size enforcement, and TCP read pausing when the
+worker queue is saturated.
 
 ## Dependencies
 
 - generic-job-protocol
+- generic-job-runtime
 - tcp-runtime
 - transport-platform
 

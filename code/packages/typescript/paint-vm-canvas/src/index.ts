@@ -474,6 +474,13 @@ function handleText(
   // Canvas default textBaseline is "alphabetic", which aligns to the baseline —
   // exactly what we want.
   ctx.textBaseline = "alphabetic";
+  // text_align maps directly to ctx.textAlign. "center" in PaintText is
+  // "center" in Canvas (not "middle" — that's the textBaseline word).
+  // Default "start" is also the Canvas default, so we only set it when
+  // explicitly provided to avoid unnecessary state changes in save/restore.
+  if (instr.text_align !== undefined) {
+    ctx.textAlign = instr.text_align;
+  }
   ctx.fillText(instr.text, instr.x, instr.y);
   ctx.restore();
 }

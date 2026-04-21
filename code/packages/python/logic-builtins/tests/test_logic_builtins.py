@@ -27,8 +27,11 @@ from logic_engine import (
 
 from logic_builtins import (
     __version__,
+    abolisho,
     add,
     argo,
+    assertao,
+    assertzo,
     atomico,
     atomo,
     bagofo,
@@ -41,6 +44,7 @@ from logic_builtins import (
     copytermo,
     current_predicateo,
     div,
+    dynamico,
     failo,
     findallo,
     floordiv,
@@ -64,6 +68,8 @@ from logic_builtins import (
     numneqo,
     onceo,
     predicate_propertyo,
+    retractallo,
+    retracto,
     same_termo,
     setofo,
     stringo,
@@ -82,7 +88,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.7.0"
+        assert __version__ == "0.8.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -919,6 +925,152 @@ class TestPredicateMetadataBuiltins:
         assert atom("built_in") in properties
         assert atom("static") not in properties
         assert term("number_of_clauses", 0) in properties
+
+
+class TestDynamicRuntimeDatabaseBuiltins:
+    """Runtime database builtins should be scoped to active proof branches."""
+
+    def test_asserta_and_assertz_update_answer_order_in_branch(self) -> None:
+        item = relation("item", 1)
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                dynamico("item", 1),
+                assertzo(item("last")),
+                assertao(item("first")),
+                item(value),
+            ),
+        ) == [atom("first"), atom("last")]
+
+    def test_dynamic_database_rolls_back_across_disjunction_branches(self) -> None:
+        seen = relation("seen", 1)
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            disj(
+                conj(dynamico("seen", 1), assertzo(seen("left")), seen(value)),
+                seen(value),
+            ),
+        ) == [atom("left")]
+
+    def test_retracto_binds_pattern_and_removes_first_match(self) -> None:
+        todo = relation("todo", 1)
+        removed = var("Removed")
+        remaining = var("Remaining")
+
+        assert solve_all(
+            program(),
+            (removed, remaining),
+            conj(
+                dynamico("todo", 1),
+                assertzo(todo("tea")),
+                assertzo(todo("cake")),
+                retracto(todo(removed)),
+                todo(remaining),
+            ),
+        ) == [(atom("tea"), atom("cake"))]
+
+    def test_retractallo_removes_all_matching_dynamic_heads(self) -> None:
+        parent = relation("parent", 2)
+        parent_name = var("Parent")
+        child_name = var("Child")
+        any_child = var("AnyChild")
+
+        assert solve_all(
+            program(),
+            (parent_name, child_name),
+            conj(
+                dynamico("parent", 2),
+                assertzo(parent("homer", "bart")),
+                assertzo(parent("homer", "lisa")),
+                assertzo(parent("marge", "bart")),
+                retractallo(parent("homer", any_child)),
+                parent(parent_name, child_name),
+            ),
+        ) == [(atom("marge"), atom("bart"))]
+
+    def test_abolisho_removes_dynamic_predicate_for_later_goals(self) -> None:
+        scratch = relation("scratch", 1)
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                dynamico("scratch", 1),
+                assertzo(scratch("temp")),
+                abolisho("scratch", 1),
+                scratch(value),
+            ),
+        ) == []
+
+    def test_static_source_predicates_cannot_be_modified_by_runtime_builtins(
+        self,
+    ) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(fact(parent("homer", "bart")))
+
+        assert solve_all(
+            family,
+            child,
+            conj(assertzo(parent("homer", "lisa")), parent("homer", child)),
+        ) == []
+        assert solve_all(
+            family,
+            child,
+            conj(dynamico("parent", 2), parent("homer", child)),
+        ) == []
+
+    def test_program_dynamic_source_clauses_can_be_retracted(self) -> None:
+        parent = relation("parent", 2)
+        removed = var("Removed")
+        remaining = var("Remaining")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            dynamic_relations=(parent,),
+        )
+
+        assert solve_all(
+            family,
+            (removed, remaining),
+            conj(retracto(parent("homer", removed)), parent("homer", remaining)),
+        ) == [(atom("bart"), atom("lisa"))]
+
+    def test_dynamic_predicates_are_visible_to_metadata_and_clauseo(self) -> None:
+        memo = relation("memo", 1)
+        prop = var("Property")
+        body = var("Body")
+
+        properties = solve_all(
+            program(),
+            prop,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo("cached")),
+                predicate_propertyo("memo", 1, prop),
+            ),
+        )
+
+        assert atom("defined") in properties
+        assert atom("dynamic") in properties
+        assert atom("static") not in properties
+        assert term("number_of_clauses", 1) in properties
+        assert solve_all(
+            program(),
+            body,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo("cached")),
+                clauseo(memo("cached"), body),
+            ),
+        ) == [atom("true")]
 
 
 class TestTermStateBuiltins:

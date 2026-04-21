@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-04-21
+
+### Added
+
+- VM handler for `DYNAMIC_REL` instructions
+- runtime tracking for dynamic relation declarations
+- assembled engine programs now preserve dynamic predicate metadata
+- tests covering dynamic declaration loading, reset behavior, and handler
+  validation
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

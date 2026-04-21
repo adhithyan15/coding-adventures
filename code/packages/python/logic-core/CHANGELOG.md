@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-04-21
+
+### Added
+
+- `State.database` extension slot for higher-level solver layers that need
+  branch-local runtime state
+- preservation of the extension slot across equality, disequality, and
+  fresh-variable goals
+- tests covering extension-state preservation
+
 ## [0.2.0] - 2026-04-18
 
 ### Added

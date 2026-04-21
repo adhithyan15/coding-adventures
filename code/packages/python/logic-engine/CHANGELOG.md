@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] - 2026-04-21
+
+### Added
+
+- dynamic predicate declarations on `Program`
+- branch-local `DynamicDatabase` overlays for runtime database mutation
+- runtime helpers for `asserta`, `assertz`, `retract`, `retractall`, and
+  `abolish` semantics during active search
+- visible-clause and visible-predicate helpers that include dynamic state
+- `clause_from_term(...)` for lowering Prolog-shaped clause data back into
+  engine clauses
+- tests covering dynamic source clauses, branch-local assertion visibility,
+  runtime retraction, visible-clause ordering, and clause-term lowering
+
 ## [0.7.0] - 2026-04-21
 
 ### Added
