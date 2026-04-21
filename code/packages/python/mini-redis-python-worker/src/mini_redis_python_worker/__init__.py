@@ -1,20 +1,22 @@
 """Python Mini Redis worker for the Rust TCP runtime prototype.
 
-The Rust side owns the TCP listener, native event loop, socket buffers, RESP
-framing, per-connection selected database state, and response writes. This
-package owns only application command semantics.
+The Rust side owns the TCP listener, native event loop, socket lifecycle, and
+socket writes. This package owns the Mini Redis application protocol:
+per-stream buffering, RESP frame parsing, command execution, and RESP frame
+assembly.
 
-The boundary intentionally mirrors ``code/packages/wasm/mini-redis``: Rust
-turns protocol bytes into a command frame, the embedded command engine returns
-an engine response, and Rust turns that response back into protocol bytes. JSON
-lines are still the prototype process encoding, but the payload is no longer a
-RESP blob and it does not contain socket identifiers.
+The stdio bridge still uses ``generic-job-protocol`` JSON lines for the
+prototype process boundary. The payload is intentionally transport-shaped:
+``stream_id`` plus raw TCP bytes in, raw TCP write frames out. That keeps the
+Rust TCP layer pure enough for Redis, IRC, WebSocket, or any other protocol to
+sit on top without changing the transport crate.
 """
 
 from __future__ import annotations
 
 import json
 import sys
+from collections import deque
 from dataclasses import dataclass, field
 from io import TextIOBase
 from typing import Literal
@@ -24,121 +26,167 @@ __version__ = "0.1.0"
 type RedisString = bytes
 type RedisHash = dict[bytes, bytes]
 type RedisValue = RedisString | RedisHash
-type EngineResponseKind = Literal[
-    "simple_string",
-    "error",
-    "integer",
-    "bulk_string",
-    "array",
-]
+type RespKind = Literal["simple", "error", "integer", "bulk"]
 
 DEFAULT_DATABASES = 16
 JOB_PROTOCOL_VERSION = 1
+MAX_BUFFERED_STREAM_BYTES = 1024 * 1024
+
+
+class RespProtocolError(ValueError):
+    """Raised when a stream contains malformed RESP."""
 
 
 @dataclass(frozen=True)
-class EngineResponse:
-    """Language-neutral response shape returned by the command layer.
+class RespReply:
+    """A tiny RESP2 reply builder owned by the Python protocol layer."""
 
-    This mirrors the Rust ``EngineResponse`` enum closely enough for generic
-    job workers in Python, Ruby, Lua, or any other language to implement the
-    same protocol without knowing anything about TCP sockets or RESP encoding.
-    """
+    kind: RespKind
+    value: bytes | str | int | None = None
 
-    kind: EngineResponseKind
-    value: bytes | str | int | list[EngineResponse] | None = None
+    def encode(self) -> bytes:
+        """Serialize this reply to RESP2 bytes."""
 
-    def to_wire(self) -> dict[str, object]:
-        """Serialize this engine response into the job-protocol payload."""
-
-        if self.kind == "simple_string":
-            return {"kind": "simple_string", "value": _as_text(self.value)}
+        if self.kind == "simple":
+            return b"+" + _as_bytes(self.value) + b"\r\n"
         if self.kind == "error":
-            return {"kind": "error", "message": _as_text(self.value)}
+            return b"-" + _as_bytes(self.value) + b"\r\n"
         if self.kind == "integer":
-            return {"kind": "integer", "value": int(self.value or 0)}
-        if self.kind == "bulk_string":
-            value = None if self.value is None else _as_bytes(self.value).hex()
-            return {"kind": "bulk_string", "value_hex": value}
-        if self.kind == "array":
-            value = self.value
-            if value is None:
-                return {"kind": "array", "values": None}
-            if not isinstance(value, list):
-                raise ValueError("array engine responses require a list value")
-            return {
-                "kind": "array",
-                "values": [item.to_wire() for item in value],
-            }
-        raise ValueError(f"unknown engine response kind: {self.kind}")
+            return b":" + str(int(self.value or 0)).encode("ascii") + b"\r\n"
+        if self.kind == "bulk":
+            if self.value is None:
+                return b"$-1\r\n"
+            data = _as_bytes(self.value)
+            return b"$" + str(len(data)).encode("ascii") + b"\r\n" + data + b"\r\n"
+        raise ValueError(f"unknown RESP reply kind: {self.kind}")
 
 
 @dataclass(frozen=True)
-class JobExecution:
-    """Result of one socket-blind command job."""
+class TcpInputJob:
+    """Opaque TCP bytes delivered from Rust for one logical stream."""
 
-    selected_db: int
-    response: EngineResponse
+    stream_id: str
+    data: bytes
+
+
+@dataclass(frozen=True)
+class TcpOutputFrame:
+    """Opaque TCP bytes that Rust should write back to the same stream."""
+
+    writes: list[bytes] = field(default_factory=list)
+    close: bool = False
 
     def to_wire_payload(self) -> dict[str, object]:
-        """Serialize the command result returned to Rust."""
+        """Serialize the frame returned to Rust."""
 
         return {
-            "selected_db": self.selected_db,
-            "response": self.response.to_wire(),
+            "writes_hex": [chunk.hex() for chunk in self.writes],
+            "close": self.close,
         }
 
 
 @dataclass
-class MiniRedisWorker:
-    """Stateful Mini Redis command engine.
+class RedisStreamSession:
+    """Application-protocol state for one TCP stream."""
 
-    The worker stores Redis key/value data. It does not store session state by
-    socket; Rust passes the currently selected database into each job and stores
-    the returned database index on the connection state after ``SELECT``.
+    selected_db: int = 0
+    buffer: bytearray = field(default_factory=bytearray)
+
+
+@dataclass
+class MiniRedisWorker:
+    """Stateful Mini Redis command engine and RESP protocol adapter.
+
+    The worker queues raw TCP byte jobs from Rust, pops them for processing, and
+    returns raw write frames. It never opens sockets, but it does own the
+    application protocol state keyed by an opaque stream id.
     """
 
     database_count: int = DEFAULT_DATABASES
     databases: list[dict[bytes, RedisValue]] = field(init=False)
+    sessions: dict[str, RedisStreamSession] = field(default_factory=dict)
+    pending_jobs: deque[TcpInputJob] = field(default_factory=deque)
 
     def __post_init__(self) -> None:
         self.databases = [dict() for _ in range(self.database_count)]
 
-    def execute(
-        self,
-        selected_db: int,
-        command: str,
-        args: list[bytes],
-    ) -> JobExecution:
-        """Execute one Redis-style command and return an engine response."""
+    def enqueue_tcp_job(self, stream_id: str, data: bytes) -> None:
+        """Queue an inbound TCP byte job for later application processing."""
 
-        if not 0 <= selected_db < self.database_count:
-            return JobExecution(selected_db, _error("ERR invalid DB index"))
-        if not command:
-            return JobExecution(selected_db, _error("ERR empty command"))
+        self.pending_jobs.append(TcpInputJob(stream_id, data))
 
-        normalized_command = command.upper()
-        db = self.databases[selected_db]
+    def process_next_job(self) -> TcpOutputFrame:
+        """Pop one queued TCP job and return bytes Rust should write."""
 
-        try:
-            next_selected_db, response = self._execute_command(
-                selected_db,
-                db,
-                normalized_command,
-                args,
+        if not self.pending_jobs:
+            return TcpOutputFrame()
+        job = self.pending_jobs.popleft()
+        return self.receive_tcp_bytes(job.stream_id, job.data)
+
+    def receive_tcp_bytes(self, stream_id: str, data: bytes) -> TcpOutputFrame:
+        """Buffer bytes for one stream, parse complete RESP commands, and reply."""
+
+        session = self.sessions.setdefault(stream_id, RedisStreamSession())
+        if len(session.buffer) + len(data) > MAX_BUFFERED_STREAM_BYTES:
+            session.buffer.clear()
+            error = "ERR protocol error: request exceeds maximum buffered size"
+            return TcpOutputFrame(
+                [_error(error).encode()],
+                close=True,
             )
-        except Exception as exc:  # noqa: BLE001 - convert worker bugs to payload errors.
-            next_selected_db = selected_db
-            response = _error(f"ERR worker error: {exc}")
-        return JobExecution(next_selected_db, response)
+
+        session.buffer.extend(data)
+        writes: list[bytes] = []
+
+        while session.buffer:
+            try:
+                parsed = _parse_resp_command(session.buffer)
+            except RespProtocolError as exc:
+                session.buffer.clear()
+                writes.append(_error(f"ERR {exc}").encode())
+                break
+
+            if parsed is None:
+                break
+
+            argv, consumed = parsed
+            del session.buffer[:consumed]
+            writes.append(self._execute_argv(session, argv).encode())
+
+        return TcpOutputFrame(writes)
 
     def handle_wire_request(self, line: str) -> str:
         """Handle one generic job-protocol request and return one response."""
 
         job_id, metadata, payload = _decode_job_request(line)
-        selected_db, command, args = _decode_command_payload(payload)
-        execution = self.execute(selected_db, command, args)
-        return _encode_job_response(job_id, metadata, execution.to_wire_payload())
+        stream_id, data = _decode_tcp_payload(payload)
+        self.enqueue_tcp_job(stream_id, data)
+        frame = self.process_next_job()
+        return _encode_job_response(job_id, metadata, frame.to_wire_payload())
+
+    def _execute_argv(
+        self,
+        session: RedisStreamSession,
+        argv: list[bytes],
+    ) -> RespReply:
+        if not argv:
+            return _error("ERR empty command")
+
+        command = argv[0].decode("ascii", errors="replace").upper()
+        args = argv[1:]
+        db = self.databases[session.selected_db]
+
+        try:
+            next_selected_db, reply = self._execute_command(
+                session.selected_db,
+                db,
+                command,
+                args,
+            )
+            session.selected_db = next_selected_db
+        except Exception as exc:  # noqa: BLE001 - convert worker bugs to RESP.
+            reply = _error(f"ERR worker error: {exc}")
+        return reply
 
     def _execute_command(
         self,
@@ -146,7 +194,7 @@ class MiniRedisWorker:
         db: dict[bytes, RedisValue],
         command: str,
         args: list[bytes],
-    ) -> tuple[int, EngineResponse]:
+    ) -> tuple[int, RespReply]:
         if command == "PING":
             return selected_db, self._ping(args)
         if command == "SET":
@@ -169,36 +217,36 @@ class MiniRedisWorker:
             return self._select(selected_db, args)
         return selected_db, _error(f"ERR unknown command '{command}'")
 
-    def _ping(self, args: list[bytes]) -> EngineResponse:
+    def _ping(self, args: list[bytes]) -> RespReply:
         if not args:
-            return EngineResponse("simple_string", "PONG")
+            return RespReply("simple", b"PONG")
         if len(args) == 1:
-            return EngineResponse("bulk_string", args[0])
+            return RespReply("bulk", args[0])
         return _wrong_arity("PING")
 
-    def _set(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _set(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if len(args) != 2:
             return _wrong_arity("SET")
         key, value = args
         db[key] = value
-        return EngineResponse("simple_string", "OK")
+        return RespReply("simple", b"OK")
 
-    def _get(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _get(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if len(args) != 1:
             return _wrong_arity("GET")
         value = db.get(args[0])
         if value is None:
-            return EngineResponse("bulk_string", None)
+            return RespReply("bulk", None)
         if not isinstance(value, bytes):
             return _wrong_type()
-        return EngineResponse("bulk_string", value)
+        return RespReply("bulk", value)
 
-    def _exists(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _exists(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if not args:
             return _wrong_arity("EXISTS")
-        return EngineResponse("integer", sum(1 for key in args if key in db))
+        return RespReply("integer", sum(1 for key in args if key in db))
 
-    def _delete(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _delete(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if not args:
             return _wrong_arity("DEL")
         removed = 0
@@ -206,9 +254,9 @@ class MiniRedisWorker:
             if key in db:
                 removed += 1
                 del db[key]
-        return EngineResponse("integer", removed)
+        return RespReply("integer", removed)
 
-    def _incrby(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _incrby(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if len(args) != 2:
             return _wrong_arity("INCRBY")
         key, delta_raw = args
@@ -225,9 +273,9 @@ class MiniRedisWorker:
         except ValueError:
             return _error("ERR value is not an integer or out of range")
         db[key] = str(next_value).encode("ascii")
-        return EngineResponse("integer", next_value)
+        return RespReply("integer", next_value)
 
-    def _hset(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _hset(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if len(args) < 3 or len(args) % 2 == 0:
             return _wrong_arity("HSET")
         key = args[0]
@@ -245,37 +293,29 @@ class MiniRedisWorker:
                 added += 1
             mapping[field_name] = field_value
         db[key] = mapping
-        return EngineResponse("integer", added)
+        return RespReply("integer", added)
 
-    def _hget(self, db: dict[bytes, RedisValue], args: list[bytes]) -> EngineResponse:
+    def _hget(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if len(args) != 2:
             return _wrong_arity("HGET")
         value = db.get(args[0])
         if value is None:
-            return EngineResponse("bulk_string", None)
+            return RespReply("bulk", None)
         if not isinstance(value, dict):
             return _wrong_type()
-        return EngineResponse("bulk_string", value.get(args[1]))
+        return RespReply("bulk", value.get(args[1]))
 
-    def _hexists(
-        self,
-        db: dict[bytes, RedisValue],
-        args: list[bytes],
-    ) -> EngineResponse:
+    def _hexists(self, db: dict[bytes, RedisValue], args: list[bytes]) -> RespReply:
         if len(args) != 2:
             return _wrong_arity("HEXISTS")
         value = db.get(args[0])
         if value is None:
-            return EngineResponse("integer", 0)
+            return RespReply("integer", 0)
         if not isinstance(value, dict):
             return _wrong_type()
-        return EngineResponse("integer", int(args[1] in value))
+        return RespReply("integer", int(args[1] in value))
 
-    def _select(
-        self,
-        selected_db: int,
-        args: list[bytes],
-    ) -> tuple[int, EngineResponse]:
+    def _select(self, selected_db: int, args: list[bytes]) -> tuple[int, RespReply]:
         if len(args) != 1:
             return selected_db, _wrong_arity("SELECT")
         try:
@@ -284,7 +324,7 @@ class MiniRedisWorker:
             return selected_db, _error("ERR invalid DB index")
         if index < 0 or index >= self.database_count:
             return selected_db, _error("ERR invalid DB index")
-        return index, EngineResponse("simple_string", "OK")
+        return index, RespReply("simple", b"OK")
 
 
 def run_stdio_worker(
@@ -314,6 +354,74 @@ def run_stdio_worker(
         output_stream.flush()
 
 
+def _parse_resp_command(buffer: bytearray) -> tuple[list[bytes], int] | None:
+    if not buffer:
+        return None
+    if buffer[0] != ord("*"):
+        raise RespProtocolError("protocol error: expected array command frame")
+
+    line = _read_line(buffer, 0)
+    if line is None:
+        return None
+    header, position = line
+    try:
+        count = int(header[1:].decode("ascii"))
+    except ValueError as exc:
+        raise RespProtocolError("protocol error: invalid array length") from exc
+    if count < 0:
+        raise RespProtocolError("protocol error: null command arrays are not supported")
+
+    parts: list[bytes] = []
+    for _ in range(count):
+        if position >= len(buffer):
+            return None
+        prefix = buffer[position]
+        if prefix == ord("$"):
+            parsed_bulk = _parse_bulk_string(buffer, position)
+            if parsed_bulk is None:
+                return None
+            part, position = parsed_bulk
+            parts.append(part)
+        elif prefix == ord("+") or prefix == ord(":"):
+            parsed_line = _read_line(buffer, position)
+            if parsed_line is None:
+                return None
+            part, position = parsed_line
+            parts.append(bytes(part[1:]))
+        else:
+            raise RespProtocolError("protocol error: expected bulk string command part")
+
+    return parts, position
+
+
+def _parse_bulk_string(buffer: bytearray, position: int) -> tuple[bytes, int] | None:
+    parsed_line = _read_line(buffer, position)
+    if parsed_line is None:
+        return None
+    line, position = parsed_line
+    try:
+        length = int(line[1:].decode("ascii"))
+    except ValueError as exc:
+        raise RespProtocolError("protocol error: invalid bulk string length") from exc
+    if length < 0:
+        message = "protocol error: null bulk command parts are not supported"
+        raise RespProtocolError(message)
+
+    end = position + length
+    if len(buffer) < end + 2:
+        return None
+    if buffer[end : end + 2] != b"\r\n":
+        raise RespProtocolError("protocol error: malformed bulk string terminator")
+    return bytes(buffer[position:end]), end + 2
+
+
+def _read_line(buffer: bytearray, position: int) -> tuple[bytes, int] | None:
+    end = buffer.find(b"\r\n", position)
+    if end == -1:
+        return None
+    return bytes(buffer[position:end]), end + 2
+
+
 def _decode_job_request(line: str) -> tuple[str, dict[str, object], dict[str, object]]:
     frame = json.loads(line)
     if frame.get("version") != JOB_PROTOCOL_VERSION:
@@ -331,19 +439,14 @@ def _decode_job_request(line: str) -> tuple[str, dict[str, object], dict[str, ob
     return str(body["id"]), metadata, payload
 
 
-def _decode_command_payload(payload: dict[str, object]) -> tuple[int, str, list[bytes]]:
-    selected_db = payload.get("selected_db", 0)
-    command = payload["command"]
-    args_hex = payload.get("args_hex", [])
-    if not isinstance(selected_db, int):
-        raise ValueError("selected_db must be an integer")
-    if not isinstance(command, str):
-        raise ValueError("command must be a string")
-    if not isinstance(args_hex, list) or not all(
-        isinstance(item, str) for item in args_hex
-    ):
-        raise ValueError("args_hex must be a list of strings")
-    return selected_db, command, [bytes.fromhex(part) for part in args_hex]
+def _decode_tcp_payload(payload: dict[str, object]) -> tuple[str, bytes]:
+    stream_id = payload["stream_id"]
+    bytes_hex = payload["bytes_hex"]
+    if not isinstance(stream_id, str):
+        raise ValueError("stream_id must be a string")
+    if not isinstance(bytes_hex, str):
+        raise ValueError("bytes_hex must be a string")
+    return stream_id, bytes.fromhex(bytes_hex)
 
 
 def _encode_job_response(
@@ -397,29 +500,23 @@ def _encode_job_error_response(
     )
 
 
-def _as_bytes(value: bytes | str | int | list[EngineResponse] | None) -> bytes:
+def _as_bytes(value: bytes | str | int | None) -> bytes:
     if value is None:
         return b""
     if isinstance(value, bytes):
         return value
     if isinstance(value, int):
         return str(value).encode("ascii")
-    if isinstance(value, list):
-        raise TypeError("array values cannot be coerced to bytes")
     return value.encode("utf-8")
 
 
-def _as_text(value: bytes | str | int | list[EngineResponse] | None) -> str:
-    return _as_bytes(value).decode("utf-8", errors="replace")
+def _error(message: str) -> RespReply:
+    return RespReply("error", message)
 
 
-def _error(message: str) -> EngineResponse:
-    return EngineResponse("error", message)
-
-
-def _wrong_arity(command: str) -> EngineResponse:
+def _wrong_arity(command: str) -> RespReply:
     return _error(f"ERR wrong number of arguments for '{command}'")
 
 
-def _wrong_type() -> EngineResponse:
+def _wrong_type() -> RespReply:
     return _error("WRONGTYPE Operation against a key holding the wrong kind of value")

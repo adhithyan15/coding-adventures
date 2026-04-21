@@ -10,8 +10,9 @@ import pytest
 import mini_redis_python_worker.stdio_worker as stdio_worker
 from mini_redis_python_worker import (
     JOB_PROTOCOL_VERSION,
-    EngineResponse,
     MiniRedisWorker,
+    RespReply,
+    TcpOutputFrame,
     __version__,
     run_stdio_worker,
 )
@@ -19,9 +20,8 @@ from mini_redis_python_worker import (
 
 def job_request(
     job_id: str,
-    selected_db: int,
-    command: str,
-    args: list[bytes],
+    stream_id: str,
+    data: bytes,
     metadata: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Build the generic job-protocol request used by Rust language bridges."""
@@ -32,24 +32,30 @@ def job_request(
         "body": {
             "id": job_id,
             "payload": {
-                "selected_db": selected_db,
-                "command": command,
-                "args_hex": [part.hex() for part in args],
+                "stream_id": stream_id,
+                "bytes_hex": data.hex(),
             },
             "metadata": metadata or {},
         },
     }
 
 
-def payload(
-    worker: MiniRedisWorker,
-    selected_db: int,
-    command: str,
-    *args: bytes,
-) -> dict:
-    """Execute one command and return the wire payload Rust receives."""
+def command(parts: list[bytes]) -> bytes:
+    """Encode a RESP array command for Mini Redis tests."""
 
-    return worker.execute(selected_db, command, list(args)).to_wire_payload()
+    output = bytearray()
+    output.extend(b"*" + str(len(parts)).encode("ascii") + b"\r\n")
+    for part in parts:
+        output.extend(b"$" + str(len(part)).encode("ascii") + b"\r\n")
+        output.extend(part + b"\r\n")
+    return bytes(output)
+
+
+def receive(worker: MiniRedisWorker, stream_id: str, data: bytes) -> bytes:
+    """Return concatenated bytes the worker asks Rust to write."""
+
+    frame = worker.receive_tcp_bytes(stream_id, data)
+    return b"".join(frame.writes)
 
 
 def test_version_exists() -> None:
@@ -58,239 +64,203 @@ def test_version_exists() -> None:
     assert __version__ == "0.1.0"
 
 
-def test_engine_response_serializes_core_response_types() -> None:
-    """Engine responses mirror the Rust-side response enum."""
+def test_resp_reply_encodes_core_response_types() -> None:
+    """RESP replies are byte-exact at the Python/Rust worker boundary."""
 
-    assert EngineResponse("simple_string", "OK").to_wire() == {
-        "kind": "simple_string",
-        "value": "OK",
-    }
-    assert EngineResponse("integer", 7).to_wire() == {"kind": "integer", "value": 7}
-    assert EngineResponse("integer", None).to_wire() == {"kind": "integer", "value": 0}
-    assert EngineResponse("bulk_string", b"abc").to_wire() == {
-        "kind": "bulk_string",
-        "value_hex": "616263",
-    }
-    assert EngineResponse("bulk_string", None).to_wire() == {
-        "kind": "bulk_string",
-        "value_hex": None,
-    }
-    assert EngineResponse("error", "ERR nope").to_wire() == {
-        "kind": "error",
-        "message": "ERR nope",
-    }
-    assert EngineResponse(
-        "array",
-        [EngineResponse("simple_string", "OK")],
-    ).to_wire() == {
-        "kind": "array",
-        "values": [{"kind": "simple_string", "value": "OK"}],
-    }
+    assert RespReply("simple", "OK").encode() == b"+OK\r\n"
+    assert RespReply("simple", None).encode() == b"+\r\n"
+    assert RespReply("integer", 7).encode() == b":7\r\n"
+    assert RespReply("integer", None).encode() == b":0\r\n"
+    assert RespReply("bulk", b"abc").encode() == b"$3\r\nabc\r\n"
+    assert RespReply("bulk", None).encode() == b"$-1\r\n"
+    assert RespReply("error", "ERR nope").encode() == b"-ERR nope\r\n"
 
 
-def test_engine_response_rejects_unknown_kinds() -> None:
+def test_resp_reply_rejects_unknown_kinds() -> None:
     """Unknown reply kinds fail loudly before crossing the wire."""
 
     try:
-        EngineResponse("mystery", "nope").to_wire()  # type: ignore[arg-type]
+        RespReply("mystery", "nope").encode()  # type: ignore[arg-type]
     except ValueError as exc:
-        assert "unknown engine response kind" in str(exc)
+        assert "unknown RESP reply kind" in str(exc)
     else:  # pragma: no cover - defensive guard for future refactors.
-        raise AssertionError("unknown engine response kind should raise")
+        raise AssertionError("unknown RESP reply kind should raise")
+
+
+def test_tcp_output_frame_serializes_raw_write_frames() -> None:
+    """Worker responses tell Rust what opaque bytes to write."""
+
+    frame = TcpOutputFrame([b"+OK\r\n", b":1\r\n"], close=True)
+    assert frame.to_wire_payload() == {
+        "writes_hex": ["2b4f4b0d0a", "3a310d0a"],
+        "close": True,
+    }
+
+
+def test_worker_queues_tcp_jobs_and_pops_them_for_processing() -> None:
+    """The Python side owns the job queue behind the stdio callback."""
+
+    worker = MiniRedisWorker()
+    worker.enqueue_tcp_job("stream-1", command([b"PING"]))
+    assert len(worker.pending_jobs) == 1
+    frame = worker.process_next_job()
+    assert frame.writes == [b"+PONG\r\n"]
+    assert len(worker.pending_jobs) == 0
+    assert worker.process_next_job().writes == []
+
+
+def test_worker_buffers_fragmented_resp_frames() -> None:
+    """RESP framing is application-owned and can span TCP reads."""
+
+    worker = MiniRedisWorker()
+    data = command([b"PING"])
+    assert receive(worker, "stream-1", data[:3]) == b""
+    assert receive(worker, "stream-1", data[3:]) == b"+PONG\r\n"
+
+
+def test_worker_processes_pipelined_resp_frames() -> None:
+    """One TCP job may contain multiple complete application frames."""
+
+    worker = MiniRedisWorker()
+    data = command([b"PING"]) + command([b"PING", b"hello"])
+    assert receive(worker, "stream-1", data) == b"+PONG\r\n$5\r\nhello\r\n"
 
 
 def test_worker_executes_string_commands() -> None:
     """The worker can execute the Redis string subset used by the prototype."""
 
     worker = MiniRedisWorker()
-    assert payload(worker, 0, "PING") == {
-        "selected_db": 0,
-        "response": {"kind": "simple_string", "value": "PONG"},
-    }
-    assert payload(worker, 0, "PING", b"hello") == {
-        "selected_db": 0,
-        "response": {"kind": "bulk_string", "value_hex": "68656c6c6f"},
-    }
-    assert payload(worker, 0, "SET", b"counter", b"2")["response"] == {
-        "kind": "simple_string",
-        "value": "OK",
-    }
-    assert payload(worker, 0, "GET", b"counter")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": "32",
-    }
-    assert payload(worker, 0, "INCRBY", b"counter", b"5")["response"] == {
-        "kind": "integer",
-        "value": 7,
-    }
-    assert payload(worker, 0, "EXISTS", b"counter", b"missing")["response"] == {
-        "kind": "integer",
-        "value": 1,
-    }
-    assert payload(worker, 0, "DEL", b"counter", b"missing")["response"] == {
-        "kind": "integer",
-        "value": 1,
-    }
-    assert payload(worker, 0, "GET", b"counter")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": None,
-    }
+    assert receive(worker, "1", command([b"PING"])) == b"+PONG\r\n"
+    assert receive(worker, "1", command([b"PING", b"hello"])) == b"$5\r\nhello\r\n"
+    assert receive(worker, "1", command([b"SET", b"counter", b"2"])) == b"+OK\r\n"
+    assert receive(worker, "1", command([b"GET", b"counter"])) == b"$1\r\n2\r\n"
+    assert receive(worker, "1", command([b"INCRBY", b"counter", b"5"])) == b":7\r\n"
+    assert receive(worker, "1", command([b"EXISTS", b"counter", b"missing"])) == (
+        b":1\r\n"
+    )
+    assert receive(worker, "1", command([b"DEL", b"counter", b"missing"])) == b":1\r\n"
+    assert receive(worker, "1", command([b"GET", b"counter"])) == b"$-1\r\n"
 
 
 def test_worker_executes_hash_commands() -> None:
     """Hash commands maintain Python-owned application state."""
 
     worker = MiniRedisWorker()
-    assert payload(worker, 0, "HSET", b"user", b"name", b"ada")["response"] == {
-        "kind": "integer",
-        "value": 1,
-    }
-    assert payload(worker, 0, "HSET", b"user", b"name", b"ada")["response"] == {
-        "kind": "integer",
-        "value": 0,
-    }
-    assert payload(worker, 0, "HGET", b"user", b"name")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": "616461",
-    }
-    assert payload(worker, 0, "HGET", b"user", b"missing")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": None,
-    }
-    assert payload(worker, 0, "HEXISTS", b"user", b"name")["response"] == {
-        "kind": "integer",
-        "value": 1,
-    }
-    assert payload(worker, 0, "HEXISTS", b"user", b"age")["response"] == {
-        "kind": "integer",
-        "value": 0,
-    }
+    assert receive(worker, "1", command([b"HSET", b"user", b"name", b"ada"])) == (
+        b":1\r\n"
+    )
+    assert receive(worker, "1", command([b"HSET", b"user", b"name", b"ada"])) == (
+        b":0\r\n"
+    )
+    assert receive(worker, "1", command([b"HGET", b"user", b"name"])) == (
+        b"$3\r\nada\r\n"
+    )
+    assert receive(worker, "1", command([b"HGET", b"user", b"missing"])) == b"$-1\r\n"
+    assert receive(worker, "1", command([b"HEXISTS", b"user", b"name"])) == b":1\r\n"
+    assert receive(worker, "1", command([b"HEXISTS", b"user", b"age"])) == b":0\r\n"
 
 
 def test_worker_reports_command_errors_without_crashing() -> None:
-    """Bad commands become engine errors so the TCP side can keep serving."""
+    """Bad commands become RESP errors so the TCP side can keep serving."""
 
     worker = MiniRedisWorker()
-    assert payload(worker, 0, "", )["response"]["message"] == "ERR empty command"
-    assert payload(worker, 20, "PING")["response"]["message"] == "ERR invalid DB index"
-    assert payload(worker, 0, "NOPE")["response"]["message"].startswith(
-        "ERR unknown command"
+    assert receive(worker, "1", command([])) == b"-ERR empty command\r\n"
+    assert receive(worker, "1", command([b"NOPE"])).startswith(b"-ERR unknown command")
+    assert receive(worker, "1", command([b"PING", b"a", b"b"])).startswith(
+        b"-ERR wrong number"
     )
-    assert payload(worker, 0, "PING", b"a", b"b")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"SET", b"only-key"])).startswith(
+        b"-ERR wrong number"
     )
-    assert payload(worker, 0, "SET", b"only-key")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"GET"])).startswith(b"-ERR wrong number")
+    assert receive(worker, "1", command([b"EXISTS"])).startswith(b"-ERR wrong number")
+    assert receive(worker, "1", command([b"DEL"])).startswith(b"-ERR wrong number")
+    assert receive(worker, "1", command([b"INCRBY", b"n"])).startswith(
+        b"-ERR wrong number"
     )
-    assert payload(worker, 0, "GET")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"INCRBY", b"n", b"not-int"])).startswith(
+        b"-ERR value is not an integer"
     )
-    assert payload(worker, 0, "EXISTS")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"SET", b"n", b"also-not-int"])) == b"+OK\r\n"
+    assert receive(worker, "1", command([b"INCRBY", b"n", b"1"])).startswith(
+        b"-ERR value is not an integer"
     )
-    assert payload(worker, 0, "DEL")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"HSET", b"h", b"field"])).startswith(
+        b"-ERR wrong number"
     )
-    assert payload(worker, 0, "INCRBY", b"n")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"HGET", b"h"])).startswith(
+        b"-ERR wrong number"
     )
-    assert payload(worker, 0, "INCRBY", b"n", b"not-int")["response"][
-        "message"
-    ].startswith("ERR value is not an integer")
-    assert payload(worker, 0, "SET", b"n", b"also-not-int")["response"] == {
-        "kind": "simple_string",
-        "value": "OK",
-    }
-    assert payload(worker, 0, "INCRBY", b"n", b"1")["response"]["message"].startswith(
-        "ERR value is not an integer"
+    assert receive(worker, "1", command([b"HEXISTS", b"h"])).startswith(
+        b"-ERR wrong number"
     )
-    assert payload(worker, 0, "HSET", b"h", b"field")["response"][
-        "message"
-    ].startswith("ERR wrong number")
-    assert payload(worker, 0, "HGET", b"h")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"SELECT"])).startswith(b"-ERR wrong number")
+    assert receive(worker, "1", command([b"SELECT", b"banana"])) == (
+        b"-ERR invalid DB index\r\n"
     )
-    assert payload(worker, 0, "HEXISTS", b"h")["response"]["message"].startswith(
-        "ERR wrong number"
+    assert receive(worker, "1", command([b"SELECT", b"999"])) == (
+        b"-ERR invalid DB index\r\n"
     )
-    assert payload(worker, 0, "SELECT")["response"]["message"].startswith(
-        "ERR wrong number"
-    )
-    assert payload(worker, 0, "SELECT", b"banana")["response"] == {
-        "kind": "error",
-        "message": "ERR invalid DB index",
-    }
-    assert payload(worker, 0, "SELECT", b"999")["response"] == {
-        "kind": "error",
-        "message": "ERR invalid DB index",
-    }
 
 
 def test_worker_preserves_wrong_type_errors() -> None:
     """String and hash commands reject keys holding the other Redis type."""
 
     worker = MiniRedisWorker()
-    assert payload(worker, 0, "SET", b"string", b"value")["response"] == {
-        "kind": "simple_string",
-        "value": "OK",
-    }
-    assert payload(worker, 0, "HSET", b"string", b"f", b"v")["response"][
-        "message"
-    ].startswith("WRONGTYPE")
-
-    assert payload(worker, 0, "HSET", b"hash", b"f", b"1")["response"] == {
-        "kind": "integer",
-        "value": 1,
-    }
-    assert payload(worker, 0, "GET", b"hash")["response"]["message"].startswith(
-        "WRONGTYPE"
+    assert receive(worker, "1", command([b"SET", b"string", b"value"])) == b"+OK\r\n"
+    assert receive(worker, "1", command([b"HSET", b"string", b"f", b"v"])).startswith(
+        b"-WRONGTYPE"
     )
-    assert payload(worker, 0, "INCRBY", b"hash", b"1")["response"][
-        "message"
-    ].startswith("WRONGTYPE")
-    assert payload(worker, 0, "HGET", b"string", b"f")["response"][
-        "message"
-    ].startswith("WRONGTYPE")
-    assert payload(worker, 0, "HEXISTS", b"string", b"f")["response"][
-        "message"
-    ].startswith("WRONGTYPE")
+
+    assert receive(worker, "1", command([b"HSET", b"hash", b"f", b"1"])) == b":1\r\n"
+    assert receive(worker, "1", command([b"GET", b"hash"])).startswith(b"-WRONGTYPE")
+    assert receive(worker, "1", command([b"INCRBY", b"hash", b"1"])).startswith(
+        b"-WRONGTYPE"
+    )
+    assert receive(worker, "1", command([b"HGET", b"string", b"f"])).startswith(
+        b"-WRONGTYPE"
+    )
+    assert receive(worker, "1", command([b"HEXISTS", b"string", b"f"])).startswith(
+        b"-WRONGTYPE"
+    )
 
 
-def test_select_state_is_passed_in_and_out_by_rust() -> None:
-    """Rust can keep session state while Python remains socket-blind."""
+def test_select_is_stream_local() -> None:
+    """Two TCP streams can select different logical databases."""
 
     worker = MiniRedisWorker()
-    assert payload(worker, 0, "SET", b"k", b"db0")["response"] == {
-        "kind": "simple_string",
-        "value": "OK",
-    }
-
-    selected = worker.execute(0, "SELECT", [b"1"]).to_wire_payload()["selected_db"]
-    assert selected == 1
-    assert payload(worker, selected, "GET", b"k")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": None,
-    }
-    assert payload(worker, selected, "SET", b"k", b"db1")["response"] == {
-        "kind": "simple_string",
-        "value": "OK",
-    }
-    assert payload(worker, 0, "GET", b"k")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": "646230",
-    }
-    assert payload(worker, selected, "GET", b"k")["response"] == {
-        "kind": "bulk_string",
-        "value_hex": "646231",
-    }
+    assert receive(worker, "1", command([b"SET", b"k", b"db0"])) == b"+OK\r\n"
+    assert receive(worker, "2", command([b"SELECT", b"1"])) == b"+OK\r\n"
+    assert receive(worker, "2", command([b"GET", b"k"])) == b"$-1\r\n"
+    assert receive(worker, "2", command([b"SET", b"k", b"db1"])) == b"+OK\r\n"
+    assert receive(worker, "1", command([b"GET", b"k"])) == b"$3\r\ndb0\r\n"
+    assert receive(worker, "2", command([b"GET", b"k"])) == b"$3\r\ndb1\r\n"
 
 
-def test_wire_request_round_trips_command_frame_payload() -> None:
-    """Generic job-protocol requests avoid raw binary at the process boundary."""
+def test_malformed_resp_returns_resp_error_from_python_layer() -> None:
+    """RESP protocol errors are assembled by Python, not by Rust."""
+
+    worker = MiniRedisWorker()
+    assert receive(worker, "1", b"not-resp").startswith(
+        b"-ERR protocol error: expected array command frame"
+    )
+
+
+def test_oversized_stream_buffer_returns_error_and_close_frame() -> None:
+    """The application layer can ask Rust to close a stream."""
+
+    worker = MiniRedisWorker()
+    frame = worker.receive_tcp_bytes("1", b"x" * (1024 * 1024 + 1))
+    assert frame.close is True
+    assert frame.writes[0].startswith(b"-ERR protocol error")
+
+
+def test_wire_request_round_trips_opaque_tcp_payload() -> None:
+    """Generic job-protocol requests carry raw TCP bytes, not RESP objects."""
 
     worker = MiniRedisWorker()
     metadata = {"trace_id": "trace-1", "tags": {"consumer": "test"}}
-    request = job_request("job-1", 0, "PING", [], metadata)
+    request = job_request("job-1", "stream-7", command([b"PING"]), metadata)
     response = json.loads(worker.handle_wire_request(json.dumps(request)))
     assert response == {
         "version": JOB_PROTOCOL_VERSION,
@@ -300,8 +270,8 @@ def test_wire_request_round_trips_command_frame_payload() -> None:
             "result": {
                 "status": "ok",
                 "payload": {
-                    "selected_db": 0,
-                    "response": {"kind": "simple_string", "value": "PONG"},
+                    "writes_hex": [b"+PONG\r\n".hex()],
+                    "close": False,
                 },
             },
             "metadata": metadata,
@@ -315,8 +285,8 @@ def test_stdio_worker_processes_multiple_lines() -> None:
     stdin = StringIO(
         "\n".join(
             [
-                json.dumps(job_request("a", 0, "SET", [b"k", b"v"])),
-                json.dumps(job_request("b", 0, "GET", [b"k"])),
+                json.dumps(job_request("a", "stream-1", command([b"SET", b"k", b"v"]))),
+                json.dumps(job_request("b", "stream-1", command([b"GET", b"k"]))),
             ]
         )
         + "\n"
@@ -324,13 +294,13 @@ def test_stdio_worker_processes_multiple_lines() -> None:
     stdout = StringIO()
     run_stdio_worker(stdin, stdout)
     lines = [json.loads(line) for line in stdout.getvalue().splitlines()]
-    assert lines[0]["body"]["result"]["payload"]["response"] == {
-        "kind": "simple_string",
-        "value": "OK",
+    assert lines[0]["body"]["result"]["payload"] == {
+        "writes_hex": [b"+OK\r\n".hex()],
+        "close": False,
     }
-    assert lines[1]["body"]["result"]["payload"]["response"] == {
-        "kind": "bulk_string",
-        "value_hex": "76",
+    assert lines[1]["body"]["result"]["payload"] == {
+        "writes_hex": [b"$1\r\nv\r\n".hex()],
+        "close": False,
     }
 
 
