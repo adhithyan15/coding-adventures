@@ -88,6 +88,12 @@ class CLRVMError(RuntimeError):
     """Raised when CLR VM execution fails."""
 
 
+class _CLRVMExit(RuntimeError):
+    def __init__(self, code: int) -> None:
+        super().__init__(code)
+        self.code = code
+
+
 class CLRVMHost(Protocol):
     """Host bridge for external MemberRef calls."""
 
@@ -126,10 +132,18 @@ class CLRVMResult:
 class CLRVMStdlibHost:
     """Default host for console output and compiler-runtime helpers."""
 
-    def __init__(self, *, memory_size: int = 65536) -> None:
+    def __init__(
+        self,
+        *,
+        memory_size: int = 65536,
+        input_bytes: bytes = b"",
+    ) -> None:
         self.output: list[str] = []
         self._memory = bytearray(memory_size)
         self._words: dict[int, int] = {}
+        self._input = bytes(input_bytes)
+        self._input_offset = 0
+        self.exit_code: int | None = None
 
     def call_member(
         self,
@@ -174,11 +188,20 @@ class CLRVMStdlibHost:
     def _call_syscall(self, args: tuple[CliValue, ...]) -> CliValue:
         number = _as_int32(args[0])
         value = _as_int32(args[1])
-        if number != 1:
-            msg = f"unsupported compiler helper syscall: {number}"
-            raise CLRVMError(msg)
-        self.output.append(_GE225_TO_ASCII.get(value, chr(value & 0xFF)))
-        return CliValue.int32(0)
+        if number == 1:
+            self.output.append(_GE225_TO_ASCII.get(value, chr(value & 0xFF)))
+            return CliValue.int32(0)
+        if number == 2:
+            if self._input_offset >= len(self._input):
+                return CliValue.int32(0)
+            byte = self._input[self._input_offset]
+            self._input_offset += 1
+            return CliValue.int32(byte)
+        if number == 10:
+            self.exit_code = value
+            raise _CLRVMExit(value)
+        msg = f"unsupported compiler helper syscall: {number}"
+        raise CLRVMError(msg)
 
 
 class CLRVM:
@@ -224,7 +247,10 @@ class CLRVM:
         self._traces.clear()
         self.host.output.clear()
         self.thread = ClrThreadState()
-        return_value = self._invoke_method_def(method, args)
+        try:
+            return_value = self._invoke_method_def(method, args)
+        except _CLRVMExit as exc:
+            return_value = CliValue.int32(exc.code)
         return CLRVMResult(
             return_value=return_value,
             output="".join(self.host.output),

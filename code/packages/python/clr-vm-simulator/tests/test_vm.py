@@ -185,6 +185,22 @@ def test_default_host_supports_compiler_helpers() -> None:
         == CliValue.int32(345)
     )
 
+    input_host = CLRVMStdlibHost(input_bytes=b"Q")
+    assert (
+        input_host.call_member(
+            _member("__ca_syscall", ("int32", "int32"), "int32"),
+            (CliValue.int32(2), CliValue.int32(0)),
+        )
+        == CliValue.int32(ord("Q"))
+    )
+    assert (
+        input_host.call_member(
+            _member("__ca_syscall", ("int32", "int32"), "int32"),
+            (CliValue.int32(2), CliValue.int32(0)),
+        )
+        == CliValue.int32(0)
+    )
+
     with pytest.raises(CLRVMError, match="unsupported compiler helper syscall"):
         host.call_member(
             _member("__ca_syscall", ("int32", "int32"), "int32"),
@@ -192,6 +208,24 @@ def test_default_host_supports_compiler_helpers() -> None:
         )
     with pytest.raises(CLRVMError, match="unsupported CLR host call"):
         host.call_member(_member("Missing", (), "void"), ())
+
+
+def test_compiler_helper_exit_stops_execution() -> None:
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(7)])
+    )
+    program.add_instruction(IrInstruction(IrOp.SYSCALL, [IrImmediate(10)]))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(99)])
+    )
+    program.add_instruction(IrInstruction(IrOp.RET))
+    cil = lower_ir_to_cil_bytecode(program)
+
+    result = run_clr_entry_point(write_cli_assembly(cil).assembly_bytes)
+
+    assert result.return_value == CliValue.int32(7)
 
 
 def test_runs_argument_and_bitwise_instruction_mix() -> None:
