@@ -1,5 +1,11 @@
 # Changelog — @coding-adventures/layout-to-paint
 
+## Unreleased
+
+### Added
+
+- `textEmitMode: "glyph_run" | "text"` option on `LayoutToPaintOptions`. When `"text"` (new), `TextContent` nodes emit a single `PaintText` instruction per node with a `canvas:<family>@<size>:<weight>[:italic]` `font_ref` rather than a per-character `PaintGlyphRun`. Default remains `"glyph_run"` for backward compatibility. Pipelines driven by a canvas-backed `TextMeasurer` (TXT03d) should select `"text"`; pipelines driven by a font-parser or OS-native measurer should keep the default.
+
 ## [0.1.0] — 2026-04-04
 
 ### Added

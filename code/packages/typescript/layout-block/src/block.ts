@@ -284,12 +284,25 @@ function layoutInlineRun(
           break;
       }
 
+      // Tokens represent individual words sliced out of the node's full text
+      // content. The source content object carries the *whole* string, which
+      // would cause the paint layer to render the entire paragraph at every
+      // word position (catastrophic double-paint for PaintText backends, less
+      // visible but still wrong for PaintGlyphRun). Override the value with
+      // just this token's word so the paint layer sees what the layout engine
+      // actually decided to draw at this position.
+      const srcContent = token.node.content;
+      const tokenContent =
+        srcContent !== null && srcContent.kind === "text"
+          ? { ...srcContent, value: token.word }
+          : srcContent;
+
       positioned.push({
         x,
         y: tokenY,
         width: token.width,
         height: token.height,
-        content: token.node.content,
+        content: tokenContent,
         children: [],
         ext: token.node.ext,
       });

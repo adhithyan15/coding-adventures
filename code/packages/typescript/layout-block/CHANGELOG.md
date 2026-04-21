@@ -1,5 +1,11 @@
 # Changelog — @coding-adventures/layout-block
 
+## Unreleased
+
+### Fixed
+
+- Inline tokens (words sliced out of a text node during word-wrap) no longer carry the parent node's full text value. Previously each token's `content.value` was the entire string, which caused paint backends to render the whole paragraph at every word position. The token now carries just its own word — correct for PaintText backends (which would double-paint severely) and neater for PaintGlyphRun backends (which used to rely on per-glyph positioning to accidentally mask the bug).
+
 ## [0.1.0] — 2026-04-04
 
 ### Added
