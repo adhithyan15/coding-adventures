@@ -4,6 +4,20 @@
 
 ### Added
 
+- **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
+  7 end-to-end tests confirming the WASM backend correctly compiles and
+  executes 8-bit integer arithmetic IR — the same IR that the Oct compiler
+  generates.  Tests cover: LOAD_IMM, ADD, SUB, AND (inc. 0xFF masking),
+  multi-output programs, and validation of Oct's unsupported SYSCALL numbers.
+  Key findings:
+  - Pure 8-bit arithmetic (LOAD_IMM/ADD/SUB/AND) compiles and runs correctly
+    through the full IR → WASM → WASI pipeline.
+  - Oct's I/O intrinsics (``out(PORT, val)`` → SYSCALL 40+PORT,
+    ``in(PORT)`` → SYSCALL 20+PORT) are Intel 8008-specific and are
+    correctly rejected by the WASM validator with a clear error message.
+    To target WASM from Oct, I/O would need to use WASM's WASI ABI
+    (SYSCALL 1/2/10) instead.
+
 - **`IrOp.OR` / `IrOp.OR_IMM`**: bitwise OR in register-register and
   register-immediate forms.  Lowers to WASM `i32.or`.
 - **`IrOp.XOR` / `IrOp.XOR_IMM`**: bitwise XOR in register-register and
