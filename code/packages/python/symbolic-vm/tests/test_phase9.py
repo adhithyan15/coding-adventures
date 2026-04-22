@@ -469,17 +469,17 @@ class TestPhase9_Fallthrough:
         F = _integrate_ir(vm, f)
         assert IRApply(INTEGRATE, (f, X)) == F
 
-    def test_mixed_linear_two_quad_unevaluated(self) -> None:
-        """∫ 1/((x−1)(x²+1)(x²+4)) dx — degree-5 mixed: unevaluated.
+    def test_mixed_linear_two_quad_evaluated_by_phase10(self) -> None:
+        """∫ 1/((x−1)(x²+1)(x²+4)) dx — Phase 10 handles L·Q₁·Q₂.
 
-        Phase 2f handles L·Q but not L·Q₁·Q₂. Phase 9 handles Q₁·Q₂ only.
+        Phase 9 handles Q₁·Q₂ only; Phase 10 generalizes to L·Q₁·Q₂.
         """
         vm = _make_vm()
         linear = _sub(X, _c(1))
         denom = _mul(linear, _mul(_x2pk(1), _x2pk(4)))
         f = _div(_c(1), denom)
         F = _integrate_ir(vm, f)
-        assert IRApply(INTEGRATE, (f, X)) == F
+        assert IRApply(INTEGRATE, (f, X)) != F
 
     def test_repeated_quadratic_unevaluated(self) -> None:
         """∫ 1/(x²+1)² dx — repeated quadratic: Hermite squarefree removes it,
