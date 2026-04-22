@@ -109,6 +109,7 @@ class _FrameScope:
     heap_mark_reg: int | None = None
     parent: _FrameScope | None = None
     active_thunk_heap_mark_reg: int | None = None
+    helper_failure: bool = False
 
     @property
     def block_id(self) -> int:
@@ -1144,20 +1145,6 @@ class AlgolIrCompiler:
                 "expression actual; eval thunk procedure-call lowering is not "
                 "implemented yet"
             )
-        array_variable = next(
-            (
-                variable
-                for variable in _nodes(argument, "variable")
-                if _variable_subscripts(variable)
-            ),
-            None,
-        )
-        if array_variable is not None:
-            raise CompileError(
-                f"by-name parameter {parameter.name!r} received an expression "
-                "actual that reads an array element; array eval thunk lowering "
-                "is not implemented yet"
-            )
 
     def _register_eval_thunk(
         self,
@@ -1286,6 +1273,7 @@ class AlgolIrCompiler:
                 heap_mark_reg=None,
                 parent=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
             )
             if thunk.is_array_element:
                 data_pointer, byte_offset = self._compile_array_element_address(
@@ -1351,6 +1339,7 @@ class AlgolIrCompiler:
                 heap_mark_reg=None,
                 parent=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
             )
             data_pointer, byte_offset = self._compile_array_element_address(
                 thunk.expression,
@@ -1422,6 +1411,7 @@ class AlgolIrCompiler:
             variable,
             scope,
             role="read",
+            helper_failure=scope.helper_failure,
         )
         dst = self._fresh_reg()
         self._emit(

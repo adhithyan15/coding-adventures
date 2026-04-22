@@ -737,6 +737,14 @@ helper that re-evaluates the original designator, including current subscript
 values, before storing. Helper-side bounds failures must be reported back to the
 calling procedure so the normal frame and thunk-region unwinding still runs.
 
+Current Phase 5d lowering may allow read-only expression descriptors to read
+integer arrays. The eval helper should mark its synthetic caller-frame scope as
+a helper context, so checked array loads inside expression thunks report bounds
+failures through the thunk failure flag and let the by-name formal read perform
+the caller's normal unwind. Procedure calls inside expression thunks remain
+rejected until helper calls can safely manage nested returns and failure
+propagation.
+
 ### Required Diagnostics
 
 The phase is not complete unless unsupported forms fail before WASM lowering

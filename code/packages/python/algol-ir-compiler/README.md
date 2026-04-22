@@ -31,9 +31,11 @@ generated helper that re-evaluates the expression against the caller frame each
 time. Integer array-element actuals lower to tagged descriptors as well; formal
 reads re-compute the element address through the eval helper, and writable
 formals call a generated store helper that re-locates the element before storing
-the new value. Expression thunks that read arrays, expression thunks that call
-procedures, and stores through read-only expression thunks still raise targeted
-`CompileError` diagnostics until Phase 5 grows full expression-helper coverage.
+the new value. Read-only expression thunks can also read array elements; helper
+bounds failures are reported back to the calling procedure before the normal
+frame and thunk-region unwind. Expression thunks that call procedures and stores
+through read-only expression thunks still raise targeted `CompileError`
+diagnostics until Phase 5 grows full expression-helper coverage.
 
 This phase keeps ALGOL frame memory and its 28-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
