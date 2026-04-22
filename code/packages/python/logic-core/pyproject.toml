@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-core"
-version = "0.3.0"
-description = "Logic programming core: terms, unification, goals, search, disequality constraints, and extension state"
+version = "0.4.0"
+description = "Logic programming core: terms, unification, goals, search, disequality constraints, and extension slots"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

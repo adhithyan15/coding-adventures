@@ -14,6 +14,7 @@ that make relational programs feel like programs:
 - persistent database updates via `asserta(...)`, `assertz(...)`, `retract_*`,
   and `abolish(...)`
 - dynamic predicate declarations and branch-local runtime database overlays
+- finite-domain store preservation for CLP(FD)-style builtins
 - scoped search control via `cut()` as the library form of Prolog `!/0`
 - recursive solving with depth-first backtracking
 - deferred recursive goal builders via `defer(...)`

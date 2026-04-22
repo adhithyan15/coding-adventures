@@ -2,7 +2,20 @@
 
 ## [Unreleased]
 
-### Added
+### Changed
+
+- **`test_oct_out_syscall_raises_at_runtime` → `test_rejects_oct_out_syscall_at_compile_time`**:
+  updated to reflect the new compile-time SYSCALL validation added to
+  `ir-to-cil-bytecode`.  Oct's `out(17, val)` → SYSCALL 57 is now rejected by
+  `lower_ir_to_cil_bytecode()` with `CILBackendError` (not `CLRVMError` at
+  runtime).  The test previously called `write_cli_assembly` and
+  `run_clr_entry_point`; it now only calls `lower_ir_to_cil_bytecode()` and
+  verifies the early `CILBackendError`.
+- Updated module docstring in `tests/test_oct_8bit_e2e.py` to describe the
+  compile-time validation behaviour (replacing the stale "no compile-time
+  validator" paragraph).
+
+### Added (in a previous unreleased update)
 
 - **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
   6 end-to-end tests confirming the CLR backend correctly compiles and

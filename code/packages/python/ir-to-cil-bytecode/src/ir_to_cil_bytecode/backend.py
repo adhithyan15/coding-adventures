@@ -200,13 +200,168 @@ class CILLoweringPipeline:
         )
 
 
+# ---------------------------------------------------------------------------
+# Pre-flight validation
+# ---------------------------------------------------------------------------
+#
+# ``validate_for_clr`` inspects an IrProgram for CLR backend incompatibilities
+# *before* any bytecode is generated.  It mirrors the pattern established by
+# ``validate_for_jvm`` in the JVM backend.
+#
+# The CLR host (brainfuck-clr-compiler / CLR VM) wires up three syscalls:
+#
+#   SYSCALL 1  — write byte to stdout  (``System.Console.Write(char)``)
+#   SYSCALL 2  — read byte from stdin  (``System.Console.Read()``)
+#   SYSCALL 10 — process exit          (``System.Environment.Exit(code)``)
+#
+# Oct's Intel 8008 I/O intrinsics map to different numbers:
+#   out(PORT, val) → SYSCALL 40+PORT   (e.g. out(17,v) → SYSCALL 57)
+#   in(PORT)       → SYSCALL 20+PORT   (e.g. in(3)    → SYSCALL 23)
+#
+# Those 8008-specific numbers are not wired in the CLR host.  Without a
+# compile-time check the program would pass through CIL lowering silently and
+# then raise CLRVMError *at runtime* — a much later and harder-to-diagnose
+# failure.  The pre-flight validator surfaces the mismatch before any bytes
+# are produced.
+# ---------------------------------------------------------------------------
+
+_CLR_SUPPORTED_SYSCALLS: frozenset[int] = frozenset({1, 2, 10})
+
+# Every IrOp that the V1 CIL lowerer handles.  Any opcode absent from this set
+# is rejected by validate_for_clr() so callers get a clear error instead of
+# an "Unsupported IR opcode" exception buried inside lowering.
+_CLR_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.RET,
+    IrOp.LOAD_IMM,
+    IrOp.LOAD_ADDR,
+    IrOp.LOAD_BYTE,
+    IrOp.LOAD_WORD,
+    IrOp.STORE_BYTE,
+    IrOp.STORE_WORD,
+    IrOp.ADD,
+    IrOp.ADD_IMM,
+    IrOp.SUB,
+    IrOp.AND,
+    IrOp.AND_IMM,
+    IrOp.OR,
+    IrOp.OR_IMM,
+    IrOp.XOR,
+    IrOp.XOR_IMM,
+    IrOp.NOT,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.JUMP,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.CALL,
+    IrOp.SYSCALL,
+})
+
+
+def validate_for_clr(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for CLR backend incompatibilities without generating
+    any bytecode.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must appear in
+       ``_CLR_SUPPORTED_OPCODES``.  Opcodes that the V1 CLR backend does not
+       handle (e.g. future IR extensions) are rejected with a precise
+       diagnostic before any CIL bytes are produced.
+
+    2. **Constant range** — every ``IrImmediate`` in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a CIL ``int32``
+       (−2 147 483 648 to 2 147 483 647).  Larger constants cannot be loaded
+       by a single ``ldc.i4`` instruction.
+
+    3. **SYSCALL number** — only SYSCALL numbers 1 (write byte), 2 (read byte),
+       and 10 (process exit) are wired in the V1 CLR host.  Oct's 8008-specific
+       SYSCALL numbers (20+PORT for input, 40+PORT for output) are caught here
+       instead of failing silently at runtime.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the CLR V1 backend.
+
+    Example — a pure-arithmetic Oct program passes validation::
+
+        errors = validate_for_clr(program)
+        assert errors == []
+
+    Example — Oct's out(17, val) → SYSCALL 57 is rejected::
+
+        errors = validate_for_clr(program_with_oct_io)
+        assert any("57" in e for e in errors)
+    """
+    errors: list[str] = []
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ──────────────────────
+        if op not in _CLR_SUPPORTED_OPCODES:
+            errors.append(f"unsupported opcode {op.name} in V1 CLR backend")
+            continue
+
+        # ── Rule 2: constant range for LOAD_IMM / ADD_IMM ───────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and not (
+                    _INT32_MIN <= operand.value <= _INT32_MAX
+                ):
+                    errors.append(
+                        f"immediate value {operand.value} out of int32 range "
+                        f"[{_INT32_MIN}, {_INT32_MAX}] in {op.name}"
+                    )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if (
+                    isinstance(operand, IrImmediate)
+                    and operand.value not in _CLR_SUPPORTED_SYSCALLS
+                ):
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL numbers {sorted(_CLR_SUPPORTED_SYSCALLS)} "
+                        f"are wired in the V1 CLR backend"
+                    )
+                    break
+
+    return errors
+
+
 def lower_ir_to_cil_bytecode(
     program: IrProgram,
     config: CILBackendConfig | None = None,
     *,
     token_provider: CILTokenProvider | None = None,
 ) -> CILProgramArtifact:
-    """Lower a compiler IR program to CIL bytecode method artifacts."""
+    """Lower a compiler IR program to CIL bytecode method artifacts.
+
+    Runs ``validate_for_clr`` as a pre-flight check before any CIL bytes are
+    produced.  Any validation failure raises ``CILBackendError`` with a
+    human-readable summary so callers get a clear error at compile time instead
+    of a runtime exception inside the CLR VM.
+    """
+    errors = validate_for_clr(program)
+    if errors:
+        joined = "; ".join(errors)
+        raise CILBackendError(
+            f"IR program failed CLR pre-flight validation "
+            f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+        )
     pipeline = CILLoweringPipeline(
         analyze_program=lambda source, resolved_config: _analyze_program(
             source,

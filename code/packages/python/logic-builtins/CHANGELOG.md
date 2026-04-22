@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.10.0] - 2026-04-22
+
+### Added
+
+- finite-domain store types for branch-local CLP(FD)-style constraints
+- `fd_ino`, `fd_eqo`, `fd_neqo`, `fd_lto`, `fd_leqo`, `fd_gto`, and
+  `fd_geqo` for finite integer domains and binary comparisons
+- `labelingo` for deterministic ascending enumeration of finite-domain
+  assignments
+- tests covering domain formats, domain narrowing, order-independent
+  constraints, equality-domain intersection, rollback across disjunctions, and
+  explicit labeling
+
 ## [0.9.0] - 2026-04-22
 
 ### Added

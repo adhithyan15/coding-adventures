@@ -29,11 +29,11 @@ to ``SYSCALL 40+PORT`` (e.g., ``out(17, v)`` → ``SYSCALL 57``).  Those
 numbers are not supported by the CLR host (which implements SYSCALL 1=write
 byte, 2=read byte, 10=exit).
 
-Unlike the WASM and JVM backends, the CLR backend has **no compile-time
-SYSCALL validator** — unsupported numbers pass through to the assembly and
-are only caught at runtime when ``CLRVMError`` is raised.  This is still
-safe (no silent misbehavior), but the error is discovered later.
-``test_oct_out_syscall_raises_at_runtime`` documents this behaviour.
+The CLR backend now has a compile-time ``validate_for_clr()`` pre-flight
+check (the same pattern as ``validate_for_wasm`` and ``validate_for_jvm``).
+Unsupported SYSCALL numbers are rejected by ``lower_ir_to_cil_bytecode()``
+with a ``CILBackendError`` *before* any CIL bytes are produced.
+``test_rejects_oct_out_syscall_at_compile_time`` documents this behaviour.
 
 **Output encoding**
 
@@ -57,13 +57,13 @@ expected GE-225 character.
 - ``SUB``       subtracts two registers.
 - ``AND``       bitwise-ANDs two registers.
 - ``SYSCALL 1`` writes the value in the arg register to the CLR host output.
-- Unsupported SYSCALL numbers raise ``CLRVMError`` at runtime.
+- Unsupported SYSCALL numbers raise ``CILBackendError`` at compile time.
 """
 from __future__ import annotations
 
 import pytest
 from cli_assembly_writer import CLIAssemblyConfig, write_cli_assembly
-from clr_vm_simulator import CLRVMError, CLRVMStdlibHost, run_clr_entry_point
+from clr_vm_simulator import CLRVMStdlibHost, run_clr_entry_point
 from compiler_ir import (
     IDGenerator,
     IrImmediate,
@@ -73,9 +73,11 @@ from compiler_ir import (
     IrProgram,
     IrRegister,
 )
-
-from ir_to_cil_bytecode import CILBackendConfig, lower_ir_to_cil_bytecode
-
+from ir_to_cil_bytecode import (
+    CILBackendConfig,
+    CILBackendError,
+    lower_ir_to_cil_bytecode,
+)
 
 # GE-225 character table (subset): maps integer values used in these tests
 # to the expected output character.  The CLR host uses this encoding for
@@ -124,16 +126,17 @@ def _compile_and_run(program: IrProgram, input_bytes: bytes = b"") -> str:
 # ── Validation ────────────────────────────────────────────────────────────────
 
 class TestOctSyscallBehaviour:
-    def test_oct_out_syscall_raises_at_runtime(self) -> None:
-        """Oct's out(17, val) → SYSCALL 57 raises CLRVMError at runtime.
+    def test_rejects_oct_out_syscall_at_compile_time(self) -> None:
+        """Oct's out(17, val) → SYSCALL 57 is rejected at compile time.
 
-        The CLR backend has no compile-time SYSCALL validator (unlike WASM and
-        JVM).  Unsupported SYSCALL numbers are detected at runtime by the CLR
-        VM host.  SYSCALL 57 is Oct's ``out(17, val)`` — an Intel 8008 hardware
-        port write that is meaningless on CLR.
+        The CLR backend now includes a ``validate_for_clr()`` pre-flight check
+        (mirroring the pattern from ``validate_for_wasm`` and
+        ``validate_for_jvm``).  Unsupported SYSCALL numbers are caught by
+        ``lower_ir_to_cil_bytecode()`` *before* any CIL bytes are produced.
 
-        This test confirms that the misbehaviour is caught, even if later than
-        ideal (runtime vs. compile time).
+        SYSCALL 57 is Oct's ``out(17, val)`` — an Intel 8008 hardware port
+        write (SYSCALL 40+PORT = 40+17 = 57) that is completely foreign to the
+        CLR host which only understands SYSCALLs 1, 2, and 10.
         """
         gen = IDGenerator()
         program = IrProgram(entry_label="_start")
@@ -143,17 +146,10 @@ class TestOctSyscallBehaviour:
         program.add_instruction(IrInstruction(IrOp.SYSCALL,   [_imm(57), _reg(4)], id=gen.next()))
         program.add_instruction(IrInstruction(IrOp.HALT,      [], id=gen.next()))
 
-        cil_artifact = lower_ir_to_cil_bytecode(program, CILBackendConfig(syscall_arg_reg=4))
-        assembly_artifact = write_cli_assembly(
-            cil_artifact,
-            CLIAssemblyConfig(
-                assembly_name="OctBadSyscall",
-                module_name="OctBadSyscall.dll",
-                type_name="OctBadSyscall",
-            ),
-        )
-        with pytest.raises(CLRVMError, match=r"57|syscall"):
-            run_clr_entry_point(assembly_artifact.assembly_bytes)
+        # The validator fires inside lower_ir_to_cil_bytecode() — no CIL bytes
+        # are produced, no assembly is written, and no CLR VM is invoked.
+        with pytest.raises(CILBackendError, match=r"57|pre-flight"):
+            lower_ir_to_cil_bytecode(program, CILBackendConfig(syscall_arg_reg=4))
 
 
 # ── Execution ─────────────────────────────────────────────────────────────────

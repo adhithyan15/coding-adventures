@@ -47,6 +47,13 @@ from logic_builtins import (
     div,
     dynamico,
     failo,
+    fd_eqo,
+    fd_geqo,
+    fd_gto,
+    fd_ino,
+    fd_leqo,
+    fd_lto,
+    fd_neqo,
     findallo,
     floordiv,
     forallo,
@@ -57,6 +64,7 @@ from logic_builtins import (
     ifthenelseo,
     iftheno,
     iso,
+    labelingo,
     leqo,
     lto,
     mod,
@@ -89,7 +97,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.9.0"
+        assert __version__ == "0.10.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -460,6 +468,131 @@ class TestArithmeticBuiltins:
             marker,
             conj(eq(marker, "ok"), noto(lto(add(2, 2), 3))),
         ) == [atom("ok")]
+
+
+class TestFiniteDomainBuiltins:
+    """Finite-domain constraints should narrow first and label explicitly."""
+
+    def test_fd_ino_and_labelingo_enumerate_domains_in_order(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(fd_ino(value, range(1, 4)), labelingo([value])),
+        ) == [num(1), num(2), num(3)]
+
+    def test_fd_domains_can_be_logic_lists_or_inclusive_range_terms(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, logic_list([2, 4])),
+                fd_ino(right, term("..", 3, 4)),
+                labelingo([left, right]),
+            ),
+        ) == [(num(2), num(3)), (num(2), num(4)), (num(4), num(3)), (num(4), num(4))]
+
+    def test_fd_constraints_narrow_before_labeling(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(fd_ino(value, range(1, 6)), fd_lto(value, 3), labelingo([value])),
+        ) == [num(1), num(2)]
+
+    def test_fd_constraints_are_order_independent(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(fd_lto(value, 3), fd_ino(value, range(1, 6)), labelingo([value])),
+        ) == [num(1), num(2)]
+
+    def test_fd_equality_intersects_aliased_domains(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, [1, 2]),
+                fd_ino(right, [2, 3]),
+                fd_eqo(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(2), num(2))]
+
+    def test_fd_neq_and_comparisons_prune_binary_domains(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_neqo(left, right),
+                fd_leqo(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(1), num(2)), (num(1), num(3)), (num(2), num(3))]
+
+    def test_fd_greater_comparisons_check_concrete_terms(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), fd_gto(4, 3), fd_geqo(4, 4)),
+        ) == [atom("ok")]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), fd_gto(3, 4))) == []
+
+    def test_labelingo_accepts_logic_list_of_variables(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, [1]),
+                fd_ino(right, [2]),
+                labelingo(logic_list([left, right])),
+            ),
+        ) == [(num(1), num(2))]
+
+    def test_fd_store_rolls_back_across_disjunction_branches(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            disj(
+                conj(fd_ino(value, [1]), labelingo([value])),
+                labelingo([value]),
+            ),
+        ) == [num(1)]
+
+    def test_fd_ino_without_labeling_preserves_open_variables(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, fd_ino(value, [1, 2])) == [value]
+
+    def test_fd_domain_validation_is_eager(self) -> None:
+        value = var("Value")
+
+        with pytest.raises(TypeError):
+            fd_ino(value, [1, 2.5])
+        with pytest.raises(ValueError):
+            fd_ino(value, range(0, 10_001))
 
 
 class TestControlBuiltins:

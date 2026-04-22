@@ -1,7 +1,8 @@
 # logic-builtins
 
-`logic-builtins` adds practical Prolog-inspired control, term inspection,
-arithmetic, and collection predicates to the Python logic stack.
+`logic-builtins` adds practical Prolog-inspired control, finite-domain
+constraints, term inspection, arithmetic, and collection predicates to the
+Python logic stack.
 
 These functions are library goals, not syntax. They compose with
 `logic-engine`, `logic-stdlib`, and the VM/bytecode layers because they return
@@ -34,6 +35,10 @@ ordinary logic goal expressions.
 - `dynamico(name, arity)`, `assertao(clause)`, `assertzo(clause)`,
   `retracto(clause)`, `retractallo(head)`, and `abolisho(name, arity)` for
   branch-local dynamic database mutation
+- `fd_ino(var, domain)`, `fd_eqo(left, right)`, `fd_neqo(left, right)`,
+  `fd_lto(left, right)`, `fd_leqo(left, right)`, `fd_gto(left, right)`,
+  `fd_geqo(left, right)`, and `labelingo(vars)` for finite-domain integer
+  constraints
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -46,12 +51,15 @@ from logic_builtins import (
     add,
     assertzo,
     argo,
-    dynamico,
     calltermo,
     clauseo,
     compare_termo,
     current_predicateo,
     cuto,
+    dynamico,
+    fd_ino,
+    fd_leqo,
+    fd_neqo,
     findallo,
     forallo,
     functoro,
@@ -59,6 +67,7 @@ from logic_builtins import (
     groundo,
     ifthenelseo,
     iso,
+    labelingo,
     noto,
     onceo,
     predicate_propertyo,
@@ -166,11 +175,22 @@ assert solve_all(
     X,
     conj(dynamico("memo", 1), assertzo(memo("cached")), memo(X)),
 ) == [atom("cached")]
+assert solve_all(
+    program(),
+    X,
+    conj(fd_ino(X, range(1, 6)), fd_leqo(X, 3), fd_neqo(X, 2), labelingo([X])),
+) == [num(1), num(3)]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
 fails while `X` is unbound, and succeeds after a goal such as `eq(X, 4)` has
 instantiated it.
+
+Finite-domain constraints are branch-local and label explicitly. `fd_ino`
+stores a finite integer domain, comparison predicates narrow domains as soon as
+enough information exists, and `labelingo([X, Y])` enumerates concrete
+assignments in ascending order. This foundation intentionally does not include
+FD arithmetic propagation or global constraints yet.
 
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail
