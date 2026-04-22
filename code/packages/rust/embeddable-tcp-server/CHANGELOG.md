@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-04-22
+
+### Added
+
+- Added `worker_job_timeout` to mailbox-mode server options so embedders can
+  configure generic job-runtime timeouts for stuck language workers.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added
