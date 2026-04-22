@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.15.0 — 2026-04-22
+
+Phase 10 of the integration roadmap — generalized partial-fraction integration and
+Rothstein–Trager performance fix.
+
+**RT performance guard**:
+- `_integrate_rational` now skips Rothstein–Trager for degree ≥ 6 denominators.
+  RT's Sylvester-matrix determinant (Fraction arithmetic, 12×12) caused a 26,261-second
+  hang on `(x²+1)(x²+4)(x²+9)` while always returning None. The guard is safe:
+  degree-6 denominators with any irreducible quadratic factor always have irrational
+  RT coefficients, so skipping is lossless.
+
+**Three distinct irreducible quadratics** (`Q₁·Q₂·Q₃`, degree-6 squarefree):
+- `_factor_triple_quadratic` — finite candidate search (rational divisors of the
+  constant term × small linear-coefficient candidates) to factor a degree-6 poly
+  into three monic irreducible quadratics over Q; delegates to `_factor_biquadratic`
+  for the degree-4 quotient.
+- Handles both diagonal (`1/((x²+1)(x²+4)(x²+9))`) and non-diagonal cases
+  (`1/((x²+2x+2)(x²+4)(x²+9))`).
+
+**Linear factors × two irreducible quadratics** (`Lᵐ·Q₁·Q₂`, degree 5–6):
+- `_solve_pf_general` — D×D Gaussian elimination over Fraction for any list of
+  coprime polynomial factors (total degree D = Σdᵢ).
+- `_try_general_rational_integral` — Phase 10 driver: extracts rational linear
+  factors, factors the quadratic remainder via `_factor_biquadratic` or
+  `_factor_triple_quadratic`, solves the generalized partial-fraction system, then
+  integrates linear pieces as logs and quadratic pieces via `arctan_integral`.
+- Handles degree-5 (`1/((x−1)(x²+1)(x²+4))`) and degree-6
+  (`1/((x−1)(x−2)(x²+1)(x²+4))`) cases.
+
+**Limitations (future work)**:
+- Denominators with four or more irreducible quadratic factors (degree ≥ 8).
+- Denominators that are irreducible of degree 4 over Q (e.g. `x⁴+1`).
+- Denominators of degree > 6 in general.
+
 ## 0.14.0 — 2026-04-22
 
 Phase 9 of the integration roadmap — multi-quadratic partial-fraction integration.
