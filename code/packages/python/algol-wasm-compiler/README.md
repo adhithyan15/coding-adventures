@@ -35,7 +35,10 @@ Expression thunks can call procedures, including procedures that receive nested
 by-name descriptors, and runtime failures from those callees propagate through
 the by-name formal read. Expression thunk stores remain guarded by IR
 compile-stage diagnostics until full Phase 5 store-helper coverage is
-available.
+available. The integer by-name acceptance tests cover the supported scalar,
+array, expression, nested-procedure, and Jensen's-device surface; full ALGOL
+labels, switches, procedure-valued parameters, whole-array by-name values, and
+non-integer by-name formals remain later phases.
 
 ```python
 from algol_wasm_compiler import compile_source

@@ -34,6 +34,8 @@ All notable changes to this package will be documented in this file.
 - Allowed read-only expression eval thunks to call integer procedures, with a
   runtime helper-depth marker for propagating nested procedure failures back to
   the caller's by-name formal read.
+- Documented the completed integer Phase 5 by-name subset and its remaining
+  full-ALGOL exclusions.
 
 ## [0.1.0] - 2026-04-20
 

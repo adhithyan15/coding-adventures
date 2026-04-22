@@ -359,6 +359,31 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "actual expression is not assignable" in result.diagnostics[0].message
 
+    def test_rejects_literal_actual_for_written_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure put(x); integer x; begin x := 7 end; "
+            "put(1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
+    def test_rejects_procedure_call_actual_for_written_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(n); value n; integer n; begin inc := n + 1 end; "
+            "procedure put(x); integer x; begin x := 7 end; "
+            "put(inc(1)) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
     def test_accepts_array_element_actual_for_written_by_name_parameter(self) -> None:
         ast = parse_algol(
             "begin integer result; integer array a[1:2]; "

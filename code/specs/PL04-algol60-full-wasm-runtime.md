@@ -687,9 +687,9 @@ The descriptor allocation must be bounded. The compiler should enforce:
 - maximum call-site thunk descriptor bytes
 - no thunk descriptor escapes the receiving call
 
-### Phase 5 Subset
+### Phase 5 Integer Subset
 
-The first Phase 5 implementation should support:
+The completed integer-focused Phase 5 implementation supports:
 
 - `integer` by-name scalar formals
 - by-name integer expression actuals for read-only formals
@@ -698,8 +698,10 @@ The first Phase 5 implementation should support:
 - by-name actual expressions that reference variables in the caller's lexical
   ancestors
 - by-name actual expressions that reference Phase 4 integer arrays
+- by-name actual expressions that call integer procedures
+- Jensen's device over integer scalar and array expressions
 
-The first implementation should continue to reject:
+The integer-focused implementation still intentionally rejects:
 
 - non-integer by-name formals
 - by-name array descriptors as whole-array values
@@ -1313,6 +1315,7 @@ Acceptance:
 - array element actuals re-compute their element address on each use
 - read-only expression actuals work without store helpers
 - assigned read-only expression actuals are rejected before IR lowering
+- read-only expression actuals can read arrays and call integer procedures
 - Jensen's device works
 
 ### Phase 6: Labels and Local Goto

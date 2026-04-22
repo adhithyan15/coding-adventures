@@ -37,7 +37,10 @@ frame and thunk-region unwind. Procedure calls inside read-only expression
 thunks are supported, including nested by-name descriptor allocation and runtime
 failure propagation from callees back to the by-name formal read. Stores through
 read-only expression thunks still raise targeted `CompileError` diagnostics
-until Phase 5 grows full store-helper coverage.
+until Phase 5 grows full store-helper coverage. The supported integer by-name
+surface is covered by the WASM acceptance suite, while full ALGOL forms such as
+non-integer formals, whole-array by-name values, procedure-valued actuals,
+labels, switches, and escaping thunk descriptors remain future work.
 
 This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
