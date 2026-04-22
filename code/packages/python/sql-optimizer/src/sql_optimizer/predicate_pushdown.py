@@ -71,6 +71,7 @@ from sql_planner import (
     FunctionCall,
     Having,
     In,
+    IndexScan,
     Intersect,
     IsNotNull,
     IsNull,
@@ -203,8 +204,8 @@ def _distribute_conjuncts(
                 new_r = _wrap_with_keeps(new_r_inner, inner_keep_r)
             return stuck, Join(left=new_l, right=new_r, kind=k, condition=cond)
 
-        # Scan / EmptyResult / others — can't descend further.
-        case Scan() | EmptyResult():
+        # Scan / IndexScan / EmptyResult / others — can't descend further.
+        case Scan() | IndexScan() | EmptyResult():
             return conjuncts, tree
 
         # Aggregate, Having, Limit, Union — do not push through.
@@ -247,7 +248,7 @@ def _alias_set(plan: LogicalPlan) -> set[str]:
 
 def _walk_aliases(p: LogicalPlan, out: set[str]) -> None:
     match p:
-        case Scan(table=t, alias=a):
+        case Scan(table=t, alias=a) | IndexScan(table=t, alias=a):
             out.add(a or t)
         case DerivedTable(query=_, alias=a, columns=_):
             # A derived table exposes its alias to the outer query; we do NOT

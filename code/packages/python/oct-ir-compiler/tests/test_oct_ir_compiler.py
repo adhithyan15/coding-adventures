@@ -38,6 +38,7 @@ Test Categories
   18. Intrinsics — carry(), parity() (flag-reading SYSCALL)
   19. Static read/write inside functions
   20. Complex programs (complete examples from OCT00 spec)
+  21. OctCompileConfig — cross-platform I/O SYSCALL ABI (WASM, JVM, CLR, custom)
 """
 
 from __future__ import annotations
@@ -45,14 +46,25 @@ from __future__ import annotations
 import pytest
 from compiler_ir import IrOp, IrProgram
 
-from oct_ir_compiler import OctCompileResult, compile_oct
+from oct_ir_compiler import (
+    CLR_IO,
+    INTEL_8008_IO,
+    JVM_IO,
+    WASM_IO,
+    OctCompileConfig,
+    OctCompileResult,
+    compile_oct,
+)
 
 # ---------------------------------------------------------------------------
 # Test pipeline helpers
 # ---------------------------------------------------------------------------
 
 
-def compile_source(source: str) -> IrProgram:
+def compile_source(
+    source: str,
+    config: OctCompileConfig = INTEL_8008_IO,
+) -> IrProgram:
     """Run the full Oct pipeline and return the compiled IrProgram.
 
     Lazily imports parser and type checker to keep tests self-contained.
@@ -61,6 +73,7 @@ def compile_source(source: str) -> IrProgram:
 
     Args:
         source: Oct source code string.
+        config: I/O target configuration (default: ``INTEL_8008_IO``).
 
     Returns:
         The compiled ``IrProgram``.
@@ -73,7 +86,7 @@ def compile_source(source: str) -> IrProgram:
     assert result.ok, (
         f"Type check failed: {[str(e.message) for e in result.errors]}"
     )
-    return compile_oct(result.typed_ast).program
+    return compile_oct(result.typed_ast, config=config).program
 
 
 def compile_result(source: str) -> OctCompileResult:
@@ -1278,3 +1291,241 @@ class TestComplexPrograms:
         # CMP_GT for x > 5, BRANCH_Z for both ifs.
         assert has_opcode(p, IrOp.CMP_GT)
         assert count_opcode(p, IrOp.BRANCH_Z) >= 2
+
+
+# ---------------------------------------------------------------------------
+# 21. OctCompileConfig — cross-platform I/O SYSCALL ABI
+# ---------------------------------------------------------------------------
+
+
+def syscall_arg_regs(program: IrProgram) -> list[int | None]:
+    """Return the arg-register index of each SYSCALL instruction (or None).
+
+    For SYSCALL instructions with a second operand (IrRegister), return its
+    index.  For one-operand SYSCALLs (8008 style, no explicit arg reg),
+    return None.
+    """
+    from compiler_ir import IrRegister
+    result = []
+    for instr in program.instructions:
+        if instr.opcode != IrOp.SYSCALL:
+            continue
+        if len(instr.operands) >= 2 and isinstance(instr.operands[1], IrRegister):
+            result.append(instr.operands[1].index)
+        else:
+            result.append(None)
+    return result
+
+
+class TestOctCompileConfig:
+    """Tests for OctCompileConfig — cross-platform I/O SYSCALL ABI.
+
+    Oct's ``in(PORT)`` and ``out(PORT, val)`` intrinsics target Intel 8008
+    hardware by default (SYSCALL 20+PORT and 40+PORT).  OctCompileConfig lets
+    callers redirect I/O to cross-platform backends (WASM, JVM, CLR) by
+    specifying different SYSCALL numbers and enabling the explicit arg-register
+    operand that those backends require.
+
+    The pre-defined configs tested here are:
+
+    ┌──────────────┬────────────────────────────┬─────────────────────────────┐
+    │ Config       │ out() SYSCALL              │ in() SYSCALL                │
+    ├──────────────┼────────────────────────────┼─────────────────────────────┤
+    │ INTEL_8008_IO│ 40+PORT (no arg reg)       │ 20+PORT (no arg reg)        │
+    │ WASM_IO      │ 1 with v2 arg reg          │ 2 with v1 (scratch) arg reg │
+    │ JVM_IO       │ 1 with v2 arg reg          │ 4 with v1 (scratch) arg reg │
+    │ CLR_IO       │ 1 with v2 arg reg          │ 2 with v1 (scratch) arg reg │
+    └──────────────┴────────────────────────────┴─────────────────────────────┘
+    """
+
+    # ── Default / INTEL_8008_IO ────────────────────────────────────────────
+
+    def test_default_in_port0_is_syscall_20(self) -> None:
+        """in(0) → SYSCALL 20 under the default INTEL_8008_IO config."""
+        p = compile_source("fn main() { let b: u8 = in(0); }")
+        nums = syscall_numbers(p)
+        assert 20 in nums, f"Expected SYSCALL 20 for in(0), got: {nums}"
+
+    def test_default_in_port5_is_syscall_25(self) -> None:
+        """in(5) → SYSCALL 25 (20+5) under INTEL_8008_IO."""
+        p = compile_source("fn main() { let b: u8 = in(5); }")
+        nums = syscall_numbers(p)
+        assert 25 in nums, f"Expected SYSCALL 25 for in(5), got: {nums}"
+
+    def test_default_out_port0_is_syscall_40(self) -> None:
+        """out(0, val) → SYSCALL 40 under the default INTEL_8008_IO config."""
+        p = compile_source("fn main() { let x: u8 = 7; out(0, x); }")
+        nums = syscall_numbers(p)
+        assert 40 in nums, f"Expected SYSCALL 40 for out(0,...), got: {nums}"
+
+    def test_default_out_port3_is_syscall_43(self) -> None:
+        """out(3, val) → SYSCALL 43 (40+3) under INTEL_8008_IO."""
+        p = compile_source("fn main() { let x: u8 = 1; out(3, x); }")
+        nums = syscall_numbers(p)
+        assert 43 in nums, f"Expected SYSCALL 43 for out(3,...), got: {nums}"
+
+    def test_default_syscall_has_no_arg_register_operand(self) -> None:
+        """Intel 8008 SYSCALLs have only one operand (the number); no arg reg."""
+        p = compile_source("fn main() { let b: u8 = in(0); out(1, b); }")
+        arg_regs = syscall_arg_regs(p)
+        # Both in() and out() should produce one-operand SYSCALLs.
+        assert all(r is None for r in arg_regs), (
+            f"Expected no arg-register operands for 8008 SYSCALLs, got: {arg_regs}"
+        )
+
+    # ── WASM_IO ────────────────────────────────────────────────────────────
+
+    def test_wasm_out_emits_syscall_1(self) -> None:
+        """WASM_IO: out() → SYSCALL 1 (WASI fd_write)."""
+        p = compile_source(
+            "fn main() { let x: u8 = 42; out(0, x); }",
+            config=WASM_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 1 in nums, f"Expected SYSCALL 1 for out() with WASM_IO, got: {nums}"
+
+    def test_wasm_in_emits_syscall_2(self) -> None:
+        """WASM_IO: in() → SYSCALL 2 (WASI fd_read)."""
+        p = compile_source(
+            "fn main() { let b: u8 = in(0); }",
+            config=WASM_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 2 in nums, f"Expected SYSCALL 2 for in() with WASM_IO, got: {nums}"
+
+    def test_wasm_out_has_arg_register_v2(self) -> None:
+        """WASM_IO: out() SYSCALL has v2 (register 2) as the arg-register operand."""
+        p = compile_source(
+            "fn main() { let x: u8 = 7; out(0, x); }",
+            config=WASM_IO,
+        )
+        arg_regs = [r for r in syscall_arg_regs(p) if r is not None]
+        assert 2 in arg_regs, (
+            f"Expected v2 (index 2) for WASM_IO out() arg reg, got: {arg_regs}"
+        )
+
+    def test_wasm_in_has_arg_register_v1(self) -> None:
+        """WASM_IO: in() SYSCALL carries v1 (scratch) as the arg-register operand."""
+        p = compile_source(
+            "fn main() { let b: u8 = in(0); }",
+            config=WASM_IO,
+        )
+        arg_regs = [r for r in syscall_arg_regs(p) if r is not None]
+        assert 1 in arg_regs, (
+            f"Expected v1 (index 1) for WASM_IO in() arg reg, got: {arg_regs}"
+        )
+
+    def test_wasm_port_does_not_affect_syscall_number(self) -> None:
+        """WASM_IO: out(3, val) still emits SYSCALL 1 — PORT is ignored."""
+        p = compile_source(
+            "fn main() { let x: u8 = 1; out(3, x); }",
+            config=WASM_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 1 in nums and 43 not in nums, (
+            f"Expected SYSCALL 1 (not 43) for WASM_IO out(3,...), got: {nums}"
+        )
+
+    # ── JVM_IO ─────────────────────────────────────────────────────────────
+
+    def test_jvm_out_emits_syscall_1(self) -> None:
+        """JVM_IO: out() → SYSCALL 1 (System.out.write)."""
+        p = compile_source(
+            "fn main() { let x: u8 = 5; out(0, x); }",
+            config=JVM_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 1 in nums, f"Expected SYSCALL 1 for JVM_IO out(), got: {nums}"
+
+    def test_jvm_in_emits_syscall_4(self) -> None:
+        """JVM_IO: in() → SYSCALL 4 (System.in.read)."""
+        p = compile_source(
+            "fn main() { let b: u8 = in(0); }",
+            config=JVM_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 4 in nums, f"Expected SYSCALL 4 for JVM_IO in(), got: {nums}"
+
+    # ── CLR_IO ─────────────────────────────────────────────────────────────
+
+    def test_clr_out_emits_syscall_1(self) -> None:
+        """CLR_IO: out() → SYSCALL 1 (Console.Write)."""
+        p = compile_source(
+            "fn main() { let x: u8 = 3; out(0, x); }",
+            config=CLR_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 1 in nums, f"Expected SYSCALL 1 for CLR_IO out(), got: {nums}"
+
+    def test_clr_in_emits_syscall_2(self) -> None:
+        """CLR_IO: in() → SYSCALL 2 (Console.Read)."""
+        p = compile_source(
+            "fn main() { let b: u8 = in(0); }",
+            config=CLR_IO,
+        )
+        nums = syscall_numbers(p)
+        assert 2 in nums, f"Expected SYSCALL 2 for CLR_IO in(), got: {nums}"
+
+    # ── Custom config ──────────────────────────────────────────────────────
+
+    def test_custom_config_write_syscall(self) -> None:
+        """A custom OctCompileConfig with write_byte_syscall=7 is respected."""
+        custom = OctCompileConfig(write_byte_syscall=7, read_byte_syscall=9)
+        p = compile_source(
+            "fn main() { let x: u8 = 1; out(0, x); }",
+            config=custom,
+        )
+        nums = syscall_numbers(p)
+        assert 7 in nums, f"Expected SYSCALL 7 for custom write, got: {nums}"
+
+    def test_custom_config_read_syscall(self) -> None:
+        """A custom OctCompileConfig with read_byte_syscall=9 is respected."""
+        custom = OctCompileConfig(write_byte_syscall=7, read_byte_syscall=9)
+        p = compile_source(
+            "fn main() { let b: u8 = in(0); }",
+            config=custom,
+        )
+        nums = syscall_numbers(p)
+        assert 9 in nums, f"Expected SYSCALL 9 for custom read, got: {nums}"
+
+    def test_config_none_write_keeps_port_encoding(self) -> None:
+        """OctCompileConfig(write_byte_syscall=None) keeps 8008 port encoding."""
+        half_custom = OctCompileConfig(write_byte_syscall=None, read_byte_syscall=2)
+        p = compile_source(
+            "fn main() { let x: u8 = 5; out(3, x); }",
+            config=half_custom,
+        )
+        nums = syscall_numbers(p)
+        # out(3, …) under 8008 encoding → SYSCALL 43
+        assert 43 in nums, f"Expected SYSCALL 43 (8008 port 3), got: {nums}"
+
+    def test_config_none_read_keeps_port_encoding(self) -> None:
+        """OctCompileConfig(read_byte_syscall=None) keeps 8008 port encoding."""
+        half_custom = OctCompileConfig(write_byte_syscall=1, read_byte_syscall=None)
+        p = compile_source(
+            "fn main() { let b: u8 = in(7); }",
+            config=half_custom,
+        )
+        nums = syscall_numbers(p)
+        # in(7) under 8008 encoding → SYSCALL 27
+        assert 27 in nums, f"Expected SYSCALL 27 (8008 port 7), got: {nums}"
+
+    def test_wasm_io_predefined_values(self) -> None:
+        """WASM_IO has write_byte_syscall=1 and read_byte_syscall=2."""
+        assert WASM_IO.write_byte_syscall == 1
+        assert WASM_IO.read_byte_syscall == 2
+
+    def test_jvm_io_predefined_values(self) -> None:
+        """JVM_IO has write_byte_syscall=1 and read_byte_syscall=4."""
+        assert JVM_IO.write_byte_syscall == 1
+        assert JVM_IO.read_byte_syscall == 4
+
+    def test_clr_io_predefined_values(self) -> None:
+        """CLR_IO has write_byte_syscall=1 and read_byte_syscall=2."""
+        assert CLR_IO.write_byte_syscall == 1
+        assert CLR_IO.read_byte_syscall == 2
+
+    def test_intel_8008_io_has_none_values(self) -> None:
+        """INTEL_8008_IO has None for both fields (port-based encoding)."""
+        assert INTEL_8008_IO.write_byte_syscall is None
+        assert INTEL_8008_IO.read_byte_syscall is None

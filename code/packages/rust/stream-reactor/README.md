@@ -35,6 +35,9 @@ Phase one supports:
 - stateful or stateless handlers
 - neutral handler results in terms of bytes plus close intent
 - delayed write and close submissions through `StreamMailbox`
+- read pausing and resume-all commands for upstream backpressure
+- deferred-read replay so a handler can retain already-read bytes until the
+  mailbox resumes reads
 - cooperative stop via a stop flag
 - macOS/BSD convenience binding through `transport_platform::bsd::KqueueTransportPlatform`
 

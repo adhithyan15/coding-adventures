@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .advisor import IndexAdvisor
 from .connection import Connection, connect
 from .cursor import Cursor
 from .errors import (
@@ -16,6 +17,7 @@ from .errors import (
     ProgrammingError,
     Warning,
 )
+from .policy import HitCountPolicy, IndexPolicy
 
 # ------------------------------------------------------------------
 # PEP 249 module-level attributes.
@@ -37,6 +39,9 @@ __all__ = [
     "DataError",
     "DatabaseError",
     "Error",
+    "HitCountPolicy",
+    "IndexAdvisor",
+    "IndexPolicy",
     "IntegrityError",
     "InterfaceError",
     "InternalError",

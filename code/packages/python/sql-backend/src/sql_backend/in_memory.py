@@ -448,6 +448,20 @@ class InMemoryBackend(Backend):
                     return
             yield row_idx
 
+    def scan_by_rowids(self, table: str, rowids: list[int]) -> RowIterator:
+        """Return a RowIterator over the rows at the given list indices.
+
+        For the in-memory backend every "rowid" is the 0-based position of a row
+        in the table's internal list — exactly what :meth:`scan_index` yields.
+        Rows are returned in the order the rowids are given; caller should sort
+        if ascending order is required.
+
+        Out-of-range indices are silently skipped.
+        """
+        t = self._require_table(table)
+        rows = [t.rows[i] for i in rowids if 0 <= i < len(t.rows)]
+        return ListRowIterator(rows)
+
     # --- Private helpers --------------------------------------------------
 
     def _require_table(self, table: str) -> _Table:

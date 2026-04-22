@@ -41,6 +41,7 @@ from sql_planner import (
     FunctionCall,
     Having,
     In,
+    IndexScan,
     Intersect,
     IsNotNull,
     IsNull,
@@ -101,6 +102,12 @@ def _prune(p: LogicalPlan, required: Req | None) -> LogicalPlan:
             return Scan(
                 table=t, alias=a, required_columns=needed, scan_limit=sl
             )
+
+        case IndexScan():
+            # IndexScan is a leaf like Scan, but it has no required_columns
+            # annotation field — the index already constrains the access path.
+            # Projection pruning can't add hints here, so pass through.
+            return p
 
         case EmptyResult():
             return p

@@ -53,6 +53,7 @@ from sql_planner import (
     FunctionCall,
     Having,
     In,
+    IndexScan,
     Insert,
     Intersect,
     Join,
@@ -76,7 +77,13 @@ from sql_planner import (
     BinaryOp as AstBinaryOp,
 )
 from sql_planner import (
+    CreateIndex as PlanCreateIndex,
+)
+from sql_planner import (
     CreateTable as PlanCreateTable,
+)
+from sql_planner import (
+    DropIndex as PlanDropIndex,
 )
 from sql_planner import (
     DropTable as PlanDropTable,
@@ -114,10 +121,12 @@ from .ir import (
     CaptureLeftResult,
     CloseScan,
     CommitTransaction,
+    CreateIndex,
     CreateTable,
     DeleteRows,
     Direction,
     DistinctResult,
+    DropIndex,
     DropTable,
     EmitColumn,
     EmitRow,
@@ -141,6 +150,7 @@ from .ir import (
     LoadConst,
     LoadGroupKey,
     NullsOrder,
+    OpenIndexScan,
     OpenScan,
     Program,
     RollbackTransaction,
@@ -258,6 +268,14 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()
+
+        case PlanCreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine):
+            return [
+                CreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine),
+            ], ()
+
+        case PlanDropIndex(name=name, if_exists=ie):
+            return [DropIndex(name=name, if_exists=ie)], ()
 
         case Insert():
             return _compile_insert(p, ctx), ()
@@ -515,6 +533,53 @@ def _compile_source(
                 AdvanceCursor(cursor_id=cid, on_exhausted=end),
             ]
             out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
+        case IndexScan(
+            table=t,
+            alias=a,
+            index_name=index_name,
+            column=_,
+            lo=lo,
+            hi=hi,
+            lo_inclusive=lo_inc,
+            hi_inclusive=hi_inc,
+            residual=residual,
+        ):
+            # An index scan replaces OpenScan with OpenIndexScan, which does
+            # the index lookup and materialises matching rows into the cursor.
+            # The AdvanceCursor / LoadColumn / CloseScan loop then works
+            # exactly as for a full table scan — the caller sees no difference.
+            alias = a or t
+            cid = ctx.new_cursor(alias)
+            loop = ctx.new_label("idx_loop")
+            end = ctx.new_label("idx_end")
+            out: list[Instruction] = [
+                OpenIndexScan(
+                    cursor_id=cid,
+                    table=t,
+                    index_name=index_name,
+                    lo=lo,
+                    hi=hi,
+                    lo_inclusive=lo_inc,
+                    hi_inclusive=hi_inc,
+                ),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            # Residual predicate: a condition not fully covered by the index
+            # (e.g. the second column of a compound AND).  Compile it and skip
+            # the row-building body if false, mirroring the Filter-under-Scan
+            # pattern used elsewhere.
+            if residual is not None:
+                skip = ctx.new_label("idx_skip")
+                out.extend(_compile_expr(residual, ctx))
+                out.append(JumpIfFalse(label=skip))
+                out.extend(body(ctx))
+                out.append(Label(name=skip))
+            else:
+                out.extend(body(ctx))
             out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
             return out
 

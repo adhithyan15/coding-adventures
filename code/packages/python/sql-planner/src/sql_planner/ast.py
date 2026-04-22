@@ -298,6 +298,29 @@ class DropTableStmt:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateIndexStmt:
+    """CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col1, col2, ...).
+
+    The ``unique`` flag is stored but not enforced in v2; it is reserved for
+    future use.  ``columns`` is the ordered list of indexed column names.
+    """
+
+    name: str
+    table: str
+    columns: tuple[str, ...]
+    unique: bool = False
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropIndexStmt:
+    """DROP INDEX [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
@@ -310,6 +333,8 @@ Statement = (
     | DeleteStmt
     | CreateTableStmt
     | DropTableStmt
+    | CreateIndexStmt
+    | DropIndexStmt
     | BeginStmt
     | CommitStmt
     | RollbackStmt

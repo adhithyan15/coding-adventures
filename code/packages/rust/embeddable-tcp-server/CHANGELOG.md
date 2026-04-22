@@ -8,6 +8,12 @@ All notable changes to this package will be documented in this file.
 
 - Added `worker_job_timeout` to mailbox-mode server options so embedders can
   configure generic job-runtime timeouts for stuck language workers.
+- Added `worker_queue_depth` to mailbox-mode server options so embedders can
+  tune the bounded worker queue used for backpressure.
+- Added queue-full handling that defers and pauses the current TCP read, then
+  resumes paused reads when worker responses release queue capacity.
+- Added an integration test proving a second connection survives worker queue
+  pressure and receives its replayed response.
 
 ## [0.1.0] - 2026-04-20
 

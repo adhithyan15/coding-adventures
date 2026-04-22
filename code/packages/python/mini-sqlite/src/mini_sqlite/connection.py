@@ -33,8 +33,10 @@ from typing import Any
 from sql_backend import Backend, InMemoryBackend, TransactionHandle
 from storage_sqlite import SqliteFileBackend
 
+from .advisor import IndexAdvisor
 from .cursor import Cursor
 from .errors import OperationalError, ProgrammingError, translate
+from .policy import IndexPolicy
 
 # Statements which, under sqlite3 semantics, implicitly commit the
 # current transaction and run outside of any transaction. Keeping the
@@ -109,7 +111,13 @@ class Connection:
     transaction lifecycle.
     """
 
-    def __init__(self, backend: Backend, *, autocommit: bool = False) -> None:
+    def __init__(
+        self,
+        backend: Backend,
+        *,
+        autocommit: bool = False,
+        auto_index: bool = True,
+    ) -> None:
         self._backend = backend
         self._autocommit = autocommit
         self._txn: TransactionHandle | None = None
@@ -117,6 +125,11 @@ class Connection:
         # True when _txn was opened for a DDL statement and should be
         # committed immediately after the statement runs.
         self._ddl_txn: bool = False
+        # Optional index advisor — created by default, may be disabled via
+        # auto_index=False or replaced via set_policy().
+        self._advisor: IndexAdvisor | None = (
+            IndexAdvisor(backend) if auto_index else None
+        )
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.
@@ -263,6 +276,25 @@ class Connection:
     # Called by Cursor on every execute to keep transaction state honest.
     # ------------------------------------------------------------------
 
+    def set_policy(self, policy: IndexPolicy) -> None:
+        """Replace the index-creation policy on the live advisor.
+
+        If ``auto_index=False`` was passed at connection time the advisor is
+        ``None`` and calling ``set_policy`` is a no-op (no advisor to
+        configure).  Create the connection with ``auto_index=True`` — the
+        default — if you want to use a custom policy.
+
+        Hit counts accumulated by the previous policy are preserved; only the
+        decision logic changes.
+
+        Example::
+
+            conn = mini_sqlite.connect(":memory:")
+            conn.set_policy(HitCountPolicy(threshold=5))
+        """
+        if self._advisor is not None:
+            self._advisor.policy = policy
+
     def _ensure_transaction_if_needed(self, sql: str) -> None:
         """Begin an implicit transaction if this DML needs one.
 
@@ -329,7 +361,12 @@ class Connection:
             raise ProgrammingError("connection is closed")
 
 
-def connect(database: str, *, autocommit: bool = False) -> Connection:
+def connect(
+    database: str,
+    *,
+    autocommit: bool = False,
+    auto_index: bool = True,
+) -> Connection:
     """Open a new :class:`Connection`.
 
     ``database``:
@@ -343,7 +380,19 @@ def connect(database: str, *, autocommit: bool = False) -> Connection:
 
     Both modes return a :class:`Connection` that implements the same
     PEP 249 DB-API 2.0 interface; only the persistence semantics differ.
+
+    ``auto_index`` (default ``True``):
+
+    When ``True``, an :class:`~mini_sqlite.advisor.IndexAdvisor` is attached
+    to the connection.  It observes every query plan and automatically creates
+    B-tree indexes for columns that appear repeatedly in ``WHERE`` predicates.
+    The default policy (:class:`~mini_sqlite.policy.HitCountPolicy`) creates
+    an index after a column has been filtered three times.
+
+    Set to ``False`` to disable automatic index management entirely.  You can
+    also call :meth:`Connection.set_policy` at any time to swap in a custom
+    policy.
     """
     if database == ":memory:":
-        return Connection(InMemoryBackend(), autocommit=autocommit)
-    return Connection(SqliteFileBackend(database), autocommit=autocommit)
+        return Connection(InMemoryBackend(), autocommit=autocommit, auto_index=auto_index)
+    return Connection(SqliteFileBackend(database), autocommit=autocommit, auto_index=auto_index)
