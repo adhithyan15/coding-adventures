@@ -55,7 +55,7 @@ __all__ = [
     "var",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 
 @dataclass(frozen=True, slots=True)
@@ -283,6 +283,7 @@ class State:
     constraints: tuple[Disequality, ...] = ()
     next_var_id: int = 0
     database: object | None = None
+    fd_store: object | None = None
 
 
 type Goal = Callable[[State], Iterator[State]]
@@ -432,6 +433,7 @@ def eq(left: object, right: object) -> Goal:
             constraints=constraints,
             next_var_id=state.next_var_id,
             database=state.database,
+            fd_store=state.fd_store,
         )
 
     return goal
@@ -472,6 +474,7 @@ def neq(left: object, right: object) -> Goal:
             constraints=constraints,
             next_var_id=state.next_var_id,
             database=state.database,
+            fd_store=state.fd_store,
         )
 
     return goal
@@ -521,6 +524,7 @@ def fresh(count: int, fn: Callable[..., Goal]) -> Goal:
             constraints=state.constraints,
             next_var_id=state.next_var_id + count,
             database=state.database,
+            fd_store=state.fd_store,
         )
         produced_goal = fn(*variables)
         yield from produced_goal(next_state)

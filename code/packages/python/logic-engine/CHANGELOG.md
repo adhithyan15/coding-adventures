@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.10.0] - 2026-04-22
+
+### Added
+
+- preservation of the `State.fd_store` extension slot across engine state-copy
+  helpers so finite-domain builtins can compose with dynamic database overlays,
+  fresh variables, rules, and relation calls
+
 ## [0.9.0] - 2026-04-22
 
 ### Added
