@@ -63,13 +63,15 @@ LP18 Batch A metaprogramming completion
 LP18 Batch B dynamic runtime database
 LP18 Batch C search control and real cut
 LP18 Batch D1 CLP(FD) foundation
+LP18 Batch D2/D3 CLP(FD) arithmetic and all-different
 PR00 Prolog lexer
 ```
 
 Known future-extension items that still need implementation:
 
 - soft-cut variants if a concrete API need emerges
-- CLP(FD) arithmetic propagation and global constraints
+- advanced CLP(FD) propagation such as division, reified constraints, and
+  Hall-set global constraint pruning
 
 ## Batch Plan
 
@@ -444,7 +446,7 @@ fd_geqo(left, right)
 labelingo(vars)
 ```
 
-Deferred predicates:
+D2/D3 predicates:
 
 ```python
 fd_addo(left, right, result)
@@ -453,8 +455,8 @@ fd_mulo(left, right, result)
 all_differento(vars)
 ```
 
-The first CLP(FD) batch should prefer correctness and clear semantics over
-advanced propagation performance.
+D2/D3 should continue to prefer correctness and clear semantics over advanced
+propagation performance.
 
 Foundation implementation shape:
 
@@ -480,6 +482,28 @@ Explicit non-goals for the foundation PR:
 - no global constraints yet (`all_differento`)
 - no infinite domains; every domain must be finite before labeling
 
+Arithmetic and global-constraint implementation shape:
+
+- finite-domain residual constraints use a generalized `operator + terms`
+  representation instead of the D1 binary-only shape
+- `fd_addo(left, right, result)` enforces `left + right = result`
+- `fd_subo(left, right, result)` enforces `left - right = result`
+- `fd_mulo(left, right, result)` enforces `left * right = result`
+- arithmetic constraints prune every known finite-domain variable to values
+  that participate in at least one satisfying tuple
+- arithmetic constraints behave as deterministic checks when all terms are
+  concrete integers
+- `all_differento(vars)` accepts either a Python sequence of terms or a proper
+  logic list and keeps the terms pairwise distinct
+- `all_differento` should fail immediately on duplicate concrete assignments
+  and should remove singleton assignments from neighboring finite domains
+
+D2/D3 non-goals:
+
+- no division or modulus CLP(FD) constraints yet
+- no reified CLP(FD) constraints yet
+- no Hall-set or matching-based `all_differento` pruning yet
+
 ## PR Sizing Recommendation
 
 Use this implementation sequence:
@@ -489,7 +513,8 @@ PR 1: Batch A - metaprogramming completion
 PR 2: Batch B - dynamic runtime database
 PR 3: Batch C - real cut and search control
 PR 4: Batch D1 - CLP(FD) foundation
-PR 5+: Batch D2/D3 - arithmetic propagation and global constraints
+PR 5: Batch D2/D3 - arithmetic propagation and all-different
+PR 6+: Batch D4 - larger examples and performance tuning
 ```
 
 This is the fewest practical set of large PRs without forcing unrelated solver
@@ -519,6 +544,8 @@ Batch-specific tests:
 - Batch C: cut does not behave like a global stop
 - Batch D: finite-domain constraints narrow domains before labeling
 - Batch D: labeling enumerates only assignments that satisfy all constraints
+- Batch D2/D3: arithmetic constraints prune domains before labeling
+- Batch D2/D3: `all_differento` solves a small Latin-square-style problem
 
 ## Security and Robustness Notes
 

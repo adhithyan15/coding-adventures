@@ -64,6 +64,7 @@ from logic_engine import (
 
 __all__ = [
     "add",
+    "all_differento",
     "argo",
     "atomico",
     "atomo",
@@ -83,7 +84,10 @@ __all__ = [
     "fd_ino",
     "fd_leqo",
     "fd_lto",
+    "fd_addo",
+    "fd_mulo",
     "fd_neqo",
+    "fd_subo",
     "failo",
     "FiniteDomainConstraint",
     "FiniteDomainStore",
@@ -143,11 +147,10 @@ _MAX_FD_DOMAIN_SIZE = 10_000
 
 @dataclass(frozen=True, slots=True)
 class FiniteDomainConstraint:
-    """A residual integer-domain relation waiting for enough information."""
+    """A residual finite-domain relation waiting for enough information."""
 
-    left: Term
     operator: FdOperator
-    right: Term
+    terms: tuple[Term, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,6 +163,7 @@ class FiniteDomainStore:
 
 _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("abolisho", 2),
+    ("all_differento", 1),
     ("argo", 3),
     ("assertao", 1),
     ("assertzo", 1),
@@ -182,7 +186,10 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_ino", 2),
     ("fd_leqo", 2),
     ("fd_lto", 2),
+    ("fd_addo", 3),
+    ("fd_mulo", 3),
     ("fd_neqo", 2),
+    ("fd_subo", 3),
     ("failo", 0),
     ("findallo", 3),
     ("forallo", 2),
@@ -453,6 +460,35 @@ def _fd_compare(operator: FdOperator, left: int, right: int) -> bool:
     raise ValueError(msg)
 
 
+def _fd_tuple_satisfies(
+    constraint: FiniteDomainConstraint,
+    values: tuple[int, ...],
+) -> bool:
+    """Evaluate one concrete residual finite-domain constraint.
+
+    The store keeps all pending finite-domain facts in one shape: an operator
+    name and the terms it talks about. Concrete evaluation is deliberately
+    small and obvious so each public predicate has a crisp mathematical meaning.
+    """
+
+    if constraint.operator in {"neq", "lt", "le", "gt", "ge"}:
+        left, right = values
+        return _fd_compare(constraint.operator, left, right)
+    if constraint.operator == "add":
+        left, right, result = values
+        return left + right == result
+    if constraint.operator == "sub":
+        left, right, result = values
+        return left - right == result
+    if constraint.operator == "mul":
+        left, right, result = values
+        return left * right == result
+    if constraint.operator == "all_different":
+        return len(set(values)) == len(values)
+    msg = f"unknown finite-domain constraint {constraint.operator}"
+    raise ValueError(msg)
+
+
 def _reified_fd_value(term_value: Term, state: State) -> LogicVar | int | None:
     """Read a term as either an open variable or a concrete integer."""
 
@@ -496,23 +532,40 @@ def _domain_for_fd_value(
     return frozenset({value})
 
 
-def _revise_constraint_domains(
+def _constraint_values(
     constraint: FiniteDomainConstraint,
     state: State,
+) -> tuple[LogicVar | int, ...] | None:
+    """Read all constraint terms as open FD variables or concrete integers."""
+
+    values: list[LogicVar | int] = []
+    for term_value in constraint.terms:
+        value = _reified_fd_value(term_value, state)
+        if value is None:
+            return None
+        values.append(value)
+    return tuple(values)
+
+
+def _constraint_domains(
+    values: tuple[LogicVar | int, ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[frozenset[int] | None, ...]:
+    """Return concrete singleton domains or known finite variable domains."""
+
+    return tuple(_domain_for_fd_value(value, domains) for value in values)
+
+
+def _revise_binary_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
     domains: dict[LogicVar, frozenset[int]],
 ) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
-    """Apply one round of arc-consistency pruning for a residual constraint."""
+    """Apply arc-consistency pruning for a binary comparison constraint."""
 
-    left_value = _reified_fd_value(constraint.left, state)
-    right_value = _reified_fd_value(constraint.right, state)
-    if left_value is None or right_value is None:
-        return None, False
-
-    left_domain = _domain_for_fd_value(left_value, domains)
-    right_domain = _domain_for_fd_value(right_value, domains)
-
-    if left_domain is None or right_domain is None:
-        return domains, False
+    left_value, right_value = values
+    left_domain, right_domain = value_domains
 
     allowed_left = frozenset(
         left
@@ -539,6 +592,207 @@ def _revise_constraint_domains(
     return updated, changed
 
 
+def _fd_arithmetic_holds(
+    operator: FdOperator,
+    left: int,
+    right: int,
+    result: int,
+) -> bool:
+    """Evaluate one ternary finite-domain arithmetic relation."""
+
+    if operator == "add":
+        return left + right == result
+    if operator == "sub":
+        return left - right == result
+    if operator == "mul":
+        return left * right == result
+    msg = f"unknown finite-domain arithmetic operator {operator}"
+    raise ValueError(msg)
+
+
+def _has_arithmetic_support(
+    operator: FdOperator,
+    index: int,
+    candidate: int,
+    value_domains: tuple[frozenset[int], frozenset[int], frozenset[int]],
+) -> bool:
+    """Return True when ``candidate`` can appear in a satisfying triple."""
+
+    left_domain, right_domain, result_domain = value_domains
+    if operator == "add":
+        if index == 0:
+            return any(candidate + right in result_domain for right in right_domain)
+        if index == 1:
+            return any(left + candidate in result_domain for left in left_domain)
+        return any(candidate - left in right_domain for left in left_domain)
+
+    if operator == "sub":
+        if index == 0:
+            return any(candidate - right in result_domain for right in right_domain)
+        if index == 1:
+            return any(left - candidate in result_domain for left in left_domain)
+        return any(left - candidate in right_domain for left in left_domain)
+
+    if operator == "mul":
+        if index == 0:
+            if candidate == 0:
+                return 0 in result_domain and bool(right_domain)
+            return any(
+                result % candidate == 0 and result // candidate in right_domain
+                for result in result_domain
+            )
+        if index == 1:
+            if candidate == 0:
+                return 0 in result_domain and bool(left_domain)
+            return any(
+                result % candidate == 0 and result // candidate in left_domain
+                for result in result_domain
+            )
+        return any(
+            candidate % left == 0 and candidate // left in right_domain
+            for left in left_domain
+            if left != 0
+        ) or (candidate == 0 and (0 in left_domain or 0 in right_domain))
+
+    msg = f"unknown finite-domain arithmetic operator {operator}"
+    raise ValueError(msg)
+
+
+def _revise_arithmetic_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune ternary arithmetic domains to values with tuple support."""
+
+    arithmetic_domains = (
+        value_domains[0],
+        value_domains[1],
+        value_domains[2],
+    )
+    updated = dict(domains)
+    changed = False
+    for index, value in enumerate(values):
+        if not isinstance(value, LogicVar):
+            continue
+        current_domain = arithmetic_domains[index]
+        allowed = frozenset(
+            candidate
+            for candidate in current_domain
+            if _has_arithmetic_support(
+                constraint.operator,
+                index,
+                candidate,
+                arithmetic_domains,
+            )
+        )
+        if not allowed:
+            return None, False
+        if allowed != current_domain:
+            updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
+def _revise_all_different_domains(
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int] | None, ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Propagate simple singleton pruning for ``all_differento``.
+
+    This is intentionally the small, trustworthy version of all-different. It
+    rejects duplicate concrete assignments and removes values that are already
+    forced elsewhere. More advanced Hall-set pruning can layer on later.
+    """
+
+    concrete_seen: set[int] = set()
+    singleton_by_owner: dict[LogicVar | int, int] = {}
+    for value, domain in zip(values, value_domains, strict=True):
+        if isinstance(value, int):
+            if value in concrete_seen:
+                return None, False
+            concrete_seen.add(value)
+            singleton_by_owner[value] = value
+            continue
+        if domain is None:
+            continue
+        if len(domain) == 1:
+            (singleton,) = domain
+            if singleton in singleton_by_owner.values():
+                return None, False
+            singleton_by_owner[value] = singleton
+
+    forced_values = set(singleton_by_owner.values())
+    updated = dict(domains)
+    changed = False
+    for value, domain in zip(values, value_domains, strict=True):
+        if not isinstance(value, LogicVar) or domain is None or len(domain) == 1:
+            continue
+        allowed = frozenset(
+            candidate for candidate in domain if candidate not in forced_values
+        )
+        if not allowed:
+            return None, False
+        if allowed != domain:
+            updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
+def _revise_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    state: State,
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Apply one round of pruning for a residual finite-domain constraint."""
+
+    values = _constraint_values(constraint, state)
+    if values is None:
+        return None, False
+
+    value_domains = _constraint_domains(values, domains)
+    if constraint.operator == "all_different":
+        return _revise_all_different_domains(values, value_domains, domains)
+
+    if any(domain is None for domain in value_domains):
+        return domains, False
+
+    known_domains = tuple(
+        domain for domain in value_domains if domain is not None
+    )
+    if constraint.operator in {"neq", "lt", "le", "gt", "ge"}:
+        return _revise_binary_constraint_domains(
+            constraint,
+            values,
+            known_domains,
+            domains,
+        )
+    if constraint.operator in {"add", "sub", "mul"}:
+        return _revise_arithmetic_constraint_domains(
+            constraint,
+            values,
+            known_domains,
+            domains,
+        )
+
+    msg = f"unknown finite-domain constraint {constraint.operator}"
+    raise ValueError(msg)
+
+
+def _concrete_constraint_values(
+    values: tuple[LogicVar | int, ...],
+) -> tuple[int, ...] | None:
+    """Return concrete integer values only when every constraint term is bound."""
+
+    if all(isinstance(value, int) for value in values):
+        return tuple(value for value in values if isinstance(value, int))
+    return None
+
+
 def _normalize_fd_store(
     store: FiniteDomainStore,
     state: State,
@@ -551,12 +805,12 @@ def _normalize_fd_store(
 
     kept_constraints: list[FiniteDomainConstraint] = []
     for constraint in store.constraints:
-        left_value = _reified_fd_value(constraint.left, state)
-        right_value = _reified_fd_value(constraint.right, state)
-        if left_value is None or right_value is None:
+        values = _constraint_values(constraint, state)
+        if values is None:
             return None
-        if isinstance(left_value, int) and isinstance(right_value, int):
-            if not _fd_compare(constraint.operator, left_value, right_value):
+        concrete_values = _concrete_constraint_values(values)
+        if concrete_values is not None:
+            if not _fd_tuple_satisfies(constraint, concrete_values):
                 return None
             continue
         kept_constraints.append(constraint)
@@ -806,24 +1060,23 @@ def fd_eqo(left: object, right: object) -> GoalExpr:
     return native_goal(run, left, right)
 
 
-def _fd_constrainto(operator: FdOperator, left: object, right: object) -> GoalExpr:
-    """Create a residual finite-domain binary constraint goal."""
+def _fd_constrainto(operator: FdOperator, *terms_value: object) -> GoalExpr:
+    """Create a residual finite-domain constraint goal."""
 
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
-        left_term, right_term = args
         store = _fd_store(state)
         updated_store = FiniteDomainStore(
             domains=dict(store.domains),
             constraints=(
                 *store.constraints,
-                FiniteDomainConstraint(left_term, operator, right_term),
+                FiniteDomainConstraint(operator, args),
             ),
         )
         normalized_store = _normalize_fd_store(updated_store, state)
         if normalized_store is not None:
             yield _state_with_fd_store(state, normalized_store)
 
-    return native_goal(run, left, right)
+    return native_goal(run, *terms_value)
 
 
 def fd_neqo(left: object, right: object) -> GoalExpr:
@@ -854,6 +1107,54 @@ def fd_geqo(left: object, right: object) -> GoalExpr:
     """Constrain ``left`` to be greater than or equal to ``right``."""
 
     return _fd_constrainto("ge", left, right)
+
+
+def fd_addo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain three finite-domain terms so ``left + right == result``."""
+
+    return _fd_constrainto("add", left, right, result)
+
+
+def fd_subo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain three finite-domain terms so ``left - right == result``."""
+
+    return _fd_constrainto("sub", left, right, result)
+
+
+def fd_mulo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain three finite-domain terms so ``left * right == result``."""
+
+    return _fd_constrainto("mul", left, right, result)
+
+
+def _all_different_terms_goal(terms_value: tuple[Term, ...]) -> GoalExpr:
+    """Create an all-different goal for already materialized terms."""
+
+    return _fd_constrainto("all_different", *terms_value)
+
+
+def all_differento(vars_value: object) -> GoalExpr:
+    """Constrain every finite-domain term in ``vars_value`` to be distinct."""
+
+    if isinstance(vars_value, list | tuple):
+        return _all_different_terms_goal(tuple(vars_value))
+
+    def run_logic_list(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        (vars_term,) = args
+        items = _proper_list_items(_reified(vars_term, state))
+        if items is None:
+            return
+        yield from solve_from(
+            program_value,
+            _all_different_terms_goal(tuple(items)),
+            state,
+        )
+
+    return native_goal(run_logic_list, vars_value)
 
 
 def _label_fd_terms(
