@@ -11,6 +11,7 @@ program           = statement { ";" statement } [ ";" ] ;
 
 statement         = query_stmt | insert_stmt | update_stmt
                   | delete_stmt | create_table_stmt | drop_table_stmt
+                  | create_index_stmt | drop_index_stmt
                   | begin_stmt | commit_stmt | rollback_stmt ;
 
 # ── QUERY (SELECT + set operations) ──────────────────────────────────────────
@@ -80,6 +81,18 @@ col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
                   | "UNIQUE" | ( "DEFAULT" primary ) ;
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
+
+# ── CREATE INDEX / DROP INDEX ─────────────────────────────────────────────────
+#
+# CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col1, col2, ...)
+# DROP INDEX [IF EXISTS] name
+#
+# The UNIQUE flag is stored but not enforced in v2 (reserved for v3).
+
+create_index_stmt = "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
+                    "ON" NAME "(" NAME { "," NAME } ")" ;
+
+drop_index_stmt   = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
 
 # ── TRANSACTIONS ──────────────────────────────────────────────────────────────
 #

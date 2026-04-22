@@ -41,6 +41,7 @@ from sql_planner import (
     Except,
     Filter,
     Having,
+    IndexScan,
     Intersect,
     Join,
     JoinKind,
@@ -66,7 +67,7 @@ class DeadCodeElimination:
 
 def _eliminate(p: LogicalPlan) -> LogicalPlan:
     match p:
-        case Scan() | EmptyResult():
+        case Scan() | IndexScan() | EmptyResult():
             return p
 
         case Filter(input=inner, predicate=pred):
