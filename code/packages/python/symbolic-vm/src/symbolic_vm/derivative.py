@@ -31,6 +31,7 @@ from symbolic_ir import (
     SIN,
     SQRT,
     SUB,
+    TAN,
     D,
     IRApply,
     IRFloat,
@@ -183,6 +184,13 @@ def _diff(f: IRNode, x: IRSymbol) -> IRNode:
         return IRApply(
             MUL,
             (IRApply(NEG, (IRApply(SIN, (inner,)),)), _diff(inner, x)),
+        )
+    if head == TAN:
+        (inner,) = f.args
+        # d/dx tan(u) = sec²(u) · u' = u' / cos²(u)
+        return IRApply(
+            DIV,
+            (_diff(inner, x), IRApply(POW, (IRApply(COS, (inner,)), IRInteger(2)))),
         )
     if head == EXP:
         (inner,) = f.args

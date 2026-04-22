@@ -2,6 +2,62 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.10.0] - 2026-04-22
+
+### Added
+
+- finite-domain store types for branch-local CLP(FD)-style constraints
+- `fd_ino`, `fd_eqo`, `fd_neqo`, `fd_lto`, `fd_leqo`, `fd_gto`, and
+  `fd_geqo` for finite integer domains and binary comparisons
+- `labelingo` for deterministic ascending enumeration of finite-domain
+  assignments
+- tests covering domain formats, domain narrowing, order-independent
+  constraints, equality-domain intersection, rollback across disjunctions, and
+  explicit labeling
+
+## [0.9.0] - 2026-04-22
+
+### Added
+
+- `cuto()` as the library spelling of Prolog cut backed by engine-level scoped
+  choicepoint pruning
+- builtin predicate metadata for `cuto/0`
+- tests distinguishing `cuto()` from `onceo(...)` and proving it commits the
+  surrounding search frame
+
+## [0.8.0] - 2026-04-21
+
+### Added
+
+- dynamic database predicates: `dynamico`, `assertao`, `assertzo`,
+  `retracto`, `retractallo`, and `abolisho`
+- predicate metadata now observes branch-local dynamic declarations and
+  reports `dynamic` properties
+- `clauseo` now sees runtime dynamic clauses from the active search state
+- tests covering assertion order, rollback across branches, retraction
+  bindings, retract-all, abolish, static-predicate protection, dynamic source
+  clauses, metadata, and clause introspection
+
+## [0.7.0] - 2026-04-21
+
+### Added
+
+- `calltermo(term_goal)` for executing reified Prolog-shaped goal terms
+- standard term-order predicates: `compare_termo`, `termo_lto`,
+  `termo_leqo`, `termo_gto`, and `termo_geqo`
+- predicate metadata predicates: `current_predicateo` and
+  `predicate_propertyo`
+- tests proving clause-body round trips, non-binding term comparisons, and
+  source/builtin predicate metadata
+
+## [0.6.0] - 2026-04-21
+
+### Added
+
+- `clauseo(head, body)` for Prolog-style clause introspection from inside logic queries
+- support for relation-call head arguments, source-order clause enumeration, fact bodies as `true`, rule body term encoding, and standardize-apart behavior
+- tests covering head/body filtering, instantiated rule bodies, returned variable freshness, and host-only body skipping
+
 ## [0.5.0] - 2026-04-20
 
 ### Added

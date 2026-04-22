@@ -13,7 +13,7 @@ use std::time::Duration;
 
 pub use stream_reactor::{ConnectionId, StopHandle};
 use stream_reactor::{
-    StreamConnectionInfo, StreamHandlerResult, StreamReactor, StreamReactorOptions,
+    StreamConnectionInfo, StreamHandlerResult, StreamMailbox, StreamReactor, StreamReactorOptions,
 };
 use transport_platform::TransportPlatform;
 pub use transport_platform::{BindAddress, ListenerOptions, PlatformError, StreamOptions};
@@ -102,6 +102,31 @@ impl From<TcpRuntimeOptions> for StreamReactorOptions {
 pub struct TcpRuntime<P, S = ()> {
     reactor: StreamReactor<P, S>,
     local_addr: SocketAddr,
+}
+
+#[derive(Clone)]
+pub struct TcpMailbox {
+    inner: StreamMailbox,
+}
+
+impl TcpMailbox {
+    pub fn send(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
+        self.inner.send(connection_id, bytes);
+    }
+
+    pub fn send_and_close(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
+        self.inner.send_and_close(connection_id, bytes);
+    }
+
+    pub fn close(&self, connection_id: ConnectionId) {
+        self.inner.close(connection_id);
+    }
+}
+
+impl From<StreamMailbox> for TcpMailbox {
+    fn from(value: StreamMailbox) -> Self {
+        Self { inner: value }
+    }
 }
 
 impl<P: TransportPlatform> TcpRuntime<P, ()> {
@@ -219,6 +244,10 @@ impl<P: TransportPlatform, S: Send + 'static> TcpRuntime<P, S> {
 
     pub fn stop_handle(&self) -> StopHandle {
         self.reactor.stop_handle()
+    }
+
+    pub fn mailbox(&self) -> TcpMailbox {
+        self.reactor.mailbox().into()
     }
 
     pub fn serve(&mut self) -> Result<(), PlatformError> {
@@ -524,6 +553,56 @@ mod tests {
         let mut echoed = [0u8; 6];
         client.read_exact(&mut echoed).expect("read response");
         assert_eq!(&echoed, b"hello\n");
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn mailbox_can_send_delayed_response_after_handler_returns() {
+        let seen = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let seen_in_handler = Arc::clone(&seen);
+        let mut runtime = TcpRuntime::bind_kqueue(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            move |info, _| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen mutex poisoned")
+                    .push(info.id);
+                TcpHandlerResult::default()
+            },
+        )
+        .expect("bind");
+        let addr = runtime.local_addr();
+        let mailbox = runtime.mailbox();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client
+            .set_read_timeout(Some(Duration::from_secs(2)))
+            .expect("read timeout");
+        client.write_all(b"request").expect("write request");
+
+        let mut connection_id = None;
+        for _ in 0..200 {
+            if let Some(id) = seen.lock().expect("seen mutex poisoned").first().copied() {
+                connection_id = Some(id);
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+        let connection_id = connection_id.expect("handler should observe the request");
+
+        mailbox.send(connection_id, b"delayed".to_vec());
+        let mut response = [0u8; 7];
+        client
+            .read_exact(&mut response)
+            .expect("read delayed response");
+        assert_eq!(&response, b"delayed");
 
         stop.stop();
         let result = server.join().expect("server thread");

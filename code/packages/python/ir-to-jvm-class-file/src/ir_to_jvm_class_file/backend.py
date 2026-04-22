@@ -64,6 +64,7 @@ _OP_ISHL = 0x78
 _OP_ISHR = 0x7A
 _OP_IAND = 0x7E
 _OP_IOR = 0x80
+_OP_IXOR = 0x82   # bitwise XOR of two ints
 _OP_I2B = 0x91
 _OP_IFEQ = 0x99
 _OP_IFNE = 0x9A
@@ -985,7 +986,7 @@ class _JvmClassLowerer:
                 )
                 continue
 
-            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.MUL, IrOp.DIV):
+            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.OR, IrOp.XOR, IrOp.MUL, IrOp.DIV):
                 dst = _as_register(
                     instruction.operands[0],
                     f"{instruction.opcode.name} dst",
@@ -1009,6 +1010,10 @@ class _JvmClassLowerer:
                     builder.emit_opcode(_OP_IMUL)
                 elif instruction.opcode == IrOp.DIV:
                     builder.emit_opcode(_OP_IDIV)
+                elif instruction.opcode == IrOp.OR:
+                    builder.emit_opcode(_OP_IOR)
+                elif instruction.opcode == IrOp.XOR:
+                    builder.emit_opcode(_OP_IXOR)
                 else:
                     builder.emit_opcode(_OP_IAND)
                 builder.emit_u2_instruction(
@@ -1017,7 +1022,7 @@ class _JvmClassLowerer:
                 )
                 continue
 
-            if instruction.opcode in (IrOp.ADD_IMM, IrOp.AND_IMM):
+            if instruction.opcode in (IrOp.ADD_IMM, IrOp.AND_IMM, IrOp.OR_IMM, IrOp.XOR_IMM):
                 dst = _as_register(
                     instruction.operands[0],
                     f"{instruction.opcode.name} dst",
@@ -1035,8 +1040,28 @@ class _JvmClassLowerer:
                 self._emit_push_int(builder, imm.value)
                 if instruction.opcode == IrOp.ADD_IMM:
                     builder.emit_opcode(_OP_IADD)
+                elif instruction.opcode == IrOp.OR_IMM:
+                    builder.emit_opcode(_OP_IOR)
+                elif instruction.opcode == IrOp.XOR_IMM:
+                    builder.emit_opcode(_OP_IXOR)
                 else:
                     builder.emit_opcode(_OP_IAND)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.NOT:
+                # NOT(x) = x XOR 0xFFFFFFFF = x XOR -1 in two's complement.
+                # We push src, push iconst_m1 (-1 = all bits set), then ixor,
+                # which flips every bit in the 32-bit int.
+                dst = _as_register(instruction.operands[0], "NOT dst")
+                src = _as_register(instruction.operands[1], "NOT src")
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, src.index)
+                builder.emit_opcode(_OP_ICONST_M1)   # push -1 (all 32 bits set)
+                builder.emit_opcode(_OP_IXOR)          # XOR: all bits flipped
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
                     self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
@@ -1273,6 +1298,11 @@ _JVM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.SUB,
     IrOp.AND,
     IrOp.AND_IMM,
+    IrOp.OR,
+    IrOp.OR_IMM,
+    IrOp.XOR,
+    IrOp.XOR_IMM,
+    IrOp.NOT,
     IrOp.MUL,
     IrOp.DIV,
     IrOp.CMP_EQ,

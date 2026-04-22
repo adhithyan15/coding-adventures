@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 — 2026-04-22
+
+- Added `"atan": ATAN` to `_STANDARD_FUNCTIONS` in `compiler.py`, mapping
+  the MACSYMA name `atan` to `IRSymbol("Atan")`. Required by
+  `symbolic-vm` Phase 9 so that `integrate(atan(ax+b), x)` is correctly
+  compiled to `Integrate(Atan(...), x)` before evaluation.
+
+## 0.2.0 — 2026-04-20
+
+- Added `"tan": TAN` to `_STANDARD_FUNCTIONS` in `compiler.py`, mapping
+  the MACSYMA name `tan` to `IRSymbol("Tan")`. Depends on
+  `coding-adventures-symbolic-ir >= 0.3.0` which introduces the `TAN`
+  head.
+
 ## 0.1.0 — 2026-04-19
 
 Initial release.

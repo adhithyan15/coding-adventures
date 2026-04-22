@@ -352,8 +352,10 @@ class TestValidateForJvm:
     The JVM V1 backend checks three rules before producing any bytecode:
 
     1. **Opcode support** — every opcode must appear in the supported set.
-       Currently all IrOp values are supported; the check is future-proofing
-       against new IR opcodes that the JVM backend has not yet implemented.
+       All IrOp values are currently supported, including the five bitwise
+       opcodes (OR, OR_IMM, XOR, XOR_IMM, NOT) added in compiler-ir v0.3.0.
+       These are lowered using native JVM ``ior`` (0x80) / ``ixor`` (0x82)
+       bytecodes; NOT emits ``iconst_m1`` + ``ixor`` to flip all 32 bits.
 
     2. **Constant range** — every IrImmediate in LOAD_IMM or ADD_IMM must
        fit in a JVM 32-bit signed integer (−2 147 483 648 to 2 147 483 647).
@@ -379,17 +381,16 @@ class TestValidateForJvm:
         assert validate_for_jvm(prog) == []
 
     # ── Rule 1: opcode support ───────────────────────────────────────────────
-    # The V1 JVM backend handles every opcode in the current IrOp enum.
-    # The check exists as future-proofing: if new opcodes are added to IrOp
-    # before the JVM backend implements them, the validator will catch them
-    # immediately rather than letting code generation silently skip them.
+    # The V1 JVM backend now handles all IrOp opcodes including the five
+    # bitwise ops (OR, OR_IMM, XOR, XOR_IMM, NOT).  If a new opcode is added
+    # to IrOp and the JVM backend is not updated, this test will fail,
+    # prompting the developer to either implement or explicitly defer it.
 
-    def test_all_current_opcodes_pass_opcode_check(self) -> None:
-        """Every opcode in the current IrOp enum is supported by the JVM
-        V1 backend.  This test documents that fact and will fail as a
-        signal if a new IrOp is added without a corresponding JVM lowering."""
-        # Build one instruction per opcode with dummy operands so the
-        # validator iterates over all of them.
+    def test_all_supported_opcodes_pass_opcode_check(self) -> None:
+        """Every opcode in IrOp passes the opcode-support check in the V1
+        JVM backend.  This includes OR, OR_IMM, XOR, XOR_IMM, and NOT which
+        were added in compiler-ir v0.3.0 and implemented using native JVM
+        ior/ixor bytecodes."""
         for op in IrOp:
             program = _prog(_instr(op))
             errors = validate_for_jvm(program)
@@ -401,6 +402,190 @@ class TestValidateForJvm:
                 f"IrOp.{op.name} was unexpectedly rejected by the JVM "
                 f"opcode-support check: {rule1_errors}"
             )
+
+    # ── Bitwise opcode integration tests ─────────────────────────────────────
+    # These tests verify that OR, OR_IMM, XOR, XOR_IMM, and NOT are accepted
+    # by the validator (rule 1 passes) and that the lowered bytecode can be
+    # parsed as a well-formed class file.
+
+    def test_or_opcode_accepted_by_validator(self) -> None:
+        """IrOp.OR passes the opcode-support check."""
+        program = _prog(_instr(IrOp.OR, _reg(2), _reg(0), _reg(1)))
+        errors = [e for e in validate_for_jvm(program) if "unsupported opcode" in e]
+        assert errors == []
+
+    def test_xor_opcode_accepted_by_validator(self) -> None:
+        """IrOp.XOR passes the opcode-support check."""
+        program = _prog(_instr(IrOp.XOR, _reg(2), _reg(0), _reg(1)))
+        errors = [e for e in validate_for_jvm(program) if "unsupported opcode" in e]
+        assert errors == []
+
+    def test_not_opcode_accepted_by_validator(self) -> None:
+        """IrOp.NOT passes the opcode-support check."""
+        program = _prog(_instr(IrOp.NOT, _reg(1), _reg(0)))
+        errors = [e for e in validate_for_jvm(program) if "unsupported opcode" in e]
+        assert errors == []
+
+    def test_or_imm_opcode_accepted_by_validator(self) -> None:
+        """IrOp.OR_IMM passes the opcode-support check."""
+        program = _prog(_instr(IrOp.OR_IMM, _reg(1), _reg(0), _imm(0xFF)))
+        errors = [e for e in validate_for_jvm(program) if "unsupported opcode" in e]
+        assert errors == []
+
+    def test_xor_imm_opcode_accepted_by_validator(self) -> None:
+        """IrOp.XOR_IMM passes the opcode-support check."""
+        program = _prog(_instr(IrOp.XOR_IMM, _reg(1), _reg(0), _imm(0xAA)))
+        errors = [e for e in validate_for_jvm(program) if "unsupported opcode" in e]
+        assert errors == []
+
+    def _or_program(self, a: int, b: int) -> IrProgram:
+        """Build a minimal IR program that ORs two immediates and returns the
+        result in r1 (the ABI return register)."""
+        return _prog(
+            _instr(IrOp.LABEL,    _lbl("_start")),
+            _instr(IrOp.LOAD_IMM, _reg(2), _imm(a)),
+            _instr(IrOp.LOAD_IMM, _reg(3), _imm(b)),
+            _instr(IrOp.OR,       _reg(1), _reg(2), _reg(3)),
+            _instr(IrOp.HALT),
+        )
+
+    def _xor_program(self, a: int, b: int) -> IrProgram:
+        """Build a minimal IR program that XORs two immediates and returns the
+        result in r1."""
+        return _prog(
+            _instr(IrOp.LABEL,    _lbl("_start")),
+            _instr(IrOp.LOAD_IMM, _reg(2), _imm(a)),
+            _instr(IrOp.LOAD_IMM, _reg(3), _imm(b)),
+            _instr(IrOp.XOR,      _reg(1), _reg(2), _reg(3)),
+            _instr(IrOp.HALT),
+        )
+
+    def _not_program(self, a: int) -> IrProgram:
+        """Build a minimal IR program that NOTs an immediate and returns the
+        result in r1."""
+        return _prog(
+            _instr(IrOp.LABEL,    _lbl("_start")),
+            _instr(IrOp.LOAD_IMM, _reg(2), _imm(a)),
+            _instr(IrOp.NOT,      _reg(1), _reg(2)),
+            _instr(IrOp.HALT),
+        )
+
+    def _or_imm_program(self, a: int, imm: int) -> IrProgram:
+        """Build a minimal IR program that ORs a register with an immediate."""
+        return _prog(
+            _instr(IrOp.LABEL,    _lbl("_start")),
+            _instr(IrOp.LOAD_IMM, _reg(2), _imm(a)),
+            _instr(IrOp.OR_IMM,   _reg(1), _reg(2), _imm(imm)),
+            _instr(IrOp.HALT),
+        )
+
+    def _xor_imm_program(self, a: int, imm: int) -> IrProgram:
+        """Build a minimal IR program that XORs a register with an immediate."""
+        return _prog(
+            _instr(IrOp.LABEL,    _lbl("_start")),
+            _instr(IrOp.LOAD_IMM, _reg(2), _imm(a)),
+            _instr(IrOp.XOR_IMM,  _reg(1), _reg(2), _imm(imm)),
+            _instr(IrOp.HALT),
+        )
+
+    def test_or_lowers_to_parseable_class_file(self) -> None:
+        """IrOp.OR lowers to a structurally valid JVM class file."""
+        program = self._or_program(0b1010, 0b0101)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="OrTest")
+        )
+        from jvm_class_file import parse_class_file
+        parsed = parse_class_file(artifact.class_bytes)
+        assert parsed.find_method("_start", "()I") is not None
+
+    def test_xor_lowers_to_parseable_class_file(self) -> None:
+        """IrOp.XOR lowers to a structurally valid JVM class file."""
+        program = self._xor_program(0b1111, 0b1010)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="XorTest")
+        )
+        from jvm_class_file import parse_class_file
+        parsed = parse_class_file(artifact.class_bytes)
+        assert parsed.find_method("_start", "()I") is not None
+
+    def test_not_lowers_to_parseable_class_file(self) -> None:
+        """IrOp.NOT lowers to a structurally valid JVM class file."""
+        program = self._not_program(0)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="NotTest")
+        )
+        from jvm_class_file import parse_class_file
+        parsed = parse_class_file(artifact.class_bytes)
+        assert parsed.find_method("_start", "()I") is not None
+
+    def test_or_imm_lowers_to_parseable_class_file(self) -> None:
+        """IrOp.OR_IMM lowers to a structurally valid JVM class file."""
+        program = self._or_imm_program(0b1010, 0b0101)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="OrImmTest")
+        )
+        from jvm_class_file import parse_class_file
+        parsed = parse_class_file(artifact.class_bytes)
+        assert parsed.find_method("_start", "()I") is not None
+
+    def test_xor_imm_lowers_to_parseable_class_file(self) -> None:
+        """IrOp.XOR_IMM lowers to a structurally valid JVM class file."""
+        program = self._xor_imm_program(0b1111, 0b1010)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="XorImmTest")
+        )
+        from jvm_class_file import parse_class_file
+        parsed = parse_class_file(artifact.class_bytes)
+        assert parsed.find_method("_start", "()I") is not None
+
+    def test_or_bytecode_is_present(self) -> None:
+        """The OR instruction emits the JVM ior opcode (0x80) in the method body."""
+        program = self._or_program(0b1010, 0b0101)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="OrBytecodeCheck")
+        )
+        # 0x80 is the ior opcode — it must appear somewhere in the class bytes.
+        assert b"\x80" in artifact.class_bytes
+
+    def test_xor_bytecode_is_present(self) -> None:
+        """The XOR instruction emits the JVM ixor opcode (0x82) in the method body."""
+        program = self._xor_program(0b1111, 0b1010)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="XorBytecodeCheck")
+        )
+        # 0x82 is the ixor opcode — it must appear somewhere in the class bytes.
+        assert b"\x82" in artifact.class_bytes
+
+    def test_not_uses_iconst_m1_and_ixor(self) -> None:
+        """The NOT instruction emits iconst_m1 (0x02) followed by ixor (0x82).
+
+        NOT(x) = x XOR -1.  In two's-complement, XOR-ing with all-ones flips
+        every bit, which is the correct bitwise NOT for a 32-bit integer.
+        iconst_m1 pushes -1 (= 0xFFFFFFFF as unsigned bits) onto the operand
+        stack, and ixor applies the flip."""
+        program = self._not_program(0)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="NotBytecodeCheck")
+        )
+        # Both iconst_m1 and ixor must appear in the generated bytecode.
+        assert b"\x02" in artifact.class_bytes   # iconst_m1
+        assert b"\x82" in artifact.class_bytes   # ixor
+
+    def test_or_imm_bytecode_is_present(self) -> None:
+        """OR_IMM emits ior (0x80) in the generated class bytes."""
+        program = self._or_imm_program(0b1010, 0b0101)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="OrImmBytecodeCheck")
+        )
+        assert b"\x80" in artifact.class_bytes
+
+    def test_xor_imm_bytecode_is_present(self) -> None:
+        """XOR_IMM emits ixor (0x82) in the generated class bytes."""
+        program = self._xor_imm_program(0b1111, 0b1010)
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="XorImmBytecodeCheck")
+        )
+        assert b"\x82" in artifact.class_bytes
 
     # ── Rule 2: constant range ────────────────────────────────────────────────
 

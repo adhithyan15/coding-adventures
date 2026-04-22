@@ -1,0 +1,54 @@
+name = "mini-redis-c10k-hold"
+description = "C10K-style Mini Redis capacity benchmark that keeps all sockets open before validating liveness."
+
+[defaults]
+warmup_trials = 0
+measurement_trials = 1
+cooldown_ms = 1000
+randomize_subject_order = false
+fail_fast = false
+
+[[subjects]]
+name = "current"
+kind = "service"
+checkout = "HEAD"
+working_directory = "code/programs/rust/mini-redis"
+build = "cargo build --release"
+command = "./target/release/mini-redis --host 127.0.0.1 --port {port} --max-connections 10000"
+ready_check = "tcp-connect"
+
+[[workloads]]
+name = "redis-hold-1k"
+driver = "tcp-resp"
+mode = "hold"
+connections = 1000
+concurrency = 250
+hold_ms = 5000
+timeout_ms = 5000
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+read_mode = "resp-frame"
+
+[[workloads]]
+name = "redis-hold-5k"
+driver = "tcp-resp"
+mode = "hold"
+connections = 5000
+concurrency = 500
+hold_ms = 10000
+timeout_ms = 5000
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+read_mode = "resp-frame"
+
+[[workloads]]
+name = "redis-hold-10k"
+driver = "tcp-resp"
+mode = "hold"
+connections = 10000
+concurrency = 500
+hold_ms = 30000
+timeout_ms = 5000
+request = "*1\r\n$4\r\nPING\r\n"
+expect = "+PONG\r\n"
+read_mode = "resp-frame"

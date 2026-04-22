@@ -22,6 +22,7 @@ The opcodes are grouped by category:
   Constants:    LOAD_IMM, LOAD_ADDR
   Memory:       LOAD_BYTE, STORE_BYTE, LOAD_WORD, STORE_WORD
   Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM, MUL, DIV
+  Bitwise:      OR, OR_IMM, XOR, XOR_IMM, NOT
   Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
   Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
   System:       SYSCALL, HALT
@@ -113,6 +114,33 @@ class IrOp(IntEnum):
     # Division by zero is a runtime error; the backend is responsible for detection.
     #   DIV v3, v1, v2  →  v3 = v1 / v2
     DIV = 26
+
+    # ── Bitwise ───────────────────────────────────────────────────────────────
+    # Register-register bitwise OR: dst = lhs | rhs.
+    # Clears the carry flag on targets where AND/OR/XOR affect flags (e.g. 8008 ORA).
+    #   OR v3, v1, v2  →  v3 = v1 | v2
+    OR = 27
+
+    # Register-immediate bitwise OR: dst = src | immediate.
+    #   OR_IMM v2, v2, 0x80  →  v2 = v2 | 0x80
+    OR_IMM = 28
+
+    # Register-register bitwise XOR: dst = lhs ^ rhs.
+    # Also clears the carry flag on flag-setting targets (e.g. 8008 XRA).
+    #   XOR v3, v1, v2  →  v3 = v1 ^ v2
+    XOR = 29
+
+    # Register-immediate bitwise XOR: dst = src ^ immediate.
+    # The canonical NOT-a-byte idiom is XOR_IMM dst, src, 0xFF (flip all 8 bits).
+    #   XOR_IMM v2, v2, 0xFF  →  v2 = v2 ^ 0xFF
+    XOR_IMM = 30
+
+    # Bitwise NOT (complement): dst = ~src.
+    # Flips every bit in src.  On platforms with no single NOT instruction
+    # (e.g. Intel 8008), the backend lowers this to XRI 0xFF (XOR-immediate 255).
+    # On WASM i32, it becomes i32.xor with 0xFFFF_FFFF.
+    #   NOT v2, v1  →  v2 = ~v1
+    NOT = 31
 
     # ── Comparison ────────────────────────────────────────────────────────────
     # Set dst = 1 if lhs == rhs, else 0.

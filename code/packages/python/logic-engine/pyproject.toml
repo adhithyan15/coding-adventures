@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-engine"
-version = "0.4.0"
-description = "Logic programming engine: relations, clauses, programs, resolution, and disequality"
+version = "0.10.0"
+description = "Logic programming engine: relations, clauses, callable terms, dynamic runtime predicates, finite-domain state, cut, resolution, and disequality"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
-dependencies = ["coding-adventures-logic-core>=0.2.0"]
+dependencies = ["coding-adventures-logic-core>=0.4.0"]
 keywords = ["logic-programming", "prolog", "resolution", "backtracking", "education"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -25,7 +25,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/adhithyan15/coding-adventures"
 Repository = "https://github.com/adhithyan15/coding-adventures"
-Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP02-disequality-constraints.md"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LP18-logic-prolog-functionality-batches.md"
 
 [project.optional-dependencies]
 dev = [

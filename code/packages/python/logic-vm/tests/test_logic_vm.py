@@ -4,6 +4,7 @@ import pytest
 from logic_engine import atom, conj, defer, eq, fresh, relation, term, var
 from logic_instructions import (
     InstructionProgram,
+    defdynamic,
     defrel,
     fact,
     instruction_program,
@@ -21,7 +22,13 @@ from logic_vm import (
     execute,
     execute_all,
 )
-from logic_vm.vm import _handle_defrel, _handle_fact, _handle_query, _handle_rule
+from logic_vm.vm import (
+    _handle_defrel,
+    _handle_dynamic_rel,
+    _handle_fact,
+    _handle_query,
+    _handle_rule,
+)
 
 
 def _ancestor_program() -> tuple[InstructionProgram, object, object, object]:
@@ -55,7 +62,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
 
 
 class TestLogicVM:
@@ -222,6 +229,7 @@ class TestLogicVM:
         assert vm.state.instruction_pointer == 0
         assert vm.state.halted is True
         assert vm.state.relations == {}
+        assert vm.state.dynamic_relations == {}
         assert vm.state.clauses == []
         assert vm.state.queries == []
 
@@ -284,6 +292,23 @@ class TestLogicVM:
 
         assembled = vm.assembled_program()
         assert len(assembled.clauses) == 1
+
+    def test_dynamic_relation_declarations_reach_assembled_program(self) -> None:
+        memo = relation("memo", 1)
+        item = var("Item")
+        program_value = instruction_program(
+            defdynamic(memo),
+            fact(memo("cached")),
+            query(memo(item), outputs=(item,)),
+        )
+
+        vm = create_logic_vm()
+        vm.load(program_value)
+        trace = vm.run()
+
+        assert trace[0].relation_count == 1
+        assert vm.assembled_program().dynamic_relations == frozenset({memo.key()})
+        assert vm.run_query() == [atom("cached")]
 
     def test_run_query_rejects_out_of_range_query_indices(self) -> None:
         parent = relation("parent", 2)
@@ -352,6 +377,8 @@ class TestLogicVM:
 
         with pytest.raises(TypeError, match="DEF_REL handler"):
             _handle_defrel(vm, loaded_fact)
+        with pytest.raises(TypeError, match="DYNAMIC_REL handler"):
+            _handle_dynamic_rel(vm, loaded_fact)
         with pytest.raises(TypeError, match="FACT handler"):
             _handle_fact(vm, declared)
         with pytest.raises(TypeError, match="RULE handler"):

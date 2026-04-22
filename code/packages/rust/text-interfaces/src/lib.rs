@@ -275,29 +275,37 @@ pub trait FontMetrics {
 // TextShaper — string → positioned glyph run
 // ═══════════════════════════════════════════════════════════════════════════
 
-/// Shape a string of text into a sequence of positioned glyphs ready for
-/// rendering. The heart of OpenType-style typography.
+/// Shape a string of text into a sequence of positioned glyphs ready
+/// for rendering.
+///
+/// Returns [`ShapedText`] — a sequence of one or more [`ShapedRun`]s.
+/// Multiple runs are produced when the shaper performs font fallback:
+/// codepoints missing from the caller's primary font get shaped with
+/// a secondary font, and the resulting glyph IDs belong to that
+/// secondary font. Each `ShapedRun` is tagged with the `font_ref` of
+/// the actual font that produced its glyphs, so the font-binding
+/// invariant is preserved across the segment boundary.
 pub trait TextShaper {
     type Handle;
 
     /// Shape the given text with the given font at the given size.
     ///
-    /// Implementations produce backend-specific glyph IDs; consumers MUST
-    /// preserve the `font_ref` string on the returned [`ShapedRun`] and
-    /// embed it in any `PaintGlyphRun` (P2D00) that renders the run. The
-    /// paint backend routes on that string's scheme prefix to pick the
-    /// matching rasterizer.
+    /// Downstream consumers MUST emit ONE `PaintGlyphRun` (P2D00) per
+    /// element of `result.runs`, preserving each segment's `font_ref`
+    /// verbatim. The paint backend routes on that string's scheme
+    /// prefix to pick the matching rasterizer.
     fn shape(
         &self,
         text: &str,
         font: &Self::Handle,
         size: f32,
         options: &ShapeOptions,
-    ) -> Result<ShapedRun, ShapingError>;
+    ) -> Result<ShapedText, ShapingError>;
 
-    /// Return the `font_ref` string this shaper would embed in any
-    /// [`ShapedRun`] produced from this handle. Used by callers that want
-    /// to pre-register a font in a paint-backend registry before shaping.
+    /// Return the `font_ref` string this shaper would embed in a
+    /// [`ShapedRun`] produced from this handle when no font-fallback
+    /// is triggered. Used by callers that want to pre-register a
+    /// font in a paint-backend registry before shaping.
     fn font_ref(&self, font: &Self::Handle) -> String;
 }
 
@@ -346,21 +354,78 @@ pub enum FeatureValue {
     Alt(u32),
 }
 
-/// The output of [`TextShaper::shape`]: a flat list of positioned glyphs
-/// plus metadata.
+/// A contiguous span of glyphs from a **single font binding**.
+///
+/// When a shaper performs font fallback (e.g. the primary font is
+/// missing U+2192 → and the system falls back to Apple Symbols), the
+/// resulting glyph IDs belong to the fallback font, NOT the primary.
+/// Those glyphs are placed in their own `ShapedRun` whose `font_ref`
+/// names the fallback. A single call to [`TextShaper::shape`] may
+/// therefore produce multiple `ShapedRun`s — see [`ShapedText`].
 #[derive(Clone, Debug, PartialEq)]
 pub struct ShapedRun {
     /// Per-glyph positioned output. See [`Glyph`].
     pub glyphs: Vec<Glyph>,
 
-    /// Total advance width of the run, equal to the sum of `glyph.x_advance`
-    /// across `glyphs`. Pre-computed so callers do not re-sum.
+    /// Total advance width of this segment, equal to the sum of
+    /// `glyph.x_advance` across `glyphs`. Pre-computed so callers do
+    /// not re-sum.
     pub x_advance_total: f32,
 
-    /// Scheme-prefixed font-binding identifier, e.g.
-    /// `"coretext:Helvetica-Bold@16.0"` or `"font-parser:abc123..."`.
-    /// Downstream consumers embed this verbatim in `PaintGlyphRun.font_ref`.
+    /// Scheme-prefixed font-binding identifier for the font that
+    /// produced THIS segment's glyph IDs. In a fallback scenario,
+    /// different `ShapedRun`s within the same shape() result will
+    /// carry different `font_ref`s. Downstream consumers embed this
+    /// verbatim in `PaintGlyphRun.font_ref`, emitting one
+    /// `PaintGlyphRun` per segment.
     pub font_ref: String,
+}
+
+/// The output of [`TextShaper::shape`]: a sequence of one or more
+/// [`ShapedRun`]s in source order, each tagged with its actual font
+/// binding.
+///
+/// For single-font content (Latin-only text in a Latin font; the
+/// naive TXT02 shaper at all times), `runs` has exactly one element.
+/// For content requiring font fallback — an arrow inside Helvetica,
+/// emoji in a sentence, CJK in English — `runs` has one entry per
+/// contiguous same-font segment.
+///
+/// Consumers walk `runs` in order, accumulate pen x across segments,
+/// and emit **one `PaintGlyphRun` per segment** so each paint
+/// instruction carries the correct `font_ref`.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ShapedText {
+    pub runs: Vec<ShapedRun>,
+}
+
+impl ShapedText {
+    /// An empty result — no glyphs, no runs. Useful as a sentinel for
+    /// empty input strings.
+    pub fn empty() -> Self {
+        Self { runs: Vec::new() }
+    }
+
+    /// Wrap a single `ShapedRun` as the degenerate one-segment output
+    /// produced by shapers without font-fallback.
+    pub fn single(run: ShapedRun) -> Self {
+        Self { runs: vec![run] }
+    }
+
+    /// Sum of `x_advance_total` across all segments. Useful for
+    /// measurement that doesn't care about segmentation.
+    pub fn total_advance(&self) -> f32 {
+        self.runs.iter().map(|r| r.x_advance_total).sum()
+    }
+
+    /// Total glyph count across all segments.
+    pub fn total_glyph_count(&self) -> usize {
+        self.runs.iter().map(|r| r.glyphs.len()).sum()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.runs.iter().all(|r| r.glyphs.is_empty())
+    }
 }
 
 /// One glyph in a [`ShapedRun`]. All positional values are in user-space
@@ -450,11 +515,13 @@ where
     S: TextShaper,
     M: FontMetrics<Handle = S::Handle>,
 {
-    let run = shaper.shape(text, font, size, options)?;
+    let shaped = shaper.shape(text, font, size, options)?;
     let upem = metrics.units_per_em(font) as f32;
     let scale = size / upem;
     Ok(MeasureResult {
-        width: run.x_advance_total,
+        // Sum across segments so font-fallback runs contribute to the
+        // total line width just like the primary run does.
+        width: shaped.total_advance(),
         ascent: metrics.ascent(font) as f32 * scale,
         descent: metrics.descent(font) as f32 * scale,
         line_count: 1,
@@ -549,7 +616,7 @@ mod tests {
             _font: &Self::Handle,
             _size: f32,
             _options: &ShapeOptions,
-        ) -> Result<ShapedRun, ShapingError> {
+        ) -> Result<ShapedText, ShapingError> {
             let glyphs: Vec<Glyph> = text
                 .chars()
                 .enumerate()
@@ -563,11 +630,11 @@ mod tests {
                 })
                 .collect();
             let total = glyphs.len() as f32 * 10.0;
-            Ok(ShapedRun {
+            Ok(ShapedText::single(ShapedRun {
                 glyphs,
                 x_advance_total: total,
                 font_ref: "test:fixed-10".into(),
-            })
+            }))
         }
 
         fn font_ref(&self, _font: &Self::Handle) -> String {
@@ -636,11 +703,64 @@ mod tests {
 
     #[test]
     fn shaped_run_carries_font_ref() {
-        let run = FixedWidthShaper
+        let shaped = FixedWidthShaper
             .shape("ab", &(), 16.0, &ShapeOptions::default())
             .unwrap();
-        assert_eq!(run.font_ref, "test:fixed-10");
-        assert_eq!(run.glyphs.len(), 2);
-        assert_eq!(run.x_advance_total, 20.0);
+        assert_eq!(shaped.runs.len(), 1);
+        assert_eq!(shaped.runs[0].font_ref, "test:fixed-10");
+        assert_eq!(shaped.runs[0].glyphs.len(), 2);
+        assert_eq!(shaped.runs[0].x_advance_total, 20.0);
+        assert_eq!(shaped.total_advance(), 20.0);
+        assert_eq!(shaped.total_glyph_count(), 2);
+    }
+
+    #[test]
+    fn shaped_text_helpers() {
+        let empty = ShapedText::empty();
+        assert!(empty.is_empty());
+        assert_eq!(empty.total_advance(), 0.0);
+        assert_eq!(empty.total_glyph_count(), 0);
+
+        let run_a = ShapedRun {
+            glyphs: vec![
+                Glyph {
+                    glyph_id: 1,
+                    cluster: 0,
+                    x_advance: 8.0,
+                    y_advance: 0.0,
+                    x_offset: 0.0,
+                    y_offset: 0.0,
+                },
+                Glyph {
+                    glyph_id: 2,
+                    cluster: 1,
+                    x_advance: 8.0,
+                    y_advance: 0.0,
+                    x_offset: 0.0,
+                    y_offset: 0.0,
+                },
+            ],
+            x_advance_total: 16.0,
+            font_ref: "coretext:Helvetica@16".into(),
+        };
+        let run_b = ShapedRun {
+            glyphs: vec![Glyph {
+                glyph_id: 99,
+                cluster: 2,
+                x_advance: 14.0,
+                y_advance: 0.0,
+                x_offset: 0.0,
+                y_offset: 0.0,
+            }],
+            x_advance_total: 14.0,
+            font_ref: "coretext:AppleSymbols@16".into(),
+        };
+        let two_runs = ShapedText {
+            runs: vec![run_a, run_b],
+        };
+        assert!(!two_runs.is_empty());
+        assert_eq!(two_runs.total_advance(), 30.0);
+        assert_eq!(two_runs.total_glyph_count(), 3);
+        assert_ne!(two_runs.runs[0].font_ref, two_runs.runs[1].font_ref);
     }
 }

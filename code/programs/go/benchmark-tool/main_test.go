@@ -55,6 +55,17 @@ func TestMiniRedisManifestValidatesRespWorkloads(t *testing.T) {
 	if manifest.Workloads[0].Request != "*1\r\n$4\r\nPING\r\n" {
 		t.Fatalf("RESP request was not unescaped correctly: %q", manifest.Workloads[0].Request)
 	}
+
+	c10k, err := LoadManifest("../../../benchmarks/mini-redis/c10k-hold.toml")
+	if err != nil {
+		t.Fatalf("load mini redis c10k manifest: %v", err)
+	}
+	if err := ValidateManifest(c10k); err != nil {
+		t.Fatalf("mini redis c10k manifest should validate: %v", err)
+	}
+	if c10k.Workloads[len(c10k.Workloads)-1].Mode != respModeHold {
+		t.Fatalf("c10k workload mode = %q", c10k.Workloads[len(c10k.Workloads)-1].Mode)
+	}
 }
 
 func TestValidateRejectsServiceWithoutReadyCheck(t *testing.T) {
@@ -100,13 +111,14 @@ func TestValidateRejectsUnsafeTCPRESPShapes(t *testing.T) {
 		Connections:           maxTCPConnections + 1,
 		Concurrency:           maxTCPConcurrency + 1,
 		RequestsPerConnection: maxTCPRequestsPerConn + 1,
+		HoldMS:                maxTCPHoldMS + 1,
 	}
 
 	err := ValidateManifest(manifest)
 	if err == nil {
 		t.Fatal("expected validation error")
 	}
-	for _, want := range []string{"mode", "connections", "concurrency", "requests_per_connection", "request"} {
+	for _, want := range []string{"mode", "connections", "concurrency", "requests_per_connection", "request", "hold_ms"} {
 		if !strings.Contains(err.Error(), want) {
 			t.Fatalf("validation error should mention %s: %v", want, err)
 		}
@@ -231,6 +243,18 @@ func TestRunTCPRESPWorkloadsAgainstLocalServer(t *testing.T) {
 			RequestsPerConnection: 5,
 			TimeoutMS:             2000,
 		},
+		{
+			Name:        "hold",
+			Driver:      respDriver,
+			Mode:        respModeHold,
+			ReadMode:    respReadMode,
+			Request:     "*1\r\n$4\r\nPING\r\n",
+			Expect:      "+PONG\r\n",
+			Connections: 6,
+			Concurrency: 3,
+			TimeoutMS:   2000,
+			HoldMS:      20,
+		},
 	}
 	for _, workload := range workloads {
 		trials, err := runTCPRESPWorkload(subject, workload, defaults, address, samplesFile, trialsFile)
@@ -246,8 +270,11 @@ func TestRunTCPRESPWorkloadsAgainstLocalServer(t *testing.T) {
 		if trials[0].Metrics["ops_per_second"] <= 0 {
 			t.Fatalf("%s should report throughput: %#v", workload.Name, trials[0].Metrics)
 		}
+		if workload.Mode == respModeHold && trials[0].Metrics["connected_before_hold"] != 6 {
+			t.Fatalf("hold should report connected sockets: %#v", trials[0].Metrics)
+		}
 	}
-	if lines := readLinesForTest(t, samplesPath); len(lines) < 36 {
+	if lines := readLinesForTest(t, samplesPath); len(lines) < 42 {
 		t.Fatalf("expected per-connection samples, got %d", len(lines))
 	}
 }

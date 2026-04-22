@@ -54,6 +54,7 @@ from logic_engine import (
     rule as engine_rule,
 )
 from logic_instructions import (
+    DynamicRelationDefInstruction,
     FactInstruction,
     InstructionOpcode,
     InstructionProgram,
@@ -64,6 +65,7 @@ from logic_instructions import (
 
 type LogicInstruction = (
     RelationDefInstruction
+    | DynamicRelationDefInstruction
     | FactInstruction
     | RuleInstruction
     | QueryInstruction
@@ -109,6 +111,7 @@ class LogicVMState:
     instruction_pointer: int = 0
     halted: bool = True
     relations: dict[RelationKey, Relation] = field(default_factory=dict)
+    dynamic_relations: dict[RelationKey, Relation] = field(default_factory=dict)
     clauses: list[Clause] = field(default_factory=list)
     queries: list[QueryInstruction] = field(default_factory=list)
 
@@ -236,6 +239,22 @@ def _handle_defrel(vm: LogicVM, instruction: LogicInstruction) -> None:
         raise LogicVMValidationError(msg)
 
     vm.state.relations[key] = instruction.relation
+
+
+def _handle_dynamic_rel(vm: LogicVM, instruction: LogicInstruction) -> None:
+    """Register one dynamic relation in the runtime registry."""
+
+    if not isinstance(instruction, DynamicRelationDefInstruction):
+        msg = "DYNAMIC_REL handler received a non-definition instruction"
+        raise TypeError(msg)
+
+    key = _relation_key(instruction.relation)
+    if key in vm.state.relations:
+        msg = f"relation {instruction.relation} was declared more than once"
+        raise LogicVMValidationError(msg)
+
+    vm.state.relations[key] = instruction.relation
+    vm.state.dynamic_relations[key] = instruction.relation
 
 
 def _handle_fact(vm: LogicVM, instruction: LogicInstruction) -> None:
@@ -375,7 +394,10 @@ class LogicVM:
     def assembled_program(self) -> Program:
         """Return the currently loaded clauses as an immutable engine program."""
 
-        return engine_program(*self.state.clauses)
+        return engine_program(
+            *self.state.clauses,
+            dynamic_relations=tuple(self.state.dynamic_relations.values()),
+        )
 
     def _require_finished_loading(self) -> None:
         """Require that the loaded program has finished executing."""
@@ -428,6 +450,7 @@ def create_logic_vm() -> LogicVM:
 
     vm = LogicVM()
     vm.register(InstructionOpcode.DEF_REL, _handle_defrel)
+    vm.register(InstructionOpcode.DYNAMIC_REL, _handle_dynamic_rel)
     vm.register(InstructionOpcode.FACT, _handle_fact)
     vm.register(InstructionOpcode.RULE, _handle_rule)
     vm.register(InstructionOpcode.QUERY, _handle_query)

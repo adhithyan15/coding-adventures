@@ -57,8 +57,10 @@ Both would work. We use ``ABC`` for three reasons:
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from typing import NewType
 
+from .index import IndexDef
 from .row import Cursor, Row, RowIterator
 from .schema import ColumnDef
 from .values import SqlValue
@@ -172,6 +174,109 @@ class Backend(ABC):
         no-op. Otherwise, raise :class:`TableNotFound`.
         """
 
+    # --- Indexes -----------------------------------------------------------
+
+    @abstractmethod
+    def create_index(self, index: IndexDef) -> None:
+        """Create a new B-tree index and backfill it from existing table rows.
+
+        The backend must:
+
+        1. Reject the call with :class:`~sql_backend.errors.IndexAlreadyExists`
+           if an index with ``index.name`` already exists.
+        2. Reject with :class:`~sql_backend.errors.TableNotFound` if
+           ``index.table`` is not a known table.
+        3. Reject with :class:`~sql_backend.errors.ColumnNotFound` if any name
+           in ``index.columns`` is not a column of ``index.table``.
+        4. Allocate storage for the new index.
+        5. Backfill the index with all existing rows from ``index.table`` so
+           that the index is immediately consistent with the table data.
+
+        Backfill must be atomic — either the index is fully built and visible,
+        or nothing changes.  File-backed implementations should wrap the
+        backfill in a transaction.
+
+        Parameters
+        ----------
+        index:
+            Full description of the index to build.  See :class:`IndexDef`.
+        """
+
+    @abstractmethod
+    def drop_index(self, name: str, *, if_exists: bool = False) -> None:
+        """Drop an existing index by name.
+
+        After a successful call, the index's storage is reclaimed and
+        ``list_indexes`` no longer returns an entry with this name.
+
+        Parameters
+        ----------
+        name:
+            The index name to drop.
+        if_exists:
+            When ``True``, silently succeed if no index named *name* exists.
+            When ``False`` (the default), raise
+            :class:`~sql_backend.errors.IndexNotFound` if absent.
+        """
+
+    @abstractmethod
+    def list_indexes(self, table: str | None = None) -> list[IndexDef]:
+        """Return all indexes, optionally filtered to a single table.
+
+        Returns a list of :class:`IndexDef` descriptors in creation order.
+        When *table* is ``None``, all indexes across all tables are returned.
+        When *table* is given, only indexes whose ``IndexDef.table`` matches
+        are included.
+
+        The list is empty (not an error) when no indexes exist.
+
+        Parameters
+        ----------
+        table:
+            Optional table name to filter by.  Pass ``None`` to list all
+            indexes in the database.
+        """
+
+    @abstractmethod
+    def scan_index(
+        self,
+        index_name: str,
+        lo: list[SqlValue] | None,
+        hi: list[SqlValue] | None,
+        *,
+        lo_inclusive: bool = True,
+        hi_inclusive: bool = True,
+    ) -> Iterator[int]:
+        """Yield rowids from the named index within the given key range.
+
+        Iterates the index in ascending key order and yields the integer
+        rowid of each matching table row.  The caller uses these rowids to
+        fetch full rows (e.g. via a positioned scan or a rowid lookup).
+
+        Parameters
+        ----------
+        index_name:
+            The name of the index to scan.  Raises
+            :class:`~sql_backend.errors.IndexNotFound` if the index does
+            not exist.
+        lo:
+            Lower bound on the key values (one element per index column).
+            ``None`` means unbounded — start from the first entry.
+        hi:
+            Upper bound on the key values.  ``None`` means unbounded.
+        lo_inclusive:
+            When ``True`` (default), entries whose key equals *lo* are
+            included.
+        hi_inclusive:
+            When ``True`` (default), entries whose key equals *hi* are
+            included.
+
+        Yields
+        ------
+        int
+            Rowids in ascending key order.
+        """
+
     # --- Transactions ------------------------------------------------------
 
     @abstractmethod
@@ -188,6 +293,25 @@ class Backend(ABC):
     @abstractmethod
     def rollback(self, handle: TransactionHandle) -> None:
         """Roll back the transaction identified by ``handle``."""
+
+    def current_transaction(self) -> TransactionHandle | None:
+        """Return the active transaction handle, or ``None`` if no transaction
+        is currently open.
+
+        The default implementation returns ``None`` — suitable for read-only
+        or stateless backends that do not track transaction state externally.
+        Backends that support transactions should override this to return the
+        handle they issued in ``begin_transaction``.
+
+        This method exists so that multi-statement transaction sequences can
+        be executed as separate :func:`~sql_vm.vm.execute` calls (each of
+        which creates a fresh VM state) while still being able to carry the
+        handle through to ``commit`` / ``rollback`` by consulting the backend
+        directly. The VM's ``BeginTransaction`` instruction stores the handle
+        on the backend; ``CommitTransaction`` / ``RollbackTransaction``
+        retrieve it here.
+        """
+        return None
 
 
 class SchemaProvider(ABC):

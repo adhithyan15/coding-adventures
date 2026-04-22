@@ -163,11 +163,11 @@ TextShaper {
     font:     FontHandle,
     size:     float,             // in user-space units (typically pixels)
     options:  ShapeOptions
-  ) → ShapedRun
+  ) → ShapedText
 
   // The shaper MUST also expose the font_ref string that is safe to embed
-  // in PaintGlyphRun.font_ref. This is how the paint backend knows which
-  // rasterizer to use. See "The font-binding invariant" below.
+  // in PaintGlyphRun.font_ref when the caller's FontHandle is the primary
+  // font (no fallback needed). See "The font-binding invariant" below.
   font_ref(font: FontHandle) → string
 }
 
@@ -218,7 +218,28 @@ ShapedRun {
 
   // The font_ref string for the font binding that produced these glyph IDs.
   // MUST be embedded verbatim in any PaintGlyphRun that renders this run.
+  // Every glyph inside a ShapedRun is bound to the SAME font_ref — the
+  // run is the unit of font-binding homogeneity.
   font_ref: string
+}
+
+// Output of `shape()`. A single shaping call can produce MULTIPLE
+// ShapedRuns when the shaper's font-fallback kicks in: characters that
+// are not present in the primary font get rendered with a secondary
+// font, and the resulting glyph IDs belong to *that* secondary font.
+// Treating them as if they came from the primary font would violate
+// the font-binding invariant and produce wrong output at paint time.
+//
+// For Latin-only text rendered with a font that covers all input
+// codepoints, `runs` contains exactly one element and everything is
+// tagged with the caller's primary font_ref — the degenerate case.
+//
+// For mixed-script / mixed-symbol content, `runs` contains one entry
+// per contiguous same-font segment, emitted in source order. The
+// layout engine's pen advances across segments by summing each
+// ShapedRun's x_advance_total.
+ShapedText {
+  runs: Array<ShapedRun>
 }
 ```
 
@@ -234,7 +255,10 @@ conceptually the pipeline is:
 4. Apply GSUB substitutions  (ligatures, contextual forms, stylistic sets)
 5. Apply GPOS positioning    (kerning, mark positioning, cursive attachment)
 6. Apply fallback kerning    (if no GPOS, use the legacy 'kern' table)
-7. Emit ShapedRun            (glyph_id + advance + offset per glyph)
+7. Segment output by font    (one ShapedRun per contiguous same-font span,
+                              including any fallback font used for
+                              codepoints missing from the primary font)
+8. Return ShapedText         (Array of ShapedRuns in source order)
 ```
 
 A **naive shaper** (TXT02) skips steps 4 and 5 entirely, emits one glyph per
@@ -257,11 +281,36 @@ which OpenType features it supports or how it implements them.
   uniform-direction runs before calling the shaper. The Unicode Bidi
   Algorithm (UAX #9) is a separate concern.
 - **Vertical metrics for line height.** That is FontMetrics.
-- **Font fallback for missing glyphs.** If the shaper encounters a
-  codepoint that the font cannot map, it emits the font's `.notdef` glyph
-  (conventionally glyph_id 0). Cross-font fallback ("if this font lacks
-  it, try another") is a higher-level concern owned by the layout engine
-  or a wrapping shaper.
+- **Bidi resolution.** The layout engine splits mixed-direction text
+  before calling.
+- **Line breaking above the shaper level.** Shapers receive a single
+  logical run; the layout engine decides where lines break.
+
+### Font fallback (when the shaper supports it)
+
+Shapers that integrate with an OS text stack (CoreText, DirectWrite,
+Pango) automatically perform **font fallback**: when a codepoint in the
+input isn't present in the caller's primary font, the shaper picks a
+system fallback font that does cover it. The emitted glyph IDs belong
+to that fallback font, NOT to the caller's primary font.
+
+Because of this, `shape()` returns [`ShapedText`] — a sequence of one
+or more [`ShapedRun`]s — rather than a single run. Each element of the
+returned array is a contiguous span of glyphs that all share one
+`font_ref`. Crossing from one `ShapedRun` to the next marks a
+font-binding boundary.
+
+For a shaper without font fallback (the naive TXT02 shaper, or a
+TXT04 invocation on text fully covered by the primary font), the
+output is a single-element `ShapedText` whose sole `ShapedRun` is
+tagged with the caller's `FontHandle`'s `font_ref`. Producers that
+emit `PaintGlyphRun` instructions MUST emit one `PaintGlyphRun` per
+`ShapedRun` so each paint instruction preserves the binding invariant
+from its segment's actual font.
+
+Shapers that DO NOT support font fallback emit the font's `.notdef`
+glyph (conventionally glyph_id 0) for any unmapped codepoint and
+return a single `ShapedRun` tagged with the caller's `font_ref`.
 
 ---
 
@@ -400,25 +449,35 @@ table. They do not survive crossing the binding boundary.
 ## Relationship to P2D00 PaintGlyphRun
 
 `PaintGlyphRun` (defined in P2D00) is the wire-format output of shaping.
-Every `ShapedRun` maps directly to a `PaintGlyphRun`:
+Each `ShapedRun` in a `ShapedText` produces **one** `PaintGlyphRun`;
+a ShapedText with N runs produces N PaintGlyphRuns emitted back to
+back along the same baseline. The layout engine's pen advances across
+segments by summing each run's `x_advance_total`.
 
 ```
-ShapedRun → PaintGlyphRun conversion (done by the layout engine):
+ShapedText → PaintGlyphRun[] conversion (done by the layout engine):
 
-PaintGlyphRun {
-  kind:      "glyph_run",
-  x:         baseline_origin_x,       // layout engine's chosen baseline
-  y:         baseline_origin_y,
-  font_ref:  shaped_run.font_ref,     // propagated verbatim
-  font_size: size,                    // the size passed to shape()
-  glyphs:    shaped_run.glyphs.map(g => ({
-    glyph_id: g.glyph_id,
-    x_offset: g.x_offset,             // NOTE: relative to pen position,
-                                      // cumulative sum of x_advance is the pen.
-    y_offset: g.y_offset
-  })),
-  fill:      color_from_layout
-}
+pen = 0
+for shaped_run in shaped_text.runs:
+    emit PaintGlyphRun {
+      kind:      "glyph_run",
+      x:         baseline_origin_x + pen,   // advance across segments
+      y:         baseline_origin_y,
+      font_ref:  shaped_run.font_ref,       // propagated verbatim
+                                            // — this may differ per
+                                            // segment when font fallback
+                                            // kicks in.
+      font_size: size,                      // the size passed to shape()
+      glyphs:    shaped_run.glyphs.map(g => ({
+        glyph_id: g.glyph_id,
+        x_offset: g.x_offset,               // relative to the segment's
+                                            // start; layout engine adds
+                                            // the cumulative pen.
+        y_offset: g.y_offset
+      })),
+      fill:      color_from_layout
+    }
+    pen += shaped_run.x_advance_total
 ```
 
 One subtlety: P2D00's `PaintGlyphRun.glyphs[i].x_offset` is the

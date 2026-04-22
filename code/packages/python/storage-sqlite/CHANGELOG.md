@@ -1,5 +1,263 @@
 # Changelog
 
+## [0.10.0] - 2026-04-20
+
+### Added
+
+- **Phase IX-2: index interface on `SqliteFileBackend`** — implements the four
+  index methods introduced by `sql-backend` 0.2.0 (`create_index`, `drop_index`,
+  `list_indexes`, `scan_index`) for the file-backed SQLite engine.
+
+  **`create_index(index: IndexDef) → None`**
+  - Validates that the table and all listed columns exist; raises `TableNotFound`
+    or `ColumnNotFound` on unknown names.
+  - Raises `IndexAlreadyExists` if an index with the same name is already in
+    `sqlite_schema`.
+  - Generates a canonical `CREATE INDEX <name> ON <table> (<col>, ...)` SQL
+    string and writes a new `type='index'` row to `sqlite_schema`.
+  - Allocates a fresh `IndexTree` root page, then backfills all existing rows
+    from the table's B-tree.
+  - Commits pages to disk (`pager.commit()`).
+
+  **`drop_index(name, *, if_exists=False) → None`**
+  - Calls `Schema.drop_index(name)`, which frees the index B-tree pages via
+    `IndexTree.free_all`, deletes the `sqlite_schema` row, and bumps the schema
+    cookie.  Raises `IndexNotFound` unless `if_exists=True`.
+
+  **`list_indexes(table=None) → list[IndexDef]`**
+  - Scans `sqlite_schema` for `type='index'` rows, parses column names from
+    the stored `CREATE INDEX` SQL via `_parse_index_columns`, and synthesises
+    `IndexDef` objects.  Indexes whose names start with `auto_` have
+    `IndexDef.auto=True`.
+
+  **`scan_index(index_name, lo, hi, *, lo_inclusive, hi_inclusive) → Iterator[int]`**
+  - Resolves the index root page from `sqlite_schema`, opens the `IndexTree`,
+    and delegates to `IndexTree.range_scan`, yielding rowids.
+  - Raises `IndexNotFound` for an unknown index name.
+
+- **`Schema` index methods** (`schema.py`):
+  - `Schema.create_index(name, table, sql) → int` — inserts a `type='index'`
+    row, allocates a fresh `IndexTree` root, bumps the schema cookie, returns
+    the root page number.
+  - `Schema.drop_index(name)` — frees the index B-tree via `IndexTree.free_all`,
+    deletes the schema row, bumps the cookie.  Raises `SchemaError` if the index
+    does not exist.
+  - `Schema.find_index(name) → (rowid, rootpage, sql) | None` — looks up an
+    index by name in `sqlite_schema`.
+  - `Schema.list_indexes(table=None) → list[tuple[str, str, int, str | None]]`
+    — returns `(name, tbl_name, rootpage, sql)` tuples for all indexes,
+    optionally filtered by `tbl_name`.
+
+- **Helper functions** (`backend.py`):
+  - `_parse_index_columns(sql)` — extracts the column name list from a
+    `CREATE INDEX ... (<cols>)` SQL string; returns `[]` when `sql` is empty
+    or unparseable.
+  - `_columns_to_index_sql(name, table, columns)` — produces canonical
+    `CREATE INDEX <name> ON <table> (<col>, ...)` SQL stored in `sqlite_schema`.
+
+- **`pyproject.toml`**: added `[tool.uv.sources]` so that the local
+  `../sql-backend` editable install is resolved instead of the PyPI registry.
+
+### Tests
+
+- `tests/test_backend_index.py` — 44 new tests covering:
+  - `TestSchemaIndex`: `create_index` / `find_index` / `list_indexes` /
+    `drop_index` at the `Schema` level
+  - `TestBackendCreateIndex`: success, duplicate, bad table, bad column,
+    `auto`/`unique` flag preservation, backfill of existing rows
+  - `TestBackendScanIndex`: full scan, equality lookup, range scan with
+    exclusive bounds, text ordering, orders by a non-PK column
+  - `TestBackendDropIndex`: basic drop, `if_exists`, double-drop
+  - `TestBackendListIndexes`: empty, all, filtered, after drop
+  - `TestIndexPersistence`: index survives close + reopen; inserted rows
+    after reopen are visible via `scan_index`
+  - `TestOracleIndexVisible`: index created by `SqliteFileBackend` is
+    visible to `sqlite3`; index created by `sqlite3` is readable by
+    `scan_index`
+- Overall package coverage: **95.62%** (555 tests total).
+
+## [0.9.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.index_tree` — phase IX-1: `IndexTree`, the index B-tree
+  implementation using SQLite index page types (`0x0A` leaf, `0x02` interior).
+
+  **`IndexTree`** stores `(key_vals, rowid)` pairs in ascending sort order
+  using SQLite's default BINARY collation: NULL < INTEGER/REAL < TEXT < BLOB.
+  Integers and floats compare numerically across types.
+
+  **API:**
+  - `IndexTree.create(pager, *, freelist=None) → IndexTree` — allocates a
+    fresh root page and returns a new index tree.
+  - `IndexTree.open(pager, rootpage, *, freelist=None) → IndexTree` — opens
+    an existing index by root page number.
+  - `insert(key, rowid)` — inserts a `(key, rowid)` pair.  Splits happen
+    transparently at all tree levels (root-leaf split, non-root leaf split,
+    interior page split, root interior split).  Raises `DuplicateIndexKeyError`
+    for duplicate `(key, rowid)` pairs.
+  - `delete(key, rowid) → bool` — removes the matching entry; returns `True`
+    if found and removed, `False` if absent.
+  - `lookup(key) → list[int]` — returns all rowids whose key equals `key`
+    (supports non-unique indexes with multiple matching rowids).
+  - `range_scan(lo, hi, *, lo_inclusive, hi_inclusive) → Iterator[...]` —
+    yields `(key_vals, rowid)` pairs in ascending order within the given key
+    range. `None` bounds mean unbounded.
+  - `free_all(freelist)` — reclaims every page in the tree (used by
+    `drop_index`).
+  - `cell_count() → int` — total number of entries across all leaf pages.
+
+  **Cell format (index leaf, type 0x0A):**
+  ```
+  [payload-size varint] [record bytes]
+  ```
+  The record encodes `[*key_cols, rowid]` as a standard SQLite record.  The
+  rowid is the last column — this gives unambiguous sort order for non-unique
+  indexes (matching SQLite's behaviour for non-UNIQUE indexes).
+
+  **Cell format (index interior, type 0x02):**
+  ```
+  [left-child u32 BE] [separator-record bytes]
+  ```
+  The separator is the full `(key_cols, rowid)` composite key of the last
+  entry in the left subtree — no ambiguity even with duplicate indexed values.
+
+  **Comparison helpers (exported for testing and future use):**
+  `_type_class`, `_cmp_values`, `_cmp_full_keys`, `_cmp_keys_partial`
+
+- **`__init__.py`** exports: `IndexTree`, `IndexTreeError`,
+  `DuplicateIndexKeyError`, `PAGE_TYPE_LEAF_INDEX`, `PAGE_TYPE_INTERIOR_INDEX`.
+
+### Tests
+
+- `tests/test_index_tree.py` — 80 tests covering:
+  - Construction (`create`, `open`, `root_page`, `cell_count`)
+  - Single-entry insert and lookup
+  - Ordered scan (ascending sort order, rowid tiebreak)
+  - Delete (present / absent, adjacent entries intact)
+  - Duplicate-key lookup (non-unique indexes)
+  - Range scan bounds (inclusive / exclusive lo / hi, empty ranges)
+  - Splits (root-leaf split, interior splits, reverse-order inserts, 5 000 entries)
+  - Deep splits with large keys (480-byte text keys trigger fast interior splits)
+  - Value types (NULL, float, text, bytes, mixed-type ordering)
+  - `free_all` with and without freelist
+  - Comparison unit tests (`_cmp_values`, `_cmp_full_keys`, etc.)
+  - Persistence (commit+reopen, rollback)
+  - Error paths (oversized keys, unsupported types, edge cases)
+
+## [0.8.1] - 2026-04-20
+
+### Fixed
+
+- **`_encode_row` / `_decode_row` byte-compatibility bug**: INTEGER PRIMARY KEY
+  columns were previously *skipped* in the record payload.  Real SQLite instead
+  writes a **NULL slot** for IPK columns (the actual integer is the B-tree cell
+  key, not the payload), so any file written by the real `sqlite3` library would
+  have an extra NULL at the start of every payload that our decoder was not
+  consuming.  The result was a column shift: reading a sqlite3-written file with
+  this backend would yield `{id: rowid, label: None, score: 'alpha'}` instead of
+  `{id: rowid, label: 'alpha', score: 1.5}`.
+
+  Fix: `_encode_row` now always appends `None` for each IPK column (matching
+  sqlite3's output); `_decode_row` now consumes (and discards) the IPK slot from
+  the decoded value list before mapping non-IPK columns, then injects the rowid
+  for the IPK column as before.  Files written by earlier versions of this backend
+  (which omitted the IPK slot) will decode incorrectly if opened by this version —
+  they were never byte-compatible with real sqlite3, so this is a breaking change
+  from 0.8.0 (still alpha).
+
+- Updated `test_encode_skips_ipk` (renamed to `test_encode_ipk_as_null_placeholder`)
+  and `test_decode_injects_rowid_for_ipk` in `tests/test_backend.py` to reflect
+  the corrected encoding contract.
+
+## [0.8.0] - 2026-04-20
+
+### Added
+
+- `storage_sqlite.backend` — phase 7: `SqliteFileBackend`, the
+  `sql_backend.Backend` adapter that wires all lower-level layers (pager,
+  freelist, schema, B-trees) behind the public Backend interface.
+
+  **`SqliteFileBackend(path)`**
+
+  Opens an existing SQLite database file or creates a new one (writing the
+  100-byte database header and an empty `sqlite_schema` leaf on first open).
+  Implements the full `sql_backend.Backend` ABC:
+
+  - **`tables() → list[str]`** — returns table names in insertion order via
+    `Schema.list_tables()`.
+  - **`columns(table) → list[ColumnDef]`** — parses the `CREATE TABLE` SQL
+    stored in `sqlite_schema` and returns column definitions.  Raises
+    `TableNotFound` if the table does not exist.
+  - **`scan(table) → RowIterator`** — opens a `_BTreeCursor` over the
+    table's B-tree.  Rows are yielded in ascending rowid order (insertion
+    order for tables without explicit rowid reuse).  Raises `TableNotFound`.
+  - **`insert(table, row)`** — applies column defaults, enforces `NOT NULL`
+    and `UNIQUE` / `PRIMARY KEY` constraints, chooses the rowid (using the
+    `INTEGER PRIMARY KEY` value when present, otherwise `max + 1`), encodes
+    the row as a SQLite record, and calls `BTree.insert`.  Raises
+    `TableNotFound`, `ColumnNotFound`, `ConstraintViolation`.
+  - **`update(table, cursor, assignments)`** — merges assignments into the
+    current row, re-encodes, and calls `BTree.update` at the cursor's rowid.
+    Enforces `NOT NULL` on the new values.  Raises `ConstraintViolation`,
+    `ColumnNotFound`, `Unsupported` (non-native cursor or no current row).
+  - **`delete(table, cursor)`** — calls `BTree.delete` at the cursor's
+    rowid and clears the cursor's current-row state.  Raises `Unsupported`
+    (non-native cursor or no current row).
+  - **`create_table(table, columns, if_not_exists)`** — serialises the
+    column list to `CREATE TABLE` SQL, inserts the schema row, and allocates
+    a root page.  Raises `TableAlreadyExists` when `if_not_exists=False` and
+    the table already exists; silently returns when `if_not_exists=True`.
+  - **`drop_table(table, if_exists)`** — frees all pages in the table's
+    B-tree, removes the schema row.  Raises `TableNotFound` when
+    `if_exists=False` and the table is missing.
+  - **`begin_transaction() → TransactionHandle`** — records an opaque
+    handle; writes continue to accumulate in the pager's dirty-page table.
+    Raises `Unsupported` if a transaction is already open.
+  - **`commit(handle)`** — fsyncs dirty pages to disk via `pager.commit()`.
+  - **`rollback(handle)`** — discards dirty pages via `pager.rollback()` and
+    reattaches the `Schema` so post-rollback reads see the committed state.
+  - **`close()`** — rolls back any open transaction, then closes the pager.
+  - **Context-manager protocol** (`with SqliteFileBackend(path) as b:`):
+    `__exit__` calls `close()`, so uncommitted writes are rolled back
+    automatically on normal or exceptional exit.
+
+  **`_BTreeCursor`** — internal class implementing both `RowIterator` and
+  `Cursor` protocols.  Wraps a `BTree.scan()` generator; `next()` decodes
+  each record; `current_row()` returns the last decoded row; `close()`
+  stops iteration.  The backend uses the stored `_current_rowid` for
+  positioned `update` and `delete`.
+
+  **SQL helper functions** (module-level, used internally):
+
+  - `_format_literal(value)` — Python value → SQL literal string.
+  - `_columns_to_sql(table, columns)` — `list[ColumnDef]` → `CREATE TABLE`
+    SQL string (parseable by both this module and the real `sqlite3` CLI).
+  - `_tokenize(sql)` — lightweight regex tokeniser (strips comments).
+  - `_parse_literal(tok)` — SQL literal token → Python value.
+  - `_split_column_defs(body)` — comma-split respecting parenthesis depth.
+  - `_parse_one_column(col_sql)` → `ColumnDef | None`.
+  - `_sql_to_columns(sql)` — `CREATE TABLE` SQL → `list[ColumnDef]`.
+  - `_is_ipk(col)` — returns `True` for `INTEGER PRIMARY KEY` columns.
+  - `_encode_row(rowid, row, columns)` — encodes a row as a SQLite record
+    payload, skipping IPK columns.
+  - `_decode_row(rowid, payload, columns)` — decodes a record payload,
+    injecting `rowid` for IPK columns.
+  - `_find_max_rowid(tree)` — full scan to find the current max rowid.
+  - `_choose_rowid(row, columns, tree)` — picks the rowid for a new row.
+  - `_apply_defaults(row, columns)` — fills absent columns from defaults.
+  - `_check_not_null(table, row, columns)` — raises `ConstraintViolation`.
+  - `_check_unique(table, row, columns, tree, ...)` — full-scan uniqueness
+    check; `NULL` values never conflict.
+
+  **`SqliteFileBackend`** and the `_BTreeCursor` class (via `SqliteFileBackend`)
+  are now exported from the package root.
+
+- `pyproject.toml` updated: `dependencies = ["coding-adventures-sql-backend"]`.
+- `BUILD` updated: installs `../sql-backend` before the package itself.
+- Pass all four tiers of `sql_backend.conformance` (required, read-write,
+  DDL, transactions) — 67 new backend tests, 431 total, 96% coverage.
+
 ## [0.7.0] - 2026-04-20
 
 ### Added

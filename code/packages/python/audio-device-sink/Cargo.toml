@@ -1,0 +1,16 @@
+[package]
+name = "audio-device-sink-python"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension for playing PCM buffers through Rust audio device sinks"
+
+[lib]
+name = "audio_device_sink"
+crate-type = ["cdylib"]
+
+[dependencies]
+audio-device-coreaudio = { path = "../../rust/audio-device-coreaudio" }
+audio-device-sink = { path = "../../rust/audio-device-sink" }
+python-bridge = { path = "../../rust/python-bridge" }
+
+[workspace]

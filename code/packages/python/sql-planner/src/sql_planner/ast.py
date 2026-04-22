@@ -80,6 +80,29 @@ class TableRef:
 
 
 @dataclass(frozen=True, slots=True)
+class DerivedTableRef:
+    """A subquery used as a table source — ``(SELECT ...) AS alias``.
+
+    The ``select`` is the inner query statement (already a typed SelectStmt,
+    not a raw parse node).  The ``alias`` is mandatory — SQL requires an
+    alias for every derived table.
+
+    Example::
+
+        SELECT dt.n FROM (SELECT COUNT(*) AS n FROM orders) AS dt
+        ↓
+        DerivedTableRef(
+            select=SelectStmt(items=[SelectItem(AggregateExpr(COUNT, *), alias='n')],
+                              from_=TableRef('orders')),
+            alias='dt',
+        )
+    """
+
+    select: SelectStmt
+    alias: str
+
+
+@dataclass(frozen=True, slots=True)
 class JoinClause:
     """One JOIN appended to the FROM clause.
 
@@ -89,7 +112,7 @@ class JoinClause:
     """
 
     kind: str  # one of JoinKind.*
-    right: TableRef
+    right: TableRef | DerivedTableRef
     on: Expr | None = None  # None for CROSS JOIN
 
 
@@ -114,7 +137,7 @@ class Limit:
 class SelectStmt:
     """A structured SELECT statement — the usual shape from a compiler textbook."""
 
-    from_: TableRef
+    from_: TableRef | DerivedTableRef
     items: tuple[SelectItem, ...]
     joins: tuple[JoinClause, ...] = field(default_factory=tuple)
     where: Expr | None = None
@@ -162,6 +185,94 @@ class DeleteStmt:
     where: Expr | None = None
 
 
+# ---- Set-operation statements -----------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class UnionStmt:
+    """SELECT … UNION [ALL] SELECT …
+
+    ``left`` and ``right`` are the two sub-queries being combined.
+    When ``all=True`` duplicate rows are preserved (UNION ALL); when
+    ``all=False`` the result is deduplicated (UNION).
+
+    ``left`` may itself be a set-operation statement to support
+    left-associative chaining: ``A UNION B UNION C`` becomes
+    ``UnionStmt(UnionStmt(A, B), C)``.
+    """
+
+    left: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
+    right: SelectStmt
+    all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class IntersectStmt:
+    """SELECT … INTERSECT [ALL] SELECT …
+
+    Returns rows present in *both* result sets. ``all=True`` keeps
+    duplicates up to the minimum multiplicity in each side.
+
+    ``left`` may itself be a set-operation statement to support
+    left-associative chaining.
+    """
+
+    left: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
+    right: SelectStmt
+    all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class ExceptStmt:
+    """SELECT … EXCEPT [ALL] SELECT …
+
+    Returns rows present in the left set but not the right set.
+    ``all=True`` subtracts multiplicities rather than sets.
+
+    ``left`` may itself be a set-operation statement to support
+    left-associative chaining.
+    """
+
+    left: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
+    right: SelectStmt
+    all: bool = False
+
+
+# ---- INSERT … SELECT statement -------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class InsertSelectStmt:
+    """INSERT INTO t (cols) SELECT …
+
+    The ``select`` field is the sub-query whose result rows are inserted.
+    ``columns`` is the explicit target column list; ``None`` means the
+    table's natural column order is used (same semantics as VALUES INSERT).
+    """
+
+    table: str
+    columns: tuple[str, ...] | None
+    select: SelectStmt
+
+
+# ---- Transaction-control statements ----------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class BeginStmt:
+    """BEGIN [TRANSACTION] — start an explicit transaction."""
+
+
+@dataclass(frozen=True, slots=True)
+class CommitStmt:
+    """COMMIT [TRANSACTION] — commit the active transaction."""
+
+
+@dataclass(frozen=True, slots=True)
+class RollbackStmt:
+    """ROLLBACK [TRANSACTION] — roll back the active transaction."""
+
+
 # ---- DDL statements -------------------------------------------------------
 
 
@@ -190,9 +301,16 @@ class DropTableStmt:
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
+    | UnionStmt
+    | IntersectStmt
+    | ExceptStmt
     | InsertValuesStmt
+    | InsertSelectStmt
     | UpdateStmt
     | DeleteStmt
     | CreateTableStmt
     | DropTableStmt
+    | BeginStmt
+    | CommitStmt
+    | RollbackStmt
 )

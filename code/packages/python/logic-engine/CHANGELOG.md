@@ -2,6 +2,69 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.10.0] - 2026-04-22
+
+### Added
+
+- preservation of the `State.fd_store` extension slot across engine state-copy
+  helpers so finite-domain builtins can compose with dynamic database overlays,
+  fresh variables, rules, and relation calls
+
+## [0.9.0] - 2026-04-22
+
+### Added
+
+- `CutExpr` and `cut()` as the library representation of Prolog `!/0`
+- internal search-result cut propagation so conjunctions and disjunctions can
+  prune scoped choicepoints without changing the public `solve` iterator API
+- relation-call cut frames that consume cuts raised inside rule bodies while
+  still pruning later clauses for that predicate invocation
+- `goal_as_term`/`goal_from_term` support for encoding and lowering cut as
+  the atom `!`
+- tests proving cut prunes choices before it, keeps choices after it, commits
+  rule bodies and later clauses, and stays scoped to the callee relation
+
+## [0.8.0] - 2026-04-21
+
+### Added
+
+- dynamic predicate declarations on `Program`
+- branch-local `DynamicDatabase` overlays for runtime database mutation
+- runtime helpers for `asserta`, `assertz`, `retract`, `retractall`, and
+  `abolish` semantics during active search
+- visible-clause and visible-predicate helpers that include dynamic state
+- `clause_from_term(...)` for lowering Prolog-shaped clause data back into
+  engine clauses
+- tests covering dynamic source clauses, branch-local assertion visibility,
+  runtime retraction, visible-clause ordering, and clause-term lowering
+
+## [0.7.0] - 2026-04-21
+
+### Added
+
+- `goal_from_term(...)` for lowering Prolog-shaped callable terms back into
+  executable engine goals
+- support for lowering truth, failure, equality, disequality, conjunction,
+  disjunction, relation-call compounds, and zero-arity callable atoms
+- tests covering executable round trips and malformed callable-term rejection
+
+## [0.6.0] - 2026-04-21
+
+### Added
+
+- clause and goal term encoders: `clause_body`, `goal_as_term`, and `clause_as_term`
+- public `freshen_clause` helper for standardizing clauses apart outside the solver
+- tests covering truth bodies for facts, Prolog-shaped goal encoding, unsupported host-only goals, clause term encoding, and freshened variable aliasing
+
+## [0.5.0] - 2026-04-20
+
+### Added
+
+- persistent clause database helpers: `asserta`, `assertz`, `clauses_matching`,
+  `retract_first`, `retract_all`, and `abolish`
+- tests proving database updates preserve source order, return new `Program`
+  values, match heads through unification, and leave original programs unchanged
+
 ## [0.4.0] - 2026-04-20
 
 ### Added

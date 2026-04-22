@@ -89,6 +89,7 @@ class CILOpcode(IntEnum):
     DIV = 0x5B
     AND = 0x5F
     OR = 0x60
+    XOR = 0x61
     SHL = 0x62
     SHR = 0x63
     CALLVIRT = 0x6F
@@ -256,6 +257,34 @@ class CILBytecodeBuilder:
     def emit_div(self) -> CILBytecodeBuilder:
         """Emit integer-compatible ``div``."""
         return self.emit_opcode(CILOpcode.DIV)
+
+    def emit_and(self) -> CILBytecodeBuilder:
+        """Emit bitwise ``and`` (0x5F).
+
+        Pops two int32 values from the evaluation stack, pushes their
+        bitwise AND result.  Equivalent to ``a & b`` in C.
+        """
+        return self.emit_opcode(CILOpcode.AND)
+
+    def emit_or(self) -> CILBytecodeBuilder:
+        """Emit bitwise ``or`` (0x60).
+
+        Pops two int32 values from the evaluation stack, pushes their
+        bitwise OR result.  Equivalent to ``a | b`` in C.
+        """
+        return self.emit_opcode(CILOpcode.OR)
+
+    def emit_xor(self) -> CILBytecodeBuilder:
+        """Emit bitwise ``xor`` (0x61).
+
+        Pops two int32 values from the evaluation stack, pushes their
+        bitwise XOR result.  Equivalent to ``a ^ b`` in C.
+
+        This is also the CIL primitive used to implement NOT:
+        ``ldc.i4.m1`` (push -1 = 0xFFFF_FFFF) followed by ``xor``
+        produces the bitwise complement of any int32 value.
+        """
+        return self.emit_opcode(CILOpcode.XOR)
 
     def emit_branch(
         self,

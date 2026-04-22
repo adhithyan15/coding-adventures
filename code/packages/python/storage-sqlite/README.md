@@ -23,19 +23,22 @@ mini_sqlite.connect("app.db")
     → sql-vm (unchanged)
     → Backend interface
     → SqliteFileBackend  (this package)
-        ├── pager    (page I/O + LRU cache + rollback journal) ✓ phase 1
-        ├── header   (100-byte database header at offset 0)    ✓ phase 1
-        ├── record   (varint + serial types)      ✓ phase 2
-        ├── btree    (leaf + overflow + full recursive splits)  ✓ phases 3 + 4a + 4b
-        ├── freelist (trunk/leaf page reuse)       ✓ phase 5
-        └── schema   (sqlite_schema round-trip)   ✓ phase 6
+        ├── pager      (page I/O + LRU cache + rollback journal)    ✓ phase 1
+        ├── header     (100-byte database header at offset 0)      ✓ phase 1
+        ├── record     (varint + serial types)                     ✓ phase 2
+        ├── btree      (leaf + overflow + full recursive splits)   ✓ phases 3 + 4a + 4b
+        ├── freelist   (trunk/leaf page reuse)                     ✓ phase 5
+        ├── schema     (sqlite_schema round-trip)                  ✓ phase 6
+        ├── backend    (Backend adapter / SqliteFileBackend)       ✓ phase 7
+        ├── index_tree (index B-tree 0x0A/0x02 + full CRUD)       ✓ phase IX-1
+        └── backend    (index interface: create/drop/list/scan)   ✓ phase IX-2
 ```
 
 Nothing above the `Backend` line changes. The full SQL pipeline (lexer →
 parser → planner → optimizer → codegen → VM) runs unmodified against this
 backend.
 
-## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6)
+## What works today (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1 + IX-2)
 
 - **`header` module** — the 100-byte database header at the start of page 1.
   Read and write every field, validate magic string and page size on open.
@@ -90,8 +93,25 @@ backend.
   names in insertion order. `find_table(name)` returns `(rowid, rootpage, sql)`
   or `None`. `get_schema_cookie()` reads the u32 at page-1 offset 40.
 
-What's **not yet** in this package (coming in a later phase):
-The `Backend` adapter that wires the full SQL pipeline into phase 7.
+- **`backend` module** — `SqliteFileBackend` (phases 7 + 8).
+  Implements the full `sql_backend.Backend` interface against a real `.db`
+  file.  `tables()`, `columns()`, `scan()`, `insert()`, `update()`,
+  `delete()`, `create_table()`, `drop_table()`, `begin_transaction()`,
+  `commit()`, `rollback()`.  Opens existing files or creates new ones.
+  Passes all four tiers of `sql_backend.conformance`.
+
+  **Byte-compatible with the real `sqlite3` library** (v0.8.1+): INTEGER
+  PRIMARY KEY columns are stored as a NULL slot in the record payload (matching
+  the real SQLite convention).  Files produced by this backend are readable by
+  the `sqlite3` CLI and Python's stdlib `sqlite3`, and vice-versa.
+
+- **`index_tree` module** — `IndexTree` (phase IX-1 of v2 automatic indexing).
+  Index B-tree pages using SQLite's `0x0A` (index leaf) and `0x02` (index
+  interior) page types.  Stores `(key_vals, rowid)` pairs sorted by SQLite's
+  BINARY collation (NULL < INTEGER/REAL < TEXT < BLOB).  Supports:
+  `insert`, `delete`, `lookup`, `range_scan` (with inclusive/exclusive bounds),
+  `free_all`, and recursive splits at all tree levels.  The foundation for
+  automatic index creation in v2.
 
 ## Installation
 
@@ -99,7 +119,7 @@ The `Backend` adapter that wires the full SQL pipeline into phase 7.
 uv pip install -e .
 ```
 
-## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6)
+## Usage (phases 1 + 2 + 3 + 4a + 4b + 5 + 6 + 7 + IX-1 + IX-2)
 
 ```python
 from storage_sqlite import Header, Pager, record, varint
@@ -198,9 +218,147 @@ with Pager.create("catalog.db") as pager:
     pager.commit()
 ```
 
-This intentionally looks low-level — the `Backend` adapter that makes
-`mini_sqlite.connect("app.db")` work will land in phase 7 once all the
-intermediate layers (records, B-trees, schema) are in place.
+```python
+# --- Backend (phase 7: full sql_backend.Backend adapter) ---
+from sql_backend import ColumnDef
+from storage_sqlite import SqliteFileBackend
+
+# Create and populate a database — fully Backend-compatible.
+with SqliteFileBackend("app.db") as b:
+    b.create_table(
+        "users",
+        [
+            ColumnDef(name="id",    type_name="INTEGER", primary_key=True),
+            ColumnDef(name="name",  type_name="TEXT",    not_null=True),
+            ColumnDef(name="email", type_name="TEXT",    unique=True),
+        ],
+        if_not_exists=True,
+    )
+    b.insert("users", {"id": 1, "name": "Alice", "email": "alice@example.com"})
+    b.insert("users", {"id": 2, "name": "Bob",   "email": "bob@example.com"})
+
+    # Explicit transaction for atomic writes.
+    h = b.begin_transaction()
+    b.insert("users", {"id": 3, "name": "Carol", "email": None})
+    b.commit(h)
+
+# Read it back in a new session — data survived on disk.
+with SqliteFileBackend("app.db") as b:
+    it = b.scan("users")
+    while (row := it.next()) is not None:
+        print(row)          # {'id': 1, 'name': 'Alice', 'email': 'alice@example.com'}
+    it.close()
+
+# Positioned update and delete via _open_cursor().
+with SqliteFileBackend("app.db") as b:
+    cursor = b._open_cursor("users")
+    row = cursor.next()           # first row
+    b.update("users", cursor, {"email": "newalice@example.com"})
+    cursor.close()
+
+    h = b.begin_transaction()
+    b.commit(h)
+```
+
+```python
+# --- IndexTree (phase IX-1: index B-tree pages 0x0A / 0x02) ---
+from storage_sqlite import IndexTree, Pager, Freelist, Header, PAGE_SIZE, initialize_new_database
+
+# Create a database with a header page and build an index tree.
+with Pager.create("index.db") as pager:
+    schema = initialize_new_database(pager)           # sets up page 1 header
+    fl = Freelist(pager)
+    tree = IndexTree.create(pager, freelist=fl)        # root on page 3
+    root = tree.root_page
+
+    # Insert (indexed_value, rowid) pairs — rowid is the table row pointer.
+    tree.insert([42], 1)          # user_id=42, table rowid=1
+    tree.insert([42], 2)          # same user_id, different row
+    tree.insert([17], 3)          # different user_id
+    tree.insert(["alice"], 4)     # text key
+    tree.insert([None], 5)        # NULL key (smallest under SQLite ordering)
+
+    # Lookup: all rowids for a given key.
+    print(tree.lookup([42]))           # [1, 2]  (non-unique index)
+    print(tree.lookup([17]))           # [3]
+    print(tree.lookup([99]))           # []
+
+    # Range scan: yield (key_vals, rowid) in ascending order.
+    for key_vals, rowid in tree.range_scan([17], [42]):
+        print(key_vals, "→ row", rowid)
+    # [17] → row 3
+    # [42] → row 1
+    # [42] → row 2
+
+    # Mixed-type ordering: NULL < INTEGER < TEXT < BLOB
+    for key_vals, rowid in tree.range_scan(None, None):
+        print(key_vals, rowid)
+    # [None]    5   ← NULL first
+    # [17]      3
+    # [42]      1
+    # [42]      2
+    # ['alice'] 4   ← TEXT last
+
+    # Delete.
+    tree.delete([42], 1)
+    print(tree.lookup([42]))           # [2]
+
+    # Splits happen automatically — insert thousands of entries.
+    for i in range(100, 5100):
+        tree.insert([i], i)
+    print(tree.cell_count())           # 5004
+
+    pager.commit()
+```
+
+```python
+# --- Index interface (phase IX-2: create/drop/list/scan_index) ---
+from sql_backend import ColumnDef, IndexDef
+from storage_sqlite import SqliteFileBackend
+
+with SqliteFileBackend("app.db") as b:
+    b.create_table(
+        "users",
+        [
+            ColumnDef(name="id",  type_name="INTEGER", primary_key=True),
+            ColumnDef(name="name", type_name="TEXT",   not_null=True),
+            ColumnDef(name="age", type_name="INTEGER"),
+        ],
+    )
+    b.insert("users", {"id": 1, "name": "Alice", "age": 30})
+    b.insert("users", {"id": 2, "name": "Bob",   "age": 25})
+    b.insert("users", {"id": 3, "name": "Carol", "age": 30})
+
+    # Create an index — backfills all existing rows automatically.
+    b.create_index(IndexDef(name="idx_users_age", table="users", columns=["age"]))
+
+    # List all indexes for a table.
+    print(b.list_indexes("users"))
+    # [IndexDef(name='idx_users_age', table='users', columns=['age'], unique=False, auto=False)]
+
+    # Equality lookup: all rowids with age = 30.
+    rowids = list(b.scan_index("idx_users_age", [30], [30]))
+    print(rowids)   # [0, 2] (0-based rowids for rows with age=30)
+
+    # Range scan: age between 25 and 30.
+    rowids = list(b.scan_index("idx_users_age", [25], [30]))
+    print(len(rowids))  # 3
+
+    # Exclusive range: age > 25 (lo bound excluded).
+    rowids = list(b.scan_index("idx_users_age", [25], None, lo_inclusive=False))
+    print(len(rowids))  # 2 (only the two age=30 rows)
+
+    # Drop the index.
+    b.drop_index("idx_users_age")
+    print(b.list_indexes("users"))   # []
+
+    # if_exists=True suppresses IndexNotFound for already-dropped indexes.
+    b.drop_index("idx_users_age", if_exists=True)   # no error
+
+# The index is stored in sqlite_schema and visible to the real sqlite3 CLI:
+#   sqlite3 app.db ".schema"
+#   CREATE INDEX idx_users_age ON users (age);
+```
 
 ## Design notes
 

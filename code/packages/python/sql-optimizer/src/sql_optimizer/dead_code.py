@@ -33,15 +33,21 @@ from __future__ import annotations
 
 from sql_planner import (
     Aggregate,
+    Begin,
+    Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
+    Except,
     Filter,
     Having,
+    Intersect,
     Join,
     JoinKind,
     Literal,
     LogicalPlan,
     Project,
+    Rollback,
     Scan,
     Sort,
     Union,
@@ -128,6 +134,31 @@ def _eliminate(p: LogicalPlan) -> LogicalPlan:
             if isinstance(rgt, EmptyResult):
                 return lft
             return Union(left=lft, right=rgt, all=a)
+
+        case Intersect(left=lft, right=rgt, all=a):
+            lft = _eliminate(lft)
+            rgt = _eliminate(rgt)
+            # Either side empty → intersection is empty.
+            if isinstance(lft, EmptyResult) or isinstance(rgt, EmptyResult):
+                return EmptyResult()
+            return Intersect(left=lft, right=rgt, all=a)
+
+        case Except(left=lft, right=rgt, all=a):
+            lft = _eliminate(lft)
+            rgt = _eliminate(rgt)
+            # Left empty → result is empty regardless of right.
+            if isinstance(lft, EmptyResult):
+                return EmptyResult()
+            # Right empty → left passes through unchanged (no rows to subtract).
+            if isinstance(rgt, EmptyResult):
+                return lft
+            return Except(left=lft, right=rgt, all=a)
+
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            return DerivedTable(query=_eliminate(q), alias=alias, columns=cols)
+
+        case Begin() | Commit() | Rollback():
+            return p
 
         case _:
             return p

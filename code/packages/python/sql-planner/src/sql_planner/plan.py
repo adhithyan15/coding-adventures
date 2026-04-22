@@ -229,6 +229,96 @@ class Union:
     all: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class Intersect:
+    """Return rows present in *both* result sets.
+
+    ``all=False`` (INTERSECT) deduplicates: a row appears once if it is in
+    both sides. ``all=True`` (INTERSECT ALL) keeps duplicates up to the
+    minimum multiplicity of each row across the two sides.
+
+    Like Union, the output schema follows the *left* side's column names.
+    """
+
+    left: LogicalPlan
+    right: LogicalPlan
+    all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class Except:
+    """Return rows in the left set that are *not* in the right set.
+
+    ``all=False`` (EXCEPT) uses set difference: if a row appears any number
+    of times in the right side, all occurrences are removed from the left
+    side's result. ``all=True`` (EXCEPT ALL) subtracts multiplicities:
+    each occurrence in the right reduces the left count by one.
+
+    Output schema follows the *left* side's column names.
+    """
+
+    left: LogicalPlan
+    right: LogicalPlan
+    all: bool = False
+
+
+# ---- Derived table (subquery in FROM) -------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class DerivedTable:
+    """A subquery used as a table source in FROM — ``(SELECT ...) AS alias``.
+
+    How it differs from a plain Scan
+    ---------------------------------
+
+    A :class:`Scan` reads from a named backend table.  A ``DerivedTable``
+    materialises the result of an inner ``query`` plan into a temporary set of
+    rows and then lets the outer query scan over them.
+
+    The ``alias`` is the name the outer query uses to reference the derived
+    table's columns (e.g. ``dt.col``).
+
+    The ``columns`` tuple is the ordered output schema of the inner query,
+    derived at planning time so the outer query's column resolution can
+    validate references like ``dt.col`` without executing anything.
+
+    Codegen strategy
+    -----------------
+
+    The compiler emits a :class:`sql_codegen.ir.RunSubquery` instruction that
+    executes the inner plan instructions inline, storing the result rows under
+    a cursor slot.  The outer scan then uses the subquery cursor for
+    ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``, identical to a normal
+    backend scan.
+    """
+
+    query: LogicalPlan         # the inner plan to materialise
+    alias: str                 # FROM-clause alias (e.g. ``dt``)
+    columns: tuple[str, ...]   # output column names of the inner query
+
+
+# ---- Transaction-control nodes --------------------------------------------
+#
+# These are leaf nodes — they carry no child plan and produce no rows.
+# The VM calls the backend's transaction methods directly when it sees them.
+
+
+@dataclass(frozen=True, slots=True)
+class Begin:
+    """BEGIN TRANSACTION — open an explicit transaction on the backend."""
+
+
+@dataclass(frozen=True, slots=True)
+class Commit:
+    """COMMIT TRANSACTION — commit the active transaction."""
+
+
+@dataclass(frozen=True, slots=True)
+class Rollback:
+    """ROLLBACK TRANSACTION — roll back the active transaction."""
+
+
 # ---- DML nodes ------------------------------------------------------------
 
 
@@ -308,6 +398,7 @@ class DropTable:
 LogicalPlan = (
     Scan
     | EmptyResult
+    | DerivedTable
     | Filter
     | Project
     | Join
@@ -317,6 +408,11 @@ LogicalPlan = (
     | Limit
     | Distinct
     | Union
+    | Intersect
+    | Except
+    | Begin
+    | Commit
+    | Rollback
     | Insert
     | Update
     | Delete
@@ -343,12 +439,16 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     match node:
         case Scan() | EmptyResult() | CreateTable() | DropTable():
             return ()
+        case Begin() | Commit() | Rollback():
+            return ()
+        case DerivedTable(query=q, alias=_, columns=_):
+            return (q,)
         case (
             Filter() | Project() | Aggregate() | Having()
             | Sort() | Limit() | Distinct()
         ):
             return (node.input,)
-        case Join() | Union():
+        case Join() | Union() | Intersect() | Except():
             return (node.left, node.right)
         case Insert(_, _, source):
             return (source.query,) if source.query is not None else ()

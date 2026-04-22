@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Compiled ALGOL programs now execute scalar variables through frame-backed
+  WASM memory operations, including nested-block outer writes and shadowing.
+- Compiled value-only integer procedures now run through generated WASM
+  functions with static links, fresh recursive frames, and typed result slots.
+- Compiled Phase 4 integer arrays through heap-backed descriptors with dynamic
+  bounds, multidimensional row-major indexing, runtime bounds checks, and
+  zero-result failure for invalid bounds or out-of-bounds accesses.
+- Executed scalar by-name actuals through caller-slot storage pointers, while
+  preserving IR compile-stage diagnostics for expression and array-element
+  actuals that still need full eval/store thunk descriptors.
+- Executed read-only integer expression actuals through tagged eval thunk
+  descriptors, including repeated formal reads that observe caller-frame
+  mutations between evaluations.
+- Executed integer array-element by-name actuals through eval/store thunk
+  helpers so repeated formal reads and assignments re-locate the current
+  element, including Jensen-style index mutation between formal uses.
+- Executed read-only expression thunks that read integer arrays, including
+  Jensen's-device expressions and bounds failures propagated through the caller
+  unwind path.
+- Executed read-only expression thunks that call integer procedures, including
+  nested by-name descriptor allocation and callee failure propagation through
+  the caller's by-name formal read.
+
 ## [0.1.0] - 2026-04-20
 
 ### Added

@@ -30,13 +30,19 @@ from __future__ import annotations
 
 from sql_planner import (
     Aggregate,
+    Begin,
+    Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
+    Except,
     Filter,
     Having,
+    Intersect,
     Join,
     LogicalPlan,
     Project,
+    Rollback,
     Scan,
     Sort,
     Union,
@@ -79,6 +85,18 @@ def _push(p: LogicalPlan) -> LogicalPlan:
             return Join(left=_push(l), right=_push(r), kind=k, condition=cond)
         case Union(left=l, right=r, all=a):
             return Union(left=_push(l), right=_push(r), all=a)
+        case Intersect(left=l, right=r, all=a):
+            # Do not push Limit through INTERSECT — the semantics change.
+            return Intersect(left=_push(l), right=_push(r), all=a)
+        case Except(left=l, right=r, all=a):
+            # Do not push Limit through EXCEPT — same reasoning.
+            return Except(left=_push(l), right=_push(r), all=a)
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            # Recurse into the inner plan; the outer LIMIT does NOT push
+            # inside the derived table — the inner query has its own shape.
+            return DerivedTable(query=_push(q), alias=alias, columns=cols)
+        case Begin() | Commit() | Rollback():
+            return p
         case _:
             return p
 

@@ -1,5 +1,45 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
+  7 end-to-end tests confirming the WASM backend correctly compiles and
+  executes 8-bit integer arithmetic IR — the same IR that the Oct compiler
+  generates.  Tests cover: LOAD_IMM, ADD, SUB, AND (inc. 0xFF masking),
+  multi-output programs, and validation of Oct's unsupported SYSCALL numbers.
+  Key findings:
+  - Pure 8-bit arithmetic (LOAD_IMM/ADD/SUB/AND) compiles and runs correctly
+    through the full IR → WASM → WASI pipeline.
+  - Oct's I/O intrinsics (``out(PORT, val)`` → SYSCALL 40+PORT,
+    ``in(PORT)`` → SYSCALL 20+PORT) are Intel 8008-specific and are
+    correctly rejected by the WASM validator with a clear error message.
+    To target WASM from Oct, I/O would need to use WASM's WASI ABI
+    (SYSCALL 1/2/10) instead.
+
+- **`IrOp.OR` / `IrOp.OR_IMM`**: bitwise OR in register-register and
+  register-immediate forms.  Lowers to WASM `i32.or`.
+- **`IrOp.XOR` / `IrOp.XOR_IMM`**: bitwise XOR in register-register and
+  register-immediate forms.  Lowers to WASM `i32.xor`.
+- **`IrOp.NOT`**: bitwise complement (one-operand form).  WASM has no dedicated
+  NOT opcode; the backend emits `i32.xor` with the all-ones mask `0xFFFFFFFF`
+  which flips every bit of the 32-bit value.
+- `i32.or` and `i32.xor` added to the `_OPCODE` lookup table.
+- 9 new runtime tests covering OR, OR_IMM, XOR, XOR_IMM, and NOT with
+  multiple input cases each.
+
+### Changed
+
+- `_WASM_SUPPORTED_OPCODES` frozenset extended to include `OR`, `OR_IMM`,
+  `XOR`, `XOR_IMM`, and `NOT`.  The V1 validator no longer rejects programs
+  that use these opcodes.
+- `CALL` lowering now accepts optional explicit argument registers after the
+  target label. Calls without explicit operands keep the legacy v2, v3, ...
+  convention.
+- Function signatures can require explicit call operands for generated callers
+  that must not fall back to the legacy v2, v3, ... convention.
+
 ## [0.5.0] — 2026-04-20
 
 ### Added

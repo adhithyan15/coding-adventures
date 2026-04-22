@@ -41,16 +41,18 @@ for i, ins in enumerate(program.instructions):
 
 ## Instruction set summary
 
-| Category   | Instructions                                               |
-| ---------- | ---------------------------------------------------------- |
-| Stack      | `LoadConst`, `LoadColumn`, `Pop`                           |
-| Arithmetic | `BinaryOp`, `UnaryOp`, `IsNull`, `IsNotNull`, `Between`, `InList`, `Like`, `Coalesce` |
-| Scan       | `OpenScan`, `AdvanceCursor`, `CloseScan`                   |
-| Output     | `BeginRow`, `EmitColumn`, `EmitRow`, `SetResultSchema`, `ScanAllColumns` |
-| Aggregate  | `InitAgg`, `UpdateAgg`, `FinalizeAgg`, `SaveGroupKey`, `LoadGroupKey` |
-| Post-proc  | `SortResult`, `LimitResult`, `DistinctResult`              |
-| Mutation   | `InsertRow`, `UpdateRows`, `DeleteRows`, `CreateTable`, `DropTable` |
-| Control    | `Label`, `Jump`, `JumpIfFalse`, `JumpIfTrue`, `Halt`       |
+| Category     | Instructions                                               |
+| ------------ | ---------------------------------------------------------- |
+| Stack        | `LoadConst`, `LoadColumn`, `Pop`                           |
+| Arithmetic   | `BinaryOp`, `UnaryOp`, `IsNull`, `IsNotNull`, `Between`, `InList`, `Like`, `Coalesce`, `CallScalar` |
+| Scan         | `OpenScan`, `AdvanceCursor`, `CloseScan`                   |
+| Output       | `BeginRow`, `EmitColumn`, `EmitRow`, `SetResultSchema`, `ScanAllColumns` |
+| Aggregate    | `InitAgg`, `UpdateAgg`, `FinalizeAgg`, `SaveGroupKey`, `LoadGroupKey`, `AdvanceGroupKey` |
+| Post-proc    | `SortResult`, `LimitResult`, `DistinctResult`              |
+| Set ops      | `CaptureLeftResult`, `IntersectResult`, `ExceptResult`     |
+| Mutation     | `InsertRow`, `InsertFromResult`, `UpdateRows`, `DeleteRows`, `CreateTable`, `DropTable` |
+| Transactions | `BeginTransaction`, `CommitTransaction`, `RollbackTransaction` |
+| Control      | `Label`, `Jump`, `JumpIfFalse`, `JumpIfTrue`, `Halt`       |
 
 See [`../../../specs/sql-codegen.md`](../../../specs/sql-codegen.md) for full
 instruction semantics.

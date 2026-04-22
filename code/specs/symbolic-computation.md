@@ -347,20 +347,42 @@ reviewed independently:
   integration for all denominators of the form L·Q with deg Q ≤ 2. See
   `mixed-integral.md`.
 
-### Phase 3 — Risch transcendental case
+### Phase 3 — Transcendental integration (single linear extension)
 
-Full Risch over towers of exp/log extensions (no algebraics). Decides
-whether an elementary antiderivative exists for any expression built
-from `{rationals, exp, log, trig-as-exp}` and constructs it when one
-does. Requires differential-field machinery: derivation on a tower,
-the structure theorem, the Rothstein–Trager resultant.
+Extends integration to the most common transcendental integrands:
+polynomials multiplied by `exp`, `log`, `sin`, or `cos` of a **linear**
+argument `a·x + b`. Five cases, two algorithms:
 
-### Phase 4 — Algebraic extensions (full Risch)
+- **Cases 3a–3c** — Bare `exp(ax+b)`, `sin(ax+b)`, `cos(ax+b)`:
+  antiderivative by dividing by the inner-argument coefficient `a`.
+- **Case 3d** — `p(x)·exp(ax+b)` for `p ∈ Q[x]`: solve the Risch
+  differential equation `g′ + a·g = p` by back-substitution; result
+  is `g(x)·exp(ax+b)`.
+- **Case 3e** — `p(x)·log(ax+b)` for `p ∈ Q[x]`: integration by parts
+  reduces to polynomial arithmetic; result is
+  `[P(x) − P(−b/a)]·log(ax+b) − S(x)`.
 
-Handles `sqrt` and `root-of-polynomial` through Trager's algorithm on
-function-field integral bases. Completes the decision procedure over
-the full elementary-function class. This is the terminus — no known
-CAS goes meaningfully beyond it, and most only implement a subset.
+No new IR primitives required. See `phase3-transcendental.md`.
+
+The full Risch algorithm for rational × transcendental products and
+multi-level towers is deferred to a later Phase 3 extension.
+
+### Phase 4 — Trigonometric integration
+
+Extends integration to the most common trigonometric integrands:
+
+- **Phase 4a** — `p(x)·sin(ax+b)` and `p(x)·cos(ax+b)` for `p ∈ Q[x]`:
+  tabular IBP formula yields `∫ p·sin = sin·S − cos·C` and
+  `∫ p·cos = sin·C + cos·S` where C and S are finite derivative sums.
+- **Phase 4b** — Trig squares and products via product-to-sum identities:
+  `sin²`, `cos²`, `sin·sin`, `cos·cos`, `sin·cos` all reduce to Phase 3.
+- **Phase 4c** — `exp(ax+b)·sin(cx+d)` and `exp(ax+b)·cos(cx+d)` via
+  the double-IBP closed form: `exp·[a·sin−c·cos]/(a²+c²)`.
+
+See `phase4-trig-integration.md` for algorithms and derivations.
+
+Deferred: `tan(x)`, `sinⁿ(x)` for n ≥ 3, u-substitution, algebraic
+extensions (Trager's algorithm for `sqrt` integrands).
 
 ## Non-Goals (For This Spec)
 

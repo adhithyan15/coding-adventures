@@ -71,16 +71,19 @@ Phase one of `stream-reactor` supports:
 - readable and writable event progression
 - per-connection application state owned by the reactor
 - per-stream queued outbound bytes
+- thread-safe outbound mailbox submissions keyed by `ConnectionId`
 - configurable connection caps
 - configurable queued-write budget caps
 - neutral handler output in terms of bytes and close intent
 - optional close callbacks for connection teardown
 - cooperative stop via a stop flag
 
-Phase one intentionally does not yet require:
+Phase two adds a mailbox for worker threads and other off-reactor producers to
+send bytes back to streams without blocking the readable callback.
+
+Phase one and two intentionally do not yet require:
 
 - timer-driven idle deadlines
-- cross-thread wakeup handles
 - listener adoption instead of bind-at-construction
 - UDP or Unix-domain sockets
 - protocol-specific framing
@@ -119,6 +122,24 @@ This keeps the runtime generic for protocols that:
 - emit one last frame and then close
 
 without forcing protocol knowledge into the reactor.
+
+### `StreamMailbox`
+
+Longer-running application work should not keep the reactor thread waiting for
+a response. `StreamMailbox` is the return address for that work.
+
+The handle is cloneable and thread-safe. Producers can submit:
+
+- bytes to write to a connection
+- bytes to write followed by close-after-flush
+- a close request with no bytes
+
+The reactor drains mailbox commands on its event-loop thread and applies the
+same queued-write budget rules as inline handler responses. Mail for already
+closed connections is discarded.
+
+Until `transport-platform` exposes a thread-safe wake handle, mailbox delivery
+is cooperative: the reactor notices queued commands on the next poll tick.
 
 ### Connection State
 
@@ -165,8 +186,12 @@ Phase-one public API:
 - `StreamReactor::serve()`
 - `StreamReactor::local_addr()`
 - `StreamReactor::stop_handle()`
+- `StreamReactor::mailbox()`
 - `StreamReactor::set_max_connections(max)`
 - `StreamReactor::set_max_pending_write_bytes(max)`
+- `StreamMailbox::send(connection_id, bytes)`
+- `StreamMailbox::send_and_close(connection_id, bytes)`
+- `StreamMailbox::close(connection_id)`
 - macOS/BSD convenience: `StreamReactor::bind_kqueue(addr, handler)`
 
 ## Event Progression
@@ -196,6 +221,15 @@ Writable side:
 3. if queue drains fully and the peer already closed or the handler requested
    close-after-flush, close the stream
 4. otherwise fall back to readable-only interest
+
+Mailbox side:
+
+1. drain queued mailbox commands on the reactor thread
+2. find the active stream for each `ConnectionId`
+3. append write bytes to that stream's pending-write queue
+4. mark close-after-flush when requested
+5. enable writable interest for streams that now have pending bytes
+6. close streams that exceed the queued-write budget
 
 ## Error Handling
 

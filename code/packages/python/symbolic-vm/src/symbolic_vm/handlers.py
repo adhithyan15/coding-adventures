@@ -49,6 +49,7 @@ from symbolic_ir import (
     SIN,
     SQRT,
     SUB,
+    TAN,
     IRApply,
     IRInteger,
     IRNode,
@@ -276,6 +277,10 @@ def sin(simplify: bool) -> Handler:
 
 def cos(simplify: bool) -> Handler:
     return _elementary("Cos", math.cos, {0: ONE}, simplify)
+
+
+def tan(simplify: bool) -> Handler:
+    return _elementary("Tan", math.tan, {0: ZERO}, simplify)
 
 
 def exp(simplify: bool) -> Handler:
@@ -521,6 +526,7 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         INV.name: inv(simplify),
         SIN.name: sin(simplify),
         COS.name: cos(simplify),
+        TAN.name: tan(simplify),
         EXP.name: exp(simplify),
         LOG.name: log(simplify),
         SQRT.name: sqrt(simplify),

@@ -4,6 +4,49 @@ This file tracks mistakes made during development so they are not repeated. Chec
 
 ---
 
+### 2026-04-21: BUILD files must be updated whenever package.json dependencies change
+
+The build-tool validates that every `BUILD` / `BUILD_windows` shell script lists
+all transitive local packages as `npm install` preludes, in leaf-to-root order.
+Changing a package's `package.json` dependencies without updating its `BUILD`
+(and the `BUILD` of every program/package that transitively depends on it) is
+a CI failure.
+
+**Symptom:** `detect` job fails with:
+
+```
+undeclared local package refs: typescript/<removed>;
+missing prerequisite refs for standalone builds: typescript/<added>
+```
+
+**Rule:** When editing `dependencies` in a `package.json`, immediately:
+
+1. Update that package's `BUILD` and `BUILD_windows` to reflect the new deps.
+2. Grep all `BUILD*` files for the OLD dep name across the repo.
+3. For every hit, replace the old dep line(s) with the new deps in correct
+   leaf-to-root order.
+
+Applies to Python/Ruby/Go/Rust/Elixir/Perl BUILD files too — same rule, same
+format.
+
+---
+
+### 2026-04-21: Full Rust workspace builds can include platform-only crates
+
+`cargo build --workspace` is useful for catching missing Rust exports, but this
+workspace currently includes crates that intentionally compile only on specific
+operating systems.
+
+**Symptom:** On macOS, a full workspace build reaches `paint-vm-direct2d` or
+`paint-vm-gdi` and fails with a compile-time message that the crate requires
+Windows.
+
+**Rule:** Treat platform-only compile errors as workspace configuration scope,
+not as regressions in the package under test. Still run the focused package
+`BUILD` scripts and any directly affected dependency builds before pushing.
+
+---
+
 ### 2026-04-20: Commit or otherwise expose intended diffs before relying on build-tool diff mode
 
 The Go build tool's default changed-package path depends on `git diff` against
@@ -22,6 +65,39 @@ intended diff or first verify `git diff --name-only origin/main...HEAD` returns
 the changed files the tool should see. If the tool announces a hash/cache
 fallback unexpectedly, stop it immediately and clean generated artifacts before
 continuing.
+
+---
+
+### 2026-04-20: Downstream package tests should not pin exact dependency patch versions
+
+When a foundational package intentionally bumps its version, dependent packages
+may rebuild in the same affected set. If a downstream test asserts the exact
+dependency version string, the downstream package fails even when its declared
+dependency range and runtime behavior are still valid.
+
+**Symptom:** A package depending on `logic-engine>=0.3.0` failed only because a
+test asserted `logic_engine.__version__ == "0.4.0"` after `logic-engine` moved
+to `0.5.0`.
+
+**Rule:** Downstream smoke tests should assert a minimum compatible dependency
+version or a capability, not an exact dependency version, unless the package
+truly requires that exact release.
+
+---
+
+### 2026-04-20: Compiler-generated data segments need source-stage size caps
+
+Even when a frontend only emits internal IR, any IR data declaration that a
+backend materializes as bytes can become a host-memory exhaustion path. Source
+size and type-checking success do not automatically bound semantic frame plans
+or generated runtime images.
+
+**Symptom:** A compiler sums frame sizes and emits one data declaration, while
+the WASM backend later expands it with `bytes(...) * size`.
+
+**Rule:** Put explicit byte caps at the earliest compiler stage that computes
+the generated data size, and test the rejection path with a synthetic semantic
+model rather than a huge source file.
 
 ---
 
@@ -89,6 +165,21 @@ conversion between integer types" on `return int(value)`.
 explicit platform-sized bounds checks first or route through `strconv.Atoi`
 after formatting/validating the value. For `float64`, reject NaN, infinity, and
 non-integral values before attempting any `int` conversion.
+
+---
+
+### 2026-04-21: Use body files for GitHub PR text containing Markdown backticks
+
+When passing a Markdown PR body directly to `gh pr create --body "..."` or
+`gh pr edit --body "..."`, shell command substitution still applies inside the
+double-quoted string. Inline code spans such as `` `goal_from_term(...)` `` can
+therefore be executed by `zsh` before `gh` receives the body, producing noisy
+shell errors and a mangled pull request description.
+
+**Rule:** For PR descriptions or comments that contain Markdown backticks, write
+the body to a temporary file with a single-quoted heredoc and pass it via
+`--body-file`. Do not put Markdown-heavy PR bodies directly in a double-quoted
+shell argument.
 
 ---
 
@@ -3008,3 +3099,113 @@ already green, and the failed jobs never reached repository code.
 **Rule:** When CI fails in job setup while downloading third-party action archives, inspect the job
 logs before changing package code. If the failure happens before checkout or tool setup commands,
 treat it as infrastructure/transient unless repeated runs prove otherwise.
+
+---
+
+### 2026-04-20: GrammarLexer returns TokenType enum values; test helpers must normalize
+
+When writing tests for grammar-driven lexer wrappers (like `oct-lexer`, `nib-lexer`), the
+`GrammarLexer` returns `Token` objects where:
+- Keyword tokens (after promotion in `tokenize_*`) have `type` set to a **string** (e.g. `"fn"`,
+  `"carry"`)
+- All other tokens keep the `TokenType` **enum** value (e.g. `TokenType.LPAREN`, `TokenType.NAME`)
+
+If test helpers compare `t.type` directly against strings, non-keyword token tests will fail
+with diffs like:
+```
+At index 1 diff: (<TokenType.LPAREN: 11>, '(') != ('LPAREN', '(')
+```
+
+And the EOF filter `t.type != "EOF"` will never exclude EOF tokens because
+`TokenType.EOF != "EOF"` is `True`.
+
+**Fix:** Add a `_tok_type` normalizer helper that converts both forms to a plain string:
+```python
+def _tok_type(tok: Token) -> str:
+    return tok.type if isinstance(tok.type, str) else tok.type.name
+```
+
+Use it everywhere `t.type` is compared or used for filtering. This pattern is established in
+`nib-lexer` and must be replicated in every new `*-lexer` test file.
+
+**Root cause:** The design intentionally keeps non-keyword token types as enums to preserve
+the `TokenType` enum contract for downstream consumers (parsers). Only keyword tokens are
+promoted to string types so the parser's grammar rules can match them by value.
+
+**Rule:** Every grammar-driven lexer test file must use a `_tok_type` normalizer. Never compare
+`t.type` directly against string literals unless you know the token is a keyword.
+
+---
+
+## Runtime failure guards in callable lowerings must unwind activation state
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of ALGOL 60 dynamic array lowering caught that array bounds and
+heap-exhaustion guards returned immediately from the current WASM function. That was fine for
+`_start`, but inside a procedure it skipped normal frame and heap restoration before handing control
+back to the caller.
+
+**Rule:** Any generated runtime-failure path that returns from a callable lowering must emit the
+same activation cleanup as the normal return path first. For frame-backed languages, unwind the
+active lexical scope chain and restore block-lifetime heap marks before `RET`. Add a regression that
+repeatedly triggers the failure inside a procedure and then proves the caller can still allocate a
+new frame.
+
+---
+
+## Conservative call-by-name scans must track lexical procedure shadowing
+
+**Date:** 2026-04-20
+
+**What happened:** Security review of the first ALGOL 60 call-by-name metadata pass caught that the
+pre-lowering write scan classified transitive calls by bare procedure name. A nested procedure that
+shadowed a known read-only procedure, or shadowed the procedure currently being analyzed, could write
+through a by-name formal while the outer formal stayed marked read-only.
+
+**Rule:** Any conservative by-name write analysis that runs before full procedure resolution must
+track procedure declarations lexically. If a call resolves to a locally declared procedure whose
+descriptor is not available to the scan, treat the matching by-name actual as writable rather than
+falling back to an outer read-only descriptor or to self-recursion handling.
+
+If the pre-pass keeps a bare-name procedure lookup, duplicate procedure names are ambiguous and must
+also be treated as writable. Recursive propagation must flow only through target parameters whose
+mode is by-name; a value parameter assigned locally does not write back to the caller's actual.
+## Python tests need imports for helper types used only in assertions
+
+**Date:** 2026-04-21
+
+**What happened:** A logic-engine test added an `isinstance(..., LogicVar)` assertion for
+standardize-apart behavior but forgot to import `LogicVar`. The implementation and behavior were
+fine, but the package `BUILD` failed during the test body with `NameError` after most tests had
+already passed.
+
+**Rule:** When adding Python tests that assert on concrete helper classes, update the test imports in
+the same patch as the assertion. Do not rely on related packages or nearby tests importing the type;
+pytest modules need every assertion-only type imported explicitly.
+
+---
+
+## Ruff import sorting is strict about similarly named Python builtins
+
+**Date:** 2026-04-21
+
+**What happened:** Adding the new `clauseo` builtin near existing `callo` and `callableo` imports
+looked visually reasonable, but Ruff's import sorter rejected the order in both the package export
+module and tests.
+
+**Rule:** After adding similarly named Python symbols to grouped imports, run Ruff before assuming the
+manual order is acceptable. Prefer letting `ruff check --fix` apply pure import-order fixes instead
+of hand-sorting by eye.
+## Music fixture tests must derive timing expectations from the score tokens
+
+**Date:** 2026-04-20
+
+**What happened:** While adding the first text-score music machine, an initial Happy Birthday test
+guessed the event and sample counts instead of deriving them from the score's duration table. The
+fixture had 28 note/rest events, 27 quarter-note beats, and therefore 13.5 seconds at 120 BPM, not
+the shorter duration assumed by the first test.
+
+**Rule:** For text-score fixtures, count tokens and beats from the same duration rules used by the
+parser before asserting rendered sample counts. Prefer assertions that make the musical math visible:
+event count, note count, total beats, tempo-derived seconds, and sample-rate-derived sample count.

@@ -162,3 +162,61 @@ class InternalError(VmError):
 
     def __str__(self) -> str:
         return self.message
+
+
+@dataclass(eq=True)
+class UnsupportedFunction(VmError):
+    """Raised by ``CallScalar`` when the function name is not in the registry.
+
+    This happens when SQL uses a function that mini-sqlite does not yet
+    implement (e.g. a vendor extension or a user-defined function not
+    registered via :func:`~sql_vm.vm.register_scalar`).
+
+    The ``name`` field is the lower-cased function name as it appears in
+    the SQL source (e.g. ``"json_extract"``, ``"my_custom_fn"``).
+    """
+
+    name: str
+
+    def __str__(self) -> str:
+        return f"unknown scalar function: {self.name!r}"
+
+
+@dataclass(eq=True)
+class TransactionError(VmError):
+    """Raised when a transaction-control instruction is used incorrectly.
+
+    Common causes:
+
+    - ``BEGIN`` while a transaction is already active (nested transactions
+      are not supported in v1).
+    - ``COMMIT`` or ``ROLLBACK`` when no transaction is active.
+
+    ``message`` describes the specific problem; callers should treat this as
+    a programming error rather than a transient failure.
+    """
+
+    message: str
+
+    def __str__(self) -> str:
+        return self.message
+
+
+@dataclass(eq=True)
+class WrongNumberOfArguments(VmError):
+    """Raised when a scalar function is called with the wrong argument count.
+
+    ``name`` is the function name; ``expected`` describes the arity
+    (e.g. ``"1"`` or ``"1 or 2"`` for optional arguments); ``got`` is the
+    actual count supplied by the caller.
+    """
+
+    name: str
+    expected: str
+    got: int
+
+    def __str__(self) -> str:
+        return (
+            f"wrong number of arguments to {self.name!r}: "
+            f"expected {self.expected}, got {self.got}"
+        )

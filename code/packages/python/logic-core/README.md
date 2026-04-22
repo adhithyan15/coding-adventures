@@ -9,6 +9,8 @@ It deliberately starts with the reusable semantic pieces:
 - substitutions and unification
 - goals and backtracking search
 - delayed disequality constraints via `neq(...)`
+- extension slots on `State` for higher layers such as runtime databases and
+  finite-domain constraint stores
 - helpers like `fresh`, `conj`, `disj`, `run_all`, and `run_n`
 
 The later Prolog implementation should lower parsed clauses and queries into
@@ -31,6 +33,8 @@ assert run_all(
 
 state = list(neq(X, atom("homer"))(State()))[0]
 assert state.constraints
+assert State(database={"branch": "local"}).database == {"branch": "local"}
+assert State(fd_store={"domains": "local"}).fd_store == {"domains": "local"}
 ```
 
 ## Dependencies

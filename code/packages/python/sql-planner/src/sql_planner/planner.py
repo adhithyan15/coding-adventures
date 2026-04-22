@@ -58,16 +58,24 @@ from .ast import (
     Assignment as AstAssignment,
 )
 from .ast import (
+    BeginStmt,
+    CommitStmt,
     CreateTableStmt,
     DeleteStmt,
+    DerivedTableRef,
     DropTableStmt,
+    ExceptStmt,
+    InsertSelectStmt,
     InsertValuesStmt,
+    IntersectStmt,
     JoinClause,
     JoinKind,
+    RollbackStmt,
     SelectItem,
     SelectStmt,
     Statement,
     TableRef,
+    UnionStmt,
     UpdateStmt,
 )
 from .ast import (
@@ -83,6 +91,7 @@ from .expr import (
     AggregateExpr,
     Between,
     BinaryExpr,
+    CaseExpr,
     Column,
     Expr,
     FunctionCall,
@@ -114,8 +123,16 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
     match ast:
         case SelectStmt():
             return _plan_select(ast, schema)
+        case UnionStmt():
+            return _plan_union(ast, schema)
+        case IntersectStmt():
+            return _plan_intersect(ast, schema)
+        case ExceptStmt():
+            return _plan_except(ast, schema)
         case InsertValuesStmt():
             return _plan_insert(ast, schema)
+        case InsertSelectStmt():
+            return _plan_insert_select(ast, schema)
         case UpdateStmt():
             return _plan_update(ast, schema)
         case DeleteStmt():
@@ -124,6 +141,12 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_table(ast)
         case DropTableStmt():
             return _plan_drop_table(ast)
+        case BeginStmt():
+            return P.Begin()
+        case CommitStmt():
+            return P.Commit()
+        case RollbackStmt():
+            return P.Rollback()
     # Exhaustiveness — every Statement variant is matched above.
     raise UnsupportedStatement(kind=type(ast).__name__)
 
@@ -202,32 +225,92 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
 
 
 def _build_from_tree(
-    root: TableRef,
+    root: TableRef | DerivedTableRef,
     joins: tuple[JoinClause, ...],
     schema: SchemaProvider,
 ) -> tuple[P.LogicalPlan, Scope]:
-    """Build a nested Join tree out of FROM + JOIN clauses. Return tree + scope."""
-    # Ensure the root table exists.
-    root_cols = schema.columns(root.table)
+    """Build a nested Join tree out of FROM + JOIN clauses. Return tree + scope.
+
+    The root may be either a plain :class:`TableRef` (common case — a named
+    backend table) or a :class:`DerivedTableRef` (a subquery used as a table
+    source, ``(SELECT …) AS alias``).  For derived tables we plan the inner
+    query recursively, compute its output column list via
+    :func:`_output_columns`, and wrap it in a :class:`P.DerivedTable` leaf.
+    """
     scope: Scope = {}
-    _add_to_scope(scope, root.alias or root.table, root_cols)
-    tree: P.LogicalPlan = P.Scan(table=root.table, alias=root.alias)
+    if isinstance(root, DerivedTableRef):
+        inner_plan = _plan_select(root.select, schema)
+        cols = _output_columns(inner_plan)
+        _add_to_scope(scope, root.alias, list(cols))
+        tree: P.LogicalPlan = P.DerivedTable(
+            query=inner_plan, alias=root.alias, columns=cols
+        )
+    else:
+        # Plain TableRef — ensure the table exists.
+        root_cols = schema.columns(root.table)
+        _add_to_scope(scope, root.alias or root.table, root_cols)
+        tree = P.Scan(table=root.table, alias=root.alias)
 
     for j in joins:
-        right_cols = schema.columns(j.right.table)
-        _add_to_scope(scope, j.right.alias or j.right.table, right_cols)
-        right_scan: P.LogicalPlan = P.Scan(table=j.right.table, alias=j.right.alias)
+        if isinstance(j.right, DerivedTableRef):
+            inner_plan = _plan_select(j.right.select, schema)
+            cols = _output_columns(inner_plan)
+            _add_to_scope(scope, j.right.alias, list(cols))
+            right_node: P.LogicalPlan = P.DerivedTable(
+                query=inner_plan, alias=j.right.alias, columns=cols
+            )
+        else:
+            right_cols = schema.columns(j.right.table)
+            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)
+            right_node = P.Scan(table=j.right.table, alias=j.right.alias)
         # ON clause is resolved against the merged scope so it can reference
         # columns from both sides.
         condition = _resolve(j.on, scope) if j.on is not None else None
         _validate_join(j, condition)
         tree = P.Join(
             left=tree,
-            right=right_scan,
+            right=right_node,
             kind=j.kind,
             condition=condition,
         )
     return tree, scope
+
+
+def _output_columns(plan: P.LogicalPlan) -> tuple[str, ...]:
+    """Return the ordered output column names of a finished plan tree.
+
+    Used to compute the schema of a derived table (subquery in FROM) at
+    planning time, so the outer query can resolve column references against
+    it.  Walks downward through transparent wrapper nodes (Sort, Limit,
+    Distinct, Having) until it reaches a Project node whose items carry
+    explicit aliases or column names.
+
+    Raises :class:`UnsupportedStatement` for ``SELECT *`` inside a derived
+    table — we can't know the column list without executing the query.
+    """
+    # Walk through purely decorative wrapper nodes that don't change columns.
+    node = plan
+    while isinstance(node, (P.Sort, P.Limit, P.Distinct, P.Having)):
+        node = node.input  # type: ignore[union-attr]
+
+    if isinstance(node, P.Project):
+        cols: list[str] = []
+        for i, item in enumerate(node.items, start=1):
+            if item.alias is not None:
+                cols.append(item.alias)
+            elif isinstance(item.expr, P.ProjectionItem):
+                # Shouldn't happen, but guard anyway.
+                cols.append(f"column_{i}")
+            else:
+                # No alias — we use the expr-level alias from _derive_alias.
+                # _derive_alias already ran and stored the result in item.alias,
+                # so reaching here means the item has no natural name.
+                cols.append(f"column_{i}")
+        return tuple(cols)
+
+    raise UnsupportedStatement(
+        kind="SELECT * in derived table (cannot infer column names without schema)"
+    )
 
 
 def _validate_join(clause: JoinClause, condition: Expr | None) -> None:
@@ -309,6 +392,14 @@ def _resolve(expr: Expr, scope: Scope) -> Expr:
                 return expr
             new_arg = type(arg)(star=False, value=_resolve(arg.value, scope))
             return AggregateExpr(func=func, arg=new_arg, distinct=distinct)
+        case CaseExpr(whens, else_):
+            return CaseExpr(
+                whens=tuple(
+                    (_resolve(cond, scope), _resolve(result, scope))
+                    for cond, result in whens
+                ),
+                else_=_resolve(else_, scope) if else_ is not None else None,
+            )
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
 
@@ -379,6 +470,12 @@ def _collect_aggregates(
                     collect_in(v)
             case Like(operand, _) | NotLike(operand, _):
                 collect_in(operand)
+            case CaseExpr(whens, else_):
+                for cond, result in whens:
+                    collect_in(cond)
+                    collect_in(result)
+                if else_ is not None:
+                    collect_in(else_)
             case _:
                 pass
 
@@ -472,6 +569,71 @@ def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
 
 def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
     return P.DropTable(table=stmt.table, if_exists=stmt.if_exists)
+
+
+# --------------------------------------------------------------------------
+# Set-operation planning (UNION / INTERSECT / EXCEPT)
+# --------------------------------------------------------------------------
+
+
+def _plan_union(stmt: UnionStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan UNION [ALL]: recurse into both sub-queries, wrap in Union.
+
+    The left side may itself be a set-operation statement (e.g. when the
+    user writes ``A UNION B UNION C`` the adapter builds
+    ``UnionStmt(UnionStmt(A, B), C)``).  We therefore dispatch through the
+    top-level ``plan()`` function rather than assuming ``_plan_select``.
+    """
+    left = plan(stmt.left, schema)
+    right = _plan_select(stmt.right, schema)
+    return P.Union(left=left, right=right, all=stmt.all)
+
+
+def _plan_intersect(stmt: IntersectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan INTERSECT [ALL]: recurse into both sub-queries, wrap in Intersect.
+
+    Left side may be another set-operation statement; dispatch through
+    ``plan()`` to handle chaining.
+    """
+    left = plan(stmt.left, schema)
+    right = _plan_select(stmt.right, schema)
+    return P.Intersect(left=left, right=right, all=stmt.all)
+
+
+def _plan_except(stmt: ExceptStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan EXCEPT [ALL]: recurse into both sub-queries, wrap in Except.
+
+    Left side may be another set-operation statement; dispatch through
+    ``plan()`` to handle chaining.
+    """
+    left = plan(stmt.left, schema)
+    right = _plan_select(stmt.right, schema)
+    return P.Except(left=left, right=right, all=stmt.all)
+
+
+# --------------------------------------------------------------------------
+# INSERT … SELECT planning
+# --------------------------------------------------------------------------
+
+
+def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+    """Plan INSERT INTO t (cols) SELECT …
+
+    The target table and columns are validated the same way as INSERT VALUES.
+    The sub-query is planned as a regular SELECT — column resolution runs
+    against the *source* table(s), not the target table.
+    """
+    table_cols = schema.columns(stmt.table)
+    if stmt.columns is not None:
+        for c in stmt.columns:
+            if c not in table_cols:
+                raise UnknownColumn(table=stmt.table, column=c)
+    sub_plan = _plan_select(stmt.select, schema)
+    return P.Insert(
+        table=stmt.table,
+        columns=stmt.columns,
+        source=P.InsertSource(query=sub_plan),
+    )
 
 
 # Keep imports from being marked unused — these are re-exported for callers.

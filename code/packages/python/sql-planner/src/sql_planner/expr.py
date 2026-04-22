@@ -210,6 +210,45 @@ class Wildcard:
 
 
 @dataclass(frozen=True, slots=True)
+class CaseExpr:
+    """Searched CASE — ``CASE WHEN c1 THEN v1 [WHEN c2 THEN v2 ...] [ELSE e] END``.
+
+    The adapter normalizes *simple* CASE (``CASE x WHEN v THEN r ...``) into
+    searched form by wrapping each WHEN value in a ``BinaryExpr(EQ, operand, v)``.
+    The planner and all downstream stages only ever see searched CASE, which
+    keeps the codegen and VM simple.
+
+    How CASE evaluates (SQL standard)
+    ----------------------------------
+
+    Conditions are tested left-to-right.  The result of the first WHEN branch
+    whose condition evaluates to TRUE is returned.  If no WHEN matches, the
+    ELSE expression is used.  When there is no ELSE and no WHEN matches, the
+    result is NULL — so ``else_=None`` is semantically ``ELSE NULL``.
+
+    Codegen strategy
+    ----------------
+
+    CASE compiles to a conditional-jump chain using existing
+    ``JumpIfFalse`` and ``Jump`` instructions.  After the end label, exactly
+    one value sits on the stack.  No new VM instructions are needed::
+
+        compile(c1)           ; push condition
+        JumpIfFalse(when2_lbl); pop condition, skip if false
+        compile(v1)           ; push result
+        Jump(end_lbl)
+        Label(when2_lbl)
+        ...
+        Label(else_lbl)
+        compile(e)            ; ELSE branch, or LoadConst(None) if absent
+        Label(end_lbl)
+    """
+
+    whens: tuple[tuple[Expr, Expr], ...]  # (condition, result) pairs, ≥1
+    else_: Expr | None = None             # None ⇒ ELSE NULL
+
+
+@dataclass(frozen=True, slots=True)
 class AggregateExpr:
     """An aggregate function — ``COUNT(*)``, ``SUM(salary)``, ``COUNT(DISTINCT email)``.
 
@@ -240,6 +279,7 @@ Expr = (
     | Like
     | NotLike
     | Wildcard
+    | CaseExpr
     | AggregateExpr
 )
 
@@ -271,6 +311,13 @@ def contains_aggregate(expr: Expr) -> bool:
             return contains_aggregate(operand) or any(contains_aggregate(v) for v in values)
         case Like(operand, _) | NotLike(operand, _):
             return contains_aggregate(operand)
+        case CaseExpr(whens, else_):
+            if any(
+                contains_aggregate(cond) or contains_aggregate(result)
+                for cond, result in whens
+            ):
+                return True
+            return else_ is not None and contains_aggregate(else_)
         case _:
             return False
 
@@ -312,6 +359,12 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
                 _collect_columns(v, out)
         case Like(operand, _) | NotLike(operand, _):
             _collect_columns(operand, out)
+        case CaseExpr(whens, else_):
+            for cond, result in whens:
+                _collect_columns(cond, out)
+                _collect_columns(result, out)
+            if else_ is not None:
+                _collect_columns(else_, out)
         case AggregateExpr(_, arg, _):
             if arg.value is not None:
                 _collect_columns(arg.value, out)

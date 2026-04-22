@@ -1,0 +1,380 @@
+# Parser grammar for Oct
+# @version 1
+#
+# Oct is a small, statically-typed, 8-bit systems programming language designed to
+# compile to the Intel 8008 microprocessor (1972). This grammar defines the syntax
+# rules that the parser reads after the lexer has produced a token stream from
+# oct.tokens.
+#
+# NOTATION (repo standard):
+#   UPPERCASE    token kinds from oct.tokens (operators, literals)
+#   "keyword"    quoted keyword literals (match token.value for keyword tokens)
+#   lowercase    grammar rules (non-terminals, defined below)
+#   |            alternation (or)
+#   { x }        zero or more repetitions of x
+#   [ x ]        optional (zero or one occurrence of x)
+#   ( x )        grouping
+#   ;            rule terminator
+#
+# TOKEN MATCHING RULES:
+#   - UPPERCASE names match by token type (EQ_EQ, NEQ, LEQ, …)
+#   - Quoted literals ("fn", "let", "if", …) match keyword token values
+#   - NAME matches identifier tokens (variables, function names)
+#   - INT_LIT, HEX_LIT, BIN_LIT match their respective literal tokens
+#
+# ENTRY POINT: program
+#
+# KEY DESIGN DECISIONS (documented inline throughout the grammar):
+#   - Intrinsics (in, out, adc, …) have dedicated grammar rules in primary,
+#     listed before call_expr and NAME so the keyword tokens are consumed
+#   - Expression precedence: logical < equality < relational < additive < bitwise < unary
+#   - return statement allows optional expression for void functions
+#   - loop and while are distinct statement kinds (loop has no condition)
+#   - Types (u8, bool) are NAME tokens, not keywords, recognised by value
+
+# ---------------------------------------------------------------------------
+# Top-level structure
+# ---------------------------------------------------------------------------
+
+# An Oct program is a sequence of top-level declarations.
+# There is no module wrapper — the entry point is a function named "main"
+# found by convention. Having only top-level declarations (no top-level
+# statements) keeps the compilation model simple: declarations are collected
+# first, then code-generated.
+#
+# Unlike Nib, Oct has no "const" declarations — compile-time constants are
+# just literals in Oct v1. The two top-level forms are static variables
+# (global memory) and function definitions.
+program       = { top_decl } ;
+
+# Top-level declarations: static (memory-mapped) variables and function
+# definitions. These are the only things allowed at file scope in Oct v1.
+top_decl      = static_decl
+              | fn_decl
+              ;
+
+# ---------------------------------------------------------------------------
+# Static variable declarations
+# ---------------------------------------------------------------------------
+
+# Static variable. Allocates one byte in the 8008's data RAM segment
+# (addresses 0x2000–0x3FFF in the OCT01 memory map). Accessible from any
+# function. Initial value must be a literal (0–255); expressions are not
+# allowed in static initializers in v1 because initialization runs before
+# main() and the 8008 has no easy way to run arbitrary code at startup.
+#
+# Example:
+#   static counter: u8 = 0;
+#   static flag: bool = false;
+static_decl   = "static" NAME COLON type EQ expr SEMICOLON ;
+
+# ---------------------------------------------------------------------------
+# Function declarations
+# ---------------------------------------------------------------------------
+
+# Function declaration. Return type annotation is optional — omitting it
+# declares a void function (no return value).
+#
+# Parameters occupy physical 8008 registers in order: B, C, D, E.
+# At most 4 parameters are allowed (one per available register).
+# Each parameter counts against the 4-local limit for the function.
+#
+# Examples:
+#   fn main() { … }                         void, no parameters
+#   fn clamp(val: u8, limit: u8) -> u8 { … } returns u8, two params
+#   fn tick() { … }                          void helper, no params
+#
+# The ARROW token (->) precedes the return type when present.
+fn_decl       = "fn" NAME LPAREN [ param_list ] RPAREN [ ARROW type ] block ;
+
+# A non-empty parameter list: one or more params separated by commas.
+# The maximum is 4 (limited by the 8008's general-purpose register file).
+param_list    = param { COMMA param } ;
+
+# A single parameter: name followed by colon and type annotation.
+# Example: x: u8
+param         = NAME COLON type ;
+
+# ---------------------------------------------------------------------------
+# Block and statements
+# ---------------------------------------------------------------------------
+
+# A block is a brace-enclosed sequence of statements.
+# All function bodies, if-branches, else-branches, while-bodies, and
+# loop-bodies must be full blocks — single-statement shortcuts are not
+# allowed. This eliminates the dangling-else ambiguity at the grammar level.
+block         = LBRACE { stmt } RBRACE ;
+
+# A statement is one of eight forms.
+# Ordering matters for parsing: let_stmt and static_decl start with unique
+# keywords; assign_stmt and expr_stmt both start with NAME or a keyword (for
+# intrinsic calls). The parser distinguishes them by lookahead:
+#   - NAME followed by EQ → assign_stmt
+#   - anything else starting with an expression → expr_stmt
+#
+# Note: static_decl is allowed inside functions in the grammar (matching Nib's
+# approach); the type-checker restricts static declarations to file scope.
+stmt          = let_stmt
+              | static_decl
+              | assign_stmt
+              | return_stmt
+              | if_stmt
+              | while_stmt
+              | loop_stmt
+              | break_stmt
+              | expr_stmt
+              ;
+
+# Local variable declaration. Binds a name to a physical 8008 register for
+# the lifetime of the enclosing function. The type annotation is mandatory —
+# Oct has no type inference.
+#
+# At most 4 locals (including parameters) may be live in any function.
+# Register exhaustion (>4 locals) is a compile-time error, not a runtime one:
+#   error: register exhaustion — function 'f' needs 5 locals but only B,C,D,E available
+#
+# Example:
+#   let x: u8 = 0;
+#   let flag: bool = carry();
+let_stmt      = "let" NAME COLON type EQ expr SEMICOLON ;
+
+# Assignment to an existing variable (local or static).
+# Simple assignment only — no compound operators (+=, -=) in v1.
+# The assigned name must already be in scope (no re-declaration).
+#
+# Example:
+#   x = x + 1;
+#   counter = 0;
+assign_stmt   = NAME EQ expr SEMICOLON ;
+
+# Return from a function. Non-void functions must provide an expression;
+# void functions use a bare return. At the top level of main(), the compiler
+# substitutes HALT for RET.
+#
+# Examples:
+#   return result;   // non-void
+#   return;          // void (bare return)
+return_stmt   = "return" [ expr ] SEMICOLON ;
+
+# Conditional statement. The condition must be of type bool.
+# Both branches are full blocks — no single-statement shorthand.
+# The else branch is optional; an absent else has no effect.
+#
+# Examples:
+#   if flag { out(1, 0xFF); }
+#   if x > limit { x = limit; } else { x = x + 1; }
+if_stmt       = "if" expr block [ "else" block ] ;
+
+# While loop. Repeats while the condition is true.
+# Condition is checked at the TOP of each iteration (pre-condition loop),
+# unlike the 8008's DJNZ which checks at the bottom.
+#
+# Example:
+#   while n != 0 { n = n - 1; }
+while_stmt    = "while" expr block ;
+
+# Infinite loop. Runs forever until a break statement exits it.
+# Useful for event-driven programs that poll I/O ports in a tight loop.
+#
+# Example:
+#   loop { let b: u8 = in(0); out(8, b); }
+loop_stmt     = "loop" block ;
+
+# Break out of the innermost while or loop. No labeled breaks in v1.
+# A break outside a loop is a compile-time error.
+break_stmt    = "break" SEMICOLON ;
+
+# Expression statement: an expression followed by a semicolon.
+# Used to call functions (including intrinsics like out()) for side effects.
+# The type-checker allows any expression here but warns if the result is
+# discarded from a pure expression (implementation detail: the IR compiler
+# simply does not emit a store for the discarded result).
+#
+# Example:
+#   out(1, result);   // intrinsic call as statement
+#   tick();           // function call as statement
+expr_stmt     = expr SEMICOLON ;
+
+# ---------------------------------------------------------------------------
+# Types
+# ---------------------------------------------------------------------------
+
+# Oct's type system has exactly two value types in v1:
+#
+#   u8   — Unsigned 8-bit integer. Values 0–255.
+#          The native ALU word of the Intel 8008. All arithmetic wraps modulo
+#          256 unless the program explicitly checks carry().
+#          Stored in one of the 8008's general-purpose registers (B, C, D, E)
+#          for locals, or one byte of RAM for statics.
+#
+#   bool — Boolean. true (1) or false (0).
+#          Stored as u8 under the hood — the 8008 has no single-bit type.
+#          A bool may be used wherever u8 is expected (implicit coercion), but
+#          a u8 may not be used where bool is expected without an explicit
+#          comparison.
+#
+# WHY NO SIGNED INTEGERS?
+# The 8008's ALU works on unsigned bytes. Two's complement arithmetic is
+# possible but requires manual carry/borrow tracking. Oct v1 keeps everything
+# unsigned and exposes carry() and sbb() for programs that need signed
+# behaviour.
+#
+# WHY NO u16?
+# The 8008 has no 16-bit registers. 16-bit arithmetic requires two bytes stored
+# in two separate registers or memory cells, with explicit carry propagation.
+# Oct v2 (targeting the 8080, which has 16-bit register pairs) will add u16.
+#
+# Type names are NAME tokens with value "u8" or "bool", not keywords.
+# This keeps the keyword set small and lets the type-checker validate the
+# type annotation value at semantic analysis time.
+type          = NAME ;
+
+# ---------------------------------------------------------------------------
+# Expressions — operator precedence hierarchy
+# ---------------------------------------------------------------------------
+#
+# Precedence levels (lowest to highest):
+#
+#   Level 1 — Logical OR   (||)        or_expr
+#   Level 2 — Logical AND  (&&)        and_expr
+#   Level 3 — Equality     (==, !=)    eq_expr
+#   Level 4 — Comparison   (<,>,<=,>=) cmp_expr
+#   Level 5 — Additive     (+, -)      add_expr
+#   Level 6 — Bitwise      (&, |, ^)   bitwise_expr
+#   Level 7 — Unary        (!, ~)      unary_expr
+#   Level 8 — Primary                  primary
+#
+# WHY THIS ORDERING?
+# Levels 1–4 and 7–8 follow C/Rust/Go conventions — matching programmer
+# expectations coming from any C-family language.
+#
+# The interesting decision is levels 5–6:
+#
+#   Bitwise ABOVE additive — same as Java and Rust.
+#   In C, bitwise is BELOW equality, causing the famous trap:
+#     if (x & MASK == 0) { … }   // intended: (x & MASK) == 0
+#     // but actually: x & (MASK == 0) because == binds tighter than &
+#   By putting bitwise above additive we avoid this. The tradeoff is that
+#   `a + b & c` parses as `a + (b & c)` — but on 8-bit hardware where bit
+#   manipulation and byte arithmetic are equally common, this ordering is more
+#   natural. Parentheses resolve any ambiguity explicitly.
+#
+# All binary operators at the same level are LEFT-ASSOCIATIVE:
+#   a + b + c  =  (a + b) + c
+#   a & b & c  =  (a & b) & c
+#   a == b == c is syntactically allowed; the type checker may warn about
+#   chained comparisons producing unexpected bool-compared-to-bool results.
+
+# Entry point for all expression contexts.
+expr          = or_expr ;
+
+# Logical OR: a || b. Short-circuits — if a is true, b is not evaluated.
+# The 8008 has no single logical-OR instruction; the backend implements this
+# with a conditional branch: if a is non-zero, skip evaluation of b.
+or_expr       = and_expr { LOR and_expr } ;
+
+# Logical AND: a && b. Short-circuits — if a is false, b is not evaluated.
+# Backend: conditional branch on a, evaluate b only if a is non-zero.
+and_expr      = eq_expr { LAND eq_expr } ;
+
+# Equality: == and !=.
+# Both operands must have the same type. Result type is always bool.
+# On the 8008, equality is implemented with CMP r then conditional branch to
+# materialise 0 or 1 in a register.
+# Example: n != 0  →  CMP_NE  →  true/false in a register
+eq_expr       = cmp_expr { ( EQ_EQ | NEQ ) cmp_expr } ;
+
+# Relational comparison: <, >, <=, >=.
+# Operands must be u8 (comparisons are unsigned). Result type is always bool.
+# The 8008 implements these via CMP r followed by conditional branches
+# (JC for carry, JNC for no-carry, etc.) to materialise 0/1.
+cmp_expr      = add_expr { ( LT | GT | LEQ | GEQ ) add_expr } ;
+
+# Additive: + and -.
+# Both wrap modulo 256 on u8 operands. The carry flag from addition can be
+# read with carry(); the borrow flag from subtraction likewise.
+# Maps to 8008 ADD r / SUB r instructions via the IR ADD / SUB opcodes.
+add_expr      = bitwise_expr { ( PLUS | MINUS ) bitwise_expr } ;
+
+# Bitwise: &, |, ^.
+# Maps to 8008 ANA r, ORA r, XRA r instructions via IR AND, OR, XOR opcodes.
+# Note: ~ (bitwise NOT) is a unary operator at the next level up, not binary.
+bitwise_expr  = unary_expr { ( AMP | PIPE | CARET ) unary_expr } ;
+
+# Unary operators: ! (logical NOT) and ~ (bitwise NOT).
+# Both are right-associative: ~~x = ~(~x), !!x = !(!x).
+# The base case delegates to primary.
+#
+# ~ maps to the IR NOT opcode (lowered to XRI 0xFF on the 8008).
+# ! maps to a compare-to-zero sequence.
+unary_expr    = ( BANG | TILDE ) unary_expr
+              | primary
+              ;
+
+# Primary expressions: leaves of the expression tree.
+# Listing order matters for first-match parsing:
+#   1. Intrinsic calls with keyword tokens must come BEFORE call_expr and NAME
+#      (an intrinsic call starts with a keyword token like "in" or "carry";
+#      if NAME were tried first, the keyword token would not match NAME)
+#   2. call_expr comes BEFORE NAME (a call starts with NAME+"("; if NAME were
+#      tried first, the function name would be consumed as a variable reference
+#      before the parser sees the opening parenthesis)
+#   3. Literals and parenthesised expressions last
+primary       = intrinsic_call
+              | call_expr
+              | INT_LIT
+              | HEX_LIT
+              | BIN_LIT
+              | "true"
+              | "false"
+              | NAME
+              | LPAREN expr RPAREN
+              ;
+
+# ---------------------------------------------------------------------------
+# Function calls (user-defined)
+# ---------------------------------------------------------------------------
+
+# User-defined function call: NAME followed by a parenthesised argument list.
+# The argument list is optional — zero-argument calls look like: tick().
+# Must come before NAME in primary (see note above).
+call_expr     = NAME LPAREN [ arg_list ] RPAREN ;
+
+# Argument list: one or more expressions separated by commas.
+arg_list      = expr { COMMA expr } ;
+
+# ---------------------------------------------------------------------------
+# Intrinsic calls
+# ---------------------------------------------------------------------------
+#
+# Intrinsics are first-class language constructs, not library functions. They
+# begin with keyword tokens (not NAME tokens), so they cannot be parsed as
+# call_expr (which requires a NAME). Each intrinsic has a specific arity:
+#
+#   in(PORT)         → 1 expr argument (PORT: compile-time constant 0–7)
+#   out(PORT, val)   → 2 expr arguments (PORT: constant 0–23; val: u8)
+#   adc(a, b)        → 2 expr arguments
+#   sbb(a, b)        → 2 expr arguments
+#   rlc(a)           → 1 expr argument
+#   rrc(a)           → 1 expr argument
+#   ral(a)           → 1 expr argument
+#   rar(a)           → 1 expr argument
+#   carry()          → 0 arguments
+#   parity(a)        → 1 expr argument
+#
+# The grammar uses the same parenthesised-argument syntax as call_expr, with
+# keyword tokens in the function-name position. The type-checker validates
+# argument counts and types, and the IR compiler lowers each intrinsic to its
+# SYSCALL number (see OCT00-oct-language.md, §IR Mapping Summary).
+
+intrinsic_call = "in"     LPAREN expr RPAREN
+               | "out"    LPAREN expr COMMA expr RPAREN
+               | "adc"    LPAREN expr COMMA expr RPAREN
+               | "sbb"    LPAREN expr COMMA expr RPAREN
+               | "rlc"    LPAREN expr RPAREN
+               | "rrc"    LPAREN expr RPAREN
+               | "ral"    LPAREN expr RPAREN
+               | "rar"    LPAREN expr RPAREN
+               | "carry"  LPAREN RPAREN
+               | "parity" LPAREN expr RPAREN
+               ;

@@ -194,3 +194,379 @@ class TestAlgolTypeChecker:
         assert inner_read.symbol_id == inner_x.symbol_id
         assert inner_write.symbol_id != outer_x.symbol_id
         assert inner_write.lexical_depth_delta == 0
+
+    def test_accepts_integer_value_procedure_descriptor(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure inc(x); value x; integer x; "
+            "begin inc := x + 1 end; "
+            "result := inc(4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        descriptor = result.semantic.procedures[0]
+        assert descriptor.name == "inc"
+        assert descriptor.return_type == "integer"
+        assert descriptor.parameters[0].name == "x"
+        assert descriptor.parameters[0].mode == "value"
+        body_block = result.semantic.blocks[descriptor.body_block_id]
+        assert body_block.scope.symbols["inc"].kind == "procedure_result"
+        assert body_block.scope.symbols["x"].kind == "parameter"
+
+    def test_records_procedure_call_static_link_delta(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure outer(x); value x; integer x; "
+            "begin integer procedure inner(y); value y; integer y; "
+            "begin inner := x + y end; "
+            "outer := inner(3) end; "
+            "result := outer(4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        inner_call = next(
+            call for call in result.semantic.procedure_calls if call.name == "inner"
+        )
+        assert inner_call.lexical_depth_delta == 0
+        outer_param_read = next(
+            ref for ref in result.semantic.references if ref.name == "x"
+        )
+        assert outer_param_read.lexical_depth_delta == 1
+
+    def test_accepts_void_procedure_statement_call(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure setresult(x); value x; integer x; "
+            "begin result := x end; "
+            "setresult(6) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        call = result.semantic.procedure_calls[0]
+        assert call.role == "statement"
+        assert call.return_type is None
+
+    def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
+        ast = parse_algol(
+            "begin integer result, lo, hi; "
+            "integer array a[lo:hi, 1:3]; "
+            "a[lo, 2] := 7; "
+            "result := a[hi, 3] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        descriptor = result.semantic.arrays[0]
+        assert descriptor.name == "a"
+        assert descriptor.element_type == "integer"
+        assert len(descriptor.dimensions) == 2
+        assert descriptor.slot_offset == FRAME_HEADER_SIZE + (3 * FRAME_WORD_SIZE)
+        assert [access.role for access in result.semantic.array_accesses] == [
+            "write",
+            "read",
+        ]
+
+    def test_rejects_array_without_integer_type_for_now(self) -> None:
+        ast = parse_algol("begin array a[1:3]; a[1] := 7 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "real arrays are not supported" in result.diagnostics[0].message
+
+    def test_rejects_wrong_array_subscript_count(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:3, 1:3]; result := a[1] end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects 2 subscript" in result.diagnostics[0].message
+
+    def test_rejects_non_integer_array_element_assignment(self) -> None:
+        ast = parse_algol("begin integer array a[1:3]; a[1] := false end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "cannot assign boolean to integer variable"
+            in result.diagnostics[0].message
+        )
+
+    def test_rejects_array_used_without_subscripts(self) -> None:
+        ast = parse_algol("begin integer result; integer array a[1:3]; result := a end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "requires subscripts" in result.diagnostics[0].message
+
+    def test_accepts_read_only_integer_call_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "result := id(1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "name"
+        assert not parameter.may_write
+
+    def test_accepts_assignable_scalar_actual_for_written_by_name_parameter(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure inc(x); integer x; begin x := x + 1 end; "
+            "inc(result) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "name"
+        assert parameter.may_write
+        assert parameter.write_reason == "local assignment"
+        assert any(
+            ref.name == "result" and ref.role == "write"
+            for ref in result.semantic.references
+        )
+
+    def test_rejects_non_assignable_actual_for_written_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure inc(x); integer x; begin x := x + 1 end; "
+            "inc(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
+    def test_accepts_array_element_actual_for_written_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:2]; "
+            "procedure put(x); integer x; begin x := 7 end; "
+            "put(a[1]); result := a[1] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert any(access.role == "write" for access in result.semantic.array_accesses)
+
+    def test_rejects_transitively_written_by_name_expression_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure inner(z); integer z; begin z := z + 1 end; "
+            "procedure outer(x); integer x; begin inner(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
+    def test_read_only_transitive_call_keeps_by_name_formal_read_only(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure read(z); integer z; begin read := z end; "
+            "integer procedure outer(x); integer x; begin outer := read(x) end; "
+            "result := outer(1 + result) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert not outer.parameters[0].may_write
+
+    def test_shadowed_read_only_procedure_call_is_conservative_write(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure read(z); integer z; begin read := z end; "
+            "procedure outer(x); integer x; "
+            "begin procedure read(y); integer y; begin y := y + 1 end; read(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
+    def test_shadowed_current_procedure_call_is_conservative_write(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure outer(x); integer x; "
+            "begin procedure outer(y); integer y; begin y := y + 1 end; outer(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
+    def test_duplicate_procedure_names_do_not_hide_visible_writer(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure p(z); integer z; begin z := z + 1 end; "
+            "procedure box(dummy); value dummy; integer dummy; "
+            "begin integer procedure p(y); integer y; begin p := y end; "
+            "result := p(dummy) end; "
+            "procedure outer(x); integer x; begin p(x) end; "
+            "outer(result + 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+        outer = next(
+            procedure
+            for procedure in result.semantic.procedures
+            if procedure.name == "outer"
+        )
+        assert outer.parameters[0].write_reason == "transitive call"
+
+    def test_read_only_recursive_by_name_formal_stays_read_only(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure again(x, n); value n; integer x, n; "
+            "begin if n = 0 then again := x else again := again(x, n - 1) end; "
+            "result := again(1 + result, 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "name"
+        assert not parameter.may_write
+
+    def test_recursive_by_name_write_propagates_through_self_call(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure move(x, y, n); value n; integer x, y, n; "
+            "begin if n = 0 then x := 1 else move(y, x, n - 1) end; "
+            "move(result, result + 1, 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "actual expression is not assignable" in result.diagnostics[0].message
+
+    def test_recursive_self_call_does_not_write_through_value_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure read(x, y, n); value y, n; integer x, y, n; "
+            "begin if n = 0 then read := x "
+            "else begin y := y + 1; read := read(x, x, n - 1) end end; "
+            "result := read(1 + result, 0, 1) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        procedure = result.semantic.procedures[0]
+        assert procedure.parameters[0].mode == "name"
+        assert not procedure.parameters[0].may_write
+        assert procedure.parameters[1].mode == "value"
+        assert not procedure.parameters[1].may_write
+
+    def test_shadowed_local_does_not_make_by_name_formal_writable(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure read(x); integer x; "
+            "begin begin integer x; x := 4 end; read := x end; "
+            "result := read(1 + result) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "name"
+        assert not parameter.may_write
+
+    def test_rejects_wrong_type_for_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "result := id(false) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "by-name parameter 'x' expects integer" in result.diagnostics[0].message
+
+    def test_rejects_procedure_argument_count_mismatch(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "result := id(1, 2) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects 1 argument" in result.diagnostics[0].message
+
+    def test_rejects_void_procedure_in_expression(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure setresult(x); value x; integer x; begin result := x end; "
+            "result := setresult(6) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "does not return a value" in result.diagnostics[0].message

@@ -161,8 +161,52 @@ class Like:
 
 @dataclass(frozen=True, slots=True)
 class Coalesce:
-    """Pop n values; push the first non-NULL, else NULL."""
+    """Pop n values; push the first non-NULL, else NULL.
+
+    .. deprecated::
+        New code should use ``CallScalar(func="coalesce", n_args=n)`` instead.
+        This instruction is kept for backwards compatibility and is still
+        dispatched by the VM.
+    """
     n: int
+
+
+@dataclass(frozen=True, slots=True)
+class CallScalar:
+    """Pop ``n_args`` values, call the named scalar function, push the result.
+
+    ``func`` is the lower-cased SQL function name (e.g. ``"upper"``, ``"abs"``).
+    The VM holds a registry of built-in implementations keyed by this name.
+    Unrecognised names raise ``UnsupportedFunction`` at runtime.
+
+    The call convention is **positional**: the last argument pushed is the
+    first element popped, so :meth:`_VmState.pop_n` returns args in
+    left-to-right (push) order.
+
+    Built-in functions implemented in the VM:
+
+    *NULL-handling*: ``coalesce``, ``nullif``, ``ifnull``, ``iif``
+
+    *Type inspection*: ``typeof``
+
+    *Numeric*: ``abs``, ``round``, ``ceil``, ``floor``, ``sign``, ``mod``,
+    ``max`` (scalar 2-arg variant), ``min`` (scalar 2-arg variant)
+
+    *String*: ``upper``, ``lower``, ``length``, ``trim``, ``ltrim``,
+    ``rtrim``, ``substr`` / ``substring``, ``replace``, ``instr``,
+    ``hex``, ``unhex``, ``quote``, ``printf`` / ``format``,
+    ``char``, ``unicode``, ``zeroblob``, ``soundex``
+
+    *Math*: ``sqrt``, ``pow`` / ``power``, ``log``, ``log2``, ``log10``,
+    ``exp``, ``pi``, ``sin``, ``cos``, ``tan``, ``asin``, ``acos``, ``atan``,
+    ``atan2``, ``degrees``, ``radians``
+
+    *Utility*: ``random``, ``randomblob``, ``last_insert_rowid``
+    (``last_insert_rowid`` always returns NULL in this implementation)
+    """
+
+    func: str      # lower-cased function name
+    n_args: int    # number of arguments already on the stack
 
 
 # ---- Scan instructions --------------------------------------------------
@@ -309,6 +353,23 @@ class InsertRow:
 
 
 @dataclass(frozen=True, slots=True)
+class InsertFromResult:
+    """Drain the current result buffer, inserting every row into ``table``.
+
+    Used for INSERT INTO … SELECT. After this instruction the result buffer
+    is empty; ``rows_affected`` is set to the number of rows inserted.
+
+    ``columns`` is the explicit target column list. If empty the VM uses
+    the result schema's column order as the target column names. This
+    mirrors the INSERT VALUES semantics: explicit column list wins, falling
+    back to the table's natural order.
+    """
+
+    table: str
+    columns: tuple[str, ...]  # empty = use result schema
+
+
+@dataclass(frozen=True, slots=True)
 class UpdateRows:
     """For the row under the current cursor, update the named assignments."""
     table: str
@@ -321,6 +382,81 @@ class DeleteRows:
     """Delete the row under the current cursor."""
     table: str
     cursor_id: int
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureLeftResult:
+    """Save the current result buffer as the "left side" of a set operation.
+
+    After this instruction the result buffer is cleared and the saved rows
+    live in VM state as ``left_result``. The right side's scan then fills
+    the result buffer normally; the subsequent Intersect/ExceptResult
+    instruction performs the final set arithmetic.
+
+    Used by INTERSECT and EXCEPT compilation, which follows the pattern::
+
+        <compile left side>
+        CaptureLeftResult
+        <compile right side>
+        IntersectResult / ExceptResult
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class IntersectResult:
+    """Compute the intersection of ``left_result`` and the current result buffer.
+
+    ``all=False`` (INTERSECT): each distinct row appears once iff it is
+    present in both sides.
+
+    ``all=True`` (INTERSECT ALL): a row appears min(left_count, right_count)
+    times, where the counts are the number of occurrences in each side.
+
+    After this instruction ``left_result`` is cleared and the result buffer
+    holds the intersection.
+    """
+
+    all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class ExceptResult:
+    """Compute the difference of ``left_result`` minus the current result buffer.
+
+    ``all=False`` (EXCEPT): a row from the left side is excluded if it
+    appears anywhere in the right side.
+
+    ``all=True`` (EXCEPT ALL): each occurrence in the right side cancels one
+    occurrence in the left side.
+
+    After this instruction ``left_result`` is cleared and the result buffer
+    holds the difference.
+    """
+
+    all: bool = False
+
+
+# ---- Transaction control ------------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class BeginTransaction:
+    """Call ``backend.begin_transaction()`` and store the handle.
+
+    The handle is saved in VM state so subsequent Commit/Rollback can
+    reference it. Nested BEGIN calls are not supported in v1 — a second
+    BEGIN while a transaction is active raises ``TransactionError``.
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class CommitTransaction:
+    """Call ``backend.commit(handle)`` and clear the stored handle."""
+
+
+@dataclass(frozen=True, slots=True)
+class RollbackTransaction:
+    """Call ``backend.rollback(handle)`` and clear the stored handle."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -344,6 +480,29 @@ class DropTable:
     """Ask the backend to drop a table."""
     table: str
     if_exists: bool = False
+
+
+# ---- Derived-table (subquery in FROM) -----------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class RunSubquery:
+    """Execute the inner sub-program and materialise its result rows under ``cursor_id``.
+
+    Used for derived tables — ``(SELECT …) AS alias`` in a FROM clause.  The
+    outer query then iterates over the materialised rows using the normal
+    ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan`` instructions on the
+    same ``cursor_id``.  The VM checks a per-state subquery-cursor dict before
+    delegating to the backend so the outer loop is transparent to changes here.
+
+    ``sub_program`` is a fully resolved inner :class:`Program` compiled
+    independently with its own cursor/label namespace.  The VM runs it in a
+    temporary child state, collects the result rows, and stores them indexed
+    by ``cursor_id``.
+    """
+
+    cursor_id: int
+    sub_program: Program   # Program is defined below; forward-ref resolved by PEP 563
 
 
 # ---- Control flow -------------------------------------------------------
@@ -384,12 +543,15 @@ class Halt:
 
 Instruction = (
     LoadConst | LoadColumn | Pop
-    | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce
+    | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
-    | InsertRow | UpdateRows | DeleteRows | CreateTable | DropTable
+    | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
+    | CaptureLeftResult | IntersectResult | ExceptResult
+    | BeginTransaction | CommitTransaction | RollbackTransaction
+    | RunSubquery
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

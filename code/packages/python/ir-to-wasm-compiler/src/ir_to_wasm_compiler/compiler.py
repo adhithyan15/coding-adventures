@@ -22,8 +22,8 @@ from wasm_types import (
     DataSegment,
     Export,
     ExternalKind,
-    FuncType,
     FunctionBody,
+    FuncType,
     Import,
     Limits,
     MemoryType,
@@ -83,6 +83,8 @@ _OPCODE = {
         "i32.add",
         "i32.sub",
         "i32.and",
+        "i32.or",
+        "i32.xor",
         "i32.mul",
         "i32.div_s",
         "drop",
@@ -118,6 +120,11 @@ _WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.SUB,
     IrOp.AND,
     IrOp.AND_IMM,
+    IrOp.OR,
+    IrOp.OR_IMM,
+    IrOp.XOR,
+    IrOp.XOR_IMM,
+    IrOp.NOT,
     IrOp.MUL,
     IrOp.DIV,
     IrOp.CMP_EQ,
@@ -217,6 +224,7 @@ class FunctionSignature:
     label: str
     param_count: int
     export_name: str | None = None
+    require_explicit_args: bool = False
 
 
 @dataclass(frozen=True)
@@ -676,6 +684,38 @@ class _FunctionLowerer:
                 self._emit_i32_const(imm.value)
                 self._emit_opcode("i32.and")
                 self._emit_local_set(dst.index)
+            case IrOp.OR:
+                self._emit_binary_numeric("i32.or", instruction)
+            case IrOp.OR_IMM:
+                # OR_IMM dst, src, imm  →  dst = src | imm
+                dst = _expect_register(instruction.operands[0], "OR_IMM dst")
+                src = _expect_register(instruction.operands[1], "OR_IMM src")
+                imm = _expect_immediate(instruction.operands[2], "OR_IMM imm")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(imm.value)
+                self._emit_opcode("i32.or")
+                self._emit_local_set(dst.index)
+            case IrOp.XOR:
+                self._emit_binary_numeric("i32.xor", instruction)
+            case IrOp.XOR_IMM:
+                # XOR_IMM dst, src, imm  →  dst = src ^ imm
+                dst = _expect_register(instruction.operands[0], "XOR_IMM dst")
+                src = _expect_register(instruction.operands[1], "XOR_IMM src")
+                imm = _expect_immediate(instruction.operands[2], "XOR_IMM imm")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(imm.value)
+                self._emit_opcode("i32.xor")
+                self._emit_local_set(dst.index)
+            case IrOp.NOT:
+                # WASM has no bitwise-NOT opcode.  XOR with 0xFFFFFFFF (all ones)
+                # flips every bit of the 32-bit value, which is exactly NOT for i32.
+                # NOT dst, src  →  dst = src ^ 0xFFFFFFFF
+                dst = _expect_register(instruction.operands[0], "NOT dst")
+                src = _expect_register(instruction.operands[1], "NOT src")
+                self._emit_local_get(src.index)
+                self._emit_i32_const(0xFFFFFFFF)
+                self._emit_opcode("i32.xor")
+                self._emit_local_set(dst.index)
             case IrOp.CMP_EQ:
                 self._emit_binary_numeric("i32.eq", instruction)
             case IrOp.CMP_NE:
@@ -691,8 +731,31 @@ class _FunctionLowerer:
                     raise WasmLoweringError(f"missing function signature for {label.name}")
                 if label.name not in self.function_indices:
                     raise WasmLoweringError(f"unknown function label: {label.name}")
-                for param_index in range(signature.param_count):
-                    self._emit_local_get(_REG_VAR_BASE + param_index)
+                explicit_args = instruction.operands[1:]
+                if (
+                    signature.require_explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"explicit argument register(s), got {len(explicit_args)}"
+                    )
+                if (
+                    not signature.require_explicit_args
+                    and explicit_args
+                    and len(explicit_args) != signature.param_count
+                ):
+                    raise WasmLoweringError(
+                        f"CALL {label.name} expects {signature.param_count} "
+                        f"argument register(s), got {len(explicit_args)}"
+                    )
+                if explicit_args:
+                    for operand in explicit_args:
+                        arg = _expect_register(operand, "CALL argument")
+                        self._emit_local_get(arg.index)
+                else:
+                    for param_index in range(signature.param_count):
+                        self._emit_local_get(_REG_VAR_BASE + param_index)
                 self._emit_opcode("call")
                 self._emit_u32(self.function_indices[label.name])
                 self._emit_local_set(_REG_SCRATCH)

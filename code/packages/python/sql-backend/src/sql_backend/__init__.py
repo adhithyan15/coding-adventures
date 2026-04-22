@@ -27,12 +27,15 @@ from .errors import (
     BackendError,
     ColumnNotFound,
     ConstraintViolation,
+    IndexAlreadyExists,
+    IndexNotFound,
     Internal,
     TableAlreadyExists,
     TableNotFound,
     Unsupported,
 )
 from .in_memory import InMemoryBackend
+from .index import IndexDef
 from .row import Cursor, ListCursor, ListRowIterator, Row, RowIterator
 from .schema import NO_DEFAULT, ColumnDef, ColumnDefault
 from .values import SqlValue, is_sql_value, sql_type_name
@@ -46,6 +49,9 @@ __all__ = [
     "ColumnNotFound",
     "ConstraintViolation",
     "Cursor",
+    "IndexAlreadyExists",
+    "IndexDef",
+    "IndexNotFound",
     "InMemoryBackend",
     "Internal",
     "ListCursor",

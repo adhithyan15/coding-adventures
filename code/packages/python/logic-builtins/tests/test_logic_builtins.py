@@ -12,10 +12,12 @@ from logic_engine import (
     eq,
     fact,
     fail,
+    fresh,
     logic_list,
     num,
     program,
     relation,
+    rule,
     solve_all,
     solve_n,
     string,
@@ -25,17 +27,33 @@ from logic_engine import (
 
 from logic_builtins import (
     __version__,
+    abolisho,
     add,
     argo,
+    assertao,
+    assertzo,
     atomico,
     atomo,
     bagofo,
     callableo,
     callo,
+    calltermo,
+    clauseo,
+    compare_termo,
     compoundo,
     copytermo,
+    current_predicateo,
+    cuto,
     div,
+    dynamico,
     failo,
+    fd_eqo,
+    fd_geqo,
+    fd_gto,
+    fd_ino,
+    fd_leqo,
+    fd_lto,
+    fd_neqo,
     findallo,
     floordiv,
     forallo,
@@ -46,6 +64,7 @@ from logic_builtins import (
     ifthenelseo,
     iftheno,
     iso,
+    labelingo,
     leqo,
     lto,
     mod,
@@ -57,10 +76,17 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    predicate_propertyo,
+    retractallo,
+    retracto,
     same_termo,
     setofo,
     stringo,
     sub,
+    termo_geqo,
+    termo_gto,
+    termo_leqo,
+    termo_lto,
     trueo,
     univo,
     varo,
@@ -71,7 +97,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.5.0"
+        assert __version__ == "0.10.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -444,6 +470,131 @@ class TestArithmeticBuiltins:
         ) == [atom("ok")]
 
 
+class TestFiniteDomainBuiltins:
+    """Finite-domain constraints should narrow first and label explicitly."""
+
+    def test_fd_ino_and_labelingo_enumerate_domains_in_order(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(fd_ino(value, range(1, 4)), labelingo([value])),
+        ) == [num(1), num(2), num(3)]
+
+    def test_fd_domains_can_be_logic_lists_or_inclusive_range_terms(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, logic_list([2, 4])),
+                fd_ino(right, term("..", 3, 4)),
+                labelingo([left, right]),
+            ),
+        ) == [(num(2), num(3)), (num(2), num(4)), (num(4), num(3)), (num(4), num(4))]
+
+    def test_fd_constraints_narrow_before_labeling(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(fd_ino(value, range(1, 6)), fd_lto(value, 3), labelingo([value])),
+        ) == [num(1), num(2)]
+
+    def test_fd_constraints_are_order_independent(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(fd_lto(value, 3), fd_ino(value, range(1, 6)), labelingo([value])),
+        ) == [num(1), num(2)]
+
+    def test_fd_equality_intersects_aliased_domains(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, [1, 2]),
+                fd_ino(right, [2, 3]),
+                fd_eqo(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(2), num(2))]
+
+    def test_fd_neq_and_comparisons_prune_binary_domains(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_neqo(left, right),
+                fd_leqo(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(1), num(2)), (num(1), num(3)), (num(2), num(3))]
+
+    def test_fd_greater_comparisons_check_concrete_terms(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), fd_gto(4, 3), fd_geqo(4, 4)),
+        ) == [atom("ok")]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), fd_gto(3, 4))) == []
+
+    def test_labelingo_accepts_logic_list_of_variables(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, [1]),
+                fd_ino(right, [2]),
+                labelingo(logic_list([left, right])),
+            ),
+        ) == [(num(1), num(2))]
+
+    def test_fd_store_rolls_back_across_disjunction_branches(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            disj(
+                conj(fd_ino(value, [1]), labelingo([value])),
+                labelingo([value]),
+            ),
+        ) == [num(1)]
+
+    def test_fd_ino_without_labeling_preserves_open_variables(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, fd_ino(value, [1, 2])) == [value]
+
+    def test_fd_domain_validation_is_eager(self) -> None:
+        value = var("Value")
+
+        with pytest.raises(TypeError):
+            fd_ino(value, [1, 2.5])
+        with pytest.raises(ValueError):
+            fd_ino(value, range(0, 10_001))
+
+
 class TestControlBuiltins:
     """Control helpers should compose with ordinary engine goals."""
 
@@ -462,6 +613,33 @@ class TestControlBuiltins:
         )
 
         assert answers == [atom("first")]
+
+    def test_cuto_commits_surrounding_search(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            conj(disj(eq(item, "first"), eq(item, "second")), cuto()),
+        ) == [atom("first")]
+
+    def test_cuto_is_not_onceo(self) -> None:
+        outer = var("Outer")
+        inner = var("Inner")
+
+        assert solve_all(
+            program(),
+            (outer, inner),
+            conj(
+                disj(eq(outer, "left"), eq(outer, "right")),
+                onceo(disj(eq(inner, "one"), eq(inner, "two"))),
+            ),
+        ) == [(atom("left"), atom("one")), (atom("right"), atom("one"))]
+        assert solve_all(
+            program(),
+            outer,
+            conj(disj(eq(outer, "left"), eq(outer, "right")), cuto()),
+        ) == [atom("left")]
 
     def test_noto_succeeds_when_goal_fails_and_fails_when_goal_succeeds(self) -> None:
         marker = var("Marker")
@@ -490,6 +668,67 @@ class TestControlBuiltins:
             onceo(object())
         with pytest.raises(TypeError):
             noto(object())
+
+
+class TestCallableTermBuiltins:
+    """Callable term helpers should execute Prolog-shaped goal data."""
+
+    def test_calltermo_executes_reified_relation_and_control_terms(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            calltermo(term("parent", "homer", child)),
+        ) == [atom("bart"), atom("lisa")]
+        assert solve_all(
+            family,
+            child,
+            calltermo(
+                term(
+                    ",",
+                    term("parent", "homer", child),
+                    term("\\=", child, "lisa"),
+                ),
+            ),
+        ) == [atom("bart")]
+
+    def test_calltermo_executes_clauseo_body_round_trips(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+        body = var("Body")
+        family = program(
+            fact(parent("homer", "bart")),
+            rule(child(x, y), parent(y, x)),
+        )
+
+        assert solve_all(
+            family,
+            body,
+            conj(clauseo(child("bart", "homer"), body), calltermo(body)),
+        ) == [term("parent", "homer", "bart")]
+
+    def test_calltermo_fails_for_open_or_non_callable_terms(self) -> None:
+        goal = var("Goal")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), calltermo(goal)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), calltermo(string("nope"))),
+        ) == []
 
 
 class TestTermMetaprogrammingBuiltins:
@@ -640,6 +879,359 @@ class TestTermMetaprogrammingBuiltins:
             value,
             conj(eq(value, string("tea")), callableo(value)),
         ) == []
+
+    def test_standard_term_order_predicates_compare_without_binding(self) -> None:
+        order = var("Order")
+        open_var = var("Open")
+        marker = var("Marker")
+
+        assert solve_all(program(), order, compare_termo(order, open_var, 7)) == [
+            atom("<"),
+        ]
+        assert solve_all(
+            program(),
+            order,
+            compare_termo(order, term("pair", "a"), term("pair", "a")),
+        ) == [atom("=")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_lto(open_var, 7)),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_gto(term("box", "tea"), "z")),
+        ) == [atom("ok")]
+
+    def test_standard_term_order_respects_compound_arity_before_functor(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_lto(term("z"), term("a", "value"))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_leqo(term("same"), term("same"))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), termo_geqo("atom", 42)),
+        ) == [atom("ok")]
+
+
+class TestClauseIntrospectionBuiltins:
+    """Program clauses should be queryable as Prolog-style data."""
+
+    def test_clauseo_enumerates_facts_in_source_order(self) -> None:
+        parent = relation("parent", 2)
+        head = var("Head")
+        body = var("Body")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(family, (head, body), clauseo(head, body)) == [
+            (term("parent", "homer", "bart"), atom("true")),
+            (term("parent", "homer", "lisa"), atom("true")),
+        ]
+
+    def test_clauseo_returns_instantiated_rule_body_after_head_matching(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+        body = var("Body")
+        family = program(rule(child(x, y), parent(y, x)))
+
+        assert solve_all(family, body, clauseo(child("bart", "homer"), body)) == [
+            term("parent", "homer", "bart"),
+        ]
+
+    def test_clauseo_filters_by_head_pattern(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            clauseo(term("parent", "homer", child), atom("true")),
+        ) == [atom("bart"), atom("lisa")]
+
+    def test_clauseo_filters_by_body_pattern(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        x = var("X")
+        y = var("Y")
+        marker = var("Marker")
+        family = program(rule(child(x, y), parent(y, x)))
+
+        assert solve_all(
+            family,
+            marker,
+            conj(
+                eq(marker, "ok"),
+                clauseo(child("bart", "homer"), term("parent", "homer", "bart")),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            family,
+            marker,
+            conj(
+                eq(marker, "ok"),
+                clauseo(child("bart", "homer"), term("parent", "marge", "bart")),
+            ),
+        ) == []
+
+    def test_clauseo_standardizes_returned_variables_apart(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        source_x = var("X")
+        source_y = var("Y")
+        head = var("Head")
+        body = var("Body")
+        family = program(rule(child(source_x, source_y), parent(source_y, source_x)))
+
+        [(observed_head, observed_body)] = solve_all(
+            family,
+            (head, body),
+            clauseo(head, body),
+        )
+
+        assert isinstance(observed_head, Compound)
+        assert isinstance(observed_body, Compound)
+        observed_x, observed_y = observed_head.args
+        assert isinstance(observed_x, LogicVar)
+        assert isinstance(observed_y, LogicVar)
+        assert observed_x != source_x
+        assert observed_y != source_y
+        assert observed_body.args == (observed_y, observed_x)
+
+    def test_clauseo_skips_host_only_bodies(self) -> None:
+        predicate = relation("p", 1)
+        body = var("Body")
+        facts_and_rules = program(
+            rule(predicate("x"), fresh(1, lambda inner: eq(inner, "x"))),
+            fact(predicate("y")),
+        )
+
+        assert solve_all(facts_and_rules, body, clauseo(predicate("x"), body)) == []
+        assert solve_all(facts_and_rules, body, clauseo(predicate("y"), body)) == [
+            atom("true"),
+        ]
+
+
+class TestPredicateMetadataBuiltins:
+    """Predicate metadata should expose source and builtin predicates."""
+
+    def test_current_predicateo_enumerates_source_predicates(self) -> None:
+        parent = relation("parent", 2)
+        child = relation("child", 2)
+        arity = var("Arity")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            rule(child("bart", "homer"), parent("homer", "bart")),
+        )
+
+        assert solve_all(family, arity, current_predicateo("parent", arity)) == [
+            num(2),
+        ]
+        assert solve_all(family, arity, current_predicateo("child", arity)) == [
+            num(2),
+        ]
+
+    def test_current_predicateo_enumerates_builtin_predicates(self) -> None:
+        arity = var("Arity")
+
+        assert solve_all(program(), arity, current_predicateo("calltermo", arity)) == [
+            num(1),
+        ]
+
+    def test_predicate_propertyo_reports_source_properties(self) -> None:
+        parent = relation("parent", 2)
+        prop = var("Property")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        properties = set(
+            solve_all(family, prop, predicate_propertyo("parent", 2, prop)),
+        )
+
+        assert atom("defined") in properties
+        assert atom("static") in properties
+        assert atom("built_in") not in properties
+        assert term("number_of_clauses", 2) in properties
+
+    def test_predicate_propertyo_reports_builtin_properties(self) -> None:
+        prop = var("Property")
+
+        properties = set(
+            solve_all(program(), prop, predicate_propertyo("calltermo", 1, prop)),
+        )
+
+        assert atom("defined") in properties
+        assert atom("built_in") in properties
+        assert atom("static") not in properties
+        assert term("number_of_clauses", 0) in properties
+
+
+class TestDynamicRuntimeDatabaseBuiltins:
+    """Runtime database builtins should be scoped to active proof branches."""
+
+    def test_asserta_and_assertz_update_answer_order_in_branch(self) -> None:
+        item = relation("item", 1)
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                dynamico("item", 1),
+                assertzo(item("last")),
+                assertao(item("first")),
+                item(value),
+            ),
+        ) == [atom("first"), atom("last")]
+
+    def test_dynamic_database_rolls_back_across_disjunction_branches(self) -> None:
+        seen = relation("seen", 1)
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            disj(
+                conj(dynamico("seen", 1), assertzo(seen("left")), seen(value)),
+                seen(value),
+            ),
+        ) == [atom("left")]
+
+    def test_retracto_binds_pattern_and_removes_first_match(self) -> None:
+        todo = relation("todo", 1)
+        removed = var("Removed")
+        remaining = var("Remaining")
+
+        assert solve_all(
+            program(),
+            (removed, remaining),
+            conj(
+                dynamico("todo", 1),
+                assertzo(todo("tea")),
+                assertzo(todo("cake")),
+                retracto(todo(removed)),
+                todo(remaining),
+            ),
+        ) == [(atom("tea"), atom("cake"))]
+
+    def test_retractallo_removes_all_matching_dynamic_heads(self) -> None:
+        parent = relation("parent", 2)
+        parent_name = var("Parent")
+        child_name = var("Child")
+        any_child = var("AnyChild")
+
+        assert solve_all(
+            program(),
+            (parent_name, child_name),
+            conj(
+                dynamico("parent", 2),
+                assertzo(parent("homer", "bart")),
+                assertzo(parent("homer", "lisa")),
+                assertzo(parent("marge", "bart")),
+                retractallo(parent("homer", any_child)),
+                parent(parent_name, child_name),
+            ),
+        ) == [(atom("marge"), atom("bart"))]
+
+    def test_abolisho_removes_dynamic_predicate_for_later_goals(self) -> None:
+        scratch = relation("scratch", 1)
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                dynamico("scratch", 1),
+                assertzo(scratch("temp")),
+                abolisho("scratch", 1),
+                scratch(value),
+            ),
+        ) == []
+
+    def test_static_source_predicates_cannot_be_modified_by_runtime_builtins(
+        self,
+    ) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(fact(parent("homer", "bart")))
+
+        assert solve_all(
+            family,
+            child,
+            conj(assertzo(parent("homer", "lisa")), parent("homer", child)),
+        ) == []
+        assert solve_all(
+            family,
+            child,
+            conj(dynamico("parent", 2), parent("homer", child)),
+        ) == []
+
+    def test_program_dynamic_source_clauses_can_be_retracted(self) -> None:
+        parent = relation("parent", 2)
+        removed = var("Removed")
+        remaining = var("Remaining")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            dynamic_relations=(parent,),
+        )
+
+        assert solve_all(
+            family,
+            (removed, remaining),
+            conj(retracto(parent("homer", removed)), parent("homer", remaining)),
+        ) == [(atom("bart"), atom("lisa"))]
+
+    def test_dynamic_predicates_are_visible_to_metadata_and_clauseo(self) -> None:
+        memo = relation("memo", 1)
+        prop = var("Property")
+        body = var("Body")
+
+        properties = solve_all(
+            program(),
+            prop,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo("cached")),
+                predicate_propertyo("memo", 1, prop),
+            ),
+        )
+
+        assert atom("defined") in properties
+        assert atom("dynamic") in properties
+        assert atom("static") not in properties
+        assert term("number_of_clauses", 1) in properties
+        assert solve_all(
+            program(),
+            body,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo("cached")),
+                clauseo(memo("cached"), body),
+            ),
+        ) == [atom("true")]
 
 
 class TestTermStateBuiltins:
