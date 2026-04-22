@@ -29,6 +29,21 @@ assert!(source.contains("pub fn turnstile_definition()"));
 The generated source contains table data and constructors only. It does not
 perform file IO, dynamic evaluation, network access, or format parsing.
 
+## End-To-End Rust Proof
+
+The test suite also proves the Rust path as linked code:
+
+```text
+StateMachineDefinition
+        -> generated Rust module
+        -> temporary wrapper crate
+        -> cargo test
+        -> executable DFA/NFA/PDA behavior
+```
+
+Those temporary crates live only in tests. The public compiler API still returns
+source text and does not read or write files.
+
 ## Fit In The Stack
 
 ```text

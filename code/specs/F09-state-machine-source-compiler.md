@@ -185,6 +185,22 @@ Other languages should preserve the same structure in idiomatic form:
 The generated source must not contain file reads, dynamic eval, arbitrary code
 execution, or network access.
 
+Rust end-to-end completion means the compiler test suite proves this full
+build-time chain:
+
+```text
+manual DFA/NFA/PDA
+  -> StateMachineDefinition
+  -> generated Rust module
+  -> temporary Rust wrapper crate
+  -> cargo test executes the generated constructors
+  -> executable automata accept/reject expected inputs
+```
+
+The generated module itself still contains only typed table data and
+constructors. Test harnesses may write temporary crates to prove linkability,
+but the source compiler API remains file-format and file-system agnostic.
+
 ## Manual Machine Export Layer
 
 The state-machine libraries also need to export manually constructed machines
@@ -331,6 +347,7 @@ The compiler should warn about:
 - canonical TOML snapshot tests
 - canonical JSON snapshot tests once JSON export exists
 - generated Rust source snapshot tests
+- generated Rust compile-and-run tests for DFA, NFA, and PDA behavior
 - generated Go source snapshot tests
 - compile-and-run tests for generated simple machines
 - tokenizer profile tests before attempting full HTML

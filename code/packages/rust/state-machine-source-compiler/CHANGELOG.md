@@ -8,3 +8,6 @@
 - Added deterministic Rust output for DFA, NFA, and PDA definition modules.
 - Added snapshot and error-path tests covering generated helpers, escaping,
   semantic validation, and unsupported kinds.
+- Added end-to-end generated-code tests that compile temporary Rust wrapper
+  crates and exercise generated DFA, NFA, and PDA constructors when the local
+  Rust toolchain can execute freshly built binaries.
