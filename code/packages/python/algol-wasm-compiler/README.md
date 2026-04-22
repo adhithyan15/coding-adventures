@@ -31,9 +31,11 @@ site. Integer array-element by-name actuals now compile as tagged descriptors
 with eval/store helpers, so reads and assignments re-compute the current element
 address every time the formal is used. Read-only expression thunks can also
 read array elements, including Jensen-style terms such as `a[i] * i`.
-Expression thunks that call procedures and expression thunk stores remain
-guarded by IR compile-stage diagnostics until full Phase 5 expression-helper
-coverage is available.
+Expression thunks can call procedures, including procedures that receive nested
+by-name descriptors, and runtime failures from those callees propagate through
+the by-name formal read. Expression thunk stores remain guarded by IR
+compile-stage diagnostics until full Phase 5 store-helper coverage is
+available.
 
 ```python
 from algol_wasm_compiler import compile_source

@@ -741,9 +741,15 @@ Current Phase 5d lowering may allow read-only expression descriptors to read
 integer arrays. The eval helper should mark its synthetic caller-frame scope as
 a helper context, so checked array loads inside expression thunks report bounds
 failures through the thunk failure flag and let the by-name formal read perform
-the caller's normal unwind. Procedure calls inside expression thunks remain
-rejected until helper calls can safely manage nested returns and failure
-propagation.
+the caller's normal unwind.
+
+Current Phase 5e lowering may allow procedure calls inside read-only expression
+descriptors. Eval and store helpers should maintain a runtime helper-depth
+counter while thunk code executes. Runtime failures in procedures called from a
+helper set the thunk failure flag, and procedure-call lowering in helper scopes
+returns immediately to the helper caller when that flag is set. This keeps
+nested procedure frames and call-scoped thunk descriptors bounded while letting
+normal, non-helper procedure failures keep their existing return-`0` behavior.
 
 ### Required Diagnostics
 

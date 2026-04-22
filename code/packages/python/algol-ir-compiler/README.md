@@ -33,11 +33,13 @@ reads re-compute the element address through the eval helper, and writable
 formals call a generated store helper that re-locates the element before storing
 the new value. Read-only expression thunks can also read array elements; helper
 bounds failures are reported back to the calling procedure before the normal
-frame and thunk-region unwind. Expression thunks that call procedures and stores
-through read-only expression thunks still raise targeted `CompileError`
-diagnostics until Phase 5 grows full expression-helper coverage.
+frame and thunk-region unwind. Procedure calls inside read-only expression
+thunks are supported, including nested by-name descriptor allocation and runtime
+failure propagation from callees back to the by-name formal read. Stores through
+read-only expression thunks still raise targeted `CompileError` diagnostics
+until Phase 5 grows full store-helper coverage.
 
-This phase keeps ALGOL frame memory and its 28-byte runtime state bounded to
+This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
 separate 64 KiB heap segment. Larger semantic frame plans raise `CompileError`
 before the WASM data encoder can materialize the memory image, dynamic

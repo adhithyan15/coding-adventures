@@ -44,19 +44,18 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
-    def test_procedure_call_expression_by_name_waits_for_eval_thunk_stage(
+    def test_procedure_call_expression_by_name_runs_through_eval_thunk(
         self,
     ) -> None:
-        with pytest.raises(AlgolWasmError) as raised:
-            compile_source(
-                "begin integer result; "
-                "integer procedure inc(n); value n; integer n; "
-                "begin inc := n + 1 end; "
-                "integer procedure id(x); integer x; begin id := x end; "
-                "result := id(inc(4)) "
-                "end"
-            )
-        assert raised.value.stage == "ir-compile"
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(n); value n; integer n; "
+            "begin inc := n + 1 end; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "result := id(inc(4)) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
 
     def test_runtime_smoke_returns_result(self) -> None:
         result = compile_source(
@@ -192,6 +191,50 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_procedure_expression_by_name_re_evaluates_on_each_read(self) -> None:
+        result = compile_source(
+            "begin integer result, count; "
+            "integer procedure next(n); value n; integer n; "
+            "begin count := count + 1; next := n + count end; "
+            "integer procedure probe(x); integer x; "
+            "begin probe := x; probe := probe * 100 + x end; "
+            "count := 0; result := probe(next(3)) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [405]
+
+    def test_procedure_expression_by_name_can_allocate_nested_thunks(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure use(x); integer x; begin use := x end; "
+            "integer procedure probe(x); integer x; "
+            "begin probe := x; result := 10; probe := probe * 100 + x end; "
+            "result := 3; result := probe(use(result + 1)) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [411]
+
+    def test_procedure_expression_by_name_bounds_failure_propagates(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure bad(n); value n; integer n; "
+            "begin integer array a[1:1]; bad := a[2] end; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "result := id(bad(1) + 1) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_procedure_expression_by_name_reads_array_value_argument(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:2]; "
+            "integer procedure inc(n); value n; integer n; begin inc := n + 1 end; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "a[1] := 7; i := 1; result := id(inc(a[i])) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
     def test_jensens_device_sums_array_element_expression(self) -> None:
         result = compile_source(
