@@ -132,7 +132,23 @@ caller provides an explicit allowlisted resolver.
 
 ## Generated Source Shape
 
-For a simple DFA, Rust output should look conceptually like:
+For the first implementation slice, Rust generation emits a small module that
+reconstructs the validated typed definition and exposes a convenience
+constructor for the executable machine kind. This keeps the generated code
+boring, reviewable, and statically linked while avoiding any runtime TOML/JSON
+file loading:
+
+```rust
+pub fn turnstile_definition() -> StateMachineDefinition { /* table data */ }
+
+pub fn turnstile_dfa() -> Result<DFA, String> {
+    DFA::from_definition(&turnstile_definition())
+}
+```
+
+Later optimization passes may lower the same definition into enum-backed static
+tables. For a simple DFA, that optimized Rust output should look conceptually
+like:
 
 ```rust
 pub enum TurnstileState {
@@ -205,6 +221,8 @@ Phase 2 export support:
 
 Phase 3 export support:
 
+- a Rust `state-machine-source-compiler` package that consumes typed
+  `StateMachineDefinition` values and emits deterministic source text
 - source code generators for Rust and Go
 - source code generators for TypeScript, Python, and Ruby
 - generated wrapper package templates
@@ -297,6 +315,7 @@ The compiler must reject:
 - profile features unsupported by the target language generator
 - generated identifiers that would collide after language-specific casing
 - generated identifiers that are reserved words in the target language
+- unsupported source generator targets or machine kinds for the selected phase
 
 The compiler should warn about:
 
@@ -326,8 +345,8 @@ The compiler should warn about:
    serializer package.
 4. Add tests covering turnstile DFA, contains-abc NFA, and balanced-parens PDA.
 5. Add bounded canonical JSON deserialization for tooling snapshots.
-6. Add a small compiler program that reads typed definitions and emits Rust
-   source.
+6. Add a Rust source compiler package that accepts validated typed definitions
+   and emits deterministic Rust source without file IO.
 7. Add Go source generation.
 8. Add tokenizer-profile source generation.
 9. Use the generated tokenizer path to rebuild the HTML 1.0 lexer wrapper.
