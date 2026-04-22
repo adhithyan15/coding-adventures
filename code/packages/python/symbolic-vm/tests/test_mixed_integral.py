@@ -281,15 +281,16 @@ class TestEndToEnd:
         result = _vm_integrate(IRApply(DIV, (IRInteger(1), den_ir)))
         assert _contains_log(result)
 
-    def test_two_quadratics_stays_unevaluated(self):
-        # ∫ 1/((x²+1)(x²+4)) dx — two irreducible quadratics, stays unevaluated.
+    def test_two_quadratics_evaluated_by_phase9(self):
+        # ∫ 1/((x²+1)(x²+4)) dx — Phase 9 now handles two irreducible quadratics.
         from symbolic_ir import DIV
 
         from symbolic_vm.polynomial_bridge import from_polynomial
         den_poly = multiply(P(1, 0, 1), P(4, 0, 1))
         den_ir = from_polynomial(den_poly, X)
-        result = _vm_integrate(IRApply(DIV, (IRInteger(1), den_ir)))
-        assert isinstance(result, IRApply) and result.head == INTEGRATE
+        integrand = IRApply(DIV, (IRInteger(1), den_ir))
+        result = _vm_integrate(integrand)
+        assert not (isinstance(result, IRApply) and result.head == INTEGRATE)
 
     def test_rt_single_log_not_broken(self):
         # Regression: ∫ 1/(x-1) dx still gives log(x-1), not broken by 2f.
