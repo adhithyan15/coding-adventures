@@ -29,6 +29,7 @@ from logic_builtins import (
     __version__,
     abolisho,
     add,
+    all_differento,
     argo,
     assertao,
     assertzo,
@@ -47,13 +48,16 @@ from logic_builtins import (
     div,
     dynamico,
     failo,
+    fd_addo,
     fd_eqo,
     fd_geqo,
     fd_gto,
     fd_ino,
     fd_leqo,
     fd_lto,
+    fd_mulo,
     fd_neqo,
+    fd_subo,
     findallo,
     floordiv,
     forallo,
@@ -97,7 +101,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.10.0"
+        assert __version__ == "0.11.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -593,6 +597,118 @@ class TestFiniteDomainBuiltins:
             fd_ino(value, [1, 2.5])
         with pytest.raises(ValueError):
             fd_ino(value, range(0, 10_001))
+
+    def test_fd_addo_prunes_addend_domains_before_labeling(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 6)),
+                fd_ino(right, range(1, 6)),
+                fd_addo(left, right, 6),
+                fd_lto(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(1), num(5)), (num(2), num(4))]
+
+    def test_fd_arithmetic_constraints_are_order_independent(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_addo(left, right, 4),
+                fd_ino(left, range(1, 5)),
+                fd_ino(right, range(1, 5)),
+                fd_lto(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(1), num(3))]
+
+    def test_fd_subo_solves_difference_constraints(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 6)),
+                fd_ino(right, range(1, 6)),
+                fd_subo(left, right, 2),
+                labelingo([left, right]),
+            ),
+        ) == [(num(3), num(1)), (num(4), num(2)), (num(5), num(3))]
+
+    def test_fd_mulo_solves_product_constraints(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 7)),
+                fd_ino(right, range(1, 7)),
+                fd_mulo(left, right, 12),
+                fd_leqo(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(2), num(6)), (num(3), num(4))]
+
+    def test_all_differento_prunes_singleton_assignments(self) -> None:
+        left = var("Left")
+        middle = var("Middle")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, middle, right),
+            conj(
+                fd_ino(left, [1]),
+                fd_ino(middle, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                all_differento([left, middle, right]),
+                labelingo([left, middle, right]),
+            ),
+        ) == [(num(1), num(2), num(3)), (num(1), num(3), num(2))]
+
+    def test_all_differento_rejects_duplicate_concrete_values(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), all_differento([1, 1, marker])),
+        ) == []
+
+    def test_all_differento_solves_tiny_latin_square(self) -> None:
+        top_left = var("TopLeft")
+        top_right = var("TopRight")
+        bottom_left = var("BottomLeft")
+        bottom_right = var("BottomRight")
+        cells = (top_left, top_right, bottom_left, bottom_right)
+
+        assert solve_all(
+            program(),
+            cells,
+            conj(
+                *(fd_ino(cell, range(1, 3)) for cell in cells),
+                all_differento([top_left, top_right]),
+                all_differento([bottom_left, bottom_right]),
+                all_differento(logic_list([top_left, bottom_left])),
+                all_differento(logic_list([top_right, bottom_right])),
+                labelingo(cells),
+            ),
+        ) == [
+            (num(1), num(2), num(2), num(1)),
+            (num(2), num(1), num(1), num(2)),
+        ]
 
 
 class TestControlBuiltins:

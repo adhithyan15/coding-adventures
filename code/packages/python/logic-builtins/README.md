@@ -37,7 +37,9 @@ ordinary logic goal expressions.
   branch-local dynamic database mutation
 - `fd_ino(var, domain)`, `fd_eqo(left, right)`, `fd_neqo(left, right)`,
   `fd_lto(left, right)`, `fd_leqo(left, right)`, `fd_gto(left, right)`,
-  `fd_geqo(left, right)`, and `labelingo(vars)` for finite-domain integer
+  `fd_geqo(left, right)`, `fd_addo(left, right, result)`,
+  `fd_subo(left, right, result)`, `fd_mulo(left, right, result)`,
+  `all_differento(vars)`, and `labelingo(vars)` for finite-domain integer
   constraints
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
@@ -57,6 +59,8 @@ from logic_builtins import (
     current_predicateo,
     cuto,
     dynamico,
+    all_differento,
+    fd_addo,
     fd_ino,
     fd_leqo,
     fd_neqo,
@@ -92,6 +96,7 @@ from logic_engine import (
 )
 
 X = var("X")
+Y = var("Y")
 Name = var("Name")
 Arity = var("Arity")
 Arg = var("Arg")
@@ -180,6 +185,17 @@ assert solve_all(
     X,
     conj(fd_ino(X, range(1, 6)), fd_leqo(X, 3), fd_neqo(X, 2), labelingo([X])),
 ) == [num(1), num(3)]
+assert solve_all(
+    program(),
+    (X, Y),
+    conj(
+        fd_ino(X, range(1, 5)),
+        fd_ino(Y, range(1, 5)),
+        fd_addo(X, Y, 5),
+        all_differento([X, Y]),
+        labelingo([X, Y]),
+    ),
+) == [(num(1), num(4)), (num(2), num(3)), (num(3), num(2)), (num(4), num(1))]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -187,10 +203,12 @@ fails while `X` is unbound, and succeeds after a goal such as `eq(X, 4)` has
 instantiated it.
 
 Finite-domain constraints are branch-local and label explicitly. `fd_ino`
-stores a finite integer domain, comparison predicates narrow domains as soon as
-enough information exists, and `labelingo([X, Y])` enumerates concrete
-assignments in ascending order. This foundation intentionally does not include
-FD arithmetic propagation or global constraints yet.
+stores a finite integer domain; comparison, arithmetic, and all-different
+predicates narrow domains as soon as enough information exists; and
+`labelingo([X, Y])` enumerates concrete assignments in ascending order.
+Arithmetic constraints currently cover addition, subtraction, and
+multiplication. `all_differento` includes duplicate checks and singleton
+pruning, while deeper Hall-set global-constraint pruning remains future work.
 
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail
