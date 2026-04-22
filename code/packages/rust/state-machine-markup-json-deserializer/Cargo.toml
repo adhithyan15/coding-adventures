@@ -1,0 +1,12 @@
+[package]
+name = "state-machine-markup-json-deserializer"
+version = "0.1.0"
+edition = "2021"
+description = "Strict JSON deserialization for typed state-machine definitions"
+
+[dependencies]
+state-machine = { path = "../state-machine" }
+state-machine-markup-deserializer = { path = "../state-machine-markup-deserializer" }
+
+[dev-dependencies]
+state-machine-markup-json-serializer = { path = "../state-machine-markup-json-serializer" }
