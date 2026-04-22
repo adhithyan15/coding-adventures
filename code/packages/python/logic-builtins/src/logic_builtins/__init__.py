@@ -21,6 +21,7 @@ from logic_builtins.builtins import (
     compoundo,
     copytermo,
     current_predicateo,
+    cuto,
     div,
     dynamico,
     failo,
@@ -79,6 +80,7 @@ __all__ = [
     "compare_termo",
     "copytermo",
     "current_predicateo",
+    "cuto",
     "div",
     "dynamico",
     "failo",
@@ -119,4 +121,4 @@ __all__ = [
     "varo",
 ]
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"

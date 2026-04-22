@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.0] - 2026-04-22
+
+### Added
+
+- `cuto()` as the library spelling of Prolog cut backed by engine-level scoped
+  choicepoint pruning
+- builtin predicate metadata for `cuto/0`
+- tests distinguishing `cuto()` from `onceo(...)` and proving it commits the
+  surrounding search frame
+
 ## [0.8.0] - 2026-04-21
 
 ### Added
