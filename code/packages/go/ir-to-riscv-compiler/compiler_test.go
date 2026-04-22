@@ -1,9 +1,12 @@
 package irtoriscvcompiler
 
 import (
+	"bytes"
+	"strings"
 	"testing"
 
 	ir "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-ir"
+	riscvassembler "github.com/adhithyan15/coding-adventures/code/packages/go/riscv-assembler"
 	riscv "github.com/adhithyan15/coding-adventures/code/packages/go/riscv-simulator"
 )
 
@@ -30,6 +33,17 @@ func TestCompileRunsArithmeticOnRiscVSimulator(t *testing.T) {
 	}
 	if offset, length := result.IrToMachineCode.LookupByIrID(3); offset != 8 || length != 4 {
 		t.Fatalf("expected ADD mapping at offset=8 length=4, got offset=%d length=%d", offset, length)
+	}
+	if !strings.Contains(result.Assembly, "add x7, x5, x6") {
+		t.Fatalf("expected assembly to contain lowered add, got:\n%s", result.Assembly)
+	}
+
+	assembled, err := riscvassembler.Assemble(result.Assembly)
+	if err != nil {
+		t.Fatalf("assemble emitted assembly failed: %v\n%s", err, result.Assembly)
+	}
+	if !bytes.Equal(assembled.Bytes, result.Bytes) {
+		t.Fatalf("expected emitted assembly to reassemble to compiler bytes")
 	}
 }
 
