@@ -22,11 +22,13 @@ from math import isfinite
 from numbers import Integral, Real
 from typing import Literal
 
-from note_audio import (
-    DEFAULT_MAX_SAMPLE_COUNT,
-    RenderedNote,
-    render_note_to_sound_chain,
+from musical_instruments import (
+    InstrumentNoteRender,
+    get_instrument,
+    instrument_for_gm_program,
+    render_instrument_note,
 )
+from note_audio import DEFAULT_MAX_SAMPLE_COUNT
 from note_frequency import parse_note
 from oscillator import sample_count_for_duration
 from pcm_audio import DEFAULT_SAMPLE_RATE_HZ, PCMBuffer, PCMFormat
@@ -34,6 +36,7 @@ from pcm_audio import DEFAULT_SAMPLE_RATE_HZ, PCMBuffer, PCMFormat
 DEFAULT_TEMPO_BPM = 120.0
 DEFAULT_METER = "4/4"
 DEFAULT_AMPLITUDE = 0.18
+DEFAULT_INSTRUMENT_ID = "sine"
 DEFAULT_MAX_SCORE_LENGTH = 1_000_000
 DEFAULT_MAX_LINE_LENGTH = 10_000
 DEFAULT_MAX_EVENT_COUNT = 10_000
@@ -53,6 +56,8 @@ DIRECTIVE_NAMES = frozenset(
         "meter",
         "amplitude",
         "sample_rate",
+        "instrument",
+        "program",
     }
 )
 
@@ -63,6 +68,7 @@ HAPPY_BIRTHDAY_TEXT = """title: Happy Birthday
 tempo: 120
 meter: 3/4
 amplitude: 0.18
+instrument: sine
 sample_rate: 44100
 
 G4/e G4/e | A4/q G4/q C5/q | B4/h R/q |
@@ -129,6 +135,17 @@ def _integer_valued_sample_rate(text: str) -> int:
     return _positive_integer("sample_rate", int(round(value)))
 
 
+def _integer_directive(name: str, text: str) -> int:
+    try:
+        value = float(text)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be an integer, got {text!r}") from exc
+
+    if not isfinite(value) or value != round(value):
+        raise ValueError(f"{name} must be an integer, got {text!r}")
+    return _positive_integer(name, int(round(value)))
+
+
 def _parse_float_directive(name: str, text: str) -> float:
     try:
         return float(text)
@@ -141,6 +158,22 @@ def _validate_meter(text: str) -> str:
     if match is None:
         raise ValueError(f"meter must look like positive beats/beat-unit, got {text!r}")
     return text
+
+
+def resolve_instrument_id(
+    *,
+    instrument_id: str | None = None,
+    gm_program: int | None = None,
+) -> str:
+    """Resolve score instrument settings to a concrete profile id."""
+
+    if instrument_id is not None and gm_program is not None:
+        raise ValueError("score may specify instrument or program, not both")
+    if gm_program is not None:
+        return instrument_for_gm_program(gm_program).id
+    if instrument_id is None:
+        return DEFAULT_INSTRUMENT_ID
+    return get_instrument(instrument_id).id
 
 
 def beats_for_duration_symbol(symbol: str) -> float:
@@ -210,6 +243,8 @@ class TextScore:
     meter: str
     amplitude: float
     sample_rate_hz: int
+    instrument_id: str
+    gm_program: int | None
     events: tuple[ScoreEvent, ...]
 
     def __post_init__(self) -> None:
@@ -225,6 +260,23 @@ class TextScore:
             self,
             "sample_rate_hz",
             _positive_integer("sample_rate_hz", self.sample_rate_hz),
+        )
+        gm_program = None
+        if self.gm_program is not None:
+            gm_program = _positive_integer("gm_program", self.gm_program)
+            if gm_program > 128:
+                raise ValueError("gm_program must be in [1, 128]")
+        object.__setattr__(self, "gm_program", gm_program)
+        if gm_program is None:
+            resolved_instrument_id = resolve_instrument_id(
+                instrument_id=str(self.instrument_id),
+            )
+        else:
+            resolved_instrument_id = resolve_instrument_id(gm_program=gm_program)
+        object.__setattr__(
+            self,
+            "instrument_id",
+            resolved_instrument_id,
         )
         object.__setattr__(self, "events", tuple(self.events))
         if not self.events:
@@ -247,7 +299,7 @@ class RenderedScore:
 
     score: TextScore
     pcm_buffer: PCMBuffer
-    rendered_notes: tuple[RenderedNote, ...]
+    rendered_notes: tuple[InstrumentNoteRender, ...]
 
     def __post_init__(self) -> None:
         if not isinstance(self.score, TextScore):
@@ -256,9 +308,9 @@ class RenderedScore:
             raise ValueError("pcm_buffer must be a PCMBuffer")
         object.__setattr__(self, "rendered_notes", tuple(self.rendered_notes))
         for index, rendered_note in enumerate(self.rendered_notes):
-            if not isinstance(rendered_note, RenderedNote):
+            if not isinstance(rendered_note, InstrumentNoteRender):
                 raise ValueError(
-                    f"rendered_notes[{index}] must be a note_audio.RenderedNote"
+                    f"rendered_notes[{index}] must be an InstrumentNoteRender"
                 )
 
 
@@ -327,6 +379,9 @@ def parse_score(
     meter = DEFAULT_METER
     amplitude = DEFAULT_AMPLITUDE
     sample_rate_hz = int(DEFAULT_SAMPLE_RATE_HZ)
+    instrument_id = DEFAULT_INSTRUMENT_ID
+    instrument_directive_seen = False
+    gm_program: int | None = None
     events: list[ScoreEvent] = []
 
     for line_number, raw_line in enumerate(text.splitlines(), start=1):
@@ -368,6 +423,28 @@ def parse_score(
                 )
             elif name == "sample_rate":
                 sample_rate_hz = _integer_valued_sample_rate(value)
+            elif name == "instrument":
+                if gm_program is not None:
+                    raise ValueError(
+                        f"line {line_number}: score may specify instrument or "
+                        "program, not both"
+                    )
+                try:
+                    instrument_id = get_instrument(value).id
+                except ValueError as exc:
+                    raise ValueError(f"line {line_number}: {exc}") from exc
+                instrument_directive_seen = True
+            elif name == "program":
+                if instrument_directive_seen:
+                    raise ValueError(
+                        f"line {line_number}: score may specify instrument or "
+                        "program, not both"
+                    )
+                gm_program = _integer_directive("program", value)
+                try:
+                    instrument_id = instrument_for_gm_program(gm_program).id
+                except ValueError as exc:
+                    raise ValueError(f"line {line_number}: {exc}") from exc
             continue
 
         for token in line.split():
@@ -389,6 +466,8 @@ def parse_score(
         meter=meter,
         amplitude=amplitude,
         sample_rate_hz=sample_rate_hz,
+        instrument_id=instrument_id,
+        gm_program=gm_program,
         events=tuple(events),
     )
 
@@ -396,11 +475,21 @@ def parse_score(
 def _validate_total_sample_budget(
     events: tuple[ScoreEvent, ...],
     sample_rate_hz: int,
+    instrument_id: str,
     max_sample_count: int,
 ) -> None:
     limit = _positive_integer("max_sample_count", max_sample_count)
+    instrument = get_instrument(instrument_id)
     total = sum(
-        sample_count_for_duration(event.duration_seconds, sample_rate_hz)
+        sample_count_for_duration(
+            event.duration_seconds
+            + (
+                instrument.envelope_profile.release_seconds
+                if event.kind == "note"
+                else 0.0
+            ),
+            sample_rate_hz,
+        )
         for event in events
     )
     if total > limit:
@@ -419,12 +508,18 @@ def render_score_to_pcm(
     if not isinstance(score, TextScore):
         raise ValueError("score must be a TextScore")
 
-    _validate_total_sample_budget(score.events, score.sample_rate_hz, max_sample_count)
+    _validate_total_sample_budget(
+        score.events,
+        score.sample_rate_hz,
+        score.instrument_id,
+        max_sample_count,
+    )
 
     pcm_samples: list[int] = []
-    rendered_notes: list[RenderedNote] = []
+    rendered_notes: list[InstrumentNoteRender] = []
     clipped_sample_count = 0
     elapsed_seconds = 0.0
+    cursor_sample_index = 0
 
     for event in score.events:
         if event.kind == "rest":
@@ -432,19 +527,36 @@ def render_score_to_pcm(
                 event.duration_seconds,
                 score.sample_rate_hz,
             )
-            pcm_samples.extend(0 for _ in range(silence_count))
+            cursor_sample_index += silence_count
+            if len(pcm_samples) < cursor_sample_index:
+                pcm_samples.extend(
+                    0 for _ in range(cursor_sample_index - len(pcm_samples))
+                )
         else:
-            rendered_note = render_note_to_sound_chain(
+            rendered_note = render_instrument_note(
                 event.note,
                 event.duration_seconds,
+                instrument=score.instrument_id,
                 sample_rate_hz=score.sample_rate_hz,
                 amplitude=score.amplitude,
                 start_time_seconds=elapsed_seconds,
                 max_sample_count=max_sample_count,
             )
             rendered_notes.append(rendered_note)
-            pcm_samples.extend(rendered_note.pcm_buffer.samples)
+            required_count = (
+                cursor_sample_index + rendered_note.pcm_buffer.sample_count()
+            )
+            if len(pcm_samples) < required_count:
+                pcm_samples.extend(0 for _ in range(required_count - len(pcm_samples)))
+            for offset, sample in enumerate(rendered_note.pcm_buffer.samples):
+                sample_index = cursor_sample_index + offset
+                mixed = pcm_samples[sample_index] + sample
+                pcm_samples[sample_index] = max(-32_768, min(32_767, mixed))
             clipped_sample_count += rendered_note.pcm_buffer.clipped_sample_count
+            cursor_sample_index += sample_count_for_duration(
+                event.duration_seconds,
+                score.sample_rate_hz,
+            )
         elapsed_seconds += event.duration_seconds
 
     return RenderedScore(
