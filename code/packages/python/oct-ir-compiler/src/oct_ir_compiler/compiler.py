@@ -256,6 +256,120 @@ _EXPR_RULES = frozenset({
 
 
 # ---------------------------------------------------------------------------
+# OctCompileConfig — I/O target configuration
+# ---------------------------------------------------------------------------
+#
+# By default Oct compiles for the Intel 8008: ``in(PORT)`` maps to
+# ``SYSCALL 20+PORT`` and ``out(PORT, val)`` maps to ``SYSCALL 40+PORT``.
+# These are 8008-specific port numbers; they are not meaningful on WASM, JVM,
+# or CLR.
+#
+# OctCompileConfig allows callers to redirect I/O to a cross-platform ABI
+# instead.  Setting ``write_byte_syscall`` to a non-None value makes
+# ``out(PORT, val)`` emit ``SYSCALL [write_byte_syscall, v2]`` (the byte is
+# in v2; PORT is ignored — cross-platform targets expose a single byte-write
+# channel rather than 24 port-specific channels).  Similarly for
+# ``read_byte_syscall`` and ``in(PORT)``.
+#
+# Pre-defined configurations cover the three cross-platform backends:
+#
+#   INTEL_8008_IO  — default; 8008 port-based SYSCALLs (port encoded in number)
+#   WASM_IO        — SYSCALL 1 (fd_write) / SYSCALL 2 (fd_read)
+#   JVM_IO         — SYSCALL 1 (System.out.write) / SYSCALL 4 (System.in.read)
+#   CLR_IO         — SYSCALL 1 (Console.Write) / SYSCALL 2 (Console.Read)
+#
+# The ``write_byte_syscall`` and ``read_byte_syscall`` values of None mean
+# "use the 8008 port-based encoding" (existing behaviour, unchanged).
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class OctCompileConfig:
+    """Configuration controlling how Oct's I/O intrinsics are lowered to IR.
+
+    Attributes:
+        write_byte_syscall: The SYSCALL number to use for ``out()`` when
+            targeting a cross-platform backend.  ``None`` (the default) means
+            ``out(PORT, val)`` → ``SYSCALL 40+PORT`` (Intel 8008 convention).
+            When non-None, ``out(PORT, val)`` → ``SYSCALL write_byte_syscall``
+            with ``val`` in the standard arg register (v2); PORT is ignored
+            because cross-platform targets have a single byte-write channel.
+
+        read_byte_syscall: The SYSCALL number to use for ``in()`` when
+            targeting a cross-platform backend.  ``None`` (the default) means
+            ``in(PORT)`` → ``SYSCALL 20+PORT`` (Intel 8008 convention).
+            When non-None, ``in(PORT)`` → ``SYSCALL read_byte_syscall`` with
+            the result in the scratch register (v1); PORT is ignored for the
+            same reason.
+
+    Example — target WASM::
+
+        from oct_ir_compiler import compile_oct, WASM_IO
+
+        result = compile_oct(typed_ast, config=WASM_IO)
+
+    Example — target JVM::
+
+        from oct_ir_compiler import compile_oct, JVM_IO
+
+        result = compile_oct(typed_ast, config=JVM_IO)
+
+    Example — default (Intel 8008)::
+
+        result = compile_oct(typed_ast)  # uses INTEL_8008_IO implicitly
+    """
+
+    write_byte_syscall: int | None = None
+    read_byte_syscall: int | None = None
+
+
+# Pre-defined I/O configurations.
+
+INTEL_8008_IO: OctCompileConfig = OctCompileConfig(
+    write_byte_syscall=None,  # out(PORT, val) → SYSCALL 40+PORT
+    read_byte_syscall=None,   # in(PORT) → SYSCALL 20+PORT
+)
+"""Intel 8008 I/O config (default).
+
+``out(PORT, val)`` lowers to ``SYSCALL 40+PORT`` and ``in(PORT)`` to
+``SYSCALL 20+PORT``, matching the 8008 INP/OUT opcode encoding where the port
+number is baked into the instruction opcode field.
+"""
+
+WASM_IO: OctCompileConfig = OctCompileConfig(
+    write_byte_syscall=1,   # WASI fd_write
+    read_byte_syscall=2,    # WASI fd_read
+)
+"""WASM / WASI I/O config.
+
+``out()`` → ``SYSCALL 1`` (fd_write), ``in()`` → ``SYSCALL 2`` (fd_read).
+Matches the WASI preview-1 ABI used by ``ir-to-wasm-compiler``.
+"""
+
+JVM_IO: OctCompileConfig = OctCompileConfig(
+    write_byte_syscall=1,   # System.out.write(byte)
+    read_byte_syscall=4,    # System.in.read()
+)
+"""JVM I/O config.
+
+``out()`` → ``SYSCALL 1`` (System.out.write), ``in()`` → ``SYSCALL 4``
+(System.in.read).  Matches the SYSCALL numbers wired in ``ir-to-jvm-class-file``
+(which uses SYSCALL 1 and 4 to match Dartmouth BASIC convention).
+"""
+
+CLR_IO: OctCompileConfig = OctCompileConfig(
+    write_byte_syscall=1,   # Console.Write(char)
+    read_byte_syscall=2,    # Console.Read()
+)
+"""CLR (.NET) I/O config.
+
+``out()`` → ``SYSCALL 1`` (Console.Write), ``in()`` → ``SYSCALL 2``
+(Console.Read).  Matches the SYSCALL numbers wired in the ``ir-to-cil-bytecode``
+CLR host.
+"""
+
+
+# ---------------------------------------------------------------------------
 # OctCompileResult — the output of compilation
 # ---------------------------------------------------------------------------
 
@@ -288,7 +402,10 @@ class OctCompileResult:
 # ---------------------------------------------------------------------------
 
 
-def compile_oct(typed_ast: ASTNode) -> OctCompileResult:
+def compile_oct(
+    typed_ast: ASTNode,
+    config: OctCompileConfig = INTEL_8008_IO,
+) -> OctCompileResult:
     """Compile a typed Oct AST into IR and return the result.
 
     This is the main entry point for the Oct IR compiler.  It accepts the
@@ -303,6 +420,12 @@ def compile_oct(typed_ast: ASTNode) -> OctCompileResult:
         typed_ast: Root ``ASTNode`` with ``rule_name == "program"``,
                    already annotated with ``._oct_type`` on every
                    expression node.
+        config: I/O target configuration that controls how ``in()`` and
+                ``out()`` intrinsics are lowered to SYSCALL IR instructions.
+                Defaults to ``INTEL_8008_IO`` (port-based 8008 encoding).
+                Pass ``WASM_IO``, ``JVM_IO``, or ``CLR_IO`` to target those
+                backends directly from Oct source without any SYSCALL ABI
+                mismatch at compile time.
 
     Returns:
         An ``OctCompileResult`` with the compiled ``IrProgram``.
@@ -310,41 +433,40 @@ def compile_oct(typed_ast: ASTNode) -> OctCompileResult:
     Raises:
         ValueError: If the AST root is not a ``"program"`` node.
 
-    Example::
+    Example — default (Intel 8008 target)::
 
         from oct_parser import parse_oct
         from oct_type_checker import check_oct
         from oct_ir_compiler import compile_oct
 
-        source = '''
-            static LIMIT: u8 = 100;
-
-            fn clamp(val: u8) -> u8 {
-                let lim: u8 = LIMIT;
-                if val > lim {
-                    return lim;
-                }
-                return val;
-            }
-
-            fn main() {
-                let b: u8 = in(0);
-                out(1, clamp(b));
-            }
-        '''
-
-        ast = parse_oct(source)
+        ast = parse_oct("fn main() { out(1, in(0)); }")
         tc_result = check_oct(ast)
         compiled = compile_oct(tc_result.typed_ast)
-        prog = compiled.program
-        # prog.entry_label == "_start"
+        # in(0)  → SYSCALL 20   (8008 INP port 0)
+        # out(1, …) → SYSCALL 41  (8008 OUT port 1)
+
+    Example — WASM target::
+
+        from oct_ir_compiler import compile_oct, WASM_IO
+
+        compiled = compile_oct(tc_result.typed_ast, config=WASM_IO)
+        # in(0)  → SYSCALL 2  (WASI fd_read)
+        # out(1, …) → SYSCALL 1  (WASI fd_write)
+
+    Example — JVM target::
+
+        from oct_ir_compiler import compile_oct, JVM_IO
+
+        compiled = compile_oct(tc_result.typed_ast, config=JVM_IO)
+        # in(0)  → SYSCALL 4  (System.in.read)
+        # out(1, …) → SYSCALL 1  (System.out.write)
     """
     if typed_ast.rule_name != "program":
         raise ValueError(
             f"expected 'program' AST node, got {typed_ast.rule_name!r}"
         )
 
-    compiler = _Compiler()
+    compiler = _Compiler(config=config)
     return compiler.compile(typed_ast)
 
 
@@ -361,6 +483,9 @@ class _Compiler:
     ``compile_oct()`` creates one instance and calls ``compile()``.
 
     Attributes:
+        config:           I/O target configuration.  Controls how ``in()`` and
+                          ``out()`` intrinsics are lowered to SYSCALL IR.
+                          Defaults to ``INTEL_8008_IO`` (8008 port encoding).
         _id_gen:          Produces unique instruction IDs.
         _program:         The IR program being built (initialised in
                           ``__post_init__``).
@@ -378,6 +503,7 @@ class _Compiler:
                           at the start of each function.
     """
 
+    config: OctCompileConfig = field(default_factory=lambda: INTEL_8008_IO)
     _id_gen: IDGenerator = field(default_factory=IDGenerator)
     _program: IrProgram = field(init=False)
     _statics: set[str] = field(default_factory=set)
@@ -1684,24 +1810,48 @@ class _Compiler:
         v3 = IrRegister(index=_REG_VAR_BASE + 1)  # second arg register
 
         if name == "in":
-            # in(PORT) → SYSCALL (20 + PORT).
-            # PORT is a compile-time literal (enforced by the type checker).
-            # Encoding the port in the syscall number matches the 8008's
-            # INP instruction which uses the port number as an opcode field.
             port = _extract_literal_int(args[0]) if args else 0
-            self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_IN_BASE + port))
+            if self.config.read_byte_syscall is not None:
+                # Cross-platform target (WASM / JVM / CLR): emit
+                #   SYSCALL [read_syscall, v1]
+                # The backend stores the read byte into the arg register (v1 =
+                # scratch), which is also Oct's return-value register.  PORT is
+                # ignored — cross-platform backends expose a single read channel.
+                self._emit(
+                    IrOp.SYSCALL,
+                    IrImmediate(value=self.config.read_byte_syscall),
+                    scratch,
+                )
+            else:
+                # Intel 8008 target: SYSCALL (20 + PORT).
+                # PORT is encoded in the SYSCALL number to match the 8008's INP
+                # instruction where the port is part of the opcode field.
+                self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_IN_BASE + port))
             return scratch
 
         if name == "out":
-            # out(PORT, val) → copy val → v2; SYSCALL (40 + PORT).
-            # PORT is a literal baked into the syscall number.
-            # val is passed in v2 (the first argument register).
+            # Stage the value into v2 (the first argument register) so the
+            # backend knows where to find it — this is common to all targets.
             port = _extract_literal_int(args[0]) if args else 0
             if len(args) >= 2:
                 val_reg = self._compile_expr(args[1], regs)
                 if val_reg.index != v2.index:
                     self._emit(IrOp.ADD_IMM, v2, val_reg, IrImmediate(value=0))
-            self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_OUT_BASE + port))
+            if self.config.write_byte_syscall is not None:
+                # Cross-platform target (WASM / JVM / CLR): emit
+                #   SYSCALL [write_syscall, v2]
+                # The backend reads the byte-to-write from the arg register v2.
+                # PORT is ignored — cross-platform backends expose a single
+                # write channel rather than 24 port-specific output channels.
+                self._emit(
+                    IrOp.SYSCALL,
+                    IrImmediate(value=self.config.write_byte_syscall),
+                    v2,
+                )
+            else:
+                # Intel 8008 target: SYSCALL (40 + PORT).
+                # PORT is baked into the SYSCALL number (8008 OUT opcode field).
+                self._emit(IrOp.SYSCALL, IrImmediate(value=_SYSCALL_OUT_BASE + port))
             return scratch  # out() is void; return scratch as a safe no-op
 
         if name in ("adc", "sbb"):

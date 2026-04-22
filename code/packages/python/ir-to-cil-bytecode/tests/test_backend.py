@@ -21,6 +21,7 @@ from ir_to_cil_bytecode import (
     CILTokenProvider,
     SequentialCILTokenProvider,
     lower_ir_to_cil_bytecode,
+    validate_for_clr,
 )
 
 
@@ -317,7 +318,7 @@ def test_validation_rejects_bad_operands_and_limits() -> None:
             IrInstruction(IrOp.LOAD_IMM, [IrRegister(65536), IrImmediate(1)]),
         ))
 
-    with pytest.raises(CILBackendError, match="outside int32 range"):
+    with pytest.raises(CILBackendError, match="int32 range"):
         lower_ir_to_cil_bytecode(_program(
             IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(2**31)]),
         ))
@@ -604,6 +605,158 @@ def test_lower_bitwise_ops_mixed() -> None:
     assert 0x5F in body  # and
     assert 0x60 in body  # or
     assert 0x61 in body  # xor
+
+
+class TestValidateForClr:
+    """Unit tests for the validate_for_clr() pre-flight validator.
+
+    The validator catches CLR-incompatible programs *before* any bytecode is
+    generated.  Three categories are checked:
+
+    1. Opcode support — every IrOp must appear in ``_CLR_SUPPORTED_OPCODES``.
+    2. Constant range — LOAD_IMM / ADD_IMM immediates must fit in int32.
+    3. SYSCALL number — only 1 (write byte), 2 (read byte), 10 (exit) are wired.
+
+    Oct's I/O intrinsics map to SYSCALL 40+PORT (output) and SYSCALL 20+PORT
+    (input) — both ranges are absent from the CLR host and are caught here.
+    """
+
+    # ── Passing cases ──────────────────────────────────────────────────────
+
+    def test_pure_arithmetic_program_passes(self) -> None:
+        """A program using only arithmetic opcodes and SYSCALL 1 passes."""
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(3)]),
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(7)]),
+            IrInstruction(IrOp.ADD, [IrRegister(4), IrRegister(0), IrRegister(1)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(4)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        assert validate_for_clr(program) == []
+
+    def test_syscall_1_passes(self) -> None:
+        """SYSCALL 1 (write byte) is wired in the CLR host — accepted."""
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(65)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(0)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        assert validate_for_clr(program) == []
+
+    def test_syscall_2_passes(self) -> None:
+        """SYSCALL 2 (read byte) is wired in the CLR host — accepted."""
+        program = _program(
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(2), IrRegister(0)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        assert validate_for_clr(program) == []
+
+    def test_syscall_10_passes(self) -> None:
+        """SYSCALL 10 (process exit) is wired in the CLR host — accepted."""
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(10), IrRegister(0)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        assert validate_for_clr(program) == []
+
+    def test_int32_boundary_immediates_pass(self) -> None:
+        """LOAD_IMM immediates at the int32 boundary are accepted."""
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(-(2**31))]),
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(2**31 - 1)]),
+            IrInstruction(IrOp.RET, []),
+        )
+        assert validate_for_clr(program) == []
+
+    # ── SYSCALL rejection ──────────────────────────────────────────────────
+
+    def test_rejects_oct_out_syscall_57(self) -> None:
+        """Oct's out(17, val) → SYSCALL 57 is rejected.
+
+        out(PORT, val) in Oct lowers to SYSCALL 40+PORT.  Port 17 gives
+        SYSCALL 57.  The CLR host only knows about SYSCALLs 1, 2, and 10.
+        """
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(10)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(57), IrRegister(4)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        errors = validate_for_clr(program)
+        assert errors, "Expected validation to reject SYSCALL 57"
+        assert any("57" in e or "unsupported" in e.lower() for e in errors)
+
+    def test_rejects_oct_in_syscall_23(self) -> None:
+        """Oct's in(3) → SYSCALL 23 is rejected.
+
+        in(PORT) in Oct lowers to SYSCALL 20+PORT.  Port 3 gives SYSCALL 23.
+        """
+        program = _program(
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(23), IrRegister(4)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        errors = validate_for_clr(program)
+        assert errors, "Expected validation to reject SYSCALL 23"
+        assert any("23" in e or "unsupported" in e.lower() for e in errors)
+
+    def test_rejects_syscall_0(self) -> None:
+        """SYSCALL 0 is not wired in the CLR host."""
+        program = _program(
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(0), IrRegister(0)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        errors = validate_for_clr(program)
+        assert errors
+        assert any("0" in e for e in errors)
+
+    # ── Constant range rejection ───────────────────────────────────────────
+
+    def test_rejects_load_imm_above_int32_max(self) -> None:
+        """LOAD_IMM with a value above int32 max is rejected."""
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(2**31)]),
+            IrInstruction(IrOp.RET, []),
+        )
+        errors = validate_for_clr(program)
+        assert errors
+        assert any("int32" in e.lower() or "range" in e.lower() for e in errors)
+
+    def test_rejects_load_imm_below_int32_min(self) -> None:
+        """LOAD_IMM with a value below int32 min is rejected."""
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(-(2**31) - 1)]),
+            IrInstruction(IrOp.RET, []),
+        )
+        errors = validate_for_clr(program)
+        assert errors
+        assert any("int32" in e.lower() or "range" in e.lower() for e in errors)
+
+    # ── Integration with lower_ir_to_cil_bytecode ─────────────────────────
+
+    def test_lower_raises_on_oct_syscall(self) -> None:
+        """lower_ir_to_cil_bytecode raises CILBackendError on SYSCALL 57.
+
+        The pre-flight validator is called inside lower_ir_to_cil_bytecode().
+        Callers that use the public API get a compile-time CILBackendError
+        instead of a runtime CLRVMError buried inside the CLR VM.
+        """
+        program = _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(10)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(57), IrRegister(4)]),
+            IrInstruction(IrOp.HALT, []),
+        )
+        with pytest.raises(CILBackendError, match=r"57|pre-flight"):
+            lower_ir_to_cil_bytecode(program)
+
+    def test_lower_raises_with_multiple_errors(self) -> None:
+        """lower_ir_to_cil_bytecode error message includes count when > 1 error."""
+        program = _program(
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(57), IrRegister(4)]),  # bad
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(23), IrRegister(4)]),  # bad
+            IrInstruction(IrOp.HALT, []),
+        )
+        with pytest.raises(CILBackendError, match=r"2 errors"):
+            lower_ir_to_cil_bytecode(program)
 
 
 def _program(*instructions: IrInstruction) -> IrProgram:
