@@ -277,6 +277,21 @@ class Backend(ABC):
             Rowids in ascending key order.
         """
 
+    @abstractmethod
+    def scan_by_rowids(self, table: str, rowids: list[int]) -> RowIterator:
+        """Fetch the rows identified by *rowids* from *table*.
+
+        Used by the VM after an index scan: ``scan_index`` yields integer rowids;
+        this method materialises the corresponding full rows in the order the
+        rowids are given.
+
+        For the in-memory backend "rowid" is the 0-based list index.
+        For the SQLite file backend "rowid" is the B-tree integer key.
+
+        Raises :class:`~sql_backend.errors.TableNotFound` if the table does not
+        exist.
+        """
+
     # --- Transactions ------------------------------------------------------
 
     @abstractmethod
@@ -331,7 +346,9 @@ class SchemaProvider(ABC):
 class _BackendSchemaProvider(SchemaProvider):
     """Adapter: expose a Backend as a SchemaProvider.
 
-    Returns just the column names. Private — callers use
+    Returns just the column names, plus proxies ``list_indexes`` so the
+    planner can perform IX-6 index-scan substitution when a backend
+    exposes indexes.  Private — callers use
     :func:`backend_as_schema_provider`.
     """
 
@@ -340,6 +357,10 @@ class _BackendSchemaProvider(SchemaProvider):
 
     def columns(self, table: str) -> list[str]:
         return [col.name for col in self._backend.columns(table)]
+
+    def list_indexes(self, table: str) -> list[IndexDef]:
+        """Proxy ``Backend.list_indexes`` filtered to *table*."""
+        return self._backend.list_indexes(table)
 
 
 def backend_as_schema_provider(backend: Backend) -> SchemaProvider:

@@ -141,7 +141,12 @@ class Cursor:
 
         self._connection._ensure_transaction_if_needed(sql)  # noqa: SLF001
 
-        result = run(self._connection._backend, sql, parameters)  # noqa: SLF001
+        result = run(  # noqa: SLF001
+            self._connection._backend,
+            sql,
+            parameters,
+            advisor=self._connection._advisor,
+        )
 
         # For DDL (CREATE/DROP/ALTER), auto-commit the single-statement
         # transaction that _ensure_transaction_if_needed opened.  This

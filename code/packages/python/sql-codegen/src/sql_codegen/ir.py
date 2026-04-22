@@ -482,6 +482,60 @@ class DropTable:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateIndex:
+    """Ask the backend to create an index and backfill existing rows.
+
+    ``columns`` is the ordered list of column names to index.
+    The backend allocates a B-tree page, builds the index from all existing
+    rows, and registers the index in ``sqlite_schema``.
+
+    If ``if_not_exists=True`` and an index with the same name already exists,
+    the instruction is silently skipped. Otherwise ``IndexAlreadyExists`` is
+    raised.
+    """
+    name: str
+    table: str
+    columns: tuple[str, ...]
+    unique: bool = False
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropIndex:
+    """Ask the backend to drop an index by name.
+
+    If ``if_exists=True`` and the index does not exist, the instruction is
+    silently skipped. Otherwise ``IndexNotFound`` is raised.
+    """
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class OpenIndexScan:
+    """Materialise rowids from an index range scan into ``cursor_id``.
+
+    The VM calls ``backend.scan_index(index_name, lo, hi, lo_inclusive,
+    hi_inclusive)`` to get matching rowids, then calls
+    ``backend.scan_by_rowids(table, rowids)`` to materialise full rows.
+    The resulting ``RowIterator`` is stored in ``cursor_table[cursor_id]``
+    so that normal ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``
+    instructions can iterate over it without change.
+
+    This single instruction replaces the ``OpenScan`` + filter-in-VM loop
+    for index-covered predicates — it is semantically equivalent to
+    ``OpenScan(cursor_id, table)`` followed by a WHERE filter, just faster.
+    """
+    cursor_id: int
+    table: str
+    index_name: str
+    lo: object | None            # SqlValue or None (unbounded)
+    hi: object | None            # SqlValue or None (unbounded)
+    lo_inclusive: bool = True
+    hi_inclusive: bool = True
+
+
 # ---- Derived-table (subquery in FROM) -----------------------------------
 
 
@@ -549,6 +603,7 @@ Instruction = (
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
+    | CreateIndex | DropIndex | OpenIndexScan
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery

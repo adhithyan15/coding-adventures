@@ -394,9 +394,81 @@ class DropTable:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateIndex:
+    """CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col, ...).
+
+    The ``unique`` flag is preserved but not enforced in v2 (reserved for
+    future constraint enforcement). The codegen calls ``backend.create_index``
+    which backfills existing rows into the new B-tree.
+    """
+
+    name: str
+    table: str
+    columns: tuple[str, ...]
+    unique: bool = False
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropIndex:
+    """DROP INDEX [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
+# ---- Index scan leaf node --------------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class IndexScan:
+    """Read rows from a table using a B-tree index (IX-6).
+
+    After the planner has identified a Filter predicate that an existing index
+    can satisfy, it replaces ``Filter(Scan(table))`` with an ``IndexScan``.
+    The codegen emits an ``OpenIndexScan`` instruction that calls
+    ``backend.scan_index(index_name, lo, hi)`` and then fetches each
+    matching row via ``backend.scan_by_rowids``.
+
+    Fields
+    ------
+    table:
+        The table being queried.
+    alias:
+        Optional table alias (same as :class:`Scan`).
+    index_name:
+        The name of the index to use.
+    column:
+        The indexed column (first column of the index in v2).
+    lo:
+        Lower bound key value, or ``None`` for unbounded.
+    hi:
+        Upper bound key value, or ``None`` for unbounded.
+    lo_inclusive:
+        Include the lower bound key in the result.
+    hi_inclusive:
+        Include the upper bound key in the result.
+    residual:
+        Remaining predicate to apply after the index scan (e.g. the non-index
+        part of a compound AND). ``None`` means no residual filter.
+    """
+
+    table: str
+    alias: str | None
+    index_name: str
+    column: str
+    lo: object | None                  # SqlValue or None
+    hi: object | None                  # SqlValue or None
+    lo_inclusive: bool = True
+    hi_inclusive: bool = True
+    residual: Expr | None = None
+
+
 # The root union. Every plan function returns one of these.
 LogicalPlan = (
     Scan
+    | IndexScan
     | EmptyResult
     | DerivedTable
     | Filter
@@ -418,6 +490,8 @@ LogicalPlan = (
     | Delete
     | CreateTable
     | DropTable
+    | CreateIndex
+    | DropIndex
 )
 
 
@@ -437,7 +511,9 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     plan nodes.
     """
     match node:
-        case Scan() | EmptyResult() | CreateTable() | DropTable():
+        case Scan() | IndexScan() | EmptyResult() | CreateTable() | DropTable():
+            return ()
+        case CreateIndex() | DropIndex():
             return ()
         case Begin() | Commit() | Rollback():
             return ()

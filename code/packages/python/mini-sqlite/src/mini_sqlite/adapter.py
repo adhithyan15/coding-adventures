@@ -50,9 +50,11 @@ from sql_planner import (
     CaseExpr,
     Column,
     CommitStmt,
+    CreateIndexStmt,
     CreateTableStmt,
     DeleteStmt,
     DerivedTableRef,
+    DropIndexStmt,
     DropTableStmt,
     ExceptStmt,
     FuncArg,
@@ -149,6 +151,10 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
             return _create_table(inner)
         case "drop_table_stmt":
             return _drop_table(inner)
+        case "create_index_stmt":
+            return _create_index(inner)
+        case "drop_index_stmt":
+            return _drop_index(inner)
         case "begin_stmt":
             return BeginStmt()
         case "commit_stmt":
@@ -539,6 +545,66 @@ def _drop_table(node: ASTNode) -> DropTableStmt:
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     return DropTableStmt(table=table_tok.value, if_exists=if_exists)
+
+
+# --------------------------------------------------------------------------
+# CREATE INDEX / DROP INDEX.
+# --------------------------------------------------------------------------
+
+
+def _create_index(node: ASTNode) -> CreateIndexStmt:
+    """Translate ``create_index_stmt`` into :class:`CreateIndexStmt`.
+
+    Grammar::
+
+        create_index_stmt =
+            "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
+            "ON" NAME "(" NAME { "," NAME } ")" ;
+
+    NAME tokens appear in order:  index_name, table_name, col1, col2, ...
+    All KEYWORD tokens are filtered out before collecting NAMEs.
+    """
+    unique = _has_keyword_child(node, "UNIQUE")
+    if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
+
+    # Collect NAME tokens, skipping keywords like INDEX, ON, IF, NOT, EXISTS.
+    names = [
+        c.value
+        for c in node.children
+        if isinstance(c, Token) and _token_type(c) == "NAME"
+    ]
+    if len(names) < 3:
+        raise ProgrammingError(
+            "create_index_stmt: expected index_name, table_name, and at least one column"
+        )
+
+    index_name = names[0]
+    table_name = names[1]
+    columns = tuple(names[2:])
+
+    return CreateIndexStmt(
+        name=index_name,
+        table=table_name,
+        columns=columns,
+        unique=unique,
+        if_not_exists=if_not_exists,
+    )
+
+
+def _drop_index(node: ASTNode) -> DropIndexStmt:
+    """Translate ``drop_index_stmt`` into :class:`DropIndexStmt`.
+
+    Grammar::
+
+        drop_index_stmt = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
+
+    The single NAME token is the index name.
+    """
+    if_exists = _has_keyword_sequence(node, ("IF", "EXISTS"))
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("drop_index_stmt: expected index name")
+    return DropIndexStmt(name=name_tok.value, if_exists=if_exists)
 
 
 # --------------------------------------------------------------------------

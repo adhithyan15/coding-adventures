@@ -8,13 +8,23 @@ just ask the engine for a result.
 
 Exception policy: every exception raised by any pipeline layer is funneled
 through :func:`translate` so the caller only ever sees PEP 249 classes.
+
+Index advisor integration
+-------------------------
+
+:func:`run` accepts an optional ``advisor`` keyword argument.  When
+provided, the engine calls :meth:`~mini_sqlite.advisor.IndexAdvisor.observe_plan`
+on the optimised plan *before* code generation.  This lets the advisor
+observe the planner's index-scan choices (or lack thereof) and create
+auto-indexes when the :class:`~mini_sqlite.policy.IndexPolicy` threshold
+is reached.
 """
 
 from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import replace
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from sql_backend import Backend, backend_as_schema_provider
 from sql_codegen import compile as codegen_compile
@@ -48,12 +58,25 @@ from .adapter import to_statement
 from .binding import substitute
 from .errors import ProgrammingError, translate
 
+if TYPE_CHECKING:
+    from .advisor import IndexAdvisor
 
-def run(backend: Backend, sql: str, parameters: Sequence[Any] = ()) -> QueryResult:
+
+def run(
+    backend: Backend,
+    sql: str,
+    parameters: Sequence[Any] = (),
+    *,
+    advisor: IndexAdvisor | None = None,
+) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
     ``parameters`` is an ordered sequence matching the ``?`` placeholders
     in ``sql``. Empty for un-parameterised statements.
+
+    ``advisor``, when provided, receives the optimised plan via
+    :meth:`~mini_sqlite.advisor.IndexAdvisor.observe_plan` so it can
+    auto-create indexes based on observed query patterns.
     """
     bound = substitute(sql, parameters)
     try:
@@ -71,6 +94,11 @@ def run(backend: Backend, sql: str, parameters: Sequence[Any] = ()) -> QueryResu
             stmt = replace(stmt, columns=names)
         logical = plan(stmt, backend_as_schema_provider(backend))
         optimized = optimize(logical)
+        # Notify the advisor about the query plan *before* code generation.
+        # This lets the advisor observe which columns were filtered without an
+        # index, and create one if the policy threshold has been reached.
+        if advisor is not None:
+            advisor.observe_plan(optimized)
         program = codegen_compile(_flatten_project_over_aggregate(optimized))
         return execute(program, backend)
     except ProgrammingError:

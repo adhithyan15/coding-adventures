@@ -57,6 +57,7 @@ from sql_planner import (
     Filter,
     Having,
     In,
+    IndexScan,
     Insert,
     InsertSource,
     Intersect,
@@ -158,8 +159,22 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                 table=t,
                 predicate=_fold_expr(pred) if pred is not None else None,
             )
+        case IndexScan(
+            table=t, alias=a, index_name=iname, column=col,
+            lo=lo, hi=hi, lo_inclusive=lo_incl, hi_inclusive=hi_incl,
+            residual=residual,
+        ):
+            # Fold the residual predicate (the non-index part of the WHERE).
+            new_res = _fold_expr(residual) if residual is not None else None
+            if new_res is residual:
+                return p
+            return IndexScan(
+                table=t, alias=a, index_name=iname, column=col,
+                lo=lo, hi=hi, lo_inclusive=lo_incl, hi_inclusive=hi_incl,
+                residual=new_res,
+            )
         case _:
-            return p  # CreateTable, DropTable — nothing to fold
+            return p  # CreateTable, DropTable, CreateIndex, DropIndex — nothing to fold
 
 
 def _fold_insert_source(src: InsertSource) -> InsertSource:
