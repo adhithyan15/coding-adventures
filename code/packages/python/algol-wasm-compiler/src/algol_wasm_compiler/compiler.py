@@ -8,6 +8,7 @@ from pathlib import Path
 from algol_ir_compiler import CompileResult, compile_algol
 from algol_parser import parse_algol
 from algol_type_checker import TypeCheckResult, check_algol
+from compiler_ir import IrLabel, IrOp, IrProgram
 from ir_to_wasm_compiler import FunctionSignature, IrToWasmCompiler
 from ir_to_wasm_validator import validate as validate_ir_to_wasm
 from wasm_module_encoder import encode_module
@@ -77,12 +78,21 @@ class AlgolWasmCompiler:
             )
             for label, param_count in sorted(ir.procedure_signatures.items())
         )
-        lowering_errors = validate_ir_to_wasm(ir.program, signatures)
+        strategy = _wasm_lowering_strategy(ir.program)
+        lowering_errors = validate_ir_to_wasm(
+            ir.program,
+            signatures,
+            strategy=strategy,
+        )
         if lowering_errors:
             raise AlgolWasmError("validate-ir", lowering_errors[0].message)
 
         try:
-            module = IrToWasmCompiler().compile(ir.program, signatures)
+            module = IrToWasmCompiler().compile(
+                ir.program,
+                signatures,
+                strategy=strategy,
+            )
         except Exception as exc:
             raise AlgolWasmError("wasm-lower", str(exc), exc) from exc
 
@@ -127,3 +137,16 @@ def pack_source(source: str) -> AlgolWasmResult:
 
 def write_wasm_file(source: str, output_path: str | Path) -> AlgolWasmResult:
     return AlgolWasmCompiler().write_wasm_file(source, output_path)
+
+
+def _wasm_lowering_strategy(program: IrProgram) -> str:
+    for instruction in program.instructions:
+        if instruction.opcode != IrOp.LABEL:
+            continue
+        if (
+            instruction.operands
+            and isinstance(instruction.operands[0], IrLabel)
+            and instruction.operands[0].name.startswith("algol_label_")
+        ):
+            return "dispatch_loop"
+    return "structured"

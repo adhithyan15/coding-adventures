@@ -36,6 +36,9 @@ All notable changes to this package will be documented in this file.
   the caller's by-name formal read.
 - Documented the completed integer Phase 5 by-name subset and its remaining
   full-ALGOL exclusions.
+- Lowered Phase 6 direct local `goto` statements to generated ALGOL IR labels
+  and `JUMP` instructions, while preserving diagnostics for nonlocal and
+  designational forms that need Phase 7.
 
 ## [0.1.0] - 2026-04-20
 

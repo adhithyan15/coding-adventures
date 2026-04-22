@@ -16,6 +16,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   nested procedure failures propagated through thunk helper state.
 - Added Phase 5 wrap-up coverage and docs for the completed integer by-name
   subset and its remaining full-ALGOL exclusions.
+- Added PL04 Phase 6 direct local labels and `goto` support through the
+  ALGOL type-checker, IR compiler, and WASM compiler path, with guards for
+  nonlocal and Phase 7 designational forms.
 
 ### Added — TypeScript Port + JavaScript/TypeScript Grammars (PR #14)
 - **31 TypeScript packages** — complete port of the computing stack to TypeScript

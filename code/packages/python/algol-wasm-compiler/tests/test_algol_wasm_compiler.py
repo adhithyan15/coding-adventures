@@ -66,6 +66,41 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
 
+    def test_forward_goto_skips_statements_until_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 1; "
+            "goto done; "
+            "result := 99; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_backward_goto_runs_local_loop(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "i := 0; "
+            "loop: i := i + 1; "
+            "if i < 4 then goto loop; "
+            "result := i "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [4]
+
+    def test_local_goto_strategy_preserves_procedure_calls(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); value x; integer x; "
+            "begin inc := x + 1 end; "
+            "result := inc(4); "
+            "goto done; "
+            "result := 0; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_inner_block_writes_outer_result_through_frame(self) -> None:
         result = compile_source(
             "begin integer result; "
