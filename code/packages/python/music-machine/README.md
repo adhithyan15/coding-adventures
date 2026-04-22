@@ -12,6 +12,10 @@ The package intentionally starts with a tiny sheet-music language instead of a
 full notation system. V1 supports one melody line, one tempo, one selected
 instrument, notes, rests, duration symbols, and visual barlines.
 
+The package also supports the canonical `music-machine-score/v2` format from
+`MUS04`. That format is better for programmatic sheet music because every event
+has an explicit track, start tick, duration tick, and velocity.
+
 ## Text Score Example
 
 ```text
@@ -56,6 +60,37 @@ program: 74
 `program:` are mutually exclusive, and both must appear before the music tokens.
 If neither is provided, the score defaults to `instrument: sine`.
 
+## Portable Multi-Track Scores
+
+Use `parse_portable_score` and `render_portable_score_to_pcm` for the canonical
+multi-track format:
+
+```text
+format: music-machine-score/v2
+title: Tiny Duet
+ppq: 100
+sample_rate: 1000
+tempo 0 600
+meter 0 4/4
+
+instrument lead profile=flute_naive gain=0.5
+instrument bass program=33 gain=0.4
+
+track melody instrument=lead
+track bassline instrument=bass
+
+event melody 0 100 note A4 velocity=0.8
+event melody 100 100 note B4 velocity=0.8
+event bassline 0 200 note A2,E3 velocity=0.7
+```
+
+`ppq` means pulses per quarter note. A note event can contain one pitch or a
+comma-separated chord. Events may overlap across tracks; rendering mixes them
+into one signed 16-bit mono `PCMBuffer` and clamps mixed samples safely.
+
+Instrument declarations can reference a naive profile, a General-MIDI-style
+program number, or the built-in `kind=sine` / `kind=silence` profiles.
+
 ## Usage
 
 ```python
@@ -68,6 +103,15 @@ print(score.title)
 print(rendered.pcm_buffer.sample_count())
 ```
 
+For the portable format:
+
+```python
+from music_machine import parse_portable_score, render_portable_score_to_pcm
+
+score = parse_portable_score(score_text)
+rendered = render_portable_score_to_pcm(score)
+```
+
 Playback is intentionally lazy, because parsing and rendering should work
 without a native audio device package:
 
@@ -76,6 +120,8 @@ from music_machine import play_score_text
 
 play_score_text(HAPPY_BIRTHDAY_TEXT)
 ```
+
+Portable scores use `play_portable_score_text` for the same lazy playback path.
 
 ## Safety Limits
 
