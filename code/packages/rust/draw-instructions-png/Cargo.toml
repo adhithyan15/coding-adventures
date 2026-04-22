@@ -1,9 +1,0 @@
-[package]
-name = "draw-instructions-png"
-version = "0.1.0"
-edition = "2021"
-description = "PNG encoder for draw-instructions pixel buffers"
-
-[dependencies]
-draw-instructions-pixels = { path = "../draw-instructions-pixels" }
-png = { path = "../png" }
