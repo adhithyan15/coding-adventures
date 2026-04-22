@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–7).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–8).
 
 The handler tries two routes, in order:
 
@@ -41,7 +41,7 @@ What Phase 1 can do
 What this phase can't do (yet)
 ------------------------------
 
-- Integration by substitution beyond Phase 7 (two-arg outer functions).
+- Integration by substitution beyond Phase 8 (two-arg non-POW outer functions).
 - Rational × transcendental (e.g. ``(1/x)·eˣ``).
 - Products of two transcendentals (e.g. ``exp(x)·log(x)``).
 - Irreducible denominators of degree > 2 (e.g. ``1/(x³+x+1)``).
@@ -377,6 +377,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_u_sub(a, b, x)
         if result is not None:
             return result
+        # Phase 8: u-substitution for POW(f(g(x)), n) · c·g'(x).
+        result = _try_u_sub_pow(a, b, x)
+        if result is not None:
+            return result
         # Phase 4c: exp × trig via double-IBP closed form.
         result = _try_exp_trig(a, b, x) or _try_exp_trig(b, a, x)
         if result is not None:
@@ -435,6 +439,26 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_trig_power(base, exponent, x)
         if result is not None:
             return result
+        # Phase 8 bonus: ∫ (ax+b)^n dx = (ax+b)^(n+1)/((n+1)·a) or log(ax+b)/a.
+        lin = _try_linear(base, x)
+        if lin is not None:
+            a_lin, b_lin = lin
+            if a_lin != Fraction(0):
+                arg_ir = base
+                a_ir = _frac_ir(a_lin)
+                if _is_minus_one(exponent):
+                    # ∫ (ax+b)^(-1) dx = log(ax+b) / a
+                    return IRApply(DIV, (IRApply(LOG, (arg_ir,)), a_ir))
+                # ∫ (ax+b)^n dx = (ax+b)^(n+1) / ((n+1)·a)
+                if isinstance(exponent, IRInteger):
+                    new_n = exponent.value + 1
+                    new_exp = IRInteger(new_n)
+                    denom = IRApply(MUL, (IRInteger(new_n), a_ir))
+                    return IRApply(DIV, (IRApply(POW, (arg_ir, new_exp)), denom))
+                # Symbolic / rational exponent — use ADD form.
+                new_exp = IRApply(ADD, (exponent, ONE))
+                denom = IRApply(MUL, (new_exp, a_ir))
+                return IRApply(DIV, (IRApply(POW, (arg_ir, new_exp)), denom))
         return None
 
     # --- Elementary functions at x  (Phase 1: argument must be bare x)
@@ -1142,6 +1166,39 @@ def _diff_ir(g: IRNode, x: IRSymbol) -> IRNode | None:
         # Rational function derivatives deferred (quotient rule not needed yet).
         return None
 
+    # Additive / negation rules — linearity of differentiation.
+    if head == NEG:
+        # d/dx(−f) = −f'
+        da = _diff_ir(g.args[0], x)
+        if da is None:
+            return None
+        if isinstance(da, IRInteger) and da.value == 0:
+            return IRInteger(0)
+        return IRApply(NEG, (da,))
+
+    if head == ADD:
+        # d/dx(f+g) = f' + g'
+        da = _diff_ir(g.args[0], x)
+        db = _diff_ir(g.args[1], x)
+        if da is None or db is None:
+            return None
+        zero = IRInteger(0)
+        if da == zero:
+            return db
+        if db == zero:
+            return da
+        return IRApply(ADD, (da, db))
+
+    if head == SUB:
+        # d/dx(f−g) = f' − g'
+        da = _diff_ir(g.args[0], x)
+        db = _diff_ir(g.args[1], x)
+        if da is None or db is None:
+            return None
+        if isinstance(db, IRInteger) and db.value == 0:
+            return da
+        return IRApply(SUB, (da, db))
+
     # Single-argument functions — apply chain rule.
     if len(g.args) == 1:
         arg = g.args[0]
@@ -1357,6 +1414,94 @@ def _try_u_sub(fa: IRNode, fb: IRNode, x: IRSymbol) -> IRNode | None:
     if result is not None:
         return result
     return _try_u_sub_one(fb, fa, x)
+
+
+# ---------------------------------------------------------------------------
+# Phase 8 helpers — power-of-composite u-substitution
+# ---------------------------------------------------------------------------
+
+
+def _try_u_sub_pow_one(
+    pow_node: IRNode, gp_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Try u-sub for ``POW(base, n) · c·g'(x)``, returning the antiderivative or None.
+
+    Two cases:
+
+    Case A — ``base = f(g(x))`` where ``f`` is a single-arg function:
+      Substitute u = g, integrate ``POW(f(u), n)`` (delegated to Phase 5 for
+      SIN/COS/TAN powers), back-substitute.
+
+    Case B — ``base = g(x)`` (polynomial, sums, etc.):
+      Substitute u = base, integrate ``u^n`` via Phase 1 power rule,
+      back-substitute.
+    """
+    if not isinstance(pow_node, IRApply) or pow_node.head != POW:
+        return None
+    base, exp_node = pow_node.args
+    if _depends_on(exp_node, x) or not _depends_on(base, x):
+        return None
+
+    u = IRSymbol("__u__")
+
+    # Case A: base is a single-arg function of some inner g(x).
+    if isinstance(base, IRApply) and len(base.args) == 1:
+        g = base.args[0]
+        # Skip f(x)^n — Phase 5 _try_trig_power handles it via the POW branch.
+        if g == x:
+            return None
+        # Skip f(ax+b)^n — Phase 5 handles linear-arg trig powers.
+        lin = _try_linear(g, x)
+        if lin is not None and lin[0] != Fraction(0):
+            return None
+        gprime = _diff_ir(g, x)
+        if gprime is None:
+            return None
+        c = _ratio_const(gp_candidate, gprime, x)
+        if c is None or c == Fraction(0):
+            return None
+        # Replace g → u inside the base function, keeping the outer POW.
+        base_u = _subst(base, g, u)
+        G_u = _integrate(IRApply(POW, (base_u, exp_node)), u)
+        if G_u is None:
+            return None
+        G_gx = _subst(G_u, u, g)
+        if c == Fraction(1):
+            return G_gx
+        return IRApply(MUL, (_frac_ir(c), G_gx))
+
+    # Case B: base is a general expression g(x) — treat the whole base as g.
+    # Skip bare x (Phase 1) and linear base (Phase 8 bonus in POW branch).
+    if base == x:
+        return None
+    lin = _try_linear(base, x)
+    if lin is not None and lin[0] != Fraction(0):
+        return None
+    gprime = _diff_ir(base, x)
+    if gprime is None:
+        return None
+    c = _ratio_const(gp_candidate, gprime, x)
+    if c is None or c == Fraction(0):
+        return None
+    # ∫ u^n du — Phase 1 power rule applies since u is now bare.
+    G_u = _integrate(IRApply(POW, (u, exp_node)), u)
+    if G_u is None:
+        return None
+    G_gx = _subst(G_u, u, base)
+    if c == Fraction(1):
+        return G_gx
+    return IRApply(MUL, (_frac_ir(c), G_gx))
+
+
+def _try_u_sub_pow(fa: IRNode, fb: IRNode, x: IRSymbol) -> IRNode | None:
+    """Return ``∫ fa·fb dx`` via power-of-composite u-sub, or ``None``.
+
+    Tries both orderings: (fa as pow_node, fb as g') and (fb as pow_node, fa as g').
+    """
+    result = _try_u_sub_pow_one(fa, fb, x)
+    if result is not None:
+        return result
+    return _try_u_sub_pow_one(fb, fa, x)
 
 
 def _depends_on(node: IRNode, var: IRSymbol) -> bool:
