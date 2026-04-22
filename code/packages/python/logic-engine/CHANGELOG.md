@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.0] - 2026-04-22
+
+### Added
+
+- `CutExpr` and `cut()` as the library representation of Prolog `!/0`
+- internal search-result cut propagation so conjunctions and disjunctions can
+  prune scoped choicepoints without changing the public `solve` iterator API
+- relation-call cut frames that consume cuts raised inside rule bodies while
+  still pruning later clauses for that predicate invocation
+- `goal_as_term`/`goal_from_term` support for encoding and lowering cut as
+  the atom `!`
+- tests proving cut prunes choices before it, keeps choices after it, commits
+  rule bodies and later clauses, and stays scoped to the callee relation
+
 ## [0.8.0] - 2026-04-21
 
 ### Added

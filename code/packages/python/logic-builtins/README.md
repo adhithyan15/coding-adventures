@@ -12,6 +12,7 @@ ordinary logic goal expressions.
 - `callo(goal)`
 - `calltermo(term_goal)` for executing reified callable goal terms
 - `onceo(goal)`
+- `cuto()` as the library form of Prolog `!/0`
 - `noto(goal)` for negation as failure
 - `trueo()` and `failo()`
 - `iftheno(condition, then_goal)` and `ifthenelseo(condition, then_goal, else_goal)`
@@ -50,6 +51,7 @@ from logic_builtins import (
     clauseo,
     compare_termo,
     current_predicateo,
+    cuto,
     findallo,
     forallo,
     functoro,
@@ -67,6 +69,7 @@ from logic_builtins import (
 from logic_engine import (
     atom,
     conj,
+    disj,
     eq,
     fail,
     logic_list,
@@ -95,6 +98,11 @@ memo = relation("memo", 1)
 family = program(rule(child(X, Name), parent(Name, X)))
 
 assert solve_all(program(), X, onceo(eq(X, "first"))) == [atom("first")]
+assert solve_all(
+    program(),
+    X,
+    conj(disj(eq(X, "first"), eq(X, "second")), cuto()),
+) == [atom("first")]
 assert solve_all(program(), X, noto(fail())) == [X]
 assert solve_all(program(), X, conj(eq(X, term("box", "tea")), groundo(X))) == [
     term("box", "tea"),
@@ -168,12 +176,12 @@ Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail
 for empty collections.
 
-Advanced control is intentionally honest about the current solver. `iftheno`
-and `ifthenelseo` commit to the first condition proof while allowing the chosen
-branch to keep backtracking. `forallo` checks every generated proof without
-leaking generator bindings to the outer query. Full Prolog cut is not included
-yet because it needs solver-level choicepoint pruning rather than a simple
-library predicate.
+Advanced control is intentionally honest about the solver. `cuto()` is real
+solver-level cut, not `onceo` in disguise: it prunes choicepoints made before it
+in the current search frame while allowing choices created after it to continue
+backtracking. `iftheno` and `ifthenelseo` commit to the first condition proof
+while allowing the chosen branch to keep backtracking. `forallo` checks every
+generated proof without leaking generator bindings to the outer query.
 
 Term metaprogramming treats terms as ordinary data. `univo` decomposes
 `box(tea, cake)` into `[box, tea, cake]` and can construct the term back from

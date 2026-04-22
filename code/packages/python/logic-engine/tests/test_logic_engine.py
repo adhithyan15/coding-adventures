@@ -30,6 +30,7 @@ from logic_engine import (
     clause_from_term,
     clauses_matching,
     conj,
+    cut,
     declare_dynamic,
     defer,
     disj,
@@ -68,7 +69,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.8.0"
+        assert __version__ == "0.9.0"
 
 
 class TestRelationsAndClauses:
@@ -412,6 +413,7 @@ class TestClauseTermIntrospection:
         assert goal_as_term(parent(x, y)) == term("parent", x, y)
         assert goal_as_term(succeed()) == atom("true")
         assert goal_as_term(fail()) == atom("fail")
+        assert goal_as_term(cut()) == atom("!")
         assert goal_as_term(eq(x, "homer")) == term("=", x, "homer")
         assert goal_as_term(neq(x, "homer")) == term("\\=", x, "homer")
         encoded_conjunction = goal_as_term(
@@ -480,6 +482,16 @@ class TestClauseTermIntrospection:
                 term(";", term("=", child, "tea"), term("=", child, "cake")),
             ),
         ) == [atom("tea"), atom("cake")]
+        assert solve_all(
+            program(),
+            child,
+            conj(
+                goal_from_term(
+                    term(";", term("=", child, "tea"), term("=", child, "cake")),
+                ),
+                goal_from_term(atom("!")),
+            ),
+        ) == [atom("tea")]
 
     def test_goal_from_term_lowers_callable_atoms_to_zero_arity_relations(self) -> None:
         ready = relation("ready", 0)
@@ -597,6 +609,97 @@ class TestRecursivePrograms:
             atom("c"),
             atom("d"),
         ]
+
+
+class TestSearchControl:
+    """Cut should prune scoped choicepoints without replacing ordinary search."""
+
+    def test_cut_prunes_prior_query_choicepoints(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            conj(disj(eq(item, "first"), eq(item, "second")), cut()),
+        ) == [atom("first")]
+
+    def test_cut_keeps_choices_created_after_it(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            conj(cut(), disj(eq(item, "first"), eq(item, "second"))),
+        ) == [atom("first"), atom("second")]
+
+    def test_cut_inside_rule_prunes_earlier_body_choices_and_later_clauses(
+        self,
+    ) -> None:
+        pick = relation("pick", 1)
+        x = var("X")
+        options = program(
+            rule(pick(x), conj(disj(eq(x, "first"), eq(x, "second")), cut())),
+            fact(pick("fallback")),
+        )
+
+        assert solve_all(options, x, pick(x)) == [atom("first")]
+
+    def test_cut_still_prunes_when_later_goal_fails(self) -> None:
+        pick = relation("pick", 1)
+        x = var("X")
+        options = program(
+            rule(pick("blocked"), conj(cut(), fail())),
+            fact(pick("fallback")),
+        )
+
+        assert solve_all(options, x, pick(x)) == []
+
+    def test_cut_inside_relation_does_not_prune_caller_choicepoints(self) -> None:
+        committed = relation("committed", 1)
+        side = var("Side")
+        value = var("Value")
+        x = var("X")
+        options = program(
+            rule(
+                committed(x),
+                conj(disj(eq(x, "inner-first"), eq(x, "inner-second")), cut()),
+            ),
+            fact(committed("later-clause")),
+        )
+
+        assert solve_all(
+            options,
+            (side, value),
+            disj(
+                conj(eq(side, "left"), committed(value)),
+                conj(eq(side, "right"), eq(value, "outside")),
+            ),
+        ) == [(atom("left"), atom("inner-first")), (atom("right"), atom("outside"))]
+
+    def test_cut_inside_recursive_predicate_commits_one_recursive_frame(
+        self,
+    ) -> None:
+        member_once = relation("member_once", 2)
+        item = var("Item")
+        head = var("Head")
+        tail = var("Tail")
+        marker = var("Marker")
+        members = program(
+            rule(member_once(item, term(".", item, tail)), cut()),
+            rule(
+                member_once(item, term(".", head, tail)),
+                member_once(item, tail),
+            ),
+        )
+
+        assert solve_all(
+            members,
+            marker,
+            conj(
+                member_once("b", logic_list(["a", "b", "b"])),
+                eq(marker, "hit"),
+            ),
+        ) == [atom("hit")]
 
 
 class TestQueryHelpers:

@@ -59,17 +59,15 @@ LP14 advanced control builtins
 LP15 term metaprogramming builtins
 LP16 persistent clause database
 LP17 clause introspection builtins
+LP18 Batch A metaprogramming completion
+LP18 Batch B dynamic runtime database
+LP18 Batch C search control and real cut
 PR00 Prolog lexer
 ```
 
 Known future-extension items that still need implementation:
 
-- callable goal-term lowering
-- standard term ordering
-- predicate metadata and predicate-property inspection
-- dynamic predicate declarations
-- backtracking-safe runtime `assert` and `retract`
-- real Prolog cut with scoped choicepoint pruning
+- soft-cut variants if a concrete API need emerges
 - CLP(FD)-style finite-domain constraints
 
 ## Batch Plan
@@ -189,9 +187,10 @@ code/packages/python/logic-builtins
 Features:
 
 - scoped choicepoint frames in the solver protocol
-- `cuto()` as the library form of `!/0`
-- if-then-else lowering that commits to the chosen branch
-- soft-cut variants if the solver protocol supports them cleanly
+- `cut()` in `logic-engine` and `cuto()` in `logic-builtins` as the library
+  form of `!/0`
+- cut encoding/lowering through `goal_as_term(...)` and `goal_from_term(...)`
+  as the atom `!`
 - examples that distinguish real cut from `onceo`
 
 Why this is one batch:
@@ -206,6 +205,25 @@ Why this is one batch:
 Batch C should not fake cut by using `onceo`. LP14 explicitly deferred `cuto`
 because a correct implementation needs scoped pruning of surrounding clause and
 disjunction alternatives.
+
+Implementation shape:
+
+- the public solver still yields ordinary `State` objects, but the private
+  solver protocol threads a cut flag alongside each state
+- conjunctions propagate a cut signal to prune alternatives created by earlier
+  goals in the same conjunction
+- disjunctions stop exploring later branches after a branch raises cut
+- relation calls act as cut frames: a cut inside a rule body prunes later body
+  alternatives and later clauses for that predicate invocation, then the
+  relation consumes the cut before returning to the caller
+- cut succeeds once, so choices introduced after the cut remain backtrackable
+
+Deliberately deferred:
+
+- soft-cut remains out of scope until there is a concrete library API need
+- `calltermo(...)` and other native-goal boundaries currently execute nested
+  goals through the public solver API, so cut is scoped to the nested call
+  rather than propagated through meta-call boundaries
 
 ### Batch D - CLP(FD) Foundation
 
@@ -486,8 +504,6 @@ Future implementation PRs should keep these guardrails:
 LP18 says yes: the remaining Prolog-level functionality can be knocked out in a
 few big batches rather than many tiny PRs.
 
-The recommended next PR is Batch A, because it completes the pure
-metaprogramming loop and makes the library feel much closer to Prolog without
-changing mutable database or solver-control internals. Batch B then adds
-runtime dynamic predicates, Batch C adds real cut, and Batch D starts finite
-domain constraints as a focused constraint-solving track.
+Batch A completed the pure metaprogramming loop, Batch B added runtime dynamic
+predicates, and Batch C added real cut. Batch D starts finite-domain
+constraints as the next focused constraint-solving track.

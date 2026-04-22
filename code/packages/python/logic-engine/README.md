@@ -14,6 +14,7 @@ that make relational programs feel like programs:
 - persistent database updates via `asserta(...)`, `assertz(...)`, `retract_*`,
   and `abolish(...)`
 - dynamic predicate declarations and branch-local runtime database overlays
+- scoped search control via `cut()` as the library form of Prolog `!/0`
 - recursive solving with depth-first backtracking
 - deferred recursive goal builders via `defer(...)`
 - state-aware native goal hooks via `native_goal(...)` for library builtins
@@ -158,6 +159,30 @@ assert solve_all(family, Child, goal_from_term(term("parent", "homer", Child))) 
     atom("bart"),
     atom("lisa"),
 ]
+```
+
+## Search Control
+
+`cut()` succeeds once and commits to choices made earlier in the current query
+or predicate invocation. Choices created after the cut can still backtrack, and
+cuts inside a relation body are consumed by that relation call instead of
+leaking into the caller.
+
+```python
+from logic_engine import atom, conj, cut, disj, eq, program, solve_all, var
+
+X = var("X")
+
+assert solve_all(
+    program(),
+    X,
+    conj(disj(eq(X, "first"), eq(X, "second")), cut()),
+) == [atom("first")]
+assert solve_all(
+    program(),
+    X,
+    conj(cut(), disj(eq(X, "first"), eq(X, "second"))),
+) == [atom("first"), atom("second")]
 ```
 
 ## Dependencies
