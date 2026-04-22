@@ -192,11 +192,10 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
 // macOS window display
 // ---------------------------------------------------------------------------
 //
-// Copies the working pattern from `draw-instructions-metal-mac-window`:
-// create an NSApplication, build an NSWindow at the scene's dimensions,
-// convert the PixelContainer into an NSImage backed by NSBitmapImageRep,
-// display via NSImageView as the window's content view, run the event
-// loop until the user closes the window.
+// Working pattern: create an NSApplication, build an NSWindow at the
+// scene's dimensions, convert the PixelContainer into an NSImage backed
+// by NSBitmapImageRep, display via NSImageView as the window's content
+// view, run the event loop until the user closes the window.
 //
 // v1 is static: one render, one display. No resize-triggered relayout.
 // Handled as a v2 concern.
