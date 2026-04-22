@@ -33,6 +33,7 @@ pub struct StreamConnectionInfo {
 pub struct StreamHandlerResult {
     pub write: Vec<u8>,
     pub close: bool,
+    pub defer_read: bool,
 }
 
 impl StreamHandlerResult {
@@ -40,6 +41,7 @@ impl StreamHandlerResult {
         Self {
             write: bytes.into(),
             close: false,
+            defer_read: false,
         }
     }
 
@@ -47,6 +49,15 @@ impl StreamHandlerResult {
         Self {
             write: Vec::new(),
             close: true,
+            defer_read: false,
+        }
+    }
+
+    pub const fn defer_read() -> Self {
+        Self {
+            write: Vec::new(),
+            close: false,
+            defer_read: true,
         }
     }
 
@@ -54,6 +65,7 @@ impl StreamHandlerResult {
         Self {
             write: bytes.into(),
             close: true,
+            defer_read: false,
         }
     }
 }
@@ -116,6 +128,18 @@ impl StreamMailbox {
         self.push(StreamMailboxCommand::Close { connection_id });
     }
 
+    pub fn pause_reads(&self, connection_id: ConnectionId) {
+        self.push(StreamMailboxCommand::PauseReads { connection_id });
+    }
+
+    pub fn resume_reads(&self, connection_id: ConnectionId) {
+        self.push(StreamMailboxCommand::ResumeReads { connection_id });
+    }
+
+    pub fn resume_all_reads(&self) {
+        self.push(StreamMailboxCommand::ResumeAllReads);
+    }
+
     fn push(&self, command: StreamMailboxCommand) {
         self.commands
             .lock()
@@ -142,6 +166,13 @@ enum StreamMailboxCommand {
     Close {
         connection_id: ConnectionId,
     },
+    PauseReads {
+        connection_id: ConnectionId,
+    },
+    ResumeReads {
+        connection_id: ConnectionId,
+    },
+    ResumeAllReads,
 }
 
 type StateInit<S> = Arc<dyn Fn(StreamConnectionInfo) -> S + Send + Sync + 'static>;
@@ -153,8 +184,17 @@ struct ConnectionState<S> {
     info: StreamConnectionInfo,
     app_state: S,
     pending_write: Vec<u8>,
+    deferred_reads: VecDeque<Vec<u8>>,
     peer_closed: bool,
+    read_paused: bool,
     close_when_flushed: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ReadChunkOutcome {
+    Applied,
+    Deferred,
+    CloseNow,
 }
 
 pub struct StreamReactor<P, S = ()> {
@@ -325,7 +365,9 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                                 peer_addr: accepted.peer_addr,
                             }),
                             pending_write: Vec::new(),
+                            deferred_reads: VecDeque::new(),
                             peer_closed: false,
+                            read_paused: false,
                             close_when_flushed: false,
                         },
                     );
@@ -337,7 +379,10 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
     fn drain_mailbox(&mut self) -> Result<(), PlatformError> {
         for command in self.mailbox.drain() {
-            self.apply_mailbox_command(command)?;
+            match command {
+                StreamMailboxCommand::ResumeAllReads => self.resume_all_reads()?,
+                other => self.apply_mailbox_command(other)?,
+            }
         }
         Ok(())
     }
@@ -349,6 +394,9 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         let connection_id = match &command {
             StreamMailboxCommand::Write { connection_id, .. } => *connection_id,
             StreamMailboxCommand::Close { connection_id } => *connection_id,
+            StreamMailboxCommand::PauseReads { connection_id } => *connection_id,
+            StreamMailboxCommand::ResumeReads { connection_id } => *connection_id,
+            StreamMailboxCommand::ResumeAllReads => return self.resume_all_reads(),
         };
 
         let Some(stream) = self.connection_index.get(&connection_id).copied() else {
@@ -378,6 +426,14 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             StreamMailboxCommand::Close { .. } => {
                 state.close_when_flushed = true;
             }
+            StreamMailboxCommand::PauseReads { .. } => {
+                state.read_paused = true;
+            }
+            StreamMailboxCommand::ResumeReads { .. } => {
+                state.read_paused = false;
+                return self.progress_reads_with_state(stream, state);
+            }
+            StreamMailboxCommand::ResumeAllReads => unreachable!("handled before dispatch"),
         }
 
         if close_now || self.should_close_after_io(&state) {
@@ -391,10 +447,25 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
     }
 
     fn read_ready(&mut self, stream: StreamId) -> Result<(), PlatformError> {
-        let Some(mut state) = self.connections.remove(&stream) else {
+        let Some(state) = self.connections.remove(&stream) else {
             return Ok(());
         };
 
+        if state.read_paused {
+            self.platform
+                .set_stream_interest(stream, self.interest_for(&state))?;
+            self.connections.insert(stream, state);
+            return Ok(());
+        }
+
+        self.progress_reads_with_state(stream, state)
+    }
+
+    fn progress_reads_with_state(
+        &mut self,
+        stream: StreamId,
+        mut state: ConnectionState<S>,
+    ) -> Result<(), PlatformError> {
         if state.pending_write.len() >= self.max_pending_write_bytes {
             self.platform
                 .set_stream_interest(stream, self.interest_for(&state))?;
@@ -405,21 +476,43 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         let mut close_now = false;
         let mut buffer = vec![0u8; self.read_buffer_size];
 
+        while let Some(chunk) = state.deferred_reads.pop_front() {
+            match self.apply_read_chunk(&mut state, &chunk) {
+                ReadChunkOutcome::Applied => {}
+                ReadChunkOutcome::Deferred => {
+                    state.deferred_reads.push_front(chunk);
+                    state.read_paused = true;
+                    break;
+                }
+                ReadChunkOutcome::CloseNow => {
+                    close_now = true;
+                    break;
+                }
+            }
+
+            if self.should_close_after_io(&state) {
+                break;
+            }
+        }
+
         loop {
+            if close_now || state.read_paused || state.close_when_flushed || state.peer_closed {
+                break;
+            }
             match self.platform.read(stream, &mut buffer)? {
                 ReadOutcome::Read(n) => {
-                    let result = (self.handler)(state.info, &mut state.app_state, &buffer[..n]);
-                    if !result.write.is_empty() {
-                        if state.pending_write.len().saturating_add(result.write.len())
-                            > self.max_pending_write_bytes
-                        {
+                    let chunk = &buffer[..n];
+                    match self.apply_read_chunk(&mut state, chunk) {
+                        ReadChunkOutcome::Applied => {}
+                        ReadChunkOutcome::Deferred => {
+                            state.deferred_reads.push_back(chunk.to_vec());
+                            state.read_paused = true;
+                            break;
+                        }
+                        ReadChunkOutcome::CloseNow => {
                             close_now = true;
                             break;
                         }
-                        state.pending_write.extend_from_slice(&result.write);
-                    }
-                    if result.close {
-                        state.close_when_flushed = true;
                     }
                     if n < buffer.len() {
                         break;
@@ -441,6 +534,25 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
             self.connections.insert(stream, state);
             Ok(())
         }
+    }
+
+    fn apply_read_chunk(&self, state: &mut ConnectionState<S>, bytes: &[u8]) -> ReadChunkOutcome {
+        let result = (self.handler)(state.info, &mut state.app_state, bytes);
+        if result.defer_read {
+            return ReadChunkOutcome::Deferred;
+        }
+        if !result.write.is_empty() {
+            if state.pending_write.len().saturating_add(result.write.len())
+                > self.max_pending_write_bytes
+            {
+                return ReadChunkOutcome::CloseNow;
+            }
+            state.pending_write.extend_from_slice(&result.write);
+        }
+        if result.close {
+            state.close_when_flushed = true;
+        }
+        ReadChunkOutcome::Applied
     }
 
     fn write_ready(&mut self, stream: StreamId) -> Result<(), PlatformError> {
@@ -497,12 +609,12 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
     fn interest_for(&self, state: &ConnectionState<S>) -> StreamInterest {
         if state.pending_write.is_empty() {
-            if state.peer_closed || state.close_when_flushed {
+            if state.read_paused || state.peer_closed || state.close_when_flushed {
                 StreamInterest::none()
             } else {
                 StreamInterest::readable()
             }
-        } else if state.peer_closed || state.close_when_flushed {
+        } else if state.read_paused || state.peer_closed || state.close_when_flushed {
             StreamInterest {
                 readable: false,
                 writable: true,
@@ -514,6 +626,22 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
 
     fn should_close_after_io(&self, state: &ConnectionState<S>) -> bool {
         state.pending_write.is_empty() && (state.peer_closed || state.close_when_flushed)
+    }
+
+    fn resume_all_reads(&mut self) -> Result<(), PlatformError> {
+        let streams = self
+            .connections
+            .iter()
+            .filter_map(|(stream, state)| state.read_paused.then_some(*stream))
+            .collect::<Vec<_>>();
+        for stream in streams {
+            let Some(mut state) = self.connections.remove(&stream) else {
+                continue;
+            };
+            state.read_paused = false;
+            self.progress_reads_with_state(stream, state)?;
+        }
+        Ok(())
     }
 
     fn close_connection(&mut self, stream: StreamId) -> Result<(), PlatformError> {
@@ -961,6 +1089,73 @@ mod tests {
             .read_exact(&mut response)
             .expect("read delayed response");
         assert_eq!(&response, b"delayed-response");
+    }
+
+    #[test]
+    fn mailbox_resume_replays_deferred_reads_without_losing_bytes() {
+        let accepting = Arc::new(AtomicBool::new(false));
+        let accepting_in_handler = Arc::clone(&accepting);
+        let mut reactor = StreamReactor::bind_kqueue(("127.0.0.1", 0), move |_, bytes| {
+            if accepting_in_handler.load(Ordering::SeqCst) {
+                StreamHandlerResult::write(bytes.to_vec())
+            } else {
+                StreamHandlerResult::defer_read()
+            }
+        })
+        .expect("bind");
+        let mailbox = reactor.mailbox();
+        let addr = reactor.local_addr();
+
+        let mut client = TcpStream::connect(addr).expect("connect");
+        client
+            .set_read_timeout(Some(Duration::from_millis(50)))
+            .expect("read timeout");
+        client.write_all(b"queued").expect("write request");
+        for _ in 0..8 {
+            reactor.accept_ready().expect("accept client");
+            if reactor.connections.len() == 1 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+
+        let stream = *reactor
+            .connections
+            .keys()
+            .next()
+            .expect("accepted connection stream");
+        reactor.read_ready(stream).expect("defer first read");
+        let state = reactor
+            .connections
+            .get(&stream)
+            .expect("connection should remain open while read is deferred");
+        assert!(state.read_paused, "deferred read should pause readability");
+        assert_eq!(state.deferred_reads.len(), 1);
+
+        let mut probe = [0u8; 16];
+        let err = client
+            .read(&mut probe)
+            .expect_err("no response while paused");
+        assert!(
+            matches!(
+                err.kind(),
+                std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut
+            ),
+            "expected no response while read is paused, got {err}"
+        );
+
+        accepting.store(true, Ordering::SeqCst);
+        mailbox.resume_all_reads();
+        reactor.drain_mailbox().expect("resume deferred reads");
+        reactor
+            .write_ready(stream)
+            .expect("flush replayed response");
+
+        let mut response = [0u8; 6];
+        client
+            .read_exact(&mut response)
+            .expect("read replayed response");
+        assert_eq!(&response, b"queued");
     }
 
     #[test]

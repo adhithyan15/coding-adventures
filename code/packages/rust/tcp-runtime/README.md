@@ -26,6 +26,9 @@ Phase one supports:
 - configurable backlog, `TCP_NODELAY`, keepalive, and socket buffer defaults
 - stateless and stateful handler variants
 - mailbox handles that can write or close TCP connections from worker threads
+- mailbox read pause/resume commands inherited from `stream-reactor`
+- `TcpHandlerResult::defer_read()` for lossless backpressure when an adapter
+  cannot accept the current read chunk yet
 - queued-write and connection caps inherited from `stream-reactor`
 - cooperative shutdown through a stop handle
 - host-OS convenience constructors for macOS / BSD, Linux, and Windows

@@ -813,7 +813,9 @@ Rust should land first because the TCP runtime will consume it.
 
 Status: Rust slices have landed with bounded in-flight submission, affinity
 routing, async response draining, per-job timeout responses, worker-exit
-failure responses, and a TCP consumer in `embeddable-tcp-server`.
+failure responses, queue-full backpressure, and a TCP consumer in
+`embeddable-tcp-server` that pauses and replays TCP reads when worker capacity
+is saturated.
 
 Add a language-neutral process-pool executor using JSON lines first so Python,
 Ruby, Perl, Lua, and other process-backed hosts can share the same execution
@@ -826,7 +828,8 @@ Remaining hardening:
 - restart policy for crashed workers
 - cancellation semantics
 - ordered response buffering by affinity where adapters need it
-- backpressure signals rich enough for TCP read pausing
+- metrics for queue pressure, paused reads, replay counts, and worker
+  saturation
 
 ### Phase 3: Rust Thread-Pool Executor
 
