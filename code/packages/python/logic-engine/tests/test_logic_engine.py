@@ -69,7 +69,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.9.0"
+        assert __version__ == "0.10.0"
 
 
 class TestRelationsAndClauses:

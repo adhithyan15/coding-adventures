@@ -165,4 +165,4 @@ __all__ = [
     "visible_predicate_keys",
 ]
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"

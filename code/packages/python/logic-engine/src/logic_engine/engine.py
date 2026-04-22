@@ -1181,6 +1181,7 @@ def _state_with_database(state: State, database: DynamicDatabase) -> State:
         constraints=state.constraints,
         next_var_id=state.next_var_id,
         database=database,
+        fd_store=state.fd_store,
     )
 
 
@@ -1192,6 +1193,7 @@ def _state_with_next_var_id(state: State, next_var_id: int) -> State:
         constraints=state.constraints,
         next_var_id=next_var_id,
         database=state.database,
+        fd_store=state.fd_store,
     )
 
 
@@ -1675,6 +1677,7 @@ def _instantiate_fresh(goal: FreshExpr, state: State) -> tuple[GoalExpr, State]:
         constraints=state.constraints,
         next_var_id=running_id,
         database=state.database,
+        fd_store=state.fd_store,
     )
     return renamed_body, next_state
 
