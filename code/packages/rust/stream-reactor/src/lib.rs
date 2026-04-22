@@ -1124,7 +1124,16 @@ mod tests {
             .keys()
             .next()
             .expect("accepted connection stream");
-        reactor.read_ready(stream).expect("defer first read");
+        for _ in 0..20 {
+            reactor.read_ready(stream).expect("defer first read");
+            let Some(state) = reactor.connections.get(&stream) else {
+                panic!("connection should remain open while read is deferred");
+            };
+            if state.read_paused {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
         let state = reactor
             .connections
             .get(&stream)
