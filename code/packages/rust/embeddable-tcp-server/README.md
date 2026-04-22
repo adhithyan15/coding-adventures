@@ -49,6 +49,8 @@ or RESP part of the crate's public identity.
   backpressure behavior.
 - `worker_job_timeout` can bound mailbox-mode jobs so stuck workers return
   timeout responses instead of leaking capacity forever.
+- `worker_restart_policy` can opt mailbox mode into restarting crashed worker
+  processes with the generic job runtime's bounded restart policy.
 - When the worker queue is full, mailbox mode defers and pauses the current TCP
   read instead of closing the connection. Worker completions resume paused
   reads through the TCP mailbox.
@@ -59,11 +61,11 @@ or RESP part of the crate's public identity.
 - The current payload structs are the first raw-byte transport shape; a later
   crate should make those stable for all language bridges.
 - This validates the runtime seam; it still needs production cancellation,
-  worker restart, and richer backpressure telemetry.
+  ordered response buffering, and richer backpressure telemetry.
 
-The next production step is to harden the process-pool path with worker restart
-policy, cancellation, response size enforcement, and metrics for paused reads
-and queue pressure.
+The next production step is to harden the process-pool path with cancellation,
+response size enforcement, ordered response buffering, and metrics for paused
+reads and queue pressure.
 
 ## Dependencies
 

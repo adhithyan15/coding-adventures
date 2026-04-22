@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Added `worker_job_timeout` to mailbox-mode server options so embedders can
   configure generic job-runtime timeouts for stuck language workers.
+- Added `worker_restart_policy` to mailbox-mode server options so embedders can
+  opt into generic job-runtime process restart behavior.
 - Added `worker_queue_depth` to mailbox-mode server options so embedders can
   tune the bounded worker queue used for backpressure.
 - Added queue-full handling that defers and pauses the current TCP read, then
