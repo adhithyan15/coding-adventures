@@ -95,6 +95,10 @@ keywords:
   KEY
   UNIQUE
   DEFAULT
+  BEGIN
+  COMMIT
+  ROLLBACK
+  TRANSACTION
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

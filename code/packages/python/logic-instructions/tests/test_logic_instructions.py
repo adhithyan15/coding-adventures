@@ -14,6 +14,7 @@ from symbol_core import sym
 from logic_instructions import (
     __version__,
     assemble,
+    defdynamic,
     defrel,
     fact,
     instruction_program,
@@ -29,7 +30,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.1.0"
+        assert __version__ == "0.2.0"
 
 
 class TestInstructionPrograms:
@@ -228,6 +229,28 @@ class TestInstructionPrograms:
         assert len(assembled.program.clauses) == 1
         assert len(assembled.queries) == 1
 
+    def test_dynamic_relation_declarations_lower_into_program_metadata(self) -> None:
+        memo = relation("memo", 1)
+        item = var("Item")
+
+        assembled = assemble(
+            instruction_program(
+                defdynamic(memo),
+                fact(memo("cached")),
+                query(memo(item), outputs=(item,)),
+            ),
+        )
+
+        assert assembled.relations == (memo,)
+        assert assembled.program.dynamic_relations == frozenset({memo.key()})
+        assert run_query(
+            instruction_program(
+                defdynamic(memo),
+                fact(memo("cached")),
+                query(memo(item), outputs=(item,)),
+            ),
+        ) == [atom("cached")]
+
     def test_defrel_accepts_symbols_and_rejects_ambiguous_arguments(self) -> None:
         parent_decl = defrel(sym("parent"), 2)
 
@@ -238,6 +261,17 @@ class TestInstructionPrograms:
 
         with pytest.raises(ValueError, match="does not accept arity"):
             defrel(relation("parent", 2), arity=2)
+
+    def test_defdynamic_accepts_symbols_and_rejects_ambiguous_arguments(self) -> None:
+        parent_decl = defdynamic(sym("parent"), 2)
+
+        assert parent_decl.relation == relation("parent", 2)
+
+        with pytest.raises(ValueError, match="requires arity"):
+            defdynamic("parent")
+
+        with pytest.raises(ValueError, match="does not accept arity"):
+            defdynamic(relation("parent", 2), arity=2)
 
     def test_fact_rule_and_query_reject_invalid_shapes(self) -> None:
         parent = relation("parent", 2)

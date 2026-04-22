@@ -20,3 +20,6 @@ All notable changes to this package will be documented in this file.
 - Added a mailbox-style asynchronous worker path where TCP callbacks send
   request jobs and return immediately while a response task posts worker output
   back to the TCP runtime.
+- Routed mailbox-mode worker execution through `generic-job-runtime` so the
+  embeddable TCP server can use a configurable stdio process pool instead of
+  owning one ad hoc child process.

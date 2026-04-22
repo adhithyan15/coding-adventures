@@ -158,8 +158,12 @@ PARSER_GRAMMAR = ParserGrammar(
                 RuleReference(name='join_type', is_token=False),
                 Literal(value='JOIN'),
                 RuleReference(name='table_ref', is_token=False),
-                Literal(value='ON'),
-                RuleReference(name='expr', is_token=False),
+                Optional(element=
+                    Sequence(elements=[
+                        Literal(value='ON'),
+                        RuleReference(name='expr', is_token=False),
+                    ]),
+                ),
             ]),
             line_number=28,
         ),

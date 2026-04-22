@@ -18,29 +18,43 @@ from collections.abc import Callable, Iterator
 
 from logic_engine import (
     Atom,
+    Clause,
     Compound,
     GoalExpr,
     LogicVar,
     Number,
     Program,
+    Relation,
     RelationCall,
     State,
     String,
     Term,
     atom,
     clause_body,
+    clause_from_term,
     conj,
     eq,
     freshen_clause,
     goal_as_term,
     goal_from_term,
+    is_dynamic_relation,
     logic_list,
     native_goal,
     num,
     reify,
+    relation,
+    runtime_abolish,
+    runtime_asserta,
+    runtime_assertz,
+    runtime_declare_dynamic,
+    runtime_retract_all,
+    runtime_retract_first,
     solve_from,
     succeed,
     term,
+    visible_clause_count,
+    visible_clauses,
+    visible_predicate_keys,
 )
 from logic_engine import (
     fail as engine_fail,
@@ -58,6 +72,7 @@ __all__ = [
     "compare_termo",
     "copytermo",
     "current_predicateo",
+    "dynamico",
     "div",
     "failo",
     "findallo",
@@ -83,6 +98,11 @@ __all__ = [
     "onceo",
     "bagofo",
     "predicate_propertyo",
+    "assertao",
+    "assertzo",
+    "abolisho",
+    "retractallo",
+    "retracto",
     "same_termo",
     "setofo",
     "clauseo",
@@ -105,7 +125,10 @@ type TermSortKey = tuple[object, ...]
 
 
 _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
+    ("abolisho", 2),
     ("argo", 3),
+    ("assertao", 1),
+    ("assertzo", 1),
     ("atomico", 1),
     ("atomo", 1),
     ("bagofo", 3),
@@ -117,6 +140,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("compoundo", 1),
     ("copytermo", 2),
     ("current_predicateo", 2),
+    ("dynamico", 2),
     ("failo", 0),
     ("findallo", 3),
     ("forallo", 2),
@@ -136,6 +160,8 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("numbero", 1),
     ("onceo", 1),
     ("predicate_propertyo", 3),
+    ("retractallo", 1),
+    ("retracto", 1),
     ("same_termo", 2),
     ("setofo", 3),
     ("stringo", 1),
@@ -255,6 +281,7 @@ def _state_with_next_var_id(state: State, next_var_id: int) -> State:
         substitution=state.substitution,
         constraints=state.constraints,
         next_var_id=next_var_id,
+        database=state.database,
     )
 
 
@@ -1005,11 +1032,129 @@ def termo_geqo(left: object, right: object) -> GoalExpr:
     return _term_compareo(left, right, lambda comparison: comparison >= 0)
 
 
-def _predicate_clause_counts(program_value: Program) -> dict[tuple[Atom, int], int]:
+def _relation_from_indicator(name_term: Term, arity_term: Term) -> Relation | None:
+    """Convert reified name/arity terms into an engine relation."""
+
+    if not isinstance(name_term, Atom) or not isinstance(arity_term, Number):
+        return None
+    raw_arity = arity_term.value
+    if isinstance(raw_arity, bool) or not isinstance(raw_arity, int) or raw_arity < 0:
+        return None
+    return relation(name_term.symbol, raw_arity)
+
+
+def dynamico(name: object, arity: object) -> GoalExpr:
+    """Declare a predicate dynamic in the current proof branch."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_term, arity_term = args
+        relation_value = _relation_from_indicator(
+            _reified(name_term, state),
+            _reified(arity_term, state),
+        )
+        if relation_value is None:
+            return
+        updated_state = runtime_declare_dynamic(program_value, state, relation_value)
+        if updated_state is not None:
+            yield updated_state
+
+    return native_goal(run, name, arity)
+
+
+def _dynamic_clause_from_arg(clause_term: Term, state: State) -> Clause | None:
+    """Parse one reified assertion/retraction argument into a clause."""
+
+    try:
+        return clause_from_term(_reified(clause_term, state))
+    except TypeError:
+        return None
+
+
+def assertao(clause_term: object) -> GoalExpr:
+    """Assert a dynamic clause before existing dynamic clauses in this branch."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (raw_clause_term,) = args
+        clause_value = _dynamic_clause_from_arg(raw_clause_term, state)
+        if clause_value is None:
+            return
+        updated_state = runtime_asserta(program_value, state, clause_value)
+        if updated_state is not None:
+            yield updated_state
+
+    return native_goal(run, _as_callable_term(clause_term))
+
+
+def assertzo(clause_term: object) -> GoalExpr:
+    """Assert a dynamic clause after existing dynamic clauses in this branch."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (raw_clause_term,) = args
+        clause_value = _dynamic_clause_from_arg(raw_clause_term, state)
+        if clause_value is None:
+            return
+        updated_state = runtime_assertz(program_value, state, clause_value)
+        if updated_state is not None:
+            yield updated_state
+
+    return native_goal(run, _as_callable_term(clause_term))
+
+
+def retracto(clause_term: object) -> GoalExpr:
+    """Retract the first matching dynamic clause and expose its bindings."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (raw_clause_term,) = args
+        clause_value = _dynamic_clause_from_arg(raw_clause_term, state)
+        if clause_value is None:
+            return
+        yield from runtime_retract_first(program_value, state, clause_value)
+
+    return native_goal(run, _as_callable_term(clause_term))
+
+
+def retractallo(head_term: object) -> GoalExpr:
+    """Retract every dynamic clause whose head matches ``head_term``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (raw_head_term,) = args
+        try:
+            clause_value = clause_from_term(_reified(raw_head_term, state))
+        except TypeError:
+            return
+        updated_state = runtime_retract_all(program_value, state, clause_value.head)
+        if updated_state is not None:
+            yield updated_state
+
+    return native_goal(run, _as_callable_term(head_term))
+
+
+def abolisho(name: object, arity: object) -> GoalExpr:
+    """Abolish a dynamic predicate in the current proof branch."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_term, arity_term = args
+        relation_value = _relation_from_indicator(
+            _reified(name_term, state),
+            _reified(arity_term, state),
+        )
+        if relation_value is None:
+            return
+        updated_state = runtime_abolish(program_value, state, relation_value)
+        if updated_state is not None:
+            yield updated_state
+
+    return native_goal(run, name, arity)
+
+
+def _predicate_clause_counts(
+    program_value: Program,
+    state: State | None = None,
+) -> dict[tuple[Atom, int], int]:
     """Count source clauses by predicate indicator in source-discovery order."""
 
     counts: dict[tuple[Atom, int], int] = {}
-    for source_clause in program_value.clauses:
+    for source_clause in visible_clauses(program_value, state):
         indicator = (
             atom(source_clause.head.relation.symbol),
             source_clause.head.relation.arity,
@@ -1024,11 +1169,16 @@ def _builtin_indicators() -> tuple[tuple[Atom, int], ...]:
     return tuple((atom(name), arity) for name, arity in _BUILTIN_PREDICATES)
 
 
-def _predicate_indicators(program_value: Program) -> tuple[tuple[Atom, int], ...]:
+def _predicate_indicators(
+    program_value: Program,
+    state: State | None = None,
+) -> tuple[tuple[Atom, int], ...]:
     """Enumerate source and builtin predicate indicators without duplicates."""
 
     ordered: dict[tuple[Atom, int], None] = {}
-    for indicator in _predicate_clause_counts(program_value):
+    for key in visible_predicate_keys(program_value, state):
+        ordered[(atom(key[0]), key[1])] = None
+    for indicator in _predicate_clause_counts(program_value, state):
         ordered[indicator] = None
     for indicator in _builtin_indicators():
         ordered.setdefault(indicator, None)
@@ -1037,18 +1187,23 @@ def _predicate_indicators(program_value: Program) -> tuple[tuple[Atom, int], ...
 
 def _predicate_properties(
     program_value: Program,
+    state: State,
     name_atom: Atom,
     arity: int,
 ) -> tuple[Term, ...]:
     """Return observable properties for one predicate indicator."""
 
-    clause_count = _predicate_clause_counts(program_value).get((name_atom, arity), 0)
+    relation_value = relation(name_atom.symbol, arity)
+    clause_count = visible_clause_count(program_value, relation_value, state)
     is_builtin = (name_atom, arity) in set(_builtin_indicators())
-    if clause_count == 0 and not is_builtin:
+    is_dynamic = is_dynamic_relation(program_value, relation_value, state)
+    if clause_count == 0 and not is_builtin and not is_dynamic:
         return ()
 
     properties: list[Term] = [atom("defined")]
-    if clause_count > 0:
+    if is_dynamic:
+        properties.append(atom("dynamic"))
+    elif clause_count > 0:
         properties.append(atom("static"))
     if is_builtin:
         properties.append(atom("built_in"))
@@ -1061,7 +1216,7 @@ def current_predicateo(name: object, arity: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         name_target, arity_target = args
-        for name_atom, raw_arity in _predicate_indicators(program_value):
+        for name_atom, raw_arity in _predicate_indicators(program_value, state):
             yield from solve_from(
                 program_value,
                 conj(eq(name_target, name_atom), eq(arity_target, num(raw_arity))),
@@ -1076,9 +1231,10 @@ def predicate_propertyo(name: object, arity: object, property_term: object) -> G
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         name_target, arity_target, property_target = args
-        for name_atom, raw_arity in _predicate_indicators(program_value):
+        for name_atom, raw_arity in _predicate_indicators(program_value, state):
             for property_value in _predicate_properties(
                 program_value,
+                state,
                 name_atom,
                 raw_arity,
             ):
@@ -1100,7 +1256,7 @@ def clauseo(head: object, body: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         head_target, body_target = args
-        for source_clause in program_value.clauses:
+        for source_clause in visible_clauses(program_value, state):
             fresh_clause, next_var_id = freshen_clause(
                 source_clause,
                 state.next_var_id,

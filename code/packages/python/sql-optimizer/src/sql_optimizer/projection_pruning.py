@@ -30,7 +30,9 @@ from sql_planner import (
     Begin,
     Between,
     BinaryExpr,
+    CaseExpr,
     Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
@@ -158,6 +160,13 @@ def _prune(p: LogicalPlan, required: Req | None) -> LogicalPlan:
         case Except(left=l, right=r, all=a):
             return Except(left=_prune(l, required), right=_prune(r, required), all=a)
 
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            # Recurse into the inner query. The outer required-column set
+            # does not propagate inside a derived table — the inner query has
+            # its own scope. We pass None to let the inner optimizer use its
+            # own logic.
+            return DerivedTable(query=_prune(q, None), alias=alias, columns=cols)
+
         case Begin() | Commit() | Rollback():
             return p
 
@@ -222,5 +231,10 @@ def _contains_wildcard(e: Expr) -> bool:
             return _contains_wildcard(op)
         case FunctionCall(_, args):
             return any(a.value is not None and _contains_wildcard(a.value) for a in args)
+        case CaseExpr(whens=whens, else_=else_):
+            return (
+                any(_contains_wildcard(cond) or _contains_wildcard(result) for cond, result in whens)
+                or (else_ is not None and _contains_wildcard(else_))
+            )
         case _:
             return False

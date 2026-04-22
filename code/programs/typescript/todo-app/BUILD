@@ -16,8 +16,10 @@ cd ../../../packages/typescript/lattice-ast-to-css && npm install --quiet
 cd ../../../packages/typescript/lattice-transpiler && npm install --quiet
 cd ../../../packages/typescript/indexeddb && npm install --quiet
 cd ../../../packages/typescript/store && npm install --quiet
-cd ../../../packages/typescript/draw-instructions && npm install --quiet
-cd ../../../packages/typescript/draw-instructions-canvas && npm install --quiet
+cd ../../../packages/typescript/pixel-container && npm install --quiet
+cd ../../../packages/typescript/paint-instructions && npm install --quiet
+cd ../../../packages/typescript/paint-vm && npm install --quiet
+cd ../../../packages/typescript/paint-vm-canvas && npm install --quiet
 cd ../../../packages/typescript/ui-components && npm install --quiet
 cd ../../../packages/typescript/vite-plugin-lattice && npm install --quiet
 cd ../../../programs/typescript/todo-app && npm install --quiet

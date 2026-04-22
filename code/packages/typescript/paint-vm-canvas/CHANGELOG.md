@@ -5,6 +5,7 @@
 ### Added
 
 - `PaintText` handler — dispatches the new `PaintText` instruction from P2D00 using `ctx.fillText`. Parses `canvas:<family>@<size>[:<weight>[:<style>]]` font_refs into CSS font shorthand, validates and sanitizes the family string, clamps out-of-range weights to 400, and throws `UnsupportedFontBindingError` for any non-`canvas:` scheme (enforcing the font-binding invariant from TXT00/TXT03d).
+- Honor `PaintText.text_align` by setting `ctx.textAlign` to the matching value before dispatching `fillText`. Default remains `"start"` (Canvas default) when the field is omitted.
 - `UnsupportedFontBindingError` export — thrown when `PaintText.font_ref` uses a scheme that this backend cannot consume (e.g. `coretext:`, `directwrite:`).
 - Handler count increased from 10 to 11 (new `text` kind registered alongside `glyph_run`).
 

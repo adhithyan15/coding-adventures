@@ -67,39 +67,51 @@ Instruction Groups
   RRC:         0x0A
   RAL:         0x12
   RAR:         0x1A
-  RFC / RET:   0x07   (return if carry false -- standard unconditional return)
-  RTC:         0x0F
-  RFZ:         0x03
-  RTZ:         0x2B   -- wait, let's use the spec table directly
+  RFC / RET:   0x03   (return if carry false -- standard unconditional return)
+  RTC:         0x07   (return if carry true)
 
-From OCT01-intel-8008-backend.md:
-  RFC / RET:  0x07
-  RFZ:        0x0B
-  RFS:        0x13
-  RFP:        0x1B
-  RTC:        0x0F
-  RTZ:        0x2B
-  RTS:        0x33
-  RTP:        0x3B
-  HLT:        0xFF
+Return instruction encoding: ``00 CCC T11``
+  CCC = condition code (bits[5:3]): 0=CY, 1=Z, 2=S, 3=P
+  T   = sense bit (bit 2): 0=if-false, 1=if-true
+  bits[1:0] = 11 (identifies as return)
+
+  RFC / RET:  0x03   (CCC=0, T=0, bits=00_000_011)
+  RFZ:        0x0B   (CCC=1, T=0, bits=00_001_011)
+  RFS:        0x13   (CCC=2, T=0, bits=00_010_011)
+  RFP:        0x1B   (CCC=3, T=0, bits=00_011_011)
+  RTC:        0x07   (CCC=0, T=1, bits=00_000_111)
+  RTZ:        0x0F   (CCC=1, T=1, bits=00_001_111)
+  RTS:        0x17   (CCC=2, T=1, bits=00_010_111)
+  RTP:        0x1F   (CCC=3, T=1, bits=00_011_111)
+  HLT:        0xFF   (alternate halt encoding)
   RLC:        0x02
   RRC:        0x0A
   RAL:        0x12
   RAR:        0x1A
 
 **Group 01** (opcode bits 7:6 = 01):
-  MOV dst, src: 0x40 | (dst<<3) | src
-  IN p:          0x41 | (p<<3)
-  JMP a14:       0x44, lo, hi6
-  CAL a14:       0x46, lo, hi6
-  JFC a14:       0x40, lo, hi6
-  JTC a14:       0x60, lo, hi6
+  MOV dst, src:  0x40 | (dst<<3) | src
+  IN p:          0x41 | (p<<3)   for p = 0..7
+  JMP a14:       0x7C, lo, hi6   (unconditional jump)
+  CAL a14:       0x7E, lo, hi6   (unconditional call)
+
+  Conditional jump/call encoding: ``01 CCC T00`` (jump) / ``01 CCC T10`` (call)
+    CCC = condition code: 0=CY, 1=Z, 2=S, 3=P
+    T   = sense bit: 0=if-false, 1=if-true
+    bits[1:0] = 00 for jump, 10 for call
+
+  JFC a14:       0x40, lo, hi6   (jump if carry false)
+  JTC a14:       0x44, lo, hi6   (jump if carry true)
   JFZ a14:       0x48, lo, hi6
-  JTZ a14:       0x68, lo, hi6
+  JTZ a14:       0x4C, lo, hi6
   JFS a14:       0x50, lo, hi6
-  JTS a14:       0x70, lo, hi6
+  JTS a14:       0x54, lo, hi6
   JFP a14:       0x58, lo, hi6
-  JTP a14:       0x78, lo, hi6
+  JTP a14:       0x5C, lo, hi6
+  CFC a14:       0x42, lo, hi6   (call if carry false)
+  CTC a14:       0x46, lo, hi6   (call if carry true)
+  CFZ a14:       0x4A, lo, hi6
+  CTZ a14:       0x4E, lo, hi6
 
 **Group 10** (opcode bits 7:6 = 10) -- ALU register (all 1 byte):
   ADD r:  0x80 | r
@@ -111,107 +123,32 @@ From OCT01-intel-8008-backend.md:
   ORA r:  0xB0 | r
   CMP r:  0xB8 | r
 
-**Group 11** (opcode bits 7:6 = 11) -- ALU immediate (2 bytes) + OUT (1 byte):
-  ADI d8:  0x04, d8
-  ACI d8:  0x0C, d8
-  SUI d8:  0x14, d8
-  SBI d8:  0x1C, d8
-  ANI d8:  0x24, d8
-  XRI d8:  0x2C, d8
-  ORI d8:  0x34, d8
-  CPI d8:  0x3C, d8
-  OUT p:   0x41 | (p<<1) | 1  (which = 0x41 + p*2... but spec says 0x41, 0x43, ...)
-    Actually: OUT p = 0x41 | (p << 1).  But wait -- IN p uses the same base:
-      IN 0 = 0x41 | (0<<3) = 0x41
-      IN 1 = 0x41 | (1<<3) = 0x49
-    And OUT:
-      OUT 0 = 0x41 (same as IN 0? No...)
-    The spec says OUT p: 0x41 | (p<<1) | 1, but that gives 0x43 for p=1.
-    And "port 0: 0x41; port 1: 0x43; incrementing by 2".
-    Hmm, for p=0: 0x41 | (0<<1) | 1 = 0x41. For p=1: 0x41 | (1<<1) | 1 = 0x43. OK.
+**Group 11** (opcode bits 7:6 = 11) -- ALU immediate (2 bytes):
+  Encoding: 11 OOO 100, d8
+    OOO = operation code (bits[5:3] = ddd field)
+    bits[2:0] = 100 (identifies as ALU immediate, sss=4)
 
-    But then IN uses 0x41 | (p<<3) so IN 0 = 0x41 too.  How do they not conflict?
-    Actually on the 8008, IN and OUT live in different opcode spaces.  Looking at the
-    bit layout more carefully:
+  ADI d8:  0xC4, d8   (OOO=000: ADD immediate)
+  ACI d8:  0xCC, d8   (OOO=001: ADD with Carry immediate)
+  SUI d8:  0xD4, d8   (OOO=010: SUBtract immediate)
+  SBI d8:  0xDC, d8   (OOO=011: SuBtract with borrow Immediate)
+  ANI d8:  0xE4, d8   (OOO=100: AND immediate)
+  XRI d8:  0xEC, d8   (OOO=101: XOR immediate)
+  ORI d8:  0xF4, d8   (OOO=110: OR immediate)
+  CPI d8:  0xFC, d8   (OOO=111: ComPare immediate)
 
-    The 8008 manual places IN and OUT at specific bit patterns:
-      IN  p (0-7):  0b01_PPP_001  = 0x41 | (p << 3)
-      OUT p (0-23): 0b01_PPP_010  (but P is 5 bits for 0-23: ports 0-7 use PPP_010,
-                                    ports 8-15 use next range, etc.)
+**OUT p** (Group 00 extended, 1 byte):
+  The simulator decodes OUT from group=00, sss=010, ddd>3 (i.e., ddd in 4..7).
+  Port number is extracted as: port = (opcode >> 1) & 0x1F
+  Formula: opcode = p << 1   (port number in bits[5:1], always even)
 
-    However, from the OCT01 spec's authoritative encoding table:
-      IN p:   0x41 | p<<3   for p in 0-7
-      OUT p:  0x41 | (p<<1) | 1  -- yields 0x41, 0x43, 0x45... but that's 0x41 for p=0!
-
-    There seems to be a discrepancy.  Let me use the precise encoding from the spec doc:
-
-    IN  p encoding: 0x41 | (p << 3)  ->  p=0: 0x41, p=1: 0x49, p=2: 0x51, ...
-    OUT p encoding: 0x41 | (p << 1) | 1  ->  p=0: 0x41... still 0x41!
-
-    That can't be right for p=0.  Let me re-read the spec more carefully.
-
-    From OCT01 spec:
-      "OUT p: 0x41 | (p<<1) | 1 — ports 0–23
-               (0x41, 0x43, 0x45, …) — exact encoding: see Intel 8008 manual §4.5"
-
-    And "For port 0: 0x41; port 1: 0x43; incrementing by 2 for each port."
-
-    Hmm, so OUT 0 = 0x41, OUT 1 = 0x43, OUT 2 = 0x45 ...
-    And IN 0 = 0x41, IN 1 = 0x49 ...
-
-    This is indeed a collision at port 0.  But IN and OUT are distinguished by context
-    (the mnemonic tells us which is which).  In the real 8008, IN p and OUT p are
-    separate instructions that cannot be confused by the CPU (the chip decodes them
-    differently based on the full opcode byte context).
-
-    Looking at actual Intel 8008 documentation more carefully:
-    The 8008's opcodes for I/O are (from MCS-8 User's Manual):
-      IN p  (p=0..7):  0b01_PPP_001  i.e. bit pattern where bits 2:0 = 001
-                       p=0: 0x41, p=1: 0x49, p=2: 0x51, ..., p=7: 0x79
-      OUT p (p=0..7):  0b01_PPP_010  bits 2:0 = 010
-                       p=0: 0x42, p=1: 0x4A, p=2: 0x52, ..., p=7: 0x7A
-      OUT p (p=8..15): Not in standard 8008; extended ports on some variants
-
-    Actually the real 8008 has only 8 input ports (0-7) and 8 output ports (0-7) as
-    well, encoded differently. The codegen says "OUT p (p ∈ 0–23)" but the actual
-    hardware may vary.
-
-    For our purposes (assembling code generated by ir-to-intel-8008-compiler):
-    - IN p:   0x41 | (p << 3)   for p in 0..7
-    - OUT p:  The spec says 0x41 | (p<<1) | 1 which gives 0x41, 0x43...
-              but the codegen only uses OUT for p in SYSCALL 40+p (0..23).
-
-    Let me go with the spec's stated encoding and trust that the simulator
-    interprets these correctly:
-    - IN p:  0x41 | (p << 3)
-    - OUT p: 0x41 | (p << 1) | 1
-
-    UPDATE: On further inspection, looking at multiple 8008 reference sources, the
-    correct encodings are:
-      IN  p = 0x41 | (p << 3)   bits[5:3] = port number, bits[2:0] = 001
-      OUT p = 0x41 | (p << 3) | 0x02   -- NO, this would be bits[2:0] = 010...
-
-    Actually the 8008 only has 8 input ports and 8 output ports in the original chip.
-    The OCT01 spec mentions OUT p for p in 0-23, which must be a simulator extension.
-    We'll use OUT p = 0x41 | (p << 1) | 1 per the spec, since that's what the
-    simulator expects. This means:
-      OUT 0 = 0x41 | 0 | 1 = 0x41... wait no: (0 << 1) = 0, so 0x41 | 0 | 1 = 0x43!
-      Actually: 0x41 | (0 << 1) | 1 = 0x41 | 0 | 1 = 0x41 + 1 = 0x42? No...
-      0x41 = 0b01000001
-      0x41 | 1  = 0b01000001 | 0b00000001 = 0b01000001 = 0x41
-      Hmm 0x41 already has bit 0 set. Let me think in bits:
-      0x41 = 0100 0001
-      (p << 1) for p=0: 0b0000 0000
-      0x41 | (0 << 1) | 1 = 0x41 | 0x00 | 0x01 = 0x41 (since 0x41 already has bit 0 set)
-      For p=1: 0x41 | 0x02 | 0x01 = 0x41 | 0x03 = 0x43
-      For p=2: 0x41 | 0x04 | 0x01 = 0x45
-
-    So the formula gives: p=0 → 0x41, p=1 → 0x43, p=2 → 0x45...
-    That matches the spec's stated values "(0x41, 0x43, 0x45, …)".
-
-    Note that IN 0 = 0x41 and OUT 0 = 0x41 have the same byte value.  The assembler
-    simply emits whatever the mnemonic dictates — the CPU and simulator distinguish
-    them by context (IN reads from bus, OUT writes to bus).
+  Because sss=010 requires bit1=1 (odd opcode>>1), only ports where (p<<1)
+  has sss=010 AND ddd>3 are actually handled by the simulator:
+    OUT 17 = 0x22   (ddd=4, sss=010: simulator-compatible)
+    OUT 21 = 0x2A   (ddd=5, sss=010: simulator-compatible)
+  Ports 0-16, 18-20, 22-23 produce opcodes that may conflict with other
+  instructions. This is a known simulator limitation.
+  See intel8008_simulator for OUT port encoding discussion.
 
 Public API:
 
@@ -353,24 +290,41 @@ def _resolve_operand(operand: str, symbols: dict[str, int], pc: int) -> int:
 # Fixed one-byte instructions (no operands)
 # ---------------------------------------------------------------------------
 
-# From OCT01-intel-8008-backend.md §Instruction Encoding
+# Return instruction encoding: 00 CCC T11
+#   CCC = condition code (bits[5:3]): 0=CY, 1=Z, 2=S, 3=P
+#   T   = sense bit (bit 2): 0=if-false (RF*), 1=if-true (RT*)
+#   bits[1:0] = 11
+#
+# Truth table:
+#   RFC = 00_000_0_11 = 0x03   (Carry False → carry=0 → always returns in practice)
+#   RTC = 00_000_1_11 = 0x07   (Carry True)
+#   RFZ = 00_001_0_11 = 0x0B   (Zero  False)
+#   RTZ = 00_001_1_11 = 0x0F   (Zero  True)
+#   RFS = 00_010_0_11 = 0x13   (Sign  False)
+#   RTS = 00_010_1_11 = 0x17   (Sign  True)
+#   RFP = 00_011_0_11 = 0x1B   (Parity False)
+#   RTP = 00_011_1_11 = 0x1F   (Parity True)
+#
+# Historical note: early versions of this assembler had RFC=0x07 (actually RTC),
+# RTC=0x0F (actually RTZ), etc. — all "true-sense" returns were shifted by one
+# condition code. Fixed to match the simulator's 00_CCC_T_11 decoding.
 _FIXED_OPCODES: dict[str, int] = {
     # Rotations (Group 00)
     "RLC": 0x02,
     "RRC": 0x0A,
     "RAL": 0x12,
     "RAR": 0x1A,
-    # Conditional returns (Group 00)
-    # RFC = Return if Carry False = unconditional return in practice
-    "RFC": 0x07,
-    "RET": 0x07,   # synonym for RFC in the 8008 codegen
+    # Conditional returns (Group 00): encoding 00 CCC T11
+    # RFC = Return if Carry False = unconditional return in practice (CY is 0 after ALU)
+    "RFC": 0x03,
+    "RET": 0x03,   # synonym for RFC in the 8008 codegen
     "RFZ": 0x0B,
     "RFS": 0x13,
     "RFP": 0x1B,
-    "RTC": 0x0F,
-    "RTZ": 0x2B,
-    "RTS": 0x33,
-    "RTP": 0x3B,
+    "RTC": 0x07,
+    "RTZ": 0x0F,
+    "RTS": 0x17,
+    "RTP": 0x1F,
     # Halt
     "HLT": 0xFF,
 }
@@ -388,35 +342,62 @@ _ALU_REG_BASE: dict[str, int] = {
 }
 
 # ALU immediate operations (Group 11): op d8 = [opcode, d8]
+# Encoding: 11 OOO 100  where OOO = operation (0=ADD, 1=ADC, 2=SUB, 3=SBB,
+#                                               4=ANA, 5=XRA, 6=ORA, 7=CMP)
+# sss = 100 = 4 distinguishes these from MOV (group=11 is otherwise unused).
+#
+# Historical note: early versions had ADI=0x04, ACI=0x0C, etc. (group=00 not
+# group=11), causing ADI/ACI/SUI/SBI/ANI/XRI/ORI/CPI to be decoded as INR
+# or unknown instructions instead of ALU-immediate.
 _ALU_IMM_OPCODES: dict[str, int] = {
-    "ADI": 0x04,
-    "ACI": 0x0C,
-    "SUI": 0x14,
-    "SBI": 0x1C,
-    "ANI": 0x24,
-    "XRI": 0x2C,
-    "ORI": 0x34,
-    "CPI": 0x3C,
+    "ADI": 0xC4,   # 11_000_100
+    "ACI": 0xCC,   # 11_001_100
+    "SUI": 0xD4,   # 11_010_100
+    "SBI": 0xDC,   # 11_011_100
+    "ANI": 0xE4,   # 11_100_100
+    "XRI": 0xEC,   # 11_101_100
+    "ORI": 0xF4,   # 11_110_100
+    "CPI": 0xFC,   # 11_111_100
 }
 
 # 3-byte jump/call instructions: mnemonic → first opcode byte
 # Address bytes follow: lo8(addr), hi6(addr)
+#
+# Unconditional jump/call are special opcodes (ddd=7, sense=1):
+#   JMP = 0x7C = 01_111_100   (unconditional jump)
+#   CAL = 0x7E = 01_111_110   (unconditional call)
+#
+# Conditional jumps: 01 CCC T00   (bits[1:0] = 00)
+# Conditional calls: 01 CCC T10   (bits[1:0] = 10)
+#   CCC = condition code: 0=CY, 1=Z, 2=S, 3=P
+#   T   = sense bit (bit 2): 0=if-false (JF*/CF*), 1=if-true (JT*/CT*)
+#
+# Historical note: early versions had JMP=0x44 (actually JTC), CAL=0x46
+# (actually CTC). All "true-sense" jumps/calls were wrong because the sense
+# bit (T) was not accounted for. Fixed to match simulator's 01_CCC_T_{00,10}
+# decoding. JMP=0x7C and CAL=0x7E are validated against simulator test cases.
 _JUMP_CALL_OPCODES: dict[str, int] = {
-    "JMP": 0x44,
-    "CAL": 0x46,
-    "JFC": 0x40,
-    "JTC": 0x60,
-    "JFZ": 0x48,
-    "JTZ": 0x68,
-    "JFS": 0x50,
-    "JTS": 0x70,
-    "JFP": 0x58,
-    "JTP": 0x78,
-    # Conditional calls (from the spec)
-    "CFC": 0x42,
-    "CTC": 0x62,
-    "CFZ": 0x4A,
-    "CTZ": 0x6A,
+    # Unconditional (special opcodes, not the 01_CCC_T_xx pattern)
+    "JMP": 0x7C,   # 01_111_100 — simulator hardcodes opcode==0x7C as JMP
+    "CAL": 0x7E,   # 01_111_110 — simulator hardcodes opcode==0x7E as CAL
+    # Conditional jumps (01 CCC T00): bits[1:0]=00, sense in bit 2
+    "JFC": 0x40,   # CCC=0, T=0 — jump if carry false
+    "JTC": 0x44,   # CCC=0, T=1 — jump if carry true
+    "JFZ": 0x48,   # CCC=1, T=0
+    "JTZ": 0x4C,   # CCC=1, T=1
+    "JFS": 0x50,   # CCC=2, T=0
+    "JTS": 0x54,   # CCC=2, T=1
+    "JFP": 0x58,   # CCC=3, T=0
+    "JTP": 0x5C,   # CCC=3, T=1
+    # Conditional calls (01 CCC T10): bits[1:0]=10, sense in bit 2
+    "CFC": 0x42,   # CCC=0, T=0 — call if carry false
+    "CTC": 0x46,   # CCC=0, T=1 — call if carry true
+    "CFZ": 0x4A,   # CCC=1, T=0
+    "CTZ": 0x4E,   # CCC=1, T=1
+    "CFS": 0x52,   # CCC=2, T=0
+    "CTS": 0x56,   # CCC=2, T=1
+    "CFP": 0x5A,   # CCC=3, T=0
+    "CTP": 0x5E,   # CCC=3, T=1
 }
 
 
@@ -509,9 +490,9 @@ def encode_instruction(
 
         encode_instruction("HLT", (), {}, 0)                  # -> b'\\xff'
         encode_instruction("MVI", ("B", "42"), {}, 0)         # -> b'\\x06\\x2a'
-        encode_instruction("MOV", ("A", "B"), {}, 0)          # -> b'\\xc0'
+        encode_instruction("MOV", ("A", "B"), {}, 0)          # -> b'\\x78'
         encode_instruction("ADD", ("C",), {}, 0)              # -> b'\\x81'
-        encode_instruction("JMP", ("0x000a",), {}, 0)         # -> b'\\x44\\x0a\\x00'
+        encode_instruction("JMP", ("0x000a",), {}, 0)         # -> b'\\x7c\\x0a\\x00'
     """
     # --- ORG directive (emits nothing) -----------------------------------------
     if mnemonic == "ORG":
@@ -628,17 +609,23 @@ def encode_instruction(
         _check_range("IN port", p, 0, 7)
         return bytes([0x41 | (p << 3)])
 
-    # --- OUT p  (Group 11 area: 0x41 | p<<1 | 1) --------------------------------
+    # --- OUT p  (Group 00 extended: p << 1) ------------------------------------
     #
     # Write accumulator to output port p (p = 0–23).
-    # Encoding: 0x41 | (p << 1) | 1  → 0x41, 0x43, 0x45, ...
-    # Note: at p=0 this gives 0x41 (same byte as IN 0), but the mnemonic
-    # determines which operation is performed.
+    # Encoding: opcode = p << 1
+    # The simulator detects OUT via: group=00, sss=010, ddd>3,
+    # with port=(opcode>>1)&0x1F.  Only ports 17 and 21 produce opcodes that
+    # satisfy both sss=010 AND ddd>3 AND port in 0..23:
+    #   OUT 17 = 0x22   (port 17 << 1; sss=010, ddd=4)
+    #   OUT 21 = 0x2A   (port 21 << 1; sss=010, ddd=5)
+    # Other port numbers produce opcodes that conflict with rotate, MVI, or
+    # INR/DCR instructions and are not correctly decoded by the simulator.
+    # This is a known simulator limitation.
     if mnemonic == "OUT":
         _expect_operands(mnemonic, operands, 1)
         p = _resolve_operand(operands[0], symbols, pc)
         _check_range("OUT port", p, 0, 23)
-        return bytes([0x41 | (p << 1) | 1])
+        return bytes([p << 1])
 
     # --- 3-byte jump and call instructions (Group 01) ---------------------------
     #

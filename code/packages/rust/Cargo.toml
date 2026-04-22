@@ -286,6 +286,8 @@ members = [
     "chacha20-poly1305",
     "blake2b",
     "csprng",
+    "ct-compare",
+    "zeroize",
     "irc-proto",
     "irc-framing",
     "irc-server",
@@ -344,4 +346,5 @@ members = [
     "state-machine-markup-json-serializer",
     "embeddable-tcp-server",
     "generic-job-protocol",
+    "generic-job-runtime",
 ]

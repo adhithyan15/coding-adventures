@@ -32,6 +32,7 @@ from sql_planner import (
     Aggregate,
     Begin,
     Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
@@ -90,6 +91,10 @@ def _push(p: LogicalPlan) -> LogicalPlan:
         case Except(left=l, right=r, all=a):
             # Do not push Limit through EXCEPT — same reasoning.
             return Except(left=_push(l), right=_push(r), all=a)
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            # Recurse into the inner plan; the outer LIMIT does NOT push
+            # inside the derived table — the inner query has its own shape.
+            return DerivedTable(query=_push(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p
         case _:

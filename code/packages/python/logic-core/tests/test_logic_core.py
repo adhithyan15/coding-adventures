@@ -44,7 +44,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.2.0"
+        assert __version__ == "0.3.0"
 
 
 class TestTermConstruction:
@@ -233,6 +233,16 @@ class TestGoalsAndSearch:
         list(fresh(1, recorder)(initial))
 
         assert seen_ids == [0]
+
+    def test_goals_preserve_runtime_database_extension_slot(self) -> None:
+        x = var("X")
+        initial = State(database={"dynamic": "snapshot"})
+
+        [state] = list(eq(x, atom("tea"))(initial))
+        [fresh_state] = list(fresh(1, lambda _inner: succeed())(state))
+
+        assert state.database == {"dynamic": "snapshot"}
+        assert fresh_state.database == {"dynamic": "snapshot"}
 
     def test_run_n_truncates_without_consuming_every_answer(self) -> None:
         x = var("X")

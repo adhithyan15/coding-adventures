@@ -17,7 +17,7 @@ the data structures defined here.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, field
 from itertools import count, islice
 
@@ -54,6 +54,7 @@ __all__ = [
     "Compound",
     "ConjExpr",
     "DeferredExpr",
+    "DynamicDatabase",
     "DisjExpr",
     "Disequality",
     "EqExpr",
@@ -80,8 +81,10 @@ __all__ = [
     "atom",
     "clause_as_term",
     "clause_body",
+    "clause_from_term",
     "clauses_matching",
     "conj",
+    "declare_dynamic",
     "defer",
     "disj",
     "eq",
@@ -91,6 +94,7 @@ __all__ = [
     "freshen_clause",
     "goal_as_term",
     "goal_from_term",
+    "is_dynamic_relation",
     "logic_list",
     "native_goal",
     "neq",
@@ -98,6 +102,12 @@ __all__ = [
     "program",
     "relation",
     "reify",
+    "runtime_abolish",
+    "runtime_asserta",
+    "runtime_assertz",
+    "runtime_declare_dynamic",
+    "runtime_retract_all",
+    "runtime_retract_first",
     "retract_all",
     "retract_first",
     "rule",
@@ -109,6 +119,10 @@ __all__ = [
     "succeed",
     "term",
     "var",
+    "visible_clause_count",
+    "visible_clauses",
+    "visible_clauses_for",
+    "visible_predicate_keys",
 ]
 
 
@@ -116,6 +130,8 @@ __all__ = [
 # do not collide before the solver remaps clause-local variables into search
 # local runtime ids.
 _TEMPLATE_VAR_IDS = count(start=-1_000_000, step=-1)
+
+type RelationKey = tuple[Symbol, int]
 
 
 def _coerce_term(value: object) -> Term:
@@ -488,11 +504,60 @@ def rule(head: RelationCall, body: object) -> Clause:
 
 
 @dataclass(frozen=True, slots=True)
+class DynamicDatabase:
+    """Branch-local runtime clauses and dynamic declarations.
+
+    Instances are immutable, so normal generator backtracking restores an older
+    database snapshot automatically when the solver explores another branch.
+    """
+
+    declared_relations: frozenset[RelationKey] = frozenset()
+    abolished_relations: frozenset[RelationKey] = frozenset()
+    prepended_clauses: tuple[Clause, ...] = ()
+    appended_clauses: tuple[Clause, ...] = ()
+    removed_program_clause_indexes: frozenset[int] = frozenset()
+
+
+@dataclass(frozen=True, slots=True)
+class _VisibleClause:
+    """A visible dynamic clause plus enough identity to remove it."""
+
+    clause: Clause
+    source: str
+    index: int
+
+
+def _normalize_relation_keys(keys: Iterable[RelationKey]) -> frozenset[RelationKey]:
+    """Validate relation-key collections stored on programs and databases."""
+
+    normalized: set[RelationKey] = set()
+    for key in keys:
+        if (
+            not isinstance(key, tuple)
+            or len(key) != 2
+            or not isinstance(key[0], Symbol)
+            or isinstance(key[1], bool)
+            or not isinstance(key[1], int)
+            or key[1] < 0
+        ):
+            msg = "dynamic relation keys must be (Symbol, non-negative int) tuples"
+            raise TypeError(msg)
+        normalized.add(key)
+    return frozenset(normalized)
+
+
+@dataclass(frozen=True, slots=True)
 class Program:
     """An immutable clause database indexed by relation."""
 
     clauses: tuple[Clause, ...]
+    dynamic_relations: frozenset[RelationKey] = field(default_factory=frozenset)
     _index: dict[tuple[Symbol, int], tuple[Clause, ...]] = field(
+        init=False,
+        repr=False,
+        compare=False,
+    )
+    _indexed_clauses: dict[RelationKey, tuple[tuple[int, Clause], ...]] = field(
         init=False,
         repr=False,
         compare=False,
@@ -500,17 +565,30 @@ class Program:
 
     def __post_init__(self) -> None:
         buckets: dict[tuple[Symbol, int], list[Clause]] = {}
-        for clause in self.clauses:
+        indexed_buckets: dict[RelationKey, list[tuple[int, Clause]]] = {}
+        for index, clause in enumerate(self.clauses):
             if not isinstance(clause, Clause):
                 msg = "Program clauses must all be Clause objects"
                 raise TypeError(msg)
-            buckets.setdefault(clause.head.relation.key(), []).append(clause)
+            key = clause.head.relation.key()
+            buckets.setdefault(key, []).append(clause)
+            indexed_buckets.setdefault(key, []).append((index, clause))
 
         frozen_index = {
             key: tuple(grouped_clauses)
             for key, grouped_clauses in buckets.items()
         }
+        frozen_indexed_clauses = {
+            key: tuple(grouped_clauses)
+            for key, grouped_clauses in indexed_buckets.items()
+        }
+        object.__setattr__(
+            self,
+            "dynamic_relations",
+            _normalize_relation_keys(self.dynamic_relations),
+        )
         object.__setattr__(self, "_index", frozen_index)
+        object.__setattr__(self, "_indexed_clauses", frozen_indexed_clauses)
 
     def clauses_for(self, relation_value: Relation) -> tuple[Clause, ...]:
         """Return clauses for ``relation_value`` in source order."""
@@ -518,10 +596,29 @@ class Program:
         return self._index.get(relation_value.key(), ())
 
 
-def program(*clauses: Clause) -> Program:
+def program(
+    *clauses: Clause,
+    dynamic_relations: Iterable[Relation] = (),
+) -> Program:
     """Construct an immutable logic program."""
 
-    return Program(clauses=tuple(clauses))
+    dynamic_keys = frozenset(
+        relation_value.key() for relation_value in dynamic_relations
+    )
+    return Program(clauses=tuple(clauses), dynamic_relations=dynamic_keys)
+
+
+def declare_dynamic(program_value: Program, *relations: Relation) -> Program:
+    """Return a new program whose listed predicates allow runtime mutation."""
+
+    checked_program = _require_program(program_value)
+    dynamic_keys = set(checked_program.dynamic_relations)
+    for relation_value in relations:
+        dynamic_keys.add(_require_relation(relation_value).key())
+    return Program(
+        clauses=checked_program.clauses,
+        dynamic_relations=frozenset(dynamic_keys),
+    )
 
 
 def _require_program(program_value: object) -> Program:
@@ -763,6 +860,42 @@ def goal_from_term(term_value: object) -> GoalExpr:
     raise TypeError(msg)
 
 
+def _relation_call_from_term(term_value: Term) -> RelationCall:
+    """Lower a callable head term into a relation call."""
+
+    if isinstance(term_value, Atom):
+        return RelationCall(
+            relation=Relation(symbol=term_value.symbol, arity=0),
+            args=(),
+        )
+    if isinstance(term_value, Compound):
+        return RelationCall(
+            relation=Relation(symbol=term_value.functor, arity=len(term_value.args)),
+            args=term_value.args,
+        )
+
+    msg = f"cannot lower {type(term_value).__name__} into a clause head"
+    raise TypeError(msg)
+
+
+def clause_from_term(term_value: object) -> Clause:
+    """Lower Prolog-shaped clause data into a fact or rule clause.
+
+    A bare callable term becomes a fact. A ``:-(Head, Body)`` compound becomes
+    a rule whose body is lowered through ``goal_from_term``.
+    """
+
+    clause_term = _coerce_term(term_value)
+    if isinstance(clause_term, Compound) and _term_functor_name(clause_term) == ":-":
+        head_term, body_term = _binary_goal_arguments(clause_term, ":-")
+        return Clause(
+            head=_relation_call_from_term(head_term),
+            body=goal_from_term(body_term),
+        )
+
+    return Clause(head=_relation_call_from_term(clause_term))
+
+
 def clause_as_term(clause_value: object) -> Compound:
     """Encode a clause as the Prolog-shaped term ``:-(Head, Body)``."""
 
@@ -989,6 +1122,504 @@ def freshen_clause(clause_value: object, next_var_id: int) -> tuple[Clause, int]
     return _freshen_clause(checked_clause, next_var_id)
 
 
+def _empty_dynamic_database() -> DynamicDatabase:
+    """Return an empty dynamic runtime database overlay."""
+
+    return DynamicDatabase()
+
+
+def _runtime_database(state: State) -> DynamicDatabase:
+    """Read the branch-local database overlay from a search state."""
+
+    if isinstance(state.database, DynamicDatabase):
+        return state.database
+    return _empty_dynamic_database()
+
+
+def _state_with_database(state: State, database: DynamicDatabase) -> State:
+    """Return ``state`` with the supplied runtime database overlay."""
+
+    return State(
+        substitution=state.substitution,
+        constraints=state.constraints,
+        next_var_id=state.next_var_id,
+        database=database,
+    )
+
+
+def _state_with_next_var_id(state: State, next_var_id: int) -> State:
+    """Return ``state`` after reserving fresh runtime variable ids."""
+
+    return State(
+        substitution=state.substitution,
+        constraints=state.constraints,
+        next_var_id=next_var_id,
+        database=state.database,
+    )
+
+
+def _program_has_source_clauses(program_value: Program, key: RelationKey) -> bool:
+    """Return True when the immutable program contains clauses for ``key``."""
+
+    return bool(program_value._indexed_clauses.get(key, ()))
+
+
+def _is_program_dynamic(
+    program_value: Program,
+    key: RelationKey,
+    database: DynamicDatabase,
+) -> bool:
+    """Return True when a program-level dynamic declaration is currently active."""
+
+    return (
+        key in program_value.dynamic_relations
+        and key not in database.abolished_relations
+    )
+
+
+def _is_dynamic_key(
+    program_value: Program,
+    key: RelationKey,
+    database: DynamicDatabase,
+) -> bool:
+    """Return True when ``key`` is mutable in the current proof branch."""
+
+    return key in database.declared_relations or _is_program_dynamic(
+        program_value,
+        key,
+        database,
+    )
+
+
+def _dynamic_clauses_for(
+    clauses: tuple[Clause, ...],
+    key: RelationKey,
+) -> tuple[_VisibleClause, ...]:
+    """Filter asserted runtime clauses by relation key."""
+
+    return tuple(
+        _VisibleClause(clause=clause, source="asserted", index=index)
+        for index, clause in enumerate(clauses)
+        if clause.head.relation.key() == key
+    )
+
+
+def _visible_dynamic_clauses_for(
+    program_value: Program,
+    relation_value: Relation,
+    database: DynamicDatabase,
+) -> tuple[_VisibleClause, ...]:
+    """Return dynamic clauses visible for one relation in proof order."""
+
+    key = relation_value.key()
+    if not _is_dynamic_key(program_value, key, database):
+        return ()
+
+    visible: list[_VisibleClause] = []
+    visible.extend(
+        _VisibleClause(clause=item.clause, source="prepended", index=item.index)
+        for item in _dynamic_clauses_for(database.prepended_clauses, key)
+    )
+    visible.extend(
+        _VisibleClause(clause=clause, source="program", index=index)
+        for index, clause in program_value._indexed_clauses.get(key, ())
+        if index not in database.removed_program_clause_indexes
+    )
+    visible.extend(
+        _VisibleClause(clause=item.clause, source="appended", index=item.index)
+        for item in _dynamic_clauses_for(database.appended_clauses, key)
+    )
+    return tuple(visible)
+
+
+def visible_clauses_for(
+    program_value: Program,
+    relation_value: Relation,
+    state: State | None = None,
+) -> tuple[Clause, ...]:
+    """Return source and runtime clauses visible for ``relation_value``."""
+
+    checked_program = _require_program(program_value)
+    checked_relation = _require_relation(relation_value)
+    if state is None:
+        return checked_program.clauses_for(checked_relation)
+
+    database = _runtime_database(state)
+    key = checked_relation.key()
+    if not _is_dynamic_key(checked_program, key, database):
+        return checked_program.clauses_for(checked_relation)
+
+    return tuple(
+        item.clause
+        for item in _visible_dynamic_clauses_for(
+            checked_program,
+            checked_relation,
+            database,
+        )
+    )
+
+
+def visible_clauses(
+    program_value: Program,
+    state: State | None = None,
+) -> tuple[Clause, ...]:
+    """Return every clause visible in source/search order."""
+
+    checked_program = _require_program(program_value)
+    if state is None:
+        return checked_program.clauses
+
+    ordered: list[Clause] = []
+    seen_keys: dict[RelationKey, None] = {}
+    database = _runtime_database(state)
+
+    for clause in database.prepended_clauses:
+        seen_keys.setdefault(clause.head.relation.key(), None)
+    for clause in checked_program.clauses:
+        seen_keys.setdefault(clause.head.relation.key(), None)
+    for clause in database.appended_clauses:
+        seen_keys.setdefault(clause.head.relation.key(), None)
+    for key in checked_program.dynamic_relations | database.declared_relations:
+        seen_keys.setdefault(key, None)
+
+    for key in seen_keys:
+        relation_value = Relation(symbol=key[0], arity=key[1])
+        ordered.extend(visible_clauses_for(checked_program, relation_value, state))
+
+    return tuple(ordered)
+
+
+def visible_predicate_keys(
+    program_value: Program,
+    state: State | None = None,
+) -> tuple[RelationKey, ...]:
+    """Return visible predicate indicators in deterministic discovery order."""
+
+    checked_program = _require_program(program_value)
+    ordered: dict[RelationKey, None] = {}
+    for clause in visible_clauses(checked_program, state):
+        ordered.setdefault(clause.head.relation.key(), None)
+
+    if state is not None:
+        database = _runtime_database(state)
+        for key in checked_program.dynamic_relations:
+            if key not in database.abolished_relations:
+                ordered.setdefault(key, None)
+        for key in database.declared_relations:
+            ordered.setdefault(key, None)
+
+    return tuple(ordered)
+
+
+def visible_clause_count(
+    program_value: Program,
+    relation_value: Relation,
+    state: State | None = None,
+) -> int:
+    """Return the number of visible clauses for one relation."""
+
+    return len(visible_clauses_for(program_value, relation_value, state))
+
+
+def is_dynamic_relation(
+    program_value: Program,
+    relation_value: Relation,
+    state: State | None = None,
+) -> bool:
+    """Return True when a relation is dynamic in the supplied state."""
+
+    checked_program = _require_program(program_value)
+    checked_relation = _require_relation(relation_value)
+    key = checked_relation.key()
+    if state is None:
+        return key in checked_program.dynamic_relations
+    return _is_dynamic_key(checked_program, key, _runtime_database(state))
+
+
+def runtime_declare_dynamic(
+    program_value: Program,
+    state: State,
+    relation_value: Relation,
+) -> State | None:
+    """Declare a branch-local dynamic predicate, failing for static sources."""
+
+    checked_program = _require_program(program_value)
+    checked_relation = _require_relation(relation_value)
+    key = checked_relation.key()
+    database = _runtime_database(state)
+
+    if (
+        _program_has_source_clauses(checked_program, key)
+        and key not in checked_program.dynamic_relations
+    ):
+        return None
+
+    return _state_with_database(
+        state,
+        DynamicDatabase(
+            declared_relations=database.declared_relations | frozenset({key}),
+            abolished_relations=database.abolished_relations - frozenset({key}),
+            prepended_clauses=database.prepended_clauses,
+            appended_clauses=database.appended_clauses,
+            removed_program_clause_indexes=database.removed_program_clause_indexes,
+        ),
+    )
+
+
+def _require_runtime_dynamic(
+    program_value: Program,
+    state: State,
+    key: RelationKey,
+) -> DynamicDatabase | None:
+    """Return the runtime database when ``key`` may be mutated."""
+
+    database = _runtime_database(state)
+    if not _is_dynamic_key(program_value, key, database):
+        return None
+    return database
+
+
+def runtime_asserta(
+    program_value: Program,
+    state: State,
+    clause_value: Clause,
+) -> State | None:
+    """Return a new state with ``clause_value`` before visible dynamic clauses."""
+
+    checked_program = _require_program(program_value)
+    checked_clause = _require_clause(clause_value)
+    key = checked_clause.head.relation.key()
+    database = _require_runtime_dynamic(checked_program, state, key)
+    if database is None:
+        return None
+    return _state_with_database(
+        state,
+        DynamicDatabase(
+            declared_relations=database.declared_relations,
+            abolished_relations=database.abolished_relations,
+            prepended_clauses=(checked_clause, *database.prepended_clauses),
+            appended_clauses=database.appended_clauses,
+            removed_program_clause_indexes=database.removed_program_clause_indexes,
+        ),
+    )
+
+
+def runtime_assertz(
+    program_value: Program,
+    state: State,
+    clause_value: Clause,
+) -> State | None:
+    """Return a new state with ``clause_value`` after visible dynamic clauses."""
+
+    checked_program = _require_program(program_value)
+    checked_clause = _require_clause(clause_value)
+    key = checked_clause.head.relation.key()
+    database = _require_runtime_dynamic(checked_program, state, key)
+    if database is None:
+        return None
+    return _state_with_database(
+        state,
+        DynamicDatabase(
+            declared_relations=database.declared_relations,
+            abolished_relations=database.abolished_relations,
+            prepended_clauses=database.prepended_clauses,
+            appended_clauses=(*database.appended_clauses, checked_clause),
+            removed_program_clause_indexes=database.removed_program_clause_indexes,
+        ),
+    )
+
+
+def _remove_visible_clause(
+    database: DynamicDatabase,
+    visible_clause: _VisibleClause,
+) -> DynamicDatabase:
+    """Return a runtime database with one visible dynamic clause removed."""
+
+    if visible_clause.source == "prepended":
+        return DynamicDatabase(
+            declared_relations=database.declared_relations,
+            abolished_relations=database.abolished_relations,
+            prepended_clauses=tuple(
+                clause
+                for index, clause in enumerate(database.prepended_clauses)
+                if index != visible_clause.index
+            ),
+            appended_clauses=database.appended_clauses,
+            removed_program_clause_indexes=database.removed_program_clause_indexes,
+        )
+    if visible_clause.source == "appended":
+        return DynamicDatabase(
+            declared_relations=database.declared_relations,
+            abolished_relations=database.abolished_relations,
+            prepended_clauses=database.prepended_clauses,
+            appended_clauses=tuple(
+                clause
+                for index, clause in enumerate(database.appended_clauses)
+                if index != visible_clause.index
+            ),
+            removed_program_clause_indexes=database.removed_program_clause_indexes,
+        )
+    return DynamicDatabase(
+        declared_relations=database.declared_relations,
+        abolished_relations=database.abolished_relations,
+        prepended_clauses=database.prepended_clauses,
+        appended_clauses=database.appended_clauses,
+        removed_program_clause_indexes=database.removed_program_clause_indexes
+        | frozenset({visible_clause.index}),
+    )
+
+
+def _clause_match_term(clause_value: Clause, *, fact_only: bool) -> Term | None:
+    """Return the term shape used for retract matching."""
+
+    if fact_only:
+        if clause_value.body is not None:
+            return None
+        return clause_value.head.as_term()
+    try:
+        return clause_as_term(clause_value)
+    except TypeError:
+        return None
+
+
+def runtime_retract_first(
+    program_value: Program,
+    state: State,
+    clause_pattern: Clause,
+) -> Iterator[State]:
+    """Yield states for retracting the first matching dynamic clause."""
+
+    checked_program = _require_program(program_value)
+    checked_pattern = _require_clause(clause_pattern)
+    key = checked_pattern.head.relation.key()
+    database = _require_runtime_dynamic(checked_program, state, key)
+    if database is None:
+        return
+
+    pattern_term = _clause_match_term(
+        checked_pattern,
+        fact_only=checked_pattern.body is None,
+    )
+    assert pattern_term is not None
+
+    for visible_clause in _visible_dynamic_clauses_for(
+        checked_program,
+        checked_pattern.head.relation,
+        database,
+    ):
+        fresh_clause, next_var_id = _freshen_clause(
+            visible_clause.clause,
+            state.next_var_id,
+        )
+        candidate_term = _clause_match_term(
+            fresh_clause,
+            fact_only=checked_pattern.body is None,
+        )
+        if candidate_term is None:
+            continue
+
+        for unified_state in core_eq(pattern_term, candidate_term)(state):
+            updated_database = _remove_visible_clause(database, visible_clause)
+            yield _state_with_database(
+                _state_with_next_var_id(unified_state, next_var_id),
+                updated_database,
+            )
+            return
+
+
+def runtime_retract_all(
+    program_value: Program,
+    state: State,
+    head_pattern: RelationCall,
+) -> State | None:
+    """Return a state with every dynamic clause matching ``head_pattern`` removed."""
+
+    checked_program = _require_program(program_value)
+    checked_head = _require_relation_call(head_pattern)
+    key = checked_head.relation.key()
+    database = _require_runtime_dynamic(checked_program, state, key)
+    if database is None:
+        return None
+
+    remove_prepended: set[int] = set()
+    remove_appended: set[int] = set()
+    remove_program: set[int] = set()
+    for visible_clause in _visible_dynamic_clauses_for(
+        checked_program,
+        checked_head.relation,
+        database,
+    ):
+        if unify(
+            checked_head.as_term(),
+            visible_clause.clause.head.as_term(),
+            state.substitution,
+        ) is not None:
+            if visible_clause.source == "prepended":
+                remove_prepended.add(visible_clause.index)
+            elif visible_clause.source == "appended":
+                remove_appended.add(visible_clause.index)
+            else:
+                remove_program.add(visible_clause.index)
+
+    return _state_with_database(
+        state,
+        DynamicDatabase(
+            declared_relations=database.declared_relations,
+            abolished_relations=database.abolished_relations,
+            prepended_clauses=tuple(
+                clause
+                for index, clause in enumerate(database.prepended_clauses)
+                if index not in remove_prepended
+            ),
+            appended_clauses=tuple(
+                clause
+                for index, clause in enumerate(database.appended_clauses)
+                if index not in remove_appended
+            ),
+            removed_program_clause_indexes=database.removed_program_clause_indexes
+            | frozenset(remove_program),
+        ),
+    )
+
+
+def runtime_abolish(
+    program_value: Program,
+    state: State,
+    relation_value: Relation,
+) -> State | None:
+    """Return a state where a dynamic predicate is abolished in this branch."""
+
+    checked_program = _require_program(program_value)
+    checked_relation = _require_relation(relation_value)
+    key = checked_relation.key()
+    database = _require_runtime_dynamic(checked_program, state, key)
+    if database is None:
+        return None
+
+    return _state_with_database(
+        state,
+        DynamicDatabase(
+            declared_relations=database.declared_relations - frozenset({key}),
+            abolished_relations=database.abolished_relations | frozenset({key}),
+            prepended_clauses=tuple(
+                clause
+                for clause in database.prepended_clauses
+                if clause.head.relation.key() != key
+            ),
+            appended_clauses=tuple(
+                clause
+                for clause in database.appended_clauses
+                if clause.head.relation.key() != key
+            ),
+            removed_program_clause_indexes=database.removed_program_clause_indexes
+            | frozenset(
+                index
+                for index, _clause in checked_program._indexed_clauses.get(key, ())
+            ),
+        ),
+    )
+
+
 def _instantiate_fresh(goal: FreshExpr, state: State) -> tuple[GoalExpr, State]:
     """Allocate runtime variables for a ``FreshExpr`` scope."""
 
@@ -1004,7 +1635,9 @@ def _instantiate_fresh(goal: FreshExpr, state: State) -> tuple[GoalExpr, State]:
     renamed_body = _rename_goal(goal.body, mapping)
     next_state = State(
         substitution=state.substitution,
+        constraints=state.constraints,
         next_var_id=running_id,
+        database=state.database,
     )
     return renamed_body, next_state
 
@@ -1054,21 +1687,16 @@ def _solve_goal(
         yield from _solve_goal(program_value, renamed_body, next_state)
         return
 
-    for clause in program_value.clauses_for(goal.relation):
+    for clause in visible_clauses_for(program_value, goal.relation, state):
         fresh_clause, next_var_id = _freshen_clause(clause, state.next_var_id)
-        unified = unify(
-            goal.as_term(),
-            fresh_clause.head.as_term(),
-            state.substitution,
-        )
-        if unified is None:
-            continue
-
-        clause_state = State(substitution=unified, next_var_id=next_var_id)
-        if fresh_clause.body is None:
-            yield clause_state
-        else:
-            yield from _solve_goal(program_value, fresh_clause.body, clause_state)
+        for unified_state in core_eq(goal.as_term(), fresh_clause.head.as_term())(
+            state,
+        ):
+            clause_state = _state_with_next_var_id(unified_state, next_var_id)
+            if fresh_clause.body is None:
+                yield clause_state
+            else:
+                yield from _solve_goal(program_value, fresh_clause.body, clause_state)
 
 
 def _solve_conjunction(

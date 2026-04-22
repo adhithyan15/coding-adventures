@@ -809,7 +809,27 @@ Add the pure data model in every target language:
 
 Rust should land first because the TCP runtime will consume it.
 
-### Phase 2: Rust Thread-Pool Executor
+### Phase 2: Stdio Process-Pool Executor
+
+Status: first Rust slice landed with bounded in-flight submission, affinity
+routing, async response draining, and a TCP consumer in
+`embeddable-tcp-server`.
+
+Add a language-neutral process-pool executor using JSON lines first so Python,
+Ruby, Perl, Lua, and other process-backed hosts can share the same execution
+seam. This phase proves that CPU-bound callbacks can run outside one GIL or VM
+lock.
+
+Remaining hardening:
+
+- per-job timeout accounting
+- worker startup timeouts
+- restart policy for crashed workers
+- cancellation semantics
+- ordered response buffering by affinity where adapters need it
+- backpressure signals rich enough for TCP read pausing
+
+### Phase 3: Rust Thread-Pool Executor
 
 Add an in-process Rust executor with:
 
@@ -820,7 +840,7 @@ Add an in-process Rust executor with:
 - timeout accounting
 - affinity-aware ordering
 
-### Phase 3: TCP Job Runtime Adapter
+### Phase 4: TCP Job Runtime Adapter
 
 Add a TCP adapter that proves:
 
@@ -830,13 +850,6 @@ Add a TCP adapter that proves:
 
 Mini Redis and IRC can then choose between inline execution and job-backed
 execution.
-
-### Phase 4: Process-Pool Executor
-
-Add a language-neutral process-pool executor using length-prefixed JSON lines.
-
-This phase should include at least one worker implementation, preferably Python,
-because it proves that CPU-bound callbacks can run outside one GIL.
 
 ### Phase 5: Language Bindings
 
