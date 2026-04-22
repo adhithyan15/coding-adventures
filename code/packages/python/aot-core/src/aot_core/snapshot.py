@@ -208,6 +208,12 @@ def read(data: bytes) -> AOTSnapshot:
         if vm_iir_table_size == 0:
             iir_table = b""
         else:
+            expected_offset = HEADER_SIZE + native_code_size
+            if vm_iir_table_offset < expected_offset:
+                raise ValueError(
+                    f"iir_table offset {vm_iir_table_offset} overlaps header"
+                    f" or code section (expected >= {expected_offset})"
+                )
             iir_end = vm_iir_table_offset + vm_iir_table_size
             if iir_end > len(data):
                 raise ValueError(
