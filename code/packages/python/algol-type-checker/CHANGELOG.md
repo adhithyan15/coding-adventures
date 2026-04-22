@@ -17,6 +17,8 @@ All notable changes to this package will be documented in this file.
 - Added Phase 5 by-name parameter semantic metadata, conservative write
   analysis for assigned or transitively passed by-name formals, and call-site
   diagnostics for non-assignable by-name actual expressions.
+- Added explicit guard coverage for literal and procedure-call actuals passed
+  to written by-name formals.
 
 ## [0.1.0] - 2026-04-20
 

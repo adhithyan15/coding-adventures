@@ -236,6 +236,26 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_integer_by_name_acceptance_surface(self) -> None:
+        result = compile_source(
+            "begin integer result, s, i; integer array a[1:3]; "
+            "procedure bump(x); integer x; begin x := x + 1 end; "
+            "integer procedure probe(x); integer x; "
+            "begin probe := x; s := s + 10; probe := probe * 100 + x end; "
+            "integer procedure inc(n); value n; integer n; begin inc := n + 1 end; "
+            "integer procedure sum(k, lo, hi, term); "
+            "value lo, hi; integer k, lo, hi, term; "
+            "begin sum := 0; for k := lo step 1 until hi do sum := sum + term end; "
+            "a[1] := 2; a[2] := 3; a[3] := 5; "
+            "s := 1; bump(s); result := s; "
+            "i := 1; bump(a[i]); result := result * 10 + a[1]; "
+            "s := 4; result := result * 1000 + probe(s + 1); "
+            "result := result * 100 + inc(a[1]); "
+            "result := result * 100 + sum(i, 1, 3, a[i] * i) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [235150424]
+
     def test_jensens_device_sums_array_element_expression(self) -> None:
         result = compile_source(
             "begin integer result, i; integer array a[1:3]; "

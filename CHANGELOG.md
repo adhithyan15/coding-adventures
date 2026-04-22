@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Jensen's-device terms such as `a[i] * i` through the WASM runtime path.
 - Enabled read-only ALGOL expression thunks to call integer procedures, with
   nested procedure failures propagated through thunk helper state.
+- Added Phase 5 wrap-up coverage and docs for the completed integer by-name
+  subset and its remaining full-ALGOL exclusions.
 
 ### Added — TypeScript Port + JavaScript/TypeScript Grammars (PR #14)
 - **31 TypeScript packages** — complete port of the computing stack to TypeScript
