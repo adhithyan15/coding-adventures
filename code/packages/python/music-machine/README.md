@@ -5,12 +5,12 @@ stack. It lets a small text score become timed events and then signed 16-bit PCM
 audio.
 
 ```text
-text score -> note/rest events -> note-audio renders -> PCM buffer -> optional audio sink
+text score -> note/rest events -> instrument renderer -> PCM buffer -> optional audio sink
 ```
 
 The package intentionally starts with a tiny sheet-music language instead of a
-full notation system. V1 supports one melody line, one tempo, notes, rests,
-duration symbols, and visual barlines.
+full notation system. V1 supports one melody line, one tempo, one selected
+instrument, notes, rests, duration symbols, and visual barlines.
 
 ## Text Score Example
 
@@ -19,6 +19,7 @@ title: Tiny Melody
 tempo: 120
 meter: 4/4
 amplitude: 0.18
+instrument: flute_naive
 sample_rate: 44100
 
 C4/q D4/q E4/q R/q
@@ -36,6 +37,24 @@ Each music token is `pitch/duration`.
 
 A single dot makes a duration one-and-a-half times as long, so `q.` is `1.5`
 beats.
+
+## Instruments
+
+Scores can choose a naive instrument profile by id:
+
+```text
+instrument: violin_naive
+```
+
+Or they can choose a General-MIDI-style keyboard program number:
+
+```text
+program: 74
+```
+
+`program: 74` resolves to the current naive flute profile. `instrument:` and
+`program:` are mutually exclusive, and both must appear before the music tokens.
+If neither is provided, the score defaults to `instrument: sine`.
 
 ## Usage
 
@@ -67,15 +86,17 @@ to run.
 
 ## How It Fits
 
-`music-machine` does not synthesize notes itself. It parses a score, then sends
-each note event through `note-audio`, which exposes the lower layers:
+`music-machine` does not define instrument timbres itself. It parses a score,
+resolves the selected profile through `musical-instruments`, then renders each
+note through the lower layers:
 
 ```text
-note-frequency -> oscillator -> sampler -> pcm-audio -> virtual DAC -> speaker model
+note-frequency -> musical-instruments -> oscillator -> sampler -> pcm-audio
 ```
 
 Rests are simpler: the machine appends zero-valued PCM samples for the requested
-duration.
+duration. Instrument release tails are mixed into the timeline, so the rendered
+PCM buffer may be slightly longer than the sum of notated durations.
 
 ## Development
 

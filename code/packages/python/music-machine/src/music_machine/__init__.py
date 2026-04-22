@@ -2,6 +2,7 @@
 
 from .music_machine import (
     DEFAULT_AMPLITUDE,
+    DEFAULT_INSTRUMENT_ID,
     DEFAULT_MAX_EVENT_COUNT,
     DEFAULT_MAX_LINE_LENGTH,
     DEFAULT_MAX_SAMPLE_COUNT,
@@ -19,6 +20,7 @@ from .music_machine import (
     play_score,
     play_score_text,
     render_score_to_pcm,
+    resolve_instrument_id,
 )
 
 __version__ = "0.1.0"
@@ -30,6 +32,7 @@ __all__ = [
     "DEFAULT_MAX_SAMPLE_COUNT",
     "DEFAULT_MAX_SCORE_LENGTH",
     "DEFAULT_METER",
+    "DEFAULT_INSTRUMENT_ID",
     "DEFAULT_SAMPLE_RATE_HZ",
     "DEFAULT_TEMPO_BPM",
     "DURATION_BEATS",
@@ -39,6 +42,7 @@ __all__ = [
     "TextScore",
     "__version__",
     "beats_for_duration_symbol",
+    "resolve_instrument_id",
     "parse_score",
     "play_score",
     "play_score_text",

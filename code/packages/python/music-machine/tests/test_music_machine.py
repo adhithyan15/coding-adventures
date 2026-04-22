@@ -7,6 +7,7 @@ import pytest
 from pcm_audio import PCMBuffer, PCMFormat
 
 from music_machine import (
+    DEFAULT_INSTRUMENT_ID,
     HAPPY_BIRTHDAY_TEXT,
     RenderedScore,
     ScoreEvent,
@@ -16,6 +17,7 @@ from music_machine import (
     play_score,
     play_score_text,
     render_score_to_pcm,
+    resolve_instrument_id,
 )
 
 
@@ -47,6 +49,7 @@ def test_parse_score_reads_metadata_notes_rests_and_barlines() -> None:
         tempo: 120
         meter: 3/4
         amplitude: 0.25
+        instrument: flute_naive
         sample_rate: 8000
 
         C4/q D4/e | R/e rest/q
@@ -57,6 +60,8 @@ def test_parse_score_reads_metadata_notes_rests_and_barlines() -> None:
     assert score.tempo_bpm == 120.0
     assert score.meter == "3/4"
     assert score.amplitude == 0.25
+    assert score.instrument_id == "flute_naive"
+    assert score.gm_program is None
     assert score.sample_rate_hz == 8000
     assert score.seconds_per_beat() == 0.5
     assert score.total_duration_seconds() == 1.5
@@ -77,6 +82,8 @@ def test_parse_score_defaults_metadata() -> None:
     assert score.tempo_bpm == 120.0
     assert score.meter == "4/4"
     assert score.amplitude == 0.18
+    assert score.instrument_id == DEFAULT_INSTRUMENT_ID
+    assert score.gm_program is None
     assert score.sample_rate_hz == 44_100
 
 
@@ -105,6 +112,12 @@ def test_parse_score_uses_known_tempo_for_dotted_duration_math() -> None:
         ("amplitude: loud\nA4/q", "amplitude must be a number"),
         ("sample_rate: 44100.5\nA4/q", "sample_rate must be an integer"),
         ("sample_rate: fast\nA4/q", "sample_rate must be an integer"),
+        ("instrument: laser_harp\nA4/q", "unknown instrument"),
+        ("program: 0\nA4/q", "program must be > 0"),
+        ("program: 129\nA4/q", "program must be in"),
+        ("program: flute\nA4/q", "program must be an integer"),
+        ("instrument: sine\nprogram: 74\nA4/q", "instrument or program"),
+        ("program: 74\ninstrument: sine\nA4/q", "instrument or program"),
         ("meter: tomato\nA4/q", "meter must look"),
         ("dynamic: loud\nA4/q", "unknown directive"),
         ("title:\nA4/q", "directive 'title' is empty"),
@@ -201,6 +214,8 @@ def test_text_score_validates_settings_and_events() -> None:
             meter="4/4",
             amplitude=0.18,
             sample_rate_hz=8000,
+            instrument_id=DEFAULT_INSTRUMENT_ID,
+            gm_program=None,
             events=(),
         )
 
@@ -211,6 +226,8 @@ def test_text_score_validates_settings_and_events() -> None:
             meter="4/4",
             amplitude=0.18,
             sample_rate_hz=0,
+            instrument_id=DEFAULT_INSTRUMENT_ID,
+            gm_program=None,
             events=(event,),
         )
 
@@ -221,6 +238,8 @@ def test_text_score_validates_settings_and_events() -> None:
             meter="4/4",
             amplitude=0.18,
             sample_rate_hz=8000,
+            instrument_id=DEFAULT_INSTRUMENT_ID,
+            gm_program=None,
             events=(event,),
         )
 
@@ -231,6 +250,8 @@ def test_text_score_validates_settings_and_events() -> None:
             meter="4/4",
             amplitude=float("nan"),
             sample_rate_hz=8000,
+            instrument_id=DEFAULT_INSTRUMENT_ID,
+            gm_program=None,
             events=(event,),
         )
 
@@ -241,8 +262,41 @@ def test_text_score_validates_settings_and_events() -> None:
             meter="4/4",
             amplitude=0.18,
             sample_rate_hz=True,  # type: ignore[arg-type]
+            instrument_id=DEFAULT_INSTRUMENT_ID,
+            gm_program=None,
             events=(event,),
         )
+
+
+def test_text_score_resolves_gm_program() -> None:
+    event = ScoreEvent(
+        kind="note",
+        note="A4",
+        duration_symbol="q",
+        beat_count=1.0,
+        duration_seconds=0.5,
+        source_token="A4/q",
+    )
+    score = TextScore(
+        title="Flute",
+        tempo_bpm=120,
+        meter="4/4",
+        amplitude=0.18,
+        sample_rate_hz=8000,
+        instrument_id=DEFAULT_INSTRUMENT_ID,
+        gm_program=74,
+        events=(event,),
+    )
+
+    assert score.gm_program == 74
+    assert score.instrument_id == "flute_naive"
+
+
+def test_resolve_instrument_id_rejects_conflicting_settings() -> None:
+    assert resolve_instrument_id(gm_program=74) == "flute_naive"
+
+    with pytest.raises(ValueError, match="instrument or program"):
+        resolve_instrument_id(instrument_id="sine", gm_program=74)
 
 
 def test_rendered_score_validates_shape() -> None:
@@ -286,8 +340,42 @@ def test_render_score_to_pcm_joins_notes_and_zero_rest_samples() -> None:
 
     assert rendered.pcm_buffer.sample_count() == 20
     assert len(rendered.rendered_notes) == 1
-    assert rendered.rendered_notes[0].frequency_hz == pytest.approx(27.5)
-    assert rendered.pcm_buffer.samples[10:] == (0,) * 10
+    assert rendered.rendered_notes[0].fundamental_hz == pytest.approx(27.5)
+    assert any(rendered.pcm_buffer.samples[10:13])
+    assert rendered.pcm_buffer.samples[13:] == (0,) * 7
+
+
+def test_render_score_uses_selected_instrument() -> None:
+    flute = render_score_to_pcm(
+        parse_score(
+            """
+            tempo: 600
+            amplitude: 0.25
+            instrument: flute_naive
+            sample_rate: 8000
+
+            A4/q
+            """
+        )
+    )
+    violin = render_score_to_pcm(
+        parse_score(
+            """
+            tempo: 600
+            amplitude: 0.25
+            program: 41
+            sample_rate: 8000
+
+            A4/q
+            """
+        )
+    )
+
+    assert flute.score.instrument_id == "flute_naive"
+    assert violin.score.instrument_id == "violin_naive"
+    assert flute.rendered_notes[0].instrument.id == "flute_naive"
+    assert violin.rendered_notes[0].instrument.id == "violin_naive"
+    assert flute.pcm_buffer.samples != violin.pcm_buffer.samples
 
 
 def test_render_score_to_pcm_rejects_sample_budget_overflow() -> None:
@@ -319,9 +407,9 @@ def test_happy_birthday_fixture_parses_and_renders() -> None:
 
     rendered = render_score_to_pcm(score)
 
-    assert rendered.pcm_buffer.sample_count() == 595_350
+    assert rendered.pcm_buffer.sample_count() == 596_673
     assert len(rendered.rendered_notes) == 25
-    assert rendered.pcm_buffer.duration_seconds() == pytest.approx(13.5)
+    assert rendered.pcm_buffer.duration_seconds() == pytest.approx(13.53)
 
 
 def test_play_score_delegates_to_injected_sink() -> None:
@@ -341,7 +429,7 @@ def test_play_score_delegates_to_injected_sink() -> None:
         return "played"
 
     assert play_score(score, play_pcm_buffer=fake_sink) == "played"
-    assert seen == {"sample_count": 10, "sample_rate": 100.0}
+    assert seen == {"sample_count": 13, "sample_rate": 100.0}
 
 
 def test_play_score_text_delegates_to_injected_sink() -> None:
@@ -390,7 +478,7 @@ def test_play_score_text_imports_default_sink_lazily(
     )
 
     assert result == "lazy played"
-    assert seen == {"sample_count": 10}
+    assert seen == {"sample_count": 13}
 
 
 def test_play_score_text_rejects_non_callable_default_sink(

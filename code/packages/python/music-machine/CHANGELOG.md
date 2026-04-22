@@ -5,6 +5,8 @@
 - Added the first text score parser for monophonic note/rest melodies.
 - Added score rendering that stitches note PCM buffers and rest silence into one
   reusable `PCMBuffer`.
+- Added `instrument:` and `program:` directives that render notes through the
+  `musical-instruments` package.
 - Added a Happy Birthday fixture that demonstrates a complete text-to-audio
   score.
 - Added lazy playback helpers that delegate to `audio-device-sink` only when
