@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Advanced PL04 Phase 5 call-by-name lowering with integer array-element
   eval/store thunk descriptors, including repeated re-location of subscripted
   actuals on formal reads and assignments.
+- Enabled read-only ALGOL expression thunks to read arrays, covering
+  Jensen's-device terms such as `a[i] * i` through the WASM runtime path.
 
 ### Added — TypeScript Port + JavaScript/TypeScript Grammars (PR #14)
 - **31 TypeScript packages** — complete port of the computing stack to TypeScript

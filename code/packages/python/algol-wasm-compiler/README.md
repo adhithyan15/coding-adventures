@@ -29,8 +29,9 @@ actuals now compile as tagged eval thunk descriptors, so each by-name formal
 read re-evaluates the expression using the caller frame captured at the call
 site. Integer array-element by-name actuals now compile as tagged descriptors
 with eval/store helpers, so reads and assignments re-compute the current element
-address every time the formal is used. Expression thunks that read arrays,
-expression thunks that call procedures, and expression thunk stores remain
+address every time the formal is used. Read-only expression thunks can also
+read array elements, including Jensen-style terms such as `a[i] * i`.
+Expression thunks that call procedures and expression thunk stores remain
 guarded by IR compile-stage diagnostics until full Phase 5 expression-helper
 coverage is available.
 

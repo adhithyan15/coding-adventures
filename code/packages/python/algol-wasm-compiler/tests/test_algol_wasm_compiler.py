@@ -44,16 +44,6 @@ class TestAlgolWasmCompiler:
             compile_source("begin integer result; result := false end")
         assert raised.value.stage == "type-check"
 
-    def test_array_read_expression_by_name_waits_for_eval_thunk_stage(self) -> None:
-        with pytest.raises(AlgolWasmError) as raised:
-            compile_source(
-                "begin integer result; integer array a[1:2]; "
-                "integer procedure id(x); integer x; begin id := x end; "
-                "result := id(a[1] + 1) "
-                "end"
-            )
-        assert raised.value.stage == "ir-compile"
-
     def test_procedure_call_expression_by_name_waits_for_eval_thunk_stage(
         self,
     ) -> None:
@@ -182,6 +172,50 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_array_read_expression_by_name_re_evaluates_on_each_read(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:2]; "
+            "integer procedure probe(x); integer x; "
+            "begin probe := x; a[1] := 9; probe := probe * 100 + x end; "
+            "a[1] := 3; i := 1; "
+            "result := probe(a[i] + 1) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [410]
+
+    def test_array_read_expression_by_name_bounds_failure_propagates(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:2]; "
+            "integer procedure id(x); integer x; begin id := x end; "
+            "i := 3; result := id(a[i] + 1) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_jensens_device_sums_array_element_expression(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:3]; "
+            "integer procedure sum(k, lo, hi, term); "
+            "value lo, hi; integer k, lo, hi, term; "
+            "begin sum := 0; for k := lo step 1 until hi do sum := sum + term end; "
+            "a[1] := 2; a[2] := 3; a[3] := 5; "
+            "result := sum(i, 1, 3, a[i]) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
+
+    def test_jensens_device_sums_array_expression(self) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:3]; "
+            "integer procedure sum(k, lo, hi, term); "
+            "value lo, hi; integer k, lo, hi, term; "
+            "begin sum := 0; for k := lo step 1 until hi do sum := sum + term end; "
+            "a[1] := 2; a[2] := 3; a[3] := 5; "
+            "result := sum(i, 1, 3, a[i] * i) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [23]
 
     def test_read_only_by_name_expression_re_evaluates_on_each_read(self) -> None:
         result = compile_source(
