@@ -70,6 +70,31 @@ class TestAlgolIrCompiler:
         assert "loop_0_start" in labels
         assert "loop_0_end" in labels
 
+    def test_compiles_local_goto_to_algol_label(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "loop: i := i + 1; "
+                "if i < 3 then goto loop; "
+                "result := i "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        jumps = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.JUMP
+        ]
+
+        algol_labels = [label for label in labels if label.startswith("algol_label_")]
+        assert len(algol_labels) == 1
+        assert algol_labels[0] in jumps
+
     def test_compiles_unary_minus_and_mod(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result; result := -10 mod 4 end")

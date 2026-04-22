@@ -30,6 +30,9 @@ All notable changes to this package will be documented in this file.
   the caller's by-name formal read.
 - Added a consolidated integer by-name acceptance test covering scalar,
   array-element, expression, nested procedure, and Jensen's-device behavior.
+- Executed Phase 6 direct local labels and `goto` statements through the
+  unstructured IR-to-WASM lowering path, covering forward jumps, backward
+  jumps, and terminal labels.
 
 ## [0.1.0] - 2026-04-20
 

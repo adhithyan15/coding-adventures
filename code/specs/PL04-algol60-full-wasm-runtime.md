@@ -948,10 +948,17 @@ Each label should resolve to:
 
 ### Local Goto
 
-Within one lowered function and one active frame, a local `goto` can lower to:
+Within one lowered function and one active frame, a local `goto` lowers to:
 
 - an IR jump if the backend supports arbitrary labels
 - or a dispatch loop state update if the backend only supports structured WASM
+
+The completed Phase 6 implementation uses the repository's unstructured IR
+control-flow path. It accepts direct labels and direct `goto` targets within the
+same active ALGOL frame, including forward jumps, backward jumps, and terminal
+labels on empty statements. It continues to reject conditional designational
+expressions, switch selections, and nonlocal jumps until Phase 7 has frame
+unwinding and switch descriptors.
 
 ### Nonlocal Goto
 
@@ -1322,17 +1329,23 @@ Acceptance:
 
 Goal: Support labels and gotos inside one procedure/frame.
 
+Status: complete for direct local label targets.
+
 Deliverables:
 
 - label symbol resolution
 - local jump lowering
-- dispatch-loop or equivalent lowering where structured WASM is insufficient
+- unstructured IR/WASM lowering where structured WASM is insufficient
+- diagnostics for missing labels, nonlocal targets, and Phase 7 designational
+  forms
 
 Acceptance:
 
 - forward and backward local gotos work
 - labels on empty statements work
 - invalid label references are rejected
+- nonlocal gotos and conditional/switch designational expressions are rejected
+  with targeted diagnostics
 
 ### Phase 7: Nonlocal Goto and Switches
 

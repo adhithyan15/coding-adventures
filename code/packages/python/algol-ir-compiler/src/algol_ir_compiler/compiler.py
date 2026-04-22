@@ -6,9 +6,11 @@ from dataclasses import dataclass, field
 
 from algol_type_checker import (
     ArrayDescriptor,
+    LabelDescriptor,
     ProcedureDescriptor,
     ProcedureParameter,
     ResolvedArrayAccess,
+    ResolvedGoto,
     ResolvedProcedureCall,
     ResolvedReference,
     SemanticBlock,
@@ -156,6 +158,8 @@ class AlgolIrCompiler:
         self.references: dict[tuple[int, str], ResolvedReference] = {}
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
         self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
+        self.labels: dict[int, LabelDescriptor] = {}
+        self.gotos: dict[int, ResolvedGoto] = {}
         self.procedures: dict[int, ProcedureDescriptor] = {}
         self.parameters_by_symbol: dict[int, ProcedureParameter] = {}
         self.arrays: dict[int, ArrayDescriptor] = {}
@@ -211,6 +215,13 @@ class AlgolIrCompiler:
         self.array_accesses = {
             (access.token_id, access.role): access
             for access in type_result.semantic.array_accesses
+        }
+        self.labels = {
+            label.statement_node_id: label
+            for label in type_result.semantic.labels
+        }
+        self.gotos = {
+            goto.token_id: goto for goto in type_result.semantic.gotos
         }
         self.procedures = {
             procedure.procedure_id: procedure
@@ -615,7 +626,11 @@ class AlgolIrCompiler:
         )
 
     def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
-        inner = _first_ast_child(statement)
+        label = self.labels.get(id(statement))
+        if label is not None:
+            self._label(label.ir_label)
+
+        inner = _statement_body(statement)
         if inner is None:
             return
         if inner.rule_name == "unlabeled_stmt":
@@ -642,10 +657,24 @@ class AlgolIrCompiler:
             self._compile_block(inner, scope)
         elif inner.rule_name == "proc_stmt":
             self._compile_procedure_call(inner, scope)
+        elif inner.rule_name == "goto_stmt":
+            self._compile_goto(inner)
         else:
             raise CompileError(
                 f"{inner.rule_name} is not supported by algol-ir-compiler"
             )
+
+    def _compile_goto(self, node: ASTNode) -> None:
+        desig_expr = _first_direct_node(node, "desig_expr")
+        target_token = _direct_label_from_designational(desig_expr)
+        if target_token is None:
+            raise CompileError(
+                "only direct local goto targets are supported by algol-ir-compiler"
+            )
+        resolved = self.gotos.get(id(target_token))
+        if resolved is None:
+            raise CompileError(f"goto target {target_token.value!r} was not resolved")
+        self._emit(IrOp.JUMP, IrLabel(resolved.ir_label))
 
     def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
         left_part = _first_direct_node(assign, "left_part")
@@ -2125,6 +2154,17 @@ def _first_ast_child(node: ASTNode) -> ASTNode | None:
     return next((child for child in node.children if isinstance(child, ASTNode)), None)
 
 
+def _statement_body(statement: ASTNode) -> ASTNode | None:
+    return next(
+        (
+            child
+            for child in statement.children
+            if isinstance(child, ASTNode) and child.rule_name != "label"
+        ),
+        None,
+    )
+
+
 def _direct_tokens(node: ASTNode | None) -> list[Token]:
     if node is None:
         return []
@@ -2168,6 +2208,32 @@ def _nodes(node: ASTNode | None, rule_name: str) -> list[ASTNode]:
     for child in _node_children(node):
         found.extend(_nodes(child, rule_name))
     return found
+
+
+def _label_token(node: ASTNode) -> Token | None:
+    return next(
+        (
+            token
+            for token in _direct_tokens(node)
+            if token.type_name in {"NAME", "INTEGER_LIT"}
+        ),
+        None,
+    )
+
+
+def _direct_label_from_designational(node: ASTNode | None) -> Token | None:
+    if node is None or any(token.value == "if" for token in _direct_tokens(node)):
+        return None
+    simple = _first_direct_node(node, "simple_desig")
+    if simple is None:
+        return None
+    if any(token.value == "[" for token in _direct_tokens(simple)):
+        return None
+    label_node = _first_direct_node(simple, "label")
+    if label_node is None:
+        nested = _first_direct_node(simple, "desig_expr")
+        return _direct_label_from_designational(nested)
+    return _label_token(label_node)
 
 
 def _variable_name(node: ASTNode | None) -> Token | None:

@@ -15,6 +15,7 @@ FRAME_WORD_SIZE = 4
 VALUE = "value"
 NAME = "name"
 ARRAY = "array"
+LABEL = "label"
 MAX_ARRAY_DIMENSIONS = 4
 
 
@@ -247,6 +248,35 @@ class ResolvedArrayAccess:
     column: int
 
 
+@dataclass(frozen=True)
+class LabelDescriptor:
+    """A statement label visible within one ALGOL frame."""
+
+    label_id: int
+    name: str
+    ir_label: str
+    declaring_block_id: int
+    symbol_id: int
+    statement_node_id: int
+    line: int
+    column: int
+
+
+@dataclass(frozen=True)
+class ResolvedGoto:
+    """A direct local goto after label lookup."""
+
+    token_id: int
+    label_id: int
+    target_name: str
+    ir_label: str
+    source_block_id: int
+    target_block_id: int
+    lexical_depth_delta: int
+    line: int
+    column: int
+
+
 @dataclass
 class SemanticProgram:
     """Typed semantic facts produced before IR lowering."""
@@ -260,6 +290,8 @@ class SemanticProgram:
     procedure_calls: list[ResolvedProcedureCall] = field(default_factory=list)
     arrays: list[ArrayDescriptor] = field(default_factory=list)
     array_accesses: list[ResolvedArrayAccess] = field(default_factory=list)
+    labels: list[LabelDescriptor] = field(default_factory=list)
+    gotos: list[ResolvedGoto] = field(default_factory=list)
     diagnostics: list[Diagnostic] = field(default_factory=list)
 
 
@@ -295,10 +327,13 @@ class AlgolTypeChecker:
         self.resolved_procedure_calls: list[ResolvedProcedureCall] = []
         self.semantic_arrays: list[ArrayDescriptor] = []
         self.resolved_array_accesses: list[ResolvedArrayAccess] = []
+        self.semantic_labels: list[LabelDescriptor] = []
+        self.resolved_gotos: list[ResolvedGoto] = []
         self._next_block_id = 0
         self._next_symbol_id = 0
         self._next_procedure_id = 0
         self._next_array_id = 0
+        self._next_label_id = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -310,10 +345,13 @@ class AlgolTypeChecker:
         self.resolved_procedure_calls = []
         self.semantic_arrays = []
         self.resolved_array_accesses = []
+        self.semantic_labels = []
+        self.resolved_gotos = []
         self._next_block_id = 0
         self._next_symbol_id = 0
         self._next_procedure_id = 0
         self._next_array_id = 0
+        self._next_label_id = 0
         root_scope = Scope()
         block = _first_node(ast, "block")
         if block is None:
@@ -330,6 +368,8 @@ class AlgolTypeChecker:
             procedure_calls=list(self.resolved_procedure_calls),
             arrays=list(self.semantic_arrays),
             array_accesses=list(self.resolved_array_accesses),
+            labels=list(self.semantic_labels),
+            gotos=list(self.resolved_gotos),
             diagnostics=list(self.diagnostics),
         )
         return TypeCheckResult(
@@ -349,6 +389,10 @@ class AlgolTypeChecker:
         for child in _node_children(block):
             if child.rule_name == "declaration":
                 self._check_declaration(child, scope)
+
+        for child in _node_children(block):
+            if child.rule_name == "statement":
+                self._collect_statement_labels(child, scope)
 
         for child in _node_children(block):
             if child.rule_name == "statement":
@@ -663,10 +707,69 @@ class AlgolTypeChecker:
         if body_inner.rule_name == "block":
             self._check_block_contents(body_inner, proc_scope)
         else:
+            self._collect_statement_labels(body_inner, proc_scope)
             self._check_statement(body_inner, proc_scope)
 
+    def _collect_statement_labels(self, statement: ASTNode, scope: Scope) -> None:
+        label_node = _first_direct_node(statement, "label")
+        if label_node is not None:
+            label_token = _label_token(label_node)
+            if label_token is not None:
+                self._declare_label(label_token, statement, scope)
+
+        body = _statement_body(statement)
+        if body is None or body.rule_name == "block":
+            return
+        for child in _node_children(body):
+            if child.rule_name == "statement":
+                self._collect_statement_labels(child, scope)
+            elif child.rule_name == "unlabeled_stmt":
+                nested = _first_ast_child(child)
+                if nested is not None and nested.rule_name != "block":
+                    for nested_statement in _direct_nodes(nested, "statement"):
+                        self._collect_statement_labels(nested_statement, scope)
+
+    def _declare_label(
+        self,
+        label_token: Token,
+        statement: ASTNode,
+        scope: Scope,
+    ) -> None:
+        label_id = self._next_label_id
+        self._next_label_id += 1
+        symbol = Symbol(
+            name=label_token.value,
+            type_name=LABEL,
+            line=label_token.line,
+            column=label_token.column,
+            symbol_id=self._next_symbol_id,
+            kind=LABEL,
+            storage_class="code",
+            declaring_block_id=scope.block_id,
+        )
+        if not scope.declare(symbol):
+            self._error(
+                label_token,
+                f"label {label_token.value!r} is already declared in this frame",
+            )
+            return
+        self._next_symbol_id += 1
+        self.semantic_symbols.append(symbol)
+        self.semantic_labels.append(
+            LabelDescriptor(
+                label_id=label_id,
+                name=label_token.value,
+                ir_label=_label_ir_name(label_id, label_token.value),
+                declaring_block_id=scope.block_id,
+                symbol_id=symbol.symbol_id,
+                statement_node_id=id(statement),
+                line=label_token.line,
+                column=label_token.column,
+            )
+        )
+
     def _check_statement(self, statement: ASTNode, scope: Scope) -> None:
-        inner = _first_ast_child(statement)
+        inner = _statement_body(statement)
         if inner is None:
             return
         if inner.rule_name == "unlabeled_stmt":
@@ -691,8 +794,68 @@ class AlgolTypeChecker:
             self._check_block(inner, scope)
         elif inner.rule_name == "proc_stmt":
             self._check_procedure_call(inner, scope, role="statement")
+        elif inner.rule_name == "goto_stmt":
+            self._check_goto(inner, scope)
         else:
             self._error(inner, f"{inner.rule_name} is not supported yet")
+
+    def _check_goto(self, node: ASTNode, scope: Scope) -> None:
+        desig_expr = _first_direct_node(node, "desig_expr")
+        target_token = _direct_label_from_designational(desig_expr)
+        if target_token is None:
+            if desig_expr is not None and _designational_contains_switch(desig_expr):
+                self._error(
+                    desig_expr,
+                    "switch designational expressions require Phase 7 lowering",
+                )
+            else:
+                self._error(
+                    desig_expr or node,
+                    "conditional designational expressions require Phase 7 lowering",
+                )
+            return
+
+        resolved = scope.resolve_with_scope(target_token.value)
+        if resolved is None:
+            self._error(target_token, f"label {target_token.value!r} is not declared")
+            return
+
+        symbol, declaring_scope, lexical_depth_delta = resolved
+        if symbol.kind != LABEL:
+            self._error(target_token, f"{target_token.value!r} is not a label")
+            return
+        if lexical_depth_delta != 0:
+            self._error(
+                target_token,
+                f"nonlocal goto to label {target_token.value!r} requires Phase 7 "
+                "frame unwinding",
+            )
+            return
+
+        label = next(
+            (
+                descriptor
+                for descriptor in self.semantic_labels
+                if descriptor.symbol_id == symbol.symbol_id
+            ),
+            None,
+        )
+        if label is None:
+            self._error(target_token, f"label {target_token.value!r} has no descriptor")
+            return
+        self.resolved_gotos.append(
+            ResolvedGoto(
+                token_id=id(target_token),
+                label_id=label.label_id,
+                target_name=target_token.value,
+                ir_label=label.ir_label,
+                source_block_id=scope.block_id,
+                target_block_id=declaring_scope.block_id,
+                lexical_depth_delta=lexical_depth_delta,
+                line=target_token.line,
+                column=target_token.column,
+            )
+        )
 
     def _check_assignment(self, assign: ASTNode, scope: Scope) -> None:
         left_parts = _direct_nodes(assign, "left_part")
@@ -1223,6 +1386,17 @@ def _first_ast_child(node: ASTNode) -> ASTNode | None:
     return next((child for child in node.children if isinstance(child, ASTNode)), None)
 
 
+def _statement_body(statement: ASTNode) -> ASTNode | None:
+    return next(
+        (
+            child
+            for child in statement.children
+            if isinstance(child, ASTNode) and child.rule_name != "label"
+        ),
+        None,
+    )
+
+
 def _direct_tokens(node: ASTNode | None) -> list[Token]:
     if node is None:
         return []
@@ -1301,6 +1475,46 @@ def _parameter_spec_types(node: ASTNode) -> dict[str, str]:
             if token.type_name == "NAME":
                 spec_types[token.value] = type_name
     return spec_types
+
+
+def _label_token(node: ASTNode) -> Token | None:
+    return next(
+        (
+            token
+            for token in _direct_tokens(node)
+            if token.type_name in {"NAME", "INTEGER_LIT"}
+        ),
+        None,
+    )
+
+
+def _direct_label_from_designational(node: ASTNode | None) -> Token | None:
+    if node is None or any(token.value == "if" for token in _direct_tokens(node)):
+        return None
+    simple = _first_direct_node(node, "simple_desig")
+    if simple is None:
+        return None
+    if any(token.value == "[" for token in _direct_tokens(simple)):
+        return None
+    label_node = _first_direct_node(simple, "label")
+    if label_node is None:
+        nested = _first_direct_node(simple, "desig_expr")
+        return _direct_label_from_designational(nested)
+    return _label_token(label_node)
+
+
+def _designational_contains_switch(node: ASTNode) -> bool:
+    if node.rule_name == "simple_desig":
+        return any(token.value == "[" for token in _direct_tokens(node))
+    return any(_designational_contains_switch(child) for child in _node_children(node))
+
+
+def _label_ir_name(label_id: int, source_name: str) -> str:
+    safe_name = "".join(
+        char if char.isalnum() or char == "_" else "_"
+        for char in source_name
+    )
+    return f"algol_label_{label_id}_{safe_name}"
 
 
 def _by_name_formal_write_reasons(
