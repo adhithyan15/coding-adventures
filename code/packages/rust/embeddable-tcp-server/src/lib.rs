@@ -76,6 +76,7 @@ pub struct EmbeddableTcpServerOptions {
     pub port: u16,
     pub max_connections: usize,
     pub worker_processes: usize,
+    pub worker_job_timeout: Option<Duration>,
     pub worker: WorkerCommand,
 }
 
@@ -95,6 +96,7 @@ impl Default for EmbeddableTcpServerOptions {
             port: 0,
             max_connections: TcpRuntimeOptions::default().max_connections,
             worker_processes: 1,
+            worker_job_timeout: None,
             worker: WorkerCommand::new("worker", Vec::<String>::new()),
         }
     }
@@ -441,6 +443,7 @@ where
             StdioProcessPoolOptions {
                 worker_count: options.worker_processes.max(1),
                 limits: ExecutorLimits::default(),
+                default_job_timeout: options.worker_job_timeout,
             },
         )?;
         let routes = Arc::new(Mutex::new(BTreeMap::new()));
@@ -1104,6 +1107,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 port: 0,
                 max_connections: 64,
                 worker_processes: 1,
+                worker_job_timeout: None,
                 worker,
             },
             |_| (),
@@ -1353,6 +1357,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 port: 0,
                 max_connections: 64,
                 worker_processes: 1,
+                worker_job_timeout: None,
                 worker,
             },
             |_| (),
@@ -1451,6 +1456,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         assert_eq!(options.port, 0);
         assert_eq!(options.worker, worker);
         assert_eq!(options.worker_processes, 1);
+        assert_eq!(options.worker_job_timeout, None);
 
         let mut zero_connections = options.clone();
         zero_connections.max_connections = 0;

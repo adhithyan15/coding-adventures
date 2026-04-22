@@ -811,9 +811,9 @@ Rust should land first because the TCP runtime will consume it.
 
 ### Phase 2: Stdio Process-Pool Executor
 
-Status: first Rust slice landed with bounded in-flight submission, affinity
-routing, async response draining, and a TCP consumer in
-`embeddable-tcp-server`.
+Status: Rust slices have landed with bounded in-flight submission, affinity
+routing, async response draining, per-job timeout responses, worker-exit
+failure responses, and a TCP consumer in `embeddable-tcp-server`.
 
 Add a language-neutral process-pool executor using JSON lines first so Python,
 Ruby, Perl, Lua, and other process-backed hosts can share the same execution
@@ -822,7 +822,6 @@ lock.
 
 Remaining hardening:
 
-- per-job timeout accounting
 - worker startup timeouts
 - restart policy for crashed workers
 - cancellation semantics
