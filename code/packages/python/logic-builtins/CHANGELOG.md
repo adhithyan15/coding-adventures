@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.11.0] - 2026-04-22
+
+### Added
+
+- generalized finite-domain residual constraints so binary comparisons,
+  arithmetic constraints, and global constraints share one propagation loop
+- `fd_addo`, `fd_subo`, and `fd_mulo` for CLP(FD)-style addition,
+  subtraction, and multiplication over finite integer domains
+- `all_differento` for pairwise-distinct finite-domain terms, including
+  duplicate concrete-value checks and singleton-domain pruning
+- tests covering arithmetic domain pruning, order-independent arithmetic
+  constraints, multiplication, singleton all-different pruning, duplicate
+  concrete values, and a tiny Latin-square-style solve
+
+### Changed
+
+- the Unix `BUILD` script removes coverage.py's optional native tracer on
+  Darwin after dependency installation so local macOS builds reliably fall back
+  to the Python tracer
+
+## [0.10.0] - 2026-04-22
+
+### Added
+
+- finite-domain store types for branch-local CLP(FD)-style constraints
+- `fd_ino`, `fd_eqo`, `fd_neqo`, `fd_lto`, `fd_leqo`, `fd_gto`, and
+  `fd_geqo` for finite integer domains and binary comparisons
+- `labelingo` for deterministic ascending enumeration of finite-domain
+  assignments
+- tests covering domain formats, domain narrowing, order-independent
+  constraints, equality-domain intersection, rollback across disjunctions, and
+  explicit labeling
+
 ## [0.9.0] - 2026-04-22
 
 ### Added

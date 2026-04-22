@@ -60,9 +60,11 @@ from .ast import (
 from .ast import (
     BeginStmt,
     CommitStmt,
+    CreateIndexStmt,
     CreateTableStmt,
     DeleteStmt,
     DerivedTableRef,
+    DropIndexStmt,
     DropTableStmt,
     ExceptStmt,
     InsertSelectStmt,
@@ -91,6 +93,7 @@ from .expr import (
     AggregateExpr,
     Between,
     BinaryExpr,
+    BinaryOp,
     CaseExpr,
     Column,
     Expr,
@@ -141,6 +144,10 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_table(ast)
         case DropTableStmt():
             return _plan_drop_table(ast)
+        case CreateIndexStmt():
+            return _plan_create_index(ast)
+        case DropIndexStmt():
+            return _plan_drop_index(ast)
         case BeginStmt():
             return P.Begin()
         case CommitStmt():
@@ -173,7 +180,18 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
         where = _resolve(stmt.where, scope)
         if contains_aggregate(where):
             raise InvalidAggregate(message="aggregate function not allowed in WHERE clause")
-        tree = P.Filter(input=tree, predicate=where)
+        # IX-6: If the WHERE predicate can be served by a B-tree index on the
+        # scan's base table, substitute Filter(Scan) with IndexScan.  This
+        # only applies when the tree is a bare Scan (not a Join or
+        # DerivedTable) — composite sources can't be accelerated this way.
+        if isinstance(tree, P.Scan):
+            idx_node = _try_index_scan(where, tree, schema)
+            if idx_node is not None:
+                tree = idx_node
+            else:
+                tree = P.Filter(input=tree, predicate=where)
+        else:
+            tree = P.Filter(input=tree, predicate=where)
 
     # 3. GROUP BY + aggregates — zero-or-one Aggregate node. We emit one if:
     #    (a) GROUP BY is non-empty, or
@@ -571,6 +589,22 @@ def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
     return P.DropTable(table=stmt.table, if_exists=stmt.if_exists)
 
 
+def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
+    """CREATE INDEX — no schema lookup needed (backend validates at execution)."""
+    return P.CreateIndex(
+        name=stmt.name,
+        table=stmt.table,
+        columns=stmt.columns,
+        unique=stmt.unique,
+        if_not_exists=stmt.if_not_exists,
+    )
+
+
+def _plan_drop_index(stmt: DropIndexStmt) -> P.LogicalPlan:
+    """DROP INDEX — no schema lookup needed (backend validates at execution)."""
+    return P.DropIndex(name=stmt.name, if_exists=stmt.if_exists)
+
+
 # --------------------------------------------------------------------------
 # Set-operation planning (UNION / INTERSECT / EXCEPT)
 # --------------------------------------------------------------------------
@@ -634,6 +668,180 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
         columns=stmt.columns,
         source=P.InsertSource(query=sub_plan),
     )
+
+
+# --------------------------------------------------------------------------
+# IX-6: Index-scan selection
+# --------------------------------------------------------------------------
+#
+# When the planner builds a Filter(Scan(t)) and the schema provider knows
+# about indexes on ``t``, it tries to replace the node pair with an
+# IndexScan.  The IndexScan materialises matching rows directly from the
+# B-tree — no full scan needed.
+#
+# Supported predicate shapes per index column ``col``:
+#
+#   col = literal          equality          → lo=v, hi=v, both inclusive
+#   col > literal          open lower bound  → lo=v (excl), hi=None
+#   col >= literal         closed lower      → lo=v (incl), hi=None
+#   col < literal          open upper bound  → lo=None, hi=v (excl)
+#   col <= literal         closed upper      → lo=None, hi=v (incl)
+#   literal < col          reversed GT       → lo=literal (excl), hi=None
+#   literal <= col         reversed GTE      → lo=literal (incl), hi=None
+#   literal > col          reversed LT       → lo=None, hi=literal (excl)
+#   literal >= col         reversed LTE      → lo=None, hi=literal (incl)
+#   col BETWEEN lo AND hi  closed range      → lo=lo_lit, hi=hi_lit
+#   pred1 AND pred2        compound: extract one half, other becomes residual
+#
+# Any other predicate shape falls through to Filter(Scan).
+
+
+def _try_index_scan(
+    predicate: Expr,
+    scan: P.Scan,
+    schema: SchemaProvider,
+) -> P.IndexScan | None:
+    """Try to replace ``Filter(Scan(scan.table))`` with an ``IndexScan``.
+
+    Asks the schema provider for indexes on ``scan.table``.  For each index
+    whose first column appears in ``predicate`` in a matchable position,
+    returns an :class:`~sql_planner.plan.IndexScan` node.  The first
+    matching index wins (deterministic: indexes are checked in the order
+    ``list_indexes`` returns them).
+
+    Returns ``None`` if no index can serve the predicate, or if the schema
+    provider does not expose a ``list_indexes`` method.
+    """
+    list_indexes_fn = getattr(schema, "list_indexes", None)
+    if list_indexes_fn is None:
+        return None
+
+    alias = scan.alias or scan.table
+    indexes = list_indexes_fn(scan.table)
+
+    for idx in indexes:
+        if not idx.columns:
+            continue
+        col = idx.columns[0]  # v2: single-column index matching only
+        result = _extract_index_bounds(predicate, alias, col)
+        if result is None:
+            continue
+        lo, lo_incl, hi, hi_incl, residual = result
+        return P.IndexScan(
+            table=scan.table,
+            alias=scan.alias,
+            index_name=idx.name,
+            column=col,
+            lo=lo,
+            hi=hi,
+            lo_inclusive=lo_incl,
+            hi_inclusive=hi_incl,
+            residual=residual,
+        )
+    return None
+
+
+# Return type: (lo, lo_inclusive, hi, hi_inclusive, residual) | None
+_BoundsResult = tuple[object | None, bool, object | None, bool, Expr | None]
+
+
+def _extract_index_bounds(
+    predicate: Expr,
+    alias: str,
+    col: str,
+) -> _BoundsResult | None:
+    """Extract B-tree range bounds for column ``alias.col`` from ``predicate``.
+
+    Returns a 5-tuple ``(lo, lo_inclusive, hi, hi_inclusive, residual)``
+    when the predicate (or part of it) can be served by a range scan on
+    ``col``.  The ``residual`` is the remaining predicate that must still be
+    evaluated row-by-row after the index scan (may be ``None``).
+
+    Returns ``None`` when the predicate cannot be used for an index scan.
+    """
+
+    def is_our_col(expr: Expr) -> bool:
+        """True when *expr* is a Column reference to ``alias.col``."""
+        return isinstance(expr, Column) and expr.table == alias and expr.col == col
+
+    if isinstance(predicate, Between):
+        # col BETWEEN lo_lit AND hi_lit  →  closed range
+        if (
+            is_our_col(predicate.operand)
+            and isinstance(predicate.low, Literal)
+            and isinstance(predicate.high, Literal)
+        ):
+            return (predicate.low.value, True, predicate.high.value, True, None)
+
+    if isinstance(predicate, BinaryExpr):
+        op = predicate.op
+        lhs = predicate.left
+        rhs = predicate.right
+
+        # ---- Equality -------------------------------------------------------
+        if op == BinaryOp.EQ:
+            if is_our_col(lhs) and isinstance(rhs, Literal):
+                return (rhs.value, True, rhs.value, True, None)
+            if isinstance(lhs, Literal) and is_our_col(rhs):
+                return (lhs.value, True, lhs.value, True, None)
+
+        # ---- Simple range: col OP literal -----------------------------------
+        elif op == BinaryOp.GT:
+            if is_our_col(lhs) and isinstance(rhs, Literal):
+                return (rhs.value, False, None, True, None)
+            if isinstance(lhs, Literal) and is_our_col(rhs):
+                # literal > col  →  col < literal
+                return (None, True, lhs.value, False, None)
+
+        elif op == BinaryOp.GTE:
+            if is_our_col(lhs) and isinstance(rhs, Literal):
+                return (rhs.value, True, None, True, None)
+            if isinstance(lhs, Literal) and is_our_col(rhs):
+                # literal >= col  →  col <= literal
+                return (None, True, lhs.value, True, None)
+
+        elif op == BinaryOp.LT:
+            if is_our_col(lhs) and isinstance(rhs, Literal):
+                return (None, True, rhs.value, False, None)
+            if isinstance(lhs, Literal) and is_our_col(rhs):
+                # literal < col  →  col > literal
+                return (lhs.value, False, None, True, None)
+
+        elif op == BinaryOp.LTE:
+            if is_our_col(lhs) and isinstance(rhs, Literal):
+                return (None, True, rhs.value, True, None)
+            if isinstance(lhs, Literal) and is_our_col(rhs):
+                # literal <= col  →  col >= literal
+                return (lhs.value, True, None, True, None)
+
+        # ---- Compound AND: try both halves ----------------------------------
+        elif op == BinaryOp.AND:
+            left_bounds = _extract_index_bounds(lhs, alias, col)
+            if left_bounds is not None:
+                lo, lo_incl, hi, hi_incl, inner_res = left_bounds
+                residual = _combine_residuals(inner_res, rhs)
+                return (lo, lo_incl, hi, hi_incl, residual)
+            right_bounds = _extract_index_bounds(rhs, alias, col)
+            if right_bounds is not None:
+                lo, lo_incl, hi, hi_incl, inner_res = right_bounds
+                residual = _combine_residuals(inner_res, lhs)
+                return (lo, lo_incl, hi, hi_incl, residual)
+
+    return None
+
+
+def _combine_residuals(inner: Expr | None, outer: Expr) -> Expr | None:
+    """Combine *inner* residual (from a sub-extraction) with *outer* sibling.
+
+    When we extract bounds from one arm of an AND, the other arm becomes the
+    residual.  If that other arm itself had an inner residual (from deeper
+    nesting), we AND them together.
+
+    ``None`` means no residual — just return *outer* unchanged.
+    """
+    if inner is None:
+        return outer
+    return BinaryExpr(op=BinaryOp.AND, left=inner, right=outer)
 
 
 # Keep imports from being marked unused — these are re-exported for callers.

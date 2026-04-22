@@ -38,6 +38,7 @@ from sql_planner import (
     Except,
     Filter,
     Having,
+    IndexScan,
     Intersect,
     Join,
     LogicalPlan,
@@ -112,6 +113,10 @@ def _attach(p: LogicalPlan, limit: int) -> LogicalPlan:
             return Scan(
                 table=t, alias=a, required_columns=rc, scan_limit=new_limit
             )
+        case IndexScan():
+            # IndexScan already constrains which rows are returned via its lo/hi
+            # bounds — no need to further annotate with scan_limit.
+            return p
         case Project(input=inner, items=items):
             return Project(input=_attach(inner, limit), items=items)
         case Filter(input=inner, predicate=pred):

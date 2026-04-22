@@ -28,10 +28,13 @@ out into helpers so that this file reads like pseudocode.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 import sql_backend.errors as be
 from sql_backend.backend import Backend, TransactionHandle
+from sql_backend.errors import IndexAlreadyExists, IndexNotFound
+from sql_backend.index import IndexDef
 from sql_backend.row import RowIterator
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
@@ -46,10 +49,12 @@ from sql_codegen import (
     CloseScan,
     Coalesce,
     CommitTransaction,
+    CreateIndex,
     CreateTable,
     DeleteRows,
     Direction,
     DistinctResult,
+    DropIndex,
     DropTable,
     EmitColumn,
     EmitRow,
@@ -74,6 +79,7 @@ from sql_codegen import (
     LoadConst,
     LoadGroupKey,
     NullsOrder,
+    OpenIndexScan,
     OpenScan,
     Pop,
     Program,
@@ -103,6 +109,44 @@ from .errors import (
 from .operators import apply_binary, apply_unary, like_match
 from .result import QueryResult, _MutableResult
 from .scalar_functions import call as _call_scalar
+
+# --------------------------------------------------------------------------
+# Query telemetry — emitted after each SELECT scan when a listener is set.
+# --------------------------------------------------------------------------
+
+
+@dataclass
+class QueryEvent:
+    """Telemetry emitted after each SELECT scan.
+
+    Registered listeners receive one ``QueryEvent`` per ``execute()`` call
+    that performed at least one table or index scan.  ``duration_us`` is the
+    wall-clock time of the entire ``execute()`` call in microseconds.
+    """
+
+    table: str
+    filtered_columns: list[str]
+    rows_scanned: int
+    rows_returned: int
+    used_index: str | None
+    duration_us: int
+
+
+# Module-level event listener — None means events are suppressed.
+_event_listener: Callable[[QueryEvent], None] | None = None
+
+
+def set_event_listener(
+    listener: Callable[[QueryEvent], None] | None,
+) -> None:
+    """Register a callback to receive :class:`QueryEvent` after each SELECT scan.
+
+    Pass ``None`` to remove the listener.  The callback is called
+    synchronously before :func:`execute` returns — it must be fast.
+    """
+    global _event_listener
+    _event_listener = listener
+
 
 # --------------------------------------------------------------------------
 # Aggregate state — one of these lives in each slot of ``agg_table[key]``.
@@ -373,6 +417,15 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, DropTable):
         _do_drop_table(ins, st)
+        return
+    if isinstance(ins, CreateIndex):
+        _do_create_index(ins, st)
+        return
+    if isinstance(ins, DropIndex):
+        _do_drop_index(ins, st)
+        return
+    if isinstance(ins, OpenIndexScan):
+        _do_open_index_scan(ins, st)
         return
 
     # Set operations -------------------------------------------------------
@@ -877,6 +930,77 @@ def _do_drop_table(ins: DropTable, st: _VmState) -> None:
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     st.result.rows_affected = 0
+
+
+def _do_create_index(ins: CreateIndex, st: _VmState) -> None:
+    """Create a named index on the backend.
+
+    ``IndexDef`` wraps all the parameters the backend needs: name, table,
+    column list, and the ``unique`` flag. The ``auto`` flag is set to
+    ``False`` for user-created indexes (auto-indexes are created by the
+    backend itself when it detects a UNIQUE constraint).
+
+    If ``if_not_exists=True`` and the index already exists, the error is
+    silently suppressed — the SQL semantics of ``CREATE INDEX IF NOT EXISTS``
+    guarantee idempotence. Otherwise, ``IndexAlreadyExists`` propagates.
+    """
+    idx = IndexDef(
+        name=ins.name, table=ins.table, columns=list(ins.columns), unique=ins.unique, auto=False
+    )
+    try:
+        st.backend.create_index(idx)
+    except IndexAlreadyExists:
+        if not ins.if_not_exists:
+            raise
+    st.result.rows_affected = 0
+
+
+def _do_drop_index(ins: DropIndex, st: _VmState) -> None:
+    """Drop a named index from the backend.
+
+    The ``if_exists`` flag is forwarded directly to the backend: when
+    ``True``, a missing index is silently ignored; when ``False``, the
+    backend raises ``IndexNotFound`` which propagates to the caller.
+    """
+    try:
+        st.backend.drop_index(ins.name, if_exists=ins.if_exists)
+    except IndexNotFound:
+        raise
+    st.result.rows_affected = 0
+
+
+def _do_open_index_scan(ins: OpenIndexScan, st: _VmState) -> None:
+    """Open a cursor backed by an index range scan.
+
+    The VM asks the backend for the set of rowids that fall within the
+    requested range, then fetches the full rows for those rowids.  The
+    resulting ``RowIterator`` is stored in ``cursors[cursor_id]`` so that
+    the normal ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``
+    instructions work transparently — no special-casing needed downstream.
+
+    Single-column range: ``lo`` and ``hi`` are scalar ``SqlValue`` objects (or
+    ``None`` for unbounded).  They are wrapped in one-element lists before
+    being passed to ``scan_index``, which expects list-valued bounds to
+    support composite indexes.
+
+    Example::
+
+        OpenIndexScan(cursor_id=0, table="orders", index_name="idx_orders_ts",
+                      lo=1_000_000, hi=2_000_000,
+                      lo_inclusive=True, hi_inclusive=False)
+        # → backend.scan_index("idx_orders_ts", [1_000_000], [2_000_000],
+        #                        lo_inclusive=True, hi_inclusive=False)
+        # → rowids = [3, 7, 12, ...]
+        # → backend.scan_by_rowids("orders", rowids)  →  RowIterator
+    """
+    lo_list = [ins.lo] if ins.lo is not None else None
+    hi_list = [ins.hi] if ins.hi is not None else None
+    rowids = list(st.backend.scan_index(
+        ins.index_name, lo_list, hi_list,
+        lo_inclusive=ins.lo_inclusive, hi_inclusive=ins.hi_inclusive,
+    ))
+    row_iter = st.backend.scan_by_rowids(ins.table, rowids)
+    st.cursors[ins.cursor_id] = row_iter  # type: ignore[assignment]
 
 
 # --------------------------------------------------------------------------

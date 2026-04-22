@@ -14,7 +14,8 @@ keeps the user-facing predicates in a separate library layer.
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
+from dataclasses import dataclass
 
 from logic_engine import (
     Atom,
@@ -63,6 +64,7 @@ from logic_engine import (
 
 __all__ = [
     "add",
+    "all_differento",
     "argo",
     "atomico",
     "atomo",
@@ -76,7 +78,19 @@ __all__ = [
     "cuto",
     "dynamico",
     "div",
+    "fd_eqo",
+    "fd_geqo",
+    "fd_gto",
+    "fd_ino",
+    "fd_leqo",
+    "fd_lto",
+    "fd_addo",
+    "fd_mulo",
+    "fd_neqo",
+    "fd_subo",
     "failo",
+    "FiniteDomainConstraint",
+    "FiniteDomainStore",
     "findallo",
     "floordiv",
     "forallo",
@@ -88,6 +102,7 @@ __all__ = [
     "iftheno",
     "iso",
     "leqo",
+    "labelingo",
     "lto",
     "mod",
     "mul",
@@ -124,10 +139,31 @@ type NativeArgs = tuple[Term, ...]
 type NativeRunner = Callable[[Program, State, NativeArgs], Iterator[State]]
 type NumericValue = int | float
 type TermSortKey = tuple[object, ...]
+type FdOperator = str
+
+
+_MAX_FD_DOMAIN_SIZE = 10_000
+
+
+@dataclass(frozen=True, slots=True)
+class FiniteDomainConstraint:
+    """A residual finite-domain relation waiting for enough information."""
+
+    operator: FdOperator
+    terms: tuple[Term, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class FiniteDomainStore:
+    """Branch-local finite domains and residual integer constraints."""
+
+    domains: dict[LogicVar, frozenset[int]]
+    constraints: tuple[FiniteDomainConstraint, ...] = ()
 
 
 _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("abolisho", 2),
+    ("all_differento", 1),
     ("argo", 3),
     ("assertao", 1),
     ("assertzo", 1),
@@ -144,6 +180,16 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("current_predicateo", 2),
     ("cuto", 0),
     ("dynamico", 2),
+    ("fd_eqo", 2),
+    ("fd_geqo", 2),
+    ("fd_gto", 2),
+    ("fd_ino", 2),
+    ("fd_leqo", 2),
+    ("fd_lto", 2),
+    ("fd_addo", 3),
+    ("fd_mulo", 3),
+    ("fd_neqo", 2),
+    ("fd_subo", 3),
     ("failo", 0),
     ("findallo", 3),
     ("forallo", 2),
@@ -154,6 +200,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("ifthenelseo", 3),
     ("iftheno", 2),
     ("iso", 2),
+    ("labelingo", 1),
     ("leqo", 2),
     ("lto", 2),
     ("nonvaro", 1),
@@ -285,7 +332,516 @@ def _state_with_next_var_id(state: State, next_var_id: int) -> State:
         constraints=state.constraints,
         next_var_id=next_var_id,
         database=state.database,
+        fd_store=state.fd_store,
     )
+
+
+def _empty_fd_store() -> FiniteDomainStore:
+    """Return an empty finite-domain overlay."""
+
+    return FiniteDomainStore(domains={})
+
+
+def _fd_store(state: State) -> FiniteDomainStore:
+    """Read the branch-local finite-domain store from ``state``."""
+
+    if state.fd_store is None:
+        return _empty_fd_store()
+    if isinstance(state.fd_store, FiniteDomainStore):
+        return state.fd_store
+    msg = "State.fd_store contains an unsupported finite-domain store"
+    raise TypeError(msg)
+
+
+def _state_with_fd_store(state: State, store: FiniteDomainStore) -> State:
+    """Return ``state`` with a normalized finite-domain store attached."""
+
+    return State(
+        substitution=state.substitution,
+        constraints=state.constraints,
+        next_var_id=state.next_var_id,
+        database=state.database,
+        fd_store=store,
+    )
+
+
+def _integer_value(term_value: object) -> int | None:
+    """Return a concrete finite-domain integer, rejecting floats and bools."""
+
+    if isinstance(term_value, Number):
+        raw_value = term_value.value
+        if isinstance(raw_value, bool) or not isinstance(raw_value, int):
+            return None
+        return raw_value
+    if isinstance(term_value, bool):
+        return None
+    if isinstance(term_value, int):
+        return term_value
+    return None
+
+
+def _domain_from_items(items: Iterable[object]) -> frozenset[int]:
+    """Normalize a finite collection of integers into a checked domain."""
+
+    values: set[int] = set()
+    for item in items:
+        integer = _integer_value(item)
+        if integer is None:
+            msg = "finite domains may contain only integer values"
+            raise TypeError(msg)
+        values.add(integer)
+        if len(values) > _MAX_FD_DOMAIN_SIZE:
+            msg = "finite domain exceeds the maximum supported size"
+            raise ValueError(msg)
+    return frozenset(values)
+
+
+def _range_domain(low: int, high: int) -> frozenset[int]:
+    """Build an inclusive finite integer range domain."""
+
+    if high < low:
+        return frozenset()
+    if high - low + 1 > _MAX_FD_DOMAIN_SIZE:
+        msg = "finite domain range exceeds the maximum supported size"
+        raise ValueError(msg)
+    return frozenset(range(low, high + 1))
+
+
+def _domain_values(domain: object) -> frozenset[int]:
+    """Normalize a Python or Prolog-shaped finite-domain description."""
+
+    integer = _integer_value(domain)
+    if integer is not None:
+        return frozenset({integer})
+    if isinstance(domain, range):
+        if len(domain) > _MAX_FD_DOMAIN_SIZE:
+            msg = "finite domain range exceeds the maximum supported size"
+            raise ValueError(msg)
+        return frozenset(domain)
+    if isinstance(domain, list | tuple | set | frozenset):
+        return _domain_from_items(domain)
+    if isinstance(domain, Atom | Compound):
+        items = _proper_list_items(domain)
+        if items is not None:
+            return _domain_from_items(items)
+    if (
+        isinstance(domain, Compound)
+        and domain.functor.namespace is None
+        and domain.functor.name == ".."
+        and len(domain.args) == 2
+    ):
+        low = _integer_value(domain.args[0])
+        high = _integer_value(domain.args[1])
+        if low is None or high is None:
+            msg = "finite range bounds must be integer values"
+            raise TypeError(msg)
+        return _range_domain(low, high)
+
+    msg = f"cannot use {type(domain).__name__} as a finite domain"
+    raise TypeError(msg)
+
+
+def _fd_compare(operator: FdOperator, left: int, right: int) -> bool:
+    """Evaluate one finite-domain binary relation over concrete integers."""
+
+    if operator == "eq":
+        return left == right
+    if operator == "neq":
+        return left != right
+    if operator == "lt":
+        return left < right
+    if operator == "le":
+        return left <= right
+    if operator == "gt":
+        return left > right
+    if operator == "ge":
+        return left >= right
+    msg = f"unknown finite-domain operator {operator}"
+    raise ValueError(msg)
+
+
+def _fd_tuple_satisfies(
+    constraint: FiniteDomainConstraint,
+    values: tuple[int, ...],
+) -> bool:
+    """Evaluate one concrete residual finite-domain constraint.
+
+    The store keeps all pending finite-domain facts in one shape: an operator
+    name and the terms it talks about. Concrete evaluation is deliberately
+    small and obvious so each public predicate has a crisp mathematical meaning.
+    """
+
+    if constraint.operator in {"neq", "lt", "le", "gt", "ge"}:
+        left, right = values
+        return _fd_compare(constraint.operator, left, right)
+    if constraint.operator == "add":
+        left, right, result = values
+        return left + right == result
+    if constraint.operator == "sub":
+        left, right, result = values
+        return left - right == result
+    if constraint.operator == "mul":
+        left, right, result = values
+        return left * right == result
+    if constraint.operator == "all_different":
+        return len(set(values)) == len(values)
+    msg = f"unknown finite-domain constraint {constraint.operator}"
+    raise ValueError(msg)
+
+
+def _reified_fd_value(term_value: Term, state: State) -> LogicVar | int | None:
+    """Read a term as either an open variable or a concrete integer."""
+
+    reified_value = _reified(term_value, state)
+    if isinstance(reified_value, LogicVar):
+        return reified_value
+    return _integer_value(reified_value)
+
+
+def _normalize_fd_domains(
+    store: FiniteDomainStore,
+    state: State,
+) -> dict[LogicVar, frozenset[int]] | None:
+    """Merge domains for aliased variables and reject incompatible bindings."""
+
+    domains: dict[LogicVar, frozenset[int]] = {}
+    for variable, domain in store.domains.items():
+        reified_value = _reified(variable, state)
+        if isinstance(reified_value, LogicVar):
+            existing = domains.get(reified_value)
+            domains[reified_value] = domain if existing is None else existing & domain
+            if not domains[reified_value]:
+                return None
+            continue
+
+        integer = _integer_value(reified_value)
+        if integer is None or integer not in domain:
+            return None
+
+    return domains
+
+
+def _domain_for_fd_value(
+    value: LogicVar | int,
+    domains: dict[LogicVar, frozenset[int]],
+) -> frozenset[int] | None:
+    """Return a finite domain for a concrete value or known FD variable."""
+
+    if isinstance(value, LogicVar):
+        return domains.get(value)
+    return frozenset({value})
+
+
+def _constraint_values(
+    constraint: FiniteDomainConstraint,
+    state: State,
+) -> tuple[LogicVar | int, ...] | None:
+    """Read all constraint terms as open FD variables or concrete integers."""
+
+    values: list[LogicVar | int] = []
+    for term_value in constraint.terms:
+        value = _reified_fd_value(term_value, state)
+        if value is None:
+            return None
+        values.append(value)
+    return tuple(values)
+
+
+def _constraint_domains(
+    values: tuple[LogicVar | int, ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[frozenset[int] | None, ...]:
+    """Return concrete singleton domains or known finite variable domains."""
+
+    return tuple(_domain_for_fd_value(value, domains) for value in values)
+
+
+def _revise_binary_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Apply arc-consistency pruning for a binary comparison constraint."""
+
+    left_value, right_value = values
+    left_domain, right_domain = value_domains
+
+    allowed_left = frozenset(
+        left
+        for left in left_domain
+        if any(_fd_compare(constraint.operator, left, right) for right in right_domain)
+    )
+    allowed_right = frozenset(
+        right
+        for right in right_domain
+        if any(_fd_compare(constraint.operator, left, right) for left in left_domain)
+    )
+    if not allowed_left or not allowed_right:
+        return None, False
+
+    changed = False
+    updated = dict(domains)
+    if isinstance(left_value, LogicVar) and allowed_left != left_domain:
+        updated[left_value] = allowed_left
+        changed = True
+    if isinstance(right_value, LogicVar) and allowed_right != right_domain:
+        updated[right_value] = allowed_right
+        changed = True
+
+    return updated, changed
+
+
+def _fd_arithmetic_holds(
+    operator: FdOperator,
+    left: int,
+    right: int,
+    result: int,
+) -> bool:
+    """Evaluate one ternary finite-domain arithmetic relation."""
+
+    if operator == "add":
+        return left + right == result
+    if operator == "sub":
+        return left - right == result
+    if operator == "mul":
+        return left * right == result
+    msg = f"unknown finite-domain arithmetic operator {operator}"
+    raise ValueError(msg)
+
+
+def _has_arithmetic_support(
+    operator: FdOperator,
+    index: int,
+    candidate: int,
+    value_domains: tuple[frozenset[int], frozenset[int], frozenset[int]],
+) -> bool:
+    """Return True when ``candidate`` can appear in a satisfying triple."""
+
+    left_domain, right_domain, result_domain = value_domains
+    if operator == "add":
+        if index == 0:
+            return any(candidate + right in result_domain for right in right_domain)
+        if index == 1:
+            return any(left + candidate in result_domain for left in left_domain)
+        return any(candidate - left in right_domain for left in left_domain)
+
+    if operator == "sub":
+        if index == 0:
+            return any(candidate - right in result_domain for right in right_domain)
+        if index == 1:
+            return any(left - candidate in result_domain for left in left_domain)
+        return any(left - candidate in right_domain for left in left_domain)
+
+    if operator == "mul":
+        if index == 0:
+            if candidate == 0:
+                return 0 in result_domain and bool(right_domain)
+            return any(
+                result % candidate == 0 and result // candidate in right_domain
+                for result in result_domain
+            )
+        if index == 1:
+            if candidate == 0:
+                return 0 in result_domain and bool(left_domain)
+            return any(
+                result % candidate == 0 and result // candidate in left_domain
+                for result in result_domain
+            )
+        return any(
+            candidate % left == 0 and candidate // left in right_domain
+            for left in left_domain
+            if left != 0
+        ) or (candidate == 0 and (0 in left_domain or 0 in right_domain))
+
+    msg = f"unknown finite-domain arithmetic operator {operator}"
+    raise ValueError(msg)
+
+
+def _revise_arithmetic_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int], ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Prune ternary arithmetic domains to values with tuple support."""
+
+    arithmetic_domains = (
+        value_domains[0],
+        value_domains[1],
+        value_domains[2],
+    )
+    updated = dict(domains)
+    changed = False
+    for index, value in enumerate(values):
+        if not isinstance(value, LogicVar):
+            continue
+        current_domain = arithmetic_domains[index]
+        allowed = frozenset(
+            candidate
+            for candidate in current_domain
+            if _has_arithmetic_support(
+                constraint.operator,
+                index,
+                candidate,
+                arithmetic_domains,
+            )
+        )
+        if not allowed:
+            return None, False
+        if allowed != current_domain:
+            updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
+def _revise_all_different_domains(
+    values: tuple[LogicVar | int, ...],
+    value_domains: tuple[frozenset[int] | None, ...],
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Propagate simple singleton pruning for ``all_differento``.
+
+    This is intentionally the small, trustworthy version of all-different. It
+    rejects duplicate concrete assignments and removes values that are already
+    forced elsewhere. More advanced Hall-set pruning can layer on later.
+    """
+
+    concrete_seen: set[int] = set()
+    singleton_by_owner: dict[LogicVar | int, int] = {}
+    for value, domain in zip(values, value_domains, strict=True):
+        if isinstance(value, int):
+            if value in concrete_seen:
+                return None, False
+            concrete_seen.add(value)
+            singleton_by_owner[value] = value
+            continue
+        if domain is None:
+            continue
+        if len(domain) == 1:
+            (singleton,) = domain
+            if singleton in singleton_by_owner.values():
+                return None, False
+            singleton_by_owner[value] = singleton
+
+    forced_values = set(singleton_by_owner.values())
+    updated = dict(domains)
+    changed = False
+    for value, domain in zip(values, value_domains, strict=True):
+        if not isinstance(value, LogicVar) or domain is None or len(domain) == 1:
+            continue
+        allowed = frozenset(
+            candidate for candidate in domain if candidate not in forced_values
+        )
+        if not allowed:
+            return None, False
+        if allowed != domain:
+            updated[value] = allowed
+            changed = True
+
+    return updated, changed
+
+
+def _revise_constraint_domains(
+    constraint: FiniteDomainConstraint,
+    state: State,
+    domains: dict[LogicVar, frozenset[int]],
+) -> tuple[dict[LogicVar, frozenset[int]] | None, bool]:
+    """Apply one round of pruning for a residual finite-domain constraint."""
+
+    values = _constraint_values(constraint, state)
+    if values is None:
+        return None, False
+
+    value_domains = _constraint_domains(values, domains)
+    if constraint.operator == "all_different":
+        return _revise_all_different_domains(values, value_domains, domains)
+
+    if any(domain is None for domain in value_domains):
+        return domains, False
+
+    known_domains = tuple(
+        domain for domain in value_domains if domain is not None
+    )
+    if constraint.operator in {"neq", "lt", "le", "gt", "ge"}:
+        return _revise_binary_constraint_domains(
+            constraint,
+            values,
+            known_domains,
+            domains,
+        )
+    if constraint.operator in {"add", "sub", "mul"}:
+        return _revise_arithmetic_constraint_domains(
+            constraint,
+            values,
+            known_domains,
+            domains,
+        )
+
+    msg = f"unknown finite-domain constraint {constraint.operator}"
+    raise ValueError(msg)
+
+
+def _concrete_constraint_values(
+    values: tuple[LogicVar | int, ...],
+) -> tuple[int, ...] | None:
+    """Return concrete integer values only when every constraint term is bound."""
+
+    if all(isinstance(value, int) for value in values):
+        return tuple(value for value in values if isinstance(value, int))
+    return None
+
+
+def _normalize_fd_store(
+    store: FiniteDomainStore,
+    state: State,
+) -> FiniteDomainStore | None:
+    """Re-check FD domains and residual constraints after state changes."""
+
+    domains = _normalize_fd_domains(store, state)
+    if domains is None:
+        return None
+
+    kept_constraints: list[FiniteDomainConstraint] = []
+    for constraint in store.constraints:
+        values = _constraint_values(constraint, state)
+        if values is None:
+            return None
+        concrete_values = _concrete_constraint_values(values)
+        if concrete_values is not None:
+            if not _fd_tuple_satisfies(constraint, concrete_values):
+                return None
+            continue
+        kept_constraints.append(constraint)
+
+    changed = True
+    while changed:
+        changed = False
+        for constraint in kept_constraints:
+            revised, revised_changed = _revise_constraint_domains(
+                constraint,
+                state,
+                domains,
+            )
+            if revised is None:
+                return None
+            domains = revised
+            changed = changed or revised_changed
+
+    return FiniteDomainStore(
+        domains=dict(domains),
+        constraints=tuple(kept_constraints),
+    )
+
+
+def _normalize_fd_state(state: State) -> State | None:
+    """Return ``state`` with its FD store reconciled against substitutions."""
+
+    store = _normalize_fd_store(_fd_store(state), state)
+    if store is None:
+        return None
+    return _state_with_fd_store(state, store)
 
 
 def _succeed_if(condition: bool, state: State) -> Iterator[State]:
@@ -440,6 +996,228 @@ def cuto() -> GoalExpr:
     """Commit to choices made so far in the current search-control frame."""
 
     return cut()
+
+
+def fd_ino(target: object, domain: object) -> GoalExpr:
+    """Constrain ``target`` to a finite integer domain.
+
+    Domains are intentionally concrete in the foundation layer: callers can use
+    Python ranges/iterables, a single integer, a proper logic list, or a
+    ``..(Low, High)`` compound term. The store narrows immediately, and normal
+    backtracking restores older domain snapshots.
+    """
+
+    domain_values = _domain_values(domain)
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target_term,) = args
+        target_value = _reified_fd_value(target_term, state)
+        if target_value is None:
+            return
+        if isinstance(target_value, int):
+            if target_value in domain_values:
+                normalized_state = _normalize_fd_state(state)
+                if normalized_state is not None:
+                    yield normalized_state
+            return
+
+        store = _fd_store(state)
+        domains = dict(store.domains)
+        existing_domain = domains.get(target_value)
+        narrowed_domain = (
+            domain_values
+            if existing_domain is None
+            else existing_domain & domain_values
+        )
+        if not narrowed_domain:
+            return
+
+        updated_store = FiniteDomainStore(
+            domains={**domains, target_value: narrowed_domain},
+            constraints=store.constraints,
+        )
+        normalized_store = _normalize_fd_store(updated_store, state)
+        if normalized_store is not None:
+            yield _state_with_fd_store(state, normalized_store)
+
+    return native_goal(run, target)
+
+
+def fd_eqo(left: object, right: object) -> GoalExpr:
+    """Constrain two finite-domain terms to equal integer values."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        for unified_state in solve_from(
+            program_value,
+            eq(left_term, right_term),
+            state,
+        ):
+            normalized_state = _normalize_fd_state(unified_state)
+            if normalized_state is not None:
+                yield normalized_state
+
+    return native_goal(run, left, right)
+
+
+def _fd_constrainto(operator: FdOperator, *terms_value: object) -> GoalExpr:
+    """Create a residual finite-domain constraint goal."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        store = _fd_store(state)
+        updated_store = FiniteDomainStore(
+            domains=dict(store.domains),
+            constraints=(
+                *store.constraints,
+                FiniteDomainConstraint(operator, args),
+            ),
+        )
+        normalized_store = _normalize_fd_store(updated_store, state)
+        if normalized_store is not None:
+            yield _state_with_fd_store(state, normalized_store)
+
+    return native_goal(run, *terms_value)
+
+
+def fd_neqo(left: object, right: object) -> GoalExpr:
+    """Constrain two finite-domain terms to different integer values."""
+
+    return _fd_constrainto("neq", left, right)
+
+
+def fd_lto(left: object, right: object) -> GoalExpr:
+    """Constrain ``left`` to be less than ``right``."""
+
+    return _fd_constrainto("lt", left, right)
+
+
+def fd_leqo(left: object, right: object) -> GoalExpr:
+    """Constrain ``left`` to be less than or equal to ``right``."""
+
+    return _fd_constrainto("le", left, right)
+
+
+def fd_gto(left: object, right: object) -> GoalExpr:
+    """Constrain ``left`` to be greater than ``right``."""
+
+    return _fd_constrainto("gt", left, right)
+
+
+def fd_geqo(left: object, right: object) -> GoalExpr:
+    """Constrain ``left`` to be greater than or equal to ``right``."""
+
+    return _fd_constrainto("ge", left, right)
+
+
+def fd_addo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain three finite-domain terms so ``left + right == result``."""
+
+    return _fd_constrainto("add", left, right, result)
+
+
+def fd_subo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain three finite-domain terms so ``left - right == result``."""
+
+    return _fd_constrainto("sub", left, right, result)
+
+
+def fd_mulo(left: object, right: object, result: object) -> GoalExpr:
+    """Constrain three finite-domain terms so ``left * right == result``."""
+
+    return _fd_constrainto("mul", left, right, result)
+
+
+def _all_different_terms_goal(terms_value: tuple[Term, ...]) -> GoalExpr:
+    """Create an all-different goal for already materialized terms."""
+
+    return _fd_constrainto("all_different", *terms_value)
+
+
+def all_differento(vars_value: object) -> GoalExpr:
+    """Constrain every finite-domain term in ``vars_value`` to be distinct."""
+
+    if isinstance(vars_value, list | tuple):
+        return _all_different_terms_goal(tuple(vars_value))
+
+    def run_logic_list(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        (vars_term,) = args
+        items = _proper_list_items(_reified(vars_term, state))
+        if items is None:
+            return
+        yield from solve_from(
+            program_value,
+            _all_different_terms_goal(tuple(items)),
+            state,
+        )
+
+    return native_goal(run_logic_list, vars_value)
+
+
+def _label_fd_terms(
+    program_value: Program,
+    state: State,
+    terms: tuple[Term, ...],
+    index: int = 0,
+) -> Iterator[State]:
+    """Enumerate concrete values for the requested FD variables."""
+
+    normalized_state = _normalize_fd_state(state)
+    if normalized_state is None:
+        return
+    if index == len(terms):
+        yield normalized_state
+        return
+
+    value = _reified_fd_value(terms[index], normalized_state)
+    if value is None:
+        return
+    if isinstance(value, int):
+        yield from _label_fd_terms(program_value, normalized_state, terms, index + 1)
+        return
+
+    store = _fd_store(normalized_state)
+    domain = store.domains.get(value)
+    if domain is None:
+        return
+
+    for choice in sorted(domain):
+        for assigned_state in solve_from(
+            program_value,
+            eq(value, num(choice)),
+            normalized_state,
+        ):
+            yield from _label_fd_terms(program_value, assigned_state, terms, index + 1)
+
+
+def labelingo(vars_value: object) -> GoalExpr:
+    """Enumerate concrete assignments for finite-domain variables."""
+
+    if isinstance(vars_value, list | tuple):
+        def run_sequence(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            yield from _label_fd_terms(program_value, state, args)
+
+        return native_goal(run_sequence, *vars_value)
+
+    def run_logic_list(
+        program_value: Program,
+        state: State,
+        args: NativeArgs,
+    ) -> Iterator[State]:
+        (vars_term,) = args
+        items = _proper_list_items(_reified(vars_term, state))
+        if items is None:
+            return
+        yield from _label_fd_terms(program_value, state, tuple(items))
+
+    return native_goal(run_logic_list, vars_value)
 
 
 def iftheno(condition: object, then_goal: object) -> GoalExpr:

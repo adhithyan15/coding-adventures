@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-logic-engine"
-version = "0.9.0"
-description = "Logic programming engine: relations, clauses, callable terms, dynamic runtime predicates, cut, resolution, and disequality"
+version = "0.10.0"
+description = "Logic programming engine: relations, clauses, callable terms, dynamic runtime predicates, finite-domain state, cut, resolution, and disequality"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
-dependencies = ["coding-adventures-logic-core>=0.3.0"]
+dependencies = ["coding-adventures-logic-core>=0.4.0"]
 keywords = ["logic-programming", "prolog", "resolution", "backtracking", "education"]
 classifiers = [
     "Development Status :: 3 - Alpha",

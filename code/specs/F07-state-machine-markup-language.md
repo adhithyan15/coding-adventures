@@ -42,6 +42,7 @@ state-machine                  -> executable automata + StateMachineDefinition
 state-machine-markup-serializer -> StateMachineDefinition -> .states.toml
 state-machine-markup-deserializer -> .states.toml -> StateMachineDefinition
 state-machine-markup-json-serializer -> StateMachineDefinition -> .states.json
+state-machine-markup-json-deserializer -> .states.json -> StateMachineDefinition
 state-machine-source-compiler  -> StateMachineDefinition -> static source
 ```
 
@@ -407,10 +408,17 @@ fields as the TOML serializer:
 
 The JSON serializer must be deterministic and dependency-light. A hand-written
 writer is acceptable for the phase 1 subset because it only emits strings,
-booleans, arrays, and objects from trusted typed definitions. A future JSON
-deserializer is a separate trust boundary and must apply its own source-size,
-nesting, array-length, and validation limits before constructing a
-`StateMachineDefinition`.
+booleans, arrays, and objects from trusted typed definitions.
+
+The JSON deserializer is a separate trust boundary. It must reject unknown
+fields, duplicate object keys, numbers, oversized sources, excessive nesting,
+oversized arrays, malformed unicode escapes, and non-phase-1 value shapes before
+constructing a `StateMachineDefinition`. It then runs the same semantic
+definition validation used by TOML input, including state references, alphabet
+membership, stack alphabet membership, DFA determinism, PDA stack-pop rules, and
+unsupported-kind rejection. JSON `null` is accepted only as the transition `on`
+value that maps to typed epsilon; a string event named `"epsilon"` remains a
+normal alphabet symbol.
 
 ## Actions And Guards
 
@@ -667,13 +675,15 @@ runtime deserialization package.
    serializer/deserializer round trips can return to runnable machines.
 8. Add a Rust `state-machine-markup-json-serializer` package for deterministic
    `.states.json` output.
-9. Add modal round-tripping through definitions once modal definitions can
+9. Add a Rust `state-machine-markup-json-deserializer` package for bounded
+   `.states.json` input and typed-definition validation.
+10. Add modal round-tripping through definitions once modal definitions can
    represent child-machine references and mode transitions.
-10. Add SCXML core import/export packages for deterministic event machines.
-11. Keep DOT export as visualization-only output.
-12. Add the build-time source compiler from
+11. Add SCXML core import/export packages for deterministic event machines.
+12. Keep DOT export as visualization-only output.
+13. Add the build-time source compiler from
    `F09-state-machine-source-compiler.md`.
-13. Build tokenizer profiles from `F08` on top of this definition model.
+14. Build tokenizer profiles from `F08` on top of this definition model.
 
 ## Test Strategy
 

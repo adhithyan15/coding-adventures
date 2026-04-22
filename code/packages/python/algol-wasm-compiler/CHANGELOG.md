@@ -25,6 +25,11 @@ All notable changes to this package will be documented in this file.
 - Executed read-only expression thunks that read integer arrays, including
   Jensen's-device expressions and bounds failures propagated through the caller
   unwind path.
+- Executed read-only expression thunks that call integer procedures, including
+  nested by-name descriptor allocation and callee failure propagation through
+  the caller's by-name formal read.
+- Added a consolidated integer by-name acceptance test covering scalar,
+  array-element, expression, nested procedure, and Jensen's-device behavior.
 
 ## [0.1.0] - 2026-04-20
 

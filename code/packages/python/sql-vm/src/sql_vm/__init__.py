@@ -33,7 +33,7 @@ from .errors import (
 )
 from .result import QueryResult
 from .scalar_functions import call as call_scalar
-from .vm import execute
+from .vm import QueryEvent, execute, set_event_listener
 
 __all__ = [
     "BackendError",
@@ -42,6 +42,7 @@ __all__ = [
     "DivisionByZero",
     "InternalError",
     "InvalidLabel",
+    "QueryEvent",
     "QueryResult",
     "StackUnderflow",
     "TableAlreadyExists",
@@ -53,4 +54,5 @@ __all__ = [
     "WrongNumberOfArguments",
     "call_scalar",
     "execute",
+    "set_event_listener",
 ]

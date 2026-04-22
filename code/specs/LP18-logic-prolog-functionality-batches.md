@@ -62,13 +62,16 @@ LP17 clause introspection builtins
 LP18 Batch A metaprogramming completion
 LP18 Batch B dynamic runtime database
 LP18 Batch C search control and real cut
+LP18 Batch D1 CLP(FD) foundation
+LP18 Batch D2/D3 CLP(FD) arithmetic and all-different
 PR00 Prolog lexer
 ```
 
 Known future-extension items that still need implementation:
 
 - soft-cut variants if a concrete API need emerges
-- CLP(FD)-style finite-domain constraints
+- advanced CLP(FD) propagation such as division, reified constraints, and
+  Hall-set global constraint pruning
 
 ## Batch Plan
 
@@ -238,7 +241,7 @@ code/packages/python/logic-engine
 code/packages/python/logic-builtins
 ```
 
-Features:
+Track features:
 
 - finite-domain variables and domain stores
 - domain constraints such as membership, equality, disequality, ordering, and
@@ -255,10 +258,10 @@ Why this is not bundled with A, B, or C:
 - useful examples, like Sudoku or scheduling, need a broader surface than one
   or two predicates
 
-CLP(FD) can still be delivered in a few sub-batches:
+CLP(FD) is being delivered in a few sub-batches:
 
-- D1: finite domains, domain narrowing, and labeling
-- D2: arithmetic and ordering constraints
+- D1: finite domains, domain narrowing, ordering constraints, and labeling
+- D2: arithmetic expression constraints
 - D3: global constraints such as `all_differento`
 - D4: real-world examples and performance tuning
 
@@ -426,7 +429,11 @@ CLP(FD) should extend the solver state with a finite-domain store. Domain
 narrowing should occur before enumeration whenever possible, and labeling
 should be the explicit bridge from constraints to concrete answers.
 
-Initial predicates:
+Batch D is intentionally split into implementation slices. The foundation PR
+should establish a branch-local finite-domain store and the integer relations
+that are useful without arithmetic expression propagation.
+
+Foundation predicates:
 
 ```python
 fd_ino(var, domain)
@@ -436,15 +443,66 @@ fd_lto(left, right)
 fd_leqo(left, right)
 fd_gto(left, right)
 fd_geqo(left, right)
+labelingo(vars)
+```
+
+D2/D3 predicates:
+
+```python
 fd_addo(left, right, result)
 fd_subo(left, right, result)
 fd_mulo(left, right, result)
-labelingo(vars)
 all_differento(vars)
 ```
 
-The first CLP(FD) batch should prefer correctness and clear semantics over
-advanced propagation performance.
+D2/D3 should continue to prefer correctness and clear semantics over advanced
+propagation performance.
+
+Foundation implementation shape:
+
+- `State` grows a branch-local `fd_store` extension slot alongside the dynamic
+  database slot, and all solver state-copying helpers must preserve it.
+- The FD store maps open logic variables to finite integer domain sets and
+  keeps residual binary constraints for variables that are not labeled yet.
+- FD predicates narrow domains immediately when possible. If both sides are
+  concrete integers, they behave as deterministic checks. If one or both sides
+  are open variables, they retain enough residual constraint state for later
+  narrowing and labeling.
+- `labelingo(vars)` is the bridge from constraints to concrete answers. It
+  enumerates the current finite domains in deterministic ascending order,
+  commits each assignment through normal unification, and re-checks the FD
+  store after every binding.
+- Domains in the Python API may be supplied as a `range`, an iterable of
+  integers, a single integer, a numeric term, a proper logic list of integer
+  terms, or a `..(Low, High)` compound term.
+
+Explicit non-goals for the foundation PR:
+
+- no arithmetic FD propagation yet (`fd_addo`, `fd_subo`, `fd_mulo`)
+- no global constraints yet (`all_differento`)
+- no infinite domains; every domain must be finite before labeling
+
+Arithmetic and global-constraint implementation shape:
+
+- finite-domain residual constraints use a generalized `operator + terms`
+  representation instead of the D1 binary-only shape
+- `fd_addo(left, right, result)` enforces `left + right = result`
+- `fd_subo(left, right, result)` enforces `left - right = result`
+- `fd_mulo(left, right, result)` enforces `left * right = result`
+- arithmetic constraints prune every known finite-domain variable to values
+  that participate in at least one satisfying tuple
+- arithmetic constraints behave as deterministic checks when all terms are
+  concrete integers
+- `all_differento(vars)` accepts either a Python sequence of terms or a proper
+  logic list and keeps the terms pairwise distinct
+- `all_differento` should fail immediately on duplicate concrete assignments
+  and should remove singleton assignments from neighboring finite domains
+
+D2/D3 non-goals:
+
+- no division or modulus CLP(FD) constraints yet
+- no reified CLP(FD) constraints yet
+- no Hall-set or matching-based `all_differento` pruning yet
 
 ## PR Sizing Recommendation
 
@@ -454,7 +512,9 @@ Use this implementation sequence:
 PR 1: Batch A - metaprogramming completion
 PR 2: Batch B - dynamic runtime database
 PR 3: Batch C - real cut and search control
-PR 4+: Batch D - CLP(FD) foundation and follow-up constraint batches
+PR 4: Batch D1 - CLP(FD) foundation
+PR 5: Batch D2/D3 - arithmetic propagation and all-different
+PR 6+: Batch D4 - larger examples and performance tuning
 ```
 
 This is the fewest practical set of large PRs without forcing unrelated solver
@@ -484,6 +544,8 @@ Batch-specific tests:
 - Batch C: cut does not behave like a global stop
 - Batch D: finite-domain constraints narrow domains before labeling
 - Batch D: labeling enumerates only assignments that satisfy all constraints
+- Batch D2/D3: arithmetic constraints prune domains before labeling
+- Batch D2/D3: `all_differento` solves a small Latin-square-style problem
 
 ## Security and Robustness Notes
 

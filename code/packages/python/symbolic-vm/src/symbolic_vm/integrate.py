@@ -1,18 +1,24 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–8).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–10).
 
 The handler tries two routes, in order:
 
-1. **Rational-function route (Phases 2c–2e)** — if the integrand is a
+1. **Rational-function route (Phases 2c–2f, 9–10)** — if the integrand is a
    rational function of ``x`` over Q, split off the polynomial part,
    run Hermite reduction, and produce the closed-form output:
 
    - Phase 2c: Hermite rational part (always closed-form).
-   - Phase 2d: Rothstein–Trager log sum (when all log coefficients ∈ Q).
+   - Phase 2d: Rothstein–Trager log sum (when all log coefficients ∈ Q,
+     and degree of denominator < 6).
    - Phase 2e: Arctan formula for an irreducible quadratic log part
      (when RT returns None and deg(log_den) == 2, no rational roots).
    - Phase 2f: Mixed partial-fraction split (L·Q denominator) when 2e
      returns None: separates into linear-factors piece (→ RT) and single
      irreducible-quadratic piece (→ arctan).
+   - Phase 9: Two-distinct-irreducible-quadratic denominator — biquadratic
+     factoring + partial fractions, each piece delegated to Phase 2e.
+   - Phase 10: Generalized partial fractions — three distinct irreducible
+     quadratics (Q₁·Q₂·Q₃) or any linear factors × two quadratics
+     (Lᵐ·Q₁·Q₂). Uses a D×D partial-fraction system solved over Q.
    - Otherwise: unevaluated ``Integrate`` for the residual log part.
 
 2. **Phase 1 route** — the "reverse derivative table". Covers linear
@@ -45,7 +51,9 @@ What this phase can't do (yet)
 - Rational × transcendental (e.g. ``(1/x)·eˣ``).
 - Products of two transcendentals (e.g. ``exp(x)·log(x)``).
 - Irreducible denominators of degree > 2 (e.g. ``1/(x³+x+1)``).
-- Mixed denominators with both linear and quadratic irreducible factors.
+- Denominators with four or more distinct irreducible quadratic factors.
+- Denominators of degree > 6 (general multi-factor case).
+- Irrational factorizations (e.g. ``x⁴+1`` over Q(√2) only).
 
 Anything we can't integrate comes back as ``Integrate(f, x)`` unchanged,
 exactly as ``D`` does for unknown heads. The CAS stays consistent — it
@@ -63,10 +71,13 @@ from fractions import Fraction
 from polynomial import (
     Polynomial,
     divmod_poly,
+    multiply,
     normalize,
+    rational_roots,
 )
 from symbolic_ir import (
     ADD,
+    ATAN,
     COS,
     DIV,
     EXP,
@@ -188,21 +199,40 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
     rt_pairs = None
     at_ir = None
     mixed_ir = None
+    multi_ir = None
+    general_ir = None
     if has_log:
-        rt_pairs = rothstein_trager(hermite_log[0], hermite_log[1])
+        # Phase 2d: Rothstein–Trager.
+        # Guard: degree ≥ 6 causes Sylvester-matrix coefficient explosion
+        # (measured: 26 ks for three-quadratic denominator). Phase 10
+        # handles those cases; skip RT to avoid the hang.
+        den_n = normalize(hermite_log[1])
+        if len(den_n) - 1 < 6:
+            rt_pairs = rothstein_trager(hermite_log[0], hermite_log[1])
         if rt_pairs is None:
             at_ir = _try_arctan_integral(hermite_log[0], hermite_log[1], x)
         if rt_pairs is None and at_ir is None:
             mixed_ir = mixed_integral(hermite_log[0], hermite_log[1], x)
+        # Phase 9: two distinct irreducible quadratic factors.
+        if rt_pairs is None and at_ir is None and mixed_ir is None:
+            multi_ir = _try_multi_quad_integral(
+                hermite_log[0], hermite_log[1], x
+            )
+        # Phase 10: three quadratics, or linear factors × two quadratics.
+        if rt_pairs is None and at_ir is None and mixed_ir is None and multi_ir is None:
+            general_ir = _try_general_rational_integral(
+                hermite_log[0], hermite_log[1], x
+            )
 
     # "Made progress" = we extracted something whose closed form Phase
     # 1 couldn't produce. Without a polynomial part, a Hermite
-    # reduction, an RT log sum, an arctan result, or a mixed result,
-    # the output would just echo the unevaluated input — return None
-    # so the handler can fall through to Phase 1 or leave the integral
-    # unevaluated.
+    # reduction, an RT log sum, an arctan result, a mixed result, a
+    # multi-quadratic result, or a general Phase 10 result, the output
+    # would just echo the unevaluated input — return None so the handler
+    # can fall through to Phase 1 or leave the integral unevaluated.
     if not (has_poly or has_rat or rt_pairs is not None
-            or at_ir is not None or mixed_ir is not None):
+            or at_ir is not None or mixed_ir is not None
+            or multi_ir is not None or general_ir is not None):
         return None
 
     pieces: list[IRNode] = []
@@ -227,6 +257,10 @@ def _integrate_rational(f: IRNode, x: IRSymbol) -> IRNode | None:
             pieces.append(at_ir)
         elif mixed_ir is not None:
             pieces.append(mixed_ir)
+        elif multi_ir is not None:
+            pieces.append(multi_ir)
+        elif general_ir is not None:
+            pieces.append(general_ir)
         else:
             integrand = _rational_to_ir(hermite_log[0], hermite_log[1], x)
             pieces.append(IRApply(INTEGRATE, (integrand, x)))
@@ -488,11 +522,11 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 ),
             )
 
-    # --- Phase 3a/3b/3c + Phase 5a: elementary function of linear arg --
+    # --- Phase 3a/3b/3c + Phase 5a + Phase 9 bonus: elementary fn of linear arg ---
     # Generalises the Phase 1 rules above to any a·x + b argument.
     # Only fires when the argument is strictly linear with a ≠ 0 and
     # (a, b) ≠ (1, 0) — otherwise the Phase 1 rules above already fired.
-    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG, TAN}:
+    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG, TAN, ATAN}:
         lin = _try_linear(f.args[0], x)
         if lin is not None:
             a_frac, b_frac = lin
@@ -519,6 +553,26 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                 if head == TAN:
                     # ∫ tan(ax+b) dx = −log(cos(ax+b))/a  (case 5a).
                     return _tan_integral(a_frac, b_frac, x)
+                if head == ATAN:
+                    # ∫ atan(ax+b) dx = ((ax+b)/a)·atan(ax+b) − (1/(2a))·log((ax+b)²+1)
+                    # IBP: u=atan(ax+b), dv=dx, du=a/((ax+b)²+1)dx, v=x.
+                    # Working out the v·du integral gives the b/a·atan correction:
+                    #   ∫ atan(ax+b) dx = (x+b/a)·atan(ax+b) − (1/(2a))·log((ax+b)²+1)
+                    # Equivalently the leading factor is (ax+b)/a.
+                    arg_ir = f.args[0]  # ax+b
+                    a_ir = _frac_ir(a_frac)
+                    coef_ir = IRApply(DIV, (arg_ir, a_ir))  # (ax+b)/a
+                    denom_sq_ir = IRApply(
+                        ADD, (IRApply(POW, (arg_ir, TWO)), ONE)
+                    )
+                    log_part = IRApply(
+                        DIV,
+                        (
+                            IRApply(LOG, (denom_sq_ir,)),
+                            IRApply(MUL, (TWO, a_ir)),
+                        ),
+                    )
+                    return IRApply(SUB, (IRApply(MUL, (coef_ir, f)), log_part))
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -599,6 +653,15 @@ def _try_linear(node: IRNode, x: IRSymbol) -> tuple[Fraction, Fraction] | None:
         if u is None or v is None:
             return None
         return (u[0] - v[0], u[1] - v[1])
+    if head == DIV:
+        # f/c — only when the divisor is a non-zero rational constant.
+        divisor = _node_to_frac(node.args[1])
+        if divisor is None or divisor == 0 or _depends_on(node.args[1], x):
+            return None
+        inner = _try_linear(node.args[0], x)
+        if inner is None:
+            return None
+        return (inner[0] / divisor, inner[1] / divisor)
     return None
 
 
@@ -1515,3 +1578,481 @@ def _depends_on(node: IRNode, var: IRSymbol) -> bool:
     if isinstance(node, (IRInteger, IRFloat, IRRational)):
         return False
     return False
+
+
+# ---------------------------------------------------------------------------
+# Phase 9 helpers — multi-quadratic partial-fraction integration
+# ---------------------------------------------------------------------------
+
+
+def _int_divisors(n: int) -> list[int]:
+    """Return the positive integer divisors of ``abs(n)``."""
+    n = abs(n)
+    if n == 0:
+        return []
+    divs = []
+    i = 1
+    while i * i <= n:
+        if n % i == 0:
+            divs.append(i)
+            if i != n // i:
+                divs.append(n // i)
+        i += 1
+    return divs
+
+
+def _rational_divisors(p: Fraction) -> list[Fraction]:
+    """Return ±(divisors of numerator) / (divisors of denominator).
+
+    Gives the finite candidate set for the biquadratic-factoring search
+    — analogous to the Rational Roots Theorem's candidate pool.  Zero is
+    excluded since ``b = 0`` would make ``d = p₀/b`` undefined.
+    """
+    num_divs = _int_divisors(p.numerator)
+    den_divs = _int_divisors(p.denominator)
+    if not num_divs or not den_divs:
+        return []
+    seen: set[Fraction] = set()
+    result: list[Fraction] = []
+    for u in num_divs:
+        for v in den_divs:
+            for sign in (1, -1):
+                cand = Fraction(sign * u, v)
+                if cand not in seen:
+                    seen.add(cand)
+                    result.append(cand)
+    return result
+
+
+def _factor_biquadratic(
+    E: tuple,
+) -> tuple[tuple[Fraction, ...], tuple[Fraction, ...]] | None:
+    """Try to write degree-4 monic squarefree ``E`` as ``Q₁·Q₂``.
+
+    Both ``Q₁`` and ``Q₂`` must be irreducible monic quadratics over Q.
+    ``E`` is passed as an ascending tuple of ``Fraction`` coefficients with
+    the leading coefficient equal to 1.
+
+    Returns ``(Q₁, Q₂)`` as ascending coefficient tuples, or ``None`` when
+    no rational biquadratic factorization exists.
+
+    Algorithm — for ``E = x⁴+p₃x³+p₂x²+p₁x+p₀``:
+
+    Write ``Q₁ = x²+ax+b``, ``Q₂ = x²+cx+d``.  The four coefficient-match
+    equations are:
+
+    ``(1) a+c=p₃   (2) b+d+ac=p₂   (3) ad+bc=p₁   (4) bd=p₀``
+
+    From (1): ``c = p₃−a``.  From (4): ``d = p₀/b``.  Substituting into (3)
+    gives ``a = b(p₁−b·p₃)/(p₀−b²)`` whenever ``b²≠p₀``.  We then verify
+    equation (2).
+    """
+    n = normalize(E)
+    if len(n) - 1 != 4:
+        return None
+    coeffs = [Fraction(c) for c in n]
+    p0, p1, p2, p3 = coeffs[0], coeffs[1], coeffs[2], coeffs[3]
+    # leading coefficient must be 1 (monic)
+    if coeffs[4] != Fraction(1):
+        return None
+    for b in _rational_divisors(p0):
+        b2 = b * b
+        if b2 == p0:
+            continue  # denominator of a-formula would be zero
+        denom = p0 - b2
+        a = b * (p1 - b * p3) / denom
+        c = p3 - a
+        d = p0 / b
+        # verify equation (2)
+        if b + d + a * c != p2:
+            continue
+        # irreducibility: discriminant < 0 for both quadratics
+        if a * a - 4 * b >= 0:
+            continue
+        if c * c - 4 * d >= 0:
+            continue
+        Q1: tuple[Fraction, ...] = (b, a, Fraction(1))
+        Q2: tuple[Fraction, ...] = (d, c, Fraction(1))
+        return Q1, Q2
+    return None
+
+
+def _solve_pf_2quad(
+    num: tuple,
+    Q1: tuple,
+    Q2: tuple,
+) -> tuple[Fraction, Fraction, Fraction, Fraction] | None:
+    """Solve the partial-fraction system for ``N/(Q₁·Q₂)``.
+
+    Finds ``A₁,B₁,A₂,B₂ ∈ Q`` satisfying
+    ``N = (A₁x+B₁)·Q₂ + (A₂x+B₂)·Q₁``.
+
+    The 4×4 system (matching x³, x², x, 1) is:
+
+    ``[1  0  1  0 ][A₁]   [n₃]``
+    ``[c  1  a  1 ][B₁] = [n₂]``
+    ``[d  c  b  a ][A₂]   [n₁]``
+    ``[0  d  0  b ][B₂]   [n₀]``
+
+    where ``Q₁ = x²+ax+b`` and ``Q₂ = x²+cx+d``.
+
+    Uses Gaussian elimination with partial pivoting over ``Fraction``.
+    Returns ``None`` if the system is singular (shouldn't happen when
+    Q₁ and Q₂ are coprime irreducible quadratics).
+    """
+    a, c = Fraction(Q1[1]), Fraction(Q2[1])
+    b, d = Fraction(Q1[0]), Fraction(Q2[0])
+    num_n = normalize(num)
+    # Pad num to length 4 (coefficients of 1, x, x², x³).
+    padded = [Fraction(0)] * 4
+    for i, v in enumerate(num_n):
+        if i < 4:
+            padded[i] = Fraction(v)
+    n0, n1, n2, n3 = padded[0], padded[1], padded[2], padded[3]
+
+    # Build augmented matrix [M | rhs] row-major.
+    # Unknowns order: [A1, B1, A2, B2].
+    # Rows match x^3, x^2, x^1, x^0 coefficient equations.
+    mat = [
+        [Fraction(1), Fraction(0), Fraction(1), Fraction(0), n3],
+        [c,           Fraction(1), a,           Fraction(1), n2],
+        [d,           c,           b,            a,           n1],
+        [Fraction(0), d,           Fraction(0), b,           n0],
+    ]
+    n_rows = 4
+    for col in range(4):
+        # Partial pivot: find row with largest abs value in this column.
+        pivot_row = max(range(col, n_rows), key=lambda r: abs(mat[r][col]))
+        mat[col], mat[pivot_row] = mat[pivot_row], mat[col]
+        if mat[col][col] == 0:
+            return None  # singular
+        piv = mat[col][col]
+        for row in range(col + 1, n_rows):
+            if mat[row][col] == 0:
+                continue
+            factor = mat[row][col] / piv
+            for k in range(col, 5):
+                mat[row][k] -= factor * mat[col][k]
+    # Back substitution.
+    sol = [Fraction(0)] * 4
+    for i in range(3, -1, -1):
+        if mat[i][i] == 0:
+            return None
+        s = mat[i][4]
+        for j in range(i + 1, 4):
+            s -= mat[i][j] * sol[j]
+        sol[i] = s / mat[i][i]
+    return sol[0], sol[1], sol[2], sol[3]
+
+
+def _try_multi_quad_integral(
+    num: tuple, den: tuple, x_sym: IRSymbol
+) -> IRNode | None:
+    """Phase 9: integrate ``num/den`` when ``den`` is a product of two
+    distinct irreducible quadratic factors.
+
+    Pre-conditions mirror those for ``mixed_integral``:
+    - RT, arctan (2e), and mixed (2f) have already returned ``None``.
+    - ``den`` is squarefree with rational coefficients.
+    - ``deg num < deg den``.
+
+    Returns ``ADD(ir1, ir2)`` or ``None`` when the denominator doesn't
+    fit the two-distinct-quadratics shape.
+    """
+    den_n = normalize(den)
+    if len(den_n) - 1 != 4:
+        return None
+    den_fracs = tuple(Fraction(c) for c in den_n)
+    # Must have no rational roots — otherwise mixed_integral would have fired.
+    if rational_roots(den_fracs):
+        return None
+    # Make monic for the biquadratic algorithm.
+    leading = den_fracs[-1]
+    if leading == 0:
+        return None
+    monic_den = tuple(c / leading for c in den_fracs)
+    factors = _factor_biquadratic(monic_den)
+    if factors is None:
+        return None
+    Q1, Q2 = factors
+    # Adjust numerator for the leading coefficient of den.
+    num_n = normalize(num)
+    num_fracs = tuple(Fraction(c) / leading for c in num_n)
+    coeffs = _solve_pf_2quad(num_fracs, Q1, Q2)
+    if coeffs is None:
+        return None
+    A1, B1, A2, B2 = coeffs
+    ir1 = arctan_integral((B1, A1), Q1, x_sym)
+    ir2 = arctan_integral((B2, A2), Q2, x_sym)
+    return IRApply(ADD, (ir1, ir2))
+
+
+# ---------------------------------------------------------------------------
+# Phase 10 — Generalized partial fractions (three quadratics, L^m × Q₁ × Q₂)
+# ---------------------------------------------------------------------------
+
+
+def _factor_triple_quadratic(
+    E: tuple,
+) -> tuple[tuple, tuple, tuple] | None:
+    """Factor a monic degree-6 squarefree poly into three irreducible monic quadratics.
+
+    ``E`` must be a 7-element ascending Fraction coefficient tuple with leading
+    coefficient 1 and no rational roots.  Iterates over candidate constant
+    terms ``b₁`` from ``_rational_divisors(p₀)`` and linear coefficients
+    ``a₁`` from a finite search set, checks exact divisibility via
+    ``divmod_poly``, and delegates the degree-4 quotient to
+    ``_factor_biquadratic``.  Returns ``(Q₁, Q₂, Q₃)`` on success, ``None``
+    if no rational factorization is found.
+    """
+    E_fracs = tuple(Fraction(c) for c in E)
+    if len(E_fracs) != 7:
+        return None
+    p0 = E_fracs[0]
+    p5 = E_fracs[5]  # degree-5 coefficient
+    if p0 == 0:
+        return None
+
+    # Candidate linear coefficients: small integers plus rational divisors
+    # of the degree-5 coefficient (covers non-diagonal factors like x²+2x+5).
+    small_ints = [Fraction(k) for k in range(-4, 5)]
+    a1_extra = _rational_divisors(p5) if p5 != 0 else []
+    seen_a: set[Fraction] = set()
+    a1_candidates: list[Fraction] = []
+    for a in small_ints + a1_extra:
+        if a not in seen_a:
+            seen_a.add(a)
+            a1_candidates.append(a)
+
+    for b1 in _rational_divisors(p0):
+        for a1 in a1_candidates:
+            Q1_cand = (b1, a1, Fraction(1))
+            # Skip if Q1 is reducible over Q (discriminant ≥ 0).
+            if a1 * a1 - 4 * b1 >= 0:
+                continue
+            quot, rem = divmod_poly(E_fracs, Q1_cand)
+            if any(c != 0 for c in normalize(rem)):
+                continue
+            # Degree-4 quotient — try biquadratic factoring.
+            quot_n = normalize(quot)
+            if len(quot_n) != 5:
+                continue
+            # Make monic.
+            lead = quot_n[-1]
+            if lead == 0:
+                continue
+            monic_quot = tuple(c / lead for c in quot_n)
+            rest = _factor_biquadratic(monic_quot)
+            if rest is None:
+                continue
+            Q2, Q3 = rest
+            return (Q1_cand, Q2, Q3)
+    return None
+
+
+def _solve_pf_general(
+    num: tuple, factors: list[tuple]
+) -> list[tuple] | None:
+    """Solve the partial-fraction system N/∏Pᵢ = ΣNᵢ/Pᵢ by Gaussian elimination.
+
+    ``factors`` is a list of coprime polynomial tuples (ascending Fraction
+    coefficients).  ``D = Σ deg Pᵢ`` is the total degree; the system has
+    ``D`` equations and ``D`` unknowns (the coefficients of each ``Nᵢ``).
+
+    The D×D matrix is built column by column: the column for the j-th
+    coefficient of ``Nᵢ`` is the cofactor ``Mᵢ = ∏_{k≠i} Pₖ`` shifted
+    left by ``j`` rows.
+
+    Returns a list of numerator tuples ``[N₁, N₂, …, Nₖ]`` (each in
+    ascending-coefficient order), or ``None`` if the system is singular.
+    """
+    D = sum(len(f) - 1 for f in factors)
+    if D == 0:
+        return None
+
+    # Build cofactors Mᵢ = ∏_{j≠i} Pⱼ.
+    cofactors: list[tuple] = []
+    for i in range(len(factors)):
+        M: tuple = (Fraction(1),)
+        for j, Pj in enumerate(factors):
+            if j != i:
+                M = multiply(M, Pj)
+        cofactors.append(normalize(M))
+
+    # Assemble D×D augmented matrix [A | b].
+    A = [[Fraction(0)] * (D + 1) for _ in range(D)]
+    # RHS: coefficients of num padded to length D.
+    num_f = tuple(Fraction(c) for c in normalize(num))
+    for row in range(D):
+        A[row][D] = num_f[row] if row < len(num_f) else Fraction(0)
+
+    col = 0
+    for Pi, Mi in zip(factors, cofactors, strict=True):
+        di = len(Pi) - 1
+        for j in range(di):  # Nᵢ = Σ c_{i,j} · xʲ
+            for row in range(D):
+                k = row - j
+                if 0 <= k < len(Mi):
+                    A[row][col] = Mi[k]
+            col += 1
+
+    # Gaussian elimination with partial pivoting over Fraction.
+    pivot_row = 0
+    col_order: list[int] = []
+    for c in range(D):
+        # Find pivot.
+        best = pivot_row
+        for r in range(pivot_row + 1, D):
+            if abs(A[r][c]) > abs(A[best][c]):
+                best = r
+        if A[best][c] == 0:
+            return None  # Singular — shouldn't happen for coprime factors.
+        A[pivot_row], A[best] = A[best], A[pivot_row]
+        col_order.append(c)
+        # Eliminate.
+        piv = A[pivot_row][c]
+        for r in range(D):
+            if r == pivot_row:
+                continue
+            if A[r][c] == 0:
+                continue
+            factor = A[r][c] / piv
+            for cc in range(D + 1):
+                A[r][cc] -= factor * A[pivot_row][cc]
+        pivot_row += 1
+
+    # Back-substitution: extract solution.
+    solution = [Fraction(0)] * D
+    for pr in range(D):
+        c = col_order[pr]
+        piv = A[pr][c]
+        if piv == 0:
+            return None
+        solution[c] = A[pr][D] / piv
+
+    # Repack solution into per-factor numerator tuples.
+    result: list[tuple] = []
+    idx = 0
+    for Pi in factors:
+        di = len(Pi) - 1
+        Ni = tuple(solution[idx + j] for j in range(di))
+        result.append(Ni)
+        idx += di
+    return result
+
+
+def _try_general_rational_integral(
+    num: tuple, den: tuple, x_sym: IRSymbol
+) -> IRNode | None:
+    """Phase 10 driver — generalized partial fractions for degree-5/6 denominators.
+
+    Handles two cases after RT, arctan (2e), mixed (2f), and Phase 9 all return None:
+
+    - **Q₁·Q₂·Q₃** (degree 6, no rational roots): factors the denominator
+      into three irreducible monic quadratics via ``_factor_triple_quadratic``,
+      then solves the 6×6 partial-fraction system.
+
+    - **Lᵐ·Q₁·Q₂** (degree 5 or 6, at least one rational root): extracts the
+      linear factors via ``rational_roots`` + ``multiply``, factors the degree-4
+      quadratic remainder via ``_factor_biquadratic``, and solves the D×D system.
+
+    Each linear piece ``A/(x−r)`` integrates to ``A·log(x−r)`` (via
+    ``rt_pairs_to_ir``); each quadratic piece uses ``arctan_integral``.
+    """
+    den_n = normalize(den)
+    deg = len(den_n) - 1
+    if deg not in (5, 6):
+        return None
+
+    den_fracs = tuple(Fraction(c) for c in den_n)
+    # Normalize to monic.
+    leading = den_fracs[-1]
+    if leading == 0:
+        return None
+    monic_den = tuple(c / leading for c in den_fracs)
+
+    # Find all rational roots (linear factors).
+    roots = rational_roots(monic_den)
+
+    # Build L = ∏(x − r) for each rational root.
+    L: tuple = (Fraction(1),)
+    for r in roots:
+        L = multiply(L, (-r, Fraction(1)))
+    L = normalize(L)
+
+    # Divide out the linear part to get the quadratic remainder Q_total.
+    Q_total, rem = divmod_poly(monic_den, L)
+    if any(c != 0 for c in normalize(rem)):
+        return None
+    Q_total = normalize(Q_total)
+    qdeg = len(Q_total) - 1
+
+    # Q_total must be degree 4 (two quadratics) or 6 (three quadratics).
+    if qdeg not in (4, 6):
+        return None
+
+    # Q_total must have no rational roots (all remaining factors are quadratic).
+    if rational_roots(Q_total):
+        return None
+
+    # Make Q_total monic.
+    q_lead = Q_total[-1]
+    if q_lead == 0:
+        return None
+    monic_Q = tuple(c / q_lead for c in Q_total)
+
+    # Factor Q_total into irreducible quadratics.
+    if qdeg == 4:
+        quad_pair = _factor_biquadratic(monic_Q)
+        if quad_pair is None:
+            return None
+        quad_list = list(quad_pair)
+    else:  # qdeg == 6
+        triple = _factor_triple_quadratic(monic_Q)
+        if triple is None:
+            return None
+        quad_list = list(triple)
+
+    # Assemble the full factor list: linear factors first, then quadratics.
+    linear_factors: list[tuple] = [
+        normalize((-r, Fraction(1))) for r in roots
+    ]
+    all_factors: list[tuple] = linear_factors + quad_list
+
+    # Verify total degree matches (sanity check).
+    total_d = sum(len(f) - 1 for f in all_factors)
+    if total_d != deg:
+        return None
+
+    # Adjust numerator for the leading coefficient of the original den.
+    num_n = normalize(num)
+    num_fracs = tuple(Fraction(c) / leading for c in num_n)
+
+    # Solve the D×D partial-fraction system.
+    pieces_num = _solve_pf_general(num_fracs, all_factors)
+    if pieces_num is None:
+        return None
+
+    # Integrate each piece.
+    ir_parts: list[IRNode] = []
+    for fi, Ni in zip(all_factors, pieces_num, strict=True):
+        fi_deg = len(fi) - 1
+        if fi_deg == 1:
+            # ∫ A/(x−r) dx = A·log(x−r).
+            A = Ni[0] if Ni else Fraction(0)
+            r = -fi[0] / fi[1]  # fi = (−r, 1) so fi[0] = −r·fi[1]
+            if A != 0:
+                log_ir = rt_pairs_to_ir([(A, fi)], x_sym)
+                ir_parts.append(log_ir)
+        elif fi_deg == 2:
+            # ∫ (Ax+B)/Qᵢ dx via Phase 2e arctan_integral.
+            part_ir = arctan_integral(Ni, fi, x_sym)
+            ir_parts.append(part_ir)
+
+    if not ir_parts:
+        return None
+
+    acc = ir_parts[0]
+    for p in ir_parts[1:]:
+        acc = IRApply(ADD, (acc, p))
+    return acc

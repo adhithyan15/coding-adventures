@@ -90,6 +90,7 @@ from sql_backend import (
     IndexAlreadyExists,
     IndexDef,
     IndexNotFound,
+    ListRowIterator,
     Row,
     RowIterator,
     SqlValue,
@@ -1194,6 +1195,26 @@ class SqliteFileBackend(Backend):
             lo, hi, lo_inclusive=lo_inclusive, hi_inclusive=hi_inclusive
         ):
             yield rowid
+
+    def scan_by_rowids(self, table: str, rowids: list[int]) -> RowIterator:
+        """Fetch rows by their B-tree integer rowids.
+
+        Each rowid is a signed integer key in the table's B-tree.
+        :meth:`scan_index` yields these rowids; this method does a point lookup
+        per rowid using :meth:`~storage_sqlite.btree.BTree.find`.
+
+        Rows whose rowid is not found (deleted between index scan and row fetch)
+        are silently skipped — this mirrors SQLite's own behaviour for stale
+        index entries.
+        """
+        rootpage, columns = self._require_table(table)
+        tree = self._open_tree(rootpage)
+        rows = []
+        for rowid in rowids:
+            payload = tree.find(rowid)
+            if payload is not None:
+                rows.append(_decode_row(rowid, payload, columns))
+        return ListRowIterator(rows)
 
     # ── Internal helpers ─────────────────────────────────────────────────────
 

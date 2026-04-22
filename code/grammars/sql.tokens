@@ -94,6 +94,7 @@ keywords:
   PRIMARY
   KEY
   UNIQUE
+  INDEX
   DEFAULT
   BEGIN
   COMMIT

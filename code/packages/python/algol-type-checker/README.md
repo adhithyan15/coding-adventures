@@ -27,7 +27,10 @@ Unsupported ALGOL 60 features, including real/Boolean/string arrays, array
 parameters, switches, procedure-valued parameters, labels, and `goto`, are
 reported as diagnostics instead of being silently accepted by the compiled
 pipeline. By-name parameters are accepted in the semantic model, while later
-lowering packages still reject them until thunk code generation lands.
+lowering packages now implement the integer call-by-name subset. The checker
+keeps guarding the remaining full-ALGOL gaps, including non-assignable actuals
+passed to written by-name formals, non-integer by-name types, whole-array
+parameters, procedure-valued parameters, labels, switches, and `goto`.
 
 ```python
 from algol_parser import parse_algol

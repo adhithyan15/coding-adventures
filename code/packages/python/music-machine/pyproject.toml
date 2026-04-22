@@ -13,6 +13,7 @@ readme = "README.md"
 dependencies = [
     "coding-adventures-note-frequency>=0.1.0",
     "coding-adventures-note-audio>=0.1.0",
+    "coding-adventures-musical-instruments>=0.1.0",
     "coding-adventures-oscillator>=0.1.0",
     "coding-adventures-pcm-audio>=0.1.0",
     "coding-adventures-trig>=0.1.0",
@@ -28,6 +29,7 @@ dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
 [tool.uv.sources]
 coding-adventures-note-frequency = { path = "../note-frequency", editable = true }
 coding-adventures-note-audio = { path = "../note-audio", editable = true }
+coding-adventures-musical-instruments = { path = "../musical-instruments", editable = true }
 coding-adventures-oscillator = { path = "../oscillator", editable = true }
 coding-adventures-pcm-audio = { path = "../pcm-audio", editable = true }
 coding-adventures-trig = { path = "../trig", editable = true }
