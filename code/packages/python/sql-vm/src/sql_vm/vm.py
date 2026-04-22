@@ -944,7 +944,9 @@ def _do_create_index(ins: CreateIndex, st: _VmState) -> None:
     silently suppressed — the SQL semantics of ``CREATE INDEX IF NOT EXISTS``
     guarantee idempotence. Otherwise, ``IndexAlreadyExists`` propagates.
     """
-    idx = IndexDef(name=ins.name, table=ins.table, columns=list(ins.columns), unique=ins.unique, auto=False)
+    idx = IndexDef(
+        name=ins.name, table=ins.table, columns=list(ins.columns), unique=ins.unique, auto=False
+    )
     try:
         st.backend.create_index(idx)
     except IndexAlreadyExists:
@@ -976,7 +978,7 @@ def _do_open_index_scan(ins: OpenIndexScan, st: _VmState) -> None:
     the normal ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``
     instructions work transparently — no special-casing needed downstream.
 
-    Single-column range: ``lo`` and ``hi`` are scalar ``SqlValue``\ s (or
+    Single-column range: ``lo`` and ``hi`` are scalar ``SqlValue`` objects (or
     ``None`` for unbounded).  They are wrapped in one-element lists before
     being passed to ``scan_index``, which expects list-valued bounds to
     support composite indexes.
