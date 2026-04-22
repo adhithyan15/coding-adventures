@@ -43,6 +43,7 @@ from logic_builtins import (
     compoundo,
     copytermo,
     current_predicateo,
+    cuto,
     div,
     dynamico,
     failo,
@@ -88,7 +89,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.8.0"
+        assert __version__ == "0.9.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -479,6 +480,33 @@ class TestControlBuiltins:
         )
 
         assert answers == [atom("first")]
+
+    def test_cuto_commits_surrounding_search(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            conj(disj(eq(item, "first"), eq(item, "second")), cuto()),
+        ) == [atom("first")]
+
+    def test_cuto_is_not_onceo(self) -> None:
+        outer = var("Outer")
+        inner = var("Inner")
+
+        assert solve_all(
+            program(),
+            (outer, inner),
+            conj(
+                disj(eq(outer, "left"), eq(outer, "right")),
+                onceo(disj(eq(inner, "one"), eq(inner, "two"))),
+            ),
+        ) == [(atom("left"), atom("one")), (atom("right"), atom("one"))]
+        assert solve_all(
+            program(),
+            outer,
+            conj(disj(eq(outer, "left"), eq(outer, "right")), cuto()),
+        ) == [atom("left")]
 
     def test_noto_succeeds_when_goal_fails_and_fails_when_goal_succeeds(self) -> None:
         marker = var("Marker")

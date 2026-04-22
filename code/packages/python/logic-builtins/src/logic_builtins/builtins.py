@@ -33,6 +33,7 @@ from logic_engine import (
     clause_body,
     clause_from_term,
     conj,
+    cut,
     eq,
     freshen_clause,
     goal_as_term,
@@ -72,6 +73,7 @@ __all__ = [
     "compare_termo",
     "copytermo",
     "current_predicateo",
+    "cuto",
     "dynamico",
     "div",
     "failo",
@@ -140,6 +142,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("compoundo", 1),
     ("copytermo", 2),
     ("current_predicateo", 2),
+    ("cuto", 0),
     ("dynamico", 2),
     ("failo", 0),
     ("findallo", 3),
@@ -431,6 +434,12 @@ def failo() -> GoalExpr:
     """Fail without yielding any successor states."""
 
     return engine_fail()
+
+
+def cuto() -> GoalExpr:
+    """Commit to choices made so far in the current search-control frame."""
+
+    return cut()
 
 
 def iftheno(condition: object, then_goal: object) -> GoalExpr:

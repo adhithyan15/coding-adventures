@@ -22,6 +22,9 @@ All notable changes to this package will be documented in this file.
 - Executed integer array-element by-name actuals through eval/store thunk
   helpers so repeated formal reads and assignments re-locate the current
   element, including Jensen-style index mutation between formal uses.
+- Executed read-only expression thunks that read integer arrays, including
+  Jensen's-device expressions and bounds failures propagated through the caller
+  unwind path.
 
 ## [0.1.0] - 2026-04-20
 

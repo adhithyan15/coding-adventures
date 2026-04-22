@@ -339,16 +339,22 @@ class TestAlgolIrCompiler:
         assert result.procedure_signatures["_fn_algol_eval_thunk"] == 2
         assert result.procedure_signatures["_fn_algol_store_thunk"] == 3
 
-    def test_rejects_array_read_inside_expression_eval_thunk(self) -> None:
-        with pytest.raises(CompileError, match="array eval thunk"):
-            compile_algol(
-                parse_algol(
-                    "begin integer result; integer array a[1:2]; "
-                    "integer procedure id(x); integer x; begin id := x end; "
-                    "result := id(a[1] + 1) "
-                    "end"
-                )
+    def test_compiles_array_read_inside_expression_eval_thunk(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "integer procedure id(x); integer x; begin id := x end; "
+                "result := id(a[1] + 1) "
+                "end"
             )
+        )
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_thunk" in calls
 
     def test_rejects_procedure_call_inside_expression_eval_thunk(self) -> None:
         with pytest.raises(CompileError, match="procedure-call expression"):

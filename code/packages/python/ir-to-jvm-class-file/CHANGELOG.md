@@ -1,5 +1,21 @@
 # ir-to-jvm-class-file
 
+## [Unreleased]
+
+### Added
+
+- **Oct 8-bit arithmetic e2e tests** (`tests/test_oct_8bit_e2e.py`):
+  7 end-to-end tests confirming the JVM backend correctly compiles and
+  executes 8-bit integer arithmetic IR — the same IR that the Oct compiler
+  generates.  Tests cover: LOAD_IMM, ADD, SUB, AND (inc. 0xFF masking),
+  multi-output programs, and validation of Oct's unsupported SYSCALL numbers.
+  Execution uses the system ``java`` binary; tests are skipped if ``java``
+  is not on PATH.  Key findings:
+  - Pure 8-bit arithmetic compiles to standard JVM .class files and runs
+    correctly through the full IR → JVM → java subprocess pipeline.
+  - Oct's I/O intrinsics (SYSCALL 40+PORT / 20+PORT) are correctly rejected
+    by the JVM validator.  The JVM backend only supports SYSCALL 1 and 4.
+
 ## 0.5.0 — 2026-04-20
 
 ### Added

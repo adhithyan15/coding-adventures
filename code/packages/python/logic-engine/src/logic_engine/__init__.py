@@ -11,6 +11,7 @@ from logic_engine.engine import (
     Clause,
     Compound,
     ConjExpr,
+    CutExpr,
     DeferredExpr,
     Disequality,
     DisjExpr,
@@ -42,6 +43,7 @@ from logic_engine.engine import (
     clause_from_term,
     clauses_matching,
     conj,
+    cut,
     declare_dynamic,
     defer,
     disj,
@@ -90,6 +92,7 @@ __all__ = [
     "Clause",
     "Compound",
     "ConjExpr",
+    "CutExpr",
     "DeferredExpr",
     "DynamicDatabase",
     "DisjExpr",
@@ -120,6 +123,7 @@ __all__ = [
     "clause_from_term",
     "clauses_matching",
     "conj",
+    "cut",
     "declare_dynamic",
     "defer",
     "disj",
@@ -161,4 +165,4 @@ __all__ = [
     "visible_predicate_keys",
 ]
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"

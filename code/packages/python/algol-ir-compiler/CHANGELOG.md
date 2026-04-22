@@ -29,6 +29,8 @@ All notable changes to this package will be documented in this file.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.
+- Allowed read-only expression eval thunks to read integer arrays, including
+  helper-side bounds failure propagation back into the caller unwind path.
 
 ## [0.1.0] - 2026-04-20
 
