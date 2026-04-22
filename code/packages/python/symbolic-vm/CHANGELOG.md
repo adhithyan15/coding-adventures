@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.16.0 — 2026-04-22
+
+Phase 11 of the integration roadmap — polynomial × arctan(linear) integration via IBP.
+
+**New capability**: `∫ P(x) · atan(ax+b) dx` for any `P ∈ Q[x]` and `a ∈ Q \ {0}`.
+
+**Algorithm** (integration by parts):
+- `u = atan(ax+b)`, `dv = P(x) dx` → `v = Q(x) = ∫P dx` (polynomial antiderivative)
+- Residual `∫ Q(x)/D(x) dx` resolved by polynomial long division `Q = S·D + R` (deg R < 2),
+  where `D = (ax+b)² + 1`; polynomial part `T = ∫S dx` handled directly, remainder
+  dispatched to `arctan_integral` (Phase 2e).
+- Final result: `Q(x)·atan(ax+b) − a·T(x) − a·arctan_integral(R, D)`.
+
+**New module** `atan_poly_integral.py`:
+- `atan_poly_integral(poly, a, b, x_sym)` — full IBP closed-form IR for `∫ P(x)·atan(ax+b) dx`.
+- `_integrate_poly` — ascending-coefficient polynomial antiderivative with Fraction arithmetic.
+
+**Dispatcher hook** in `integrate.py`:
+- `_try_atan_product(transcendental, poly_candidate, x)` — checks ATAN head, extracts linear
+  arg via `_try_linear`, validates polynomial coefficient via `to_rational`.
+- Tries both operand orders: `_try_atan_product(a, b, x) or _try_atan_product(b, a, x)`.
+- Inserted after Phase 3e (poly × log) in the MUL handler.
+
+**Special case**: `P = 1` (bare arctan) reduces to the same result as Phase 9 — verified.
+
+**Limitations (future work)**:
+- `∫ atan(g(x))` for non-linear `g` (e.g. `atan(x²)`, `atan(sin(x))`).
+- `∫ atan(ax+b)^n dx` for `n ≥ 2`.
+- `∫ R(x)·atan(ax+b) dx` for rational (non-polynomial) `R`.
+
 ## 0.15.0 — 2026-04-22
 
 Phase 10 of the integration roadmap — generalized partial-fraction integration and
