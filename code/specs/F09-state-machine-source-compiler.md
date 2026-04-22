@@ -96,9 +96,9 @@ html-living.tokenizer.expanded.states.json
 
 They contain no unresolved includes, have deterministic ordering, and are ideal
 for snapshot tests. They are not meant to be loaded by production packages. The
-canonical JSON writer is its own serializer package so source compiler crates can
-consume typed definitions without depending on TOML writing, TOML parsing, or
-runtime file loading.
+canonical JSON writer and bounded JSON reader are separate serializer and
+deserializer packages so source compiler crates can consume typed definitions
+without depending on TOML writing, TOML parsing, or runtime file loading.
 
 ### Generated Source Artifacts
 
@@ -199,7 +199,9 @@ Phase 2 export support:
 - modal machines with inline child-machine documents
 - JSON writer in a separate serializer package, exposed as
   `to_states_json(definition) -> string`
-- TOML/JSON parser in separate deserializer packages for tooling only
+- JSON reader in a separate deserializer package, exposed as
+  `from_states_json(source) -> StateMachineDefinition`
+- TOML/JSON parsers in separate deserializer packages for tooling only
 
 Phase 3 export support:
 
@@ -323,11 +325,13 @@ The compiler should warn about:
 3. Add deterministic TOML output for DFA/NFA/PDA definitions in a separate
    serializer package.
 4. Add tests covering turnstile DFA, contains-abc NFA, and balanced-parens PDA.
-5. Add a small compiler program that reads canonical JSON and emits Rust source.
-6. Add Go source generation.
-7. Add tokenizer-profile source generation.
-8. Use the generated tokenizer path to rebuild the HTML 1.0 lexer wrapper.
-9. Expand toward the WHATWG HTML tokenizer.
+5. Add bounded canonical JSON deserialization for tooling snapshots.
+6. Add a small compiler program that reads typed definitions and emits Rust
+   source.
+7. Add Go source generation.
+8. Add tokenizer-profile source generation.
+9. Use the generated tokenizer path to rebuild the HTML 1.0 lexer wrapper.
+10. Expand toward the WHATWG HTML tokenizer.
 
 ## Success Criteria
 

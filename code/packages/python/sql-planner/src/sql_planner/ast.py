@@ -80,6 +80,29 @@ class TableRef:
 
 
 @dataclass(frozen=True, slots=True)
+class DerivedTableRef:
+    """A subquery used as a table source — ``(SELECT ...) AS alias``.
+
+    The ``select`` is the inner query statement (already a typed SelectStmt,
+    not a raw parse node).  The ``alias`` is mandatory — SQL requires an
+    alias for every derived table.
+
+    Example::
+
+        SELECT dt.n FROM (SELECT COUNT(*) AS n FROM orders) AS dt
+        ↓
+        DerivedTableRef(
+            select=SelectStmt(items=[SelectItem(AggregateExpr(COUNT, *), alias='n')],
+                              from_=TableRef('orders')),
+            alias='dt',
+        )
+    """
+
+    select: SelectStmt
+    alias: str
+
+
+@dataclass(frozen=True, slots=True)
 class JoinClause:
     """One JOIN appended to the FROM clause.
 
@@ -89,7 +112,7 @@ class JoinClause:
     """
 
     kind: str  # one of JoinKind.*
-    right: TableRef
+    right: TableRef | DerivedTableRef
     on: Expr | None = None  # None for CROSS JOIN
 
 
@@ -114,7 +137,7 @@ class Limit:
 class SelectStmt:
     """A structured SELECT statement — the usual shape from a compiler textbook."""
 
-    from_: TableRef
+    from_: TableRef | DerivedTableRef
     items: tuple[SelectItem, ...]
     joins: tuple[JoinClause, ...] = field(default_factory=tuple)
     where: Expr | None = None
@@ -172,9 +195,13 @@ class UnionStmt:
     ``left`` and ``right`` are the two sub-queries being combined.
     When ``all=True`` duplicate rows are preserved (UNION ALL); when
     ``all=False`` the result is deduplicated (UNION).
+
+    ``left`` may itself be a set-operation statement to support
+    left-associative chaining: ``A UNION B UNION C`` becomes
+    ``UnionStmt(UnionStmt(A, B), C)``.
     """
 
-    left: SelectStmt
+    left: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
     right: SelectStmt
     all: bool = False
 
@@ -185,9 +212,12 @@ class IntersectStmt:
 
     Returns rows present in *both* result sets. ``all=True`` keeps
     duplicates up to the minimum multiplicity in each side.
+
+    ``left`` may itself be a set-operation statement to support
+    left-associative chaining.
     """
 
-    left: SelectStmt
+    left: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
     right: SelectStmt
     all: bool = False
 
@@ -198,9 +228,12 @@ class ExceptStmt:
 
     Returns rows present in the left set but not the right set.
     ``all=True`` subtracts multiplicities rather than sets.
+
+    ``left`` may itself be a set-operation statement to support
+    left-associative chaining.
     """
 
-    left: SelectStmt
+    left: SelectStmt | UnionStmt | IntersectStmt | ExceptStmt
     right: SelectStmt
     all: bool = False
 
@@ -265,6 +298,29 @@ class DropTableStmt:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateIndexStmt:
+    """CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col1, col2, ...).
+
+    The ``unique`` flag is stored but not enforced in v2; it is reserved for
+    future use.  ``columns`` is the ordered list of indexed column names.
+    """
+
+    name: str
+    table: str
+    columns: tuple[str, ...]
+    unique: bool = False
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropIndexStmt:
+    """DROP INDEX [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
 # The type union every Statement consumer matches on.
 Statement = (
     SelectStmt
@@ -277,6 +333,8 @@ Statement = (
     | DeleteStmt
     | CreateTableStmt
     | DropTableStmt
+    | CreateIndexStmt
+    | DropIndexStmt
     | BeginStmt
     | CommitStmt
     | RollbackStmt

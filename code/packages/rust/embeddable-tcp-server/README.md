@@ -45,18 +45,25 @@ or RESP part of the crate's public identity.
 - Mailbox mode can use a configurable stdio worker process pool through
   `generic-job-runtime`; the default remains one worker for deterministic local
   behavior.
+- `worker_queue_depth` lets embedders bound queued worker jobs and tune
+  backpressure behavior.
+- `worker_job_timeout` can bound mailbox-mode jobs so stuck workers return
+  timeout responses instead of leaking capacity forever.
+- When the worker queue is full, mailbox mode defers and pauses the current TCP
+  read instead of closing the connection. Worker completions resume paused
+  reads through the TCP mailbox.
 - The worker protocol uses the JSON-line `generic-job-protocol` codec over
   stdio for debuggability, not throughput.
 - Worker responses are asynchronous with respect to TCP reads, but still flow
   through one response reader per worker process.
 - The current payload structs are the first raw-byte transport shape; a later
   crate should make those stable for all language bridges.
-- This validates the runtime seam; it still needs production timeout,
-  cancellation, worker restart, and backpressure-to-read-pausing policies.
+- This validates the runtime seam; it still needs production cancellation,
+  worker restart, and richer backpressure telemetry.
 
-The next production step is to harden the process-pool path with timeouts,
-worker restart policy, response size enforcement, and TCP read pausing when the
-worker queue is saturated.
+The next production step is to harden the process-pool path with worker restart
+policy, cancellation, response size enforcement, and metrics for paused reads
+and queue pressure.
 
 ## Dependencies
 

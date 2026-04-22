@@ -76,6 +76,8 @@ pub struct EmbeddableTcpServerOptions {
     pub port: u16,
     pub max_connections: usize,
     pub worker_processes: usize,
+    pub worker_queue_depth: usize,
+    pub worker_job_timeout: Option<Duration>,
     pub worker: WorkerCommand,
 }
 
@@ -95,6 +97,8 @@ impl Default for EmbeddableTcpServerOptions {
             port: 0,
             max_connections: TcpRuntimeOptions::default().max_connections,
             worker_processes: 1,
+            worker_queue_depth: ExecutorLimits::default().max_queue_depth,
+            worker_job_timeout: None,
             worker: WorkerCommand::new("worker", Vec::<String>::new()),
         }
     }
@@ -328,6 +332,7 @@ impl<Request, Response> Drop for StdioJobWorker<Request, Response> {
 pub enum WorkerError {
     Io(io::Error),
     Codec(JobCodecError),
+    Submit(SubmitError),
     Protocol(String),
 }
 
@@ -336,6 +341,7 @@ impl fmt::Display for WorkerError {
         match self {
             Self::Io(error) => write!(f, "worker I/O error: {error}"),
             Self::Codec(error) => write!(f, "worker protocol error: {error}"),
+            Self::Submit(error) => write!(f, "worker submit error: {error}"),
             Self::Protocol(message) => f.write_str(message),
         }
     }
@@ -357,7 +363,7 @@ impl From<JobCodecError> for WorkerError {
 
 impl From<SubmitError> for WorkerError {
     fn from(value: SubmitError) -> Self {
-        Self::Protocol(value.to_string())
+        Self::Submit(value)
     }
 }
 
@@ -440,7 +446,11 @@ where
             StdioWorkerCommand::new(options.worker.program.clone(), options.worker.args.clone()),
             StdioProcessPoolOptions {
                 worker_count: options.worker_processes.max(1),
-                limits: ExecutorLimits::default(),
+                limits: ExecutorLimits {
+                    max_queue_depth: options.worker_queue_depth.max(1),
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: options.worker_job_timeout,
             },
         )?;
         let routes = Arc::new(Mutex::new(BTreeMap::new()));
@@ -530,6 +540,7 @@ where
         else {
             continue;
         };
+        mailbox.resume_all_reads();
         let Some(connection_id) = routes
             .lock()
             .expect("stdio worker route table mutex poisoned")
@@ -988,6 +999,7 @@ mod tests {
             },
         ) {
             Ok(_) => TcpHandlerResult::default(),
+            Err(WorkerError::Submit(SubmitError::QueueFull)) => TcpHandlerResult::defer_read(),
             Err(_) => TcpHandlerResult::close(),
         }
     }
@@ -1104,6 +1116,8 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 port: 0,
                 max_connections: 64,
                 worker_processes: 1,
+                worker_queue_depth: ExecutorLimits::default().max_queue_depth,
+                worker_job_timeout: None,
                 worker,
             },
             |_| (),
@@ -1347,12 +1361,21 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
     fn start_async_test_server(
         worker: WorkerCommand,
     ) -> (EmbeddableTcpServer<()>, thread::JoinHandle<io::Result<()>>) {
+        start_async_test_server_with_queue_depth(worker, ExecutorLimits::default().max_queue_depth)
+    }
+
+    fn start_async_test_server_with_queue_depth(
+        worker: WorkerCommand,
+        worker_queue_depth: usize,
+    ) -> (EmbeddableTcpServer<()>, thread::JoinHandle<io::Result<()>>) {
         let server = EmbeddableTcpServer::new_mailbox(
             EmbeddableTcpServerOptions {
                 host: "127.0.0.1".to_string(),
                 port: 0,
                 max_connections: 64,
                 worker_processes: 1,
+                worker_queue_depth,
+                worker_job_timeout: None,
                 worker,
             },
             |_| (),
@@ -1451,6 +1474,11 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         assert_eq!(options.port, 0);
         assert_eq!(options.worker, worker);
         assert_eq!(options.worker_processes, 1);
+        assert_eq!(
+            options.worker_queue_depth,
+            ExecutorLimits::default().max_queue_depth
+        );
+        assert_eq!(options.worker_job_timeout, None);
 
         let mut zero_connections = options.clone();
         zero_connections.max_connections = 0;
@@ -1504,6 +1532,12 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         assert!(worker_error
             .to_string()
             .starts_with("worker protocol error: job frame JSON error:"));
+
+        let submit_error = WorkerError::from(SubmitError::QueueFull);
+        assert_eq!(
+            submit_error.to_string(),
+            "worker submit error: job queue is full"
+        );
     }
 
     #[test]
@@ -1597,5 +1631,71 @@ emit(first, "first")
         assert_eq!(&first_response, b"first");
 
         stop_server(server, handle);
+    }
+
+    #[test]
+    fn mailbox_server_replays_deferred_reads_after_worker_queue_pressure() {
+        let marker = std::env::temp_dir().join(format!(
+            "embeddable-tcp-queue-full-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+        ));
+        let marker_literal = format!("{:?}", marker.to_string_lossy());
+        let script = format!(
+            r#"
+import json, sys, time
+
+marker_path = {marker_literal}
+
+def emit(frame, text):
+    body = frame["body"]
+    payload = {{"writes_hex": [text.encode("utf-8").hex()], "close": False}}
+    print(json.dumps({{"version": 1, "kind": "response", "body": {{"id": body["id"], "result": {{"status": "ok", "payload": payload}}, "metadata": body["metadata"]}}}}), flush=True)
+
+first = json.loads(sys.stdin.readline())
+open(marker_path, "w").close()
+time.sleep(0.2)
+emit(first, "first")
+
+second = json.loads(sys.stdin.readline())
+emit(second, "second")
+"#
+        );
+        let Some(worker) = scripted_worker(&script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+
+        let (server, handle) = start_async_test_server_with_queue_depth(worker, 1);
+        let mut first = connect_client(&server);
+        let mut second = connect_client(&server);
+
+        first.write_all(b"one").expect("write first request");
+        for _ in 0..100 {
+            if marker.exists() {
+                break;
+            }
+            thread::sleep(Duration::from_millis(5));
+        }
+        assert!(
+            marker.exists(),
+            "worker should have accepted the first job before queue pressure is tested"
+        );
+        second.write_all(b"two").expect("write second request");
+
+        let mut first_response = [0u8; 5];
+        first
+            .read_exact(&mut first_response)
+            .expect("read first response");
+        assert_eq!(&first_response, b"first");
+
+        let mut second_response = [0u8; 6];
+        second
+            .read_exact(&mut second_response)
+            .expect("read replayed second response");
+        assert_eq!(&second_response, b"second");
+
+        stop_server(server, handle);
+        let _ = std::fs::remove_file(marker);
     }
 }

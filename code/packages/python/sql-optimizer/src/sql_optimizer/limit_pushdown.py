@@ -32,11 +32,13 @@ from sql_planner import (
     Aggregate,
     Begin,
     Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
     Filter,
     Having,
+    IndexScan,
     Intersect,
     Join,
     LogicalPlan,
@@ -90,6 +92,10 @@ def _push(p: LogicalPlan) -> LogicalPlan:
         case Except(left=l, right=r, all=a):
             # Do not push Limit through EXCEPT — same reasoning.
             return Except(left=_push(l), right=_push(r), all=a)
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            # Recurse into the inner plan; the outer LIMIT does NOT push
+            # inside the derived table — the inner query has its own shape.
+            return DerivedTable(query=_push(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p
         case _:
@@ -107,6 +113,10 @@ def _attach(p: LogicalPlan, limit: int) -> LogicalPlan:
             return Scan(
                 table=t, alias=a, required_columns=rc, scan_limit=new_limit
             )
+        case IndexScan():
+            # IndexScan already constrains which rows are returned via its lo/hi
+            # bounds — no need to further annotate with scan_limit.
+            return p
         case Project(input=inner, items=items):
             return Project(input=_attach(inner, limit), items=items)
         case Filter(input=inner, predicate=pred):

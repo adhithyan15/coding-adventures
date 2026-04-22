@@ -8,6 +8,7 @@
 //! executor knowing what the payload means.
 
 use std::collections::hash_map::DefaultHasher;
+use std::collections::HashMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::io::{self, BufRead, BufReader, Write};
@@ -16,11 +17,11 @@ use std::process::{Child, ChildStdin, Command, Stdio};
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use generic_job_protocol::{
-    decode_response_json_line_with_limit, encode_request_json_line, JobCodecError, JobRequest,
-    JobResponse,
+    decode_response_json_line_with_limit, encode_request_json_line, JobCodecError, JobError,
+    JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResult, JobTimeout,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -77,6 +78,7 @@ impl StdioWorkerCommand {
 pub struct StdioProcessPoolOptions {
     pub worker_count: usize,
     pub limits: ExecutorLimits,
+    pub default_job_timeout: Option<Duration>,
 }
 
 impl Default for StdioProcessPoolOptions {
@@ -84,6 +86,7 @@ impl Default for StdioProcessPoolOptions {
         Self {
             worker_count: 1,
             limits: ExecutorLimits::default(),
+            default_job_timeout: None,
         }
     }
 }
@@ -166,10 +169,14 @@ impl<Request, Response> Clone for StdioProcessPool<Request, Response> {
 struct PoolInner<Response> {
     workers: Vec<WorkerProcess>,
     responses: Mutex<mpsc::Receiver<JobResponse<Response>>>,
+    response_sender: mpsc::Sender<JobResponse<Response>>,
+    pending: Arc<Mutex<HashMap<String, PendingJob>>>,
     next_worker: AtomicUsize,
     in_flight: Arc<AtomicUsize>,
     shutting_down: AtomicBool,
+    worker_alive: Vec<Arc<AtomicBool>>,
     limits: ExecutorLimits,
+    default_job_timeout: Option<Duration>,
 }
 
 struct WorkerProcess {
@@ -190,6 +197,13 @@ impl Drop for WorkerProcess {
     }
 }
 
+#[derive(Debug, Clone)]
+struct PendingJob {
+    worker_index: usize,
+    metadata: JobMetadata,
+    deadline_at_ms: Option<u64>,
+}
+
 impl<Response> Drop for PoolInner<Response> {
     fn drop(&mut self) {
         self.shutting_down.store(true, Ordering::SeqCst);
@@ -208,25 +222,36 @@ where
         let worker_count = options.worker_count.max(1);
         let (sender, receiver) = mpsc::channel();
         let mut workers = Vec::with_capacity(worker_count);
+        let mut worker_alive = Vec::with_capacity(worker_count);
         let in_flight = Arc::new(AtomicUsize::new(0));
+        let pending = Arc::new(Mutex::new(HashMap::new()));
 
-        for _ in 0..worker_count {
+        for worker_index in 0..worker_count {
+            let alive = Arc::new(AtomicBool::new(true));
             workers.push(spawn_worker::<Response>(
                 &command,
+                worker_index,
                 sender.clone(),
+                Arc::clone(&pending),
                 Arc::clone(&in_flight),
+                Arc::clone(&alive),
                 options.limits.max_response_bytes,
             )?);
+            worker_alive.push(alive);
         }
 
         Ok(Self {
             inner: Arc::new(PoolInner {
                 workers,
                 responses: Mutex::new(receiver),
+                response_sender: sender,
+                pending,
                 next_worker: AtomicUsize::new(0),
                 in_flight,
                 shutting_down: AtomicBool::new(false),
+                worker_alive,
                 limits: options.limits,
+                default_job_timeout: options.default_job_timeout,
             }),
             _request: PhantomData,
         })
@@ -240,6 +265,7 @@ where
         &self,
         timeout: Duration,
     ) -> Result<Option<JobResponse<Response>>, RuntimeError> {
+        self.expire_timed_out_jobs();
         let receiver = self
             .inner
             .responses
@@ -260,9 +286,21 @@ where
         if let Some(affinity_key) = request.metadata.affinity_key.as_deref() {
             let mut hasher = DefaultHasher::new();
             affinity_key.hash(&mut hasher);
-            return Ok((hasher.finish() as usize) % worker_len);
+            let start = (hasher.finish() as usize) % worker_len;
+            return self.first_live_worker_from(start);
         }
-        Ok(self.inner.next_worker.fetch_add(1, Ordering::SeqCst) % worker_len)
+        self.first_live_worker_from(self.inner.next_worker.fetch_add(1, Ordering::SeqCst))
+    }
+
+    fn first_live_worker_from(&self, start: usize) -> Result<usize, SubmitError> {
+        let worker_len = self.inner.worker_alive.len();
+        for offset in 0..worker_len {
+            let index = (start + offset) % worker_len;
+            if self.inner.worker_alive[index].load(Ordering::SeqCst) {
+                return Ok(index);
+            }
+        }
+        Err(SubmitError::WorkerUnavailable)
     }
 
     fn reserve_slot(&self) -> Result<(), SubmitError> {
@@ -281,6 +319,40 @@ where
             }
         }
     }
+
+    fn expire_timed_out_jobs(&self) {
+        let now = current_time_millis();
+        let expired = {
+            let mut pending = self
+                .inner
+                .pending
+                .lock()
+                .expect("pending job table mutex poisoned");
+            let expired_ids = pending
+                .iter()
+                .filter_map(|(id, job)| {
+                    job.deadline_at_ms
+                        .filter(|deadline| *deadline <= now)
+                        .map(|_| id.clone())
+                })
+                .collect::<Vec<_>>();
+            let mut expired = Vec::with_capacity(expired_ids.len());
+            for id in expired_ids {
+                if let Some(job) = pending.remove(&id) {
+                    decrement_in_flight(&self.inner.in_flight);
+                    expired.push((id, job.metadata));
+                }
+            }
+            expired
+        };
+
+        for (id, metadata) in expired {
+            let _ = self
+                .inner
+                .response_sender
+                .send(timeout_response(id, metadata));
+        }
+    }
 }
 
 impl<Request, Response> JobExecutor<Request, Response> for StdioProcessPool<Request, Response>
@@ -295,7 +367,7 @@ where
             requires_vm_lock: false,
             supports_process_isolation: true,
             supports_cancellation: false,
-            supports_timeouts: false,
+            supports_timeouts: true,
             supports_affinity: true,
             supports_ordered_responses: false,
             requires_serializable_payloads: true,
@@ -306,6 +378,7 @@ where
     }
 
     fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError> {
+        self.expire_timed_out_jobs();
         if self.inner.shutting_down.load(Ordering::SeqCst) {
             return Err(SubmitError::ShuttingDown);
         }
@@ -318,8 +391,27 @@ where
             });
         }
 
-        self.reserve_slot()?;
         let worker_index = self.worker_index_for(&request)?;
+        self.reserve_slot()?;
+        let id = request.id.clone();
+        let metadata = request.metadata.clone();
+        let deadline_at_ms = metadata.deadline_at_ms.or_else(|| {
+            self.inner
+                .default_job_timeout
+                .map(|timeout| current_time_millis().saturating_add(timeout.as_millis() as u64))
+        });
+        self.inner
+            .pending
+            .lock()
+            .expect("pending job table mutex poisoned")
+            .insert(
+                id.clone(),
+                PendingJob {
+                    worker_index,
+                    metadata,
+                    deadline_at_ms,
+                },
+            );
         let write_result = {
             let mut stdin = self.inner.workers[worker_index]
                 .stdin
@@ -331,7 +423,19 @@ where
         };
 
         if let Err(error) = write_result {
-            self.inner.in_flight.fetch_sub(1, Ordering::SeqCst);
+            self.inner
+                .pending
+                .lock()
+                .expect("pending job table mutex poisoned")
+                .remove(&id);
+            decrement_in_flight(&self.inner.in_flight);
+            self.inner.worker_alive[worker_index].store(false, Ordering::SeqCst);
+            fail_pending_jobs_for_worker(
+                &self.inner.pending,
+                &self.inner.in_flight,
+                worker_index,
+                &self.inner.response_sender,
+            );
             return Err(error.into());
         }
 
@@ -339,6 +443,7 @@ where
     }
 
     fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>> {
+        self.expire_timed_out_jobs();
         let receiver = self
             .inner
             .responses
@@ -361,8 +466,11 @@ where
 
 fn spawn_worker<Response>(
     command: &StdioWorkerCommand,
+    worker_index: usize,
     sender: mpsc::Sender<JobResponse<Response>>,
+    pending: Arc<Mutex<HashMap<String, PendingJob>>>,
     in_flight: Arc<AtomicUsize>,
+    alive: Arc<AtomicBool>,
     max_response_bytes: usize,
 ) -> io::Result<WorkerProcess>
 where
@@ -397,7 +505,10 @@ where
 
             match decode_response_json_line_with_limit::<Response>(&line, max_response_bytes) {
                 Ok(response) => {
-                    decrement_in_flight(&in_flight);
+                    let metadata = remove_pending_job(&pending, &in_flight, &response.id);
+                    if metadata.is_none() {
+                        continue;
+                    }
                     if sender.send(response).is_err() {
                         break;
                     }
@@ -407,6 +518,8 @@ where
                 Err(_) => {}
             }
         }
+        alive.store(false, Ordering::SeqCst);
+        fail_pending_jobs_for_worker(&pending, &in_flight, worker_index, &sender);
     });
 
     Ok(WorkerProcess {
@@ -420,6 +533,85 @@ fn decrement_in_flight(in_flight: &AtomicUsize) {
     let _ = in_flight.fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
         Some(current.saturating_sub(1))
     });
+}
+
+fn remove_pending_job(
+    pending: &Mutex<HashMap<String, PendingJob>>,
+    in_flight: &AtomicUsize,
+    id: &str,
+) -> Option<JobMetadata> {
+    let job = pending
+        .lock()
+        .expect("pending job table mutex poisoned")
+        .remove(id)?;
+    decrement_in_flight(in_flight);
+    Some(job.metadata)
+}
+
+fn fail_pending_jobs_for_worker<Response>(
+    pending: &Mutex<HashMap<String, PendingJob>>,
+    in_flight: &AtomicUsize,
+    worker_index: usize,
+    sender: &mpsc::Sender<JobResponse<Response>>,
+) {
+    let failed = {
+        let mut pending = pending.lock().expect("pending job table mutex poisoned");
+        let failed_ids = pending
+            .iter()
+            .filter_map(|(id, job)| (job.worker_index == worker_index).then(|| id.clone()))
+            .collect::<Vec<_>>();
+        let mut failed = Vec::with_capacity(failed_ids.len());
+        for id in failed_ids {
+            if let Some(job) = pending.remove(&id) {
+                decrement_in_flight(in_flight);
+                failed.push((id, job.metadata));
+            }
+        }
+        failed
+    };
+
+    for (id, metadata) in failed {
+        if sender
+            .send(worker_unavailable_response(id, metadata))
+            .is_err()
+        {
+            break;
+        }
+    }
+}
+
+fn current_time_millis() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as u64
+}
+
+fn timeout_response<Response>(id: String, metadata: JobMetadata) -> JobResponse<Response> {
+    JobResponse {
+        id,
+        result: JobResult::TimedOut {
+            timeout: JobTimeout {
+                message: "job exceeded its executor deadline".to_string(),
+            },
+        },
+        metadata,
+    }
+}
+
+fn worker_unavailable_response<Response>(
+    id: String,
+    metadata: JobMetadata,
+) -> JobResponse<Response> {
+    JobResponse::error(
+        id,
+        JobError::new(
+            "worker_unavailable",
+            "worker exited before completing the job",
+            JobErrorOrigin::Executor,
+        ),
+    )
+    .with_metadata(metadata)
 }
 
 #[cfg(test)]
@@ -506,6 +698,7 @@ for line in sys.stdin:
                     max_queue_depth: 8,
                     ..ExecutorLimits::default()
                 },
+                default_job_timeout: None,
             },
         )
         .expect("spawn process pool");
@@ -558,6 +751,7 @@ for line in sys.stdin:
                     max_queue_depth: 1,
                     ..ExecutorLimits::default()
                 },
+                default_job_timeout: None,
             },
         )
         .expect("spawn process pool");
@@ -581,5 +775,127 @@ for line in sys.stdin:
             ))
             .expect_err("second job should hit backpressure");
         assert_eq!(err, SubmitError::QueueFull);
+    }
+
+    #[test]
+    fn process_pool_times_out_jobs_and_releases_capacity() {
+        let Some(command) = scripted_worker(
+            r#"
+import json, sys, time
+for line in sys.stdin:
+    frame = json.loads(line)
+    body = frame["body"]
+    time.sleep(0.4)
+    out = {"stream_id": "late", "counter": 1, "text": "late"}
+    print(json.dumps({"version": 1, "kind": "response", "body": {"id": body["id"], "result": {"status": "ok", "payload": out}, "metadata": body["metadata"]}}), flush=True)
+"#,
+        ) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let pool = StdioProcessPool::<EchoJob, EchoResponse>::spawn(
+            command,
+            StdioProcessPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: Some(Duration::from_millis(50)),
+            },
+        )
+        .expect("spawn process pool");
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "one".to_string(),
+            },
+        ))
+        .expect("submit slow job");
+
+        let response = wait_for_response(&pool).expect("timeout response");
+        match response.result {
+            JobResult::TimedOut { timeout } => {
+                assert!(timeout.message.contains("deadline"));
+            }
+            other => panic!("expected timed out response, got {other:?}"),
+        }
+
+        pool.try_submit(JobRequest::new(
+            "job-2",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "two".to_string(),
+            },
+        ))
+        .expect("timeout should release in-flight capacity");
+    }
+
+    #[test]
+    fn process_pool_reports_worker_exit_and_stops_routing_to_dead_worker() {
+        let Some(command) = scripted_worker(
+            r#"
+import sys
+sys.stdin.readline()
+"#,
+        ) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let pool = StdioProcessPool::<EchoJob, EchoResponse>::spawn(
+            command,
+            StdioProcessPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+        )
+        .expect("spawn process pool");
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "one".to_string(),
+            },
+        ))
+        .expect("submit job to exiting worker");
+
+        let response = wait_for_response(&pool).expect("worker failure response");
+        match response.result {
+            JobResult::Error { error } => {
+                assert_eq!(error.code, "worker_unavailable");
+                assert_eq!(error.origin, JobErrorOrigin::Executor);
+            }
+            other => panic!("expected worker error response, got {other:?}"),
+        }
+
+        let err = pool
+            .try_submit(JobRequest::new(
+                "job-2",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "two".to_string(),
+                },
+            ))
+            .expect_err("dead worker should be unavailable");
+        assert_eq!(err, SubmitError::WorkerUnavailable);
+    }
+
+    fn wait_for_response(
+        pool: &StdioProcessPool<EchoJob, EchoResponse>,
+    ) -> Option<JobResponse<EchoResponse>> {
+        for _ in 0..100 {
+            if let Some(response) = pool.drain_responses(1).into_iter().next() {
+                return Some(response);
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        None
     }
 }

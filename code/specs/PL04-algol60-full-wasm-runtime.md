@@ -687,9 +687,9 @@ The descriptor allocation must be bounded. The compiler should enforce:
 - maximum call-site thunk descriptor bytes
 - no thunk descriptor escapes the receiving call
 
-### Phase 5 Subset
+### Phase 5 Integer Subset
 
-The first Phase 5 implementation should support:
+The completed integer-focused Phase 5 implementation supports:
 
 - `integer` by-name scalar formals
 - by-name integer expression actuals for read-only formals
@@ -698,8 +698,10 @@ The first Phase 5 implementation should support:
 - by-name actual expressions that reference variables in the caller's lexical
   ancestors
 - by-name actual expressions that reference Phase 4 integer arrays
+- by-name actual expressions that call integer procedures
+- Jensen's device over integer scalar and array expressions
 
-The first implementation should continue to reject:
+The integer-focused implementation still intentionally rejects:
 
 - non-integer by-name formals
 - by-name array descriptors as whole-array values
@@ -736,6 +738,20 @@ through the eval helper. Writable formals dispatch assignments through a store
 helper that re-evaluates the original designator, including current subscript
 values, before storing. Helper-side bounds failures must be reported back to the
 calling procedure so the normal frame and thunk-region unwinding still runs.
+
+Current Phase 5d lowering may allow read-only expression descriptors to read
+integer arrays. The eval helper should mark its synthetic caller-frame scope as
+a helper context, so checked array loads inside expression thunks report bounds
+failures through the thunk failure flag and let the by-name formal read perform
+the caller's normal unwind.
+
+Current Phase 5e lowering may allow procedure calls inside read-only expression
+descriptors. Eval and store helpers should maintain a runtime helper-depth
+counter while thunk code executes. Runtime failures in procedures called from a
+helper set the thunk failure flag, and procedure-call lowering in helper scopes
+returns immediately to the helper caller when that flag is set. This keeps
+nested procedure frames and call-scoped thunk descriptors bounded while letting
+normal, non-helper procedure failures keep their existing return-`0` behavior.
 
 ### Required Diagnostics
 
@@ -1299,6 +1315,7 @@ Acceptance:
 - array element actuals re-compute their element address on each use
 - read-only expression actuals work without store helpers
 - assigned read-only expression actuals are rejected before IR lowering
+- read-only expression actuals can read arrays and call integer procedures
 - Jensen's device works
 
 ### Phase 6: Labels and Local Goto

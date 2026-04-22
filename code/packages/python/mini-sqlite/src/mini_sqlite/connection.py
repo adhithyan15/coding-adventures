@@ -33,22 +33,32 @@ from typing import Any
 from sql_backend import Backend, InMemoryBackend, TransactionHandle
 from storage_sqlite import SqliteFileBackend
 
+from .advisor import IndexAdvisor
 from .cursor import Cursor
-from .errors import ProgrammingError, translate
+from .errors import OperationalError, ProgrammingError, translate
+from .policy import IndexPolicy
 
 # Statements which, under sqlite3 semantics, implicitly commit the
 # current transaction and run outside of any transaction. Keeping the
 # list small and explicit avoids surprising users — if a statement is
 # not in this set, it participates in the current transaction.
-_DDL_KEYWORDS = ("CREATE", "DROP", "ALTER")
+_DDL_KEYWORDS = frozenset(["CREATE", "DROP", "ALTER"])
+
+# Explicit transaction-control keywords.  Statements that begin with one
+# of these are intercepted at the cursor level and handled directly by the
+# connection — they never pass through the engine/VM.  This avoids a
+# conflict between the connection's implicit-transaction management and
+# the VM's own transaction instructions.
+_TCL_KEYWORDS = frozenset(["BEGIN", "COMMIT", "ROLLBACK"])
 
 
-def _is_ddl(sql: str) -> bool:
-    """Cheap first-token sniff to decide if a statement is DDL.
+def _first_keyword(sql: str) -> str:
+    """Extract the first identifier (uppercase) from a SQL string.
 
-    We skip leading whitespace and comments, then look at the first word.
-    A wrong answer here is not catastrophic: it just means the user sees
-    a slightly different transaction boundary than sqlite3 would draw.
+    Skips leading whitespace and both ``--`` line comments and ``/* */``
+    block comments before extracting the word.  Used to sniff whether a
+    statement is DDL or a transaction-control statement (TCL) so the
+    connection can handle it specially.
     """
     i = 0
     n = len(sql)
@@ -58,21 +68,40 @@ def _is_ddl(sql: str) -> bool:
             i += 1
             continue
         if ch == "-" and i + 1 < n and sql[i + 1] == "-":
+            # Line comment — skip to end of line.
             while i < n and sql[i] != "\n":
                 i += 1
             continue
         if ch == "/" and i + 1 < n and sql[i + 1] == "*":
+            # Block comment — skip to matching close.
             i += 2
             while i + 1 < n and not (sql[i] == "*" and sql[i + 1] == "/"):
                 i += 1
             i = min(i + 2, n)
             continue
         break
-    word = []
+    word: list[str] = []
     while i < n and sql[i].isalpha():
         word.append(sql[i])
         i += 1
-    return "".join(word).upper() in _DDL_KEYWORDS
+    return "".join(word).upper()
+
+
+def _is_ddl(sql: str) -> bool:
+    """Return True when the first keyword is a DDL keyword (CREATE/DROP/ALTER).
+
+    A wrong answer here is not catastrophic: it just means the user sees
+    a slightly different transaction boundary than sqlite3 would draw.
+    """
+    return _first_keyword(sql) in _DDL_KEYWORDS
+
+
+def _is_tcl(sql: str) -> bool:
+    """Return True when the first keyword is a TCL keyword (BEGIN/COMMIT/ROLLBACK).
+
+    TCL statements are handled entirely by the connection, never by the VM.
+    """
+    return _first_keyword(sql) in _TCL_KEYWORDS
 
 
 class Connection:
@@ -82,7 +111,13 @@ class Connection:
     transaction lifecycle.
     """
 
-    def __init__(self, backend: Backend, *, autocommit: bool = False) -> None:
+    def __init__(
+        self,
+        backend: Backend,
+        *,
+        autocommit: bool = False,
+        auto_index: bool = True,
+    ) -> None:
         self._backend = backend
         self._autocommit = autocommit
         self._txn: TransactionHandle | None = None
@@ -90,6 +125,11 @@ class Connection:
         # True when _txn was opened for a DDL statement and should be
         # committed immediately after the statement runs.
         self._ddl_txn: bool = False
+        # Optional index advisor — created by default, may be disabled via
+        # auto_index=False or replaced via set_policy().
+        self._advisor: IndexAdvisor | None = (
+            IndexAdvisor(backend) if auto_index else None
+        )
 
     # ------------------------------------------------------------------
     # Cursor + shortcut methods.
@@ -138,6 +178,70 @@ class Connection:
             self._txn = None
 
     # ------------------------------------------------------------------
+    # Explicit TCL — called by Cursor when it detects BEGIN/COMMIT/ROLLBACK
+    # ------------------------------------------------------------------
+
+    def _tcl_begin(self) -> None:
+        """Handle an explicit ``BEGIN [TRANSACTION]`` statement.
+
+        Unlike the implicit transaction opened by :meth:`_ensure_transaction_if_needed`,
+        an explicit BEGIN is an error if a transaction is already active (the
+        DB-API does not support nested transactions without SAVEPOINT).
+
+        If there is already an implicit DML transaction open we commit it
+        first so the user's explicit BEGIN starts with a clean slate — this
+        matches SQLite's behaviour.
+        """
+        self._assert_open()
+        if self._txn is not None:
+            # A transaction is already open — explicit BEGIN is a no-nested
+            # rule violation.
+            raise OperationalError(
+                "cannot BEGIN: a transaction is already active"
+            )
+        try:
+            self._txn = self._backend.begin_transaction()
+            self._ddl_txn = False  # explicit; do NOT auto-commit it
+        except Exception as e:  # noqa: BLE001
+            raise translate(e) from e
+
+    def _tcl_commit(self) -> None:
+        """Handle an explicit ``COMMIT [TRANSACTION]`` statement.
+
+        Raises :exc:`OperationalError` when there is no active transaction —
+        committing without a prior BEGIN is a programming error.
+        """
+        self._assert_open()
+        if self._txn is None:
+            raise OperationalError(
+                "cannot COMMIT: no active transaction"
+            )
+        try:
+            self._backend.commit(self._txn)
+        except Exception as e:  # noqa: BLE001
+            raise translate(e) from e
+        finally:
+            self._txn = None
+
+    def _tcl_rollback(self) -> None:
+        """Handle an explicit ``ROLLBACK [TRANSACTION]`` statement.
+
+        Raises :exc:`OperationalError` when there is no active transaction —
+        rolling back without a prior BEGIN is a programming error.
+        """
+        self._assert_open()
+        if self._txn is None:
+            raise OperationalError(
+                "cannot ROLLBACK: no active transaction"
+            )
+        try:
+            self._backend.rollback(self._txn)
+        except Exception as e:  # noqa: BLE001
+            raise translate(e) from e
+        finally:
+            self._txn = None
+
+    # ------------------------------------------------------------------
     # Lifecycle.
     # ------------------------------------------------------------------
 
@@ -171,6 +275,25 @@ class Connection:
     # ------------------------------------------------------------------
     # Called by Cursor on every execute to keep transaction state honest.
     # ------------------------------------------------------------------
+
+    def set_policy(self, policy: IndexPolicy) -> None:
+        """Replace the index-creation policy on the live advisor.
+
+        If ``auto_index=False`` was passed at connection time the advisor is
+        ``None`` and calling ``set_policy`` is a no-op (no advisor to
+        configure).  Create the connection with ``auto_index=True`` — the
+        default — if you want to use a custom policy.
+
+        Hit counts accumulated by the previous policy are preserved; only the
+        decision logic changes.
+
+        Example::
+
+            conn = mini_sqlite.connect(":memory:")
+            conn.set_policy(HitCountPolicy(threshold=5))
+        """
+        if self._advisor is not None:
+            self._advisor.policy = policy
 
     def _ensure_transaction_if_needed(self, sql: str) -> None:
         """Begin an implicit transaction if this DML needs one.
@@ -238,7 +361,12 @@ class Connection:
             raise ProgrammingError("connection is closed")
 
 
-def connect(database: str, *, autocommit: bool = False) -> Connection:
+def connect(
+    database: str,
+    *,
+    autocommit: bool = False,
+    auto_index: bool = True,
+) -> Connection:
     """Open a new :class:`Connection`.
 
     ``database``:
@@ -252,7 +380,19 @@ def connect(database: str, *, autocommit: bool = False) -> Connection:
 
     Both modes return a :class:`Connection` that implements the same
     PEP 249 DB-API 2.0 interface; only the persistence semantics differ.
+
+    ``auto_index`` (default ``True``):
+
+    When ``True``, an :class:`~mini_sqlite.advisor.IndexAdvisor` is attached
+    to the connection.  It observes every query plan and automatically creates
+    B-tree indexes for columns that appear repeatedly in ``WHERE`` predicates.
+    The default policy (:class:`~mini_sqlite.policy.HitCountPolicy`) creates
+    an index after a column has been filtered three times.
+
+    Set to ``False`` to disable automatic index management entirely.  You can
+    also call :meth:`Connection.set_policy` at any time to swap in a custom
+    policy.
     """
     if database == ":memory:":
-        return Connection(InMemoryBackend(), autocommit=autocommit)
-    return Connection(SqliteFileBackend(database), autocommit=autocommit)
+        return Connection(InMemoryBackend(), autocommit=autocommit, auto_index=auto_index)
+    return Connection(SqliteFileBackend(database), autocommit=autocommit, auto_index=auto_index)

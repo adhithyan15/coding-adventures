@@ -43,17 +43,26 @@ from sql_planner import (
     AggFunc,
     AggregateExpr,
     Assignment,
+    BeginStmt,
     Between,
     BinaryExpr,
     BinaryOp,
+    CaseExpr,
     Column,
+    CommitStmt,
+    CreateIndexStmt,
     CreateTableStmt,
     DeleteStmt,
+    DerivedTableRef,
+    DropIndexStmt,
     DropTableStmt,
+    ExceptStmt,
     FuncArg,
     FunctionCall,
     In,
+    InsertSelectStmt,
     InsertValuesStmt,
+    IntersectStmt,
     IsNotNull,
     IsNull,
     JoinClause,
@@ -63,6 +72,7 @@ from sql_planner import (
     Literal,
     NotIn,
     NotLike,
+    RollbackStmt,
     SelectItem,
     SelectStmt,
     SortKey,
@@ -70,6 +80,7 @@ from sql_planner import (
     TableRef,
     UnaryExpr,
     UnaryOp,
+    UnionStmt,
     UpdateStmt,
     Wildcard,
 )
@@ -125,7 +136,10 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
     if not isinstance(inner, ASTNode):
         raise ProgrammingError(f"unexpected statement shape: {inner}")
     match inner.rule_name:
+        case "query_stmt":
+            return _query_stmt(inner)
         case "select_stmt":
+            # Legacy: old grammar emitted select_stmt directly under statement.
             return _select(inner)
         case "insert_stmt":
             return _insert(inner)
@@ -137,7 +151,69 @@ def _stmt_dispatch(stmt: ASTNode) -> Statement:
             return _create_table(inner)
         case "drop_table_stmt":
             return _drop_table(inner)
+        case "create_index_stmt":
+            return _create_index(inner)
+        case "drop_index_stmt":
+            return _drop_index(inner)
+        case "begin_stmt":
+            return BeginStmt()
+        case "commit_stmt":
+            return CommitStmt()
+        case "rollback_stmt":
+            return RollbackStmt()
     raise ProgrammingError(f"unsupported statement: {inner.rule_name}")
+
+
+# --------------------------------------------------------------------------
+# QUERY (SELECT + set operations via query_stmt).
+# --------------------------------------------------------------------------
+
+
+def _query_stmt(node: ASTNode) -> Statement:
+    """Translate ``query_stmt = select_stmt { set_op_clause }`` to a Statement.
+
+    A ``query_stmt`` wraps a bare ``select_stmt`` with zero or more
+    UNION/INTERSECT/EXCEPT tails.  When no tails are present this is
+    equivalent to a plain SELECT; otherwise we build a left-associative
+    set-operation tree.
+    """
+    select_node = _child_node(node, "select_stmt")
+    left: Statement = _select(select_node)
+    set_ops = _child_nodes(node, "set_op_clause")
+    for op_node in set_ops:
+        op, all_flag, right_select_node = _set_op_clause(op_node)
+        right_stmt = _select(right_select_node)
+        # Build a left-associative tree: after the first iteration ``left``
+        # will already be a UnionStmt/IntersectStmt/ExceptStmt.  The AST
+        # types accept any set-op stmt on the left side, and the planner
+        # dispatches through plan() rather than _plan_select() for the left
+        # operand, so chaining works correctly.
+        if op == "UNION":
+            left = UnionStmt(left=left, right=right_stmt, all=all_flag)  # type: ignore[arg-type]
+        elif op == "INTERSECT":
+            left = IntersectStmt(left=left, right=right_stmt, all=all_flag)  # type: ignore[arg-type]
+        elif op == "EXCEPT":
+            left = ExceptStmt(left=left, right=right_stmt, all=all_flag)  # type: ignore[arg-type]
+    return left
+
+
+def _set_op_clause(node: ASTNode) -> tuple[str, bool, ASTNode]:
+    """Extract (operator_name, all_flag, select_stmt_node) from a set_op_clause."""
+    op: str | None = None
+    all_flag = False
+    select_node: ASTNode | None = None
+    for c in node.children:
+        if isinstance(c, Token) and _token_type(c) == "KEYWORD":
+            kw = c.value.upper()
+            if kw in ("UNION", "INTERSECT", "EXCEPT"):
+                op = kw
+            elif kw == "ALL":
+                all_flag = True
+        elif isinstance(c, ASTNode) and c.rule_name == "select_stmt":
+            select_node = c
+    if op is None or select_node is None:
+        raise ProgrammingError("malformed set_op_clause")
+    return op, all_flag, select_node
 
 
 # --------------------------------------------------------------------------
@@ -200,13 +276,40 @@ def _select_item(node: ASTNode, state: _PlaceholderCounter) -> SelectItem:
     return SelectItem(expr=expr, alias=alias)
 
 
-def _table_ref(node: ASTNode) -> TableRef:
-    # table_ref = table_name [ "AS" NAME ]
-    # table_name = NAME [ "." NAME ]
+def _table_ref(node: ASTNode) -> TableRef | DerivedTableRef:
+    """Translate a table_ref node.
+
+    The grammar has two forms::
+
+        table_ref = "(" query_stmt ")" "AS" NAME   -- derived table
+                  | table_name [ "AS" NAME ]        -- plain table
+
+    We detect the derived-table form by checking for a ``query_stmt`` child.
+    """
+    # Derived-table form: "(" query_stmt ")" "AS" NAME
+    q = _maybe_child(node, "query_stmt")
+    if q is not None:
+        inner_stmt = _query_stmt(q)
+        if not isinstance(inner_stmt, SelectStmt):
+            raise ProgrammingError("derived table must be a plain SELECT, not a set operation")
+        # The mandatory alias comes after the "AS" keyword.
+        alias: str | None = None
+        found_as = False
+        for c in node.children:
+            if _is_keyword(c, "AS"):
+                found_as = True
+            elif found_as and isinstance(c, Token) and _token_type(c) == "NAME":
+                alias = c.value
+                break
+        if alias is None:
+            raise ProgrammingError("derived table requires an alias (AS <name>)")
+        return DerivedTableRef(select=inner_stmt, alias=alias)
+
+    # Plain table form: table_name [ "AS" NAME ]
     tn = _child_node(node, "table_name")
     parts = [c.value for c in tn.children if isinstance(c, Token) and _token_type(c) == "NAME"]
     table = parts[-1]  # schema.table → we ignore the schema qualifier
-    alias: str | None = None
+    alias = None
     for i, c in enumerate(node.children):
         if _is_keyword(c, "AS") and i + 1 < len(node.children):
             nxt = node.children[i + 1]
@@ -300,33 +403,53 @@ def _limit_clause(node: ASTNode | None) -> Limit | None:
 # --------------------------------------------------------------------------
 
 
-def _insert(node: ASTNode) -> InsertValuesStmt:
+def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
     state = _PlaceholderCounter()
     # insert_stmt =
-    #   "INSERT" "INTO" NAME [ "(" NAME { "," NAME } ")" ] "VALUES"
-    #   row_value { "," row_value }
+    #   "INSERT" "INTO" NAME [ "(" NAME { "," NAME } ")" ]
+    #   insert_body
+    # insert_body = "VALUES" row_value { "," row_value } | query_stmt
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     table = table_tok.value
 
-    # Explicit column list: everything between LPAREN and RPAREN before "VALUES".
+    # Explicit column list: everything between LPAREN and RPAREN before insert_body.
     columns: tuple[str, ...] | None = None
     i = 0
-    # skip INSERT INTO NAME
-    while i < len(node.children) and not _is_token(node.children[i], type_="LPAREN"):
-        if _is_keyword(node.children[i], "VALUES"):
+    while i < len(node.children):
+        c = node.children[i]
+        if isinstance(c, ASTNode) and c.rule_name == "insert_body":
+            break
+        if _is_token(c, type_="LPAREN"):
+            cols: list[str] = []
+            j = i + 1
+            while j < len(node.children) and not _is_token(node.children[j], type_="RPAREN"):
+                child = node.children[j]
+                if isinstance(child, Token) and _token_type(child) == "NAME":
+                    cols.append(child.value)
+                j += 1
+            columns = tuple(cols)
+        elif _is_keyword(c, "VALUES"):
+            # Old grammar (pre insert_body): VALUES is at the stmt level.
             break
         i += 1
-    if i < len(node.children) and _is_token(node.children[i], type_="LPAREN"):
-        cols: list[str] = []
-        j = i + 1
-        while j < len(node.children) and not _is_token(node.children[j], type_="RPAREN"):
-            c = node.children[j]
-            if isinstance(c, Token) and _token_type(c) == "NAME":
-                cols.append(c.value)
-            j += 1
-        columns = tuple(cols)
 
+    # Check if we have an insert_body child (new grammar).
+    insert_body_node = _maybe_child(node, "insert_body")
+    if insert_body_node is not None:
+        # New grammar: insert_body = "VALUES" row_value ... | query_stmt
+        q = _maybe_child(insert_body_node, "query_stmt")
+        if q is not None:
+            inner_stmt = _query_stmt(q)
+            if not isinstance(inner_stmt, SelectStmt):
+                raise ProgrammingError(
+                    "INSERT \u2026 SELECT requires a plain SELECT, not a set operation"
+                )
+            return InsertSelectStmt(table=table, columns=columns, select=inner_stmt)
+        rows = tuple(_row_value(rv, state) for rv in _child_nodes(insert_body_node, "row_value"))
+        return InsertValuesStmt(table=table, columns=columns, rows=rows)
+
+    # Old grammar fallback: row_value nodes directly under insert_stmt.
     rows = tuple(_row_value(rv, state) for rv in _child_nodes(node, "row_value"))
     return InsertValuesStmt(table=table, columns=columns, rows=rows)
 
@@ -425,6 +548,66 @@ def _drop_table(node: ASTNode) -> DropTableStmt:
 
 
 # --------------------------------------------------------------------------
+# CREATE INDEX / DROP INDEX.
+# --------------------------------------------------------------------------
+
+
+def _create_index(node: ASTNode) -> CreateIndexStmt:
+    """Translate ``create_index_stmt`` into :class:`CreateIndexStmt`.
+
+    Grammar::
+
+        create_index_stmt =
+            "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
+            "ON" NAME "(" NAME { "," NAME } ")" ;
+
+    NAME tokens appear in order:  index_name, table_name, col1, col2, ...
+    All KEYWORD tokens are filtered out before collecting NAMEs.
+    """
+    unique = _has_keyword_child(node, "UNIQUE")
+    if_not_exists = _has_keyword_sequence(node, ("IF", "NOT", "EXISTS"))
+
+    # Collect NAME tokens, skipping keywords like INDEX, ON, IF, NOT, EXISTS.
+    names = [
+        c.value
+        for c in node.children
+        if isinstance(c, Token) and _token_type(c) == "NAME"
+    ]
+    if len(names) < 3:
+        raise ProgrammingError(
+            "create_index_stmt: expected index_name, table_name, and at least one column"
+        )
+
+    index_name = names[0]
+    table_name = names[1]
+    columns = tuple(names[2:])
+
+    return CreateIndexStmt(
+        name=index_name,
+        table=table_name,
+        columns=columns,
+        unique=unique,
+        if_not_exists=if_not_exists,
+    )
+
+
+def _drop_index(node: ASTNode) -> DropIndexStmt:
+    """Translate ``drop_index_stmt`` into :class:`DropIndexStmt`.
+
+    Grammar::
+
+        drop_index_stmt = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
+
+    The single NAME token is the index name.
+    """
+    if_exists = _has_keyword_sequence(node, ("IF", "EXISTS"))
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("drop_index_stmt: expected index name")
+    return DropIndexStmt(name=name_tok.value, if_exists=if_exists)
+
+
+# --------------------------------------------------------------------------
 # Expressions. Walk the precedence tower.
 # --------------------------------------------------------------------------
 
@@ -499,7 +682,17 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     # IN / NOT IN.
     if _has_keyword_child(node, "IN"):
         negated = _has_keyword_child(node, "NOT")
-        vl = _child_node(node, "value_list")
+        # New grammar wraps the list in an in_expr node (= query_stmt | value_list).
+        in_expr_node = _maybe_child(node, "in_expr")
+        if in_expr_node is not None:
+            q = _maybe_child(in_expr_node, "query_stmt")
+            if q is not None:
+                # Subquery in IN clause — not yet supported; raise a clear error.
+                raise ProgrammingError("subquery in IN clause is not yet supported")
+            vl = _child_node(in_expr_node, "value_list")
+        else:
+            # Old grammar fallback: value_list directly under comparison.
+            vl = _child_node(node, "value_list")
         values = tuple(
             _expr(c, state) for c in vl.children if isinstance(c, ASTNode) and c.rule_name == "expr"
         )
@@ -584,6 +777,11 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                 return _column_ref_to_expr(c)
             if c.rule_name == "expr":
                 return _expr(c, state)
+            if c.rule_name == "case_expr":
+                return _case_expr(c, state)
+            if c.rule_name == "query_stmt":
+                # Scalar subquery: "(" query_stmt ")" — not yet supported.
+                raise ProgrammingError("scalar subqueries in expressions are not yet supported")
     raise ProgrammingError("unrecognized primary expression")
 
 
@@ -615,6 +813,53 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
         return AggregateExpr(func=agg_map[upper], arg=args[0])
     return FunctionCall(name=name, args=tuple(args))
+
+
+def _case_expr(node: ASTNode, state: _PlaceholderCounter) -> CaseExpr:
+    """Translate a ``case_expr`` node into a :class:`CaseExpr`.
+
+    Grammar::
+
+        case_expr   = "CASE" [ case_operand ] case_when { case_when } [ "ELSE" expr ] "END"
+        case_operand = expr
+        case_when   = "WHEN" expr "THEN" expr
+
+    If ``case_operand`` is present this is a *simple* CASE: each WHEN value is
+    turned into an equality comparison ``operand = when_value``.  Without an
+    operand it is a *searched* CASE whose WHEN clauses are boolean predicates.
+    The planner and all downstream stages see only the searched form.
+    """
+    # Optional simple-CASE operand.
+    op_node = _maybe_child(node, "case_operand")
+    operand = _expr(_child_node(op_node, "expr"), state) if op_node is not None else None
+
+    # WHEN/THEN pairs.
+    when_nodes = _child_nodes(node, "case_when")
+    if not when_nodes:
+        raise ProgrammingError("CASE requires at least one WHEN clause")
+    whens: list[tuple[Expr, Expr]] = []
+    for wn in when_nodes:
+        # case_when = "WHEN" expr "THEN" expr  — exactly two expr children.
+        exprs = [c for c in wn.children if isinstance(c, ASTNode) and c.rule_name == "expr"]
+        if len(exprs) != 2:
+            raise ProgrammingError("CASE WHEN requires exactly one condition and one result")
+        cond_expr = _expr(exprs[0], state)
+        result_expr = _expr(exprs[1], state)
+        if operand is not None:
+            # Normalize simple CASE: WHEN v THEN r → WHEN operand = v THEN r
+            cond_expr = BinaryExpr(op=BinaryOp.EQ, left=operand, right=cond_expr)
+        whens.append((cond_expr, result_expr))
+
+    # Optional ELSE clause.
+    else_expr: Expr | None = None
+    for i, c in enumerate(node.children):
+        if _is_keyword(c, "ELSE") and i + 1 < len(node.children):
+            next_c = node.children[i + 1]
+            if isinstance(next_c, ASTNode) and next_c.rule_name == "expr":
+                else_expr = _expr(next_c, state)
+            break
+
+    return CaseExpr(whens=tuple(whens), else_=else_expr)
 
 
 def _column_ref_to_expr(node: ASTNode) -> Column:

@@ -33,3 +33,12 @@ All notable changes to this package will be documented in this file.
   or close requests by `ConnectionId`.
 - Added tests proving TCP reads can return immediately while another thread
   posts the eventual response.
+
+## [0.1.3] - 2026-04-22
+
+### Added
+
+- Added TCP mailbox read pause/resume helpers for worker-backed adapters.
+- Added `TcpHandlerResult::defer_read()` so adapters can pause a connection
+  and replay the already-read bytes later instead of dropping data or closing
+  on backpressure.

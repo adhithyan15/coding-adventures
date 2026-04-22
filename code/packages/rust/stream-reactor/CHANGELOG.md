@@ -34,3 +34,13 @@ All notable changes to this package will be documented in this file.
   writes or close requests by `ConnectionId`.
 - Added tests for delayed mailbox writes, write-and-close delivery, and stale
   mailbox commands for already closed streams.
+
+## [0.1.3] - 2026-04-22
+
+### Added
+
+- Added mailbox read pause/resume commands for backpressure-aware adapters.
+- Added deferred-read replay so a handler can ask the reactor to retry an
+  already-read byte chunk after reads are resumed.
+- Added a regression test proving deferred bytes are not lost across pause and
+  resume.

@@ -1,5 +1,5 @@
 # Parser grammar for SQL (ANSI SQL subset)
-# @version 1
+# @version 2
 #
 # UPPERCASE identifiers reference token types from sql.tokens.
 # Quoted strings match keyword values (normalized to uppercase by the lexer
@@ -9,8 +9,23 @@
 
 program           = statement { ";" statement } [ ";" ] ;
 
-statement         = select_stmt | insert_stmt | update_stmt
-                  | delete_stmt | create_table_stmt | drop_table_stmt ;
+statement         = query_stmt | insert_stmt | update_stmt
+                  | delete_stmt | create_table_stmt | drop_table_stmt
+                  | create_index_stmt | drop_index_stmt
+                  | begin_stmt | commit_stmt | rollback_stmt ;
+
+# ── QUERY (SELECT + set operations) ──────────────────────────────────────────
+#
+# A query_stmt wraps a bare select_stmt and allows zero-or-more set-operation
+# tails (UNION / INTERSECT / EXCEPT).  The adapter checks whether any tails
+# are present to decide whether to emit a SetOpStmt or a plain SelectStmt.
+#
+# Precedence note: SQL standard gives INTERSECT higher precedence than
+# UNION/EXCEPT.  For the educational subset we treat all three as left-
+# associative equals; ANSI-compliant precedence can be added later.
+
+query_stmt        = select_stmt { set_op_clause } ;
+set_op_clause     = ( "UNION" | "INTERSECT" | "EXCEPT" ) [ "ALL" ] select_stmt ;
 
 # ── SELECT ───────────────────────────────────────────────────────────────────
 
@@ -22,10 +37,13 @@ select_stmt       = "SELECT" [ "DISTINCT" | "ALL" ] select_list
 select_list       = STAR | select_item { "," select_item } ;
 select_item       = expr [ "AS" NAME ] ;
 
-table_ref         = table_name [ "AS" NAME ] ;
+# table_ref: try derived-table form first (starts with "(") then plain name.
+# PEG backtracking ensures "(SELECT ...)" matches the first branch and
+# "users" or "users AS u" matches the second branch.
+table_ref         = "(" query_stmt ")" "AS" NAME | table_name [ "AS" NAME ] ;
 table_name        = NAME [ "." NAME ] ;
 
-join_clause       = join_type "JOIN" table_ref "ON" expr ;
+join_clause       = join_type "JOIN" table_ref [ "ON" expr ] ;
 join_type         = "CROSS" | "INNER" | ( "LEFT" [ "OUTER" ] )
                   | ( "RIGHT" [ "OUTER" ] ) | ( "FULL" [ "OUTER" ] ) ;
 
@@ -37,10 +55,15 @@ order_item        = expr [ "ASC" | "DESC" ] ;
 limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
 
 # ── INSERT / UPDATE / DELETE ─────────────────────────────────────────────────
+#
+# INSERT ... SELECT is handled by making insert_body an alternative:
+#   "VALUES" row_value ...   — classic VALUES insert
+#   query_stmt               — INSERT INTO t SELECT ...
 
 insert_stmt       = "INSERT" "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
-                    "VALUES" row_value { "," row_value } ;
+                    insert_body ;
+insert_body       = "VALUES" row_value { "," row_value } | query_stmt ;
 row_value         = "(" expr { "," expr } ")" ;
 
 update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
@@ -59,6 +82,26 @@ col_constraint    = ( "NOT" "NULL" ) | "NULL" | ( "PRIMARY" "KEY" )
 
 drop_table_stmt   = "DROP" "TABLE" [ "IF" "EXISTS" ] NAME ;
 
+# ── CREATE INDEX / DROP INDEX ─────────────────────────────────────────────────
+#
+# CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col1, col2, ...)
+# DROP INDEX [IF EXISTS] name
+#
+# The UNIQUE flag is stored but not enforced in v2 (reserved for v3).
+
+create_index_stmt = "CREATE" [ "UNIQUE" ] "INDEX" [ "IF" "NOT" "EXISTS" ] NAME
+                    "ON" NAME "(" NAME { "," NAME } ")" ;
+
+drop_index_stmt   = "DROP" "INDEX" [ "IF" "EXISTS" ] NAME ;
+
+# ── TRANSACTIONS ──────────────────────────────────────────────────────────────
+#
+# Optional TRANSACTION keyword mirrors SQLite's accepted syntax.
+
+begin_stmt        = "BEGIN"    [ "TRANSACTION" ] ;
+commit_stmt       = "COMMIT"   [ "TRANSACTION" ] ;
+rollback_stmt     = "ROLLBACK" [ "TRANSACTION" ] ;
+
 # ── Expressions ───────────────────────────────────────────────────────────────
 
 expr              = or_expr ;
@@ -68,20 +111,56 @@ not_expr          = "NOT" not_expr | comparison ;
 comparison        = additive [ cmp_op additive
                   | "BETWEEN" additive "AND" additive
                   | "NOT" "BETWEEN" additive "AND" additive
-                  | "IN" "(" value_list ")"
-                  | "NOT" "IN" "(" value_list ")"
+                  | "IN" "(" in_expr ")"
+                  | "NOT" "IN" "(" in_expr ")"
                   | "LIKE" additive
                   | "NOT" "LIKE" additive
                   | "IS" "NULL"
                   | "IS" "NOT" "NULL" ] ;
 
+# in_expr: a subquery takes priority (starts with SELECT); otherwise a
+# comma-separated value list is used.
+in_expr           = query_stmt | value_list ;
+
 cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
 additive          = multiplicative { ( "+" | "-" ) multiplicative } ;
 multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
 unary             = "-" unary | primary ;
+
+# primary: order matters for PEG backtracking.
+#   1. Simple literals
+#   2. CASE expression (starts with "CASE" keyword)
+#   3. Function call (NAME "(" — checked before bare column_ref)
+#   4. Scalar subquery "(SELECT ...)" — tried before plain "(" expr ")"
+#      because query_stmt starts with "SELECT" which is a KEYWORD, not valid
+#      as a plain expression; backtrack if the first token inside "(" is not
+#      "SELECT".
+#   5. Bare column reference NAME [. NAME]
+#   6. Parenthesised expression "(" expr ")"
 primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
-                  | function_call | column_ref | "(" expr ")" ;
+                  | case_expr
+                  | function_call
+                  | "(" query_stmt ")"
+                  | column_ref
+                  | "(" expr ")" ;
 
 column_ref        = NAME [ "." NAME ] ;
 function_call     = NAME "(" ( STAR | [ value_list ] ) ")" ;
 value_list        = expr { "," expr } ;
+
+# ── CASE expression ───────────────────────────────────────────────────────────
+#
+# Two forms of CASE, unified under one rule:
+#
+#   Searched CASE:  CASE WHEN c1 THEN v1 [WHEN c2 THEN v2 ...] [ELSE e] END
+#   Simple CASE:    CASE x WHEN v1 THEN r1 [WHEN v2 THEN r2 ...] [ELSE e] END
+#
+# The optional `case_operand` captures the simple-CASE operand.  When the
+# token immediately after CASE is WHEN, the optional `[ case_operand ]`
+# returns nothing (expr cannot start with the WHEN keyword) and we fall
+# straight into the `case_when` list.  The adapter converts simple CASE into
+# equality comparisons so the planner only ever sees searched CASE.
+
+case_expr         = "CASE" [ case_operand ] case_when { case_when } [ "ELSE" expr ] "END" ;
+case_operand      = expr ;
+case_when         = "WHEN" expr "THEN" expr ;

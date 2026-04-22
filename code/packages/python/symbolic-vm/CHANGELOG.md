@@ -1,5 +1,74 @@
 # Changelog
 
+## 0.14.0 — 2026-04-22
+
+Phase 9 of the integration roadmap — multi-quadratic partial-fraction integration.
+
+Extends the rational-function route to handle denominators that are products of
+**two distinct irreducible quadratic factors** over Q (no linear factors), closing
+the gap left by Phases 2d–2f.
+
+**Core — two-quadratic partial fractions**:
+- Detects degree-4 squarefree denominators with no rational roots.
+- Attempts to factor as `Q₁·Q₂` using a finite candidate search (rational divisors
+  of the constant term, derived from the coefficient-match system).
+- Solves the 4×4 partial-fraction linear system over Q by Gaussian elimination.
+- Integrates each `(Aᵢx+Bᵢ)/Qᵢ` piece via the existing Phase 2e `arctan_integral`.
+- Handles both pure-arctan outputs (`1/((x²+1)(x²+4))`) and mixed log+arctan outputs
+  (`(x+1)/((x²+1)(x²+4))`).
+- Non-diagonal quadratics (`x²+2x+5` etc.) are fully supported.
+
+**Bonus — `∫ atan(ax+b) dx` table entry**:
+- Added to the Phase 3 linear-arg dispatch alongside sin/cos/exp/log/tan.
+- Result: `x·atan(ax+b) − (1/(2a))·log((ax+b)²+1)`.
+- Covers all linear arguments including fractional coefficients.
+
+**New helpers in `integrate.py`**:
+- `_int_divisors`, `_rational_divisors` — finite candidate enumeration.
+- `_factor_biquadratic` — splits degree-4 poly into two irreducible quadratics.
+- `_solve_pf_2quad` — Gaussian elimination for the 4×4 partial-fraction system.
+- `_try_multi_quad_integral` — Phase 9 driver; hooked into `_integrate_rational`
+  after `mixed_integral` (Phase 2f).
+
+New spec: `code/specs/phase9-multi-quad-partial-fraction.md`.
+
+42 new tests (`tests/test_phase9.py`). Package at ~532 tests.
+
+## 0.13.0 — 2026-04-22
+
+Phase 8 of the integration roadmap — power-of-composite u-substitution.
+
+Extends u-substitution (Phase 7) to handle integrands where the outer function
+is a **power** of a composite: `POW(f(g(x)), n) · c·g'(x)` and `POW(g(x), n) · c·g'(x)`.
+
+**Case A — `f(g(x))^n · c·g'(x)`**:
+- Substitute `u = g(x)`, integrate `∫ f(u)^n du` via Phase 5 (sin/cos/tan reduction
+  formulas for trig outers), back-substitute `u → g(x)`.
+- Guard: `g` must not be bare `x` (Phase 5 handles) or linear with a≠0 (Phase 5 handles).
+
+**Case B — `g(x)^n · c·g'(x)`**:
+- Substitute `u = g(x)`, integrate `∫ u^n du` via Phase 1 power rule,
+  back-substitute.
+- Special case n=−1: `∫ u⁻¹ du = log(u)` → `log(g(x))`.
+- Guard: `g` must not be bare `x` or linear with a≠0.
+
+**Bonus — `(ax+b)^n` in the single-factor POW branch**:
+- `∫ (ax+b)^n dx = (ax+b)^(n+1)/((n+1)·a)` for n≠−1.
+- `∫ (ax+b)^(−1) dx = log(ax+b)/a`.
+- Supports integer and symbolic exponents.
+
+**`_diff_ir` extensions** (enables Case B for sums of functions):
+- `NEG(f)`: `d/dx(−f) = −f'`
+- `ADD(f, g)`: `d/dx(f+g) = f' + g'` (zero terms simplified)
+- `SUB(f, g)`: `d/dx(f−g) = f' − g'`
+
+New helpers in `integrate.py`: `_try_u_sub_pow_one`, `_try_u_sub_pow`.
+Hook in MUL branch after Phase 7, before Phase 4c.
+
+New spec: `code/specs/phase8-power-composite-usub.md`.
+
+40 new tests (`tests/test_phase8.py`). Package at ~491 tests.
+
 ## 0.12.0 — 2026-04-20
 
 Phase 7 of the integration roadmap — u-substitution (chain-rule reversal).

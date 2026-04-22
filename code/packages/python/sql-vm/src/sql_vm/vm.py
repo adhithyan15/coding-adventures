@@ -28,11 +28,14 @@ out into helpers so that this file reads like pseudocode.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 import sql_backend.errors as be
 from sql_backend.backend import Backend, TransactionHandle
-from sql_backend.row import Cursor
+from sql_backend.errors import IndexAlreadyExists, IndexNotFound
+from sql_backend.index import IndexDef
+from sql_backend.row import RowIterator
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
     AdvanceCursor,
@@ -46,10 +49,12 @@ from sql_codegen import (
     CloseScan,
     Coalesce,
     CommitTransaction,
+    CreateIndex,
     CreateTable,
     DeleteRows,
     Direction,
     DistinctResult,
+    DropIndex,
     DropTable,
     EmitColumn,
     EmitRow,
@@ -74,10 +79,12 @@ from sql_codegen import (
     LoadConst,
     LoadGroupKey,
     NullsOrder,
+    OpenIndexScan,
     OpenScan,
     Pop,
     Program,
     RollbackTransaction,
+    RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
     SetResultSchema,
@@ -104,6 +111,44 @@ from .result import QueryResult, _MutableResult
 from .scalar_functions import call as _call_scalar
 
 # --------------------------------------------------------------------------
+# Query telemetry — emitted after each SELECT scan when a listener is set.
+# --------------------------------------------------------------------------
+
+
+@dataclass
+class QueryEvent:
+    """Telemetry emitted after each SELECT scan.
+
+    Registered listeners receive one ``QueryEvent`` per ``execute()`` call
+    that performed at least one table or index scan.  ``duration_us`` is the
+    wall-clock time of the entire ``execute()`` call in microseconds.
+    """
+
+    table: str
+    filtered_columns: list[str]
+    rows_scanned: int
+    rows_returned: int
+    used_index: str | None
+    duration_us: int
+
+
+# Module-level event listener — None means events are suppressed.
+_event_listener: Callable[[QueryEvent], None] | None = None
+
+
+def set_event_listener(
+    listener: Callable[[QueryEvent], None] | None,
+) -> None:
+    """Register a callback to receive :class:`QueryEvent` after each SELECT scan.
+
+    Pass ``None`` to remove the listener.  The callback is called
+    synchronously before :func:`execute` returns — it must be fast.
+    """
+    global _event_listener
+    _event_listener = listener
+
+
+# --------------------------------------------------------------------------
 # Aggregate state — one of these lives in each slot of ``agg_table[key]``.
 # --------------------------------------------------------------------------
 
@@ -126,6 +171,42 @@ class _AggState:
 
 
 # --------------------------------------------------------------------------
+# Subquery cursor — an in-memory RowIterator backed by materialised rows.
+# --------------------------------------------------------------------------
+
+
+class _SubqueryCursor:
+    """RowIterator over pre-materialised rows from a derived-table sub-query.
+
+    After ``RunSubquery`` executes the inner program and collects result rows,
+    it wraps them in one of these so that the outer scan's ``AdvanceCursor`` /
+    ``LoadColumn`` / ``CloseScan`` instructions work transparently — they go
+    through ``st.cursors`` just like a normal backend scan.
+
+    ``current_row()`` is a no-op stub because subquery rows are read-only:
+    the VM never issues UPDATE / DELETE against a derived-table source.
+    """
+
+    __slots__ = ("_rows", "_pos", "_closed")
+
+    def __init__(self, rows: list[dict[str, SqlValue]]) -> None:
+        self._rows = rows
+        self._pos = -1
+        self._closed = False
+
+    def next(self) -> dict[str, SqlValue] | None:
+        if self._closed:
+            return None
+        self._pos += 1
+        if self._pos >= len(self._rows):
+            return None
+        return dict(self._rows[self._pos])  # shallow copy — consistent with ListRowIterator
+
+    def close(self) -> None:
+        self._closed = True
+
+
+# --------------------------------------------------------------------------
 # VM state. Public API is only the ``execute`` entry point below.
 # --------------------------------------------------------------------------
 
@@ -136,9 +217,9 @@ class _VmState:
     backend: Backend
     pc: int = 0
     stack: list[SqlValue] = field(default_factory=list)
-    cursors: dict[int, Cursor] = field(default_factory=dict)
+    cursors: dict[int, RowIterator] = field(default_factory=dict)
     current_row: dict[int, dict[str, SqlValue]] = field(default_factory=dict)
-    row_buffer: dict[str, SqlValue] = field(default_factory=dict)
+    row_buffer: list[SqlValue] = field(default_factory=list)
     result: _MutableResult = field(default_factory=_MutableResult)
     # Aggregate state, keyed by the tuple of group key values.
     agg_table: dict[tuple[SqlValue, ...], list[_AggState]] = field(default_factory=dict)
@@ -265,10 +346,16 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         st.row_buffer.clear()
         return
     if isinstance(ins, EmitColumn):
-        st.row_buffer[ins.name] = st.pop()
+        # Positional append — the column name is used only for schema
+        # bookkeeping (result_schema / SetResultSchema), not for row assembly.
+        # Using a list instead of a dict correctly handles SELECT lists with
+        # duplicate column names (e.g. SELECT da.v, db.v in a CROSS JOIN where
+        # both sub-queries expose a column called "v").
+        st.row_buffer.append(st.pop())
         return
     if isinstance(ins, EmitRow):
-        row = tuple(st.row_buffer.get(c) for c in st.result.columns)
+        # The row buffer is positional; just convert to a tuple.
+        row = tuple(st.row_buffer)
         st.result.rows.append(row)
         st.row_buffer.clear()
         return
@@ -331,6 +418,15 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, DropTable):
         _do_drop_table(ins, st)
         return
+    if isinstance(ins, CreateIndex):
+        _do_create_index(ins, st)
+        return
+    if isinstance(ins, DropIndex):
+        _do_drop_index(ins, st)
+        return
+    if isinstance(ins, OpenIndexScan):
+        _do_open_index_scan(ins, st)
+        return
 
     # Set operations -------------------------------------------------------
     if isinstance(ins, CaptureLeftResult):
@@ -341,6 +437,11 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, ExceptResult):
         _do_except(ins, st)
+        return
+
+    # Derived-table sub-queries -------------------------------------------
+    if isinstance(ins, RunSubquery):
+        _do_run_subquery(ins, st)
         return
 
     # Transactions --------------------------------------------------------
@@ -494,6 +595,35 @@ def _do_call_scalar(ins: CallScalar, st: _VmState) -> None:
     st.push(result)
 
 
+def _do_run_subquery(ins: RunSubquery, st: _VmState) -> None:
+    """Execute the derived-table sub-program and materialise its rows.
+
+    Runs the inner program against the *same backend* as the outer query (so
+    the sub-query sees the same data, transactions, and schema).  The result
+    rows are wrapped in a :class:`_SubqueryCursor` and stored under
+    ``cursor_id`` in the outer state's cursor table.
+
+    After this instruction, the outer scan loop's ``AdvanceCursor`` /
+    ``LoadColumn`` / ``CloseScan`` on the same ``cursor_id`` iterate over
+    the materialised rows exactly like a normal backend scan — no special
+    casing needed in those paths.
+
+    The inner execution gets a fresh ``_VmState`` so the sub-query's stack,
+    agg_table, and result buffer are fully isolated from the outer query's
+    state.  The backend is shared (read-only access from the sub-query side
+    is safe; the sub-query should not issue DML, but we don't enforce that
+    here).
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    cols = sub_result.columns
+    # Convert the result rows (tuples keyed by position) back to dicts so
+    # LoadColumn can look up by column name exactly as it does for a normal scan.
+    rows: list[dict[str, SqlValue]] = [
+        dict(zip(cols, row, strict=False)) for row in sub_result.rows
+    ]
+    st.cursors[ins.cursor_id] = _SubqueryCursor(rows=rows)
+
+
 def _do_open(ins: OpenScan, st: _VmState) -> None:
     # Prefer a positioned cursor when the backend offers one — UPDATE and
     # DELETE paths need ``current_row`` semantics. Falling back to ``scan``
@@ -529,12 +659,18 @@ def _do_close(ins: CloseScan, st: _VmState) -> None:
 
 
 def _do_scan_all_columns(ins: ScanAllColumns, st: _VmState) -> None:
-    # Copy every column from the cursor's current row into the row buffer.
+    """Copy every column from the cursor's current row into the row buffer.
+
+    The row buffer is positional (a list), so we append values in the
+    same order as ``row.items()`` — which is insertion order (Python ≥ 3.7).
+    The schema (``result.columns``) is derived from ``row.keys()`` in the
+    same iteration order, so column positions are guaranteed to match.
+    """
     row = st.current_row.get(ins.cursor_id)
     if row is None:
         return
-    for name, value in row.items():
-        st.row_buffer[name] = value
+    for value in row.values():
+        st.row_buffer.append(value)
     # Ensure the schema covers every column we just dumped — if the outer
     # query had no explicit schema, derive one from the row's keys in order.
     if not st.result.columns:
@@ -794,6 +930,77 @@ def _do_drop_table(ins: DropTable, st: _VmState) -> None:
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     st.result.rows_affected = 0
+
+
+def _do_create_index(ins: CreateIndex, st: _VmState) -> None:
+    """Create a named index on the backend.
+
+    ``IndexDef`` wraps all the parameters the backend needs: name, table,
+    column list, and the ``unique`` flag. The ``auto`` flag is set to
+    ``False`` for user-created indexes (auto-indexes are created by the
+    backend itself when it detects a UNIQUE constraint).
+
+    If ``if_not_exists=True`` and the index already exists, the error is
+    silently suppressed — the SQL semantics of ``CREATE INDEX IF NOT EXISTS``
+    guarantee idempotence. Otherwise, ``IndexAlreadyExists`` propagates.
+    """
+    idx = IndexDef(
+        name=ins.name, table=ins.table, columns=list(ins.columns), unique=ins.unique, auto=False
+    )
+    try:
+        st.backend.create_index(idx)
+    except IndexAlreadyExists:
+        if not ins.if_not_exists:
+            raise
+    st.result.rows_affected = 0
+
+
+def _do_drop_index(ins: DropIndex, st: _VmState) -> None:
+    """Drop a named index from the backend.
+
+    The ``if_exists`` flag is forwarded directly to the backend: when
+    ``True``, a missing index is silently ignored; when ``False``, the
+    backend raises ``IndexNotFound`` which propagates to the caller.
+    """
+    try:
+        st.backend.drop_index(ins.name, if_exists=ins.if_exists)
+    except IndexNotFound:
+        raise
+    st.result.rows_affected = 0
+
+
+def _do_open_index_scan(ins: OpenIndexScan, st: _VmState) -> None:
+    """Open a cursor backed by an index range scan.
+
+    The VM asks the backend for the set of rowids that fall within the
+    requested range, then fetches the full rows for those rowids.  The
+    resulting ``RowIterator`` is stored in ``cursors[cursor_id]`` so that
+    the normal ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``
+    instructions work transparently — no special-casing needed downstream.
+
+    Single-column range: ``lo`` and ``hi`` are scalar ``SqlValue`` objects (or
+    ``None`` for unbounded).  They are wrapped in one-element lists before
+    being passed to ``scan_index``, which expects list-valued bounds to
+    support composite indexes.
+
+    Example::
+
+        OpenIndexScan(cursor_id=0, table="orders", index_name="idx_orders_ts",
+                      lo=1_000_000, hi=2_000_000,
+                      lo_inclusive=True, hi_inclusive=False)
+        # → backend.scan_index("idx_orders_ts", [1_000_000], [2_000_000],
+        #                        lo_inclusive=True, hi_inclusive=False)
+        # → rowids = [3, 7, 12, ...]
+        # → backend.scan_by_rowids("orders", rowids)  →  RowIterator
+    """
+    lo_list = [ins.lo] if ins.lo is not None else None
+    hi_list = [ins.hi] if ins.hi is not None else None
+    rowids = list(st.backend.scan_index(
+        ins.index_name, lo_list, hi_list,
+        lo_inclusive=ins.lo_inclusive, hi_inclusive=ins.hi_inclusive,
+    ))
+    row_iter = st.backend.scan_by_rowids(ins.table, rowids)
+    st.cursors[ins.cursor_id] = row_iter  # type: ignore[assignment]
 
 
 # --------------------------------------------------------------------------

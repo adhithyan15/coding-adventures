@@ -5,6 +5,8 @@ the first state-aware builtins layer for the library-first Prolog path.
 """
 
 from logic_builtins.builtins import (
+    FiniteDomainConstraint,
+    FiniteDomainStore,
     abolisho,
     add,
     argo,
@@ -21,9 +23,17 @@ from logic_builtins.builtins import (
     compoundo,
     copytermo,
     current_predicateo,
+    cuto,
     div,
     dynamico,
     failo,
+    fd_eqo,
+    fd_geqo,
+    fd_gto,
+    fd_ino,
+    fd_leqo,
+    fd_lto,
+    fd_neqo,
     findallo,
     floordiv,
     forallo,
@@ -34,6 +44,7 @@ from logic_builtins.builtins import (
     ifthenelseo,
     iftheno,
     iso,
+    labelingo,
     leqo,
     lto,
     mod,
@@ -79,9 +90,19 @@ __all__ = [
     "compare_termo",
     "copytermo",
     "current_predicateo",
+    "cuto",
     "div",
+    "fd_eqo",
+    "fd_geqo",
+    "fd_gto",
+    "fd_ino",
+    "fd_leqo",
+    "fd_lto",
+    "fd_neqo",
     "dynamico",
     "failo",
+    "FiniteDomainConstraint",
+    "FiniteDomainStore",
     "findallo",
     "floordiv",
     "forallo",
@@ -92,6 +113,7 @@ __all__ = [
     "ifthenelseo",
     "iftheno",
     "iso",
+    "labelingo",
     "leqo",
     "lto",
     "mod",
@@ -119,4 +141,4 @@ __all__ = [
     "varo",
 ]
 
-__version__ = "0.8.0"
+__version__ = "0.10.0"

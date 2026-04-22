@@ -76,22 +76,51 @@ USAGE
     # compiled.program: IrProgram with all IR instructions
     # compiled.program.entry_label == "_start"
 
+To target WASM, JVM, or CLR instead of the Intel 8008::
+
+    from oct_ir_compiler import compile_oct, WASM_IO, JVM_IO, CLR_IO
+
+    wasm_result = compile_oct(tc_result.typed_ast, config=WASM_IO)
+    jvm_result  = compile_oct(tc_result.typed_ast, config=JVM_IO)
+    clr_result  = compile_oct(tc_result.typed_ast, config=CLR_IO)
+
 =============================================================================
 PUBLIC API
 =============================================================================
 
-- ``compile_oct(typed_ast: ASTNode) -> OctCompileResult``
-  Main entry point.  Takes a type-annotated AST and returns an
-  ``OctCompileResult`` wrapping the compiled ``IrProgram``.
+- ``compile_oct(typed_ast, config=INTEL_8008_IO) -> OctCompileResult``
+  Main entry point.  Takes a type-annotated AST and an optional
+  ``OctCompileConfig`` and returns an ``OctCompileResult`` wrapping the
+  compiled ``IrProgram``.
+
+- ``OctCompileConfig`` — frozen dataclass controlling how ``in()`` / ``out()``
+  lower to SYSCALL IR.  Fields: ``write_byte_syscall``, ``read_byte_syscall``
+  (both ``int | None``; ``None`` = 8008 port-based encoding).
+
+- ``INTEL_8008_IO``, ``WASM_IO``, ``JVM_IO``, ``CLR_IO`` — pre-built
+  ``OctCompileConfig`` instances for the four supported targets.
 
 - ``OctCompileResult`` — dataclass with ``program: IrProgram``.
 """
 
 from __future__ import annotations
 
-from oct_ir_compiler.compiler import OctCompileResult, compile_oct
+from oct_ir_compiler.compiler import (
+    CLR_IO,
+    INTEL_8008_IO,
+    JVM_IO,
+    WASM_IO,
+    OctCompileConfig,
+    OctCompileResult,
+    compile_oct,
+)
 
 __all__ = [
+    "CLR_IO",
+    "INTEL_8008_IO",
+    "JVM_IO",
+    "OctCompileConfig",
     "OctCompileResult",
+    "WASM_IO",
     "compile_oct",
 ]

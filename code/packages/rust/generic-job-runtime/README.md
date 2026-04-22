@@ -12,6 +12,10 @@ language workers such as Python, Ruby, Perl, Lua, or other bridge targets.
 - Stable affinity routing so related jobs, such as one TCP connection's bytes,
   stay on the same worker process.
 - Async response collection from worker stdout.
+- Per-job deadlines and default job timeouts that emit portable timed-out
+  responses and release queue capacity.
+- Worker-exit detection that converts abandoned in-flight jobs into portable
+  executor errors.
 - Capability and limit metadata that adapters can inspect.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters

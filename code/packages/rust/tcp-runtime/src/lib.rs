@@ -34,6 +34,7 @@ pub struct TcpConnectionInfo {
 pub struct TcpHandlerResult {
     pub write: Vec<u8>,
     pub close: bool,
+    pub defer_read: bool,
 }
 
 impl TcpHandlerResult {
@@ -41,6 +42,7 @@ impl TcpHandlerResult {
         Self {
             write: bytes.into(),
             close: false,
+            defer_read: false,
         }
     }
 
@@ -48,6 +50,15 @@ impl TcpHandlerResult {
         Self {
             write: Vec::new(),
             close: true,
+            defer_read: false,
+        }
+    }
+
+    pub const fn defer_read() -> Self {
+        Self {
+            write: Vec::new(),
+            close: false,
+            defer_read: true,
         }
     }
 
@@ -55,6 +66,7 @@ impl TcpHandlerResult {
         Self {
             write: bytes.into(),
             close: true,
+            defer_read: false,
         }
     }
 }
@@ -120,6 +132,18 @@ impl TcpMailbox {
 
     pub fn close(&self, connection_id: ConnectionId) {
         self.inner.close(connection_id);
+    }
+
+    pub fn pause_reads(&self, connection_id: ConnectionId) {
+        self.inner.pause_reads(connection_id);
+    }
+
+    pub fn resume_reads(&self, connection_id: ConnectionId) {
+        self.inner.resume_reads(connection_id);
+    }
+
+    pub fn resume_all_reads(&self) {
+        self.inner.resume_all_reads();
     }
 }
 
@@ -201,6 +225,7 @@ impl<P: TransportPlatform, S: Send + 'static> TcpRuntime<P, S> {
                 StreamHandlerResult {
                     write: result.write,
                     close: result.close,
+                    defer_read: result.defer_read,
                 }
             },
             move |info: StreamConnectionInfo, state: S| {

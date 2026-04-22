@@ -482,6 +482,83 @@ class DropTable:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateIndex:
+    """Ask the backend to create an index and backfill existing rows.
+
+    ``columns`` is the ordered list of column names to index.
+    The backend allocates a B-tree page, builds the index from all existing
+    rows, and registers the index in ``sqlite_schema``.
+
+    If ``if_not_exists=True`` and an index with the same name already exists,
+    the instruction is silently skipped. Otherwise ``IndexAlreadyExists`` is
+    raised.
+    """
+    name: str
+    table: str
+    columns: tuple[str, ...]
+    unique: bool = False
+    if_not_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DropIndex:
+    """Ask the backend to drop an index by name.
+
+    If ``if_exists=True`` and the index does not exist, the instruction is
+    silently skipped. Otherwise ``IndexNotFound`` is raised.
+    """
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class OpenIndexScan:
+    """Materialise rowids from an index range scan into ``cursor_id``.
+
+    The VM calls ``backend.scan_index(index_name, lo, hi, lo_inclusive,
+    hi_inclusive)`` to get matching rowids, then calls
+    ``backend.scan_by_rowids(table, rowids)`` to materialise full rows.
+    The resulting ``RowIterator`` is stored in ``cursor_table[cursor_id]``
+    so that normal ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``
+    instructions can iterate over it without change.
+
+    This single instruction replaces the ``OpenScan`` + filter-in-VM loop
+    for index-covered predicates — it is semantically equivalent to
+    ``OpenScan(cursor_id, table)`` followed by a WHERE filter, just faster.
+    """
+    cursor_id: int
+    table: str
+    index_name: str
+    lo: object | None            # SqlValue or None (unbounded)
+    hi: object | None            # SqlValue or None (unbounded)
+    lo_inclusive: bool = True
+    hi_inclusive: bool = True
+
+
+# ---- Derived-table (subquery in FROM) -----------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class RunSubquery:
+    """Execute the inner sub-program and materialise its result rows under ``cursor_id``.
+
+    Used for derived tables — ``(SELECT …) AS alias`` in a FROM clause.  The
+    outer query then iterates over the materialised rows using the normal
+    ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan`` instructions on the
+    same ``cursor_id``.  The VM checks a per-state subquery-cursor dict before
+    delegating to the backend so the outer loop is transparent to changes here.
+
+    ``sub_program`` is a fully resolved inner :class:`Program` compiled
+    independently with its own cursor/label namespace.  The VM runs it in a
+    temporary child state, collects the result rows, and stores them indexed
+    by ``cursor_id``.
+    """
+
+    cursor_id: int
+    sub_program: Program   # Program is defined below; forward-ref resolved by PEP 563
+
+
 # ---- Control flow -------------------------------------------------------
 
 
@@ -526,8 +603,10 @@ Instruction = (
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
+    | CreateIndex | DropIndex | OpenIndexScan
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
+    | RunSubquery
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

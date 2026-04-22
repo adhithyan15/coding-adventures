@@ -202,12 +202,12 @@ class TestEncodeFixedOpcodes:
         assert encode_instruction("HLT", (), {}, 0) == bytes([0xFF])
 
     def test_rfc(self) -> None:
-        """RFC (unconditional return) encodes as 0x07."""
-        assert encode_instruction("RFC", (), {}, 0) == bytes([0x07])
+        """RFC encodes as 0x03 (00_000_011: CCC=0=CY, T=0=false → carry-false return)."""
+        assert encode_instruction("RFC", (), {}, 0) == bytes([0x03])
 
     def test_ret_is_rfc(self) -> None:
-        """RET is a synonym for RFC — same encoding."""
-        assert encode_instruction("RET", (), {}, 0) == bytes([0x07])
+        """RET is a synonym for RFC — same encoding (0x03)."""
+        assert encode_instruction("RET", (), {}, 0) == bytes([0x03])
 
     def test_rlc(self) -> None:
         """RLC → 0x02."""
@@ -238,20 +238,20 @@ class TestEncodeFixedOpcodes:
         assert encode_instruction("RFP", (), {}, 0) == bytes([0x1B])
 
     def test_rtc(self) -> None:
-        """RTC → 0x0F."""
-        assert encode_instruction("RTC", (), {}, 0) == bytes([0x0F])
+        """RTC → 0x07 (00_000_111: CCC=0=CY, T=1=true → carry-true return)."""
+        assert encode_instruction("RTC", (), {}, 0) == bytes([0x07])
 
     def test_rtz(self) -> None:
-        """RTZ → 0x2B."""
-        assert encode_instruction("RTZ", (), {}, 0) == bytes([0x2B])
+        """RTZ → 0x0F (00_001_111: CCC=1=Z, T=1=true → zero-true return)."""
+        assert encode_instruction("RTZ", (), {}, 0) == bytes([0x0F])
 
     def test_rts(self) -> None:
-        """RTS → 0x33."""
-        assert encode_instruction("RTS", (), {}, 0) == bytes([0x33])
+        """RTS → 0x17 (00_010_111: CCC=2=S, T=1=true → sign-true return)."""
+        assert encode_instruction("RTS", (), {}, 0) == bytes([0x17])
 
     def test_rtp(self) -> None:
-        """RTP → 0x3B."""
-        assert encode_instruction("RTP", (), {}, 0) == bytes([0x3B])
+        """RTP → 0x1F (00_011_111: CCC=3=P, T=1=true → parity-true return)."""
+        assert encode_instruction("RTP", (), {}, 0) == bytes([0x1F])
 
     def test_wrong_operand_count_raises(self) -> None:
         """Fixed opcodes with operands raise AssemblerError."""
@@ -430,39 +430,43 @@ class TestEncodeAluReg:
 
 
 class TestEncodeAluImm:
-    """Tests for ALU immediate operations (Group 11, 2 bytes)."""
+    """Tests for ALU immediate operations (Group 11, 2 bytes).
+
+    Encoding: 11 OOO 100, d8  (group=11, sss=100, operation in bits[5:3])
+    All opcodes are in the range 0xC4..0xFC with sss=100 (bit pattern xxx_100).
+    """
 
     def test_adi_5(self) -> None:
-        """ADI 5: [0x04, 0x05]."""
-        assert encode_instruction("ADI", ("5",), {}, 0) == bytes([0x04, 0x05])
+        """ADI 5: [0xC4, 0x05] — 11_000_100, group=11, OOO=000 (ADD)."""
+        assert encode_instruction("ADI", ("5",), {}, 0) == bytes([0xC4, 0x05])
 
     def test_aci_0(self) -> None:
-        """ACI 0: [0x0C, 0x00] — used for carry() materialisation."""
-        assert encode_instruction("ACI", ("0",), {}, 0) == bytes([0x0C, 0x00])
+        """ACI 0: [0xCC, 0x00] — used for carry() materialisation."""
+        assert encode_instruction("ACI", ("0",), {}, 0) == bytes([0xCC, 0x00])
 
     def test_sui_1(self) -> None:
-        """SUI 1: [0x14, 0x01]."""
-        assert encode_instruction("SUI", ("1",), {}, 0) == bytes([0x14, 0x01])
+        """SUI 1: [0xD4, 0x01]."""
+        assert encode_instruction("SUI", ("1",), {}, 0) == bytes([0xD4, 0x01])
 
     def test_sbi_0(self) -> None:
-        """SBI 0: [0x1C, 0x00]."""
-        assert encode_instruction("SBI", ("0",), {}, 0) == bytes([0x1C, 0x00])
+        """SBI 0: [0xDC, 0x00]."""
+        assert encode_instruction("SBI", ("0",), {}, 0) == bytes([0xDC, 0x00])
 
     def test_ani_0xff(self) -> None:
-        """ANI 0xFF: [0x24, 0xFF]."""
-        assert encode_instruction("ANI", ("0xFF",), {}, 0) == bytes([0x24, 0xFF])
+        """ANI 0xFF: [0xE4, 0xFF]."""
+        assert encode_instruction("ANI", ("0xFF",), {}, 0) == bytes([0xE4, 0xFF])
 
     def test_xri_0xff(self) -> None:
-        """XRI 0xFF: [0x2C, 0xFF] — used for bitwise NOT (flip all bits)."""
-        assert encode_instruction("XRI", ("0xFF",), {}, 0) == bytes([0x2C, 0xFF])
+        """XRI 0xFF: [0xEC, 0xFF] — used for bitwise NOT (flip all bits)."""
+        assert encode_instruction("XRI", ("0xFF",), {}, 0) == bytes([0xEC, 0xFF])
 
     def test_ori_1(self) -> None:
-        """ORI 1: [0x34, 0x01]."""
-        assert encode_instruction("ORI", ("1",), {}, 0) == bytes([0x34, 0x01])
+        """ORI 1: [0xF4, 0x01]."""
+        assert encode_instruction("ORI", ("1",), {}, 0) == bytes([0xF4, 0x01])
 
     def test_cpi_0(self) -> None:
-        """CPI 0: [0x3C, 0x00] — compare A with 0 (for BRANCH_Z/BRANCH_NZ)."""
-        assert encode_instruction("CPI", ("0",), {}, 0) == bytes([0x3C, 0x00])
+        """CPI 0: [0xFC, 0x00] — compare A with 0 (for BRANCH_Z/BRANCH_NZ)."""
+        assert encode_instruction("CPI", ("0",), {}, 0) == bytes([0xFC, 0x00])
 
     def test_adi_out_of_range_raises(self) -> None:
         """ADI 256 raises AssemblerError."""
@@ -476,78 +480,84 @@ class TestEncodeJumpCall:
     Address encoding for 3-byte instructions:
       byte 2 = addr & 0xFF           (low 8 bits)
       byte 3 = (addr >> 8) & 0x3F   (high 6 bits)
+
+    Opcode derivation:
+      JMP = 0x7C (01_111_100): special unconditional, hardcoded in simulator
+      CAL = 0x7E (01_111_110): special unconditional, hardcoded in simulator
+      Conditional jumps: 01_CCC_T_00  (CCC=condition 0..3, T=sense bit)
+      Conditional calls: 01_CCC_T_10
     """
 
     def test_jmp_addr_zero(self) -> None:
-        """JMP 0x0000 → [0x44, 0x00, 0x00]."""
+        """JMP 0x0000 → [0x7C, 0x00, 0x00] — unconditional jump."""
         result = encode_instruction("JMP", ("0x0000",), {}, 0)
-        assert result == bytes([0x44, 0x00, 0x00])
+        assert result == bytes([0x7C, 0x00, 0x00])
 
     def test_jmp_addr_10(self) -> None:
-        """JMP 0x000A → [0x44, 0x0A, 0x00]."""
+        """JMP 0x000A → [0x7C, 0x0A, 0x00]."""
         result = encode_instruction("JMP", ("0x000A",), {}, 0)
-        assert result == bytes([0x44, 0x0A, 0x00])
+        assert result == bytes([0x7C, 0x0A, 0x00])
 
     def test_jmp_addr_crosses_256(self) -> None:
-        """JMP 0x0300 → [0x44, 0x00, 0x03] — hi6 = 3."""
+        """JMP 0x0300 → [0x7C, 0x00, 0x03] — hi6 = 3."""
         result = encode_instruction("JMP", ("0x0300",), {}, 0)
-        assert result == bytes([0x44, 0x00, 0x03])
+        assert result == bytes([0x7C, 0x00, 0x03])
 
     def test_jmp_addr_max(self) -> None:
-        """JMP 0x3FFF → [0x44, 0xFF, 0x3F] — maximum 14-bit address."""
+        """JMP 0x3FFF → [0x7C, 0xFF, 0x3F] — maximum 14-bit address."""
         result = encode_instruction("JMP", ("0x3FFF",), {}, 0)
-        assert result == bytes([0x44, 0xFF, 0x3F])
+        assert result == bytes([0x7C, 0xFF, 0x3F])
 
     def test_cal(self) -> None:
-        """CAL 0x0010 → [0x46, 0x10, 0x00]."""
+        """CAL 0x0010 → [0x7E, 0x10, 0x00] — unconditional call."""
         result = encode_instruction("CAL", ("0x0010",), {}, 0)
-        assert result == bytes([0x46, 0x10, 0x00])
+        assert result == bytes([0x7E, 0x10, 0x00])
 
     def test_jfc(self) -> None:
-        """JFC: opcode 0x40."""
+        """JFC: opcode 0x40 (01_000_000: CCC=0=CY, T=0=false, bits[1:0]=00)."""
         result = encode_instruction("JFC", ("0x0005",), {}, 0)
         assert result == bytes([0x40, 0x05, 0x00])
 
     def test_jtc(self) -> None:
-        """JTC: opcode 0x60."""
+        """JTC: opcode 0x44 (01_000_100: CCC=0=CY, T=1=true)."""
         result = encode_instruction("JTC", ("0x0005",), {}, 0)
-        assert result == bytes([0x60, 0x05, 0x00])
+        assert result == bytes([0x44, 0x05, 0x00])
 
     def test_jfz(self) -> None:
-        """JFZ: opcode 0x48."""
+        """JFZ: opcode 0x48 (01_001_000: CCC=1=Z, T=0=false)."""
         result = encode_instruction("JFZ", ("0x0005",), {}, 0)
         assert result == bytes([0x48, 0x05, 0x00])
 
     def test_jtz(self) -> None:
-        """JTZ: opcode 0x68."""
+        """JTZ: opcode 0x4C (01_001_100: CCC=1=Z, T=1=true)."""
         result = encode_instruction("JTZ", ("0x0005",), {}, 0)
-        assert result == bytes([0x68, 0x05, 0x00])
+        assert result == bytes([0x4C, 0x05, 0x00])
 
     def test_jfs(self) -> None:
-        """JFS: opcode 0x50."""
+        """JFS: opcode 0x50 (01_010_000: CCC=2=S, T=0=false)."""
         result = encode_instruction("JFS", ("0x0005",), {}, 0)
         assert result == bytes([0x50, 0x05, 0x00])
 
     def test_jts(self) -> None:
-        """JTS: opcode 0x70."""
+        """JTS: opcode 0x54 (01_010_100: CCC=2=S, T=1=true)."""
         result = encode_instruction("JTS", ("0x0005",), {}, 0)
-        assert result == bytes([0x70, 0x05, 0x00])
+        assert result == bytes([0x54, 0x05, 0x00])
 
     def test_jfp(self) -> None:
-        """JFP: opcode 0x58 — jump if parity false."""
+        """JFP: opcode 0x58 (01_011_000: CCC=3=P, T=0=false) — jump if parity false."""
         result = encode_instruction("JFP", ("0x0005",), {}, 0)
         assert result == bytes([0x58, 0x05, 0x00])
 
     def test_jtp(self) -> None:
-        """JTP: opcode 0x78."""
+        """JTP: opcode 0x5C (01_011_100: CCC=3=P, T=1=true)."""
         result = encode_instruction("JTP", ("0x0005",), {}, 0)
-        assert result == bytes([0x78, 0x05, 0x00])
+        assert result == bytes([0x5C, 0x05, 0x00])
 
     def test_jmp_label_reference(self) -> None:
         """JMP with a label resolves via the symbol table."""
         syms = {"loop": 0x0020}
         encoded = encode_instruction("JMP", ("loop",), syms, 0)
-        assert encoded == bytes([0x44, 0x20, 0x00])
+        assert encoded == bytes([0x7C, 0x20, 0x00])
 
     def test_jmp_undefined_label_raises(self) -> None:
         """JMP to an undefined label raises AssemblerError."""
@@ -563,13 +573,13 @@ class TestEncodeJumpCall:
         """CAL with a label resolves via the symbol table."""
         syms = {"func": 0x0100}
         encoded = encode_instruction("CAL", ("func",), syms, 0)
-        assert encoded == bytes([0x46, 0x00, 0x01])
+        assert encoded == bytes([0x7E, 0x00, 0x01])
 
     def test_jmp_dollar_sign(self) -> None:
         """JMP $ jumps to the current PC (self-loop)."""
-        # At PC=0x0010, JMP $ → [0x44, 0x10, 0x00]
+        # At PC=0x0010, JMP $ → [0x7C, 0x10, 0x00]
         encoded = encode_instruction("JMP", ("$",), {}, 0x0010)
-        assert encoded == bytes([0x44, 0x10, 0x00])
+        assert encoded == bytes([0x7C, 0x10, 0x00])
 
 
 class TestEncodeInOut:
@@ -593,21 +603,33 @@ class TestEncodeInOut:
             encode_instruction("IN", ("8",), {}, 0)
 
     def test_out_port_0(self) -> None:
-        """OUT 0: 0x41 | (0<<1) | 1 = 0x41."""
-        assert encode_instruction("OUT", ("0",), {}, 0) == bytes([0x41])
+        """OUT 0: p<<1 = 0x00.
+
+        Intel 8008 OUT encoding: opcode = port << 1.  The simulator detects
+        OUT by matching group=00, sss=010, ddd>3 and extracts port via
+        ``(opcode >> 1) & 0x1F``.
+        """
+        assert encode_instruction("OUT", ("0",), {}, 0) == bytes([0x00])
 
     def test_out_port_1(self) -> None:
-        """OUT 1: 0x41 | (1<<1) | 1 = 0x43."""
-        assert encode_instruction("OUT", ("1",), {}, 0) == bytes([0x43])
+        """OUT 1: p<<1 = 0x02."""
+        assert encode_instruction("OUT", ("1",), {}, 0) == bytes([0x02])
 
     def test_out_port_2(self) -> None:
-        """OUT 2: 0x41 | (2<<1) | 1 = 0x45."""
-        assert encode_instruction("OUT", ("2",), {}, 0) == bytes([0x45])
+        """OUT 2: p<<1 = 0x04."""
+        assert encode_instruction("OUT", ("2",), {}, 0) == bytes([0x04])
+
+    def test_out_port_17(self) -> None:
+        """OUT 17: p<<1 = 0x22 — the standard simulator-compatible port.
+
+        17<<1 = 0x22 = 00_100_010.  group=00, sss=010, ddd=4 (>3) ✓
+        The simulator extracts port as (0x22 >> 1) & 0x1F = 0x11 = 17.
+        """
+        assert encode_instruction("OUT", ("17",), {}, 0) == bytes([0x22])
 
     def test_out_port_23(self) -> None:
-        """OUT 23: 0x41 | (23<<1) | 1 = 0x41 | 46 | 1 = 0x41 | 0x2F = 0x6F."""
-        expected = 0x41 | (23 << 1) | 1
-        assert encode_instruction("OUT", ("23",), {}, 0) == bytes([expected])
+        """OUT 23: p<<1 = 0x2E."""
+        assert encode_instruction("OUT", ("23",), {}, 0) == bytes([0x2E])
 
     def test_out_port_out_of_range_raises(self) -> None:
         """OUT 24 raises AssemblerError (max port is 23)."""
@@ -699,8 +721,8 @@ loop:
 """
         binary = assemble(src)
         # HLT at 0x0000 = 0xFF
-        # JMP loop at 0x0001 → [0x44, 0x00, 0x00]
-        assert binary == bytes([0xFF, 0x44, 0x00, 0x00])
+        # JMP loop at 0x0001 → [0x7C, 0x00, 0x00]  (JMP=0x7C unconditional)
+        assert binary == bytes([0xFF, 0x7C, 0x00, 0x00])
 
     def test_forward_label_reference(self) -> None:
         """JMP to a label defined later (forward reference)."""
@@ -712,10 +734,10 @@ done:
     HLT
 """
         binary = assemble(src)
-        # JMP done: at 0x0000 → [0x44, lo, hi] where done = 0x0005
+        # JMP done: at 0x0000 → [0x7C, lo, hi] where done = 0x0005
         # MVI B, 42: at 0x0003 → [0x06, 0x2A]
         # HLT: at 0x0005 → [0xFF]
-        assert binary == bytes([0x44, 0x05, 0x00, 0x06, 0x2A, 0xFF])
+        assert binary == bytes([0x7C, 0x05, 0x00, 0x06, 0x2A, 0xFF])
 
     def test_multiple_labels(self) -> None:
         """Multiple labels in one program all resolve correctly."""
@@ -728,10 +750,10 @@ middle:
     RFC
 """
         binary = assemble(src)
-        # CAL middle: at 0x0000 → [0x46, 0x04, 0x00]  (middle = 0x0004)
+        # CAL middle: at 0x0000 → [0x7E, 0x04, 0x00]  (CAL=0x7E, middle=0x0004)
         # HLT:        at 0x0003 → [0xFF]
-        # RFC:        at 0x0004 → [0x07]
-        assert binary == bytes([0x46, 0x04, 0x00, 0xFF, 0x07])
+        # RFC:        at 0x0004 → [0x03]  (RFC = 00_000_011, T=0 → carry-false return)
+        assert binary == bytes([0x7E, 0x04, 0x00, 0xFF, 0x03])
 
     def test_label_in_conditional_jump(self) -> None:
         """JTZ with a label resolves correctly."""
@@ -744,11 +766,12 @@ done:
     RFC
 """
         binary = assemble(src)
-        # CPI 0:  [0x3C, 0x00]  at 0x0000
-        # JTZ done: [0x68, lo, hi] where done = 0x0007  at 0x0002
-        # HLT:    [0xFF]          at 0x0005
-        # RFC:    [0x07]          at 0x0006
-        assert binary == bytes([0x3C, 0x00, 0x68, 0x06, 0x00, 0xFF, 0x07])
+        # CPI 0:    [0xFC, 0x00]  at 0x0000  (CPI = 11_111_100 = 0xFC)
+        # JTZ done: [0x4C, lo, hi] where done = 0x0006  at 0x0002
+        #           JTZ = 01_001_100 = 0x4C  (CCC=1=zero, T=1=true)
+        # HLT:      [0xFF]         at 0x0005
+        # RFC:      [0x03]         at 0x0006  (RFC = 00_000_011 = 0x03)
+        assert binary == bytes([0xFC, 0x00, 0x4C, 0x06, 0x00, 0xFF, 0x03])
 
 
 class TestHiLoDirectives:
@@ -821,16 +844,16 @@ _fn_main:
 """
         binary = assemble(src)
         # MVI B, 0:    [0x06, 0x00]  at 0x0000
-        # CAL _fn_main: [0x46, 0x06, 0x00] at 0x0002  (_fn_main = 0x0006)
+        # CAL _fn_main: [0x7E, 0x06, 0x00] at 0x0002  (CAL=0x7E, _fn_main=0x0006)
         # HLT:         [0xFF]         at 0x0005
         # MOV A, B:    [0x78]         at 0x0006  (0x40|(7<<3)|0 = 0x78)
-        # RFC:         [0x07]         at 0x0007
+        # RFC:         [0x03]         at 0x0007  (RFC = 00_000_011 = 0x03)
         assert binary == bytes([
             0x06, 0x00,       # MVI B, 0
-            0x46, 0x06, 0x00, # CAL _fn_main
+            0x7E, 0x06, 0x00, # CAL _fn_main  (CAL=0x7E unconditional)
             0xFF,             # HLT
             0x78,             # MOV A, B
-            0x07,             # RFC
+            0x03,             # RFC  (carry-false → always returns since ALU clears CY)
         ])
 
     def test_comparison_sequence(self) -> None:
@@ -852,14 +875,14 @@ cmp_done:
         # MOV A, B:    [0x78]         at 0x0000
         # CMP C:       [0xB9]         at 0x0001  (0xB8|1 = 0xB9)
         # MVI D, 1:    [0x16, 0x01]   at 0x0002  ((2<<3)|6 = 0x16)
-        # JTZ cmp_done: [0x68, 0x09, 0x00] at 0x0004  (cmp_done = 0x0009)
+        # JTZ cmp_done: [0x4C, 0x09, 0x00] at 0x0004  (JTZ=0x4C, cmp_done=0x0009)
         # MVI D, 0:    [0x16, 0x00]   at 0x0007
         # HLT:         [0xFF]         at 0x0009
         assert binary == bytes([
             0x78,             # MOV A, B
             0xB9,             # CMP C
             0x16, 0x01,       # MVI D, 1
-            0x68, 0x09, 0x00, # JTZ cmp_done (cmp_done = 0x0009)
+            0x4C, 0x09, 0x00, # JTZ cmp_done  (JTZ = 01_001_100 = 0x4C)
             0x16, 0x00,       # MVI D, 0
             0xFF,             # HLT (cmp_done)
         ])
@@ -907,10 +930,10 @@ cmp_done:
 """
         binary = assemble(src)
         # MOV A, B:  0x78
-        # XRI 0xFF:  0x2C, 0xFF
+        # XRI 0xFF:  0xEC, 0xFF  (XRI = 11_101_100 = 0xEC; was wrong 0x2C = group 00)
         # MOV C, A:  0x4F
         # HLT:       0xFF
-        assert binary == bytes([0x78, 0x2C, 0xFF, 0x4F, 0xFF])
+        assert binary == bytes([0x78, 0xEC, 0xFF, 0x4F, 0xFF])
 
     def test_io_operations(self) -> None:
         """IN p (read) and OUT p (write) sequences."""
@@ -923,12 +946,12 @@ cmp_done:
     HLT
 """
         binary = assemble(src)
-        # IN 0:    0x41
+        # IN 0:    0x41  (01_000_001)
         # MOV C,A: 0x4F  (0x40|(1<<3)|7)
         # MOV A,D: 0x7A  (0x40|(7<<3)|2)
-        # OUT 1:   0x41|(1<<1)|1 = 0x43
+        # OUT 1:   1<<1 = 0x02
         # HLT:     0xFF
-        assert binary == bytes([0x41, 0x4F, 0x7A, 0x43, 0xFF])
+        assert binary == bytes([0x41, 0x4F, 0x7A, 0x02, 0xFF])
 
 
 class TestOrgDirective:
@@ -988,7 +1011,7 @@ class TestAssemblerClass:
         b1 = asm.assemble("    HLT")
         b2 = asm.assemble("    RFC")
         assert b1 == bytes([0xFF])
-        assert b2 == bytes([0x07])
+        assert b2 == bytes([0x03])
 
     def test_stateless_between_calls(self) -> None:
         """Symbol table is not shared between calls."""

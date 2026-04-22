@@ -53,6 +53,7 @@ __all__ = [
     "Clause",
     "Compound",
     "ConjExpr",
+    "CutExpr",
     "DeferredExpr",
     "DynamicDatabase",
     "DisjExpr",
@@ -84,6 +85,7 @@ __all__ = [
     "clause_from_term",
     "clauses_matching",
     "conj",
+    "cut",
     "declare_dynamic",
     "defer",
     "disj",
@@ -231,6 +233,11 @@ class FailExpr:
 
 
 @dataclass(frozen=True, slots=True)
+class CutExpr:
+    """A goal expression that commits to choices made in the current frame."""
+
+
+@dataclass(frozen=True, slots=True)
 class EqExpr:
     """A structured equality goal that delegates unification to LP00."""
 
@@ -307,6 +314,7 @@ type GoalExpr = (
     RelationCall
     | SucceedExpr
     | FailExpr
+    | CutExpr
     | EqExpr
     | NeqExpr
     | NativeGoalExpr
@@ -326,6 +334,7 @@ def _coerce_goal(goal: object) -> GoalExpr:
             RelationCall
             | SucceedExpr
             | FailExpr
+            | CutExpr
             | EqExpr
             | NeqExpr
             | NativeGoalExpr
@@ -351,6 +360,18 @@ def fail() -> GoalExpr:
     """Construct a failure goal expression."""
 
     return FailExpr()
+
+
+def cut() -> GoalExpr:
+    """Construct a scoped Prolog-style cut goal expression.
+
+    Cut succeeds once, then prunes choicepoints created earlier in the current
+    query or predicate invocation. Predicate calls consume cuts raised by their
+    own clause bodies, so a cut inside a relation commits that relation without
+    accidentally pruning the caller's surrounding search.
+    """
+
+    return CutExpr()
 
 
 def eq(left: object, right: object) -> GoalExpr:
@@ -525,6 +546,18 @@ class _VisibleClause:
     clause: Clause
     source: str
     index: int
+
+
+@dataclass(frozen=True, slots=True)
+class _SearchResult:
+    """One internal proof event plus whether a cut fired on that path.
+
+    ``state=None`` represents a failing path that still needs to propagate a
+    cut, such as the Prolog pattern ``!, fail``.
+    """
+
+    state: State | None
+    cut: bool = False
 
 
 def _normalize_relation_keys(keys: Iterable[RelationKey]) -> frozenset[RelationKey]:
@@ -772,6 +805,8 @@ def goal_as_term(goal_value: object) -> Term:
         return atom("true")
     if isinstance(goal, FailExpr):
         return atom("fail")
+    if isinstance(goal, CutExpr):
+        return atom("!")
     if isinstance(goal, EqExpr):
         return term("=", goal.left, goal.right)
     if isinstance(goal, NeqExpr):
@@ -829,6 +864,8 @@ def goal_from_term(term_value: object) -> GoalExpr:
             return succeed()
         if _is_plain_atom(callable_term, "fail"):
             return fail()
+        if _is_plain_atom(callable_term, "!"):
+            return cut()
         return RelationCall(
             relation=Relation(symbol=callable_term.symbol, arity=0),
             args=(),
@@ -1144,6 +1181,7 @@ def _state_with_database(state: State, database: DynamicDatabase) -> State:
         constraints=state.constraints,
         next_var_id=state.next_var_id,
         database=database,
+        fd_store=state.fd_store,
     )
 
 
@@ -1155,6 +1193,7 @@ def _state_with_next_var_id(state: State, next_var_id: int) -> State:
         constraints=state.constraints,
         next_var_id=next_var_id,
         database=state.database,
+        fd_store=state.fd_store,
     )
 
 
@@ -1638,8 +1677,127 @@ def _instantiate_fresh(goal: FreshExpr, state: State) -> tuple[GoalExpr, State]:
         constraints=state.constraints,
         next_var_id=running_id,
         database=state.database,
+        fd_store=state.fd_store,
     )
     return renamed_body, next_state
+
+
+def _solve_goal_results(
+    program_value: Program,
+    goal: GoalExpr,
+    state: State,
+) -> Iterator[_SearchResult]:
+    """Interpret one goal expression and retain internal cut signals."""
+
+    if isinstance(goal, SucceedExpr):
+        yield _SearchResult(state)
+        return
+
+    if isinstance(goal, FailExpr):
+        return
+
+    if isinstance(goal, CutExpr):
+        yield _SearchResult(state, cut=True)
+        return
+
+    if isinstance(goal, EqExpr):
+        for next_state in core_eq(goal.left, goal.right)(state):
+            yield _SearchResult(next_state)
+        return
+
+    if isinstance(goal, NeqExpr):
+        for next_state in core_neq(goal.left, goal.right)(state):
+            yield _SearchResult(next_state)
+        return
+
+    if isinstance(goal, NativeGoalExpr):
+        for next_state in goal.runner(program_value, state, goal.args):
+            yield _SearchResult(next_state)
+        return
+
+    if isinstance(goal, ConjExpr):
+        yield from _solve_conjunction_results(program_value, goal.goals, state)
+        return
+
+    if isinstance(goal, DisjExpr):
+        for branch in goal.goals:
+            branch_cut = False
+            for result in _solve_goal_results(program_value, branch, state):
+                branch_cut = branch_cut or result.cut
+                yield result
+            if branch_cut:
+                break
+        return
+
+    if isinstance(goal, DeferredExpr):
+        expanded_goal = _coerce_goal(goal.builder(*goal.args))
+        yield from _solve_goal_results(program_value, expanded_goal, state)
+        return
+
+    if isinstance(goal, FreshExpr):
+        renamed_body, next_state = _instantiate_fresh(goal, state)
+        yield from _solve_goal_results(program_value, renamed_body, next_state)
+        return
+
+    for clause in visible_clauses_for(program_value, goal.relation, state):
+        clause_cut = False
+        fresh_clause, next_var_id = _freshen_clause(clause, state.next_var_id)
+        for unified_state in core_eq(goal.as_term(), fresh_clause.head.as_term())(
+            state,
+        ):
+            clause_state = _state_with_next_var_id(unified_state, next_var_id)
+            if fresh_clause.body is None:
+                yield _SearchResult(clause_state)
+            else:
+                for result in _solve_goal_results(
+                    program_value,
+                    fresh_clause.body,
+                    clause_state,
+                ):
+                    clause_cut = clause_cut or result.cut
+                    if result.state is not None:
+                        yield _SearchResult(result.state)
+                if clause_cut:
+                    break
+        if clause_cut:
+            break
+
+
+def _solve_conjunction_results(
+    program_value: Program,
+    goals: tuple[GoalExpr, ...],
+    state: State,
+) -> Iterator[_SearchResult]:
+    """Solve conjunctions left-to-right while propagating scoped cuts."""
+
+    if not goals:
+        yield _SearchResult(state)
+        return
+
+    first, *rest = goals
+    for first_result in _solve_goal_results(program_value, first, state):
+        cut_seen = first_result.cut
+        if first_result.state is None:
+            if cut_seen:
+                yield _SearchResult(None, cut=True)
+                break
+            continue
+        emitted_rest_result = False
+        for rest_result in _solve_conjunction_results(
+            program_value,
+            tuple(rest),
+            first_result.state,
+        ):
+            emitted_rest_result = True
+            cut_seen = cut_seen or rest_result.cut
+            if rest_result.state is None:
+                yield _SearchResult(None, cut=cut_seen)
+            else:
+                yield _SearchResult(rest_result.state, cut=cut_seen)
+        if first_result.cut and not emitted_rest_result:
+            yield _SearchResult(None, cut=True)
+        if cut_seen:
+            break
 
 
 def _solve_goal(
@@ -1649,70 +1807,9 @@ def _solve_goal(
 ) -> Iterator[State]:
     """Interpret one goal expression against ``program_value``."""
 
-    if isinstance(goal, SucceedExpr):
-        yield state
-        return
-
-    if isinstance(goal, FailExpr):
-        return
-
-    if isinstance(goal, EqExpr):
-        yield from core_eq(goal.left, goal.right)(state)
-        return
-
-    if isinstance(goal, NeqExpr):
-        yield from core_neq(goal.left, goal.right)(state)
-        return
-
-    if isinstance(goal, NativeGoalExpr):
-        yield from goal.runner(program_value, state, goal.args)
-        return
-
-    if isinstance(goal, ConjExpr):
-        yield from _solve_conjunction(program_value, goal.goals, state)
-        return
-
-    if isinstance(goal, DisjExpr):
-        for branch in goal.goals:
-            yield from _solve_goal(program_value, branch, state)
-        return
-
-    if isinstance(goal, DeferredExpr):
-        expanded_goal = _coerce_goal(goal.builder(*goal.args))
-        yield from _solve_goal(program_value, expanded_goal, state)
-        return
-
-    if isinstance(goal, FreshExpr):
-        renamed_body, next_state = _instantiate_fresh(goal, state)
-        yield from _solve_goal(program_value, renamed_body, next_state)
-        return
-
-    for clause in visible_clauses_for(program_value, goal.relation, state):
-        fresh_clause, next_var_id = _freshen_clause(clause, state.next_var_id)
-        for unified_state in core_eq(goal.as_term(), fresh_clause.head.as_term())(
-            state,
-        ):
-            clause_state = _state_with_next_var_id(unified_state, next_var_id)
-            if fresh_clause.body is None:
-                yield clause_state
-            else:
-                yield from _solve_goal(program_value, fresh_clause.body, clause_state)
-
-
-def _solve_conjunction(
-    program_value: Program,
-    goals: tuple[GoalExpr, ...],
-    state: State,
-) -> Iterator[State]:
-    """Solve conjunctions left-to-right, threading substitutions through."""
-
-    if not goals:
-        yield state
-        return
-
-    first, *rest = goals
-    for next_state in _solve_goal(program_value, first, state):
-        yield from _solve_conjunction(program_value, tuple(rest), next_state)
+    for result in _solve_goal_results(program_value, goal, state):
+        if result.state is not None:
+            yield result.state
 
 
 def solve(program_value: Program, goal: object) -> Iterator[State]:

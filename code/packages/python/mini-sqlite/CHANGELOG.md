@@ -1,5 +1,138 @@
 # Changelog
 
+## [0.4.0] - 2026-04-22
+
+### Added — Phase 9.5: Automatic B-tree index creation (IndexAdvisor)
+
+- **`CREATE INDEX` / `DROP INDEX` DDL** — end-to-end support for explicit
+  index management:
+  - Grammar extended with `create_index_stmt` and `drop_index_stmt` rules.
+  - `sql-parser` regenerated from the updated grammar.
+  - `sql-planner` gained `CreateIndexStmt`, `DropIndexStmt` AST nodes and
+    `CreateIndex`, `DropIndex` plan nodes.  The planner dispatches to
+    `_plan_create_index` / `_plan_drop_index` which emit the new plan nodes.
+  - `sql-codegen` gained `CreateIndex` and `DropIndex` IR instructions plus
+    compiler lowering.
+  - `sql-vm` handles `CreateIndex` and `DropIndex` by calling
+    `backend.create_index` and `backend.drop_index`.
+  - `adapter.py` gains `_create_index()` and `_drop_index()` helper
+    functions and their dispatch cases in `_stmt_dispatch`.
+  - `CREATE UNIQUE INDEX` and `CREATE INDEX IF NOT EXISTS` are both
+    supported.  `DROP INDEX IF EXISTS` is supported.
+
+- **`IndexScan` planner node** — the planner can now substitute a
+  `Filter(Scan(t))` with an `IndexScan(t)` when an index covering the
+  predicate column exists on the backend.  Range bounds are extracted from
+  EQ / GT / GTE / LT / LTE / BETWEEN predicates.  All five optimizer passes
+  (`constant_folding`, `dead_code`, `limit_pushdown`, `predicate_pushdown`,
+  `projection_pruning`) handle `IndexScan` as a leaf node.
+
+- **`IndexAdvisor`** (`mini_sqlite.advisor`) — observes every optimised
+  query plan and auto-creates B-tree indexes for filtered-but-unindexed
+  columns:
+  - Hooks into `engine.run()` via the new `advisor` keyword parameter.
+    Called with the optimised plan before code generation.
+  - Walks the plan tree looking for `Filter(Scan(t), predicate)` patterns
+    and records `(table, column)` hit counts.
+  - Uses `auto_{table}_{column}` naming convention for created indexes.
+  - Skips creation if any existing index already covers the column (first
+    key match).
+  - Handles `IndexAlreadyExists` from the backend gracefully (race-safe
+    no-op).
+
+- **`IndexPolicy` / `HitCountPolicy`** (`mini_sqlite.policy`) — pluggable
+  decision interface for auto-index creation:
+  - `IndexPolicy` — `@runtime_checkable` `Protocol` requiring `should_create(table, column, hit_count) → bool`.
+  - `HitCountPolicy(threshold=3)` — creates an index when a column's
+    filter-hit count reaches the configured threshold.  Default threshold 3.
+    Threshold must be ≥ 1 (raises `ValueError` otherwise).
+  - Any object implementing `should_create` satisfies the protocol without
+    subclassing.
+
+- **`Connection.set_policy(policy)`** — replace the active
+  `IndexPolicy` on a live connection without losing accumulated hit counts.
+  No-op when `auto_index=False`.
+
+- **`connect(auto_index=True)`** — new `auto_index` keyword parameter.
+  `True` (default): an `IndexAdvisor` is attached to the connection.
+  `False`: no advisor; automatic index management is disabled entirely.
+
+- **`mini_sqlite.__all__`** additions: `HitCountPolicy`, `IndexAdvisor`,
+  `IndexPolicy`.
+
+### Tests
+
+- `tests/test_tier2_features.py` — 43 additional tests covering:
+  - `TestCreateDropIndex` (8 tests): CREATE INDEX, CREATE UNIQUE INDEX,
+    CREATE INDEX IF NOT EXISTS idempotence, DROP INDEX, DROP INDEX IF EXISTS,
+    multi-column indexes, correctness parity (indexed vs. un-indexed).
+  - `TestHitCountPolicy` (10 tests): threshold semantics, protocol
+    conformance, error cases, custom policy protocol.
+  - `TestIndexAdvisor` (9 tests): advisor creation, set_policy, auto-index
+    naming, threshold behavior (below/at/above), no-duplicate creation,
+    explicit index prevents auto creation, correctness before/after.
+  - `TestConnectAutoIndex` (5 tests): `auto_index` parameter, `__all__`
+    exports.
+
+## [0.3.0] - 2026-04-21
+
+### Added — Phase 9: Tier-2 SQL features (CASE, derived tables, chained set ops, TCL)
+
+- **CASE expression** (`CASE WHEN … THEN … [ELSE …] END`) — both searched and
+  simple CASE forms now parse and execute end-to-end.  The adapter converts
+  simple CASE into equality comparisons; the codegen emits a
+  `JumpIfFalse`-based chain; the VM evaluates branches lazily.  CASE can appear
+  in SELECT items, WHERE predicates, ORDER BY keys, and HAVING clauses.
+
+- **Derived tables** (`(SELECT …) AS alias` in FROM) — subqueries used as
+  table sources now work end-to-end.  The adapter translates to
+  `DerivedTableRef`; the planner emits a `DerivedTable` plan node with resolved
+  output columns; the codegen emits `RunSubquery`; the VM executes the inner
+  program against the same backend and exposes the rows via `_SubqueryCursor`.
+
+- **Chained set operations** — `A UNION B UNION C`, `A INTERSECT B EXCEPT C`,
+  etc.  The adapter builds a left-associative tree of
+  `UnionStmt`/`IntersectStmt`/`ExceptStmt` nodes; the planner dispatches
+  through `plan()` for each left operand so nesting resolves correctly.
+
+- **Explicit TCL interception** — `BEGIN`, `COMMIT`, and `ROLLBACK` SQL
+  statements are now intercepted in `Cursor.execute()` *before*
+  `_ensure_transaction_if_needed` runs, delegating to three new
+  `Connection`-level methods:
+  - `_tcl_begin()` — opens a transaction; raises `OperationalError` if one is
+    already active.
+  - `_tcl_commit()` — commits the active transaction; raises `OperationalError`
+    if none exists.
+  - `_tcl_rollback()` — rolls back the active transaction; raises
+    `OperationalError` if none exists.
+  This prevents a double-transaction collision (the connection's implicit
+  transaction opening racing with the VM's `BeginTransaction` instruction).
+
+- **`_flatten_children()` recursion in `engine.py`** — the
+  `_flatten_project_over_aggregate` helper now recurses into child plans
+  (including `DerivedTable`, `Filter`, `Join`, `Union`, etc.) before processing
+  the outer plan, so `Project(Aggregate(...))` patterns inside derived tables
+  are correctly rewritten before codegen sees them.
+
+### Fixed
+
+- **INSERT with explicit column list** — `_insert()` in the adapter now
+  correctly parses the column name list when an `insert_body` grammar node
+  separates the column list from the values.
+
+- **`_stmt_dispatch` routing** — statements that arrive as `query_stmt` nodes
+  (the grammar's outer wrapper for SELECT + set-op tails) are now handled
+  explicitly; previously only bare `select_stmt` nodes were routed, causing
+  parse errors for UNION queries at the top level.
+
+### Tests
+
+- `tests/test_tier2_features.py` — 34 new integration tests across six classes:
+  `TestCaseExpression` (11), `TestDerivedTables` (5), `TestChainedSetOps` (5),
+  `TestExplicitTransactions` (4), `TestSubqueriesInWhere` (5),
+  `TestCrossJoin` (4).
+- Mini-sqlite total: **165 tests, 89.79% coverage**.
+
 ## [0.2.0] - 2026-04-20
 
 ### Added — Phase 8: file-backed `connect()` and byte-compatibility oracle tests

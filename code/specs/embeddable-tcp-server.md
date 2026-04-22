@@ -94,18 +94,24 @@ transport package identity.
 
 - Mailbox mode can use a configurable stdio worker process pool through
   `generic-job-runtime`; the default remains one process.
+- Mailbox mode can bound worker queue depth and treats `queue_full` as
+  backpressure: the TCP layer defers the already-read bytes, pauses reads for
+  that stream, and resumes paused streams when worker completions release
+  capacity.
+- Mailbox mode can pass a default worker job timeout into the generic runtime
+  so stuck jobs produce timed-out responses instead of leaking capacity.
 - Worker communication uses the JSON-line `generic-job-protocol` codec over
   standard streams, not a binary protocol.
 - Mailbox delivery is bounded by the stream reactor's cooperative poll timeout
   until the transport layer exposes a thread-safe wake handle.
-- Process-pool hardening is still incomplete: timeouts, restart policy,
-  cancellation, and TCP read pausing on queue saturation need dedicated follow-up
-  work.
+- Process-pool hardening is still incomplete: restart policy, cancellation,
+  ordered response buffering, and richer backpressure telemetry need dedicated
+  follow-up work.
 
 These limits are intentional for the first process-pool slice. The TCP package
-now consumes the generic job runtime, but the runtime still needs production
-supervision and backpressure policy before it should be treated as the final
-high-performance architecture.
+now consumes the generic job runtime, but the runtime still needs restart,
+cancellation, ordering policy, and production metrics before it should be
+treated as the final high-performance architecture.
 
 ## Acceptance Criteria
 
@@ -122,5 +128,7 @@ high-performance architecture.
   replies generated entirely by the Python worker.
 - Rust tests prove the TCP callback can accept later reads while an earlier
   worker response is still pending.
+- Rust tests prove worker queue saturation pauses and replays TCP reads instead
+  of closing connections or dropping bytes.
 - Documentation states that this is a prototype and not the final async worker
   architecture.

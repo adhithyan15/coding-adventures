@@ -12,6 +12,7 @@ from ir_to_cil_bytecode.backend import (
     CILTokenProvider,
     SequentialCILTokenProvider,
     lower_ir_to_cil_bytecode,
+    validate_for_clr,
 )
 
 __all__ = [
@@ -26,4 +27,5 @@ __all__ = [
     "CILTokenProvider",
     "SequentialCILTokenProvider",
     "lower_ir_to_cil_bytecode",
+    "validate_for_clr",
 ]

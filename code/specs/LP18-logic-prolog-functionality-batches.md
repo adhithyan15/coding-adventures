@@ -59,18 +59,17 @@ LP14 advanced control builtins
 LP15 term metaprogramming builtins
 LP16 persistent clause database
 LP17 clause introspection builtins
+LP18 Batch A metaprogramming completion
+LP18 Batch B dynamic runtime database
+LP18 Batch C search control and real cut
+LP18 Batch D1 CLP(FD) foundation
 PR00 Prolog lexer
 ```
 
 Known future-extension items that still need implementation:
 
-- callable goal-term lowering
-- standard term ordering
-- predicate metadata and predicate-property inspection
-- dynamic predicate declarations
-- backtracking-safe runtime `assert` and `retract`
-- real Prolog cut with scoped choicepoint pruning
-- CLP(FD)-style finite-domain constraints
+- soft-cut variants if a concrete API need emerges
+- CLP(FD) arithmetic propagation and global constraints
 
 ## Batch Plan
 
@@ -189,9 +188,10 @@ code/packages/python/logic-builtins
 Features:
 
 - scoped choicepoint frames in the solver protocol
-- `cuto()` as the library form of `!/0`
-- if-then-else lowering that commits to the chosen branch
-- soft-cut variants if the solver protocol supports them cleanly
+- `cut()` in `logic-engine` and `cuto()` in `logic-builtins` as the library
+  form of `!/0`
+- cut encoding/lowering through `goal_as_term(...)` and `goal_from_term(...)`
+  as the atom `!`
 - examples that distinguish real cut from `onceo`
 
 Why this is one batch:
@@ -207,6 +207,25 @@ Batch C should not fake cut by using `onceo`. LP14 explicitly deferred `cuto`
 because a correct implementation needs scoped pruning of surrounding clause and
 disjunction alternatives.
 
+Implementation shape:
+
+- the public solver still yields ordinary `State` objects, but the private
+  solver protocol threads a cut flag alongside each state
+- conjunctions propagate a cut signal to prune alternatives created by earlier
+  goals in the same conjunction
+- disjunctions stop exploring later branches after a branch raises cut
+- relation calls act as cut frames: a cut inside a rule body prunes later body
+  alternatives and later clauses for that predicate invocation, then the
+  relation consumes the cut before returning to the caller
+- cut succeeds once, so choices introduced after the cut remain backtrackable
+
+Deliberately deferred:
+
+- soft-cut remains out of scope until there is a concrete library API need
+- `calltermo(...)` and other native-goal boundaries currently execute nested
+  goals through the public solver API, so cut is scoped to the nested call
+  rather than propagated through meta-call boundaries
+
 ### Batch D - CLP(FD) Foundation
 
 Batch D should start finite-domain constraint logic programming, but it should
@@ -220,7 +239,7 @@ code/packages/python/logic-engine
 code/packages/python/logic-builtins
 ```
 
-Features:
+Track features:
 
 - finite-domain variables and domain stores
 - domain constraints such as membership, equality, disequality, ordering, and
@@ -237,10 +256,10 @@ Why this is not bundled with A, B, or C:
 - useful examples, like Sudoku or scheduling, need a broader surface than one
   or two predicates
 
-CLP(FD) can still be delivered in a few sub-batches:
+CLP(FD) is being delivered in a few sub-batches:
 
-- D1: finite domains, domain narrowing, and labeling
-- D2: arithmetic and ordering constraints
+- D1: finite domains, domain narrowing, ordering constraints, and labeling
+- D2: arithmetic expression constraints
 - D3: global constraints such as `all_differento`
 - D4: real-world examples and performance tuning
 
@@ -408,7 +427,11 @@ CLP(FD) should extend the solver state with a finite-domain store. Domain
 narrowing should occur before enumeration whenever possible, and labeling
 should be the explicit bridge from constraints to concrete answers.
 
-Initial predicates:
+Batch D is intentionally split into implementation slices. The foundation PR
+should establish a branch-local finite-domain store and the integer relations
+that are useful without arithmetic expression propagation.
+
+Foundation predicates:
 
 ```python
 fd_ino(var, domain)
@@ -418,15 +441,44 @@ fd_lto(left, right)
 fd_leqo(left, right)
 fd_gto(left, right)
 fd_geqo(left, right)
+labelingo(vars)
+```
+
+Deferred predicates:
+
+```python
 fd_addo(left, right, result)
 fd_subo(left, right, result)
 fd_mulo(left, right, result)
-labelingo(vars)
 all_differento(vars)
 ```
 
 The first CLP(FD) batch should prefer correctness and clear semantics over
 advanced propagation performance.
+
+Foundation implementation shape:
+
+- `State` grows a branch-local `fd_store` extension slot alongside the dynamic
+  database slot, and all solver state-copying helpers must preserve it.
+- The FD store maps open logic variables to finite integer domain sets and
+  keeps residual binary constraints for variables that are not labeled yet.
+- FD predicates narrow domains immediately when possible. If both sides are
+  concrete integers, they behave as deterministic checks. If one or both sides
+  are open variables, they retain enough residual constraint state for later
+  narrowing and labeling.
+- `labelingo(vars)` is the bridge from constraints to concrete answers. It
+  enumerates the current finite domains in deterministic ascending order,
+  commits each assignment through normal unification, and re-checks the FD
+  store after every binding.
+- Domains in the Python API may be supplied as a `range`, an iterable of
+  integers, a single integer, a numeric term, a proper logic list of integer
+  terms, or a `..(Low, High)` compound term.
+
+Explicit non-goals for the foundation PR:
+
+- no arithmetic FD propagation yet (`fd_addo`, `fd_subo`, `fd_mulo`)
+- no global constraints yet (`all_differento`)
+- no infinite domains; every domain must be finite before labeling
 
 ## PR Sizing Recommendation
 
@@ -436,7 +488,8 @@ Use this implementation sequence:
 PR 1: Batch A - metaprogramming completion
 PR 2: Batch B - dynamic runtime database
 PR 3: Batch C - real cut and search control
-PR 4+: Batch D - CLP(FD) foundation and follow-up constraint batches
+PR 4: Batch D1 - CLP(FD) foundation
+PR 5+: Batch D2/D3 - arithmetic propagation and global constraints
 ```
 
 This is the fewest practical set of large PRs without forcing unrelated solver
@@ -486,8 +539,6 @@ Future implementation PRs should keep these guardrails:
 LP18 says yes: the remaining Prolog-level functionality can be knocked out in a
 few big batches rather than many tiny PRs.
 
-The recommended next PR is Batch A, because it completes the pure
-metaprogramming loop and makes the library feel much closer to Prolog without
-changing mutable database or solver-control internals. Batch B then adds
-runtime dynamic predicates, Batch C adds real cut, and Batch D starts finite
-domain constraints as a focused constraint-solving track.
+Batch A completed the pure metaprogramming loop, Batch B added runtime dynamic
+predicates, and Batch C added real cut. Batch D starts finite-domain
+constraints as the next focused constraint-solving track.

@@ -59,8 +59,10 @@ from sql_planner import (
     Between,
     BinaryExpr,
     BinaryOp,
+    CaseExpr,
     Column,
     Commit,
+    DerivedTable,
     Distinct,
     EmptyResult,
     Except,
@@ -69,6 +71,7 @@ from sql_planner import (
     FunctionCall,
     Having,
     In,
+    IndexScan,
     Intersect,
     IsNotNull,
     IsNull,
@@ -121,6 +124,11 @@ def _push(p: LogicalPlan) -> LogicalPlan:
             return Intersect(left=_push(l), right=_push(r), all=a)
         case Except(left=l, right=r, all=a):
             return Except(left=_push(l), right=_push(r), all=a)
+        case DerivedTable(query=q, alias=alias, columns=cols):
+            # Recurse into the inner query; predicates from the outer query
+            # are NOT pushed inside a derived table (they reference aliases
+            # that only exist in the outer scope).
+            return DerivedTable(query=_push(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p
         case _:
@@ -196,8 +204,8 @@ def _distribute_conjuncts(
                 new_r = _wrap_with_keeps(new_r_inner, inner_keep_r)
             return stuck, Join(left=new_l, right=new_r, kind=k, condition=cond)
 
-        # Scan / EmptyResult / others — can't descend further.
-        case Scan() | EmptyResult():
+        # Scan / IndexScan / EmptyResult / others — can't descend further.
+        case Scan() | IndexScan() | EmptyResult():
             return conjuncts, tree
 
         # Aggregate, Having, Limit, Union — do not push through.
@@ -240,8 +248,12 @@ def _alias_set(plan: LogicalPlan) -> set[str]:
 
 def _walk_aliases(p: LogicalPlan, out: set[str]) -> None:
     match p:
-        case Scan(table=t, alias=a):
+        case Scan(table=t, alias=a) | IndexScan(table=t, alias=a):
             out.add(a or t)
+        case DerivedTable(query=_, alias=a, columns=_):
+            # A derived table exposes its alias to the outer query; we do NOT
+            # descend into the inner plan — its aliases are inner scope only.
+            out.add(a)
         case Filter(input=inner) | Project(input=inner) | Aggregate(input=inner) \
                 | Having(input=inner) | Sort(input=inner) | Limit(input=inner) \
                 | Distinct(input=inner):
@@ -315,6 +327,12 @@ def _walk_column_aliases(expr: Expr, out: set[str], unknown: list[bool]) -> None
             for a in args:
                 if a.value is not None:
                     _walk_column_aliases(a.value, out, unknown)
+        case CaseExpr(whens=whens, else_=else_):
+            for cond, result in whens:
+                _walk_column_aliases(cond, out, unknown)
+                _walk_column_aliases(result, out, unknown)
+            if else_ is not None:
+                _walk_column_aliases(else_, out, unknown)
         case Literal():
             pass
         case _:
