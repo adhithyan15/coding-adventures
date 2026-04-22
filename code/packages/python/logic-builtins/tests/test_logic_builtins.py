@@ -101,7 +101,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.11.0"
+        assert __version__ == "0.12.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -709,6 +709,125 @@ class TestFiniteDomainBuiltins:
             (num(1), num(2), num(2), num(1)),
             (num(2), num(1), num(1), num(2)),
         ]
+
+    def test_labelingo_uses_smallest_domain_first_with_stable_ties(self) -> None:
+        wide = var("Wide")
+        narrow = var("Narrow")
+
+        assert solve_all(
+            program(),
+            (wide, narrow),
+            conj(
+                fd_ino(wide, range(1, 4)),
+                fd_ino(narrow, [10, 20]),
+                labelingo([wide, narrow]),
+            ),
+        ) == [
+            (num(1), num(10)),
+            (num(2), num(10)),
+            (num(3), num(10)),
+            (num(1), num(20)),
+            (num(2), num(20)),
+            (num(3), num(20)),
+        ]
+
+    def test_fd_constraints_solve_australia_map_coloring(self) -> None:
+        wa = var("WA")
+        nt = var("NT")
+        sa = var("SA")
+        q = var("Q")
+        nsw = var("NSW")
+        v = var("V")
+        t = var("T")
+        regions = (wa, nt, sa, q, nsw, v, t)
+        borders = (
+            (wa, nt),
+            (wa, sa),
+            (nt, sa),
+            (nt, q),
+            (sa, q),
+            (sa, nsw),
+            (sa, v),
+            (q, nsw),
+            (nsw, v),
+        )
+
+        assert solve_n(
+            program(),
+            1,
+            regions,
+            conj(
+                *(fd_ino(region, range(1, 4)) for region in regions),
+                fd_ino(wa, [1]),
+                *(fd_neqo(left, right) for left, right in borders),
+                labelingo(regions),
+            ),
+        ) == [(num(1), num(2), num(3), num(1), num(2), num(1), num(1))]
+
+    def test_fd_constraints_solve_four_by_four_latin_square(self) -> None:
+        cells = tuple(var(f"Cell{index}") for index in range(16))
+        rows = tuple(cells[index : index + 4] for index in range(0, 16, 4))
+        columns = tuple(tuple(row[index] for row in rows) for index in range(4))
+        givens = {
+            cells[0]: 1,
+            cells[1]: 2,
+            cells[2]: 3,
+            cells[3]: 4,
+            cells[4]: 2,
+            cells[8]: 3,
+            cells[12]: 4,
+        }
+
+        answers = solve_n(
+            program(),
+            1,
+            cells,
+            conj(
+                *(fd_ino(cell, range(1, 5)) for cell in cells),
+                *(fd_ino(cell, [value]) for cell, value in givens.items()),
+                *(all_differento(row) for row in rows),
+                *(all_differento(column) for column in columns),
+                labelingo(cells),
+            ),
+        )
+
+        assert len(answers) == 1
+        square = tuple(
+            answers[0][index : index + 4]
+            for index in range(0, len(answers[0]), 4)
+        )
+        latin_values = {num(1), num(2), num(3), num(4)}
+        assert square[0] == (num(1), num(2), num(3), num(4))
+        assert tuple(row[0] for row in square) == (num(1), num(2), num(3), num(4))
+        assert all(set(row) == latin_values for row in square)
+        assert all(
+            {row[index] for row in square} == latin_values
+            for index in range(4)
+        )
+
+    def test_fd_constraints_solve_simple_task_schedule(self) -> None:
+        design = var("Design")
+        build = var("Build")
+        test = var("Test")
+        design_done = var("DesignDone")
+        build_done = var("BuildDone")
+        starts = (design, build, test)
+        all_times = (*starts, design_done, build_done)
+
+        assert solve_n(
+            program(),
+            1,
+            starts,
+            conj(
+                *(fd_ino(time, range(0, 7)) for time in all_times),
+                fd_ino(test, range(0, 5)),
+                fd_addo(design, 1, design_done),
+                fd_leqo(design_done, build),
+                fd_addo(build, 2, build_done),
+                fd_leqo(build_done, test),
+                labelingo(starts),
+            ),
+        ) == [(num(0), num(1), num(3))]
 
 
 class TestControlBuiltins:

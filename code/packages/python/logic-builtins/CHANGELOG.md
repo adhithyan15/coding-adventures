@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.12.0] - 2026-04-22
+
+### Added
+
+- end-to-end finite-domain examples for Australia map coloring, a 4x4 Latin
+  square, and a simple precedence-constrained task schedule
+- tests proving CLP(FD) examples can be solved directly through the Python
+  library API before parser integration
+
+### Changed
+
+- `labelingo` now chooses the currently smallest finite domain first, using the
+  caller's variable order as a stable tie-breaker, so constrained examples do
+  less avoidable search while keeping deterministic answers
+
 ## [0.11.0] - 2026-04-22
 
 ### Added
