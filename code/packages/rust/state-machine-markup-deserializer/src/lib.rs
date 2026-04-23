@@ -800,11 +800,16 @@ fn validate_pda_transition(
 }
 
 fn validate_transducer_transition(transition: &TransitionDefinition) -> Result<()> {
-    let event = transition.on.as_ref().ok_or_else(|| {
-        StateMachineMarkupError::MissingTransducerMatcher {
-            from: transition.from.clone(),
+    let is_eof = match (&transition.on, &transition.matcher) {
+        (Some(event), _) => event == END_INPUT,
+        (None, Some(MatcherDefinition::Eof)) => true,
+        (None, Some(_)) => false,
+        (None, None) => {
+            return Err(StateMachineMarkupError::MissingTransducerMatcher {
+                from: transition.from.clone(),
+            })
         }
-    })?;
+    };
     if transition.to.len() != 1 {
         return Err(StateMachineMarkupError::InvalidTransducerTargetCount {
             from: transition.from.clone(),
@@ -815,7 +820,7 @@ fn validate_transducer_transition(transition: &TransitionDefinition) -> Result<(
             from: transition.from.clone(),
         });
     }
-    if event == END_INPUT && transition.consume {
+    if is_eof && transition.consume {
         return Err(StateMachineMarkupError::ConsumingEndTransition {
             from: transition.from.clone(),
         });
