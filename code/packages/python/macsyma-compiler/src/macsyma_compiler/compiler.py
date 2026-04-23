@@ -33,7 +33,9 @@ from __future__ import annotations
 from lang_parser import ASTNode
 from lexer import Token
 from symbolic_ir import (
+    ACOS,
     ADD,
+    ASIN,
     ASSIGN,
     ATAN,
     COS,
@@ -114,6 +116,8 @@ _STANDARD_FUNCTIONS: dict[str, IRSymbol] = {
     "sin": SIN,
     "cos": COS,
     "tan": TAN,
+    "asin": ASIN,
+    "acos": ACOS,
     "atan": ATAN,
     "log": LOG,
     "exp": EXP,
