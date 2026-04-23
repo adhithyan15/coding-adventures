@@ -1,0 +1,106 @@
+"""Tests for parsing SWI-Prolog syntax into executable logic programs."""
+
+from __future__ import annotations
+
+import pytest
+from logic_engine import atom, solve_all
+
+from swi_prolog_parser import (
+    SWI_PROLOG_GRAMMAR_PATH,
+    PrologParseError,
+    __version__,
+    create_swi_prolog_parser,
+    parse_swi_ast,
+    parse_swi_program,
+    parse_swi_query,
+    parse_swi_source,
+)
+
+
+class TestVersion:
+    """Verify the package is importable and versioned."""
+
+    def test_version_exists(self) -> None:
+        assert __version__ == "0.1.0"
+
+
+class TestSwiParser:
+    """The SWI parser should own its grammar and execute through lowering."""
+
+    def test_uses_swi_parser_grammar_path(self) -> None:
+        assert SWI_PROLOG_GRAMMAR_PATH.name == "swi.grammar"
+        assert SWI_PROLOG_GRAMMAR_PATH.parent.name == "prolog"
+
+    def test_create_swi_prolog_parser(self) -> None:
+        ast = create_swi_prolog_parser("parent(homer, bart).\n").parse()
+
+        assert ast.rule_name == "program"
+
+    def test_parse_swi_ast(self) -> None:
+        ast = parse_swi_ast(":- initialization(main).\n?- parent(homer, Who).\n")
+
+        assert ast.rule_name == "program"
+        assert len(ast.children) == 2
+
+    def test_parse_swi_source_collects_directives_and_executes_program(self) -> None:
+        parsed = parse_swi_source(
+            """
+            :- initialization(main).
+            parent(homer, bart).
+            parent(bart, lisa).
+            ancestor(X, Y) :- parent(X, Y).
+            ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+            ?- ancestor(homer, Who).
+            """,
+        )
+
+        query = parsed.queries[0]
+        assert len(parsed.directives) == 1
+        assert parsed.directives[0].goal_ast.rule_name == "goal"
+        assert solve_all(
+            parsed.program,
+            query.variables["Who"],
+            query.goal,
+        ) == [atom("bart"), atom("lisa")]
+
+    def test_parse_swi_source_skips_swi_comments(self) -> None:
+        parsed = parse_swi_source(
+            """
+            % line comment
+            parent(homer, bart). /* block comment */
+            ?- parent(homer, Who).
+            """,
+        )
+        query = parsed.queries[0]
+
+        assert solve_all(
+            parsed.program,
+            query.variables["Who"],
+            query.goal,
+        ) == [atom("bart")]
+
+    def test_parse_swi_program_allows_directives(self) -> None:
+        program = parse_swi_program(":- initialization(main).\nparent(homer, bart).\n")
+        query = parse_swi_query("?- parent(homer, Who).\n")
+
+        assert solve_all(
+            program,
+            query.variables["Who"],
+            query.goal,
+        ) == [atom("bart")]
+
+    def test_parse_swi_program_rejects_queries(self) -> None:
+        with pytest.raises(PrologParseError, match="expected only clauses"):
+            parse_swi_program("?- true.\n")
+
+    def test_parse_swi_query_rejects_directives(self) -> None:
+        with pytest.raises(PrologParseError, match="directive"):
+            parse_swi_query(":- initialization(main).\n")
+
+    def test_parse_swi_query_rejects_clauses(self) -> None:
+        with pytest.raises(PrologParseError, match="expected only a query"):
+            parse_swi_query("parent(homer, bart).\n")
+
+    def test_rejects_dcg_rules_for_now(self) -> None:
+        with pytest.raises(PrologParseError, match="DCG rules"):
+            parse_swi_source("digits --> digit.\n")
