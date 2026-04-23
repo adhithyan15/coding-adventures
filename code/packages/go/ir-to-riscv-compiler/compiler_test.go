@@ -136,6 +136,36 @@ func TestCompileHonorsEntryLabelWithTrampoline(t *testing.T) {
 	}
 }
 
+func TestCompileUsesA0ForSyscallArguments(t *testing.T) {
+	program := ir.NewIrProgram("_start")
+	program.Instructions = []ir.IrInstruction{
+		label("_start"),
+		instr(1, ir.OpLoadImm, ir.IrRegister{Index: 4}, ir.IrImmediate{Value: 65}),
+		instr(2, ir.OpSyscall, ir.IrImmediate{Value: riscv.SyscallWriteByte}),
+		instr(3, ir.OpLoadImm, ir.IrRegister{Index: 4}, ir.IrImmediate{Value: 0}),
+		instr(4, ir.OpSyscall, ir.IrImmediate{Value: riscv.SyscallExit}),
+	}
+
+	result, err := NewIrToRiscVCompiler().Compile(program)
+	if err != nil {
+		t.Fatalf("compile failed: %v", err)
+	}
+
+	host := riscv.NewHostIO(nil)
+	sim := riscv.NewRiscVSimulatorWithHost(4096, host)
+	sim.Run(result.Bytes)
+
+	if got := host.OutputString(); got != "A" {
+		t.Fatalf("expected syscall write to emit %q, got %q", "A", got)
+	}
+	if !host.Exited {
+		t.Fatal("expected syscall exit to halt host execution")
+	}
+	if got := sim.CPU.Registers.Read(10); got != 0 {
+		t.Fatalf("expected a0/x10 to contain exit code 0, got %d", got)
+	}
+}
+
 func TestCompilePreservesReturnAddressAcrossNestedCalls(t *testing.T) {
 	program := ir.NewIrProgram("_start")
 	program.Instructions = []ir.IrInstruction{
