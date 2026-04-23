@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-haskell-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Haskell lexer — tokenizes Haskell source code using the grammar-driven lexer and the haskell.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

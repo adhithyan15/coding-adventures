@@ -70,6 +70,8 @@ members = [
     "gradient-descent",
     "grammar-tools",
     "grammar-wasm-support",
+    "haskell-lexer",
+    "haskell-parser",
     "heap",
     "hazard-detection",
     "html-lexer",
