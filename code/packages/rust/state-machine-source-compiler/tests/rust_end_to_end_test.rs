@@ -247,7 +247,8 @@ fn behavior_tests() -> &'static str {
     r#"use state_machine::EffectfulInput;
 
 use generated_state_machine_e2e::{
-    balanced_parens_pda, contains_ab_nfa, html_skeleton_transducer, turnstile_dfa,
+    balanced_parens_pda, contains_ab_nfa, html_skeleton_definition, html_skeleton_transducer,
+    turnstile_dfa,
 };
 
 #[test]
