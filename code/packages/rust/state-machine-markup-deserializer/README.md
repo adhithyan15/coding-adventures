@@ -58,6 +58,8 @@ The first reader intentionally accepts a strict subset:
 - repeated `[[states]]` tables with boolean marker fields
 - repeated `[[transitions]]` tables with `from`, `on`, `to`, `stack_pop`, and
   `stack_push`
+- transducer transition fields `actions` and `consume`, with `$any` and `$end`
+  reserved for any-input and EOF matchers
 
 Unsupported tables, duplicate keys, dotted keys, numbers, inline tables,
 includes, and malformed strings are rejected. That keeps the first

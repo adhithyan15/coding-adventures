@@ -11,3 +11,5 @@
 - Added end-to-end generated-code tests that compile temporary Rust wrapper
   crates and exercise generated DFA, NFA, and PDA constructors when the local
   Rust toolchain can execute freshly built binaries.
+- Added Rust source generation for effectful transducer definitions, including
+  transition actions, consume flags, and an `EffectfulStateMachine` constructor.

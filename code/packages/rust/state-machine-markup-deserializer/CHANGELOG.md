@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Extended serializer/deserializer round-trip tests to reconstruct executable
   DFA, NFA, and PDA machines from parsed `StateMachineDefinition` values.
+- Added phase 1 transducer validation for `$any`, `$end`, transition actions,
+  and `consume = false` EOF transitions.
 
 ## [0.1.0] - 2026-04-20
 

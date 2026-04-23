@@ -523,7 +523,7 @@ impl DFA {
 
         // Header row
         let mut header = format!("{:width$}", "", width = state_width);
-        header.push_str("|");
+        header.push('|');
         for event in &sorted_events {
             header.push_str(&format!(" {:width$} |", event, width = event_width));
         }
@@ -531,11 +531,11 @@ impl DFA {
 
         // Separator
         let mut sep = "\u{2500}".repeat(state_width);
-        sep.push_str("\u{253C}");
+        sep.push('\u{253C}');
         for (i, _) in sorted_events.iter().enumerate() {
             sep.push_str(&"\u{2500}".repeat(event_width + 2));
             if i < sorted_events.len() - 1 {
-                sep.push_str("\u{253C}");
+                sep.push('\u{253C}');
             }
         }
         lines.push(sep);
@@ -556,7 +556,7 @@ impl DFA {
             };
 
             let mut row = format!("{:width$}", label, width = state_width);
-            row.push_str("|");
+            row.push('|');
             for event in &sorted_events {
                 let target = self
                     .transitions

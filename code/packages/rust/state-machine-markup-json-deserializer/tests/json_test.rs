@@ -588,6 +588,8 @@ fn manual_definition_serializes_then_deserializes_flags() {
         to: vec!["q0".to_string()],
         stack_pop: Some("$".to_string()),
         stack_push: vec!["$".to_string()],
+        actions: Vec::new(),
+        consume: true,
     }];
 
     let parsed = from_states_json(&definition.to_states_json()).unwrap();

@@ -90,6 +90,18 @@ pub struct TransitionDefinition {
     pub stack_pop: Option<String>,
     /// PDA stack symbols to push, ordered deepest-to-topmost.
     pub stack_push: Vec<String>,
+    /// Portable effect/action identifiers executed when this transition fires.
+    ///
+    /// Recognition-only machines such as DFA, NFA, and PDA definitions leave
+    /// this empty.  Tokenizers and other transducers use it to name effects
+    /// like `flush_text`, `append_tag_name(current)`, or `emit_current_token`
+    /// without embedding host-language callbacks in the definition layer.
+    pub actions: Vec<String>,
+    /// Whether this transition consumes the current input symbol.
+    ///
+    /// Traditional automata consume by default.  Tokenizer-style machines can
+    /// set this to `false` for EOF, lookahead, or reconsume-style transitions.
+    pub consume: bool,
 }
 
 impl TransitionDefinition {
@@ -101,6 +113,8 @@ impl TransitionDefinition {
             to,
             stack_pop: None,
             stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
         }
     }
 }

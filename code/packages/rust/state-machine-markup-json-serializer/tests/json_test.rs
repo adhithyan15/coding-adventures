@@ -207,6 +207,8 @@ fn json_serializer_canonicalizes_set_like_arrays() {
         to: vec!["q2".to_string(), "q1".to_string()],
         stack_pop: Some("base".to_string()),
         stack_push: vec!["top".to_string(), "base".to_string()],
+        actions: Vec::new(),
+        consume: true,
     }];
 
     let json = definition.to_states_json();
