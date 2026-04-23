@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, solve_all, term
+from logic_engine import atom, goal_as_term, relation, solve_all, term
 from prolog_core import iso_operator_table
 
 from iso_prolog_parser import (
@@ -110,6 +110,33 @@ class TestIsoParser:
             query.variables["Result"],
             query.goal,
         ) == [term("++", term("++", "a", "b"), "c")]
+
+    def test_parse_iso_source_tracks_predicate_registry_metadata(self) -> None:
+        parsed = parse_iso_source(
+            """
+            :- dynamic(parent/2).
+            :- multifile([parent/2, helper/1]).
+            :- initialization(main).
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+        )
+
+        parent = parsed.predicate_registry.get("parent", 2)
+        helper = parsed.predicate_registry.get("helper", 1)
+
+        assert parent is not None
+        assert helper is not None
+        assert parent.dynamic is True
+        assert parent.multifile is True
+        assert helper.multifile is True
+        assert parsed.program.dynamic_relations == frozenset(
+            {relation("parent", 2).key()},
+        )
+        assert parsed.predicate_registry.initialization_directives[0].term == term(
+            "initialization",
+            "main",
+        )
 
     def test_rejects_dcg_rules_for_now(self) -> None:
         with pytest.raises(PrologParseError, match="DCG rules"):

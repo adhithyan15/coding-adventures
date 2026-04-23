@@ -12,6 +12,7 @@ from lexer import Token
 from logic_engine import Clause, Program
 from prolog_core import (
     OperatorTable,
+    PredicateRegistry,
     PrologDirective,
     swi_operator_table,
 )
@@ -39,6 +40,7 @@ class ParsedSwiSource:
     queries: tuple[ParsedQuery, ...]
     directives: tuple[PrologDirective, ...]
     operator_table: OperatorTable
+    predicate_registry: PredicateRegistry
 
 
 ParsedSwiDirective = PrologDirective
@@ -83,7 +85,9 @@ def parse_swi_source(
 
     tokens = tokenize_swi_prolog(source)
     _reject_unsupported_tokens(tokens)
-    active_operator_table = swi_operator_table() if operator_table is None else operator_table
+    active_operator_table = (
+        swi_operator_table() if operator_table is None else operator_table
+    )
     parsed = parse_operator_source_tokens(
         tokens,
         active_operator_table,
@@ -95,6 +99,7 @@ def parse_swi_source(
         queries=parsed.queries,
         directives=parsed.directives,
         operator_table=parsed.operator_table,
+        predicate_registry=parsed.predicate_registry,
     )
 
 
@@ -107,7 +112,9 @@ def parse_swi_program(
 
     tokens = tokenize_swi_prolog(source)
     _reject_unsupported_tokens(tokens)
-    active_operator_table = swi_operator_table() if operator_table is None else operator_table
+    active_operator_table = (
+        swi_operator_table() if operator_table is None else operator_table
+    )
     return parse_operator_program_tokens(
         tokens,
         active_operator_table,
@@ -132,7 +139,9 @@ def parse_swi_query(
     if first_token.type_name != "QUERY":
         raise PrologParseError(first_token, "expected only a query")
 
-    active_operator_table = swi_operator_table() if operator_table is None else operator_table
+    active_operator_table = (
+        swi_operator_table() if operator_table is None else operator_table
+    )
     return parse_operator_query_tokens(
         tokens,
         active_operator_table,

@@ -11,7 +11,12 @@ from iso_prolog_lexer import tokenize_iso_prolog
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 from logic_engine import Clause, Program
-from prolog_core import OperatorTable, PrologDirective, iso_operator_table
+from prolog_core import (
+    OperatorTable,
+    PredicateRegistry,
+    PrologDirective,
+    iso_operator_table,
+)
 from prolog_operator_parser import (
     parse_operator_program_tokens,
     parse_operator_query_tokens,
@@ -32,6 +37,7 @@ class ParsedIsoSource:
     queries: tuple[ParsedQuery, ...]
     directives: tuple[PrologDirective, ...]
     operator_table: OperatorTable
+    predicate_registry: PredicateRegistry
 
 
 @cache
@@ -73,7 +79,9 @@ def parse_iso_source(
 
     tokens = tokenize_iso_prolog(source)
     _reject_unsupported_tokens(tokens)
-    active_operator_table = iso_operator_table() if operator_table is None else operator_table
+    active_operator_table = (
+        iso_operator_table() if operator_table is None else operator_table
+    )
     parsed = parse_operator_source_tokens(
         tokens,
         active_operator_table,
@@ -85,6 +93,7 @@ def parse_iso_source(
         queries=parsed.queries,
         directives=parsed.directives,
         operator_table=parsed.operator_table,
+        predicate_registry=parsed.predicate_registry,
     )
 
 
@@ -97,7 +106,9 @@ def parse_iso_program(
 
     tokens = tokenize_iso_prolog(source)
     _reject_unsupported_tokens(tokens)
-    active_operator_table = iso_operator_table() if operator_table is None else operator_table
+    active_operator_table = (
+        iso_operator_table() if operator_table is None else operator_table
+    )
     return parse_operator_program_tokens(
         tokens,
         active_operator_table,
@@ -121,7 +132,9 @@ def parse_iso_query(
             "expected only a query",
         )
 
-    active_operator_table = iso_operator_table() if operator_table is None else operator_table
+    active_operator_table = (
+        iso_operator_table() if operator_table is None else operator_table
+    )
     return parse_operator_query_tokens(
         tokens,
         active_operator_table,

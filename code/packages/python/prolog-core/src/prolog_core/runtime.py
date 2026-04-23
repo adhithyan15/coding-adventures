@@ -6,7 +6,18 @@ from dataclasses import dataclass, field
 from functools import cache
 from typing import Literal
 
-from logic_engine import Atom, Compound, GoalExpr, LogicVar, Number, Relation, RelationCall, Term, goal_as_term
+from logic_engine import (
+    Atom,
+    Compound,
+    GoalExpr,
+    LogicVar,
+    Number,
+    Relation,
+    RelationCall,
+    Term,
+    goal_as_term,
+    relation,
+)
 from symbol_core import Symbol, sym
 
 __version__ = "0.1.0"
@@ -213,9 +224,136 @@ def directive(
     )
 
 
+@dataclass(frozen=True, slots=True)
+class PredicateSpec:
+    """Metadata collected for one predicate indicator such as ``parent/2``."""
+
+    relation: Relation
+    dynamic: bool = False
+    discontiguous: bool = False
+    multifile: bool = False
+
+    @property
+    def key(self) -> tuple[Symbol, int]:
+        """Return the immutable predicate indicator used for indexing."""
+
+        return self.relation.key()
+
+
+@dataclass(frozen=True, slots=True)
+class PredicateRegistry:
+    """An immutable registry of frontend predicate properties and directives."""
+
+    predicates: tuple[PredicateSpec, ...] = ()
+    initialization_directives: tuple[PrologDirective, ...] = ()
+    _by_key: dict[tuple[Symbol, int], PredicateSpec] = field(
+        init=False,
+        repr=False,
+        compare=False,
+    )
+
+    def __post_init__(self) -> None:
+        by_key: dict[tuple[Symbol, int], PredicateSpec] = {}
+        for spec in self.predicates:
+            if not isinstance(spec, PredicateSpec):
+                msg = "predicate registries may only contain PredicateSpec values"
+                raise TypeError(msg)
+            if spec.key in by_key:
+                msg = (
+                    "duplicate predicate specification for "
+                    f"{spec.relation.symbol}/{spec.relation.arity}"
+                )
+                raise ValueError(msg)
+            by_key[spec.key] = spec
+
+        for directive_value in self.initialization_directives:
+            if not isinstance(directive_value, PrologDirective):
+                msg = (
+                    "predicate registry initialization directives must be "
+                    "PrologDirective values"
+                )
+                raise TypeError(msg)
+
+        object.__setattr__(self, "_by_key", by_key)
+
+    def get(
+        self,
+        name: str | Symbol | Relation,
+        arity: int | None = None,
+    ) -> PredicateSpec | None:
+        """Return predicate metadata by relation or predicate indicator."""
+
+        relation_value = _coerce_relation(name, arity)
+        return self._by_key.get(relation_value.key())
+
+    def define(
+        self,
+        *relations: Relation,
+        dynamic: bool = False,
+        discontiguous: bool = False,
+        multifile: bool = False,
+    ) -> PredicateRegistry:
+        """Return a registry with metadata added or merged for each relation."""
+
+        if not relations:
+            return self
+
+        updates = dict(self._by_key)
+        for relation_value in relations:
+            checked = _coerce_relation(relation_value)
+            existing = updates.get(checked.key())
+            updates[checked.key()] = PredicateSpec(
+                relation=checked,
+                dynamic=dynamic if existing is None else existing.dynamic or dynamic,
+                discontiguous=(
+                    discontiguous
+                    if existing is None
+                    else existing.discontiguous or discontiguous
+                ),
+                multifile=(
+                    multifile if existing is None else existing.multifile or multifile
+                ),
+            )
+
+        return PredicateRegistry(
+            predicates=tuple(updates.values()),
+            initialization_directives=self.initialization_directives,
+        )
+
+    def add_initialization(self, directive_value: PrologDirective) -> PredicateRegistry:
+        """Return a registry that appends one structured initialization directive."""
+
+        if not isinstance(directive_value, PrologDirective):
+            msg = "initialization directives must be PrologDirective values"
+            raise TypeError(msg)
+        return PredicateRegistry(
+            predicates=self.predicates,
+            initialization_directives=(
+                *self.initialization_directives,
+                directive_value,
+            ),
+        )
+
+    def dynamic_relations(self) -> tuple[Relation, ...]:
+        """Return every predicate currently marked as dynamic."""
+
+        return tuple(spec.relation for spec in self.predicates if spec.dynamic)
+
+
+def empty_predicate_registry() -> PredicateRegistry:
+    """Return an empty immutable predicate registry."""
+
+    return PredicateRegistry()
+
+
 _EMPTY_LIST = sym("[]")
 _LIST_CONS = sym(".")
 _OP_DIRECTIVE = sym("op")
+_DYNAMIC_DIRECTIVE = sym("dynamic")
+_DISCONTIGUOUS_DIRECTIVE = sym("discontiguous")
+_MULTIFILE_DIRECTIVE = sym("multifile")
+_INITIALIZATION_DIRECTIVE = sym("initialization")
+_PREDICATE_INDICATOR = sym("/")
 
 
 def apply_op_directive(
@@ -229,7 +367,10 @@ def apply_op_directive(
     operator declarations take effect.
     """
 
-    if not isinstance(directive_term, Compound) or directive_term.functor != _OP_DIRECTIVE:
+    if (
+        not isinstance(directive_term, Compound)
+        or directive_term.functor != _OP_DIRECTIVE
+    ):
         return operator_table
 
     if len(directive_term.args) != 3:
@@ -241,6 +382,61 @@ def apply_op_directive(
     associativity = _directive_associativity(associativity_term)
     names = _directive_operator_names(names_term)
     return operator_table.define(precedence, associativity, *names)
+
+
+def apply_predicate_directive(
+    predicate_registry: PredicateRegistry,
+    directive_value: PrologDirective,
+) -> PredicateRegistry:
+    """Apply one recognized predicate-property directive to a registry.
+
+    Non-property directives leave the registry unchanged so callers can feed
+    every parsed directive through this helper while only the currently
+    supported frontend directives take effect.
+    """
+
+    if not isinstance(directive_value, PrologDirective):
+        msg = "predicate directives must be PrologDirective values"
+        raise TypeError(msg)
+
+    term_value = directive_value.term
+    if not isinstance(term_value, Compound):
+        return predicate_registry
+
+    if term_value.functor == _INITIALIZATION_DIRECTIVE:
+        if len(term_value.args) != 1:
+            msg = "initialization/1 directives require exactly one argument"
+            raise ValueError(msg)
+        return predicate_registry.add_initialization(directive_value)
+
+    if len(term_value.args) != 1:
+        return predicate_registry
+
+    predicate_property = _directive_predicate_property(term_value.functor)
+    if predicate_property is None:
+        return predicate_registry
+
+    relations = _directive_relations(
+        term_value.args[0],
+        directive_name=term_value.functor.name,
+    )
+    if predicate_property == "dynamic":
+        return predicate_registry.define(*relations, dynamic=True)
+    if predicate_property == "discontiguous":
+        return predicate_registry.define(*relations, discontiguous=True)
+    return predicate_registry.define(*relations, multifile=True)
+
+
+def _directive_predicate_property(
+    directive_name: Symbol,
+) -> Literal["dynamic", "discontiguous", "multifile"] | None:
+    if directive_name == _DYNAMIC_DIRECTIVE:
+        return "dynamic"
+    if directive_name == _DISCONTIGUOUS_DIRECTIVE:
+        return "discontiguous"
+    if directive_name == _MULTIFILE_DIRECTIVE:
+        return "multifile"
+    return None
 
 
 def _directive_precedence(term_value: Term) -> int:
@@ -275,6 +471,55 @@ def _directive_operator_names(term_value: Term) -> tuple[str | Symbol, ...]:
     return tuple(names)
 
 
+def _directive_relations(
+    term_value: Term,
+    *,
+    directive_name: str,
+) -> tuple[Relation, ...]:
+    relation_value = _indicator_relation(term_value)
+    if relation_value is not None:
+        return (relation_value,)
+
+    items = _logic_list_items(term_value)
+    if items is None:
+        msg = (
+            f"{directive_name}/1 expects a predicate indicator or proper list "
+            "of predicate indicators"
+        )
+        raise TypeError(msg)
+
+    relations: list[Relation] = []
+    for item in items:
+        parsed = _indicator_relation(item)
+        if parsed is None:
+            msg = (
+                f"{directive_name}/1 lists may only contain predicate "
+                "indicators of the form name/arity"
+            )
+            raise TypeError(msg)
+        relations.append(parsed)
+    return tuple(relations)
+
+
+def _indicator_relation(term_value: Term) -> Relation | None:
+    if (
+        not isinstance(term_value, Compound)
+        or term_value.functor != _PREDICATE_INDICATOR
+        or len(term_value.args) != 2
+    ):
+        return None
+
+    name_term, arity_term = term_value.args
+    if not isinstance(name_term, Atom):
+        return None
+    if not isinstance(arity_term, Number) or not isinstance(arity_term.value, int):
+        return None
+    if arity_term.value < 0:
+        msg = "predicate indicator arity must be non-negative"
+        raise ValueError(msg)
+    return relation(name_term.symbol, arity_term.value)
+
+
 def _logic_list_items(term_value: Term) -> list[Term] | None:
     items: list[Term] = []
     current = term_value
@@ -290,6 +535,21 @@ def _logic_list_items(term_value: Term) -> list[Term] | None:
             current = current.args[1]
             continue
         return None
+
+
+def _coerce_relation(
+    name: str | Symbol | Relation,
+    arity: int | None = None,
+) -> Relation:
+    if isinstance(name, Relation):
+        if arity is not None and arity != name.arity:
+            msg = "arity must match the provided relation"
+            raise ValueError(msg)
+        return name
+    if arity is None:
+        msg = "predicate registry lookups by name require an arity"
+        raise TypeError(msg)
+    return relation(name, arity)
 
 
 @cache

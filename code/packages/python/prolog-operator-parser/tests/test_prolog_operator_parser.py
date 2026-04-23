@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, solve_all, term
+from logic_engine import atom, goal_as_term, relation, solve_all, term
 from prolog_core import iso_operator_table
 from prolog_lexer import tokenize_prolog
 from prolog_parser import PrologParseError
@@ -113,6 +113,37 @@ class TestOperatorParsing:
             term("++", term("++", "a", "b"), "c"),
         ]
 
+    def test_parse_source_tracks_predicate_properties_and_initialization(self) -> None:
+        parsed = parse_operator_source_tokens(
+            tokenize_prolog(
+                ":- dynamic(parent/2).\n"
+                ":- multifile([parent/2, helper/1]).\n"
+                ":- discontiguous(parent/2).\n"
+                ":- initialization(main).\n"
+                "parent(homer, bart).\n"
+                "?- parent(homer, Who).\n"
+            ),
+            iso_operator_table(),
+            allow_directives=True,
+        )
+
+        parent = parsed.predicate_registry.get("parent", 2)
+        helper = parsed.predicate_registry.get("helper", 1)
+
+        assert parent is not None
+        assert helper is not None
+        assert parent.dynamic is True
+        assert parent.discontiguous is True
+        assert parent.multifile is True
+        assert helper.multifile is True
+        assert parsed.program.dynamic_relations == frozenset(
+            {relation("parent", 2).key()},
+        )
+        assert parsed.predicate_registry.initialization_directives[0].term == term(
+            "initialization",
+            "main",
+        )
+
     def test_parse_source_removes_operators_after_op_zero(self) -> None:
         with pytest.raises(PrologParseError, match="expected RPAREN"):
             parse_operator_source_tokens(
@@ -141,7 +172,10 @@ class TestOperatorParsing:
             )
 
     def test_parse_goal_rejects_non_callable_terms(self) -> None:
-        with pytest.raises(PrologParseError, match="cannot lower Number into a callable goal"):
+        with pytest.raises(
+            PrologParseError,
+            match="cannot lower Number into a callable goal",
+        ):
             parse_operator_goal_tokens(tokenize_prolog("42"), iso_operator_table())
 
     def test_parse_term_rejects_trailing_tokens(self) -> None:

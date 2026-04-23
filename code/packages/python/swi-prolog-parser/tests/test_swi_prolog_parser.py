@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, solve_all, term
+from logic_engine import atom, goal_as_term, relation, solve_all, term
 
 from swi_prolog_parser import (
     SWI_PROLOG_GRAMMAR_PATH,
@@ -114,6 +114,35 @@ class TestSwiParser:
             query.variables["Result"],
             query.goal,
         ) == [term("++", term("++", "a", "b"), "c")]
+
+    def test_parse_swi_source_tracks_predicate_registry_metadata(self) -> None:
+        parsed = parse_swi_source(
+            """
+            :- dynamic(parent/2).
+            :- discontiguous(parent/2).
+            :- multifile([parent/2, helper/1]).
+            :- initialization(main).
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+        )
+
+        parent = parsed.predicate_registry.get("parent", 2)
+        helper = parsed.predicate_registry.get("helper", 1)
+
+        assert parent is not None
+        assert helper is not None
+        assert parent.dynamic is True
+        assert parent.discontiguous is True
+        assert parent.multifile is True
+        assert helper.multifile is True
+        assert parsed.program.dynamic_relations == frozenset(
+            {relation("parent", 2).key()},
+        )
+        assert parsed.predicate_registry.initialization_directives[0].term == term(
+            "initialization",
+            "main",
+        )
 
     def test_parse_swi_query_understands_operator_terms(self) -> None:
         query = parse_swi_query("?- X is 1 + 2 * 3.\n")

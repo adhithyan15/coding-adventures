@@ -16,7 +16,6 @@ from logic_engine import (
     Term,
     atom,
     fact,
-    goal_as_term,
     goal_from_term,
     logic_list,
     num,
@@ -28,12 +27,14 @@ from logic_engine import (
     var,
 )
 from prolog_core import (
-    OperatorAssociativity,
     OperatorSpec,
     OperatorTable,
+    PredicateRegistry,
     PrologDirective,
     apply_op_directive,
+    apply_predicate_directive,
     directive,
+    empty_predicate_registry,
 )
 from prolog_parser import ParsedQuery, PrologParseError
 
@@ -68,6 +69,7 @@ class ParsedOperatorSource:
     queries: tuple[ParsedQuery, ...]
     directives: tuple[PrologDirective, ...]
     operator_table: OperatorTable
+    predicate_registry: PredicateRegistry
 
 
 @dataclass(slots=True)
@@ -110,6 +112,7 @@ class _OperatorParser:
     ) -> None:
         self._tokens = tokens
         self._operator_table = operator_table
+        self._predicate_registry = empty_predicate_registry()
         self._allow_directives = allow_directives
         self._pos = 0
 
@@ -130,17 +133,25 @@ class _OperatorParser:
                         self._operator_table,
                         directive_value.term,
                     )
+                    self._predicate_registry = apply_predicate_directive(
+                        self._predicate_registry,
+                        directive_value,
+                    )
                 except (TypeError, ValueError) as error:
                     raise self._error(self._current_or_eof(), str(error)) from error
                 continue
             clauses.append(self._parse_clause_statement())
 
         return ParsedOperatorSource(
-            program=program(*clauses),
+            program=program(
+                *clauses,
+                dynamic_relations=self._predicate_registry.dynamic_relations(),
+            ),
             clauses=tuple(clauses),
             queries=tuple(queries),
             directives=tuple(directives),
             operator_table=self._operator_table,
+            predicate_registry=self._predicate_registry,
         )
 
     def parse_query(self) -> ParsedQuery:
@@ -257,7 +268,9 @@ class _OperatorParser:
 
             self._advance()
             right_precedence = (
-                infix.precedence if infix.associativity == "xfy" else infix.precedence - 1
+                infix.precedence
+                if infix.associativity == "xfy"
+                else infix.precedence - 1
             )
             right = self._parse_term_expression(
                 scope,
@@ -287,7 +300,9 @@ class _OperatorParser:
         if prefix is not None:
             self._advance()
             right_precedence = (
-                prefix.precedence if prefix.associativity == "fy" else prefix.precedence - 1
+                prefix.precedence
+                if prefix.associativity == "fy"
+                else prefix.precedence - 1
             )
             operand = self._parse_term_expression(
                 scope,
@@ -423,7 +438,10 @@ class _OperatorParser:
                 continue
             if spec.precedence > max_precedence:
                 continue
-            if spec.associativity in {"xfx", "xfy"} and left_precedence >= spec.precedence:
+            if (
+                spec.associativity in {"xfx", "xfy"}
+                and left_precedence >= spec.precedence
+            ):
                 continue
             if spec.associativity == "yfx" and left_precedence > spec.precedence:
                 continue
