@@ -5,6 +5,7 @@ from __future__ import annotations
 from .advisor import IndexAdvisor
 from .connection import Connection, connect
 from .cursor import Cursor
+from .engine import QueryEvent
 from .errors import (
     DatabaseError,
     DataError,
@@ -48,6 +49,7 @@ __all__ = [
     "NotSupportedError",
     "OperationalError",
     "ProgrammingError",
+    "QueryEvent",
     "Warning",
     "apilevel",
     "connect",

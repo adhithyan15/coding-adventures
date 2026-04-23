@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.5.0 — 2026-04-23
+
+### Added
+
+- **`QueryEvent` dataclass** — emitted by `execute()` after each SELECT scan
+  via the new `event_cb` callback.  Fields:
+  - `table` — the table that was scanned.
+  - `filtered_columns` — column names in the WHERE predicate (pre-populated
+    by the caller).
+  - `rows_scanned` — total rows advanced through during the scan.
+  - `rows_returned` — rows emitted to the result set via `EmitRow`.
+  - `used_index` — the index name used for an index scan, or `None` for a
+    full-table scan.
+  - `duration_us` — wall-clock execution time in microseconds.
+- **`execute()` new keyword parameters**:
+  - `event_cb: Callable[[QueryEvent], None] | None` — callback invoked once
+    after execution when a scan table was observed.  Replaces the global
+    `set_event_listener` hook for per-execution callbacks.
+  - `filtered_columns: list[str] | None` — caller-supplied column names
+    forwarded into the emitted `QueryEvent`.
+- **`QueryEvent` exported** from `sql_vm.__init__` and included in
+  `__all__`.
+- **Scan telemetry in `_VmState`** — four new fields (`scan_table`,
+  `scan_index`, `rows_scanned`, `rows_returned`) accumulate metrics during
+  execution.  Updated by `_do_open`, `_do_open_index_scan`, `_do_advance`,
+  and the `EmitRow` handler.
+
 ## 0.4.0 — 2026-04-21
 
 ### Added

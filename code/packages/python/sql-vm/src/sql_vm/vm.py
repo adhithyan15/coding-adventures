@@ -238,6 +238,12 @@ class _VmState:
     # Handle returned by backend.begin_transaction(); None when no explicit
     # transaction is active.
     transaction_handle: TransactionHandle | None = None
+    # Scan telemetry — populated during execution; used to build QueryEvent.
+    # Only the *first* scan per execute() call is recorded (one event per call).
+    scan_table: str = ""
+    scan_index: str | None = None
+    rows_scanned: int = 0
+    rows_returned: int = 0
 
     def push(self, v: SqlValue) -> None:
         self.stack.append(v)
@@ -261,12 +267,31 @@ class _VmState:
 # --------------------------------------------------------------------------
 
 
-def execute(program: Program, backend: Backend) -> QueryResult:
+def execute(
+    program: Program,
+    backend: Backend,
+    *,
+    event_cb: Callable[[QueryEvent], None] | None = None,
+    filtered_columns: list[str] | None = None,
+) -> QueryResult:
     """Execute ``program`` against ``backend`` and return the result.
 
-    This is the VM's single public entry point. It creates a fresh
+    This is the VM's single public entry point.  It creates a fresh
     :class:`_VmState`, runs the dispatch loop, and packages up the result.
+
+    ``event_cb``:
+        Optional callback invoked with a :class:`QueryEvent` after execution
+        completes, if a scan was performed.  Takes precedence over any
+        module-level listener registered via :func:`set_event_listener`.
+
+    ``filtered_columns``:
+        Optional list of column names that appeared in the WHERE predicate of
+        the executing statement.  Passed through verbatim to the
+        :class:`QueryEvent`.  When ``None`` the event carries an empty list.
     """
+    import time
+
+    _t0 = time.perf_counter()
     state = _VmState(program=program, backend=backend)
     instructions = program.instructions
     n = len(instructions)
@@ -276,7 +301,23 @@ def execute(program: Program, backend: Backend) -> QueryResult:
         if isinstance(ins, Halt):
             break
         _dispatch(ins, state)
-    return state.result.freeze()
+    result = state.result.freeze()
+
+    # Emit a QueryEvent when a scan was performed and a listener is registered.
+    listener = event_cb or _event_listener
+    if listener is not None and state.scan_table:
+        duration_us = int((time.perf_counter() - _t0) * 1_000_000)
+        event = QueryEvent(
+            table=state.scan_table,
+            filtered_columns=filtered_columns or [],
+            rows_scanned=state.rows_scanned,
+            rows_returned=state.rows_returned,
+            used_index=state.scan_index,
+            duration_us=duration_us,
+        )
+        listener(event)
+
+    return result
 
 
 # --------------------------------------------------------------------------
@@ -358,6 +399,7 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         row = tuple(st.row_buffer)
         st.result.rows.append(row)
         st.row_buffer.clear()
+        st.rows_returned += 1
         return
     if isinstance(ins, SetResultSchema):
         st.result.columns = ins.columns
@@ -637,6 +679,9 @@ def _do_open(ins: OpenScan, st: _VmState) -> None:
     except be.BackendError as e:
         raise BackendError(message=str(e), original=e) from e
     st.cursors[ins.cursor_id] = it  # type: ignore[assignment]
+    # Record the first scan's table for QueryEvent telemetry.
+    if not st.scan_table:
+        st.scan_table = ins.table
 
 
 def _do_advance(ins: AdvanceCursor, st: _VmState) -> None:
@@ -649,6 +694,7 @@ def _do_advance(ins: AdvanceCursor, st: _VmState) -> None:
         st.pc = _resolve(st, ins.on_exhausted)
     else:
         st.current_row[ins.cursor_id] = row
+        st.rows_scanned += 1
 
 
 def _do_close(ins: CloseScan, st: _VmState) -> None:
@@ -1001,6 +1047,10 @@ def _do_open_index_scan(ins: OpenIndexScan, st: _VmState) -> None:
     ))
     row_iter = st.backend.scan_by_rowids(ins.table, rowids)
     st.cursors[ins.cursor_id] = row_iter  # type: ignore[assignment]
+    # Record scan telemetry for QueryEvent.  An IndexScan overrides any
+    # earlier plain OpenScan because it is more specific information.
+    st.scan_table = ins.table
+    st.scan_index = ins.index_name
 
 
 # --------------------------------------------------------------------------
