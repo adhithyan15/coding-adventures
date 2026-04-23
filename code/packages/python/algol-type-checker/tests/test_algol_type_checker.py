@@ -462,6 +462,25 @@ class TestAlgolTypeChecker:
         call = result.semantic.procedure_calls[0]
         assert call.return_type == "boolean"
 
+    def test_accepts_real_value_procedure_signature_and_call(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real y; "
+            "real procedure half(x); value x; real x; "
+            "begin half := x / 2 end; "
+            "y := half(3); "
+            "if y > 1.0 then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        descriptor = result.semantic.procedures[0]
+        assert descriptor.return_type == "real"
+        assert descriptor.parameters[0].type_name == "real"
+        call = result.semantic.procedure_calls[0]
+        assert call.return_type == "real"
+
     def test_accepts_boolean_by_name_parameter_writeback(self) -> None:
         ast = parse_algol(
             "begin integer result; "

@@ -288,6 +288,28 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_real_value_procedure_returns_real_result(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "real procedure half(x); value x; real x; "
+            "begin half := x / 2 end; "
+            "y := half(3); "
+            "if y > 1.0 then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_integer_actual_promotes_for_real_value_parameter(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "real procedure id(x); value x; real x; "
+            "begin id := x end; "
+            "y := id(1); "
+            "if y = 1.0 then result := 9 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_void_procedure_statement_writes_outer_frame(self) -> None:
         result = compile_source(
             "begin integer result; "

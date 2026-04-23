@@ -38,6 +38,7 @@ _FRAME_MEMORY_LABEL = "__algol_frames"
 _HEAP_MEMORY_LABEL = "__algol_heap"
 _ZERO_REG = 0
 _RESULT_REG = 1
+_REAL_RESULT_REG = 31
 _DYNAMIC_LINK_OFFSET = 0
 _STATIC_LINK_OFFSET = 4
 _RETURN_TOKEN_OFFSET = 8
@@ -88,6 +89,18 @@ _REAL_TYPE = "real"
 
 
 @dataclass(frozen=True)
+class ProcedureSignaturePlan:
+    """WASM-relevant procedure signature facts produced by ALGOL lowering."""
+
+    param_types: tuple[str, ...]
+    return_type: str | None
+
+    @property
+    def param_count(self) -> int:
+        return len(self.param_types)
+
+
+@dataclass(frozen=True)
 class CompileResult:
     """The IR compiler output and useful frame metadata.
 
@@ -103,7 +116,9 @@ class CompileResult:
     frame_offsets: dict[int, int] = field(default_factory=dict)
     frame_memory_label: str = _FRAME_MEMORY_LABEL
     heap_memory_label: str = _HEAP_MEMORY_LABEL
-    procedure_signatures: dict[str, int] = field(default_factory=dict)
+    procedure_signatures: dict[str, ProcedureSignaturePlan] = field(
+        default_factory=dict
+    )
 
 
 class CompileError(Exception):
@@ -181,8 +196,9 @@ class AlgolIrCompiler:
         self.frame_offsets: dict[int, int] = {}
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
-        self.procedure_signatures: dict[str, int] = {}
+        self.procedure_signatures: dict[str, ProcedureSignaturePlan] = {}
         self.expression_types: dict[int, str] = {}
+        self.current_function_return_type: str | None = _INTEGER_TYPE
         self.eval_thunks: list[_EvalThunk] = []
         self.has_by_name_parameters = False
 
@@ -279,12 +295,25 @@ class AlgolIrCompiler:
         for array in type_result.semantic.arrays:
             self.arrays_by_block.setdefault(array.declaring_block_id, []).append(array)
         self.procedure_signatures = {
-            procedure.label: 2 + len(procedure.parameters)
+            procedure.label: ProcedureSignaturePlan(
+                param_types=(
+                    _INTEGER_TYPE,
+                    _INTEGER_TYPE,
+                    *(parameter.type_name for parameter in procedure.parameters),
+                ),
+                return_type=procedure.return_type,
+            )
             for procedure in type_result.semantic.procedures
         }
         if self.has_by_name_parameters:
-            self.procedure_signatures[_THUNK_EVAL_LABEL] = 2
-            self.procedure_signatures[_THUNK_STORE_LABEL] = 3
+            self.procedure_signatures[_THUNK_EVAL_LABEL] = ProcedureSignaturePlan(
+                param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+                return_type=_INTEGER_TYPE,
+            )
+            self.procedure_signatures[_THUNK_STORE_LABEL] = ProcedureSignaturePlan(
+                param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
+                return_type=_INTEGER_TYPE,
+            )
         self.frame_offsets = self._layout_frames(self.semantic_blocks)
         self.variable_slots = self._collect_variable_slots(self.semantic_blocks)
         self.legacy_variable_slots = self._collect_legacy_variable_slots(
@@ -358,6 +387,7 @@ class AlgolIrCompiler:
         block = _first_node(type_result.ast, "block")
         if block is None:
             raise CompileError("ALGOL program must contain a block")
+        self.current_function_return_type = _INTEGER_TYPE
         root_scope = self._compile_block(block, parent=None)
 
         result_symbol = root_scope.semantic_block.scope.symbols.get("result")
@@ -1349,7 +1379,12 @@ class AlgolIrCompiler:
             zip(actuals, procedure.parameters, strict=True)
         ):
             if parameter.mode == _VALUE_MODE:
-                arguments[index] = self._compile_expr(argument, scope)
+                value = self._compile_expr(argument, scope)
+                arguments[index] = self._coerce_reg_to_type(
+                    value,
+                    self._expr_type(argument),
+                    expected_type=parameter.type_name,
+                )
 
         descriptor_heap_mark = (
             self._emit_reserve_eval_thunk_descriptors(len(thunk_actuals), scope)
@@ -1409,7 +1444,11 @@ class AlgolIrCompiler:
             self._emit_helper_return_on_thunk_failure(scope)
         self._emit_handle_pending_goto_after_call(scope)
         result = self._fresh_reg()
-        self._copy_reg(dst=result, src=_RESULT_REG)
+        self._copy_scalar_reg(
+            type_name=call.return_type or _INTEGER_TYPE,
+            dst=result,
+            src=_REAL_RESULT_REG if call.return_type == _REAL_TYPE else _RESULT_REG,
+        )
         return result
 
     def _requires_by_name_thunk_descriptor(self, argument: ASTNode) -> bool:
@@ -1730,6 +1769,8 @@ class AlgolIrCompiler:
         if body is None:
             raise CompileError(f"missing body AST for procedure {procedure.name!r}")
         semantic_block = self.semantic_blocks_by_id[procedure.body_block_id]
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = procedure.return_type
         self._label(procedure.label)
         heap_mark_reg = self._snapshot_heap_pointer()
         frame_base_reg = self._emit_enter_frame(
@@ -1777,7 +1818,8 @@ class AlgolIrCompiler:
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
-            self._store_word_reg(
+            self._store_scalar_reg(
+                type_name=parameter.type_name,
                 value_reg=_VALUE_PARAM_BASE_REG + index,
                 base_reg=scope.frame_base_reg,
                 offset=parameter.slot_offset,
@@ -1801,6 +1843,7 @@ class AlgolIrCompiler:
             self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
         self._emit_leave_frame(scope)
         self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
 
     def _compile_array_load(self, variable: ASTNode, scope: _FrameScope) -> int:
         data_pointer, byte_offset = self._compile_array_element_address(
@@ -2248,6 +2291,19 @@ class AlgolIrCompiler:
             IrRegister(offset_reg),
         )
 
+    def _store_scalar_reg(
+        self,
+        *,
+        type_name: str,
+        value_reg: int,
+        base_reg: int,
+        offset: int,
+    ) -> None:
+        if type_name == _REAL_TYPE:
+            self._store_f64_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
+            return
+        self._store_word_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
+
     def _store_word_const(self, base_reg: int, offset: int, value: int) -> None:
         value_reg = self._const_reg(value)
         self._store_word_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
@@ -2261,6 +2317,18 @@ class AlgolIrCompiler:
 
     def _copy_reg(self, *, dst: int, src: int) -> None:
         self._emit(IrOp.ADD_IMM, IrRegister(dst), IrRegister(src), IrImmediate(0))
+
+    def _copy_scalar_reg(self, *, type_name: str, dst: int, src: int) -> None:
+        if type_name == _REAL_TYPE:
+            zero = self._const_f64_reg(0.0)
+            self._emit(
+                IrOp.F64_ADD,
+                IrRegister(dst),
+                IrRegister(src),
+                IrRegister(zero),
+            )
+            return
+        self._copy_reg(dst=dst, src=src)
 
     def _const_reg(self, value: int) -> int:
         reg = self._fresh_reg()
@@ -2359,13 +2427,23 @@ class AlgolIrCompiler:
         )
         self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, token_reg)
 
+    def _emit_zero_result_reg(self) -> None:
+        if self.current_function_return_type == _REAL_TYPE:
+            self._emit(
+                IrOp.LOAD_F64_IMM,
+                IrRegister(_RESULT_REG),
+                IrFloatImmediate(0.0),
+            )
+            return
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+
     def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
         index = self.if_count
         self.if_count += 1
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(overflow_reg), IrLabel(else_label))
-        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_zero_result_reg()
         self._emit(IrOp.RET)
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(else_label)
@@ -2378,7 +2456,7 @@ class AlgolIrCompiler:
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
         self._emit_mark_thunk_failure_if_helper_active()
-        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_zero_result_reg()
         self._emit_unwind_for_return(scope)
         if scope.helper_failure:
             self._emit_leave_thunk_helper()
@@ -2397,7 +2475,7 @@ class AlgolIrCompiler:
             _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
             self._const_reg(label_id),
         )
-        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_zero_result_reg()
         if not scope.helper_failure:
             self._emit_unwind_for_return(scope)
         if scope.helper_failure:
@@ -2414,7 +2492,7 @@ class AlgolIrCompiler:
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(pending_label), IrLabel(no_pending_label))
         if scope.helper_failure:
-            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+            self._emit_zero_result_reg()
             self._emit_leave_thunk_helper()
             self._emit_restore_active_thunk_heap_mark(scope)
             self._emit(IrOp.RET)
@@ -2447,13 +2525,13 @@ class AlgolIrCompiler:
             self._label(next_end_label)
 
         if scope.function_owner_procedure_id is not None:
-            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+            self._emit_zero_result_reg()
             self._emit_unwind_for_return(scope)
             self._emit_restore_active_thunk_heap_mark(scope)
             self._emit(IrOp.RET)
         else:
             self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)
-            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+            self._emit_zero_result_reg()
             self._emit(IrOp.HALT)
 
         self._emit(IrOp.JUMP, IrLabel(end_label))
@@ -2540,7 +2618,7 @@ class AlgolIrCompiler:
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed), IrLabel(else_label))
-        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_zero_result_reg()
         self._emit_leave_thunk_helper()
         self._emit_restore_active_thunk_heap_mark(scope)
         self._emit(IrOp.RET)
