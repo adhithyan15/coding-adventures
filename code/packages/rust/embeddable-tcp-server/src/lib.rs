@@ -240,11 +240,16 @@ where
     Response: DeserializeOwned,
 {
     pub fn spawn(command: &WorkerCommand) -> io::Result<Self> {
+        let stderr = if cfg!(target_os = "windows") {
+            Stdio::null()
+        } else {
+            Stdio::inherit()
+        };
         let mut child = Command::new(&command.program)
             .args(&command.args)
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())
-            .stderr(Stdio::inherit())
+            .stderr(stderr)
             .spawn()?;
 
         let stdin = child.stdin.take().ok_or_else(|| {
@@ -456,7 +461,13 @@ where
                 default_job_timeout: options.worker_job_timeout,
                 restart_policy: options.worker_restart_policy.clone(),
             },
-        )?;
+        )
+        .map_err(|error| {
+            io::Error::new(
+                error.kind(),
+                format!("spawn stdio worker process pool: {error}"),
+            )
+        })?;
         let routes = Arc::new(Mutex::new(BTreeMap::new()));
         let submitter = StdioJobSubmitter {
             pool: pool.clone(),
@@ -464,8 +475,15 @@ where
             next_job_id: Arc::new(AtomicU64::new(1)),
             _types: PhantomData,
         };
-        let runtime = build_runtime_mailbox(&options, submitter, init, handler, on_close)
-            .map_err(into_io_error)?;
+        let runtime = build_runtime_mailbox(&options, submitter, init, handler, on_close).map_err(
+            |error| {
+                let io_error = into_io_error(error.clone());
+                io::Error::new(
+                    io_error.kind(),
+                    format!("bind mailbox TCP runtime: {error}"),
+                )
+            },
+        )?;
         let local_addr = runtime.local_addr();
         let stop_handle = runtime.stop_handle();
         let mailbox = runtime.mailbox();

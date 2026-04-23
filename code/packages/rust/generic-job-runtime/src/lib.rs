@@ -569,12 +569,18 @@ fn spawn_worker<Response>(
 where
     Response: DeserializeOwned + Send + 'static,
 {
+    let stderr = if cfg!(target_os = "windows") {
+        Stdio::null()
+    } else {
+        Stdio::inherit()
+    };
     let mut child = Command::new(&command.program)
         .args(&command.args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .stderr(Stdio::inherit())
-        .spawn()?;
+        .stderr(stderr)
+        .spawn()
+        .map_err(|error| io::Error::new(error.kind(), format!("spawn worker process: {error}")))?;
 
     let stdin = child
         .stdin
