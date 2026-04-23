@@ -106,6 +106,5 @@ test("PCMBuffer rejects invalid metadata", () => {
 test("PCMBuffer validates index bounds for time lookup", () => {
   const pcm = new PCMBuffer([0], new PCMFormat(8.0));
   assert.throws(() => pcm.timeAt(1), /in \[0, 1\)/);
-  // @ts-expect-error deliberate negative test
   assert.throws(() => pcm.timeAt(0.5), /integer/);
 });
