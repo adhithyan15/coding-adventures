@@ -113,16 +113,20 @@ fn build_symbols(encoded_digits: &[EncodedDigit]) -> Vec<Barcode1DSymbolDescript
         role: Barcode1DSymbolRole::Guard,
     }];
 
-    symbols.extend(encoded_digits[..6].iter().map(|entry| Barcode1DSymbolDescriptor {
-        label: entry.digit.clone(),
-        modules: 7,
-        source_index: entry.source_index,
-        role: if entry.role == Barcode1DRunRole::Check {
-            Barcode1DSymbolRole::Check
-        } else {
-            Barcode1DSymbolRole::Data
-        },
-    }));
+    symbols.extend(
+        encoded_digits[..6]
+            .iter()
+            .map(|entry| Barcode1DSymbolDescriptor {
+                label: entry.digit.clone(),
+                modules: 7,
+                source_index: entry.source_index,
+                role: if entry.role == Barcode1DRunRole::Check {
+                    Barcode1DSymbolRole::Check
+                } else {
+                    Barcode1DSymbolRole::Data
+                },
+            }),
+    );
 
     symbols.push(Barcode1DSymbolDescriptor {
         label: "center".to_string(),
@@ -131,16 +135,20 @@ fn build_symbols(encoded_digits: &[EncodedDigit]) -> Vec<Barcode1DSymbolDescript
         role: Barcode1DSymbolRole::Guard,
     });
 
-    symbols.extend(encoded_digits[6..].iter().map(|entry| Barcode1DSymbolDescriptor {
-        label: entry.digit.clone(),
-        modules: 7,
-        source_index: entry.source_index,
-        role: if entry.role == Barcode1DRunRole::Check {
-            Barcode1DSymbolRole::Check
-        } else {
-            Barcode1DSymbolRole::Data
-        },
-    }));
+    symbols.extend(
+        encoded_digits[6..]
+            .iter()
+            .map(|entry| Barcode1DSymbolDescriptor {
+                label: entry.digit.clone(),
+                modules: 7,
+                source_index: entry.source_index,
+                role: if entry.role == Barcode1DRunRole::Check {
+                    Barcode1DSymbolRole::Check
+                } else {
+                    Barcode1DSymbolRole::Data
+                },
+            }),
+    );
 
     symbols.push(Barcode1DSymbolDescriptor {
         label: "end".to_string(),
@@ -215,6 +223,9 @@ pub fn layout_upc_a(data: &str, options: &PaintBarcode1DOptions) -> Result<Paint
     if layout_options.label.is_none() {
         layout_options.label = Some(format!("UPC-A barcode for {}", normalized));
     }
+    if layout_options.human_readable_text.is_none() {
+        layout_options.human_readable_text = Some(normalized.clone());
+    }
     layout_options
         .metadata
         .insert("symbology".to_string(), "upc-a".to_string());
@@ -238,7 +249,10 @@ mod tests {
 
         let scene = layout_upc_a("03600029145", &PaintBarcode1DOptions::default()).unwrap();
         assert_eq!(
-            scene.metadata.as_ref().and_then(|metadata| metadata.get("symbology")),
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("symbology")),
             Some(&"upc-a".to_string())
         );
     }

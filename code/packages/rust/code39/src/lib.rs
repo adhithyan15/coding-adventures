@@ -215,6 +215,7 @@ pub fn layout_code39(data: &str, options: &PaintBarcode1DOptions) -> Result<Pain
 #[cfg(test)]
 mod tests {
     use super::*;
+    use paint_instructions::PaintInstruction;
 
     #[test]
     fn version_and_encode() {
@@ -256,10 +257,55 @@ mod tests {
     }
 
     #[test]
-    fn human_readable_text_is_an_explicit_follow_up() {
+    #[cfg(any(target_os = "windows", target_vendor = "apple"))]
+    fn human_readable_text_emits_glyph_runs_when_enabled() {
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        let scene = layout_code39("OK", &options).unwrap();
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("humanReadableText")),
+            Some(&"OK".to_string())
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn human_readable_text_renders_to_direct2d_pixels() {
+        let mut options = PaintBarcode1DOptions::default();
+        options.render_config.include_human_readable_text = true;
+        let scene = layout_code39("OK", &options).unwrap();
+        let bar_height = options.render_config.bar_height as usize;
+
+        let pixels = paint_vm_direct2d::render(&scene);
+        let label_dark_pixels = pixels
+            .data
+            .chunks_exact(4)
+            .enumerate()
+            .filter(|(index, px)| {
+                let y = index / pixels.width as usize;
+                y >= bar_height && px[0] < 64 && px[1] < 64 && px[2] < 64 && px[3] > 0
+            })
+            .count();
+
+        assert!(
+            label_dark_pixels > 20,
+            "expected visible text pixels below the bars"
+        );
+    }
+
+    #[cfg(all(not(target_os = "windows"), not(target_vendor = "apple")))]
+    #[test]
+    fn human_readable_text_waits_for_platform_text_backend() {
         let mut options = PaintBarcode1DOptions::default();
         options.render_config.include_human_readable_text = true;
         let error = layout_code39("OK", &options).unwrap_err();
-        assert!(error.contains("human-readable text"));
+        assert!(error.contains("font resolution failed") || error.contains("LoadFailed"));
     }
 }

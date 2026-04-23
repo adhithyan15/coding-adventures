@@ -6,8 +6,8 @@
 pub const VERSION: &str = "0.1.0";
 
 use barcode_layout_1d::{
-    layout_barcode_1d, runs_from_binary_pattern, Barcode1DRun, Barcode1DRunColor,
-    Barcode1DRunRole, PaintBarcode1DOptions, RunsFromBinaryPatternOptions,
+    layout_barcode_1d, runs_from_binary_pattern, Barcode1DRun, Barcode1DRunColor, Barcode1DRunRole,
+    PaintBarcode1DOptions, RunsFromBinaryPatternOptions,
 };
 use paint_instructions::PaintScene;
 
@@ -169,6 +169,9 @@ pub fn layout_codabar(
     if layout_options.label.is_none() {
         layout_options.label = Some(format!("Codabar barcode for {}", normalized));
     }
+    if layout_options.human_readable_text.is_none() {
+        layout_options.human_readable_text = Some(normalized.clone());
+    }
 
     layout_options
         .metadata
@@ -181,7 +184,10 @@ pub fn layout_codabar(
         normalized[normalized.len() - 1..].to_string(),
     );
 
-    layout_barcode_1d(&expand_codabar_runs(&normalized, None, None)?, &layout_options)
+    layout_barcode_1d(
+        &expand_codabar_runs(&normalized, None, None)?,
+        &layout_options,
+    )
 }
 
 #[cfg(test)]
@@ -200,18 +206,32 @@ mod tests {
 
     #[test]
     fn builds_paint_scene() {
-        let scene = layout_codabar("40156", Some("B"), Some("D"), &PaintBarcode1DOptions::default())
-            .unwrap();
+        let scene = layout_codabar(
+            "40156",
+            Some("B"),
+            Some("D"),
+            &PaintBarcode1DOptions::default(),
+        )
+        .unwrap();
         assert_eq!(
-            scene.metadata.as_ref().and_then(|metadata| metadata.get("symbology")),
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("symbology")),
             Some(&"codabar".to_string())
         );
         assert_eq!(
-            scene.metadata.as_ref().and_then(|metadata| metadata.get("start")),
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("start")),
             Some(&"B".to_string())
         );
         assert_eq!(
-            scene.metadata.as_ref().and_then(|metadata| metadata.get("stop")),
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("stop")),
             Some(&"D".to_string())
         );
     }
