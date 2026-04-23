@@ -97,7 +97,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		// often point at subdirectories (e.g. ../sha512/lib) rather than
 		// the package root, and those should satisfy the prereq.
 		var missing []string
-		if requiresExplicitPrereqs[pkg.Language] {
+		if requiresExplicitPrereqs[pkg.Language] && !isIntentionalSkipBuild(pkg) {
 			for dep := range prereqs {
 				if !referencedFuzzy[dep] {
 					missing = append(missing, dep)
@@ -235,6 +235,22 @@ func allowedDirectRefsFromMetadata(pkg discovery.Package, pythonKnownNames map[s
 		return nil
 	}
 	return parsePythonOptionalDeps(pkg, pythonKnownNames)
+}
+
+func isIntentionalSkipBuild(pkg discovery.Package) bool {
+	if len(pkg.BuildCommands) == 0 {
+		return false
+	}
+	for _, command := range pkg.BuildCommands {
+		lower := strings.ToLower(strings.TrimSpace(command))
+		if !strings.HasPrefix(lower, "echo ") {
+			return false
+		}
+		if !strings.Contains(lower, "skip") && !strings.Contains(lower, "not supported") {
+			return false
+		}
+	}
+	return true
 }
 
 func parsePythonOptionalDeps(pkg discovery.Package, knownNames map[string]string) map[string]bool {

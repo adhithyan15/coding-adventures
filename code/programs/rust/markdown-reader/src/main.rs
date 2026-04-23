@@ -1,6 +1,6 @@
 //! # markdown-reader
 //!
-//! Native macOS Markdown viewer. End-to-end binary that exercises the
+//! Native Markdown viewer. End-to-end binary that exercises the
 //! whole coding-adventures text stack for the first time:
 //!
 //! ```text
@@ -9,11 +9,11 @@
 //!   DocumentNode
 //!      ↓  document-ast-to-layout + DocumentTheme
 //!   LayoutNode tree
-//!      ↓  layout-block + layout-text-measure-native (CoreText under the hood)
+//!      ↓  layout-block + layout-text-measure-native
 //!   PositionedNode tree
 //!      ↓  layout-to-paint + the same CoreText trio
 //!   PaintScene (with pre-shaped PaintGlyphRun instructions)
-//!      ↓  paint-metal (Metal rects/lines + CoreText glyph overlay)
+//!      ↓  platform paint backend
 //!   PixelContainer
 //!      ↓  NSImageView in an NSWindow
 //!   visible text on screen
@@ -54,18 +54,18 @@ const SAMPLE_MARKDOWN: &str = r#"# Hello, Markdown!
 
 This is a **native** Markdown viewer. Every pixel you see on this window
 went through the coding-adventures stack end to end: parse → AST → layout
-→ paint → Metal.
+→ paint → platform pixels.
 
 ## Features
 
 - Pure Rust implementation.
-- CoreText for platform-native shaping.
+- Native OS text shaping.
 - Paint VM for device-independent scene model.
-- Built from first principles — no HarfBuzz, no Pango, no WebKit.
+- Built from first principles - no HarfBuzz, no Pango, no WebKit.
 
 ### Supported today
 
-- Headings (h1–h6)
+- Headings (h1-h6)
 - Paragraphs with word-wrap
 - Unordered and ordered lists
 - Blockquotes
@@ -189,7 +189,7 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
     let theme = document_default_theme();
     let layout_root = document_ast_to_layout(&doc, &theme);
 
-    // Step 3. Lay out using layout-block with a CoreText-backed measurer.
+    // Step 3. Lay out using layout-block with a native text measurer.
     let measurer = NativeMeasurer::new();
     let constraints = constraints_width(WINDOW_WIDTH);
     let positioned = layout_block(&layout_root, constraints, &measurer);
@@ -197,7 +197,7 @@ fn render_markdown_to_scene(markdown: &str) -> PaintScene {
     // Step 4. Convert to a PaintScene. The shaper/metrics/resolver
     //        trio MUST match a single font binding — by using the
     //        NativeResolver/NativeMetrics/NativeShaper triple they
-    //        all share a CoreText `Handle`.
+    //        all share one backend-specific `Handle`.
     let resolver = NativeResolver::new();
     let metrics = NativeMetrics::new();
     let shaper = NativeShaper::new();

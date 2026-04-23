@@ -101,7 +101,7 @@ compile_error!(
 //   - IWICBitmap: a CPU-accessible bitmap that Direct2D can render into
 
 #[cfg(target_os = "windows")]
-use windows::core::{GUID, Interface, PCWSTR};
+use windows::core::{Interface, GUID, PCWSTR};
 #[cfg(target_os = "windows")]
 use windows::Foundation::Numerics::Matrix3x2;
 #[cfg(target_os = "windows")]
@@ -1013,11 +1013,9 @@ pub unsafe fn show_scene_in_window(scene: &PaintScene, title: &str) {
     attributes.initial_size = LogicalSize::new(scene_size.0, scene_size.1);
     attributes.preferred_surface = SurfacePreference::Direct2D;
 
-    if let Err(err) = backend.create_native_window(
-        attributes,
-        Some(render_paint_callback),
-        scene_ptr,
-    ) {
+    if let Err(err) =
+        backend.create_native_window(attributes, Some(render_paint_callback), scene_ptr)
+    {
         drop(unsafe { Box::from_raw(scene_ptr as *mut PaintScene) });
         panic!("failed to create native Direct2D window: {err}");
     }
@@ -1031,16 +1029,17 @@ pub unsafe fn show_scene_in_window(scene: &PaintScene, title: &str) {
 }
 
 #[cfg(target_os = "windows")]
-unsafe extern "system" fn render_paint_callback(
-    hwnd: HWND,
-    user_data: isize,
-) {
+unsafe extern "system" fn render_paint_callback(hwnd: HWND, user_data: isize) {
     let scene_ptr = user_data as *const PaintScene;
     if scene_ptr.is_null() {
         return;
     }
 
-    let scene = unsafe { scene_ptr.as_ref().expect("scene pointer provided by show_scene_in_window") };
+    let scene = unsafe {
+        scene_ptr
+            .as_ref()
+            .expect("scene pointer provided by show_scene_in_window")
+    };
     let _ = render_to_hwnd(hwnd, scene);
 }
 
@@ -1205,7 +1204,10 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 #[cfg(test)]
 mod tests {
     use super::*;
-    use paint_instructions::{PaintBase, PaintGroup, PaintInstruction, PaintRect, PaintScene};
+    use paint_instructions::{
+        GlyphPosition, PaintBase, PaintGlyphRun, PaintGroup, PaintInstruction, PaintRect,
+        PaintScene,
+    };
 
     #[test]
     fn version_exists() {
@@ -1468,5 +1470,54 @@ mod tests {
         assert_eq!(r, 0, "black module should have r=0");
         assert_eq!(g, 0, "black module should have g=0");
         assert_eq!(b, 0, "black module should have b=0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_directwrite_glyph_run_draws_text_pixels() {
+        use text_interfaces::{FontQuery, FontResolver, ShapeOptions, TextShaper};
+        use text_native::{NativeResolver, NativeShaper};
+
+        let resolver = NativeResolver::new();
+        let shaper = NativeShaper::new();
+        let handle = resolver.resolve(&FontQuery::named("Segoe UI")).unwrap();
+        let shaped = shaper
+            .shape("Hi", &handle, 32.0, &ShapeOptions::default())
+            .unwrap();
+        let run = &shaped.runs[0];
+
+        let mut x = 12.0;
+        let glyphs: Vec<GlyphPosition> = run
+            .glyphs
+            .iter()
+            .map(|g| {
+                let positioned = GlyphPosition {
+                    glyph_id: g.glyph_id,
+                    x,
+                    y: 46.0,
+                };
+                x += g.x_advance as f64;
+                positioned
+            })
+            .collect();
+
+        let mut scene = PaintScene::new(100.0, 64.0);
+        scene
+            .instructions
+            .push(PaintInstruction::GlyphRun(PaintGlyphRun {
+                base: PaintBase::default(),
+                glyphs,
+                font_ref: run.font_ref.clone(),
+                font_size: 32.0,
+                fill: Some("#000000".to_string()),
+            }));
+
+        let pixels = render(&scene);
+        let dark_pixels = pixels
+            .data
+            .chunks_exact(4)
+            .filter(|px| px[0] < 64 && px[1] < 64 && px[2] < 64 && px[3] > 0)
+            .count();
+        assert!(dark_pixels > 20, "expected visible glyph pixels");
     }
 }

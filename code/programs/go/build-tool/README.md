@@ -13,6 +13,14 @@ cd code/programs/go/build-tool
 go build -o build-tool .
 ```
 
+On Windows, build the executable with the `.exe` suffix so PowerShell runs it
+directly instead of asking which application should open an extensionless file:
+
+```powershell
+cd code\programs\go\build-tool
+go build -o ..\..\..\..\build-tool.exe .
+```
+
 This produces a single static binary with no runtime dependencies.
 
 ## Usage
@@ -41,6 +49,13 @@ This produces a single static binary with no runtime dependencies.
 
 # Custom cache file location
 ./build-tool -cache-file /tmp/my-cache.json
+```
+
+On Windows, use the compiled `.exe`:
+
+```powershell
+.\build-tool.exe -root . -diff-base origin/main
+.\build-tool.exe -root . -validate-build-files -detect-languages -emit-plan build-plan.json
 ```
 
 ## CLI flags

@@ -9,3 +9,9 @@ text-interfaces = { path = "../text-interfaces" }
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
 text-native-coretext = { path = "../text-native-coretext" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_DirectWrite",
+] }
