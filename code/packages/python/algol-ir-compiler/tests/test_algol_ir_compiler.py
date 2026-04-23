@@ -227,6 +227,21 @@ class TestAlgolIrCompiler:
         assert IrOp.CMP_GT in opcodes
         assert IrOp.AND in opcodes
 
+    def test_compiles_boolean_variable_storage_and_readback(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "boolean flag; "
+                "flag := true; "
+                "if flag then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert opcodes.count(IrOp.STORE_WORD) >= 2
+        assert opcodes.count(IrOp.LOAD_WORD) >= 2
+
     def test_compiles_greater_equal_via_less_than_inversion(self) -> None:
         result = compile_algol(
             parse_algol(

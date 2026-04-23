@@ -230,6 +230,19 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "real variables are not supported" in result.diagnostics[0].message
 
+    def test_accepts_boolean_variable_declaration_and_assignment(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "boolean flag; "
+            "flag := true; "
+            "if flag then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.root_scope.children[0].symbols["flag"].type_name == "boolean"
+
     def test_reports_arithmetic_operand_that_is_not_integer(self) -> None:
         ast = parse_algol("begin integer result; result := true + 1 end")
         result = check_algol(ast)
