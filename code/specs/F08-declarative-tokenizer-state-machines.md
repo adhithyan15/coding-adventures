@@ -150,7 +150,7 @@ with typed events:
 
 - ordinary events match declared alphabet entries
 - `$any` matches any non-EOF event after earlier transitions have had a chance
-  to match
+  to match, including Unicode code points that are not declared in the alphabet
 - `$end` matches the EOF sentinel and must not consume input
 - `actions` is an ordered list of portable effect identifiers
 - `consume = false` models EOF, lookahead, and future reconsume-style behavior
@@ -159,6 +159,12 @@ That representation is deliberately smaller than the full tokenizer profile,
 but it is enough for generated source and wrapper packages to share one
 execution primitive while the tokenizer-specific matcher/action vocabulary
 continues to grow.
+
+The Rust `state-machine-tokenizer` package is the first profile wrapper over
+that primitive. It owns the tokenizer loop, source positions, text buffer,
+current token, diagnostics, trace entries, a bounded non-consuming step budget,
+and a fixed portable action vocabulary. Browser-specific packages can then wrap
+that runtime with friendlier token names and parser integration.
 
 ## File Format
 
@@ -617,13 +623,15 @@ web-platform-tests/html and run them through the same runtime.
    pipeline to preserve transition actions and consume flags.
 4. Add a minimal HTML tokenizer skeleton test that proves text buffering,
    start/end tag emission, EOF handling, and generated transducer source.
-5. Add `code/tokenizers/html/html1.tokenizer.states.toml`.
-6. Compile the tokenizer definition into static source code with the F09
+5. Add the Rust `state-machine-tokenizer` profile runtime that interprets
+   portable actions over a statically linked transducer definition.
+6. Add `code/tokenizers/html/html1.tokenizer.states.toml`.
+7. Compile the tokenizer definition into static source code with the F09
    compiler.
-7. Rebuild `html1.0-lexer` as a wrapper over the generated definition.
-8. Add conformance fixtures and transition traces.
-9. Expand toward `whatwg-html.tokenizer.states.toml` state by state.
-10. Create a later tree-construction spec for insertion modes, stack of open
+8. Rebuild `html1.0-lexer` as a wrapper over the generated definition.
+9. Add conformance fixtures and transition traces.
+10. Expand toward `whatwg-html.tokenizer.states.toml` state by state.
+11. Create a later tree-construction spec for insertion modes, stack of open
    elements, active formatting elements, foster parenting, template insertion
    modes, and the adoption agency algorithm.
 
