@@ -15,8 +15,8 @@ music machine appends zero-valued PCM samples for the requested amount of time.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable
-from dataclasses import dataclass, replace
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass, field, replace
 from importlib import import_module
 from math import isfinite
 from numbers import Integral, Real
@@ -594,6 +594,216 @@ class PortableScore:
         return {track.id: track for track in self.tracks}
 
 
+@dataclass
+class PortableScoreBuilder:
+    """Programmatic builder for `music-machine-score/v2` portable scores."""
+
+    title: str = "Untitled"
+    ppq: int = DEFAULT_PPQ
+    sample_rate_hz: int = int(DEFAULT_SAMPLE_RATE_HZ)
+    format_version: str = PORTABLE_FORMAT_VERSION
+    _tempo_events: list[TempoEvent] = field(
+        default_factory=list,
+        init=False,
+        repr=False,
+    )
+    _meter_events: list[MeterEvent] = field(
+        default_factory=list,
+        init=False,
+        repr=False,
+    )
+    _instruments: list[InstrumentDeclaration] = field(
+        default_factory=list,
+        init=False,
+        repr=False,
+    )
+    _tracks: list[TrackDeclaration] = field(
+        default_factory=list,
+        init=False,
+        repr=False,
+    )
+    _events: list[PortableScoreEvent] = field(
+        default_factory=list,
+        init=False,
+        repr=False,
+    )
+    _source_order: int = field(default=0, init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        self.title = str(self.title)
+        self.ppq = _positive_integer("ppq", self.ppq)
+        self.sample_rate_hz = _positive_integer("sample_rate_hz", self.sample_rate_hz)
+        if self.format_version != PORTABLE_FORMAT_VERSION:
+            raise ValueError(
+                f"format_version must be {PORTABLE_FORMAT_VERSION!r}, "
+                f"got {self.format_version!r}"
+            )
+
+    def add_tempo(self, start_tick: int, bpm: float) -> PortableScoreBuilder:
+        self._tempo_events.append(TempoEvent(start_tick=start_tick, bpm=bpm))
+        return self
+
+    def add_meter(self, start_tick: int, meter: str) -> PortableScoreBuilder:
+        self._meter_events.append(MeterEvent(start_tick=start_tick, meter=meter))
+        return self
+
+    def add_instrument(
+        self,
+        instrument_id: str,
+        *,
+        profile: str | None = None,
+        program: int | None = None,
+        kind: str | None = None,
+        gain: float = 1.0,
+    ) -> PortableScoreBuilder:
+        selector_count = sum(
+            value is not None for value in (profile, program, kind)
+        )
+        if selector_count != 1:
+            raise ValueError(
+                "instrument must specify exactly one of profile, program, or kind"
+            )
+
+        if program is not None:
+            profile_id = instrument_for_gm_program(program).id
+        elif profile is not None:
+            profile_id = resolve_instrument_id(instrument_id=profile)
+        else:
+            if kind not in {"sine", "silence"}:
+                raise ValueError("kind must be sine or silence in V2")
+            profile_id = kind
+
+        self._instruments.append(
+            InstrumentDeclaration(
+                id=instrument_id,
+                profile_id=profile_id,
+                gain=gain,
+            )
+        )
+        return self
+
+    def add_track(self, track_id: str, *, instrument_id: str) -> PortableScoreBuilder:
+        self._tracks.append(TrackDeclaration(track_id, instrument_id))
+        return self
+
+    def add_note(
+        self,
+        track_id: str,
+        start_tick: int,
+        duration_tick: int,
+        note: str,
+        *,
+        velocity: float = 1.0,
+    ) -> PortableScoreBuilder:
+        self._events.append(
+            PortableScoreEvent(
+                track_id=track_id,
+                start_tick=start_tick,
+                duration_tick=duration_tick,
+                kind="note",
+                notes=(note,),
+                velocity=velocity,
+                source_order=self._next_source_order(),
+            )
+        )
+        return self
+
+    def add_chord(
+        self,
+        track_id: str,
+        start_tick: int,
+        duration_tick: int,
+        notes: Iterable[str],
+        *,
+        velocity: float = 1.0,
+    ) -> PortableScoreBuilder:
+        if isinstance(notes, str):
+            raise ValueError("notes must be an iterable of note strings")
+
+        self._events.append(
+            PortableScoreEvent(
+                track_id=track_id,
+                start_tick=start_tick,
+                duration_tick=duration_tick,
+                kind="note",
+                notes=tuple(notes),
+                velocity=velocity,
+                source_order=self._next_source_order(),
+            )
+        )
+        return self
+
+    def add_rest(
+        self,
+        track_id: str,
+        start_tick: int,
+        duration_tick: int,
+    ) -> PortableScoreBuilder:
+        self._events.append(
+            PortableScoreEvent(
+                track_id=track_id,
+                start_tick=start_tick,
+                duration_tick=duration_tick,
+                kind="rest",
+                notes=(),
+                source_order=self._next_source_order(),
+            )
+        )
+        return self
+
+    def build(self) -> PortableScore:
+        return PortableScore(
+            format_version=self.format_version,
+            title=self.title,
+            ppq=self.ppq,
+            sample_rate_hz=self.sample_rate_hz,
+            tempo_events=tuple(self._tempo_events),
+            meter_events=tuple(self._meter_events),
+            instruments=tuple(self._instruments),
+            tracks=tuple(self._tracks),
+            events=tuple(self._events),
+        )
+
+    def to_text(self) -> str:
+        score = self.build()
+        lines = [
+            f"format: {score.format_version}",
+            f"title: {score.title}",
+            f"ppq: {score.ppq}",
+            f"sample_rate: {score.sample_rate_hz}",
+        ]
+
+        lines.extend(
+            f"tempo {event.start_tick} {_format_portable_number(event.bpm)}"
+            for event in score.tempo_events
+        )
+        lines.extend(
+            f"meter {event.start_tick} {event.meter}" for event in score.meter_events
+        )
+
+        if score.instruments:
+            lines.append("")
+            lines.extend(_portable_instrument_line(item) for item in score.instruments)
+
+        if score.tracks:
+            lines.append("")
+            lines.extend(
+                f"track {track.id} instrument={track.instrument_id}"
+                for track in score.tracks
+            )
+
+        if score.events:
+            lines.append("")
+            lines.extend(_portable_event_line(event) for event in score.events)
+
+        return "\n".join(lines)
+
+    def _next_source_order(self) -> int:
+        source_order = self._source_order
+        self._source_order += 1
+        return source_order
+
+
 @dataclass(frozen=True)
 class RenderedPortableScore:
     """Rendered output for a portable multi-track score."""
@@ -991,6 +1201,33 @@ def _parse_portable_event_line(
         notes=notes,
         velocity=velocity,
         source_order=source_order,
+    )
+
+
+def _format_portable_number(value: float) -> str:
+    return f"{value:g}"
+
+
+def _portable_instrument_line(instrument: InstrumentDeclaration) -> str:
+    selector = (
+        f"kind={instrument.profile_id}"
+        if instrument.profile_id in {"sine", "silence"}
+        else f"profile={instrument.profile_id}"
+    )
+    return (
+        f"instrument {instrument.id} {selector} "
+        f"gain={_format_portable_number(instrument.gain)}"
+    )
+
+
+def _portable_event_line(event: PortableScoreEvent) -> str:
+    if event.kind == "rest":
+        return f"event {event.track_id} {event.start_tick} {event.duration_tick} rest"
+
+    notes = ",".join(event.notes)
+    return (
+        f"event {event.track_id} {event.start_tick} {event.duration_tick} "
+        f"note {notes} velocity={_format_portable_number(event.velocity)}"
     )
 
 
