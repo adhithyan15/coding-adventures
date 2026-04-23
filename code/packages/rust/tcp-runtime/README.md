@@ -39,4 +39,5 @@ Phase one supports:
 cargo test -p tcp-runtime -- --nocapture
 cargo check -p tcp-runtime --tests --target x86_64-unknown-linux-gnu
 cargo check -p tcp-runtime --tests --target x86_64-pc-windows-msvc
+TCP_RUNTIME_STRESS_CLIENTS=10000 cargo test -p tcp-runtime bind_iocp_sustains_ten_thousand_concurrent_connections -- --ignored --nocapture
 ```
