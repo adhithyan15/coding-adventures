@@ -285,6 +285,11 @@ pub struct PaintRect {
     pub stroke_width: Option<f64>,
     /// 0.0 or `None` = sharp corners.
     pub corner_radius: Option<f64>,
+    /// Dash pattern for the stroke, e.g. `[6.0, 3.0]` = 6px dash, 3px gap.
+    /// `None` = solid stroke.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 impl PaintRect {
@@ -300,6 +305,8 @@ impl PaintRect {
             stroke: None,
             stroke_width: None,
             corner_radius: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }
     }
 }
@@ -332,6 +339,10 @@ pub struct PaintEllipse {
     pub fill: Option<String>,
     pub stroke: Option<String>,
     pub stroke_width: Option<f64>,
+    /// Dash pattern for the stroke. `None` = solid.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 // ─── PaintPath ────────────────────────────────────────────────────────────────
@@ -354,6 +365,10 @@ pub struct PaintPath {
     pub stroke_width: Option<f64>,
     pub stroke_cap: Option<StrokeCap>,
     pub stroke_join: Option<StrokeJoin>,
+    /// Dash pattern for the stroke. `None` = solid.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 /// Fill rule for overlapping subpaths.
@@ -540,6 +555,10 @@ pub struct PaintLine {
     /// Default 1.0.
     pub stroke_width: Option<f64>,
     pub stroke_cap: Option<StrokeCap>,
+    /// Dash pattern for the stroke. `None` = solid.
+    pub stroke_dash: Option<Vec<f64>>,
+    /// Phase offset into the dash pattern. `None` = 0.0.
+    pub stroke_dash_offset: Option<f64>,
 }
 
 // ─── PaintClip ────────────────────────────────────────────────────────────────
@@ -910,6 +929,8 @@ mod tests {
             stroke: "#000000".to_string(),
             stroke_width: None,
             stroke_cap: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         });
 
         match &line {
