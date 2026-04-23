@@ -323,6 +323,7 @@ export function dotAstToGraphDiagram(document: DotDocument): GraphDiagram {
   const edges: GraphEdge[] = [];
 
   const ensureNode = (id: string, attributes: DotAttribute[] = []) => {
+    if (nodes.has(id) && attributes.length === 0) return;
     const lowered = lowerNode(id, attributes, nodeDefaults);
     const existing = nodes.get(id);
     nodes.set(
