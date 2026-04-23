@@ -28,8 +28,10 @@ Example::
 """
 
 from symbolic_ir.nodes import (
+    ACOS,
     ADD,
     AND,
+    ASIN,
     ASSIGN,
     ATAN,
     COS,
@@ -76,6 +78,8 @@ __all__ = [
     "IRString",
     "IRApply",
     # Standard head symbols
+    "ACOS",
+    "ASIN",
     "ATAN",
     "ADD",
     "SUB",

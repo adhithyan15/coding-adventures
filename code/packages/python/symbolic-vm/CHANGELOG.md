@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.17.0 — 2026-04-23
+
+Phase 12 of the integration roadmap — polynomial × asin/acos(linear) integration via IBP.
+
+**New capability**: `∫ P(x) · asin(ax+b) dx` and `∫ P(x) · acos(ax+b) dx` for any
+`P ∈ Q[x]` and `a ∈ Q \ {0}`, completing all three inverse-trig × polynomial families.
+
+**Algorithm** (integration by parts):
+
+- **asin IBP**: `u = asin(ax+b)`, `dv = P dx` → `du = a/√(1−(ax+b)²) dx`, `v = Q = ∫P dx`
+  - Residual: `a · ∫ Q/√(1−(ax+b)²) dx = ∫ Q̃(t)/√(1−t²) dt`  (t = ax+b substitution)
+  - Residual decomposed via reduction formula: `∫ Q̃/√(1−t²) dt = A(t)·√(1−t²) + B(t)·asin(t)`
+  - Final result: `[Q(x) − B(ax+b)]·asin(ax+b) − A(ax+b)·√(1−(ax+b)²)`
+
+- **acos IBP**: sign of `du` flips (`d/dx acos = −a/√`), giving
+  - Final result: `Q(x)·acos(ax+b) + A(ax+b)·√(1−(ax+b)²) + B(ax+b)·asin(ax+b)`
+  - The B·asin term is non-zero for deg(P) ≥ 1 — this is expected, not a bug.
+
+**New module** `asin_poly_integral.py`:
+- `asin_poly_integral(poly, a, b, x_sym)` — IBP closed-form for `∫ P(x)·asin(ax+b) dx`.
+- `acos_poly_integral(poly, a, b, x_sym)` — IBP closed-form for `∫ P(x)·acos(ax+b) dx`.
+- Private helpers: `_compose_to_t`, `_sqrt_integral_decompose`, `_poly_compose_linear`, `_compute_AB`.
+- Reduction formula is memoized per monomial degree for efficiency.
+
+**Dispatcher hooks** in `integrate.py`:
+- `_try_asin_product` / `_try_acos_product` — check ASIN/ACOS head, validate linear arg and polynomial coefficient.
+- Both hooks try both operand orders, inserted after Phase 11 in the MUL handler.
+- Bare `asin/acos(linear)` cases (P = 1) handled in the elementary-function branch.
+- Differentiation rules for `d/dx asin(u)` and `d/dx acos(u)` added to `_diff_ir`.
+
+**VM handlers** in `handlers.py`:
+- `asin(simplify)` and `acos(simplify)` handlers registered (numeric fold + symbolic passthrough).
+
+**symbolic-ir**: bumped dependency to `>=0.4.0` (requires ASIN/ACOS head symbols).
+
+**Limitations (future work)**:
+- `∫ asin(g(x))` for non-linear `g`.
+- `∫ asin(ax+b)^n dx` for `n ≥ 2`.
+- `∫ asin(ax+b) · exp(x) dx` (mixed inverse-trig × exponential).
+
 ## 0.16.0 — 2026-04-22
 
 Phase 11 of the integration roadmap — polynomial × arctan(linear) integration via IBP.

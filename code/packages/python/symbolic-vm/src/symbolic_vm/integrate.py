@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–10).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–12).
 
 The handler tries two routes, in order:
 
@@ -76,7 +76,9 @@ from polynomial import (
     rational_roots,
 )
 from symbolic_ir import (
+    ACOS,
     ADD,
+    ASIN,
     ATAN,
     COS,
     DIV,
@@ -99,6 +101,7 @@ from symbolic_ir import (
 )
 
 from symbolic_vm.arctan_integral import arctan_integral
+from symbolic_vm.asin_poly_integral import acos_poly_integral, asin_poly_integral
 from symbolic_vm.atan_poly_integral import atan_poly_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.exp_integral import exp_integral
@@ -404,6 +407,13 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         result = _try_atan_product(a, b, x) or _try_atan_product(b, a, x)
         if result is not None:
             return result
+        # Phase 12: asin/acos(linear) × polynomial via IBP.
+        result = _try_asin_product(a, b, x) or _try_asin_product(b, a, x)
+        if result is not None:
+            return result
+        result = _try_acos_product(a, b, x) or _try_acos_product(b, a, x)
+        if result is not None:
+            return result
         # Phase 4b: trig × trig via product-to-sum identities.
         result = _try_trig_trig(a, b, x) or _try_trig_trig(b, a, x)
         if result is not None:
@@ -531,7 +541,7 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
     # Generalises the Phase 1 rules above to any a·x + b argument.
     # Only fires when the argument is strictly linear with a ≠ 0 and
     # (a, b) ≠ (1, 0) — otherwise the Phase 1 rules above already fired.
-    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG, TAN, ATAN}:
+    if len(f.args) == 1 and head in {EXP, SIN, COS, LOG, TAN, ATAN, ASIN, ACOS}:
         lin = _try_linear(f.args[0], x)
         if lin is not None:
             a_frac, b_frac = lin
@@ -578,6 +588,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
                         ),
                     )
                     return IRApply(SUB, (IRApply(MUL, (coef_ir, f)), log_part))
+                if head in (ASIN, ACOS):
+                    # ∫ asin/acos(ax+b) dx — unit-polynomial IBP (Phase 12).
+                    fn = asin_poly_integral if head == ASIN else acos_poly_integral
+                    return fn((Fraction(1),), a_frac, b_frac, x)
 
     # Unknown shape — signal "no rule" to the caller.
     return None
@@ -781,6 +795,70 @@ def _try_atan_product(
     if not poly:
         return None
     return atan_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_asin_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · asin(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Asin(linear)`` and
+    ``poly_candidate`` is a polynomial. Phase 12 IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ASIN:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return asin_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_acos_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · acos(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Acos(linear)`` and
+    ``poly_candidate`` is a polynomial. Phase 12 IBP formula.
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ACOS:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return acos_poly_integral(poly, a_frac, b_frac, x)
 
 
 # ---------------------------------------------------------------------------
@@ -1317,6 +1395,25 @@ def _diff_ir(g: IRNode, x: IRSymbol) -> IRNode | None:
             # d/dx cos(u) = −sin(u)·u'
             neg_sin = IRApply(NEG, (IRApply(SIN, (arg,)),))
             return neg_sin if darg_is_one else IRApply(MUL, (neg_sin, darg))
+
+        if head == ASIN:
+            # d/dx asin(u) = u'/√(1−u²)
+            denom = IRApply(
+                SQRT, (IRApply(SUB, (ONE, IRApply(POW, (arg, TWO)))),)
+            )
+            if darg_is_one:
+                return IRApply(DIV, (ONE, denom))
+            return IRApply(DIV, (darg, denom))
+
+        if head == ACOS:
+            # d/dx acos(u) = −u'/√(1−u²)
+            denom = IRApply(
+                SQRT, (IRApply(SUB, (ONE, IRApply(POW, (arg, TWO)))),)
+            )
+            neg_inv = IRApply(NEG, (IRApply(DIV, (ONE, denom)),))
+            if darg_is_one:
+                return neg_inv
+            return IRApply(MUL, (IRApply(NEG, (darg,)), IRApply(DIV, (ONE, denom))))
 
         if head == EXP:
             # d/dx exp(u) = exp(u)·u'

@@ -187,6 +187,8 @@ COS = IRSymbol("Cos")
 TAN = IRSymbol("Tan")
 SQRT = IRSymbol("Sqrt")
 ATAN = IRSymbol("Atan")
+ASIN = IRSymbol("Asin")
+ACOS = IRSymbol("Acos")
 
 # Calculus
 D = IRSymbol("D")
