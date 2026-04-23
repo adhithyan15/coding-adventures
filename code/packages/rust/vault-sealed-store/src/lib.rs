@@ -35,8 +35,8 @@ use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
 use coding_adventures_csprng::{random_array, random_bytes};
-use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use coding_adventures_json_value::{JsonNumber, JsonValue};
+use coding_adventures_zeroize::Zeroizing;
 use storage_core::{
     Revision, StorageBackend, StorageError, StorageListOptions, StoragePutInput,
 };
@@ -52,11 +52,17 @@ pub const RESERVED_NAMESPACE: &str = "__vault__";
 /// Fixed key for the singleton manifest record.
 pub const MANIFEST_KEY: &str = "manifest";
 
+/// Fixed key for the namespace-registry side record.
+const NAMESPACES_KEY: &str = "namespaces";
+
 /// Content-type tag on the manifest record.
 pub const MANIFEST_CONTENT_TYPE: &str = "application/vault-manifest+json-v1";
 
 /// Content-type tag on every sealed record.
 pub const SEALED_CONTENT_TYPE: &str = "application/vault-sealed+json-v1";
+
+/// Content-type tag on the namespace-registry record.
+const NAMESPACES_CONTENT_TYPE: &str = "application/vault-namespaces+json-v1";
 
 /// Manifest schema version. Increments on any breaking on-disk change.
 const MANIFEST_VERSION: u64 = 1;
@@ -73,6 +79,19 @@ pub const DEFAULT_ARGON2_TIME_COST: u32 = 3;
 pub const DEFAULT_ARGON2_MEMORY_KIB: u32 = 65_536;
 pub const DEFAULT_ARGON2_PARALLELISM: u32 = 4;
 pub const DEFAULT_ARGON2_SALT_LEN: usize = 16;
+
+/// Hard upper bounds for Argon2id parameters as read from the persisted
+/// manifest. These are defence against a tampered manifest: an attacker
+/// who can rewrite the at-rest bytes can otherwise force unseal into an
+/// O(hours) / O(TiB) KDF run and DoS the vault.
+///
+/// The ceilings chosen here are far above any legitimate operator
+/// tuning (5 GiB, 10 passes, 64 lanes) but still cap the blast radius.
+const ARGON2_TIME_COST_MAX: u32 = 10;
+const ARGON2_MEMORY_KIB_MAX: u32 = 5 * 1024 * 1024;
+const ARGON2_PARALLELISM_MAX: u32 = 64;
+const ARGON2_SALT_MIN_LEN: usize = 8;
+const ARGON2_SALT_MAX_LEN: usize = 1024;
 
 /// XChaCha20-Poly1305 nonce + tag lengths. Hard-coded because we commit to
 /// a single AEAD suite in v1 of the format.
@@ -162,7 +181,9 @@ pub enum SealedStoreError {
     Storage(StorageError),
     /// A crypto primitive rejected its inputs. Message is intentionally vague.
     Crypto(String),
-    /// Caller input violated a surface-level contract.
+    /// Caller input violated a surface-level contract. Message strings here
+    /// are always produced from static literals in this crate — never from
+    /// untrusted on-disk bytes — so they cannot carry attacker payloads.
     Validation { field: String, message: String },
 }
 
@@ -257,6 +278,13 @@ impl SealedStore {
     /// Create a fresh vault. Writes a new manifest containing the KDF
     /// parameters, a random salt, and a verifier AEAD'd under the derived
     /// KEK. Fails if a manifest already exists.
+    ///
+    /// Note on TOCTOU: the absence check + write is not atomic at the
+    /// backend level. Two concurrent `init()` calls racing on the same
+    /// backend may both succeed at the absence check; the second write
+    /// will overwrite the first. In practice `init()` runs once per
+    /// machine setup; the documented invariant is that callers must not
+    /// race it.
     pub fn init(&self, password: &[u8], opts: &InitOptions) -> Result<(), SealedStoreError> {
         // 1. Fail fast if a manifest already exists.
         if self
@@ -267,22 +295,33 @@ impl SealedStore {
             return Err(SealedStoreError::AlreadyInitialized);
         }
 
-        // 2. Collect salt (caller-supplied or CSPRNG).
+        // 2. Validate caller-supplied KDF parameters. Nothing here involves
+        //    untrusted on-disk bytes yet — we just clamp to the same ceiling
+        //    we use when parsing a persisted manifest, so init() and unseal()
+        //    have the same concept of "legal".
+        validate_argon2_params(
+            opts.argon2id_time_cost,
+            opts.argon2id_memory_kib,
+            opts.argon2id_parallelism,
+        )?;
+
+        // 3. Collect salt (caller-supplied or CSPRNG).
         let salt = match &opts.salt_override {
             Some(s) => {
-                if s.len() < 8 {
+                if s.len() < ARGON2_SALT_MIN_LEN || s.len() > ARGON2_SALT_MAX_LEN {
                     return Err(SealedStoreError::Validation {
                         field: "salt_override".to_string(),
-                        message: "must be at least 8 bytes".to_string(),
+                        message: "salt length out of range".to_string(),
                     });
                 }
                 s.clone()
             }
             None => random_bytes(DEFAULT_ARGON2_SALT_LEN)
-                .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?,
+                .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?,
         };
 
-        // 3. Derive the initial KEK.
+        // 4. Derive the initial KEK. `derive_kek` returns the key already
+        //    wrapped in Zeroizing, so any `?` below wipes on the way out.
         let kek = derive_kek(
             password,
             &salt,
@@ -291,32 +330,32 @@ impl SealedStore {
             opts.argon2id_parallelism,
         )?;
 
-        // 4. Produce the verifier (known-plaintext AEAD under the KEK).
+        // 5. Produce the verifier (known-plaintext AEAD under the KEK).
         let verifier_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
+            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
             &VERIFIER_PLAINTEXT,
-            &kek,
+            &*kek,
             &verifier_nonce,
             b"vault-verifier",
         );
 
-        // 5. Assemble and persist the manifest.
+        // 6. Assemble and persist the manifest.
         let kek_id = "kek-1".to_string();
         let manifest = build_manifest_json(
             MANIFEST_VERSION,
             opts.argon2id_time_cost,
             opts.argon2id_memory_kib,
             opts.argon2id_parallelism,
-            &salt,
             &[KekEntry {
                 id: kek_id.clone(),
                 status: "active",
+                salt: salt.clone(),
                 verifier_nonce,
                 verifier_tag,
-                verifier_ct: verifier_ct.clone(),
+                verifier_ct,
             }],
-            now_ms_from_backend_optional(),
+            now_ms_from_wallclock(),
         );
 
         let put = StoragePutInput::new(
@@ -330,20 +369,22 @@ impl SealedStore {
 
         self.backend.put(put)?;
 
-        // 6. Install the KEK in memory.
+        // 7. Install the KEK in memory. We move the `Zeroizing<[u8;32]>`
+        //    directly into the state so no extra stack copy is ever created.
         self.state
             .lock()
             .expect("vault state mutex poisoned")
             .unsealed = Some(UnsealedKey {
             id: kek_id,
-            key: Zeroizing::new(kek),
+            key: kek,
         });
 
         Ok(())
     }
 
-    /// Load the manifest, derive a candidate KEK from `password`, verify
-    /// against the manifest's verifier. On success holds the KEK in RAM.
+    /// Load the manifest, derive a candidate KEK against each KEK entry's
+    /// own salt, and verify against the manifest's verifier. On success
+    /// holds the KEK in RAM.
     pub fn unseal(&self, password: &[u8]) -> Result<(), SealedStoreError> {
         let manifest_record = self
             .backend
@@ -352,49 +393,44 @@ impl SealedStore {
 
         let manifest = Manifest::parse(&manifest_record.metadata)?;
 
-        let kek = derive_kek(
-            password,
-            &manifest.salt,
-            manifest.time_cost,
-            manifest.memory_kib,
-            manifest.parallelism,
-        )?;
-
         // Walk active → retired KEKs; stop at the first that verifies. This
         // supports mid-rotation states where the active entry has not yet
-        // been switched to the new password.
-        let mut matched_id: Option<String> = None;
+        // been switched to the new password, and also supports recovery
+        // under an old password if a rotation crashed mid-flight.
+        //
+        // NB: each entry has its own salt, so we re-derive per entry. That's
+        // O(len(keks)) Argon2 runs per bad unseal attempt — acceptable for
+        // any realistic key history (≤ a handful of entries).
         for entry in &manifest.keks {
-            let candidate = xchacha20_poly1305_aead_decrypt(
+            // Derive under *this* entry's salt.
+            let candidate = derive_kek(
+                password,
+                &entry.salt,
+                manifest.time_cost,
+                manifest.memory_kib,
+                manifest.parallelism,
+            )?;
+            let decrypted = xchacha20_poly1305_aead_decrypt(
                 &entry.verifier_ct,
-                &kek,
+                &*candidate,
                 &entry.verifier_nonce,
                 b"vault-verifier",
                 &entry.verifier_tag,
             );
-            if candidate.as_deref() == Some(&VERIFIER_PLAINTEXT[..]) {
-                matched_id = Some(entry.id.clone());
-                break;
+            if decrypted.as_deref() == Some(&VERIFIER_PLAINTEXT[..]) {
+                // Move the matching KEK into state.
+                self.state
+                    .lock()
+                    .expect("vault state mutex poisoned")
+                    .unsealed = Some(UnsealedKey {
+                    id: entry.id.clone(),
+                    key: candidate,
+                });
+                return Ok(());
             }
+            // `candidate` falls out of scope here and Zeroizing wipes it.
         }
-
-        let id = match matched_id {
-            Some(id) => id,
-            None => {
-                // kek is a plain array — drop it explicitly via Zeroizing.
-                let _wipe = Zeroizing::new(kek);
-                return Err(SealedStoreError::BadPassword);
-            }
-        };
-
-        self.state
-            .lock()
-            .expect("vault state mutex poisoned")
-            .unsealed = Some(UnsealedKey {
-            id,
-            key: Zeroizing::new(kek),
-        });
-        Ok(())
+        Err(SealedStoreError::BadPassword)
     }
 
     // ---- data plane -------------------------------------------------------
@@ -409,28 +445,32 @@ impl SealedStore {
     ) -> Result<Revision, SealedStoreError> {
         check_external_namespace(namespace)?;
 
+        // Register the namespace first (outside the state lock, so this does
+        // not starve other ops). `register_namespace` is idempotent; if the
+        // namespace is already known it returns immediately with no write.
+        self.register_namespace(namespace)?;
+
         let guard = self.state.lock().expect("vault state mutex poisoned");
         let unsealed = guard.unsealed.as_ref().ok_or(SealedStoreError::Sealed)?;
 
-        // Fresh per-record DEK from CSPRNG.
-        let mut dek: [u8; KEY_LEN] = random_array()
-            .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
+        // Fresh per-record DEK from CSPRNG. Wrapped in Zeroizing *at
+        // creation* so any `?` below wipes on the way out.
+        let dek: Zeroizing<[u8; KEY_LEN]> = Zeroizing::new(
+            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?,
+        );
 
         let body_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
+            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let aad = record_aad(namespace, key);
         let (ciphertext, body_tag) =
-            xchacha20_poly1305_aead_encrypt(plaintext, &dek, &body_nonce, &aad);
+            xchacha20_poly1305_aead_encrypt(plaintext, &*dek, &body_nonce, &aad);
 
         // Wrap the DEK under the KEK.
         let wrap_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
+            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
         let (wrapped_dek, wrap_tag) =
-            xchacha20_poly1305_aead_encrypt(&dek, &unsealed.key, &wrap_nonce, &wrap_aad);
-
-        // DEK has been encrypted — wipe the cleartext copy now.
-        dek.zeroize();
+            xchacha20_poly1305_aead_encrypt(&*dek, &*unsealed.key, &wrap_nonce, &wrap_aad);
 
         let metadata = build_sealed_metadata(
             &body_nonce,
@@ -453,6 +493,7 @@ impl SealedStore {
         put_in = put_in.with_if_revision(if_revision);
 
         let rec = self.backend.put(put_in)?;
+        // `dek` drops here, wiping the cleartext DEK bytes.
         Ok(rec.revision)
     }
 
@@ -483,8 +524,10 @@ impl SealedStore {
             });
         }
 
-        // We currently only support unwrapping records wrapped under the
-        // in-memory KEK. Multi-KEK support arrives via `rotate_kek`.
+        // We only unwrap records wrapped under the in-memory KEK. Records
+        // wrapped under an earlier KEK (e.g. during an in-progress rotation)
+        // are surfaced as Tamper so the caller knows to resume rotation or
+        // unseal under the older password.
         if sealed.kek_id != unsealed.id {
             return Err(SealedStoreError::Tamper {
                 namespace: namespace.to_string(),
@@ -493,37 +536,19 @@ impl SealedStore {
         }
 
         let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
-        let dek_vec = xchacha20_poly1305_aead_decrypt(
+        let dek = unwrap_dek(
             &sealed.wrapped_dek,
-            &unsealed.key,
+            &*unsealed.key,
             &sealed.wrap_nonce,
             &wrap_aad,
             &sealed.wrap_tag,
-        )
-        .ok_or_else(|| SealedStoreError::Tamper {
-            namespace: namespace.to_string(),
-            key: key.to_string(),
-        })?;
-
-        if dek_vec.len() != KEY_LEN {
-            let mut z = Zeroizing::new(dek_vec);
-            z.zeroize();
-            return Err(SealedStoreError::Tamper {
-                namespace: namespace.to_string(),
-                key: key.to_string(),
-            });
-        }
-
-        let mut dek = [0u8; KEY_LEN];
-        dek.copy_from_slice(&dek_vec);
-        {
-            let mut z = Zeroizing::new(dek_vec);
-            z.zeroize();
-        }
+            namespace,
+            key,
+        )?;
 
         let plaintext = xchacha20_poly1305_aead_decrypt(
             &record.body,
-            &dek,
+            &*dek,
             &sealed.body_nonce,
             &sealed.body_aad,
             &sealed.body_tag,
@@ -533,8 +558,7 @@ impl SealedStore {
             key: key.to_string(),
         })?;
 
-        dek.zeroize();
-
+        // `dek` drops here, wiping the cleartext DEK bytes.
         Ok(Some(SealedRecord {
             namespace: record.namespace,
             key: record.key,
@@ -604,6 +628,22 @@ impl SealedStore {
     /// Rotate the master KEK: unseal under `old_password`, derive a new KEK
     /// from `new_password` + fresh salt, and rewrap every record's DEK
     /// under the new KEK. Bodies are not re-encrypted.
+    ///
+    /// ### Crash safety
+    ///
+    /// This call writes the manifest **before** rewrapping any record. The
+    /// persisted manifest at that point contains both the old and the new
+    /// KEK entries (old marked `retired`, new marked `active`), each with
+    /// its own salt and verifier. Consequences:
+    ///
+    /// - A crash before all records are rewrapped leaves some records with
+    ///   `kek_id = old`. These are still readable — a caller can unseal
+    ///   with the **old** password (the retired entry verifies), or call
+    ///   `rotate_kek` again with the new password to resume the rewrap.
+    /// - A crash after rewrap completes leaves all records under the new
+    ///   KEK. The old retired entry remains in the manifest until a future
+    ///   admin prunes it; it costs ~128 bytes and does not weaken the
+    ///   security of new records.
     pub fn rotate_kek(
         &self,
         old_password: &[u8],
@@ -611,24 +651,22 @@ impl SealedStore {
     ) -> Result<KekRotationReport, SealedStoreError> {
         // Step 1: confirm caller knows the old password.
         self.unseal(old_password)?;
-        let old_kek_bytes: [u8; KEY_LEN] = {
+
+        // Step 2: pull the unsealed KEK into an owned Zeroizing<[u8;32]>.
+        // We hold the state lock only long enough to copy; we do NOT hold
+        // it across the (minutes-long) Argon2 derivation below.
+        let old_kek: Zeroizing<[u8; KEY_LEN]>;
+        let old_kek_id: String;
+        {
             let guard = self.state.lock().expect("vault state mutex poisoned");
             let cur = guard.unsealed.as_ref().ok_or(SealedStoreError::Sealed)?;
-            let mut copy = [0u8; KEY_LEN];
+            let mut copy = Zeroizing::new([0u8; KEY_LEN]);
             copy.copy_from_slice(&*cur.key);
-            copy
-        };
-        let old_kek_id = {
-            let guard = self.state.lock().expect("vault state mutex poisoned");
-            guard
-                .unsealed
-                .as_ref()
-                .map(|u| u.id.clone())
-                .ok_or(SealedStoreError::Sealed)?
-        };
+            old_kek = copy;
+            old_kek_id = cur.id.clone();
+        }
 
-        // Step 2: derive the new KEK from a freshly generated salt. We keep
-        // the original KDF parameters so the user sees no latency change.
+        // Step 3: load and parse the manifest for its KDF parameters.
         let manifest_record = self
             .backend
             .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
@@ -636,12 +674,11 @@ impl SealedStore {
         let mut manifest = Manifest::parse(&manifest_record.metadata)?;
         let manifest_revision = manifest_record.revision.clone();
 
+        // Step 4: draw a fresh salt and derive the new KEK. Every KEK has
+        // its own salt so retired entries remain independently verifiable
+        // and no single salt ever needs to be overwritten.
         let new_salt = random_bytes(DEFAULT_ARGON2_SALT_LEN)
-            .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
-        // Note: the manifest has a single salt slot in v1; we overwrite it
-        // now that the rotation commits. Old verifier uses old salt (still
-        // stored on the entry as-of the verifier ciphertext but we will
-        // mark it retired).
+            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let new_kek = derive_kek(
             new_password,
             &new_salt,
@@ -650,39 +687,39 @@ impl SealedStore {
             manifest.parallelism,
         )?;
 
-        // Step 3: build the new verifier and manifest entry.
-        let new_kek_id = next_kek_id(&manifest.keks);
+        // Step 5: build the new verifier and manifest entry.
+        let new_kek_id = next_kek_id(&manifest.keks)?;
         let verifier_nonce: [u8; NONCE_LEN] = random_array()
-            .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
+            .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
         let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
             &VERIFIER_PLAINTEXT,
-            &new_kek,
+            &*new_kek,
             &verifier_nonce,
             b"vault-verifier",
         );
-        manifest
-            .keks
-            .iter_mut()
-            .for_each(|e| e.status = if e.id == old_kek_id { "retired" } else { e.status });
+        for e in manifest.keks.iter_mut() {
+            if e.id == old_kek_id {
+                e.status = "retired";
+            }
+        }
         manifest.keks.push(KekEntry {
             id: new_kek_id.clone(),
             status: "active",
+            salt: new_salt,
             verifier_nonce,
             verifier_tag,
-            verifier_ct: verifier_ct.clone(),
+            verifier_ct,
         });
-        manifest.salt = new_salt;
 
-        // Step 4: persist manifest first (CAS on its revision) — this is
-        // the point at which both old and new KEKs are valid for unseal.
+        // Step 6: persist manifest first (CAS on its revision) — the
+        // moment this returns, both old and new KEKs are valid for unseal.
         let new_manifest_json = build_manifest_json(
             MANIFEST_VERSION,
             manifest.time_cost,
             manifest.memory_kib,
             manifest.parallelism,
-            &manifest.salt,
             &manifest.keks,
-            now_ms_from_backend_optional(),
+            now_ms_from_wallclock(),
         );
         let put_in = StoragePutInput::new(
             RESERVED_NAMESPACE.to_string(),
@@ -695,12 +732,12 @@ impl SealedStore {
         .with_if_revision(Some(manifest_revision));
         self.backend.put(put_in)?;
 
-        // Step 5: iterate every record (all namespaces, except reserved)
-        // and rewrap its DEK. This is restartable: records already wrapped
-        // under `new_kek_id` are left alone.
+        // Step 7: iterate every registered external namespace and rewrap
+        // each record's DEK under the new KEK. This is restartable:
+        // records already wrapped under `new_kek_id` are left alone.
         let mut rewrapped = 0usize;
         let mut already_new = 0usize;
-        for ns in self.list_external_namespaces()? {
+        for ns in self.list_registered_namespaces()? {
             let mut cursor: Option<String> = None;
             loop {
                 let page = self.backend.list(
@@ -725,43 +762,27 @@ impl SealedStore {
 
                     // Unwrap under old KEK.
                     let old_wrap_aad = wrap_aad(&rec.namespace, &rec.key, &old_kek_id);
-                    let dek_vec = xchacha20_poly1305_aead_decrypt(
+                    let dek = unwrap_dek(
                         &meta.wrapped_dek,
-                        &old_kek_bytes,
+                        &*old_kek,
                         &meta.wrap_nonce,
                         &old_wrap_aad,
                         &meta.wrap_tag,
-                    )
-                    .ok_or_else(|| SealedStoreError::Tamper {
-                        namespace: rec.namespace.clone(),
-                        key: rec.key.clone(),
-                    })?;
-                    if dek_vec.len() != KEY_LEN {
-                        let mut z = Zeroizing::new(dek_vec);
-                        z.zeroize();
-                        return Err(SealedStoreError::Tamper {
-                            namespace: rec.namespace.clone(),
-                            key: rec.key.clone(),
-                        });
-                    }
-                    let mut dek = [0u8; KEY_LEN];
-                    dek.copy_from_slice(&dek_vec);
-                    {
-                        let mut z = Zeroizing::new(dek_vec);
-                        z.zeroize();
-                    }
+                        &rec.namespace,
+                        &rec.key,
+                    )?;
 
                     // Rewrap under new KEK.
                     let new_wrap_nonce: [u8; NONCE_LEN] = random_array()
-                        .map_err(|e| SealedStoreError::Crypto(format!("csprng: {e:?}")))?;
+                        .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
                     let new_wrap_aad = wrap_aad(&rec.namespace, &rec.key, &new_kek_id);
                     let (new_wrapped_dek, new_wrap_tag) = xchacha20_poly1305_aead_encrypt(
-                        &dek,
-                        &new_kek,
+                        &*dek,
+                        &*new_kek,
                         &new_wrap_nonce,
                         &new_wrap_aad,
                     );
-                    dek.zeroize();
+                    // `dek` drops at end of this loop iteration.
 
                     let new_meta = build_sealed_metadata(
                         &meta.body_nonce,
@@ -791,19 +812,17 @@ impl SealedStore {
             }
         }
 
-        // Step 6: swap the in-memory KEK.
+        // Step 8: swap the in-memory KEK. Moving `new_kek` into the state
+        // transfers ownership of the Zeroizing wrapper — no extra copy.
         self.state
             .lock()
             .expect("vault state mutex poisoned")
             .unsealed = Some(UnsealedKey {
             id: new_kek_id.clone(),
-            key: Zeroizing::new(new_kek),
+            key: new_kek,
         });
 
-        // Step 7: wipe the stack-resident old-KEK copy.
-        let mut old_copy = old_kek_bytes;
-        old_copy.zeroize();
-
+        // `old_kek` drops here, wiping the old KEK bytes.
         Ok(KekRotationReport {
             new_kek_id,
             records_rewrapped: rewrapped,
@@ -811,39 +830,66 @@ impl SealedStore {
         })
     }
 
-    fn list_external_namespaces(&self) -> Result<Vec<String>, SealedStoreError> {
-        // The current StorageBackend trait does not expose a namespace
-        // enumerator, so we ask the caller to pre-register namespaces via
-        // a tiny manifest side-table. For v1 we walk a simple convention:
-        // every sealed record lives in a namespace recorded by prior puts.
-        //
-        // Practical fallback: the only records the store emits are in
-        // `RESERVED_NAMESPACE` plus arbitrary external ones. We fetch a
-        // list side-record kept under the reserved namespace when present,
-        // and otherwise return a single "default" namespace bucket that
-        // callers have already touched.
-        //
-        // For simplicity in v1 we require callers to use a known namespace
-        // or manually drive rotation per-namespace. Here we reflect the
-        // records by scanning a single shared registry.
-        //
-        // This side-registry under the reserved namespace stores the set
-        // of namespaces the vault has ever written to.
-        let rec = self
-            .backend
-            .get(RESERVED_NAMESPACE, "namespaces")?;
-        let mut names = Vec::new();
-        if let Some(rec) = rec {
-            if let JsonValue::Object(obj) = &rec.metadata {
-                if let Some((_, JsonValue::Array(arr))) = obj.iter().find(|(k, _)| k == "names") {
-                    for v in arr {
-                        if let JsonValue::String(s) = v {
-                            names.push(s.clone());
-                        }
-                    }
-                }
+    // ---- internal namespace registry --------------------------------------
+    //
+    // storage-core does not enumerate namespaces, so `rotate_kek` needs an
+    // out-of-band index of "namespaces the vault has ever written to".
+    // We maintain it under (`__vault__`, `namespaces`) as a JSON array.
+    // Every `put()` reads-modifies-writes this record via CAS if (and
+    // only if) its namespace isn't already in the list.
+
+    /// Append `namespace` to the registry if it isn't already present.
+    /// Idempotent. Uses CAS to survive concurrent `put` on different
+    /// namespaces; retries a bounded number of times on conflict.
+    fn register_namespace(&self, namespace: &str) -> Result<(), SealedStoreError> {
+        // Must only be called for external namespaces. `check_external_namespace`
+        // has already run in the caller, so debug-assert here.
+        debug_assert_ne!(namespace, RESERVED_NAMESPACE);
+
+        const MAX_ATTEMPTS: usize = 8;
+        for _ in 0..MAX_ATTEMPTS {
+            let existing = self.backend.get(RESERVED_NAMESPACE, NAMESPACES_KEY)?;
+            let (mut names, rev) = match existing {
+                Some(rec) => (parse_namespaces(&rec.metadata), Some(rec.revision)),
+                None => (Vec::new(), None),
+            };
+            if names.iter().any(|n| n == namespace) {
+                return Ok(());
+            }
+            names.push(namespace.to_string());
+
+            let meta = build_namespaces_json(&names);
+            let put = StoragePutInput::new(
+                RESERVED_NAMESPACE.to_string(),
+                NAMESPACES_KEY.to_string(),
+                NAMESPACES_CONTENT_TYPE.to_string(),
+                meta,
+                Vec::new(),
+            )
+            .map_err(SealedStoreError::Storage)?
+            .with_if_revision(rev);
+
+            match self.backend.put(put) {
+                Ok(_) => return Ok(()),
+                Err(StorageError::Conflict { .. }) => continue,
+                Err(e) => return Err(SealedStoreError::Storage(e)),
             }
         }
+        Err(SealedStoreError::Storage(StorageError::Backend {
+            message: "namespace registry: too many CAS conflicts".to_string(),
+        }))
+    }
+
+    /// Read the registered namespaces. Always filters out the reserved
+    /// namespace even if an attacker managed to inject it into the list —
+    /// rotation must never attempt to rewrap records inside `__vault__`.
+    fn list_registered_namespaces(&self) -> Result<Vec<String>, SealedStoreError> {
+        let rec = self.backend.get(RESERVED_NAMESPACE, NAMESPACES_KEY)?;
+        let mut names = match rec {
+            Some(r) => parse_namespaces(&r.metadata),
+            None => Vec::new(),
+        };
+        names.retain(|n| n != RESERVED_NAMESPACE);
         Ok(names)
     }
 }
@@ -856,7 +902,7 @@ fn check_external_namespace(namespace: &str) -> Result<(), SealedStoreError> {
     if namespace == RESERVED_NAMESPACE {
         return Err(SealedStoreError::Validation {
             field: "namespace".to_string(),
-            message: format!("namespace {RESERVED_NAMESPACE:?} is reserved"),
+            message: "reserved namespace".to_string(),
         });
     }
     Ok(())
@@ -886,13 +932,16 @@ fn wrap_aad(namespace: &str, key: &str, kek_id: &str) -> Vec<u8> {
     v
 }
 
+/// Run Argon2id and return a zeroizing 32-byte KEK. All intermediate
+/// allocations holding key material are wiped on drop, including the
+/// error paths.
 fn derive_kek(
     password: &[u8],
     salt: &[u8],
     time_cost: u32,
     memory_kib: u32,
     parallelism: u32,
-) -> Result<[u8; KEY_LEN], SealedStoreError> {
+) -> Result<Zeroizing<[u8; KEY_LEN]>, SealedStoreError> {
     let tag = argon2id(
         password,
         salt,
@@ -906,22 +955,60 @@ fn derive_kek(
             version: Some(ARGON2_VERSION),
         },
     )
-    .map_err(|e| SealedStoreError::Crypto(format!("argon2id: {e}")))?;
+    .map_err(|_| SealedStoreError::Crypto("argon2id derivation failed".into()))?;
 
-    if tag.len() != KEY_LEN {
-        return Err(SealedStoreError::Crypto("argon2id: wrong tag length".into()));
+    // Wrap the raw Vec<u8> from argon2id in Zeroizing *before* we touch
+    // it any further, so early returns wipe it.
+    let tag_z: Zeroizing<Vec<u8>> = Zeroizing::new(tag);
+    if tag_z.len() != KEY_LEN {
+        return Err(SealedStoreError::Crypto(
+            "argon2id produced wrong tag length".into(),
+        ));
     }
-    let mut out = [0u8; KEY_LEN];
-    out.copy_from_slice(&tag);
-    // Shadow-wipe the intermediate Vec<u8>.
-    {
-        let mut z = Zeroizing::new(tag);
-        z.zeroize();
-    }
+    let mut out = Zeroizing::new([0u8; KEY_LEN]);
+    out.copy_from_slice(&tag_z);
     Ok(out)
 }
 
-fn now_ms_from_backend_optional() -> u64 {
+/// Unwrap a wrapped DEK under the given KEK and return it as a fixed-size
+/// zeroizing array. Collapses the length check + AEAD failure path into a
+/// single `Tamper` outcome (no oracle leaked).
+fn unwrap_dek(
+    wrapped_dek: &[u8],
+    kek: &[u8; KEY_LEN],
+    wrap_nonce: &[u8; NONCE_LEN],
+    wrap_aad: &[u8],
+    wrap_tag: &[u8; TAG_LEN],
+    namespace: &str,
+    key: &str,
+) -> Result<Zeroizing<[u8; KEY_LEN]>, SealedStoreError> {
+    let dek_vec = xchacha20_poly1305_aead_decrypt(
+        wrapped_dek,
+        kek,
+        wrap_nonce,
+        wrap_aad,
+        wrap_tag,
+    )
+    .ok_or_else(|| SealedStoreError::Tamper {
+        namespace: namespace.to_string(),
+        key: key.to_string(),
+    })?;
+
+    // Wrap the Vec in Zeroizing *before* inspecting it so any error path
+    // below wipes the bytes.
+    let dek_vec_z: Zeroizing<Vec<u8>> = Zeroizing::new(dek_vec);
+    if dek_vec_z.len() != KEY_LEN {
+        return Err(SealedStoreError::Tamper {
+            namespace: namespace.to_string(),
+            key: key.to_string(),
+        });
+    }
+    let mut out = Zeroizing::new([0u8; KEY_LEN]);
+    out.copy_from_slice(&dek_vec_z);
+    Ok(out)
+}
+
+fn now_ms_from_wallclock() -> u64 {
     // We do not have a clock abstraction here; the backend stamps its own
     // created_at/updated_at. The manifest stores "created_at_ms" purely for
     // operator visibility, so use the wall clock if available and fall back
@@ -933,7 +1020,10 @@ fn now_ms_from_backend_optional() -> u64 {
         .unwrap_or(0)
 }
 
-fn next_kek_id(existing: &[KekEntry]) -> String {
+/// Pick the next stable KEK id. Rejects the (extraordinarily unlikely)
+/// case of u64 overflow and also guards against an already-used id
+/// (which would indicate a corrupted manifest).
+fn next_kek_id(existing: &[KekEntry]) -> Result<String, SealedStoreError> {
     let mut max_n: u64 = 0;
     for e in existing {
         if let Some(rest) = e.id.strip_prefix("kek-") {
@@ -944,7 +1034,46 @@ fn next_kek_id(existing: &[KekEntry]) -> String {
             }
         }
     }
-    format!("kek-{}", max_n + 1)
+    let next = max_n.checked_add(1).ok_or(SealedStoreError::Validation {
+        field: "keks".to_string(),
+        message: "kek id counter overflow".to_string(),
+    })?;
+    let candidate = format!("kek-{next}");
+    if existing.iter().any(|e| e.id == candidate) {
+        return Err(SealedStoreError::Validation {
+            field: "keks".to_string(),
+            message: "kek id collision".to_string(),
+        });
+    }
+    Ok(candidate)
+}
+
+fn validate_argon2_params(
+    time_cost: u32,
+    memory_kib: u32,
+    parallelism: u32,
+) -> Result<(), SealedStoreError> {
+    if !(1..=ARGON2_PARALLELISM_MAX).contains(&parallelism) {
+        return Err(SealedStoreError::Validation {
+            field: "argon2id_parallelism".to_string(),
+            message: "out of range".to_string(),
+        });
+    }
+    if !(1..=ARGON2_TIME_COST_MAX).contains(&time_cost) {
+        return Err(SealedStoreError::Validation {
+            field: "argon2id_time_cost".to_string(),
+            message: "out of range".to_string(),
+        });
+    }
+    // RFC 9106 §3.1: memory must be ≥ 8 × parallelism KiB.
+    let min_memory = parallelism.saturating_mul(8);
+    if memory_kib < min_memory || memory_kib > ARGON2_MEMORY_KIB_MAX {
+        return Err(SealedStoreError::Validation {
+            field: "argon2id_memory_kib".to_string(),
+            message: "out of range".to_string(),
+        });
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -959,6 +1088,10 @@ fn next_kek_id(existing: &[KekEntry]) -> String {
 struct KekEntry {
     id: String,
     status: &'static str, // "active" | "retired"
+    /// Per-KEK Argon2id salt. Each entry is independently verifiable so an
+    /// operator can always unseal under the password that minted *this*
+    /// KEK, even after many rotations.
+    salt: Vec<u8>,
     verifier_nonce: [u8; NONCE_LEN],
     verifier_tag: [u8; TAG_LEN],
     verifier_ct: Vec<u8>,
@@ -969,7 +1102,6 @@ struct Manifest {
     time_cost: u32,
     memory_kib: u32,
     parallelism: u32,
-    salt: Vec<u8>,
     keks: Vec<KekEntry>,
 }
 
@@ -988,7 +1120,6 @@ fn build_manifest_json(
     time_cost: u32,
     memory_kib: u32,
     parallelism: u32,
-    salt: &[u8],
     keks: &[KekEntry],
     created_at_ms: u64,
 ) -> JsonValue {
@@ -998,6 +1129,7 @@ fn build_manifest_json(
             JsonValue::Object(vec![
                 ("id".to_string(), JsonValue::String(e.id.clone())),
                 ("status".to_string(), JsonValue::String(e.status.to_string())),
+                ("salt".to_string(), JsonValue::String(hex_encode(&e.salt))),
                 (
                     "verifier_nonce".to_string(),
                     JsonValue::String(hex_encode(&e.verifier_nonce)),
@@ -1034,10 +1166,6 @@ fn build_manifest_json(
         (
             "kdf_parallelism".to_string(),
             JsonValue::Number(JsonNumber::Integer(parallelism as i64)),
-        ),
-        (
-            "kdf_salt".to_string(),
-            JsonValue::String(hex_encode(salt)),
         ),
         (
             "kdf_tag_length".to_string(),
@@ -1097,18 +1225,48 @@ fn build_sealed_metadata(
     ])
 }
 
+fn build_namespaces_json(names: &[String]) -> JsonValue {
+    JsonValue::Object(vec![
+        (
+            "vault_namespaces_version".to_string(),
+            JsonValue::Number(JsonNumber::Integer(1)),
+        ),
+        (
+            "names".to_string(),
+            JsonValue::Array(
+                names
+                    .iter()
+                    .map(|s| JsonValue::String(s.clone()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn parse_namespaces(meta: &JsonValue) -> Vec<String> {
+    let mut names = Vec::new();
+    if let JsonValue::Object(obj) = meta {
+        if let Some((_, JsonValue::Array(arr))) = obj.iter().find(|(k, _)| k == "names") {
+            for v in arr {
+                if let JsonValue::String(s) = v {
+                    names.push(s.clone());
+                }
+            }
+        }
+    }
+    names
+}
+
 impl Manifest {
     fn parse(meta: &JsonValue) -> Result<Self, SealedStoreError> {
         let obj = expect_object(meta, "manifest")?;
         let time_cost = get_u32(obj, "kdf_time_cost")?;
         let memory_kib = get_u32(obj, "kdf_memory_cost_kib")?;
         let parallelism = get_u32(obj, "kdf_parallelism")?;
-        let salt = hex_decode(get_string(obj, "kdf_salt")?).map_err(|m| {
-            SealedStoreError::Validation {
-                field: "kdf_salt".to_string(),
-                message: m,
-            }
-        })?;
+        // Attacker-tampered bounds: the first defence against a swapped
+        // manifest that tries to stall unseal forever.
+        validate_argon2_params(time_cost, memory_kib, parallelism)?;
+
         let keks_raw = get_field(obj, "keks").map_err(|_| SealedStoreError::Validation {
             field: "keks".to_string(),
             message: "missing".to_string(),
@@ -1122,48 +1280,85 @@ impl Manifest {
                 })
             }
         };
+        if keks_arr.is_empty() {
+            return Err(SealedStoreError::Validation {
+                field: "keks".to_string(),
+                message: "empty".to_string(),
+            });
+        }
         let mut keks = Vec::with_capacity(keks_arr.len());
         for entry in keks_arr {
-            let eo = expect_object(entry, "keks[]")?;
+            let eo = expect_object(entry, "keks_entry")?;
             let id = get_string(eo, "id")?.to_string();
             let status_raw = get_string(eo, "status")?;
-            // JsonValue stores `status` as `String`; we compress back to the
-            // two canonical forms for in-memory use.
             let status: &'static str = match status_raw {
                 "active" => "active",
                 "retired" => "retired",
-                other => {
+                _ => {
                     return Err(SealedStoreError::Validation {
                         field: "status".to_string(),
-                        message: format!("unknown status {other:?}"),
+                        message: "unsupported".to_string(),
                     })
                 }
             };
+            let salt = hex_decode(get_string(eo, "salt")?).map_err(|_| {
+                SealedStoreError::Validation {
+                    field: "salt".to_string(),
+                    message: "invalid hex".to_string(),
+                }
+            })?;
+            if salt.len() < ARGON2_SALT_MIN_LEN || salt.len() > ARGON2_SALT_MAX_LEN {
+                return Err(SealedStoreError::Validation {
+                    field: "salt".to_string(),
+                    message: "length out of range".to_string(),
+                });
+            }
             let verifier_nonce = hex_decode_fixed::<NONCE_LEN>(
                 get_string(eo, "verifier_nonce")?,
                 "verifier_nonce",
             )?;
             let verifier_tag =
                 hex_decode_fixed::<TAG_LEN>(get_string(eo, "verifier_tag")?, "verifier_tag")?;
-            let verifier_ct = hex_decode(get_string(eo, "verifier_ct")?).map_err(|m| {
+            let verifier_ct = hex_decode(get_string(eo, "verifier_ct")?).map_err(|_| {
                 SealedStoreError::Validation {
                     field: "verifier_ct".to_string(),
-                    message: m,
+                    message: "invalid hex".to_string(),
                 }
             })?;
+            // Known-plaintext verifier: verifier_ct is exactly VERIFIER_PLAINTEXT's
+            // length (16 bytes). Reject anything else up front — avoids feeding
+            // an attacker-sized blob into the AEAD.
+            if verifier_ct.len() != VERIFIER_PLAINTEXT.len() {
+                return Err(SealedStoreError::Validation {
+                    field: "verifier_ct".to_string(),
+                    message: "length mismatch".to_string(),
+                });
+            }
             keks.push(KekEntry {
                 id,
                 status,
+                salt,
                 verifier_nonce,
                 verifier_tag,
                 verifier_ct,
             });
         }
+        // Disallow duplicate ids — a tampered manifest could otherwise put
+        // two entries with the same id and confuse rotation.
+        for i in 0..keks.len() {
+            for j in (i + 1)..keks.len() {
+                if keks[i].id == keks[j].id {
+                    return Err(SealedStoreError::Validation {
+                        field: "keks".to_string(),
+                        message: "duplicate id".to_string(),
+                    });
+                }
+            }
+        }
         Ok(Self {
             time_cost,
             memory_kib,
             parallelism,
-            salt,
             keks,
         })
     }
@@ -1175,15 +1370,16 @@ impl SealedRecordMeta {
         let body_nonce =
             hex_decode_fixed::<NONCE_LEN>(get_string(obj, "body_nonce")?, "body_nonce")?;
         let body_tag = hex_decode_fixed::<TAG_LEN>(get_string(obj, "body_tag")?, "body_tag")?;
-        let body_aad =
-            hex_decode(get_string(obj, "body_aad")?).map_err(|m| SealedStoreError::Validation {
+        let body_aad = hex_decode(get_string(obj, "body_aad")?).map_err(|_| {
+            SealedStoreError::Validation {
                 field: "body_aad".to_string(),
-                message: m,
-            })?;
-        let wrapped_dek = hex_decode(get_string(obj, "wrapped_dek")?).map_err(|m| {
+                message: "invalid hex".to_string(),
+            }
+        })?;
+        let wrapped_dek = hex_decode(get_string(obj, "wrapped_dek")?).map_err(|_| {
             SealedStoreError::Validation {
                 field: "wrapped_dek".to_string(),
-                message: m,
+                message: "invalid hex".to_string(),
             }
         })?;
         let wrap_nonce = hex_decode_fixed::<NONCE_LEN>(
@@ -1295,14 +1491,14 @@ fn hex_nibble(c: u8) -> Result<u8, String> {
 }
 
 fn hex_decode_fixed<const N: usize>(s: &str, field: &str) -> Result<[u8; N], SealedStoreError> {
-    let v = hex_decode(s).map_err(|m| SealedStoreError::Validation {
+    let v = hex_decode(s).map_err(|_| SealedStoreError::Validation {
         field: field.to_string(),
-        message: m,
+        message: "invalid hex".to_string(),
     })?;
     if v.len() != N {
         return Err(SealedStoreError::Validation {
             field: field.to_string(),
-            message: format!("expected {N} bytes, got {}", v.len()),
+            message: "length mismatch".to_string(),
         });
     }
     let mut out = [0u8; N];
@@ -1325,7 +1521,7 @@ mod tests {
         // the minimum legal parameters so the full suite stays fast.
         InitOptions {
             argon2id_time_cost: 1,
-            argon2id_memory_kib: 32,   // minimum for parallelism=4 is 4*8=32
+            argon2id_memory_kib: 32, // minimum for parallelism=4 is 4*8=32
             argon2id_parallelism: 4,
             salt_override: Some(vec![0x42u8; 16]),
         }
@@ -1355,10 +1551,7 @@ mod tests {
         store.put("a", "b", b"x", None).unwrap();
         store.seal();
         assert!(store.is_sealed());
-        assert!(matches!(
-            store.get("a", "b"),
-            Err(SealedStoreError::Sealed)
-        ));
+        assert!(matches!(store.get("a", "b"), Err(SealedStoreError::Sealed)));
         store.unseal(b"pw").unwrap();
         assert_eq!(&*store.get("a", "b").unwrap().unwrap().plaintext, b"x");
     }
@@ -1436,10 +1629,6 @@ mod tests {
         store.put("ns", "a", b"body-a", None).unwrap();
         store.put("ns", "b", b"body-b", None).unwrap();
 
-        // Fetch (ns,a)'s entire row and paste it (metadata + body) into
-        // (ns,b). Now the body_aad = ns\0a but the record lives at ns/b
-        // — AEAD decrypt succeeds under the DEK, but the AAD-mismatch
-        // check in get() rejects it.
         let ra = backend.get("ns", "a").unwrap().unwrap();
         let rb_rev = backend.get("ns", "b").unwrap().unwrap().revision;
         let put = StoragePutInput::new(
@@ -1496,11 +1685,12 @@ mod tests {
         store.init(b"pw", &fast_opts()).unwrap();
         let _rev1 = store.put("ns", "k", b"v1", None).unwrap();
         let rev2 = store.put("ns", "k", b"v2", None).unwrap();
-        // Now use rev2 - but write something else, and then try again
-        // with rev2 (stale).
         let _rev3 = store.put("ns", "k", b"v3", Some(rev2.clone())).unwrap();
         let err = store.put("ns", "k", b"v4", Some(rev2)).unwrap_err();
-        assert!(matches!(err, SealedStoreError::Storage(StorageError::Conflict { .. })));
+        assert!(matches!(
+            err,
+            SealedStoreError::Storage(StorageError::Conflict { .. })
+        ));
     }
 
     #[test]
@@ -1573,11 +1763,13 @@ mod tests {
         store.init(b"pw", &fast_opts()).unwrap();
         store.put("ns", "k", b"hello", None).unwrap();
         drop(store);
-        // Fresh instance on the same storage.
         let store2 = SealedStore::new(Arc::clone(&backend));
         assert!(store2.is_sealed());
         store2.unseal(b"pw").unwrap();
-        assert_eq!(&*store2.get("ns", "k").unwrap().unwrap().plaintext, b"hello");
+        assert_eq!(
+            &*store2.get("ns", "k").unwrap().unwrap().plaintext,
+            b"hello"
+        );
     }
 
     #[test]
@@ -1589,11 +1781,12 @@ mod tests {
     }
 
     #[test]
-    fn kek_id_increments() {
+    fn kek_id_increments_and_rejects_overflow() {
         let e = [
             KekEntry {
                 id: "kek-1".into(),
                 status: "retired",
+                salt: vec![0; 16],
                 verifier_nonce: [0; NONCE_LEN],
                 verifier_tag: [0; TAG_LEN],
                 verifier_ct: vec![],
@@ -1601,13 +1794,28 @@ mod tests {
             KekEntry {
                 id: "kek-7".into(),
                 status: "active",
+                salt: vec![0; 16],
                 verifier_nonce: [0; NONCE_LEN],
                 verifier_tag: [0; TAG_LEN],
                 verifier_ct: vec![],
             },
         ];
-        assert_eq!(next_kek_id(&e), "kek-8");
-        assert_eq!(next_kek_id(&[]), "kek-1");
+        assert_eq!(next_kek_id(&e).unwrap(), "kek-8");
+        assert_eq!(next_kek_id(&[]).unwrap(), "kek-1");
+
+        // Overflow case.
+        let overflow = [KekEntry {
+            id: format!("kek-{}", u64::MAX),
+            status: "active",
+            salt: vec![0; 16],
+            verifier_nonce: [0; NONCE_LEN],
+            verifier_tag: [0; TAG_LEN],
+            verifier_ct: vec![],
+        }];
+        assert!(matches!(
+            next_kek_id(&overflow),
+            Err(SealedStoreError::Validation { .. })
+        ));
     }
 
     #[test]
@@ -1616,6 +1824,163 @@ mod tests {
         let mut opts = fast_opts();
         opts.salt_override = Some(vec![1, 2, 3]); // too short
         let err = store.init(b"pw", &opts).unwrap_err();
+        assert!(matches!(err, SealedStoreError::Validation { .. }));
+    }
+
+    #[test]
+    fn init_validates_bogus_argon2_params() {
+        let (store, _) = new_store();
+        let mut opts = fast_opts();
+        opts.argon2id_time_cost = 999; // way above the max
+        let err = store.init(b"pw", &opts).unwrap_err();
+        assert!(matches!(err, SealedStoreError::Validation { .. }));
+
+        let (store, _) = new_store();
+        let mut opts = fast_opts();
+        opts.argon2id_parallelism = 0;
+        let err = store.init(b"pw", &opts).unwrap_err();
+        assert!(matches!(err, SealedStoreError::Validation { .. }));
+
+        let (store, _) = new_store();
+        let mut opts = fast_opts();
+        // memory must be >= 8 * parallelism
+        opts.argon2id_parallelism = 4;
+        opts.argon2id_memory_kib = 8;
+        let err = store.init(b"pw", &opts).unwrap_err();
+        assert!(matches!(err, SealedStoreError::Validation { .. }));
+    }
+
+    #[test]
+    fn tampered_manifest_with_huge_memory_is_rejected() {
+        // Attacker rewrites the manifest to demand 4 GiB of RAM at unseal
+        // time. parse() must reject it before we call Argon2.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        let mf = backend.get(RESERVED_NAMESPACE, MANIFEST_KEY).unwrap().unwrap();
+        let mut obj = match mf.metadata.clone() {
+            JsonValue::Object(o) => o,
+            _ => panic!("bad manifest"),
+        };
+        for (k, v) in obj.iter_mut() {
+            if k == "kdf_memory_cost_kib" {
+                *v = JsonValue::Number(JsonNumber::Integer(8 * 1024 * 1024)); // 8 GiB
+            }
+        }
+        let tampered = JsonValue::Object(obj);
+        let put = StoragePutInput::new(
+            RESERVED_NAMESPACE.to_string(),
+            MANIFEST_KEY.to_string(),
+            MANIFEST_CONTENT_TYPE.to_string(),
+            tampered,
+            Vec::new(),
+        )
+        .unwrap()
+        .with_if_revision(Some(mf.revision));
+        backend.put(put).unwrap();
+
+        let store2 = SealedStore::new(Arc::clone(&backend));
+        let err = store2.unseal(b"pw").unwrap_err();
+        assert!(matches!(err, SealedStoreError::Validation { .. }));
+    }
+
+    #[test]
+    fn rotate_kek_rewraps_records_across_namespaces() {
+        let (store, _) = new_store();
+        store.init(b"old-pw", &fast_opts()).unwrap();
+        store.put("ns1", "a", b"A", None).unwrap();
+        store.put("ns2", "b", b"B", None).unwrap();
+
+        let report = store.rotate_kek(b"old-pw", b"new-pw").unwrap();
+        assert_eq!(report.records_rewrapped, 2);
+        assert_eq!(report.new_kek_id, "kek-2");
+
+        // Reads under new KEK (just unsealed in-place by rotate) must succeed.
+        assert_eq!(&*store.get("ns1", "a").unwrap().unwrap().plaintext, b"A");
+        assert_eq!(&*store.get("ns2", "b").unwrap().unwrap().plaintext, b"B");
+
+        // Sealing + unseal with new password.
+        store.seal();
+        store.unseal(b"new-pw").unwrap();
+        assert_eq!(&*store.get("ns1", "a").unwrap().unwrap().plaintext, b"A");
+
+        // Old password must also still unseal (retired entry remains), and
+        // under that unseal, get() returns Tamper because records now have
+        // kek-2 but unsealed is kek-1.
+        store.seal();
+        store.unseal(b"old-pw").unwrap();
+        match store.get("ns1", "a") {
+            Err(SealedStoreError::Tamper { .. }) => {}
+            other => panic!("expected Tamper, got {:?}", other.map(|_| "Ok(..)").err()),
+        }
+    }
+
+    #[test]
+    fn namespace_registry_filters_reserved() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("real", "k", b"v", None).unwrap();
+
+        // Check what ended up in the side record.
+        let rec = backend
+            .get(RESERVED_NAMESPACE, NAMESPACES_KEY)
+            .unwrap()
+            .unwrap();
+        let names = parse_namespaces(&rec.metadata);
+        assert_eq!(names, vec!["real".to_string()]);
+
+        // Even if an attacker injects the reserved namespace into the list,
+        // list_registered_namespaces must filter it out.
+        let tampered = build_namespaces_json(&[
+            "real".to_string(),
+            RESERVED_NAMESPACE.to_string(),
+        ]);
+        let put = StoragePutInput::new(
+            RESERVED_NAMESPACE.to_string(),
+            NAMESPACES_KEY.to_string(),
+            NAMESPACES_CONTENT_TYPE.to_string(),
+            tampered,
+            Vec::new(),
+        )
+        .unwrap()
+        .with_if_revision(Some(rec.revision));
+        backend.put(put).unwrap();
+
+        let names = store.list_registered_namespaces().unwrap();
+        assert_eq!(names, vec!["real".to_string()]);
+    }
+
+    #[test]
+    fn manifest_with_duplicate_kek_ids_is_rejected() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        let mf = backend.get(RESERVED_NAMESPACE, MANIFEST_KEY).unwrap().unwrap();
+        let mut obj = match mf.metadata.clone() {
+            JsonValue::Object(o) => o,
+            _ => panic!("bad manifest"),
+        };
+        for (k, v) in obj.iter_mut() {
+            if k == "keks" {
+                if let JsonValue::Array(arr) = v {
+                    if let Some(first) = arr.first().cloned() {
+                        arr.push(first); // inject duplicate
+                    }
+                }
+            }
+        }
+        let tampered = JsonValue::Object(obj);
+        let put = StoragePutInput::new(
+            RESERVED_NAMESPACE.to_string(),
+            MANIFEST_KEY.to_string(),
+            MANIFEST_CONTENT_TYPE.to_string(),
+            tampered,
+            Vec::new(),
+        )
+        .unwrap()
+        .with_if_revision(Some(mf.revision));
+        backend.put(put).unwrap();
+
+        let store2 = SealedStore::new(Arc::clone(&backend));
+        let err = store2.unseal(b"pw").unwrap_err();
         assert!(matches!(err, SealedStoreError::Validation { .. }));
     }
 }

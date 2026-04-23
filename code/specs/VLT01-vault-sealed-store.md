@@ -93,29 +93,75 @@ metadata  = {
   "kdf_time_cost": <u32>,
   "kdf_memory_cost_kib": <u32>,
   "kdf_parallelism": <u32>,
-  "kdf_salt": "<base16 ≥16 bytes from CSPRNG>",
   "kdf_tag_length": 32,
   "keks": [
     { "id": "kek-1", "status": "active"|"retired",
+      "salt": "<base16 ≥8 bytes from CSPRNG>",
       "verifier_nonce": "<base16 24>",
       "verifier_tag":   "<base16 16>",
       "verifier_ct":    "<base16 16 bytes of AEAD'd zeros>" }
     , …
   ],
-  "created_at_ms": <u64>,
-  "rotated_at_ms": <u64>
+  "created_at_ms": <u64>
 }
 body = (empty)
 ```
 
+Each KEK entry carries its own salt. This is the salt that was used with
+the Argon2id parameters above to derive *that* KEK from the operator
+password. After a rotation the old KEK entry remains in the manifest
+with status `retired`, together with its original salt, so it can still
+be verified (and the records it wrapped can still be unwrapped in a
+crash-recovery path).
+
+**Attacker-tampered manifest defence.** Because the manifest is sitting
+on the at-rest medium, an attacker who can rewrite bytes at rest could
+otherwise set `kdf_memory_cost_kib = u32::MAX` and force unseal to
+allocate TiB of RAM. The implementation therefore clamps the persisted
+KDF parameters to these hard ceilings before calling Argon2:
+
+| parameter       | min                      | max           |
+|-----------------|--------------------------|---------------|
+| time_cost       | 1                        | 10            |
+| memory_cost_kib | 8 × parallelism (RFC 9106) | 5 × 1024 × 1024 (5 GiB) |
+| parallelism     | 1                        | 64            |
+| salt length     | 8 bytes                  | 1024 bytes    |
+
+A manifest outside these bounds is rejected with `Validation` before any
+key-derivation work runs.
+
 The **verifier** is a known-plaintext (16 zero bytes) AEAD'd under the
 KEK. On unseal we recompute a candidate KEK from the operator password
-and check it decrypts the verifier to zeros — if not, the password is
-wrong. This gives O(1) constant-time password check without needing any
-stored secret.
+(using the salt of each KEK entry) and check it decrypts the verifier
+to zeros — if not, the password is wrong against that entry. This gives
+O(entries) constant-time password checks without needing any stored
+secret.
 
 Namespace `__vault__` is reserved. The sealed-store rejects writes with
 that namespace from external callers.
+
+### Namespace registry
+
+`storage-core` does not expose a "list all namespaces" operation. To
+support `rotate_kek` (which must walk every sealed record), the vault
+maintains a side record under the reserved namespace:
+
+```text
+namespace = "__vault__"
+key       = "namespaces"
+content_type = "application/vault-namespaces+json-v1"
+metadata  = {
+  "vault_namespaces_version": 1,
+  "names": ["ns1", "ns2", ...]
+}
+body = (empty)
+```
+
+Every `put()` adds its namespace to this list via read-modify-write with
+CAS (idempotent if the namespace is already present). On read, the
+reserved namespace itself is filtered out defensively — a tampered
+registry that tries to trick rotation into rewrapping the manifest
+record must never succeed.
 
 ## Seal / unseal state machine
 
@@ -326,18 +372,31 @@ Not guaranteed:
 
 1. Unseal under `old_password` (fail → `BadPassword`).
 2. Derive `KEK_new` from `new_password` + fresh 16-byte salt.
-3. Create a new manifest entry `keks[len] = { id: "kek-<n>",
-   status: "active", verifier = AEAD(KEK_new, zeros16) }`.
-4. For each record in storage: unwrap DEK under `KEK_old`, wrap under
-   `KEK_new`, rewrite metadata (with `if_revision` CAS). Bodies
-   untouched.
-5. Mark old KEK entry `retired` in the manifest.
-6. Persist updated manifest with CAS.
-7. Replace the in-memory KEK with `KEK_new`; wipe `KEK_old`.
+3. Build a new manifest in memory: mark the old KEK entry `retired`
+   (preserving its original salt + verifier so old-password unseal
+   keeps working for crash-recovery), and append a new entry
+   `{ id: "kek-<n>", status: "active", salt: <new salt>,
+   verifier = AEAD(KEK_new, zeros16) }`.
+4. **Persist the manifest first** (CAS on its revision). After this
+   point, both `KEK_old` and `KEK_new` are valid for unseal.
+5. For every registered external namespace, page through every record:
+   unwrap DEK under `KEK_old`, wrap under `KEK_new`, rewrite metadata
+   (with `if_revision` CAS). Bodies untouched.
+6. Replace the in-memory KEK with `KEK_new`; wipe `KEK_old`.
 
-Rotation is restartable: if interrupted, re-running `rotate_kek`
-finishes wraps for records still on the old KEK. A record's
-`kek_id` metadata field is the source of truth for which KEK wrapped it.
+Rotation is **restartable under any crash**. Because the manifest is
+persisted first, a crash mid-rewrap leaves:
+
+- records whose `kek_id` was already rewritten to the new id — readable
+  under `new_password`;
+- records still carrying the old `kek_id` — still wrappable under the
+  old KEK (retired but retained + verifiable), so the admin can:
+  (a) unseal with `new_password` and re-run `rotate_kek(new, new)` which
+  walks the still-old records and rewraps them, or
+  (b) unseal with `old_password` to read them directly.
+
+A record's `kek_id` metadata field is the source of truth for which KEK
+wrapped it.
 
 ## Testing
 
