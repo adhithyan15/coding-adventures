@@ -245,14 +245,23 @@ fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
 ///
 /// - Rects, lines, ellipses, and paths → triangle vertices in `positions`/`colors`.
 /// - Text instructions → `texts` (rendered via CoreText overlay after GPU pass).
-/// - Group and Clip nodes are recursed into.
+/// - Group and Clip nodes are recursed into (up to `MAX_GROUP_DEPTH` levels).
 /// - GlyphRun, Layer, Gradient, Image are not yet implemented (silently skipped).
+///
+/// `depth` must be 0 on the initial call; it is incremented for each recursive Group/Clip.
 fn collect_geometry(
     instructions: &[PaintInstruction],
     positions: &mut Vec<f32>,
     colors: &mut Vec<f32>,
     texts: &mut Vec<PaintText>,
+    depth: usize,
 ) {
+    // Guard against stack overflow from pathologically deep instruction trees.
+    const MAX_GROUP_DEPTH: usize = 128;
+    if depth > MAX_GROUP_DEPTH {
+        return;
+    }
+
     for instr in instructions {
         match instr {
             PaintInstruction::Rect(rect) => {
@@ -271,11 +280,11 @@ fn collect_geometry(
                 texts.push(text.clone());
             }
             PaintInstruction::Group(group) => {
-                collect_geometry(&group.children, positions, colors, texts);
+                collect_geometry(&group.children, positions, colors, texts, depth + 1);
             }
             PaintInstruction::Clip(clip) => {
                 // Render clip children without a stencil clip for now.
-                collect_geometry(&clip.children, positions, colors, texts);
+                collect_geometry(&clip.children, positions, colors, texts, depth + 1);
             }
             // Not yet implemented:
             PaintInstruction::GlyphRun(_)
@@ -509,6 +518,12 @@ fn add_ellipse_vertices(ellipse: &PaintEllipse, positions: &mut Vec<f32>, colors
 /// `CubicTo` is approximated with 8 linear segments via de Casteljau.
 /// `ArcTo` is not yet tessellated — it is silently skipped.
 fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Vec<f32>) {
+    // Guard: each CubicTo/QuadTo expands to 8 points; cap total to prevent OOM.
+    const MAX_PATH_COMMANDS: usize = 10_000;
+    if path.commands.len() > MAX_PATH_COMMANDS {
+        return;
+    }
+
     // Flatten all path commands into a sequence of (x, y) points.
     // Each subpath (starting at MoveTo) is collected, then we tessellate fill
     // and stroke across all points.
@@ -687,21 +702,27 @@ fn collect_text_instructions(instructions: &[PaintInstruction], out: &mut Vec<Pa
 
 #[cfg(target_vendor = "apple")]
 unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
+    // Guard against NaN/Inf before casting — `f64::INFINITY as u32` saturates to
+    // u32::MAX on Rust (4 294 967 295), which would bypass the zero-size check and
+    // trigger the dimension assert with a confusing message.
+    const MAX_DIMENSION_F: f64 = 16384.0;
+    if !scene.width.is_finite()
+        || !scene.height.is_finite()
+        || scene.width > MAX_DIMENSION_F
+        || scene.height > MAX_DIMENSION_F
+    {
+        panic!(
+            "Scene dimensions {}×{} are non-finite or exceed maximum {}×{}",
+            scene.width, scene.height, MAX_DIMENSION_F, MAX_DIMENSION_F
+        );
+    }
+
     let width = scene.width as u32;
     let height = scene.height as u32;
 
     if width == 0 || height == 0 {
         return PixelContainer::new(width, height);
     }
-
-    // Guard against accidental huge allocations.  A 16384×16384 RGBA image
-    // is ~1 GB — beyond this size most systems would OOM.
-    const MAX_DIMENSION: u32 = 16384;
-    assert!(
-        width <= MAX_DIMENSION && height <= MAX_DIMENSION,
-        "Scene dimensions {}×{} exceed maximum {}×{}",
-        width, height, MAX_DIMENSION, MAX_DIMENSION
-    );
 
     // ── Step 1: Metal device + command queue ─────────────────────────────────
     let device = MTLCreateSystemDefaultDevice();
@@ -720,7 +741,7 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     let mut positions: Vec<f32> = Vec::new();
     let mut colors: Vec<f32> = Vec::new();
     let mut _texts: Vec<PaintText> = Vec::new(); // collected by outer render() fn
-    collect_geometry(&scene.instructions, &mut positions, &mut colors, &mut _texts);
+    collect_geometry(&scene.instructions, &mut positions, &mut colors, &mut _texts, 0);
 
     // ── Step 6: Render pass ───────────────────────────────────────────────────
     let pass_desc_class = class("MTLRenderPassDescriptor");
@@ -971,7 +992,14 @@ mod text_overlay {
             return;
         }
 
-        let data_ptr = pixels.data.as_ptr() as *mut std::ffi::c_void;
+        // SAFETY: We hold exclusive access to `pixels` via the `&mut PixelContainer`
+        // borrow. `as_mut_ptr()` is correct here (not `as_ptr() as *mut`) because
+        // CGBitmapContextCreate writes through this pointer when CTLineDraw paints text.
+        // The bitmap context is fully released (CGContextRelease) before this function
+        // returns, so no aliased write survives the call. These two overlay functions
+        // (text_overlay and glyph_run_overlay) run sequentially — never in parallel —
+        // so there is no concurrent aliasing between their bitmap contexts.
+        let data_ptr = pixels.data.as_mut_ptr() as *mut std::ffi::c_void;
         let ctx: CGContextRef = CGBitmapContextCreate(
             data_ptr,
             width,
@@ -998,6 +1026,20 @@ mod text_overlay {
 
         CGContextRestoreGState(ctx);
         CGContextRelease(ctx);
+    }
+
+    /// Query the advance width of a CTLine.
+    ///
+    /// # Safety
+    ///
+    /// `line` must be a valid, non-NULL `CTLineRef`. `ascent`, `descent`, and
+    /// `leading` are stack-initialised to `0.0` before being passed as out-pointers,
+    /// so CoreText always writes to initialised memory through them.
+    unsafe fn ct_line_width(line: Id) -> f64 {
+        let mut ascent = 0.0f64;
+        let mut descent = 0.0f64;
+        let mut leading = 0.0f64;
+        CTLineGetTypographicBounds(line, &mut ascent, &mut descent, &mut leading)
     }
 
     unsafe fn draw_one_text(ctx: CGContextRef, text: &PaintText, image_height: f64) {
@@ -1055,28 +1097,10 @@ mod text_overlay {
         // Compute x position, adjusting for text_align.
         let draw_x = match text.text_align.as_ref().unwrap_or(&TextAlign::Left) {
             TextAlign::Center => {
-                let mut ascent = 0.0f64;
-                let mut descent = 0.0f64;
-                let mut leading = 0.0f64;
-                let line_width = CTLineGetTypographicBounds(
-                    line,
-                    &mut ascent as *mut f64,
-                    &mut descent as *mut f64,
-                    &mut leading as *mut f64,
-                );
-                text.x - line_width / 2.0
+                text.x - ct_line_width(line) / 2.0
             }
             TextAlign::Right => {
-                let mut ascent = 0.0f64;
-                let mut descent = 0.0f64;
-                let mut leading = 0.0f64;
-                let line_width = CTLineGetTypographicBounds(
-                    line,
-                    &mut ascent as *mut f64,
-                    &mut descent as *mut f64,
-                    &mut leading as *mut f64,
-                );
-                text.x - line_width
+                text.x - ct_line_width(line)
             }
             TextAlign::Left => text.x,
         };
@@ -1227,7 +1251,10 @@ mod glyph_run_overlay {
             return;
         }
 
-        let data_ptr = pixels.data.as_ptr() as *mut std::ffi::c_void;
+        // SAFETY: see text_overlay::overlay_paint_text for the aliasing argument.
+        // `as_mut_ptr()` is required here because CGBitmapContextCreate writes
+        // glyph pixels through this pointer. The context is fully released before return.
+        let data_ptr = pixels.data.as_mut_ptr() as *mut std::ffi::c_void;
 
         let ctx: CGContextRef = CGBitmapContextCreate(
             data_ptr,
@@ -1594,7 +1621,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[rect], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[rect], &mut positions, &mut colors, &mut texts, 0);
         // 6 vertices × 2 floats (x, y) each = 12 position floats
         assert_eq!(positions.len(), 12);
         // 6 vertices × 4 floats (r, g, b, a) each = 24 color floats
@@ -1607,7 +1634,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[rect], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[rect], &mut positions, &mut colors, &mut texts, 0);
         assert!(positions.is_empty(), "transparent rect should produce no vertices");
     }
 
@@ -1626,7 +1653,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[group], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[group], &mut positions, &mut colors, &mut texts, 0);
         // 2 rects × 6 vertices × 2 floats = 24 positions
         assert_eq!(positions.len(), 24);
     }
@@ -1647,7 +1674,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[ellipse], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[ellipse], &mut positions, &mut colors, &mut texts, 0);
         let expected = ELLIPSE_SEGMENTS * 3 * 2; // 64 triangles × 3 verts × 2 floats
         assert_eq!(positions.len(), expected, "ellipse fill vertex count");
     }
@@ -1668,7 +1695,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[ellipse], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[ellipse], &mut positions, &mut colors, &mut texts, 0);
         // fill: 64 * 3 verts, stroke ring: 64 quads * 2 tris * 3 verts = 384
         let expected = (ELLIPSE_SEGMENTS * 3 + ELLIPSE_SEGMENTS * 2 * 3) * 2; // × 2 for x,y
         assert_eq!(positions.len(), expected, "ellipse fill+stroke vertex count");
@@ -1696,7 +1723,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[diamond], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[diamond], &mut positions, &mut colors, &mut texts, 0);
         // Subpath has 5 points (top, right, bottom, left, top-again from close).
         // Fan: pivot=pts[0], triangles for i in 1..4 → 3 triangles
         // Each triangle: 3 vertices × 2 floats = 6 floats → 18 total
@@ -1718,7 +1745,7 @@ mod tests {
         let mut positions = Vec::new();
         let mut colors = Vec::new();
         let mut texts = Vec::new();
-        collect_geometry(&[text_instr], &mut positions, &mut colors, &mut texts);
+        collect_geometry(&[text_instr], &mut positions, &mut colors, &mut texts, 0);
         // Text goes into `texts`, not into the vertex buffers
         assert!(positions.is_empty(), "PaintText should not generate triangle vertices");
         assert_eq!(texts.len(), 1, "PaintText should be collected");
