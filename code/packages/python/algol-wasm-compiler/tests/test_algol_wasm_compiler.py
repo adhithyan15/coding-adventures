@@ -66,6 +66,30 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
 
+    def test_boolean_variable_assignment_drives_condition(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "boolean flag; "
+            "flag := true; "
+            "if flag then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_boolean_variable_shadowing_uses_nearest_frame(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "boolean flag; "
+            "flag := false; "
+            "begin boolean flag; "
+            "flag := true; "
+            "if flag then result := 9 else result := 0 "
+            "end; "
+            "if flag then result := 1 else result := result "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_forward_goto_skips_statements_until_label(self) -> None:
         result = compile_source(
             "begin integer result; "
