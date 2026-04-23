@@ -28,8 +28,7 @@ pub struct EncodedPair {
 const START_PATTERN: &str = "1010";
 const STOP_PATTERN: &str = "11101";
 const DIGIT_PATTERNS: [&str; 10] = [
-    "00110", "10001", "01001", "11000", "00101", "10100", "01100", "00011", "10010",
-    "01010",
+    "00110", "10001", "01001", "11000", "00101", "10100", "01100", "00011", "10010", "01010",
 ];
 
 pub fn normalize_itf(data: &str) -> Result<String, String> {
@@ -146,6 +145,9 @@ pub fn layout_itf(data: &str, options: &PaintBarcode1DOptions) -> Result<PaintSc
     if layout_options.label.is_none() {
         layout_options.label = Some(format!("ITF barcode for {}", normalized));
     }
+    if layout_options.human_readable_text.is_none() {
+        layout_options.human_readable_text = Some(normalized.clone());
+    }
     layout_options
         .metadata
         .insert("symbology".to_string(), "itf".to_string());
@@ -174,7 +176,10 @@ mod tests {
 
         let scene = layout_itf("123456", &PaintBarcode1DOptions::default()).unwrap();
         assert_eq!(
-            scene.metadata.as_ref().and_then(|metadata| metadata.get("symbology")),
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("symbology")),
             Some(&"itf".to_string())
         );
     }
