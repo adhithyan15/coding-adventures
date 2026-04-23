@@ -131,18 +131,34 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
 
-    def test_procedure_crossing_goto_reports_type_check_error(self) -> None:
-        with pytest.raises(AlgolWasmError) as raised:
-            compile_source(
-                "begin integer result; "
-                "procedure escape; "
-                "begin goto outerdone; result := 9 end; "
-                "escape; "
-                "result := 0; "
-                "outerdone: result := 7 "
-                "end"
-            )
-        assert raised.value.stage == "type-check"
+    def test_procedure_crossing_goto_unwinds_back_to_caller_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape; "
+            "begin goto outerdone; result := 9 end; "
+            "escape; "
+            "result := 0; "
+            "outerdone: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_procedure_crossing_goto_propagates_through_intermediate_procedure(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure outer; "
+            "begin "
+            "procedure inner; begin goto done end; "
+            "inner; "
+            "result := 3; "
+            "done: result := 8 "
+            "end; "
+            "outer "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
     def test_conditional_designational_goto_selects_branch(self) -> None:
         result = compile_source(
