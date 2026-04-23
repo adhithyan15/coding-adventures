@@ -1,5 +1,25 @@
 # Changelog — paint-metal
 
+## 0.2.0 — 2026-04-23
+
+### Added
+
+- `PaintEllipse` rendering: CPU fan tessellation with 64 triangles for fill; ring of 64 quads for stroke
+- `PaintPath` rendering: fan tessellation from first point for fill (correct for all convex diagram shapes); segment-to-rectangle for stroke; de Casteljau approximation of QuadTo/CubicTo with 8 linear segments each
+- `PaintText` rendering: new `text_overlay` module uses `CTLineCreateWithAttributedString` + `CTLineDraw` into a CGBitmapContext wrapping the pixel buffer — no Metal texture upload needed
+  - `parse_canvas_font_ref()` — parses `"canvas:family@size:weight"` font_ref format (DG03 spec)
+  - `map_family_to_ps()` — maps logical CSS family names (`system-ui`, `monospace`, `serif`) to PostScript names CoreText can resolve on all Apple platforms
+  - `TextAlign::Center` support via `CTLineGetTypographicBounds` width query
+- `PaintRect` stroke rendering: 4 thin edge rects (top, bottom, left, right)
+- `collect_geometry()` replaces `collect_vertices()` — new signature adds `texts: &mut Vec<PaintText>` so text instructions route to the CoreText overlay instead of the GPU triangle pipeline
+- `emit_filled_rect()` helper for stroke edge quads
+- 12 new tests covering ellipse vertex count, diamond path vertices, text collection, blue ellipse GPU render, yellow diamond GPU render, text overlay produces non-background pixels
+
+### Changed
+
+- `VERSION` bumped to `0.2.0`
+- `render()` now orchestrates three passes: Metal GPU → PaintText CoreText overlay → PaintGlyphRun CoreText overlay
+
 ## 0.1.0 — 2026-04-05
 
 Initial release.
