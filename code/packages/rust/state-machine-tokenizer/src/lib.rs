@@ -115,6 +115,19 @@ pub enum TokenizerError {
     MissingCurrentCodePoint { action: String },
     /// An action required a current token but none exists.
     MissingCurrentToken { action: String },
+    /// An action required a current attribute but none exists.
+    MissingCurrentAttribute { action: String },
+    /// An action required a stored return state but none exists.
+    MissingReturnState { action: String },
+    /// An action expected one current token kind but saw another.
+    InvalidCurrentToken {
+        /// Portable action that failed.
+        action: String,
+        /// Expected token kind.
+        expected: &'static str,
+        /// Actual token kind.
+        actual: &'static str,
+    },
     /// A transition loop exceeded the per-input step budget.
     StepLimitExceeded {
         /// Current state when the budget was exceeded.
@@ -139,6 +152,20 @@ impl fmt::Display for TokenizerError {
             Self::MissingCurrentToken { action } => {
                 write!(f, "action `{action}` requires a current token")
             }
+            Self::MissingCurrentAttribute { action } => {
+                write!(f, "action `{action}` requires a current attribute")
+            }
+            Self::MissingReturnState { action } => {
+                write!(f, "action `{action}` requires a stored return state")
+            }
+            Self::InvalidCurrentToken {
+                action,
+                expected,
+                actual,
+            } => write!(
+                f,
+                "action `{action}` expected current token kind `{expected}`, found `{actual}`"
+            ),
             Self::StepLimitExceeded {
                 state,
                 position,
@@ -162,7 +189,10 @@ pub type Result<T> = std::result::Result<T, TokenizerError>;
 pub struct Tokenizer {
     machine: EffectfulStateMachine,
     text_buffer: String,
+    temporary_buffer: String,
     current_token: Option<CurrentToken>,
+    current_attribute: Option<Attribute>,
+    return_state: Option<String>,
     tokens: VecDeque<Token>,
     diagnostics: Vec<Diagnostic>,
     trace: Vec<TokenizerTraceEntry>,
@@ -177,7 +207,10 @@ impl Tokenizer {
         Self {
             machine,
             text_buffer: String::new(),
+            temporary_buffer: String::new(),
             current_token: None,
+            current_attribute: None,
+            return_state: None,
             tokens: VecDeque::new(),
             diagnostics: Vec::new(),
             trace: Vec::new(),
@@ -223,7 +256,7 @@ impl Tokenizer {
                 position: before,
                 from,
                 input: None,
-                to: step.to,
+                to: self.machine.current_state().to_string(),
                 actions: step.effects,
                 consume: step.consume,
             });
@@ -274,7 +307,10 @@ impl Tokenizer {
     pub fn reset(&mut self) {
         self.machine.reset();
         self.text_buffer.clear();
+        self.temporary_buffer.clear();
         self.current_token = None;
+        self.current_attribute = None;
+        self.return_state = None;
         self.tokens.clear();
         self.diagnostics.clear();
         self.trace.clear();
@@ -306,7 +342,7 @@ impl Tokenizer {
                 position: before,
                 from,
                 input: Some(ch),
-                to: step.to,
+                to: self.machine.current_state().to_string(),
                 actions: step.effects,
                 consume: step.consume,
             });
@@ -347,11 +383,26 @@ impl Tokenizer {
                         attributes: Vec::new(),
                         self_closing: false,
                     });
+                    self.current_attribute = None;
                 }
                 "create_end_tag" => {
                     self.current_token = Some(CurrentToken::EndTag {
                         name: String::new(),
                     });
+                    self.current_attribute = None;
+                }
+                "create_comment" => {
+                    self.current_token = Some(CurrentToken::Comment {
+                        data: String::new(),
+                    });
+                    self.current_attribute = None;
+                }
+                "create_doctype" => {
+                    self.current_token = Some(CurrentToken::Doctype {
+                        name: None,
+                        force_quirks: false,
+                    });
+                    self.current_attribute = None;
                 }
                 "append_tag_name(current)" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
@@ -365,13 +416,138 @@ impl Tokenizer {
                     })?;
                     self.append_tag_name(action, ch, true)?;
                 }
+                "start_attribute" => {
+                    self.current_attribute = Some(Attribute {
+                        name: String::new(),
+                        value: String::new(),
+                    });
+                }
+                "append_attribute_name(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_attribute_name(action, ch, false)?;
+                }
+                "append_attribute_name(current_lowercase)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_attribute_name(action, ch, true)?;
+                }
+                "append_attribute_value(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_attribute_value(action, ch)?;
+                }
+                "commit_attribute" => self.commit_attribute(action)?,
+                "mark_self_closing" => self.mark_self_closing(action)?,
+                "append_comment(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_comment(action, ch, false)?;
+                }
+                "append_comment(current_lowercase)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_comment(action, ch, true)?;
+                }
+                "append_doctype_name(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_doctype_name(action, ch, false)?;
+                }
+                "append_doctype_name(current_lowercase)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.append_doctype_name(action, ch, true)?;
+                }
+                "mark_force_quirks" => self.mark_force_quirks(action)?,
+                "clear_temporary_buffer" => self.temporary_buffer.clear(),
+                "append_temporary_buffer(current)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    self.temporary_buffer.push(ch);
+                }
+                "append_temporary_buffer(current_lowercase)" => {
+                    let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
+                        action: action.clone(),
+                    })?;
+                    push_lowercase(&mut self.temporary_buffer, ch);
+                }
+                "append_temporary_buffer_to_text" => {
+                    self.text_buffer.push_str(&self.temporary_buffer);
+                    self.temporary_buffer.clear();
+                }
+                "switch_to_return_state" => {
+                    let return_state = self.return_state.clone().ok_or_else(|| {
+                        TokenizerError::MissingReturnState {
+                            action: action.clone(),
+                        }
+                    })?;
+                    self.machine
+                        .set_current_state(return_state)
+                        .map_err(TokenizerError::Machine)?;
+                }
                 "emit_current_token" => self.emit_current_token(action)?,
                 "emit(EOF)" => self.tokens.push_back(Token::Eof),
+                _ if action.starts_with("set_return_state(") && action.ends_with(')') => {
+                    let state = action
+                        .trim_start_matches("set_return_state(")
+                        .trim_end_matches(')');
+                    if !self.machine.has_state(state) {
+                        return Err(TokenizerError::Machine(format!("Unknown state '{state}'")));
+                    }
+                    self.return_state = Some(state.to_string());
+                }
+                _ if action.starts_with("switch_to(") && action.ends_with(')') => {
+                    let state = action
+                        .trim_start_matches("switch_to(")
+                        .trim_end_matches(')');
+                    self.machine
+                        .set_current_state(state.to_string())
+                        .map_err(TokenizerError::Machine)?;
+                }
                 _ if action.starts_with("append_text(") && action.ends_with(')') => {
                     let literal = action
                         .trim_start_matches("append_text(")
                         .trim_end_matches(')');
                     self.text_buffer.push_str(literal);
+                }
+                _ if action.starts_with("append_attribute_name(") && action.ends_with(')') => {
+                    let literal = action
+                        .trim_start_matches("append_attribute_name(")
+                        .trim_end_matches(')');
+                    self.attribute_mut(action)?.name.push_str(literal);
+                }
+                _ if action.starts_with("append_attribute_value(") && action.ends_with(')') => {
+                    let literal = action
+                        .trim_start_matches("append_attribute_value(")
+                        .trim_end_matches(')');
+                    self.attribute_mut(action)?.value.push_str(literal);
+                }
+                _ if action.starts_with("append_comment(") && action.ends_with(')') => {
+                    let literal = action
+                        .trim_start_matches("append_comment(")
+                        .trim_end_matches(')');
+                    self.comment_data_mut(action)?.push_str(literal);
+                }
+                _ if action.starts_with("append_doctype_name(") && action.ends_with(')') => {
+                    let literal = action
+                        .trim_start_matches("append_doctype_name(")
+                        .trim_end_matches(')');
+                    self.doctype_name_mut(action)?.push_str(literal);
+                }
+                _ if action.starts_with("append_temporary_buffer(") && action.ends_with(')') => {
+                    let literal = action
+                        .trim_start_matches("append_temporary_buffer(")
+                        .trim_end_matches(')');
+                    self.temporary_buffer.push_str(literal);
                 }
                 _ if action.starts_with("parse_error(") && action.ends_with(')') => {
                     let code = action
@@ -398,27 +574,111 @@ impl Tokenizer {
     }
 
     fn append_tag_name(&mut self, action: &str, ch: char, lowercase: bool) -> Result<()> {
-        let current_token =
-            self.current_token
-                .as_mut()
-                .ok_or_else(|| TokenizerError::MissingCurrentToken {
-                    action: action.to_string(),
-                })?;
-        match current_token {
+        match self.current_token_mut(action)? {
             CurrentToken::StartTag { name, .. } | CurrentToken::EndTag { name } => {
                 if lowercase {
-                    for lowered in ch.to_lowercase() {
-                        name.push(lowered);
-                    }
+                    push_lowercase(name, ch);
                 } else {
                     name.push(ch);
                 }
                 Ok(())
             }
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "start-tag-or-end-tag",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn append_attribute_name(&mut self, action: &str, ch: char, lowercase: bool) -> Result<()> {
+        let attribute = self.attribute_mut(action)?;
+        if lowercase {
+            push_lowercase(&mut attribute.name, ch);
+        } else {
+            attribute.name.push(ch);
+        }
+        Ok(())
+    }
+
+    fn append_attribute_value(&mut self, action: &str, ch: char) -> Result<()> {
+        self.attribute_mut(action)?.value.push(ch);
+        Ok(())
+    }
+
+    fn commit_attribute(&mut self, action: &str) -> Result<()> {
+        let attribute = self.current_attribute.take().ok_or_else(|| {
+            TokenizerError::MissingCurrentAttribute {
+                action: action.to_string(),
+            }
+        })?;
+        match self.current_token_mut(action)? {
+            CurrentToken::StartTag { attributes, .. } => {
+                attributes.push(attribute);
+                Ok(())
+            }
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "start-tag",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn mark_self_closing(&mut self, action: &str) -> Result<()> {
+        match self.current_token_mut(action)? {
+            CurrentToken::StartTag { self_closing, .. } => {
+                *self_closing = true;
+                Ok(())
+            }
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "start-tag",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn append_comment(&mut self, action: &str, ch: char, lowercase: bool) -> Result<()> {
+        let data = self.comment_data_mut(action)?;
+        if lowercase {
+            push_lowercase(data, ch);
+        } else {
+            data.push(ch);
+        }
+        Ok(())
+    }
+
+    fn append_doctype_name(&mut self, action: &str, ch: char, lowercase: bool) -> Result<()> {
+        let name = self.doctype_name_mut(action)?;
+        if lowercase {
+            push_lowercase(name, ch);
+        } else {
+            name.push(ch);
+        }
+        Ok(())
+    }
+
+    fn mark_force_quirks(&mut self, action: &str) -> Result<()> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Doctype { force_quirks, .. } => {
+                *force_quirks = true;
+                Ok(())
+            }
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "doctype",
+                actual: other.kind_name(),
+            }),
         }
     }
 
     fn emit_current_token(&mut self, action: &str) -> Result<()> {
+        if matches!(self.current_token, Some(CurrentToken::StartTag { .. }))
+            && self.current_attribute.is_some()
+        {
+            self.commit_attribute("commit_attribute")?;
+        }
         let token =
             self.current_token
                 .take()
@@ -436,8 +696,50 @@ impl Tokenizer {
                 self_closing,
             }),
             CurrentToken::EndTag { name } => self.tokens.push_back(Token::EndTag { name }),
+            CurrentToken::Comment { data } => self.tokens.push_back(Token::Comment(data)),
+            CurrentToken::Doctype { name, force_quirks } => {
+                self.tokens.push_back(Token::Doctype { name, force_quirks })
+            }
         }
         Ok(())
+    }
+
+    fn current_token_mut(&mut self, action: &str) -> Result<&mut CurrentToken> {
+        self.current_token
+            .as_mut()
+            .ok_or_else(|| TokenizerError::MissingCurrentToken {
+                action: action.to_string(),
+            })
+    }
+
+    fn attribute_mut(&mut self, action: &str) -> Result<&mut Attribute> {
+        self.current_attribute
+            .as_mut()
+            .ok_or_else(|| TokenizerError::MissingCurrentAttribute {
+                action: action.to_string(),
+            })
+    }
+
+    fn comment_data_mut(&mut self, action: &str) -> Result<&mut String> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Comment { data } => Ok(data),
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "comment",
+                actual: other.kind_name(),
+            }),
+        }
+    }
+
+    fn doctype_name_mut(&mut self, action: &str) -> Result<&mut String> {
+        match self.current_token_mut(action)? {
+            CurrentToken::Doctype { name, .. } => Ok(name.get_or_insert_with(String::new)),
+            other => Err(TokenizerError::InvalidCurrentToken {
+                action: action.to_string(),
+                expected: "doctype",
+                actual: other.kind_name(),
+            }),
+        }
     }
 
     fn advance(&mut self, ch: char) {
@@ -462,4 +764,28 @@ enum CurrentToken {
     EndTag {
         name: String,
     },
+    Comment {
+        data: String,
+    },
+    Doctype {
+        name: Option<String>,
+        force_quirks: bool,
+    },
+}
+
+impl CurrentToken {
+    fn kind_name(&self) -> &'static str {
+        match self {
+            Self::StartTag { .. } => "start-tag",
+            Self::EndTag { .. } => "end-tag",
+            Self::Comment { .. } => "comment",
+            Self::Doctype { .. } => "doctype",
+        }
+    }
+}
+
+fn push_lowercase(target: &mut String, ch: char) {
+    for lowered in ch.to_lowercase() {
+        target.push(lowered);
+    }
 }

@@ -66,6 +66,11 @@ and now also accepts the current lexer profile used by `html-lexer`:
 Numbers, dotted keys, malformed inline tables, and unsupported fields are still
 rejected so the reader stays bounded and predictable at the trust boundary.
 
+For lexer-profile definitions, transition `actions` are intentionally left as
+portable strings. The executable Rust vocabulary for those actions lives in the
+`state-machine-tokenizer` crate so the read side and runtime side can evolve
+independently.
+
 ## Dependencies
 
 - state-machine

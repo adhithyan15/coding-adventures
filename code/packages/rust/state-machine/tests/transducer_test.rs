@@ -267,3 +267,25 @@ fn any_transition_accepts_events_outside_declared_alphabet() {
 
     assert_eq!(step.effects, vec!["append_text(current)".to_string()]);
 }
+
+#[test]
+fn effectful_machine_allows_controlled_runtime_state_hops() {
+    let mut machine = EffectfulStateMachine::new(
+        set(&["data", "escaped"]),
+        set(&["x"]),
+        vec![EffectfulTransition::new(
+            "escaped",
+            EffectfulMatcher::Any,
+            "data",
+        )],
+        "data".to_string(),
+        HashSet::new(),
+    )
+    .unwrap();
+
+    machine.set_current_state("escaped").unwrap();
+    assert_eq!(machine.current_state(), "escaped");
+
+    let error = machine.set_current_state("missing").unwrap_err();
+    assert!(error.contains("Unknown state"));
+}

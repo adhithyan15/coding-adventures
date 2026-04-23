@@ -26,6 +26,9 @@ All notable changes to the `state-machine` crate will be documented in this file
 - Allowed `$any` transitions to accept runtime events outside the declared
   alphabet when the current state has an `Any` fallback, which lets tokenizer
   wrappers process arbitrary Unicode text without declaring every code point.
+- Added controlled runtime state hops for effectful transducers via
+  `EffectfulStateMachine::set_current_state`, which lets wrapper runtimes model
+  return-state flows without embedding host-language callbacks in definitions.
 
 ### Changed
 
