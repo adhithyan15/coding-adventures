@@ -15,21 +15,61 @@ HTML-specific machine constructors live in `coding-adventures-html-lexer`. This
 package stays generic: it interprets lexer actions for any statically linked
 machine that uses the portable action vocabulary below.
 
-## Current Scope
+## Lexer Action Vocabulary
 
-The first runtime supports the small fixed action vocabulary needed by the HTML
-skeleton:
+The runtime interprets a bounded portable action vocabulary. Definitions stay
+serializable because actions are simple strings, and unknown actions still fail
+closed at runtime.
+
+Text buffering:
 
 - `append_text(current)`
 - `append_text(literal)`
 - `append_text_replacement`
 - `flush_text`
 - `emit_current_as_text`
+
+Tag tokens:
+
 - `create_start_tag`
 - `create_end_tag`
 - `append_tag_name(current)`
 - `append_tag_name(current_lowercase)`
+- `start_attribute`
+- `append_attribute_name(current)`
+- `append_attribute_name(current_lowercase)`
+- `append_attribute_name(literal)`
+- `append_attribute_value(current)`
+- `append_attribute_value(literal)`
+- `commit_attribute`
+- `mark_self_closing`
 - `emit_current_token`
+
+Comments and doctypes:
+
+- `create_comment`
+- `append_comment(current)`
+- `append_comment(current_lowercase)`
+- `append_comment(literal)`
+- `create_doctype`
+- `append_doctype_name(current)`
+- `append_doctype_name(current_lowercase)`
+- `append_doctype_name(literal)`
+- `mark_force_quirks`
+
+Temporary buffers and controlled state changes:
+
+- `clear_temporary_buffer`
+- `append_temporary_buffer(current)`
+- `append_temporary_buffer(current_lowercase)`
+- `append_temporary_buffer(literal)`
+- `append_temporary_buffer_to_text`
+- `set_return_state(state)`
+- `switch_to(state)`
+- `switch_to_return_state`
+
+Diagnostics and stream control:
+
 - `emit(EOF)`
 - `parse_error(code)`
 

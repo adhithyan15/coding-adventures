@@ -366,6 +366,25 @@ impl EffectfulStateMachine {
         &self.current
     }
 
+    /// Whether the machine declares the given state identifier.
+    pub fn has_state(&self, state: &str) -> bool {
+        self.states.contains(state)
+    }
+
+    /// Force the current state to one of the declared machine states.
+    ///
+    /// Wrapper runtimes use this for controlled state changes such as HTML
+    /// tokenizer return-state hops. Unknown targets are rejected so callers
+    /// still fail closed.
+    pub fn set_current_state(&mut self, state: impl Into<String>) -> Result<(), String> {
+        let state = state.into();
+        if !self.states.contains(&state) {
+            return Err(format!("Unknown state '{state}'"));
+        }
+        self.current = state;
+        Ok(())
+    }
+
     /// Whether the current state is final.
     pub fn is_final(&self) -> bool {
         self.final_states.contains(&self.current)

@@ -12,3 +12,6 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Added a statically linked HTML skeleton tokenizer definition and fixture
   coverage for text, tags, chunked input, EOF flushing, diagnostics, and
   arbitrary Unicode text through `$any`.
+- Expanded the portable lexer action vocabulary with comment, doctype,
+  attribute, temporary-buffer, self-closing, and return-state actions so
+  future HTML lexer definitions can stay declarative without host callbacks.
