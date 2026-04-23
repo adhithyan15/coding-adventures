@@ -144,7 +144,9 @@ class TestAlgolIrCompiler:
             if instr.opcode == IrOp.JUMP
         ]
         assert any(label.startswith("algol_label_") for label in labels)
-        assert any(label in jumps for label in labels if label.startswith("algol_label_"))
+        assert any(
+            label in jumps for label in labels if label.startswith("algol_label_")
+        )
         assert opcodes.count(IrOp.LOAD_WORD) >= 2
         assert opcodes.count(IrOp.STORE_WORD) >= 2
 
