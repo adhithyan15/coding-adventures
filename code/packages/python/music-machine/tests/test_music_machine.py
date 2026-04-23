@@ -9,13 +9,24 @@ from pcm_audio import PCMBuffer, PCMFormat
 from music_machine import (
     DEFAULT_INSTRUMENT_ID,
     HAPPY_BIRTHDAY_TEXT,
+    InstrumentDeclaration,
+    MeterEvent,
+    PortableScore,
+    PortableScoreEvent,
+    RenderedPortableScore,
     RenderedScore,
     ScoreEvent,
+    TempoEvent,
     TextScore,
+    TrackDeclaration,
     beats_for_duration_symbol,
+    parse_portable_score,
     parse_score,
+    play_portable_score,
+    play_portable_score_text,
     play_score,
     play_score_text,
+    render_portable_score_to_pcm,
     render_score_to_pcm,
     resolve_instrument_id,
 )
@@ -502,3 +513,445 @@ def test_play_score_text_rejects_non_callable_default_sink(
             A0/q
             """,
         )
+
+
+PORTABLE_DUET_TEXT = """
+format: music-machine-score/v2
+title: Tiny Duet
+ppq: 100
+sample_rate: 1000
+tempo 0 600
+meter 0 4/4
+
+instrument lead profile=flute_naive gain=0.5
+instrument bass program=33 gain=0.4
+
+track melody instrument=lead
+track bassline instrument=bass
+
+event melody 0 100 note A4 velocity=0.8
+event melody 100 100 note B4 velocity=0.8
+event bassline 0 200 note A2,E3 velocity=0.7
+"""
+
+
+def test_parse_portable_score_reads_tracks_instruments_and_events() -> None:
+    score = parse_portable_score(PORTABLE_DUET_TEXT)
+
+    assert score.title == "Tiny Duet"
+    assert score.ppq == 100
+    assert score.sample_rate_hz == 1000
+    assert score.tempo_events == (TempoEvent(start_tick=0, bpm=600.0),)
+    assert score.meter_events == (MeterEvent(start_tick=0, meter="4/4"),)
+    assert score.instruments == (
+        InstrumentDeclaration("lead", "flute_naive", 0.5),
+        InstrumentDeclaration("bass", "pluck_naive", 0.4),
+    )
+    assert score.tracks == (
+        TrackDeclaration("melody", "lead"),
+        TrackDeclaration("bassline", "bass"),
+    )
+    assert score.events[0] == PortableScoreEvent(
+        track_id="melody",
+        start_tick=0,
+        duration_tick=100,
+        kind="note",
+        notes=("A4",),
+        velocity=0.8,
+        source_order=0,
+    )
+    assert score.events[1].notes == ("A2", "E3")
+
+
+def test_render_portable_score_mixes_tracks_and_chords() -> None:
+    rendered = render_portable_score_to_pcm(parse_portable_score(PORTABLE_DUET_TEXT))
+
+    assert isinstance(rendered, RenderedPortableScore)
+    assert rendered.pcm_buffer.sample_count() > 200
+    assert len(rendered.rendered_notes) == 4
+    assert {note.instrument.id for note in rendered.rendered_notes} == {
+        "flute_naive",
+        "pluck_naive",
+    }
+    assert any(rendered.pcm_buffer.samples[:100])
+    assert any(rendered.pcm_buffer.samples[100:200])
+
+
+def test_portable_score_supports_tempo_changes() -> None:
+    score = parse_portable_score(
+        """
+        format: music-machine-score/v2
+        ppq: 100
+        sample_rate: 1000
+        tempo 0 600
+        tempo 100 300
+        instrument lead kind=sine gain=0.5
+        track melody instrument=lead
+        event melody 50 100 note A4 velocity=0.5
+        """
+    )
+
+    rendered = render_portable_score_to_pcm(score)
+
+    assert rendered.rendered_notes[0].floating_samples.start_time_seconds == 0.05
+    duration = rendered.rendered_notes[0].floating_samples.duration_seconds()
+    assert duration == pytest.approx(0.15 + 0.03)
+
+
+@pytest.mark.parametrize(
+    ("text", "message"),
+    [
+        ("title: no format", "first directive"),
+        ("format: music-machine-score/v2\nunknown: yep", "unknown directive"),
+        ("format: music-machine-score/v2\ntempo 0", "tempo lines"),
+        ("format: music-machine-score/v2\nmeter 0 tomato", "meter must look"),
+        (
+            "format: music-machine-score/v2\ninstrument lead profile=laser",
+            "unknown instrument",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument lead kind=sample",
+            "kind must be",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument lead kind=sine gain=loud",
+            "gain must be a number",
+        ),
+        (
+            "format: music-machine-score/v2\ntrack melody",
+            "track lines",
+        ),
+        (
+            "format: music-machine-score/v2\ntrack melody instrument=missing",
+            "unknown instrument",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead\n"
+            "event missing 0 100 note A4",
+            "unknown track",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead\n"
+            "event melody 0 0 note A4",
+            "duration_tick must be > 0",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead\n"
+            "event melody 0 100 note",
+            "pitch list",
+        ),
+    ],
+)
+def test_parse_portable_score_rejects_invalid_input(
+    text: str,
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        parse_portable_score(text)
+
+
+@pytest.mark.parametrize(
+    ("text", "message"),
+    [
+        (
+            "format: music-machine-score/v2\ninstrument lead badtoken",
+            "key=value",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument lead kind=",
+            "key=value",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument lead kind=sine kind=sine",
+            "duplicate property",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument 1lead kind=sine",
+            "identifier",
+        ),
+        (
+            "format: music-machine-score/v2\ntempo start 120",
+            "tempo start_tick must be an integer",
+        ),
+        (
+            "format: music-machine-score/v2\ntempo -1 120",
+            "tempo start_tick must be >= 0",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead program=1 profile=sine",
+            "only one",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead profile=sine kind=sine",
+            "only one",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument lead gain=0.5",
+            "must include program, profile, or kind",
+        ),
+        (
+            "format: music-machine-score/v2\ninstrument lead kind=sine color=blue",
+            "unknown instrument properties",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead gain=1.0",
+            "unknown track properties",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody color=blue",
+            "unknown track properties",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead\n"
+            "event melody 0 100 rest velocity=1.0",
+            "rest events must not include",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead\n"
+            "event melody 0 100 chord A4",
+            "event kind must be",
+        ),
+        (
+            "format: music-machine-score/v2\n"
+            "instrument lead kind=sine\n"
+            "track melody instrument=lead\n"
+            "event melody 0 100 note A4 color=blue",
+            "unknown event properties",
+        ),
+    ],
+)
+def test_parse_portable_score_rejects_more_invalid_input(
+    text: str,
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        parse_portable_score(text)
+
+
+def test_parse_portable_score_validates_resource_limits() -> None:
+    with pytest.raises(ValueError, match="score text must be a string"):
+        parse_portable_score(123)  # type: ignore[arg-type]
+
+    with pytest.raises(ValueError, match="max_score_length=4"):
+        parse_portable_score("format: music-machine-score/v2", max_score_length=4)
+
+    with pytest.raises(ValueError, match="max_line_length=3"):
+        parse_portable_score("format: music-machine-score/v2", max_line_length=3)
+
+    score_text = """
+    format: music-machine-score/v2
+    instrument lead kind=sine
+    track melody instrument=lead
+    event melody 0 100 note A4
+    """
+    with pytest.raises(ValueError, match="max_event_count=0"):
+        parse_portable_score(score_text, max_event_count=0)
+
+    with pytest.raises(ValueError, match="first directive"):
+        parse_portable_score("")
+
+
+def test_parse_portable_score_defaults_tempo_and_meter() -> None:
+    score = parse_portable_score(
+        """
+        format: music-machine-score/v2
+        instrument lead kind=sine
+        track melody instrument=lead
+        event melody 0 100 note A4
+        """
+    )
+
+    assert score.tempo_events == (TempoEvent(0, 120.0),)
+    assert score.meter_events == (MeterEvent(0, "4/4"),)
+
+
+def test_portable_score_validates_duplicate_ids() -> None:
+    with pytest.raises(ValueError, match="instrument ids"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="bad",
+            ppq=100,
+            sample_rate_hz=1000,
+            tempo_events=(),
+            meter_events=(),
+            instruments=(
+                InstrumentDeclaration("lead", "sine"),
+                InstrumentDeclaration("lead", "sine"),
+            ),
+            tracks=(),
+            events=(),
+        )
+
+    with pytest.raises(ValueError, match="format_version"):
+        PortableScore(
+            format_version="music-machine-score/v3",
+            title="bad",
+            ppq=100,
+            sample_rate_hz=1000,
+            tempo_events=(),
+            meter_events=(),
+            instruments=(),
+            tracks=(),
+            events=(),
+        )
+
+    with pytest.raises(ValueError, match="track ids"):
+        PortableScore(
+            format_version="music-machine-score/v2",
+            title="bad",
+            ppq=100,
+            sample_rate_hz=1000,
+            tempo_events=(),
+            meter_events=(),
+            instruments=(InstrumentDeclaration("lead", "sine"),),
+            tracks=(
+                TrackDeclaration("melody", "lead"),
+                TrackDeclaration("melody", "lead"),
+            ),
+            events=(),
+        )
+
+
+def test_portable_score_event_validates_shape() -> None:
+    with pytest.raises(ValueError, match="kind must be"):
+        PortableScoreEvent(
+            track_id="melody",
+            start_tick=0,
+            duration_tick=100,
+            kind="chord",  # type: ignore[arg-type]
+            notes=("A4",),
+        )
+
+    with pytest.raises(ValueError, match="at least one note"):
+        PortableScoreEvent(
+            track_id="melody",
+            start_tick=0,
+            duration_tick=100,
+            kind="note",
+            notes=(),
+        )
+
+    with pytest.raises(ValueError, match="rest events cannot include"):
+        PortableScoreEvent(
+            track_id="melody",
+            start_tick=0,
+            duration_tick=100,
+            kind="rest",
+            notes=("A4",),
+        )
+
+
+def test_render_portable_score_rejects_wrong_type_and_sample_overflow() -> None:
+    with pytest.raises(ValueError, match="PortableScore"):
+        render_portable_score_to_pcm("not a score")  # type: ignore[arg-type]
+
+    score = parse_portable_score(PORTABLE_DUET_TEXT)
+    with pytest.raises(ValueError, match="max_sample_count"):
+        render_portable_score_to_pcm(score, max_sample_count=10)
+
+
+def test_render_portable_score_rejects_long_rest_before_allocation() -> None:
+    score = parse_portable_score(
+        """
+        format: music-machine-score/v2
+        ppq: 100
+        sample_rate: 1000
+        tempo 0 600
+        instrument lead kind=sine
+        track melody instrument=lead
+        event melody 0 10000 rest
+        """
+    )
+
+    with pytest.raises(ValueError, match="max_sample_count=100"):
+        render_portable_score_to_pcm(score, max_sample_count=100)
+
+
+def test_render_portable_score_counts_clipped_samples() -> None:
+    score = parse_portable_score(
+        """
+        format: music-machine-score/v2
+        ppq: 100
+        sample_rate: 1000
+        tempo 0 600
+        instrument one kind=sine gain=1.0
+        instrument two kind=sine gain=1.0
+        track melody instrument=one
+        track harmony instrument=two
+        event melody 0 100 note A4 velocity=1.0
+        event harmony 0 100 note A4 velocity=1.0
+        """
+    )
+
+    rendered = render_portable_score_to_pcm(score)
+
+    assert rendered.pcm_buffer.clipped_sample_count > 0
+
+
+def test_rendered_portable_score_validates_shape() -> None:
+    score = parse_portable_score(PORTABLE_DUET_TEXT)
+    pcm_buffer = PCMBuffer(samples=(), pcm_format=PCMFormat(sample_rate_hz=1000))
+
+    with pytest.raises(ValueError, match="score must be a PortableScore"):
+        RenderedPortableScore(
+            score="not a score",  # type: ignore[arg-type]
+            pcm_buffer=pcm_buffer,
+            rendered_notes=(),
+        )
+
+    with pytest.raises(ValueError, match="pcm_buffer must be"):
+        RenderedPortableScore(
+            score=score,
+            pcm_buffer="not pcm",  # type: ignore[arg-type]
+            rendered_notes=(),
+        )
+
+    with pytest.raises(ValueError, match="rendered_notes\\[0\\]"):
+        RenderedPortableScore(
+            score=score,
+            pcm_buffer=pcm_buffer,
+            rendered_notes=("not a note",),  # type: ignore[arg-type]
+        )
+
+
+def test_play_portable_score_delegates_to_injected_sink() -> None:
+    score = parse_portable_score(PORTABLE_DUET_TEXT)
+    seen: dict[str, int] = {}
+
+    def fake_sink(buffer: PCMBuffer) -> str:
+        seen["sample_count"] = buffer.sample_count()
+        return "portable played"
+
+    assert play_portable_score(score, play_pcm_buffer=fake_sink) == "portable played"
+    assert seen["sample_count"] > 200
+
+
+def test_play_portable_score_text_delegates_to_injected_sink() -> None:
+    seen: dict[str, int] = {}
+
+    def fake_sink(buffer: PCMBuffer) -> str:
+        seen["sample_count"] = buffer.sample_count()
+        return "portable text played"
+
+    result = play_portable_score_text(
+        PORTABLE_DUET_TEXT,
+        play_pcm_buffer=fake_sink,
+    )
+
+    assert result == "portable text played"
