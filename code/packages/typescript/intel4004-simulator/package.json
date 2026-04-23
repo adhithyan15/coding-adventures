@@ -20,6 +20,9 @@
   ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/simulator-protocol": "file:../simulator-protocol"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^3.0.0",

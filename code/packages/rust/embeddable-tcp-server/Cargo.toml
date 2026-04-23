@@ -1,0 +1,15 @@
+[package]
+name = "embeddable-tcp-server"
+version = "0.1.0"
+edition = "2021"
+description = "Language-neutral embeddable TCP server for generic job-protocol workers"
+
+[dependencies]
+generic-job-protocol = { path = "../generic-job-protocol" }
+generic-job-runtime = { path = "../generic-job-runtime" }
+serde = { version = "1", features = ["derive"] }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }
+
+[dev-dependencies]
+resp-protocol = { path = "../resp-protocol" }

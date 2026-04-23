@@ -7,6 +7,7 @@ JVM bytecode.
 """
 
 import pytest
+from jvm_bytecode_disassembler import disassemble_method_body
 
 from jvm_simulator.simulator import (
     JVMOpcode,
@@ -18,10 +19,32 @@ from jvm_simulator.simulator import (
     encode_istore,
 )
 
-
 # ===========================================================================
 # Helper encoding tests
 # ===========================================================================
+
+
+class _FakeMethodRef:
+    def __init__(self, descriptor: str) -> None:
+        self.descriptor = descriptor
+
+
+class _FakeHost:
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, object, list[object]]] = []
+
+    def get_static(self, reference: object) -> object:
+        self.calls.append(("get_static", reference, []))
+        return {"kind": "print-stream"}
+
+    def invoke_virtual(
+        self,
+        reference: object,
+        receiver: object,
+        args: list[object],
+    ) -> object | None:
+        self.calls.append(("invoke_virtual", receiver, args))
+        return None
 
 
 class TestEncodeIconst:
@@ -54,12 +77,20 @@ class TestEncodeIconst:
         result = encode_iconst(-128)
         assert result == bytes([0x10, 0x80])
 
+    def test_iconst_128_uses_sipush(self) -> None:
+        """Values beyond bipush range fall back to sipush."""
+        assert encode_iconst(128) == bytes([0x11, 0x00, 0x80])
+
+    def test_iconst_negative_129_uses_sipush(self) -> None:
+        """Negative values below -128 also use sipush when possible."""
+        assert encode_iconst(-129) == bytes([0x11, 0xFF, 0x7F])
+
     def test_iconst_out_of_range_raises(self) -> None:
-        """Values outside signed byte range raise ValueError."""
-        with pytest.raises(ValueError, match="outside signed byte range"):
-            encode_iconst(128)
-        with pytest.raises(ValueError, match="outside signed byte range"):
-            encode_iconst(-129)
+        """Values outside signed short range still raise ValueError."""
+        with pytest.raises(ValueError, match="outside signed short range"):
+            encode_iconst(32768)
+        with pytest.raises(ValueError, match="outside signed short range"):
+            encode_iconst(-32769)
 
 
 class TestEncodeIstore:
@@ -971,3 +1002,668 @@ class TestStep:
         sim.load(assemble_jvm((JVMOpcode.BIPUSH, 42), (JVMOpcode.RETURN,)))
         sim.step()
         assert sim.pc == 2  # bipush is 2 bytes
+
+
+# ===========================================================================
+# simulator-protocol conformance tests
+# ===========================================================================
+# These tests verify that JVMSimulator satisfies the Simulator[JVMState]
+# protocol: get_state(), execute(), and reset() behave correctly and
+# the returned types match the protocol contract.
+
+
+class TestSimulatorProtocolConformance:
+    """Verify Simulator[JVMState] protocol conformance for JVMSimulator."""
+
+    def test_get_state_returns_jvm_state(self) -> None:
+        """get_state() returns a JVMState frozen dataclass with correct field types."""
+        from jvm_simulator.state import JVMState
+
+        sim = JVMSimulator()
+        state = sim.get_state()
+
+        assert isinstance(state, JVMState)
+        assert isinstance(state.stack, tuple)
+        assert isinstance(state.locals, tuple)
+        assert isinstance(state.constants, tuple)
+        assert isinstance(state.pc, int)
+        assert isinstance(state.halted, bool)
+
+    def test_get_state_is_immutable_snapshot(self) -> None:
+        """get_state() snapshots are independent — mutating sim does not affect them."""
+        sim = JVMSimulator()
+        sim.load(assemble_jvm((JVMOpcode.ICONST_1,), (JVMOpcode.RETURN,)))
+        state_before = sim.get_state()
+        sim.step()  # push 1 onto stack
+        state_after = sim.get_state()
+
+        # The snapshot taken before step() must NOT reflect the new stack
+        assert state_before.stack == ()
+        assert state_after.stack == (1,)
+
+    def test_execute_simple_program_ok(self) -> None:
+        """execute() runs x = 1 + 2 and returns ok=True with correct final state."""
+        from simulator_protocol import ExecutionResult
+
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.ICONST_1,),
+            (JVMOpcode.ICONST_2,),
+            (JVMOpcode.IADD,),
+            (JVMOpcode.ISTORE_0,),
+            (JVMOpcode.RETURN,),
+        )
+        result = sim.execute(program)
+
+        assert isinstance(result, ExecutionResult)
+        assert result.ok
+        assert result.halted
+        assert result.error is None
+        assert result.final_state.locals[0] == 3
+        assert result.steps == 5
+
+    def test_execute_ireturn_captures_return_value(self) -> None:
+        """execute() stores the IRETURN return value in final_state.return_value."""
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.BIPUSH, 42),
+            (JVMOpcode.IRETURN,),
+        )
+        result = sim.execute(program)
+
+        assert result.ok
+        assert result.final_state.return_value == 42
+
+    def test_execute_traces_contain_step_traces(self) -> None:
+        """execute() populates result.traces with one StepTrace per instruction."""
+        from simulator_protocol import StepTrace
+
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.ICONST_3,),
+            (JVMOpcode.ISTORE_0,),
+            (JVMOpcode.RETURN,),
+        )
+        result = sim.execute(program)
+
+        assert len(result.traces) == 3
+        for trace in result.traces:
+            assert isinstance(trace, StepTrace)
+            assert isinstance(trace.mnemonic, str)
+            assert len(trace.mnemonic) > 0
+
+    def test_reset_clears_state(self) -> None:
+        """reset() restores the simulator to its initial power-on state."""
+        sim = JVMSimulator()
+        program = assemble_jvm(
+            (JVMOpcode.ICONST_5,),
+            (JVMOpcode.ISTORE_0,),
+            (JVMOpcode.RETURN,),
+        )
+        sim.execute(program)
+
+        # After execution the simulator is halted with locals[0] = 5
+        assert sim.halted
+        assert sim.locals[0] == 5
+
+        sim.reset()
+
+        assert not sim.halted
+        assert sim.stack == []
+        assert sim.locals[0] is None
+        assert sim.pc == 0
+        assert sim.return_value is None
+
+
+class TestDisassembledMethodFacade:
+    """Verify the simulator's disassembled-bytecode API."""
+
+    def test_load_method_executes_disassembled_body(self) -> None:
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.ICONST_1,),
+                (JVMOpcode.ICONST_2,),
+                (JVMOpcode.IADD,),
+                (JVMOpcode.IRETURN,),
+            ),
+            max_stack=2,
+            max_locals=0,
+        )
+
+        sim = JVMSimulator()
+        sim.load_method(method)
+        traces = sim.run()
+
+        assert sim.halted is True
+        assert sim.return_value == 3
+        assert traces[-1].opcode == "ireturn"
+
+    def test_load_method_supports_real_constant_pool_indices(self) -> None:
+        method = disassemble_method_body(
+            assemble_jvm((JVMOpcode.LDC, 9), (JVMOpcode.IRETURN,)),
+            max_stack=1,
+            max_locals=0,
+            constant_pool={9: 300},
+        )
+
+        sim = JVMSimulator()
+        sim.load_method(method)
+        sim.run()
+
+        assert sim.return_value == 300
+
+    def test_load_method_with_host_executes_getstatic_and_invokevirtual(self) -> None:
+        host = _FakeHost()
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.GETSTATIC, 7),
+                (JVMOpcode.LDC, 13),
+                (JVMOpcode.INVOKEVIRTUAL, 15),
+                (JVMOpcode.RETURN,),
+            ),
+            max_stack=2,
+            max_locals=0,
+            constant_pool={
+                7: "java/lang/System.out",
+                13: "Hello, world!",
+                15: _FakeMethodRef("(Ljava/lang/String;)V"),
+            },
+        )
+
+        sim = JVMSimulator(host=host)
+        sim.load_method(method)
+        traces = sim.run()
+
+        assert sim.halted is True
+        assert host.calls == [
+            ("get_static", "java/lang/System.out", []),
+            ("invoke_virtual", {"kind": "print-stream"}, ["Hello, world!"]),
+        ]
+        assert [trace.opcode for trace in traces] == [
+            "getstatic",
+            "ldc",
+            "invokevirtual",
+            "return",
+        ]
+
+    def test_host_required_for_getstatic(self) -> None:
+        method = disassemble_method_body(
+            assemble_jvm((JVMOpcode.GETSTATIC, 7), (JVMOpcode.RETURN,)),
+            constant_pool={7: "java/lang/System.out"},
+        )
+        sim = JVMSimulator()
+        sim.load_method(method)
+
+        with pytest.raises(RuntimeError, match="No JVM host is configured"):
+            sim.step()
+
+
+# ===========================================================================
+# New opcode tests (v0.2.0)
+# ===========================================================================
+
+
+class TestIconstM1:
+    """iconst_m1 pushes the integer -1."""
+
+    def test_iconst_m1_pushes_minus_one(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x02, 0xAC]))  # iconst_m1, ireturn
+        sim.run()
+        assert sim.return_value == -1
+
+    def test_iconst_m1_trace_shows_minus_one(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x02, 0xB1]))  # iconst_m1, return
+        traces = sim.run()
+        assert traces[0].stack_after == [-1]
+
+
+class TestNop:
+    """nop (0x00) advances PC without touching the stack."""
+
+    def test_nop_does_not_change_stack(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x00, 0x04, 0xAC]))  # nop, iconst_1, ireturn
+        sim.run()
+        assert sim.return_value == 1
+
+
+class TestPop:
+    """pop discards the top of the operand stack."""
+
+    def test_pop_removes_top(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x04, 0x05, 0x57, 0xAC]))  # iconst_1, iconst_2, pop, ireturn
+        sim.run()
+        assert sim.return_value == 1  # iconst_1 survives; iconst_2 was popped
+
+    def test_pop_stack_underflow_raises(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x57, 0xB1]))  # pop on empty stack, return
+        with pytest.raises(RuntimeError, match="Stack underflow"):
+            sim.step()
+
+
+class TestBitwiseOps:
+    """ishl, ishr, iand, ior perform bitwise integer operations."""
+
+    def test_ishl(self) -> None:
+        # 1 << 3 = 8
+        sim = JVMSimulator()
+        sim.load(bytes([0x04, 0x06, 0x78, 0xAC]))  # iconst_1, iconst_3, ishl, ireturn
+        sim.run()
+        assert sim.return_value == 8
+
+    def test_ishr(self) -> None:
+        # 8 >> 2 = 2
+        sim = JVMSimulator()
+        sim.load(bytes([0x10, 0x08, 0x05, 0x7A, 0xAC]))  # bipush 8, iconst_2, ishr, ireturn
+        sim.run()
+        assert sim.return_value == 2
+
+    def test_iand(self) -> None:
+        # 5 & 3 = 1
+        sim = JVMSimulator()
+        sim.load(bytes([0x08, 0x06, 0x7E, 0xAC]))  # iconst_5, iconst_3
+        sim.run()
+        assert sim.return_value == 1
+
+    def test_ior(self) -> None:
+        # 5 | 2 = 7
+        sim = JVMSimulator()
+        sim.load(bytes([0x08, 0x05, 0x80, 0xAC]))  # iconst_5, iconst_2, ior, ireturn
+        sim.run()
+        assert sim.return_value == 7
+
+
+class TestI2B:
+    """i2b narrows an int to a signed byte (sign-extends lowest 8 bits)."""
+
+    def test_i2b_positive_unchanged(self) -> None:
+        # 65 stays 65
+        sim = JVMSimulator()
+        sim.load(bytes([0x10, 0x41, 0x91, 0xAC]))  # bipush 65, i2b, ireturn
+        sim.run()
+        assert sim.return_value == 65
+
+    def test_i2b_wraps_to_negative(self) -> None:
+        # 0xFF = 255 → signed byte = -1
+        sim = JVMSimulator()
+        sim.load(bytes([0x10, 0xFF, 0x91, 0xAC]))  # bipush 0xFF, i2b, ireturn
+        sim.run()
+        assert sim.return_value == -1
+
+    def test_i2b_128_becomes_negative_128(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x10, 0x80, 0x91, 0xAC]))  # bipush 0x80, i2b, ireturn
+        sim.run()
+        assert sim.return_value == -128
+
+
+class TestIfeqIfne:
+    """ifeq / ifne branch on the top-of-stack value compared to 0."""
+
+    def test_ifeq_branches_when_zero(self) -> None:
+        # iconst_0; ifeq +3 (skip next); iconst_1; return
+        bytecode = bytes([
+            0x03,        # iconst_0
+            0x99, 0x00, 0x05,  # ifeq +5  (jump to return)
+            0x04,        # iconst_1
+            0xAC,        # ireturn  ← SKIPPED
+            0x03,        # iconst_0  ← TAKEN
+            0xAC,        # ireturn
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 0  # branched to iconst_0+ireturn
+
+    def test_ifeq_falls_through_when_nonzero(self) -> None:
+        bytecode = bytes([
+            0x04,               # iconst_1
+            0x99, 0x00, 0x05,   # ifeq +5
+            0x05,               # iconst_2  ← TAKEN (falls through)
+            0xAC,               # ireturn
+            0x03,               # iconst_0
+            0xAC,               # ireturn
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 2
+
+    def test_ifne_branches_when_nonzero(self) -> None:
+        bytecode = bytes([
+            0x04,               # iconst_1
+            0x9A, 0x00, 0x05,   # ifne +5  (jump to second ireturn)
+            0x03,               # iconst_0
+            0xAC,               # ireturn  ← SKIPPED
+            0x05,               # iconst_2  ← TAKEN
+            0xAC,               # ireturn
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 2
+
+    def test_ifeq_stack_underflow_raises(self) -> None:
+        sim = JVMSimulator()
+        sim.load(bytes([0x99, 0x00, 0x03, 0xB1]))  # ifeq with empty stack
+        with pytest.raises(RuntimeError, match="Stack underflow"):
+            sim.step()
+
+
+class TestIfIcmpLtNe:
+    """if_icmplt and if_icmpne branch on two-operand comparisons."""
+
+    def test_if_icmplt_branches_when_less_than(self) -> None:
+        # 2 < 5 → branch
+        bytecode = bytes([
+            0x05, 0x08,           # iconst_2, iconst_5
+            0xA1, 0x00, 0x05,     # if_icmplt +5
+            0x04, 0xAC,           # iconst_1, ireturn
+            0x05, 0xAC,           # iconst_2, ireturn  ← TAKEN
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 2
+
+    def test_if_icmplt_falls_through_when_not_less(self) -> None:
+        # 5 < 2 → false → fall through
+        bytecode = bytes([
+            0x08, 0x05,           # iconst_5, iconst_2
+            0xA1, 0x00, 0x05,     # if_icmplt +5
+            0x04, 0xAC,           # iconst_1, ireturn  ← TAKEN
+            0x05, 0xAC,           # iconst_2, ireturn
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 1
+
+    def test_if_icmpne_branches_when_not_equal(self) -> None:
+        # 3 != 4 → branch
+        bytecode = bytes([
+            0x06, 0x07,           # iconst_3, iconst_4
+            0xA0, 0x00, 0x05,     # if_icmpne +5
+            0x04, 0xAC,           # iconst_1, ireturn
+            0x05, 0xAC,           # iconst_2, ireturn  ← TAKEN
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 2
+
+    def test_if_icmpne_falls_through_when_equal(self) -> None:
+        # 4 == 4 → fall through
+        bytecode = bytes([
+            0x07, 0x07,           # iconst_4, iconst_4
+            0xA0, 0x00, 0x05,     # if_icmpne +5
+            0x04, 0xAC,           # iconst_1, ireturn  ← TAKEN
+            0x05, 0xAC,           # iconst_2, ireturn
+        ])
+        sim = JVMSimulator()
+        sim.load(bytecode)
+        sim.run()
+        assert sim.return_value == 1
+
+
+
+# ---------------------------------------------------------------------------
+# Mock field/method reference objects.  The simulator treats these as opaque
+# dict keys and only reads the `descriptor` attribute on method references
+# for argument-count inference.  We keep them here rather than importing
+# jvm_class_file so this package does not need jvm_class_file in its BUILD.
+# ---------------------------------------------------------------------------
+
+from dataclasses import dataclass as _dc
+
+
+@_dc(frozen=True)
+class _FieldRef:
+    class_name: str
+    name: str
+    descriptor: str
+
+
+@_dc(frozen=True)
+class _MethodRef:
+    class_name: str
+    name: str
+    descriptor: str
+
+
+class TestStaticFields:
+    """putstatic stores values in static_fields; getstatic reads them back."""
+
+    def test_putstatic_stores_value(self) -> None:
+        field_ref = _FieldRef("TestClass", "myField", "I")
+        host = _FakeHost()
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.ICONST_5,),
+                (JVMOpcode.PUTSTATIC, 10),
+                (JVMOpcode.RETURN,),
+            ),
+            constant_pool={10: field_ref},
+        )
+        sim = JVMSimulator(host=host)
+        sim.load_method(method)
+        sim.run()
+        assert sim.static_fields[field_ref] == 5
+
+    def test_getstatic_reads_from_static_fields_first(self) -> None:
+        """getstatic should return the value in static_fields before trying host."""
+        field_ref = _FieldRef("TestClass", "counter", "I")
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.GETSTATIC, 10),
+                (JVMOpcode.IRETURN,),
+            ),
+            constant_pool={10: field_ref},
+        )
+        sim = JVMSimulator()
+        sim.static_fields[field_ref] = 42
+        sim.load_method(method)
+        sim.run()
+        assert sim.return_value == 42
+
+    def test_static_fields_survive_load_method(self) -> None:
+        """load_method must not reset static_fields."""
+        sim = JVMSimulator()
+        ref = _FieldRef("A", "x", "I")
+        sim.static_fields[ref] = 99
+        sim.load(bytes([0xB1]))  # return
+        assert sim.static_fields[ref] == 99
+
+    def test_static_fields_survive_reset(self) -> None:
+        """reset() clears per-method state but must NOT wipe static_fields."""
+        sim = JVMSimulator()
+        ref = _FieldRef("A", "y", "I")
+        sim.static_fields[ref] = 7
+        sim.reset()
+        assert sim.static_fields[ref] == 7
+
+    def test_shared_static_fields_dict_is_visible_to_multiple_simulators(self) -> None:
+        """Two simulators sharing the same dict see each other's writes."""
+        shared: dict = {}
+        ref = _FieldRef("Foo", "val", "I")
+
+        writer = JVMSimulator(static_fields=shared)
+        writer.static_fields[ref] = 123
+
+        reader = JVMSimulator(static_fields=shared)
+        assert reader.static_fields[ref] == 123
+
+
+class TestInvokestatic:
+    """invokestatic dispatches to host.invoke_static with args and static_fields."""
+
+    class _InvokeStaticHost:
+        """Records invokestatic calls and returns a fixed value."""
+
+        def __init__(self, return_value: object | None = None) -> None:
+            self.calls: list[tuple] = []
+            self._return_value = return_value
+
+        def get_static(self, reference: object) -> object:
+            return {"stream": True}
+
+        def invoke_static(
+            self,
+            reference: object,
+            static_fields: dict,
+            args: list[object],
+        ) -> object | None:
+            self.calls.append((reference, static_fields, list(args)))
+            return self._return_value
+
+    def test_invokestatic_void_method_passes_args(self) -> None:
+        method_ref = _MethodRef("Foo", "bar", "(II)V")
+        host = self._InvokeStaticHost(return_value=None)
+
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.ICONST_3,),
+                (JVMOpcode.ICONST_4,),
+                (JVMOpcode.INVOKESTATIC, 5),
+                (JVMOpcode.RETURN,),
+            ),
+            constant_pool={5: method_ref},
+        )
+        sim = JVMSimulator(host=host)
+        sim.load_method(method)
+        sim.run()
+        assert len(host.calls) == 1
+        ref, sf, args = host.calls[0]
+        assert ref is method_ref
+        assert args == [3, 4]
+
+    def test_invokestatic_with_return_value_pushes_result(self) -> None:
+        method_ref = _MethodRef("Foo", "getValue", "()I")
+        host = self._InvokeStaticHost(return_value=99)
+
+        method = disassemble_method_body(
+            assemble_jvm(
+                (JVMOpcode.INVOKESTATIC, 5),
+                (JVMOpcode.IRETURN,),
+            ),
+            constant_pool={5: method_ref},
+        )
+        sim = JVMSimulator(host=host)
+        sim.load_method(method)
+        sim.run()
+        assert sim.return_value == 99
+
+    def test_invokestatic_passes_static_fields_dict(self) -> None:
+        method_ref = _MethodRef("X", "m", "()V")
+        host = self._InvokeStaticHost(return_value=None)
+        shared: dict = {}
+        ref = _FieldRef("X", "f", "I")
+        shared[ref] = 77
+
+        method = disassemble_method_body(
+            assemble_jvm((JVMOpcode.INVOKESTATIC, 5), (JVMOpcode.RETURN,)),
+            constant_pool={5: method_ref},
+        )
+        sim = JVMSimulator(host=host, static_fields=shared)
+        sim.load_method(method)
+        sim.run()
+        _, sf, _ = host.calls[0]
+        assert sf is shared
+
+    def test_invokestatic_no_host_raises(self) -> None:
+        method_ref = _MethodRef("X", "m", "()V")
+        method = disassemble_method_body(
+            assemble_jvm((JVMOpcode.INVOKESTATIC, 5), (JVMOpcode.RETURN,)),
+            constant_pool={5: method_ref},
+        )
+        sim = JVMSimulator()  # no host
+        sim.load_method(method)
+        with pytest.raises(RuntimeError, match="No JVM host is configured for invokestatic"):
+            sim.step()
+
+
+class TestArrayOps:
+    """newarray, iaload, iastore, baload, bastore operate on Python lists."""
+
+    def test_newarray_creates_array_of_correct_size(self) -> None:
+        # iconst_3; newarray T_INT; istore_0; iload_0; iconst_2; iaload; ireturn
+        # Array of size 3, access element at index 2 (default 0)
+        bytecode = bytearray()
+        bytecode += bytes([0x06])        # iconst_3
+        bytecode += bytes([0xBC, 0x0A])  # newarray T_INT=10
+        bytecode += bytes([0x3B])        # istore_0
+        bytecode += bytes([0x1A])        # iload_0
+        bytecode += bytes([0x05])        # iconst_2
+        bytecode += bytes([0x2E])        # iaload
+        bytecode += bytes([0xAC])        # ireturn
+        sim = JVMSimulator()
+        sim.load(bytes(bytecode), num_locals=4)
+        sim.run()
+        assert sim.return_value == 0  # default value
+
+    def test_newarray_and_iastore_and_iaload(self) -> None:
+        # new int[3]; a[1] = 42; return a[1]
+        bytecode = bytearray()
+        bytecode += bytes([0x06])        # iconst_3
+        bytecode += bytes([0xBC, 0x0A])  # newarray T_INT=10
+        bytecode += bytes([0x3B])        # istore_0
+        bytecode += bytes([0x1A])        # iload_0
+        bytecode += bytes([0x04])        # iconst_1
+        bytecode += bytes([0x10, 42])    # bipush 42
+        bytecode += bytes([0x4F])        # iastore
+        bytecode += bytes([0x1A])        # iload_0
+        bytecode += bytes([0x04])        # iconst_1
+        bytecode += bytes([0x2E])        # iaload
+        bytecode += bytes([0xAC])        # ireturn
+        sim = JVMSimulator()
+        sim.load(bytes(bytecode), num_locals=4)
+        sim.run()
+        assert sim.return_value == 42
+
+    def test_newarray_and_bastore_and_baload(self) -> None:
+        # new byte[4]; b[2] = 0xFF; return b[2] (sign-extended = -1)
+        bytecode = bytearray()
+        bytecode += bytes([0x07])        # iconst_4
+        bytecode += bytes([0xBC, 0x08])  # newarray T_BYTE=8
+        bytecode += bytes([0x3B])        # istore_0
+        bytecode += bytes([0x1A])        # iload_0
+        bytecode += bytes([0x05])        # iconst_2
+        bytecode += bytes([0x10, 0xFF])  # bipush 0xFF
+        bytecode += bytes([0x54])        # bastore
+        bytecode += bytes([0x1A])        # iload_0
+        bytecode += bytes([0x05])        # iconst_2
+        bytecode += bytes([0x33])        # baload
+        bytecode += bytes([0xAC])        # ireturn
+        sim = JVMSimulator()
+        sim.load(bytes(bytecode), num_locals=4)
+        sim.run()
+        assert sim.return_value == -1  # 0xFF sign-extended
+
+    def test_iaload_out_of_bounds_raises(self) -> None:
+        bytecode = bytearray()
+        bytecode += bytes([0x03])        # iconst_0 (size = 0)
+        bytecode += bytes([0xBC, 0x0A])  # newarray T_INT
+        bytecode += bytes([0x03])        # iconst_0 (index 0 is out of bounds for empty array)
+        bytecode += bytes([0x2E])        # iaload
+        bytecode += bytes([0xAC])
+        sim = JVMSimulator()
+        sim.load(bytes(bytecode))
+        with pytest.raises(RuntimeError, match="ArrayIndexOutOfBoundsException"):
+            sim.run()
+
+    def test_iastore_out_of_bounds_raises(self) -> None:
+        bytecode = bytearray()
+        bytecode += bytes([0x03])        # iconst_0 (size = 0)
+        bytecode += bytes([0xBC, 0x0A])  # newarray T_INT
+        bytecode += bytes([0x03])        # iconst_0 (index)
+        bytecode += bytes([0x04])        # iconst_1 (value)
+        bytecode += bytes([0x4F])        # iastore
+        bytecode += bytes([0xB1])
+        sim = JVMSimulator()
+        sim.load(bytes(bytecode))
+        with pytest.raises(RuntimeError, match="ArrayIndexOutOfBoundsException"):
+            sim.run()

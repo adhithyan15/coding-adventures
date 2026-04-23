@@ -1,0 +1,639 @@
+# Parser grammar for VHDL (IEEE 1076-1987)
+#
+# Baseline note: this edition currently starts from the shared VHDL 2008 parser grammar.
+# Edition-specific deltas can be tightened incrementally without changing package APIs.
+#
+# Synthesizable subset â€" constructs that map to real digital hardware.
+#
+# VHDL takes a fundamentally different approach to hardware description
+# than Verilog. Where Verilog is implicit and concise (like C), VHDL is
+# explicit and verbose (like Ada). Every signal must be declared with its
+# type. Every entity must have a separate architecture. Every port must
+# specify its direction and type.
+#
+# This verbosity is intentional: it catches errors at compile time that
+# would be silent bugs in Verilog. VHDL's strong type system means that
+# connecting an 8-bit signal to a 16-bit port is a compile error, not a
+# silent truncation.
+#
+# VHDL Terminology vs Verilog:
+#
+#   +-------------------+--------------------+
+#   | VHDL              | Verilog            |
+#   +-------------------+--------------------+
+#   | entity            | module (interface) |
+#   | architecture      | module (body)      |
+#   | signal            | wire/reg           |
+#   | variable          | (inside process)   |
+#   | process           | always block       |
+#   | port map          | instance ports     |
+#   | generic           | parameter          |
+#   | <=                | <= (non-blocking)   |
+#   | :=                | = (blocking)        |
+#   +-------------------+--------------------+
+#
+# Format: rule_name = definition ;
+#
+# UPPERCASE names reference tokens from vhdl.tokens
+# lowercase names reference other grammar rules
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional
+#   ( x )   grouping
+#   "lit"   literal token match (keyword)
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+#
+# A VHDL source file contains one or more design units. Each design unit
+# can be preceded by context clauses (library and use statements).
+#
+# Example:
+#   library IEEE;
+#   use IEEE.std_logic_1164.all;
+#
+#   entity my_and is
+#     port (a, b : in std_logic; y : out std_logic);
+#   end entity my_and;
+#
+#   architecture rtl of my_and is
+#   begin
+#     y <= a and b;
+#   end architecture rtl;
+
+design_file = { design_unit } ;
+
+design_unit = { context_item } library_unit ;
+
+context_item = library_clause | use_clause ;
+
+# library IEEE; â€" makes the IEEE library visible
+library_clause = "library" name_list SEMICOLON ;
+
+# use IEEE.std_logic_1164.all; â€" imports all names from a package
+use_clause = "use" selected_name SEMICOLON ;
+
+# Dotted name path: IEEE.std_logic_1164.all
+selected_name = NAME { DOT ( NAME | "all" ) } ;
+
+name_list = NAME { COMMA NAME } ;
+
+library_unit = entity_declaration
+             | architecture_body
+             | package_declaration
+             | package_body ;
+
+# ============================================================================
+# Entity Declaration
+# ============================================================================
+#
+# An entity defines the INTERFACE of a hardware block â€" its inputs,
+# outputs, and configuration parameters (generics). Think of it as
+# the pin diagram on an IC datasheet.
+#
+# The entity says WHAT the component does (its ports) but not HOW
+# (that's the architecture's job).
+#
+#   entity full_adder is
+#     generic (DELAY : time := 1 ns);
+#     port (
+#       a, b, cin : in  std_logic;
+#       sum, cout : out std_logic
+#     );
+#   end entity full_adder;
+#
+# Generics are compile-time parameters (like Verilog's #(parameter ...)):
+#   entity memory is
+#     generic (ADDR_WIDTH : integer := 8;
+#              DATA_WIDTH : integer := 32);
+#     port (...);
+#   end entity memory;
+
+entity_declaration = "entity" NAME "is"
+                     [ generic_clause ]
+                     [ port_clause ]
+                     "end" [ "entity" ] [ NAME ] SEMICOLON ;
+
+generic_clause = "generic" LPAREN interface_list RPAREN SEMICOLON ;
+port_clause    = "port" LPAREN interface_list RPAREN SEMICOLON ;
+
+# Interface list: shared by both ports and generics.
+#   a, b : in std_logic;
+#   data : out std_logic_vector(7 downto 0) := (others => '0')
+interface_list    = interface_element { SEMICOLON interface_element } ;
+interface_element = name_list COLON [ mode ] subtype_indication
+                    [ VAR_ASSIGN expression ] ;
+
+# Port modes:
+#   in     â€" input only (read inside architecture)
+#   out    â€" output only (write inside architecture)
+#   inout  â€" bidirectional (read and write)
+#   buffer â€" output that can also be read back internally
+mode = "in" | "out" | "inout" | "buffer" ;
+
+# ============================================================================
+# Architecture Body
+# ============================================================================
+#
+# An architecture defines the IMPLEMENTATION of an entity. The same entity
+# can have multiple architectures (e.g., behavioral, structural, rtl).
+#
+# The architecture has two parts:
+#   1. Declarative region (before BEGIN) â€" signal declarations, types, etc.
+#   2. Statement region (after BEGIN) â€" concurrent statements
+#
+#   architecture rtl of full_adder is
+#     signal carry_gen, carry_prop : std_logic;  -- declarations
+#   begin
+#     carry_gen  <= a and b;                     -- concurrent statements
+#     carry_prop <= a xor b;
+#     sum        <= carry_prop xor cin;
+#     cout       <= carry_gen or (carry_prop and cin);
+#   end architecture rtl;
+
+architecture_body = "architecture" NAME "of" NAME "is"
+                    { block_declarative_item }
+                    "begin"
+                    { concurrent_statement }
+                    "end" [ "architecture" ] [ NAME ] SEMICOLON ;
+
+block_declarative_item = signal_declaration
+                       | constant_declaration
+                       | type_declaration
+                       | subtype_declaration
+                       | component_declaration
+                       | function_declaration
+                       | function_body
+                       | procedure_declaration
+                       | procedure_body ;
+
+# ============================================================================
+# Declarations
+# ============================================================================
+#
+# Signals vs Variables:
+#
+# A signal represents a physical wire or register. Signal assignments (<=)
+# take effect after a delta delay â€" all concurrent assignments in a single
+# simulation step see the OLD values. This models real hardware where all
+# flip-flops clock simultaneously.
+#
+# A variable exists only inside a process. Variable assignments (:=) take
+# effect immediately â€" like software variables. Variables are used for
+# intermediate calculations within a process.
+#
+#   signal   clk     : std_logic;                    -- physical wire
+#   signal   counter : unsigned(7 downto 0) := x"00"; -- with default
+#   constant ZERO    : std_logic := '0';             -- compile-time constant
+
+signal_declaration   = "signal" name_list COLON subtype_indication
+                       [ VAR_ASSIGN expression ] SEMICOLON ;
+constant_declaration = "constant" name_list COLON subtype_indication
+                       VAR_ASSIGN expression SEMICOLON ;
+variable_declaration = "variable" name_list COLON subtype_indication
+                       [ VAR_ASSIGN expression ] SEMICOLON ;
+
+# ============================================================================
+# Type System (Synthesizable Subset)
+# ============================================================================
+#
+# VHDL's type system is much richer than Verilog's. Types are explicitly
+# declared, and implicit conversions are errors.
+#
+# Enumeration types:
+#   type state_t is (IDLE, RUNNING, DONE, ERROR);
+#   type std_logic is ('U','X','0','1','Z','W','L','H','-');
+#
+# Array types:
+#   type mem_t is array (0 to 255) of std_logic_vector(7 downto 0);
+#   type byte_array is array (natural range <>) of byte;
+#
+# Record types:
+#   type packet_t is record
+#     addr : std_logic_vector(31 downto 0);
+#     data : std_logic_vector(63 downto 0);
+#     valid : std_logic;
+#   end record packet_t;
+
+type_declaration    = "type" NAME "is" type_definition SEMICOLON ;
+subtype_declaration = "subtype" NAME "is" subtype_indication SEMICOLON ;
+
+type_definition = enumeration_type
+                | array_type
+                | record_type ;
+
+# Enumeration: list of named values or character literals.
+# std_logic is defined this way in the IEEE library.
+enumeration_type = LPAREN ( NAME | CHAR_LITERAL )
+                   { COMMA ( NAME | CHAR_LITERAL ) } RPAREN ;
+
+# Array: indexed collection of elements.
+# The range can be constrained (0 to 255) or unconstrained (natural range <>).
+array_type = "array" LPAREN index_constraint RPAREN "of" subtype_indication ;
+
+index_constraint = discrete_range { COMMA discrete_range } ;
+discrete_range   = subtype_indication
+                 | expression ( "to" | "downto" ) expression ;
+
+# Record: named fields (like C struct).
+record_type = "record"
+              { NAME COLON subtype_indication SEMICOLON }
+              "end" "record" [ NAME ] ;
+
+# Subtype indication: a type name with optional constraint.
+#   std_logic_vector(7 downto 0)
+#   integer range 0 to 255
+#   unsigned(WIDTH-1 downto 0)
+subtype_indication = selected_name [ constraint ] ;
+
+constraint = LPAREN expression ( "to" | "downto" ) expression RPAREN
+           | "range" expression ( "to" | "downto" ) expression ;
+
+# ============================================================================
+# Concurrent Statements
+# ============================================================================
+#
+# Everything in the statement region of an architecture executes
+# CONCURRENTLY â€" all statements are "running" simultaneously, just
+# like gates on a circuit board are all operating at once.
+#
+# This is the fundamental difference from software: there is no
+# sequential execution order for concurrent statements. The order
+# they appear in the source code does not matter.
+
+concurrent_statement = process_statement
+                     | signal_assignment_concurrent
+                     | component_instantiation
+                     | generate_statement ;
+
+# Concurrent signal assignment:
+#   y <= a and b;
+#   mux_out <= a when sel = '1' else b;
+signal_assignment_concurrent = NAME LESS_EQUALS waveform SEMICOLON ;
+
+waveform = waveform_element { COMMA waveform_element } ;
+waveform_element = expression ;
+
+# ============================================================================
+# Process Statement
+# ============================================================================
+#
+# A process is a sequential region inside the concurrent world. Inside
+# a process, statements execute TOP TO BOTTOM (like software). But the
+# process itself is concurrent with everything outside it.
+#
+# The sensitivity list specifies which signals trigger the process:
+#   process (clk)          â€" re-evaluate when clk changes
+#   process (a, b, sel)    â€" re-evaluate when any input changes
+#
+# Sequential logic (flip-flop):
+#   process (clk)
+#   begin
+#     if rising_edge(clk) then
+#       q <= d;
+#     end if;
+#   end process;
+#
+# Combinational logic (mux):
+#   process (a, b, sel)
+#   begin
+#     if sel = '1' then
+#       y <= a;
+#     else
+#       y <= b;
+#     end if;
+#   end process;
+
+process_statement = [ NAME COLON ]
+                    "process" [ LPAREN sensitivity_list RPAREN ]
+                    [ "is" ]
+                    { process_declarative_item }
+                    "begin"
+                    { sequential_statement }
+                    "end" "process" [ NAME ] SEMICOLON ;
+
+sensitivity_list = NAME { COMMA NAME } ;
+
+process_declarative_item = variable_declaration
+                         | constant_declaration
+                         | type_declaration
+                         | subtype_declaration ;
+
+# ============================================================================
+# Sequential Statements
+# ============================================================================
+#
+# Sequential statements appear inside processes, functions, and procedures.
+# They execute in order, like software code.
+
+sequential_statement = signal_assignment_seq
+                     | variable_assignment
+                     | if_statement
+                     | case_statement
+                     | loop_statement
+                     | return_statement
+                     | null_statement ;
+
+# Signal assignment (<=) inside a process:
+#   q <= d;
+# Note: even though this looks identical to concurrent signal assignment,
+# it behaves differently. Inside a process, multiple assignments to the
+# same signal are legal â€" only the LAST one takes effect.
+signal_assignment_seq = NAME LESS_EQUALS waveform SEMICOLON ;
+
+# Variable assignment (:=) â€" immediate effect:
+#   temp := a + b;
+variable_assignment = NAME VAR_ASSIGN expression SEMICOLON ;
+
+# If/elsif/else:
+#   if rising_edge(clk) then
+#     if reset = '1' then
+#       count <= (others => '0');
+#     elsif enable = '1' then
+#       count <= count + 1;
+#     end if;
+#   end if;
+if_statement = "if" expression "then"
+               { sequential_statement }
+               { "elsif" expression "then" { sequential_statement } }
+               [ "else" { sequential_statement } ]
+               "end" "if" SEMICOLON ;
+
+# Case/when:
+#   case state is
+#     when IDLE    => next_state <= RUNNING;
+#     when RUNNING => next_state <= DONE;
+#     when others  => next_state <= IDLE;
+#   end case;
+#
+# Note: VHDL uses => (arrow) after when, not : (colon) like Verilog.
+# Also, VHDL requires "when others" (like Verilog's "default") to
+# cover all possible values â€" incomplete case statements are errors.
+case_statement = "case" expression "is"
+                 { "when" choices ARROW { sequential_statement } }
+                 "end" "case" SEMICOLON ;
+
+choices = choice { PIPE choice } ;
+choice  = expression
+        | discrete_range
+        | "others" ;
+
+# Loop statements:
+#   -- For loop (synthesis unrolls into parallel hardware)
+#   for i in 0 to 7 loop
+#     data(i) <= '0';
+#   end loop;
+#
+#   -- While loop (generally not synthesizable)
+#   while count < 10 loop
+#     count := count + 1;
+#   end loop;
+loop_statement = [ NAME COLON ]
+                 [ "for" NAME "in" discrete_range
+                 | "while" expression ]
+                 "loop"
+                 { sequential_statement }
+                 "end" "loop" [ NAME ] SEMICOLON ;
+
+return_statement = "return" [ expression ] SEMICOLON ;
+null_statement   = "null" SEMICOLON ;
+
+# ============================================================================
+# Component Declaration and Instantiation
+# ============================================================================
+#
+# Components are VHDL's mechanism for structural design â€" connecting
+# instances of other entities together, like placing ICs on a board.
+#
+# Step 1: Declare the component (what it looks like):
+#   component full_adder is
+#     port (a, b, cin : in std_logic; sum, cout : out std_logic);
+#   end component full_adder;
+#
+# Step 2: Instantiate it (place and wire it):
+#   adder0 : full_adder port map (
+#     a    => x(0),
+#     b    => y(0),
+#     cin  => '0',
+#     sum  => s(0),
+#     cout => carry(0)
+#   );
+#
+# Or using direct entity instantiation (VHDL-93):
+#   adder0 : entity work.full_adder port map (...);
+
+component_declaration = "component" NAME [ "is" ]
+                        [ generic_clause ]
+                        [ port_clause ]
+                        "end" "component" [ NAME ] SEMICOLON ;
+
+component_instantiation = NAME COLON
+                          ( NAME
+                          | "entity" selected_name [ LPAREN NAME RPAREN ] )
+                          [ "generic" "map" LPAREN association_list RPAREN ]
+                          [ "port" "map" LPAREN association_list RPAREN ]
+                          SEMICOLON ;
+
+association_list    = association_element { COMMA association_element } ;
+association_element = [ NAME ARROW ] expression
+                    | [ NAME ARROW ] "open" ;
+
+# ============================================================================
+# Generate Statements
+# ============================================================================
+#
+# Generate creates parameterized, replicated hardware â€" like Verilog's
+# generate blocks.
+#
+# For-generate (creates N copies):
+#   gen_adders : for i in 0 to 7 generate
+#     adder_i : full_adder port map (
+#       a => a(i), b => b(i), cin => carry(i),
+#       sum => sum(i), cout => carry(i+1)
+#     );
+#   end generate gen_adders;
+#
+# If-generate (conditional hardware):
+#   gen_parity : if USE_PARITY generate
+#     parity_check : entity work.parity_checker port map (...);
+#   end generate gen_parity;
+
+generate_statement = NAME COLON ( for_generate | if_generate ) ;
+
+for_generate = "for" NAME "in" discrete_range "generate"
+               { concurrent_statement }
+               "end" "generate" [ NAME ] SEMICOLON ;
+
+if_generate = "if" expression "generate"
+              { concurrent_statement }
+              "end" "generate" [ NAME ] SEMICOLON ;
+
+# ============================================================================
+# Package Declaration and Body
+# ============================================================================
+#
+# Packages group related declarations (types, constants, functions) for
+# reuse across multiple entities. The IEEE standard library packages
+# (std_logic_1164, numeric_std) are defined this way.
+#
+#   package my_types is
+#     type state_t is (IDLE, RUNNING, DONE);
+#     constant MAX_COUNT : integer := 255;
+#   end package my_types;
+#
+#   package body my_types is
+#     -- function implementations go here
+#   end package body my_types;
+
+package_declaration = "package" NAME "is"
+                      { package_declarative_item }
+                      "end" [ "package" ] [ NAME ] SEMICOLON ;
+
+package_body = "package" "body" NAME "is"
+               { package_body_declarative_item }
+               "end" [ "package" "body" ] [ NAME ] SEMICOLON ;
+
+package_declarative_item = type_declaration
+                         | subtype_declaration
+                         | constant_declaration
+                         | signal_declaration
+                         | component_declaration
+                         | function_declaration
+                         | procedure_declaration ;
+
+package_body_declarative_item = type_declaration
+                              | subtype_declaration
+                              | constant_declaration
+                              | function_body
+                              | procedure_body ;
+
+# ============================================================================
+# Function and Procedure Declarations
+# ============================================================================
+#
+# Functions return a value (pure computation):
+#   function rising_edge(signal s : std_logic) return boolean;
+#
+# Procedures can have in, out, and inout parameters:
+#   procedure reset_counter(signal count : out unsigned);
+
+function_declaration = [ "pure" | "impure" ]
+                       "function" NAME
+                       [ LPAREN interface_list RPAREN ]
+                       "return" subtype_indication SEMICOLON ;
+
+function_body = [ "pure" | "impure" ]
+                "function" NAME
+                [ LPAREN interface_list RPAREN ]
+                "return" subtype_indication "is"
+                { process_declarative_item }
+                "begin"
+                { sequential_statement }
+                "end" [ "function" ] [ NAME ] SEMICOLON ;
+
+procedure_declaration = "procedure" NAME
+                        [ LPAREN interface_list RPAREN ] SEMICOLON ;
+
+procedure_body = "procedure" NAME
+                 [ LPAREN interface_list RPAREN ] "is"
+                 { process_declarative_item }
+                 "begin"
+                 { sequential_statement }
+                 "end" [ "procedure" ] [ NAME ] SEMICOLON ;
+
+# ============================================================================
+# Expressions
+# ============================================================================
+#
+# VHDL operator precedence (lowest to highest):
+#
+#   1. and, or, xor, nand, nor, xnor    Logical
+#   2. =, /=, <, <=, >, >=              Relational
+#   3. sll, srl, sla, sra, rol, ror     Shift
+#   4. +, -, &                          Adding (& is concatenation)
+#   5. *, /, mod, rem                   Multiplying
+#   6. **, abs, not                     Miscellaneous
+#
+# IMPORTANT: VHDL does NOT allow mixing logical operators without
+# parentheses. This is a deliberate language design choice:
+#
+#   a and b or c        -- SYNTAX ERROR!
+#   (a and b) or c      -- OK
+#   a and b and c       -- OK (same operator)
+#
+# The grammar enforces this by making logical_expr a single binary
+# operation (not a repetition). The Python grammar uses { } for
+# repeated binary operators; VHDL intentionally does not.
+#
+# Note on <= disambiguation:
+# In expression context (inside relation), <= is "less than or equal".
+# In statement context (signal_assignment), <= is "signal assignment".
+# The grammar structure naturally separates these: relation is called
+# from within expression, which is never at statement level.
+
+expression = logical_expr ;
+
+# Logical: single binary operation (no mixing without parens).
+# VHDL also allows chaining the SAME operator: a and b and c
+# is legal, but a and b or c is not. We approximate this by
+# allowing repetition (which is slightly more permissive than
+# the IEEE spec â€" semantic analysis would catch mixed operators).
+logical_expr = relation [ logical_op relation ] ;
+logical_op   = "and" | "or" | "xor" | "nand" | "nor" | "xnor" ;
+
+# Relational: comparison operators.
+# <= here means "less than or equal" (NOT signal assignment).
+relation = shift_expr [ relational_op shift_expr ] ;
+relational_op = EQUALS | NOT_EQUALS | LESS_THAN | LESS_EQUALS
+              | GREATER_THAN | GREATER_EQUALS ;
+
+# Shift: bit manipulation operators (keyword operators).
+# sll/srl = logical shift, sla/sra = arithmetic shift, rol/ror = rotate
+shift_expr = adding_expr [ shift_op adding_expr ] ;
+shift_op   = "sll" | "srl" | "sla" | "sra" | "rol" | "ror" ;
+
+# Adding: + - and & (concatenation).
+# Concatenation is at the same precedence as addition.
+adding_expr = multiplying_expr { adding_op multiplying_expr } ;
+adding_op   = PLUS | MINUS | AMPERSAND ;
+
+# Multiplying: * / mod rem
+multiplying_expr = unary_expr { multiplying_op unary_expr } ;
+multiplying_op   = STAR | SLASH | "mod" | "rem" ;
+
+# Unary: abs, not, and sign operators.
+unary_expr = "abs" unary_expr
+           | "not" unary_expr
+           | ( PLUS | MINUS ) unary_expr
+           | power_expr ;
+
+# Power: ** (exponentiation). Right-associative.
+power_expr = primary [ POWER primary ] ;
+
+# ============================================================================
+# Primary Expressions
+# ============================================================================
+#
+# Atoms of the expression tree.
+
+primary = NUMBER
+        | REAL_NUMBER
+        | BASED_LITERAL
+        | STRING
+        | CHAR_LITERAL
+        | BIT_STRING
+        | NAME [ TICK NAME ]
+        | NAME LPAREN [ expression { COMMA expression } ] RPAREN
+        | LPAREN expression RPAREN
+        | aggregate
+        | "null" ;
+
+# Aggregates: construct composite values.
+#   (others => '0')                  â€" fill with zeros
+#   (0 => '1', others => '0')       â€" set bit 0, clear rest
+#   (a, b, c)                       â€" positional
+aggregate = LPAREN element_association { COMMA element_association } RPAREN ;
+element_association = [ choices ARROW ] expression ;

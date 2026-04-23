@@ -1,0 +1,28 @@
+{
+  "name": "@coding-adventures/rpc",
+  "version": "0.1.0",
+  "description": "Codec-agnostic RPC primitive — the abstract layer that json-rpc, msgpack-rpc, and other concrete RPC packages build on top of",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "rpc",
+    "remote-procedure-call",
+    "codec",
+    "framer",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}

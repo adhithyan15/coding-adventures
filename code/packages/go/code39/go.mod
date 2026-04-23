@@ -2,14 +2,10 @@ module github.com/adhithyan15/coding-adventures/code/packages/go/code39
 
 go 1.26
 
-require github.com/adhithyan15/coding-adventures/code/packages/go/draw-instructions v0.0.0
-
-replace github.com/adhithyan15/coding-adventures/code/packages/go/draw-instructions => ../draw-instructions
-
 require (
-	github.com/adhithyan15/coding-adventures/code/packages/go/draw-instructions v0.0.0
+	github.com/adhithyan15/coding-adventures/code/packages/go/barcode-layout-1d v0.0.0
+	github.com/adhithyan15/coding-adventures/code/packages/go/paint-instructions v0.0.0
 )
 
-replace (
-	github.com/adhithyan15/coding-adventures/code/packages/go/draw-instructions => ../draw-instructions
-)
+replace github.com/adhithyan15/coding-adventures/code/packages/go/barcode-layout-1d => ../barcode-layout-1d
+replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-instructions => ../paint-instructions

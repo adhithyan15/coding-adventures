@@ -34,6 +34,7 @@ require_relative "../lib/build_tool/executor"
 require_relative "../lib/build_tool/reporter"
 require_relative "../lib/build_tool/starlark_evaluator"
 require_relative "../lib/build_tool/git_diff"
+require_relative "../lib/build_tool/ci_workflow"
 require_relative "../lib/build_tool/plan"
 require_relative "../lib/build_tool/validator"
 

@@ -35,6 +35,8 @@
  */
 export const VERSION = "0.1.0";
 
+import type { PixelContainer } from "@coding-adventures/pixel-container";
+
 // ============================================================================
 // PaintBase — shared fields on every instruction
 // ============================================================================
@@ -369,6 +371,77 @@ export interface PaintGlyphRun extends PaintBase {
 }
 
 /**
+ * PaintText — a string of text with a font descriptor, positioned at a baseline.
+ *
+ * The sibling of PaintGlyphRun for runtimes that do their own shaping at paint
+ * time and do NOT expose glyph IDs to the caller. The primary consumer is HTML
+ * Canvas 2D (`ctx.fillText(text, x, y)`), which accepts only strings — see
+ * spec TXT03d and the P2D00 "GlyphRun vs Text" section.
+ *
+ * Why two instructions, not one?
+ * ------------------------------
+ *
+ * The font-binding invariant from TXT00 says: glyph IDs are opaque tokens bound
+ * to the shaper that produced them. A Canvas backend cannot consume synthesized
+ * glyph IDs — there is no `ctx.drawGlyphs(ids[])` API. Forcing a PaintGlyphRun
+ * through canvas means mapping glyph_id back to a codepoint and guessing, which
+ * breaks the invariant.
+ *
+ * PaintText is the honest representation for canvas: the layout engine has
+ * measured the line (via `ctx.measureText`) to decide line wraps and positions,
+ * but final shaping + fallback + rasterization happen inside `fillText` at
+ * dispatch time. The browser's text stack owns that last mile.
+ *
+ * The font-binding invariant still holds — on a coarser grain. A PaintText
+ * with `font_ref: "canvas:Helvetica@16"` is bindable only to a canvas-capable
+ * backend. Routing it to paint-vm-metal or paint-vm-direct2d MUST throw
+ * UnsupportedFontBindingError. The binding is the runtime, not the glyph index.
+ *
+ * Which instruction does layout-to-paint emit?
+ * --------------------------------------------
+ *
+ *   Font-parser (TXT01) + naive/HarfBuzz shaper (TXT02/04) → PaintGlyphRun
+ *   CoreText measurer (TXT03a)                             → PaintGlyphRun
+ *   DirectWrite / Pango (TXT03b/c)                         → PaintGlyphRun
+ *   Canvas measurer (TXT03d)                               → PaintText
+ *
+ * A pipeline picks one emitter at configuration time; instructions of both
+ * kinds may coexist in one scene only if both backends are available
+ * (uncommon).
+ */
+export interface PaintText extends PaintBase {
+  kind: "text";
+  x: number;         // alignment anchor x. By default this is the baseline origin (left edge
+                     // of the first character). When `text_align` is set, it is the reference
+                     // point relative to which alignment is computed: "start" aligns left,
+                     // "center" aligns the midpoint, "end" aligns right.
+  y: number;         // baseline origin y — NOT the top of the text, but the baseline
+  text: string;      // the literal text to render (UTF-16 in TypeScript)
+  font_ref: string;  // opaque font reference; e.g. "canvas:Helvetica@16:700"
+                     // the scheme prefix (canvas:, css:, svg:) routes dispatch
+  font_size: number; // in user-space units (same units as x, y)
+  fill: string;      // color of the text — required (no default)
+
+  /**
+   * Horizontal alignment of the text relative to `x`. Default: "start".
+   *
+   * - `"start"` — left edge of text at `x` (LTR). Matches Canvas `textAlign = "start"`.
+   * - `"center"` — midpoint of text at `x`. Matches Canvas `textAlign = "center"`.
+   * - `"end"` — right edge of text at `x` (LTR). Matches Canvas `textAlign = "end"`.
+   *
+   * Canvas backends translate this to `ctx.textAlign`. Backends that pre-measure
+   * (SVG) or that always left-align internally will adjust `x` by
+   * `+textWidth*0` / `-textWidth/2` / `-textWidth` at dispatch time.
+   */
+  text_align?: "start" | "center" | "end";
+
+  // Optional: map from cluster (string index) to pen x-offset, computed by the
+  // layout engine via its TextMeasurer. Enables hit-testing and selection
+  // without re-measuring at paint time. Omit for simple rendering.
+  cluster_positions?: Array<{ cluster: number; x: number }>;
+}
+
+/**
  * PaintGroup — logical container for transform and state inheritance.
  *
  * A group renders directly into the parent surface — no separate buffer is
@@ -558,6 +631,7 @@ export interface PaintImage extends PaintBase {
  *     case "ellipse":   // PaintEllipse
  *     case "path":      // PaintPath
  *     case "glyph_run": // PaintGlyphRun
+ *     case "text":      // PaintText (Canvas-runtime string-level text; see TXT03d)
  *     case "group":     // PaintGroup
  *     case "layer":     // PaintLayer
  *     case "line":      // PaintLine
@@ -571,6 +645,7 @@ export type PaintInstruction =
   | PaintEllipse
   | PaintPath
   | PaintGlyphRun
+  | PaintText
   | PaintGroup
   | PaintLayer
   | PaintLine
@@ -790,4 +865,32 @@ export function paintImage(
   options?: Omit<PaintImage, "kind" | "x" | "y" | "width" | "height" | "src">,
 ): PaintImage {
   return { kind: "image", x, y, width, height, src, ...options };
+}
+
+/**
+ * Create a PaintText instruction.
+ *
+ * Use this when the paint backend is a runtime that does its own shaping at
+ * paint time (HTML Canvas 2D via `ctx.fillText`). For backends that consume
+ * pre-shaped glyph indices (Metal, Direct2D with DirectWrite), use
+ * PaintGlyphRun instead.
+ *
+ * font_ref is an opaque string with a scheme prefix that routes dispatch:
+ *   "canvas:<family>@<size>[:<weight>[:<style>]]"  — HTML Canvas
+ *   "css:<css-font-shorthand>"                      — deferred
+ *   "svg:<family>@<size>"                           — deferred
+ *
+ * Example:
+ *   paintText(20, 40, "Hello world", "canvas:Helvetica@16", 16, "#111")
+ */
+export function paintText(
+  x: number,
+  y: number,
+  text: string,
+  font_ref: string,
+  font_size: number,
+  fill: string,
+  options?: Omit<PaintText, "kind" | "x" | "y" | "text" | "font_ref" | "font_size" | "fill">,
+): PaintText {
+  return { kind: "text", x, y, text, font_ref, font_size, fill, ...options };
 }

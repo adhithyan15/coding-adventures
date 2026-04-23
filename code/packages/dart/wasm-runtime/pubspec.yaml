@@ -1,0 +1,24 @@
+name: coding_adventures_wasm_runtime
+description: >
+  Top-level Dart WebAssembly runtime for the MVP square-function path.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_wasm_execution:
+    path: ../wasm-execution
+  coding_adventures_wasm_module_parser:
+    path: ../wasm-module-parser
+  coding_adventures_wasm_types:
+    path: ../wasm-types
+  coding_adventures_wasm_validator:
+    path: ../wasm-validator
+
+dev_dependencies:
+  coding_adventures_wasm_leb128:
+    path: ../wasm-leb128
+  test: ^1.25.0

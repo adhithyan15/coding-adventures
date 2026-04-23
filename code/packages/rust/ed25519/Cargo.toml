@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_ed25519"
+version = "0.1.0"
+edition = "2021"
+description = "Ed25519 digital signatures (RFC 8032) implemented from scratch"
+
+[dependencies]
+coding_adventures_sha512 = { path = "../sha512" }

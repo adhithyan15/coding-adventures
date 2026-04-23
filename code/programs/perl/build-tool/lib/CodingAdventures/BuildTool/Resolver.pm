@@ -50,6 +50,7 @@ use strict;
 use warnings;
 use File::Spec ();
 use File::Basename ();
+use File::Find ();
 use Scalar::Util qw(blessed);
 
 our $VERSION = '0.01';
@@ -236,6 +237,55 @@ sub new {
     return bless {}, $class;
 }
 
+sub _dependency_scope {
+    my ($language) = @_;
+    return 'dotnet' if $language eq 'csharp' || $language eq 'fsharp' || $language eq 'dotnet';
+    return 'rust' if $language eq 'wasm';
+    return $language;
+}
+
+sub _in_dependency_scope {
+    my ($package_language, $scope) = @_;
+    return $package_language eq 'csharp' || $package_language eq 'fsharp' || $package_language eq 'dotnet'
+        if $scope eq 'dotnet';
+    return $package_language eq 'rust' || $package_language eq 'wasm'
+        if $scope eq 'rust';
+    return $package_language eq $scope;
+}
+
+sub _normalize_path {
+    my ($path) = @_;
+    return lc File::Spec->canonpath($path);
+}
+
+sub _read_cargo_package_name {
+    my ($pkg) = @_;
+    my $cargo = File::Spec->catfile($pkg->{path}, 'Cargo.toml');
+    my $text = _slurp($cargo) // return undef;
+
+    for my $line (split /\n/, $text) {
+        if ($line =~ /^\s*name\s*=\s*"([^"]+)"/) {
+            return lc $1;
+        }
+    }
+
+    return undef;
+}
+
+sub _set_known {
+    my ($known_ref, $key, $pkg) = @_;
+    if (!exists $known_ref->{$key}) {
+        $known_ref->{$key} = $pkg->{name};
+        return;
+    }
+
+    my $normalized = $pkg->{path};
+    $normalized =~ s{\\}{/}g;
+    if ($normalized !~ m{/programs/}i) {
+        $known_ref->{$key} = $pkg->{name};
+    }
+}
+
 # resolve -- Build a dependency graph from a list of packages.
 #
 # For each package, reads its metadata file and extracts internal dependencies.
@@ -247,16 +297,20 @@ sub resolve {
     my ($self, $packages_ref) = @_;
 
     my $graph = CodingAdventures::BuildTool::Graph->new();
-    my %known_names = $self->build_known_names($packages_ref);
+    my %known_names_by_scope;
 
     # Add all packages as nodes first — even isolated packages with no deps.
     for my $pkg (@{$packages_ref}) {
         $graph->add_node($pkg->{name});
+        my $language = $pkg->{language};
+        if (!exists $known_names_by_scope{$language}) {
+            $known_names_by_scope{$language} = { $self->build_known_names($packages_ref, $language) };
+        }
     }
 
     # Parse dependencies for each package and add edges.
     for my $pkg (@{$packages_ref}) {
-        my @deps = $self->resolve_dependencies($pkg, \%known_names);
+        my @deps = $self->resolve_dependencies($pkg, $known_names_by_scope{$pkg->{language}});
         for my $dep (@deps) {
             # Edge: dep -> pkg (dep must be built before pkg).
             $graph->add_edge($dep, $pkg->{name});
@@ -281,10 +335,13 @@ sub resolve {
 # @param \@packages -- arrayref of package hashrefs.
 # @return hash mapping ecosystem name -> graph node name.
 sub build_known_names {
-    my ($self, $packages_ref) = @_;
+    my ($self, $packages_ref, $language) = @_;
     my %known;
+    $language //= '';
+    my $scope = $language eq '' ? '' : _dependency_scope($language);
 
     for my $pkg (@{$packages_ref}) {
+        next if $scope ne '' && !_in_dependency_scope($pkg->{language}, $scope);
         my $dir_name  = File::Basename::basename($pkg->{path});
         my $lang      = $pkg->{language};
 
@@ -292,14 +349,14 @@ sub build_known_names {
             # Python: coding-adventures-<kebab> (hyphens, lowercase).
             my $cpan_name = "coding-adventures-$dir_name";
             $cpan_name =~ tr/A-Z/a-z/;
-            $known{$cpan_name} = $pkg->{name};
+            _set_known(\%known, $cpan_name, $pkg);
 
         } elsif ($lang eq 'ruby') {
             # Ruby: coding_adventures_<snake> (underscores, lowercase).
             my $gem_name = "coding_adventures_$dir_name";
             $gem_name =~ s/-/_/g;
             $gem_name =~ tr/A-Z/a-z/;
-            $known{$gem_name} = $pkg->{name};
+            _set_known(\%known, $gem_name, $pkg);
 
         } elsif ($lang eq 'go') {
             # Go: full module path github.com/adhithyan15/.../go/<name>.
@@ -311,39 +368,71 @@ sub build_known_names {
             # TypeScript: @coding-adventures/<kebab> (npm scoped package).
             my $npm_name = "\@coding-adventures/$dir_name";
             $npm_name =~ tr/A-Z/a-z/;
-            $known{$npm_name} = $pkg->{name};
+            _set_known(\%known, $npm_name, $pkg);
+            _set_known(\%known, lc($dir_name), $pkg);
 
         } elsif ($lang eq 'rust') {
             # Rust: bare crate name (hyphens, lowercase).
             my $crate_name = $dir_name;
             $crate_name =~ tr/A-Z/a-z/;
-            $known{$crate_name} = $pkg->{name};
+            _set_known(\%known, $crate_name, $pkg);
+            my $cargo_name = _read_cargo_package_name($pkg);
+            _set_known(\%known, $cargo_name, $pkg) if defined $cargo_name;
+
+        } elsif ($lang eq 'wasm') {
+            # WASM wrappers should resolve through their explicit Cargo package
+            # names (for example "graph-wasm"), not bare Rust crate names.
+            my $cargo_name = _read_cargo_package_name($pkg);
+            _set_known(\%known, $cargo_name, $pkg) if defined $cargo_name;
 
         } elsif ($lang eq 'elixir') {
             # Elixir: :coding_adventures_<snake> atom (underscores).
             my $mix_name = "coding_adventures_$dir_name";
             $mix_name =~ s/-/_/g;
             $mix_name =~ tr/A-Z/a-z/;
-            $known{$mix_name}          = $pkg->{name};
-            $known{":$mix_name"}       = $pkg->{name};
+            _set_known(\%known, $mix_name, $pkg);
+            _set_known(\%known, ":$mix_name", $pkg);
 
         } elsif ($lang eq 'lua') {
             # Lua: coding-adventures-<kebab> (same as Python).
             my $rock_name = "coding-adventures-$dir_name";
             $rock_name =~ tr/A-Z/a-z/;
-            $known{$rock_name} = $pkg->{name};
+            _set_known(\%known, $rock_name, $pkg);
 
         } elsif ($lang eq 'perl') {
             # Perl: coding-adventures-<kebab> (same convention as Python/Lua).
             my $dist_name = "coding-adventures-$dir_name";
             $dist_name =~ tr/A-Z/a-z/;
-            $known{$dist_name} = $pkg->{name};
+            _set_known(\%known, $dist_name, $pkg);
+
+        } elsif ($lang eq 'swift') {
+            _set_known(\%known, lc($dir_name), $pkg);
 
         } elsif ($lang eq 'haskell') {
             # Haskell: coding-adventures-<kebab>
             my $cabal_name = "coding-adventures-$dir_name";
             $cabal_name =~ tr/A-Z/a-z/;
-            $known{$cabal_name} = $pkg->{name};
+            _set_known(\%known, $cabal_name, $pkg);
+
+        } elsif ($lang eq 'csharp' || $lang eq 'fsharp' || $lang eq 'dotnet') {
+            # .NET packages refer to sibling package directories via
+            # <ProjectReference Include="../graph/Graph.csproj" />.
+            _set_known(\%known, lc($dir_name), $pkg);
+            my @project_files;
+            File::Find::find(
+                {
+                    wanted => sub {
+                        return if -d $File::Find::name;
+                        return unless $_ =~ /\.(?:csproj|fsproj)\z/;
+                        push @project_files, $File::Find::name;
+                    },
+                    no_chdir => 1,
+                },
+                $pkg->{path},
+            );
+            for my $project_file (@project_files) {
+                $known{ _normalize_path($project_file) } = $pkg->{name};
+            }
         }
     }
 
@@ -370,7 +459,7 @@ sub resolve_dependencies {
         return $self->_parse_go_deps($pkg, $known_ref);
     } elsif ($lang eq 'typescript') {
         return $self->_parse_typescript_deps($pkg, $known_ref);
-    } elsif ($lang eq 'rust') {
+    } elsif ($lang eq 'rust' || $lang eq 'wasm') {
         return $self->_parse_rust_deps($pkg, $known_ref);
     } elsif ($lang eq 'elixir') {
         return $self->_parse_elixir_deps($pkg, $known_ref);
@@ -378,8 +467,12 @@ sub resolve_dependencies {
         return $self->_parse_lua_deps($pkg, $known_ref);
     } elsif ($lang eq 'perl') {
         return $self->_parse_perl_deps($pkg, $known_ref);
+    } elsif ($lang eq 'swift') {
+        return $self->_parse_swift_deps($pkg, $known_ref);
     } elsif ($lang eq 'haskell') {
         return $self->_parse_haskell_deps($pkg, $known_ref);
+    } elsif ($lang eq 'csharp' || $lang eq 'fsharp' || $lang eq 'dotnet') {
+        return $self->_parse_dotnet_deps($pkg, $known_ref);
     }
     return ();
 }
@@ -581,6 +674,59 @@ sub _parse_haskell_deps {
         next unless exists $known_ref->{$dep};
         next if $known_ref->{$dep} eq $pkg->{name};
         push @deps, $known_ref->{$dep};
+    }
+    return @deps;
+}
+
+sub _parse_swift_deps {
+    my ($self, $pkg, $known_ref) = @_;
+    my $manifest = File::Spec->catfile($pkg->{path}, 'Package.swift');
+    my $text = _slurp($manifest) // return ();
+
+    my @deps;
+    while ($text =~ /\.package\s*\(\s*path\s*:\s*"([^"]+)"/g) {
+        my $dep_path = $1;
+        next if File::Spec->file_name_is_absolute($dep_path);
+        my $cleaned = File::Spec->canonpath($dep_path);
+        my @parts = grep { defined $_ && $_ ne '' } File::Spec->splitdir($cleaned);
+        my $dep_dir = $parts[-1];
+        next if !defined $dep_dir || $dep_dir eq '.' || $dep_dir eq '..';
+        my $key = lc $dep_dir;
+        push @deps, $known_ref->{$key} if exists $known_ref->{$key};
+    }
+    return @deps;
+}
+
+sub _parse_dotnet_deps {
+    my ($self, $pkg, $known_ref) = @_;
+
+    my @project_files;
+    File::Find::find(
+        {
+            wanted => sub {
+                return if -d $File::Find::name;
+                return unless $_ =~ /\.(?:csproj|fsproj)\z/;
+                push @project_files, $File::Find::name;
+            },
+            no_chdir => 1,
+        },
+        $pkg->{path},
+    );
+
+    my @deps;
+    for my $project_file (@project_files) {
+        my $text = _slurp($project_file) // next;
+        while ($text =~ /<ProjectReference\s+Include\s*=\s*"([^"]+)"/g) {
+            my $include = $1;
+            next if File::Spec->file_name_is_absolute($include);
+            my $cleaned = File::Spec->canonpath($include);
+            my @parts = grep { defined $_ && $_ ne '' } File::Spec->splitdir($cleaned);
+            next if !@parts;
+            my $dep_dir = @parts >= 2 ? $parts[-2] : $parts[0];
+            next if !defined $dep_dir || $dep_dir eq '.' || $dep_dir eq '..';
+            my $key = lc $dep_dir;
+            push @deps, $known_ref->{$key} if exists $known_ref->{$key};
+        }
     }
     return @deps;
 }

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.CliBuilder.CSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Declarative CLI parsing from JSON specs with validation, help generation, and subcommand routing</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests\\**\\*.cs" />
+    <EmbeddedResource Remove="tests\\**" />
+    <None Remove="tests\\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../directed-graph/CodingAdventures.DirectedGraph.csproj" />
+    <ProjectReference Include="../json-value/CodingAdventures.JsonValue.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/nib-formatter",
+  "version": "0.1.0",
+  "description": "Format Nib source into canonical layout using the shared document algebra stack.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/format-doc": "file:../format-doc",
+    "@coding-adventures/format-doc-std": "file:../format-doc-std",
+    "@coding-adventures/format-doc-to-paint": "file:../format-doc-to-paint",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/nib-parser": "file:../nib-parser",
+    "@coding-adventures/paint-vm-ascii": "file:../paint-vm-ascii",
+    "@coding-adventures/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

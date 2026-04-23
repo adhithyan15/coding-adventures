@@ -1,1 +1,1 @@
-echo Swift is not supported on Windows — skipping
+swift test --enable-code-coverage --verbose

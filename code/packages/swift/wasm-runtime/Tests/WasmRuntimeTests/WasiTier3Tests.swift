@@ -131,6 +131,25 @@ final class WasiTier3Tests: XCTestCase {
         XCTAssertEqual(bufSize, 12, "argv buffer size should be 12 bytes")
     }
 
+    func testFdReadCopiesInputBytes() throws {
+        let mem = makeMemory()
+        let config = WasiConfig(stdin: { _ in Array("hi".utf8) })
+        let wasi = WasiHost(config: config)
+        wasi.memory = mem
+
+        try mem.storeI32(0, 200)
+        try mem.storeI32(4, 2)
+
+        let fn = wasi.resolveFunction(moduleName: "wasi_snapshot_preview1", name: "fd_read")
+        XCTAssertNotNil(fn, "fd_read must be resolvable")
+
+        let result = try fn!.call([.i32(0), .i32(0), .i32(1), .i32(100)])
+        XCTAssertEqual(result, [.i32(0)])
+        XCTAssertEqual(try mem.loadI32(100), 2)
+        XCTAssertEqual(try mem.loadI32_8u(200), 104)
+        XCTAssertEqual(try mem.loadI32_8u(201), 105)
+    }
+
     // ========================================================================
     // MARK: - 2. args_get
     // ========================================================================

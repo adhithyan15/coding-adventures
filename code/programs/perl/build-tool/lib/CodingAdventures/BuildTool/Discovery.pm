@@ -45,7 +45,8 @@ our $VERSION = '0.01';
 # which ecosystem a package belongs to. The order does not matter for
 # correctness but we list them alphabetically for readability.
 my @KNOWN_LANGUAGES = qw(
-    elixir go lua perl python ruby rust starlark typescript
+    python ruby go rust typescript elixir lua perl swift wasm haskell starlark
+    java kotlin csharp fsharp dotnet
 );
 
 # SKIP_DIRS -- directory names that we never descend into during the walk.
@@ -56,7 +57,7 @@ my @KNOWN_LANGUAGES = qw(
 my %SKIP_DIRS = map { $_ => 1 } qw(
     .git .hg .svn .venv .tox .mypy_cache .pytest_cache .ruff_cache
     __pycache__ node_modules vendor dist build target .claude Pods
-    _build blib
+    _build blib .build .gradle gradle-build
 );
 
 # new -- Constructor.
@@ -142,7 +143,11 @@ sub discover {
                 # (Avoids registering the same package multiple times when
                 # both BUILD and BUILD_mac exist.)
                 my $canonical = File::Spec->catfile($dir, $build_file);
-                return unless $fullpath eq $canonical;
+                my $normalized_fullpath = $fullpath;
+                my $normalized_canonical = $canonical;
+                $normalized_fullpath =~ s{\\}{/}g;
+                $normalized_canonical =~ s{\\}{/}g;
+                return unless $normalized_fullpath eq $normalized_canonical;
 
                 # Read the BUILD commands — non-blank, non-comment lines.
                 my @commands = _read_commands($canonical);

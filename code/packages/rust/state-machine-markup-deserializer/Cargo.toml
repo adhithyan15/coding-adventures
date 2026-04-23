@@ -1,0 +1,11 @@
+[package]
+name = "state-machine-markup-deserializer"
+version = "0.1.0"
+edition = "2021"
+description = "State Machine Markup deserialization and validation for typed state-machine definitions"
+
+[dependencies]
+state-machine = { path = "../state-machine" }
+
+[dev-dependencies]
+state-machine-markup-serializer = { path = "../state-machine-markup-serializer" }

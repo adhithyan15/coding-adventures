@@ -152,22 +152,33 @@ end
 -- to `parse()` or `create_parser()` reuse the cached grammar, avoiding
 -- repeated file I/O and repeated rule compilation.
 
-local _grammar_cache = nil
+local _grammar_cache = {}
+
+local function normalize_version(version)
+    if version == nil or version == "" then
+        return "algol60"
+    end
+    if version ~= "algol60" then
+        error("algol_parser: unknown ALGOL version '" .. tostring(version) .. "' (valid: algol60)")
+    end
+    return version
+end
 
 --- Load and parse `algol.grammar`, with caching.
 -- On the first call, opens the file, parses it with
 -- `grammar_tools.parse_parser_grammar`, and caches the result.
 -- @return ParserGrammar  The parsed ALGOL 60 parser grammar.
 -- @error                 Raises an error if the file cannot be opened or parsed.
-local function get_grammar()
-    if _grammar_cache then
-        return _grammar_cache
+local function get_grammar(version)
+    version = normalize_version(version)
+    if _grammar_cache[version] then
+        return _grammar_cache[version]
     end
 
     -- Navigate: 6 levels up from this file's directory → code/ root.
     local script_dir   = get_script_dir()
     local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/algol.grammar"
+    local grammar_path = repo_root .. "/grammars/algol/" .. version .. ".grammar"
 
     local f, open_err = io.open(grammar_path, "r")
     if not f then
@@ -182,12 +193,12 @@ local function get_grammar()
     local grammar, parse_err = grammar_tools.parse_parser_grammar(content)
     if not grammar then
         error(
-            "algol_parser: failed to parse algol.grammar: " ..
+            "algol_parser: failed to parse " .. version .. ".grammar: " ..
             (parse_err or "unknown error")
         )
     end
 
-    _grammar_cache = grammar
+    _grammar_cache[version] = grammar
     return grammar
 end
 
@@ -216,9 +227,9 @@ end
 --   local ast = algol_parser.parse("begin integer x; x := 42 end")
 --   -- ast.rule_name  → "program"
 --   -- find a block node inside
-function M.parse(source)
-    local tokens = algol_lexer.tokenize(source)
-    local grammar = get_grammar()
+function M.parse(source, version)
+    local tokens = algol_lexer.tokenize(source, version)
+    local grammar = get_grammar(version)
     local gp = parser_pkg.GrammarParser.new(tokens, grammar)
     local ast, err = gp:parse()
     if not ast then
@@ -239,9 +250,9 @@ end
 --
 --   local p = algol_parser.create_parser("begin integer x; x := 0 end")
 --   local ast, err = p:parse()
-function M.create_parser(source)
-    local tokens = algol_lexer.tokenize(source)
-    local grammar = get_grammar()
+function M.create_parser(source, version)
+    local tokens = algol_lexer.tokenize(source, version)
+    local grammar = get_grammar(version)
     return parser_pkg.GrammarParser.new(tokens, grammar)
 end
 
@@ -251,8 +262,8 @@ end
 -- to enumerate rule names or to check how many rules the grammar has.
 --
 -- @return ParserGrammar  The parsed ALGOL 60 parser grammar.
-function M.get_grammar()
-    return get_grammar()
+function M.get_grammar(version)
+    return get_grammar(version)
 end
 
 return M

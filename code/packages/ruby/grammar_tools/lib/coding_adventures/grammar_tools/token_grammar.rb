@@ -118,6 +118,11 @@ module CodingAdventures
     #                      true" magic comment; defaults to false
     # The complete contents of a parsed .tokens file.
     #
+    # layout_keywords  -- list of keywords that introduce a layout context
+    #                     when mode is "layout". The generic lexer uses
+    #                     these to inject virtual "{", ";", and "}"
+    #                     tokens following Haskell-style offside rules.
+    #                     Examples: let, where, do, of.
     # context_keywords -- list of context-sensitive keywords from the
     #                     context_keywords: section. These are words that
     #                     are keywords in some syntactic positions but
@@ -149,12 +154,14 @@ module CodingAdventures
     #                       Python 3.12+: type
     class TokenGrammar
       attr_reader :definitions, :keywords, :skip_definitions, :error_definitions,
-                  :reserved_keywords, :groups, :context_keywords, :soft_keywords
+                  :reserved_keywords, :groups, :layout_keywords,
+                  :context_keywords, :soft_keywords
       attr_accessor :mode, :escape_mode, :case_sensitive, :version, :case_insensitive
 
       def initialize(definitions: [], keywords: [], mode: nil,
                      skip_definitions: [], error_definitions: [],
                      reserved_keywords: [], escape_mode: nil, groups: {},
+                     layout_keywords: [],
                      case_sensitive: true, version: 0, case_insensitive: false,
                      context_keywords: [], soft_keywords: [])
         @definitions = definitions
@@ -165,6 +172,7 @@ module CodingAdventures
         @reserved_keywords = reserved_keywords
         @escape_mode = escape_mode
         @groups = groups
+        @layout_keywords = layout_keywords
         @case_sensitive = case_sensitive
         @version = version
         @case_insensitive = case_insensitive
@@ -446,7 +454,10 @@ module CodingAdventures
               line_number
             )
           end
-          reserved_names = %w[default skip keywords reserved errors context_keywords soft_keywords].to_set
+          reserved_names = %w[
+            default skip keywords reserved errors layout_keywords
+            context_keywords soft_keywords
+          ].to_set
           if reserved_names.include?(group_name)
             raise TokenGrammarError.new(
               "Reserved group name: #{group_name.inspect} " \
@@ -493,6 +504,11 @@ module CodingAdventures
           next
         end
 
+        if stripped == "layout_keywords:" || stripped == "layout_keywords :"
+          current_section = "layout_keywords"
+          next
+        end
+
         # context_keywords: section -- words that are keywords in some
         # syntactic positions but identifiers in others. The lexer emits
         # these as NAME tokens with the TOKEN_CONTEXT_KEYWORD flag set.
@@ -516,6 +532,8 @@ module CodingAdventures
             case current_section
             when "keywords"
               grammar.keywords << stripped unless stripped.empty?
+            when "layout_keywords"
+              grammar.layout_keywords << stripped unless stripped.empty?
             when "context_keywords"
               grammar.context_keywords << stripped unless stripped.empty?
             when "soft_keywords"
@@ -700,8 +718,14 @@ module CodingAdventures
       issues.concat(validate_definitions(grammar.definitions, "token"))
       issues.concat(validate_definitions(grammar.skip_definitions, "skip pattern"))
 
-      if grammar.mode && grammar.mode != "indentation"
-        issues << "Unknown lexer mode '#{grammar.mode}' (only 'indentation' is supported)"
+      supported_modes = [nil, "indentation", "layout"]
+      unless supported_modes.include?(grammar.mode)
+        issues << "Unknown lexer mode '#{grammar.mode}' " \
+                  "(supported: indentation, layout)"
+      end
+
+      if grammar.mode == "layout" && grammar.layout_keywords.empty?
+        issues << "Layout mode requires a non-empty layout_keywords: section"
       end
 
       # Validate pattern groups.

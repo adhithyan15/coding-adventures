@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/paint-codec-png-native",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "paint_codec_png_c",
+      "justification": "Calls the reviewed Rust C ABI wrapper for PNG encoding."
+    }
+  ],
+  "banned_construct_exceptions": [
+    {
+      "construct": "import \"C\"",
+      "language": "go",
+      "justification": "Uses cgo to call the reviewed Rust PNG codec wrapper."
+    }
+  ],
+  "justification": "Go wrapper over the reviewed Rust PNG codec C ABI."
+}

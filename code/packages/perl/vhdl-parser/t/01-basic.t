@@ -14,6 +14,11 @@ sub parse_vhdl {
     return CodingAdventures::VhdlParser->parse_vhdl($src);
 }
 
+sub parse_vhdl_version {
+    my ($src, $version) = @_;
+    return CodingAdventures::VhdlParser->parse_vhdl($src, $version);
+}
+
 sub find_node {
     my ($node, $rule_name) = @_;
     return undef unless ref($node);
@@ -67,6 +72,19 @@ subtest 'empty source parses' => sub {
     my $ast = parse_vhdl("");
     is( $ast->rule_name, 'design_file', 'root is design_file' );
     is( scalar @{ $ast->children }, 0, 'no children' );
+};
+
+subtest 'default version matches explicit 2008' => sub {
+    my $default_ast = parse_vhdl("entity empty is end entity;");
+    my $versioned_ast = parse_vhdl_version("entity empty is end entity;", '2008');
+    is( $default_ast->rule_name, $versioned_ast->rule_name, 'same root rule' );
+};
+
+subtest 'unknown version raises die' => sub {
+    ok(
+        dies { parse_vhdl_version("entity empty is end entity;", '2099') },
+        'unsupported version dies'
+    );
 };
 
 subtest 'design_file contains design_unit' => sub {

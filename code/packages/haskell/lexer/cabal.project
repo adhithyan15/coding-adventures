@@ -1,0 +1,6 @@
+packages:
+  .
+  ../grammar-tools
+  ../graph
+  ../directed-graph
+  ../state-machine

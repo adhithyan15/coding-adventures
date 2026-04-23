@@ -649,6 +649,17 @@ itself uses `ast` which involves `compile()`), it must:
 
 2. Obtain hardware-key-signed approval, just like any capability escalation.
 
+For Go, the FFI-style constructs require a second declaration in addition to the
+exception itself:
+
+- `import "C"` also requires an `ffi:call:*` capability (or a specific
+  `ffi:call:<library>` target)
+- `plugin.Open()` also requires an `ffi:load:*` capability (or a specific
+  `ffi:load:<library>` target)
+
+This keeps native interop explicitly opt-in instead of silently turning
+`banned_construct_exceptions` into a blanket escape hatch.
+
 ---
 
 ## Layer 4: CI Gate (Static Analysis)

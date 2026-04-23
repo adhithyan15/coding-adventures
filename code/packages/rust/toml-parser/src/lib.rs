@@ -1,213 +1,22 @@
-//! # TOML Parser — parsing TOML source text into an AST.
-//!
-//! This crate is the second half of the TOML front-end pipeline. Where the
-//! `toml-lexer` crate breaks source text into tokens, this crate arranges
-//! those tokens into a tree that reflects the **structure** of the data —
-//! an Abstract Syntax Tree (AST).
-//!
-//! # The parsing pipeline
-//!
-//! Parsing TOML requires four cooperating components:
-//!
-//! ```text
-//! Source text  ("title = \"TOML Example\"\n[server]\nhost = \"localhost\"")
-//!       |
-//!       v
-//! toml-lexer           -> Vec<Token>
-//!       |                [BARE_KEY("title"), EQUALS, BASIC_STRING("TOML Example"),
-//!       |                 NEWLINE, LBRACKET, BARE_KEY("server"), RBRACKET,
-//!       |                 NEWLINE, BARE_KEY("host"), EQUALS, BASIC_STRING("localhost"), EOF]
-//!       v
-//! toml.grammar         -> ParserGrammar (12 rules)
-//!       |
-//!       v
-//! GrammarParser        -> GrammarASTNode tree
-//!       |
-//!       |                document
-//!       |                  +-- expression
-//!       |                  |     +-- keyval
-//!       |                  |           +-- key
-//!       |                  |           |     +-- BARE_KEY("title")
-//!       |                  |           +-- EQUALS
-//!       |                  |           +-- value
-//!       |                  |                 +-- BASIC_STRING("TOML Example")
-//!       |                  +-- NEWLINE
-//!       |                  +-- expression
-//!       |                  |     +-- table_header
-//!       |                  |           +-- LBRACKET
-//!       |                  |           +-- key
-//!       |                  |           |     +-- BARE_KEY("server")
-//!       |                  |           +-- RBRACKET
-//!       |                  +-- ...
-//!       v
-//! [application logic consumes the AST]
-//! ```
-//!
-//! This crate is the thin glue layer that wires these components together.
-//! It knows where to find the `toml.grammar` file and provides two public
-//! entry points.
-//!
-//! # Grammar-driven parsing
-//!
-//! The `GrammarParser` is a **recursive descent parser with backtracking and
-//! packrat memoization**. TOML's grammar has ~12 rules:
-//!
-//! - `document` — the start symbol: sequence of NEWLINEs and expressions
-//! - `expression` — array_table_header | table_header | keyval
-//! - `keyval` — key EQUALS value
-//! - `key` — simple_key with optional dotted parts
-//! - `simple_key` — BARE_KEY | BASIC_STRING | LITERAL_STRING | value tokens
-//! - `table_header` — `[key]`
-//! - `array_table_header` — `[[key]]`
-//! - `value` — strings | numbers | booleans | dates | array | inline_table
-//! - `array` — `[array_values]`
-//! - `array_values` — comma-separated values with optional newlines
-//! - `inline_table` — `{keyval, ...}`
-//!
-//! # TOML vs JSON: grammar complexity
-//!
-//! TOML's grammar (~12 rules) is more complex than JSON's (4 rules) because:
-//!
-//! 1. **Newline sensitivity** — expressions are delimited by newlines, not just
-//!    structural tokens. The grammar must explicitly handle NEWLINE tokens.
-//! 2. **Table headers** — `[table]` and `[[array-of-tables]]` have no JSON
-//!    equivalent. They're syntactic sugar for nested key creation.
-//! 3. **Key types** — TOML keys can be bare, quoted, or dotted. JSON only has
-//!    quoted string keys.
-//! 4. **Value types** — TOML has 15+ value types (4 strings, 4 integers,
-//!    3 floats, 2 booleans, 4 date/time) vs JSON's 7.
-//! 5. **Multi-line arrays** — TOML arrays can span multiple lines with
-//!    trailing commas.
+//! TOML parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 use coding_adventures_toml_lexer::tokenize_toml;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
+mod _grammar;
 
-/// Build the path to the `toml.grammar` file.
-///
-/// Uses the same strategy as the toml-lexer crate: `env!("CARGO_MANIFEST_DIR")`
-/// gives us the compile-time path to this crate's directory, and we navigate
-/// up to the shared `grammars/` directory.
-///
-/// ```text
-/// code/
-///   grammars/
-///     toml.grammar          <-- target file
-///   packages/
-///     rust/
-///       toml-parser/
-///         Cargo.toml        <-- CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/toml.grammar")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a `GrammarParser` configured for TOML source text.
-///
-/// This function performs two major steps:
-///
-/// 1. **Tokenization** — uses `tokenize_toml` from the toml-lexer crate
-///    to break the source into tokens (BARE_KEY, BASIC_STRING, INTEGER,
-///    FLOAT, TRUE, FALSE, date/time tokens, and structural delimiters).
-///    NEWLINE tokens are preserved since TOML is newline-sensitive.
-///
-/// 2. **Grammar loading** — reads and parses the `toml.grammar` file,
-///    which defines ~12 rules for TOML's document structure.
-///
-/// The returned `GrammarParser` is ready to call `.parse()` on.
-///
-/// # Panics
-///
-/// Panics if:
-/// - The `toml.grammar` file cannot be read or parsed.
-/// - The source text fails tokenization (unexpected character).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_toml_parser::create_toml_parser;
-///
-/// let mut parser = create_toml_parser("title = \"TOML\"");
-/// let ast = parser.parse().expect("parse failed");
-/// println!("{:?}", ast.rule_name);
-/// ```
 pub fn create_toml_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source using the toml-lexer.
-    //
-    // This produces a Vec<Token> with TOML token types including:
-    // BARE_KEY, BASIC_STRING, LITERAL_STRING, ML_BASIC_STRING,
-    // ML_LITERAL_STRING, INTEGER, FLOAT, TRUE, FALSE,
-    // OFFSET_DATETIME, LOCAL_DATETIME, LOCAL_DATE, LOCAL_TIME,
-    // EQUALS, DOT, COMMA, LBRACKET, RBRACKET, LBRACE, RBRACE,
-    // NEWLINE, and EOF.
     let tokens = tokenize_toml(source);
-
-    // Step 2: Read the parser grammar from disk.
-    //
-    // The grammar file defines the syntactic structure of TOML in EBNF
-    // notation. It has ~12 rules covering document structure, table headers,
-    // key-value pairs, values, arrays, and inline tables.
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read toml.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a structured ParserGrammar.
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse toml.grammar: {e}"));
-
-    // Step 4: Create the parser.
-    //
-    // The GrammarParser takes ownership of both the tokens and the grammar.
-    // It builds internal indexes (rule lookup, memo cache) for efficient
-    // parsing.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
-/// Parse TOML source text into an AST.
-///
-/// This is the most convenient entry point — it handles tokenization,
-/// grammar loading, parser creation, and parsing in one call.
-///
-/// The returned `GrammarASTNode` has `rule_name` set to `"document"` (the
-/// start symbol of the TOML grammar) with children corresponding to the
-/// structure of the TOML document.
-///
-/// # Panics
-///
-/// Panics if tokenization fails, the grammar file is missing/invalid,
-/// or the source text has a syntax error.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_toml_parser::parse_toml;
-///
-/// let ast = parse_toml("title = \"TOML Example\"");
-/// assert_eq!(ast.rule_name, "document");
-/// ```
 pub fn parse_toml(source: &str) -> GrammarASTNode {
-    // Create a parser wired to the TOML grammar and tokens.
-    let mut toml_parser = create_toml_parser(source);
-
-    // Parse and unwrap — any GrammarParseError becomes a panic.
-    toml_parser
+    let mut parser = create_toml_parser(source);
+    parser
         .parse()
         .unwrap_or_else(|e| panic!("TOML parse failed: {e}"))
 }
-
-// ===========================================================================
-// Tests
-// ===========================================================================
 
 #[cfg(test)]
 mod tests {
@@ -592,3 +401,4 @@ role = \"user\"
         assert!(has_table_header, "Expected 'table_header' rule in AST");
     }
 }
+

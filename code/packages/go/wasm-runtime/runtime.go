@@ -59,6 +59,10 @@ type WasmRuntime struct {
 	host   wasmexecution.HostInterface
 }
 
+type memoryBinder interface {
+	SetMemory(*wasmexecution.LinearMemory)
+}
+
 // New creates a new WasmRuntime with an optional host interface.
 func New(host wasmexecution.HostInterface) *WasmRuntime {
 	return &WasmRuntime{
@@ -208,6 +212,10 @@ func (r *WasmRuntime) Instantiate(module *wasmtypes.WasmModule) (*WasmInstance, 
 		HostFunctions: hostFunctions,
 		Exports:       exports,
 		Host:          r.host,
+	}
+
+	if binder, ok := r.host.(memoryBinder); ok && instance.Memory != nil {
+		binder.SetMemory(instance.Memory)
 	}
 
 	// Step 8: Call start function.

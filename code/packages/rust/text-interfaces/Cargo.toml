@@ -1,0 +1,7 @@
+[package]
+name = "text-interfaces"
+version = "0.1.0"
+edition = "2021"
+description = "TXT00 text interfaces: FontMetrics, TextShaper, TextMeasurer, FontResolver — pluggable traits that the TXT-series implementations (font-parser, CoreText, DirectWrite, Pango, HarfBuzz-equivalent) satisfy."
+
+[dependencies]

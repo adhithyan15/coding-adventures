@@ -1,0 +1,11 @@
+packages:
+  .
+  ../compiler-ir
+  ../wasm-leb128
+  ../wasm-types
+  ../wasm-module-encoder
+  ../wasm-module-parser
+  ../wasm-opcodes
+  ../wasm-execution
+  ../wasm-validator
+  ../wasm-runtime

@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-ls00"
+version = "0.1.0"
+edition = "2021"
+description = "Generic Language Server Protocol (LSP) framework"
+
+[dependencies]
+coding-adventures-json-rpc = { path = "../json-rpc" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]

@@ -158,10 +158,18 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-ALGOL_TOKENS_PATH = GRAMMAR_DIR / "algol.tokens"
+VALID_VERSIONS = {"algol60"}
 
 
-def create_algol_lexer(source: str) -> GrammarLexer:
+def resolve_tokens_path(version: str = "algol60") -> Path:
+    """Resolve a supported ALGOL token grammar path."""
+    if version not in VALID_VERSIONS:
+        valid = ", ".join(sorted(VALID_VERSIONS))
+        raise ValueError(f"Unknown ALGOL version {version!r}. Valid versions: {valid}")
+    return GRAMMAR_DIR / "algol" / f"{version}.tokens"
+
+
+def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for ALGOL 60 text.
 
     This function reads the ``algol.tokens`` file, parses it into a
@@ -197,11 +205,11 @@ def create_algol_lexer(source: str) -> GrammarLexer:
         lexer = create_algol_lexer('begin integer x; x := 42 end')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(ALGOL_TOKENS_PATH.read_text())
+    grammar = parse_token_grammar(resolve_tokens_path(version).read_text())
     return GrammarLexer(source, grammar)
 
 
-def tokenize_algol(source: str) -> list[Token]:
+def tokenize_algol(source: str, version: str = "algol60") -> list[Token]:
     """Tokenize ALGOL 60 text and return a list of tokens.
 
     This is the main entry point for the ALGOL 60 lexer. Pass in a string of
@@ -258,5 +266,5 @@ def tokenize_algol(source: str) -> list[Token]:
         #  Token(INTEGER_LIT, '42'), Token(END, 'end'),
         #  Token(EOF, '')]
     """
-    lexer = create_algol_lexer(source)
+    lexer = create_algol_lexer(source, version=version)
     return lexer.tokenize()

@@ -1,0 +1,10 @@
+[package]
+name = "lsm-tree"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+skip-list = { path = "../skip-list" }
+bloom-filter = { path = "../bloom-filter" }
+write-ahead-log = { path = "../write-ahead-log" }
+

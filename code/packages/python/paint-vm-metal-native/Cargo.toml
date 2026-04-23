@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "paint-vm-metal-native-python"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping paint-metal via python-bridge"
+
+[lib]
+name = "paint_vm_metal_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+paint-instructions = { path = "../../rust/paint-instructions" }
+paint-metal = { path = "../../rust/paint-metal" }
+python-bridge = { path = "../../rust/python-bridge" }

@@ -1,0 +1,148 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "benchmark-tool",
+  "display_name": "benchmark-tool",
+  "description": "Run and compare reproducible coding-adventures benchmark manifests",
+  "version": "0.5.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "commands": [
+    {
+      "id": "doctor",
+      "name": "doctor",
+      "description": "Print local host diagnostics that affect benchmark quality",
+      "flags": [],
+      "arguments": [],
+      "commands": []
+    },
+    {
+      "id": "validate",
+      "name": "validate",
+      "description": "Validate a benchmark manifest before running it",
+      "flags": [],
+      "arguments": [
+        {
+          "id": "manifest",
+          "name": "MANIFEST",
+          "description": "Path to benchmark.toml",
+          "type": "file",
+          "required": true
+        }
+      ],
+      "commands": []
+    },
+    {
+      "id": "run",
+      "name": "run",
+      "description": "Run command-style benchmark workloads and write result artifacts",
+      "flags": [
+        {
+          "id": "out",
+          "long": "out",
+          "description": "Directory where benchmark artifacts should be written",
+          "type": "string",
+          "value_name": "DIR",
+          "default": ""
+        },
+        {
+          "id": "trials",
+          "long": "trials",
+          "description": "Override measurement trial count",
+          "type": "integer",
+          "default": -1
+        },
+        {
+          "id": "warmup",
+          "long": "warmup",
+          "description": "Override warmup trial count",
+          "type": "integer",
+          "default": -1
+        },
+        {
+          "id": "subject",
+          "long": "subject",
+          "description": "Override a manifest subject checkout using NAME=REF; may be repeated",
+          "type": "string",
+          "value_name": "NAME=REF",
+          "repeatable": true
+        },
+        {
+          "id": "subjects",
+          "long": "subjects",
+          "description": "Comma-separated subject names to run",
+          "type": "string",
+          "value_name": "NAMES",
+          "default": ""
+        },
+        {
+          "id": "workloads",
+          "long": "workloads",
+          "description": "Comma-separated workload names to run",
+          "type": "string",
+          "value_name": "NAMES",
+          "default": ""
+        }
+      ],
+      "arguments": [
+        {
+          "id": "manifest",
+          "name": "MANIFEST",
+          "description": "Path to benchmark.toml",
+          "type": "file",
+          "required": true
+        }
+      ],
+      "commands": []
+    },
+    {
+      "id": "report",
+      "name": "report",
+      "description": "Regenerate report.md from an existing result directory",
+      "flags": [],
+      "arguments": [
+        {
+          "id": "result-dir",
+          "name": "RESULT_DIR",
+          "description": "Directory containing summary.json",
+          "type": "directory",
+          "required": true
+        }
+      ],
+      "commands": []
+    },
+    {
+      "id": "compare",
+      "name": "compare",
+      "description": "Compare two benchmark result directories and write comparison artifacts",
+      "flags": [
+        {
+          "id": "metric",
+          "long": "metric",
+          "description": "Metric to compare",
+          "type": "string",
+          "default": "elapsed_ms"
+        }
+      ],
+      "arguments": [
+        {
+          "id": "base-dir",
+          "name": "BASE_DIR",
+          "description": "Baseline result directory containing summary.json",
+          "type": "directory",
+          "required": true
+        },
+        {
+          "id": "new-dir",
+          "name": "NEW_DIR",
+          "description": "Candidate result directory containing summary.json",
+          "type": "directory",
+          "required": true
+        }
+      ],
+      "commands": []
+    }
+  ],
+  "flags": [],
+  "arguments": [],
+  "mutually_exclusive_groups": []
+}

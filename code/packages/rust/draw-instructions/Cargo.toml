@@ -1,7 +1,0 @@
-[package]
-name = "draw-instructions"
-version = "0.1.0"
-edition = "2021"
-description = "Backend-neutral 2D draw instructions for reusable scene generation"
-
-[dependencies]

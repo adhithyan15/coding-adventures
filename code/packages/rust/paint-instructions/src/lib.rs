@@ -81,7 +81,14 @@ pub enum PathCommand {
     /// Draw a quadratic Bézier curve.  `(cx, cy)` is the control point.
     QuadTo { cx: f64, cy: f64, x: f64, y: f64 },
     /// Draw a cubic Bézier curve.  `(cx1, cy1)` and `(cx2, cy2)` are the two control points.
-    CubicTo { cx1: f64, cy1: f64, cx2: f64, cy2: f64, x: f64, y: f64 },
+    CubicTo {
+        cx1: f64,
+        cy1: f64,
+        cx2: f64,
+        cy2: f64,
+        x: f64,
+        y: f64,
+    },
     /// Draw an elliptical arc with SVG arc semantics.
     ArcTo {
         rx: f64,
@@ -206,7 +213,12 @@ pub enum FilterEffect {
     /// Gaussian blur. `radius` is in user-space units.
     Blur { radius: f64 },
     /// Drop shadow — offset by `(dx, dy)`, blurred by `blur` radius, filled with `color`.
-    DropShadow { dx: f64, dy: f64, blur: f64, color: String },
+    DropShadow {
+        dx: f64,
+        dy: f64,
+        blur: f64,
+        color: String,
+    },
     /// 4×5 colour matrix (20 values, row-major).  Maps `[R,G,B,A,1]` to `[R',G',B',A']`.
     ColorMatrix { matrix: Vec<f64> },
     /// Multiply luminance. `1.0` = unchanged, `0.0` = black.
@@ -665,6 +677,7 @@ pub enum PaintInstruction {
 ///         PaintInstruction::Rect(PaintRect::filled(50.0, 50.0, 100.0, 100.0, "#ff0000")),
 ///     ],
 ///     id: None,
+///     metadata: None,
 /// };
 /// ```
 #[derive(Clone, Debug, PartialEq)]
@@ -679,6 +692,8 @@ pub struct PaintScene {
     pub instructions: Vec<PaintInstruction>,
     /// Stable scene identity for future `patch()` support.
     pub id: Option<String>,
+    /// Arbitrary scene-level metadata for producers and debuggers.
+    pub metadata: Option<std::collections::HashMap<String, String>>,
 }
 
 impl PaintScene {
@@ -690,6 +705,7 @@ impl PaintScene {
             background: "#ffffff".to_string(),
             instructions: Vec::new(),
             id: None,
+            metadata: None,
         }
     }
 }
@@ -793,15 +809,34 @@ mod tests {
         assert_eq!(scene.height, 600.0);
         assert_eq!(scene.background, "#ffffff");
         assert!(scene.instructions.is_empty());
+        assert!(scene.metadata.is_none());
     }
 
     #[test]
     fn paint_scene_can_hold_instructions() {
         let mut scene = PaintScene::new(100.0, 100.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(0.0, 0.0, 100.0, 100.0, "#000000"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 100.0, 100.0, "#000000",
+            )));
         assert_eq!(scene.instructions.len(), 1);
+    }
+
+    #[test]
+    fn paint_scene_can_hold_metadata() {
+        let mut scene = PaintScene::new(100.0, 100.0);
+        scene.metadata = Some(std::collections::HashMap::from([(
+            "label".to_string(),
+            "Demo scene".to_string(),
+        )]));
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("label")),
+            Some(&"Demo scene".to_string())
+        );
     }
 
     // ─── PaintInstruction dispatch ───────────────────────────────────────────
@@ -810,7 +845,10 @@ mod tests {
     fn paint_instruction_variants_match() {
         let line = PaintInstruction::Line(PaintLine {
             base: PaintBase::default(),
-            x1: 0.0, y1: 0.0, x2: 10.0, y2: 10.0,
+            x1: 0.0,
+            y1: 0.0,
+            x2: 10.0,
+            y2: 10.0,
             stroke: "#000000".to_string(),
             stroke_width: None,
             stroke_cap: None,

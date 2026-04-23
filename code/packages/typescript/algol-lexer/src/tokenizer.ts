@@ -120,7 +120,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars   = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const ALGOL_TOKENS_PATH = join(GRAMMARS_DIR, "algol.tokens");
+const VALID_VERSIONS = new Set(["algol60"]);
+
+function resolveTokensPath(version = "algol60"): string {
+  if (!VALID_VERSIONS.has(version)) {
+    const valid = Array.from(VALID_VERSIONS).sort().join(", ");
+    throw new Error(`Unknown ALGOL version ${JSON.stringify(version)}. Valid versions: ${valid}`);
+  }
+  return join(GRAMMARS_DIR, "algol", `${version}.tokens`);
+}
 
 /**
  * Tokenize ALGOL 60 source text and return an array of tokens.
@@ -165,13 +173,13 @@ const ALGOL_TOKENS_PATH = join(GRAMMARS_DIR, "algol.tokens");
  *     // [Token(IDENT, "x"), Token(ASSIGN, ":="), Token(INTEGER_LIT, "1"),
  *     //  Token(EOF, "")]
  */
-export function tokenizeAlgol(source: string): Token[] {
+export function tokenizeAlgol(source: string, version = "algol60"): Token[] {
   /**
    * Read the grammar file from disk. In a production system, you would
    * cache this — but for an educational codebase, reading on every call
    * keeps the code simple and makes the data flow obvious.
    */
-  const grammarText = readFileSync(ALGOL_TOKENS_PATH, "utf-8");
+  const grammarText = readFileSync(resolveTokensPath(version), "utf-8");
 
   /**
    * Parse the grammar text into a structured TokenGrammar object.

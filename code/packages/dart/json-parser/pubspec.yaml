@@ -1,0 +1,20 @@
+name: coding_adventures_json_parser
+description: >
+  Grammar-driven JSON parser for Dart backed by the shared ParserGrammar format.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_grammar_tools:
+    path: ../grammar-tools
+  coding_adventures_json_lexer:
+    path: ../json-lexer
+  coding_adventures_parser:
+    path: ../parser
+
+dev_dependencies:
+  test: ^1.25.0

@@ -217,6 +217,8 @@ function WasmRuntime:instantiate(module)
     --   2. { kind = 0, type_index = N, module_name = "env", name = "foo" }
     -- We normalize here.
 
+    local next_func_index = 1
+
     for _, imp in ipairs(module.imports or {}) do
         local imp_kind, imp_mod, imp_name
         if imp.desc then
@@ -234,13 +236,13 @@ function WasmRuntime:instantiate(module)
 
         if imp_kind == "func" then
             local type_idx = (imp.desc and imp.desc.type_idx) or imp.type_index or imp.typeInfo or 0
-            func_types[#func_types + 1] = module.types[type_idx + 1]
-            func_bodies[#func_bodies + 1] = nil
+            func_types[next_func_index] = module.types[type_idx + 1]
             local host_func = nil
             if self._host and self._host.resolve_function then
                 host_func = self._host:resolve_function(imp_mod, imp_name)
             end
-            host_functions[#host_functions + 1] = host_func
+            host_functions[next_func_index] = host_func
+            next_func_index = next_func_index + 1
 
         elseif imp_kind == "mem" then
             if self._host and self._host.resolve_memory then
@@ -275,10 +277,10 @@ function WasmRuntime:instantiate(module)
     -- body is in module.codes at the same position.
 
     for i, type_idx in ipairs(module.functions or {}) do
-        func_types[#func_types + 1] = module.types[type_idx + 1]
+        func_types[next_func_index] = module.types[type_idx + 1]
         local code_entry = (module.codes or {})[i]
-        func_bodies[#func_bodies + 1] = code_entry
-        host_functions[#host_functions + 1] = nil
+        func_bodies[next_func_index] = code_entry
+        next_func_index = next_func_index + 1
     end
 
     -- ── Step 3: Allocate memory ──────────────────────────────────────
@@ -310,7 +312,9 @@ function WasmRuntime:instantiate(module)
     -- expression that may reference previously defined globals).
 
     for _, global_def in ipairs(module.globals or {}) do
-        global_types[#global_types + 1] = global_def.global_type or global_def.type_info
+        global_types[#global_types + 1] = global_def.global_type
+            or global_def.type_info
+            or { value_type = global_def.val_type, mutable = global_def.mutable }
         local init_expr = global_def.init_expr or global_def.init or {}
         local value = wasm_execution.evaluate_const_expr(init_expr, globals_list)
         globals_list[#globals_list + 1] = value
@@ -692,6 +696,7 @@ end
 
 -- WASI errno constants.
 local ESUCCESS = 0   -- No error.
+local EBADF    = 8   -- Bad file descriptor.
 local EINVAL   = 28  -- Invalid argument.
 local ENOSYS   = 52  -- Function not implemented.
 
@@ -723,6 +728,9 @@ function WasiStub.new(config)
 
     -- Environment variables: a list of "KEY=VALUE" strings.
     self.env = config.env or {}
+
+    -- Input callback for fd_read. Defaults to EOF.
+    self.stdin_cb = config.stdin or function(_n) return "" end
 
     -- Output callbacks for fd_write.
     self.stdout_cb = config.stdout or function(_t) end
@@ -767,6 +775,7 @@ function WasiStub:resolve_function(module_name, name)
 
     -- Dispatch to specific implementations.
     if name == "fd_write"            then return self:_make_fd_write()
+    elseif name == "fd_read"         then return self:_make_fd_read()
     elseif name == "proc_exit"       then return self:_make_proc_exit()
     elseif name == "args_sizes_get"  then return self:_make_args_sizes_get()
     elseif name == "args_get"        then return self:_make_args_get()
@@ -866,6 +875,64 @@ function WasiStub:_make_fd_write()
             -- Write total bytes written back to the WASM program.
             memory:store_i32(nwritten_ptr, total_written)
 
+            return { wasm_execution.i32(ESUCCESS) }
+        end
+    }
+end
+
+
+-- ── fd_read ───────────────────────────────────────────────────────────────────
+--
+-- fd_read(fd: i32, iovs_ptr: i32, iovs_len: i32, nread_ptr: i32) → i32
+--
+-- Reads bytes from stdin into guest buffers. Only fd=0 (stdin) is supported.
+
+function WasiStub:_make_fd_read()
+    local self_ref = self
+    return {
+        call = function(args)
+            local fd         = args[1].value
+            local iovs_ptr   = args[2].value
+            local iovs_len   = args[3].value
+            local nread_ptr  = args[4].value
+
+            local memory = self_ref.memory
+            if not memory then
+                return { wasm_execution.i32(ENOSYS) }
+            end
+            if fd ~= 0 then
+                return { wasm_execution.i32(EBADF) }
+            end
+
+            local total_read = 0
+
+            for i = 0, iovs_len - 1 do
+                local buf_ptr = memory:load_i32(iovs_ptr + i * 8) & 0xFFFFFFFF
+                local buf_len = memory:load_i32(iovs_ptr + i * 8 + 4) & 0xFFFFFFFF
+
+                local chunk = self_ref.stdin_cb(buf_len)
+                if type(chunk) == "table" then
+                    local chars = {}
+                    for _, byte in ipairs(chunk) do
+                        chars[#chars + 1] = string.char(byte)
+                    end
+                    chunk = table.concat(chars)
+                elseif chunk == nil then
+                    chunk = ""
+                end
+
+                chunk = string.sub(chunk, 1, buf_len)
+                for j = 1, #chunk do
+                    memory:store_i32_8(buf_ptr + (j - 1), string.byte(chunk, j))
+                end
+
+                total_read = total_read + #chunk
+                if #chunk < buf_len then
+                    break
+                end
+            end
+
+            memory:store_i32(nread_ptr, total_read)
             return { wasm_execution.i32(ESUCCESS) }
         end
     }
@@ -1227,6 +1294,8 @@ function WasiStub:_make_enosys_stub(_name)
         end
     }
 end
+
+M.WasiHost = WasiStub
 
 
 return M

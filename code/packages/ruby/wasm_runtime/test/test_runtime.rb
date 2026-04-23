@@ -175,6 +175,56 @@ class TestRuntime < Minitest::Test
     parts.pack("C*")
   end
 
+  # Build a function that branches to a block end and then continues with
+  # more instructions before the final function end.
+  def build_branch_to_end_then_continue_wasm
+    parts = []
+    parts.push(0x00, 0x61, 0x73, 0x6D)
+    parts.push(0x01, 0x00, 0x00, 0x00)
+
+    # Type section: () -> (i32)
+    type_payload = [0x01, 0x60, 0x00, 0x01, 0x7F]
+    parts.push(0x01)
+    parts.concat(encode_unsigned(type_payload.length))
+    parts.concat(type_payload)
+
+    # Function section
+    func_payload = [0x01, 0x00]
+    parts.push(0x03)
+    parts.concat(encode_unsigned(func_payload.length))
+    parts.concat(func_payload)
+
+    # Export section
+    name_bytes = "branch_then_continue".bytes
+    export_payload = [
+      0x01,
+      *encode_unsigned(name_bytes.length),
+      *name_bytes,
+      0x00, 0x00
+    ]
+    parts.push(0x07)
+    parts.concat(encode_unsigned(export_payload.length))
+    parts.concat(export_payload)
+
+    # Code:
+    #   block
+    #     i32.const 1
+    #     br_if 0
+    #     unreachable
+    #   end
+    #   i32.const 7
+    #   end
+    body_code = [0x02, 0x40, 0x41, 0x01, 0x0D, 0x00, 0x00, 0x0B, 0x41, 0x07, 0x0B]
+    body_payload = [0x00, *body_code]
+    func_body = [*encode_unsigned(body_payload.length), *body_payload]
+    code_payload = [0x01, *func_body]
+    parts.push(0x0A)
+    parts.concat(encode_unsigned(code_payload.length))
+    parts.concat(code_payload)
+
+    parts.pack("C*")
+  end
+
   # ── Load and Parse ─────────────────────────────────────────────────
 
   def test_load_returns_wasm_module
@@ -261,6 +311,12 @@ class TestRuntime < Minitest::Test
     runtime = WR::Runtime.new
     result = runtime.load_and_run(build_add_wasm, "add", [100, 200])
     assert_equal [300], result
+  end
+
+  def test_branch_to_non_final_end_continues_execution
+    runtime = WR::Runtime.new
+    result = runtime.load_and_run(build_branch_to_end_then_continue_wasm, "branch_then_continue", [])
+    assert_equal [7], result
   end
 
   # ── Error Paths ────────────────────────────────────────────────────

@@ -1,0 +1,8 @@
+[package]
+name = "state-machine-markup-serializer"
+version = "0.1.0"
+edition = "2021"
+description = "State Machine Markup serialization for typed state-machine definitions"
+
+[dependencies]
+state-machine = { path = "../state-machine" }

@@ -365,7 +365,10 @@ impl DFA {
     pub fn is_complete(&self) -> bool {
         for state in &self.states {
             for event in &self.alphabet {
-                if !self.transitions.contains_key(&(state.clone(), event.clone())) {
+                if !self
+                    .transitions
+                    .contains_key(&(state.clone(), event.clone()))
+                {
                     return false;
                 }
             }
@@ -384,17 +387,15 @@ impl DFA {
 
         // Check for unreachable states
         let reachable = self.reachable_states();
-        let unreachable: Vec<String> = sorted_set(
-            &self.states.difference(&reachable).cloned().collect(),
-        );
+        let unreachable: Vec<String> =
+            sorted_set(&self.states.difference(&reachable).cloned().collect());
         if !unreachable.is_empty() {
             warnings.push(format!("Unreachable states: {:?}", unreachable));
         }
 
         // Check for unreachable accepting states
-        let unreachable_accepting: Vec<String> = sorted_set(
-            &self.accepting.difference(&reachable).cloned().collect(),
-        );
+        let unreachable_accepting: Vec<String> =
+            sorted_set(&self.accepting.difference(&reachable).cloned().collect());
         if !unreachable_accepting.is_empty() {
             warnings.push(format!(
                 "Unreachable accepting states: {:?}",
@@ -506,16 +507,14 @@ impl DFA {
         let event_width = sorted_events
             .iter()
             .map(|e| e.len())
-            .chain(
-                sorted_states.iter().flat_map(|s| {
-                    sorted_events.iter().map(move |e| {
-                        self.transitions
-                            .get(&(s.clone(), e.clone()))
-                            .map(|t| t.len())
-                            .unwrap_or(1) // for the dash
-                    })
-                }),
-            )
+            .chain(sorted_states.iter().flat_map(|s| {
+                sorted_events.iter().map(move |e| {
+                    self.transitions
+                        .get(&(s.clone(), e.clone()))
+                        .map(|t| t.len())
+                        .unwrap_or(1) // for the dash
+                })
+            }))
             .max()
             .unwrap_or(5)
             .max(5);

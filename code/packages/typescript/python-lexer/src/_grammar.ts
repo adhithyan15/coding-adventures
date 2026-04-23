@@ -97,6 +97,8 @@ export const TOKEN_GRAMMAR: TokenGrammar = {
   escapeMode: undefined,
   skipDefinitions: [],
   reservedKeywords: [],
+  layoutKeywords: [],
+  contextKeywords: [],
   errorDefinitions: [],
   groups: {},
 };

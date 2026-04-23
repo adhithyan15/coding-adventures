@@ -120,10 +120,18 @@ from lang_parser import ASTNode, GrammarParser
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-ALGOL_GRAMMAR_PATH = GRAMMAR_DIR / "algol.grammar"
+VALID_VERSIONS = {"algol60"}
 
 
-def create_algol_parser(source: str) -> GrammarParser:
+def resolve_grammar_path(version: str = "algol60") -> Path:
+    """Resolve a supported ALGOL parser grammar path."""
+    if version not in VALID_VERSIONS:
+        valid = ", ".join(sorted(VALID_VERSIONS))
+        raise ValueError(f"Unknown ALGOL version {version!r}. Valid versions: {valid}")
+    return GRAMMAR_DIR / "algol" / f"{version}.grammar"
+
+
+def create_algol_parser(source: str, version: str = "algol60") -> GrammarParser:
     """Create a ``GrammarParser`` configured for ALGOL 60 text.
 
     This function:
@@ -160,12 +168,12 @@ def create_algol_parser(source: str) -> GrammarParser:
         parser = create_algol_parser('begin integer x; x := 42 end')
         ast = parser.parse()
     """
-    tokens = tokenize_algol(source)
-    grammar = parse_parser_grammar(ALGOL_GRAMMAR_PATH.read_text())
+    tokens = tokenize_algol(source, version=version)
+    grammar = parse_parser_grammar(resolve_grammar_path(version).read_text())
     return GrammarParser(tokens, grammar)
 
 
-def parse_algol(source: str) -> ASTNode:
+def parse_algol(source: str, version: str = "algol60") -> ASTNode:
     """Parse ALGOL 60 text and return an AST.
 
     This is the main entry point for the ALGOL 60 parser. Pass in a string of
@@ -240,5 +248,5 @@ def parse_algol(source: str) -> ASTNode:
         #   ])
         # ])
     """
-    parser = create_algol_parser(source)
+    parser = create_algol_parser(source, version=version)
     return parser.parse()

@@ -153,6 +153,21 @@ class TestCompileTokenGrammarRoundTrip < Minitest::Test
     assert_equal "indentation", loaded.mode
   end
 
+  def test_mode_layout_with_layout_keywords
+    source = <<~TOKENS
+      mode: layout
+      NAME = /[a-z]+/
+      layout_keywords:
+        let
+        where
+    TOKENS
+    original = GT.parse_token_grammar(source)
+    code     = GT.compile_token_grammar(original)
+    loaded   = eval_token_grammar(code)
+    assert_equal "layout", loaded.mode
+    assert_equal %w[let where], loaded.layout_keywords
+  end
+
   def test_escape_mode_none
     source = "escapes: none\nSTRING = /\"[^\"]*\"/"
     original = GT.parse_token_grammar(source)

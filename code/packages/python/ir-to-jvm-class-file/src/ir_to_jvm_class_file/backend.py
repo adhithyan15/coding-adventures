@@ -1,0 +1,1503 @@
+"""Lower compiler_ir programs into JVM class-file bytes.
+
+This module implements a deliberately small, verifier-friendly JVM backend for
+the repository's lower-level AOT IR. The generated classes are intentionally
+"boring": plain static fields, plain static methods, integer arithmetic,
+ordinary array loads/stores, and ordinary method calls.
+"""
+
+from __future__ import annotations
+
+import os
+import re
+import struct
+from contextlib import suppress
+from dataclasses import dataclass
+from pathlib import Path
+
+from compiler_ir import (
+    IrImmediate,
+    IrInstruction,
+    IrLabel,
+    IrOp,
+    IrProgram,
+    IrRegister,
+)
+from jvm_class_file import ACC_PUBLIC, ACC_STATIC, ACC_SUPER
+
+_ACC_PRIVATE = 0x0002
+_ACC_FINAL = 0x0010
+
+_CONSTANT_UTF8 = 1
+_CONSTANT_INTEGER = 3
+_CONSTANT_CLASS = 7
+_CONSTANT_STRING = 8
+_CONSTANT_FIELDREF = 9
+_CONSTANT_METHODREF = 10
+_CONSTANT_NAME_AND_TYPE = 12
+
+_OP_ICONST_M1 = 0x02
+_OP_ICONST_0 = 0x03
+_OP_ICONST_1 = 0x04
+_OP_ICONST_2 = 0x05
+_OP_ICONST_3 = 0x06
+_OP_ICONST_4 = 0x07
+_OP_ICONST_5 = 0x08
+_OP_BIPUSH = 0x10
+_OP_SIPUSH = 0x11
+_OP_LDC = 0x12
+_OP_LDC_W = 0x13
+_OP_ILOAD = 0x15
+_OP_ILOAD_0 = 0x1A
+_OP_ISTORE = 0x36
+_OP_ISTORE_0 = 0x3B
+_OP_IALOAD = 0x2E
+_OP_BALOAD = 0x33
+_OP_IASTORE = 0x4F
+_OP_BASTORE = 0x54
+_OP_POP = 0x57
+_OP_IADD = 0x60
+_OP_ISUB = 0x64
+_OP_IMUL = 0x68
+_OP_IDIV = 0x6C
+_OP_ISHL = 0x78
+_OP_ISHR = 0x7A
+_OP_IAND = 0x7E
+_OP_IOR = 0x80
+_OP_IXOR = 0x82   # bitwise XOR of two ints
+_OP_I2B = 0x91
+_OP_IFEQ = 0x99
+_OP_IFNE = 0x9A
+_OP_IF_ICMPEQ = 0x9F
+_OP_IF_ICMPNE = 0xA0
+_OP_IF_ICMPLT = 0xA1
+_OP_IF_ICMPGT = 0xA3
+_OP_GOTO = 0xA7
+_OP_IRETURN = 0xAC
+_OP_RETURN = 0xB1
+_OP_GETSTATIC = 0xB2
+_OP_PUTSTATIC = 0xB3
+_OP_INVOKEVIRTUAL = 0xB6
+_OP_INVOKESTATIC = 0xB8
+_OP_NEWARRAY = 0xBC
+_OP_NOP = 0x00
+
+_ATYPE_INT = 10
+_ATYPE_BYTE = 8
+
+_DESC_INT = "I"
+_DESC_VOID = "V"
+_DESC_INT_ARRAY = "[I"
+_DESC_BYTE_ARRAY = "[B"
+_DESC_MAIN = "([Ljava/lang/String;)V"
+_DESC_NOARGS_INT = "()I"
+_DESC_NOARGS_VOID = "()V"
+_DESC_INT_TO_INT = "(I)I"
+_DESC_INT_INT_TO_VOID = "(II)V"
+_DESC_ARRAYS_FILL_BYTE_RANGE = "([BIIB)V"
+_DESC_PRINTSTREAM_WRITE = "(I)V"
+_DESC_INPUTSTREAM_READ = "()I"
+
+_JAVA_BINARY_NAME_RE = re.compile(
+    r"[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*"
+)
+_MAX_STATIC_DATA_BYTES = 16 * 1024 * 1024
+
+
+class JvmBackendError(ValueError):
+    """Raised when an IR program cannot be lowered by this backend."""
+
+
+@dataclass(frozen=True)
+class JvmBackendConfig:
+    """Configuration for JVM class-file lowering."""
+
+    class_name: str
+    class_file_major: int = 49
+    class_file_minor: int = 0
+    emit_main_wrapper: bool = True
+    syscall_arg_reg: int = 4  # register holding the SYSCALL print/read argument (Brainfuck=4, BASIC=0)
+
+
+@dataclass(frozen=True)
+class JVMClassArtifact:
+    """The result of lowering an IR program to JVM class-file bytes."""
+
+    class_name: str
+    class_bytes: bytes
+    callable_labels: tuple[str, ...]
+    data_offsets: dict[str, int]
+
+    @property
+    def class_filename(self) -> str:
+        """Return the relative class-file path inside a classpath root."""
+        return self.class_name.replace(".", "/") + ".class"
+
+
+@dataclass(frozen=True)
+class _FieldSpec:
+    access_flags: int
+    name: str
+    descriptor: str
+
+
+@dataclass(frozen=True)
+class _MethodSpec:
+    access_flags: int
+    name: str
+    descriptor: str
+    code: bytes
+    max_stack: int
+    max_locals: int
+
+
+@dataclass(frozen=True)
+class _LabelMarker:
+    name: str
+
+
+@dataclass(frozen=True)
+class _RawBytes:
+    data: bytes
+
+
+@dataclass(frozen=True)
+class _BranchRef:
+    opcode: int
+    label: str
+
+
+class _ConstantPoolBuilder:
+    """Minimal constant-pool encoder with deduplication."""
+
+    def __init__(self) -> None:
+        self._entries: list[bytes] = []
+        self._indices: dict[tuple[object, ...], int] = {}
+
+    def _add(self, key: tuple[object, ...], payload: bytes) -> int:
+        existing = self._indices.get(key)
+        if existing is not None:
+            return existing
+        self._entries.append(payload)
+        index = len(self._entries)
+        self._indices[key] = index
+        return index
+
+    def utf8(self, value: str) -> int:
+        encoded = value.encode("utf-8")
+        return self._add(
+            ("Utf8", value),
+            bytes([_CONSTANT_UTF8]) + _u2(len(encoded)) + encoded,
+        )
+
+    def integer(self, value: int) -> int:
+        return self._add(
+            ("Integer", value),
+            bytes([_CONSTANT_INTEGER]) + struct.pack(">i", value),
+        )
+
+    def class_ref(self, internal_name: str) -> int:
+        name_index = self.utf8(internal_name)
+        return self._add(
+            ("Class", internal_name),
+            bytes([_CONSTANT_CLASS]) + _u2(name_index),
+        )
+
+    def string(self, value: str) -> int:
+        string_index = self.utf8(value)
+        return self._add(
+            ("String", value),
+            bytes([_CONSTANT_STRING]) + _u2(string_index),
+        )
+
+    def name_and_type(self, name: str, descriptor: str) -> int:
+        return self._add(
+            ("NameAndType", name, descriptor),
+            bytes([_CONSTANT_NAME_AND_TYPE])
+            + _u2(self.utf8(name))
+            + _u2(self.utf8(descriptor)),
+        )
+
+    def field_ref(self, owner: str, name: str, descriptor: str) -> int:
+        return self._add(
+            ("Fieldref", owner, name, descriptor),
+            bytes([_CONSTANT_FIELDREF])
+            + _u2(self.class_ref(owner))
+            + _u2(self.name_and_type(name, descriptor)),
+        )
+
+    def method_ref(self, owner: str, name: str, descriptor: str) -> int:
+        return self._add(
+            ("Methodref", owner, name, descriptor),
+            bytes([_CONSTANT_METHODREF])
+            + _u2(self.class_ref(owner))
+            + _u2(self.name_and_type(name, descriptor)),
+        )
+
+    def encode(self) -> bytes:
+        return b"".join(self._entries)
+
+    @property
+    def count(self) -> int:
+        return len(self._entries) + 1
+
+
+class _BytecodeBuilder:
+    """Two-pass JVM bytecode assembler for a small instruction subset."""
+
+    def __init__(self) -> None:
+        self._items: list[_LabelMarker | _RawBytes | _BranchRef] = []
+
+    def mark(self, label: str) -> None:
+        self._items.append(_LabelMarker(label))
+
+    def emit_raw(self, data: bytes) -> None:
+        self._items.append(_RawBytes(data))
+
+    def emit_opcode(self, opcode: int) -> None:
+        self.emit_raw(bytes([opcode]))
+
+    def emit_u1_instruction(self, opcode: int, operand: int) -> None:
+        self.emit_raw(bytes([opcode, operand & 0xFF]))
+
+    def emit_u2_instruction(self, opcode: int, operand: int) -> None:
+        self.emit_raw(bytes([opcode]) + _u2(operand))
+
+    def emit_branch(self, opcode: int, label: str) -> None:
+        self._items.append(_BranchRef(opcode, label))
+
+    def assemble(self) -> bytes:
+        label_offsets: dict[str, int] = {}
+        offset = 0
+        for item in self._items:
+            if isinstance(item, _LabelMarker):
+                label_offsets[item.name] = offset
+            elif isinstance(item, _RawBytes):
+                offset += len(item.data)
+            else:
+                offset += 3
+
+        output = bytearray()
+        offset = 0
+        for item in self._items:
+            if isinstance(item, _LabelMarker):
+                continue
+            if isinstance(item, _RawBytes):
+                output.extend(item.data)
+                offset += len(item.data)
+                continue
+            target = label_offsets.get(item.label)
+            if target is None:
+                raise JvmBackendError(f"Unknown bytecode label: {item.label}")
+            branch_offset = target - offset
+            if branch_offset < -32768 or branch_offset > 32767:
+                raise JvmBackendError(
+                    "Branch offset out of range for label "
+                    f"{item.label}: {branch_offset}"
+                )
+            output.extend(bytes([item.opcode]) + struct.pack(">h", branch_offset))
+            offset += 3
+        return bytes(output)
+
+
+@dataclass(frozen=True)
+class _CallableRegion:
+    name: str
+    start_index: int
+    end_index: int
+    instructions: tuple[IrInstruction, ...]
+
+
+class _JvmClassLowerer:
+    """Internal lowering engine."""
+
+    def __init__(self, program: IrProgram, config: JvmBackendConfig) -> None:
+        self.program = program
+        self.config = config
+        self.internal_name = config.class_name.replace(".", "/")
+        self.cp = _ConstantPoolBuilder()
+        self._data_offsets: dict[str, int] = {}
+        self._fresh_label_id = 0
+        self._helper_reg_field = "__ca_regs"
+        self._helper_mem_field = "__ca_memory"
+        self._helper_reg_get = "__ca_regGet"
+        self._helper_reg_set = "__ca_regSet"
+        self._helper_mem_load_byte = "__ca_memLoadByte"
+        self._helper_mem_store_byte = "__ca_memStoreByte"
+        self._helper_load_word = "__ca_loadWord"
+        self._helper_store_word = "__ca_storeWord"
+        self._helper_syscall = "__ca_syscall"
+
+    def lower(self) -> JVMClassArtifact:
+        self._validate_class_name()
+        label_positions = self._collect_labels()
+        callable_regions = self._discover_callable_regions(label_positions)
+        self._validate_helper_name_collisions(callable_regions)
+        data_offsets = self._assign_data_offsets()
+        self._data_offsets = data_offsets
+        # Register 1 is read by every HALT/RET emission (_emit_reg_get(builder, 1))
+        # even when the IR program only references register 0 explicitly.  The
+        # array must therefore be at least 2 elements long so index 1 is valid.
+        reg_count = max(self._max_register_index() + 1, 2)
+
+        fields = [
+            _FieldSpec(
+                _ACC_PRIVATE | ACC_STATIC,
+                self._helper_reg_field,
+                _DESC_INT_ARRAY,
+            ),
+            _FieldSpec(
+                _ACC_PRIVATE | ACC_STATIC,
+                self._helper_mem_field,
+                _DESC_BYTE_ARRAY,
+            ),
+        ]
+
+        methods = [
+            self._build_class_initializer(reg_count, data_offsets),
+            self._build_reg_get_method(),
+            self._build_reg_set_method(),
+            self._build_mem_load_byte_method(),
+            self._build_mem_store_byte_method(),
+            self._build_load_word_method(),
+            self._build_store_word_method(),
+            self._build_syscall_method(),
+        ]
+        methods.extend(
+            self._build_callable_method(region) for region in callable_regions
+        )
+        if self.config.emit_main_wrapper:
+            methods.append(self._build_main_method())
+
+        class_bytes = self._encode_class_file(fields, methods)
+        return JVMClassArtifact(
+            class_name=self.config.class_name,
+            class_bytes=class_bytes,
+            callable_labels=tuple(region.name for region in callable_regions),
+            data_offsets=data_offsets,
+        )
+
+    def _validate_class_name(self) -> None:
+        if not self.config.class_name:
+            raise JvmBackendError("class_name must not be empty")
+        if not _JAVA_BINARY_NAME_RE.fullmatch(self.config.class_name):
+            raise JvmBackendError(
+                "class_name must be a legal Java binary name made of "
+                "dot-separated identifiers"
+            )
+
+    def _collect_labels(self) -> dict[str, int]:
+        positions: dict[str, int] = {}
+        for index, instruction in enumerate(self.program.instructions):
+            if instruction.opcode != IrOp.LABEL:
+                continue
+            label = _as_label(instruction.operands[0], "LABEL operand")
+            if label.name in positions:
+                raise JvmBackendError(f"Duplicate IR label: {label.name}")
+            positions[label.name] = index
+        return positions
+
+    def _discover_callable_regions(
+        self,
+        label_positions: dict[str, int],
+    ) -> list[_CallableRegion]:
+        callable_names = {self.program.entry_label}
+        for instruction in self.program.instructions:
+            if instruction.opcode == IrOp.CALL:
+                target = _as_label(instruction.operands[0], "CALL target")
+                callable_names.add(target.name)
+
+        if self.program.entry_label not in label_positions:
+            raise JvmBackendError(f"Entry label not found: {self.program.entry_label}")
+        missing = sorted(callable_names - set(label_positions))
+        if missing:
+            raise JvmBackendError(f"Missing callable labels: {missing}")
+
+        ordered_names = sorted(callable_names, key=lambda name: label_positions[name])
+        regions: list[_CallableRegion] = []
+        for index, name in enumerate(ordered_names):
+            start = label_positions[name]
+            end = (
+                label_positions[ordered_names[index + 1]]
+                if index + 1 < len(ordered_names)
+                else len(self.program.instructions)
+            )
+            region_instructions = tuple(self.program.instructions[start:end])
+            regions.append(
+                _CallableRegion(
+                    name=name,
+                    start_index=start,
+                    end_index=end,
+                    instructions=region_instructions,
+                )
+            )
+
+        callable_lookup = {region.name for region in regions}
+        for region in regions:
+            for instruction in region.instructions:
+                if instruction.opcode in (IrOp.JUMP, IrOp.BRANCH_Z, IrOp.BRANCH_NZ):
+                    label_operand = _as_label(
+                        instruction.operands[-1],
+                        f"{instruction.opcode.name} target",
+                    )
+                    target_index = label_positions.get(label_operand.name)
+                    if target_index is None:
+                        raise JvmBackendError(
+                            f"Branch target {label_operand.name!r} does not exist"
+                        )
+                    if not (region.start_index <= target_index < region.end_index):
+                        raise JvmBackendError(
+                            "Branch target "
+                            f"{label_operand.name!r} escapes callable "
+                            f"{region.name!r}"
+                        )
+                elif instruction.opcode == IrOp.CALL:
+                    label_operand = _as_label(instruction.operands[0], "CALL target")
+                    if label_operand.name not in callable_lookup:
+                        raise JvmBackendError(
+                            "CALL target "
+                            f"{label_operand.name!r} is not a callable label"
+                        )
+        return regions
+
+    def _validate_helper_name_collisions(self, regions: list[_CallableRegion]) -> None:
+        reserved = {
+            self._helper_reg_get,
+            self._helper_reg_set,
+            self._helper_mem_load_byte,
+            self._helper_mem_store_byte,
+            self._helper_load_word,
+            self._helper_store_word,
+            self._helper_syscall,
+            "<clinit>",
+            "main",
+        }
+        collisions = sorted(
+            reserved.intersection(region.name for region in regions)
+        )
+        if collisions:
+            raise JvmBackendError(
+                "Callable labels collide with helper names: "
+                f"{collisions}"
+            )
+
+    def _assign_data_offsets(self) -> dict[str, int]:
+        offset = 0
+        offsets: dict[str, int] = {}
+        for declaration in self.program.data:
+            if declaration.size < 0:
+                raise JvmBackendError(f"Negative data size for {declaration.label!r}")
+            offsets[declaration.label] = offset
+            offset += declaration.size
+            if offset > _MAX_STATIC_DATA_BYTES:
+                raise JvmBackendError(
+                    "Total static data exceeds the JVM backend limit of "
+                    f"{_MAX_STATIC_DATA_BYTES} bytes"
+                )
+        return offsets
+
+    def _max_register_index(self) -> int:
+        highest = -1
+        for instruction in self.program.instructions:
+            for operand in instruction.operands:
+                if isinstance(operand, IrRegister):
+                    highest = max(highest, operand.index)
+        return highest
+
+    def _fresh_label(self, prefix: str) -> str:
+        self._fresh_label_id += 1
+        return f"__ca_{prefix}_{self._fresh_label_id}"
+
+    def _field_ref(self, name: str, descriptor: str) -> int:
+        return self.cp.field_ref(self.internal_name, name, descriptor)
+
+    def _method_ref(self, name: str, descriptor: str) -> int:
+        return self.cp.method_ref(self.internal_name, name, descriptor)
+
+    def _emit_push_int(self, builder: _BytecodeBuilder, value: int) -> None:
+        if value == -1:
+            builder.emit_opcode(_OP_ICONST_M1)
+            return
+        if 0 <= value <= 5:
+            builder.emit_opcode(_OP_ICONST_0 + value)
+            return
+        if -128 <= value <= 127:
+            builder.emit_u1_instruction(_OP_BIPUSH, value)
+            return
+        if -32768 <= value <= 32767:
+            builder.emit_raw(bytes([_OP_SIPUSH]) + struct.pack(">h", value))
+            return
+        constant_index = self.cp.integer(value)
+        if constant_index <= 0xFF:
+            builder.emit_u1_instruction(_OP_LDC, constant_index)
+        else:
+            builder.emit_u2_instruction(_OP_LDC_W, constant_index)
+
+    def _emit_iload(self, builder: _BytecodeBuilder, index: int) -> None:
+        if 0 <= index <= 3:
+            builder.emit_opcode(_OP_ILOAD_0 + index)
+        else:
+            builder.emit_u1_instruction(_OP_ILOAD, index)
+
+    def _emit_istore(self, builder: _BytecodeBuilder, index: int) -> None:
+        if 0 <= index <= 3:
+            builder.emit_opcode(_OP_ISTORE_0 + index)
+        else:
+            builder.emit_u1_instruction(_OP_ISTORE, index)
+
+    def _emit_reg_get(self, builder: _BytecodeBuilder, index: int) -> None:
+        self._emit_push_int(builder, index)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_reg_get, _DESC_INT_TO_INT),
+        )
+
+    def _emit_reg_set(
+        self,
+        builder: _BytecodeBuilder,
+        dst_index: int,
+        value: int,
+    ) -> None:
+        self._emit_push_int(builder, dst_index)
+        self._emit_push_int(builder, value)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+        )
+
+    def _build_class_initializer(
+        self,
+        reg_count: int,
+        data_offsets: dict[str, int],
+    ) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+
+        self._emit_push_int(builder, reg_count)
+        builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_INT)
+        builder.emit_u2_instruction(
+            _OP_PUTSTATIC,
+            self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+        )
+
+        total_bytes = sum(declaration.size for declaration in self.program.data)
+        self._emit_push_int(builder, total_bytes)
+        builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_BYTE)
+        builder.emit_u2_instruction(
+            _OP_PUTSTATIC,
+            self._field_ref(self._helper_mem_field, _DESC_BYTE_ARRAY),
+        )
+
+        for declaration in self.program.data:
+            if declaration.init == 0 or declaration.size == 0:
+                continue
+            start = data_offsets[declaration.label]
+            self._emit_fill_byte_range(
+                builder,
+                start=start,
+                size=declaration.size,
+                value=declaration.init,
+            )
+
+        builder.emit_opcode(_OP_RETURN)
+        return _MethodSpec(
+            access_flags=ACC_STATIC,
+            name="<clinit>",
+            descriptor=_DESC_NOARGS_VOID,
+            code=builder.assemble(),
+            max_stack=8,
+            max_locals=0,
+        )
+
+    def _build_reg_get_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+        )
+        self._emit_iload(builder, 0)
+        builder.emit_opcode(_OP_IALOAD)
+        builder.emit_opcode(_OP_IRETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_reg_get,
+            descriptor=_DESC_INT_TO_INT,
+            code=builder.assemble(),
+            max_stack=2,
+            max_locals=1,
+        )
+
+    def _build_reg_set_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+        )
+        self._emit_iload(builder, 0)
+        self._emit_iload(builder, 1)
+        builder.emit_opcode(_OP_IASTORE)
+        builder.emit_opcode(_OP_RETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_reg_set,
+            descriptor=_DESC_INT_INT_TO_VOID,
+            code=builder.assemble(),
+            max_stack=3,
+            max_locals=2,
+        )
+
+    def _emit_fill_byte_range(
+        self,
+        builder: _BytecodeBuilder,
+        *,
+        start: int,
+        size: int,
+        value: int,
+    ) -> None:
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._helper_mem_field, _DESC_BYTE_ARRAY),
+        )
+        self._emit_push_int(builder, start)
+        self._emit_push_int(builder, start + size)
+        self._emit_push_int(builder, value)
+        builder.emit_opcode(_OP_I2B)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self.cp.method_ref(
+                "java/util/Arrays",
+                "fill",
+                _DESC_ARRAYS_FILL_BYTE_RANGE,
+            ),
+        )
+
+    def _build_mem_load_byte_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._helper_mem_field, _DESC_BYTE_ARRAY),
+        )
+        self._emit_iload(builder, 0)
+        builder.emit_opcode(_OP_BALOAD)
+        self._emit_push_int(builder, 0xFF)
+        builder.emit_opcode(_OP_IAND)
+        builder.emit_opcode(_OP_IRETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_mem_load_byte,
+            descriptor=_DESC_INT_TO_INT,
+            code=builder.assemble(),
+            max_stack=2,
+            max_locals=1,
+        )
+
+    def _build_mem_store_byte_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self._field_ref(self._helper_mem_field, _DESC_BYTE_ARRAY),
+        )
+        self._emit_iload(builder, 0)
+        self._emit_iload(builder, 1)
+        builder.emit_opcode(_OP_BASTORE)
+        builder.emit_opcode(_OP_RETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_mem_store_byte,
+            descriptor=_DESC_INT_INT_TO_VOID,
+            code=builder.assemble(),
+            max_stack=3,
+            max_locals=2,
+        )
+
+    def _build_load_word_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+
+        self._emit_iload(builder, 0)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_mem_load_byte, _DESC_INT_TO_INT),
+        )
+
+        for shift, extra in ((8, 1), (16, 2), (24, 3)):
+            self._emit_iload(builder, 0)
+            self._emit_push_int(builder, extra)
+            builder.emit_opcode(_OP_IADD)
+            builder.emit_u2_instruction(
+                _OP_INVOKESTATIC,
+                self._method_ref(self._helper_mem_load_byte, _DESC_INT_TO_INT),
+            )
+            self._emit_push_int(builder, shift)
+            builder.emit_opcode(_OP_ISHL)
+            builder.emit_opcode(_OP_IOR)
+
+        builder.emit_opcode(_OP_IRETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_load_word,
+            descriptor=_DESC_INT_TO_INT,
+            code=builder.assemble(),
+            max_stack=4,
+            max_locals=1,
+        )
+
+    def _build_store_word_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+
+        for shift, extra in ((0, 0), (8, 1), (16, 2), (24, 3)):
+            self._emit_iload(builder, 0)
+            if extra:
+                self._emit_push_int(builder, extra)
+                builder.emit_opcode(_OP_IADD)
+            self._emit_iload(builder, 1)
+            if shift:
+                self._emit_push_int(builder, shift)
+                builder.emit_opcode(_OP_ISHR)
+            builder.emit_u2_instruction(
+                _OP_INVOKESTATIC,
+                self._method_ref(
+                    self._helper_mem_store_byte,
+                    _DESC_INT_INT_TO_VOID,
+                ),
+            )
+
+        builder.emit_opcode(_OP_RETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_store_word,
+            descriptor=_DESC_INT_INT_TO_VOID,
+            code=builder.assemble(),
+            max_stack=4,
+            max_locals=2,
+        )
+
+    def _build_syscall_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+        label_read = self._fresh_label("sys_read")
+        label_halt = self._fresh_label("sys_halt")
+        label_have_input = self._fresh_label("sys_have_input")
+
+        self._emit_iload(builder, 0)
+        self._emit_push_int(builder, 1)
+        builder.emit_branch(_OP_IF_ICMPNE, label_read)
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(
+                "java/lang/System",
+                "out",
+                "Ljava/io/PrintStream;",
+            ),
+        )
+        # Load __ca_regs[arg_reg] — arg_reg is local variable 1 (runtime value).
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+        )
+        self._emit_iload(builder, 1)   # arg_reg index
+        builder.emit_opcode(_OP_IALOAD)
+        self._emit_push_int(builder, 0xFF)
+        builder.emit_opcode(_OP_IAND)
+        builder.emit_u2_instruction(
+            _OP_INVOKEVIRTUAL,
+            self.cp.method_ref(
+                "java/io/PrintStream",
+                "write",
+                _DESC_PRINTSTREAM_WRITE,
+            ),
+        )
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(
+                "java/lang/System",
+                "out",
+                "Ljava/io/PrintStream;",
+            ),
+        )
+        builder.emit_u2_instruction(
+            _OP_INVOKEVIRTUAL,
+            self.cp.method_ref(
+                "java/io/PrintStream",
+                "flush",
+                _DESC_NOARGS_VOID,
+            ),
+        )
+        builder.emit_opcode(_OP_RETURN)
+
+        builder.mark(label_read)
+        self._emit_iload(builder, 0)
+        self._emit_push_int(builder, 2)
+        builder.emit_branch(_OP_IF_ICMPNE, label_halt)
+        builder.emit_u2_instruction(
+            _OP_GETSTATIC,
+            self.cp.field_ref(
+                "java/lang/System",
+                "in",
+                "Ljava/io/InputStream;",
+            ),
+        )
+        builder.emit_u2_instruction(
+            _OP_INVOKEVIRTUAL,
+            self.cp.method_ref(
+                "java/io/InputStream",
+                "read",
+                _DESC_INPUTSTREAM_READ,
+            ),
+        )
+        # local 2 = byte read from stdin (local 1 is arg_reg)
+        self._emit_istore(builder, 2)
+        self._emit_iload(builder, 2)
+        self._emit_push_int(builder, -1)
+        builder.emit_branch(_OP_IF_ICMPNE, label_have_input)
+        # EOF: store 0 into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
+        self._emit_push_int(builder, 0)
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+        )
+        builder.emit_opcode(_OP_RETURN)
+
+        builder.mark(label_have_input)
+        # Store read byte into regs[arg_reg]
+        self._emit_iload(builder, 1)   # arg_reg
+        self._emit_iload(builder, 2)   # byte value
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+        )
+        builder.emit_opcode(_OP_RETURN)
+
+        builder.mark(label_halt)
+        builder.emit_opcode(_OP_RETURN)
+        return _MethodSpec(
+            access_flags=_ACC_PRIVATE | ACC_STATIC,
+            name=self._helper_syscall,
+            descriptor="(II)V",   # syscall_num, arg_reg
+            code=builder.assemble(),
+            max_stack=4,
+            max_locals=3,          # 0=syscall_num, 1=arg_reg, 2=read_byte
+        )
+
+    def _build_callable_method(self, region: _CallableRegion) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+
+        for instruction in region.instructions:
+            if instruction.opcode == IrOp.LABEL:
+                label = _as_label(instruction.operands[0], "LABEL operand")
+                builder.mark(label.name)
+                continue
+            if instruction.opcode == IrOp.COMMENT:
+                continue
+            if instruction.opcode == IrOp.NOP:
+                builder.emit_opcode(_OP_NOP)
+                continue
+
+            if instruction.opcode == IrOp.LOAD_IMM:
+                dst = _as_register(instruction.operands[0], "LOAD_IMM dst")
+                imm = _as_immediate(instruction.operands[1], "LOAD_IMM immediate")
+                self._emit_push_int(builder, dst.index)
+                self._emit_push_int(builder, imm.value)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.LOAD_ADDR:
+                dst = _as_register(instruction.operands[0], "LOAD_ADDR dst")
+                label = _as_label(instruction.operands[1], "LOAD_ADDR label")
+                offset = self._data_offsets.get(label.name)
+                if offset is None:
+                    raise JvmBackendError(f"Unknown data label: {label.name}")
+                self._emit_push_int(builder, dst.index)
+                self._emit_push_int(builder, offset)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.LOAD_BYTE:
+                dst = _as_register(instruction.operands[0], "LOAD_BYTE dst")
+                base = _as_register(instruction.operands[1], "LOAD_BYTE base")
+                offset = _as_register(instruction.operands[2], "LOAD_BYTE offset")
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, base.index)
+                self._emit_reg_get(builder, offset.index)
+                builder.emit_opcode(_OP_IADD)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_mem_load_byte, _DESC_INT_TO_INT),
+                )
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.STORE_BYTE:
+                src = _as_register(instruction.operands[0], "STORE_BYTE src")
+                base = _as_register(instruction.operands[1], "STORE_BYTE base")
+                offset = _as_register(instruction.operands[2], "STORE_BYTE offset")
+                self._emit_reg_get(builder, base.index)
+                self._emit_reg_get(builder, offset.index)
+                builder.emit_opcode(_OP_IADD)
+                self._emit_reg_get(builder, src.index)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(
+                        self._helper_mem_store_byte,
+                        _DESC_INT_INT_TO_VOID,
+                    ),
+                )
+                continue
+
+            if instruction.opcode == IrOp.LOAD_WORD:
+                dst = _as_register(instruction.operands[0], "LOAD_WORD dst")
+                base = _as_register(instruction.operands[1], "LOAD_WORD base")
+                offset = _as_register(instruction.operands[2], "LOAD_WORD offset")
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, base.index)
+                self._emit_reg_get(builder, offset.index)
+                builder.emit_opcode(_OP_IADD)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_load_word, _DESC_INT_TO_INT),
+                )
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.STORE_WORD:
+                src = _as_register(instruction.operands[0], "STORE_WORD src")
+                base = _as_register(instruction.operands[1], "STORE_WORD base")
+                offset = _as_register(instruction.operands[2], "STORE_WORD offset")
+                self._emit_reg_get(builder, base.index)
+                self._emit_reg_get(builder, offset.index)
+                builder.emit_opcode(_OP_IADD)
+                self._emit_reg_get(builder, src.index)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(
+                        self._helper_store_word,
+                        _DESC_INT_INT_TO_VOID,
+                    ),
+                )
+                continue
+
+            if instruction.opcode in (IrOp.ADD, IrOp.SUB, IrOp.AND, IrOp.OR, IrOp.XOR, IrOp.MUL, IrOp.DIV):
+                dst = _as_register(
+                    instruction.operands[0],
+                    f"{instruction.opcode.name} dst",
+                )
+                lhs = _as_register(
+                    instruction.operands[1],
+                    f"{instruction.opcode.name} lhs",
+                )
+                rhs = _as_register(
+                    instruction.operands[2],
+                    f"{instruction.opcode.name} rhs",
+                )
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, lhs.index)
+                self._emit_reg_get(builder, rhs.index)
+                if instruction.opcode == IrOp.ADD:
+                    builder.emit_opcode(_OP_IADD)
+                elif instruction.opcode == IrOp.SUB:
+                    builder.emit_opcode(_OP_ISUB)
+                elif instruction.opcode == IrOp.MUL:
+                    builder.emit_opcode(_OP_IMUL)
+                elif instruction.opcode == IrOp.DIV:
+                    builder.emit_opcode(_OP_IDIV)
+                elif instruction.opcode == IrOp.OR:
+                    builder.emit_opcode(_OP_IOR)
+                elif instruction.opcode == IrOp.XOR:
+                    builder.emit_opcode(_OP_IXOR)
+                else:
+                    builder.emit_opcode(_OP_IAND)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode in (IrOp.ADD_IMM, IrOp.AND_IMM, IrOp.OR_IMM, IrOp.XOR_IMM):
+                dst = _as_register(
+                    instruction.operands[0],
+                    f"{instruction.opcode.name} dst",
+                )
+                src = _as_register(
+                    instruction.operands[1],
+                    f"{instruction.opcode.name} src",
+                )
+                imm = _as_immediate(
+                    instruction.operands[2],
+                    f"{instruction.opcode.name} imm",
+                )
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, src.index)
+                self._emit_push_int(builder, imm.value)
+                if instruction.opcode == IrOp.ADD_IMM:
+                    builder.emit_opcode(_OP_IADD)
+                elif instruction.opcode == IrOp.OR_IMM:
+                    builder.emit_opcode(_OP_IOR)
+                elif instruction.opcode == IrOp.XOR_IMM:
+                    builder.emit_opcode(_OP_IXOR)
+                else:
+                    builder.emit_opcode(_OP_IAND)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.NOT:
+                # NOT(x) = x XOR 0xFFFFFFFF = x XOR -1 in two's complement.
+                # We push src, push iconst_m1 (-1 = all bits set), then ixor,
+                # which flips every bit in the 32-bit int.
+                dst = _as_register(instruction.operands[0], "NOT dst")
+                src = _as_register(instruction.operands[1], "NOT src")
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, src.index)
+                builder.emit_opcode(_OP_ICONST_M1)   # push -1 (all 32 bits set)
+                builder.emit_opcode(_OP_IXOR)          # XOR: all bits flipped
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode in (
+                IrOp.CMP_EQ,
+                IrOp.CMP_NE,
+                IrOp.CMP_LT,
+                IrOp.CMP_GT,
+            ):
+                dst = _as_register(
+                    instruction.operands[0],
+                    f"{instruction.opcode.name} dst",
+                )
+                lhs = _as_register(
+                    instruction.operands[1],
+                    f"{instruction.opcode.name} lhs",
+                )
+                rhs = _as_register(
+                    instruction.operands[2],
+                    f"{instruction.opcode.name} rhs",
+                )
+                true_label = self._fresh_label("cmp_true")
+                done_label = self._fresh_label("cmp_done")
+                branch_opcode = {
+                    IrOp.CMP_EQ: _OP_IF_ICMPEQ,
+                    IrOp.CMP_NE: _OP_IF_ICMPNE,
+                    IrOp.CMP_LT: _OP_IF_ICMPLT,
+                    IrOp.CMP_GT: _OP_IF_ICMPGT,
+                }[instruction.opcode]
+                self._emit_push_int(builder, dst.index)
+                self._emit_reg_get(builder, lhs.index)
+                self._emit_reg_get(builder, rhs.index)
+                builder.emit_branch(branch_opcode, true_label)
+                self._emit_push_int(builder, 0)
+                builder.emit_branch(_OP_GOTO, done_label)
+                builder.mark(true_label)
+                self._emit_push_int(builder, 1)
+                builder.mark(done_label)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.JUMP:
+                label = _as_label(instruction.operands[0], "JUMP target")
+                builder.emit_branch(_OP_GOTO, label.name)
+                continue
+
+            if instruction.opcode in (IrOp.BRANCH_Z, IrOp.BRANCH_NZ):
+                reg = _as_register(
+                    instruction.operands[0],
+                    f"{instruction.opcode.name} reg",
+                )
+                label = _as_label(
+                    instruction.operands[1],
+                    f"{instruction.opcode.name} target",
+                )
+                self._emit_reg_get(builder, reg.index)
+                builder.emit_branch(
+                    _OP_IFEQ if instruction.opcode == IrOp.BRANCH_Z else _OP_IFNE,
+                    label.name,
+                )
+                continue
+
+            if instruction.opcode == IrOp.CALL:
+                label = _as_label(instruction.operands[0], "CALL target")
+                self._emit_push_int(builder, 1)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(label.name, _DESC_NOARGS_INT),
+                )
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
+                )
+                continue
+
+            if instruction.opcode == IrOp.RET or instruction.opcode == IrOp.HALT:
+                self._emit_reg_get(builder, 1)
+                builder.emit_opcode(_OP_IRETURN)
+                continue
+
+            if instruction.opcode == IrOp.SYSCALL:
+                # SYSCALL carries two operands: the syscall number (immediate) and
+                # the argument register (register).  The register operand makes the
+                # IR self-describing — no backend config is needed.
+                number = _as_immediate(instruction.operands[0], "SYSCALL number")
+                arg_reg = _as_register(instruction.operands[1], "SYSCALL arg register")
+                self._emit_push_int(builder, number.value)
+                self._emit_push_int(builder, arg_reg.index)
+                builder.emit_u2_instruction(
+                    _OP_INVOKESTATIC,
+                    self._method_ref(self._helper_syscall, "(II)V"),
+                )
+                continue
+
+            raise JvmBackendError(
+                "Unsupported IR opcode in prototype backend: "
+                f"{instruction.opcode}"
+            )
+
+        code = builder.assemble()
+        access_flags = (
+            ACC_PUBLIC | ACC_STATIC
+            if region.name == self.program.entry_label
+            else _ACC_PRIVATE | ACC_STATIC
+        )
+        return _MethodSpec(
+            access_flags=access_flags,
+            name=region.name,
+            descriptor=_DESC_NOARGS_INT,
+            code=code,
+            max_stack=16,
+            max_locals=0,
+        )
+
+    def _build_main_method(self) -> _MethodSpec:
+        builder = _BytecodeBuilder()
+        builder.emit_u2_instruction(
+            _OP_INVOKESTATIC,
+            self._method_ref(self.program.entry_label, _DESC_NOARGS_INT),
+        )
+        builder.emit_opcode(_OP_POP)
+        builder.emit_opcode(_OP_RETURN)
+        return _MethodSpec(
+            access_flags=ACC_PUBLIC | ACC_STATIC,
+            name="main",
+            descriptor=_DESC_MAIN,
+            code=builder.assemble(),
+            max_stack=1,
+            max_locals=1,
+        )
+
+    def _encode_class_file(
+        self,
+        fields: list[_FieldSpec],
+        methods: list[_MethodSpec],
+    ) -> bytes:
+        this_class_index = self.cp.class_ref(self.internal_name)
+        super_class_index = self.cp.class_ref("java/lang/Object")
+
+        field_bytes = b"".join(
+            _u2(field.access_flags)
+            + _u2(self.cp.utf8(field.name))
+            + _u2(self.cp.utf8(field.descriptor))
+            + _u2(0)
+            for field in fields
+        )
+
+        code_name_index = self.cp.utf8("Code")
+        method_bytes = b"".join(
+            self._encode_method(method, code_name_index) for method in methods
+        )
+
+        return b"".join(
+            [
+                _u4(0xCAFEBABE),
+                _u2(self.config.class_file_minor),
+                _u2(self.config.class_file_major),
+                _u2(self.cp.count),
+                self.cp.encode(),
+                _u2(ACC_PUBLIC | ACC_SUPER | _ACC_FINAL),
+                _u2(this_class_index),
+                _u2(super_class_index),
+                _u2(0),
+                _u2(len(fields)),
+                field_bytes,
+                _u2(len(methods)),
+                method_bytes,
+                _u2(0),
+            ]
+        )
+
+    def _encode_method(self, method: _MethodSpec, code_name_index: int) -> bytes:
+        code_attribute_body = b"".join(
+            [
+                _u2(method.max_stack),
+                _u2(method.max_locals),
+                _u4(len(method.code)),
+                method.code,
+                _u2(0),
+                _u2(0),
+            ]
+        )
+        code_attribute = b"".join(
+            [
+                _u2(code_name_index),
+                _u4(len(code_attribute_body)),
+                code_attribute_body,
+            ]
+        )
+        return b"".join(
+            [
+                _u2(method.access_flags),
+                _u2(self.cp.utf8(method.name)),
+                _u2(self.cp.utf8(method.descriptor)),
+                _u2(1),
+                code_attribute,
+            ]
+        )
+
+
+# ---------------------------------------------------------------------------
+# JVM word-size constraints and supported opcode set
+# ---------------------------------------------------------------------------
+#
+# The JVM uses 32-bit two's-complement integers (Java ``int``).
+# Signed range: -2 147 483 648 (−2^31) to 2 147 483 647 (2^31 − 1).
+
+_JVM_INT_MIN: int = -(1 << 31)   # -2 147 483 648
+_JVM_INT_MAX: int =  (1 << 31) - 1  # 2 147 483 647
+
+# The V1 JVM backend handles exactly these opcodes.  Any opcode absent from
+# this set is rejected by validate_for_jvm() before code generation begins.
+_JVM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
+    IrOp.LABEL,
+    IrOp.COMMENT,
+    IrOp.NOP,
+    IrOp.HALT,
+    IrOp.RET,
+    IrOp.JUMP,
+    IrOp.LOAD_IMM,
+    IrOp.LOAD_ADDR,
+    IrOp.LOAD_BYTE,
+    IrOp.LOAD_WORD,
+    IrOp.STORE_BYTE,
+    IrOp.STORE_WORD,
+    IrOp.ADD,
+    IrOp.ADD_IMM,
+    IrOp.SUB,
+    IrOp.AND,
+    IrOp.AND_IMM,
+    IrOp.OR,
+    IrOp.OR_IMM,
+    IrOp.XOR,
+    IrOp.XOR_IMM,
+    IrOp.NOT,
+    IrOp.MUL,
+    IrOp.DIV,
+    IrOp.CMP_EQ,
+    IrOp.CMP_NE,
+    IrOp.CMP_LT,
+    IrOp.CMP_GT,
+    IrOp.BRANCH_Z,
+    IrOp.BRANCH_NZ,
+    IrOp.CALL,
+    IrOp.SYSCALL,
+})
+
+
+def validate_for_jvm(program: IrProgram) -> list[str]:
+    """Inspect ``program`` for JVM backend incompatibilities without generating
+    any bytecode.
+
+    Checks performed:
+
+    1. **Opcode support** — every opcode must appear in ``_JVM_SUPPORTED_OPCODES``.
+       Opcodes that the V1 JVM backend does not handle (e.g. future IR
+       extensions) are rejected with a precise diagnostic before any class-file
+       bytes are produced.
+
+    2. **Constant range** — every ``IrImmediate`` in a ``LOAD_IMM`` or
+       ``ADD_IMM`` instruction must fit in a JVM 32-bit signed integer
+       (−2 147 483 648 to 2 147 483 647).  The JVM stack is a 32-bit
+       operand stack; constants outside this range cannot be represented as a
+       JVM ``int`` and would require a ``long`` (64-bit) type, which the
+       backend does not support.
+
+    3. **SYSCALL number** — the V1 JVM backend wires up SYSCALL 1 (print byte)
+       and SYSCALL 4 (read byte).  Any other syscall number is rejected.
+
+    Args:
+        program: The ``IrProgram`` to inspect.
+
+    Returns:
+        A list of human-readable error strings.  An empty list means the
+        program is compatible with the JVM V1 backend.
+    """
+    errors: list[str] = []
+    _SUPPORTED_SYSCALLS = {1, 4}
+
+    for instr in program.instructions:
+        op = instr.opcode
+
+        # ── Rule 1: opcode must be in the supported set ─────────────────────
+        if op not in _JVM_SUPPORTED_OPCODES:
+            errors.append(
+                f"unsupported opcode {op.name} in V1 JVM backend"
+            )
+            continue
+
+        # ── Rule 2: constant range on LOAD_IMM and ADD_IMM ──────────────────
+        if op in (IrOp.LOAD_IMM, IrOp.ADD_IMM):
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate):
+                    v = operand.value
+                    if not (_JVM_INT_MIN <= v <= _JVM_INT_MAX):
+                        errors.append(
+                            f"{op.name}: constant {v:,} overflows JVM 32-bit "
+                            f"signed integer (valid range "
+                            f"{_JVM_INT_MIN:,} to {_JVM_INT_MAX:,})"
+                        )
+
+        # ── Rule 3: SYSCALL number ───────────────────────────────────────────
+        elif op == IrOp.SYSCALL:
+            for operand in instr.operands:
+                if isinstance(operand, IrImmediate) and operand.value not in _SUPPORTED_SYSCALLS:
+                    errors.append(
+                        f"unsupported SYSCALL {operand.value}: "
+                        f"only SYSCALL numbers {sorted(_SUPPORTED_SYSCALLS)} "
+                        f"are wired in the V1 JVM backend"
+                    )
+                    break
+
+    return errors
+
+
+def lower_ir_to_jvm_class_file(
+    program: IrProgram,
+    config: JvmBackendConfig,
+) -> JVMClassArtifact:
+    """Lower an IR program to a JVM class artifact.
+
+    Runs ``validate_for_jvm`` as a pre-flight check before any bytecode is
+    generated.  If the IR contains an unsupported opcode or an out-of-range
+    constant, a ``JvmBackendError`` is raised immediately with a precise
+    per-instruction diagnostic.
+    """
+    errors = validate_for_jvm(program)
+    if errors:
+        joined = "; ".join(errors)
+        raise JvmBackendError(
+            f"IR program failed JVM pre-flight validation "
+            f"({len(errors)} error{'s' if len(errors) != 1 else ''}): {joined}"
+        )
+    return _JvmClassLowerer(program, config).lower()
+
+
+def write_class_file(artifact: JVMClassArtifact, output_dir: str | Path) -> Path:
+    """Write a generated class file into a classpath root."""
+
+    root = Path(output_dir)
+    relative_path = _validated_output_relative_path(artifact.class_filename)
+    root.mkdir(parents=True, exist_ok=True)
+
+    open_directory_flags = os.O_RDONLY
+    if hasattr(os, "O_DIRECTORY"):
+        open_directory_flags |= os.O_DIRECTORY
+    if hasattr(os, "O_NOFOLLOW"):
+        open_directory_flags |= os.O_NOFOLLOW
+
+    open_file_flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+    if hasattr(os, "O_NOFOLLOW"):
+        open_file_flags |= os.O_NOFOLLOW
+
+    directory_fds: list[int] = []
+    try:
+        current_fd = os.open(root, open_directory_flags)
+        directory_fds.append(current_fd)
+
+        # Traverse relative output components through directory FDs so later
+        # writes cannot be redirected by swapping in a symlink after validation.
+        for component in relative_path.parts[:-1]:
+            with suppress(FileExistsError):
+                os.mkdir(component, dir_fd=current_fd)
+            try:
+                next_fd = os.open(component, open_directory_flags, dir_fd=current_fd)
+            except OSError as exc:
+                raise JvmBackendError(
+                    "class_filename contains a symlinked or invalid directory "
+                    f"component: {component}"
+                ) from exc
+            directory_fds.append(next_fd)
+            current_fd = next_fd
+
+        try:
+            file_fd = os.open(
+                relative_path.name,
+                open_file_flags,
+                0o644,
+                dir_fd=current_fd,
+            )
+        except OSError as exc:
+            raise JvmBackendError(
+                "class_filename points at a symlinked or invalid output file"
+            ) from exc
+        with os.fdopen(file_fd, "wb", closefd=True) as handle:
+            handle.write(artifact.class_bytes)
+    finally:
+        for directory_fd in reversed(directory_fds):
+            os.close(directory_fd)
+
+    target = root / relative_path
+    return target
+
+
+def _u2(value: int) -> bytes:
+    return int(value).to_bytes(2, byteorder="big", signed=False)
+
+
+def _u4(value: int) -> bytes:
+    return int(value).to_bytes(4, byteorder="big", signed=False)
+
+
+def _as_label(operand: object, context: str) -> IrLabel:
+    if not isinstance(operand, IrLabel):
+        raise JvmBackendError(
+            f"{context} must be an IrLabel, got {type(operand).__name__}"
+        )
+    return operand
+
+
+def _as_register(operand: object, context: str) -> IrRegister:
+    if not isinstance(operand, IrRegister):
+        raise JvmBackendError(
+            f"{context} must be an IrRegister, got {type(operand).__name__}"
+        )
+    return operand
+
+
+def _as_immediate(operand: object, context: str) -> IrImmediate:
+    if not isinstance(operand, IrImmediate):
+        raise JvmBackendError(
+            f"{context} must be an IrImmediate, got {type(operand).__name__}"
+        )
+    return operand
+
+
+def _validated_output_relative_path(class_filename: str) -> Path:
+    relative_path = Path(class_filename)
+    if relative_path.is_absolute():
+        raise JvmBackendError("class_filename escapes the requested output directory")
+    if any(component in ("", ".", "..") for component in relative_path.parts):
+        raise JvmBackendError("class_filename escapes the requested output directory")
+    return relative_path

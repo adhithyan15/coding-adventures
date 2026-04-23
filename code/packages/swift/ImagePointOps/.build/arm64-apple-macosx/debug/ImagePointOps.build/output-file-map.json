@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/master.swiftdeps"
+  },
+  "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/Sources/ImagePointOps/ImagePointOps.swift": {
+    "dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.d",
+    "object": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.swift.o",
+    "swiftmodule": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps~partial.swiftmodule",
+    "swift-dependencies": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.swiftdeps",
+    "diagnostics": "/Users/adhithya/Documents/coding-adventures/.claude/worktrees/img03-point-ops/code/packages/swift/ImagePointOps/.build/arm64-apple-macosx/debug/ImagePointOps.build/ImagePointOps.dia"
+  }
+}

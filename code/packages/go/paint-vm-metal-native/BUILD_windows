@@ -1,0 +1,1 @@
+echo Skipping go/paint-vm-metal-native on Windows because Metal is macOS-only

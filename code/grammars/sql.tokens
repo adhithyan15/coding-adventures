@@ -94,7 +94,12 @@ keywords:
   PRIMARY
   KEY
   UNIQUE
+  INDEX
   DEFAULT
+  BEGIN
+  COMMIT
+  ROLLBACK
+  TRANSACTION
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

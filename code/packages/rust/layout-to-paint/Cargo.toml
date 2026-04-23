@@ -1,0 +1,10 @@
+[package]
+name = "layout-to-paint"
+version = "0.1.0"
+edition = "2021"
+description = "UI04 — walks a PositionedNode tree and emits a PaintScene with PaintGlyphRun instructions pre-shaped via a caller-supplied TXT00 shaper trio. The device-dependent amendment: shaping happens once here, the paint backend only rasterizes."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }
+paint-instructions = { path = "../paint-instructions" }
+text-interfaces = { path = "../text-interfaces" }

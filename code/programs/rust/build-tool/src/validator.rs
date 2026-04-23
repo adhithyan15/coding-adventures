@@ -12,6 +12,8 @@ const CI_MANAGED_TOOLCHAIN_LANGUAGES: &[&str] = &[
     "elixir",
     "lua",
     "perl",
+    "java",
+    "kotlin",
     "haskell",
 ];
 

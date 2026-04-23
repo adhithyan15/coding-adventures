@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "csharp/cli-builder",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "The default SpecLoader path reads CLI spec JSON files from the local filesystem, and file or directory argument validation may inspect referenced paths."
+    }
+  ],
+  "justification": "CLI Builder commonly loads a JSON spec from disk and may validate file or directory arguments against the local filesystem."
+}

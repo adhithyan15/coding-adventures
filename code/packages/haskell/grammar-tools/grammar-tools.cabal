@@ -1,0 +1,40 @@
+cabal-version: 3.0
+name:          grammar-tools
+version:       0.1.0
+synopsis:      Grammar parsing and validation tools for Haskell
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  GrammarTools
+                    , GrammarTools.TokenGrammar
+                    , GrammarTools.ParserGrammar
+                    , GrammarTools.CrossValidator
+                    , GrammarTools.Compiler
+    build-depends:    base >=4.14
+                    , containers
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    TokenGrammarSpec
+                    , ParserGrammarSpec
+                    , CrossValidatorSpec
+                    , CompilerSpec
+    build-depends:    base >=4.14
+                    , containers
+                    , grammar-tools
+                    , hspec == 2.*
+    hs-source-dirs:   test
+    default-language: Haskell2010
+
+executable grammar-tools-cli
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    base >=4.14
+                    , grammar-tools
+    default-language: Haskell2010

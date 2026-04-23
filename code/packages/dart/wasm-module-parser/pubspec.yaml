@@ -1,0 +1,20 @@
+name: coding_adventures_wasm_module_parser
+description: >
+  Core WebAssembly binary parser for the Dart runtime stack.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_wasm_leb128:
+    path: ../wasm-leb128
+  coding_adventures_wasm_opcodes:
+    path: ../wasm-opcodes
+  coding_adventures_wasm_types:
+    path: ../wasm-types
+
+dev_dependencies:
+  test: ^1.25.0

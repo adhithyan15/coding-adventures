@@ -164,20 +164,48 @@ use strict;
 use warnings;
 
 our $VERSION = '0.01';
+our $DEFAULT_VERSION = '2008';
+our @SUPPORTED_VERSIONS = qw(1987 1993 2002 2008 2019);
 
 use CodingAdventures::VhdlLexer;
 use CodingAdventures::VhdlParser::ASTNode;
+
+# The lexer is now version-aware and selects edition-specific token grammars.
+# The parser core remains handwritten for historical reasons: this package
+# landed before the generic grammar-driven Perl parser stack, and it has not
+# been migrated over yet.
+
+sub _resolve_version {
+    my ($version) = @_;
+    return $DEFAULT_VERSION unless defined $version && length $version;
+    return $version if grep { $_ eq $version } @SUPPORTED_VERSIONS;
+    die sprintf(
+        "CodingAdventures::VhdlParser: unknown VHDL version '%s' (expected one of: %s)",
+        $version,
+        join(', ', @SUPPORTED_VERSIONS)
+    );
+}
+
+sub default_version {
+    return $DEFAULT_VERSION;
+}
+
+sub supported_versions {
+    return [ @SUPPORTED_VERSIONS ];
+}
 
 # ============================================================================
 # Constructor
 # ============================================================================
 
 sub new {
-    my ($class, $source) = @_;
-    my $tokens = CodingAdventures::VhdlLexer->tokenize($source);
+    my ($class, $source, $version) = @_;
+    $version = _resolve_version($version);
+    my $tokens = CodingAdventures::VhdlLexer->tokenize($source, $version);
     return bless {
         _tokens => $tokens,
         _pos    => 0,
+        _version => $version,
     }, $class;
 }
 
@@ -1726,8 +1754,8 @@ sub _parse_element_association {
 # ============================================================================
 
 sub parse_vhdl {
-    my ($class, $source) = @_;
-    my $parser = $class->new($source);
+    my ($class, $source, $version) = @_;
+    my $parser = $class->new($source, $version);
     return $parser->parse();
 }
 

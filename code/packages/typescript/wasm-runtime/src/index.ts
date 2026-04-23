@@ -19,10 +19,10 @@
  * **With WASI (I/O programs):**
  *
  * ```typescript
- * import { WasmRuntime, WasiStub } from "@coding-adventures/wasm-runtime";
+ * import { WasmRuntime, WasiHost } from "@coding-adventures/wasm-runtime";
  *
  * const output: string[] = [];
- * const wasi = new WasiStub({
+ * const wasi = new WasiHost({
  *   args: ["myapp", "--verbose"],
  *   env: { HOME: "/home/user" },
  *   stdout: (text) => output.push(text),
@@ -39,6 +39,7 @@ export const VERSION = "0.1.0";
 
 export { WasmRuntime } from "./wasm_runtime.js";
 export {
+  WasiHost,
   WasiStub,
   ProcExitError,
   SystemClock,

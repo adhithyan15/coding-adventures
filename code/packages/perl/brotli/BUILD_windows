@@ -1,0 +1,1 @@
+cd ..\heap && cd ..\huffman-tree && cd ..\brotli && set PERL5LIB=..\heap\lib;..\huffman-tree\lib;%PERL5LIB% && perl -I..\heap\lib -I..\huffman-tree\lib -Ilib t\00-load.t && perl -I..\heap\lib -I..\huffman-tree\lib -Ilib t\01-brotli.t

@@ -31,9 +31,11 @@ import {
   paintClip,
   paintGradient,
   paintImage,
+  paintText,
   type PixelContainer,
 } from "@coding-adventures/paint-instructions";
 import { ExportNotSupportedError } from "@coding-adventures/paint-vm";
+import { UnsupportedFontBindingError } from "../src/index.js";
 
 // ============================================================================
 // Global Path2D mock
@@ -109,6 +111,8 @@ function makeCtx(): CanvasRenderingContext2D {
     globalCompositeOperation: "source-over" as GlobalCompositeOperation,
     filter: "none",
     font: "",
+    textBaseline: "alphabetic" as CanvasTextBaseline,
+    textAlign: "start" as CanvasTextAlign,
 
     // --- methods (tracked by spies) ---
     clearRect: vi.fn(),
@@ -161,12 +165,12 @@ describe("VERSION", () => {
 // ============================================================================
 
 describe("createCanvasVM()", () => {
-  it("returns a VM with all 10 instruction kinds registered", () => {
+  it("returns a VM with all 11 instruction kinds registered", () => {
     const vm = createCanvasVM();
     const kinds = vm.registeredKinds().sort();
     expect(kinds).toEqual([
       "clip", "ellipse", "glyph_run", "gradient", "group",
-      "image", "layer", "line", "path", "rect",
+      "image", "layer", "line", "path", "rect", "text",
     ]);
   });
 });
@@ -1121,5 +1125,156 @@ describe("Canvas filter string", () => {
       ctx,
     );
     expect(ctx.filter).toBe("none");
+  });
+});
+
+// ============================================================================
+// PaintText — TXT03d canvas-native text path
+// ============================================================================
+
+describe("PaintText dispatch", () => {
+  it("sets ctx.font from a minimal canvas: font_ref and calls fillText", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(20, 40, "Hello", "canvas:Helvetica@16", 16, "#111"),
+      ]),
+      ctx,
+    );
+    // font shorthand: weight 400 is the default when no weight suffix is present
+    expect(ctx.font).toBe("400 16px 'Helvetica'");
+    expect(ctx.fillStyle).toBe("#111");
+    expect(ctx.textBaseline).toBe("alphabetic");
+    expect(ctx.fillText).toHaveBeenCalledWith("Hello", 20, 40);
+  });
+
+  it("parses weight from canvas:<family>@<size>:<weight>", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(0, 20, "Bold", "canvas:Helvetica@16:700", 16, "#000"),
+      ]),
+      ctx,
+    );
+    expect(ctx.font).toBe("700 16px 'Helvetica'");
+  });
+
+  it("parses italic style from canvas:<family>@<size>:<weight>:italic", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(0, 20, "Oblique", "canvas:Georgia@14:400:italic", 14, "#000"),
+      ]),
+      ctx,
+    );
+    expect(ctx.font).toBe("italic 400 14px 'Georgia'");
+  });
+
+  it("ignores the size encoded in font_ref — font_size argument wins", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    // font_ref says 16; but font_size is the authoritative size from the layout engine
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(0, 40, "Sized", "canvas:Helvetica@16:700", 32, "#000"),
+      ]),
+      ctx,
+    );
+    expect(ctx.font).toBe("700 32px 'Helvetica'");
+  });
+
+  it("sanitizes a family name that contains CSS-injection characters", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    // Adversarial family with characters that could break out of the string
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(0, 20, "X", "canvas:Helvetica'; color: red;@16:400", 16, "#000"),
+      ]),
+      ctx,
+    );
+    // Semicolons, apostrophes, and braces stripped; only alnum/space/hyphen/comma
+    // remain inside the quoted family name.
+    expect(ctx.font).toMatch(/^400 16px '[A-Za-z ]+'$/);
+    expect(ctx.font).not.toContain(";");
+    expect(ctx.font).not.toContain("'; ");
+  });
+
+  it("clamps a nonsense weight to the default 400", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(0, 20, "X", "canvas:Helvetica@16:99999", 16, "#000"),
+      ]),
+      ctx,
+    );
+    expect(ctx.font).toBe("400 16px 'Helvetica'");
+  });
+
+  it("throws UnsupportedFontBindingError for non-canvas scheme", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    expect(() =>
+      vm.execute(
+        paintScene(400, 100, "transparent", [
+          paintText(0, 20, "X", "coretext:Helvetica-Bold@16", 16, "#000"),
+        ]),
+        ctx,
+      ),
+    ).toThrow(UnsupportedFontBindingError);
+  });
+
+  it("throws RangeError when font_size is not a finite number", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    expect(() =>
+      vm.execute(
+        paintScene(400, 100, "transparent", [
+          paintText(0, 20, "X", "canvas:Helvetica@16", NaN, "#000"),
+        ]),
+        ctx,
+      ),
+    ).toThrow(RangeError);
+  });
+
+  it("falls back to sans-serif when family portion is empty", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(0, 20, "X", "canvas:@16:400", 16, "#000"),
+      ]),
+      ctx,
+    );
+    expect(ctx.font).toBe("400 16px 'sans-serif'");
+  });
+
+  it("honors text_align by setting ctx.textAlign before fillText", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(50, 20, "Centered", "canvas:Helvetica@16", 16, "#000", { text_align: "center" }),
+      ]),
+      ctx,
+    );
+    expect(ctx.textAlign).toBe("center");
+    expect(ctx.fillText).toHaveBeenCalledWith("Centered", 50, 20);
+  });
+
+  it("supports text_align = \"end\" for right-aligned cells", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    vm.execute(
+      paintScene(400, 100, "transparent", [
+        paintText(100, 20, "Right", "canvas:Helvetica@16", 16, "#000", { text_align: "end" }),
+      ]),
+      ctx,
+    );
+    expect(ctx.textAlign).toBe("end");
   });
 });

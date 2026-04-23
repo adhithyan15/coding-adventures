@@ -1,0 +1,48 @@
+{
+  "name": "nib-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nib language playground and Intel 4004 simulator",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@coding-adventures/compiler-ir": "file:../../../packages/typescript/compiler-ir",
+    "@coding-adventures/grammar-tools": "file:../../../packages/typescript/grammar-tools",
+    "@coding-adventures/intel-4004-assembler": "file:../../../packages/typescript/intel-4004-assembler",
+    "@coding-adventures/intel-4004-packager": "file:../../../packages/typescript/intel-4004-packager",
+    "@coding-adventures/intel4004-simulator": "file:../../../packages/typescript/intel4004-simulator",
+    "@coding-adventures/ir-optimizer": "file:../../../packages/typescript/ir-optimizer",
+    "@coding-adventures/ir-to-intel-4004-compiler": "file:../../../packages/typescript/ir-to-intel-4004-compiler",
+    "@coding-adventures/lattice-ast-to-css": "file:../../../packages/typescript/lattice-ast-to-css",
+    "@coding-adventures/lattice-lexer": "file:../../../packages/typescript/lattice-lexer",
+    "@coding-adventures/lattice-parser": "file:../../../packages/typescript/lattice-parser",
+    "@coding-adventures/lattice-transpiler": "file:../../../packages/typescript/lattice-transpiler",
+    "@coding-adventures/lexer": "file:../../../packages/typescript/lexer",
+    "@coding-adventures/nib-ir-compiler": "file:../../../packages/typescript/nib-ir-compiler",
+    "@coding-adventures/nib-type-checker": "file:../../../packages/typescript/nib-type-checker",
+    "@coding-adventures/parser": "file:../../../packages/typescript/parser",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@coding-adventures/vite-plugin-lattice": "file:../../../packages/typescript/vite-plugin-lattice",
+    "@vitejs/plugin-react": "^4.3.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "jsdom": "^25.0.0",
+    "typescript": "~5.7.0",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}

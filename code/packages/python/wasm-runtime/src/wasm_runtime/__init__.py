@@ -4,20 +4,20 @@ __version__ = "0.1.0"
 
 from wasm_runtime.instance import WasmInstance
 from wasm_runtime.runtime import WasmRuntime
-from wasm_runtime.wasi_stub import (
+from wasm_runtime.wasi_host import (
     ProcExitError,
     SystemClock,
     SystemRandom,
     WasiClock,
     WasiConfig,
+    WasiHost,
     WasiRandom,
-    WasiStub,
 )
 
 __all__ = [
     "WasmRuntime",
     "WasmInstance",
-    "WasiStub",
+    "WasiHost",
     "WasiConfig",
     "WasiClock",
     "WasiRandom",

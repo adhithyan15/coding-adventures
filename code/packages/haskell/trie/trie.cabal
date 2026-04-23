@@ -1,0 +1,26 @@
+cabal-version: 3.0
+name:          trie
+version:       0.1.0
+synopsis:      Educational Haskell package for trie
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Trie
+    build-depends:    base >=4.14
+                    , containers
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    TrieSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , containers
+                    , trie
+                    , hspec == 2.*
+    default-language: Haskell2010

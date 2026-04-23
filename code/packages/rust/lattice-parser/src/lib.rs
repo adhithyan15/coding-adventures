@@ -1,187 +1,16 @@
-//! # Lattice Parser — parsing Lattice source text into an AST.
-//!
-//! This crate is the second stage of the Lattice compiler pipeline. Where the
-//! `lattice-lexer` crate breaks source text into tokens, this crate arranges
-//! those tokens into a tree that reflects the *structure* of the Lattice
-//! source — an Abstract Syntax Tree (AST).
-//!
-//! # The pipeline
-//!
-//! ```text
-//! Lattice source text
-//!         |
-//!         v
-//! lattice-lexer  ──→  Vec<Token>
-//!         |           [VARIABLE, COLON, HASH, SEMICOLON, ...]
-//!         v
-//! lattice.grammar ──→  ParserGrammar
-//!         |            (rules: stylesheet, rule, variable_declaration, ...)
-//!         v
-//! GrammarParser  ──→  GrammarASTNode tree
-//!         |
-//!         |            stylesheet
-//!         |              └── rule
-//!         |                    └── lattice_rule
-//!         |                          └── variable_declaration
-//!         |                                ├── VARIABLE("$primary")
-//!         |                                ├── COLON(":")
-//!         |                                ├── value_list
-//!         |                                │     └── value
-//!         |                                │           └── HASH("#4a90d9")
-//!         |                                └── SEMICOLON(";")
-//!         v
-//! [lattice-ast-to-css consumes the AST]
-//! ```
-//!
-//! # Mixed AST
-//!
-//! The resulting AST is "mixed" — it contains both CSS nodes and Lattice
-//! nodes. The `lattice-ast-to-css` crate (the next stage) separates them:
-//! Lattice nodes (variable declarations, mixin definitions, @if blocks, etc.)
-//! are expanded and removed; CSS nodes (qualified_rule, declaration, etc.)
-//! are passed through to the emitter.
-//!
-//! # Grammar-Driven Approach
-//!
-//! Like all parsers in this monorepo, the Lattice parser does not hand-code
-//! grammar rules. Instead it reads `lattice.grammar` — a declarative EBNF
-//! grammar file — and uses the generic [`GrammarParser`] to drive parsing.
-//! This means the parser logic lives in the grammar file, and changing the
-//! language syntax requires only editing that file (plus updating the
-//! compiler for any new AST node types).
-//!
-//! # Grammar File Location
-//!
-//! ```text
-//! code/
-//!   grammars/
-//!     lattice.grammar       ← target file
-//!   packages/
-//!     rust/
-//!       lattice-parser/
-//!         Cargo.toml        ← CARGO_MANIFEST_DIR points here
-//! ```
+//! Lattice parser backed by compiled parser grammar.
 
-use std::fs;
-
-use grammar_tools::parser_grammar::parse_parser_grammar;
-use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 use coding_adventures_lattice_lexer::tokenize_lattice;
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-// Re-export the AST node type so callers don't need to depend on `parser`
-// directly. This is the standard pattern used throughout this monorepo.
-pub use parser::grammar_parser::ASTNodeOrToken;
+mod _grammar;
 
-// ===========================================================================
-// Grammar file location
-// ===========================================================================
-
-/// Build the path to the `lattice.grammar` file.
-///
-/// Same navigation strategy as `lattice-lexer`: `env!("CARGO_MANIFEST_DIR")`
-/// gives the absolute path to this crate's `Cargo.toml`, and we navigate up
-/// to the repository's `grammars/` directory.
-///
-/// Path structure:
-/// ```text
-/// code/grammars/lattice.grammar
-///               ↑
-/// code/packages/rust/lattice-parser/Cargo.toml
-///                                   ↑ CARGO_MANIFEST_DIR
-/// ```
-fn grammar_path() -> String {
-    let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/lattice.grammar")
-}
-
-// ===========================================================================
-// Public API
-// ===========================================================================
-
-/// Create a [`GrammarParser`] configured for Lattice source text.
-///
-/// This function:
-/// 1. Tokenizes the source using the Lattice lexer (`tokenize_lattice`).
-/// 2. Reads `lattice.grammar` from disk and parses it into a `ParserGrammar`.
-/// 3. Constructs a `GrammarParser` with the tokens and grammar.
-///
-/// The returned parser is ready to call `.parse()` on. Use this factory when
-/// you need access to the parser object (e.g., for error recovery or partial
-/// parsing).
-///
-/// # Panics
-///
-/// Panics if:
-/// - The grammar file cannot be read or is malformed.
-/// - The source text fails lexical analysis (unexpected character).
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_lattice_parser::create_lattice_parser;
-///
-/// let mut parser = create_lattice_parser("$color: red;");
-/// let ast = parser.parse().expect("parse failed");
-/// assert_eq!(ast.rule_name, "stylesheet");
-/// ```
 pub fn create_lattice_parser(source: &str) -> GrammarParser {
-    // Step 1: Tokenize the source with the Lattice lexer.
-    //
-    // This produces a Vec<Token> with all CSS and Lattice token types
-    // (VARIABLE, AT_KEYWORD, EQUALS_EQUALS, etc.) plus standard CSS tokens.
-    // The token stream always ends with EOF.
     let tokens = tokenize_lattice(source);
-
-    // Step 2: Read the parser grammar from disk.
-    //
-    // lattice.grammar contains ~35 rules covering both CSS constructs
-    // (qualified_rule, selector_list, declaration, value) and Lattice
-    // constructs (variable_declaration, mixin_definition, if_directive,
-    // for_directive, each_directive, function_definition, use_directive).
-    let grammar_text = fs::read_to_string(grammar_path())
-        .unwrap_or_else(|e| panic!("Failed to read lattice.grammar: {e}"));
-
-    // Step 3: Parse the grammar text into a ParserGrammar struct.
-    //
-    // ParserGrammar contains a list of GrammarRule objects. Each rule has
-    // a name and an EBNF body (sequences, alternations, repetitions,
-    // optionals, token references, and literal matches).
-    let grammar = parse_parser_grammar(&grammar_text)
-        .unwrap_or_else(|e| panic!("Failed to parse lattice.grammar: {e}"));
-
-    // Step 4: Create and return the parser.
-    //
-    // GrammarParser takes ownership of tokens and grammar, builds an
-    // internal rule index, and allocates the packrat memo cache.
+    let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar)
 }
 
-/// Parse Lattice source text into an AST.
-///
-/// This is the main entry point for the Lattice parser. Pass in a string of
-/// Lattice source text, get back a `GrammarASTNode` representing the complete
-/// parse tree.
-///
-/// The returned AST has `rule_name = "stylesheet"` at the root. Its children
-/// are `rule` nodes, each containing either:
-/// - A `lattice_rule` (variable declaration, mixin/function definition, @use)
-/// - A CSS `at_rule` (@media, @import, etc.)
-/// - A CSS `qualified_rule` (selector + declaration block)
-///
-/// # Panics
-///
-/// Panics if lexing or parsing fails. In normal usage with valid Lattice
-/// source, this should never happen.
-///
-/// # Example
-///
-/// ```no_run
-/// use coding_adventures_lattice_parser::parse_lattice;
-///
-/// let ast = parse_lattice("$color: red; h1 { color: $color; }");
-/// assert_eq!(ast.rule_name, "stylesheet");
-/// println!("Root has {} children", ast.children.len());
-/// ```
 pub fn parse_lattice(source: &str) -> GrammarASTNode {
     let mut parser = create_lattice_parser(source);
     parser
@@ -189,13 +18,10 @@ pub fn parse_lattice(source: &str) -> GrammarASTNode {
         .unwrap_or_else(|e| panic!("Lattice parse failed: {e}"))
 }
 
-// ===========================================================================
-// Tests
-// ===========================================================================
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use parser::grammar_parser::ASTNodeOrToken;
 
     // -----------------------------------------------------------------------
     // Helper functions
@@ -524,3 +350,4 @@ mod tests {
             "Expected at least 3 rule children, got {}", ast.children.len());
     }
 }
+

@@ -31,7 +31,9 @@
 //! // AUTO-GENERATED FILE — DO NOT EDIT
 //! // Source: json.tokens
 //!
+//! #[allow(unused_imports)]
 //! use grammar_tools::token_grammar::{PatternGroup, TokenDefinition, TokenGrammar};
+//! #[allow(unused_imports)]
 //! use std::collections::HashMap;
 //!
 //! pub fn token_grammar() -> TokenGrammar {
@@ -93,7 +95,9 @@ pub fn compile_token_grammar(grammar: &TokenGrammar, source_file: &str) -> Strin
 // This file embeds a TokenGrammar as native Rust data structures.
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
+#[allow(unused_imports)]
 use grammar_tools::token_grammar::{{PatternGroup, TokenDefinition, TokenGrammar}};
+#[allow(unused_imports)]
 use std::collections::HashMap;
 
 pub fn token_grammar() -> TokenGrammar {{
@@ -109,6 +113,9 @@ pub fn token_grammar() -> TokenGrammar {{
         case_sensitive: {case_sensitive},
         version: {version},
         case_insensitive: {case_insensitive},
+        context_keywords: {context_kw_src},
+        soft_keywords: {soft_kw_src},
+        layout_keywords: {layout_kw_src},
     }}
 }}
 ",
@@ -125,6 +132,9 @@ pub fn token_grammar() -> TokenGrammar {{
         case_sensitive = grammar.case_sensitive,
         version = grammar.version,
         case_insensitive = grammar.case_insensitive,
+        context_kw_src = string_vec_src(&grammar.context_keywords),
+        soft_kw_src = string_vec_src(&grammar.soft_keywords),
+        layout_kw_src = string_vec_src(&grammar.layout_keywords),
     )
 }
 
@@ -260,10 +270,7 @@ fn token_def_vec_src(defs: &[TokenDefinition], indent: &str) -> String {
 }
 
 /// Render a `HashMap<String, PatternGroup>` as a Rust expression.
-fn groups_src(
-    groups: &std::collections::HashMap<String, PatternGroup>,
-    indent: &str,
-) -> String {
+fn groups_src(groups: &std::collections::HashMap<String, PatternGroup>, indent: &str) -> String {
     if groups.is_empty() {
         return "HashMap::new()".to_string();
     }
@@ -388,10 +395,7 @@ fn element_src(element: &GrammarElement, indent: &str) -> String {
         }
         GrammarElement::Group { element } => {
             let child = element_src(element, &i);
-            format!(
-                "GrammarElement::Group {{ element: Box::new({}) }}",
-                child
-            )
+            format!("GrammarElement::Group {{ element: Box::new({}) }}", child)
         }
         GrammarElement::PositiveLookahead { element } => {
             let child = element_src(element, &i);
@@ -414,7 +418,11 @@ fn element_src(element: &GrammarElement, indent: &str) -> String {
                 child
             )
         }
-        GrammarElement::SeparatedRepetition { element, separator, at_least_one } => {
+        GrammarElement::SeparatedRepetition {
+            element,
+            separator,
+            at_least_one,
+        } => {
             let elem_child = element_src(element, &i);
             let sep_child = element_src(separator, &i);
             format!(

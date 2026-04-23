@@ -224,6 +224,9 @@ class TokenGrammar:
     error_definitions: list[TokenDefinition] = field(default_factory=list)
     groups: dict[str, PatternGroup] = field(default_factory=dict)
     case_sensitive: bool = True
+    layout_keywords: list[str] = field(default_factory=list)
+    """Keywords that introduce a Haskell-style layout context when
+    ``mode == "layout"``."""
     context_keywords: list[str] = field(default_factory=list)
     """Context-sensitive keywords — words that are keywords in some
     syntactic positions but identifiers in others.
@@ -596,7 +599,16 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                     "(must be a lowercase identifier like 'tag' or 'cdata')",
                     line_number,
                 )
-            reserved_names = {"default", "skip", "keywords", "reserved", "errors"}
+            reserved_names = {
+                "default",
+                "skip",
+                "keywords",
+                "reserved",
+                "errors",
+                "layout_keywords",
+                "context_keywords",
+                "soft_keywords",
+            }
             if group_name in reserved_names:
                 raise TokenGrammarError(
                     f"Reserved group name: {group_name!r} "
@@ -635,6 +647,10 @@ def parse_token_grammar(source: str) -> TokenGrammar:
             current_section = "context_keywords"
             continue
 
+        if stripped in ("layout_keywords:", "layout_keywords :"):
+            current_section = "layout_keywords"
+            continue
+
         if stripped in ("soft_keywords:", "soft_keywords :"):
             current_section = "soft_keywords"
             continue
@@ -653,6 +669,9 @@ def parse_token_grammar(source: str) -> TokenGrammar:
                 elif current_section == "context_keywords":
                     if stripped:
                         grammar.context_keywords.append(stripped)
+                elif current_section == "layout_keywords":
+                    if stripped:
+                        grammar.layout_keywords.append(stripped)
                 elif current_section == "soft_keywords":
                     if stripped:
                         grammar.soft_keywords.append(stripped)
@@ -875,11 +894,13 @@ def validate_token_grammar(grammar: TokenGrammar) -> list[str]:
     issues.extend(_validate_definitions(grammar.error_definitions, "error pattern"))
 
     # Validate mode
-    if grammar.mode is not None and grammar.mode != "indentation":
+    if grammar.mode is not None and grammar.mode not in ("indentation", "layout"):
         issues.append(
             f"Unknown lexer mode '{grammar.mode}' "
-            f"(only 'indentation' is supported)"
+            f"(only 'indentation' and 'layout' are supported)"
         )
+    if grammar.mode == "layout" and not grammar.layout_keywords:
+        issues.append("Layout mode requires a non-empty layout_keywords section")
 
     # Validate escape mode
     if grammar.escape_mode is not None and grammar.escape_mode != "none":

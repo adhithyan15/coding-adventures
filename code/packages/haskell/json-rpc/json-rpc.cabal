@@ -1,0 +1,31 @@
+cabal-version: 3.0
+name:          coding-adventures-json-rpc
+version:       0.1.0
+synopsis:      JSON-RPC 2.0 transport and dispatch for Haskell
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  JsonRpc
+    build-depends:    base >=4.14
+                    , bytestring
+                    , containers
+                    , json-serializer
+                    , json-value
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    JsonRpcSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , bytestring
+                    , hspec == 2.*
+                    , json-serializer
+                    , json-value
+                    , coding-adventures-json-rpc
+    default-language: Haskell2010

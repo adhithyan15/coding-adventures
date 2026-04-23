@@ -1,0 +1,2 @@
+REM prereqs: ../virtual-machine ../wasm-leb128 ../wasm-types ../wasm-opcodes ../wasm-module-parser ../wasm-validator
+echo Perl testing is not supported on Windows - skipping

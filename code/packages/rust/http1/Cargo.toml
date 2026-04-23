@@ -1,0 +1,8 @@
+[package]
+name = "http1"
+version = "0.1.0"
+edition = "2021"
+description = "HTTP/1 request and response head parser with body framing detection"
+
+[dependencies]
+http-core = { path = "../http-core" }

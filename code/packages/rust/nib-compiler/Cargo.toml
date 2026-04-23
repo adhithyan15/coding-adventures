@@ -1,0 +1,14 @@
+[package]
+name = "nib-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+intel-4004-assembler = { path = "../intel-4004-assembler" }
+intel-4004-packager = { path = "../intel-4004-packager" }
+intel4004-simulator = { path = "../intel4004-simulator" }
+ir-optimizer = { path = "../ir-optimizer" }
+ir-to-intel-4004-compiler = { path = "../ir-to-intel-4004-compiler" }
+nib-ir-compiler = { path = "../nib-ir-compiler" }
+nib-type-checker = { path = "../nib-type-checker" }

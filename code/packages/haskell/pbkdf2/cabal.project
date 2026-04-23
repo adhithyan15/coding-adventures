@@ -1,0 +1,5 @@
+packages: .
+          ../hmac
+          ../sha1
+          ../sha256
+          ../sha512

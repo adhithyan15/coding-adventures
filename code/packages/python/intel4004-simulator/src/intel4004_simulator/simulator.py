@@ -72,6 +72,8 @@ from dataclasses import dataclass
 
 from virtual_machine import CodeObject, GenericVM, Instruction
 
+from intel4004_simulator.state import Intel4004State
+
 # ---------------------------------------------------------------------------
 # Trace — what happened during one instruction
 # ---------------------------------------------------------------------------
@@ -510,6 +512,120 @@ class Intel4004Simulator:
             traces.append(trace)
 
         return traces
+
+    def get_state(self) -> Intel4004State:
+        """Return a frozen snapshot of the current CPU state.
+
+        All mutable lists are converted to tuples so the result is a true
+        immutable value.  The snapshot will not change even if the simulator
+        continues executing after this call returns.
+
+        This method satisfies the ``Simulator[Intel4004State]`` protocol from
+        the ``simulator-protocol`` package.
+
+        Returns
+        -------
+        Intel4004State:
+            A frozen dataclass capturing the complete CPU state at this moment:
+            accumulator, all 16 registers, carry flag, program counter,
+            halted flag, full RAM contents, hardware stack, and stack pointer.
+
+        Examples
+        --------
+        >>> sim = Intel4004Simulator()
+        >>> sim.run(bytes([0xD5, 0x01]))  # LDM 5, HLT  (returns trace list)
+        [...]
+        >>> state = sim.get_state()
+        >>> state.accumulator
+        0
+        >>> state.halted
+        True
+        """
+        return Intel4004State(
+            accumulator=self.accumulator,
+            registers=tuple(self.registers),
+            carry=self.carry,
+            pc=self.pc,
+            halted=self.halted,
+            ram=tuple(
+                tuple(tuple(reg) for reg in bank)
+                for bank in self.ram
+            ),
+            hw_stack=tuple(self.hw_stack),
+            stack_pointer=self.stack_pointer,
+        )
+
+    def execute(self, program: bytes, max_steps: int = 100_000) -> "ExecutionResult[Intel4004State]":
+        """Load program, run to HALT or max_steps, return ExecutionResult.
+
+        This is the protocol-conforming entry point for the
+        ``Simulator[Intel4004State]`` protocol defined in the
+        ``simulator-protocol`` package.  It wraps the existing ``run()``
+        method but returns a richer result type that carries the final CPU
+        state snapshot, the full per-instruction trace, and a clean error
+        field.
+
+        The existing ``run()`` method is unchanged — this method calls it
+        internally and adapts the return value.
+
+        Parameters
+        ----------
+        program:
+            Raw Intel 4004 machine-code bytes.
+        max_steps:
+            Maximum instructions to execute before giving up (default 100,000).
+            Programs that exceed this limit likely contain an infinite loop.
+
+        Returns
+        -------
+        ExecutionResult[Intel4004State]:
+            - ``halted``: True if HLT was reached; False if max_steps exceeded.
+            - ``steps``: total instructions executed.
+            - ``final_state``: frozen ``Intel4004State`` snapshot at termination.
+            - ``error``: None on clean halt; error string if max_steps exceeded.
+            - ``traces``: one ``StepTrace`` per instruction executed.
+
+        Examples
+        --------
+        >>> sim = Intel4004Simulator()
+        >>> program = bytes([0xD3, 0xB0, 0x01])  # LDM 3, XCH R0, HLT
+        >>> result = sim.execute(program)
+        >>> result.ok
+        True
+        >>> result.final_state.registers[0]
+        3
+        """
+        from simulator_protocol import ExecutionResult, StepTrace
+
+        self.reset()
+        self.load_program(program)
+        self._prepare_execution()
+
+        step_traces: list[StepTrace] = []
+        steps = 0
+
+        while not self.halted and steps < max_steps:
+            if self._code is None or self._vm.pc >= len(self._code.instructions):
+                break
+            pc_before = self.pc
+            trace = self.step()
+            step_traces.append(
+                StepTrace(
+                    pc_before=pc_before,
+                    pc_after=self.pc,
+                    mnemonic=trace.mnemonic,
+                    description=f"{trace.mnemonic} @ 0x{pc_before:03X}",
+                )
+            )
+            steps += 1
+
+        return ExecutionResult(
+            halted=self.halted,
+            steps=steps,
+            final_state=self.get_state(),
+            error=None if self.halted else f"max_steps ({max_steps}) exceeded",
+            traces=step_traces,
+        )
 
     def reset(self) -> None:
         """Reset all CPU state to initial values."""

@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.1] - 2026-04-18
+
+### Fixed
+
+- Normalized imported function descriptors so runtimes accept either `idx` or
+  `type_idx`, matching the parser and encoder packages.
+- Normalized memory declarations and data segments produced by the Perl Wasm
+  stack so instantiation works across the new compiler pipeline.
+- Implemented observable `fd_write` output and injected guest memory into the
+  host, which unblocks Brainfuck and Nib end-to-end runtime tests.
+- Capped guest-controlled WASI iovec counts and total read/write bytes so
+  untrusted modules cannot force unbounded host-side copying through
+  `fd_write` or `fd_read`.
+- Rejected malformed raw data sections before slicing payload bytes so
+  truncated or oversized Wasm modules cannot force unbounded temporary lists
+  during instantiation.
+- Capped `random_get` buffer lengths and checked guest memory bounds before
+  asking the random provider for entropy, preventing unbounded host allocation
+  from guest-controlled sizes.
+
 ## [0.3.0] - 2026-04-06
 
 ### Added

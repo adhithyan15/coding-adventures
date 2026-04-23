@@ -82,6 +82,10 @@ sub fill_bytes {
     return [ (0xAB) x $n ];
 }
 
+package ExplodingRandom;
+sub new { bless {}, shift }
+sub fill_bytes { die 'random source should not be called for invalid requests' }
+
 # ============================================================================
 # Test helpers
 # ============================================================================
@@ -100,7 +104,7 @@ sub _make_stub {
         args   => $opts{args}   // [],
         env    => $opts{env}    // {},
         clock  => FakeClock->new(),
-        random => FakeRandom->new(),
+        random => $opts{random} // FakeRandom->new(),
     );
 
     # Create one 64 KiB page of memory (minimum WASM page size).
@@ -380,6 +384,17 @@ subtest 'random_get: fills 4 bytes with 0xAB' => sub {
     }
 };
 
+subtest 'random_get: rejects oversized buffers before requesting entropy' => sub {
+    my ($stub, $mem) = _make_stub(random => ExplodingRandom->new());
+
+    my $result = _call($stub, 'random_get', [
+        i32(0),
+        i32(1024 * 1024 + 1),
+    ]);
+
+    is($result->[0]{value}, 28, 'oversized random_get returns EINVAL');
+};
+
 # ============================================================================
 # Test 9: sched_yield — always returns 0
 # ============================================================================
@@ -459,7 +474,78 @@ subtest 'clock_time_get(id=2): process clock → realtime' => sub {
 };
 
 # ============================================================================
-# Test 14: existing square test still passes (regression)
+# Test 14: fd_read copies stdin bytes into guest buffers
+# ============================================================================
+
+subtest 'fd_read: copies stdin bytes into guest buffers' => sub {
+    my $stub = CodingAdventures::WasmRuntime::WasiHost->new(
+        stdin  => sub { return 'hi' },
+        clock  => FakeClock->new(),
+        random => FakeRandom->new(),
+    );
+    my $mem = CodingAdventures::WasmExecution::LinearMemory->new(1, undef);
+    $stub->set_memory($mem);
+
+    $mem->store_i32(0, 200);
+    $mem->store_i32(4, 2);
+
+    my $result = _call($stub, 'fd_read', [
+        i32(0),
+        i32(0),
+        i32(1),
+        i32(100),
+    ]);
+
+    is($result->[0]{value}, 0, 'fd_read returns ESUCCESS');
+    is($mem->load_i32(100), 2, 'nread = 2');
+    is($mem->load_i32_8u(200), ord('h'), 'first byte copied');
+    is($mem->load_i32_8u(201), ord('i'), 'second byte copied');
+};
+
+subtest 'fd_write: rejects oversized iovec counts before copying guest data' => sub {
+    my @output;
+    my $stub = CodingAdventures::WasmRuntime::WasiHost->new(
+        stdout => sub { push @output, $_[0] },
+        clock  => FakeClock->new(),
+        random => FakeRandom->new(),
+    );
+    my $mem = CodingAdventures::WasmExecution::LinearMemory->new(1, undef);
+    $stub->set_memory($mem);
+
+    my $result = _call($stub, 'fd_write', [
+        i32(1),
+        i32(0),
+        i32(1025),
+        i32(100),
+    ]);
+
+    is($result->[0]{value}, 28, 'fd_write returns EINVAL for oversized iovec counts');
+    is(\@output, [], 'stdout callback is not invoked');
+};
+
+subtest 'fd_read: rejects oversized iovec counts before requesting stdin' => sub {
+    my $read_calls = 0;
+    my $stub = CodingAdventures::WasmRuntime::WasiHost->new(
+        stdin  => sub { $read_calls++; return 'blocked'; },
+        clock  => FakeClock->new(),
+        random => FakeRandom->new(),
+    );
+    my $mem = CodingAdventures::WasmExecution::LinearMemory->new(1, undef);
+    $stub->set_memory($mem);
+
+    my $result = _call($stub, 'fd_read', [
+        i32(0),
+        i32(0),
+        i32(1025),
+        i32(100),
+    ]);
+
+    is($result->[0]{value}, 28, 'fd_read returns EINVAL for oversized iovec counts');
+    is($read_calls, 0, 'stdin callback is not invoked');
+};
+
+# ============================================================================
+# Test 15: existing square test still passes (regression)
 # ============================================================================
 #
 # This verifies that Tier 3 additions did not break the existing end-to-end

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <PackageId>CodingAdventures.InMemoryDataStoreProtocol.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure F# Mini-Redis command protocol helpers</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Protocol.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../resp-protocol/CodingAdventures.RespProtocol.fsproj" />
+  </ItemGroup>
+</Project>

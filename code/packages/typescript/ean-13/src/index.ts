@@ -6,13 +6,13 @@
  * indirectly through the parity pattern of the next six digits.
  */
 import {
-  drawBarcode1D,
+  layoutBarcode1D,
   runsFromBinaryPattern,
   type Barcode1DRun,
   type Barcode1DSymbolDescriptor,
-  type DrawBarcode1DOptions,
-} from "@coding-adventures/barcode-1d";
-import type { DrawScene } from "@coding-adventures/draw-instructions";
+  type PaintBarcode1DOptions,
+} from "@coding-adventures/barcode-layout-1d";
+import type { PaintScene } from "@coding-adventures/paint-instructions";
 
 export const VERSION = "0.1.0";
 
@@ -225,21 +225,19 @@ export function expandEan13Runs(data: string): Barcode1DRun[] {
   return runs;
 }
 
-export function drawEan13(
+export function layoutEan13(
   data: string,
-  options: Omit<DrawBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
-    humanReadableText?: string | null;
+  options: Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
     metadata?: Record<string, string | number | boolean>;
     label?: string;
   } = {},
-): DrawScene {
+): PaintScene {
   const normalized = normalizeEan13(data);
   const encodedDigits = encodeEan13(normalized);
 
-  return drawBarcode1D(expandEan13Runs(normalized), {
+  return layoutBarcode1D(expandEan13Runs(normalized), {
     ...options,
     symbols: buildEan13Symbols(normalized, encodedDigits).filter((symbol) => symbol.modules > 0),
-    humanReadableText: options.humanReadableText ?? normalized,
     label: options.label ?? `EAN-13 barcode for ${normalized}`,
     metadata: {
       ...options.metadata,
@@ -248,4 +246,14 @@ export function drawEan13(
       leftParity: LEFT_PARITY_PATTERNS[Number(normalized[0])],
     },
   });
+}
+
+export function drawEan13(
+  data: string,
+  options: Omit<PaintBarcode1DOptions, "symbols" | "humanReadableText" | "label" | "metadata"> & {
+    metadata?: Record<string, string | number | boolean>;
+    label?: string;
+  } = {},
+): PaintScene {
+  return layoutEan13(data, options);
 }

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/paint-vm-gdi-direct",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "gdi32",
+      "justification": "Calls Win32 GDI drawing functions directly from Go."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "user32",
+      "justification": "Calls Win32 FillRect for direct GDI rectangle painting."
+    }
+  ],
+  "justification": "Direct Win32 GDI paint backend with no Rust indirection."
+}

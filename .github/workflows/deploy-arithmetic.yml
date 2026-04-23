@@ -22,8 +22,13 @@ on:
     paths:
       - "code/programs/typescript/arithmetic-visualizer/**"
       - "code/packages/typescript/arithmetic/**"
+      - "code/packages/typescript/pixel-container/**"
+      - "code/packages/typescript/paint-instructions/**"
+      - "code/packages/typescript/paint-vm/**"
+      - "code/packages/typescript/paint-vm-canvas/**"
       - "code/packages/typescript/intel4004-gatelevel/**"
       - "code/packages/typescript/logic-gates/**"
+      - "code/packages/typescript/transistors/**"
       - "code/packages/typescript/ui-components/**"
       - ".github/workflows/deploy-arithmetic.yml"
   workflow_dispatch:
@@ -45,21 +50,21 @@ jobs:
 
       - name: Install dependencies (packages)
         run: |
-          cd code/packages/typescript/transistors && npm install
-          cd ../logic-gates && npm install
-          cd ../arithmetic && npm install
-          cd ../intel4004-gatelevel && npm install
-          cd ../ui-components && npm install
+          (cd code/packages/typescript/transistors && npm install)
+          (cd code/packages/typescript/logic-gates && npm install)
+          (cd code/packages/typescript/pixel-container && npm install)
+          (cd code/packages/typescript/paint-instructions && npm install)
+          (cd code/packages/typescript/paint-vm && npm install)
+          (cd code/packages/typescript/paint-vm-canvas && npm install)
+          (cd code/packages/typescript/ui-components && npm install)
+          (cd code/packages/typescript/arithmetic && npm install)
+          (cd code/packages/typescript/intel4004-gatelevel && npm install)
 
       - name: Install dependencies (app)
-        run: |
-          cd code/programs/typescript/arithmetic-visualizer
-          npm install
+        run: (cd code/programs/typescript/arithmetic-visualizer && npm install)
 
       - name: Build
-        run: |
-          cd code/programs/typescript/arithmetic-visualizer
-          npm run build
+        run: (cd code/programs/typescript/arithmetic-visualizer && npm run build)
 
       - name: Deploy to GitHub Pages (arithmetic/ subdirectory)
         uses: peaceiris/actions-gh-pages@v4

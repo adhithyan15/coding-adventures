@@ -49,20 +49,35 @@ impl WasmBPlusTree {
 
     #[wasm_bindgen(js_name = "rangeScan")]
     pub fn range_scan(&self, low: i32, high: i32) -> Array {
-        entries_array(self.inner.range_scan(&low, &high))
+        entries_array(
+            self.inner
+                .range_scan(&low, &high)
+                .into_iter()
+                .map(|(key, value)| (*key, value.clone())),
+        )
     }
 
     #[wasm_bindgen(js_name = "fullScan")]
     pub fn full_scan(&self) -> Array {
-        entries_array(self.inner.full_scan())
+        entries_array(
+            self.inner
+                .full_scan()
+                .into_iter()
+                .map(|(key, value)| (*key, value.clone())),
+        )
     }
 
     pub fn iter_keys(&self) -> Vec<i32> {
-        self.inner.iter().copied().collect()
+        self.inner.iter().map(|(key, _)| *key).collect()
     }
 
     pub fn items(&self) -> Array {
-        entries_array(self.inner.items().map(|(key, value)| (*key, value.clone())))
+        entries_array(
+            self.inner
+                .full_scan()
+                .into_iter()
+                .map(|(key, value)| (*key, value.clone())),
+        )
     }
 
     #[wasm_bindgen(js_name = "minKey")]
@@ -94,7 +109,12 @@ impl WasmBPlusTree {
 
     #[wasm_bindgen(js_name = "toString")]
     pub fn to_string_value(&self) -> String {
-        self.inner.to_string()
+        format!(
+            "BPlusTree(len={}, height={}, valid={})",
+            self.inner.len(),
+            self.inner.height(),
+            self.inner.is_valid()
+        )
     }
 }
 
@@ -129,6 +149,6 @@ mod tests {
         assert_eq!(tree.inner.range_scan(&10, &30).len(), 3);
         assert_eq!(tree.inner.full_scan().len(), 3);
         assert_eq!(tree.iter_keys(), vec![10, 20, 30]);
-        assert_eq!(tree.inner.items().count(), 3);
+        assert_eq!(tree.inner.iter().count(), 3);
     }
 }

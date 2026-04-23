@@ -1,0 +1,5 @@
+REM Prerequisite (not installed on Windows): ../transistors
+REM Prerequisite (not installed on Windows): ../logic-gates
+REM Prerequisite (not installed on Windows): ../arithmetic
+REM Prerequisite (not installed on Windows): ../intel8008-simulator
+echo Perl testing is not supported on Windows - skipping

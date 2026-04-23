@@ -11,6 +11,6 @@ license = "MIT"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-b-plus-tree = { path = "../../rust/b-plus-tree" }
+b-plus-tree = { package = "coding-adventures-b-plus-tree", path = "../../rust/b-plus-tree" }
 js-sys = "0.3"
 wasm-bindgen = "0.2"

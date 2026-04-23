@@ -1,0 +1,9 @@
+[package]
+name = "storage-core"
+version = "0.1.0"
+edition = "2021"
+description = "Portable storage backend contract for Chief of Staff stores"
+
+[dependencies]
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_sha256 = { path = "../sha256" }

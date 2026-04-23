@@ -1,0 +1,17 @@
+[workspace]
+
+[package]
+name = "paint-codec-png-native-nif"
+version = "0.1.0"
+edition = "2021"
+description = "Erlang NIF exposing PNG encoding for PixelContainer"
+build = "build.rs"
+
+[lib]
+name = "paint_codec_png_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+erl-nif-bridge = { path = "../../../../rust/erl-nif-bridge" }
+paint-instructions = { path = "../../../../rust/paint-instructions" }
+paint-codec-png = { path = "../../../../rust/paint-codec-png" }

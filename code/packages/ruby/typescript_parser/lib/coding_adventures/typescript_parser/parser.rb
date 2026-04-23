@@ -48,6 +48,7 @@ module CodingAdventures
     #   grammars/                                 <- ../../../../../../grammars
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
     TS_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "typescript.grammar")
+    COMPILED_GRAMMAR_DIR = __dir__
 
     # All valid TypeScript grammar versions supported by the versioned grammar
     # files in code/grammars/typescript/.
@@ -74,6 +75,21 @@ module CodingAdventures
       end
     end
 
+    def self.resolve_compiled_grammar_path(version)
+      resolve_grammar_path(version)
+
+      if version.nil? || version.empty?
+        File.join(COMPILED_GRAMMAR_DIR, "_grammar.rb")
+      else
+        suffix = version.tr(".", "_")
+        File.join(COMPILED_GRAMMAR_DIR, "_grammar_#{suffix}.rb")
+      end
+    end
+
+    def self.parser_grammar(version)
+      CodingAdventures::GrammarTools.load_parser_grammar(resolve_compiled_grammar_path(version))
+    end
+
     # Parse a string of TypeScript source code into a generic AST.
     #
     # The optional `version:` keyword argument selects a specific versioned
@@ -89,14 +105,8 @@ module CodingAdventures
       # Step 1: Tokenize using the TypeScript lexer (version-aware)
       tokens = CodingAdventures::TypescriptLexer.tokenize(source, version: version)
 
-      # Step 2: Load and parse the TypeScript grammar for this version
-      grammar_path = resolve_grammar_path(version)
-      grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(grammar_path, encoding: "UTF-8")
-      )
-
-      # Step 3: Parse tokens using the grammar-driven parser
-      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, grammar)
+      # Step 2: Parse tokens using the compiled grammar for this version.
+      parser = CodingAdventures::Parser::GrammarDrivenParser.new(tokens, parser_grammar(version))
       parser.parse
     end
   end

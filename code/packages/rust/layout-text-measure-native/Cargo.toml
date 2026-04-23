@@ -1,0 +1,10 @@
+[package]
+name = "layout-text-measure-native"
+version = "0.1.0"
+edition = "2021"
+description = "Bridge crate: implements layout-ir's TextMeasurer trait on top of the text-native (CoreText / DirectWrite / Pango) trio. The architectural joint between the layout engine and the device-dependent text pipeline."
+
+[dependencies]
+layout-ir = { path = "../layout-ir" }
+text-interfaces = { path = "../text-interfaces" }
+text-native = { path = "../text-native" }

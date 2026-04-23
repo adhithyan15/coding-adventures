@@ -64,7 +64,10 @@ pub fn minimize(dfa: &DFA) -> DFA {
         .collect();
 
     // Step 1: Initial partition -- accepting vs non-accepting
-    let non_accepting: HashSet<String> = reachable.difference(&reachable_accepting).cloned().collect();
+    let non_accepting: HashSet<String> = reachable
+        .difference(&reachable_accepting)
+        .cloned()
+        .collect();
 
     let mut partitions: Vec<HashSet<String>> = Vec::new();
     if !reachable_accepting.is_empty() {

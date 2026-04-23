@@ -3,7 +3,8 @@
 A WebAssembly 1.0 runtime for the coding-adventures monorepo.
 
 Orchestrates the full pipeline: parse → validate → instantiate → execute.
-Provides a WASI host implementation (`WasiStub`) so WASM modules can call
+Provides a WASI host implementation (`WasiHost`, with `WasiStub` kept as a
+backward-compatible alias) so WASM modules can call
 standard system functions via injectable clock and random interfaces.
 
 ## Stack position
@@ -46,7 +47,7 @@ results, err := rt.Call(instance, "main", nil)
 ### With WASI
 
 ```go
-wasi := wasmruntime.NewWasiStubFromConfig(wasmruntime.WasiConfig{
+wasi := wasmruntime.NewWasiHostFromConfig(wasmruntime.WasiConfig{
     Args:           []string{"myapp", "--verbose"},
     Env:            []string{"HOME=/home/user", "PATH=/usr/bin"},
     StdoutCallback: func(s string) { fmt.Print(s) },
@@ -67,7 +68,7 @@ func (FakeClock) RealtimeNs() int64         { return 1_700_000_000_000_000_001 }
 func (FakeClock) MonotonicNs() int64        { return 42_000_000_000 }
 func (FakeClock) ResolutionNs(int32) int64  { return 1_000_000 }
 
-wasi := wasmruntime.NewWasiStubFromConfig(wasmruntime.WasiConfig{
+wasi := wasmruntime.NewWasiHostFromConfig(wasmruntime.WasiConfig{
     Clock:  FakeClock{},
     Random: MyFakeRandom{},
 })

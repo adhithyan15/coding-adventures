@@ -1,0 +1,8 @@
+[package]
+name = "image-geometric-transforms"
+version = "0.1.0"
+edition = "2021"
+description = "IMG04: Geometric transforms on PixelContainer (flip, rotate, scale, affine, perspective)"
+
+[dependencies]
+pixel-container = { path = "../pixel-container" }

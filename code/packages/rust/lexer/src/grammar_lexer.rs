@@ -379,7 +379,7 @@ fn compile_patterns(definitions: &[TokenDefinition], case_sensitive: bool) -> Ve
         .iter()
         .map(|defn| {
             let regex_str = if defn.is_regex {
-                format!("^{}", defn.pattern)
+                format!("^(?:{})", defn.pattern)
             } else {
                 format!("^{}", regex::escape(&defn.pattern))
             };
@@ -475,6 +475,8 @@ pub struct GrammarLexer<'a> {
 
     /// Whether indentation mode is active.
     indent_mode: bool,
+    /// Whether Haskell-style layout mode is active.
+    layout_mode: bool,
 
     /// Escape processing mode. When set to `"none"`, STRING tokens have their
     /// quotes stripped but escape sequences are left as raw text. This is used
@@ -511,12 +513,6 @@ pub struct GrammarLexer<'a> {
     /// via `LexerContext::set_skip_enabled()` for groups where whitespace
     /// is significant (e.g., CDATA, raw strings).
     skip_enabled: bool,
-
-    /// Whether the grammar is case-sensitive. When `false`, the source
-    /// string is lowercased before tokenization so that keywords and
-    /// patterns match regardless of case. This is useful for languages
-    /// like SQL and BASIC where `SELECT` and `select` are equivalent.
-    case_sensitive: bool,
 
     /// Pre-tokenize hooks: transform source text before lexing.
     /// Each hook is a function `String -> String`. Multiple hooks compose left-to-right.
@@ -565,6 +561,8 @@ pub struct GrammarLexer<'a> {
     ///
     /// Examples: JavaScript's `async`, `await`, `yield`, `get`, `set`.
     context_keyword_set: HashSet<String>,
+    /// Keywords that introduce Haskell-style layout contexts.
+    layout_keyword_set: HashSet<String>,
 }
 
 impl<'a> GrammarLexer<'a> {
@@ -593,6 +591,7 @@ impl<'a> GrammarLexer<'a> {
         let patterns = compile_patterns(&grammar.definitions, case_sensitive);
         let skip_patterns = compile_patterns(&grammar.skip_definitions, case_sensitive);
         let indent_mode = grammar.mode.as_deref() == Some("indentation");
+        let layout_mode = grammar.mode.as_deref() == Some("layout");
         let escape_mode = grammar.escapes.clone();
 
         // --- Build per-group compiled patterns ---
@@ -605,11 +604,11 @@ impl<'a> GrammarLexer<'a> {
             .definitions
             .iter()
             .map(|defn| {
-                let regex_str = if defn.is_regex {
-                    format!("^{}", defn.pattern)
-                } else {
-                    format!("^{}", regex::escape(&defn.pattern))
-                };
+            let regex_str = if defn.is_regex {
+                format!("^(?:{})", defn.pattern)
+            } else {
+                format!("^{}", regex::escape(&defn.pattern))
+            };
                 CompiledPattern {
                     name: defn.name.clone(),
                     pattern: RegexBuilder::new(&regex_str)
@@ -637,6 +636,11 @@ impl<'a> GrammarLexer<'a> {
             .iter()
             .cloned()
             .collect();
+        let layout_keyword_set: HashSet<String> = grammar
+            .layout_keywords
+            .iter()
+            .cloned()
+            .collect();
         GrammarLexer {
             chars: source.chars().collect(),
             source: Cow::Borrowed(source),
@@ -649,19 +653,20 @@ impl<'a> GrammarLexer<'a> {
             patterns,
             skip_patterns,
             indent_mode,
+            layout_mode,
             escape_mode,
             group_patterns,
             group_names,
             group_stack: vec!["default".to_string()],
             on_token: None,
             skip_enabled: true,
-            case_sensitive,
             pre_tokenize_hooks: Vec::new(),
             post_tokenize_hooks: Vec::new(),
             case_insensitive,
             last_emitted_token: None,
             bracket_depths: BracketDepths::default(),
             context_keyword_set,
+            layout_keyword_set,
         }
     }
 
@@ -1348,6 +1353,131 @@ impl<'a> GrammarLexer<'a> {
         Ok(tokens)
     }
 
+    fn tokenize_layout(&mut self) -> Result<Vec<Token>, LexerError> {
+        let tokens = self.tokenize_standard()?;
+        Ok(self.apply_layout(tokens))
+    }
+
+    fn apply_layout(&self, tokens: Vec<Token>) -> Vec<Token> {
+        let mut result = Vec::with_capacity(tokens.len());
+        let mut layout_stack: Vec<usize> = Vec::new();
+        let mut pending_layouts = 0usize;
+        let mut suppress_depth = 0usize;
+
+        for index in 0..tokens.len() {
+            let token = tokens[index].clone();
+            let type_name = token.type_name.as_deref().unwrap_or(match token.type_ {
+                TokenType::Newline => "NEWLINE",
+                TokenType::Eof => "EOF",
+                _ => "",
+            });
+
+            if type_name == "NEWLINE" {
+                result.push(token.clone());
+                if suppress_depth == 0 {
+                    if let Some(next_token) = self.next_layout_token(&tokens, index + 1) {
+                        while !layout_stack.is_empty() && next_token.column < *layout_stack.last().unwrap() {
+                            result.push(self.virtual_layout_token("VIRTUAL_RBRACE", "}", next_token));
+                            layout_stack.pop();
+                        }
+
+                        let next_type = next_token.type_name.as_deref().unwrap_or(match next_token.type_ {
+                            TokenType::Newline => "NEWLINE",
+                            TokenType::Eof => "EOF",
+                            _ => "",
+                        });
+                        if !layout_stack.is_empty()
+                            && next_type != "EOF"
+                            && next_token.value != "}"
+                            && next_token.column == *layout_stack.last().unwrap()
+                        {
+                            result.push(self.virtual_layout_token("VIRTUAL_SEMICOLON", ";", next_token));
+                        }
+                    }
+                }
+                continue;
+            }
+
+            if type_name == "EOF" {
+                while !layout_stack.is_empty() {
+                    result.push(self.virtual_layout_token("VIRTUAL_RBRACE", "}", &token));
+                    layout_stack.pop();
+                }
+                result.push(token);
+                continue;
+            }
+
+            if pending_layouts > 0 {
+                if token.value == "{" {
+                    pending_layouts -= 1;
+                } else {
+                    for _ in 0..pending_layouts {
+                        layout_stack.push(token.column);
+                        result.push(self.virtual_layout_token("VIRTUAL_LBRACE", "{", &token));
+                    }
+                    pending_layouts = 0;
+                }
+            }
+
+            result.push(token.clone());
+
+            if !token
+                .type_name
+                .as_deref()
+                .unwrap_or("")
+                .starts_with("VIRTUAL_")
+            {
+                match token.value.as_str() {
+                    "(" | "[" | "{" => suppress_depth += 1,
+                    ")" | "]" | "}" => {
+                        if suppress_depth > 0 {
+                            suppress_depth -= 1;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+
+            if self.is_layout_keyword(&token) {
+                pending_layouts += 1;
+            }
+        }
+
+        result
+    }
+
+    fn next_layout_token<'b>(&self, tokens: &'b [Token], start_index: usize) -> Option<&'b Token> {
+        tokens[start_index..]
+            .iter()
+            .find(|token| {
+                let type_name = token.type_name.as_deref().unwrap_or(match token.type_ {
+                    TokenType::Newline => "NEWLINE",
+                    TokenType::Eof => "EOF",
+                    _ => "",
+                });
+                type_name != "NEWLINE"
+            })
+    }
+
+    fn virtual_layout_token(&self, type_name: &str, value: &str, anchor: &Token) -> Token {
+        Token {
+            type_: TokenType::Name,
+            value: value.to_string(),
+            line: anchor.line,
+            column: anchor.column,
+            type_name: Some(type_name.to_string()),
+            flags: None,
+        }
+    }
+
+    fn is_layout_keyword(&self, token: &Token) -> bool {
+        if self.layout_keyword_set.is_empty() {
+            return false;
+        }
+        self.layout_keyword_set.contains(&token.value)
+            || self.layout_keyword_set.contains(&token.value.to_lowercase())
+    }
+
     // -----------------------------------------------------------------------
     // Public API
     // -----------------------------------------------------------------------
@@ -1371,6 +1501,8 @@ impl<'a> GrammarLexer<'a> {
         // Stage 2: Core tokenization.
         let mut tokens = if self.indent_mode {
             self.tokenize_indentation()?
+        } else if self.layout_mode {
+            self.tokenize_layout()?
         } else {
             self.tokenize_standard()?
         };
@@ -2523,6 +2655,65 @@ PLUS = "+""#,
             "# @case_insensitive true\nNAME = /[a-zA-Z_][a-zA-Z0-9_]*/\nskip:\n  WS = /[ \\t\\n]+/\nkeywords:\n  SELECT\n  FROM\n"
         )
         .unwrap()
+    }
+
+    fn layout_grammar() -> TokenGrammar {
+        parse_token_grammar(
+            "mode: layout\n\
+             NAME = /[a-zA-Z_][a-zA-Z0-9_]*/\n\
+             EQUALS = \"=\"\n\
+             LBRACE = \"{\"\n\
+             RBRACE = \"}\"\n\
+             skip:\n\
+             \x20 WS = /[ \\t]+/\n\
+             layout_keywords:\n\
+             \x20 let\n\
+             \x20 where\n\
+             \x20 do\n\
+             \x20 of\n",
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn test_layout_mode_injects_virtual_tokens() {
+        let grammar = layout_grammar();
+        let tokens = GrammarLexer::new("let\n  x = y\n  z = q\n", &grammar)
+            .tokenize()
+            .unwrap();
+
+        let types: Vec<String> = tokens.iter().map(token_type_name).collect();
+        assert_eq!(
+            types,
+            vec![
+                "Name",
+                "Newline",
+                "VIRTUAL_LBRACE",
+                "Name",
+                "Equals",
+                "Name",
+                "Newline",
+                "VIRTUAL_SEMICOLON",
+                "Name",
+                "Equals",
+                "Name",
+                "Newline",
+                "VIRTUAL_RBRACE",
+                "EOF",
+            ]
+        );
+    }
+
+    #[test]
+    fn test_layout_mode_respects_explicit_braces() {
+        let grammar = layout_grammar();
+        let tokens = GrammarLexer::new("let {\n  x = y\n}\n", &grammar)
+            .tokenize()
+            .unwrap();
+
+        let types: Vec<String> = tokens.iter().map(token_type_name).collect();
+        assert!(!types.iter().any(|t| t == "VIRTUAL_LBRACE"));
+        assert!(!types.iter().any(|t| t == "VIRTUAL_SEMICOLON"));
     }
 
     #[test]

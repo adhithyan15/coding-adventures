@@ -2,153 +2,108 @@
 
 Coding Adventures is a learning-first monorepo for understanding how computers work by building the layers ourselves.
 
-This repository is not just "a lot of packages." It is really four projects living in one place:
+This repo is part computing-stack curriculum, part polyglot package lab, part tooling playground, and part app/program sandbox. The goal is not just to collect implementations, but to make the ideas behind them easier to study, compare, and extend.
 
-1. A computing-stack curriculum, from logic gates and arithmetic up through lexers, parsers, compilers, virtual machines, assemblers, and ISA simulators.
-2. A computer architecture lab, with growing coverage of caches, branch prediction, hazard detection, pipelining, and configurable core design.
-3. A polyglot comparison space, where the same ideas are implemented across Python, Ruby, Go, TypeScript, Rust, Elixir, Lua, Perl, and Swift so the concepts are separated from the language.
-4. A publishing and tooling playground, where each package is treated like a real artifact with tests, metadata, changelogs, and CI.
+## What Lives Here
 
-## What This Repository Optimizes For
+- `code/specs/` contains design docs and package specs
+- `code/learning/` contains plain-language teaching material
+- `code/grammars/` contains shared `.grammar` and `.tokens` sources
+- `code/src/` contains shared TypeScript support code and token sources
+- `code/packages/` contains publishable libraries across multiple ecosystems
+- `code/programs/` contains standalone tools, demos, apps, and visualizers
+- `code/fixtures/` contains shared assets and sample inputs
+- `scripts/` contains repo-level helper scripts
+- `.github/workflows/` contains CI, publish, release, and deploy automation
 
-- **Understanding before abstraction**: build the layers directly instead of treating them as magic.
-- **Learning through implementation**: every package should teach, not just execute.
-- **Architecture as a first-class topic**: this repo is as much about pipelines, caches, and execution models as it is about parsers and bytecode.
-- **Cross-language repetition with purpose**: re-implementing the same idea in multiple ecosystems is part of the learning method.
-- **Publishable quality**: packages are expected to have tests, READMEs, changelogs, and package metadata.
-- **Specs and learning notes alongside code**: the code, the specifications, and the learning material should reinforce each other.
+## Current Shape
 
-## The Main Tracks
+The repo changes quickly, so this README describes the shape of the project
+rather than trying to keep a live inventory in sync.
 
-### 1. Digital logic and arithmetic
+- `code/packages/` contains publishable libraries across ecosystems such as
+  C#, Dart, Elixir, F#, Go, Haskell, Java, Kotlin, Lua, Perl, Python, Ruby,
+  Rust, Swift, TypeScript, and WebAssembly.
+- `code/programs/` contains standalone tools, demos, visualizers, apps, and
+  experiments across the same general language families.
+- `code/specs/` contains the package and system design documents.
+- `code/learning/` contains teaching material that explains the concepts behind
+  the packages.
+- `code/grammars/` contains shared grammar and token sources.
+- Starlark is used as a build-time rule/configuration language, not as a
+  package implementation ecosystem.
 
-This track starts at the hardware floor:
+## Main Themes
 
-- `logic-gates`
-- `arithmetic`
-- `fp-arithmetic`
-- `clock`
+### 1. Computer architecture and the computing stack
 
-The goal is to show how larger behavior emerges from small, deterministic building blocks.
+This is still one of the core stories in the repo:
 
-### 2. CPU and ISA simulation
+- logic gates, transistors, clocks, arithmetic, and floating-point arithmetic
+- CPU simulators and ISA simulators
+- ARM, ARM1, RISC-V, WASM, Intel 4004, Intel 8008, JVM, and CLR execution models
+- cache, branch prediction, hazard detection, pipeline, and core design
+- accelerator and GPU-oriented work such as `gpu-core`, `compute-unit`, and `parallel-execution-engine`
 
-This track models execution closer to real hardware:
+### 2. Language tooling and runtimes
 
-- `cpu-simulator`
-- `arm-simulator`
-- `riscv-simulator`
-- `wasm-simulator`
-- `intel4004-simulator`
-- `jvm-simulator`
-- `clr-simulator`
+The repo has deep coverage of the path from text to execution:
 
-The goal is to understand instruction formats, execution models, fetch-decode-execute loops, and the differences between register machines, stack machines, and older accumulator-style designs.
+- shared grammars and generated frontends
+- lexers and parsers for multiple languages
+- bytecode compilers, virtual machines, assemblers, and IR tooling
+- grammar tools and build-time code generation
 
-### 3. Deep computer architecture
+### 3. Data structures, storage, and execution infrastructure
 
-This is one of the most important themes in the repo:
+There is broad coverage of classic and systems-oriented data-structure work:
 
-- `cpu-cache`
-- `branch-predictor`
-- `hazard-detection`
-- `pipeline`
-- `core`
+- trees, tries, heaps, skip lists, bloom filters, hyperloglog, and graph packages
+- RESP and in-memory data-store protocol work
+- file-system, process-manager, event-loop, IPC, and network-stack packages
 
-The goal is to move beyond "a CPU executes instructions" and into "how a modern core actually stays fast."
+### 4. Cryptography, compression, and encoding
 
-### 4. Language frontends and execution
+This area is much more prominent than the older README suggested:
 
-This track builds the path from source code to execution:
+- hashes, HMAC, HKDF, PBKDF2, scrypt, AES, ChaCha20-Poly1305, Ed25519, X25519
+- compression families like LZ77, LZ78, LZSS, LZW, Huffman, Deflate, and Brotli
+- barcode and related encoding work such as Code39, Code128, Codabar, EAN-13, ITF, and UPC-A
 
-- `grammar-tools`
-- `lexer`
-- `parser`
-- `python-lexer`, `ruby-lexer`, `javascript-lexer`, `typescript-lexer`
-- `python-parser`, `ruby-parser`, `javascript-parser`, `typescript-parser`
-- `bytecode-compiler`
-- `virtual-machine`
-- `assembler`
-- `jit-compiler`
+### 5. Documents, graphics, and rendering
 
-The goal is to connect programming-language tooling back to the machine beneath it.
+The repo also includes a substantial content/rendering track:
 
-### 5. In-memory data stores and protocol stacks
+- CommonMark, GFM, AsciiDoc, document ASTs, sanitizers, and HTML rendering
+- draw and paint instruction systems
+- image codecs, font parsing, display work, and visualizer programs
 
-This track is about building transport-agnostic, pluggable storage systems and ordered-set abstractions:
+### 6. Tooling, apps, and learning-oriented programs
 
-- `resp-protocol`
-- `in-memory-data-store-protocol`
-- `in-memory-data-store-engine`
-- `in-memory-data-store`
-- `tree-set`
-- `hash-map`, `hash-set`, `heap`, `skip-list`, `hyperloglog`
+`code/programs/` is broader than just demos:
 
-The goal is to model a single-node data store as a composition of reusable
-packages that can grow into new protocols, new transports, and new storage
-modules over time.
+- build tools, scaffold generators, grammar tools, and package materializers
+- visualizers such as arithmetic, logic-gates, transistor, ENIAC, and Code39 programs
+- apps and product experiments like checklist, journal, Engram, and browser/extension work
+- small ML/demo programs such as predictors and classifiers
+- multi-language IRC server work via `ircd`
 
-### 6. Accelerators and parallel execution
-
-This track explores computation outside the classic scalar CPU story:
-
-- `gpu-core`
-- `compute-unit`
-- `device-simulator`
-- `parallel-execution-engine`
-
-The goal is to study throughput-oriented execution, dataflow, and accelerator-style design.
-
-### 7. Machine learning fundamentals
-
-This track covers small, foundational learning components that fit naturally with the accelerator story:
-
-- `loss-functions`
-- `gradient-descent`
-
-The goal is to treat optimization primitives as understandable building blocks rather than opaque library calls.
-
-### 8. Tooling, visualization, and infrastructure
-
-This repo also includes the tools needed to sustain the work:
-
-- monorepo build tools
-- `directed-graph`
-- `html-renderer`
-- pipeline visualizers and support programs
-
-These are not side quests. They are part of the project's teaching philosophy: infrastructure is also a thing worth understanding.
-
-## How The Repository Is Organized
+## Repository Map
 
 ```text
 code/
-├── specs/         Specifications and architecture documents
-├── learning/      Explanatory notes and teaching material
-├── grammars/      Shared grammar definitions
-├── packages/      Publishable libraries in multiple languages
-└── programs/      Standalone tools and demos
+|-- fixtures/
+|-- grammars/
+|-- learning/
+|-- packages/
+|-- programs/
+|-- specs/
+`-- src/
 ```
-
-## Languages
-
-The repository currently spans nine core ecosystems:
-
-- Python
-- Ruby
-- Go
-- TypeScript
-- Rust
-- Elixir
-- Lua
-- Perl
-- Swift
-
-The language split is intentional. A parser should still be recognizable as a parser when moved from Python to Go. A cache should still look like a cache in Ruby or TypeScript. The repetition is part of the point.
 
 ## Learning Material
 
-The learning side of the repository is now a first-class part of the structure, not an afterthought.
+The learning side of the repo is a first-class part of the structure, not an afterthought.
 
 Start here:
 
@@ -156,9 +111,7 @@ Start here:
 - [Algorithms](./code/learning/algorithms/README.md)
 - [Computer Architecture](./code/learning/computer-architecture/README.md)
 - [Language Tooling](./code/learning/language-tooling/README.md)
-- [Machine learning notes](./code/learning/loss-functions.md)
-- [Optimization notes](./code/learning/gradient-descent.md)
-- [Python Ecosystem Notes](./code/learning/python/ecosystem.md)
+- [Python Ecosystem](./code/learning/python/ecosystem.md)
 
 The intended relationship is:
 
@@ -169,47 +122,42 @@ packages show the ideas in code
 tests prove the behavior
 ```
 
-## Current Shape
+## Tooling
 
-Today the repo contains:
+The root `mise.toml` currently pins:
 
-- 1513 package directories
-- 122 program directories
-- 9 implementation languages
+- Dart `latest`
+- Go `latest`
+- Python `3.12`
+- Ruby `3.4`
+- Rust `stable`
 
-Those counts matter less than the shape: this is a broad, layered study of computing systems, programming-language tooling, and computer architecture.
+The main repo-level grammar helper is:
+
+- [scripts/generate-compiled-grammars.sh](./scripts/generate-compiled-grammars.sh)
 
 ## Workflow
 
-The working style for the repository is:
+The working style for the repo is:
 
 1. Write or refine the spec.
-2. Add or update the learning entry for the concept.
+2. Add or update the matching learning entry.
 3. Add tests.
 4. Implement the package or feature.
-5. Update changelog and package README.
+5. Update the package README and changelog.
 
-The long-term goal is that no major concept in the repository exists only as code. It should also exist as a teachable explanation.
+The long-term goal is that no major concept in the repo exists only as code. It should also exist as a teachable explanation.
 
 ## Good Entry Points
 
-If you want to explore the repository by theme:
+If you want to explore the repo by theme, start here:
 
-- Start with [00-architecture.md](./code/specs/00-architecture.md) for the big picture.
-- Read [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track.
-- Read [DT25 in-memory data store](./code/specs/DT25-mini-redis.md) for the current single-node in-memory data store baseline of the DT data-structure series.
-- Read [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) to see how the build system uses graph algorithms.
-- Read [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story.
-
-## Future Direction
-
-The repository is still expanding in a few directions:
-
-- richer learning material tied to every major package family
-- deeper computer architecture coverage
-- stronger accelerator and GPU material
-- more cross-language consistency
-- better visualization of the stack and execution flow
+- [00-architecture.md](./code/specs/00-architecture.md) for the big picture
+- [D00-deep-cpu-architecture.md](./code/specs/D00-deep-cpu-architecture.md) for the architecture track
+- [DT25-mini-redis.md](./code/specs/DT25-mini-redis.md) for the single-node data-store baseline
+- [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) for the build-planning story
+- [computing-stack.md](./code/learning/computer-architecture/computing-stack.md) for the hardware-to-language story
+- [code/programs/typescript](./code/programs/typescript/) for the current app and visualizer-heavy program surface
 
 ## Copyright
 

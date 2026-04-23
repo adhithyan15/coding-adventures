@@ -50,7 +50,7 @@ module CodingAdventures
         end
 
         # Call a function by index (handles both host and module functions).
-        def call_function(vm, ctx, func_index)
+        def call_function(vm, code, ctx, func_index)
           func_type = ctx[:func_types][func_index]
           raise TrapError, "undefined function #{func_index}" unless func_type
 
@@ -77,6 +77,7 @@ module CodingAdventures
             label_stack: ctx[:label_stack].dup,
             stack_height: vm.typed_stack.length,
             control_flow_map: ctx[:control_flow_map],
+            code: code,
             return_pc: vm.pc + 1,
             return_arity: func_type.results.length
           })
@@ -90,12 +91,15 @@ module CodingAdventures
           decoded = Decoder.decode_function_body(body)
           ctx[:control_flow_map] = Decoder.build_control_flow_map(decoded)
 
-          # Set up new code for the callee.
-          ctx[:current_instructions] = Decoder.to_vm_instructions(decoded)
-
+          # Hand control back to the engine so it can swap code objects cleanly.
+          ctx[:pending_code] = CodingAdventures::VirtualMachine::CodeObject.new(
+            instructions: Decoder.to_vm_instructions(decoded),
+            constants: [],
+            names: []
+          )
           ctx[:returned] = false
-          vm.halted = false
           vm.jump_to(0)
+          vm.halted = true
         end
 
         def register(vm)
@@ -180,9 +184,17 @@ module CodingAdventures
               vm.advance_pc
               "end (block)"
             else
-              ctx[:returned] = true
-              vm.halted = true
-              "end (function)"
+              # Branches can legally jump to a block's `end` instruction after
+              # its label has already been popped. Only the final `end` of the
+              # function should stop execution.
+              if vm.pc >= ctx[:current_instructions].length - 1
+                ctx[:returned] = true
+                vm.halted = true
+                "end (function)"
+              else
+                vm.advance_pc
+                "end (continue)"
+              end
             end
           })
 
@@ -226,9 +238,9 @@ module CodingAdventures
           })
 
           # 0x10: call
-          vm.register_context_opcode(0x10, ->(vm, instr, _code, ctx) {
+          vm.register_context_opcode(0x10, ->(vm, instr, code, ctx) {
             func_index = instr.operand
-            Control.call_function(vm, ctx, func_index)
+            Control.call_function(vm, code, ctx, func_index)
             "call"
           })
 

@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-csharp-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "C# lexer — tokenizes C# source code using the grammar-driven lexer and the csharp.tokens grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }

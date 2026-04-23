@@ -1,0 +1,4 @@
+module CPaintVmMetalNative {
+    header "include/paint_vm_metal_c.h"
+    export *
+}

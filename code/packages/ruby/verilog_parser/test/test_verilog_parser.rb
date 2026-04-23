@@ -324,4 +324,20 @@ class TestVerilogParser < Minitest::Test
     refute_nil CodingAdventures::VerilogParser::VERSION
     assert_match(/\A\d+\.\d+\.\d+\z/, CodingAdventures::VerilogParser::VERSION)
   end
+
+  def test_default_version_matches_explicit_2005
+    default_ast = parse("module empty; endmodule")
+    explicit_ast = CodingAdventures::VerilogParser.parse(
+      "module empty; endmodule",
+      version: "2005"
+    )
+    assert_equal default_ast.rule_name, explicit_ast.rule_name
+  end
+
+  def test_rejects_unknown_version
+    error = assert_raises(ArgumentError) do
+      CodingAdventures::VerilogParser.parse("module empty; endmodule", version: "2099")
+    end
+    assert_match(/Unknown Verilog version/, error.message)
+  end
 end

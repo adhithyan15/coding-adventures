@@ -97,6 +97,13 @@
  * an 8-bit address component, immediate data, or jump target.
  */
 
+import {
+  ExecutionResult,
+  StepTrace,
+} from "@coding-adventures/simulator-protocol";
+
+import type { Intel4004State } from "./state.js";
+
 // ---------------------------------------------------------------------------
 // Trace -- what happened during one instruction
 // ---------------------------------------------------------------------------
@@ -149,6 +156,22 @@ function isTwoByte(raw: number): boolean {
   }
   // FIM is 0x2_ with even lower nibble
   return upper === 0x2 && (raw & 0x1) === 0;
+}
+
+function freezeNumbers(values: readonly number[]): readonly number[] {
+  return Object.freeze([...values]);
+}
+
+function freezeRam(
+  ram: readonly (readonly (readonly number[])[])[]
+): readonly (readonly (readonly number[])[])[] {
+  return Object.freeze(
+    ram.map((bank) =>
+      Object.freeze(
+        bank.map((register) => Object.freeze([...register]))
+      )
+    )
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -347,9 +370,14 @@ export class Intel4004Simulator {
    * but some (JUN, JMS, JCN, FIM, ISZ) are 2 bytes.
    */
   loadProgram(program: Uint8Array): void {
+    this.memory.fill(0);
     for (let i = 0; i < program.length; i++) {
       this.memory[i] = program[i];
     }
+  }
+
+  load(program: Uint8Array): void {
+    this.loadProgram(program);
   }
 
   /**
@@ -443,7 +471,7 @@ export class Intel4004Simulator {
    */
   run(program: Uint8Array, maxSteps: number = 10000): Intel4004Trace[] {
     this.reset();
-    this.loadProgram(program);
+    this.load(program);
 
     const traces: Intel4004Trace[] = [];
 
@@ -454,6 +482,55 @@ export class Intel4004Simulator {
     }
 
     return traces;
+  }
+
+  getState(): Intel4004State {
+    return Object.freeze({
+      accumulator: this.accumulator,
+      registers: freezeNumbers(this.registers),
+      carry: this.carry,
+      pc: this.pc,
+      halted: this.halted,
+      ram: freezeRam(this.ram),
+      hwStack: freezeNumbers(this.hwStack),
+      stackPointer: this.stackPointer,
+    });
+  }
+
+  execute(
+    program: Uint8Array,
+    maxSteps: number = 100_000
+  ): ExecutionResult<Intel4004State> {
+    this.reset();
+    this.load(program);
+
+    const traces: StepTrace[] = [];
+    let steps = 0;
+    let error: string | null = null;
+
+    try {
+      while (!this.halted && steps < maxSteps) {
+        const trace = this.step();
+        traces.push(
+          new StepTrace(trace.address, this.pc, trace.mnemonic, trace.mnemonic)
+        );
+        steps += 1;
+      }
+    } catch (caught) {
+      error = caught instanceof Error ? caught.message : String(caught);
+    }
+
+    if (error === null && !this.halted) {
+      error = `max_steps (${maxSteps}) exceeded`;
+    }
+
+    return new ExecutionResult({
+      halted: this.halted,
+      steps,
+      finalState: this.getState(),
+      error,
+      traces,
+    });
   }
 
   // -----------------------------------------------------------------

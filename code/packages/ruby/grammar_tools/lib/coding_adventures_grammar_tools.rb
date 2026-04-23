@@ -24,6 +24,7 @@ require_relative "coding_adventures/grammar_tools/token_grammar"
 require_relative "coding_adventures/grammar_tools/parser_grammar"
 require_relative "coding_adventures/grammar_tools/cross_validator"
 require_relative "coding_adventures/grammar_tools/compiler"
+require_relative "coding_adventures/grammar_tools/compiled_loader"
 
 module CodingAdventures
   module GrammarTools

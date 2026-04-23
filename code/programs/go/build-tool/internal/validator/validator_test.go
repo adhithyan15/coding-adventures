@@ -186,6 +186,7 @@ func TestValidateBuildFilesFailsFullBuildWorkflowWithoutNormalizedToolchains(t *
 	}{
 		{name: "elixir/actor", relPath: "code/packages/elixir/actor", lang: "elixir"},
 		{name: "python/actor", relPath: "code/packages/python/actor", lang: "python"},
+		{name: "swift/actor", relPath: "code/packages/swift/actor", lang: "swift"},
 	})
 
 	repoRoot := inferRepoRoot(pkgs)
@@ -214,6 +215,7 @@ jobs:
 	graph := directedgraph.New()
 	graph.AddNode("elixir/actor")
 	graph.AddNode("python/actor")
+	graph.AddNode("swift/actor")
 
 	err := ValidateBuildFiles(pkgs, graph)
 	if err == nil {
@@ -223,7 +225,7 @@ jobs:
 	if !strings.Contains(msg, ".github/workflows/ci.yml") {
 		t.Fatalf("expected ci.yml to be mentioned, got %v", err)
 	}
-	if !strings.Contains(msg, "elixir") || !strings.Contains(msg, "python") {
+	if !strings.Contains(msg, "elixir") || !strings.Contains(msg, "python") || !strings.Contains(msg, "swift") {
 		t.Fatalf("expected missing toolchain languages in message, got %v", err)
 	}
 }
@@ -237,6 +239,7 @@ func TestValidateBuildFilesAllowsFullBuildWorkflowWithNormalizedToolchains(t *te
 	}{
 		{name: "elixir/actor", relPath: "code/packages/elixir/actor", lang: "elixir"},
 		{name: "python/actor", relPath: "code/packages/python/actor", lang: "python"},
+		{name: "swift/actor", relPath: "code/packages/swift/actor", lang: "swift"},
 	})
 
 	repoRoot := inferRepoRoot(pkgs)
@@ -254,13 +257,15 @@ jobs:
     outputs:
       needs_python: ${{ steps.toolchains.outputs.needs_python }}
       needs_elixir: ${{ steps.toolchains.outputs.needs_elixir }}
+      needs_swift: ${{ steps.toolchains.outputs.needs_swift }}
     steps:
       - name: Normalize toolchain requirements
         id: toolchains
         run: |
           printf '%s\n' \
             'needs_python=true' \
-            'needs_elixir=true' >> "$GITHUB_OUTPUT"
+            'needs_elixir=true' \
+            'needs_swift=true' >> "$GITHUB_OUTPUT"
   build:
     steps:
       - name: Full build on main merge
@@ -272,6 +277,7 @@ jobs:
 	graph := directedgraph.New()
 	graph.AddNode("elixir/actor")
 	graph.AddNode("python/actor")
+	graph.AddNode("swift/actor")
 
 	if err := ValidateBuildFiles(pkgs, graph); err != nil {
 		t.Fatalf("expected CI validation to pass, got %v", err)

@@ -53,6 +53,7 @@ use lib '../wasm-validator/lib';
 use lib '../wasm-execution/lib';
 
 use CodingAdventures::WasmModuleParser qw(parse);
+use CodingAdventures::WasmLeb128 ();
 use CodingAdventures::WasmValidator ();  # import nothing; call fully qualified
 use CodingAdventures::WasmExecution qw(i32 i64 f32 f64 evaluate_const_expr);
 use CodingAdventures::WasmRuntime::WasiClockRandom ();
@@ -64,6 +65,12 @@ use Encode ();
 
 use Exporter 'import';
 our @EXPORT_OK = qw();
+
+use constant {
+    _MAX_DATA_SEGMENTS      => 4096,
+    _MAX_DATA_SEGMENT_BYTES => 16 * 1024 * 1024,
+    _MAX_TOTAL_DATA_BYTES   => 16 * 1024 * 1024,
+};
 
 # ============================================================================
 # WasmRuntime
@@ -114,37 +121,42 @@ sub instantiate {
 
         if ($kind eq 'func') {
             my $type_idx = $imp->{desc}{idx};
+            $type_idx = $imp->{desc}{type_idx} unless defined $type_idx;
             push @func_types, $module->{types}[$type_idx];
             push @func_bodies, undef;  # no body for imports
 
             # Try to resolve from host
             my $host_func = undef;
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 $host_func = $self->{host}->resolve_function(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
             }
             push @host_functions, $host_func;
         }
         elsif ($kind eq 'mem') {
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 $memory = $self->{host}->resolve_memory(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
             }
         }
         elsif ($kind eq 'table') {
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 my $t = $self->{host}->resolve_table(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
                 push @tables, $t if $t;
             }
         }
         elsif ($kind eq 'global') {
             if ($self->{host}) {
+                my $module_name = defined $imp->{module} ? $imp->{module} : $imp->{mod};
                 my $g = $self->{host}->resolve_global(
-                    $imp->{module}, $imp->{name}
+                    $module_name, $imp->{name}
                 );
                 if ($g) {
                     push @global_types, $g->{type};
@@ -184,9 +196,10 @@ sub instantiate {
     # Step 3: Allocate memory (from memory section, if not imported)
     if (!$memory && scalar(@{ $module->{memories} || [] }) > 0) {
         my $mem_type = $module->{memories}[0];
+        my $limits = $mem_type->{limits} || $mem_type;
         $memory = CodingAdventures::WasmExecution::LinearMemory->new(
-            $mem_type->{min},
-            $mem_type->{max},
+            $mem_type->{min} // $limits->{min},
+            $mem_type->{max} // $limits->{max},
         );
     }
 
@@ -207,7 +220,7 @@ sub instantiate {
 
     # Step 6: Apply data segments
     if ($memory) {
-        for my $seg (@{ $module->{data} || [] }) {
+        for my $seg (@{ _normalize_data_segments($module->{data} || []) }) {
             my $offset = evaluate_const_expr($seg->{offset_expr}, \@globals);
             my $offset_num = $offset->{value};
             $memory->write_bytes($offset_num, $seg->{data});
@@ -248,6 +261,10 @@ sub instantiate {
         exports        => \%exports,
     };
 
+    if ($self->{host} && $memory && $self->{host}->can('set_memory')) {
+        $self->{host}->set_memory($memory);
+    }
+
     # Step 8: Call start function (if present)
     if (defined $module->{start}) {
         my $engine = CodingAdventures::WasmExecution::Engine->new(
@@ -263,6 +280,105 @@ sub instantiate {
     }
 
     return $instance;
+}
+
+sub _normalize_data_segments {
+    my ($segments) = @_;
+    croak 'WasmRuntime: data segments arrayref required'
+        unless ref($segments || []) eq 'ARRAY';
+
+    my @normalized;
+    my $segment_count = 0;
+    my $total_data = 0;
+
+    for my $segment (@{ $segments || [] }) {
+        if (ref($segment) eq 'HASH') {
+            my $data_len = _data_payload_length($segment->{data});
+            ($segment_count, $total_data) = _check_data_segment_limits(
+                $segment_count,
+                $total_data,
+                $data_len,
+            );
+            push @normalized, $segment;
+            next;
+        }
+
+        my $bytes = $segment || [];
+        croak 'WasmRuntime: raw data section must be an arrayref of bytes'
+            unless ref($bytes) eq 'ARRAY';
+
+        my $pos = 0;
+        my ($count, $cc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
+        $pos += $cc;
+        croak 'WasmRuntime: data segment count exceeds limit'
+            if $segment_count + $count > _MAX_DATA_SEGMENTS;
+
+        for (my $i = 0; $i < $count; $i++) {
+            my ($memory_index, $mc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
+            $pos += $mc;
+
+            my @offset_expr;
+            my $saw_end = 0;
+            while ($pos <= $#$bytes) {
+                my $byte = $bytes->[$pos++];
+                push @offset_expr, $byte;
+                if ($byte == 0x0B) {
+                    $saw_end = 1;
+                    last;
+                }
+            }
+            croak 'WasmRuntime: unterminated data segment offset expression'
+                unless $saw_end;
+
+            my ($size, $sc) = CodingAdventures::WasmLeb128::decode_unsigned($bytes, $pos);
+            $pos += $sc;
+            ($segment_count, $total_data) = _check_data_segment_limits(
+                $segment_count,
+                $total_data,
+                $size,
+            );
+            croak 'WasmRuntime: data segment payload shorter than declared size'
+                if $size > scalar(@$bytes) - $pos;
+
+            my @data = $size > 0 ? @{$bytes}[$pos .. $pos + $size - 1] : ();
+            $pos += $size;
+
+            push @normalized, {
+                memory_index => $memory_index,
+                offset_expr  => \@offset_expr,
+                data         => \@data,
+            };
+        }
+
+        croak 'WasmRuntime: trailing bytes after data section'
+            if $pos != scalar(@$bytes);
+    }
+
+    return \@normalized;
+}
+
+sub _data_payload_length {
+    my ($payload) = @_;
+    return 0 unless defined $payload;
+    return scalar(@$payload) if ref($payload) eq 'ARRAY';
+    return length($payload) unless ref($payload);
+    croak 'WasmRuntime: data segment payload must be bytes or an arrayref';
+}
+
+sub _check_data_segment_limits {
+    my ($segment_count, $total_data, $size) = @_;
+    croak 'WasmRuntime: data segment size exceeds limit'
+        if $size > _MAX_DATA_SEGMENT_BYTES;
+
+    $segment_count++;
+    croak 'WasmRuntime: data segment count exceeds limit'
+        if $segment_count > _MAX_DATA_SEGMENTS;
+
+    $total_data += $size;
+    croak 'WasmRuntime: total data segment bytes exceed limit'
+        if $total_data > _MAX_TOTAL_DATA_BYTES;
+
+    return ($segment_count, $total_data);
 }
 
 # ---- Call -----------------------------------------------------------------
@@ -387,11 +503,18 @@ sub load_and_run {
 
 package CodingAdventures::WasmRuntime::WasiStub;
 
+use constant {
+    _WASI_MAX_IOVECS   => 1024,
+    _WASI_MAX_RW_BYTES => 1024 * 1024,
+    _WASI_ERRNO_INVAL  => 28,
+};
+
 # constructor — create a new WasiStub with optional configuration.
 #
 # Parameters (all optional):
 #   args    => \@array   — command-line arguments (like ARGV). Default: [].
 #   env     => \%hash    — environment variables {KEY => VALUE}. Default: {}.
+#   stdin   => \&coderef — callback invoked with a byte count for fd_read.
 #   stdout  => \&coderef — callback invoked with each line of stdout output.
 #   stderr  => \&coderef — callback invoked with stderr output (reserved).
 #   clock   => $obj      — object implementing WasiClock interface.
@@ -409,6 +532,7 @@ sub new {
     return bless {
         args            => $args{args}   // [],
         env             => $args{env}    // {},
+        stdin_callback  => $args{stdin}  // sub { [] },
         stdout_callback => $args{stdout} // sub {},
         stderr_callback => $args{stderr} // sub {},
         clock           => $args{clock}  // CodingAdventures::WasmRuntime::SystemClock->new(),
@@ -445,10 +569,93 @@ sub resolve_function {
     if ($name eq 'fd_write') {
         # fd_write(fd, iovs_ptr, iovs_len, nwritten_ptr) → errno
         #
-        # Writes scattered buffers to a file descriptor. This stub returns 0
-        # to signal "0 bytes written" without doing any real I/O.
+        # Writes scattered buffers to a file descriptor. This implementation
+        # supports stdout/stderr so compiled Brainfuck and Nib programs can
+        # exercise observable WASI output during tests.
         return sub {
             my ($args) = @_;
+            my $memory       = $self->{instance_memory};
+            return [ CodingAdventures::WasmExecution::i32(52) ] unless $memory;
+
+            my $fd           = $args->[0]{value};
+            my $iovs_ptr     = $args->[1]{value} & 0xFFFFFFFF;
+            my $iovs_len     = $args->[2]{value} & 0x7FFFFFFF;
+            my $nwritten_ptr = $args->[3]{value} & 0xFFFFFFFF;
+
+            return [ CodingAdventures::WasmExecution::i32(8) ] unless $fd == 1 || $fd == 2;
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $iovs_len > _WASI_MAX_IOVECS;
+
+            my $callback = $fd == 1 ? $self->{stdout_callback} : $self->{stderr_callback};
+            my $total_written = 0;
+            for my $i (0 .. $iovs_len - 1) {
+                my $buf_ptr = $memory->load_i32($iovs_ptr + $i * 8) & 0xFFFFFFFF;
+                my $buf_len = $memory->load_i32($iovs_ptr + $i * 8 + 4) & 0xFFFFFFFF;
+                return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                    if $buf_len > _WASI_MAX_RW_BYTES || $total_written + $buf_len > _WASI_MAX_RW_BYTES;
+
+                my $offset = 0;
+                while ($offset < $buf_len) {
+                    my $chunk_len = $buf_len - $offset;
+                    $chunk_len = 4096 if $chunk_len > 4096;
+                    my @chunk_bytes;
+                    for my $j (0 .. $chunk_len - 1) {
+                        push @chunk_bytes, $memory->load_i32_8u($buf_ptr + $offset + $j);
+                    }
+                    $callback->(pack('C*', @chunk_bytes));
+                    $offset += $chunk_len;
+                }
+
+                $total_written += $buf_len;
+            }
+
+            $memory->store_i32($nwritten_ptr, $total_written);
+            return [ CodingAdventures::WasmExecution::i32(0) ];
+        };
+    }
+
+    if ($name eq 'fd_read') {
+        # fd_read(fd, iovs_ptr, iovs_len, nread_ptr) → errno
+        #
+        # Reads bytes from stdin into the guest buffers described by the iovec
+        # array. Only fd 0 is supported.
+        return sub {
+            my ($args) = @_;
+            my $memory    = $self->{instance_memory};
+            return [ CodingAdventures::WasmExecution::i32(52) ] unless $memory;
+
+            my $fd        = $args->[0]{value};
+            my $iovs_ptr  = $args->[1]{value} & 0xFFFFFFFF;
+            my $iovs_len  = $args->[2]{value} & 0x7FFFFFFF;
+            my $nread_ptr = $args->[3]{value} & 0xFFFFFFFF;
+
+            return [ CodingAdventures::WasmExecution::i32(8) ] unless $fd == 0;
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $iovs_len > _WASI_MAX_IOVECS;
+
+            my $total_read = 0;
+            for my $i (0 .. $iovs_len - 1) {
+                my $buf_ptr = $memory->load_i32($iovs_ptr + $i * 8) & 0xFFFFFFFF;
+                my $buf_len = $memory->load_i32($iovs_ptr + $i * 8 + 4) & 0xFFFFFFFF;
+                return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                    if $buf_len > _WASI_MAX_RW_BYTES || $total_read + $buf_len > _WASI_MAX_RW_BYTES;
+
+                my $raw = $self->{stdin_callback}->($buf_len);
+                my @bytes =
+                    !defined $raw ? ()
+                  : ref($raw) eq 'ARRAY' ? @$raw
+                  : unpack('C*', $raw);
+                splice(@bytes, $buf_len) if @bytes > $buf_len;
+
+                for my $j (0 .. $#bytes) {
+                    $memory->store_i32_8($buf_ptr + $j, $bytes[$j]);
+                }
+
+                $total_read += scalar @bytes;
+                last if scalar(@bytes) < $buf_len;
+            }
+
+            $memory->store_i32($nread_ptr, $total_read);
             return [ CodingAdventures::WasmExecution::i32(0) ];
         };
     }
@@ -674,6 +881,11 @@ sub resolve_function {
             my $buf_ptr = $args->[0]{value} & 0xFFFFFFFF;
             my $buf_len = $args->[1]{value} & 0x7FFFFFFF;
 
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $buf_len > _WASI_MAX_RW_BYTES;
+            return [ CodingAdventures::WasmExecution::i32(_WASI_ERRNO_INVAL) ]
+                if $buf_ptr > $memory->byte_length || $buf_len > $memory->byte_length - $buf_ptr;
+
             my $bytes = $self->{random}->fill_bytes($buf_len);
             for my $i (0 .. $#$bytes) {
                 $memory->store_i32_8($buf_ptr + $i, $bytes->[$i]);
@@ -721,6 +933,10 @@ sub resolve_table  { return undef }
 sub resolve_global { return undef }
 
 sub exit_code { return $_[0]->{exit_code} }
+
+package CodingAdventures::WasmRuntime::WasiHost;
+
+our @ISA = ('CodingAdventures::WasmRuntime::WasiStub');
 
 1;
 

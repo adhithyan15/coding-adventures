@@ -126,8 +126,16 @@ Orchestrator (Rust actor, D18)     ← signature verification + host supervision
 ├── uses ──► Process Manager (D14)
 │             └── host/agent lifecycle uses fork/exec/wait
 │
-└── uses ──► File System (D15)
-              └── channel persistence, vault storage
+├── uses ──► File System (D15)
+│             └── channel persistence, vault storage
+│
+└── extended by ──► Store / Job / Tool Layers
+                    ├── D18A Store Layer
+                    │    └── repository-owned storage abstraction + Context/Artifact/Skill/Memory stores
+                    ├── D18C Job Framework
+                    │    └── portable jobs + native scheduler backends
+                    └── D18D Tool API
+                         └── repository-owned model-facing tool contract + built-in tool catalog
 ```
 
 **Depends on:** Actor Package (D19) — the foundation; messages, channels, and actors
@@ -137,6 +145,11 @@ Stack (D17) — host sub-agents needing external access use the socket API. Proc
 Manager (D14) — host and agent lifecycle uses fork/exec/wait. File System (D15) —
 channel logs and vault secrets are stored on disk. Crypto Primitives (D20, future) —
 encryption algorithms.
+
+**Extended by:** D18A Chief of Staff Stores — repository-owned storage abstraction,
+ContextStore, ArtifactStore, SkillStore, and MemoryStore. D18C Chief of Staff Job
+Framework — portable jobs and native scheduler backends. D18D Chief of Staff Tool API —
+repository-owned model-facing tool contract and built-in tool catalog.
 
 **Used by:** Future agent packages (email reader, email responder, calendar, finance,
 health, browser agents), CLI interface, mobile clients

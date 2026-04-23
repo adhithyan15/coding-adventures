@@ -34,9 +34,9 @@ import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-import { parseParserGrammar } from "@coding-adventures/grammar-tools";
+import { parseParserGrammar, parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import type { ParserGrammar } from "@coding-adventures/grammar-tools";
-import { tokenize } from "@coding-adventures/lexer";
+import { grammarTokenize, tokenize } from "@coding-adventures/lexer";
 import type { Token } from "@coding-adventures/lexer";
 
 import {
@@ -114,6 +114,23 @@ function parseSource(source: string): ASTNode {
   const tokens = tokenize(source);
   const parser = new GrammarParser(tokens, grammar);
   return parser.parse();
+}
+
+function makeRichSourceTokenGrammar() {
+  return parseTokenGrammar([
+    "NAME = /[a-zA-Z_][a-zA-Z0-9_]*/",
+    "EQ = \"=\"",
+    "skip:",
+    "  WHITESPACE = /[ \\t\\r\\n]+/",
+    "  LINE_COMMENT = /\\/\\/[^\\n]*/",
+  ].join("\n"));
+}
+
+function makeRichSourceParserGrammar(): ParserGrammar {
+  return parseParserGrammar([
+    "program = assignment ;",
+    "assignment = NAME EQ NAME ;",
+  ].join("\n"));
 }
 
 // =============================================================================
@@ -1192,5 +1209,55 @@ describe("pre-parse and post-parse hooks", () => {
     });
     const result = parser.parse();
     expect(result.ruleName).toBe("transformed_program");
+  });
+});
+
+describe("rich source preservation", () => {
+  it("propagates token-derived offsets, indices, and trivia onto AST nodes", () => {
+    const tokenGrammar = makeRichSourceTokenGrammar();
+    const parserGrammar = makeRichSourceParserGrammar();
+    const tokens = grammarTokenize(
+      "  // lead\nfoo=bar",
+      tokenGrammar,
+      { preserveSourceInfo: true },
+    );
+
+    const parser = new GrammarParser(tokens, parserGrammar, {
+      preserveSourceInfo: true,
+    });
+    const ast = parser.parse();
+    const assignment = findNodes(ast, "assignment")[0];
+
+    expect(ast.startOffset).toBe(10);
+    expect(ast.endOffset).toBe(17);
+    expect(ast.firstTokenIndex).toBe(0);
+    expect(ast.lastTokenIndex).toBe(2);
+    expect(ast.leadingTrivia?.map((item) => item.type)).toEqual([
+      "WHITESPACE",
+      "LINE_COMMENT",
+      "WHITESPACE",
+    ]);
+
+    expect(assignment.startOffset).toBe(10);
+    expect(assignment.endOffset).toBe(17);
+    expect(assignment.firstTokenIndex).toBe(0);
+    expect(assignment.lastTokenIndex).toBe(2);
+  });
+
+  it("keeps AST nodes lean when preserveSourceInfo is disabled", () => {
+    const tokenGrammar = makeRichSourceTokenGrammar();
+    const parserGrammar = makeRichSourceParserGrammar();
+    const tokens = grammarTokenize(
+      "foo=bar",
+      tokenGrammar,
+      { preserveSourceInfo: true },
+    );
+
+    const parser = new GrammarParser(tokens, parserGrammar);
+    const ast = parser.parse();
+
+    expect(ast.startOffset).toBeUndefined();
+    expect(ast.firstTokenIndex).toBeUndefined();
+    expect(ast.leadingTrivia).toBeUndefined();
   });
 });

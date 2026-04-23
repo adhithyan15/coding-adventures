@@ -1,0 +1,11 @@
+[package]
+name = "brainfuck-ir-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir = { path = "../compiler-ir" }
+compiler-source-map = { path = "../compiler-source-map" }
+brainfuck = { path = "../brainfuck" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }

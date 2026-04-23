@@ -1,0 +1,420 @@
+# C# 10.0 (2021) — Lexical Grammar
+# @version 1
+# @csharp_version 10.0
+#
+# .NET 6.0 — November 2021
+#
+# C# 10.0 shipped with .NET 6, the first Long-Term Support (LTS) release
+# of the unified .NET platform. .NET 6 was the version where Microsoft
+# declared the migration from .NET Framework was "done" — it had feature
+# parity with the legacy framework for all mainstream scenarios.
+#
+# C# 10.0's theme is REDUCING BOILERPLATE at the project and file level:
+#
+#   - GLOBAL USINGS: Instead of `using System;` in every file, add it once
+#     to a single file and it applies to the entire project.
+#
+#   - FILE-SCOPED NAMESPACES: `namespace MyApp;` on one line instead of
+#     `namespace MyApp { ... }` wrapping the entire file body. This removes
+#     one level of indentation from every class in every file.
+#
+# Together, these two features mean a minimal C# class can be:
+#
+#   // No using directives needed — global usings handle System, etc.
+#   namespace MyApp;                    // file-scoped — no braces!
+#
+#   class Calculator {
+#       public int Add(int a, int b) => a + b;
+#   }
+#
+# Compare to before C# 10:
+#   using System;
+#   using System.Collections.Generic;
+#   // ... more usings ...
+#
+#   namespace MyApp {
+#       class Calculator {
+#           public int Add(int a, int b) => a + b;
+#       }
+#   }
+#
+# Other C# 10.0 additions:
+#   - Record structs: `record struct Point(int X, int Y)` — value-type records
+#   - `readonly record struct`: immutable value-type records
+#   - Extended property patterns: `x is { Order.Customer.Name: "Alice" }`
+#   - `const` interpolated strings (when all parts are const)
+#   - Lambda expression improvements: inferred return types, attributes
+#   - `CallerArgumentExpression` attribute (semantic, no grammar change)
+#   - Deconstruct improvements in foreach and assignments
+#
+# What C# 10.0 does NOT have (added in later versions):
+#   - Required members (C# 11.0, 2022)
+#   - Raw string literals (C# 11.0)
+#   - Generic attributes (C# 11.0)
+#   - Primary constructors for classes (C# 12.0, 2023)
+#   - Collection expressions (C# 12.0)
+#   - Interceptors (C# 12.0)
+#
+# IMPORTANT NOTE ON NEW "KEYWORDS" IN C# 10.0
+# ---------------------------------------------
+# Like C# 9.0, C# 10.0 adds ZERO reserved keywords. All new syntax uses
+# context keywords (NAME tokens) or reuses existing tokens in new positions.
+#
+#   global — already a context keyword for `global::` (namespace alias).
+#             In C# 10.0, also used as modifier on `using` directives:
+#             `global using System;`
+#
+#   file   — new context keyword for file-scoped type access modifier:
+#             `file class Internals { }` — type is private to the file
+#             (Note: file-scoped types as an access modifier is actually C# 11.
+#             In C# 10, `file` appears in the global using / file-scoped
+#             namespace context.)
+#
+#   record, init, with, and, or, not — all carried over from C# 9.0.
+#
+# All these lex as NAME. No token changes from C# 9.0.
+#
+# This tokens file is COMPLETE and SELF-CONTAINED. It includes all tokens
+# from C# 1.0 through 9.0, plus the context keywords from C# 10.0.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#   TOKEN_NAME = /regex/ -> ALIAS  — regex token aliased to a canonical name
+#
+# Order matters: first match wins. Multi-character operators
+# must come before single-character ones.
+# Numeric literals with suffixes must come before plain integers.
+
+# ============================================================================
+# Literals
+# ============================================================================
+#
+# Context keywords in C# 10.0 (all lex as NAME):
+#   global — `global using System;` — applies to entire project
+#   file   — file-scoped access modifier (fully realized in C# 11)
+#   record — record type declaration (C# 9.0, carried forward)
+#   init   — init-only property accessor (C# 9.0, carried forward)
+#   with   — non-destructive mutation (C# 9.0, carried forward)
+#   and    — logical pattern combinator (C# 9.0, carried forward)
+#   or     — logical pattern alternation (C# 9.0, carried forward)
+#   not    — logical pattern negation (C# 9.0, carried forward)
+#   nint   — native signed integer (C# 9.0, carried forward)
+#   nuint  — native unsigned integer (C# 9.0, carried forward)
+
+NAME           = /[a-zA-Z_][a-zA-Z0-9_]*/
+VERBATIM_NAME  = /@[a-zA-Z_][a-zA-Z0-9_]*/ -> NAME
+
+# ----------------------------------------------------------------------------
+# Numeric literals
+# ----------------------------------------------------------------------------
+#
+# C# 10.0 does NOT add new numeric literal forms. The set is unchanged
+# from C# 7.0-9.0: decimal, hex, binary, with digit separators.
+#
+# C# 10.0 DOES allow const interpolated strings when all interpolated
+# expressions are const. This is a semantic extension, not a new token:
+#
+#   const string Name = "World";
+#   const string Greeting = $"Hello, {Name}!";  // OK in C# 10!
+#
+# Before C# 10, this was a compile error (interpolated strings could not
+# be const, even when all parts were constant).
+#
+# All numeric variants alias to NUMBER so the parser sees a single token type.
+
+BINARY_ULONG     = /0[bB]_?[01][01_]*([uU][lL]|[lL][uU])/ -> NUMBER
+BINARY_LONG      = /0[bB]_?[01][01_]*[lL]/ -> NUMBER
+BINARY_UINT      = /0[bB]_?[01][01_]*[uU]/ -> NUMBER
+BINARY_NUMBER    = /0[bB]_?[01][01_]*/ -> NUMBER
+HEX_ULONG        = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*([uU][lL]|[lL][uU])/ -> NUMBER
+HEX_LONG         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[lL]/ -> NUMBER
+HEX_UINT         = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*[uU]/ -> NUMBER
+HEX_NUMBER       = /0[xX]_?[0-9a-fA-F][0-9a-fA-F_]*/ -> NUMBER
+DECIMAL_FLOAT    = /[0-9][0-9_]*\.[0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+LEADING_DOT_FLOAT = /\.[0-9][0-9_]*([eE][+-]?[0-9][0-9_]*)?[fFdDmM]?/ -> NUMBER
+SCI_NUMBER       = /[0-9][0-9_]*[eE][+-]?[0-9][0-9_]*[fFdDmM]?/ -> NUMBER
+ULONG_NUMBER     = /[0-9][0-9_]*([uU][lL]|[lL][uU])/ -> NUMBER
+LONG_NUMBER      = /[0-9][0-9_]*[lL]/ -> NUMBER
+UINT_NUMBER      = /[0-9][0-9_]*[uU]/ -> NUMBER
+FLOAT_SUFFIX     = /[0-9][0-9_]*[fFdDmM]/ -> NUMBER
+INT_NUMBER       = /[0-9][0-9_]*/ -> NUMBER
+
+# ----------------------------------------------------------------------------
+# String and character literals
+# ----------------------------------------------------------------------------
+#
+# C# 10.0 does NOT add new string literal forms. Raw string literals
+# (""" ... """) come in C# 11.0 (2022).
+#
+# The `const` interpolated string improvement is purely semantic —
+# the lexer still emits INTERPOLATED_STRING, but the compiler now
+# accepts it in const contexts when all expressions are constants.
+
+STRING                   = /"([^"\\]|\\.)*"/
+VERBATIM_STRING          = /@"([^"]|"")*"/
+INTERPOLATED_STRING      = /\$"([^"\\{]|\\.|\{\{|\}\})*"/
+INTERPOLATED_VERBATIM    = /(\$@|@\$)"([^"{]|""|\{\{|\}\})*"/
+CHAR                     = /'([^'\\]|\\.)*'/
+
+# ============================================================================
+# Multi-character operators (must come before single-character versions)
+# ============================================================================
+#
+# C# 10.0 does NOT add any new operator tokens. The full operator set,
+# unchanged from C# 8.0-9.0:
+#
+#   C# 1.0:  All basic C-style operators
+#   C# 2.0:  ?? (null coalescing)
+#   C# 3.0:  => (lambda arrow)
+#   C# 6.0:  ?. (null-conditional member access)
+#            ?[ (null-conditional element access)
+#   C# 8.0:  .. (range operator)
+#            ??= (null-coalescing assignment)
+#
+# The global using syntax (`global using System;`) uses the NAME "global"
+# followed by the `using` keyword — no new tokens.
+#
+# File-scoped namespaces (`namespace MyApp;`) use the existing `namespace`
+# keyword followed by a qualified name and SEMICOLON — no new tokens.
+#
+# Extended property patterns (`x is { A.B: value }`) use existing DOT tokens
+# within the property pattern body — no new tokens needed.
+
+QUESTION_QUESTION_EQUALS = "??="
+NULL_CONDITIONAL_DOT     = "?."
+NULL_CONDITIONAL_BRACKET = "?["
+NULL_COALESCING          = "??"
+LAMBDA_ARROW             = "=>"
+LEFT_SHIFT_EQUALS        = "<<="
+RIGHT_SHIFT_EQUALS       = ">>="
+DOT_DOT                  = ".."
+EQUALS_EQUALS            = "=="
+NOT_EQUALS               = "!="
+LESS_EQUALS              = "<="
+GREATER_EQUALS           = ">="
+AND_AND                  = "&&"
+OR_OR                    = "||"
+PLUS_PLUS                = "++"
+MINUS_MINUS              = "--"
+PLUS_EQUALS              = "+="
+MINUS_EQUALS             = "-="
+STAR_EQUALS              = "*="
+SLASH_EQUALS             = "/="
+PERCENT_EQUALS           = "%="
+AMPERSAND_EQUALS         = "&="
+PIPE_EQUALS              = "|="
+CARET_EQUALS             = "^="
+LEFT_SHIFT               = "<<"
+RIGHT_SHIFT              = ">>"
+COLON_COLON              = "::"
+ARROW                    = "->"
+
+# ============================================================================
+# Single-character operators
+# ============================================================================
+#
+# All single-character operators from C# 1.0. Unchanged through C# 10.0.
+
+EQUALS       = "="
+PLUS         = "+"
+MINUS        = "-"
+STAR         = "*"
+SLASH        = "/"
+PERCENT      = "%"
+LESS_THAN    = "<"
+GREATER_THAN = ">"
+BANG         = "!"
+AMPERSAND    = "&"
+PIPE         = "|"
+CARET        = "^"
+TILDE        = "~"
+QUESTION     = "?"
+
+# ============================================================================
+# Delimiters
+# ============================================================================
+#
+# Unchanged through C# 10.0. Note that file-scoped namespace declarations
+# (`namespace MyApp;`) are delimited by SEMICOLON rather than LBRACE/RBRACE,
+# but SEMICOLON already exists — no new token needed.
+
+LPAREN    = "("
+RPAREN    = ")"
+LBRACE    = "{"
+RBRACE    = "}"
+LBRACKET  = "["
+RBRACKET  = "]"
+SEMICOLON = ";"
+COMMA     = ","
+DOT       = "."
+COLON     = ":"
+
+# ============================================================================
+# Keywords
+# ============================================================================
+#
+# C# 10.0 reserved keyword count: 79 (UNCHANGED since C# 5.0).
+#
+# New context keywords in C# 10.0 (all lex as NAME):
+#
+#   global — now also used as a modifier on using directives:
+#     global using System;                   // applies to entire project
+#     global using static System.Math;       // global static using
+#     global using G = System.Collections;   // global alias using
+#
+#     Before C# 10, `global` was already a context keyword for the
+#     global namespace alias: `global::System.String`. Using it as a
+#     using modifier is a natural extension. Since `global` was never
+#     reserved, this is backward-compatible.
+#
+#     The SDK injects several global usings by default when you create
+#     a new project, saving you from writing the same boilerplate in
+#     every file:
+#       global using System;
+#       global using System.Collections.Generic;
+#       global using System.IO;
+#       global using System.Linq;
+#       global using System.Net.Http;
+#       global using System.Threading;
+#       global using System.Threading.Tasks;
+#
+#   file — file-scoped access modifier (context keyword, preview in C# 10,
+#     fully supported in C# 11 for types):
+#     file class ImplementationDetail { }   // only visible in this file
+#
+# Inherited context keywords from C# 9.0:
+#   record, init, with, and, or, not, nint, nuint
+#
+# All reserved keywords are the same as C# 1.0-9.0:
+
+keywords:
+  abstract
+  as
+  async
+  await
+  base
+  bool
+  break
+  byte
+  case
+  catch
+  char
+  checked
+  class
+  const
+  continue
+  decimal
+  default
+  delegate
+  do
+  double
+  else
+  enum
+  event
+  explicit
+  extern
+  false
+  finally
+  fixed
+  float
+  for
+  foreach
+  goto
+  if
+  implicit
+  in
+  int
+  interface
+  internal
+  is
+  lock
+  long
+  namespace
+  new
+  null
+  object
+  operator
+  out
+  override
+  params
+  private
+  protected
+  public
+  readonly
+  ref
+  return
+  sbyte
+  sealed
+  short
+  sizeof
+  stackalloc
+  static
+  string
+  struct
+  switch
+  this
+  throw
+  true
+  try
+  typeof
+  uint
+  ulong
+  unchecked
+  unsafe
+  ushort
+  using
+  virtual
+  void
+  volatile
+  while
+
+# ============================================================================
+# Skip patterns (whitespace and comments)
+# ============================================================================
+#
+# Unchanged from C# 1.0.
+
+skip:
+  WHITESPACE    = /[ \t\r\n\v\f]+/
+  LINE_COMMENT  = /\/\/[^\n]*/
+  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+
+# ============================================================================
+# Preprocessor directives
+# ============================================================================
+#
+# C# 10.0 does not add new preprocessor directives.
+# The full set (unchanged from C# 8.0):
+#
+#   #nullable — nullable reference type analysis (C# 8.0)
+#   #if/#elif/#else/#endif — conditional compilation
+#   #define/#undef — symbol definition
+#   #region/#endregion — code folding markers
+#   #error/#warning — compiler messages
+#   #line — line number manipulation
+#   #pragma — miscellaneous compiler directives (e.g., #pragma warning disable)
+
+PP_NULLABLE  = /#\s*nullable\b[^\n]*/
+PP_IF        = /#\s*if\b[^\n]*/
+PP_ELIF      = /#\s*elif\b[^\n]*/
+PP_ELSE      = /#\s*else\b[^\n]*/
+PP_ENDIF     = /#\s*endif\b[^\n]*/
+PP_DEFINE    = /#\s*define\b[^\n]*/
+PP_UNDEF     = /#\s*undef\b[^\n]*/
+PP_REGION    = /#\s*region\b[^\n]*/
+PP_ENDREGION = /#\s*endregion\b[^\n]*/
+PP_ERROR     = /#\s*error\b[^\n]*/
+PP_WARNING   = /#\s*warning\b[^\n]*/
+PP_LINE      = /#\s*line\b[^\n]*/
+PP_PRAGMA    = /#\s*pragma\b[^\n]*/
+
+# ============================================================================
+# Error recovery tokens
+# ============================================================================
+
+errors:
+  BAD_STRING = /"[^"]*$/
+  BAD_CHAR   = /'[^']*$/
+  BAD_VERBATIM_STRING = /@"([^"]|"")*$/
+  BAD_INTERPOLATED_STRING = /\$"([^"\\{]|\\.)*$/

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `CanvasTable` now renders through `@coding-adventures/paint-vm-canvas` instead of `@coding-adventures/draw-instructions-canvas`. The table builds a `PaintScene` (paint-instructions IR) which carries the same primitives used by the rest of the codebase. Dropped the draw-instructions dependencies entirely. No API or visual change — identical columns/rows/grid/text render.
+- Internal helpers renamed: `toDrawAlign` → `toPaintAlign` (mapping now produces `"start" | "center" | "end"` to match PaintText.text_align and Canvas 2D textAlign spelling; the old "middle" spelling is gone).
+- Added a small `makeCanvasFontRef(family, size, weight)` helper that encodes table text as a `canvas:<family>@<size>:<weight>` font_ref per spec TXT03d.
+
+This is the first step in retiring the `draw-instructions` family of packages in favour of `paint-instructions` (PaintText made draw-instructions' only non-overlapping feature — text rendering — redundant).
+
 ## 0.3.0 — 2026-03-29
 
 ### Added

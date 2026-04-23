@@ -1,0 +1,12 @@
+[package]
+name = "wasm-module-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Encode WebAssembly 1.0 modules into raw .wasm bytes"
+
+[dependencies]
+wasm-leb128 = { path = "../wasm-leb128" }
+wasm-types = { path = "../wasm-types" }
+
+[dev-dependencies]
+wasm-module-parser = { path = "../wasm-module-parser" }

@@ -1,0 +1,77 @@
+# MACSYMA Parser Grammar
+# ============================================================
+#
+# This grammar describes the MACSYMA expression sublanguage as
+# preserved in Maxima. The parser produces a generic ASTNode tree,
+# which is then compiled to the symbolic IR by the macsyma-compiler
+# package.
+#
+# Precedence cascade (from lowest to highest binding):
+#
+#   1. assign          (`:` assignment, `:=` definition — right-assoc)
+#   2. logical_or      (short-circuit OR)
+#   3. logical_and     (short-circuit AND)
+#   4. logical_not     (unary NOT)
+#   5. comparison      (=, #, <, >, <=, >=)
+#   6. additive        (+, -)
+#   7. multiplicative  (*, /)
+#   8. unary           (unary -, +)
+#   9. power           (^ right-associative)
+#  10. postfix         (function calls f(x), subscripting is not here)
+#  11. atom            (numbers, names, parens, lists)
+#
+# The precedence is encoded purely through rule nesting — no priority
+# annotations. Higher precedence means deeper in the parse tree.
+
+# @version 1
+
+# A program is zero or more statements. Each statement is terminated
+# by `;` or `$`. The terminator is kept in the token stream so the
+# display-vs-suppress distinction can be recovered by the compiler.
+program     = { statement } ;
+
+statement   = expression ( SEMI | DOLLAR ) ;
+
+# Assignment and definition are right-associative and have the lowest
+# precedence among operators. `x : expr` binds a value; `f(x) := body`
+# defines a function. Syntactically both sit at the same level.
+expression  = assign ;
+assign      = logical_or [ ( COLON | COLONEQ ) assign ] ;
+
+# Boolean OR / AND / NOT. These arrive as KEYWORD tokens from the
+# lexer with values "and", "or", "not" — so the grammar matches them
+# as string literals rather than named token types.
+logical_or  = logical_and { "or" logical_and } ;
+logical_and = logical_not { "and" logical_not } ;
+logical_not = "not" logical_not | comparison ;
+
+# Comparisons are non-chaining: `a < b < c` is a parse error in
+# MACSYMA. Only one comparison operator per expression level.
+comparison  = additive [ ( EQ | HASH | LT | GT | LEQ | GEQ ) additive ] ;
+
+additive       = multiplicative { ( PLUS | MINUS ) multiplicative } ;
+multiplicative = unary { ( STAR | SLASH ) unary } ;
+
+# Unary minus binds tighter than * and /, so `-x^2` parses as `-(x^2)`
+# and `a * -b` parses as `a * (-b)`.
+unary          = ( MINUS | PLUS ) unary | power ;
+
+# Exponentiation is right-associative: `a^b^c` = `a^(b^c)`. Both `^`
+# and `**` are accepted; the compiler normalizes them.
+power          = postfix [ ( CARET | STAREQ ) unary ] ;
+
+# Function calls chain left-to-right: `f(x)(y)` = `(f(x))(y)`. Though
+# rare in MACSYMA, the mechanic falls out naturally from the repetition.
+postfix        = atom { LPAREN [ arglist ] RPAREN } ;
+arglist        = expression { COMMA expression } ;
+
+atom           = NUMBER
+               | STRING
+               | NAME
+               | "true"
+               | "false"
+               | group
+               | list ;
+
+group          = LPAREN expression RPAREN ;
+list           = LBRACKET [ arglist ] RBRACKET ;

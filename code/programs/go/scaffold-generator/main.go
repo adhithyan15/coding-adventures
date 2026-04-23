@@ -3,8 +3,8 @@
 // =========================================================================
 //
 // This program generates correctly-structured, CI-ready package directories
-// for the coding-adventures monorepo. It supports all six languages:
-// Python, Go, Ruby, TypeScript, Rust, and Elixir.
+// for the coding-adventures monorepo. It supports the repo's current
+// scaffoldable language set across package ecosystems.
 //
 // # Why this tool exists
 //
@@ -53,7 +53,7 @@ import (
 // =========================================================================
 
 // validLanguages lists all supported target languages.
-var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell"}
+var validLanguages = []string{"python", "go", "ruby", "typescript", "rust", "elixir", "perl", "lua", "swift", "haskell", "java", "kotlin"}
 
 // kebabCaseRe validates that a package name is kebab-case:
 // lowercase letters and digits, segments separated by single hyphens.
@@ -155,6 +155,10 @@ func readDeps(pkgDir, lang string) ([]string, error) {
 		return readSwiftDeps(pkgDir)
 	case "haskell":
 		return readHaskellDeps(pkgDir)
+	case "java":
+		return readJavaDeps(pkgDir)
+	case "kotlin":
+		return readKotlinDeps(pkgDir)
 	default:
 		return nil, fmt.Errorf("unknown language: %s", lang)
 	}
@@ -439,6 +443,42 @@ func readHaskellDeps(pkgDir string) ([]string, error) {
 				continue
 			}
 			deps = append(deps, m[1])
+		}
+	}
+	return deps, nil
+}
+
+// jvmDepRe matches local composite-build dependency coordinates in Gradle.
+var jvmDepRe = regexp.MustCompile(`com\.codingadventures:([a-z0-9-]+)`)
+
+func readJavaDeps(pkgDir string) ([]string, error) {
+	return readJVMDeps(pkgDir)
+}
+
+func readKotlinDeps(pkgDir string) ([]string, error) {
+	return readJVMDeps(pkgDir)
+}
+
+func readJVMDeps(pkgDir string) ([]string, error) {
+	buildPath := filepath.Join(pkgDir, "build.gradle.kts")
+	data, err := os.ReadFile(buildPath)
+	if err != nil {
+		return nil, nil
+	}
+
+	seen := make(map[string]bool)
+	var deps []string
+	for _, line := range strings.Split(string(data), "\n") {
+		matches := jvmDepRe.FindAllStringSubmatch(line, -1)
+		for _, match := range matches {
+			if len(match) != 2 {
+				continue
+			}
+			dep := match[1]
+			if !seen[dep] {
+				seen[dep] = true
+				deps = append(deps, dep)
+			}
 		}
 	}
 	return deps, nil
@@ -1716,10 +1756,10 @@ main = do
 
 	files := map[string]string{
 		fmt.Sprintf("%s.cabal", pkgNameHaskell): cabal,
-		"cabal.project": cabalProject,
-		"src/" + moduleName + ".hs": libHs,
-		"test/Spec.hs": specHs,
-		"BUILD": build,
+		"cabal.project":                         cabalProject,
+		"src/" + moduleName + ".hs":             libHs,
+		"test/Spec.hs":                          specHs,
+		"BUILD":                                 build,
 	}
 
 	for path, content := range files {
@@ -1728,6 +1768,221 @@ main = do
 			return err
 		}
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// =========================================================================
+// File generation — Java
+// =========================================================================
+
+func generateJava(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	camel := toCamelCase(pkgName)
+	joined := toJoinedLower(pkgName)
+	sourcePath := filepath.Join("src", "main", "java", "com", "codingadventures", joined, camel+".java")
+	testPath := filepath.Join("src", "test", "java", "com", "codingadventures", joined, camel+"Test.java")
+
+	var build strings.Builder
+	build.WriteString("layout.buildDirectory = file(\"gradle-build\")\n\n")
+	build.WriteString("plugins {\n")
+	build.WriteString("    java\n")
+	build.WriteString("    `java-library`\n")
+	build.WriteString("}\n\n")
+	build.WriteString("group = \"com.codingadventures\"\n")
+	build.WriteString("version = \"0.1.0\"\n\n")
+	build.WriteString("repositories {\n")
+	build.WriteString("    mavenCentral()\n")
+	build.WriteString("}\n\n")
+	build.WriteString("tasks.withType<JavaCompile> {\n")
+	build.WriteString("    sourceCompatibility = \"21\"\n")
+	build.WriteString("    targetCompatibility = \"21\"\n")
+	build.WriteString("    options.release.set(21)\n")
+	build.WriteString("}\n\n")
+	build.WriteString("dependencies {\n")
+	for _, dep := range directDeps {
+		fmt.Fprintf(&build, "    api(\"com.codingadventures:%s\")\n", dep)
+	}
+	build.WriteString("    testImplementation(\"org.junit.jupiter:junit-jupiter:5.11.4\")\n")
+	build.WriteString("    testRuntimeOnly(\"org.junit.platform:junit-platform-launcher\")\n")
+	build.WriteString("}\n\n")
+	build.WriteString("tasks.test {\n")
+	build.WriteString("    useJUnitPlatform()\n")
+	build.WriteString("}\n")
+
+	var settings strings.Builder
+	fmt.Fprintf(&settings, "rootProject.name = %q\n", pkgName)
+	for _, dep := range directDeps {
+		fmt.Fprintf(&settings, "\nincludeBuild(\"../%s\")\n", dep)
+	}
+
+	layerDoc := ""
+	if layerCtx != "" {
+		layerDoc = fmt.Sprintf(" * <p>%s</p>\n", layerCtx)
+	}
+	source := fmt.Sprintf(`package com.codingadventures.%s;
+
+/**
+ * %s — %s
+ *
+%s */
+public final class %s {
+    public String ping() {
+        return "%s";
+    }
+}
+`, joined, camel, description, layerDoc, camel, pkgName)
+
+	testSource := fmt.Sprintf(`package com.codingadventures.%s;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class %sTest {
+    @Test
+    void pingReturnsPackageName() {
+        assertEquals("%s", new %s().ping());
+    }
+}
+`, joined, camel, pkgName, camel)
+
+	capJSON := fmt.Sprintf(`{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "java/%s",
+  "capabilities": [],
+  "justification": "Pure in-memory library and tests. No filesystem, process, environment, or network access needed."
+}
+`, pkgName)
+
+	files := map[string]string{
+		".gitignore":                 "/.gradle/\n/gradle-build/\n/build/\n/out/\n",
+		"BUILD":                      "gradle test\n",
+		"BUILD_windows":              "gradle test\n",
+		"build.gradle.kts":           build.String(),
+		"settings.gradle.kts":        settings.String(),
+		"required_capabilities.json": capJSON,
+		sourcePath:                   source,
+		testPath:                     testSource,
+	}
+
+	for path, content := range files {
+		fullPath := filepath.Join(targetDir, path)
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(fullPath, []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// =========================================================================
+// File generation — Kotlin
+// =========================================================================
+
+func generateKotlin(targetDir, pkgName, description, layerCtx string, directDeps []string) error {
+	camel := toCamelCase(pkgName)
+	joined := toJoinedLower(pkgName)
+	sourcePath := filepath.Join("src", "main", "kotlin", "com", "codingadventures", joined, camel+".kt")
+	testPath := filepath.Join("src", "test", "kotlin", "com", "codingadventures", joined, camel+"Test.kt")
+
+	var build strings.Builder
+	build.WriteString("layout.buildDirectory = file(\"gradle-build\")\n\n")
+	build.WriteString("plugins {\n")
+	build.WriteString("    kotlin(\"jvm\") version \"2.1.20\"\n")
+	build.WriteString("    `java-library`\n")
+	build.WriteString("}\n\n")
+	build.WriteString("group = \"com.codingadventures\"\n")
+	build.WriteString("version = \"0.1.0\"\n\n")
+	build.WriteString("repositories {\n")
+	build.WriteString("    mavenCentral()\n")
+	build.WriteString("}\n\n")
+	build.WriteString("tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {\n")
+	build.WriteString("    compilerOptions {\n")
+	build.WriteString("        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)\n")
+	build.WriteString("    }\n")
+	build.WriteString("}\n\n")
+	build.WriteString("tasks.withType<JavaCompile> {\n")
+	build.WriteString("    sourceCompatibility = \"21\"\n")
+	build.WriteString("    targetCompatibility = \"21\"\n")
+	build.WriteString("    options.release.set(21)\n")
+	build.WriteString("}\n\n")
+	build.WriteString("dependencies {\n")
+	for _, dep := range directDeps {
+		fmt.Fprintf(&build, "    api(\"com.codingadventures:%s\")\n", dep)
+	}
+	build.WriteString("    testImplementation(kotlin(\"test\"))\n")
+	build.WriteString("    testImplementation(\"org.junit.jupiter:junit-jupiter:5.11.4\")\n")
+	build.WriteString("    testRuntimeOnly(\"org.junit.platform:junit-platform-launcher\")\n")
+	build.WriteString("}\n\n")
+	build.WriteString("tasks.test {\n")
+	build.WriteString("    useJUnitPlatform()\n")
+	build.WriteString("}\n")
+
+	var settings strings.Builder
+	fmt.Fprintf(&settings, "rootProject.name = %q\n", pkgName)
+	for _, dep := range directDeps {
+		fmt.Fprintf(&settings, "\nincludeBuild(\"../%s\")\n", dep)
+	}
+
+	layerDoc := ""
+	if layerCtx != "" {
+		layerDoc = fmt.Sprintf(" * %s\n", layerCtx)
+	}
+	source := fmt.Sprintf(`package com.codingadventures.%s
+
+/**
+ * %s — %s
+ *
+%s */
+class %s {
+    fun ping(): String = "%s"
+}
+`, joined, camel, description, layerDoc, camel, pkgName)
+
+	testSource := fmt.Sprintf(`package com.codingadventures.%s
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class %sTest {
+    @Test
+    fun pingReturnsPackageName() {
+        assertEquals("%s", %s().ping())
+    }
+}
+`, joined, camel, pkgName, camel)
+
+	capJSON := fmt.Sprintf(`{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "kotlin/%s",
+  "capabilities": [],
+  "justification": "Pure in-memory library and tests. No filesystem, process, environment, or network access needed."
+}
+`, pkgName)
+
+	files := map[string]string{
+		".gitignore":                 "/.gradle/\n/gradle-build/\n/build/\n/out/\n",
+		"BUILD":                      "gradle test\n",
+		"BUILD_windows":              "gradle test\n",
+		"build.gradle.kts":           build.String(),
+		"settings.gradle.kts":        settings.String(),
+		"required_capabilities.json": capJSON,
+		sourcePath:                   source,
+		testPath:                     testSource,
+	}
+
+	for path, content := range files {
+		fullPath := filepath.Join(targetDir, path)
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
+			return err
+		}
+		if err := os.WriteFile(fullPath, []byte(content), 0o644); err != nil {
 			return err
 		}
 	}
@@ -1952,6 +2207,14 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 		if err := generateHaskell(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps, orderedDeps); err != nil {
 			return err
 		}
+	case "java":
+		if err := generateJava(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
+			return err
+		}
+	case "kotlin":
+		if err := generateKotlin(targetDir, cfg.packageName, cfg.description, layerCtx, cfg.directDeps); err != nil {
+			return err
+		}
 	}
 
 	// Generate common files (README, CHANGELOG)
@@ -1976,6 +2239,8 @@ func scaffold(cfg scaffoldConfig, lang string, stdout, stderr io.Writer) error {
 	case "go":
 		fmt.Fprintf(stdout, "  Run: cd %s && go mod tidy\n", targetDir)
 		fmt.Fprintf(stdout, "  After other packages depend on this, run go mod tidy in those too\n")
+	case "java", "kotlin":
+		fmt.Fprintf(stdout, "  Run: cd %s && gradle test\n", targetDir)
 	}
 
 	return nil

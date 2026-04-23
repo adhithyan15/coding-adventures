@@ -88,7 +88,22 @@ module CodingAdventures
     #
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    ALGOL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "algol.grammar")
+    VALID_VERSIONS = %w[algol60].freeze
+    ALGOL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "algol", "algol60.grammar")
+
+    def self.resolve_grammar_path(version = "algol60")
+      if version.nil? || version.empty?
+        version = "algol60"
+      end
+
+      unless VALID_VERSIONS.include?(version)
+        raise ArgumentError,
+          "Unknown ALGOL version #{version.inspect}. " \
+          "Valid versions: #{VALID_VERSIONS.sort.join(", ")}"
+      end
+
+      File.join(GRAMMAR_DIR, "algol", "#{version}.grammar")
+    end
 
     # Parse a string of ALGOL 60 source text into a generic AST.
     #
@@ -105,18 +120,18 @@ module CodingAdventures
     #
     # @param source [String] ALGOL 60 source text to parse
     # @return [CodingAdventures::Parser::ASTNode] the root AST node
-    def self.parse(source)
+    def self.parse(source, version: "algol60")
       # Step 1: Tokenize using the ALGOL 60 lexer.
       # This loads algol.tokens and produces a flat token stream.
       # Comments (comment...;) and whitespace are consumed silently.
       # Keywords like "begin" and "integer" are reclassified from IDENT.
-      tokens = CodingAdventures::AlgolLexer.tokenize(source)
+      tokens = CodingAdventures::AlgolLexer.tokenize(source, version: version)
 
       # Step 2: Load and parse the ALGOL 60 grammar.
       # The grammar file uses EBNF notation to describe ALGOL 60's
       # block structure, declarations, statements, and expressions.
       grammar = CodingAdventures::GrammarTools.parse_parser_grammar(
-        File.read(ALGOL_GRAMMAR_PATH, encoding: "UTF-8")
+        File.read(resolve_grammar_path(version), encoding: "UTF-8")
       )
 
       # Step 3: Parse tokens using the grammar-driven parser.

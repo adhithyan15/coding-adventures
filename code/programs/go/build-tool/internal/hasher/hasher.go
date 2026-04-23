@@ -56,9 +56,14 @@ var sourceExtensions = map[string]map[string]bool{
 	"typescript": {".ts": true, ".tsx": true, ".json": true},
 	"rust":       {".rs": true, ".toml": true},
 	"elixir":     {".ex": true, ".exs": true},
+	"dart":       {".dart": true, ".yaml": true},
 	"starlark":   {".star": true},
 	"perl":       {".pl": true, ".pm": true, ".t": true, ".xs": true},
 	"haskell":    {".hs": true, ".cabal": true},
+	// .cs and .fs are C# and F# source files. .csproj and .fsproj are the
+	// project manifests — equivalent to Cargo.toml or go.mod. Changes to
+	// any of these should invalidate the build cache and trigger a rebuild.
+	"dotnet": {".cs": true, ".fs": true, ".csproj": true, ".fsproj": true},
 }
 
 // specialFilenames maps languages to filenames that should always be
@@ -70,9 +75,15 @@ var specialFilenames = map[string]map[string]bool{
 	"typescript": {"package.json": true, "tsconfig.json": true, "vitest.config.ts": true},
 	"rust":       {"Cargo.toml": true, "Cargo.lock": true},
 	"elixir":     {"mix.exs": true, "mix.lock": true},
+	"dart":       {"pubspec.yaml": true, "pubspec.lock": true, "analysis_options.yaml": true},
 	"starlark":   {},
 	"perl":       {"Makefile.PL": true, "Build.PL": true, "cpanfile": true, "MANIFEST": true, "META.json": true, "META.yml": true},
 	"haskell":    {},
+	// global.json pins the .NET SDK version — a change here should trigger
+	// a rebuild even if no source files changed. NuGet.Config controls the
+	// package feed sources (case-insensitive filename on Windows, so both
+	// variants are tracked).
+	"dotnet": {"global.json": true, "NuGet.Config": true, "nuget.config": true},
 }
 
 // collectSourceFiles walks the package directory and returns all source
@@ -80,7 +91,7 @@ var specialFilenames = map[string]map[string]bool{
 // relative path for deterministic hashing.
 //
 // The collection rules:
-//   - BUILD, BUILD_mac, BUILD_linux are always included.
+//   - BUILD, BUILD_mac, BUILD_linux, and BUILD_windows are always included.
 //   - Files matching the language's extensions are included.
 //   - Special filenames (go.mod, Gemfile, etc.) are included.
 //   - Everything else is ignored.
@@ -105,7 +116,7 @@ func collectSourceFiles(pkg discovery.Package) []string {
 		name := info.Name()
 
 		// Always include BUILD files — they define how the package is built.
-		if name == "BUILD" || name == "BUILD_mac" || name == "BUILD_linux" {
+		if name == "BUILD" || name == "BUILD_mac" || name == "BUILD_linux" || name == "BUILD_windows" {
 			files = append(files, path)
 			return nil
 		}

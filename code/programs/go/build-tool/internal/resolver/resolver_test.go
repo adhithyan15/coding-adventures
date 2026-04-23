@@ -236,6 +236,132 @@ let package = Package(name: "md5")
 	}
 }
 
+func TestResolveDependenciesWasmCanReferenceRustCrate(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"wasm-graph/Cargo.toml": `[package]
+name = "graph-wasm"
+
+[dependencies]
+graph = { path = "../../rust/graph" }
+`,
+		"rust-graph/Cargo.toml": `[package]
+name = "graph"
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "wasm/graph", Path: filepath.Join(root, "wasm-graph"), Language: "wasm"},
+		{Name: "rust/graph", Path: filepath.Join(root, "rust-graph"), Language: "rust"},
+	}
+
+	graph := ResolveDependencies(packages)
+	if !graph.HasEdge("rust/graph", "wasm/graph") {
+		t.Fatalf("expected rust/graph -> wasm/graph edge, got %v", graph.Edges())
+	}
+}
+
+func TestResolveDependenciesWasmPrefersRustOnSharedBasename(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"wasm-avl-tree/Cargo.toml": `[package]
+name = "avl-tree-wasm"
+
+[dependencies]
+avl-tree = { path = "../../rust/avl-tree" }
+`,
+		"rust-avl-tree/Cargo.toml": `[package]
+name = "avl-tree"
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "wasm/avl-tree", Path: filepath.Join(root, "wasm-avl-tree"), Language: "wasm"},
+		{Name: "rust/avl-tree", Path: filepath.Join(root, "rust-avl-tree"), Language: "rust"},
+	}
+
+	graph := ResolveDependencies(packages)
+	if graph.HasEdge("wasm/avl-tree", "wasm/avl-tree") {
+		t.Fatalf("did not expect wasm self-loop, got %v", graph.Edges())
+	}
+	if !graph.HasEdge("rust/avl-tree", "wasm/avl-tree") {
+		t.Fatalf("expected rust/avl-tree -> wasm/avl-tree edge, got %v", graph.Edges())
+	}
+}
+
+func TestBuildKnownNamesForLanguageWasmDoesNotClaimBareRustCrateNames(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"wasm-avl-tree/Cargo.toml": `[package]
+name = "avl-tree-wasm"
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "wasm/avl-tree", Path: filepath.Join(root, "wasm-avl-tree"), Language: "wasm"},
+	}
+
+	known := buildKnownNamesForLanguage(packages, "wasm")
+	if _, ok := known["avl-tree"]; ok {
+		t.Fatalf("did not expect wasm scope to claim bare rust crate name avl-tree: %v", known)
+	}
+	if got := known["avl-tree-wasm"]; got != "wasm/avl-tree" {
+		t.Fatalf("expected avl-tree-wasm -> wasm/avl-tree, got %q", got)
+	}
+}
+
+func TestResolveDependenciesDotnetScopeSupportsCrossLanguageProjectReferences(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"csharp-graph/CodingAdventures.Graph.csproj": `<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../fsharp-helpers/CodingAdventures.Helpers.fsproj" />
+  </ItemGroup>
+</Project>
+`,
+		"fsharp-helpers/CodingAdventures.Helpers.fsproj": `<Project Sdk="Microsoft.NET.Sdk">
+</Project>
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "csharp/graph", Path: filepath.Join(root, "csharp-graph"), Language: "csharp"},
+		{Name: "fsharp/helpers", Path: filepath.Join(root, "fsharp-helpers"), Language: "fsharp"},
+	}
+
+	graph := ResolveDependencies(packages)
+	if !graph.HasEdge("fsharp/helpers", "csharp/graph") {
+		t.Fatalf("expected fsharp/helpers -> csharp/graph edge, got %v", graph.Edges())
+	}
+}
+
+func TestResolveDependenciesDotnetPrefersSameLanguageOnSharedBasename(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"csharp/graph/CodingAdventures.Graph.csproj": `<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../bitset/CodingAdventures.Bitset.csproj" />
+  </ItemGroup>
+</Project>
+`,
+		"csharp/bitset/CodingAdventures.Bitset.csproj": `<Project Sdk="Microsoft.NET.Sdk">
+</Project>
+`,
+		"fsharp/bitset/CodingAdventures.Bitset.fsproj": `<Project Sdk="Microsoft.NET.Sdk">
+</Project>
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "csharp/graph", Path: filepath.Join(root, "csharp", "graph"), Language: "csharp"},
+		{Name: "csharp/bitset", Path: filepath.Join(root, "csharp", "bitset"), Language: "csharp"},
+		{Name: "fsharp/bitset", Path: filepath.Join(root, "fsharp", "bitset"), Language: "fsharp"},
+	}
+
+	graph := ResolveDependencies(packages)
+	if !graph.HasEdge("csharp/bitset", "csharp/graph") {
+		t.Fatalf("expected csharp/bitset -> csharp/graph edge, got %v", graph.Edges())
+	}
+	if graph.HasEdge("fsharp/bitset", "csharp/graph") {
+		t.Fatalf("did not expect fsharp/bitset -> csharp/graph edge, got %v", graph.Edges())
+	}
+}
+
 func TestParseHaskellDepsSkipsSelfReference(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"build-tool/coding-adventures-build-tool.cabal": `cabal-version: 3.0
@@ -266,6 +392,22 @@ test-suite spec
 
 	if len(deps) != 1 || deps[0] != "haskell/logic-gates" {
 		t.Fatalf("expected only haskell/logic-gates dependency, got %v", deps)
+	}
+}
+
+func TestDependencyScopeMapsSharedToolchainFamilies(t *testing.T) {
+	tests := map[string]string{
+		"python": "python",
+		"wasm":   "wasm",
+		"csharp": "dotnet",
+		"fsharp": "dotnet",
+		"dotnet": "dotnet",
+	}
+
+	for language, want := range tests {
+		if got := dependencyScope(language); got != want {
+			t.Fatalf("dependencyScope(%q) = %q, want %q", language, got, want)
+		}
 	}
 }
 
@@ -551,6 +693,64 @@ func TestParseTypescriptDepsExternalSkipped(t *testing.T) {
 
 	pkg := discovery.Package{Name: "typescript/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "typescript"}
 	deps := parseTypescriptDeps(pkg, map[string]string{})
+	if len(deps) != 0 {
+		t.Fatalf("expected external deps to be skipped, got %d", len(deps))
+	}
+}
+
+func TestBuildKnownNamesDart(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "dart/logic-gates", Path: "/repo/packages/dart/logic-gates", Language: "dart"},
+	}
+	known := BuildKnownNames(packages)
+	if known["coding_adventures_logic_gates"] != "dart/logic-gates" {
+		t.Fatalf("expected dart/logic-gates, got %s", known["coding_adventures_logic_gates"])
+	}
+	if known["logic_gates"] != "dart/logic-gates" {
+		t.Fatalf("expected unprefixed mapping for dart/logic-gates, got %s", known["logic_gates"])
+	}
+}
+
+func TestParseDartDeps(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/pubspec.yaml": `name: pkg_a
+dependencies:
+  coding_adventures_pkg_b: ^0.1.0
+dev_dependencies:
+  pkg_c:
+    path: ../pkg-c
+`,
+		"pkg-b/pubspec.yaml": `name: coding_adventures_pkg_b
+`,
+		"pkg-c/pubspec.yaml": `name: pkg_c
+`,
+	})
+
+	packages := []discovery.Package{
+		{Name: "dart/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "dart"},
+		{Name: "dart/pkg-b", Path: filepath.Join(root, "pkg-b"), Language: "dart"},
+		{Name: "dart/pkg-c", Path: filepath.Join(root, "pkg-c"), Language: "dart"},
+	}
+
+	known := BuildKnownNames(packages)
+	deps := parseDartDeps(packages[0], known)
+
+	if len(deps) != 2 {
+		t.Fatalf("expected 2 deps, got %d: %v", len(deps), deps)
+	}
+}
+
+func TestParseDartDepsExternalSkipped(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"pkg-a/pubspec.yaml": `name: pkg_a
+dependencies:
+  collection: ^1.18.0
+  args: ^2.6.0
+`,
+	})
+
+	pkg := discovery.Package{Name: "dart/pkg-a", Path: filepath.Join(root, "pkg-a"), Language: "dart"}
+	deps := parseDartDeps(pkg, map[string]string{})
 	if len(deps) != 0 {
 		t.Fatalf("expected external deps to be skipped, got %d", len(deps))
 	}

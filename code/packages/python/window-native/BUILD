@@ -1,0 +1,6 @@
+uv venv --quiet --clear
+uv pip install pytest pytest-cov ruff --quiet
+cargo build --release
+BUILD_IMPORT_DIR=$(.venv/bin/python -c 'import tempfile; print(tempfile.mkdtemp(prefix="window-native-build-", dir="."))') && mkdir -p "$BUILD_IMPORT_DIR/window_native" && cp src/window_native/__init__.py "$BUILD_IMPORT_DIR/window_native/__init__.py" && FOUND_ARTIFACT= && for ARTIFACT in target/release/libwindow_native.so target/release/libwindow_native.dylib target/release/window_native.dll; do if [ -f "$ARTIFACT" ]; then case "$ARTIFACT" in *.dll) ARTIFACT_NAME=window_native.pyd ;; *) ARTIFACT_NAME=window_native.so ;; esac; cp "$ARTIFACT" "$BUILD_IMPORT_DIR/window_native/$ARTIFACT_NAME"; FOUND_ARTIFACT=1; break; fi; done && if [ -z "$FOUND_ARTIFACT" ]; then echo "no compiled extension artifact was found" >&2; rm -rf "$BUILD_IMPORT_DIR"; exit 1; fi
+BUILD_IMPORT_DIR=$(find . -maxdepth 1 -type d -name 'window-native-build-*' | head -n 1) && PYTHONPATH="$BUILD_IMPORT_DIR" .venv/bin/python -m ruff check src tests
+BUILD_IMPORT_DIR=$(find . -maxdepth 1 -type d -name 'window-native-build-*' | head -n 1) && PYTHONPATH="$BUILD_IMPORT_DIR" .venv/bin/python -m pytest tests/ -v; STATUS=$?; BUILD_IMPORT_DIR=$(find . -maxdepth 1 -type d -name 'window-native-build-*' | head -n 1); rm -rf "$BUILD_IMPORT_DIR"; exit $STATUS

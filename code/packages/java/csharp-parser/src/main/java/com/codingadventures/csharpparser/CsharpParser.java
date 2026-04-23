@@ -1,0 +1,11 @@
+package com.codingadventures.csharpparser;
+
+/**
+ * CsharpParser — CSharp parser - parses C# source text using the grammar-driven parser infrastructure
+ *
+ */
+public final class CsharpParser {
+    public String ping() {
+        return "csharp-parser";
+    }
+}

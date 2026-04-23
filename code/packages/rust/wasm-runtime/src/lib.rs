@@ -39,6 +39,11 @@ use wasm_types::{
 };
 use wasm_validator::{validate, ValidatedModule, ValidationError};
 
+const WASI_ESUCCESS: i32 = 0;
+const WASI_EBADF: i32 = 8;
+const WASI_EINVAL: i32 = 28;
+const WASI_ENOSYS: i32 = 52;
+
 // ══════════════════════════════════════════════════════════════════════════════
 // ProcExitError
 // ══════════════════════════════════════════════════════════════════════════════
@@ -210,6 +215,9 @@ pub struct WasiConfig {
     /// Optional callback invoked for every line written to stderr (fd 2).
     pub stderr_callback: Option<Box<dyn Fn(&str) + Send + Sync>>,
 
+    /// Optional callback invoked when stdin bytes are requested (fd 0).
+    pub stdin_callback: Option<Box<dyn Fn(usize) -> Vec<u8> + Send + Sync>>,
+
     /// Injected clock.  Defaults to `SystemClock`.
     pub clock: Box<dyn WasiClock>,
 
@@ -224,6 +232,7 @@ impl Default for WasiConfig {
             env: Vec::new(),
             stdout_callback: None,
             stderr_callback: None,
+            stdin_callback: None,
             clock: Box::new(SystemClock),
             random: Box::new(SystemRandom),
         }
@@ -253,11 +262,7 @@ impl WasiStub {
 }
 
 impl HostInterface for WasiStub {
-    fn resolve_function(
-        &self,
-        module_name: &str,
-        name: &str,
-    ) -> Option<Box<dyn HostFunction>> {
+    fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         if module_name != "wasi_snapshot_preview1" {
             return None;
         }
@@ -274,27 +279,15 @@ impl HostInterface for WasiStub {
         }
     }
 
-    fn resolve_global(
-        &self,
-        _module_name: &str,
-        _name: &str,
-    ) -> Option<(GlobalType, WasmValue)> {
+    fn resolve_global(&self, _module_name: &str, _name: &str) -> Option<(GlobalType, WasmValue)> {
         None
     }
 
-    fn resolve_memory(
-        &self,
-        _module_name: &str,
-        _name: &str,
-    ) -> Option<LinearMemory> {
+    fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
         None
     }
 
-    fn resolve_table(
-        &self,
-        _module_name: &str,
-        _name: &str,
-    ) -> Option<Table> {
+    fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
         None
     }
 }
@@ -314,11 +307,12 @@ impl HostFunction for ProcExitFunc {
         &FUNC_TYPE
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
-        let exit_code = args
-            .first()
-            .and_then(|v| v.as_i32().ok())
-            .unwrap_or(0);
+    fn call(
+        &self,
+        args: &[WasmValue],
+        _memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        let exit_code = args.first().and_then(|v| v.as_i32().ok()).unwrap_or(0);
         Err(TrapError::new(format!("proc_exit({})", exit_code)))
     }
 }
@@ -333,8 +327,12 @@ impl HostFunction for EnosysFunc {
         &self.func_type
     }
 
-    fn call(&self, _args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
-        Ok(vec![WasmValue::I32(52)]) // ENOSYS
+    fn call(
+        &self,
+        _args: &[WasmValue],
+        _memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        Ok(vec![WasmValue::I32(WASI_ENOSYS)])
     }
 }
 
@@ -378,17 +376,48 @@ pub struct WasiEnv {
 
     /// Injected random.
     pub random: Arc<dyn WasiRandom>,
+
+    /// Callback for stdout output (fd 1).
+    pub stdout_callback: Arc<dyn Fn(&str) + Send + Sync>,
+
+    /// Callback for stderr output (fd 2).
+    pub stderr_callback: Arc<dyn Fn(&str) + Send + Sync>,
+
+    /// Callback for stdin bytes (fd 0).
+    pub stdin_callback: Arc<dyn Fn(usize) -> Vec<u8> + Send + Sync>,
 }
+
+/// Preferred name for the full WASI host surface.
+///
+/// `WasiEnv` remains available, but new call sites should prefer `WasiHost`
+/// to match the other language runtimes in the repo.
+pub type WasiHost = WasiEnv;
 
 impl WasiEnv {
     /// Create a `WasiEnv` from a `WasiConfig`.
     pub fn new(cfg: WasiConfig) -> Self {
+        let stdout_callback: Arc<dyn Fn(&str) + Send + Sync> = match cfg.stdout_callback {
+            Some(callback) => Arc::from(callback),
+            None => Arc::new(|_: &str| {}),
+        };
+        let stderr_callback: Arc<dyn Fn(&str) + Send + Sync> = match cfg.stderr_callback {
+            Some(callback) => Arc::from(callback),
+            None => Arc::new(|_: &str| {}),
+        };
+        let stdin_callback: Arc<dyn Fn(usize) -> Vec<u8> + Send + Sync> =
+            match cfg.stdin_callback {
+                Some(callback) => Arc::from(callback),
+                None => Arc::new(|_: usize| Vec::new()),
+            };
         WasiEnv {
             args: cfg.args,
             env: cfg.env,
             memory: Arc::new(Mutex::new(None)),
             clock: Arc::from(cfg.clock),
             random: Arc::from(cfg.random),
+            stdout_callback,
+            stderr_callback,
+            stdin_callback,
         }
     }
 
@@ -409,17 +438,22 @@ impl WasiEnv {
 }
 
 impl HostInterface for WasiEnv {
-    fn resolve_function(
-        &self,
-        module_name: &str,
-        name: &str,
-    ) -> Option<Box<dyn HostFunction>> {
+    fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
         if module_name != "wasi_snapshot_preview1" {
             return None;
         }
 
         match name {
-            // ── Tier 1: process termination ───────────────────────────────
+            // ── Tier 1: stdio + process termination ───────────────────────
+            "fd_write" => Some(Box::new(FdWriteFunc {
+                memory: Arc::clone(&self.memory),
+                stdout_callback: Arc::clone(&self.stdout_callback),
+                stderr_callback: Arc::clone(&self.stderr_callback),
+            })),
+            "fd_read" => Some(Box::new(FdReadFunc {
+                memory: Arc::clone(&self.memory),
+                stdin_callback: Arc::clone(&self.stdin_callback),
+            })),
             "proc_exit" => Some(Box::new(ProcExitFunc)),
 
             // ── Tier 3: arguments ─────────────────────────────────────────
@@ -498,11 +532,7 @@ impl HostInterface for WasiEnv {
 ///   ptr+0 .. ptr+3  — low 32 bits
 ///   ptr+4 .. ptr+7  — high 32 bits
 /// ```
-fn write_i64_le(
-    memory: &mut LinearMemory,
-    ptr: usize,
-    value: i64,
-) -> Result<(), TrapError> {
+fn write_i64_le(memory: &mut LinearMemory, ptr: usize, value: i64) -> Result<(), TrapError> {
     let lo = (value & 0xFFFF_FFFF) as i32;
     let hi = ((value >> 32) & 0xFFFF_FFFF) as i32;
     memory.store_i32(ptr, lo)?;
@@ -514,17 +544,170 @@ fn write_i64_le(
 // Helper: write an i32 into shared memory
 // ══════════════════════════════════════════════════════════════════════════════
 
-fn write_i32_le(
+fn write_i32_le(memory: &mut LinearMemory, ptr: usize, value: i32) -> Result<(), TrapError> {
+    memory.store_i32(ptr, value)
+}
+
+fn with_linear_memory<T>(
+    provided: Option<&mut LinearMemory>,
+    shared: &Arc<Mutex<Option<LinearMemory>>>,
+    action: impl FnOnce(&mut LinearMemory) -> Result<T, TrapError>,
+) -> Result<T, TrapError> {
+    if let Some(memory) = provided {
+        return action(memory);
+    }
+
+    let mut guard = shared.lock().unwrap();
+    let memory = guard
+        .as_mut()
+        .ok_or_else(|| TrapError::new("no memory attached"))?;
+    action(memory)
+}
+
+fn read_i32_le(memory: &mut LinearMemory, ptr: usize) -> Result<i32, TrapError> {
+    memory.load_i32(ptr)
+}
+
+fn read_guest_bytes(
     memory: &mut LinearMemory,
     ptr: usize,
-    value: i32,
-) -> Result<(), TrapError> {
-    memory.store_i32(ptr, value)
+    len: usize,
+) -> Result<Vec<u8>, TrapError> {
+    let mut bytes = Vec::with_capacity(len);
+    for offset in 0..len {
+        bytes.push(memory.load_i32_8u(ptr + offset)? as u8);
+    }
+    Ok(bytes)
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Tier 3 host functions
 // ══════════════════════════════════════════════════════════════════════════════
+
+// ── Tier 1: fd_write ────────────────────────────────────────────────────────
+
+struct FdWriteFunc {
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+    stdout_callback: Arc<dyn Fn(&str) + Send + Sync>,
+    stderr_callback: Arc<dyn Fn(&str) + Send + Sync>,
+}
+
+impl HostFunction for FdWriteFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![
+                ValueType::I32,
+                ValueType::I32,
+                ValueType::I32,
+                ValueType::I32,
+            ],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        let fd = args[0].as_i32().map_err(|e| TrapError::new(e.message))?;
+        let iovs_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let iovs_len = args[2].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let nwritten_ptr = args[3].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        if fd != 1 && fd != 2 {
+            return Ok(vec![WasmValue::I32(WASI_EBADF)]);
+        }
+
+        let output = with_linear_memory(memory, &self.memory, |mem| {
+            let mut output = Vec::new();
+            for index in 0..iovs_len {
+                let base = iovs_ptr + index * 8;
+                let ptr = read_i32_le(mem, base)? as usize;
+                let len = read_i32_le(mem, base + 4)? as usize;
+                output.extend(read_guest_bytes(mem, ptr, len)?);
+            }
+            write_i32_le(mem, nwritten_ptr, output.len() as i32)?;
+            Ok(output)
+        })?;
+
+        let text = String::from_utf8_lossy(&output);
+        if fd == 1 {
+            (self.stdout_callback)(&text);
+        } else {
+            (self.stderr_callback)(&text);
+        }
+
+        Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+    }
+}
+
+// ── Tier 1: fd_read ─────────────────────────────────────────────────────────
+
+struct FdReadFunc {
+    memory: Arc<Mutex<Option<LinearMemory>>>,
+    stdin_callback: Arc<dyn Fn(usize) -> Vec<u8> + Send + Sync>,
+}
+
+impl HostFunction for FdReadFunc {
+    fn func_type(&self) -> &FuncType {
+        static FT: std::sync::LazyLock<FuncType> = std::sync::LazyLock::new(|| FuncType {
+            params: vec![
+                ValueType::I32,
+                ValueType::I32,
+                ValueType::I32,
+                ValueType::I32,
+            ],
+            results: vec![ValueType::I32],
+        });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        let fd = args[0].as_i32().map_err(|e| TrapError::new(e.message))?;
+        let iovs_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let iovs_len = args[2].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+        let nread_ptr = args[3].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
+
+        if fd != 0 {
+            return Ok(vec![WasmValue::I32(WASI_EBADF)]);
+        }
+
+        with_linear_memory(memory, &self.memory, |mem| {
+            let mut requested = 0usize;
+            for index in 0..iovs_len {
+                let base = iovs_ptr + index * 8;
+                requested += read_i32_le(mem, base + 4)? as usize;
+            }
+            let stdin_bytes = (self.stdin_callback)(requested);
+            let mut written = 0usize;
+            for index in 0..iovs_len {
+                if written >= stdin_bytes.len() {
+                    break;
+                }
+
+                let base = iovs_ptr + index * 8;
+                let ptr = read_i32_le(mem, base)? as usize;
+                let len = read_i32_le(mem, base + 4)? as usize;
+                let remaining = stdin_bytes.len() - written;
+                let chunk_len = remaining.min(len);
+
+                if chunk_len > 0 {
+                    mem.write_bytes(ptr, &stdin_bytes[written..written + chunk_len])?;
+                    written += chunk_len;
+                }
+            }
+
+            write_i32_le(mem, nread_ptr, written as i32)?;
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
+    }
+}
 
 // ── 1. args_sizes_get ────────────────────────────────────────────────────────
 
@@ -554,7 +737,11 @@ impl HostFunction for ArgsSizesGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let argc_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
         let buf_size_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
 
@@ -562,12 +749,11 @@ impl HostFunction for ArgsSizesGetFunc {
         // Each argument occupies len(utf8) + 1 bytes (null terminator).
         let buf_size: i32 = self.args.iter().map(|a| a.len() as i32 + 1).sum();
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
-        write_i32_le(mem, argc_ptr, argc)?;
-        write_i32_le(mem, buf_size_ptr, buf_size)?;
-
-        Ok(vec![WasmValue::I32(0)])
+        with_linear_memory(memory, &self.memory, |mem| {
+            write_i32_le(mem, argc_ptr, argc)?;
+            write_i32_le(mem, buf_size_ptr, buf_size)?;
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -605,30 +791,28 @@ impl HostFunction for ArgsGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let argv_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
         let argv_buf_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        with_linear_memory(memory, &self.memory, |mem| {
+            let mut buf_cursor = argv_buf_ptr;
+            for (i, arg) in self.args.iter().enumerate() {
+                let ptr_slot = argv_ptr + i * 4;
+                write_i32_le(mem, ptr_slot, buf_cursor as i32)?;
 
-        // Walk through each argument, writing:
-        // 1. A pointer (i32) into the argv pointer array.
-        // 2. The null-terminated string bytes into the buffer.
-        let mut buf_cursor = argv_buf_ptr;
-        for (i, arg) in self.args.iter().enumerate() {
-            // Write the pointer to this argument into the argv array.
-            let ptr_slot = argv_ptr + i * 4; // 4 bytes per i32 pointer
-            write_i32_le(mem, ptr_slot, buf_cursor as i32)?;
+                let bytes = arg.as_bytes();
+                mem.write_bytes(buf_cursor, bytes)?;
+                mem.write_bytes(buf_cursor + bytes.len(), &[0u8])?;
+                buf_cursor += bytes.len() + 1;
+            }
 
-            // Write the argument bytes followed by a null terminator.
-            let bytes = arg.as_bytes();
-            mem.write_bytes(buf_cursor, bytes)?;
-            mem.write_bytes(buf_cursor + bytes.len(), &[0u8])?; // '\0'
-            buf_cursor += bytes.len() + 1;
-        }
-
-        Ok(vec![WasmValue::I32(0)])
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -652,19 +836,22 @@ impl HostFunction for EnvironSizesGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let envc_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
         let buf_size_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
 
         let envc = self.env.len() as i32;
         let buf_size: i32 = self.env.iter().map(|e| e.len() as i32 + 1).sum();
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
-        write_i32_le(mem, envc_ptr, envc)?;
-        write_i32_le(mem, buf_size_ptr, buf_size)?;
-
-        Ok(vec![WasmValue::I32(0)])
+        with_linear_memory(memory, &self.memory, |mem| {
+            write_i32_le(mem, envc_ptr, envc)?;
+            write_i32_le(mem, buf_size_ptr, buf_size)?;
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -687,25 +874,28 @@ impl HostFunction for EnvironGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let environ_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
         let environ_buf_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
+        with_linear_memory(memory, &self.memory, |mem| {
+            let mut buf_cursor = environ_buf_ptr;
+            for (i, var) in self.env.iter().enumerate() {
+                let ptr_slot = environ_ptr + i * 4;
+                write_i32_le(mem, ptr_slot, buf_cursor as i32)?;
 
-        let mut buf_cursor = environ_buf_ptr;
-        for (i, var) in self.env.iter().enumerate() {
-            let ptr_slot = environ_ptr + i * 4;
-            write_i32_le(mem, ptr_slot, buf_cursor as i32)?;
+                let bytes = var.as_bytes();
+                mem.write_bytes(buf_cursor, bytes)?;
+                mem.write_bytes(buf_cursor + bytes.len(), &[0u8])?;
+                buf_cursor += bytes.len() + 1;
+            }
 
-            let bytes = var.as_bytes();
-            mem.write_bytes(buf_cursor, bytes)?;
-            mem.write_bytes(buf_cursor + bytes.len(), &[0u8])?;
-            buf_cursor += bytes.len() + 1;
-        }
-
-        Ok(vec![WasmValue::I32(0)])
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -732,17 +922,20 @@ impl HostFunction for ClockResGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let id = args[0].as_i32().map_err(|e| TrapError::new(e.message))?;
         let resolution_ptr = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
 
         let resolution = self.clock.resolution_ns(id);
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
-        write_i64_le(mem, resolution_ptr, resolution)?;
-
-        Ok(vec![WasmValue::I32(0)])
+        with_linear_memory(memory, &self.memory, |mem| {
+            write_i64_le(mem, resolution_ptr, resolution)?;
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -779,7 +972,11 @@ impl HostFunction for ClockTimeGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let id = args[0].as_i32().map_err(|e| TrapError::new(e.message))?;
         // args[1] is precision (i64) — ignored.
         let time_ptr = args[2].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
@@ -789,14 +986,13 @@ impl HostFunction for ClockTimeGetFunc {
         let ns = match id {
             0 | 2 | 3 => self.clock.realtime_ns(),
             1 => self.clock.monotonic_ns(),
-            _ => return Ok(vec![WasmValue::I32(28)]), // EINVAL
+            _ => return Ok(vec![WasmValue::I32(WASI_EINVAL)]),
         };
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
-        write_i64_le(mem, time_ptr, ns)?;
-
-        Ok(vec![WasmValue::I32(0)])
+        with_linear_memory(memory, &self.memory, |mem| {
+            write_i64_le(mem, time_ptr, ns)?;
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -824,7 +1020,11 @@ impl HostFunction for RandomGetFunc {
         &FT
     }
 
-    fn call(&self, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
+    fn call(
+        &self,
+        args: &[WasmValue],
+        memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
         let buf_ptr = args[0].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
         let buf_len = args[1].as_i32().map_err(|e| TrapError::new(e.message))? as usize;
 
@@ -832,11 +1032,10 @@ impl HostFunction for RandomGetFunc {
         let mut buf = vec![0u8; buf_len];
         self.random.fill_bytes(&mut buf);
 
-        let mut guard = self.memory.lock().unwrap();
-        let mem = guard.as_mut().ok_or_else(|| TrapError::new("no memory attached"))?;
-        mem.write_bytes(buf_ptr, &buf)?;
-
-        Ok(vec![WasmValue::I32(0)])
+        with_linear_memory(memory, &self.memory, |mem| {
+            mem.write_bytes(buf_ptr, &buf)?;
+            Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
+        })
     }
 }
 
@@ -861,8 +1060,12 @@ impl HostFunction for SchedYieldFunc {
         &FT
     }
 
-    fn call(&self, _args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError> {
-        Ok(vec![WasmValue::I32(0)]) // Success — yield is a no-op here
+    fn call(
+        &self,
+        _args: &[WasmValue],
+        _memory: Option<&mut LinearMemory>,
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        Ok(vec![WasmValue::I32(WASI_ESUCCESS)])
     }
 }
 
@@ -888,6 +1091,8 @@ pub struct WasmInstance {
     pub func_types: Vec<FuncType>,
     /// Function bodies (None for imports).
     pub func_bodies: Vec<Option<FunctionBody>>,
+    /// Resolved imported host functions.
+    pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
     /// Export map: name -> (kind, index).
     pub exports: Vec<(String, ExternalKind, u32)>,
 }
@@ -965,10 +1170,7 @@ impl WasmRuntime {
                     if let Some(m) = imported_mem {
                         memory = Some(m);
                     } else {
-                        memory = Some(LinearMemory::new(
-                            mem_type.limits.min,
-                            mem_type.limits.max,
-                        ));
+                        memory = Some(LinearMemory::new(mem_type.limits.min, mem_type.limits.max));
                     }
                 }
                 ImportTypeInfo::Table(table_type) => {
@@ -979,10 +1181,7 @@ impl WasmRuntime {
                     if let Some(t) = imported_table {
                         tables.push(t);
                     } else {
-                        tables.push(Table::new(
-                            table_type.limits.min,
-                            table_type.limits.max,
-                        ));
+                        tables.push(Table::new(table_type.limits.min, table_type.limits.max));
                     }
                 }
                 ImportTypeInfo::Global(gt) => {
@@ -1011,18 +1210,12 @@ impl WasmRuntime {
         // Allocate memory.
         if memory.is_none() && !module.memories.is_empty() {
             let mem_type = &module.memories[0];
-            memory = Some(LinearMemory::new(
-                mem_type.limits.min,
-                mem_type.limits.max,
-            ));
+            memory = Some(LinearMemory::new(mem_type.limits.min, mem_type.limits.max));
         }
 
         // Allocate tables.
         for table_type in &module.tables {
-            tables.push(Table::new(
-                table_type.limits.min,
-                table_type.limits.max,
-            ));
+            tables.push(Table::new(table_type.limits.min, table_type.limits.max));
         }
 
         // Initialize globals.
@@ -1045,8 +1238,7 @@ impl WasmRuntime {
         for elem in &module.elements {
             if let Some(table) = tables.get_mut(elem.table_index as usize) {
                 let offset = evaluate_const_expr(&elem.offset_expr, &globals)?;
-                let offset_num =
-                    offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32;
+                let offset_num = offset.as_i32().map_err(|e| TrapError::new(e.message))? as u32;
                 for (j, &func_idx) in elem.function_indices.iter().enumerate() {
                     table.set(offset_num + j as u32, Some(func_idx))?;
                 }
@@ -1068,6 +1260,7 @@ impl WasmRuntime {
             global_types,
             func_types,
             func_bodies,
+            host_functions,
             exports,
         };
 
@@ -1112,6 +1305,7 @@ impl WasmRuntime {
         // Build engine config, transferring ownership temporarily.
         let memory = instance.memory.take();
         let tables = std::mem::take(&mut instance.tables);
+        let host_functions = std::mem::take(&mut instance.host_functions);
 
         let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
             memory,
@@ -1120,10 +1314,15 @@ impl WasmRuntime {
             global_types: instance.global_types.clone(),
             func_types: instance.func_types.clone(),
             func_bodies: instance.func_bodies.clone(),
-            host_functions: (0..instance.func_types.len()).map(|_| None).collect(),
+            host_functions,
         });
 
         let results = engine.call_function(func_index, &wasm_args)?;
+        let state = engine.into_state();
+        instance.memory = state.memory;
+        instance.tables = state.tables;
+        instance.globals = state.globals;
+        instance.host_functions = state.host_functions;
 
         // Convert back to i64.
         Ok(results
@@ -1166,6 +1365,61 @@ impl Default for WasmRuntime {
 mod tests {
     use super::*;
     use wasm_types::*;
+
+    struct TestHostFunction {
+        func_type: FuncType,
+    }
+
+    impl HostFunction for TestHostFunction {
+        fn func_type(&self) -> &FuncType {
+            &self.func_type
+        }
+
+        fn call(
+            &self,
+            args: &[WasmValue],
+            _memory: Option<&mut LinearMemory>,
+        ) -> Result<Vec<WasmValue>, TrapError> {
+            let value = args
+                .first()
+                .ok_or_else(|| TrapError::new("missing argument"))?
+                .as_i32()?;
+            Ok(vec![WasmValue::I32(value * 2)])
+        }
+    }
+
+    struct TestHost;
+
+    impl HostInterface for TestHost {
+        fn resolve_function(&self, module_name: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+            if module_name == "env" && name == "double" {
+                Some(Box::new(TestHostFunction {
+                    func_type: FuncType {
+                        params: vec![ValueType::I32],
+                        results: vec![ValueType::I32],
+                    },
+                }))
+            } else {
+                None
+            }
+        }
+
+        fn resolve_global(
+            &self,
+            _module_name: &str,
+            _name: &str,
+        ) -> Option<(GlobalType, WasmValue)> {
+            None
+        }
+
+        fn resolve_memory(&self, _module_name: &str, _name: &str) -> Option<LinearMemory> {
+            None
+        }
+
+        fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<Table> {
+            None
+        }
+    }
 
     /// Build the raw WASM binary for a square(x) = x * x function.
     ///
@@ -1300,6 +1554,12 @@ mod tests {
     }
 
     #[test]
+    fn test_wasi_host_alias_creation() {
+        let host = WasiHost::new(WasiConfig::default());
+        assert!(host.memory.lock().unwrap().is_none());
+    }
+
+    #[test]
     fn test_proc_exit_error() {
         let err = ProcExitError { exit_code: 0 };
         assert_eq!(format!("{}", err), "proc_exit(0)");
@@ -1370,11 +1630,10 @@ mod tests {
 
         // Export section (id=7): export "mem" as memory 0
         let export_section = vec![
-            0x01,       // 1 export
-            0x03,       // name length
-            b'm', b'e', b'm',
-            0x02,       // memory export kind
-            0x00,       // memory index 0
+            0x01, // 1 export
+            0x03, // name length
+            b'm', b'e', b'm', 0x02, // memory export kind
+            0x00, // memory index 0
         ];
         wasm.push(0x07);
         wasm.push(export_section.len() as u8);
@@ -1414,22 +1673,20 @@ mod tests {
         wasm.extend_from_slice(&mem_section);
 
         // Export section
-        let export_section = vec![
-            0x01, 0x04, b't', b'e', b's', b't', 0x00, 0x00,
-        ];
+        let export_section = vec![0x01, 0x04, b't', b'e', b's', b't', 0x00, 0x00];
         wasm.push(0x07);
         wasm.push(export_section.len() as u8);
         wasm.extend_from_slice(&export_section);
 
         // Code section
         let body = vec![
-            0x00,       // 0 locals
+            0x00, // 0 locals
             0x41, 0x00, // i32.const 0 (addr)
             0x20, 0x00, // local.get 0 (val)
             0x36, 0x02, 0x00, // i32.store align=2 offset=0
             0x41, 0x00, // i32.const 0 (addr)
             0x28, 0x02, 0x00, // i32.load align=2 offset=0
-            0x0B,       // end
+            0x0B, // end
         ];
         let body_with_size = {
             let mut v = vec![body.len() as u8];
@@ -1532,7 +1789,7 @@ mod tests {
         assert_eq!(func.func_type().params, vec![ValueType::I32]);
         assert!(func.func_type().results.is_empty());
         // Calling proc_exit should return an error (trap)
-        let result = func.call(&[WasmValue::I32(0)]);
+        let result = func.call(&[WasmValue::I32(0)], None);
         assert!(result.is_err());
     }
 
@@ -1542,8 +1799,8 @@ mod tests {
         let func = wasi
             .resolve_function("wasi_snapshot_preview1", "unknown_function")
             .unwrap();
-        let result = func.call(&[]).unwrap();
-        assert_eq!(result, vec![WasmValue::I32(52)]); // ENOSYS
+        let result = func.call(&[], None).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(WASI_ENOSYS)]);
     }
 
     #[test]
@@ -1561,13 +1818,17 @@ mod tests {
     #[test]
     fn test_wasi_stub_resolve_memory() {
         let wasi = WasiStub::new(|_| {});
-        assert!(wasi.resolve_memory("wasi_snapshot_preview1", "memory").is_none());
+        assert!(wasi
+            .resolve_memory("wasi_snapshot_preview1", "memory")
+            .is_none());
     }
 
     #[test]
     fn test_wasi_stub_resolve_table() {
         let wasi = WasiStub::new(|_| {});
-        assert!(wasi.resolve_table("wasi_snapshot_preview1", "table").is_none());
+        assert!(wasi
+            .resolve_table("wasi_snapshot_preview1", "table")
+            .is_none());
     }
 
     #[test]
@@ -1577,6 +1838,42 @@ mod tests {
         let wasm = build_square_wasm();
         let result = runtime.load_and_run(&wasm, "square", &[4]);
         assert_eq!(result.unwrap(), vec![16]);
+    }
+
+    #[test]
+    fn test_runtime_calls_imported_host_function() {
+        let runtime = WasmRuntime::with_host(Box::new(TestHost));
+        let module = WasmModule {
+            types: vec![FuncType {
+                params: vec![ValueType::I32],
+                results: vec![ValueType::I32],
+            }],
+            imports: vec![Import {
+                module_name: "env".to_string(),
+                name: "double".to_string(),
+                kind: ExternalKind::Function,
+                type_info: ImportTypeInfo::Function(0),
+            }],
+            functions: vec![0],
+            code: vec![FunctionBody {
+                locals: vec![],
+                code: vec![
+                    0x20, 0x00, // local.get 0
+                    0x10, 0x00, // call imported function 0
+                    0x0B, // end
+                ],
+            }],
+            exports: vec![Export {
+                name: "call_double".to_string(),
+                kind: ExternalKind::Function,
+                index: 1,
+            }],
+            ..Default::default()
+        };
+
+        let mut instance = runtime.instantiate(&module).unwrap();
+        let result = runtime.call(&mut instance, "call_double", &[5]).unwrap();
+        assert_eq!(result, vec![10]);
     }
 
     #[test]

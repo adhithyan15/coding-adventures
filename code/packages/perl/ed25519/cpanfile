@@ -1,0 +1,7 @@
+# Runtime dependency
+requires 'CodingAdventures::Sha512';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};

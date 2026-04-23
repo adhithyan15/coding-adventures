@@ -1,6 +1,9 @@
+# DEPRECATED compatibility mirror.
+# Canonical source: code/grammars/vhdl/vhdl2008.grammar
+#
 # Parser grammar for VHDL (IEEE 1076-2008)
 #
-# Synthesizable subset — constructs that map to real digital hardware.
+# Synthesizable subset -- constructs that map to real digital hardware.
 #
 # VHDL takes a fundamentally different approach to hardware description
 # than Verilog. Where Verilog is implicit and concise (like C), VHDL is
@@ -67,10 +70,10 @@ design_unit = { context_item } library_unit ;
 
 context_item = library_clause | use_clause ;
 
-# library IEEE; — makes the IEEE library visible
+# library IEEE; -- makes the IEEE library visible
 library_clause = "library" name_list SEMICOLON ;
 
-# use IEEE.std_logic_1164.all; — imports all names from a package
+# use IEEE.std_logic_1164.all; -- imports all names from a package
 use_clause = "use" selected_name SEMICOLON ;
 
 # Dotted name path: IEEE.std_logic_1164.all
@@ -87,7 +90,7 @@ library_unit = entity_declaration
 # Entity Declaration
 # ============================================================================
 #
-# An entity defines the INTERFACE of a hardware block — its inputs,
+# An entity defines the INTERFACE of a hardware block -- its inputs,
 # outputs, and configuration parameters (generics). Think of it as
 # the pin diagram on an IC datasheet.
 #
@@ -125,10 +128,10 @@ interface_element = name_list COLON [ mode ] subtype_indication
                     [ VAR_ASSIGN expression ] ;
 
 # Port modes:
-#   in     — input only (read inside architecture)
-#   out    — output only (write inside architecture)
-#   inout  — bidirectional (read and write)
-#   buffer — output that can also be read back internally
+#   in     -- input only (read inside architecture)
+#   out    -- output only (write inside architecture)
+#   inout  -- bidirectional (read and write)
+#   buffer -- output that can also be read back internally
 mode = "in" | "out" | "inout" | "buffer" ;
 
 # ============================================================================
@@ -139,8 +142,8 @@ mode = "in" | "out" | "inout" | "buffer" ;
 # can have multiple architectures (e.g., behavioral, structural, rtl).
 #
 # The architecture has two parts:
-#   1. Declarative region (before BEGIN) — signal declarations, types, etc.
-#   2. Statement region (after BEGIN) — concurrent statements
+#   1. Declarative region (before BEGIN) -- signal declarations, types, etc.
+#   2. Statement region (after BEGIN) -- concurrent statements
 #
 #   architecture rtl of full_adder is
 #     signal carry_gen, carry_prop : std_logic;  -- declarations
@@ -174,12 +177,12 @@ block_declarative_item = signal_declaration
 # Signals vs Variables:
 #
 # A signal represents a physical wire or register. Signal assignments (<=)
-# take effect after a delta delay — all concurrent assignments in a single
+# take effect after a delta delay -- all concurrent assignments in a single
 # simulation step see the OLD values. This models real hardware where all
 # flip-flops clock simultaneously.
 #
 # A variable exists only inside a process. Variable assignments (:=) take
-# effect immediately — like software variables. Variables are used for
+# effect immediately -- like software variables. Variables are used for
 # intermediate calculations within a process.
 #
 #   signal   clk     : std_logic;                    -- physical wire
@@ -254,7 +257,7 @@ constraint = LPAREN expression ( "to" | "downto" ) expression RPAREN
 # ============================================================================
 #
 # Everything in the statement region of an architecture executes
-# CONCURRENTLY — all statements are "running" simultaneously, just
+# CONCURRENTLY -- all statements are "running" simultaneously, just
 # like gates on a circuit board are all operating at once.
 #
 # This is the fundamental difference from software: there is no
@@ -283,8 +286,8 @@ waveform_element = expression ;
 # process itself is concurrent with everything outside it.
 #
 # The sensitivity list specifies which signals trigger the process:
-#   process (clk)          — re-evaluate when clk changes
-#   process (a, b, sel)    — re-evaluate when any input changes
+#   process (clk)          -- re-evaluate when clk changes
+#   process (a, b, sel)    -- re-evaluate when any input changes
 #
 # Sequential logic (flip-flop):
 #   process (clk)
@@ -338,10 +341,10 @@ sequential_statement = signal_assignment_seq
 #   q <= d;
 # Note: even though this looks identical to concurrent signal assignment,
 # it behaves differently. Inside a process, multiple assignments to the
-# same signal are legal — only the LAST one takes effect.
+# same signal are legal -- only the LAST one takes effect.
 signal_assignment_seq = NAME LESS_EQUALS waveform SEMICOLON ;
 
-# Variable assignment (:=) — immediate effect:
+# Variable assignment (:=) -- immediate effect:
 #   temp := a + b;
 variable_assignment = NAME VAR_ASSIGN expression SEMICOLON ;
 
@@ -368,7 +371,7 @@ if_statement = "if" expression "then"
 #
 # Note: VHDL uses => (arrow) after when, not : (colon) like Verilog.
 # Also, VHDL requires "when others" (like Verilog's "default") to
-# cover all possible values — incomplete case statements are errors.
+# cover all possible values -- incomplete case statements are errors.
 case_statement = "case" expression "is"
                  { "when" choices ARROW { sequential_statement } }
                  "end" "case" SEMICOLON ;
@@ -402,7 +405,7 @@ null_statement   = "null" SEMICOLON ;
 # Component Declaration and Instantiation
 # ============================================================================
 #
-# Components are VHDL's mechanism for structural design — connecting
+# Components are VHDL's mechanism for structural design -- connecting
 # instances of other entities together, like placing ICs on a board.
 #
 # Step 1: Declare the component (what it looks like):
@@ -442,7 +445,7 @@ association_element = [ NAME ARROW ] expression
 # Generate Statements
 # ============================================================================
 #
-# Generate creates parameterized, replicated hardware — like Verilog's
+# Generate creates parameterized, replicated hardware -- like Verilog's
 # generate blocks.
 #
 # For-generate (creates N copies):
@@ -577,7 +580,7 @@ expression = logical_expr ;
 # VHDL also allows chaining the SAME operator: a and b and c
 # is legal, but a and b or c is not. We approximate this by
 # allowing repetition (which is slightly more permissive than
-# the IEEE spec — semantic analysis would catch mixed operators).
+# the IEEE spec -- semantic analysis would catch mixed operators).
 logical_expr = relation [ logical_op relation ] ;
 logical_op   = "and" | "or" | "xor" | "nand" | "nor" | "xnor" ;
 
@@ -629,8 +632,8 @@ primary = NUMBER
         | "null" ;
 
 # Aggregates: construct composite values.
-#   (others => '0')                  — fill with zeros
-#   (0 => '1', others => '0')       — set bit 0, clear rest
-#   (a, b, c)                       — positional
+#   (others => '0')                  -- fill with zeros
+#   (0 => '1', others => '0')       -- set bit 0, clear rest
+#   (a, b, c)                       -- positional
 aggregate = LPAREN element_association { COMMA element_association } RPAREN ;
 element_association = [ choices ARROW ] expression ;

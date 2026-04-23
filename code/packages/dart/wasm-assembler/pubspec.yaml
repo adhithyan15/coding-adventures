@@ -1,0 +1,16 @@
+name: coding_adventures_wasm_assembler
+description: >
+  Assembles a small Dart instruction DSL into MVP WebAssembly bytecode.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_wasm_leb128:
+    path: ../wasm-leb128
+
+dev_dependencies:
+  test: ^1.25.0

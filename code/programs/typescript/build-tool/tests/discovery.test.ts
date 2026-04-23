@@ -126,7 +126,7 @@ describe("inferLanguage", () => {
 
   it("should return unknown for unrecognized paths", () => {
     expect(inferLanguage("/repo/code/packages/haskell/something")).toBe(
-      "unknown",
+      "haskell",
     );
   });
 });

@@ -82,6 +82,13 @@ export interface TextMetricsLike {
   readonly width: number;
   readonly actualBoundingBoxAscent: number;
   readonly actualBoundingBoxDescent: number;
+  // Optional: populated by modern Chrome/Safari/Firefox. These are the font-
+  // wide ascent/descent (constant per font+size) rather than the per-string
+  // glyph envelope. Preferred for line-height and baseline math because
+  // measuring "Hi" and "hi" against a font-wide ascent gives the same line
+  // height — matching what browsers do internally.
+  readonly fontBoundingBoxAscent?: number;
+  readonly fontBoundingBoxDescent?: number;
 }
 
 // ============================================================================
@@ -118,15 +125,27 @@ function measureSingleLine(
 ): { width: number; height: number } {
   ctx.font = fontSpecToCss(font);
   const metrics = ctx.measureText(text);
-  // Note: typeof NaN === "number" — must also guard with isNaN.
-  const ascent = metrics.actualBoundingBoxAscent;
-  const descent = metrics.actualBoundingBoxDescent;
+  // Prefer fontBoundingBox* — constant per font, so two words in the same font
+  // report the same height regardless of which letters they contain. Using
+  // actualBoundingBox* would make "Heading" (has 'd' ascender) taller than
+  // "on" (x-height only), which misaligns their baselines on a shared line.
+  const fontAscent = metrics.fontBoundingBoxAscent;
+  const fontDescent = metrics.fontBoundingBoxDescent;
+  const actualAscent = metrics.actualBoundingBoxAscent;
+  const actualDescent = metrics.actualBoundingBoxDescent;
+
   const height =
-    typeof ascent === "number" && !isNaN(ascent) &&
-    typeof descent === "number" && !isNaN(descent)
-      ? ascent + descent
-      : font.size * font.lineHeight; // fallback if metrics unavailable
+    isFiniteNum(fontAscent) && isFiniteNum(fontDescent)
+      ? fontAscent + fontDescent
+      : isFiniteNum(actualAscent) && isFiniteNum(actualDescent)
+        ? actualAscent + actualDescent
+        : font.size * font.lineHeight; // last-resort fallback
+
   return { width: metrics.width, height };
+}
+
+function isFiniteNum(v: number | undefined): v is number {
+  return typeof v === "number" && !isNaN(v) && isFinite(v);
 }
 
 /**

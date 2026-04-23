@@ -224,6 +224,19 @@ class TestTokenGrammar < Minitest::Test
     assert_includes error.message, "Missing value"
   end
 
+  def test_parse_layout_mode_directive
+    source = <<~TOKENS
+      mode: layout
+      NAME = /[a-z]+/
+      layout_keywords:
+        let
+        where
+    TOKENS
+    grammar = GT.parse_token_grammar(source)
+    assert_equal "layout", grammar.mode
+    assert_equal %w[let where], grammar.layout_keywords
+  end
+
   # -----------------------------------------------------------------------
   # Extended format: skip section
   # -----------------------------------------------------------------------
@@ -371,6 +384,19 @@ class TestTokenGrammar < Minitest::Test
     grammar = GT::TokenGrammar.new(mode: "indentation")
     issues = GT.validate_token_grammar(grammar)
     refute issues.any? { |i| i.include?("Unknown lexer mode") }
+  end
+
+  def test_validate_layout_mode_requires_layout_keywords
+    grammar = GT::TokenGrammar.new(mode: "layout")
+    issues = GT.validate_token_grammar(grammar)
+    assert issues.any? { |i| i.include?("layout_keywords") }
+  end
+
+  def test_validate_layout_mode_ok
+    grammar = GT::TokenGrammar.new(mode: "layout", layout_keywords: ["let"])
+    issues = GT.validate_token_grammar(grammar)
+    refute issues.any? { |i| i.include?("Unknown lexer mode") }
+    refute issues.any? { |i| i.include?("layout_keywords") }
   end
 
   def test_validate_skip_definitions
@@ -834,6 +860,13 @@ class TestTokenGrammar < Minitest::Test
     # "context_keywords" should also be a reserved group name.
     error = assert_raises(GT::TokenGrammarError) do
       GT.parse_token_grammar("TEXT = /abc/\ngroup context_keywords:\n  FOO = /x/\n")
+    end
+    assert_includes error.message, "Reserved group name"
+  end
+
+  def test_layout_keywords_reserved_group_name
+    error = assert_raises(GT::TokenGrammarError) do
+      GT.parse_token_grammar("TEXT = /abc/\ngroup layout_keywords:\n  FOO = /x/\n")
     end
     assert_includes error.message, "Reserved group name"
   end

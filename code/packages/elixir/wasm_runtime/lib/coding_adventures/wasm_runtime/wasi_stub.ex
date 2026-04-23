@@ -35,10 +35,33 @@ defmodule CodingAdventures.WasmRuntime.WasiConfig do
 
   defstruct args: [],
             env: %{},
+            stdin: nil,
             stdout: nil,
             stderr: nil,
             clock: CodingAdventures.WasmRuntime.SystemClock,
             random: CodingAdventures.WasmRuntime.SystemRandom
+end
+
+defmodule CodingAdventures.WasmRuntime.WasiHost do
+  @moduledoc """
+  Preferred alias for the WASI host helper surface.
+
+  `WasiStub` remains available for backwards compatibility, but new code
+  should use `WasiHost` to reflect that this module now exposes real host
+  behavior rather than a pure placeholder.
+  """
+
+  alias CodingAdventures.WasmRuntime.WasiStub
+
+  @spec host_functions() :: map()
+  defdelegate host_functions(), to: WasiStub
+
+  @spec host_functions(CodingAdventures.WasmRuntime.WasiConfig.t()) :: map()
+  defdelegate host_functions(config), to: WasiStub
+
+  @spec call_with_memory(map(), String.t(), [CodingAdventures.WasmExecution.Values.wasm_value()], CodingAdventures.WasmExecution.LinearMemory.t()) ::
+          {[CodingAdventures.WasmExecution.Values.wasm_value()], CodingAdventures.WasmExecution.LinearMemory.t()}
+  defdelegate call_with_memory(host_fns, func_name, wasm_args, memory), to: WasiStub
 end
 
 defmodule CodingAdventures.WasmRuntime.WasiStub do
@@ -131,9 +154,12 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
   alias CodingAdventures.WasmExecution.{Values, LinearMemory}
   alias CodingAdventures.WasmRuntime.WasiConfig
 
-  @ebadf_fd 8 # errno 8  = EBADF (bad file descriptor)
-  @einval 28  # errno 28 = EINVAL (invalid argument)
-  @esuccess 0 # errno 0  = success
+  # errno 8  = EBADF (bad file descriptor)
+  @ebadf_fd 8
+  # errno 28 = EINVAL (invalid argument)
+  @einval 28
+  # errno 0  = success
+  @esuccess 0
 
   # ===========================================================================
   # Public API
@@ -182,48 +208,36 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
   """
   @spec host_functions(WasiConfig.t()) :: map()
   def host_functions(%WasiConfig{} = config) do
+    stdin_reader = build_stdin_reader(config.stdin)
+
     %{
       # --- Tier 1: Unconditional stubs ---
-      {"wasi_snapshot_preview1", "proc_exit"} =>
-        fn _args -> [] end,
-
-      {"wasi_snapshot_preview1", "fd_write"} =>
-        fn _args -> [Values.i32(@ebadf_fd)] end,
-
-      {"wasi_snapshot_preview1", "fd_read"} =>
-        fn _args -> [Values.i32(@ebadf_fd)] end,
-
-      {"wasi_snapshot_preview1", "fd_close"} =>
-        fn _args -> [Values.i32(@ebadf_fd)] end,
-
-      {"wasi_snapshot_preview1", "fd_seek"} =>
-        fn _args -> [Values.i32(@ebadf_fd)] end,
+      {"wasi_snapshot_preview1", "proc_exit"} => fn _args -> [] end,
+      {"wasi_snapshot_preview1", "fd_write"} => fn args -> handle_fd_write(args, config) end,
+      {"wasi_snapshot_preview1", "fd_read"} => fn args ->
+        handle_fd_read(args, config, stdin_reader)
+      end,
+      {"wasi_snapshot_preview1", "fd_close"} => fn _args -> [Values.i32(@ebadf_fd)] end,
+      {"wasi_snapshot_preview1", "fd_seek"} => fn _args -> [Values.i32(@ebadf_fd)] end,
 
       # --- Tier 3: Memory-writing functions ---
       # These are called via call_with_memory/4 in tests.
-      {"wasi_snapshot_preview1", "args_sizes_get"} =>
-        fn args -> handle_args_sizes_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "args_get"} =>
-        fn args -> handle_args_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "environ_sizes_get"} =>
-        fn args -> handle_environ_sizes_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "environ_get"} =>
-        fn args -> handle_environ_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "clock_res_get"} =>
-        fn args -> handle_clock_res_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "clock_time_get"} =>
-        fn args -> handle_clock_time_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "random_get"} =>
-        fn args -> handle_random_get(args, config) end,
-
-      {"wasi_snapshot_preview1", "sched_yield"} =>
-        fn _args -> [Values.i32(@esuccess)] end
+      {"wasi_snapshot_preview1", "args_sizes_get"} => fn args ->
+        handle_args_sizes_get(args, config)
+      end,
+      {"wasi_snapshot_preview1", "args_get"} => fn args -> handle_args_get(args, config) end,
+      {"wasi_snapshot_preview1", "environ_sizes_get"} => fn args ->
+        handle_environ_sizes_get(args, config)
+      end,
+      {"wasi_snapshot_preview1", "environ_get"} => fn args -> handle_environ_get(args, config) end,
+      {"wasi_snapshot_preview1", "clock_res_get"} => fn args ->
+        handle_clock_res_get(args, config)
+      end,
+      {"wasi_snapshot_preview1", "clock_time_get"} => fn args ->
+        handle_clock_time_get(args, config)
+      end,
+      {"wasi_snapshot_preview1", "random_get"} => fn args -> handle_random_get(args, config) end,
+      {"wasi_snapshot_preview1", "sched_yield"} => fn _args -> [Values.i32(@esuccess)] end
     }
   end
 
@@ -280,9 +294,10 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
 
     argc = length(args)
     # Each arg gets a null terminator, so buf size = sum of (len + 1)
-    buf_size = Enum.reduce(args, 0, fn arg, total ->
-      total + byte_size(arg) + 1
-    end)
+    buf_size =
+      Enum.reduce(args, 0, fn arg, total ->
+        total + byte_size(arg) + 1
+      end)
 
     mem1 = LinearMemory.store_i32(memory, argc_ptr, argc)
     mem2 = LinearMemory.store_i32(mem1, buf_size_ptr, buf_size)
@@ -321,9 +336,10 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
         null_terminated = arg <> <<0>>
         bytes = :binary.bin_to_list(null_terminated)
 
-        mem3 = Enum.reduce(Enum.with_index(bytes), mem2, fn {byte_val, i}, m ->
-          LinearMemory.store_i32_8(m, offset + i, byte_val)
-        end)
+        mem3 =
+          Enum.reduce(Enum.with_index(bytes), mem2, fn {byte_val, i}, m ->
+            LinearMemory.store_i32_8(m, offset + i, byte_val)
+          end)
 
         {mem3, offset + byte_size(null_terminated)}
       end)
@@ -348,10 +364,11 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
 
     env_count = map_size(env)
     # Each env var is encoded as "KEY=VALUE\0"
-    buf_size = Enum.reduce(env, 0, fn {key, value}, total ->
-      total + byte_size(key) + 1 + byte_size(value) + 1
-      # "KEY" + "=" + "VALUE" + "\0"
-    end)
+    buf_size =
+      Enum.reduce(env, 0, fn {key, value}, total ->
+        total + byte_size(key) + 1 + byte_size(value) + 1
+        # "KEY" + "=" + "VALUE" + "\0"
+      end)
 
     mem1 = LinearMemory.store_i32(memory, count_ptr, env_count)
     mem2 = LinearMemory.store_i32(mem1, buf_size_ptr, buf_size)
@@ -388,9 +405,10 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
         entry = key <> "=" <> value <> <<0>>
         bytes = :binary.bin_to_list(entry)
 
-        mem3 = Enum.reduce(Enum.with_index(bytes), mem2, fn {byte_val, i}, m ->
-          LinearMemory.store_i32_8(m, offset + i, byte_val)
-        end)
+        mem3 =
+          Enum.reduce(Enum.with_index(bytes), mem2, fn {byte_val, i}, m ->
+            LinearMemory.store_i32_8(m, offset + i, byte_val)
+          end)
 
         {mem3, offset + byte_size(entry)}
       end)
@@ -442,11 +460,12 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
         clock_id = Values.as_i32(id_val)
         time_ptr = Values.as_i32(time_ptr_val)
 
-        ns_result = case clock_id do
-          id when id in [0, 2, 3] -> clock_mod.realtime_ns()
-          1 -> clock_mod.monotonic_ns()
-          _ -> :einval
-        end
+        ns_result =
+          case clock_id do
+            id when id in [0, 2, 3] -> clock_mod.realtime_ns()
+            1 -> clock_mod.monotonic_ns()
+            _ -> :einval
+          end
 
         case ns_result do
           :einval ->
@@ -480,9 +499,10 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
     rand_bytes = random_mod.fill_bytes(buf_len)
     bytes = :binary.bin_to_list(rand_bytes)
 
-    final_mem = Enum.reduce(Enum.with_index(bytes), memory, fn {byte_val, i}, mem ->
-      LinearMemory.store_i32_8(mem, buf_ptr + i, byte_val)
-    end)
+    final_mem =
+      Enum.reduce(Enum.with_index(bytes), memory, fn {byte_val, i}, mem ->
+        LinearMemory.store_i32_8(mem, buf_ptr + i, byte_val)
+      end)
 
     {[Values.i32(@esuccess)], final_mem}
   end
@@ -490,4 +510,118 @@ defmodule CodingAdventures.WasmRuntime.WasiStub do
   defp handle_random_get(plain_args, _config) when is_list(plain_args) do
     [Values.i32(@esuccess)]
   end
+
+  # ===========================================================================
+  # Runtime fd_write / fd_read support
+  # ===========================================================================
+
+  defp handle_fd_write({wasm_args, memory}, %WasiConfig{} = config) do
+    [fd_val, iovs_ptr_val, iovs_len_val, nwritten_ptr_val] = wasm_args
+    fd = Values.as_i32(fd_val)
+    iovs_ptr = Values.as_i32(iovs_ptr_val)
+    iovs_len = Values.as_i32(iovs_len_val)
+    nwritten_ptr = Values.as_i32(nwritten_ptr_val)
+
+    {text, total_written} =
+      if iovs_len > 0 do
+        Enum.reduce(0..(iovs_len - 1), {"", 0}, fn i, {acc, total} ->
+          buf_ptr = LinearMemory.load_i32(memory, iovs_ptr + i * 8) |> Bitwise.band(0xFFFFFFFF)
+
+          buf_len =
+            LinearMemory.load_i32(memory, iovs_ptr + i * 8 + 4) |> Bitwise.band(0xFFFFFFFF)
+
+          bytes =
+            if buf_len > 0 do
+              for j <- 0..(buf_len - 1), do: LinearMemory.load_i32_8u(memory, buf_ptr + j)
+            else
+              []
+            end
+
+          chunk = :binary.list_to_bin(bytes)
+          {acc <> chunk, total + buf_len}
+        end)
+      else
+        {"", 0}
+      end
+
+    case fd do
+      1 -> if is_function(config.stdout, 1), do: config.stdout.(text)
+      2 -> if is_function(config.stderr, 1), do: config.stderr.(text)
+      _ -> :ok
+    end
+
+    memory = LinearMemory.store_i32(memory, nwritten_ptr, total_written)
+    errno = if fd in [1, 2], do: @esuccess, else: @ebadf_fd
+    {[Values.i32(errno)], memory}
+  end
+
+  defp handle_fd_write(plain_args, _config) when is_list(plain_args) do
+    [Values.i32(@ebadf_fd)]
+  end
+
+  defp handle_fd_read({wasm_args, memory}, _config, stdin_reader) do
+    [fd_val, iovs_ptr_val, iovs_len_val, nread_ptr_val] = wasm_args
+    fd = Values.as_i32(fd_val)
+    iovs_ptr = Values.as_i32(iovs_ptr_val)
+    iovs_len = Values.as_i32(iovs_len_val)
+    nread_ptr = Values.as_i32(nread_ptr_val)
+
+    if fd != 0 do
+      {[Values.i32(@ebadf_fd)], memory}
+    else
+      {memory, total_read, _done} =
+        if iovs_len > 0 do
+          Enum.reduce(0..(iovs_len - 1), {memory, 0, false}, fn i, {mem, total, done?} ->
+            if done? do
+              {mem, total, true}
+            else
+              buf_ptr = LinearMemory.load_i32(mem, iovs_ptr + i * 8) |> Bitwise.band(0xFFFFFFFF)
+
+              buf_len =
+                LinearMemory.load_i32(mem, iovs_ptr + i * 8 + 4) |> Bitwise.band(0xFFFFFFFF)
+
+              chunk = stdin_reader.(buf_len)
+              bytes = :binary.bin_to_list(chunk)
+
+              updated_mem =
+                Enum.reduce(Enum.with_index(bytes), mem, fn {byte_val, j}, acc ->
+                  LinearMemory.store_i32_8(acc, buf_ptr + j, byte_val)
+                end)
+
+              chunk_len = byte_size(chunk)
+              {updated_mem, total + chunk_len, chunk_len < buf_len}
+            end
+          end)
+        else
+          {memory, 0, true}
+        end
+
+      memory = LinearMemory.store_i32(memory, nread_ptr, total_read)
+      {[Values.i32(@esuccess)], memory}
+    end
+  end
+
+  defp handle_fd_read(plain_args, _config, _stdin_reader) when is_list(plain_args) do
+    [Values.i32(@ebadf_fd)]
+  end
+
+  defp build_stdin_reader(nil), do: fn _max_bytes -> <<>> end
+
+  defp build_stdin_reader(stdin) when is_binary(stdin) do
+    {:ok, pid} = Agent.start_link(fn -> 0 end)
+
+    fn max_bytes ->
+      Agent.get_and_update(pid, fn offset ->
+        if offset >= byte_size(stdin) do
+          {<<>>, offset}
+        else
+          size = min(max_bytes, byte_size(stdin) - offset)
+          chunk = binary_part(stdin, offset, size)
+          {chunk, offset + size}
+        end
+      end)
+    end
+  end
+
+  defp build_stdin_reader(stdin) when is_function(stdin, 1), do: stdin
 end

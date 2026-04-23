@@ -72,6 +72,7 @@ defmodule CodingAdventures.AlgolParser do
   # file. Walking up: lib → algol_parser → elixir → packages → code → grammars.
   @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
                 |> Path.expand()
+  @valid_versions ~w(algol60)
 
   @doc """
   Parse ALGOL 60 source code into an AST.
@@ -89,11 +90,11 @@ defmodule CodingAdventures.AlgolParser do
       "program"
 
   """
-  @spec parse(String.t()) :: {:ok, ASTNode.t()} | {:error, String.t()}
-  def parse(source) do
-    grammar = get_grammar()
+  @spec parse(String.t(), String.t()) :: {:ok, ASTNode.t()} | {:error, String.t()}
+  def parse(source, version \\ "algol60") do
+    grammar = get_grammar(version)
 
-    case AlgolLexer.tokenize(source) do
+    case AlgolLexer.tokenize(source, version) do
       {:ok, tokens} -> GrammarParser.parse(tokens, grammar)
       {:error, msg} -> {:error, msg}
     end
@@ -105,20 +106,31 @@ defmodule CodingAdventures.AlgolParser do
   Useful for inspecting the grammar rules or for passing the grammar
   directly to `GrammarParser.parse/2` when you already hold a token list.
   """
-  @spec create_parser() :: ParserGrammar.t()
-  def create_parser do
-    grammar_path = Path.join(@grammars_dir, "algol.grammar")
+  @spec create_parser(String.t()) :: ParserGrammar.t()
+  def create_parser(version \\ "algol60") do
+    grammar_path = resolve_grammar_path(version)
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end
 
+  defp resolve_grammar_path(version) when version in @valid_versions do
+    Path.join([@grammars_dir, "algol", "#{version}.grammar"])
+  end
+
+  defp resolve_grammar_path(version) do
+    raise ArgumentError,
+          "Unknown ALGOL version #{inspect(version)}. Valid versions: #{Enum.join(@valid_versions, ", ")}"
+  end
+
   # Cache the parsed ParserGrammar in a persistent_term. The grammar is
   # immutable once loaded, so persistent_term gives lock-free concurrent reads.
-  defp get_grammar do
-    case :persistent_term.get({__MODULE__, :grammar}, nil) do
+  defp get_grammar(version) do
+    key = {__MODULE__, :grammar, version}
+
+    case :persistent_term.get(key, nil) do
       nil ->
-        grammar = create_parser()
-        :persistent_term.put({__MODULE__, :grammar}, grammar)
+        grammar = create_parser(version)
+        :persistent_term.put(key, grammar)
         grammar
 
       grammar ->
