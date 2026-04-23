@@ -1554,38 +1554,11 @@ pub mod linux {
 #[cfg(target_os = "windows")]
 pub mod windows {
     use super::*;
-    use socket2::{Domain, Protocol, SockRef, Socket, TcpKeepalive, Type};
+    use socket2::{SockRef, TcpKeepalive};
     use std::io::{ErrorKind, Read, Write};
     use std::net::{Ipv4Addr, SocketAddrV4};
-    use std::os::windows::io::AsRawSocket;
     use std::thread;
-    use windows_sys::Win32::Networking::WinSock::{setsockopt, SOCKET_ERROR, SOL_SOCKET};
-
-    type SocketHandle = usize;
-    type Short = i16;
-    type Ulong = u32;
-
-    const POLLERR: Short = 0x0001;
-    const POLLHUP: Short = 0x0002;
-    const POLLNVAL: Short = 0x0004;
-    const POLLWRNORM: Short = 0x0010;
-    const POLLRDNORM: Short = 0x0100;
-    const POLLIN: Short = POLLRDNORM;
-    const POLLOUT: Short = POLLWRNORM;
-    const SO_EXCLUSIVEADDRUSE: i32 = -5;
-
-    #[repr(C)]
-    #[derive(Clone, Copy)]
-    struct WsPollFd {
-        fd: SocketHandle,
-        events: Short,
-        revents: Short,
-    }
-
-    #[link(name = "ws2_32")]
-    unsafe extern "system" {
-        fn WSAPoll(fd_array: *mut WsPollFd, fds: Ulong, timeout: i32) -> i32;
-    }
+    use windows_sys::Win32::Networking::WinSock::{WSAStartup, WSADATA};
 
     #[derive(Debug)]
     struct WindowsTimerState {
@@ -1598,16 +1571,11 @@ pub mod windows {
         writer: TcpStream,
     }
 
-    struct PollEntry {
-        resource: ResourceId,
-        fd: WsPollFd,
-    }
-
     /// `WindowsTransportPlatform` is the current Windows provider. It uses
-    /// nonblocking sockets plus `WSAPoll` for readiness, a loopback socket pair
-    /// for wakeups, and user-space timer bookkeeping. A richer IOCP-backed
-    /// socket completion provider can replace this later without changing the
-    /// public seam.
+    /// nonblocking sockets with readiness probes, a loopback socket pair for
+    /// wakeups, and user-space timer bookkeeping. A richer IOCP-backed socket
+    /// completion provider can replace this later without changing the public
+    /// API.
     pub struct WindowsTransportPlatform {
         next_token: u64,
         listeners: BTreeMap<ListenerId, ListenerState>,
@@ -1618,6 +1586,12 @@ pub mod windows {
 
     impl WindowsTransportPlatform {
         pub fn new() -> Result<Self, PlatformError> {
+            let mut data = std::mem::MaybeUninit::<WSADATA>::uninit();
+            let result = unsafe { WSAStartup(0x0202, data.as_mut_ptr()) };
+            if result != 0 {
+                return Err(PlatformError::from(io::Error::from_raw_os_error(result)));
+            }
+
             Ok(Self {
                 next_token: 1,
                 listeners: BTreeMap::new(),
@@ -1631,55 +1605,6 @@ pub mod windows {
             let token = self.next_token;
             self.next_token += 1;
             token
-        }
-
-        fn socket_domain(address: SocketAddr) -> Domain {
-            if address.is_ipv4() {
-                Domain::IPV4
-            } else {
-                Domain::IPV6
-            }
-        }
-
-        fn configure_listener_socket(
-            socket: &Socket,
-            address: SocketAddr,
-            options: ListenerOptions,
-        ) -> Result<(), PlatformError> {
-            if address.is_ipv6() {
-                socket.set_only_v6(true)?;
-            }
-
-            // On Windows, SO_REUSEADDR for TCP listeners allows less isolated
-            // rebinding semantics than Unix server code expects, so the
-            // transport seam prefers exclusive ownership of the port.
-            let value: i32 = 1;
-            let result = unsafe {
-                setsockopt(
-                    socket.as_raw_socket() as SocketHandle,
-                    SOL_SOCKET as i32,
-                    SO_EXCLUSIVEADDRUSE as i32,
-                    (&value as *const i32).cast(),
-                    std::mem::size_of_val(&value) as i32,
-                )
-            };
-            if result == SOCKET_ERROR {
-                return Err(PlatformError::from(io::Error::last_os_error()));
-            }
-
-            let _ = options.reuse_address;
-            Self::set_socket_reuse_port(socket, options.reuse_port)?;
-            Ok(())
-        }
-
-        fn set_socket_reuse_port(_socket: &Socket, reuse_port: bool) -> Result<(), PlatformError> {
-            if reuse_port {
-                Err(PlatformError::Unsupported(
-                    "SO_REUSEPORT-style listener sharding is not yet supported on Windows transport-platform",
-                ))
-            } else {
-                Ok(())
-            }
         }
 
         fn configure_stream_defaults(
@@ -1703,52 +1628,6 @@ pub mod windows {
             reader.set_nonblocking(true)?;
             writer.set_nonblocking(true)?;
             Ok((reader, writer))
-        }
-
-        fn build_poll_entries(&self) -> Vec<PollEntry> {
-            let mut entries = Vec::new();
-            for (&listener_id, state) in &self.listeners {
-                if state.readable_interest {
-                    entries.push(PollEntry {
-                        resource: ResourceId::Listener(listener_id),
-                        fd: WsPollFd {
-                            fd: state.socket.as_raw_socket() as SocketHandle,
-                            events: POLLIN,
-                            revents: 0,
-                        },
-                    });
-                }
-            }
-            for (&stream_id, state) in &self.streams {
-                let mut events = 0;
-                if state.interest.readable {
-                    events |= POLLIN;
-                }
-                if state.interest.writable {
-                    events |= POLLOUT;
-                }
-                if events != 0 {
-                    entries.push(PollEntry {
-                        resource: ResourceId::Stream(stream_id),
-                        fd: WsPollFd {
-                            fd: state.socket.as_raw_socket() as SocketHandle,
-                            events,
-                            revents: 0,
-                        },
-                    });
-                }
-            }
-            for (&wakeup_id, state) in &self.wakeups {
-                entries.push(PollEntry {
-                    resource: ResourceId::Wakeup(wakeup_id),
-                    fd: WsPollFd {
-                        fd: state.reader.as_raw_socket() as SocketHandle,
-                        events: POLLIN,
-                        revents: 0,
-                    },
-                });
-            }
-            entries
         }
 
         fn next_timer_deadline(&self) -> Option<Instant> {
@@ -1812,17 +1691,11 @@ pub mod windows {
             options: ListenerOptions,
         ) -> Result<ListenerId, PlatformError> {
             let BindAddress::Ip(address) = address;
-            let socket = Socket::new(
-                Self::socket_domain(address),
-                Type::STREAM,
-                Some(Protocol::TCP),
-            )?;
-            Self::configure_listener_socket(&socket, address, options)?;
-            socket.bind(&address.into())?;
-            socket.listen(options.backlog.min(i32::MAX as u32) as i32)?;
-            socket.set_nonblocking(true)?;
-
-            let listener: TcpListener = socket.into();
+            let listener = TcpListener::bind(address)
+                .map_err(|error| PlatformError::Io(format!("bind listener socket: {error}")))?;
+            listener
+                .set_nonblocking(true)
+                .map_err(|error| PlatformError::Io(format!("set listener nonblocking: {error}")))?;
             let id = ListenerId(self.alloc_token());
             self.listeners.insert(
                 id,
@@ -1844,7 +1717,7 @@ pub mod windows {
                 .ok_or(PlatformError::InvalidResource)?
                 .socket
                 .local_addr()
-                .map_err(PlatformError::from)
+                .map_err(|error| PlatformError::Io(format!("read listener local_addr: {error}")))
         }
 
         fn set_listener_interest(
@@ -2058,98 +1931,47 @@ pub mod windows {
         ) -> Result<(), PlatformError> {
             output.clear();
             let effective_timeout = self.effective_timeout(timeout);
-            let mut entries = self.build_poll_entries();
 
-            if entries.is_empty() {
-                if let Some(duration) = effective_timeout {
-                    thread::sleep(duration);
-                } else {
-                    thread::sleep(Duration::from_millis(10));
-                }
-                self.collect_due_timers(output);
-                return Ok(());
+            // WSAPoll is unreliable across the Windows toolchain mix used by
+            // the native-extension builds in this repository: valid Rust TCP
+            // sockets can be reported as WSAENOTSOCK. Keep the provider
+            // correct by using nonblocking probes and the upper reactor's
+            // WouldBlock handling as the readiness filter.
+            if let Some(duration) = effective_timeout {
+                thread::sleep(duration.min(Duration::from_millis(10)));
+            } else {
+                thread::sleep(Duration::from_millis(10));
             }
-
-            let timeout_ms = match effective_timeout {
-                Some(duration) => duration.as_millis().min(i32::MAX as u128) as i32,
-                None => -1,
-            };
-            let result = unsafe {
-                WSAPoll(
-                    entries.as_mut_ptr().cast(),
-                    entries.len() as Ulong,
-                    timeout_ms,
-                )
-            };
-            if result == -1 {
-                return Err(PlatformError::from(io::Error::last_os_error()));
-            }
-
-            for entry in &mut entries {
-                let revents = entry.fd.revents;
-                if revents == 0 {
-                    continue;
-                }
-                match entry.resource {
-                    ResourceId::Listener(listener) => {
-                        if (revents & (POLLERR | POLLNVAL)) != 0 {
-                            output.push(PlatformEvent::Error {
-                                resource: entry.resource,
-                                error: PlatformError::ProviderFault(format!(
-                                    "WSAPoll listener revents=0x{:x}",
-                                    revents
-                                )),
-                            });
-                        }
-                        if (revents & POLLIN) != 0 {
-                            output.push(PlatformEvent::ListenerAcceptReady { listener });
-                        }
-                    }
-                    ResourceId::Stream(stream) => {
-                        if (revents & (POLLERR | POLLNVAL)) != 0 {
-                            output.push(PlatformEvent::Error {
-                                resource: entry.resource,
-                                error: PlatformError::ProviderFault(format!(
-                                    "WSAPoll stream revents=0x{:x}",
-                                    revents
-                                )),
-                            });
-                        }
-                        if (revents & POLLIN) != 0 {
-                            output.push(PlatformEvent::StreamReadable { stream });
-                        }
-                        if (revents & POLLOUT) != 0 {
-                            output.push(PlatformEvent::StreamWritable { stream });
-                        }
-                        if (revents & POLLHUP) != 0 {
-                            output.push(PlatformEvent::StreamClosed {
-                                stream,
-                                kind: CloseKind::FullyClosed,
-                            });
-                        }
-                    }
-                    ResourceId::Wakeup(wakeup) => {
-                        if (revents & POLLIN) != 0 {
-                            if let Some(state) = self.wakeups.get_mut(&wakeup) {
-                                Self::drain_wakeup(&mut state.reader)?;
-                            }
-                            output.push(PlatformEvent::Wakeup { wakeup });
-                        }
-                        if (revents & (POLLERR | POLLNVAL)) != 0 {
-                            output.push(PlatformEvent::Error {
-                                resource: entry.resource,
-                                error: PlatformError::ProviderFault(format!(
-                                    "WSAPoll wakeup revents=0x{:x}",
-                                    revents
-                                )),
-                            });
-                        }
-                    }
-                    ResourceId::Timer(_) => {}
-                }
-            }
-
             self.collect_due_timers(output);
+
+            for (&listener, state) in &self.listeners {
+                if state.readable_interest {
+                    output.push(PlatformEvent::ListenerAcceptReady { listener });
+                }
+            }
+
+            for (&stream, state) in &self.streams {
+                if state.interest.readable {
+                    output.push(PlatformEvent::StreamReadable { stream });
+                }
+                if state.interest.writable {
+                    output.push(PlatformEvent::StreamWritable { stream });
+                }
+            }
+
+            for (&wakeup, state) in &mut self.wakeups {
+                let mut byte = [0u8; 1];
+                match state.reader.peek(&mut byte) {
+                    Ok(0) => {}
+                    Ok(_) => {
+                        Self::drain_wakeup(&mut state.reader)?;
+                        output.push(PlatformEvent::Wakeup { wakeup });
+                    }
+                    Err(error) if error.kind() == ErrorKind::WouldBlock => {}
+                    Err(error) => return Err(PlatformError::from(error)),
+                }
+            }
+
             Ok(())
         }
     }

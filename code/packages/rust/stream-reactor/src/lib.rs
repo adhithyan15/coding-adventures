@@ -251,9 +251,19 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         F: Fn(StreamConnectionInfo, &mut S, &[u8]) -> StreamHandlerResult + Send + Sync + 'static,
         C: Fn(StreamConnectionInfo, S) + Send + Sync + 'static,
     {
-        let listener = platform.bind_listener(address, options.listener)?;
-        let listener_addr = platform.local_addr(listener)?;
-        platform.set_listener_interest(listener, true)?;
+        let listener = platform
+            .bind_listener(address, options.listener)
+            .map_err(|error| {
+                PlatformError::ProviderFault(format!("bind listener resource: {error}"))
+            })?;
+        let listener_addr = platform.local_addr(listener).map_err(|error| {
+            PlatformError::ProviderFault(format!("read listener address: {error}"))
+        })?;
+        platform
+            .set_listener_interest(listener, true)
+            .map_err(|error| {
+                PlatformError::ProviderFault(format!("enable listener interest: {error}"))
+            })?;
 
         Ok(Self {
             platform,
