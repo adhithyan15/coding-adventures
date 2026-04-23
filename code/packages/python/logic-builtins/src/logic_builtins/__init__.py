@@ -38,6 +38,7 @@ from logic_builtins.builtins import (
     fd_mulo,
     fd_neqo,
     fd_subo,
+    fd_sumo,
     findallo,
     floordiv,
     forallo,
@@ -107,6 +108,7 @@ __all__ = [
     "fd_mulo",
     "fd_neqo",
     "fd_subo",
+    "fd_sumo",
     "dynamico",
     "failo",
     "FiniteDomainConstraint",
@@ -149,4 +151,4 @@ __all__ = [
     "varo",
 ]
 
-__version__ = "0.12.0"
+__version__ = "0.13.0"
