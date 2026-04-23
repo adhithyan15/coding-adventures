@@ -577,6 +577,26 @@ def test_render_portable_score_mixes_tracks_and_chords() -> None:
     assert any(rendered.pcm_buffer.samples[100:200])
 
 
+def test_render_portable_score_keeps_later_scheduled_notes_audible() -> None:
+    score = parse_portable_score(
+        """
+        format: music-machine-score/v2
+        ppq: 100
+        sample_rate: 2000
+        tempo 0 600
+        instrument lead kind=sine gain=0.5
+        track melody instrument=lead
+        event melody 0 100 note A4 velocity=0.8
+        event melody 300 100 note C5 velocity=0.8
+        """
+    )
+
+    rendered = render_portable_score_to_pcm(score)
+
+    assert any(rendered.pcm_buffer.samples[:200])
+    assert any(rendered.pcm_buffer.samples[600:800])
+
+
 def test_portable_score_supports_tempo_changes() -> None:
     score = parse_portable_score(
         """
