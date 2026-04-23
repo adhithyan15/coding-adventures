@@ -611,6 +611,12 @@ impl CudaDevice {
 
     /// Allocate `len` bytes of device memory.
     pub fn alloc(&self, len: usize) -> Result<CudaBuffer, CudaError> {
+        if len == 0 {
+            return Err(CudaError::DriverError {
+                code: -1,
+                message: "alloc: zero-length allocation is not permitted".to_string(),
+            });
+        }
         self.bind_ctx()?;
         let mut dptr: CUdeviceptr = 0;
         unsafe { self.cuda.check((self.cuda.cu_mem_alloc)(&mut dptr, len))? };
@@ -705,6 +711,14 @@ impl CudaDevice {
         block: [u32; 3],
         args:  &mut [*mut c_void],
     ) -> Result<(), CudaError> {
+        if grid.iter().any(|&d| d == 0) || block.iter().any(|&d| d == 0) {
+            return Err(CudaError::DriverError {
+                code: -1,
+                message: format!(
+                    "launch: all grid/block dimensions must be >= 1 (grid={grid:?}, block={block:?})"
+                ),
+            });
+        }
         self.bind_ctx()?;
         unsafe {
             self.cuda.check((self.cuda.cu_launch_kernel)(
@@ -771,9 +785,14 @@ impl CudaBuffer {
     ///
     /// # Safety
     ///
-    /// The returned pointer is only valid for the lifetime of `self`.
-    /// Do not use it after `self` is dropped.
-    pub fn as_kernel_arg(&mut self) -> *mut c_void {
+    /// The returned pointer is only valid for the lifetime of `self` AND only
+    /// while `self` has not been moved since this call.  Moving `CudaBuffer`
+    /// (e.g. into a closure or another variable) invalidates the pointer
+    /// because the `CUdeviceptr` field changes address.  The caller must
+    /// ensure the pointer is used before any such move occurs — typically by
+    /// assembling the args array and calling `launch` in the same expression.
+    /// Prefer `device_ptr()` + manual args construction for clarity.
+    pub unsafe fn as_kernel_arg(&mut self) -> *mut c_void {
         &mut self.dptr as *mut u64 as *mut c_void
     }
 }
