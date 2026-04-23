@@ -44,9 +44,16 @@ message interface.
 from __future__ import annotations
 
 import argparse
+import logging
+import os
 import sys
 import threading
 from dataclasses import dataclass, field
+
+# Use a module-level logger so operators can configure log level and output
+# destination independently of stdout.  In production, redirect to a file or
+# structured log aggregator; in tests the default NullHandler keeps tests quiet.
+log = logging.getLogger(__name__)
 
 from irc_framing import Framer
 from irc_net_selectors import (
@@ -316,7 +323,12 @@ def parse_args(argv: list[str]) -> Config:
         "--oper-password",
         default="",
         dest="oper_password",
-        help="Password for the OPER command (default: empty = disabled).",
+        help=(
+            "Password for the OPER command (default: empty = disabled).  "
+            "WARNING: CLI arguments are visible in the process list (ps aux, "
+            "/proc/<pid>/cmdline).  Prefer the IRCD_OPER_PASSWORD environment "
+            "variable for production deployments."
+        ),
     )
 
     ns = parser.parse_args(argv)
@@ -327,12 +339,19 @@ def parse_args(argv: list[str]) -> Config:
     if not (0 <= ns.port <= 65535):
         parser.error(f"--port must be between 0 and 65535, got {ns.port}")
 
+    # SECURITY: Prefer environment variable for the OPER password.
+    # If the env var is set it takes priority over the CLI argument, so the
+    # secret never appears in /proc/<pid>/cmdline or ``ps aux`` output.
+    # The CLI flag is kept for convenience in development but carries a warning
+    # in its help text above.
+    oper_password = os.environ.get("IRCD_OPER_PASSWORD") or ns.oper_password
+
     return Config(
         host=ns.host,
         port=ns.port,
         server_name=ns.server_name,
         motd=ns.motd if ns.motd else ["Welcome."],
-        oper_password=ns.oper_password,
+        oper_password=oper_password,
     )
 
 
@@ -394,7 +413,19 @@ def main(argv: list[str] | None = None) -> None:
     signal.signal(signal.SIGINT, _shutdown)
     signal.signal(signal.SIGTERM, _shutdown)
 
-    print(f"ircd listening on {config.host}:{config.port}", flush=True)
+    # SECURITY: warn when binding to all interfaces — this exposes the server
+    # on every network the host is connected to, including the public internet
+    # if the host has a public IP.  Operators must opt in to this explicitly.
+    if config.host in ("0.0.0.0", "::"):
+        log.warning(
+            "ircd binding to %s — server is reachable on ALL network interfaces. "
+            "Use --host 127.0.0.1 to restrict to loopback only.",
+            config.host,
+        )
+
+    # Use the logging module rather than print() so operators can control the
+    # log level, format, and destination without modifying this code.
+    log.info("ircd listening on %s:%d", config.host, config.port)
 
     # Block here.  The event loop accepts connections and dispatches events to
     # ``handler`` until ``loop.stop()`` is called (from the signal handler or
