@@ -1,0 +1,12 @@
+cd ../directed-graph && npm ci --quiet
+cd ../grammar-tools && npm ci --quiet
+cd ../lexer && npm ci --quiet
+cd ../diagram-ir && npm ci --quiet
+cd ../diagram-layout-graph && npm ci --quiet
+cd ../dot-parser && npm ci --quiet
+cd ../paint-instructions && npm ci --quiet
+cd ../pixel-container && npm ci --quiet
+cd ../state-machine && npm ci --quiet
+cd ../parser && npm ci --quiet
+npm ci --quiet
+npx vitest run --coverage

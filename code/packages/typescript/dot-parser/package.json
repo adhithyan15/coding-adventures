@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/dot-parser",
+  "version": "0.1.0",
+  "description": "Parser for a focused Graphviz DOT subset that lowers into the shared diagram IR",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "dot",
+    "graphviz",
+    "parser",
+    "diagram"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/diagram-ir": "file:../diagram-ir",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/parser": "file:../parser"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
