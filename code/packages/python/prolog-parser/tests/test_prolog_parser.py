@@ -18,6 +18,7 @@ from logic_engine import (
 from prolog_parser import (
     PrologParseError,
     __version__,
+    lower_ast,
     parse_ast,
     parse_program,
     parse_query,
@@ -43,6 +44,11 @@ class TestGrammarDrivenParser:
             "statement",
             "statement",
         ]
+
+    def test_lower_ast_reuses_parser_lowering(self) -> None:
+        parsed = lower_ast(parse_ast("parent(homer, bart).\n"))
+
+        assert len(parsed.clauses) == 1
 
 
 class TestClausesAndQueries:

@@ -373,7 +373,13 @@ def _atom_name(value: str) -> str:
 def parse_source(source: str) -> ParsedSource:
     """Parse clauses and queries from Prolog source text."""
 
-    return _Lowerer().lower_source(parse_ast(source))
+    return lower_ast(parse_ast(source))
+
+
+def lower_ast(ast: ASTNode) -> ParsedSource:
+    """Lower a Prolog grammar AST into executable engine objects."""
+
+    return _Lowerer().lower_source(ast)
 
 
 def parse_program(source: str) -> Program:

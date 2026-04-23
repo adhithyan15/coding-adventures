@@ -51,6 +51,9 @@ assert [str(answer) for answer in answers] == ["bart", "lisa"]
 
 - `parse_ast(source)` returns the generic grammar AST produced from
   `code/grammars/prolog.grammar`.
+- `lower_ast(ast)` lowers a compatible Prolog grammar AST into executable
+  `logic-engine` objects. Dialect parser packages use this to share semantics
+  while owning their own lexer/parser grammar files.
 - `create_prolog_parser(source)` returns a configured grammar-driven parser.
 - `parse_source(source)` returns a `ParsedSource` with an executable
   `logic-engine` `Program`, parsed clauses, and parsed top-level queries.
