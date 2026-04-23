@@ -353,6 +353,7 @@ members = [
     "state-machine-tokenizer",
     "embeddable-tcp-server",
     "embeddable-http-server",
+    "web-core",
     "generic-job-protocol",
     "generic-job-runtime",
 ]
