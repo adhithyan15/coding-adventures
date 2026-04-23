@@ -39,7 +39,11 @@ pub mod pda;
 pub mod transducer;
 pub mod types;
 
-pub use definitions::{MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition};
+pub use definitions::{
+    FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition,
+    RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition,
+    TransitionDefinition,
+};
 pub use dfa::DFA;
 pub use minimize::minimize;
 pub use modal::{ModalStateMachine, ModeTransitionRecord};

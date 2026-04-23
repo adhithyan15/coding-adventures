@@ -49,22 +49,22 @@ let definition = from_states_toml(source).unwrap();
 assert_eq!(definition.name, "turnstile");
 ```
 
-## Phase 1 Profile
+## Supported Profiles
 
-The first reader intentionally accepts a strict subset:
+The reader still supports the generic phase-1 DFA/NFA/PDA/transducer surface,
+and now also accepts the current lexer profile used by `html-lexer`:
 
-- root string fields: `format`, `name`, `kind`, `initial`, `initial_stack`
-- root string arrays: `alphabet`, `stack_alphabet`
-- repeated `[[states]]` tables with boolean marker fields
-- repeated `[[transitions]]` tables with `from`, `on`, `to`, `stack_pop`, and
-  `stack_push`
-- transducer transition fields `actions` and `consume`, with `$any` and `$end`
-  reserved for any-input and EOF matchers
+- root metadata such as `format`, `name`, `kind`, `initial`, `version`,
+  `profile`, `runtime_min`, `done`, and `includes`
+- repeated `[[states]]` and `[[transitions]]` tables
+- transducer transition fields `actions`, `consume`, `guard`, and `matcher`
+- lexer-profile sections `[[tokens]]`, `[[inputs]]`, `[[registers]]`,
+  `[[guards]]`, and `[[fixtures]]`
+- inline matcher tables such as `matcher = { literal = "<" }`
+- multiline string arrays for actions, fixtures, and includes
 
-Unsupported tables, duplicate keys, dotted keys, numbers, inline tables,
-includes, and malformed strings are rejected. That keeps the first
-implementation small enough to port while still exercising the same validation
-rules future language ports need.
+Numbers, dotted keys, malformed inline tables, and unsupported fields are still
+rejected so the reader stays bounded and predictable at the trust boundary.
 
 ## Dependencies
 

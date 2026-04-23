@@ -125,7 +125,9 @@ fn transducer_definition_emits_effect_tables_and_constructor() {
     definition.transitions = vec![TransitionDefinition {
         from: "data".to_string(),
         on: Some(END_INPUT.to_string()),
+        matcher: None,
         to: vec!["done".to_string()],
+        guard: None,
         stack_pop: None,
         stack_push: Vec::new(),
         actions: vec!["flush_text".to_string(), "emit(EOF)".to_string()],

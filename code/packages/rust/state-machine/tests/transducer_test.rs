@@ -1,7 +1,8 @@
 use std::collections::HashSet;
 
 use state_machine::{
-    EffectfulInput, EffectfulMatcher, EffectfulStateMachine, EffectfulTransition, ANY_INPUT,
+    EffectfulInput, EffectfulMatcher, EffectfulStateMachine, EffectfulTransition,
+    MatcherDefinition, StateDefinition, StateMachineDefinition, TransitionDefinition, ANY_INPUT,
     END_INPUT,
 };
 
@@ -158,6 +159,74 @@ fn effectful_machine_round_trips_through_definition_layer() {
         .any(|transition| transition.on.as_deref() == Some(END_INPUT) && !transition.consume));
     assert_eq!(imported.current_state(), "data");
     assert_eq!(imported.transitions().len(), machine.transitions().len());
+}
+
+#[test]
+fn effectful_machine_imports_typed_matcher_definitions() {
+    let mut definition = StateMachineDefinition::new(
+        "typed-html-skeleton",
+        state_machine::MachineKind::Transducer,
+    );
+    definition.alphabet = vec!["<".to_string(), "x".to_string()];
+    definition.initial = Some("data".to_string());
+    definition.states = vec![
+        StateDefinition {
+            initial: true,
+            ..StateDefinition::new("data")
+        },
+        StateDefinition::new("tag_open"),
+        StateDefinition {
+            final_state: true,
+            ..StateDefinition::new("done")
+        },
+    ];
+    definition.transitions = vec![
+        TransitionDefinition {
+            from: "data".to_string(),
+            to: vec!["tag_open".to_string()],
+            on: None,
+            consume: true,
+            actions: vec!["flush_text".to_string()],
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+        },
+        TransitionDefinition {
+            from: "data".to_string(),
+            to: vec!["done".to_string()],
+            on: None,
+            consume: false,
+            actions: vec!["emit(EOF)".to_string()],
+            matcher: Some(MatcherDefinition::Eof),
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+        },
+        TransitionDefinition {
+            from: "tag_open".to_string(),
+            to: vec!["tag_open".to_string()],
+            on: None,
+            consume: true,
+            actions: vec!["append_text(current)".to_string()],
+            matcher: Some(MatcherDefinition::Anything),
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+        },
+    ];
+
+    let mut machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+
+    let open = machine.process(EffectfulInput::event("<")).unwrap();
+    assert!(open.consume);
+    assert_eq!(open.effects, vec!["flush_text".to_string()]);
+    assert_eq!(machine.current_state(), "tag_open");
+
+    let any = machine.process(EffectfulInput::event("x")).unwrap();
+    assert!(any.consume);
+    assert_eq!(any.effects, vec!["append_text(current)".to_string()]);
+    assert_eq!(machine.current_state(), "tag_open");
 }
 
 #[test]

@@ -10,7 +10,7 @@ use std::collections::HashSet;
 use std::error::Error;
 use std::fmt;
 
-use state_machine::{MachineKind, StateMachineDefinition, TransitionDefinition};
+use state_machine::{MachineKind, MatcherDefinition, StateMachineDefinition, TransitionDefinition};
 use state_machine_markup_deserializer::{validate_definition, StateMachineMarkupError};
 
 /// Errors that can occur before source text is emitted.
@@ -102,16 +102,16 @@ pub fn to_rust_source(definition: &StateMachineDefinition) -> Result<String> {
     source.push_str("use state_machine::{");
     source.push_str(match definition.kind {
         MachineKind::Dfa => {
-            "DFA, MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition"
+            "DFA, MachineKind, MatcherDefinition, StateDefinition, StateMachineDefinition, TransitionDefinition"
         }
         MachineKind::Nfa => {
-            "MachineKind, NFA, StateDefinition, StateMachineDefinition, TransitionDefinition"
+            "MachineKind, MatcherDefinition, NFA, StateDefinition, StateMachineDefinition, TransitionDefinition"
         }
         MachineKind::Pda => {
-            "MachineKind, PushdownAutomaton, StateDefinition, StateMachineDefinition, TransitionDefinition"
+            "MachineKind, MatcherDefinition, PushdownAutomaton, StateDefinition, StateMachineDefinition, TransitionDefinition"
         }
         MachineKind::Transducer => {
-            "EffectfulStateMachine, MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition"
+            "EffectfulStateMachine, MachineKind, MatcherDefinition, StateDefinition, StateMachineDefinition, TransitionDefinition"
         }
         _ => unreachable!("unsupported kinds are rejected before source emission"),
     });
@@ -276,8 +276,14 @@ fn emit_transitions(source: &mut String, definition: &StateMachineDefinition) {
         source.push_str("            on: ");
         source.push_str(&rust_option_string(&transition.on));
         source.push_str(",\n");
+        source.push_str("            matcher: ");
+        source.push_str(&rust_option_matcher(&transition.matcher, 12));
+        source.push_str(",\n");
         source.push_str("            to: ");
         source.push_str(&rust_string_vec(&transition.to, 12));
+        source.push_str(",\n");
+        source.push_str("            guard: ");
+        source.push_str(&rust_option_string(&transition.guard));
         source.push_str(",\n");
         source.push_str("            stack_pop: ");
         source.push_str(&rust_option_string(&transition.stack_pop));
@@ -299,10 +305,14 @@ fn emit_transitions(source: &mut String, definition: &StateMachineDefinition) {
 fn sorted_transitions(definition: &StateMachineDefinition) -> Vec<TransitionDefinition> {
     let mut transitions = definition.transitions.clone();
     transitions.sort_by(|left, right| {
+        let left_matcher = left.matcher.as_ref().map(matcher_sort_key);
+        let right_matcher = right.matcher.as_ref().map(matcher_sort_key);
         (
             &left.from,
             &left.on,
+            &left_matcher,
             &left.to,
+            &left.guard,
             &left.stack_pop,
             &left.stack_push,
             &left.actions,
@@ -311,7 +321,9 @@ fn sorted_transitions(definition: &StateMachineDefinition) -> Vec<TransitionDefi
             .cmp(&(
                 &right.from,
                 &right.on,
+                &right_matcher,
                 &right.to,
+                &right.guard,
                 &right.stack_pop,
                 &right.stack_push,
                 &right.actions,
@@ -319,6 +331,23 @@ fn sorted_transitions(definition: &StateMachineDefinition) -> Vec<TransitionDefi
             ))
     });
     transitions
+}
+
+fn matcher_sort_key(value: &MatcherDefinition) -> String {
+    match value {
+        MatcherDefinition::Literal(value) => format!("literal:{value}"),
+        MatcherDefinition::Eof => "eof".to_string(),
+        MatcherDefinition::Anything => "anything".to_string(),
+        MatcherDefinition::Class(value) => format!("class:{value}"),
+        MatcherDefinition::OneOf(value) => format!("one_of:{value}"),
+        MatcherDefinition::Range { start, end } => format!("range:{start}..{end}"),
+        MatcherDefinition::AnyOfClasses(values) => {
+            format!("any_of_classes:{}", values.join(","))
+        }
+        MatcherDefinition::Lookahead(inner) => {
+            format!("lookahead:{}", matcher_sort_key(inner))
+        }
+    }
 }
 
 fn machine_kind_variant(definition: &StateMachineDefinition) -> &'static str {
@@ -362,6 +391,42 @@ fn rust_option_string(value: &Option<String>) -> String {
     match value {
         Some(value) => format!("Some({})", rust_to_string_expr(value)),
         None => "None".to_string(),
+    }
+}
+
+fn rust_option_matcher(value: &Option<MatcherDefinition>, indent: usize) -> String {
+    match value {
+        Some(value) => format!("Some({})", rust_matcher_expr(value, indent)),
+        None => "None".to_string(),
+    }
+}
+
+fn rust_matcher_expr(value: &MatcherDefinition, indent: usize) -> String {
+    match value {
+        MatcherDefinition::Literal(value) => {
+            format!("MatcherDefinition::Literal({})", rust_to_string_expr(value))
+        }
+        MatcherDefinition::Eof => "MatcherDefinition::Eof".to_string(),
+        MatcherDefinition::Anything => "MatcherDefinition::Anything".to_string(),
+        MatcherDefinition::Class(value) => {
+            format!("MatcherDefinition::Class({})", rust_to_string_expr(value))
+        }
+        MatcherDefinition::OneOf(value) => {
+            format!("MatcherDefinition::OneOf({})", rust_to_string_expr(value))
+        }
+        MatcherDefinition::Range { start, end } => format!(
+            "MatcherDefinition::Range {{ start: {}, end: {} }}",
+            rust_to_string_expr(start),
+            rust_to_string_expr(end)
+        ),
+        MatcherDefinition::AnyOfClasses(values) => format!(
+            "MatcherDefinition::AnyOfClasses({})",
+            rust_string_vec(values, indent)
+        ),
+        MatcherDefinition::Lookahead(inner) => format!(
+            "MatcherDefinition::Lookahead(Box::new({}))",
+            rust_matcher_expr(inner, indent)
+        ),
     }
 }
 
