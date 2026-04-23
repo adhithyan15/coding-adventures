@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-haskell-parser"
+version = "0.1.0"
+edition = "2021"
+description = "Haskell parser — parses Haskell source code into an AST using the grammar-driven parser and the haskell.grammar file"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-haskell-lexer = { path = "../haskell-lexer" }

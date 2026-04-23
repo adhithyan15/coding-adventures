@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "elixir/haskell_parser",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads shared Haskell grammar files from code/grammars/haskell/ to configure the parser."
+    }
+  ],
+  "justification": "Reads shared Haskell grammar files (haskell<version>.grammar) from code/grammars/haskell/ at runtime."
+}

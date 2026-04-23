@@ -1,0 +1,15 @@
+# Changelog
+
+All notable changes to the Haskell Lexer package will be documented in this file.
+
+## [0.1.0] - 2026-04-11
+
+### Added
+- Initial release of the Haskell lexer package.
+- `tokenize_haskell()` function that tokenizes Haskell source code using the grammar-driven lexer.
+- `create_haskell_lexer()` factory function for creating a `GrammarLexer` configured for Haskell.
+- `version` parameter supporting Haskell versions: `"1.0"`, `"1.1"`, `"1.4"`, `"5"`, `"7"`,
+  `"8"`, `"10"`, `"14"`, `"17"`, `"21"`. Default is `"21"` (latest).
+- `_resolve_tokens_path(version)` private helper mapping version strings to paths.
+- Raises `ValueError` with a clear message for unknown version strings.
+- Comprehensive test suite with 80%+ coverage.
