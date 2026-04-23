@@ -232,6 +232,7 @@ class TestPlannerComposite:
         rows = conn.execute(
             "SELECT id FROM orders WHERE user_id = 0 AND status = 'shipped'"
         ).fetchall()
+        # Correctness check: rows where user_id=0 AND status='shipped'.
         all_rows = conn.execute("SELECT id, user_id, status FROM orders").fetchall()
         expected_ids = sorted(
             r[0] for r in all_rows if r[1] == 0 and r[2] == "shipped"
