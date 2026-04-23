@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-native-debug-info"
+version = "0.1.0"
+description = "DWARF 4 and CodeView 4 emission from DebugSidecar for ELF, Mach-O, and PE binaries."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "coding-adventures-debug-sidecar",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/native_debug_info"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
