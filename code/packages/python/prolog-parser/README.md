@@ -1,11 +1,13 @@
 # prolog-parser
 
-`prolog-parser` parses a first executable Prolog syntax subset and lowers it
-onto the existing `logic-engine` runtime.
+`prolog-parser` parses a first executable Prolog syntax subset with
+`code/grammars/prolog.grammar` and lowers it onto the existing `logic-engine`
+runtime.
 
 This package is intentionally not a second solver. It consumes tokens from
-`prolog-lexer`, builds `logic-engine` facts, rules, goals, terms, and variables,
-and lets the already-tested backtracking engine execute the result.
+`prolog-lexer`, parses them with the shared grammar-driven `GrammarParser`,
+builds `logic-engine` facts, rules, goals, terms, and variables, and lets the
+already-tested backtracking engine execute the result.
 
 ## What It Supports
 
@@ -47,6 +49,9 @@ assert [str(answer) for answer in answers] == ["bart", "lisa"]
 
 ## API
 
+- `parse_ast(source)` returns the generic grammar AST produced from
+  `code/grammars/prolog.grammar`.
+- `create_prolog_parser(source)` returns a configured grammar-driven parser.
 - `parse_source(source)` returns a `ParsedSource` with an executable
   `logic-engine` `Program`, parsed clauses, and parsed top-level queries.
 - `parse_program(source)` returns a `Program` and rejects query statements.

@@ -1,9 +1,13 @@
-"""Recursive-descent parser that lowers Prolog syntax to ``logic-engine``."""
+"""Grammar-driven parser that lowers Prolog syntax to ``logic-engine``."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cache
+from pathlib import Path
 
+from grammar_tools import ParserGrammar, parse_parser_grammar
+from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 from logic_engine import (
     Atom,
@@ -33,6 +37,9 @@ from logic_engine import (
     var,
 )
 from prolog_lexer import tokenize_prolog
+
+GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
+PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog.grammar"
 
 
 @dataclass(frozen=True, slots=True)
@@ -86,131 +93,191 @@ class _Scope:
         return var(f"_{self.anonymous_count}")
 
 
-class _Parser:
-    """Small parser for facts, rules, queries, terms, lists, and core goals."""
+@cache
+def _prolog_grammar() -> ParserGrammar:
+    """Load and cache the declarative Prolog grammar."""
 
-    def __init__(self, tokens: list[Token]) -> None:
-        self.tokens = tokens
-        self.index = 0
+    return parse_parser_grammar(PROLOG_GRAMMAR_PATH.read_text())
 
-    def parse_source(self) -> ParsedSource:
-        """Parse every statement in the token stream."""
+
+def create_prolog_parser(source: str) -> GrammarParser:
+    """Create a generic ``GrammarParser`` configured for Prolog source."""
+
+    return GrammarParser(tokenize_prolog(source), _prolog_grammar())
+
+
+def parse_ast(source: str) -> ASTNode:
+    """Parse Prolog source with ``prolog.grammar`` and return the syntax tree."""
+
+    tokens = tokenize_prolog(source)
+    for token in tokens:
+        if token.type_name == "DCG":
+            raise PrologParseError(
+                token,
+                "DCG rules are recognized by the lexer but not parsed yet",
+            )
+    try:
+        return GrammarParser(tokens, _prolog_grammar()).parse()
+    except GrammarParseError as error:
+        token = error.token if error.token is not None else tokens[-1]
+        raise PrologParseError(token, str(error)) from error
+
+
+class _Lowerer:
+    """Lower the grammar AST into executable ``logic-engine`` values."""
+
+    def lower_source(self, ast: ASTNode) -> ParsedSource:
+        """Lower a ``program`` AST node into a parsed source object."""
 
         clauses: list[Clause] = []
         queries: list[ParsedQuery] = []
-        while not self._check("EOF"):
-            if self._check("QUERY"):
-                queries.append(self._parse_query_statement())
-            else:
-                clauses.append(self._parse_clause_statement())
+        for statement in _node_children(ast, "statement"):
+            body = _single_node_child(statement)
+            if body.rule_name == "query_statement":
+                queries.append(self._lower_query_statement(body))
+            elif body.rule_name == "rule_statement":
+                clauses.append(self._lower_rule_statement(body))
+            elif body.rule_name == "fact_statement":
+                clauses.append(self._lower_fact_statement(body))
+            else:  # pragma: no cover - grammar validation keeps this unreachable.
+                raise _unexpected_node(body)
+
         return ParsedSource(
             program=program(*clauses),
             clauses=tuple(clauses),
             queries=tuple(queries),
         )
 
-    def _parse_query_statement(self) -> ParsedQuery:
-        self._expect("QUERY", "expected query introducer")
+    def _lower_query_statement(self, node: ASTNode) -> ParsedQuery:
         scope = _Scope(variables={})
-        goal = self._parse_goal(scope)
-        self._expect("DOT", "expected '.' after query")
+        goal = self._lower_goal(_single_node_child(node, "goal"), scope)
         return ParsedQuery(goal=goal, variables=dict(scope.variables))
 
-    def _parse_clause_statement(self) -> Clause:
+    def _lower_rule_statement(self, node: ASTNode) -> Clause:
         scope = _Scope(variables={})
         head = self._term_as_relation_call(
-            self._parse_term(scope),
+            self._lower_callable_term(_single_node_child(node, "callable_term"), scope),
             "clause head must be an atom or compound term",
         )
-        if self._match("RULE"):
-            body = self._parse_goal(scope)
-            self._expect("DOT", "expected '.' after rule")
-            return rule(head, body)
-        if self._check("DCG"):
-            raise PrologParseError(
-                self._peek(),
-                "DCG rules are recognized by the lexer but not parsed yet",
-            )
-        self._expect("DOT", "expected '.' after fact")
+        body = self._lower_goal(_single_node_child(node, "goal"), scope)
+        return rule(head, body)
+
+    def _lower_fact_statement(self, node: ASTNode) -> Clause:
+        scope = _Scope(variables={})
+        head = self._term_as_relation_call(
+            self._lower_callable_term(_single_node_child(node, "callable_term"), scope),
+            "clause head must be an atom or compound term",
+        )
         return fact(head)
 
-    def _parse_goal(self, scope: _Scope) -> GoalExpr:
-        return self._parse_disjunction(scope)
+    def _lower_goal(self, node: ASTNode, scope: _Scope) -> GoalExpr:
+        if node.rule_name == "goal":
+            return self._lower_goal(_single_node_child(node), scope)
+        if node.rule_name == "disjunction":
+            parts = [
+                self._lower_goal(child, scope)
+                for child in _node_children(node, "conjunction")
+            ]
+            return disj(*parts) if len(parts) > 1 else parts[0]
+        if node.rule_name == "conjunction":
+            parts = [
+                self._lower_goal(child, scope)
+                for child in _node_children(node, "goal_primary")
+            ]
+            return conj(*parts) if len(parts) > 1 else parts[0]
+        if node.rule_name != "goal_primary":
+            raise _unexpected_node(node)
 
-    def _parse_disjunction(self, scope: _Scope) -> GoalExpr:
-        parts = [self._parse_conjunction(scope)]
-        while self._match("SEMICOLON"):
-            parts.append(self._parse_conjunction(scope))
-        return disj(*parts) if len(parts) > 1 else parts[0]
+        child = node.children[0]
+        if isinstance(child, Token):
+            if child.type_name == "CUT":
+                return cut()
+            raise PrologParseError(child, "unexpected token in goal")
 
-    def _parse_conjunction(self, scope: _Scope) -> GoalExpr:
-        parts = [self._parse_goal_primary(scope)]
-        while self._match("COMMA"):
-            parts.append(self._parse_goal_primary(scope))
-        return conj(*parts) if len(parts) > 1 else parts[0]
+        if child.rule_name == "grouped_goal":
+            return self._lower_goal(_single_node_child(child, "goal"), scope)
+        if child.rule_name == "equality_goal":
+            return self._lower_equality_goal(child, scope)
+        if child.rule_name == "callable_goal":
+            return self._term_as_goal(
+                self._lower_callable_term(
+                    _single_node_child(child, "callable_term"),
+                    scope,
+                ),
+                child,
+            )
+        raise _unexpected_node(child)
 
-    def _parse_goal_primary(self, scope: _Scope) -> GoalExpr:
-        if self._match("CUT"):
-            return cut()
-        if self._match("LPAREN"):
-            goal = self._parse_goal(scope)
-            self._expect("RPAREN", "expected ')' after grouped goal")
-            return goal
+    def _lower_equality_goal(self, node: ASTNode, scope: _Scope) -> GoalExpr:
+        terms = [
+            self._lower_term(child, scope) for child in _node_children(node, "term")
+        ]
+        operator = _single_token_child(
+            _single_node_child(node, "equality_operator"),
+        ).value
+        return eq(terms[0], terms[1]) if operator == "=" else neq(terms[0], terms[1])
 
-        left = self._parse_term(scope)
-        if self._check("ATOM") and self._peek().value in {"=", "\\="}:
-            operator = self._advance().value
-            right = self._parse_term(scope)
-            return eq(left, right) if operator == "=" else neq(left, right)
-        return self._term_as_goal(left)
+    def _lower_callable_term(self, node: ASTNode, scope: _Scope) -> Term:
+        return self._lower_term(_single_node_child(node), scope)
 
-    def _parse_term(self, scope: _Scope) -> Term:
-        if self._match("VARIABLE"):
-            return scope.variable(self._previous().value)
-        if self._match("ANON_VAR"):
+    def _lower_term(self, node: ASTNode, scope: _Scope) -> Term:
+        if node.rule_name == "term":
+            return self._lower_term(_single_node_child(node), scope)
+        if node.rule_name == "compound_term":
+            name = self._lower_atom_token(_single_node_child(node, "atom_token"))
+            arguments_node = _optional_node_child(node, "term_arguments")
+            arguments = (
+                ()
+                if arguments_node is None
+                else tuple(
+                    self._lower_term(child, scope)
+                    for child in _node_children(arguments_node, "term")
+                )
+            )
+            return term(name, *arguments)
+        if node.rule_name == "atom_term":
+            return atom(self._lower_atom_token(_single_node_child(node, "atom_token")))
+        if node.rule_name == "variable_term":
+            return scope.variable(_single_token_child(node).value)
+        if node.rule_name == "anonymous_term":
             return scope.anonymous()
-        if self._match("INTEGER"):
-            return num(int(self._previous().value))
-        if self._match("FLOAT"):
-            return num(float(self._previous().value))
-        if self._match("STRING"):
-            return string(self._previous().value)
-        if self._match("LBRACKET"):
-            return self._parse_list(scope)
-        if self._match("ATOM"):
-            name = _atom_name(self._previous().value)
-            if self._match("LPAREN"):
-                args = self._parse_term_arguments(scope)
-                return term(name, *args)
-            return atom(name)
+        if node.rule_name == "number_term":
+            token = _single_token_child(node)
+            if token.type_name == "FLOAT":
+                return num(float(token.value))
+            return num(int(token.value))
+        if node.rule_name == "string_term":
+            return string(_single_token_child(node).value)
+        if node.rule_name == "list_term":
+            return self._lower_list(node, scope)
+        raise _unexpected_node(node)
 
-        raise PrologParseError(self._peek(), "expected term")
-
-    def _parse_term_arguments(self, scope: _Scope) -> tuple[Term, ...]:
-        if self._match("RPAREN"):
-            return ()
-
-        args = [self._parse_term(scope)]
-        while self._match("COMMA"):
-            args.append(self._parse_term(scope))
-        self._expect("RPAREN", "expected ')' after term arguments")
-        return tuple(args)
-
-    def _parse_list(self, scope: _Scope) -> Term:
-        if self._match("RBRACKET"):
+    def _lower_list(self, node: ASTNode, scope: _Scope) -> Term:
+        body = _optional_node_child(node, "list_body")
+        if body is None:
             return logic_list([])
 
-        items = [self._parse_term(scope)]
-        while self._match("COMMA"):
-            items.append(self._parse_term(scope))
-
+        item_nodes: list[ASTNode] = []
         tail: Term | None = None
-        if self._match("BAR"):
-            tail = self._parse_term(scope)
-        self._expect("RBRACKET", "expected ']' after list")
+        after_bar = False
+        for child in body.children:
+            if isinstance(child, Token):
+                after_bar = after_bar or child.type_name == "BAR"
+                continue
+            if child.rule_name != "term":
+                continue
+            if after_bar:
+                tail = self._lower_term(child, scope)
+            else:
+                item_nodes.append(child)
+
+        items = [self._lower_term(child, scope) for child in item_nodes]
         return logic_list(items, tail=tail)
 
-    def _term_as_goal(self, term_value: Term) -> GoalExpr:
+    def _lower_atom_token(self, node: ASTNode) -> str:
+        return _atom_name(_single_token_child(node).value)
+
+    def _term_as_goal(self, term_value: Term, node: ASTNode) -> GoalExpr:
         if isinstance(term_value, Atom):
             name = term_value.symbol.name
             if term_value.symbol.namespace is None and name == "true":
@@ -220,7 +287,7 @@ class _Parser:
             return relation(term_value.symbol, 0)()
         if isinstance(term_value, Compound):
             return relation(term_value.functor, len(term_value.args))(*term_value.args)
-        raise PrologParseError(self._peek(), "term is not callable as a goal")
+        raise _node_error(node, "term is not callable as a goal")
 
     def _term_as_relation_call(
         self,
@@ -231,32 +298,68 @@ class _Parser:
             return relation(term_value.symbol, 0)()
         if isinstance(term_value, Compound):
             return relation(term_value.functor, len(term_value.args))(*term_value.args)
-        raise PrologParseError(self._peek(), message)
+        token = Token("EOF", "", 1, 1)
+        raise PrologParseError(token, message)
 
-    def _match(self, token_type: str) -> bool:
-        if not self._check(token_type):
-            return False
-        self.index += 1
-        return True
 
-    def _expect(self, token_type: str, message: str) -> Token:
-        if self._check(token_type):
-            return self._advance()
-        raise PrologParseError(self._peek(), message)
+def _node_children(node: ASTNode, rule_name: str | None = None) -> list[ASTNode]:
+    """Return AST children, optionally filtered by grammar rule name."""
 
-    def _check(self, token_type: str) -> bool:
-        return self._peek().type_name == token_type
+    children = [child for child in node.children if isinstance(child, ASTNode)]
+    if rule_name is None:
+        return children
+    return [child for child in children if child.rule_name == rule_name]
 
-    def _advance(self) -> Token:
-        token = self._peek()
-        self.index += 1
-        return token
 
-    def _peek(self) -> Token:
-        return self.tokens[self.index]
+def _single_node_child(node: ASTNode, rule_name: str | None = None) -> ASTNode:
+    """Return exactly one AST child from ``node``."""
 
-    def _previous(self) -> Token:
-        return self.tokens[self.index - 1]
+    children = _node_children(node, rule_name)
+    if len(children) != 1:
+        raise _node_error(
+            node,
+            f"expected one {rule_name or 'AST'} child, found {len(children)}",
+        )
+    return children[0]
+
+
+def _optional_node_child(node: ASTNode, rule_name: str) -> ASTNode | None:
+    """Return zero or one AST child by rule name."""
+
+    children = _node_children(node, rule_name)
+    if len(children) > 1:
+        raise _node_error(node, f"expected at most one {rule_name} child")
+    return children[0] if children else None
+
+
+def _single_token_child(node: ASTNode) -> Token:
+    """Return exactly one direct token child from ``node``."""
+
+    children = [child for child in node.children if isinstance(child, Token)]
+    if len(children) != 1:
+        raise _node_error(node, f"expected one token child, found {len(children)}")
+    return children[0]
+
+
+def _node_error(node: ASTNode, message: str) -> PrologParseError:
+    token = _first_token(node)
+    if token is None:
+        token = Token("EOF", "", node.start_line or 1, node.start_column or 1)
+    return PrologParseError(token, message)
+
+
+def _unexpected_node(node: ASTNode) -> PrologParseError:
+    return _node_error(node, f"unexpected {node.rule_name} node")
+
+
+def _first_token(node: ASTNode) -> Token | None:
+    for child in node.children:
+        if isinstance(child, Token):
+            return child
+        token = _first_token(child)
+        if token is not None:
+            return token
+    return None
 
 
 def _atom_name(value: str) -> str:
@@ -270,7 +373,7 @@ def _atom_name(value: str) -> str:
 def parse_source(source: str) -> ParsedSource:
     """Parse clauses and queries from Prolog source text."""
 
-    return _Parser(tokenize_prolog(source)).parse_source()
+    return _Lowerer().lower_source(parse_ast(source))
 
 
 def parse_program(source: str) -> Program:

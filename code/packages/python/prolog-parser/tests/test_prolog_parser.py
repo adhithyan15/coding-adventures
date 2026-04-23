@@ -18,6 +18,7 @@ from logic_engine import (
 from prolog_parser import (
     PrologParseError,
     __version__,
+    parse_ast,
     parse_program,
     parse_query,
     parse_source,
@@ -29,6 +30,19 @@ class TestVersion:
 
     def test_version_exists(self) -> None:
         assert __version__ == "0.1.0"
+
+
+class TestGrammarDrivenParser:
+    """The parser should use the shared Prolog grammar as its syntax source."""
+
+    def test_parse_ast_uses_prolog_grammar(self) -> None:
+        ast = parse_ast("parent(homer, bart).\n?- parent(homer, Who).\n")
+
+        assert ast.rule_name == "program"
+        assert [child.rule_name for child in ast.children] == [
+            "statement",
+            "statement",
+        ]
 
 
 class TestClausesAndQueries:
@@ -167,7 +181,7 @@ class TestErrors:
             parse_source("digits --> digit.\n")
 
     def test_rejects_missing_clause_terminator(self) -> None:
-        with pytest.raises(PrologParseError, match="expected '.' after fact"):
+        with pytest.raises(PrologParseError, match="DOT|Unexpected"):
             parse_source("parent(homer, bart)")
 
     def test_parse_program_rejects_queries(self) -> None:

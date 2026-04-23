@@ -3,14 +3,16 @@
 ## Overview
 
 PR00 gave the project a grammar-driven Prolog lexer. PR01 adds the first parser
-layer above it: a small recursive-descent parser that lowers Prolog source
-directly onto the existing Python logic engine.
+layer above it: `code/grammars/prolog.grammar`, parsed by the shared generic
+`GrammarParser`, plus a Python lowering layer that maps the resulting AST onto
+the existing Python logic engine.
 
 The goal is not full ISO Prolog yet. The goal is the first honest bridge:
 
 ```text
 source text
     -> prolog-lexer tokens
+    -> prolog.grammar AST
     -> prolog-parser clauses and queries
     -> logic-engine Program and GoalExpr values
     -> solve_all / solve_n
@@ -39,9 +41,16 @@ small Prolog programs:
 Every parsed clause and query is lowered to existing `logic-engine` objects. The
 parser does not introduce a second runtime or a second unification model.
 
+The grammar file is the syntax source of truth for this subset. Python code is
+reserved for semantic lowering into `logic-engine` values and should not grow a
+parallel hand-written syntax parser unless the shared grammar runtime cannot
+express a specific construct.
+
 ## Public API
 
 ```python
+parse_ast(source: str) -> ASTNode
+create_prolog_parser(source: str) -> GrammarParser
 parse_source(source: str) -> ParsedSource
 parse_program(source: str) -> Program
 parse_query(source: str) -> ParsedQuery

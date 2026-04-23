@@ -7,7 +7,9 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - first executable Prolog parser package
-- `parse_source`, `parse_program`, and `parse_query`
+- `code/grammars/prolog.grammar` as the parser syntax source of truth
+- `create_prolog_parser`, `parse_ast`, `parse_source`, `parse_program`, and
+  `parse_query`
 - lowering for facts, rules, queries, terms, lists, conjunction, disjunction,
   cut, unification, and disequality
 - end-to-end tests proving parsed source executes through `logic-engine`
