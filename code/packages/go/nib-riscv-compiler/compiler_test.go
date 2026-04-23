@@ -79,6 +79,34 @@ func TestRunSourceExecutesNestedNibCallsOnRiscVSimulator(t *testing.T) {
 	}
 }
 
+func TestRunSourcePreservesCallerLocalsAcrossNibCalls(t *testing.T) {
+	source := strings.Join([]string{
+		"fn add_one(value: u4) -> u4 {",
+		"  let scratch: u4 = value +% 1;",
+		"  return scratch;",
+		"}",
+		"fn main() -> u4 {",
+		"  let kept: u4 = 5;",
+		"  let called: u4 = add_one(6);",
+		"  return kept + called;",
+		"}",
+	}, " ")
+	run, err := RunSource(source)
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if run.ReturnValue != 12 {
+		t.Fatalf("expected caller local plus call result to be 12, got %d", run.ReturnValue)
+	}
+	if !strings.Contains(run.Package.Assembly, "sw x12, ") ||
+		!strings.Contains(run.Package.Assembly, "lw x12, ") {
+		t.Fatalf("expected caller-save spill/reload in assembly, got:\n%s", run.Package.Assembly)
+	}
+}
+
 func TestTypeErrorsReportStage(t *testing.T) {
 	_, err := CompileSource("fn main() { let flag: bool = 1; }")
 	if err == nil {

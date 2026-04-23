@@ -113,7 +113,7 @@ func (c *NibRiscVCompiler) CompileSource(source string) (*PackageResult, error) 
 		return nil, wrapStage("type-check", errors.New(strings.Join(messages, "\n")))
 	}
 
-	config := nibircompiler.ReleaseConfig()
+	config := nibircompiler.CallSafeConfig()
 	if c.buildConfig != nil {
 		config = *c.buildConfig
 	}
