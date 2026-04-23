@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.18.0 — 2026-04-23
+
+Phase 13 of the integration roadmap — hyperbolic functions.
+
+**New heads** (requires `symbolic-ir >= 0.5.0`): SINH, COSH, TANH, ASINH, ACOSH, ATANH.
+
+**New capability**:
+- `∫ P(x) · sinh(ax+b) dx` and `∫ P(x) · cosh(ax+b) dx` — tabular IBP with sign `(−1)^k`.
+  Assembly: `C(x)·cosh(ax+b) + S(x)·sinh(ax+b)` for sinh; swapped for cosh.
+- `∫ P(x) · asinh(ax+b) dx` — IBP + reduction formula `∫ tⁿ/√(t²+1) dt`.
+  Final: `[Q(x)−B(ax+b)]·asinh(ax+b) − A(ax+b)·√((ax+b)²+1)`.
+- `∫ P(x) · acosh(ax+b) dx` — same reduction formula with `√(t²−1)`.
+  Final: `[Q(x)−B(ax+b)]·acosh(ax+b) − A(ax+b)·√((ax+b)²−1)`.
+- `∫ tanh(ax+b) dx = (1/a)·log(cosh(ax+b))`.
+- `∫ atanh(ax+b) dx = (ax+b)/a·atanh(ax+b) + (1/(2a))·log(1−(ax+b)²)`.
+
+**New modules**: `sinh_poly_integral.py`, `asinh_poly_integral.py`.
+
+**Differentiation rules**: all six hyperbolic functions wired into `_diff_ir`.
+
+**poly×tanh and poly×atanh deferred** to a future phase.
+
+**Tests**: 45 tests in `tests/test_phase13.py` using numerical finite-difference
+verification. All correctness checks pass.
+
 ## 0.17.0 — 2026-04-23
 
 Phase 12 of the integration roadmap — polynomial × asin/acos(linear) integration via IBP.

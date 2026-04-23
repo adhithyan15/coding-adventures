@@ -25,12 +25,16 @@ from collections.abc import Mapping
 
 from symbolic_ir import (
     ACOS,
+    ACOSH,
     ADD,
     AND,
     ASIN,
+    ASINH,
     ASSIGN,
     ATAN,
+    ATANH,
     COS,
+    COSH,
     DEFINE,
     DIV,
     EQUAL,
@@ -49,9 +53,11 @@ from symbolic_ir import (
     OR,
     POW,
     SIN,
+    SINH,
     SQRT,
     SUB,
     TAN,
+    TANH,
     IRApply,
     IRInteger,
     IRNode,
@@ -309,6 +315,30 @@ def acos(simplify: bool) -> Handler:
     return _elementary("Acos", math.acos, {}, simplify)
 
 
+def sinh(simplify: bool) -> Handler:
+    return _elementary("Sinh", math.sinh, {0: ZERO}, simplify)
+
+
+def cosh(simplify: bool) -> Handler:
+    return _elementary("Cosh", math.cosh, {0: ONE}, simplify)
+
+
+def tanh(simplify: bool) -> Handler:
+    return _elementary("Tanh", math.tanh, {0: ZERO}, simplify)
+
+
+def asinh(simplify: bool) -> Handler:
+    return _elementary("Asinh", math.asinh, {0: ZERO}, simplify)
+
+
+def acosh(simplify: bool) -> Handler:
+    return _elementary("Acosh", math.acosh, {1: ZERO}, simplify)
+
+
+def atanh(simplify: bool) -> Handler:
+    return _elementary("Atanh", math.atanh, {0: ZERO}, simplify)
+
+
 # ---------------------------------------------------------------------------
 # Comparisons
 # ---------------------------------------------------------------------------
@@ -543,6 +573,12 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         ATAN.name: atan(simplify),
         ASIN.name: asin(simplify),
         ACOS.name: acos(simplify),
+        SINH.name: sinh(simplify),
+        COSH.name: cosh(simplify),
+        TANH.name: tanh(simplify),
+        ASINH.name: asinh(simplify),
+        ACOSH.name: acosh(simplify),
+        ATANH.name: atanh(simplify),
         EQUAL.name: equal(simplify),
         NOT_EQUAL.name: not_equal(simplify),
         LESS.name: less(simplify),
