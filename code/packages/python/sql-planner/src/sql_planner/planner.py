@@ -671,7 +671,7 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
 
 
 # --------------------------------------------------------------------------
-# IX-6: Index-scan selection
+# IX-6 / IX-8: Index-scan selection
 # --------------------------------------------------------------------------
 #
 # When the planner builds a Filter(Scan(t)) and the schema provider knows
@@ -681,19 +681,54 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
 #
 # Supported predicate shapes per index column ``col``:
 #
-#   col = literal          equality          → lo=v, hi=v, both inclusive
-#   col > literal          open lower bound  → lo=v (excl), hi=None
-#   col >= literal         closed lower      → lo=v (incl), hi=None
-#   col < literal          open upper bound  → lo=None, hi=v (excl)
-#   col <= literal         closed upper      → lo=None, hi=v (incl)
-#   literal < col          reversed GT       → lo=literal (excl), hi=None
-#   literal <= col         reversed GTE      → lo=literal (incl), hi=None
-#   literal > col          reversed LT       → lo=None, hi=literal (excl)
-#   literal >= col         reversed LTE      → lo=None, hi=literal (incl)
-#   col BETWEEN lo AND hi  closed range      → lo=lo_lit, hi=hi_lit
+#   col = literal          equality          → lo=(v,), hi=(v,), both inclusive
+#   col > literal          open lower bound  → lo=(v,) (excl), hi=None
+#   col >= literal         closed lower      → lo=(v,) (incl), hi=None
+#   col < literal          open upper bound  → lo=None, hi=(v,) (excl)
+#   col <= literal         closed upper      → lo=None, hi=(v,) (incl)
+#   literal < col          reversed GT       → lo=(literal,) (excl), hi=None
+#   literal <= col         reversed GTE      → lo=(literal,) (incl), hi=None
+#   literal > col          reversed LT       → lo=None, hi=(literal,) (excl)
+#   literal >= col         reversed LTE      → lo=None, hi=(literal,) (incl)
+#   col BETWEEN lo AND hi  closed range      → lo=(lo_lit,), hi=(hi_lit,)
 #   pred1 AND pred2        compound: extract one half, other becomes residual
 #
+# Multi-column composite indexes (IX-8):
+#
+#   a = v1 AND b = v2      → lo=(v1,v2), hi=(v1,v2), both inclusive
+#   a = v1 AND b > v2      → lo=(v1,v2) excl, hi=(v1,) incl
+#   a = v1 AND b < v2      → lo=(v1,) incl, hi=(v1,v2) excl
+#   a = v1 AND b BETWEEN l AND h  → lo=(v1,l), hi=(v1,h), both incl
+#
 # Any other predicate shape falls through to Filter(Scan).
+
+
+class _MultiColBounds:
+    """Result of multi-column index prefix matching for a predicate.
+
+    ``matched_cols`` is the ordered list of index columns that were
+    successfully bound against the predicate (always >= 1).  ``lo`` / ``hi``
+    are tuples of bound values (one per matched column), or ``None`` for an
+    unbounded side.  ``residual`` is any predicate fragment not consumed by
+    the index.
+    """
+    __slots__ = ("matched_cols", "lo", "hi", "lo_inclusive", "hi_inclusive", "residual")
+
+    def __init__(
+        self,
+        matched_cols: list[str],
+        lo: tuple[object, ...] | None,
+        hi: tuple[object, ...] | None,
+        lo_inclusive: bool,
+        hi_inclusive: bool,
+        residual: Expr | None,
+    ) -> None:
+        self.matched_cols = matched_cols
+        self.lo = lo
+        self.hi = hi
+        self.lo_inclusive = lo_inclusive
+        self.hi_inclusive = hi_inclusive
+        self.residual = residual
 
 
 def _try_index_scan(
@@ -704,13 +739,19 @@ def _try_index_scan(
     """Try to replace ``Filter(Scan(scan.table))`` with an ``IndexScan``.
 
     Asks the schema provider for indexes on ``scan.table``.  For each index
-    whose first column appears in ``predicate`` in a matchable position,
-    returns an :class:`~sql_planner.plan.IndexScan` node.  The first
-    matching index wins (deterministic: indexes are checked in the order
-    ``list_indexes`` returns them).
+    whose leading columns appear in ``predicate`` in a matchable position,
+    computes a :class:`_MultiColBounds` result.  The *best* matching index
+    (most predicate columns covered) wins.  Ties are broken by the order
+    ``list_indexes`` returns indexes (deterministic).
 
     Returns ``None`` if no index can serve the predicate, or if the schema
     provider does not expose a ``list_indexes`` method.
+
+    IX-8 change: ``_try_index_scan`` now evaluates *all* indexes and picks
+    the one that covers the most predicate columns, rather than returning
+    the first match.  A two-column composite index covering both ``a`` and
+    ``b`` is preferred over a single-column index on ``a`` alone when the
+    predicate has constraints on both ``a`` and ``b``.
     """
     list_indexes_fn = getattr(schema, "list_indexes", None)
     if list_indexes_fn is None:
@@ -719,30 +760,165 @@ def _try_index_scan(
     alias = scan.alias or scan.table
     indexes = list_indexes_fn(scan.table)
 
+    best_n: int = 0
+    best_node: P.IndexScan | None = None
+
     for idx in indexes:
         if not idx.columns:
             continue
-        col = idx.columns[0]  # v2: single-column index matching only
-        result = _extract_index_bounds(predicate, alias, col)
+        result = _extract_multi_column_bounds(predicate, alias, list(idx.columns))
         if result is None:
             continue
-        lo, lo_incl, hi, hi_incl, residual = result
-        return P.IndexScan(
-            table=scan.table,
-            alias=scan.alias,
-            index_name=idx.name,
-            column=col,
-            lo=lo,
-            hi=hi,
-            lo_inclusive=lo_incl,
-            hi_inclusive=hi_incl,
-            residual=residual,
-        )
-    return None
+        n = len(result.matched_cols)
+        if n > best_n:
+            best_n = n
+            best_node = P.IndexScan(
+                table=scan.table,
+                alias=scan.alias,
+                index_name=idx.name,
+                columns=tuple(result.matched_cols),
+                lo=result.lo,
+                hi=result.hi,
+                lo_inclusive=result.lo_inclusive,
+                hi_inclusive=result.hi_inclusive,
+                residual=result.residual,
+            )
+    return best_node
 
 
-# Return type: (lo, lo_inclusive, hi, hi_inclusive, residual) | None
+# Return type: (lo_scalar, lo_inclusive, hi_scalar, hi_inclusive, residual) | None
+# lo_scalar / hi_scalar are *single* SqlValue scalars, not tuples.
+# _extract_multi_column_bounds wraps these into tuples for IndexScan.
 _BoundsResult = tuple[object | None, bool, object | None, bool, Expr | None]
+
+
+def _extract_multi_column_bounds(
+    predicate: Expr,
+    alias: str,
+    index_cols: list[str],
+) -> "_MultiColBounds | None":
+    """Extract multi-column range bounds for a composite index prefix.
+
+    Walks ``index_cols`` in order, trying to bind each leading column to a
+    constraint in ``predicate``.  Binding rules:
+
+    - An **equality** constraint on column ``c`` (``c = literal``) is a
+      *prefix-extending* match: after binding ``c``, we recurse into the
+      residual predicate to try binding the next column.
+    - A **range** constraint (GT, GTE, LT, LTE, BETWEEN) on column ``c``
+      stops the prefix extension — no further columns can be added to the
+      composite bound (subsequent columns are not constrained by range
+      B-tree semantics).
+    - If column ``c`` has no constraint, the whole attempt fails.
+
+    Returns ``None`` if *no* column in ``index_cols`` can be matched.
+
+    Examples (index columns ``["a", "b"]``)::
+
+        predicate: a = 1 AND b = 2
+          → _MultiColBounds(["a","b"], lo=(1,2), hi=(1,2), both incl, residual=None)
+
+        predicate: a = 1 AND b > 5
+          → _MultiColBounds(["a","b"], lo=(1,5) excl, hi=(1,) incl, residual=None)
+
+        predicate: a = 1 AND b < 5
+          → _MultiColBounds(["a","b"], lo=(1,) incl, hi=(1,5) excl, residual=None)
+
+        predicate: a > 3
+          → _MultiColBounds(["a"], lo=(3,) excl, hi=None, residual=None)
+
+        predicate: a = 1
+          → _MultiColBounds(["a"], lo=(1,) incl, hi=(1,) incl, residual=None)
+    """
+    if not index_cols:
+        return None
+
+    # ---- Step 1: extract bounds for the first column ---------------------
+    result = _extract_index_bounds(predicate, alias, index_cols[0])
+    if result is None:
+        return None
+
+    lo0, lo_incl0, hi0, hi_incl0, residual0 = result
+
+    # ---- Step 2: determine whether the first column is an exact equality -
+    # An equality match (lo == hi, both inclusive) is the only case that
+    # allows extending the composite bound to the next column.
+    is_eq = (
+        lo0 is not None
+        and hi0 is not None
+        and lo0 == hi0
+        and lo_incl0
+        and hi_incl0
+    )
+
+    # ---- Step 3: single-column stop cases --------------------------------
+    # Stop extending if:
+    #   (a) the match is a range, not an equality  →  can't use next col
+    #   (b) there is only one index column
+    #   (c) the residual after extracting col 0 is None  →  nothing left to
+    #       extract the next column from
+    if not is_eq or len(index_cols) == 1 or residual0 is None:
+        lo_t = (lo0,) if lo0 is not None else None
+        hi_t = (hi0,) if hi0 is not None else None
+        return _MultiColBounds(
+            matched_cols=[index_cols[0]],
+            lo=lo_t,
+            hi=hi_t,
+            lo_inclusive=lo_incl0,
+            hi_inclusive=hi_incl0,
+            residual=residual0,
+        )
+
+    # ---- Step 4: try to extend with the next column ----------------------
+    eq_val = lo0   # lo0 == hi0 for an equality match
+    next_result = _extract_multi_column_bounds(residual0, alias, index_cols[1:])
+
+    if next_result is None:
+        # The residual couldn't bind the next column — stay single-column.
+        return _MultiColBounds(
+            matched_cols=[index_cols[0]],
+            lo=(eq_val,),
+            hi=(eq_val,),
+            lo_inclusive=True,
+            hi_inclusive=True,
+            residual=residual0,
+        )
+
+    # ---- Step 5: prepend eq_val to the next column's bounds --------------
+    #
+    # For composite B-tree prefix comparison, the backend uses
+    # ``sort_key[:len(lo_sort)]``.  Therefore:
+    #
+    # • If next.lo is None (unbounded below for the next column), the
+    #   composite lower bound is just ``(eq_val,)`` inclusive — start of the
+    #   sub-tree where the first column equals eq_val.
+    #
+    # • If next.hi is None (unbounded above), the composite upper bound is
+    #   ``(eq_val,)`` inclusive — end of the sub-tree.
+    #
+    # • Otherwise, prepend eq_val to get the full composite bound tuple.
+    if next_result.lo is not None:
+        new_lo: tuple[object, ...] | None = (eq_val,) + next_result.lo
+        new_lo_incl = next_result.lo_inclusive
+    else:
+        new_lo = (eq_val,)
+        new_lo_incl = True
+
+    if next_result.hi is not None:
+        new_hi: tuple[object, ...] | None = (eq_val,) + next_result.hi
+        new_hi_incl = next_result.hi_inclusive
+    else:
+        new_hi = (eq_val,)
+        new_hi_incl = True
+
+    return _MultiColBounds(
+        matched_cols=[index_cols[0]] + next_result.matched_cols,
+        lo=new_lo,
+        hi=new_hi,
+        lo_inclusive=new_lo_incl,
+        hi_inclusive=new_hi_incl,
+        residual=next_result.residual,
+    )
 
 
 def _extract_index_bounds(
