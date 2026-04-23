@@ -108,7 +108,7 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "nonlocal goto to label 'done'" in result.diagnostics[0].message
 
-    def test_rejects_conditional_designational_goto_for_now(self) -> None:
+    def test_accepts_conditional_designational_goto(self) -> None:
         ast = parse_algol(
             "begin integer result; "
             "goto if true then done else done; "
@@ -117,21 +117,73 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert (
-            "conditional designational expressions require Phase 7"
-            in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.gotos[0].target_name == (
+            "conditional designational expression"
         )
 
-    def test_rejects_switch_designational_goto_for_now(self) -> None:
+    def test_accepts_switch_declaration_and_designational_goto(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i; "
+            "switch s := first, second; "
+            "i := 2; goto s[i]; "
+            "first: result := 1; second: result := 2 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.switches[0].name == "s"
+        assert len(result.semantic.switches[0].entry_node_ids) == 2
+        assert result.semantic.switch_selections[0].name == "s"
+        assert result.semantic.gotos[0].target_name == "switch designational expression"
+
+    def test_rejects_missing_switch_designational_goto(self) -> None:
         ast = parse_algol("begin integer result; goto s[1] end")
         result = check_algol(ast)
 
         assert not result.ok
-        assert (
-            "switch designational expressions require Phase 7"
-            in result.diagnostics[0].message
+        assert "switch 's' is not declared" in result.diagnostics[0].message
+
+    def test_rejects_unsupported_switch_index_expression(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "switch s := done; "
+            "goto s[1 / 2]; "
+            "done: result := 1 "
+            "end"
         )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "real division is not supported" in result.diagnostics[0].message
+
+    def test_rejects_nonlocal_switch_selection_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "switch s := done; "
+            "begin integer inner; goto s[1] end; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "nonlocal switch 's'" in result.diagnostics[0].message
+
+    def test_rejects_nested_switch_selection_entries_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "switch s := s[1]; "
+            "goto s[1] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "select another switch require Phase 7b" in result.diagnostics[0].message
 
     def test_reports_missing_program_block(self) -> None:
         result = check_algol(ASTNode("program", []))
