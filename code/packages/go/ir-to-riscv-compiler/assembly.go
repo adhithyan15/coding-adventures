@@ -10,12 +10,18 @@ import (
 func (c *IrToRiscVCompiler) emitAssembly(program *ir.IrProgram, plan *compilePlan) (string, error) {
 	var builder strings.Builder
 	builder.WriteString(".text\n")
+	if plan.usesCallFrames() {
+		for _, line := range emitStackSetupAssembly(plan.stackTop) {
+			builder.WriteString(line)
+			builder.WriteByte('\n')
+		}
+	}
 	if plan.entryTrampoline {
 		builder.WriteString(fmt.Sprintf("  j %s\n", program.EntryLabel))
 	}
 
 	for _, instruction := range program.Instructions {
-		lines, err := c.emitAssemblyInstruction(instruction)
+		lines, err := c.emitAssemblyInstruction(instruction, plan)
 		if err != nil {
 			return "", err
 		}
@@ -25,7 +31,7 @@ func (c *IrToRiscVCompiler) emitAssembly(program *ir.IrProgram, plan *compilePla
 		}
 	}
 
-	if len(program.Data) > 0 {
+	if len(program.Data) > 0 || plan.usesCallFrames() {
 		builder.WriteString("\n.data\n")
 		for _, decl := range program.Data {
 			builder.WriteString(fmt.Sprintf("%s:\n", decl.Label))
@@ -42,19 +48,27 @@ func (c *IrToRiscVCompiler) emitAssembly(program *ir.IrProgram, plan *compilePla
 			}
 			builder.WriteString(fmt.Sprintf("  .byte %s\n", strings.Join(values, ", ")))
 		}
+		if plan.usesCallFrames() {
+			builder.WriteString(fmt.Sprintf("%s:\n", callFrameStackLabel))
+			builder.WriteString(fmt.Sprintf("  .zero %d\n", callFrameStackSize))
+		}
 	}
 
 	return builder.String(), nil
 }
 
-func (c *IrToRiscVCompiler) emitAssemblyInstruction(instruction ir.IrInstruction) ([]string, error) {
+func (c *IrToRiscVCompiler) emitAssemblyInstruction(instruction ir.IrInstruction, plan *compilePlan) ([]string, error) {
 	switch instruction.Opcode {
 	case ir.OpLabel:
 		label, err := labelOperand(instruction, 0)
 		if err != nil {
 			return nil, err
 		}
-		return []string{fmt.Sprintf("%s:", label.Name)}, nil
+		lines := []string{fmt.Sprintf("%s:", label.Name)}
+		if plan.callTargets[label.Name] {
+			lines = append(lines, emitCallTargetPrologueAssembly()...)
+		}
+		return lines, nil
 	case ir.OpComment:
 		text := ""
 		if len(instruction.Operands) > 0 {
@@ -138,7 +152,10 @@ func (c *IrToRiscVCompiler) emitAssemblyInstruction(instruction ir.IrInstruction
 		}
 		return []string{fmt.Sprintf("  call %s", label.Name)}, nil
 	case ir.OpRet:
-		return []string{"  ret"}, nil
+		if !plan.usesCallFrames() {
+			return []string{"  ret"}, nil
+		}
+		return emitRetEpilogueAssembly(), nil
 	case ir.OpSyscall:
 		imm, err := immOperand(instruction, 0)
 		if err != nil {
@@ -246,6 +263,29 @@ func emitCmpEqNeAssembly(instruction ir.IrInstruction, equal bool) ([]string, er
 		fmt.Sprintf("  xor %s, %s, %s", regName(dst), regName(left), regName(right)),
 		fmt.Sprintf("  sltu %s, zero, %s", regName(dst), regName(dst)),
 	}, nil
+}
+
+func emitCallTargetPrologueAssembly() []string {
+	return []string{
+		"  addi sp, sp, -4",
+		"  sw ra, 0(sp)",
+	}
+}
+
+func emitStackSetupAssembly(stackTop int) []string {
+	upper, lower := splitUpperLower(stackTop)
+	return []string{
+		fmt.Sprintf("  lui sp, %d", upper),
+		fmt.Sprintf("  addi sp, sp, %d", lower),
+	}
+}
+
+func emitRetEpilogueAssembly() []string {
+	return []string{
+		"  lw ra, 0(sp)",
+		"  addi sp, sp, 4",
+		"  ret",
+	}
 }
 
 func threePhysicalRegs(instruction ir.IrInstruction) (int, int, int, error) {

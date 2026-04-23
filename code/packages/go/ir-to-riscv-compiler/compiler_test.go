@@ -131,6 +131,49 @@ func TestCompileHonorsEntryLabelWithTrampoline(t *testing.T) {
 	}
 }
 
+func TestCompilePreservesReturnAddressAcrossNestedCalls(t *testing.T) {
+	program := ir.NewIrProgram("_start")
+	program.Instructions = []ir.IrInstruction{
+		label("_start"),
+		instr(1, ir.OpCall, ir.IrLabel{Name: "first"}),
+		instr(2, ir.OpHalt),
+		label("first"),
+		instr(3, ir.OpCall, ir.IrLabel{Name: "second"}),
+		instr(4, ir.OpRet),
+		label("second"),
+		instr(5, ir.OpLoadImm, ir.IrRegister{Index: 0}, ir.IrImmediate{Value: 42}),
+		instr(6, ir.OpRet),
+	}
+
+	result, err := NewIrToRiscVCompiler().Compile(program)
+	if err != nil {
+		t.Fatalf("compile failed: %v", err)
+	}
+
+	sim := riscv.NewRiscVSimulator(4096)
+	sim.Run(result.Bytes)
+
+	if got := sim.CPU.Registers.Read(5); got != 42 {
+		t.Fatalf("expected nested call result in v0/x5 to be 42, got %d", got)
+	}
+	expectedStackTop := uint32(result.DataOffsets[callFrameStackLabel] + callFrameStackSize)
+	if got := sim.CPU.Registers.Read(2); got != expectedStackTop {
+		t.Fatalf("expected stack pointer to be restored to %d, got %d", expectedStackTop, got)
+	}
+	if !strings.Contains(result.Assembly, "sw ra, 0(sp)") ||
+		!strings.Contains(result.Assembly, "lw ra, 0(sp)") {
+		t.Fatalf("expected call frame save/restore in assembly, got:\n%s", result.Assembly)
+	}
+
+	assembled, err := riscvassembler.Assemble(result.Assembly)
+	if err != nil {
+		t.Fatalf("assemble emitted assembly failed: %v\n%s", err, result.Assembly)
+	}
+	if !bytes.Equal(assembled.Bytes, result.Bytes) {
+		t.Fatalf("expected emitted assembly to reassemble to compiler bytes")
+	}
+}
+
 func TestCompileRejectsUnknownLabel(t *testing.T) {
 	program := ir.NewIrProgram("_start")
 	program.Instructions = []ir.IrInstruction{

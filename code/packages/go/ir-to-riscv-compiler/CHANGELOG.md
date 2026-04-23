@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Add call-frame lowering for nested `CALL`/`RET` programs.
+- Emit a hidden call stack for compiler-generated RISC-V images that need one.
+
 ## 0.1.0
 
 - Initial `ir-to-riscv-compiler` package.

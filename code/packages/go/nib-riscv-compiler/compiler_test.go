@@ -57,6 +57,28 @@ func TestRunSourceExecutesNibOnRiscVSimulator(t *testing.T) {
 	}
 }
 
+func TestRunSourceExecutesNestedNibCallsOnRiscVSimulator(t *testing.T) {
+	source := strings.Join([]string{
+		"fn inner() -> u4 { return 7; }",
+		"fn middle() -> u4 { return inner(); }",
+		"fn main() -> u4 { return middle(); }",
+	}, " ")
+	run, err := RunSource(source)
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if run.ReturnValue != 7 {
+		t.Fatalf("expected nested call return value 7, got %d", run.ReturnValue)
+	}
+	if !strings.Contains(run.Package.Assembly, "sw ra, 0(sp)") ||
+		!strings.Contains(run.Package.Assembly, "lw ra, 0(sp)") {
+		t.Fatalf("expected call frame save/restore in assembly, got:\n%s", run.Package.Assembly)
+	}
+}
+
 func TestTypeErrorsReportStage(t *testing.T) {
 	_, err := CompileSource("fn main() { let flag: bool = 1; }")
 	if err == nil {
