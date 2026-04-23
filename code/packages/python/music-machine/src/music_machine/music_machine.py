@@ -41,6 +41,7 @@ DEFAULT_PPQ = 480
 DEFAULT_MAX_SCORE_LENGTH = 1_000_000
 DEFAULT_MAX_LINE_LENGTH = 10_000
 DEFAULT_MAX_EVENT_COUNT = 10_000
+BEAT_TICK_TOLERANCE = 1e-9
 
 DURATION_BEATS = {
     "w": 4.0,
@@ -751,6 +752,62 @@ class PortableScoreBuilder:
         )
         return self
 
+    def beats_to_ticks(self, beat_count: Real) -> int:
+        beats = _finite_float("beat_count", beat_count)
+        if beats < 0.0:
+            raise ValueError(f"beat_count must be >= 0.0, got {beats}")
+        raw_ticks = beats * self.ppq
+        rounded = round(raw_ticks)
+        if abs(raw_ticks - rounded) > BEAT_TICK_TOLERANCE:
+            raise ValueError(
+                f"beat_count {beats} is not representable at ppq={self.ppq}"
+            )
+        return int(rounded)
+
+    def measure_ticks(self, meter: str | None = None) -> int:
+        active_meter = _builder_meter(self, meter)
+        numerator, denominator = _meter_parts(active_meter)
+        beats = numerator * (4.0 / denominator)
+        return self.beats_to_ticks(beats)
+
+    def measure_start_tick(
+        self,
+        measure_number: int,
+        *,
+        meter: str | None = None,
+    ) -> int:
+        if isinstance(measure_number, bool) or not isinstance(measure_number, Integral):
+            raise ValueError("measure_number must be an integer >= 1")
+        converted = int(measure_number)
+        if converted < 1:
+            raise ValueError("measure_number must be >= 1")
+        return (converted - 1) * self.measure_ticks(meter)
+
+    def tick_in_measure(
+        self,
+        measure_number: int,
+        beat_offset: Real = 0.0,
+        *,
+        meter: str | None = None,
+    ) -> int:
+        start_tick = self.measure_start_tick(measure_number, meter=meter)
+        return start_tick + self.beats_to_ticks(beat_offset)
+
+    def phrase(
+        self,
+        track_id: str,
+        *,
+        measure_number: int = 1,
+        beat_offset: Real = 0.0,
+        meter: str | None = None,
+    ) -> PhraseBuilder:
+        start_tick = self.tick_in_measure(
+            measure_number,
+            beat_offset,
+            meter=meter,
+        )
+        return PhraseBuilder(self, track_id, start_tick=start_tick)
+
     def build(self) -> PortableScore:
         return PortableScore(
             format_version=self.format_version,
@@ -802,6 +859,89 @@ class PortableScoreBuilder:
         source_order = self._source_order
         self._source_order += 1
         return source_order
+
+
+@dataclass
+class PhraseBuilder:
+    """Mutable cursor for sequencing a phrase on one track."""
+
+    score_builder: PortableScoreBuilder
+    track_id: str
+    start_tick: int = 0
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.score_builder, PortableScoreBuilder):
+            raise ValueError("score_builder must be a PortableScoreBuilder")
+        self.track_id = _validate_identifier("track id", self.track_id)
+        self.start_tick = _non_negative_tick("start_tick", self.start_tick)
+
+    @property
+    def current_tick(self) -> int:
+        return self.start_tick
+
+    def note(
+        self,
+        note: str,
+        duration_beats: Real,
+        *,
+        velocity: float = 1.0,
+    ) -> PhraseBuilder:
+        duration_tick = self.score_builder.beats_to_ticks(duration_beats)
+        self.score_builder.add_note(
+            self.track_id,
+            self.start_tick,
+            duration_tick,
+            note,
+            velocity=velocity,
+        )
+        self.start_tick += duration_tick
+        return self
+
+    def chord(
+        self,
+        notes: Iterable[str],
+        duration_beats: Real,
+        *,
+        velocity: float = 1.0,
+    ) -> PhraseBuilder:
+        duration_tick = self.score_builder.beats_to_ticks(duration_beats)
+        self.score_builder.add_chord(
+            self.track_id,
+            self.start_tick,
+            duration_tick,
+            notes,
+            velocity=velocity,
+        )
+        self.start_tick += duration_tick
+        return self
+
+    def rest(self, duration_beats: Real) -> PhraseBuilder:
+        duration_tick = self.score_builder.beats_to_ticks(duration_beats)
+        self.score_builder.add_rest(
+            self.track_id,
+            self.start_tick,
+            duration_tick,
+        )
+        self.start_tick += duration_tick
+        return self
+
+    def advance_beats(self, beat_count: Real) -> PhraseBuilder:
+        self.start_tick += self.score_builder.beats_to_ticks(beat_count)
+        return self
+
+    def jump_to_measure(
+        self,
+        measure_number: int,
+        beat_offset: Real = 0.0,
+        *,
+        meter: str | None = None,
+    ) -> PhraseBuilder:
+        self.start_tick = self.score_builder.tick_in_measure(
+            measure_number,
+            beat_offset,
+            meter=meter,
+        )
+        return self
 
 
 @dataclass(frozen=True)
@@ -1229,6 +1369,22 @@ def _portable_event_line(event: PortableScoreEvent) -> str:
         f"event {event.track_id} {event.start_tick} {event.duration_tick} "
         f"note {notes} velocity={_format_portable_number(event.velocity)}"
     )
+
+
+def _builder_meter(builder: PortableScoreBuilder, meter: str | None) -> str:
+    if meter is not None:
+        return _validate_meter(meter)
+
+    if not builder._meter_events:
+        return DEFAULT_METER
+
+    return sorted(builder._meter_events, key=lambda event: event.start_tick)[0].meter
+
+
+def _meter_parts(meter: str) -> tuple[int, int]:
+    validated = _validate_meter(meter)
+    numerator_text, denominator_text = validated.split("/", 1)
+    return int(numerator_text), int(denominator_text)
 
 
 def _validate_total_sample_budget(
