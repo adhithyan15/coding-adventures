@@ -348,6 +348,7 @@ members = [
     "state-machine-source-compiler",
     "state-machine-tokenizer",
     "embeddable-tcp-server",
+    "embeddable-http-server",
     "generic-job-protocol",
     "generic-job-runtime",
 ]

@@ -8,7 +8,9 @@
 //! convenience constructors.
 
 use std::net::{SocketAddr, ToSocketAddrs};
+use std::sync::atomic::AtomicU64;
 use std::sync::{Arc, OnceLock};
+use std::thread;
 use std::time::Duration;
 
 pub use stream_reactor::{ConnectionId, StopHandle};
@@ -74,10 +76,12 @@ impl TcpHandlerResult {
 /// `TcpRuntimeOptions` is the TCP policy surface that callers configure.
 /// Listener options feed binding defaults, stream options shape accepted socket
 /// policy, and the remaining knobs forward into the generic stream runtime.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct TcpRuntimeOptions {
     pub listener: ListenerOptions,
     pub stream: StreamOptions,
+    /// Optional shared seed used by sharded runtimes for unique connection IDs.
+    pub connection_id_seed: Option<Arc<AtomicU64>>,
     pub read_buffer_size: usize,
     pub max_connections: usize,
     pub max_pending_write_bytes: usize,
@@ -90,6 +94,7 @@ impl Default for TcpRuntimeOptions {
         Self {
             listener: defaults.listener,
             stream: defaults.stream,
+            connection_id_seed: None,
             read_buffer_size: defaults.read_buffer_size,
             max_connections: defaults.max_connections,
             max_pending_write_bytes: defaults.max_pending_write_bytes,
@@ -98,11 +103,26 @@ impl Default for TcpRuntimeOptions {
     }
 }
 
+impl PartialEq for TcpRuntimeOptions {
+    fn eq(&self, other: &Self) -> bool {
+        self.listener == other.listener
+            && self.stream == other.stream
+            && self.connection_id_seed.is_some() == other.connection_id_seed.is_some()
+            && self.read_buffer_size == other.read_buffer_size
+            && self.max_connections == other.max_connections
+            && self.max_pending_write_bytes == other.max_pending_write_bytes
+            && self.poll_timeout == other.poll_timeout
+    }
+}
+
+impl Eq for TcpRuntimeOptions {}
+
 impl From<TcpRuntimeOptions> for StreamReactorOptions {
     fn from(value: TcpRuntimeOptions) -> Self {
         Self {
             listener: value.listener,
             stream: value.stream,
+            connection_id_seed: value.connection_id_seed,
             read_buffer_size: value.read_buffer_size,
             max_connections: value.max_connections,
             max_pending_write_bytes: value.max_pending_write_bytes,
@@ -116,40 +136,146 @@ pub struct TcpRuntime<P, S = ()> {
     local_addr: SocketAddr,
 }
 
+pub struct ShardedTcpRuntime<P, S = ()> {
+    local_addr: SocketAddr,
+    worker_count: usize,
+    mailbox: TcpMailbox,
+    stop_handles: Vec<StopHandle>,
+    runtimes: Vec<TcpRuntime<P, S>>,
+}
+
+#[derive(Clone)]
+pub struct ShardedStopHandle {
+    stop_handles: Arc<[StopHandle]>,
+}
+
+impl ShardedStopHandle {
+    pub fn stop(&self) {
+        for stop in self.stop_handles.iter() {
+            stop.stop();
+        }
+    }
+}
+
+impl<P, S> ShardedTcpRuntime<P, S> {
+    pub fn local_addr(&self) -> SocketAddr {
+        self.local_addr
+    }
+
+    pub fn worker_count(&self) -> usize {
+        self.worker_count
+    }
+
+    pub fn mailbox(&self) -> TcpMailbox {
+        self.mailbox.clone()
+    }
+
+    pub fn stop_handle(&self) -> ShardedStopHandle {
+        ShardedStopHandle {
+            stop_handles: Arc::from(self.stop_handles.clone().into_boxed_slice()),
+        }
+    }
+
+    pub fn stop(&self) {
+        for stop in &self.stop_handles {
+            stop.stop();
+        }
+    }
+}
+
+impl<P, S> ShardedTcpRuntime<P, S>
+where
+    P: TransportPlatform + Send + 'static,
+    S: Send + 'static,
+{
+    pub fn serve(&mut self) -> Result<(), PlatformError> {
+        let runtimes = std::mem::take(&mut self.runtimes);
+        let mut workers = Vec::with_capacity(runtimes.len());
+        for mut runtime in runtimes {
+            workers.push(thread::spawn(move || runtime.serve()));
+        }
+
+        let mut first_error = None;
+        for worker in workers {
+            let result = match worker.join() {
+                Ok(result) => result,
+                Err(_) => Err(PlatformError::ProviderFault(
+                    "TCP runtime worker panicked".to_string(),
+                )),
+            };
+            if first_error.is_none() {
+                first_error = result.err();
+            }
+        }
+
+        if let Some(error) = first_error {
+            Err(error)
+        } else {
+            Ok(())
+        }
+    }
+}
+
+impl<P, S> Drop for ShardedTcpRuntime<P, S> {
+    fn drop(&mut self) {
+        self.stop();
+    }
+}
+
 #[derive(Clone)]
 pub struct TcpMailbox {
-    inner: StreamMailbox,
+    inners: Arc<[StreamMailbox]>,
 }
 
 impl TcpMailbox {
     pub fn send(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
-        self.inner.send(connection_id, bytes);
+        let bytes = bytes.into();
+        for inner in self.inners.iter() {
+            inner.send(connection_id, bytes.clone());
+        }
     }
 
     pub fn send_and_close(&self, connection_id: ConnectionId, bytes: impl Into<Vec<u8>>) {
-        self.inner.send_and_close(connection_id, bytes);
+        let bytes = bytes.into();
+        for inner in self.inners.iter() {
+            inner.send_and_close(connection_id, bytes.clone());
+        }
     }
 
     pub fn close(&self, connection_id: ConnectionId) {
-        self.inner.close(connection_id);
+        for inner in self.inners.iter() {
+            inner.close(connection_id);
+        }
     }
 
     pub fn pause_reads(&self, connection_id: ConnectionId) {
-        self.inner.pause_reads(connection_id);
+        for inner in self.inners.iter() {
+            inner.pause_reads(connection_id);
+        }
     }
 
     pub fn resume_reads(&self, connection_id: ConnectionId) {
-        self.inner.resume_reads(connection_id);
+        for inner in self.inners.iter() {
+            inner.resume_reads(connection_id);
+        }
     }
 
     pub fn resume_all_reads(&self) {
-        self.inner.resume_all_reads();
+        for inner in self.inners.iter() {
+            inner.resume_all_reads();
+        }
+    }
+
+    fn from_mailboxes(mailboxes: Vec<StreamMailbox>) -> Self {
+        Self {
+            inners: Arc::from(mailboxes.into_boxed_slice()),
+        }
     }
 }
 
 impl From<StreamMailbox> for TcpMailbox {
     fn from(value: StreamMailbox) -> Self {
-        Self { inner: value }
+        Self::from_mailboxes(vec![value])
     }
 }
 
@@ -280,6 +406,87 @@ impl<P: TransportPlatform, S: Send + 'static> TcpRuntime<P, S> {
     }
 }
 
+fn bind_sharded_runtime_with_state<P, S, I, F, C>(
+    address: SocketAddr,
+    mut options: TcpRuntimeOptions,
+    worker_count: usize,
+    init: I,
+    handler: F,
+    on_close: C,
+    new_platform: impl Fn() -> Result<P, PlatformError>,
+) -> Result<ShardedTcpRuntime<P, S>, PlatformError>
+where
+    P: TransportPlatform + 'static,
+    S: Send + 'static,
+    I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+    F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+{
+    let worker_count = worker_count.max(1);
+    if worker_count > 1 {
+        options.listener.reuse_port = true;
+    }
+
+    let shared_connection_id = if worker_count > 1 {
+        Some(Arc::new(AtomicU64::new(1)))
+    } else {
+        None
+    };
+
+    let init: Arc<dyn Fn(TcpConnectionInfo) -> S + Send + Sync> = Arc::new(init);
+    let handler: Arc<dyn Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync> =
+        Arc::new(handler);
+    let on_close: Arc<dyn Fn(TcpConnectionInfo, S) + Send + Sync> = Arc::new(on_close);
+
+    let mut bind_address = address;
+    let mut runtimes = Vec::with_capacity(worker_count);
+    for _ in 0..worker_count {
+        let mut worker_options = options.clone();
+        if let Some(seed) = &shared_connection_id {
+            worker_options.connection_id_seed = Some(Arc::clone(seed));
+        }
+
+        let init = Arc::clone(&init);
+        let handler = Arc::clone(&handler);
+        let on_close = Arc::clone(&on_close);
+        let runtime = TcpRuntime::bind_with_state(
+            new_platform()?,
+            BindAddress::Ip(bind_address),
+            worker_options,
+            move |info| init(info),
+            move |info, state, bytes| handler(info, state, bytes),
+            move |info, state| on_close(info, state),
+        )?;
+
+        bind_address = runtime.local_addr();
+        runtimes.push(runtime);
+    }
+
+    let local_addr = runtimes
+        .first()
+        .map(TcpRuntime::local_addr)
+        .ok_or(PlatformError::InvalidResource)?;
+    let stop_handles = runtimes
+        .iter()
+        .map(TcpRuntime::stop_handle)
+        .collect::<Vec<_>>();
+    let mailbox = TcpMailbox::from_mailboxes(
+        runtimes
+            .iter()
+            .map(|runtime| runtime.reactor.mailbox())
+            .collect(),
+    );
+    let worker_count = runtimes.len();
+
+    Ok(ShardedTcpRuntime {
+        local_addr,
+        worker_count,
+        mailbox,
+        stop_handles,
+        runtimes,
+    })
+}
+
 #[cfg(any(
     target_os = "macos",
     target_os = "freebsd",
@@ -300,6 +507,26 @@ impl TcpRuntime<transport_platform::bsd::KqueueTransportPlatform, ()> {
         let address = resolve_first_socket_addr(addr)?;
         let platform = transport_platform::bsd::KqueueTransportPlatform::new()?;
         Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+
+    pub fn bind_kqueue_sharded<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedTcpRuntime<transport_platform::bsd::KqueueTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        Self::bind_kqueue_sharded_with_state(
+            addr,
+            options,
+            worker_count,
+            |_| (),
+            move |info, _, bytes| handler(info, bytes),
+            |_, _| {},
+        )
     }
 }
 
@@ -335,6 +562,31 @@ impl<S: Send + 'static> TcpRuntime<transport_platform::bsd::KqueueTransportPlatf
             on_close,
         )
     }
+
+    pub fn bind_kqueue_sharded_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        worker_count: usize,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<ShardedTcpRuntime<transport_platform::bsd::KqueueTransportPlatform, S>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
+        bind_sharded_runtime_with_state(
+            resolve_first_socket_addr(addr)?,
+            options,
+            worker_count,
+            init,
+            handler,
+            on_close,
+            transport_platform::bsd::KqueueTransportPlatform::new,
+        )
+    }
 }
 
 #[cfg(target_os = "linux")]
@@ -351,6 +603,26 @@ impl TcpRuntime<transport_platform::linux::EpollTransportPlatform, ()> {
         let address = resolve_first_socket_addr(addr)?;
         let platform = transport_platform::linux::EpollTransportPlatform::new()?;
         Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+
+    pub fn bind_epoll_sharded<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<ShardedTcpRuntime<transport_platform::linux::EpollTransportPlatform>, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        Self::bind_epoll_sharded_with_state(
+            addr,
+            options,
+            worker_count,
+            |_| (),
+            move |info, _, bytes| handler(info, bytes),
+            |_, _| {},
+        )
     }
 }
 
@@ -380,6 +652,34 @@ impl<S: Send + 'static> TcpRuntime<transport_platform::linux::EpollTransportPlat
             on_close,
         )
     }
+
+    pub fn bind_epoll_sharded_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        worker_count: usize,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<
+        ShardedTcpRuntime<transport_platform::linux::EpollTransportPlatform, S>,
+        PlatformError,
+    >
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
+        bind_sharded_runtime_with_state(
+            resolve_first_socket_addr(addr)?,
+            options,
+            worker_count,
+            init,
+            handler,
+            on_close,
+            transport_platform::linux::EpollTransportPlatform::new,
+        )
+    }
 }
 
 #[cfg(target_os = "windows")]
@@ -396,6 +696,29 @@ impl TcpRuntime<transport_platform::windows::WindowsTransportPlatform, ()> {
         let address = resolve_first_socket_addr(addr)?;
         let platform = transport_platform::windows::WindowsTransportPlatform::new()?;
         Self::bind(platform, BindAddress::Ip(address), options, handler)
+    }
+
+    pub fn bind_windows_sharded<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        worker_count: usize,
+        handler: F,
+    ) -> Result<
+        ShardedTcpRuntime<transport_platform::windows::WindowsTransportPlatform>,
+        PlatformError,
+    >
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
+        Self::bind_windows_sharded_with_state(
+            addr,
+            options,
+            worker_count,
+            |_| (),
+            move |info, _, bytes| handler(info, bytes),
+            |_, _| {},
+        )
     }
 }
 
@@ -423,6 +746,34 @@ impl<S: Send + 'static> TcpRuntime<transport_platform::windows::WindowsTransport
             init,
             handler,
             on_close,
+        )
+    }
+
+    pub fn bind_windows_sharded_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        worker_count: usize,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<
+        ShardedTcpRuntime<transport_platform::windows::WindowsTransportPlatform, S>,
+        PlatformError,
+    >
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
+        bind_sharded_runtime_with_state(
+            resolve_first_socket_addr(addr)?,
+            options,
+            worker_count,
+            init,
+            handler,
+            on_close,
+            transport_platform::windows::WindowsTransportPlatform::new,
         )
     }
 }
@@ -490,6 +841,68 @@ mod tests {
             assert_eq!(echoed, format!("client-{i}-payload").into_bytes());
         }
 
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    fn sharded_runtime_serves_clients_across_multiple_reactors() {
+        let seen_ids = Arc::new(Mutex::new(Vec::<ConnectionId>::new()));
+        let seen_in_handler = Arc::clone(&seen_ids);
+        let mut runtime = TcpRuntime::bind_kqueue_sharded(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            3,
+            move |info, bytes| {
+                seen_in_handler
+                    .lock()
+                    .expect("seen ids mutex poisoned")
+                    .push(info.id);
+                TcpHandlerResult::write(bytes.to_vec())
+            },
+        )
+        .expect("bind sharded runtime");
+        let addr = runtime.local_addr();
+        assert_eq!(runtime.worker_count(), 3);
+
+        let stop = runtime.stop_handle();
+        let mailbox = runtime.mailbox();
+        let server = thread::spawn(move || runtime.serve());
+
+        let client_count = 24usize;
+        let barrier = Arc::new(Barrier::new(client_count));
+        let mut clients = Vec::new();
+
+        for i in 0..client_count {
+            let barrier = Arc::clone(&barrier);
+            clients.push(thread::spawn(move || -> Result<Vec<u8>, String> {
+                barrier.wait();
+                let mut stream = TcpStream::connect(addr).map_err(|e| e.to_string())?;
+                let payload = format!("sharded-{i}").into_bytes();
+                stream.write_all(&payload).map_err(|e| e.to_string())?;
+                stream
+                    .shutdown(Shutdown::Write)
+                    .map_err(|e| e.to_string())?;
+                let mut echoed = Vec::new();
+                stream.read_to_end(&mut echoed).map_err(|e| e.to_string())?;
+                Ok(echoed)
+            }));
+        }
+
+        for (i, client) in clients.into_iter().enumerate() {
+            let echoed = client.join().expect("client thread").expect("client io");
+            assert_eq!(echoed, format!("sharded-{i}").into_bytes());
+        }
+
+        let ids = seen_ids.lock().expect("seen ids mutex poisoned").clone();
+        let mut unique = ids.clone();
+        unique.sort();
+        unique.dedup();
+        assert_eq!(ids.len(), client_count);
+        assert_eq!(unique.len(), client_count);
+
+        mailbox.resume_all_reads();
         stop.stop();
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
