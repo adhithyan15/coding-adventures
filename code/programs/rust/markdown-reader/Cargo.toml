@@ -19,6 +19,9 @@ text-native = { path = "../../../packages/rust/text-native" }
 [target.'cfg(target_vendor = "apple")'.dependencies]
 objc-bridge = { path = "../../../packages/rust/objc-bridge" }
 
+[target.'cfg(target_os = "windows")'.dependencies]
+paint-vm-direct2d = { path = "../../../packages/rust/paint-vm-direct2d" }
+
 [[bin]]
 name = "markdown-reader"
 path = "src/main.rs"
