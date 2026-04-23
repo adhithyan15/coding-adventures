@@ -19,12 +19,14 @@ TestCompositeIntegration
 
 from __future__ import annotations
 
+import mini_sqlite
+from mini_sqlite.advisor import IndexAdvisor, _walk
+from mini_sqlite.policy import HitCountPolicy
 from sql_backend.in_memory import InMemoryBackend
+from sql_backend.index import IndexDef
 from sql_backend.schema import ColumnDef
 
-import mini_sqlite
-from mini_sqlite.advisor import IndexAdvisor
-from mini_sqlite.policy import HitCountPolicy
+
 
 # ---------------------------------------------------------------------------
 # Helpers
