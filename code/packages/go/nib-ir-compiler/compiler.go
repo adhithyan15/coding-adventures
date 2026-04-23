@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	regZero    = 0
-	regScratch = 1
-	regVarBase = 2
+	regZero                  = 0
+	regScratch               = 1
+	regArgBase               = 2
+	defaultLocalRegisterBase = 8
 )
 
 type CompileResult struct {
@@ -155,13 +156,30 @@ func (c *Compiler) compileFunction(node *parser.ASTNode) {
 	c.emitComment("function: " + functionName)
 	c.emitLabel("_fn_" + functionName)
 	registers := map[string]int{}
-	nextRegister := regVarBase
-	for _, param := range params {
-		registers[param[0]] = nextRegister
-		nextRegister++
+	nextRegister := regArgBase
+	if c.config.CopyParametersToLocals {
+		nextRegister = c.localRegisterBase()
+		for index, param := range params {
+			argRegister := regArgBase + index
+			registers[param[0]] = nextRegister
+			c.emit(ir.OpAddImm, ir.IrRegister{Index: nextRegister}, ir.IrRegister{Index: argRegister}, ir.IrImmediate{Value: 0})
+			nextRegister++
+		}
+	} else {
+		for _, param := range params {
+			registers[param[0]] = nextRegister
+			nextRegister++
+		}
 	}
 	c.compileBlock(blockNode, registers, nextRegister)
 	c.emit(ir.OpRet)
+}
+
+func (c *Compiler) localRegisterBase() int {
+	if c.config.LocalRegisterBase > 0 {
+		return c.config.LocalRegisterBase
+	}
+	return defaultLocalRegisterBase
 }
 
 func (c *Compiler) compileBlock(block *parser.ASTNode, registers map[string]int, nextRegister int) int {
@@ -415,7 +433,7 @@ func (c *Compiler) compileCallExpr(node *parser.ASTNode, registers map[string]in
 	}
 	for index, arg := range args {
 		valueRegister := c.compileExpr(arg, registers)
-		destination := regVarBase + index
+		destination := regArgBase + index
 		if valueRegister != destination {
 			c.emit(ir.OpAddImm, ir.IrRegister{Index: destination}, ir.IrRegister{Index: valueRegister}, ir.IrImmediate{Value: 0})
 		}

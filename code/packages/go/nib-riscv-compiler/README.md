@@ -20,9 +20,11 @@ value from physical register `x6`, the RISC-V register currently used for Nib's
 
 ## Current scope
 
-This path supports simple Nib programs and nested function calls that only need
-the current fixed-register ABI. Arguments are copied into virtual registers in
-order, and the return value is reported from virtual `v1`/physical `x6`.
+This path supports simple Nib programs and nested function calls with caller
+locals preserved across calls. Arguments are staged through virtual registers in
+order, function parameters are copied into local virtual registers on entry, and
+the return value is reported from virtual `v1`/physical `x6`.
 
-The remaining ABI gaps are local values that must survive across calls, recursion
-depth beyond the hidden backend stack, and richer argument/return conventions.
+The remaining ABI gaps are recursion depth beyond the hidden backend stack,
+values that outgrow the starter physical-register map, and richer
+argument/return conventions.

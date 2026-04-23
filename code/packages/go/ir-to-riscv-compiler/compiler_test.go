@@ -174,6 +174,53 @@ func TestCompilePreservesReturnAddressAcrossNestedCalls(t *testing.T) {
 	}
 }
 
+func TestCompilePreservesCallerRegistersAroundCalls(t *testing.T) {
+	program := ir.NewIrProgram("_start")
+	program.Instructions = []ir.IrInstruction{
+		label("_start"),
+		instr(1, ir.OpCall, ir.IrLabel{Name: "caller"}),
+		instr(2, ir.OpHalt),
+		label("caller"),
+		instr(3, ir.OpLoadImm, ir.IrRegister{Index: 8}, ir.IrImmediate{Value: 5}),
+		instr(4, ir.OpLoadImm, ir.IrRegister{Index: 9}, ir.IrImmediate{Value: 9}),
+		instr(5, ir.OpCall, ir.IrLabel{Name: "clobber"}),
+		instr(6, ir.OpAdd, ir.IrRegister{Index: 1}, ir.IrRegister{Index: 8}, ir.IrRegister{Index: 9}),
+		instr(7, ir.OpRet),
+		label("clobber"),
+		instr(8, ir.OpLoadImm, ir.IrRegister{Index: 8}, ir.IrImmediate{Value: 100}),
+		instr(9, ir.OpLoadImm, ir.IrRegister{Index: 9}, ir.IrImmediate{Value: 200}),
+		instr(10, ir.OpRet),
+	}
+
+	result, err := NewIrToRiscVCompiler().Compile(program)
+	if err != nil {
+		t.Fatalf("compile failed: %v", err)
+	}
+
+	sim := riscv.NewRiscVSimulator(4096)
+	sim.Run(result.Bytes)
+
+	if got := sim.CPU.Registers.Read(6); got != 14 {
+		t.Fatalf("expected caller return register v1/x6 to preserve 5+9 across call, got %d", got)
+	}
+	expectedStackTop := uint32(result.DataOffsets[callFrameStackLabel] + callFrameStackSize)
+	if got := sim.CPU.Registers.Read(2); got != expectedStackTop {
+		t.Fatalf("expected stack pointer to be restored to %d, got %d", expectedStackTop, got)
+	}
+	if !strings.Contains(result.Assembly, "sw x12, 0(sp)") ||
+		!strings.Contains(result.Assembly, "lw x12, 0(sp)") {
+		t.Fatalf("expected caller-save spill/reload in assembly, got:\n%s", result.Assembly)
+	}
+
+	assembled, err := riscvassembler.Assemble(result.Assembly)
+	if err != nil {
+		t.Fatalf("assemble emitted assembly failed: %v\n%s", err, result.Assembly)
+	}
+	if !bytes.Equal(assembled.Bytes, result.Bytes) {
+		t.Fatalf("expected emitted assembly to reassemble to compiler bytes")
+	}
+}
+
 func TestCompileRejectsUnknownLabel(t *testing.T) {
 	program := ir.NewIrProgram("_start")
 	program.Instructions = []ir.IrInstruction{

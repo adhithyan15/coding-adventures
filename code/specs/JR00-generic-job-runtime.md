@@ -356,6 +356,11 @@ Thread-pool executors must expose:
 - timeout behavior
 - shutdown semantics
 
+Rust status: `generic-job-runtime` now includes a transport-neutral
+`RustThreadPool<T, U>` executor. The pool accepts only `JobRequest<T>` values,
+returns only `JobResponse<U>` values, and has no view into TCP, Redis, IRC, UI
+events, or any future producer.
+
 ### Process-Pool Executor
 
 Runs work in child processes.
@@ -832,14 +837,20 @@ Remaining hardening:
 
 ### Phase 3: Rust Thread-Pool Executor
 
-Add an in-process Rust executor with:
+Status: initial Rust implementation has landed with:
 
 - bounded queue
 - worker count
 - response draining
 - panic containment
 - timeout accounting
+- queued-job cancellation and logical running-job cancellation
+
+Remaining hardening:
+
 - affinity-aware ordering
+- cooperative cancellation tokens for long-running CPU jobs
+- metrics for queue depth, in-flight jobs, cancellations, and panics
 
 ### Phase 4: TCP Job Runtime Adapter
 

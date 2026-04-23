@@ -150,7 +150,7 @@ func (c *IrToRiscVCompiler) emitAssemblyInstruction(instruction ir.IrInstruction
 		if err != nil {
 			return nil, err
 		}
-		return []string{fmt.Sprintf("  call %s", label.Name)}, nil
+		return emitCallWithCallerSavesAssembly(label.Name, plan.callerSavedRegs), nil
 	case ir.OpRet:
 		if !plan.usesCallFrames() {
 			return []string{"  ret"}, nil
@@ -270,6 +270,36 @@ func emitCallTargetPrologueAssembly() []string {
 		"  addi sp, sp, -4",
 		"  sw ra, 0(sp)",
 	}
+}
+
+func emitCallWithCallerSavesAssembly(label string, regs []callerSavedRegister) []string {
+	lines := emitCallerSavePrologueAssembly(regs)
+	lines = append(lines, fmt.Sprintf("  call %s", label))
+	lines = append(lines, emitCallerSaveEpilogueAssembly(regs)...)
+	return lines
+}
+
+func emitCallerSavePrologueAssembly(regs []callerSavedRegister) []string {
+	if len(regs) == 0 {
+		return nil
+	}
+	lines := []string{fmt.Sprintf("  addi sp, sp, -%d", callerSaveFrameBytes(regs))}
+	for index, register := range regs {
+		lines = append(lines, fmt.Sprintf("  sw %s, %d(sp)", regName(register.physical), index*4))
+	}
+	return lines
+}
+
+func emitCallerSaveEpilogueAssembly(regs []callerSavedRegister) []string {
+	if len(regs) == 0 {
+		return nil
+	}
+	lines := make([]string, 0, len(regs)+1)
+	for index, register := range regs {
+		lines = append(lines, fmt.Sprintf("  lw %s, %d(sp)", regName(register.physical), index*4))
+	}
+	lines = append(lines, fmt.Sprintf("  addi sp, sp, %d", callerSaveFrameBytes(regs)))
+	return lines
 }
 
 func emitStackSetupAssembly(stackTop int) []string {
