@@ -17,6 +17,7 @@ pub fn html_skeleton_lexer_definition() -> StateMachineDefinition {
     definition.profile = Some("lexer/v1".to_string());
     definition.runtime_min = Some("state-machine-tokenizer/0.1".to_string());
     definition.done = Some("done".to_string());
+    definition.alphabet = vec!["<".to_string(), "/".to_string(), ">".to_string()];
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),

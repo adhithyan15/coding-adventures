@@ -198,6 +198,10 @@ fn html_skeleton_source() -> io::Result<String> {
         name: "Text".to_string(),
         fields: vec!["data".to_string()],
     }];
+    definition.tokens.push(TokenDefinition {
+        name: "EOF".to_string(),
+        fields: Vec::new(),
+    });
     definition.inputs = vec![InputDefinition {
         id: "text".to_string(),
         matcher: MatcherDefinition::Anything,
