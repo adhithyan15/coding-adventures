@@ -1,0 +1,12 @@
+[package]
+name = "embeddable-http-server"
+version = "0.1.0"
+edition = "2021"
+description = "Embeddable HTTP/1 server primitive built on tcp-runtime"
+license = "MIT"
+
+[dependencies]
+http-core = { path = "../http-core" }
+http1 = { path = "../http1" }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }
