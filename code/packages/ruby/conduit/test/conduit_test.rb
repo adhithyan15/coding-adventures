@@ -19,16 +19,20 @@ class TestConduitRouter < Minitest::Test
   def test_route_falls_back_off_main_thread
     route = CodingAdventures::Conduit::Route.new("GET", "/hello/:name") { "ok" }
     conduit_singleton = CodingAdventures::Conduit.singleton_class
-    conduit_singleton.alias_method(:__original_match_route_native, :match_route_native)
-    conduit_singleton.define_method(:match_route_native) do |_pattern, _path|
-      raise "native matcher should not run off the main thread"
+    had_native_matcher = CodingAdventures::Conduit.respond_to?(:match_route_native)
+
+    if had_native_matcher
+      conduit_singleton.alias_method(:__original_match_route_native, :match_route_native)
+      conduit_singleton.define_method(:match_route_native) do |_pattern, _path|
+        raise "native matcher should not run off the main thread"
+      end
     end
 
     params = Thread.new { route.match?("GET", "/hello/Adhithya") }.value
 
     assert_equal({ "name" => "Adhithya" }, params)
   ensure
-    if conduit_singleton
+    if conduit_singleton && had_native_matcher
       conduit_singleton.alias_method(:match_route_native, :__original_match_route_native)
       conduit_singleton.remove_method(:__original_match_route_native)
     end
