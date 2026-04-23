@@ -32,6 +32,7 @@ from prolog_core import (
     OperatorSpec,
     OperatorTable,
     PrologDirective,
+    apply_op_directive,
     directive,
 )
 from prolog_parser import ParsedQuery, PrologParseError
@@ -66,6 +67,7 @@ class ParsedOperatorSource:
     clauses: tuple[Clause, ...]
     queries: tuple[ParsedQuery, ...]
     directives: tuple[PrologDirective, ...]
+    operator_table: OperatorTable
 
 
 @dataclass(slots=True)
@@ -121,7 +123,15 @@ class _OperatorParser:
                 queries.append(self._parse_query_statement())
                 continue
             if self._allow_directives and self._match_type("RULE"):
-                directives.append(self._parse_directive_statement())
+                directive_value = self._parse_directive_statement()
+                directives.append(directive_value)
+                try:
+                    self._operator_table = apply_op_directive(
+                        self._operator_table,
+                        directive_value.term,
+                    )
+                except (TypeError, ValueError) as error:
+                    raise self._error(self._current_or_eof(), str(error)) from error
                 continue
             clauses.append(self._parse_clause_statement())
 
@@ -130,6 +140,7 @@ class _OperatorParser:
             clauses=tuple(clauses),
             queries=tuple(queries),
             directives=tuple(directives),
+            operator_table=self._operator_table,
         )
 
     def parse_query(self) -> ParsedQuery:

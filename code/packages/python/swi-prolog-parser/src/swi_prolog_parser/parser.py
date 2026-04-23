@@ -94,7 +94,7 @@ def parse_swi_source(
         clauses=parsed.clauses,
         queries=parsed.queries,
         directives=parsed.directives,
-        operator_table=active_operator_table,
+        operator_table=parsed.operator_table,
     )
 
 

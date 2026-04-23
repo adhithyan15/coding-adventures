@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, solve_all
+from logic_engine import atom, goal_as_term, solve_all, term
 from prolog_core import iso_operator_table
 
 from iso_prolog_parser import (
@@ -91,6 +91,25 @@ class TestIsoParser:
         query = parse_iso_query("?- Result = a ++ b ++ c.\n", operator_table=table)
 
         assert str(goal_as_term(query.goal)) == "=(Result, ++(++(a, b), c))"
+
+    def test_parse_iso_source_applies_op_directives_file_locally(self) -> None:
+        parsed = parse_iso_source(
+            """
+            :- op(500, yfx, ++).
+            value(Result) :- Result = a ++ b ++ c.
+            ?- value(Result).
+            """,
+        )
+
+        query = parsed.queries[0]
+        assert len(parsed.directives) == 1
+        assert str(parsed.directives[0].term) == "op(500, yfx, ++)"
+        assert parsed.operator_table.get("++", "yfx") is not None
+        assert solve_all(
+            parsed.program,
+            query.variables["Result"],
+            query.goal,
+        ) == [term("++", term("++", "a", "b"), "c")]
 
     def test_rejects_dcg_rules_for_now(self) -> None:
         with pytest.raises(PrologParseError, match="DCG rules"):
