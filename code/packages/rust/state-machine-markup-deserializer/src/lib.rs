@@ -13,7 +13,10 @@ use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::fmt;
 
-use state_machine::{MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition};
+use state_machine::{
+    MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition, ANY_INPUT,
+    END_INPUT,
+};
 
 /// The current State Machine Markup document version.
 pub const STATE_MACHINE_MARKUP_FORMAT: &str = "state-machine/v1";
@@ -111,6 +114,12 @@ pub enum StateMachineMarkupError {
     MissingInitialStack,
     /// PDA transitions must say which stack symbol they pop/read.
     MissingStackPop { from: String, on: String },
+    /// Transducer transitions must use an explicit matcher event.
+    MissingTransducerMatcher { from: String },
+    /// Transducer transitions must have exactly one target.
+    InvalidTransducerTargetCount { from: String },
+    /// EOF transitions cannot consume input.
+    ConsumingEndTransition { from: String },
 }
 
 impl fmt::Display for StateMachineMarkupError {
@@ -226,6 +235,17 @@ impl fmt::Display for StateMachineMarkupError {
                 f,
                 "PDA transition from `{from}` on `{on}` is missing `stack_pop`"
             ),
+            Self::MissingTransducerMatcher { from } => write!(
+                f,
+                "transducer transition from `{from}` must use `{END_INPUT}` for EOF, not null"
+            ),
+            Self::InvalidTransducerTargetCount { from } => write!(
+                f,
+                "transducer transition from `{from}` must have exactly one target"
+            ),
+            Self::ConsumingEndTransition { from } => {
+                write!(f, "EOF transition from `{from}` must not consume input")
+            }
         }
     }
 }
@@ -242,10 +262,10 @@ pub fn from_states_toml(source: &str) -> Result<StateMachineDefinition> {
     Ok(definition)
 }
 
-/// Validate a typed definition using the phase 1 DFA, NFA, and PDA rules.
+/// Validate a typed definition using the phase 1 DFA, NFA, PDA, and transducer rules.
 pub fn validate_definition(definition: &StateMachineDefinition) -> Result<()> {
     match definition.kind {
-        MachineKind::Dfa | MachineKind::Nfa | MachineKind::Pda => {}
+        MachineKind::Dfa | MachineKind::Nfa | MachineKind::Pda | MachineKind::Transducer => {}
         _ => {
             return Err(StateMachineMarkupError::UnsupportedKind {
                 kind: definition.kind.as_str().to_string(),
@@ -309,6 +329,13 @@ pub fn validate_definition(definition: &StateMachineDefinition) -> Result<()> {
     let stack_alphabet: HashSet<String> = definition.stack_alphabet.iter().cloned().collect();
     let mut dfa_keys = HashSet::new();
 
+    if !matches!(definition.kind, MachineKind::Pda)
+        && (!definition.stack_alphabet.is_empty() || definition.initial_stack.is_some())
+    {
+        return Err(StateMachineMarkupError::UnsupportedKind {
+            kind: format!("{} stack fields", definition.kind.as_str()),
+        });
+    }
     if matches!(definition.kind, MachineKind::Pda) {
         let initial_stack = definition
             .initial_stack
@@ -353,18 +380,28 @@ pub fn validate_definition(definition: &StateMachineDefinition) -> Result<()> {
             }
         }
         if let Some(event) = &transition.on {
-            if !alphabet.contains(event) {
+            let transducer_builtin = matches!(definition.kind, MachineKind::Transducer)
+                && (event == ANY_INPUT || event == END_INPUT);
+            if !transducer_builtin && !alphabet.contains(event) {
                 return Err(StateMachineMarkupError::UnknownAlphabetSymbol {
                     symbol: event.clone(),
                 });
             }
+        }
+        if !matches!(definition.kind, MachineKind::Transducer)
+            && (!transition.actions.is_empty() || !transition.consume)
+        {
+            return Err(StateMachineMarkupError::UnsupportedKind {
+                kind: format!("{} transition effects", definition.kind.as_str()),
+            });
         }
 
         match definition.kind {
             MachineKind::Dfa => validate_dfa_transition(transition, &mut dfa_keys)?,
             MachineKind::Nfa => validate_nfa_transition(transition)?,
             MachineKind::Pda => validate_pda_transition(transition, &stack_alphabet)?,
-            _ => unreachable!("phase 1 kinds are checked before transition validation"),
+            MachineKind::Transducer => validate_transducer_transition(transition)?,
+            _ => unreachable!("supported kinds are checked before transition validation"),
         }
     }
 
@@ -455,6 +492,30 @@ fn validate_pda_transition(
     Ok(())
 }
 
+fn validate_transducer_transition(transition: &TransitionDefinition) -> Result<()> {
+    let event = transition.on.as_ref().ok_or_else(|| {
+        StateMachineMarkupError::MissingTransducerMatcher {
+            from: transition.from.clone(),
+        }
+    })?;
+    if transition.to.len() != 1 {
+        return Err(StateMachineMarkupError::InvalidTransducerTargetCount {
+            from: transition.from.clone(),
+        });
+    }
+    if transition.stack_pop.is_some() || !transition.stack_push.is_empty() {
+        return Err(StateMachineMarkupError::StackEffectOnNonPda {
+            from: transition.from.clone(),
+        });
+    }
+    if event == END_INPUT && transition.consume {
+        return Err(StateMachineMarkupError::ConsumingEndTransition {
+            from: transition.from.clone(),
+        });
+    }
+    Ok(())
+}
+
 fn ensure_unique_values(field: &str, values: &[String]) -> Result<()> {
     let mut seen = HashSet::new();
     for value in values {
@@ -534,6 +595,8 @@ impl RawDocument {
                 to,
                 stack_pop: optional_string(transition, "stack_pop", &table)?,
                 stack_push: optional_array(transition, "stack_push", &table)?.unwrap_or_default(),
+                actions: optional_array(transition, "actions", &table)?.unwrap_or_default(),
+                consume: optional_bool(transition, "consume", &table)?.unwrap_or(true),
             });
         }
 
@@ -710,7 +773,10 @@ fn field_allowed(section: Section, field: &str) -> bool {
             "id" | "initial" | "accepting" | "final" | "external_entry"
         ),
         Section::Transition(_) => {
-            matches!(field, "from" | "on" | "to" | "stack_pop" | "stack_push")
+            matches!(
+                field,
+                "from" | "on" | "to" | "stack_pop" | "stack_push" | "actions" | "consume"
+            )
         }
     }
 }

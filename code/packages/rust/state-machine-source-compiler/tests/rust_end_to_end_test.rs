@@ -6,7 +6,10 @@ use std::process::{Command, Stdio};
 use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
-use state_machine::{PDATransition, PushdownAutomaton, DFA, EPSILON, NFA};
+use state_machine::{
+    MachineKind, PDATransition, PushdownAutomaton, StateDefinition, StateMachineDefinition,
+    TransitionDefinition, ANY_INPUT, DFA, END_INPUT, EPSILON, NFA,
+};
 use state_machine_source_compiler::to_rust_source;
 
 fn set(values: &[&str]) -> HashSet<String> {
@@ -74,12 +77,14 @@ fn generated_library_source(root: &Path) -> io::Result<String> {
     source.push_str("pub mod turnstile;\n");
     source.push_str("pub mod contains_ab;\n");
     source.push_str("pub mod balanced_parens;\n");
+    source.push_str("pub mod html_skeleton;\n");
     let src_dir = root.join("src");
 
     let modules = [
         ("turnstile", turnstile_source()?),
         ("contains_ab", contains_ab_source()?),
         ("balanced_parens", balanced_parens_source()?),
+        ("html_skeleton", html_skeleton_source()?),
     ];
     for (module, module_source) in modules {
         source.push_str("pub use ");
@@ -179,9 +184,42 @@ fn balanced_parens_source() -> io::Result<String> {
     to_rust_source(&pda.to_definition("balanced-parens")).map_err(io::Error::other)
 }
 
+fn html_skeleton_source() -> io::Result<String> {
+    let mut definition = StateMachineDefinition::new("html-skeleton", MachineKind::Transducer);
+    definition.initial = Some("data".to_string());
+    definition.alphabet = vec!["<".to_string(), "x".to_string()];
+    definition.states = vec![
+        StateDefinition {
+            initial: true,
+            ..StateDefinition::new("data")
+        },
+        StateDefinition {
+            final_state: true,
+            ..StateDefinition::new("done")
+        },
+    ];
+    let mut text = TransitionDefinition::new(
+        "data",
+        Some(ANY_INPUT.to_string()),
+        vec!["data".to_string()],
+    );
+    text.actions = vec!["append_text(current)".to_string()];
+    let mut eof = TransitionDefinition::new(
+        "data",
+        Some(END_INPUT.to_string()),
+        vec!["done".to_string()],
+    );
+    eof.actions = vec!["flush_text".to_string(), "emit(EOF)".to_string()];
+    eof.consume = false;
+    definition.transitions = vec![text, eof];
+    to_rust_source(&definition).map_err(io::Error::other)
+}
+
 fn behavior_tests() -> &'static str {
-    r#"use generated_state_machine_e2e::{
-    balanced_parens_pda, contains_ab_nfa, turnstile_dfa,
+    r#"use state_machine::EffectfulInput;
+
+use generated_state_machine_e2e::{
+    balanced_parens_pda, contains_ab_nfa, html_skeleton_transducer, turnstile_dfa,
 };
 
 #[test]
@@ -209,6 +247,19 @@ fn generated_pda_accepts_balanced_parentheses() {
     assert!(pda.accepts(&["(", "(", ")", ")"]));
     assert!(!pda.accepts(&["("]));
     assert!(!pda.accepts(&[")"]));
+}
+
+#[test]
+fn generated_transducer_emits_effects() {
+    let mut transducer = html_skeleton_transducer().expect("generated transducer should import");
+    let text = transducer.process(EffectfulInput::event("x")).unwrap();
+    assert_eq!(text.effects, vec!["append_text(current)".to_string()]);
+    assert!(text.consume);
+    let eof = transducer.process(EffectfulInput::end()).unwrap();
+    assert_eq!(eof.effects, vec!["flush_text".to_string(), "emit(EOF)".to_string()]);
+    assert!(!eof.consume);
+    assert_eq!(transducer.current_state(), "done");
+    assert!(transducer.is_final());
 }
 "#
 }

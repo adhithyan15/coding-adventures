@@ -110,6 +110,9 @@ pub fn to_rust_source(definition: &StateMachineDefinition) -> Result<String> {
         MachineKind::Pda => {
             "MachineKind, PushdownAutomaton, StateDefinition, StateMachineDefinition, TransitionDefinition"
         }
+        MachineKind::Transducer => {
+            "EffectfulStateMachine, MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition"
+        }
         _ => unreachable!("unsupported kinds are rejected before source emission"),
     });
     source.push_str("};\n\n");
@@ -121,7 +124,7 @@ pub fn to_rust_source(definition: &StateMachineDefinition) -> Result<String> {
 
 fn ensure_supported_kind(definition: &StateMachineDefinition) -> Result<()> {
     match definition.kind {
-        MachineKind::Dfa | MachineKind::Nfa | MachineKind::Pda => Ok(()),
+        MachineKind::Dfa | MachineKind::Nfa | MachineKind::Pda | MachineKind::Transducer => Ok(()),
         _ => Err(StateMachineSourceError::UnsupportedKind {
             kind: definition.kind.as_str().to_string(),
         }),
@@ -209,6 +212,14 @@ fn emit_machine_constructor(
             source.push_str("_pda() -> std::result::Result<PushdownAutomaton, String> {\n");
             source.push_str("    PushdownAutomaton::from_definition(&");
         }
+        MachineKind::Transducer => {
+            source.push_str("pub fn ");
+            source.push_str(function_stem);
+            source.push_str(
+                "_transducer() -> std::result::Result<EffectfulStateMachine, String> {\n",
+            );
+            source.push_str("    EffectfulStateMachine::from_definition(&");
+        }
         _ => unreachable!("unsupported kinds are rejected before source emission"),
     }
     source.push_str(function_stem);
@@ -274,6 +285,12 @@ fn emit_transitions(source: &mut String, definition: &StateMachineDefinition) {
         source.push_str("            stack_push: ");
         source.push_str(&rust_string_vec(&transition.stack_push, 12));
         source.push_str(",\n");
+        source.push_str("            actions: ");
+        source.push_str(&rust_string_vec(&transition.actions, 12));
+        source.push_str(",\n");
+        source.push_str("            consume: ");
+        source.push_str(bool_literal(transition.consume));
+        source.push_str(",\n");
         source.push_str("        },\n");
     }
     source.push_str("    ];\n");
@@ -288,6 +305,8 @@ fn sorted_transitions(definition: &StateMachineDefinition) -> Vec<TransitionDefi
             &left.to,
             &left.stack_pop,
             &left.stack_push,
+            &left.actions,
+            left.consume,
         )
             .cmp(&(
                 &right.from,
@@ -295,6 +314,8 @@ fn sorted_transitions(definition: &StateMachineDefinition) -> Vec<TransitionDefi
                 &right.to,
                 &right.stack_pop,
                 &right.stack_push,
+                &right.actions,
+                right.consume,
             ))
     });
     transitions
@@ -305,6 +326,7 @@ fn machine_kind_variant(definition: &StateMachineDefinition) -> &'static str {
         MachineKind::Dfa => "Dfa",
         MachineKind::Nfa => "Nfa",
         MachineKind::Pda => "Pda",
+        MachineKind::Transducer => "Transducer",
         _ => unreachable!("unsupported kinds are rejected before source emission"),
     }
 }
@@ -314,6 +336,7 @@ fn machine_suffix(definition: &StateMachineDefinition) -> &'static str {
         MachineKind::Dfa => "dfa",
         MachineKind::Nfa => "nfa",
         MachineKind::Pda => "pda",
+        MachineKind::Transducer => "transducer",
         _ => unreachable!("unsupported kinds are rejected before source emission"),
     }
 }

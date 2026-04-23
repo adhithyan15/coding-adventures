@@ -18,11 +18,18 @@ All notable changes to the `state-machine` crate will be documented in this file
 - Added definition import tests covering language preservation and rejection of
   invalid machine-kind, transition-target, epsilon, empty-event, and
   stack-effect shapes.
+- Added an effectful transducer runtime for ordered tokenizer-style state
+  machines with portable actions, consume flags, EOF handling, trace records,
+  and definition round-tripping.
+- Added a minimal HTML tokenizer skeleton test covering text buffering,
+  start/end tag emission, and EOF effects.
 
 ### Changed
 
 - Moved State Machine Markup serialization out of this crate. Format-specific
   writers now belong in sibling serializer libraries.
+- Extended `TransitionDefinition` with `actions` and `consume` fields so the
+  shared typed definition layer can represent tokenizer/transducer effects.
 
 ## [0.1.0] - 2026-03-20
 

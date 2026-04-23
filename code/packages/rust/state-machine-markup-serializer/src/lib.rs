@@ -79,6 +79,8 @@ pub fn to_states_toml(definition: &StateMachineDefinition) -> String {
             &a.to,
             &a.stack_pop,
             &a.stack_push,
+            &a.actions,
+            a.consume,
         )
             .cmp(&(
                 &b.from,
@@ -86,6 +88,8 @@ pub fn to_states_toml(definition: &StateMachineDefinition) -> String {
                 &b.to,
                 &b.stack_pop,
                 &b.stack_push,
+                &b.actions,
+                b.consume,
             ))
     });
     for transition in transitions {
@@ -109,6 +113,12 @@ pub fn to_states_toml(definition: &StateMachineDefinition) -> String {
                 "stack_push = {}",
                 toml_array(&transition.stack_push)
             ));
+        }
+        if !transition.actions.is_empty() {
+            lines.push(format!("actions = {}", toml_array(&transition.actions)));
+        }
+        if !transition.consume {
+            lines.push("consume = false".to_string());
         }
     }
 
