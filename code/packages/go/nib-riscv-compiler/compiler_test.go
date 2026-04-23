@@ -101,9 +101,43 @@ func TestRunSourcePreservesCallerLocalsAcrossNibCalls(t *testing.T) {
 	if run.ReturnValue != 12 {
 		t.Fatalf("expected caller local plus call result to be 12, got %d", run.ReturnValue)
 	}
-	if !strings.Contains(run.Package.Assembly, "sw x12, ") ||
-		!strings.Contains(run.Package.Assembly, "lw x12, ") {
+	if !strings.Contains(run.Package.Assembly, "sw x15, ") ||
+		!strings.Contains(run.Package.Assembly, "lw x15, ") {
 		t.Fatalf("expected caller-save spill/reload in assembly, got:\n%s", run.Package.Assembly)
+	}
+}
+
+func TestRunSourceHandlesNibLocalsBeyondStarterRegisterMap(t *testing.T) {
+	source := strings.Join([]string{
+		"fn main() -> u4 {",
+		"  let a: u4 = 1;",
+		"  let b: u4 = 1;",
+		"  let c: u4 = 1;",
+		"  let d: u4 = 1;",
+		"  let e: u4 = 1;",
+		"  let f: u4 = 1;",
+		"  let g: u4 = 1;",
+		"  let h: u4 = 1;",
+		"  let i: u4 = 1;",
+		"  let j: u4 = 1;",
+		"  let k: u4 = 1;",
+		"  let l: u4 = 1;",
+		"  let m: u4 = 1;",
+		"  return a + b + c + d + e + f + g + h + i + j + k + l + m;",
+		"}",
+	}, " ")
+	run, err := RunSource(source)
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if run.ReturnValue != 13 {
+		t.Fatalf("expected many-local program to return 13, got %d", run.ReturnValue)
+	}
+	if !strings.Contains(run.Package.Assembly, "sw x28, 4(sp)") {
+		t.Fatalf("expected spilled local in assembly, got:\n%s", run.Package.Assembly)
 	}
 }
 
