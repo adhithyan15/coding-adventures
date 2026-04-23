@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Added `RustThreadPool`, a generic in-process job executor that only depends
+  on `JobRequest<T>` / `JobResponse<U>` and has no TCP/application awareness.
+- Added bounded queueing, cancellation, timeout accounting, and panic
+  containment for Rust thread-pool jobs.
 - Added pending-job tracking for stdio process-pool workers.
 - Added per-job deadline/default-timeout handling that emits timed-out
   `JobResponse` values and releases in-flight capacity.

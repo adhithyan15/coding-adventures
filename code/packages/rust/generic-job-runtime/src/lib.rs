@@ -13,15 +13,17 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::io::{self, BufRead, BufReader, Write};
 use std::marker::PhantomData;
+use std::panic::AssertUnwindSafe;
 use std::process::{Child, ChildStdin, Command, Stdio};
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use std::sync::{mpsc, Arc, Mutex};
+use std::sync::{mpsc, Arc, Condvar, Mutex, Weak};
 use std::thread;
+use std::thread::JoinHandle;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use generic_job_protocol::{
-    decode_response_json_line_with_limit, encode_request_json_line, JobCodecError, JobError,
-    JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResult, JobTimeout,
+    decode_response_json_line_with_limit, encode_request_json_line, JobCancellation, JobCodecError,
+    JobError, JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResult, JobTimeout,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -148,6 +150,15 @@ impl From<io::Error> for SubmitError {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CancelResult {
+    Cancelled,
+    AlreadyCancelled,
+    AlreadyCompleted,
+    ShuttingDown,
+    Unsupported,
+}
+
 #[derive(Debug)]
 pub enum RuntimeError {
     Io(io::Error),
@@ -166,8 +177,445 @@ impl std::error::Error for RuntimeError {}
 pub trait JobExecutor<Request, Response> {
     fn capabilities(&self) -> ExecutorCapabilities;
     fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError>;
+    fn cancel(&self, id: &str) -> CancelResult;
     fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>>;
     fn shutdown(&self);
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RustThreadPoolOptions {
+    pub worker_count: usize,
+    pub limits: ExecutorLimits,
+    pub default_job_timeout: Option<Duration>,
+}
+
+impl Default for RustThreadPoolOptions {
+    fn default() -> Self {
+        Self {
+            worker_count: thread::available_parallelism()
+                .map(usize::from)
+                .unwrap_or(1),
+            limits: ExecutorLimits::default(),
+            default_job_timeout: None,
+        }
+    }
+}
+
+type RustJobHandler<Request, Response> =
+    dyn Fn(JobRequest<Request>) -> JobResult<Response> + Send + Sync + 'static;
+
+pub struct RustThreadPool<Request, Response> {
+    inner: Arc<ThreadPoolInner<Request, Response>>,
+    guard: Arc<ThreadPoolGuard<Request, Response>>,
+}
+
+impl<Request, Response> Clone for RustThreadPool<Request, Response> {
+    fn clone(&self) -> Self {
+        Self {
+            inner: Arc::clone(&self.inner),
+            guard: Arc::clone(&self.guard),
+        }
+    }
+}
+
+struct ThreadPoolInner<Request, Response> {
+    queue: Mutex<ThreadPoolQueue<Request>>,
+    queue_ready: Condvar,
+    responses: Mutex<mpsc::Receiver<JobResponse<Response>>>,
+    response_sender: mpsc::Sender<JobResponse<Response>>,
+    handler: Arc<RustJobHandler<Request, Response>>,
+    in_flight: AtomicUsize,
+    shutting_down: AtomicBool,
+    worker_count: usize,
+    limits: ExecutorLimits,
+    default_job_timeout: Option<Duration>,
+}
+
+struct ThreadPoolGuard<Request, Response> {
+    inner: Weak<ThreadPoolInner<Request, Response>>,
+    workers: Mutex<Vec<JoinHandle<()>>>,
+}
+
+struct ThreadPoolQueue<Request> {
+    jobs: VecDeque<ThreadPoolJob<Request>>,
+    pending: HashMap<String, ThreadPoolPendingJob>,
+    closed: bool,
+}
+
+struct ThreadPoolJob<Request> {
+    request: JobRequest<Request>,
+}
+
+struct ThreadPoolPendingJob {
+    metadata: JobMetadata,
+    deadline_at_ms: Option<u64>,
+    state: ThreadPoolJobState,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ThreadPoolJobState {
+    Queued,
+    Running {
+        terminal: Option<ThreadPoolTerminal>,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ThreadPoolTerminal {
+    Cancelled,
+    TimedOut,
+}
+
+impl<Request, Response> RustThreadPool<Request, Response>
+where
+    Request: Send + 'static,
+    Response: Send + 'static,
+{
+    pub fn spawn<Handler>(options: RustThreadPoolOptions, handler: Handler) -> Self
+    where
+        Handler: Fn(JobRequest<Request>) -> JobResult<Response> + Send + Sync + 'static,
+    {
+        let worker_count = options.worker_count.max(1);
+        let (sender, receiver) = mpsc::channel();
+        let inner = Arc::new(ThreadPoolInner {
+            queue: Mutex::new(ThreadPoolQueue {
+                jobs: VecDeque::new(),
+                pending: HashMap::new(),
+                closed: false,
+            }),
+            queue_ready: Condvar::new(),
+            responses: Mutex::new(receiver),
+            response_sender: sender,
+            handler: Arc::new(handler),
+            in_flight: AtomicUsize::new(0),
+            shutting_down: AtomicBool::new(false),
+            worker_count,
+            limits: options.limits,
+            default_job_timeout: options.default_job_timeout,
+        });
+
+        let workers = (0..worker_count)
+            .map(|_| spawn_thread_pool_worker(Arc::clone(&inner)))
+            .collect::<Vec<_>>();
+        let guard = Arc::new(ThreadPoolGuard {
+            inner: Arc::downgrade(&inner),
+            workers: Mutex::new(workers),
+        });
+
+        Self { inner, guard }
+    }
+
+    pub fn submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError> {
+        self.try_submit(request)
+    }
+
+    pub fn recv_response_timeout(
+        &self,
+        timeout: Duration,
+    ) -> Result<Option<JobResponse<Response>>, RuntimeError> {
+        self.expire_timed_out_jobs();
+        let receiver = self
+            .inner
+            .responses
+            .lock()
+            .expect("job response receiver mutex poisoned");
+        match receiver.recv_timeout(timeout) {
+            Ok(response) => Ok(Some(response)),
+            Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
+            Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    fn reserve_slot(&self) -> Result<(), SubmitError> {
+        loop {
+            let current = self.inner.in_flight.load(Ordering::SeqCst);
+            if current >= self.inner.limits.max_queue_depth {
+                return Err(SubmitError::QueueFull);
+            }
+            if self
+                .inner
+                .in_flight
+                .compare_exchange(current, current + 1, Ordering::SeqCst, Ordering::SeqCst)
+                .is_ok()
+            {
+                return Ok(());
+            }
+        }
+    }
+
+    fn expire_timed_out_jobs(&self) {
+        let now = current_time_millis();
+        let mut timed_out = Vec::new();
+        {
+            let mut queue = self
+                .inner
+                .queue
+                .lock()
+                .expect("thread pool queue mutex poisoned");
+            let expired_ids = queue
+                .pending
+                .iter()
+                .filter_map(|(id, pending)| {
+                    pending
+                        .deadline_at_ms
+                        .filter(|deadline| *deadline <= now)
+                        .map(|_| id.clone())
+                })
+                .collect::<Vec<_>>();
+            for id in expired_ids {
+                let Some(pending) = queue.pending.get_mut(&id) else {
+                    continue;
+                };
+                match pending.state {
+                    ThreadPoolJobState::Queued => {
+                        if let Some(position) =
+                            queue.jobs.iter().position(|job| job.request.id == id)
+                        {
+                            queue.jobs.remove(position);
+                        }
+                        if let Some(pending) = queue.pending.remove(&id) {
+                            decrement_in_flight(&self.inner.in_flight);
+                            timed_out.push(timeout_response(id, pending.metadata));
+                        }
+                    }
+                    ThreadPoolJobState::Running { ref mut terminal } => {
+                        if terminal.is_none() {
+                            *terminal = Some(ThreadPoolTerminal::TimedOut);
+                        }
+                    }
+                }
+            }
+        }
+
+        for response in timed_out {
+            let _ = self.inner.response_sender.send(response);
+        }
+    }
+}
+
+impl<Request, Response> JobExecutor<Request, Response> for RustThreadPool<Request, Response>
+where
+    Request: Send + 'static,
+    Response: Send + 'static,
+{
+    fn capabilities(&self) -> ExecutorCapabilities {
+        ExecutorCapabilities {
+            supports_parallel_execution: self.inner.worker_count > 1,
+            supports_parallel_callbacks: true,
+            requires_vm_lock: false,
+            supports_process_isolation: false,
+            supports_cancellation: true,
+            supports_timeouts: true,
+            supports_affinity: false,
+            supports_ordered_responses: false,
+            requires_serializable_payloads: false,
+            max_workers: self.inner.worker_count,
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
+        }
+    }
+
+    fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError> {
+        self.expire_timed_out_jobs();
+        if self.inner.shutting_down.load(Ordering::SeqCst) {
+            return Err(SubmitError::ShuttingDown);
+        }
+
+        self.reserve_slot()?;
+        let id = request.id.clone();
+        let metadata = request.metadata.clone();
+        let deadline_at_ms = metadata.deadline_at_ms.or_else(|| {
+            self.inner
+                .default_job_timeout
+                .map(|timeout| current_time_millis().saturating_add(timeout.as_millis() as u64))
+        });
+        {
+            let mut queue = self
+                .inner
+                .queue
+                .lock()
+                .expect("thread pool queue mutex poisoned");
+            if queue.closed || self.inner.shutting_down.load(Ordering::SeqCst) {
+                decrement_in_flight(&self.inner.in_flight);
+                return Err(SubmitError::ShuttingDown);
+            }
+            queue.pending.insert(
+                id,
+                ThreadPoolPendingJob {
+                    metadata,
+                    deadline_at_ms,
+                    state: ThreadPoolJobState::Queued,
+                },
+            );
+            queue.jobs.push_back(ThreadPoolJob { request });
+        }
+        self.inner.queue_ready.notify_one();
+        Ok(())
+    }
+
+    fn cancel(&self, id: &str) -> CancelResult {
+        if self.inner.shutting_down.load(Ordering::SeqCst) {
+            return CancelResult::ShuttingDown;
+        }
+
+        let mut cancelled = None;
+        {
+            let mut queue = self
+                .inner
+                .queue
+                .lock()
+                .expect("thread pool queue mutex poisoned");
+            let Some(pending) = queue.pending.get_mut(id) else {
+                return CancelResult::AlreadyCompleted;
+            };
+            match pending.state {
+                ThreadPoolJobState::Queued => {
+                    if let Some(position) = queue.jobs.iter().position(|job| job.request.id == id) {
+                        queue.jobs.remove(position);
+                    }
+                    if let Some(pending) = queue.pending.remove(id) {
+                        decrement_in_flight(&self.inner.in_flight);
+                        cancelled = Some(cancelled_response(id.to_string(), pending.metadata));
+                    }
+                }
+                ThreadPoolJobState::Running { ref mut terminal } => match terminal {
+                    Some(ThreadPoolTerminal::Cancelled) => return CancelResult::AlreadyCancelled,
+                    Some(ThreadPoolTerminal::TimedOut) => return CancelResult::AlreadyCompleted,
+                    None => *terminal = Some(ThreadPoolTerminal::Cancelled),
+                },
+            }
+        }
+
+        if let Some(response) = cancelled {
+            let _ = self.inner.response_sender.send(response);
+        }
+        CancelResult::Cancelled
+    }
+
+    fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>> {
+        self.expire_timed_out_jobs();
+        let receiver = self
+            .inner
+            .responses
+            .lock()
+            .expect("job response receiver mutex poisoned");
+        let mut responses = Vec::new();
+        for _ in 0..max {
+            match receiver.try_recv() {
+                Ok(response) => responses.push(response),
+                Err(mpsc::TryRecvError::Empty | mpsc::TryRecvError::Disconnected) => break,
+            }
+        }
+        responses
+    }
+
+    fn shutdown(&self) {
+        self.inner.shutting_down.store(true, Ordering::SeqCst);
+        let mut queue = self
+            .inner
+            .queue
+            .lock()
+            .expect("thread pool queue mutex poisoned");
+        queue.closed = true;
+        self.inner.queue_ready.notify_all();
+    }
+}
+
+impl<Request, Response> Drop for ThreadPoolGuard<Request, Response> {
+    fn drop(&mut self) {
+        if let Some(inner) = self.inner.upgrade() {
+            inner.shutting_down.store(true, Ordering::SeqCst);
+            if let Ok(mut queue) = inner.queue.lock() {
+                queue.closed = true;
+                inner.queue_ready.notify_all();
+            }
+        };
+        if let Ok(mut workers) = self.workers.lock() {
+            for worker in workers.drain(..) {
+                let _ = worker.join();
+            }
+        }
+    }
+}
+
+fn spawn_thread_pool_worker<Request, Response>(
+    inner: Arc<ThreadPoolInner<Request, Response>>,
+) -> JoinHandle<()>
+where
+    Request: Send + 'static,
+    Response: Send + 'static,
+{
+    thread::spawn(move || loop {
+        let Some(request) = take_next_thread_pool_job(&inner) else {
+            break;
+        };
+        let id = request.id.clone();
+        let result = std::panic::catch_unwind(AssertUnwindSafe(|| (inner.handler)(request)))
+            .unwrap_or_else(|panic| panic_job_result(panic_message(panic)));
+        let response = complete_thread_pool_job(&inner, id, result);
+        if let Some(response) = response {
+            if inner.response_sender.send(response).is_err() {
+                break;
+            }
+        }
+    })
+}
+
+fn take_next_thread_pool_job<Request, Response>(
+    inner: &ThreadPoolInner<Request, Response>,
+) -> Option<JobRequest<Request>> {
+    let mut queue = inner
+        .queue
+        .lock()
+        .expect("thread pool queue mutex poisoned");
+    loop {
+        if queue.closed || inner.shutting_down.load(Ordering::SeqCst) {
+            return None;
+        }
+        let Some(job) = queue.jobs.pop_front() else {
+            queue = inner
+                .queue_ready
+                .wait(queue)
+                .expect("thread pool queue mutex poisoned");
+            continue;
+        };
+        if let Some(pending) = queue.pending.get_mut(&job.request.id) {
+            pending.state = ThreadPoolJobState::Running { terminal: None };
+            return Some(job.request);
+        }
+    }
+}
+
+fn complete_thread_pool_job<Request, Response>(
+    inner: &ThreadPoolInner<Request, Response>,
+    id: String,
+    result: JobResult<Response>,
+) -> Option<JobResponse<Response>> {
+    let pending = {
+        let mut queue = inner
+            .queue
+            .lock()
+            .expect("thread pool queue mutex poisoned");
+        queue.pending.remove(&id)
+    };
+    let Some(pending) = pending else {
+        return None;
+    };
+    decrement_in_flight(&inner.in_flight);
+
+    match pending.state {
+        ThreadPoolJobState::Running {
+            terminal: Some(ThreadPoolTerminal::Cancelled),
+        } => Some(cancelled_response(id, pending.metadata)),
+        ThreadPoolJobState::Running {
+            terminal: Some(ThreadPoolTerminal::TimedOut),
+        } => Some(timeout_response(id, pending.metadata)),
+        _ => Some(JobResponse {
+            id,
+            result,
+            metadata: pending.metadata,
+        }),
+    }
 }
 
 pub struct StdioProcessPool<Request, Response> {
@@ -535,6 +983,23 @@ where
         Ok(())
     }
 
+    fn cancel(&self, id: &str) -> CancelResult {
+        if self.inner.shutting_down.load(Ordering::SeqCst) {
+            return CancelResult::ShuttingDown;
+        }
+        if self
+            .inner
+            .pending
+            .lock()
+            .expect("pending job table mutex poisoned")
+            .contains_key(id)
+        {
+            CancelResult::Unsupported
+        } else {
+            CancelResult::AlreadyCompleted
+        }
+    }
+
     fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>> {
         self.expire_timed_out_jobs();
         let receiver = self
@@ -720,6 +1185,18 @@ fn current_time_millis() -> u64 {
         .as_millis() as u64
 }
 
+fn cancelled_response<Response>(id: String, metadata: JobMetadata) -> JobResponse<Response> {
+    JobResponse {
+        id,
+        result: JobResult::Cancelled {
+            cancellation: JobCancellation {
+                message: "job was cancelled by the executor".to_string(),
+            },
+        },
+        metadata,
+    }
+}
+
 fn timeout_response<Response>(id: String, metadata: JobMetadata) -> JobResponse<Response> {
     JobResponse {
         id,
@@ -745,6 +1222,22 @@ fn worker_unavailable_response<Response>(
         ),
     )
     .with_metadata(metadata)
+}
+
+fn panic_job_result<Response>(message: String) -> JobResult<Response> {
+    JobResult::Error {
+        error: JobError::new("worker_panic", message, JobErrorOrigin::PanicOrException),
+    }
+}
+
+fn panic_message(panic: Box<dyn std::any::Any + Send>) -> String {
+    if let Some(message) = panic.downcast_ref::<&str>() {
+        format!("job handler panicked: {message}")
+    } else if let Some(message) = panic.downcast_ref::<String>() {
+        format!("job handler panicked: {message}")
+    } else {
+        "job handler panicked".to_string()
+    }
 }
 
 #[cfg(test)]
@@ -815,6 +1308,299 @@ for line in sys.stdin:
     print(json.dumps({{"version": 1, "kind": "response", "body": {{"id": body["id"], "result": {{"status": "ok", "payload": out}}, "metadata": body["metadata"]}}}}), flush=True)
 "#
         )
+    }
+
+    #[test]
+    fn thread_pool_runs_jobs_without_transport_knowledge() {
+        let executions = Arc::new(AtomicUsize::new(0));
+        let seen = Arc::clone(&executions);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                let counter = seen.fetch_add(1, Ordering::SeqCst) as u64 + 1;
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "hello".to_string(),
+            },
+        ))
+        .expect("submit Rust job");
+
+        let response = wait_for_thread_response(&pool).expect("thread response");
+        match response.result {
+            JobResult::Ok { payload } => {
+                assert_eq!(payload.stream_id, "stream");
+                assert_eq!(payload.text, "hello");
+                assert_eq!(executions.load(Ordering::SeqCst), 1);
+            }
+            other => panic!("expected thread-pool success, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn thread_pool_rejects_jobs_when_in_flight_limit_is_full() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                handler_entered.fetch_add(1, Ordering::SeqCst);
+                wait_for_gate(&handler_gate);
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "one".to_string(),
+            },
+        ))
+        .expect("first job is accepted");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+
+        let err = pool
+            .try_submit(JobRequest::new(
+                "job-2",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "two".to_string(),
+                },
+            ))
+            .expect_err("second job should hit backpressure");
+        assert_eq!(err, SubmitError::QueueFull);
+        open_gate(&gate);
+    }
+
+    #[test]
+    fn thread_pool_cancels_queued_job_and_releases_capacity() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 2,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                if request.payload.text == "block" {
+                    handler_entered.fetch_add(1, Ordering::SeqCst);
+                    wait_for_gate(&handler_gate);
+                }
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "block".to_string(),
+            },
+        ))
+        .expect("submit running job");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+        pool.try_submit(JobRequest::new(
+            "job-2",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "queued".to_string(),
+            },
+        ))
+        .expect("submit queued job");
+
+        assert_eq!(pool.cancel("job-2"), CancelResult::Cancelled);
+        let response = wait_for_thread_response(&pool).expect("queued cancellation response");
+        assert!(matches!(response.result, JobResult::Cancelled { .. }));
+
+        pool.try_submit(JobRequest::new(
+            "job-3",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "after-cancel".to_string(),
+            },
+        ))
+        .expect("queued cancellation should release capacity");
+        open_gate(&gate);
+    }
+
+    #[test]
+    fn thread_pool_cancels_running_job_when_handler_returns() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                handler_entered.fetch_add(1, Ordering::SeqCst);
+                wait_for_gate(&handler_gate);
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: "stale-success".to_string(),
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "running".to_string(),
+            },
+        ))
+        .expect("submit running job");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+
+        assert_eq!(pool.cancel("job-1"), CancelResult::Cancelled);
+        assert!(
+            pool.recv_response_timeout(Duration::from_millis(25))
+                .expect("check for immediate response")
+                .is_none(),
+            "running cancellation should not claim capacity until the worker returns"
+        );
+
+        open_gate(&gate);
+        let response = wait_for_thread_response(&pool).expect("running cancellation response");
+        assert!(matches!(response.result, JobResult::Cancelled { .. }));
+    }
+
+    #[test]
+    fn thread_pool_converts_panics_to_job_errors() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits::default(),
+                default_job_timeout: None,
+            },
+            |_request: JobRequest<EchoJob>| -> JobResult<EchoResponse> {
+                panic!("boom");
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "panic".to_string(),
+            },
+        ))
+        .expect("submit panicking job");
+
+        let response = wait_for_thread_response(&pool).expect("panic response");
+        match response.result {
+            JobResult::Error { error } => {
+                assert_eq!(error.code, "worker_panic");
+                assert_eq!(error.origin, JobErrorOrigin::PanicOrException);
+                assert!(error.message.contains("boom"));
+            }
+            other => panic!("expected panic error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn thread_pool_times_out_running_job_when_handler_returns() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: Some(Duration::from_millis(25)),
+            },
+            move |request: JobRequest<EchoJob>| {
+                handler_entered.fetch_add(1, Ordering::SeqCst);
+                wait_for_gate(&handler_gate);
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: "stale-success".to_string(),
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "running".to_string(),
+            },
+        ))
+        .expect("submit running job");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+        thread::sleep(Duration::from_millis(50));
+        assert!(
+            pool.recv_response_timeout(Duration::from_millis(25))
+                .expect("check for timeout response")
+                .is_none(),
+            "running timeout should not claim capacity until the worker returns"
+        );
+
+        open_gate(&gate);
+        let response = wait_for_thread_response(&pool).expect("timeout response");
+        assert!(matches!(response.result, JobResult::TimedOut { .. }));
     }
 
     #[test]
@@ -1170,5 +1956,41 @@ for line in sys.stdin:
             thread::sleep(Duration::from_millis(10));
         }
         None
+    }
+
+    fn wait_for_thread_response(
+        pool: &RustThreadPool<EchoJob, EchoResponse>,
+    ) -> Option<JobResponse<EchoResponse>> {
+        for _ in 0..100 {
+            if let Some(response) = pool.drain_responses(1).into_iter().next() {
+                return Some(response);
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        None
+    }
+
+    fn wait_until(mut predicate: impl FnMut() -> bool) {
+        for _ in 0..100 {
+            if predicate() {
+                return;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        panic!("condition was not met before timeout");
+    }
+
+    fn wait_for_gate(gate: &Arc<(Mutex<bool>, Condvar)>) {
+        let (lock, cvar) = &**gate;
+        let mut open = lock.lock().expect("gate mutex poisoned");
+        while !*open {
+            open = cvar.wait(open).expect("gate mutex poisoned");
+        }
+    }
+
+    fn open_gate(gate: &Arc<(Mutex<bool>, Condvar)>) {
+        let (lock, cvar) = &**gate;
+        *lock.lock().expect("gate mutex poisoned") = true;
+        cvar.notify_all();
     }
 }
