@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-debug-sidecar"
+version = "0.1.0"
+description = "Source-location companion for the IIR pipeline: maps instruction indices to file/line/col for debuggers, insight tools, and native debug info emitters."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/debug_sidecar"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
