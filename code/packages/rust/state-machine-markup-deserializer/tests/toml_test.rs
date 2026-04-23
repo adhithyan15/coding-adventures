@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use state_machine::{
     MachineKind, MatcherDefinition, PDATransition, PushdownAutomaton, StateDefinition,
-    StateMachineDefinition, TransitionDefinition, DFA, END_INPUT, EPSILON, NFA,
+    StateMachineDefinition, TransitionDefinition, DFA, EPSILON, NFA,
 };
 use state_machine_markup_deserializer::{
     from_states_toml, validate_definition, StateMachineMarkupError, STATE_MACHINE_MARKUP_FORMAT,
@@ -94,7 +94,7 @@ fn lexer_profile_html_skeleton_toml_parses_into_typed_definition() {
 
     let first = &definition.transitions[0];
     assert_eq!(first.from, "data");
-    assert_eq!(first.on.as_deref(), Some("<"));
+    assert_eq!(first.on, None);
     assert_eq!(
         first.matcher,
         Some(MatcherDefinition::Literal("<".to_string()))
@@ -103,9 +103,9 @@ fn lexer_profile_html_skeleton_toml_parses_into_typed_definition() {
     let eof = definition
         .transitions
         .iter()
-        .find(|transition| transition.on.as_deref() == Some(END_INPUT))
+        .find(|transition| transition.matcher == Some(MatcherDefinition::Eof))
         .unwrap();
-    assert_eq!(eof.matcher, Some(MatcherDefinition::Eof));
+    assert_eq!(eof.on, None);
     assert!(!eof.consume);
 }
 
@@ -399,7 +399,7 @@ format = "state-machine/v1"
 name = "guarded"
 kind = "dfa"
 
-[[guards]]
+[[modes]]
 id = "never"
 "#;
     assert!(matches!(

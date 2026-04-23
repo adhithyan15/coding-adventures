@@ -292,8 +292,7 @@ fn json_value_to_definition(value: JsonValue) -> Result<StateMachineDefinition> 
             ],
         )?;
         let matcher = optional_matcher(&transition, "matcher", &object)?;
-        let on = optional_event(&transition, "on", &object)?
-            .or_else(|| matcher.as_ref().map(lower_matcher_event));
+        let on = optional_event(&transition, "on", &object)?;
         definition.transitions.push(TransitionDefinition {
             from: required_string(&transition, "from", &object)?,
             on,
@@ -419,21 +418,6 @@ fn parse_matcher_object(
                 message: format!("unsupported matcher entry `{kind}`"),
             },
         )),
-    }
-}
-
-fn lower_matcher_event(matcher: &MatcherDefinition) -> String {
-    match matcher {
-        MatcherDefinition::Literal(value) => value.clone(),
-        MatcherDefinition::Eof => "$end".to_string(),
-        MatcherDefinition::Anything => "$any".to_string(),
-        MatcherDefinition::Class(id) => format!("$class:{id}"),
-        MatcherDefinition::OneOf(value) => format!("$one_of:{value}"),
-        MatcherDefinition::Range { start, end } => format!("$range:{start}..{end}"),
-        MatcherDefinition::AnyOfClasses(ids) => format!("$any_of_classes:{}", ids.join(",")),
-        MatcherDefinition::Lookahead(inner) => {
-            format!("$lookahead:{}", lower_matcher_event(inner))
-        }
     }
 }
 

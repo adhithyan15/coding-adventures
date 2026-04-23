@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use state_machine::{
     MachineKind, MatcherDefinition, PDATransition, PushdownAutomaton, StateDefinition,
-    StateMachineDefinition, TransitionDefinition, DFA, END_INPUT, EPSILON, NFA,
+    StateMachineDefinition, TransitionDefinition, DFA, EPSILON, NFA,
 };
 use state_machine_markup_deserializer::StateMachineMarkupError;
 use state_machine_markup_json_deserializer::{
@@ -83,7 +83,7 @@ fn json_deserializer_parses_lexer_profile_matchers_and_sections() {
         definition.transitions[0].matcher,
         Some(MatcherDefinition::Literal("<".to_string()))
     );
-    assert_eq!(definition.transitions[1].on.as_deref(), Some(END_INPUT));
+    assert_eq!(definition.transitions[1].on, None);
     assert_eq!(
         definition.transitions[1].matcher,
         Some(MatcherDefinition::Eof)

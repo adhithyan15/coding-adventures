@@ -930,8 +930,7 @@ impl RawDocument {
             let table = format!("transitions[{index}]");
             let matcher = optional_matcher(transition, "matcher", &table)?;
             let on = optional_string(transition, "on", &table)?
-                .and_then(|event| (event != "epsilon").then_some(event))
-                .or_else(|| matcher.as_ref().map(lower_matcher_event));
+                .and_then(|event| (event != "epsilon").then_some(event));
             let to = match transition.get("to") {
                 Some(Value::String(target)) => vec![target.clone()],
                 Some(Value::Array(targets)) => targets.clone(),
@@ -1623,23 +1622,6 @@ fn parse_matcher_table(
             context: context.to_string(),
             message: format!("unsupported matcher entry `{kind}`"),
         }),
-    }
-}
-
-fn lower_matcher_event(matcher: &MatcherDefinition) -> String {
-    match matcher {
-        MatcherDefinition::Literal(value) => value.clone(),
-        MatcherDefinition::Eof => END_INPUT.to_string(),
-        MatcherDefinition::Anything => ANY_INPUT.to_string(),
-        MatcherDefinition::Class(id) => format!("$class:{id}"),
-        MatcherDefinition::OneOf(value) => format!("$one_of:{value}"),
-        MatcherDefinition::Range { start, end } => format!("$range:{start}..{end}"),
-        MatcherDefinition::AnyOfClasses(ids) => {
-            format!("$any_of_classes:{}", ids.join(","))
-        }
-        MatcherDefinition::Lookahead(inner) => {
-            format!("$lookahead:{}", lower_matcher_event(inner))
-        }
     }
 }
 
