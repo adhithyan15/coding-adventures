@@ -43,8 +43,10 @@ or RESP part of the crate's public identity.
 ## Current Limitations
 
 - Mailbox mode can use a configurable stdio worker process pool through
-  `generic-job-runtime`; the default remains one worker for deterministic local
-  behavior.
+  `generic-job-runtime`; `new_mailbox` keeps that path as the default behavior.
+- Mailbox mode can also use a Rust in-process `RustThreadPool` through
+  `new_inprocess_mailbox`, where a host callback produces job results directly
+  without child process boundaries.
 - `worker_queue_depth` lets embedders bound queued worker jobs and tune
   backpressure behavior.
 - `worker_job_timeout` can bound mailbox-mode jobs so stuck workers return
