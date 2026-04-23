@@ -11,25 +11,9 @@ The package does not read TOML, JSON, or any other definition file at runtime.
 Production wrappers should link statically generated machine constructors, then
 pass the resulting `EffectfulStateMachine` into `Tokenizer::new`.
 
-## Example
-
-```rust
-use state_machine_tokenizer::{html_skeleton_tokenizer, Token};
-
-let mut tokenizer = html_skeleton_tokenizer().unwrap();
-tokenizer.push("<p>Hello</p>").unwrap();
-tokenizer.finish().unwrap();
-
-assert_eq!(
-    tokenizer.drain_tokens(),
-    vec![
-        Token::StartTag { name: "p".into(), attributes: vec![], self_closing: false },
-        Token::Text("Hello".into()),
-        Token::EndTag { name: "p".into() },
-        Token::Eof,
-    ]
-);
-```
+HTML-specific machine constructors live in `coding-adventures-html-lexer`. This
+package stays generic: it interprets lexer actions for any statically linked
+machine that uses the portable action vocabulary below.
 
 ## Current Scope
 

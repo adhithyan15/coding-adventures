@@ -71,6 +71,7 @@ members = [
     "grammar-wasm-support",
     "heap",
     "hazard-detection",
+    "html-lexer",
     "html-renderer",
     "intel4004-gatelevel",
     "intel4004-simulator",

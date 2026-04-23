@@ -1,6 +1,6 @@
 format = "state-machine/v1"
-profile = "tokenizer/v1"
-name = "html-skeleton-tokenizer"
+profile = "lexer/v1"
+name = "html-skeleton-lexer"
 kind = "transducer"
 version = "0.1.0"
 runtime_min = "state-machine-tokenizer/0.1"
@@ -160,4 +160,3 @@ tokens = [
 name = "plain-text"
 input = "plain text"
 tokens = ["Text(data=plain text)", "EOF"]
-
