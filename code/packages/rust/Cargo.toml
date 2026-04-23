@@ -341,6 +341,7 @@ members = [
     "state-machine-markup-json-serializer",
     "state-machine-markup-json-deserializer",
     "state-machine-source-compiler",
+    "state-machine-tokenizer",
     "embeddable-tcp-server",
     "generic-job-protocol",
     "generic-job-runtime",

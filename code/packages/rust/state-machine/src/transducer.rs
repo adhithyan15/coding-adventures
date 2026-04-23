@@ -369,7 +369,7 @@ impl EffectfulStateMachine {
     /// Process one input event or EOF sentinel and return the emitted effects.
     pub fn process(&mut self, input: EffectfulInput<'_>) -> Result<EffectfulStep, String> {
         if let EffectfulInput::Event(event) = input {
-            if !self.alphabet.contains(event) {
+            if !self.alphabet.contains(event) && !self.current_state_has_any_transition() {
                 return Err(format!("Event '{event}' is not in the alphabet"));
             }
         }
@@ -402,6 +402,12 @@ impl EffectfulStateMachine {
         self.current = transition.target;
         self.trace.push(step.clone());
         Ok(step)
+    }
+
+    fn current_state_has_any_transition(&self) -> bool {
+        self.transitions.iter().any(|transition| {
+            transition.source == self.current && matches!(transition.matcher, EffectfulMatcher::Any)
+        })
     }
 }
 
