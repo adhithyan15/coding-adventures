@@ -179,7 +179,208 @@ Example filename:
 code/tokenizers/html/html1.tokenizer.states.toml
 ```
 
-The first version uses the same serialized envelope as `F07`:
+### Root Table
+
+Tokenizer documents use the same serialized envelope as `F07`, with
+tokenizer-profile additions:
+
+```toml
+format = "state-machine/v1"
+profile = "tokenizer/v1"
+name = "html-skeleton-tokenizer"
+kind = "transducer"
+version = "0.1.0"
+runtime_min = "state-machine-tokenizer/0.1"
+initial = "data"
+done = "done"
+includes = []
+```
+
+Required root fields:
+
+- `format`: must be `state-machine/v1`.
+- `profile`: must be `tokenizer/v1`.
+- `name`: stable generated identifier source.
+- `kind`: must be `transducer` for tokenizer profile documents.
+- `initial`: initial tokenizer state.
+
+Optional root fields:
+
+- `version`: authoring artifact version.
+- `runtime_min`: minimum tokenizer runtime capability string.
+- `done`: terminal EOF state.
+- `includes`: relative include paths resolved by build tooling only.
+- `metadata`: future structured metadata, only in canonical JSON until the TOML
+  subset supports inline tables safely.
+
+### Token Declarations
+
+`[[tokens]]` declares token shapes emitted by the profile. Token fields are
+names, not host-language types; wrapper packages map them to idiomatic structs
+or enums.
+
+```toml
+[[tokens]]
+name = "StartTag"
+fields = ["name", "attributes", "self_closing"]
+```
+
+Rules:
+
+- token names must be unique
+- field names must be unique within one token
+- every `emit(...)` action must name a declared token or one of the built-in
+  token construction actions that emits `current_token`
+
+### Input Classes
+
+`[[inputs]]` declares reusable matcher classes. Classes are a build-time
+authoring convenience; source generators lower them into static matcher tables
+or predicates for each target language.
+
+```toml
+[[inputs]]
+id = "ascii_alpha"
+matcher = { any_of_classes = ["ascii_upper", "ascii_lower"] }
+```
+
+Rules:
+
+- input class IDs must be unique
+- class references must resolve after includes are expanded
+- recursive class definitions are rejected
+- character ranges are inclusive Unicode scalar ranges
+
+### Registers
+
+`[[registers]]` documents tokenizer-owned runtime storage. The first Rust
+runtime has fixed storage for text buffer, current token, diagnostics, and
+trace. Registers let the source definition state which additional portable
+storage the machine expects as the profile grows.
+
+```toml
+[[registers]]
+id = "temporary_buffer"
+type = "string"
+```
+
+Initial register types:
+
+- `string`
+- `string?`
+- `token?`
+- `attribute?`
+- `state?`
+- `bool`
+
+Definitions must not declare arbitrary host-language types.
+
+### State Tables
+
+`[[states]]` uses the generic state definition fields from `F07`:
+
+```toml
+[[states]]
+id = "data"
+initial = true
+```
+
+Tokenizer-specific conventions:
+
+- exactly one state must be marked `initial = true`
+- the root `done` state, when present, must be marked `final = true`
+- states that the tree constructor may enter directly must use
+  `external_entry = true`
+- unreachable states are rejected unless marked `external_entry = true`
+
+### Transition Tables
+
+Tokenizer transitions use ordered matching. File order is semantically
+meaningful within one source state, so serializer packages must preserve
+tokenizer transition order unless they are explicitly emitting a canonical form
+with stable `priority` values.
+
+```toml
+[[transitions]]
+from = "data"
+matcher = { literal = "<" }
+to = "tag_open"
+actions = ["flush_text"]
+```
+
+Required fields:
+
+- `from`: source state
+- `matcher`: matcher object
+- `to`: target state
+
+Optional fields:
+
+- `actions`: ordered action-call strings
+- `consume`: defaults to `true`; must be `false` for EOF
+- `guard`: named guard call
+- `priority`: explicit deterministic ordering for canonical output
+- `description`: human-facing notes ignored by runtimes
+
+The older generic `on = "event"` surface remains valid for plain transducers,
+but tokenizer-profile authoring should prefer `matcher = {...}` because HTML
+needs EOF, classes, literals, ranges, and lookahead.
+
+### Action Calls
+
+The TOML authoring surface writes actions as compact strings:
+
+```toml
+actions = [
+  "parse_error(eof-in-tag-open-state)",
+  "append_text(<)",
+  "flush_text",
+  "emit(EOF)",
+]
+```
+
+Build-time tooling lowers these to canonical structured action calls:
+
+```text
+ActionCall { name: "parse_error", args: ["eof-in-tag-open-state"] }
+```
+
+Action names and argument forms must come from the portable vocabulary in this
+spec. Definition files must not contain Rust, Go, JavaScript, Python, Ruby, or
+shell snippets.
+
+### Fixtures
+
+Tokenizer documents may include small inline fixtures for build-time smoke
+tests. Larger conformance suites should live beside the definition as `.cases`
+files.
+
+```toml
+[[fixtures]]
+name = "simple-start-tag"
+input = "<p>Hello</p>"
+tokens = [
+  "StartTag(name=p, attributes=[], self_closing=false)",
+  "Text(data=Hello)",
+  "EndTag(name=p)",
+  "EOF",
+]
+```
+
+Fixtures are not part of the runtime machine. Source compilers may use them for
+generated-code tests, but generated production modules should not embed fixture
+data unless a test-only feature requests it.
+
+### Minimal HTML Skeleton
+
+The current Rust skeleton can be authored with this schema as
+`code/tokenizers/html/html-skeleton.tokenizer.states.toml`. It intentionally
+uses only literal, `anything`, and EOF matchers so the next implementation slice
+can prove the text-file-to-generated-Rust loop before attributes, comments,
+doctype, and character references arrive.
+
+A fuller HTML sketch still follows the same envelope while adding the
+tokenizer-profile declarations needed by later states:
 
 ```toml
 format = "state-machine/v1"
