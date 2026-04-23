@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, solve_all
+from logic_engine import atom, goal_as_term, solve_all
+from prolog_core import iso_operator_table
 
 from iso_prolog_parser import (
     ISO_PROLOG_GRAMMAR_PATH,
@@ -79,6 +80,17 @@ class TestIsoParser:
             query.variables["Who"],
             query.goal,
         ) == [atom("bart")]
+
+    def test_parse_iso_query_understands_operator_terms(self) -> None:
+        query = parse_iso_query("?- X is 1 + 2 * 3.\n")
+
+        assert str(goal_as_term(query.goal)) == "is(X, +(1, *(2, 3)))"
+
+    def test_parse_iso_query_accepts_custom_operator_table(self) -> None:
+        table = iso_operator_table().define(500, "yfx", "++")
+        query = parse_iso_query("?- Result = a ++ b ++ c.\n", operator_table=table)
+
+        assert str(goal_as_term(query.goal)) == "=(Result, ++(++(a, b), c))"
 
     def test_rejects_dcg_rules_for_now(self) -> None:
         with pytest.raises(PrologParseError, match="DCG rules"):

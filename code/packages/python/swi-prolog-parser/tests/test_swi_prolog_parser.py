@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, solve_all, term
+from logic_engine import atom, goal_as_term, solve_all, term
 
 from swi_prolog_parser import (
     SWI_PROLOG_GRAMMAR_PATH,
@@ -90,6 +90,16 @@ class TestSwiParser:
             query.variables["Who"],
             query.goal,
         ) == [atom("bart")]
+
+    def test_parse_swi_source_parses_operator_directive_terms(self) -> None:
+        parsed = parse_swi_source(":- initialization(main + extra).\n")
+
+        assert str(parsed.directives[0].term) == "initialization(+(main, extra))"
+
+    def test_parse_swi_query_understands_operator_terms(self) -> None:
+        query = parse_swi_query("?- X is 1 + 2 * 3.\n")
+
+        assert str(goal_as_term(query.goal)) == "is(X, +(1, *(2, 3)))"
 
     def test_parse_swi_program_rejects_queries(self) -> None:
         with pytest.raises(PrologParseError, match="expected only clauses"):
