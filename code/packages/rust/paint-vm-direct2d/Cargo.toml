@@ -6,6 +6,8 @@ description = "Direct2D renderer for the paint-instructions scene model (P2D06)"
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
+window-core = { path = "../window-core" }
+window-win32 = { path = "../window-win32" }
 
 [dependencies.windows]
 version = "0.58"
@@ -13,11 +15,18 @@ features = [
     "Foundation_Numerics",
     "Win32_Graphics_Direct2D",
     "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Gdi",
     "Win32_Graphics_Imaging",
     "Win32_Graphics_Imaging_D2D",
+    "Win32_Graphics_Dxgi",
     "Win32_Graphics_Dxgi_Common",
+    "Win32_System_LibraryLoader",
     "Win32_System_Com",
+    "Win32_UI_WindowsAndMessaging",
 ]
 
 [dev-dependencies]
 paint-codec-png = { path = "../paint-codec-png" }
+text-interfaces = { path = "../text-interfaces" }
+text-native = { path = "../text-native" }
