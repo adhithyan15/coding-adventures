@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-code-packager"
+version = "0.1.0"
+description = "Cross-platform binary packager: wraps native code in ELF64, Mach-O64, PE, WASM, or raw formats"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "coding-adventures-intel-4004-packager",
+    "coding-adventures-wasm-module-encoder",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/code_packager"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
