@@ -123,6 +123,19 @@ play_score_text(HAPPY_BIRTHDAY_TEXT)
 
 Portable scores use `play_portable_score_text` for the same lazy playback path.
 
+The package also ships a reusable four-part portable demo:
+
+```python
+from music_machine import MINI_ORCHESTRA_TEXT, parse_portable_score, render_portable_score_to_pcm
+
+score = parse_portable_score(MINI_ORCHESTRA_TEXT)
+rendered = render_portable_score_to_pcm(score)
+
+print(len(score.tracks))         # 4
+print(score.title)               # Mini Orchestra
+print(rendered.pcm_buffer.sample_count())
+```
+
 ## Safety Limits
 
 The parser has explicit limits for score size, line length, and event count.

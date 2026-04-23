@@ -402,7 +402,6 @@ fn build_query_params_hash(query: &str) -> VALUE {
 
     hash
 }
-
 fn params_hash_to_rb(params: &[(String, String)]) -> VALUE {
     let hash = ruby_bridge::hash_new();
     for (key, value) in params {
@@ -414,7 +413,6 @@ fn params_hash_to_rb(params: &[(String, String)]) -> VALUE {
     }
     hash
 }
-
 fn percent_decode_component(input: &str) -> String {
     let mut output = Vec::with_capacity(input.len());
     let bytes = input.as_bytes();
