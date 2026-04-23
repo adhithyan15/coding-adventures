@@ -3236,3 +3236,28 @@ The branch's changes to those BUILD files were from earlier unrelated work that 
 **Rule:** During rebase conflict resolution, BUILD files that the branch did not *intentionally* change should be resolved to the `theirs` (main) side: `git checkout --theirs <file>` then `git add <file>`. Only keep the branch side for files that the current branch deliberately modified.
 
 **Rule:** After completing a rebase, run `git diff origin/main...HEAD -- '**/BUILD'` to verify that only the BUILD files intentionally added or changed by this branch appear in the diff. Any unexpected BUILD file diffs indicate a bad conflict resolution.
+
+---
+
+## Ruby native extensions: QNIL = 0x04 on 64-bit Ruby (USE_FLONUM), not 0x08
+
+**Date:** 2026-04-23
+
+**What happened:** The `ruby-bridge` Rust crate had `QNIL = 0x08`, copied from pre-USE_FLONUM Ruby documentation. On every modern 64-bit Ruby (x86_64, aarch64) `USE_FLONUM` is enabled, which changes the special constant layout:
+
+```
+Qfalse = 0x00, Qnil = 0x04, Qtrue = 0x14, Qundef = 0x24
+```
+
+Returning `0x08` to Ruby caused it to treat the value as an object pointer. Ruby then read the `klass` field at `pointer + 8`, landing at address `0x10`, and crashed with SIGSEGV. The crash only manifested on the "no match" code path (where `None => QNIL` was returned), so the "match" path appeared to work.
+
+This caused four CI workaround hacks in the `conduit` package — all of which masked the real bug rather than fixing it.
+
+**Rule:** In `ruby-bridge` and any other Rust/C Ruby extension, always use:
+- `QNIL = 0x04` (not 0x08)
+- `QTRUE = 0x14`
+- `QFALSE = 0x00`
+
+Confirm against `ruby/internal/special_consts.h` in the Ruby installation. The `nil.object_id` value in Ruby (which returns 4 in Ruby 3.x) is computed as `LONG2FIX(QNIL)` and matches: `QNIL = nil.object_id` only if you account for the Fixnum encoding (`LONG2FIX(n) = n << 1 | 1`, so `LONG2FIX(4) >> 1 = 4`).
+
+**Rule:** When a Ruby native extension starts crashing with SIGSEGV at a low address like `0x10`, suspect that a "nil" or other special constant is being returned with the wrong bit pattern, causing Ruby to dereference it as an object pointer.

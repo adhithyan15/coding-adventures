@@ -9,17 +9,26 @@ module CodingAdventures
         @method = method
         @pattern = pattern
         @block = block
-        @segments = split_segments(pattern)
       end
 
       def match?(request_method, path)
         return nil unless request_method == method
+        if CodingAdventures::Conduit.respond_to?(:match_route_native)
+          CodingAdventures::Conduit.match_route_native(pattern, path)
+        else
+          fallback_match(path)
+        end
+      end
 
+      private
+
+      def fallback_match(path)
+        pattern_segments = split_segments(pattern)
         path_segments = split_segments(path)
-        return nil unless path_segments.length == @segments.length
+        return nil unless path_segments.length == pattern_segments.length
 
         params = {}
-        @segments.zip(path_segments).each do |expected, actual|
+        pattern_segments.zip(path_segments).each do |expected, actual|
           if expected.start_with?(":")
             params[expected[1..]] = actual
           elsif expected != actual
@@ -28,8 +37,6 @@ module CodingAdventures
         end
         params
       end
-
-      private
 
       def split_segments(path)
         return [] if path == "/"

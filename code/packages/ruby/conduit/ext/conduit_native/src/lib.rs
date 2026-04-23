@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use embeddable_http_server::{HttpRequest, HttpResponse, HttpServer, HttpServerOptions};
-use http_core::Header;
+use http_core::{Header, RoutePattern};
 use ruby_bridge::{ID, VALUE};
 
 extern "C" {
@@ -50,7 +50,8 @@ struct RubyConduitServer {
 }
 
 struct ServeCall {
-    server: *mut RubyConduitServer,
+    server: *mut PlatformHttpServer,
+    running: Arc<AtomicBool>,
     ok: bool,
     error: Option<String>,
 }
@@ -79,6 +80,16 @@ unsafe extern "C" fn server_alloc(klass: VALUE) -> VALUE {
             running: Arc::new(AtomicBool::new(false)),
         },
     )
+}
+
+extern "C" fn conduit_match_route(_module: VALUE, pattern_val: VALUE, path_val: VALUE) -> VALUE {
+    let pattern = string_from_rb(pattern_val, "pattern must be a String");
+    let path = string_from_rb(path_val, "path must be a String");
+    let pattern = RoutePattern::parse(&pattern);
+    match pattern.match_path(&path) {
+        Some(params) => params_hash_to_rb(&params),
+        None => ruby_bridge::QNIL,
+    }
 }
 
 extern "C" fn server_initialize(
@@ -116,12 +127,17 @@ extern "C" fn server_initialize(
 }
 
 extern "C" fn server_serve(self_val: VALUE) -> VALUE {
-    let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
-    if slot.server.is_none() {
-        raise_server_error("server is closed");
-    }
+    let (server, running) = {
+        let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
+        let server = match slot.server.as_mut() {
+            Some(server) => server as *mut PlatformHttpServer,
+            None => raise_server_error("server is closed"),
+        };
+        (server, Arc::clone(&slot.running))
+    };
     let mut call = ServeCall {
-        server: slot as *mut RubyConduitServer,
+        server,
+        running,
         ok: false,
         error: None,
     };
@@ -189,16 +205,9 @@ extern "C" fn server_local_port(self_val: VALUE) -> VALUE {
 
 unsafe extern "C" fn serve_without_gvl(data: *mut c_void) -> *mut c_void {
     let call = &mut *(data as *mut ServeCall);
-    let slot = &mut *call.server;
-    let Some(server) = slot.server.as_mut() else {
-        call.ok = false;
-        call.error = Some("server is closed".to_string());
-        return ptr::null_mut();
-    };
-
-    slot.running.store(true, Ordering::SeqCst);
-    let result = server.serve();
-    slot.running.store(false, Ordering::SeqCst);
+    call.running.store(true, Ordering::SeqCst);
+    let result = (*call.server).serve();
+    call.running.store(false, Ordering::SeqCst);
     match result {
         Ok(()) => {
             call.ok = true;
@@ -392,7 +401,17 @@ fn build_query_params_hash(query: &str) -> VALUE {
 
     hash
 }
-
+fn params_hash_to_rb(params: &[(String, String)]) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    for (key, value) in params {
+        ruby_bridge::hash_aset(
+            hash,
+            ruby_bridge::str_to_rb(key),
+            ruby_bridge::str_to_rb(value),
+        );
+    }
+    hash
+}
 fn percent_decode_component(input: &str) -> String {
     let mut output = Vec::with_capacity(input.len());
     let bytes = input.as_bytes();
@@ -583,6 +602,13 @@ fn bind_server(
 pub extern "C" fn Init_conduit_native() {
     let coding_adventures = ruby_bridge::define_module("CodingAdventures");
     let conduit = ruby_bridge::define_module_under(coding_adventures, "Conduit");
+
+    ruby_bridge::define_module_function_raw(
+        conduit,
+        "match_route_native",
+        conduit_match_route as *const c_void,
+        2,
+    );
 
     let error_class = ruby_bridge::define_class_under(
         conduit,
