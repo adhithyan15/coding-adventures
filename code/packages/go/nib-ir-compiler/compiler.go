@@ -158,7 +158,7 @@ func (c *Compiler) compileFunction(node *parser.ASTNode) {
 	registers := map[string]int{}
 	nextRegister := regArgBase
 	if c.config.CopyParametersToLocals {
-		nextRegister = c.localRegisterBase()
+		nextRegister = c.firstLocalRegister(len(params))
 		for index, param := range params {
 			argRegister := regArgBase + index
 			registers[param[0]] = nextRegister
@@ -180,6 +180,15 @@ func (c *Compiler) localRegisterBase() int {
 		return c.config.LocalRegisterBase
 	}
 	return defaultLocalRegisterBase
+}
+
+func (c *Compiler) firstLocalRegister(paramCount int) int {
+	base := c.localRegisterBase()
+	argLimit := regArgBase + paramCount
+	if base < argLimit {
+		return argLimit
+	}
+	return base
 }
 
 func (c *Compiler) compileBlock(block *parser.ASTNode, registers map[string]int, nextRegister int) int {
