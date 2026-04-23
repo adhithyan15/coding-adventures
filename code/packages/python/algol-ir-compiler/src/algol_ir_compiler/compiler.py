@@ -113,6 +113,7 @@ class _FrameScope:
     frame_base_reg: int
     heap_mark_reg: int | None = None
     parent: _FrameScope | None = None
+    goto_parent: _FrameScope | None = None
     active_thunk_heap_mark_reg: int | None = None
     helper_failure: bool = False
 
@@ -373,12 +374,18 @@ class AlgolIrCompiler:
     def _compile_block(self, block: ASTNode, parent: _FrameScope | None) -> _FrameScope:
         semantic_block = self._semantic_block_for_ast(block)
         static_parent_reg = parent.frame_base_reg if parent is not None else _ZERO_REG
-        frame_base_reg = self._emit_enter_frame(semantic_block, static_parent_reg)
+        heap_mark_reg = self._snapshot_heap_pointer()
+        frame_base_reg = self._emit_enter_frame(
+            semantic_block,
+            static_parent_reg,
+            heap_mark_reg,
+        )
         scope = _FrameScope(
             semantic_block=semantic_block,
             frame_base_reg=frame_base_reg,
-            heap_mark_reg=self._snapshot_heap_pointer(),
+            heap_mark_reg=heap_mark_reg,
             parent=parent,
+            goto_parent=parent,
             active_thunk_heap_mark_reg=(
                 parent.active_thunk_heap_mark_reg if parent is not None else None
             ),
@@ -396,6 +403,7 @@ class AlgolIrCompiler:
         self,
         semantic_block: SemanticBlock,
         static_parent_reg: int,
+        heap_mark_reg: int,
     ) -> int:
         frame_base = self._fresh_reg()
         new_stack_pointer = self._fresh_reg()
@@ -428,7 +436,11 @@ class AlgolIrCompiler:
             base_reg=frame_base,
             offset=_STATIC_LINK_OFFSET,
         )
-        self._store_word_const(frame_base, _RETURN_TOKEN_OFFSET, 0)
+        self._store_word_reg(
+            value_reg=heap_mark_reg,
+            base_reg=frame_base,
+            offset=_RETURN_TOKEN_OFFSET,
+        )
         self._store_word_const(
             frame_base,
             _FRAME_SIZE_OFFSET,
@@ -761,7 +773,7 @@ class AlgolIrCompiler:
         current: _FrameScope | None = scope
         while current is not None and current.block_id != target_block_id:
             self._emit_leave_frame(current)
-            current = current.parent
+            current = current.goto_parent
         if current is None:
             raise CompileError(
                 f"goto target block {target_block_id} is not active in this function"
@@ -1427,6 +1439,7 @@ class AlgolIrCompiler:
                 frame_base_reg=caller_frame,
                 heap_mark_reg=None,
                 parent=None,
+                goto_parent=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
                 helper_failure=True,
             )
@@ -1495,6 +1508,7 @@ class AlgolIrCompiler:
                 frame_base_reg=caller_frame,
                 heap_mark_reg=None,
                 parent=None,
+                goto_parent=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
                 helper_failure=True,
             )
@@ -1526,15 +1540,46 @@ class AlgolIrCompiler:
             raise CompileError(f"missing body AST for procedure {procedure.name!r}")
         semantic_block = self.semantic_blocks_by_id[procedure.body_block_id]
         self._label(procedure.label)
+        heap_mark_reg = self._snapshot_heap_pointer()
         frame_base_reg = self._emit_enter_frame(
             semantic_block,
             _STATIC_LINK_PARAM_REG,
+            heap_mark_reg,
         )
+        parent: _FrameScope | None = None
+        parent_block_id = semantic_block.frame_layout.static_parent_id
+        next_parent_reg = _STATIC_LINK_PARAM_REG
+        while parent_block_id is not None:
+            parent_block = self.semantic_blocks_by_id.get(parent_block_id)
+            if parent_block is None:
+                raise CompileError(
+                    f"missing semantic block {parent_block_id} for procedure "
+                    f"{procedure.name!r} parent chain"
+                )
+            parent = _FrameScope(
+                semantic_block=parent_block,
+                frame_base_reg=next_parent_reg,
+                heap_mark_reg=None,
+                parent=parent,
+                goto_parent=parent,
+                active_thunk_heap_mark_reg=None,
+            )
+            parent_block_id = parent_block.frame_layout.static_parent_id
+            if parent_block_id is not None:
+                next_parent_reg_next = self._fresh_reg()
+                self._emit(
+                    IrOp.LOAD_WORD,
+                    IrRegister(next_parent_reg_next),
+                    IrRegister(next_parent_reg),
+                    IrRegister(self._const_reg(_STATIC_LINK_OFFSET)),
+                )
+                next_parent_reg = next_parent_reg_next
         scope = _FrameScope(
             semantic_block=semantic_block,
             frame_base_reg=frame_base_reg,
-            heap_mark_reg=self._snapshot_heap_pointer(),
+            heap_mark_reg=heap_mark_reg,
             parent=None,
+            goto_parent=parent,
             active_thunk_heap_mark_reg=_THUNK_HEAP_MARK_PARAM_REG,
         )
         self._initialize_scalar_slots(scope)
@@ -2029,6 +2074,16 @@ class AlgolIrCompiler:
     def _restore_heap_pointer(self, scope: _FrameScope) -> None:
         if scope.heap_mark_reg is not None:
             self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, scope.heap_mark_reg)
+            return
+
+        token_reg = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(token_reg),
+            IrRegister(scope.frame_base_reg),
+            IrRegister(self._const_reg(_RETURN_TOKEN_OFFSET)),
+        )
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, token_reg)
 
     def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
         index = self.if_count
