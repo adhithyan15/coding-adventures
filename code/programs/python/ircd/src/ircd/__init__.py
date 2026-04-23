@@ -2,10 +2,10 @@
 
 This module is the wiring layer — the topmost layer of the IRC stack.  It
 connects the pure IRC logic (``irc-server``) to the TCP transport layer
-(``irc-net-stdlib``) via two adapter objects:
+(``irc-net-selectors``) via two adapter objects:
 
     ``DriverHandler``
-        Implements the ``Handler`` protocol expected by ``irc-net-stdlib``.
+        Implements the ``Handler`` protocol expected by ``irc-net-selectors``.
         Translates raw byte chunks from the network into ``Message`` objects,
         feeds them to ``IRCServer``, and sends the resulting responses back
         over the network.
@@ -19,7 +19,7 @@ Wiring diagram::
 
     TCP socket
        ↓ raw bytes
-    StdlibEventLoop.on_data()        ← irc-net-stdlib
+    SelectorsEventLoop.on_data()     ← irc-net-selectors
        ↓ conn_id, raw bytes
     DriverHandler.on_data()          ← THIS MODULE
        ↓ feeds bytes into per-connection Framer
@@ -31,7 +31,7 @@ Wiring diagram::
        ↓ list[(ConnId, Message)]
     irc_proto.serialize()            ← irc-proto
        ↓ b":irc.local 001 alice :Welcome\r\n"
-    EventLoop.send_to()              ← irc-net-stdlib
+    EventLoop.send_to()              ← irc-net-selectors
        ↓ bytes on the wire
 
 None of the four dependency packages know about each other — only this module
@@ -49,12 +49,12 @@ import threading
 from dataclasses import dataclass, field
 
 from irc_framing import Framer
-from irc_net_stdlib import (
+from irc_net_selectors import (
     ConnId as NetConnId,
 )
-from irc_net_stdlib import (
+from irc_net_selectors import (
     EventLoop,
-    StdlibEventLoop,
+    SelectorsEventLoop,
     create_listener,
 )
 from irc_proto import Message, ParseError, parse, serialize
@@ -75,14 +75,14 @@ def _to_net_conn_id(conn_id: ServerConnId) -> NetConnId:
 
 
 # ---------------------------------------------------------------------------
-# DriverHandler — bridges irc-net-stdlib and irc-server
+# DriverHandler — bridges irc-net-selectors and irc-server
 # ---------------------------------------------------------------------------
 
 
 class DriverHandler:
-    """Adapts ``IRCServer`` to the ``Handler`` interface expected by ``irc-net-stdlib``.
+    """Adapts ``IRCServer`` to the ``Handler`` interface expected by ``irc-net-selectors``.
 
-    The ``irc-net-stdlib`` event loop calls three lifecycle callbacks on a
+    The ``irc-net-selectors`` event loop calls three lifecycle callbacks on a
     ``Handler``:
 
     * ``on_connect(conn_id, host)`` — a new TCP connection arrived.
@@ -104,7 +104,7 @@ class DriverHandler:
 
     Concurrency
     -----------
-    The ``irc-net-stdlib`` event loop already holds its ``_handler_lock`` before
+    The ``irc-net-selectors`` event loop already holds its ``_handler_lock`` before
     calling any ``Handler`` method.  This means all three callbacks here run
     serially — we never have two threads in ``on_data`` simultaneously.
     ``IRCServer`` is therefore safe without an additional lock.
@@ -286,7 +286,7 @@ def parse_args(argv: list[str]) -> Config:
     parser = argparse.ArgumentParser(
         prog="ircd",
         description=(
-            "IRC server — wires irc-proto, irc-framing, irc-server, and irc-net-stdlib."
+            "IRC server — wires irc-proto, irc-framing, irc-server, and irc-net-selectors."
         ),
     )
     parser.add_argument(
@@ -374,7 +374,7 @@ def main(argv: list[str] | None = None) -> None:
     # so the port is available immediately after the previous server exits.
     listener = create_listener(config.host, config.port)
 
-    loop: StdlibEventLoop = StdlibEventLoop()
+    loop: SelectorsEventLoop = SelectorsEventLoop()
 
     # The IRC state machine — knows nothing about sockets or threads.
     server = IRCServer(

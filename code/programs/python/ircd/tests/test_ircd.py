@@ -6,7 +6,7 @@ Two layers of testing are used:
 
 **Integration tests** (``TestRegistration``, ``TestMOTD``, ``TestPrivmsg``,
 ``TestPingPong``) start a *real* ``ircd`` server in a background thread using
-the production ``StdlibEventLoop`` and connect to it via real TCP sockets.
+the production ``SelectorsEventLoop`` and connect to it via real TCP sockets.
 This exercises the full stack: framing → parsing → IRC logic → serialization
 → network delivery.  Port 0 is used so the OS picks a free ephemeral port,
 which avoids conflicts between parallel test runs.
@@ -36,7 +36,7 @@ import pytest
 from ircd import Config, DriverHandler, parse_args
 
 if TYPE_CHECKING:
-    from irc_net_stdlib import EventLoop
+    from irc_net_selectors import EventLoop
 
 
 # ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ def _start_server(motd: list[str] | None = None) -> tuple[int, EventLoop]:
     The server binds to 127.0.0.1 (loopback only) so no real network traffic
     escapes the test machine.
     """
-    from irc_net_stdlib import StdlibEventLoop, create_listener
+    from irc_net_selectors import SelectorsEventLoop, create_listener
     from irc_server import IRCServer
 
     # Port 0 tells the OS to assign a free ephemeral port.
@@ -62,7 +62,7 @@ def _start_server(motd: list[str] | None = None) -> tuple[int, EventLoop]:
     # Retrieve the OS-assigned port so we know where to connect.
     port: int = listener._sock.getsockname()[1]
 
-    loop: StdlibEventLoop = StdlibEventLoop()
+    loop: SelectorsEventLoop = SelectorsEventLoop()
     server = IRCServer(
         server_name="irc.test",
         motd=motd if motd is not None else ["Hello from ircd tests."],
@@ -427,7 +427,7 @@ class TestDriverHandlerUnit:
 
     def test_on_connect_creates_framer(self) -> None:
         """on_connect stores a Framer for the given conn_id."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, _ = self._make_handler()
         conn_id = ConnId(1)
@@ -436,7 +436,7 @@ class TestDriverHandlerUnit:
 
     def test_on_disconnect_removes_framer(self) -> None:
         """on_disconnect removes the Framer for the given conn_id."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, _ = self._make_handler()
         conn_id = ConnId(2)
@@ -446,7 +446,7 @@ class TestDriverHandlerUnit:
 
     def test_nick_user_triggers_send_to(self) -> None:
         """Sending NICK + USER causes send_to to be called with 001 wire bytes."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, mock_loop = self._make_handler()
         conn_id = ConnId(3)
@@ -468,7 +468,7 @@ class TestDriverHandlerUnit:
 
     def test_partial_line_buffered(self) -> None:
         """A partial line is buffered and only dispatched once complete."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, mock_loop = self._make_handler()
         conn_id = ConnId(4)
@@ -491,7 +491,7 @@ class TestDriverHandlerUnit:
 
     def test_garbage_line_skipped(self) -> None:
         """A completely unparseable line does not crash the server."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, mock_loop = self._make_handler()
         conn_id = ConnId(5)
@@ -511,7 +511,7 @@ class TestDriverHandlerUnit:
 
     def test_on_data_unknown_conn_id_is_noop(self) -> None:
         """on_data for a conn_id with no framer silently does nothing."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, mock_loop = self._make_handler()
         # Never called on_connect — no framer exists.
@@ -521,7 +521,7 @@ class TestDriverHandlerUnit:
 
     def test_privmsg_dispatched_to_correct_connection(self) -> None:
         """A PRIVMSG to a nick sends the message to the correct conn_id."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, mock_loop = self._make_handler()
         conn1 = ConnId(10)
@@ -547,7 +547,7 @@ class TestDriverHandlerUnit:
 
     def test_motd_numeric_376_in_welcome(self) -> None:
         """The welcome sequence includes 376 (RPL_ENDOFMOTD)."""
-        from irc_net_stdlib import ConnId
+        from irc_net_selectors import ConnId
 
         handler, mock_loop = self._make_handler()
         conn_id = ConnId(20)
@@ -568,11 +568,11 @@ class TestMainEntryPoint:
 
     def test_main_calls_loop_run(self) -> None:
         """main() should call loop.run() exactly once before returning."""
-        # We patch StdlibEventLoop so the server never actually binds a socket
+        # We patch SelectorsEventLoop so the server never actually binds a socket
         # or blocks waiting for connections.  The mock loop's run() returns
         # immediately.
         with (
-            patch("ircd.StdlibEventLoop") as MockLoop,
+            patch("ircd.SelectorsEventLoop") as MockLoop,
             patch("ircd.create_listener") as mock_listener,
             patch("ircd.IRCServer"),
         ):
@@ -590,7 +590,7 @@ class TestMainEntryPoint:
     def test_main_uses_config_port(self) -> None:
         """main() passes the configured port to create_listener."""
         with (
-            patch("ircd.StdlibEventLoop") as MockLoop,
+            patch("ircd.SelectorsEventLoop") as MockLoop,
             patch("ircd.create_listener") as mock_listener,
             patch("ircd.IRCServer"),
         ):
