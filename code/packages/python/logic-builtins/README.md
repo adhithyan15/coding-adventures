@@ -39,8 +39,8 @@ ordinary logic goal expressions.
   `fd_lto(left, right)`, `fd_leqo(left, right)`, `fd_gto(left, right)`,
   `fd_geqo(left, right)`, `fd_addo(left, right, result)`,
   `fd_subo(left, right, result)`, `fd_mulo(left, right, result)`,
-  `all_differento(vars)`, and `labelingo(vars)` for finite-domain integer
-  constraints
+  `fd_sumo(vars, total)`, `all_differento(vars)`, and `labelingo(vars)` for
+  finite-domain integer constraints
 - arithmetic expression constructors: `add`, `sub`, `mul`, `div`, `floordiv`, `mod`, and `neg`
 - `iso(result, expression)` for Prolog-style evaluative arithmetic
 - `numeqo(left, right)`, `numneqo(left, right)`, `lto(left, right)`, `leqo(left, right)`, `gto(left, right)`, and `geqo(left, right)`
@@ -63,7 +63,9 @@ from logic_builtins import (
     fd_addo,
     fd_ino,
     fd_leqo,
+    fd_lto,
     fd_neqo,
+    fd_sumo,
     findallo,
     forallo,
     functoro,
@@ -196,6 +198,17 @@ assert solve_all(
         labelingo([X, Y]),
     ),
 ) == [(num(1), num(4)), (num(2), num(3)), (num(3), num(2)), (num(4), num(1))]
+assert solve_all(
+    program(),
+    (X, Y),
+    conj(
+        fd_ino(X, range(1, 5)),
+        fd_ino(Y, range(1, 5)),
+        fd_sumo([X, Y, 1], 6),
+        fd_lto(X, Y),
+        labelingo([X, Y]),
+    ),
+) == [(num(1), num(4)), (num(2), num(3))]
 ```
 
 Arithmetic is evaluative, not a constraint system yet. `iso(Y, add(X, 1))`
@@ -207,8 +220,9 @@ stores a finite integer domain; comparison, arithmetic, and all-different
 predicates narrow domains as soon as enough information exists; and
 `labelingo([X, Y])` enumerates concrete assignments in ascending order.
 Arithmetic constraints currently cover addition, subtraction, and
-multiplication. `all_differento` includes duplicate checks and singleton
-pruning, while deeper Hall-set global-constraint pruning remains future work.
+multiplication, plus `fd_sumo` for n-ary sums. `all_differento` includes
+duplicate checks and singleton pruning, while deeper Hall-set global-constraint
+pruning remains future work.
 `labelingo` chooses the smallest current finite domain first and uses the
 caller-provided variable order as a stable tie-breaker.
 
@@ -248,9 +262,10 @@ assert solve_n(
 ) == [(num(1), num(2), num(3), num(1), num(2), num(1), num(1))]
 ```
 
-Scheduling and puzzle-style problems use the same ingredients: finite start
-times, arithmetic relations for durations, ordering constraints for
-dependencies, and `labelingo(...)` to enumerate concrete assignments.
+Scheduling, budgeting, and puzzle-style problems use the same ingredients:
+finite start times, arithmetic relations for durations, `fd_sumo(...)` for
+resource totals, ordering constraints for dependencies, and `labelingo(...)` to
+enumerate concrete assignments.
 
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail

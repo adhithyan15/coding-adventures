@@ -58,6 +58,7 @@ from logic_builtins import (
     fd_mulo,
     fd_neqo,
     fd_subo,
+    fd_sumo,
     findallo,
     floordiv,
     forallo,
@@ -101,7 +102,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.12.0"
+        assert __version__ == "0.13.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -661,6 +662,76 @@ class TestFiniteDomainBuiltins:
             ),
         ) == [(num(2), num(6)), (num(3), num(4))]
 
+    def test_fd_sumo_solves_n_ary_sum_constraints(self) -> None:
+        left = var("Left")
+        middle = var("Middle")
+        right = var("Right")
+        values = (left, middle, right)
+
+        assert solve_all(
+            program(),
+            values,
+            conj(
+                *(fd_ino(value, range(1, 5)) for value in values),
+                fd_sumo(values, 6),
+                all_differento(values),
+                labelingo(values),
+            ),
+        ) == [
+            (num(1), num(2), num(3)),
+            (num(1), num(3), num(2)),
+            (num(2), num(1), num(3)),
+            (num(2), num(3), num(1)),
+            (num(3), num(1), num(2)),
+            (num(3), num(2), num(1)),
+        ]
+
+    def test_fd_sumo_accepts_logic_lists_and_result_variables(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        total = var("Total")
+
+        assert solve_all(
+            program(),
+            (left, right, total),
+            conj(
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_ino(total, [4]),
+                fd_sumo(logic_list([left, right]), total),
+                fd_lto(left, right),
+                labelingo([left, right, total]),
+            ),
+        ) == [(num(1), num(3), num(4))]
+
+    def test_fd_sumo_prunes_result_domain_before_labeling(self) -> None:
+        total = var("Total")
+
+        assert solve_all(
+            program(),
+            total,
+            conj(
+                fd_ino(total, range(0, 10)),
+                fd_sumo([1, 2, 3], total),
+                labelingo([total]),
+            ),
+        ) == [num(6)]
+
+    def test_fd_sumo_handles_empty_sums(self) -> None:
+        total = var("Total")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            total,
+            conj(fd_ino(total, range(0, 3)), fd_sumo([], total), labelingo([total])),
+        ) == [num(0)]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), fd_sumo([], 1)),
+        ) == []
+
     def test_all_differento_prunes_singleton_assignments(self) -> None:
         left = var("Left")
         middle = var("Middle")
@@ -821,13 +892,37 @@ class TestFiniteDomainBuiltins:
             conj(
                 *(fd_ino(time, range(0, 7)) for time in all_times),
                 fd_ino(test, range(0, 5)),
-                fd_addo(design, 1, design_done),
+                fd_sumo([design, 1], design_done),
                 fd_leqo(design_done, build),
-                fd_addo(build, 2, build_done),
+                fd_sumo([build, 2], build_done),
                 fd_leqo(build_done, test),
                 labelingo(starts),
             ),
         ) == [(num(0), num(1), num(3))]
+
+    def test_fd_sumo_models_resource_allocation(self) -> None:
+        design_hours = var("DesignHours")
+        build_hours = var("BuildHours")
+        test_hours = var("TestHours")
+        hours = (design_hours, build_hours, test_hours)
+
+        assert solve_n(
+            program(),
+            3,
+            hours,
+            conj(
+                fd_ino(design_hours, range(1, 4)),
+                fd_ino(build_hours, range(2, 5)),
+                fd_ino(test_hours, range(1, 3)),
+                fd_sumo(hours, 7),
+                fd_geqo(build_hours, design_hours),
+                labelingo(hours),
+            ),
+        ) == [
+            (num(2), num(4), num(1)),
+            (num(3), num(3), num(1)),
+            (num(1), num(4), num(2)),
+        ]
 
 
 class TestControlBuiltins:
