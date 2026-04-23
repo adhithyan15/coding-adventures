@@ -278,6 +278,7 @@ members = [
     "aes-modes",
     "chacha20-poly1305",
     "blake2b",
+    "curve25519",
     "csprng",
     "ct-compare",
     "zeroize",
