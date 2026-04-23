@@ -681,6 +681,15 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "append_text_replacement"
         | "create_start_tag"
         | "create_end_tag"
+        | "create_comment"
+        | "create_doctype"
+        | "start_attribute"
+        | "commit_attribute"
+        | "mark_self_closing"
+        | "mark_force_quirks"
+        | "clear_temporary_buffer"
+        | "append_temporary_buffer_to_text"
+        | "switch_to_return_state"
         | "emit_current_token" => return Ok(()),
         _ => {}
     }
@@ -691,10 +700,42 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
     if matches!(
         action,
         "append_tag_name(current)" | "append_tag_name(current_lowercase)"
+    ) || matches!(
+        action,
+        "append_attribute_name(current)"
+            | "append_attribute_name(current_lowercase)"
+            | "append_attribute_value(current)"
+            | "append_comment(current)"
+            | "append_comment(current_lowercase)"
+            | "append_doctype_name(current)"
+            | "append_doctype_name(current_lowercase)"
+            | "append_temporary_buffer(current)"
+            | "append_temporary_buffer(current_lowercase)"
     ) {
         return Ok(());
     }
+    if action.starts_with("append_attribute_name(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_attribute_value(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_comment(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_doctype_name(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_temporary_buffer(") && action.ends_with(')') {
+        return Ok(());
+    }
     if action.starts_with("parse_error(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("set_return_state(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("switch_to(") && action.ends_with(')') {
         return Ok(());
     }
     if action.starts_with("emit(") && action.ends_with(')') {
