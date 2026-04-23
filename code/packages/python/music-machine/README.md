@@ -136,6 +136,25 @@ print(score.title)               # Mini Orchestra
 print(rendered.pcm_buffer.sample_count())
 ```
 
+For programmatic composition, use `PortableScoreBuilder` instead of hand-writing
+every portable `event` line:
+
+```python
+from music_machine import PortableScoreBuilder, parse_portable_score
+
+builder = PortableScoreBuilder(title="Tiny Builder Song", ppq=100, sample_rate_hz=2000)
+builder.add_tempo(0, 600)
+builder.add_instrument("lead", kind="sine", gain=0.5)
+builder.add_track("melody", instrument_id="lead")
+builder.add_note("melody", 0, 100, "A4", velocity=0.8)
+builder.add_chord("melody", 100, 100, ("C5", "E5"), velocity=0.6)
+builder.add_rest("melody", 200, 50)
+
+score = builder.build()
+score_text = builder.to_text()
+round_tripped = parse_portable_score(score_text)
+```
+
 ## Safety Limits
 
 The parser has explicit limits for score size, line length, and event count.

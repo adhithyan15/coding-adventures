@@ -13,6 +13,7 @@ from music_machine import (
     InstrumentDeclaration,
     MeterEvent,
     PortableScore,
+    PortableScoreBuilder,
     PortableScoreEvent,
     RenderedPortableScore,
     RenderedScore,
@@ -590,6 +591,71 @@ def test_mini_orchestra_fixture_parses_and_renders() -> None:
     assert len(rendered.rendered_notes) == 52
     assert any(rendered.pcm_buffer.samples[:10_000])
     assert any(rendered.pcm_buffer.samples[-10_000:])
+
+
+def test_portable_score_builder_builds_round_trippable_score_text() -> None:
+    builder = PortableScoreBuilder(title="Builder Song", ppq=100, sample_rate_hz=2000)
+    builder.add_tempo(0, 600)
+    builder.add_meter(0, "4/4")
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_instrument("bass", program=33, gain=0.4)
+    builder.add_track("melody", instrument_id="lead")
+    builder.add_track("low", instrument_id="bass")
+    builder.add_note("melody", 0, 100, "A4", velocity=0.8)
+    builder.add_chord("melody", 100, 100, ("C5", "E5"), velocity=0.6)
+    builder.add_rest("melody", 200, 50)
+    builder.add_note("low", 0, 250, "A2", velocity=0.7)
+
+    score = builder.build()
+    rebuilt = parse_portable_score(builder.to_text())
+
+    assert score.title == "Builder Song"
+    assert score.instruments[1] == InstrumentDeclaration("bass", "pluck_naive", 0.4)
+    assert any(event.notes == ("C5", "E5") for event in score.events)
+    assert any(event.kind == "rest" for event in score.events)
+    assert rebuilt.title == score.title
+    assert rebuilt.ppq == score.ppq
+    assert rebuilt.sample_rate_hz == score.sample_rate_hz
+    assert rebuilt.instruments == score.instruments
+    assert rebuilt.tracks == score.tracks
+    assert [
+        (
+            event.track_id,
+            event.start_tick,
+            event.duration_tick,
+            event.kind,
+            event.notes,
+            event.velocity,
+        )
+        for event in rebuilt.events
+    ] == [
+        (
+            event.track_id,
+            event.start_tick,
+            event.duration_tick,
+            event.kind,
+            event.notes,
+            event.velocity,
+        )
+        for event in score.events
+    ]
+
+
+def test_portable_score_builder_requires_one_instrument_selector() -> None:
+    builder = PortableScoreBuilder()
+
+    with pytest.raises(ValueError, match="exactly one"):
+        builder.add_instrument("lead", profile="flute_naive", kind="sine")
+
+    with pytest.raises(ValueError, match="exactly one"):
+        builder.add_instrument("lead")
+
+
+def test_portable_score_builder_rejects_string_chords() -> None:
+    builder = PortableScoreBuilder()
+
+    with pytest.raises(ValueError, match="iterable of note strings"):
+        builder.add_chord("melody", 0, 100, "C5,E5")  # type: ignore[arg-type]
 
 
 def test_render_portable_score_keeps_later_scheduled_notes_audible() -> None:
