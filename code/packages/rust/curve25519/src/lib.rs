@@ -109,6 +109,8 @@
 
 #![forbid(unsafe_code)]
 
+use core::hint::black_box;
+
 // ─── Public Types ────────────────────────────────────────────────────────────
 
 /// A 32-byte Curve25519 scalar.
@@ -288,6 +290,17 @@ pub fn fe_add(a: Fe, b: Fe) -> Fe {
 ///   limb[0]    = 2·(2⁵¹ − 19) = 2⁵² − 38
 ///   limb[1..4] = 2·(2⁵¹ − 1)  = 2⁵² − 2
 /// ```
+///
+/// # Precondition
+///
+/// Each limb of **`b`** must be ≤ `TWO_P_0 = 2⁵² − 38` (limb 0) or
+/// ≤ `TWO_P_1234 = 2⁵² − 2` (limbs 1–4).  This is satisfied whenever
+/// `b` is the output of `fe_mul`, `fe_sq`, or `fe_carry_reduce`
+/// (loose invariant: limbs ≤ 2⁵²).
+///
+/// If `b` came from `fe_add` applied to two `fe_mul` outputs, its
+/// limbs can reach 2·2⁵² + small, exceeding the constant.
+/// Callers must ensure the invariant or reduce `b` first.
 pub fn fe_sub(a: Fe, b: Fe) -> Fe {
     const TWO_P_0:    u64 = 2 * ((1u64 << 51) - 19);
     const TWO_P_1234: u64 = 2 * ((1u64 << 51) - 1);
@@ -435,8 +448,14 @@ pub fn fe_inv(z: Fe) -> Fe {
 ///
 /// If `swap == 1` exchanges `a` and `b`; if `swap == 0` leaves them unchanged.
 /// No branches on `swap` — safe against timing side-channels.
+///
+/// `black_box(mask)` prevents LLVM from recognising the bitmask pattern and
+/// converting it to a conditional branch or `cmov` sequence that could
+/// introduce timing variation on the secret scalar bits.
 pub fn fe_cswap(swap: u64, a: &mut Fe, b: &mut Fe) {
-    let mask = (swap & 1).wrapping_neg(); // 0 or 0xFFFF_FFFF_FFFF_FFFF
+    // `black_box` is a stable no-op at runtime; it blocks LLVM from
+    // treating `mask` as a compile-time-known value and emitting branches.
+    let mask = black_box((swap & 1).wrapping_neg()); // 0 or 0xFFFF_FFFF_FFFF_FFFF
     for i in 0..5 {
         let t = mask & (a.0[i] ^ b.0[i]);
         a.0[i] ^= t;
@@ -547,6 +566,14 @@ fn fe_reduce_full(a: Fe) -> Fe {
 /// # Returns
 /// The u-coordinate of k·(u,?) encoded as a 32-byte little-endian integer.
 /// Returns all-zeros if the result is the point at infinity.
+///
+/// # Warning — all-zero output
+///
+/// When `u` is a low-order point (e.g., u = 0, or one of the seven other
+/// points of order dividing 8), the result is `[0u8; 32]`.  An attacker
+/// who can supply the peer's public key can force a known shared secret.
+/// RFC 7748 recommends checking for the all-zero result; use
+/// [`x25519_checked`] when the peer's public key is not trusted.
 pub fn x25519(k: &Scalar, u: &MontgomeryPoint) -> MontgomeryPoint {
     // Clamp the scalar: RFC 7748 §5.
     //   - Clear the three low-order bits of byte 0 (cofactor-8 torsion safety).
@@ -607,6 +634,35 @@ pub fn x25519(k: &Scalar, u: &MontgomeryPoint) -> MontgomeryPoint {
 
     // Affine conversion: u = X₂ / Z₂ = X₂ · Z₂⁻¹.
     fe_mul(x2, fe_inv(z2)).to_bytes()
+}
+
+/// X25519 with low-order-point rejection.
+///
+/// Identical to [`x25519`] but returns `None` when the output is the
+/// all-zero point (indicating the input was a low-order or zero point).
+///
+/// Use this instead of `x25519` whenever the peer's public key comes from
+/// an untrusted source (e.g., over the network).  RFC 7748 §6 recommends
+/// treating an all-zero output as a key-agreement failure.
+///
+/// # Example
+/// ```
+/// use coding_adventures_curve25519::{x25519_checked, X25519_BASEPOINT};
+/// let secret = [0x42u8; 32];
+/// let peer_pub = X25519_BASEPOINT;  // legit base point → Some(result)
+/// assert!(x25519_checked(&secret, &peer_pub).is_some());
+///
+/// // u = 0 is a low-order point → None
+/// let zero_point = [0u8; 32];
+/// assert!(x25519_checked(&secret, &zero_point).is_none());
+/// ```
+pub fn x25519_checked(k: &Scalar, u: &MontgomeryPoint) -> Option<MontgomeryPoint> {
+    let result = x25519(k, u);
+    if result == [0u8; 32] {
+        None
+    } else {
+        Some(result)
+    }
 }
 
 /// Compute a Diffie-Hellman public key from a secret scalar.
@@ -818,6 +874,27 @@ mod tests {
         let mut s1 = [0u8; 32]; s1[0] = 0b11111000; s1[31] = 64;
         let mut s2 = [0u8; 32]; s2[0] = 0b11111111; s2[31] = 64;
         assert_eq!(x25519_public_key(&s1), x25519_public_key(&s2));
+    }
+
+    #[test]
+    fn x25519_checked_rejects_zero_point() {
+        // u = 0 is a low-order point; the DH result is all-zeros.
+        let secret = [0x42u8; 32];
+        let zero_point = [0u8; 32];
+        assert!(
+            x25519_checked(&secret, &zero_point).is_none(),
+            "zero u-coordinate must be rejected"
+        );
+    }
+
+    #[test]
+    fn x25519_checked_accepts_basepoint() {
+        // The standard base point must produce a non-zero result.
+        let secret = [0x42u8; 32];
+        assert!(
+            x25519_checked(&secret, &X25519_BASEPOINT).is_some(),
+            "scalar × basepoint must not be zero"
+        );
     }
 
 }
