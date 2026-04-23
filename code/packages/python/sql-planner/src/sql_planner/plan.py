@@ -423,7 +423,7 @@ class DropIndex:
 
 @dataclass(frozen=True, slots=True)
 class IndexScan:
-    """Read rows from a table using a B-tree index (IX-6).
+    """Read rows from a table using a B-tree index (IX-6 / IX-8).
 
     After the planner has identified a Filter predicate that an existing index
     can satisfy, it replaces ``Filter(Scan(table))`` with an ``IndexScan``.
@@ -439,12 +439,19 @@ class IndexScan:
         Optional table alias (same as :class:`Scan`).
     index_name:
         The name of the index to use.
-    column:
-        The indexed column (first column of the index in v2).
+    columns:
+        The indexed columns that were matched from the predicate, in index
+        order.  A single-column index match produces a 1-tuple; a composite
+        index that matched two predicate columns produces a 2-tuple, etc.
+        (was a bare ``column: str`` in v2; upgrading to a tuple maintains
+        the frozen-dataclass hashability invariant.)
     lo:
-        Lower bound key value, or ``None`` for unbounded.
+        Tuple of lower-bound key values (one per matched column), or
+        ``None`` for an unbounded lower range.  The backend's
+        ``scan_index`` call uses prefix-key comparison, so a 1-tuple bound
+        on a 2-column index correctly constrains only the first column.
     hi:
-        Upper bound key value, or ``None`` for unbounded.
+        Tuple of upper-bound key values, or ``None`` for unbounded.
     lo_inclusive:
         Include the lower bound key in the result.
     hi_inclusive:
@@ -457,9 +464,9 @@ class IndexScan:
     table: str
     alias: str | None
     index_name: str
-    column: str
-    lo: object | None                  # SqlValue or None
-    hi: object | None                  # SqlValue or None
+    columns: tuple[str, ...]           # matched index prefix (length >= 1)
+    lo: tuple[object, ...] | None      # SqlValue tuple or None (unbounded)
+    hi: tuple[object, ...] | None      # SqlValue tuple or None (unbounded)
     lo_inclusive: bool = True
     hi_inclusive: bool = True
     residual: Expr | None = None

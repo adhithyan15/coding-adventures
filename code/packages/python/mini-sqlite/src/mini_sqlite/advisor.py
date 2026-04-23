@@ -137,8 +137,14 @@ class IndexAdvisor:
         self._backend = backend
         self._policy: IndexPolicy = policy or HitCountPolicy()
         # hit counts: (table_name, column_name) → how many times we've seen
-        # this column in a filter position.
+        # this column in a filter position (single-column tracking).
         self._hits: dict[tuple[str, str], int] = {}
+        # pair hit counts: (table_name, col_a, col_b) → how many times we've
+        # seen *both* columns filtered in the same query (composite tracking,
+        # IX-8).  Only ordered pairs where col_a < col_b in scan order are
+        # recorded (first column seen in _filter_columns order, second column
+        # next).
+        self._pair_hits: dict[tuple[str, str, str], int] = {}
         # Drop-tracking state.
         # _query_count: total SELECT scans observed via on_query_event.
         # _last_use[index_name]: _query_count value when the index was last
@@ -148,6 +154,11 @@ class IndexAdvisor:
         self._query_count: int = 0
         self._last_use: dict[str, int] = {}
         self._created_at: dict[str, int] = {}
+        # Metadata for auto-created indexes: name → (table, columns_tuple).
+        # Populated when _maybe_create_index or _maybe_create_composite_index
+        # succeeds.  Used by the drop loop to properly reset hit counts when
+        # an index is dropped, without relying on name-parsing heuristics.
+        self._auto_index_meta: dict[str, tuple[str, tuple[str, ...]]] = {}
 
     # ------------------------------------------------------------------
     # Policy swap.
@@ -177,8 +188,15 @@ class IndexAdvisor:
         The method is idempotent with respect to index creation: if an
         index already exists for a ``(table, column)`` pair, the advisor
         skips creation even if the policy says "yes".
+
+        IX-8: pair callbacks are processed *before* single-column callbacks
+        within each :class:`~sql_planner.plan.Filter` node.  This ordering
+        ensures that when both the pair threshold and the single-column
+        threshold are reached simultaneously, the composite index is created
+        first and the subsequent single-column check for the leading column
+        finds an existing covering index (and skips the single).
         """
-        _walk(plan, self._record)
+        _walk(plan, self._record, self._record_pair)
 
     def on_query_event(self, event: QueryEvent) -> None:
         """Process one :class:`~sql_vm.QueryEvent` emitted after a SELECT scan.
@@ -219,13 +237,24 @@ class IndexAdvisor:
         for idx_name in list(candidates):
             last = self._last_use.get(idx_name, self._created_at.get(idx_name, 0))
             queries_since = self._query_count - last
-            # Derive table and column from the naming convention
-            # auto_{table}_{column}.  If the name doesn't follow the
-            # convention we skip it rather than guessing.
-            parts = idx_name.split("_", 2)  # ["auto", table, column]
-            if len(parts) != 3:
-                continue
-            _, table, column = parts
+
+            # Resolve table + columns from stored metadata when available.
+            # Fall back to name-parsing for indexes whose metadata was not
+            # captured (e.g. single-column indexes created before IX-8).
+            meta = self._auto_index_meta.get(idx_name)
+            if meta is not None:
+                table, columns = meta
+                # Pass the first column to should_drop for the column arg
+                # (the spec argument is informational; HitCountPolicy ignores it).
+                column = columns[0] if columns else ""
+            else:
+                # Legacy path: parse auto_{table}_{column} by splitting on "_".
+                parts = idx_name.split("_", 2)  # ["auto", table, column]
+                if len(parts) != 3:
+                    continue
+                _, table, column = parts
+                columns = (column,)
+
             if should_drop_fn(idx_name, table, column, queries_since):
                 try:
                     self._backend.drop_index(idx_name, if_exists=True)
@@ -234,10 +263,14 @@ class IndexAdvisor:
                 # Remove from tracking so the advisor doesn't re-check it.
                 self._created_at.pop(idx_name, None)
                 self._last_use.pop(idx_name, None)
-                # Also reset the hit count so the index can be re-created if
-                # the workload pattern returns.
-                key = (table, column)
-                self._hits.pop(key, None)
+                self._auto_index_meta.pop(idx_name, None)
+                # Reset single-column hit counts so the index can be
+                # re-created if the workload pattern returns.
+                for col in columns:
+                    self._hits.pop((table, col), None)
+                # Reset pair hit counts for composite indexes (2-column).
+                if len(columns) == 2:
+                    self._pair_hits.pop((table, columns[0], columns[1]), None)
 
     # ------------------------------------------------------------------
     # Internal callbacks.
@@ -260,8 +293,35 @@ class IndexAdvisor:
             return
         self._maybe_create_index(table, column)
 
+    def _record_pair(self, table: str, col_a: str, col_b: str) -> None:
+        """Record a co-filtered column pair and maybe create a composite index.
+
+        Called for each ordered pair of columns observed in the same
+        ``Filter(Scan(t))`` predicate (IX-8).  The pair ``(col_a, col_b)``
+        reflects the column order as returned by :func:`_filter_columns` —
+        col_a is the first-encountered column, col_b the second.
+
+        Uses ``policy.should_create(table, "{col_a}_{col_b}", hit_count)``
+        to decide when to act.  Since :class:`~mini_sqlite.policy.HitCountPolicy`
+        only checks ``hit_count >= threshold``, the synthetic column string
+        is purely informational.
+        """
+        key = (table, col_a, col_b)
+        self._pair_hits[key] = self._pair_hits.get(key, 0) + 1
+        hit_count = self._pair_hits[key]
+        # Use a synthetic column name to represent the pair in the policy call.
+        if not self._policy.should_create(table, f"{col_a}_{col_b}", hit_count):
+            return
+        self._maybe_create_composite_index(table, col_a, col_b)
+
     def _maybe_create_index(self, table: str, column: str) -> None:
-        """Create ``auto_{table}_{column}`` if no index already covers it."""
+        """Create ``auto_{table}_{column}`` if no index already covers it.
+
+        Skips creation when any existing index already has ``column`` as its
+        leading column — including a composite index that starts with
+        ``column`` (e.g. ``auto_t_column_other``), which already accelerates
+        queries that filter only on ``column``.
+        """
         try:
             existing = self._backend.list_indexes(table)
         except Exception:  # noqa: BLE001 — backend errors are non-fatal here
@@ -283,6 +343,48 @@ class IndexAdvisor:
             # Record creation time so the drop loop can compute
             # queries_since_last_use from the moment the index was born.
             self._created_at[name] = self._query_count
+            self._auto_index_meta[name] = (table, (column,))
+
+    def _maybe_create_composite_index(
+        self,
+        table: str,
+        col_a: str,
+        col_b: str,
+    ) -> None:
+        """Create ``auto_{table}_{col_a}_{col_b}`` if no covering index exists.
+
+        Skips creation when any index on the table already has ``col_a`` as
+        its leading column.  The rationale: if a single-column index on
+        ``col_a`` (or a composite starting with ``col_a``) already exists and
+        is being used, adding another composite index would be redundant while
+        ``col_a``-only queries remain dominant.
+
+        If no index covers the leading column, a new two-column composite
+        index is created.  This replaces the need for two separate
+        single-column indexes when both columns are always filtered together.
+        """
+        try:
+            existing = self._backend.list_indexes(table)
+        except Exception:  # noqa: BLE001 — backend errors are non-fatal here
+            return
+        # Skip if any existing index already has col_a as its leading column.
+        # This includes both single-column ``auto_t_col_a`` and composite
+        # ``auto_t_col_a_col_b`` indexes.
+        for idx in existing:
+            if idx.columns and idx.columns[0] == col_a:
+                return
+        name = f"auto_{table}_{col_a}_{col_b}"
+        idx_def = IndexDef(
+            name=name,
+            table=table,
+            columns=[col_a, col_b],
+            unique=False,
+            auto=True,
+        )
+        with contextlib.suppress(IndexAlreadyExists):
+            self._backend.create_index(idx_def)
+            self._created_at[name] = self._query_count
+            self._auto_index_meta[name] = (table, (col_a, col_b))
 
 
 # --------------------------------------------------------------------------
@@ -293,17 +395,29 @@ class IndexAdvisor:
 def _walk(
     plan: LogicalPlan,
     callback: Callable[[str, str, str | None], None],
+    pair_callback: Callable[[str, str, str], None] | None = None,
 ) -> None:
     """Walk *plan* depth-first, invoking *callback* for each filter pattern.
 
     Recognised patterns:
 
     ``Filter(Scan(t), predicate)``
-        → extract column names from ``predicate``; call
-        ``callback(t, col, None)`` for each.
+        → extract column names from ``predicate``; for each column call
+        ``callback(t, col, None)``.
 
-    ``IndexScan(t, column, index_name)``
-        → call ``callback(t, column, index_name)`` to signal "already indexed".
+        IX-8: if *pair_callback* is provided and two or more indexable
+        columns are present in the same predicate, also call
+        ``pair_callback(t, col_a, col_b)`` for each ordered pair.  Pairs
+        are processed **before** single-column callbacks so that a composite
+        index created by a pair callback is visible to the subsequent
+        single-column checks (which then skip the leading column as already
+        covered).
+
+    ``IndexScan(t, columns, index_name)``
+        → call ``callback(t, col, index_name)`` for each column in
+        ``columns`` to signal "already indexed" — this prevents the hit
+        count from accumulating for columns that already benefit from an
+        index.
 
     All other nodes are recursed into without triggering a callback.
     """
@@ -312,20 +426,25 @@ def _walk(
             # A full-table scan with a filter — the interesting case.
             tbl_alias = alias or table
             cols = _filter_columns(pred, tbl_alias)
+            # IX-8: process pairs FIRST so that a newly-created composite
+            # index is visible to the subsequent single-column callbacks.
+            if pair_callback is not None and len(cols) >= 2:
+                for i in range(len(cols)):
+                    for j in range(i + 1, len(cols)):
+                        pair_callback(table, cols[i], cols[j])
             for col in cols:
                 callback(table, col, None)
-            # Still recurse in case of nested queries (shouldn't happen in
-            # this position, but be defensive).
 
-        case IndexScan(table=table, column=col, index_name=idx_name):
-            # The planner already picked an index — note it without
-            # incrementing hit counts.
-            callback(table, col, idx_name)
+        case IndexScan(table=table, columns=idx_cols, index_name=idx_name):
+            # The planner already picked an index — note each covered column
+            # without incrementing hit counts (no new index needed).
+            for col in idx_cols:
+                callback(table, col, idx_name)
 
         case Filter(input=inner, predicate=_):
             # Filter over something other than a Scan (e.g. Filter over Join).
             # Recurse into the inner plan.
-            _walk(inner, callback)
+            _walk(inner, callback, pair_callback)
 
         case Scan():
             # Bare scan with no filter above it — nothing to record.
@@ -339,22 +458,22 @@ def _walk(
             | Having(input=inner)
             | Aggregate(input=inner)
         ):
-            _walk(inner, callback)
+            _walk(inner, callback, pair_callback)
 
         case DerivedTable(query=inner):
-            _walk(inner, callback)
+            _walk(inner, callback, pair_callback)
 
         case Join(left=lhs, right=rhs):
-            _walk(lhs, callback)
-            _walk(rhs, callback)
+            _walk(lhs, callback, pair_callback)
+            _walk(rhs, callback, pair_callback)
 
         case (
             Union(left=lhs, right=rhs)
             | Intersect(left=lhs, right=rhs)
             | Except(left=lhs, right=rhs)
         ):
-            _walk(lhs, callback)
-            _walk(rhs, callback)
+            _walk(lhs, callback, pair_callback)
+            _walk(rhs, callback, pair_callback)
 
         case _:
             # Leaf nodes (Begin, Commit, Rollback, Insert, Update, Delete,

@@ -526,12 +526,18 @@ class OpenIndexScan:
     This single instruction replaces the ``OpenScan`` + filter-in-VM loop
     for index-covered predicates — it is semantically equivalent to
     ``OpenScan(cursor_id, table)`` followed by a WHERE filter, just faster.
+
+    IX-8 change: ``lo`` and ``hi`` are now *tuples* of ``SqlValue`` rather
+    than bare scalars.  A single-column scan uses a 1-tuple; a composite
+    two-column scan uses a 2-tuple.  ``None`` still means "unbounded on
+    that side".  The VM converts these to lists when passing them to
+    ``backend.scan_index``, which requires ``list[SqlValue] | None``.
     """
     cursor_id: int
     table: str
     index_name: str
-    lo: object | None            # SqlValue or None (unbounded)
-    hi: object | None            # SqlValue or None (unbounded)
+    lo: tuple[object, ...] | None   # SqlValue tuple or None (unbounded)
+    hi: tuple[object, ...] | None   # SqlValue tuple or None (unbounded)
     lo_inclusive: bool = True
     hi_inclusive: bool = True
 

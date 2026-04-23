@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.5.0] - 2026-04-23
+
+### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
+
+- **`IndexScan.columns: tuple[str, ...]`** — replaces the v2 `column: str`
+  single-column field.  Single-column scans produce a 1-tuple; composite scans
+  produce an n-tuple matching the leading prefix of the index used.  This is a
+  breaking API change; downstream packages (`sql-codegen`, `sql-optimizer`,
+  `mini-sqlite`) are updated in lockstep.
+
+- **`IndexScan.lo / IndexScan.hi` widened to `tuple[object, ...] | None`** —
+  v2 stored scalar bounds; v3 stores them as tuples aligned with `columns`.
+  A 1-tuple bound on a 2-column index correctly constrains only the first
+  column because the backend's `scan_index` performs prefix-key comparison
+  (`sort_key[:len(lo_sort)]`).
+
+- **`_MultiColBounds` internal class** (`sql_planner.planner`) — captures the
+  result of multi-column bound extraction: `matched_cols`, `lo` / `hi` tuples,
+  inclusive flags, and a `residual` predicate to be re-applied after the scan.
+
+- **`_extract_multi_column_bounds(predicate, alias, index_cols)`** helper —
+  walks a predicate recursively for a given ordered list of index columns.
+  For each leading column it calls the existing `_extract_index_bounds`; if
+  the result is an exact-equality match it extends the chain into the residual
+  for the next column; a range predicate terminates the chain.  Returns `None`
+  when no column of the index is constrained.
+
+- **`_try_index_scan` now picks the best-match index** — evaluates ALL indexes
+  on a table against the predicate (previously stopped at first usable index)
+  and selects the one covering the most predicate columns.  Ties are broken by
+  iteration order (first declared index wins).
+
 ## [0.4.0] - 2026-04-21
 
 ### Added

@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.6.0] - 2026-04-23
+
+### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
+
+- **`IndexAdvisor._pair_hits: dict[tuple[str, str, str], int]`** — new
+  accumulator tracking `(table, col_a, col_b)` predicate pairs observed in
+  full-table scans.  Pair keys are always normalised to ascending column-name
+  order to avoid double-counting `(a, b)` and `(b, a)`.
+
+- **`IndexAdvisor._auto_index_meta: dict[str, tuple[str, tuple[str, ...]]]`** —
+  maps auto-created index name → `(table, columns_tuple)`.  Replaces name
+  parsing for drop-loop bookkeeping; correctly handles composite names like
+  `auto_orders_user_id_status` that would confuse a `split("_", 2)` approach.
+
+- **`IndexAdvisor._record_pair(table, col_a, col_b)` callback** — increments
+  `_pair_hits` for the normalised pair key, then calls
+  `_maybe_create_composite_index` when the policy threshold is reached.  Pair
+  callbacks are processed **before** single-column callbacks inside `_walk` so
+  that if both thresholds fire in the same observation, the composite is created
+  first and the subsequent single-column check correctly skips creating a
+  redundant index on the leading column.
+
+- **`IndexAdvisor._maybe_create_composite_index(table, col_a, col_b)`** —
+  creates a two-column B-tree index `auto_<table>_<col_a>_<col_b>` unless any
+  existing index already has `col_a` as its leading column (which would make
+  the composite redundant for leading-column-only queries).  Registers the new
+  index in `_auto_index_meta`.
+
+- **`IndexAdvisor.observe_plan` updated** — passes `pair_callback=self._record_pair`
+  to `_walk`.
+
+- **`_walk` pair callback support** — the helper now accepts an optional
+  `pair_callback(table, col_a, col_b)` argument.  Inside the
+  `Filter(Scan(...))` branch, all `(col_i, col_j)` pairs from the predicate
+  column list are dispatched to `pair_callback` before the per-column
+  `callback` calls, ensuring composite creation precedes single-column creation.
+  The `IndexScan` branch now destructures `columns=idx_cols` (was `column=col`)
+  and iterates the tuple.
+
+- **`engine._extract_scan_info` updated** — the `IndexScan` match arm now
+  reads `columns=cols` (was `column=col`) and returns `list(cols)`.
+
+### Tests
+
+- `tests/test_tier3_composite.py` — 21 new tests across three classes:
+  - `TestAdvisorComposite` (8 tests) — pair hit accumulation, composite index
+    creation at threshold, naming convention, skipping composite when
+    single-column index on leading column already exists, no duplicate creation,
+    independent columns not cross-correlated, `_auto_index_meta` population,
+    pair hits reset after composite drop.
+  - `TestPlannerComposite` (8 tests) — planner uses composite index for both
+    columns, leading-column prefix match, non-leading column cannot use
+    composite, composite preferred over single-column for two-column query,
+    range on second column, lower-bound range, equality on both columns,
+    BETWEEN on second column.
+  - `TestCompositeIntegration` (5 tests) — full end-to-end create cycle,
+    range correctness, equality correctness, `auto_index=False` has no
+    composite, composite drop resets pair hits.
+
 ## [0.5.0] - 2026-04-23
 
 ### Added — Phase 9.6: Automatic index drop logic (IX-7)

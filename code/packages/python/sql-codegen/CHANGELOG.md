@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.0] - 2026-04-23
+
+### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
+
+- **`OpenIndexScan.lo / OpenIndexScan.hi` widened to `tuple[object, ...] | None`** —
+  mirrors the sql-planner `IndexScan` change.  Previously stored scalar bounds
+  (`object | None`); now stores tuples so that composite index bounds are
+  transmitted faithfully to the VM.  The VM handler unpacks them with
+  `list(ins.lo)` instead of the old `[ins.lo]` wrapping.
+
+- **`_compile_source` pattern match updated** — the `IndexScan` destructuring
+  now binds `columns=_` (was `column=_`) to stay consistent with the renamed
+  field.  No semantic change; the codegen emits `OpenIndexScan` with the
+  `lo`/`hi` tuples it receives from the plan node directly.
+
 ## [0.5.0] - 2026-04-21
 
 ### Added
