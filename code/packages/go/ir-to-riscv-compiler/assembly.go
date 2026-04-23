@@ -433,5 +433,13 @@ func emitStackSlotStoreAssembly(rs, offset int) []string {
 }
 
 func regName(index int) string {
+	switch index {
+	case 0:
+		return "zero"
+	case 1:
+		return "ra"
+	case 2:
+		return "sp"
+	}
 	return fmt.Sprintf("x%d", index)
 }
