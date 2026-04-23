@@ -3209,3 +3209,13 @@ the shorter duration assumed by the first test.
 **Rule:** For text-score fixtures, count tokens and beats from the same duration rules used by the
 parser before asserting rendered sample counts. Prefer assertions that make the musical math visible:
 event count, note count, total beats, tempo-derived seconds, and sample-rate-derived sample count.
+
+---
+
+## Python BUILD files must use .venv/bin/python, not system python3.12
+
+**Date:** 2026-04-22
+
+**What happened:** The aot-core BUILD file used `python3.12 -m pytest` (the system Python) instead of `.venv/bin/python -m pytest`. Locally this worked because the system Python had the packages installed globally. On CI runners, only the uv venv has pytest and the other dependencies — the system Python has none of them.
+
+**Rule:** Python BUILD files must always run pytest via `.venv/bin/python -m pytest`, matching the pattern used by jit-core, interpreter-ir, and every other Python package in the repo. Never use `python3.12` or `python3` directly in a BUILD file.
