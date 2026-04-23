@@ -25,7 +25,7 @@ impl SourceRef {
     }
 
     #[cfg(target_os = "windows")]
-    pub const fn from_raw_handle(handle: std::os::windows::io::RawHandle) -> Self {
+    pub fn from_raw_handle(handle: std::os::windows::io::RawHandle) -> Self {
         Self(handle as usize)
     }
 
@@ -223,10 +223,12 @@ struct SourceRegistry {
 }
 
 impl SourceRegistry {
+    #[allow(dead_code)]
     fn len(&self) -> usize {
         self.by_source.len()
     }
 
+    #[allow(dead_code)]
     fn get(&self, source: &SourceRef) -> Option<&SourceState> {
         self.by_source.get(source)
     }

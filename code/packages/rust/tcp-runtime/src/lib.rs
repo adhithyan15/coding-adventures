@@ -393,8 +393,20 @@ impl TcpRuntime<transport_platform::windows::WindowsTransportPlatform, ()> {
         A: ToSocketAddrs,
         F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
     {
+        Self::bind_iocp(addr, options, handler)
+    }
+
+    pub fn bind_iocp<A, F>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        handler: F,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        F: Fn(TcpConnectionInfo, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+    {
         let address = resolve_first_socket_addr(addr)?;
-        let platform = transport_platform::windows::WindowsTransportPlatform::new()?;
+        let platform = transport_platform::windows::IocpTransportPlatform::new()?;
         Self::bind(platform, BindAddress::Ip(address), options, handler)
     }
 }
@@ -414,8 +426,24 @@ impl<S: Send + 'static> TcpRuntime<transport_platform::windows::WindowsTransport
         F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
         C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
     {
+        Self::bind_iocp_with_state(addr, options, init, handler, on_close)
+    }
+
+    pub fn bind_iocp_with_state<A, I, F, C>(
+        addr: A,
+        options: TcpRuntimeOptions,
+        init: I,
+        handler: F,
+        on_close: C,
+    ) -> Result<Self, PlatformError>
+    where
+        A: ToSocketAddrs,
+        I: Fn(TcpConnectionInfo) -> S + Send + Sync + 'static,
+        F: Fn(TcpConnectionInfo, &mut S, &[u8]) -> TcpHandlerResult + Send + Sync + 'static,
+        C: Fn(TcpConnectionInfo, S) + Send + Sync + 'static,
+    {
         let address = resolve_first_socket_addr(addr)?;
-        let platform = transport_platform::windows::WindowsTransportPlatform::new()?;
+        let platform = transport_platform::windows::IocpTransportPlatform::new()?;
         Self::bind_with_state(
             platform,
             BindAddress::Ip(address),
@@ -432,6 +460,42 @@ fn resolve_first_socket_addr<A: ToSocketAddrs>(addr: A) -> Result<SocketAddr, Pl
         .map_err(PlatformError::from)?
         .next()
         .ok_or_else(|| PlatformError::Io("no socket addresses resolved".into()))
+}
+
+#[cfg(all(test, target_os = "windows"))]
+mod windows_tests {
+    use super::*;
+    use std::io::{Read, Write};
+    use std::net::{Shutdown, TcpStream};
+    use std::thread;
+
+    #[test]
+    fn bind_iocp_serves_echo_clients() {
+        let mut runtime = TcpRuntime::bind_iocp(
+            ("127.0.0.1", 0),
+            TcpRuntimeOptions::default(),
+            |_, bytes| TcpHandlerResult::write(bytes.to_vec()),
+        )
+        .expect("bind iocp runtime");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let mut client = TcpStream::connect(addr).expect("connect client");
+        client.write_all(b"iocp-echo").expect("write request");
+        client.shutdown(Shutdown::Write).expect("shutdown write");
+
+        let mut response = Vec::new();
+        client
+            .read_to_end(&mut response)
+            .expect("read echoed response");
+        assert_eq!(response, b"iocp-echo");
+
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
 }
 
 #[cfg(all(
