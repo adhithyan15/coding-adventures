@@ -258,6 +258,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
 
+    def test_boolean_value_procedure_returns_boolean_result(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "boolean procedure negate(x); value x; boolean x; "
+            "begin negate := not x end; "
+            "if negate(false) then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_void_procedure_statement_writes_outer_frame(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -286,6 +296,16 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_boolean_by_name_parameter_assignment_writes_back(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure settrue(x); boolean x; begin x := true end; "
+            "flag := false; settrue(flag); "
+            "if flag then result := 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(

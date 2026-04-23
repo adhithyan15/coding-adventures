@@ -675,7 +675,7 @@ class AlgolTypeChecker:
             return
 
         return_type = _procedure_return_type(node)
-        if return_type is not None and return_type != INTEGER:
+        if return_type is not None and return_type not in {INTEGER, BOOLEAN}:
             self._error(
                 name_token,
                 f"{return_type} procedure results are not supported yet",
@@ -697,16 +697,18 @@ class AlgolTypeChecker:
         )
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
-            if mode == NAME and spec_types.get(formal.value) != INTEGER:
+            parameter_type = spec_types.get(formal.value)
+            if mode == NAME and parameter_type not in {INTEGER, BOOLEAN}:
                 self._error(
                     formal,
                     f"by-name parameter {formal.value!r} must have an integer "
-                    "specifier",
+                    "or boolean specifier",
                 )
-            elif mode == VALUE and spec_types.get(formal.value) != INTEGER:
+            elif mode == VALUE and parameter_type not in {INTEGER, BOOLEAN}:
                 self._error(
                     formal,
-                    f"value parameter {formal.value!r} must have an integer specifier",
+                    f"value parameter {formal.value!r} must have an integer or "
+                    "boolean specifier",
                 )
 
         procedure_id = self._next_procedure_id
@@ -762,9 +764,14 @@ class AlgolTypeChecker:
 
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
+            parameter_type = spec_types.get(formal.value)
             param_symbol = Symbol(
                 name=formal.value,
-                type_name=INTEGER,
+                type_name=(
+                    parameter_type
+                    if parameter_type in {INTEGER, BOOLEAN}
+                    else INTEGER
+                ),
                 line=formal.line,
                 column=formal.column,
                 symbol_id=self._next_symbol_id,
@@ -787,7 +794,7 @@ class AlgolTypeChecker:
                 parameters.append(
                     ProcedureParameter(
                         name=formal.value,
-                        type_name=INTEGER,
+                        type_name=param_symbol.type_name,
                         mode=mode,
                         symbol_id=param_symbol.symbol_id,
                         slot_offset=param_symbol.slot_offset,

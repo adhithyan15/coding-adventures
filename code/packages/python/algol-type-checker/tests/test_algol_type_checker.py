@@ -421,6 +421,42 @@ class TestAlgolTypeChecker:
         assert call.role == "statement"
         assert call.return_type is None
 
+    def test_accepts_boolean_value_procedure_signature_and_call(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "boolean procedure negate(x); value x; boolean x; "
+            "begin negate := not x end; "
+            "if negate(false) then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        descriptor = result.semantic.procedures[0]
+        assert descriptor.return_type == "boolean"
+        assert descriptor.parameters[0].type_name == "boolean"
+        call = result.semantic.procedure_calls[0]
+        assert call.return_type == "boolean"
+
+    def test_accepts_boolean_by_name_parameter_writeback(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "boolean flag; "
+            "procedure settrue(x); boolean x; begin x := true end; "
+            "flag := false; settrue(flag); "
+            "if flag then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.type_name == "boolean"
+        assert parameter.mode == "name"
+        assert parameter.may_write
+
     def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
         ast = parse_algol(
             "begin integer result, lo, hi; "
@@ -737,6 +773,22 @@ class TestAlgolTypeChecker:
 
         assert not result.ok
         assert "by-name parameter 'x' expects integer" in result.diagnostics[0].message
+
+    def test_rejects_wrong_type_for_boolean_value_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "boolean procedure negate(x); value x; boolean x; "
+            "begin negate := not x end; "
+            "if negate(1) then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "parameter 'x' expects boolean, got integer"
+            in result.diagnostics[0].message
+        )
 
     def test_rejects_procedure_argument_count_mismatch(self) -> None:
         ast = parse_algol(
