@@ -376,6 +376,14 @@ def parse_source(source: str) -> ParsedSource:
     return lower_ast(parse_ast(source))
 
 
+def lower_goal_ast(ast: ASTNode) -> ParsedQuery:
+    """Lower a ``goal`` AST node into an executable query-shaped object."""
+
+    scope = _Scope(variables={})
+    goal = _Lowerer()._lower_goal(ast, scope)
+    return ParsedQuery(goal=goal, variables=dict(scope.variables))
+
+
 def lower_ast(ast: ASTNode) -> ParsedSource:
     """Lower a Prolog grammar AST into executable engine objects."""
 

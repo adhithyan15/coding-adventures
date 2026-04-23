@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, solve_all
+from logic_engine import atom, solve_all, term
 
 from swi_prolog_parser import (
     SWI_PROLOG_GRAMMAR_PATH,
@@ -56,7 +56,9 @@ class TestSwiParser:
 
         query = parsed.queries[0]
         assert len(parsed.directives) == 1
-        assert parsed.directives[0].goal_ast.rule_name == "goal"
+        assert parsed.operator_table.get(":", "xfy") is not None
+        assert parsed.directives[0].term == term("initialization", "main")
+        assert str(parsed.directives[0].relation) == "initialization/1"
         assert solve_all(
             parsed.program,
             query.variables["Who"],

@@ -2,17 +2,30 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
 from grammar_tools import ParserGrammar, parse_parser_grammar
 from iso_prolog_lexer import tokenize_iso_prolog
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
-from logic_engine import Program
-from prolog_parser import ParsedQuery, ParsedSource, PrologParseError, lower_ast
+from logic_engine import Clause, Program
+from prolog_core import OperatorTable, PrologDirective, iso_operator_table
+from prolog_parser import ParsedQuery, PrologParseError, lower_ast
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
 ISO_PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "iso.grammar"
+
+
+@dataclass(frozen=True, slots=True)
+class ParsedIsoSource:
+    """A parsed ISO/Core source file with shared directive/operator metadata."""
+
+    program: Program
+    clauses: tuple[Clause, ...]
+    queries: tuple[ParsedQuery, ...]
+    directives: tuple[PrologDirective, ...]
+    operator_table: OperatorTable
 
 
 @cache
@@ -45,10 +58,17 @@ def parse_iso_ast(source: str) -> ASTNode:
         raise PrologParseError(token, str(error)) from error
 
 
-def parse_iso_source(source: str) -> ParsedSource:
+def parse_iso_source(source: str) -> ParsedIsoSource:
     """Parse ISO/Core Prolog clauses and queries."""
 
-    return lower_ast(parse_iso_ast(source))
+    parsed = lower_ast(parse_iso_ast(source))
+    return ParsedIsoSource(
+        program=parsed.program,
+        clauses=parsed.clauses,
+        queries=parsed.queries,
+        directives=(),
+        operator_table=iso_operator_table(),
+    )
 
 
 def parse_iso_program(source: str) -> Program:
