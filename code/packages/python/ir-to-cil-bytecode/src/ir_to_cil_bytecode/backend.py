@@ -734,7 +734,19 @@ def _emit_instruction(
         builder.emit_ldc_i4(number.value)
         builder.emit_ldloc(config.syscall_arg_reg)
         builder.emit_call(plan.token_provider.helper_token(CILHelper.SYSCALL))
-        builder.emit_stloc(config.syscall_arg_reg)
+        # Store the syscall return value into the register given by operands[1],
+        # if present and a register (e.g. SYSCALL 2 / read stores its result into
+        # a scratch register rather than the write-arg register).
+        # Fall back to syscall_arg_reg when no result operand is present.
+        result_reg: int
+        if (
+            len(instruction.operands) >= 2
+            and isinstance(instruction.operands[1], IrRegister)
+        ):
+            result_reg = instruction.operands[1].index
+        else:
+            result_reg = config.syscall_arg_reg
+        builder.emit_stloc(result_reg)
         return
 
     msg = f"Unsupported IR opcode in CIL backend: {instruction.opcode}"
