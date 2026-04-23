@@ -639,7 +639,6 @@ pub mod bsd {
             }
             if let Some(size) = options.recv_buffer_size {
                 socket.set_recv_buffer_size(size)?;
-                state.read_buffer_size = size.max(1);
             }
             if let Some(size) = options.send_buffer_size {
                 socket.set_send_buffer_size(size)?;
@@ -2183,6 +2182,7 @@ pub mod windows {
             }
             if let Some(size) = options.recv_buffer_size {
                 socket.set_recv_buffer_size(size)?;
+                state.read_buffer_size = size.max(1);
             }
             if let Some(size) = options.send_buffer_size {
                 socket.set_send_buffer_size(size)?;
