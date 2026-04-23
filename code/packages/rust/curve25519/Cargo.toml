@@ -1,0 +1,12 @@
+[package]
+name = "coding_adventures_curve25519"
+version = "0.1.0"
+edition = "2021"
+description = "Curve25519 X25519 Diffie-Hellman (RFC 7748) and GF(2^255-19) field arithmetic — implemented from scratch"
+license = "MIT"
+authors = ["Adhithya Rajasekaran"]
+
+[dependencies]
+
+[dev-dependencies]
+hex = "0.4"
