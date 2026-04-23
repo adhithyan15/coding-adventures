@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use embeddable_http_server::{HttpRequest, HttpResponse, HttpServer, HttpServerOptions};
-use http_core::Header;
+use http_core::{Header, RoutePattern};
 use ruby_bridge::{ID, VALUE};
 
 extern "C" {
@@ -79,6 +79,16 @@ unsafe extern "C" fn server_alloc(klass: VALUE) -> VALUE {
             running: Arc::new(AtomicBool::new(false)),
         },
     )
+}
+
+extern "C" fn conduit_match_route(_module: VALUE, pattern_val: VALUE, path_val: VALUE) -> VALUE {
+    let pattern = string_from_rb(pattern_val, "pattern must be a String");
+    let path = string_from_rb(path_val, "path must be a String");
+    let pattern = RoutePattern::parse(&pattern);
+    match pattern.match_path(&path) {
+        Some(params) => params_hash_to_rb(&params),
+        None => ruby_bridge::QNIL,
+    }
 }
 
 extern "C" fn server_initialize(
@@ -393,6 +403,18 @@ fn build_query_params_hash(query: &str) -> VALUE {
     hash
 }
 
+fn params_hash_to_rb(params: &[(String, String)]) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    for (key, value) in params {
+        ruby_bridge::hash_aset(
+            hash,
+            ruby_bridge::str_to_rb(key),
+            ruby_bridge::str_to_rb(value),
+        );
+    }
+    hash
+}
+
 fn percent_decode_component(input: &str) -> String {
     let mut output = Vec::with_capacity(input.len());
     let bytes = input.as_bytes();
@@ -583,6 +605,13 @@ fn bind_server(
 pub extern "C" fn Init_conduit_native() {
     let coding_adventures = ruby_bridge::define_module("CodingAdventures");
     let conduit = ruby_bridge::define_module_under(coding_adventures, "Conduit");
+
+    ruby_bridge::define_module_function_raw(
+        conduit,
+        "match_route_native",
+        conduit_match_route as *const c_void,
+        2,
+    );
 
     let error_class = ruby_bridge::define_class_under(
         conduit,

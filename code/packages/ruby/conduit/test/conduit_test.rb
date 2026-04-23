@@ -10,6 +10,12 @@ class TestConduitRouter < Minitest::Test
     assert_nil route.match?("GET", "/hello")
   end
 
+  def test_route_matches_root_path
+    route = CodingAdventures::Conduit::Route.new("GET", "/") { "ok" }
+    assert_equal({}, route.match?("GET", "/"))
+    assert_nil route.match?("GET", "/hello")
+  end
+
   def test_application_normalizes_string_response
     app = CodingAdventures::Conduit.app do
       get "/hello/:name" do |request|
