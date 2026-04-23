@@ -95,6 +95,32 @@ class TestAlgolIrCompiler:
         assert len(algol_labels) == 1
         assert algol_labels[0] in jumps
 
+    def test_compiles_direct_nonlocal_block_goto_with_frame_unwind(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "begin integer inner; goto done; inner := 99 end; "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        jumps = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.JUMP
+        ]
+
+        target = next(label for label in labels if label.startswith("algol_label_"))
+        assert target in jumps
+        assert opcodes.count(IrOp.LOAD_WORD) >= 1
+        assert opcodes.count(IrOp.STORE_WORD) >= 1
+
     def test_compiles_conditional_designational_goto(self) -> None:
         result = compile_algol(
             parse_algol(

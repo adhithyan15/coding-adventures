@@ -22,6 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Added PL04 Phase 7a local switch declarations, switch selections, and
   conditional designational `goto` support through type-checking, IR lowering,
   and WASM execution, while keeping nonlocal frame unwinding guarded.
+- Added PL04 Phase 7b direct nonlocal block `goto` support with frame/heap
+  unwinding inside one lowered function, while keeping procedure-crossing
+  jumps and nonlocal designational forms guarded.
 
 ### Added — TypeScript Port + JavaScript/TypeScript Grammars (PR #14)
 - **31 TypeScript packages** — complete port of the computing stack to TypeScript

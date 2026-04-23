@@ -42,6 +42,8 @@ All notable changes to this package will be documented in this file.
 - Lowered Phase 7a local conditional designational expressions and switch
   selections into local IR jumps, including one-based switch dispatch and
   runtime failure for out-of-range switch indexes.
+- Lowered Phase 7b direct nonlocal block `goto` statements by unwinding exited
+  block frames before jumping to the outer ALGOL label.
 
 ## [0.1.0] - 2026-04-20
 
