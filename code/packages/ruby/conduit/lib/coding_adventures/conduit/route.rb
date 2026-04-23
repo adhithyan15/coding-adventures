@@ -13,7 +13,7 @@ module CodingAdventures
 
       def match?(request_method, path)
         return nil unless request_method == method
-        if CodingAdventures::Conduit.respond_to?(:match_route_native)
+        if use_native_matcher?
           CodingAdventures::Conduit.match_route_native(pattern, path)
         else
           fallback_match(path)
@@ -42,6 +42,16 @@ module CodingAdventures
         return [] if path == "/"
 
         path.split("/").reject(&:empty?)
+      end
+
+      def use_native_matcher?
+        return false unless CodingAdventures::Conduit.respond_to?(:match_route_native)
+
+        # The native route matcher is safe on the direct Ruby path, but the
+        # embedded server callback currently re-enters Ruby from a native
+        # reactor thread. Keep that path on the pure Ruby matcher until the
+        # cross-thread bridge is hardened.
+        Thread.current == Thread.main
       end
     end
   end

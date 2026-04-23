@@ -16,6 +16,24 @@ class TestConduitRouter < Minitest::Test
     assert_nil route.match?("GET", "/hello")
   end
 
+  def test_route_falls_back_off_main_thread
+    route = CodingAdventures::Conduit::Route.new("GET", "/hello/:name") { "ok" }
+    conduit_singleton = CodingAdventures::Conduit.singleton_class
+    conduit_singleton.alias_method(:__original_match_route_native, :match_route_native)
+    conduit_singleton.define_method(:match_route_native) do |_pattern, _path|
+      raise "native matcher should not run off the main thread"
+    end
+
+    params = Thread.new { route.match?("GET", "/hello/Adhithya") }.value
+
+    assert_equal({ "name" => "Adhithya" }, params)
+  ensure
+    if conduit_singleton
+      conduit_singleton.alias_method(:match_route_native, :__original_match_route_native)
+      conduit_singleton.remove_method(:__original_match_route_native)
+    end
+  end
+
   def test_application_normalizes_string_response
     app = CodingAdventures::Conduit.app do
       get "/hello/:name" do |request|
