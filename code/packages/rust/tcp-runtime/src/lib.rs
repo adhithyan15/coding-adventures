@@ -469,6 +469,9 @@ mod windows_tests {
     use std::net::{Shutdown, TcpStream};
     use std::thread;
 
+    const DEFAULT_STRESS_CLIENT_COUNT: usize = 10_000;
+    const STRESS_PROGRESS_INTERVAL: usize = 1_000;
+
     #[test]
     fn bind_iocp_serves_echo_clients() {
         let mut runtime = TcpRuntime::bind_iocp(
@@ -495,6 +498,109 @@ mod windows_tests {
         stop.stop();
         let result = server.join().expect("server thread");
         assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    #[test]
+    #[ignore]
+    fn bind_iocp_sustains_ten_thousand_concurrent_connections() {
+        let client_count = std::env::var("TCP_RUNTIME_STRESS_CLIENTS")
+            .ok()
+            .and_then(|value| value.parse::<usize>().ok())
+            .filter(|count| *count > 0)
+            .unwrap_or(DEFAULT_STRESS_CLIENT_COUNT);
+        let backlog = client_count.saturating_add(1_024).min(u32::MAX as usize) as u32;
+        let options = TcpRuntimeOptions {
+            listener: ListenerOptions {
+                backlog,
+                ..ListenerOptions::default()
+            },
+            max_connections: client_count.saturating_add(1_024),
+            read_buffer_size: 1024,
+            poll_timeout: Duration::from_millis(1),
+            ..TcpRuntimeOptions::default()
+        };
+        let mut runtime = TcpRuntime::bind_iocp(("127.0.0.1", 0), options, |_, bytes| {
+            TcpHandlerResult::write(bytes.to_vec())
+        })
+        .expect("bind iocp runtime");
+        let addr = runtime.local_addr();
+        let stop = runtime.stop_handle();
+
+        let server = thread::spawn(move || runtime.serve());
+
+        let connect_started = std::time::Instant::now();
+        let mut clients = Vec::with_capacity(client_count);
+        for index in 0..client_count {
+            let stream = connect_client_with_retry(addr);
+            stream.set_nodelay(true).expect("set nodelay");
+            stream
+                .set_read_timeout(Some(Duration::from_secs(20)))
+                .expect("set read timeout");
+            clients.push(stream);
+            if (index + 1) % STRESS_PROGRESS_INTERVAL == 0 || index + 1 == client_count {
+                eprintln!(
+                    "connected {}/{} clients in {:?}",
+                    index + 1,
+                    client_count,
+                    connect_started.elapsed()
+                );
+            }
+        }
+
+        let round_trip_started = std::time::Instant::now();
+        for (index, stream) in clients.iter_mut().enumerate() {
+            let payload = (index as u32).to_le_bytes();
+            stream.write_all(&payload).expect("write payload");
+        }
+
+        let mut echoed = [0u8; 4];
+        for (index, stream) in clients.iter_mut().enumerate() {
+            let payload = (index as u32).to_le_bytes();
+            stream.read_exact(&mut echoed).expect("read echoed payload");
+            assert_eq!(echoed, payload, "echo mismatch for client {index}");
+            if (index + 1) % STRESS_PROGRESS_INTERVAL == 0 || index + 1 == client_count {
+                eprintln!(
+                    "echoed {}/{} clients in {:?}",
+                    index + 1,
+                    client_count,
+                    round_trip_started.elapsed()
+                );
+            }
+        }
+
+        drop(clients);
+        stop.stop();
+        let result = server.join().expect("server thread");
+        assert!(result.is_ok(), "server should exit cleanly: {result:?}");
+    }
+
+    fn connect_client_with_retry(addr: SocketAddr) -> TcpStream {
+        let deadline = std::time::Instant::now() + Duration::from_secs(20);
+        let mut last_error = None;
+        while std::time::Instant::now() < deadline {
+            match TcpStream::connect(addr) {
+                Ok(stream) => return stream,
+                Err(error)
+                    if matches!(
+                        error.kind(),
+                        std::io::ErrorKind::ConnectionRefused
+                            | std::io::ErrorKind::ConnectionReset
+                            | std::io::ErrorKind::ConnectionAborted
+                            | std::io::ErrorKind::TimedOut
+                            | std::io::ErrorKind::WouldBlock
+                            | std::io::ErrorKind::AddrNotAvailable
+                    ) =>
+                {
+                    last_error = Some(error);
+                    thread::sleep(Duration::from_millis(10));
+                }
+                Err(error) => panic!("connect client: {error}"),
+            }
+        }
+        panic!(
+            "connect client before deadline: {:?}",
+            last_error.expect("last transient connect error")
+        );
     }
 }
 
