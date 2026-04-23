@@ -272,6 +272,65 @@ class IndexAdvisor:
                 if len(columns) == 2:
                     self._pair_hits.pop((table, columns[0], columns[1]), None)
 
+    def on_query_event(self, event: QueryEvent) -> None:
+        """Process one :class:`~sql_vm.QueryEvent` emitted after a SELECT scan.
+
+        Called by the engine after each ``vm.execute()`` call that performed
+        a table or index scan.  Advances the query counter, updates the
+        last-use timestamp for the used index (if any), then checks all
+        tracked auto-created indexes against the policy's
+        :meth:`~mini_sqlite.policy.IndexPolicy.should_drop` method.
+
+        Drop semantics
+        --------------
+        An index is a candidate for dropping when:
+
+        - Its name starts with ``auto_`` (user-created indexes are never
+          touched automatically).
+        - The policy implements ``should_drop`` (detected via ``hasattr``).
+        - ``policy.should_drop(name, table, col, queries_since_last_use)``
+          returns ``True``.
+
+        Failures during ``drop_index`` are swallowed — the advisor continues
+        running; the index simply stays in place until the next opportunity.
+        """
+        self._query_count += 1
+
+        # Record index utilisation.
+        if event.used_index is not None and event.used_index.startswith("auto_"):
+            self._last_use[event.used_index] = self._query_count
+
+        # Check whether the policy wants to drop any cold auto-indexes.
+        should_drop_fn = getattr(self._policy, "should_drop", None)
+        if not callable(should_drop_fn):
+            return
+
+        # Collect all auto-indexes we know about: those we created plus any
+        # that were already tracked in _last_use from previous events.
+        candidates = set(self._created_at) | set(self._last_use)
+        for idx_name in list(candidates):
+            last = self._last_use.get(idx_name, self._created_at.get(idx_name, 0))
+            queries_since = self._query_count - last
+            # Derive table and column from the naming convention
+            # auto_{table}_{column}.  If the name doesn't follow the
+            # convention we skip it rather than guessing.
+            parts = idx_name.split("_", 2)  # ["auto", table, column]
+            if len(parts) != 3:
+                continue
+            _, table, column = parts
+            if should_drop_fn(idx_name, table, column, queries_since):
+                try:
+                    self._backend.drop_index(idx_name, if_exists=True)
+                except Exception:  # noqa: BLE001 — drop failures are non-fatal
+                    continue
+                # Remove from tracking so the advisor doesn't re-check it.
+                self._created_at.pop(idx_name, None)
+                self._last_use.pop(idx_name, None)
+                # Also reset the hit count so the index can be re-created if
+                # the workload pattern returns.
+                key = (table, column)
+                self._hits.pop(key, None)
+
     # ------------------------------------------------------------------
     # Internal callbacks.
     # ------------------------------------------------------------------
