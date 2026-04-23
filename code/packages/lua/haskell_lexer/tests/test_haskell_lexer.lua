@@ -1,3 +1,17 @@
+package.path = (
+    "../src/?.lua;" ..
+    "../src/?/init.lua;" ..
+    "../../grammar_tools/src/?.lua;" ..
+    "../../grammar_tools/src/?/init.lua;" ..
+    "../../lexer/src/?.lua;" ..
+    "../../lexer/src/?/init.lua;" ..
+    "../../state_machine/src/?.lua;" ..
+    "../../state_machine/src/?/init.lua;" ..
+    "../../directed_graph/src/?.lua;" ..
+    "../../directed_graph/src/?/init.lua;" ..
+    package.path
+)
+
 local haskell_lexer = require("coding_adventures.haskell_lexer")
 
 describe("haskell_lexer", function()
