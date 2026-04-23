@@ -10,18 +10,22 @@ from grammar_tools import ParserGrammar, parse_parser_grammar
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 from logic_engine import Clause, Program
-from prolog_parser import ParsedQuery, PrologParseError, lower_ast
+from prolog_core import (
+    OperatorTable,
+    PrologDirective,
+    directive,
+    swi_operator_table,
+)
+from prolog_parser import (
+    ParsedQuery,
+    PrologParseError,
+    lower_ast,
+    lower_goal_ast,
+)
 from swi_prolog_lexer import tokenize_swi_prolog
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
 SWI_PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "swi.grammar"
-
-
-@dataclass(frozen=True, slots=True)
-class ParsedSwiDirective:
-    """A top-level SWI directive parsed from ``:- goal.`` syntax."""
-
-    goal_ast: ASTNode
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,7 +35,11 @@ class ParsedSwiSource:
     program: Program
     clauses: tuple[Clause, ...]
     queries: tuple[ParsedQuery, ...]
-    directives: tuple[ParsedSwiDirective, ...]
+    directives: tuple[PrologDirective, ...]
+    operator_table: OperatorTable
+
+
+ParsedSwiDirective = PrologDirective
 
 
 @cache
@@ -75,6 +83,7 @@ def parse_swi_source(source: str) -> ParsedSwiSource:
         clauses=parsed.clauses,
         queries=parsed.queries,
         directives=directives,
+        operator_table=swi_operator_table(),
     )
 
 
@@ -113,11 +122,11 @@ def parse_swi_query(source: str) -> ParsedQuery:
     return parsed.queries[0]
 
 
-def _split_directives(ast: ASTNode) -> tuple[ASTNode, tuple[ParsedSwiDirective, ...]]:
+def _split_directives(ast: ASTNode) -> tuple[ASTNode, tuple[PrologDirective, ...]]:
     """Return a generic-compatible AST plus SWI directive metadata."""
 
     statements: list[ASTNode | Token] = []
-    directives: list[ParsedSwiDirective] = []
+    directives: list[PrologDirective] = []
     for statement in ast.children:
         if not isinstance(statement, ASTNode):
             statements.append(statement)
@@ -125,8 +134,9 @@ def _split_directives(ast: ASTNode) -> tuple[ASTNode, tuple[ParsedSwiDirective, 
 
         body = _single_node_child(statement)
         if body.rule_name == "directive_statement":
+            parsed_goal = lower_goal_ast(_single_node_child(body, "goal"))
             directives.append(
-                ParsedSwiDirective(goal_ast=_single_node_child(body, "goal")),
+                directive(parsed_goal.goal, parsed_goal.variables),
             )
         else:
             statements.append(statement)

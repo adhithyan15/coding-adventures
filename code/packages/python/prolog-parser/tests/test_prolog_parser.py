@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from lang_parser import ASTNode
 from logic_engine import (
     atom,
     conj,
@@ -19,6 +20,7 @@ from prolog_parser import (
     PrologParseError,
     __version__,
     lower_ast,
+    lower_goal_ast,
     parse_ast,
     parse_program,
     parse_query,
@@ -49,6 +51,24 @@ class TestGrammarDrivenParser:
         parsed = lower_ast(parse_ast("parent(homer, bart).\n"))
 
         assert len(parsed.clauses) == 1
+
+    def test_lower_goal_ast_reuses_goal_lowering(self) -> None:
+        ast = parse_ast("?- parent(homer, Who).\n")
+        statement = next(
+            child for child in ast.children if isinstance(child, ASTNode)
+        )
+        query_statement = next(
+            child for child in statement.children if isinstance(child, ASTNode)
+        )
+        goal_node = next(
+            child
+            for child in query_statement.children
+            if isinstance(child, ASTNode) and child.rule_name == "goal"
+        )
+
+        parsed = lower_goal_ast(goal_node)
+
+        assert "Who" in parsed.variables
 
 
 class TestClausesAndQueries:

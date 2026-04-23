@@ -54,6 +54,8 @@ class TestIsoParser:
         )
 
         query = parsed.queries[0]
+        assert parsed.directives == ()
+        assert parsed.operator_table.get(":-", "xfx") is not None
         assert solve_all(
             parsed.program,
             query.variables["Who"],

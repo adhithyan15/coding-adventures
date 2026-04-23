@@ -1,5 +1,6 @@
 """SWI-Prolog parser."""
 
+from prolog_core import OperatorTable, PrologDirective
 from prolog_parser import ParsedQuery, PrologParseError
 
 from swi_prolog_parser.parser import (
@@ -15,7 +16,9 @@ from swi_prolog_parser.parser import (
 
 __all__ = [
     "__version__",
+    "OperatorTable",
     "ParsedQuery",
+    "PrologDirective",
     "ParsedSwiDirective",
     "ParsedSwiSource",
     "PrologParseError",
