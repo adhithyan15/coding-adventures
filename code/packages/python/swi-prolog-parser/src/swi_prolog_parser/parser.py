@@ -13,14 +13,16 @@ from logic_engine import Clause, Program
 from prolog_core import (
     OperatorTable,
     PrologDirective,
-    directive,
     swi_operator_table,
+)
+from prolog_operator_parser import (
+    parse_operator_program_tokens,
+    parse_operator_query_tokens,
+    parse_operator_source_tokens,
 )
 from prolog_parser import (
     ParsedQuery,
     PrologParseError,
-    lower_ast,
-    lower_goal_ast,
 )
 from swi_prolog_lexer import tokenize_swi_prolog
 
@@ -72,109 +74,74 @@ def parse_swi_ast(source: str) -> ASTNode:
         raise PrologParseError(token, str(error)) from error
 
 
-def parse_swi_source(source: str) -> ParsedSwiSource:
+def parse_swi_source(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> ParsedSwiSource:
     """Parse SWI-Prolog clauses, queries, and top-level directives."""
 
-    ast = parse_swi_ast(source)
-    executable_ast, directives = _split_directives(ast)
-    parsed = lower_ast(executable_ast)
+    tokens = tokenize_swi_prolog(source)
+    _reject_unsupported_tokens(tokens)
+    active_operator_table = swi_operator_table() if operator_table is None else operator_table
+    parsed = parse_operator_source_tokens(
+        tokens,
+        active_operator_table,
+        allow_directives=True,
+    )
     return ParsedSwiSource(
         program=parsed.program,
         clauses=parsed.clauses,
         queries=parsed.queries,
-        directives=directives,
-        operator_table=swi_operator_table(),
+        directives=parsed.directives,
+        operator_table=active_operator_table,
     )
 
 
-def parse_swi_program(source: str) -> Program:
+def parse_swi_program(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> Program:
     """Parse a SWI-Prolog source containing only facts, rules, and directives."""
 
-    parsed = parse_swi_source(source)
-    if parsed.queries:
-        raise PrologParseError(
-            tokenize_swi_prolog(source)[0],
-            "expected only clauses and directives, but found "
-            f"{len(parsed.queries)} query statement(s)",
-        )
-    return parsed.program
+    tokens = tokenize_swi_prolog(source)
+    _reject_unsupported_tokens(tokens)
+    active_operator_table = swi_operator_table() if operator_table is None else operator_table
+    return parse_operator_program_tokens(
+        tokens,
+        active_operator_table,
+        allow_directives=True,
+    )
 
 
-def parse_swi_query(source: str) -> ParsedQuery:
+def parse_swi_query(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> ParsedQuery:
     """Parse one SWI-Prolog top-level query statement."""
 
-    parsed = parse_swi_source(source)
-    if parsed.directives:
-        raise PrologParseError(
-            tokenize_swi_prolog(source)[0],
-            f"expected only a query, but found {len(parsed.directives)} directive(s)",
-        )
-    if parsed.clauses:
-        raise PrologParseError(
-            tokenize_swi_prolog(source)[0],
-            f"expected only a query, but found {len(parsed.clauses)} clause(s)",
-        )
-    if len(parsed.queries) != 1:
-        raise PrologParseError(
-            tokenize_swi_prolog(source)[0],
-            f"expected exactly one query, but found {len(parsed.queries)}",
-        )
-    return parsed.queries[0]
+    tokens = tokenize_swi_prolog(source)
+    _reject_unsupported_tokens(tokens)
+    first_token = next((token for token in tokens if token.type_name != "EOF"), None)
+    if first_token is None:
+        raise PrologParseError(Token("EOF", "", 1, 1), "expected only a query")
+    if first_token.type_name == "RULE":
+        raise PrologParseError(first_token, "expected a query, not a directive")
+    if first_token.type_name != "QUERY":
+        raise PrologParseError(first_token, "expected only a query")
 
-
-def _split_directives(ast: ASTNode) -> tuple[ASTNode, tuple[PrologDirective, ...]]:
-    """Return a generic-compatible AST plus SWI directive metadata."""
-
-    statements: list[ASTNode | Token] = []
-    directives: list[PrologDirective] = []
-    for statement in ast.children:
-        if not isinstance(statement, ASTNode):
-            statements.append(statement)
-            continue
-
-        body = _single_node_child(statement)
-        if body.rule_name == "directive_statement":
-            parsed_goal = lower_goal_ast(_single_node_child(body, "goal"))
-            directives.append(
-                directive(parsed_goal.goal, parsed_goal.variables),
-            )
-        else:
-            statements.append(statement)
-
-    executable_ast = ASTNode(
-        rule_name=ast.rule_name,
-        children=statements,
-        start_line=ast.start_line,
-        start_column=ast.start_column,
-        end_line=ast.end_line,
-        end_column=ast.end_column,
+    active_operator_table = swi_operator_table() if operator_table is None else operator_table
+    return parse_operator_query_tokens(
+        tokens,
+        active_operator_table,
     )
-    return executable_ast, tuple(directives)
 
-
-def _single_node_child(node: ASTNode, rule_name: str | None = None) -> ASTNode:
-    """Return exactly one AST child from ``node``."""
-
-    children = [
-        child
-        for child in node.children
-        if isinstance(child, ASTNode)
-        and (rule_name is None or child.rule_name == rule_name)
-    ]
-    if len(children) != 1:
-        token = _first_token(node) or Token("EOF", "", 1, 1)
-        raise PrologParseError(
-            token,
-            f"expected one {rule_name or 'AST'} child, found {len(children)}",
-        )
-    return children[0]
-
-
-def _first_token(node: ASTNode) -> Token | None:
-    for child in node.children:
-        if isinstance(child, Token):
-            return child
-        token = _first_token(child)
-        if token is not None:
-            return token
-    return None
+def _reject_unsupported_tokens(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type_name == "DCG":
+            raise PrologParseError(
+                token,
+                "DCG rules are recognized by the SWI lexer but not parsed yet",
+            )

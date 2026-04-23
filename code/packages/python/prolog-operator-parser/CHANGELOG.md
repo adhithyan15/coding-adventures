@@ -1,0 +1,6 @@
+# Changelog
+
+## 0.1.0
+
+- Added a token-level operator-aware Prolog parser shared by dialect frontends
+- Added optional directive parsing and operator-table overrides for dialect source parsing

@@ -14,6 +14,7 @@ keywords = ["prolog", "swi-prolog", "parser", "logic-programming", "education"]
 dependencies = [
     "coding-adventures-grammar-tools>=0.1.0",
     "coding-adventures-logic-engine>=0.10.0",
+    "coding-adventures-prolog-operator-parser>=0.1.0",
     "coding-adventures-parser>=0.1.0",
     "coding-adventures-prolog-core>=0.1.0",
     "coding-adventures-prolog-parser>=0.1.0",
@@ -42,6 +43,7 @@ coding-adventures-grammar-tools = { path = "../grammar-tools", editable = true }
 coding-adventures-logic-engine = { path = "../logic-engine", editable = true }
 coding-adventures-parser = { path = "../parser", editable = true }
 coding-adventures-prolog-core = { path = "../prolog-core", editable = true }
+coding-adventures-prolog-operator-parser = { path = "../prolog-operator-parser", editable = true }
 coding-adventures-prolog-parser = { path = "../prolog-parser", editable = true }
 coding-adventures-swi-prolog-lexer = { path = "../swi-prolog-lexer", editable = true }
 

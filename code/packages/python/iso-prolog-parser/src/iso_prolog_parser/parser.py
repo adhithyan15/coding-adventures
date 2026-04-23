@@ -9,9 +9,15 @@ from pathlib import Path
 from grammar_tools import ParserGrammar, parse_parser_grammar
 from iso_prolog_lexer import tokenize_iso_prolog
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
+from lexer import Token
 from logic_engine import Clause, Program
 from prolog_core import OperatorTable, PrologDirective, iso_operator_table
-from prolog_parser import ParsedQuery, PrologParseError, lower_ast
+from prolog_operator_parser import (
+    parse_operator_program_tokens,
+    parse_operator_query_tokens,
+    parse_operator_source_tokens,
+)
+from prolog_parser import ParsedQuery, PrologParseError
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
 ISO_PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "iso.grammar"
@@ -58,44 +64,74 @@ def parse_iso_ast(source: str) -> ASTNode:
         raise PrologParseError(token, str(error)) from error
 
 
-def parse_iso_source(source: str) -> ParsedIsoSource:
+def parse_iso_source(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> ParsedIsoSource:
     """Parse ISO/Core Prolog clauses and queries."""
 
-    parsed = lower_ast(parse_iso_ast(source))
+    tokens = tokenize_iso_prolog(source)
+    _reject_unsupported_tokens(tokens)
+    active_operator_table = iso_operator_table() if operator_table is None else operator_table
+    parsed = parse_operator_source_tokens(
+        tokens,
+        active_operator_table,
+        allow_directives=False,
+    )
     return ParsedIsoSource(
         program=parsed.program,
         clauses=parsed.clauses,
         queries=parsed.queries,
         directives=(),
-        operator_table=iso_operator_table(),
+        operator_table=active_operator_table,
     )
 
 
-def parse_iso_program(source: str) -> Program:
+def parse_iso_program(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> Program:
     """Parse an ISO/Core Prolog source containing only facts and rules."""
 
-    parsed = parse_iso_source(source)
-    if parsed.queries:
-        raise PrologParseError(
-            tokenize_iso_prolog(source)[0],
-            "expected only clauses, but found "
-            f"{len(parsed.queries)} query statement(s)",
-        )
-    return parsed.program
+    tokens = tokenize_iso_prolog(source)
+    _reject_unsupported_tokens(tokens)
+    active_operator_table = iso_operator_table() if operator_table is None else operator_table
+    return parse_operator_program_tokens(
+        tokens,
+        active_operator_table,
+        allow_directives=False,
+    )
 
 
-def parse_iso_query(source: str) -> ParsedQuery:
+def parse_iso_query(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> ParsedQuery:
     """Parse one ISO/Core Prolog top-level query statement."""
 
-    parsed = parse_iso_source(source)
-    if parsed.clauses:
+    tokens = tokenize_iso_prolog(source)
+    _reject_unsupported_tokens(tokens)
+    first_token = next((token for token in tokens if token.type_name != "EOF"), None)
+    if first_token is None or first_token.type_name != "QUERY":
         raise PrologParseError(
-            tokenize_iso_prolog(source)[0],
-            f"expected only a query, but found {len(parsed.clauses)} clause(s)",
+            first_token or Token("EOF", "", 1, 1),
+            "expected only a query",
         )
-    if len(parsed.queries) != 1:
-        raise PrologParseError(
-            tokenize_iso_prolog(source)[0],
-            f"expected exactly one query, but found {len(parsed.queries)}",
-        )
-    return parsed.queries[0]
+
+    active_operator_table = iso_operator_table() if operator_table is None else operator_table
+    return parse_operator_query_tokens(
+        tokens,
+        active_operator_table,
+    )
+
+
+def _reject_unsupported_tokens(tokens: list[Token]) -> None:
+    for token in tokens:
+        if token.type_name == "DCG":
+            raise PrologParseError(
+                token,
+                "DCG rules are recognized by the ISO lexer but not parsed yet",
+            )
