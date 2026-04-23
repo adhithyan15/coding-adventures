@@ -21,13 +21,14 @@ type CompileResult struct {
 }
 
 type Compiler struct {
-	config      BuildConfig
-	typedAST    *nibtypechecker.TypedAST
-	idGen       *ir.IDGenerator
-	program     *ir.IrProgram
-	loopCount   int
-	ifCount     int
-	constValues map[string]int
+	config        BuildConfig
+	typedAST      *nibtypechecker.TypedAST
+	idGen         *ir.IDGenerator
+	program       *ir.IrProgram
+	loopCount     int
+	ifCount       int
+	registerFloor int
+	constValues   map[string]int
 }
 
 func CompileNib(typedAST *nibtypechecker.TypedAST, config BuildConfig) CompileResult {
@@ -171,8 +172,10 @@ func (c *Compiler) compileFunction(node *parser.ASTNode) {
 			nextRegister++
 		}
 	}
+	c.registerFloor = nextRegister
 	c.compileBlock(blockNode, registers, nextRegister)
 	c.emit(ir.OpRet)
+	c.registerFloor = 0
 }
 
 func (c *Compiler) localRegisterBase() int {
@@ -191,8 +194,23 @@ func (c *Compiler) firstLocalRegister(paramCount int) int {
 	return base
 }
 
+func (c *Compiler) nextAvailableRegister(nextRegister int) int {
+	if nextRegister < c.registerFloor {
+		return c.registerFloor
+	}
+	return nextRegister
+}
+
+func (c *Compiler) claimRegisterBlock(nextRegister int, count int) int {
+	base := c.nextAvailableRegister(nextRegister)
+	if count > 0 && base+count > c.registerFloor {
+		c.registerFloor = base + count
+	}
+	return base
+}
+
 func (c *Compiler) compileBlock(block *parser.ASTNode, registers map[string]int, nextRegister int) int {
-	current := nextRegister
+	current := c.nextAvailableRegister(nextRegister)
 	for _, child := range childNodes(block) {
 		if child.RuleName == "stmt" && len(child.Children) > 0 {
 			if inner, ok := child.Children[0].(*parser.ASTNode); ok {
@@ -244,7 +262,7 @@ func (c *Compiler) compileLet(node *parser.ASTNode, registers map[string]int, ne
 	if name == "" || expression == nil {
 		return nextRegister
 	}
-	destination := nextRegister
+	destination := c.claimRegisterBlock(nextRegister, 1)
 	registers[name] = destination
 	resultRegister := c.compileExpr(expression, registers)
 	if resultRegister != destination {
@@ -255,7 +273,7 @@ func (c *Compiler) compileLet(node *parser.ASTNode, registers map[string]int, ne
 			c.emitComment("let " + name + ": " + string(nibType))
 		}
 	}
-	return nextRegister + 1
+	return destination + 1
 }
 
 func (c *Compiler) compileAssign(node *parser.ASTNode, registers map[string]int) {
@@ -310,8 +328,9 @@ func (c *Compiler) compileFor(node *parser.ASTNode, registers map[string]int, ne
 	if loopVar == "" || len(exprs) < 2 || blockNode == nil {
 		return nextRegister
 	}
-	loopRegister := nextRegister
-	limitRegister := nextRegister + 1
+	baseRegister := c.claimRegisterBlock(nextRegister, 2)
+	loopRegister := baseRegister
+	limitRegister := baseRegister + 1
 	startLabel := "loop_" + strconv.Itoa(c.loopCount) + "_start"
 	endLabel := "loop_" + strconv.Itoa(c.loopCount) + "_end"
 	c.loopCount++
@@ -331,11 +350,11 @@ func (c *Compiler) compileFor(node *parser.ASTNode, registers map[string]int, ne
 	c.emit(ir.OpBranchZ, ir.IrRegister{Index: regScratch}, ir.IrLabel{Name: endLabel})
 
 	nested := copyRegisters(registers)
-	c.compileBlock(blockNode, nested, nextRegister+2)
+	c.compileBlock(blockNode, nested, baseRegister+2)
 	c.emit(ir.OpAddImm, ir.IrRegister{Index: loopRegister}, ir.IrRegister{Index: loopRegister}, ir.IrImmediate{Value: 1})
 	c.emit(ir.OpJump, ir.IrLabel{Name: startLabel})
 	c.emitLabel(endLabel)
-	return nextRegister + 2
+	return baseRegister + 2
 }
 
 func (c *Compiler) compileIf(node *parser.ASTNode, registers map[string]int, nextRegister int) {
@@ -440,11 +459,19 @@ func (c *Compiler) compileCallExpr(node *parser.ASTNode, registers map[string]in
 	if functionName == "" {
 		return regScratch
 	}
+	stagedArgBase := c.claimRegisterBlock(regArgBase+len(args), len(args))
 	for index, arg := range args {
 		valueRegister := c.compileExpr(arg, registers)
-		destination := regArgBase + index
+		destination := stagedArgBase + index
 		if valueRegister != destination {
 			c.emit(ir.OpAddImm, ir.IrRegister{Index: destination}, ir.IrRegister{Index: valueRegister}, ir.IrImmediate{Value: 0})
+		}
+	}
+	for index := range args {
+		source := stagedArgBase + index
+		destination := regArgBase + index
+		if source != destination {
+			c.emit(ir.OpAddImm, ir.IrRegister{Index: destination}, ir.IrRegister{Index: source}, ir.IrImmediate{Value: 0})
 		}
 	}
 	c.emit(ir.OpCall, ir.IrLabel{Name: "_fn_" + functionName})
