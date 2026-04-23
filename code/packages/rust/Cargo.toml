@@ -316,6 +316,7 @@ members = [
     "http-core",
     "http1",
     "storage-core",
+    "vault-sealed-store",
     "context-store",
     "artifact-store",
     "skill-store",
