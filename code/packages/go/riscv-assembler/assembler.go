@@ -864,12 +864,9 @@ func parseNumber(operand string) (int, bool, error) {
 	if start == len(text) || !(unicode.IsDigit(rune(text[start]))) {
 		return 0, false, nil
 	}
-	value, err := strconv.ParseInt(text, 0, 64)
+	value, err := strconv.ParseInt(text, 0, strconv.IntSize)
 	if err != nil {
 		return 0, true, err
-	}
-	if value < minIntValue || value > maxIntValue {
-		return 0, true, fmt.Errorf("integer literal %q is outside int range", text)
 	}
 	return int(value), true, nil
 }
@@ -960,8 +957,3 @@ var registerNames = map[string]int{
 	"s2": 18, "s3": 19, "s4": 20, "s5": 21, "s6": 22, "s7": 23, "s8": 24, "s9": 25, "s10": 26, "s11": 27,
 	"t3": 28, "t4": 29, "t5": 30, "t6": 31,
 }
-
-const (
-	maxIntValue = int64(1<<(strconv.IntSize-1) - 1)
-	minIntValue = -maxIntValue - 1
-)
