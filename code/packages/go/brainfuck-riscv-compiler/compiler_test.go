@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	brainfuckircompiler "github.com/adhithyan15/coding-adventures/code/packages/go/brainfuck-ir-compiler"
 )
 
 func TestCompileSourceReturnsAssemblyAndBytes(t *testing.T) {
@@ -70,6 +72,83 @@ func TestRunSourceWithInputEchoesByte(t *testing.T) {
 	}
 	if got := run.OutputString(); got != "Z" {
 		t.Fatalf("expected output %q, got %q", "Z", got)
+	}
+}
+
+func TestRunSourceExecutesLoopHeavyBrainfuckProgramOnRiscVSimulator(t *testing.T) {
+	run, err := RunSource("++++++++[>++++++++<-]>+.")
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if !run.HostExited {
+		t.Fatal("expected host exit syscall")
+	}
+	if got := run.OutputString(); got != "A" {
+		t.Fatalf("expected output %q, got %q", "A", got)
+	}
+}
+
+func TestRunSourceWithInputEchoesUntilZeroSentinel(t *testing.T) {
+	run, err := RunSourceWithInput(",[.,]", []byte{'O', 'K', 0})
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if !run.HostExited {
+		t.Fatal("expected host exit syscall")
+	}
+	if got := run.OutputString(); got != "OK" {
+		t.Fatalf("expected output %q, got %q", "OK", got)
+	}
+}
+
+func TestRunSourceDebugBoundsCheckExitsOnRightOverflow(t *testing.T) {
+	config := brainfuckircompiler.DebugConfig()
+	config.TapeSize = 1
+	run, err := NewBrainfuckRiscVCompiler(&BrainfuckRiscVCompilerOptions{BuildConfig: &config}).RunSource(">")
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if !run.HostExited {
+		t.Fatal("expected host exit syscall")
+	}
+	if run.ExitCode != 1 {
+		t.Fatalf("expected bounds trap exit code 1, got %d", run.ExitCode)
+	}
+	if len(run.Output) != 0 {
+		t.Fatalf("expected no output before bounds trap, got %v", run.Output)
+	}
+	if !strings.Contains(run.Package.Assembly, "__trap_oob:") {
+		t.Fatalf("expected debug assembly to contain trap label, got:\n%s", run.Package.Assembly)
+	}
+}
+
+func TestRunSourceDebugBoundsCheckExitsOnLeftUnderflow(t *testing.T) {
+	config := brainfuckircompiler.DebugConfig()
+	config.TapeSize = 4
+	run, err := NewBrainfuckRiscVCompiler(&BrainfuckRiscVCompilerOptions{BuildConfig: &config}).RunSource("<")
+	if err != nil {
+		t.Fatalf("run failed: %v", err)
+	}
+	if !run.Halted {
+		t.Fatal("expected simulator to halt")
+	}
+	if !run.HostExited {
+		t.Fatal("expected host exit syscall")
+	}
+	if run.ExitCode != 1 {
+		t.Fatalf("expected bounds trap exit code 1, got %d", run.ExitCode)
+	}
+	if len(run.Output) != 0 {
+		t.Fatalf("expected no output before bounds trap, got %v", run.Output)
 	}
 }
 
