@@ -155,6 +155,22 @@ score_text = builder.to_text()
 round_tripped = parse_portable_score(score_text)
 ```
 
+For more musical sequencing, the builder now has measure helpers and a phrase
+cursor:
+
+```python
+from music_machine import PortableScoreBuilder
+
+builder = PortableScoreBuilder(title="Phrase Demo", ppq=120, sample_rate_hz=2000)
+builder.add_tempo(0, 600)
+builder.add_meter(0, "4/4")
+builder.add_instrument("lead", kind="sine", gain=0.5)
+builder.add_track("melody", instrument_id="lead")
+
+phrase = builder.phrase("melody", measure_number=2, beat_offset=1.0)
+phrase.note("A4", 1.0, velocity=0.8).rest(0.5).chord(("C5", "E5"), 0.5)
+```
+
 ## Safety Limits
 
 The parser has explicit limits for score size, line length, and event count.

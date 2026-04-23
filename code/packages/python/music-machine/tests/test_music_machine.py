@@ -12,6 +12,7 @@ from music_machine import (
     MINI_ORCHESTRA_TEXT,
     InstrumentDeclaration,
     MeterEvent,
+    PhraseBuilder,
     PortableScore,
     PortableScoreBuilder,
     PortableScoreEvent,
@@ -656,6 +657,63 @@ def test_portable_score_builder_rejects_string_chords() -> None:
 
     with pytest.raises(ValueError, match="iterable of note strings"):
         builder.add_chord("melody", 0, 100, "C5,E5")  # type: ignore[arg-type]
+
+
+def test_portable_score_builder_measure_helpers() -> None:
+    builder = PortableScoreBuilder(ppq=120)
+    builder.add_meter(0, "3/4")
+
+    assert builder.beats_to_ticks(1.5) == 180
+    assert builder.measure_ticks() == 360
+    assert builder.measure_start_tick(3) == 720
+    assert builder.tick_in_measure(2, 1.5) == 540
+
+
+def test_phrase_builder_sequences_musical_time() -> None:
+    builder = PortableScoreBuilder(title="Phrase Song", ppq=120, sample_rate_hz=2000)
+    builder.add_tempo(0, 600)
+    builder.add_meter(0, "4/4")
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_track("melody", instrument_id="lead")
+
+    phrase = builder.phrase("melody", measure_number=2, beat_offset=1.0)
+    assert isinstance(phrase, PhraseBuilder)
+
+    phrase.note("A4", 1.0, velocity=0.8).rest(0.5).chord(
+        ("C5", "E5"),
+        0.5,
+        velocity=0.6,
+    )
+
+    score = builder.build()
+    events = score.events
+
+    assert events[0] == PortableScoreEvent(
+        track_id="melody",
+        start_tick=600,
+        duration_tick=120,
+        kind="note",
+        notes=("A4",),
+        velocity=0.8,
+        source_order=0,
+    )
+    assert events[1].kind == "rest"
+    assert events[1].start_tick == 720
+    assert events[1].duration_tick == 60
+    assert events[2].notes == ("C5", "E5")
+    assert events[2].start_tick == 780
+    assert phrase.current_tick == 840
+
+
+def test_phrase_builder_jump_and_advance() -> None:
+    builder = PortableScoreBuilder(ppq=120)
+    phrase = builder.phrase("melody")
+
+    phrase.advance_beats(1.5)
+    assert phrase.current_tick == 180
+
+    phrase.jump_to_measure(3, 0.5, meter="3/4")
+    assert phrase.current_tick == 780
 
 
 def test_render_portable_score_keeps_later_scheduled_notes_audible() -> None:
