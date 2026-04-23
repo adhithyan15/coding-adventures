@@ -9,9 +9,11 @@ from lexer import Token
 
 INTEGER = "integer"
 BOOLEAN = "boolean"
+REAL = "real"
 ERROR = "error"
 FRAME_HEADER_SIZE = 20
 FRAME_WORD_SIZE = 4
+FRAME_REAL_SIZE = 8
 VALUE = "value"
 NAME = "name"
 ARRAY = "array"
@@ -82,12 +84,13 @@ class FrameLayout:
         return self.header_size + sum(slot.size for slot in self.slots)
 
     def allocate_scalar(self, symbol: Symbol) -> FrameSlot:
+        slot_size = FRAME_REAL_SIZE if symbol.type_name == REAL else self.word_size
         slot = FrameSlot(
             symbol_id=symbol.symbol_id,
             name=symbol.name,
             type_name=symbol.type_name,
-            offset=self.header_size + (len(self.slots) * self.word_size),
-            size=self.word_size,
+            offset=self.header_size + sum(existing.size for existing in self.slots),
+            size=slot_size,
         )
         self.slots.append(slot)
         symbol.slot_offset = slot.offset
@@ -501,7 +504,7 @@ class AlgolTypeChecker:
 
         type_node = _first_node(inner, "type")
         declared_type = _first_keyword_value(type_node) if type_node is not None else ""
-        if declared_type not in {INTEGER, BOOLEAN}:
+        if declared_type not in {INTEGER, BOOLEAN, REAL}:
             self._error(
                 inner, f"{declared_type or 'unknown'} variables are not supported yet"
             )
@@ -1157,7 +1160,11 @@ class AlgolTypeChecker:
 
         expr = _first_direct_node(assign, "expression")
         value_type = self._infer_expr(expr, scope) if expr is not None else ERROR
-        if target_type != ERROR and value_type != ERROR and target_type != value_type:
+        if (
+            target_type != ERROR
+            and value_type != ERROR
+            and not self._can_assign(target_type, value_type)
+        ):
             self._error(
                 name,
                 f"cannot assign {value_type} to {target_type} variable {name.value!r}",
@@ -1265,7 +1272,7 @@ class AlgolTypeChecker:
         ):
             operator = meaningful[0].value
             if operator in {"+", "-"}:
-                return self._require_unary(expr, meaningful[1], scope, INTEGER, INTEGER)
+                return self._require_numeric_unary(expr, meaningful[1], scope)
 
         if expr.rule_name in {
             "expr_eqv",
@@ -1284,19 +1291,11 @@ class AlgolTypeChecker:
                 and child.value in {"=", "!=", "<", "<=", ">", ">="}
                 for child in meaningful
             ):
-                return self._fold_binary(expr, meaningful, scope, INTEGER, BOOLEAN)
+                return self._infer_numeric_comparison(expr, meaningful, scope)
             return self._infer_expr(meaningful[0], scope)
 
         if expr.rule_name in {"expr_add", "simple_arith", "expr_mul", "term"}:
-            if any(
-                isinstance(child, Token) and child.value == "/" for child in meaningful
-            ):
-                self._error(
-                    expr,
-                    "real division is not supported yet; use div for integer division",
-                )
-                return ERROR
-            return self._fold_binary(expr, meaningful, scope, INTEGER, INTEGER)
+            return self._infer_numeric_chain(expr, meaningful, scope)
 
         if expr.rule_name in {"expr_pow", "factor"}:
             if any(
@@ -1330,6 +1329,8 @@ class AlgolTypeChecker:
     def _infer_token(self, token: Token, scope: Scope) -> str:
         if token.type_name == "INTEGER_LIT":
             return INTEGER
+        if token.type_name == "REAL_LIT":
+            return REAL
         if token.value in {"true", "false"}:
             return BOOLEAN
         if token.type_name == "NAME":
@@ -1455,7 +1456,11 @@ class AlgolTypeChecker:
             )
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
             actual_type = self._infer_expr(argument, scope)
-            if actual_type != ERROR and actual_type != parameter.type_name:
+            if actual_type != ERROR and not self._parameter_accepts_type(
+                parameter.mode,
+                parameter.type_name,
+                actual_type,
+            ):
                 if parameter.mode == NAME:
                     self._error(
                         argument,
@@ -1591,6 +1596,107 @@ class AlgolTypeChecker:
             return ERROR
         return result_type
 
+    def _require_numeric_unary(
+        self,
+        node: ASTNode,
+        operand: ASTNode | Token,
+        scope: Scope,
+    ) -> str:
+        actual = self._infer_expr(operand, scope)
+        if actual == ERROR:
+            return ERROR
+        if not _is_numeric_type(actual):
+            self._error(node, f"operator requires numeric operand, got {actual}")
+            return ERROR
+        return actual
+
+    def _infer_numeric_chain(
+        self,
+        node: ASTNode,
+        children: list[ASTNode | Token],
+        scope: Scope,
+    ) -> str:
+        current_type = self._infer_expr(children[0], scope)
+        if current_type == ERROR:
+            return ERROR
+        if not _is_numeric_type(current_type):
+            self._error(node, f"operator requires numeric operand, got {current_type}")
+            return ERROR
+
+        saw_operator = False
+        index = 1
+        while index < len(children):
+            operator = children[index]
+            right = children[index + 1]
+            right_type = self._infer_expr(right, scope)
+            if right_type == ERROR:
+                return ERROR
+            if not isinstance(operator, Token):
+                self._error(node, "expected numeric operator")
+                return ERROR
+            if not _is_numeric_type(right_type):
+                self._error(
+                    node,
+                    f"operator requires numeric operand, got {right_type}",
+                )
+                return ERROR
+            saw_operator = True
+            if operator.value in {"div", "mod"}:
+                if current_type != INTEGER or right_type != INTEGER:
+                    self._error(
+                        node,
+                        f"operator {operator.value!r} requires integer operands",
+                    )
+                    return ERROR
+                current_type = INTEGER
+            elif operator.value == "/":
+                current_type = REAL
+            elif operator.value in {"+", "-", "*"}:
+                current_type = (
+                    REAL if REAL in {current_type, right_type} else INTEGER
+                )
+            else:
+                self._error(
+                    node,
+                    f"numeric operator {operator.value!r} is not supported",
+                )
+                return ERROR
+            index += 2
+        return current_type if saw_operator else self._infer_expr(children[0], scope)
+
+    def _infer_numeric_comparison(
+        self,
+        node: ASTNode,
+        children: list[ASTNode | Token],
+        scope: Scope,
+    ) -> str:
+        left = self._infer_expr(children[0], scope)
+        right = self._infer_expr(children[2], scope)
+        if left == ERROR or right == ERROR:
+            return ERROR
+        if not _is_numeric_type(left):
+            self._error(node, f"operator requires numeric operand, got {left}")
+            return ERROR
+        if not _is_numeric_type(right):
+            self._error(node, f"operator requires numeric operand, got {right}")
+            return ERROR
+        return BOOLEAN
+
+    def _can_assign(self, target_type: str, value_type: str) -> bool:
+        if target_type == value_type:
+            return True
+        return target_type == REAL and value_type == INTEGER
+
+    def _parameter_accepts_type(
+        self,
+        mode: str,
+        expected_type: str,
+        actual_type: str,
+    ) -> bool:
+        if expected_type == actual_type:
+            return True
+        return mode == VALUE and expected_type == REAL and actual_type == INTEGER
+
     def _fold_binary(
         self,
         node: ASTNode,
@@ -1616,6 +1722,10 @@ class AlgolTypeChecker:
 
 def check_algol(ast: ASTNode) -> TypeCheckResult:
     return AlgolTypeChecker().check(ast)
+
+
+def _is_numeric_type(type_name: str) -> bool:
+    return type_name in {INTEGER, REAL}
 
 
 def check(ast: ASTNode) -> TypeCheckResult:

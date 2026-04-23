@@ -5,6 +5,7 @@ from lang_parser import ASTNode
 
 from algol_type_checker import (
     FRAME_HEADER_SIZE,
+    FRAME_REAL_SIZE,
     FRAME_WORD_SIZE,
     TypeCheckError,
     __version__,
@@ -186,7 +187,7 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
 
         assert not result.ok
-        assert "real division is not supported" in result.diagnostics[0].message
+        assert "switch index must be integer" in result.diagnostics[0].message
 
     def test_rejects_nonlocal_switch_selection_for_now(self) -> None:
         ast = parse_algol(
@@ -224,11 +225,15 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "already declared" in result.diagnostics[0].message
 
-    def test_reports_unsupported_real_declaration(self) -> None:
-        ast = parse_algol("begin real result; result := 1 end")
+    def test_accepts_real_variable_declaration_and_assignment(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real x; x := 1.5; "
+            "if x > 1.0 then result := 1 else result := 0 "
+            "end"
+        )
         result = check_algol(ast)
-        assert not result.ok
-        assert "real variables are not supported" in result.diagnostics[0].message
+        assert result.ok
+        assert result.root_scope.children[0].symbols["x"].type_name == "real"
 
     def test_accepts_boolean_variable_declaration_and_assignment(self) -> None:
         ast = parse_algol(
@@ -247,7 +252,7 @@ class TestAlgolTypeChecker:
         ast = parse_algol("begin integer result; result := true + 1 end")
         result = check_algol(ast)
         assert not result.ok
-        assert "operator requires integer" in result.diagnostics[0].message
+        assert "operator requires numeric operand" in result.diagnostics[0].message
 
     def test_accepts_boolean_operators_in_condition(self) -> None:
         ast = parse_algol(
@@ -263,11 +268,14 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "chained assignment" in result.diagnostics[0].message
 
-    def test_reports_unsupported_real_division(self) -> None:
-        ast = parse_algol("begin integer result; result := 1 / 2 end")
+    def test_accepts_real_division_and_integer_to_real_assignment(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real x; x := 1 / 2; "
+            "if x < 1.0 then result := 1 else result := 0 "
+            "end"
+        )
         result = check_algol(ast)
-        assert not result.ok
-        assert "real division is not supported" in result.diagnostics[0].message
+        assert result.ok
 
     def test_reports_unsupported_exponentiation(self) -> None:
         ast = parse_algol("begin integer result; result := 2 ** 3 end")
@@ -304,6 +312,21 @@ class TestAlgolTypeChecker:
         assert [(slot.name, slot.offset) for slot in layout.slots] == [
             ("result", 20),
             ("other", 24),
+        ]
+
+    def test_plans_real_scalar_frame_slot_with_eight_byte_size(self) -> None:
+        ast = parse_algol("begin integer result; real x; result := 0 end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.root_block is not None
+        layout = result.semantic.root_block.frame_layout
+        expected_size = FRAME_HEADER_SIZE + FRAME_WORD_SIZE + FRAME_REAL_SIZE
+        assert layout.frame_size == expected_size
+        assert [(slot.name, slot.offset, slot.size) for slot in layout.slots] == [
+            ("result", 20, FRAME_WORD_SIZE),
+            ("x", 24, FRAME_REAL_SIZE),
         ]
 
     def test_records_outer_scope_reference_static_link_delta(self) -> None:

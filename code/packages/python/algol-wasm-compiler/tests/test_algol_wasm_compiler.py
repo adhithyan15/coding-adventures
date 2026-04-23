@@ -90,6 +90,26 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_real_variable_assignment_drives_comparison(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "real x; "
+            "x := 1.5; "
+            "if x > 1.0 then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_integer_to_real_assignment_promotes_before_store(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "real x; "
+            "x := 1; "
+            "if x = 1.0 then result := 9 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_forward_goto_skips_statements_until_label(self) -> None:
         result = compile_source(
             "begin integer result; "
