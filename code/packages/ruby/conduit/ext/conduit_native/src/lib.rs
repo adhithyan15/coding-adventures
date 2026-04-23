@@ -50,7 +50,8 @@ struct RubyConduitServer {
 }
 
 struct ServeCall {
-    server: *mut RubyConduitServer,
+    server: *mut PlatformHttpServer,
+    running: Arc<AtomicBool>,
     ok: bool,
     error: Option<String>,
 }
@@ -126,12 +127,17 @@ extern "C" fn server_initialize(
 }
 
 extern "C" fn server_serve(self_val: VALUE) -> VALUE {
-    let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
-    if slot.server.is_none() {
-        raise_server_error("server is closed");
-    }
+    let (server, running) = {
+        let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
+        let server = match slot.server.as_mut() {
+            Some(server) => server as *mut PlatformHttpServer,
+            None => raise_server_error("server is closed"),
+        };
+        (server, Arc::clone(&slot.running))
+    };
     let mut call = ServeCall {
-        server: slot as *mut RubyConduitServer,
+        server,
+        running,
         ok: false,
         error: None,
     };
@@ -199,16 +205,9 @@ extern "C" fn server_local_port(self_val: VALUE) -> VALUE {
 
 unsafe extern "C" fn serve_without_gvl(data: *mut c_void) -> *mut c_void {
     let call = &mut *(data as *mut ServeCall);
-    let slot = &mut *call.server;
-    let Some(server) = slot.server.as_mut() else {
-        call.ok = false;
-        call.error = Some("server is closed".to_string());
-        return ptr::null_mut();
-    };
-
-    slot.running.store(true, Ordering::SeqCst);
-    let result = server.serve();
-    slot.running.store(false, Ordering::SeqCst);
+    call.running.store(true, Ordering::SeqCst);
+    let result = (*call.server).serve();
+    call.running.store(false, Ordering::SeqCst);
     match result {
         Ok(()) => {
             call.ok = true;
