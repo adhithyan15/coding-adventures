@@ -33,6 +33,8 @@ All notable changes to this package will be documented in this file.
 - Executed Phase 6 direct local labels and `goto` statements through the
   unstructured IR-to-WASM lowering path, covering forward jumps, backward
   jumps, and terminal labels.
+- Executed Phase 7a local switch selections and conditional designational
+  `goto` forms through the WASM path, including conditional switch entries.
 
 ## [0.1.0] - 2026-04-20
 

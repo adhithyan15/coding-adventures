@@ -13,7 +13,9 @@ from algol_type_checker import (
     ResolvedGoto,
     ResolvedProcedureCall,
     ResolvedReference,
+    ResolvedSwitchSelection,
     SemanticBlock,
+    SwitchDescriptor,
     Symbol,
     TypeCheckResult,
     check_algol,
@@ -145,6 +147,7 @@ class AlgolIrCompiler:
         self.next_reg = _FIRST_GENERAL_REG
         self.if_count = 0
         self.loop_count = 0
+        self.switch_count = 0
         self.current_frame_reg = -1
         self.stack_base_reg = -1
         self.stack_pointer_reg = -1
@@ -159,7 +162,11 @@ class AlgolIrCompiler:
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
         self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
         self.labels: dict[int, LabelDescriptor] = {}
+        self.labels_by_block_name: dict[tuple[int, str], LabelDescriptor] = {}
         self.gotos: dict[int, ResolvedGoto] = {}
+        self.gotos_by_designational: dict[int, ResolvedGoto] = {}
+        self.switches: dict[int, SwitchDescriptor] = {}
+        self.switch_selections: dict[int, ResolvedSwitchSelection] = {}
         self.procedures: dict[int, ProcedureDescriptor] = {}
         self.parameters_by_symbol: dict[int, ProcedureParameter] = {}
         self.arrays: dict[int, ArrayDescriptor] = {}
@@ -190,6 +197,7 @@ class AlgolIrCompiler:
         self.next_reg = _FIRST_GENERAL_REG
         self.if_count = 0
         self.loop_count = 0
+        self.switch_count = 0
         self.heap_base_reg = -1
         self.heap_pointer_reg = -1
         self.heap_limit_reg = -1
@@ -220,8 +228,24 @@ class AlgolIrCompiler:
             label.statement_node_id: label
             for label in type_result.semantic.labels
         }
+        self.labels_by_block_name = {
+            (label.declaring_block_id, label.name): label
+            for label in type_result.semantic.labels
+        }
         self.gotos = {
             goto.token_id: goto for goto in type_result.semantic.gotos
+        }
+        self.gotos_by_designational = {
+            goto.designational_node_id: goto
+            for goto in type_result.semantic.gotos
+            if goto.designational_node_id is not None
+        }
+        self.switches = {
+            switch.switch_id: switch for switch in type_result.semantic.switches
+        }
+        self.switch_selections = {
+            selection.node_id: selection
+            for selection in type_result.semantic.switch_selections
         }
         self.procedures = {
             procedure.procedure_id: procedure
@@ -658,23 +682,103 @@ class AlgolIrCompiler:
         elif inner.rule_name == "proc_stmt":
             self._compile_procedure_call(inner, scope)
         elif inner.rule_name == "goto_stmt":
-            self._compile_goto(inner)
+            self._compile_goto(inner, scope)
         else:
             raise CompileError(
                 f"{inner.rule_name} is not supported by algol-ir-compiler"
             )
 
-    def _compile_goto(self, node: ASTNode) -> None:
+    def _compile_goto(self, node: ASTNode, scope: _FrameScope) -> None:
         desig_expr = _first_direct_node(node, "desig_expr")
-        target_token = _direct_label_from_designational(desig_expr)
-        if target_token is None:
-            raise CompileError(
-                "only direct local goto targets are supported by algol-ir-compiler"
-            )
-        resolved = self.gotos.get(id(target_token))
+        if desig_expr is None:
+            raise CompileError("goto statement is missing a designational expression")
+        resolved = self.gotos_by_designational.get(id(desig_expr))
         if resolved is None:
-            raise CompileError(f"goto target {target_token.value!r} was not resolved")
-        self._emit(IrOp.JUMP, IrLabel(resolved.ir_label))
+            raise CompileError("goto designational expression was not resolved")
+        self._compile_designational(desig_expr, scope)
+
+    def _compile_designational(self, node: ASTNode, scope: _FrameScope) -> None:
+        if any(token.value == "if" for token in _direct_tokens(node)):
+            index = self.if_count
+            self.if_count += 1
+            else_label = f"if_{index}_else"
+            bool_expr = _first_direct_node(node, "bool_expr")
+            if bool_expr is None:
+                raise CompileError("conditional designational is missing a condition")
+            condition = self._compile_expr(bool_expr, scope)
+            self._emit(IrOp.BRANCH_Z, IrRegister(condition), IrLabel(else_label))
+            then_desig = _first_direct_node(node, "simple_desig")
+            if then_desig is None:
+                raise CompileError("conditional designational is missing then target")
+            self._compile_simple_designational(then_desig, scope)
+            self._label(else_label)
+            else_desig = _first_direct_node(node, "desig_expr")
+            if else_desig is None:
+                raise CompileError("conditional designational is missing else target")
+            self._compile_designational(else_desig, scope)
+            return
+
+        simple = _first_direct_node(node, "simple_desig")
+        if simple is None:
+            raise CompileError("unsupported designational expression")
+        self._compile_simple_designational(simple, scope)
+
+    def _compile_simple_designational(
+        self,
+        node: ASTNode,
+        scope: _FrameScope,
+    ) -> None:
+        direct = _direct_label_from_simple_designational(node)
+        if direct is not None:
+            label = self.labels_by_block_name.get((scope.block_id, direct.value))
+            if label is None:
+                raise CompileError(f"goto target {direct.value!r} was not resolved")
+            self._emit(IrOp.JUMP, IrLabel(label.ir_label))
+            return
+
+        if any(token.value == "[" for token in _direct_tokens(node)):
+            self._compile_switch_selection(node, scope)
+            return
+
+        nested = _first_direct_node(node, "desig_expr")
+        if nested is not None:
+            self._compile_designational(nested, scope)
+            return
+        raise CompileError("unsupported designational expression")
+
+    def _compile_switch_selection(self, node: ASTNode, scope: _FrameScope) -> None:
+        selection = self.switch_selections.get(id(node))
+        if selection is None:
+            raise CompileError("switch selection was not resolved")
+        descriptor = self.switches.get(selection.switch_id)
+        if descriptor is None:
+            raise CompileError(f"switch {selection.name!r} has no descriptor")
+        indexes = _direct_nodes(node, "arith_expr")
+        if len(indexes) != 1:
+            raise CompileError("switch selection requires exactly one index")
+        index_value = self._compile_expr(indexes[0], scope)
+        dispatch_index = self.switch_count
+        self.switch_count += 1
+        for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
+            next_label = f"switch_{dispatch_index}_{entry_index}_next"
+            expected = self._const_reg(entry_index)
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(index_value),
+                IrRegister(expected),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+            entry = self._find_ast_by_id(entry_node_id)
+            if entry is None:
+                raise CompileError(
+                    f"switch {selection.name!r} entry {entry_index} is missing"
+                )
+            self._compile_designational(entry, scope)
+            self._label(next_label)
+        failed = self._const_reg(1)
+        self._emit_runtime_failure_guard(failed, scope)
 
     def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
         left_part = _first_direct_node(assign, "left_part")
@@ -2221,18 +2325,20 @@ def _label_token(node: ASTNode) -> Token | None:
     )
 
 
-def _direct_label_from_designational(node: ASTNode | None) -> Token | None:
-    if node is None or any(token.value == "if" for token in _direct_tokens(node)):
+def _direct_label_from_simple_designational(node: ASTNode | None) -> Token | None:
+    if node is None:
         return None
-    simple = _first_direct_node(node, "simple_desig")
-    if simple is None:
+    if any(token.value == "[" for token in _direct_tokens(node)):
         return None
-    if any(token.value == "[" for token in _direct_tokens(simple)):
-        return None
-    label_node = _first_direct_node(simple, "label")
+    label_node = _first_direct_node(node, "label")
     if label_node is None:
-        nested = _first_direct_node(simple, "desig_expr")
-        return _direct_label_from_designational(nested)
+        nested = _first_direct_node(node, "desig_expr")
+        if nested is None or any(
+            token.value == "if" for token in _direct_tokens(nested)
+        ):
+            return None
+        simple = _first_direct_node(nested, "simple_desig")
+        return _direct_label_from_simple_designational(simple)
     return _label_token(label_node)
 
 

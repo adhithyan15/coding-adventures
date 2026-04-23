@@ -101,6 +101,52 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
 
+    def test_conditional_designational_goto_selects_branch(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto if false then left else right; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_switch_designational_goto_selects_entry(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "switch s := first, second; "
+            "i := 2; goto s[i]; "
+            "first: result := 1; goto done; "
+            "second: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_switch_entry_can_be_conditional_designational(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "switch s := if i = 1 then first else second; "
+            "i := 2; goto s[1]; "
+            "first: result := 1; goto done; "
+            "second: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_repeated_switch_designational_gotos_use_distinct_dispatch(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "switch s := first, second; "
+            "i := 1; goto s[i]; "
+            "first: i := 2; goto s[i]; "
+            "second: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_inner_block_writes_outer_result_through_frame(self) -> None:
         result = compile_source(
             "begin integer result; "

@@ -956,9 +956,9 @@ Within one lowered function and one active frame, a local `goto` lowers to:
 The completed Phase 6 implementation uses the repository's unstructured IR
 control-flow path. It accepts direct labels and direct `goto` targets within the
 same active ALGOL frame, including forward jumps, backward jumps, and terminal
-labels on empty statements. It continues to reject conditional designational
-expressions, switch selections, and nonlocal jumps until Phase 7 has frame
-unwinding and switch descriptors.
+labels on empty statements. Phase 7a extends that local path to conditional
+designational expressions and switch selections. It continues to reject
+nonlocal jumps until Phase 7b has frame unwinding.
 
 ### Nonlocal Goto
 
@@ -1024,6 +1024,16 @@ Each entry may be:
 - nested switch selection
 
 The first switch phase may support only direct-label entries.
+
+The completed Phase 7a implementation keeps switch descriptors in semantic
+metadata rather than runtime memory. Local switch declarations may contain
+direct labels and conditional designational expressions over local labels. A
+`goto s[i]` evaluates `i` once, uses ALGOL's one-based switch entry numbering,
+and jumps through the selected local designational entry. Indexes outside the
+declared switch range follow the existing runtime-failure path and return `0`.
+Switch entries that select another switch remain guarded to avoid recursive
+descriptor expansion. Switch selections that require crossing an ALGOL frame
+boundary remain Phase 7b work.
 
 ## Expressions
 
@@ -1351,19 +1361,23 @@ Acceptance:
 
 Goal: Support designational expressions across block boundaries.
 
+Status: Phase 7a is complete for local switch declarations, local switch
+selections, and local conditional designational `goto` forms. Phase 7b remains
+for nonlocal `goto` and frame unwinding.
+
 Deliverables:
 
+- switch descriptors (complete for local switches)
+- direct-label switch entries (complete for local switches)
+- conditional designational expressions (complete for local jumps)
 - nonlocal target analysis
 - frame unwinding
-- switch descriptors
-- direct-label switch entries
-- conditional designational expressions
 
 Acceptance:
 
+- direct local switch selection works
+- conditional designational expression jumps to the chosen local label
 - nonlocal goto exits nested frames correctly
-- direct switch selection works
-- conditional designational expression jumps to the chosen label
 
 ### Phase 8: Rich Scalar Types
 

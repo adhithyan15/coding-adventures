@@ -39,9 +39,13 @@ available. The integer by-name acceptance tests cover the supported scalar,
 array, expression, nested-procedure, and Jensen's-device surface.
 Direct labels and direct local `goto` statements now execute through the
 unstructured IR-to-WASM lowering path, including forward jumps, backward jumps,
-and terminal labels on empty statements. Full ALGOL switches, nonlocal gotos,
-conditional designational expressions, procedure-valued parameters, whole-array
-by-name values, and non-integer by-name formals remain later phases.
+and terminal labels on empty statements. Local switch declarations, switch
+selections, and conditional designational `goto` forms execute through that
+same path, including conditional switch entries. Switch entries that select
+another switch remain guarded to avoid recursive descriptor expansion.
+Nonlocal gotos, nonlocal switch selections, procedure-valued parameters,
+whole-array by-name values, and non-integer by-name formals remain later
+phases.
 
 ```python
 from algol_wasm_compiler import compile_source
