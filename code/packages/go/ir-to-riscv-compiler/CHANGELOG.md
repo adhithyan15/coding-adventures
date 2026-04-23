@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- Preserve mapped caller virtual registers around `CALL`.
+- Document `v0` and `v1` as volatile starter-ABI registers.
+
 ## 0.2.0
 
 - Add call-frame lowering for nested `CALL`/`RET` programs.
