@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from importlib import import_module
 from math import isfinite
 from numbers import Integral, Real
@@ -1129,8 +1129,18 @@ def render_portable_score_to_pcm(
                 instrument=instrument.profile_id,
                 sample_rate_hz=score.sample_rate_hz,
                 amplitude=note_amplitude,
-                start_time_seconds=start_seconds,
                 max_sample_count=max_sample_count,
+            )
+            rendered_note = replace(
+                rendered_note,
+                floating_samples=replace(
+                    rendered_note.floating_samples,
+                    start_time_seconds=start_seconds,
+                ),
+                pcm_buffer=replace(
+                    rendered_note.pcm_buffer,
+                    start_time_seconds=start_seconds,
+                ),
             )
             rendered_notes.append(rendered_note)
             clipped_sample_count += rendered_note.pcm_buffer.clipped_sample_count
