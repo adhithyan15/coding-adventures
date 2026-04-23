@@ -143,11 +143,11 @@ func TestRunSourceHandlesNibLocalsBeyondStarterRegisterMap(t *testing.T) {
 
 func TestRunSourcePreservesEarlierNibArgumentsAcrossNestedCalls(t *testing.T) {
 	source := strings.Join([]string{
-		"fn inc(value: u8) -> u8 { return value +% 1; }",
-		"fn sum7(a: u8, b: u8, c: u8, d: u8, e: u8, f: u8, g: u8) -> u8 {",
+		"fn inc(value: u4) -> u4 { return value +% 1; }",
+		"fn sum7(a: u4, b: u4, c: u4, d: u4, e: u4, f: u4, g: u4) -> u4 {",
 		"  return a + b + c + d + e + f + g;",
 		"}",
-		"fn main() -> u8 {",
+		"fn main() -> u4 {",
 		"  return sum7(inc(0), inc(1), inc(2), inc(3), inc(4), inc(5), inc(6));",
 		"}",
 	}, " ")
@@ -165,22 +165,22 @@ func TestRunSourcePreservesEarlierNibArgumentsAcrossNestedCalls(t *testing.T) {
 
 func TestRunSourcePreservesSpilledNibLocalsAcrossCalls(t *testing.T) {
 	source := strings.Join([]string{
-		"fn bump(value: u8) -> u8 { return value +% 1; }",
-		"fn main() -> u8 {",
-		"  let a: u8 = 1;",
-		"  let b: u8 = 1;",
-		"  let c: u8 = 1;",
-		"  let d: u8 = 1;",
-		"  let e: u8 = 1;",
-		"  let f: u8 = 1;",
-		"  let g: u8 = 1;",
-		"  let h: u8 = 1;",
-		"  let i: u8 = 1;",
-		"  let j: u8 = 1;",
-		"  let k: u8 = 1;",
-		"  let l: u8 = 1;",
-		"  let m: u8 = 1;",
-		"  let called: u8 = bump(2);",
+		"fn bump(value: u4) -> u4 { return value +% 1; }",
+		"fn main() -> u4 {",
+		"  let a: u4 = 1;",
+		"  let b: u4 = 1;",
+		"  let c: u4 = 1;",
+		"  let d: u4 = 1;",
+		"  let e: u4 = 1;",
+		"  let f: u4 = 1;",
+		"  let g: u4 = 1;",
+		"  let h: u4 = 1;",
+		"  let i: u4 = 1;",
+		"  let j: u4 = 1;",
+		"  let k: u4 = 1;",
+		"  let l: u4 = 1;",
+		"  let m: u4 = 1;",
+		"  let called: u4 = bump(2);",
 		"  return a + b + c + d + e + f + g + h + i + j + k + l + m + called;",
 		"}",
 	}, " ")
