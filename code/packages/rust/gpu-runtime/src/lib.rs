@@ -290,6 +290,15 @@ impl Runtime {
         uniforms:    &[u8],
         pixel_count: usize,
     ) -> Result<Vec<u8>, GpuError> {
+        // Validate pixel_count * 4 fits in usize before any backend allocates
+        // memory.  This is a public API so callers outside image-gpu-core (which
+        // already uses checked_mul) could pass an oversized count.
+        let byte_count = pixel_count
+            .checked_mul(4)
+            .ok_or_else(|| GpuError::Cpu(format!(
+                "pixel_count {pixel_count} overflows usize when multiplied by 4"
+            )))?;
+
         let guard = self.inner.lock().expect("gpu-runtime mutex poisoned");
         match &*guard {
             #[cfg(all(target_vendor = "apple", feature = "metal"))]
@@ -298,7 +307,7 @@ impl Runtime {
                     backend: BackendKind::Metal,
                     operation: fn_name,
                 })?;
-                self.run_metal_pixels(device, queue, msl, fn_name, src, uniforms, pixel_count)
+                self.run_metal_pixels(device, queue, msl, fn_name, src, uniforms, pixel_count, byte_count)
             }
 
             RuntimeInner::Cuda { device } => {
@@ -306,7 +315,7 @@ impl Runtime {
                     backend: BackendKind::Cuda,
                     operation: fn_name,
                 })?;
-                self.run_cuda_pixels(device, cu, fn_name, src, uniforms, pixel_count)
+                self.run_cuda_pixels(device, cu, fn_name, src, uniforms, pixel_count, byte_count)
             }
 
             RuntimeInner::Cpu => {
@@ -314,7 +323,7 @@ impl Runtime {
                     backend: BackendKind::Cpu,
                     operation: fn_name,
                 })?;
-                let mut dst = vec![0u8; pixel_count * 4];
+                let mut dst = vec![0u8; byte_count];
                 f(src, &mut dst, uniforms);
                 Ok(dst)
             }
@@ -370,9 +379,10 @@ impl Runtime {
         src:         &[u8],
         uniforms:    &[u8],
         pixel_count: usize,
+        byte_count:  usize,
     ) -> Result<Vec<u8>, GpuError> {
         let src_buf  = device.alloc_with_bytes(src)?;
-        let dst_buf  = device.alloc(pixel_count * 4)?;
+        let dst_buf  = device.alloc(byte_count)?;
         let unif_buf = if uniforms.is_empty() {
             device.alloc(4)?
         } else {
@@ -463,9 +473,10 @@ impl Runtime {
         src:         &[u8],
         uniforms:    &[u8],
         pixel_count: usize,
+        byte_count:  usize,
     ) -> Result<Vec<u8>, GpuError> {
         let src_buf = device.alloc_with_bytes(src)?;
-        let dst_buf = device.alloc(pixel_count * 4)?;
+        let dst_buf = device.alloc(byte_count)?;
 
         let unif_buf = if uniforms.is_empty() {
             None

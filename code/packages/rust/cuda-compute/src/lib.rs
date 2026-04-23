@@ -456,22 +456,48 @@ impl NvrtcLib {
             let compile_r = (self.nvrtc_compile_program)(prog, 0, std::ptr::null());
 
             // Always retrieve the log, even on success (it may contain warnings).
+            // Check return values: if size query fails, skip log retrieval rather
+            // than allocating a 0-byte buffer and letting nvrtcGetProgramLog write
+            // an unknown number of bytes into it (heap buffer overflow risk).
             let mut log_size: usize = 0;
-            (self.nvrtc_get_program_log_size)(prog, &mut log_size);
-            let mut log_buf = vec![0u8; log_size];
-            (self.nvrtc_get_program_log)(prog, log_buf.as_mut_ptr() as *mut c_char);
-            let log = String::from_utf8_lossy(&log_buf).trim_end_matches('\0').to_string();
+            let log_size_r = (self.nvrtc_get_program_log_size)(prog, &mut log_size);
+            let log = if log_size_r == 0 && log_size > 0 {
+                let mut log_buf = vec![0u8; log_size];
+                let log_r = (self.nvrtc_get_program_log)(prog, log_buf.as_mut_ptr() as *mut c_char);
+                if log_r == 0 {
+                    String::from_utf8_lossy(&log_buf).trim_end_matches('\0').to_string()
+                } else {
+                    format!("(nvrtcGetProgramLog failed: {log_r})")
+                }
+            } else {
+                String::new()
+            };
 
             if compile_r != 0 {
                 (self.nvrtc_destroy_program)(&mut prog);
-                return Err(CudaError::CompileFailed(log));
+                return Err(CudaError::CompileFailed(if log.is_empty() {
+                    format!("nvrtcCompileProgram failed: {compile_r}")
+                } else {
+                    log
+                }));
             }
 
             let mut ptx_size: usize = 0;
-            (self.nvrtc_get_ptx_size)(prog, &mut ptx_size);
+            let ptx_size_r = (self.nvrtc_get_ptx_size)(prog, &mut ptx_size);
+            if ptx_size_r != 0 {
+                (self.nvrtc_destroy_program)(&mut prog);
+                return Err(CudaError::CompileFailed(
+                    format!("nvrtcGetPTXSize failed: {ptx_size_r}")
+                ));
+            }
             let mut ptx = vec![0u8; ptx_size];
-            (self.nvrtc_get_ptx)(prog, ptx.as_mut_ptr() as *mut c_char);
+            let ptx_r = (self.nvrtc_get_ptx)(prog, ptx.as_mut_ptr() as *mut c_char);
             (self.nvrtc_destroy_program)(&mut prog);
+            if ptx_r != 0 {
+                return Err(CudaError::CompileFailed(
+                    format!("nvrtcGetPTX failed: {ptx_r}")
+                ));
+            }
 
             let ptx_str = String::from_utf8_lossy(&ptx).trim_end_matches('\0').to_string();
             Ok(ptx_str)
@@ -626,7 +652,12 @@ impl CudaDevice {
                 &mut module,
                 c_ptx.as_ptr() as *const c_void,
             ))?;
-            Ok(CudaModule { cuda: self.cuda.clone(), module })
+            Ok(CudaModule {
+                inner: std::sync::Arc::new(CudaModuleInner {
+                    cuda: self.cuda.clone(),
+                    module,
+                }),
+            })
         }
     }
 
@@ -723,15 +754,17 @@ impl CudaBuffer {
 // CudaModule
 // --------------------------------------------------------------------------
 
-/// A loaded CUDA module (compiled PTX).
-///
-/// Contains one or more `__global__` kernel functions.
-pub struct CudaModule {
+// Inner state shared between CudaModule and every CudaFunction derived from
+// it.  Wrapping in Arc means the PTX module is not unloaded (cuModuleUnload)
+// until both the CudaModule AND all derived CudaFunctions are dropped —
+// eliminating the use-after-free that would occur if the module is dropped
+// while a CudaFunction is still alive.
+struct CudaModuleInner {
     cuda:   std::sync::Arc<CudaLib>,
     module: CUmodule,
 }
 
-impl Drop for CudaModule {
+impl Drop for CudaModuleInner {
     fn drop(&mut self) {
         if !self.module.is_null() {
             unsafe { (self.cuda.cu_module_unload)(self.module) };
@@ -739,26 +772,44 @@ impl Drop for CudaModule {
     }
 }
 
+// CUmodule is an opaque driver handle; CUDA docs say it is safe to transfer
+// between threads (the context, not the module, is the thread-bound entity).
+unsafe impl Send for CudaModuleInner {}
+
+/// A loaded CUDA module (compiled PTX).
+///
+/// Contains one or more `__global__` kernel functions.
+pub struct CudaModule {
+    inner: std::sync::Arc<CudaModuleInner>,
+}
+
 impl CudaModule {
     /// Get a kernel function by name.
     ///
     /// The `name` must match a `__global__` function in the compiled source
     /// with C linkage (`extern "C"`).
+    ///
+    /// The returned `CudaFunction` holds an internal reference to this module,
+    /// so the PTX module remains loaded until both the `CudaModule` and the
+    /// `CudaFunction` are dropped.
     pub fn function(&self, name: &str) -> Result<CudaFunction, CudaError> {
         let c_name = CString::new(name)
             .map_err(|_| CudaError::FunctionNotFound(name.to_string()))?;
         let mut func: CUfunction = std::ptr::null_mut();
         unsafe {
-            self.cuda.check((self.cuda.cu_module_get_function)(
+            self.inner.cuda.check((self.inner.cuda.cu_module_get_function)(
                 &mut func,
-                self.module,
+                self.inner.module,
                 c_name.as_ptr(),
             ))?;
         }
         if func.is_null() {
             return Err(CudaError::FunctionNotFound(name.to_string()));
         }
-        Ok(CudaFunction { function: func })
+        Ok(CudaFunction {
+            function: func,
+            _module: self.inner.clone(),
+        })
     }
 }
 
@@ -768,11 +819,16 @@ impl CudaModule {
 
 /// A `__global__` kernel function, ready to launch.
 ///
-/// Obtained from `CudaModule::function()`.  The module must remain alive
-/// for as long as this function handle is used.
+/// Obtained from `CudaModule::function()`.  Holds an `Arc` to the parent
+/// module's inner state, so the PTX module stays loaded for the entire
+/// lifetime of this handle.
 pub struct CudaFunction {
     pub(crate) function: CUfunction,
+    _module: std::sync::Arc<CudaModuleInner>,
 }
+
+// CUfunction is an opaque driver handle; safe to transfer between threads.
+unsafe impl Send for CudaFunction {}
 
 // --------------------------------------------------------------------------
 // Tests
