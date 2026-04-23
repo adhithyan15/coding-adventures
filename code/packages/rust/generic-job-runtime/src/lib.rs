@@ -8,7 +8,7 @@
 //! executor knowing what the payload means.
 
 use std::collections::hash_map::DefaultHasher;
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::io::{self, BufRead, BufReader, Write};
@@ -79,6 +79,7 @@ pub struct StdioProcessPoolOptions {
     pub worker_count: usize,
     pub limits: ExecutorLimits,
     pub default_job_timeout: Option<Duration>,
+    pub restart_policy: StdioWorkerRestartPolicy,
 }
 
 impl Default for StdioProcessPoolOptions {
@@ -87,7 +88,24 @@ impl Default for StdioProcessPoolOptions {
             worker_count: 1,
             limits: ExecutorLimits::default(),
             default_job_timeout: None,
+            restart_policy: StdioWorkerRestartPolicy::default(),
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum StdioWorkerRestartPolicy {
+    Never,
+    Always,
+    Bounded {
+        max_restarts: usize,
+        window: Duration,
+    },
+}
+
+impl Default for StdioWorkerRestartPolicy {
+    fn default() -> Self {
+        Self::Never
     }
 }
 
@@ -167,7 +185,8 @@ impl<Request, Response> Clone for StdioProcessPool<Request, Response> {
 }
 
 struct PoolInner<Response> {
-    workers: Vec<WorkerProcess>,
+    command: StdioWorkerCommand,
+    workers: Vec<WorkerSlot>,
     responses: Mutex<mpsc::Receiver<JobResponse<Response>>>,
     response_sender: mpsc::Sender<JobResponse<Response>>,
     pending: Arc<Mutex<HashMap<String, PendingJob>>>,
@@ -177,12 +196,24 @@ struct PoolInner<Response> {
     worker_alive: Vec<Arc<AtomicBool>>,
     limits: ExecutorLimits,
     default_job_timeout: Option<Duration>,
+    restart_policy: StdioWorkerRestartPolicy,
+}
+
+struct WorkerSlot {
+    process: Mutex<Option<WorkerProcess>>,
+    alive: Arc<AtomicBool>,
+    restart_state: Mutex<RestartState>,
 }
 
 struct WorkerProcess {
     stdin: Arc<Mutex<ChildStdin>>,
     child: Arc<Mutex<Child>>,
     reader: Option<thread::JoinHandle<()>>,
+}
+
+#[derive(Debug, Default)]
+struct RestartState {
+    restart_timestamps_ms: VecDeque<u64>,
 }
 
 impl Drop for WorkerProcess {
@@ -227,8 +258,8 @@ where
         let pending = Arc::new(Mutex::new(HashMap::new()));
 
         for worker_index in 0..worker_count {
-            let alive = Arc::new(AtomicBool::new(true));
-            workers.push(spawn_worker::<Response>(
+            let alive = Arc::new(AtomicBool::new(false));
+            let process = spawn_worker::<Response>(
                 &command,
                 worker_index,
                 sender.clone(),
@@ -236,12 +267,18 @@ where
                 Arc::clone(&in_flight),
                 Arc::clone(&alive),
                 options.limits.max_response_bytes,
-            )?);
-            worker_alive.push(alive);
+            )?;
+            worker_alive.push(Arc::clone(&alive));
+            workers.push(WorkerSlot {
+                process: Mutex::new(Some(process)),
+                alive,
+                restart_state: Mutex::new(RestartState::default()),
+            });
         }
 
         Ok(Self {
             inner: Arc::new(PoolInner {
+                command,
                 workers,
                 responses: Mutex::new(receiver),
                 response_sender: sender,
@@ -252,6 +289,7 @@ where
                 worker_alive,
                 limits: options.limits,
                 default_job_timeout: options.default_job_timeout,
+                restart_policy: options.restart_policy,
             }),
             _request: PhantomData,
         })
@@ -294,13 +332,51 @@ where
 
     fn first_live_worker_from(&self, start: usize) -> Result<usize, SubmitError> {
         let worker_len = self.inner.worker_alive.len();
+        let mut restart_error = None;
         for offset in 0..worker_len {
             let index = (start + offset) % worker_len;
             if self.inner.worker_alive[index].load(Ordering::SeqCst) {
                 return Ok(index);
             }
+            match self.restart_worker_if_allowed(index) {
+                Ok(true) => return Ok(index),
+                Ok(false) => {}
+                Err(error) => restart_error = Some(error),
+            }
         }
-        Err(SubmitError::WorkerUnavailable)
+        Err(restart_error.unwrap_or(SubmitError::WorkerUnavailable))
+    }
+
+    fn restart_worker_if_allowed(&self, worker_index: usize) -> Result<bool, SubmitError> {
+        if self.inner.shutting_down.load(Ordering::SeqCst)
+            || self.inner.worker_alive[worker_index].load(Ordering::SeqCst)
+        {
+            return Ok(self.inner.worker_alive[worker_index].load(Ordering::SeqCst));
+        }
+
+        let slot = &self.inner.workers[worker_index];
+        let mut process = slot.process.lock().expect("worker slot mutex poisoned");
+        if slot.alive.load(Ordering::SeqCst) {
+            return Ok(true);
+        }
+        if !restart_allowed(&self.inner.restart_policy, &slot.restart_state) {
+            return Ok(false);
+        }
+
+        let previous = process.take();
+        drop(previous);
+
+        let restarted = spawn_worker::<Response>(
+            &self.inner.command,
+            worker_index,
+            self.inner.response_sender.clone(),
+            Arc::clone(&self.inner.pending),
+            Arc::clone(&self.inner.in_flight),
+            Arc::clone(&slot.alive),
+            self.inner.limits.max_response_bytes,
+        )?;
+        *process = Some(restarted);
+        Ok(true)
     }
 
     fn reserve_slot(&self) -> Result<(), SubmitError> {
@@ -413,13 +489,25 @@ where
                 },
             );
         let write_result = {
-            let mut stdin = self.inner.workers[worker_index]
-                .stdin
+            let process = self.inner.workers[worker_index]
+                .process
                 .lock()
-                .expect("stdio worker stdin mutex poisoned");
-            stdin
-                .write_all(encoded.as_bytes())
-                .and_then(|_| stdin.flush())
+                .expect("worker slot mutex poisoned");
+            match process.as_ref() {
+                Some(process) => {
+                    let mut stdin = process
+                        .stdin
+                        .lock()
+                        .expect("stdio worker stdin mutex poisoned");
+                    stdin
+                        .write_all(encoded.as_bytes())
+                        .and_then(|_| stdin.flush())
+                }
+                None => Err(io::Error::new(
+                    io::ErrorKind::BrokenPipe,
+                    "worker process is unavailable",
+                )),
+            }
         };
 
         if let Err(error) = write_result {
@@ -430,6 +518,11 @@ where
                 .remove(&id);
             decrement_in_flight(&self.inner.in_flight);
             self.inner.worker_alive[worker_index].store(false, Ordering::SeqCst);
+            self.inner.workers[worker_index]
+                .process
+                .lock()
+                .expect("worker slot mutex poisoned")
+                .take();
             fail_pending_jobs_for_worker(
                 &self.inner.pending,
                 &self.inner.in_flight,
@@ -492,6 +585,7 @@ where
         .take()
         .ok_or_else(|| io::Error::new(io::ErrorKind::BrokenPipe, "worker did not expose stdout"))?;
 
+    alive.store(true, Ordering::SeqCst);
     let child = Arc::new(Mutex::new(child));
     let reader = thread::spawn(move || {
         let mut stdout = BufReader::new(stdout);
@@ -527,6 +621,39 @@ where
         child,
         reader: Some(reader),
     })
+}
+
+fn restart_allowed(policy: &StdioWorkerRestartPolicy, restart_state: &Mutex<RestartState>) -> bool {
+    match policy {
+        StdioWorkerRestartPolicy::Never => false,
+        StdioWorkerRestartPolicy::Always => true,
+        StdioWorkerRestartPolicy::Bounded {
+            max_restarts,
+            window,
+        } => {
+            if *max_restarts == 0 {
+                return false;
+            }
+            let now = current_time_millis();
+            let window_ms = window.as_millis() as u64;
+            let cutoff = now.saturating_sub(window_ms);
+            let mut state = restart_state
+                .lock()
+                .expect("worker restart state mutex poisoned");
+            while state
+                .restart_timestamps_ms
+                .front()
+                .is_some_and(|timestamp| *timestamp <= cutoff)
+            {
+                state.restart_timestamps_ms.pop_front();
+            }
+            if state.restart_timestamps_ms.len() >= *max_restarts {
+                return false;
+            }
+            state.restart_timestamps_ms.push_back(now);
+            true
+        }
+    }
 }
 
 fn decrement_in_flight(in_flight: &AtomicUsize) {
@@ -699,6 +826,7 @@ for line in sys.stdin:
                     ..ExecutorLimits::default()
                 },
                 default_job_timeout: None,
+                restart_policy: StdioWorkerRestartPolicy::Never,
             },
         )
         .expect("spawn process pool");
@@ -752,6 +880,7 @@ for line in sys.stdin:
                     ..ExecutorLimits::default()
                 },
                 default_job_timeout: None,
+                restart_policy: StdioWorkerRestartPolicy::Never,
             },
         )
         .expect("spawn process pool");
@@ -802,6 +931,7 @@ for line in sys.stdin:
                     ..ExecutorLimits::default()
                 },
                 default_job_timeout: Some(Duration::from_millis(50)),
+                restart_policy: StdioWorkerRestartPolicy::Never,
             },
         )
         .expect("spawn process pool");
@@ -853,6 +983,7 @@ sys.stdin.readline()
                     ..ExecutorLimits::default()
                 },
                 default_job_timeout: None,
+                restart_policy: StdioWorkerRestartPolicy::Never,
             },
         )
         .expect("spawn process pool");
@@ -884,6 +1015,142 @@ sys.stdin.readline()
                 },
             ))
             .expect_err("dead worker should be unavailable");
+        assert_eq!(err, SubmitError::WorkerUnavailable);
+    }
+
+    #[test]
+    fn process_pool_restarts_dead_worker_when_policy_allows() {
+        let marker = std::env::temp_dir().join(format!(
+            "generic-job-runtime-restart-once-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+        ));
+        let marker_literal = format!("{:?}", marker.to_string_lossy());
+        let script = format!(
+            r#"
+import json, os, sys
+marker_path = {marker_literal}
+
+for line in sys.stdin:
+    frame = json.loads(line)
+    body = frame["body"]
+    payload = body["payload"]
+    if not os.path.exists(marker_path):
+        open(marker_path, "w").close()
+        sys.exit(0)
+    out = {{"stream_id": payload["stream_id"], "counter": 1, "text": payload["text"]}}
+    print(json.dumps({{"version": 1, "kind": "response", "body": {{"id": body["id"], "result": {{"status": "ok", "payload": out}}, "metadata": body["metadata"]}}}}), flush=True)
+"#
+        );
+        let Some(command) = scripted_worker(&script) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let pool = StdioProcessPool::<EchoJob, EchoResponse>::spawn(
+            command,
+            StdioProcessPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+                restart_policy: StdioWorkerRestartPolicy::Always,
+            },
+        )
+        .expect("spawn process pool");
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "one".to_string(),
+            },
+        ))
+        .expect("submit job to worker that exits");
+
+        let response = wait_for_response(&pool).expect("worker failure response");
+        match response.result {
+            JobResult::Error { error } => assert_eq!(error.code, "worker_unavailable"),
+            other => panic!("expected worker failure before restart, got {other:?}"),
+        }
+
+        pool.try_submit(JobRequest::new(
+            "job-2",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "two".to_string(),
+            },
+        ))
+        .expect("submit job to restarted worker");
+
+        let response = wait_for_response(&pool).expect("restarted worker response");
+        match response.result {
+            JobResult::Ok { payload } => {
+                assert_eq!(payload.stream_id, "stream");
+                assert_eq!(payload.text, "two");
+            }
+            other => panic!("expected restarted worker success, got {other:?}"),
+        }
+
+        let _ = std::fs::remove_file(marker);
+    }
+
+    #[test]
+    fn process_pool_stops_restarting_after_bounded_policy_is_exhausted() {
+        let Some(command) = scripted_worker(
+            r#"
+import sys
+for line in sys.stdin:
+    sys.exit(0)
+"#,
+        ) else {
+            eprintln!("skipping test because no Python interpreter was found");
+            return;
+        };
+        let pool = StdioProcessPool::<EchoJob, EchoResponse>::spawn(
+            command,
+            StdioProcessPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 1,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+                restart_policy: StdioWorkerRestartPolicy::Bounded {
+                    max_restarts: 1,
+                    window: Duration::from_secs(60),
+                },
+            },
+        )
+        .expect("spawn process pool");
+
+        for job_id in ["job-1", "job-2"] {
+            pool.try_submit(JobRequest::new(
+                job_id,
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: job_id.to_string(),
+                },
+            ))
+            .expect("submit job before restart budget is exhausted");
+
+            let response = wait_for_response(&pool).expect("worker failure response");
+            match response.result {
+                JobResult::Error { error } => assert_eq!(error.code, "worker_unavailable"),
+                other => panic!("expected worker failure response, got {other:?}"),
+            }
+        }
+
+        let err = pool
+            .try_submit(JobRequest::new(
+                "job-3",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "three".to_string(),
+                },
+            ))
+            .expect_err("restart budget should be exhausted");
         assert_eq!(err, SubmitError::WorkerUnavailable);
     }
 

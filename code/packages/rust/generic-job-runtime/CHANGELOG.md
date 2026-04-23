@@ -12,6 +12,10 @@ All notable changes to this package will be documented in this file.
 - Added worker-exit detection that reports executor-origin
   `worker_unavailable` responses for abandoned jobs.
 - Added tests proving timeouts and worker exits do not leak queue capacity.
+- Added `StdioWorkerRestartPolicy` with `Never`, `Always`, and bounded restart
+  modes for reviving dead stdio worker slots.
+- Added tests proving restarted workers can accept new jobs and bounded restart
+  policies stop crash loops.
 
 ## [0.1.0] - 2026-04-21
 

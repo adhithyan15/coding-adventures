@@ -16,6 +16,8 @@ language workers such as Python, Ruby, Perl, Lua, or other bridge targets.
   responses and release queue capacity.
 - Worker-exit detection that converts abandoned in-flight jobs into portable
   executor errors.
+- Opt-in stdio worker restart policies that can revive a dead worker slot while
+  preserving worker-index affinity.
 - Capability and limit metadata that adapters can inspect.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters

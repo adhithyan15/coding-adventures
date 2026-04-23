@@ -31,7 +31,8 @@ use generic_job_protocol::{
     JobResponse, JobResult,
 };
 use generic_job_runtime::{
-    ExecutorLimits, StdioProcessPool, StdioProcessPoolOptions, StdioWorkerCommand, SubmitError,
+    ExecutorLimits, StdioProcessPool, StdioProcessPoolOptions, StdioWorkerCommand,
+    StdioWorkerRestartPolicy, SubmitError,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -78,6 +79,7 @@ pub struct EmbeddableTcpServerOptions {
     pub worker_processes: usize,
     pub worker_queue_depth: usize,
     pub worker_job_timeout: Option<Duration>,
+    pub worker_restart_policy: StdioWorkerRestartPolicy,
     pub worker: WorkerCommand,
 }
 
@@ -99,6 +101,7 @@ impl Default for EmbeddableTcpServerOptions {
             worker_processes: 1,
             worker_queue_depth: ExecutorLimits::default().max_queue_depth,
             worker_job_timeout: None,
+            worker_restart_policy: StdioWorkerRestartPolicy::default(),
             worker: WorkerCommand::new("worker", Vec::<String>::new()),
         }
     }
@@ -451,6 +454,7 @@ where
                     ..ExecutorLimits::default()
                 },
                 default_job_timeout: options.worker_job_timeout,
+                restart_policy: options.worker_restart_policy.clone(),
             },
         )?;
         let routes = Arc::new(Mutex::new(BTreeMap::new()));
@@ -1118,6 +1122,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 worker_processes: 1,
                 worker_queue_depth: ExecutorLimits::default().max_queue_depth,
                 worker_job_timeout: None,
+                worker_restart_policy: StdioWorkerRestartPolicy::default(),
                 worker,
             },
             |_| (),
@@ -1376,6 +1381,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
                 worker_processes: 1,
                 worker_queue_depth,
                 worker_job_timeout: None,
+                worker_restart_policy: StdioWorkerRestartPolicy::default(),
                 worker,
             },
             |_| (),
@@ -1479,6 +1485,10 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
             ExecutorLimits::default().max_queue_depth
         );
         assert_eq!(options.worker_job_timeout, None);
+        assert_eq!(
+            options.worker_restart_policy,
+            StdioWorkerRestartPolicy::Never
+        );
 
         let mut zero_connections = options.clone();
         zero_connections.max_connections = 0;
