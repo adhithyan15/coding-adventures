@@ -201,6 +201,36 @@ pub const MTL_PRIMITIVE_TYPE_TRIANGLE: c_ulong = 3;
 // Metal texture type constants
 pub const MTL_TEXTURE_TYPE_2D: c_ulong = 2;
 
+// ---------------------------------------------------------------------------
+// Metal compute constants
+// ---------------------------------------------------------------------------
+//
+// MTLResourceOptions control the storage mode of buffers and textures.
+// On Apple Silicon (unified memory architecture), MTL_RESOURCE_STORAGE_MODE_SHARED
+// is the key mode: CPU and GPU share the same physical RAM, so no explicit
+// data transfer is needed — just write on one side and read on the other.
+
+/// CPU and GPU share the same physical memory (Apple Silicon).  No upload/
+/// download needed — writes on either side are immediately visible to both.
+pub const MTL_RESOURCE_STORAGE_MODE_SHARED: c_ulong = 0 << 4;
+
+/// GPU-private memory; not CPU-accessible.  Faster for GPU-only resources,
+/// but requires explicit staging buffers to transfer data.
+pub const MTL_RESOURCE_STORAGE_MODE_PRIVATE: c_ulong = 2 << 4;
+
+/// CPU-cached copy with manual CPU→GPU sync via `-didModifyRange:`.
+pub const MTL_RESOURCE_STORAGE_MODE_MANAGED: c_ulong = 1 << 4;
+
+/// Default CPU cache mode — write-combined on arm64 for better GPU performance.
+pub const MTL_RESOURCE_CPU_CACHE_MODE_DEFAULT: c_ulong = 0;
+
+/// Hazard tracking: untracked.  Caller is responsible for barriers.
+/// Use this for shared buffers where you manage sync yourself.
+pub const MTL_RESOURCE_HAZARD_TRACKING_MODE_UNTRACKED: c_ulong = 1 << 8;
+
+// Convenience combination: shared + default cache + tracked hazards.
+pub const MTL_RESOURCE_OPTIONS_DEFAULT: c_ulong = MTL_RESOURCE_STORAGE_MODE_SHARED;
+
 // CoreGraphics bitmap info constants
 pub const K_CG_IMAGE_ALPHA_PREMULTIPLIED_LAST: u32 = 1;
 pub const K_CG_BITMAP_BYTE_ORDER_32_BIG: u32 = 1 << 12;
@@ -717,6 +747,45 @@ pub const NS_BACKING_STORE_BUFFERED: c_ulong = 2;
 // // Two args: [obj setX:1 Y:2]
 // msg!(obj, "setX:Y:", 1usize, 2usize)
 // ```
+
+/// Message dispatch for methods returning a raw `*mut c_void` (not an ObjC Id).
+///
+/// Used for Metal methods like `[MTLBuffer contents]` that return a plain
+/// memory pointer rather than an Objective-C object.
+///
+/// # Example
+///
+/// ```ignore
+/// let ptr: *mut c_void = msg_ptr!(buffer, "contents");
+/// ```
+#[macro_export]
+macro_rules! msg_ptr {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> *mut ::std::ffi::c_void =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel))
+    }};
+}
+
+/// Message dispatch for methods returning a `usize` (e.g. `[MTLBuffer length]`).
+#[macro_export]
+macro_rules! msg_usize {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> usize =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel))
+    }};
+}
+
+/// Message dispatch for methods returning a `u64` (e.g. `[MTLComputePipelineState maxTotalThreadsPerThreadgroup]`).
+#[macro_export]
+macro_rules! msg_u64 {
+    ($receiver:expr, $sel:expr) => {{
+        let f: unsafe extern "C" fn($crate::Id, $crate::Sel) -> u64 =
+            ::std::mem::transmute($crate::objc_msgSend as *const ());
+        f($receiver, $crate::sel($sel))
+    }};
+}
 
 /// Type-safe message dispatch macro.
 ///

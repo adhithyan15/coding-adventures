@@ -1,0 +1,16 @@
+[package]
+name = "gpu-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "G09 Layer 5: Abstract GPU compute runtime — selects best available backend (Metal → CUDA → CPU) at startup"
+
+[features]
+# Enable Metal backend (macOS/Apple Silicon).  Requires Metal.framework at link
+# time.  Disable with --no-default-features to get a CPU+CUDA-only build that
+# does not load Metal.framework on startup (useful in sandboxed test envs).
+default = ["metal"]
+metal   = ["dep:metal-compute"]
+
+[dependencies]
+metal-compute = { path = "../metal-compute", optional = true }
+cuda-compute  = { path = "../cuda-compute" }

@@ -1,0 +1,18 @@
+[package]
+name = "image-gpu-core"
+version = "0.1.0"
+edition = "2021"
+description = "IMG06: GPU-accelerated point operations on PixelContainer — Metal on macOS, CUDA on NVIDIA, CPU fallback everywhere"
+
+[features]
+# Enable Metal backend (macOS).  Propagates to gpu-runtime/metal.
+# Disable with --no-default-features to build/test without linking Metal.framework.
+default = ["metal"]
+metal   = ["gpu-runtime/metal"]
+
+[dependencies]
+gpu-runtime     = { path = "../gpu-runtime", default-features = false }
+pixel-container = { path = "../pixel-container" }
+
+[dev-dependencies]
+image-point-ops = { path = "../image-point-ops" }
