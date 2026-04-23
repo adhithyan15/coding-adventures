@@ -14,9 +14,9 @@ The generic `state-machine` crate executes ordered transitions. The
 buffers, current token construction, diagnostics, source positions, and traces.
 This crate owns the HTML-specific state machine and exposes a Rust lexer API.
 
-The TOML file in this package is a build-time authoring artifact. Production
-code should statically link generated Rust constructors rather than loading
-TOML at runtime.
+The TOML file in this package is an authoring artifact. Production code links a
+checked-in generated Rust module built to match the output shape of
+`state-machine-source-compiler`, so the runtime never loads TOML or JSON.
 
 ## Usage
 

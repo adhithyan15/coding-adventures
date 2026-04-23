@@ -10,3 +10,7 @@ documented in this file.
 - Statically linked HTML skeleton state machine over the generic
   `state-machine-tokenizer` runtime.
 - Build-time `html-skeleton.lexer.states.toml` authoring artifact.
+- Checked-in generated Rust module for the HTML skeleton lexer definition, so
+  the crate links static source instead of loading TOML at runtime.
+- Fixture-backed tests proving the generated lexer definition and emitted
+  runtime tokens stay aligned.

@@ -13,3 +13,6 @@
   Rust toolchain can execute freshly built binaries.
 - Added Rust source generation for effectful transducer definitions, including
   transition actions, consume flags, and an `EffectfulStateMachine` constructor.
+- Added lexer-profile Rust source generation for version/profile/runtime
+  metadata, token/input/register/guard declarations, fixtures, and matcher-only
+  transducer transitions.
