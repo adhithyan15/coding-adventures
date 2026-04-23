@@ -121,6 +121,10 @@ fn transducer_definition_emits_effect_tables_and_constructor() {
         name: "Text".to_string(),
         fields: vec!["data".to_string()],
     }];
+    definition.tokens.push(TokenDefinition {
+        name: "EOF".to_string(),
+        fields: Vec::new(),
+    });
     definition.inputs = vec![InputDefinition {
         id: "tag_name_char".to_string(),
         matcher: MatcherDefinition::Anything,
