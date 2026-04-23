@@ -317,6 +317,7 @@ struct ListenerStateDefaults {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct ListenerState {
     socket: TcpListener,
     defaults: ListenerStateDefaults,
@@ -1601,11 +1602,27 @@ pub mod windows {
     use windows_sys::Win32::Networking::WinSock::{WSAStartup, WSADATA};
 
     const WINDOWS_IO_BUFFER_SIZE: usize = 64 * 1024;
+    const WINDOWS_ACCEPTEX_ADDRESS_SIZE: usize = 128 + 16;
+    const WINDOWS_MAX_PENDING_ACCEPTS: usize = 1024;
     const SOCKET_ERROR: i32 = -1;
     const WSA_IO_PENDING: i32 = 997;
+    const SIO_GET_EXTENSION_FUNCTION_POINTER: Dword = 0xC800_0006;
+    const SOL_SOCKET: i32 = 0xffff;
+    const SO_UPDATE_ACCEPT_CONTEXT: i32 = 0x700b;
 
     type RawSocketValue = usize;
     type Dword = u32;
+
+    type AcceptExFn = unsafe extern "system" fn(
+        listen_socket: RawSocketValue,
+        accept_socket: RawSocketValue,
+        output_buffer: *mut c_void,
+        receive_data_length: Dword,
+        local_address_length: Dword,
+        remote_address_length: Dword,
+        bytes_received: *mut Dword,
+        overlapped: *mut iocp::Overlapped,
+    ) -> i32;
 
     #[repr(C)]
     struct WsaBuf {
@@ -1613,8 +1630,35 @@ pub mod windows {
         buf: *mut i8,
     }
 
+    #[repr(C)]
+    #[derive(Clone, Copy)]
+    struct Guid {
+        data1: u32,
+        data2: u16,
+        data3: u16,
+        data4: [u8; 8],
+    }
+
+    const WSAID_ACCEPTEX: Guid = Guid {
+        data1: 0xb5367df1,
+        data2: 0xcbac,
+        data3: 0x11cf,
+        data4: [0x95, 0xca, 0x00, 0x80, 0x5f, 0x48, 0xa1, 0x92],
+    };
+
     #[link(name = "Ws2_32")]
     unsafe extern "system" {
+        fn WSAIoctl(
+            socket: RawSocketValue,
+            io_control_code: Dword,
+            in_buffer: *mut c_void,
+            in_buffer_size: Dword,
+            out_buffer: *mut c_void,
+            out_buffer_size: Dword,
+            bytes_returned: *mut Dword,
+            overlapped: *mut iocp::Overlapped,
+            completion_routine: *mut c_void,
+        ) -> i32;
         fn WSARecv(
             socket: RawSocketValue,
             buffers: *mut WsaBuf,
@@ -1633,7 +1677,32 @@ pub mod windows {
             overlapped: *mut iocp::Overlapped,
             completion_routine: *mut c_void,
         ) -> i32;
+        fn setsockopt(
+            socket: RawSocketValue,
+            level: i32,
+            optname: i32,
+            optval: *const i8,
+            optlen: i32,
+        ) -> i32;
         fn WSAGetLastError() -> i32;
+    }
+
+    #[derive(Debug)]
+    struct WindowsCompletedAccept {
+        stream: TcpStream,
+        peer_addr: SocketAddr,
+    }
+
+    #[derive(Debug)]
+    struct WindowsListenerState {
+        socket: TcpListener,
+        defaults: ListenerStateDefaults,
+        readable_interest: bool,
+        domain: Domain,
+        accept_ex: AcceptExFn,
+        accept_queue_depth: usize,
+        pending_accepts: usize,
+        completed_accepts: VecDeque<WindowsCompletedAccept>,
     }
 
     #[derive(Debug)]
@@ -1685,6 +1754,32 @@ pub mod windows {
         }
     }
 
+    #[repr(C)]
+    #[derive(Debug)]
+    struct WindowsAcceptOperation {
+        overlapped: iocp::Overlapped,
+        listener: ListenerId,
+        socket: Option<Socket>,
+        buffer: Vec<u8>,
+    }
+
+    unsafe impl Send for WindowsAcceptOperation {}
+
+    impl WindowsAcceptOperation {
+        fn new(listener: ListenerId, socket: Socket) -> Self {
+            Self {
+                overlapped: zeroed_overlapped(),
+                listener,
+                socket: Some(socket),
+                buffer: vec![0; WINDOWS_ACCEPTEX_ADDRESS_SIZE * 2],
+            }
+        }
+
+        fn key(&mut self) -> usize {
+            (&mut self.overlapped as *mut iocp::Overlapped) as usize
+        }
+    }
+
     #[derive(Debug)]
     struct WindowsStreamState {
         socket: TcpStream,
@@ -1704,11 +1799,12 @@ pub mod windows {
     pub struct WindowsTransportPlatform {
         completion_port: iocp::CompletionPort,
         next_token: u64,
-        listeners: BTreeMap<ListenerId, ListenerState>,
+        listeners: BTreeMap<ListenerId, WindowsListenerState>,
         streams: BTreeMap<StreamId, WindowsStreamState>,
         timers: BTreeMap<TimerId, WindowsTimerState>,
         wakeups: BTreeMap<WakeupId, WindowsWakeupState>,
         resources: BTreeMap<u64, ResourceId>,
+        accept_operations: BTreeMap<usize, Box<WindowsAcceptOperation>>,
         operations: BTreeMap<usize, Box<WindowsOverlappedOperation>>,
     }
 
@@ -1730,6 +1826,7 @@ pub mod windows {
                 timers: BTreeMap::new(),
                 wakeups: BTreeMap::new(),
                 resources: BTreeMap::new(),
+                accept_operations: BTreeMap::new(),
                 operations: BTreeMap::new(),
             })
         }
@@ -1777,6 +1874,31 @@ pub mod windows {
             Ok(())
         }
 
+        fn load_accept_ex(socket: RawSocketValue) -> Result<AcceptExFn, PlatformError> {
+            let mut guid = WSAID_ACCEPTEX;
+            let mut accept_ex = std::mem::MaybeUninit::<AcceptExFn>::uninit();
+            let mut bytes = 0;
+            let result = unsafe {
+                WSAIoctl(
+                    socket,
+                    SIO_GET_EXTENSION_FUNCTION_POINTER,
+                    (&mut guid as *mut Guid).cast(),
+                    std::mem::size_of::<Guid>() as Dword,
+                    accept_ex.as_mut_ptr().cast(),
+                    std::mem::size_of::<AcceptExFn>() as Dword,
+                    &mut bytes,
+                    ptr::null_mut(),
+                    ptr::null_mut(),
+                )
+            };
+            if result == SOCKET_ERROR {
+                return Err(PlatformError::from(io::Error::from_raw_os_error(unsafe {
+                    WSAGetLastError()
+                })));
+            }
+            Ok(unsafe { accept_ex.assume_init() })
+        }
+
         fn associate_listener(
             &self,
             listener: &TcpListener,
@@ -1801,6 +1923,92 @@ pub mod windows {
                     stream_id.0 as usize,
                 )
                 .map_err(PlatformError::from)
+        }
+
+        fn queue_accept(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
+            let Some(state) = self.listeners.get(&listener) else {
+                return Err(PlatformError::InvalidResource);
+            };
+            if !state.readable_interest {
+                return Ok(());
+            }
+
+            let accept_socket = Socket::new(state.domain, Type::STREAM, Some(Protocol::TCP))?;
+            accept_socket.set_nonblocking(true)?;
+            let listen_socket = raw_socket_value(state.socket.as_raw_socket());
+            let accept_socket_raw = raw_socket_value(accept_socket.as_raw_socket());
+            let accept_ex = state.accept_ex;
+
+            let mut operation = Box::new(WindowsAcceptOperation::new(listener, accept_socket));
+            let mut bytes = 0;
+            let result = unsafe {
+                accept_ex(
+                    listen_socket,
+                    accept_socket_raw,
+                    operation.buffer.as_mut_ptr().cast(),
+                    0,
+                    WINDOWS_ACCEPTEX_ADDRESS_SIZE as Dword,
+                    WINDOWS_ACCEPTEX_ADDRESS_SIZE as Dword,
+                    &mut bytes,
+                    &mut operation.overlapped,
+                )
+            };
+            if result == SOCKET_ERROR {
+                let error = unsafe { WSAGetLastError() };
+                if error != WSA_IO_PENDING {
+                    return Err(PlatformError::from(io::Error::from_raw_os_error(error)));
+                }
+            }
+
+            let key = operation.key();
+            self.accept_operations.insert(key, operation);
+            if let Some(state) = self.listeners.get_mut(&listener) {
+                state.pending_accepts += 1;
+            }
+            Ok(())
+        }
+
+        fn replenish_accepts(&mut self, listener: ListenerId) -> Result<(), PlatformError> {
+            loop {
+                let Some(state) = self.listeners.get(&listener) else {
+                    return Ok(());
+                };
+                if !state.readable_interest || state.pending_accepts >= state.accept_queue_depth {
+                    return Ok(());
+                }
+                self.queue_accept(listener)?;
+            }
+        }
+
+        fn replenish_all_accepts(&mut self) -> Result<(), PlatformError> {
+            let listeners: Vec<_> = self.listeners.keys().copied().collect();
+            for listener in listeners {
+                self.replenish_accepts(listener)?;
+            }
+            Ok(())
+        }
+
+        fn update_accept_context(
+            accept_socket: RawSocketValue,
+            listen_socket: RawSocketValue,
+        ) -> Result<(), PlatformError> {
+            let listen_socket_bytes = listen_socket.to_ne_bytes();
+            let result = unsafe {
+                setsockopt(
+                    accept_socket,
+                    SOL_SOCKET,
+                    SO_UPDATE_ACCEPT_CONTEXT,
+                    listen_socket_bytes.as_ptr().cast(),
+                    listen_socket_bytes.len() as i32,
+                )
+            };
+            if result == SOCKET_ERROR {
+                Err(PlatformError::from(io::Error::from_raw_os_error(unsafe {
+                    WSAGetLastError()
+                })))
+            } else {
+                Ok(())
+            }
         }
 
         fn queue_read_if_needed(&mut self, stream: StreamId) -> Result<(), PlatformError> {
@@ -1999,6 +2207,11 @@ pub mod windows {
             output: &mut Vec<PlatformEvent>,
         ) {
             let key = packet.overlapped as usize;
+            if self.accept_operations.contains_key(&key) {
+                self.push_accept_completion(packet, output);
+                return;
+            }
+
             let Some(mut operation) = self.operations.remove(&key) else {
                 return;
             };
@@ -2054,6 +2267,68 @@ pub mod windows {
                 }
             }
         }
+
+        fn push_accept_completion(
+            &mut self,
+            packet: iocp::CompletionPacket,
+            output: &mut Vec<PlatformEvent>,
+        ) {
+            let key = packet.overlapped as usize;
+            let Some(mut operation) = self.accept_operations.remove(&key) else {
+                return;
+            };
+            let listener = operation.listener;
+
+            let Some(listener_state) = self.listeners.get_mut(&listener) else {
+                return;
+            };
+            listener_state.pending_accepts = listener_state.pending_accepts.saturating_sub(1);
+
+            if packet.error.is_some() {
+                return;
+            }
+
+            let Some(socket) = operation.socket.take() else {
+                return;
+            };
+            let listen_socket = raw_socket_value(listener_state.socket.as_raw_socket());
+            let accept_socket = raw_socket_value(socket.as_raw_socket());
+
+            if let Err(error) = Self::update_accept_context(accept_socket, listen_socket) {
+                output.push(PlatformEvent::Error {
+                    resource: ResourceId::Listener(listener),
+                    error,
+                });
+                return;
+            }
+
+            let stream: TcpStream = socket.into();
+            if let Err(error) = stream.set_nonblocking(true) {
+                output.push(PlatformEvent::Error {
+                    resource: ResourceId::Listener(listener),
+                    error: PlatformError::from(error),
+                });
+                return;
+            }
+
+            let peer_addr = match stream.peer_addr() {
+                Ok(peer_addr) => peer_addr,
+                Err(error) => {
+                    output.push(PlatformEvent::Error {
+                        resource: ResourceId::Listener(listener),
+                        error: PlatformError::from(error),
+                    });
+                    return;
+                }
+            };
+
+            listener_state
+                .completed_accepts
+                .push_back(WindowsCompletedAccept { stream, peer_addr });
+            if listener_state.readable_interest {
+                output.push(PlatformEvent::ListenerAcceptReady { listener });
+            }
+        }
     }
 
     impl TransportPlatform for WindowsTransportPlatform {
@@ -2077,15 +2352,13 @@ pub mod windows {
             options: ListenerOptions,
         ) -> Result<ListenerId, PlatformError> {
             let BindAddress::Ip(address) = address;
-            let socket = Socket::new(
-                Self::socket_domain(address),
-                Type::STREAM,
-                Some(Protocol::TCP),
-            )?;
+            let domain = Self::socket_domain(address);
+            let socket = Socket::new(domain, Type::STREAM, Some(Protocol::TCP))?;
             Self::configure_listener_socket(&socket, address, options)?;
             socket.bind(&address.into())?;
             socket.listen(options.backlog.min(i32::MAX as u32) as i32)?;
             socket.set_nonblocking(true)?;
+            let accept_ex = Self::load_accept_ex(raw_socket_value(socket.as_raw_socket()))?;
 
             let listener: TcpListener = socket.into();
             let id = ListenerId(self.alloc_token());
@@ -2093,15 +2366,23 @@ pub mod windows {
             self.register_resource(id.0, ResourceId::Listener(id));
             self.listeners.insert(
                 id,
-                ListenerState {
+                WindowsListenerState {
                     socket: listener,
                     defaults: ListenerStateDefaults {
                         nodelay: options.nodelay_default,
                         keepalive: options.keepalive_default,
                     },
                     readable_interest: true,
+                    domain,
+                    accept_ex,
+                    accept_queue_depth: (options.backlog as usize)
+                        .max(1)
+                        .min(WINDOWS_MAX_PENDING_ACCEPTS),
+                    pending_accepts: 0,
+                    completed_accepts: VecDeque::new(),
                 },
             );
+            self.replenish_accepts(id)?;
             Ok(id)
         }
 
@@ -2123,6 +2404,9 @@ pub mod windows {
                 .get_mut(&listener)
                 .ok_or(PlatformError::InvalidResource)?
                 .readable_interest = readable;
+            if readable {
+                self.replenish_accepts(listener)?;
+            }
             Ok(())
         }
 
@@ -2132,36 +2416,35 @@ pub mod windows {
         ) -> Result<Option<AcceptedStream>, PlatformError> {
             let state = self
                 .listeners
-                .get(&listener)
+                .get_mut(&listener)
                 .ok_or(PlatformError::InvalidResource)?;
-            match state.socket.accept() {
-                Ok((stream, peer_addr)) => {
-                    stream.set_nonblocking(true)?;
-                    Self::configure_stream_defaults(&stream, state.defaults)?;
-                    let id = StreamId(self.alloc_token());
-                    self.associate_stream(&stream, id)?;
-                    self.register_resource(id.0, ResourceId::Stream(id));
-                    self.streams.insert(
-                        id,
-                        WindowsStreamState {
-                            socket: stream,
-                            interest: StreamInterest::none(),
-                            read_buffer_size: WINDOWS_IO_BUFFER_SIZE,
-                            pending_read: None,
-                            completed_reads: VecDeque::new(),
-                            pending_write: None,
-                            completed_writes: VecDeque::new(),
-                            read_closed: false,
-                        },
-                    );
-                    Ok(Some(AcceptedStream {
-                        stream: id,
-                        peer_addr,
-                    }))
-                }
-                Err(error) if error.kind() == io::ErrorKind::WouldBlock => Ok(None),
-                Err(error) => Err(PlatformError::from(error)),
-            }
+            let Some(accepted) = state.completed_accepts.pop_front() else {
+                return Ok(None);
+            };
+            let defaults = state.defaults;
+            let WindowsCompletedAccept { stream, peer_addr } = accepted;
+
+            Self::configure_stream_defaults(&stream, defaults)?;
+            let id = StreamId(self.alloc_token());
+            self.associate_stream(&stream, id)?;
+            self.register_resource(id.0, ResourceId::Stream(id));
+            self.streams.insert(
+                id,
+                WindowsStreamState {
+                    socket: stream,
+                    interest: StreamInterest::none(),
+                    read_buffer_size: WINDOWS_IO_BUFFER_SIZE,
+                    pending_read: None,
+                    completed_reads: VecDeque::new(),
+                    pending_write: None,
+                    completed_writes: VecDeque::new(),
+                    read_closed: false,
+                },
+            );
+            Ok(Some(AcceptedStream {
+                stream: id,
+                peer_addr,
+            }))
         }
 
         fn configure_stream(
@@ -2368,20 +2651,13 @@ pub mod windows {
             output.clear();
             let effective_timeout = self.effective_timeout(timeout);
 
-            // WSAPoll is unreliable across the Windows toolchain mix used by
-            // the native-extension builds in this repository: valid Rust TCP
-            // sockets can be reported as WSAENOTSOCK. Use IOCP for native
-            // wakeups/completion packets and keep nonblocking probes as the
-            // readiness filter for the existing stream contract.
-            let wait = effective_timeout
-                .map(|duration| duration.min(Duration::from_millis(10)))
-                .or(Some(Duration::from_millis(10)));
-            let _ = self.wait_for_iocp_packet(wait, output)?;
+            self.replenish_all_accepts()?;
+            let _ = self.wait_for_iocp_packet(effective_timeout, output)?;
             self.collect_due_timers(output);
             self.drain_iocp_now(output)?;
 
             for (&listener, state) in &self.listeners {
-                if state.readable_interest {
+                if state.readable_interest && !state.completed_accepts.is_empty() {
                     output.push(PlatformEvent::ListenerAcceptReady { listener });
                 }
             }
@@ -2395,6 +2671,7 @@ pub mod windows {
                 }
             }
 
+            self.replenish_all_accepts()?;
             Ok(())
         }
     }
