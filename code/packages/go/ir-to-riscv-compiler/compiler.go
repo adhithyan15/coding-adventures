@@ -18,6 +18,7 @@ const (
 // MachineCodeResult is the output of lowering IR to a flat RISC-V image.
 type MachineCodeResult struct {
 	Bytes           []byte
+	Assembly        string
 	Instructions    []uint32
 	LabelOffsets    map[string]int
 	DataOffsets     map[string]int
@@ -86,9 +87,14 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 
 	image := riscv.Assemble(words)
 	image = append(image, dataBytes(program.Data)...)
+	assembly, err := c.emitAssembly(program, plan)
+	if err != nil {
+		return nil, err
+	}
 
 	return &MachineCodeResult{
 		Bytes:           image,
+		Assembly:        assembly,
 		Instructions:    words,
 		LabelOffsets:    plan.labelOffsets,
 		DataOffsets:     plan.dataOffsets,

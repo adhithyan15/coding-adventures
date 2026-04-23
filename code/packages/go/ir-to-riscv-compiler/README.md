@@ -29,6 +29,7 @@ sim := riscvsimulator.NewRiscVSimulator(65536)
 sim.Run(result.Bytes)
 ```
 
-`MachineCodeResult.Bytes` contains the assembled text section followed by any
-declared IR data bytes. `DataOffsets` and `LabelOffsets` are absolute byte
-offsets from the beginning of the loaded program.
+`MachineCodeResult.Assembly` contains human-readable RISC-V assembly for the
+same image. `MachineCodeResult.Bytes` contains the assembled text section
+followed by any declared IR data bytes. `DataOffsets` and `LabelOffsets` are
+absolute byte offsets from the beginning of the loaded program.
