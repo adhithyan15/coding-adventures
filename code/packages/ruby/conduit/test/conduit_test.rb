@@ -16,26 +16,10 @@ class TestConduitRouter < Minitest::Test
     assert_nil route.match?("GET", "/hello")
   end
 
-  def test_route_falls_back_off_main_thread
+  def test_native_matcher_works_from_any_thread
     route = CodingAdventures::Conduit::Route.new("GET", "/hello/:name") { "ok" }
-    conduit_singleton = CodingAdventures::Conduit.singleton_class
-    had_native_matcher = CodingAdventures::Conduit.respond_to?(:match_route_native)
-
-    if had_native_matcher
-      conduit_singleton.alias_method(:__original_match_route_native, :match_route_native)
-      conduit_singleton.define_method(:match_route_native) do |_pattern, _path|
-        raise "native matcher should not run off the main thread"
-      end
-    end
-
     params = Thread.new { route.match?("GET", "/hello/Adhithya") }.value
-
     assert_equal({ "name" => "Adhithya" }, params)
-  ensure
-    if conduit_singleton && had_native_matcher
-      conduit_singleton.alias_method(:match_route_native, :__original_match_route_native)
-      conduit_singleton.remove_method(:__original_match_route_native)
-    end
   end
 
   def test_application_normalizes_string_response
@@ -87,12 +71,6 @@ class TestConduitRouter < Minitest::Test
 end
 
 class TestConduitServer < Minitest::Test
-  def require_native_e2e!
-    return if ENV["CONDUIT_NATIVE_E2E"] == "1"
-
-    skip "native Conduit end-to-end tests are opt-in while the bridge is stabilized"
-  end
-
   def with_server(app)
     server = CodingAdventures::Conduit::Server.new(app, port: 0)
     thread = server.start
@@ -104,8 +82,6 @@ class TestConduitServer < Minitest::Test
   end
 
   def test_native_server_handles_hello_route_end_to_end
-    require_native_e2e!
-
     app = CodingAdventures::Conduit.app do
       get "/hello/:name" do |request|
         "Hello #{request.params.fetch("name")}"
@@ -123,8 +99,6 @@ class TestConduitServer < Minitest::Test
   end
 
   def test_native_server_returns_not_found_for_missing_route
-    require_native_e2e!
-
     app = CodingAdventures::Conduit.app do
       get "/hello/:name" do |request|
         "Hello #{request.params.fetch("name")}"
