@@ -198,12 +198,16 @@ mod dynlib {
         }
 
         pub fn symbol<T>(&self, name: &str) -> Option<T> {
-            // T must be pointer-sized (a function pointer or *mut c_void).
-            // transmute_copy from a *mut c_void into a differently-sized T is UB.
+            // T must be pointer-sized and pointer-aligned for transmute_copy to be sound.
             assert_eq!(
                 std::mem::size_of::<T>(),
                 std::mem::size_of::<*mut c_void>(),
                 "DynLib::symbol: T must be pointer-sized"
+            );
+            assert_eq!(
+                std::mem::align_of::<T>(),
+                std::mem::align_of::<*mut c_void>(),
+                "DynLib::symbol: T must have pointer alignment"
             );
             let c_name = CString::new(name).ok()?;
             let sym = unsafe { dlsym(self.0, c_name.as_ptr()) };
@@ -247,11 +251,16 @@ mod dynlib {
         }
 
         pub fn symbol<T>(&self, name: &str) -> Option<T> {
-            // T must be pointer-sized — see Unix impl for rationale.
+            // T must be pointer-sized and pointer-aligned — see Unix impl for rationale.
             assert_eq!(
                 std::mem::size_of::<T>(),
                 std::mem::size_of::<*mut c_void>(),
                 "DynLib::symbol: T must be pointer-sized"
+            );
+            assert_eq!(
+                std::mem::align_of::<T>(),
+                std::mem::align_of::<*mut c_void>(),
+                "DynLib::symbol: T must have pointer alignment"
             );
             let c_name = CString::new(name).ok()?;
             let sym = unsafe { GetProcAddress(self.0, c_name.as_ptr()) };
@@ -367,13 +376,15 @@ impl CudaLib {
         // Copy the error name string into owned memory before returning.
         // The C string points into the dynamically-loaded driver; holding a
         // borrow across a library unload would be a dangling pointer.
+        // Check cu_get_error_name's own return value before dereferencing ptr:
+        // if the query itself fails (non-zero), ptr may remain null or invalid.
         let message = unsafe {
             let mut ptr: *const c_char = std::ptr::null();
-            (self.cu_get_error_name)(result, &mut ptr);
-            if ptr.is_null() {
-                "unknown CUDA error".to_owned()
-            } else {
+            let name_r = (self.cu_get_error_name)(result, &mut ptr);
+            if name_r == 0 && !ptr.is_null() {
                 CStr::from_ptr(ptr).to_str().unwrap_or("unreadable").to_owned()
+            } else {
+                format!("unknown CUDA error (code {result})")
             }
         };
         Err(CudaError::DriverError { code: result, message })
@@ -459,9 +470,12 @@ impl NvrtcLib {
             // Check return values: if size query fails, skip log retrieval rather
             // than allocating a 0-byte buffer and letting nvrtcGetProgramLog write
             // an unknown number of bytes into it (heap buffer overflow risk).
+            // Cap allocation at 16 MiB — NVRTC log sizes beyond this indicate a
+            // driver bug or corrupted state; honouring them would be a DoS vector.
+            const MAX_NVRTC_BYTES: usize = 16 * 1024 * 1024;
             let mut log_size: usize = 0;
             let log_size_r = (self.nvrtc_get_program_log_size)(prog, &mut log_size);
-            let log = if log_size_r == 0 && log_size > 0 {
+            let log = if log_size_r == 0 && log_size > 0 && log_size <= MAX_NVRTC_BYTES {
                 let mut log_buf = vec![0u8; log_size];
                 let log_r = (self.nvrtc_get_program_log)(prog, log_buf.as_mut_ptr() as *mut c_char);
                 if log_r == 0 {
@@ -488,6 +502,12 @@ impl NvrtcLib {
                 (self.nvrtc_destroy_program)(&mut prog);
                 return Err(CudaError::CompileFailed(
                     format!("nvrtcGetPTXSize failed: {ptx_size_r}")
+                ));
+            }
+            if ptx_size > MAX_NVRTC_BYTES {
+                (self.nvrtc_destroy_program)(&mut prog);
+                return Err(CudaError::CompileFailed(
+                    format!("nvrtcGetPTXSize returned implausibly large PTX ({ptx_size} bytes)")
                 ));
             }
             let mut ptx = vec![0u8; ptx_size];
@@ -611,7 +631,15 @@ impl CudaDevice {
 
     /// Copy `data` from CPU (host) into an existing device buffer.
     pub fn upload(&self, buf: &CudaBuffer, data: &[u8]) -> Result<(), CudaError> {
-        assert!(data.len() <= buf.len, "upload: data larger than buffer");
+        if data.len() > buf.len {
+            return Err(CudaError::DriverError {
+                code: -1,
+                message: format!(
+                    "upload: data ({} bytes) exceeds buffer capacity ({} bytes)",
+                    data.len(), buf.len
+                ),
+            });
+        }
         self.bind_ctx()?;
         unsafe {
             self.cuda.check((self.cuda.cu_memcpy_h_to_d)(
