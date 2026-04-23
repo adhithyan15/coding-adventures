@@ -4,3 +4,4 @@
 
 - Added a token-level operator-aware Prolog parser shared by dialect frontends
 - Added optional directive parsing and operator-table overrides for dialect source parsing
+- Added file-scoped `op/3` execution so operator tables can evolve while parsing one source

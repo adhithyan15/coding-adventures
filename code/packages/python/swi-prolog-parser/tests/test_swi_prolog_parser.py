@@ -96,6 +96,25 @@ class TestSwiParser:
 
         assert str(parsed.directives[0].term) == "initialization(+(main, extra))"
 
+    def test_parse_swi_source_applies_op_directives_file_locally(self) -> None:
+        parsed = parse_swi_source(
+            """
+            :- op(500, yfx, ++).
+            value(Result) :- Result = a ++ b ++ c.
+            ?- value(Result).
+            """,
+        )
+
+        query = parsed.queries[0]
+        assert len(parsed.directives) == 1
+        assert str(parsed.directives[0].term) == "op(500, yfx, ++)"
+        assert parsed.operator_table.get("++", "yfx") is not None
+        assert solve_all(
+            parsed.program,
+            query.variables["Result"],
+            query.goal,
+        ) == [term("++", term("++", "a", "b"), "c")]
+
     def test_parse_swi_query_understands_operator_terms(self) -> None:
         query = parse_swi_query("?- X is 1 + 2 * 3.\n")
 

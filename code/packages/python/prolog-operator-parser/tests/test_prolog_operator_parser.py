@@ -88,11 +88,43 @@ class TestOperatorParsing:
         query = parsed.queries[0]
         assert len(parsed.directives) == 1
         assert str(parsed.directives[0].term) == "setup(+(a, b))"
+        assert parsed.operator_table.get("+", "yfx") is not None
         assert len(parsed.clauses) == 4
         assert solve_all(parsed.program, query.variables["Who"], query.goal) == [
             atom("bart"),
             atom("lisa"),
         ]
+
+    def test_parse_source_applies_op_directives_to_following_clauses(self) -> None:
+        parsed = parse_operator_source_tokens(
+            tokenize_prolog(
+                ":- op(500, yfx, ++).\n"
+                "value(Result) :- Result = a ++ b ++ c.\n"
+                "?- value(Result).\n"
+            ),
+            iso_operator_table(),
+            allow_directives=True,
+        )
+
+        query = parsed.queries[0]
+        assert parsed.operator_table.get("++", "yfx") is not None
+        assert str(goal_as_term(query.goal)) == "value(Result)"
+        assert solve_all(parsed.program, query.variables["Result"], query.goal) == [
+            term("++", term("++", "a", "b"), "c"),
+        ]
+
+    def test_parse_source_removes_operators_after_op_zero(self) -> None:
+        with pytest.raises(PrologParseError, match="expected RPAREN"):
+            parse_operator_source_tokens(
+                tokenize_prolog(
+                    ":- op(500, yfx, ++).\n"
+                    "value(a ++ b).\n"
+                    ":- op(0, yfx, ++).\n"
+                    "broken(a ++ b).\n"
+                ),
+                iso_operator_table(),
+                allow_directives=True,
+            )
 
     def test_parse_program_rejects_queries(self) -> None:
         with pytest.raises(PrologParseError, match="expected only clauses"):

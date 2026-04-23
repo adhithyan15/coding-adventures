@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from functools import cache
 from typing import Literal
 
-from logic_engine import GoalExpr, LogicVar, Relation, RelationCall, Term, goal_as_term
+from logic_engine import Atom, Compound, GoalExpr, LogicVar, Number, Relation, RelationCall, Term, goal_as_term
 from symbol_core import Symbol, sym
 
 __version__ = "0.1.0"
@@ -211,6 +211,85 @@ def directive(
         term=goal_as_term(goal),
         variables={} if variables is None else dict(variables),
     )
+
+
+_EMPTY_LIST = sym("[]")
+_LIST_CONS = sym(".")
+_OP_DIRECTIVE = sym("op")
+
+
+def apply_op_directive(
+    operator_table: OperatorTable,
+    directive_term: Term,
+) -> OperatorTable:
+    """Apply one ``op/3`` directive term to an operator table.
+
+    Non-``op/3`` directive terms leave the table unchanged so callers can
+    safely pass every parsed directive through this helper while only
+    operator declarations take effect.
+    """
+
+    if not isinstance(directive_term, Compound) or directive_term.functor != _OP_DIRECTIVE:
+        return operator_table
+
+    if len(directive_term.args) != 3:
+        msg = "op/3 directives require exactly three arguments"
+        raise ValueError(msg)
+
+    precedence_term, associativity_term, names_term = directive_term.args
+    precedence = _directive_precedence(precedence_term)
+    associativity = _directive_associativity(associativity_term)
+    names = _directive_operator_names(names_term)
+    return operator_table.define(precedence, associativity, *names)
+
+
+def _directive_precedence(term_value: Term) -> int:
+    if not isinstance(term_value, Number) or not isinstance(term_value.value, int):
+        msg = "op/3 precedence must be an integer number term"
+        raise TypeError(msg)
+    return _validate_precedence(term_value.value)
+
+
+def _directive_associativity(term_value: Term) -> OperatorAssociativity:
+    if not isinstance(term_value, Atom):
+        msg = "op/3 associativity must be an atom"
+        raise TypeError(msg)
+    return _validate_operator_associativity(term_value.symbol.name)
+
+
+def _directive_operator_names(term_value: Term) -> tuple[str | Symbol, ...]:
+    if isinstance(term_value, Atom):
+        return (term_value.symbol,)
+
+    items = _logic_list_items(term_value)
+    if items is None:
+        msg = "op/3 operator names must be an atom or proper list of atoms"
+        raise TypeError(msg)
+
+    names: list[str | Symbol] = []
+    for item in items:
+        if not isinstance(item, Atom):
+            msg = "op/3 operator name lists may only contain atoms"
+            raise TypeError(msg)
+        names.append(item.symbol)
+    return tuple(names)
+
+
+def _logic_list_items(term_value: Term) -> list[Term] | None:
+    items: list[Term] = []
+    current = term_value
+    while True:
+        if isinstance(current, Atom) and current.symbol == _EMPTY_LIST:
+            return items
+        if (
+            isinstance(current, Compound)
+            and current.functor == _LIST_CONS
+            and len(current.args) == 2
+        ):
+            items.append(current.args[0])
+            current = current.args[1]
+            continue
+        return None
 
 
 @cache

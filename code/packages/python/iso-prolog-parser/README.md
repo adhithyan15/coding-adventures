@@ -12,6 +12,10 @@ This package is separate from `prolog-parser` on purpose. Every Prolog dialect
 should get its own parser package and grammar file, while sharing semantic
 lowering where compatible.
 
+Executable source parsing now accepts file-scoped directives such as
+`:- op(500, yfx, ++).` and returns the final `parsed.operator_table` after
+those directives have been applied.
+
 ## Quick Start
 
 ```python

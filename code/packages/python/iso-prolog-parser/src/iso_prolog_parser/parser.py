@@ -69,7 +69,7 @@ def parse_iso_source(
     *,
     operator_table: OperatorTable | None = None,
 ) -> ParsedIsoSource:
-    """Parse ISO/Core Prolog clauses and queries."""
+    """Parse ISO/Core Prolog clauses, queries, and file-scoped directives."""
 
     tokens = tokenize_iso_prolog(source)
     _reject_unsupported_tokens(tokens)
@@ -77,14 +77,14 @@ def parse_iso_source(
     parsed = parse_operator_source_tokens(
         tokens,
         active_operator_table,
-        allow_directives=False,
+        allow_directives=True,
     )
     return ParsedIsoSource(
         program=parsed.program,
         clauses=parsed.clauses,
         queries=parsed.queries,
-        directives=(),
-        operator_table=active_operator_table,
+        directives=parsed.directives,
+        operator_table=parsed.operator_table,
     )
 
 
@@ -93,7 +93,7 @@ def parse_iso_program(
     *,
     operator_table: OperatorTable | None = None,
 ) -> Program:
-    """Parse an ISO/Core Prolog source containing only facts and rules."""
+    """Parse an ISO/Core Prolog source containing only clauses and directives."""
 
     tokens = tokenize_iso_prolog(source)
     _reject_unsupported_tokens(tokens)
@@ -101,7 +101,7 @@ def parse_iso_program(
     return parse_operator_program_tokens(
         tokens,
         active_operator_table,
-        allow_directives=False,
+        allow_directives=True,
     )
 
 
