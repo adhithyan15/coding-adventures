@@ -1,0 +1,162 @@
+format = "state-machine/v1"
+profile = "lexer/v1"
+name = "html-skeleton-lexer"
+kind = "transducer"
+version = "0.1.0"
+runtime_min = "state-machine-tokenizer/0.1"
+initial = "data"
+done = "done"
+includes = []
+
+[[tokens]]
+name = "Text"
+fields = ["data"]
+
+[[tokens]]
+name = "StartTag"
+fields = ["name", "attributes", "self_closing"]
+
+[[tokens]]
+name = "EndTag"
+fields = ["name"]
+
+[[tokens]]
+name = "EOF"
+fields = []
+
+[[registers]]
+id = "text_buffer"
+type = "string"
+
+[[registers]]
+id = "current_token"
+type = "token?"
+
+[[states]]
+id = "data"
+initial = true
+
+[[states]]
+id = "tag_open"
+
+[[states]]
+id = "tag_name"
+
+[[states]]
+id = "end_tag_open"
+
+[[states]]
+id = "end_tag_name"
+
+[[states]]
+id = "done"
+final = true
+
+[[transitions]]
+from = "data"
+matcher = { literal = "<" }
+to = "tag_open"
+actions = ["flush_text"]
+
+[[transitions]]
+from = "data"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "data"
+matcher = { anything = true }
+to = "data"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "tag_open"
+matcher = { literal = "/" }
+to = "end_tag_open"
+
+[[transitions]]
+from = "tag_open"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-tag-open-state)",
+  "append_text(<)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "tag_open"
+matcher = { anything = true }
+to = "tag_name"
+actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "tag_name"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "tag_name"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-tag-name-state)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "tag_name"
+matcher = { anything = true }
+to = "tag_name"
+actions = ["append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "end_tag_open"
+matcher = { anything = true }
+to = "end_tag_name"
+actions = ["create_end_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-end-tag-name-state)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { anything = true }
+to = "end_tag_name"
+actions = ["append_tag_name(current_lowercase)"]
+
+[[fixtures]]
+name = "simple-element"
+input = "<p>Hello</p>"
+tokens = [
+  "StartTag(name=p, attributes=[], self_closing=false)",
+  "Text(data=Hello)",
+  "EndTag(name=p)",
+  "EOF",
+]
+
+[[fixtures]]
+name = "plain-text"
+input = "plain text"
+tokens = ["Text(data=plain text)", "EOF"]

@@ -4,11 +4,11 @@
 //! crate owns tokenizer-specific state: buffers, current token construction,
 //! diagnostics, source positions, and action interpretation.
 
-use std::collections::{HashSet, VecDeque};
+use std::collections::VecDeque;
 use std::error::Error;
 use std::fmt;
 
-use state_machine::{EffectfulInput, EffectfulMatcher, EffectfulStateMachine, EffectfulTransition};
+use state_machine::{EffectfulInput, EffectfulStateMachine};
 
 /// Parsed token emitted by the tokenizer profile runtime.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -462,84 +462,4 @@ enum CurrentToken {
     EndTag {
         name: String,
     },
-}
-
-/// Build the first statically linked HTML-like tokenizer skeleton.
-pub fn html_skeleton_machine() -> std::result::Result<EffectfulStateMachine, String> {
-    EffectfulStateMachine::new(
-        set(&[
-            "data",
-            "tag_open",
-            "tag_name",
-            "end_tag_open",
-            "end_tag_name",
-            "done",
-        ]),
-        set(&["<", "/", ">"]),
-        vec![
-            EffectfulTransition::new("data", EffectfulMatcher::Event("<".to_string()), "tag_open")
-                .with_effects(&["flush_text"]),
-            EffectfulTransition::new("data", EffectfulMatcher::End, "done")
-                .with_effects(&["flush_text", "emit(EOF)"])
-                .consuming(false),
-            EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
-                .with_effects(&["append_text(current)"]),
-            EffectfulTransition::new(
-                "tag_open",
-                EffectfulMatcher::Event("/".to_string()),
-                "end_tag_open",
-            ),
-            EffectfulTransition::new("tag_open", EffectfulMatcher::End, "done")
-                .with_effects(&[
-                    "parse_error(eof-in-tag-open-state)",
-                    "append_text(<)",
-                    "flush_text",
-                    "emit(EOF)",
-                ])
-                .consuming(false),
-            EffectfulTransition::new("tag_open", EffectfulMatcher::Any, "tag_name")
-                .with_effects(&["create_start_tag", "append_tag_name(current_lowercase)"]),
-            EffectfulTransition::new("tag_name", EffectfulMatcher::Event(">".to_string()), "data")
-                .with_effects(&["emit_current_token"]),
-            EffectfulTransition::new("tag_name", EffectfulMatcher::End, "done")
-                .with_effects(&[
-                    "parse_error(eof-in-tag-name-state)",
-                    "emit_current_token",
-                    "emit(EOF)",
-                ])
-                .consuming(false),
-            EffectfulTransition::new("tag_name", EffectfulMatcher::Any, "tag_name")
-                .with_effects(&["append_tag_name(current_lowercase)"]),
-            EffectfulTransition::new("end_tag_open", EffectfulMatcher::Any, "end_tag_name")
-                .with_effects(&["create_end_tag", "append_tag_name(current_lowercase)"]),
-            EffectfulTransition::new(
-                "end_tag_name",
-                EffectfulMatcher::Event(">".to_string()),
-                "data",
-            )
-            .with_effects(&["emit_current_token"]),
-            EffectfulTransition::new("end_tag_name", EffectfulMatcher::End, "done")
-                .with_effects(&[
-                    "parse_error(eof-in-end-tag-name-state)",
-                    "emit_current_token",
-                    "emit(EOF)",
-                ])
-                .consuming(false),
-            EffectfulTransition::new("end_tag_name", EffectfulMatcher::Any, "end_tag_name")
-                .with_effects(&["append_tag_name(current_lowercase)"]),
-        ],
-        "data".to_string(),
-        set(&["done"]),
-    )
-}
-
-/// Build a tokenizer over the statically linked HTML skeleton machine.
-pub fn html_skeleton_tokenizer() -> Result<Tokenizer> {
-    html_skeleton_machine()
-        .map(Tokenizer::new)
-        .map_err(TokenizerError::Machine)
-}
-
-fn set(values: &[&str]) -> HashSet<String> {
-    values.iter().map(|value| value.to_string()).collect()
 }

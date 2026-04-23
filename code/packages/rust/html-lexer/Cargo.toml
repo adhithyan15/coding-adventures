@@ -1,0 +1,9 @@
+[package]
+name = "coding-adventures-html-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "HTML lexer built from state-machine lexer definitions"
+
+[dependencies]
+state-machine = { path = "../state-machine" }
+state-machine-tokenizer = { path = "../state-machine-tokenizer" }
