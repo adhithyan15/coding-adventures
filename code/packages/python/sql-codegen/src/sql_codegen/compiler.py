@@ -540,7 +540,7 @@ def _compile_source(
             table=t,
             alias=a,
             index_name=index_name,
-            column=_,
+            columns=_,
             lo=lo,
             hi=hi,
             lo_inclusive=lo_inc,

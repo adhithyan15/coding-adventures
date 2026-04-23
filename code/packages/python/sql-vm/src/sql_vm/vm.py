@@ -1024,23 +1024,32 @@ def _do_open_index_scan(ins: OpenIndexScan, st: _VmState) -> None:
     the normal ``AdvanceCursor`` / ``LoadColumn`` / ``CloseScan``
     instructions work transparently — no special-casing needed downstream.
 
-    Single-column range: ``lo`` and ``hi`` are scalar ``SqlValue`` objects (or
-    ``None`` for unbounded).  They are wrapped in one-element lists before
-    being passed to ``scan_index``, which expects list-valued bounds to
-    support composite indexes.
+    IX-8: ``ins.lo`` and ``ins.hi`` are now *tuples* of ``SqlValue``
+    (matching the ``OpenIndexScan`` IR field change).  A single-column scan
+    uses a 1-tuple; a composite two-column scan uses a 2-tuple.  We convert
+    the tuples to lists before passing them to ``backend.scan_index``, whose
+    type signature requires ``list[SqlValue] | None``.
 
-    Example::
+    Example (single-column)::
 
         OpenIndexScan(cursor_id=0, table="orders", index_name="idx_orders_ts",
-                      lo=1_000_000, hi=2_000_000,
+                      lo=(1_000_000,), hi=(2_000_000,),
                       lo_inclusive=True, hi_inclusive=False)
         # → backend.scan_index("idx_orders_ts", [1_000_000], [2_000_000],
         #                        lo_inclusive=True, hi_inclusive=False)
         # → rowids = [3, 7, 12, ...]
         # → backend.scan_by_rowids("orders", rowids)  →  RowIterator
+
+    Example (composite two-column)::
+
+        OpenIndexScan(cursor_id=0, table="orders", index_name="auto_orders_user_id_status",
+                      lo=(1, "shipped"), hi=(1, "shipped"),
+                      lo_inclusive=True, hi_inclusive=True)
+        # → backend.scan_index("auto_orders_user_id_status", [1, "shipped"], [1, "shipped"],
+        #                        lo_inclusive=True, hi_inclusive=True)
     """
-    lo_list = [ins.lo] if ins.lo is not None else None
-    hi_list = [ins.hi] if ins.hi is not None else None
+    lo_list = list(ins.lo) if ins.lo is not None else None
+    hi_list = list(ins.hi) if ins.hi is not None else None
     rowids = list(st.backend.scan_index(
         ins.index_name, lo_list, hi_list,
         lo_inclusive=ins.lo_inclusive, hi_inclusive=ins.hi_inclusive,

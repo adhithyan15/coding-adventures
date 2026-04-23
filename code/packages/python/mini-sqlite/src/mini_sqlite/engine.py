@@ -253,9 +253,9 @@ def _extract_scan_info(plan: LogicalPlan) -> tuple[str, list[str]]:
     Returns ``("", [])`` for plans that have no scan (e.g. DDL statements).
     """
     match plan:
-        case IndexScan(table=t, column=col):
-            # IndexScan: the filter column is the index column itself.
-            return t, [col]
+        case IndexScan(table=t, columns=cols):
+            # IndexScan: the filter columns are the matched index columns.
+            return t, list(cols)
         case Filter(input=Scan(table=t), predicate=pred):
             from .advisor import _filter_columns  # local import to avoid circularity
             alias = t

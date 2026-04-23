@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.0] - 2026-04-23
+
+### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
+
+- **`ConstantFolding` `IndexScan` branch updated** — destructures `columns=cols`
+  (was `column=col`) and reconstructs the node with `columns=cols` to stay
+  consistent with the renamed field on `sql_planner.plan.IndexScan`.  No
+  semantic change; the pass only rewrites `residual` predicates inside an
+  `IndexScan`, leaving bound tuples and column metadata unchanged.
+
 ## [0.3.0] - 2026-04-21
 
 ### Added

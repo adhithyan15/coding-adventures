@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 — 2026-04-23
+
+### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
+
+- **`_do_open_index_scan` tuple-unpack fix** — index scan bounds (`lo`, `hi`)
+  are now tuples (`tuple[object, ...] | None`) instead of scalars.  The handler
+  previously wrapped scalar bounds with `[ins.lo]`; it now calls `list(ins.lo)`
+  directly.  This is the minimal change needed to support composite multi-column
+  scans: the backend's `scan_index` receives a list of values, one per leading
+  index column, rather than always a 1-element list.
+
 ## 0.5.0 — 2026-04-23
 
 ### Added

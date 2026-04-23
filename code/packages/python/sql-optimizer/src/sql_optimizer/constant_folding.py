@@ -160,7 +160,7 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                 predicate=_fold_expr(pred) if pred is not None else None,
             )
         case IndexScan(
-            table=t, alias=a, index_name=iname, column=col,
+            table=t, alias=a, index_name=iname, columns=cols,
             lo=lo, hi=hi, lo_inclusive=lo_incl, hi_inclusive=hi_incl,
             residual=residual,
         ):
@@ -169,7 +169,7 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             if new_res is residual:
                 return p
             return IndexScan(
-                table=t, alias=a, index_name=iname, column=col,
+                table=t, alias=a, index_name=iname, columns=cols,
                 lo=lo, hi=hi, lo_inclusive=lo_incl, hi_inclusive=hi_incl,
                 residual=new_res,
             )
