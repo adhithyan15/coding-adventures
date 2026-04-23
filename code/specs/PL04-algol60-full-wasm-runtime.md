@@ -957,8 +957,7 @@ The completed Phase 6 implementation uses the repository's unstructured IR
 control-flow path. It accepts direct labels and direct `goto` targets within the
 same active ALGOL frame, including forward jumps, backward jumps, and terminal
 labels on empty statements. Phase 7a extends that local path to conditional
-designational expressions and switch selections. It continues to reject
-nonlocal jumps until Phase 7b has frame unwinding.
+designational expressions and switch selections.
 
 ### Nonlocal Goto
 
@@ -972,8 +971,12 @@ Lowering must:
 4. restore display entries if displays are used
 5. transfer control to the target label
 
-Initial implementation should reject nonlocal `goto` until frame cleanup and
-dispatch are both implemented.
+The completed Phase 7b-1 implementation accepts direct nonlocal block gotos
+that stay inside one lowered function. It unwinds each exited block by
+restoring the block's heap mark, dynamic current frame, and stack pointer, then
+jumps to the target label. Procedure-crossing gotos, nonlocal conditional
+designational branches, and nonlocal switch selections remain guarded until
+the runtime has procedure escape propagation.
 
 ### Dispatch Loop Lowering
 
@@ -1354,30 +1357,34 @@ Acceptance:
 - forward and backward local gotos work
 - labels on empty statements work
 - invalid label references are rejected
-- nonlocal gotos and conditional/switch designational expressions are rejected
-  with targeted diagnostics
+- unsupported nonlocal and conditional/switch designational forms are rejected
+  with targeted diagnostics until their later phases land
 
 ### Phase 7: Nonlocal Goto and Switches
 
 Goal: Support designational expressions across block boundaries.
 
 Status: Phase 7a is complete for local switch declarations, local switch
-selections, and local conditional designational `goto` forms. Phase 7b remains
-for nonlocal `goto` and frame unwinding.
+selections, and local conditional designational `goto` forms. Phase 7b-1 is
+complete for direct nonlocal block `goto` statements inside one lowered
+function. Procedure-crossing `goto`, nonlocal conditional designational
+branches, and nonlocal switch selections remain future Phase 7 work.
 
 Deliverables:
 
 - switch descriptors (complete for local switches)
 - direct-label switch entries (complete for local switches)
 - conditional designational expressions (complete for local jumps)
-- nonlocal target analysis
-- frame unwinding
+- nonlocal target analysis (complete for direct block gotos)
+- frame unwinding (complete for direct block gotos)
+- procedure escape propagation
 
 Acceptance:
 
 - direct local switch selection works
 - conditional designational expression jumps to the chosen local label
-- nonlocal goto exits nested frames correctly
+- direct nonlocal block goto exits nested frames correctly
+- procedure-crossing goto exits called procedures correctly
 
 ### Phase 8: Rich Scalar Types
 

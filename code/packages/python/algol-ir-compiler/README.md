@@ -40,20 +40,24 @@ read-only expression thunks still raise targeted `CompileError` diagnostics
 until Phase 5 grows full store-helper coverage. The supported integer by-name
 surface is covered by the WASM acceptance suite, while full ALGOL forms such as
 non-integer formals, whole-array by-name values, procedure-valued actuals,
-nonlocal gotos, nonlocal switch selections, and escaping thunk descriptors
-remain future work.
+procedure-crossing gotos, nonlocal switch selections, and escaping thunk
+descriptors remain future work.
 
-Direct local `goto` statements lower to ordinary IR `JUMP` instructions
-targeting generated ALGOL labels. The downstream WASM backend's unstructured
-control-flow lowering handles forward and backward jumps, while this package
-continues to reject nonlocal gotos before IR generation. Local conditional
-designational expressions now lower as condition-controlled branch points that
-only evaluate the selected target. Local switch selections evaluate their
-integer index once, compare against one-based switch entries, and lower the
-chosen designational entry into the same local jump path. An out-of-range
-switch index follows the existing runtime-failure path and returns `0`.
-Switch declaration entries that select another switch remain guarded before IR
-lowering so recursive switch descriptors cannot expand without bound.
+Direct `goto` statements lower to ordinary IR `JUMP` instructions targeting
+generated ALGOL labels. Local jumps emit the jump directly. Direct nonlocal
+block jumps unwind each exited block with the same heap-pointer, current-frame,
+and stack-pointer restoration used by normal block exits before transferring
+control to the outer label. The downstream WASM backend's unstructured
+control-flow lowering handles forward, backward, and nonlocal block jumps.
+Local conditional designational expressions now lower as condition-controlled
+branch points that only evaluate the selected target. Local switch selections
+evaluate their integer index once, compare against one-based switch entries,
+and lower the chosen designational entry into the same local jump path. An
+out-of-range switch index follows the existing runtime-failure path and returns
+`0`. Switch declaration entries that select another switch remain guarded
+before IR lowering so recursive switch descriptors cannot expand without
+bound. Procedure-crossing gotos and nonlocal switch/designational forms remain
+guarded before IR generation.
 
 This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a

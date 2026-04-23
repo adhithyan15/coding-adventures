@@ -107,6 +107,7 @@ class Scope:
     parent: Scope | None = None
     block_id: int = -1
     depth: int = -1
+    owner_procedure_id: int | None = None
     frame_layout: FrameLayout | None = None
     symbols: dict[str, Symbol] = field(default_factory=dict)
     children: list[Scope] = field(default_factory=list)
@@ -460,6 +461,11 @@ class AlgolTypeChecker:
             parent=parent,
             block_id=block_id,
             depth=depth,
+            owner_procedure_id=(
+                owner_procedure_id
+                if owner_procedure_id is not None
+                else parent.owner_procedure_id
+            ),
             frame_layout=frame_layout,
         )
         parent.children.append(scope)
@@ -471,7 +477,7 @@ class AlgolTypeChecker:
                 scope=scope,
                 frame_layout=frame_layout,
                 ast_node_id=id(ast_node) if ast_node is not None else None,
-                owner_procedure_id=owner_procedure_id,
+                owner_procedure_id=scope.owner_procedure_id,
             )
         )
         return scope
@@ -644,7 +650,12 @@ class AlgolTypeChecker:
             self._error(node, "switch declaration requires at least one entry")
             return
         for entry in entries:
-            self._check_designational(entry, scope, allow_switch_selection=False)
+            self._check_designational(
+                entry,
+                scope,
+                allow_nonlocal_label=False,
+                allow_switch_selection=False,
+            )
         self.semantic_switches.append(
             SwitchDescriptor(
                 switch_id=switch_id,
@@ -908,6 +919,7 @@ class AlgolTypeChecker:
         node: ASTNode,
         scope: Scope,
         *,
+        allow_nonlocal_label: bool = True,
         allow_switch_selection: bool = True,
     ) -> ResolvedGoto | None:
         if any(token.value == "if" for token in _direct_tokens(node)):
@@ -923,12 +935,14 @@ class AlgolTypeChecker:
                 self._check_simple_designational(
                     then_desig,
                     scope,
+                    allow_nonlocal_label=False,
                     allow_switch_selection=allow_switch_selection,
                 )
             if else_desig is not None:
                 self._check_designational(
                     else_desig,
                     scope,
+                    allow_nonlocal_label=False,
                     allow_switch_selection=allow_switch_selection,
                 )
             return ResolvedGoto(
@@ -952,6 +966,7 @@ class AlgolTypeChecker:
             simple,
             scope,
             outer_node=node,
+            allow_nonlocal_label=allow_nonlocal_label,
             allow_switch_selection=allow_switch_selection,
         )
 
@@ -961,6 +976,7 @@ class AlgolTypeChecker:
         scope: Scope,
         *,
         outer_node: ASTNode | None = None,
+        allow_nonlocal_label: bool = True,
         allow_switch_selection: bool = True,
     ) -> ResolvedGoto | None:
         target_token = _direct_label_from_simple_designational(node)
@@ -969,6 +985,7 @@ class AlgolTypeChecker:
                 target_token,
                 scope,
                 outer_node=outer_node or node,
+                allow_nonlocal_label=allow_nonlocal_label,
             )
 
         if any(token.value == "[" for token in _direct_tokens(node)):
@@ -998,6 +1015,7 @@ class AlgolTypeChecker:
             return self._check_designational(
                 nested,
                 scope,
+                allow_nonlocal_label=allow_nonlocal_label,
                 allow_switch_selection=allow_switch_selection,
             )
 
@@ -1010,6 +1028,7 @@ class AlgolTypeChecker:
         scope: Scope,
         *,
         outer_node: ASTNode,
+        allow_nonlocal_label: bool,
     ) -> ResolvedGoto | None:
         resolved = scope.resolve_with_scope(target_token.value)
         if resolved is None:
@@ -1020,11 +1039,18 @@ class AlgolTypeChecker:
         if symbol.kind != LABEL:
             self._error(target_token, f"{target_token.value!r} is not a label")
             return
-        if lexical_depth_delta != 0:
+        if scope.owner_procedure_id != declaring_scope.owner_procedure_id:
             self._error(
                 target_token,
-                f"nonlocal goto to label {target_token.value!r} requires Phase 7 "
-                "frame unwinding",
+                f"goto to label {target_token.value!r} crosses a procedure "
+                "boundary, which requires Phase 7c procedure unwinding",
+            )
+            return
+        if lexical_depth_delta != 0 and not allow_nonlocal_label:
+            self._error(
+                target_token,
+                f"nonlocal designational label {target_token.value!r} requires "
+                "a direct Phase 7b goto",
             )
             return
 

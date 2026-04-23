@@ -25,6 +25,9 @@ All notable changes to this package will be documented in this file.
 - Added Phase 7a switch descriptors, local switch selection resolution, and
   conditional designational `goto` checking, with nonlocal switch selections
   and recursively selected switch entries still guarded for later phases.
+- Added Phase 7b direct nonlocal block `goto` resolution within one
+  procedure/function, while keeping procedure-crossing jumps and nonlocal
+  designational branches guarded.
 
 ## [0.1.0] - 2026-04-20
 

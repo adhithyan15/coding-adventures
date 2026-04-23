@@ -695,6 +695,13 @@ class AlgolIrCompiler:
         resolved = self.gotos_by_designational.get(id(desig_expr))
         if resolved is None:
             raise CompileError("goto designational expression was not resolved")
+        simple = _first_direct_node(desig_expr, "simple_desig")
+        if (
+            not any(token.value == "if" for token in _direct_tokens(desig_expr))
+            and _direct_label_from_simple_designational(simple) is not None
+        ):
+            self._emit_resolved_goto(resolved, scope)
+            return
         self._compile_designational(desig_expr, scope)
 
     def _compile_designational(self, node: ASTNode, scope: _FrameScope) -> None:
@@ -745,6 +752,20 @@ class AlgolIrCompiler:
             self._compile_designational(nested, scope)
             return
         raise CompileError("unsupported designational expression")
+
+    def _emit_resolved_goto(self, resolved: ResolvedGoto, scope: _FrameScope) -> None:
+        self._emit_unwind_to_block(scope, resolved.target_block_id)
+        self._emit(IrOp.JUMP, IrLabel(resolved.ir_label))
+
+    def _emit_unwind_to_block(self, scope: _FrameScope, target_block_id: int) -> None:
+        current: _FrameScope | None = scope
+        while current is not None and current.block_id != target_block_id:
+            self._emit_leave_frame(current)
+            current = current.parent
+        if current is None:
+            raise CompileError(
+                f"goto target block {target_block_id} is not active in this function"
+            )
 
     def _compile_switch_selection(self, node: ASTNode, scope: _FrameScope) -> None:
         selection = self.switch_selections.get(id(node))

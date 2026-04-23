@@ -101,6 +101,36 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
 
+    def test_direct_nonlocal_block_goto_exits_inner_frame(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "begin integer inner; goto done; inner := 99 end; "
+            "result := 0; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_nonlocal_block_goto_restores_frame_for_later_block(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "begin integer inner; goto done; inner := 99 end; "
+            "done: begin integer later; later := 8; result := later end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_direct_nonlocal_block_goto_inside_procedure(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape; "
+            "begin begin integer inner; goto done; inner := 99 end; "
+            "done: result := 6 end; "
+            "escape "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
+
     def test_conditional_designational_goto_selects_branch(self) -> None:
         result = compile_source(
             "begin integer result; "

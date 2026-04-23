@@ -35,6 +35,8 @@ All notable changes to this package will be documented in this file.
   jumps, and terminal labels.
 - Executed Phase 7a local switch selections and conditional designational
   `goto` forms through the WASM path, including conditional switch entries.
+- Executed Phase 7b direct nonlocal block `goto` statements through the WASM
+  path with frame restoration before later block entry.
 
 ## [0.1.0] - 2026-04-20
 

@@ -96,7 +96,7 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "label 'missing' is not declared" in result.diagnostics[0].message
 
-    def test_rejects_nonlocal_goto_for_now(self) -> None:
+    def test_accepts_direct_nonlocal_block_goto(self) -> None:
         ast = parse_algol(
             "begin integer result; "
             "begin integer inner; goto done end; "
@@ -105,8 +105,35 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.gotos[0].target_name == "done"
+        assert result.semantic.gotos[0].lexical_depth_delta == 1
+
+    def test_rejects_procedure_crossing_goto_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure escape; begin goto done end; "
+            "escape; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
         assert not result.ok
-        assert "nonlocal goto to label 'done'" in result.diagnostics[0].message
+        assert "crosses a procedure boundary" in result.diagnostics[0].message
+
+    def test_rejects_conditional_nonlocal_designational_goto_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "begin integer inner; goto if true then done else done end; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "nonlocal designational label 'done'" in result.diagnostics[0].message
 
     def test_accepts_conditional_designational_goto(self) -> None:
         ast = parse_algol(
