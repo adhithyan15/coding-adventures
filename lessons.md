@@ -3219,3 +3219,20 @@ event count, note count, total beats, tempo-derived seconds, and sample-rate-der
 **What happened:** The aot-core BUILD file used `python3.12 -m pytest` (the system Python) instead of `.venv/bin/python -m pytest`. Locally this worked because the system Python had the packages installed globally. On CI runners, only the uv venv has pytest and the other dependencies — the system Python has none of them.
 
 **Rule:** Python BUILD files must always run pytest via `.venv/bin/python -m pytest`, matching the pattern used by jit-core, interpreter-ir, and every other Python package in the repo. Never use `python3.12` or `python3` directly in a BUILD file.
+
+---
+
+## Rebase conflict resolution must not carry branch-side BUILD files onto main
+
+**Date:** 2026-04-23
+
+**What happened:** While rebasing the `claude/trusting-thompson-5867c0` branch (msg-crypto/curve25519) onto origin/main, seven BUILD files had merge conflicts. The branch's `our` version was chosen for all of them, which introduced two types of CI failures:
+
+1. **`mise: command not found`** — Elixir and Ruby BUILD files gained `mise exec --` prefixes that don't exist on GitHub Actions runners.
+2. **`sh: 1: set: Illegal option -o pipefail`** — Lua and Perl BUILD files gained `#!/usr/bin/env bash` + `set -euo pipefail` headers. On Ubuntu the build tool invokes BUILD via `/bin/sh` (dash), which rejects `-o pipefail`.
+
+The branch's changes to those BUILD files were from earlier unrelated work that had already been merged or was being merged on main. Keeping the branch version created duplicate/stale changes.
+
+**Rule:** During rebase conflict resolution, BUILD files that the branch did not *intentionally* change should be resolved to the `theirs` (main) side: `git checkout --theirs <file>` then `git add <file>`. Only keep the branch side for files that the current branch deliberately modified.
+
+**Rule:** After completing a rebase, run `git diff origin/main...HEAD -- '**/BUILD'` to verify that only the BUILD files intentionally added or changed by this branch appear in the diff. Any unexpected BUILD file diffs indicate a bad conflict resolution.
