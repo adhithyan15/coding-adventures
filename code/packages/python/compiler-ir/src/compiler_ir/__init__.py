@@ -46,6 +46,7 @@ from compiler_ir.printer import print_ir  # noqa: I001
 from compiler_ir.types import (
     IDGenerator,
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -63,6 +64,7 @@ __all__ = [
     # Types
     "IDGenerator",
     "IrDataDecl",
+    "IrFloatImmediate",
     "IrImmediate",
     "IrInstruction",
     "IrLabel",

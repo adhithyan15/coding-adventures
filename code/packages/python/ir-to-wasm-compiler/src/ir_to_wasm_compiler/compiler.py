@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import math
 import re
+import struct
 from dataclasses import dataclass
 
 from compiler_ir import (
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -52,6 +54,8 @@ _MEMORY_OPS = frozenset(
         IrOp.STORE_BYTE,
         IrOp.LOAD_WORD,
         IrOp.STORE_WORD,
+        IrOp.LOAD_F64,
+        IrOp.STORE_F64,
     }
 )
 
@@ -87,6 +91,20 @@ _OPCODE = {
         "i32.xor",
         "i32.mul",
         "i32.div_s",
+        "f64.load",
+        "f64.store",
+        "f64.const",
+        "f64.eq",
+        "f64.ne",
+        "f64.lt",
+        "f64.gt",
+        "f64.le",
+        "f64.ge",
+        "f64.add",
+        "f64.sub",
+        "f64.mul",
+        "f64.div",
+        "f64.convert_i32_s",
         "drop",
     )
 }
@@ -125,6 +143,20 @@ _WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.XOR,
     IrOp.XOR_IMM,
     IrOp.NOT,
+    IrOp.LOAD_F64_IMM,
+    IrOp.LOAD_F64,
+    IrOp.STORE_F64,
+    IrOp.F64_ADD,
+    IrOp.F64_SUB,
+    IrOp.F64_MUL,
+    IrOp.F64_DIV,
+    IrOp.F64_CMP_EQ,
+    IrOp.F64_CMP_NE,
+    IrOp.F64_CMP_LT,
+    IrOp.F64_CMP_GT,
+    IrOp.F64_CMP_LE,
+    IrOp.F64_CMP_GE,
+    IrOp.F64_FROM_I32,
     IrOp.MUL,
     IrOp.DIV,
     IrOp.CMP_EQ,
@@ -225,6 +257,29 @@ class FunctionSignature:
     param_count: int
     export_name: str | None = None
     require_explicit_args: bool = False
+    param_types: tuple[ValueType, ...] | None = None
+    result_types: tuple[ValueType, ...] = (ValueType.I32,)
+
+    def __post_init__(self) -> None:
+        if self.param_types is not None and len(self.param_types) != self.param_count:
+            raise ValueError(
+                f"FunctionSignature({self.label!r}) param_types length "
+                f"{len(self.param_types)} does not match param_count {self.param_count}"
+            )
+        if len(self.result_types) > 1:
+            raise ValueError(
+                f"FunctionSignature({self.label!r}) supports at most one result"
+            )
+
+    @property
+    def wasm_param_types(self) -> tuple[ValueType, ...]:
+        if self.param_types is not None:
+            return self.param_types
+        return (ValueType.I32,) * self.param_count
+
+    @property
+    def wasm_result_types(self) -> tuple[ValueType, ...]:
+        return self.result_types
 
 
 @dataclass(frozen=True)
@@ -233,6 +288,7 @@ class _FunctionIR:
     instructions: list[IrInstruction]
     signature: FunctionSignature
     max_reg: int
+    register_types: tuple[ValueType, ...]
 
 
 @dataclass(frozen=True)
@@ -365,8 +421,8 @@ class IrToWasmCompiler:
 
         for function in functions:
             func_type = FuncType(
-                params=(ValueType.I32,) * function.signature.param_count,
-                results=(ValueType.I32,),
+                params=function.signature.wasm_param_types,
+                results=function.signature.wasm_result_types,
             )
             if func_type not in type_indices:
                 type_indices[func_type] = len(function_types)
@@ -492,6 +548,7 @@ class _FunctionLowerer:
         self.data_offsets = data_offsets
         self.wasi_context = wasi_context
         self.param_count = function.signature.param_count
+        self._register_types = function.register_types
         self._bytes = bytearray()
         self._instructions = function.instructions
         self._label_to_index = {
@@ -508,7 +565,7 @@ class _FunctionLowerer:
         self._emit_opcode("end")
 
         return FunctionBody(
-            locals=(ValueType.I32,) * (self.function.max_reg + 1),
+            locals=self.function.register_types,
             code=bytes(self._bytes),
         )
 
@@ -619,6 +676,13 @@ class _FunctionLowerer:
                 imm = _expect_immediate(instruction.operands[1], "LOAD_IMM imm")
                 self._emit_i32_const(imm.value)
                 self._emit_local_set(dst.index)
+            case IrOp.LOAD_F64_IMM:
+                dst = _expect_register(instruction.operands[0], "LOAD_F64_IMM dst")
+                imm = _expect_float_immediate(
+                    instruction.operands[1], "LOAD_F64_IMM imm"
+                )
+                self._emit_f64_const(imm.value)
+                self._emit_local_set(dst.index)
             case IrOp.LOAD_ADDR:
                 dst = _expect_register(instruction.operands[0], "LOAD_ADDR dst")
                 label = _expect_label(instruction.operands[1], "LOAD_ADDR label")
@@ -658,6 +722,22 @@ class _FunctionLowerer:
                 self._emit_local_get(src.index)
                 self._emit_opcode("i32.store")
                 self._emit_memarg(2, 0)
+            case IrOp.LOAD_F64:
+                dst = _expect_register(instruction.operands[0], "LOAD_F64 dst")
+                base = _expect_register(instruction.operands[1], "LOAD_F64 base")
+                offset = _expect_register(instruction.operands[2], "LOAD_F64 offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_opcode("f64.load")
+                self._emit_memarg(3, 0)
+                self._emit_local_set(dst.index)
+            case IrOp.STORE_F64:
+                src = _expect_register(instruction.operands[0], "STORE_F64 src")
+                base = _expect_register(instruction.operands[1], "STORE_F64 base")
+                offset = _expect_register(instruction.operands[2], "STORE_F64 offset")
+                self._emit_address(base.index, offset.index)
+                self._emit_local_get(src.index)
+                self._emit_opcode("f64.store")
+                self._emit_memarg(3, 0)
             case IrOp.ADD:
                 self._emit_binary_numeric("i32.add", instruction)
             case IrOp.ADD_IMM:
@@ -716,6 +796,14 @@ class _FunctionLowerer:
                 self._emit_i32_const(0xFFFFFFFF)
                 self._emit_opcode("i32.xor")
                 self._emit_local_set(dst.index)
+            case IrOp.F64_ADD:
+                self._emit_binary_numeric("f64.add", instruction)
+            case IrOp.F64_SUB:
+                self._emit_binary_numeric("f64.sub", instruction)
+            case IrOp.F64_MUL:
+                self._emit_binary_numeric("f64.mul", instruction)
+            case IrOp.F64_DIV:
+                self._emit_binary_numeric("f64.div", instruction)
             case IrOp.CMP_EQ:
                 self._emit_binary_numeric("i32.eq", instruction)
             case IrOp.CMP_NE:
@@ -724,6 +812,24 @@ class _FunctionLowerer:
                 self._emit_binary_numeric("i32.lt_s", instruction)
             case IrOp.CMP_GT:
                 self._emit_binary_numeric("i32.gt_s", instruction)
+            case IrOp.F64_CMP_EQ:
+                self._emit_binary_numeric("f64.eq", instruction)
+            case IrOp.F64_CMP_NE:
+                self._emit_binary_numeric("f64.ne", instruction)
+            case IrOp.F64_CMP_LT:
+                self._emit_binary_numeric("f64.lt", instruction)
+            case IrOp.F64_CMP_GT:
+                self._emit_binary_numeric("f64.gt", instruction)
+            case IrOp.F64_CMP_LE:
+                self._emit_binary_numeric("f64.le", instruction)
+            case IrOp.F64_CMP_GE:
+                self._emit_binary_numeric("f64.ge", instruction)
+            case IrOp.F64_FROM_I32:
+                dst = _expect_register(instruction.operands[0], "F64_FROM_I32 dst")
+                src = _expect_register(instruction.operands[1], "F64_FROM_I32 src")
+                self._emit_local_get(src.index)
+                self._emit_opcode("f64.convert_i32_s")
+                self._emit_local_set(dst.index)
             case IrOp.CALL:
                 label = _expect_label(instruction.operands[0], "CALL target")
                 signature = self.signatures.get(label.name)
@@ -750,17 +856,34 @@ class _FunctionLowerer:
                         f"argument register(s), got {len(explicit_args)}"
                     )
                 if explicit_args:
-                    for operand in explicit_args:
+                    for operand, expected_type in zip(
+                        explicit_args, signature.wasm_param_types, strict=True
+                    ):
                         arg = _expect_register(operand, "CALL argument")
+                        actual_type = self._register_types[arg.index]
+                        if actual_type != expected_type:
+                            raise WasmLoweringError(
+                                f"CALL {label.name} argument v{arg.index} has type "
+                                f"{actual_type.name}, expected {expected_type.name}"
+                            )
                         self._emit_local_get(arg.index)
                 else:
                     for param_index in range(signature.param_count):
+                        actual_type = self._register_types[_REG_VAR_BASE + param_index]
+                        expected_type = signature.wasm_param_types[param_index]
+                        if actual_type != expected_type:
+                            raise WasmLoweringError(
+                                f"CALL {label.name} implicit argument v{_REG_VAR_BASE + param_index} "
+                                f"has type {actual_type.name}, expected {expected_type.name}"
+                            )
                         self._emit_local_get(_REG_VAR_BASE + param_index)
                 self._emit_opcode("call")
                 self._emit_u32(self.function_indices[label.name])
-                self._emit_local_set(_REG_SCRATCH)
+                if signature.wasm_result_types:
+                    self._emit_local_set(_REG_SCRATCH)
             case IrOp.RET | IrOp.HALT:
-                self._emit_local_get(_REG_SCRATCH)
+                if self.function.signature.wasm_result_types:
+                    self._emit_local_get(_REG_SCRATCH)
                 self._emit_opcode("return")
             case IrOp.NOP:
                 self._emit_opcode("nop")
@@ -881,6 +1004,10 @@ class _FunctionLowerer:
         self._emit_opcode("i32.const")
         self._bytes.extend(encode_signed(value))
 
+    def _emit_f64_const(self, value: float) -> None:
+        self._emit_opcode("f64.const")
+        self._bytes.extend(struct.pack("<d", value))
+
     def _emit_memarg(self, align: int, offset: int) -> None:
         self._emit_u32(align)
         self._emit_u32(offset)
@@ -982,13 +1109,14 @@ class _DispatchLoopLowerer(_FunctionLowerer):
         # end block $prog_end
         self._emit_opcode("end")
 
-        # Function return value (0 on normal exit; HALT via br 2 lands here)
-        self._emit_local_get(_REG_SCRATCH)
+        # Function return value (HALT via br 2 lands here)
+        if self.function.signature.wasm_result_types:
+            self._emit_local_get(_REG_SCRATCH)
         self._emit_opcode("end")
 
         return FunctionBody(
             # max_reg + 1 IR virtual-register slots, plus one for $pc
-            locals=(ValueType.I32,) * (self.function.max_reg + 2),
+            locals=self.function.register_types + (ValueType.I32,),
             code=bytes(self._bytes),
         )
 
@@ -1166,6 +1294,12 @@ def _make_function_ir(
         instructions=instructions,
         signature=signature,
         max_reg=max_reg,
+        register_types=_infer_register_types(
+            instructions=instructions,
+            signature=signature,
+            max_reg=max_reg,
+            signatures=signatures,
+        ),
     )
 
 
@@ -1206,6 +1340,12 @@ def _expect_immediate(operand: object, context: str) -> IrImmediate:
     return operand
 
 
+def _expect_float_immediate(operand: object, context: str) -> IrFloatImmediate:
+    if not isinstance(operand, IrFloatImmediate):
+        raise WasmLoweringError(f"{context}: expected float immediate, got {operand!r}")
+    return operand
+
+
 def _expect_label(operand: object, context: str) -> IrLabel:
     if not isinstance(operand, IrLabel):
         raise WasmLoweringError(f"{context}: expected label, got {operand!r}")
@@ -1218,3 +1358,107 @@ def _align_up(value: int, alignment: int) -> int:
 
 _REG_SCRATCH = 1
 _REG_VAR_BASE = 2
+
+
+def _infer_register_types(
+    *,
+    instructions: list[IrInstruction],
+    signature: FunctionSignature,
+    max_reg: int,
+    signatures: dict[str, FunctionSignature],
+) -> tuple[ValueType, ...]:
+    reg_types: list[ValueType | None] = [None] * (max_reg + 1)
+
+    for param_index, param_type in enumerate(signature.wasm_param_types):
+        _assign_register_type(
+            reg_types,
+            _REG_VAR_BASE + param_index,
+            param_type,
+            f"{signature.label} param {param_index}",
+        )
+
+    if signature.wasm_result_types:
+        _assign_register_type(
+            reg_types,
+            _REG_SCRATCH,
+            signature.wasm_result_types[0],
+            f"{signature.label} result",
+        )
+
+    for instruction in instructions:
+        match instruction.opcode:
+            case IrOp.LOAD_F64_IMM | IrOp.LOAD_F64:
+                dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+                _assign_register_type(
+                    reg_types, dst.index, ValueType.F64, instruction.opcode.name
+                )
+            case (
+                IrOp.LOAD_IMM
+                | IrOp.LOAD_ADDR
+                | IrOp.LOAD_BYTE
+                | IrOp.LOAD_WORD
+                | IrOp.ADD
+                | IrOp.ADD_IMM
+                | IrOp.SUB
+                | IrOp.AND
+                | IrOp.AND_IMM
+                | IrOp.OR
+                | IrOp.OR_IMM
+                | IrOp.XOR
+                | IrOp.XOR_IMM
+                | IrOp.NOT
+                | IrOp.MUL
+                | IrOp.DIV
+                | IrOp.CMP_EQ
+                | IrOp.CMP_NE
+                | IrOp.CMP_LT
+                | IrOp.CMP_GT
+                | IrOp.F64_CMP_EQ
+                | IrOp.F64_CMP_NE
+                | IrOp.F64_CMP_LT
+                | IrOp.F64_CMP_GT
+                | IrOp.F64_CMP_LE
+                | IrOp.F64_CMP_GE
+            ):
+                dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+                _assign_register_type(
+                    reg_types, dst.index, ValueType.I32, instruction.opcode.name
+                )
+            case IrOp.F64_ADD | IrOp.F64_SUB | IrOp.F64_MUL | IrOp.F64_DIV | IrOp.F64_FROM_I32:
+                dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
+                _assign_register_type(
+                    reg_types, dst.index, ValueType.F64, instruction.opcode.name
+                )
+            case IrOp.CALL:
+                target = _expect_label(instruction.operands[0], "CALL target")
+                callee = signatures.get(target.name)
+                if callee is None:
+                    raise WasmLoweringError(f"missing function signature for {target.name}")
+                if callee.wasm_result_types:
+                    _assign_register_type(
+                        reg_types,
+                        _REG_SCRATCH,
+                        callee.wasm_result_types[0],
+                        f"CALL {target.name}",
+                    )
+            case _:
+                continue
+
+    return tuple(
+        reg_type if reg_type is not None else ValueType.I32 for reg_type in reg_types
+    )
+
+
+def _assign_register_type(
+    reg_types: list[ValueType | None],
+    reg_index: int,
+    value_type: ValueType,
+    context: str,
+) -> None:
+    existing = reg_types[reg_index]
+    if existing is not None and existing != value_type:
+        raise WasmLoweringError(
+            f"{context}: register v{reg_index} has conflicting WASM types "
+            f"{existing.name} and {value_type.name}"
+        )
+    reg_types[reg_index] = value_type

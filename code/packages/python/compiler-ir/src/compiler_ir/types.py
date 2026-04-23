@@ -3,10 +3,11 @@
 Overview
 --------
 
-Every IR instruction operates on **operands**. There are three kinds:
+Every IR instruction operates on **operands**. There are four kinds:
 
   IrRegister  — a virtual register (v0, v1, v2, ...)
   IrImmediate — a literal integer value
+  IrFloatImmediate — a literal floating-point value
   IrLabel     — a named jump target or data label
 
 These three operand types are combined into ``IrInstruction`` objects, which
@@ -14,7 +15,7 @@ live inside an ``IrProgram``.
 
 The type hierarchy::
 
-  IrOperand (base type — IrRegister | IrImmediate | IrLabel)
+  IrOperand (base type — IrRegister | IrImmediate | IrFloatImmediate | IrLabel)
   IrInstruction (opcode + operands + unique ID)
   IrDataDecl (named data segment: label, size, init byte)
   IrProgram (full program: instructions + data + entry label + version)
@@ -48,7 +49,8 @@ from compiler_ir.opcodes import IrOp
 # ---------------------------------------------------------------------------
 #
 # Python does not have sealed interfaces like Go, so we use a Union type.
-# The three concrete operand types are IrRegister, IrImmediate, and IrLabel.
+# The concrete operand types are IrRegister, IrImmediate, IrFloatImmediate,
+# and IrLabel.
 # ---------------------------------------------------------------------------
 
 
@@ -102,6 +104,24 @@ class IrImmediate:
 
 
 @dataclass(frozen=True)
+class IrFloatImmediate:
+    """A literal floating-point value operand.
+
+    Floating immediates are IEEE-754 double-precision values that appear
+    directly in instructions.
+
+    Attributes:
+        value: The floating-point value.
+    """
+
+    value: float
+
+    def __str__(self) -> str:
+        """Return the canonical text form: the float as a string."""
+        return str(self.value)
+
+
+@dataclass(frozen=True)
 class IrLabel:
     """A named jump target or data reference operand.
 
@@ -126,7 +146,7 @@ class IrLabel:
 
 # The Union type for any IR operand. Used in type annotations throughout
 # the compiler and backend packages.
-IrOperand = IrRegister | IrImmediate | IrLabel
+IrOperand = IrRegister | IrImmediate | IrFloatImmediate | IrLabel
 
 
 # ---------------------------------------------------------------------------

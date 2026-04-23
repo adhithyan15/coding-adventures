@@ -40,9 +40,12 @@ adversarial input:
 
 from __future__ import annotations
 
+import re
+
 from compiler_ir.opcodes import IrOp, parse_op
 from compiler_ir.types import (
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -56,6 +59,13 @@ from compiler_ir.types import (
 _MAX_LINES = 1_000_000       # max lines in an IR text file
 _MAX_OPERANDS_PER_INSTR = 16  # max operands per instruction
 _MAX_REGISTER_INDEX = 65535   # max virtual register index (v0..v65535)
+_FLOAT_IMMEDIATE_RE = re.compile(
+    r"^[+-]?(?:"
+    r"(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?"
+    r"|"
+    r"\d+[eE][+-]?\d+"
+    r")$"
+)
 
 
 class IrParseError(ValueError):
@@ -272,14 +282,15 @@ def _parse_operand(s: str, line_num: int) -> IrOperand:
 
     1. Starts with ``v`` followed by digits → ``IrRegister``
     2. Parseable as integer → ``IrImmediate``
-    3. Anything else → ``IrLabel``
+    3. Parseable as float literal → ``IrFloatImmediate``
+    4. Anything else → ``IrLabel``
 
     Args:
         s:        The operand text (already stripped).
         line_num: Line number for error messages.
 
     Returns:
-        An ``IrRegister``, ``IrImmediate``, or ``IrLabel``.
+        An ``IrRegister``, ``IrImmediate``, ``IrFloatImmediate``, or ``IrLabel``.
 
     Raises:
         IrParseError: If the register index is out of range.
@@ -302,6 +313,13 @@ def _parse_operand(s: str, line_num: int) -> IrOperand:
         return IrImmediate(value=int(s))
     except ValueError:
         pass
+
+    # Floating immediate: 1.5, -0.25, 1e3, ...
+    if _FLOAT_IMMEDIATE_RE.match(s):
+        try:
+            return IrFloatImmediate(value=float(s))
+        except ValueError:
+            pass
 
     # Label: _start, loop_0_end, tape, ...
     return IrLabel(name=s)

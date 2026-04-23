@@ -16,7 +16,7 @@ from ir_to_jvm_class_file import (
     validate_for_jvm,
     write_class_file,
 )
-from ir_to_jvm_class_file.backend import JvmBackendError
+from ir_to_jvm_class_file.backend import JvmBackendError, _JVM_SUPPORTED_OPCODES
 
 
 def compile_brainfuck_program(source: str) -> bytes:
@@ -381,17 +381,13 @@ class TestValidateForJvm:
         assert validate_for_jvm(prog) == []
 
     # ── Rule 1: opcode support ───────────────────────────────────────────────
-    # The V1 JVM backend now handles all IrOp opcodes including the five
-    # bitwise ops (OR, OR_IMM, XOR, XOR_IMM, NOT).  If a new opcode is added
-    # to IrOp and the JVM backend is not updated, this test will fail,
-    # prompting the developer to either implement or explicitly defer it.
+    # The V1 JVM backend handles the subset listed in _JVM_SUPPORTED_OPCODES.
+    # Shared IR may grow beyond that; those additions should be explicitly
+    # rejected until the JVM backend learns them.
 
     def test_all_supported_opcodes_pass_opcode_check(self) -> None:
-        """Every opcode in IrOp passes the opcode-support check in the V1
-        JVM backend.  This includes OR, OR_IMM, XOR, XOR_IMM, and NOT which
-        were added in compiler-ir v0.3.0 and implemented using native JVM
-        ior/ixor bytecodes."""
-        for op in IrOp:
+        """Every opcode claimed by the JVM backend passes rule 1 validation."""
+        for op in _JVM_SUPPORTED_OPCODES:
             program = _prog(_instr(op))
             errors = validate_for_jvm(program)
             # Filter out any errors that are not about opcode support —
@@ -401,6 +397,31 @@ class TestValidateForJvm:
             assert rule1_errors == [], (
                 f"IrOp.{op.name} was unexpectedly rejected by the JVM "
                 f"opcode-support check: {rule1_errors}"
+            )
+
+    def test_new_f64_opcodes_are_explicitly_rejected(self) -> None:
+        """The V1 JVM backend still rejects the new floating-point IR ops."""
+        unsupported = {
+            IrOp.LOAD_F64_IMM,
+            IrOp.LOAD_F64,
+            IrOp.STORE_F64,
+            IrOp.F64_ADD,
+            IrOp.F64_SUB,
+            IrOp.F64_MUL,
+            IrOp.F64_DIV,
+            IrOp.F64_CMP_EQ,
+            IrOp.F64_CMP_NE,
+            IrOp.F64_CMP_LT,
+            IrOp.F64_CMP_GT,
+            IrOp.F64_CMP_LE,
+            IrOp.F64_CMP_GE,
+            IrOp.F64_FROM_I32,
+        }
+        for op in unsupported:
+            program = _prog(_instr(op))
+            errors = validate_for_jvm(program)
+            assert any("unsupported opcode" in error for error in errors), (
+                f"IrOp.{op.name} should remain unsupported in the V1 JVM backend"
             )
 
     # ── Bitwise opcode integration tests ─────────────────────────────────────
