@@ -39,6 +39,9 @@ All notable changes to this package will be documented in this file.
 - Lowered Phase 6 direct local `goto` statements to generated ALGOL IR labels
   and `JUMP` instructions, while preserving diagnostics for nonlocal and
   designational forms that need Phase 7.
+- Lowered Phase 7a local conditional designational expressions and switch
+  selections into local IR jumps, including one-based switch dispatch and
+  runtime failure for out-of-range switch indexes.
 
 ## [0.1.0] - 2026-04-20
 

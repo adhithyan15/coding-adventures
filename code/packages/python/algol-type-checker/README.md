@@ -8,7 +8,9 @@ It currently supports integer scalar declarations, assignments, arithmetic,
 comparisons, boolean conditions, nested blocks, `if` statements,
 `for ... step ... until ... do` loops, integer value/by-name procedures, and
 descriptor metadata for integer arrays with integer bounds. Direct labels and
-direct local `goto` statements are accepted within one active ALGOL frame.
+direct local `goto` statements are accepted within one active ALGOL frame, as
+are local switch declarations, switch selections, and conditional
+designational `goto` forms.
 
 The checker also builds the first ALGOL 60 full-runtime semantic model. Each
 source block receives a stable block id, lexical depth, static-parent id, and a
@@ -24,18 +26,23 @@ dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the
 IR and WASM lowering stages.
 Labels receive stable label descriptors and direct local `goto` statements
-resolve to those descriptors. Nonlocal gotos, conditional designational
-expressions, and switch selections remain guarded with targeted diagnostics.
+resolve to those descriptors. Switch declarations receive stable descriptors
+whose entries point at checked local designational expressions, and switch
+selection use sites resolve to their chosen switch symbol. Nonlocal gotos and
+switch selections that cross an ALGOL frame boundary remain guarded with
+targeted diagnostics. Switch entries that recursively select another switch
+are also guarded until the later dispatch-lowering phase.
 
 Unsupported ALGOL 60 features, including real/Boolean/string arrays, array
-parameters, switches, procedure-valued parameters, and nonlocal `goto`, are
-reported as diagnostics instead of being silently accepted by the compiled
-pipeline. By-name parameters are accepted in the semantic model, while later
-lowering packages now implement the integer call-by-name subset. The checker
-keeps guarding the remaining full-ALGOL gaps, including non-assignable actuals
-passed to written by-name formals, non-integer by-name types, whole-array
-parameters, procedure-valued parameters, switches, conditional designational
-expressions, and `goto` forms that cross frame boundaries.
+parameters, procedure-valued parameters, nonlocal switches, and nonlocal
+`goto`, are reported as diagnostics instead of being silently accepted by the
+compiled pipeline. By-name parameters are accepted in the semantic model,
+while later lowering packages now implement the integer call-by-name subset.
+The checker keeps guarding the remaining full-ALGOL gaps, including
+non-assignable actuals passed to written by-name formals, non-integer by-name
+types, whole-array parameters, procedure-valued parameters, conditional
+designational expressions that cross frame boundaries, and nonlocal `goto`
+forms.
 
 ```python
 from algol_parser import parse_algol

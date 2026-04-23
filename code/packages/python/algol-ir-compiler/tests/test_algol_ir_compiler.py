@@ -95,6 +95,69 @@ class TestAlgolIrCompiler:
         assert len(algol_labels) == 1
         assert algol_labels[0] in jumps
 
+    def test_compiles_conditional_designational_goto(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "goto if true then left else right; "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.BRANCH_Z in opcodes
+        assert any(label.startswith("algol_label_") for label in labels)
+
+    def test_compiles_switch_designational_goto(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "switch s := first, second; "
+                "i := 2; goto s[i]; "
+                "first: result := 1; goto done; "
+                "second: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CMP_EQ in opcodes
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+
+    def test_repeated_switch_selections_get_distinct_dispatch_labels(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "switch s := first, second; "
+                "i := 1; goto s[i]; "
+                "first: i := 2; goto s[i]; "
+                "second: result := 7 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(label.startswith("switch_1_1_next") for label in labels)
+
     def test_compiles_unary_minus_and_mod(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result; result := -10 mod 4 end")

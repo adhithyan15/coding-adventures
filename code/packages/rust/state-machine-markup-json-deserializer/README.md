@@ -16,6 +16,9 @@ JSON files in production. This reader exists for build tools, tests, and source
 compiler pipelines that need to validate canonical snapshots before generating
 static code.
 
+The reader also accepts transducer transition `actions` and `consume` flags,
+then delegates semantic checks to the shared markup validator.
+
 ## Usage
 
 ```rust
@@ -48,7 +51,8 @@ assert!(machine.accepts(&["coin"]));
 The parser accepts only the phase 1 State Machine Markup JSON profile: objects,
 arrays, strings, booleans, and `null` for transition epsilon. It rejects numbers,
 unknown fields, duplicate object keys, excessive nesting, oversized sources, and
-oversized arrays before returning a typed definition.
+oversized arrays before returning a typed definition. For transducers, EOF is
+represented by the explicit `$end` matcher rather than JSON `null`.
 
 ## Dependencies
 

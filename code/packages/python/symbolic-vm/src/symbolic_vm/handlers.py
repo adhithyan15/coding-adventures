@@ -24,8 +24,10 @@ import math
 from collections.abc import Mapping
 
 from symbolic_ir import (
+    ACOS,
     ADD,
     AND,
+    ASIN,
     ASSIGN,
     ATAN,
     COS,
@@ -299,6 +301,14 @@ def atan(simplify: bool) -> Handler:
     return _elementary("Atan", math.atan, {0: ZERO}, simplify)
 
 
+def asin(simplify: bool) -> Handler:
+    return _elementary("Asin", math.asin, {0: ZERO}, simplify)
+
+
+def acos(simplify: bool) -> Handler:
+    return _elementary("Acos", math.acos, {}, simplify)
+
+
 # ---------------------------------------------------------------------------
 # Comparisons
 # ---------------------------------------------------------------------------
@@ -531,6 +541,8 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         LOG.name: log(simplify),
         SQRT.name: sqrt(simplify),
         ATAN.name: atan(simplify),
+        ASIN.name: asin(simplify),
+        ACOS.name: acos(simplify),
         EQUAL.name: equal(simplify),
         NOT_EQUAL.name: not_equal(simplify),
         LESS.name: less(simplify),

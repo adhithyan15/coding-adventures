@@ -32,7 +32,9 @@ from sql_optimizer import optimize
 from sql_parser import parse_sql
 from sql_planner import (
     AggregateExpr,
+    IndexScan,
     InsertValuesStmt,
+    Scan,
     plan,
 )
 from sql_planner.plan import (
@@ -52,7 +54,7 @@ from sql_planner.plan import (
 from sql_planner.plan import (
     Limit as PlanLimit,
 )
-from sql_vm import QueryResult, execute
+from sql_vm import QueryEvent, QueryResult, execute  # noqa: F401 — QueryEvent re-exported
 
 from .adapter import to_statement
 from .binding import substitute
@@ -100,7 +102,26 @@ def run(
         if advisor is not None:
             advisor.observe_plan(optimized)
         program = codegen_compile(_flatten_project_over_aggregate(optimized))
-        return execute(program, backend)
+        # Extract scan metadata from the plan so the QueryEvent is populated
+        # with the correct table and filtered columns without requiring the VM
+        # to parse the predicate structure.
+        _table, _filtered = _extract_scan_info(optimized)
+        # Only emit QueryEvents for SELECT-type plans.  _extract_scan_info
+        # returns an empty string for DML and DDL statements (UPDATE, DELETE,
+        # INSERT, CREATE TABLE, …).  We suppress the callback for those so
+        # the advisor's cold-window counter only advances on SELECT scans —
+        # consistent with the spec language "N consecutive SELECT scans".
+        event_cb = (
+            advisor.on_query_event
+            if (advisor is not None and _table)
+            else None
+        )
+        return execute(
+            program,
+            backend,
+            event_cb=event_cb,
+            filtered_columns=_filtered,
+        )
     except ProgrammingError:
         # Already-translated errors raised from our own code pass through.
         raise
@@ -217,3 +238,47 @@ def _flatten_children(p: LogicalPlan) -> LogicalPlan:
             # Leaf nodes (Scan, Insert, Delete, Update, Create, Drop, Begin,
             # Commit, Rollback) have no child plans to recurse into.
             return p
+
+
+def _extract_scan_info(plan: LogicalPlan) -> tuple[str, list[str]]:
+    """Return ``(table, filtered_columns)`` for the primary scan in *plan*.
+
+    Walks the plan tree looking for the first ``Filter(Scan(t))`` or
+    ``IndexScan(t)`` pattern and returns the table name plus the column names
+    that appear in the filter predicate.
+
+    Used to pre-populate :class:`~sql_vm.QueryEvent` fields without requiring
+    the VM to parse the predicate structure at execution time.
+
+    Returns ``("", [])`` for plans that have no scan (e.g. DDL statements).
+    """
+    match plan:
+        case IndexScan(table=t, column=col):
+            # IndexScan: the filter column is the index column itself.
+            return t, [col]
+        case Filter(input=Scan(table=t), predicate=pred):
+            from .advisor import _filter_columns  # local import to avoid circularity
+            alias = t
+            cols = _filter_columns(pred, alias)
+            return t, cols
+        case Filter(input=inner):
+            return _extract_scan_info(inner)
+        case Scan(table=t):
+            return t, []
+        case (
+            Project(input=inner)
+            | Distinct(input=inner)
+            | Sort(input=inner)
+            | PlanLimit(input=inner)
+            | Having(input=inner)
+            | Aggregate(input=inner)
+        ):
+            return _extract_scan_info(inner)
+        case DerivedTable():
+            # Don't recurse into subqueries — focus on the outermost scan.
+            return "", []
+        case Join(left=lhs):
+            # For JOINs, use the left (driving) table.
+            return _extract_scan_info(lhs)
+        case _:
+            return "", []

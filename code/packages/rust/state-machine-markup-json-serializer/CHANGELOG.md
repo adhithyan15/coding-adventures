@@ -10,3 +10,5 @@ All notable changes to this package will be documented in this file.
 - Added deterministic JSON output for typed `StateMachineDefinition` values.
 - Added golden coverage for DFA, NFA, PDA, epsilon, multi-target,
   stack-effect, and JSON string escaping behavior.
+- Added canonical JSON output for transition `actions` and non-default
+  `consume` flags used by transducer definitions.

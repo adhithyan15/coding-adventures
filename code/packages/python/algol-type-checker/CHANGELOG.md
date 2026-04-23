@@ -22,6 +22,9 @@ All notable changes to this package will be documented in this file.
 - Added Phase 6 label descriptors and direct local `goto` resolution, plus
   diagnostics for missing labels, nonlocal gotos, and Phase 7 designational
   forms.
+- Added Phase 7a switch descriptors, local switch selection resolution, and
+  conditional designational `goto` checking, with nonlocal switch selections
+  and recursively selected switch entries still guarded for later phases.
 
 ## [0.1.0] - 2026-04-20
 

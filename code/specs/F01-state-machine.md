@@ -13,11 +13,12 @@ input Y, move to state Z." That's it. Yet this simple abstraction is powerful
 enough to model everything from a light switch (2 states) to the HTML
 tokenizer in your web browser (80+ states).
 
-This library provides formal, composable, traceable state machines — from the
-simplest deterministic finite automaton (DFA) all the way up to modal state
-machines that can switch between sub-machines based on context. Every
-transition is logged, every machine is visualizable, and every machine can be
-defined either in code or in a declarative `.states` file.
+This library provides formal, composable, traceable state machines. DFA, NFA,
+PDA, and modal machines are important specializations, but they are not the
+only primitives. The shared foundation also includes effectful transducers:
+ordered state machines whose transitions can emit portable effects while they
+move between states. That wider primitive is what tokenizer-style systems such
+as HTML need.
 
 ## Layer Position
 
@@ -106,6 +107,29 @@ single (state, input) pair can lead to **multiple** possible next states. We'll
 get to NFAs shortly — they are more expressive for defining machines, but DFAs
 are more efficient for executing them. The magic is that every NFA can be
 converted to an equivalent DFA.
+
+### Effectful Transducers
+
+Recognition-only automata answer yes/no questions about input languages. Many
+real systems need one more dimension: taking a transition should be able to
+produce outputs or update declared registers.
+
+An HTML tokenizer is the canonical browser example. In the `data` state, seeing
+`<` does not merely move to `tag_open`; it also flushes buffered text. In a tag
+name state, seeing `>` emits the current tag token. At EOF, the tokenizer emits
+an EOF token without consuming a real character. These are still state-machine
+transitions, but they are **effectful** transitions.
+
+The generic primitive is:
+
+```text
+state + ordered matcher -> next state + consume flag + effects
+```
+
+DFA transitions are the zero-effect, always-consuming subset of this model.
+NFA and PDA keep their own execution rules, but they share the same typed
+definition layer so generated source, serializers, visualizers, and validators
+can talk about state machines without assuming every machine is a DFA.
 
 ### A More Interesting Example: Binary Divisibility by 3
 

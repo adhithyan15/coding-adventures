@@ -205,7 +205,15 @@ fn json_value_to_definition(value: JsonValue) -> Result<StateMachineDefinition> 
         ensure_allowed_fields(
             &transition,
             &object,
-            &["from", "on", "to", "stack_pop", "stack_push"],
+            &[
+                "from",
+                "on",
+                "to",
+                "stack_pop",
+                "stack_push",
+                "actions",
+                "consume",
+            ],
         )?;
         definition.transitions.push(TransitionDefinition {
             from: required_string(&transition, "from", &object)?,
@@ -214,6 +222,8 @@ fn json_value_to_definition(value: JsonValue) -> Result<StateMachineDefinition> 
             stack_pop: optional_string(&transition, "stack_pop", &object)?,
             stack_push: optional_string_array(&transition, "stack_push", &object)?
                 .unwrap_or_default(),
+            actions: optional_string_array(&transition, "actions", &object)?.unwrap_or_default(),
+            consume: optional_bool(&transition, "consume", &object)?.unwrap_or(true),
         });
     }
 

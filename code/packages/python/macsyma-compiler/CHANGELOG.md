@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — 2026-04-23
+
+- Added `"asin": ASIN` and `"acos": ACOS` to `_STANDARD_FUNCTIONS` in `compiler.py`,
+  mapping the MACSYMA names `asin`/`acos` to `IRSymbol("Asin")`/`IRSymbol("Acos")`.
+  Required by `symbolic-vm` Phase 12 so that `integrate(asin(ax+b), x)` and
+  `integrate(acos(ax+b), x)` are correctly compiled before evaluation.
+  Depends on `coding-adventures-symbolic-ir >= 0.4.0` which introduces the ASIN/ACOS heads.
+
 ## 0.3.0 — 2026-04-22
 
 - Added `"atan": ATAN` to `_STANDARD_FUNCTIONS` in `compiler.py`, mapping

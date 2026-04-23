@@ -16,6 +16,7 @@ VALUE = "value"
 NAME = "name"
 ARRAY = "array"
 LABEL = "label"
+SWITCH = "switch"
 MAX_ARRAY_DIMENSIONS = 4
 
 
@@ -44,6 +45,7 @@ class Symbol:
     slot_size: int | None = None
     procedure_id: int | None = None
     array_id: int | None = None
+    switch_id: int | None = None
     parameter_mode: str | None = None
 
 
@@ -264,7 +266,7 @@ class LabelDescriptor:
 
 @dataclass(frozen=True)
 class ResolvedGoto:
-    """A direct local goto after label lookup."""
+    """A local goto after designational-expression lookup."""
 
     token_id: int
     label_id: int
@@ -273,6 +275,36 @@ class ResolvedGoto:
     source_block_id: int
     target_block_id: int
     lexical_depth_delta: int
+    line: int
+    column: int
+    designational_node_id: int | None = None
+
+
+@dataclass(frozen=True)
+class SwitchDescriptor:
+    """A local ALGOL switch table with designational-expression entries."""
+
+    switch_id: int
+    name: str
+    declaring_block_id: int
+    symbol_id: int
+    entry_node_ids: tuple[int, ...]
+    line: int
+    column: int
+
+
+@dataclass(frozen=True)
+class ResolvedSwitchSelection:
+    """A switch subscript occurrence after semantic lookup."""
+
+    node_id: int
+    token_id: int
+    name: str
+    switch_id: int
+    use_block_id: int
+    declaration_block_id: int
+    lexical_depth_delta: int
+    index_node_id: int
     line: int
     column: int
 
@@ -292,6 +324,8 @@ class SemanticProgram:
     array_accesses: list[ResolvedArrayAccess] = field(default_factory=list)
     labels: list[LabelDescriptor] = field(default_factory=list)
     gotos: list[ResolvedGoto] = field(default_factory=list)
+    switches: list[SwitchDescriptor] = field(default_factory=list)
+    switch_selections: list[ResolvedSwitchSelection] = field(default_factory=list)
     diagnostics: list[Diagnostic] = field(default_factory=list)
 
 
@@ -329,11 +363,14 @@ class AlgolTypeChecker:
         self.resolved_array_accesses: list[ResolvedArrayAccess] = []
         self.semantic_labels: list[LabelDescriptor] = []
         self.resolved_gotos: list[ResolvedGoto] = []
+        self.semantic_switches: list[SwitchDescriptor] = []
+        self.resolved_switch_selections: list[ResolvedSwitchSelection] = []
         self._next_block_id = 0
         self._next_symbol_id = 0
         self._next_procedure_id = 0
         self._next_array_id = 0
         self._next_label_id = 0
+        self._next_switch_id = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -347,11 +384,14 @@ class AlgolTypeChecker:
         self.resolved_array_accesses = []
         self.semantic_labels = []
         self.resolved_gotos = []
+        self.semantic_switches = []
+        self.resolved_switch_selections = []
         self._next_block_id = 0
         self._next_symbol_id = 0
         self._next_procedure_id = 0
         self._next_array_id = 0
         self._next_label_id = 0
+        self._next_switch_id = 0
         root_scope = Scope()
         block = _first_node(ast, "block")
         if block is None:
@@ -370,6 +410,8 @@ class AlgolTypeChecker:
             array_accesses=list(self.resolved_array_accesses),
             labels=list(self.semantic_labels),
             gotos=list(self.resolved_gotos),
+            switches=list(self.semantic_switches),
+            switch_selections=list(self.resolved_switch_selections),
             diagnostics=list(self.diagnostics),
         )
         return TypeCheckResult(
@@ -387,12 +429,12 @@ class AlgolTypeChecker:
 
     def _check_block_contents(self, block: ASTNode, scope: Scope) -> None:
         for child in _node_children(block):
-            if child.rule_name == "declaration":
-                self._check_declaration(child, scope)
-
-        for child in _node_children(block):
             if child.rule_name == "statement":
                 self._collect_statement_labels(child, scope)
+
+        for child in _node_children(block):
+            if child.rule_name == "declaration":
+                self._check_declaration(child, scope)
 
         for child in _node_children(block):
             if child.rule_name == "statement":
@@ -443,6 +485,9 @@ class AlgolTypeChecker:
             return
         if inner.rule_name == "array_decl":
             self._check_array_declaration(inner, scope)
+            return
+        if inner.rule_name == "switch_decl":
+            self._check_switch_declaration(inner, scope)
             return
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
@@ -561,6 +606,56 @@ class AlgolTypeChecker:
                         column=name_token.column,
                     )
                 )
+
+    def _check_switch_declaration(self, node: ASTNode, scope: Scope) -> None:
+        name_token = next(
+            (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+            None,
+        )
+        if name_token is None:
+            self._error(node, "switch declaration is missing a name")
+            return
+
+        switch_id = self._next_switch_id
+        self._next_switch_id += 1
+        symbol = Symbol(
+            name=name_token.value,
+            type_name=SWITCH,
+            line=name_token.line,
+            column=name_token.column,
+            symbol_id=self._next_symbol_id,
+            kind=SWITCH,
+            storage_class="code",
+            declaring_block_id=scope.block_id,
+            switch_id=switch_id,
+        )
+        if not scope.declare(symbol):
+            self._error(
+                name_token,
+                f"{name_token.value!r} is already declared in this scope",
+            )
+            return
+        self._next_symbol_id += 1
+        self.semantic_symbols.append(symbol)
+
+        switch_list = _first_direct_node(node, "switch_list")
+        entries = _direct_nodes(switch_list, "desig_expr")
+        if not entries:
+            self._error(node, "switch declaration requires at least one entry")
+            return
+        for entry in entries:
+            self._check_designational(entry, scope, allow_switch_selection=False)
+        self.semantic_switches.append(
+            SwitchDescriptor(
+                switch_id=switch_id,
+                name=name_token.value,
+                declaring_block_id=scope.block_id,
+                symbol_id=symbol.symbol_id,
+                entry_node_ids=tuple(id(entry) for entry in entries),
+                line=name_token.line,
+                column=name_token.column,
+            )
+        )
 
     def _check_procedure_declaration(self, node: ASTNode, scope: Scope) -> None:
         name_token = _procedure_name(node)
@@ -801,20 +896,121 @@ class AlgolTypeChecker:
 
     def _check_goto(self, node: ASTNode, scope: Scope) -> None:
         desig_expr = _first_direct_node(node, "desig_expr")
-        target_token = _direct_label_from_designational(desig_expr)
-        if target_token is None:
-            if desig_expr is not None and _designational_contains_switch(desig_expr):
-                self._error(
-                    desig_expr,
-                    "switch designational expressions require Phase 7 lowering",
-                )
-            else:
-                self._error(
-                    desig_expr or node,
-                    "conditional designational expressions require Phase 7 lowering",
-                )
+        if desig_expr is None:
+            self._error(node, "goto statement is missing a designational expression")
             return
+        goto = self._check_designational(desig_expr, scope)
+        if goto is not None:
+            self.resolved_gotos.append(goto)
 
+    def _check_designational(
+        self,
+        node: ASTNode,
+        scope: Scope,
+        *,
+        allow_switch_selection: bool = True,
+    ) -> ResolvedGoto | None:
+        if any(token.value == "if" for token in _direct_tokens(node)):
+            bool_expr = _first_direct_node(node, "bool_expr")
+            cond_type = (
+                self._infer_expr(bool_expr, scope) if bool_expr is not None else ERROR
+            )
+            if cond_type != ERROR and cond_type != BOOLEAN:
+                self._error(node, "conditional designational condition must be boolean")
+            then_desig = _first_direct_node(node, "simple_desig")
+            else_desig = _first_direct_node(node, "desig_expr")
+            if then_desig is not None:
+                self._check_simple_designational(
+                    then_desig,
+                    scope,
+                    allow_switch_selection=allow_switch_selection,
+                )
+            if else_desig is not None:
+                self._check_designational(
+                    else_desig,
+                    scope,
+                    allow_switch_selection=allow_switch_selection,
+                )
+            return ResolvedGoto(
+                token_id=id(node),
+                label_id=-1,
+                target_name="conditional designational expression",
+                ir_label="",
+                source_block_id=scope.block_id,
+                target_block_id=scope.block_id,
+                lexical_depth_delta=0,
+                line=node.start_line or 1,
+                column=node.start_column or 1,
+                designational_node_id=id(node),
+            )
+
+        simple = _first_direct_node(node, "simple_desig")
+        if simple is None:
+            self._error(node, "unsupported designational expression")
+            return None
+        return self._check_simple_designational(
+            simple,
+            scope,
+            outer_node=node,
+            allow_switch_selection=allow_switch_selection,
+        )
+
+    def _check_simple_designational(
+        self,
+        node: ASTNode,
+        scope: Scope,
+        *,
+        outer_node: ASTNode | None = None,
+        allow_switch_selection: bool = True,
+    ) -> ResolvedGoto | None:
+        target_token = _direct_label_from_simple_designational(node)
+        if target_token is not None:
+            return self._check_direct_label_designational(
+                target_token,
+                scope,
+                outer_node=outer_node or node,
+            )
+
+        if any(token.value == "[" for token in _direct_tokens(node)):
+            if not allow_switch_selection:
+                self._error(
+                    node,
+                    "switch entries that select another switch require Phase 7b "
+                    "dispatch lowering",
+                )
+                return None
+            self._check_switch_selection(node, scope)
+            return ResolvedGoto(
+                token_id=id(outer_node or node),
+                label_id=-1,
+                target_name="switch designational expression",
+                ir_label="",
+                source_block_id=scope.block_id,
+                target_block_id=scope.block_id,
+                lexical_depth_delta=0,
+                line=node.start_line or 1,
+                column=node.start_column or 1,
+                designational_node_id=id(outer_node or node),
+            )
+
+        nested = _first_direct_node(node, "desig_expr")
+        if nested is not None:
+            return self._check_designational(
+                nested,
+                scope,
+                allow_switch_selection=allow_switch_selection,
+            )
+
+        self._error(node, "unsupported designational expression")
+        return None
+
+    def _check_direct_label_designational(
+        self,
+        target_token: Token,
+        scope: Scope,
+        *,
+        outer_node: ASTNode,
+    ) -> ResolvedGoto | None:
         resolved = scope.resolve_with_scope(target_token.value)
         if resolved is None:
             self._error(target_token, f"label {target_token.value!r} is not declared")
@@ -843,17 +1039,66 @@ class AlgolTypeChecker:
         if label is None:
             self._error(target_token, f"label {target_token.value!r} has no descriptor")
             return
-        self.resolved_gotos.append(
-            ResolvedGoto(
-                token_id=id(target_token),
-                label_id=label.label_id,
-                target_name=target_token.value,
-                ir_label=label.ir_label,
-                source_block_id=scope.block_id,
-                target_block_id=declaring_scope.block_id,
+        return ResolvedGoto(
+            token_id=id(target_token),
+            label_id=label.label_id,
+            target_name=target_token.value,
+            ir_label=label.ir_label,
+            source_block_id=scope.block_id,
+            target_block_id=declaring_scope.block_id,
+            lexical_depth_delta=lexical_depth_delta,
+            line=target_token.line,
+            column=target_token.column,
+            designational_node_id=id(outer_node),
+        )
+
+    def _check_switch_selection(self, node: ASTNode, scope: Scope) -> None:
+        name_token = next(
+            (token for token in _direct_tokens(node) if token.type_name == "NAME"),
+            None,
+        )
+        if name_token is None:
+            self._error(node, "switch selection is missing a name")
+            return
+        resolved = scope.resolve_with_scope(name_token.value)
+        if resolved is None:
+            self._error(name_token, f"switch {name_token.value!r} is not declared")
+            return
+        symbol, declaring_scope, lexical_depth_delta = resolved
+        if symbol.kind != SWITCH:
+            self._error(name_token, f"{name_token.value!r} is not a switch")
+            return
+        if lexical_depth_delta != 0:
+            self._error(
+                name_token,
+                f"nonlocal switch {name_token.value!r} requires Phase 7b frame "
+                "unwinding",
+            )
+            return
+        if symbol.switch_id is None:
+            self._error(name_token, f"switch {name_token.value!r} has no descriptor")
+            return
+
+        indexes = _direct_nodes(node, "arith_expr")
+        if len(indexes) != 1:
+            self._error(node, "switch selection requires exactly one index")
+            return
+        index_type = self._infer_expr(indexes[0], scope)
+        if index_type != ERROR and index_type != INTEGER:
+            self._error(indexes[0], "switch index must be integer")
+
+        self.resolved_switch_selections.append(
+            ResolvedSwitchSelection(
+                node_id=id(node),
+                token_id=id(name_token),
+                name=name_token.value,
+                switch_id=symbol.switch_id,
+                use_block_id=scope.block_id,
+                declaration_block_id=declaring_scope.block_id,
                 lexical_depth_delta=lexical_depth_delta,
-                line=target_token.line,
-                column=target_token.column,
+                index_node_id=id(indexes[0]),
+                line=name_token.line,
+                column=name_token.column,
             )
         )
 
@@ -1488,26 +1733,21 @@ def _label_token(node: ASTNode) -> Token | None:
     )
 
 
-def _direct_label_from_designational(node: ASTNode | None) -> Token | None:
-    if node is None or any(token.value == "if" for token in _direct_tokens(node)):
+def _direct_label_from_simple_designational(node: ASTNode | None) -> Token | None:
+    if node is None:
         return None
-    simple = _first_direct_node(node, "simple_desig")
-    if simple is None:
+    if any(token.value == "[" for token in _direct_tokens(node)):
         return None
-    if any(token.value == "[" for token in _direct_tokens(simple)):
-        return None
-    label_node = _first_direct_node(simple, "label")
+    label_node = _first_direct_node(node, "label")
     if label_node is None:
-        nested = _first_direct_node(simple, "desig_expr")
-        return _direct_label_from_designational(nested)
+        nested = _first_direct_node(node, "desig_expr")
+        if nested is None or any(
+            token.value == "if" for token in _direct_tokens(nested)
+        ):
+            return None
+        simple = _first_direct_node(nested, "simple_desig")
+        return _direct_label_from_simple_designational(simple)
     return _label_token(label_node)
-
-
-def _designational_contains_switch(node: ASTNode) -> bool:
-    if node.rule_name == "simple_desig":
-        return any(token.value == "[" for token in _direct_tokens(node))
-    return any(_designational_contains_switch(child) for child in _node_children(node))
-
 
 def _label_ir_name(label_id: int, source_name: str) -> str:
     safe_name = "".join(

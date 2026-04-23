@@ -6,23 +6,43 @@ This document specifies v2 of the `storage-sqlite` / `mini-sqlite` stack: a
 system that **watches incoming queries and automatically builds B-tree indexes
 without the user ever writing `CREATE INDEX`**.
 
-The database is a silent observer. Every time a `SELECT` runs a full table
-scan because of a `WHERE` clause, it takes a note. After enough evidence
-accumulates on the same column, it quietly builds a B-tree index and starts
-using it. The user sees faster queries and does nothing.
+The database is a silent observer. Every time a query plan shows a full table
+scan with a `WHERE` predicate, it takes a note. After enough evidence
+accumulates on the same column, it quietly builds a B-tree index. The planner
+notices the new index on the next query and uses it automatically. The user
+sees faster queries and does nothing.
 
 ### Who decides?
 
-The decision of *when* to build or drop an index is separated from the
-mechanics of *how*. A pluggable `IndexPolicy` interface owns the decision.
-The default `HitCountPolicy` is a simple hit-count heuristic. Any other
-policy — rule-based, statistical, or learned — can be dropped in at runtime
-by implementing the same interface. The infrastructure does not know or care
-what logic the policy uses.
+The decision of *when* to build an index is separated from the mechanics of
+*how*. A pluggable `IndexPolicy` interface owns the decision. The default
+`HitCountPolicy` is a simple hit-count heuristic. Any other policy —
+rule-based, statistical, or learned — can be dropped in at runtime by
+implementing the same interface. The infrastructure does not know or care what
+logic the policy uses.
 
-This keeps the mechanical layers (B-tree pages, backend interface, query
-events, advisor) completely independent of any particular decision strategy,
-now or in the future.
+This keeps the mechanical layers (B-tree pages, backend interface, advisor)
+completely independent of any particular decision strategy, now or in the future.
+
+### Design decision: plan-level observation
+
+The advisor observes the *optimised logical plan* before the VM executes it,
+rather than listening to events emitted during execution. This approach was
+chosen because:
+
+1. **Simplicity** — the plan explicitly encodes which columns are in filter
+   positions; no VM instrumentation is needed.
+2. **Accuracy** — the plan is inspected before execution starts, so an index
+   can be created on the very query that crosses the threshold, not only on
+   the next one.
+3. **Decoupling** — the advisor is wired into the engine layer, not the VM.
+   The VM itself is unchanged by v2.
+
+The trade-off is that the advisor sees *planned* filter columns, not columns
+that were actually evaluated at runtime. In practice this is fine — if the
+planner placed a `Filter` node there, the column is definitively being
+filtered. (Index drop logic, which requires knowing how often an index is
+*actually used*, is deferred to v3.)
 
 ---
 
@@ -36,14 +56,15 @@ v1 is complete and byte-compatible with real SQLite. v2 adds on top of it:
 | `storage_sqlite.index_tree` | absent | new module — `IndexTree` CRUD |
 | `storage_sqlite.backend` | table scan only | + `create_index`, `drop_index`, `scan_index`, `list_indexes` |
 | `sql_backend` | no index interface | + `IndexDef`, index methods on `Backend` |
-| `sql_vm` | executes, returns result | + emits a `QueryEvent` after each SELECT scan |
+| `sql_planner` | always full scan | + `IndexScan` node, first-match substitution |
+| `sql_codegen` | no index ops | + `CreateIndex`, `DropIndex`, `OpenIndexScan` IR instructions |
+| `sql_vm` | executes, returns result | + executes index DDL and `IndexScan` plans |
 | `mini_sqlite.policy` | absent | new module — `IndexPolicy` protocol + `HitCountPolicy` |
-| `mini_sqlite.advisor` | absent | new module — `IndexAdvisor` (event consumer + actuator) |
+| `mini_sqlite.advisor` | absent | new module — `IndexAdvisor` (plan observer + actuator) |
 | `mini_sqlite.connection` | passes backend to vm | + wires `IndexAdvisor` into every execute |
-| `sql_planner` | always full scan | + index selection for equality / range predicates |
 
 Everything else (pager, record, freelist, schema, varint, header, lexer,
-parser, optimizer, codegen) is **untouched**.
+parser, optimizer) is **untouched**.
 
 ---
 
@@ -59,22 +80,21 @@ parser, optimizer, codegen) is **untouched**.
 ┌──────────────────────────────────────────────────────────┐
 │  mini_sqlite.Connection                                   │
 │                                                           │
-│  1. run SQL through pipeline → QueryResult                │
-│  2. pass QueryEvent to IndexAdvisor                       │
-│  3. if advisor says "build index X" → call create_index   │
+│  1. parse + plan + optimize → LogicalPlan                 │
+│  2. advisor.observe_plan(plan) → may trigger create_index │
+│  3. codegen + vm.run(plan) → QueryResult                  │
 └───────┬──────────────────────────┬────────────────────────┘
-        │ SQL pipeline             │ index DDL
+        │ SQL pipeline             │ plan observation
         ▼                          ▼
 ┌───────────────┐        ┌─────────────────────────────────┐
 │  sql-vm       │        │  IndexAdvisor                   │
 │               │        │                                  │
-│  executes     │        │  • receives QueryEvents          │
-│  plan; uses   │        │  • forwards signals to policy    │
-│  available    │        │  • calls create_index / drop_    │
-│  indexes      │        │    index when policy says so     │
+│  executes     │        │  • walks plan for Filter(Scan)  │
+│  plan; uses   │        │  • increments per-column hits   │
+│  available    │        │  • calls policy.should_create() │
+│  indexes      │        │  • calls create_index if yes    │
 └───────┬───────┘        └───────────┬─────────────────────┘
-        │                            │ policy.on_scan() /
-        │                            │ policy.should_drop()
+        │                            │ should_create(table, col, n)
         │                            ▼
         │                ┌─────────────────────────────────┐
         │                │  IndexPolicy (protocol)         │
@@ -131,14 +151,6 @@ record = [user_id_value, rowid]
          ^               ^
          sort key         pointer back to table row
 ```
-
-For a composite index on `(last_name, first_name)`:
-
-```
-record = [last_name_value, first_name_value, rowid]
-```
-
-The sort order is lexicographic over the record values — same as `sqlite3`.
 
 #### Index cell format (interior, 0x02)
 
@@ -263,192 +275,177 @@ name     = <index name>
 tbl_name = <table name>
 rootpage = <root page of the index B-tree>
 sql      = 'CREATE INDEX <name> ON <table> (<col>, ...)'
-           or NULL for auto-created indexes (matching sqlite3 convention
-           for internal indexes on UNIQUE / PRIMARY KEY constraints)
 ```
 
-This means auto-created indexes are visible to the real `sqlite3` CLI and
-survive a `sqlite3` `VACUUM` or `.schema` inspection.
+Auto-created indexes are visible to the real `sqlite3` CLI and survive a
+`sqlite3` `VACUUM` or `.schema` inspection.
 
 ---
 
-### Component 3 — Query event system (`sql_vm`)
+### Component 3 — Plan-level observation (`mini_sqlite.advisor`)
 
-After every successful `SELECT` that performs a scan, `sql_vm` emits a
-`QueryEvent` to a registered listener.
+Instead of a runtime query-event system, the advisor inspects the **optimised
+logical plan** before code generation. The engine calls
+`advisor.observe_plan(plan)` once per statement, right after optimization and
+before VM execution.
 
-```python
-@dataclass
-class QueryEvent:
-    table: str                    # primary table being scanned
-    filtered_columns: list[str]   # columns that appeared in WHERE predicates
-    rows_scanned: int             # rows examined (full-scan count)
-    rows_returned: int            # rows in result set
-    used_index: str | None        # index name used, or None (full scan)
-    duration_us: int              # wall-clock microseconds
-```
+The advisor walks the plan tree for two structural patterns:
 
-```python
-# sql_vm public API addition
-def set_event_listener(listener: Callable[[QueryEvent], None] | None) -> None:
-    """Register a callback to receive QueryEvents after each SELECT scan.
+1. **`Filter(Scan(t), predicate)`** — a full table scan with a predicate.  
+   The advisor extracts column names from the predicate (see *Indexable
+   predicates* below), increments hit counts, and calls `should_create` on the
+   policy.
 
-    Pass None to remove the listener. The listener is called synchronously
-    before execute() returns, so it must be fast (no blocking I/O).
-    """
-```
+2. **`IndexScan(t, column, index_name)`** — an index scan already chosen by
+   the planner.  
+   The advisor notes that the index is in use but does *not* increment hit
+   counts (the index already exists; no action needed).
 
-`QueryEvent` is only emitted for SELECT statements that produce a scan node.
-INSERT / UPDATE / DELETE do not emit events in v2.
+All other plan nodes are recursed into transparently.
+
+#### Indexable predicates
+
+The advisor extracts column names from predicates that a B-tree index could
+satisfy:
+
+| Predicate form | Indexable? |
+|---|---|
+| `col = literal` / `literal = col` | ✅ |
+| `col < / <= / > / >= literal` (and reversed) | ✅ |
+| `col BETWEEN lo AND hi` | ✅ |
+| `col IN (v1, v2, …)` | ✅ |
+| `predA AND predB` | ✅ (recurse into both halves) |
+| `predA OR predB` | ❌ (or-predicates rarely benefit from a single index) |
+
+OR sub-predicates and complex expressions are deliberately excluded — an index
+on a column that only appears inside an `OR` is unlikely to help, and
+over-creating indexes has a write-amplification cost.
 
 ---
 
 ### Component 4 — Index policy (`mini_sqlite.policy`)
 
-The `IndexPolicy` interface owns the decision of when to create or drop an
-index. It receives workload signals and returns simple yes/no answers.
+The `IndexPolicy` interface owns the *create* decision. It receives a running
+hit count and returns a boolean.
 
 ```python
+@runtime_checkable
 class IndexPolicy(Protocol):
-    """Decides which indexes to build and drop based on query observations.
+    """Decides whether to create an index on a (table, column) pair.
 
-    Implementations receive signals from the IndexAdvisor and return
-    decisions. They do not interact with the backend directly — the advisor
-    acts on their decisions.
+    The advisor calls should_create() each time it observes a new hit for
+    a (table, column) pair. Return True to trigger index creation; return
+    False to wait for more evidence.
 
-    The default implementation is HitCountPolicy. Any other strategy can be
-    plugged in by implementing this protocol.
+    hit_count is the running total of times the advisor has seen a filter
+    on column within table. It includes the current observation — so the
+    first call arrives with hit_count=1.
     """
 
-    def on_full_scan(
-        self,
-        table: str,
-        column: str,
-        event: QueryEvent,
-    ) -> bool:
-        """Called after each full-table scan that filtered on *column*.
-
-        Return True to request that an index be created on (table, column).
-        The advisor will act on a True return — implementations should only
-        return True when they are confident an index is warranted.
-        """
-
-    def on_index_used(
-        self,
-        index_name: str,
-        table: str,
-        column: str,
-        event: QueryEvent,
-    ) -> None:
-        """Called when a query used an existing index.
-
-        Allows the policy to track utilization and inform drop decisions.
-        No return value — use should_drop() for drop decisions.
-        """
-
-    def should_drop(self, index_name: str, table: str, column: str) -> bool:
-        """Return True if an auto-created index should be dropped.
-
-        Called periodically by the advisor. Return True only when the
-        index is clearly no longer beneficial.
-        """
+    def should_create(self, table: str, column: str, hit_count: int) -> bool:
+        """Return True when an index on table.column should be created."""
+        ...
 ```
+
+**v2 scope**: the policy handles *creation* only. Index drop logic (determining
+when an auto-created index has become cold and should be removed) is deferred
+to v3 where it will be designed alongside composite-index utilisation tracking.
 
 #### Default implementation: `HitCountPolicy`
 
 ```python
 class HitCountPolicy:
-    """Create an index after N full-table scans on the same column.
-    Drop an index that has not been used in the last M queries.
-
-    This is the simplest useful policy. It is correct and predictable.
-    It makes no assumptions about data distribution, query frequency
-    trends, or workload stationarity.
+    """Create an index when a column's filter-hit count reaches threshold.
 
     Parameters
     ----------
-    create_threshold : int
+    threshold : int
         Number of full-table scans on a column before requesting an index.
-        Default 10.
-    cold_window : int
-        Number of query events without index use before requesting a drop.
-        Default 100.
+        Default 3.
     """
 
-    def __init__(
-        self,
-        *,
-        create_threshold: int = 10,
-        cold_window: int = 100,
-    ) -> None: ...
+    def __init__(self, threshold: int = 3) -> None:
+        if threshold < 1:
+            raise ValueError(f"threshold must be >= 1, got {threshold!r}")
+        self._threshold = threshold
 
-    def on_full_scan(self, table: str, column: str, event: QueryEvent) -> bool:
-        # Increment hit_count[(table, column)].
-        # Return True when hit_count >= create_threshold.
-        ...
+    @property
+    def threshold(self) -> int:
+        """The configured hit-count threshold (read-only)."""
+        return self._threshold
 
-    def on_index_used(self, index_name: str, table: str, column: str,
-                      event: QueryEvent) -> None:
-        # Record last-used event index for drop tracking.
-        ...
-
-    def should_drop(self, index_name: str, table: str, column: str) -> bool:
-        # Return True if the index has not appeared in used_index for the
-        # last cold_window query events.
-        ...
+    def should_create(self, table: str, column: str, hit_count: int) -> bool:
+        """Return True when hit_count has reached the configured threshold."""
+        _ = table, column  # unused — decision is purely count-based
+        return hit_count >= self._threshold
 ```
 
 ---
 
 ### Component 5 — Index advisor (`mini_sqlite.advisor`)
 
-The `IndexAdvisor` is the coordinator between the query event stream and the
-backend. It holds a reference to a `Backend` and an `IndexPolicy`, receives
-`QueryEvent` objects from the VM, and calls `create_index` / `drop_index`
-when the policy asks for it.
+The `IndexAdvisor` coordinates plan observation with index creation. It holds a
+reference to the `Backend` and the active `IndexPolicy`, and maintains a
+per-`(table, column)` hit-count table.
 
 ```python
 class IndexAdvisor:
-    """Coordinates query observations with index lifecycle management.
+    """Observes optimised query plans and auto-creates indexes when warranted.
 
-    Receives QueryEvents, forwards signals to the policy, and acts on
-    the policy's decisions by calling create_index / drop_index on the
-    backend. The advisor is policy-agnostic — it does not know or care
-    what decision logic the policy uses.
+    Parameters
+    ----------
+    backend:
+        The database backend. Used for list_indexes (to avoid duplicates)
+        and create_index (to materialise new indexes).
+    policy:
+        Decision policy. Defaults to HitCountPolicy(threshold=3). May be
+        replaced at any time via the policy property.
     """
 
     def __init__(
         self,
         backend: Backend,
-        policy: IndexPolicy | None = None,  # defaults to HitCountPolicy()
-        *,
-        max_auto_indexes: int = 20,
+        policy: IndexPolicy | None = None,
     ) -> None: ...
 
-    def set_policy(self, policy: IndexPolicy | None) -> None:
-        """Swap the active policy at runtime.
+    @property
+    def policy(self) -> IndexPolicy:
+        """The active index-creation policy."""
+        ...
 
-        The new policy takes effect on the next query event. Existing
-        indexes are not affected by a policy change.
-        If None, reverts to HitCountPolicy with default parameters.
+    @policy.setter
+    def policy(self, new_policy: IndexPolicy) -> None:
+        """Replace the policy. Hit counts accumulated so far are preserved."""
+        ...
+
+    def observe_plan(self, plan: LogicalPlan) -> None:
+        """Walk plan and record filter-column observations.
+
+        Called by the engine after each optimize() before code generation.
+        Mutates internal hit-count state and may trigger create_index calls
+        on the backend.
+
+        Idempotent with respect to index creation: if an index already
+        exists for a (table, column) pair, the advisor skips creation even
+        if the policy says yes.
         """
-
-    def on_query_event(self, event: QueryEvent) -> None:
-        """Process one query event. May trigger create_index or drop_index."""
+        ...
 ```
 
-#### Policy swap contract
+#### Hit-count state and policy swaps
 
-Swapping the policy at runtime has well-defined semantics:
+Hit counts are stored in the advisor (`_hits: dict[tuple[str, str], int]`),
+not in the policy. This means:
 
-- Indexes already created remain in place (they live in the file, not the policy)
-- The new policy starts fresh with no hit-count history from the old policy
-- The old policy is discarded and its state is not transferred
-- Indexes created by the old policy may later be dropped by the new policy
-  if `should_drop` returns True
+- **Policy swaps preserve accumulated hit counts.** Replacing the policy via
+  `advisor.policy = new_policy` retains the existing counter table. The new
+  policy will see the same hit counts the next time `should_create` is called.
+- **Only the decision logic changes** when the policy is swapped, not the
+  observation history.
 
-This makes policies **stateless with respect to the advisor** — each policy
-owns its own internal counters and can be reasoned about in isolation.
+This is deliberately different from the original spec design (which proposed
+hit counts living inside the policy). Housing counters in the advisor is a
+cleaner separation: the advisor owns *state*, the policy owns *rules*.
 
 #### Auto-index naming
 
@@ -461,25 +458,41 @@ auto_orders_user_id
 auto_users_email
 ```
 
-If a name would collide with an existing index, a numeric suffix is appended:
+If the first column of any existing index on the table already matches the
+target column, the advisor skips creation to avoid redundancy (rather than
+appending a numeric suffix). Numeric suffixes are a v3 concern for composite
+index disambiguation.
 
-```
-auto_orders_user_id_2
-```
+#### Duplicate prevention
 
-#### Index creation is transactional
-
-Each `create_index` call is wrapped in a `begin_transaction` / `commit`
-cycle so the backfill is atomic and durable. If the backfill fails, the
-advisor logs the failure, resets the hit count via the policy, and does not
-retry until the threshold is crossed again.
+Before calling `backend.create_index`, the advisor calls `backend.list_indexes`
+and skips creation if any existing index already has the target column as its
+first key. `IndexAlreadyExists` from the backend (a race between two advisors
+on the same file) is silently suppressed via `contextlib.suppress`.
 
 ---
 
-### Component 6 — Planner index selection (`sql_planner`)
+### Component 6 — SQL pipeline additions (IX-3)
+
+v2 wires `CREATE INDEX` and `DROP INDEX` DDL through the entire pipeline:
+
+**`sql_planner`**: new AST nodes `CreateIndexStmt`, `DropIndexStmt`; new
+logical plan nodes `CreateIndex`, `DropIndex`.
+
+**`sql_codegen`**: new IR instructions `CreateIndex`, `DropIndex`,
+`OpenIndexScan`; the compiler lowers `IndexScan` plan nodes to
+`OpenIndexScan` with `lo`/`hi` bounds.
+
+**`sql_vm`**: executes `CreateIndex` and `DropIndex` by delegating to the
+backend; executes `OpenIndexScan` by calling `backend.scan_index` and
+iterating rowids through a table fetch.
+
+---
+
+### Component 7 — Planner index selection (IX-6)
 
 When the planner builds a `Scan` node for a table, it checks whether any
-available index covers the predicate columns. If so, it substitutes an
+available index covers the predicate column. If so, it substitutes an
 `IndexScan` node.
 
 #### Index-eligible predicates (v2 subset)
@@ -494,7 +507,7 @@ available index covers the predicate columns. If so, it substitutes an
 | `col IN (v1, v2, …)` | ✅ (union of point lookups) |
 | `col IS NULL` | ❌ deferred |
 | `col LIKE 'prefix%'` | ❌ deferred |
-| Multi-column compound predicates | ❌ deferred (composite indexes later) |
+| Multi-column compound predicates | ❌ deferred (composite indexes in v3) |
 
 #### Index selection algorithm (v2 — first match, no cost model)
 
@@ -507,8 +520,7 @@ for each Scan(table, predicate) in the logical plan:
 ```
 
 No cost model in v2 — any matching index is used. A future phase adds
-selectivity estimates to prefer the best index when multiple candidates
-exist.
+selectivity estimates to prefer the best index when multiple candidates exist.
 
 #### `IndexScan` logical plan node
 
@@ -525,8 +537,8 @@ class IndexScan:
     residual: Expr | None     # remaining predicate applied after index scan
 ```
 
-The `IndexScan` node compiles to an `INDEX_SCAN` opcode in `sql_codegen`
-and executes via `backend.scan_index` in `sql_vm`.
+The `IndexScan` node compiles to an `OpenIndexScan` IR instruction in
+`sql_codegen` and executes via `backend.scan_index` in `sql_vm`.
 
 ---
 
@@ -542,12 +554,12 @@ for i in range(10_000):
     conn.execute("INSERT INTO orders VALUES (?, ?, ?)", (i, i % 500, float(i)))
 conn.commit()
 
-# First 9 queries: full table scans. Hit count climbs to 9.
-for _ in range(9):
+# First 2 queries: full table scans. Hit count climbs to 2.
+for _ in range(2):
     conn.execute("SELECT * FROM orders WHERE user_id = ?", (42,)).fetchall()
 
-# 10th query crosses the threshold. Advisor silently creates
-# auto_orders_user_id and all subsequent queries use it.
+# 3rd query crosses the default threshold of 3. Advisor silently creates
+# auto_orders_user_id and all subsequent queries use it automatically.
 rows = conn.execute("SELECT * FROM orders WHERE user_id = ?", (42,)).fetchall()
 
 # The index is visible to sqlite3 too.
@@ -564,43 +576,43 @@ with sqlite3.connect("shop.db") as db:
 ```python
 from mini_sqlite.policy import HitCountPolicy
 
-# Aggressive policy: build indexes after just 3 hits.
-conn._advisor.set_policy(HitCountPolicy(create_threshold=3, cold_window=50))
+# Aggressive policy: build indexes after just 1 hit.
+conn.set_policy(HitCountPolicy(threshold=1))
 
 # Any future policy (rule-based, statistical, etc.) fits the same slot.
-# conn._advisor.set_policy(MyCustomPolicy())
+# conn.set_policy(MyCustomPolicy())
 ```
+
+Note: `Connection.set_policy(policy)` delegates to `advisor.policy = policy`.
+Hit counts accumulated before the swap are preserved.
 
 ---
 
 ## Phased build order
 
-| Phase | Deliverable | Packages touched |
-|---|---|---|
-| IX-1 | `IndexTree` — index B-tree page types, insert / lookup / range_scan / delete | `storage-sqlite` |
-| IX-2 | Backend interface extension — `IndexDef`, `create_index`, `drop_index`, `list_indexes`, `scan_index` in `sql_backend` + `SqliteFileBackend` | `sql-backend`, `storage-sqlite` |
-| IX-3 | `CREATE INDEX` / `DROP INDEX` DDL wired end-to-end through the pipeline | `sql-planner`, `sql-codegen`, `sql-vm`, `mini-sqlite` |
-| IX-4 | Query event system — `QueryEvent`, `set_event_listener` in `sql_vm` | `sql-vm` |
-| IX-5 | `IndexPolicy` protocol, `HitCountPolicy`, `IndexAdvisor`, wired into `mini_sqlite.Connection` | `mini-sqlite` |
-| IX-6 | Planner index selection — `IndexScan` node, first-match substitution | `sql-planner`, `sql-codegen`, `sql-vm` |
+Phases IX-1 and IX-2 were delivered as separate PRs. Phases IX-3 through IX-6
+were tightly coupled (DDL, planner index selection, and advisor all interact
+at the engine level) and were delivered together in a single PR.
 
-Each phase is a separate feature branch and PR. Do not start IX-2 until
-IX-1's tests are fully green.
+| Phase | Deliverable | Packages touched | Status |
+|---|---|---|---|
+| IX-1 | `IndexTree` — index B-tree page types, insert / lookup / range_scan / delete | `storage-sqlite` | ✅ done |
+| IX-2 | Backend interface extension — `IndexDef`, `create_index`, `drop_index`, `list_indexes`, `scan_index` in `sql_backend` + `SqliteFileBackend` | `sql-backend`, `storage-sqlite` | ✅ done |
+| IX-3–6 | `CREATE INDEX` / `DROP INDEX` DDL + `IndexScan` planner + codegen + VM + `IndexPolicy` / `HitCountPolicy` / `IndexAdvisor` + `Connection.auto_index` | `sql-planner`, `sql-codegen`, `sql-vm`, `mini-sqlite` | ✅ done |
 
 ---
 
 ## Testing strategy
 
-### IX-1: `IndexTree` unit tests
+### IX-1: `IndexTree` unit tests (storage-sqlite/tests/test_index_tree.py)
 - Insert N keys, scan in order → keys returned sorted
 - Point lookup: present and absent keys
 - Range scan: open/closed bounds
 - Delete: remove a key, adjacent keys intact
 - Splits: enough insertions to force root split and interior splits
-- Overflow: index a long TEXT value requiring overflow pages
 - `free_all`: all pages returned to freelist after call
 
-### IX-2: Backend index tests
+### IX-2: Backend index tests (storage-sqlite/tests/test_backend_index.py)
 - `create_index` backfills existing rows correctly
 - `scan_index` equality and range
 - `drop_index` removes B-tree and `sqlite_schema` row
@@ -609,48 +621,54 @@ IX-1's tests are fully green.
 - Index row visible to real `sqlite3` (oracle test)
 - `sqlite3`-created index readable by `scan_index` (reverse oracle)
 
-### IX-3: DDL pipeline tests
+### IX-3: DDL pipeline tests (mini-sqlite/tests/test_tier2_features.py — TestCreateDropIndex)
 - `CREATE INDEX idx ON t (col)` end-to-end
 - `DROP INDEX idx` end-to-end
 - `CREATE INDEX IF NOT EXISTS` is idempotent
 - `DROP INDEX IF EXISTS` is idempotent
 - Errors translate correctly to PEP 249 exceptions
 
-### IX-4: Query event tests
-- Listener receives event after SELECT with WHERE
-- `rows_scanned` matches actual scan count
-- `used_index` is None on full scan, set on index scan
-- INSERT / UPDATE / DELETE do not emit events
-- Removing listener stops events
-
-### IX-5: Advisor + policy tests
-- Hit count below threshold → no index created
-- Hit count at threshold → index created
-- Column queried after index exists → `used_index` set → count not incremented
-- `max_auto_indexes` cap respected
-- Name collision → numeric suffix appended
-- Failed backfill → advisor resets and does not retry immediately
-- `set_policy()` swap → new policy takes effect, existing indexes retained
+### IX-4 (policy + advisor): (mini-sqlite/tests/test_tier2_features.py — TestHitCountPolicy, TestIndexAdvisor)
+- `HitCountPolicy.should_create` returns False below threshold, True at/above it
+- `threshold < 1` raises `ValueError`
+- `observe_plan` on a `Filter(Scan)` increments hit count; creates index at threshold
+- `observe_plan` on an `IndexScan` does not increment hit count
+- `observe_plan` on a bare `Scan` (no filter) does not increment hit count
+- Advisor skips creation if existing index already covers the column
+- `IndexAlreadyExists` from backend is silently suppressed
 - Custom `IndexPolicy` implementation accepted
+- Policy swap preserves hit counts
 
-### IX-6: Planner index selection tests
-- `SELECT … WHERE col = ?` uses index after creation
-- `SELECT … WHERE col > ?` uses index for range scan
-- Full scan used when no index covers the predicate column
-- `QueryEvent.used_index` set correctly when index is used
+### IX-5 (connection integration): (mini-sqlite/tests/test_tier2_features.py — TestConnectAutoIndex)
+- `connect(auto_index=True)` (default) wires advisor
+- `connect(auto_index=False)` disables advisor; `set_policy` is a no-op
+- `set_policy(new_policy)` replaces policy on live connection
+
+### IX-6 (planner index selection): covered by IX-4 advisor tests — after
+  the advisor creates an index, re-running the same query produces an
+  `IndexScan` plan rather than a `Filter(Scan)` plan.
 
 ---
 
 ## Non-goals (v2)
 
-- **Composite / multi-column indexes** — deferred to v3
-- **UNIQUE indexes** — `IndexDef.unique` field reserved but not enforced in v2
-- **`ANALYZE` / statistics-based cost model** — deferred to v3 (requires
-  selectivity estimates and histogram maintenance)
+- **Index drop logic** — the advisor creates indexes but never drops them.
+  Designing drop correctly requires knowing how often each index is *actually
+  used at runtime*, which in turn requires either query-event instrumentation
+  or periodic index utilisation queries. Deferred to v3 where it is designed
+  alongside composite-index utilisation tracking.
+- **Composite / multi-column indexes** — the advisor and planner handle
+  single-column indexes only. `IndexDef.columns` is a list to accommodate
+  future multi-column support; the advisor always passes a single-element list.
+  Deferred to v3.
+- **UNIQUE indexes** — `IndexDef.unique` field is present but not enforced.
+  Deferred to v3.
+- **`ANALYZE` / statistics-based cost model** — the planner picks the first
+  matching index with no cost comparison. Deferred to v3.
 - **Index-only scans** (covering indexes where the SELECT list is fully
-  satisfied by the index without touching the table) — deferred to v3
-- **WAL mode** — still rollback journal only in v2
-- **Multi-process locking** — still single-process only
+  satisfied by the index without touching the table) — deferred to v3.
+- **WAL mode** — still rollback journal only in v2.
+- **Multi-process locking** — still single-process only.
 
 ---
 
@@ -658,7 +676,7 @@ IX-1's tests are fully green.
 
 - **Extends:** `storage-sqlite.md` (IX-1, IX-2), `sql-backend.md` (index
   interface), `mini-sqlite-python.md` (policy + advisor), `sql-planner.md`
-  (index selection), `sql-vm.md` (query events)
+  (index selection), `sql-vm.md` (index DDL execution)
 - **Forward compatibility:** the `IndexPolicy` interface is the stable
-  extension point for any future decision strategy. Nothing else needs to
-  change when a new policy is introduced.
+  extension point for any future decision strategy. v3 will extend it with
+  a `should_drop` method and a `cold_window` parameter on `HitCountPolicy`.

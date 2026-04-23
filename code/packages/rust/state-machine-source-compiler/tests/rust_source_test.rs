@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use state_machine::{
     MachineKind, PDATransition, PushdownAutomaton, StateDefinition, StateMachineDefinition,
-    TransitionDefinition, DFA, EPSILON, NFA,
+    TransitionDefinition, DFA, END_INPUT, EPSILON, NFA,
 };
 use state_machine_source_compiler::{
     to_rust_source, StateMachineRustSourceCompiler, StateMachineSourceError,
@@ -105,6 +105,42 @@ fn pda_definition_emits_stack_tables_and_constructor() {
     assert!(source.contains("definition.initial_stack = Some(\"$\".to_string())"));
     assert!(source.contains("stack_pop: Some(\"$\".to_string())"));
     assert!(source.contains("\"(\".to_string()"));
+}
+
+#[test]
+fn transducer_definition_emits_effect_tables_and_constructor() {
+    let mut definition = StateMachineDefinition::new("html-skeleton", MachineKind::Transducer);
+    definition.initial = Some("data".to_string());
+    definition.alphabet = vec!["<".to_string()];
+    definition.states = vec![
+        StateDefinition {
+            initial: true,
+            ..StateDefinition::new("data")
+        },
+        StateDefinition {
+            final_state: true,
+            ..StateDefinition::new("done")
+        },
+    ];
+    definition.transitions = vec![TransitionDefinition {
+        from: "data".to_string(),
+        on: Some(END_INPUT.to_string()),
+        to: vec!["done".to_string()],
+        stack_pop: None,
+        stack_push: Vec::new(),
+        actions: vec!["flush_text".to_string(), "emit(EOF)".to_string()],
+        consume: false,
+    }];
+
+    let source = to_rust_source(&definition).unwrap();
+
+    assert!(source.contains("MachineKind::Transducer"));
+    assert!(source.contains(
+        "pub fn html_skeleton_transducer() -> std::result::Result<EffectfulStateMachine, String>"
+    ));
+    assert!(source.contains("EffectfulStateMachine::from_definition"));
+    assert!(source.contains("\"flush_text\".to_string()"));
+    assert!(source.contains("consume: false"));
 }
 
 #[test]

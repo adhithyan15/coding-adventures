@@ -118,6 +118,8 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
             &left.to,
             &left.stack_pop,
             &left.stack_push,
+            &left.actions,
+            left.consume,
         )
             .cmp(&(
                 &right.from,
@@ -125,6 +127,8 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
                 &right.to,
                 &right.stack_pop,
                 &right.stack_push,
+                &right.actions,
+                right.consume,
             ))
     });
 
@@ -152,6 +156,12 @@ fn json_transition_array(definition: &StateMachineDefinition) -> String {
                 json_array(&transition.stack_push),
             ));
         }
+        if !transition.actions.is_empty() {
+            fields.push(json_property("actions", json_array(&transition.actions)));
+        }
+        if !transition.consume {
+            fields.push(json_property("consume", "false".to_string()));
+        }
         let comma = if index + 1 == transitions.len() {
             ""
         } else {
@@ -170,6 +180,8 @@ struct JsonTransition {
     to: Vec<String>,
     stack_pop: Option<String>,
     stack_push: Vec<String>,
+    actions: Vec<String>,
+    consume: bool,
 }
 
 impl JsonTransition {
@@ -186,6 +198,8 @@ impl JsonTransition {
             to,
             stack_pop: transition.stack_pop.clone(),
             stack_push: transition.stack_push.clone(),
+            actions: transition.actions.clone(),
+            consume: transition.consume,
         }
     }
 }

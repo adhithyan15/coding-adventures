@@ -14,8 +14,8 @@ at runtime.
 The first backend emits Rust modules with two pieces:
 
 - a `<machine>_definition()` function that reconstructs the typed definition
-- a kind-specific convenience function such as `<machine>_dfa()` that calls the
-  corresponding executable automaton importer
+- a kind-specific convenience function such as `<machine>_dfa()` or
+  `<machine>_transducer()` that calls the corresponding executable importer
 
 Example:
 
@@ -38,7 +38,7 @@ StateMachineDefinition
         -> generated Rust module
         -> temporary wrapper crate
         -> cargo test
-        -> executable DFA/NFA/PDA behavior
+        -> executable DFA/NFA/PDA behavior and transducer effects
 ```
 
 Those temporary crates live only in tests. The public compiler API still returns
@@ -54,5 +54,7 @@ source text and does not read or write files.
         -> wrapper package links generated module
 ```
 
-Future slices can add Go, TypeScript, Python, Ruby, and tokenizer-specific
-backends while preserving the same typed definition input boundary.
+The Rust backend currently supports DFA, NFA, PDA, and effectful transducer
+definitions. Future slices can add Go, TypeScript, Python, Ruby, and
+tokenizer-specific wrapper generators while preserving the same typed
+definition input boundary.

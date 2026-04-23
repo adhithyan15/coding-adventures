@@ -21,6 +21,12 @@ tokens, append text, track temporary buffers, report parse errors, reconsume the
 current input character in a new state, and sometimes call a shared submachine
 such as character-reference parsing.
 
+The first Rust implementation slice widens the state-machine foundation with an
+effectful transducer runtime. That runtime is intentionally generic: it executes
+ordered transitions, emits named effects, and reports whether the transition
+consumed input. HTML tokenization then becomes a wrapper/interpreter over those
+effects rather than a custom automaton family bolted beside DFA/NFA/PDA.
+
 So the answer to "can the states and transitions live purely in a text file?"
 is:
 
@@ -138,6 +144,21 @@ Each loop iteration:
 The machine is deterministic because transition matching is ordered and
 `anything`/`anything_else` matchers are only valid as the last transition in a
 state.
+
+The lower-level Rust `EffectfulStateMachine` currently represents the same idea
+with typed events:
+
+- ordinary events match declared alphabet entries
+- `$any` matches any non-EOF event after earlier transitions have had a chance
+  to match
+- `$end` matches the EOF sentinel and must not consume input
+- `actions` is an ordered list of portable effect identifiers
+- `consume = false` models EOF, lookahead, and future reconsume-style behavior
+
+That representation is deliberately smaller than the full tokenizer profile,
+but it is enough for generated source and wrapper packages to share one
+execution primitive while the tokenizer-specific matcher/action vocabulary
+continues to grow.
 
 ## File Format
 
@@ -590,12 +611,12 @@ web-platform-tests/html and run them through the same runtime.
 ## Implementation Plan
 
 1. Add this spec.
-2. Add a `tokenizer-state-machine` package in Rust first, because Rust is the
-   browser implementation direction and gives us strong data modeling.
-3. Port the runtime to Go next, because Go is the other preferred systems
-   direction for this repo.
-4. Add TypeScript, Python, Ruby, and other ports only after the Rust and Go APIs
-   settle.
+2. Add a generic effectful transducer primitive to the Rust `state-machine`
+   package so tokenizer runtimes build on the same foundation as DFA/NFA/PDA.
+3. Teach the Rust definition, serializer/deserializer, and source compiler
+   pipeline to preserve transition actions and consume flags.
+4. Add a minimal HTML tokenizer skeleton test that proves text buffering,
+   start/end tag emission, EOF handling, and generated transducer source.
 5. Add `code/tokenizers/html/html1.tokenizer.states.toml`.
 6. Compile the tokenizer definition into static source code with the F09
    compiler.

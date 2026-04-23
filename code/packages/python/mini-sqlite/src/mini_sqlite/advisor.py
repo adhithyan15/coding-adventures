@@ -1,16 +1,23 @@
 """
-IndexAdvisor — automatic B-tree index creation from observed query plans.
-=========================================================================
+IndexAdvisor — automatic B-tree index lifecycle management.
+===========================================================
 
-The advisor sits between the SQL engine and the backend.  Every time a
-query is executed the engine calls :meth:`IndexAdvisor.observe_plan` with
-the *optimised* logical plan.  The advisor walks the plan tree looking for
-``Filter(Scan)`` patterns — a full table scan with a filter applied — and
-records which columns appear in those filters.  Once a column's hit count
-reaches the policy threshold the advisor calls ``backend.create_index``.
+The advisor sits between the SQL engine and the backend.  It has two hooks:
 
-Why plan-level observation instead of execution-level?
--------------------------------------------------------
+1. **:meth:`observe_plan`** — called *before* execution with the optimised
+   logical plan.  The advisor walks the plan tree looking for
+   ``Filter(Scan)`` patterns (full table scans with a filter applied) and
+   records which columns appear in those filters.  Once a column's hit count
+   reaches the policy threshold the advisor calls ``backend.create_index``.
+
+2. **:meth:`on_query_event`** — called *after* execution with a
+   :class:`~sql_vm.QueryEvent`.  The advisor uses this to track how
+   recently each auto-created index was actually used and to drop indexes
+   that have gone cold according to the active policy's :meth:`should_drop`
+   method.
+
+Why plan-level observation instead of execution-level for creation?
+--------------------------------------------------------------------
 
 We observe the *plan*, not the execution, for two reasons:
 
@@ -25,11 +32,23 @@ The trade-off is that we see *potential* filter columns, not actually
 evaluated ones.  In practice this is fine — if the planner put a ``Filter``
 node there, the column is definitely being filtered.
 
+Drop logic requires execution-level data
+----------------------------------------
+
+Dropping indexes correctly requires knowing which indexes were *actually
+used at runtime*.  The :meth:`on_query_event` hook receives a
+:class:`~sql_vm.QueryEvent` after each SELECT scan that contains
+``used_index`` — the name of the index that was used, or ``None`` for a
+full table scan.  The advisor uses this to maintain a per-index
+``queries_since_last_use`` counter and requests a drop when the policy
+threshold is reached.
+
 Index naming convention
 -----------------------
 
 Auto-created indexes use the name ``auto_{table}_{column}``.  This prefix
-makes it easy to identify and optionally drop them.
+makes it easy to identify them and ensures the advisor never accidentally
+drops user-created indexes (which do not start with ``auto_``).
 
 If a user-created index already covers the column (first column of any
 existing index for that table), the advisor skips creation to avoid
@@ -40,8 +59,8 @@ Lifecycle
 
 One ``IndexAdvisor`` is created per :class:`~mini_sqlite.connection.Connection`.
 If the user calls :meth:`Connection.set_policy` the connection replaces the
-advisor's policy in-place; the hit-count table is preserved so accumulated
-observations are not lost.
+advisor's policy in-place; the hit-count table and drop-tracking state are
+preserved so accumulated observations are not lost.
 """
 
 from __future__ import annotations
@@ -79,6 +98,7 @@ from sql_planner.plan import (
     Union,
 )
 from sql_planner.plan import Limit as PlanLimit
+from sql_vm import QueryEvent
 
 from .policy import HitCountPolicy, IndexPolicy
 
@@ -119,6 +139,15 @@ class IndexAdvisor:
         # hit counts: (table_name, column_name) → how many times we've seen
         # this column in a filter position.
         self._hits: dict[tuple[str, str], int] = {}
+        # Drop-tracking state.
+        # _query_count: total SELECT scans observed via on_query_event.
+        # _last_use[index_name]: _query_count value when the index was last
+        #     seen in a QueryEvent.used_index.
+        # _created_at[index_name]: _query_count value when the advisor created
+        #     the index (baseline for "never used since creation").
+        self._query_count: int = 0
+        self._last_use: dict[str, int] = {}
+        self._created_at: dict[str, int] = {}
 
     # ------------------------------------------------------------------
     # Policy swap.
@@ -150,6 +179,65 @@ class IndexAdvisor:
         skips creation even if the policy says "yes".
         """
         _walk(plan, self._record)
+
+    def on_query_event(self, event: QueryEvent) -> None:
+        """Process one :class:`~sql_vm.QueryEvent` emitted after a SELECT scan.
+
+        Called by the engine after each ``vm.execute()`` call that performed
+        a table or index scan.  Advances the query counter, updates the
+        last-use timestamp for the used index (if any), then checks all
+        tracked auto-created indexes against the policy's
+        :meth:`~mini_sqlite.policy.IndexPolicy.should_drop` method.
+
+        Drop semantics
+        --------------
+        An index is a candidate for dropping when:
+
+        - Its name starts with ``auto_`` (user-created indexes are never
+          touched automatically).
+        - The policy implements ``should_drop`` (detected via ``hasattr``).
+        - ``policy.should_drop(name, table, col, queries_since_last_use)``
+          returns ``True``.
+
+        Failures during ``drop_index`` are swallowed — the advisor continues
+        running; the index simply stays in place until the next opportunity.
+        """
+        self._query_count += 1
+
+        # Record index utilisation.
+        if event.used_index is not None and event.used_index.startswith("auto_"):
+            self._last_use[event.used_index] = self._query_count
+
+        # Check whether the policy wants to drop any cold auto-indexes.
+        should_drop_fn = getattr(self._policy, "should_drop", None)
+        if not callable(should_drop_fn):
+            return
+
+        # Collect all auto-indexes we know about: those we created plus any
+        # that were already tracked in _last_use from previous events.
+        candidates = set(self._created_at) | set(self._last_use)
+        for idx_name in list(candidates):
+            last = self._last_use.get(idx_name, self._created_at.get(idx_name, 0))
+            queries_since = self._query_count - last
+            # Derive table and column from the naming convention
+            # auto_{table}_{column}.  If the name doesn't follow the
+            # convention we skip it rather than guessing.
+            parts = idx_name.split("_", 2)  # ["auto", table, column]
+            if len(parts) != 3:
+                continue
+            _, table, column = parts
+            if should_drop_fn(idx_name, table, column, queries_since):
+                try:
+                    self._backend.drop_index(idx_name, if_exists=True)
+                except Exception:  # noqa: BLE001 — drop failures are non-fatal
+                    continue
+                # Remove from tracking so the advisor doesn't re-check it.
+                self._created_at.pop(idx_name, None)
+                self._last_use.pop(idx_name, None)
+                # Also reset the hit count so the index can be re-created if
+                # the workload pattern returns.
+                key = (table, column)
+                self._hits.pop(key, None)
 
     # ------------------------------------------------------------------
     # Internal callbacks.
@@ -192,6 +280,9 @@ class IndexAdvisor:
         )
         with contextlib.suppress(IndexAlreadyExists):
             self._backend.create_index(idx_def)
+            # Record creation time so the drop loop can compute
+            # queries_since_last_use from the moment the index was born.
+            self._created_at[name] = self._query_count
 
 
 # --------------------------------------------------------------------------

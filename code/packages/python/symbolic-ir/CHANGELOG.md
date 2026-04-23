@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — 2026-04-22
+
+- Added `ASIN = IRSymbol("Asin")` and `ACOS = IRSymbol("Acos")` to the
+  elementary-functions group in `nodes.py` (after `ATAN`) and exported both
+  from `__init__.py`. Required by Phase 12 of the symbolic integration
+  roadmap (`∫ P(x)·asin(ax+b) dx` and `∫ P(x)·acos(ax+b) dx`). See
+  `phase12-poly-asin-acos.md`.
+
 ## 0.3.0 — 2026-04-20
 
 - Added `TAN = IRSymbol("Tan")` to the elementary-functions group in

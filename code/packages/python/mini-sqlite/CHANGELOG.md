@@ -1,5 +1,69 @@
 # Changelog
 
+## [0.5.0] - 2026-04-23
+
+### Added — Phase 9.6: Automatic index drop logic (IX-7)
+
+- **`IndexPolicy.should_drop` optional method** — the protocol now documents
+  an optional `should_drop(index_name, table, column, queries_since_last_use)`
+  method.  Policies without it continue to work (the advisor detects the method
+  via `hasattr`).
+
+- **`HitCountPolicy.cold_window` parameter** — new keyword-only argument
+  (default 0, which disables drop logic).  When positive, `should_drop`
+  returns `True` once an auto-created index hasn't been seen in
+  `queries_since_last_use >= cold_window` consecutive SELECT scans.
+  Negative values raise `ValueError`.
+
+- **`HitCountPolicy.should_drop` method** — implements the optional drop
+  decision.  Always returns `False` when `cold_window == 0`; otherwise
+  returns `queries_since_last_use >= cold_window`.  Accepts `index_name`,
+  `table`, and `column` (unused in this implementation — custom policies
+  may inspect them).
+
+- **`IndexAdvisor.on_query_event(event: QueryEvent)` hook** — second hook on
+  the advisor (alongside the existing `observe_plan`).  Called by the engine
+  after each SELECT scan:
+  - Increments `_query_count` (the global SELECT scan counter).
+  - Records `_last_use[index_name] = _query_count` when `event.used_index`
+    is a known auto-index.
+  - Iterates all tracked auto-indexes and calls `policy.should_drop` on each;
+    drops cold indexes via `backend.drop_index(name, if_exists=True)`.
+  - Clears drop-tracking state and hit counts for dropped indexes so they
+    can be re-created if the query pattern returns.
+  - Drop failures are swallowed — the advisor continues running.
+
+- **`IndexAdvisor` drop-tracking state** — three new internal fields:
+  `_query_count: int`, `_last_use: dict[str, int]`,
+  `_created_at: dict[str, int]`.
+
+- **`engine.run()` wires `event_cb`** — passes `advisor.on_query_event` as
+  `event_cb` to `vm.execute()` and pre-populates `filtered_columns` via
+  `_extract_scan_info(optimized)`.  The callback is only set for SELECT-type
+  plans; DML and DDL never advance the cold-window counter.
+
+- **`_extract_scan_info(plan)` helper** in `engine.py` — walks the logical
+  plan to extract the primary scan table and filtered column names for
+  pre-populating `QueryEvent`.  Uses structural pattern matching; returns
+  `("", [])` for DDL/DML.
+
+- **`QueryEvent` re-exported** from `mini_sqlite` top-level namespace and
+  added to `__all__`.
+
+### Tests
+
+- `tests/test_tier3_drop.py` — 42 new tests across four classes:
+  - `TestHitCountPolicyColdWindow` — 10 tests for the `cold_window` parameter
+    and `should_drop` semantics.
+  - `TestQueryEventEmission` — 8 tests for VM-level event emission (table,
+    rows_scanned, rows_returned, filtered_columns, duration_us, index usage).
+  - `TestAdvisorDropLogic` — 10 tests for advisor drop loop (query counting,
+    last-use tracking, drop at threshold, reset on use, non-fatal failures,
+    v2-policy compatibility, hit-count reset after drop).
+  - `TestDropIntegration` — 6 end-to-end tests via `mini_sqlite.connect()`
+    (full create-then-drop cycle, re-creation after drop, `cold_window=0`
+    never drops, `auto_index=False` has no advisor, `QueryEvent` export).
+
 ## [0.4.0] - 2026-04-22
 
 ### Added — Phase 9.5: Automatic B-tree index creation (IndexAdvisor)
