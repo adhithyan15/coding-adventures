@@ -131,6 +131,18 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
 
+    def test_procedure_crossing_goto_exits_called_procedure_frame(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure escape; "
+            "begin goto outer_done; result := 9 end; "
+            "escape; "
+            "result := 0; "
+            "outer_done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_conditional_designational_goto_selects_branch(self) -> None:
         result = compile_source(
             "begin integer result; "
