@@ -33,6 +33,7 @@ initial = true
 
 const HTML_SKELETON_LEXER_TOML: &str =
     include_str!("../../html-lexer/html-skeleton.lexer.states.toml");
+const HTML1_LEXER_TOML: &str = include_str!("../../html-lexer/html1.lexer.states.toml");
 
 #[test]
 fn dfa_serializer_output_round_trips_through_deserializer() {
@@ -107,6 +108,35 @@ fn lexer_profile_html_skeleton_toml_parses_into_typed_definition() {
         .unwrap();
     assert_eq!(eof.on, None);
     assert!(!eof.consume);
+}
+
+#[test]
+fn lexer_profile_html1_toml_parses_into_typed_definition() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+
+    assert_eq!(definition.name, "html1-lexer");
+    assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
+    assert_eq!(
+        definition
+            .tokens
+            .iter()
+            .map(|token| token.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["Text", "StartTag", "EndTag", "Comment", "Doctype", "EOF"]
+    );
+    assert!(definition
+        .registers
+        .iter()
+        .any(|register| register.id == "temporary_buffer"));
+    assert!(definition.transitions.iter().any(|transition| transition
+        .actions
+        .iter()
+        .any(|action| action == "create_comment")));
+    assert!(definition.transitions.iter().any(|transition| transition
+        .actions
+        .iter()
+        .any(|action| action == "create_doctype")));
+    assert_eq!(definition.fixtures.len(), 5);
 }
 
 #[test]

@@ -5,9 +5,12 @@ use state_machine::{
     PDATransition, PushdownAutomaton, RegisterDefinition, StateDefinition, StateMachineDefinition,
     TokenDefinition, TransitionDefinition, DFA, END_INPUT, EPSILON, NFA,
 };
+use state_machine_markup_deserializer::from_states_toml;
 use state_machine_source_compiler::{
     to_rust_source, StateMachineRustSourceCompiler, StateMachineSourceError,
 };
+
+const HTML1_LEXER_TOML: &str = include_str!("../../html-lexer/html1.lexer.states.toml");
 
 fn set(values: &[&str]) -> HashSet<String> {
     values.iter().map(|value| value.to_string()).collect()
@@ -186,6 +189,22 @@ fn transducer_definition_emits_effect_tables_and_constructor() {
     assert!(source.contains("guard: Some(\"can_emit\".to_string())"));
     assert!(source.contains("\"flush_text\".to_string()"));
     assert!(source.contains("consume: false"));
+}
+
+#[test]
+fn html1_toml_compiles_to_rust_source() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+    let source = to_rust_source(&definition).unwrap();
+
+    assert!(source.contains("pub fn html1_lexer_definition()"));
+    assert!(source.contains(
+        "pub fn html1_lexer_transducer() -> std::result::Result<EffectfulStateMachine, String>"
+    ));
+    assert!(source.contains("definition.profile = Some(\"lexer/v1\".to_string())"));
+    assert!(source.contains("name: \"Comment\".to_string()"));
+    assert!(source.contains("name: \"Doctype\".to_string()"));
+    assert!(source.contains("\"create_comment\".to_string()"));
+    assert!(source.contains("\"create_doctype\".to_string()"));
 }
 
 #[test]

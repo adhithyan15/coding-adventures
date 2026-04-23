@@ -7,3 +7,6 @@ description = "HTML lexer built from state-machine lexer definitions"
 [dependencies]
 state-machine = { path = "../state-machine" }
 state-machine-tokenizer = { path = "../state-machine-tokenizer" }
+
+[dev-dependencies]
+state-machine-markup-deserializer = { path = "../state-machine-markup-deserializer" }
