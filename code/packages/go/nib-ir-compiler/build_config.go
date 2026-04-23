@@ -1,7 +1,9 @@
 package nibircompiler
 
 type BuildConfig struct {
-	InsertDebugComments bool
+	InsertDebugComments    bool
+	CopyParametersToLocals bool
+	LocalRegisterBase      int
 }
 
 func DebugConfig() BuildConfig {
@@ -10,4 +12,11 @@ func DebugConfig() BuildConfig {
 
 func ReleaseConfig() BuildConfig {
 	return BuildConfig{InsertDebugComments: false}
+}
+
+func CallSafeConfig() BuildConfig {
+	return BuildConfig{
+		CopyParametersToLocals: true,
+		LocalRegisterBase:      defaultLocalRegisterBase,
+	}
 }

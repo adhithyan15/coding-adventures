@@ -37,4 +37,6 @@ absolute byte offsets from the beginning of the loaded program.
 When a program uses `CALL`, the backend emits a small runtime prelude that
 initializes `sp` to a hidden call-frame stack appended after the IR data segment.
 Every called label saves `ra` on entry, and `RET` restores it before returning,
-so nested calls can safely return through multiple frames.
+so nested calls can safely return through multiple frames. The backend also
+saves and restores mapped virtual registers around each `CALL`, treating `v0`
+and `v1` as volatile starter-ABI registers.

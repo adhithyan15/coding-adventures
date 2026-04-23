@@ -2,6 +2,7 @@ package irtoriscvcompiler
 
 import (
 	"fmt"
+	"sort"
 
 	ir "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-ir"
 	sm "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-source-map"
@@ -47,6 +48,7 @@ type compilePlan struct {
 	labelOffsets    map[string]int
 	dataOffsets     map[string]int
 	callTargets     map[string]bool
+	callerSavedRegs []callerSavedRegister
 	stackTop        int
 	textSize        int
 	entryTrampoline bool
@@ -54,6 +56,11 @@ type compilePlan struct {
 
 func (p *compilePlan) usesCallFrames() bool {
 	return len(p.callTargets) > 0
+}
+
+type callerSavedRegister struct {
+	virtual  int
+	physical int
 }
 
 // IrToRiscVCompiler lowers compiler IR to RV32I machine code.
@@ -123,6 +130,10 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 	if err != nil {
 		return nil, err
 	}
+	callerSavedRegs := []callerSavedRegister{}
+	if len(callTargets) > 0 {
+		callerSavedRegs = collectCallerSavedRegisters(program)
+	}
 
 	labelOffsets := map[string]int{}
 	pc := stackSetupSize(callTargets) * 4
@@ -139,7 +150,7 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 			labelOffsets[label.Name] = pc
 		}
 
-		size, err := c.instructionSize(instruction, callTargets)
+		size, err := c.instructionSize(instruction, callTargets, callerSavedRegs)
 		if err != nil {
 			return nil, err
 		}
@@ -192,13 +203,14 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 		labelOffsets:    labelOffsets,
 		dataOffsets:     dataOffsets,
 		callTargets:     callTargets,
+		callerSavedRegs: callerSavedRegs,
 		stackTop:        stackTop,
 		textSize:        pc,
 		entryTrampoline: entryTrampoline,
 	}, nil
 }
 
-func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction, callTargets map[string]bool) (int, error) {
+func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction, callTargets map[string]bool, callerSavedRegs []callerSavedRegister) (int, error) {
 	switch instruction.Opcode {
 	case ir.OpLabel, ir.OpComment:
 		return 0, nil
@@ -228,8 +240,10 @@ func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction, callTa
 			return 1, nil
 		}
 		return loadConstSize(imm.Value) + 1, nil
-	case ir.OpJump, ir.OpBranchZ, ir.OpBranchNz, ir.OpCall, ir.OpNop:
+	case ir.OpJump, ir.OpBranchZ, ir.OpBranchNz, ir.OpNop:
 		return 1, nil
+	case ir.OpCall:
+		return callInstructionSize(callerSavedRegs), nil
 	case ir.OpRet:
 		if len(callTargets) == 0 {
 			return 1, nil
@@ -331,11 +345,12 @@ func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int
 		if err != nil {
 			return nil, err
 		}
-		offset, err := jalOffset(instruction, label, pc, plan)
+		jalPC := pc + callerSavePrologueSize(plan.callerSavedRegs)*4
+		offset, err := jalOffset(instruction, label, jalPC, plan)
 		if err != nil {
 			return nil, err
 		}
-		return []uint32{riscv.EncodeJal(xRa, offset)}, nil
+		return emitCallWithCallerSaves(offset, plan.callerSavedRegs), nil
 	case ir.OpRet:
 		if !plan.usesCallFrames() {
 			return []uint32{riscv.EncodeJalr(x0, xRa, 0)}, nil
@@ -423,6 +438,39 @@ func collectCallTargets(program *ir.IrProgram) (map[string]bool, error) {
 	return targets, nil
 }
 
+func collectCallerSavedRegisters(program *ir.IrProgram) []callerSavedRegister {
+	seen := map[int]bool{}
+	for _, instruction := range program.Instructions {
+		for _, operand := range instruction.Operands {
+			register, ok := operand.(ir.IrRegister)
+			if !ok || isVolatileVirtualRegister(register.Index) {
+				continue
+			}
+			physical, ok := physicalRegister(register.Index)
+			if !ok || physical == xRa || physical == xSp || physical == xBackendScratch {
+				continue
+			}
+			seen[register.Index] = true
+		}
+	}
+	virtuals := make([]int, 0, len(seen))
+	for virtual := range seen {
+		virtuals = append(virtuals, virtual)
+	}
+	sort.Ints(virtuals)
+
+	registers := make([]callerSavedRegister, 0, len(virtuals))
+	for _, virtual := range virtuals {
+		physical, _ := physicalRegister(virtual)
+		registers = append(registers, callerSavedRegister{virtual: virtual, physical: physical})
+	}
+	return registers
+}
+
+func isVolatileVirtualRegister(index int) bool {
+	return index == 0 || index == 1
+}
+
 func callTargetPrologueSize() int {
 	return 2
 }
@@ -438,11 +486,64 @@ func retEpilogueSize() int {
 	return 3
 }
 
+func callInstructionSize(regs []callerSavedRegister) int {
+	return callerSavePrologueSize(regs) + 1 + callerSaveEpilogueSize(regs)
+}
+
+func callerSavePrologueSize(regs []callerSavedRegister) int {
+	if len(regs) == 0 {
+		return 0
+	}
+	return 1 + len(regs)
+}
+
+func callerSaveEpilogueSize(regs []callerSavedRegister) int {
+	if len(regs) == 0 {
+		return 0
+	}
+	return len(regs) + 1
+}
+
+func callerSaveFrameBytes(regs []callerSavedRegister) int {
+	return len(regs) * 4
+}
+
 func emitCallTargetPrologue() []uint32 {
 	return []uint32{
 		riscv.EncodeAddi(xSp, xSp, -4),
 		riscv.EncodeSw(xRa, xSp, 0),
 	}
+}
+
+func emitCallWithCallerSaves(offset int, regs []callerSavedRegister) []uint32 {
+	words := emitCallerSavePrologue(regs)
+	words = append(words, riscv.EncodeJal(xRa, offset))
+	words = append(words, emitCallerSaveEpilogue(regs)...)
+	return words
+}
+
+func emitCallerSavePrologue(regs []callerSavedRegister) []uint32 {
+	if len(regs) == 0 {
+		return nil
+	}
+	frameBytes := callerSaveFrameBytes(regs)
+	words := []uint32{riscv.EncodeAddi(xSp, xSp, -frameBytes)}
+	for index, register := range regs {
+		words = append(words, riscv.EncodeSw(register.physical, xSp, index*4))
+	}
+	return words
+}
+
+func emitCallerSaveEpilogue(regs []callerSavedRegister) []uint32 {
+	if len(regs) == 0 {
+		return nil
+	}
+	words := make([]uint32, 0, len(regs)+1)
+	for index, register := range regs {
+		words = append(words, riscv.EncodeLw(register.physical, xSp, index*4))
+	}
+	words = append(words, riscv.EncodeAddi(xSp, xSp, callerSaveFrameBytes(regs)))
+	return words
 }
 
 func emitRetEpilogue() []uint32 {
