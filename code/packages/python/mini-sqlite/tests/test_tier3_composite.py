@@ -20,11 +20,10 @@ TestCompositeIntegration
 from __future__ import annotations
 
 import mini_sqlite
-from mini_sqlite.advisor import IndexAdvisor, _walk
+from mini_sqlite.advisor import IndexAdvisor
 from mini_sqlite.policy import HitCountPolicy
 from sql_backend.in_memory import InMemoryBackend
 from sql_backend.schema import ColumnDef
-from sql_backend.index import IndexDef
 
 
 # ---------------------------------------------------------------------------
@@ -233,13 +232,6 @@ class TestPlannerComposite:
         rows = conn.execute(
             "SELECT id FROM orders WHERE user_id = 0 AND status = 'shipped'"
         ).fetchall()
-        # Correctness check: rows where user_id=0 AND status='shipped'.
-        expected = [
-            (r[0],) for r in conn.execute(
-                "SELECT id FROM orders"
-            ).fetchall()
-            # We can't use the optimized path to validate — re-fetch all and filter.
-        ]
         all_rows = conn.execute("SELECT id, user_id, status FROM orders").fetchall()
         expected_ids = sorted(
             r[0] for r in all_rows if r[1] == 0 and r[2] == "shipped"
