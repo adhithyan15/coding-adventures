@@ -1,29 +1,13 @@
-import sys
-from importlib import util
-from pathlib import Path
-
 import pytest
 
-_SCORE_MODULE_PATH = (
-    Path(__file__).resolve().parents[1]
-    / "src"
-    / "music_machine"
-    / "score.py"
+from music_machine.score import (
+    MusicalEvent,
+    Score,
+    ScoreParseError,
+    parse_score,
+    render_score,
+    score_duration_seconds,
 )
-_SCORE_SPEC = util.spec_from_file_location("music_machine_score", _SCORE_MODULE_PATH)
-if _SCORE_SPEC is None or _SCORE_SPEC.loader is None:
-    raise RuntimeError("Unable to load music-machine score module fixture")
-
-_SCORE_MODULE = util.module_from_spec(_SCORE_SPEC)
-sys.modules[_SCORE_SPEC.name] = _SCORE_MODULE
-_SCORE_SPEC.loader.exec_module(_SCORE_MODULE)  # type: ignore[arg-type]
-
-MusicalEvent = _SCORE_MODULE.MusicalEvent
-Score = _SCORE_MODULE.Score
-ScoreParseError = _SCORE_MODULE.ScoreParseError
-parse_score = _SCORE_MODULE.parse_score
-render_score = _SCORE_MODULE.render_score
-score_duration_seconds = _SCORE_MODULE.score_duration_seconds
 
 
 class TestParseScore:
