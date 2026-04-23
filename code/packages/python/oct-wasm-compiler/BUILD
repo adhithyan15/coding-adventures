@@ -1,0 +1,3 @@
+uv venv --quiet --clear
+uv pip install -e ../graph -e ../directed-graph -e ../grammar-tools -e ../lexer -e ../parser -e ../state-machine -e ../type-checker-protocol -e ../oct-lexer -e ../oct-parser -e ../oct-type-checker -e ../compiler-ir -e ../oct-ir-compiler -e ../virtual-machine -e ../wasm-leb128 -e ../wasm-types -e ../wasm-opcodes -e ../wasm-module-parser -e ../wasm-validator -e ../wasm-execution -e ../wasm-runtime -e ../wasm-module-encoder -e ../ir-to-wasm-compiler -e ../ir-to-wasm-validator -e ../ir-to-wasm-assembly -e ../wasm-assembler -e ".[dev]" --quiet
+.venv/bin/python -m pytest tests/ -v

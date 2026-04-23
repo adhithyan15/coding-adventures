@@ -1,0 +1,8 @@
+[package]
+name = "metal-compute"
+version = "0.1.0"
+edition = "2021"
+description = "G09 Layer 4B: Real Metal GPU compute on macOS — MetalDevice, MetalBuffer, MetalComputePipeline via objc-bridge"
+
+[dependencies]
+objc-bridge = { path = "../objc-bridge" }

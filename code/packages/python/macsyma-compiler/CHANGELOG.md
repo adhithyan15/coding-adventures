@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0 — 2026-04-23
+
+- Added `"sinh": SINH`, `"cosh": COSH`, `"tanh": TANH`, `"asinh": ASINH`,
+  `"acosh": ACOSH`, and `"atanh": ATANH` to `_STANDARD_FUNCTIONS` in
+  `compiler.py`, mapping the MACSYMA names to their canonical IR heads.
+  Required by Phase 13 so that `integrate(sinh(x), x)`, `integrate(x*cosh(x), x)`,
+  `integrate(asinh(x), x)`, etc. are correctly compiled before evaluation.
+  Depends on `coding-adventures-symbolic-ir >= 0.5.0` which introduces the
+  SINH/COSH/TANH/ASINH/ACOSH/ATANH heads.
+
 ## 0.4.0 — 2026-04-23
 
 - Added `"asin": ASIN` and `"acos": ACOS` to `_STANDARD_FUNCTIONS` in `compiler.py`,

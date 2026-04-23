@@ -23,6 +23,9 @@ All notable changes to the `state-machine` crate will be documented in this file
   and definition round-tripping.
 - Added a minimal HTML tokenizer skeleton test covering text buffering,
   start/end tag emission, and EOF effects.
+- Allowed `$any` transitions to accept runtime events outside the declared
+  alphabet when the current state has an `Any` fallback, which lets tokenizer
+  wrappers process arbitrary Unicode text without declaring every code point.
 
 ### Changed
 

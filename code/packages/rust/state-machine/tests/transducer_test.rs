@@ -177,3 +177,24 @@ fn effectful_machine_rejects_consuming_eof_transition() {
 
     assert!(error.contains("EOF"));
 }
+
+#[test]
+fn any_transition_accepts_events_outside_declared_alphabet() {
+    let mut machine = EffectfulStateMachine::new(
+        set(&["data"]),
+        set(&["<"]),
+        vec![
+            EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
+                .with_effects(&["append_text(current)"]),
+        ],
+        "data".to_string(),
+        HashSet::new(),
+    )
+    .unwrap();
+
+    let step = machine
+        .process(EffectfulInput::event("unicode-snowman"))
+        .unwrap();
+
+    assert_eq!(step.effects, vec!["append_text(current)".to_string()]);
+}

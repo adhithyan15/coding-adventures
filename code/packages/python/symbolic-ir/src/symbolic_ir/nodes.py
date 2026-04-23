@@ -190,6 +190,14 @@ ATAN = IRSymbol("Atan")
 ASIN = IRSymbol("Asin")
 ACOS = IRSymbol("Acos")
 
+# Hyperbolic functions
+SINH = IRSymbol("Sinh")
+COSH = IRSymbol("Cosh")
+TANH = IRSymbol("Tanh")
+ASINH = IRSymbol("Asinh")
+ACOSH = IRSymbol("Acosh")
+ATANH = IRSymbol("Atanh")
+
 # Calculus
 D = IRSymbol("D")
 INTEGRATE = IRSymbol("Integrate")
