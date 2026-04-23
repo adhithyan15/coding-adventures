@@ -379,6 +379,27 @@ class TestAlgolIrCompiler:
         assert any(label.startswith("_fn_algol_") for label in labels)
         assert result.procedure_signatures[calls[0].operands[0].name] == 3
 
+    def test_compiles_boolean_value_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "boolean procedure negate(x); value x; boolean x; "
+                "begin negate := not x end; "
+                "if negate(false) then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert result.procedure_signatures[calls[0].operands[0].name] == 3
+        assert IrOp.AND_IMM in opcodes
+
     def test_compiles_recursive_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -432,6 +453,29 @@ class TestAlgolIrCompiler:
         assert len(calls[0].operands) == 4
         assert result.procedure_signatures[calls[0].operands[0].name] == 3
         assert IrOp.ADD_IMM in opcodes
+        assert opcodes.count(IrOp.LOAD_WORD) >= 4
+        assert opcodes.count(IrOp.STORE_WORD) >= 8
+
+    def test_compiles_boolean_by_name_parameter_as_storage_pointer(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "boolean flag; "
+                "procedure settrue(x); boolean x; begin x := true end; "
+                "flag := false; settrue(flag); "
+                "if flag then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert len(calls[0].operands) == 4
+        assert result.procedure_signatures[calls[0].operands[0].name] == 3
         assert opcodes.count(IrOp.LOAD_WORD) >= 4
         assert opcodes.count(IrOp.STORE_WORD) >= 8
 
