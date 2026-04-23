@@ -52,7 +52,8 @@ _RUNTIME_HEAP_LIMIT_OFFSET = 16
 _RUNTIME_THUNK_HEAP_MARK_OFFSET = 20
 _RUNTIME_THUNK_FAILURE_OFFSET = 24
 _RUNTIME_THUNK_HELPER_DEPTH_OFFSET = 28
-_RUNTIME_STATE_BYTES = 32
+_RUNTIME_PENDING_GOTO_LABEL_OFFSET = 32
+_RUNTIME_STATE_BYTES = 36
 _STATIC_LINK_PARAM_REG = 2
 _THUNK_HEAP_MARK_PARAM_REG = 3
 _VALUE_PARAM_BASE_REG = 4
@@ -114,6 +115,7 @@ class _FrameScope:
     heap_mark_reg: int | None = None
     parent: _FrameScope | None = None
     goto_parent: _FrameScope | None = None
+    function_owner_procedure_id: int | None = None
     active_thunk_heap_mark_reg: int | None = None
     helper_failure: bool = False
 
@@ -229,6 +231,9 @@ class AlgolIrCompiler:
             label.statement_node_id: label
             for label in type_result.semantic.labels
         }
+        self.labels_by_id = {
+            label.label_id: label for label in type_result.semantic.labels
+        }
         self.labels_by_block_name = {
             (label.declaring_block_id, label.name): label
             for label in type_result.semantic.labels
@@ -342,6 +347,7 @@ class AlgolIrCompiler:
         self._store_runtime_state(_RUNTIME_THUNK_HEAP_MARK_OFFSET, _ZERO_REG)
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, _ZERO_REG)
         self._store_runtime_state(_RUNTIME_THUNK_HELPER_DEPTH_OFFSET, _ZERO_REG)
+        self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)
 
         block = _first_node(type_result.ast, "block")
         if block is None:
@@ -386,6 +392,9 @@ class AlgolIrCompiler:
             heap_mark_reg=heap_mark_reg,
             parent=parent,
             goto_parent=parent,
+            function_owner_procedure_id=(
+                parent.function_owner_procedure_id if parent is not None else None
+            ),
             active_thunk_heap_mark_reg=(
                 parent.active_thunk_heap_mark_reg if parent is not None else None
             ),
@@ -704,16 +713,6 @@ class AlgolIrCompiler:
         desig_expr = _first_direct_node(node, "desig_expr")
         if desig_expr is None:
             raise CompileError("goto statement is missing a designational expression")
-        resolved = self.gotos_by_designational.get(id(desig_expr))
-        if resolved is None:
-            raise CompileError("goto designational expression was not resolved")
-        simple = _first_direct_node(desig_expr, "simple_desig")
-        if (
-            not any(token.value == "if" for token in _direct_tokens(desig_expr))
-            and _direct_label_from_simple_designational(simple) is not None
-        ):
-            self._emit_resolved_goto(resolved, scope)
-            return
         self._compile_designational(desig_expr, scope)
 
     def _compile_designational(self, node: ASTNode, scope: _FrameScope) -> None:
@@ -749,10 +748,10 @@ class AlgolIrCompiler:
     ) -> None:
         direct = _direct_label_from_simple_designational(node)
         if direct is not None:
-            label = self.labels_by_block_name.get((scope.block_id, direct.value))
+            label = self._resolve_label_in_scope_chain(direct.value, scope)
             if label is None:
                 raise CompileError(f"goto target {direct.value!r} was not resolved")
-            self._emit(IrOp.JUMP, IrLabel(label.ir_label))
+            self._emit_goto_label(label, scope)
             return
 
         if any(token.value == "[" for token in _direct_tokens(node)):
@@ -766,8 +765,40 @@ class AlgolIrCompiler:
         raise CompileError("unsupported designational expression")
 
     def _emit_resolved_goto(self, resolved: ResolvedGoto, scope: _FrameScope) -> None:
-        self._emit_unwind_to_block(scope, resolved.target_block_id)
-        self._emit(IrOp.JUMP, IrLabel(resolved.ir_label))
+        label = self.labels_by_id.get(resolved.label_id)
+        if label is None:
+            raise CompileError(
+                f"goto target {resolved.target_name!r} has no label descriptor"
+            )
+        self._emit_goto_label(label, scope)
+
+    def _resolve_label_in_scope_chain(
+        self,
+        name: str,
+        scope: _FrameScope,
+    ) -> LabelDescriptor | None:
+        current: _FrameScope | None = scope
+        while current is not None:
+            label = self.labels_by_block_name.get((current.block_id, name))
+            if label is not None:
+                return label
+            current = current.goto_parent
+        return None
+
+    def _emit_goto_label(
+        self,
+        label: LabelDescriptor,
+        scope: _FrameScope,
+    ) -> None:
+        target_block = self.semantic_blocks_by_id[label.declaring_block_id]
+        if (
+            not scope.helper_failure
+            and target_block.owner_procedure_id == scope.function_owner_procedure_id
+        ):
+            self._emit_unwind_to_block(scope, label.declaring_block_id)
+            self._emit(IrOp.JUMP, IrLabel(label.ir_label))
+            return
+        self._emit_pending_goto_return(scope, label.label_id)
 
     def _emit_unwind_to_block(self, scope: _FrameScope, target_block_id: int) -> None:
         current: _FrameScope | None = scope
@@ -1212,15 +1243,16 @@ class AlgolIrCompiler:
             IrRegister(active_thunk_heap_mark),
             *(IrRegister(argument) for argument in call_arguments),
         )
-        if scope.helper_failure:
-            self._emit_helper_return_on_thunk_failure(scope)
-        result = self._fresh_reg()
-        self._copy_reg(dst=result, src=_RESULT_REG)
         if descriptor_heap_mark is not None:
             self._store_runtime_state(
                 _RUNTIME_HEAP_POINTER_OFFSET,
                 descriptor_heap_mark,
             )
+        if scope.helper_failure:
+            self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
         return result
 
     def _requires_by_name_thunk_descriptor(self, argument: ASTNode) -> bool:
@@ -1440,6 +1472,7 @@ class AlgolIrCompiler:
                 heap_mark_reg=None,
                 parent=None,
                 goto_parent=None,
+                function_owner_procedure_id=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
                 helper_failure=True,
             )
@@ -1509,6 +1542,7 @@ class AlgolIrCompiler:
                 heap_mark_reg=None,
                 parent=None,
                 goto_parent=None,
+                function_owner_procedure_id=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
                 helper_failure=True,
             )
@@ -1562,6 +1596,7 @@ class AlgolIrCompiler:
                 heap_mark_reg=None,
                 parent=parent,
                 goto_parent=parent,
+                function_owner_procedure_id=procedure.procedure_id,
                 active_thunk_heap_mark_reg=None,
             )
             parent_block_id = parent_block.frame_layout.static_parent_id
@@ -1580,6 +1615,7 @@ class AlgolIrCompiler:
             heap_mark_reg=heap_mark_reg,
             parent=None,
             goto_parent=parent,
+            function_owner_procedure_id=procedure.procedure_id,
             active_thunk_heap_mark_reg=_THUNK_HEAP_MARK_PARAM_REG,
         )
         self._initialize_scalar_slots(scope)
@@ -1811,6 +1847,7 @@ class AlgolIrCompiler:
             IrRegister(active_thunk_heap_mark),
         )
         self._emit_propagate_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
         self._copy_reg(dst=dst, src=_RESULT_REG)
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(storage_label)
@@ -1911,6 +1948,7 @@ class AlgolIrCompiler:
                 IrRegister(value_reg),
             )
             self._emit_propagate_thunk_failure(scope)
+            self._emit_handle_pending_goto_after_call(scope)
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(storage_label)
             self._emit(
@@ -2113,6 +2151,88 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(else_label)
         self._label(end_label)
+
+    def _emit_pending_goto_return(
+        self,
+        scope: _FrameScope,
+        label_id: int,
+    ) -> None:
+        self._store_runtime_state(
+            _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
+            self._const_reg(label_id),
+        )
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        if not scope.helper_failure:
+            self._emit_unwind_for_return(scope)
+        if scope.helper_failure:
+            self._emit_leave_thunk_helper()
+        self._emit_restore_active_thunk_heap_mark(scope)
+        self._emit(IrOp.RET)
+
+    def _emit_handle_pending_goto_after_call(self, scope: _FrameScope) -> None:
+        pending_label = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, pending_label)
+        index = self.if_count
+        self.if_count += 1
+        no_pending_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        self._emit(IrOp.BRANCH_Z, IrRegister(pending_label), IrLabel(no_pending_label))
+        if scope.helper_failure:
+            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+            self._emit_leave_thunk_helper()
+            self._emit_restore_active_thunk_heap_mark(scope)
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(no_pending_label)
+            self._label(end_label)
+            return
+
+        active_scopes = self._active_function_scopes(scope)
+        active_block_ids = {active_scope.block_id for active_scope in active_scopes}
+        for label in self.labels_by_id.values():
+            if label.declaring_block_id not in active_block_ids:
+                continue
+            next_label = f"if_{self.if_count}_else"
+            next_end_label = f"if_{self.if_count}_end"
+            self.if_count += 1
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(pending_label),
+                IrRegister(self._const_reg(label.label_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+            self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)
+            self._emit_unwind_to_block(scope, label.declaring_block_id)
+            self._emit(IrOp.JUMP, IrLabel(label.ir_label))
+            self._emit(IrOp.JUMP, IrLabel(next_end_label))
+            self._label(next_label)
+            self._label(next_end_label)
+
+        if scope.function_owner_procedure_id is not None:
+            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+            self._emit_unwind_for_return(scope)
+            self._emit_restore_active_thunk_heap_mark(scope)
+            self._emit(IrOp.RET)
+        else:
+            self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)
+            self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+            self._emit(IrOp.HALT)
+
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(no_pending_label)
+        self._label(end_label)
+
+    def _active_function_scopes(self, scope: _FrameScope) -> list[_FrameScope]:
+        active_scopes: list[_FrameScope] = []
+        current: _FrameScope | None = scope
+        while current is not None:
+            if current.function_owner_procedure_id != scope.function_owner_procedure_id:
+                break
+            active_scopes.append(current)
+            current = current.parent
+        return active_scopes
 
     def _emit_helper_runtime_failure_guard(
         self,

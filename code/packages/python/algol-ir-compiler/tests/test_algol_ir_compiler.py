@@ -121,6 +121,27 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.LOAD_WORD) >= 1
         assert opcodes.count(IrOp.STORE_WORD) >= 1
 
+    def test_compiles_procedure_crossing_goto_with_pending_transfer(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure escape; begin goto done end; "
+                "escape; "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CALL in opcodes
+        assert opcodes.count(IrOp.RET) >= 2
+        assert any(label.startswith("algol_label_") for label in labels)
+
     def test_compiles_conditional_designational_goto(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -282,7 +303,7 @@ class TestAlgolIrCompiler:
                 )
         )
 
-        with pytest.raises(CompileError, match="frame bytes plus 32 runtime bytes"):
+        with pytest.raises(CompileError, match="frame bytes plus 36 runtime bytes"):
             compile_algol(typed)
 
     def test_compiles_integer_array_descriptor_and_element_accesses(self) -> None:
