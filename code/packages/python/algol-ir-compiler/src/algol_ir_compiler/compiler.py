@@ -113,6 +113,7 @@ class _FrameScope:
     frame_base_reg: int
     heap_mark_reg: int | None = None
     parent: _FrameScope | None = None
+    goto_parent: _FrameScope | None = None
     active_thunk_heap_mark_reg: int | None = None
     helper_failure: bool = False
 
@@ -384,6 +385,7 @@ class AlgolIrCompiler:
             frame_base_reg=frame_base_reg,
             heap_mark_reg=heap_mark_reg,
             parent=parent,
+            goto_parent=parent,
             active_thunk_heap_mark_reg=(
                 parent.active_thunk_heap_mark_reg if parent is not None else None
             ),
@@ -771,7 +773,7 @@ class AlgolIrCompiler:
         current: _FrameScope | None = scope
         while current is not None and current.block_id != target_block_id:
             self._emit_leave_frame(current)
-            current = current.parent
+            current = current.goto_parent
         if current is None:
             raise CompileError(
                 f"goto target block {target_block_id} is not active in this function"
@@ -1437,6 +1439,7 @@ class AlgolIrCompiler:
                 frame_base_reg=caller_frame,
                 heap_mark_reg=None,
                 parent=None,
+                goto_parent=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
                 helper_failure=True,
             )
@@ -1505,6 +1508,7 @@ class AlgolIrCompiler:
                 frame_base_reg=caller_frame,
                 heap_mark_reg=None,
                 parent=None,
+                goto_parent=None,
                 active_thunk_heap_mark_reg=active_thunk_heap_mark,
                 helper_failure=True,
             )
@@ -1557,6 +1561,7 @@ class AlgolIrCompiler:
                 frame_base_reg=next_parent_reg,
                 heap_mark_reg=None,
                 parent=parent,
+                goto_parent=parent,
                 active_thunk_heap_mark_reg=None,
             )
             parent_block_id = parent_block.frame_layout.static_parent_id
@@ -1573,7 +1578,8 @@ class AlgolIrCompiler:
             semantic_block=semantic_block,
             frame_base_reg=frame_base_reg,
             heap_mark_reg=heap_mark_reg,
-            parent=parent,
+            parent=None,
+            goto_parent=parent,
             active_thunk_heap_mark_reg=_THUNK_HEAP_MARK_PARAM_REG,
         )
         self._initialize_scalar_slots(scope)

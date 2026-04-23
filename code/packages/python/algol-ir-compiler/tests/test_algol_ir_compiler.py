@@ -121,35 +121,6 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.LOAD_WORD) >= 1
         assert opcodes.count(IrOp.STORE_WORD) >= 1
 
-    def test_compiles_direct_procedure_crossing_goto_with_frame_unwind(self) -> None:
-        result = compile_algol(
-            parse_algol(
-                "begin integer result; "
-                "procedure escape; begin goto done; "
-                "result := 1 end; "
-                "escape; "
-                "done: result := 7 "
-                "end"
-            )
-        )
-        opcodes = [instr.opcode for instr in result.program.instructions]
-        labels = [
-            instr.operands[0].name
-            for instr in result.program.instructions
-            if instr.opcode == IrOp.LABEL
-        ]
-        jumps = [
-            instr.operands[0].name
-            for instr in result.program.instructions
-            if instr.opcode == IrOp.JUMP
-        ]
-        assert any(label.startswith("algol_label_") for label in labels)
-        assert any(
-            label in jumps for label in labels if label.startswith("algol_label_")
-        )
-        assert opcodes.count(IrOp.LOAD_WORD) >= 2
-        assert opcodes.count(IrOp.STORE_WORD) >= 2
-
     def test_compiles_conditional_designational_goto(self) -> None:
         result = compile_algol(
             parse_algol(

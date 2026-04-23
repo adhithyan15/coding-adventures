@@ -1039,6 +1039,13 @@ class AlgolTypeChecker:
         if symbol.kind != LABEL:
             self._error(target_token, f"{target_token.value!r} is not a label")
             return
+        if scope.owner_procedure_id != declaring_scope.owner_procedure_id:
+            self._error(
+                target_token,
+                f"goto to label {target_token.value!r} crosses a procedure "
+                "boundary, which requires Phase 7c procedure unwinding",
+            )
+            return
         if lexical_depth_delta != 0 and not allow_nonlocal_label:
             self._error(
                 target_token,

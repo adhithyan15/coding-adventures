@@ -110,7 +110,7 @@ class TestAlgolTypeChecker:
         assert result.semantic.gotos[0].target_name == "done"
         assert result.semantic.gotos[0].lexical_depth_delta == 1
 
-    def test_accepts_procedure_crossing_goto(self) -> None:
+    def test_rejects_procedure_crossing_goto_for_now(self) -> None:
         ast = parse_algol(
             "begin integer result; "
             "procedure escape; begin goto done end; "
@@ -120,10 +120,8 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
-        assert result.ok
-        assert result.semantic is not None
-        assert result.semantic.gotos[0].target_name == "done"
-        assert result.semantic.gotos[0].lexical_depth_delta == 1
+        assert not result.ok
+        assert "crosses a procedure boundary" in result.diagnostics[0].message
 
     def test_rejects_conditional_nonlocal_designational_goto_for_now(self) -> None:
         ast = parse_algol(
