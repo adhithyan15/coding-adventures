@@ -1,29 +1,35 @@
-# lzw — LZW Compression (CMP03)
+# coding-adventures-lzw (Rust)
 
-LZW (Lempel-Ziv-Welch, 1984) refines LZ78 by pre-seeding the dictionary with all 256
-single-byte sequences. Because every byte already has a code (0–255), the encoder emits
-only dictionary codes — no raw literals. This enables variable-width bit-packing (9–16
-bits per code), the scheme used in GIF, TIFF, and Unix `compress`.
+LZW (Lempel-Ziv-Welch, 1984) lossless compression — CMP03 in the coding-adventures series.
 
 ## Usage
 
 ```rust
 use lzw::{compress, decompress};
 
-let data = b"hello hello hello";
+let data = b"TOBEORNOTTOBEORTOBEORNOT";
 let compressed = compress(data);
-assert_eq!(decompress(&compressed).unwrap(), data);
+let original = decompress(&compressed);
+assert_eq!(original, data);
 ```
 
 ## Wire Format (CMP03)
 
 ```
 Bytes 0–3:  original_length (big-endian u32)
-Bytes 4+:   LSB-first bit-packed variable-width codes (9–16 bits each)
+Bytes 4+:   variable-width codes, LSB-first bit-packed
+              - code_size starts at 9 bits, grows as dict expands
+              - first code: CLEAR_CODE (256)
+              - last code:  STOP_CODE  (257)
 ```
 
-## Development
+## Series
 
-```bash
-cargo test -p lzw
+```
+CMP00 (LZ77,    1977) — Sliding-window backreferences
+CMP01 (LZ78,    1978) — Explicit dictionary (trie)
+CMP02 (LZSS,    1982) — LZ77 + flag bits
+CMP03 (LZW,     1984) — LZ78 + pre-initialized dict; powers GIF  ← this crate
+CMP04 (Huffman, 1952) — Entropy coding
+CMP05 (DEFLATE, 1996) — LZ77 + Huffman; ZIP/gzip/PNG/zlib
 ```
