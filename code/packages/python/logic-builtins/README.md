@@ -209,6 +209,48 @@ predicates narrow domains as soon as enough information exists; and
 Arithmetic constraints currently cover addition, subtraction, and
 multiplication. `all_differento` includes duplicate checks and singleton
 pruning, while deeper Hall-set global-constraint pruning remains future work.
+`labelingo` chooses the smallest current finite domain first and uses the
+caller-provided variable order as a stable tie-breaker.
+
+## Finite-Domain Examples
+
+The CLP(FD) layer is already useful enough to model recognizable logic
+problems directly from Python. This map-coloring example solves a 3-coloring
+for Australian regions:
+
+```python
+WA, NT, SA, Q, NSW, V, T = (
+    var(name) for name in ("WA", "NT", "SA", "Q", "NSW", "V", "T")
+)
+regions = (WA, NT, SA, Q, NSW, V, T)
+borders = (
+    (WA, NT),
+    (WA, SA),
+    (NT, SA),
+    (NT, Q),
+    (SA, Q),
+    (SA, NSW),
+    (SA, V),
+    (Q, NSW),
+    (NSW, V),
+)
+
+assert solve_n(
+    program(),
+    1,
+    regions,
+    conj(
+        *(fd_ino(region, range(1, 4)) for region in regions),
+        fd_ino(WA, [1]),
+        *(fd_neqo(left, right) for left, right in borders),
+        labelingo(regions),
+    ),
+) == [(num(1), num(2), num(3), num(1), num(2), num(1), num(1))]
+```
+
+Scheduling and puzzle-style problems use the same ingredients: finite start
+times, arithmetic relations for durations, ordering constraints for
+dependencies, and `labelingo(...)` to enumerate concrete assignments.
 
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail

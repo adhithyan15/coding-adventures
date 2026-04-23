@@ -60,6 +60,79 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
         assert result.ok
 
+    def test_accepts_local_labels_and_direct_gotos(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i; "
+            "goto done; "
+            "loop: i := i + 1; "
+            "if i < 3 then goto loop; "
+            "done: result := i "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [label.name for label in result.semantic.labels] == ["loop", "done"]
+        assert [goto.target_name for goto in result.semantic.gotos] == [
+            "done",
+            "loop",
+        ]
+        assert all(goto.lexical_depth_delta == 0 for goto in result.semantic.gotos)
+
+    def test_accepts_label_on_empty_statement(self) -> None:
+        ast = parse_algol("begin integer result; goto 10; 10: end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.labels[0].name == "10"
+        assert result.semantic.gotos[0].target_name == "10"
+
+    def test_rejects_missing_goto_label(self) -> None:
+        ast = parse_algol("begin integer result; goto missing end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "label 'missing' is not declared" in result.diagnostics[0].message
+
+    def test_rejects_nonlocal_goto_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "begin integer inner; goto done end; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "nonlocal goto to label 'done'" in result.diagnostics[0].message
+
+    def test_rejects_conditional_designational_goto_for_now(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "goto if true then done else done; "
+            "done: result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "conditional designational expressions require Phase 7"
+            in result.diagnostics[0].message
+        )
+
+    def test_rejects_switch_designational_goto_for_now(self) -> None:
+        ast = parse_algol("begin integer result; goto s[1] end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "switch designational expressions require Phase 7"
+            in result.diagnostics[0].message
+        )
+
     def test_reports_missing_program_block(self) -> None:
         result = check_algol(ASTNode("program", []))
         assert not result.ok

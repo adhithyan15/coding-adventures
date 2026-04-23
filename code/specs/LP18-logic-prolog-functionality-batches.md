@@ -64,6 +64,7 @@ LP18 Batch B dynamic runtime database
 LP18 Batch C search control and real cut
 LP18 Batch D1 CLP(FD) foundation
 LP18 Batch D2/D3 CLP(FD) arithmetic and all-different
+LP18 Batch D4 CLP(FD) examples and labeling ergonomics
 PR00 Prolog lexer
 ```
 
@@ -263,7 +264,7 @@ CLP(FD) is being delivered in a few sub-batches:
 - D1: finite domains, domain narrowing, ordering constraints, and labeling
 - D2: arithmetic expression constraints
 - D3: global constraints such as `all_differento`
-- D4: real-world examples and performance tuning
+- D4: real-world examples, solver ergonomics, and performance tuning
 
 ## Detailed Batch A Semantics
 
@@ -504,6 +505,26 @@ D2/D3 non-goals:
 - no reified CLP(FD) constraints yet
 - no Hall-set or matching-based `all_differento` pruning yet
 
+D4 implementation shape:
+
+- `labelingo(vars)` chooses the open finite-domain variable with the smallest
+  currently-known domain first, while using the caller's variable order as a
+  stable tie-breaker
+- examples should solve recognizable problems directly through the Python
+  library API, before any parser syntax exists
+- examples should keep domains small and use `solve_n(...)` where a single
+  representative solution is enough
+- map coloring exercises binary disequality constraints
+- Latin-square-style puzzles exercise `all_differento` across rows and columns
+- task scheduling exercises arithmetic duration constraints plus ordering
+  constraints
+
+D4 non-goals:
+
+- no parser integration
+- no search strategy API beyond the default smallest-domain labeling heuristic
+- no global-constraint algorithms beyond the current singleton pruning
+
 ## PR Sizing Recommendation
 
 Use this implementation sequence:
@@ -514,7 +535,8 @@ PR 2: Batch B - dynamic runtime database
 PR 3: Batch C - real cut and search control
 PR 4: Batch D1 - CLP(FD) foundation
 PR 5: Batch D2/D3 - arithmetic propagation and all-different
-PR 6+: Batch D4 - larger examples and performance tuning
+PR 6: Batch D4 - larger examples and labeling ergonomics
+PR 7+: later CLP(FD) extensions, parser integration, or advanced propagation
 ```
 
 This is the fewest practical set of large PRs without forcing unrelated solver
@@ -567,5 +589,7 @@ LP18 says yes: the remaining Prolog-level functionality can be knocked out in a
 few big batches rather than many tiny PRs.
 
 Batch A completed the pure metaprogramming loop, Batch B added runtime dynamic
-predicates, and Batch C added real cut. Batch D starts finite-domain
-constraints as the next focused constraint-solving track.
+predicates, Batch C added real cut, and Batch D now covers finite domains,
+arithmetic constraints, all-different, and practical examples. Later CLP(FD)
+work can deepen propagation, add reification, or connect parser syntax onto the
+same Python-first runtime.

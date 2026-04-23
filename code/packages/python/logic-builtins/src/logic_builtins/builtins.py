@@ -1161,28 +1161,36 @@ def _label_fd_terms(
     program_value: Program,
     state: State,
     terms: tuple[Term, ...],
-    index: int = 0,
 ) -> Iterator[State]:
-    """Enumerate concrete values for the requested FD variables."""
+    """Enumerate concrete values for requested FD variables.
+
+    Labeling is the point where the constraint store becomes concrete search.
+    Choose the smallest currently-known domain first to reduce branching while
+    preserving the caller's variable order as a deterministic tie-breaker.
+    """
 
     normalized_state = _normalize_fd_state(state)
     if normalized_state is None:
         return
-    if index == len(terms):
+
+    candidates: list[tuple[int, int, LogicVar, frozenset[int]]] = []
+    store = _fd_store(normalized_state)
+    for index, term_value in enumerate(terms):
+        value = _reified_fd_value(term_value, normalized_state)
+        if value is None:
+            return
+        if isinstance(value, int):
+            continue
+        domain = store.domains.get(value)
+        if domain is None:
+            return
+        candidates.append((len(domain), index, value, domain))
+
+    if not candidates:
         yield normalized_state
         return
 
-    value = _reified_fd_value(terms[index], normalized_state)
-    if value is None:
-        return
-    if isinstance(value, int):
-        yield from _label_fd_terms(program_value, normalized_state, terms, index + 1)
-        return
-
-    store = _fd_store(normalized_state)
-    domain = store.domains.get(value)
-    if domain is None:
-        return
+    _, _, value, domain = min(candidates, key=lambda candidate: candidate[:2])
 
     for choice in sorted(domain):
         for assigned_state in solve_from(
@@ -1190,7 +1198,7 @@ def _label_fd_terms(
             eq(value, num(choice)),
             normalized_state,
         ):
-            yield from _label_fd_terms(program_value, assigned_state, terms, index + 1)
+            yield from _label_fd_terms(program_value, assigned_state, terms)
 
 
 def labelingo(vars_value: object) -> GoalExpr:

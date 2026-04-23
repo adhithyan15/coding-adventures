@@ -19,6 +19,9 @@ All notable changes to this package will be documented in this file.
   diagnostics for non-assignable by-name actual expressions.
 - Added explicit guard coverage for literal and procedure-call actuals passed
   to written by-name formals.
+- Added Phase 6 label descriptors and direct local `goto` resolution, plus
+  diagnostics for missing labels, nonlocal gotos, and Phase 7 designational
+  forms.
 
 ## [0.1.0] - 2026-04-20
 

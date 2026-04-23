@@ -99,6 +99,7 @@ from symbolic_ir import (
 )
 
 from symbolic_vm.arctan_integral import arctan_integral
+from symbolic_vm.atan_poly_integral import atan_poly_integral
 from symbolic_vm.backend import Handler
 from symbolic_vm.exp_integral import exp_integral
 from symbolic_vm.exp_trig_integral import exp_cos_integral, exp_sin_integral
@@ -397,6 +398,10 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if result is not None:
             return result
         result = _try_log_product(a, b, x) or _try_log_product(b, a, x)
+        if result is not None:
+            return result
+        # Phase 11: atan(linear) × polynomial via IBP.
+        result = _try_atan_product(a, b, x) or _try_atan_product(b, a, x)
         if result is not None:
             return result
         # Phase 4b: trig × trig via product-to-sum identities.
@@ -743,6 +748,39 @@ def _try_log_product(
     if not poly:
         return None
     return log_poly_integral(poly, a_frac, b_frac, x)
+
+
+def _try_atan_product(
+    transcendental: IRNode, poly_candidate: IRNode, x: IRSymbol
+) -> IRNode | None:
+    """Return ``∫ poly_candidate · atan(linear) dx`` or ``None``.
+
+    Checks whether ``transcendental`` is ``Atan(linear)`` and
+    ``poly_candidate`` is a polynomial (rational with denominator 1).
+    Phase 11 IBP formula: Q(x)·atan − a·(T(x) + arctan_integral(R, D)).
+    """
+    if not isinstance(transcendental, IRApply):
+        return None
+    if transcendental.head != ATAN:
+        return None
+    lin = _try_linear(transcendental.args[0], x)
+    if lin is None:
+        return None
+    a_frac, b_frac = lin
+    if a_frac == 0:
+        return None  # atan(b) is a constant — constant-factor rule handles it
+
+    r = to_rational(poly_candidate, x)
+    if r is None:
+        return None
+    num, den = r
+    from polynomial import normalize as _norm
+    if len(_norm(den)) > 1:
+        return None  # rational, not polynomial
+    poly = tuple(Fraction(c) for c in _norm(num))
+    if not poly:
+        return None
+    return atan_poly_integral(poly, a_frac, b_frac, x)
 
 
 # ---------------------------------------------------------------------------

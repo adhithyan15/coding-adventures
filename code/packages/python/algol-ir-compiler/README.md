@@ -40,7 +40,14 @@ read-only expression thunks still raise targeted `CompileError` diagnostics
 until Phase 5 grows full store-helper coverage. The supported integer by-name
 surface is covered by the WASM acceptance suite, while full ALGOL forms such as
 non-integer formals, whole-array by-name values, procedure-valued actuals,
-labels, switches, and escaping thunk descriptors remain future work.
+switches, nonlocal gotos, conditional designational expressions, and escaping
+thunk descriptors remain future work.
+
+Direct local `goto` statements lower to ordinary IR `JUMP` instructions
+targeting generated ALGOL labels. The downstream WASM backend's unstructured
+control-flow lowering handles forward and backward jumps, while this package
+continues to reject nonlocal gotos and Phase 7 designational forms before IR
+generation.
 
 This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a
