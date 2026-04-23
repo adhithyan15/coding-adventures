@@ -833,7 +833,7 @@ ones.
 | Spec  | Title                        | New node types                                                          |
 |-------|------------------------------|-------------------------------------------------------------------------|
 | TE00  | Document AST (this)          | 19 node types above                                                     |
-| TE04  | GFM Extensions               | `TableNode`, `TableRowNode`, `TableCellNode`, `StrikeNode`, `TaskItemNode` |
+| TE04  | GFM Extensions               | `TableNode`, `TableRowNode`, `TableCellNode`, `StrikeNode`, `TaskItemNode`, `FencedBlockNode` |
 | TE05  | ThunderEgg Dialect           | `WikiLinkNode`, `WikiEmbedNode`, `HighlightNode`, `MathInlineNode`, `MathBlockNode`, `FrontmatterNode`, `CalloutNode` |
 
 GFM node types (TE04):
@@ -844,6 +844,7 @@ interface TableRowNode  { readonly type: "table_row";      readonly isHeader: bo
 interface TableCellNode { readonly type: "table_cell";     readonly children: readonly InlineNode[] }
 interface StrikeNode    { readonly type: "strikethrough";  readonly children: readonly InlineNode[] }
 interface TaskItemNode  { readonly type: "task_item";      readonly checked: boolean; readonly children: readonly BlockNode[] }
+interface FencedBlockNode { readonly type: "fenced_block"; readonly name: string | null; readonly info: string | null; readonly value: string }
 ```
 
 ThunderEgg dialect node types (TE05):
