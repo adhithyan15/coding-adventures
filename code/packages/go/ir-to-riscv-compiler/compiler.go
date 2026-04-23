@@ -11,8 +11,12 @@ import (
 const (
 	x0              = 0
 	xRa             = 1
+	xSp             = 2
 	xSyscallNumber  = 17
 	xBackendScratch = 31
+
+	callFrameStackLabel = "__riscv_call_stack"
+	callFrameStackSize  = 1024
 )
 
 // MachineCodeResult is the output of lowering IR to a flat RISC-V image.
@@ -42,8 +46,14 @@ func (e LoweringError) Error() string {
 type compilePlan struct {
 	labelOffsets    map[string]int
 	dataOffsets     map[string]int
+	callTargets     map[string]bool
+	stackTop        int
 	textSize        int
 	entryTrampoline bool
+}
+
+func (p *compilePlan) usesCallFrames() bool {
+	return len(p.callTargets) > 0
 }
 
 // IrToRiscVCompiler lowers compiler IR to RV32I machine code.
@@ -64,6 +74,9 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 	}
 
 	words := make([]uint32, 0, plan.textSize/4)
+	if plan.usesCallFrames() {
+		words = append(words, emitLoadAddress(xSp, plan.stackTop)...)
+	}
 	if plan.entryTrampoline {
 		entryOffset := plan.labelOffsets[program.EntryLabel]
 		if err := validateJalOffset(entryOffset); err != nil {
@@ -87,6 +100,9 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 
 	image := riscv.Assemble(words)
 	image = append(image, dataBytes(program.Data)...)
+	if plan.usesCallFrames() {
+		image = append(image, make([]byte, callFrameStackSize)...)
+	}
 	assembly, err := c.emitAssembly(program, plan)
 	if err != nil {
 		return nil, err
@@ -103,8 +119,14 @@ func (c *IrToRiscVCompiler) Compile(program *ir.IrProgram) (*MachineCodeResult, 
 }
 
 func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
+	callTargets, err := collectCallTargets(program)
+	if err != nil {
+		return nil, err
+	}
+
 	labelOffsets := map[string]int{}
-	pc := 0
+	pc := stackSetupSize(callTargets) * 4
+	fallthroughOffset := pc
 	for _, instruction := range program.Instructions {
 		if instruction.Opcode == ir.OpLabel {
 			label, err := labelOperand(instruction, 0)
@@ -117,16 +139,25 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 			labelOffsets[label.Name] = pc
 		}
 
-		size, err := c.instructionSize(instruction)
+		size, err := c.instructionSize(instruction, callTargets)
 		if err != nil {
 			return nil, err
+		}
+		if instruction.Opcode == ir.OpLabel {
+			label, err := labelOperand(instruction, 0)
+			if err != nil {
+				return nil, err
+			}
+			if callTargets[label.Name] {
+				size += callTargetPrologueSize()
+			}
 		}
 		pc += size * 4
 	}
 
 	entryTrampoline := false
 	if program.EntryLabel != "" {
-		if entryOffset, ok := labelOffsets[program.EntryLabel]; ok && entryOffset != 0 {
+		if entryOffset, ok := labelOffsets[program.EntryLabel]; ok && entryOffset != fallthroughOffset {
 			entryTrampoline = true
 			for name, offset := range labelOffsets {
 				labelOffsets[name] = offset + 4
@@ -147,16 +178,27 @@ func (c *IrToRiscVCompiler) plan(program *ir.IrProgram) (*compilePlan, error) {
 		dataOffsets[decl.Label] = dataPC
 		dataPC += decl.Size
 	}
+	stackTop := 0
+	if len(callTargets) > 0 {
+		if _, exists := dataOffsets[callFrameStackLabel]; exists {
+			return nil, fmt.Errorf("duplicate data label %q", callFrameStackLabel)
+		}
+		dataOffsets[callFrameStackLabel] = dataPC
+		stackTop = dataPC + callFrameStackSize
+		dataPC += callFrameStackSize
+	}
 
 	return &compilePlan{
 		labelOffsets:    labelOffsets,
 		dataOffsets:     dataOffsets,
+		callTargets:     callTargets,
+		stackTop:        stackTop,
 		textSize:        pc,
 		entryTrampoline: entryTrampoline,
 	}, nil
 }
 
-func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction) (int, error) {
+func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction, callTargets map[string]bool) (int, error) {
 	switch instruction.Opcode {
 	case ir.OpLabel, ir.OpComment:
 		return 0, nil
@@ -186,8 +228,13 @@ func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction) (int, 
 			return 1, nil
 		}
 		return loadConstSize(imm.Value) + 1, nil
-	case ir.OpJump, ir.OpBranchZ, ir.OpBranchNz, ir.OpCall, ir.OpRet, ir.OpNop:
+	case ir.OpJump, ir.OpBranchZ, ir.OpBranchNz, ir.OpCall, ir.OpNop:
 		return 1, nil
+	case ir.OpRet:
+		if len(callTargets) == 0 {
+			return 1, nil
+		}
+		return retEpilogueSize(), nil
 	case ir.OpSyscall:
 		imm, err := immOperand(instruction, 0)
 		if err != nil {
@@ -203,7 +250,16 @@ func (c *IrToRiscVCompiler) instructionSize(instruction ir.IrInstruction) (int, 
 
 func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int, plan *compilePlan) ([]uint32, error) {
 	switch instruction.Opcode {
-	case ir.OpLabel, ir.OpComment:
+	case ir.OpLabel:
+		label, err := labelOperand(instruction, 0)
+		if err != nil {
+			return nil, err
+		}
+		if plan.callTargets[label.Name] {
+			return emitCallTargetPrologue(), nil
+		}
+		return nil, nil
+	case ir.OpComment:
 		return nil, nil
 	case ir.OpLoadImm:
 		dst, err := physicalRegOperand(instruction, 0)
@@ -281,7 +337,10 @@ func (c *IrToRiscVCompiler) emitInstruction(instruction ir.IrInstruction, pc int
 		}
 		return []uint32{riscv.EncodeJal(xRa, offset)}, nil
 	case ir.OpRet:
-		return []uint32{riscv.EncodeJalr(x0, xRa, 0)}, nil
+		if !plan.usesCallFrames() {
+			return []uint32{riscv.EncodeJalr(x0, xRa, 0)}, nil
+		}
+		return emitRetEpilogue(), nil
 	case ir.OpSyscall:
 		imm, err := immOperand(instruction, 0)
 		if err != nil {
@@ -347,6 +406,51 @@ func (c *IrToRiscVCompiler) emitStore(instruction ir.IrInstruction, encode func(
 		riscv.EncodeAdd(xBackendScratch, base, offset),
 		encode(src, xBackendScratch, 0),
 	}, nil
+}
+
+func collectCallTargets(program *ir.IrProgram) (map[string]bool, error) {
+	targets := map[string]bool{}
+	for _, instruction := range program.Instructions {
+		if instruction.Opcode != ir.OpCall {
+			continue
+		}
+		label, err := labelOperand(instruction, 0)
+		if err != nil {
+			return nil, err
+		}
+		targets[label.Name] = true
+	}
+	return targets, nil
+}
+
+func callTargetPrologueSize() int {
+	return 2
+}
+
+func stackSetupSize(callTargets map[string]bool) int {
+	if len(callTargets) == 0 {
+		return 0
+	}
+	return 2
+}
+
+func retEpilogueSize() int {
+	return 3
+}
+
+func emitCallTargetPrologue() []uint32 {
+	return []uint32{
+		riscv.EncodeAddi(xSp, xSp, -4),
+		riscv.EncodeSw(xRa, xSp, 0),
+	}
+}
+
+func emitRetEpilogue() []uint32 {
+	return []uint32{
+		riscv.EncodeLw(xRa, xSp, 0),
+		riscv.EncodeAddi(xSp, xSp, 4),
+		riscv.EncodeJalr(x0, xRa, 0),
+	}
 }
 
 func emitThreeReg(instruction ir.IrInstruction, encode func(rd, rs1, rs2 int) uint32) ([]uint32, error) {
