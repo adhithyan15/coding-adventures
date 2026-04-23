@@ -35,6 +35,7 @@ use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
 use coding_adventures_csprng::{random_array, random_bytes};
+use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_zeroize::Zeroizing;
 use storage_core::{
@@ -417,7 +418,14 @@ impl SealedStore {
                 b"vault-verifier",
                 &entry.verifier_tag,
             );
-            if decrypted.as_deref() == Some(&VERIFIER_PLAINTEXT[..]) {
+            // Constant-time compare defensively. If the AEAD produced a
+            // cleartext (Some), XChaCha20-Poly1305's tag check already
+            // authenticates it, so the value equality *should* be
+            // cryptographically implied — but we still route it through
+            // `ct_eq` rather than `==` so the review trail is consistent
+            // with the spec's "constant-time compares" guarantee.
+            let bytes = decrypted.as_deref().unwrap_or(&[]);
+            if ct_eq(bytes, &VERIFIER_PLAINTEXT) {
                 // Move the matching KEK into state.
                 self.state
                     .lock()
@@ -445,8 +453,19 @@ impl SealedStore {
     ) -> Result<Revision, SealedStoreError> {
         check_external_namespace(namespace)?;
 
-        // Register the namespace first (outside the state lock, so this does
-        // not starve other ops). `register_namespace` is idempotent; if the
+        // Must be unsealed before we do *any* side-effect — otherwise an
+        // unauthenticated caller holding a handle to a sealed store could
+        // bloat the namespace registry indefinitely by retrying puts
+        // against fresh namespaces.
+        {
+            let guard = self.state.lock().expect("vault state mutex poisoned");
+            if guard.unsealed.is_none() {
+                return Err(SealedStoreError::Sealed);
+            }
+        }
+
+        // Register the namespace (outside the state lock, so this does not
+        // starve other ops). `register_namespace` is idempotent; if the
         // namespace is already known it returns immediately with no write.
         self.register_namespace(namespace)?;
 
@@ -1947,6 +1966,23 @@ mod tests {
 
         let names = store.list_registered_namespaces().unwrap();
         assert_eq!(names, vec!["real".to_string()]);
+    }
+
+    #[test]
+    fn put_on_sealed_store_does_not_write_registry() {
+        // Regression guard: an unauthenticated caller holding a handle on a
+        // sealed store must not be able to mutate the namespace registry by
+        // spamming puts that each return Sealed.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.seal();
+        let err = store.put("evilns", "k", b"v", None).unwrap_err();
+        assert!(matches!(err, SealedStoreError::Sealed));
+        // Registry must not exist (init never created one).
+        assert!(backend
+            .get(RESERVED_NAMESPACE, NAMESPACES_KEY)
+            .unwrap()
+            .is_none());
     }
 
     #[test]
