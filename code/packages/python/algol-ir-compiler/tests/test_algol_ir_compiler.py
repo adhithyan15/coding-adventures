@@ -242,6 +242,37 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.STORE_WORD) >= 2
         assert opcodes.count(IrOp.LOAD_WORD) >= 2
 
+    def test_compiles_real_variable_storage_and_comparison(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "real x; "
+                "x := 1.5; "
+                "if x > 1.0 then result := 7 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.LOAD_F64_IMM in opcodes
+        assert IrOp.STORE_F64 in opcodes
+        assert IrOp.LOAD_F64 in opcodes
+        assert IrOp.F64_CMP_GT in opcodes
+
+    def test_compiles_integer_to_real_promotion(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "real x; "
+                "x := 1; "
+                "if x = 1.0 then result := 9 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.F64_FROM_I32 in opcodes
+
     def test_compiles_greater_equal_via_less_than_inversion(self) -> None:
         result = compile_algol(
             parse_algol(

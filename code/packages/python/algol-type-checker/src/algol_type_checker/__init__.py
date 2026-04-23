@@ -6,6 +6,7 @@ implementation of the computing stack from transistors to operating systems.
 
 from algol_type_checker.checker import (
     FRAME_HEADER_SIZE,
+    FRAME_REAL_SIZE,
     FRAME_WORD_SIZE,
     AlgolTypeChecker,
     ArrayDescriptor,
@@ -41,6 +42,7 @@ __all__ = [
     "ArrayDimension",
     "Diagnostic",
     "FRAME_HEADER_SIZE",
+    "FRAME_REAL_SIZE",
     "FRAME_WORD_SIZE",
     "FrameLayout",
     "FrameSlot",

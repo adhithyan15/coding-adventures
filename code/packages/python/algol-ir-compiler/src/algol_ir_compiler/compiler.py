@@ -23,6 +23,7 @@ from algol_type_checker import (
 from compiler_ir import (
     IDGenerator,
     IrDataDecl,
+    IrFloatImmediate,
     IrImmediate,
     IrInstruction,
     IrLabel,
@@ -81,6 +82,9 @@ _THUNK_FLAGS_OFFSET = 8
 _THUNK_DESCRIPTOR_TAG = 1
 _THUNK_FLAG_STORE = 1
 _MAX_EVAL_THUNKS = 256
+_INTEGER_TYPE = "integer"
+_BOOLEAN_TYPE = "boolean"
+_REAL_TYPE = "real"
 
 
 @dataclass(frozen=True)
@@ -178,6 +182,7 @@ class AlgolIrCompiler:
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
         self.procedure_signatures: dict[str, int] = {}
+        self.expression_types: dict[int, str] = {}
         self.eval_thunks: list[_EvalThunk] = []
         self.has_by_name_parameters = False
 
@@ -285,6 +290,7 @@ class AlgolIrCompiler:
         self.legacy_variable_slots = self._collect_legacy_variable_slots(
             self.semantic_blocks
         )
+        self.expression_types = dict(type_result.expression_types)
 
         total_frame_bytes = sum(
             block.frame_layout.frame_size for block in self.semantic_blocks
@@ -474,7 +480,10 @@ class AlgolIrCompiler:
 
     def _initialize_scalar_slots(self, scope: _FrameScope) -> None:
         for slot in scope.semantic_block.frame_layout.slots:
-            self._store_word_const(scope.frame_base_reg, slot.offset, 0)
+            if slot.type_name == _REAL_TYPE:
+                self._store_f64_const(scope.frame_base_reg, slot.offset, 0.0)
+            else:
+                self._store_word_const(scope.frame_base_reg, slot.offset, 0)
 
     def _allocate_arrays(self, scope: _FrameScope) -> None:
         for array in self.arrays_by_block.get(scope.block_id, []):
@@ -858,6 +867,11 @@ class AlgolIrCompiler:
         if name is None:
             raise CompileError("only scalar assignments are supported")
         target = self._require_reference(name, "write")
+        value = self._coerce_reg_to_type(
+            value,
+            self._expr_type(expr),
+            expected_type=target.type_name,
+        )
         self._emit_store_reference(target, scope, value)
 
     def _compile_if(self, cond: ASTNode, scope: _FrameScope) -> None:
@@ -973,6 +987,20 @@ class AlgolIrCompiler:
             if operator == "+":
                 return value
             if operator == "-":
+                if self._expr_type(expr) == _REAL_TYPE:
+                    zero = self._const_f64_reg(0.0)
+                    operand = self._coerce_reg_to_type(
+                        value,
+                        self._expr_type(meaningful[1]),
+                    )
+                    dst = self._fresh_reg()
+                    self._emit(
+                        IrOp.F64_SUB,
+                        IrRegister(dst),
+                        IrRegister(zero),
+                        IrRegister(operand),
+                    )
+                    return dst
                 dst = self._fresh_reg()
                 self._emit(IrOp.SUB, IrRegister(dst), IrRegister(0), IrRegister(value))
                 return dst
@@ -1025,6 +1053,8 @@ class AlgolIrCompiler:
     def _compile_token(self, token: Token, scope: _FrameScope) -> int:
         if token.type_name == "INTEGER_LIT":
             return self._const_reg(int(token.value))
+        if token.type_name == "REAL_LIT":
+            return self._const_f64_reg(float(token.value))
         if token.value in {"true", "false"}:
             return self._const_reg(1 if token.value == "true" else 0)
         if token.type_name == "NAME":
@@ -1036,13 +1066,26 @@ class AlgolIrCompiler:
         self, children: list[ASTNode | Token], scope: _FrameScope
     ) -> int:
         current = self._compile_expr(children[0], scope)
+        current_type = self._expr_type(children[0])
         index = 1
         while index < len(children):
             operator = children[index]
             right = self._compile_expr(children[index + 1], scope)
             if not isinstance(operator, Token):
                 raise CompileError("expected numeric operator")
-            current = self._emit_numeric(operator.value, current, right)
+            right_type = self._expr_type(children[index + 1])
+            current = self._emit_numeric(
+                operator.value,
+                current,
+                current_type,
+                right,
+                right_type,
+            )
+            current_type = self._result_type_for_numeric_operator(
+                operator.value,
+                current_type,
+                right_type,
+            )
             index += 2
         return current
 
@@ -1087,43 +1130,157 @@ class AlgolIrCompiler:
         left = self._compile_expr(children[0], scope)
         operator = children[1]
         right = self._compile_expr(children[2], scope)
+        left_type = self._expr_type(children[0])
+        right_type = self._expr_type(children[2])
         if not isinstance(operator, Token):
             raise CompileError("expected comparison operator")
         dst = self._fresh_reg()
-        if operator.value == "=":
-            self._emit(
-                IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
+        if _REAL_TYPE in {left_type, right_type}:
+            left = self._coerce_reg_to_type(
+                left,
+                left_type,
+                expected_type=_REAL_TYPE,
             )
-        elif operator.value == "!=":
-            self._emit(
-                IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
+            right = self._coerce_reg_to_type(
+                right,
+                right_type,
+                expected_type=_REAL_TYPE,
             )
-        elif operator.value == "<":
-            self._emit(
-                IrOp.CMP_LT, IrRegister(dst), IrRegister(left), IrRegister(right)
-            )
-        elif operator.value == ">":
-            self._emit(
-                IrOp.CMP_GT, IrRegister(dst), IrRegister(left), IrRegister(right)
-            )
-        elif operator.value == "<=":
-            self._emit(
-                IrOp.CMP_GT, IrRegister(dst), IrRegister(left), IrRegister(right)
-            )
-            dst = self._invert_bool(dst)
-        elif operator.value == ">=":
-            self._emit(
-                IrOp.CMP_LT, IrRegister(dst), IrRegister(left), IrRegister(right)
-            )
-            dst = self._invert_bool(dst)
+            if operator.value == "=":
+                self._emit(
+                    IrOp.F64_CMP_EQ,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator.value == "!=":
+                self._emit(
+                    IrOp.F64_CMP_NE,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator.value == "<":
+                self._emit(
+                    IrOp.F64_CMP_LT,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator.value == ">":
+                self._emit(
+                    IrOp.F64_CMP_GT,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator.value == "<=":
+                self._emit(
+                    IrOp.F64_CMP_LE,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator.value == ">=":
+                self._emit(
+                    IrOp.F64_CMP_GE,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            else:
+                raise CompileError(
+                    f"comparison operator {operator.value!r} is not supported"
+                )
         else:
-            raise CompileError(
-                f"comparison operator {operator.value!r} is not supported"
-            )
+            if operator.value == "=":
+                self._emit(
+                    IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            elif operator.value == "!=":
+                self._emit(
+                    IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            elif operator.value == "<":
+                self._emit(
+                    IrOp.CMP_LT, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            elif operator.value == ">":
+                self._emit(
+                    IrOp.CMP_GT, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            elif operator.value == "<=":
+                self._emit(
+                    IrOp.CMP_GT, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+                dst = self._invert_bool(dst)
+            elif operator.value == ">=":
+                self._emit(
+                    IrOp.CMP_LT, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+                dst = self._invert_bool(dst)
+            else:
+                raise CompileError(
+                    f"comparison operator {operator.value!r} is not supported"
+                )
         return dst
 
-    def _emit_numeric(self, operator: str, left: int, right: int) -> int:
+    def _emit_numeric(
+        self,
+        operator: str,
+        left: int,
+        left_type: str,
+        right: int,
+        right_type: str,
+    ) -> int:
         dst = self._fresh_reg()
+        result_type = self._result_type_for_numeric_operator(
+            operator,
+            left_type,
+            right_type,
+        )
+        if result_type == _REAL_TYPE:
+            left = self._coerce_reg_to_type(
+                left,
+                left_type,
+                expected_type=_REAL_TYPE,
+            )
+            right = self._coerce_reg_to_type(
+                right,
+                right_type,
+                expected_type=_REAL_TYPE,
+            )
+            if operator == "+":
+                self._emit(
+                    IrOp.F64_ADD,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator == "-":
+                self._emit(
+                    IrOp.F64_SUB,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator == "*":
+                self._emit(
+                    IrOp.F64_MUL,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            elif operator == "/":
+                self._emit(
+                    IrOp.F64_DIV,
+                    IrRegister(dst),
+                    IrRegister(left),
+                    IrRegister(right),
+                )
+            else:
+                raise CompileError(f"numeric operator {operator!r} is not supported")
+            return dst
         if operator == "+":
             self._emit(IrOp.ADD, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "-":
@@ -1801,12 +1958,7 @@ class AlgolIrCompiler:
             return self._emit_load_by_name_reference(reference, scope)
         pointer = self._emit_reference_pointer(reference, scope)
         dst = self._fresh_reg()
-        self._emit(
-            IrOp.LOAD_WORD,
-            IrRegister(dst),
-            IrRegister(pointer),
-            IrRegister(self._const_reg(0)),
-        )
+        self._emit_load_scalar(reference.type_name, dst, pointer, 0)
         return dst
 
     def _emit_load_by_name_reference(
@@ -1851,12 +2003,7 @@ class AlgolIrCompiler:
         self._copy_reg(dst=dst, src=_RESULT_REG)
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(storage_label)
-        self._emit(
-            IrOp.LOAD_WORD,
-            IrRegister(dst),
-            IrRegister(pointer),
-            IrRegister(self._const_reg(0)),
-        )
+        self._emit_load_scalar(reference.type_name, dst, pointer, 0)
         self._label(end_label)
         return dst
 
@@ -1951,20 +2098,15 @@ class AlgolIrCompiler:
             self._emit_handle_pending_goto_after_call(scope)
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(storage_label)
-            self._emit(
-                IrOp.STORE_WORD,
-                IrRegister(value_reg),
-                IrRegister(pointer),
-                IrRegister(self._const_reg(0)),
+            self._emit_store_scalar(
+                reference.type_name,
+                value_reg,
+                pointer,
+                0,
             )
             self._label(end_label)
             return
-        self._emit(
-            IrOp.STORE_WORD,
-            IrRegister(value_reg),
-            IrRegister(pointer),
-            IrRegister(self._const_reg(0)),
-        )
+        self._emit_store_scalar(reference.type_name, value_reg, pointer, 0)
 
     def _emit_frame_for_reference(
         self, reference: ResolvedReference, scope: _FrameScope
@@ -2050,10 +2192,50 @@ class AlgolIrCompiler:
         if symbol.slot_offset is None:
             raise CompileError(f"symbol {symbol.name!r} has no planned frame slot")
         offset_reg = self._const_reg(symbol.slot_offset)
+        if symbol.type_name == _REAL_TYPE:
+            self._emit(
+                IrOp.LOAD_F64,
+                IrRegister(dst_reg),
+                IrRegister(scope.frame_base_reg),
+                IrRegister(offset_reg),
+            )
+            return
         self._emit(
             IrOp.LOAD_WORD,
             IrRegister(dst_reg),
             IrRegister(scope.frame_base_reg),
+            IrRegister(offset_reg),
+        )
+
+    def _emit_load_scalar(
+        self,
+        type_name: str,
+        dst_reg: int,
+        base_reg: int,
+        offset: int,
+    ) -> None:
+        offset_reg = self._const_reg(offset)
+        opcode = IrOp.LOAD_F64 if type_name == _REAL_TYPE else IrOp.LOAD_WORD
+        self._emit(
+            opcode,
+            IrRegister(dst_reg),
+            IrRegister(base_reg),
+            IrRegister(offset_reg),
+        )
+
+    def _emit_store_scalar(
+        self,
+        type_name: str,
+        value_reg: int,
+        base_reg: int,
+        offset: int,
+    ) -> None:
+        offset_reg = self._const_reg(offset)
+        opcode = IrOp.STORE_F64 if type_name == _REAL_TYPE else IrOp.STORE_WORD
+        self._emit(
+            opcode,
+            IrRegister(value_reg),
+            IrRegister(base_reg),
             IrRegister(offset_reg),
         )
 
@@ -2070,6 +2252,13 @@ class AlgolIrCompiler:
         value_reg = self._const_reg(value)
         self._store_word_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
 
+    def _store_f64_reg(self, *, value_reg: int, base_reg: int, offset: int) -> None:
+        self._emit_store_scalar(_REAL_TYPE, value_reg, base_reg, offset)
+
+    def _store_f64_const(self, base_reg: int, offset: int, value: float) -> None:
+        value_reg = self._const_f64_reg(value)
+        self._store_f64_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
+
     def _copy_reg(self, *, dst: int, src: int) -> None:
         self._emit(IrOp.ADD_IMM, IrRegister(dst), IrRegister(src), IrImmediate(0))
 
@@ -2077,6 +2266,53 @@ class AlgolIrCompiler:
         reg = self._fresh_reg()
         self._emit(IrOp.LOAD_IMM, IrRegister(reg), IrImmediate(value))
         return reg
+
+    def _const_f64_reg(self, value: float) -> int:
+        reg = self._fresh_reg()
+        self._emit(IrOp.LOAD_F64_IMM, IrRegister(reg), IrFloatImmediate(value))
+        return reg
+
+    def _coerce_reg_to_type(
+        self,
+        reg: int,
+        actual_type: str,
+        *,
+        expected_type: str | None = None,
+    ) -> int:
+        target_type = expected_type or actual_type
+        if actual_type == target_type:
+            return reg
+        if actual_type == _INTEGER_TYPE and target_type == _REAL_TYPE:
+            coerced = self._fresh_reg()
+            self._emit(IrOp.F64_FROM_I32, IrRegister(coerced), IrRegister(reg))
+            return coerced
+        raise CompileError(
+            f"cannot coerce {actual_type} value to {target_type} during lowering"
+        )
+
+    def _result_type_for_numeric_operator(
+        self,
+        operator: str,
+        left_type: str,
+        right_type: str,
+    ) -> str:
+        if operator == "/":
+            return _REAL_TYPE
+        if operator in {"+", "-", "*"}:
+            return (
+                _REAL_TYPE
+                if _REAL_TYPE in {left_type, right_type}
+                else _INTEGER_TYPE
+            )
+        return _INTEGER_TYPE
+
+    def _expr_type(self, expr: ASTNode | Token | None) -> str:
+        if expr is None:
+            raise CompileError("missing typed expression")
+        inferred = self.expression_types.get(id(expr))
+        if inferred is None:
+            raise CompileError(f"missing inferred type for {type(expr).__name__}")
+        return inferred
 
     def _load_runtime_state(self, offset: int, dst_reg: int) -> None:
         self._emit(
