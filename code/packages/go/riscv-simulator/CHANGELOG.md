@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] - Unreleased
+
+### Added
+- Added opt-in host byte I/O syscalls for compiler end-to-end tests.
+
 ## [0.3.0] - 2026-04-02
 
 ### Changed
