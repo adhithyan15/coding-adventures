@@ -276,6 +276,13 @@ fn build_env(request: &HttpRequest) -> VALUE {
     let (path, query) = split_target(request.target());
     set_hash_str(&env, "PATH_INFO", path);
     set_hash_str(&env, "QUERY_STRING", query);
+    ruby_bridge::hash_aset(
+        env,
+        ruby_bridge::str_to_rb("conduit.query_params"),
+        build_query_params_hash(query),
+    );
+    let headers_hash = build_headers_hash(&request.head.headers);
+    ruby_bridge::hash_aset(env, ruby_bridge::str_to_rb("conduit.headers"), headers_hash);
     set_hash_str(
         &env,
         "SERVER_PROTOCOL",
@@ -306,6 +313,20 @@ fn build_env(request: &HttpRequest) -> VALUE {
         ruby_bridge::str_to_rb("SERVER_PORT"),
         ruby_bridge::usize_to_rb(request.connection.local_addr.port() as usize),
     );
+    if let Some(content_length) = request.head.content_length() {
+        ruby_bridge::hash_aset(
+            env,
+            ruby_bridge::str_to_rb("conduit.content_length"),
+            ruby_bridge::usize_to_rb(content_length),
+        );
+    }
+    if let Some((content_type, _charset)) = request.head.content_type() {
+        ruby_bridge::hash_aset(
+            env,
+            ruby_bridge::str_to_rb("conduit.content_type"),
+            ruby_bridge::str_to_rb(&content_type),
+        );
+    }
 
     for header in &request.head.headers {
         let key = header_env_key(&header.name);
@@ -327,6 +348,87 @@ fn split_target(target: &str) -> (&str, &str) {
     match target.split_once('?') {
         Some((path, query)) => (path, query),
         None => (target, ""),
+    }
+}
+
+fn build_headers_hash(headers: &[Header]) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    for header in headers {
+        ruby_bridge::hash_aset(
+            hash,
+            ruby_bridge::str_to_rb(&header.name.to_ascii_lowercase()),
+            ruby_bridge::str_to_rb(&header.value),
+        );
+    }
+    hash
+}
+
+fn build_query_params_hash(query: &str) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    if query.is_empty() {
+        return hash;
+    }
+
+    for pair in query.split('&') {
+        if pair.is_empty() {
+            continue;
+        }
+        let (raw_key, raw_value) = match pair.split_once('=') {
+            Some((key, value)) => (key, value),
+            None => (pair, ""),
+        };
+
+        let key = percent_decode_component(raw_key);
+        if key.is_empty() {
+            continue;
+        }
+        let value = percent_decode_component(raw_value);
+        ruby_bridge::hash_aset(
+            hash,
+            ruby_bridge::str_to_rb(&key),
+            ruby_bridge::str_to_rb(&value),
+        );
+    }
+
+    hash
+}
+
+fn percent_decode_component(input: &str) -> String {
+    let mut output = Vec::with_capacity(input.len());
+    let bytes = input.as_bytes();
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'+' => {
+                output.push(b' ');
+                index += 1;
+            }
+            b'%' if index + 2 < bytes.len() => {
+                if let (Some(high), Some(low)) =
+                    (hex_nibble(bytes[index + 1]), hex_nibble(bytes[index + 2]))
+                {
+                    output.push(high << 4 | low);
+                    index += 3;
+                } else {
+                    output.push(b'%');
+                    index += 1;
+                }
+            }
+            byte => {
+                output.push(byte);
+                index += 1;
+            }
+        }
+    }
+    String::from_utf8_lossy(&output).into_owned()
+}
+
+fn hex_nibble(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
     }
 }
 
