@@ -9,6 +9,7 @@ from pcm_audio import PCMBuffer, PCMFormat
 from music_machine import (
     DEFAULT_INSTRUMENT_ID,
     HAPPY_BIRTHDAY_TEXT,
+    MINI_ORCHESTRA_TEXT,
     InstrumentDeclaration,
     MeterEvent,
     PortableScore,
@@ -575,6 +576,20 @@ def test_render_portable_score_mixes_tracks_and_chords() -> None:
     }
     assert any(rendered.pcm_buffer.samples[:100])
     assert any(rendered.pcm_buffer.samples[100:200])
+
+
+def test_mini_orchestra_fixture_parses_and_renders() -> None:
+    score = parse_portable_score(MINI_ORCHESTRA_TEXT)
+    rendered = render_portable_score_to_pcm(score)
+
+    assert score.title == "Mini Orchestra"
+    assert len(score.instruments) == 4
+    assert len(score.tracks) == 4
+    assert len(score.events) == 36
+    assert rendered.pcm_buffer.sample_count() > 0
+    assert len(rendered.rendered_notes) == 52
+    assert any(rendered.pcm_buffer.samples[:10_000])
+    assert any(rendered.pcm_buffer.samples[-10_000:])
 
 
 def test_render_portable_score_keeps_later_scheduled_notes_audible() -> None:

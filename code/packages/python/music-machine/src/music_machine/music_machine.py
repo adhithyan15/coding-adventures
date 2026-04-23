@@ -80,6 +80,64 @@ G4/e G4/e | G5/q E5/q C5/q | B4/q A4/q R/q |
 F5/e F5/e | E5/q C5/q D5/q | C5/h
 """
 
+MINI_ORCHESTRA_TEXT = """format: music-machine-score/v2
+title: Mini Orchestra
+ppq: 120
+sample_rate: 16000
+tempo 0 96
+meter 0 4/4
+
+instrument flute profile=flute_naive gain=0.20
+instrument violin profile=violin_naive gain=0.17
+instrument piano profile=piano_naive gain=0.14
+instrument bass program=33 gain=0.15
+
+track melody instrument=flute
+track harmony instrument=violin
+track comp instrument=piano
+track low instrument=bass
+
+event melody 0 120 note C5 velocity=0.72
+event melody 120 120 note D5 velocity=0.72
+event melody 240 120 note E5 velocity=0.72
+event melody 360 120 note G5 velocity=0.72
+event harmony 0 240 note E4 velocity=0.48
+event harmony 240 240 note G4 velocity=0.42
+event comp 0 240 note C4,E4,G4 velocity=0.42
+event comp 240 240 note C4,E4,G4 velocity=0.36
+event low 0 480 note C2 velocity=0.56
+
+event melody 480 120 note E5 velocity=0.72
+event melody 600 120 note D5 velocity=0.72
+event melody 720 120 note C5 velocity=0.72
+event melody 840 120 note G4 velocity=0.72
+event harmony 480 240 note A4 velocity=0.48
+event harmony 720 240 note C5 velocity=0.42
+event comp 480 240 note F4,A4,C5 velocity=0.42
+event comp 720 240 note F4,A4,C5 velocity=0.36
+event low 480 480 note F2 velocity=0.56
+
+event melody 960 120 note A4 velocity=0.72
+event melody 1080 120 note C5 velocity=0.72
+event melody 1200 120 note D5 velocity=0.72
+event melody 1320 120 note E5 velocity=0.72
+event harmony 960 240 note B4 velocity=0.48
+event harmony 1200 240 note D5 velocity=0.42
+event comp 960 240 note G3,B3,D4 velocity=0.42
+event comp 1200 240 note G3,B3,D4 velocity=0.36
+event low 960 480 note G2 velocity=0.56
+
+event melody 1440 120 note G5 velocity=0.72
+event melody 1560 120 note E5 velocity=0.72
+event melody 1680 120 note D5 velocity=0.72
+event melody 1800 120 note C5 velocity=0.72
+event harmony 1440 240 note E4 velocity=0.48
+event harmony 1680 240 note G4 velocity=0.42
+event comp 1440 240 note C4,E4,G4 velocity=0.42
+event comp 1680 240 note C4,E4,G4 velocity=0.36
+event low 1440 480 note C2 velocity=0.56
+"""
+
 ScoreEventKind = Literal["note", "rest"]
 PortableEventKind = Literal["note", "rest"]
 
