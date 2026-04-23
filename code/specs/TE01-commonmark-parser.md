@@ -822,7 +822,7 @@ The AST defined in this spec is the stable foundation. Future specs extend it:
 | TE01  | CommonMark Parser (this)     | —         | All 20 node types above                             |
 | TE02  | Parsing Algorithm            | TE01      | None — specifies how to produce TE01 AST            |
 | TE03  | HTML Renderer                | TE01      | None — specifies toHtml(DocumentNode)               |
-| TE04  | GFM Extensions               | TE01–03   | TableNode, TableRowNode, TableCellNode, StrikeNode, TaskListItemNode |
+| TE04  | GFM Extensions               | TE01–03   | TableNode, TableRowNode, TableCellNode, StrikeNode, TaskListItemNode, FencedBlockNode |
 | TE05  | ThunderEgg Dialect           | TE01–04   | WikiLinkNode, WikiEmbedNode, HighlightNode, MathNode, FrontmatterNode, CalloutNode |
 
 GFM node types (TE04):
@@ -834,6 +834,7 @@ interface TableRowNode   { type: "table_row";  isHeader: boolean; children: read
 interface TableCellNode  { type: "table_cell"; children: readonly InlineNode[] }
 interface StrikeNode     { type: "strikethrough"; children: readonly InlineNode[] }
 interface TaskItemNode   { type: "task_item";  checked: boolean; children: readonly BlockNode[] }
+interface FencedBlockNode { type: "fenced_block"; name: string | null; info: string | null; value: string }
 ```
 
 ThunderEgg dialect node types (TE05):
