@@ -28,6 +28,34 @@ class TestConduitRouter < Minitest::Test
     assert_equal "text/plain", headers["content-type"]
     assert_equal ["Hello Adhithya"], body
   end
+
+  def test_request_exposes_preparsed_query_and_header_helpers
+    seen = nil
+    app = CodingAdventures::Conduit.app do
+      get "/hello/:name" do |request|
+        seen = request
+        "Hello #{request.params.fetch("name")}"
+      end
+    end
+
+    app.call(
+      "REQUEST_METHOD" => "GET",
+      "PATH_INFO" => "/hello/Adhithya",
+      "QUERY_STRING" => "lang=rust",
+      "rack.input" => "hello",
+      "conduit.query_params" => { "lang" => "rust", "empty" => "" },
+      "conduit.headers" => { "content-type" => "text/plain", "x-name" => "Adhithya" },
+      "conduit.content_length" => 5,
+      "conduit.content_type" => "text/plain"
+    )
+
+    refute_nil seen
+    assert_equal({ "lang" => "rust", "empty" => "" }, seen.query_params)
+    assert_equal "Adhithya", seen.header("X-Name")
+    assert_equal 5, seen.content_length
+    assert_equal "text/plain", seen.content_type
+    assert_equal "hello", seen.body
+  end
 end
 
 class TestConduitServer < Minitest::Test
