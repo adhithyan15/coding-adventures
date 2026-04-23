@@ -344,7 +344,13 @@ def parse_args(argv: list[str]) -> Config:
     # secret never appears in /proc/<pid>/cmdline or ``ps aux`` output.
     # The CLI flag is kept for convenience in development but carries a warning
     # in its help text above.
-    oper_password = os.environ.get("IRCD_OPER_PASSWORD") or ns.oper_password
+    #
+    # Use explicit ``is not None`` (not ``or``) so that setting
+    # IRCD_OPER_PASSWORD="" intentionally disables oper and does NOT fall
+    # back to any CLI-supplied value.  If we used ``or``, an empty env var
+    # would be falsy and the CLI password would reactivate unexpectedly.
+    _env_oper = os.environ.get("IRCD_OPER_PASSWORD")
+    oper_password = _env_oper if _env_oper is not None else ns.oper_password
 
     return Config(
         host=ns.host,
@@ -386,6 +392,17 @@ def main(argv: list[str] | None = None) -> None:
         ircd --port 6667
     """
     import signal
+
+    # Configure basic logging if no handlers are attached yet.  This ensures
+    # security-relevant warnings (e.g. binding to 0.0.0.0) are visible in a
+    # plain ``python -m ircd`` invocation.  Library users who configure their
+    # own logging before calling main() are unaffected — basicConfig is a no-op
+    # when root handlers are already present.
+    if not logging.root.handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(levelname)s %(name)s: %(message)s",
+        )
 
     config = parse_args(argv if argv is not None else sys.argv[1:])
 
