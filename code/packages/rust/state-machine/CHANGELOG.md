@@ -33,6 +33,10 @@ All notable changes to the `state-machine` crate will be documented in this file
   writers now belong in sibling serializer libraries.
 - Extended `TransitionDefinition` with `actions` and `consume` fields so the
   shared typed definition layer can represent tokenizer/transducer effects.
+- Extended the typed definition layer with profile metadata, lexer token/input/
+  register/fixture declarations, typed matcher objects, and optional transition
+  guards so build-time lexer tooling can lower `.lexer.states.toml` documents
+  without embedding host-language code.
 
 ## [0.1.0] - 2026-03-20
 

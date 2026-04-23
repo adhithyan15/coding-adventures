@@ -9,7 +9,7 @@
 use std::collections::HashSet;
 
 use crate::definitions::{
-    MachineKind, StateDefinition, StateMachineDefinition, TransitionDefinition,
+    MachineKind, MatcherDefinition, StateDefinition, StateMachineDefinition, TransitionDefinition,
 };
 
 /// Serialized transition event used for "match any non-EOF input".
@@ -272,16 +272,27 @@ impl EffectfulStateMachine {
                     transition.from
                 ));
             }
-            let matcher = match transition.on.as_deref() {
-                Some(ANY_INPUT) => EffectfulMatcher::Any,
-                Some(END_INPUT) => EffectfulMatcher::End,
-                Some(event) => EffectfulMatcher::Event(event.to_string()),
-                None => {
+            let matcher = match transition.matcher.as_ref() {
+                Some(MatcherDefinition::Literal(event)) => EffectfulMatcher::Event(event.clone()),
+                Some(MatcherDefinition::Anything) => EffectfulMatcher::Any,
+                Some(MatcherDefinition::Eof) => EffectfulMatcher::End,
+                Some(other) => {
                     return Err(format!(
-                        "Transducer transition from '{}' must use `$end` for EOF, not null",
-                        transition.from
+                        "Transducer matcher {:?} is not executable by EffectfulStateMachine yet",
+                        other
                     ))
                 }
+                None => match transition.on.as_deref() {
+                    Some(ANY_INPUT) => EffectfulMatcher::Any,
+                    Some(END_INPUT) => EffectfulMatcher::End,
+                    Some(event) => EffectfulMatcher::Event(event.to_string()),
+                    None => {
+                        return Err(format!(
+                            "Transducer transition from '{}' must use `$end` for EOF, not null",
+                            transition.from
+                        ))
+                    }
+                },
             };
             transitions.push(EffectfulTransition {
                 source: transition.from.clone(),
@@ -317,6 +328,11 @@ impl EffectfulStateMachine {
                     Some(transition.matcher.as_definition_event()),
                     vec![transition.target.clone()],
                 );
+                entry.matcher = Some(match &transition.matcher {
+                    EffectfulMatcher::Event(event) => MatcherDefinition::Literal(event.clone()),
+                    EffectfulMatcher::Any => MatcherDefinition::Anything,
+                    EffectfulMatcher::End => MatcherDefinition::Eof,
+                });
                 entry.actions = transition.effects.clone();
                 entry.consume = transition.consume;
                 entry
