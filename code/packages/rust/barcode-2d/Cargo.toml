@@ -1,0 +1,8 @@
+[package]
+name = "barcode-2d"
+version = "0.1.0"
+edition = "2021"
+description = "Shared 2D barcode abstraction: ModuleGrid type and layout() pipeline"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }
