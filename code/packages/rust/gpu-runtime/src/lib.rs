@@ -336,12 +336,12 @@ impl Runtime {
         uniforms: &[u8],
         count:    usize,
     ) -> Result<Vec<u8>, GpuError> {
-        let src_buf  = device.alloc_with_bytes(src);
-        let dst_buf  = device.alloc(count);
+        let src_buf  = device.alloc_with_bytes(src)?;
+        let dst_buf  = device.alloc(count)?;
         let unif_buf = if uniforms.is_empty() {
-            device.alloc(4) // placeholder: 4 zero bytes
+            device.alloc(4)? // 4 zero bytes (uniforms slot required by shader)
         } else {
-            device.alloc_with_bytes(uniforms)
+            device.alloc_with_bytes(uniforms)?
         };
 
         let lib      = device.compile(msl)?;
@@ -371,12 +371,12 @@ impl Runtime {
         uniforms:    &[u8],
         pixel_count: usize,
     ) -> Result<Vec<u8>, GpuError> {
-        let src_buf  = device.alloc_with_bytes(src);
-        let dst_buf  = device.alloc(pixel_count * 4);
+        let src_buf  = device.alloc_with_bytes(src)?;
+        let dst_buf  = device.alloc(pixel_count * 4)?;
         let unif_buf = if uniforms.is_empty() {
-            device.alloc(4)
+            device.alloc(4)?
         } else {
-            device.alloc_with_bytes(uniforms)
+            device.alloc_with_bytes(uniforms)?
         };
 
         let lib      = device.compile(msl)?;
@@ -408,13 +408,17 @@ impl Runtime {
         uniforms: &[u8],
         count:    usize,
     ) -> Result<Vec<u8>, GpuError> {
-        let src_buf  = device.alloc_with_bytes(src)?;
-        let dst_buf  = device.alloc(count)?;
+        let src_buf = device.alloc_with_bytes(src)?;
+        let dst_buf = device.alloc(count)?;
 
-        let _unif_buf = if uniforms.is_empty() {
-            device.alloc(4)?
+        // Optional uniforms buffer — only allocated when uniforms are non-empty,
+        // because CUDA kernel signatures differ:
+        //   no-uniform ops: (src, dst, n)
+        //   uniform ops:    (src, dst, uni, n)
+        let unif_buf = if uniforms.is_empty() {
+            None
         } else {
-            device.alloc_with_bytes(uniforms)?
+            Some(device.alloc_with_bytes(uniforms)?)
         };
 
         let module   = device.compile(cuda_c)?;
@@ -424,20 +428,30 @@ impl Runtime {
         let block_size = 256u32;
         let grid_size  = (n + block_size - 1) / block_size;
 
-        // CUdeviceptr arguments: pass the ptr value as a kernel arg pointer.
-        // See cuda-compute crate docs for the full pattern.
-        let mut src_ptr = src_buf.len() as u64; // placeholder until we expose CUdeviceptr
-        let mut dst_ptr = dst_buf.len() as u64;
+        // Pass the actual CUdeviceptr values, not lengths.
+        let mut src_ptr = src_buf.device_ptr();
+        let mut dst_ptr = dst_buf.device_ptr();
         let mut n_arg   = n;
-        let mut args: [*mut std::ffi::c_void; 3] = [
-            &mut src_ptr as *mut _ as *mut std::ffi::c_void,
-            &mut dst_ptr as *mut _ as *mut std::ffi::c_void,
-            &mut n_arg   as *mut _ as *mut std::ffi::c_void,
-        ];
 
-        device.launch(&function, [grid_size, 1, 1], [block_size, 1, 1], &mut args)?;
+        if let Some(ref ub) = unif_buf {
+            let mut uni_ptr = ub.device_ptr();
+            let mut args: [*mut std::ffi::c_void; 4] = [
+                &mut src_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut dst_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut uni_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut n_arg   as *mut _ as *mut std::ffi::c_void,
+            ];
+            device.launch(&function, [grid_size, 1, 1], [block_size, 1, 1], &mut args)?;
+        } else {
+            let mut args: [*mut std::ffi::c_void; 3] = [
+                &mut src_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut dst_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut n_arg   as *mut _ as *mut std::ffi::c_void,
+            ];
+            device.launch(&function, [grid_size, 1, 1], [block_size, 1, 1], &mut args)?;
+        }
+
         device.synchronize()?;
-
         device.download(&dst_buf).map_err(GpuError::from)
     }
 
@@ -450,13 +464,13 @@ impl Runtime {
         uniforms:    &[u8],
         pixel_count: usize,
     ) -> Result<Vec<u8>, GpuError> {
-        let src_buf  = device.alloc_with_bytes(src)?;
-        let dst_buf  = device.alloc(pixel_count * 4)?;
+        let src_buf = device.alloc_with_bytes(src)?;
+        let dst_buf = device.alloc(pixel_count * 4)?;
 
-        let _unif_buf = if uniforms.is_empty() {
-            device.alloc(4)?
+        let unif_buf = if uniforms.is_empty() {
+            None
         } else {
-            device.alloc_with_bytes(uniforms)?
+            Some(device.alloc_with_bytes(uniforms)?)
         };
 
         let module   = device.compile(cuda_c)?;
@@ -466,18 +480,29 @@ impl Runtime {
         let block_size = 256u32;
         let grid_size  = (n + block_size - 1) / block_size;
 
-        let mut src_ptr = src_buf.len() as u64; // placeholder until CUdeviceptr is exposed
-        let mut dst_ptr = dst_buf.len() as u64;
+        let mut src_ptr = src_buf.device_ptr();
+        let mut dst_ptr = dst_buf.device_ptr();
         let mut n_arg   = n;
-        let mut args: [*mut std::ffi::c_void; 3] = [
-            &mut src_ptr as *mut _ as *mut std::ffi::c_void,
-            &mut dst_ptr as *mut _ as *mut std::ffi::c_void,
-            &mut n_arg   as *mut _ as *mut std::ffi::c_void,
-        ];
 
-        device.launch(&function, [grid_size, 1, 1], [block_size, 1, 1], &mut args)?;
+        if let Some(ref ub) = unif_buf {
+            let mut uni_ptr = ub.device_ptr();
+            let mut args: [*mut std::ffi::c_void; 4] = [
+                &mut src_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut dst_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut uni_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut n_arg   as *mut _ as *mut std::ffi::c_void,
+            ];
+            device.launch(&function, [grid_size, 1, 1], [block_size, 1, 1], &mut args)?;
+        } else {
+            let mut args: [*mut std::ffi::c_void; 3] = [
+                &mut src_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut dst_ptr as *mut _ as *mut std::ffi::c_void,
+                &mut n_arg   as *mut _ as *mut std::ffi::c_void,
+            ];
+            device.launch(&function, [grid_size, 1, 1], [block_size, 1, 1], &mut args)?;
+        }
+
         device.synchronize()?;
-
         device.download(&dst_buf).map_err(GpuError::from)
     }
 }

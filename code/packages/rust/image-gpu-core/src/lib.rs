@@ -321,7 +321,9 @@ pub fn gpu_brightness(img: &PixelContainer, delta: i16) -> Result<PixelContainer
 
 #[inline]
 fn pixel_count(img: &PixelContainer) -> usize {
-    img.width as usize * img.height as usize
+    (img.width as usize)
+        .checked_mul(img.height as usize)
+        .expect("pixel_count overflow: image dimensions too large for usize")
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────────

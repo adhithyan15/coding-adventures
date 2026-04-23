@@ -101,16 +101,19 @@ pub enum MetalError {
     FunctionNotFound(String),
     /// `newComputePipelineStateWithFunction:error:` failed.
     PipelineFailed(String),
+    /// `newBufferWithLength:options:` returned nil — allocation failed.
+    AllocationFailed(usize),
 }
 
 impl std::fmt::Display for MetalError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            MetalError::NotSupported       => write!(f, "Metal is not supported on this platform"),
-            MetalError::NoDevice           => write!(f, "MTLCreateSystemDefaultDevice returned nil"),
-            MetalError::CompileFailed(m)   => write!(f, "MSL compilation failed: {m}"),
+            MetalError::NotSupported        => write!(f, "Metal is not supported on this platform"),
+            MetalError::NoDevice            => write!(f, "MTLCreateSystemDefaultDevice returned nil"),
+            MetalError::CompileFailed(m)    => write!(f, "MSL compilation failed: {m}"),
             MetalError::FunctionNotFound(n) => write!(f, "kernel function '{n}' not found in library"),
-            MetalError::PipelineFailed(m)  => write!(f, "compute pipeline creation failed: {m}"),
+            MetalError::PipelineFailed(m)   => write!(f, "compute pipeline creation failed: {m}"),
+            MetalError::AllocationFailed(n) => write!(f, "MTLBuffer allocation failed for {n} bytes"),
         }
     }
 }
@@ -184,7 +187,7 @@ mod apple {
         /// Uses `MTLResourceStorageModeShared` so the same physical bytes
         /// are accessible from both CPU (`as_slice`) and GPU (`[[buffer(N)]]`
         /// in MSL).  No transfer cost on Apple Silicon.
-        pub fn alloc(&self, len: usize) -> MetalBuffer {
+        pub fn alloc(&self, len: usize) -> Result<MetalBuffer, MetalError> {
             unsafe {
                 // [device newBufferWithLength:len options:MTL_RESOURCE_OPTIONS_DEFAULT]
                 let f: unsafe extern "C" fn(Id, objc_bridge::Sel, usize, usize) -> Id =
@@ -195,8 +198,10 @@ mod apple {
                     len,
                     MTL_RESOURCE_OPTIONS_DEFAULT as usize,
                 );
-                assert!(!buf.is_null(), "MetalDevice::alloc: MTLBuffer allocation failed");
-                MetalBuffer { buffer: buf, len }
+                if buf.is_null() {
+                    return Err(MetalError::AllocationFailed(len));
+                }
+                Ok(MetalBuffer { buffer: buf, len })
             }
         }
 
@@ -204,7 +209,7 @@ mod apple {
         ///
         /// Equivalent to `alloc(data.len())` followed by writing to `as_slice_mut()`,
         /// but uses `newBufferWithBytes:length:options:` directly for efficiency.
-        pub fn alloc_with_bytes(&self, data: &[u8]) -> MetalBuffer {
+        pub fn alloc_with_bytes(&self, data: &[u8]) -> Result<MetalBuffer, MetalError> {
             unsafe {
                 let f: unsafe extern "C" fn(Id, objc_bridge::Sel, *const c_void, usize, usize) -> Id =
                     ::std::mem::transmute(objc_bridge::objc_msgSend as *const ());
@@ -215,8 +220,10 @@ mod apple {
                     data.len(),
                     MTL_RESOURCE_OPTIONS_DEFAULT as usize,
                 );
-                assert!(!buf.is_null(), "MetalDevice::alloc_with_bytes: MTLBuffer allocation failed");
-                MetalBuffer { buffer: buf, len: data.len() }
+                if buf.is_null() {
+                    return Err(MetalError::AllocationFailed(data.len()));
+                }
+                Ok(MetalBuffer { buffer: buf, len: data.len() })
             }
         }
 
@@ -857,7 +864,7 @@ mod tests {
     fn alloc_and_read_buffer() {
         let d   = MetalDevice::new().unwrap();
         let src = vec![1u8, 2, 3, 4, 5];
-        let mut buf = d.alloc_with_bytes(&src);
+        let mut buf = d.alloc_with_bytes(&src).unwrap();
         assert_eq!(buf.as_slice(), &[1, 2, 3, 4, 5]);
 
         // Write on CPU side.
@@ -872,8 +879,8 @@ mod tests {
         let src    = (0u8..=255).collect::<Vec<u8>>();
         let n      = src.len() as u32;
 
-        let src_buf = d.alloc_with_bytes(&src);
-        let dst_buf = d.alloc(src.len());
+        let src_buf = d.alloc_with_bytes(&src).unwrap();
+        let dst_buf = d.alloc(src.len()).unwrap();
 
         let lib = d.compile(MSL_IDENTITY).unwrap();
         let f   = lib.function("identity").unwrap();
@@ -899,8 +906,8 @@ mod tests {
         let n      = src.len() as u32;
         let expected: Vec<u8> = src.iter().map(|&b| 255 - b).collect();
 
-        let src_buf = d.alloc_with_bytes(&src);
-        let dst_buf = d.alloc(src.len());
+        let src_buf = d.alloc_with_bytes(&src).unwrap();
+        let dst_buf = d.alloc(src.len()).unwrap();
 
         let lib = d.compile(MSL_INVERT).unwrap();
         let f   = lib.function("invert").unwrap();

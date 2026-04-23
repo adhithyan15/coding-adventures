@@ -83,7 +83,7 @@ pub enum CudaError {
     /// or `libcuda.so` not found).
     NotAvailable,
     /// A CUDA Driver API call returned a non-zero result code.
-    DriverError { code: i32, message: &'static str },
+    DriverError { code: i32, message: String },
     /// NVRTC (compiler) not found — `libnvrtc.so` is missing.
     NvrtcNotFound,
     /// NVRTC compilation of CUDA C source failed.
@@ -297,8 +297,9 @@ type FnCuLaunchKernel     = unsafe extern "C" fn(
     kernel_params: *mut *mut c_void,
     extra: *mut *mut c_void,
 ) -> CUresult;
-type FnCuCtxSynchronize = unsafe extern "C" fn() -> CUresult;
-type FnCuGetErrorName   = unsafe extern "C" fn(error: CUresult, pstr: *mut *const c_char) -> CUresult;
+type FnCuCtxSynchronize  = unsafe extern "C" fn() -> CUresult;
+type FnCuCtxSetCurrent   = unsafe extern "C" fn(ctx: CUcontext) -> CUresult;
+type FnCuGetErrorName    = unsafe extern "C" fn(error: CUresult, pstr: *mut *const c_char) -> CUresult;
 
 struct CudaLib {
     _handle: dynlib::DynLib,
@@ -307,6 +308,7 @@ struct CudaLib {
     cu_device_get_count:  FnCuDeviceGetCount,
     cu_ctx_create:        FnCuCtxCreate,
     cu_ctx_destroy:       FnCuCtxDestroy,
+    cu_ctx_set_current:   FnCuCtxSetCurrent,
     cu_mem_alloc:         FnCuMemAlloc,
     cu_mem_free:          FnCuMemFree,
     cu_memcpy_h_to_d:     FnCuMemcpyHtoD,
@@ -343,6 +345,7 @@ impl CudaLib {
             cu_device_get_count:   sym!("cuDeviceGetCount"),
             cu_ctx_create:         sym!("cuCtxCreate_v2"),
             cu_ctx_destroy:        sym!("cuCtxDestroy_v2"),
+            cu_ctx_set_current:    sym!("cuCtxSetCurrent"),
             cu_mem_alloc:          sym!("cuMemAlloc_v2"),
             cu_mem_free:           sym!("cuMemFree_v2"),
             cu_memcpy_h_to_d:      sym!("cuMemcpyHtoD_v2"),
@@ -361,16 +364,19 @@ impl CudaLib {
         if result == 0 {
             return Ok(());
         }
-        let msg = unsafe {
+        // Copy the error name string into owned memory before returning.
+        // The C string points into the dynamically-loaded driver; holding a
+        // borrow across a library unload would be a dangling pointer.
+        let message = unsafe {
             let mut ptr: *const c_char = std::ptr::null();
             (self.cu_get_error_name)(result, &mut ptr);
             if ptr.is_null() {
-                "unknown CUDA error"
+                "unknown CUDA error".to_owned()
             } else {
-                CStr::from_ptr(ptr).to_str().unwrap_or("unreadable")
+                CStr::from_ptr(ptr).to_str().unwrap_or("unreadable").to_owned()
             }
         };
-        Err(CudaError::DriverError { code: result, message: msg })
+        Err(CudaError::DriverError { code: result, message })
     }
 }
 
@@ -434,8 +440,9 @@ impl NvrtcLib {
     /// Compile CUDA C source to a PTX string.
     fn compile(&self, source: &str) -> Result<String, CudaError> {
         unsafe {
-            let c_src  = CString::new(source).unwrap();
-            let c_name = CString::new("kernel.cu").unwrap();
+            let c_src = CString::new(source)
+                .map_err(|_| CudaError::CompileFailed("source contains interior NUL byte".to_string()))?;
+            let c_name = CString::new("kernel.cu").expect("static literal is valid CString");
             let mut prog: NvrtcProgram = std::ptr::null_mut();
 
             let r = (self.nvrtc_create_program)(
@@ -545,8 +552,20 @@ impl CudaDevice {
         }
     }
 
+    /// Make this device's context current on the calling thread.
+    ///
+    /// CUDA Driver API contexts are created on and bound to a specific thread.
+    /// When the device is moved to another thread (via the `Send` impl and a
+    /// `Mutex`), callers must rebind the context before issuing any CUDA work.
+    /// This method does that atomically.  `gpu-runtime` calls it through the
+    /// Mutex, so only one thread rebinds at a time.
+    fn bind_ctx(&self) -> Result<(), CudaError> {
+        unsafe { self.cuda.check((self.cuda.cu_ctx_set_current)(self.ctx)) }
+    }
+
     /// Allocate `len` bytes of device memory.
     pub fn alloc(&self, len: usize) -> Result<CudaBuffer, CudaError> {
+        self.bind_ctx()?;
         let mut dptr: CUdeviceptr = 0;
         unsafe { self.cuda.check((self.cuda.cu_mem_alloc)(&mut dptr, len))? };
         Ok(CudaBuffer {
@@ -558,6 +577,7 @@ impl CudaDevice {
 
     /// Allocate device memory and upload `data` from the CPU.
     pub fn alloc_with_bytes(&self, data: &[u8]) -> Result<CudaBuffer, CudaError> {
+        // bind_ctx is called inside alloc() and upload().
         let buf = self.alloc(data.len())?;
         self.upload(&buf, data)?;
         Ok(buf)
@@ -566,6 +586,7 @@ impl CudaDevice {
     /// Copy `data` from CPU (host) into an existing device buffer.
     pub fn upload(&self, buf: &CudaBuffer, data: &[u8]) -> Result<(), CudaError> {
         assert!(data.len() <= buf.len, "upload: data larger than buffer");
+        self.bind_ctx()?;
         unsafe {
             self.cuda.check((self.cuda.cu_memcpy_h_to_d)(
                 buf.dptr,
@@ -577,6 +598,7 @@ impl CudaDevice {
 
     /// Copy device buffer contents to a CPU `Vec<u8>`.
     pub fn download(&self, buf: &CudaBuffer) -> Result<Vec<u8>, CudaError> {
+        self.bind_ctx()?;
         let mut out = vec![0u8; buf.len];
         unsafe {
             self.cuda.check((self.cuda.cu_memcpy_d_to_h)(
@@ -593,6 +615,7 @@ impl CudaDevice {
     /// Uses NVRTC to compile the source to PTX, then loads the PTX into
     /// the Driver API as a `CUmodule`.
     pub fn compile(&self, source: &str) -> Result<CudaModule, CudaError> {
+        self.bind_ctx()?;
         let ptx = self.nvrtc.compile(source)?;
         let c_ptx = CString::new(ptx).map_err(|_| {
             CudaError::CompileFailed("PTX contains internal NUL bytes".to_string())
@@ -623,6 +646,7 @@ impl CudaDevice {
         block: [u32; 3],
         args:  &mut [*mut c_void],
     ) -> Result<(), CudaError> {
+        self.bind_ctx()?;
         unsafe {
             self.cuda.check((self.cuda.cu_launch_kernel)(
                 func.function,
@@ -640,6 +664,7 @@ impl CudaDevice {
     ///
     /// Always call this after `launch()` before reading results.
     pub fn synchronize(&self) -> Result<(), CudaError> {
+        self.bind_ctx()?;
         unsafe { self.cuda.check((self.cuda.cu_ctx_synchronize)()) }
     }
 }
@@ -668,6 +693,14 @@ impl Drop for CudaBuffer {
 impl CudaBuffer {
     pub fn len(&self) -> usize {
         self.len
+    }
+
+    /// The raw CUDA device pointer value.
+    ///
+    /// Pass this (via a `*mut CUdeviceptr` pointer) to `cuLaunchKernel`
+    /// kernel params so the kernel receives the actual GPU memory address.
+    pub fn device_ptr(&self) -> CUdeviceptr {
+        self.dptr
     }
 
     /// Return this buffer's device pointer as a kernel argument pointer.
@@ -712,7 +745,8 @@ impl CudaModule {
     /// The `name` must match a `__global__` function in the compiled source
     /// with C linkage (`extern "C"`).
     pub fn function(&self, name: &str) -> Result<CudaFunction, CudaError> {
-        let c_name = CString::new(name).unwrap();
+        let c_name = CString::new(name)
+            .map_err(|_| CudaError::FunctionNotFound(name.to_string()))?;
         let mut func: CUfunction = std::ptr::null_mut();
         unsafe {
             self.cuda.check((self.cuda.cu_module_get_function)(
