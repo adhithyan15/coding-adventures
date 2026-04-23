@@ -470,7 +470,7 @@ fn json_deserializer_rejects_type_errors_and_missing_fields() {
 }"#
         )
         .unwrap_err(),
-        StateMachineMarkupJsonError::MissingField { .. }
+        StateMachineMarkupJsonError::Validation(_)
     ));
     assert!(matches!(
         from_states_json(
