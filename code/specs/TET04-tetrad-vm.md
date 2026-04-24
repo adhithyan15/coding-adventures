@@ -1,5 +1,17 @@
 # TET04 — Tetrad Register VM Specification
 
+> **LANG migration (2026-04-23):** Tetrad programs now also execute on
+> the generic `vm-core` (LANG02) via the `tetrad-runtime` package
+> (`TetradRuntime.run(source)`).  vm-core is configured with
+> `u8_wrap=True`, four-frame max depth, and a small Tetrad opcode
+> extension (`tetrad.move`).  The legacy `TetradVM` described below
+> continues to exist unchanged — its rich metric surface (feedback
+> vectors with a V8 Ignition state machine, branch stats, loop
+> iteration counts) is kept for callers that need it.  Future work
+> will migrate those metrics to vm-core's profiler shape; until then
+> both runtimes coexist, both backed by the same `tetrad-compiler`
+> front end.
+
 ## Overview
 
 The Tetrad VM executes `CodeObject`s produced by the bytecode compiler (spec TET03).
