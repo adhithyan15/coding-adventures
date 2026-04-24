@@ -592,11 +592,10 @@ class AlgolTypeChecker:
         element_type = (
             _first_keyword_value(type_node) if type_node is not None else REAL
         )
-        if element_type not in {INTEGER, REAL}:
+        if element_type not in {INTEGER, BOOLEAN, REAL, STRING}:
             self._error(
                 node,
-                f"{element_type} arrays are not supported yet; "
-                "use integer or real array",
+                f"{element_type} arrays are not supported yet",
             )
             return
 

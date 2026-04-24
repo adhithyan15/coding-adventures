@@ -667,6 +667,35 @@ class TestAlgolIrCompiler:
         assert IrOp.LOAD_F64 in opcodes
         assert IrOp.F64_CMP_GT in opcodes
 
+    def test_compiles_boolean_array_descriptor_and_element_accesses(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean array flags[1:2]; "
+                "flags[1] := true; "
+                "if flags[1] then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.STORE_WORD in opcodes
+        assert IrOp.LOAD_WORD in opcodes
+        assert IrOp.BRANCH_Z in opcodes
+
+    def test_compiles_string_array_element_output(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; string array messages[1:2]; "
+                "messages[1] := 'Hi'; print(messages[1]); result := 1 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.STORE_WORD in opcodes
+        assert IrOp.LOAD_WORD in opcodes
+        assert IrOp.SYSCALL in opcodes
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(

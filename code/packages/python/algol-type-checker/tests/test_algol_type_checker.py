@@ -678,6 +678,31 @@ class TestAlgolTypeChecker:
         assert result.semantic is not None
         assert result.semantic.arrays[0].element_type == "real"
 
+    def test_accepts_boolean_array_element_assignment(self) -> None:
+        ast = parse_algol(
+            "begin integer result; boolean array flags[1:2]; "
+            "flags[1] := true; "
+            "if flags[1] then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.arrays[0].element_type == "boolean"
+
+    def test_accepts_string_array_element_assignment(self) -> None:
+        ast = parse_algol(
+            "begin integer result; string array messages[1:2]; "
+            "messages[1] := 'Hi'; print(messages[1]); result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.arrays[0].element_type == "string"
+
     def test_rejects_wrong_array_subscript_count(self) -> None:
         ast = parse_algol(
             "begin integer result; integer array a[1:3, 1:3]; result := a[1] end"
@@ -703,6 +728,16 @@ class TestAlgolTypeChecker:
 
         assert not result.ok
         assert "cannot assign boolean to real variable" in result.diagnostics[0].message
+
+    def test_rejects_non_string_array_element_assignment(self) -> None:
+        ast = parse_algol("begin string array messages[1:2]; messages[1] := 1 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "cannot assign integer to string variable"
+            in result.diagnostics[0].message
+        )
 
     def test_rejects_array_used_without_subscripts(self) -> None:
         ast = parse_algol("begin integer result; integer array a[1:3]; result := a end")

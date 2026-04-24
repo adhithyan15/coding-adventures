@@ -15,7 +15,8 @@ already supports a substantial ALGOL 60 surface:
 - nested blocks and nested procedures with lexical access through static links
 - `integer`, `boolean`, `real`, and `string` scalar values
 - `own` scalars and arrays with static lifetime
-- arrays with runtime bounds and checked element access
+- arrays of `integer`, `boolean`, `real`, and `string` values with runtime
+  bounds and checked element access
 - value and by-name parameters, including Jensen-style expression thunks
 - labels, local and nonlocal `goto`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
