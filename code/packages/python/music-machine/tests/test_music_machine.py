@@ -10,6 +10,8 @@ from music_machine import (
     DEFAULT_INSTRUMENT_ID,
     HAPPY_BIRTHDAY_TEXT,
     MINI_ORCHESTRA_TEXT,
+    ArrangementSection,
+    ArrangementSectionEvent,
     InstrumentDeclaration,
     MeterEvent,
     PhraseBuilder,
@@ -780,6 +782,104 @@ def test_phrase_builder_applies_motif_and_advances_cursor() -> None:
     score = builder.build()
     assert [event.start_tick for event in score.events] == [480, 660]
     assert phrase.current_tick == 840
+
+
+def test_portable_score_builder_captures_and_reapplies_section() -> None:
+    builder = PortableScoreBuilder(title="Section Song", ppq=120, sample_rate_hz=2000)
+    builder.add_tempo(0, 600)
+    builder.add_meter(0, "4/4")
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_instrument("bass", kind="sine", gain=0.4)
+    builder.add_track("melody", instrument_id="lead")
+    builder.add_track("bassline", instrument_id="bass")
+    builder.add_track("answer", instrument_id="lead")
+    builder.add_track("low_answer", instrument_id="bass")
+
+    builder.phrase("melody").note("C4", 1.0, velocity=0.8).note(
+        "D4",
+        1.0,
+        velocity=0.7,
+    )
+    builder.phrase("bassline").note("C2", 2.0, velocity=0.6)
+
+    section = builder.capture_section(start_tick=0, end_tick=240)
+
+    assert section == ArrangementSection(
+        duration_tick=240,
+        events=(
+            ArrangementSectionEvent("bassline", 0, 240, "note", ("C2",), 0.6),
+            ArrangementSectionEvent("melody", 0, 120, "note", ("C4",), 0.8),
+            ArrangementSectionEvent("melody", 120, 120, "note", ("D4",), 0.7),
+        ),
+    )
+
+    builder.apply_section(
+        section,
+        480,
+        track_map={"melody": "answer", "bassline": "low_answer"},
+        transpose_semitones={"melody": 12},
+        velocity_scale={"melody": 0.5, "bassline": 0.75},
+    )
+
+    score = builder.build()
+    answer_events = [event for event in score.events if event.track_id == "answer"]
+    low_answer_events = [
+        event for event in score.events if event.track_id == "low_answer"
+    ]
+
+    answer_summary = [
+        (event.track_id, event.start_tick, event.notes, event.source_order)
+        for event in answer_events
+    ]
+    assert answer_summary == [
+        ("answer", 480, ("C5",), 4),
+        ("answer", 600, ("D5",), 5),
+    ]
+    assert answer_events[0].velocity == pytest.approx(0.4)
+    assert answer_events[1].velocity == pytest.approx(0.35)
+
+    assert len(low_answer_events) == 1
+    assert low_answer_events[0].track_id == "low_answer"
+    assert low_answer_events[0].start_tick == 480
+    assert low_answer_events[0].duration_tick == 240
+    assert low_answer_events[0].notes == ("C2",)
+    assert low_answer_events[0].velocity == pytest.approx(0.45)
+    assert low_answer_events[0].source_order == 3
+
+
+def test_portable_score_builder_repeats_section_with_scalar_transpose() -> None:
+    builder = PortableScoreBuilder(ppq=120)
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_track("melody", instrument_id="lead")
+
+    section = ArrangementSection(
+        duration_tick=120,
+        events=(ArrangementSectionEvent("melody", 0, 120, "note", ("A4",), 0.8),),
+    )
+
+    builder.apply_section(
+        section,
+        240,
+        transpose_semitones=12,
+        velocity_scale=0.5,
+        repeat_count=2,
+    )
+
+    score = builder.build()
+    assert score.events == (
+        PortableScoreEvent("melody", 240, 120, "note", ("A5",), 0.4, 0),
+        PortableScoreEvent("melody", 360, 120, "note", ("A5",), 0.4, 1),
+    )
+
+
+def test_capture_section_rejects_events_that_extend_past_the_end() -> None:
+    builder = PortableScoreBuilder(ppq=120)
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_track("melody", instrument_id="lead")
+    builder.add_note("melody", 0, 180, "C4")
+
+    with pytest.raises(ValueError, match="extends beyond end_tick"):
+        builder.capture_section(start_tick=0, end_tick=120)
 
 
 def test_render_portable_score_keeps_later_scheduled_notes_audible() -> None:

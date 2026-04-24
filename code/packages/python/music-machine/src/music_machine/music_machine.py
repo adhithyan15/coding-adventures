@@ -15,7 +15,7 @@ music machine appends zero-valued PCM samples for the requested amount of time.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from importlib import import_module
 from math import isfinite
@@ -923,6 +923,131 @@ class PortableScoreBuilder:
                     )
         return self
 
+    def capture_section(
+        self,
+        *,
+        start_tick: int,
+        end_tick: int,
+        track_ids: Iterable[str] | None = None,
+    ) -> ArrangementSection:
+        start = _non_negative_tick("start_tick", start_tick)
+        end = _non_negative_tick("end_tick", end_tick)
+        if end < start:
+            raise ValueError("end_tick must be >= start_tick")
+
+        selected_tracks: set[str] | None = None
+        if track_ids is not None:
+            if isinstance(track_ids, str):
+                raise ValueError("track_ids must be an iterable of track ids")
+            selected_tracks = {
+                _validate_identifier("track id", track_id) for track_id in track_ids
+            }
+
+        section_duration = end - start
+        section_events: list[ArrangementSectionEvent] = []
+        for event in self._events:
+            if selected_tracks is not None and event.track_id not in selected_tracks:
+                continue
+            if not start <= event.start_tick < end:
+                continue
+            offset_tick = event.start_tick - start
+            if offset_tick + event.duration_tick > section_duration:
+                raise ValueError("captured section event extends beyond end_tick")
+            section_events.append(
+                ArrangementSectionEvent(
+                    track_id=event.track_id,
+                    offset_tick=offset_tick,
+                    duration_tick=event.duration_tick,
+                    kind=event.kind,
+                    notes=event.notes,
+                    velocity=event.velocity,
+                )
+            )
+
+        return ArrangementSection(
+            duration_tick=section_duration,
+            events=tuple(section_events),
+        )
+
+    def apply_section(
+        self,
+        section: ArrangementSection,
+        start_tick: int,
+        *,
+        track_map: Mapping[str, str] | None = None,
+        transpose_semitones: int | Mapping[str, int] = 0,
+        velocity_scale: Real | Mapping[str, Real] = 1.0,
+        repeat_count: int = 1,
+        repeat_spacing_tick: int | None = None,
+    ) -> PortableScoreBuilder:
+        if not isinstance(section, ArrangementSection):
+            raise ValueError("section must be an ArrangementSection")
+
+        checked_start = _non_negative_tick("start_tick", start_tick)
+        checked_repeat_count = _positive_integer("repeat_count", repeat_count)
+        spacing_tick = (
+            section.duration_tick
+            if repeat_spacing_tick is None
+            else _non_negative_tick("repeat_spacing_tick", repeat_spacing_tick)
+        )
+        checked_track_map = _validated_track_map(track_map)
+        scalar_transpose = (
+            0
+            if isinstance(transpose_semitones, Mapping)
+            else _signed_integer("transpose_semitones", transpose_semitones)
+        )
+        checked_transpose_map = _validated_track_integer_map(
+            "transpose_semitones",
+            transpose_semitones,
+        )
+        scalar_velocity_scale = (
+            1.0
+            if isinstance(velocity_scale, Mapping)
+            else _positive_float("velocity_scale", velocity_scale)
+        )
+        checked_velocity_map = _validated_track_float_map(
+            "velocity_scale",
+            velocity_scale,
+        )
+
+        for repeat_index in range(checked_repeat_count):
+            repeat_start = checked_start + repeat_index * spacing_tick
+            for event in section.events:
+                target_track = checked_track_map.get(event.track_id, event.track_id)
+                semitone_offset = checked_transpose_map.get(
+                    event.track_id,
+                    scalar_transpose,
+                )
+                event_velocity_scale = checked_velocity_map.get(
+                    event.track_id,
+                    scalar_velocity_scale,
+                )
+                event_start = repeat_start + event.offset_tick
+                if event.kind == "rest":
+                    self.add_rest(target_track, event_start, event.duration_tick)
+                    continue
+                notes = tuple(
+                    _transpose_note_text(note, semitone_offset) for note in event.notes
+                )
+                velocity = _scaled_velocity(event.velocity, event_velocity_scale)
+                if len(notes) == 1:
+                    self.add_note(
+                        target_track,
+                        event_start,
+                        event.duration_tick,
+                        notes[0],
+                        velocity=velocity,
+                    )
+                else:
+                    self.add_chord(
+                        target_track,
+                        event_start,
+                        event.duration_tick,
+                        notes,
+                        velocity=velocity,
+                    )
+        return self
+
     def build(self) -> PortableScore:
         return PortableScore(
             format_version=self.format_version,
@@ -1149,6 +1274,111 @@ class PhraseMotif:
         for event in ordered:
             if event.offset_tick + event.duration_tick > self.duration_tick:
                 raise ValueError("motif event extends beyond motif duration")
+        object.__setattr__(self, "events", ordered)
+
+
+def _validated_track_map(
+    value: Mapping[str, str] | None,
+) -> dict[str, str]:
+    if value is None:
+        return {}
+    if not isinstance(value, Mapping):
+        raise ValueError(
+            "track_map must be a mapping of source track ids to target ids"
+        )
+    return {
+        _validate_identifier("track id", source_track): _validate_identifier(
+            "track id",
+            target_track,
+        )
+        for source_track, target_track in value.items()
+    }
+
+
+def _validated_track_integer_map(
+    name: str,
+    value: int | Mapping[str, int],
+) -> dict[str, int]:
+    if isinstance(value, Mapping):
+        return {
+            _validate_identifier("track id", track_id): _signed_integer(name, item)
+            for track_id, item in value.items()
+        }
+    return {}
+
+
+def _validated_track_float_map(
+    name: str,
+    value: Real | Mapping[str, Real],
+) -> dict[str, float]:
+    if isinstance(value, Mapping):
+        return {
+            _validate_identifier("track id", track_id): _positive_float(name, item)
+            for track_id, item in value.items()
+        }
+    return {}
+
+
+@dataclass(frozen=True)
+class ArrangementSectionEvent:
+    """A multi-track reusable event stored relative to section start."""
+
+    track_id: str
+    offset_tick: int
+    duration_tick: int
+    kind: PortableEventKind
+    notes: tuple[str, ...]
+    velocity: float = 1.0
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "track_id",
+            _validate_identifier("track_id", self.track_id),
+        )
+        object.__setattr__(
+            self,
+            "offset_tick",
+            _non_negative_tick("offset_tick", self.offset_tick),
+        )
+        object.__setattr__(
+            self,
+            "duration_tick",
+            _positive_integer("duration_tick", self.duration_tick),
+        )
+        if self.kind not in {"note", "rest"}:
+            raise ValueError(f"kind must be 'note' or 'rest', got {self.kind!r}")
+        notes = tuple(str(parse_note(note)) for note in self.notes)
+        if self.kind == "note" and not notes:
+            raise ValueError("note section events must include at least one note")
+        if self.kind == "rest" and notes:
+            raise ValueError("rest section events cannot include notes")
+        object.__setattr__(self, "notes", notes)
+        object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
+
+
+@dataclass(frozen=True)
+class ArrangementSection:
+    """Reusable multi-track arrangement fragment such as a verse or chorus."""
+
+    duration_tick: int
+    events: tuple[ArrangementSectionEvent, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "duration_tick",
+            _non_negative_tick("duration_tick", self.duration_tick),
+        )
+        ordered = tuple(
+            sorted(
+                self.events,
+                key=lambda event: (event.offset_tick, event.track_id),
+            )
+        )
+        for event in ordered:
+            if event.offset_tick + event.duration_tick > self.duration_tick:
+                raise ValueError("section event extends beyond section duration")
         object.__setattr__(self, "events", ordered)
 
 
