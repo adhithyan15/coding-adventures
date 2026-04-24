@@ -1,0 +1,57 @@
+{
+  "format": "venture-html-lexer-fixtures/v1",
+  "suite": "html1",
+  "description": "Mosaic-era HTML compatibility-floor cases for the current generated Rust wrapper.",
+  "cases": [
+    {
+      "id": "mosaic-text-and-tag",
+      "input": "<TITLE>Hello</TITLE>",
+      "tokens": [
+        "StartTag(name=title, attributes=[], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "mosaic-attributes-and-self-closing",
+      "input": "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>",
+      "tokens": [
+        "StartTag(name=img, attributes=[src=mosaic.gif, alt=Splash, hidden=1], self_closing=true)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "mosaic-comment",
+      "input": "Before<!--note-->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=note)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "mosaic-doctype-and-heading",
+      "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "StartTag(name=h1, attributes=[class=test], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=h1)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "comment-eof-recovery",
+      "input": "<!--open",
+      "tokens": [
+        "Comment(data=open)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-comment"
+      ]
+    }
+  ]
+}

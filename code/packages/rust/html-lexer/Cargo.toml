@@ -9,4 +9,6 @@ state-machine = { path = "../state-machine" }
 state-machine-tokenizer = { path = "../state-machine-tokenizer" }
 
 [dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 state-machine-markup-deserializer = { path = "../state-machine-markup-deserializer" }
