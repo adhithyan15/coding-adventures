@@ -283,6 +283,7 @@ members = [
     "lzss",
     "lzw",
     "zip",
+    "zstd",
     "huffman-tree",
     "huffman-compression",
     "json-rpc",
