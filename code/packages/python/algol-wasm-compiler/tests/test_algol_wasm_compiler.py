@@ -150,6 +150,26 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
 
+    def test_local_integer_array_is_fresh_each_activation(self) -> None:
+        result = compile_source(
+            "begin integer result, n; "
+            "procedure probe; begin integer array a[1:n]; "
+            "a[1] := a[1] + 1; result := result * 10 + a[1] end; "
+            "n := 1; probe; n := 3; probe "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_own_integer_array_keeps_first_entry_bounds(self) -> None:
+        result = compile_source(
+            "begin integer result, n; "
+            "procedure probe; begin own integer array a[1:n]; "
+            "a[1] := a[1] + 1; result := result * 10 + a[1] end; "
+            "n := 1; probe; n := 0; probe "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
+
     def test_boolean_variable_assignment_drives_condition(self) -> None:
         result = compile_source(
             "begin integer result; "
