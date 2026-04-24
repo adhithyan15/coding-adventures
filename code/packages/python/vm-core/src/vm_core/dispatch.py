@@ -268,25 +268,77 @@ def handle_label(_vm: VMCore, _frame: VMFrame, _instr: IIRInstr) -> None:
 
 
 def handle_jmp(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
-    label = instr.srcs[0]
-    frame.ip = frame.fn.label_index(str(label))
+    # ``frame.ip`` has already been advanced past this instruction by the
+    # dispatch loop, so the *source* index of this jump is ip - 1.  We use
+    # it for back-edge detection (a back-edge is any jump whose target
+    # index is strictly less than the source index).
+    source_ip = frame.ip - 1
+    target_ip = frame.fn.label_index(str(instr.srcs[0]))
+    if target_ip < source_ip:
+        _bump_loop(vm, frame.fn.name, source_ip)
+    frame.ip = target_ip
     return None
 
 
 def handle_jmp_if_true(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    source_ip = frame.ip - 1
     cond = frame.resolve(instr.srcs[0])
-    if cond:
-        label = instr.srcs[1]
-        frame.ip = frame.fn.label_index(str(label))
+    taken = bool(cond)
+    _bump_branch(vm, frame.fn.name, source_ip, taken)
+    if taken:
+        target_ip = frame.fn.label_index(str(instr.srcs[1]))
+        if target_ip < source_ip:
+            _bump_loop(vm, frame.fn.name, source_ip)
+        frame.ip = target_ip
     return None
 
 
 def handle_jmp_if_false(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    source_ip = frame.ip - 1
     cond = frame.resolve(instr.srcs[0])
-    if not cond:
-        label = instr.srcs[1]
-        frame.ip = frame.fn.label_index(str(label))
+    # For a jmp_if_false, "taken" means the branch was followed, i.e.
+    # the condition was false.  We record it in the same (taken vs
+    # not-taken) shape so consumers get a uniform view regardless of
+    # which conditional opcode was used.
+    taken = not bool(cond)
+    _bump_branch(vm, frame.fn.name, source_ip, taken)
+    if taken:
+        target_ip = frame.fn.label_index(str(instr.srcs[1]))
+        if target_ip < source_ip:
+            _bump_loop(vm, frame.fn.name, source_ip)
+        frame.ip = target_ip
     return None
+
+
+# ---------------------------------------------------------------------------
+# Branch / loop counter helpers
+# ---------------------------------------------------------------------------
+#
+# These mutate the live dicts on ``VMCore``.  They are private to this
+# module — external callers read the deep-copied snapshot via
+# ``VMCore.metrics()`` or the typed accessors ``VMCore.branch_profile``
+# and ``VMCore.loop_iterations``.
+# ---------------------------------------------------------------------------
+
+
+def _bump_branch(vm: VMCore, fn_name: str, source_ip: int, taken: bool) -> None:
+    """Record one conditional-branch observation on the live metrics dicts."""
+    from vm_core.metrics import BranchStats
+    fn_stats = vm._branch_stats.setdefault(fn_name, {})
+    stats = fn_stats.get(source_ip)
+    if stats is None:
+        stats = BranchStats()
+        fn_stats[source_ip] = stats
+    if taken:
+        stats.taken_count += 1
+    else:
+        stats.not_taken_count += 1
+
+
+def _bump_loop(vm: VMCore, fn_name: str, source_ip: int) -> None:
+    """Record one back-edge traversal on the live metrics dicts."""
+    fn_loops = vm._loop_back_edges.setdefault(fn_name, {})
+    fn_loops[source_ip] = fn_loops.get(source_ip, 0) + 1
 
 
 def handle_ret(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
