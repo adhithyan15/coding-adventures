@@ -184,6 +184,8 @@ mod tests {
                 stroke: "#000000".to_string(),
                 stroke_width: None,
                 stroke_cap: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
             })],
             id: None,
             metadata: None,

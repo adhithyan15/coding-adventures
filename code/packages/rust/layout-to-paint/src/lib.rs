@@ -237,6 +237,8 @@ fn emit_box_decorations(
         },
         stroke_width: border_width.map(|v| v * dpr),
         corner_radius: corner_radius.map(|v| v * dpr),
+        stroke_dash: None,
+        stroke_dash_offset: None,
     }));
 }
 
