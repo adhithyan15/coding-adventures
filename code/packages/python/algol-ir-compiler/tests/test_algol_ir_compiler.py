@@ -574,6 +574,38 @@ class TestAlgolIrCompiler:
         assert result.procedure_signatures["_fn_algol_eval_thunk"].param_count == 2
         assert any(call.operands[0].name == "_fn_algol_eval_thunk" for call in calls)
 
+    def test_compiles_read_only_real_by_name_expression_eval_thunk(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "real procedure id(x); real x; begin id := x end; "
+                "y := id(1.5); "
+                "if y > 1.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+
+        assert "_fn_algol_eval_real_thunk" in labels
+        assert result.procedure_signatures["_fn_algol_eval_real_thunk"].param_types == (
+            "integer",
+            "integer",
+        )
+        assert (
+            result.procedure_signatures["_fn_algol_eval_real_thunk"].return_type
+            == "real"
+        )
+        assert any(call.operands[0].name == "_fn_algol_eval_real_thunk" for call in calls)
+
     def test_compiles_array_element_by_name_eval_and_store_thunks(
         self,
     ) -> None:
@@ -603,6 +635,22 @@ class TestAlgolIrCompiler:
         assert "_fn_algol_store_thunk" in calls
         assert result.procedure_signatures["_fn_algol_eval_thunk"].param_count == 2
         assert result.procedure_signatures["_fn_algol_store_thunk"].param_count == 3
+
+    def test_compiles_real_by_name_scalar_write_through_storage_pointer(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure bump(x); real x; begin x := x + 1.5 end; "
+                "y := 2.0; "
+                "bump(y); "
+                "if y > 3.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert IrOp.LOAD_F64 in opcodes
+        assert IrOp.STORE_F64 in opcodes
 
     def test_compiles_array_read_inside_expression_eval_thunk(self) -> None:
         result = compile_algol(

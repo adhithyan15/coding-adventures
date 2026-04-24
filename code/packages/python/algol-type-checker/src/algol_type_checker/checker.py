@@ -701,11 +701,11 @@ class AlgolTypeChecker:
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
             parameter_type = spec_types.get(formal.value)
-            if mode == NAME and parameter_type not in {INTEGER, BOOLEAN}:
+            if mode == NAME and parameter_type not in {INTEGER, BOOLEAN, REAL}:
                 self._error(
                     formal,
-                    f"by-name parameter {formal.value!r} must have an integer "
-                    "or boolean specifier",
+                    f"by-name parameter {formal.value!r} must have an integer, "
+                    "boolean, or real specifier",
                 )
             elif mode == VALUE and parameter_type not in {INTEGER, BOOLEAN, REAL}:
                 self._error(
