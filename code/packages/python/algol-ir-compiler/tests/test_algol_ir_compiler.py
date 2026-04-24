@@ -871,6 +871,26 @@ class TestAlgolIrCompiler:
             instruction.opcode == IrOp.CMP_NE for instruction in probe_window
         )
 
+    def test_compiles_label_parameter_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure jump(target); label target; begin goto target end; "
+                "jump(done); "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        signature = result.procedure_signatures[calls[0].operands[0].name]
+
+        assert signature.param_count == 3
+        assert signature.param_types == ("integer", "integer", "integer")
+
     def test_compiles_integer_actual_promoted_for_real_value_parameter(self) -> None:
         result = compile_algol(
             parse_algol(

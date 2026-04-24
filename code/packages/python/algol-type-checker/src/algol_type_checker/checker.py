@@ -787,7 +787,15 @@ class AlgolTypeChecker:
                     )
                 if parameter_type is None:
                     parameter_type = REAL
-            elif parameter_kind in {LABEL, SWITCH, "procedure"}:
+            elif parameter_kind == LABEL:
+                if mode == VALUE:
+                    self._error(
+                        formal,
+                        f"value parameter {formal.value!r} cannot be a label in "
+                        "this phase",
+                    )
+                parameter_type = LABEL
+            elif parameter_kind in {SWITCH, "procedure"}:
                 self._error(
                     formal,
                     f"{parameter_kind} parameter {formal.value!r} is not supported yet",
@@ -874,19 +882,25 @@ class AlgolTypeChecker:
             if parameter_kind == ARRAY:
                 if parameter_type is None:
                     parameter_type = REAL
-            elif parameter_kind in {LABEL, SWITCH, "procedure"}:
+            elif parameter_kind == LABEL:
+                parameter_type = LABEL
+            elif parameter_kind in {SWITCH, "procedure"}:
                 parameter_kind = "scalar"
             param_symbol = Symbol(
                 name=formal.value,
                 type_name=(
                     parameter_type
-                    if parameter_type in {INTEGER, BOOLEAN, REAL, STRING}
+                    if parameter_type in {INTEGER, BOOLEAN, REAL, STRING, LABEL}
                     else INTEGER
                 ),
                 line=formal.line,
                 column=formal.column,
                 symbol_id=self._next_symbol_id,
-                kind=ARRAY if parameter_kind == ARRAY else "parameter",
+                kind=(
+                    parameter_kind
+                    if parameter_kind in {ARRAY, LABEL}
+                    else "parameter"
+                ),
                 storage_class=(
                     PARAMETER_STORAGE if parameter_kind == ARRAY else "frame"
                 ),
@@ -1205,6 +1219,19 @@ class AlgolTypeChecker:
         if symbol.kind != LABEL:
             self._error(target_token, f"{target_token.value!r} is not a label")
             return
+        if symbol.parameter_mode is not None and symbol.slot_offset is not None:
+            return ResolvedGoto(
+                token_id=id(target_token),
+                label_id=-1,
+                target_name=target_token.value,
+                ir_label="",
+                source_block_id=scope.block_id,
+                target_block_id=declaring_scope.block_id,
+                lexical_depth_delta=lexical_depth_delta,
+                line=target_token.line,
+                column=target_token.column,
+                designational_node_id=id(outer_node),
+            )
         if lexical_depth_delta != 0 and not allow_nonlocal_label:
             self._error(
                 target_token,
@@ -1326,6 +1353,9 @@ class AlgolTypeChecker:
             symbol = self._resolve_name(name, scope, role="write")
             if symbol is not None and symbol.kind == ARRAY:
                 self._error(name, f"array {name.value!r} requires subscripts")
+                target_type = ERROR
+            elif symbol is not None and symbol.kind == LABEL:
+                self._error(name, f"label {name.value!r} is not assignable")
                 target_type = ERROR
             else:
                 target_type = ERROR if symbol is None else symbol.type_name
@@ -1711,6 +1741,9 @@ class AlgolTypeChecker:
             if parameter.kind == ARRAY:
                 self._check_array_parameter_actual(argument, scope, parameter)
                 continue
+            if parameter.kind == LABEL:
+                self._check_label_parameter_actual(argument, scope, parameter)
+                continue
             actual_type = self._infer_expr(argument, scope)
             if descriptor.procedure_id == -1:
                 if actual_type != ERROR and actual_type not in {
@@ -1819,6 +1852,40 @@ class AlgolTypeChecker:
                 f"{parameter.type_name} elements, got {descriptor.element_type}",
             )
         return access
+
+    def _check_label_parameter_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        parameter: ProcedureParameter,
+    ) -> Symbol | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            self._error(
+                argument,
+                f"label parameter {parameter.name!r} expects a direct label actual",
+            )
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            self._error(argument, "label actual is missing a name")
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            self._error(
+                name,
+                f"{name.value!r} is not declared in block {scope.block_id} "
+                "or its lexical parents",
+            )
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind != LABEL:
+            self._error(
+                name,
+                f"label parameter {parameter.name!r} expects a label actual",
+            )
+            return None
+        return symbol
 
     def _resolve_builtin_procedure(
         self,
