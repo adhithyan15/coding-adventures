@@ -402,6 +402,8 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
                     EffectfulMatcher::Event("<".to_string()),
                     "less_than",
                 ),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "rcdata")
+                    .with_effects(&["append_text(current)"]),
                 EffectfulTransition::new("rcdata", EffectfulMatcher::End, "done")
                     .with_effects(&["flush_text", "emit(EOF)"])
                     .consuming(false),
@@ -472,6 +474,8 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
                     EffectfulMatcher::Event("<".to_string()),
                     "less_than",
                 ),
+                EffectfulTransition::new("rcdata", EffectfulMatcher::Any, "rcdata")
+                    .with_effects(&["append_text(current)"]),
                 EffectfulTransition::new("rcdata", EffectfulMatcher::End, "done")
                     .with_effects(&["flush_text", "emit(EOF)"])
                     .consuming(false),
