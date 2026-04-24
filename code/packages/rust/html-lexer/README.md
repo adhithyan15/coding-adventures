@@ -14,9 +14,15 @@ The generic `state-machine` crate executes ordered transitions. The
 buffers, current token construction, diagnostics, source positions, and traces.
 This crate owns the HTML-specific state machine and exposes a Rust lexer API.
 
-The TOML file in this package is an authoring artifact. Production code links a
+The TOML files in this package are authoring artifacts. Production code links a
 checked-in generated Rust module built to match the output shape of
 `state-machine-source-compiler`, so the runtime never loads TOML or JSON.
+
+`html-skeleton.lexer.states.toml` is the bootstrap machine already wired into
+the package API today. `html1.lexer.states.toml` is the broader compatibility
+floor for Venture's Mosaic-era target: it is not the end state of the project,
+but the first real HTML authoring artifact that must keep HTML 1.0-era content
+working as the lexer grows forward toward newer standards.
 
 ## Usage
 
