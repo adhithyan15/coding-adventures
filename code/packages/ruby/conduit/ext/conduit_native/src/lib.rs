@@ -1,12 +1,16 @@
-/// Conduit native extension — Phase 2
+/// Conduit native extension — Phase 3
 ///
-/// Routing now lives entirely in Rust inside a `WebApp`. Ruby only supplies
-/// handler blocks. When a route matches, Rust calls back to
-/// `NativeServer#native_dispatch_route(route_index, env)` with a pre-built
-/// Rack env hash; Ruby executes the block and returns `[status, headers, body]`.
+/// Phase 2 moved routing entirely into Rust (web-core). Phase 3 adds the
+/// Sinatra-level hook surface: before/after filters, not-found handlers,
+/// and error handlers. All hooks are registered at server init time;
+/// Rust dispatches them to Ruby via the GVL, just like route handlers.
 ///
-/// Connection management (TCP sockets, HTTP framing, event-loop) remains in
-/// `web-core` → `embeddable-http-server` → `tcp-runtime`.
+/// The protocol between Rust and Ruby for hooks is simple:
+///   - Ruby returns nil   → no short-circuit / no override
+///   - Ruby returns [s,h,b] → use this response
+///
+/// This keeps HaltError entirely Ruby-side. Rust never needs to know about
+/// Ruby exception classes.
 
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 use std::ptr;
@@ -70,11 +74,34 @@ struct ServeCall {
     error: Option<String>,
 }
 
-// Data packet threaded through rb_protect for route dispatch.
+// Data packets threaded through rb_protect for each dispatch type.
+
 struct ProtectedRouteDispatch {
     owner: VALUE,
-    route_index: VALUE, // Ruby integer — index into app.routes
-    env: VALUE,         // Ruby hash — the Rack env
+    route_index: VALUE,
+    env: VALUE,
+}
+
+struct ProtectedBeforeFiltersDispatch {
+    owner: VALUE,
+    env: VALUE,
+}
+
+struct ProtectedAfterFiltersDispatch {
+    owner: VALUE,
+    env: VALUE,
+    response_rb: VALUE,
+}
+
+struct ProtectedNotFoundDispatch {
+    owner: VALUE,
+    env: VALUE,
+}
+
+struct ProtectedErrorHandlerDispatch {
+    owner: VALUE,
+    env: VALUE,
+    error_val: VALUE,
 }
 
 static mut NATIVE_SERVER_CLASS: VALUE = 0;
@@ -95,8 +122,9 @@ unsafe extern "C" fn server_alloc(klass: VALUE) -> VALUE {
 
 // NativeServer.new(app, host, port, max_connections)
 //
-// Iterates `app.routes` and registers every route in a fresh `WebApp`.
-// Each route handler calls back to Ruby's `native_dispatch_route`.
+// Iterates app.routes and registers every route in a fresh WebApp. Then
+// checks for before/after filters, not_found, and error handlers and registers
+// the corresponding web-core hooks.
 extern "C" fn server_initialize(
     self_val: VALUE,
     app_val: VALUE,
@@ -110,7 +138,8 @@ extern "C" fn server_initialize(
         usize_from_rb(max_connections_val, "max_connections must be non-negative");
     let owner = self_val;
 
-    // Iterate app.routes to register each route in the WebApp.
+    // --- Route registration ---
+
     let routes_val = unsafe {
         let mid = intern("routes");
         ruby_bridge::rb_funcallv(app_val, mid, 0, ptr::null())
@@ -133,7 +162,6 @@ extern "C" fn server_initialize(
             string_from_rb(v, "route pattern must be a String")
         };
 
-        // The closure captures owner (VALUE = usize, which is Send+Sync) and i.
         let owner_cap = owner;
         let index_cap = i;
         web_app.add(&method, &pattern, move |req: &WebRequest| {
@@ -141,7 +169,57 @@ extern "C" fn server_initialize(
         });
     }
 
-    // Store the running flag before moving web_app into the server.
+    // --- Hook registration ---
+
+    // Before-routing hook: fires for EVERY request, before route lookup.
+    // This matches Sinatra semantics — before filters run even when no route
+    // matches (useful for maintenance mode, auth, rate limiting). Route named
+    // params are not available at this stage; use request.path / query_params.
+    let before_filters_val = unsafe {
+        let mid = intern("before_filters");
+        ruby_bridge::rb_funcallv(app_val, mid, 0, ptr::null())
+    };
+    if ruby_bridge::array_len(before_filters_val) > 0 {
+        let owner_cap = owner;
+        web_app.before_routing(move |req: &WebRequest| -> Option<WebResponse> {
+            dispatch_before_filters_to_ruby(owner_cap, req)
+        });
+    }
+
+    // After-handler hook: fires after the route handler. Currently used for
+    // side effects; the response is always returned unchanged by the Ruby side.
+    let after_filters_val = unsafe {
+        let mid = intern("after_filters");
+        ruby_bridge::rb_funcallv(app_val, mid, 0, ptr::null())
+    };
+    if ruby_bridge::array_len(after_filters_val) > 0 {
+        let owner_cap = owner;
+        web_app.after_handler(move |req: &WebRequest, resp: WebResponse| -> WebResponse {
+            dispatch_after_filters_to_ruby(owner_cap, req, resp)
+        });
+    }
+
+    // Not-found hook: overrides the default 404 response.
+    let not_found_val = unsafe {
+        let mid = intern("not_found_handler");
+        ruby_bridge::rb_funcallv(app_val, mid, 0, ptr::null())
+    };
+    if not_found_val != ruby_bridge::QNIL {
+        let owner_cap = owner;
+        web_app.on_not_found(move |req: &WebRequest| -> WebResponse {
+            dispatch_not_found_to_ruby(owner_cap, req)
+        });
+    }
+
+    // The on_handler_error hook (Rust panic path) is intentionally not registered
+    // here. Ruby exceptions raised by route handlers are caught by rb_protect
+    // inside dispatch_route_with_gvl — still within the GVL — and routed to
+    // native_run_error_handler without re-entering the GVL. Registering the hook
+    // for the Rust panic path would require a separate GVL re-entry, which is
+    // unnecessary since our handler closures don't panic in normal operation.
+
+    // --- Bind server ---
+
     let running = {
         let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
         slot.owner = owner;
@@ -249,7 +327,9 @@ unsafe extern "C" fn serve_without_gvl(data: *mut c_void) -> *mut c_void {
     ptr::null_mut()
 }
 
-// --- Route dispatch back to Ruby ---
+// =============================================================================
+// Route dispatch (unchanged from Phase 2)
+// =============================================================================
 
 struct RouteDispatchCall {
     owner: VALUE,
@@ -297,15 +377,63 @@ unsafe extern "C" fn dispatch_route_with_gvl(data: *mut c_void) -> *mut c_void {
     );
 
     if state != 0 {
-        let error = rb_errinfo();
+        // A Ruby exception was raised by the handler. Extract the message,
+        // clear the pending exception, then try the custom error handler while
+        // still holding the GVL (avoids a second rb_thread_call_with_gvl).
+        let error_obj = rb_errinfo();
         rb_set_errinfo(ruby_bridge::QNIL);
-        let _ = error;
-        call.response = Some(Err("route handler raised an exception".to_string()));
+        let error_msg = extract_exception_message(error_obj);
+        call.response = Some(Ok(
+            call_error_handler_in_gvl(call.owner, &call.request, &error_msg)
+        ));
         return ptr::null_mut();
     }
 
     call.response = Some(parse_web_response(result));
     ptr::null_mut()
+}
+
+/// Extract the #message string from a Ruby exception VALUE.
+/// Falls back to a generic message if anything goes wrong.
+unsafe fn extract_exception_message(error_obj: VALUE) -> String {
+    if error_obj == ruby_bridge::QNIL {
+        return "route handler raised an exception".to_string();
+    }
+    let mid = intern("message");
+    let msg_val = ruby_bridge::rb_funcallv(error_obj, mid, 0, ptr::null());
+    ruby_bridge::str_from_rb(msg_val).unwrap_or_else(|| "route handler raised an exception".to_string())
+}
+
+/// Called from within the GVL when a route handler raised a Ruby exception.
+/// Calls native_run_error_handler on the NativeServer and returns the response.
+/// If no custom error handler is registered (Ruby returns nil), returns a 500.
+unsafe fn call_error_handler_in_gvl(owner: VALUE, req: &WebRequest, error_msg: &str) -> WebResponse {
+    let env = build_env(req);
+    let error_val = ruby_bridge::str_to_rb(error_msg);
+
+    let mut protected = ProtectedErrorHandlerDispatch {
+        owner,
+        env,
+        error_val,
+    };
+    let mut state = 0;
+    let result = rb_protect(
+        protected_error_handler_dispatch,
+        &mut protected as *mut ProtectedErrorHandlerDispatch as VALUE,
+        &mut state,
+    );
+
+    if state != 0 {
+        rb_set_errinfo(ruby_bridge::QNIL);
+        return WebResponse::internal_error(error_msg);
+    }
+
+    if result != ruby_bridge::QNIL {
+        if let Ok(resp) = parse_web_response(result) {
+            return resp;
+        }
+    }
+    WebResponse::internal_error(error_msg)
 }
 
 unsafe extern "C" fn protected_route_dispatch(data: VALUE) -> VALUE {
@@ -315,7 +443,221 @@ unsafe extern "C" fn protected_route_dispatch(data: VALUE) -> VALUE {
     ruby_bridge::rb_funcallv(protected.owner, mid, 2, args.as_ptr())
 }
 
-// --- Env hash builder ---
+// =============================================================================
+// Before-filter dispatch
+// =============================================================================
+
+struct BeforeFiltersCall {
+    owner: VALUE,
+    request: WebRequest,
+    result: Option<Option<WebResponse>>,
+}
+
+fn dispatch_before_filters_to_ruby(owner: VALUE, req: &WebRequest) -> Option<WebResponse> {
+    let mut call = BeforeFiltersCall {
+        owner,
+        request: req.clone(),
+        result: None,
+    };
+
+    unsafe {
+        rb_thread_call_with_gvl(
+            before_filters_with_gvl,
+            &mut call as *mut BeforeFiltersCall as *mut c_void,
+        );
+    }
+
+    call.result.flatten()
+}
+
+unsafe extern "C" fn before_filters_with_gvl(data: *mut c_void) -> *mut c_void {
+    let call = &mut *(data as *mut BeforeFiltersCall);
+    let env = build_env(&call.request);
+
+    let mut protected = ProtectedBeforeFiltersDispatch {
+        owner: call.owner,
+        env,
+    };
+    let mut state = 0;
+    let result = rb_protect(
+        protected_before_filters_dispatch,
+        &mut protected as *mut ProtectedBeforeFiltersDispatch as VALUE,
+        &mut state,
+    );
+
+    if state != 0 {
+        // Exception in before filter — treat as internal error short-circuit.
+        rb_set_errinfo(ruby_bridge::QNIL);
+        call.result = Some(Some(WebResponse::internal_error("before filter raised an exception")));
+        return ptr::null_mut();
+    }
+
+    // nil → no short-circuit; [s,h,b] → short-circuit with that response.
+    if result == ruby_bridge::QNIL {
+        call.result = Some(None);
+    } else {
+        call.result = Some(match parse_web_response(result) {
+            Ok(resp) => Some(resp),
+            Err(e) => Some(WebResponse::internal_error(e)),
+        });
+    }
+    ptr::null_mut()
+}
+
+unsafe extern "C" fn protected_before_filters_dispatch(data: VALUE) -> VALUE {
+    let protected = &*(data as *const ProtectedBeforeFiltersDispatch);
+    let mid = intern("native_run_before_filters");
+    let args = [protected.env];
+    ruby_bridge::rb_funcallv(protected.owner, mid, 1, args.as_ptr())
+}
+
+// =============================================================================
+// After-filter dispatch
+// =============================================================================
+
+struct AfterFiltersCall {
+    owner: VALUE,
+    request: WebRequest,
+    response: WebResponse,
+}
+
+fn dispatch_after_filters_to_ruby(owner: VALUE, req: &WebRequest, resp: WebResponse) -> WebResponse {
+    let mut call = AfterFiltersCall {
+        owner,
+        request: req.clone(),
+        response: resp,
+    };
+
+    unsafe {
+        rb_thread_call_with_gvl(
+            after_filters_with_gvl,
+            &mut call as *mut AfterFiltersCall as *mut c_void,
+        );
+    }
+
+    call.response
+}
+
+unsafe extern "C" fn after_filters_with_gvl(data: *mut c_void) -> *mut c_void {
+    let call = &mut *(data as *mut AfterFiltersCall);
+    let env = build_env(&call.request);
+    let response_rb = web_response_to_rb_array(&call.response);
+
+    let mut protected = ProtectedAfterFiltersDispatch {
+        owner: call.owner,
+        env,
+        response_rb,
+    };
+    let mut state = 0;
+    let result = rb_protect(
+        protected_after_filters_dispatch,
+        &mut protected as *mut ProtectedAfterFiltersDispatch as VALUE,
+        &mut state,
+    );
+
+    if state != 0 {
+        // Exception in after filter — leave response unchanged.
+        rb_set_errinfo(ruby_bridge::QNIL);
+        return ptr::null_mut();
+    }
+
+    // Ruby returns the (possibly unchanged) [s,h,b] triplet.
+    if let Ok(new_resp) = parse_web_response(result) {
+        call.response = new_resp;
+    }
+    ptr::null_mut()
+}
+
+unsafe extern "C" fn protected_after_filters_dispatch(data: VALUE) -> VALUE {
+    let protected = &*(data as *const ProtectedAfterFiltersDispatch);
+    let mid = intern("native_run_after_filters");
+    let args = [protected.env, protected.response_rb];
+    ruby_bridge::rb_funcallv(protected.owner, mid, 2, args.as_ptr())
+}
+
+// =============================================================================
+// Not-found dispatch
+// =============================================================================
+
+struct NotFoundCall {
+    owner: VALUE,
+    request: WebRequest,
+    result: Option<WebResponse>,
+}
+
+fn dispatch_not_found_to_ruby(owner: VALUE, req: &WebRequest) -> WebResponse {
+    let mut call = NotFoundCall {
+        owner,
+        request: req.clone(),
+        result: None,
+    };
+
+    unsafe {
+        rb_thread_call_with_gvl(
+            not_found_with_gvl,
+            &mut call as *mut NotFoundCall as *mut c_void,
+        );
+    }
+
+    call.result.take().unwrap_or_else(WebResponse::not_found)
+}
+
+unsafe extern "C" fn not_found_with_gvl(data: *mut c_void) -> *mut c_void {
+    let call = &mut *(data as *mut NotFoundCall);
+    let env = build_env(&call.request);
+
+    let mut protected = ProtectedNotFoundDispatch {
+        owner: call.owner,
+        env,
+    };
+    let mut state = 0;
+    let result = rb_protect(
+        protected_not_found_dispatch,
+        &mut protected as *mut ProtectedNotFoundDispatch as VALUE,
+        &mut state,
+    );
+
+    if state != 0 {
+        rb_set_errinfo(ruby_bridge::QNIL);
+        call.result = Some(WebResponse::internal_error("not_found handler raised an exception"));
+        return ptr::null_mut();
+    }
+
+    // nil means no custom handler was registered; use default 404.
+    if result != ruby_bridge::QNIL {
+        if let Ok(resp) = parse_web_response(result) {
+            call.result = Some(resp);
+        }
+    }
+    ptr::null_mut()
+}
+
+unsafe extern "C" fn protected_not_found_dispatch(data: VALUE) -> VALUE {
+    let protected = &*(data as *const ProtectedNotFoundDispatch);
+    let mid = intern("native_run_not_found");
+    let args = [protected.env];
+    ruby_bridge::rb_funcallv(protected.owner, mid, 1, args.as_ptr())
+}
+
+// =============================================================================
+// Error-handler dispatch
+//
+// Error handling uses a different pattern from other hooks: Ruby exceptions
+// from route handlers are caught by rb_protect inside dispatch_route_with_gvl
+// (already holding the GVL). call_error_handler_in_gvl reuses the current GVL
+// context instead of re-entering via rb_thread_call_with_gvl.
+// =============================================================================
+
+unsafe extern "C" fn protected_error_handler_dispatch(data: VALUE) -> VALUE {
+    let protected = &*(data as *const ProtectedErrorHandlerDispatch);
+    let mid = intern("native_run_error_handler");
+    let args = [protected.env, protected.error_val];
+    ruby_bridge::rb_funcallv(protected.owner, mid, 2, args.as_ptr())
+}
+
+// =============================================================================
+// Env hash builder
+// =============================================================================
 
 fn build_env(request: &WebRequest) -> VALUE {
     let env = ruby_bridge::hash_new();
@@ -323,18 +665,15 @@ fn build_env(request: &WebRequest) -> VALUE {
     set_hash_str(&env, "REQUEST_METHOD", request.method());
     set_hash_str(&env, "PATH_INFO", request.path());
 
-    // Reconstruct the original query string from the HTTP target.
     let (_, query) = split_target(request.http.target());
     set_hash_str(&env, "QUERY_STRING", query);
 
-    // Pre-parsed query params from web-core (avoids re-parsing in Ruby).
     ruby_bridge::hash_aset(
         env,
         ruby_bridge::str_to_rb("conduit.query_params"),
         map_to_rb_hash(&request.query_params),
     );
 
-    // Route params injected by web-core's router.
     ruby_bridge::hash_aset(
         env,
         ruby_bridge::str_to_rb("conduit.route_params"),
@@ -394,7 +733,9 @@ fn build_env(request: &WebRequest) -> VALUE {
     env
 }
 
-// --- Response parsers ---
+// =============================================================================
+// Response helpers
+// =============================================================================
 
 fn parse_web_response(value: VALUE) -> Result<WebResponse, String> {
     if ruby_bridge::array_len(value) != 3 {
@@ -413,6 +754,32 @@ fn parse_web_response(value: VALUE) -> Result<WebResponse, String> {
         headers: headers.into_iter().map(|h| (h.name, h.value)).collect(),
         body,
     })
+}
+
+/// Convert a Rust WebResponse into a Ruby [status, headers, body] array.
+/// Used to pass the current response to after-filter hooks.
+fn web_response_to_rb_array(resp: &WebResponse) -> VALUE {
+    let ary = ruby_bridge::array_new();
+
+    ruby_bridge::array_push(ary, ruby_bridge::usize_to_rb(resp.status as usize));
+
+    let hdrs = ruby_bridge::array_new();
+    for (name, val) in &resp.headers {
+        let pair = ruby_bridge::array_new();
+        ruby_bridge::array_push(pair, ruby_bridge::str_to_rb(name));
+        ruby_bridge::array_push(pair, ruby_bridge::str_to_rb(val));
+        ruby_bridge::array_push(hdrs, pair);
+    }
+    ruby_bridge::array_push(ary, hdrs);
+
+    let body_ary = ruby_bridge::array_new();
+    if !resp.body.is_empty() {
+        let body_str = String::from_utf8_lossy(&resp.body);
+        ruby_bridge::array_push(body_ary, ruby_bridge::str_to_rb(&body_str));
+    }
+    ruby_bridge::array_push(ary, body_ary);
+
+    ary
 }
 
 fn parse_header_pairs(value: VALUE) -> Result<Vec<Header>, String> {
@@ -449,7 +816,9 @@ fn parse_body_chunks(value: VALUE) -> Result<Vec<u8>, String> {
     Ok(body)
 }
 
-// --- Utility helpers ---
+// =============================================================================
+// Utility helpers
+// =============================================================================
 
 fn set_hash_str(hash: &VALUE, key: &str, value: &str) {
     ruby_bridge::hash_aset(
@@ -546,7 +915,9 @@ fn intern(name: &str) -> ID {
     unsafe { ruby_bridge::rb_intern(c_name.as_ptr() as *const c_char) }
 }
 
-// --- Platform-specific server binding ---
+// =============================================================================
+// Platform-specific server binding
+// =============================================================================
 
 #[cfg(any(
     target_os = "macos",
@@ -584,7 +955,9 @@ fn bind_server(
     WebServer::bind_windows((host, port), options, app)
 }
 
-// --- Extension entry point ---
+// =============================================================================
+// Extension entry point
+// =============================================================================
 
 #[no_mangle]
 pub extern "C" fn Init_conduit_native() {
@@ -607,7 +980,7 @@ pub extern "C" fn Init_conduit_native() {
         server_class,
         "initialize",
         server_initialize as *const c_void,
-        4, // app, host, port, max_connections
+        4,
     );
     ruby_bridge::define_method_raw(server_class, "serve", server_serve as *const c_void, 0);
     ruby_bridge::define_method_raw(server_class, "stop", server_stop as *const c_void, 0);

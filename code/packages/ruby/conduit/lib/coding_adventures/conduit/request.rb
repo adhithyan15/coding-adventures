@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "json"
+require "uri"
+
 module CodingAdventures
   module Conduit
     class Request
@@ -24,8 +27,31 @@ module CodingAdventures
         env.fetch("QUERY_STRING", "")
       end
 
+      # Raw request body as a String. When rack.input is an IO-like object
+      # (e.g. a StringIO), it is rewound and read once; subsequent calls
+      # return the same string via memoization.
       def body
-        env.fetch("rack.input", "")
+        @body ||= begin
+          input = env.fetch("rack.input", "")
+          if input.is_a?(String)
+            input
+          else
+            input.rewind if input.respond_to?(:rewind)
+            input.read.to_s
+          end
+        end
+      end
+
+      # Parse the request body as JSON. Memoized. Raises JSON::ParserError on
+      # invalid input. Useful for Content-Type: application/json requests.
+      def json
+        @parsed_json ||= JSON.parse(body)
+      end
+
+      # Parse the request body as URL-encoded form data (application/x-www-form-urlencoded).
+      # Returns a Hash. Memoized.
+      def form
+        @parsed_form ||= URI.decode_www_form(body).to_h
       end
 
       def header(name)
