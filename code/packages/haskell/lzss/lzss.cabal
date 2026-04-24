@@ -1,0 +1,27 @@
+cabal-version: 3.0
+name:          lzss
+version:       0.1.0
+synopsis:      Educational Haskell LZSS (CMP02) compression library
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Lzss
+    build-depends:    base >=4.14
+                    , bytestring >= 0.11
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    default-extensions: BangPatterns
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    LzssSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , lzss
+                    , hspec == 2.*
+                    , bytestring >= 0.11
+    default-language: Haskell2010
