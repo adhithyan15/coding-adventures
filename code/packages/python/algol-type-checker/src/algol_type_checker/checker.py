@@ -1301,18 +1301,78 @@ class AlgolTypeChecker:
             self._error(node, "for loop is missing its control variable")
             return
         symbol = self._resolve_name(loop_name, scope, role="control")
-        if symbol is not None and symbol.type_name != INTEGER:
-            self._error(loop_name, "for loop control variable must be integer")
+        loop_type = ERROR if symbol is None else symbol.type_name
+        if loop_type != ERROR and loop_type not in {INTEGER, REAL}:
+            self._error(loop_name, "for loop control variable must be integer or real")
 
         for elem in _direct_nodes(_first_direct_node(node, "for_list"), "for_elem"):
             arith_nodes = _direct_nodes(elem, "arith_expr")
-            if len(arith_nodes) != 3:
-                self._error(elem, "only step/until for-elements are supported")
+            bool_node = _first_direct_node(elem, "bool_expr")
+            if bool_node is not None:
+                if len(arith_nodes) != 1:
+                    self._error(elem, "for while-element must have one value expression")
+                    continue
+                start_type = self._infer_expr(arith_nodes[0], scope)
+                if (
+                    loop_type != ERROR
+                    and start_type != ERROR
+                    and not self._can_assign(loop_type, start_type)
+                ):
+                    self._error(
+                        arith_nodes[0],
+                        f"cannot assign {start_type} to {loop_type} for loop control "
+                        f"variable {loop_name.value!r}",
+                    )
+                condition_type = self._infer_expr(bool_node, scope)
+                if condition_type != ERROR and condition_type != BOOLEAN:
+                    self._error(bool_node, "for while-element condition must be boolean")
                 continue
-            for arith_node in arith_nodes:
-                expr_type = self._infer_expr(arith_node, scope)
-                if expr_type != ERROR and expr_type != INTEGER:
-                    self._error(arith_node, "for loop bounds must be integer")
+            if len(arith_nodes) == 1:
+                value_type = self._infer_expr(arith_nodes[0], scope)
+                if (
+                    loop_type != ERROR
+                    and value_type != ERROR
+                    and not self._can_assign(loop_type, value_type)
+                ):
+                    self._error(
+                        arith_nodes[0],
+                        f"cannot assign {value_type} to {loop_type} for loop control "
+                        f"variable {loop_name.value!r}",
+                    )
+                continue
+            if len(arith_nodes) != 3:
+                self._error(elem, "unsupported for-element form")
+                continue
+
+            start_type = self._infer_expr(arith_nodes[0], scope)
+            if (
+                loop_type != ERROR
+                and start_type != ERROR
+                and not self._can_assign(loop_type, start_type)
+            ):
+                self._error(
+                    arith_nodes[0],
+                    f"cannot assign {start_type} to {loop_type} for loop control "
+                    f"variable {loop_name.value!r}",
+                )
+
+            step_type = self._infer_expr(arith_nodes[1], scope)
+            if step_type != ERROR and not _is_numeric_type(step_type):
+                self._error(arith_nodes[1], "for loop step must be numeric")
+            elif (
+                loop_type != ERROR
+                and step_type != ERROR
+                and not self._can_assign(loop_type, step_type)
+            ):
+                self._error(
+                    arith_nodes[1],
+                    f"cannot assign {step_type} to {loop_type} for loop control "
+                    f"variable {loop_name.value!r}",
+                )
+
+            limit_type = self._infer_expr(arith_nodes[2], scope)
+            if limit_type != ERROR and not _is_numeric_type(limit_type):
+                self._error(arith_nodes[2], "for loop limit must be numeric")
 
         body = _first_direct_node(node, "statement")
         if body is not None:

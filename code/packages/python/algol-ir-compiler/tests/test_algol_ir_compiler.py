@@ -69,7 +69,51 @@ class TestAlgolIrCompiler:
             if instr.opcode == IrOp.LABEL
         ]
         assert "loop_0_start" in labels
+        assert "loop_0_positive" in labels
+        assert "loop_0_body" in labels
         assert "loop_0_end" in labels
+
+    def test_compiles_while_for_element(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i, x; x := 3; "
+                "for i := x while x > 0 do begin result := result + i; x := x - 1 end "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert IrOp.BRANCH_Z in opcodes
+        assert opcodes.count(IrOp.JUMP) >= 2
+
+    def test_compiles_multiple_for_elements_with_shared_body(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "for i := 1, 2 do "
+                "begin result := result * 10 + i; result := result * 10 + i end "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        assert labels.count("loop_0_body") == 1
+        assert "loop_0_after_body" in labels
+
+    def test_compiles_real_step_until_for_element(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real x; "
+                "for x := 1.5 step -0.5 until 0.5 do result := result + 1 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert IrOp.F64_CMP_GT in opcodes
+        assert IrOp.F64_CMP_LT in opcodes
+        assert IrOp.F64_ADD in opcodes
 
     def test_compiles_own_scalar_to_static_storage(self) -> None:
         result = compile_algol(

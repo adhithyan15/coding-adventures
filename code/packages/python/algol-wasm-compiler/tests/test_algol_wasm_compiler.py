@@ -67,6 +67,44 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
 
+    def test_simple_for_element_executes_once(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "result := 0; "
+            "for i := 5 do result := result + i "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_while_for_element_reevaluates_value_each_iteration(self) -> None:
+        result = compile_source(
+            "begin integer result, i, x; "
+            "result := 0; x := 3; "
+            "for i := x while x > 0 do "
+            "begin result := result + i; x := x - 1 end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
+
+    def test_multiple_for_elements_share_one_body(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "result := 0; "
+            "for i := 1, 2 do "
+            "begin result := result * 10 + i; result := result * 10 + i end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1122]
+
+    def test_real_step_until_for_element_supports_negative_step(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "result := 0; "
+            "for x := 1.5 step -0.5 until 0.5 do result := result + 1 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
+
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
         captured: list[str] = []
