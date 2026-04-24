@@ -3,23 +3,42 @@
 module CodingAdventures
   module Conduit
     class NativeServer
-      def attach_app(app)
-        @app = app
-        self
-      end
-
-      def dispatch_request(env)
-        raise ServerError, "no app attached" unless @app
-
-        status, headers, body = @app.call(env)
-        [
-          Integer(status),
-          normalize_headers(headers),
-          normalize_body(body)
-        ]
+      # Called by Rust when a route match is found. `route_index` is the
+      # position in app.routes; `env` is the Rack-compatible env hash
+      # (already enriched with conduit.route_params by the Rust router).
+      def native_dispatch_route(route_index, env)
+        route = @app.routes[route_index]
+        request = Request.new(
+          env,
+          params: env.fetch("conduit.route_params", {}),
+          query_params: env.fetch("conduit.query_params", {}),
+          headers: env.fetch("conduit.headers", {})
+        )
+        result = invoke_route(route.block, request)
+        normalize_result(result)
       end
 
       private
+
+      def invoke_route(block, request)
+        case block.arity
+        when 0
+          request.instance_exec(&block)
+        else
+          block.call(request)
+        end
+      end
+
+      def normalize_result(result)
+        case result
+        when Array
+          [Integer(result[0]), normalize_headers(result[1]), normalize_body(result[2])]
+        when String
+          [200, [["content-type", "text/plain; charset=utf-8"]], [result]]
+        else
+          [200, [["content-type", "text/plain; charset=utf-8"]], [result.to_s]]
+        end
+      end
 
       def normalize_headers(headers)
         return [] if headers.nil?
@@ -52,8 +71,8 @@ module CodingAdventures
 
       def initialize(app, host: DEFAULT_HOST, port: 0, max_connections: DEFAULT_MAX_CONNECTIONS)
         @app = app
-        @native = NativeServer.new(host, Integer(port), Integer(max_connections))
-        @native.attach_app(app)
+        @native = NativeServer.new(app, host, Integer(port), Integer(max_connections))
+        @native.instance_variable_set(:@app, app)
         @host = @native.local_host
         @thread = nil
         @closed = false

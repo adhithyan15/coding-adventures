@@ -94,7 +94,7 @@ class TestConduitServer < Minitest::Test
 
       assert_equal "200", response.code
       assert_equal "Hello Adhithya", response.body
-      assert_equal "text/plain", response["content-type"]
+      assert_equal "text/plain; charset=utf-8", response["content-type"]
     end
   end
 
