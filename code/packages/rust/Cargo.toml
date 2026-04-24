@@ -231,6 +231,7 @@ members = [
     "micro-qr",
     "qr-code",
     "data-matrix",
+    "pdf417",
     "image-codec-bmp",
     "image-codec-ppm",
     "image-codec-qoi",
