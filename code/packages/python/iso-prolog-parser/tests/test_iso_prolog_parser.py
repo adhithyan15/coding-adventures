@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, relation, solve_all, term
+from logic_engine import atom, goal_as_term, logic_list, relation, solve_all, term
 from prolog_core import iso_operator_table
 
 from iso_prolog_parser import (
@@ -42,6 +42,12 @@ class TestIsoParser:
 
         assert ast.rule_name == "program"
         assert len(ast.children) == 2
+
+    def test_parse_iso_ast_accepts_dcg_rules(self) -> None:
+        ast = parse_iso_ast("digits --> [a], [b].\n")
+
+        assert ast.rule_name == "program"
+        assert len(ast.children) == 1
 
     def test_parse_iso_source_executes_recursive_program(self) -> None:
         parsed = parse_iso_source(
@@ -138,6 +144,16 @@ class TestIsoParser:
             "main",
         )
 
-    def test_rejects_dcg_rules_for_now(self) -> None:
-        with pytest.raises(PrologParseError, match="DCG rules"):
-            parse_iso_source("digits --> digit.\n")
+    def test_parse_iso_source_executes_dcg_rules(self) -> None:
+        parsed = parse_iso_source(
+            """
+            digits --> [a], [b].
+            ?- digits(Input, []).
+            """,
+        )
+
+        query = parsed.queries[0]
+
+        assert solve_all(parsed.program, query.variables["Input"], query.goal) == [
+            logic_list(["a", "b"]),
+        ]

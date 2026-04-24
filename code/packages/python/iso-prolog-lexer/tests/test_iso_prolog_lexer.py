@@ -73,6 +73,28 @@ class TestIsoTokenization:
             "EOF",
         ]
 
+    def test_dcg_rule_with_braced_goal(self) -> None:
+        tokens = tokenize_iso_prolog("digits(X) --> { X = done }, [X].\n")
+
+        assert token_types(tokens) == [
+            "ATOM",
+            "LPAREN",
+            "VARIABLE",
+            "RPAREN",
+            "DCG",
+            "LCURLY",
+            "VARIABLE",
+            "ATOM",
+            "ATOM",
+            "RCURLY",
+            "COMMA",
+            "LBRACKET",
+            "VARIABLE",
+            "RBRACKET",
+            "DOT",
+            "EOF",
+        ]
+
     def test_create_iso_prolog_lexer(self) -> None:
         lexer = create_iso_prolog_lexer("likes(marge, donuts).\n")
 

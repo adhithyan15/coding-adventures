@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import relation, term, var
+from logic_engine import atom, logic_list, program, relation, solve_all, term, var
 
 from prolog_core import (
     __version__,
@@ -12,6 +12,8 @@ from prolog_core import (
     directive,
     empty_operator_table,
     empty_predicate_registry,
+    expand_dcg_clause,
+    expand_dcg_phrase,
     iso_operator_table,
     swi_operator_table,
 )
@@ -147,3 +149,54 @@ class TestPredicateRegistry:
                     ),
                 ),
             )
+
+
+class TestDcgExpansion:
+    """DCG helpers should lower grammar rules into ordinary executable clauses."""
+
+    def test_expand_dcg_clause_supports_terminals(self) -> None:
+        clause = expand_dcg_clause(
+            term("letters"),
+            term(",", logic_list(["a"]), logic_list(["b"])),
+        )
+        input_var = var("Input")
+
+        assert solve_all(
+            program(clause),
+            input_var,
+            relation("letters", 2)(input_var, atom("[]")),
+        ) == [logic_list(["a", "b"])]
+
+    def test_expand_dcg_clause_supports_braced_goals_and_disjunction(self) -> None:
+        symbol = var("Symbol")
+        clause = expand_dcg_clause(
+            term("pick", symbol),
+            term(
+                ",",
+                term(
+                    "{}",
+                    term(";", term("=", symbol, "a"), term("=", symbol, "b")),
+                ),
+                logic_list([symbol]),
+            ),
+        )
+        result_var = var("Result")
+
+        assert solve_all(
+            program(clause),
+            result_var,
+            relation("pick", 3)(result_var, logic_list(["b"]), atom("[]")),
+        ) == [atom("b")]
+
+    def test_expand_dcg_phrase_appends_state_arguments(self) -> None:
+        assert expand_dcg_phrase(term("letters"), logic_list(["a", "b"])) == term(
+            "letters",
+            logic_list(["a", "b"]),
+            atom("[]"),
+        )
+
+        assert expand_dcg_phrase(
+            term("letters"),
+            logic_list(["a"]),
+            logic_list(["b"]),
+        ) == term("letters", logic_list(["a"]), logic_list(["b"]))

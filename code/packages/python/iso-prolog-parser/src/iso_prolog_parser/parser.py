@@ -57,12 +57,6 @@ def parse_iso_ast(source: str) -> ASTNode:
     """Parse ISO/Core Prolog source and return the grammar AST."""
 
     tokens = tokenize_iso_prolog(source)
-    for token in tokens:
-        if token.type_name == "DCG":
-            raise PrologParseError(
-                token,
-                "DCG rules are recognized by the ISO lexer but not parsed yet",
-            )
     try:
         return GrammarParser(tokens, _iso_parser_grammar()).parse()
     except GrammarParseError as error:
@@ -78,7 +72,6 @@ def parse_iso_source(
     """Parse ISO/Core Prolog clauses, queries, and file-scoped directives."""
 
     tokens = tokenize_iso_prolog(source)
-    _reject_unsupported_tokens(tokens)
     active_operator_table = (
         iso_operator_table() if operator_table is None else operator_table
     )
@@ -105,7 +98,6 @@ def parse_iso_program(
     """Parse an ISO/Core Prolog source containing only clauses and directives."""
 
     tokens = tokenize_iso_prolog(source)
-    _reject_unsupported_tokens(tokens)
     active_operator_table = (
         iso_operator_table() if operator_table is None else operator_table
     )
@@ -124,7 +116,6 @@ def parse_iso_query(
     """Parse one ISO/Core Prolog top-level query statement."""
 
     tokens = tokenize_iso_prolog(source)
-    _reject_unsupported_tokens(tokens)
     first_token = next((token for token in tokens if token.type_name != "EOF"), None)
     if first_token is None or first_token.type_name != "QUERY":
         raise PrologParseError(
@@ -139,12 +130,3 @@ def parse_iso_query(
         tokens,
         active_operator_table,
     )
-
-
-def _reject_unsupported_tokens(tokens: list[Token]) -> None:
-    for token in tokens:
-        if token.type_name == "DCG":
-            raise PrologParseError(
-                token,
-                "DCG rules are recognized by the ISO lexer but not parsed yet",
-            )

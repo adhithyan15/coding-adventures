@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from logic_engine import atom, goal_as_term, relation, solve_all, term
+from logic_engine import atom, goal_as_term, logic_list, relation, solve_all, term
 from prolog_core import iso_operator_table
 from prolog_lexer import tokenize_prolog
 from prolog_parser import PrologParseError
@@ -144,6 +144,38 @@ class TestOperatorParsing:
             "main",
         )
 
+    def test_parse_source_expands_dcg_rules_into_executable_clauses(self) -> None:
+        parsed = parse_operator_source_tokens(
+            tokenize_prolog(
+                "letters --> [a], [b].\n"
+                "?- letters(Input, []).\n"
+            ),
+            iso_operator_table(),
+            allow_directives=True,
+        )
+
+        query = parsed.queries[0]
+
+        assert solve_all(parsed.program, query.variables["Input"], query.goal) == [
+            logic_list(["a", "b"]),
+        ]
+
+    def test_parse_source_supports_braced_dcg_goals(self) -> None:
+        parsed = parse_operator_source_tokens(
+            tokenize_prolog(
+                "pick(X) --> { X = a ; X = b }, [X].\n"
+                "?- pick(Result, [b], []).\n"
+            ),
+            iso_operator_table(),
+            allow_directives=True,
+        )
+
+        query = parsed.queries[0]
+
+        assert solve_all(parsed.program, query.variables["Result"], query.goal) == [
+            atom("b"),
+        ]
+
     def test_parse_source_removes_operators_after_op_zero(self) -> None:
         with pytest.raises(PrologParseError, match="expected RPAREN"):
             parse_operator_source_tokens(
@@ -189,6 +221,13 @@ class TestOperatorParsing:
         with pytest.raises(PrologParseError, match="clause head must be callable"):
             parse_operator_source_tokens(
                 tokenize_prolog("42 :- true.\n"),
+                iso_operator_table(),
+            )
+
+    def test_parse_source_rejects_non_callable_dcg_heads(self) -> None:
+        with pytest.raises(PrologParseError, match="DCG head must be callable"):
+            parse_operator_source_tokens(
+                tokenize_prolog("42 --> [a].\n"),
                 iso_operator_table(),
             )
 

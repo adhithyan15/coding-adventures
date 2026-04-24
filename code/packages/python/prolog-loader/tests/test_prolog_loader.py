@@ -150,6 +150,21 @@ class TestPrologLoader:
         ):
             run_initialization_goals(loaded)
 
+    def test_run_prolog_initialization_goals_supports_phrase_with_dcg_rules(
+        self,
+    ) -> None:
+        loaded = load_iso_prolog_source(
+            """
+            digits --> [a], [b].
+            :- initialization(phrase(digits, [a, b], Rest)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(loaded)
+        rest_var = loaded.initialization_directives[0].variables["Rest"]
+
+        assert reify(rest_var, state.substitution) == atom("[]")
+
 
 class TestPrologGoalAdapter:
     """The shared adapter should translate common Prolog builtin shapes."""
@@ -167,6 +182,15 @@ class TestPrologGoalAdapter:
             relation("compound", 1)(term("pair", atom("a"), atom("b"))),
             relation("callable", 1)(term("memo", atom("ok"))),
             relation("call", 1)(term("memo", atom("ok"))),
+            relation(
+                "phrase",
+                2,
+            )(term("digits"), term(".", atom("a"), term(".", atom("b"), atom("[]")))),
+            relation("phrase", 3)(
+                term("digits"),
+                term(".", atom("a"), term(".", atom("b"), atom("[]"))),
+                atom("[]"),
+            ),
             relation("once", 1)(term("memo", atom("ok"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),

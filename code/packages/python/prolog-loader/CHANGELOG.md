@@ -13,3 +13,4 @@
 - add `run_prolog_initialization_goals(...)` so loader callers can execute
   `call/1`, `dynamic/1`, `assertz/1`, `predicate_property/2`, and related
   builtins without writing custom Python adapters
+- add `phrase/2` and `phrase/3` builtin adaptation for DCG-backed grammar calls
