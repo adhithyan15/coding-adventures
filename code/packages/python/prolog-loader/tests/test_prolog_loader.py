@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from logic_engine import (
     ConjExpr,
@@ -29,7 +31,9 @@ from prolog_loader import (
     adapt_prolog_goal,
     link_loaded_prolog_sources,
     load_iso_prolog_source,
+    load_swi_prolog_file,
     load_swi_prolog_project,
+    load_swi_prolog_project_from_files,
     load_swi_prolog_source,
     run_initialization_goals,
     run_prolog_initialization_goals,
@@ -258,7 +262,6 @@ class TestPrologLoader:
         result_var = project.initialization_directives[0].variables["Result"]
 
         assert reify(result_var, state.substitution) == atom("done")
-
     def test_linked_queries_support_explicit_module_qualification(self) -> None:
         project = load_swi_prolog_project(
             """
@@ -279,6 +282,85 @@ class TestPrologLoader:
         assert solve_all(project.program, query.variables["Who"], query.goal) == [
             atom("bart"),
             atom("lisa"),
+        ]
+
+    def test_load_swi_prolog_file_tracks_source_path_and_dependencies(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\nancestor(homer, bart).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- use_module(family, [ancestor/2]).\n"
+            ":- consult('facts.pl').\n"
+            "run(Who) :- ancestor(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        loaded = load_swi_prolog_file(app_path)
+
+        assert loaded.source_path == app_path.resolve()
+        assert [dependency.kind for dependency in loaded.file_dependencies] == [
+            "use_module",
+            "consult",
+        ]
+        assert loaded.file_dependencies[0].resolved_path == family_path.resolve()
+        assert loaded.file_dependencies[1].resolved_path == (
+            tmp_path / "facts.pl"
+        ).resolve()
+
+    def test_load_swi_prolog_project_from_files_loads_consulted_user_sources(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        facts_path = tmp_path / "facts.pl"
+        facts_path.write_text(
+            "parent(homer, bart).\nparent(bart, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- consult(facts).\n?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+        ]
+
+    def test_load_swi_prolog_project_from_files_resolves_use_module_files(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [ancestor/2]).\n"
+            "ancestor(homer, bart).\n"
+            "ancestor(bart, lisa).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, [run/1]).\n"
+            ":- use_module(family, [ancestor/2]).\n"
+            "run(Who) :- ancestor(homer, Who).\n"
+            "?- run(Who).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
         ]
 
     def test_module_qualification_uses_target_module_imports(self) -> None:
@@ -359,6 +441,54 @@ class TestPrologLoader:
             match=r"module qualification references unknown module missing",
         ):
             link_loaded_prolog_sources(family)
+
+    def test_load_swi_prolog_project_from_files_resolves_relative_use_module_paths(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        family_path = tmp_path / "family.pl"
+        family_path.write_text(
+            ":- module(family, [main/1]).\nmain(done).\n",
+            encoding="utf-8",
+        )
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n"
+            ":- use_module('./family.pl', [main/1]).\n"
+            ":- initialization(main(Result)).\n",
+            encoding="utf-8",
+        )
+
+        project = load_swi_prolog_project_from_files(app_path)
+        state = run_prolog_initialization_goals(project)
+        result_var = project.initialization_directives[0].variables["Result"]
+
+        assert family_path.resolve() in {
+            source.source_path for source in project.sources if source.source_path
+        }
+        assert reify(result_var, state.substitution) == atom("done")
+
+    def test_use_module_file_targets_must_declare_a_module(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        helper_path = tmp_path / "helper.pl"
+        helper_path.write_text("helper(ok).\n", encoding="utf-8")
+        app_path = tmp_path / "app.pl"
+        app_path.write_text(
+            ":- module(app, []).\n:- use_module(helper, [helper/1]).\n",
+            encoding="utf-8",
+        )
+
+        expected_message = (
+            r"use_module file target .*helper\.pl "
+            r"must load a module/2 declaration"
+        )
+        with pytest.raises(
+            ValueError,
+            match=expected_message,
+        ):
+            load_swi_prolog_project_from_files(app_path)
 
 
 class TestPrologGoalAdapter:
