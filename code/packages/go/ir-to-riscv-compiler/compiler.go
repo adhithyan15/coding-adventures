@@ -889,7 +889,8 @@ func emitBranch(instruction ir.IrInstruction, frame *functionFrame, pc int, plan
 	if !ok {
 		return nil, loweringError(instruction, "unknown label %q", label.Name)
 	}
-	offset := target - pc
+	branchPC := pc + len(setup)*4
+	offset := target - branchPC
 	if err := validateBranchOffset(offset); err != nil {
 		return nil, loweringError(instruction, "%v", err)
 	}

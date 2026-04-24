@@ -108,6 +108,11 @@ func (ConstantFolder) Run(program *ir.IrProgram) *ir.IrProgram {
 	next := cloneProgram(program)
 	pending := map[int]int{}
 	for index, instruction := range next.Instructions {
+		if instruction.Opcode == ir.OpLabel {
+			pending = map[int]int{}
+			continue
+		}
+
 		if instruction.Opcode == ir.OpLoadImm {
 			if len(instruction.Operands) >= 2 {
 				if dest, ok := instruction.Operands[0].(ir.IrRegister); ok {
@@ -124,7 +129,7 @@ func (ConstantFolder) Run(program *ir.IrProgram) *ir.IrProgram {
 				dest, destOK := instruction.Operands[0].(ir.IrRegister)
 				src, srcOK := instruction.Operands[1].(ir.IrRegister)
 				immediate, immOK := instruction.Operands[2].(ir.IrImmediate)
-				base, hasBase := pending[dest.Index]
+				base, hasBase := pending[src.Index]
 				if destOK && srcOK && immOK && hasBase && dest.Index == src.Index {
 					value := base
 					if instruction.Opcode == ir.OpAddImm {
