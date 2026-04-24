@@ -331,11 +331,25 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "exponentiation is not supported" in result.diagnostics[0].message
 
-    def test_reports_unsupported_simple_for_element(self) -> None:
+    def test_accepts_simple_for_element(self) -> None:
         ast = parse_algol("begin integer result, i; for i := 1 do result := i end")
-        result = check_algol(ast)
-        assert not result.ok
-        assert "only step/until" in result.diagnostics[0].message
+        assert check_algol(ast).ok
+
+    def test_accepts_while_for_element(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i, x; x := 3; "
+            "for i := x while x > 0 do begin result := result + i; x := x - 1 end "
+            "end"
+        )
+        assert check_algol(ast).ok
+
+    def test_accepts_multiple_for_elements_and_real_control(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real x; "
+            "for x := 1.5 step -0.5 until 0.5, 2.0 do result := result + 1 "
+            "end"
+        )
+        assert check_algol(ast).ok
 
     def test_accepts_nested_block_scope(self) -> None:
         ast = parse_algol(

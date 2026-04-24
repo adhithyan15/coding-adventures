@@ -154,9 +154,16 @@ def _wasm_lowering_strategy(program: IrProgram) -> str:
         if (
             instruction.operands
             and isinstance(instruction.operands[0], IrLabel)
-            and instruction.operands[0].name.startswith("algol_label_")
         ):
-            return "dispatch_loop"
+            label_name = instruction.operands[0].name
+            if label_name.startswith("algol_label_"):
+                return "dispatch_loop"
+            if label_name.startswith("loop_") and "_dispatch" in label_name:
+                return "dispatch_loop"
+            if label_name.startswith("loop_") and (
+                "_positive" in label_name or "_negative" in label_name
+            ):
+                return "dispatch_loop"
     return "structured"
 
 

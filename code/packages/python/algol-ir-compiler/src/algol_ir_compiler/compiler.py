@@ -170,6 +170,18 @@ class _EvalThunk:
     store_capable: bool = False
 
 
+@dataclass(frozen=True)
+class _ForElementPlan:
+    """A lowered for-list element and the labels needed to execute it."""
+
+    kind: str
+    node: ASTNode
+    entry_label: str
+    advance_label: str
+    dispatch_value: int
+    check_label: str | None = None
+
+
 class AlgolIrCompiler:
     """Compile a typed ALGOL AST into the repository's register IR.
 
@@ -1129,48 +1141,622 @@ class AlgolIrCompiler:
         if loop_token is None:
             raise CompileError("for loop is missing its control variable")
         loop_reference = self._require_reference(loop_token, "control")
-
-        elem = _first_direct_node(_first_direct_node(node, "for_list"), "for_elem")
-        pieces = _direct_nodes(elem, "arith_expr")
-        if elem is None or len(pieces) != 3:
-            raise CompileError("only step/until for-elements are supported")
-
-        start = self._compile_expr(pieces[0], scope)
-        self._emit_store_reference(loop_reference, scope, start)
+        body = _first_direct_node(node, "statement")
+        elements = _direct_nodes(_first_direct_node(node, "for_list"), "for_elem")
+        if not elements:
+            return
 
         index = self.loop_count
         self.loop_count += 1
-        start_label = f"loop_{index}_start"
+        if len(elements) == 1:
+            self._compile_single_for_element(
+                elements[0],
+                loop_reference=loop_reference,
+                body=body,
+                scope=scope,
+                index=index,
+            )
+            return
+
+        dispatch_label = f"loop_{index}_dispatch"
+        body_label = f"loop_{index}_body"
+        after_body_label = f"loop_{index}_after_body"
         end_label = f"loop_{index}_end"
-
-        self._label(start_label)
-        loop_value = self._emit_load_reference(loop_reference, scope)
-        limit = self._compile_expr(pieces[2], scope)
-        should_stop = self._fresh_reg()
+        active_element_reg = self._fresh_reg()
         self._emit(
-            IrOp.CMP_GT,
-            IrRegister(should_stop),
-            IrRegister(loop_value),
-            IrRegister(limit),
+            IrOp.LOAD_IMM,
+            IrRegister(active_element_reg),
+            IrImmediate(0),
         )
-        self._emit(IrOp.BRANCH_NZ, IrRegister(should_stop), IrLabel(end_label))
+        self._emit(IrOp.JUMP, IrLabel(dispatch_label))
 
-        body = _first_direct_node(node, "statement")
+        plans: list[_ForElementPlan] = []
+        for dispatch_value, elem in enumerate(elements):
+            kind = _for_element_kind(elem)
+            entry_label = f"loop_{index}_elem_{dispatch_value}_entry"
+            advance_label = f"loop_{index}_elem_{dispatch_value}_advance"
+            check_label = (
+                f"loop_{index}_elem_{dispatch_value}_check"
+                if kind == "step_until"
+                else None
+            )
+            plans.append(
+                _ForElementPlan(
+                    kind=kind,
+                    node=elem,
+                    entry_label=entry_label,
+                    advance_label=advance_label,
+                    dispatch_value=dispatch_value,
+                    check_label=check_label,
+                )
+            )
+
+        self._label(dispatch_label)
+        self._emit_for_dispatch(
+            active_element_reg,
+            dispatch_label,
+            tuple((plan.dispatch_value, plan.entry_label) for plan in plans),
+            default_label=end_label,
+        )
+
+        for plan_index, plan in enumerate(plans):
+            next_entry_label = (
+                plans[plan_index + 1].entry_label
+                if plan_index + 1 < len(plans)
+                else end_label
+            )
+            arith_nodes = _direct_nodes(plan.node, "arith_expr")
+            bool_node = _first_direct_node(plan.node, "bool_expr")
+
+            if plan.kind == "simple":
+                self._label(plan.entry_label)
+                value = self._compile_expr(arith_nodes[0], scope)
+                value = self._coerce_reg_to_type(
+                    value,
+                    self._expr_type(arith_nodes[0]),
+                    expected_type=loop_reference.type_name,
+                )
+                self._emit_store_reference(loop_reference, scope, value)
+                self._emit(
+                    IrOp.LOAD_IMM,
+                    IrRegister(active_element_reg),
+                    IrImmediate(plan.dispatch_value),
+                )
+                self._emit(IrOp.JUMP, IrLabel(body_label))
+                self._label(plan.advance_label)
+                self._emit(IrOp.JUMP, IrLabel(next_entry_label))
+                continue
+
+            if plan.kind == "while":
+                if bool_node is None:
+                    raise CompileError("for while-element is missing a condition")
+                self._label(plan.entry_label)
+                value = self._compile_expr(arith_nodes[0], scope)
+                value = self._coerce_reg_to_type(
+                    value,
+                    self._expr_type(arith_nodes[0]),
+                    expected_type=loop_reference.type_name,
+                )
+                self._emit_store_reference(loop_reference, scope, value)
+                condition = self._compile_expr(bool_node, scope)
+                self._emit(
+                    IrOp.BRANCH_Z,
+                    IrRegister(condition),
+                    IrLabel(next_entry_label),
+                )
+                self._emit(
+                    IrOp.LOAD_IMM,
+                    IrRegister(active_element_reg),
+                    IrImmediate(plan.dispatch_value),
+                )
+                self._emit(IrOp.JUMP, IrLabel(body_label))
+                self._label(plan.advance_label)
+                self._emit(IrOp.JUMP, IrLabel(plan.entry_label))
+                continue
+
+            if plan.kind != "step_until" or plan.check_label is None:
+                raise CompileError("unsupported for-element form")
+            self._label(plan.entry_label)
+            start = self._compile_expr(arith_nodes[0], scope)
+            start = self._coerce_reg_to_type(
+                start,
+                self._expr_type(arith_nodes[0]),
+                expected_type=loop_reference.type_name,
+            )
+            self._emit_store_reference(loop_reference, scope, start)
+            self._emit(IrOp.JUMP, IrLabel(plan.check_label))
+
+            self._label(plan.check_label)
+            step_value = self._compile_expr(arith_nodes[1], scope)
+            step_type = self._expr_type(arith_nodes[1])
+            limit_value = self._compile_expr(arith_nodes[2], scope)
+            limit_type = self._expr_type(arith_nodes[2])
+            self._emit_step_until_dispatch(
+                active_element_reg=active_element_reg,
+                dispatch_value=plan.dispatch_value,
+                loop_reference=loop_reference,
+                loop_scope=scope,
+                step_value=step_value,
+                step_type=step_type,
+                limit_value=limit_value,
+                limit_type=limit_type,
+                continue_label=body_label,
+                stop_label=next_entry_label,
+            )
+
+            self._label(plan.advance_label)
+            current_value = self._emit_load_reference(loop_reference, scope)
+            next_value = self._emit_numeric(
+                "+",
+                current_value,
+                loop_reference.type_name,
+                step_value,
+                step_type,
+            )
+            next_type = self._result_type_for_numeric_operator(
+                "+",
+                loop_reference.type_name,
+                step_type,
+            )
+            next_value = self._coerce_reg_to_type(
+                next_value,
+                next_type,
+                expected_type=loop_reference.type_name,
+            )
+            self._emit_store_reference(loop_reference, scope, next_value)
+            self._emit(IrOp.JUMP, IrLabel(plan.check_label))
+
+        self._label(body_label)
         if body is not None:
             self._compile_statement(body, scope)
+        self._label(after_body_label)
+        self._emit_for_dispatch(
+            active_element_reg,
+            after_body_label,
+            tuple((plan.dispatch_value, plan.advance_label) for plan in plans),
+            default_label=end_label,
+        )
+        self._label(end_label)
 
+    def _compile_single_for_element(
+        self,
+        elem: ASTNode,
+        *,
+        loop_reference: ResolvedReference,
+        body: ASTNode | None,
+        scope: _FrameScope,
+        index: int,
+    ) -> None:
+        kind = _for_element_kind(elem)
+        if kind == "simple":
+            value_node = _direct_nodes(elem, "arith_expr")[0]
+            value = self._compile_expr(value_node, scope)
+            value = self._coerce_reg_to_type(
+                value,
+                self._expr_type(value_node),
+                expected_type=loop_reference.type_name,
+            )
+            self._emit_store_reference(loop_reference, scope, value)
+            if body is not None:
+                self._compile_statement(body, scope)
+            return
+
+        if kind == "while":
+            value_node = _direct_nodes(elem, "arith_expr")[0]
+            condition_node = _first_direct_node(elem, "bool_expr")
+            if condition_node is None:
+                raise CompileError("for while-element is missing a condition")
+            start_label = f"loop_{index}_start"
+            end_label = f"loop_{index}_end"
+            self._label(start_label)
+            value = self._compile_expr(value_node, scope)
+            value = self._coerce_reg_to_type(
+                value,
+                self._expr_type(value_node),
+                expected_type=loop_reference.type_name,
+            )
+            self._emit_store_reference(loop_reference, scope, value)
+            condition = self._compile_expr(condition_node, scope)
+            self._emit(IrOp.BRANCH_Z, IrRegister(condition), IrLabel(end_label))
+            if body is not None:
+                self._compile_statement(body, scope)
+            self._emit(IrOp.JUMP, IrLabel(start_label))
+            self._label(end_label)
+            return
+
+        if kind != "step_until":
+            raise CompileError("unsupported for-element form")
+
+        nodes = _direct_nodes(elem, "arith_expr")
+        start_node = nodes[0]
+        step_node = nodes[1]
+        limit_node = nodes[2]
+        start = self._compile_expr(start_node, scope)
+        start = self._coerce_reg_to_type(
+            start,
+            self._expr_type(start_node),
+            expected_type=loop_reference.type_name,
+        )
+        self._emit_store_reference(loop_reference, scope, start)
+
+        start_label = f"loop_{index}_start"
+        body_label = f"loop_{index}_body"
+        end_label = f"loop_{index}_end"
+        self._label(start_label)
+        step_value = self._compile_expr(step_node, scope)
+        step_type = self._expr_type(step_node)
+        limit_value = self._compile_expr(limit_node, scope)
+        limit_type = self._expr_type(limit_node)
+        self._emit_step_until_branch(
+            loop_reference=loop_reference,
+            loop_scope=scope,
+            step_value=step_value,
+            step_type=step_type,
+            limit_value=limit_value,
+            limit_type=limit_type,
+            label_prefix=f"loop_{index}",
+            continue_label=body_label,
+            stop_label=end_label,
+        )
+        self._label(body_label)
+        if body is not None:
+            self._compile_statement(body, scope)
         current_value = self._emit_load_reference(loop_reference, scope)
-        step = self._compile_expr(pieces[1], scope)
-        next_value = self._fresh_reg()
-        self._emit(
-            IrOp.ADD,
-            IrRegister(next_value),
-            IrRegister(current_value),
-            IrRegister(step),
+        next_value = self._emit_numeric(
+            "+",
+            current_value,
+            loop_reference.type_name,
+            step_value,
+            step_type,
+        )
+        next_type = self._result_type_for_numeric_operator(
+            "+",
+            loop_reference.type_name,
+            step_type,
+        )
+        next_value = self._coerce_reg_to_type(
+            next_value,
+            next_type,
+            expected_type=loop_reference.type_name,
         )
         self._emit_store_reference(loop_reference, scope, next_value)
         self._emit(IrOp.JUMP, IrLabel(start_label))
         self._label(end_label)
+
+    def _emit_step_until_branch(
+        self,
+        *,
+        loop_reference: ResolvedReference,
+        loop_scope: _FrameScope,
+        step_value: int,
+        step_type: str,
+        limit_value: int,
+        limit_type: str,
+        label_prefix: str,
+        continue_label: str,
+        stop_label: str,
+    ) -> None:
+        positive_label = f"{label_prefix}_positive"
+        negative_or_zero_label = f"{label_prefix}_negative_or_zero"
+        negative_label = f"{label_prefix}_negative"
+        compare_type = (
+            _REAL_TYPE
+            if _REAL_TYPE in {loop_reference.type_name, limit_type}
+            else _INTEGER_TYPE
+        )
+        step_type_for_compare = self._result_type_for_numeric_operator(
+            "+",
+            step_type,
+            _INTEGER_TYPE,
+        )
+        zero = (
+            self._const_f64_reg(0.0)
+            if step_type_for_compare == _REAL_TYPE
+            else self._const_reg(0)
+        )
+        step_for_compare = self._coerce_reg_to_type(
+            step_value,
+            step_type,
+            expected_type=step_type_for_compare,
+        )
+        is_positive = self._fresh_reg()
+        if step_type_for_compare == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_GT,
+                IrRegister(is_positive),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(is_positive),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(is_positive),
+            IrLabel(positive_label),
+        )
+
+        self._label(negative_or_zero_label)
+        is_negative = self._fresh_reg()
+        if step_type_for_compare == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(is_negative),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_LT,
+                IrRegister(is_negative),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(is_negative),
+            IrLabel(negative_label),
+        )
+        self._emit(IrOp.JUMP, IrLabel(continue_label))
+
+        self._label(positive_label)
+        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        positive_loop = self._coerce_reg_to_type(
+            loop_value,
+            loop_reference.type_name,
+            expected_type=compare_type,
+        )
+        positive_limit = self._coerce_reg_to_type(
+            limit_value,
+            limit_type,
+            expected_type=compare_type,
+        )
+        should_stop_positive = self._fresh_reg()
+        if compare_type == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_GT,
+                IrRegister(should_stop_positive),
+                IrRegister(positive_loop),
+                IrRegister(positive_limit),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(should_stop_positive),
+                IrRegister(positive_loop),
+                IrRegister(positive_limit),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(should_stop_positive),
+            IrLabel(stop_label),
+        )
+        self._emit(IrOp.JUMP, IrLabel(continue_label))
+
+        self._label(negative_label)
+        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        negative_loop = self._coerce_reg_to_type(
+            loop_value,
+            loop_reference.type_name,
+            expected_type=compare_type,
+        )
+        negative_limit = self._coerce_reg_to_type(
+            limit_value,
+            limit_type,
+            expected_type=compare_type,
+        )
+        should_stop_negative = self._fresh_reg()
+        if compare_type == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(should_stop_negative),
+                IrRegister(negative_loop),
+                IrRegister(negative_limit),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_LT,
+                IrRegister(should_stop_negative),
+                IrRegister(negative_loop),
+                IrRegister(negative_limit),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(should_stop_negative),
+            IrLabel(stop_label),
+        )
+        self._emit(IrOp.JUMP, IrLabel(continue_label))
+
+    def _emit_for_dispatch(
+        self,
+        active_element_reg: int,
+        label_prefix: str,
+        branches: tuple[tuple[int, str], ...],
+        *,
+        default_label: str,
+    ) -> None:
+        for dispatch_value, target_label in branches:
+            next_label = f"{label_prefix}_{dispatch_value}_next"
+            expected = self._const_reg(dispatch_value)
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(active_element_reg),
+                IrRegister(expected),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+            self._emit(IrOp.JUMP, IrLabel(target_label))
+            self._label(next_label)
+        self._emit(IrOp.JUMP, IrLabel(default_label))
+
+    def _emit_step_until_dispatch(
+        self,
+        *,
+        active_element_reg: int,
+        dispatch_value: int,
+        loop_reference: ResolvedReference,
+        loop_scope: _FrameScope,
+        step_value: int,
+        step_type: str,
+        limit_value: int,
+        limit_type: str,
+        continue_label: str,
+        stop_label: str,
+    ) -> None:
+        positive_label = f"{continue_label}_{dispatch_value}_positive"
+        negative_or_zero_label = f"{continue_label}_{dispatch_value}_negative_or_zero"
+        negative_label = f"{continue_label}_{dispatch_value}_negative"
+        compare_type = (
+            _REAL_TYPE
+            if _REAL_TYPE in {loop_reference.type_name, limit_type}
+            else _INTEGER_TYPE
+        )
+        step_type_for_compare = self._result_type_for_numeric_operator(
+            "+",
+            step_type,
+            _INTEGER_TYPE,
+        )
+        zero = (
+            self._const_f64_reg(0.0)
+            if step_type_for_compare == _REAL_TYPE
+            else self._const_reg(0)
+        )
+        step_for_compare = self._coerce_reg_to_type(
+            step_value,
+            step_type,
+            expected_type=step_type_for_compare,
+        )
+        is_positive = self._fresh_reg()
+        if step_type_for_compare == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_GT,
+                IrRegister(is_positive),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(is_positive),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(is_positive),
+            IrLabel(positive_label),
+        )
+
+        self._label(negative_or_zero_label)
+        is_negative = self._fresh_reg()
+        if step_type_for_compare == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(is_negative),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_LT,
+                IrRegister(is_negative),
+                IrRegister(step_for_compare),
+                IrRegister(zero),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(is_negative),
+            IrLabel(negative_label),
+        )
+        self._emit(
+            IrOp.LOAD_IMM,
+            IrRegister(active_element_reg),
+            IrImmediate(dispatch_value),
+        )
+        self._emit(IrOp.JUMP, IrLabel(continue_label))
+
+        self._label(positive_label)
+        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        positive_loop = self._coerce_reg_to_type(
+            loop_value,
+            loop_reference.type_name,
+            expected_type=compare_type,
+        )
+        positive_limit = self._coerce_reg_to_type(
+            limit_value,
+            limit_type,
+            expected_type=compare_type,
+        )
+        should_stop_positive = self._fresh_reg()
+        if compare_type == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_GT,
+                IrRegister(should_stop_positive),
+                IrRegister(positive_loop),
+                IrRegister(positive_limit),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(should_stop_positive),
+                IrRegister(positive_loop),
+                IrRegister(positive_limit),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(should_stop_positive),
+            IrLabel(stop_label),
+        )
+        self._emit(
+            IrOp.LOAD_IMM,
+            IrRegister(active_element_reg),
+            IrImmediate(dispatch_value),
+        )
+        self._emit(IrOp.JUMP, IrLabel(continue_label))
+
+        self._label(negative_label)
+        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        negative_loop = self._coerce_reg_to_type(
+            loop_value,
+            loop_reference.type_name,
+            expected_type=compare_type,
+        )
+        negative_limit = self._coerce_reg_to_type(
+            limit_value,
+            limit_type,
+            expected_type=compare_type,
+        )
+        should_stop_negative = self._fresh_reg()
+        if compare_type == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(should_stop_negative),
+                IrRegister(negative_loop),
+                IrRegister(negative_limit),
+            )
+        else:
+            self._emit(
+                IrOp.CMP_LT,
+                IrRegister(should_stop_negative),
+                IrRegister(negative_loop),
+                IrRegister(negative_limit),
+            )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(should_stop_negative),
+            IrLabel(stop_label),
+        )
+        self._emit(
+            IrOp.LOAD_IMM,
+            IrRegister(active_element_reg),
+            IrImmediate(dispatch_value),
+        )
+        self._emit(IrOp.JUMP, IrLabel(continue_label))
 
     def _compile_expr(self, expr: ASTNode | Token, scope: _FrameScope) -> int:
         if isinstance(expr, Token):
@@ -3681,6 +4267,18 @@ def _direct_tokens(node: ASTNode | None) -> list[Token]:
     if node is None:
         return []
     return [child for child in node.children if isinstance(child, Token)]
+
+
+def _for_element_kind(node: ASTNode) -> str:
+    arith_count = len(_direct_nodes(node, "arith_expr"))
+    has_bool = _first_direct_node(node, "bool_expr") is not None
+    if has_bool:
+        return "while"
+    if arith_count == 3:
+        return "step_until"
+    if arith_count == 1:
+        return "simple"
+    return "unsupported"
 
 
 def _tokens(node: ASTNode | None) -> list[Token]:

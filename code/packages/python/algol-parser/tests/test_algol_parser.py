@@ -336,6 +336,36 @@ class TestForLoop:
         )
         assert ast.rule_name == "program"
 
+    def test_simple_for_element(self) -> None:
+        """Simple one-shot for-elements parse correctly."""
+        ast = parse(
+            "begin integer i; integer result; "
+            "for i := 5 do result := i "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) >= 1
+
+    def test_while_for_element(self) -> None:
+        """While for-elements parse correctly."""
+        ast = parse(
+            "begin integer i; integer x; "
+            "for i := x while x > 0 do x := x - 1 "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) >= 1
+
+    def test_multiple_for_elements(self) -> None:
+        """Comma-separated for-elements parse correctly."""
+        ast = parse(
+            "begin integer i; integer x; integer result; "
+            "for i := 1 step 1 until 3, 5, x while x > 0 do result := i "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) >= 1
+
 
 # ---------------------------------------------------------------------------
 # Nested block tests
