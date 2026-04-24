@@ -17,3 +17,5 @@
 - add structured module/import metadata on loaded sources
 - add multi-source project linking with namespace-aware `module/2` and
   `use_module/1,2` resolution
+- add loader-time rewriting for explicit `module:goal` qualification, including
+  linked queries, initialization goals, and common meta-goal wrappers

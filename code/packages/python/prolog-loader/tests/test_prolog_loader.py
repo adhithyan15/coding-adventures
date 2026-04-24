@@ -259,6 +259,107 @@ class TestPrologLoader:
 
         assert reify(result_var, state.substitution) == atom("done")
 
+    def test_linked_queries_support_explicit_module_qualification(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [parent/2, ancestor/2]).
+            parent(homer, bart).
+            parent(bart, lisa).
+            ancestor(X, Y) :- parent(X, Y).
+            ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+            """,
+            """
+            :- module(app, []).
+            ?- family:ancestor(homer, Who).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_module_qualification_uses_target_module_imports(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(edges, [edge/2]).
+            edge(homer, bart).
+            edge(bart, lisa).
+            """,
+            """
+            :- module(family, [ancestor/2]).
+            :- use_module(edges, [edge/2]).
+            ancestor(X, Y) :- edge(X, Y).
+            ancestor(X, Y) :- edge(X, Z), ancestor(Z, Y).
+            """,
+            """
+            :- module(app, []).
+            ?- family:ancestor(homer, Who).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_module_qualification_rewrites_meta_call_arguments(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            """,
+            """
+            :- module(app, []).
+            ?- call(family:ancestor(homer, Who)).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(
+            project.program,
+            query.variables["Who"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("bart"),
+        ]
+
+    def test_module_qualified_initialization_goals_execute(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [main/1]).
+            main(done).
+            """,
+            """
+            :- module(app, []).
+            :- initialization(family:main(Result)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(project)
+        result_var = project.initialization_directives[0].variables["Result"]
+
+        assert reify(result_var, state.substitution) == atom("done")
+
+    def test_unknown_module_qualification_raises_during_linking(self) -> None:
+        family = load_swi_prolog_source(
+            """
+            :- module(app, []).
+            ?- missing:main(Result).
+            """,
+        )
+
+        with pytest.raises(
+            ValueError,
+            match=r"module qualification references unknown module missing",
+        ):
+            link_loaded_prolog_sources(family)
+
 
 class TestPrologGoalAdapter:
     """The shared adapter should translate common Prolog builtin shapes."""

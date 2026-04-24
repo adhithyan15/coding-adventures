@@ -7,10 +7,9 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from logic_engine import (
+    Atom,
     Clause,
     Compound,
-    ConjExpr,
-    DisjExpr,
     FreshExpr,
     GoalExpr,
     Program,
@@ -18,12 +17,13 @@ from logic_engine import (
     RelationCall,
     State,
     Term,
-    conj,
-    disj,
+    atom,
+    goal_as_term,
     goal_from_term,
     program,
     rule,
     solve_from,
+    term,
 )
 from prolog_core import (
     OperatorTable,
@@ -44,6 +44,14 @@ __version__ = "0.1.0"
 type GoalAdapter = Callable[[GoalExpr], object]
 type RelationResolver = Callable[[Relation], Relation]
 _USER_MODULE = sym("user")
+_MODULE_QUALIFIER = sym(":")
+_CONJUNCTION = sym(",")
+_DISJUNCTION = sym(";")
+_CALL = sym("call")
+_ONCE = sym("once")
+_NOT = sym("not")
+_NEGATION = sym("\\+")
+_PHRASE = sym("phrase")
 
 
 class ParsedSourceLike(Protocol):
@@ -217,6 +225,8 @@ def link_loaded_prolog_sources(
     initialization_terms: list[Term] = []
     initialization_goals: list[GoalExpr] = []
     dynamic_relations: list[Relation] = []
+    source_resolvers: dict[int, RelationResolver] = {}
+    module_resolvers: dict[Symbol, RelationResolver] = {}
 
     for loaded_source in loaded_sources:
         if loaded_source.module_spec is not None:
@@ -242,19 +252,25 @@ def link_loaded_prolog_sources(
             local_keys=local_keys,
             import_resolution=import_resolution,
         )
+        source_resolvers[id(loaded_source)] = resolver
+        if loaded_source.module_spec is not None:
+            module_resolvers[loaded_source.module_spec.name] = resolver
+
+    for loaded_source in loaded_sources:
+        resolver = source_resolvers[id(loaded_source)]
 
         linked_clauses.extend(
-            _rewrite_clause(clause_value, resolver)
+            _rewrite_clause(clause_value, resolver, module_resolvers)
             for clause_value in loaded_source.clauses
         )
         linked_queries.extend(
-            _rewrite_query(query_value, resolver)
+            _rewrite_query(query_value, resolver, module_resolvers)
             for query_value in loaded_source.queries
         )
         initialization_directives.extend(loaded_source.initialization_directives)
         initialization_terms.extend(loaded_source.initialization_terms)
         initialization_goals.extend(
-            _rewrite_goal(goal_value, resolver)
+            _rewrite_goal(goal_value, resolver, module_resolvers)
             for goal_value in loaded_source.initialization_goals
         )
         dynamic_relations.extend(
@@ -421,33 +437,45 @@ def _resolver_for_source(
     return resolve
 
 
-def _rewrite_clause(clause_value: Clause, resolver: RelationResolver) -> Clause:
+def _rewrite_clause(
+    clause_value: Clause,
+    resolver: RelationResolver,
+    module_resolvers: dict[Symbol, RelationResolver],
+) -> Clause:
     head = _rewrite_relation_call(clause_value.head, resolver)
     if clause_value.body is None:
         return Clause(head=head)
-    return rule(head, _rewrite_goal(clause_value.body, resolver))
+    return rule(head, _rewrite_goal(clause_value.body, resolver, module_resolvers))
 
 
-def _rewrite_query(query_value: ParsedQuery, resolver: RelationResolver) -> ParsedQuery:
+def _rewrite_query(
+    query_value: ParsedQuery,
+    resolver: RelationResolver,
+    module_resolvers: dict[Symbol, RelationResolver],
+) -> ParsedQuery:
     return ParsedQuery(
-        goal=_rewrite_goal(query_value.goal, resolver),
+        goal=_rewrite_goal(query_value.goal, resolver, module_resolvers),
         variables=dict(query_value.variables),
     )
 
 
-def _rewrite_goal(goal_value: GoalExpr, resolver: RelationResolver) -> GoalExpr:
-    if isinstance(goal_value, RelationCall):
-        return _rewrite_relation_call(goal_value, resolver)
-    if isinstance(goal_value, ConjExpr):
-        return conj(*(_rewrite_goal(child, resolver) for child in goal_value.goals))
-    if isinstance(goal_value, DisjExpr):
-        return disj(*(_rewrite_goal(child, resolver) for child in goal_value.goals))
+def _rewrite_goal(
+    goal_value: GoalExpr,
+    resolver: RelationResolver,
+    module_resolvers: dict[Symbol, RelationResolver],
+) -> GoalExpr:
     if isinstance(goal_value, FreshExpr):
         return FreshExpr(
             template_vars=goal_value.template_vars,
-            body=_rewrite_goal(goal_value.body, resolver),
+            body=_rewrite_goal(goal_value.body, resolver, module_resolvers),
         )
-    return goal_value
+    return goal_from_term(
+        _rewrite_goal_term(
+            goal_as_term(goal_value),
+            resolver,
+            module_resolvers,
+        ),
+    )
 
 
 def _rewrite_relation_call(
@@ -458,6 +486,82 @@ def _rewrite_relation_call(
     if resolved_relation.key() == call_value.relation.key():
         return call_value
     return resolved_relation(*call_value.args)
+
+
+def _rewrite_goal_term(
+    term_value: Term,
+    resolver: RelationResolver,
+    module_resolvers: dict[Symbol, RelationResolver],
+) -> Term:
+    if isinstance(term_value, Atom):
+        resolved_relation = resolver(Relation(symbol=term_value.symbol, arity=0))
+        if resolved_relation.symbol == term_value.symbol:
+            return term_value
+        return atom(resolved_relation.symbol)
+
+    if not isinstance(term_value, Compound):
+        return term_value
+
+    qualified = _qualified_goal(term_value)
+    if qualified is not None:
+        module_name, goal_term = qualified
+        target_resolver = module_resolvers.get(module_name)
+        if target_resolver is None:
+            msg = f"module qualification references unknown module {module_name}"
+            raise ValueError(msg)
+        return _rewrite_goal_term(goal_term, target_resolver, module_resolvers)
+
+    if term_value.functor == _CONJUNCTION and len(term_value.args) == 2:
+        return term(
+            ",",
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+            _rewrite_goal_term(term_value.args[1], resolver, module_resolvers),
+        )
+
+    if term_value.functor == _DISJUNCTION and len(term_value.args) == 2:
+        return term(
+            ";",
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+            _rewrite_goal_term(term_value.args[1], resolver, module_resolvers),
+        )
+
+    if term_value.functor in {_CALL, _ONCE}:
+        return term(
+            term_value.functor,
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+        )
+
+    if term_value.functor in {_NOT, _NEGATION}:
+        return term(
+            term_value.functor,
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+        )
+
+    if (
+        term_value.functor == _PHRASE and len(term_value.args) in {2, 3}
+    ):
+        rewritten_args = (
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+            *term_value.args[1:],
+        )
+        return term(term_value.functor, *rewritten_args)
+
+    resolved_relation = resolver(
+        Relation(symbol=term_value.functor, arity=len(term_value.args)),
+    )
+    if resolved_relation.symbol == term_value.functor:
+        return term_value
+    return term(resolved_relation.symbol, *term_value.args)
+
+
+def _qualified_goal(term_value: Compound) -> tuple[Symbol, Term] | None:
+    if term_value.functor != _MODULE_QUALIFIER or len(term_value.args) != 2:
+        return None
+
+    module_term, goal_term = term_value.args
+    if not isinstance(module_term, Atom):
+        return None
+    return (module_term.symbol, goal_term)
 
 
 def _module_name_for_error(loaded_source: LoadedPrologSource) -> str:
