@@ -2,6 +2,48 @@
 
 All notable changes to `tetrad-runtime` will be documented in this file.
 
+## [Unreleased]
+
+### Added — LANG17 PR4: legacy ``TetradVM`` API parity
+
+Adds re-projection wrappers on `TetradRuntime` so callers can switch
+from the legacy `tetrad_vm.TetradVM` to `tetrad_runtime.TetradRuntime`
+without rewriting metric-reading code.
+
+- `TetradRuntime.hot_functions(threshold=100)` — delegates to
+  `VMCore.hot_functions`.
+- `TetradRuntime.feedback_vector(fn)` → `list[SlotState] | None`,
+  indexed by Tetrad slot index.  Reconstructed by walking
+  `IIRFunction.feedback_slots` (populated in the translator).  Returns
+  `None` for fully-typed functions (which allocate no slots).
+- `TetradRuntime.type_profile(fn, slot)` → `SlotState | None` —
+  one-slot lookup over `feedback_vector`.
+- `TetradRuntime.call_site_shape(fn, slot)` → `SlotKind` — returns
+  `UNINITIALIZED` for unknown / unreached slots, matching legacy.
+- `TetradRuntime.branch_profile(fn, tetrad_ip)` → `BranchStats | None`,
+  re-keyed from the IIR's IIR-IP-keyed counters via
+  `IIRFunction.source_map`.
+- `TetradRuntime.loop_iterations(fn)` → `dict[tetrad_ip, int]`,
+  re-keyed via `source_map`.
+- `TetradRuntime.execute_traced(source)` → `(result, list[VMTrace])`,
+  thin wrapper over `VMCore.execute_traced`.
+- `TetradRuntime.reset_metrics()` — delegates to live `VMCore`.
+
+The translator (`code_object_to_iir`) now populates
+`IIRFunction.feedback_slots` and `IIRFunction.source_map` so the
+re-projection layer has the data it needs:
+
+- `feedback_slots[slot_index]` → IIR index of the value-producing
+  instruction that gets the observation (i.e. the last IIR
+  instruction in that Tetrad op's translation).
+- `source_map` → list of `(iir_start, tetrad_ip, 0)` per Tetrad
+  instruction, so any Tetrad IP resolves to the IIR range of its
+  translation.
+
+Test coverage: 68 tests, 94% line coverage.  New file
+`test_legacy_api_parity.py` covers shape parity for every legacy
+metric API plus the empty-state-defaults contract.
+
 ## [0.1.0] — 2026-04-23
 
 ### Added

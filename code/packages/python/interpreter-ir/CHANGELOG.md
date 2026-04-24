@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Added — LANG17 PR4: optional frontend side tables on IIRFunction
+
+- `IIRFunction.feedback_slots: dict[int, int]` — optional
+  ``slot_index → iir_instr_index`` mapping.  Frontends that allocate
+  named feedback slots at compile time (Tetrad, SpiderMonkey, V8)
+  populate this so a slot index can be resolved back to the IIR
+  instruction that owns it.  ``vm-core`` does not interpret this field
+  — it is the frontend's contract with its own metric APIs.
+- `IIRFunction.source_map: list[tuple[int, int, int]]` — optional
+  ``(iir_index, source_a, source_b)`` triples.  Conventional uses:
+  ``(iir_index, source_line, source_column)`` for debuggers, or
+  ``(iir_index, original_byte_code_ip, 0)`` for legacy-API
+  re-projection (used by tetrad-runtime to map Tetrad bytecode IPs
+  to IIR IPs).
+
+Both fields default to empty so existing callers see no behaviour
+change.  Neither is serialised by `serialise.py` — they are runtime
+metadata only, repopulated each time a frontend translates source.
+
 ### Added — LANG17 feedback-slot state machine
 
 - `slot_state.py` — `SlotKind` enum (UNINITIALIZED / MONOMORPHIC /
