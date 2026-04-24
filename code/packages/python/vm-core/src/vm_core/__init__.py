@@ -5,6 +5,7 @@ Public surface
 ``VMCore``              — the main interpreter (register VM).
 ``VMFrame``             — per-call-frame state (frame stack entry).
 ``VMMetrics``           — execution statistics snapshot.
+``BranchStats``         — taken/not-taken counters for one conditional branch.
 ``VMProfiler``          — inline type profiler.
 ``TypeMapper``          — type alias for a runtime-value → type-string callable.
 ``default_type_mapper`` — the Python-primitive default type mapper.
@@ -24,7 +25,7 @@ from vm_core.errors import (
     VMInterrupt,
 )
 from vm_core.frame import RegisterFile, VMFrame
-from vm_core.metrics import VMMetrics
+from vm_core.metrics import BranchStats, VMMetrics
 from vm_core.profiler import TypeMapper, VMProfiler, default_type_mapper
 
 __all__ = [
@@ -32,6 +33,7 @@ __all__ = [
     "VMFrame",
     "RegisterFile",
     "VMMetrics",
+    "BranchStats",
     "VMProfiler",
     "TypeMapper",
     "default_type_mapper",

@@ -69,7 +69,7 @@ from interpreter_ir import IIRModule
 from vm_core.builtins import BuiltinRegistry
 from vm_core.dispatch import STANDARD_OPCODES, run_dispatch_loop
 from vm_core.frame import VMFrame
-from vm_core.metrics import VMMetrics
+from vm_core.metrics import BranchStats, VMMetrics
 from vm_core.profiler import TypeMapper, VMProfiler
 
 
@@ -136,11 +136,21 @@ class VMCore:
         self._memory: dict[int, Any] = {}
         self._io_ports: dict[int, Any] = {}
 
-        # Metrics accumulators — never reset; aggregate lifetime stats.
+        # Metrics accumulators — never reset automatically; aggregate
+        # lifetime stats.  Call ``reset_metrics()`` to zero them.
         self._metrics_instrs: int = 0
         self._metrics_frames: int = 0
         self._metrics_jit_hits: int = 0
         self._fn_call_counts: dict[str, int] = {}
+
+        # LANG17 branch / loop observation state — the dispatch-loop
+        # handlers for ``jmp`` / ``jmp_if_true`` / ``jmp_if_false``
+        # mutate these dicts directly via the helpers in
+        # ``vm_core.dispatch``.  The public API exposes them via
+        # :meth:`branch_profile`, :meth:`loop_iterations`, and through
+        # deep copies inside :meth:`metrics`.
+        self._branch_stats: dict[str, dict[int, BranchStats]] = {}
+        self._loop_back_edges: dict[str, dict[int, int]] = {}
 
     # ------------------------------------------------------------------
     # Public API
@@ -200,16 +210,98 @@ class VMCore:
     def metrics(self) -> VMMetrics:
         """Return a point-in-time snapshot of execution statistics.
 
-        The snapshot is immutable — it does not update after creation.
-        Designed for consumption by jit-core to decide which functions
-        to promote to the compiled tier.
+        The snapshot is a deep copy — subsequent execution will not
+        change it, and the caller can freely mutate the returned dicts
+        without affecting the running VM.
         """
+        branch_snapshot: dict[str, dict[int, BranchStats]] = {
+            fn: {
+                ip: BranchStats(
+                    taken_count=stats.taken_count,
+                    not_taken_count=stats.not_taken_count,
+                )
+                for ip, stats in per_fn.items()
+            }
+            for fn, per_fn in self._branch_stats.items()
+        }
+        loop_snapshot: dict[str, dict[int, int]] = {
+            fn: dict(per_fn) for fn, per_fn in self._loop_back_edges.items()
+        }
         return VMMetrics(
             function_call_counts=dict(self._fn_call_counts),
             total_instructions_executed=self._metrics_instrs,
             total_frames_pushed=self._metrics_frames,
             total_jit_hits=self._metrics_jit_hits,
+            branch_stats=branch_snapshot,
+            loop_back_edge_counts=loop_snapshot,
         )
+
+    # ------------------------------------------------------------------
+    # LANG17 typed accessors — sugar over ``metrics()`` so callers can
+    # look up one fn/site without walking a full snapshot.
+    # ------------------------------------------------------------------
+
+    def hot_functions(self, threshold: int = 100) -> list[str]:
+        """Return names of functions whose call count meets ``threshold``.
+
+        JITs use this to decide what to promote to the compiled tier.
+        Returns function names in insertion order (Python dict order
+        preserves call-count registration order).
+        """
+        return [
+            name
+            for name, count in self._fn_call_counts.items()
+            if count >= threshold
+        ]
+
+    def branch_profile(self, fn_name: str, source_ip: int) -> BranchStats | None:
+        """Return the live ``BranchStats`` for one conditional branch.
+
+        ``source_ip`` is the IIR instruction index of the branch
+        (``jmp_if_true`` / ``jmp_if_false``) within ``fn_name``'s
+        instruction list.  Returns ``None`` if the branch has never
+        been reached.
+
+        The returned object is the *live* counter — subsequent VM
+        execution will mutate it.  Use ``metrics().branch_stats`` for a
+        stable snapshot.
+        """
+        fn_stats = self._branch_stats.get(fn_name)
+        if fn_stats is None:
+            return None
+        return fn_stats.get(source_ip)
+
+    def loop_iterations(self, fn_name: str) -> dict[int, int]:
+        """Return back-edge hit counts for ``fn_name`` keyed by source IP.
+
+        Empty dict if the function has no back-edges or has never
+        executed one.  The returned dict is a fresh copy so callers can
+        mutate it freely without affecting the VM.
+        """
+        fn_loops = self._loop_back_edges.get(fn_name, {})
+        return dict(fn_loops)
+
+    def reset_metrics(self) -> None:
+        """Zero all aggregate metrics.
+
+        Clears:
+
+        - ``function_call_counts`` / ``total_instructions_executed`` /
+          ``total_frames_pushed`` / ``total_jit_hits``
+        - ``branch_stats`` and ``loop_back_edge_counts``
+
+        Does *not* reset per-instruction observations
+        (``IIRInstr.observed_slot`` / ``observed_type``) — those live on
+        the IIR module, not on the VM.  Callers that want a clean slate
+        for observations should walk their module or construct a fresh
+        one.  (LANG17 future work: add a helper for this.)
+        """
+        self._fn_call_counts = {}
+        self._metrics_instrs = 0
+        self._metrics_frames = 0
+        self._metrics_jit_hits = 0
+        self._branch_stats = {}
+        self._loop_back_edges = {}
 
     def register_builtin(self, name: str, fn: Callable[[list[Any]], Any]) -> None:
         """Register a host callable under ``name`` in the builtin registry.

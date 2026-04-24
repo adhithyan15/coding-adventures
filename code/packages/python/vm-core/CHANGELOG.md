@@ -6,7 +6,41 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
-### Added — LANG17 feedback-slot state machine
+### Added — LANG17 PR2: branch and loop iteration counters
+
+- `BranchStats` — new dataclass in `vm_core.metrics` holding
+  `taken_count` / `not_taken_count` for one conditional-branch site,
+  with derived `taken_ratio` and `total` properties.  JITs use
+  `taken_ratio` to decide branch layout (hot-body inline vs.
+  out-of-line).  Re-exported from the package root.
+- `VMMetrics.branch_stats: dict[str, dict[int, BranchStats]]` —
+  per-function per-branch-site counts, keyed by IIR instruction index.
+- `VMMetrics.loop_back_edge_counts: dict[str, dict[int, int]]` —
+  per-function per-back-edge iteration counts.  A back-edge is any
+  jump whose target index is strictly less than the source index.
+- `VMCore.branch_profile(fn_name, source_ip) -> BranchStats | None` —
+  live counter lookup.
+- `VMCore.loop_iterations(fn_name) -> dict[int, int]` — fresh copy of
+  per-back-edge counts.
+- `VMCore.hot_functions(threshold=100)` — function names whose call
+  count meets the threshold.  JITs use this for tier promotion.
+- `VMCore.reset_metrics()` — zero all aggregate counters including
+  branch / loop state.  Does NOT reset per-IIRInstr observations
+  (those live on the module).
+- `VMCore.metrics()` now returns deep copies of the branch and loop
+  dicts so callers can mutate the snapshot without affecting live
+  state.
+
+### Changed
+
+- `handle_jmp` now detects back-edges (target < source) and bumps the
+  loop counter.  `handle_jmp_if_true` and `handle_jmp_if_false` now
+  record (taken, not-taken) counters and also bump the loop counter
+  when the branch is taken to an earlier index.  Overhead: one dict
+  lookup + one integer increment per conditional branch or taken
+  backward jump.
+
+### Added — LANG17 PR1: feedback-slot state machine (already merged on main)
 
 - `VMProfiler` gained a pluggable `type_mapper` parameter — a callable
   from runtime value to IIR type string.  Defaults to
@@ -23,7 +57,7 @@ All notable changes to this package will be documented in this file.
   `observed_type` / `observation_count` fields remain populated for
   backwards compatibility.
 
-### Changed
+### Changed (PR1)
 
 - `VMProfiler.__init__` signature is now `VMProfiler(type_mapper=None)`
   instead of `VMProfiler()`.  Callers passing no arguments are
