@@ -171,6 +171,19 @@ phrase = builder.phrase("melody", measure_number=2, beat_offset=1.0)
 phrase.note("A4", 1.0, velocity=0.8).rest(0.5).chord(("C5", "E5"), 0.5)
 ```
 
+You can also capture a phrase as a motif, then repeat or transpose it:
+
+```python
+motif = phrase.motif()
+builder.apply_motif(
+    motif,
+    "melody",
+    builder.measure_start_tick(3),
+    transpose_semitones=12,
+    repeat_count=2,
+)
+```
+
 ## Safety Limits
 
 The parser has explicit limits for score size, line length, and event count.
