@@ -154,6 +154,71 @@ event comp 1680 240 note C4,E4,G4 velocity=0.36
 event low 1440 480 note C2 velocity=0.56
 """
 
+PITCHED_PERCUSSION_MIX_TEXT = """format: music-machine-score/v2
+title: Pitched Percussion Mix
+ppq: 120
+sample_rate: 44100
+tempo 0 100
+meter 0 4/4
+
+instrument flute profile=flute_naive gain=0.12
+instrument piano profile=piano_naive gain=0.10
+instrument glock profile=glockenspiel_naive gain=0.08
+instrument vibes profile=vibraphone_naive gain=0.08
+instrument timp profile=timpani_naive gain=0.10
+
+track melody instrument=flute
+track comp instrument=piano
+track sparkle instrument=glock
+track sustain instrument=vibes
+track drum instrument=timp
+
+event melody 0 120 note C5 velocity=0.55
+event melody 120 120 note D5 velocity=0.55
+event melody 240 120 note E5 velocity=0.55
+event melody 360 120 note G5 velocity=0.55
+event melody 480 120 note E5 velocity=0.55
+event melody 600 120 note D5 velocity=0.55
+event melody 720 120 note C5 velocity=0.55
+event melody 840 240 note G4 velocity=0.55
+event melody 1080 120 note A4 velocity=0.55
+event melody 1200 120 note C5 velocity=0.55
+event melody 1320 120 note D5 velocity=0.55
+event melody 1440 120 note E5 velocity=0.55
+event melody 1560 120 note G5 velocity=0.55
+event melody 1680 120 note E5 velocity=0.55
+event melody 1800 120 note D5 velocity=0.55
+event melody 1920 240 note C5 velocity=0.55
+
+event comp 0 240 note C4,E4,G4 velocity=0.32
+event comp 240 240 note C4,E4,G4 velocity=0.28
+event comp 480 240 note F4,A4,C5 velocity=0.32
+event comp 720 240 note F4,A4,C5 velocity=0.28
+event comp 960 240 note G3,B3,D4 velocity=0.32
+event comp 1200 240 note G3,B3,D4 velocity=0.28
+event comp 1440 240 note C4,E4,G4 velocity=0.32
+event comp 1680 240 note C4,E4,G4 velocity=0.28
+
+event sparkle 0 60 note C6 velocity=0.30
+event sparkle 240 60 note G5 velocity=0.24
+event sparkle 480 60 note A5 velocity=0.30
+event sparkle 720 60 note C6 velocity=0.24
+event sparkle 960 60 note D6 velocity=0.30
+event sparkle 1200 60 note B5 velocity=0.24
+event sparkle 1440 60 note C6 velocity=0.30
+event sparkle 1680 60 note G5 velocity=0.24
+
+event sustain 0 480 note G4 velocity=0.18
+event sustain 480 480 note A4 velocity=0.18
+event sustain 960 480 note B4 velocity=0.18
+event sustain 1440 480 note G4 velocity=0.18
+
+event drum 0 120 note C3 velocity=0.34
+event drum 480 120 note F2 velocity=0.34
+event drum 960 120 note G2 velocity=0.34
+event drum 1440 120 note C3 velocity=0.34
+"""
+
 ScoreEventKind = Literal["note", "rest"]
 PortableEventKind = Literal["note", "rest"]
 
