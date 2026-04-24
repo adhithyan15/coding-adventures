@@ -48,9 +48,9 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA cases can already live
-in the shared Venture fixture format even before the Rust wrapper knows how to
-execute them. Current Rust conformance tests run the executable subset and
-report the RCDATA cases as runtime gaps to drive the next lexer expansion.
+in the shared Venture fixture format. Current Rust conformance tests now seed
+that context into the generated lexer so the first RCDATA cases execute through
+the same static Rust wrapper as the data-state corpus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

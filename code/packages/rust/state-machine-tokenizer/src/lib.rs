@@ -193,6 +193,7 @@ pub struct Tokenizer {
     current_token: Option<CurrentToken>,
     current_attribute: Option<Attribute>,
     return_state: Option<String>,
+    last_start_tag: Option<String>,
     tokens: VecDeque<Token>,
     diagnostics: Vec<Diagnostic>,
     trace: Vec<TokenizerTraceEntry>,
@@ -211,6 +212,7 @@ impl Tokenizer {
             current_token: None,
             current_attribute: None,
             return_state: None,
+            last_start_tag: None,
             tokens: VecDeque::new(),
             diagnostics: Vec::new(),
             trace: Vec::new(),
@@ -224,6 +226,30 @@ impl Tokenizer {
     pub fn with_max_steps_per_input(mut self, limit: usize) -> Self {
         self.max_steps_per_input = limit.max(1);
         self
+    }
+
+    /// Seed the tokenizer at one of the machine's declared states.
+    pub fn with_initial_state(mut self, state: &str) -> Result<Self> {
+        self.set_initial_state(state)?;
+        Ok(self)
+    }
+
+    /// Force the tokenizer into one of the machine's declared states.
+    pub fn set_initial_state(&mut self, state: &str) -> Result<()> {
+        self.machine
+            .set_current_state(state.to_string())
+            .map_err(TokenizerError::Machine)
+    }
+
+    /// Seed the last emitted start-tag name used by HTML tokenizer submodes.
+    pub fn with_last_start_tag(mut self, tag: impl Into<String>) -> Self {
+        self.set_last_start_tag(tag);
+        self
+    }
+
+    /// Store the last emitted start-tag name used by HTML tokenizer submodes.
+    pub fn set_last_start_tag(&mut self, tag: impl Into<String>) {
+        self.last_start_tag = Some(tag.into());
     }
 
     /// Push one chunk of Unicode text into the tokenizer.
@@ -311,6 +337,7 @@ impl Tokenizer {
         self.current_token = None;
         self.current_attribute = None;
         self.return_state = None;
+        self.last_start_tag = None;
         self.tokens.clear();
         self.diagnostics.clear();
         self.trace.clear();
@@ -484,6 +511,10 @@ impl Tokenizer {
                     self.text_buffer.push_str(&self.temporary_buffer);
                     self.temporary_buffer.clear();
                 }
+                "discard_current_token" => {
+                    self.current_token = None;
+                    self.current_attribute = None;
+                }
                 "switch_to_return_state" => {
                     let return_state = self.return_state.clone().ok_or_else(|| {
                         TokenizerError::MissingReturnState {
@@ -495,6 +526,7 @@ impl Tokenizer {
                         .map_err(TokenizerError::Machine)?;
                 }
                 "emit_current_token" => self.emit_current_token(action)?,
+                "emit_rcdata_end_tag_or_text" => self.emit_rcdata_end_tag_or_text(action)?,
                 "emit(EOF)" => self.tokens.push_back(Token::Eof),
                 _ if action.starts_with("set_return_state(") && action.ends_with(')') => {
                     let state = action
@@ -690,17 +722,51 @@ impl Tokenizer {
                 name,
                 attributes,
                 self_closing,
-            } => self.tokens.push_back(Token::StartTag {
-                name,
-                attributes,
-                self_closing,
-            }),
+            } => {
+                self.last_start_tag = Some(name.clone());
+                self.tokens.push_back(Token::StartTag {
+                    name,
+                    attributes,
+                    self_closing,
+                });
+            }
             CurrentToken::EndTag { name } => self.tokens.push_back(Token::EndTag { name }),
             CurrentToken::Comment { data } => self.tokens.push_back(Token::Comment(data)),
             CurrentToken::Doctype { name, force_quirks } => {
                 self.tokens.push_back(Token::Doctype { name, force_quirks })
             }
         }
+        Ok(())
+    }
+
+    fn emit_rcdata_end_tag_or_text(&mut self, action: &str) -> Result<()> {
+        let candidate = match self.current_token.as_ref() {
+            Some(CurrentToken::EndTag { name }) => name.clone(),
+            Some(other) => {
+                return Err(TokenizerError::InvalidCurrentToken {
+                    action: action.to_string(),
+                    expected: "end-tag",
+                    actual: other.kind_name(),
+                })
+            }
+            None => {
+                return Err(TokenizerError::MissingCurrentToken {
+                    action: action.to_string(),
+                })
+            }
+        };
+
+        if self.last_start_tag.as_deref() == Some(candidate.as_str()) {
+            self.flush_text();
+            self.emit_current_token("emit_current_token")?;
+        } else {
+            self.current_token = None;
+            self.current_attribute = None;
+            self.text_buffer.push_str("</");
+            self.text_buffer.push_str(&self.temporary_buffer);
+            self.text_buffer.push('>');
+        }
+        self.temporary_buffer.clear();
         Ok(())
     }
 
