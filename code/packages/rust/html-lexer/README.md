@@ -38,6 +38,12 @@ Today the package carries two suites:
 - `html-skeleton.json` for narrow bootstrap regression coverage
 - `html1.json` for the current Mosaic-era compatibility floor
 
+There is also an `upstream-html5lib-smoke.test` file that mirrors the raw
+html5lib tokenizer JSON shape in a small supported subset. The Rust test
+harness lowers that upstream-style file into Venture's portable fixture schema
+before execution, which makes the future WPT/html5lib import path concrete
+without coupling the shared harness to upstream file formats.
+
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files
 directly. That gives us a clean expansion path from the HTML 1.x floor toward

@@ -41,13 +41,22 @@ binary while production code continues to link only static Rust source.
 
 - `html-skeleton.json`: narrow bootstrap regression cases
 - `html1.json`: Mosaic-era compatibility-floor cases for the current default wrapper
+- `upstream-html5lib-smoke.test`: raw html5lib-style tokenizer cases used to
+  exercise the normalization path toward broader upstream corpora
 
 ## WPT Path
 
-The next layer should normalize WHATWG/WPT tokenizer coverage into this same
-schema instead of making the Rust test harness understand raw upstream files.
-That keeps the runtime boundary stable while still letting us mirror broader
-living-standard cases.
+The next layer normalizes WHATWG/WPT or html5lib-style tokenizer coverage into
+this same schema instead of making the Rust test harness understand raw
+upstream files directly. That keeps the runtime boundary stable while still
+letting us mirror broader living-standard cases.
+
+`upstream-html5lib-smoke.test` is the first concrete step in that direction. It
+uses the tokenizer JSON structure documented by the html5lib tokenizer tests:
+top-level `tests`, with each test carrying `description`, `input`, `output`,
+optional `initialStates`, optional `lastStartTag`, and optional `errors`.
+Rust tests parse that raw upstream-style file and lower it into
+`venture-html-lexer-fixtures/v1` before running the shared conformance harness.
 
 Planned flow:
 
