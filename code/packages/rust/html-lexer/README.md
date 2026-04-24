@@ -40,9 +40,11 @@ Today the package carries two suites:
 
 There is also an `upstream-html5lib-smoke.test` file that mirrors the raw
 html5lib tokenizer JSON shape in a small supported subset. The Rust test
-harness lowers that upstream-style file into Venture's portable fixture schema
-before execution, which makes the future WPT/html5lib import path concrete
-without coupling the shared harness to upstream file formats.
+harness now targets a checked-in generated `html5lib-smoke.json` corpus, which
+is produced by `tests/fixtures/normalize_html5lib_fixtures.py` from that raw
+upstream-style file. This makes the future WPT/html5lib import path concrete
+without coupling the shared harness to upstream file formats or requiring raw
+fixture normalization logic to live forever inside the Rust tests.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

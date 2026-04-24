@@ -34,3 +34,6 @@ documented in this file.
   path.
 - A first raw html5lib-style tokenizer smoke file plus a Rust normalizer that
   lowers supported upstream cases into Venture's portable conformance schema.
+- A checked-in importer script and generated normalized `html5lib-smoke.json`
+  corpus so broader upstream-style cases can be regenerated instead of
+  hand-maintained in Rust tests.
