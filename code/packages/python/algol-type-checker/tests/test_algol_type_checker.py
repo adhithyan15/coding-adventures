@@ -125,7 +125,7 @@ class TestAlgolTypeChecker:
         assert result.semantic is not None
         assert result.semantic.gotos[0].target_name == "done"
 
-    def test_rejects_conditional_nonlocal_designational_goto_for_now(self) -> None:
+    def test_accepts_conditional_nonlocal_designational_goto(self) -> None:
         ast = parse_algol(
             "begin integer result; "
             "begin integer inner; goto if true then done else done end; "
@@ -134,8 +134,8 @@ class TestAlgolTypeChecker:
         )
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "nonlocal designational label 'done'" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
 
     def test_accepts_conditional_designational_goto(self) -> None:
         ast = parse_algol(
@@ -206,7 +206,24 @@ class TestAlgolTypeChecker:
         assert selection.use_block_id != selection.declaration_block_id
         assert selection.lexical_depth_delta == 1
 
-    def test_rejects_nested_switch_selection_entries_for_now(self) -> None:
+    def test_accepts_nested_switch_selection_entries(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i; "
+            "switch inner := first, second; "
+            "switch outer := inner[i]; "
+            "i := 2; goto outer[1]; "
+            "first: result := 1; goto done; "
+            "second: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert len(result.semantic.switch_selections) == 2
+
+    def test_rejects_self_recursive_switch_selection_entry(self) -> None:
         ast = parse_algol(
             "begin integer result; "
             "switch s := s[1]; "
@@ -216,7 +233,34 @@ class TestAlgolTypeChecker:
         result = check_algol(ast)
 
         assert not result.ok
-        assert "select another switch require Phase 7b" in result.diagnostics[0].message
+        assert "cannot select itself recursively" in result.diagnostics[0].message
+
+    def test_accepts_nonlocal_conditional_designational_goto(self) -> None:
+        ast = parse_algol(
+            "begin integer result, flag; "
+            "begin goto if flag = 0 then left else right end; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_accepts_procedure_crossing_conditional_designational_goto(self) -> None:
+        ast = parse_algol(
+            "begin integer result, flag; "
+            "procedure escape; begin goto if flag = 0 then left else right end; "
+            "flag := 1; escape; result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
 
     def test_reports_missing_program_block(self) -> None:
         result = check_algol(ASTNode("program", []))

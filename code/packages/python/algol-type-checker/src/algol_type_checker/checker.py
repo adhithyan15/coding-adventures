@@ -717,7 +717,8 @@ class AlgolTypeChecker:
                 entry,
                 scope,
                 allow_nonlocal_label=False,
-                allow_switch_selection=False,
+                allow_switch_selection=True,
+                active_switch_id=switch_id,
             )
         self.semantic_switches.append(
             SwitchDescriptor(
@@ -1006,6 +1007,7 @@ class AlgolTypeChecker:
         *,
         allow_nonlocal_label: bool = True,
         allow_switch_selection: bool = True,
+        active_switch_id: int | None = None,
     ) -> ResolvedGoto | None:
         if any(token.value == "if" for token in _direct_tokens(node)):
             bool_expr = _first_direct_node(node, "bool_expr")
@@ -1020,15 +1022,17 @@ class AlgolTypeChecker:
                 self._check_simple_designational(
                     then_desig,
                     scope,
-                    allow_nonlocal_label=False,
+                    allow_nonlocal_label=allow_nonlocal_label,
                     allow_switch_selection=allow_switch_selection,
+                    active_switch_id=active_switch_id,
                 )
             if else_desig is not None:
                 self._check_designational(
                     else_desig,
                     scope,
-                    allow_nonlocal_label=False,
+                    allow_nonlocal_label=allow_nonlocal_label,
                     allow_switch_selection=allow_switch_selection,
+                    active_switch_id=active_switch_id,
                 )
             return ResolvedGoto(
                 token_id=id(node),
@@ -1053,6 +1057,7 @@ class AlgolTypeChecker:
             outer_node=node,
             allow_nonlocal_label=allow_nonlocal_label,
             allow_switch_selection=allow_switch_selection,
+            active_switch_id=active_switch_id,
         )
 
     def _check_simple_designational(
@@ -1063,6 +1068,7 @@ class AlgolTypeChecker:
         outer_node: ASTNode | None = None,
         allow_nonlocal_label: bool = True,
         allow_switch_selection: bool = True,
+        active_switch_id: int | None = None,
     ) -> ResolvedGoto | None:
         target_token = _direct_label_from_simple_designational(node)
         if target_token is not None:
@@ -1081,7 +1087,11 @@ class AlgolTypeChecker:
                     "dispatch lowering",
                 )
                 return None
-            self._check_switch_selection(node, scope)
+            self._check_switch_selection(
+                node,
+                scope,
+                active_switch_id=active_switch_id,
+            )
             return ResolvedGoto(
                 token_id=id(outer_node or node),
                 label_id=-1,
@@ -1102,6 +1112,7 @@ class AlgolTypeChecker:
                 scope,
                 allow_nonlocal_label=allow_nonlocal_label,
                 allow_switch_selection=allow_switch_selection,
+                active_switch_id=active_switch_id,
             )
 
         self._error(node, "unsupported designational expression")
@@ -1156,7 +1167,13 @@ class AlgolTypeChecker:
             designational_node_id=id(outer_node),
         )
 
-    def _check_switch_selection(self, node: ASTNode, scope: Scope) -> None:
+    def _check_switch_selection(
+        self,
+        node: ASTNode,
+        scope: Scope,
+        *,
+        active_switch_id: int | None = None,
+    ) -> None:
         name_token = next(
             (token for token in _direct_tokens(node) if token.type_name == "NAME"),
             None,
@@ -1171,6 +1188,12 @@ class AlgolTypeChecker:
         symbol, declaring_scope, lexical_depth_delta = resolved
         if symbol.kind != SWITCH:
             self._error(name_token, f"{name_token.value!r} is not a switch")
+            return
+        if active_switch_id is not None and symbol.switch_id == active_switch_id:
+            self._error(
+                name_token,
+                f"switch {name_token.value!r} cannot select itself recursively",
+            )
             return
         if symbol.switch_id is None:
             self._error(name_token, f"switch {name_token.value!r} has no descriptor")
