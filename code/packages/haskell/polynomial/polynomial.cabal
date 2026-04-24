@@ -1,0 +1,43 @@
+cabal-version:      2.4
+name:               polynomial
+version:            0.1.0.0
+synopsis:           Coefficient-array polynomial arithmetic over GF(256)
+description:
+    Polynomial arithmetic over the Galois Field GF(2^8), using coefficient
+    arrays in little-endian order (index = degree).
+    .
+    Provides: normalization, degree, add, subtract, multiply, divmod,
+    evaluate (Horner's method), and GCD (Euclidean algorithm).
+    .
+    This is the polynomial layer (MA00) that Reed-Solomon (MA02) builds on.
+    All coefficient arithmetic delegates to the gf256 package.
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Math
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  Polynomial
+    build-depends:    base   >= 4.7 && < 5
+                    , array  >= 0.5
+                    , gf256
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall -Wno-unused-imports
+
+test-suite polynomial-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    PolynomialSpec
+    build-depends:    base       >= 4.7 && < 5
+                    , array      >= 0.5
+                    , gf256
+                    , polynomial
+                    , hspec      == 2.*
+    ghc-options:      -Wall -Wno-unused-imports

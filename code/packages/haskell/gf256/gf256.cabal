@@ -1,0 +1,42 @@
+cabal-version:      2.4
+name:               gf256
+version:            0.1.0.0
+synopsis:           GF(256) field arithmetic for Reed-Solomon error correction
+description:
+    Galois Field GF(2^8) arithmetic over the primitive polynomial
+    p(x) = x^8 + x^4 + x^3 + x^2 + 1 (0x11D).
+    .
+    Used by Reed-Solomon error correction (QR codes, CDs, hard drives)
+    and as the field arithmetic layer for the polynomial and reed-solomon
+    packages (MA01 in the coding-adventures math foundation).
+    .
+    All operations are O(1) table lookups. Precomputed log/antilog tables
+    make multiply and divide as fast as two array accesses plus an addition.
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Math
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  GF256
+    build-depends:    base   >= 4.7 && < 5
+                    , array  >= 0.5
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall -Wno-unused-imports
+
+test-suite gf256-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    GF256Spec
+    build-depends:    base   >= 4.7 && < 5
+                    , array  >= 0.5
+                    , gf256
+                    , hspec  == 2.*
+    ghc-options:      -Wall -Wno-unused-imports
