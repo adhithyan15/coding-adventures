@@ -85,11 +85,15 @@ mod tests {
             .iter()
             .filter_map(|t| t.type_name.as_deref().map(|name| (name, t.value.as_str())))
             .collect();
+        let semicolon_count = tokens
+            .iter()
+            .filter(|t| t.type_ == TokenType::Semicolon)
+            .count();
 
         assert!(custom_tokens.contains(&("CIRCLE", "((Circle))")));
         assert!(custom_tokens.contains(&("ROUND", "(Round)")));
         assert!(custom_tokens.contains(&("RECT", "[Rect]")));
         assert!(custom_tokens.contains(&("DIAMOND", "{Decision}")));
-        assert!(custom_tokens.contains(&("SEMICOLON", ";")));
+        assert_eq!(semicolon_count, 3);
     }
 }

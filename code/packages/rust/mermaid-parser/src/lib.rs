@@ -154,7 +154,7 @@ fn lower_statement(
 }
 
 fn parse_header(header: &GrammarASTNode) -> Result<DiagramDirection, ParseError> {
-    let direction = immediate_tokens(header)
+    let direction = descendant_tokens(header)
         .into_iter()
         .find(|token| token_name(token) == "DIRECTION")
         .map(|token| direction_from_value(&token.value))
@@ -167,18 +167,18 @@ fn parse_header(header: &GrammarASTNode) -> Result<DiagramDirection, ParseError>
 fn parse_edge_segment(
     segment: &GrammarASTNode,
 ) -> Result<(EdgeKind, Option<String>, MermaidNodeRef), ParseError> {
-    let kind = child_nodes_named(segment, "edge_op")
+    let kind = descendant_nodes_named(segment, "edge_op")
         .into_iter()
         .next()
         .ok_or_else(|| node_error(segment, "missing edge operator"))
         .and_then(parse_edge_kind)?;
 
-    let label = immediate_tokens(segment)
+    let label = descendant_tokens(segment)
         .into_iter()
         .find(|token| token_name(token) == "EDGE_LABEL")
         .map(|token| strip_edge_label(&token.value));
 
-    let node_ref = child_nodes_named(segment, "node_ref")
+    let node_ref = descendant_nodes_named(segment, "node_ref")
         .into_iter()
         .next()
         .ok_or_else(|| node_error(segment, "missing edge target"))
@@ -188,7 +188,7 @@ fn parse_edge_segment(
 }
 
 fn parse_edge_kind(edge_op: &GrammarASTNode) -> Result<EdgeKind, ParseError> {
-    let token = immediate_tokens(edge_op)
+    let token = descendant_tokens(edge_op)
         .into_iter()
         .next()
         .ok_or_else(|| node_error(edge_op, "missing edge operator token"))?;
@@ -205,7 +205,7 @@ fn parse_edge_kind(edge_op: &GrammarASTNode) -> Result<EdgeKind, ParseError> {
 }
 
 fn parse_node_ref(node_ref: &GrammarASTNode) -> Result<MermaidNodeRef, ParseError> {
-    let id_token = immediate_tokens(node_ref)
+    let id_token = descendant_tokens(node_ref)
         .into_iter()
         .find(|token| token_name(token) == "NAME")
         .ok_or_else(|| node_error(node_ref, "missing node id"))?;
@@ -216,7 +216,7 @@ fn parse_node_ref(node_ref: &GrammarASTNode) -> Result<MermaidNodeRef, ParseErro
         shape: None,
     };
 
-    if let Some(shape_node) = child_nodes_named(node_ref, "node_shape").into_iter().next() {
+    if let Some(shape_node) = descendant_nodes_named(node_ref, "node_shape").into_iter().next() {
         let (label, shape) = parse_node_shape(shape_node)?;
         result.label = Some(label);
         result.shape = Some(shape);
@@ -226,7 +226,7 @@ fn parse_node_ref(node_ref: &GrammarASTNode) -> Result<MermaidNodeRef, ParseErro
 }
 
 fn parse_node_shape(node_shape: &GrammarASTNode) -> Result<(String, DiagramShape), ParseError> {
-    let token = immediate_tokens(node_shape)
+    let token = descendant_tokens(node_shape)
         .into_iter()
         .next()
         .ok_or_else(|| node_error(node_shape, "missing node shape token"))?;
@@ -294,14 +294,28 @@ fn child_nodes_named<'a>(node: &'a GrammarASTNode, name: &str) -> Vec<&'a Gramma
         .collect()
 }
 
-fn immediate_tokens(node: &GrammarASTNode) -> Vec<&Token> {
-    node.children
-        .iter()
-        .filter_map(|child| match child {
-            ASTNodeOrToken::Token(token) => Some(token),
-            ASTNodeOrToken::Node(_) => None,
-        })
-        .collect()
+fn descendant_nodes_named<'a>(node: &'a GrammarASTNode, name: &str) -> Vec<&'a GrammarASTNode> {
+    let mut matches = Vec::new();
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(child_node) = child {
+            if child_node.rule_name == name {
+                matches.push(child_node);
+            }
+            matches.extend(descendant_nodes_named(child_node, name));
+        }
+    }
+    matches
+}
+
+fn descendant_tokens(node: &GrammarASTNode) -> Vec<&Token> {
+    let mut tokens = Vec::new();
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(token) => tokens.push(token),
+            ASTNodeOrToken::Node(child_node) => tokens.extend(descendant_tokens(child_node)),
+        }
+    }
+    tokens
 }
 
 fn token_name(token: &Token) -> &str {
