@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.codingadventures.lzss.LzssTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-04-24T20:30:57.511Z" hostname="Adhithyas-Mac-mini.local" time="0.031">
+  <properties/>
+  <testcase name="compressStoresOriginalLengthInHeader()" classname="com.codingadventures.lzss.LzssTest" time="0.01"/>
+  <testcase name="compressedSizeSmallerForRepetitiveData()" classname="com.codingadventures.lzss.LzssTest" time="0.005"/>
+  <testcase name="decodeReconstructsFromKnownTokenList()" classname="com.codingadventures.lzss.LzssTest" time="0.001"/>
+  <testcase name="roundTripOneKilobyteData()" classname="com.codingadventures.lzss.LzssTest" time="0.001"/>
+  <testcase name="roundTripRepetitiveText()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="roundTripAll256ByteValues()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="roundTripSingleByte()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="encodeAllIdenticalProducesOneLiteralAndOneMatch()" classname="com.codingadventures.lzss.LzssTest" time="0.003"/>
+  <testcase name="encodeReturnsMatchForRepeatedData()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="roundTripUnicodeText()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="craftedLargeBlockCountIsSafe()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="roundTripLargeInput()" classname="com.codingadventures.lzss.LzssTest" time="0.005"/>
+  <testcase name="encodeReturnsLiteralsForNonRepetitiveData()" classname="com.codingadventures.lzss.LzssTest" time="0.001"/>
+  <testcase name="roundTripEmpty()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <testcase name="encodeAbababProducesKnownTokens()" classname="com.codingadventures.lzss.LzssTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
