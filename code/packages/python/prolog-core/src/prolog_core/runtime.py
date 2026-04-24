@@ -232,6 +232,24 @@ def directive(
 
 
 @dataclass(frozen=True, slots=True)
+class PrologModule:
+    """One parsed module declaration plus its exported surface."""
+
+    name: Symbol
+    exports: tuple[Relation, ...] = ()
+    exported_operators: tuple[OperatorSpec, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class PrologModuleImport:
+    """One parsed `use_module/1` or `use_module/2` directive."""
+
+    module_name: Symbol
+    imports: tuple[Relation, ...] = ()
+    import_all: bool = False
+
+
+@dataclass(frozen=True, slots=True)
 class PredicateSpec:
     """Metadata collected for one predicate indicator such as ``parent/2``."""
 
@@ -361,6 +379,8 @@ _DISCONTIGUOUS_DIRECTIVE = sym("discontiguous")
 _MULTIFILE_DIRECTIVE = sym("multifile")
 _INITIALIZATION_DIRECTIVE = sym("initialization")
 _PREDICATE_INDICATOR = sym("/")
+_MODULE_DIRECTIVE = sym("module")
+_USE_MODULE_DIRECTIVE = sym("use_module")
 _DCG_CONJUNCTION = sym(",")
 _DCG_DISJUNCTION = sym(";")
 _DCG_BRACED_GOAL = sym("{}")
@@ -436,6 +456,70 @@ def apply_predicate_directive(
     if predicate_property == "discontiguous":
         return predicate_registry.define(*relations, discontiguous=True)
     return predicate_registry.define(*relations, multifile=True)
+
+
+def module_spec_from_directive(
+    directive_value: PrologDirective,
+) -> PrologModule | None:
+    """Parse a `module/2` directive into shared module metadata."""
+
+    if not isinstance(directive_value, PrologDirective):
+        msg = "module directives must be PrologDirective values"
+        raise TypeError(msg)
+
+    term_value = directive_value.term
+    if not isinstance(term_value, Compound) or term_value.functor != _MODULE_DIRECTIVE:
+        return None
+    if len(term_value.args) != 2:
+        msg = "module/2 directives require exactly two arguments"
+        raise ValueError(msg)
+
+    name_term, export_list_term = term_value.args
+    if not isinstance(name_term, Atom):
+        msg = "module/2 module names must be atoms"
+        raise TypeError(msg)
+
+    exports, exported_operators = _module_exports(export_list_term)
+    return PrologModule(
+        name=name_term.symbol,
+        exports=exports,
+        exported_operators=exported_operators,
+    )
+
+
+def module_import_from_directive(
+    directive_value: PrologDirective,
+) -> PrologModuleImport | None:
+    """Parse one `use_module/1` or `use_module/2` directive."""
+
+    if not isinstance(directive_value, PrologDirective):
+        msg = "module import directives must be PrologDirective values"
+        raise TypeError(msg)
+
+    term_value = directive_value.term
+    if (
+        not isinstance(term_value, Compound)
+        or term_value.functor != _USE_MODULE_DIRECTIVE
+    ):
+        return None
+    if len(term_value.args) not in {1, 2}:
+        msg = "use_module directives require one or two arguments"
+        raise ValueError(msg)
+
+    module_term = term_value.args[0]
+    if not isinstance(module_term, Atom):
+        msg = "use_module/1 and use_module/2 currently expect an atom module name"
+        raise TypeError(msg)
+
+    if len(term_value.args) == 1:
+        return PrologModuleImport(module_name=module_term.symbol, import_all=True)
+
+    imports = _directive_relations(term_value.args[1], directive_name="use_module")
+    return PrologModuleImport(
+        module_name=module_term.symbol,
+        imports=imports,
+        import_all=False,
+    )
 
 
 def expand_dcg_clause(head_term: Term, body_term: Term) -> Clause:
@@ -532,6 +616,49 @@ def _directive_predicate_property(
     if directive_name == _MULTIFILE_DIRECTIVE:
         return "multifile"
     return None
+
+
+def _module_exports(
+    export_list_term: Term,
+) -> tuple[tuple[Relation, ...], tuple[OperatorSpec, ...]]:
+    items = _logic_list_items(export_list_term)
+    if items is None:
+        msg = "module/2 export lists must be proper lists"
+        raise TypeError(msg)
+
+    exports: list[Relation] = []
+    exported_operators: list[OperatorSpec] = []
+    for item in items:
+        relation_value = _indicator_relation(item)
+        if relation_value is not None:
+            exports.append(relation_value)
+            continue
+
+        if isinstance(item, Compound) and item.functor == _OP_DIRECTIVE:
+            exported_operators.extend(_module_operator_exports(item))
+            continue
+
+        msg = (
+            "module/2 export lists may only contain predicate indicators "
+            "or op(Precedence, Type, Name) declarations"
+        )
+        raise TypeError(msg)
+
+    return (tuple(exports), tuple(exported_operators))
+
+
+def _module_operator_exports(export_term: Compound) -> tuple[OperatorSpec, ...]:
+    if len(export_term.args) != 3:
+        msg = "module/2 operator exports must use op/3 terms"
+        raise ValueError(msg)
+    precedence_term, associativity_term, names_term = export_term.args
+    precedence = _directive_precedence(precedence_term)
+    associativity = _directive_associativity(associativity_term)
+    names = _directive_operator_names(names_term)
+    if precedence == 0:
+        msg = "module/2 operator exports may not remove operators"
+        raise ValueError(msg)
+    return tuple(operator(name, precedence, associativity) for name in names)
 
 
 def _append_dcg_state(

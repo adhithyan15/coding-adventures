@@ -17,15 +17,19 @@ from logic_engine import (
     fresh,
     reify,
     relation,
+    solve_all,
     term,
     visible_clauses_for,
 )
 
 from prolog_loader import (
+    LoadedPrologProject,
     PrologInitializationError,
     __version__,
     adapt_prolog_goal,
+    link_loaded_prolog_sources,
     load_iso_prolog_source,
+    load_swi_prolog_project,
     load_swi_prolog_source,
     run_initialization_goals,
     run_prolog_initialization_goals,
@@ -69,6 +73,27 @@ class TestPrologLoader:
 
         assert len(loaded.initialization_goals) == 1
         assert str(loaded.initialization_terms[0]) == "main"
+
+    def test_load_swi_source_collects_module_metadata(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- module(family, [parent/2, ancestor/2, op(500, yfx, ++)]).
+            :- use_module(graph, [edge/2]).
+            parent(homer, bart).
+            """,
+        )
+
+        assert loaded.module_spec is not None
+        assert loaded.module_spec.name.name == "family"
+        assert [str(export) for export in loaded.module_spec.exports] == [
+            "parent/2",
+            "ancestor/2",
+        ]
+        assert str(loaded.module_spec.exported_operators[0].symbol) == "++"
+        assert loaded.module_imports[0].module_name.name == "graph"
+        assert [str(imported) for imported in loaded.module_imports[0].imports] == [
+            "edge/2",
+        ]
 
     def test_run_initialization_goals_executes_clause_backed_startup_goals(
         self,
@@ -164,6 +189,75 @@ class TestPrologLoader:
         rest_var = loaded.initialization_directives[0].variables["Rest"]
 
         assert reify(rest_var, state.substitution) == atom("[]")
+
+    def test_link_loaded_prolog_sources_resolves_module_imports(self) -> None:
+        family = load_swi_prolog_source(
+            """
+            :- module(family, [parent/2, ancestor/2]).
+            parent(homer, bart).
+            parent(bart, lisa).
+            ancestor(X, Y) :- parent(X, Y).
+            ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+            """,
+        )
+        app = load_swi_prolog_source(
+            """
+            :- module(app, [run/1]).
+            :- use_module(family, [ancestor/2]).
+            run(Who) :- ancestor(homer, Who).
+            ?- run(Who).
+            """,
+        )
+
+        project = link_loaded_prolog_sources(family, app)
+        query = project.queries[0]
+
+        assert isinstance(project, LoadedPrologProject)
+        assert [module.name.name for module in project.modules] == ["family", "app"]
+        assert solve_all(project.program, query.variables["Who"], query.goal) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_load_swi_prolog_project_keeps_local_definitions_over_imports(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [message/1]).
+            message(imported).
+            """,
+            """
+            :- module(app, [message/1]).
+            :- use_module(family, [message/1]).
+            message(local).
+            ?- message(Value).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(project.program, query.variables["Value"], query.goal) == [
+            atom("local"),
+        ]
+
+    def test_run_project_initialization_goals_resolves_imported_module_calls(
+        self,
+    ) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [main/1]).
+            main(done).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(family, [main/1]).
+            :- initialization(main(Result)).
+            """,
+        )
+
+        state = run_prolog_initialization_goals(project)
+        result_var = project.initialization_directives[0].variables["Result"]
+
+        assert reify(result_var, state.substitution) == atom("done")
 
 
 class TestPrologGoalAdapter:
