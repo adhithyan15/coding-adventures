@@ -42,6 +42,21 @@ DEFAULT_MAX_SCORE_LENGTH = 1_000_000
 DEFAULT_MAX_LINE_LENGTH = 10_000
 DEFAULT_MAX_EVENT_COUNT = 10_000
 BEAT_TICK_TOLERANCE = 1e-9
+SEMITONES_PER_OCTAVE = 12
+CANONICAL_SHARP_SPELLINGS = (
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B",
+)
 
 DURATION_BEATS = {
     "w": 4.0,
@@ -196,6 +211,12 @@ def _non_negative_tick(name: str, value: int) -> int:
     return converted
 
 
+def _signed_integer(name: str, value: int) -> int:
+    if isinstance(value, bool) or not isinstance(value, Integral):
+        raise ValueError(f"{name} must be an integer, got {value!r}")
+    return int(value)
+
+
 def _integer_valued_sample_rate(text: str) -> int:
     try:
         value = float(text)
@@ -237,6 +258,20 @@ def _validate_identifier(name: str, value: str) -> str:
     if IDENTIFIER_PATTERN.fullmatch(converted) is None:
         raise ValueError(f"{name} must be an identifier, got {value!r}")
     return converted
+
+
+def _scaled_velocity(velocity: float, scale: float) -> float:
+    return _unit_float("scaled velocity", velocity * scale)
+
+
+def _transpose_note_text(text: str, semitone_offset: int) -> str:
+    parsed = parse_note(text)
+    absolute_index = (
+        (parsed.octave + 1) * SEMITONES_PER_OCTAVE + parsed.chromatic_index
+    )
+    transposed_index = absolute_index + semitone_offset
+    octave, chromatic_index = divmod(transposed_index, SEMITONES_PER_OCTAVE)
+    return f"{CANONICAL_SHARP_SPELLINGS[chromatic_index]}{octave - 1}"
 
 
 def _parse_properties(tokens: list[str]) -> dict[str, str]:
@@ -808,6 +843,86 @@ class PortableScoreBuilder:
         )
         return PhraseBuilder(self, track_id, start_tick=start_tick)
 
+    def capture_motif(
+        self,
+        track_id: str,
+        *,
+        start_tick: int,
+        end_tick: int,
+    ) -> PhraseMotif:
+        checked_track = _validate_identifier("track id", track_id)
+        start = _non_negative_tick("start_tick", start_tick)
+        end = _non_negative_tick("end_tick", end_tick)
+        if end < start:
+            raise ValueError("end_tick must be >= start_tick")
+
+        motif_events = tuple(
+            PhraseMotifEvent(
+                offset_tick=event.start_tick - start,
+                duration_tick=event.duration_tick,
+                kind=event.kind,
+                notes=event.notes,
+                velocity=event.velocity,
+            )
+            for event in self._events
+            if event.track_id == checked_track and start <= event.start_tick < end
+        )
+        return PhraseMotif(duration_tick=end - start, events=motif_events)
+
+    def apply_motif(
+        self,
+        motif: PhraseMotif,
+        track_id: str,
+        start_tick: int,
+        *,
+        transpose_semitones: int = 0,
+        velocity_scale: Real = 1.0,
+        repeat_count: int = 1,
+        repeat_spacing_tick: int | None = None,
+    ) -> PortableScoreBuilder:
+        if not isinstance(motif, PhraseMotif):
+            raise ValueError("motif must be a PhraseMotif")
+
+        checked_track = _validate_identifier("track id", track_id)
+        checked_start = _non_negative_tick("start_tick", start_tick)
+        checked_scale = _positive_float("velocity_scale", velocity_scale)
+        checked_repeat_count = _positive_integer("repeat_count", repeat_count)
+        spacing_tick = (
+            motif.duration_tick
+            if repeat_spacing_tick is None
+            else _non_negative_tick("repeat_spacing_tick", repeat_spacing_tick)
+        )
+        semitone_offset = _signed_integer("transpose_semitones", transpose_semitones)
+
+        for repeat_index in range(checked_repeat_count):
+            repeat_start = checked_start + repeat_index * spacing_tick
+            for event in motif.events:
+                event_start = repeat_start + event.offset_tick
+                if event.kind == "rest":
+                    self.add_rest(checked_track, event_start, event.duration_tick)
+                    continue
+                notes = tuple(
+                    _transpose_note_text(note, semitone_offset) for note in event.notes
+                )
+                velocity = _scaled_velocity(event.velocity, checked_scale)
+                if len(notes) == 1:
+                    self.add_note(
+                        checked_track,
+                        event_start,
+                        event.duration_tick,
+                        notes[0],
+                        velocity=velocity,
+                    )
+                else:
+                    self.add_chord(
+                        checked_track,
+                        event_start,
+                        event.duration_tick,
+                        notes,
+                        velocity=velocity,
+                    )
+        return self
+
     def build(self) -> PortableScore:
         return PortableScore(
             format_version=self.format_version,
@@ -868,12 +983,17 @@ class PhraseBuilder:
     score_builder: PortableScoreBuilder
     track_id: str
     start_tick: int = 0
+    origin_tick: int | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.score_builder, PortableScoreBuilder):
             raise ValueError("score_builder must be a PortableScoreBuilder")
         self.track_id = _validate_identifier("track id", self.track_id)
         self.start_tick = _non_negative_tick("start_tick", self.start_tick)
+        if self.origin_tick is None:
+            self.origin_tick = self.start_tick
+        else:
+            self.origin_tick = _non_negative_tick("origin_tick", self.origin_tick)
 
     @property
     def current_tick(self) -> int:
@@ -942,6 +1062,94 @@ class PhraseBuilder:
             meter=meter,
         )
         return self
+
+    def motif(self, *, start_tick: int | None = None) -> PhraseMotif:
+        start = self.origin_tick if start_tick is None else start_tick
+        return self.score_builder.capture_motif(
+            self.track_id,
+            start_tick=start,
+            end_tick=self.current_tick,
+        )
+
+    def apply_motif(
+        self,
+        motif: PhraseMotif,
+        *,
+        transpose_semitones: int = 0,
+        velocity_scale: Real = 1.0,
+        repeat_count: int = 1,
+        spacing_beats: Real | None = None,
+        advance: bool = True,
+    ) -> PhraseBuilder:
+        spacing_tick = (
+            motif.duration_tick
+            if spacing_beats is None
+            else self.score_builder.beats_to_ticks(spacing_beats)
+        )
+        self.score_builder.apply_motif(
+            motif,
+            self.track_id,
+            self.start_tick,
+            transpose_semitones=transpose_semitones,
+            velocity_scale=velocity_scale,
+            repeat_count=repeat_count,
+            repeat_spacing_tick=spacing_tick,
+        )
+        if advance:
+            self.start_tick += spacing_tick * repeat_count
+        return self
+
+
+@dataclass(frozen=True)
+class PhraseMotifEvent:
+    """A track-agnostic portable event stored relative to motif start."""
+
+    offset_tick: int
+    duration_tick: int
+    kind: PortableEventKind
+    notes: tuple[str, ...]
+    velocity: float = 1.0
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "offset_tick",
+            _non_negative_tick("offset_tick", self.offset_tick),
+        )
+        object.__setattr__(
+            self,
+            "duration_tick",
+            _positive_integer("duration_tick", self.duration_tick),
+        )
+        if self.kind not in {"note", "rest"}:
+            raise ValueError(f"kind must be 'note' or 'rest', got {self.kind!r}")
+        notes = tuple(str(parse_note(note)) for note in self.notes)
+        if self.kind == "note" and not notes:
+            raise ValueError("note motif events must include at least one note")
+        if self.kind == "rest" and notes:
+            raise ValueError("rest motif events cannot include notes")
+        object.__setattr__(self, "notes", notes)
+        object.__setattr__(self, "velocity", _unit_float("velocity", self.velocity))
+
+
+@dataclass(frozen=True)
+class PhraseMotif:
+    """Reusable single-track phrase fragment that can be repeated or transposed."""
+
+    duration_tick: int
+    events: tuple[PhraseMotifEvent, ...]
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "duration_tick",
+            _non_negative_tick("duration_tick", self.duration_tick),
+        )
+        ordered = tuple(sorted(self.events, key=lambda event: event.offset_tick))
+        for event in ordered:
+            if event.offset_tick + event.duration_tick > self.duration_tick:
+                raise ValueError("motif event extends beyond motif duration")
+        object.__setattr__(self, "events", ordered)
 
 
 @dataclass(frozen=True)

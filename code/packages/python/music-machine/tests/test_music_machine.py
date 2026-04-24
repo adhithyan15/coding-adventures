@@ -13,6 +13,8 @@ from music_machine import (
     InstrumentDeclaration,
     MeterEvent,
     PhraseBuilder,
+    PhraseMotif,
+    PhraseMotifEvent,
     PortableScore,
     PortableScoreBuilder,
     PortableScoreEvent,
@@ -714,6 +716,70 @@ def test_phrase_builder_jump_and_advance() -> None:
 
     phrase.jump_to_measure(3, 0.5, meter="3/4")
     assert phrase.current_tick == 780
+
+
+def test_portable_score_builder_captures_and_reapplies_motif() -> None:
+    builder = PortableScoreBuilder(title="Motif Song", ppq=120, sample_rate_hz=2000)
+    builder.add_tempo(0, 600)
+    builder.add_meter(0, "4/4")
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_track("melody", instrument_id="lead")
+
+    phrase = builder.phrase("melody")
+    phrase.note("C4", 1.0, velocity=0.8).rest(0.5).chord(
+        ("E4", "G4"),
+        0.5,
+        velocity=0.6,
+    )
+    motif = phrase.motif()
+
+    assert motif == PhraseMotif(
+        duration_tick=240,
+        events=(
+            PhraseMotifEvent(0, 120, "note", ("C4",), 0.8),
+            PhraseMotifEvent(120, 60, "rest", (), 1.0),
+            PhraseMotifEvent(180, 60, "note", ("E4", "G4"), 0.6),
+        ),
+    )
+
+    builder.apply_motif(
+        motif,
+        "melody",
+        480,
+        transpose_semitones=12,
+        velocity_scale=0.5,
+        repeat_count=2,
+    )
+
+    score = builder.build()
+    note_events = [event for event in score.events if event.kind == "note"]
+    rest_events = [event for event in score.events if event.kind == "rest"]
+
+    assert note_events[2].start_tick == 480
+    assert note_events[2].notes == ("C5",)
+    assert note_events[2].velocity == 0.4
+    assert note_events[3].notes == ("E5", "G5")
+    assert note_events[3].start_tick == 660
+    assert note_events[4].start_tick == 720
+    assert rest_events[1].start_tick == 600
+
+
+def test_phrase_builder_applies_motif_and_advances_cursor() -> None:
+    builder = PortableScoreBuilder(ppq=120)
+    builder.add_instrument("lead", kind="sine", gain=0.5)
+    builder.add_track("melody", instrument_id="lead")
+
+    motif = PhraseMotif(
+        duration_tick=180,
+        events=(PhraseMotifEvent(0, 120, "note", ("A4",), 0.8),),
+    )
+
+    phrase = builder.phrase("melody", measure_number=2)
+    phrase.apply_motif(motif, repeat_count=2)
+
+    score = builder.build()
+    assert [event.start_tick for event in score.events] == [480, 660]
+    assert phrase.current_tick == 840
 
 
 def test_render_portable_score_keeps_later_scheduled_notes_audible() -> None:
