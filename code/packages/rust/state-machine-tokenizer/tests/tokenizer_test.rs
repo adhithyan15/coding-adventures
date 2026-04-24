@@ -389,7 +389,7 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
                 "end_tag_name",
                 "done",
             ]),
-            set(&["H", "<", "/", "t", "i", "l", "e", "s", ">"]),
+            set(&["H", "e", "l", "o", "<", "/", "t", "i", ">"]),
             vec![
                 EffectfulTransition::new(
                     "rcdata",
@@ -459,7 +459,7 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
                 "end_tag_name",
                 "done",
             ]),
-            set(&["H", "<", "/", "s", "t", "y", "l", "e", ">"]),
+            set(&["H", "e", "l", "o", "<", "/", "s", "t", "y", ">"]),
             vec![
                 EffectfulTransition::new(
                     "rcdata",
