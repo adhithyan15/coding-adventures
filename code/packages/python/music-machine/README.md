@@ -136,6 +136,23 @@ print(score.title)               # Mini Orchestra
 print(rendered.pcm_buffer.sample_count())
 ```
 
+It also ships a mixed melodic-plus-pitched-percussion demo:
+
+```python
+from music_machine import (
+    PITCHED_PERCUSSION_MIX_TEXT,
+    parse_portable_score,
+    render_portable_score_to_pcm,
+)
+
+score = parse_portable_score(PITCHED_PERCUSSION_MIX_TEXT)
+rendered = render_portable_score_to_pcm(score)
+
+print(score.title)               # Pitched Percussion Mix
+print(len(score.tracks))         # 5
+print(rendered.pcm_buffer.clipped_sample_count)   # 0
+```
+
 For programmatic composition, use `PortableScoreBuilder` instead of hand-writing
 every portable `event` line:
 

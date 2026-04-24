@@ -10,6 +10,7 @@ from music_machine import (
     DEFAULT_INSTRUMENT_ID,
     HAPPY_BIRTHDAY_TEXT,
     MINI_ORCHESTRA_TEXT,
+    PITCHED_PERCUSSION_MIX_TEXT,
     ArrangementSection,
     ArrangementSectionEvent,
     InstrumentDeclaration,
@@ -596,6 +597,28 @@ def test_mini_orchestra_fixture_parses_and_renders() -> None:
     assert len(rendered.rendered_notes) == 52
     assert any(rendered.pcm_buffer.samples[:10_000])
     assert any(rendered.pcm_buffer.samples[-10_000:])
+
+
+def test_pitched_percussion_mix_fixture_parses_and_renders() -> None:
+    score = parse_portable_score(PITCHED_PERCUSSION_MIX_TEXT)
+    rendered = render_portable_score_to_pcm(score)
+
+    assert score.title == "Pitched Percussion Mix"
+    assert len(score.instruments) == 5
+    assert len(score.tracks) == 5
+    assert len(score.events) == 40
+    assert {instrument.profile_id for instrument in score.instruments} == {
+        "flute_naive",
+        "piano_naive",
+        "glockenspiel_naive",
+        "vibraphone_naive",
+        "timpani_naive",
+    }
+    assert rendered.pcm_buffer.sample_count() > 400_000
+    assert rendered.pcm_buffer.clipped_sample_count == 0
+    assert len(rendered.rendered_notes) == 56
+    assert any(rendered.pcm_buffer.samples[:20_000])
+    assert any(rendered.pcm_buffer.samples[-20_000:])
 
 
 def test_portable_score_builder_builds_round_trippable_score_text() -> None:
