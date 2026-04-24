@@ -13,11 +13,8 @@ module CodingAdventures
 
       def match?(request_method, path)
         return nil unless request_method == method
-        if CodingAdventures::Conduit.respond_to?(:match_route_native)
-          CodingAdventures::Conduit.match_route_native(pattern, path)
-        else
-          fallback_match(path)
-        end
+
+        fallback_match(path)
       end
 
       private
