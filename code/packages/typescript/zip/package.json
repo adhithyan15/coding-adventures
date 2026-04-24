@@ -1,0 +1,32 @@
+{
+  "name": "@coding-adventures/zip",
+  "version": "0.1.0",
+  "description": "ZIP archive format (PKZIP 1989) from scratch — CMP09",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "zip",
+    "deflate",
+    "lzss",
+    "compression",
+    "archive",
+    "cmp09",
+    "computer-science",
+    "education"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/lzss": "file:../lzss"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0",
+    "@vitest/coverage-v8": "^3.0.0"
+  }
+}
