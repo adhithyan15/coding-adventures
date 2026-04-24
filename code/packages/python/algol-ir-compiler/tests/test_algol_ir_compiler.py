@@ -369,6 +369,21 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.STORE_WORD) >= 12
         assert IrOp.CMP_GT in opcodes
 
+    def test_compiles_real_array_descriptor_and_element_accesses(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real array a[1:3]; "
+                "a[2] := 1.5; "
+                "if a[2] > 1.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.STORE_F64 in opcodes
+        assert IrOp.LOAD_F64 in opcodes
+        assert IrOp.F64_CMP_GT in opcodes
+
     def test_compiles_dynamic_multidimensional_array_bounds(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -649,6 +664,36 @@ class TestAlgolIrCompiler:
         )
         opcodes = [instruction.opcode for instruction in result.program.instructions]
 
+        assert IrOp.LOAD_F64 in opcodes
+        assert IrOp.STORE_F64 in opcodes
+
+    def test_compiles_real_array_element_by_name_eval_and_store_thunks(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real array a[1:1]; "
+                "procedure bump(x); real x; begin x := x + 1.5 end; "
+                "a[1] := 2.0; "
+                "bump(a[1]); "
+                "if a[1] > 3.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert "_fn_algol_eval_real_thunk" in labels
+        assert "_fn_algol_store_real_thunk" in labels
+        assert "_fn_algol_eval_real_thunk" in calls
+        assert "_fn_algol_store_real_thunk" in calls
         assert IrOp.LOAD_F64 in opcodes
         assert IrOp.STORE_F64 in opcodes
 

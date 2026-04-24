@@ -521,12 +521,21 @@ class TestAlgolTypeChecker:
             "read",
         ]
 
-    def test_rejects_array_without_integer_type_for_now(self) -> None:
+    def test_accepts_default_real_array_declaration(self) -> None:
         ast = parse_algol("begin array a[1:3]; a[1] := 7 end")
         result = check_algol(ast)
 
-        assert not result.ok
-        assert "real arrays are not supported" in result.diagnostics[0].message
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.arrays[0].element_type == "real"
+
+    def test_accepts_real_array_element_assignment(self) -> None:
+        ast = parse_algol("begin real array a[1:3]; a[1] := 1.5 end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.arrays[0].element_type == "real"
 
     def test_rejects_wrong_array_subscript_count(self) -> None:
         ast = parse_algol(
@@ -546,6 +555,13 @@ class TestAlgolTypeChecker:
             "cannot assign boolean to integer variable"
             in result.diagnostics[0].message
         )
+
+    def test_rejects_non_real_array_element_assignment(self) -> None:
+        ast = parse_algol("begin real array a[1:3]; a[1] := false end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot assign boolean to real variable" in result.diagnostics[0].message
 
     def test_rejects_array_used_without_subscripts(self) -> None:
         ast = parse_algol("begin integer result; integer array a[1:3]; result := a end")

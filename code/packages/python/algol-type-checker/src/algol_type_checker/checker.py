@@ -535,12 +535,14 @@ class AlgolTypeChecker:
 
     def _check_array_declaration(self, node: ASTNode, scope: Scope) -> None:
         type_node = _first_direct_node(node, "type")
-        element_type = _first_keyword_value(type_node) if type_node is not None else ""
-        if element_type != INTEGER:
+        element_type = (
+            _first_keyword_value(type_node) if type_node is not None else REAL
+        )
+        if element_type not in {INTEGER, REAL}:
             self._error(
                 node,
-                f"{element_type or 'real'} arrays are not supported yet; "
-                "use integer array",
+                f"{element_type} arrays are not supported yet; "
+                "use integer or real array",
             )
             return
 
@@ -1149,7 +1151,18 @@ class AlgolTypeChecker:
 
         if _variable_subscripts(variable):
             access = self._check_array_access(variable, scope, role="write")
-            target_type = ERROR if access is None else INTEGER
+            if access is None:
+                target_type = ERROR
+            else:
+                descriptor = next(
+                    (
+                        array
+                        for array in self.semantic_arrays
+                        if array.array_id == access.array_id
+                    ),
+                    None,
+                )
+                target_type = ERROR if descriptor is None else descriptor.element_type
         else:
             symbol = self._resolve_name(name, scope, role="write")
             if symbol is not None and symbol.kind == ARRAY:
@@ -1227,7 +1240,18 @@ class AlgolTypeChecker:
         if expr.rule_name == "variable":
             if _variable_subscripts(expr):
                 access = self._check_array_access(expr, scope, role="read")
-                inferred = ERROR if access is None else INTEGER
+                if access is None:
+                    inferred = ERROR
+                else:
+                    descriptor = next(
+                        (
+                            array
+                            for array in self.semantic_arrays
+                            if array.array_id == access.array_id
+                        ),
+                        None,
+                    )
+                    inferred = ERROR if descriptor is None else descriptor.element_type
             else:
                 name = _variable_head_name(expr)
                 if name is None:

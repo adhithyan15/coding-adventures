@@ -546,6 +546,17 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_real_array_element_by_name_uses_eval_and_store_thunks(self) -> None:
+        result = compile_source(
+            "begin integer result; real array a[1:1]; "
+            "procedure bump(x); real x; begin x := x + 1.5 end; "
+            "a[1] := 2.0; "
+            "bump(a[1]); "
+            "if a[1] > 3.0 then result := 5 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_nested_by_name_parameter_forwards_original_storage_pointer(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -594,6 +605,24 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_real_array_element_store_and_load(self) -> None:
+        result = compile_source(
+            "begin integer result; real array a[1:3]; "
+            "a[2] := 1.5; "
+            "if a[2] > 1.0 then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_multidimensional_real_array_uses_row_major_offsets(self) -> None:
+        result = compile_source(
+            "begin integer result; real array a[1:2, 1:2]; "
+            "a[2, 2] := 3.5; "
+            "if a[2, 2] > 3.0 then result := 9 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
     def test_dynamic_array_bounds_are_evaluated_at_block_entry(self) -> None:
         result = compile_source(
