@@ -10,7 +10,7 @@ use diagram_ir::{
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::tokenize_mermaid;
-use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
+use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid.grammar");
 
@@ -34,6 +34,11 @@ struct MermaidNodeRef {
     id: String,
     label: Option<String>,
     shape: Option<DiagramShape>,
+}
+
+struct TokenCursor {
+    tokens: Vec<Token>,
+    index: usize,
 }
 
 #[derive(Default)]
@@ -67,6 +72,66 @@ impl DiagramBuilder {
     }
 }
 
+impl TokenCursor {
+    fn new(tokens: Vec<Token>) -> Self {
+        Self { tokens, index: 0 }
+    }
+
+    fn current(&self) -> &Token {
+        &self.tokens[self.index]
+    }
+
+    fn advance(&mut self) -> &Token {
+        let token = &self.tokens[self.index];
+        if token.type_ != TokenType::Eof {
+            self.index += 1;
+        }
+        token
+    }
+
+    fn consume_if(&mut self, name: &str) -> Option<Token> {
+        if token_name(self.current()) == name {
+            Some(self.advance().clone())
+        } else {
+            None
+        }
+    }
+
+    fn skip_terminators(&mut self) {
+        while matches!(token_name(self.current()), "NEWLINE" | "SEMICOLON") {
+            self.advance();
+        }
+    }
+
+    fn at_eof(&self) -> bool {
+        self.current().type_ == TokenType::Eof
+    }
+
+    fn expect_keyword(&mut self, value: &str) -> Result<Token, ParseError> {
+        let token = self.current();
+        if token.type_ == TokenType::Keyword && token.value == value {
+            Ok(self.advance().clone())
+        } else {
+            Err(token_error(
+                token,
+                format!("expected Mermaid keyword {value:?}, got {:?}", token.value),
+            ))
+        }
+    }
+
+    fn expect_name_or_node_ref(&self) -> Result<(), ParseError> {
+        let token = self.current();
+        if token_name(token) == "NAME" {
+            Ok(())
+        } else {
+            Err(token_error(
+                token,
+                format!("expected NAME or node_ref, got {:?}", token.value),
+            ))
+        }
+    }
+}
+
 pub fn create_mermaid_parser(source: &str) -> GrammarParser {
     let tokens = tokenize_mermaid(source);
     let grammar = parse_parser_grammar(PARSER_GRAMMAR_SOURCE)
@@ -84,21 +149,17 @@ pub fn parse_mermaid_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
 }
 
 pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
-    let ast = parse_mermaid_ast(source)?;
-    lower_document(&ast)
-}
+    let mut cursor = TokenCursor::new(tokenize_mermaid(source));
+    cursor.skip_terminators();
 
-fn lower_document(document: &GrammarASTNode) -> Result<GraphDiagram, ParseError> {
-    let header = child_nodes_named(document, "header")
-        .into_iter()
-        .next()
-        .ok_or_else(|| node_error(document, "missing Mermaid header"))?;
-
-    let direction = parse_header(header)?;
+    let direction = parse_header(&mut cursor)?;
     let mut builder = DiagramBuilder::default();
 
-    for statement in child_nodes_named(document, "statement") {
-        lower_statement(statement, &mut builder)?;
+    cursor.skip_terminators();
+
+    while !cursor.at_eof() {
+        lower_statement(&mut cursor, &mut builder)?;
+        cursor.skip_terminators();
     }
 
     Ok(GraphDiagram {
@@ -109,115 +170,87 @@ fn lower_document(document: &GrammarASTNode) -> Result<GraphDiagram, ParseError>
     })
 }
 
+fn parse_header(cursor: &mut TokenCursor) -> Result<DiagramDirection, ParseError> {
+    let token = cursor.current();
+    if token.type_ == TokenType::Keyword && token.value == "flowchart" {
+        cursor.expect_keyword("flowchart")?;
+    } else {
+        cursor.expect_keyword("graph")?;
+    }
+
+    cursor
+        .consume_if("DIRECTION")
+        .map(|token| direction_from_token(&token))
+        .transpose()?
+        .map_or(Ok(DiagramDirection::Tb), Ok)
+}
+
 fn lower_statement(
-    statement: &GrammarASTNode,
+    cursor: &mut TokenCursor,
     builder: &mut DiagramBuilder,
 ) -> Result<(), ParseError> {
-    for child in child_nodes(statement) {
-        match child.rule_name.as_str() {
-            "node_stmt" => {
-                let node_ref = child_nodes_named(child, "node_ref")
-                    .into_iter()
-                    .next()
-                    .ok_or_else(|| node_error(child, "missing node reference"))?;
-                builder.upsert_node(parse_node_ref(node_ref)?);
-                return Ok(());
-            }
-            "edge_stmt" => {
-                let mut node_refs = child_nodes_named(child, "node_ref").into_iter();
-                let start_node = node_refs
-                    .next()
-                    .ok_or_else(|| node_error(child, "missing edge source"))?;
-                let mut previous = parse_node_ref(start_node)?;
-                builder.upsert_node(previous.clone());
+    cursor.expect_name_or_node_ref()?;
+    let mut previous = parse_node_ref(cursor)?;
+    builder.upsert_node(previous.clone());
 
-                for segment in child_nodes_named(child, "edge_segment") {
-                    let (kind, label, target) = parse_edge_segment(segment)?;
-                    builder.upsert_node(target.clone());
-                    builder.edges.push(GraphEdge {
-                        id: None,
-                        from: previous.id.clone(),
-                        to: target.id.clone(),
-                        label: label.map(DiagramLabel::new),
-                        kind,
-                        style: None,
-                    });
-                    previous = target;
-                }
-                return Ok(());
-            }
-            _ => {}
-        }
+    while is_edge_operator(cursor.current()) {
+        let (kind, label) = parse_edge_op(cursor)?;
+        let target = parse_node_ref(cursor)?;
+        builder.upsert_node(target.clone());
+        builder.edges.push(GraphEdge {
+            id: None,
+            from: previous.id.clone(),
+            to: target.id.clone(),
+            label: label.map(DiagramLabel::new),
+            kind,
+            style: None,
+        });
+        previous = target;
     }
 
-    Err(node_error(statement, "unsupported Mermaid statement"))
+    Ok(())
 }
 
-fn parse_header(header: &GrammarASTNode) -> Result<DiagramDirection, ParseError> {
-    let direction = descendant_tokens(header)
-        .into_iter()
-        .find(|token| token_name(token) == "DIRECTION")
-        .map(|token| direction_from_value(&token.value))
-        .transpose()?
-        .unwrap_or(DiagramDirection::Tb);
+fn parse_edge_op(cursor: &mut TokenCursor) -> Result<(EdgeKind, Option<String>), ParseError> {
+    let token = cursor.advance().clone();
+    let kind = match token_name(&token) {
+        "ARROW" => EdgeKind::Directed,
+        "LINE" => EdgeKind::Undirected,
+        other => {
+            return Err(token_error(
+                &token,
+                format!("unsupported Mermaid edge operator: {other}"),
+            ));
+        }
+    };
 
-    Ok(direction)
-}
-
-fn parse_edge_segment(
-    segment: &GrammarASTNode,
-) -> Result<(EdgeKind, Option<String>, MermaidNodeRef), ParseError> {
-    let kind = descendant_nodes_named(segment, "edge_op")
-        .into_iter()
-        .next()
-        .ok_or_else(|| node_error(segment, "missing edge operator"))
-        .and_then(parse_edge_kind)?;
-
-    let label = descendant_tokens(segment)
-        .into_iter()
-        .find(|token| token_name(token) == "EDGE_LABEL")
+    let label = cursor
+        .consume_if("EDGE_LABEL")
         .map(|token| strip_edge_label(&token.value));
 
-    let node_ref = descendant_nodes_named(segment, "node_ref")
-        .into_iter()
-        .next()
-        .ok_or_else(|| node_error(segment, "missing edge target"))
-        .and_then(parse_node_ref)?;
-
-    Ok((kind, label, node_ref))
+    Ok((kind, label))
 }
 
-fn parse_edge_kind(edge_op: &GrammarASTNode) -> Result<EdgeKind, ParseError> {
-    let token = descendant_tokens(edge_op)
-        .into_iter()
-        .next()
-        .ok_or_else(|| node_error(edge_op, "missing edge operator token"))?;
-
-    match token_name(token) {
-        "ARROW" => Ok(EdgeKind::Directed),
-        "LINE" => Ok(EdgeKind::Undirected),
-        other => Err(ParseError {
-            message: format!("unsupported Mermaid edge operator: {other}"),
-            line: token.line,
-            col: token.column,
-        }),
+fn parse_node_ref(cursor: &mut TokenCursor) -> Result<MermaidNodeRef, ParseError> {
+    let token = cursor.current();
+    if token_name(token) != "NAME" {
+        return Err(token_error(token, "missing node id"));
     }
-}
 
-fn parse_node_ref(node_ref: &GrammarASTNode) -> Result<MermaidNodeRef, ParseError> {
-    let id_token = descendant_tokens(node_ref)
-        .into_iter()
-        .find(|token| token_name(token) == "NAME")
-        .ok_or_else(|| node_error(node_ref, "missing node id"))?;
-
+    let id = cursor.advance().value.clone();
     let mut result = MermaidNodeRef {
-        id: id_token.value.clone(),
+        id,
         label: None,
         shape: None,
     };
 
-    if let Some(shape_node) = descendant_nodes_named(node_ref, "node_shape").into_iter().next() {
-        let (label, shape) = parse_node_shape(shape_node)?;
+    if let Some(token) = cursor
+        .consume_if("CIRCLE")
+        .or_else(|| cursor.consume_if("ROUND"))
+        .or_else(|| cursor.consume_if("RECT"))
+        .or_else(|| cursor.consume_if("DIAMOND"))
+    {
+        let (label, shape) = parse_node_shape_token(&token)?;
         result.label = Some(label);
         result.shape = Some(shape);
     }
@@ -225,36 +258,29 @@ fn parse_node_ref(node_ref: &GrammarASTNode) -> Result<MermaidNodeRef, ParseErro
     Ok(result)
 }
 
-fn parse_node_shape(node_shape: &GrammarASTNode) -> Result<(String, DiagramShape), ParseError> {
-    let token = descendant_tokens(node_shape)
-        .into_iter()
-        .next()
-        .ok_or_else(|| node_error(node_shape, "missing node shape token"))?;
-
+fn parse_node_shape_token(token: &Token) -> Result<(String, DiagramShape), ParseError> {
     match token_name(token) {
         "RECT" => Ok((strip_wrapped(&token.value, 1, 1), DiagramShape::Rect)),
         "ROUND" => Ok((strip_wrapped(&token.value, 1, 1), DiagramShape::RoundedRect)),
         "CIRCLE" => Ok((strip_wrapped(&token.value, 2, 2), DiagramShape::Ellipse)),
         "DIAMOND" => Ok((strip_wrapped(&token.value, 1, 1), DiagramShape::Diamond)),
-        other => Err(ParseError {
-            message: format!("unsupported Mermaid node shape: {other}"),
-            line: token.line,
-            col: token.column,
-        }),
+        other => Err(token_error(
+            token,
+            format!("unsupported Mermaid node shape: {other}"),
+        )),
     }
 }
 
-fn direction_from_value(value: &str) -> Result<DiagramDirection, ParseError> {
-    match value {
+fn direction_from_token(token: &Token) -> Result<DiagramDirection, ParseError> {
+    match token.value.as_str() {
         "TB" | "TD" => Ok(DiagramDirection::Tb),
         "BT" => Ok(DiagramDirection::Bt),
         "LR" => Ok(DiagramDirection::Lr),
         "RL" => Ok(DiagramDirection::Rl),
-        other => Err(ParseError {
-            message: format!("unsupported Mermaid direction: {other}"),
-            line: 1,
-            col: 1,
-        }),
+        other => Err(token_error(
+            token,
+            format!("unsupported Mermaid direction: {other}"),
+        )),
     }
 }
 
@@ -266,56 +292,16 @@ fn strip_edge_label(raw: &str) -> String {
     strip_wrapped(raw, 1, 1)
 }
 
-fn node_error(node: &GrammarASTNode, message: impl Into<String>) -> ParseError {
+fn token_error(token: &Token, message: impl Into<String>) -> ParseError {
     ParseError {
         message: message.into(),
-        line: node.start_line.unwrap_or(1),
-        col: node.start_column.unwrap_or(1),
+        line: token.line,
+        col: token.column,
     }
 }
 
-fn child_nodes<'a>(node: &'a GrammarASTNode) -> Vec<&'a GrammarASTNode> {
-    node.children
-        .iter()
-        .filter_map(|child| match child {
-            ASTNodeOrToken::Node(child_node) => Some(child_node),
-            ASTNodeOrToken::Token(_) => None,
-        })
-        .collect()
-}
-
-fn child_nodes_named<'a>(node: &'a GrammarASTNode, name: &str) -> Vec<&'a GrammarASTNode> {
-    node.children
-        .iter()
-        .filter_map(|child| match child {
-            ASTNodeOrToken::Node(child_node) if child_node.rule_name == name => Some(child_node),
-            _ => None,
-        })
-        .collect()
-}
-
-fn descendant_nodes_named<'a>(node: &'a GrammarASTNode, name: &str) -> Vec<&'a GrammarASTNode> {
-    let mut matches = Vec::new();
-    for child in &node.children {
-        if let ASTNodeOrToken::Node(child_node) = child {
-            if child_node.rule_name == name {
-                matches.push(child_node);
-            }
-            matches.extend(descendant_nodes_named(child_node, name));
-        }
-    }
-    matches
-}
-
-fn descendant_tokens(node: &GrammarASTNode) -> Vec<&Token> {
-    let mut tokens = Vec::new();
-    for child in &node.children {
-        match child {
-            ASTNodeOrToken::Token(token) => tokens.push(token),
-            ASTNodeOrToken::Node(child_node) => tokens.extend(descendant_tokens(child_node)),
-        }
-    }
-    tokens
+fn is_edge_operator(token: &Token) -> bool {
+    matches!(token_name(token), "ARROW" | "LINE")
 }
 
 fn token_name(token: &Token) -> &str {
