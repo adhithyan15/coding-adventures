@@ -128,6 +128,16 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [8]
         assert "".join(captured) == "OK"
 
+    def test_empty_string_output_writes_nothing(self) -> None:
+        result = compile_source(
+            "begin string msg; integer result; msg := ''; print(msg); result := 9 end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [9]
+        assert "".join(captured) == ""
+
     def test_own_integer_persists_across_procedure_calls(self) -> None:
         result = compile_source(
             "begin own integer counter; integer result; "

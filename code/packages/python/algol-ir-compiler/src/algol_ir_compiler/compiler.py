@@ -92,6 +92,9 @@ _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
 _STRING_TYPE = "string"
+_STRING_DESCRIPTOR_LENGTH_OFFSET = 0
+_STRING_DESCRIPTOR_DATA_POINTER_OFFSET = 4
+_STRING_DESCRIPTOR_SIZE = 8
 _BUILTIN_PRINT_LABEL = "__algol_builtin_print"
 _BUILTIN_OUTPUT_LABEL = "__algol_builtin_output"
 _WRITE_SYSCALL = 1
@@ -1642,18 +1645,31 @@ class AlgolIrCompiler:
         loop_label = f"algol_label_output_string_{index}_loop"
         end_label = f"algol_label_output_string_{index}_end"
         current_reg = self._fresh_reg()
+        remaining_reg = self._fresh_reg()
         char_reg = self._fresh_reg()
+        next_remaining_reg = self._fresh_reg()
 
-        self._copy_reg(dst=current_reg, src=pointer_reg)
-        self._emit(IrOp.BRANCH_Z, IrRegister(current_reg), IrLabel(end_label))
+        self._emit(IrOp.BRANCH_Z, IrRegister(pointer_reg), IrLabel(end_label))
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            remaining_reg,
+            pointer_reg,
+            _STRING_DESCRIPTOR_LENGTH_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            current_reg,
+            pointer_reg,
+            _STRING_DESCRIPTOR_DATA_POINTER_OFFSET,
+        )
         self._label(loop_label)
+        self._emit(IrOp.BRANCH_Z, IrRegister(remaining_reg), IrLabel(end_label))
         self._emit(
             IrOp.LOAD_BYTE,
             IrRegister(char_reg),
             IrRegister(current_reg),
             IrRegister(_ZERO_REG),
         )
-        self._emit(IrOp.BRANCH_Z, IrRegister(char_reg), IrLabel(end_label))
         self._emit_output_reg(char_reg)
         self._emit(
             IrOp.ADD_IMM,
@@ -1661,6 +1677,13 @@ class AlgolIrCompiler:
             IrRegister(current_reg),
             IrImmediate(1),
         )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_remaining_reg),
+            IrRegister(remaining_reg),
+            IrImmediate(-1),
+        )
+        self._copy_reg(dst=remaining_reg, src=next_remaining_reg)
         self._emit(IrOp.JUMP, IrLabel(loop_label))
         self._label(end_label)
 
@@ -3441,7 +3464,7 @@ class AlgolIrCompiler:
             if text in self.string_literal_offsets:
                 continue
             self.string_literal_offsets[text] = offset
-            offset += len(text) + 1
+            offset += _STRING_DESCRIPTOR_SIZE + len(text)
         return offset
 
     def _initialize_string_literals(self) -> None:
@@ -3454,17 +3477,29 @@ class AlgolIrCompiler:
             IrLabel(_STATIC_MEMORY_LABEL),
         )
         for text, offset in self.string_literal_offsets.items():
+            self._store_word_const(
+                static_base_reg,
+                offset + _STRING_DESCRIPTOR_LENGTH_OFFSET,
+                len(text),
+            )
+            data_pointer = self._fresh_reg()
+            self._emit(
+                IrOp.ADD_IMM,
+                IrRegister(data_pointer),
+                IrRegister(static_base_reg),
+                IrImmediate(offset + _STRING_DESCRIPTOR_SIZE),
+            )
+            self._store_word_reg(
+                value_reg=data_pointer,
+                base_reg=static_base_reg,
+                offset=offset + _STRING_DESCRIPTOR_DATA_POINTER_OFFSET,
+            )
             for index, char in enumerate(text):
                 self._store_byte_const(
                     base_reg=static_base_reg,
-                    offset=offset + index,
+                    offset=offset + _STRING_DESCRIPTOR_SIZE + index,
                     value=ord(char),
                 )
-            self._store_byte_const(
-                base_reg=static_base_reg,
-                offset=offset + len(text),
-                value=0,
-            )
 
     def _emit_string_literal_pointer(self, text: str) -> int:
         offset = self.string_literal_offsets.get(text)

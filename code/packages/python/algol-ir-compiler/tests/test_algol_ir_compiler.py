@@ -139,7 +139,7 @@ class TestAlgolIrCompiler:
         assert "loop_0_start" in labels
         assert "loop_0_end" in labels
 
-    def test_compiles_string_variable_assignment_to_static_literal_pointer(self) -> None:
+    def test_compiles_string_variable_assignment_to_static_literal_descriptor(self) -> None:
         result = compile_algol(
             parse_algol("begin string msg; integer result; msg := 'Hi'; result := 1 end")
         )
@@ -153,9 +153,10 @@ class TestAlgolIrCompiler:
 
         assert "__algol_static" in data_labels
         assert IrOp.STORE_BYTE in opcodes
+        assert IrOp.STORE_WORD in opcodes
         assert "__algol_static" in load_addr_labels
 
-    def test_compiles_string_variable_output_to_byte_loop(self) -> None:
+    def test_compiles_string_variable_output_to_descriptor_loop(self) -> None:
         result = compile_algol(
             parse_algol(
                 "begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end"
@@ -168,6 +169,7 @@ class TestAlgolIrCompiler:
             if instr.opcode == IrOp.LABEL
         ]
 
+        assert opcodes.count(IrOp.LOAD_WORD) >= 2
         assert IrOp.LOAD_BYTE in opcodes
         assert any(label.startswith("algol_label_output_string_") for label in labels)
 
