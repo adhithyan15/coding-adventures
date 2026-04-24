@@ -1,0 +1,10 @@
+[package]
+name = "micro-qr"
+version = "0.1.0"
+edition = "2021"
+description = "Micro QR Code encoder — ISO/IEC 18004:2015 Annex E, produces scannable M1–M4 symbols"
+
+[dependencies]
+barcode-2d = { path = "../barcode-2d" }
+gf256 = { path = "../gf256" }
+paint-instructions = { path = "../paint-instructions" }
