@@ -2,6 +2,7 @@
 
 import pytest
 from algol_parser import parse_algol
+from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTPUT_BYTES
 from algol_type_checker import FRAME_WORD_SIZE, FrameSlot, check_algol
 from compiler_ir import IrOp
 from lang_parser import ASTNode
@@ -172,6 +173,25 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.LOAD_WORD) >= 2
         assert IrOp.LOAD_BYTE in opcodes
         assert any(label.startswith("algol_label_output_string_") for label in labels)
+
+    def test_compiles_string_output_guards_for_length_and_total_bytes(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        immediate_values = [
+            operand.value
+            for instr in result.program.instructions
+            for operand in instr.operands
+            if hasattr(operand, "value")
+        ]
+
+        assert IrOp.CMP_LT in opcodes
+        assert IrOp.CMP_GT in opcodes
+        assert _MAX_STRING_OUTPUT_BYTES in immediate_values
+        assert _MAX_TOTAL_OUTPUT_BYTES in immediate_values
 
     def test_compiles_local_goto_to_algol_label(self) -> None:
         result = compile_algol(
@@ -452,7 +472,7 @@ class TestAlgolIrCompiler:
                 )
         )
 
-        with pytest.raises(CompileError, match="frame bytes plus 36 runtime bytes"):
+        with pytest.raises(CompileError, match="frame bytes plus 40 runtime bytes"):
             compile_algol(typed)
 
     def test_compiles_integer_array_descriptor_and_element_accesses(self) -> None:

@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pytest
+from algol_ir_compiler.compiler import _MAX_STRING_OUTPUT_BYTES, _MAX_TOTAL_OUTPUT_BYTES
 from wasm_runtime import WasiConfig, WasiHost, WasmRuntime
 
 from algol_wasm_compiler import (
@@ -137,6 +138,32 @@ class TestAlgolWasmCompiler:
 
         assert runtime.load_and_run(result.binary, "_start", []) == [9]
         assert "".join(captured) == ""
+
+    def test_oversized_string_output_returns_zero_without_writing_stdout(self) -> None:
+        oversized = "A" * (_MAX_STRING_OUTPUT_BYTES + 1)
+        result = compile_source(
+            f"begin integer result; print('{oversized}'); result := 9 end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
+
+    def test_total_output_budget_caps_multiple_print_calls(self) -> None:
+        chunk = "A" * _MAX_STRING_OUTPUT_BYTES
+        result = compile_source(
+            "begin integer result; "
+            f"print('{chunk}'); "
+            f"print('{chunk}'); "
+            "print('B'); "
+            "result := 9 end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == "A" * _MAX_TOTAL_OUTPUT_BYTES
 
     def test_own_integer_persists_across_procedure_calls(self) -> None:
         result = compile_source(
