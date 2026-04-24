@@ -25,6 +25,32 @@ sub paint_rect {
     };
 }
 
+# paint_path — create a PaintPath instruction from an array of PathCommands.
+#
+# Each command is a hashref with a 'kind' key:
+#   { kind => 'move_to', x => $x, y => $y }
+#   { kind => 'line_to', x => $x, y => $y }
+#   { kind => 'close' }
+#
+# This is used for drawing arbitrary vector shapes, such as flat-top hexagons
+# in MaxiCode grids.
+#
+# Arguments:
+#   $commands  - arrayref of PathCommand hashrefs
+#   $fill      - fill color string (default '#000000')
+#   $metadata  - optional hashref of metadata
+sub paint_path {
+    my ($class, $commands, $fill, $metadata) = @_;
+    $commands //= [];
+    $fill     //= '#000000';
+    return {
+        kind     => 'path',
+        commands => $commands,
+        fill     => $fill,
+        metadata => _copy_metadata($metadata),
+    };
+}
+
 sub paint_scene {
     my ($class, $width, $height, $instructions, $background, $metadata) = @_;
     $instructions //= [];
