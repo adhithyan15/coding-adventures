@@ -1,6 +1,6 @@
 [package]
 name = "diagram-to-paint"
-version = "0.1.0"
+version = "0.1.2"
 edition = "2021"
 description = "Lowers a LayoutedGraphDiagram (DG00) into a PaintScene (P2D00) for rendering by paint-metal and other backends"
 
@@ -10,3 +10,11 @@ paint-instructions = { path = "../paint-instructions" }
 layout-ir = { path = "../layout-ir" }
 layout-to-paint = { path = "../layout-to-paint" }
 text-interfaces = { path = "../text-interfaces" }
+
+[target.'cfg(target_vendor = "apple")'.dev-dependencies]
+dot-parser = { path = "../dot-parser" }
+diagram-layout-graph = { path = "../diagram-layout-graph" }
+paint-metal = { path = "../paint-metal" }
+paint-codec-png = { path = "../paint-codec-png" }
+text-native-coretext = { path = "../text-native-coretext" }
+layout-ir = { path = "../layout-ir" }
