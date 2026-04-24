@@ -13,6 +13,7 @@ text-interfaces = { path = "../text-interfaces" }
 
 [target.'cfg(target_vendor = "apple")'.dev-dependencies]
 dot-parser = { path = "../dot-parser" }
+mermaid-parser = { path = "../mermaid-parser" }
 diagram-layout-graph = { path = "../diagram-layout-graph" }
 paint-metal = { path = "../paint-metal" }
 paint-codec-png = { path = "../paint-codec-png" }

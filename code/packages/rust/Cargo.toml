@@ -52,6 +52,8 @@ members = [
     "directed-graph",
     "dot-lexer",
     "dot-parser",
+    "mermaid-lexer",
+    "mermaid-parser",
     "display",
     "excel-lexer",
     "excel-parser",
