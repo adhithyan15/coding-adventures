@@ -1,10 +1,11 @@
 use coding_adventures_html_lexer::{
-    create_html_lexer, html_skeleton_definition, html_skeleton_machine, lex_html, Token,
+    create_html_lexer, html1_definition, html1_machine, html_skeleton_definition,
+    html_skeleton_machine, lex_html, Attribute, Token,
 };
 use state_machine::END_INPUT;
 
 #[test]
-fn html_skeleton_lexes_text_start_tag_end_tag_and_eof() {
+fn default_html_lexer_still_lexes_basic_text_tags_and_eof() {
     let tokens = lex_html("<p>Hello</p>").unwrap();
 
     assert_eq!(
@@ -25,7 +26,47 @@ fn html_skeleton_lexes_text_start_tag_end_tag_and_eof() {
 }
 
 #[test]
-fn html_skeleton_supports_chunked_input_and_unicode_any_matcher() {
+fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
+    let tokens = lex_html(
+        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>Before<!--note-->After",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                force_quirks: false,
+            },
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "src".to_string(),
+                        value: "mosaic.gif".to_string(),
+                    },
+                    Attribute {
+                        name: "alt".to_string(),
+                        value: "Splash".to_string(),
+                    },
+                    Attribute {
+                        name: "hidden".to_string(),
+                        value: "1".to_string(),
+                    },
+                ],
+                self_closing: true,
+            },
+            Token::Text("Before".to_string()),
+            Token::Comment("note".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_chunked_input_and_unicode_any_matcher() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer.push("Hello ").unwrap();
@@ -57,33 +98,25 @@ fn html_skeleton_supports_chunked_input_and_unicode_any_matcher() {
 }
 
 #[test]
-fn html_skeleton_flushes_text_at_eof() {
-    assert_eq!(
-        lex_html("plain text").unwrap(),
-        vec![Token::Text("plain text".to_string()), Token::Eof]
-    );
-}
-
-#[test]
-fn html_skeleton_reports_recoverable_eof_diagnostic() {
+fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
     let mut lexer = create_html_lexer().unwrap();
 
-    lexer.push("<").unwrap();
+    lexer.push("<!--open").unwrap();
     lexer.finish().unwrap();
 
     assert_eq!(
         lexer.drain_tokens(),
-        vec![Token::Text("<".to_string()), Token::Eof]
+        vec![Token::Comment("open".to_string()), Token::Eof]
     );
-    assert_eq!(lexer.diagnostics().len(), 1);
-    assert_eq!(lexer.diagnostics()[0].code, "eof-in-tag-open-state");
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-comment"));
 }
 
 #[test]
-fn html_skeleton_machine_exports_definition_with_eof_matcher() {
-    let definition = html_skeleton_machine()
-        .unwrap()
-        .to_definition("html-skeleton-lexer");
+fn html1_machine_exports_definition_with_eof_matcher() {
+    let definition = html1_machine().unwrap().to_definition("html1-lexer");
 
     assert!(definition.transitions.iter().any(|transition| {
         transition.on.as_deref() == Some(END_INPUT)
@@ -96,8 +129,8 @@ fn html_skeleton_machine_exports_definition_with_eof_matcher() {
 }
 
 #[test]
-fn html_skeleton_generated_definition_preserves_lexer_profile_metadata() {
-    let definition = html_skeleton_definition();
+fn html1_generated_definition_preserves_lexer_profile_metadata() {
+    let definition = html1_definition();
 
     assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
     assert_eq!(
@@ -105,17 +138,17 @@ fn html_skeleton_generated_definition_preserves_lexer_profile_metadata() {
         Some("state-machine-tokenizer/0.1")
     );
     assert_eq!(definition.done.as_deref(), Some("done"));
-    assert_eq!(definition.tokens.len(), 4);
+    assert_eq!(definition.tokens.len(), 6);
     assert!(definition
         .registers
         .iter()
-        .any(|register| register.id == "text_buffer"));
-    assert_eq!(definition.fixtures.len(), 2);
+        .any(|register| register.id == "temporary_buffer"));
+    assert_eq!(definition.fixtures.len(), 5);
 }
 
 #[test]
-fn html_skeleton_generated_fixtures_match_runtime_tokens() {
-    let definition = html_skeleton_definition();
+fn default_html_lexer_matches_generated_html1_fixtures() {
+    let definition = html1_definition();
 
     for fixture in definition.fixtures {
         let actual = lex_html(&fixture.input)
@@ -129,6 +162,23 @@ fn html_skeleton_generated_fixtures_match_runtime_tokens() {
             fixture.name
         );
     }
+}
+
+#[test]
+fn html_skeleton_helpers_remain_available_for_bootstrap_comparisons() {
+    let definition = html_skeleton_definition();
+    assert_eq!(definition.profile.as_deref(), Some("lexer/v1"));
+    assert_eq!(definition.tokens.len(), 4);
+
+    let machine = html_skeleton_machine().unwrap();
+    let exported = machine.to_definition("html-skeleton-lexer");
+    assert!(exported.transitions.iter().any(|transition| {
+        transition.on.as_deref() == Some(END_INPUT)
+            && transition
+                .actions
+                .iter()
+                .any(|action| action == "emit(EOF)")
+    }));
 }
 
 fn token_summary(token: Token) -> String {
@@ -152,7 +202,7 @@ fn token_summary(token: Token) -> String {
     }
 }
 
-fn attribute_summary(attributes: &[coding_adventures_html_lexer::Attribute]) -> String {
+fn attribute_summary(attributes: &[Attribute]) -> String {
     if attributes.is_empty() {
         "[]".to_string()
     } else {
