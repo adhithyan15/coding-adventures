@@ -19,3 +19,5 @@
   `use_module/1,2` resolution
 - add loader-time rewriting for explicit `module:goal` qualification, including
   linked queries, initialization goals, and common meta-goal wrappers
+- add file-backed SWI project loading with recursive `consult/1`,
+  `ensure_loaded/1`, and relative `use_module/1,2` resolution

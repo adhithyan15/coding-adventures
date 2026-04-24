@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
-from typing import Protocol
+from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Literal, Protocol
 
 from logic_engine import (
     Atom,
@@ -12,10 +13,12 @@ from logic_engine import (
     Compound,
     FreshExpr,
     GoalExpr,
+    Number,
     Program,
     Relation,
     RelationCall,
     State,
+    String,
     Term,
     atom,
     goal_as_term,
@@ -74,10 +77,25 @@ class InitializableLike(Protocol):
     initialization_goals: tuple[GoalExpr, ...]
 
 
+type DependencyKind = Literal["consult", "ensure_loaded", "use_module"]
+
+
+@dataclass(frozen=True, slots=True)
+class PrologSourceDependency:
+    """One file dependency referenced by a Prolog source directive."""
+
+    kind: DependencyKind
+    requested: str
+    resolved_path: Path
+    imports: tuple[Relation, ...] = ()
+    import_all: bool = False
+
+
 @dataclass(frozen=True, slots=True)
 class LoadedPrologSource:
     """A parsed-and-loaded Prolog source with derived initialization metadata."""
 
+    source_path: Path | None
     program: Program
     clauses: tuple[Clause, ...]
     queries: tuple[ParsedQuery, ...]
@@ -86,6 +104,7 @@ class LoadedPrologSource:
     predicate_registry: PredicateRegistry
     module_spec: PrologModule | None
     module_imports: tuple[PrologModuleImport, ...]
+    file_dependencies: tuple[PrologSourceDependency, ...]
     initialization_directives: tuple[PrologDirective, ...]
     initialization_terms: tuple[Term, ...]
     initialization_goals: tuple[GoalExpr, ...]
@@ -122,10 +141,17 @@ class PrologInitializationError(RuntimeError):
         )
 
 
-def load_parsed_prolog_source(parsed_source: ParsedSourceLike) -> LoadedPrologSource:
+def load_parsed_prolog_source(
+    parsed_source: ParsedSourceLike,
+    *,
+    source_path: str | Path | None = None,
+) -> LoadedPrologSource:
     """Normalize a dialect-specific parsed source into one loader result."""
 
     predicate_registry = parsed_source.predicate_registry
+    normalized_source_path = (
+        None if source_path is None else Path(source_path).expanduser().resolve()
+    )
     module_spec: PrologModule | None = None
     module_imports: list[PrologModuleImport] = []
     for directive_value in parsed_source.directives:
@@ -137,15 +163,26 @@ def load_parsed_prolog_source(parsed_source: ParsedSourceLike) -> LoadedPrologSo
             module_spec = parsed_module
 
         parsed_import = module_import_from_directive(directive_value)
-        if parsed_import is not None:
+        if parsed_import is not None and (
+            normalized_source_path is None
+            or not _is_file_backed_use_module_directive(
+                directive_value,
+                source_path=normalized_source_path,
+            )
+        ):
             module_imports.append(parsed_import)
 
+    file_dependencies = _source_dependencies(
+        parsed_source.directives,
+        source_path=normalized_source_path,
+    )
     initialization_directives = predicate_registry.initialization_directives
     initialization_terms = tuple(
         _initialization_term(directive_value)
         for directive_value in initialization_directives
     )
     return LoadedPrologSource(
+        source_path=normalized_source_path,
         program=parsed_source.program,
         clauses=parsed_source.clauses,
         queries=parsed_source.queries,
@@ -154,6 +191,7 @@ def load_parsed_prolog_source(parsed_source: ParsedSourceLike) -> LoadedPrologSo
         predicate_registry=predicate_registry,
         module_spec=module_spec,
         module_imports=tuple(module_imports),
+        file_dependencies=file_dependencies,
         initialization_directives=initialization_directives,
         initialization_terms=initialization_terms,
         initialization_goals=tuple(
@@ -166,6 +204,7 @@ def load_iso_prolog_source(
     source: str,
     *,
     operator_table: OperatorTable | None = None,
+    source_path: str | Path | None = None,
 ) -> LoadedPrologSource:
     """Parse and load one ISO/Core Prolog source file."""
 
@@ -173,6 +212,7 @@ def load_iso_prolog_source(
 
     return load_parsed_prolog_source(
         parse_iso_source(source, operator_table=operator_table),
+        source_path=source_path,
     )
 
 
@@ -180,6 +220,7 @@ def load_swi_prolog_source(
     source: str,
     *,
     operator_table: OperatorTable | None = None,
+    source_path: str | Path | None = None,
 ) -> LoadedPrologSource:
     """Parse and load one SWI-Prolog source file."""
 
@@ -187,6 +228,22 @@ def load_swi_prolog_source(
 
     return load_parsed_prolog_source(
         parse_swi_source(source, operator_table=operator_table),
+        source_path=source_path,
+    )
+
+
+def load_swi_prolog_file(
+    path: str | Path,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> LoadedPrologSource:
+    """Read, parse, and load one SWI-Prolog source file."""
+
+    normalized_path = Path(path).expanduser().resolve()
+    return load_swi_prolog_source(
+        normalized_path.read_text(encoding="utf-8"),
+        operator_table=operator_table,
+        source_path=normalized_path,
     )
 
 
@@ -201,6 +258,43 @@ def load_swi_prolog_project(
         for source in sources
     )
     return link_loaded_prolog_sources(*loaded_sources)
+
+
+def load_swi_prolog_project_from_files(
+    *entry_paths: str | Path,
+    operator_table: OperatorTable | None = None,
+) -> LoadedPrologProject:
+    """Load, resolve, and link a SWI-Prolog file graph."""
+
+    pending_paths = [
+        Path(entry_path).expanduser().resolve() for entry_path in entry_paths
+    ]
+    loaded_by_path: dict[Path, LoadedPrologSource] = {}
+
+    while pending_paths:
+        current_path = pending_paths.pop(0)
+        if current_path in loaded_by_path:
+            continue
+
+        loaded_source = load_swi_prolog_file(
+            current_path,
+            operator_table=operator_table,
+        )
+        loaded_by_path[current_path] = loaded_source
+        pending_paths.extend(
+            dependency.resolved_path
+            for dependency in loaded_source.file_dependencies
+            if dependency.resolved_path not in loaded_by_path
+        )
+
+    normalized_sources = tuple(
+        _normalize_file_module_imports(
+            loaded_source,
+            loaded_by_path=loaded_by_path,
+        )
+        for loaded_source in loaded_by_path.values()
+    )
+    return link_loaded_prolog_sources(*normalized_sources)
 
 
 def link_loaded_prolog_sources(
@@ -356,12 +450,258 @@ def run_prolog_initialization_goals(
     )
 
 
+def _normalize_file_module_imports(
+    loaded_source: LoadedPrologSource,
+    *,
+    loaded_by_path: dict[Path, LoadedPrologSource],
+) -> LoadedPrologSource:
+    normalized_imports = list(loaded_source.module_imports)
+    for dependency in loaded_source.file_dependencies:
+        if dependency.kind != "use_module":
+            continue
+
+        target_source = loaded_by_path.get(dependency.resolved_path)
+        if target_source is None or target_source.module_spec is None:
+            msg = (
+                f"use_module file target {dependency.resolved_path} "
+                "must load a module/2 declaration"
+            )
+            raise ValueError(msg)
+
+        normalized_imports.append(
+            PrologModuleImport(
+                module_name=target_source.module_spec.name,
+                imports=dependency.imports,
+                import_all=dependency.import_all,
+            ),
+        )
+
+    return replace(
+        loaded_source,
+        module_imports=tuple(normalized_imports),
+    )
+
+
+def _source_dependencies(
+    directives: tuple[PrologDirective, ...],
+    *,
+    source_path: Path | None,
+) -> tuple[PrologSourceDependency, ...]:
+    if source_path is None:
+        return ()
+
+    dependencies: list[PrologSourceDependency] = []
+    for directive_value in directives:
+        parsed = _dependency_from_directive(
+            directive_value,
+            source_path=source_path,
+        )
+        dependencies.extend(parsed)
+    return tuple(dependencies)
+
+
+def _is_file_backed_use_module_directive(
+    directive_value: PrologDirective,
+    *,
+    source_path: Path,
+) -> bool:
+    return any(
+        dependency.kind == "use_module"
+        for dependency in _dependency_from_directive(
+            directive_value,
+            source_path=source_path,
+        )
+    )
+
+
+def _dependency_from_directive(
+    directive_value: PrologDirective,
+    *,
+    source_path: Path,
+) -> tuple[PrologSourceDependency, ...]:
+    term_value = directive_value.term
+    if not isinstance(term_value, Compound):
+        return ()
+
+    if term_value.functor.name in {"consult", "ensure_loaded"}:
+        if len(term_value.args) != 1:
+            msg = f"{term_value.functor}/1 directives require exactly one argument"
+            raise ValueError(msg)
+        return tuple(
+            PrologSourceDependency(
+                kind=term_value.functor.name,  # type: ignore[arg-type]
+                requested=requested,
+                resolved_path=resolved_path,
+            )
+            for requested, resolved_path in _resolved_source_terms(
+                term_value.args[0],
+                source_path=source_path,
+                resolve_plain_atoms=True,
+            )
+        )
+
+    if term_value.functor.name == "use_module":
+        if len(term_value.args) not in {1, 2}:
+            msg = "use_module directives require one or two arguments"
+            raise ValueError(msg)
+
+        resolved = _resolved_source_term(
+            term_value.args[0],
+            source_path=source_path,
+            resolve_plain_atoms=True,
+        )
+        if resolved is None:
+            return ()
+
+        imports: tuple[Relation, ...] = ()
+        import_all = True
+        if len(term_value.args) == 2:
+            imports = _directive_relations(
+                term_value.args[1],
+                directive_name="use_module",
+            )
+            import_all = False
+
+        requested, resolved_path = resolved
+        return (
+            PrologSourceDependency(
+                kind="use_module",
+                requested=requested,
+                resolved_path=resolved_path,
+                imports=imports,
+                import_all=import_all,
+            ),
+        )
+
+    return ()
+
+
 def _initialization_term(directive_value: PrologDirective) -> Term:
     term_value = directive_value.term
     if not isinstance(term_value, Compound) or len(term_value.args) != 1:
         msg = "initialization directives must have the form initialization(Goal)"
         raise TypeError(msg)
     return term_value.args[0]
+
+
+def _resolved_source_terms(
+    term_value: Term,
+    *,
+    source_path: Path,
+    resolve_plain_atoms: bool,
+) -> tuple[tuple[str, Path], ...]:
+    items = _logic_list_items(term_value)
+    if items is None:
+        resolved = _resolved_source_term(
+            term_value,
+            source_path=source_path,
+            resolve_plain_atoms=resolve_plain_atoms,
+        )
+        if resolved is None:
+            msg = f"unsupported source reference {term_value}"
+            raise TypeError(msg)
+        return (resolved,)
+
+    resolved_items: list[tuple[str, Path]] = []
+    for item in items:
+        resolved = _resolved_source_term(
+            item,
+            source_path=source_path,
+            resolve_plain_atoms=resolve_plain_atoms,
+        )
+        if resolved is None:
+            msg = f"unsupported source reference {item}"
+            raise TypeError(msg)
+        resolved_items.append(resolved)
+    return tuple(resolved_items)
+
+
+def _resolved_source_term(
+    term_value: Term,
+    *,
+    source_path: Path,
+    resolve_plain_atoms: bool,
+) -> tuple[str, Path] | None:
+    requested = _source_reference_text(term_value)
+    if requested is None:
+        return None
+
+    explicit_path = (
+        "/" in requested
+        or "\\" in requested
+        or requested.startswith(".")
+        or requested.endswith(".pl")
+    )
+    if explicit_path:
+        candidate = Path(requested).expanduser()
+        if not candidate.is_absolute():
+            candidate = source_path.parent / candidate
+        return (requested, candidate.resolve())
+
+    if not resolve_plain_atoms:
+        return None
+
+    return (
+        requested,
+        (source_path.parent / f"{requested}.pl").resolve(),
+    )
+
+
+def _source_reference_text(term_value: Term) -> str | None:
+    if isinstance(term_value, Atom):
+        return term_value.symbol.name
+    if isinstance(term_value, String):
+        return term_value.value
+    return None
+
+
+def _directive_relations(
+    indicators: Term,
+    *,
+    directive_name: str,
+) -> tuple[Relation, ...]:
+    items = _logic_list_items(indicators)
+    if items is None:
+        relation_value = _directive_relation(indicators, directive_name=directive_name)
+        return (relation_value,)
+
+    return tuple(
+        _directive_relation(item, directive_name=directive_name) for item in items
+    )
+
+
+def _directive_relation(term_value: Term, *, directive_name: str) -> Relation:
+    if (
+        isinstance(term_value, Compound)
+        and term_value.functor.name == "/"
+        and len(term_value.args) == 2
+        and isinstance(term_value.args[0], Atom)
+    ):
+        arity_term = term_value.args[1]
+        if not isinstance(arity_term, Number) or not isinstance(arity_term.value, int):
+            msg = f"{directive_name} indicators must use atom/integer pairs"
+            raise TypeError(msg)
+        return Relation(symbol=term_value.args[0].symbol, arity=arity_term.value)
+
+    msg = f"{directive_name} directives must contain predicate indicators"
+    raise TypeError(msg)
+
+
+def _logic_list_items(term_value: Term) -> list[Term] | None:
+    items: list[Term] = []
+    current = term_value
+    while True:
+        if isinstance(current, Atom) and current.symbol.name == "[]":
+            return items
+        if (
+            isinstance(current, Compound)
+            and current.functor.name == "."
+            and len(current.args) == 2
+        ):
+            items.append(current.args[0])
+            current = current.args[1]
+            continue
+        return None
 
 
 def _qualified_relation(module_name: Symbol, relation_value: Relation) -> Relation:
