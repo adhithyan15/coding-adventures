@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.1.2";
 
 use std::collections::HashMap;
 
@@ -375,11 +375,18 @@ where
         ext: HashMap::new(),
     };
 
+    // Use DPR=1 for the text bridge. `diagram_to_paint` emits all geometry
+    // (rects, paths) in logical pixels and the PaintScene dimensions are
+    // logical. layout_to_paint with DPR>1 would emit glyph positions in
+    // device pixels, causing a mismatch: paint-metal creates the CGBitmap at
+    // scene.height logical pixels and flips y as (height - gy), so a device-
+    // pixel y value would land off-canvas. Keeping everything in logical pixel
+    // space is consistent. A future pass can scale the whole scene by DPR.
     let text_opts = LayoutToPaintOptions {
         width: diagram.width,
         height: diagram.height,
         background: Color { r: 0, g: 0, b: 0, a: 0 }, // transparent root
-        device_pixel_ratio: options.device_pixel_ratio,
+        device_pixel_ratio: 1.0,
         shaper:   options.shaper,
         metrics:  options.metrics,
         resolver: options.resolver,
@@ -560,7 +567,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.1.2");
     }
 
     #[test]

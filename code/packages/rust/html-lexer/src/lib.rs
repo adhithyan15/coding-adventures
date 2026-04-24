@@ -11,7 +11,18 @@ pub use state_machine_tokenizer::{
     TokenizerTraceEntry,
 };
 
+mod generated_html1;
 mod generated_html_skeleton;
+
+/// Return the generated typed definition for the HTML 1.x compatibility-floor lexer.
+pub fn html1_definition() -> StateMachineDefinition {
+    generated_html1::html1_lexer_definition()
+}
+
+/// Build the statically linked HTML 1.x compatibility-floor lexer machine.
+pub fn html1_machine() -> std::result::Result<EffectfulStateMachine, String> {
+    generated_html1::html1_lexer_transducer()
+}
 
 /// Return the generated typed definition for the current HTML lexer skeleton.
 pub fn html_skeleton_definition() -> StateMachineDefinition {
@@ -23,14 +34,14 @@ pub fn html_skeleton_machine() -> std::result::Result<EffectfulStateMachine, Str
     generated_html_skeleton::html_skeleton_lexer_transducer()
 }
 
-/// Build a Rust HTML lexer over the statically linked skeleton machine.
+/// Build a Rust HTML lexer over the statically linked HTML 1.x compatibility floor.
 pub fn create_html_lexer() -> Result<HtmlLexer> {
-    html_skeleton_machine()
+    html1_machine()
         .map(HtmlLexer::new)
         .map_err(TokenizerError::Machine)
 }
 
-/// Lex one complete HTML string with the current skeleton machine.
+/// Lex one complete HTML string with the current compatibility-floor machine.
 pub fn lex_html(source: &str) -> Result<Vec<Token>> {
     let mut lexer = create_html_lexer()?;
     lexer.push(source)?;
