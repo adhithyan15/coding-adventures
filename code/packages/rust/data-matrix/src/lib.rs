@@ -114,7 +114,7 @@ struct Gf256Tables {
 /// Global GF(256)/0x12D tables, lazily initialised.
 static GF_TABLES: std::sync::OnceLock<Gf256Tables> = std::sync::OnceLock::new();
 
-fn get_gf_tables() -> &'static Gf256Tables {
+pub(crate) fn get_gf_tables() -> &'static Gf256Tables {
     GF_TABLES.get_or_init(|| {
         let mut exp = [0u8; 256];
         let mut log = [0u16; 256];
@@ -139,7 +139,7 @@ fn get_gf_tables() -> &'static Gf256Tables {
 /// For a, b ≠ 0: a × b = α^{(log[a] + log[b]) mod 255}
 /// If either operand is 0, the product is 0.
 #[inline]
-fn gf_mul(a: u8, b: u8) -> u8 {
+pub(crate) fn gf_mul(a: u8, b: u8) -> u8 {
     if a == 0 || b == 0 {
         return 0;
     }
@@ -174,7 +174,7 @@ struct SymbolSizeEntry {
 
 /// All 24 square symbol sizes for Data Matrix ECC200.
 /// Source: ISO/IEC 16022:2006, Table 7.
-static SQUARE_SIZES: &[SymbolSizeEntry] = &[
+pub(crate) static SQUARE_SIZES: &[SymbolSizeEntry] = &[
     SymbolSizeEntry { symbol_rows: 10,  symbol_cols: 10,  region_rows: 1, region_cols: 1, data_region_height:  8, data_region_width:  8, data_cw:   3, ecc_cw:   5, num_blocks: 1, ecc_per_block:  5 },
     SymbolSizeEntry { symbol_rows: 12,  symbol_cols: 12,  region_rows: 1, region_cols: 1, data_region_height: 10, data_region_width: 10, data_cw:   5, ecc_cw:   7, num_blocks: 1, ecc_per_block:  7 },
     SymbolSizeEntry { symbol_rows: 14,  symbol_cols: 14,  region_rows: 1, region_cols: 1, data_region_height: 12, data_region_width: 12, data_cw:   8, ecc_cw:  10, num_blocks: 1, ecc_per_block: 10 },
@@ -203,7 +203,7 @@ static SQUARE_SIZES: &[SymbolSizeEntry] = &[
 
 /// All 6 rectangular symbol sizes for Data Matrix ECC200.
 /// Source: ISO/IEC 16022:2006, Table 7 (rectangular symbols).
-static RECT_SIZES: &[SymbolSizeEntry] = &[
+pub(crate) static RECT_SIZES: &[SymbolSizeEntry] = &[
     SymbolSizeEntry { symbol_rows:  8, symbol_cols: 18, region_rows: 1, region_cols: 1, data_region_height: 6, data_region_width: 16, data_cw:  5, ecc_cw:  7, num_blocks: 1, ecc_per_block:  7 },
     SymbolSizeEntry { symbol_rows:  8, symbol_cols: 32, region_rows: 1, region_cols: 2, data_region_height: 6, data_region_width: 14, data_cw: 10, ecc_cw: 11, num_blocks: 1, ecc_per_block: 11 },
     SymbolSizeEntry { symbol_rows: 12, symbol_cols: 26, region_rows: 1, region_cols: 1, data_region_height:10, data_region_width: 24, data_cw: 16, ecc_cw: 14, num_blocks: 1, ecc_per_block: 14 },
@@ -222,7 +222,7 @@ static RECT_SIZES: &[SymbolSizeEntry] = &[
 /// This matches the Data Matrix / ISO/IEC 16022 convention exactly.
 ///
 /// Returns a vector of n_ecc+1 coefficients (leading coefficient 1, monic).
-fn build_generator(n_ecc: usize) -> Vec<u8> {
+pub(crate) fn build_generator(n_ecc: usize) -> Vec<u8> {
     let t = get_gf_tables();
     let mut g: Vec<u8> = vec![1u8];
     for i in 1..=(n_ecc as u8) {
@@ -253,7 +253,7 @@ fn build_generator(n_ecc: usize) -> Vec<u8> {
 ///
 /// This is the standard systematic RS encoding: the message occupies the
 /// high-degree coefficients and the check symbols the low-degree ones.
-fn rs_encode_block(data: &[u8], generator: &[u8]) -> Vec<u8> {
+pub(crate) fn rs_encode_block(data: &[u8], generator: &[u8]) -> Vec<u8> {
     let n_ecc = generator.len() - 1;
     let mut rem = vec![0u8; n_ecc];
     for &byte in data {
@@ -288,7 +288,7 @@ fn rs_encode_block(data: &[u8], generator: &[u8]) -> Vec<u8> {
 ///   "12"   → [142]         (130 + (1*10+2))
 ///   "1234" → [142, 164]    (130+12, 130+34)
 ///   "1A"   → [50, 66]      (49+1, 65+1 — no pair because 'A' is not a digit)
-fn encode_ascii(input: &[u8]) -> Vec<u8> {
+pub(crate) fn encode_ascii(input: &[u8]) -> Vec<u8> {
     let mut codewords = Vec::new();
     let mut i = 0;
     while i < input.len() {
@@ -332,7 +332,7 @@ fn encode_ascii(input: &[u8]) -> Vec<u8> {
 ///   k=2: 129 (first pad)
 ///   k=3: 129 + (149*3 mod 253) + 1 = 129 + 194 + 1 = 324 → 324-254 = 70
 ///   Result: [66, 129, 70]
-fn pad_codewords(codewords: &[u8], data_cw: usize) -> Vec<u8> {
+pub(crate) fn pad_codewords(codewords: &[u8], data_cw: usize) -> Vec<u8> {
     let mut padded = codewords.to_vec();
     let first_pad_pos = padded.len(); // 0-indexed position of first pad
     let mut k = padded.len() as u32 + 1; // 1-indexed stream position of first pad
@@ -356,7 +356,7 @@ fn pad_codewords(codewords: &[u8], data_cw: usize) -> Vec<u8> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Select the smallest symbol whose `data_cw` capacity fits `codeword_count`.
-fn select_symbol(
+pub(crate) fn select_symbol(
     codeword_count: usize,
     shape: SymbolShape,
 ) -> Result<&'static SymbolSizeEntry, DataMatrixError> {
@@ -706,7 +706,7 @@ fn place_corner4(
 /// to avoid degenerate patterns, unlike QR Code's 8-mask evaluation.
 ///
 /// Returns the filled `nRows × nCols` logical grid.
-fn utah_placement(codewords: &[u8], n_rows: usize, n_cols: usize) -> Vec<Vec<bool>> {
+pub(crate) fn utah_placement(codewords: &[u8], n_rows: usize, n_cols: usize) -> Vec<Vec<bool>> {
     let mut grid = vec![vec![false; n_cols]; n_rows];
     let mut used = vec![vec![false; n_cols]; n_rows];
     let nr = n_rows as i32;
@@ -877,8 +877,8 @@ pub fn encode(input: &[u8], options: DataMatrixOptions) -> Result<ModuleGrid, Da
 
     // Step 10: Return (no masking — Data Matrix never masks)
     Ok(ModuleGrid {
-        rows: entry.symbol_rows,
-        cols: entry.symbol_cols,
+        rows: entry.symbol_rows as u32,
+        cols: entry.symbol_cols as u32,
         modules: phys_grid,
         module_shape: ModuleShape::Square,
     })
@@ -919,7 +919,9 @@ pub fn encode_and_layout(
     if cfg.quiet_zone_modules == 0 {
         cfg.quiet_zone_modules = 1;
     }
-    Ok(layout(&grid, &cfg))
+    // layout() returns Result<PaintScene, Barcode2DError>; we expect it to
+    // succeed for a valid grid (invalid config would be a programming error).
+    Ok(layout(&grid, &cfg).expect("layout failed for valid data-matrix grid"))
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -927,8 +929,8 @@ pub fn encode_and_layout(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[doc(hidden)]
-pub mod internal {
-    pub use super::{
+pub(crate) mod internal {
+    pub(crate) use super::{
         build_generator, encode_ascii, gf_mul, get_gf_tables, pad_codewords,
         rs_encode_block, select_symbol, utah_placement, SymbolShape,
         RECT_SIZES, SQUARE_SIZES,
@@ -1134,8 +1136,8 @@ mod tests {
 
     fn assert_border(input: &str) {
         let grid = encode_str(input, Default::default()).unwrap();
-        let rows = grid.rows;
-        let cols = grid.cols;
+        let rows = grid.rows as usize;
+        let cols = grid.cols as usize;
 
         // L-finder: left column all dark
         for r in 0..rows {
@@ -1222,7 +1224,7 @@ mod tests {
         let g1 = encode_str("Hello World", Default::default()).unwrap();
         let g2 = encode_str("Hello World", Default::default()).unwrap();
         assert_eq!(g1.rows, g2.rows);
-        for r in 0..g1.rows {
+        for r in 0..g1.rows as usize {
             assert_eq!(g1.modules[r], g2.modules[r]);
         }
     }
