@@ -1,0 +1,17 @@
+name: coding_adventures_reed_solomon
+version: 0.1.0
+description: >
+  Reed-Solomon error-correcting codes over GF(256). Implements systematic RS
+  encoding and decoding via Berlekamp-Massey, Chien search, and Forney's algorithm.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_gf256:
+    path: ../gf256
+
+dev_dependencies:
+  test: ^1.25.0

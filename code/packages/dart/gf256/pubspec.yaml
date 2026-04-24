@@ -1,0 +1,13 @@
+name: coding_adventures_gf256
+version: 0.1.0
+description: >
+  GF(256) Galois Field arithmetic for Reed-Solomon error correction.
+  Implements GF(2^8) with the Reed-Solomon primitive polynomial 0x11D.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dev_dependencies:
+  test: ^1.25.0
