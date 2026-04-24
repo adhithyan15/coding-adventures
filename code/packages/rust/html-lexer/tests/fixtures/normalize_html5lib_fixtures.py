@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-SUPPORTED_INITIAL_STATES = {"Data state"}
+SUPPORTED_INITIAL_STATES = {"Data state", "RCDATA state"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -63,11 +63,17 @@ def main() -> int:
 
 def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     initial_states = test.get("initialStates", [])
-    if initial_states and set(initial_states) != SUPPORTED_INITIAL_STATES:
+    if len(initial_states) > 1:
+        return False, f"unsupported initialStates={initial_states!r}"
+
+    if initial_states and initial_states[0] not in SUPPORTED_INITIAL_STATES:
         return False, f"unsupported initialStates={initial_states!r}"
 
     last_start_tag = test.get("lastStartTag")
-    if last_start_tag is not None:
+    if initial_states == ["RCDATA state"] and not isinstance(last_start_tag, str):
+        return False, "RCDATA state requires lastStartTag"
+
+    if initial_states != ["RCDATA state"] and last_start_tag is not None:
         return False, f"unsupported lastStartTag={last_start_tag!r}"
 
     for token in test.get("output", []):
@@ -107,13 +113,23 @@ def normalize_case(index: int, test: dict[str, Any]) -> dict[str, Any]:
 
     tokens.append("EOF")
 
-    return {
+    normalized = {
         "id": f"html5lib-smoke-{index}",
         "description": test.get("description", f"case {index}"),
         "input": test["input"],
         "tokens": tokens,
         "diagnostics": [error["code"] for error in test.get("errors", [])],
     }
+
+    initial_states = test.get("initialStates", [])
+    if initial_states:
+        normalized["initial_state"] = initial_states[0]
+
+    last_start_tag = test.get("lastStartTag")
+    if last_start_tag is not None:
+        normalized["last_start_tag"] = last_start_tag
+
+    return normalized
 
 
 def normalize_start_tag(token: list[Any]) -> str:

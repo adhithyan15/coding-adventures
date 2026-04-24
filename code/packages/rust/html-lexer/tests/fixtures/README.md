@@ -19,6 +19,7 @@ Each file is a JSON object with this shape:
   "cases": [
     {
       "id": "stable-case-id",
+      "description": "human-readable case summary",
       "input": "<P>Hello</P>",
       "tokens": [
         "StartTag(name=p, attributes=[], self_closing=false)",
@@ -26,6 +27,8 @@ Each file is a JSON object with this shape:
         "EndTag(name=p)",
         "EOF"
       ],
+      "initial_state": "optional tokenizer state context",
+      "last_start_tag": "optional tokenizer tag context",
       "diagnostics": ["optional-diagnostic-code"]
     }
   ]
@@ -65,6 +68,7 @@ currently supports:
 
 - default data-state cases
 - explicit `initialStates: ["Data state"]`
+- `initialStates: ["RCDATA state"]` together with `lastStartTag`
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
 - tokenizer error codes lowered into Venture diagnostics
@@ -72,7 +76,10 @@ currently supports:
 Unsupported raw cases are skipped into metadata in the generated file rather
 than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
-keep the intake path visible.
+keep the intake path visible. Cases that require tokenizer context the current
+Rust wrapper cannot yet execute, such as RCDATA, stay in the generated corpus
+with `initial_state` / `last_start_tag` metadata so they can be reported as
+runtime gaps instead of being discarded.
 
 To regenerate the normalized corpus:
 

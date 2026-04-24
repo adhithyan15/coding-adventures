@@ -37,3 +37,6 @@ documented in this file.
 - A checked-in importer script and generated normalized `html5lib-smoke.json`
   corpus so broader upstream-style cases can be regenerated instead of
   hand-maintained in Rust tests.
+- RCDATA and `lastStartTag` support in the html5lib importer, with normalized
+  fixture metadata that lets Rust tests distinguish executable cases from
+  runtime gaps that still need lexer support.
