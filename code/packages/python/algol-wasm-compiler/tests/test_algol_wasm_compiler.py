@@ -381,6 +381,19 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_nested_switch_selection_entry_dispatches_through_inner_switch(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "switch inner := first, second; "
+            "switch outer := inner[i]; "
+            "i := 2; goto outer[1]; "
+            "first: result := 1; goto done; "
+            "second: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_switch_entry_can_be_conditional_designational(self) -> None:
         result = compile_source(
             "begin integer result, i; "
@@ -388,6 +401,31 @@ class TestAlgolWasmCompiler:
             "i := 2; goto s[1]; "
             "first: result := 1; goto done; "
             "second: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_nonlocal_conditional_designational_goto_selects_outer_label(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "begin goto if flag = 0 then left else right end; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_procedure_crossing_conditional_designational_goto_selects_outer_label(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure escape; begin goto if flag = 0 then left else right end; "
+            "flag := 1; escape; result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
             "done: "
             "end"
         )

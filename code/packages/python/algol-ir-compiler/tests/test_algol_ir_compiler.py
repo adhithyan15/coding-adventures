@@ -339,10 +339,11 @@ class TestAlgolIrCompiler:
                 "begin integer result, flag; "
                 "switch s := if flag = 0 then left else right; "
                 "procedure escape; begin flag := 1; goto s[1] end; "
+                "escape; "
+                "result := 0; "
                 "left: result := 1; goto done; "
                 "right: result := 2; "
                 "done: "
-                "escape "
                 "end"
             )
         )
@@ -355,6 +356,72 @@ class TestAlgolIrCompiler:
 
         assert IrOp.CALL in opcodes
         assert opcodes.count(IrOp.RET) >= 2
+        assert any(label.startswith("algol_label_") for label in labels)
+
+    def test_compiles_nested_switch_selection_entry(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "switch inner := first, second; "
+                "switch outer := inner[i]; "
+                "i := 2; goto outer[1]; "
+                "first: result := 1; goto done; "
+                "second: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(label.startswith("switch_1_1_next") for label in labels)
+
+    def test_compiles_nonlocal_conditional_designational_goto(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "begin goto if flag = 0 then left else right end; "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.BRANCH_Z in opcodes
+        assert any(label.startswith("algol_label_") for label in labels)
+
+    def test_compiles_procedure_crossing_conditional_designational_goto(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "procedure escape; begin goto if flag = 0 then left else right end; "
+                "flag := 1; escape; result := 0; "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CALL in opcodes
+        assert IrOp.BRANCH_Z in opcodes
         assert any(label.startswith("algol_label_") for label in labels)
 
     def test_repeated_switch_selections_get_distinct_dispatch_labels(self) -> None:

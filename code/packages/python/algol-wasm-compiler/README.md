@@ -18,7 +18,8 @@ already supports a substantial ALGOL 60 surface:
 - arrays with runtime bounds and checked element access
 - value and by-name parameters, including Jensen-style expression thunks
 - labels, local and nonlocal `goto`, switch designators, and conditional
-  designational expressions
+  designational expressions, including nonlocal branches and nested
+  non-recursive switch entries
 - builtin `print(...)` / `output(...)` for integers, booleans, reals, strings,
   and string variables
 

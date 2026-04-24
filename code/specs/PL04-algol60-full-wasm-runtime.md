@@ -1036,8 +1036,9 @@ and jumps through the selected designational entry. Indexes outside the
 declared switch range follow the existing runtime-failure path and return `0`.
 Switch selections may cross ALGOL frame boundaries by evaluating the chosen
 entry in the switch's declaring scope while still using the active execution
-scope for frame unwinding and pending-goto propagation. Switch entries that
-select another switch remain guarded to avoid recursive descriptor expansion.
+scope for frame unwinding and pending-goto propagation. Switch entries may
+select another switch when that expansion does not recurse back to the same
+switch.
 
 ## Expressions
 
@@ -1369,9 +1370,9 @@ Status: Phase 7a is complete for local switch declarations, local switch
 selections, and local conditional designational `goto` forms. Phase 7b-1 is
 complete for direct nonlocal block `goto` statements inside one lowered
 function. Procedure-crossing `goto`, nonlocal conditional designational
-branches, and nonlocal switch selections now execute through the same pending
-goto machinery. Nested switch entries that select another switch remain future
-Phase 7 work.
+branches, nonlocal switch selections, and nested non-recursive switch entries
+now execute through the same pending goto machinery and designational
+evaluation model.
 
 Deliverables:
 
