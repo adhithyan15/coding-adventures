@@ -100,6 +100,24 @@ class TestAlgolIrCompiler:
         ]
         assert load_addr_labels.count("__algol_static") >= 2
 
+    def test_compiles_own_array_descriptor_to_static_storage(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin own integer array counts[1:2]; integer result; "
+                "counts[1] := 7; result := counts[1] "
+                "end"
+            )
+        )
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+
+        assert "__algol_static" in data_labels
+        assert load_addr_labels.count("__algol_static") >= 2
+
     def test_compiles_string_variable_assignment_to_static_literal_pointer(self) -> None:
         result = compile_algol(
             parse_algol("begin string msg; integer result; msg := 'Hi'; result := 1 end")

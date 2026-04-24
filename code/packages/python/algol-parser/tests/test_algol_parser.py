@@ -492,6 +492,12 @@ class TestDeclarations:
         own_decl_nodes = find_nodes(ast, "own_decl")
         assert len(own_decl_nodes) >= 1
 
+    def test_own_array_declaration(self) -> None:
+        """Own array declaration produces an own_array_decl node."""
+        ast = parse("begin own integer array counts[1:3]; counts[1] := 1 end")
+        own_array_decl_nodes = find_nodes(ast, "own_array_decl")
+        assert len(own_array_decl_nodes) >= 1
+
 
 # ---------------------------------------------------------------------------
 # Procedure call tests

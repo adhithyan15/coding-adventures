@@ -439,6 +439,30 @@ class TestAlgolTypeChecker:
         assert all(ref.storage_class == "static" for ref in [*reads, *writes])
         assert all(ref.lexical_depth_delta == 1 for ref in [*reads, *writes])
 
+    def test_own_array_uses_static_descriptor_storage(self) -> None:
+        ast = parse_algol(
+            "begin own integer array counts[1:2]; integer result; "
+            "counts[1] := 7; result := counts[1] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        counts = next(
+            symbol for symbol in result.semantic.symbols if symbol.name == "counts"
+        )
+        descriptor = next(
+            array for array in result.semantic.arrays if array.name == "counts"
+        )
+        assert counts.storage_class == "static"
+        assert counts.slot_offset == 0
+        assert counts.slot_size == 4
+        assert descriptor.storage_class == "static"
+        assert result.semantic.root_block is not None
+        layout = result.semantic.root_block.frame_layout
+        assert [slot.name for slot in layout.slots] == ["result"]
+
     def test_accepts_integer_value_procedure_descriptor(self) -> None:
         ast = parse_algol(
             "begin integer result; "

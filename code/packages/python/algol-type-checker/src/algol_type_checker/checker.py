@@ -99,6 +99,19 @@ class FrameLayout:
         symbol.slot_size = slot.size
         return slot
 
+    def allocate_descriptor(self, symbol: Symbol) -> FrameSlot:
+        slot = FrameSlot(
+            symbol_id=symbol.symbol_id,
+            name=symbol.name,
+            type_name=symbol.type_name,
+            offset=self.header_size + sum(existing.size for existing in self.slots),
+            size=self.word_size,
+        )
+        self.slots.append(slot)
+        symbol.slot_offset = slot.offset
+        symbol.slot_size = slot.size
+        return slot
+
 
 @dataclass
 class Scope:
@@ -232,6 +245,7 @@ class ArrayDescriptor:
     array_id: int
     name: str
     element_type: str
+    storage_class: str
     declaring_block_id: int
     dimensions: tuple[ArrayDimension, ...]
     symbol_id: int
@@ -500,8 +514,11 @@ class AlgolTypeChecker:
         if inner.rule_name == "own_decl":
             self._check_scalar_declaration(inner, scope, storage_class=STATIC)
             return
+        if inner.rule_name == "own_array_decl":
+            self._check_array_declaration(inner, scope, storage_class=STATIC)
+            return
         if inner.rule_name == "array_decl":
-            self._check_array_declaration(inner, scope)
+            self._check_array_declaration(inner, scope, storage_class="frame")
             return
         if inner.rule_name == "switch_decl":
             self._check_switch_declaration(inner, scope)
@@ -559,7 +576,18 @@ class AlgolTypeChecker:
         symbol.slot_size = slot_size
         self._next_static_offset += slot_size
 
-    def _check_array_declaration(self, node: ASTNode, scope: Scope) -> None:
+    def _allocate_static_descriptor(self, symbol: Symbol) -> None:
+        symbol.slot_offset = self._next_static_offset
+        symbol.slot_size = FRAME_WORD_SIZE
+        self._next_static_offset += FRAME_WORD_SIZE
+
+    def _check_array_declaration(
+        self,
+        node: ASTNode,
+        scope: Scope,
+        *,
+        storage_class: str,
+    ) -> None:
         type_node = _first_direct_node(node, "type")
         element_type = (
             _first_keyword_value(type_node) if type_node is not None else REAL
@@ -615,6 +643,7 @@ class AlgolTypeChecker:
                     column=name_token.column,
                     symbol_id=self._next_symbol_id,
                     kind=ARRAY,
+                    storage_class=storage_class,
                     declaring_block_id=scope.block_id,
                     array_id=array_id,
                 )
@@ -625,8 +654,10 @@ class AlgolTypeChecker:
                     )
                     continue
                 self._next_symbol_id += 1
-                if scope.frame_layout is not None:
-                    scope.frame_layout.allocate_scalar(symbol)
+                if storage_class == STATIC:
+                    self._allocate_static_descriptor(symbol)
+                elif scope.frame_layout is not None:
+                    scope.frame_layout.allocate_descriptor(symbol)
                 self.semantic_symbols.append(symbol)
                 if symbol.slot_offset is None:
                     continue
@@ -635,6 +666,7 @@ class AlgolTypeChecker:
                         array_id=array_id,
                         name=name_token.value,
                         element_type=element_type,
+                        storage_class=storage_class,
                         declaring_block_id=scope.block_id,
                         dimensions=tuple(dimensions),
                         symbol_id=symbol.symbol_id,
