@@ -1,5 +1,5 @@
 # Runtime dependencies
-requires 'CodingAdventures::LZSS';
+requires 'coding-adventures-lzss', '0.01';
 
 # Test dependencies
 on 'test' => sub {
