@@ -1,1 +1,1 @@
-ruby hello.rb
+rake test

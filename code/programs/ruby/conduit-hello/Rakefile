@@ -1,0 +1,63 @@
+# frozen_string_literal: true
+
+# Smoke-test the conduit-hello demo routes against a real server.
+#
+# We compile conduit ourselves because the build tool may run this package in
+# parallel with the conduit package; we cannot rely on conduit's own BUILD
+# having finished first.
+
+CONDUIT_DIR = File.expand_path("../../../packages/ruby/conduit", __dir__)
+
+task default: :test
+
+task :compile do
+  Dir.chdir(CONDUIT_DIR) do
+    system("rake compile") or raise "conduit compile failed"
+  end
+  $LOAD_PATH.unshift(File.join(CONDUIT_DIR, "lib"))
+end
+
+task test: :compile do
+  require "coding_adventures_conduit"
+  require "net/http"
+  require "uri"
+  require "minitest/autorun"
+
+  app = CodingAdventures::Conduit.app do
+    get "/" do
+      "Hello from Conduit!"
+    end
+
+    get "/hello/:name" do |request|
+      "Hello #{request.params.fetch("name")}"
+    end
+  end
+
+  describe "conduit-hello routes" do
+    before do
+      @server = CodingAdventures::Conduit::Server.new(app, port: 0)
+      @server.start
+    end
+
+    after do
+      @server.close
+    end
+
+    it "GET / returns greeting" do
+      response = Net::HTTP.get_response(URI("http://127.0.0.1:#{@server.port}/"))
+      assert_equal "200", response.code
+      assert_equal "Hello from Conduit!", response.body
+    end
+
+    it "GET /hello/:name returns personalised greeting" do
+      response = Net::HTTP.get_response(URI("http://127.0.0.1:#{@server.port}/hello/Adhithya"))
+      assert_equal "200", response.code
+      assert_equal "Hello Adhithya", response.body
+    end
+
+    it "unknown route returns 404" do
+      response = Net::HTTP.get_response(URI("http://127.0.0.1:#{@server.port}/missing"))
+      assert_equal "404", response.code
+    end
+  end
+end
