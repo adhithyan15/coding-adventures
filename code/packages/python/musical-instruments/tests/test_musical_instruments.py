@@ -31,6 +31,14 @@ def test_builtin_presets_are_available() -> None:
         "violin_naive",
         "piano_naive",
         "pluck_naive",
+        "celesta_naive",
+        "glockenspiel_naive",
+        "vibraphone_naive",
+        "marimba_naive",
+        "xylophone_naive",
+        "tubular_bells_naive",
+        "timpani_naive",
+        "kalimba_naive",
     } <= ids
 
 
@@ -46,6 +54,13 @@ def test_general_midi_catalog_has_128_programs() -> None:
 def test_general_midi_programs_resolve_to_profiles() -> None:
     assert get_gm_program(41).name == "Violin"
     assert instrument_for_gm_program(41).id == "violin_naive"
+    assert instrument_for_gm_program(10).id == "glockenspiel_naive"
+    assert instrument_for_gm_program(12).id == "vibraphone_naive"
+    assert instrument_for_gm_program(13).id == "marimba_naive"
+    assert instrument_for_gm_program(14).id == "xylophone_naive"
+    assert instrument_for_gm_program(15).id == "tubular_bells_naive"
+    assert instrument_for_gm_program(48).id == "timpani_naive"
+    assert instrument_for_gm_program(109).id == "kalimba_naive"
     assert instrument_for_gm_program(74).id == "flute_naive"
 
 
@@ -86,6 +101,35 @@ def test_instruments_change_the_sample_sequence_for_same_note() -> None:
 
     assert flute.fundamental_hz == pytest.approx(violin.fundamental_hz)
     assert flute.floating_samples.samples != violin.floating_samples.samples
+
+
+def test_pitched_percussion_profiles_share_pitch_but_change_timbre() -> None:
+    glockenspiel = render_instrument_note(
+        "C5",
+        0.25,
+        instrument="glockenspiel_naive",
+        sample_rate_hz=12_000,
+        amplitude=0.4,
+    )
+    marimba = render_instrument_note(
+        "C5",
+        0.25,
+        instrument="marimba_naive",
+        sample_rate_hz=12_000,
+        amplitude=0.4,
+    )
+    vibraphone = render_instrument_note(
+        "C5",
+        0.25,
+        instrument="vibraphone_naive",
+        sample_rate_hz=12_000,
+        amplitude=0.4,
+    )
+
+    assert glockenspiel.fundamental_hz == pytest.approx(marimba.fundamental_hz)
+    assert marimba.fundamental_hz == pytest.approx(vibraphone.fundamental_hz)
+    assert glockenspiel.floating_samples.samples != marimba.floating_samples.samples
+    assert marimba.floating_samples.samples != vibraphone.floating_samples.samples
 
 
 def test_adsr_envelope_values_cover_main_stages() -> None:

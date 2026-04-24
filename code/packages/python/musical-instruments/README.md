@@ -65,9 +65,28 @@ The first named presets are:
 | `brass_naive` | bright brass-like harmonic mix |
 | `organ_naive` | steady drawbar-like harmonic mix |
 | `mallet_naive` | percussive chromatic percussion archetype |
+| `celesta_naive` | soft bell-like pitched percussion |
+| `glockenspiel_naive` | bright metallic pitched percussion |
+| `vibraphone_naive` | sustained metallic bar pitched percussion |
+| `marimba_naive` | warm woody bar pitched percussion |
+| `xylophone_naive` | short bright wooden bar pitched percussion |
+| `tubular_bells_naive` | long-ringing bell-like pitched percussion |
+| `timpani_naive` | drum-like but still note-pitched percussion |
+| `kalimba_naive` | plucked tine pitched percussion |
 | `synth_lead_naive` | bright synth lead archetype |
 | `synth_pad_naive` | slow-attack pad archetype |
 | `effect_naive` | inharmonic placeholder for effects |
+
+These are still rendered through the same note-based path as melodic
+instruments:
+
+```text
+note -> frequency -> instrument signal -> sampled PCM
+```
+
+That is the key distinction for this phase: pitched percussion still has a
+stable note/frequency center, even though its overtone mix and envelope feel
+more like a struck bar, bell, tine, or drum shell than a flute or violin.
 
 ## What This Is Not Yet
 

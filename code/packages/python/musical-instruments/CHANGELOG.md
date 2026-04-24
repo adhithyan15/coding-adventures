@@ -9,3 +9,11 @@
 - Added a full 128-entry General-MIDI-style melodic program catalog that maps
   keyboard programs onto the current naive preset library.
 - Added note rendering to floating samples and signed 16-bit mono PCM.
+
+## Unreleased
+
+- Added named naive pitched-percussion profiles for celesta, glockenspiel,
+  vibraphone, marimba, xylophone, tubular bells, timpani, and kalimba.
+- Updated the General-MIDI-style catalog so pitched-percussion slots resolve to
+  those more specific note-based timbres instead of the single generic mallet
+  profile.
