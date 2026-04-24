@@ -8,25 +8,70 @@ module CodingAdventures
       # (already enriched with conduit.route_params by the Rust router).
       def native_dispatch_route(route_index, env)
         route = @app.routes[route_index]
-        request = Request.new(
+        request = build_request(env)
+        result = HandlerContext.new(request).instance_exec(request, &route.block)
+        normalize_result(result)
+      rescue HaltError => e
+        [e.status, e.halt_headers, [e.body]]
+      end
+
+      # Called by Rust for before-handler filters. Returns nil if no filter
+      # short-circuited, or [status, headers, body] if halt was called.
+      def native_run_before_filters(env)
+        request = build_request(env)
+        @app.before_filters.each do |filter|
+          HandlerContext.new(request).instance_exec(request, &filter)
+        end
+        nil
+      rescue HaltError => e
+        [e.status, e.halt_headers, [e.body]]
+      end
+
+      # Called by Rust for after-handler filters. Runs filters for side effects
+      # and returns the (unchanged) response.
+      def native_run_after_filters(env, response)
+        request = build_request(env)
+        @app.after_filters.each do |filter|
+          HandlerContext.new(request).instance_exec(request, &filter)
+        rescue HaltError
+          # After-filter halts are silently swallowed — the response is already sent.
+        end
+        response
+      end
+
+      # Called by Rust when no route matches. Returns nil if no custom handler
+      # is registered, or [status, headers, body] to override the default 404.
+      def native_run_not_found(env)
+        return nil unless @app.not_found_handler
+
+        request = build_request(env)
+        result = HandlerContext.new(request).instance_exec(request, &@app.not_found_handler)
+        normalize_result(result)
+      rescue HaltError => e
+        [e.status, e.halt_headers, [e.body]]
+      end
+
+      # Called by Rust when a route handler raises an exception. Returns nil if
+      # no custom error handler is registered, or [status, headers, body].
+      def native_run_error_handler(env, error_message)
+        return nil unless @app.error_handler
+
+        request = build_request(env)
+        result = HandlerContext.new(request).instance_exec(request, error_message, &@app.error_handler)
+        normalize_result(result)
+      rescue HaltError => e
+        [e.status, e.halt_headers, [e.body]]
+      end
+
+      private
+
+      def build_request(env)
+        Request.new(
           env,
           params: env.fetch("conduit.route_params", {}),
           query_params: env.fetch("conduit.query_params", {}),
           headers: env.fetch("conduit.headers", {})
         )
-        result = invoke_route(route.block, request)
-        normalize_result(result)
-      end
-
-      private
-
-      def invoke_route(block, request)
-        case block.arity
-        when 0
-          request.instance_exec(&block)
-        else
-          block.call(request)
-        end
       end
 
       def normalize_result(result)
