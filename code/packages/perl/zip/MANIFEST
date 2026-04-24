@@ -1,0 +1,10 @@
+MANIFEST
+Makefile.PL
+README.md
+CHANGELOG.md
+cpanfile
+BUILD
+BUILD_windows
+lib/CodingAdventures/Zip.pm
+t/00-load.t
+t/01-zip.t

@@ -1,0 +1,7 @@
+# Runtime dependencies
+requires 'coding-adventures-lzss', '0.01';
+
+# Test dependencies
+on 'test' => sub {
+    requires 'Test2::V0';
+};
