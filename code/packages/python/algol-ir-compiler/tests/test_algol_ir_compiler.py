@@ -408,7 +408,7 @@ class TestAlgolIrCompiler:
         assert calls[0].operands[0].name.startswith("_fn_algol_")
         assert len(calls[0].operands) == 4
         assert any(label.startswith("_fn_algol_") for label in labels)
-        assert result.procedure_signatures[calls[0].operands[0].name] == 3
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 3
 
     def test_compiles_boolean_value_procedure_call(self) -> None:
         result = compile_algol(
@@ -428,8 +428,48 @@ class TestAlgolIrCompiler:
         opcodes = [instr.opcode for instr in result.program.instructions]
 
         assert calls[0].operands[0].name.startswith("_fn_algol_")
-        assert result.procedure_signatures[calls[0].operands[0].name] == 3
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 3
         assert IrOp.AND_IMM in opcodes
+
+    def test_compiles_real_value_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "real procedure half(x); value x; real x; "
+                "begin half := x / 2 end; "
+                "y := half(3); "
+                "if y > 1.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        signature = result.procedure_signatures[calls[0].operands[0].name]
+
+        assert signature.param_count == 3
+        assert signature.param_types == ("integer", "integer", "real")
+        assert signature.return_type == "real"
+        assert IrOp.F64_DIV in opcodes
+        assert IrOp.F64_CMP_GT in opcodes
+
+    def test_compiles_integer_actual_promoted_for_real_value_parameter(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "real procedure id(x); value x; real x; "
+                "begin id := x end; "
+                "y := id(1); "
+                "if y = 1.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.F64_FROM_I32 in opcodes
 
     def test_compiles_recursive_procedure_call(self) -> None:
         result = compile_algol(
@@ -482,7 +522,7 @@ class TestAlgolIrCompiler:
         opcodes = [instruction.opcode for instruction in result.program.instructions]
 
         assert len(calls[0].operands) == 4
-        assert result.procedure_signatures[calls[0].operands[0].name] == 3
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 3
         assert IrOp.ADD_IMM in opcodes
         assert opcodes.count(IrOp.LOAD_WORD) >= 4
         assert opcodes.count(IrOp.STORE_WORD) >= 8
@@ -506,7 +546,7 @@ class TestAlgolIrCompiler:
         opcodes = [instruction.opcode for instruction in result.program.instructions]
 
         assert len(calls[0].operands) == 4
-        assert result.procedure_signatures[calls[0].operands[0].name] == 3
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 3
         assert opcodes.count(IrOp.LOAD_WORD) >= 4
         assert opcodes.count(IrOp.STORE_WORD) >= 8
 
@@ -531,8 +571,40 @@ class TestAlgolIrCompiler:
         ]
 
         assert "_fn_algol_eval_thunk" in labels
-        assert result.procedure_signatures["_fn_algol_eval_thunk"] == 2
+        assert result.procedure_signatures["_fn_algol_eval_thunk"].param_count == 2
         assert any(call.operands[0].name == "_fn_algol_eval_thunk" for call in calls)
+
+    def test_compiles_read_only_real_by_name_expression_eval_thunk(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "real procedure id(x); real x; begin id := x end; "
+                "y := id(1.5); "
+                "if y > 1.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+
+        assert "_fn_algol_eval_real_thunk" in labels
+        assert result.procedure_signatures["_fn_algol_eval_real_thunk"].param_types == (
+            "integer",
+            "integer",
+        )
+        assert (
+            result.procedure_signatures["_fn_algol_eval_real_thunk"].return_type
+            == "real"
+        )
+        assert any(call.operands[0].name == "_fn_algol_eval_real_thunk" for call in calls)
 
     def test_compiles_array_element_by_name_eval_and_store_thunks(
         self,
@@ -561,8 +633,24 @@ class TestAlgolIrCompiler:
         assert "_fn_algol_store_thunk" in labels
         assert "_fn_algol_eval_thunk" in calls
         assert "_fn_algol_store_thunk" in calls
-        assert result.procedure_signatures["_fn_algol_eval_thunk"] == 2
-        assert result.procedure_signatures["_fn_algol_store_thunk"] == 3
+        assert result.procedure_signatures["_fn_algol_eval_thunk"].param_count == 2
+        assert result.procedure_signatures["_fn_algol_store_thunk"].param_count == 3
+
+    def test_compiles_real_by_name_scalar_write_through_storage_pointer(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure bump(x); real x; begin x := x + 1.5 end; "
+                "y := 2.0; "
+                "bump(y); "
+                "if y > 3.0 then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert IrOp.LOAD_F64 in opcodes
+        assert IrOp.STORE_F64 in opcodes
 
     def test_compiles_array_read_inside_expression_eval_thunk(self) -> None:
         result = compile_algol(

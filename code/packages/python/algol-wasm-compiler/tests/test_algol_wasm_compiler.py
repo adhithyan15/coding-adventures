@@ -288,6 +288,28 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_real_value_procedure_returns_real_result(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "real procedure half(x); value x; real x; "
+            "begin half := x / 2 end; "
+            "y := half(3); "
+            "if y > 1.0 then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_integer_actual_promotes_for_real_value_parameter(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "real procedure id(x); value x; real x; "
+            "begin id := x end; "
+            "y := id(1); "
+            "if y = 1.0 then result := 9 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_void_procedure_statement_writes_outer_frame(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -502,6 +524,27 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_read_only_real_by_name_expression_runs_through_eval_thunk(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "real procedure id(x); real x; begin id := x end; "
+            "y := id(1.5); "
+            "if y > 1.0 then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_real_by_name_scalar_write_through_storage_pointer(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure bump(x); real x; begin x := x + 1.5 end; "
+            "y := 2.0; "
+            "bump(y); "
+            "if y > 3.0 then result := 9 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
     def test_nested_by_name_parameter_forwards_original_storage_pointer(self) -> None:
         result = compile_source(

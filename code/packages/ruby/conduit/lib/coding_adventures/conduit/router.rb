@@ -3,6 +3,8 @@
 module CodingAdventures
   module Conduit
     class Router
+      attr_reader :routes
+
       def initialize
         @routes = []
       end

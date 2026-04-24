@@ -1,11 +1,21 @@
+/// Conduit native extension — Phase 2
+///
+/// Routing now lives entirely in Rust inside a `WebApp`. Ruby only supplies
+/// handler blocks. When a route matches, Rust calls back to
+/// `NativeServer#native_dispatch_route(route_index, env)` with a pre-built
+/// Rack env hash; Ruby executes the block and returns `[status, headers, body]`.
+///
+/// Connection management (TCP sockets, HTTP framing, event-loop) remains in
+/// `web-core` → `embeddable-http-server` → `tcp-runtime`.
+
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 use std::ptr;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
-use embeddable_http_server::{HttpRequest, HttpResponse, HttpServer, HttpServerOptions};
-use http_core::{Header, RoutePattern};
+use http_core::Header;
 use ruby_bridge::{ID, VALUE};
+use web_core::{WebApp, WebRequest, WebResponse, WebServer};
 
 extern "C" {
     fn rb_num2long(val: VALUE) -> c_long;
@@ -28,6 +38,8 @@ extern "C" {
     fn rb_set_errinfo(error: VALUE);
 }
 
+// Platform alias — kqueue on BSD/macOS, epoll on Linux, IOCP on Windows.
+
 #[cfg(any(
     target_os = "macos",
     target_os = "freebsd",
@@ -35,41 +47,40 @@ extern "C" {
     target_os = "netbsd",
     target_os = "dragonfly"
 ))]
-type PlatformHttpServer = HttpServer<transport_platform::bsd::KqueueTransportPlatform>;
+type PlatformWebServer = WebServer<transport_platform::bsd::KqueueTransportPlatform>;
 
 #[cfg(target_os = "linux")]
-type PlatformHttpServer = HttpServer<transport_platform::linux::EpollTransportPlatform>;
+type PlatformWebServer = WebServer<transport_platform::linux::EpollTransportPlatform>;
 
 #[cfg(target_os = "windows")]
-type PlatformHttpServer = HttpServer<transport_platform::windows::WindowsTransportPlatform>;
+type PlatformWebServer = WebServer<transport_platform::windows::WindowsTransportPlatform>;
+
+// --- Rust-side server state ---
 
 struct RubyConduitServer {
-    server: Option<PlatformHttpServer>,
+    server: Option<PlatformWebServer>,
     owner: VALUE,
     running: Arc<AtomicBool>,
 }
 
 struct ServeCall {
-    server: *mut PlatformHttpServer,
+    server: *mut PlatformWebServer,
     running: Arc<AtomicBool>,
     ok: bool,
     error: Option<String>,
 }
 
-struct RubyDispatch {
+// Data packet threaded through rb_protect for route dispatch.
+struct ProtectedRouteDispatch {
     owner: VALUE,
-    request: HttpRequest,
-    response: Option<Result<HttpResponse, String>>,
-}
-
-struct ProtectedDispatch {
-    owner: VALUE,
-    env: VALUE,
-    result: VALUE,
+    route_index: VALUE, // Ruby integer — index into app.routes
+    env: VALUE,         // Ruby hash — the Rack env
 }
 
 static mut NATIVE_SERVER_CLASS: VALUE = 0;
 static mut SERVER_ERROR: VALUE = 0;
+
+// --- Ruby-object lifecycle ---
 
 unsafe extern "C" fn server_alloc(klass: VALUE) -> VALUE {
     ruby_bridge::wrap_data(
@@ -82,18 +93,13 @@ unsafe extern "C" fn server_alloc(klass: VALUE) -> VALUE {
     )
 }
 
-extern "C" fn conduit_match_route(_module: VALUE, pattern_val: VALUE, path_val: VALUE) -> VALUE {
-    let pattern = string_from_rb(pattern_val, "pattern must be a String");
-    let path = string_from_rb(path_val, "path must be a String");
-    let pattern = RoutePattern::parse(&pattern);
-    match pattern.match_path(&path) {
-        Some(params) => params_hash_to_rb(&params),
-        None => ruby_bridge::QNIL,
-    }
-}
-
+// NativeServer.new(app, host, port, max_connections)
+//
+// Iterates `app.routes` and registers every route in a fresh `WebApp`.
+// Each route handler calls back to Ruby's `native_dispatch_route`.
 extern "C" fn server_initialize(
     self_val: VALUE,
+    app_val: VALUE,
     host_val: VALUE,
     port_val: VALUE,
     max_connections_val: VALUE,
@@ -102,22 +108,53 @@ extern "C" fn server_initialize(
     let port = u16_from_rb(port_val, "port must be between 0 and 65535");
     let max_connections =
         usize_from_rb(max_connections_val, "max_connections must be non-negative");
-
-    let mut options = HttpServerOptions::default();
-    options.tcp.max_connections = max_connections;
-
     let owner = self_val;
+
+    // Iterate app.routes to register each route in the WebApp.
+    let routes_val = unsafe {
+        let mid = intern("routes");
+        ruby_bridge::rb_funcallv(app_val, mid, 0, ptr::null())
+    };
+    let route_count = ruby_bridge::array_len(routes_val);
+
+    let mut web_app = WebApp::new();
+
+    for i in 0..route_count {
+        let route_val = ruby_bridge::array_entry(routes_val, i);
+
+        let method = {
+            let mid = intern("method");
+            let v = unsafe { ruby_bridge::rb_funcallv(route_val, mid, 0, ptr::null()) };
+            string_from_rb(v, "route method must be a String")
+        };
+        let pattern = {
+            let mid = intern("pattern");
+            let v = unsafe { ruby_bridge::rb_funcallv(route_val, mid, 0, ptr::null()) };
+            string_from_rb(v, "route pattern must be a String")
+        };
+
+        // The closure captures owner (VALUE = usize, which is Send+Sync) and i.
+        let owner_cap = owner;
+        let index_cap = i;
+        web_app.add(&method, &pattern, move |req: &WebRequest| {
+            dispatch_route_to_ruby(owner_cap, index_cap, req)
+        });
+    }
+
+    // Store the running flag before moving web_app into the server.
     let running = {
         let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
         slot.owner = owner;
         Arc::clone(&slot.running)
     };
 
-    let server = match bind_server(&host, port, options, move |request| {
-        dispatch_http_request(owner, request)
-    }) {
-        Ok(server) => server,
-        Err(error) => raise_server_error(&format!("failed to start Conduit HTTP runtime: {error}")),
+    let mut options = embeddable_http_server::HttpServerOptions::default();
+    options.tcp.max_connections = max_connections;
+
+    let web_app = Arc::new(web_app);
+    let server = match bind_server(&host, port, options, web_app) {
+        Ok(s) => s,
+        Err(e) => raise_server_error(&format!("failed to start Conduit server: {e}")),
     };
 
     let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
@@ -126,11 +163,13 @@ extern "C" fn server_initialize(
     self_val
 }
 
+// --- Serve / stop / dispose ---
+
 extern "C" fn server_serve(self_val: VALUE) -> VALUE {
     let (server, running) = {
         let slot = unsafe { ruby_bridge::unwrap_data_mut::<RubyConduitServer>(self_val) };
         let server = match slot.server.as_mut() {
-            Some(server) => server as *mut PlatformHttpServer,
+            Some(s) => s as *mut PlatformWebServer,
             None => raise_server_error("server is closed"),
         };
         (server, Arc::clone(&slot.running))
@@ -154,9 +193,7 @@ extern "C" fn server_serve(self_val: VALUE) -> VALUE {
     if call.ok {
         ruby_bridge::QNIL
     } else {
-        let message = call
-            .error
-            .unwrap_or_else(|| "Conduit HTTP runtime failed".to_string());
+        let message = call.error.unwrap_or_else(|| "Conduit server failed".to_string());
         raise_server_error(&message)
     }
 }
@@ -164,7 +201,7 @@ extern "C" fn server_serve(self_val: VALUE) -> VALUE {
 extern "C" fn server_stop(self_val: VALUE) -> VALUE {
     let slot = unsafe { ruby_bridge::unwrap_data::<RubyConduitServer>(self_val) };
     match slot.server.as_ref() {
-        Some(server) => server.stop_handle().stop(),
+        Some(s) => s.stop_handle().stop(),
         None => raise_server_error("server is closed"),
     }
     ruby_bridge::QNIL
@@ -187,20 +224,14 @@ extern "C" fn server_running(self_val: VALUE) -> VALUE {
 
 extern "C" fn server_local_host(self_val: VALUE) -> VALUE {
     let slot = unsafe { ruby_bridge::unwrap_data::<RubyConduitServer>(self_val) };
-    let server = slot
-        .server
-        .as_ref()
-        .unwrap_or_else(|| raise_server_error("server is closed"));
-    ruby_bridge::str_to_rb(&server.local_addr().ip().to_string())
+    let s = slot.server.as_ref().unwrap_or_else(|| raise_server_error("server is closed"));
+    ruby_bridge::str_to_rb(&s.local_addr().ip().to_string())
 }
 
 extern "C" fn server_local_port(self_val: VALUE) -> VALUE {
     let slot = unsafe { ruby_bridge::unwrap_data::<RubyConduitServer>(self_val) };
-    let server = slot
-        .server
-        .as_ref()
-        .unwrap_or_else(|| raise_server_error("server is closed"));
-    ruby_bridge::usize_to_rb(server.local_addr().port() as usize)
+    let s = slot.server.as_ref().unwrap_or_else(|| raise_server_error("server is closed"));
+    ruby_bridge::usize_to_rb(s.local_addr().port() as usize)
 }
 
 unsafe extern "C" fn serve_without_gvl(data: *mut c_void) -> *mut c_void {
@@ -209,53 +240,59 @@ unsafe extern "C" fn serve_without_gvl(data: *mut c_void) -> *mut c_void {
     let result = (*call.server).serve();
     call.running.store(false, Ordering::SeqCst);
     match result {
-        Ok(()) => {
-            call.ok = true;
-        }
-        Err(error) => {
+        Ok(()) => call.ok = true,
+        Err(e) => {
             call.ok = false;
-            call.error = Some(format!("Conduit HTTP runtime failed: {error}"));
+            call.error = Some(format!("Conduit server failed: {e}"));
         }
     }
     ptr::null_mut()
 }
 
-fn dispatch_http_request(owner: VALUE, request: HttpRequest) -> HttpResponse {
-    let mut dispatch = RubyDispatch {
+// --- Route dispatch back to Ruby ---
+
+struct RouteDispatchCall {
+    owner: VALUE,
+    route_index: usize,
+    request: WebRequest,
+    response: Option<Result<WebResponse, String>>,
+}
+
+fn dispatch_route_to_ruby(owner: VALUE, route_index: usize, req: &WebRequest) -> WebResponse {
+    let mut call = RouteDispatchCall {
         owner,
-        request,
+        route_index,
+        request: req.clone(),
         response: None,
     };
 
     unsafe {
         rb_thread_call_with_gvl(
-            dispatch_with_gvl,
-            &mut dispatch as *mut RubyDispatch as *mut c_void,
+            dispatch_route_with_gvl,
+            &mut call as *mut RouteDispatchCall as *mut c_void,
         );
     }
 
-    match dispatch
-        .response
-        .take()
-        .unwrap_or_else(|| Err("Conduit dispatch did not return a response".to_string()))
-    {
-        Ok(response) => response,
-        Err(message) => HttpResponse::new(500, message).with_header("Content-Type", "text/plain"),
+    match call.response.take().unwrap_or_else(|| Err("no response from route".to_string())) {
+        Ok(r) => r,
+        Err(msg) => WebResponse::internal_error(msg),
     }
 }
 
-unsafe extern "C" fn dispatch_with_gvl(data: *mut c_void) -> *mut c_void {
-    let dispatch = &mut *(data as *mut RubyDispatch);
-    let env = build_env(&dispatch.request);
-    let mut protected = ProtectedDispatch {
-        owner: dispatch.owner,
+unsafe extern "C" fn dispatch_route_with_gvl(data: *mut c_void) -> *mut c_void {
+    let call = &mut *(data as *mut RouteDispatchCall);
+    let env = build_env(&call.request);
+    let route_index_rb = ruby_bridge::usize_to_rb(call.route_index);
+
+    let mut protected = ProtectedRouteDispatch {
+        owner: call.owner,
+        route_index: route_index_rb,
         env,
-        result: ruby_bridge::QNIL,
     };
     let mut state = 0;
     let result = rb_protect(
-        protected_dispatch,
-        &mut protected as *mut ProtectedDispatch as VALUE,
+        protected_route_dispatch,
+        &mut protected as *mut ProtectedRouteDispatch as VALUE,
         &mut state,
     );
 
@@ -263,81 +300,93 @@ unsafe extern "C" fn dispatch_with_gvl(data: *mut c_void) -> *mut c_void {
         let error = rb_errinfo();
         rb_set_errinfo(ruby_bridge::QNIL);
         let _ = error;
-        dispatch.response = Some(Err("Conduit app raised an exception".to_string()));
+        call.response = Some(Err("route handler raised an exception".to_string()));
         return ptr::null_mut();
     }
 
-    protected.result = result;
-    dispatch.response = Some(parse_response(result));
+    call.response = Some(parse_web_response(result));
     ptr::null_mut()
 }
 
-unsafe extern "C" fn protected_dispatch(data: VALUE) -> VALUE {
-    let protected = &mut *(data as *mut ProtectedDispatch);
-    let mid = intern("dispatch_request");
-    let args = [protected.env];
-    ruby_bridge::rb_funcallv(protected.owner, mid, 1, args.as_ptr())
+unsafe extern "C" fn protected_route_dispatch(data: VALUE) -> VALUE {
+    let protected = &mut *(data as *mut ProtectedRouteDispatch);
+    let mid = intern("native_dispatch_route");
+    let args = [protected.route_index, protected.env];
+    ruby_bridge::rb_funcallv(protected.owner, mid, 2, args.as_ptr())
 }
 
-fn build_env(request: &HttpRequest) -> VALUE {
+// --- Env hash builder ---
+
+fn build_env(request: &WebRequest) -> VALUE {
     let env = ruby_bridge::hash_new();
+
     set_hash_str(&env, "REQUEST_METHOD", request.method());
-    let (path, query) = split_target(request.target());
-    set_hash_str(&env, "PATH_INFO", path);
+    set_hash_str(&env, "PATH_INFO", request.path());
+
+    // Reconstruct the original query string from the HTTP target.
+    let (_, query) = split_target(request.http.target());
     set_hash_str(&env, "QUERY_STRING", query);
+
+    // Pre-parsed query params from web-core (avoids re-parsing in Ruby).
     ruby_bridge::hash_aset(
         env,
         ruby_bridge::str_to_rb("conduit.query_params"),
-        build_query_params_hash(query),
+        map_to_rb_hash(&request.query_params),
     );
-    let headers_hash = build_headers_hash(&request.head.headers);
+
+    // Route params injected by web-core's router.
+    ruby_bridge::hash_aset(
+        env,
+        ruby_bridge::str_to_rb("conduit.route_params"),
+        map_to_rb_hash(&request.route_params),
+    );
+
+    let headers_hash = build_headers_hash(&request.http.head.headers);
     ruby_bridge::hash_aset(env, ruby_bridge::str_to_rb("conduit.headers"), headers_hash);
+
     set_hash_str(
         &env,
         "SERVER_PROTOCOL",
         &format!(
             "HTTP/{}.{}",
-            request.head.version.major, request.head.version.minor
+            request.http.head.version.major, request.http.head.version.minor
         ),
     );
     set_hash_str(&env, "rack.url_scheme", "http");
-    set_hash_str(&env, "rack.input", &String::from_utf8_lossy(&request.body));
-    set_hash_str(
-        &env,
-        "REMOTE_ADDR",
-        &request.connection.peer_addr.ip().to_string(),
-    );
+    set_hash_str(&env, "rack.input", &String::from_utf8_lossy(request.body()));
+    set_hash_str(&env, "REMOTE_ADDR", &request.peer_addr().ip().to_string());
     ruby_bridge::hash_aset(
         env,
         ruby_bridge::str_to_rb("REMOTE_PORT"),
-        ruby_bridge::usize_to_rb(request.connection.peer_addr.port() as usize),
+        ruby_bridge::usize_to_rb(request.peer_addr().port() as usize),
     );
     set_hash_str(
         &env,
         "SERVER_NAME",
-        &request.connection.local_addr.ip().to_string(),
+        &request.http.connection.local_addr.ip().to_string(),
     );
     ruby_bridge::hash_aset(
         env,
         ruby_bridge::str_to_rb("SERVER_PORT"),
-        ruby_bridge::usize_to_rb(request.connection.local_addr.port() as usize),
+        ruby_bridge::usize_to_rb(request.http.connection.local_addr.port() as usize),
     );
-    if let Some(content_length) = request.head.content_length() {
+
+    if let Some(content_length) = request.content_length() {
         ruby_bridge::hash_aset(
             env,
             ruby_bridge::str_to_rb("conduit.content_length"),
             ruby_bridge::usize_to_rb(content_length),
         );
     }
-    if let Some((content_type, _charset)) = request.head.content_type() {
+    if let Some(ct) = request.content_type() {
         ruby_bridge::hash_aset(
             env,
             ruby_bridge::str_to_rb("conduit.content_type"),
-            ruby_bridge::str_to_rb(&content_type),
+            ruby_bridge::str_to_rb(ct),
         );
     }
 
-    for header in &request.head.headers {
+    for header in &request.http.head.headers {
         let key = header_env_key(&header.name);
         set_hash_str(&env, &key, &header.value);
     }
@@ -345,121 +394,9 @@ fn build_env(request: &HttpRequest) -> VALUE {
     env
 }
 
-fn set_hash_str(hash: &VALUE, key: &str, value: &str) {
-    ruby_bridge::hash_aset(
-        *hash,
-        ruby_bridge::str_to_rb(key),
-        ruby_bridge::str_to_rb(value),
-    );
-}
+// --- Response parsers ---
 
-fn split_target(target: &str) -> (&str, &str) {
-    match target.split_once('?') {
-        Some((path, query)) => (path, query),
-        None => (target, ""),
-    }
-}
-
-fn build_headers_hash(headers: &[Header]) -> VALUE {
-    let hash = ruby_bridge::hash_new();
-    for header in headers {
-        ruby_bridge::hash_aset(
-            hash,
-            ruby_bridge::str_to_rb(&header.name.to_ascii_lowercase()),
-            ruby_bridge::str_to_rb(&header.value),
-        );
-    }
-    hash
-}
-
-fn build_query_params_hash(query: &str) -> VALUE {
-    let hash = ruby_bridge::hash_new();
-    if query.is_empty() {
-        return hash;
-    }
-
-    for pair in query.split('&') {
-        if pair.is_empty() {
-            continue;
-        }
-        let (raw_key, raw_value) = match pair.split_once('=') {
-            Some((key, value)) => (key, value),
-            None => (pair, ""),
-        };
-
-        let key = percent_decode_component(raw_key);
-        if key.is_empty() {
-            continue;
-        }
-        let value = percent_decode_component(raw_value);
-        ruby_bridge::hash_aset(
-            hash,
-            ruby_bridge::str_to_rb(&key),
-            ruby_bridge::str_to_rb(&value),
-        );
-    }
-
-    hash
-}
-fn params_hash_to_rb(params: &[(String, String)]) -> VALUE {
-    let hash = ruby_bridge::hash_new();
-    for (key, value) in params {
-        ruby_bridge::hash_aset(
-            hash,
-            ruby_bridge::str_to_rb(key),
-            ruby_bridge::str_to_rb(value),
-        );
-    }
-    hash
-}
-fn percent_decode_component(input: &str) -> String {
-    let mut output = Vec::with_capacity(input.len());
-    let bytes = input.as_bytes();
-    let mut index = 0;
-    while index < bytes.len() {
-        match bytes[index] {
-            b'+' => {
-                output.push(b' ');
-                index += 1;
-            }
-            b'%' if index + 2 < bytes.len() => {
-                if let (Some(high), Some(low)) =
-                    (hex_nibble(bytes[index + 1]), hex_nibble(bytes[index + 2]))
-                {
-                    output.push(high << 4 | low);
-                    index += 3;
-                } else {
-                    output.push(b'%');
-                    index += 1;
-                }
-            }
-            byte => {
-                output.push(byte);
-                index += 1;
-            }
-        }
-    }
-    String::from_utf8_lossy(&output).into_owned()
-}
-
-fn hex_nibble(byte: u8) -> Option<u8> {
-    match byte {
-        b'0'..=b'9' => Some(byte - b'0'),
-        b'a'..=b'f' => Some(byte - b'a' + 10),
-        b'A'..=b'F' => Some(byte - b'A' + 10),
-        _ => None,
-    }
-}
-
-fn header_env_key(name: &str) -> String {
-    let normalized = name.replace('-', "_").to_ascii_uppercase();
-    match normalized.as_str() {
-        "CONTENT_TYPE" | "CONTENT_LENGTH" => normalized,
-        _ => format!("HTTP_{normalized}"),
-    }
-}
-
-fn parse_response(value: VALUE) -> Result<HttpResponse, String> {
+fn parse_web_response(value: VALUE) -> Result<WebResponse, String> {
     if ruby_bridge::array_len(value) != 3 {
         return Err("Conduit app must return [status, headers, body]".to_string());
     }
@@ -471,12 +408,10 @@ fn parse_response(value: VALUE) -> Result<HttpResponse, String> {
     let headers = parse_header_pairs(ruby_bridge::array_entry(value, 1))?;
     let body = parse_body_chunks(ruby_bridge::array_entry(value, 2))?;
 
-    Ok(HttpResponse {
+    Ok(WebResponse {
         status,
-        reason: String::new(),
-        headers,
+        headers: headers.into_iter().map(|h| (h.name, h.value)).collect(),
         body,
-        close: false,
     })
 }
 
@@ -492,11 +427,11 @@ fn parse_header_pairs(value: VALUE) -> Result<Vec<Header>, String> {
             ruby_bridge::array_entry(pair, 0),
             "response header name must be a String",
         )?;
-        let value = string_from_rb_result(
+        let val = string_from_rb_result(
             ruby_bridge::array_entry(pair, 1),
             "response header value must be a String",
         )?;
-        headers.push(Header { name, value });
+        headers.push(Header { name, value: val });
     }
     Ok(headers)
 }
@@ -514,9 +449,50 @@ fn parse_body_chunks(value: VALUE) -> Result<Vec<u8>, String> {
     Ok(body)
 }
 
+// --- Utility helpers ---
+
+fn set_hash_str(hash: &VALUE, key: &str, value: &str) {
+    ruby_bridge::hash_aset(
+        *hash,
+        ruby_bridge::str_to_rb(key),
+        ruby_bridge::str_to_rb(value),
+    );
+}
+
+fn split_target(target: &str) -> (&str, &str) {
+    match target.split_once('?') {
+        Some((path, query)) => (path, query),
+        None => (target, ""),
+    }
+}
+
+fn map_to_rb_hash(map: &std::collections::HashMap<String, String>) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    for (key, value) in map {
+        ruby_bridge::hash_aset(
+            hash,
+            ruby_bridge::str_to_rb(key),
+            ruby_bridge::str_to_rb(value),
+        );
+    }
+    hash
+}
+
+fn build_headers_hash(headers: &[Header]) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    for header in headers {
+        ruby_bridge::hash_aset(
+            hash,
+            ruby_bridge::str_to_rb(&header.name.to_ascii_lowercase()),
+            ruby_bridge::str_to_rb(&header.value),
+        );
+    }
+    hash
+}
+
 fn string_from_rb(value: VALUE, message: &str) -> String {
     match ruby_bridge::str_from_rb(value) {
-        Some(value) => value,
+        Some(v) => v,
         None => raise_arg_error(message),
     }
 }
@@ -549,6 +525,14 @@ fn u16_from_rb_result(value: VALUE, message: &str) -> Result<u16, String> {
     Ok(number as u16)
 }
 
+fn header_env_key(name: &str) -> String {
+    let normalized = name.replace('-', "_").to_ascii_uppercase();
+    match normalized.as_str() {
+        "CONTENT_TYPE" | "CONTENT_LENGTH" => normalized,
+        _ => format!("HTTP_{normalized}"),
+    }
+}
+
 fn raise_arg_error(message: &str) -> ! {
     ruby_bridge::raise_error(ruby_bridge::path2class("ArgumentError"), message)
 }
@@ -562,6 +546,8 @@ fn intern(name: &str) -> ID {
     unsafe { ruby_bridge::rb_intern(c_name.as_ptr() as *const c_char) }
 }
 
+// --- Platform-specific server binding ---
+
 #[cfg(any(
     target_os = "macos",
     target_os = "freebsd",
@@ -572,43 +558,38 @@ fn intern(name: &str) -> ID {
 fn bind_server(
     host: &str,
     port: u16,
-    options: HttpServerOptions,
-    handler: impl Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
-) -> Result<PlatformHttpServer, transport_platform::PlatformError> {
-    PlatformHttpServer::bind_kqueue((host, port), options, handler)
+    options: embeddable_http_server::HttpServerOptions,
+    app: Arc<WebApp>,
+) -> Result<PlatformWebServer, transport_platform::PlatformError> {
+    WebServer::bind_kqueue((host, port), options, app)
 }
 
 #[cfg(target_os = "linux")]
 fn bind_server(
     host: &str,
     port: u16,
-    options: HttpServerOptions,
-    handler: impl Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
-) -> Result<PlatformHttpServer, transport_platform::PlatformError> {
-    PlatformHttpServer::bind_epoll((host, port), options, handler)
+    options: embeddable_http_server::HttpServerOptions,
+    app: Arc<WebApp>,
+) -> Result<PlatformWebServer, transport_platform::PlatformError> {
+    WebServer::bind_epoll((host, port), options, app)
 }
 
 #[cfg(target_os = "windows")]
 fn bind_server(
     host: &str,
     port: u16,
-    options: HttpServerOptions,
-    handler: impl Fn(HttpRequest) -> HttpResponse + Send + Sync + 'static,
-) -> Result<PlatformHttpServer, transport_platform::PlatformError> {
-    PlatformHttpServer::bind_windows((host, port), options, handler)
+    options: embeddable_http_server::HttpServerOptions,
+    app: Arc<WebApp>,
+) -> Result<PlatformWebServer, transport_platform::PlatformError> {
+    WebServer::bind_windows((host, port), options, app)
 }
+
+// --- Extension entry point ---
 
 #[no_mangle]
 pub extern "C" fn Init_conduit_native() {
     let coding_adventures = ruby_bridge::define_module("CodingAdventures");
     let conduit = ruby_bridge::define_module_under(coding_adventures, "Conduit");
-
-    ruby_bridge::define_module_function_raw(
-        conduit,
-        "match_route_native",
-        conduit_match_route as *const c_void,
-        2,
-    );
 
     let error_class = ruby_bridge::define_class_under(
         conduit,
@@ -626,7 +607,7 @@ pub extern "C" fn Init_conduit_native() {
         server_class,
         "initialize",
         server_initialize as *const c_void,
-        3,
+        4, // app, host, port, max_connections
     );
     ruby_bridge::define_method_raw(server_class, "serve", server_serve as *const c_void, 0);
     ruby_bridge::define_method_raw(server_class, "stop", server_stop as *const c_void, 0);

@@ -12,7 +12,7 @@ from compiler_ir import IrLabel, IrOp, IrProgram
 from ir_to_wasm_compiler import FunctionSignature, IrToWasmCompiler
 from ir_to_wasm_validator import validate as validate_ir_to_wasm
 from wasm_module_encoder import encode_module
-from wasm_types import WasmModule
+from wasm_types import ValueType, WasmModule
 from wasm_validator import ValidatedModule, ValidationError, validate
 
 
@@ -73,10 +73,18 @@ class AlgolWasmCompiler:
         signatures.extend(
             FunctionSignature(
                 label=label,
-                param_count=param_count,
+                param_count=plan.param_count,
                 require_explicit_args=True,
+                param_types=tuple(
+                    _wasm_value_type(type_name) for type_name in plan.param_types
+                ),
+                result_types=(
+                    (_wasm_value_type(plan.return_type),)
+                    if plan.return_type is not None
+                    else ()
+                ),
             )
-            for label, param_count in sorted(ir.procedure_signatures.items())
+            for label, plan in sorted(ir.procedure_signatures.items())
         )
         strategy = _wasm_lowering_strategy(ir.program)
         lowering_errors = validate_ir_to_wasm(
@@ -150,3 +158,9 @@ def _wasm_lowering_strategy(program: IrProgram) -> str:
         ):
             return "dispatch_loop"
     return "structured"
+
+
+def _wasm_value_type(type_name: str | None) -> ValueType:
+    if type_name == "real":
+        return ValueType.F64
+    return ValueType.I32
