@@ -62,6 +62,7 @@ _VALUE_PARAM_BASE_REG = 4
 _FIRST_GENERAL_REG = 32
 _ARRAY_DESCRIPTOR_SIZE = 24
 _ARRAY_ELEMENT_TYPE_INTEGER = 1
+_ARRAY_ELEMENT_TYPE_REAL = 2
 _ARRAY_DIMENSION_ENTRY_SIZE = 12
 _ARRAY_DIM_LOWER_OFFSET = 0
 _ARRAY_DIM_UPPER_OFFSET = 4
@@ -71,6 +72,7 @@ _ARRAY_ELEMENT_WIDTH_OFFSET = 12
 _ARRAY_DATA_POINTER_OFFSET = 16
 _ARRAY_BOUNDS_POINTER_OFFSET = 20
 _ARRAY_WORD_BYTES = 4
+_ARRAY_REAL_BYTES = 8
 _ARRAY_MAX_ELEMENTS = 4096
 _VALUE_MODE = "value"
 _NAME_MODE = "name"
@@ -647,7 +649,8 @@ class AlgolIrCompiler:
         self._load_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, heap_limit)
 
         data_bytes = self._fresh_reg()
-        word_bytes = self._const_reg(_ARRAY_WORD_BYTES)
+        element_width = self._array_element_width(array.element_type)
+        word_bytes = self._const_reg(element_width)
         self._emit(
             IrOp.MUL,
             IrRegister(data_bytes),
@@ -696,7 +699,15 @@ class AlgolIrCompiler:
             IrImmediate(len(array.dimensions) * _ARRAY_DIMENSION_ENTRY_SIZE),
         )
 
-        self._store_word_const(heap_pointer, 0, _ARRAY_ELEMENT_TYPE_INTEGER)
+        self._store_word_const(
+            heap_pointer,
+            0,
+            (
+                _ARRAY_ELEMENT_TYPE_REAL
+                if array.element_type == _REAL_TYPE
+                else _ARRAY_ELEMENT_TYPE_INTEGER
+            ),
+        )
         self._store_word_const(heap_pointer, 4, len(array.dimensions))
         self._store_word_reg(
             value_reg=total_reg,
@@ -706,7 +717,7 @@ class AlgolIrCompiler:
         self._store_word_const(
             heap_pointer,
             _ARRAY_ELEMENT_WIDTH_OFFSET,
-            _ARRAY_WORD_BYTES,
+            element_width,
         )
         self._store_word_reg(
             value_reg=data_pointer,
@@ -925,6 +936,15 @@ class AlgolIrCompiler:
             raise CompileError("assignment needs a variable target and expression")
         value = self._compile_expr(expr, scope)
         if _variable_subscripts(variable):
+            name = _variable_head_name(variable)
+            if name is None:
+                raise CompileError("array assignment target is missing a name")
+            access = self._require_array_access(name, "write")
+            value = self._coerce_reg_to_type(
+                value,
+                self._expr_type(expr),
+                expected_type=self.arrays[access.array_id].element_type,
+            )
             self._compile_array_store(variable, scope, value)
             return
         name = _variable_name(variable)
@@ -1906,6 +1926,10 @@ class AlgolIrCompiler:
         self.current_function_return_type = previous_return_type
 
     def _compile_array_load(self, variable: ASTNode, scope: _FrameScope) -> int:
+        name = _variable_head_name(variable)
+        if name is None:
+            raise CompileError("array access is missing a name")
+        access = self._require_array_access(name, "read")
         data_pointer, byte_offset = self._compile_array_element_address(
             variable,
             scope,
@@ -1913,11 +1937,11 @@ class AlgolIrCompiler:
             helper_failure=scope.helper_failure,
         )
         dst = self._fresh_reg()
-        self._emit(
-            IrOp.LOAD_WORD,
-            IrRegister(dst),
-            IrRegister(data_pointer),
-            IrRegister(byte_offset),
+        self._emit_load_scalar_at_reg(
+            self.arrays[access.array_id].element_type,
+            dst,
+            data_pointer,
+            byte_offset,
         )
         return dst
 
@@ -1927,16 +1951,20 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         value_reg: int,
     ) -> None:
+        name = _variable_head_name(variable)
+        if name is None:
+            raise CompileError("array access is missing a name")
+        access = self._require_array_access(name, "write")
         data_pointer, byte_offset = self._compile_array_element_address(
             variable,
             scope,
             role="write",
         )
-        self._emit(
-            IrOp.STORE_WORD,
-            IrRegister(value_reg),
-            IrRegister(data_pointer),
-            IrRegister(byte_offset),
+        self._emit_store_scalar_at_reg(
+            self.arrays[access.array_id].element_type,
+            value_reg,
+            data_pointer,
+            byte_offset,
         )
 
     def _compile_array_element_address(
@@ -2045,12 +2073,19 @@ class AlgolIrCompiler:
             )
             element_index = next_index
 
+        element_width = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(element_width),
+            IrRegister(descriptor_pointer),
+            IrRegister(self._const_reg(_ARRAY_ELEMENT_WIDTH_OFFSET)),
+        )
         byte_offset = self._fresh_reg()
         self._emit(
             IrOp.MUL,
             IrRegister(byte_offset),
             IrRegister(element_index),
-            IrRegister(self._const_reg(_ARRAY_WORD_BYTES)),
+            IrRegister(element_width),
         )
         return data_pointer, byte_offset
 
@@ -2338,6 +2373,21 @@ class AlgolIrCompiler:
             IrRegister(offset_reg),
         )
 
+    def _emit_load_scalar_at_reg(
+        self,
+        type_name: str,
+        dst_reg: int,
+        base_reg: int,
+        offset_reg: int,
+    ) -> None:
+        opcode = IrOp.LOAD_F64 if type_name == _REAL_TYPE else IrOp.LOAD_WORD
+        self._emit(
+            opcode,
+            IrRegister(dst_reg),
+            IrRegister(base_reg),
+            IrRegister(offset_reg),
+        )
+
     def _emit_store_scalar(
         self,
         type_name: str,
@@ -2354,6 +2404,21 @@ class AlgolIrCompiler:
             IrRegister(offset_reg),
         )
 
+    def _emit_store_scalar_at_reg(
+        self,
+        type_name: str,
+        value_reg: int,
+        base_reg: int,
+        offset_reg: int,
+    ) -> None:
+        opcode = IrOp.STORE_F64 if type_name == _REAL_TYPE else IrOp.STORE_WORD
+        self._emit(
+            opcode,
+            IrRegister(value_reg),
+            IrRegister(base_reg),
+            IrRegister(offset_reg),
+        )
+
     def _store_word_reg(self, *, value_reg: int, base_reg: int, offset: int) -> None:
         offset_reg = self._const_reg(offset)
         self._emit(
@@ -2362,6 +2427,9 @@ class AlgolIrCompiler:
             IrRegister(base_reg),
             IrRegister(offset_reg),
         )
+
+    def _array_element_width(self, type_name: str) -> int:
+        return _ARRAY_REAL_BYTES if type_name == _REAL_TYPE else _ARRAY_WORD_BYTES
 
     def _store_scalar_reg(
         self,
