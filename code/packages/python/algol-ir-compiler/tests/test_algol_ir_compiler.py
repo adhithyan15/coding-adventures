@@ -755,3 +755,31 @@ class TestAlgolIrCompiler:
         assert syscall_count == 2
         assert 72 in immediates
         assert 105 in immediates
+
+    def test_compiles_builtin_print_integer_to_digit_buffer_ops(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; print(42); result := 1 end")
+        )
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert IrOp.STORE_BYTE in opcodes
+        assert IrOp.LOAD_BYTE in opcodes
+        assert IrOp.SYSCALL in opcodes
+
+    def test_compiles_builtin_print_boolean_to_branching_output(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; print(true); result := 1 end")
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        syscalls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.SYSCALL
+        ]
+
+        assert any(label.startswith("algol_label_output_bool_") for label in labels)
+        assert len(syscalls) >= 4

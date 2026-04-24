@@ -1485,6 +1485,18 @@ class AlgolTypeChecker:
             )
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
             actual_type = self._infer_expr(argument, scope)
+            if descriptor.procedure_id == -1:
+                if actual_type != ERROR and actual_type not in {
+                    INTEGER,
+                    BOOLEAN,
+                    STRING,
+                }:
+                    self._error(
+                        argument,
+                        f"builtin procedure {name_token.value!r} expects integer, "
+                        f"boolean, or string, got {actual_type}",
+                    )
+                continue
             if actual_type != ERROR and not self._parameter_accepts_type(
                 parameter.mode,
                 parameter.type_name,
