@@ -10,6 +10,7 @@ It keeps parsing side-effect free, then exposes helpers to:
 - run those initialization goals explicitly against the loaded `Program`
 - adapt parsed Prolog builtin calls like `call/1`, `dynamic/1`, `assertz/1`,
   and `predicate_property/2` into runtime goals before execution
+- adapt `phrase/2` and `phrase/3` into executable DCG runtime calls
 - expose a convenience runner for executing initialization goals with the shared
   Prolog builtin adapter enabled
 

@@ -35,6 +35,7 @@ from prolog_core import (
     apply_predicate_directive,
     directive,
     empty_predicate_registry,
+    expand_dcg_clause,
 )
 from prolog_parser import ParsedQuery, PrologParseError
 
@@ -54,8 +55,11 @@ _NON_ATOM_TERMINALS = frozenset(
         "RPAREN",
         "LBRACKET",
         "RBRACKET",
+        "LCURLY",
+        "RCURLY",
         "BAR",
         "DOT",
+        "DCG",
     }
 )
 
@@ -200,7 +204,19 @@ class _OperatorParser:
 
     def _parse_clause_statement(self) -> Clause:
         scope = _Scope(variables={})
-        head = self._parse_term_expression(scope, 1200, stop_types={"RULE", "DOT"})
+        head = self._parse_term_expression(
+            scope,
+            1200,
+            stop_types={"RULE", "DCG", "DOT"},
+        )
+        if self._match_type("DCG"):
+            body_term = self._parse_term_expression(scope, 1200, stop_types={"DOT"})
+            self._expect_type("DOT")
+            try:
+                return expand_dcg_clause(head.value, body_term.value)
+            except TypeError as error:
+                raise self._error(self._current_or_eof(), str(error)) from error
+
         try:
             relation_head = _term_as_relation_call(
                 head.value,
@@ -321,6 +337,10 @@ class _OperatorParser:
 
         if self._match_type("LBRACKET"):
             return _ParsedTerm(self._parse_list(scope))
+        if self._match_type("LCURLY"):
+            inner = self._parse_term_expression(scope, 1200, stop_types={"RCURLY"})
+            self._expect_type("RCURLY")
+            return _ParsedTerm(term("{}", inner.value))
 
         if token.type_name == "ATOM":
             self._advance()

@@ -10,3 +10,4 @@ All notable changes to this package will be documented in this file.
 - `code/grammars/prolog/iso.grammar`
 - `create_iso_prolog_parser`, `parse_iso_ast`, `parse_iso_source`,
   `parse_iso_program`, and `parse_iso_query`
+- grammar and executable-source support for DCG rules (`-->`)

@@ -54,6 +54,7 @@ from logic_engine import (
     relation,
     term,
 )
+from prolog_core import expand_dcg_phrase
 
 _PREDICATE_INDICATOR = relation("/", 2)
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
@@ -100,6 +101,16 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
 
     if name == "call" and goal.relation.arity == 1:
         return calltermo(args[0])
+    if name == "phrase" and goal.relation.arity == 2:
+        try:
+            return calltermo(expand_dcg_phrase(args[0], args[1]))
+        except TypeError:
+            return goal
+    if name == "phrase" and goal.relation.arity == 3:
+        try:
+            return calltermo(expand_dcg_phrase(args[0], args[1], args[2]))
+        except TypeError:
+            return goal
     if name == "once" and goal.relation.arity == 1:
         return onceo(calltermo(args[0]))
     if name in {"not", "\\+"} and goal.relation.arity == 1:

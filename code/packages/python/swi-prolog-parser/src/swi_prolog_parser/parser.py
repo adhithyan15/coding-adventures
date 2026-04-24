@@ -63,12 +63,6 @@ def parse_swi_ast(source: str) -> ASTNode:
     """Parse SWI-Prolog source and return the grammar AST."""
 
     tokens = tokenize_swi_prolog(source)
-    for token in tokens:
-        if token.type_name == "DCG":
-            raise PrologParseError(
-                token,
-                "DCG rules are recognized by the SWI lexer but not parsed yet",
-            )
     try:
         return GrammarParser(tokens, _swi_parser_grammar()).parse()
     except GrammarParseError as error:
@@ -84,7 +78,6 @@ def parse_swi_source(
     """Parse SWI-Prolog clauses, queries, and top-level directives."""
 
     tokens = tokenize_swi_prolog(source)
-    _reject_unsupported_tokens(tokens)
     active_operator_table = (
         swi_operator_table() if operator_table is None else operator_table
     )
@@ -111,7 +104,6 @@ def parse_swi_program(
     """Parse a SWI-Prolog source containing only facts, rules, and directives."""
 
     tokens = tokenize_swi_prolog(source)
-    _reject_unsupported_tokens(tokens)
     active_operator_table = (
         swi_operator_table() if operator_table is None else operator_table
     )
@@ -130,7 +122,6 @@ def parse_swi_query(
     """Parse one SWI-Prolog top-level query statement."""
 
     tokens = tokenize_swi_prolog(source)
-    _reject_unsupported_tokens(tokens)
     first_token = next((token for token in tokens if token.type_name != "EOF"), None)
     if first_token is None:
         raise PrologParseError(Token("EOF", "", 1, 1), "expected only a query")
@@ -146,11 +137,3 @@ def parse_swi_query(
         tokens,
         active_operator_table,
     )
-
-def _reject_unsupported_tokens(tokens: list[Token]) -> None:
-    for token in tokens:
-        if token.type_name == "DCG":
-            raise PrologParseError(
-                token,
-                "DCG rules are recognized by the SWI lexer but not parsed yet",
-            )

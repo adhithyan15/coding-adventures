@@ -14,7 +14,8 @@ lowering where compatible.
 
 Executable source parsing now accepts file-scoped directives such as
 `:- op(500, yfx, ++).` and returns the final `parsed.operator_table` after
-those directives have been applied.
+those directives have been applied. It also expands DCG rules (`-->`) into
+ordinary executable clauses during source parsing.
 
 ## Quick Start
 

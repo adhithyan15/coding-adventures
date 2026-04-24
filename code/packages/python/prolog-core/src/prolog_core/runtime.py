@@ -8,6 +8,7 @@ from typing import Literal
 
 from logic_engine import (
     Atom,
+    Clause,
     Compound,
     GoalExpr,
     LogicVar,
@@ -15,8 +16,14 @@ from logic_engine import (
     Relation,
     RelationCall,
     Term,
+    atom,
     goal_as_term,
+    goal_from_term,
+    logic_list,
     relation,
+    rule,
+    term,
+    var,
 )
 from symbol_core import Symbol, sym
 
@@ -354,6 +361,10 @@ _DISCONTIGUOUS_DIRECTIVE = sym("discontiguous")
 _MULTIFILE_DIRECTIVE = sym("multifile")
 _INITIALIZATION_DIRECTIVE = sym("initialization")
 _PREDICATE_INDICATOR = sym("/")
+_DCG_CONJUNCTION = sym(",")
+_DCG_DISJUNCTION = sym(";")
+_DCG_BRACED_GOAL = sym("{}")
+_DCG_CUT = sym("!")
 
 
 def apply_op_directive(
@@ -427,6 +438,90 @@ def apply_predicate_directive(
     return predicate_registry.define(*relations, multifile=True)
 
 
+def expand_dcg_clause(head_term: Term, body_term: Term) -> Clause:
+    """Expand one DCG rule into an ordinary executable clause."""
+
+    dcg_input = var("__DcgInput")
+    dcg_output = var("__DcgOutput")
+    expanded_head = _append_dcg_state(
+        head_term,
+        dcg_input,
+        dcg_output,
+        context="DCG head must be callable",
+    )
+    relation_head = _term_as_relation_call(
+        expanded_head,
+        "DCG head must be callable",
+    )
+    expanded_body = expand_dcg_body(body_term, dcg_input, dcg_output)
+    return rule(relation_head, goal_from_term(expanded_body))
+
+
+def expand_dcg_body(
+    body_term: Term,
+    dcg_input: Term,
+    dcg_output: Term,
+) -> Term:
+    """Expand one DCG body term into an ordinary Prolog goal term."""
+
+    terminals = _dcg_terminal_pattern(body_term)
+    if terminals is not None:
+        items, tail = terminals
+        if isinstance(tail, Atom) and tail.symbol == _EMPTY_LIST:
+            return term("=", dcg_input, logic_list(items, tail=dcg_output))
+        return term(
+            ",",
+            term("=", dcg_input, logic_list(items, tail=tail)),
+            term("=", tail, dcg_output),
+        )
+
+    if isinstance(body_term, Atom) and body_term.symbol == _DCG_CUT:
+        return term(",", body_term, term("=", dcg_input, dcg_output))
+
+    if isinstance(body_term, Compound):
+        if body_term.functor == _DCG_CONJUNCTION and len(body_term.args) == 2:
+            dcg_middle = var("__DcgMiddle")
+            return term(
+                ",",
+                expand_dcg_body(body_term.args[0], dcg_input, dcg_middle),
+                expand_dcg_body(body_term.args[1], dcg_middle, dcg_output),
+            )
+        if body_term.functor == _DCG_DISJUNCTION and len(body_term.args) == 2:
+            return term(
+                ";",
+                expand_dcg_body(body_term.args[0], dcg_input, dcg_output),
+                expand_dcg_body(body_term.args[1], dcg_input, dcg_output),
+            )
+        if body_term.functor == _DCG_BRACED_GOAL and len(body_term.args) == 1:
+            return term(
+                ",",
+                body_term.args[0],
+                term("=", dcg_input, dcg_output),
+            )
+
+    return _append_dcg_state(
+        body_term,
+        dcg_input,
+        dcg_output,
+        context="unsupported DCG body item",
+    )
+
+
+def expand_dcg_phrase(
+    goal_term: Term,
+    dcg_input: Term,
+    dcg_output: Term | None = None,
+) -> Term:
+    """Expand one ``phrase/2`` or ``phrase/3`` call into an ordinary goal term."""
+
+    return _append_dcg_state(
+        goal_term,
+        dcg_input,
+        atom("[]") if dcg_output is None else dcg_output,
+        context="phrase/2 and phrase/3 expect a callable grammar goal",
+    )
+
+
 def _directive_predicate_property(
     directive_name: Symbol,
 ) -> Literal["dynamic", "discontiguous", "multifile"] | None:
@@ -437,6 +532,25 @@ def _directive_predicate_property(
     if directive_name == _MULTIFILE_DIRECTIVE:
         return "multifile"
     return None
+
+
+def _append_dcg_state(
+    callable_term: Term,
+    dcg_input: Term,
+    dcg_output: Term,
+    *,
+    context: str,
+) -> Term:
+    if isinstance(callable_term, Atom):
+        return term(callable_term.symbol, dcg_input, dcg_output)
+    if isinstance(callable_term, Compound):
+        return term(
+            callable_term.functor,
+            *callable_term.args,
+            dcg_input,
+            dcg_output,
+        )
+    raise TypeError(context)
 
 
 def _directive_precedence(term_value: Term) -> int:
@@ -520,6 +634,16 @@ def _indicator_relation(term_value: Term) -> Relation | None:
     return relation(name_term.symbol, arity_term.value)
 
 
+def _term_as_relation_call(term_value: Term, message: str) -> RelationCall:
+    if isinstance(term_value, RelationCall):
+        return term_value
+    if isinstance(term_value, Atom):
+        return relation(term_value.symbol, 0)()
+    if isinstance(term_value, Compound):
+        return relation(term_value.functor, len(term_value.args))(*term_value.args)
+    raise TypeError(message)
+
+
 def _logic_list_items(term_value: Term) -> list[Term] | None:
     items: list[Term] = []
     current = term_value
@@ -534,6 +658,25 @@ def _logic_list_items(term_value: Term) -> list[Term] | None:
             items.append(current.args[0])
             current = current.args[1]
             continue
+        return None
+
+
+def _dcg_terminal_pattern(term_value: Term) -> tuple[list[Term], Term] | None:
+    items: list[Term] = []
+    current = term_value
+    while True:
+        if isinstance(current, Atom) and current.symbol == _EMPTY_LIST:
+            return (items, current)
+        if (
+            isinstance(current, Compound)
+            and current.functor == _LIST_CONS
+            and len(current.args) == 2
+        ):
+            items.append(current.args[0])
+            current = current.args[1]
+            continue
+        if items:
+            return (items, current)
         return None
 
 

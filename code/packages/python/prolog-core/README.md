@@ -9,6 +9,7 @@ The first batch includes:
 - `OperatorTable`
 - `PrologDirective`
 - `apply_op_directive(...)`
+- `expand_dcg_clause(...)` and `expand_dcg_phrase(...)`
 - default ISO/Core and SWI operator tables
 
 Dialect parser packages can share these objects even when they keep separate
