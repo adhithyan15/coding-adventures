@@ -119,11 +119,16 @@ def _cir_to_legacy_ir(cir: list[CIRInstr], IRInstrCls: type) -> list | None:  # 
             return None
         if instr.is_generic():
             return None
+        # Map the CIR concrete type onto the legacy IR's two-state field:
+        # "u8" stays "u8"; anything else is treated as "unknown" (which the
+        # codegen handles as a deopt in most cases).
+        ty = "u8" if instr.type == "u8" else "unknown"
         out.append(
             IRInstrCls(
                 op=op,
-                dest=instr.dest,
+                dst=instr.dest,
                 srcs=list(instr.srcs),
+                ty=ty,
             )
         )
     return out

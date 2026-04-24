@@ -14,7 +14,6 @@ from interpreter_ir.function import FunctionTypeStatus
 
 from tetrad_runtime import code_object_to_iir, compile_to_iir
 
-
 # ---------------------------------------------------------------------------
 # Shape assertions
 # ---------------------------------------------------------------------------
@@ -156,6 +155,7 @@ def test_call_marshals_args_through_named_register_slots() -> None:
 def test_translate_existing_code_object() -> None:
     """``code_object_to_iir`` should accept a pre-built CodeObject too."""
     from tetrad_compiler import compile_program
+
     from tetrad_runtime.iir_translator import ENTRY_FN_NAME
     code = compile_program("fn main() -> u8 { return 42; }")
     module = code_object_to_iir(code, module_name="explicit-name")

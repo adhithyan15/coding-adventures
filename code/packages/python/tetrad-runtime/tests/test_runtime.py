@@ -18,7 +18,6 @@ import pytest
 
 from tetrad_runtime import TetradRuntime
 
-
 # ---------------------------------------------------------------------------
 # A tiny harness that runs programs through both the interpreter and JIT
 # paths and asserts they agree.

@@ -229,14 +229,16 @@ def _translate_function(
         body.append(IIRInstr("tetrad.move", _reg_name(i), [pname], _U8))
 
     # Optionally drop the trailing HALT so we can splice in the call to
-    # user-defined main and a `ret` instruction.
+    # user-defined main and a `ret` instruction.  Tetrad's compile_checked
+    # always appends a single HALT after all global initialisers; strip it
+    # so we can replace it with a real function call + return.
     body_instructions = list(instructions)
-    if append_user_main_call:
-        # Tetrad's compile_checked always appends a single HALT after all
-        # global initialisers.  Strip it so we can replace it with a real
-        # function call + return.
-        if body_instructions and body_instructions[-1].opcode == Op.HALT:
-            body_instructions.pop()
+    if (
+        append_user_main_call
+        and body_instructions
+        and body_instructions[-1].opcode == Op.HALT
+    ):
+        body_instructions.pop()
 
     for ip, instr in enumerate(body_instructions):
         if ip in branch_targets:

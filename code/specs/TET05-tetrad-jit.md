@@ -1,5 +1,18 @@
 # TET05 — Tetrad JIT Compiler Specification
 
+> **LANG migration (2026-04-23):** Tetrad JIT now also flows through
+> the generic `jit-core` (LANG03) via the `tetrad-runtime` package
+> (`TetradRuntime.run_with_jit(source)`).  The Intel 4004 backend
+> implements `jit_core.BackendProtocol` as `Intel4004Backend` — a
+> bridge that re-projects `jit-core`'s `CIRInstr` shape into the
+> legacy `tetrad-jit.ir.IRInstr` and reuses the existing
+> `codegen_4004.codegen()` and `run_on_4004()` for now.  Functions
+> the legacy codegen does not support fall back to interpretation
+> through jit-core's standard deopt path.  The legacy `TetradJIT`
+> described below remains in place; both JIT paths share the same
+> `Intel4004Simulator` and produce identical results on programs the
+> codegen accepts.
+
 ## Overview
 
 The Tetrad JIT compiler is a **profile-guided Intel 4004 native code generator**.
