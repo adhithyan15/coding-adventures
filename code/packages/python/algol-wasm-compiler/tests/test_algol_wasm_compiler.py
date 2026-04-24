@@ -368,6 +368,19 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_nonlocal_switch_designational_goto_selects_outer_entry(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "switch s := first, second; "
+            "i := 2; "
+            "begin goto s[i] end; "
+            "first: result := 1; goto done; "
+            "second: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_switch_entry_can_be_conditional_designational(self) -> None:
         result = compile_source(
             "begin integer result, i; "
@@ -375,6 +388,22 @@ class TestAlgolWasmCompiler:
             "i := 2; goto s[1]; "
             "first: result := 1; goto done; "
             "second: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_procedure_crossing_nonlocal_switch_selection_uses_declaring_scope(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch s := if flag = 0 then left else right; "
+            "procedure escape; begin flag := 1; goto s[1] end; "
+            "escape; "
+            "result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
             "done: "
             "end"
         )

@@ -892,7 +892,15 @@ class AlgolIrCompiler:
             raise CompileError("goto statement is missing a designational expression")
         self._compile_designational(desig_expr, scope)
 
-    def _compile_designational(self, node: ASTNode, scope: _FrameScope) -> None:
+    def _compile_designational(
+        self,
+        node: ASTNode,
+        scope: _FrameScope,
+        *,
+        execution_scope: _FrameScope | None = None,
+    ) -> None:
+        if execution_scope is None:
+            execution_scope = scope
         if any(token.value == "if" for token in _direct_tokens(node)):
             index = self.if_count
             self.if_count += 1
@@ -905,39 +913,59 @@ class AlgolIrCompiler:
             then_desig = _first_direct_node(node, "simple_desig")
             if then_desig is None:
                 raise CompileError("conditional designational is missing then target")
-            self._compile_simple_designational(then_desig, scope)
+            self._compile_simple_designational(
+                then_desig,
+                scope,
+                execution_scope=execution_scope,
+            )
             self._label(else_label)
             else_desig = _first_direct_node(node, "desig_expr")
             if else_desig is None:
                 raise CompileError("conditional designational is missing else target")
-            self._compile_designational(else_desig, scope)
+            self._compile_designational(
+                else_desig,
+                scope,
+                execution_scope=execution_scope,
+            )
             return
 
         simple = _first_direct_node(node, "simple_desig")
         if simple is None:
             raise CompileError("unsupported designational expression")
-        self._compile_simple_designational(simple, scope)
+        self._compile_simple_designational(simple, scope, execution_scope=execution_scope)
 
     def _compile_simple_designational(
         self,
         node: ASTNode,
         scope: _FrameScope,
+        *,
+        execution_scope: _FrameScope | None = None,
     ) -> None:
+        if execution_scope is None:
+            execution_scope = scope
         direct = _direct_label_from_simple_designational(node)
         if direct is not None:
             label = self._resolve_label_in_scope_chain(direct.value, scope)
             if label is None:
                 raise CompileError(f"goto target {direct.value!r} was not resolved")
-            self._emit_goto_label(label, scope)
+            self._emit_goto_label(label, execution_scope)
             return
 
         if any(token.value == "[" for token in _direct_tokens(node)):
-            self._compile_switch_selection(node, scope)
+            self._compile_switch_selection(
+                node,
+                scope,
+                execution_scope=execution_scope,
+            )
             return
 
         nested = _first_direct_node(node, "desig_expr")
         if nested is not None:
-            self._compile_designational(nested, scope)
+            self._compile_designational(
+                nested,
+                scope,
+                execution_scope=execution_scope,
+            )
             return
         raise CompileError("unsupported designational expression")
 
@@ -987,17 +1015,26 @@ class AlgolIrCompiler:
                 f"goto target block {target_block_id} is not active in this function"
             )
 
-    def _compile_switch_selection(self, node: ASTNode, scope: _FrameScope) -> None:
+    def _compile_switch_selection(
+        self,
+        node: ASTNode,
+        scope: _FrameScope,
+        *,
+        execution_scope: _FrameScope | None = None,
+    ) -> None:
         selection = self.switch_selections.get(id(node))
         if selection is None:
             raise CompileError("switch selection was not resolved")
         descriptor = self.switches.get(selection.switch_id)
         if descriptor is None:
             raise CompileError(f"switch {selection.name!r} has no descriptor")
+        if execution_scope is None:
+            execution_scope = scope
         indexes = _direct_nodes(node, "arith_expr")
         if len(indexes) != 1:
             raise CompileError("switch selection requires exactly one index")
         index_value = self._compile_expr(indexes[0], scope)
+        entry_scope = self._active_scope_for_block(selection.declaration_block_id, scope)
         dispatch_index = self.switch_count
         self.switch_count += 1
         for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
@@ -1016,10 +1053,14 @@ class AlgolIrCompiler:
                 raise CompileError(
                     f"switch {selection.name!r} entry {entry_index} is missing"
                 )
-            self._compile_designational(entry, scope)
+            self._compile_designational(
+                entry,
+                entry_scope,
+                execution_scope=execution_scope,
+            )
             self._label(next_label)
         failed = self._const_reg(1)
-        self._emit_runtime_failure_guard(failed, scope)
+        self._emit_runtime_failure_guard(failed, execution_scope)
 
     def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
         left_part = _first_direct_node(assign, "left_part")
@@ -3313,6 +3354,18 @@ class AlgolIrCompiler:
             active_scopes.append(current)
             current = current.parent
         return active_scopes
+
+    def _active_scope_for_block(
+        self,
+        block_id: int,
+        scope: _FrameScope,
+    ) -> _FrameScope:
+        current: _FrameScope | None = scope
+        while current is not None:
+            if current.block_id == block_id:
+                return current
+            current = current.goto_parent
+        raise CompileError(f"block {block_id} is not active for switch selection")
 
     def _emit_helper_runtime_failure_guard(
         self,

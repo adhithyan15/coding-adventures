@@ -1032,11 +1032,12 @@ The completed Phase 7a implementation keeps switch descriptors in semantic
 metadata rather than runtime memory. Local switch declarations may contain
 direct labels and conditional designational expressions over local labels. A
 `goto s[i]` evaluates `i` once, uses ALGOL's one-based switch entry numbering,
-and jumps through the selected local designational entry. Indexes outside the
+and jumps through the selected designational entry. Indexes outside the
 declared switch range follow the existing runtime-failure path and return `0`.
-Switch entries that select another switch remain guarded to avoid recursive
-descriptor expansion. Switch selections that require crossing an ALGOL frame
-boundary remain Phase 7b work.
+Switch selections may cross ALGOL frame boundaries by evaluating the chosen
+entry in the switch's declaring scope while still using the active execution
+scope for frame unwinding and pending-goto propagation. Switch entries that
+select another switch remain guarded to avoid recursive descriptor expansion.
 
 ## Expressions
 
@@ -1368,7 +1369,9 @@ Status: Phase 7a is complete for local switch declarations, local switch
 selections, and local conditional designational `goto` forms. Phase 7b-1 is
 complete for direct nonlocal block `goto` statements inside one lowered
 function. Procedure-crossing `goto`, nonlocal conditional designational
-branches, and nonlocal switch selections remain future Phase 7 work.
+branches, and nonlocal switch selections now execute through the same pending
+goto machinery. Nested switch entries that select another switch remain future
+Phase 7 work.
 
 Deliverables:
 
