@@ -214,6 +214,7 @@ class AlgolIrCompiler:
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
         self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
         self.labels: dict[int, LabelDescriptor] = {}
+        self.labels_by_symbol: dict[int, LabelDescriptor] = {}
         self.labels_by_block_name: dict[tuple[int, str], LabelDescriptor] = {}
         self.gotos: dict[int, ResolvedGoto] = {}
         self.gotos_by_designational: dict[int, ResolvedGoto] = {}
@@ -288,6 +289,9 @@ class AlgolIrCompiler:
         self.labels_by_id = {
             label.label_id: label for label in type_result.semantic.labels
         }
+        self.labels_by_symbol = {
+            label.symbol_id: label for label in type_result.semantic.labels
+        }
         self.labels_by_block_name = {
             (label.declaring_block_id, label.name): label
             for label in type_result.semantic.labels
@@ -338,7 +342,8 @@ class AlgolIrCompiler:
                     _INTEGER_TYPE,
                     *(
                         _INTEGER_TYPE
-                        if parameter.mode == _NAME_MODE or parameter.kind == "array"
+                        if parameter.mode == _NAME_MODE
+                        or parameter.kind in {"array", "label"}
                         else parameter.type_name
                         for parameter in procedure.parameters
                     ),
@@ -967,9 +972,14 @@ class AlgolIrCompiler:
         direct = _direct_label_from_simple_designational(node)
         if direct is not None:
             label = self._resolve_label_in_scope_chain(direct.value, scope)
-            if label is None:
-                raise CompileError(f"goto target {direct.value!r} was not resolved")
-            self._emit_goto_label(label, execution_scope)
+            if label is not None:
+                self._emit_goto_label(label, execution_scope)
+                return
+            label_value = self._compile_label_parameter_target(direct, scope)
+            if label_value is not None:
+                self._emit_pending_goto_return_reg(execution_scope, label_value)
+                return
+            raise CompileError(f"goto target {direct.value!r} was not resolved")
             return
 
         if any(token.value == "[" for token in _direct_tokens(node)):
@@ -1010,6 +1020,31 @@ class AlgolIrCompiler:
                 return label
             current = current.goto_parent
         return None
+
+    def _compile_label_parameter_target(
+        self,
+        token: Token,
+        scope: _FrameScope,
+    ) -> int | None:
+        resolved = self._resolve_symbol_in_scope_chain(token.value, scope)
+        if resolved is None:
+            return None
+        symbol, lexical_depth_delta = resolved
+        if symbol.kind != "label" or symbol.parameter_mode is None:
+            return None
+        if symbol.slot_offset is None:
+            raise CompileError(
+                f"label parameter {token.value!r} has no planned frame slot"
+            )
+        frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+        value_reg = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(value_reg),
+            IrRegister(frame_reg),
+            IrRegister(self._const_reg(symbol.slot_offset)),
+        )
+        return value_reg
 
     def _emit_goto_label(
         self,
@@ -2169,7 +2204,7 @@ class AlgolIrCompiler:
             for index, (argument, parameter) in enumerate(
                 zip(actuals, procedure.parameters, strict=True)
             )
-            if parameter.kind != "array"
+            if parameter.kind not in {"array", "label"}
             and parameter.mode == _NAME_MODE
             and self._requires_by_name_thunk_descriptor(argument)
         ]
@@ -2192,6 +2227,9 @@ class AlgolIrCompiler:
                     raise CompileError(
                         f"value array parameter {parameter.name!r} is not supported yet"
                     )
+                continue
+            if parameter.kind == "label":
+                arguments[index] = self._compile_label_actual_value(argument, scope)
                 continue
             if parameter.mode == _VALUE_MODE:
                 value = self._compile_expr(argument, scope)
@@ -2226,6 +2264,9 @@ class AlgolIrCompiler:
         ):
             if parameter.kind == "array":
                 arguments[index] = self._compile_array_actual_pointer(argument, scope)
+                continue
+            if parameter.kind == "label":
+                arguments[index] = self._compile_label_actual_value(argument, scope)
                 continue
             if parameter.mode != _NAME_MODE:
                 continue
@@ -2796,6 +2837,44 @@ class AlgolIrCompiler:
             raise CompileError("array parameter actual is missing a name")
         access = self._require_array_access(name, "actual")
         return self._emit_load_array_descriptor(access, scope)
+
+    def _compile_label_actual_value(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> int:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            raise CompileError("label parameter actual must be a direct label")
+        name = _variable_name(variable)
+        if name is None:
+            raise CompileError("label parameter actual is missing a name")
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            raise CompileError(f"label actual {name.value!r} was not resolved")
+        symbol, lexical_depth_delta = resolved
+        if symbol.kind != "label":
+            raise CompileError(
+                f"label parameter actual {name.value!r} is not a label"
+            )
+        if symbol.parameter_mode is not None:
+            if symbol.slot_offset is None:
+                raise CompileError(
+                    f"label parameter actual {name.value!r} has no planned frame slot"
+                )
+            frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+            value_reg = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(value_reg),
+                IrRegister(frame_reg),
+                IrRegister(self._const_reg(symbol.slot_offset)),
+            )
+            return value_reg
+        label = self.labels_by_symbol.get(symbol.symbol_id)
+        if label is None:
+            raise CompileError(f"label actual {name.value!r} has no descriptor")
+        return self._const_reg(label.label_id)
 
     def _compile_eval_thunk_actual(
         self,
@@ -3465,7 +3544,11 @@ class AlgolIrCompiler:
 
     def _is_by_name_reference(self, reference: ResolvedReference) -> bool:
         parameter = self.parameters_by_symbol.get(reference.symbol_id)
-        return parameter is not None and parameter.mode == _NAME_MODE
+        return (
+            parameter is not None
+            and parameter.mode == _NAME_MODE
+            and parameter.kind == "scalar"
+        )
 
     def _emit_store_reference(
         self,
@@ -3554,8 +3637,15 @@ class AlgolIrCompiler:
                 f"reference {reference.name!r} was resolved for block "
                 f"{reference.use_block_id}, but codegen is in block {scope.block_id}"
             )
+        return self._emit_frame_for_lexical_depth(scope, reference.lexical_depth_delta)
+
+    def _emit_frame_for_lexical_depth(
+        self,
+        scope: _FrameScope,
+        lexical_depth_delta: int,
+    ) -> int:
         frame_reg = scope.frame_base_reg
-        for _ in range(reference.lexical_depth_delta):
+        for _ in range(lexical_depth_delta):
             next_frame = self._fresh_reg()
             offset_reg = self._const_reg(_STATIC_LINK_OFFSET)
             self._emit(
@@ -3566,6 +3656,17 @@ class AlgolIrCompiler:
             )
             frame_reg = next_frame
         return frame_reg
+
+    def _resolve_symbol_in_scope_chain(
+        self,
+        name: str,
+        scope: _FrameScope,
+    ) -> tuple[Symbol, int] | None:
+        resolved = scope.semantic_block.scope.resolve_with_scope(name)
+        if resolved is None:
+            return None
+        symbol, _, lexical_depth_delta = resolved
+        return symbol, lexical_depth_delta
 
     def _emit_load_array_descriptor(
         self,
@@ -3937,9 +4038,16 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         label_id: int,
     ) -> None:
+        self._emit_pending_goto_return_reg(scope, self._const_reg(label_id))
+
+    def _emit_pending_goto_return_reg(
+        self,
+        scope: _FrameScope,
+        label_reg: int,
+    ) -> None:
         self._store_runtime_state(
             _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
-            self._const_reg(label_id),
+            label_reg,
         )
         self._emit_zero_result_reg()
         if not scope.helper_failure:

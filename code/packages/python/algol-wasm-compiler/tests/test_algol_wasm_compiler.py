@@ -672,6 +672,29 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
+    def test_label_parameter_jumps_to_caller_label(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(done); result := 1; "
+            "done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forwarded_label_parameter_propagates_through_intermediate_procedure(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "procedure relay(target); label target; begin jump(target) end; "
+            "relay(done); result := 1; "
+            "done: result := 8 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(
             "begin integer result; "

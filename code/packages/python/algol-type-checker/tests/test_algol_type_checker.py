@@ -676,6 +676,34 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "cannot be an array in this phase" in result.diagnostics[0].message
 
+    def test_accepts_label_parameter_and_direct_label_actual(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(done); "
+            "done: result := 7 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.kind == "label"
+        assert parameter.type_name == "label"
+
+    def test_rejects_value_label_parameter_in_this_phase(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure jump(target); value target; label target; begin end; "
+            "result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "cannot be a label in this phase" in result.diagnostics[0].message
+
     def test_accepts_integer_array_descriptor_and_accesses(self) -> None:
         ast = parse_algol(
             "begin integer result, lo, hi; "
