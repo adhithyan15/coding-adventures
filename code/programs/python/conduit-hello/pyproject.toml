@@ -1,0 +1,11 @@
+[project]
+name = "conduit-hello"
+version = "0.1.0"
+description = "Flask-like demo program for coding-adventures-conduit"
+requires-python = ">=3.12"
+dependencies = [
+    "coding-adventures-conduit"
+]
+
+[tool.uv.sources]
+coding-adventures-conduit = { path = "../../../packages/python/conduit", editable = true }
