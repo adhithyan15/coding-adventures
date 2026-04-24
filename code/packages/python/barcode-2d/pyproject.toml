@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-barcode-2d"
+version = "0.1.0"
+description = "Shared 2D barcode abstraction: ModuleGrid type and layout() function"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+dependencies = ["coding-adventures-paint-instructions"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/barcode_2d"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=barcode_2d --cov-report=term-missing --cov-fail-under=90"
+
+[tool.coverage.run]
+source = ["src/barcode_2d"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
