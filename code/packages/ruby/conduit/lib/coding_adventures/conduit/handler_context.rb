@@ -65,6 +65,12 @@ module CodingAdventures
       end
 
       # Redirect to url. Default status is 302 Found.
+      #
+      # SECURITY: This method does not validate the URL. If url is derived from
+      # user-supplied input (e.g. a `return_to` query parameter), validate that
+      # it is a trusted relative path or known origin before calling redirect —
+      # otherwise an attacker can craft a link that bounces users to a phishing
+      # site (open redirect / CWE-601).
       def redirect(url, status = 302)
         raise HaltError.new(status, "", { "location" => url.to_s })
       end

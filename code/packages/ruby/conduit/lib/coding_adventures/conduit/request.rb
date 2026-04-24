@@ -42,10 +42,13 @@ module CodingAdventures
         end
       end
 
-      # Parse the request body as JSON. Memoized. Raises JSON::ParserError on
-      # invalid input. Useful for Content-Type: application/json requests.
+      # Parse the request body as JSON. Memoized. Raises HaltError 400 on invalid
+      # JSON so the error handler receives a proper HTTP response instead of a
+      # raw parser exception that might expose internal details.
       def json
         @parsed_json ||= JSON.parse(body)
+      rescue JSON::ParserError
+        raise HaltError.new(400, "invalid JSON body", { "content-type" => "text/plain; charset=utf-8" })
       end
 
       # Parse the request body as URL-encoded form data (application/x-www-form-urlencoded).
