@@ -6,7 +6,29 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
-### Added — LANG17 PR2: branch and loop iteration counters
+### Added — LANG17 PR3: ``execute_traced`` and the ``VMTracer`` helper
+
+- `vm_core.tracer` — new module with `VMTrace` dataclass and
+  `VMTracer` accumulator.  `VMTrace` captures one dispatch event:
+  `frame_depth`, `fn_name`, `ip`, `instr` (reference), shallow copies
+  of the register file before and after dispatch, and `slot_delta`
+  recording any feedback-slot changes produced by this instruction.
+- `VMCore.execute_traced(module, fn, args) -> (result, list[VMTrace])`
+  — opt-in tracing path.  Runs the normal dispatch loop with a fresh
+  `VMTracer` installed for the duration of the call, returns the
+  function result alongside the accumulated trace records.  Normal
+  `execute` pays zero tracing overhead.
+- Re-exports `VMTrace` and `VMTracer` from the package root.
+
+### Changed (PR3)
+
+- `run_dispatch_loop` now consults `vm._tracer`; when set, snapshots
+  registers + frame depth before dispatch, then records a `VMTrace`
+  after.  Frame depth is captured *before* dispatch so `ret`
+  instructions still report the correct depth even though the frame
+  is popped during the same dispatch step.
+
+### Added — LANG17 PR2: branch and loop iteration counters (already on main)
 
 - `BranchStats` — new dataclass in `vm_core.metrics` holding
   `taken_count` / `not_taken_count` for one conditional-branch site,
@@ -31,16 +53,14 @@ All notable changes to this package will be documented in this file.
   dicts so callers can mutate the snapshot without affecting live
   state.
 
-### Changed
+### Changed (PR2)
 
 - `handle_jmp` now detects back-edges (target < source) and bumps the
   loop counter.  `handle_jmp_if_true` and `handle_jmp_if_false` now
   record (taken, not-taken) counters and also bump the loop counter
-  when the branch is taken to an earlier index.  Overhead: one dict
-  lookup + one integer increment per conditional branch or taken
-  backward jump.
+  when the branch is taken to an earlier index.
 
-### Added — LANG17 PR1: feedback-slot state machine (already merged on main)
+### Added — LANG17 PR1: feedback-slot state machine (already on main)
 
 - `VMProfiler` gained a pluggable `type_mapper` parameter — a callable
   from runtime value to IIR type string.  Defaults to
