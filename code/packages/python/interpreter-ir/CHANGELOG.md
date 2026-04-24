@@ -1,5 +1,35 @@
 # Changelog — coding-adventures-interpreter-ir
 
+## [Unreleased]
+
+### Added — LANG17 feedback-slot state machine
+
+- `slot_state.py` — `SlotKind` enum (UNINITIALIZED / MONOMORPHIC /
+  POLYMORPHIC / MEGAMORPHIC) and `SlotState` dataclass implementing the
+  V8 Ignition-style inline-cache state machine.  `SlotState.record()`
+  advances the machine; `is_specialisable()`, `is_megamorphic()`, and
+  `dominant_type()` are JIT-oriented read helpers.
+  `MAX_POLYMORPHIC_OBSERVATIONS = 4` is exposed as a module-level
+  constant.
+- `IIRInstr.observed_slot: SlotState | None` — new field holding the
+  live state machine.  Populated on first call to `record_observation`.
+- `IIRInstr.record_observation()` now advances `observed_slot` *and*
+  keeps the legacy `observed_type` / `observation_count` fields in
+  sync.  Callers that read those legacy fields keep working unchanged;
+  callers that want the full four-state view read `observed_slot`.
+- `SlotKind`, `SlotState`, and `MAX_POLYMORPHIC_OBSERVATIONS` re-exported
+  from the package root.
+
+### Notes
+
+- `SlotState` lives in `interpreter-ir` (not `vm-core` as LANG17's
+  first draft suggested) because `IIRInstr.observed_slot` references
+  it directly.  Putting the type in `vm-core` would require an import
+  cycle (`vm-core` already depends on `interpreter-ir`).  Grouping the
+  runtime-observation type with the instruction it annotates also
+  matches how `observed_type` and `observation_count` have always
+  lived on `IIRInstr`.
+
 ## [0.1.0] — 2026-04-21
 
 ### Added

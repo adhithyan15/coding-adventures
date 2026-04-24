@@ -70,7 +70,7 @@ from vm_core.builtins import BuiltinRegistry
 from vm_core.dispatch import STANDARD_OPCODES, run_dispatch_loop
 from vm_core.frame import VMFrame
 from vm_core.metrics import VMMetrics
-from vm_core.profiler import VMProfiler
+from vm_core.profiler import TypeMapper, VMProfiler
 
 
 class VMCore:
@@ -89,6 +89,15 @@ class VMCore:
         Whether to run the inline type profiler.
     u8_wrap:
         Mask arithmetic results to 8 bits (Tetrad / u8 mode).
+    type_mapper:
+        Callable from runtime value to IIR type string, used by the
+        profiler to advance the V8 Ignition-style feedback-slot state
+        machine.  If omitted, :func:`vm_core.profiler.default_type_mapper`
+        is used, which handles Python primitives.  Supply a custom
+        mapper when hosting a language whose runtime values are not
+        Python primitives (Lisp cons cells, Ruby tagged pointers, JS
+        Values, etc.) — the profiler otherwise classifies them all as
+        ``"any"`` and the JIT never specialises.
     """
 
     def __init__(
@@ -99,6 +108,7 @@ class VMCore:
         builtins: BuiltinRegistry | None = None,
         profiler_enabled: bool = True,
         u8_wrap: bool = False,
+        type_mapper: TypeMapper | None = None,
     ) -> None:
         self._max_frames = max_frames
         self._u8_wrap = u8_wrap
@@ -112,7 +122,7 @@ class VMCore:
         self._builtins: BuiltinRegistry = (
             builtins if builtins is not None else BuiltinRegistry()
         )
-        self._profiler: VMProfiler = VMProfiler()
+        self._profiler: VMProfiler = VMProfiler(type_mapper=type_mapper)
 
         # JIT handlers — registered by jit-core after compilation.
         self._jit_handlers: dict[str, Callable[[list[Any]], Any]] = {}

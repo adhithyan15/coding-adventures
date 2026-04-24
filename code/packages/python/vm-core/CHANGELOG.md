@@ -4,6 +4,33 @@ All notable changes to this package will be documented in this file.
 
 ---
 
+## [Unreleased]
+
+### Added — LANG17 feedback-slot state machine
+
+- `VMProfiler` gained a pluggable `type_mapper` parameter — a callable
+  from runtime value to IIR type string.  Defaults to
+  `default_type_mapper` (Python primitives).  Frontends hosting a
+  non-primitive runtime (Lisp cons cells, Ruby tagged pointers, JS
+  Values, etc.) pass a custom mapper so the profiler records
+  language-specific type names in `SlotState.observations`.
+- `VMCore(type_mapper=...)` constructor kwarg threads the mapper
+  through to the profiler.
+- `TypeMapper` and `default_type_mapper` are re-exported from the
+  package root for consumers declaring their own mappers.
+- The profiler now drives the V8 Ignition-style state machine on
+  `IIRInstr.observed_slot` (defined in `interpreter-ir`).  Legacy
+  `observed_type` / `observation_count` fields remain populated for
+  backwards compatibility.
+
+### Changed
+
+- `VMProfiler.__init__` signature is now `VMProfiler(type_mapper=None)`
+  instead of `VMProfiler()`.  Callers passing no arguments are
+  unaffected; the old call site is still valid.
+
+---
+
 ## [0.1.0] — 2026-04-21
 
 ### Added
