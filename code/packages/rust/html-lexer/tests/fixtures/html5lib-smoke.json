@@ -5,7 +5,8 @@
   "source": "upstream-html5lib-smoke.test",
   "generator": "normalize_html5lib_fixtures.py",
   "supported_initial_states": [
-    "Data state"
+    "Data state",
+    "RCDATA state"
   ],
   "cases": [
     {
@@ -42,7 +43,8 @@
         "EndTag(name=em)",
         "EOF"
       ],
-      "diagnostics": []
+      "diagnostics": [],
+      "initial_state": "Data state"
     },
     {
       "id": "html5lib-smoke-4",
@@ -78,13 +80,38 @@
       "diagnostics": [
         "eof-in-comment"
       ]
+    },
+    {
+      "id": "html5lib-smoke-7",
+      "description": "rcdata matching end tag emits end tag token",
+      "input": "Hello</title>",
+      "tokens": [
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-8",
+      "description": "rcdata non matching end tag stays text",
+      "input": "Hello&lt;/title>",
+      "tokens": [
+        "Text(data=Hello</title>)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ],
   "skipped": [
     {
-      "id": "html5lib-smoke-7",
-      "description": "unsupported rcdata fixture is skipped by the importer",
-      "reason": "unsupported initialStates=['RCDATA state']"
+      "id": "html5lib-smoke-9",
+      "description": "unsupported rawtext fixture is skipped by the importer",
+      "reason": "unsupported initialStates=['RAWTEXT state']"
     }
   ]
 }

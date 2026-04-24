@@ -20,10 +20,16 @@ struct FixtureSuite {
 #[derive(Debug, Clone, Deserialize)]
 struct FixtureCase {
     id: String,
+    #[serde(default)]
+    description: String,
     input: String,
     tokens: Vec<String>,
     #[serde(default)]
     diagnostics: Vec<String>,
+    #[serde(default)]
+    initial_state: Option<String>,
+    #[serde(default)]
+    last_start_tag: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -90,7 +96,7 @@ fn fixture_manifests_parse() {
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 7);
+    assert_eq!(file.tests.len(), 9);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -106,6 +112,11 @@ fn html5lib_smoke_fixture_file_parses() {
         vec!["RCDATA state".to_string()]
     );
     assert_eq!(file.tests[6].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(
+        file.tests[8].initial_states,
+        vec!["RAWTEXT state".to_string()]
+    );
+    assert_eq!(file.tests[8].last_start_tag.as_deref(), Some("style"));
 }
 
 #[test]
@@ -119,19 +130,29 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert_eq!(normalized.generator, "normalize_html5lib_fixtures.py");
     assert_eq!(
         normalized.supported_initial_states,
-        vec!["Data state".to_string()]
+        vec!["Data state".to_string(), "RCDATA state".to_string()]
     );
-    assert_eq!(normalized.cases.len(), 6);
+    assert_eq!(normalized.cases.len(), 8);
     assert_eq!(normalized.skipped.len(), 1);
-    assert_eq!(normalized.skipped[0].id, "html5lib-smoke-7");
+    assert_eq!(normalized.skipped[0].id, "html5lib-smoke-9");
     assert_eq!(
         normalized.skipped[0].description,
-        "unsupported rcdata fixture is skipped by the importer"
+        "unsupported rawtext fixture is skipped by the importer"
     );
     assert_eq!(
         normalized.skipped[0].reason,
-        "unsupported initialStates=['RCDATA state']"
+        "unsupported initialStates=['RAWTEXT state']"
     );
+    assert_eq!(
+        normalized.cases[6].initial_state.as_deref(),
+        Some("RCDATA state")
+    );
+    assert_eq!(normalized.cases[6].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(
+        normalized.cases[7].initial_state.as_deref(),
+        Some("RCDATA state")
+    );
+    assert_eq!(normalized.cases[7].last_start_tag.as_deref(), Some("title"));
 }
 
 #[test]
@@ -165,7 +186,7 @@ fn html1_conformance_cases_match_default_wrapper() {
 #[test]
 fn normalized_html5lib_cases_match_default_wrapper() {
     let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
-    let suite = fixture_suite_from_normalized(&normalized);
+    let suite = executable_suite_from_normalized(&normalized);
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
@@ -179,13 +200,36 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 #[test]
 fn normalized_html5lib_cases_match_generated_html1_machine() {
     let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
-    let suite = fixture_suite_from_normalized(&normalized);
+    let suite = executable_suite_from_normalized(&normalized);
 
     run_fixture_suite(&suite, || {
         html1_machine()
             .map(HtmlLexer::new)
             .map_err(|error| error.to_string())
     });
+}
+
+#[test]
+fn normalized_html5lib_cases_report_runtime_gaps_for_rcdata_context() {
+    let normalized = load_html5lib_normalized_suite(HTML5LIB_NORMALIZED_FIXTURES);
+    let unsupported = unsupported_runtime_cases(&normalized);
+
+    assert_eq!(unsupported.len(), 2);
+    assert_eq!(unsupported[0].id, "html5lib-smoke-7");
+    assert_eq!(
+        unsupported[0].description,
+        "rcdata matching end tag emits end tag token"
+    );
+    assert_eq!(
+        unsupported[0].initial_state.as_deref(),
+        Some("RCDATA state")
+    );
+    assert_eq!(unsupported[0].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(unsupported[1].id, "html5lib-smoke-8");
+    assert_eq!(
+        unsupported[1].description,
+        "rcdata non matching end tag stays text"
+    );
 }
 
 fn load_suite(raw: &str) -> FixtureSuite {
@@ -200,12 +244,33 @@ fn load_html5lib_normalized_suite(raw: &str) -> Html5libNormalizedSuite {
     serde_json::from_str(raw).expect("normalized html5lib fixture suite should parse")
 }
 
-fn fixture_suite_from_normalized(normalized: &Html5libNormalizedSuite) -> FixtureSuite {
+fn executable_suite_from_normalized(normalized: &Html5libNormalizedSuite) -> FixtureSuite {
     FixtureSuite {
         format: normalized.format.clone(),
         suite: normalized.suite.clone(),
-        description: normalized.description.clone(),
-        cases: normalized.cases.clone(),
+        description: format!("{} (runtime-executable subset)", normalized.description),
+        cases: normalized
+            .cases
+            .iter()
+            .filter(|case| is_supported_by_current_runtime(case))
+            .cloned()
+            .collect(),
+    }
+}
+
+fn unsupported_runtime_cases(normalized: &Html5libNormalizedSuite) -> Vec<FixtureCase> {
+    normalized
+        .cases
+        .iter()
+        .filter(|case| !is_supported_by_current_runtime(case))
+        .cloned()
+        .collect()
+}
+
+fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
+    match case.initial_state.as_deref() {
+        None | Some("Data state") => case.last_start_tag.is_none(),
+        Some(_) => false,
     }
 }
 

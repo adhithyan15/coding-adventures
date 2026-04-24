@@ -56,7 +56,17 @@
       ]
     },
     {
-      "description": "unsupported rcdata fixture is skipped by the importer",
+      "description": "rcdata matching end tag emits end tag token",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "Hello</title>",
+      "output": [
+        ["Character", "Hello"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "rcdata non matching end tag stays text",
       "initialStates": ["RCDATA state"],
       "lastStartTag": "title",
       "input": "Hello&lt;/title>",
@@ -64,6 +74,16 @@
         ["Character", "Hello"],
         ["Character", "<"],
         ["Character", "/title>"]
+      ]
+    },
+    {
+      "description": "unsupported rawtext fixture is skipped by the importer",
+      "initialStates": ["RAWTEXT state"],
+      "lastStartTag": "style",
+      "input": "body { color: red; }</style>",
+      "output": [
+        ["Character", "body { color: red; }"],
+        ["EndTag", "style"]
       ]
     }
   ]
