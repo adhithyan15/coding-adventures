@@ -2,10 +2,10 @@
 
 This module is the wiring layer — the topmost layer of the IRC stack.  It
 connects the pure IRC logic (``irc-server``) to the TCP transport layer
-(``irc-net-stdlib``) via two adapter objects:
+(``irc-net-selectors``) via two adapter objects:
 
     ``DriverHandler``
-        Implements the ``Handler`` protocol expected by ``irc-net-stdlib``.
+        Implements the ``Handler`` protocol expected by ``irc-net-selectors``.
         Translates raw byte chunks from the network into ``Message`` objects,
         feeds them to ``IRCServer``, and sends the resulting responses back
         over the network.
@@ -19,7 +19,7 @@ Wiring diagram::
 
     TCP socket
        ↓ raw bytes
-    StdlibEventLoop.on_data()        ← irc-net-stdlib
+    SelectorsEventLoop.on_data()     ← irc-net-selectors
        ↓ conn_id, raw bytes
     DriverHandler.on_data()          ← THIS MODULE
        ↓ feeds bytes into per-connection Framer
@@ -31,7 +31,7 @@ Wiring diagram::
        ↓ list[(ConnId, Message)]
     irc_proto.serialize()            ← irc-proto
        ↓ b":irc.local 001 alice :Welcome\r\n"
-    EventLoop.send_to()              ← irc-net-stdlib
+    EventLoop.send_to()              ← irc-net-selectors
        ↓ bytes on the wire
 
 None of the four dependency packages know about each other — only this module
@@ -44,17 +44,24 @@ message interface.
 from __future__ import annotations
 
 import argparse
+import logging
+import os
 import sys
 import threading
 from dataclasses import dataclass, field
 
+# Use a module-level logger so operators can configure log level and output
+# destination independently of stdout.  In production, redirect to a file or
+# structured log aggregator; in tests the default NullHandler keeps tests quiet.
+log = logging.getLogger(__name__)
+
 from irc_framing import Framer
-from irc_net_stdlib import (
+from irc_net_selectors import (
     ConnId as NetConnId,
 )
-from irc_net_stdlib import (
+from irc_net_selectors import (
     EventLoop,
-    StdlibEventLoop,
+    SelectorsEventLoop,
     create_listener,
 )
 from irc_proto import Message, ParseError, parse, serialize
@@ -75,14 +82,14 @@ def _to_net_conn_id(conn_id: ServerConnId) -> NetConnId:
 
 
 # ---------------------------------------------------------------------------
-# DriverHandler — bridges irc-net-stdlib and irc-server
+# DriverHandler — bridges irc-net-selectors and irc-server
 # ---------------------------------------------------------------------------
 
 
 class DriverHandler:
-    """Adapts ``IRCServer`` to the ``Handler`` interface expected by ``irc-net-stdlib``.
+    """Adapts ``IRCServer`` to the ``Handler`` interface expected by ``irc-net-selectors``.
 
-    The ``irc-net-stdlib`` event loop calls three lifecycle callbacks on a
+    The ``irc-net-selectors`` event loop calls three lifecycle callbacks on a
     ``Handler``:
 
     * ``on_connect(conn_id, host)`` — a new TCP connection arrived.
@@ -104,7 +111,7 @@ class DriverHandler:
 
     Concurrency
     -----------
-    The ``irc-net-stdlib`` event loop already holds its ``_handler_lock`` before
+    The ``irc-net-selectors`` event loop already holds its ``_handler_lock`` before
     calling any ``Handler`` method.  This means all three callbacks here run
     serially — we never have two threads in ``on_data`` simultaneously.
     ``IRCServer`` is therefore safe without an additional lock.
@@ -286,7 +293,7 @@ def parse_args(argv: list[str]) -> Config:
     parser = argparse.ArgumentParser(
         prog="ircd",
         description=(
-            "IRC server — wires irc-proto, irc-framing, irc-server, and irc-net-stdlib."
+            "IRC server — wires irc-proto, irc-framing, irc-server, and irc-net-selectors."
         ),
     )
     parser.add_argument(
@@ -316,7 +323,12 @@ def parse_args(argv: list[str]) -> Config:
         "--oper-password",
         default="",
         dest="oper_password",
-        help="Password for the OPER command (default: empty = disabled).",
+        help=(
+            "Password for the OPER command (default: empty = disabled).  "
+            "WARNING: CLI arguments are visible in the process list (ps aux, "
+            "/proc/<pid>/cmdline).  Prefer the IRCD_OPER_PASSWORD environment "
+            "variable for production deployments."
+        ),
     )
 
     ns = parser.parse_args(argv)
@@ -327,12 +339,25 @@ def parse_args(argv: list[str]) -> Config:
     if not (0 <= ns.port <= 65535):
         parser.error(f"--port must be between 0 and 65535, got {ns.port}")
 
+    # SECURITY: Prefer environment variable for the OPER password.
+    # If the env var is set it takes priority over the CLI argument, so the
+    # secret never appears in /proc/<pid>/cmdline or ``ps aux`` output.
+    # The CLI flag is kept for convenience in development but carries a warning
+    # in its help text above.
+    #
+    # Use explicit ``is not None`` (not ``or``) so that setting
+    # IRCD_OPER_PASSWORD="" intentionally disables oper and does NOT fall
+    # back to any CLI-supplied value.  If we used ``or``, an empty env var
+    # would be falsy and the CLI password would reactivate unexpectedly.
+    _env_oper = os.environ.get("IRCD_OPER_PASSWORD")
+    oper_password = _env_oper if _env_oper is not None else ns.oper_password
+
     return Config(
         host=ns.host,
         port=ns.port,
         server_name=ns.server_name,
         motd=ns.motd if ns.motd else ["Welcome."],
-        oper_password=ns.oper_password,
+        oper_password=oper_password,
     )
 
 
@@ -368,13 +393,24 @@ def main(argv: list[str] | None = None) -> None:
     """
     import signal
 
+    # Configure basic logging if no handlers are attached yet.  This ensures
+    # security-relevant warnings (e.g. binding to 0.0.0.0) are visible in a
+    # plain ``python -m ircd`` invocation.  Library users who configure their
+    # own logging before calling main() are unaffected — basicConfig is a no-op
+    # when root handlers are already present.
+    if not logging.root.handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(levelname)s %(name)s: %(message)s",
+        )
+
     config = parse_args(argv if argv is not None else sys.argv[1:])
 
     # Create the listening socket.  ``create_listener`` sets ``SO_REUSEADDR``
     # so the port is available immediately after the previous server exits.
     listener = create_listener(config.host, config.port)
 
-    loop: StdlibEventLoop = StdlibEventLoop()
+    loop: SelectorsEventLoop = SelectorsEventLoop()
 
     # The IRC state machine — knows nothing about sockets or threads.
     server = IRCServer(
@@ -394,7 +430,19 @@ def main(argv: list[str] | None = None) -> None:
     signal.signal(signal.SIGINT, _shutdown)
     signal.signal(signal.SIGTERM, _shutdown)
 
-    print(f"ircd listening on {config.host}:{config.port}", flush=True)
+    # SECURITY: warn when binding to all interfaces — this exposes the server
+    # on every network the host is connected to, including the public internet
+    # if the host has a public IP.  Operators must opt in to this explicitly.
+    if config.host in ("0.0.0.0", "::"):
+        log.warning(
+            "ircd binding to %s — server is reachable on ALL network interfaces. "
+            "Use --host 127.0.0.1 to restrict to loopback only.",
+            config.host,
+        )
+
+    # Use the logging module rather than print() so operators can control the
+    # log level, format, and destination without modifying this code.
+    log.info("ircd listening on %s:%d", config.host, config.port)
 
     # Block here.  The event loop accepts connections and dispatches events to
     # ``handler`` until ``loop.stop()`` is called (from the signal handler or
