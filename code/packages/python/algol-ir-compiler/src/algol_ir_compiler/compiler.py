@@ -212,6 +212,7 @@ class AlgolIrCompiler:
         self.current_function_return_type: str | None = _INTEGER_TYPE
         self.eval_thunks: list[_EvalThunk] = []
         self.has_by_name_parameters = False
+        self.string_literal_offsets: dict[str, int] = {}
 
     def compile(self, typed: TypeCheckResult | ASTNode) -> CompileResult:
         type_result = (
@@ -239,6 +240,7 @@ class AlgolIrCompiler:
         self.heap_limit_reg = -1
         self.eval_thunks = []
         self.has_by_name_parameters = False
+        self.string_literal_offsets = {}
         self.semantic_blocks = list(type_result.semantic.blocks)
         self.semantic_blocks_by_ast = {
             block.ast_node_id: block
@@ -364,6 +366,7 @@ class AlgolIrCompiler:
         self.program.add_data(IrDataDecl(_FRAME_MEMORY_LABEL, _FRAME_MEMORY_BYTES, 0))
         self.program.add_data(IrDataDecl(_HEAP_MEMORY_LABEL, _HEAP_MEMORY_BYTES, 0))
         static_bytes = self._static_storage_bytes(type_result.semantic.symbols)
+        static_bytes = self._plan_string_literals(type_result.ast, static_bytes)
         if static_bytes > 0:
             self.program.add_data(IrDataDecl(_STATIC_MEMORY_LABEL, static_bytes, 0))
 
@@ -398,6 +401,7 @@ class AlgolIrCompiler:
             IrRegister(self.heap_base_reg),
             IrLabel(_HEAP_MEMORY_LABEL),
         )
+        self._initialize_string_literals()
         self._copy_reg(dst=self.heap_pointer_reg, src=self.heap_base_reg)
         self._emit(
             IrOp.ADD_IMM,
@@ -1149,6 +1153,8 @@ class AlgolIrCompiler:
             return self._const_reg(int(token.value))
         if token.type_name == "REAL_LIT":
             return self._const_f64_reg(float(token.value))
+        if token.type_name == "STRING_LIT":
+            return self._emit_string_literal_pointer(token.value[1:-1])
         if token.value in {"true", "false"}:
             return self._const_reg(1 if token.value == "true" else 0)
         if token.type_name == "NAME":
@@ -1523,26 +1529,19 @@ class AlgolIrCompiler:
             raise CompileError("builtin output expects exactly 1 argument")
         actual = actuals[0]
         actual_type = self._expr_type(actual)
+        actual_reg = self._compile_expr(actual, scope)
         saved_arg_reg: int | None = None
         if self.next_reg > _VALUE_PARAM_BASE_REG:
             saved_arg_reg = self._fresh_reg()
             self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
         if actual_type == _STRING_TYPE:
-            literal = next(
-                (token for token in _tokens(actual) if token.type_name == "STRING_LIT"),
-                None,
-            )
-            if literal is None:
-                raise CompileError(
-                    "builtin output currently requires a string literal"
-                )
-            self._emit_output_chars(literal.value[1:-1])
+            self._emit_output_string(actual_reg)
         elif actual_type == _BOOLEAN_TYPE:
-            self._emit_output_boolean(self._compile_expr(actual, scope))
+            self._emit_output_boolean(actual_reg)
         elif actual_type == _INTEGER_TYPE:
-            self._emit_output_integer(self._compile_expr(actual, scope))
+            self._emit_output_integer(actual_reg)
         elif actual_type == _REAL_TYPE:
-            self._emit_output_real(self._compile_expr(actual, scope))
+            self._emit_output_real(actual_reg)
         else:
             raise CompileError(
                 "builtin output currently supports integer, boolean, real, "
@@ -1564,6 +1563,34 @@ class AlgolIrCompiler:
             IrImmediate(_WRITE_SYSCALL),
             IrRegister(_VALUE_PARAM_BASE_REG),
         )
+
+    def _emit_output_string(self, pointer_reg: int) -> None:
+        index = self.output_count
+        self.output_count += 1
+        loop_label = f"algol_label_output_string_{index}_loop"
+        end_label = f"algol_label_output_string_{index}_end"
+        current_reg = self._fresh_reg()
+        char_reg = self._fresh_reg()
+
+        self._copy_reg(dst=current_reg, src=pointer_reg)
+        self._emit(IrOp.BRANCH_Z, IrRegister(current_reg), IrLabel(end_label))
+        self._label(loop_label)
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(char_reg),
+            IrRegister(current_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(char_reg), IrLabel(end_label))
+        self._emit_output_reg(char_reg)
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(current_reg),
+            IrRegister(current_reg),
+            IrImmediate(1),
+        )
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
 
     def _emit_output_boolean(self, value_reg: int) -> None:
         index = self.output_count
@@ -2872,6 +2899,16 @@ class AlgolIrCompiler:
         value_reg = self._const_reg(value)
         self._store_word_reg(value_reg=value_reg, base_reg=base_reg, offset=offset)
 
+    def _store_byte_const(self, *, base_reg: int, offset: int, value: int) -> None:
+        value_reg = self._const_reg(value)
+        offset_reg = self._const_reg(offset)
+        self._emit(
+            IrOp.STORE_BYTE,
+            IrRegister(value_reg),
+            IrRegister(base_reg),
+            IrRegister(offset_reg),
+        )
+
     def _store_f64_reg(self, *, value_reg: int, base_reg: int, offset: int) -> None:
         self._emit_store_scalar(_REAL_TYPE, value_reg, base_reg, offset)
 
@@ -3305,6 +3342,61 @@ class AlgolIrCompiler:
                 )
             total = max(total, symbol.slot_offset + symbol.slot_size)
         return total
+
+    def _plan_string_literals(self, ast: ASTNode, start_offset: int) -> int:
+        offset = start_offset
+        for token in _tokens(ast):
+            if token.type_name != "STRING_LIT":
+                continue
+            text = token.value[1:-1]
+            if text in self.string_literal_offsets:
+                continue
+            self.string_literal_offsets[text] = offset
+            offset += len(text) + 1
+        return offset
+
+    def _initialize_string_literals(self) -> None:
+        if not self.string_literal_offsets:
+            return
+        static_base_reg = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_ADDR,
+            IrRegister(static_base_reg),
+            IrLabel(_STATIC_MEMORY_LABEL),
+        )
+        for text, offset in self.string_literal_offsets.items():
+            for index, char in enumerate(text):
+                self._store_byte_const(
+                    base_reg=static_base_reg,
+                    offset=offset + index,
+                    value=ord(char),
+                )
+            self._store_byte_const(
+                base_reg=static_base_reg,
+                offset=offset + len(text),
+                value=0,
+            )
+
+    def _emit_string_literal_pointer(self, text: str) -> int:
+        offset = self.string_literal_offsets.get(text)
+        if offset is None:
+            raise CompileError(f"string literal {text!r} was not planned")
+        pointer_reg = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_ADDR,
+            IrRegister(pointer_reg),
+            IrLabel(_STATIC_MEMORY_LABEL),
+        )
+        if offset != 0:
+            adjusted_reg = self._fresh_reg()
+            self._emit(
+                IrOp.ADD_IMM,
+                IrRegister(adjusted_reg),
+                IrRegister(pointer_reg),
+                IrImmediate(offset),
+            )
+            return adjusted_reg
+        return pointer_reg
 
     def _fresh_reg(self) -> int:
         reg = self.next_reg

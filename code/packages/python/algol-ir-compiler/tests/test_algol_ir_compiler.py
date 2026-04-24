@@ -100,6 +100,38 @@ class TestAlgolIrCompiler:
         ]
         assert load_addr_labels.count("__algol_static") >= 2
 
+    def test_compiles_string_variable_assignment_to_static_literal_pointer(self) -> None:
+        result = compile_algol(
+            parse_algol("begin string msg; integer result; msg := 'Hi'; result := 1 end")
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+
+        assert "__algol_static" in data_labels
+        assert IrOp.STORE_BYTE in opcodes
+        assert "__algol_static" in load_addr_labels
+
+    def test_compiles_string_variable_output_to_byte_loop(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin string msg; integer result; msg := 'Hi'; print(msg); result := 1 end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.LOAD_BYTE in opcodes
+        assert any(label.startswith("algol_label_output_string_") for label in labels)
+
     def test_compiles_local_goto_to_algol_label(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -770,21 +802,17 @@ class TestAlgolIrCompiler:
         result = compile_algol(
             parse_algol("begin integer result; print('Hi'); result := 1 end")
         )
-        instructions = result.program.instructions
-        syscall_count = sum(
-            1 for instruction in instructions if instruction.opcode == IrOp.SYSCALL
-        )
-        immediates = [
-            operand.value
-            for instruction in instructions
-            if instruction.opcode == IrOp.LOAD_IMM
-            for operand in instruction.operands[1:]
-            if hasattr(operand, "value")
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+        load_addr_labels = [
+            instruction.operands[1].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LOAD_ADDR and len(instruction.operands) == 2
         ]
 
-        assert syscall_count == 2
-        assert 72 in immediates
-        assert 105 in immediates
+        assert IrOp.STORE_BYTE in opcodes
+        assert IrOp.LOAD_BYTE in opcodes
+        assert IrOp.SYSCALL in opcodes
+        assert "__algol_static" in load_addr_labels
 
     def test_compiles_builtin_print_integer_to_digit_buffer_ops(self) -> None:
         result = compile_algol(

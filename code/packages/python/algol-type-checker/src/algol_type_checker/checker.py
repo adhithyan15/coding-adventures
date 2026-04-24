@@ -521,7 +521,7 @@ class AlgolTypeChecker:
     ) -> None:
         type_node = _first_node(node, "type")
         declared_type = _first_keyword_value(type_node) if type_node is not None else ""
-        if declared_type not in {INTEGER, BOOLEAN, REAL}:
+        if declared_type not in {INTEGER, BOOLEAN, REAL, STRING}:
             self._error(
                 node, f"{declared_type or 'unknown'} variables are not supported yet"
             )

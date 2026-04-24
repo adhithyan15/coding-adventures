@@ -104,6 +104,30 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [4]
         assert "".join(captured) == "3.500-0.125"
 
+    def test_string_variable_assignment_and_output_write_stdout(self) -> None:
+        result = compile_source(
+            "begin string msg; integer result; "
+            "msg := 'Hi'; print(msg); result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
+
+    def test_string_variable_copy_preserves_pointer_value(self) -> None:
+        result = compile_source(
+            "begin string first, second; integer result; "
+            "first := 'OK'; second := first; output(second); result := 8 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [8]
+        assert "".join(captured) == "OK"
+
     def test_own_integer_persists_across_procedure_calls(self) -> None:
         result = compile_source(
             "begin own integer counter; integer result; "
