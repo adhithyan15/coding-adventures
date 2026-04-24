@@ -8,3 +8,8 @@
   `initialization/1` handling
 - support optional goal adaptation so parsed initialization goals can be mapped
   into richer runtime or builtin goals before execution
+- add `adapt_prolog_goal(...)` as a shared builtin adapter for parsed Prolog
+  goals
+- add `run_prolog_initialization_goals(...)` so loader callers can execute
+  `call/1`, `dynamic/1`, `assertz/1`, `predicate_property/2`, and related
+  builtins without writing custom Python adapters

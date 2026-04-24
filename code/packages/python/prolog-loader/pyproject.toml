@@ -12,6 +12,7 @@ authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 dependencies = [
     "coding-adventures-iso-prolog-parser>=0.1.0",
+    "coding-adventures-logic-builtins>=0.13.0",
     "coding-adventures-logic-engine>=0.10.0",
     "coding-adventures-prolog-core>=0.1.0",
     "coding-adventures-prolog-parser>=0.1.0",
