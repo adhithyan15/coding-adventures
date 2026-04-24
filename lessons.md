@@ -3292,4 +3292,22 @@ This caused four CI workaround hacks in the `conduit` package — all of which m
 
 Confirm against `ruby/internal/special_consts.h` in the Ruby installation. The `nil.object_id` value in Ruby (which returns 4 in Ruby 3.x) is computed as `LONG2FIX(QNIL)` and matches: `QNIL = nil.object_id` only if you account for the Fixnum encoding (`LONG2FIX(n) = n << 1 | 1`, so `LONG2FIX(4) >> 1 = 4`).
 
+---
+
+### 2026-04-24: Java/Kotlin packages — always add `.gitignore` before running `gradle test`
+
+Gradle generates `.gradle/` and `gradle-build/` directories at the package root during any build/test run. These are build artifacts and must never be committed.
+
+**Always create `.gitignore` before running `gradle test`:**
+```
+/.gradle/
+/gradle-build/
+/build/
+/out/
+```
+
+If the agent already ran `gradle test` before creating `.gitignore`, the artifacts will be untracked and get swept into `git add .`. Use `git rm -r --cached .gradle/ gradle-build/` to evict them, then add the `.gitignore` and amend/follow-up commit.
+
+This applies to **all** Java and Kotlin packages. The existing packages (e.g. `java/hash-map`, `kotlin/hash-map`) already have this `.gitignore`; new packages must include it from the start.
+
 **Rule:** When a Ruby native extension starts crashing with SIGSEGV at a low address like `0x10`, suspect that a "nil" or other special constant is being returned with the wrong bit pattern, causing Ruby to dereference it as an object pointer.
