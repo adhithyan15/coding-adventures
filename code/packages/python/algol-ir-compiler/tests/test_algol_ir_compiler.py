@@ -533,6 +533,27 @@ class TestAlgolIrCompiler:
         assert IrOp.F64_DIV in opcodes
         assert IrOp.F64_CMP_GT in opcodes
 
+    def test_compiles_string_value_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin string msg; integer result; "
+                "string procedure id(x); value x; string x; "
+                "begin id := x end; "
+                "msg := id('Hi'); print(msg); result := 1 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        signature = result.procedure_signatures[calls[0].operands[0].name]
+
+        assert signature.param_count == 3
+        assert signature.param_types == ("integer", "integer", "string")
+        assert signature.return_type == "string"
+
     def test_compiles_integer_actual_promoted_for_real_value_parameter(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -612,6 +633,27 @@ class TestAlgolIrCompiler:
                 "procedure settrue(x); boolean x; begin x := true end; "
                 "flag := false; settrue(flag); "
                 "if flag then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert len(calls[0].operands) == 4
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 3
+        assert opcodes.count(IrOp.LOAD_WORD) >= 4
+        assert opcodes.count(IrOp.STORE_WORD) >= 8
+
+    def test_compiles_string_by_name_parameter_as_storage_pointer(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin string msg; integer result; "
+                "procedure setmsg(x); string x; begin x := 'OK' end; "
+                "msg := 'Hi'; setmsg(msg); print(msg); result := 1 "
                 "end"
             )
         )

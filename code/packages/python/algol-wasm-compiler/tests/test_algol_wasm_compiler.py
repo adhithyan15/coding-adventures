@@ -374,6 +374,20 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_string_value_procedure_returns_string_result(self) -> None:
+        result = compile_source(
+            "begin string msg; integer result; "
+            "string procedure id(x); value x; string x; "
+            "begin id := x end; "
+            "msg := id('Hi'); print(msg); result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
+
     def test_integer_actual_promotes_for_real_value_parameter(self) -> None:
         result = compile_source(
             "begin integer result; real y; "
@@ -423,6 +437,19 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_string_by_name_parameter_assignment_writes_back(self) -> None:
+        result = compile_source(
+            "begin string msg; integer result; "
+            "procedure setmsg(x); string x; begin x := 'OK' end; "
+            "msg := 'Hi'; setmsg(msg); print(msg); result := 8 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [8]
+        assert "".join(captured) == "OK"
 
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(
