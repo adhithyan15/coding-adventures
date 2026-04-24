@@ -56,7 +56,8 @@ _RUNTIME_THUNK_HEAP_MARK_OFFSET = 20
 _RUNTIME_THUNK_FAILURE_OFFSET = 24
 _RUNTIME_THUNK_HELPER_DEPTH_OFFSET = 28
 _RUNTIME_PENDING_GOTO_LABEL_OFFSET = 32
-_RUNTIME_STATE_BYTES = 36
+_RUNTIME_OUTPUT_BYTES_OFFSET = 36
+_RUNTIME_STATE_BYTES = 40
 _STATIC_LINK_PARAM_REG = 2
 _THUNK_HEAP_MARK_PARAM_REG = 3
 _VALUE_PARAM_BASE_REG = 4
@@ -95,6 +96,8 @@ _STRING_TYPE = "string"
 _STRING_DESCRIPTOR_LENGTH_OFFSET = 0
 _STRING_DESCRIPTOR_DATA_POINTER_OFFSET = 4
 _STRING_DESCRIPTOR_SIZE = 8
+_MAX_STRING_OUTPUT_BYTES = 4096
+_MAX_TOTAL_OUTPUT_BYTES = 8192
 _BUILTIN_PRINT_LABEL = "__algol_builtin_print"
 _BUILTIN_OUTPUT_LABEL = "__algol_builtin_output"
 _WRITE_SYSCALL = 1
@@ -422,6 +425,7 @@ class AlgolIrCompiler:
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, _ZERO_REG)
         self._store_runtime_state(_RUNTIME_THUNK_HELPER_DEPTH_OFFSET, _ZERO_REG)
         self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)
+        self._store_runtime_state(_RUNTIME_OUTPUT_BYTES_OFFSET, _ZERO_REG)
 
         block = _first_node(type_result.ast, "block")
         if block is None:
@@ -1610,13 +1614,13 @@ class AlgolIrCompiler:
             saved_arg_reg = self._fresh_reg()
             self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
         if actual_type == _STRING_TYPE:
-            self._emit_output_string(actual_reg)
+            self._emit_output_string(actual_reg, scope)
         elif actual_type == _BOOLEAN_TYPE:
-            self._emit_output_boolean(actual_reg)
+            self._emit_output_boolean(actual_reg, scope)
         elif actual_type == _INTEGER_TYPE:
-            self._emit_output_integer(actual_reg)
+            self._emit_output_integer(actual_reg, scope)
         elif actual_type == _REAL_TYPE:
-            self._emit_output_real(actual_reg)
+            self._emit_output_real(actual_reg, scope)
         else:
             raise CompileError(
                 "builtin output currently supports integer, boolean, real, "
@@ -1627,11 +1631,29 @@ class AlgolIrCompiler:
             self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
         return _ZERO_REG
 
-    def _emit_output_chars(self, text: str) -> None:
+    def _emit_output_chars(self, text: str, scope: _FrameScope) -> None:
         for char in text:
-            self._emit_output_reg(self._const_reg(ord(char)))
+            self._emit_output_reg(self._const_reg(ord(char)), scope)
 
-    def _emit_output_reg(self, value_reg: int) -> None:
+    def _emit_output_reg(self, value_reg: int, scope: _FrameScope) -> None:
+        total_output_reg = self._fresh_reg()
+        next_total_reg = self._fresh_reg()
+        limit_exceeded_reg = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_OUTPUT_BYTES_OFFSET, total_output_reg)
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_total_reg),
+            IrRegister(total_output_reg),
+            IrImmediate(1),
+        )
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(limit_exceeded_reg),
+            IrRegister(next_total_reg),
+            IrRegister(self._const_reg(_MAX_TOTAL_OUTPUT_BYTES)),
+        )
+        self._emit_runtime_failure_guard(limit_exceeded_reg, scope)
+        self._store_runtime_state(_RUNTIME_OUTPUT_BYTES_OFFSET, next_total_reg)
         self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=value_reg)
         self._emit(
             IrOp.SYSCALL,
@@ -1639,15 +1661,19 @@ class AlgolIrCompiler:
             IrRegister(_VALUE_PARAM_BASE_REG),
         )
 
-    def _emit_output_string(self, pointer_reg: int) -> None:
+    def _emit_output_string(self, pointer_reg: int, scope: _FrameScope) -> None:
         index = self.output_count
         self.output_count += 1
         loop_label = f"algol_label_output_string_{index}_loop"
         end_label = f"algol_label_output_string_{index}_end"
+        data_guard_done_label = f"algol_label_output_string_{index}_data_guard_done"
         current_reg = self._fresh_reg()
         remaining_reg = self._fresh_reg()
         char_reg = self._fresh_reg()
         next_remaining_reg = self._fresh_reg()
+        negative_length_reg = self._fresh_reg()
+        too_large_reg = self._fresh_reg()
+        missing_data_reg = self._fresh_reg()
 
         self._emit(IrOp.BRANCH_Z, IrRegister(pointer_reg), IrLabel(end_label))
         self._emit_load_scalar(
@@ -1662,6 +1688,33 @@ class AlgolIrCompiler:
             pointer_reg,
             _STRING_DESCRIPTOR_DATA_POINTER_OFFSET,
         )
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative_length_reg),
+            IrRegister(remaining_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(negative_length_reg, scope)
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(too_large_reg),
+            IrRegister(remaining_reg),
+            IrRegister(self._const_reg(_MAX_STRING_OUTPUT_BYTES)),
+        )
+        self._emit_runtime_failure_guard(too_large_reg, scope)
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(remaining_reg),
+            IrLabel(data_guard_done_label),
+        )
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(missing_data_reg),
+            IrRegister(current_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(missing_data_reg, scope)
+        self._label(data_guard_done_label)
         self._label(loop_label)
         self._emit(IrOp.BRANCH_Z, IrRegister(remaining_reg), IrLabel(end_label))
         self._emit(
@@ -1670,7 +1723,7 @@ class AlgolIrCompiler:
             IrRegister(current_reg),
             IrRegister(_ZERO_REG),
         )
-        self._emit_output_reg(char_reg)
+        self._emit_output_reg(char_reg, scope)
         self._emit(
             IrOp.ADD_IMM,
             IrRegister(current_reg),
@@ -1687,19 +1740,19 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(loop_label))
         self._label(end_label)
 
-    def _emit_output_boolean(self, value_reg: int) -> None:
+    def _emit_output_boolean(self, value_reg: int, scope: _FrameScope) -> None:
         index = self.output_count
         self.output_count += 1
         false_label = f"algol_label_output_bool_{index}_false"
         end_label = f"algol_label_output_bool_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(value_reg), IrLabel(false_label))
-        self._emit_output_chars("true")
+        self._emit_output_chars("true", scope)
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(false_label)
-        self._emit_output_chars("false")
+        self._emit_output_chars("false", scope)
         self._label(end_label)
 
-    def _emit_output_integer(self, value_reg: int) -> None:
+    def _emit_output_integer(self, value_reg: int, scope: _FrameScope) -> None:
         index = self.output_count
         self.output_count += 1
         extract_loop_label = f"algol_label_output_int_{index}_extract_loop"
@@ -1726,7 +1779,7 @@ class AlgolIrCompiler:
         )
         self._emit(IrOp.BRANCH_Z, IrRegister(is_negative_reg), IrLabel(zero_label))
         self._label(negative_label)
-        self._emit_output_chars("-")
+        self._emit_output_chars("-", scope)
         self._label(zero_label)
         is_zero_reg = self._fresh_reg()
         self._emit(
@@ -1736,7 +1789,7 @@ class AlgolIrCompiler:
             IrRegister(_ZERO_REG),
         )
         self._emit(IrOp.BRANCH_Z, IrRegister(is_zero_reg), IrLabel(extract_loop_label))
-        self._emit_output_chars("0")
+        self._emit_output_chars("0", scope)
         self._emit(IrOp.JUMP, IrLabel(end_label))
 
         self._label(extract_loop_label)
@@ -1785,7 +1838,7 @@ class AlgolIrCompiler:
             IrRegister(buffer_base_reg),
             IrRegister(emit_index_reg),
         )
-        self._emit_output_reg(char_reg)
+        self._emit_output_reg(char_reg, scope)
         self._emit(
             IrOp.ADD_IMM,
             IrRegister(emit_index_reg),
@@ -1795,7 +1848,7 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(emit_loop_label))
         self._label(end_label)
 
-    def _emit_output_real(self, value_reg: int) -> None:
+    def _emit_output_real(self, value_reg: int, scope: _FrameScope) -> None:
         index = self.output_count
         self.output_count += 1
         positive_label = f"algol_label_output_real_{index}_positive"
@@ -1816,7 +1869,7 @@ class AlgolIrCompiler:
             IrRegister(negative_reg),
             IrLabel(positive_label),
         )
-        self._emit_output_chars("-")
+        self._emit_output_chars("-", scope)
         self._emit(
             IrOp.F64_SUB,
             IrRegister(abs_reg),
@@ -1894,11 +1947,11 @@ class AlgolIrCompiler:
         )
         self._label(no_carry_label)
 
-        self._emit_output_integer(integer_part_reg)
-        self._emit_output_chars(".")
-        self._emit_output_three_digits(fraction_digits_reg)
+        self._emit_output_integer(integer_part_reg, scope)
+        self._emit_output_chars(".", scope)
+        self._emit_output_three_digits(fraction_digits_reg, scope)
 
-    def _emit_output_three_digits(self, value_reg: int) -> None:
+    def _emit_output_three_digits(self, value_reg: int, scope: _FrameScope) -> None:
         hundred_reg = self._const_reg(100)
         ten_reg = self._const_reg(10)
         ascii_zero_reg = self._const_reg(ord("0"))
@@ -1953,7 +2006,7 @@ class AlgolIrCompiler:
                 IrRegister(digit_reg),
                 IrRegister(ascii_zero_reg),
             )
-            self._emit_output_reg(ascii_reg)
+            self._emit_output_reg(ascii_reg, scope)
 
     def _emit_extract_integer_digit(
         self,
