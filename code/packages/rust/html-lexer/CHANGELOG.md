@@ -17,3 +17,10 @@ documented in this file.
   the crate links static source instead of loading TOML at runtime.
 - Fixture-backed tests proving the generated lexer definition and emitted
   runtime tokens stay aligned.
+
+### Changed
+- Switched the stable `create_html_lexer` and `lex_html` API over from the
+  bootstrap skeleton to the generated `html1` compatibility-floor lexer.
+- Kept the bootstrap skeleton helpers available for focused comparisons while
+  the default wrapper now exercises attributes, comments, doctypes, and
+  Mosaic-era fixtures.
