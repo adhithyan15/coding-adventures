@@ -1,0 +1,36 @@
+{
+  "format": "venture-html-lexer-fixtures/v1",
+  "suite": "html-skeleton",
+  "description": "Bootstrap lexer conformance cases kept intentionally small for narrow regression checks.",
+  "cases": [
+    {
+      "id": "simple-element",
+      "input": "<p>Hello</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=Hello)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "plain-text",
+      "input": "plain text",
+      "tokens": [
+        "Text(data=plain text)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "tag-open-eof-recovery",
+      "input": "<",
+      "tokens": [
+        "Text(data=<)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-tag-open-state"
+      ]
+    }
+  ]
+}

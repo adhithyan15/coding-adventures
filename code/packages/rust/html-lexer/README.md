@@ -25,6 +25,24 @@ the project, but the first real HTML authoring artifact that must keep HTML
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
+## Conformance
+
+Repo-native conformance fixtures live under
+[`tests/fixtures`](/tmp/coding-adventures-html-conformance/code/packages/rust/html-lexer/tests/fixtures).
+They use a documented JSON schema that Rust tests load with `include_str!`, so
+the test corpus is checked in and shared while production code still links only
+static Rust modules.
+
+Today the package carries two suites:
+
+- `html-skeleton.json` for narrow bootstrap regression coverage
+- `html1.json` for the current Mosaic-era compatibility floor
+
+The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
+same schema rather than teaching the Rust harness to parse raw upstream files
+directly. That gives us a clean expansion path from the HTML 1.x floor toward
+the living standard without reopening the runtime trust boundary.
+
 ## Usage
 
 ```rust

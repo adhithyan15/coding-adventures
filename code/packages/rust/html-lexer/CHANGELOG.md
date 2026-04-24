@@ -24,3 +24,11 @@ documented in this file.
 - Kept the bootstrap skeleton helpers available for focused comparisons while
   the default wrapper now exercises attributes, comments, doctypes, and
   Mosaic-era fixtures.
+
+### Added
+- Repo-native JSON conformance fixture suites for the bootstrap skeleton and the
+  `html1` compatibility-floor lexer.
+- A shared Rust conformance harness that runs the fixture suites against both
+  explicit generated constructors and the default wrapper API.
+- Documentation for the fixture schema and the planned WHATWG/WPT normalization
+  path.
