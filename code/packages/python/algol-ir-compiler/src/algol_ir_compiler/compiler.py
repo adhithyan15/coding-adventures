@@ -76,6 +76,8 @@ _VALUE_MODE = "value"
 _NAME_MODE = "name"
 _THUNK_EVAL_LABEL = "_fn_algol_eval_thunk"
 _THUNK_STORE_LABEL = "_fn_algol_store_thunk"
+_THUNK_EVAL_REAL_LABEL = "_fn_algol_eval_real_thunk"
+_THUNK_STORE_REAL_LABEL = "_fn_algol_store_real_thunk"
 _THUNK_DESCRIPTOR_SIZE = 12
 _THUNK_CODE_ID_OFFSET = 0
 _THUNK_CALLER_FRAME_OFFSET = 4
@@ -150,6 +152,7 @@ class _EvalThunk:
     thunk_id: int
     expression: ASTNode
     block_id: int
+    type_name: str
     is_array_element: bool = False
     store_capable: bool = False
 
@@ -299,7 +302,12 @@ class AlgolIrCompiler:
                 param_types=(
                     _INTEGER_TYPE,
                     _INTEGER_TYPE,
-                    *(parameter.type_name for parameter in procedure.parameters),
+                    *(
+                        _INTEGER_TYPE
+                        if parameter.mode == _NAME_MODE
+                        else parameter.type_name
+                        for parameter in procedure.parameters
+                    ),
                 ),
                 return_type=procedure.return_type,
             )
@@ -313,6 +321,18 @@ class AlgolIrCompiler:
             self.procedure_signatures[_THUNK_STORE_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
+            )
+            self.procedure_signatures[_THUNK_EVAL_REAL_LABEL] = (
+                ProcedureSignaturePlan(
+                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+                    return_type=_REAL_TYPE,
+                )
+            )
+            self.procedure_signatures[_THUNK_STORE_REAL_LABEL] = (
+                ProcedureSignaturePlan(
+                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _REAL_TYPE),
+                    return_type=_INTEGER_TYPE,
+                )
             )
         self.frame_offsets = self._layout_frames(self.semantic_blocks)
         self.variable_slots = self._collect_variable_slots(self.semantic_blocks)
@@ -399,8 +419,22 @@ class AlgolIrCompiler:
         self._emit(IrOp.HALT)
         self._compile_procedures(type_result.semantic.procedures)
         if self.has_by_name_parameters:
-            self._compile_eval_thunk_dispatcher()
-            self._compile_store_thunk_dispatcher()
+            self._compile_eval_thunk_dispatcher(
+                label=_THUNK_EVAL_LABEL,
+                thunk_kind="word",
+            )
+            self._compile_eval_thunk_dispatcher(
+                label=_THUNK_EVAL_REAL_LABEL,
+                thunk_kind=_REAL_TYPE,
+            )
+            self._compile_store_thunk_dispatcher(
+                label=_THUNK_STORE_LABEL,
+                thunk_kind="word",
+            )
+            self._compile_store_thunk_dispatcher(
+                label=_THUNK_STORE_REAL_LABEL,
+                thunk_kind=_REAL_TYPE,
+            )
 
         return CompileResult(
             program=self.program,
@@ -1498,7 +1532,11 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         descriptor: int,
     ) -> int:
-        thunk = self._register_eval_thunk(argument, scope.block_id)
+        thunk = self._register_eval_thunk(
+            argument,
+            scope.block_id,
+            type_name=parameter.type_name,
+        )
         self._emit_write_eval_thunk_descriptor(thunk, scope, descriptor)
         tagged_descriptor = self._fresh_reg()
         self._emit(
@@ -1519,6 +1557,7 @@ class AlgolIrCompiler:
         thunk = self._register_eval_thunk(
             variable,
             scope.block_id,
+            type_name=parameter.type_name,
             is_array_element=True,
             store_capable=parameter.may_write,
         )
@@ -1545,6 +1584,7 @@ class AlgolIrCompiler:
         argument: ASTNode,
         block_id: int,
         *,
+        type_name: str,
         is_array_element: bool = False,
         store_capable: bool = False,
     ) -> _EvalThunk:
@@ -1557,6 +1597,7 @@ class AlgolIrCompiler:
             thunk_id=len(self.eval_thunks) + 1,
             expression=argument,
             block_id=block_id,
+            type_name=type_name,
             is_array_element=is_array_element,
             store_capable=store_capable,
         )
@@ -1630,8 +1671,12 @@ class AlgolIrCompiler:
         for procedure in procedures:
             self._compile_procedure(procedure)
 
-    def _compile_eval_thunk_dispatcher(self) -> None:
-        self._label(_THUNK_EVAL_LABEL)
+    def _compile_eval_thunk_dispatcher(self, *, label: str, thunk_kind: str) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = (
+            _REAL_TYPE if thunk_kind == _REAL_TYPE else _INTEGER_TYPE
+        )
+        self._label(label)
         descriptor = _STATIC_LINK_PARAM_REG
         active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
         code_id = self._fresh_reg()
@@ -1649,6 +1694,8 @@ class AlgolIrCompiler:
             IrRegister(self._const_reg(_THUNK_CALLER_FRAME_OFFSET)),
         )
         for thunk in self.eval_thunks:
+            if (thunk_kind == _REAL_TYPE) != (thunk.type_name == _REAL_TYPE):
+                continue
             index = self.if_count
             self.if_count += 1
             else_label = f"if_{index}_else"
@@ -1681,24 +1728,27 @@ class AlgolIrCompiler:
                 )
                 value = self._fresh_reg()
                 self._emit(
-                    IrOp.LOAD_WORD,
+                    IrOp.LOAD_F64 if thunk.type_name == _REAL_TYPE else IrOp.LOAD_WORD,
                     IrRegister(value),
                     IrRegister(data_pointer),
                     IrRegister(byte_offset),
                 )
             else:
                 value = self._compile_expr(thunk.expression, thunk_scope)
-            self._copy_reg(dst=_RESULT_REG, src=value)
+            self._copy_scalar_reg(type_name=thunk.type_name, dst=_RESULT_REG, src=value)
             self._emit_leave_thunk_helper()
             self._emit(IrOp.RET)
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(else_label)
             self._label(end_label)
-        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_zero_result_reg()
         self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
 
-    def _compile_store_thunk_dispatcher(self) -> None:
-        self._label(_THUNK_STORE_LABEL)
+    def _compile_store_thunk_dispatcher(self, *, label: str, thunk_kind: str) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = _INTEGER_TYPE
+        self._label(label)
         descriptor = _STATIC_LINK_PARAM_REG
         active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
         value_reg = _VALUE_PARAM_BASE_REG
@@ -1718,6 +1768,8 @@ class AlgolIrCompiler:
         )
         for thunk in self.eval_thunks:
             if not thunk.store_capable:
+                continue
+            if (thunk_kind == _REAL_TYPE) != (thunk.type_name == _REAL_TYPE):
                 continue
             index = self.if_count
             self.if_count += 1
@@ -1749,7 +1801,7 @@ class AlgolIrCompiler:
                 helper_failure=True,
             )
             self._emit(
-                IrOp.STORE_WORD,
+                IrOp.STORE_F64 if thunk.type_name == _REAL_TYPE else IrOp.STORE_WORD,
                 IrRegister(value_reg),
                 IrRegister(data_pointer),
                 IrRegister(byte_offset),
@@ -1763,6 +1815,7 @@ class AlgolIrCompiler:
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
         self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
         self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
 
     def _compile_procedure(self, procedure: ProcedureDescriptor) -> None:
         body = self._find_ast_by_id(procedure.body_node_id)
@@ -1818,12 +1871,19 @@ class AlgolIrCompiler:
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
-            self._store_scalar_reg(
-                type_name=parameter.type_name,
-                value_reg=_VALUE_PARAM_BASE_REG + index,
-                base_reg=scope.frame_base_reg,
-                offset=parameter.slot_offset,
-            )
+            if parameter.mode == _NAME_MODE:
+                self._store_word_reg(
+                    value_reg=_VALUE_PARAM_BASE_REG + index,
+                    base_reg=scope.frame_base_reg,
+                    offset=parameter.slot_offset,
+                )
+            else:
+                self._store_scalar_reg(
+                    type_name=parameter.type_name,
+                    value_reg=_VALUE_PARAM_BASE_REG + index,
+                    base_reg=scope.frame_base_reg,
+                    offset=parameter.slot_offset,
+                )
         self._allocate_arrays(scope)
 
         if body.rule_name == "block":
@@ -2037,13 +2097,21 @@ class AlgolIrCompiler:
         )
         self._emit(
             IrOp.CALL,
-            IrLabel(_THUNK_EVAL_LABEL),
+            IrLabel(
+                _THUNK_EVAL_REAL_LABEL
+                if reference.type_name == _REAL_TYPE
+                else _THUNK_EVAL_LABEL
+            ),
             IrRegister(descriptor),
             IrRegister(active_thunk_heap_mark),
         )
         self._emit_propagate_thunk_failure(scope)
         self._emit_handle_pending_goto_after_call(scope)
-        self._copy_reg(dst=dst, src=_RESULT_REG)
+        self._copy_scalar_reg(
+            type_name=reference.type_name,
+            dst=dst,
+            src=_REAL_RESULT_REG if reference.type_name == _REAL_TYPE else _RESULT_REG,
+        )
         self._emit(IrOp.JUMP, IrLabel(end_label))
         self._label(storage_label)
         self._emit_load_scalar(reference.type_name, dst, pointer, 0)
@@ -2132,7 +2200,11 @@ class AlgolIrCompiler:
             )
             self._emit(
                 IrOp.CALL,
-                IrLabel(_THUNK_STORE_LABEL),
+                IrLabel(
+                    _THUNK_STORE_REAL_LABEL
+                    if reference.type_name == _REAL_TYPE
+                    else _THUNK_STORE_LABEL
+                ),
                 IrRegister(descriptor),
                 IrRegister(active_thunk_heap_mark),
                 IrRegister(value_reg),
@@ -2559,7 +2631,7 @@ class AlgolIrCompiler:
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
-        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
+        self._emit_zero_result_reg()
         self._emit_leave_thunk_helper()
         self._emit_restore_active_thunk_heap_mark(scope)
         self._emit(IrOp.RET)

@@ -816,6 +816,23 @@ class TestAlgolTypeChecker:
         assert not result.ok
         assert "by-name parameter 'x' expects integer" in result.diagnostics[0].message
 
+    def test_accepts_real_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real y; "
+            "procedure bump(x); real x; begin x := x + 1.5 end; "
+            "y := 1.5; bump(y); "
+            "if y > 2.0 then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "name"
+        assert parameter.type_name == "real"
+        assert parameter.may_write
+
     def test_rejects_wrong_type_for_boolean_value_parameter(self) -> None:
         ast = parse_algol(
             "begin integer result; "
