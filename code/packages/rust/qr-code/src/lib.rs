@@ -516,16 +516,35 @@ fn compute_format_bits(ecc: EccLevel, mask: u32) -> u32 {
 }
 
 fn write_format_info(g: &mut WorkGrid, fmt: u32) {
+    // The 15-bit format information word `fmt` is labeled f14..f0 (f14 = MSB).
+    //
+    // ISO/IEC 18004 — Copy 1 (around top-left finder):
+    //
+    //   Row 8, col 0 → f14   col 1 → f13  …  col 5 → f9
+    //   Row 8, col 7 → f8    (col 6 is the timing column, skipped)
+    //   Row 8, col 8 → f7
+    //   Col 8, row 7 → f6    (row 6 is the timing row, skipped)
+    //   Col 8, row 5 → f5  …  row 0 → f0
+    //
+    // Copy 2 (around top-right / bottom-left finders):
+    //   Row 8, col n-1 → f0   col n-2 → f1  …  col n-8 → f7
+    //   Col 8, row n-7 → f8   row n-6 → f9  …  row n-1 → f14
     let sz = g.size;
-    // Copy 1
-    for i in 0u32..=5 { g.modules[8][i as usize] = (fmt >> i) & 1 == 1; }
-    g.modules[8][7] = (fmt >> 6) & 1 == 1;
-    g.modules[8][8] = (fmt >> 7) & 1 == 1;
-    g.modules[7][8] = (fmt >> 8) & 1 == 1;
-    for i in 9u32..=14 { g.modules[(14 - i) as usize][8] = (fmt >> i) & 1 == 1; }
-    // Copy 2
-    for i in 0u32..=6 { g.modules[sz - 1 - i as usize][8] = (fmt >> i) & 1 == 1; }
-    for i in 7u32..=14 { g.modules[8][sz - 15 + i as usize] = (fmt >> i) & 1 == 1; }
+
+    // ── Copy 1 ──────────────────────────────────────────────────────────────
+    // Row 8, cols 0-5: f14 down to f9 (MSB first, left-to-right)
+    for i in 0u32..=5 { g.modules[8][i as usize] = (fmt >> (14 - i)) & 1 == 1; }
+    g.modules[8][7] = (fmt >> 8) & 1 == 1;  // f8
+    g.modules[8][8] = (fmt >> 7) & 1 == 1;  // f7
+    g.modules[7][8] = (fmt >> 6) & 1 == 1;  // f6
+    // Col 8, rows 0-5: f0 at row 0 … f5 at row 5 (LSB at top)
+    for i in 0u32..=5 { g.modules[i as usize][8] = (fmt >> i) & 1 == 1; }
+
+    // ── Copy 2 ──────────────────────────────────────────────────────────────
+    // Row 8, cols n-1 down to n-8: f0 at col n-1 … f7 at col n-8
+    for i in 0u32..=7 { g.modules[8][sz - 1 - i as usize] = (fmt >> i) & 1 == 1; }
+    // Col 8, rows n-7 to n-1: f8 at row n-7 … f14 at row n-1
+    for i in 8u32..=14 { g.modules[sz - 15 + i as usize][8] = (fmt >> i) & 1 == 1; }
 }
 
 fn reserve_version_info(g: &mut WorkGrid, version: usize) {
@@ -848,17 +867,23 @@ mod tests {
         true
     }
 
-    // Read copy-1 format bits and BCH-verify them
+    // Read copy-1 format bits (standard order: f14 at (8,0) → f0 at (0,8))
+    // and BCH-verify them.
     fn format_info_valid(mods: &[Vec<bool>], _sz: usize) -> Option<(u32, u32)> {
+        // Standard ISO 18004 copy-1 positions, ordered f14 → f0.
+        // Each position i carries bit (14-i) of the format word.
         let positions: [(usize, usize); 15] = [
             (8,0),(8,1),(8,2),(8,3),(8,4),(8,5),(8,7),(8,8),
             (7,8),(5,8),(4,8),(3,8),(2,8),(1,8),(0,8),
         ];
         let mut raw = 0u32;
         for (i, &(r, c)) in positions.iter().enumerate() {
-            if mods[r][c] { raw |= 1 << i; }
+            if mods[r][c] { raw |= 1 << (14 - i); }  // f14 at i=0 → bit 14
         }
+        // raw is now the 15-bit format word; XOR off the ISO masking sequence.
         let fmt = raw ^ 0x5412;
+        // BCH check: recompute the 10-bit parity from the 5-bit data portion
+        // and compare against the stored parity.
         let mut rem = (fmt >> 10) << 10;
         for i in (10u32..=14).rev() {
             if (rem >> i) & 1 == 1 { rem ^= 0x537 << (i - 10); }

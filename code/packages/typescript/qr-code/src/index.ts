@@ -325,10 +325,24 @@ function encodeNumeric(input: string, w: BitWriter): void {
 function encodeAlphanumeric(input: string, w: BitWriter): void {
   let i = 0;
   while (i + 1 < input.length) {
-    w.write(ALPHANUM_CHARS.indexOf(input[i]) * 45 + ALPHANUM_CHARS.indexOf(input[i + 1]), 11);
+    const idx0 = ALPHANUM_CHARS.indexOf(input[i]);
+    const idx1 = ALPHANUM_CHARS.indexOf(input[i + 1]);
+    // Guard: selectMode() must have confirmed every character is in the
+    // alphanumeric set before this function is called.  indexOf returning -1
+    // would silently produce a corrupt bit stream, so we fail fast here.
+    if (idx0 < 0 || idx1 < 0) throw new QRCodeError(
+      `encodeAlphanumeric: character not in QR alphanumeric set (precondition violated)`
+    );
+    w.write(idx0 * 45 + idx1, 11);
     i += 2;
   }
-  if (i < input.length) w.write(ALPHANUM_CHARS.indexOf(input[i]), 6);
+  if (i < input.length) {
+    const idx = ALPHANUM_CHARS.indexOf(input[i]);
+    if (idx < 0) throw new QRCodeError(
+      `encodeAlphanumeric: character not in QR alphanumeric set (precondition violated)`
+    );
+    w.write(idx, 6);
+  }
 }
 
 /** Each UTF-8 byte → 8 bits. */
@@ -863,6 +877,16 @@ function buildGrid(version: number): WorkGrid {
  * ```
  */
 export function encode(input: string, eccLevel: EccLevel): ModuleGrid {
+  // Early-exit guard: QR Code v40 holds at most 7089 numeric characters
+  // (~2953 bytes in byte mode).  Without this guard, selectVersion() would
+  // call `new TextEncoder().encode(input)` up to 40 times for a huge input,
+  // allocating O(n) memory 40 times before finally throwing InputTooLongError.
+  // In a server-side Node.js context this is a cheap DoS amplifier.
+  if (input.length > 7089) {
+    throw new InputTooLongError(
+      `Input length ${input.length} exceeds 7089 (QR Code v40 numeric-mode maximum).`
+    );
+  }
   const version = selectVersion(input, eccLevel);
   const sz      = symbolSize(version);
 
@@ -913,10 +937,22 @@ export function encodeAndLayout(
  *
  * Returns a complete `<svg>…</svg>` document.
  *
+ * @security Do NOT inject the returned string via `innerHTML` or `outerHTML`.
+ * Use `DOMParser` + `appendChild` instead, or a trusted HTML sanitizer:
+ * ```typescript
+ * const parser = new DOMParser();
+ * const svgDoc = parser.parseFromString(svg, "image/svg+xml");
+ * document.body.appendChild(svgDoc.documentElement);
+ * ```
+ *
  * @example
  * ```typescript
  * const svg = renderSvg("https://example.com", "M");
- * document.body.innerHTML = svg;
+ * // Safe: parse, then append
+ * const parser = new DOMParser();
+ * document.body.appendChild(
+ *   parser.parseFromString(svg, "image/svg+xml").documentElement
+ * );
  * ```
  */
 export function renderSvg(
