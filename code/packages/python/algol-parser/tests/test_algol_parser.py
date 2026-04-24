@@ -460,6 +460,52 @@ class TestBooleanExpression:
         )
         assert ast.rule_name == "program"
 
+    def test_implication_expression(self) -> None:
+        """Boolean expression with IMPL."""
+        ast = parse(
+            "begin integer x; "
+            "if true impl false then x := 1 else x := 0 "
+            "end"
+        )
+        impl_nodes = find_nodes(ast, "implication")
+        assert any(
+            token.value == "impl"
+            for node in impl_nodes
+            for token in child_tokens(node)
+        )
+
+    def test_equivalence_expression(self) -> None:
+        """Boolean expression with EQV."""
+        ast = parse(
+            "begin integer x; "
+            "if true eqv false then x := 1 else x := 0 "
+            "end"
+        )
+        eqv_nodes = find_nodes(ast, "simple_bool")
+        assert any(
+            token.value == "eqv"
+            for node in eqv_nodes
+            for token in child_tokens(node)
+        )
+
+    def test_or_binds_tighter_than_implication(self) -> None:
+        """``or`` should parse inside the left operand of ``impl``."""
+        ast = parse(
+            "begin integer x; "
+            "if true or false impl false then x := 1 else x := 0 "
+            "end"
+        )
+        impl_nodes = find_nodes(ast, "implication")
+        assert any(
+            any(
+                child.rule_name == "bool_term"
+                and any(token.value == "or" for token in child_tokens(child))
+                for child in child_nodes(node)
+            )
+            and any(token.value == "impl" for token in child_tokens(node))
+            for node in impl_nodes
+        )
+
     def test_complex_boolean(self) -> None:
         """A complex boolean expression with multiple operators."""
         ast = parse(

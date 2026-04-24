@@ -510,6 +510,32 @@ class TestAlgolIrCompiler:
         assert IrOp.CMP_GT in opcodes
         assert IrOp.AND in opcodes
 
+    def test_compiles_boolean_implication_form(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "if true impl false then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.ADD_IMM in opcodes
+        assert IrOp.AND_IMM in opcodes
+        assert IrOp.CMP_NE in opcodes
+
+    def test_compiles_boolean_equivalence_form(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "if true eqv false then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.CMP_EQ in opcodes
+
     def test_compiles_boolean_variable_storage_and_readback(self) -> None:
         result = compile_algol(
             parse_algol(

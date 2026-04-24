@@ -269,6 +269,38 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_boolean_implication_truth_table(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 0; "
+            "if true impl false then result := result + 8 else result := result; "
+            "if true impl true then result := result + 4 else result := result; "
+            "if false impl false then result := result + 2 else result := result; "
+            "if false impl true then result := result + 1 else result := result "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_boolean_equivalence_truth_table(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 0; "
+            "if true eqv true then result := result + 8 else result := result; "
+            "if true eqv false then result := result + 4 else result := result; "
+            "if false eqv false then result := result + 2 else result := result; "
+            "if false eqv true then result := result + 1 else result := result "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
+
+    def test_or_binds_tighter_than_implication(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "if true or false impl false then result := 1 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
     def test_real_variable_assignment_drives_comparison(self) -> None:
         result = compile_source(
             "begin integer result; "

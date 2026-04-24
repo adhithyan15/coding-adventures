@@ -1453,6 +1453,7 @@ class AlgolTypeChecker:
             "expr_and",
             "simple_bool",
             "implication",
+            "bool_factor",
             "bool_term",
         }:
             return self._fold_binary(expr, meaningful, scope, BOOLEAN, BOOLEAN)
