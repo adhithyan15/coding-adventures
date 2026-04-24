@@ -90,6 +90,10 @@ _MAX_EVAL_THUNKS = 256
 _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
+_STRING_TYPE = "string"
+_BUILTIN_PRINT_LABEL = "__algol_builtin_print"
+_BUILTIN_OUTPUT_LABEL = "__algol_builtin_output"
+_WRITE_SYSCALL = 1
 
 
 @dataclass(frozen=True)
@@ -1402,6 +1406,8 @@ class AlgolIrCompiler:
             raise CompileError("procedure call is missing a name")
         role = "statement" if node.rule_name == "proc_stmt" else "expression"
         call = self._require_procedure_call(name, role)
+        if call.label in {_BUILTIN_PRINT_LABEL, _BUILTIN_OUTPUT_LABEL}:
+            return self._compile_builtin_output(node)
         procedure = self.procedures[call.procedure_id]
         static_link = self._emit_static_link_for_call(call, scope)
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
@@ -1504,6 +1510,35 @@ class AlgolIrCompiler:
             src=_REAL_RESULT_REG if call.return_type == _REAL_TYPE else _RESULT_REG,
         )
         return result
+
+    def _compile_builtin_output(self, node: ASTNode) -> int:
+        actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
+        if len(actuals) != 1:
+            raise CompileError("builtin output expects exactly 1 argument")
+        literal = next(
+            (token for token in _tokens(actuals[0]) if token.type_name == "STRING_LIT"),
+            None,
+        )
+        if literal is None:
+            raise CompileError("builtin output currently requires a string literal")
+
+        saved_arg_reg: int | None = None
+        if self.next_reg > _VALUE_PARAM_BASE_REG:
+            saved_arg_reg = self._fresh_reg()
+            self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
+
+        for char in literal.value[1:-1]:
+            value_reg = self._const_reg(ord(char))
+            self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=value_reg)
+            self._emit(
+                IrOp.SYSCALL,
+                IrImmediate(_WRITE_SYSCALL),
+                IrRegister(_VALUE_PARAM_BASE_REG),
+            )
+
+        if saved_arg_reg is not None:
+            self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
+        return _ZERO_REG
 
     def _requires_by_name_thunk_descriptor(self, argument: ASTNode) -> bool:
         variable = _single_variable_expr(argument)

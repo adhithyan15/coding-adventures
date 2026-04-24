@@ -10,6 +10,7 @@ from lexer import Token
 INTEGER = "integer"
 BOOLEAN = "boolean"
 REAL = "real"
+STRING = "string"
 ERROR = "error"
 FRAME_HEADER_SIZE = 20
 FRAME_WORD_SIZE = 4
@@ -1355,6 +1356,8 @@ class AlgolTypeChecker:
             return INTEGER
         if token.type_name == "REAL_LIT":
             return REAL
+        if token.type_name == "STRING_LIT":
+            return STRING
         if token.value in {"true", "false"}:
             return BOOLEAN
         if token.type_name == "NAME":
@@ -1460,6 +1463,8 @@ class AlgolTypeChecker:
 
         resolved = self._resolve_procedure(name_token, scope)
         if resolved is None:
+            resolved = self._resolve_builtin_procedure(name_token, scope)
+        if resolved is None:
             self._error(
                 name_token,
                 f"{name_token.value!r} is not a procedure visible from block "
@@ -1533,6 +1538,35 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _resolve_builtin_procedure(
+        self,
+        token: Token,
+        scope: Scope,
+    ) -> tuple[ProcedureDescriptor, Scope, int] | None:
+        if token.value not in {"print", "output"}:
+            return None
+        descriptor = ProcedureDescriptor(
+            procedure_id=-1,
+            name=token.value,
+            label=f"__algol_builtin_{token.value}",
+            declaring_block_id=scope.block_id,
+            body_block_id=scope.block_id,
+            body_node_id=-1,
+            return_type=None,
+            parameters=(
+                ProcedureParameter(
+                    name="value",
+                    type_name=STRING,
+                    mode=VALUE,
+                    symbol_id=-1,
+                    slot_offset=0,
+                ),
+            ),
+            line=token.line,
+            column=token.column,
+        )
+        return descriptor, scope, 0
 
     def _record_assignable_actual_write(self, argument: ASTNode, scope: Scope) -> None:
         variable = _single_variable_expr(argument)

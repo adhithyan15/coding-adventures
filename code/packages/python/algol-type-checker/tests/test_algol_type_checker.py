@@ -888,3 +888,28 @@ class TestAlgolTypeChecker:
 
         assert not result.ok
         assert "does not return a value" in result.diagnostics[0].message
+
+    def test_accepts_builtin_print_with_string_literal(self) -> None:
+        ast = parse_algol("begin integer result; print('Hi'); result := 1 end")
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.procedure_calls[-1].label == "__algol_builtin_print"
+
+    def test_rejects_builtin_print_with_non_string_argument(self) -> None:
+        ast = parse_algol("begin integer result; print(1); result := 0 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "parameter 'value' expects string, got integer"
+            in result.diagnostics[0].message
+        )
+
+    def test_rejects_builtin_print_in_expression(self) -> None:
+        ast = parse_algol("begin integer result; result := print('Hi') end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "does not return a value" in result.diagnostics[0].message

@@ -619,7 +619,9 @@ class TestAlgolIrCompiler:
             result.procedure_signatures["_fn_algol_eval_real_thunk"].return_type
             == "real"
         )
-        assert any(call.operands[0].name == "_fn_algol_eval_real_thunk" for call in calls)
+        assert any(
+            call.operands[0].name == "_fn_algol_eval_real_thunk" for call in calls
+        )
 
     def test_compiles_array_element_by_name_eval_and_store_thunks(
         self,
@@ -733,3 +735,23 @@ class TestAlgolIrCompiler:
 
         assert "_fn_algol_eval_thunk" in calls
         assert any(label.startswith("_fn_algol_") for label in calls)
+
+    def test_compiles_builtin_print_string_literal_to_syscalls(self) -> None:
+        result = compile_algol(
+            parse_algol("begin integer result; print('Hi'); result := 1 end")
+        )
+        instructions = result.program.instructions
+        syscall_count = sum(
+            1 for instruction in instructions if instruction.opcode == IrOp.SYSCALL
+        )
+        immediates = [
+            operand.value
+            for instruction in instructions
+            if instruction.opcode == IrOp.LOAD_IMM
+            for operand in instruction.operands[1:]
+            if hasattr(operand, "value")
+        ]
+
+        assert syscall_count == 2
+        assert 72 in immediates
+        assert 105 in immediates
