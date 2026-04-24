@@ -228,6 +228,7 @@ members = [
     "brotli",
     "deflate",
     "gf256",
+    "micro-qr",
     "qr-code",
     "image-codec-bmp",
     "image-codec-ppm",
