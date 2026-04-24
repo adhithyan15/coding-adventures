@@ -118,6 +118,27 @@ class TestAlgolIrCompiler:
         assert "__algol_static" in data_labels
         assert load_addr_labels.count("__algol_static") >= 2
 
+    def test_compiles_array_allocation_with_zero_fill_loop(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, n; "
+                "procedure probe; begin integer array a[1:n]; "
+                "a[1] := a[1] + 1; result := a[1] end; "
+                "n := 1; probe "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.STORE_BYTE in opcodes
+        assert "loop_0_start" in labels
+        assert "loop_0_end" in labels
+
     def test_compiles_string_variable_assignment_to_static_literal_pointer(self) -> None:
         result = compile_algol(
             parse_algol("begin string msg; integer result; msg := 'Hi'; result := 1 end")

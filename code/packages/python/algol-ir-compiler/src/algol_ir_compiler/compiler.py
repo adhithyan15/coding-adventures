@@ -722,6 +722,7 @@ class AlgolIrCompiler:
         )
         self._emit_runtime_failure_guard(heap_exhausted, scope)
         self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, new_heap_pointer)
+        self._emit_zero_memory(heap_pointer, new_heap_pointer)
 
         bounds_pointer = self._fresh_reg()
         self._emit(
@@ -805,6 +806,39 @@ class AlgolIrCompiler:
             base_reg=scope.frame_base_reg,
             offset=array.slot_offset,
         )
+
+    def _emit_zero_memory(self, start_pointer: int, end_pointer: int) -> None:
+        index = self.loop_count
+        self.loop_count += 1
+        loop_label = f"loop_{index}_start"
+        end_label = f"loop_{index}_end"
+        cursor = self._fresh_reg()
+        done = self._fresh_reg()
+        zero = self._const_reg(0)
+
+        self._copy_reg(dst=cursor, src=start_pointer)
+        self._label(loop_label)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(cursor),
+            IrRegister(end_pointer),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(end_label))
+        self._emit(
+            IrOp.STORE_BYTE,
+            IrRegister(zero),
+            IrRegister(cursor),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(cursor),
+            IrRegister(cursor),
+            IrImmediate(1),
+        )
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
 
     def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
         label = self.labels.get(id(statement))
