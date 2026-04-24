@@ -61,7 +61,15 @@ appear on the left / bottom respectively.
 
 ### 1.3 Node sizing
 
-Node width is a function of the label text length:
+When a `TextMeasurer` is supplied, node width is measured via real font metrics:
+
+```
+measured = measurer.measure(label, font_spec, max_width = None)
+width = max(min_node_width, horizontal_padding * 2 + measured.width)
+```
+
+When no `TextMeasurer` is supplied (e.g. in tests without a font stack), the
+heuristic fallback is used:
 
 ```
 width = max(min_node_width, horizontal_padding * 2 + text_length * char_width)
@@ -116,10 +124,19 @@ All options have defaults and can be overridden:
 
 ## 3. Public API
 
-### `layout_graph_diagram(diagram, options?) → LayoutedGraphDiagram`
+### `layout_graph_diagram(diagram, options?, measurer?) → LayoutedGraphDiagram`
 
 Takes a `GraphDiagram` and returns a fully laid-out `LayoutedGraphDiagram`.
 All style fields are resolved to `ResolvedDiagramStyle` (no `Option`).
+
+The optional `measurer: Option<&dyn TextMeasurer>` (from `layout-ir`) enables
+real glyph-advance–based node sizing. When `None`, the heuristic char-width
+fallback is used. The measurer is called with the node label string and a
+`FontSpec` matching the label font configured in `diagram-to-paint`
+(default: Helvetica 14 pt).
+
+Callers on Apple platforms should inject a `NativeMeasurer` from
+`layout-text-measure-native`. Callers in test code may pass `None`.
 
 ---
 

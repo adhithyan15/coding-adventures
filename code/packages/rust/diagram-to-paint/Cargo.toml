@@ -7,3 +7,6 @@ description = "Lowers a LayoutedGraphDiagram (DG00) into a PaintScene (P2D00) fo
 [dependencies]
 diagram-ir = { path = "../diagram-ir" }
 paint-instructions = { path = "../paint-instructions" }
+layout-ir = { path = "../layout-ir" }
+layout-to-paint = { path = "../layout-to-paint" }
+text-interfaces = { path = "../text-interfaces" }

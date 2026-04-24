@@ -31,7 +31,7 @@ associated type constraint.
 | `ext["paint"]["backgroundColor"]`   | `PaintRect` with fill                                          |
 | `ext["paint"]["borderWidth"]` > 0   | `PaintRect` with stroke + stroke_width (same rect as above)    |
 | `ext["paint"]["cornerRadius"]`      | `corner_radius` field on the rect                              |
-| `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line (greedy word-wrap within `node.width`) |
+| `Content::Text(tc)`                 | One `PaintGlyphRun` per wrapped line; alignment (Start/Center/End) via `TextContent.text_align` |
 | `Content::Image(ic)`                | `PaintImage` with `src` unchanged                              |
 
 All coordinates in the output `PaintScene` are in **device pixels**
@@ -51,9 +51,17 @@ strings.
 - **No intrinsic image sizing** — `width`/`height` come directly from
   the node's positioned dimensions.
 
+## Text alignment
+
+`TextContent.text_align` controls how each line is positioned within the node width:
+
+- `TextAlign::Start` — left-aligned (default for document text).
+- `TextAlign::Center` — centred; line advance is measured first, then `baseline_x` is computed as `box_x + (width − advance) / 2`. Used by `diagram-to-paint` for all diagram labels.
+- `TextAlign::End` — right-aligned.
+
 ## Test plan
 
-12 unit tests pass, covering:
+14 unit tests pass, covering:
 - Empty container; background color → Rect; text content →
   PaintGlyphRun with correct ID / baseline / advance math.
 - Hard newline → multiple glyph runs with increasing baseline.
@@ -63,5 +71,7 @@ strings.
 - Failing resolver drops text silently (no crash).
 - Color → CSS conversion for both opaque and alpha channels.
 - Image content → PaintImage with src unchanged.
-- Font resolution cache: same FontSpec across two nodes → one
-  `resolve()` call.
+- Font resolution cache: same FontSpec across two nodes → one `resolve()` call.
+- Font fallback: shaper producing multiple `ShapedRun`s emits one `PaintGlyphRun`
+  per segment with correct font_ref and monotonically increasing x positions.
+- Deep tree (1000 levels) does not stack-overflow (iterative walk).

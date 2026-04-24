@@ -45,6 +45,7 @@ use diagram_ir::{
     LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style, resolve_style_with_base,
 };
 use directed_graph::Graph;
+use layout_ir::{FontSpec, TextMeasurer};
 
 // ============================================================================
 // Layout options
@@ -97,16 +98,32 @@ impl Opts {
 // Node width calculation
 // ============================================================================
 
-/// Compute the bounding-box width for a node given its label length.
+/// Default label font spec: Helvetica 14 pt weight 400 (matches diagram-to-paint).
+fn label_font_spec() -> FontSpec {
+    FontSpec {
+        family: "Helvetica".to_string(),
+        size: 14.0,
+        weight: 400,
+        italic: false,
+        line_height: 1.2,
+    }
+}
+
+/// Compute the bounding-box width for a node given its label.
 ///
-/// Width = max(min_node_width, h_padding × 2 + label_chars × char_width).
+/// When `measurer` is supplied, the real glyph-advance measurement is used:
+///   width = max(min_node_width, h_padding × 2 + measured.width)
 ///
-/// This is a heuristic for monospace / system-sans-serif fonts. A real shaper
-/// would measure glyph advances, but for diagram layout the heuristic is close
-/// enough: it keeps short labels from making very narrow boxes while letting
-/// long labels expand the box naturally.
-fn node_width(label: &str, opts: &Opts) -> f64 {
-    let text_width = opts.h_padding * 2.0 + label.len() as f64 * opts.char_width;
+/// When no measurer is supplied (tests, environments without a font stack),
+/// the heuristic fallback is used:
+///   width = max(min_node_width, h_padding × 2 + label_chars × char_width)
+fn node_width(label: &str, opts: &Opts, measurer: Option<&dyn TextMeasurer>) -> f64 {
+    let text_width = if let Some(m) = measurer {
+        let result = m.measure(label, &label_font_spec(), None);
+        opts.h_padding * 2.0 + result.width
+    } else {
+        opts.h_padding * 2.0 + label.len() as f64 * opts.char_width
+    };
     text_width.max(opts.min_node_width)
 }
 
@@ -195,6 +212,7 @@ fn assign_ranks(diagram: &GraphDiagram) -> Vec<Vec<String>> {
 fn place_nodes(
     diagram: &GraphDiagram,
     opts: &Opts,
+    measurer: Option<&dyn TextMeasurer>,
 ) -> (Vec<LayoutedGraphNode>, f64, f64) {
     let direction = &diagram.direction;
     let ranks = assign_ranks(diagram);
@@ -208,7 +226,7 @@ fn place_nodes(
             rank.iter()
                 .map(|id| {
                     let node = diagram.nodes.iter().find(|n| n.id == *id).unwrap();
-                    node_width(&node.label.text, opts)
+                    node_width(&node.label.text, opts, measurer)
                 })
                 .fold(0.0_f64, f64::max)
         })
@@ -221,7 +239,7 @@ fn place_nodes(
     for (rank_index, rank) in ranks.iter().enumerate() {
         for (item_index, node_id) in rank.iter().enumerate() {
             let node = diagram.nodes.iter().find(|n| n.id == *node_id).unwrap();
-            let width  = node_width(&node.label.text, opts);
+            let width  = node_width(&node.label.text, opts, measurer);
             let height = opts.node_height;
 
             // For BT/RL, reverse the rank axis so rank 0 appears at the
@@ -399,7 +417,7 @@ fn route_edge(
 ///     ],
 /// };
 ///
-/// let layout = layout_graph_diagram(&diagram, None);
+/// let layout = layout_graph_diagram(&diagram, None, None);
 /// assert_eq!(layout.nodes.len(), 2);
 /// assert_eq!(layout.edges.len(), 1);
 /// assert!(layout.width > 0.0);
@@ -408,9 +426,10 @@ fn route_edge(
 pub fn layout_graph_diagram(
     diagram: &GraphDiagram,
     options: Option<&GraphLayoutOptions>,
+    measurer: Option<&dyn TextMeasurer>,
 ) -> LayoutedGraphDiagram {
     let opts = Opts::from(options);
-    let (nodes, width, height) = place_nodes(diagram, &opts);
+    let (nodes, width, height) = place_nodes(diagram, &opts, measurer);
 
     let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> =
         nodes.iter().map(|n| (n.id.clone(), n)).collect();
@@ -483,21 +502,21 @@ mod tests {
     #[test]
     fn layout_produces_correct_node_count() {
         let d = two_node_diagram(DiagramDirection::Tb);
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         assert_eq!(l.nodes.len(), 2);
     }
 
     #[test]
     fn layout_produces_correct_edge_count() {
         let d = two_node_diagram(DiagramDirection::Tb);
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         assert_eq!(l.edges.len(), 1);
     }
 
     #[test]
     fn layout_scene_has_positive_dimensions() {
         let d = two_node_diagram(DiagramDirection::Tb);
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         assert!(l.width > 0.0);
         assert!(l.height > 0.0);
     }
@@ -505,7 +524,7 @@ mod tests {
     #[test]
     fn tb_nodes_have_different_y_coordinates() {
         let d = two_node_diagram(DiagramDirection::Tb);
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         let ya = l.nodes.iter().find(|n| n.id == "A").unwrap().y;
         let yb = l.nodes.iter().find(|n| n.id == "B").unwrap().y;
         assert!(ya < yb, "in TB layout A should be above B");
@@ -514,7 +533,7 @@ mod tests {
     #[test]
     fn lr_nodes_have_different_x_coordinates() {
         let d = two_node_diagram(DiagramDirection::Lr);
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         let xa = l.nodes.iter().find(|n| n.id == "A").unwrap().x;
         let xb = l.nodes.iter().find(|n| n.id == "B").unwrap().x;
         assert!(xa < xb, "in LR layout A should be left of B");
@@ -523,7 +542,7 @@ mod tests {
     #[test]
     fn edge_points_connect_nodes() {
         let d = two_node_diagram(DiagramDirection::Tb);
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         let edge = &l.edges[0];
         assert_eq!(edge.points.len(), 2, "straight edge should have 2 points");
     }
@@ -536,7 +555,7 @@ mod tests {
             nodes: vec![simple_node("A")],
             edges: vec![directed_edge("A", "A")],
         };
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         assert_eq!(l.edges[0].points.len(), 5, "self-loop should have 5-point detour");
     }
 
@@ -546,8 +565,8 @@ mod tests {
         let mut d_title = d_no_title.clone();
         d_title.title = Some("My Diagram".to_string());
 
-        let l_no = layout_graph_diagram(&d_no_title, None);
-        let l_yes = layout_graph_diagram(&d_title, None);
+        let l_no = layout_graph_diagram(&d_no_title, None, None);
+        let l_yes = layout_graph_diagram(&d_title, None, None);
 
         let y_no = l_no.nodes[0].y;
         let y_yes = l_yes.nodes[0].y;
@@ -563,7 +582,7 @@ mod tests {
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "A")],
         };
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         assert_eq!(l.nodes.len(), 2);
         // In flat fallback each node is its own rank, so they have different Y.
         let ya = l.nodes.iter().find(|n| n.id == "A").unwrap().y;
@@ -587,7 +606,7 @@ mod tests {
             ],
             edges: vec![],
         };
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         let w_short = l.nodes.iter().find(|n| n.id == "A").unwrap().width;
         let w_long  = l.nodes.iter().find(|n| n.id == "LongLabel").unwrap().width;
         assert!(w_long > w_short, "longer label should produce wider node");
@@ -601,7 +620,7 @@ mod tests {
             nodes: vec![simple_node("A"), simple_node("B"), simple_node("C")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "C")],
         };
-        let l = layout_graph_diagram(&d, None);
+        let l = layout_graph_diagram(&d, None, None);
         let ya = l.nodes.iter().find(|n| n.id == "A").unwrap().y;
         let yb = l.nodes.iter().find(|n| n.id == "B").unwrap().y;
         let yc = l.nodes.iter().find(|n| n.id == "C").unwrap().y;

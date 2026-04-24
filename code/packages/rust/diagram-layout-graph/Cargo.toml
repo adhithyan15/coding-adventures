@@ -7,3 +7,4 @@ description = "Topological rank assignment and geometry layout for graph diagram
 [dependencies]
 diagram-ir = { path = "../diagram-ir" }
 directed-graph = { path = "../directed-graph" }
+layout-ir = { path = "../layout-ir" }

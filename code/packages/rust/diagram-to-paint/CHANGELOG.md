@@ -1,5 +1,36 @@
 # Changelog — diagram-to-paint
 
+## 0.1.1 — Real text shaping via layout-to-paint
+
+### Changed (breaking)
+- `DiagramToPaintOptions` is now a **generic struct** with lifetime:
+  `DiagramToPaintOptions<'a, S: TextShaper, M: FontMetrics, R: FontResolver>`.
+  The `shaper`, `metrics`, and `resolver` fields replace the old `ps_font_name` field.
+  `background` is now a `layout-ir::Color` (RGBA) instead of a CSS string.
+  New fields: `device_pixel_ratio`, `label_font: FontSpec`, `title_font: FontSpec`.
+- `diagram_to_paint` is now generic over the TXT00 triple:
+  `fn diagram_to_paint<S, M, R>(diagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene`.
+- All text (node labels, edge labels, diagram title) is now rendered via
+  `layout-to-paint::layout_to_paint`. A `PositionedNode` tree is built for all text items
+  (one node per label/title) and passed to `layout_to_paint` in a single call. This produces
+  `PaintGlyphRun` instructions with **real glyph IDs** from the font shaper, not Unicode codepoints.
+  `TextAlign::Center` is used for all text nodes.
+- Painter's algorithm order: edges (lines + arrowheads) → node shapes → text labels.
+  Node shapes are still emitted directly as `PaintRect`/`PaintEllipse`/`PaintPath`.
+- Added dependencies: `layout-ir`, `layout-to-paint`, `text-interfaces`.
+- Removed: `coretext_font_ref`, `approx_char_advance`, `centred_glyph_run` helpers —
+  text rendering is fully delegated to `layout-to-paint`.
+
+### Tests — 15 pass (was 11)
+- Tests now use a `FakeShaper`/`FakeMetrics`/`FakeResolver` triple (same pattern as
+  `layout-to-paint`'s tests). The `make_opts` helper constructs a `DiagramToPaintOptions`.
+- `glyph_run_font_ref_is_shaper_provided` — asserts `font_ref == "fake:test"`, verifying
+  glyph IDs come from the shaper rather than a hardcoded `coretext:` string.
+- `painter_order_edges_before_nodes` — asserts all `PaintPath` (edges) indices < first
+  `PaintRect` (node shape) index, enforcing the z-order invariant.
+- `css_to_color_parses_hex` — covers the new `css_to_color` helper.
+- `edge_label_produces_glyph_run` — compares run count with/without an edge label.
+
 ## 0.1.0
 
 Initial release.
