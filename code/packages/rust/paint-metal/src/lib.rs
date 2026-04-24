@@ -91,8 +91,7 @@ compile_error!("paint-metal requires arm64 Apple Silicon. Intel macOS is not sup
 #[cfg(target_vendor = "apple")]
 use objc_bridge::*;
 use paint_instructions::{
-    PaintEllipse, PaintInstruction, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
-    PathCommand,
+    PaintEllipse, PaintInstruction, PaintLine, PaintPath, PaintRect, PaintScene, PathCommand,
 };
 #[allow(unused_imports)]
 use std::ffi::{c_int, c_ulong};
@@ -238,22 +237,19 @@ fn parse_rgb_components(inner: &str, has_alpha: bool) -> (f64, f64, f64, f64) {
 // The GPU only needs the triangle vertex stream — it has no concept of
 // "rectangles", "ellipses", or "paths".  Everything is triangles.
 //
-// PaintText instructions are collected separately into a Vec<PaintText>
-// and rendered via the CoreText overlay after the GPU pass.
-
-/// Collect triangle vertices and text instructions from a [`PaintInstruction`] tree.
+/// Collect triangle vertices from a [`PaintInstruction`] tree.
 ///
 /// - Rects, lines, ellipses, and paths → triangle vertices in `positions`/`colors`.
-/// - Text instructions → `texts` (rendered via CoreText overlay after GPU pass).
 /// - Group and Clip nodes are recursed into (up to `MAX_GROUP_DEPTH` levels).
-/// - GlyphRun, Layer, Gradient, Image are not yet implemented (silently skipped).
+/// - GlyphRun is rendered by the CoreText overlay (glyph_run_overlay module).
+/// - Text (PaintText) is Canvas/SVG/DOM-only — not rendered by Metal.
+/// - Layer, Gradient, Image are deferred to P2D08.
 ///
 /// `depth` must be 0 on the initial call; it is incremented for each recursive Group/Clip.
 fn collect_geometry(
     instructions: &[PaintInstruction],
     positions: &mut Vec<f32>,
     colors: &mut Vec<f32>,
-    texts: &mut Vec<PaintText>,
     depth: usize,
 ) {
     // Guard against stack overflow from pathologically deep instruction trees.
@@ -276,19 +272,19 @@ fn collect_geometry(
             PaintInstruction::Path(path) => {
                 add_path_vertices(path, positions, colors);
             }
-            PaintInstruction::Text(text) => {
-                texts.push(text.clone());
-            }
             PaintInstruction::Group(group) => {
-                collect_geometry(&group.children, positions, colors, texts, depth + 1);
+                collect_geometry(&group.children, positions, colors, depth + 1);
             }
             PaintInstruction::Clip(clip) => {
                 // Render clip children without a stencil clip for now.
-                collect_geometry(&clip.children, positions, colors, texts, depth + 1);
+                collect_geometry(&clip.children, positions, colors, depth + 1);
             }
-            // Not yet implemented:
-            PaintInstruction::GlyphRun(_)
-            | PaintInstruction::Layer(_)
+            // Rendered via CoreText glyph_run_overlay:
+            PaintInstruction::GlyphRun(_) => {}
+            // PaintText is Canvas/DOM-only — not handled by Metal.
+            PaintInstruction::Text(_) => {}
+            // Deferred to P2D08:
+            PaintInstruction::Layer(_)
             | PaintInstruction::Gradient(_)
             | PaintInstruction::Image(_) => {}
         }
@@ -660,44 +656,20 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
 /// 2. Allocate an offscreen RGBA8 texture at `scene.width × scene.height`
 /// 3. Compile the rect shader from MSL source
 /// 4. Convert `PaintInstruction` tree to triangle vertex buffers (Rect, Line, Ellipse, Path)
-///    — PaintText collected separately for CoreText overlay
 /// 5. Encode a render pass that clears to `scene.background` then draws all triangles
 /// 6. Commit the command buffer and wait for GPU completion
 /// 7. Read back the RGBA8 pixels with `getBytes()`
-/// 8. Apply CoreText overlay for PaintText and PaintGlyphRun
+/// 8. Apply CoreText overlay for PaintGlyphRun
 /// 9. Return the pixels as a `PixelContainer`
 #[cfg(target_vendor = "apple")]
 pub fn render(scene: &PaintScene) -> PixelContainer {
     let mut pixels = unsafe { render_unsafe(scene) };
-
-    // Collect PaintText instructions and render via CoreText overlay.
-    // This runs after Metal, so text always renders on top of shapes.
-    let mut texts: Vec<PaintText> = Vec::new();
-    collect_text_instructions(&scene.instructions, &mut texts);
-    if !texts.is_empty() {
-        unsafe {
-            text_overlay::overlay_paint_text(scene, &mut pixels, &texts);
-        }
-    }
 
     // Render PaintGlyphRun instructions via CoreText glyph drawing.
     unsafe {
         glyph_run_overlay::overlay_coretext_glyph_runs(scene, &mut pixels);
     }
     pixels
-}
-
-/// Collect all PaintText instructions from the instruction tree.
-fn collect_text_instructions(instructions: &[PaintInstruction], out: &mut Vec<PaintText>) {
-    for instr in instructions {
-        match instr {
-            PaintInstruction::Text(t) => out.push(t.clone()),
-            PaintInstruction::Group(g) => collect_text_instructions(&g.children, out),
-            PaintInstruction::Clip(c) => collect_text_instructions(&c.children, out),
-            PaintInstruction::Layer(l) => collect_text_instructions(&l.children, out),
-            _ => {}
-        }
-    }
 }
 
 #[cfg(target_vendor = "apple")]
@@ -740,8 +712,7 @@ unsafe fn render_unsafe(scene: &PaintScene) -> PixelContainer {
     // ── Step 5: Generate triangle vertices from PaintInstructions ────────────
     let mut positions: Vec<f32> = Vec::new();
     let mut colors: Vec<f32> = Vec::new();
-    let mut _texts: Vec<PaintText> = Vec::new(); // collected by outer render() fn
-    collect_geometry(&scene.instructions, &mut positions, &mut colors, &mut _texts, 0);
+    collect_geometry(&scene.instructions, &mut positions, &mut colors, 0);
 
     // ── Step 6: Render pass ───────────────────────────────────────────────────
     let pass_desc_class = class("MTLRenderPassDescriptor");
@@ -941,266 +912,6 @@ unsafe fn read_back_pixels(texture: Id, width: u32, height: u32) -> PixelContain
     PixelContainer::from_data(width, height, data)
 }
 
-// ---------------------------------------------------------------------------
-// PaintText CoreText overlay (Apple only)
-// ---------------------------------------------------------------------------
-//
-// After the Metal render pass rasterizes shapes into RGBA bytes, we render
-// `PaintText` instructions by wrapping the pixel buffer in a CGBitmapContext
-// and using CoreText's `CTLineDraw` API.
-//
-// This is simpler than Metal texture-based text: no glyph rasterisation pass,
-// no R8Unorm texture, no second render pipeline — just CoreText drawing
-// directly into the bitmap the Metal pass already produced.
-//
-// ## font_ref format
-//
-// `PaintText.font_ref` uses `"canvas:<family>@<size>:<weight>"` per DG03.
-// We parse the family and size, map "system-ui" → "Helvetica" (the nearest
-// PostScript name available on all Apple platforms without sandbox issues),
-// and create a CTFont. The weight component is currently ignored — future
-// work can map it to a CTFontDescriptor trait.
-
-#[cfg(target_vendor = "apple")]
-mod text_overlay {
-    use objc_bridge::{
-        cfstring_checked, CFAttributedStringCreate, CFDictionaryCreate, CFRelease,
-        CGAffineTransform, CGBitmapContextCreate, CGColorSpaceCreateDeviceRGB,
-        CGColorSpaceRelease, CGContextRef, CGContextRelease, CGContextRestoreGState,
-        CGContextSaveGState, CGContextSetRGBFillColor, CGContextSetShouldAntialias,
-        CGContextSetShouldSmoothFonts, CGContextSetTextMatrix, CGContextSetTextPosition,
-        CTFontCreateWithName, CTLineCreateWithAttributedString, CTLineDraw,
-        CTLineGetTypographicBounds, Id, K_CG_BITMAP_BYTE_ORDER_32_LITTLE,
-        K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST, NIL, kCFTypeDictionaryKeyCallBacks,
-        kCFTypeDictionaryValueCallBacks, kCTFontAttributeName,
-    };
-    use paint_instructions::{PaintScene, PaintText, TextAlign, PixelContainer};
-
-    pub(super) unsafe fn overlay_paint_text(
-        _scene: &PaintScene,
-        pixels: &mut PixelContainer,
-        texts: &[PaintText],
-    ) {
-        let width = pixels.width as usize;
-        let height = pixels.height as usize;
-        if width == 0 || height == 0 || texts.is_empty() {
-            return;
-        }
-
-        let color_space = CGColorSpaceCreateDeviceRGB();
-        if color_space.is_null() {
-            return;
-        }
-
-        // SAFETY: We hold exclusive access to `pixels` via the `&mut PixelContainer`
-        // borrow. `as_mut_ptr()` is correct here (not `as_ptr() as *mut`) because
-        // CGBitmapContextCreate writes through this pointer when CTLineDraw paints text.
-        // The bitmap context is fully released (CGContextRelease) before this function
-        // returns, so no aliased write survives the call. These two overlay functions
-        // (text_overlay and glyph_run_overlay) run sequentially — never in parallel —
-        // so there is no concurrent aliasing between their bitmap contexts.
-        let data_ptr = pixels.data.as_mut_ptr() as *mut std::ffi::c_void;
-        let ctx: CGContextRef = CGBitmapContextCreate(
-            data_ptr,
-            width,
-            height,
-            8,
-            width * 4,
-            color_space,
-            K_CG_IMAGE_ALPHA_PREMULTIPLIED_FIRST | K_CG_BITMAP_BYTE_ORDER_32_LITTLE,
-        );
-        CGColorSpaceRelease(color_space);
-        if ctx.is_null() {
-            return;
-        }
-
-        CGContextSaveGState(ctx);
-        CGContextSetShouldAntialias(ctx, true);
-        CGContextSetShouldSmoothFonts(ctx, true);
-        // Keep text matrix as identity — we convert Y coordinates manually.
-        CGContextSetTextMatrix(ctx, CGAffineTransform::IDENTITY);
-
-        for text in texts {
-            draw_one_text(ctx, text, height as f64);
-        }
-
-        CGContextRestoreGState(ctx);
-        CGContextRelease(ctx);
-    }
-
-    /// Query the advance width of a CTLine.
-    ///
-    /// # Safety
-    ///
-    /// `line` must be a valid, non-NULL `CTLineRef`. `ascent`, `descent`, and
-    /// `leading` are stack-initialised to `0.0` before being passed as out-pointers,
-    /// so CoreText always writes to initialised memory through them.
-    unsafe fn ct_line_width(line: Id) -> f64 {
-        let mut ascent = 0.0f64;
-        let mut descent = 0.0f64;
-        let mut leading = 0.0f64;
-        CTLineGetTypographicBounds(line, &mut ascent, &mut descent, &mut leading)
-    }
-
-    unsafe fn draw_one_text(ctx: CGContextRef, text: &PaintText, image_height: f64) {
-        // Parse font_ref: "canvas:family@size:weight"  →  (family, size)
-        let (family, size_from_ref) = parse_canvas_font_ref(text.font_ref.as_deref().unwrap_or(""));
-        let size = size_from_ref.unwrap_or(text.font_size);
-        // Map logical "system-ui" to a PostScript name CoreText can resolve on all Apple platforms.
-        let ps_name = map_family_to_ps(&family);
-
-        let cf_name = match cfstring_checked(&ps_name) {
-            Some(s) => s,
-            None => return,
-        };
-        let font: Id = CTFontCreateWithName(cf_name, size, std::ptr::null());
-        CFRelease(cf_name);
-        if font == NIL {
-            return;
-        }
-
-        // Build attributes dict: { kCTFontAttributeName: font }
-        let keys = [kCTFontAttributeName as *const std::ffi::c_void];
-        let values = [font as *const std::ffi::c_void];
-        let attrs: Id = CFDictionaryCreate(
-            std::ptr::null(),
-            keys.as_ptr(),
-            values.as_ptr(),
-            1,
-            &kCFTypeDictionaryKeyCallBacks as *const _ as *const std::ffi::c_void,
-            &kCFTypeDictionaryValueCallBacks as *const _ as *const std::ffi::c_void,
-        );
-
-        let cf_text = match cfstring_checked(&text.text) {
-            Some(s) => s,
-            None => {
-                CFRelease(attrs);
-                CFRelease(font);
-                return;
-            }
-        };
-
-        let attr_string: Id = CFAttributedStringCreate(std::ptr::null(), cf_text, attrs);
-        CFRelease(cf_text);
-        CFRelease(attrs);
-        CFRelease(font);
-        if attr_string == NIL {
-            return;
-        }
-
-        let line: Id = CTLineCreateWithAttributedString(attr_string);
-        CFRelease(attr_string);
-        if line == NIL {
-            return;
-        }
-
-        // Compute x position, adjusting for text_align.
-        let draw_x = match text.text_align.as_ref().unwrap_or(&TextAlign::Left) {
-            TextAlign::Center => {
-                text.x - ct_line_width(line) / 2.0
-            }
-            TextAlign::Right => {
-                text.x - ct_line_width(line)
-            }
-            TextAlign::Left => text.x,
-        };
-
-        // Set fill color for the text. CG fill color is used by CTLineDraw
-        // when no kCTForegroundColorAttributeName is set in the run.
-        let (r, g, b, a) = super::parse_hex_color(
-            text.fill.as_deref().unwrap_or("#000000"),
-        );
-        CGContextSetRGBFillColor(ctx, r, g, b, a);
-
-        // Convert scene Y-down baseline to CG Y-up: cg_y = height - scene_y.
-        let cg_y = image_height - text.y;
-        CGContextSetTextPosition(ctx, draw_x, cg_y);
-        CTLineDraw(line, ctx);
-
-        CFRelease(line);
-    }
-
-    /// Parse `"canvas:family@size:weight"` → `(family, Some(size))`.
-    /// Missing size or weight components are silently ignored.
-    fn parse_canvas_font_ref(s: &str) -> (String, Option<f64>) {
-        let rest = s.strip_prefix("canvas:").unwrap_or(s);
-        // rest is "family@size:weight" or just "family"
-        if let Some(at_idx) = rest.find('@') {
-            let family = rest[..at_idx].to_string();
-            let after = &rest[at_idx + 1..];
-            // after is "size:weight" or just "size"
-            let size_str = after.split(':').next().unwrap_or(after);
-            let size = size_str.parse::<f64>().ok();
-            return (family, size);
-        }
-        (rest.to_string(), None)
-    }
-
-    /// Map a logical font family name to a PostScript name CoreText can load.
-    ///
-    /// CoreText can resolve PostScript names reliably on all Apple platforms.
-    /// Logical names like "system-ui" and "sans-serif" are CSS conventions —
-    /// CoreText doesn't know them, so we map them to concrete PostScript names.
-    fn map_family_to_ps(family: &str) -> String {
-        match family.to_lowercase().as_str() {
-            "system-ui" | "ui-sans-serif" | "sans-serif" | "-apple-system" => {
-                "Helvetica".to_string()
-            }
-            "monospace" | "ui-monospace" => "Courier".to_string(),
-            "serif" | "ui-serif" => "Times-Roman".to_string(),
-            other => other.to_string(),
-        }
-    }
-
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-
-        #[test]
-        fn parse_canvas_font_ref_full() {
-            let (family, size) = parse_canvas_font_ref("canvas:system-ui@14:400");
-            assert_eq!(family, "system-ui");
-            assert_eq!(size, Some(14.0));
-        }
-
-        #[test]
-        fn parse_canvas_font_ref_no_weight() {
-            let (family, size) = parse_canvas_font_ref("canvas:Helvetica@18");
-            assert_eq!(family, "Helvetica");
-            assert_eq!(size, Some(18.0));
-        }
-
-        #[test]
-        fn parse_canvas_font_ref_no_at() {
-            let (family, size) = parse_canvas_font_ref("canvas:Helvetica");
-            assert_eq!(family, "Helvetica");
-            assert_eq!(size, None);
-        }
-
-        #[test]
-        fn parse_canvas_font_ref_bare() {
-            let (family, size) = parse_canvas_font_ref("SomeFont@12:700");
-            assert_eq!(family, "SomeFont");
-            assert_eq!(size, Some(12.0));
-        }
-
-        #[test]
-        fn map_system_ui_to_helvetica() {
-            assert_eq!(map_family_to_ps("system-ui"), "Helvetica");
-            assert_eq!(map_family_to_ps("sans-serif"), "Helvetica");
-        }
-
-        #[test]
-        fn map_monospace_to_courier() {
-            assert_eq!(map_family_to_ps("monospace"), "Courier");
-        }
-
-        #[test]
-        fn map_unknown_family_passthrough() {
-            assert_eq!(map_family_to_ps("Comic Sans"), "comic sans");
-        }
-    }
-}
 
 // ---------------------------------------------------------------------------
 // CoreText glyph-run overlay (Apple only)
@@ -1568,8 +1279,8 @@ mod live_present {
 mod tests {
     use super::*;
     use paint_instructions::{
-        PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene, PaintText,
-        PathCommand, TextAlign,
+        PaintBase, PaintEllipse, PaintInstruction, PaintPath, PaintRect, PaintScene,
+        PathCommand,
     };
 
     #[test]
@@ -1620,8 +1331,7 @@ mod tests {
         let rect = PaintInstruction::Rect(PaintRect::filled(10.0, 20.0, 30.0, 40.0, "#ff0000"));
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[rect], &mut positions, &mut colors, &mut texts, 0);
+        collect_geometry(&[rect], &mut positions, &mut colors, 0);
         // 6 vertices × 2 floats (x, y) each = 12 position floats
         assert_eq!(positions.len(), 12);
         // 6 vertices × 4 floats (r, g, b, a) each = 24 color floats
@@ -1633,8 +1343,7 @@ mod tests {
         let rect = PaintInstruction::Rect(PaintRect::filled(0.0, 0.0, 50.0, 50.0, "transparent"));
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[rect], &mut positions, &mut colors, &mut texts, 0);
+        collect_geometry(&[rect], &mut positions, &mut colors, 0);
         assert!(positions.is_empty(), "transparent rect should produce no vertices");
     }
 
@@ -1652,8 +1361,7 @@ mod tests {
         });
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[group], &mut positions, &mut colors, &mut texts, 0);
+        collect_geometry(&[group], &mut positions, &mut colors, 0);
         // 2 rects × 6 vertices × 2 floats = 24 positions
         assert_eq!(positions.len(), 24);
     }
@@ -1670,11 +1378,12 @@ mod tests {
             fill: Some("#0000ff".to_string()),
             stroke: None,
             stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         });
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[ellipse], &mut positions, &mut colors, &mut texts, 0);
+        collect_geometry(&[ellipse], &mut positions, &mut colors, 0);
         let expected = ELLIPSE_SEGMENTS * 3 * 2; // 64 triangles × 3 verts × 2 floats
         assert_eq!(positions.len(), expected, "ellipse fill vertex count");
     }
@@ -1691,11 +1400,12 @@ mod tests {
             fill: Some("#0000ff".to_string()),
             stroke: Some("#ff0000".to_string()),
             stroke_width: Some(2.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
         });
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[ellipse], &mut positions, &mut colors, &mut texts, 0);
+        collect_geometry(&[ellipse], &mut positions, &mut colors, 0);
         // fill: 64 * 3 verts, stroke ring: 64 quads * 2 tris * 3 verts = 384
         let expected = (ELLIPSE_SEGMENTS * 3 + ELLIPSE_SEGMENTS * 2 * 3) * 2; // × 2 for x,y
         assert_eq!(positions.len(), expected, "ellipse fill+stroke vertex count");
@@ -1719,11 +1429,12 @@ mod tests {
             stroke_width: None,
             stroke_cap: None,
             stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         });
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[diamond], &mut positions, &mut colors, &mut texts, 0);
+        collect_geometry(&[diamond], &mut positions, &mut colors, 0);
         // Subpath has 5 points (top, right, bottom, left, top-again from close).
         // Fan: pivot=pts[0], triangles for i in 1..4 → 3 triangles
         // Each triangle: 3 vertices × 2 floats = 6 floats → 18 total
@@ -1731,25 +1442,23 @@ mod tests {
     }
 
     #[test]
-    fn paint_text_collected_not_triangulated() {
-        let text_instr = PaintInstruction::Text(PaintText {
+    fn paint_text_silently_ignored() {
+        // PaintText is Canvas/SVG/DOM-only — Metal ignores it entirely.
+        let text_instr = PaintInstruction::Text(paint_instructions::PaintText {
             base: PaintBase::default(),
             x: 50.0,
             y: 50.0,
             text: "Hello".to_string(),
-            font_ref: Some("canvas:system-ui@14:400".to_string()),
+            font_ref: None,
             font_size: 14.0,
             fill: Some("#000000".to_string()),
-            text_align: Some(TextAlign::Center),
+            text_align: None,
         });
         let mut positions = Vec::new();
         let mut colors = Vec::new();
-        let mut texts = Vec::new();
-        collect_geometry(&[text_instr], &mut positions, &mut colors, &mut texts, 0);
-        // Text goes into `texts`, not into the vertex buffers
+        collect_geometry(&[text_instr], &mut positions, &mut colors, 0);
         assert!(positions.is_empty(), "PaintText should not generate triangle vertices");
-        assert_eq!(texts.len(), 1, "PaintText should be collected");
-        assert_eq!(texts[0].text, "Hello");
+        assert!(colors.is_empty(), "PaintText should not generate color vertices");
     }
 
     #[test]
@@ -1801,6 +1510,8 @@ mod tests {
             fill: Some("#0000ff".to_string()),
             stroke: None,
             stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }));
 
         let pixels = render(&scene);
@@ -1837,6 +1548,8 @@ mod tests {
             stroke_width: None,
             stroke_cap: None,
             stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }));
 
         let pixels = render(&scene);
@@ -1852,45 +1565,6 @@ mod tests {
         assert_eq!(r, 255, "background white at corner");
         assert_eq!(g, 255, "background white at corner");
         assert_eq!(b, 255, "background white at corner");
-    }
-
-    /// Render text and verify that at least some pixels differ from the background.
-    ///
-    /// We can't assert exact pixel values (anti-aliasing, subpixel differences,
-    /// CoreText hinting), so we just verify that the text overlay produced some
-    /// non-white pixels in the area where we drew the text.
-    #[test]
-    fn render_text_draws_non_background_pixels() {
-        let mut scene = PaintScene::new(200.0, 50.0);
-        scene.instructions.push(PaintInstruction::Text(PaintText {
-            base: PaintBase::default(),
-            x: 100.0,
-            // Baseline at y=35 → text visible between y≈15 and y≈35
-            y: 35.0,
-            text: "Hello".to_string(),
-            font_ref: Some("canvas:system-ui@20:400".to_string()),
-            font_size: 20.0,
-            fill: Some("#000000".to_string()),
-            text_align: Some(TextAlign::Center),
-        }));
-
-        let pixels = render(&scene);
-        assert_eq!(pixels.width, 200);
-        assert_eq!(pixels.height, 50);
-
-        // Scan the central strip for any pixel that is not pure white.
-        // A 20px font centred at x=100 will span roughly x=50..150, y=15..35.
-        let mut found_non_white = false;
-        'outer: for y in 10..40u32 {
-            for x in 30..170u32 {
-                let (r, g, b, _a) = pixels.pixel_at(x, y);
-                if r < 240 || g < 240 || b < 240 {
-                    found_non_white = true;
-                    break 'outer;
-                }
-            }
-        }
-        assert!(found_non_white, "text render should produce some non-white pixels");
     }
 
     /// Render a dark module grid pattern (like a QR code quiet zone).

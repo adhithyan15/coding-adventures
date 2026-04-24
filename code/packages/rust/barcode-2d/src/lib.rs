@@ -438,6 +438,8 @@ fn layout_square(grid: &ModuleGrid, config: &Barcode2DLayoutConfig) -> PaintScen
         stroke: None,
         stroke_width: None,
         corner_radius: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
     }));
 
     // 2. One PaintRect per dark module.
@@ -457,6 +459,8 @@ fn layout_square(grid: &ModuleGrid, config: &Barcode2DLayoutConfig) -> PaintScen
                     stroke: None,
                     stroke_width: None,
                     corner_radius: None,
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
                 }));
             }
         }
@@ -530,6 +534,8 @@ fn layout_hex(grid: &ModuleGrid, config: &Barcode2DLayoutConfig) -> PaintScene {
         stroke: None,
         stroke_width: None,
         corner_radius: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
     }));
 
     // One PaintPath per dark module.
@@ -610,6 +616,8 @@ fn build_flat_top_hex_path(cx: f64, cy: f64, r: f64, fill: &str) -> PaintPath {
         stroke_width: None,
         stroke_cap: None,
         stroke_join: None,
+        stroke_dash: None,
+        stroke_dash_offset: None,
     }
 }
 
