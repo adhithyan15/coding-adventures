@@ -36,6 +36,7 @@ from lexer import Token
 
 _FRAME_MEMORY_LABEL = "__algol_frames"
 _HEAP_MEMORY_LABEL = "__algol_heap"
+_STATIC_MEMORY_LABEL = "__algol_static"
 _ZERO_REG = 0
 _RESULT_REG = 1
 _REAL_RESULT_REG = 31
@@ -362,6 +363,9 @@ class AlgolIrCompiler:
             )
         self.program.add_data(IrDataDecl(_FRAME_MEMORY_LABEL, _FRAME_MEMORY_BYTES, 0))
         self.program.add_data(IrDataDecl(_HEAP_MEMORY_LABEL, _HEAP_MEMORY_BYTES, 0))
+        static_bytes = self._static_storage_bytes(type_result.semantic.symbols)
+        if static_bytes > 0:
+            self.program.add_data(IrDataDecl(_STATIC_MEMORY_LABEL, static_bytes, 0))
 
         self._label("_start")
         self._emit(IrOp.LOAD_IMM, IrRegister(_ZERO_REG), IrImmediate(0))
@@ -2548,6 +2552,23 @@ class AlgolIrCompiler:
     def _emit_reference_pointer(
         self, reference: ResolvedReference, scope: _FrameScope
     ) -> int:
+        if reference.storage_class == "static":
+            pointer = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_ADDR,
+                IrRegister(pointer),
+                IrLabel(_STATIC_MEMORY_LABEL),
+            )
+            if reference.slot_offset != 0:
+                adjusted = self._fresh_reg()
+                self._emit(
+                    IrOp.ADD_IMM,
+                    IrRegister(adjusted),
+                    IrRegister(pointer),
+                    IrImmediate(reference.slot_offset),
+                )
+                return adjusted
+            return pointer
         frame_reg = self._emit_frame_for_reference(reference, scope)
         if self._is_by_name_reference(reference):
             pointer = self._fresh_reg()
@@ -2729,6 +2750,17 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         dst_reg: int,
     ) -> None:
+        if symbol.storage_class == "static":
+            if symbol.slot_offset is None:
+                raise CompileError(f"symbol {symbol.name!r} has no planned static slot")
+            base_reg = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_ADDR,
+                IrRegister(base_reg),
+                IrLabel(_STATIC_MEMORY_LABEL),
+            )
+            self._emit_load_scalar(symbol.type_name, dst_reg, base_reg, symbol.slot_offset)
+            return
         if symbol.declaring_block_id != scope.block_id:
             raise CompileError(f"symbol {symbol.name!r} does not belong to root block")
         if symbol.slot_offset is None:
@@ -3261,6 +3293,18 @@ class AlgolIrCompiler:
                 if symbol.slot_offset is not None:
                     slots.setdefault(symbol.name, symbol.slot_offset)
         return slots
+
+    def _static_storage_bytes(self, symbols: list[Symbol]) -> int:
+        total = 0
+        for symbol in symbols:
+            if symbol.storage_class != "static":
+                continue
+            if symbol.slot_offset is None or symbol.slot_size is None:
+                raise CompileError(
+                    f"static symbol {symbol.name!r} is missing storage layout"
+                )
+            total = max(total, symbol.slot_offset + symbol.slot_size)
+        return total
 
     def _fresh_reg(self) -> int:
         reg = self.next_reg

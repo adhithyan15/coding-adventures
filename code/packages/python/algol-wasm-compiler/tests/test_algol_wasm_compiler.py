@@ -104,6 +104,19 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [4]
         assert "".join(captured) == "3.500-0.125"
 
+    def test_own_integer_persists_across_procedure_calls(self) -> None:
+        result = compile_source(
+            "begin own integer counter; integer result; "
+            "procedure bump; begin integer local; "
+            "local := 1; "
+            "counter := counter + 1; "
+            "result := local * 10 + counter "
+            "end; "
+            "bump; bump "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
+
     def test_boolean_variable_assignment_drives_condition(self) -> None:
         result = compile_source(
             "begin integer result; "

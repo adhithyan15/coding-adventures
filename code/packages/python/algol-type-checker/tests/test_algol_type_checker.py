@@ -384,6 +384,61 @@ class TestAlgolTypeChecker:
         assert inner_write.symbol_id != outer_x.symbol_id
         assert inner_write.lexical_depth_delta == 0
 
+    def test_own_scalar_uses_static_storage_outside_frame_layout(self) -> None:
+        ast = parse_algol(
+            "begin own integer counter; integer result; result := counter end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        counter = next(
+            symbol for symbol in result.semantic.symbols if symbol.name == "counter"
+        )
+        result_symbol = next(
+            symbol for symbol in result.semantic.symbols if symbol.name == "result"
+        )
+        assert counter.storage_class == "static"
+        assert counter.slot_offset == 0
+        assert result_symbol.storage_class == "frame"
+        assert result.semantic.root_block is not None
+        layout = result.semantic.root_block.frame_layout
+        assert [slot.name for slot in layout.slots] == ["result"]
+
+        counter_read = next(
+            ref
+            for ref in result.semantic.references
+            if ref.name == "counter" and ref.role == "read"
+        )
+        assert counter_read.storage_class == "static"
+        assert counter_read.slot_offset == 0
+
+    def test_own_scalar_remains_lexically_visible_inside_nested_procedure(self) -> None:
+        ast = parse_algol(
+            "begin own integer counter; integer result; "
+            "procedure bump; begin counter := counter + 1; result := counter end; "
+            "bump "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        reads = [
+            ref
+            for ref in result.semantic.references
+            if ref.name == "counter" and ref.role == "read"
+        ]
+        writes = [
+            ref
+            for ref in result.semantic.references
+            if ref.name == "counter" and ref.role == "write"
+        ]
+        assert reads
+        assert writes
+        assert all(ref.storage_class == "static" for ref in [*reads, *writes])
+        assert all(ref.lexical_depth_delta == 1 for ref in [*reads, *writes])
+
     def test_accepts_integer_value_procedure_descriptor(self) -> None:
         ast = parse_algol(
             "begin integer result; "

@@ -486,6 +486,12 @@ class TestDeclarations:
         type_decl_nodes = find_nodes(ast, "type_decl")
         assert len(type_decl_nodes) >= 3
 
+    def test_own_scalar_declaration(self) -> None:
+        """Own scalar declaration produces an own_decl node."""
+        ast = parse("begin own integer counter; counter := 1 end")
+        own_decl_nodes = find_nodes(ast, "own_decl")
+        assert len(own_decl_nodes) >= 1
+
 
 # ---------------------------------------------------------------------------
 # Procedure call tests
