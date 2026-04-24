@@ -1,0 +1,29 @@
+cabal-version: 3.0
+name:          zip
+version:       0.1.0
+synopsis:      Educational Haskell ZIP archive format (CMP09)
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Zip
+    build-depends:    base >=4.14
+                    , bytestring >= 0.11
+                    , array >= 0.5
+                    , lzss
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    ZipSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , zip
+                    , lzss
+                    , hspec == 2.*
+                    , bytestring >= 0.11
+    default-language: Haskell2010
