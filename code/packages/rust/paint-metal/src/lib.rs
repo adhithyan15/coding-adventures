@@ -1510,6 +1510,8 @@ mod tests {
             fill: Some("#0000ff".to_string()),
             stroke: None,
             stroke_width: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }));
 
         let pixels = render(&scene);
@@ -1546,6 +1548,8 @@ mod tests {
             stroke_width: None,
             stroke_cap: None,
             stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
         }));
 
         let pixels = render(&scene);
