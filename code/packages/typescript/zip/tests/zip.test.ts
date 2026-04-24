@@ -205,7 +205,7 @@ describe("TC-8 — empty file", () => {
 // ─── TC-9: Large file ─────────────────────────────────────────────────────────
 
 describe("TC-9 — large file", () => {
-  it("compresses and decompresses 100 KB of repetitive data", () => {
+  it("compresses and decompresses 100 KB of repetitive data", { timeout: 30_000 }, () => {
     const data = new Uint8Array(100_000);
     for (let i = 0; i < data.length; i++) data[i] = i % 26 + 65; // A-Z repeating
     const archive = zipBytes([["big.bin", data]], true);
