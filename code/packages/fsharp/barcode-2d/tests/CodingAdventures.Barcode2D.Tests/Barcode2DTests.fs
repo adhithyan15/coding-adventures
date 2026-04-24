@@ -26,26 +26,30 @@ open CodingAdventures.PaintInstructions
 // Small helpers used across multiple test groups
 // ---------------------------------------------------------------------------
 
-/// Extract the ``PaintRect`` from a ``Rect`` instruction, failing if it isn't one.
-let asRect (instr: PaintInstruction) : PaintRect =
-    match instr with
-    | Rect r -> r
-    | other  -> failwith (sprintf "Expected Rect but got %s" other.Kind)
+/// Helpers must live in a module — F# namespaces cannot contain values.
+[<AutoOpen>]
+module TestHelpers =
 
-/// Extract the ``PaintPath`` from a ``Path`` instruction, failing if it isn't one.
-let asPath (instr: PaintInstruction) : PaintPath =
-    match instr with
-    | Path p -> p
-    | other  -> failwith (sprintf "Expected Path but got %s" other.Kind)
+    /// Extract the ``PaintRect`` from a ``Rect`` instruction, failing if it isn't one.
+    let asRect (instr: PaintInstruction) : PaintRect =
+        match instr with
+        | Rect r -> r
+        | other  -> failwith (sprintf "Expected Rect but got %s" other.Kind)
 
-/// A tiny tolerance for floating-point geometry comparisons.
-let eps = 1e-9
+    /// Extract the ``PaintPath`` from a ``Path`` instruction, failing if it isn't one.
+    let asPath (instr: PaintInstruction) : PaintPath =
+        match instr with
+        | Path p -> p
+        | other  -> failwith (sprintf "Expected Path but got %s" other.Kind)
 
-/// Assert two floats are equal within ``eps``.
-let assertApprox (expected: float) (actual: float) =
-    Assert.True(
-        Math.Abs(expected - actual) < eps,
-        sprintf "Expected ~%g but got %g (diff=%g)" expected actual (Math.Abs(expected - actual)))
+    /// A tiny tolerance for floating-point geometry comparisons.
+    let eps = 1e-9
+
+    /// Assert two floats are equal within ``eps``.
+    let assertApprox (expected: float) (actual: float) =
+        Assert.True(
+            Math.Abs(expected - actual) < eps,
+            sprintf "Expected ~%g but got %g (diff=%g)" expected actual (Math.Abs(expected - actual)))
 
 // ===========================================================================
 // 1. VERSION

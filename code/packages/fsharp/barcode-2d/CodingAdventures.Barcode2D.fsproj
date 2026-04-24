@@ -9,7 +9,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../paint-instructions/CodingAdventures.PaintInstructions.fsproj" />
+    <ProjectReference Include="../paint-instructions/CodingAdventures.PaintInstructions.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Barcode2D.fs" />
