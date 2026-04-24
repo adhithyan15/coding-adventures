@@ -441,7 +441,7 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
     )
     .with_last_start_tag("title");
 
-    tokenizer.push("Hello</title").unwrap();
+    tokenizer.push("Hello</title>").unwrap();
     tokenizer.finish().unwrap();
 
     assert_eq!(
@@ -516,7 +516,7 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
     )
     .with_last_start_tag("title");
 
-    mismatch.push("Hello</style").unwrap();
+    mismatch.push("Hello</style>").unwrap();
     mismatch.finish().unwrap();
 
     assert_eq!(
