@@ -449,6 +449,8 @@ module CodingAdventures
         cd_size = @buf.bytesize - cd_start
 
         @buf << pack_le32(0x06054B50)   # EOCD signature
+        raise "zip: entry count #{@entries.length} exceeds ZIP limit of 65535" if @entries.length > 65535
+
         @buf << pack_le16(0)
         @buf << pack_le16(0)
         @buf << pack_le16(@entries.length)
@@ -536,6 +538,9 @@ module CodingAdventures
         while pos + 4 <= cd_offset + cd_size
           break if read_le32(pos) != 0x02014B50
 
+          # Guard: minimum CD header is 46 bytes before the variable-length fields.
+          raise "zip: CD entry header out of bounds" if pos + 46 > @data.bytesize
+
           method = read_le16(pos + 10)
           crc32v = read_le32(pos + 16)
           compressed_size = read_le32(pos + 20)
@@ -545,14 +550,26 @@ module CodingAdventures
           comment_len = read_le16(pos + 32)
           local_offset = read_le32(pos + 42)
 
+          # Validate that all fixed fields were readable (nil = byteslice out of bounds).
+          raise "zip: CD entry fields truncated" if [method, crc32v, compressed_size,
+            size, name_len, extra_len, comment_len, local_offset].any?(&:nil?)
+
           name_start = pos + 46
           name_end = name_start + name_len
+
           raise "zip: CD entry name out of bounds" if name_end > @data.bytesize
-          name = @data.byteslice(name_start, name_len).force_encoding("UTF-8")
+
+          # force_encoding relabels the bytes; scrub replaces any invalid UTF-8
+          # sequences with U+FFFD rather than raising on attacker-crafted names.
+          name = @data.byteslice(name_start, name_len).force_encoding("UTF-8").scrub
 
           @entries << ZipEntry.new(name, size, compressed_size, method,
             crc32v, name.end_with?("/"), local_offset)
-          pos = name_end + extra_len + comment_len
+
+          # Guard: ensure pos advancement stays within declared CD region.
+          next_pos = name_end + extra_len + comment_len
+          raise "zip: CD entry advance out of bounds" if next_pos > cd_offset + cd_size
+          pos = next_pos
         end
       end
 
@@ -569,6 +586,7 @@ module CodingAdventures
 
         lh_name_len = read_le16(entry.local_offset + 26)
         lh_extra_len = read_le16(entry.local_offset + 28)
+        raise "zip: local header fields out of bounds for '#{entry.name}'" if lh_name_len.nil? || lh_extra_len.nil?
         data_start = entry.local_offset + 30 + lh_name_len + lh_extra_len
         data_end = data_start + entry.compressed_size
         raise "zip: entry '#{entry.name}' data out of bounds" if data_end > @data.bytesize
