@@ -1,0 +1,42 @@
+{
+  "tests": [
+    {
+      "description": "simple start and end tag in data state",
+      "input": "<b>Hello</b>",
+      "output": [
+        ["StartTag", "b", {}],
+        ["Character", "Hello"],
+        ["EndTag", "b"]
+      ]
+    },
+    {
+      "description": "comment token surrounded by characters",
+      "input": "Before<!--note-->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "note"],
+        ["Character", "After"]
+      ]
+    },
+    {
+      "description": "doctype plus single attribute start tag",
+      "input": "<!DOCTYPE html><p class=test>Hi</p>",
+      "output": [
+        ["DOCTYPE", "html", null, null, true],
+        ["StartTag", "p", {"class": "test"}],
+        ["Character", "Hi"],
+        ["EndTag", "p"]
+      ]
+    },
+    {
+      "description": "comment eof recovery reports tokenizer error",
+      "input": "<!--open",
+      "output": [
+        ["Comment", "open"]
+      ],
+      "errors": [
+        {"code": "eof-in-comment", "line": 1, "col": 9}
+      ]
+    }
+  ]
+}

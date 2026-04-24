@@ -32,3 +32,5 @@ documented in this file.
   explicit generated constructors and the default wrapper API.
 - Documentation for the fixture schema and the planned WHATWG/WPT normalization
   path.
+- A first raw html5lib-style tokenizer smoke file plus a Rust normalizer that
+  lowers supported upstream cases into Venture's portable conformance schema.
