@@ -74,6 +74,26 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [7]
         assert "".join(captured) == "Hi"
 
+    def test_builtin_print_integer_and_boolean_write_stdout(self) -> None:
+        result = compile_source(
+            "begin integer result; print(42); output(true); result := 7 end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "42true"
+
+    def test_builtin_print_negative_integer_writes_stdout(self) -> None:
+        result = compile_source(
+            "begin integer result; print(-12); result := 3 end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [3]
+        assert "".join(captured) == "-12"
+
     def test_boolean_variable_assignment_drives_condition(self) -> None:
         result = compile_source(
             "begin integer result; "

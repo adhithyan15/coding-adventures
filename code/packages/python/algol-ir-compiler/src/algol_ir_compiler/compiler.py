@@ -179,6 +179,7 @@ class AlgolIrCompiler:
         self.if_count = 0
         self.loop_count = 0
         self.switch_count = 0
+        self.output_count = 0
         self.current_frame_reg = -1
         self.stack_base_reg = -1
         self.stack_pointer_reg = -1
@@ -231,6 +232,7 @@ class AlgolIrCompiler:
         self.if_count = 0
         self.loop_count = 0
         self.switch_count = 0
+        self.output_count = 0
         self.heap_base_reg = -1
         self.heap_pointer_reg = -1
         self.heap_limit_reg = -1
@@ -1407,7 +1409,7 @@ class AlgolIrCompiler:
         role = "statement" if node.rule_name == "proc_stmt" else "expression"
         call = self._require_procedure_call(name, role)
         if call.label in {_BUILTIN_PRINT_LABEL, _BUILTIN_OUTPUT_LABEL}:
-            return self._compile_builtin_output(node)
+            return self._compile_builtin_output(node, scope)
         procedure = self.procedures[call.procedure_id]
         static_link = self._emit_static_link_for_call(call, scope)
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
@@ -1511,34 +1513,226 @@ class AlgolIrCompiler:
         )
         return result
 
-    def _compile_builtin_output(self, node: ASTNode) -> int:
+    def _compile_builtin_output(self, node: ASTNode, scope: _FrameScope) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
         if len(actuals) != 1:
             raise CompileError("builtin output expects exactly 1 argument")
-        literal = next(
-            (token for token in _tokens(actuals[0]) if token.type_name == "STRING_LIT"),
-            None,
-        )
-        if literal is None:
-            raise CompileError("builtin output currently requires a string literal")
-
+        actual = actuals[0]
+        actual_type = self._expr_type(actual)
         saved_arg_reg: int | None = None
         if self.next_reg > _VALUE_PARAM_BASE_REG:
             saved_arg_reg = self._fresh_reg()
             self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
-
-        for char in literal.value[1:-1]:
-            value_reg = self._const_reg(ord(char))
-            self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=value_reg)
-            self._emit(
-                IrOp.SYSCALL,
-                IrImmediate(_WRITE_SYSCALL),
-                IrRegister(_VALUE_PARAM_BASE_REG),
+        if actual_type == _STRING_TYPE:
+            literal = next(
+                (token for token in _tokens(actual) if token.type_name == "STRING_LIT"),
+                None,
+            )
+            if literal is None:
+                raise CompileError(
+                    "builtin output currently requires a string literal"
+                )
+            self._emit_output_chars(literal.value[1:-1])
+        elif actual_type == _BOOLEAN_TYPE:
+            self._emit_output_boolean(self._compile_expr(actual, scope))
+        elif actual_type == _INTEGER_TYPE:
+            self._emit_output_integer(self._compile_expr(actual, scope))
+        else:
+            raise CompileError(
+                "builtin output currently supports integer, boolean, and string"
             )
 
         if saved_arg_reg is not None:
             self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
         return _ZERO_REG
+
+    def _emit_output_chars(self, text: str) -> None:
+        for char in text:
+            self._emit_output_reg(self._const_reg(ord(char)))
+
+    def _emit_output_reg(self, value_reg: int) -> None:
+        self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=value_reg)
+        self._emit(
+            IrOp.SYSCALL,
+            IrImmediate(_WRITE_SYSCALL),
+            IrRegister(_VALUE_PARAM_BASE_REG),
+        )
+
+    def _emit_output_boolean(self, value_reg: int) -> None:
+        index = self.output_count
+        self.output_count += 1
+        false_label = f"algol_label_output_bool_{index}_false"
+        end_label = f"algol_label_output_bool_{index}_end"
+        self._emit(IrOp.BRANCH_Z, IrRegister(value_reg), IrLabel(false_label))
+        self._emit_output_chars("true")
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(false_label)
+        self._emit_output_chars("false")
+        self._label(end_label)
+
+    def _emit_output_integer(self, value_reg: int) -> None:
+        index = self.output_count
+        self.output_count += 1
+        extract_loop_label = f"algol_label_output_int_{index}_extract_loop"
+        emit_label = f"algol_label_output_int_{index}_emit"
+        emit_loop_label = f"algol_label_output_int_{index}_emit_loop"
+        end_label = f"algol_label_output_int_{index}_end"
+        negative_label = f"algol_label_output_int_{index}_negative"
+        zero_label = f"algol_label_output_int_{index}_zero"
+
+        work_reg = self._fresh_reg()
+        digit_count_reg = self._fresh_reg()
+        buffer_base_reg = self._snapshot_heap_pointer()
+        ten_reg = self._const_reg(10)
+        ascii_zero_reg = self._const_reg(ord("0"))
+        self._copy_reg(dst=work_reg, src=value_reg)
+        self._emit(IrOp.LOAD_IMM, IrRegister(digit_count_reg), IrImmediate(0))
+
+        is_negative_reg = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(is_negative_reg),
+            IrRegister(work_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(is_negative_reg), IrLabel(zero_label))
+        self._label(negative_label)
+        self._emit_output_chars("-")
+        self._label(zero_label)
+        is_zero_reg = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(is_zero_reg),
+            IrRegister(work_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(is_zero_reg), IrLabel(extract_loop_label))
+        self._emit_output_chars("0")
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+
+        self._label(extract_loop_label)
+        self._emit_extract_integer_digit(
+            work_reg,
+            digit_count_reg,
+            buffer_base_reg,
+            ten_reg,
+            ascii_zero_reg,
+            negative_reg=is_negative_reg,
+        )
+        continue_reg = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_NE,
+            IrRegister(continue_reg),
+            IrRegister(work_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(
+            IrOp.BRANCH_NZ,
+            IrRegister(continue_reg),
+            IrLabel(extract_loop_label),
+        )
+
+        self._label(emit_label)
+        emit_index_reg = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(emit_index_reg),
+            IrRegister(digit_count_reg),
+            IrImmediate(-1),
+        )
+        self._label(emit_loop_label)
+        done_reg = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(done_reg),
+            IrRegister(emit_index_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done_reg), IrLabel(end_label))
+        char_reg = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(char_reg),
+            IrRegister(buffer_base_reg),
+            IrRegister(emit_index_reg),
+        )
+        self._emit_output_reg(char_reg)
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(emit_index_reg),
+            IrRegister(emit_index_reg),
+            IrImmediate(-1),
+        )
+        self._emit(IrOp.JUMP, IrLabel(emit_loop_label))
+        self._label(end_label)
+
+    def _emit_extract_integer_digit(
+        self,
+        work_reg: int,
+        digit_count_reg: int,
+        buffer_base_reg: int,
+        ten_reg: int,
+        ascii_zero_reg: int,
+        *,
+        negative_reg: int,
+    ) -> None:
+        quotient_reg = self._fresh_reg()
+        product_reg = self._fresh_reg()
+        digit_reg = self._fresh_reg()
+        ascii_reg = self._fresh_reg()
+        self._emit(
+            IrOp.DIV,
+            IrRegister(quotient_reg),
+            IrRegister(work_reg),
+            IrRegister(ten_reg),
+        )
+        self._emit(
+            IrOp.MUL,
+            IrRegister(product_reg),
+            IrRegister(quotient_reg),
+            IrRegister(ten_reg),
+        )
+        self._emit(
+            IrOp.SUB,
+            IrRegister(digit_reg),
+            IrRegister(work_reg),
+            IrRegister(product_reg),
+        )
+        invert_label = f"algol_label_output_digit_{self.output_count}_invert"
+        continue_label = f"algol_label_output_digit_{self.output_count}_continue"
+        self.output_count += 1
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(negative_reg),
+            IrLabel(continue_label),
+        )
+        self._label(invert_label)
+        self._emit(
+            IrOp.SUB,
+            IrRegister(digit_reg),
+            IrRegister(_ZERO_REG),
+            IrRegister(digit_reg),
+        )
+        self._label(continue_label)
+        self._emit(
+            IrOp.ADD,
+            IrRegister(ascii_reg),
+            IrRegister(digit_reg),
+            IrRegister(ascii_zero_reg),
+        )
+        self._emit(
+            IrOp.STORE_BYTE,
+            IrRegister(ascii_reg),
+            IrRegister(buffer_base_reg),
+            IrRegister(digit_count_reg),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(digit_count_reg),
+            IrRegister(digit_count_reg),
+            IrImmediate(1),
+        )
+        self._copy_reg(dst=work_reg, src=quotient_reg)
 
     def _requires_by_name_thunk_descriptor(self, argument: ASTNode) -> bool:
         variable = _single_variable_expr(argument)

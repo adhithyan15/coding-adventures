@@ -897,15 +897,11 @@ class TestAlgolTypeChecker:
         assert result.semantic is not None
         assert result.semantic.procedure_calls[-1].label == "__algol_builtin_print"
 
-    def test_rejects_builtin_print_with_non_string_argument(self) -> None:
+    def test_accepts_builtin_print_with_integer_argument(self) -> None:
         ast = parse_algol("begin integer result; print(1); result := 0 end")
         result = check_algol(ast)
 
-        assert not result.ok
-        assert (
-            "parameter 'value' expects string, got integer"
-            in result.diagnostics[0].message
-        )
+        assert result.ok
 
     def test_rejects_builtin_print_in_expression(self) -> None:
         ast = parse_algol("begin integer result; result := print('Hi') end")
@@ -913,3 +909,27 @@ class TestAlgolTypeChecker:
 
         assert not result.ok
         assert "does not return a value" in result.diagnostics[0].message
+
+    def test_accepts_builtin_print_with_integer_expression_argument(self) -> None:
+        ast = parse_algol("begin integer result; print(1 + 2); result := 1 end")
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_accepts_builtin_print_with_boolean_argument(self) -> None:
+        ast = parse_algol(
+            "begin integer result; print(1 < 2); result := 1 end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
+    def test_rejects_builtin_print_with_real_argument(self) -> None:
+        ast = parse_algol("begin integer result; print(1.5); result := 0 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert (
+            "builtin procedure 'print' expects integer, boolean, or string, got real"
+            in result.diagnostics[0].message
+        )
