@@ -654,6 +654,24 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [8]
         assert "".join(captured) == "OK"
 
+    def test_integer_array_parameter_writes_back_through_descriptor(self) -> None:
+        result = compile_source(
+            "begin integer array xs[1:2]; integer result; "
+            "procedure setfirst(a); integer a; array a; begin a[1] := 9 end; "
+            "xs[1] := 4; setfirst(xs); result := xs[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(self) -> None:
+        result = compile_source(
+            "begin integer array xs[1:2]; integer result; "
+            "procedure probe(a); integer a; array a; begin result := a[1, 1] end; "
+            "probe(xs); result := 1 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(
             "begin integer result; "

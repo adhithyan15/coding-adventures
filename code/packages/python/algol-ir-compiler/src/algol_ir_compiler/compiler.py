@@ -65,6 +65,7 @@ _FIRST_GENERAL_REG = 32
 _ARRAY_DESCRIPTOR_SIZE = 24
 _ARRAY_ELEMENT_TYPE_INTEGER = 1
 _ARRAY_ELEMENT_TYPE_REAL = 2
+_ARRAY_DIMENSION_COUNT_OFFSET = 4
 _ARRAY_DIMENSION_ENTRY_SIZE = 12
 _ARRAY_DIM_LOWER_OFFSET = 0
 _ARRAY_DIM_UPPER_OFFSET = 4
@@ -325,7 +326,11 @@ class AlgolIrCompiler:
         }
         self.arrays_by_block = {}
         for array in type_result.semantic.arrays:
-            self.arrays_by_block.setdefault(array.declaring_block_id, []).append(array)
+            if array.storage_class in {"frame", "static"}:
+                self.arrays_by_block.setdefault(
+                    array.declaring_block_id,
+                    [],
+                ).append(array)
         self.procedure_signatures = {
             procedure.label: ProcedureSignaturePlan(
                 param_types=(
@@ -333,7 +338,7 @@ class AlgolIrCompiler:
                     _INTEGER_TYPE,
                     *(
                         _INTEGER_TYPE
-                        if parameter.mode == _NAME_MODE
+                        if parameter.mode == _NAME_MODE or parameter.kind == "array"
                         else parameter.type_name
                         for parameter in procedure.parameters
                     ),
@@ -767,7 +772,11 @@ class AlgolIrCompiler:
                 else _ARRAY_ELEMENT_TYPE_INTEGER
             ),
         )
-        self._store_word_const(heap_pointer, 4, len(array.dimensions))
+        self._store_word_const(
+            heap_pointer,
+            _ARRAY_DIMENSION_COUNT_OFFSET,
+            len(array.dimensions),
+        )
         self._store_word_reg(
             value_reg=total_reg,
             base_reg=heap_pointer,
@@ -2160,7 +2169,8 @@ class AlgolIrCompiler:
             for index, (argument, parameter) in enumerate(
                 zip(actuals, procedure.parameters, strict=True)
             )
-            if parameter.mode == _NAME_MODE
+            if parameter.kind != "array"
+            and parameter.mode == _NAME_MODE
             and self._requires_by_name_thunk_descriptor(argument)
         ]
         for _, argument, parameter in thunk_actuals:
@@ -2177,6 +2187,12 @@ class AlgolIrCompiler:
         for index, (argument, parameter) in enumerate(
             zip(actuals, procedure.parameters, strict=True)
         ):
+            if parameter.kind == "array":
+                if parameter.mode == _VALUE_MODE:
+                    raise CompileError(
+                        f"value array parameter {parameter.name!r} is not supported yet"
+                    )
+                continue
             if parameter.mode == _VALUE_MODE:
                 value = self._compile_expr(argument, scope)
                 arguments[index] = self._coerce_reg_to_type(
@@ -2208,6 +2224,9 @@ class AlgolIrCompiler:
         for index, (argument, parameter) in enumerate(
             zip(actuals, procedure.parameters, strict=True)
         ):
+            if parameter.kind == "array":
+                arguments[index] = self._compile_array_actual_pointer(argument, scope)
+                continue
             if parameter.mode != _NAME_MODE:
                 continue
             descriptor = None
@@ -2764,6 +2783,20 @@ class AlgolIrCompiler:
         reference = self._require_reference(name, "read")
         return self._emit_reference_pointer(reference, scope)
 
+    def _compile_array_actual_pointer(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> int:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            raise CompileError("array parameter actual must be a whole-array variable")
+        name = _variable_name(variable)
+        if name is None:
+            raise CompileError("array parameter actual is missing a name")
+        access = self._require_array_access(name, "actual")
+        return self._emit_load_array_descriptor(access, scope)
+
     def _compile_eval_thunk_actual(
         self,
         argument: ASTNode,
@@ -3110,7 +3143,7 @@ class AlgolIrCompiler:
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
-            if parameter.mode == _NAME_MODE:
+            if parameter.kind == "array" or parameter.mode == _NAME_MODE:
                 self._store_word_reg(
                     value_reg=_VALUE_PARAM_BASE_REG + index,
                     base_reg=scope.frame_base_reg,
@@ -3221,8 +3254,27 @@ class AlgolIrCompiler:
             IrRegister(bounds_offset),
         )
 
-        element_index = self._const_reg(0)
         subscripts = _variable_subscripts(variable)
+        dimension_count = self._fresh_reg()
+        dimension_mismatch = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(dimension_count),
+            IrRegister(descriptor_pointer),
+            IrRegister(self._const_reg(_ARRAY_DIMENSION_COUNT_OFFSET)),
+        )
+        self._emit(
+            IrOp.CMP_NE,
+            IrRegister(dimension_mismatch),
+            IrRegister(dimension_count),
+            IrRegister(self._const_reg(len(subscripts))),
+        )
+        if helper_failure:
+            self._emit_helper_runtime_failure_guard(dimension_mismatch, scope)
+        else:
+            self._emit_runtime_failure_guard(dimension_mismatch, scope)
+
+        element_index = self._const_reg(0)
         for index, subscript in enumerate(subscripts):
             subscript_reg = self._compile_expr(subscript, scope)
             lower = self._fresh_reg()
