@@ -52,6 +52,29 @@
       "diagnostics": [
         "eof-in-comment"
       ]
+    },
+    {
+      "id": "mosaic-title-rcdata-end-tag",
+      "description": "Seeded title RCDATA context emits the matching end tag",
+      "input": "Hello</title>",
+      "tokens": [
+        "Text(data=Hello)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "mosaic-title-rcdata-lt-reference",
+      "description": "Seeded title RCDATA context resolves &lt; into text",
+      "input": "Hello&lt;/title>",
+      "tokens": [
+        "Text(data=Hello</title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
     }
   ]
 }

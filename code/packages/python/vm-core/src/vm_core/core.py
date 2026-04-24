@@ -71,6 +71,7 @@ from vm_core.dispatch import STANDARD_OPCODES, run_dispatch_loop
 from vm_core.frame import VMFrame
 from vm_core.metrics import BranchStats, VMMetrics
 from vm_core.profiler import TypeMapper, VMProfiler
+from vm_core.tracer import VMTrace, VMTracer
 
 
 class VMCore:
@@ -152,6 +153,11 @@ class VMCore:
         self._branch_stats: dict[str, dict[int, BranchStats]] = {}
         self._loop_back_edges: dict[str, dict[int, int]] = {}
 
+        # Active tracer (LANG17 PR3).  ``None`` on the normal execute
+        # path so no overhead is paid.  Set transiently by
+        # :meth:`execute_traced` for the duration of one run.
+        self._tracer: VMTracer | None = None
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
@@ -206,6 +212,42 @@ class VMCore:
         self._fn_call_counts[fn] = self._fn_call_counts.get(fn, 0) + 1
 
         return run_dispatch_loop(self)
+
+    def execute_traced(
+        self,
+        module: IIRModule,
+        *,
+        fn: str = "main",
+        args: list[Any] | None = None,
+    ) -> tuple[Any, list[VMTrace]]:
+        """Execute ``fn`` and return ``(result, list_of_VMTraces)``.
+
+        For every instruction dispatched during this run, the tracer
+        records a :class:`vm_core.tracer.VMTrace` capturing:
+
+        - frame depth at dispatch
+        - function name and instruction-pointer before dispatch
+        - a reference to the ``IIRInstr`` that ran
+        - shallow-copied register files before and after the dispatch
+        - any feedback-slot changes produced by this instruction
+
+        Overhead: two ``list`` copies and one ``VMTrace`` allocation
+        per instruction.  Intended for debuggers, test harnesses, and
+        reproducer generation — not for hot-path runs.
+
+        A fresh :class:`VMTracer` is installed for this call only; the
+        normal :meth:`execute` path still pays zero tracing cost.
+        """
+        tracer = VMTracer()
+        previous_tracer = self._tracer
+        self._tracer = tracer
+        try:
+            result = self.execute(module, fn=fn, args=args)
+        finally:
+            # Restore any outer tracer (for nested execute_traced calls,
+            # though that is a corner case).
+            self._tracer = previous_tracer
+        return result, list(tracer.traces)
 
     def metrics(self) -> VMMetrics:
         """Return a point-in-time snapshot of execution statistics.
