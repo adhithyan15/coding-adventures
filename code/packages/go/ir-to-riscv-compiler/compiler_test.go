@@ -357,6 +357,40 @@ func TestCompilePreservesSpilledRegistersAcrossCalls(t *testing.T) {
 	}
 }
 
+func TestCompileUsesCorrectBranchPcAfterSpillReload(t *testing.T) {
+	program := ir.NewIrProgram("_start")
+	program.Instructions = []ir.IrInstruction{
+		label("_start"),
+		instr(1, ir.OpLoadImm, ir.IrRegister{Index: 20}, ir.IrImmediate{Value: 3}),
+		label("loop"),
+		instr(2, ir.OpAddImm, ir.IrRegister{Index: 20}, ir.IrRegister{Index: 20}, ir.IrImmediate{Value: -1}),
+		instr(3, ir.OpBranchNz, ir.IrRegister{Index: 20}, ir.IrLabel{Name: "loop"}),
+		instr(4, ir.OpAddImm, ir.IrRegister{Index: 1}, ir.IrRegister{Index: 20}, ir.IrImmediate{Value: 0}),
+		instr(5, ir.OpHalt),
+	}
+
+	result, err := NewIrToRiscVCompiler().Compile(program)
+	if err != nil {
+		t.Fatalf("compile failed: %v", err)
+	}
+
+	sim := riscv.NewRiscVSimulator(4096)
+	sim.Run(result.Bytes)
+
+	assembled, err := riscvassembler.Assemble(result.Assembly)
+	if err != nil {
+		t.Fatalf("assemble emitted assembly failed: %v\n%s", err, result.Assembly)
+	}
+	if !bytes.Equal(assembled.Bytes, result.Bytes) {
+		t.Fatalf("expected emitted assembly to reassemble to compiler bytes")
+	}
+
+	loopRegister, _ := physicalRegister(1)
+	if got := sim.CPU.Registers.Read(loopRegister); got != 0 {
+		t.Fatalf("expected spilled loop counter to reach 0, got %d", got)
+	}
+}
+
 func instr(id int, opcode ir.IrOp, operands ...ir.IrOperand) ir.IrInstruction {
 	return ir.IrInstruction{ID: id, Opcode: opcode, Operands: operands}
 }
