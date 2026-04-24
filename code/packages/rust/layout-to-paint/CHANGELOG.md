@@ -18,6 +18,25 @@
 - No shadows, opacity, or layer filters.
 - No intrinsic image sizing.
 
+## [0.1.1] — TextAlign::Center support
+
+### Changed
+- `emit_text_content` now shapes each line first to obtain `total_advance()`,
+  then computes `baseline_x` based on `TextContent.text_align`:
+  - `TextAlign::Center` — line centred within the node's width.
+  - `TextAlign::End` — right-aligned.
+  - `TextAlign::Start` — left-aligned (unchanged behaviour).
+- Extracted `emit_glyph_runs_from_shaped(shaped, ...)` helper so the shape
+  step happens once per line (previously it was done twice when centering
+  would have been needed). Removed now-dead `emit_paint_glyph_runs_for_line`.
+- Added `TextAlign` import to the crate's top-level `use` block.
+
+### Tests — 14 pass (was 12; 2 new)
+- `font_fallback_emits_one_paint_glyph_run_per_segment` — verifies that a
+  shaper producing multiple ShapedRuns (font fallback) emits one PaintGlyphRun
+  per segment with the correct font_ref and monotonically increasing x positions.
+- Existing 13 tests all pass unmodified.
+
 ### Tests — 12 pass
 - Empty container → empty scene.
 - `backgroundColor` in ext → PaintRect with correct fill.

@@ -13,13 +13,34 @@ use diagram_ir::{GraphDiagram, GraphNode, GraphEdge, DiagramDirection,
 use diagram_layout_graph::layout_graph_diagram;
 
 let diagram = GraphDiagram { /* ... */ };
-let layout = layout_graph_diagram(&diagram, None);
+
+// Pass None for options (defaults) and None for measurer (heuristic widths).
+// On Apple platforms, pass Some(&NativeMeasurer::new()) for CoreText sizing.
+let layout = layout_graph_diagram(&diagram, None, None);
 
 for node in &layout.nodes {
     println!("Node {} at ({}, {}) size {}×{}",
         node.id, node.x, node.y, node.width, node.height);
 }
 ```
+
+## Node sizing
+
+When a `TextMeasurer` is supplied (third argument), node widths are measured via
+real font metrics:
+
+```
+width = max(min_node_width, h_padding × 2 + measured.width)
+```
+
+When `None` is passed, the heuristic fallback is used:
+
+```
+width = max(min_node_width, h_padding × 2 + label.len() × char_width)
+```
+
+On Apple platforms, inject `layout_text_measure_native::NativeMeasurer` for
+CoreText-accurate sizing that matches the text shaping pipeline.
 
 ## Algorithm
 
