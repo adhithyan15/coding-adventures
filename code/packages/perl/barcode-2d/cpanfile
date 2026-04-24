@@ -1,0 +1,2 @@
+requires 'coding-adventures-paint-instructions';
+on 'test' => sub { requires 'Test2::V0'; };

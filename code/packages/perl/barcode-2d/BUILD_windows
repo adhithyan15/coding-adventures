@@ -1,0 +1,1 @@
+echo Skipping perl/barcode-2d on Windows -- prerequisite refs: ..\paint-instructions
