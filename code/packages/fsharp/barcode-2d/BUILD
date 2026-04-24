@@ -1,0 +1,1 @@
+mkdir -p .dotnet .artifacts && HOME="$PWD/.dotnet" DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_HOME="$PWD/.dotnet" dotnet test tests/CodingAdventures.Barcode2D.Tests/CodingAdventures.Barcode2D.Tests.fsproj --disable-build-servers --artifacts-path .artifacts /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line
