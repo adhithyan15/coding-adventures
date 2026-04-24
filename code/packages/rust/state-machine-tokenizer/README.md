@@ -64,9 +64,11 @@ Temporary buffers and controlled state changes:
 - `append_temporary_buffer(current_lowercase)`
 - `append_temporary_buffer(literal)`
 - `append_temporary_buffer_to_text`
+- `discard_current_token`
 - `set_return_state(state)`
 - `switch_to(state)`
 - `switch_to_return_state`
+- `emit_rcdata_end_tag_or_text`
 
 Diagnostics and stream control:
 
@@ -75,6 +77,11 @@ Diagnostics and stream control:
 
 It also enforces a per-input step limit so malformed reconsume-style machines
 cannot spin forever on one code point.
+
+The runtime also exposes context-seeding helpers such as
+`Tokenizer::set_initial_state` and `Tokenizer::set_last_start_tag` so wrapper
+packages can execute HTML submodes like RCDATA without loading definition files
+at runtime.
 
 ## Development
 
