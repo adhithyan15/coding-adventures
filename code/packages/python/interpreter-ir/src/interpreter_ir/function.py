@@ -91,6 +91,43 @@ class IIRFunction:
     type_status: FunctionTypeStatus = FunctionTypeStatus.UNTYPED
     call_count: int = field(default=0, repr=False, compare=False)
 
+    # ----------------------------------------------------------------------
+    # Optional frontend-owned side tables (LANG17 PR4).
+    #
+    # ``feedback_slots`` and ``source_map`` let language frontends carry
+    # their own indexing schemes alongside the generic IIR.  vm-core does
+    # not interpret either field — they are passive metadata that
+    # frontends populate at compile time and read back at metric
+    # observation time.
+    # ----------------------------------------------------------------------
+
+    feedback_slots: dict[int, int] = field(default_factory=dict, repr=False, compare=False)
+    """Optional: ``slot_index → iir_instr_index`` mapping.
+
+    Frontends that allocate named feedback slots at compile time (Tetrad,
+    SpiderMonkey, V8) populate this dict so a slot index can be resolved
+    back to the IIR instruction that owns it.  ``vm-core`` does not
+    populate or read this field — it is the frontend's contract with
+    its own metric APIs (e.g. ``TetradRuntime.feedback_vector(fn)``
+    returns a list indexed by slot index).
+    """
+
+    source_map: list[tuple[int, int, int]] = field(default_factory=list, repr=False, compare=False)
+    """Optional: ``(iir_index, source_a, source_b)`` triples.
+
+    Frontends populate this with whatever indexing scheme they need on
+    the read side.  Conventional uses:
+
+    - ``(iir_index, source_line, source_column)`` — the LANG17 spec's
+      default reading.  Debuggers map IIR back to source positions.
+    - ``(iir_index, original_byte_code_ip, 0)`` — Tetrad's reading.
+      Lets ``TetradRuntime.branch_profile(fn, tetrad_ip)`` re-key the
+      generic IIR-IP-keyed counters back into Tetrad-IP space.
+
+    The third field's meaning is frontend-defined; vm-core does not look
+    at it.
+    """
+
     # -----------------------------------------------------------------------
     # Helpers
     # -----------------------------------------------------------------------

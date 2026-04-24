@@ -38,11 +38,11 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from interpreter_ir import IIRModule
+from interpreter_ir import IIRModule, SlotKind, SlotState
 from jit_core import JITCore
 from tetrad_compiler import compile_program
 from tetrad_compiler.bytecode import CodeObject
-from vm_core import VMCore
+from vm_core import BranchStats, VMCore, VMTrace
 
 from tetrad_runtime.iir_translator import (
     TETRAD_OPCODE_EXTENSIONS,
@@ -197,6 +197,224 @@ class TetradRuntime:
             name: int(self._last_vm.memory.get(addr, 0)) & 0xFF
             for addr, name in enumerate(names)
         }
+
+    # ------------------------------------------------------------------
+    # Legacy TetradVM API parity (LANG17 PR4).
+    #
+    # These wrappers re-project vm-core's generic, IIR-IP-keyed metric
+    # surface into the exact signatures the legacy ``tetrad-vm``
+    # ``TetradVM`` class exposed.  Existing callers can switch from
+    # ``TetradVM → TetradRuntime`` without rewriting metric-reading code.
+    #
+    # Each method requires that the most recent ``run()`` populated
+    # ``self._last_vm`` and ``self.last_module`` — an unrun runtime
+    # returns ``None`` / empty rather than raising, matching the legacy
+    # behaviour.
+    # ------------------------------------------------------------------
+
+    def hot_functions(self, threshold: int = 100) -> list[str]:
+        """Return names of functions called at least ``threshold`` times.
+
+        Mirrors ``TetradVM.hot_functions``.  Always returns an empty list
+        if no run has happened yet.
+        """
+        if self._last_vm is None:
+            return []
+        return self._last_vm.hot_functions(threshold)
+
+    def feedback_vector(self, fn_name: str) -> list[SlotState] | None:
+        """Return the per-slot ``SlotState`` list for ``fn_name``.
+
+        Mirrors ``TetradVM.feedback_vector``.  Returns ``None`` if the
+        function has no slots, has never been called, or the runtime has
+        not been used yet.
+
+        The list is indexed by the slot index the Tetrad compiler assigned
+        (from the bytecode's slot operand), reconstructed by walking
+        ``IIRFunction.feedback_slots`` populated in the translator.
+        Slots whose IIR instruction hasn't been observed yet are
+        represented by a fresh UNINITIALIZED ``SlotState`` so the list
+        is never sparse.
+        """
+        fn, _instrs = self._lookup_fn(fn_name)
+        if fn is None:
+            return None
+        slot_map = fn.feedback_slots
+        if not slot_map:
+            return None
+        max_slot = max(slot_map.keys())
+        out: list[SlotState] = []
+        for slot in range(max_slot + 1):
+            iir_idx = slot_map.get(slot)
+            if iir_idx is None:
+                out.append(SlotState())
+                continue
+            instr = fn.instructions[iir_idx]
+            out.append(instr.observed_slot or SlotState())
+        return out
+
+    def type_profile(self, fn_name: str, slot: int) -> SlotState | None:
+        """Return the ``SlotState`` for one slot in ``fn_name``, or ``None``.
+
+        Mirrors ``TetradVM.type_profile``.
+        """
+        vec = self.feedback_vector(fn_name)
+        if vec is None or slot >= len(vec):
+            return None
+        return vec[slot]
+
+    def call_site_shape(self, fn_name: str, slot: int) -> SlotKind:
+        """Return the IC shape (``SlotKind``) of one CALL feedback slot.
+
+        Mirrors ``TetradVM.call_site_shape``.  Returns
+        ``SlotKind.UNINITIALIZED`` for unknown / unreached slots, matching
+        legacy behaviour.
+        """
+        state = self.type_profile(fn_name, slot)
+        if state is None:
+            return SlotKind.UNINITIALIZED
+        return state.kind
+
+    def branch_profile(self, fn_name: str, tetrad_ip: int) -> BranchStats | None:
+        """Return ``BranchStats`` for the branch at the original Tetrad IP.
+
+        Mirrors ``TetradVM.branch_profile``.  ``tetrad_ip`` is the
+        instruction index in the *original Tetrad bytecode*, not the IIR
+        index.  We walk ``IIRFunction.source_map`` to find the IIR
+        index where that Tetrad instr's translation starts, then
+        consult ``vm_core.branch_profile`` keyed by IIR IP.
+
+        The IIR translator emits the conditional branch (``jmp_if_true``
+        / ``jmp_if_false``) as the only ``jmp_if_*`` instruction in the
+        translation of a Tetrad JZ/JNZ — so the IIR's source-map start
+        index is the right one to consult.
+        """
+        if self._last_vm is None:
+            return None
+        fn, _ = self._lookup_fn(fn_name)
+        if fn is None:
+            return None
+        iir_ip = self._iir_ip_for_tetrad_ip(fn, tetrad_ip)
+        if iir_ip is None:
+            return None
+        # Tetrad JZ / JNZ both translate to a small IIR sequence; the
+        # ``jmp_if_*`` instruction lives one or two instructions deep.
+        # Scan forward from iir_ip until we hit one (bounded by the start
+        # of the next Tetrad source-map entry).
+        iir_branch_ip = self._find_branch_in_translation(fn, iir_ip)
+        if iir_branch_ip is None:
+            return None
+        return self._last_vm.branch_profile(fn_name, iir_branch_ip)
+
+    def loop_iterations(self, fn_name: str) -> dict[int, int]:
+        """Return ``{tetrad_ip: hit_count}`` for back-edges in ``fn_name``.
+
+        Mirrors ``TetradVM.loop_iterations``.  Re-keys the IIR-IP-keyed
+        counts back into Tetrad-IP space using ``IIRFunction.source_map``.
+        Tetrad IPs that produced no IIR back-edge (e.g. forward jumps)
+        are absent from the returned dict.
+        """
+        if self._last_vm is None:
+            return {}
+        fn, _ = self._lookup_fn(fn_name)
+        if fn is None:
+            return {}
+        iir_loops = self._last_vm.loop_iterations(fn_name)
+        if not iir_loops:
+            return {}
+        # Build a reverse map: iir_ip → tetrad_ip (using the start-of-
+        # translation entries from source_map, then fanning forward to
+        # every IIR ip in that Tetrad instr's translation).
+        out: dict[int, int] = {}
+        for iir_ip, count in iir_loops.items():
+            tetrad_ip = self._tetrad_ip_for_iir_ip(fn, iir_ip)
+            if tetrad_ip is not None:
+                out[tetrad_ip] = count
+        return out
+
+    def reset_metrics(self) -> None:
+        """Zero all aggregate counters on the live VM (if any).
+
+        Mirrors ``TetradVM.reset_metrics``.  No-op if no run has happened.
+        Per-instruction observations live on the IIR module and are NOT
+        reset here — to clear those, run a fresh source through ``run``.
+        """
+        if self._last_vm is not None:
+            self._last_vm.reset_metrics()
+
+    def execute_traced(self, source: str) -> tuple[Any, list[VMTrace]]:
+        """Run ``source`` and return ``(result, list[VMTrace])``.
+
+        Mirrors ``TetradVM.execute_traced``.  Each ``VMTrace`` records
+        one IIR instruction dispatch — note that one Tetrad bytecode
+        instruction typically translates to several IIR instructions, so
+        the trace is denser than legacy callers may expect.  Frontends
+        that need Tetrad-IP-keyed traces can re-project through
+        ``IIRFunction.source_map``.
+        """
+        module = compile_to_iir(source)
+        self.last_module = module
+        vm = self._make_vm()
+        self._last_vm = vm
+        return vm.execute_traced(module, fn=module.entry_point or "main")
+
+    # ------------------------------------------------------------------
+    # Legacy-API helpers
+    # ------------------------------------------------------------------
+
+    def _lookup_fn(self, fn_name: str):
+        """Return ``(IIRFunction | None, instructions | None)``.
+
+        Convenience helper for the metric wrappers that need to pull a
+        function out of the most recently executed module.
+        """
+        if self.last_module is None:
+            return None, None
+        fn = self.last_module.get_function(fn_name)
+        if fn is None:
+            return None, None
+        return fn, fn.instructions
+
+    @staticmethod
+    def _iir_ip_for_tetrad_ip(fn, tetrad_ip: int) -> int | None:
+        """Resolve a Tetrad IP to the IIR IP at the start of its translation."""
+        for iir_ip, t_ip, _col in fn.source_map:
+            if t_ip == tetrad_ip:
+                return iir_ip
+        return None
+
+    @staticmethod
+    def _tetrad_ip_for_iir_ip(fn, iir_ip: int) -> int | None:
+        """Reverse resolve: IIR IP → Tetrad IP it belongs to.
+
+        A Tetrad instruction's translation occupies the IIR range
+        ``[start, next_start)`` — find the largest ``start`` that is
+        ``<= iir_ip``.
+        """
+        best: tuple[int, int] | None = None
+        for iir_start, t_ip, _col in fn.source_map:
+            if iir_start <= iir_ip and (best is None or iir_start > best[0]):
+                best = (iir_start, t_ip)
+        return best[1] if best is not None else None
+
+    @staticmethod
+    def _find_branch_in_translation(fn, iir_ip_start: int) -> int | None:
+        """Find the conditional-branch IIR ip within one Tetrad translation.
+
+        Returns the index of the first ``jmp_if_true`` / ``jmp_if_false``
+        starting at or after ``iir_ip_start``, bounded by the start of
+        the next source-map entry (i.e. the next Tetrad instr).
+        """
+        # Determine the upper bound (start of next Tetrad translation).
+        next_starts = sorted(
+            iir_start for iir_start, _, _ in fn.source_map if iir_start > iir_ip_start
+        )
+        upper = next_starts[0] if next_starts else len(fn.instructions)
+        for ip in range(iir_ip_start, upper):
+            instr = fn.instructions[ip]
+            if instr.op in ("jmp_if_true", "jmp_if_false"):
+                return ip
+        return None
 
     # ------------------------------------------------------------------
     # Internal: vm-core construction with Tetrad opcodes and builtins.
