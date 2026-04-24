@@ -8,6 +8,7 @@ members = [
     "arithmetic",
     "arm-simulator",
     "assembler",
+    "aztec-code",
     "barcode-2d",
     "barcode-layout-1d",
     "barcode-1d",
