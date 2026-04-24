@@ -904,6 +904,39 @@ class TestAlgolTypeChecker:
         assert parameter.type_name == "real"
         assert parameter.may_write
 
+    def test_accepts_string_value_procedure_result(self) -> None:
+        ast = parse_algol(
+            "begin string msg; integer result; "
+            "string procedure id(x); value x; string x; "
+            "begin id := x end; "
+            "msg := id('Hi'); print(msg); result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        procedure = result.semantic.procedures[0]
+        assert procedure.return_type == "string"
+        assert procedure.parameters[0].mode == "value"
+        assert procedure.parameters[0].type_name == "string"
+
+    def test_accepts_string_by_name_parameter(self) -> None:
+        ast = parse_algol(
+            "begin string msg; integer result; "
+            "procedure setmsg(x); string x; begin x := 'OK' end; "
+            "msg := 'Hi'; setmsg(msg); print(msg); result := 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        parameter = result.semantic.procedures[0].parameters[0]
+        assert parameter.mode == "name"
+        assert parameter.type_name == "string"
+        assert parameter.may_write
+
     def test_rejects_wrong_type_for_boolean_value_parameter(self) -> None:
         ast = parse_algol(
             "begin integer result; "
