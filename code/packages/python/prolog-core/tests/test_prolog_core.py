@@ -15,6 +15,8 @@ from prolog_core import (
     expand_dcg_clause,
     expand_dcg_phrase,
     iso_operator_table,
+    module_import_from_directive,
+    module_spec_from_directive,
     swi_operator_table,
 )
 
@@ -200,3 +202,65 @@ class TestDcgExpansion:
             logic_list(["a"]),
             logic_list(["b"]),
         ) == term("letters", logic_list(["a"]), logic_list(["b"]))
+
+
+class TestModules:
+    """Module and import directive helpers should preserve shared metadata."""
+
+    def test_module_spec_from_directive_parses_exports(self) -> None:
+        parsed = module_spec_from_directive(
+            directive(
+                relation("module", 2)(
+                    "family",
+                    term(
+                        ".",
+                        term("/", "parent", 2),
+                        term(
+                            ".",
+                            term("op", 500, "yfx", "++"),
+                            term(".", term("/", "ancestor", 2), "[]"),
+                        ),
+                    ),
+                ),
+            ),
+        )
+
+        assert parsed is not None
+        assert parsed.name.name == "family"
+        assert [str(export) for export in parsed.exports] == ["parent/2", "ancestor/2"]
+        assert str(parsed.exported_operators[0].symbol) == "++"
+
+    def test_module_import_from_directive_parses_import_lists(self) -> None:
+        parsed = module_import_from_directive(
+            directive(
+                relation("use_module", 2)(
+                    "family",
+                    term(".", term("/", "ancestor", 2), "[]"),
+                ),
+            ),
+        )
+
+        assert parsed is not None
+        assert parsed.module_name.name == "family"
+        assert parsed.import_all is False
+        assert [str(imported) for imported in parsed.imports] == ["ancestor/2"]
+
+    def test_module_import_from_directive_supports_import_all(self) -> None:
+        parsed = module_import_from_directive(
+            directive(relation("use_module", 1)("family")),
+        )
+
+        assert parsed is not None
+        assert parsed.module_name.name == "family"
+        assert parsed.import_all is True
+
+    def test_module_spec_rejects_invalid_exports(self) -> None:
+        with pytest.raises(TypeError, match="export lists may only contain"):
+            module_spec_from_directive(
+                directive(
+                    relation("module", 2)(
+                        "family",
+                        term(".", "oops", "[]"),
+                    ),
+                ),
+            )

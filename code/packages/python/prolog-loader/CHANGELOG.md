@@ -14,3 +14,6 @@
   `call/1`, `dynamic/1`, `assertz/1`, `predicate_property/2`, and related
   builtins without writing custom Python adapters
 - add `phrase/2` and `phrase/3` builtin adaptation for DCG-backed grammar calls
+- add structured module/import metadata on loaded sources
+- add multi-source project linking with namespace-aware `module/2` and
+  `use_module/1,2` resolution
