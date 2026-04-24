@@ -230,6 +230,7 @@ members = [
     "gf256",
     "micro-qr",
     "qr-code",
+    "data-matrix",
     "image-codec-bmp",
     "image-codec-ppm",
     "image-codec-qoi",
