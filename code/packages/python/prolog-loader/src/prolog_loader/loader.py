@@ -19,6 +19,8 @@ from logic_engine import (
 from prolog_core import OperatorTable, PredicateRegistry, PrologDirective
 from prolog_parser import ParsedQuery
 
+from prolog_loader.adapters import adapt_prolog_goal
+
 __version__ = "0.1.0"
 
 type GoalAdapter = Callable[[GoalExpr], object]
@@ -171,6 +173,20 @@ def run_initialization_goals(
         current_state = next_state
 
     return current_state
+
+
+def run_prolog_initialization_goals(
+    loaded_source: LoadedPrologSource,
+    *,
+    state: State | None = None,
+) -> State:
+    """Run initialization directives with the shared Prolog builtin adapter."""
+
+    return run_initialization_goals(
+        loaded_source,
+        state=state,
+        goal_adapter=adapt_prolog_goal,
+    )
 
 
 def _initialization_term(directive_value: PrologDirective) -> Term:
