@@ -7,6 +7,7 @@ Public surface
 ``VMMetrics``           — execution statistics snapshot.
 ``BranchStats``         — taken/not-taken counters for one conditional branch.
 ``VMProfiler``          — inline type profiler.
+``VMTrace`` / ``VMTracer`` — opt-in per-instruction trace records.
 ``TypeMapper``          — type alias for a runtime-value → type-string callable.
 ``default_type_mapper`` — the Python-primitive default type mapper.
 ``BuiltinRegistry``     — maps builtin names to host callables.
@@ -27,6 +28,7 @@ from vm_core.errors import (
 from vm_core.frame import RegisterFile, VMFrame
 from vm_core.metrics import BranchStats, VMMetrics
 from vm_core.profiler import TypeMapper, VMProfiler, default_type_mapper
+from vm_core.tracer import VMTrace, VMTracer
 
 __all__ = [
     "VMCore",
@@ -35,6 +37,8 @@ __all__ = [
     "VMMetrics",
     "BranchStats",
     "VMProfiler",
+    "VMTrace",
+    "VMTracer",
     "TypeMapper",
     "default_type_mapper",
     "BuiltinRegistry",
