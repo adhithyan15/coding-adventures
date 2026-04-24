@@ -184,6 +184,24 @@ builder.apply_motif(
 )
 ```
 
+For bigger structure, capture a whole multi-track section and reuse it like a
+verse or chorus:
+
+```python
+section = builder.capture_section(
+    start_tick=builder.measure_start_tick(1),
+    end_tick=builder.measure_start_tick(5),
+)
+
+builder.apply_section(
+    section,
+    builder.measure_start_tick(9),
+    track_map={"melody": "answer"},
+    transpose_semitones={"melody": 12},
+    velocity_scale={"bassline": 0.8},
+)
+```
+
 ## Safety Limits
 
 The parser has explicit limits for score size, line length, and event count.
