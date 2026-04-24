@@ -229,6 +229,7 @@ members = [
     "deflate",
     "gf256",
     "qr-code",
+    "aztec-code",
     "image-codec-bmp",
     "image-codec-ppm",
     "image-codec-qoi",
