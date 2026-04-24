@@ -1,0 +1,12 @@
+[package]
+name = "zstd"
+version = "0.1.0"
+edition = "2021"
+description = "Zstandard lossless compression algorithm (2015) — CMP07"
+license = "MIT"
+
+[dependencies]
+lzss = { path = "../lzss" }
+
+[dev-dependencies]
+# none needed
