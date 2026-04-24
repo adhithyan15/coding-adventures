@@ -678,7 +678,7 @@ class AlgolTypeChecker:
             return
 
         return_type = _procedure_return_type(node)
-        if return_type is not None and return_type not in {INTEGER, BOOLEAN}:
+        if return_type is not None and return_type not in {INTEGER, BOOLEAN, REAL}:
             self._error(
                 name_token,
                 f"{return_type} procedure results are not supported yet",
@@ -707,11 +707,11 @@ class AlgolTypeChecker:
                     f"by-name parameter {formal.value!r} must have an integer "
                     "or boolean specifier",
                 )
-            elif mode == VALUE and parameter_type not in {INTEGER, BOOLEAN}:
+            elif mode == VALUE and parameter_type not in {INTEGER, BOOLEAN, REAL}:
                 self._error(
                     formal,
-                    f"value parameter {formal.value!r} must have an integer or "
-                    "boolean specifier",
+                    f"value parameter {formal.value!r} must have an integer, "
+                    "boolean, or real specifier",
                 )
 
         procedure_id = self._next_procedure_id
@@ -772,7 +772,7 @@ class AlgolTypeChecker:
                 name=formal.value,
                 type_name=(
                     parameter_type
-                    if parameter_type in {INTEGER, BOOLEAN}
+                    if parameter_type in {INTEGER, BOOLEAN, REAL}
                     else INTEGER
                 ),
                 line=formal.line,

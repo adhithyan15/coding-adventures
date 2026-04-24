@@ -880,7 +880,12 @@ class _FunctionLowerer:
                 self._emit_opcode("call")
                 self._emit_u32(self.function_indices[label.name])
                 if signature.wasm_result_types:
-                    self._emit_local_set(_REG_SCRATCH)
+                    result_reg = (
+                        _REG_F64_SCRATCH
+                        if signature.wasm_result_types[0] == ValueType.F64
+                        else _REG_SCRATCH
+                    )
+                    self._emit_local_set(result_reg)
             case IrOp.RET | IrOp.HALT:
                 if self.function.signature.wasm_result_types:
                     self._emit_local_get(_REG_SCRATCH)
@@ -1280,7 +1285,11 @@ def _make_function_ir(
             raise WasmLoweringError(f"missing function signature for {label}")
 
     max_reg = max(
-        [1, _REG_VAR_BASE + max(signature.param_count - 1, 0)]
+        [
+            1,
+            _REG_VAR_BASE + max(signature.param_count - 1, 0),
+            _REG_F64_SCRATCH if _needs_f64_scratch(instructions, signatures) else 1,
+        ]
         + [
             operand.index
             for instruction in instructions
@@ -1301,6 +1310,22 @@ def _make_function_ir(
             signatures=signatures,
         ),
     )
+
+
+def _needs_f64_scratch(
+    instructions: list[IrInstruction],
+    signatures: dict[str, FunctionSignature],
+) -> bool:
+    for instruction in instructions:
+        if instruction.opcode != IrOp.CALL:
+            continue
+        target = instruction.operands[0]
+        if not isinstance(target, IrLabel):
+            continue
+        callee = signatures.get(target.name)
+        if callee is not None and callee.wasm_result_types == (ValueType.F64,):
+            return True
+    return False
 
 
 def _const_expr(value: int) -> bytes:
@@ -1357,6 +1382,7 @@ def _align_up(value: int, alignment: int) -> int:
 
 
 _REG_SCRATCH = 1
+_REG_F64_SCRATCH = 31
 _REG_VAR_BASE = 2
 
 
@@ -1435,9 +1461,14 @@ def _infer_register_types(
                 if callee is None:
                     raise WasmLoweringError(f"missing function signature for {target.name}")
                 if callee.wasm_result_types:
+                    result_reg = (
+                        _REG_F64_SCRATCH
+                        if callee.wasm_result_types[0] == ValueType.F64
+                        else _REG_SCRATCH
+                    )
                     _assign_register_type(
                         reg_types,
-                        _REG_SCRATCH,
+                        result_reg,
                         callee.wasm_result_types[0],
                         f"CALL {target.name}",
                     )
