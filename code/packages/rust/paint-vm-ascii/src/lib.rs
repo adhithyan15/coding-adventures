@@ -125,6 +125,9 @@ pub fn render(scene: &PaintScene, options: AsciiOptions) -> Result<String, Paint
             PaintInstruction::Image(_) => {
                 return Err(PaintVmAsciiError::UnsupportedInstruction("image"))
             }
+            PaintInstruction::Text(_) => {
+                return Err(PaintVmAsciiError::UnsupportedInstruction("text"))
+            }
         }
     }
 

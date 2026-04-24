@@ -1,5 +1,16 @@
 # Changelog — paint-instructions
 
+## 0.1.1 — 2026-04-23
+
+### Added
+
+- `PaintText` struct — simple string-plus-position text instruction for backends with native text support (Metal, SVG, Canvas); counterpart to the existing `PaintGlyphRun` which requires pre-shaped glyph IDs
+  - Fields: `x`, `y`, `text`, `font_ref`, `font_size`, `fill`, `text_align`
+  - `font_ref` uses `"canvas:<family>@<size>:<weight>"` format per DG03 spec
+- `TextAlign` enum — `Left` (default), `Center`, `Right`
+- `PaintInstruction::Text(PaintText)` variant added between `Path` and `GlyphRun`
+- Tests: `paint_text_fields_round_trip`, `text_align_default_is_left`, `paint_instruction_text_variant`
+
 ## 0.1.0 — 2026-04-05
 
 Initial release.
