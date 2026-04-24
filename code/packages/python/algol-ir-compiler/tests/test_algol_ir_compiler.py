@@ -830,6 +830,47 @@ class TestAlgolIrCompiler:
         assert signature.param_types == ("integer", "integer", "string")
         assert signature.return_type == "string"
 
+    def test_compiles_integer_array_parameter_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer array xs[1:2]; integer result; "
+                "procedure setfirst(a); integer a; array a; begin a[1] := 9 end; "
+                "xs[1] := 4; setfirst(xs); result := xs[1] "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+        signature = result.procedure_signatures[calls[0].operands[0].name]
+
+        assert signature.param_count == 3
+        assert signature.param_types == ("integer", "integer", "integer")
+
+    def test_compiles_array_parameter_dimension_guard(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer array xs[1:2]; integer result; "
+                "procedure probe(a); integer a; array a; begin result := a[1, 1] end; "
+                "probe(xs); result := 1 "
+                "end"
+            )
+        )
+        instructions = result.program.instructions
+        probe_index = next(
+            index
+            for index, instruction in enumerate(instructions)
+            if instruction.opcode == IrOp.LABEL
+            and instruction.operands[0].name == "_fn_algol_0_probe"
+        )
+        probe_window = instructions[probe_index : probe_index + 80]
+
+        assert any(
+            instruction.opcode == IrOp.CMP_NE for instruction in probe_window
+        )
+
     def test_compiles_integer_actual_promoted_for_real_value_parameter(self) -> None:
         result = compile_algol(
             parse_algol(
