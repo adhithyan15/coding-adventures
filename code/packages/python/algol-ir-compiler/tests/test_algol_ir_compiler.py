@@ -70,6 +70,36 @@ class TestAlgolIrCompiler:
         assert "loop_0_start" in labels
         assert "loop_0_end" in labels
 
+    def test_compiles_own_scalar_to_static_storage(self) -> None:
+        result = compile_algol(
+            parse_algol("begin own integer counter; integer result; result := counter end")
+        )
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+
+        assert "__algol_static" in data_labels
+        assert "__algol_static" in load_addr_labels
+
+    def test_compiles_own_scalar_updates_across_procedure_calls(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin own integer counter; integer result; "
+                "procedure bump; begin counter := counter + 1; result := counter end; "
+                "bump; bump "
+                "end"
+            )
+        )
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+        assert load_addr_labels.count("__algol_static") >= 2
+
     def test_compiles_local_goto_to_algol_label(self) -> None:
         result = compile_algol(
             parse_algol(

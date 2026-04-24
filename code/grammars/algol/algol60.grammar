@@ -57,6 +57,7 @@ block        = "begin" { declaration SEMICOLON } [ statement { SEMICOLON stateme
 # ---------------------------------------------------------------------------
 
 declaration  = type_decl
+             | own_decl
              | array_decl
              | switch_decl
              | procedure_decl ;
@@ -66,6 +67,12 @@ declaration  = type_decl
 #   real sum, average
 #   boolean flag
 type_decl    = type ident_list ;
+
+# OWN declaration: static-lifetime scalar storage with lexical visibility.
+#   own integer counter
+#   own real total
+# Array support for own is deferred to a later phase.
+own_decl     = "own" type ident_list ;
 
 type         = "integer" | "real" | "boolean" | "string" ;
 

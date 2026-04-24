@@ -20,6 +20,7 @@ NAME = "name"
 ARRAY = "array"
 LABEL = "label"
 SWITCH = "switch"
+STATIC = "static"
 MAX_ARRAY_DIMENSIONS = 4
 
 
@@ -163,6 +164,7 @@ class ResolvedReference:
     use_block_id: int
     declaration_block_id: int
     lexical_depth_delta: int
+    storage_class: str
     slot_offset: int
     line: int
     column: int
@@ -376,6 +378,7 @@ class AlgolTypeChecker:
         self._next_array_id = 0
         self._next_label_id = 0
         self._next_switch_id = 0
+        self._next_static_offset = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -397,6 +400,7 @@ class AlgolTypeChecker:
         self._next_array_id = 0
         self._next_label_id = 0
         self._next_switch_id = 0
+        self._next_static_offset = 0
         root_scope = Scope()
         block = _first_node(ast, "block")
         if block is None:
@@ -493,6 +497,9 @@ class AlgolTypeChecker:
         if inner.rule_name == "procedure_decl":
             self._check_procedure_declaration(inner, scope)
             return
+        if inner.rule_name == "own_decl":
+            self._check_scalar_declaration(inner, scope, storage_class=STATIC)
+            return
         if inner.rule_name == "array_decl":
             self._check_array_declaration(inner, scope)
             return
@@ -503,15 +510,24 @@ class AlgolTypeChecker:
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
             return
 
-        type_node = _first_node(inner, "type")
+        self._check_scalar_declaration(inner, scope, storage_class="frame")
+
+    def _check_scalar_declaration(
+        self,
+        node: ASTNode,
+        scope: Scope,
+        *,
+        storage_class: str,
+    ) -> None:
+        type_node = _first_node(node, "type")
         declared_type = _first_keyword_value(type_node) if type_node is not None else ""
         if declared_type not in {INTEGER, BOOLEAN, REAL}:
             self._error(
-                inner, f"{declared_type or 'unknown'} variables are not supported yet"
+                node, f"{declared_type or 'unknown'} variables are not supported yet"
             )
             return
 
-        ident_list = _first_node(inner, "ident_list")
+        ident_list = _first_node(node, "ident_list")
         for name_token in _tokens(ident_list):
             if name_token.type_name != "NAME":
                 continue
@@ -521,6 +537,7 @@ class AlgolTypeChecker:
                 line=name_token.line,
                 column=name_token.column,
                 symbol_id=self._next_symbol_id,
+                storage_class=storage_class,
                 declaring_block_id=scope.block_id,
             )
             if not scope.declare(symbol):
@@ -530,9 +547,17 @@ class AlgolTypeChecker:
                 )
                 continue
             self._next_symbol_id += 1
-            if scope.frame_layout is not None:
+            if storage_class == STATIC:
+                self._allocate_static_scalar(symbol)
+            elif scope.frame_layout is not None:
                 scope.frame_layout.allocate_scalar(symbol)
             self.semantic_symbols.append(symbol)
+
+    def _allocate_static_scalar(self, symbol: Symbol) -> None:
+        slot_size = FRAME_REAL_SIZE if symbol.type_name == REAL else FRAME_WORD_SIZE
+        symbol.slot_offset = self._next_static_offset
+        symbol.slot_size = slot_size
+        self._next_static_offset += slot_size
 
     def _check_array_declaration(self, node: ASTNode, scope: Scope) -> None:
         type_node = _first_direct_node(node, "type")
@@ -1646,6 +1671,7 @@ class AlgolTypeChecker:
                 use_block_id=scope.block_id,
                 declaration_block_id=declaring_scope.block_id,
                 lexical_depth_delta=lexical_depth_delta,
+                storage_class=symbol.storage_class,
                 slot_offset=symbol.slot_offset,
                 line=token.line,
                 column=token.column,
